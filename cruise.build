@@ -1,0 +1,175 @@
+<project name="StructureMap" default="all">
+	<property name="build.dir" value="build" />
+	<property name="deployment.dir" value="source\StructureMap.Testing.DeploymentTasks\"/>
+	<property name="results.dir" value="results" />
+	<property name="nant.dir" value="bin\nant" />
+	<property name="project.version" value="1.0.0" />
+	<property name="project.config" value="release" />
+	<property name="archive.dir" value="d:\builds\StructureMap"/>
+
+	<target name="all" depends="compile, unit-test, runDoctor, post-clean"/>
+	<target name="cruise" depends="compile, unit-test, runDoctor, post-clean, archive" />
+
+	<target name="pre-clean">
+	    <delete dir="${build.dir}" failonerror="false" />
+	    <delete dir="${results.dir}" failonerror="false"/>
+
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${results.dir}" />
+		
+		<call target="cleanJunk" />
+	</target>
+	
+	<target name="cleanJunk">
+	  <delete failonerror="false">
+	  	<fileset basedir=".">
+	  		<includes name="source/**/obj/**"/>
+	  		<includes name="source/**/bin**"/>
+	   		<includes name="**/_ReSharper*"/>
+	   		<includes name="source/**/*.resharperoptions"/>
+	   	</fileset>
+	  </delete>	
+	</target>
+
+    <target name="version" description="mark AssemblyInfo builds with the build number">
+		<property name="assembly-version" value="${project.version}.0000" />
+    
+		<if test="${property::exists('CCNetLabel')}">	      
+			<property name="assembly-version" value="${project.version}.${CCNetLabel}" />
+	    </if>
+    
+		<echo message="Marking this build as version ${assembly-version}" />
+        <asminfo output="Source/CommonAssemblyInfo.cs" language="CSharp">
+            <imports>
+                <import name="System" />
+                <import name="System.Reflection" />
+                <import name="System.Runtime.InteropServices" />
+            </imports>
+            <attributes>
+                <attribute type="ComVisibleAttribute" value="false" />
+                <attribute type="AssemblyVersionAttribute" value="${assembly-version}" />
+                <attribute type="AssemblyCopyrightAttribute" value="Copyright (c) 2005, Jeremy D. Miller, Jeffrey Palermo" />
+                <attribute type="AssemblyProductAttribute" value="StructureMap" />         
+				<attribute type="AssemblyCompanyAttribute" value="" />
+				<attribute type="AssemblyConfigurationAttribute" value="${project.config}" />
+				<attribute type="AssemblyInformationalVersionAttribute" value="${assembly-version}" />
+            </attributes>
+            <references>
+                <include name="System.dll" />
+            </references>
+        </asminfo>
+    </target>
+
+
+	<target name="compile" depends="pre-clean,version">
+      <property name="net20Files" value="C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727" />
+      <exec program="${net20Files}\msbuild.exe" commandline="source\StructureMap.sln /t:rebuild /p:Configuration=Release">
+      </exec>
+      <copy todir="${build.dir}" flatten="true" overwrite="true">
+        <fileset basedir="source\">
+          <include name="**\bin\${project.config}\*.dll" />
+          <include name="**\bin\${project.config}\*.exe" />
+          <include name="**\bin\${project.config}\*.xml" />
+          <include name="**\bin\${project.config}\*.xml.actual" />
+          <include name="StructureMap.Testing\StructureMap.config" />
+        </fileset>
+      </copy>
+    <copy todir="${build.dir}\..\" flatten="true" overwrite="true">
+      <fileset basedir="source\">
+        <include name="StructureMap.Testing\StructureMap.config" />
+      </fileset>
+    </copy>
+	    
+	    <mkdir dir="${build.dir}\StructureMapExplorer"/>
+	    <copy todir="${build.dir}\StructureMapExplorer">
+			  <fileset basedir="${build.dir}">
+				  <includes name="*.dll"/>
+				  <includes name="*StructureMapExplorer.exe"/>
+				  <excludes name="*.Testing*.*"/>
+				  <excludes name="Nant*.*"/>
+			  </fileset>
+	    </copy>
+	</target>
+
+  <!-- temporarily not used since <loadtasks doesn't work for .Net 2.0 assemblies at this time. -->
+	<target name="runDeploymentTask" depends="compile">
+		<property name="source.config" value="${build.dir}\DeploymentSourceConfig.xml"/>
+		
+		<copy file="${build.dir}\StructureMap.dll" todir="${nant.dir}"/>
+		<loadtasks assembly="${build.dir}\StructureMap.DeploymentTasks.dll"/>
+		
+		<structuremap.deployment configPath="${source.config}"
+			destinationPath="${build.dir}\WithProfileAndNothingElseCopyMachineOverrides.xml.actual"
+			profile="Blue"
+			machineOption="CopyMachineOverrides"/>
+
+		<structuremap.deployment configPath="${source.config}"
+			destinationPath="${build.dir}\WithProfileAndNothingElseIgnoreMachineOverrides.xml.actual"
+			profile="Blue"
+			machineOption="IgnoreMachineOverrides"/>
+			
+		<structuremap.deployment configPath="${source.config}"
+			destinationPath="${build.dir}\DeploymentTargetIsClientCopyMachineOverrides.xml.actual"
+			deploymentTarget = "Client"
+			machineOption="CopyMachineOverrides"/>
+			
+		<structuremap.versionreport directory="${build.dir}" manifest="${build.dir}\manifest.xml" />
+		<structuremap.checkversion directory="${build.dir}" manifest="${build.dir}\manifest.xml" />
+	</target>
+
+	<target name="unit-test">
+        <nunit2 failonerror="true">
+            <formatter type="Xml" outputdir="${results.dir}" usefile="true" extension=".xml"/>
+            <formatter type="Plain" />
+                
+            <test assemblyname="${build.dir}\StructureMap.Testing.dll" appconfig="${nant.location}nant.tests.config" />
+            <test assemblyname="${build.dir}\StructureMap.Testing.DeploymentTasks.dll" appconfig="${nant.location}nant.tests.config" />
+        </nunit2>	
+
+	</target>
+	
+	<target name="runDoctor">
+		<echo message="Running StructureMapDoctor" />
+		<copy file="source\StructureMap.Testing\TestData\ObjectMother.config" todir="build" verbose="true"/>
+	
+	
+		<exec 
+			program="${build.dir}\StructureMapDoctor.exe" 
+			workingdir="." 
+			commandline="${build.dir}\ObjectMother.config -All"/>
+			
+		<delete file="build/ObjectMother.config" />
+	
+	</target>
+
+	
+	
+	<target name="post-clean">
+	    <call target="cleanJunk" />
+	    
+	    <delete>
+			<fileset basedir="${build.dir}">
+				<include name="*.xml" />
+				<include name="*.config" />
+			</fileset>
+	    </delete>
+	</target>
+	
+	<target name="archive">
+		<if test="${property::exists('CCNetLabel')}">	      
+			<zip zipfile="${archive.dir}\StructureMap_${CCNetLabel}.zip" if="${property::exists('CCNetLabel')}">
+				<fileset basedir="${build.dir}">
+					<include name="*.dll" />
+					<include name="*.exe" />
+					<exclude name="*.xml" />
+				</fileset>
+			</zip>
+			
+			
+			<nant buildfile="Deploy.build" inheritall="true"/>
+		</if>
+		
+		
+	</target>
+
+</project>

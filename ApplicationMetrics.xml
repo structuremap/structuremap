@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<ApplicationMetrics NAsm="3" NType="191" NClass="164" NAbstractClass="33" NInterface="19" NValueType="8" NExceptionType="3" NAttributeType="5" NDelegateType="2" NEnumType="8" NILInstruction="23437" PercentPublicType="98.95" PercentPublicMethod="71.69" PercentClassWithAtLeastOnePublicField="4.27">
+  <PropertyOnInterface Occ="19" Avg="0.95" StdDev="1.5" MaxVal="5" MaxName="Asm:StructureMap  Interface:StructureMap.Caching.ICacheItem" />
+  <MethodOnInterface Occ="19" Avg="4.32" StdDev="4.66" MaxVal="18" MaxName="Asm:StructureMap  Interface:StructureMap.Configuration.IConfigurationVisitor" />
+  <ArgOnMethodOnInterface Occ="82" Avg="0.95" StdDev="0.82" MaxVal="4" MaxName="Asm:StructureMap  Interface:StructureMap.Graph.Configuration.IGraphBuilder  Method:AddPluginFamily" />
+  <PublicPropertyOnClass Occ="164" Avg="4.71" StdDev="9.32" MaxVal="109" MaxName="Asm:StructureMap.Client  Class:StructureMap.Client.Shell.ApplicationShell" />
+  <PublicMethodOnClass Occ="164" Avg="17.28" StdDev="31.69" MaxVal="403" MaxName="Asm:StructureMap.Client  Class:StructureMap.Client.Shell.ApplicationShell" />
+  <ArgOnPublicMethodOnClass Occ="2834" Avg="0.55" StdDev="0.65" MaxVal="5" MaxName="Asm:StructureMap.Client  Class:StructureMap.Client.Shell.ApplicationShell  Method:SelectNextControl" />
+  <ILInstructionInNonAbstractMethods Occ="1905" Avg="12.31" StdDev="18.76" MaxVal="559" MaxName="Asm:StructureMap.Client  Class:StructureMap.Client.Shell.ApplicationShell Method:InitializeComponent()" />
+  <TypeWithTheMostILInstruction Occ="162" Avg="144.79" StdDev="123.59" MaxVal="836" MaxName="Asm:StructureMap.Client  Type:StructureMap.Client.Shell.ApplicationShell" />
+  <MethodCC Occ="1905" Avg="0.53" StdDev="1.32" MaxVal="12" MaxName="Asm:StructureMap  Type:StructureMap.Graph.PluginGraph  Method:Seal()" />
+  <ResponseForType Occ="191" Avg="640.42" StdDev="1054.65" MaxVal="6562" MaxName="Asm:StructureMap  Type:StructureMap.Configuration.DiagnosticGraphBuilder" />
+</ApplicationMetrics>

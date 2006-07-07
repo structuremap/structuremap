@@ -1,0 +1,292 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+	<head>
+		<title>StructureMap - Deployment NAnt Task</title>
+		<link rel="stylesheet" type="text/css" href="style.css">
+		<meta name="GENERATOR" content="Microsoft Visual Studio .NET 7.1">
+		<meta name="vs_targetSchema" content="http://schemas.microsoft.com/intellisense/ie5">
+	</head>
+	<body>
+		<TABLE cellSpacing="5" cellPadding="0" width="100%" border="0" height="100%">
+			<TR>
+				<TD valign="top" width="210" class="form">
+					<p align="center">
+						<A href="http://sourceforge.net"><IMG src="http://sourceforge.net/sflogo.php?group_id=104740&amp;type=5" width="210" height="62"
+								border="0" alt="SourceForge.net Logo"></A>
+					</p>
+					<P style="LINE-HEIGHT: 25px">
+						<A href="default.htm">Home</A><BR>
+						<a href="http://sourceforge.net/projects/structuremap">StructureMap on SourceForge</a><br>
+						<A href="Basic Architecture.htm">Basic Architecture</A><BR>
+						<A href="Concepts.htm">Concepts</A><BR>
+						<A href="StructureMap-API.chm">API Documentation</A><BR>
+						<A href="FAQ.htm">FAQ</A><BR>
+						<A href="Configuration.htm">Configuration Schema</A><BR>
+						&nbsp;&nbsp;&nbsp; <a href="MementoSources.htm">Memento Sources</a><BR>
+						&nbsp;&nbsp;&nbsp; <a href="NodeNormalized.htm">Node Normalized Xml</a><BR>
+						&nbsp;&nbsp;&nbsp; <a href="AttributeNormalized.htm">Attribute 
+						Normalized Xml</a><BR>
+						&nbsp;&nbsp;&nbsp; <a href="Attributes.htm">Attribute Usage</a><BR>
+						&nbsp;&nbsp;&nbsp; <a href="Scoping.htm">Instance Lifecyle Scoping</a><BR>
+						
+						<A href="ConfigurationManagement.htm">Configuration Management</A><BR>
+						&nbsp;&nbsp;&nbsp; <A href="StructureMapDoctor.htm">StructureMapDoctor</A><BR>
+						&nbsp;&nbsp;&nbsp; <A href="StructureMapExplorer.htm">StructureMapExplorer</A><BR>
+						&nbsp;&nbsp;&nbsp; <A href="structuremap.deployment.htm">deployment Task</A><BR>
+						&nbsp;&nbsp;&nbsp; <A href="structuremap.verification.htm">verification Task</A><BR>
+						&nbsp;&nbsp;&nbsp; <A href="ValidationAttribute.htm">ValidationMethod Attribute</A><BR>
+						&nbsp;&nbsp;&nbsp; <A href="NAnt Tasks.htm">Other NAnt Tasks</A><BR>
+
+						
+						<A href="Troubleshooting.htm">Troubleshooting</A><BR>
+						<A href="SingletonInjection.htm">Singleton Injection</A></P>
+
+				</TD>
+				<TD valign="top" style="PADDING-LEFT: 25px">
+					<h1>"structuremap.deployment" NAnt Task</h1>
+					<p>The structuremap.deployment NAnt task is a utility to deploy a subset copy of a 
+						StructureMap.config file based on filter rules.&nbsp; It is often valuable or 
+						even necessary to have multiple configurations for an application.&nbsp; During 
+						the pilot project for StructureMap the team had different configurations for 
+						developer workstations, smoke tests, the build server, and and several testing 
+						environments.&nbsp;&nbsp;Roughly double&nbsp;the configurations for client 
+						versus server deployments.&nbsp; The cost of maintaining several similar 
+						configuration files became too daunting and led to duplicated effort.&nbsp; 
+						Anytime a change or addition was made to the configuration, up to eight or nine 
+						configuration files had to be modified in a similar manner.</p>
+					<P>To eliminate some of this overhead and make the deployment be more reliable, the 
+						team created a facility to keep all configuration options in a master 
+						configuration file.&nbsp; The deployment NAnt task was added to the build 
+						script to create the individual configuration files as a part of the continuous 
+						integration process.&nbsp; Combined with the <A href="structuremap.verification.htm">
+							validation task</A>, this eased the overhead of maintaining and expanding 
+						the configuration for the system.</P>
+					<h3>Usage</h3>
+					<p>The&nbsp;following conditions must be met for the deployment task to 
+						function.&nbsp; Some of these limitations may be eliminated in a later version.</p>
+					<OL>
+						<LI>
+						The StructureMap.dll and StructureMap.DeploymentTasks.dll must both be in the 
+						target path for the NAnt executable
+						<LI>
+							The StructureMap.dll must be in the same directory as the&nbsp;configuration 
+							file specified by the <EM>configPath</EM>
+						argument
+						<LI>
+							All application assemblies must be in the&nbsp;same directory as 
+							the&nbsp;configuration file specified by the <EM>configPath</EM> argument</LI></OL>
+					<h5>Arguments</h5>
+					<DIV class="schema-table">
+						<table border="1" cellpadding="1" cellspacing="1" width="100%">
+							<tr>
+								<th width="25%" style="HEIGHT: 19px">
+									Argument</th>
+								<th width="75%" style="HEIGHT: 19px">
+									Description</th>
+							</tr>
+							<tr>
+								<td valign="top">configPath</td>
+								<td>The path to the source configuration file</td>
+							</tr>
+							<tr>
+								<td valign="top">destinationPath</td>
+								<td>The path to the new derived configuration file</td>
+							</tr>
+							<tr>
+								<td valign="top">deploymentTarget</td>
+								<td>Optional argument specifying the deployment target.&nbsp;&nbsp;The intention of 
+									this&nbsp;argument was to filter out assemblies and plugin types by physical 
+									deployment.&nbsp;&nbsp;For example, setting a deploymentTarget="Client" will 
+									filter out any&nbsp;plugin or plugged types and the resultant 
+									instances&nbsp;from any assembly that&nbsp;is not deployed to the "Client" 
+									target.&nbsp;</td>
+							</tr>
+							<tr>
+								<td valign="top">profile</td>
+								<td>Optional argument specifying the active profile from the source configuration 
+									file.&nbsp; If this argument is specified, the destination configuration file 
+									will be filtered by the default instances specified by the &lt;Profile&gt; 
+									element in the source configuration file.&nbsp; For each plugin type configured 
+									in the specified &lt;Profile&gt; element, the default instance will be set to 
+									the instance from the profile, and all other instances will be discarded.&nbsp; 
+									For example, setting profile="Test" will use the instance defaults from the 
+									"Test" profile and discard any instances from the "Development" and 
+									"Production" profiles.&nbsp; All &lt;Profile&gt; elements will also be 
+									discarded in the deployment.</td>
+							</tr>
+							<tr>
+								<td valign="top">machineOption</td>
+								<td>
+									<P>Optional argument used to control the handling of the &lt;Machine&gt; 
+										elements.&nbsp; The possible values are:</P>
+									<OL>
+										<LI>
+											<FONT size="3">"IgnoreMachineOverrides" - The &lt;Machine&gt; elements are ignored 
+												and discarded</FONT></LI>
+										<LI>
+											<FONT size="3">"CopyMachineOverrides" - Default value.&nbsp; The &lt;Machine&gt; 
+												elements are copied into the destination file</FONT></LI>
+										<LI>
+											<FONT size="3">"UseCurrentMachineOverride" - The instance defaults of the 
+												&lt;Machine&gt; element matching the computer name running the NAnt task will 
+												be applied as a filter to the instances in the destination file in exactly the 
+												same manner as setting the "profile" argument.&nbsp; The "profile" argument has 
+												precedence over the machineOption="UseCurrentMachineOverride" argument.</FONT></LI></OL>
+
+				</TD>
+			</TR>
+		</TABLE>
+
+
+
+
+
+					<h5>Sample NAnt Configuration</h5>
+					<pre class="xml-sample">	
+&lt;target name="testDeploymentTask"&gt;
+	&lt;property name="deployment.dir" value="source\StructureMap.Testing.DeploymentTasks\bin\release\"/&gt;
+	&lt;property name="source.config" value="${deployment.dir}DeploymentSourceConfig.xml"/&gt;
+	
+	&lt;structuremap.deployment configPath="${source.config}"
+		destinationPath="${deployment.dir}WithProfileAndNothingElseCopyMachineOverrides.xml.actual"
+		profile="Blue"
+		machineOption="CopyMachineOverrides"/&gt;
+
+	&lt;structuremap.deployment configPath="${source.config}"
+		destinationPath="${deployment.dir}WithProfileAndNothingElseIgnoreMachineOverrides.xml.actual"
+		profile="Blue"
+		machineOption="IgnoreMachineOverrides"/&gt;
+		
+	&lt;structuremap.deployment configPath="${source.config}"
+		destinationPath="${deployment.dir}DeploymentTargetIsClientCopyMachineOverrides.xml.actual"
+		deploymentTarget = "Client"
+		machineOption="CopyMachineOverrides"/&gt;
+&lt;/target&gt;					
+					</pre>
+
+
+		
+		<h5>Source File</h5>
+		<pre class="xml-sample">
+&lt;StructureMap&gt;
+	&lt;Assembly Name="MyApp.Data" Deploy="Server"/&gt;
+	&lt;Assembly Name="MyApp.Common" Deploy="All" /&gt;
+	&lt;Assembly Name="MyApp.Stub" Deploy="Test" /&gt;
+	
+	&lt;Profile Name="Dev"&gt;
+		&lt;Override Type="MyApp.Common.IDirectory" DefaultKey="UnitTest"/&gt;
+	&lt;/Profile&gt;
+	
+	&lt;Profile Name="Build"&gt;
+		&lt;Override Type="MyApp.Common.IDirectory" DefaultKey="Test"/&gt;
+		&lt;Override Type="MyApp.Common.IDatabase" DefaultKey="Build"/&gt;
+	&lt;/Profile&gt;
+	
+	&lt;Profile Name="Test"&gt;
+		&lt;Override Type="MyApp.Common.IDirectory" DefaultKey="Test"/&gt;
+		&lt;Override Type="MyApp.Common.IDatabase" DefaultKey="Test"/&gt;
+	&lt;/Profile&gt;
+	
+	&lt;Profile Name="Production"&gt;
+		&lt;Override Type="MyApp.Common.IDirectory" DefaultKey="Production"/&gt;
+		&lt;Override Type="MyApp.Common.IDatabase" DefaultKey="Production"/&gt;
+	&lt;/Profile&gt;
+	
+	&lt;Machine Name="DEV-1" Profile="Dev"&gt;
+		&lt;Override Type="MyApp.Common.IDatabase" DefaultKey="Dev1"/&gt;
+	&lt;/Machine&gt;
+	&lt;Machine Name="DEV-2" Profile="Dev"&gt;
+		&lt;Override Type="MyApp.Common.IDatabase" DefaultKey="Dev2"/&gt;
+	&lt;/Machine&gt;
+	&lt;Machine Name="DEV-3" Profile="Dev"&gt;
+		&lt;Override Type="MyApp.Common.IDatabase" DefaultKey="Dev3"/&gt;
+	&lt;/Machine&gt;
+	
+
+	&lt;PluginFamily Assembly="MyApp.Common" Type="MyApp.Common.IDatabase" DefaultKey="Build"&gt;
+		&lt;Plugin Assembly="MyApp.Stub" Type="MyApp.Stub.StubDatabase" ConcreteKey="Stub"/&gt;
+		&lt;Plugin Assembly="MyApp.Data" Type="MyApp.Data.MSSQLDatabase" ConcreteKey="MSSQL"/&gt;
+		
+		
+		&lt;Instance Type="Stub" Key="UnitTest"/&gt;
+		&lt;Instance Type="MSSQL" Key="Dev1"&gt;
+			&lt;Property Name="connectionString" Value="data source=devserver;initial catalog=dev1"/&gt;
+		&lt;/Instance&gt;
+		&lt;Instance Type="MSSQL" Key="Dev2"&gt;
+			&lt;Property Name="connectionString" Value="data source=devserver;initial catalog=dev1"/&gt;
+		&lt;/Instance&gt;
+		&lt;Instance Type="MSSQL" Key="Dev3"&gt;
+			&lt;Property Name="connectionString" Value="data source=devserver;initial catalog=dev1"/&gt;
+		&lt;/Instance&gt;
+		&lt;Instance Type="MSSQL" Key="Build"&gt;
+			&lt;Property Name="connectionString" Value="data source=devserver;initial catalog=build"/&gt;
+		&lt;/Instance&gt;
+		&lt;Instance Type="MSSQL" Key="Test"&gt;
+			&lt;Property Name="connectionString" Value="data source=testserver;initial catalog=test"/&gt;
+		&lt;/Instance&gt;
+		&lt;Instance Type="MSSQL" Key="Production"&gt;
+			&lt;Property Name="connectionString" Value="data source=prodserver;initial catalog=MyApp"/&gt;
+		&lt;/Instance&gt;
+	&lt;/PluginFamily&gt;
+	
+	&lt;PluginFamily Assembly="MyApp.Common" Type="MyApp.Common.IDirectory" DefaultKey="Build"&gt;
+		&lt;Plugin Assembly="MyApp.Stub" Type="MyApp.Stub.StubDirectory" ConcreteKey="Stub"/&gt;
+		&lt;Plugin Assembly="MyApp.Data" Type="MyApp.Data.ActiveDirectory" ConcreteKey="ActiveDirectory"/&gt;
+	
+	
+		&lt;Instance Type="Stub" Key="UnitTest"&gt;
+			&lt;Property Name="filePath" Value="\\devserver\development\testusers.xml" /&gt;
+		&lt;/Instance&gt;
+		&lt;Instance Type="ActiveDirectory" Key="Test"&gt;
+			&lt;Property Name="Domain" Value="TestDomain"/&gt;
+		&lt;/Instance&gt;
+		&lt;Instance Type="ActiveDirectory" Key="Production"&gt;
+			&lt;Property Name="Domain" Value="ProductionDomain"/&gt;
+		&lt;/Instance&gt;
+	&lt;/PluginFamily&gt;
+
+&lt;/StructureMap&gt;
+		</pre>
+		<h5>Filter by Profile</h5>
+		<pre class="xml-sample">
+&lt;structuremap.deployment configPath="${source.config}"
+	destinationPath="${deployment.config}"
+	profile="Test"
+	machineOption="IgnoreMachineOverrides"/&gt;
+		</pre>
+		
+		<h5>Destination File</h5>
+		<pre class="xml-sample">
+&lt;StructureMap&gt;
+	&lt;Assembly Name="MyApp.Data" Deploy="Server"/&gt;
+	&lt;Assembly Name="MyApp.Common" Deploy="All" /&gt;
+	&lt;Assembly Name="MyApp.Stub" Deploy="Test" /&gt;
+
+	&lt;PluginFamily Assembly="MyApp.Common" Type="MyApp.Common.IDatabase" DefaultKey="Test"&gt;
+		&lt;Plugin Assembly="MyApp.Stub" Type="MyApp.Stub.StubDatabase" ConcreteKey="Stub"/&gt;
+		&lt;Plugin Assembly="MyApp.Data" Type="MyApp.Data.MSSQLDatabase" ConcreteKey="MSSQL"/&gt;
+
+		&lt;Instance Type="MSSQL" Key="Test"&gt;
+			&lt;Property Name="connectionString" Value="data source=testserver;initial catalog=test"/&gt;
+		&lt;/Instance&gt;
+	&lt;/PluginFamily&gt;
+	
+	&lt;PluginFamily Assembly="MyApp.Common" Type="MyApp.Common.IDirectory" DefaultKey="Test"&gt;
+		&lt;Plugin Assembly="MyApp.Stub" Type="MyApp.Stub.StubDirectory" ConcreteKey="Stub"/&gt;
+		&lt;Plugin Assembly="MyApp.Data" Type="MyApp.Data.ActiveDirectory" ConcreteKey="ActiveDirectory"/&gt;
+
+		&lt;Instance Type="ActiveDirectory" Key="Test"&gt;
+			&lt;Property Name="Domain" Value="TestDomain"/&gt;
+		&lt;/Instance&gt;
+	&lt;/PluginFamily&gt;
+&lt;/StructureMap&gt;
+		</pre>
+
+
+
+								</td>
+							</tr>
+						</table>
+					</DIV>
+	</body>
+</html>

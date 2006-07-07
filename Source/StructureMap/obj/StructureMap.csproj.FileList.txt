@@ -1,0 +1,6 @@
+bin\Release\StructureMap.dll
+bin\Release\nmock.dll
+obj\Release\ResolveAssemblyReference.cache
+obj\Release\StructureMap.StructureMapException.resources
+obj\Release\StructureMap.csproj.GenerateResource.Cache
+obj\Release\StructureMap.dll

@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+ <NDepend AppName="NDepend V1.2.0">
+  <Dirs>
+   <Dir>c:\work\StructureMap\build</Dir>
+  </Dirs>
+  
+  <Assemblies>
+		<Name>StructureMap</Name>
+		<Name>StructureMap.DeploymentTasks</Name>
+		<Name>StructureMap.Client</Name>
+		<Name>StructureMap.Diagnostics</Name>
+
+  </Assemblies>
+  
+  <FrameworkAssemblies>
+
+		<Name>nmock</Name>
+		<Name>log4net</Name>
+		<Name>nunit.framework</Name>
+		<Name>nant.core</Name>
+		<Name>AxInterop.SHDocVw</Name>
+		<Name>Interop.SHDocVw</Name>
+		<Name>StructureMap.Testing.Widget</Name>
+    <Name>StructureMap.Testing.Widget2</Name>
+    <Name>StructureMap.Testing.Widget3</Name>
+    <Name>StructureMap.Testing.Widget4</Name>
+    <Name>StructureMap.Testing.Widget5</Name>
+
+  </FrameworkAssemblies>
+  
+  <WarnFilter WarnNotUsedType="True" 
+  						WarnNotUsedMember="True" 
+  						WarnTypeVisibility="True" 
+  						WarnPropertiesVisibility="True"
+              WarnMethodsVisibility="True" 
+              WarnConstructorsVisibility="True" 
+              WarnFieldsVisibility="True" 
+              WarnEventsVisibility="True" >
+  </WarnFilter>
+ </NDepend>
+ 

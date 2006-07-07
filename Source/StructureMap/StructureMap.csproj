@@ -1,0 +1,552 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3F36EA80-2F9A-4DAD-BA27-5AC6163A2EE3}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>
+    </ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>StructureMap</AssemblyName>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>Library</OutputType>
+    <RootNamespace>StructureMap</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>StructureMap.xml</DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>0</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Build|AnyCPU' ">
+    <OutputPath>..\..\build\StructureMap\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>StructureMap.xml</DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="nmock">
+      <Name>nmock</Name>
+      <HintPath>..\..\bin\nmock.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Web">
+      <Name>System.Web</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\CommonAssemblyInfo.cs">
+      <Link>CommonAssemblyInfo.cs</Link>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Attributes\DefaultConstructorAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Attributes\InstanceScope.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Attributes\PluggableAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Attributes\PluginFamilyAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Attributes\SetterPropertyAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Attributes\ValidationMethodAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Caching\CacheItem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Caching\CacheManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Caching\ClearEventDispatcher.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Caching\CloneCacheItem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Caching\CloneStorageStrategy.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Caching\EagerInstanceCache.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Caching\EventDispatcher.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Caching\Expirations\AbsoluteTimeExpirationPolicy.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Caching\Expirations\SlidingTimeExpirationPolicy.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Caching\FileModificationWatcher.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Caching\ICacheItem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Caching\IExpirationPolicy.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Caching\IManagedCache.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Caching\IStorageStrategy.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Caching\IValueSource.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Caching\LazyCache.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Caching\PruneEventDispatcher.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Caching\SerializationCacheItem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Caching\SerializationStorageStrategy.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Caching\SharedCacheItem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Caching\SharedStorageStrategy.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\ConfigurationConstants.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\ConfigurationParser.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DiagnosticGraphBuilder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\FamilyParser.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\GraphObject.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\GraphObjectIterator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\IConfigurationVisitor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\IGraphBuilder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\IInstanceValidator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\InstanceValidator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\NormalGraphBuilder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\PluginGraphReport.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\Problem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\ProblemFinder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\Tokens\AssemblyToken.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\Tokens\Deployable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\Tokens\FamilyToken.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\Tokens\InstanceToken.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\Tokens\InterceptorInstanceToken.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\Tokens\MementoSourceInstanceToken.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\Tokens\PluginToken.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\Tokens\Properties\ChildArrayProperty.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\Tokens\Properties\ChildProperty.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\Tokens\Properties\DefaultChildPropertyMode.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\Tokens\Properties\EnumerationProperty.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\Tokens\Properties\IChildPropertyMode.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\Tokens\Properties\InlineInstanceChildPropertyMode.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\Tokens\Properties\IProperty.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\Tokens\Properties\NulloChildPropertyMode.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\Tokens\Properties\PrimitiveProperty.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\Tokens\Properties\Property.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\Tokens\Properties\ReferencedChildPropertyMode.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\Tokens\Properties\TemplateProperty.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\Tokens\PropertyDefinition.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\Tokens\PropertyDefinitionBuilder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\Tokens\TemplateToken.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\XmlConstants.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DeploymentTasks\DeploymentConfiguration.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DeploymentTasks\DeploymentExecutor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DeploymentTasks\MachineSpecificOption.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DeploymentTasks\PluginGraphFilter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Emitting\BuildInstanceMethod.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Emitting\ClassBuilder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Emitting\DynamicAssembly.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Emitting\InstanceBuilderAssembly.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Emitting\Method.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Emitting\Parameters\ChildArrayParameterEmitter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Emitting\Parameters\ChildParameterEmitter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Emitting\Parameters\EnumParameterEmitter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Emitting\Parameters\ParameterEmitter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Emitting\Parameters\PrimitiveParameterEmitter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Emitting\Parameters\StringParameterEmitter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Exceptions\InstancePropertyValueException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Exceptions\MissingPluginFamilyException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Exceptions\StructureMapException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\AssemblyGraph.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\AssemblyGraphCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\DefinitionSource.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\Deployable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\InstanceDefault.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\InstanceDefaultManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\InterceptionChain.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\MachineOverride.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\Plugin.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\PluginCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\PluginFamily.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\PluginFamilyCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\PluginGraph.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\PluginGraphObjectCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\Profile.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\RemoteGraph.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\RemoteGraphContainer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\SetterProperty.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\SetterPropertyCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\TypePath.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IInstanceFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="InstanceBuilder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="InstanceFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="InstanceManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="InstanceMemento.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Interceptors\CacheInterceptor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Interceptors\HttpContextItemInterceptor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Interceptors\HybridCacheInterceptor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Interceptors\IInterceptorChainBuilder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Interceptors\InstanceFactoryInterceptor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Interceptors\InterceptorChainBuilder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Interceptors\SingletonInterceptor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Interceptors\ThreadLocalStorageInterceptor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MementoSource.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MemoryInstanceMemento.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MockInstanceFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ObjectFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ObjectFactoryCacheCallback.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PluginGraphBuilder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Source\BasicXmlMementoSource.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Source\DirectoryXmlMementoSource.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Source\EmbeddedFolderXmlMementoSource.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Source\MementoSourceType.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Source\MemoryMementoSource.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Source\SingleEmbeddedXmlMementoSource.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Source\TemplatedMementoSource.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Source\XmlAttributeFileMementoSource.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Source\XmlAttributeInstanceMemento.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Source\XmlFileMementoSource.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Source\XmlMementoCreator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Source\XmlMementoSource.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Source\XmlMementoStyle.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Source\XmlNodeInstanceMemento.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Source\XmlTemplater.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="StubbedInstanceFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Verification\PluginGraphConsoleWriter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XmlMapping\ConfigEditor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XmlMapping\InstanceDefaultManagerMapper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <EmbeddedResource Include="StructureMapException.resx" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>

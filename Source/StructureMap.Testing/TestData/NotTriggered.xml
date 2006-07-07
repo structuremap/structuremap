@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8" ?> 
+<!--This file only exists to be a trigger to the FileModificationWatcher class-->
+<Trigger State="Original"></Trigger>

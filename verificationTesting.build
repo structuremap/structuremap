@@ -1,0 +1,22 @@
+<project name="StructureMap" default="all">
+	<property name="bin.dir" value="build" />
+
+	<target name="all" depends="runVerification"/>
+
+
+	<target name="runVerification">
+		<copy file="source\StructureMap.Testing\TestData\Valid.config" todir="${bin.dir}" />
+		<copy file="source\StructureMap.Testing\TestData\InValid.config" todir="${bin.dir}" />
+		<copy file="source\StructureMap.Testing\TestData\FullTesting.xml" todir="${bin.dir}" />
+	
+		<loadtasks assembly="${bin.dir}\StructureMap.DeploymentTasks.dll"/>
+
+
+		<echo message="Validating Valid StructureMap Configuration"/>		
+		<structuremap.verification configPath="${bin.dir}\Valid.config"/>	
+
+		<echo message="Validating Invalid StructureMap Configuration"/>		
+		<structuremap.verification configPath="${bin.dir}\Invalid.config"/>			
+	</target>
+
+</project>

@@ -1,0 +1,262 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+	<head>
+		<title>Title</title>
+		<link rel="stylesheet" type="text/css" href="style.css">
+		<meta name="GENERATOR" content="Microsoft Visual Studio .NET 7.1">
+		<meta name="vs_targetSchema" content="http://schemas.microsoft.com/intellisense/ie5">
+	</head>
+	<body>
+		<TABLE cellSpacing="5" cellPadding="0" width="100%" border="0" height="100%">
+			<TR>
+				<TD valign="top" width="210" class="form">
+					<p align="center">
+						<A href="http://sourceforge.net"><IMG src="http://sourceforge.net/sflogo.php?group_id=104740&amp;type=5" width="210" height="62"
+								border="0" alt="SourceForge.net Logo"></A>
+					</p>
+					<P style="LINE-HEIGHT: 25px">
+						<A href="default.htm">Home</A><BR>
+						<a href="http://sourceforge.net/projects/structuremap">StructureMap on SourceForge</a><br>
+						<A href="Basic Architecture.htm">Basic Architecture</A><BR>
+						<A href="Concepts.htm">Concepts</A><BR>
+						<A href="StructureMap-API.chm">API Documentation</A><BR>
+						<A href="FAQ.htm">FAQ</A><BR>
+						<A href="Configuration.htm">Configuration Schema</A><BR>
+						&nbsp;&nbsp;&nbsp; <a href="MementoSources.htm">Memento Sources</a><BR>
+						&nbsp;&nbsp;&nbsp; <a href="NodeNormalized.htm">Node Normalized Xml</a><BR>
+						&nbsp;&nbsp;&nbsp; <a href="AttributeNormalized.htm">Attribute 
+						Normalized Xml</a><BR>
+						&nbsp;&nbsp;&nbsp; <a href="Attributes.htm">Attribute Usage</a><BR>
+						&nbsp;&nbsp;&nbsp; <a href="Scoping.htm">Instance Lifecyle Scoping</a><BR>
+						
+						<A href="ConfigurationManagement.htm">Configuration Management</A><BR>
+						&nbsp;&nbsp;&nbsp; <A href="StructureMapDoctor.htm">StructureMapDoctor</A><BR>
+						&nbsp;&nbsp;&nbsp; <A href="StructureMapExplorer.htm">StructureMapExplorer</A><BR>
+						&nbsp;&nbsp;&nbsp; <A href="structuremap.deployment.htm">deployment Task</A><BR>
+						&nbsp;&nbsp;&nbsp; <A href="structuremap.verification.htm">verification Task</A><BR>
+						&nbsp;&nbsp;&nbsp; <A href="ValidationAttribute.htm">ValidationMethod Attribute</A><BR>
+						&nbsp;&nbsp;&nbsp; <A href="NAnt Tasks.htm">Other NAnt Tasks</A><BR>
+
+						
+						<A href="Troubleshooting.htm">Troubleshooting</A><BR>
+						<A href="SingletonInjection.htm">Singleton Injection</A></P>
+
+				</TD>
+				<TD valign="top" style="PADDING-LEFT: 25px">
+					<h1>Attribute Usage</h1>
+					<p>To some degree, StructureMap can be configured through 
+					the optional usage of attributes instead of the Xml 
+					configuration.&nbsp; Choosing attributes over Xml 
+					configuration is partially a choice of preference.&nbsp; 
+					Using attributes will make the StructureMap configuration 
+					more resilient to refactorings if configured classes are 
+					renamed or moved into different namespaces or assemblies.</p>
+					<h3>[DefaultConstructor] Attribute</h3>
+					<p>The [DefaultConstructor] attribute overrides StructureMap 
+					to use a particular constructor function to instantiate a 
+					concrete class. </p>
+<div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border-top: windowtext 1pt solid; padding-top: 0pt; border-left: windowtext 1pt solid; padding-left: 0pt; border-right: windowtext 1pt solid; padding-right: 0pt; border-bottom: windowtext 1pt solid; padding-bottom: 0pt;">
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; [AttributeUsage(AttributeTargets.Constructor)]</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">class</span> DefaultConstructorAttribute : Attribute</pre>
+</div>
+<p>Without using the [DefaultConstructor] attribute StructureMap will look for the constructor function with the most arguments.</p>
+<div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border-top: windowtext 1pt solid; padding-top: 0pt; border-left: windowtext 1pt solid; padding-left: 0pt; border-right: windowtext 1pt solid; padding-right: 0pt; border-bottom: windowtext 1pt solid; padding-bottom: 0pt;">
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: green;">// Force StructureMap to create this class with this constructor</span></pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [DefaultConstructor]</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> ProblemView() : <span style="color: blue;">this</span>(<span style="color: blue;">false</span>)</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</pre>
+<pre style="margin: 0px;">&nbsp;</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</pre>
+<pre style="margin: 0px;">&nbsp;</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> ProblemView(<span style="color: blue;">bool</span> showPath)</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; _showPath = showPath;</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</pre>
+</div>
+					<h3>[PluginFamily] Attribute</h3>
+					<p>The [PluginFamily]&nbsp;attribute directs StructureMap to 
+					create a <a href="Basic%20Architecture.htm#PluginFamily">
+					PluginFamily</a> for the decorated type.&nbsp; It is a 
+					shorthand for the &lt;PluginFamily&gt; node in the Xml 
+					configuration.&nbsp; Note that the Xml configuration will 
+					override the attribute if both exist for the same CLR type.&nbsp; 
+					The PluginFamily attribute can be used to define any 
+					combination of the default instance key, the MementoSource, 
+					and the request scope.&nbsp; [PluginFamily] can be used on 
+					any interface, abstract, or concrete class.</p>
+<div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border-top: windowtext 1pt solid; padding-top: 0pt; border-left: windowtext 1pt solid; padding-left: 0pt; border-right: windowtext 1pt solid; padding-right: 0pt; border-bottom: windowtext 1pt solid; padding-bottom: 0pt;">
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">class</span> PluginFamilyAttribute : Attribute</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; {</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: blue;">private</span> <span style="color: blue;">string</span> _default = <span style="color: blue;">string</span>.Empty;</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: blue;">private</span> Type _source = <span style="color: blue;">null</span>;</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: blue;">private</span> InstanceScope _scope = InstanceScope.PerRequest;</pre>
+<pre style="margin: 0px;">&nbsp;</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> PluginFamilyAttribute()</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</pre>
+<pre style="margin: 0px;">&nbsp;</pre>
+<pre style="margin: 0px;">&nbsp;</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> PluginFamilyAttribute(<span style="color: blue;">string</span> DefaultKey)</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; _default = DefaultKey;</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</pre>
+<pre style="margin: 0px;">&nbsp;</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span style="color: green;"> </span><span style="color: gray;">&lt;summary&gt;</span></pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span style="color: green;"> If set, determines the shared "scope" of the instance -- PerRequest, Singleton, ThreadLocal,</span></pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span style="color: green;"> HttpContext, etc.</span></pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span style="color: green;"> </span><span style="color: gray;">&lt;/summary&gt;</span></pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> InstanceScope Scope</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: blue;">get</span> { <span style="color: blue;">return</span> _scope; }</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: blue;">set</span> { _scope = <span style="color: blue;">value</span>; }</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</pre>
+<pre style="margin: 0px;">&nbsp;</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span style="color: green;"> </span><span style="color: gray;">&lt;summary&gt;</span></pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span style="color: green;"> If set, </span><span style="color: #008000">specifies the MementoSource for the PluginFamily</span></pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span style="color: green;"> </span><span style="color: gray;">&lt;/summary&gt;</span></pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> Type SourceType</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: blue;">get</span> { <span style="color: blue;">return</span> _source; }</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: blue;">set</span> { _source = <span style="color: blue;">value</span>; }</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</pre>
+<pre style="margin: 0px;">&nbsp;</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span style="color: green;"> </span><span style="color: gray;">&lt;summary&gt;</span></pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span style="color: green;"> Declares the target to be built by StructureMap as a Singleton.&nbsp; One object instance will</span></pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span style="color: green;"> be created for each named instance.  Equivalent to saying Scope = InstanceScope.Singleton</span></pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span style="color: green;"> </span><span style="color: gray;">&lt;/summary&gt;</span></pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">bool</span> IsSingleton</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: blue;">get</span></pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: blue;">return</span> _scope == InstanceScope.Singleton;</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: blue;">set</span></pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; _scope = <span style="color: blue;">value</span> ? InstanceScope.Singleton : InstanceScope.PerRequest;</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; }</pre>
+</div>
+<p>Here are some sample usages:</p>
+
+<div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border-top: windowtext 1pt solid; padding-top: 0pt; border-left: windowtext 1pt solid; padding-left: 0pt; border-right: windowtext 1pt solid; padding-right: 0pt; border-bottom: windowtext 1pt solid; padding-bottom: 0pt;">
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; [PluginFamily]</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">interface</span> IExpirationPolicy</pre>
+</div>
+<br><br>
+<div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border-top: windowtext 1pt solid; padding-top: 0pt; border-left: windowtext 1pt solid; padding-left: 0pt; border-right: windowtext 1pt solid; padding-right: 0pt; border-bottom: windowtext 1pt solid; padding-bottom: 0pt;">
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span style="color: green;"> </span><span style="color: gray;">&lt;summary&gt;</span></pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span style="color: green;"> Directs StructureMap to use an instance of HTMLSourceMementoSource for the </span></pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span style="color: green;"> MementoSource.&nbsp; Note that the MementoSource specified has to have a</span></pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span style="color: green;"> no argument constructor</span></pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span style="color: green;"> </span><span style="color: gray;">&lt;/summary&gt;</span></pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; [PluginFamily(SourceType = <span style="color: blue;">typeof</span>(HTMLSourceMementoSource))]</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">interface</span> IHTMLSource</pre>
+</div>
+<br><br>
+<div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border-top: windowtext 1pt solid; padding-top: 0pt; border-left: windowtext 1pt solid; padding-left: 0pt; border-right: windowtext 1pt solid; padding-right: 0pt; border-bottom: windowtext 1pt solid; padding-bottom: 0pt;">
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; [PluginFamily(Scope = InstanceScope.HttpContext)]</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">interface</span> ImplicitFamilyTarget{}</pre>
+</div>
+<br><br>
+<div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border-top: windowtext 1pt solid; padding-top: 0pt; border-left: windowtext 1pt solid; padding-left: 0pt; border-right: windowtext 1pt solid; padding-right: 0pt; border-bottom: windowtext 1pt solid; padding-bottom: 0pt;">
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span style="color: green;"> </span><span style="color: gray;">&lt;summary&gt;</span></pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span style="color: green;"> Specifying the default instance is "Default" and marking the PluginFamily</span></pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span style="color: green;"> as an injected Singleton</span></pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span style="color: green;"> </span><span style="color: gray;">&lt;/summary&gt;</span></pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; [PluginFamily("Default", IsSingleton = <span style="color: blue;">true</span>)]</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">interface</span> ISingletonRepository</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; {</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; }</pre>
+</div>
+
+<h3>[Pluggable] Attribute</h3>
+<p>When a concrete class is decorated with the [Pluggable] attribute it directs 
+StructureMap to create a <a href="Basic%20Architecture.htm#Plugin">Plugin</a> 
+for the concrete type.&nbsp; </p>
+<div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border-top: windowtext 1pt solid; padding-top: 0pt; border-left: windowtext 1pt solid; padding-left: 0pt; border-right: windowtext 1pt solid; padding-right: 0pt; border-bottom: windowtext 1pt solid; padding-bottom: 0pt;">
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span style="color: green;"> </span><span style="color: gray;">&lt;summary&gt;</span></pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span style="color: green;"> Used to implicitly mark a class as a Plugin candidate for StructureMap</span></pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span style="color: green;"> </span><span style="color: gray;">&lt;/summary&gt;</span></pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; [AttributeUsage(AttributeTargets.Class)]</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">class</span> PluggableAttribute : Attribute</pre>
+</div>
+<p>The "Concrete Key" property is required.</p>
+<div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border-top: windowtext 1pt solid; padding-top: 0pt; border-left: windowtext 1pt solid; padding-left: 0pt; border-right: windowtext 1pt solid; padding-right: 0pt; border-bottom: windowtext 1pt solid; padding-bottom: 0pt;">
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; [Pluggable("AbsoluteTime")]</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">class</span> AbsoluteTimeExpirationPolicy : IExpirationPolicy</pre>
+</div>
+
+
+					<p>If StructureMap controls the construction of all of the 
+					constructor argument types of a Plugin class or the 
+					constructor has no arguments, the concrete key specified by 
+					[Pluggable(&quot;SomeKey&quot;)] is also the instance key.&nbsp; </p>
+<div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border-top: windowtext 1pt solid; padding-top: 0pt; border-left: windowtext 1pt solid; padding-left: 0pt; border-right: windowtext 1pt solid; padding-right: 0pt; border-bottom: windowtext 1pt solid; padding-bottom: 0pt;">
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; [Pluggable("Singleton")]</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">class</span> SingletonInterceptor : CacheInterceptor</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; {</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: blue;">private</span> IDictionary _instances;</pre>
+<pre style="margin: 0px;">&nbsp;</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [DefaultConstructor]</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> SingletonInterceptor() : <span style="color: blue;">this</span>(<span style="color: blue;">new</span> Hashtable())</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</pre>
+<pre style="margin: 0px;">&nbsp;</pre>
+<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</pre>
+</div>
+
+					<p>In this case, you could retrieve an instance of 
+					SingletonInterceptor by calling <font face="Courier New">
+					ObjectFactory.GetNamedInstance(typeof(InstanceFactoryInterceptor), 
+					&quot;Singleton&quot;)</font>.</p>
+					<p>&nbsp;</p>
+					
+					
+					<h3>[SetterProperty] Attribute</h3>
+					<p>StructureMap provides some admittedly weak support for 
+					Setter Injection.&nbsp; In order to use setter properties as 
+					part of the StructureMap construction process you must 
+					either mark the properties with the [SetterProperty] 
+					attribute or use the &lt;Setter&gt; node in the configuration 
+					file.&nbsp; All setter properties are mandatory and 
+					StructureMap will fail if it cannot find a value for the 
+					property.&nbsp; </p>
+					<div style="font-family: Courier New; font-size: 10pt; color: black; border: 1pt solid windowtext; padding: 0pt; background: white">
+						<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [SetterProperty]</pre>
+						<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> IWidget Widget</pre>
+						<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</pre>
+						<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: blue;">get</span> { <span style="color: blue;">return</span> _widget; }</pre>
+						<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: blue;">set</span> { _widget = <span style="color: blue;">value</span>; }</pre>
+						<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</pre>
+						<pre style="margin: 0px;">&nbsp;</pre>
+						<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [SetterProperty]</pre>
+						<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> FontStyleEnum FontStyle</pre>
+						<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</pre>
+						<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: blue;">get</span> { <span style="color: blue;">return</span> _fontStyle; }</pre>
+						<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: blue;">set</span> { _fontStyle = <span style="color: blue;">value</span>; }</pre>
+						<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</pre>
+						<pre style="margin: 0px;">&nbsp;</pre>
+						<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [SetterProperty]</pre>
+						<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">string</span> ColumnName</pre>
+						<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</pre>
+						<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: blue;">get</span> { <span style="color: blue;">return</span> _columnName; }</pre>
+						<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: blue;">set</span> { _columnName = <span style="color: blue;">value</span>; }</pre>
+						<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</pre>
+						<pre style="margin: 0px;">&nbsp;</pre>
+						<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [SetterProperty]</pre>
+						<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> Rule[] Rules</pre>
+						<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</pre>
+						<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: blue;">get</span> { <span style="color: blue;">return</span> _rules; }</pre>
+						<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: blue;">set</span> { _rules = <span style="color: blue;">value</span>; }</pre>
+						<pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</pre>
+					</div>
+<!--EndFragment-->
+<p>&nbsp;</p>
+<h3>[ValidationMethod] Attribute</h3>
+<p><a href="ValidationAttribute.htm">Validation Methods</a></p>
+
+				</TD>
+			</TR>
+		</TABLE>
+	</body>
+</html>

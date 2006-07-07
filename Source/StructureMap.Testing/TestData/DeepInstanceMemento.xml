@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?> 
+<StructureMap>
+	<PluginFamily Type="StructureMap.Testing.Widget4.IStrategy" Assembly="StructureMap.Testing.Widget4" DefaultKey="Blue">
+		<Plugin Assembly="StructureMap.Testing.Widget4" Type="StructureMap.Testing.Widget4.Strategy" ConcreteKey="Basic"/>
+		<Plugin Assembly="StructureMap.Testing.Widget4" Type="StructureMap.Testing.Widget4.ComplexStrategy" ConcreteKey="Complex"/>
+		<Plugin Assembly="StructureMap.Testing.Widget4" Type="StructureMap.Testing.Widget4.RandomStrategy" ConcreteKey="Random"/>
+		<Plugin Assembly="StructureMap.Testing.Widget4" Type="StructureMap.Testing.Widget4.ColorStrategy" ConcreteKey="Color"/>
+		<Plugin Assembly="StructureMap.Testing.Widget4" Type="StructureMap.Testing.Widget4.StrategyDecorator" ConcreteKey="Decorator"/>
+		<Plugin Assembly="StructureMap.Testing.Widget4" Type="StructureMap.Testing.Widget4.CompoundStrategy" ConcreteKey="Compound"/>
+	
+		<Instance Key="ArrayTest" Type="Compound">
+			<Property Name="innerStrategies">
+				<Property Key="Red"></Property>
+				<Property><!-- Default --></Property>
+				<Property Type="Random">
+					<Property Name="seed" Value="0.034"/>
+				</Property>
+			</Property>
+		</Instance>
+
+		<Instance Key="Blue" Type="Color">
+			<Property Name="color" Value="Blue" />
+		</Instance>
+		
+		<Instance Key="DeepTest" Type="Complex">
+			<Property Name="defaultStrategy" Type="Decorator">
+				<Property Name="innerStrategy" Type="Decorator">
+					<Property Name="innerStrategy" Type="Random">
+						<Property Name="seed" Value="0.125"/>
+					</Property>
+				</Property>
+			</Property>
+			<Property Name="innerStrategies">
+				<Property Key="Red"></Property>
+				<Property><!-- Default --></Property>
+				<Property Type="Random">
+					<Property Name="seed" Value="0.034"/>
+				</Property>
+
+				<Property Type="Decorator">
+					<Property Name="innerStrategy" Type="Basic">
+						<Property Name="count" Value="10" />
+						<Property Name="isCalculated" Value="True" />
+						<Property Name="name" Value="Jeremy" />
+						<Property Name="quantity" Value="250000" />
+						<Property Name="rating" Value="0.25" />
+					</Property>
+				</Property>
+			</Property>
+			<Property Name="name" Value="DeepTest" />
+			<Property Name="quantity" Value="12500" />
+
+			<Property Name="strategyType" Value="OverTheHorizon"/>
+		
+		</Instance>
+
+		<Instance Key="Red" Type="Color">
+			<Property Name="color" Value="Red" />
+		</Instance>
+		
+		<Instance Key="DecoratedDefault" Type="Decorator">
+			<Property Name="innerStrategy" />
+		</Instance>	
+
+		<Instance Key="DecoratedRed" Type="Decorator">
+			<Property Name="innerStrategy" Key="Red"/>
+		</Instance>	
+	</PluginFamily>
+
+
+</StructureMap>

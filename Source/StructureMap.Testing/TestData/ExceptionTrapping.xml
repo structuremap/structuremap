@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?> 
+<Tests>
+	<StructureMap Description="CannotLoadAssembly">
+		<Assembly Name="StructureMap.NonExistent"/>
+	</StructureMap>
+
+	<StructureMap Description="PluginFamilyAssemblyCannotBeFound">
+		<PluginFamily Assembly="StructureMap.NonExistent" Type="StructureMap.NonExistent.NotARealClass"/>
+	</StructureMap>
+
+	<StructureMap Description="PluginFamilyTypeCannotBeFound">
+		<PluginFamily Assembly="StructureMap.Testing.Widget" Type="StructureMap.Testing.Widget.NotARealType"/>
+	</StructureMap>
+
+
+	<StructureMap Description="PluginAssemblyCannotBeFound">
+		<Assembly Name="StructureMap.Testing.Widget"/>
+				
+		<PluginFamily Type="StructureMap.Testing.Widget.IWidget" Assembly="StructureMap.Testing.Widget" DefaultKey="">
+			<Plugin Assembly="StructureMap.NotARealAssembly" Type="StructureMap.Testing.Widget.NotPluggableWidget" ConcreteKey="NotPluggable"/>
+		</PluginFamily>	
+	</StructureMap>
+	
+	<StructureMap Description="PluginTypeCannotBeFound">
+		<Assembly Name="StructureMap.Testing.Widget"/>
+				
+		<PluginFamily Type="StructureMap.Testing.Widget.IWidget" Assembly="StructureMap.Testing.Widget" DefaultKey="">
+			<Plugin Assembly="StructureMap.Testing" Type="StructureMap.Testing.Widget.NotARealClass" ConcreteKey="NotReal"/>
+		</PluginFamily>	
+	</StructureMap>	
+
+	<StructureMap Description="PluginFamilySourceCannotBeBuilt">
+		<Assembly Name="StructureMap.Testing.Widget"/>
+				
+		<PluginFamily Type="StructureMap.Testing.Widget.IWidget" Assembly="StructureMap.Testing.Widget" DefaultKey="">
+			<Plugin Assembly="StructureMap.Testing.Widget" Type="StructureMap.Testing.Widget.NotPluggableWidget" ConcreteKey="Dup"/>
+			<Source Type="Nonexistent"/>
+		</PluginFamily>							
+	</StructureMap>
+	
+	<StructureMap Description="SpecifiedPluggedTypeDoesNotPluginIntoPluginType">
+		<Assembly Name="StructureMap.Testing.Widget"/>
+				
+		<PluginFamily Type="StructureMap.Testing.Widget.IWidget" Assembly="StructureMap.Testing.Widget" DefaultKey="">
+			<Plugin Assembly="StructureMap.Testing.Widget" Type="StructureMap.Testing.Widget.ComplexRule" ConcreteKey="Rule"/>
+		</PluginFamily>			
+	</StructureMap>
+	
+	<StructureMap Description="InstanceMementoRefersToAnInvalidConcreteKey">
+		<Assembly Name="StructureMap.Testing.Widget"/>
+				
+		<PluginFamily Type="StructureMap.Testing.Widget.IWidget" Assembly="StructureMap.Testing.Widget" DefaultKey="">			
+			<Instance Key="Default" Type="NotARealConcreteKey"></Instance>
+		</PluginFamily>						
+	</StructureMap>
+	
+	
+	<StructureMap Description="MementoSourceCannotFindInformation">
+		<Assembly Name="StructureMap.Testing.Widget"/>
+				
+		<PluginFamily Type="StructureMap.Testing.Widget.IWidget" Assembly="StructureMap.Testing.Widget" DefaultKey="Red">
+			<Source Type="XmlFile" FilePath="NotExistentFile.XML" XPath="Widgets" NodeName="Widget"/>
+			<Plugin Assembly="StructureMap.Testing.Widget" Type="StructureMap.Testing.Widget.NotPluggableWidget" ConcreteKey="NotPluggable"/>
+		</PluginFamily>
+	</StructureMap>
+
+
+
+</Tests>

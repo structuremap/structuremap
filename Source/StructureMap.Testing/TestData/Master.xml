@@ -1,0 +1,16 @@
+<StructureMap>
+	<Include File="Include1.xml" />
+	<Include File="Include2.xml" />
+
+	<Assembly Name="StructureMap.Testing.Widget"/>
+	<Assembly Name="StructureMap.Testing.Widget2"/>
+	
+	<Instances>
+		<StructureMap.Testing.Widget4.IStrategy Key="Red" Type="Color">
+			<Property Name="color" Value="Red" />
+		</StructureMap.Testing.Widget4.IStrategy>
+		<StructureMap.Testing.Widget4.IStrategy Key="Blue" Type="Color">
+			<Property Name="color" Value="Blue" />
+		</StructureMap.Testing.Widget4.IStrategy>
+	</Instances>
+</StructureMap>

@@ -1,0 +1,1085 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+	<head>
+		<title>StructureMap FAQ</title><LINK href="style.css" type="text/css" rel="stylesheet">
+		<meta content="Microsoft Visual Studio .NET 7.1" name="GENERATOR">
+		<meta content="http://schemas.microsoft.com/intellisense/ie5" name="vs_targetSchema">
+	</head>
+	<body>
+		<TABLE id="Table1" height="100%" cellSpacing="5" cellPadding="0" width="100%" border="0">
+			<TR>
+				<TD class="form" vAlign="top" width="210">
+					<p align="center"><A href="http://sourceforge.net"><IMG height="62" alt="SourceForge.net Logo" src="http://sourceforge.net/sflogo.php?group_id=104740&amp;type=5"
+								width="210" border="0"></A>
+					</p>
+					<P style="LINE-HEIGHT: 25px">
+						<A href="default.htm">Home</A><BR>
+						<a href="http://sourceforge.net/projects/structuremap">StructureMap on SourceForge</a><br>
+						<A href="Basic Architecture.htm">Basic Architecture</A><BR>
+						<A href="Concepts.htm">Concepts</A><BR>
+						<A href="StructureMap-API.chm">API Documentation</A><BR>
+						<A href="FAQ.htm">FAQ</A><BR>
+						<A href="Configuration.htm">Configuration Schema</A><BR>
+						&nbsp;&nbsp;&nbsp; <a href="MementoSources.htm">Memento Sources</a><BR>
+						&nbsp;&nbsp;&nbsp; <a href="NodeNormalized.htm">Node Normalized Xml</a><BR>
+						&nbsp;&nbsp;&nbsp; <a href="AttributeNormalized.htm">Attribute 
+						Normalized Xml</a><BR>
+						&nbsp;&nbsp;&nbsp; <a href="Attributes.htm">Attribute Usage</a><BR>
+						&nbsp;&nbsp;&nbsp; <a href="Scoping.htm">Instance Lifecyle Scoping</a><BR>
+						
+						<A href="ConfigurationManagement.htm">Configuration Management</A><BR>
+						&nbsp;&nbsp;&nbsp; <A href="StructureMapDoctor.htm">StructureMapDoctor</A><BR>
+						&nbsp;&nbsp;&nbsp; <A href="StructureMapExplorer.htm">StructureMapExplorer</A><BR>
+						&nbsp;&nbsp;&nbsp; <A href="structuremap.deployment.htm">deployment Task</A><BR>
+						&nbsp;&nbsp;&nbsp; <A href="structuremap.verification.htm">verification Task</A><BR>
+						&nbsp;&nbsp;&nbsp; <A href="ValidationAttribute.htm">ValidationMethod Attribute</A><BR>
+						&nbsp;&nbsp;&nbsp; <A href="NAnt Tasks.htm">Other NAnt Tasks</A><BR>
+
+						
+						<A href="Troubleshooting.htm">Troubleshooting</A><BR>
+						<A href="SingletonInjection.htm">Singleton Injection</A></P>
+
+				</TD>
+				<TD style="PADDING-LEFT: 25px" vAlign="top">
+					<h1>Frequently Asked Questions</h1>
+					<OL>
+						<LI>
+							<A href="#FAQ1">How do I make StructureMap watch an Assembly for PluginFamily's and 
+								Plugin's? </A>
+						<LI>
+							<A href="#FAQ2">Where does the StructureMap.config file go?</A>
+						<LI>
+							<A href="#FAQ3">How can I&nbsp;specify a PluginFamily by using custom attributes?</A>
+						<LI>
+							<A href="#FAQ4">How can I configure a PluginFamily in the config file?</A>
+						<LI>
+							<A href="#FAQ5">How do I specify a Plugin by using custom attributes?</A>
+						<LI>
+							<A href="#FAQ6">How do I configure a Plugin in the config file?</A>
+						<LI>
+							<A href="#FAQ7">How do I configure an object instance in the config file?</A>
+						<LI>
+							<A href="#FAQ8">I have a class that has no constructor arguments or each argument 
+								type is configured in StructureMap with a default.&nbsp; Do I have to configure 
+								an object instance in the config file, or can I just reference it by the 
+								ConcreteKey?</A>
+						<LI>
+							<A href="#FAQ9">How do I specify the default object instance for a PluginFamily?</A>
+						<LI>
+							<A href="#FAQ10">Which constructor function is called by StructureMap for a 
+								particular class?</A>
+						<LI>
+							<A href="#FAQ11">Can I override the constructor function called by StructureMap?</A>
+						<LI>
+							<A href="#FAQ12">How do I configure a non-primitive child argument to a constructor 
+								function?</A>
+						<LI>
+							<A href="#FAQ13">How do I configure an array of non-primitive objects as an 
+								argument to a constructor function?</A>
+						<LI>
+							<A href="#FAQ14">How do I use the builtin <EM>Mock Injection</EM> functionality in 
+								NUnit testing?</A>
+						<LI>
+							<A href="#FAQ15">How can I set a runtime Profile of default instances?</A>
+						<LI>
+							<A href="#FAQ16">How can I override the default instances by Machine?</A>
+						<LI>
+							<A href="#FAQ17">Can I use a different configuration source for object instances 
+								rather than StructureMap.config?</A>
+						<LI>
+							<A href="#FAQ18">How do I use Setter Injection?</A>
+						<LI>
+							<A href="#FAQ19">How do I inject a static mock or a stub in testing?</A>
+						<LI>
+							<A href="#FAQ20">How can I fill dependencies to a concrete class that is not 
+								configured in StructureMap?</A>
+						</LI>
+					</OL>
+					<P>
+						<HR width="100%" SIZE="1">
+					<P></P>
+					<h4><A name="FAQ1"></A>How do I make StructureMap watch an Assembly for 
+						PluginFamily's and Plugin's?</h4>
+					<p>At this time, the only way is to place an &lt;Assembly&gt; node in the 
+						StructureMap.config file. StructureMap will not function correctly unless the 
+						assembly is both configured and in the binary path of the application</p>
+					<h5>Example Configuration</h5>
+					<pre class="xml-sample">
+&lt;StructureMap&gt;
+	&lt;Assembly Name="StructureMap.Testing.Widget"/&gt;
+	&lt;Assembly Name="StructureMap.Testing.Widget2"/&gt;
+	&lt;Assembly Name="StructureMap.Testing.Widget3"/&gt;
+&lt;/StructureMap&gt;
+					</pre>
+					<A href="#TopOfPage">Back to Top</A>
+					<hr>
+					<h4><A name="FAQ2"></A>Where does the StructureMap.config file go?</h4>
+					<P>The StructureMap.config file should be placed in the same directory as the 
+						App.config or Web.config file.&nbsp; StructureMap uses the following code to 
+						find the file:</P>
+					<pre class="code-sample">
+public static string GetStructureMapConfigurationPath()
+{
+	string configPath = System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+	configPath += "\\StructureMap.config";
+	configPath = configPath.Replace("\\\\", "\\");
+
+	return configPath;
+}
+					</pre>
+					<P><A href="#TopOfPage">Back to Top</A>
+					</P>
+					<HR width="100%" SIZE="1">
+					<h4><A name="FAQ3"></A>How can I specify a PluginFamily by using custom attributes?</h4>
+					<p>Mark an interface or class declaration with the [StructureMap.PluginFamily] 
+						attribute. Optionally, specify the default instance key. Configuring a 
+						PluginFamily in the config file will override this attribute</p>
+					<h5>Example</h5>
+					<pre class="code-sample">
+[StructureMap.PluginFamily("Default")]
+public interface IGateway
+{
+	void DoSomething();
+	string WhoAmI{get;}
+}
+					</pre>
+					<P><A href="#TopOfPage">Back to Top</A>
+					</P>
+					<HR width="100%" SIZE="1">
+					<h4><A href="#FAQ4"></A>How can I configure a PluginFamily in the config file?</h4>
+					<p>Place a &lt;PluginFamily&gt; node in the StructureMap.config file. Specify the 
+						assembly and full type name of the PluginType of the PluginFamily</p>
+					<h5>Example</h5>
+					<pre class="xml-sample">
+&lt;PluginFamily Type="StructureMap.Testing.Widget.IWidget" Assembly="StructureMap.Testing.Widget" DefaultKey="Red"&gt;
+	&lt;Source Type="XmlFile" FilePath="FullTesting.XML" XPath="Widgets" NodeName="Widget"/&gt;
+	&lt;Plugin Assembly="StructureMap.Testing.Widget" Type="StructureMap.Testing.Widget.NotPluggableWidget" ConcreteKey="NotPluggable"/&gt;
+&lt;/PluginFamily&gt;
+
+&lt;!-- If no source is defined, use the default MementoSource --&gt;
+&lt;PluginFamily Type="StructureMap.Testing.Widget.Column" Assembly="StructureMap.Testing.Widget"&gt;
+	&lt;Source Type="XmlFile" FilePath="FullTesting.XML" XPath="Columns" NodeName="Columns" /&gt;
+&lt;/PluginFamily&gt;
+
+
+&lt;PluginFamily Type="StructureMap.Testing.Widget.Rule" Assembly="StructureMap.Testing.Widget" DefaultKey="Blue"&gt;
+	&lt;Interceptors&gt;
+		&lt;Interceptor Type="Singleton"&gt;&lt;/Interceptor&gt;
+	&lt;/Interceptors&gt;
+	
+	&lt;Instance Key="Red" Type="Color"&gt;
+		&lt;Property Name="Color" Value="Red" /&gt;
+	&lt;/Instance&gt;
+	&lt;Instance Key="Blue" Type="Color"&gt;
+		&lt;Property Name="Color" Value="Blue" /&gt;
+	&lt;/Instance&gt;
+	&lt;Instance Key="Bigger" Type="GreaterThan"&gt;
+		&lt;Property Name="Attribute" Value="MyDad" /&gt;
+		&lt;Property Name="Value" Value="10" /&gt;
+	&lt;/Instance&gt;
+&lt;/PluginFamily&gt;
+					</pre>
+					<P><A href="#TopOfPage">Back to Top</A>
+					</P>
+					<HR width="100%" SIZE="1">
+					<h4><A name="FAQ5"></A>How do I specify a Plugin by using custom attributes?</h4>
+					<p>Use the [StructureMap.Pluggable] attribute to mark a concrete class declaration 
+						as a Plugin. The class will be added to any and all PluginFamily's that the 
+						class can be casted to. In order for the attribute to be found, the containing 
+						assembly must be included in the StructureMap.config file. The first property 
+						is the ConcreteKey of the Plugin</p>
+					<h5>Example</h5>
+					<pre class="code-sample">
+[StructureMap.Pluggable("Default", "")]
+public class DefaultGateway : IGateway
+{
+	public void DoSomething()
+	{
+	}
+
+	public string WhoAmI
+	{
+		get {return "Default";}
+	}
+}
+
+					</pre>
+					<P><A href="#TopOfPage">Back to Top</A>
+					</P>
+					<HR width="100%" SIZE="1">
+					<h4><A name="FAQ6"></A>How do I configure a Plugin in the config file?</h4>
+					<p>Use a &lt;Plugin&gt; element nested inside a &lt;PluginFamily&gt; node in the 
+						StructureMap.config file. The containing assembly must also be specified</p>
+					<h5>Example</h5>
+					<pre class="xml-sample">
+&lt;PluginFamily Type="StructureMap.Testing.Widget5.IGridColumn" Assembly="StructureMap.Testing.Widget5" DefaultKey=""&gt;
+	&lt;!-- Plugin w/o setter injection --&gt;
+	&lt;Plugin Assembly="StructureMap.Testing.Widget5" Type="StructureMap.Testing.Widget5.LinkGridColumn" ConcreteKey="Link"&gt;
+	
+	
+	&lt;!-- Plugin with setter injection --&gt;
+	&lt;Plugin Assembly="StructureMap.Testing.Widget5" Type="StructureMap.Testing.Widget5.OtherGridColumn" ConcreteKey="Other"&gt;
+		&lt;Setter Name="ColumnName" /&gt;
+		&lt;Setter Name="FontStyle" /&gt;
+		&lt;Setter Name="Rules" /&gt;
+		&lt;Setter Name="Widget" /&gt;
+		&lt;Setter Name="WrapLines" /&gt;
+	&lt;/Plugin&gt;
+&lt;/PluginFamily&gt;
+					</pre>
+					<P><A href="#TopOfPage">Back to Top</A>
+					</P>
+					<HR width="100%" SIZE="1">
+					<h4><A name="FAQ7"></A>How do I configure an object instance in the config file?
+					</h4>
+					<p>Create an &lt;Instance&gt; element within&nbsp;the 
+						correct&nbsp;&lt;PluginFamily&gt; node in StructureMap.config.&nbsp; The 
+						ConcreteKey of the Plugin class to use and an identifying InstanceKey must be 
+						defined.&nbsp; The properties to pass into the constructor function are 
+						contained in nested &lt;Property&gt; elements.
+					</p>
+					<h5>Example</h5>
+					<pre class="xml-sample">
+&lt;PluginFamily Type="StructureMap.Testing.Widget4.IStrategy" Assembly="StructureMap.Testing.Widget4" DefaultKey="Red"&gt;
+
+	&lt;Instance Key="Blue" Type="Color"&gt;
+		&lt;Property Name="color" Value="Blue" /&gt;
+	&lt;/Instance&gt;
+	
+	&lt;Instance Key="DeepTest" Type="Complex"&gt;
+		&lt;Property Name="defaultStrategy" Type="Decorator"&gt;
+			&lt;Property Name="innerStrategy" Type="Decorator"&gt;
+				&lt;Property Name="innerStrategy" Type="Random"&gt;
+					&lt;Property Name="seed" Value="0.125"/&gt;
+				&lt;/Property&gt;
+			&lt;/Property&gt;
+		&lt;/Property&gt;
+		&lt;Property Name="innerStrategies"&gt;
+			&lt;Property Key="Red"&gt;&lt;/Property&gt;
+			&lt;Property&gt;&lt;!-- Default --&gt;&lt;/Property&gt;
+			&lt;Property Type="Random"&gt;
+				&lt;Property Name="seed" Value="0.034"/&gt;
+			&lt;/Property&gt;
+
+			&lt;Property Type="Decorator"&gt;
+				&lt;Property Name="innerStrategy" Type="Basic"&gt;
+					&lt;Property Name="count" Value="10" /&gt;
+					&lt;Property Name="isCalculated" Value="True" /&gt;
+					&lt;Property Name="name" Value="Jeremy" /&gt;
+					&lt;Property Name="quantity" Value="250000" /&gt;
+					&lt;Property Name="rating" Value="0.25" /&gt;
+				&lt;/Property&gt;
+			&lt;/Property&gt;
+		&lt;/Property&gt;
+		&lt;Property Name="name" Value="DeepTest" /&gt;
+		&lt;Property Name="quantity" Value="12500" /&gt;
+
+		&lt;Property Name="strategyType" Value="OverTheHorizon"/&gt;
+	
+	&lt;/Instance&gt;
+
+	&lt;Instance Key="Red" Type="Color"&gt;
+		&lt;Property Name="color" Value="Red" /&gt;
+	&lt;/Instance&gt;
+
+
+&lt;/PluginFamily&gt;
+
+					</pre>
+					<P><A href="#TopOfPage">Back to Top</A>
+					</P>
+					<HR width="100%" SIZE="1">
+					<h4><A name="FAQ8"></A>I have a class that has no constructor arguments or each 
+						argument type is configured in StructureMap with a default.&nbsp; Do I have to 
+						configure an object instance in the config file, or can I just reference it by 
+						the ConcreteKey?</h4>
+					<p>In this case StructureMap "knows" to build an object instance of this class 
+						whenever the ConcreteKey is passed in as the InstanceKey. In the example code 
+						below, the class <EM>DefaultGateway</EM> can be created directly as "Default" 
+						because it requires no inputs to the constructor function. <EM>SecuredGateway</EM>
+						can be created directly as "Secured" because its only input argument is another 
+						object of type <EM>IGateway</EM>, which has a default configured in 
+						StructureMap.
+					</p>
+					<h5>Example</h5>
+					<pre class="code-sample">
+[PluginFamily( "Default" )]
+public interface IGateway
+{
+	void DoSomething();
+	string WhoAmI { get; }
+}
+
+[Pluggable("Default", "")]
+public class DefaultGateway : IGateway
+{
+	public DefaultGateway(){}
+
+	public void DoSomething()
+	{
+	}
+
+	public string WhoAmI
+	{
+		get {return "Default";}
+	}
+}
+
+[Pluggable("Secured")]
+public class SecuredGateway : IGateway
+{
+	private IGateway _innerGateway;
+
+	public SecuredGateway(IGateway innerGateway)
+	{
+	    _innerGateway = innerGateway;
+	}
+
+	public void DoSomething()
+	{
+	}
+
+	public string WhoAmI
+	{
+		get {return "Secured";}
+	}
+}
+
+// Fetch a DefaultGateway from ObjectFactory
+IGateway gateway = (IGateway)ObjectFactory.GetNamedInstance(typeof(IGateway), "Default");
+
+// Fetch a SecuredGateway from ObjectFactory
+IGateway gateway = (IGateway)ObjectFactory.GetNamedInstance(typeof(IGateway), "Secured");
+
+
+					</pre>
+					<P><A href="#TopOfPage">Back to Top</A>
+					</P>
+					<HR width="100%" SIZE="1">
+					<h4><A name="FAQ9"></A>How do I specify the default object instance for a 
+						PluginFamily?
+					</h4>
+					<p>There are several ways. The first way is to mark the DefaultKey property of a 
+						[PluginFamily] attribute.&nbsp; The second way is to set the DefaultKey 
+						attribute of a &lt;PluginFamily&gt; node in the config file.&nbsp; Either way, 
+						this value refers to a named instance for the PluginFamily. The DefaultKey can 
+						be overriden at runtime through ObjectFactory or at configuration time by using 
+						the Profile and Machine nodes in the config file.
+					</p>
+					<h5>Attribute Example</h5>
+					<pre class="code-sample">// The instance called "Default" will be the default object instance created by StructureMap when an IGateway is requested.
+[StructureMap.PluginFamily("Default")]
+public interface IGateway
+{
+	void DoSomething();
+	string WhoAmI{get;}
+}
+					</pre>
+					<h5>Configuration Example</h5>
+					<pre class="xml-sample">
+&lt;PluginFamily Type="StructureMap.Testing.Widget.IWidget" Assembly="StructureMap.Testing.Widget" DefaultKey="Red"&gt;
+	&lt;Instance Type="Color" Key="Blue"&gt;
+		&lt;Property Name="Color" Value="Blue" /&gt;
+	&lt;/Instance&gt;
+	&lt;Instance Type="Color" Key="Green"&gt;
+		&lt;Property Name="Color" Value="Green" /&gt;
+	&lt;/Instance&gt;
+	&lt;Instance Type="NotPluggable" Key="NotPluggableInstance"&gt;&lt;/Instance&gt;
+
+	&lt;Instance Type="Color" Key="Red"&gt;
+		&lt;Property Name="Color" Value="Red" /&gt;
+	&lt;/Instance&gt;
+&lt;/PluginFamily&gt;
+
+					</pre>
+
+					<h5>Overriding at Runtime</h5>
+					<pre class="code-sample">ObjectFactory.SetDefaultInstanceName(typeof(IWidget), "Green");
+					</pre>
+					<P><A href="#TopOfPage">Back to Top</A>
+					</P>
+					<HR width="100%" SIZE="1">
+					<h4><A name="FAQ10"></A>Which constructor function is called by StructureMap for a 
+						particular class?</h4>
+					<p>By default, StructureMap will use the "greediest" constructor function, i.e. the 
+						constructor function with the most arguments. The behavior can be altered by 
+						using a custom attribute as shown in the FAQ below.</p>
+					<P><A href="#TopOfPage">Back to Top</A>
+					</P>
+					<HR width="100%" SIZE="1">
+					<h4><A name="FAQ11"></A>Can I override the constructor function called by 
+						StructureMap?</h4>
+					<p>Yes. In some unit testing scenarios, it may make more sense for a testing only 
+						constructor that takes in multiple arguments and a production constructor that 
+						builds default children. Use the [StructureMap.DefaultConstructor] attribute on 
+						a constructor function to override the default behavior.&nbsp;
+					</p>
+					<pre class="code-sample">[StructureMap.Pluggable("Complex", "Complex rule for testing")]
+public class ComplexRule : Rule
+{
+	private string _String;
+	private string _String2;
+	private int _Int;
+	private long _Long;
+	private byte _Byte;
+	private double _Double;
+	private bool _Bool;
+
+	[DefaultConstructor]
+	public ComplexRule(string String, string String2, int Int, long Long, byte Byte, double Double, bool Bool)
+	{
+		this._String = String;
+		this._String2 = String2;
+		this._Int = Int;
+		this._Long = Long;
+		this._Byte = Byte;
+		this._Double = Double;
+		this._Bool = Bool;
+	}
+
+	public ComplexRule(string String, string String2, int Int, long Long, byte Byte, double Double, bool Bool, string extra)
+	{
+
+	}
+
+}
+					</pre>
+					<P><A href="#TopOfPage">Back to Top</A>
+					</P>
+					<HR width="100%" SIZE="1">
+					<h4><A name="FAQ12"></A>How do I configure a non-primitive child argument to a 
+						constructor function?</h4>
+					<p>There are three (and a half)&nbsp;options.&nbsp; First though, the child type 
+						must be a PluginFamily controlled by StructureMap for this to work.&nbsp;</p>
+					<OL>
+						<LI>
+						Configure a whole new object instance for the child member inline with the 
+						&lt;Property&gt; element&nbsp;inside the &lt;Instance&gt; node for the parent
+						<LI>
+						In the &lt;Property&gt; element for an object memento, use the Key attribute to 
+						refer to a configured object instance for the child member type
+						<LI>
+							Either omit the &lt;Property&gt; element for the child member or leave off the 
+							Key attribute to use the default object instance for the child member type</LI></OL>
+					<h5>Example</h5>
+					<pre class="code-sample">[PluginFamily]
+[StructureMap.Pluggable("Default", "")]
+public class GrandChild
+{
+	private bool _RightHanded;
+	private int _BirthYear;
+
+	public GrandChild(bool RightHanded, int BirthYear)
+	{
+		_BirthYear = BirthYear;
+		_RightHanded = RightHanded;
+	}
+
+	public bool RightHanded
+	{
+		get {return _RightHanded;}
+	}
+
+	public int BirthYear
+	{
+		get {return _BirthYear;}
+	}
+}
+
+
+[StructureMap.Pluggable("Leftie", "")]
+public class LeftieGrandChild : GrandChild
+{
+	public LeftieGrandChild(int BirthYear) : base(false, BirthYear){}
+}
+
+
+[PluginFamily]
+[StructureMap.Pluggable("Default", "")]
+public class Child
+{
+	private string _Name;
+	private GrandChild _MyGrandChild;
+
+	public Child(string Name, GrandChild MyGrandChild)
+	{
+		_Name = Name;
+		_MyGrandChild = MyGrandChild;
+	}
+
+	public string Name
+	{
+		get {return _Name;}
+	}
+
+	public GrandChild MyGrandChild
+	{
+		get {return _MyGrandChild;}
+	}
+}
+
+[PluginFamily]
+[StructureMap.Pluggable("Default", "")]
+public class Parent
+{
+	private int _Age;
+	private string _EyeColor;
+	private Child _MyChild;
+
+	public Parent(int Age, string EyeColor, Child MyChild)
+	{
+		_Age = Age;
+		_EyeColor = EyeColor;
+		_MyChild = MyChild;
+	}
+
+	public int Age
+	{
+		get {return _Age;}
+	}
+
+	public string EyeColor
+	{
+		get {return _EyeColor;}
+	}
+
+	public Child MyChild
+	{
+		get {return _MyChild;}
+	}
+}
+					</pre>
+					<h5>Config Section for Parent Instances</h5>
+					<p class="MsoNormal" style="mso-layout-grid-align: none"><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: 'Courier New'">&lt;!</span><span style="FONT-SIZE: 10pt; COLOR: green; FONT-FAMILY: 'Courier New'">-- 
+							Define the Child Member by Reference to the "Marsha" object instance --</span><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: 'Courier New'">&gt;<o:p></o:p></span></p>
+					<p class="MsoNormal" style="mso-layout-grid-align: none"><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: 'Courier New'">&lt;</span><span style="FONT-SIZE: 10pt; COLOR: maroon; FONT-FAMILY: 'Courier New'">Instance</span><span style="FONT-SIZE: 10pt; COLOR: fuchsia; FONT-FAMILY: 'Courier New'">
+						</span><span style="FONT-SIZE: 10pt; COLOR: red; FONT-FAMILY: 'Courier New'">Type</span><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: 'Courier New'">="Default"</span><span style="FONT-SIZE: 10pt; COLOR: fuchsia; FONT-FAMILY: 'Courier New'">
+						</span><span style="FONT-SIZE: 10pt; COLOR: red; FONT-FAMILY: 'Courier New'">Key</span><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: 'Courier New'">="Jerry"&gt;<o:p></o:p></span></p>
+					<p class="MsoNormal" style="mso-layout-grid-align: none"><span style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'"><span style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							</span><span style="COLOR: blue">&lt;</span><span style="COLOR: maroon">Property</span><span style="COLOR: fuchsia">
+							</span><span style="COLOR: red">Name</span><span style="COLOR: blue">="Age"</span><span style="COLOR: fuchsia">
+							</span><span style="COLOR: red">Value</span><span style="COLOR: blue">="72"/&gt;<o:p></o:p></span></span></p>
+					<p class="MsoNormal" style="mso-layout-grid-align: none"><span style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'"><span style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							</span><span style="COLOR: blue">&lt;</span><span style="COLOR: maroon">Property</span><span style="COLOR: fuchsia">
+							</span><span style="COLOR: red">Name</span><span style="COLOR: blue">="EyeColor"</span><span style="COLOR: fuchsia">
+							</span><span style="COLOR: red">Value</span><span style="COLOR: blue">="Blue"/&gt;<o:p></o:p></span></span></p>
+					<p class="MsoNormal" style="mso-layout-grid-align: none"><span style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'"><span style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							</span><span style="COLOR: blue">&lt;</span><span style="COLOR: maroon">Property</span><span style="COLOR: fuchsia">
+							</span><span style="COLOR: red">Name</span><span style="COLOR: blue">="MyChild"</span><span style="COLOR: fuchsia">
+							</span><span style="COLOR: red">Key</span><span style="COLOR: blue">="Marsha"/&gt;<o:p></o:p></span></span></p>
+					<p class="MsoNormal" style="mso-layout-grid-align: none"><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: 'Courier New'">&lt;/</span><span style="FONT-SIZE: 10pt; COLOR: maroon; FONT-FAMILY: 'Courier New'">Instance</span><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: 'Courier New'">&gt;<o:p></o:p></span></p>
+					<p class="MsoNormal" style="mso-layout-grid-align: none"><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: 'Courier New'"><o:p></o:p></span></p>
+					<p class="MsoNormal" style="mso-layout-grid-align: none"><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: 'Courier New'">&lt;!</span><span style="FONT-SIZE: 10pt; COLOR: green; FONT-FAMILY: 'Courier New'">-- 
+							Inline configuration of the Child Member. <span style="mso-spacerun: yes">&nbsp;</span>Note 
+							that "MyChild" is a nested InstanceMemento --</span><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: 'Courier New'">&gt;<o:p></o:p></span></p>
+					<p class="MsoNormal" style="mso-layout-grid-align: none"><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: 'Courier New'">&lt;</span><span style="FONT-SIZE: 10pt; COLOR: maroon; FONT-FAMILY: 'Courier New'">Instance</span><span style="FONT-SIZE: 10pt; COLOR: fuchsia; FONT-FAMILY: 'Courier New'">
+						</span><span style="FONT-SIZE: 10pt; COLOR: red; FONT-FAMILY: 'Courier New'">Type</span><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: 'Courier New'">="Default"</span><span style="FONT-SIZE: 10pt; COLOR: fuchsia; FONT-FAMILY: 'Courier New'">
+						</span><span style="FONT-SIZE: 10pt; COLOR: red; FONT-FAMILY: 'Courier New'">Key</span><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: 'Courier New'">="Jackie"&gt;<o:p></o:p></span></p>
+					<p class="MsoNormal" style="mso-layout-grid-align: none"><span style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'"><span style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							</span><span style="COLOR: blue">&lt;</span><span style="COLOR: maroon">Property</span><span style="COLOR: fuchsia">
+							</span><span style="COLOR: red">Name</span><span style="COLOR: blue">="Age"</span><span style="COLOR: fuchsia">
+							</span><span style="COLOR: red">Value</span><span style="COLOR: blue">="70"/&gt;<o:p></o:p></span></span></p>
+					<p class="MsoNormal" style="mso-layout-grid-align: none"><span style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'"><span style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							</span><span style="COLOR: blue">&lt;</span><span style="COLOR: maroon">Property</span><span style="COLOR: fuchsia">
+							</span><span style="COLOR: red">Name</span><span style="COLOR: blue">="EyeColor"</span><span style="COLOR: fuchsia">
+							</span><span style="COLOR: red">Value</span><span style="COLOR: blue">="Green"/&gt;<o:p></o:p></span></span></p>
+					<p class="MsoNormal" style="mso-layout-grid-align: none"><span style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'"><span style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							</span><span style="COLOR: blue">&lt;</span><span style="COLOR: maroon">Property</span><span style="COLOR: fuchsia">
+							</span><span style="COLOR: red">Name</span><span style="COLOR: blue">="MyChild"</span><span style="COLOR: fuchsia">
+							</span><span style="COLOR: red">Type</span><span style="COLOR: blue">="Default"&gt;<o:p></o:p></span></span></p>
+					<p class="MsoNormal" style="mso-layout-grid-align: none"><span style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'"><span style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							</span><span style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="COLOR: blue">
+								&lt;</span><span style="COLOR: maroon">Property</span><span style="COLOR: fuchsia">
+							</span><span style="COLOR: red">Name</span><span style="COLOR: blue">="Name"</span><span style="COLOR: fuchsia">
+							</span><span style="COLOR: red">Value</span><span style="COLOR: blue">="</span></span><st1:city><st1:place><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: 'Courier New'">Elizabeth</span></st1:place>
+						</st1:city><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: 'Courier New'">"/&gt;<o:p></o:p></span></p>
+					<p class="MsoNormal" style="mso-layout-grid-align: none"><span style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'"><span style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							</span><span style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="COLOR: blue">
+								&lt;</span><span style="COLOR: maroon">Property</span><span style="COLOR: fuchsia">
+							</span><span style="COLOR: red">Name</span><span style="COLOR: blue">="MyGrandChild"</span><span style="COLOR: fuchsia">
+							</span><span style="COLOR: red">Type</span><span style="COLOR: blue">="Leftie"&gt;<o:p></o:p></span></span></p>
+					<p class="MsoNormal" style="mso-layout-grid-align: none"><span style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'"><span style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							</span><span style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="mso-tab-count: 1">
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="COLOR: blue">&lt;</span><span style="COLOR: maroon">Property</span><span style="COLOR: fuchsia">
+							</span><span style="COLOR: red">Name</span><span style="COLOR: blue">="BirthYear"</span><span style="COLOR: fuchsia">
+							</span><span style="COLOR: red">Value</span><span style="COLOR: blue">="1992"/&gt;<o:p></o:p></span></span></p>
+					<p class="MsoNormal" style="mso-layout-grid-align: none"><span style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'"><span style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							</span><span style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="COLOR: blue">
+								&lt;/</span><span style="COLOR: maroon">Property</span><span style="COLOR: blue">&gt;</span><span style="mso-tab-count: 1">
+							</span><span style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="mso-tab-count: 1">
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>
+							<o:p></o:p></span></p>
+					<p class="MsoNormal" style="mso-layout-grid-align: none"><span style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'"><span style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							</span><span style="COLOR: blue">&lt;/</span><span style="COLOR: maroon">Property</span><span style="COLOR: blue">&gt;<o:p></o:p></span></span></p>
+					<p class="MsoNormal" style="mso-layout-grid-align: none"><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: 'Courier New'">&lt;/</span><span style="FONT-SIZE: 10pt; COLOR: maroon; FONT-FAMILY: 'Courier New'">Instance</span><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: 'Courier New'">&gt;<o:p></o:p></span></p>
+					<p class="MsoNormal" style="mso-layout-grid-align: none"><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: 'Courier New'"><o:p></o:p></span></p>
+					<p class="MsoNormal" style="mso-layout-grid-align: none"><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: 'Courier New'">&lt;!</span><span style="FONT-SIZE: 10pt; COLOR: green; FONT-FAMILY: 'Courier New'">-- 
+							No "MyChild" member is defined, so the default Child object instance will be 
+							used --</span><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: 'Courier New'">&gt;<o:p></o:p></span></p>
+					<p class="MsoNormal" style="mso-layout-grid-align: none"><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: 'Courier New'">&lt;</span><span style="FONT-SIZE: 10pt; COLOR: maroon; FONT-FAMILY: 'Courier New'">Instance</span><span style="FONT-SIZE: 10pt; COLOR: fuchsia; FONT-FAMILY: 'Courier New'">
+						</span><span style="FONT-SIZE: 10pt; COLOR: red; FONT-FAMILY: 'Courier New'">Type</span><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: 'Courier New'">="Default"</span><span style="FONT-SIZE: 10pt; COLOR: fuchsia; FONT-FAMILY: 'Courier New'">
+						</span><span style="FONT-SIZE: 10pt; COLOR: red; FONT-FAMILY: 'Courier New'">Key</span><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: 'Courier New'">="ImplicitChild"&gt;<o:p></o:p></span></p>
+					<p class="MsoNormal" style="mso-layout-grid-align: none"><span style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'"><span style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							</span><span style="COLOR: blue">&lt;</span><span style="COLOR: maroon">Property</span><span style="COLOR: fuchsia">
+							</span><span style="COLOR: red">Name</span><span style="COLOR: blue">="Age"</span><span style="COLOR: fuchsia">
+							</span><span style="COLOR: red">Value</span><span style="COLOR: blue">="72"/&gt;<o:p></o:p></span></span></p>
+					<p class="MsoNormal" style="mso-layout-grid-align: none"><span style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'"><span style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							</span><span style="COLOR: blue">&lt;</span><span style="COLOR: maroon">Property</span><span style="COLOR: fuchsia">
+							</span><span style="COLOR: red">Name</span><span style="COLOR: blue">="EyeColor"</span><span style="COLOR: fuchsia">
+							</span><span style="COLOR: red">Value</span><span style="COLOR: blue">="Blue"/&gt;<o:p></o:p></span></span></p>
+					<p class="MsoNormal"><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: 'Courier New'">&lt;/</span><span style="FONT-SIZE: 10pt; COLOR: maroon; FONT-FAMILY: 'Courier New'">Instance</span><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: 'Courier New'">&gt;</span></p>
+
+					<P>&nbsp;</P>
+					<P><A href="#TopOfPage">Back to Top</A>
+					</P>
+					<HR width="100%" SIZE="1">
+					<h4><A name="FAQ13"></A>How do I configure an array of non-primitive objects as an 
+						argument to a constructor function?</h4>
+					<p>StructureMap supports a constructor argument that is an array of non-primitive 
+						objects. The child type construction must be controlled by StructureMap. The 
+						child members of the array itself are configured in the config file as embedded 
+						instances themselves within the proper &lt;Property&gt; element for the child 
+						member.&nbsp; The same rules apply for the configuration as for a single 
+						non-primitive child member.&nbsp; The actual node name of the array members is 
+						actually arbitrary.&nbsp; Any node within the &lt;Property&gt; element is 
+						assumed to be an array member
+					</p>
+					<h5>Example</h5>
+					<p>The Decision class below uses a collection of Rule objects in order to carry out 
+						some sort of business logic. The Rule[] array is passed into the "Rules" 
+						argument in the constructor function.</p>
+					<pre class="code-sample">public class Decision
+{
+	public Rule[] Rules;
+
+	public Decision(Rule[] Rules)
+	{
+		this.Rules = Rules;
+	}
+}
+
+public abstract class Rule
+{
+	public Rule()
+	{
+	}
+
+	public virtual bool IsTrue()
+	{
+		return true;
+	}
+}
+
+					</pre>
+
+					<p class="MsoNormal" style="mso-layout-grid-align: none"><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: 'Courier New'">&lt;</span><span style="FONT-SIZE: 10pt; COLOR: maroon; FONT-FAMILY: 'Courier New'">Instance</span><span style="FONT-SIZE: 10pt; COLOR: fuchsia; FONT-FAMILY: 'Courier New'">
+						</span><span style="FONT-SIZE: 10pt; COLOR: red; FONT-FAMILY: 'Courier New'">Type</span><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: 'Courier New'">="Default"</span><span style="FONT-SIZE: 10pt; COLOR: fuchsia; FONT-FAMILY: 'Courier New'">
+						</span><span style="FONT-SIZE: 10pt; COLOR: red; FONT-FAMILY: 'Courier New'">Key</span><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: 'Courier New'">="GreenBluePurple"&gt;<o:p></o:p></span></p>
+					<p class="MsoNormal" style="mso-layout-grid-align: none"><span style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'"><span style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							</span><span style="COLOR: blue">&lt;</span><span style="COLOR: maroon">Property</span><span style="COLOR: fuchsia">
+							</span><span style="COLOR: red">Name</span><span style="COLOR: blue">="Rules"&gt;<o:p></o:p></span></span></p>
+					<p class="MsoNormal" style="mso-layout-grid-align: none"><span style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'"><span style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							</span><span style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="COLOR: blue">
+								&lt;</span><span style="COLOR: maroon">Rule</span><span style="COLOR: fuchsia"> </span>
+							<span style="COLOR: red">Key</span><span style="COLOR: blue">="Blue"&gt;<o:p></o:p></span></span></p>
+					<p class="MsoNormal" style="mso-layout-grid-align: none"><span style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'"><span style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							</span><span style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="COLOR: blue">
+								&lt;</span><span style="COLOR: maroon">Rule</span><span style="COLOR: fuchsia"> </span>
+							<span style="COLOR: red">Type</span><span style="COLOR: blue">="Color"&gt;<o:p></o:p></span></span></p>
+					<p class="MsoNormal" style="mso-layout-grid-align: none"><span style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'"><span style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							</span><span style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="mso-tab-count: 1">
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="COLOR: blue">&lt;</span><span style="COLOR: maroon">Property</span><span style="COLOR: fuchsia">
+							</span><span style="COLOR: red">Name</span><span style="COLOR: blue">="Color"</span><span style="COLOR: fuchsia">
+							</span><span style="COLOR: red">Value</span><span style="COLOR: blue">="Blue"/&gt;<o:p></o:p></span></span></p>
+					<p class="MsoNormal" style="mso-layout-grid-align: none"><span style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'"><span style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							</span><span style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="COLOR: blue">
+								&lt;/</span><span style="COLOR: maroon">Rule</span><span style="COLOR: blue">&gt;<o:p></o:p></span></span></p>
+					<p class="MsoNormal" style="mso-layout-grid-align: none"><span style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'"><span style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							</span><span style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="COLOR: blue">
+								&lt;</span><span style="COLOR: maroon">Rule</span><span style="COLOR: fuchsia"> </span>
+							<span style="COLOR: red">Type</span><span style="COLOR: blue">="Color"&gt;<o:p></o:p></span></span></p>
+					<p class="MsoNormal" style="mso-layout-grid-align: none"><span style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'"><span style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							</span><span style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="mso-tab-count: 1">
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="COLOR: blue">&lt;</span><span style="COLOR: maroon">Property</span><span style="COLOR: fuchsia">
+							</span><span style="COLOR: red">Name</span><span style="COLOR: blue">="Color"</span><span style="COLOR: fuchsia">
+							</span><span style="COLOR: red">Value</span><span style="COLOR: blue">="Purple"/&gt;<o:p></o:p></span></span></p>
+					<p class="MsoNormal" style="mso-layout-grid-align: none"><span style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'"><span style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							</span><span style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="COLOR: blue">
+								&lt;/</span><span style="COLOR: maroon">Rule</span><span style="COLOR: blue">&gt;<o:p></o:p></span></span></p>
+					<p class="MsoNormal" style="mso-layout-grid-align: none"><span style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'"><span style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							</span><span style="COLOR: blue">&lt;/</span><span style="COLOR: maroon">Property</span><span style="COLOR: blue">&gt;<o:p></o:p></span></span></p>
+					<p class="MsoNormal"><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: 'Courier New'">&lt;/</span><span style="FONT-SIZE: 10pt; COLOR: maroon; FONT-FAMILY: 'Courier New'">Instance</span><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: 'Courier New'">&gt;</span><o:p></o:p></p>
+
+					<P><A href="#TopOfPage">Back to Top</A>
+					</P>
+					<HR width="100%" SIZE="1">
+					<h4><A name="FAQ14"></A>How do I use the builtin <EM>Mock Injection</EM> functionality 
+						in NUnit testing?</h4>
+					<p>As an alternative to a pure <em>Constructor Injection</em> pattern for a class, 
+						it may be easier to have a child member built internally from StructureMap. 
+						StructureMap supports a runtime replacement of the normal object construction 
+						with an NMock.IMock dynamic mock object. If you only want to separate an 
+						interface from a concrete class for the purpose of easier NUnit testing, 
+						StructureMap can setup an interface/class combination for construction and 
+						mocking with only a couple of attributes</p>
+					<h5>Example</h5>
+					<p>We have a gateway pattern class to some nasty old legacy system. We want to be 
+						able to mock the gateway class to unit test our code independently of the nasty 
+						legacy system.&nbsp; It is importatnt to call either ObjectFactory.UnMock(Type) 
+						or ObjectFactory.ResetDefaults() in the TearDown() method to un-mock the plugin 
+						type.&nbsp; This is a conscious design choice to ensure that unit tests are 
+						isolated and not accidentally sharing a previous NMock.IMock object from 
+						another test.</p>
+					<pre class="code-sample">[StructureMap.PluginFamily("Default")]
+public interface IGateway
+{
+	void DoSomething();
+	string WhoAmI{get;}
+}
+
+[StructureMap.Pluggable("Default", "")]
+public class DefaultGateway : IGateway
+{
+	#region IGateway Members
+
+	public void DoSomething()
+	{
+		// TODO:  Add DefaultGateway.DoSomething implementation
+	}
+
+	public string WhoAmI
+	{
+		get {return "Default";}
+	}
+
+	#endregion
+}
+
+using NUnit.Framework;
+using StructureMap;
+
+[TestFixture]
+public class MockingTester
+{
+	private IMock _gatewayMock;
+
+	[SetUp]
+	public void SetUp()
+	{
+		// Set up ObjectFactory to return MockInstance's for IGateway
+		_gatewayMock = ObjectFactory.Mock(typeof(IGateway));
+	}
+
+	[TearDown]
+	public void TearDown()
+	{
+		// UnMock in teardown methods to avoid oddball behavior in later NUnit tests
+		ObjectFactory.UnMock(typeof(IGateway));
+	}
+
+
+	[Test]
+	public void ClassTest()
+	{
+		MyClass myClass = new MyClass();
+		_gatewayMock.Expect("DoSomething");
+
+		myClass.Go();
+
+		_gatewayMock.Verify();
+	}
+
+
+}
+					</pre>
+					<P><A href="#TopOfPage">Back to Top</A>
+					</P>
+					<HR width="100%" SIZE="1">
+					<h4><A name="FAQ15"></A>How can I set a runtime Profile of default instances?
+					</h4>
+					<p>Use a &lt;Profile&gt; node within the StructureMap.config file to set a related 
+						series of default overrides.&nbsp; The profile can be changed at runtime with a 
+						call to ObjectFactory.&nbsp; This feature can be useful in cases where a user 
+						interface application can run in either a connected mode or a disconnected 
+						mode.&nbsp; It has also been used to great effect to create different profiles 
+						for developer sandboxes versus a build machine versus a test environment.</p>
+
+					<P class="MsoNormal" style="mso-layout-grid-align: none"><SPAN style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: 'Courier New'">&lt;</SPAN><SPAN style="FONT-SIZE: 10pt; COLOR: maroon; FONT-FAMILY: 'Courier New'">Profile</SPAN><SPAN style="FONT-SIZE: 10pt; COLOR: fuchsia; FONT-FAMILY: 'Courier New'">
+						</SPAN><SPAN style="FONT-SIZE: 10pt; COLOR: red; FONT-FAMILY: 'Courier New'">Name</SPAN><SPAN style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: 'Courier New'">="Green"&gt;
+							<o:p></o:p></SPAN></P>
+					<P class="MsoNormal" style="mso-layout-grid-align: none"><SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'"><SPAN style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							</SPAN><SPAN style="COLOR: blue">&lt;</SPAN><SPAN style="COLOR: maroon">Override</SPAN><SPAN style="COLOR: fuchsia">
+							</SPAN><SPAN style="COLOR: red">Type</SPAN><SPAN style="COLOR: blue">="StructureMap.Testing.Widget.Rule"</SPAN><SPAN style="COLOR: fuchsia">
+							</SPAN><SPAN style="COLOR: red">DefaultKey</SPAN><SPAN style="COLOR: blue">="Green"/&gt;
+								<o:p></o:p></SPAN></SPAN></P>
+					<P class="MsoNormal" style="mso-layout-grid-align: none"><SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'"><SPAN style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							</SPAN><SPAN style="COLOR: blue">&lt;</SPAN><SPAN style="COLOR: maroon">Override</SPAN><SPAN style="COLOR: fuchsia">
+							</SPAN><SPAN style="COLOR: red">Type</SPAN><SPAN style="COLOR: blue">="StructureMap.Testing.Widget.IWidget"</SPAN><SPAN style="COLOR: fuchsia">
+							</SPAN><SPAN style="COLOR: red">DefaultKey</SPAN><SPAN style="COLOR: blue">="Green"/&gt;
+								<o:p></o:p></SPAN></SPAN></P>
+					<P class="MsoNormal"><SPAN style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: 'Courier New'">&lt;/</SPAN><SPAN style="FONT-SIZE: 10pt; COLOR: maroon; FONT-FAMILY: 'Courier New'">Profile</SPAN><SPAN style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: 'Courier New'">&gt;</SPAN><SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'"><SPAN style="mso-tab-count: 1">&nbsp;
+							</SPAN></SPAN>
+						<o:p></o:p></P>
+
+					<h5>Example Code</h5>
+					<pre class="code-sample">ObjectFactory.Profile = "Stubbed";
+ObjectFactory.ResetDefaults();
+					</pre>
+					<P><A href="#TopOfPage">Back to Top</A>
+					</P>
+					<HR width="100%" SIZE="1">
+					<h4><A name="FAQ16"></A>How can I override the default instances by Machine?
+					</h4>
+					<p>The first question is why would you want to do this? For an example, the 
+						original reason for this feature was to connect each developer workstation to 
+						an individual database sandbox to avoid collisions. Simply place a 
+						&lt;Machine&gt; element in the config file and use &lt;Override&gt; elements to 
+						set the defaults for each PluginFamily, or set a Profile for the machine.&nbsp; 
+						It can, however, make maintenance of the config file much more difficult, so 
+						proceed with caution.</p>
+					<h5>Example</h5>
+
+					<p class="MsoNormal" style="mso-layout-grid-align: none"><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: 'Courier New'">&lt;</span><span style="FONT-SIZE: 10pt; COLOR: maroon; FONT-FAMILY: 'Courier New'">Machine</span><span style="FONT-SIZE: 10pt; COLOR: fuchsia; FONT-FAMILY: 'Courier New'">
+						</span><span style="FONT-SIZE: 10pt; COLOR: red; FONT-FAMILY: 'Courier New'">Name</span><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: 'Courier New'">="SERVER"&gt;<o:p></o:p></span></p>
+					<p class="MsoNormal" style="mso-layout-grid-align: none"><span style="FONT-SIZE: 10pt; FONT-FAMILY: 'Courier New'"><span style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							</span><span style="COLOR: blue">&lt;</span><span style="COLOR: maroon">Override</span><span style="COLOR: fuchsia">
+							</span><span style="COLOR: red">Type</span><span style="COLOR: blue">="StructureMap.Testing.Widget.IWidget"</span><span style="COLOR: fuchsia">
+							</span><span style="COLOR: red">DefaultKey</span><span style="COLOR: blue">="Orange"/&gt;<o:p></o:p></span></span></p>
+					<p class="MsoNormal"><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: 'Courier New'">&lt;/</span><span style="FONT-SIZE: 10pt; COLOR: maroon; FONT-FAMILY: 'Courier New'">Machine</span><span style="FONT-SIZE: 10pt; COLOR: blue; FONT-FAMILY: 'Courier New'">&gt;</span><o:p></o:p></p>
+
+					
+					<P><A href="#TopOfPage">Back to Top</A>
+					</P>
+					<HR width="100%" SIZE="1">
+					<h4><A name="FAQ17"></A>Can I use a different configuration source for object 
+						instances rather than StructureMap.config?</h4>
+					<p>At this point the only other alternative is a separate Xml file, but an 
+						extensibility mechanism is in place to add new types of MementoSouce's. The 
+						MementoSource for a PluginFamily can be overriden from the default by placing a 
+						&lt;Source&gt; node within the proper &lt;PluginFamily&gt; node in the config 
+						file and configuring properties like filepaths for the custom 
+						MementoSource.&nbsp; Possible reasons for using custom MementoSource's would be 
+						to isolate a volatile PluginFamily or to provide a centralized configuration 
+						store in a database or LDAP for a large server farm.&nbsp; See the 
+						configuration documentation for more information.
+					</p>
+					<P><A href="#TopOfPage">Back to Top</A>
+					</P>
+					<HR width="100%" SIZE="1">
+					<h4><A name="FAQ18"></A>How do I use Setter Injection?</h4>
+					<p>As of version 0.90 StructureMap must be explicitly configured to fill setter 
+						properties on a Plugin.&nbsp; StructureMap assumes that these properties are 
+						mandatory in the instance definition.&nbsp; If a defined setter property does 
+						not have a corresponding value set in the InstanceMemento configuration, 
+						StructureMap will throw an exception.&nbsp; This will probably change in a 
+						later version to allow for optional properties.&nbsp; The allowable CLR types 
+						for Setter Injection is the same as for Constructor Injection.
+					</p>
+					<P>Setter properties can be marked for population by either marking the properties 
+						with an attribute in the class itself, or by declaring the properties within a <A href="Basic Architecture.htm#Plugin">
+							Plugin</A> definition in the StructureMap.config file.&nbsp; Property 
+						values for Setter Injection are configured in an <A href="Basic Architecture.htm#InstanceMemento">
+							InstanceMemento</A> definition&nbsp;no differently than constructor 
+						arguments.&nbsp;</P>
+					<p>The [SetterProperty] attribute directs StructureMap to fill a setter property 
+						during object construction</p>
+					<pre class="code-sample">[Pluggable( "Basic" )]
+public class BasicGridColumn : IGridColumn
+{
+	private readonly string _headerText;
+	private IWidget _widget;
+	private FontStyleEnum _fontStyle;
+	private string _columnName;
+	private Rule[] _rules;
+	private bool _displayed;
+	private int _size;
+	private bool _wrapLines;
+
+	public BasicGridColumn( string headerText )
+	{
+		_headerText = headerText;
+	}
+
+	public string HeaderText
+	{
+		get { return _headerText; }
+	}
+
+	[SetterProperty]
+	public IWidget Widget
+	{
+		get { return _widget; }
+		set { _widget = value; }
+	}
+
+	[SetterProperty]
+	public FontStyleEnum FontStyle
+	{
+		get { return _fontStyle; }
+		set { _fontStyle = value; }
+	}
+
+	[SetterProperty]
+	public string ColumnName
+	{
+		get { return _columnName; }
+		set { _columnName = value; }
+	}
+
+	[SetterProperty]
+	public Rule[] Rules
+	{
+		get { return _rules; }
+		set { _rules = value; }
+	}
+
+	[SetterProperty]
+	public bool WrapLines
+	{
+		get { return _wrapLines; }
+		set { _wrapLines = value; }
+	}
+
+	public bool Displayed
+	{
+		get { return _displayed; }
+		set { _displayed = value; }
+	}
+
+	public int Size
+	{
+		get { return _size; }
+		set { _size = value; }
+	}
+}
+					</pre>
+					<p>Setter properties can also be configured explicitly inside of the 
+						StructureMap.config file. This is particularly useful when using StructureMap 
+						to create class instances from external class libraries that cannot be edited 
+						with attributes.</p>
+					<pre class="xml-sample">&lt;PluginFamily Type="StructureMap.Testing.Widget5.IGridColumn" Assembly="StructureMap.Testing.Widget5" DefaultKey=""&gt;
+	&lt;Plugin Assembly="StructureMap.Testing.Widget5" Type="StructureMap.Testing.Widget5.OtherGridColumn" ConcreteKey="Other"&gt;
+		&lt;Setter Name="ColumnName" /&gt;
+		&lt;Setter Name="FontStyle" /&gt;
+		&lt;Setter Name="Rules" /&gt;
+		&lt;Setter Name="Widget" /&gt;
+		&lt;Setter Name="WrapLines" /&gt;
+	&lt;/Plugin&gt;
+&lt;/PluginFamily&gt;
+					</pre>
+					<P><A href="#TopOfPage">Back to Top</A>
+					</P>
+					<HR width="100%" SIZE="1">
+					<h4><A name="FAQ19"></A>How do I inject a static mock or a stub in testing?</h4>
+					<p>In some cases&nbsp;it is desirable to test with either a&nbsp;<A href="Concepts.htm#stub">service 
+							stub</A> or a custom <A href="Concepts.htm#_Mock_Object">mock</A> class 
+						created by hand.&nbsp; StructureMap can be&nbsp;instructed to&nbsp;at runtime 
+						to&nbsp;always return a testing instance for a plugin type.&nbsp;&nbsp;Any 
+						object&nbsp;loaded as a static mock or stub&nbsp;must be assignable to the 
+						plugin type, or StructureMap will throw an exception.&nbsp; As&nbsp;with 
+						the&nbsp;Mock Injection usage, always "un-mock"&nbsp;the plugin type as part of 
+						the unit test cleanup.&nbsp;</p>
+					<h5>Example</h5>
+					<pre class="code-sample">[PluginFamily]
+public interface IUserDataStore
+{
+	DataSet GetData(string userName);
+}
+
+public class StubbedUserDataStore : IUserDataStore
+{
+	private DataSet _dataSet;
+
+	public void LoadFromFile(string fileName)
+	{
+		_dataSet = new DataSet();
+		_dataSet.ReadXml(fileName);
+	}
+
+	public DataSet GetData( string userName )
+	{
+		return _dataSet;
+	}
+}
+
+[TestFixture]
+public class SecurityTester
+{
+	private StubbedUserDataStore _stubbedUserDataStore;
+
+	[SetUp]
+	public void SetUp()
+	{
+		_stubbedUserDataStore = new StubbedUserDataStore();
+		ObjectFactory.InjectStub(typeof(IUserDataStore), _stubbedUserDataStore);
+	}
+
+	[TearDown]
+	public void TearDown()
+	{
+		ObjectFactory.UnMock(typeof(IUserDataStore));
+	}
+
+	[Test]
+	public void Test1()
+	{
+		// Set up known test data
+		_stubbedUserDataStore.LoadFromFile("Test1.xml");
+		
+		/* Test implementations */
+	}
+}
+					</pre>
+					<P><A href="#TopOfPage">Back to Top</A>
+					</P>
+					<HR width="100%" SIZE="1">
+					<h4><A name="FAQ20"></A>How can I fill dependencies to a concrete class that is not 
+						configured in StructureMap?</h4>
+					<p>If all constructor arguments (or marked setter properties) for a concrete type 
+						are non-primitive classes, and the dependency types are a</p>
+					<h5>Example Class</h5>
+					<pre class="code-sample">
+// "FilledConcreteClass" can have its dependencies set automatically assuming that both
+// IStrategy and IWidget are configured under StructureMap with a default instance.
+public class FilledConcreteClass
+{
+	private readonly IWidget _widget;
+	private readonly IStrategy _strategy;
+
+	public FilledConcreteClass( IStrategy strategy, IWidget widget )
+	{
+		_strategy = strategy;
+		_widget = widget;
+	}
+
+	public IStrategy Strategy
+	{
+		get { return _strategy; }
+	}
+
+	public IWidget Widget
+	{
+		get { return _widget; }
+	}
+}
+
+// This class cannot be automatically filled with dependencies because the "name" argument to the
+// constructor is a String or a primitive
+public class CannotBeFilledConcreteClass
+{
+	public CannotBeFilledConcreteClass( string name, Rule rule )
+	{
+	}
+}
+
+					</pre>
+					<p>The class FilledConcreteClass can be created with the default instances of 
+						IWidget and IStrategy with the following code.</p>
+					<pre class="code-sample">FilledConcreteClass filled = (FilledConcreteClass)ObjectFactory.FillDependencies(typeof(FilledConcreteClass));</pre>
+					<P><A href="#TopOfPage">Back to Top</A>
+					</P>
+				</TD>
+			</TR>
+		</TABLE>
+	</body>
+</html>

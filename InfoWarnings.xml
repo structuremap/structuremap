@@ -1,0 +1,1132 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<InfoWarnings>
+  <Info>INFO:    5/7/2006 8:54:07 AM Retrieve dependencies of your application.</Info>
+  <Info>INFO:    5/7/2006 8:54:09 AM Analyse dependencies of your application.</Info>
+  <Info>INFO:    No cycle detected.</Info>
+  <Warning>WARNING: The assembly with simple name {StructureMap.Diagnostics} was not found in specified directories.</Warning>
+  <Warning>WARNING: The assembly with simple name {log4net} was not found in specified directories.</Warning>
+  <Warning>WARNING: The assembly with simple name {nunit.framework} was not found in specified directories.</Warning>
+  <WarningByType TypeName="StructureMap.Configuration.Tokens.AssemblyToken">
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Configuration.Tokens.AssemblyToken.MarkLoadFailure(System.Exception)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Configuration.Tokens.AssemblyToken..ctor(System.String,System.String[])} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Notify">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Notify} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Configuration.Tokens.MementoSourceInstanceToken">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Configuration.Tokens.MementoSourceInstanceToken..ctor(System.String,StructureMap.Configuration.PluginGraphReport,StructureMap.InstanceMemento)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Emitting.Parameters.ChildArrayParameterEmitter">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Emitting.Parameters.ChildArrayParameterEmitter..ctor()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Emitting.Parameters.ChildArrayParameterEmitter} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Emitting.Parameters.PrimitiveParameterEmitter">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Emitting.Parameters.PrimitiveParameterEmitter..ctor()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Emitting.Parameters.PrimitiveParameterEmitter} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Configuration.Tokens.FamilyToken">
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Configuration.Tokens.FamilyToken.ReadInstances(StructureMap.Graph.PluginFamily,StructureMap.Configuration.PluginGraphReport)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Configuration.Tokens.FamilyToken.Validate(StructureMap.Configuration.IInstanceValidator)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Configuration.Tokens.FamilyToken.AddInstance(StructureMap.Configuration.Tokens.InstanceToken)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Configuration.Tokens.FamilyToken.AddInterceptor(StructureMap.Configuration.Tokens.InstanceToken)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Configuration.Tokens.FamilyToken.FindTemplate(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Configuration.Tokens.FamilyToken.get_Templates()} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Configuration.Tokens.FamilyToken.FindPlugin(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Configuration.Tokens.FamilyToken.AddPlugin(StructureMap.Configuration.Tokens.PluginToken)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Configuration.Tokens.FamilyToken.MarkTypeCannotBeLoaded(System.Exception)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Configuration.Tokens.FamilyToken.set_SourceInstance(StructureMap.Configuration.Tokens.InstanceToken)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Configuration.Tokens.FamilyToken.get_SourceInstance()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Configuration.Tokens.FamilyToken.set_Scope(StructureMap.Attributes.InstanceScope)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Configuration.Tokens.FamilyToken.get_DefaultKey()} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Configuration.Tokens.FamilyToken.set_DefinitionSource(StructureMap.Graph.DefinitionSource)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Configuration.Tokens.FamilyToken.get_DefinitionSource()} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Configuration.Tokens.FamilyToken.get_AssemblyName()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Configuration.Tokens.FamilyToken.CreateImplicitFamily(StructureMap.Graph.PluginFamily)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Configuration.Tokens.FamilyToken..ctor(StructureMap.Graph.TypePath,System.String,System.String[])} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Configuration.Tokens.FamilyToken.HasInstance(System.String)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Configuration.Tokens.FamilyToken.get_Interceptors()} could have the visibility {private} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Caching.EventDispatcher">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Caching.EventDispatcher..ctor(System.String)} could have the visibility {protected} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Caching.EventDispatcher.Dispatch()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Caching.EventDispatcher.RemoveCache(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Caching.EventDispatcher.AddManagedCache(StructureMap.Caching.IManagedCache)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Caching.EventDispatcher.get_SubjectName()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Caching.EventDispatcher.dispatch(StructureMap.Caching.IManagedCache)} could have the visibility {private} instead of the visibility {protected}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Client.Controllers.HTMLSourceFactory">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Client.Controllers.HTMLSourceFactory..ctor()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Client.Controllers.HTMLSourceFactory} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Graph.DefinitionSource">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Graph.DefinitionSource} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Caching.Expirations.AbsoluteTimeExpirationPolicy">
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Caching.Expirations.AbsoluteTimeExpirationPolicy.get_Ticks()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Caching.Expirations.AbsoluteTimeExpirationPolicy} is never used.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Source.BasicXmlMementoSource">
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Source.BasicXmlMementoSource.set_Family(StructureMap.Graph.PluginFamily)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Source.BasicXmlMementoSource.get_Family()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Source.BasicXmlMementoSource.GetAllMementos()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Source.BasicXmlMementoSource.set_DefaultMemento(StructureMap.InstanceMemento)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Source.BasicXmlMementoSource.get_DefaultMemento()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Source.BasicXmlMementoSource.SetDefault(System.String)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Source.BasicXmlMementoSource.AddExternalMemento(StructureMap.InstanceMemento)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Source.BasicXmlMementoSource.GetMemento(System.String)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Source.BasicXmlMementoSource.createMemento(System.Xml.XmlNode)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Source.BasicXmlMementoSource.get_KeyAttribute()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Source.BasicXmlMementoSource.get_TypeAttribute()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Source.BasicXmlMementoSource.get_NodeName()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Source.BasicXmlMementoSource} is never used.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.DeploymentTasks.Deployment">
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.DeploymentTasks.Deployment.get_MachineSpecificOption()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.DeploymentTasks.Deployment.set_MachineOption(System.String)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.DeploymentTasks.Deployment.set_Profile(System.String)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.DeploymentTasks.Deployment.get_Profile()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.DeploymentTasks.Deployment.get_DeploymentTarget()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.DeploymentTasks.Deployment.set_DestinationPath(System.String)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.DeploymentTasks.Deployment.set_MachineName(System.String)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.DeploymentTasks.Deployment.get_MachineName()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.DeploymentTasks.Deployment.CreateConfiguration()} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.DeploymentTasks.Deployment.set_MachineSpecificOption(StructureMap.DeploymentTasks.MachineSpecificOption)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.DeploymentTasks.Deployment.get_DestinationPath()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.DeploymentTasks.Deployment.set_ConfigPath(System.String)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.DeploymentTasks.Deployment.get_ConfigPath()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.DeploymentTasks.Deployment.get_MachineOption()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.DeploymentTasks.Deployment.set_DeploymentTarget(System.String)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.DeploymentTasks.Deployment} is never used.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.DeploymentTasks.RemoveAssemblyTask">
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.DeploymentTasks.RemoveAssemblyTask.set_AssemblyName(System.String)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.DeploymentTasks.RemoveAssemblyTask.get_AssemblyName()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.DeploymentTasks.RemoveAssemblyTask.set_ConfigPath(System.String)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.DeploymentTasks.RemoveAssemblyTask.get_ConfigPath()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.DeploymentTasks.RemoveAssemblyTask} is never used.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Caching.CacheManager">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Caching.CacheManager..ctor(System.Int32)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Caching.CacheManager.get_IsPolling()} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Caching.CacheManager.ReleaseCache(System.String)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Caching.CacheManager.WatchFile(System.String,StructureMap.Caching.IManagedCache)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Caching.CacheManager.ManageCache(StructureMap.Caching.IManagedCache)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Caching.CacheManager.get_CurrentManager()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Caching.CacheManager} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.DeploymentTasks.Verification">
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.DeploymentTasks.Verification.get_BinPath()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.DeploymentTasks.Verification.set_ConfigPath(System.String)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.DeploymentTasks.Verification.get_ConfigPath()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.DeploymentTasks.Verification.set_BinPath(System.String)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.DeploymentTasks.Verification} is never used.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Source.XmlMementoStyle">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Source.XmlMementoStyle} is never used.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Source.XmlMementoSource">
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Source.XmlMementoSource.createMemento(System.Xml.XmlNode)} could have the visibility {private} instead of the visibility {protected}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Source.XmlMementoSource.getRootNode()} could have the visibility {private} instead of the visibility {protected}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Source.XmlMementoSource..ctor(System.String,System.String,System.String,StructureMap.Source.XmlMementoStyle)} could have the visibility {protected} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Configuration.InstanceValidator">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Configuration.InstanceValidator..ctor(StructureMap.Graph.PluginGraph,StructureMap.Graph.Profile,StructureMap.InstanceManager)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Configuration.InstanceValidator} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Verification.PluginGraphConsoleWriter">
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Verification.PluginGraphConsoleWriter.set_WriteProblems(System.Boolean)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Verification.PluginGraphConsoleWriter.get_WriteProblems()} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Verification.PluginGraphConsoleWriter.set_WriteAll(System.Boolean)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Verification.PluginGraphConsoleWriter.get_WriteAll()} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Verification.PluginGraphConsoleWriter.set_IncludeSource(System.Boolean)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Verification.PluginGraphConsoleWriter.get_IncludeSource()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Verification.PluginGraphConsoleWriter.set_IncludeAllInstances(System.Boolean)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Verification.PluginGraphConsoleWriter.get_IncludeAllInstances()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Verification.PluginGraphConsoleWriter.set_IncludePlugins(System.Boolean)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Verification.PluginGraphConsoleWriter.get_IncludePlugins()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Verification.PluginGraphConsoleWriter.GetReport()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Verification.PluginGraphConsoleWriter.Write(System.IO.TextWriter)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Verification.PluginGraphConsoleWriter} is never used.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Source.MemoryMementoSource">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Source.MemoryMementoSource..ctor()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Source.MemoryMementoSource} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Interceptors.InstanceFactoryInterceptor">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Interceptors.InstanceFactoryInterceptor..ctor()} could have the visibility {protected} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Exceptions.MissingPluginFamilyException">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Exceptions.MissingPluginFamilyException..ctor(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Exceptions.MissingPluginFamilyException} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Graph.Configuration.IGraphBuilder">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Graph.Configuration.IGraphBuilder} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.InstanceFactory">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.InstanceFactory..ctor(StructureMap.Graph.PluginFamily,System.Boolean)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.InstanceFactory} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Caching.SerializationStorageStrategy">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Caching.SerializationStorageStrategy} is never used.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Graph.PluginGraphObjectCollection">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Graph.PluginGraphObjectCollection..ctor(StructureMap.Graph.PluginGraph)} could have the visibility {protected} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Graph.PluginGraphObjectCollection.get_innerCollection()} could have the visibility {private} instead of the visibility {protected}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Caching.SharedCacheItem">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Caching.SharedCacheItem..ctor(System.Object)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Caching.SharedCacheItem} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Emitting.BuildInstanceMethod">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Emitting.BuildInstanceMethod..ctor(StructureMap.Graph.Plugin)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Emitting.BuildInstanceMethod} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.XmlMapping.ConfigEditor">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.XmlMapping.ConfigEditor..ctor(System.Xml.XmlDocument)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.XmlMapping.ConfigEditor.RemoveAllMachineOptions()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.XmlMapping.ConfigEditor.FilterToDefaultInstance(System.String,System.String)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.XmlMapping.ConfigEditor.CreateDefaultProfile(StructureMap.Graph.Profile)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.XmlMapping.ConfigEditor.RemovePlugin(System.String,System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.XmlMapping.ConfigEditor.RemovePluginFamily(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.XmlMapping.ConfigEditor.RemoveAssembly(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.XmlMapping.ConfigEditor} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Caching.EagerInstanceCache">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Caching.EagerInstanceCache} is never used.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Caching.CacheItem">
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Caching.CacheItem.getValue()} could have the visibility {private} instead of the visibility {protected}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Caching.CacheItem.setValue(System.Object)} could have the visibility {private} instead of the visibility {protected}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Caching.CacheItem..ctor(System.Object)} could have the visibility {protected} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.DeploymentTasks.Versioning.DotNetAssembly">
+    <Warning>WARNING: In the context of this application, the method {StructureMap.DeploymentTasks.Versioning.DotNetAssembly.CheckVersion(StructureMap.DeploymentTasks.Versioning.DeployedDirectory,StructureMap.DeploymentTasks.Versioning.IVersionReport)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.DeploymentTasks.Versioning.DotNetAssembly.TryCreateAssembly(System.IO.FileInfo)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.DeploymentTasks.Versioning.DotNetAssembly.get_Version()} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.DeploymentTasks.Versioning.DotNetAssembly.get_AssemblyName()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.DeploymentTasks.Versioning.DotNetAssembly..ctor(System.Reflection.Assembly)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.DeploymentTasks.Versioning.DotNetAssembly} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Interceptors.ThreadLocalStorageInterceptor">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Interceptors.ThreadLocalStorageInterceptor..ctor()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Interceptors.ThreadLocalStorageInterceptor} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Client.Views.BasicView">
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Client.Views.BasicView.GetHeaderText(StructureMap.Configuration.GraphObject)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Client.Views.BasicView} is never used.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Client.Views.HTMLBuilder">
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Client.Views.HTMLBuilder.AddDivider()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Client.Views.HTMLBuilder.AddTable()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Client.Views.HTMLBuilder.AddSubHeader(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Client.Views.HTMLBuilder.get_HTML()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Client.Views.HTMLBuilder.StartTable()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Client.Views.HTMLBuilder.AddHeader(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Client.Views.HTMLBuilder..ctor()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Client.Views.HTMLBuilder} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.ObjectFactoryCacheCallback">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.ObjectFactoryCacheCallback..ctor()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Graph.TypePath">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Graph.TypePath..ctor(System.Type)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.TypePath.CanFindType()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.TypePath.FindType()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Graph.TypePath.get_AssemblyName()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Graph.TypePath.get_ClassName()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.TypePath.CreateFromXmlNode(System.Xml.XmlNode)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Graph.TypePath..ctor(System.String,System.String)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Graph.TypePath} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Graph.MachineOverride">
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.MachineOverride.FilterOutNonExistentPluginTypes(StructureMap.Configuration.PluginGraphReport)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Graph.MachineOverride.get_Defaults()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Graph.MachineOverride.get_DefaultKey(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.MachineOverride.HasOverride(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.MachineOverride.AddMachineOverride(System.String,System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Graph.MachineOverride.get_MachineName()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Graph.MachineOverride..ctor(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Graph.MachineOverride..ctor(System.String,StructureMap.Graph.Profile)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Graph.MachineOverride} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Emitting.DynamicAssembly">
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Emitting.DynamicAssembly.Compile()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Emitting.DynamicAssembly.AddClass(System.String,System.Type)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Emitting.DynamicAssembly.get_Name()} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Emitting.DynamicAssembly..ctor(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Emitting.DynamicAssembly} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Configuration.DiagnosticGraphBuilder">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Configuration.DiagnosticGraphBuilder..ctor(StructureMap.Graph.InstanceDefaultManager)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Configuration.DiagnosticGraphBuilder.get_Report()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Configuration.DiagnosticGraphBuilder} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Graph.RemoteGraph">
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.RemoteGraph.Load(System.String,System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Client.Shell.SearchPart">
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Client.Shell.SearchPart.FindNode(StructureMap.Client.TreeNodes.GraphObjectNode)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Client.Shell.SearchPart.ParseParts(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Client.Shell.SearchPart..ctor(System.String,System.String)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Client.Shell.SearchPart} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.DeploymentTasks.ImportFamilyTask">
+    <Warning>WARNING: In the context of this application, the method {StructureMap.DeploymentTasks.ImportFamilyTask.ImportFamilyNode(System.Xml.XmlDocument,System.Xml.XmlDocument)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.DeploymentTasks.ImportFamilyTask.set_PluginType(System.String)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.DeploymentTasks.ImportFamilyTask.get_PluginType()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.DeploymentTasks.ImportFamilyTask.set_SourcePath(System.String)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.DeploymentTasks.ImportFamilyTask.get_SourcePath()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.DeploymentTasks.ImportFamilyTask.set_TargetPath(System.String)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.DeploymentTasks.ImportFamilyTask.get_TargetPath()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.DeploymentTasks.ImportFamilyTask} is never used.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.MockInstanceFactory">
+    <Warning>WARNING: In the context of this application, the method {StructureMap.MockInstanceFactory.GetMock()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.MockInstanceFactory..ctor(StructureMap.IInstanceFactory)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.MockInstanceFactory} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Graph.InstanceDefault">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Graph.InstanceDefault..ctor(System.String,System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Graph.InstanceDefault.get_DefaultKey()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Graph.InstanceDefault.get_PluginTypeName()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Graph.InstanceDefault} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Caching.ICacheItem">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Caching.ICacheItem} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Emitting.ClassBuilder">
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Emitting.ClassBuilder.AddReadonlyStringProperty(System.String,System.String,System.Boolean)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Emitting.ClassBuilder.get_ClassName()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Emitting.ClassBuilder.AddMethod(StructureMap.Emitting.Method)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Emitting.ClassBuilder..ctor(System.Reflection.Emit.ModuleBuilder,System.String,System.Type)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Emitting.ClassBuilder..ctor(System.Reflection.Emit.ModuleBuilder,System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Emitting.ClassBuilder} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Configuration.Tokens.ArgumentType">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Configuration.Tokens.ArgumentType} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Caching.FileModificationWatcher">
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Caching.FileModificationWatcher.SubjectNameFromFilePath(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Caching.FileModificationWatcher..ctor(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Caching.FileModificationWatcher} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Caching.CloneStorageStrategy">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Caching.CloneStorageStrategy} is never used.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Graph.PluginFamily">
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Graph.PluginFamily.get_PluginTypeName()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.PluginFamily.SearchAssemblyGraph(StructureMap.Graph.AssemblyGraph)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Graph.PluginFamily.set_DefinitionSource(StructureMap.Graph.DefinitionSource)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Graph.PluginFamily.get_DefaultInstanceKey()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Graph.PluginFamily.get_PluginType()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.PluginFamily.CreateAutoFilledPluginFamily(System.Type)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.PluginFamily.RemoveImplicitChildren()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Graph.PluginFamily.get_Plugins()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Graph.PluginFamily.set_InterceptionChain(StructureMap.Graph.InterceptionChain)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Graph.PluginFamily.get_InterceptionChain()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Graph.PluginFamily.set_Source(StructureMap.MementoSource)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Graph.PluginFamily.get_Source()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Graph.PluginFamily.get_DefinitionSource()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Graph.PluginFamily.set_DefaultInstanceKey(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Graph.PluginFamily..ctor(StructureMap.Graph.TypePath,System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Graph.PluginFamily..ctor(System.Type)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Graph.PluginFamily..ctor(System.Type,System.String,StructureMap.MementoSource)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Graph.PluginFamily..ctor(System.Type,System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Graph.SetterProperty">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Graph.SetterProperty..ctor(System.Reflection.PropertyInfo)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Graph.SetterProperty.get_Property()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Graph.SetterProperty} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Source.XmlMementoCreator">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Source.XmlMementoCreator..ctor(StructureMap.Source.XmlMementoStyle,System.String,System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Source.XmlMementoCreator.CreateMemento(System.Xml.XmlNode)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Source.XmlMementoCreator} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Configuration.ProblemFinder">
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Configuration.ProblemFinder.GetProblems()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Configuration.ProblemFinder.FindProblems(System.String)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Configuration.ProblemFinder..ctor(StructureMap.Configuration.PluginGraphReport)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Configuration.Tokens.PluginToken">
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Configuration.Tokens.PluginToken.set_PluginType(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Configuration.Tokens.PluginToken.get_PluginType()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Configuration.Tokens.PluginToken.get_AssemblyName()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Configuration.Tokens.PluginToken.get_DefinitionSource()} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Configuration.Tokens.PluginToken.get_PluggedType()} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Configuration.Tokens.PluginToken.CreateImplicitToken(StructureMap.Graph.Plugin)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Configuration.Tokens.PluginToken..ctor(StructureMap.Graph.TypePath,System.String,StructureMap.Graph.DefinitionSource)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Configuration.Tokens.PluginToken.AddPropertyDefinition(StructureMap.Configuration.Tokens.PropertyDefinition)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Configuration.Tokens.PluginToken.ReadProperties(StructureMap.Graph.Plugin)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Configuration.Tokens.PluginToken.get_Properties()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Configuration.Tokens.Properties.PrimitiveProperty">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Configuration.Tokens.Properties.PrimitiveProperty..ctor(StructureMap.Configuration.Tokens.PropertyDefinition,StructureMap.InstanceMemento)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.PluginGraphBuilder">
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.PluginGraphBuilder.get_Report()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.PluginGraphBuilder.get_DefaultManager()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.PluginGraphBuilder.BuildDiagnosticPluginGraph()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.PluginGraphBuilder.Build()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.PluginGraphBuilder.GetStructureMapConfigurationPath()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.PluginGraphBuilder..ctor()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.PluginGraphBuilder..ctor(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.PluginGraphBuilder..ctor(System.Xml.XmlDocument)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.PluginGraphBuilder..ctor(System.Xml.XmlNode)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.PluginGraphBuilder} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Graph.InterceptionChain">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Graph.InterceptionChain..ctor()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.InterceptionChain.WrapInstanceFactory(StructureMap.IInstanceFactory)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.InterceptionChain.AddInterceptor(StructureMap.Interceptors.InstanceFactoryInterceptor)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Graph.InterceptionChain} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.PluginFamilyAttribute">
+    <Warning>WARNING: In the context of this application, the method {StructureMap.PluginFamilyAttribute.GetAttribute(System.Type)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.PluginFamilyAttribute.CreatePluginFamily(System.Type)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.PluginFamilyAttribute.BuildPluginFamily(System.Type)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.PluginFamilyAttribute.IsMarkedAsSingleton(System.Type)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.PluginFamilyAttribute.GetDefaultKey(System.Type)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.PluginFamilyAttribute.MarkedAsPluginFamily(System.Type)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.PluginFamilyAttribute.CreateSource(System.Type)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.PluginFamilyAttribute.get_IsSingleton()} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.PluginFamilyAttribute.get_DefaultKey()} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.PluginFamilyAttribute.get_SourceType()} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.PluginFamilyAttribute.get_Scope()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.StubbedInstanceFactory">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.StubbedInstanceFactory..ctor(StructureMap.IInstanceFactory,System.Object)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.StubbedInstanceFactory} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.DefaultConstructorAttribute">
+    <Warning>WARNING: In the context of this application, the method {StructureMap.DefaultConstructorAttribute.GetConstructor(System.Type)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.DefaultConstructorAttribute} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Client.Views.ChildHeader">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Client.Views.ChildHeader} is never used.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Caching.LazyCache">
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Caching.LazyCache.set_Value(System.Object,System.Object)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Caching.LazyCache.get_Value(System.Object)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Caching.LazyCache} is never used.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.DeploymentTasks.PluginGraphFilter">
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.DeploymentTasks.PluginGraphFilter.get_PluginsToRemove()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.DeploymentTasks.PluginGraphFilter.get_FamiliesToRemove()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.DeploymentTasks.PluginGraphFilter.get_AssembliesToRemove()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.DeploymentTasks.PluginGraphFilter.FilterDeployment(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.DeploymentTasks.PluginGraphFilter..ctor(StructureMap.Configuration.PluginGraphReport)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.DeploymentTasks.PluginGraphFilter} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Configuration.Tokens.Properties.IProperty">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Configuration.Tokens.Properties.IProperty} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Attributes.InstanceScope">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Attributes.InstanceScope} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Interceptors.CacheInterceptor">
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Interceptors.CacheInterceptor.getInstance(System.String)} could have the visibility {private} instead of the visibility {protected}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Interceptors.CacheInterceptor..ctor()} could have the visibility {protected} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Interceptors.CacheInterceptor.cache(System.String,System.Object)} could have the visibility {private} instead of the visibility {protected}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Interceptors.CacheInterceptor.isCached(System.String)} could have the visibility {private} instead of the visibility {protected}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Interceptors.InterceptorChainBuilder">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Interceptors.InterceptorChainBuilder..ctor()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Interceptors.InterceptorChainBuilder} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Client.Views.HTMLSourceMementoSource">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Client.Views.HTMLSourceMementoSource} is never used.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Configuration.Tokens.Properties.ChildProperty">
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Configuration.Tokens.Properties.ChildProperty.get_InnerInstance()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Configuration.Tokens.Properties.ChildProperty.set_ArrayIndex(System.Int32)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Configuration.Tokens.Properties.ChildProperty.get_ArrayIndex()} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Configuration.Tokens.Properties.ChildProperty.BuildArrayChild(StructureMap.Configuration.Tokens.PropertyDefinition,StructureMap.InstanceMemento,StructureMap.Configuration.PluginGraphReport)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Configuration.Tokens.Properties.ChildProperty..ctor(StructureMap.Configuration.Tokens.PropertyDefinition,StructureMap.InstanceMemento,StructureMap.Configuration.PluginGraphReport)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Configuration.Tokens.Properties.ChildProperty..ctor(StructureMap.Configuration.Tokens.PropertyDefinition)} could have the visibility {private} instead of the visibility {protected}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.IInstanceFactory">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.IInstanceFactory} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Graph.SetterPropertyCollection">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Graph.SetterPropertyCollection..ctor(StructureMap.Graph.Plugin)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.SetterPropertyCollection.Add(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Graph.SetterPropertyCollection} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Caching.IValueSource">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Caching.IValueSource} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Source.EmbeddedFolderXmlMementoSource">
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Source.EmbeddedFolderXmlMementoSource.set_Family(StructureMap.Graph.PluginFamily)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Source.EmbeddedFolderXmlMementoSource.get_Family()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Source.EmbeddedFolderXmlMementoSource.GetAllMementos()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Source.EmbeddedFolderXmlMementoSource.set_DefaultMemento(StructureMap.InstanceMemento)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Source.EmbeddedFolderXmlMementoSource.get_DefaultMemento()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Source.EmbeddedFolderXmlMementoSource.SetDefault(System.String)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Source.EmbeddedFolderXmlMementoSource.AddExternalMemento(StructureMap.InstanceMemento)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Source.EmbeddedFolderXmlMementoSource.GetMemento(System.String)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Source.EmbeddedFolderXmlMementoSource} is never used.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Client.Views.SummaryView">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Client.Views.SummaryView} is never used.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Client.Controllers.IHTMLSourceFactory">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Client.Controllers.IHTMLSourceFactory} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.ValidationMethodAttribute">
+    <Warning>WARNING: In the context of this application, the method {StructureMap.ValidationMethodAttribute.CallValidationMethods(System.Object)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.ValidationMethodAttribute.GetValidationMethods(System.Type)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.DeploymentTasks.DumbConfigMergeTask">
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.DeploymentTasks.DumbConfigMergeTask.set_DestinationPath(System.String)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.DeploymentTasks.DumbConfigMergeTask.get_DestinationPath()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.DeploymentTasks.DumbConfigMergeTask.set_SecondConfig(System.String)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.DeploymentTasks.DumbConfigMergeTask.get_SecondConfig()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.DeploymentTasks.DumbConfigMergeTask.set_MainConfig(System.String)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.DeploymentTasks.DumbConfigMergeTask.get_MainConfig()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.DeploymentTasks.DumbConfigMergeTask} is never used.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Graph.PluginGraph">
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Graph.PluginGraph.get_IsSealed()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Graph.PluginGraph.get_PluginFamilies()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Source.XmlFileMementoSource">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Source.XmlFileMementoSource..ctor(System.String,System.String,System.String,StructureMap.Source.XmlMementoStyle)} could have the visibility {protected} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Emitting.Parameters.StringParameterEmitter">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Emitting.Parameters.StringParameterEmitter..ctor()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Emitting.Parameters.StringParameterEmitter} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Configuration.Tokens.Properties.ChildPropertyType">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Configuration.Tokens.Properties.ChildPropertyType} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Client.Views.ProblemView">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Client.Views.ProblemView..ctor(System.Boolean)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Client.Views.ProblemView.WriteProblems(StructureMap.Configuration.Problem[],StructureMap.Client.Views.HTMLBuilder)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Client.Views.ProblemView} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Client.Shell.ApplicationShell">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Client.Shell.ApplicationShell} is never used.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Configuration.GraphObject">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Configuration.GraphObject..ctor()} could have the visibility {protected} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Configuration.GraphObject.LogProblem(StructureMap.Configuration.Problem)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Configuration.GraphObject.get_key()} could have the visibility {private} instead of the visibility {protected}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Client.Views.ProblemColumn">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Client.Views.ProblemColumn} is never used.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Emitting.Parameters.ParameterEmitter">
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Emitting.Parameters.ParameterEmitter.Generate(System.Reflection.Emit.ILGenerator,System.Reflection.ParameterInfo)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Emitting.Parameters.ParameterEmitter.AttachNextSibling(StructureMap.Emitting.Parameters.ParameterEmitter)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Emitting.Parameters.ParameterEmitter.GenerateSetter(System.Reflection.Emit.ILGenerator,System.Reflection.PropertyInfo)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Emitting.Parameters.ParameterEmitter.get_NextSibling()} could have the visibility {private} instead of the visibility {protected}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Emitting.Parameters.ParameterEmitter.set_NextSibling(StructureMap.Emitting.Parameters.ParameterEmitter)} could have the visibility {private} instead of the visibility {protected}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Emitting.Parameters.ParameterEmitter.canProcess(System.Type)} could have the visibility {private} instead of the visibility {protected}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Emitting.Parameters.ParameterEmitter.generate(System.Reflection.Emit.ILGenerator,System.Reflection.ParameterInfo)} could have the visibility {private} instead of the visibility {protected}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Emitting.Parameters.ParameterEmitter.generateSetter(System.Reflection.Emit.ILGenerator,System.Reflection.PropertyInfo)} could have the visibility {private} instead of the visibility {protected}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Exceptions.InstancePropertyValueException">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Exceptions.InstancePropertyValueException} is never used.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Configuration.Tokens.PropertyDefinitionType">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Configuration.Tokens.PropertyDefinitionType} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Graph.PluginFamilyCollection">
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.PluginFamilyCollection.Remove(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Graph.PluginFamilyCollection.get_Item(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.PluginFamilyCollection.Add(StructureMap.Graph.PluginFamily)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Graph.PluginFamilyCollection..ctor(StructureMap.Graph.PluginGraph)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.PluginFamilyCollection.Contains(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.PluginFamilyCollection.Remove(StructureMap.Graph.PluginFamily)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Graph.PluginFamilyCollection} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.DeploymentTasks.SetOverrideTask">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.DeploymentTasks.SetOverrideTask..ctor()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.DeploymentTasks.SetOverrideTask.ApplyToDocument(System.Xml.XmlDocument)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.DeploymentTasks.SetOverrideTask.set_DefaultKey(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.DeploymentTasks.SetOverrideTask.set_TypeName(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.DeploymentTasks.SetOverrideTask.set_ProfileName(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.DeploymentTasks.SetOverrideTask} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Source.XmlAttributeInstanceMemento">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Source.XmlAttributeInstanceMemento..ctor(System.Xml.XmlNode)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Source.XmlAttributeInstanceMemento} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.DeploymentTasks.Versioning.DeployedDirectory">
+    <Warning>WARNING: In the context of this application, the method {StructureMap.DeploymentTasks.Versioning.DeployedDirectory.ReadFromXml(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.DeploymentTasks.Versioning.DeployedDirectory.WriteToXml(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.DeploymentTasks.Versioning.DeployedDirectory.FindAssembly(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.DeploymentTasks.Versioning.DeployedDirectory.AddAssembly(StructureMap.DeploymentTasks.Versioning.DotNetAssembly)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.DeploymentTasks.Versioning.DeployedDirectory.FindFile(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.DeploymentTasks.Versioning.DeployedDirectory.AddFile(StructureMap.DeploymentTasks.Versioning.DeployedFile)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.DeploymentTasks.Versioning.DeployedDirectory.CheckDeployedVersions(StructureMap.DeploymentTasks.Versioning.DeployedDirectory,StructureMap.DeploymentTasks.Versioning.IVersionReport)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.DeploymentTasks.Versioning.DeployedDirectory..ctor(System.IO.DirectoryInfo)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.DeploymentTasks.Versioning.DeployedDirectory..ctor()} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.DeploymentTasks.Versioning.DeployedDirectory} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Caching.IExpirationPolicy">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Caching.IExpirationPolicy} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Client.Views.IViewPart">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Client.Views.IViewPart} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Client.TreeNodes.GraphObjectNode">
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Client.TreeNodes.GraphObjectNode.set_IsAggregate(System.Boolean)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Client.TreeNodes.GraphObjectNode.get_IsAggregate()} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Client.TreeNodes.GraphObjectNode.RefreshStatus()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Client.TreeNodes.GraphObjectNode.get_HasChildrenProblems()} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Client.TreeNodes.GraphObjectNode.get_HasProblems()} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Client.TreeNodes.GraphObjectNode.FindById(System.Guid)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Client.TreeNodes.GraphObjectNode.FindChild(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Client.TreeNodes.GraphObjectNode.get_ViewName()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Client.TreeNodes.GraphObjectNode.get_Subject()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Client.TreeNodes.GraphObjectNode..ctor(System.String,StructureMap.Configuration.GraphObject,System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Client.TreeNodes.GraphObjectNode} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Graph.Plugin">
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Graph.Plugin.get_CanBeAutoFilled()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.Plugin.CreateImplicitMemento()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Graph.Plugin.set_DefinitionSource(StructureMap.Graph.DefinitionSource)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Graph.Plugin.get_DefinitionSource()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.Plugin.GetInstanceBuilderClassName()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Graph.Plugin.get_Setters()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Graph.Plugin.get_PluggedType()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Graph.Plugin.get_ConcreteKey()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.Plugin.GetConstructor()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.Plugin.CreateExplicitPlugin(System.Type,System.String,System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.Plugin.CreateImplicitPlugin(System.Type)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.Plugin.CanBeCast(System.Type,System.Type)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.Plugin.CanBePluggedIn(System.Type,System.Type)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.Plugin.GetPlugins(System.Reflection.Assembly,System.Type)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Graph.Plugin..ctor(StructureMap.Graph.TypePath,System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Graph.Plugin} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Interceptors.HybridCacheInterceptor">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Interceptors.HybridCacheInterceptor..ctor()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Interceptors.HybridCacheInterceptor} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Caching.IManagedCache">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Caching.IManagedCache} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.DeploymentTasks.Versioning.IVersionReport">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.DeploymentTasks.Versioning.IVersionReport} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Configuration.Tokens.Properties.Property">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Configuration.Tokens.Properties.Property..ctor(StructureMap.Configuration.Tokens.PropertyDefinition)} could have the visibility {protected} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Configuration.Tokens.Properties.Property.get_Definition()} could have the visibility {protected} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Client.Controllers.ReportSource">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Client.Controllers.ReportSource..ctor()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Client.Controllers.ReportSource} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Caching.SerializationCacheItem">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Caching.SerializationCacheItem..ctor(System.Object)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Caching.SerializationCacheItem} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Configuration.Tokens.Properties.ReferencedChildPropertyMode">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Configuration.Tokens.Properties.ReferencedChildPropertyMode..ctor(StructureMap.Configuration.Tokens.Properties.ChildProperty)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Configuration.Tokens.Properties.ReferencedChildPropertyMode} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Client.Controllers.IReportSource">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Client.Controllers.IReportSource} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.ObjectFactory">
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.ObjectFactory.get_Profile()} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.ObjectFactory.set_Profile(System.String)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.ObjectFactory} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Configuration.Tokens.Properties.NulloChildPropertyMode">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Configuration.Tokens.Properties.NulloChildPropertyMode..ctor(StructureMap.Configuration.Tokens.Properties.ChildProperty)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Configuration.Tokens.Properties.NulloChildPropertyMode} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Caching.IStorageStrategy">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Caching.IStorageStrategy} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Configuration.NormalGraphBuilder">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Configuration.NormalGraphBuilder..ctor(StructureMap.Graph.InstanceDefaultManager,StructureMap.Interceptors.IInterceptorChainBuilder)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Configuration.NormalGraphBuilder..ctor(StructureMap.Graph.InstanceDefaultManager)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Configuration.NormalGraphBuilder.FindPluginFamily(System.String)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Configuration.NormalGraphBuilder} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Source.XmlTemplater">
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Source.XmlTemplater.get_Substitutions()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Source.XmlTemplater.SubstituteTemplates(System.Xml.XmlNode,StructureMap.InstanceMemento)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Source.XmlTemplater..ctor(System.Xml.XmlNode)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Source.XmlTemplater} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.InstanceBuilder">
+    <Warning>WARNING: In the context of this application, the method {StructureMap.InstanceBuilder.SetInstanceManager(StructureMap.InstanceManager)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.InstanceBuilder.get_ConcreteTypeKey()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.InstanceBuilder.BuildInstance(StructureMap.InstanceMemento)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Client.Controllers.TreeNodeAggregator">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Client.Controllers.TreeNodeAggregator..ctor(System.Type,System.String,System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Client.Controllers.TreeNodeAggregator.Aggregate(StructureMap.Client.TreeNodes.GraphObjectNode)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Client.Controllers.TreeNodeAggregator} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Source.SingleEmbeddedXmlMementoSource">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Source.SingleEmbeddedXmlMementoSource..ctor(System.String,StructureMap.Source.XmlMementoStyle,System.Reflection.Assembly,System.String)} could have the visibility {protected} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Graph.AssemblyGraphCollection">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Graph.AssemblyGraphCollection..ctor(StructureMap.Graph.PluginGraph)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.AssemblyGraphCollection.Remove(System.String)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.AssemblyGraphCollection.Add(StructureMap.Graph.AssemblyGraph)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Configuration.Tokens.Properties.DefaultChildPropertyMode">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Configuration.Tokens.Properties.DefaultChildPropertyMode..ctor(StructureMap.Configuration.Tokens.Properties.ChildProperty)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Configuration.Tokens.Properties.DefaultChildPropertyMode} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Client.Controllers.TreeBuilder">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Client.Controllers.TreeBuilder..ctor(StructureMap.Configuration.PluginGraphReport)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Client.Controllers.TreeBuilder.BuildTree()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Client.Controllers.TreeBuilder.get_LastNode()} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Client.Controllers.TreeBuilder.PushNodeOntoStack(System.String,System.String,StructureMap.Configuration.GraphObject)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Client.Controllers.TreeBuilder} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Configuration.Tokens.PropertyDefinition">
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Configuration.Tokens.PropertyDefinition.CreateProperty(StructureMap.InstanceMemento,StructureMap.Configuration.PluginGraphReport)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Configuration.Tokens.PropertyDefinition.set_ArgumentType(StructureMap.Configuration.Tokens.ArgumentType)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Configuration.Tokens.PropertyDefinition.get_ArgumentType()} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Configuration.Tokens.PropertyDefinition.set_EnumerationValues(System.String[])} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Configuration.Tokens.PropertyDefinition.get_EnumerationValues()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Configuration.Tokens.PropertyDefinition.set_PropertyName(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Configuration.Tokens.PropertyDefinition.set_PropertyType(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Configuration.Tokens.PropertyDefinition.get_PropertyType()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Configuration.Tokens.PropertyDefinition.set_DefinitionType(StructureMap.Configuration.Tokens.PropertyDefinitionType)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Configuration.Tokens.PropertyDefinition.get_DefinitionType()} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Configuration.Tokens.PropertyDefinition..ctor(System.String,System.String,StructureMap.Configuration.Tokens.PropertyDefinitionType,StructureMap.Configuration.Tokens.ArgumentType)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Configuration.Tokens.PropertyDefinition..ctor()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.StructureMapException">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.StructureMapException..ctor(System.Int32,System.Exception,System.Object[])} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.StructureMapException..ctor(System.Int32,System.Object[])} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.StructureMapException.get_ErrorCode()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.StructureMapException} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.DeploymentTasks.AddAssembly">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.DeploymentTasks.AddAssembly..ctor()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.DeploymentTasks.AddAssembly.AddAssemblyToDocument(System.Xml.XmlDocument)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.DeploymentTasks.AddAssembly.AddAssemblyNode()} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.DeploymentTasks.AddAssembly.set_AssemblyName(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.DeploymentTasks.AddAssembly} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Configuration.Tokens.TemplateToken">
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Configuration.Tokens.TemplateToken.set_Properties(System.String[])} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Configuration.Tokens.TemplateToken.get_Properties()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Configuration.Tokens.TemplateToken.set_ConcreteKey(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Configuration.Tokens.TemplateToken.set_PluginType(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Configuration.Tokens.TemplateToken.set_TemplateKey(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Configuration.Tokens.TemplateToken..ctor()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Graph.Profile">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Graph.Profile..ctor(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Graph.Profile.get_DefaultInstanceKey(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.Profile.FilterOutNonExistentPluginTypes(StructureMap.Configuration.PluginGraphReport)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Graph.Profile.get_Defaults()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.Profile.HasOverride(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.Profile.RemoveOverride(System.String)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.Profile.AddOverride(System.String,System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.Profile.AddOverride(StructureMap.Graph.InstanceDefault)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Graph.Profile.get_ProfileName()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Graph.Profile} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Emitting.Parameters.ChildParameterEmitter">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Emitting.Parameters.ChildParameterEmitter..ctor()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Emitting.Parameters.ChildParameterEmitter} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Emitting.InstanceBuilderAssembly">
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Emitting.InstanceBuilderAssembly.Compile()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Emitting.InstanceBuilderAssembly.AddPlugin(StructureMap.Graph.Plugin)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Emitting.InstanceBuilderAssembly..ctor(System.String,System.Type)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Emitting.InstanceBuilderAssembly} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Client.Views.GridView">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Client.Views.GridView} is never used.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.DeploymentTasks.Versioning.CheckVersionTask">
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.DeploymentTasks.Versioning.CheckVersionTask.get_Exclusions()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.DeploymentTasks.Versioning.CheckVersionTask.set_Exclusions(System.String)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.DeploymentTasks.Versioning.CheckVersionTask.set_TargetFolder(System.String)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.DeploymentTasks.Versioning.CheckVersionTask.get_TargetFolder()} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.DeploymentTasks.Versioning.CheckVersionTask.set_ManifestFile(System.String)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.DeploymentTasks.Versioning.CheckVersionTask.get_ManifestFile()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.DeploymentTasks.Versioning.CheckVersionTask} is never used.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Client.Controllers.ApplicationController">
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Client.Controllers.ApplicationController.ShowView(System.String,StructureMap.Configuration.GraphObject)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Client.Controllers.ApplicationController.RefreshReport()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Client.Controllers.ApplicationController..ctor(StructureMap.Client.Controllers.IApplicationShell,StructureMap.Client.Controllers.IReportSource)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Client.Controllers.ApplicationController} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Configuration.Tokens.InstanceToken">
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Configuration.Tokens.InstanceToken.get_TemplateKey()} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Configuration.Tokens.InstanceToken.Validate(StructureMap.Configuration.IInstanceValidator)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Configuration.Tokens.InstanceToken.AddProperty(StructureMap.Configuration.Tokens.Properties.IProperty)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Configuration.Tokens.InstanceToken.set_ConcreteKey(System.String)} could have the visibility {protected} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Configuration.Tokens.InstanceToken..ctor(System.String,StructureMap.Configuration.PluginGraphReport,StructureMap.InstanceMemento)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Configuration.Tokens.InstanceToken..ctor()} could have the visibility {protected} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Configuration.Tokens.InstanceToken.set_Source(StructureMap.Graph.DefinitionSource)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Configuration.Tokens.InstanceToken.set_InstanceKey(System.String)} could have the visibility {protected} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.InstanceManager">
+    <Warning>WARNING: In the context of this application, the method {StructureMap.InstanceManager.RegisterType(StructureMap.IInstanceFactory)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.InstanceManager.SetDefaults(StructureMap.Graph.Profile)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.InstanceManager.get_Item(System.Type)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.InstanceManager.GetAllInstances(System.Type)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.InstanceManager.InjectStub(System.Type,System.Object)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.InstanceManager.UnMockAll()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.InstanceManager.IsMocked(System.Type)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.InstanceManager.Mock(System.Type)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.InstanceManager.FillDependencies(System.Type)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.InstanceManager.set_Item(System.String,StructureMap.IInstanceFactory)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.InstanceManager.get_Item(System.String)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.InstanceManager.set_Item(System.Type,StructureMap.IInstanceFactory)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.InstanceManager.SetDefault(System.String,System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.InstanceManager.SetDefault(System.Type,System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.InstanceManager.CreateInstance(System.String,StructureMap.InstanceMemento)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.InstanceManager.CreateInstance(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.InstanceManager.CreateInstance(System.Type)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.InstanceManager..ctor(StructureMap.Graph.PluginGraph,System.Boolean)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.InstanceManager..ctor()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.InstanceManager.UnMock(System.Type)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.InstanceManager.CreateInstance(System.Type,StructureMap.InstanceMemento)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.DeploymentTasks.Versioning.DeployedFile">
+    <Warning>WARNING: In the context of this application, the method {StructureMap.DeploymentTasks.Versioning.DeployedFile.CheckContents(System.Byte[])} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.DeploymentTasks.Versioning.DeployedFile.CheckVersion(StructureMap.DeploymentTasks.Versioning.DeployedDirectory,StructureMap.DeploymentTasks.Versioning.IVersionReport)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.DeploymentTasks.Versioning.DeployedFile.CreateFile(System.IO.FileInfo)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.DeploymentTasks.Versioning.DeployedFile.set_ContentsHash(System.Byte[])} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.DeploymentTasks.Versioning.DeployedFile.get_ContentsHash()} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.DeploymentTasks.Versioning.DeployedFile.get_FileName()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.DeploymentTasks.Versioning.DeployedFile..ctor(System.String)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.DeploymentTasks.Versioning.DeployedFile} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.DeploymentTasks.SubstitutionTask">
+    <Warning>WARNING: In the context of this application, the method {StructureMap.DeploymentTasks.SubstitutionTask.DoWork()} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.DeploymentTasks.SubstitutionTask.set_FilePath(System.String)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.DeploymentTasks.SubstitutionTask.get_FilePath()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.DeploymentTasks.SubstitutionTask.set_Value(System.String)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.DeploymentTasks.SubstitutionTask.get_Value()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.DeploymentTasks.SubstitutionTask.set_Flag(System.String)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.DeploymentTasks.SubstitutionTask.get_Flag()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.DeploymentTasks.SubstitutionTask} is never used.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.MementoSource">
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.MementoSource.get_Description()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.MementoSource.set_Family(StructureMap.Graph.PluginFamily)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.MementoSource.get_Family()} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.MementoSource.GetAllMementos()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.MementoSource.set_DefaultMemento(StructureMap.InstanceMemento)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.MementoSource.get_DefaultMemento()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.MementoSource.AddExternalMemento(StructureMap.InstanceMemento)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.MementoSource.GetMemento(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.MementoSource.fetchInternalMementos()} could have the visibility {private} instead of the visibility {protected}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.MementoSource.retrieveMemento(System.String)} could have the visibility {private} instead of the visibility {protected}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Interceptors.SingletonInterceptor">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Interceptors.SingletonInterceptor..ctor(System.Collections.IDictionary)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Interceptors.SingletonInterceptor..ctor()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Interceptors.SingletonInterceptor} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Client.Views.Column">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Client.Views.Column..ctor(System.String,System.String)} could have the visibility {protected} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Client.Views.CellMaker">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Client.Views.CellMaker..ctor(System.Xml.XmlElement)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Client.Views.CellMaker.MarkProblems(StructureMap.Configuration.GraphObject)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Client.Views.CellMaker.set_Level(System.Int32)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Client.Views.CellMaker.AddLink(System.String,System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Client.Views.CellMaker.AddText(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Client.Views.CellMaker} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Caching.PruneEventDispatcher">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Caching.PruneEventDispatcher..ctor(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Caching.PruneEventDispatcher} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Configuration.IInstanceValidator">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Configuration.IInstanceValidator} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Graph.PluginCollection">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Graph.PluginCollection..ctor(StructureMap.Graph.PluginFamily)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.PluginCollection.RemoveImplicitChildren()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.PluginCollection.Remove(System.String)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Graph.PluginCollection.get_Item(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.PluginCollection.Add(StructureMap.Graph.Plugin)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Graph.PluginCollection} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Configuration.Tokens.Properties.IChildPropertyMode">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Configuration.Tokens.Properties.IChildPropertyMode} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.MemoryInstanceMemento">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.MemoryInstanceMemento..ctor(System.String,System.String,System.Collections.Specialized.NameValueCollection)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.MemoryInstanceMemento.SetProperty(System.String,System.String)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.MemoryInstanceMemento..ctor(System.String,System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.MemoryInstanceMemento} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Configuration.Tokens.Properties.EnumerationProperty">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Configuration.Tokens.Properties.EnumerationProperty..ctor(StructureMap.Configuration.Tokens.PropertyDefinition,StructureMap.InstanceMemento)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Configuration.Tokens.Properties.TemplateProperty">
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Configuration.Tokens.Properties.TemplateProperty.GetTemplateProperties(StructureMap.InstanceMemento,StructureMap.Configuration.Tokens.TemplateToken)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Configuration.Tokens.Properties.TemplateProperty..ctor(System.String,System.Exception)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Configuration.Tokens.Properties.TemplateProperty..ctor(System.String,System.String)} could have the visibility {private} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Configuration.Tokens.Deployable">
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Configuration.Tokens.Deployable.IsDeployed(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Configuration.Tokens.Deployable.set_DeploymentTargets(System.String[])} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Configuration.Tokens.Deployable.get_DeploymentTargets()} could have the visibility {protected} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Configuration.Tokens.Deployable..ctor(System.String[])} could have the visibility {protected} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Configuration.Tokens.Deployable..ctor()} could have the visibility {protected} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Client.Views.IColumn">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Client.Views.IColumn} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Configuration.FamilyParser">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Configuration.FamilyParser..ctor(StructureMap.Graph.Configuration.IGraphBuilder)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Configuration.FamilyParser.ParseFamily(System.Xml.XmlElement)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Configuration.FamilyParser} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.PluggableAttribute">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.PluggableAttribute..ctor(System.String,System.String)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.PluggableAttribute.MarkedAsPluggable(System.Type)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.PluggableAttribute.InstanceOf(System.Type)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.PluggableAttribute.get_ConcreteKey()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Caching.ClearEventDispatcher">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Caching.ClearEventDispatcher..ctor(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Client.Views.ViewConstants">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Client.Views.ViewConstants} is never used.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Client.Views.ReferenceColumn">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Client.Views.ReferenceColumn} is never used.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Emitting.Method">
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Emitting.Method.Build()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Emitting.Method.get_MethodName()} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Emitting.Method.get_ArgumentList()} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Emitting.Method.Generate(System.Reflection.Emit.ILGenerator)} could have the visibility {private} instead of the visibility {protected}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Emitting.Method.get_ReturnType()} could have the visibility {private} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Graph.InstanceDefaultManager">
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.InstanceDefaultManager.AddMachineOverride(StructureMap.Graph.MachineOverride)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.InstanceDefaultManager.AddPluginFamilyDefault(System.String,System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.InstanceDefaultManager.AddPluginFamilyDefault(StructureMap.Graph.InstanceDefault)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.InstanceDefaultManager.ReadDefaultsFromPluginGraph(StructureMap.Graph.PluginGraph)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Graph.InstanceDefaultManager.set_DefaultProfileName(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Graph.InstanceDefaultManager.get_DefaultProfileName()} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.InstanceDefaultManager.GetMachineName()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.InstanceDefaultManager.ClearProfiles()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.InstanceDefaultManager.ClearMachineOverrides()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.InstanceDefaultManager.CalculateOverridenDefaults(System.String,System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.InstanceDefaultManager.CalculateDefaults()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.InstanceDefaultManager.CalculateDefaults(System.String,System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.InstanceDefaultManager.GetMachineOverride(System.String)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Graph.InstanceDefaultManager..ctor()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.InstanceDefaultManager.GetProfile(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.InstanceDefaultManager.AddProfile(StructureMap.Graph.Profile)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Graph.InstanceDefaultManager} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.DeploymentTasks.Versioning.GenerateVersionReport">
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.DeploymentTasks.Versioning.GenerateVersionReport.set_OutputPath(System.String)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.DeploymentTasks.Versioning.GenerateVersionReport.get_OutputPath()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.DeploymentTasks.Versioning.GenerateVersionReport.set_Directory(System.String)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.DeploymentTasks.Versioning.GenerateVersionReport.get_Directory()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.DeploymentTasks.Versioning.GenerateVersionReport} is never used.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Client.Controllers.IApplicationShell">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Client.Controllers.IApplicationShell} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Interceptors.IInterceptorChainBuilder">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Interceptors.IInterceptorChainBuilder} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Configuration.Tokens.InterceptorInstanceToken">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Configuration.Tokens.InterceptorInstanceToken..ctor(System.String,StructureMap.Configuration.PluginGraphReport,StructureMap.InstanceMemento)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Configuration.Tokens.InterceptorInstanceToken..ctor(StructureMap.Attributes.InstanceScope)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.InstanceMemento">
+    <Warning>WARNING: In the context of this application, the method {StructureMap.InstanceMemento.GetChildMemento(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.InstanceMemento.set_DefinitionSource(StructureMap.Graph.DefinitionSource)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.InstanceMemento.get_DefinitionSource()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.InstanceMemento.get_IsDefault()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.InstanceMemento.get_TemplateName()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.InstanceMemento.GetProperty(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.InstanceMemento.get_ConcreteKey()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.InstanceMemento.get_InstanceKey()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.InstanceMemento.getPropertyValue(System.String)} could have the visibility {private} instead of the visibility {protected}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.InstanceMemento.getChild(System.String)} could have the visibility {private} instead of the visibility {protected}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.InstanceMemento.GetChildrenArray(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.InstanceMemento.get_IsReference()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.InstanceMemento.get_ReferenceKey()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Graph.AssemblyGraph">
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Graph.AssemblyGraph.set_LookForPluginFamilies(System.Boolean)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Graph.AssemblyGraph.get_LookForPluginFamilies()} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.AssemblyGraph.FindPlugins(System.Type)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.AssemblyGraph.FindPluginFamilies()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Graph.AssemblyGraph.get_AssemblyName()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Graph.AssemblyGraph..ctor(System.Reflection.Assembly)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Graph.AssemblyGraph..ctor(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Graph.AssemblyGraph} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Client.Views.IndexColumn">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Client.Views.IndexColumn} is never used.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Configuration.ConfigurationConstants">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Configuration.ConfigurationConstants} is never used.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.XmlMapping.InstanceDefaultManagerMapper">
+    <Warning>WARNING: In the context of this application, the method {StructureMap.XmlMapping.InstanceDefaultManagerMapper.ReadFromXml(System.Xml.XmlNode)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.XmlMapping.InstanceDefaultManagerMapper} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Configuration.ConfigurationParser">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Configuration.ConfigurationParser..ctor(System.Xml.XmlNode)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Configuration.ConfigurationParser.ParseInstances(StructureMap.Graph.Configuration.IGraphBuilder)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Configuration.ConfigurationParser.ParseFamilies(StructureMap.Graph.Configuration.IGraphBuilder)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Configuration.ConfigurationParser.ParseAssemblies(StructureMap.Graph.Configuration.IGraphBuilder)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Configuration.ConfigurationParser.GetDeploymentTargets(System.Xml.XmlNode)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Configuration.ConfigurationParser.GetParsers(System.Xml.XmlDocument,System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Configuration.ConfigurationParser} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Configuration.Problem">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Configuration.Problem..ctor(System.String,System.Exception)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Configuration.Problem..ctor(System.String,System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Configuration.Problem.set_ObjectId(System.Guid)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Configuration.Problem.set_Path(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Interceptors.HttpContextItemInterceptor">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Interceptors.HttpContextItemInterceptor..ctor()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Interceptors.HttpContextItemInterceptor.HasContext()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Interceptors.HttpContextItemInterceptor} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Source.XmlAttributeFileMementoSource">
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Source.XmlAttributeFileMementoSource.set_Family(StructureMap.Graph.PluginFamily)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Source.XmlAttributeFileMementoSource.get_Family()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Source.XmlAttributeFileMementoSource.GetAllMementos()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Source.XmlAttributeFileMementoSource.set_DefaultMemento(StructureMap.InstanceMemento)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Source.XmlAttributeFileMementoSource.get_DefaultMemento()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Source.XmlAttributeFileMementoSource.SetDefault(System.String)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Source.XmlAttributeFileMementoSource.AddExternalMemento(StructureMap.InstanceMemento)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Source.XmlAttributeFileMementoSource.GetMemento(System.String)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Source.XmlAttributeFileMementoSource.createMemento(System.Xml.XmlNode)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Source.XmlAttributeFileMementoSource.get_KeyAttribute()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Source.XmlAttributeFileMementoSource.get_TypeAttribute()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Source.XmlAttributeFileMementoSource.get_NodeName()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Source.XmlAttributeFileMementoSource.get_XPath()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Source.XmlAttributeFileMementoSource.get_FilePath()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Source.XmlAttributeFileMementoSource} is never used.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Client.Controllers.IHTMLSource">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Client.Controllers.IHTMLSource} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Source.TemplatedMementoSource">
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Source.TemplatedMementoSource.set_Family(StructureMap.Graph.PluginFamily)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Source.TemplatedMementoSource.get_Family()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Source.TemplatedMementoSource.GetAllMementos()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Source.TemplatedMementoSource.set_DefaultMemento(StructureMap.InstanceMemento)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Source.TemplatedMementoSource.get_DefaultMemento()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Source.TemplatedMementoSource.SetDefault(System.String)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Source.TemplatedMementoSource.AddExternalMemento(StructureMap.InstanceMemento)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Source.TemplatedMementoSource.GetMemento(System.String)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Source.TemplatedMementoSource} is never used.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Client.Views.TableMaker">
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Client.Views.TableMaker.AddCenteredCell(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Client.Views.TableMaker.CreateCell()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Client.Views.TableMaker.AddReferenceLink(System.String,System.Guid)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Client.Views.TableMaker.AddLink(System.String,System.String)} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Client.Views.TableMaker.AddCell(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Client.Views.TableMaker.AddHeader(System.String,System.Int32)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Client.Views.TableMaker.AddHeader(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Client.Views.TableMaker.AlternateColors()} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Client.Views.TableMaker.AddRow(System.Boolean)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Client.Views.TableMaker..ctor(System.Xml.XmlElement)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Client.Views.TableMaker} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Configuration.Tokens.Properties.ChildArrayProperty">
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Configuration.Tokens.Properties.ChildArrayProperty.get_InnerProperties()} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Configuration.Tokens.Properties.ChildArrayProperty..ctor(StructureMap.Configuration.Tokens.PropertyDefinition,StructureMap.InstanceMemento,StructureMap.Configuration.PluginGraphReport)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Source.DirectoryXmlMementoSource">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Source.DirectoryXmlMementoSource..ctor(System.String,System.String)} could have the visibility {protected} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Caching.SharedStorageStrategy">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Caching.SharedStorageStrategy} is never used.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Caching.Expirations.SlidingTimeExpirationPolicy">
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Caching.Expirations.SlidingTimeExpirationPolicy.get_Ticks()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Caching.Expirations.SlidingTimeExpirationPolicy} is never used.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Attributes.SetterPropertyAttribute">
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Attributes.SetterPropertyAttribute.FindMarkedProperties(System.Type)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Emitting.Parameters.EnumParameterEmitter">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Emitting.Parameters.EnumParameterEmitter..ctor()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Emitting.Parameters.EnumParameterEmitter} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Caching.CloneCacheItem">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Caching.CloneCacheItem..ctor(System.Object)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Caching.CloneCacheItem} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Configuration.Tokens.Properties.InlineInstanceChildPropertyMode">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Configuration.Tokens.Properties.InlineInstanceChildPropertyMode..ctor(StructureMap.Configuration.Tokens.Properties.ChildProperty)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Configuration.Tokens.Properties.InlineInstanceChildPropertyMode} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Source.XmlAttributeDirectoryMementoSource">
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Source.XmlAttributeDirectoryMementoSource.set_Family(StructureMap.Graph.PluginFamily)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Source.XmlAttributeDirectoryMementoSource.get_Family()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Source.XmlAttributeDirectoryMementoSource.GetAllMementos()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Source.XmlAttributeDirectoryMementoSource.set_DefaultMemento(StructureMap.InstanceMemento)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Source.XmlAttributeDirectoryMementoSource.get_DefaultMemento()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Source.XmlAttributeDirectoryMementoSource.SetDefault(System.String)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Source.XmlAttributeDirectoryMementoSource.AddExternalMemento(StructureMap.InstanceMemento)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Source.XmlAttributeDirectoryMementoSource.GetMemento(System.String)} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Source.XmlAttributeDirectoryMementoSource.Validate()} is never used.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Source.XmlAttributeDirectoryMementoSource} is never used.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Client.Views.RecordView">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Client.Views.RecordView} is never used.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.DeploymentTasks.DeploymentExecutor">
+    <Warning>WARNING: In the context of this application, the method {StructureMap.DeploymentTasks.DeploymentExecutor.BuildConfigDocument()} could have the visibility {private} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.DeploymentTasks.DeploymentExecutor..ctor()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Client.Views.InstanceHierarchyView">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Client.Views.InstanceHierarchyView} is never used.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Source.CreateXmlMementoDelegate">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Source.CreateXmlMementoDelegate..ctor(System.Object,System.IntPtr)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Source.CreateXmlMementoDelegate} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Configuration.PluginGraphReport">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Configuration.PluginGraphReport..ctor()} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Configuration.PluginGraphReport.FindTemplate(System.String,System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Configuration.PluginGraphReport.ValidateInstances(StructureMap.Configuration.IInstanceValidator)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Configuration.PluginGraphReport.AnalyzeInstances(StructureMap.Graph.PluginGraph)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Configuration.PluginGraphReport.ImportImplicitChildren(StructureMap.Graph.PluginGraph)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Configuration.PluginGraphReport.FindPlugin(System.String,System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Configuration.PluginGraphReport.FindFamily(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Configuration.PluginGraphReport.AddFamily(StructureMap.Configuration.Tokens.FamilyToken)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Configuration.PluginGraphReport.AddAssembly(StructureMap.Configuration.Tokens.AssemblyToken)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Configuration.PluginGraphReport.set_DefaultManager(StructureMap.Graph.InstanceDefaultManager)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Source.XmlNodeInstanceMemento">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Source.XmlNodeInstanceMemento..ctor(System.Xml.XmlNode,System.String,System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Source.XmlNodeInstanceMemento} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Configuration.Tokens.PropertyDefinitionBuilder">
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Configuration.Tokens.PropertyDefinitionBuilder.CreatePropertyDefinition(System.Reflection.PropertyInfo)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Configuration.Tokens.PropertyDefinitionBuilder.CreatePropertyDefinitions(System.Reflection.ConstructorInfo)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Configuration.Tokens.PropertyDefinitionBuilder} could have the visibility {internal} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Graph.Deployable">
+    <Warning>WARNING: In the context of this application, the constructor {StructureMap.Graph.Deployable..ctor()} could have the visibility {protected} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the method {StructureMap.Graph.Deployable.IsDeployed(System.String)} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property setter {StructureMap.Graph.Deployable.set_DeploymentTargets(System.String[])} could have the visibility {internal} instead of the visibility {public}.</Warning>
+    <Warning>WARNING: In the context of this application, the property getter {StructureMap.Graph.Deployable.get_DeploymentTargets()} could have the visibility {private} instead of the visibility {public}.</Warning>
+  </WarningByType>
+  <WarningByType TypeName="StructureMap.Configuration.XmlConstants">
+    <Warning>WARNING: In the context of this application, the type {StructureMap.Configuration.XmlConstants} is never used.</Warning>
+  </WarningByType>
+</InfoWarnings>

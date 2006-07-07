@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?> 
+<StructureMap>
+	<Assembly Name="StructureMap.Testing.Widget"/>
+	<Assembly Name="StructureMap.Testing.Widget2"/>
+	
+	<Profile Name="Blue">
+		<Override Type="StructureMap.Testing.Widget.Rule" DefaultKey="Blue"/>
+		<Override Type="StructureMap.Testing.Widget.IWidget" DefaultKey="Blue"/>
+	</Profile>
+
+	<Profile Name="Green">
+		<Override Type="StructureMap.Testing.Widget.Rule" DefaultKey="Green"/>
+		<Override Type="StructureMap.Testing.Widget.IWidget" DefaultKey="Green"/>
+	</Profile>	
+	
+	<Machine Name="SERVER">
+		<Override Type="StructureMap.Testing.Widget.IWidget" DefaultKey="Orange"/>
+	</Machine>
+	
+	<Machine Name="GREEN-BOX" Profile="Green"/>
+	
+	
+	
+	<PluginFamily Type="StructureMap.Testing.Widget.Rule" Assembly="StructureMap.Testing.Widget" DefaultKey="">
+		<Instance Key="Red" Type="Color">
+			<Property Name="Color" Value="Red" />	
+		</Instance>
+		<Instance Key="Blue" Type="Color">
+			<Property Name="Color" Value="Blue" />
+		</Instance>
+		<Instance Key="Green" Type="Color">
+			<Property Name="Color" Value="Green" />
+		</Instance>
+		<Instance Key="Bigger" Type="GreaterThan">
+			<Property Name="Attribute" Value="MyDad" />
+			<Property Name="Value" Value="10" />
+		</Instance>
+	</PluginFamily>
+	
+	<PluginFamily Type="StructureMap.Testing.Widget.IWidget" Assembly="StructureMap.Testing.Widget" DefaultKey="Red">
+		<Instance Key="Red" Type="Color">
+			<Property Name="Color" Value="Red" />
+		</Instance>
+		<Instance Key="Blue" Type="Color">
+			<Property Name="Color" Value="Blue" />
+		</Instance>
+		<Instance Key="Green" Type="Color">
+			<Property Name="Color" Value="Green" />
+		</Instance>
+		<Instance Key="Orange" Type="Color">
+			<Property Name="Color" Value="Orange" />
+		</Instance>
+	</PluginFamily>
+</StructureMap>

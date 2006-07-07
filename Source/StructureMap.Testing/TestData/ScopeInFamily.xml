@@ -1,0 +1,246 @@
+<StructureMap>
+	<Assembly Name="StructureMap.Testing.Widget" Deploy="Client,Server"/>
+	<Assembly Name="StructureMap.Testing.Widget2" Deploy="Client"/>
+	<Assembly Name="StructureMap.Testing.Widget3"/>
+	<Assembly Name="StructureMap.Testing.Widget4" Deploy="Server"/>
+	
+	<Profile Name="Blue">
+		<Override Type="StructureMap.Testing.Widget.IWidget" DefaultKey="Blue"/>
+		<Override Type="StructureMap.Testing.Widget.Rule" DefaultKey="Blue"/>
+		<Override Type="StructureMap.Testing.Widget4.IStrategy" DefaultKey="Blue"/>
+	</Profile>
+
+	<Profile Name="Green">
+		<Override Type="StructureMap.Testing.Widget.IWidget" DefaultKey="Green"/>
+		<Override Type="StructureMap.Testing.Widget.Rule" DefaultKey="Green"/>
+	</Profile>	
+
+	<Machine Name="GREEN-BOX" Profile="Green"/>
+	
+	<Machine Name="SERVER">
+		<Override Type="StructureMap.Testing.Widget.IWidget" DefaultKey="Orange"/>
+	</Machine>
+	
+			
+
+			
+	<PluginFamily Type="StructureMap.Testing.Widget.Column" Assembly="StructureMap.Testing.Widget" DefaultKey="" Scope="ThreadLocal">
+		<Source Type="XmlFile" FilePath="FullTesting.XML" XPath="Columns" NodeName="Columns" />
+	</PluginFamily>
+			
+			
+	<PluginFamily Type="StructureMap.Testing.Widget.IWidget" Assembly="StructureMap.Testing.Widget" DefaultKey="Red" Scope="HttpContext">
+		<Plugin Assembly="StructureMap.Testing.Widget" Type="StructureMap.Testing.Widget.NotPluggableWidget" ConcreteKey="NotPluggable"/>
+
+		<Instance Type="Configuration" Key="BigOne">
+			<Property Name="Bool" Value="True"/>
+			<Property Name="Byte" Value="3"/>
+			<Property Name="Double" Value="4.5"/>
+			<Property Name="Int" Value="1"/>
+			<Property Name="Long" Value="2"/>
+			<Property Name="String" Value="Red"/>
+			<Property Name="String2" Value="Green"/>
+		</Instance>
+		<Instance Type="Color" Key="Blue">
+			<Property Name="Color" Value="Blue" />
+		</Instance>
+		<Instance Type="Color" Key="Green">
+			<Property Name="Color" Value="Green" />
+		</Instance>
+		<Instance Type="NotPluggable" Key="NotPluggableInstance">
+			<Property Name="name" Value="WagsTheDog" />
+		</Instance>
+
+		<Instance Type="Color" Key="Red">
+			<Property Name="Color" Value="Red" />
+		</Instance>
+	</PluginFamily>
+	
+	
+	<PluginFamily Type="StructureMap.Testing.Widget.Rule" Assembly="StructureMap.Testing.Widget" DefaultKey="Blue">
+		<Instance Key="Bigger" Type="GreaterThan">
+			<Property Name="Attribute" Value="MyDad" />
+			<Property Name="Value" Value="10" />
+		</Instance>
+		<Instance Key="Blue" Type="Color">
+			<Property Name="Color" Value="Blue" />
+		</Instance>
+		<Instance Key="Red" Type="Color">
+			<Property Name="Color" Value="Red" />
+		</Instance>
+	</PluginFamily>
+	
+	
+	<PluginFamily Type="StructureMap.Testing.Widget4.IStrategy" Assembly="StructureMap.Testing.Widget4" DefaultKey="Red">
+		<Plugin Assembly="StructureMap.Testing.Widget4" Type="StructureMap.Testing.Widget4.ColorStrategy" ConcreteKey="Color"/>
+		<Plugin Assembly="StructureMap.Testing.Widget4" Type="StructureMap.Testing.Widget4.ComplexStrategy" ConcreteKey="Complex"/>
+		<Plugin Assembly="StructureMap.Testing.Widget4" Type="StructureMap.Testing.Widget4.CompoundStrategy" ConcreteKey="Compound"/>
+		<Plugin Assembly="StructureMap.Testing.Widget4" Type="StructureMap.Testing.Widget4.RandomStrategy" ConcreteKey="Random"/>
+		<Plugin Assembly="StructureMap.Testing.Widget4" Type="StructureMap.Testing.Widget4.Strategy" ConcreteKey="Basic"/>
+		<Plugin Assembly="StructureMap.Testing.Widget4" Type="StructureMap.Testing.Widget4.StrategyDecorator" ConcreteKey="Decorator"/>
+	
+		
+		<Instance Key="ArrayTest" Type="Compound">
+			<Property Name="innerStrategies">
+				<Property Key="Red"></Property>
+				<Property><!-- Default --></Property>
+				<Property Type="Random">
+					<Property Name="seed" Value="0.034"/>
+				</Property>
+			</Property>
+		</Instance>
+
+		<Instance Key="Blue" Type="Color">
+			<Property Name="color" Value="Blue" />
+		</Instance>
+		
+		<Instance Key="DeepTest" Type="Complex">
+			<Property Name="defaultStrategy" Type="Decorator">
+				<Property Name="innerStrategy" Type="Decorator">
+					<Property Name="innerStrategy" Type="Random">
+						<Property Name="seed" Value="0.125"/>
+					</Property>
+				</Property>
+			</Property>
+			<Property Name="innerStrategies">
+				<Property Key="Red"></Property>
+				<Property><!-- Default --></Property>
+				<Property Type="Random">
+					<Property Name="seed" Value="0.034"/>
+				</Property>
+
+				<Property Type="Decorator">
+					<Property Name="innerStrategy" Type="Basic">
+						<Property Name="count" Value="10" />
+						<Property Name="isCalculated" Value="True" />
+						<Property Name="name" Value="Jeremy" />
+						<Property Name="quantity" Value="250000" />
+						<Property Name="rating" Value="0.25" />
+					</Property>
+				</Property>
+			</Property>
+			<Property Name="name" Value="DeepTest" />
+			<Property Name="quantity" Value="12500" />
+
+			<Property Name="strategyType" Value="OverTheHorizon"/>
+		
+		</Instance>
+
+		<Instance Key="Red" Type="Color">
+			<Property Name="color" Value="Red" />
+		</Instance>
+
+
+	</PluginFamily>
+	
+	
+	
+	<Instances>
+		<StructureMap.Testing.Widget.Child Type="Default" Key="Jessica">
+			<Property Name="MyGrandChild"/>
+			<Property Name="Name" Value="Jessica"/>
+		</StructureMap.Testing.Widget.Child>
+		<StructureMap.Testing.Widget.Child Type="Default" Key="Marsha">
+			<Property Name="MyGrandChild" Key="Tommy"/>
+			<Property Name="Name" Value="Marsha"/>
+		</StructureMap.Testing.Widget.Child>	
+		<StructureMap.Testing.Widget.Child Type="Default" Key="Monte">
+			<Property Name="MyGrandChild" Key="NotARealGrandchild"/>
+			<Property Name="Name" Value="Monte"/>
+		</StructureMap.Testing.Widget.Child>
+		<StructureMap.Testing.Widget.Child Type="Default" Key="Tom">
+			<Property Name="MyGrandChild" Type="Leftie">
+				<Property Name="BirthYear" Value="1984" />
+			</Property>
+			<Property Name="Name" Value="Tom" />
+		</StructureMap.Testing.Widget.Child>
+
+
+		<StructureMap.Testing.Widget.GrandChild Type="Default" Key="Todd">
+			<Property Name="BirthYear" Value="1975" />
+			<Property Name="RightHanded" Value="True" />
+		</StructureMap.Testing.Widget.GrandChild>		
+		<StructureMap.Testing.Widget.GrandChild Type="Default" Key="Tommy">
+			<Property Name="BirthYear" Value="1972" />
+			<Property Name="RightHanded" Value="True" />
+		</StructureMap.Testing.Widget.GrandChild>
+		<StructureMap.Testing.Widget.GrandChild Type="Leftie" Key="Trevor">
+			<Property Name="BirthYear" Value="1979" />
+		</StructureMap.Testing.Widget.GrandChild>
+
+
+
+		<StructureMap.Testing.Widget.Parent Type="Default" Key="Jackie">
+			<Property Name="Age" Value="70"/>
+			<Property Name="EyeColor" Value="Green"/>
+			<Property Name="MyChild" Type="Default">
+				<Property Name="MyGrandChild" Type="Leftie">
+					<Property Name="BirthYear" Value="1992"/>
+				</Property>
+				<Property Name="Name" Value="Elizabeth"/>			
+			</Property>
+		</StructureMap.Testing.Widget.Parent>
+		<StructureMap.Testing.Widget.Parent Type="Default" Key="Jerry">
+			<Property Name="Age" Value="72"/>
+			<Property Name="EyeColor" Value="Blue"/>
+			<Property Name="MyChild" Key="Marsha"/>
+		</StructureMap.Testing.Widget.Parent>
+		
+
+		
+		
+		<StructureMap.Testing.Widget.WidgetMaker Type="Color" Key="Red">
+			<Property Name="Color" Value="Red" />
+		</StructureMap.Testing.Widget.WidgetMaker>			
+	</Instances>		
+
+
+		
+	<Logging>
+		<Assembly Name="StructureMap.Testing">
+			<Logger Name="Logger1" Level="Debug"/>
+			<Logger Name="Logger2" Level="Error"/>
+		</Assembly> 
+		<Namespace Name="StructureMap.Testing.Logging">
+			<Logger Name="Logger3" Level="Warn"/>
+		</Namespace>
+	</Logging>
+
+	<log4net>
+		<appender name="ConsoleAppender" type="log4net.Appender.ConsoleAppender" >
+			<layout type="log4net.Layout.PatternLayout">
+				<param name="ConversionPattern" value="%d [%t] %-5p %c [%x] - %m%n" />
+			</layout>
+		</appender>
+		<appender name="OutputDebugStringAppender" type="log4net.Appender.OutputDebugStringAppender" >
+			<layout type="log4net.Layout.PatternLayout">
+				<conversionPattern value="%date [%thread] %-5level %logger [%ndc] - %message%newline" />
+			</layout>
+		</appender>
+		<appender name="EventLogAppender" type="log4net.Appender.EventLogAppender" >
+			<layout type="log4net.Layout.PatternLayout">
+				<conversionPattern value="%date [%thread] %-5level %logger [%ndc] - %message%newline" />
+			</layout>
+		</appender>
+		
+		<root>
+			<level value="ALL"></level>
+		</root>
+		
+		<logger name="Logger1">
+			<appender-ref ref="ConsoleAppender"/>
+			<appender-ref ref="OutputDebugStringAppender"/>
+		</logger>
+		
+		<logger name="Logger2">
+			<appender-ref ref="EventLogAppender"/>
+		</logger>
+		
+		<logger name="Logger3">
+			<appender-ref ref="EventLogAppender"/>
+		</logger>
+
+	
+	</log4net>
+
+</StructureMap>

@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<AssemblySortForCompilOrObfusk>
+  <Assembly Name="StructureMap">1</Assembly>
+  <Assembly Name="StructureMap.DeploymentTasks">2</Assembly>
+  <Assembly Name="StructureMap.Client">3</Assembly>
+</AssemblySortForCompilOrObfusk>

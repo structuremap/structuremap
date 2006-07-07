@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+	<head>
+		<title>StructureMap - [ValidationMethod] Attribute</title>
+		<link rel="stylesheet" type="text/css" href="style.css">
+		<meta name="GENERATOR" content="Microsoft Visual Studio .NET 7.1">
+		<meta name="vs_targetSchema" content="http://schemas.microsoft.com/intellisense/ie5">
+	</head>
+	<body>
+		<TABLE cellSpacing="5" cellPadding="0" width="100%" border="0" height="100%">
+			<TR>
+				<TD valign="top" width="210" class="form">
+					<p align="center">
+						<A href="http://sourceforge.net"><IMG src="http://sourceforge.net/sflogo.php?group_id=104740&amp;type=5" width="210" height="62"
+								border="0" alt="SourceForge.net Logo"></A>
+					</p>
+					<P style="LINE-HEIGHT: 25px">
+						<A href="default.htm">Home</A><BR>
+						<a href="http://sourceforge.net/projects/structuremap">StructureMap on SourceForge</a><br>
+						<A href="Basic Architecture.htm">Basic Architecture</A><BR>
+						<A href="Concepts.htm">Concepts</A><BR>
+						<A href="StructureMap-API.chm">API Documentation</A><BR>
+						<A href="FAQ.htm">FAQ</A><BR>
+						<A href="Configuration.htm">Configuration Schema</A><BR>
+						&nbsp;&nbsp;&nbsp; <a href="MementoSources.htm">Memento Sources</a><BR>
+						&nbsp;&nbsp;&nbsp; <a href="NodeNormalized.htm">Node Normalized Xml</a><BR>
+						&nbsp;&nbsp;&nbsp; <a href="AttributeNormalized.htm">Attribute 
+						Normalized Xml</a><BR>
+						&nbsp;&nbsp;&nbsp; <a href="Attributes.htm">Attribute Usage</a><BR>
+						&nbsp;&nbsp;&nbsp; <a href="Scoping.htm">Instance Lifecyle Scoping</a><BR>
+						
+						<A href="ConfigurationManagement.htm">Configuration Management</A><BR>
+						&nbsp;&nbsp;&nbsp; <A href="StructureMapDoctor.htm">StructureMapDoctor</A><BR>
+						&nbsp;&nbsp;&nbsp; <A href="StructureMapExplorer.htm">StructureMapExplorer</A><BR>
+						&nbsp;&nbsp;&nbsp; <A href="structuremap.deployment.htm">deployment Task</A><BR>
+						&nbsp;&nbsp;&nbsp; <A href="structuremap.verification.htm">verification Task</A><BR>
+						&nbsp;&nbsp;&nbsp; <A href="ValidationAttribute.htm">ValidationMethod Attribute</A><BR>
+						&nbsp;&nbsp;&nbsp; <A href="NAnt Tasks.htm">Other NAnt Tasks</A><BR>
+
+						
+						<A href="Troubleshooting.htm">Troubleshooting</A><BR>
+						<A href="SingletonInjection.htm">Singleton Injection</A></P>
+
+				</TD>
+				<TD valign="top" style="PADDING-LEFT: 25px">
+					<h1>[ValidationMethod] Attribute</h1>
+					<P>Just because StructureMap can successfully call a constructor function with 
+						configured properties does not mean the object can actually perform work.&nbsp; 
+						The new [ValidationMethod] attribute can be used to provide runtime 
+						verification of an environment.&nbsp; Consider the code below:</P>
+					<pre class="code-sample">
+[PluginFamily]
+public interface IDataStore
+{
+	void AddUser(string userName);
+}
+
+[Pluggable("Default")]
+public class DataStore : IDataStore
+{
+	private readonly string _connectionString;
+
+	public DataStore(string connectionString)
+	{
+		_connectionString = connectionString;
+	}
+
+	public void AddUser( string userName )
+	{
+		string sql = string.Format("insert into table users (user_name) values ('{0}')", userName);
+			
+		using (SqlConnection connection = new SqlConnection(_connectionString))
+		{
+			SqlCommand command = new SqlCommand(sql, connection);
+			command.ExecuteNonQuery();
+		}
+	}
+
+	[ValidationMethod]
+	public void TestConnection()
+	{
+		SqlConnection connection = new SqlConnection(_connectionString);
+
+		try
+		{
+			connection.Open();
+		}
+		finally
+		{
+			connection.Close();
+		}
+	}
+}
+
+	  </pre>
+					<P class="MsoNormal">StructureMap will be able to create this class with any value 
+						for “connectionString” that is a valid string, but <I style="mso-bidi-font-style: normal">
+							DataStore </I>cannot function if the database connection string is 
+						incorrect or invalid in someway.&nbsp; The application cannot function 
+						correctly if the database cannot be reached.&nbsp; However, decorating a method 
+						with the <I style="mso-bidi-font-style: normal">[ValidationMethod]</I> attribute 
+						instructs StructureMap to call the method after creating an object to perform 
+						runtime validation.&nbsp; During verification in either <A href="StructureMapDoctor.htm">
+							StructureMapDoctor</A>&nbsp; or the <A href="structuremap.verification.htm">verification</A>
+						NAnt task, StructureMap will create every configured instance of <I style="mso-bidi-font-style: normal">
+							DataStore</I> and call the TestConnection() method.&nbsp; If a connection 
+						cannot be opened to the configured connection string, an exception will be 
+						thrown and StructureMap will report the full exception message and stacktrace.</P>
+					<P class="MsoNormal">This mechanism can be used to create an automatic “smoke” test 
+						of the development and testing environments.&nbsp; In any enterprise software 
+						development project, a significant loss of productivity is a test environment 
+						that is either misconfigured, or a piece of infrastructure like a database 
+						server is temporarily powered down.&nbsp; A tester and I once suffered a full 
+						week of frustration troubleshooting a newly developed data exchange.&nbsp; 
+						Later we found out that the integration server we were depending on in testing 
+						was being upgraded that week and had been rebooted often while we were 
+						testing.&nbsp; Ignoring the egregious&nbsp;lack of&nbsp;communication, an 
+						automatic verification of the testing environment prior to testing would have 
+						saved a great deal of time in an already stressful project.</P>
+				</TD>
+			</TR>
+		</TABLE>
+	</body>
+</html>

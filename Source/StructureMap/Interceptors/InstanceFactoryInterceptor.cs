@@ -1,0 +1,123 @@
+using System;
+using System.Collections;
+
+namespace StructureMap.Interceptors
+{
+	/// <summary>
+	/// Base "Decorator" class around IInstanceFactory to alter the object creation process
+	/// for a PluginType.  The SingletonInterceptor is an example subclass that ensures that 
+	/// only one instance is created for a given InstanceKey as a more testable alternative to 
+	/// the GoF Singleton pattern. 
+	/// </summary>
+	[PluginFamily]
+	public abstract class InstanceFactoryInterceptor : IInstanceFactory
+	{
+		private IInstanceFactory _innerInstanceFactory;
+
+
+		public InstanceFactoryInterceptor()
+		{
+		}
+
+		public virtual IInstanceFactory InnerInstanceFactory
+		{
+			get { return _innerInstanceFactory; }
+			set { _innerInstanceFactory = value; }
+		}
+
+		/// <summary>
+		/// Establishes a reference to the parent InstanceManager
+		/// </summary>
+		/// <param name="instanceManager"></param>
+		public void SetInstanceManager(InstanceManager instanceManager)
+		{
+			this.InnerInstanceFactory.SetInstanceManager(instanceManager);
+		}
+
+		/// <summary>
+		/// The CLR System.Type that the IInstanceManager builds instances  
+		/// </summary>
+		public Type PluginType
+		{
+			get { return this.InnerInstanceFactory.PluginType; }
+		}
+
+		/// <summary>
+		/// Creates an object instance for the InstanceKey
+		/// </summary>
+		/// <param name="instanceKey">The named instance</param>
+		/// <returns></returns>
+		public virtual object GetInstance(string instanceKey)
+		{
+			return this.InnerInstanceFactory.GetInstance(instanceKey);
+		}
+
+		/// <summary>
+		/// Creates an object instance directly from the Memento
+		/// </summary>
+		/// <param name="Memento">A representation of an object instance</param>
+		/// <returns></returns>
+		public virtual object GetInstance(InstanceMemento Memento)
+		{
+			return this.InnerInstanceFactory.GetInstance(Memento);
+		}
+
+		/// <summary>
+		/// Creates a new object instance of the default instance memento
+		/// </summary>
+		/// <returns></returns>
+		public virtual object GetInstance()
+		{
+			return this.InnerInstanceFactory.GetInstance();
+		}
+
+		/// <summary>
+		/// Returns an array of objects, one for each InstanceMemento passed in
+		/// </summary>
+		/// <param name="Mementos"></param>
+		/// <returns>An array of InstanceMemento's to build out into objects</returns>
+		public Array GetArray(InstanceMemento[] Mementos)
+		{
+			return this.InnerInstanceFactory.GetArray(Mementos);
+		}
+
+		/// <summary>
+		/// Sets the default instance 
+		/// </summary>
+		/// <param name="instanceKey"></param>
+		public void SetDefault(string instanceKey)
+		{
+			this.InnerInstanceFactory.SetDefault(instanceKey);
+		}
+
+		/// <summary>
+		/// Makes the InstanceMemento the basis of the default instance
+		/// </summary>
+		/// <param name="Memento"></param>
+		public void SetDefault(InstanceMemento Memento)
+		{
+			this.InnerInstanceFactory.SetDefault(Memento);
+		}
+
+		/// <summary>
+		/// The InstanceKey of the default instance built by this IInstanceFactory
+		/// </summary>
+		public string DefaultInstanceKey
+		{
+			get { return this.InnerInstanceFactory.DefaultInstanceKey; }
+		}
+
+		public IList GetAllInstances()
+		{
+			return this.InnerInstanceFactory.GetAllInstances();
+		}
+
+		/// <summary>
+		/// Declares whether or not the interceptor creates a stubbed or mocked version of the PluginType 
+		/// </summary>
+		public virtual bool IsMockedOrStubbed
+		{
+			get { return false; }
+		}
+	}
+}

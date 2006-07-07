@@ -1,0 +1,134 @@
+<project name="StructureMap" default="all">
+	<property name="bin.dir" value="build\bin" />
+	<property name="results.dir" value="results" />
+	<property name="target.dir" value="build\TargetBin" />
+	<property name="nant.dir" value="bin\nant" />
+
+	<target name="all" depends="pre-clean, compile, move, targetBin, test, runDoctor, runCustomTasks, testDeploymentTask, post-clean"/>
+
+	<target name="pre-clean">
+	    <delete dir="${bin.dir}" failonerror="false" />
+	    <delete dir="${target.dir}" failonerror="false"/>
+	    <delete dir="${results.dir}" failonerror="false"/>
+
+	    <echo message="Deleting old version of StructureMap.DeploymentTasks.dll from bin\NAnt\"/>
+	    <delete failonerror="false">
+	    	<fileset basedir="${nant.dir}">
+	    		<includes name="StructureMap*.dll"/>
+	    	</fileset>
+	    </delete>
+	</target>
+
+	<target name="compile">
+    <property name="net20Files" value="C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727" />
+    <exec program="${net20Files}\msbuild.exe" commandline="source\StructureMap.sln /t:rebuild /p:Configuration=Release">
+    </exec>
+    <!--<copy todir="${build.dir}" overwrite="true" flatten="true">
+      <fileset>
+        <include name="**/*.dll"/>
+        <include name="**/*.pdb"/>
+      </fileset>
+    </copy>-->
+    
+	</target>
+
+
+	<target name="move">
+	    <mkdir dir="${bin.dir}"></mkdir>
+	
+	    <copy todir="${bin.dir}">
+	    	<fileset basedir="source\StructureMap\bin\release">
+			<includes name="*.dll" />
+	      	</fileset>
+	    </copy>
+
+	    <copy file="source\StructureMap.Diagnostics\bin\release\StructureMapDoctor.exe" todir="${bin.dir}"/>
+	    
+
+	</target>
+		
+	<target name="targetBin">
+	    <mkdir dir="${target.dir}"/>
+	    
+	    <copy todir="${target.dir}">
+	    	<fileset basedir="source\StructureMap.Testing\bin\release">
+			<includes name="*Widget*.dll" />
+			<includes name="*.config" />
+			<includes name="StructureMap.dll" />
+	      	</fileset>
+	    </copy>
+	    
+		<copy todir="${target.dir}" file="source\StructureMap.Testing\TestData\ObjectMother.config"/>
+
+	</target>
+	
+	
+	<target name="test">
+		<mkdir dir="${results.dir}"/>
+		<exec 
+			program="bin\NUnit\nunit-console.exe" 
+			workingdir="." 
+			commandline="source\StructureMap.Testing\bin\release\StructureMap.Testing.dll /thread /xml=StructureMap.Testing.dll-results.xml"/>
+	</target>
+	
+	<target name="runDoctor">
+		<echo message="Running StructureMapDoctor" />
+		<copy file="source\StructureMap.Testing\TestData\ObjectMother.config" todir="." verbose="true"/>
+	
+		<exec 
+			program="${bin.dir}\StructureMapDoctor.exe" 
+			workingdir="." 
+			commandline="${target.dir}\ObjectMother.config -All"/>
+			
+		<delete file="ObjectMother.config" />
+	
+	</target>
+	
+	<target name="runCustomTasks">
+		<copy file="${bin.dir}\StructureMap.dll" todir="${nant.dir}"/>
+
+		<loadtasks assembly="${bin.dir}\StructureMap.DeploymentTasks.dll"/>		
+	</target>
+	
+	
+	<target name="testDeploymentTask">
+
+		<property name="deployment.dir" value="source\StructureMap.Testing.DeploymentTasks\bin\release\"/>
+		<property name="source.config" value="${deployment.dir}DeploymentSourceConfig.xml"/>
+		
+		<structuremap.deployment configPath="${source.config}"
+			destinationPath="${deployment.dir}WithProfileAndNothingElseCopyMachineOverrides.xml.actual"
+			profile="Blue"
+			machineOption="CopyMachineOverrides"/>
+
+		<structuremap.deployment configPath="${source.config}"
+			destinationPath="${deployment.dir}WithProfileAndNothingElseIgnoreMachineOverrides.xml.actual"
+			profile="Blue"
+			machineOption="IgnoreMachineOverrides"/>
+			
+		<structuremap.deployment configPath="${source.config}"
+			destinationPath="${deployment.dir}DeploymentTargetIsClientCopyMachineOverrides.xml.actual"
+			deploymentTarget = "Client"
+			machineOption="CopyMachineOverrides"/>
+			
+
+		<exec 
+			program="bin\NUnit\nunit-console.exe" 
+			workingdir="." 
+			commandline="source\StructureMap.Testing.DeploymentTasks\bin\release\StructureMap.Testing.DeploymentTasks.dll /thread /xml=StructureMap.Testing.UserInterface.dll-results.xml"/>
+
+	</target>
+	
+	
+	<target name="post-clean">
+	    <delete failonerror="false">
+	    	<fileset basedir=".">
+	    		<includes name="source/**/obj/**"/>
+	    		<includes name="source/**/bin**"/>
+	    		<includes name="**/_ReSharper*"/>
+	    		<includes name="source/**/*.resharperoptions"/>
+	    	</fileset>
+	    </delete>
+	</target>
+
+</project>

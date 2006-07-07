@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<AssembliesMetrics>
+  <Assembly Assembly="StructureMap" NTypes="147" NAbstractTypes="26" NILInstructionInAsm="18779" AfferentCoupling="60" EfferentCoupling="2" RelationalCohesion="4.69" Instability="0.03" Abstractness="0.18" DistFrMainSeq="0.56" NormDistFrMainSeq="0.79" />
+  <Assembly Assembly="StructureMap.DeploymentTasks" NTypes="14" NAbstractTypes="1" NILInstructionInAsm="1661" AfferentCoupling="0" EfferentCoupling="18" RelationalCohesion="1" Instability="1" Abstractness="0.07" DistFrMainSeq="0.05" NormDistFrMainSeq="0.07" />
+  <Assembly Assembly="StructureMap.Client" NTypes="30" NAbstractTypes="6" NILInstructionInAsm="2997" AfferentCoupling="0" EfferentCoupling="38" RelationalCohesion="1.93" Instability="1" Abstractness="0.2" DistFrMainSeq="0.14" NormDistFrMainSeq="0.2" />
+</AssembliesMetrics>

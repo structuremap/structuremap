@@ -1,0 +1,71 @@
+<StructureMap DefaultProfile="DEFAULT">
+	<Profile Name="DEFAULT">
+		<Override Type="StructureMap.Testing.Widget.IWidget" DefaultKey="Green"/>
+		<Override Type="StructureMap.Testing.Widget.Rule" DefaultKey="Green"/>
+	</Profile>	
+
+	<Assembly Name="StructureMap.Testing.Widget" Deploy="Client,Server,AcceptanceTesting"/>
+	<Assembly Name="StructureMap.Testing.Widget2" Deploy="Client,AcceptanceTesting"/>
+	<Assembly Name="StructureMap.Testing.Widget3"/>
+	<Assembly Name="StructureMap.Testing.Widget4" Deploy="Server"/>
+	
+	<PluginFamily Type="StructureMap.Testing.Widget.Column" Assembly="StructureMap.Testing.Widget" DefaultKey="">
+		<Source Type="XmlFile" FilePath="FullTesting.XML" XPath="Columns" NodeName="Columns" />
+	</PluginFamily>
+			
+			
+	<PluginFamily Type="StructureMap.Testing.Widget.IWidget" Assembly="StructureMap.Testing.Widget" DefaultKey="Green">
+		<Instance Type="Color" Key="Green">
+			<Property Name="Color" Value="Green" />
+		</Instance>
+	</PluginFamily>
+	
+	
+	<PluginFamily Type="StructureMap.Testing.Widget.Rule" Assembly="StructureMap.Testing.Widget" DefaultKey="Green">
+		<Instance Key="Green" Type="Color">
+			<Property Name="Color" Value="Green" />
+		</Instance>
+	</PluginFamily>
+	
+	
+	
+	<PluginFamily Type="StructureMap.Testing.Widget3.IService" Assembly="StructureMap.Testing.Widget3" DefaultKey="Orange" Deploy="Client,AcceptanceTesting">
+		<Plugin Assembly="StructureMap.Testing.Widget3" Type="StructureMap.Testing.Widget3.ColorService" ConcreteKey="Color"></Plugin>
+		<Instance Type="Color" Key="Blue">
+			<Property Name="Color" Value="Blue" />
+		</Instance>
+		<Instance Type="Color" Key="Green">
+			<Property Name="Color" Value="Green" />
+		</Instance>
+		<Instance Type="Color" Key="Orange">
+			<Property Name="Color" Value="Orange" />
+		</Instance>
+		<Instance Type="Color" Key="Purple">
+			<Property Name="Color" Value="Purple" />
+		</Instance>
+		<Instance Type="Color" Key="Red">
+			<Property Name="Color" Value="Red" />
+		</Instance>
+	</PluginFamily>
+	
+	
+	<PluginFamily Type="StructureMap.Testing.Widget4.IStrategy" Assembly="StructureMap.Testing.Widget4" DefaultKey="Red">
+		<Plugin Assembly="StructureMap.Testing.Widget4" Type="StructureMap.Testing.Widget4.ColorStrategy" ConcreteKey="Color"/>	
+
+		<Instance Key="Blue" Type="Color">
+			<Property Name="color" Value="Blue" />
+		</Instance>
+		<Instance Key="Green" Type="Color">
+			<Property Name="color" Value="Green" />
+		</Instance>
+		<Instance Key="Purple" Type="Color">
+			<Property Name="color" Value="Purple" />
+		</Instance>
+		<Instance Key="Red" Type="Color">
+			<Property Name="color" Value="Red" />
+		</Instance>
+	</PluginFamily>	
+	
+	
+	<Instances/>
+</StructureMap>
