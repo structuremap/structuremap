@@ -9,9 +9,11 @@ namespace StructureMapExplorer
 		{
 		}
 
+        [System.STAThread]
 		public static void Main(string[] args)
 		{
 			ApplicationShell shell = new ApplicationShell();
+            Application.EnableVisualStyles();
 			Application.Run(shell);
 		}
 	}
