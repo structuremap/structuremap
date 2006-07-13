@@ -23,10 +23,10 @@
 	<target name="cleanJunk">
 	  <delete failonerror="false">
 	  	<fileset basedir=".">
-	  		<includes name="source/**/obj/**"/>
-	  		<includes name="source/**/bin**"/>
-	   		<includes name="**/_ReSharper*"/>
-	   		<includes name="source/**/*.resharperoptions"/>
+	  		<include name="source/**/obj/**"/>
+	  		<include name="source/**/bin**"/>
+	   		<include name="**/_ReSharper*"/>
+	   		<include name="source/**/*.resharperoptions"/>
 	   	</fileset>
 	  </delete>	
 	</target>
@@ -62,8 +62,7 @@
 
 
 	<target name="compile" depends="pre-clean,version">
-      <property name="net20Files" value="C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727" />
-      <exec program="${net20Files}\msbuild.exe" commandline="source\StructureMap.sln /t:rebuild /p:Configuration=Release">
+      <exec program="${nant.settings.currentframework.frameworkdirectory}\msbuild.exe" commandline="source\StructureMap.sln /t:rebuild /p:Configuration=Release">
       </exec>
       <copy todir="${build.dir}" flatten="true" overwrite="true">
         <fileset basedir="source\">
@@ -83,10 +82,10 @@
 	    <mkdir dir="${build.dir}\StructureMapExplorer"/>
 	    <copy todir="${build.dir}\StructureMapExplorer">
 			  <fileset basedir="${build.dir}">
-				  <includes name="*.dll"/>
-				  <includes name="*StructureMapExplorer.exe"/>
-				  <excludes name="*.Testing*.*"/>
-				  <excludes name="Nant*.*"/>
+				  <include name="*.dll"/>
+				  <include name="*StructureMapExplorer.exe"/>
+				  <exclude name="*.Testing*.*"/>
+				  <exclude name="Nant*.*"/>
 			  </fileset>
 	    </copy>
 	</target>
