@@ -9,7 +9,6 @@ namespace StructureMap
 	public class StubbedInstanceFactory : InstanceFactoryInterceptor
 	{
 		private readonly object _stub;
-		private readonly IInstanceFactory _innerFactory;
 
 		public StubbedInstanceFactory(IInstanceFactory innerFactory, object stub) : base()
 		{

@@ -35,7 +35,8 @@ namespace StructureMap.Testing.DeploymentTasks
 			                                                     _deploymentTarget, _profile, _machineName, _machineOption);
 
 			XmlDocument actualDoc = executor.BuildConfigDocument();
-			actualDoc.Save("C:\\Results.xml");
+            string outputDirectory = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            actualDoc.Save(System.IO.Path.Combine(outputDirectory, @"Results.xml"));
 			checker.Check(actualDoc.DocumentElement);
 		}
 
