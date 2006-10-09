@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<StructureMap>
+  <Assembly Name="StructureMap.Testing.GenericWidgets"/>
+
+  <PluginFamily Assembly="StructureMap.Testing.GenericWidgets" Type="StructureMap.Testing.GenericWidgets.IThing`3" DefaultKey="Red">
+    <Plugin Assembly="StructureMap.Testing.GenericWidgets" Type="StructureMap.Testing.GenericWidgets.ColorThing`3" ConcreteKey="Color" />
+    <Plugin Assembly="StructureMap.Testing.GenericWidgets" Type="StructureMap.Testing.GenericWidgets.ComplexThing`3" ConcreteKey="Complex" />
+
+    <Instance Key="Red" Type="Color">
+      <Property Name="color" Value="Red"/>
+    </Instance>
+
+    <Instance Key="Complicated" Type="Complex">
+      <Property Name="name" Value="Jeremy" />
+      <Property Name="age" Value="32" />
+      <Property Name="ready" Value="true" />
+    </Instance>
+  </PluginFamily>
+
+  <PluginFamily Assembly="StructureMap.Testing.GenericWidgets" Type="StructureMap.Testing.GenericWidgets.ISimpleThing`1" DefaultKey="Simple">
+    <Plugin Assembly="StructureMap.Testing.GenericWidgets" Type="StructureMap.Testing.GenericWidgets.SimpleThing`1" ConcreteKey="Simple" />
+  </PluginFamily>
+  
+</StructureMap>
