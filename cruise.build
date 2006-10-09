@@ -41,18 +41,18 @@
 		<echo message="Marking this build as version ${assembly-version}" />
         <asminfo output="Source/CommonAssemblyInfo.cs" language="CSharp">
             <imports>
-                <import name="System" />
-                <import name="System.Reflection" />
-                <import name="System.Runtime.InteropServices" />
+                <import namespace="System" />
+                <import namespace="System.Reflection" />
+                <import namespace="System.Runtime.InteropServices" />
             </imports>
             <attributes>
                 <attribute type="ComVisibleAttribute" value="false" />
                 <attribute type="AssemblyVersionAttribute" value="${assembly-version}" />
                 <attribute type="AssemblyCopyrightAttribute" value="Copyright (c) 2005, Jeremy D. Miller, Jeffrey Palermo" />
                 <attribute type="AssemblyProductAttribute" value="StructureMap" />         
-				<attribute type="AssemblyCompanyAttribute" value="" />
-				<attribute type="AssemblyConfigurationAttribute" value="${project.config}" />
-				<attribute type="AssemblyInformationalVersionAttribute" value="${assembly-version}" />
+				        <attribute type="AssemblyCompanyAttribute" value="" />
+				        <attribute type="AssemblyConfigurationAttribute" value="${project.config}" />
+				        <attribute type="AssemblyInformationalVersionAttribute" value="${assembly-version}" />
             </attributes>
             <references>
                 <include name="System.dll" />
@@ -62,8 +62,9 @@
 
 
 	<target name="compile" depends="pre-clean,version">
-      <exec program="${nant.settings.currentframework.frameworkdirectory}\msbuild.exe" commandline="source\StructureMap.sln /t:rebuild /p:Configuration=Release">
-      </exec>
+    <exec program="${nant.settings.currentframework.frameworkdirectory}\msbuild.exe" commandline="source\StructureMap.sln /t:rebuild /p:Configuration=Release">
+    </exec>
+
       <copy todir="${build.dir}" flatten="true" overwrite="true">
         <fileset basedir="source\">
           <include name="**\bin\${project.config}\*.dll" />

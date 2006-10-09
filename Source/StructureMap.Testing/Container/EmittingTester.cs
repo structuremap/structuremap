@@ -38,7 +38,9 @@ namespace StructureMap.Testing.Container
 
 				if (assem != null)
 				{
-					builder = assem.CreateInstance("StructureMapTestingWidgetComplexRuleInstanceBuilder") as InstanceBuilder;
+				    string builderName = plugin.GetInstanceBuilderClassName();
+				    
+				    builder = assem.CreateInstance(builderName) as InstanceBuilder;
 				}
 
 				if (builder != null)

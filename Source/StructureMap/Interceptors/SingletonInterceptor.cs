@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 
 namespace StructureMap.Interceptors
@@ -38,5 +39,10 @@ namespace StructureMap.Interceptors
 		{
 			return _instances[instanceKey];
 		}
+
+	    public override object Clone()
+	    {
+            return new SingletonInterceptor();
+	    }
 	}
 }

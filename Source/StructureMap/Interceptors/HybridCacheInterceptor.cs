@@ -13,6 +13,10 @@ namespace StructureMap.Interceptors
 			{
 				_innerInterceptor = new HttpContextItemInterceptor();
 			}
+		    else
+			{
+                _innerInterceptor = new ThreadLocalStorageInterceptor();
+			}
 		}
 
 		public override IInstanceFactory InnerInstanceFactory
@@ -35,5 +39,10 @@ namespace StructureMap.Interceptors
 		{
 			return _innerInterceptor.GetInstance();
 		}
+
+	    public override object Clone()
+	    {
+            return new HybridCacheInterceptor();
+	    }
 	}
 }

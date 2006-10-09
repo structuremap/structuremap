@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using NUnit.Framework;
 using StructureMap.Testing.Widget;
 
@@ -198,6 +199,24 @@ namespace StructureMap.Testing.Container.ExceptionHandling
 		{
 			_testRunner.ExecuteExceptionTestFromResetDefaults(121);
 		}
+
+	    [Test]
+	    public void CanSerialize()
+	    {
+	        ApplicationException ex = new ApplicationException("Oh no!");
+	        StructureMapException smapEx = new StructureMapException(200, ex, "a", "b");
+	        
+	        BinaryFormatter formatter = new BinaryFormatter();
+	        MemoryStream stream = new MemoryStream();
+	        formatter.Serialize(stream, smapEx);
+
+            stream.Position = 0;
+
+            StructureMapException smapEx2 = (StructureMapException) formatter.Deserialize(stream);
+	        Assert.AreNotSame(smapEx, smapEx2);
+	        
+	        Assert.AreEqual(smapEx.Message, smapEx2.Message);
+	    }
 	}
 
 

@@ -15,11 +15,11 @@ namespace StructureMap
 		public abstract string PluginType { get; }
 		public abstract string PluggedType { get; }
 		public abstract string ConcreteTypeKey { get; }
-		public abstract object BuildInstance(InstanceMemento Memento);
+		public abstract object BuildInstance(InstanceMemento memento);
 
-		public void SetInstanceManager(InstanceManager Manager)
+		public void SetInstanceManager(InstanceManager manager)
 		{
-			_manager = Manager;
+			_manager = manager;
 		}
 
 		public InstanceManager Manager

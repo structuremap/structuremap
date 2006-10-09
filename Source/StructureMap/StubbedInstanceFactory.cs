@@ -1,3 +1,4 @@
+using System;
 using StructureMap.Interceptors;
 
 namespace StructureMap
@@ -51,5 +52,9 @@ namespace StructureMap
 			get { return true; }
 		}
 
+	    public override object Clone()
+	    {
+            return this.MemberwiseClone();
+	    }
 	}
 }

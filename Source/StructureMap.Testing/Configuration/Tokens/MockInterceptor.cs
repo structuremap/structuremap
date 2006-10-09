@@ -30,5 +30,10 @@ namespace StructureMap.Testing.Configuration.Tokens
 				throw new ApplicationException("Bad");
 			}
 		}
+
+	    public override object Clone()
+	    {
+            return this.MemberwiseClone();
+	    }
 	}
 }

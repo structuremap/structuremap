@@ -1,3 +1,4 @@
+using System;
 using NMock;
 using StructureMap.Interceptors;
 
@@ -64,5 +65,9 @@ namespace StructureMap
 			get { return true; }
 		}
 
+	    public override object Clone()
+	    {
+            return this.MemberwiseClone();
+	    }
 	}
 }

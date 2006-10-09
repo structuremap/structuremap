@@ -1,138 +1,219 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
-	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-		<xsd:element name="root" msdata:IsDataSet="true">
-			<xsd:complexType>
-				<xsd:choice maxOccurs="unbounded">
-					<xsd:element name="data">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-							</xsd:sequence>
-							<xsd:attribute name="name" type="xsd:string" />
-							<xsd:attribute name="type" type="xsd:string" />
-							<xsd:attribute name="mimetype" type="xsd:string" />
-						</xsd:complexType>
-					</xsd:element>
-					<xsd:element name="resheader">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-							</xsd:sequence>
-							<xsd:attribute name="name" type="xsd:string" use="required" />
-						</xsd:complexType>
-					</xsd:element>
-				</xsd:choice>
-			</xsd:complexType>
-		</xsd:element>
-	</xsd:schema>
-	<resheader name="ResMimeType">
-		<value>text/microsoft-resx</value>
-	</resheader>
-	<resheader name="Version">
-		<value>1.0.0.0</value>
-	</resheader>
-	<resheader name="Reader">
-		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-	</resheader>
-	<resheader name="Writer">
-		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-	</resheader>
-	<data name="100">
-		<value>Expected file "StructureMap.config" cannot be opened at {0}</value>
-	</data>
-	<data name="101">
-		<value>Assembly {0} referenced by an &lt;Assembly&gt; node in StructureMap.config cannot be loaded into the current AppDomain</value>
-	</data>
-	<data name="102">
-		<value>Assembly {0} referenced in a &lt;PluginFamily&gt; node for PluginType "{1}" in StructureMap.config cannot be loaded into the current AppDomain</value>
-	</data>
-	<data name="103">
-		<value>PluginType "{0}" referenced in a &lt;PluginFamily&gt; node in StructureMap.config cannot be loaded from Assembly {1}</value>
-	</data>
-	<data name="110">
-		<value>Assembly referenced by a &lt;Plugin&gt; for Type "{0}", concrete key "{1}" node in StructureMap.config cannot be loaded into the current AppDomain.</value>
-	</data>
-	<data name="111">
-		<value>Type referenced in a &lt;Plugin&gt; for Type "{0}", concrete type "{1}" cannot be loaded from named assembly</value>
-	</data>
-	<data name="112">
-		<value>Missing a mandatory "ConcreteKey" attribute in a &lt;Plugin&gt; node for Type "{0}"</value>
-	</data>
-	<data name="113">
-		<value>Duplicate ConcreteKey ({0}) values in PluginType "{1}"</value>
-	</data>
-	<data name="120">
-		<value>Could not build the configured MementoSource for PluginFamily "{0}"</value>
-	</data>
-	<data name="114">
-		<value>Type {0} specified as a Plugin cannot be plugged into Type {1}</value>
-	</data>
-	<data name="200">
-		<value>Could not find an InstanceMemento for the requested InstanceKey "{0}" of PluginFamily {1}</value>
-	</data>
-	<data name="201">
-		<value>Unrecognized ConcreteKey "{0}" configured for InstanceKey "{1}" of PluginFamily {2}</value>
-	</data>
-	<data name="202">
-		<value>No Default Instance defined for PluginFamily {0}</value>
-	</data>
-	<data name="203">
-		<value>Internal exception in MementoSource creating an InstanceMemento for InstanceKey "{0}"</value>
-	</data>
-	<data name="205">
-		<value>Missing requested InstanceMemento property "{0}" for InstanceKey "{1}"</value>
-	</data>
-	<data name="204">
-		<value>Internal exception in InstanceMemento "{0}"</value>
-	</data>
-	<data name="206">
-		<value>Invalid property value(s), InstanceKey "{0}"</value>
-	</data>
-	<data name="207">
-		<value>Internal exception in the constructor function of the targeted concrete type.  InstanceKey "{0}", PluginFamily {1}</value>
-	</data>
-	<data name="104">
-		<value>Concrete Type {0} cannot be plugged into type {1}</value>
-	</data>
-	<data name="209">
-		<value>Could not find a value for property *{0}* and no default *{1}* set</value>
-	</data>
-	<data name="208">
-		<value>Requested type {0} is not configured in StructureMap</value>
-	</data>
-	<data name="121">
-		<value>Could not build the configured InstanceFactoryInterceptor for PluginFamily {0}</value>
-	</data>
-	<data name="220">
-		<value>Cannot "Stub" type {0} with an object of type {1}</value>
-	</data>
-	<data name="230">
-		<value>Cannot call "FillDependencies" on an abstract or interface type.</value>
-	</data>
-	<data name="231">
-		<value>Primitive Type arguments in the constructor!</value>
-	</data>
-	<data name="240">
-		<value>Property {0} does not exist on the PluggedType {1}</value>
-	</data>
-	<data name="241">
-		<value>Property {0} on PluggedType {1} is not writeable!</value>
-	</data>
-	<data name="210">
-		<value>The default instance {0} referenced in the [PluginFamily] attribute for {1}</value>
-	</data>
-	<data name="150">
-		<value>The file {0} referenced in an &lt;Include&gt; node cannot be opened</value>
-	</data>
-	<data name="250">
-		<value>The named Template {0} cannot be found</value>
-	</data>
-	<data name="170">
-		<value>Unable to find the exported Type's in assembly {0}.  One or more of the assembly's dependencies may be missing.</value>
-	</data>
-	<data name="122">
-		<value>Could not create the type {0} specified in the [PluginFamily] attribute on PluginFamily {1}</value>
-	</data>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="100" xml:space="preserve">
+    <value>Expected file "StructureMap.config" cannot be opened at {0}</value>
+  </data>
+  <data name="101" xml:space="preserve">
+    <value>Assembly {0} referenced by an &lt;Assembly&gt; node in StructureMap.config cannot be loaded into the current AppDomain</value>
+  </data>
+  <data name="102" xml:space="preserve">
+    <value>Assembly {0} referenced in a &lt;PluginFamily&gt; node for PluginType "{1}" in StructureMap.config cannot be loaded into the current AppDomain</value>
+  </data>
+  <data name="103" xml:space="preserve">
+    <value>PluginType "{0}" referenced in a &lt;PluginFamily&gt; node in StructureMap.config cannot be loaded from Assembly {1}</value>
+  </data>
+  <data name="110" xml:space="preserve">
+    <value>Assembly referenced by a &lt;Plugin&gt; for Type "{0}", concrete key "{1}" node in StructureMap.config cannot be loaded into the current AppDomain.</value>
+  </data>
+  <data name="111" xml:space="preserve">
+    <value>Type referenced in a &lt;Plugin&gt; for Type "{0}", concrete type "{1}" cannot be loaded from named assembly</value>
+  </data>
+  <data name="112" xml:space="preserve">
+    <value>Missing a mandatory "ConcreteKey" attribute in a &lt;Plugin&gt; node for Type "{0}"</value>
+  </data>
+  <data name="113" xml:space="preserve">
+    <value>Duplicate ConcreteKey ({0}) values in PluginType "{1}"</value>
+  </data>
+  <data name="120" xml:space="preserve">
+    <value>Could not build the configured MementoSource for PluginFamily "{0}"</value>
+  </data>
+  <data name="114" xml:space="preserve">
+    <value>Type {0} specified as a Plugin cannot be plugged into Type {1}</value>
+  </data>
+  <data name="200" xml:space="preserve">
+    <value>Could not find an InstanceMemento for the requested InstanceKey "{0}" of PluginFamily {1}</value>
+  </data>
+  <data name="201" xml:space="preserve">
+    <value>Unrecognized ConcreteKey "{0}" configured for InstanceKey "{1}" of PluginFamily {2}</value>
+  </data>
+  <data name="202" xml:space="preserve">
+    <value>No Default Instance defined for PluginFamily {0}</value>
+  </data>
+  <data name="203" xml:space="preserve">
+    <value>Internal exception in MementoSource creating an InstanceMemento for InstanceKey "{0}"</value>
+  </data>
+  <data name="205" xml:space="preserve">
+    <value>Missing requested InstanceMemento property "{0}" for InstanceKey "{1}"</value>
+  </data>
+  <data name="204" xml:space="preserve">
+    <value>Internal exception in InstanceMemento "{0}"</value>
+  </data>
+  <data name="206" xml:space="preserve">
+    <value>Invalid property value(s), InstanceKey "{0}"</value>
+  </data>
+  <data name="207" xml:space="preserve">
+    <value>Internal exception in the constructor function of the targeted concrete type.  InstanceKey "{0}", PluginFamily {1}</value>
+  </data>
+  <data name="104" xml:space="preserve">
+    <value>Concrete Type {0} cannot be plugged into type {1}</value>
+  </data>
+  <data name="209" xml:space="preserve">
+    <value>Could not find a value for property *{0}* and no default *{1}* set</value>
+  </data>
+  <data name="208" xml:space="preserve">
+    <value>Requested type {0} is not configured in StructureMap</value>
+  </data>
+  <data name="121" xml:space="preserve">
+    <value>Could not build the configured InstanceFactoryInterceptor for PluginFamily {0}</value>
+  </data>
+  <data name="220" xml:space="preserve">
+    <value>Cannot "Stub" type {0} with an object of type {1}</value>
+  </data>
+  <data name="230" xml:space="preserve">
+    <value>Cannot call "FillDependencies" on an abstract or interface type.</value>
+  </data>
+  <data name="231" xml:space="preserve">
+    <value>Primitive Type arguments in the constructor!</value>
+  </data>
+  <data name="240" xml:space="preserve">
+    <value>Property {0} does not exist on the PluggedType {1}</value>
+  </data>
+  <data name="241" xml:space="preserve">
+    <value>Property {0} on PluggedType {1} is not writeable!</value>
+  </data>
+  <data name="210" xml:space="preserve">
+    <value>The default instance {0} referenced in the [PluginFamily] attribute for {1}</value>
+  </data>
+  <data name="150" xml:space="preserve">
+    <value>The file {0} referenced in an &lt;Include&gt; node cannot be opened</value>
+  </data>
+  <data name="250" xml:space="preserve">
+    <value>The named Template {0} cannot be found</value>
+  </data>
+  <data name="170" xml:space="preserve">
+    <value>Unable to find the exported Type's in assembly {0}.  One or more of the assembly's dependencies may be missing.</value>
+  </data>
+  <data name="122" xml:space="preserve">
+    <value>Could not create the type {0} specified in the [PluginFamily] attribute on PluginFamily {1}</value>
+  </data>
+  <data name="180" xml:space="preserve">
+    <value>Cannot construct a Plugin for Class {0}, No public constructor found.</value>
+  </data>
 </root>

@@ -34,9 +34,9 @@ namespace StructureMap
 			initialize(ErrorCode, args);
 		}
 
-		private void initialize(int ErrorCode, params object[] args)
+		private void initialize(int errorCode, params object[] args)
 		{
-			_errorCode = ErrorCode;
+			_errorCode = errorCode;
 			_msg = "StructureMap Exception Code:  " + _errorCode + "\n";
 
 
@@ -49,11 +49,11 @@ namespace StructureMap
 			_msg += string.Format(errorMsg, args);
 		}
 
-		private string getMessage(int ErrorCode)
+		private string getMessage(int errorCode)
 		{
 			ResourceManager resources = new ResourceManager(this.GetType());
 
-			return resources.GetString(ErrorCode.ToString());
+			return resources.GetString(errorCode.ToString());
 		}
 
 		public override string Message
@@ -63,7 +63,7 @@ namespace StructureMap
 
 		public int ErrorCode
 		{
-			get { return _errorCode; }
+            get { return _errorCode; }
 		}
 
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)

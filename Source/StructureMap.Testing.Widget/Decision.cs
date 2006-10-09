@@ -29,10 +29,10 @@ namespace StructureMap.Testing.Widget
 			get { return null; }
 		}
 
-		public override object BuildInstance(InstanceMemento Memento)
+		public override object BuildInstance(InstanceMemento memento)
 		{
 			return new Decision(
-				(Rule[]) this.Manager.CreateInstanceArray("StructureMap.Testing.Widget", Memento.GetChildrenArray("Rules")));
+				(Rule[]) this.Manager.CreateInstanceArray("StructureMap.Testing.Widget", memento.GetChildrenArray("Rules")));
 		}
 
 

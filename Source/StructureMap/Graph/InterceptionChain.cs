@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using StructureMap.Interceptors;
 
 namespace StructureMap.Graph
@@ -7,13 +9,13 @@ namespace StructureMap.Graph
 	/// Manages a list of InstanceFactoryInterceptor's.  Design-time model of an array
 	/// of decorators to alter the InstanceFactory behavior for a PluginType.
 	/// </summary>
-	public class InterceptionChain
+	public class InterceptionChain : IEnumerable<InstanceFactoryInterceptor>
 	{
-		private ArrayList _interceptorList;
+		private List<InstanceFactoryInterceptor> _interceptorList;
 
 		public InterceptionChain()
 		{
-			_interceptorList = new ArrayList();
+			_interceptorList = new List<InstanceFactoryInterceptor>();
 		}
 
 		public IInstanceFactory WrapInstanceFactory(IInstanceFactory factory)
@@ -22,7 +24,7 @@ namespace StructureMap.Graph
 
 			for (int i = _interceptorList.Count - 1; i >= 0; i--)
 			{
-				InstanceFactoryInterceptor interceptor = (InstanceFactoryInterceptor) _interceptorList[i];
+				InstanceFactoryInterceptor interceptor = _interceptorList[i];
 				interceptor.InnerInstanceFactory = outerFactory;
 				outerFactory = interceptor;
 			}
@@ -42,8 +44,17 @@ namespace StructureMap.Graph
 
 		public InstanceFactoryInterceptor this[int index]
 		{
-			get { return (InstanceFactoryInterceptor) _interceptorList[index]; }
+			get { return _interceptorList[index]; }
 		}
 
+	    IEnumerator<InstanceFactoryInterceptor> IEnumerable<InstanceFactoryInterceptor>.GetEnumerator()
+	    {
+            return _interceptorList.GetEnumerator();
+	    }
+
+	    public IEnumerator GetEnumerator()
+	    {
+            return _interceptorList.GetEnumerator();
+	    }
 	}
 }

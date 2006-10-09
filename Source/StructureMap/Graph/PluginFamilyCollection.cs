@@ -20,20 +20,20 @@ namespace StructureMap.Graph
 			get { return _pluginFamilies.Values; }
 		}
 
-		public void Add(Type pluginType, string defaultInstanceKey)
+		public PluginFamily Add(Type pluginType, string defaultInstanceKey)
 		{
 			PluginFamily family = new PluginFamily(pluginType, defaultInstanceKey);
-			Add(family);
+			return Add(family);
 		}
 
 
-		public void Add(Type pluginType, string defaultInstanceKey, MementoSource mementoSource)
+        public PluginFamily Add(Type pluginType, string defaultInstanceKey, MementoSource mementoSource)
 		{
 			PluginFamily family = new PluginFamily(pluginType, defaultInstanceKey, mementoSource);
-			Add(family);
+			return Add(family);
 		}
 
-		public void Add(PluginFamily family)
+        public PluginFamily Add(PluginFamily family)
 		{
 			verifyNotSealed();
 
@@ -46,6 +46,8 @@ namespace StructureMap.Graph
 			{
 				_pluginFamilies.Add(key, family);
 			}
+
+            return family;
 		}
 
 		public PluginFamily this[Type pluginType]

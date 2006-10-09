@@ -10,7 +10,7 @@ namespace StructureMap.Interceptors
 	/// the GoF Singleton pattern. 
 	/// </summary>
 	[PluginFamily]
-	public abstract class InstanceFactoryInterceptor : IInstanceFactory
+	public abstract class InstanceFactoryInterceptor : IInstanceFactory, ICloneable
 	{
 		private IInstanceFactory _innerInstanceFactory;
 
@@ -119,5 +119,7 @@ namespace StructureMap.Interceptors
 		{
 			get { return false; }
 		}
+
+        public abstract object Clone();
 	}
 }

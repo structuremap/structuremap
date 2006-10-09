@@ -38,5 +38,10 @@ namespace StructureMap.Interceptors
 			string key = getKey(instanceKey);
 			return HttpContext.Current.Items[key];
 		}
+
+	    public override object Clone()
+	    {
+            return this.MemberwiseClone();
+	    }
 	}
 }

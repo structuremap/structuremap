@@ -106,11 +106,11 @@ namespace StructureMap.Testing.Widget
 		}
 
 
-		public override object BuildInstance(InstanceMemento Memento)
+		public override object BuildInstance(InstanceMemento memento)
 		{
 			return new Child(
-				Memento.GetProperty("Name"),
-				(GrandChild) Memento.GetChild("MyGrandChild", "StructureMap.Testing.Widget.GrandChild", this.Manager));
+				memento.GetProperty("Name"),
+				(GrandChild) memento.GetChild("MyGrandChild", "StructureMap.Testing.Widget.GrandChild", this.Manager));
 		}
 
 	}

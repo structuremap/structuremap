@@ -11,10 +11,6 @@ namespace StructureMap.Testing.Graph
 	[TestFixture]
 	public class PluginFamilyTester
 	{
-		public PluginFamilyTester()
-		{
-		}
-
 		[Test]
 		public void GetPlugins()
 		{

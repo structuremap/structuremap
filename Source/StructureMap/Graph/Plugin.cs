@@ -76,27 +76,19 @@ namespace StructureMap.Graph
 
 
 		/// <summary>
-		/// Determines if the PluggedType can be upcast to the PluginType
+		/// Determines if the pluggedType can be upcast to the pluginType
 		/// </summary>
-		/// <param name="PluginType"></param>
-		/// <param name="PluggedType"></param>
+		/// <param name="pluginType"></param>
+		/// <param name="pluggedType"></param>
 		/// <returns></returns>
-		public static bool CanBeCast(Type PluginType, Type PluggedType)
+		public static bool CanBeCast(Type pluginType, Type pluggedType)
 		{
-			bool returnValue = false;
-
-			if (PluginType.IsInterface)
-			{
-				Type interfaceType = PluggedType.GetInterface(PluginType.FullName);
-				returnValue = (interfaceType != null);
-			}
-			else
-			{
-				returnValue = PluginType.IsAssignableFrom(PluggedType);
-			}
-
-
-			return returnValue;
+		    if (GenericsPluginGraph.CanBeCast(pluginType, pluggedType))
+		    {
+		        return true;
+		    }
+		    
+			return pluginType.IsAssignableFrom(pluggedType);
 		}
 
 
@@ -200,6 +192,16 @@ namespace StructureMap.Graph
 		}
 
 
+        public Plugin CreateTemplatedClone(params Type[] types)
+        {
+            Type templatedType = _pluggedType.MakeGenericType(types);
+            Plugin templatedPlugin = new Plugin(templatedType, _concreteKey, _definitionSource);
+            templatedPlugin._setters = _setters;
+
+            return templatedPlugin;
+        }
+
+
 		/// <summary>
 		/// Returns the System.Reflection.ConstructorInfo for the PluggedType.  Uses either
 		/// the "greediest" constructor with the most arguments or the constructor function
@@ -225,6 +227,11 @@ namespace StructureMap.Graph
 					}
 				}
 			}
+		    
+		    if (returnValue == null)
+		    {
+                throw new StructureMapException(180, _pluggedType.Name);
+		    }
 
 			return returnValue;
 		}
@@ -278,11 +285,34 @@ namespace StructureMap.Graph
 		/// <returns></returns>
 		public string GetInstanceBuilderClassName()
 		{
-			return _pluggedType.FullName.Replace(".", string.Empty) + "InstanceBuilder";
+            string className = "";
+		    
+            if (_pluggedType.IsGenericType)
+            {
+                className += escapeClassName(_pluggedType);
+
+                Type[] args = _pluggedType.GetGenericArguments();
+                foreach (Type arg in args)
+                {
+                    className += escapeClassName(arg);
+                }
+            }
+            else
+            {
+                className = escapeClassName(_pluggedType);
+            }
+
+            return className + "InstanceBuilder";
 		}
 
+	    private string escapeClassName(Type type)
+	    {
+	        string returnValue = type.Name.Replace(".", string.Empty);
+            return returnValue.Replace("`", string.Empty);
+	    }
 
-		/// <summary>
+
+	    /// <summary>
 		/// Boolean flag denoting the presence of any constructor arguments
 		/// </summary>
 		/// <returns></returns>
@@ -365,6 +395,7 @@ namespace StructureMap.Graph
 
 			return !cannotBeFilled;
 		}
+
 
 
 	}

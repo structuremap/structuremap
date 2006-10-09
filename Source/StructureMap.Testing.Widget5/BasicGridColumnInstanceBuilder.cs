@@ -28,9 +28,9 @@ namespace StructureMap.Testing.Widget5
 			get { throw new NotImplementedException(); }
 		}
 
-		public override object BuildInstance(InstanceMemento Memento)
+		public override object BuildInstance(InstanceMemento memento)
 		{
-			BasicGridColumn column = new BasicGridColumn(Memento.GetProperty("headerText"));
+			BasicGridColumn column = new BasicGridColumn(memento.GetProperty("headerText"));
 
 //			column.Widget = 
 //				(IWidget) Memento.GetChild("Widget", "StructureMap.Testing.Widget.IWidget", this.Manager);
@@ -41,7 +41,7 @@ namespace StructureMap.Testing.Widget5
 //			column.ColumnName = Memento.GetProperty("ColumnName");
 
 			column.Rules =
-				(Rule[]) this.Manager.CreateInstanceArray("StructureMap.Testing.Widget.Rule", Memento.GetChildrenArray("Rules"));
+				(Rule[]) this.Manager.CreateInstanceArray("StructureMap.Testing.Widget.Rule", memento.GetChildrenArray("Rules"));
 
 //
 //			column.WrapLines = bool.Parse(Memento.GetProperty("WrapLines"));

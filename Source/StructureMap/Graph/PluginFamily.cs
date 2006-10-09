@@ -114,7 +114,30 @@ namespace StructureMap.Graph
 
 		#endregion
 
-		#region properties
+	    public PluginFamily CreateTemplatedClone(params Type[] templateTypes)
+	    {
+            Type templatedType = _pluginType.MakeGenericType(templateTypes);
+            PluginFamily templatedFamily = new PluginFamily(templatedType);
+            templatedFamily._defaultKey = _defaultKey;
+            templatedFamily._source = _source;
+            templatedFamily._definitionSource = _definitionSource;
+
+	        foreach (InstanceFactoryInterceptor interceptor in _interceptionChain)
+	        {
+	            InstanceFactoryInterceptor clonedInterceptor = (InstanceFactoryInterceptor) interceptor.Clone();
+	            templatedFamily.InterceptionChain.AddInterceptor(clonedInterceptor);
+	        }
+	        
+	        foreach (Plugin plugin in _plugins)
+	        {
+                Plugin templatedPlugin = plugin.CreateTemplatedClone(templateTypes);
+	            templatedFamily.Plugins.Add(templatedPlugin);
+	        }
+
+            return templatedFamily;
+	    }
+
+	    #region properties
 
 		/// <summary>
 		/// The CLR Type that defines the "Plugin" interface for the PluginFamily
@@ -181,7 +204,13 @@ namespace StructureMap.Graph
 		{
 			get { return this.Source.Description; }
 		}
-		#endregion
+
+	    public bool IsGeneric
+	    {
+            get { return _pluginType.IsGenericType; }
+	    }
+
+	    #endregion
 
 		/// <summary>
 		/// Finds Plugin's that match the PluginType from the assembly and add to the internal

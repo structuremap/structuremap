@@ -78,9 +78,9 @@
       <Name>nmock</Name>
       <HintPath>..\..\bin\nmock.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.framework, Version=2.2.0.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
+    <Reference Include="nunit.framework, Version=2.2.6.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\nant\lib\net\2.0\nunit.framework.dll</HintPath>
+      <HintPath>..\..\bin\NUnit\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
@@ -98,6 +98,10 @@
       <Name>StructureMap.Client</Name>
       <Project>{887C4441-07A4-489D-B8D9-EFE9D28A47CA}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\StructureMap.Testing.GenericWidgets\StructureMap.Testing.GenericWidgets.csproj">
+      <Project>{C205EA4C-4CD0-4221-A3CB-AFD835F0B263}</Project>
+      <Name>StructureMap.Testing.GenericWidgets</Name>
     </ProjectReference>
     <ProjectReference Include="..\StructureMap.Testing.Widget2\StructureMap.Testing.Widget2.csproj">
       <Name>StructureMap.Testing.Widget2</Name>
@@ -318,12 +322,13 @@
     <Compile Include="Container\StubbedInstanceFactoryTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Debugging.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="GenericsAcceptanceTester.cs" />
+    <Compile Include="GenericsIntegrationTester.cs" />
+    <Compile Include="GenericsPlaying.cs" />
     <Compile Include="Graph\AssemblyGraphTester.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Graph\GenericsPluginGraphTester.cs" />
     <Compile Include="Graph\GraphDeploymentTester.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -403,6 +408,9 @@
     <EmbeddedResource Include="TestData\Trigger.xml" />
     <EmbeddedResource Include="TestData\Valid.config" />
     <EmbeddedResource Include="TestData\XmlInstanceMemento.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestData\GenericsTesting.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

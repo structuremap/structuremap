@@ -44,12 +44,12 @@ namespace StructureMap.Testing.Widget2
 		}
 
 
-		public override object BuildInstance(InstanceMemento Memento)
+		public override object BuildInstance(InstanceMemento memento)
 		{
 			return new Cow(
-				long.Parse(Memento.GetProperty("Weight")),
-				(BreedEnum) Enum.Parse(typeof (BreedEnum), Memento.GetProperty("Breed"), true),
-				Memento.GetProperty("Name"));
+				long.Parse(memento.GetProperty("Weight")),
+				(BreedEnum) Enum.Parse(typeof (BreedEnum), memento.GetProperty("Breed"), true),
+				memento.GetProperty("Name"));
 		}
 
 

@@ -51,5 +51,10 @@ namespace StructureMap.Interceptors
 		{
 			return _instances[getKey(instanceKey)];
 		}
+
+	    public override object Clone()
+	    {
+            return this.MemberwiseClone();
+	    }
 	}
 }

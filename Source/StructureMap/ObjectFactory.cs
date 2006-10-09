@@ -248,7 +248,7 @@ namespace StructureMap
 		/// </summary>
 		/// <param name="targetType"></param>
 		/// <returns></returns>
-		public static System.Collections.IList GetAllInstances(Type targetType)
+		public static IList GetAllInstances(Type targetType)
 		{
 			return manager.GetAllInstances(targetType);
 		}
@@ -284,6 +284,11 @@ namespace StructureMap
 			return _manager.FillDependencies(type);
 		}
 
+        public static T FillDependencies<T>()
+        {
+            return (T)_manager.FillDependencies(typeof(T));
+        }
+	    
 		#region Mocking
 
 		/// <summary>

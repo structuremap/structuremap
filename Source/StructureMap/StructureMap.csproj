@@ -378,6 +378,7 @@
     <Compile Include="Graph\Deployable.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Graph\GenericsPluginGraph.cs" />
     <Compile Include="Graph\InstanceDefault.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -540,7 +541,9 @@
     <Compile Include="XmlMapping\InstanceDefaultManagerMapper.cs">
       <SubType>Code</SubType>
     </Compile>
-    <EmbeddedResource Include="StructureMapException.resx" />
+    <EmbeddedResource Include="StructureMapException.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
