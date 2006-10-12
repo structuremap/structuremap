@@ -143,7 +143,15 @@ namespace StructureMap.Testing
 
             InstanceFactory factory = new InstanceFactory(family, true);
         }
+
+        [Test]
+        public void SmokeTestCanBeCaseWithImplementationOfANonGenericInterface()
+        {
+            Assert.IsTrue(GenericsPluginGraph.CanBeCast(typeof(ITarget<,>), typeof(DisposableTarget<,>)));
+        }
     }
+    
+   
     
     public class ComplexType<T>
     {
@@ -170,6 +178,18 @@ namespace StructureMap.Testing
     public interface ITarget<T, U>{}
     
     public class SpecificTarget<T, U> : ITarget<T, U>{}
+    
+    public class DisposableTarget<T, U> : ITarget<T, U>, IDisposable
+    {
+        public DisposableTarget()
+        {
+        }
+
+        public void Dispose()
+        {
+            
+        }
+    }
 
     public interface ITarget2<T, U, V> { }
 

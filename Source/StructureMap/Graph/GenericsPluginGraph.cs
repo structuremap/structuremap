@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace StructureMap.Graph
 {
     public class GenericsPluginGraph
-    {
+    {        
         public static bool CanBeCast(Type pluginType, Type pluggedType)
         {
             bool isGenericComparison = pluginType.IsGenericType && pluggedType.IsGenericType;
@@ -14,9 +13,30 @@ namespace StructureMap.Graph
                 return false;
             }
 
-            // check interfaces
+            try
+            {
+                return checkGenericType(pluggedType, pluginType);
+            }
+            catch (Exception e)
+            {
+                string message =
+                    string.Format("Could not Determine Whether Type '{0}' plugs into Type '{1}'", 
+                                  pluginType.Name,
+                                  pluggedType.Name);
+                throw new ApplicationException(message, e);
+            }
+        }
+
+        private static bool checkGenericType(Type pluggedType, Type pluginType)
+        {
+// check interfaces
             foreach (Type type in pluggedType.GetInterfaces())
             {
+                if (!type.IsGenericType)
+                {
+                    continue;
+                }
+                
                 if (type.GetGenericTypeDefinition().Equals(pluginType))
                 {
                     return true;
