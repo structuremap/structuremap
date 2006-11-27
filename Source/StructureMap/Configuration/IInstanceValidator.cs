@@ -1,9 +1,11 @@
+using System;
+
 namespace StructureMap.Configuration
 {
 	public interface IInstanceValidator
 	{
-		object CreateObject(string pluginTypeName, InstanceMemento memento);
-		bool HasDefaultInstance(string pluginTypeName);
-		bool InstanceExists(string pluginTypeName, string instanceKey);
+		object CreateObject(Type pluginType, InstanceMemento memento);
+		bool HasDefaultInstance(Type pluginType);
+		bool InstanceExists(Type pluginType, string instanceKey);
 	}
 }

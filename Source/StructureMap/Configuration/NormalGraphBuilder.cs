@@ -35,11 +35,6 @@ namespace StructureMap.Configuration
 
 		public PluginGraph CreatePluginGraph()
 		{
-			foreach (PluginFamily family in _pluginGraph.PluginFamilies)
-			{
-				_defaultManager.AddPluginFamilyDefault(family.PluginTypeName, family.DefaultInstanceKey);
-			}
-
 			return _pluginGraph;
 		}
 

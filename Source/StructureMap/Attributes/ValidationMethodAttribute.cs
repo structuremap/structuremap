@@ -36,7 +36,7 @@ namespace StructureMap
 					if (method.GetParameters().Length > 0)
 					{
 						string msg = string.Format("Method *{0}* in Class *{1}* cannot be a validation method because it has parameters",
-						                           method.Name, objectType.FullName);
+						                           method.Name, objectType.AssemblyQualifiedName);
 						throw new ApplicationException(msg);
 					}
 

@@ -126,11 +126,6 @@ namespace StructureMap.Testing.Container.ExceptionHandling
 			_testRunner.ExecuteExceptionTestFromResetDefaults(101);
 		}
 
-		[Test]
-		public void MissingAssemblyInPluginFamilyNode()
-		{
-			_testRunner.ExecuteExceptionTestFromResetDefaults(102);
-		}
 
 		[Test]
 		public void CannotLoadTypeFromPluginFamilyNode()
@@ -138,11 +133,6 @@ namespace StructureMap.Testing.Container.ExceptionHandling
 			_testRunner.ExecuteExceptionTestFromResetDefaults(103);
 		}
 
-		[Test]
-		public void CannotLoadAssemblyInPluginNode()
-		{
-			_testRunner.ExecuteExceptionTestFromResetDefaults(110);
-		}
 
 		[Test]
 		public void CannotLoadTypeFromPluginNode()

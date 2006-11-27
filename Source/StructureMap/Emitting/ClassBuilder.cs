@@ -24,13 +24,21 @@ namespace StructureMap.Emitting
 
 		public ClassBuilder(ModuleBuilder module, string ClassName, Type superType)
 		{
-			_Methods = new ArrayList();
+		    try
+		    {
+		        _Methods = new ArrayList();
 
-			newTypeBuilder = module.DefineType(ClassName, PUBLIC_ATTS, superType);
-			this.superType = superType;
-			_ClassName = ClassName;
+		        newTypeBuilder = module.DefineType(ClassName, PUBLIC_ATTS, superType);
+		        this.superType = superType;
+		        _ClassName = ClassName;
 
-			this.addDefaultConstructor();
+		        this.addDefaultConstructor();
+		    }
+		    catch (Exception e)
+		    {
+                string message = string.Format("Error trying to emit an InstanceBuilder for {0}", ClassName);
+                throw new ApplicationException(message, e);
+		    }
 		}
 
 

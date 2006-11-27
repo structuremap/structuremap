@@ -141,6 +141,13 @@ namespace StructureMap.Testing.Graph
             Assert.AreEqual(typeof(SecondGenericService3<int, bool, string>), templatedFamily.Plugins["Second"].PluggedType);
             Assert.AreEqual(typeof(ThirdGenericService3<int, bool, string>), templatedFamily.Plugins["Third"].PluggedType);
         }
+
+
+        [Test]
+        public void FindPluginFamily()
+        {
+            Assert.Fail("Do.");
+        }
         
         
         

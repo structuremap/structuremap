@@ -15,7 +15,7 @@ namespace StructureMap.Configuration.Tokens
 			this.InstanceKey = this.ConcreteKey = scope.ToString();			
 		}
 
-		public InterceptorInstanceToken(string pluginTypeName, PluginGraphReport report, InstanceMemento memento) : base(pluginTypeName, report, memento)
+		public InterceptorInstanceToken(Type pluginType, PluginGraphReport report, InstanceMemento memento) : base(pluginType, report, memento)
 		{
 		}
 

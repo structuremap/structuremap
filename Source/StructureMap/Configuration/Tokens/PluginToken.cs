@@ -40,7 +40,7 @@ namespace StructureMap.Configuration.Tokens
 
 		public PluginToken(TypePath pluginPath, string concreteKey, DefinitionSource definitionSource)
 		{
-			_pluggedType = pluginPath.ClassName;
+			_pluggedType = pluginPath.AssemblyQualifiedName;
 			_assemblyName = pluginPath.AssemblyName;
 			_concreteKey = concreteKey;
 			_definitionSource = definitionSource;

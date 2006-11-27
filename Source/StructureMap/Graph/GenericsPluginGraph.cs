@@ -86,8 +86,26 @@ namespace StructureMap.Graph
             }
             else
             {
+                string configuredTypes = "";
+                foreach (KeyValuePair<Type, PluginFamily> pair in _families)
+                {
+                    configuredTypes += "\n" + pair.Value.PluginTypeName + ";";
+                }
+                
+                throw new StructureMapException(190, templatedType.FullName, basicType.FullName, configuredTypes);
+            }
+        }
+
+        public PluginFamily CreateTemplatedFamily(string pluginTypeName)
+        {
+            Type type = Type.GetType(pluginTypeName, true);
+            
+            if (!type.IsGenericType)
+            {
                 return null;
             }
+
+            return CreateTemplatedFamily(type);
         }
     }
     

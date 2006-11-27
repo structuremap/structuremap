@@ -19,13 +19,13 @@ namespace StructureMap.Testing.Configuration.Tokens
 		public void SetUp()
 		{
 			PluginGraphReport report = new PluginGraphReport();
-			FamilyToken family = new FamilyToken(new TypePath(typeof(IGateway)), "", new string[0]);
+			FamilyToken family = new FamilyToken(typeof(IGateway), "", new string[0]);
 
 			report.AddFamily(family);
 
 			_plugin = new PluginToken(new TypePath(typeof(StubbedGateway)), "concrete", DefinitionSource.Explicit);
 
-			PropertyDefinition property = new PropertyDefinition("color", typeof(string).FullName, PropertyDefinitionType.Constructor, ArgumentType.Primitive);
+			PropertyDefinition property = new PropertyDefinition("color", typeof(string), PropertyDefinitionType.Constructor, ArgumentType.Primitive);
 			_plugin.AddPropertyDefinition(property);
 			family.AddPlugin(_plugin);
 
@@ -38,7 +38,7 @@ namespace StructureMap.Testing.Configuration.Tokens
 			MemoryInstanceMemento memento = new MemoryInstanceMemento("concrete", "instance");
 			memento.SetProperty("color", "blue");
 
-			InstanceToken instance = new InstanceToken(typeof(IGateway).FullName, _report, memento);
+			InstanceToken instance = new InstanceToken(typeof(IGateway), _report, memento);
 
 			Assert.AreEqual("instance", instance.InstanceKey);
 			Assert.AreEqual("concrete", instance.ConcreteKey);
@@ -54,13 +54,13 @@ namespace StructureMap.Testing.Configuration.Tokens
 		[Test]
 		public void CreateInstanceTokenWithTwoPrimitiveProperty()
 		{
-			_plugin.AddPropertyDefinition(new PropertyDefinition("name", typeof(string).FullName, PropertyDefinitionType.Constructor, ArgumentType.Primitive));
+			_plugin.AddPropertyDefinition(new PropertyDefinition("name", typeof(string), PropertyDefinitionType.Constructor, ArgumentType.Primitive));
 
 			MemoryInstanceMemento memento = new MemoryInstanceMemento("concrete", "instance");
 			memento.SetProperty("color", "blue");
 			memento.SetProperty("name", "Bob");
 
-			InstanceToken instance = new InstanceToken(typeof(IGateway).FullName, _report, memento);
+			InstanceToken instance = new InstanceToken(typeof(IGateway), _report, memento);
 
 			Assert.AreEqual("instance", instance.InstanceKey);
 			Assert.AreEqual("concrete", instance.ConcreteKey);
@@ -77,7 +77,7 @@ namespace StructureMap.Testing.Configuration.Tokens
 		[Test]
 		public void CreateInstanceTokenWithAnEnumerationProperty()
 		{
-			PropertyDefinition definition = new PropertyDefinition("name", typeof(string).FullName, PropertyDefinitionType.Constructor, ArgumentType.Enumeration);
+			PropertyDefinition definition = new PropertyDefinition("name", typeof(string), PropertyDefinitionType.Constructor, ArgumentType.Enumeration);
 			definition.EnumerationValues = new string[]{"Bob"};
 			_plugin.AddPropertyDefinition(definition);
 
@@ -85,7 +85,7 @@ namespace StructureMap.Testing.Configuration.Tokens
 			memento.SetProperty("color", "blue");
 			memento.SetProperty("name", "Bob");
 
-			InstanceToken instance = new InstanceToken(typeof(IGateway).FullName, _report, memento);
+			InstanceToken instance = new InstanceToken(typeof(IGateway), _report, memento);
 
 			Assert.AreEqual("instance", instance.InstanceKey);
 			Assert.AreEqual("concrete", instance.ConcreteKey);
@@ -101,7 +101,7 @@ namespace StructureMap.Testing.Configuration.Tokens
 		public void InstanceTokenWithoutConcreteKey()
 		{
 			MemoryInstanceMemento memento = new MemoryInstanceMemento(string.Empty, "instance");
-			InstanceToken instance = new InstanceToken(typeof(IGateway).FullName, _report, memento);
+			InstanceToken instance = new InstanceToken(typeof(IGateway), _report, memento);
 
 			Problem expected = new Problem(ConfigurationConstants.INVALID_PLUGIN, string.Empty);
 
@@ -112,7 +112,7 @@ namespace StructureMap.Testing.Configuration.Tokens
 		public void InstanceTokenWithoutAPlugin()
 		{
 			MemoryInstanceMemento memento = new MemoryInstanceMemento("SomethingReallyWrong", "instance");
-			InstanceToken instance = new InstanceToken(typeof(IGateway).FullName, _report, memento);
+			InstanceToken instance = new InstanceToken(typeof(IGateway), _report, memento);
 
 			Problem expected = new Problem(ConfigurationConstants.INVALID_PLUGIN, string.Empty);
 
@@ -122,12 +122,13 @@ namespace StructureMap.Testing.Configuration.Tokens
 		[Test]
 		public void InstanceTokenWithoutAPluginFamily()
 		{
-			MemoryInstanceMemento memento = new MemoryInstanceMemento("concrete", "instance");
-			InstanceToken instance = new InstanceToken("something that does not exist", _report, memento);
+		    Assert.Fail("How are you going to do this?");
+            //MemoryInstanceMemento memento = new MemoryInstanceMemento("concrete", "instance");
+            //InstanceToken instance = new InstanceToken("something that does not exist", _report, memento);
 
-			Problem expected = new Problem(ConfigurationConstants.INVALID_PLUGIN_FAMILY, string.Empty);
+            //Problem expected = new Problem(ConfigurationConstants.INVALID_PLUGIN_FAMILY, string.Empty);
 
-			Assert.AreEqual(new Problem[]{expected}, instance.Problems);
+            //Assert.AreEqual(new Problem[]{expected}, instance.Problems);
 		}
 
 		[Test]
@@ -135,14 +136,14 @@ namespace StructureMap.Testing.Configuration.Tokens
 		{
 			MemoryInstanceMemento memento = new MemoryInstanceMemento("concrete", "instance");
 
-			string pluginTypeName = typeof(IGateway).FullName;
-			InstanceToken instance = new InstanceToken(pluginTypeName, _report, memento);
+
+            InstanceToken instance = new InstanceToken(typeof(IGateway), _report, memento);
 
 			Assert.AreEqual(0, instance.Problems.Length, "Asserting that there are no problems upfront");
 
 			ValidationTarget target = new ValidationTarget(true);
 			DynamicMock validatorMock = new DynamicMock(typeof(IInstanceValidator));
-			validatorMock.ExpectAndReturn("CreateObject", target, pluginTypeName, memento);
+            validatorMock.ExpectAndReturn("CreateObject", target, typeof(IGateway), memento);
 
 			instance.Validate((IInstanceValidator) validatorMock.MockInstance);
 
@@ -157,14 +158,13 @@ namespace StructureMap.Testing.Configuration.Tokens
 		{
 			MemoryInstanceMemento memento = new MemoryInstanceMemento("concrete", "instance");
 
-			string pluginTypeName = typeof(IGateway).FullName;
-			InstanceToken instance = new InstanceToken(pluginTypeName, _report, memento);
+            InstanceToken instance = new InstanceToken(typeof(IGateway), _report, memento);
 
 			Assert.AreEqual(0, instance.Problems.Length, "Asserting that there are no problems upfront");
 
 			ValidationTarget target = new ValidationTarget(false);
 			DynamicMock validatorMock = new DynamicMock(typeof(IInstanceValidator));
-			validatorMock.ExpectAndReturn("CreateObject", target, pluginTypeName, memento);
+            validatorMock.ExpectAndReturn("CreateObject", target, typeof(IGateway), memento);
 
 			instance.Validate((IInstanceValidator) validatorMock.MockInstance);
 
@@ -180,12 +180,11 @@ namespace StructureMap.Testing.Configuration.Tokens
 		{
 			MemoryInstanceMemento memento = new MemoryInstanceMemento("concrete", "instance");
 
-			string pluginTypeName = typeof(IGateway).FullName;
-			InstanceToken instance = new InstanceToken(pluginTypeName, _report, memento);
+            InstanceToken instance = new InstanceToken(typeof(IGateway), _report, memento);
 
 			Assert.AreEqual(0, instance.Problems.Length, "Asserting that there are no problems upfront");
 			DynamicMock validatorMock = new DynamicMock(typeof(IInstanceValidator));
-			validatorMock.ExpectAndThrow("CreateObject", new ApplicationException("Bad"), pluginTypeName, memento);
+			validatorMock.ExpectAndThrow("CreateObject", new ApplicationException("Bad"), typeof(IGateway), memento);
 
 			instance.Validate((IInstanceValidator) validatorMock.MockInstance);
 
@@ -198,10 +197,10 @@ namespace StructureMap.Testing.Configuration.Tokens
 		[Test]
 		public void InstanceTokenValidatePropagatesTheValidatorDownToTheProperties()
 		{
-			_plugin.AddPropertyDefinition(new PropertyDefinition("name", typeof(string).FullName, PropertyDefinitionType.Constructor, ArgumentType.Primitive));
+			_plugin.AddPropertyDefinition(new PropertyDefinition("name", typeof(string), PropertyDefinitionType.Constructor, ArgumentType.Primitive));
 
 			MemoryInstanceMemento memento = new MemoryInstanceMemento("concrete", "instance");
-			InstanceToken instance = new InstanceToken(typeof(IGateway).FullName, _report, memento);
+			InstanceToken instance = new InstanceToken(typeof(IGateway), _report, memento);
 
 			MockProperty property1 = new MockProperty("prop1");
 			MockProperty property2 = new MockProperty("prop2");
@@ -212,7 +211,7 @@ namespace StructureMap.Testing.Configuration.Tokens
 			instance.AddProperty(property3);
 
 			DynamicMock validatorMock = new DynamicMock(typeof(IInstanceValidator));
-			validatorMock.ExpectAndReturn("CreateObject", new object(), typeof(IGateway).FullName, memento);
+			validatorMock.ExpectAndReturn("CreateObject", new object(), typeof(IGateway), memento);
 
 			instance.Validate((IInstanceValidator) validatorMock.MockInstance);
 		
@@ -227,8 +226,7 @@ namespace StructureMap.Testing.Configuration.Tokens
 			TemplateToken template = new TemplateToken("Template1", "Concrete", new string[]{"prop1", "prop2", "prop3"});
 
 			PluginGraphReport report = new PluginGraphReport();
-			FamilyToken family = new FamilyToken();
-			family.PluginType = "SomeType";
+            FamilyToken family = new FamilyToken(typeof(IGateway), "", new string[0]);
 			report.AddFamily(family);
 			family.AddTemplate(template);
 
@@ -238,8 +236,7 @@ namespace StructureMap.Testing.Configuration.Tokens
 			memento.SetProperty("prop2", "value2");
 			memento.SetProperty("prop3", "value3");
 
-
-			InstanceToken instance = new InstanceToken(family.PluginType, report, memento);
+			InstanceToken instance = new InstanceToken(typeof(IGateway), report, memento);
 
 			Assert.AreEqual(memento.InstanceKey, instance.InstanceKey);
 			Assert.AreEqual(template.TemplateKey, instance.TemplateKey);
@@ -259,8 +256,7 @@ namespace StructureMap.Testing.Configuration.Tokens
 			TemplateToken template = new TemplateToken("Template1", "Concrete", new string[]{"prop1", "prop2", "prop3"});
 
 			PluginGraphReport report = new PluginGraphReport();
-			FamilyToken family = new FamilyToken();
-			family.PluginType = "SomeType";
+			FamilyToken family = new FamilyToken(typeof(IGateway), string.Empty, new string[0]);
 			report.AddFamily(family);
 			family.AddTemplate(template);
 
@@ -273,7 +269,7 @@ namespace StructureMap.Testing.Configuration.Tokens
 			//memento.SetProperty("prop3", "value3");
 
 
-			InstanceToken instance = new InstanceToken(family.PluginType, report, memento);
+			InstanceToken instance = new InstanceToken(typeof(IGateway), report, memento);
 			TemplateProperty property = (TemplateProperty) instance["prop3"];
 			
 			Problem problem = new Problem(ConfigurationConstants.MISSING_TEMPLATE_VALUE, "");

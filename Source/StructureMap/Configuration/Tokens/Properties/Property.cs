@@ -20,7 +20,7 @@ namespace StructureMap.Configuration.Tokens.Properties
 			}
 		}
 
-		public string PropertyType
+		public Type PropertyType
 		{
 			get
 			{

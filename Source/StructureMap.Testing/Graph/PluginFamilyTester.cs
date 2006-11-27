@@ -43,7 +43,7 @@ namespace StructureMap.Testing.Graph
 			family.Plugins.Add(typeof (Rule), "Rule");
 		}
 
-		[Test, ExpectedException(typeof (StructureMapException), "StructureMap Exception Code:  102\nAssembly NonexistentAssembly referenced in a <PluginFamily> node for PluginType \"NonexistentAssembly.Class1\" in StructureMap.config cannot be loaded into the current AppDomain")]
+		[Test, ExpectedException(typeof (StructureMapException))]
 		public void CreateExplicitWithNonexistentAssembly()
 		{
 			TypePath path = new TypePath("NonexistentAssembly", "NonexistentAssembly.Class1");
@@ -51,7 +51,7 @@ namespace StructureMap.Testing.Graph
 			PluginFamily family = new PluginFamily(path, "");
 		}
 
-		[Test, ExpectedException(typeof (StructureMapException), "StructureMap Exception Code:  103\nPluginType \"StructureMap.Testing.Widget.NonExistentInterface\" referenced in a <PluginFamily> node in StructureMap.config cannot be loaded from Assembly StructureMap.Testing.Widget")]
+		[Test, ExpectedException(typeof (StructureMapException))]
 		public void CreateExplicitWithNonexistentClass()
 		{
 			TypePath path = new TypePath("StructureMap.Testing.Widget", "StructureMap.Testing.Widget.NonExistentInterface");

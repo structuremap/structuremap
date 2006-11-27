@@ -14,11 +14,11 @@ namespace StructureMap.Configuration.Tokens.Properties
 
 		public void Validate(IInstanceValidator validator)
 		{
-			if (!validator.InstanceExists(_property.PluginTypeName, _property.ReferenceKey))
+			if (!validator.InstanceExists(_property.PluginType, _property.ReferenceKey))
 			{
 				string message = string.Format(
 					"The configured reference to instance {0} is not configured for PluginType {1}", 
-					_property.ReferenceKey, _property.PluginTypeName);
+					_property.ReferenceKey, _property.PluginType);
 
 				Problem problem = new Problem(ConfigurationConstants.NO_MATCHING_INSTANCE_CONFIGURED, message);
 				_property.LogProblem(problem);

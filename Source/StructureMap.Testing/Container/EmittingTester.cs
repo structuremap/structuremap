@@ -88,7 +88,7 @@ namespace StructureMap.Testing.Container
 		[Test]
 		public void PluginType()
 		{
-			Assert.AreEqual("StructureMap.Testing.Widget.Rule", builder.PluginType);
+			Assert.AreEqual("StructureMap.Testing.Widget.Rule,StructureMap.Testing.Widget", builder.PluginType);
 		}
 
 		[Test]

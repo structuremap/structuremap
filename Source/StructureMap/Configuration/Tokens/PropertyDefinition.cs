@@ -21,7 +21,7 @@ namespace StructureMap.Configuration.Tokens
 	public class PropertyDefinition : GraphObject
 	{
 		private string _propertyName;
-		private string _propertyType;
+		private Type _propertyType;
 		private PropertyDefinitionType _definitionType;
 		private string[] _enumerationValues;
 		private ArgumentType _argumentType;
@@ -31,7 +31,7 @@ namespace StructureMap.Configuration.Tokens
 		{
 		}
 
-		public PropertyDefinition(string propertyName, string propertyType, PropertyDefinitionType definitionType, ArgumentType argumentType) : this()
+		public PropertyDefinition(string propertyName, Type propertyType, PropertyDefinitionType definitionType, ArgumentType argumentType) : this()
 		{
 			_propertyName = propertyName;
 			_propertyType = propertyType;
@@ -39,13 +39,22 @@ namespace StructureMap.Configuration.Tokens
 			_argumentType = argumentType;
 		}
 
+        public PropertyDefinition(string propertyName, PropertyDefinitionType definitionType, ArgumentType argumentType)
+            : this()
+        {
+            _propertyName = propertyName;
+            _propertyType = null;
+            _definitionType = definitionType;
+            _argumentType = argumentType;
+        }
+	    
 		public PropertyDefinitionType DefinitionType
 		{
 			get { return _definitionType; }
 			set { _definitionType = value; }
 		}
 
-		public string PropertyType
+		public Type PropertyType
 		{
 			get { return _propertyType; }
 			set { _propertyType = value; }

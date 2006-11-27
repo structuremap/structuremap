@@ -58,8 +58,9 @@ namespace StructureMap.Testing.Caching
             ObjectFactory.ResetDefaults();
 
             // The default GrandChild is set within the default profile
-            GrandChild defaultGrandChild = ObjectFactory.GetInstance<GrandChild>();
             GrandChild todd = ObjectFactory.GetNamedInstance<GrandChild>("Todd");
+            GrandChild defaultGrandChild = ObjectFactory.GetInstance<GrandChild>();
+            
             Assert.AreEqual(todd.BirthYear, defaultGrandChild.BirthYear);
         }
 

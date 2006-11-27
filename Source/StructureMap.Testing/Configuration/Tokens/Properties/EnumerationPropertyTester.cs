@@ -1,5 +1,6 @@
 using NMock;
 using NUnit.Framework;
+using StructureMap.Attributes;
 using StructureMap.Configuration;
 using StructureMap.Configuration.Tokens;
 using StructureMap.Configuration.Tokens.Properties;
@@ -14,7 +15,7 @@ namespace StructureMap.Testing.Configuration.Tokens.Properties
 		[SetUp]
 		public void SetUp()
 		{
-			_definition = new PropertyDefinition("order", "OrderEnum", PropertyDefinitionType.Constructor, ArgumentType.Enumeration);
+			_definition = new PropertyDefinition("order", typeof(InstanceScope), PropertyDefinitionType.Constructor, ArgumentType.Enumeration);
 			_definition.EnumerationValues = new string[]{"First", "Second", "Third"};
 		}
 

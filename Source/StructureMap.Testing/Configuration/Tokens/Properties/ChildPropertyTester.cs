@@ -36,7 +36,7 @@ namespace StructureMap.Testing.Configuration.Tokens.Properties
 			MemoryInstanceMemento child = new MemoryInstanceMemento("Stubbed", "inner");
 			parent.AddChild(THE_PROPERTY_NAME, child);
 
-			InstanceToken instance = new InstanceToken(typeof(IGateway).FullName, _report, parent);
+			InstanceToken instance = new InstanceToken(typeof(IGateway), _report, parent);
 
 			ChildProperty property = (ChildProperty) instance[THE_PROPERTY_NAME];
 
@@ -59,7 +59,7 @@ namespace StructureMap.Testing.Configuration.Tokens.Properties
 			MemoryInstanceMemento child = new MemoryInstanceMemento("Stubbed", "inner");
 			parent.AddChild(THE_PROPERTY_NAME, child);
 
-			InstanceToken instance = new InstanceToken(typeof(IGateway).FullName, _report, parent);
+			InstanceToken instance = new InstanceToken(typeof(IGateway), _report, parent);
 
 			ChildProperty property = (ChildProperty) instance[THE_PROPERTY_NAME];
 
@@ -76,13 +76,13 @@ namespace StructureMap.Testing.Configuration.Tokens.Properties
 			MemoryInstanceMemento child = new MemoryInstanceMemento("Stubbed", "inner");
 			parent.AddChild(THE_PROPERTY_NAME, child);
 
-			InstanceToken instance = new InstanceToken(typeof(IGateway).FullName, _report, parent);
+			InstanceToken instance = new InstanceToken(typeof(IGateway), _report, parent);
 
 			ChildProperty property = (ChildProperty) instance[THE_PROPERTY_NAME];
 
 			DynamicMock validatorMock = new DynamicMock(typeof(IInstanceValidator));
 			IInstanceValidator validator = (IInstanceValidator) validatorMock.MockInstance;
-			validatorMock.ExpectAndReturn("CreateObject", new object(), typeof(IGateway).FullName, child);
+			validatorMock.ExpectAndReturn("CreateObject", new object(), typeof(IGateway), child);
 
 			property.Validate(validator);
 
@@ -96,7 +96,7 @@ namespace StructureMap.Testing.Configuration.Tokens.Properties
 			MemoryInstanceMemento child = MemoryInstanceMemento.CreateDefaultInstanceMemento();
 			parent.AddChild(THE_PROPERTY_NAME, child);
 
-			InstanceToken instance = new InstanceToken(typeof(IGateway).FullName, _report, parent);
+			InstanceToken instance = new InstanceToken(typeof(IGateway), _report, parent);
 
 			ChildProperty property = (ChildProperty) instance[THE_PROPERTY_NAME];
 
@@ -115,7 +115,7 @@ namespace StructureMap.Testing.Configuration.Tokens.Properties
 			MemoryInstanceMemento child = MemoryInstanceMemento.CreateDefaultInstanceMemento();
 			parent.AddChild(THE_PROPERTY_NAME, child);
 
-			InstanceToken instance = new InstanceToken(typeof(IGateway).FullName, _report, parent);
+			InstanceToken instance = new InstanceToken(typeof(IGateway), _report, parent);
 
 			ChildProperty property = (ChildProperty) instance[THE_PROPERTY_NAME];
 
@@ -132,12 +132,12 @@ namespace StructureMap.Testing.Configuration.Tokens.Properties
 			MemoryInstanceMemento child = MemoryInstanceMemento.CreateDefaultInstanceMemento();
 			parent.AddChild(THE_PROPERTY_NAME, child);
 
-			InstanceToken instance = new InstanceToken(typeof(IGateway).FullName, _report, parent);
+			InstanceToken instance = new InstanceToken(typeof(IGateway), _report, parent);
 
 			ChildProperty property = (ChildProperty) instance[THE_PROPERTY_NAME];
 			
 			DynamicMock validatorMock = new DynamicMock(typeof(IInstanceValidator));
-			validatorMock.ExpectAndReturn("HasDefaultInstance", true, typeof(IGateway).FullName);
+			validatorMock.ExpectAndReturn("HasDefaultInstance", true, typeof(IGateway));
 
 			property.Validate((IInstanceValidator) validatorMock.MockInstance);
 
@@ -153,12 +153,12 @@ namespace StructureMap.Testing.Configuration.Tokens.Properties
 			MemoryInstanceMemento child = MemoryInstanceMemento.CreateDefaultInstanceMemento();
 			parent.AddChild(THE_PROPERTY_NAME, child);
 
-			InstanceToken instance = new InstanceToken(typeof(IGateway).FullName, _report, parent);
+			InstanceToken instance = new InstanceToken(typeof(IGateway), _report, parent);
 
 			ChildProperty property = (ChildProperty) instance[THE_PROPERTY_NAME];
 			
 			DynamicMock validatorMock = new DynamicMock(typeof(IInstanceValidator));
-			validatorMock.ExpectAndReturn("HasDefaultInstance", false, typeof(IGateway).FullName);
+			validatorMock.ExpectAndReturn("HasDefaultInstance", false, typeof(IGateway));
 
 			property.Validate((IInstanceValidator) validatorMock.MockInstance);
 
@@ -176,7 +176,7 @@ namespace StructureMap.Testing.Configuration.Tokens.Properties
 			MemoryInstanceMemento child = MemoryInstanceMemento.CreateReferencedInstanceMemento(theReferenceKey);
 			parent.AddChild(THE_PROPERTY_NAME, child);
 
-			InstanceToken instance = new InstanceToken(typeof(IGateway).FullName, _report, parent);
+			InstanceToken instance = new InstanceToken(typeof(IGateway), _report, parent);
 
 			ChildProperty property = (ChildProperty) instance[THE_PROPERTY_NAME];
 
@@ -197,7 +197,7 @@ namespace StructureMap.Testing.Configuration.Tokens.Properties
 			MemoryInstanceMemento child = MemoryInstanceMemento.CreateReferencedInstanceMemento(theReferenceKey);
 			parent.AddChild(THE_PROPERTY_NAME, child);
 
-			InstanceToken instance = new InstanceToken(typeof(IGateway).FullName, _report, parent);
+			InstanceToken instance = new InstanceToken(typeof(IGateway), _report, parent);
 
 			ChildProperty property = (ChildProperty) instance[THE_PROPERTY_NAME];
 
@@ -215,12 +215,12 @@ namespace StructureMap.Testing.Configuration.Tokens.Properties
 			MemoryInstanceMemento child = MemoryInstanceMemento.CreateReferencedInstanceMemento(theReferenceKey);
 			parent.AddChild(THE_PROPERTY_NAME, child);
 
-			InstanceToken instance = new InstanceToken(typeof(IGateway).FullName, _report, parent);
+			InstanceToken instance = new InstanceToken(typeof(IGateway), _report, parent);
 
 			ChildProperty property = (ChildProperty) instance[THE_PROPERTY_NAME];
 			
 			DynamicMock validatorMock = new DynamicMock(typeof(IInstanceValidator));
-			validatorMock.ExpectAndReturn("InstanceExists", true, typeof(IGateway).FullName, theReferenceKey);
+			validatorMock.ExpectAndReturn("InstanceExists", true, typeof(IGateway), theReferenceKey);
 
 			property.Validate((IInstanceValidator)validatorMock.MockInstance);
 
@@ -236,12 +236,12 @@ namespace StructureMap.Testing.Configuration.Tokens.Properties
 			MemoryInstanceMemento child = MemoryInstanceMemento.CreateReferencedInstanceMemento(theReferenceKey);
 			parent.AddChild(THE_PROPERTY_NAME, child);
 
-			InstanceToken instance = new InstanceToken(typeof(IGateway).FullName, _report, parent);
+			InstanceToken instance = new InstanceToken(typeof(IGateway), _report, parent);
 
 			ChildProperty property = (ChildProperty) instance[THE_PROPERTY_NAME];
 			
 			DynamicMock validatorMock = new DynamicMock(typeof(IInstanceValidator));
-			validatorMock.ExpectAndReturn("InstanceExists", false, typeof(IGateway).FullName, theReferenceKey);
+			validatorMock.ExpectAndReturn("InstanceExists", false, typeof(IGateway), theReferenceKey);
 
 			property.Validate((IInstanceValidator)validatorMock.MockInstance);
 
@@ -254,7 +254,7 @@ namespace StructureMap.Testing.Configuration.Tokens.Properties
 		public void NotDefinedChildShouldBeDefault()
 		{
 			MemoryInstanceMemento parent = new MemoryInstanceMemento(THE_CONCRETE_KEY, "decorated");
-			InstanceToken instance = new InstanceToken(typeof(IGateway).FullName, _report, parent);
+			InstanceToken instance = new InstanceToken(typeof(IGateway), _report, parent);
 			ChildProperty property = (ChildProperty) instance[THE_PROPERTY_NAME];
 
 			Assert.IsNull(property.InnerInstance);

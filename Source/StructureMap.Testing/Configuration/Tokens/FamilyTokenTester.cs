@@ -21,7 +21,7 @@ namespace StructureMap.Testing.Configuration.Tokens
 			FamilyToken token = FamilyToken.CreateImplicitFamily(family);
 
 			// Type IGateway has a default instance key defined on the PluginFamilyAttribute
-			FamilyToken expected = new FamilyToken(new TypePath(typeof(IGateway)), "Default", new string[0]);
+			FamilyToken expected = new FamilyToken(typeof(IGateway), "Default", new string[0]);
 			expected.DefinitionSource = DefinitionSource.Implicit;
 
 			Assert.AreEqual(expected, token);
@@ -58,7 +58,7 @@ namespace StructureMap.Testing.Configuration.Tokens
 
 			family.Source = source;
 
-			FamilyToken token = new FamilyToken();
+			FamilyToken token = new FamilyToken(family.PluginType, null, new string[0]);
 			token.ReadInstances(family, report);
 
 			Assert.AreEqual(2, token.Instances.Length);
@@ -75,7 +75,7 @@ namespace StructureMap.Testing.Configuration.Tokens
 			MemoryMementoSource source = new MemoryMementoSource();
 			family.Plugins.Add(typeof(DefaultGateway), "Implicit");
 
-			FamilyToken token = new FamilyToken();
+			FamilyToken token = new FamilyToken(family.PluginType, null, new string[0]);
 			token.ReadInstances(family, report);
 
 			Assert.AreEqual(1, token.Instances.Length);
@@ -102,7 +102,7 @@ namespace StructureMap.Testing.Configuration.Tokens
 
 			family.Source = source;
 
-			FamilyToken token = new FamilyToken(new TypePath(typeof(IGateway)), family.DefaultInstanceKey, new string[0]);
+			FamilyToken token = new FamilyToken(typeof(IGateway), family.DefaultInstanceKey, new string[0]);
 			token.ReadInstances(family, report);
 
 			Assert.AreEqual(string.Empty, family.DefaultInstanceKey, "Imperative that the family.DefaultInstanceKey get set to string.empty");
@@ -129,7 +129,7 @@ namespace StructureMap.Testing.Configuration.Tokens
 
 			family.Source = source;
 
-			FamilyToken token = new FamilyToken();
+			FamilyToken token = new FamilyToken(family.PluginType, null, new string[0]);
 			token.ReadInstances(family, report);
 
 			Assert.AreEqual(2, token.Instances.Length);
@@ -146,7 +146,7 @@ namespace StructureMap.Testing.Configuration.Tokens
 			PluginFamily family = new PluginFamily(typeof(IGateway));
 			family.Source = new BadMementoSource();
 
-			FamilyToken token = new FamilyToken();
+			FamilyToken token = new FamilyToken(family.PluginType, string.Empty, new string[0]);
 			token.ReadInstances(family, report);
 
 			Problem[] expected = new Problem[] {

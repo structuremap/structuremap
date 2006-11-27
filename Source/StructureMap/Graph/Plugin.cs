@@ -105,7 +105,7 @@ namespace StructureMap.Graph
 			{
 				string message = string.Format(
 					"The class *{0}* is not marked as Pluggable",
-					pluggedType.FullName);
+					pluggedType.AssemblyQualifiedName);
 
 				throw new ApplicationException(message);
 			}
@@ -181,11 +181,7 @@ namespace StructureMap.Graph
 			{
 				_pluggedType = path.FindType();
 			}
-			catch (FileNotFoundException ex)
-			{
-				throw new StructureMapException(110, ex, path.ClassName, concreteKey);
-			}
-			catch (TypeLoadException ex)
+			catch (Exception ex)
 			{
 				throw new StructureMapException(111, ex, path.ClassName, concreteKey);
 			}
@@ -307,7 +303,8 @@ namespace StructureMap.Graph
 
 	    private string escapeClassName(Type type)
 	    {
-	        string returnValue = type.Name.Replace(".", string.Empty);
+	        string typeName = type.Namespace + type.Name;
+	        string returnValue = typeName.Replace(".", string.Empty);
             return returnValue.Replace("`", string.Empty);
 	    }
 
@@ -334,7 +331,7 @@ namespace StructureMap.Graph
 
 		public override string ToString()
 		{
-			return ("Plugin:  " + _concreteKey).PadRight(40) + this.PluggedType.FullName;
+			return ("Plugin:  " + _concreteKey).PadRight(40) + this.PluggedType.AssemblyQualifiedName;
 		}
 
 		/// <summary>

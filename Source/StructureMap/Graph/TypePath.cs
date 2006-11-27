@@ -27,17 +27,28 @@ namespace StructureMap.Graph
 		private string _className;
 		private string _assemblyName;
 
-		public string ClassName
+		public string AssemblyQualifiedName
 		{
-			get { return _className; }
+			get { return _className + "," + _assemblyName; }
 		}
+	    
+	    public static string GetAssemblyQualifiedName(Type type)
+	    {
+	        TypePath path = new TypePath(type);
+            return path.AssemblyQualifiedName;
+	    }
 
 		public string AssemblyName
 		{
 			get { return _assemblyName; }
 		}
 
-		public TypePath(string assemblyName, string className)
+	    public string ClassName
+	    {
+            get { return _className; }
+	    }
+
+	    public TypePath(string assemblyName, string className)
 		{
 			_className = className;
 			_assemblyName = assemblyName;
@@ -51,8 +62,15 @@ namespace StructureMap.Graph
 
 		public Type FindType()
 		{
-			Assembly assembly = AppDomain.CurrentDomain.Load(_assemblyName);
-			return assembly.GetType(_className, true);
+		    try
+		    {
+		        return Type.GetType(this.AssemblyQualifiedName, true);
+		    }
+		    catch (Exception e)
+		    {
+                string message = string.Format("Could not create a Type for '{0}'", this.AssemblyQualifiedName);
+                throw new ApplicationException(message, e);
+		    }
 		}
 
 		public override bool Equals(object obj)
@@ -84,5 +102,10 @@ namespace StructureMap.Graph
 				return false;
 			}
 		}
+
+	    public override string ToString()
+	    {
+            return "TypePath:  " + this.AssemblyQualifiedName;
+	    }
 	}
 }

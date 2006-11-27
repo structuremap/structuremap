@@ -36,6 +36,8 @@ namespace StructureMap.Client.Views
 			_tdElement.AppendChild(link);
 		}
 
+
+	    
 		public void AddFormattedText(string message)
 		{
 			XmlElement pre = _tdElement.OwnerDocument.CreateElement("pre");

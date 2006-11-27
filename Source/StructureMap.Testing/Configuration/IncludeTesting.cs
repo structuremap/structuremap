@@ -40,7 +40,7 @@ namespace StructureMap.Testing.Configuration
 		{
 			PluginGraph graph = buildGraph();
 
-			Assert.IsTrue(graph.PluginFamilies.Contains("StructureMap.Testing.Widget4.IStrategy"));
+			Assert.IsTrue(graph.PluginFamilies.Contains(typeof(IStrategy)));
 		}
 
 		[Test]

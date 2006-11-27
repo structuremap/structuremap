@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using NUnit.Framework;
@@ -56,12 +57,12 @@ namespace StructureMap.Testing.Configuration
 		public void FindTemplate()
 		{
 			PluginGraphReport report = ObjectMother.Report();
-			string pluginTypeName = typeof(IWidget).FullName;
+			Type pluginType = typeof(IWidget);
 
 			TemplateToken theTemplate = new TemplateToken("Template1", "Concrete1", new string[]{"prop1"});
-			report.FindFamily(pluginTypeName).AddTemplate(theTemplate);
+			report.FindFamily(pluginType).AddTemplate(theTemplate);
 
-			TemplateToken actual = report.FindTemplate(pluginTypeName, theTemplate.TemplateKey);
+			TemplateToken actual = report.FindTemplate(pluginType, theTemplate.TemplateKey);
 
 			Assert.AreEqual(theTemplate, actual);
 		}

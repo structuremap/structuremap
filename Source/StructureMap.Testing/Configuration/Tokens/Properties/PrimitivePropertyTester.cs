@@ -19,7 +19,7 @@ namespace StructureMap.Testing.Configuration.Tokens.Properties
 			memento.SetProperty(theProperty, theValue);
 
 			PropertyDefinition definition = 
-				new PropertyDefinition(theProperty, typeof(string).FullName, 
+				new PropertyDefinition(theProperty, typeof(string), 
 				PropertyDefinitionType.Constructor, ArgumentType.Primitive);
 
 			PrimitiveProperty property = new PrimitiveProperty(definition, memento);
@@ -40,7 +40,7 @@ namespace StructureMap.Testing.Configuration.Tokens.Properties
 			memento.SetProperty(theProperty, theValue);
 
 			PropertyDefinition definition = 
-				new PropertyDefinition(theProperty, typeof(double).FullName, 
+				new PropertyDefinition(theProperty, typeof(double), 
 				PropertyDefinitionType.Constructor, ArgumentType.Primitive);
 
 			PrimitiveProperty property = new PrimitiveProperty(definition, memento);
@@ -60,7 +60,7 @@ namespace StructureMap.Testing.Configuration.Tokens.Properties
 			MemoryInstanceMemento memento = new MemoryInstanceMemento("concrete", "instance");
 
 			PropertyDefinition definition = 
-				new PropertyDefinition(theProperty, typeof(string).FullName, 
+				new PropertyDefinition(theProperty, typeof(string), 
 				PropertyDefinitionType.Constructor, ArgumentType.Primitive);
 
 			PrimitiveProperty property = new PrimitiveProperty(definition, memento);
@@ -79,7 +79,7 @@ namespace StructureMap.Testing.Configuration.Tokens.Properties
 			MemoryInstanceMemento memento = new MemoryInstanceMemento("concrete", "instance");
 
 			PropertyDefinition definition = 
-				new PropertyDefinition(theProperty, typeof(string).FullName, 
+				new PropertyDefinition(theProperty, typeof(string), 
 				PropertyDefinitionType.Constructor, ArgumentType.Primitive);
 
 			PrimitiveProperty property = new PrimitiveProperty(definition, memento);

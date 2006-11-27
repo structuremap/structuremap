@@ -38,7 +38,7 @@ namespace StructureMap.Configuration.Tokens
 		{
 			PropertyDefinition definition = new PropertyDefinition();
 			definition.PropertyName = propertyName;
-			definition.PropertyType = memberType.FullName;
+			definition.PropertyType = memberType;
 
 			bool isPrimitive = memberType.IsPrimitive || memberType.Equals(typeof (string));
 			if (isPrimitive)
@@ -53,7 +53,7 @@ namespace StructureMap.Configuration.Tokens
 			else if (memberType.IsArray)
 			{
 				definition.ArgumentType = ArgumentType.ChildArray;
-				definition.PropertyType = memberType.GetElementType().FullName;
+				definition.PropertyType = memberType.GetElementType();
 			}
 			else
 			{

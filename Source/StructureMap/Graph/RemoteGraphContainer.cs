@@ -58,7 +58,7 @@ namespace StructureMap.Graph
 			// Got to inject this copy of StructureMap.dll into new domain
 			string assemblyName = Assembly.GetExecutingAssembly().GetName().Name;
 			Assembly assem = _domain.Load(assemblyName);
-			object obj = _domain.CreateInstanceAndUnwrap(assemblyName, typeof (RemoteGraph).FullName);
+			object obj = _domain.CreateInstanceAndUnwrap(assemblyName, typeof (RemoteGraph).AssemblyQualifiedName);
 
 			RemoteGraph graph = (RemoteGraph) obj;
 

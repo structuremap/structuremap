@@ -96,16 +96,7 @@ namespace StructureMap.Testing
         }
 
 
-        [Test]
-        public void GetGenericTypeWithParametersByString()
-        {
-            Type type1 = typeof (ITarget<int, string>);
-            string name = type1.FullName;
-            Debug.WriteLine(name);
-            Type type2 = Assembly.GetExecutingAssembly().GetType(name);
-            
-            Assert.AreEqual(type1, type2);
-        }
+        
 
         [Test]
         public void CanEmitInstanceBuilderForATypeWithConstructorArguments()
@@ -148,6 +139,18 @@ namespace StructureMap.Testing
         public void SmokeTestCanBeCaseWithImplementationOfANonGenericInterface()
         {
             Assert.IsTrue(GenericsPluginGraph.CanBeCast(typeof(ITarget<,>), typeof(DisposableTarget<,>)));
+        }
+
+        [Test]
+        public void CanBuildAGenericObjectThatHasAnotherGenericObjectAsAChild()
+        {
+            Assert.Fail("Do.");
+        }
+
+        [Test]
+        public void GenericsTypeAndProfileOrMachine()
+        {
+            Assert.Fail("Do.");
         }
     }
     

@@ -13,7 +13,7 @@ namespace StructureMap.Configuration.Tokens.Properties
 			{
 				_value = memento.GetProperty(definition.PropertyName);
 
-				Type targetType = Type.GetType(definition.PropertyType);
+				Type targetType = definition.PropertyType;
 				Convert.ChangeType(_value, targetType);
 			}
 			catch (FormatException ex)

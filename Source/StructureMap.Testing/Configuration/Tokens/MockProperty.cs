@@ -11,7 +11,7 @@ namespace StructureMap.Testing.Configuration.Tokens
 		private bool _validateWasCalled = false;
 
 		public MockProperty(string propertyName)
-			: base(new PropertyDefinition(propertyName, typeof(string).FullName, 
+			: base(new PropertyDefinition(propertyName, typeof(string), 
 					PropertyDefinitionType.Constructor, ArgumentType.Primitive))
 		{
 			_propertyName = propertyName;

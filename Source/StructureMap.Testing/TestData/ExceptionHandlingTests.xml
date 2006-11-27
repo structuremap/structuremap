@@ -67,7 +67,8 @@ Type referenced in a <Plugin> for Type "StructureMap.Testing.Widget.NotARealCla
 				<Plugin Assembly="StructureMap.Testing.Widget" Type="StructureMap.Testing.Widget.NotPluggableWidget" ConcreteKey=""/>
 			</PluginFamily>				
 		</StructureMap>
-		<Expectation><![CDATA[
+		<Expectation>
+  <![CDATA[
 StructureMap Exception Code:  112
 Missing a mandatory "ConcreteKey" attribute in a <Plugin> node for Type "StructureMap.Testing.Widget.NotPluggableWidget"
 		]]></Expectation>
@@ -81,9 +82,10 @@ Missing a mandatory "ConcreteKey" attribute in a <Plugin> node for Type "Structu
 				<Plugin Assembly="StructureMap.Testing.Widget" Type="StructureMap.Testing.Widget.NotPluggableWidget" ConcreteKey="Dup"/>
 			</PluginFamily>							
 		</StructureMap>
-		<Expectation><![CDATA[
+		<Expectation>
+  <![CDATA[
 StructureMap Exception Code:  113
-Duplicate ConcreteKey (Dup) values in PluginType "StructureMap.Testing.Widget.IWidget"
+Duplicate ConcreteKey (Dup) values in PluginType "StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget"
 		]]></Expectation>
 	</Test>
 	<Test ErrorCode="120">
@@ -95,9 +97,10 @@ Duplicate ConcreteKey (Dup) values in PluginType "StructureMap.Testing.Widget.IW
 				<Source Type="Nonexistent"/>
 			</PluginFamily>							
 		</StructureMap>
-		<Expectation><![CDATA[
+		<Expectation>
+  <![CDATA[
 StructureMap Exception Code:  120
-Could not build the configured MementoSource for PluginFamily "StructureMap.Testing.Widget.IWidget"
+Could not build the configured MementoSource for PluginFamily "StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget"
 		]]></Expectation>
 	</Test>
 	<Test ErrorCode="114">
@@ -110,7 +113,7 @@ Could not build the configured MementoSource for PluginFamily "StructureMap.Test
 		</StructureMap>
 		<Expectation><![CDATA[
 StructureMap Exception Code:  114
-Type StructureMap.Testing.Widget.ComplexRule specified as a Plugin cannot be plugged into Type StructureMap.Testing.Widget.IWidget
+Type StructureMap.Testing.Widget.ComplexRule specified as a Plugin cannot be plugged into Type StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget
 		]]></Expectation>
 	</Test>
 	<Test ErrorCode="200">
@@ -158,9 +161,10 @@ No Default Instance defined for PluginFamily StructureMap.Testing.Widget.IWidget
 				</Interceptors>
 			</PluginFamily>						
 		</StructureMap>
-		<Expectation><![CDATA[
+		<Expectation>
+  <![CDATA[
 StructureMap Exception Code:  121
-Could not build the configured InstanceFactoryInterceptor for PluginFamily StructureMap.Testing.Widget.IWidget
+Could not build the configured InstanceFactoryInterceptor for PluginFamily StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget
 		]]></Expectation>
 	</Test>
 	<Test ErrorCode="">

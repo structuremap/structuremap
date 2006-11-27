@@ -70,7 +70,7 @@ namespace StructureMap.Graph
 			foreach (PluginFamily family in families)
 			{
 				// Do not replace an explicitly defined PluginFamily with the implicit version
-				if (!_pluginFamilies.Contains(family.PluginTypeName))
+				if (!_pluginFamilies.Contains(family.PluginType))
 				{
 					_pluginFamilies.Add(family);
 				}
@@ -95,7 +95,7 @@ namespace StructureMap.Graph
 			{
 				if (family.DefinitionSource == DefinitionSource.Implicit)
 				{
-					_pluginFamilies.Remove(family.PluginTypeName);
+					_pluginFamilies.Remove(family);
 				}
 				else
 				{

@@ -3,6 +3,7 @@ using System.Xml;
 using StructureMap.Configuration;
 using StructureMap.Configuration.Tokens;
 using StructureMap.Configuration.Tokens.Properties;
+using StructureMap.Graph;
 
 namespace StructureMap.Client.Views
 {
@@ -118,7 +119,7 @@ namespace StructureMap.Client.Views
 			_cell.AddText(preamble);
 	
 			string familyLink = "PluginType=" + property.PluginTypeName;
-			_cell.AddLink(property.PluginTypeName, familyLink);
+            _cell.AddLink(TypePath.GetAssemblyQualifiedName(property.PropertyType), familyLink);
 		}
 
 		public void HandleDefaultChildProperty(ChildProperty property)
@@ -126,7 +127,7 @@ namespace StructureMap.Client.Views
 			startChildProperty(property);
 			_cell.AddText(") = ");
 
-			string defaultUrl = string.Format("PluginType={0}:DefaultInstance", property.PluginTypeName);
+			string defaultUrl = string.Format("PluginType={0}:DefaultInstance", property.PluginType);
 			_cell.AddLink("Default Instance", defaultUrl);
 		}
 
@@ -152,7 +153,7 @@ namespace StructureMap.Client.Views
 			startChildProperty(property);
 			_cell.AddText(") References ") ;
 
-			string defaultUrl = string.Format("http://PluginType={0}:InstanceKey={1}", property.PluginTypeName, property.ReferenceKey);
+			string defaultUrl = string.Format("http://PluginType={0}:InstanceKey={1}", property.PluginType, property.ReferenceKey);
 			_cell.AddLink(property.ReferenceKey, defaultUrl);
 		}
 
@@ -167,7 +168,7 @@ namespace StructureMap.Client.Views
 			_cell.AddText(preamble);
 
 			string familyLink = "PluginType=" + property.PropertyType;
-			_cell.AddLink(property.PropertyType, familyLink);
+			_cell.AddLink(property.PropertyTypeName, familyLink);
 			_cell.AddText(")");
 		}
 

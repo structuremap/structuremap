@@ -14,9 +14,9 @@ namespace StructureMap.Configuration.Tokens.Properties
 
 		public void Validate(IInstanceValidator validator)
 		{
-			if (!validator.HasDefaultInstance(_property.PluginTypeName))
+			if (!validator.HasDefaultInstance(_property.PluginType))
 			{
-				string message = string.Format("There is not a default instance for type {0} configured in StructureMap", _property.PluginTypeName);
+				string message = string.Format("There is not a default instance for type {0} configured in StructureMap", _property.PluginType);
 				Problem problem = new Problem(ConfigurationConstants.NO_DEFAULT_INSTANCE_CONFIGURED, message);
 				_property.LogProblem(problem);
 			}

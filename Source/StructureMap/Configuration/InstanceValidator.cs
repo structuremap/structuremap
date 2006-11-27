@@ -21,23 +21,23 @@ namespace StructureMap.Configuration
 			_instanceManager = instanceManager;
 		}
 
-		public object CreateObject(string pluginTypeName, InstanceMemento memento)
+		public object CreateObject(Type pluginType, InstanceMemento memento)
 		{
-			return _instanceManager.CreateInstance(pluginTypeName, memento);
+			return _instanceManager.CreateInstance(pluginType, memento);
 		}
 
-		public bool HasDefaultInstance(string pluginTypeName)
+		public bool HasDefaultInstance(Type pluginType)
 		{
-			return _defaultProfile.HasOverride(pluginTypeName);
+			return _defaultProfile.HasOverride(TypePath.GetAssemblyQualifiedName(pluginType));
 		}
 
-		public bool InstanceExists(string pluginTypeName, string instanceKey)
+		public bool InstanceExists(Type pluginType, string instanceKey)
 		{
 			bool returnValue = false;
 
 			try
 			{
-				PluginFamily family = _pluginGraph.PluginFamilies[pluginTypeName];
+				PluginFamily family = _pluginGraph.PluginFamilies[pluginType];
 				InstanceMemento memento = family.Source.GetMemento(instanceKey);
 				if (memento != null)
 				{

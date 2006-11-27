@@ -124,6 +124,10 @@ namespace StructureMap
 				{
 					returnValue = manager.CreateInstance(typeName);
 				}
+			    catch (StructureMapException)
+			    {
+			        throw;
+			    }
 				catch (Exception ex)
 				{
 					throw new StructureMapException(209, ex, key, typeName);

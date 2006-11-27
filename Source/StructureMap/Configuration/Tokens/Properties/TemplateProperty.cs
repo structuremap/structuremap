@@ -53,9 +53,9 @@ namespace StructureMap.Configuration.Tokens.Properties
 			get { return _propertyValue; }
 		}
 
-		public string PropertyType
+		public Type PropertyType
 		{
-			get { return typeof(string).FullName; }
+			get { return typeof(string); }
 		}
 
 		public void Validate(IInstanceValidator validator)

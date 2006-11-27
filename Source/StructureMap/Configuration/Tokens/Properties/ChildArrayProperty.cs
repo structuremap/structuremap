@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using StructureMap.Graph;
 
 namespace StructureMap.Configuration.Tokens.Properties
 {
@@ -7,11 +8,13 @@ namespace StructureMap.Configuration.Tokens.Properties
 	public class ChildArrayProperty : Property
 	{
 		private ArrayList _innerProperties = new ArrayList();
+	    private string _propertyTypeName;
 
-		public ChildArrayProperty(PropertyDefinition definition, InstanceMemento memento, PluginGraphReport report) : base(definition)
+	    public ChildArrayProperty(PropertyDefinition definition, InstanceMemento memento, PluginGraphReport report) : base(definition)
 		{
 			try
 			{
+                _propertyTypeName = TypePath.GetAssemblyQualifiedName(definition.PropertyType);
 				InstanceMemento[] children = memento.GetChildrenArray(definition.PropertyName);
 				processChildren(children, definition, report);
 			}
@@ -94,7 +97,13 @@ namespace StructureMap.Configuration.Tokens.Properties
 			get { return InnerProperties; }
 		}
 
-		public override void AcceptVisitor(IConfigurationVisitor visitor)
+	    public string PropertyTypeName
+	    {
+            get { return _propertyTypeName; }
+	        set { _propertyTypeName = value;}
+	    }
+
+	    public override void AcceptVisitor(IConfigurationVisitor visitor)
 		{
 			visitor.HandleChildArrayProperty(this);
 		}

@@ -57,7 +57,7 @@ namespace StructureMap.Testing.Configuration.Tokens.Properties
 				});
 	
 	
-			InstanceToken instance = new InstanceToken(typeof (IGateway).FullName, _report, parent);
+			InstanceToken instance = new InstanceToken(typeof (IGateway), _report, parent);
 
 			return (ChildArrayProperty) instance[THE_PROPERTY_NAME];
 		}
@@ -87,7 +87,7 @@ namespace StructureMap.Testing.Configuration.Tokens.Properties
 			MemoryInstanceMemento parent = new MemoryInstanceMemento(THE_CONCRETE_KEY, "decorated");
 			parent.AddChildArray(THE_PROPERTY_NAME, new InstanceMemento[0]);
 
-			InstanceToken instance = new InstanceToken(typeof (IGateway).FullName, _report, parent);
+			InstanceToken instance = new InstanceToken(typeof (IGateway), _report, parent);
 
 			ChildArrayProperty property = (ChildArrayProperty) instance[THE_PROPERTY_NAME];
 			
@@ -114,7 +114,7 @@ namespace StructureMap.Testing.Configuration.Tokens.Properties
 		public void ChildArrayIsNotDefinedInTheMemento()
 		{
 			MemoryInstanceMemento parent = new MemoryInstanceMemento(THE_CONCRETE_KEY, "decorated");
-			InstanceToken instance = new InstanceToken(typeof (IGateway).FullName, _report, parent);
+			InstanceToken instance = new InstanceToken(typeof (IGateway), _report, parent);
 
 			ChildArrayProperty property = (ChildArrayProperty) instance[THE_PROPERTY_NAME];
 
@@ -127,7 +127,7 @@ namespace StructureMap.Testing.Configuration.Tokens.Properties
 		[Test]
 		public void ChildArrayIsNotDefinedInTheMementoWhenMementoThrowsException()
 		{
-			PropertyDefinition definition = _report.FindPlugin(typeof(IGateway).FullName, THE_CONCRETE_KEY)[THE_PROPERTY_NAME];
+			PropertyDefinition definition = _report.FindPlugin(typeof(IGateway), THE_CONCRETE_KEY)[THE_PROPERTY_NAME];
 
 			DynamicMock mementoMock = new DynamicMock(typeof(InstanceMemento));
 			mementoMock.ExpectAndThrow("GetChildrenArray", new ApplicationException("Bad"), THE_PROPERTY_NAME);

@@ -31,7 +31,7 @@ namespace StructureMap.Emitting.Parameters
 			}
 			else
 			{
-				string msg = string.Format("Cannot emit constructor injection for type *{0}*", parameter.ParameterType.FullName);
+				string msg = string.Format("Cannot emit constructor injection for type *{0}*", parameter.ParameterType.AssemblyQualifiedName);
 				throw new ApplicationException(msg);
 			}
 		}
@@ -48,7 +48,7 @@ namespace StructureMap.Emitting.Parameters
 			}
 			else
 			{
-				string msg = string.Format("Cannot emit constructor injection for type *{0}*", property.PropertyType.FullName);
+				string msg = string.Format("Cannot emit constructor injection for type *{0}*", property.PropertyType.AssemblyQualifiedName);
 				throw new ApplicationException(msg);
 			}
 		}

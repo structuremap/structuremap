@@ -9,7 +9,7 @@ namespace StructureMap.Configuration.Tokens
 		{
 		}
 
-		public MementoSourceInstanceToken(string pluginTypeName, PluginGraphReport report, InstanceMemento memento) : base(pluginTypeName, report, memento)
+		public MementoSourceInstanceToken(Type pluginType, PluginGraphReport report, InstanceMemento memento) : base(pluginType, report, memento)
 		{
 		}
 

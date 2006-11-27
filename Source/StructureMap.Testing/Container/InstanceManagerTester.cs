@@ -113,5 +113,12 @@ namespace StructureMap.Testing.Container
 			Assert.AreEqual(typeof (Rule), factory.PluginType);
 		}
 
+
+	    [Test]
+	    public void FindAPluginFamilyForAGenericTypeFromPluginTypeName()
+	    {
+	        Assert.Fail("Do.");
+	    }
+
 	}
 }

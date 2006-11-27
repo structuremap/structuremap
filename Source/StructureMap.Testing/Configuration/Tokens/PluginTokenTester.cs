@@ -20,8 +20,8 @@ namespace StructureMap.Testing.Configuration.Tokens
 
 			PropertyDefinition[] expected = new PropertyDefinition[]
 				{
-					new PropertyDefinition("Name", typeof (string).FullName, PropertyDefinitionType.Setter, ArgumentType.Primitive),
-					new PropertyDefinition("active", typeof (bool).FullName, PropertyDefinitionType.Constructor, ArgumentType.Primitive)
+					new PropertyDefinition("Name", typeof (string), PropertyDefinitionType.Setter, ArgumentType.Primitive),
+					new PropertyDefinition("active", typeof (bool), PropertyDefinitionType.Constructor, ArgumentType.Primitive)
 				};
 
 			Assert.AreEqual(expected, token.Properties);

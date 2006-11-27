@@ -54,7 +54,7 @@ namespace StructureMap.Configuration
 
 		public void AddPluginFamily(TypePath typePath, string defaultKey, string[] deploymentTargets, InstanceScope scope)
 		{
-			FamilyToken family = new FamilyToken(typePath, defaultKey, deploymentTargets);
+			FamilyToken family = new FamilyToken(typePath.FindType(), defaultKey, deploymentTargets);
 			family.DefinitionSource = DefinitionSource.Explicit;
 			family.Scope = scope;
 			_report.AddFamily(family);
@@ -74,7 +74,7 @@ namespace StructureMap.Configuration
 		{
 			FamilyToken family = _report.FindFamily(pluginTypeName);
 
-			MementoSourceInstanceToken sourceInstance = new MementoSourceInstanceToken(typeof(MementoSource).FullName, _systemReport, sourceMemento);
+			MementoSourceInstanceToken sourceInstance = new MementoSourceInstanceToken(typeof(MementoSource), _systemReport, sourceMemento);
 			family.SourceInstance = sourceInstance;
 			sourceInstance.Validate(_systemValidator);
 
@@ -140,7 +140,7 @@ namespace StructureMap.Configuration
 			}
 			catch (Exception ex)
 			{
-				PropertyDefinition property = new PropertyDefinition(setterName, "UNKNOWN", PropertyDefinitionType.Setter, ArgumentType.Primitive);
+				PropertyDefinition property = new PropertyDefinition(setterName, PropertyDefinitionType.Setter, ArgumentType.Primitive);
 				pluginToken.AddPropertyDefinition(property);
 				Problem problem = new Problem(ConfigurationConstants.INVALID_SETTER, ex);
 
@@ -152,7 +152,7 @@ namespace StructureMap.Configuration
 
 		public void AddInterceptor(string pluginTypeName, InstanceMemento interceptorMemento)
 		{
-			InstanceToken instance = new InterceptorInstanceToken(typeof(InstanceFactoryInterceptor).FullName, _systemReport, interceptorMemento);
+			InstanceToken instance = new InterceptorInstanceToken(typeof(InstanceFactoryInterceptor), _systemReport, interceptorMemento);
 			instance.Validate(_systemValidator);
 			FamilyToken family = _report.FindFamily(pluginTypeName);
 			family.AddInterceptor(instance);

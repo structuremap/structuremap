@@ -94,6 +94,10 @@
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
+    <ProjectReference Include="..\..\..\gauntlet\Copy of Gauntlet\src\FieldAgent\FieldAgent.UI\FieldAgent.UI.csproj">
+      <Project>{70303638-1AE3-4E23-9309-6BBE3DA2BA68}</Project>
+      <Name>FieldAgent.UI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\StructureMap.Client\StructureMap.Client.csproj">
       <Name>StructureMap.Client</Name>
       <Project>{887C4441-07A4-489D-B8D9-EFE9D28A47CA}</Project>
@@ -359,6 +363,7 @@
     <Compile Include="Graph\SetterInjectionTester.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Graph\TypePathTester.cs" />
     <Compile Include="ObjectFactoryTester.cs">
       <SubType>Code</SubType>
     </Compile>

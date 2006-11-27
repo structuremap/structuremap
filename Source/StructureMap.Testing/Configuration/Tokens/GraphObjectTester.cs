@@ -2,6 +2,7 @@ using NMock;
 using NUnit.Framework;
 using StructureMap.Configuration;
 using StructureMap.Configuration.Tokens;
+using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Configuration.Tokens
 {
@@ -43,7 +44,7 @@ namespace StructureMap.Testing.Configuration.Tokens
 		[Test]
 		public void FamilyTokenAcceptVisitor()
 		{
-			FamilyToken token = new FamilyToken();
+			FamilyToken token = new FamilyToken(typeof(IGateway), null, new string[0]);
 			_visitorMock.Expect("HandleFamily", token);
 
 			token.AcceptVisitor(_visitor);
@@ -62,7 +63,7 @@ namespace StructureMap.Testing.Configuration.Tokens
 					childCount++;
 				}
 
-				Assert.AreEqual(childCount, family.Children.Length, family.PluginType);
+				Assert.AreEqual(childCount, family.Children.Length, family.PluginTypeName);
 			}
 		}
 

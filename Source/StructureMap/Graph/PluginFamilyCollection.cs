@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace StructureMap.Graph
 {
@@ -8,11 +9,11 @@ namespace StructureMap.Graph
 	/// </summary>
 	public class PluginFamilyCollection : PluginGraphObjectCollection
 	{
-		private Hashtable _pluginFamilies;
+		private Dictionary<Type, PluginFamily> _pluginFamilies;
 
 		public PluginFamilyCollection(PluginGraph pluginGraph) : base(pluginGraph)
 		{
-			_pluginFamilies = new Hashtable();
+			_pluginFamilies = new Dictionary<Type, PluginFamily>();
 		}
 
 		protected override ICollection innerCollection
@@ -37,8 +38,8 @@ namespace StructureMap.Graph
 		{
 			verifyNotSealed();
 
-			string key = family.PluginTypeName;
-			if (_pluginFamilies.ContainsKey(key))
+            Type key = family.PluginType;
+            if (_pluginFamilies.ContainsKey(key))
 			{
 				_pluginFamilies[key] = family;
 			}
@@ -52,7 +53,10 @@ namespace StructureMap.Graph
 
 		public PluginFamily this[Type pluginType]
 		{
-			get { return (PluginFamily) _pluginFamilies[pluginType.FullName]; }
+			get
+			{
+			    return _pluginFamilies[pluginType];
+			}
 		}
 
 		public PluginFamily this[int index]
@@ -67,19 +71,33 @@ namespace StructureMap.Graph
 
 		public PluginFamily this[string pluginTypeName]
 		{
-			get { return _pluginFamilies[pluginTypeName] as PluginFamily; }
+			get
+			{
+                Type pluginType = Type.GetType(pluginTypeName);
+			    
+			    if (pluginType == null)
+			    {
+			        foreach (KeyValuePair<Type, PluginFamily> pair in _pluginFamilies)
+			        {
+			            if (pair.Value.PluginType.FullName == pluginTypeName)
+			            {
+                            return pair.Value;
+			            }
+			        }
+
+                    throw new ApplicationException("Could not find PluginFamily " + pluginTypeName);
+			    }
+			    else
+			    {
+                    return _pluginFamilies[pluginType];
+			    }
+			}
 		}
 
 		public void Remove(PluginFamily family)
 		{
-			_pluginFamilies.Remove(family.PluginTypeName);
+			_pluginFamilies.Remove(family.PluginType);
 		}
-
-		public void Remove(string pluginTypeName)
-		{
-			_pluginFamilies.Remove(pluginTypeName);
-		}
-
 
 		public void FilterByDeploymentTarget(string deploymentTarget)
 		{
@@ -87,14 +105,9 @@ namespace StructureMap.Graph
 			{
 				if (!family.IsDeployed(deploymentTarget))
 				{
-					this.Remove(family.PluginType.FullName);
+					this.Remove(family);
 				}
 			}
-		}
-
-		public bool Contains(string pluginTypeName)
-		{
-			return _pluginFamilies.ContainsKey(pluginTypeName);
 		}
 
 		public void RemoveImplicitChildren()
@@ -112,5 +125,10 @@ namespace StructureMap.Graph
 				}
 			}
 		}
+
+	    public bool Contains(Type pluginType)
+	    {
+            return _pluginFamilies.ContainsKey(pluginType);
+	    }
 	}
 }

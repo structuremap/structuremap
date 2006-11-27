@@ -19,7 +19,7 @@ namespace StructureMap.Emitting.Parameters
 		{
 			Type parameterType = parameter.ParameterType;
 			string parameterName = parameter.Name;
-			string fullName = parameterType.FullName;
+			string fullName = parameterType.AssemblyQualifiedName;
 
 
 			putChildObjectOnStack(ilgen, parameterName, fullName, parameterType);
@@ -41,7 +41,7 @@ namespace StructureMap.Emitting.Parameters
 		{
 			ilgen.Emit(OpCodes.Ldloc_0);
 
-			putChildObjectOnStack(ilgen, property.Name, property.PropertyType.FullName, property.PropertyType);
+			putChildObjectOnStack(ilgen, property.Name, property.PropertyType.AssemblyQualifiedName, property.PropertyType);
 
 			MethodInfo method = property.GetSetMethod();
 			ilgen.Emit(OpCodes.Callvirt, method);

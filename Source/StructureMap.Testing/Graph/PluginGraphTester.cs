@@ -46,7 +46,7 @@ namespace StructureMap.Testing.Graph
 
 			foreach (PluginFamily family in graph.PluginFamilies)
 			{
-				Console.WriteLine(family.PluginType.FullName);
+				Console.WriteLine(family.PluginType.AssemblyQualifiedName);
 			}
 
 			Assert.AreEqual(5, graph.PluginFamilies.Count);

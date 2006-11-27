@@ -1,4 +1,5 @@
 using System;
+using StructureMap.Graph;
 
 namespace StructureMap.Configuration.Tokens.Properties
 {
@@ -26,10 +27,11 @@ namespace StructureMap.Configuration.Tokens.Properties
 		private InstanceToken _innerInstance;
 		private string _referenceKey = string.Empty;
 		private IChildPropertyMode _mode;
-		private string _pluginTypeName;
+		private Type _pluginType;
 		private int _arrayIndex = -1;
+	    private string _pluginTypeName;
 
-		protected ChildProperty(PropertyDefinition definition) : base(definition)
+	    protected ChildProperty(PropertyDefinition definition) : base(definition)
 		{
 			_mode = new NulloChildPropertyMode(this);
 		}
@@ -60,7 +62,8 @@ namespace StructureMap.Configuration.Tokens.Properties
 
 		private void initialize(PropertyDefinition definition, InstanceMemento propertyMemento, PluginGraphReport report)
 		{
-			_pluginTypeName = definition.PropertyType;
+			_pluginType = definition.PropertyType;
+            _pluginTypeName = TypePath.GetAssemblyQualifiedName(_pluginType);
 	
 			if (propertyMemento == null)
 			{
@@ -82,7 +85,8 @@ namespace StructureMap.Configuration.Tokens.Properties
 			else
 			{
 				_childType = ChildPropertyType.InlineDefinition;
-				_innerInstance = new InstanceToken(definition.PropertyType, report, propertyMemento);
+                Type propertyType = definition.PropertyType;
+			    _innerInstance = new InstanceToken(propertyType, report, propertyMemento);
 				_mode = new InlineInstanceChildPropertyMode(this);
 			}
 		}
@@ -105,10 +109,10 @@ namespace StructureMap.Configuration.Tokens.Properties
 			set {_referenceKey = value;}
 		}
 
-		public string PluginTypeName
+		public Type PluginType
 		{
-			get { return _pluginTypeName; }
-			set { _pluginTypeName = value; }
+			get { return _pluginType; }
+			set { _pluginType = value; }
 		}
 
 		public override void Validate(IInstanceValidator validator)
@@ -131,7 +135,14 @@ namespace StructureMap.Configuration.Tokens.Properties
 			}
 		}
 
-		public override void AcceptVisitor(IConfigurationVisitor visitor)
+	    public string PluginTypeName
+	    {
+            get { return _pluginTypeName; }
+	        set { _pluginTypeName = value;}
+	    }
+
+
+	    public override void AcceptVisitor(IConfigurationVisitor visitor)
 		{
 			_mode.AcceptVisitor(visitor);
 		}

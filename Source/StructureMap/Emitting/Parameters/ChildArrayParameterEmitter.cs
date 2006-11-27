@@ -35,7 +35,7 @@ namespace StructureMap.Emitting.Parameters
 		{
 			ilgen.Emit(OpCodes.Ldarg_0);
 			this.callGetInstanceManager(ilgen);
-			ilgen.Emit(OpCodes.Ldstr, argumentType.GetElementType().FullName);
+			ilgen.Emit(OpCodes.Ldstr, argumentType.GetElementType().AssemblyQualifiedName);
 			ilgen.Emit(OpCodes.Ldarg_1);
 
 			ilgen.Emit(OpCodes.Ldstr, argumentName);

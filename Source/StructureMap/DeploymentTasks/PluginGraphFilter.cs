@@ -28,7 +28,7 @@ namespace StructureMap.DeploymentTasks
 			{
 				if (!family.IsDeployed(deploymentTarget) || _assemblies.Contains(family.AssemblyName))
 				{
-					_families.Add(family.PluginType);
+					_families.Add(family.PluginTypeName);
 				}
 				else
 				{

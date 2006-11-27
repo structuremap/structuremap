@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.Reflection;
 using NUnit.Framework;
 using StructureMap.Graph;
@@ -183,11 +182,7 @@ namespace StructureMap.Testing.Graph
         }
 
 
-        [
-            Test,
-                ExpectedException(typeof (StructureMapException),
-                    "StructureMap Exception Code:  110\nAssembly referenced by a <Plugin> for Type \"IDontExist.Assembly.NotPluggableWidget\", concrete key \"default\" node in StructureMap.config cannot be loaded into the current AppDomain."
-                    )]
+        [Test, ExpectedException(typeof (StructureMapException))]
         public void CreateAPluginWithANonExistentAssembly()
         {
             TypePath path = new TypePath("IDontExist.Assembly",
@@ -199,9 +194,7 @@ namespace StructureMap.Testing.Graph
 
         [
             Test,
-                ExpectedException(typeof (StructureMapException),
-                    "StructureMap Exception Code:  111\nType referenced in a <Plugin> for Type \"StructureMap.Testing.Widget.NonExistentClass\", concrete type \"default\" cannot be loaded from named assembly"
-                    )]
+                ExpectedException(typeof (StructureMapException))]
         public void CreateAPluginWithANonExistentClass()
         {
             TypePath path = new TypePath("StructureMap.Testing.Widget",
@@ -297,7 +290,9 @@ namespace StructureMap.Testing.Graph
             catch (StructureMapException ex)
             {
                 Assert.AreEqual(180, ex.ErrorCode);
-                Assert.AreEqual("StructureMap Exception Code:  180\nCannot construct a Plugin for Class ClassWithNoConstructor, No public constructor found.", ex.Message);
+                Assert.AreEqual(
+                    "StructureMap Exception Code:  180\nCannot construct a Plugin for Class ClassWithNoConstructor, No public constructor found.",
+                    ex.Message);
             }
         }
     }
@@ -356,6 +351,8 @@ namespace StructureMap.Testing.Graph
     [Pluggable("NoConstructor")]
     public class ClassWithNoConstructor
     {
-        private ClassWithNoConstructor(){}
+        private ClassWithNoConstructor()
+        {
+        }
     }
 }

@@ -341,7 +341,7 @@ namespace StructureMap
 
 			foreach (IInstanceFactory factory in manager)
 			{
-				sb.AppendFormat("PluginType {0}, Default: {1}\r\n", factory.PluginType.FullName, factory.DefaultInstanceKey);
+				sb.AppendFormat("PluginType {0}, Default: {1}\r\n", factory.PluginType.AssemblyQualifiedName, factory.DefaultInstanceKey);
 			}
 
 			return sb.ToString();

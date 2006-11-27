@@ -15,7 +15,7 @@ namespace StructureMap.Testing.Configuration
 			PluginGraph pluginGraph = ObjectMother.GetPluginGraph();
 			InstanceManager manager = new InstanceManager(pluginGraph);
 			InstanceValidator validator = new InstanceValidator(pluginGraph, new Profile("profile"), manager);
-			Assert.IsTrue(validator.InstanceExists(typeof(Rule).FullName, "Red"));
+			Assert.IsTrue(validator.InstanceExists(typeof(Rule), "Red"));
 		}
 
 		[Test]
@@ -24,7 +24,7 @@ namespace StructureMap.Testing.Configuration
 			PluginGraph pluginGraph = ObjectMother.GetPluginGraph();
 			InstanceManager manager = new InstanceManager(pluginGraph);
 			InstanceValidator validator = new InstanceValidator(pluginGraph, new Profile("profile"), manager);
-			Assert.IsFalse(validator.InstanceExists(typeof(IGateway).FullName, "SomethingWrong"));
+			Assert.IsFalse(validator.InstanceExists(typeof(IGateway), "SomethingWrong"));
 		}
 	}
 }

@@ -18,7 +18,7 @@ namespace StructureMap.Interceptors
 
 		private string getKey(string instanceKey)
 		{
-			return string.Format("{0}:{1}", this.InnerInstanceFactory.PluginType.FullName, instanceKey);
+			return string.Format("{0}:{1}", this.InnerInstanceFactory.PluginType.AssemblyQualifiedName, instanceKey);
 		}
 
 		protected override void cache(string instanceKey, object instance)

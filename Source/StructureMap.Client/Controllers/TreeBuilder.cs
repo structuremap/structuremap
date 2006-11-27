@@ -84,7 +84,7 @@ namespace StructureMap.Client.Controllers
 
 		public void HandleFamily(FamilyToken family)
 		{
-			PushNodeOntoStack(family.PluginType, ViewConstants.PLUGINFAMILY, family);
+			PushNodeOntoStack(family.PluginTypeName, ViewConstants.PLUGINFAMILY, family);
 		}
 
 		public void HandleMementoSource(MementoSourceInstanceToken source)

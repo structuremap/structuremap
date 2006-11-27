@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using NMock;
+using StructureMap.Exceptions;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 
@@ -12,7 +14,7 @@ namespace StructureMap
     /// </summary>
     public class InstanceManager : IEnumerable
     {
-        private HybridDictionary _factories;
+        private Dictionary<Type, IInstanceFactory> _factories;
         private HybridDictionary _filledTypeFactories;
         private bool _failOnException = true;
         private GenericsPluginGraph _genericsGraph;
@@ -22,7 +24,7 @@ namespace StructureMap
         /// </summary>
         public InstanceManager()
         {
-            _factories = new HybridDictionary();
+            _factories = new Dictionary<Type, IInstanceFactory>();
             _filledTypeFactories = new HybridDictionary();
             _genericsGraph = new GenericsPluginGraph();
         }
@@ -106,7 +108,7 @@ namespace StructureMap
         /// <param name="instanceFactory"></param>
         public void RegisterType(IInstanceFactory instanceFactory)
         {
-            _factories.Add(instanceFactory.PluginType.FullName, instanceFactory);
+            _factories.Add(instanceFactory.PluginType, instanceFactory);
             instanceFactory.SetInstanceManager(this);
         }
 
@@ -237,31 +239,46 @@ namespace StructureMap
         {
             get
             {
-                if (pluginType.IsGenericType && !_factories.Contains(pluginType.FullName))
+                if (pluginType.IsGenericType && !_factories.ContainsKey(pluginType))
                 {
                     PluginFamily family = _genericsGraph.CreateTemplatedFamily(pluginType);
                     return registerPluginFamily(family);
                 }
                 
-                return this[pluginType.FullName];
+                if (!_factories.ContainsKey(pluginType))
+                {
+                    throw new StructureMapException(208, pluginType.FullName);
+                }
+
+                return _factories[pluginType];
             }
-            set { this[pluginType.FullName] = value; }
+            set { _factories[pluginType] = value; }
         }
 
         public IInstanceFactory this[string pluginTypeName]
         {
             get
             {
-                if (_factories.Contains(pluginTypeName))
+                Type type = Type.GetType(pluginTypeName);
+                
+                
+                if (type == null)
                 {
-                    return (IInstanceFactory) _factories[pluginTypeName];
+                    foreach (KeyValuePair<Type, IInstanceFactory> pair in _factories)
+                    {
+                        if (pair.Value.PluginType.FullName == pluginTypeName)
+                        {
+                            return pair.Value;
+                        }
+                    }
+
+                    throw new MissingPluginFamilyException(pluginTypeName);
                 }
                 else
                 {
-                    throw new StructureMapException(208, pluginTypeName);
+                    return this[type];
                 }
             }
-            set { _factories[pluginTypeName] = value; }
         }
 
 
@@ -313,7 +330,7 @@ namespace StructureMap
         {
             if (IsMocked(TargetType))
             {
-                string msg = string.Format("The Type {0} is already mocked", TargetType.FullName);
+                string msg = string.Format("The Type {0} is already mocked", TargetType.AssemblyQualifiedName);
                 throw new InvalidOperationException(msg);
             }
 
@@ -407,7 +424,8 @@ namespace StructureMap
         {
             if (!Plugin.CanBeCast(pluginType, stub.GetType()))
             {
-                throw new StructureMapException(220, pluginType.FullName, stub.GetType().FullName);
+                throw new StructureMapException(220, pluginType.FullName,
+                                                stub.GetType().FullName);
             }
 
             IInstanceFactory innerFactory = this[pluginType];

@@ -27,7 +27,7 @@ namespace StructureMap.Configuration
 
 			_builder.AddPluginFamily(typePath, defaultKey, deploymentTargets, scope);
 	
-			string pluginTypeName = typePath.ClassName;
+			string pluginTypeName = typePath.AssemblyQualifiedName;
 	
 			attachMementoSource(familyElement, pluginTypeName);
 			attachPlugins(pluginTypeName, familyElement);

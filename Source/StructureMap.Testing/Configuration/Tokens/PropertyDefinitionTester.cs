@@ -26,10 +26,10 @@ namespace StructureMap.Testing.Configuration.Tokens
 		public void BuildPropertyDefinitionsFromConstructor()
 		{
 			PropertyDefinition[] expected = new PropertyDefinition[] {
-				new PropertyDefinition("name", typeof(string).FullName, PropertyDefinitionType.Constructor, ArgumentType.Primitive), 
-				new PropertyDefinition("color", typeof(Color).FullName, PropertyDefinitionType.Constructor, ArgumentType.Enumeration),
-				new PropertyDefinition("connection", typeof(IDbConnection).FullName, PropertyDefinitionType.Constructor, ArgumentType.Child),
-				new PropertyDefinition("documents", typeof(XmlDocument).FullName, PropertyDefinitionType.Constructor, ArgumentType.ChildArray) 
+				new PropertyDefinition("name", typeof(string), PropertyDefinitionType.Constructor, ArgumentType.Primitive), 
+				new PropertyDefinition("color", typeof(Color), PropertyDefinitionType.Constructor, ArgumentType.Enumeration),
+				new PropertyDefinition("connection", typeof(IDbConnection), PropertyDefinitionType.Constructor, ArgumentType.Child),
+				new PropertyDefinition("documents", typeof(XmlDocument), PropertyDefinitionType.Constructor, ArgumentType.ChildArray) 
 			};
 
 			PropertyDefinition[] actual = PropertyDefinitionBuilder.CreatePropertyDefinitions(_ctor);
@@ -48,7 +48,7 @@ namespace StructureMap.Testing.Configuration.Tokens
 		[Test]
 		public void PrimitiveSetter()
 		{
-			PropertyDefinition expected = new PropertyDefinition("Name", typeof(string).FullName, PropertyDefinitionType.Setter, ArgumentType.Primitive);
+			PropertyDefinition expected = new PropertyDefinition("Name", typeof(string), PropertyDefinitionType.Setter, ArgumentType.Primitive);
 			validateSetter(expected, "Name");			
 		}
 
@@ -56,7 +56,7 @@ namespace StructureMap.Testing.Configuration.Tokens
 		[Test]
 		public void EnumerationSetter()
 		{
-			PropertyDefinition expected = new PropertyDefinition("Color", typeof(Color).FullName, PropertyDefinitionType.Setter, ArgumentType.Enumeration);
+			PropertyDefinition expected = new PropertyDefinition("Color", typeof(Color), PropertyDefinitionType.Setter, ArgumentType.Enumeration);
 			validateSetter(expected, "Color");	
 		}
 
@@ -64,7 +64,7 @@ namespace StructureMap.Testing.Configuration.Tokens
 		[Test]
 		public void ChildSetter()
 		{
-			PropertyDefinition expected = new PropertyDefinition("Connection", typeof(IDbConnection).FullName, PropertyDefinitionType.Setter, ArgumentType.Child);
+			PropertyDefinition expected = new PropertyDefinition("Connection", typeof(IDbConnection), PropertyDefinitionType.Setter, ArgumentType.Child);
 			validateSetter(expected, "Connection");	
 		}
 
@@ -73,14 +73,14 @@ namespace StructureMap.Testing.Configuration.Tokens
 		[Test]
 		public void ChildArraySetter()
 		{
-			PropertyDefinition expected = new PropertyDefinition("Documents", typeof(XmlDocument).FullName, PropertyDefinitionType.Setter, ArgumentType.ChildArray);
+			PropertyDefinition expected = new PropertyDefinition("Documents", typeof(XmlDocument), PropertyDefinitionType.Setter, ArgumentType.ChildArray);
 			validateSetter(expected, "Documents");	
 		}
 
 		[Test]
 		public void BuildPrimitiveProperty()
 		{
-			PropertyDefinition definition = new PropertyDefinition("Color", typeof(string).FullName, PropertyDefinitionType.Constructor, ArgumentType.Primitive);
+			PropertyDefinition definition = new PropertyDefinition("Color", typeof(string), PropertyDefinitionType.Constructor, ArgumentType.Primitive);
 			MemoryInstanceMemento memento = new MemoryInstanceMemento("concrete", "instance");
 			memento.SetProperty("Color", "red");
 
@@ -93,7 +93,7 @@ namespace StructureMap.Testing.Configuration.Tokens
 		[Test]
 		public void BuildEnumerationProperty()
 		{
-			PropertyDefinition definition = new PropertyDefinition("Color", typeof(string).FullName, PropertyDefinitionType.Constructor, ArgumentType.Enumeration);
+			PropertyDefinition definition = new PropertyDefinition("Color", typeof(string), PropertyDefinitionType.Constructor, ArgumentType.Enumeration);
 			definition.EnumerationValues = new string[]{"red", "green", "blue"};
 			
 			MemoryInstanceMemento memento = new MemoryInstanceMemento("concrete", "instance");
@@ -108,7 +108,7 @@ namespace StructureMap.Testing.Configuration.Tokens
 		[Test]
 		public void BuildChildProperty()
 		{
-			PropertyDefinition definition = new PropertyDefinition("Color", typeof(string).FullName, PropertyDefinitionType.Constructor, ArgumentType.Child);
+			PropertyDefinition definition = new PropertyDefinition("Color", typeof(string), PropertyDefinitionType.Constructor, ArgumentType.Child);
 
 			MemoryInstanceMemento memento = new MemoryInstanceMemento("concrete", "instance");
 			memento.AddChild("Color", MemoryInstanceMemento.CreateDefaultInstanceMemento());
@@ -123,7 +123,7 @@ namespace StructureMap.Testing.Configuration.Tokens
 		[Test]
 		public void BuildChildArrayProperty()
 		{
-			PropertyDefinition definition = new PropertyDefinition("Color", typeof(string).FullName, PropertyDefinitionType.Constructor, ArgumentType.ChildArray);
+			PropertyDefinition definition = new PropertyDefinition("Color", typeof(string), PropertyDefinitionType.Constructor, ArgumentType.ChildArray);
 
 			MemoryInstanceMemento memento = new MemoryInstanceMemento("concrete", "instance");
 			memento.AddChildArray("Color", new InstanceMemento[0]);	
