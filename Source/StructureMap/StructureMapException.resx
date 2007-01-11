@@ -222,4 +222,7 @@
   <data name="190" xml:space="preserve">
     <value>Can not create a Generic PluginFamily for PluginFamily {0}.  Check that the basic type {1} is configured as a PluginFamily.  These Generic types are configured within StructureMap as PluginFamily's:  {2}</value>
   </data>
+  <data name="116" xml:space="preserve">
+    <value>Requested PluginFamily {0} is not configured in StructureMap or could not be loaded</value>
+  </data>
 </root>

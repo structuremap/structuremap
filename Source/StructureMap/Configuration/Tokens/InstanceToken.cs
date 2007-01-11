@@ -13,38 +13,41 @@ namespace StructureMap.Configuration.Tokens
         private string _concreteKey;
         private DefinitionSource _source = DefinitionSource.Explicit;
         private Hashtable _properties;
+        private readonly TypePath _pluginTypePath;
         [NonSerialized] private InstanceMemento _memento;
-        private string _pluginTypeName;
         private string _mementoString;
         private string _templateKey;
-        private Type _pluginType;
 
         public InstanceToken() : base()
         {
             _properties = new Hashtable();
         }
 
-        public InstanceToken(Type pluginType, PluginGraphReport report, InstanceMemento memento) : this()
+        public InstanceToken(Type pluginType, PluginGraphReport report, InstanceMemento memento) : this(new TypePath(pluginType), report, memento)
         {
+        }
+
+        public InstanceToken(TypePath pluginTypePath, PluginGraphReport report, InstanceMemento memento) : this()
+        {
+            _pluginTypePath = pluginTypePath;
             _memento = memento;
             _mementoString = memento.ToString();
-            _pluginTypeName = TypePath.GetAssemblyQualifiedName(pluginType);
-            _pluginType = pluginType;
+
 
             InstanceKey = memento.InstanceKey;
             ConcreteKey = memento.ConcreteKey;
             try
             {
-                PluginToken plugin = report.FindPlugin(pluginType, ConcreteKey);
+                PluginToken plugin = report.FindPlugin(_pluginTypePath, ConcreteKey);
                 if (plugin == null)
                 {
                     if (memento.TemplateName == string.Empty)
                     {
-                        logInvalidPlugin(_pluginTypeName);
+                        logInvalidPlugin();
                     }
                     else
                     {
-                        buildPropertyFromTemplatedMemento(report, _pluginType, memento);
+                        buildPropertyFromTemplatedMemento(report, memento);
                     }
                 }
                 else
@@ -59,11 +62,10 @@ namespace StructureMap.Configuration.Tokens
             }
         }
 
-        private void buildPropertyFromTemplatedMemento(PluginGraphReport report, Type pluginType,
-                                                       InstanceMemento memento)
+        private void buildPropertyFromTemplatedMemento(PluginGraphReport report, InstanceMemento memento)
         {
             _templateKey = memento.TemplateName;
-            TemplateToken token = report.FindTemplate(pluginType, _templateKey);
+            TemplateToken token = report.FindTemplate(_pluginTypePath, _templateKey);
             IProperty[] properties = TemplateProperty.GetTemplateProperties(memento, token);
             foreach (IProperty property in properties)
             {
@@ -71,9 +73,9 @@ namespace StructureMap.Configuration.Tokens
             }
         }
 
-        private void logInvalidPlugin(string pluginTypeName)
+        private void logInvalidPlugin()
         {
-            string message = string.Format("Looking for Plugin '{0}' for PluginFamily {1}", ConcreteKey, pluginTypeName);
+            string message = string.Format("Looking for Plugin '{0}' for PluginFamily {1}", ConcreteKey, _pluginTypePath.AssemblyQualifiedName);
             Problem problem = new Problem(ConfigurationConstants.INVALID_PLUGIN, message);
             LogProblem(problem);
         }
@@ -136,7 +138,12 @@ namespace StructureMap.Configuration.Tokens
         {
             try
             {
-                object target = validator.CreateObject(_pluginType, _memento);
+                if (!_pluginTypePath.CanFindType())
+                {
+                    return;
+                }
+
+                object target = validator.CreateObject(_pluginTypePath.FindType(), _memento);
                 validateInstance(target);
             }
             catch (Exception ex)
@@ -171,7 +178,7 @@ namespace StructureMap.Configuration.Tokens
 
         public string PluginTypeName
         {
-            get { return _pluginTypeName; }
+            get { return _pluginTypePath.AssemblyQualifiedName; }
         }
 
         public override GraphObject[] Children

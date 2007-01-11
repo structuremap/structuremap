@@ -57,7 +57,7 @@ namespace StructureMap.Testing.Configuration
 		public void FindTemplate()
 		{
 			PluginGraphReport report = ObjectMother.Report();
-			Type pluginType = typeof(IWidget);
+			TypePath pluginType = new TypePath(typeof(IWidget));
 
 			TemplateToken theTemplate = new TemplateToken("Template1", "Concrete1", new string[]{"prop1"});
 			report.FindFamily(pluginType).AddTemplate(theTemplate);

@@ -74,7 +74,8 @@ namespace StructureMap.Testing.Client.Controllers
         [Test]
         public void PluginNode()
         {
-            PluginToken plugin = new PluginToken("something", "else", "concrete", DefinitionSource.Explicit);
+            TypePath path = TypePath.TypePathForFullName("some type name");
+            PluginToken plugin = new PluginToken(path, "concrete", DefinitionSource.Explicit);
             _builder.HandlePlugin(plugin);
 
             TreeNodeExpectation expectation = new TreeNodeExpectation("concrete", ViewConstants.PLUGIN, plugin);

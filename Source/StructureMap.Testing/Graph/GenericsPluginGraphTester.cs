@@ -143,12 +143,6 @@ namespace StructureMap.Testing.Graph
         }
 
 
-        [Test]
-        public void FindPluginFamily()
-        {
-            Assert.Fail("Do.");
-        }
-        
         
         
     }

@@ -1,5 +1,5 @@
 using System;
-using System.Reflection;
+using System.Diagnostics;
 using System.Xml;
 using StructureMap.Configuration;
 
@@ -8,8 +8,19 @@ namespace StructureMap.Graph
 	/// <summary>
 	/// Designates a CLR type that is loaded by name.
 	/// </summary>
+	[Serializable]
 	public class TypePath
 	{
+        public static string GetTypeIdentifier(Type type)
+        {
+            return type.AssemblyQualifiedName;
+        }
+
+        public static TypePath TypePathForFullName(string fullname)
+        {
+            return new TypePath(string.Empty, fullname);
+        }
+
 		public static TypePath CreateFromXmlNode(XmlNode node)
 		{
 			string typeName = node.Attributes[XmlConstants.TYPE_ATTRIBUTE].Value;
@@ -25,7 +36,7 @@ namespace StructureMap.Graph
 		}
 
 		private string _className;
-		private string _assemblyName;
+		private string _assemblyName = string.Empty;
 
 		public string AssemblyQualifiedName
 		{
@@ -73,6 +84,16 @@ namespace StructureMap.Graph
 		    }
 		}
 
+        public bool Matches(string typeName)
+        {
+            return (this.AssemblyQualifiedName == typeName || this.ClassName == typeName) ;
+        }
+
+        public bool Matches(Type type)
+        {
+            return (this.AssemblyQualifiedName == type.AssemblyQualifiedName || this.ClassName == type.FullName);
+        }
+
 		public override bool Equals(object obj)
 		{
 			TypePath peer = obj as TypePath;
@@ -81,12 +102,12 @@ namespace StructureMap.Graph
 				return false;
 			}
 
-			return peer.FindType().Equals(this.FindType());
+		    return peer.AssemblyQualifiedName == this.AssemblyQualifiedName;
 		}
 
 		public override int GetHashCode()
 		{
-			return base.GetHashCode();
+		    return this.AssemblyQualifiedName.GetHashCode();
 		}
 
 
@@ -105,7 +126,25 @@ namespace StructureMap.Graph
 
 	    public override string ToString()
 	    {
-            return "TypePath:  " + this.AssemblyQualifiedName;
+            return this.AssemblyQualifiedName;
+	    }
+
+	    public static TypePath GetTypePath(string name)
+	    {
+	        try
+	        {
+	            Type type = Type.GetType(name);
+	            if (type != null)
+	            {
+	                return new TypePath(type);
+	            }
+	        }
+	        catch (Exception ex)
+	        {
+	            Debug.WriteLine("here!");
+	        }
+
+            return TypePathForFullName(name);
 	    }
 	}
 }

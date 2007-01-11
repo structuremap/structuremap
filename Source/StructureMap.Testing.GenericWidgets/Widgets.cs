@@ -17,6 +17,38 @@ namespace StructureMap.Testing.GenericWidgets
             return typeof (T);
         }
     }
+
+    [Pluggable("Plugged")]
+    public class ServiceWithPlug<T> : IService<T>
+    {
+        private readonly IPlug<T> _plug;
+
+        public ServiceWithPlug(IPlug<T> plug)
+        {
+            _plug = plug;
+        }
+
+
+        public IPlug<T> Plug
+        {
+            get { return _plug; }
+        }
+    }
+
+    [PluginFamily("Default")]
+    public interface IPlug<T>
+    {
+        Type PlugType { get;}
+    }
+
+    [Pluggable("Default")]
+    public class ConcretePlug<T> : IPlug<T>
+    {
+        public Type PlugType
+        {
+            get { return typeof (T); }
+        }
+    }
     
     public interface IThing<T, U, V>{}
     

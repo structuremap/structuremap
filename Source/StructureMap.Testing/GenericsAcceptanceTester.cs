@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Reflection;
 using NUnit.Framework;
 using StructureMap.Graph;
+using StructureMap.Testing.GenericWidgets;
 
 namespace StructureMap.Testing
 {
@@ -144,13 +145,39 @@ namespace StructureMap.Testing
         [Test]
         public void CanBuildAGenericObjectThatHasAnotherGenericObjectAsAChild()
         {
-            Assert.Fail("Do.");
+            Type serviceType = typeof (IService<>);
+            PluginGraph pluginGraph = PluginGraph.BuildGraphFromAssembly(serviceType.Assembly);
+            InstanceManager manager = new InstanceManager(pluginGraph);
+
+            Type doubleServiceType = typeof (IService<double>);
+
+            ServiceWithPlug<double> service = (ServiceWithPlug<double>) manager.CreateInstance(doubleServiceType, "Plugged"); 
+            Assert.AreEqual(typeof(double), service.Plug.PlugType);
         }
 
         [Test]
         public void GenericsTypeAndProfileOrMachine()
         {
-            Assert.Fail("Do.");
+            string typeName = "StructureMap.Testing.GenericWidgets.IService`1";
+            Profile profile1 = new Profile("1");
+            profile1.AddOverride(typeName, "Default");
+
+            Profile profile2 = new Profile("2");
+            profile2.AddOverride(typeName, "Plugged");
+
+            PluginGraph pluginGraph = PluginGraph.BuildGraphFromAssembly(typeof (IService<>).Assembly);
+            
+            InstanceManager manager = new InstanceManager(pluginGraph);
+            
+            manager.SetDefaults(profile1);
+            Assert.IsInstanceOfType(typeof(Service<string>), manager.CreateInstance(typeof(IService<string>)));
+
+            manager.SetDefaults(profile2);
+            Assert.IsInstanceOfType(typeof(ServiceWithPlug<string>), manager.CreateInstance(typeof(IService<string>)));
+
+            manager.SetDefaults(profile1);
+            Assert.IsInstanceOfType(typeof(Service<string>), manager.CreateInstance(typeof(IService<string>)));
+
         }
     }
     

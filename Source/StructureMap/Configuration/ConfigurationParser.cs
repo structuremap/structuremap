@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Xml;
+using StructureMap.Graph;
 using StructureMap.Graph.Configuration;
 using StructureMap.Source;
 
@@ -102,8 +103,8 @@ namespace StructureMap.Configuration
 			XmlNodeList familyNodes = findNodes(XmlConstants.PLUGIN_FAMILY_NODE);
 			foreach (XmlElement familyElement in familyNodes)
 			{
-				string pluginTypeName = familyElement.GetAttribute(XmlConstants.TYPE_ATTRIBUTE);
-				this.attachInstances(pluginTypeName, familyElement);
+			    TypePath typePath = TypePath.CreateFromXmlNode(familyElement);
+				this.attachInstances(typePath, familyElement);
 			}
 		}
 
@@ -140,7 +141,7 @@ namespace StructureMap.Configuration
 
 
 
-		private void attachInstances(string pluginTypeName, XmlElement familyElement)
+		private void attachInstances(TypePath pluginTypePath, XmlElement familyElement)
 		{
 			foreach (XmlNode instanceNode in familyElement.ChildNodes)
 			{
@@ -150,7 +151,7 @@ namespace StructureMap.Configuration
 				}
 
 				XmlNodeInstanceMemento memento = new XmlNodeInstanceMemento(instanceNode, XmlConstants.TYPE_ATTRIBUTE, XmlConstants.KEY_ATTRIBUTE);
-				_builder.RegisterMemento(pluginTypeName, memento);
+				_builder.RegisterMemento(pluginTypePath, memento);
 			}
 		}
 
@@ -165,9 +166,11 @@ namespace StructureMap.Configuration
 			foreach (XmlNode instanceNode in instancesNode)
 			{
 				string pluginTypeName = instanceNode.Name;
+			    TypePath typePath = TypePath.TypePathForFullName(pluginTypeName);
+
 				XmlNodeInstanceMemento memento = new XmlNodeInstanceMemento(instanceNode, XmlConstants.TYPE_ATTRIBUTE, XmlConstants.KEY_ATTRIBUTE);
 
-				_builder.RegisterMemento(pluginTypeName, memento);
+				_builder.RegisterMemento(typePath, memento);
 			}
 		}
 	}

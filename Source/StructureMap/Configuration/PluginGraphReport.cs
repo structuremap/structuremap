@@ -11,7 +11,7 @@ namespace StructureMap.Configuration
     public class PluginGraphReport : GraphObject
     {
         private Hashtable _assemblies = new Hashtable();
-        private Dictionary<Type, FamilyToken> _families = new Dictionary<Type, FamilyToken>();
+        private Dictionary<TypePath, FamilyToken> _families = new Dictionary<TypePath, FamilyToken>();
         private InstanceDefaultManager _defaultManager;
 
         public PluginGraphReport()
@@ -68,20 +68,20 @@ namespace StructureMap.Configuration
 
         public void AddFamily(FamilyToken family)
         {
-            _families.Add(family.PluginType, family);
+            _families.Add(family.TypePath, family);
         }
 
         public FamilyToken FindFamily(string pluginTypeClassName)
         {
-            Type type = Type.GetType(pluginTypeClassName);
-            if (type != null)
+            TypePath path = TypePath.GetTypePath(pluginTypeClassName);
+            if (path != null)
             {
-                return FindFamily(type);
+                return FindFamily(path);
             }
             
-            foreach (KeyValuePair<Type, FamilyToken> pair in _families)
+            foreach (KeyValuePair<TypePath, FamilyToken> pair in _families)
             {
-                if (pair.Value.PluginType.FullName == pluginTypeClassName)
+                if (pair.Key.Matches(pluginTypeClassName))
                 {
                     return pair.Value;
                 }
@@ -92,18 +92,25 @@ namespace StructureMap.Configuration
         
         public FamilyToken FindFamily(Type pluginType)
         {
-            if (!_families.ContainsKey(pluginType))
+            TypePath path = new TypePath(pluginType);
+
+            if (!_families.ContainsKey(path))
             {
-                throw new MissingPluginFamilyException(pluginType.FullName);
+                throw new MissingPluginFamilyException(path.AssemblyQualifiedName);
             }
 
-            return _families[pluginType];
+            return _families[path];
         }
 
 
+        public PluginToken FindPlugin(TypePath pluginTypePath, string concreteKey)
+        {
+            return FindFamily(pluginTypePath).FindPlugin(concreteKey);
+        }
+
         public PluginToken FindPlugin(Type pluginType, string concreteKey)
         {
-            return FindFamily(pluginType).FindPlugin(concreteKey);
+            return FindPlugin(new TypePath(pluginType), concreteKey);
         }
 
         public void ImportImplicitChildren(PluginGraph pluginGraph)
@@ -161,10 +168,15 @@ namespace StructureMap.Configuration
             get { return string.Empty; }
         }
 
-        public TemplateToken FindTemplate(Type pluginType, string templateName)
+        public TemplateToken FindTemplate(TypePath pluginTypePath, string templateName)
         {
-            FamilyToken family = FindFamily(pluginType);
+            FamilyToken family = FindFamily(pluginTypePath);
             return family.FindTemplate(templateName);
+        }
+
+        public FamilyToken FindFamily(TypePath path)
+        {
+            return _families[path];
         }
     }
 }

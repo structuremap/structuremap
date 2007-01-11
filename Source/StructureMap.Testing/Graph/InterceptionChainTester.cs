@@ -23,6 +23,13 @@ namespace StructureMap.Testing.Graph
 			_chain.AddInterceptor(_singleton2);
 		}
 
+	    [Test]
+	    public void tryIt()
+	    {
+            ObjectMother.Reset();
+	    }
+
+
 		[Test]
 		public void CreateInterceptionChainWithTwoInterceptors()
 		{

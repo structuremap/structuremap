@@ -60,7 +60,7 @@ namespace StructureMap.Testing.Configuration
             InstanceScope theScope = InstanceScope.PerRequest;
             _builder.AddPluginFamily(typePath, theDefaultKey, theTargets, theScope);
 
-            FamilyToken expected = new FamilyToken(GetType(), theDefaultKey, theTargets);
+            FamilyToken expected = new FamilyToken(typePath, theDefaultKey, theTargets);
             Assert.AreEqual(new FamilyToken[] {expected}, _report.Families);
 
             FamilyToken actual = _report.Families[0];
@@ -79,7 +79,7 @@ namespace StructureMap.Testing.Configuration
             InstanceScope theScope = InstanceScope.Singleton;
             _builder.AddPluginFamily(typePath, theDefaultKey, theTargets, theScope);
 
-            FamilyToken expected = new FamilyToken(GetType(), theDefaultKey, theTargets);
+            FamilyToken expected = new FamilyToken(typePath, theDefaultKey, theTargets);
             Assert.AreEqual(new FamilyToken[] {expected}, _report.Families);
 
             FamilyToken actual = _report.Families[0];
@@ -103,10 +103,9 @@ namespace StructureMap.Testing.Configuration
 
             InstanceMemento sourceMemento = MockMementoSource.CreateSuccessMemento();
 
-            string pluginTypeName = typePath.AssemblyQualifiedName;
-            _builder.AttachSource(pluginTypeName, sourceMemento);
+            _builder.AttachSource(typePath, sourceMemento);
 
-            FamilyToken family = _report.FindFamily(pluginTypeName);
+            FamilyToken family = _report.FindFamily(typePath);
             Assert.IsNotNull(family.SourceInstance);
             Assert.AreEqual(0, family.SourceInstance.Problems.Length);
         }
@@ -127,10 +126,9 @@ namespace StructureMap.Testing.Configuration
 
             InstanceMemento sourceMemento = MockMementoSource.CreateFailureMemento();
 
-            string pluginTypeName = typePath.AssemblyQualifiedName;
-            _builder.AttachSource(pluginTypeName, sourceMemento);
+            _builder.AttachSource(typePath, sourceMemento);
 
-            FamilyToken family = _report.FindFamily(pluginTypeName);
+            FamilyToken family = _report.FindFamily(typePath);
 
             Problem expected = new Problem(ConfigurationConstants.COULD_NOT_CREATE_MEMENTO_SOURCE, string.Empty);
             Assert.AreEqual(new Problem[] {expected}, family.Problems);
@@ -151,9 +149,9 @@ namespace StructureMap.Testing.Configuration
             _builder.AddPluginFamily(typePath, theDefaultKey, theTargets, InstanceScope.PerRequest);
 
             InstanceMemento memento = MockInterceptor.CreateSuccessMemento();
-            _builder.AddInterceptor(typePath.AssemblyQualifiedName, memento);
+            _builder.AddInterceptor(typePath, memento);
 
-            FamilyToken family = _report.FindFamily(typePath.AssemblyQualifiedName);
+            FamilyToken family = _report.FindFamily(typePath);
             Assert.AreEqual(1, family.Interceptors.Length);
 
             Assert.AreEqual(0, family.Interceptors[0].Problems.Length);
@@ -174,7 +172,7 @@ namespace StructureMap.Testing.Configuration
             _builder.AddPluginFamily(typePath, theDefaultKey, theTargets, InstanceScope.PerRequest);
 
             InstanceMemento memento = MockInterceptor.CreateFailureMemento();
-            _builder.AddInterceptor(typePath.AssemblyQualifiedName, memento);
+            _builder.AddInterceptor(typePath, memento);
 
             FamilyToken family = _report.FindFamily(typePath.AssemblyQualifiedName);
             Assert.AreEqual(1, family.Interceptors.Length);
@@ -190,14 +188,11 @@ namespace StructureMap.Testing.Configuration
         [Test]
         public void AddPluginFamilyWithFakeType()
         {
-            Assert.Fail("Do differently");
-            
             TypePath typePath = new TypePath("Nothing", "Wrong");
             _builder.AddPluginFamily(typePath, "", new string[0], InstanceScope.PerRequest);
 
-            FamilyToken family = _report.Families[0];
-
             Problem expected = new Problem(ConfigurationConstants.COULD_NOT_LOAD_TYPE, string.Empty);
+            FamilyToken family = _report.FindFamily(typePath);
 
             Assert.AreEqual(new Problem[] {expected}, family.Problems);
         }
@@ -211,7 +206,7 @@ namespace StructureMap.Testing.Configuration
             _builder.AddPluginFamily(familyPath, string.Empty, new string[0], InstanceScope.PerRequest);
 
             string theConcreteKey = "green";
-            _builder.AddPlugin(familyPath.AssemblyQualifiedName, pluginPath, theConcreteKey);
+            _builder.AddPlugin(familyPath, pluginPath, theConcreteKey);
 
             FamilyToken family = _report.Families[0];
             PluginToken expected = new PluginToken(pluginPath, theConcreteKey, DefinitionSource.Explicit);
@@ -229,7 +224,7 @@ namespace StructureMap.Testing.Configuration
             _builder.AddPluginFamily(familyPath, string.Empty, new string[0], InstanceScope.PerRequest);
 
             string[] theSetters = new string[] {"Name", "Color"};
-            _builder.AddPlugin(familyPath.AssemblyQualifiedName, pluginPath, string.Empty);
+            _builder.AddPlugin(familyPath, pluginPath, string.Empty);
 
             PluginToken plugin = _report.FindFamily(familyPath.AssemblyQualifiedName).Plugins[0];
 
@@ -248,7 +243,7 @@ namespace StructureMap.Testing.Configuration
             _builder.AddPluginFamily(familyPath, string.Empty, new string[0], InstanceScope.PerRequest);
 
             string[] theSetters = new string[] {"Name", "Color"};
-            _builder.AddPlugin(familyPath.AssemblyQualifiedName, pluginPath, "red");
+            _builder.AddPlugin(familyPath, pluginPath, "red");
 
             PluginToken plugin = _report.FindFamily(familyPath.AssemblyQualifiedName).Plugins[0];
 
@@ -264,9 +259,9 @@ namespace StructureMap.Testing.Configuration
             TypePath pluginPath = new TypePath(typeof (DefaultGateway));
 
             _builder.AddPluginFamily(familyPath, string.Empty, new string[0], InstanceScope.PerRequest);
-            _builder.AddPlugin(familyPath.AssemblyQualifiedName, pluginPath, "red");
+            _builder.AddPlugin(familyPath, pluginPath, "red");
 
-            _builder.AddSetter(familyPath.AssemblyQualifiedName, "red", "Name");
+            _builder.AddSetter(familyPath, "red", "Name");
 
             PluginToken pluginToken = _report.FindFamily(familyPath.AssemblyQualifiedName).Plugins[0];
             PropertyDefinition actual = pluginToken["Name"];
@@ -284,10 +279,10 @@ namespace StructureMap.Testing.Configuration
             TypePath pluginPath = new TypePath(typeof (DefaultGateway));
 
             _builder.AddPluginFamily(familyPath, string.Empty, new string[0], InstanceScope.PerRequest);
-            _builder.AddPlugin(familyPath.AssemblyQualifiedName, pluginPath, "red");
+            _builder.AddPlugin(familyPath, pluginPath, "red");
 
             string theFakePropertyName = "FakeProperty";
-            _builder.AddSetter(familyPath.AssemblyQualifiedName, "red", theFakePropertyName);
+            _builder.AddSetter(familyPath, "red", theFakePropertyName);
 
             PluginToken pluginToken = _report.FindFamily(familyPath.AssemblyQualifiedName).Plugins[0];
             PropertyDefinition property = pluginToken[theFakePropertyName];
@@ -305,7 +300,7 @@ namespace StructureMap.Testing.Configuration
             _builder.AddPluginFamily(familyPath, string.Empty, new string[0], InstanceScope.PerRequest);
 
             MemoryInstanceMemento memento = new MemoryInstanceMemento("concrete", "instance");
-            _builder.RegisterMemento(familyPath.AssemblyQualifiedName, memento);
+            _builder.RegisterMemento(familyPath, memento);
 
             Assert.AreEqual(0, _builder.Report.Problems.Length);
         }
@@ -314,7 +309,9 @@ namespace StructureMap.Testing.Configuration
         public void RegisterMementoWithNoPluginFamily()
         {
             MemoryInstanceMemento memento = new MemoryInstanceMemento("concrete", "instance");
-            _builder.RegisterMemento("Some family", memento);
+
+            TypePath typePath = TypePath.TypePathForFullName("Some Family");
+            _builder.RegisterMemento(typePath, memento);
 
             Problem expected =
                 new Problem(ConfigurationConstants.PLUGIN_FAMILY_CANNOT_BE_FOUND_FOR_INSTANCE, string.Empty);

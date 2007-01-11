@@ -59,6 +59,8 @@ namespace StructureMap.Testing.Configuration.Tokens
 			family.Source = source;
 
 			FamilyToken token = new FamilyToken(family.PluginType, null, new string[0]);
+            report.AddFamily(token);
+
 			token.ReadInstances(family, report);
 
 			Assert.AreEqual(2, token.Instances.Length);
@@ -76,6 +78,7 @@ namespace StructureMap.Testing.Configuration.Tokens
 			family.Plugins.Add(typeof(DefaultGateway), "Implicit");
 
 			FamilyToken token = new FamilyToken(family.PluginType, null, new string[0]);
+            report.AddFamily(token);
 			token.ReadInstances(family, report);
 
 			Assert.AreEqual(1, token.Instances.Length);
@@ -103,7 +106,8 @@ namespace StructureMap.Testing.Configuration.Tokens
 			family.Source = source;
 
 			FamilyToken token = new FamilyToken(typeof(IGateway), family.DefaultInstanceKey, new string[0]);
-			token.ReadInstances(family, report);
+			report.AddFamily(token);
+            token.ReadInstances(family, report);
 
 			Assert.AreEqual(string.Empty, family.DefaultInstanceKey, "Imperative that the family.DefaultInstanceKey get set to string.empty");
 
@@ -130,6 +134,7 @@ namespace StructureMap.Testing.Configuration.Tokens
 			family.Source = source;
 
 			FamilyToken token = new FamilyToken(family.PluginType, null, new string[0]);
+            report.AddFamily(token);
 			token.ReadInstances(family, report);
 
 			Assert.AreEqual(2, token.Instances.Length);

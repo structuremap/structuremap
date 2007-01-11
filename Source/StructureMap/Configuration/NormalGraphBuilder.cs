@@ -79,33 +79,28 @@ namespace StructureMap.Configuration
 			return _systemInstanceManager.CreateInstance(type, memento);
 		}
 
-		public virtual void AttachSource(string pluginTypeName, InstanceMemento sourceMemento)
+		public virtual void AttachSource(TypePath pluginTypePath, InstanceMemento sourceMemento)
 		{
 			try
 			{
 				MementoSource source = (MementoSource) buildSystemObject(typeof(MementoSource), sourceMemento);
-				AttachSource(pluginTypeName, source);
+				AttachSource(pluginTypePath, source);
 			}
 			catch (Exception ex)
 			{
-				throw new StructureMapException(120, ex, pluginTypeName);
+				throw new StructureMapException(120, ex, pluginTypePath);
 			}
 		}
 
-		public void AttachSource(string pluginTypeName, MementoSource source)
+		public void AttachSource(TypePath pluginTypePath, MementoSource source)
 		{
-			PluginFamily family = FindPluginFamily(pluginTypeName);
+		    PluginFamily family = _pluginGraph.PluginFamilies[pluginTypePath];
 			family.Source = source;
 		}
 
-		public PluginFamily FindPluginFamily(string pluginTypeName)
+		public Plugin AddPlugin(TypePath pluginTypePath, TypePath pluginPath, string concreteKey)
 		{
-			return _pluginGraph.PluginFamilies[pluginTypeName];
-		}
-
-		public Plugin AddPlugin(string pluginTypeName, TypePath pluginPath, string concreteKey)
-		{
-			PluginFamily family = _pluginGraph.PluginFamilies[pluginTypeName];
+			PluginFamily family = _pluginGraph.PluginFamilies[pluginTypePath];
 			Plugin plugin = new Plugin(pluginPath, concreteKey);
 			plugin.DefinitionSource = DefinitionSource.Explicit;
 			family.Plugins.Add(plugin);
@@ -113,16 +108,16 @@ namespace StructureMap.Configuration
 			return plugin;
 		}
 
-		public SetterProperty AddSetter(string pluginTypeName, string concreteKey, string setterName)
+		public SetterProperty AddSetter(TypePath pluginTypePath, string concreteKey, string setterName)
 		{
-			PluginFamily family = _pluginGraph.PluginFamilies[pluginTypeName];
+			PluginFamily family = _pluginGraph.PluginFamilies[pluginTypePath];
 			Plugin plugin = family.Plugins[concreteKey];
 			return plugin.Setters.Add(setterName);
 		}
 
-		public virtual void AddInterceptor(string pluginTypeName, InstanceMemento interceptorMemento)
+		public virtual void AddInterceptor(TypePath pluginTypePath, InstanceMemento interceptorMemento)
 		{
-			PluginFamily family = _pluginGraph.PluginFamilies[pluginTypeName];
+			PluginFamily family = _pluginGraph.PluginFamilies[pluginTypePath];
 			try
 			{
 				InstanceFactoryInterceptor interceptor = 
@@ -132,7 +127,7 @@ namespace StructureMap.Configuration
 			}
 			catch (Exception ex)
 			{
-				throw new StructureMapException(121, ex, pluginTypeName);
+				throw new StructureMapException(121, ex, pluginTypePath);
 			}
 		}
 
@@ -141,9 +136,9 @@ namespace StructureMap.Configuration
 			get { return _defaultManager; }
 		}
 
-		public void RegisterMemento(string pluginTypeName, InstanceMemento memento)
+		public void RegisterMemento(TypePath pluginTypePath, InstanceMemento memento)
 		{
-			PluginFamily family = _pluginGraph.PluginFamilies[pluginTypeName];
+			PluginFamily family = _pluginGraph.PluginFamilies[pluginTypePath];
 
 			family.Source.AddExternalMemento(memento);
 		}

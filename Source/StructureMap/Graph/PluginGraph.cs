@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Reflection;
 
 namespace StructureMap.Graph
 {
@@ -106,5 +107,14 @@ namespace StructureMap.Graph
 
 		#endregion
 
+	    public static PluginGraph BuildGraphFromAssembly(Assembly assembly)
+	    {
+            PluginGraph pluginGraph = new PluginGraph();
+            pluginGraph.Assemblies.Add(assembly);
+            
+            pluginGraph.Seal();
+
+	        return pluginGraph;
+	    }
 	}
 }

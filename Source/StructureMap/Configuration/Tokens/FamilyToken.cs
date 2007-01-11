@@ -10,7 +10,8 @@ namespace StructureMap.Configuration.Tokens
     {
         public static FamilyToken CreateImplicitFamily(PluginFamily family)
         {
-            FamilyToken token = new FamilyToken(family.PluginType, family.DefaultInstanceKey, new string[0]);
+            FamilyToken token =
+                new FamilyToken(new TypePath(family.PluginType), family.DefaultInstanceKey, new string[0]);
             token.DefinitionSource = DefinitionSource.Implicit;
 
 
@@ -33,31 +34,26 @@ namespace StructureMap.Configuration.Tokens
         private Hashtable _instances = new Hashtable();
         private Hashtable _templates = new Hashtable();
         private InstanceScope _scope = InstanceScope.PerRequest;
-        private Type _pluginType;
+        private TypePath _typePath;
 
         public FamilyToken() : base()
         {
         }
 
-        public FamilyToken(Type pluginType, string defaultKey, string[] deploymentTargets) : base(deploymentTargets)
+        public FamilyToken(Type type, string defaultKey, string[] deploymentTargets)
+            : this(new TypePath(type), defaultKey, deploymentTargets)
         {
-            _pluginType = pluginType;
+        }
+
+        public FamilyToken(TypePath path, string defaultKey, string[] deploymentTargets) : base(deploymentTargets)
+        {
+            _typePath = path;
             _defaultKey = defaultKey;
         }
 
         public string PluginTypeName
         {
-            get { return _pluginType.FullName; }
-        }
-
-        public Type PluginType
-        {
-            get { return _pluginType; }
-        }
-
-        public string AssemblyName
-        {
-            get { return _pluginType.Assembly.GetName().Name; }
+            get { return _typePath.AssemblyQualifiedName; }
         }
 
         public DefinitionSource DefinitionSource
@@ -96,6 +92,11 @@ namespace StructureMap.Configuration.Tokens
 
         public override bool Equals(object obj)
         {
+            if (object.ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
             FamilyToken peer = obj as FamilyToken;
             if (peer == null)
             {
@@ -113,11 +114,6 @@ namespace StructureMap.Configuration.Tokens
             return base.GetHashCode();
         }
 
-        public void MarkTypeCannotBeLoaded(Exception ex)
-        {
-            Problem problem = new Problem(ConfigurationConstants.COULD_NOT_LOAD_TYPE, ex);
-            LogProblem(problem);
-        }
 
         public PluginToken[] Plugins
         {
@@ -285,6 +281,16 @@ namespace StructureMap.Configuration.Tokens
             get { return PluginTypeName; }
         }
 
+        public TypePath TypePath
+        {
+            get { return _typePath; }
+        }
+
+        public string AssemblyName
+        {
+            get { return _typePath.AssemblyName; }
+        }
+
         public bool HasInstance(string instanceKey)
         {
             return _instances.ContainsKey(instanceKey);
@@ -300,6 +306,12 @@ namespace StructureMap.Configuration.Tokens
             InstanceToken instance = (InstanceToken) _instances[defaultKey];
             _instances = new Hashtable();
             _instances.Add(instance.InstanceKey, instance);
+        }
+
+        public void MarkAsInvalidType(Exception ex)
+        {
+            Problem problem = new Problem(ConfigurationConstants.COULD_NOT_LOAD_TYPE, ex);
+            LogProblem(problem);
         }
     }
 }

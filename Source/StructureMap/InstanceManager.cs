@@ -88,14 +88,41 @@ namespace StructureMap
                 try
                 {
                     string pluginTypeName = defaultInstance.PluginTypeName;
-                    IInstanceFactory instanceFactory = this[pluginTypeName];
-                    instanceFactory.SetDefault(defaultInstance.DefaultKey);
+                    PluginFamily genericFamily = _genericsGraph.FindGenericFamily(pluginTypeName);
+                    if (genericFamily == null)
+                    {
+                        IInstanceFactory instanceFactory = this[pluginTypeName];
+                        instanceFactory.SetDefault(defaultInstance.DefaultKey);                        
+                    }
+                    else
+                    {
+                        setGenericTypeDefaults(defaultInstance, genericFamily);
+                    }
+
+
                 }
                 catch (Exception)
                 {
                     if (_failOnException)
                     {
                         throw;
+                    }
+                }
+            }
+        }
+
+        private void setGenericTypeDefaults(InstanceDefault defaultInstance, PluginFamily genericFamily)
+        {
+            genericFamily.DefaultInstanceKey = defaultInstance.DefaultKey;
+            Type genericType = genericFamily.PluginType;
+
+            foreach (KeyValuePair<Type, IInstanceFactory> pair in _factories)
+            {
+                if (pair.Key.IsGenericType)
+                {
+                    if (pair.Key.GetGenericTypeDefinition().Equals(genericType))
+                    {
+                        pair.Value.SetDefault(defaultInstance.DefaultKey);
                     }
                 }
             }

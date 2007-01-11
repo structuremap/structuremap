@@ -26,12 +26,10 @@ namespace StructureMap.Configuration
 			InstanceScope scope = findScope(familyElement);
 
 			_builder.AddPluginFamily(typePath, defaultKey, deploymentTargets, scope);
-	
-			string pluginTypeName = typePath.AssemblyQualifiedName;
-	
-			attachMementoSource(familyElement, pluginTypeName);
-			attachPlugins(pluginTypeName, familyElement);
-			attachInterceptors(pluginTypeName, familyElement);
+
+			attachMementoSource(familyElement, typePath);
+            attachPlugins(typePath, familyElement);
+            attachInterceptors(typePath, familyElement);
 		}
 
 		private InstanceScope findScope(XmlElement familyElement)
@@ -47,17 +45,17 @@ namespace StructureMap.Configuration
 			return returnValue;
 		}
 
-		private void attachMementoSource(XmlElement familyElement, string pluginTypeName)
+		private void attachMementoSource(XmlElement familyElement, TypePath pluginTypePath)
 		{
 			XmlNode sourceNode = familyElement[XmlConstants.MEMENTO_SOURCE_NODE];
 			if (sourceNode != null)
 			{
 				InstanceMemento sourceMemento = new XmlAttributeInstanceMemento(sourceNode);
-				_builder.AttachSource(pluginTypeName, sourceMemento);
+                _builder.AttachSource(pluginTypePath, sourceMemento);
 			}
 		}
 
-		private void attachPlugins(string pluginTypeName, XmlElement familyElement)
+		private void attachPlugins(TypePath pluginTypePath, XmlElement familyElement)
 		{
 			XmlNodeList pluginNodes = familyElement.SelectNodes(XmlConstants.PLUGIN_NODE);
 			foreach (XmlElement pluginElement in pluginNodes)
@@ -65,17 +63,17 @@ namespace StructureMap.Configuration
 				TypePath pluginPath = TypePath.CreateFromXmlNode(pluginElement);
 				string concreteKey = pluginElement.GetAttribute(XmlConstants.CONCRETE_KEY_ATTRIBUTE);
 
-				_builder.AddPlugin(pluginTypeName, pluginPath, concreteKey);
+				_builder.AddPlugin(pluginTypePath, pluginPath, concreteKey);
 
 				foreach (XmlElement setterElement in pluginElement.ChildNodes)
 				{
 					string setterName = setterElement.GetAttribute("Name");
-					_builder.AddSetter(pluginTypeName, concreteKey, setterName);
+					_builder.AddSetter(pluginTypePath, concreteKey, setterName);
 				}
 			}
 		}
 
-		private void attachInterceptors(string pluginTypeName, XmlElement familyElement)
+		private void attachInterceptors(TypePath pluginTypePath, XmlElement familyElement)
 		{
 			XmlNode interceptorChainNode = familyElement[XmlConstants.INTERCEPTORS_NODE];
 			if (interceptorChainNode == null)
@@ -86,7 +84,7 @@ namespace StructureMap.Configuration
 			foreach (XmlNode interceptorNode in interceptorChainNode.ChildNodes)
 			{
 				XmlAttributeInstanceMemento interceptorMemento = new XmlAttributeInstanceMemento(interceptorNode);
-				_builder.AddInterceptor(pluginTypeName, interceptorMemento);
+				_builder.AddInterceptor(pluginTypePath, interceptorMemento);
 			}
 		}
 

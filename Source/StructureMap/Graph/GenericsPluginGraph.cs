@@ -66,6 +66,19 @@ namespace StructureMap.Graph
         {
             _families = new Dictionary<Type, PluginFamily>();
         }
+
+        public PluginFamily FindGenericFamily(string pluginTypeName)
+        {
+            foreach (KeyValuePair<Type, PluginFamily> pair in _families)
+            {
+                if (new TypePath(pair.Key).Matches(pluginTypeName))
+                {
+                    return pair.Value;
+                }
+            }
+
+            return null;
+        }
         
         public void AddFamily(PluginFamily family)
         {

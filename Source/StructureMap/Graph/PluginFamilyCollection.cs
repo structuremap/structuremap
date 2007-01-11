@@ -55,9 +55,31 @@ namespace StructureMap.Graph
 		{
 			get
 			{
-			    return _pluginFamilies[pluginType];
+			    if (!_pluginFamilies.ContainsKey(pluginType))
+			    {
+			        throw new StructureMapException(116, pluginType.FullName);
+			    }
+                
+                return _pluginFamilies[pluginType];
 			}
 		}
+
+
+	    public PluginFamily this[TypePath pluginTypePath]
+	    {
+	        get
+	        {
+	            foreach (KeyValuePair<Type, PluginFamily> pair in _pluginFamilies)
+	            {
+	                if (pluginTypePath.Matches(pair.Key))
+	                {
+	                    return pair.Value;
+	                }
+	            }
+
+	            return null;
+	        }
+	    }
 
 		public PluginFamily this[int index]
 		{
@@ -89,7 +111,7 @@ namespace StructureMap.Graph
 			    }
 			    else
 			    {
-                    return _pluginFamilies[pluginType];
+                    return this[pluginType];
 			    }
 			}
 		}

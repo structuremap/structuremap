@@ -120,22 +120,9 @@ namespace StructureMap.Testing.Configuration.Tokens
 		}
 
 		[Test]
-		public void InstanceTokenWithoutAPluginFamily()
-		{
-		    Assert.Fail("How are you going to do this?");
-            //MemoryInstanceMemento memento = new MemoryInstanceMemento("concrete", "instance");
-            //InstanceToken instance = new InstanceToken("something that does not exist", _report, memento);
-
-            //Problem expected = new Problem(ConfigurationConstants.INVALID_PLUGIN_FAMILY, string.Empty);
-
-            //Assert.AreEqual(new Problem[]{expected}, instance.Problems);
-		}
-
-		[Test]
 		public void ValidateInstanceTokenWithoutAnyPropertiesAndNoProblems()
 		{
 			MemoryInstanceMemento memento = new MemoryInstanceMemento("concrete", "instance");
-
 
             InstanceToken instance = new InstanceToken(typeof(IGateway), _report, memento);
 
@@ -147,7 +134,7 @@ namespace StructureMap.Testing.Configuration.Tokens
 
 			instance.Validate((IInstanceValidator) validatorMock.MockInstance);
 
-			Assert.AreEqual(0, instance.Problems.Length);
+			Assert.AreEqual(new Problem[0], instance.Problems);
 			validatorMock.Verify();
 			target.AssertValidationCall();
 		}

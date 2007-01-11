@@ -9,11 +9,11 @@ namespace StructureMap.Graph.Configuration
 		void StartFamilies();
 		
 		void AddPluginFamily(TypePath typePath, string defaultKey, string[] deploymentTargets, InstanceScope scope);
-		void AttachSource(string pluginTypeName, InstanceMemento sourceMemento);
-		void AttachSource(string pluginTypeName, MementoSource source);
-		Plugin AddPlugin(string pluginTypeName, TypePath pluginPath, string concreteKey);
-		SetterProperty AddSetter(string pluginTypeName, string concreteKey, string setterName);
-		void AddInterceptor(string pluginTypeName, InstanceMemento interceptorMemento);
+		void AttachSource(TypePath pluginTypePath, InstanceMemento sourceMemento);
+		void AttachSource(TypePath pluginTypePath, MementoSource source);
+		Plugin AddPlugin(TypePath pluginTypePath, TypePath pluginPath, string concreteKey);
+		SetterProperty AddSetter(TypePath pluginTypePath, string concreteKey, string setterName);
+		void AddInterceptor(TypePath pluginTypePath, InstanceMemento interceptorMemento);
 		
 		void FinishFamilies();
 		
@@ -21,7 +21,7 @@ namespace StructureMap.Graph.Configuration
 		PluginGraph SystemGraph { get; }
 		InstanceDefaultManager DefaultManager {get;}
 
-		void RegisterMemento(string pluginTypeName, InstanceMemento memento);
+		void RegisterMemento(TypePath pluginTypePath, InstanceMemento memento);
 
 		PluginGraph PluginGraph { get; }
 	}

@@ -54,25 +54,27 @@ namespace StructureMap.Configuration
 
 		public void AddPluginFamily(TypePath typePath, string defaultKey, string[] deploymentTargets, InstanceScope scope)
 		{
-			FamilyToken family = new FamilyToken(typePath.FindType(), defaultKey, deploymentTargets);
-			family.DefinitionSource = DefinitionSource.Explicit;
-			family.Scope = scope;
-			_report.AddFamily(family);
-
-			try
-			{
-				_innerBuilder.AddPluginFamily(typePath,  defaultKey, deploymentTargets, scope);
-			}
-			catch (Exception ex)
-			{
-				family.MarkTypeCannotBeLoaded(ex);
-			}
+            FamilyToken family = new FamilyToken(typePath, defaultKey, deploymentTargets);
+            family.DefinitionSource = DefinitionSource.Explicit;
+            family.Scope = scope;
+            _report.AddFamily(family);
+            
+            try
+		    {
+                Type type = typePath.FindType();
+                _innerBuilder.AddPluginFamily(typePath, defaultKey, deploymentTargets, scope );
+		    }
+            catch (Exception ex)
+            {
+                family.MarkAsInvalidType(ex);
+            }
+            
 		}
 
 	
-		public void AttachSource(string pluginTypeName, InstanceMemento sourceMemento)
+		public void AttachSource(TypePath pluginTypePath, InstanceMemento sourceMemento)
 		{
-			FamilyToken family = _report.FindFamily(pluginTypeName);
+			FamilyToken family = _report.FindFamily(pluginTypePath);
 
 			MementoSourceInstanceToken sourceInstance = new MementoSourceInstanceToken(typeof(MementoSource), _systemReport, sourceMemento);
 			family.SourceInstance = sourceInstance;
@@ -80,7 +82,7 @@ namespace StructureMap.Configuration
 
 			try
 			{
-				_innerBuilder.AttachSource(pluginTypeName, sourceMemento);
+				_innerBuilder.AttachSource(pluginTypePath, sourceMemento);
 			}
 			catch (Exception ex)
 			{
@@ -89,22 +91,22 @@ namespace StructureMap.Configuration
 			}
 		}
 
-		public void AttachSource(string pluginTypeName, MementoSource source)
+		public void AttachSource(TypePath pluginTypePath, MementoSource source)
 		{
-			_innerBuilder.AttachSource(pluginTypeName, source);
+			_innerBuilder.AttachSource(pluginTypePath, source);
 		}
 
-		public Plugin AddPlugin(string pluginTypeName, TypePath pluginPath, string concreteKey)
+		public Plugin AddPlugin(TypePath pluginTypePath, TypePath pluginPath, string concreteKey)
 		{
 			PluginToken pluginToken = new PluginToken(pluginPath, concreteKey, DefinitionSource.Explicit);
-			FamilyToken familyToken = _report.FindFamily(pluginTypeName);
-			familyToken.AddPlugin(pluginToken);
+			FamilyToken familyToken = _report.FindFamily(pluginTypePath);            
+            familyToken.AddPlugin(pluginToken);
 
 			Plugin returnValue = null;
 
 			try
 			{
-				Plugin plugin = _innerBuilder.AddPlugin(pluginTypeName, pluginPath, concreteKey);
+				Plugin plugin = _innerBuilder.AddPlugin(pluginTypePath, pluginPath, concreteKey);
 				pluginToken.ReadProperties(plugin);
 				returnValue = plugin;
 			}
@@ -125,16 +127,16 @@ namespace StructureMap.Configuration
 			return returnValue;
 		}
 
-		public SetterProperty AddSetter(string pluginTypeName, string concreteKey, string setterName)
+		public SetterProperty AddSetter(TypePath pluginTypePath, string concreteKey, string setterName)
 		{
-			FamilyToken familyToken = _report.FindFamily(pluginTypeName);
+			FamilyToken familyToken = _report.FindFamily(pluginTypePath);
 			PluginToken pluginToken = familyToken.FindPlugin(concreteKey);
 
 			SetterProperty setter = null;
 
 			try
 			{
-				setter = _innerBuilder.AddSetter(pluginTypeName, concreteKey, setterName);
+				setter = _innerBuilder.AddSetter(pluginTypePath, concreteKey, setterName);
 				PropertyDefinition property = PropertyDefinitionBuilder.CreatePropertyDefinition(setter.Property);
 				pluginToken.AddPropertyDefinition(property);
 			}
@@ -150,16 +152,16 @@ namespace StructureMap.Configuration
 			return setter;
 		}
 
-		public void AddInterceptor(string pluginTypeName, InstanceMemento interceptorMemento)
+		public void AddInterceptor(TypePath pluginTypePath, InstanceMemento interceptorMemento)
 		{
 			InstanceToken instance = new InterceptorInstanceToken(typeof(InstanceFactoryInterceptor), _systemReport, interceptorMemento);
 			instance.Validate(_systemValidator);
-			FamilyToken family = _report.FindFamily(pluginTypeName);
+			FamilyToken family = _report.FindFamily(pluginTypePath);
 			family.AddInterceptor(instance);
 
 			try
 			{
-				_innerBuilder.AddInterceptor(pluginTypeName, interceptorMemento);
+				_innerBuilder.AddInterceptor(pluginTypePath, interceptorMemento);
 			}
 			catch (Exception)
 			{
@@ -213,11 +215,11 @@ namespace StructureMap.Configuration
 			get { return _innerBuilder.DefaultManager; }
 		}
 
-		public void RegisterMemento(string pluginTypeName, InstanceMemento memento)
+		public void RegisterMemento(TypePath pluginTypePath, InstanceMemento memento)
 		{
 			try
 			{
-				_innerBuilder.RegisterMemento(pluginTypeName, memento);
+				_innerBuilder.RegisterMemento(pluginTypePath, memento);
 			}
 			catch (Exception ex)
 			{

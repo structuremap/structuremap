@@ -1,7 +1,9 @@
+using System;
 using NUnit.Framework;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 using StructureMap.Source;
+using StructureMap.Testing.GenericWidgets;
 using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing.Container
@@ -117,7 +119,15 @@ namespace StructureMap.Testing.Container
 	    [Test]
 	    public void FindAPluginFamilyForAGenericTypeFromPluginTypeName()
 	    {
-	        Assert.Fail("Do.");
+	        Type serviceType = typeof (IService<>);
+	        PluginGraph pluginGraph = PluginGraph.BuildGraphFromAssembly(serviceType.Assembly);
+
+            InstanceManager manager = new InstanceManager(pluginGraph);
+
+	        Type stringService = typeof (IService<string>);
+
+	        IInstanceFactory factory = manager[stringService];
+            Assert.AreEqual(stringService, factory.PluginType);
 	    }
 
 	}
