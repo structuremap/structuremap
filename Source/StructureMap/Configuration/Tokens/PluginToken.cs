@@ -23,16 +23,16 @@ namespace StructureMap.Configuration.Tokens
         private DefinitionSource _definitionSource;
         private string _assemblyName;
         private Hashtable _properties = new Hashtable();
-        private string _pluginType;
+        private TypePath _pluginType;
 
         public PluginToken() : base()
         {
         }
 
-        public PluginToken(TypePath pluginPath, string concreteKey, DefinitionSource definitionSource)
+        public PluginToken(TypePath pluggedPath, string concreteKey, DefinitionSource definitionSource)
         {
-            _pluggedType = pluginPath.AssemblyQualifiedName;
-            _assemblyName = pluginPath.AssemblyName;
+            _pluggedType = pluggedPath.AssemblyQualifiedName;
+            _assemblyName = pluggedPath.AssemblyName;
             _concreteKey = concreteKey;
             _definitionSource = definitionSource;
         }
@@ -61,7 +61,7 @@ namespace StructureMap.Configuration.Tokens
             set { _assemblyName = value; }
         }
 
-        public string PluginType
+        public TypePath PluginType
         {
             get { return _pluginType; }
             set { _pluginType = value; }

@@ -36,15 +36,16 @@ namespace StructureMap.XmlMapping
 			removeNodes(xpath3);
 		}
 
-		public void RemovePlugin(string pluginTypeName, string concreteKey)
+		public void RemovePlugin(TypePath pluginType, string concreteKey)
 		{
-			string xpath1 = string.Format("PluginFamily[@Type='{0}']/Plugin[@ConcreteKey='{1}']", pluginTypeName, concreteKey);
+		    string pluginTypeFullName = pluginType.ClassName;
+		    string xpath1 = string.Format("PluginFamily[@Type='{0}']/Plugin[@ConcreteKey='{1}']", pluginTypeFullName, concreteKey);
 			removeNodes(xpath1);
 
-			string xpath2 = string.Format("PluginFamily[@Type='{0}']/Instance[@Type='{1}']", pluginTypeName, concreteKey);
+			string xpath2 = string.Format("PluginFamily[@Type='{0}']/Instance[@Type='{1}']", pluginTypeFullName, concreteKey);
 			removeNodes(xpath2);
 
-			string xpath3 = string.Format("//{0}[@Type='{1}']", pluginTypeName, concreteKey);
+			string xpath3 = string.Format("//{0}[@Type='{1}']", pluginTypeFullName, concreteKey);
 			removeNodes(xpath3);
 		}
 

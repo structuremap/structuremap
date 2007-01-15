@@ -56,6 +56,14 @@ namespace StructureMap.Configuration.Tokens
             get { return _typePath.AssemblyQualifiedName; }
         }
 
+        public string FullPluginTypeName
+        {
+            get
+            {
+                return _typePath.ClassName;
+            }
+        }
+
         public DefinitionSource DefinitionSource
         {
             get { return _definitionSource; }
@@ -128,7 +136,7 @@ namespace StructureMap.Configuration.Tokens
 
         public void AddPlugin(PluginToken plugin)
         {
-            plugin.PluginType = PluginTypeName;
+            plugin.PluginType = _typePath;
             _plugins.Add(plugin.ConcreteKey, plugin);
         }
 
