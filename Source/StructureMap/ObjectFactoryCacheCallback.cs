@@ -3,38 +3,38 @@ using StructureMap.Caching;
 
 namespace StructureMap
 {
-	internal class ObjectFactoryCacheCallback : IManagedCache
-	{
-		public ObjectFactoryCacheCallback()
-		{
-			try
-			{
-				CacheManager.CurrentManager.WatchFile(StructureMapConfiguration.GetStructureMapConfigurationPath(), this);
-			}
-			catch (Exception exception)
-			{
-				Console.Write(exception);
-			}
-		}
+    internal class ObjectFactoryCacheCallback : IManagedCache
+    {
+        public ObjectFactoryCacheCallback()
+        {
+            try
+            {
+                CacheManager.CurrentManager.WatchFile(StructureMapConfiguration.GetStructureMapConfigurationPath(), this);
+            }
+            catch (Exception exception)
+            {
+                Console.Write(exception);
+            }
+        }
 
 
-		public string CacheName
-		{
-			get { return "ObjectFactory"; }
-		}
+        public string CacheName
+        {
+            get { return "ObjectFactory"; }
+        }
 
-		public void Clear()
-		{
-			ObjectFactory.Reset();
-		}
+        public void Clear()
+        {
+            ObjectFactory.Reset();
+        }
 
-		//no-op for interface implementation
-		public void Prune(DateTime currentTime)
-		{
-		}
+        //no-op for interface implementation
+        public void Prune(DateTime currentTime)
+        {
+        }
 
-		public void AddWatches(CacheManager Manager)
-		{
-		}
-	}
+        public void AddWatches(CacheManager Manager)
+        {
+        }
+    }
 }

@@ -1,4 +1,3 @@
-using System;
 using System.Xml;
 using NUnit.Framework;
 using StructureMap.Configuration;
@@ -9,7 +8,8 @@ namespace StructureMap.Testing.Configuration
     [TestFixture]
     public class ConfigurationParserTester
     {
-        string xml = @"
+        private string xml =
+            @"
 <StructureMap DefaultProfile=""Blue"">
 	<Profile Name=""Blue"">
 		<Override Type=""StructureMap.Testing.Widget.IWidget"" DefaultKey=""Blue""/>
@@ -29,6 +29,7 @@ namespace StructureMap.Testing.Configuration
 		<Override Type=""StructureMap.Testing.Widget4.IStrategy"" DefaultKey=""Blue""/>
 	</Machine>
 </StructureMap>";
+
         private InstanceDefaultManager _defaults;
 
 
@@ -45,7 +46,6 @@ namespace StructureMap.Testing.Configuration
 
             _defaults = builder.DefaultManager;
         }
-
 
 
         [Test]
@@ -66,9 +66,9 @@ namespace StructureMap.Testing.Configuration
         {
             InstanceDefault[] defaults = new InstanceDefault[]
                 {
-                    new InstanceDefault("StructureMap.Testing.Widget.IWidget", "Blue"), 
-                    new InstanceDefault("StructureMap.Testing.Widget.Rule", "Blue"), 
-                    new InstanceDefault("StructureMap.Testing.Widget4.IStrategy", "Blue") 
+                    new InstanceDefault("StructureMap.Testing.Widget.IWidget", "Blue"),
+                    new InstanceDefault("StructureMap.Testing.Widget.Rule", "Blue"),
+                    new InstanceDefault("StructureMap.Testing.Widget4.IStrategy", "Blue")
                 };
 
             // You're my boy, Blue!
@@ -92,14 +92,14 @@ namespace StructureMap.Testing.Configuration
         [Test]
         public void GotAllProfiles()
         {
-            Assert.AreEqual(new string[]{"Blue", "Green"}, _defaults.GetProfileNames());
+            Assert.AreEqual(new string[] {"Blue", "Green"}, _defaults.GetProfileNames());
         }
 
         [Test]
         public void GotAllMachines()
         {
             string[] names = _defaults.GetMachineNames();
-            Assert.AreEqual(new string[] { "SERVER", "GREEN-BOX" }, names);
+            Assert.AreEqual(new string[] {"SERVER", "GREEN-BOX"}, names);
         }
     }
 }

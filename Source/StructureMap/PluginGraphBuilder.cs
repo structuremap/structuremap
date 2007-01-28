@@ -32,7 +32,8 @@ namespace StructureMap
 
         public static PluginGraphReport BuildDefaultReport()
         {
-            PluginGraphBuilder builder = new PluginGraphBuilder(StructureMapConfiguration.GetStructureMapConfigurationPath());
+            PluginGraphBuilder builder =
+                new PluginGraphBuilder(StructureMapConfiguration.GetStructureMapConfigurationPath());
             builder.BuildDiagnosticPluginGraph();
             return builder.Report;
         }
@@ -42,6 +43,7 @@ namespace StructureMap
             PluginGraphBuilder builder = new PluginGraphBuilder(ConfigurationParser.FromFile(fileName));
             return builder.Report;
         }
+
         #endregion
 
         private PluginGraph _graph;
@@ -204,8 +206,5 @@ namespace StructureMap
                 return _report;
             }
         }
-
-
-
     }
 }

@@ -78,7 +78,7 @@ namespace StructureMap.Configuration
             {
                 return FindFamily(path);
             }
-            
+
             foreach (KeyValuePair<TypePath, FamilyToken> pair in _families)
             {
                 if (pair.Key.Matches(pluginTypeClassName))
@@ -86,10 +86,10 @@ namespace StructureMap.Configuration
                     return pair.Value;
                 }
             }
-            
+
             return null;
         }
-        
+
         public FamilyToken FindFamily(Type pluginType)
         {
             TypePath path = new TypePath(pluginType);

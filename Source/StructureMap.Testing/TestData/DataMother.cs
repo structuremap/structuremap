@@ -8,23 +8,24 @@ using StructureMap.Graph;
 
 namespace StructureMap.Testing.TestData
 {
-	public class DataMother
-	{
-		private static ArrayList _files = new ArrayList();
+    public class DataMother
+    {
+        private static ArrayList _files = new ArrayList();
 
-		private DataMother()
-		{
-		}
+        private DataMother()
+        {
+        }
 
-		public static XmlDocument GetXmlDocument(string fileName)
-		{
-			XmlDocument document = new XmlDocument();
+        public static XmlDocument GetXmlDocument(string fileName)
+        {
+            XmlDocument document = new XmlDocument();
 
-			Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(new DataMother().GetType(), fileName);
-			document.Load(stream);
+            Stream stream =
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(new DataMother().GetType(), fileName);
+            document.Load(stream);
 
-			return document;
-		}
+            return document;
+        }
 
         public static PluginGraph GetDiagnosticPluginGraph(string fileName)
         {
@@ -41,26 +42,26 @@ namespace StructureMap.Testing.TestData
             return builder.Build();
         }
 
-	    public static void WriteDocument(string fileName)
-		{
-			XmlDocument document = GetXmlDocument(fileName);
-			document.Save(fileName);
+        public static void WriteDocument(string fileName)
+        {
+            XmlDocument document = GetXmlDocument(fileName);
+            document.Save(fileName);
 
-			_files.Add(fileName);
-		}
+            _files.Add(fileName);
+        }
 
-		public static void CleanUp()
-		{
-			foreach (string fileName in _files)
-			{
-				try
-				{
-					File.Delete(fileName);
-				}
-				catch (Exception){}
-			}
-		}
-
-
-	}
+        public static void CleanUp()
+        {
+            foreach (string fileName in _files)
+            {
+                try
+                {
+                    File.Delete(fileName);
+                }
+                catch (Exception)
+                {
+                }
+            }
+        }
+    }
 }

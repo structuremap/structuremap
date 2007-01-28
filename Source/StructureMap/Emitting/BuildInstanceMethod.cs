@@ -6,70 +6,69 @@ using StructureMap.Graph;
 
 namespace StructureMap.Emitting
 {
-	/// <summary>
-	/// Emits the IL for the InstanceBuilder.BuildInstance(InstanceMemento) method of an
-	/// InstanceBuilder
-	/// </summary>
-	public class BuildInstanceMethod : Method
-	{
-		private readonly Plugin _plugin;
-		private ConstructorInfo _constructor;
-		private ParameterEmitter _parameterEmitter;
+    /// <summary>
+    /// Emits the IL for the InstanceBuilder.BuildInstance(InstanceMemento) method of an
+    /// InstanceBuilder
+    /// </summary>
+    public class BuildInstanceMethod : Method
+    {
+        private readonly Plugin _plugin;
+        private ConstructorInfo _constructor;
+        private ParameterEmitter _parameterEmitter;
 
-		public BuildInstanceMethod(Plugin plugin) : base()
-		{
-			_constructor = plugin.GetConstructor();
+        public BuildInstanceMethod(Plugin plugin) : base()
+        {
+            _constructor = plugin.GetConstructor();
 
-			_parameterEmitter = new StringParameterEmitter();
+            _parameterEmitter = new StringParameterEmitter();
 
-			_parameterEmitter.AttachNextSibling(new PrimitiveParameterEmitter());
-			_parameterEmitter.AttachNextSibling(new EnumParameterEmitter());
-			_parameterEmitter.AttachNextSibling(new ChildParameterEmitter());
-			_parameterEmitter.AttachNextSibling(new ChildArrayParameterEmitter());
-			_plugin = plugin;
-		}
-
-
-		public override Type[] ArgumentList
-		{
-			get { return new Type[] {typeof (InstanceMemento)}; }
-		}
-
-		public override string MethodName
-		{
-			get { return "BuildInstance"; }
-		}
+            _parameterEmitter.AttachNextSibling(new PrimitiveParameterEmitter());
+            _parameterEmitter.AttachNextSibling(new EnumParameterEmitter());
+            _parameterEmitter.AttachNextSibling(new ChildParameterEmitter());
+            _parameterEmitter.AttachNextSibling(new ChildArrayParameterEmitter());
+            _plugin = plugin;
+        }
 
 
-		public override Type ReturnType
-		{
-			get { return typeof (object); }
-		}
+        public override Type[] ArgumentList
+        {
+            get { return new Type[] {typeof (InstanceMemento)}; }
+        }
+
+        public override string MethodName
+        {
+            get { return "BuildInstance"; }
+        }
 
 
-		protected override void Generate(ILGenerator ilgen)
-		{
-			ilgen.DeclareLocal(typeof (object));
+        public override Type ReturnType
+        {
+            get { return typeof (object); }
+        }
 
-			foreach (ParameterInfo parameter in _constructor.GetParameters())
-			{
-				_parameterEmitter.Generate(ilgen, parameter);
-			}
 
-			ilgen.Emit(OpCodes.Newobj, _constructor);
-			Label label = ilgen.DefineLabel();
-			ilgen.Emit(OpCodes.Stloc_0);
+        protected override void Generate(ILGenerator ilgen)
+        {
+            ilgen.DeclareLocal(typeof (object));
 
-			foreach (SetterProperty setter in _plugin.Setters)
-			{
-				_parameterEmitter.GenerateSetter(ilgen, setter.Property);
-			}
+            foreach (ParameterInfo parameter in _constructor.GetParameters())
+            {
+                _parameterEmitter.Generate(ilgen, parameter);
+            }
 
-			ilgen.Emit(OpCodes.Br_S, label);
-			ilgen.MarkLabel(label);
-			ilgen.Emit(OpCodes.Ldloc_0);
-			ilgen.Emit(OpCodes.Ret);
-		}
+            ilgen.Emit(OpCodes.Newobj, _constructor);
+            Label label = ilgen.DefineLabel();
+            ilgen.Emit(OpCodes.Stloc_0);
 
-	}
+            foreach (SetterProperty setter in _plugin.Setters)
+            {
+                _parameterEmitter.GenerateSetter(ilgen, setter.Property);
+            }
+
+            ilgen.Emit(OpCodes.Br_S, label);
+            ilgen.MarkLabel(label);
+            ilgen.Emit(OpCodes.Ldloc_0);
+            ilgen.Emit(OpCodes.Ret);
+        }
+    }
 }

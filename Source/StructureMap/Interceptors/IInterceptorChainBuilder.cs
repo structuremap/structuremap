@@ -3,8 +3,8 @@ using StructureMap.Graph;
 
 namespace StructureMap.Interceptors
 {
-	public interface IInterceptorChainBuilder
-	{
-		InterceptionChain Build(InstanceScope scope);
-	}
+    public interface IInterceptorChainBuilder
+    {
+        InterceptionChain Build(InstanceScope scope);
+    }
 }

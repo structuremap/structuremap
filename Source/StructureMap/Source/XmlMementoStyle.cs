@@ -1,8 +1,8 @@
 namespace StructureMap.Source
 {
-	public enum XmlMementoStyle
-	{
-		NodeNormalized,
-		AttributeNormalized
-	}
+    public enum XmlMementoStyle
+    {
+        NodeNormalized,
+        AttributeNormalized
+    }
 }

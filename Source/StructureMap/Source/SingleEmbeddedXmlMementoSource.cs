@@ -4,51 +4,47 @@ using System.Xml;
 
 namespace StructureMap.Source
 {
-	[Pluggable("EmbeddedXmlFile")]
-	public class SingleEmbeddedXmlMementoSource : XmlMementoSource
-	{
-		private readonly string _path;
-		private Assembly _assembly;
+    [Pluggable("EmbeddedXmlFile")]
+    public class SingleEmbeddedXmlMementoSource : XmlMementoSource
+    {
+        private readonly string _path;
+        private Assembly _assembly;
 
-		/// <summary>
-		/// Retrieves Xml InstanceMemento's from an xml file stored as an embedded resource in an assembly.
-		/// </summary>
-		/// <param name="nodeName">Designates the nodes that are memento nodes</param>
-		/// <param name="style">NodeNormalized or AttributeNormalized</param>
-		/// <param name="assemblyName">The name of the Assembly the file is embedded into</param>
-		/// <param name="path">The path to the embedded resource within the file</param>
-		[DefaultConstructor]
-		public SingleEmbeddedXmlMementoSource(string nodeName, XmlMementoStyle style, string assemblyName, string path)
-			: base(nodeName, "Type", "Key", style)
-		{
-			_path = path;
-			_assembly = Assembly.Load(assemblyName);
-		}
+        /// <summary>
+        /// Retrieves Xml InstanceMemento's from an xml file stored as an embedded resource in an assembly.
+        /// </summary>
+        /// <param name="nodeName">Designates the nodes that are memento nodes</param>
+        /// <param name="style">NodeNormalized or AttributeNormalized</param>
+        /// <param name="assemblyName">The name of the Assembly the file is embedded into</param>
+        /// <param name="path">The path to the embedded resource within the file</param>
+        [DefaultConstructor]
+        public SingleEmbeddedXmlMementoSource(string nodeName, XmlMementoStyle style, string assemblyName, string path)
+            : base(nodeName, "Type", "Key", style)
+        {
+            _path = path;
+            _assembly = Assembly.Load(assemblyName);
+        }
 
-		public SingleEmbeddedXmlMementoSource(string nodeName, XmlMementoStyle style, Assembly assembly, string path)
-			: base(nodeName, "Type", "Key", style)
-		{
-			_assembly = assembly;
-			_path = path;
-		}
+        public SingleEmbeddedXmlMementoSource(string nodeName, XmlMementoStyle style, Assembly assembly, string path)
+            : base(nodeName, "Type", "Key", style)
+        {
+            _assembly = assembly;
+            _path = path;
+        }
 
-		protected override XmlNode getRootNode()
-		{
-			Stream stream = _assembly.GetManifestResourceStream(_path);
-			XmlDocument document = new XmlDocument();
-			document.Load(stream);
+        protected override XmlNode getRootNode()
+        {
+            Stream stream = _assembly.GetManifestResourceStream(_path);
+            XmlDocument document = new XmlDocument();
+            document.Load(stream);
 
-			return document.DocumentElement;
-		}
+            return document.DocumentElement;
+        }
 
 
-		public override string Description
-		{
-			get 
-			{ 
-				return "Single Embedded File:  " + _path;
-			}
-		}
-
-	}
+        public override string Description
+        {
+            get { return "Single Embedded File:  " + _path; }
+        }
+    }
 }

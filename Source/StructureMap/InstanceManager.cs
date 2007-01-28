@@ -92,14 +92,12 @@ namespace StructureMap
                     if (genericFamily == null)
                     {
                         IInstanceFactory instanceFactory = this[pluginTypeName];
-                        instanceFactory.SetDefault(defaultInstance.DefaultKey);                        
+                        instanceFactory.SetDefault(defaultInstance.DefaultKey);
                     }
                     else
                     {
                         setGenericTypeDefaults(defaultInstance, genericFamily);
                     }
-
-
                 }
                 catch (Exception)
                 {
@@ -271,7 +269,7 @@ namespace StructureMap
                     PluginFamily family = _genericsGraph.CreateTemplatedFamily(pluginType);
                     return registerPluginFamily(family);
                 }
-                
+
                 if (!_factories.ContainsKey(pluginType))
                 {
                     throw new StructureMapException(208, pluginType.FullName);
@@ -287,8 +285,8 @@ namespace StructureMap
             get
             {
                 Type type = Type.GetType(pluginTypeName);
-                
-                
+
+
                 if (type == null)
                 {
                     foreach (KeyValuePair<Type, IInstanceFactory> pair in _factories)

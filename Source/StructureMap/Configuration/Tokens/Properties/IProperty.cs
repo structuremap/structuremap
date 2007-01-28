@@ -2,12 +2,12 @@ using System;
 
 namespace StructureMap.Configuration.Tokens.Properties
 {
-	public interface IProperty
-	{
-		string PropertyName { get; }
+    public interface IProperty
+    {
+        string PropertyName { get; }
 
-        Type PropertyType { get;}
+        Type PropertyType { get; }
 
-		void Validate(IInstanceValidator validator);
-	}
+        void Validate(IInstanceValidator validator);
+    }
 }

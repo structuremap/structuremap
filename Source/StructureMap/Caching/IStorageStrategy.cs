@@ -1,7 +1,7 @@
 namespace StructureMap.Caching
 {
-	public interface IStorageStrategy
-	{
-		ICacheItem BuildCacheItem(object Key);
-	}
+    public interface IStorageStrategy
+    {
+        ICacheItem BuildCacheItem(object Key);
+    }
 }

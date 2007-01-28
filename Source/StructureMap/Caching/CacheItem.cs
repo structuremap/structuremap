@@ -3,87 +3,87 @@ using System.Threading;
 
 namespace StructureMap.Caching
 {
-	public abstract class CacheItem : ICacheItem
-	{
-		private object _key;
-		private DateTime _lastAccessed;
-		private DateTime _created;
-		private int _accesses;
-		private ReaderWriterLock rwl;
-		private bool _isEmpty = false;
+    public abstract class CacheItem : ICacheItem
+    {
+        private object _key;
+        private DateTime _lastAccessed;
+        private DateTime _created;
+        private int _accesses;
+        private ReaderWriterLock rwl;
+        private bool _isEmpty = false;
 
-		public CacheItem(object Key)
-		{
-			rwl = new ReaderWriterLock();
-			_key = Key;
+        public CacheItem(object Key)
+        {
+            rwl = new ReaderWriterLock();
+            _key = Key;
 
-			reset();
-		}
+            reset();
+        }
 
-		public object Key
-		{
-			get { return _key; }
-		}
+        public object Key
+        {
+            get { return _key; }
+        }
 
-		public DateTime LastAccessed
-		{
-			get { return _lastAccessed; }
-		}
+        public DateTime LastAccessed
+        {
+            get { return _lastAccessed; }
+        }
 
-		public DateTime Created
-		{
-			get { return _created; }
-		}
+        public DateTime Created
+        {
+            get { return _created; }
+        }
 
-		public int Accesses
-		{
-			get { return _accesses; }
-		}
-
-
-		private void reset()
-		{
-			_accesses = 0;
-			_lastAccessed = _created = DateTime.Now;
-		}
-
-		private void markAccess()
-		{
-			lock (this)
-			{
-				_accesses++;
-				_lastAccessed = DateTime.Now;
-			}
-		}
+        public int Accesses
+        {
+            get { return _accesses; }
+        }
 
 
-		public object Value
-		{
-			get
-			{
-				rwl.AcquireReaderLock(1000);
-				object returnValue = this.getValue();
-				rwl.ReleaseReaderLock();
+        private void reset()
+        {
+            _accesses = 0;
+            _lastAccessed = _created = DateTime.Now;
+        }
 
-				return returnValue;
-			}
-			set
-			{
-				rwl.AcquireWriterLock(1000);
-				this.setValue(value);
-				this.reset();
-				_isEmpty = false;
-				rwl.ReleaseWriterLock();
-			}
-		}
-
-		public bool IsEmpty
-		{
-			get { return _isEmpty; }
-		}
+        private void markAccess()
+        {
+            lock (this)
+            {
+                _accesses++;
+                _lastAccessed = DateTime.Now;
+            }
+        }
 
 
-		protected abstract object getValue();
-		protected abstract void setValue(object Value);
-	}
+        public object Value
+        {
+            get
+            {
+                rwl.AcquireReaderLock(1000);
+                object returnValue = getValue();
+                rwl.ReleaseReaderLock();
+
+                return returnValue;
+            }
+            set
+            {
+                rwl.AcquireWriterLock(1000);
+                setValue(value);
+                reset();
+                _isEmpty = false;
+                rwl.ReleaseWriterLock();
+            }
+        }
+
+        public bool IsEmpty
+        {
+            get { return _isEmpty; }
+        }
+
+
+        protected abstract object getValue();
+        protected abstract void setValue(object Value);
+    }
 }

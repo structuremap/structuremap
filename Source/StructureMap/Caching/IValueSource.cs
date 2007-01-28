@@ -1,7 +1,7 @@
 namespace StructureMap.Caching
 {
-	public interface IValueSource
-	{
-		object GetValue(object Key);
-	}
+    public interface IValueSource
+    {
+        object GetValue(object Key);
+    }
 }

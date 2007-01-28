@@ -1,13 +1,11 @@
-using System;
-
 namespace StructureMap.Attributes
 {
-	public enum InstanceScope
-	{
-		PerRequest,
-		Singleton,
-		ThreadLocal,
-		HttpContext,
-		Hybrid
-	}
+    public enum InstanceScope
+    {
+        PerRequest,
+        Singleton,
+        ThreadLocal,
+        HttpContext,
+        Hybrid
+    }
 }

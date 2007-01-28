@@ -2,96 +2,96 @@ using StructureMap.Configuration.Tokens;
 
 namespace StructureMap.Source
 {
-	[Pluggable("Templated")]
-	public class TemplatedMementoSource : MementoSource
-	{
-		private readonly MementoSource _innerSource;
-		private readonly MementoSource _templateSource;
+    [Pluggable("Templated")]
+    public class TemplatedMementoSource : MementoSource
+    {
+        private readonly MementoSource _innerSource;
+        private readonly MementoSource _templateSource;
 
-		/// <summary>
-		/// Default Constructor
-		/// </summary>
-		/// <param name="innerSource">MementoSource that contains the Memento Templates</param>
-		/// <param name="templateSource">MementoSource that contains instances consisting of Template valuee</param>
-		public TemplatedMementoSource(MementoSource innerSource, MementoSource templateSource)
-		{
-			_innerSource = innerSource;
-			_templateSource = templateSource;
-		}
+        /// <summary>
+        /// Default Constructor
+        /// </summary>
+        /// <param name="innerSource">MementoSource that contains the Memento Templates</param>
+        /// <param name="templateSource">MementoSource that contains instances consisting of Template valuee</param>
+        public TemplatedMementoSource(MementoSource innerSource, MementoSource templateSource)
+        {
+            _innerSource = innerSource;
+            _templateSource = templateSource;
+        }
 
-		protected override InstanceMemento[] fetchInternalMementos()
-		{
-			InstanceMemento[] rawMementos = _innerSource.GetAllMementos();
-			InstanceMemento[] returnValue = new InstanceMemento[rawMementos.Length];
+        protected override InstanceMemento[] fetchInternalMementos()
+        {
+            InstanceMemento[] rawMementos = _innerSource.GetAllMementos();
+            InstanceMemento[] returnValue = new InstanceMemento[rawMementos.Length];
 
-			for (int i = 0; i < returnValue.Length; i++)
-			{
-				returnValue[i] = this.resolveMemento(rawMementos[i]);
-			}
+            for (int i = 0; i < returnValue.Length; i++)
+            {
+                returnValue[i] = resolveMemento(rawMementos[i]);
+            }
 
-			return returnValue;
-		}
+            return returnValue;
+        }
 
-		protected internal override bool containsKey(string instanceKey)
-		{
-			return _innerSource.containsKey(instanceKey);
-		}
+        protected internal override bool containsKey(string instanceKey)
+        {
+            return _innerSource.containsKey(instanceKey);
+        }
 
-		protected override InstanceMemento retrieveMemento(string instanceKey)
-		{
-			InstanceMemento rawMemento = _innerSource.GetMemento(instanceKey);
+        protected override InstanceMemento retrieveMemento(string instanceKey)
+        {
+            InstanceMemento rawMemento = _innerSource.GetMemento(instanceKey);
 
-			return resolveMemento(rawMemento);
-		}
+            return resolveMemento(rawMemento);
+        }
 
-		private InstanceMemento resolveMemento(InstanceMemento rawMemento)
-		{			
-			InstanceMemento returnValue = null;
+        private InstanceMemento resolveMemento(InstanceMemento rawMemento)
+        {
+            InstanceMemento returnValue = null;
 
-			string templateName = rawMemento.TemplateName;
-			if (templateName == string.Empty)
-			{
-				returnValue = rawMemento;
-			}
-			else
-			{
-				InstanceMemento templateMemento = _templateSource.GetMemento(templateName);
+            string templateName = rawMemento.TemplateName;
+            if (templateName == string.Empty)
+            {
+                returnValue = rawMemento;
+            }
+            else
+            {
+                InstanceMemento templateMemento = _templateSource.GetMemento(templateName);
 
-				if (templateMemento == null)
-				{
-					throw new StructureMapException(250, templateName);
-				}
+                if (templateMemento == null)
+                {
+                    throw new StructureMapException(250, templateName);
+                }
 
-				returnValue = templateMemento.Substitute(rawMemento);
-			}
+                returnValue = templateMemento.Substitute(rawMemento);
+            }
 
-			return returnValue;
-		}
+            return returnValue;
+        }
 
-		public override InstanceMemento ResolveMemento(InstanceMemento memento)
-		{
-			InstanceMemento intermediateMemento = base.ResolveMemento (memento);
-			return resolveMemento(intermediateMemento);
-		}
+        public override InstanceMemento ResolveMemento(InstanceMemento memento)
+        {
+            InstanceMemento intermediateMemento = base.ResolveMemento(memento);
+            return resolveMemento(intermediateMemento);
+        }
 
 
-		public override string Description
-		{
-			get { return "Templated MementoSource"; }
-		}
+        public override string Description
+        {
+            get { return "Templated MementoSource"; }
+        }
 
-		public override TemplateToken[] GetAllTemplates()
-		{
-			InstanceMemento[] templateMementos = _templateSource.GetAllMementos();
-			TemplateToken[] returnValue = new TemplateToken[templateMementos.Length];
+        public override TemplateToken[] GetAllTemplates()
+        {
+            InstanceMemento[] templateMementos = _templateSource.GetAllMementos();
+            TemplateToken[] returnValue = new TemplateToken[templateMementos.Length];
 
-			for (int i = 0; i < templateMementos.Length; i++)
-			{
-				InstanceMemento memento = templateMementos[i];
-				returnValue[i] = memento.CreateTemplateToken();
-			}
+            for (int i = 0; i < templateMementos.Length; i++)
+            {
+                InstanceMemento memento = templateMementos[i];
+                returnValue[i] = memento.CreateTemplateToken();
+            }
 
-			return returnValue;
-		}
-	}
+            return returnValue;
+        }
+    }
 }

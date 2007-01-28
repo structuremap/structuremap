@@ -23,7 +23,8 @@ namespace StructureMap.Configuration.Tokens
             _properties = new Hashtable();
         }
 
-        public InstanceToken(Type pluginType, PluginGraphReport report, InstanceMemento memento) : this(new TypePath(pluginType), report, memento)
+        public InstanceToken(Type pluginType, PluginGraphReport report, InstanceMemento memento)
+            : this(new TypePath(pluginType), report, memento)
         {
         }
 
@@ -75,7 +76,9 @@ namespace StructureMap.Configuration.Tokens
 
         private void logInvalidPlugin()
         {
-            string message = string.Format("Looking for Plugin '{0}' for PluginFamily {1}", ConcreteKey, _pluginTypePath.AssemblyQualifiedName);
+            string message =
+                string.Format("Looking for Plugin '{0}' for PluginFamily {1}", ConcreteKey,
+                              _pluginTypePath.AssemblyQualifiedName);
             Problem problem = new Problem(ConfigurationConstants.INVALID_PLUGIN, message);
             LogProblem(problem);
         }

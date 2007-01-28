@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace StructureMap.Graph
 {
     public class GenericsPluginGraph
-    {        
+    {
         public static bool CanBeCast(Type pluginType, Type pluggedType)
         {
             bool isGenericComparison = pluginType.IsGenericType && pluggedType.IsGenericType;
@@ -20,7 +20,7 @@ namespace StructureMap.Graph
             catch (Exception e)
             {
                 string message =
-                    string.Format("Could not Determine Whether Type '{0}' plugs into Type '{1}'", 
+                    string.Format("Could not Determine Whether Type '{0}' plugs into Type '{1}'",
                                   pluginType.Name,
                                   pluggedType.Name);
                 throw new ApplicationException(message, e);
@@ -36,32 +36,32 @@ namespace StructureMap.Graph
                 {
                     continue;
                 }
-                
+
                 if (type.GetGenericTypeDefinition().Equals(pluginType))
                 {
                     return true;
                 }
             }
-            
+
             if (pluggedType.BaseType.IsGenericType)
             {
                 Type baseType = pluggedType.BaseType.GetGenericTypeDefinition();
-                
+
                 if (baseType.Equals(pluginType))
                 {
                     return true;
                 }
                 else
                 {
-                    return CanBeCast(pluginType, baseType);   
+                    return CanBeCast(pluginType, baseType);
                 }
             }
-            
+
             return false;
         }
 
         private Dictionary<Type, PluginFamily> _families;
-        
+
         public GenericsPluginGraph()
         {
             _families = new Dictionary<Type, PluginFamily>();
@@ -79,13 +79,13 @@ namespace StructureMap.Graph
 
             return null;
         }
-        
+
         public void AddFamily(PluginFamily family)
         {
             _families.Add(family.PluginType, family);
         }
 
-        
+
         public PluginFamily CreateTemplatedFamily(Type templatedType)
         {
             Type basicType = templatedType.GetGenericTypeDefinition();
@@ -104,7 +104,7 @@ namespace StructureMap.Graph
                 {
                     configuredTypes += "\n" + pair.Value.PluginTypeName + ";";
                 }
-                
+
                 throw new StructureMapException(190, templatedType.FullName, basicType.FullName, configuredTypes);
             }
         }
@@ -112,7 +112,7 @@ namespace StructureMap.Graph
         public PluginFamily CreateTemplatedFamily(string pluginTypeName)
         {
             Type type = Type.GetType(pluginTypeName, true);
-            
+
             if (!type.IsGenericType)
             {
                 return null;
@@ -121,6 +121,4 @@ namespace StructureMap.Graph
             return CreateTemplatedFamily(type);
         }
     }
-    
-    
 }

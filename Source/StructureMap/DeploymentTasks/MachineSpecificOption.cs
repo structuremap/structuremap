@@ -1,9 +1,9 @@
 namespace StructureMap.DeploymentTasks
 {
-	public enum MachineSpecificOption
-	{
-		IgnoreMachineOverrides,
-		CopyMachineOverrides,
-		UseCurrentMachineOverride
-	}
+    public enum MachineSpecificOption
+    {
+        IgnoreMachineOverrides,
+        CopyMachineOverrides,
+        UseCurrentMachineOverride
+    }
 }

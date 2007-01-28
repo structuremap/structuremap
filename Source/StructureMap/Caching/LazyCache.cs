@@ -4,128 +4,128 @@ using System.Runtime.CompilerServices;
 
 namespace StructureMap.Caching
 {
-	public class LazyCache : IManagedCache
-	{
-		private string _name;
-		private IExpirationPolicy[] _expirations;
-		private IValueSource _source;
-		private IStorageStrategy _storage;
-		private HybridDictionary _items;
-		private bool _refillOnExpiration;
+    public class LazyCache : IManagedCache
+    {
+        private string _name;
+        private IExpirationPolicy[] _expirations;
+        private IValueSource _source;
+        private IStorageStrategy _storage;
+        private HybridDictionary _items;
+        private bool _refillOnExpiration;
 
 
-		public LazyCache(string CacheName, IExpirationPolicy[] Expirations, IValueSource Source, IStorageStrategy Storage, bool RefillOnExpiration)
-		{
-			_name = CacheName;
-			_expirations = Expirations;
-			_source = Source;
-			_storage = Storage;
-			_refillOnExpiration = RefillOnExpiration;
-			_items = new HybridDictionary();
+        public LazyCache(string CacheName, IExpirationPolicy[] Expirations, IValueSource Source,
+                         IStorageStrategy Storage, bool RefillOnExpiration)
+        {
+            _name = CacheName;
+            _expirations = Expirations;
+            _source = Source;
+            _storage = Storage;
+            _refillOnExpiration = RefillOnExpiration;
+            _items = new HybridDictionary();
 
-			CacheManager.CurrentManager.ManageCache(this);
-		}
+            CacheManager.CurrentManager.ManageCache(this);
+        }
 
-		#region IManagedCache Members
+        #region IManagedCache Members
 
-		public string CacheName
-		{
-			get { return _name; }
-		}
+        public string CacheName
+        {
+            get { return _name; }
+        }
 
-		public void Clear()
-		{
-			lock (this)
-			{
-				_items.Clear();
-			}
-		}
+        public void Clear()
+        {
+            lock (this)
+            {
+                _items.Clear();
+            }
+        }
 
-		public void Prune(DateTime currentTime)
-		{
-			lock (this)
-			{
-				foreach (IExpirationPolicy policy in _expirations)
-				{
-					policy.Calculate(currentTime);
+        public void Prune(DateTime currentTime)
+        {
+            lock (this)
+            {
+                foreach (IExpirationPolicy policy in _expirations)
+                {
+                    policy.Calculate(currentTime);
 
-					foreach (ICacheItem item in _items.Values)
-					{
-						if (policy.HasExpired(item))
-						{
-							expire(item);
-						}
-					}
-				}
+                    foreach (ICacheItem item in _items.Values)
+                    {
+                        if (policy.HasExpired(item))
+                        {
+                            expire(item);
+                        }
+                    }
+                }
+            }
+        }
 
-			}
-		}
+        private void expire(ICacheItem item)
+        {
+            if (_refillOnExpiration)
+            {
+                item.Value = _source.GetValue(item.Key);
+            }
+            else
+            {
+                _items.Remove(item);
+            }
+        }
 
-		private void expire(ICacheItem item)
-		{
-			if (_refillOnExpiration)
-			{
-				item.Value = _source.GetValue(item.Key);
-			}
-			else
-			{
-				_items.Remove(item);
-			}
-		}
+        public void AddWatches(CacheManager Manager)
+        {
+            // TODO:  Add LazyCache.AddWatches implementation
+        }
 
-		public void AddWatches(CacheManager Manager)
-		{
-			// TODO:  Add LazyCache.AddWatches implementation
-		}
+        #endregion
 
-		#endregion
+        // TODO -- optimize this.  Go to record level locking
 
-		// TODO -- optimize this.  Go to record level locking
+        [IndexerName("Value")]
+        public object this[object key]
+        {
+            get
+            {
+                if (!_items.Contains(key))
+                {
+                    lock (_items.SyncRoot)
+                    {
+                        if (!_items.Contains(key))
+                        {
+                            ICacheItem newItem = _storage.BuildCacheItem(key);
+                            newItem.Value = _source.GetValue(key);
+                            _items.Add(key, newItem);
+                        }
+                    }
+                }
 
-		[IndexerName("Value")]
-		public object this[object key]
-		{
-			get
-			{
-				if (!_items.Contains(key))
-				{
-					lock (_items.SyncRoot)
-					{
-						if (!_items.Contains(key))
-						{
-							ICacheItem newItem = _storage.BuildCacheItem(key);
-							newItem.Value = _source.GetValue(key);
-							_items.Add(key, newItem);
-						}
-					}
-				}
+                ICacheItem item = (ICacheItem) _items[key];
+                return item.Value;
+            }
+            set
+            {
+                ICacheItem item = null;
 
-				ICacheItem item = (ICacheItem) _items[key];
-				return item.Value;
-			}
-			set
-			{
-				ICacheItem item = null;
+                if (!_items.Contains(key))
+                {
+                    lock (_items.SyncRoot)
+                    {
+                        if (!_items.Contains(key))
+                        {
+                            item = _storage.BuildCacheItem(key);
+                            _items.Add(key, item);
+                        }
+                    }
+                }
 
-				if (!_items.Contains(key))
-				{
-					lock (_items.SyncRoot)
-					{
-						if (!_items.Contains(key))
-						{
-							item = _storage.BuildCacheItem(key);
-							_items.Add(key, item);
-						}
-					}
-				}
+                if (item == null)
+                {
+                    item = (ICacheItem) _items[key];
+                }
 
-				if (item == null)
-				{
-					item = (ICacheItem) _items[key];
-				}
-
-				item.Value = value;
-			}
-		}
-	}
+                item.Value = value;
+            }
+        }
+    }
 }
