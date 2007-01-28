@@ -19,7 +19,7 @@ namespace StructureMap.Testing.Configuration
 			DynamicMock builderMock = new DynamicMock(typeof(IInterceptorChainBuilder));
 			builderMock.ExpectAndReturn("Build", chain, theScope);
 
-			NormalGraphBuilder graphBuilder = new NormalGraphBuilder(new InstanceDefaultManager(), (IInterceptorChainBuilder) builderMock.MockInstance);
+			NormalGraphBuilder graphBuilder = new NormalGraphBuilder((IInterceptorChainBuilder) builderMock.MockInstance);
 
 			TypePath typePath = new TypePath(this.GetType());
 

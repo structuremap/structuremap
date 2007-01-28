@@ -11,16 +11,12 @@ namespace StructureMap.Testing.Graph
 	[TestFixture]
 	public class OverrideTester
 	{
-		private PluginGraphBuilder builder;
 		private InstanceDefaultManager defaultManager;
 
 		[SetUp]
 		public void SetUp()
 		{
-			XmlDocument document = DataMother.GetXmlDocument("ProfileAndMachine.xml");
-			builder = new PluginGraphBuilder(document);
-
-			defaultManager = builder.DefaultManager;
+		    defaultManager = DataMother.GetDiagnosticPluginGraph("ProfileAndMachine.xml").DefaultManager;
 		}
 
 		[Test]

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Reflection;
+using StructureMap.Configuration;
 
 namespace StructureMap.Graph
 {
@@ -15,14 +16,18 @@ namespace StructureMap.Graph
 		private AssemblyGraphCollection _assemblies;
 		private bool _sealed = false;
 		private PluginFamilyCollection _pluginFamilies;
+	    private InstanceDefaultManager _defaultManager = new InstanceDefaultManager();
+	    private PluginGraphReport _report = new PluginGraphReport();
 
-		/// <summary>
+	    /// <summary>
 		/// Default constructor
 		/// </summary>
 		public PluginGraph() : base()
 		{
 			_assemblies = new AssemblyGraphCollection(this);
 			_pluginFamilies = new PluginFamilyCollection(this);
+
+	        _report.DefaultManager = _defaultManager;
 		}
 
 
@@ -59,6 +64,8 @@ namespace StructureMap.Graph
 					}
 				}
 
+                _defaultManager.ReadDefaultsFromPluginGraph(this);
+
 				_sealed = true;
 			}
 		}
@@ -84,7 +91,12 @@ namespace StructureMap.Graph
 			get { return _sealed; }
 		}
 
-		/// <summary>
+	    public InstanceDefaultManager DefaultManager
+	    {
+	        get { return _defaultManager; }
+	    }
+
+	    /// <summary>
 		/// Un-seals a PluginGraph.  Makes  the PluginGraph editable
 		/// </summary>
 		public void UnSeal()
@@ -115,6 +127,12 @@ namespace StructureMap.Graph
             pluginGraph.Seal();
 
 	        return pluginGraph;
+	    }
+
+	    public PluginGraphReport Report
+	    {
+	        get { return _report; }
+	        set { _report = value; }
 	    }
 	}
 }

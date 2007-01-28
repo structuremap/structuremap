@@ -18,8 +18,7 @@ namespace StructureMap.Testing.Configuration
 
 		private PluginGraph buildGraph()
 		{
-			PluginGraphBuilder builder = new PluginGraphBuilder("Master.xml");
-			return builder.Build();
+		    return DataMother.GetDiagnosticPluginGraph("Master.xml");
 		}
 
 		[Test]

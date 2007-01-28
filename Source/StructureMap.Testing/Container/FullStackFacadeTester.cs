@@ -194,10 +194,9 @@ namespace StructureMap.Testing.Container
 		[Test]
 		public void BuildAllInstances()
 		{
-			DataMother.WriteDocument("SampleConfig.xml");
 			DataMother.WriteDocument("FullTesting.XML");
-			PluginGraphBuilder builder = new PluginGraphBuilder("SampleConfig.xml");
-			PluginGraph pluginGraph = builder.Build();
+
+            PluginGraph pluginGraph = DataMother.GetDiagnosticPluginGraph("SampleConfig.xml");
 
 			InstanceManager manager = new InstanceManager(pluginGraph);
 

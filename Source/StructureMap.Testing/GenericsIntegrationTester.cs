@@ -14,10 +14,7 @@ namespace StructureMap.Testing
         [SetUp]
         public void SetUp()
         {
-            XmlDocument document = DataMother.GetXmlDocument("GenericsTesting.xml");
-            PluginGraphBuilder builder = new PluginGraphBuilder(document);
-            PluginGraph graph = builder.Build();
-            
+            PluginGraph graph = DataMother.GetDiagnosticPluginGraph("GenericsTesting.xml");
             manager = new InstanceManager(graph);
         }
 

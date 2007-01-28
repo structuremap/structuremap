@@ -69,42 +69,6 @@ namespace StructureMap.Testing.Container.ExceptionHandling
 		}
 
 
-		[Test, Ignore("Issue with MSBUILD causes this to fail in cruise build.")]
-		public void CannotLoadTheConfigFile()
-		{
-			try
-			{
-				try
-				{
-					backupConfig();
-					File.Delete("StructureMap.config");
-					PluginGraphBuilder builder = new PluginGraphBuilder();
-				}
-				catch (StructureMapException ex)
-				{
-					string configPath = StructureMapConfiguration.GetStructureMapConfigurationPath();
-					string expected = "StructureMap Exception Code:  100\nExpected file \"StructureMap.config\" cannot be opened at ";
-					expected += configPath;
-
-					Assert.AreEqual(100, ex.ErrorCode);
-					string actual = ex.Message;
-					Assert.AreEqual(expected, actual);
-					return;
-
-				}
-				catch (Exception ex)
-				{
-					Assert.Fail("Wrong exception:  " + ex.Message);
-				}
-
-				Assert.Fail("No exception");
-			}
-			finally
-			{
-				this.restoreConfig();
-			}
-		}
-
 		[Test, ExpectedException(typeof (StructureMapException)), Ignore("Issue with MSBUILD causes this to fail in cruise build.")]
 		public void Exception100FromObjectFactory()
 		{

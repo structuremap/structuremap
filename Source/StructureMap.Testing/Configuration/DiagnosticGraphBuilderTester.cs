@@ -22,7 +22,7 @@ namespace StructureMap.Testing.Configuration
             XmlDocument document = new XmlDocument();
             document.LoadXml("<StructureMap/>");
 
-            _builder = new DiagnosticGraphBuilder(new InstanceDefaultManager());
+            _builder = new DiagnosticGraphBuilder();
             _report = _builder.Report;
         }
 
@@ -322,9 +322,7 @@ namespace StructureMap.Testing.Configuration
         [Test]
         public void GiveItATry()
         {
-            PluginGraphBuilder builder = new PluginGraphBuilder();
-            builder.BuildDiagnosticPluginGraph();
-            PluginGraphReport report = builder.Report;
+            PluginGraphReport report = PluginGraphBuilder.BuildDefaultReport();
             Assert.IsNotNull(report);
         }
     }

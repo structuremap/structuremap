@@ -92,10 +92,9 @@ namespace StructureMap.Testing.Container
 
 		private InstanceManager buildInstanceManager()
 		{
-			XmlDocument document = DataMother.GetXmlDocument("SetterInjectionTesting.xml");
-			PluginGraphBuilder builder = new PluginGraphBuilder(document);
-			PluginGraph pluginGraph = builder.Build();
-			return new InstanceManager(pluginGraph, true);
+            PluginGraph pluginGraph = DataMother.GetDiagnosticPluginGraph("SetterInjectionTesting.xml");
+			
+            return new InstanceManager(pluginGraph, true);
 		}
 
 

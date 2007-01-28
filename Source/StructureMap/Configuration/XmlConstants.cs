@@ -7,6 +7,7 @@ namespace StructureMap.Configuration
 	public class XmlConstants
 	{
 		public const string ASSEMBLY = "Assembly";
+		public const string STRUCTUREMAP = "StructureMap";
 		public const string NAME = "Name";
 		public const string DEPLOYMENT_ATTRIBUTE = "Deploy";
 		public const string PLUGIN_FAMILY_NODE = "PluginFamily";

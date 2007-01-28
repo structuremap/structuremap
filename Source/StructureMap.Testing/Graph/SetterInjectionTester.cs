@@ -20,11 +20,7 @@ namespace StructureMap.Testing.Graph
 
 		private PluginGraph getPluginGraph()
 		{
-			XmlDocument document = DataMother.GetXmlDocument("SetterInjectionTesting.xml");
-			PluginGraphBuilder builder = new PluginGraphBuilder(document);
-			PluginGraph buildDiagnosticPluginGraph = builder.BuildDiagnosticPluginGraph();
-
-			return buildDiagnosticPluginGraph;
+            return DataMother.GetDiagnosticPluginGraph("SetterInjectionTesting.xml");
 		}
 
 		[Test]

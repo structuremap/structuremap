@@ -3,6 +3,8 @@ using System.Collections;
 using System.IO;
 using System.Reflection;
 using System.Xml;
+using StructureMap.Configuration;
+using StructureMap.Graph;
 
 namespace StructureMap.Testing.TestData
 {
@@ -24,7 +26,22 @@ namespace StructureMap.Testing.TestData
 			return document;
 		}
 
-		public static void WriteDocument(string fileName)
+        public static PluginGraph GetDiagnosticPluginGraph(string fileName)
+        {
+            XmlDocument document = GetXmlDocument(fileName);
+            return PluginGraphBuilder.BuildFromXml(document);
+        }
+
+        public static PluginGraph GetPluginGraph(string fileName)
+        {
+            XmlDocument document = GetXmlDocument(fileName);
+            ConfigurationParser parser = new ConfigurationParser(document.DocumentElement);
+            PluginGraphBuilder builder = new PluginGraphBuilder(parser);
+
+            return builder.Build();
+        }
+
+	    public static void WriteDocument(string fileName)
 		{
 			XmlDocument document = GetXmlDocument(fileName);
 			document.Save(fileName);
@@ -43,5 +60,7 @@ namespace StructureMap.Testing.TestData
 				catch (Exception){}
 			}
 		}
+
+
 	}
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Xml;
 using NUnit.Framework;
+using StructureMap.Configuration;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 using StructureMap.Source;
@@ -29,7 +30,9 @@ namespace StructureMap.Testing.Container
 			doc.Load("StructureMap.config");
 			XmlNode node = doc.DocumentElement.SelectSingleNode("//StructureMap");
 
-			PluginGraphBuilder builder = new PluginGraphBuilder(node);
+            ConfigurationParser parser = new ConfigurationParser(node);
+
+			PluginGraphBuilder builder = new PluginGraphBuilder(parser);
 			graph = builder.Build();
 			diagnosticGraph = builder.BuildDiagnosticPluginGraph();
 
@@ -220,10 +223,9 @@ namespace StructureMap.Testing.Container
 		[Test]
 		public void BuildsInterceptionChain()
 		{
-			XmlDocument document = DataMother.GetXmlDocument("SingletonIntercepterTest.xml");
-			PluginGraphBuilder builder = new PluginGraphBuilder(document);
-			PluginGraph pluginGraph = builder.BuildDiagnosticPluginGraph();
-			PluginFamily family = pluginGraph.PluginFamilies[typeof (Rule)];
+			PluginGraph pluginGraph = DataMother.GetDiagnosticPluginGraph("SingletonIntercepterTest.xml");
+            
+            PluginFamily family = pluginGraph.PluginFamilies[typeof (Rule)];
 
 			Assert.AreEqual(1, family.InterceptionChain.Count);
 			Assert.IsTrue(family.InterceptionChain[0] is SingletonInterceptor);
@@ -237,10 +239,8 @@ namespace StructureMap.Testing.Container
 		[Test]
 		public void ReadScopeFromXmlConfiguration()
 		{
-			XmlDocument document = DataMother.GetXmlDocument("ScopeInFamily.xml");
-			PluginGraphBuilder builder = new PluginGraphBuilder(document);
-			PluginGraph pluginGraph = builder.BuildDiagnosticPluginGraph();
-			PluginFamily family = pluginGraph.PluginFamilies[typeof (Column)];
+			PluginGraph pluginGraph = DataMother.GetDiagnosticPluginGraph("ScopeInFamily.xml");
+            PluginFamily family = pluginGraph.PluginFamilies[typeof (Column)];
 
 			Assert.AreEqual(1, family.InterceptionChain.Count);
 			Assert.IsTrue(family.InterceptionChain[0] is ThreadLocalStorageInterceptor);
@@ -254,9 +254,7 @@ namespace StructureMap.Testing.Container
 		[Test]
 		public void PicksUpTheDefaultProfileAttributeOnTheStructureMapNodeAndSetsTheProfile()
 		{
-			XmlDocument document = DataMother.GetXmlDocument("DefaultProfileConfig.xml");
-			PluginGraphBuilder builder = new PluginGraphBuilder(document);
-			InstanceDefaultManager defaultManager = builder.DefaultManager;
+			InstanceDefaultManager defaultManager = DataMother.GetDiagnosticPluginGraph("DefaultProfileConfig.xml").DefaultManager;
 
 			Assert.AreEqual("Green", defaultManager.DefaultProfileName);			
 		}
@@ -264,10 +262,7 @@ namespace StructureMap.Testing.Container
 		[Test]
 		public void ExplicitPluginFamilyDefinitionOverridesImplicitDefinition()
 		{
-			XmlDocument document = DataMother.GetXmlDocument("ExplicitPluginFamilyOverridesImplicitPluginFamily.xml");
-			PluginGraphBuilder builder = new PluginGraphBuilder(document);
-
-			PluginGraph pluginGraph = builder.Build();
+			PluginGraph pluginGraph = DataMother.GetPluginGraph("ExplicitPluginFamilyOverridesImplicitPluginFamily.xml");
 
 			PluginFamily family = pluginGraph.PluginFamilies[typeof(GrandChild)];
 			Assert.AreEqual(DefinitionSource.Explicit, family.DefinitionSource);

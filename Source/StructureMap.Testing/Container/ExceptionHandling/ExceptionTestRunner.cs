@@ -1,6 +1,7 @@
 using System;
 using System.Xml;
 using NUnit.Framework;
+using StructureMap.Configuration;
 using StructureMap.Graph;
 using StructureMap.Testing.TestData;
 
@@ -96,12 +97,11 @@ namespace StructureMap.Testing.Container.ExceptionHandling
 
 		private void buildInstanceManager()
 		{
-			PluginGraphBuilder builder = new PluginGraphBuilder(_configNode);
-			PluginGraph graph = builder.Build();
-			_manager = new InstanceManager(graph);
+            ConfigurationParser parser = new ConfigurationParser(_configNode);
+            PluginGraphBuilder builder = new PluginGraphBuilder(parser);
+		    PluginGraph graph = builder.Build();
+		    _manager = new InstanceManager(graph);
 		}
-
-
 	}
 
 }

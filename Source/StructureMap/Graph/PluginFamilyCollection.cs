@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace StructureMap.Graph
 {
@@ -36,7 +37,12 @@ namespace StructureMap.Graph
 
         public PluginFamily Add(PluginFamily family)
 		{
-			verifyNotSealed();
+            if (family.PluginTypeName.Contains("GrandChild"))
+            {
+                int x = 0;
+            }
+
+            verifyNotSealed();
 
             Type key = family.PluginType;
             if (_pluginFamilies.ContainsKey(key))

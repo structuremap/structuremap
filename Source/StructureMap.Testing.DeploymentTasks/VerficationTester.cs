@@ -9,8 +9,8 @@ namespace StructureMap.Testing.DeploymentTasks
 		[Test]
 		public void ExpectFailureWithinProblemFinder()
 		{
-			PluginGraphBuilder builder = new PluginGraphBuilder("Invalid.xml");
-			ProblemFinder finder = new ProblemFinder(builder.Report);
+		    PluginGraphReport report = PluginGraphBuilder.BuildReportFromXml("Invalid.xml");
+		    ProblemFinder finder = new ProblemFinder(report);
 			Problem[] problems = finder.GetProblems();
 
 			Assert.IsTrue(problems.Length > 0);

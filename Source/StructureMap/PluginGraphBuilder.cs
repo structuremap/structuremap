@@ -12,23 +12,65 @@ namespace StructureMap
     /// </summary>
     public class PluginGraphBuilder : IPluginGraphSource
     {
+        #region statics
+
+        public static PluginGraph BuildFromXml(XmlDocument document)
+        {
+            ConfigurationParser[] parsers = ConfigurationParser.GetParsers(document, "");
+            PluginGraphBuilder builder = new PluginGraphBuilder(parsers);
+            return builder.BuildDiagnosticPluginGraph();
+        }
+
+        public static PluginGraph BuildFromXml(XmlNode structureMapNode)
+        {
+            ConfigurationParser parser = new ConfigurationParser(structureMapNode);
+
+            PluginGraphBuilder builder = new PluginGraphBuilder(parser);
+
+            return builder.BuildDiagnosticPluginGraph();
+        }
+
+        public static PluginGraphReport BuildDefaultReport()
+        {
+            PluginGraphBuilder builder = new PluginGraphBuilder(StructureMapConfiguration.GetStructureMapConfigurationPath());
+            builder.BuildDiagnosticPluginGraph();
+            return builder.Report;
+        }
+
+        public static PluginGraphReport BuildReportFromXml(string fileName)
+        {
+            PluginGraphBuilder builder = new PluginGraphBuilder(ConfigurationParser.FromFile(fileName));
+            return builder.Report;
+        }
+        #endregion
+
         private PluginGraph _graph;
-        private InstanceDefaultManager _defaultManager;
         private PluginGraphReport _report;
         private ConfigurationParser[] _parsers;
 
         #region constructors
 
+        public PluginGraphBuilder(ConfigurationParser parser)
+            : this(new ConfigurationParser[] {parser})
+        {
+        }
+
+        public PluginGraphBuilder(ConfigurationParser[] parsers)
+        {
+            _parsers = parsers;
+        }
+
         /// <summary>
         /// Creates a PluginGraphBuilder from a %lt;StructureMap%gt; node
         /// </summary>
         /// <param name="structureMapNode"></param>
+        [Obsolete("Elimating direct usage of PluginGraphBuilder")]
         public PluginGraphBuilder(XmlNode structureMapNode)
         {
             _parsers = new ConfigurationParser[] {new ConfigurationParser(structureMapNode)};
         }
 
-
+        [Obsolete("Elimating direct usage of PluginGraphBuilder")]
         public PluginGraphBuilder(XmlDocument document) : this(document.DocumentElement)
         {
         }
@@ -37,6 +79,7 @@ namespace StructureMap
         /// Creates a PluginGraphBuilder that reads configuration from the filePath
         /// </summary>
         /// <param name="filePath">The path to the configuration file</param>
+        [Obsolete("Elimating direct usage of PluginGraphBuilder")]
         public PluginGraphBuilder(string filePath)
         {
             try
@@ -56,6 +99,7 @@ namespace StructureMap
         /// Default constructor reads configuration from the StructureMap.config file
         /// in the application folder
         /// </summary>
+        [Obsolete("Elimating direct usage of PluginGraphBuilder")]
         public PluginGraphBuilder() : this(StructureMapConfiguration.GetStructureMapConfigurationPath())
         {
         }
@@ -69,34 +113,18 @@ namespace StructureMap
         /// <returns></returns>
         public PluginGraph Build()
         {
-            _defaultManager = new InstanceDefaultManager();
-            NormalGraphBuilder graphBuilder = new NormalGraphBuilder(_defaultManager);
+            NormalGraphBuilder graphBuilder = new NormalGraphBuilder();
             PluginGraph pluginGraph = buildPluginGraph(graphBuilder);
             return pluginGraph;
         }
 
         private PluginGraph buildPluginGraph(IGraphBuilder graphBuilder)
         {
-            foreach (ConfigurationParser parser in _parsers)
-            {
-                parser.ParseAssemblies(graphBuilder);
-            }
+            readAssemblies(graphBuilder);
 
-            graphBuilder.StartFamilies();
+            readFamilies(graphBuilder);
 
-            foreach (ConfigurationParser parser in _parsers)
-            {
-                parser.ParseFamilies(graphBuilder);
-            }
-
-            foreach (ConfigurationParser parser in _parsers)
-            {
-                parser.ParseProfilesAndMachines(graphBuilder);
-            }
-
-            graphBuilder.FinishFamilies();
-
-            _defaultManager.ReadDefaultsFromPluginGraph(graphBuilder.PluginGraph);
+            readInstanceDefaults(graphBuilder);
 
             foreach (ConfigurationParser parser in _parsers)
             {
@@ -108,6 +136,34 @@ namespace StructureMap
             return _graph;
         }
 
+        private void readInstanceDefaults(IGraphBuilder graphBuilder)
+        {
+            foreach (ConfigurationParser parser in _parsers)
+            {
+                parser.ParseProfilesAndMachines(graphBuilder);
+            }
+        }
+
+        private void readFamilies(IGraphBuilder graphBuilder)
+        {
+            graphBuilder.StartFamilies();
+
+            foreach (ConfigurationParser parser in _parsers)
+            {
+                parser.ParseFamilies(graphBuilder);
+            }
+
+            graphBuilder.FinishFamilies();
+        }
+
+        private void readAssemblies(IGraphBuilder graphBuilder)
+        {
+            foreach (ConfigurationParser parser in _parsers)
+            {
+                parser.ParseAssemblies(graphBuilder);
+            }
+        }
+
 
         /// <summary>
         /// Build a PluginGraph with all instances calculated.  Used in the UI and diagnostic tools.
@@ -115,8 +171,7 @@ namespace StructureMap
         /// <returns></returns>
         public PluginGraph BuildDiagnosticPluginGraph()
         {
-            _defaultManager = new InstanceDefaultManager();
-            DiagnosticGraphBuilder graphBuilder = new DiagnosticGraphBuilder(_defaultManager);
+            DiagnosticGraphBuilder graphBuilder = new DiagnosticGraphBuilder();
             buildPluginGraph(graphBuilder);
 
             _report = graphBuilder.Report;
@@ -133,7 +188,7 @@ namespace StructureMap
                 {
                     Build();
                 }
-                return _defaultManager;
+                return _graph.DefaultManager;
             }
         }
 
@@ -149,5 +204,8 @@ namespace StructureMap
                 return _report;
             }
         }
+
+
+
     }
 }

@@ -23,12 +23,12 @@ namespace StructureMap.Testing
 		{
 			DataMother.WriteDocument("FullTesting.XML");
 
-			XmlDocument document = DataMother.GetXmlDocument("ObjectMother.config");
-			PluginGraphBuilder builder = new PluginGraphBuilder(document);
-			_pluginGraph = builder.BuildDiagnosticPluginGraph();
-			_instanceManager = new InstanceManager(_pluginGraph);
-			_instanceDefaultManager = builder.DefaultManager;
-			_report = builder.Report;
+		    _pluginGraph = DataMother.GetDiagnosticPluginGraph("ObjectMother.config");
+            
+            
+            _instanceManager = new InstanceManager(_pluginGraph);
+			_instanceDefaultManager = _pluginGraph.DefaultManager;
+			_report = _pluginGraph.Report;
 		}
 
 		

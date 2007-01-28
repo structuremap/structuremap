@@ -12,21 +12,17 @@ namespace StructureMap.Configuration
 		private PluginGraph _pluginGraph;
 		private PluginGraph _systemGraph;
 		private InstanceManager _systemInstanceManager;
-		private InstanceDefaultManager _defaultManager;
 		private readonly IInterceptorChainBuilder _builder;
 	    private Profile _profile;
 	    private MachineOverride _machine;
 
 
-	    public NormalGraphBuilder() : this(new InstanceDefaultManager(), new InterceptorChainBuilder())
+	    public NormalGraphBuilder() : this(new InterceptorChainBuilder())
 	    {
 	    }
 
-	    public NormalGraphBuilder(InstanceDefaultManager defaultManager) : this(defaultManager, new InterceptorChainBuilder()){}
-
-		public NormalGraphBuilder(InstanceDefaultManager defaultManager, IInterceptorChainBuilder builder)
+		public NormalGraphBuilder(IInterceptorChainBuilder builder)
 		{
-			_defaultManager = defaultManager;
 			_builder = builder;
 			_pluginGraph = new PluginGraph();
 			_systemGraph = new PluginGraph();
@@ -57,7 +53,7 @@ namespace StructureMap.Configuration
 	    public void AddProfile(string profileName)
 	    {
 	        _profile = new Profile(profileName);
-            _defaultManager.AddProfile(_profile);
+            _pluginGraph.DefaultManager.AddProfile(_profile);
 	    }
 
 	    public void OverrideProfile(string fullTypeName, string instanceKey)
@@ -73,7 +69,7 @@ namespace StructureMap.Configuration
 	        }
             else
 	        {
-                Profile profile = _defaultManager.GetProfile(profileName);
+                Profile profile = _pluginGraph.DefaultManager.GetProfile(profileName);
 
                 if (profile == null)
                 {
@@ -87,7 +83,7 @@ namespace StructureMap.Configuration
 	        
             
             
-            _defaultManager.AddMachineOverride(_machine);
+            _pluginGraph.DefaultManager.AddMachineOverride(_machine);
 
 	    }
 
@@ -95,7 +91,6 @@ namespace StructureMap.Configuration
 	    {
 	        _machine.AddMachineOverride(fullTypeName, instanceKey);
 	    }
-
 
 	    public void AddAssembly(string assemblyName, string[] deployableTargets)
 		{
@@ -181,7 +176,7 @@ namespace StructureMap.Configuration
 
 		public InstanceDefaultManager DefaultManager
 		{
-			get { return _defaultManager; }
+			get { return _pluginGraph.DefaultManager; }
 		}
 
 		public void RegisterMemento(TypePath pluginTypePath, InstanceMemento memento)
