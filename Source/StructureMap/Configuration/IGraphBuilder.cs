@@ -24,5 +24,10 @@ namespace StructureMap.Graph.Configuration
 		void RegisterMemento(TypePath pluginTypePath, InstanceMemento memento);
 
 		PluginGraph PluginGraph { get; }
+
+	    void AddProfile(string profileName);
+	    void OverrideProfile(string fullTypeName, string instanceKey);
+        void AddMachine(string machineName, string profileName);
+        void OverrideMachine(string fullTypeName, string instanceKey);
 	}
 }

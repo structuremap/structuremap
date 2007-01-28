@@ -173,5 +173,52 @@ namespace StructureMap.Configuration
 				_builder.RegisterMemento(typePath, memento);
 			}
 		}
+
+
+        public void ParseProfilesAndMachines(IGraphBuilder builder)
+        {
+            XmlNode defaultProfileNode = _structureMapNode.Attributes.GetNamedItem(XmlConstants.DEFAULT_PROFILE);
+            if (defaultProfileNode != null)
+            {
+                builder.DefaultManager.DefaultProfileName = defaultProfileNode.InnerText;
+            }
+
+            foreach (XmlElement profileElement in findNodes(XmlConstants.PROFILE_NODE))
+            {
+                string profileName = profileElement.GetAttribute(XmlConstants.NAME);
+                builder.AddProfile(profileName);
+
+                writeOverrides(profileElement, delegate(string fullName, string defaultKey)
+                                                   {
+                                                       builder.OverrideProfile(fullName, defaultKey);
+                                                   });
+            }
+
+            foreach (XmlElement machineElement in findNodes(XmlConstants.MACHINE_NODE))
+            {
+                string machineName = machineElement.GetAttribute(XmlConstants.NAME);
+                string profileName = machineElement.GetAttribute(XmlConstants.PROFILE_NODE);
+
+                builder.AddMachine(machineName, profileName);
+
+                writeOverrides(machineElement, delegate(string fullName, string defaultKey)
+                                   {
+                                       builder.OverrideMachine(fullName, defaultKey);
+                                   });
+            }
+        }
+
+	    private delegate void WriteOverride(string fullTypeName, string defaultKey);
+
+        private void writeOverrides(XmlElement parentElement, WriteOverride function)
+        {
+            foreach (XmlElement overrideElement in parentElement.SelectNodes(XmlConstants.OVERRIDE))
+            {
+                string fullName = overrideElement.GetAttribute(XmlConstants.TYPE_ATTRIBUTE);
+                string defaultKey = overrideElement.GetAttribute(XmlConstants.DEFAULT_KEY_ATTRIBUTE);
+
+                function(fullName, defaultKey);
+            }
+        }
 	}
 }

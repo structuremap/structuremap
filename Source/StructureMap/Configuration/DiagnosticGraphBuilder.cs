@@ -27,7 +27,34 @@ namespace StructureMap.Configuration
 			get { return _innerBuilder.PluginGraph; }
 		}
 
-		public void AddAssembly(string assemblyName, string[] deployableTargets)
+	    public void AddProfile(string profileName)
+	    {
+	        _innerBuilder.AddProfile(profileName);
+	    }
+
+	    public void OverrideProfile(string fullTypeName, string instanceKey)
+	    {
+	        _innerBuilder.OverrideProfile(fullTypeName, instanceKey);
+	    }
+
+	    public void AddMachine(string machineName, string profileName)
+	    {
+	        try
+	        {
+	            _innerBuilder.AddMachine(machineName, profileName);
+	        }
+	        catch (Exception e)
+	        {
+	            _report.LogProblem(new Problem("Could not add Machine", e));
+	        }
+	    }
+
+	    public void OverrideMachine(string fullTypeName, string instanceKey)
+	    {
+	        _innerBuilder.OverrideMachine(fullTypeName, instanceKey);
+	    }
+
+	    public void AddAssembly(string assemblyName, string[] deployableTargets)
 		{
 			AssemblyToken assemblyToken = new AssemblyToken(assemblyName, deployableTargets);
 			_report.AddAssembly(assemblyToken);

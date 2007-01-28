@@ -82,7 +82,7 @@ namespace StructureMap.Testing.Container.ExceptionHandling
 				}
 				catch (StructureMapException ex)
 				{
-					string configPath = PluginGraphBuilder.GetStructureMapConfigurationPath();
+					string configPath = StructureMapConfiguration.GetStructureMapConfigurationPath();
 					string expected = "StructureMap Exception Code:  100\nExpected file \"StructureMap.config\" cannot be opened at ";
 					expected += configPath;
 

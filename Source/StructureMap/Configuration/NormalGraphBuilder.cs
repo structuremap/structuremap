@@ -14,9 +14,15 @@ namespace StructureMap.Configuration
 		private InstanceManager _systemInstanceManager;
 		private InstanceDefaultManager _defaultManager;
 		private readonly IInterceptorChainBuilder _builder;
+	    private Profile _profile;
+	    private MachineOverride _machine;
 
 
-		public NormalGraphBuilder(InstanceDefaultManager defaultManager) : this(defaultManager, new InterceptorChainBuilder()){}
+	    public NormalGraphBuilder() : this(new InstanceDefaultManager(), new InterceptorChainBuilder())
+	    {
+	    }
+
+	    public NormalGraphBuilder(InstanceDefaultManager defaultManager) : this(defaultManager, new InterceptorChainBuilder()){}
 
 		public NormalGraphBuilder(InstanceDefaultManager defaultManager, IInterceptorChainBuilder builder)
 		{
@@ -48,8 +54,50 @@ namespace StructureMap.Configuration
 			get { return _pluginGraph; }
 		}
 
+	    public void AddProfile(string profileName)
+	    {
+	        _profile = new Profile(profileName);
+            _defaultManager.AddProfile(_profile);
+	    }
 
-		public void AddAssembly(string assemblyName, string[] deployableTargets)
+	    public void OverrideProfile(string fullTypeName, string instanceKey)
+	    {
+	        _profile.AddOverride(fullTypeName, instanceKey);
+	    }
+
+	    public void AddMachine(string machineName, string profileName)
+	    {
+	        if (string.IsNullOrEmpty(profileName))
+	        {
+	            _machine = new MachineOverride(machineName, null);
+	        }
+            else
+	        {
+                Profile profile = _defaultManager.GetProfile(profileName);
+
+                if (profile == null)
+                {
+                    throw new StructureMapException(195, profileName, machineName);
+                }
+
+                _machine = new MachineOverride(machineName, profile);
+	        }
+            
+            
+	        
+            
+            
+            _defaultManager.AddMachineOverride(_machine);
+
+	    }
+
+	    public void OverrideMachine(string fullTypeName, string instanceKey)
+	    {
+	        _machine.AddMachineOverride(fullTypeName, instanceKey);
+	    }
+
+
+	    public void AddAssembly(string assemblyName, string[] deployableTargets)
 		{
 			AssemblyGraph assemblyGraph = new AssemblyGraph(assemblyName);
 			assemblyGraph.DeploymentTargets = deployableTargets;

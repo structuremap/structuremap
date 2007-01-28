@@ -19,7 +19,10 @@ namespace StructureMap.Graph
 		public MachineOverride(string machineName, Profile profile)
 			: this(machineName)
 		{
-			_profile = profile;
+		    if (profile != null)
+		    {
+		        _profile = profile;
+		    }
 		}
 
 		public MachineOverride(string machineName) : base()
@@ -78,7 +81,7 @@ namespace StructureMap.Graph
 		/// </summary>
 		public string ProfileName
 		{
-			get { return _profile.ProfileName; }
+			get { return _profile == null ? string.Empty : _profile.ProfileName; }
 		}
 
 		

@@ -21,6 +21,10 @@ namespace StructureMap.Configuration
 		public const string KEY_ATTRIBUTE = "Key";
 		public const string INCLUDE_NODE = "Include";
 		public const string SCOPE_ATTRIBUTE = "Scope";
+		public const string PROFILE_NODE = "Profile";
+		public const string MACHINE_NODE = "Machine";
+		public const string OVERRIDE = "Override";
+		public const string DEFAULT_PROFILE = "DefaultProfile";
 
 
 		private XmlConstants()

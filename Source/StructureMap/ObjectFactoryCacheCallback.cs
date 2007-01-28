@@ -9,7 +9,7 @@ namespace StructureMap
 		{
 			try
 			{
-				CacheManager.CurrentManager.WatchFile(PluginGraphBuilder.GetStructureMapConfigurationPath(), this);
+				CacheManager.CurrentManager.WatchFile(StructureMapConfiguration.GetStructureMapConfigurationPath(), this);
 			}
 			catch (Exception exception)
 			{

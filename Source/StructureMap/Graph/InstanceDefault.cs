@@ -43,14 +43,24 @@ namespace StructureMap.Graph
 
 		#endregion
 
-		public override int GetHashCode()
-		{
-			return _pluginTypeName.GetHashCode();
-		}
+	    public override bool Equals(object obj)
+	    {
+	        if (this == obj) return true;
+	        InstanceDefault instanceDefault = obj as InstanceDefault;
+	        if (instanceDefault == null) return false;
+	        return Equals(_pluginTypeName, instanceDefault._pluginTypeName) && Equals(_defaultKey, instanceDefault._defaultKey);
+	    }
 
-		protected override string key
+	    public override int GetHashCode()
+	    {
+	        return (_pluginTypeName != null ? _pluginTypeName.GetHashCode() : 0) + 29*(_defaultKey != null ? _defaultKey.GetHashCode() : 0);
+	    }
+
+	    protected override string key
 		{
 			get { return this.PluginTypeName; }
 		}
+
+
 	}
 }

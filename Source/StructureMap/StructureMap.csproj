@@ -467,6 +467,7 @@
     <Compile Include="Interceptors\ThreadLocalStorageInterceptor.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="IPluginGraphSource.cs" />
     <Compile Include="MementoSource.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -530,6 +531,7 @@
     <Compile Include="Source\XmlTemplater.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="StructureMapConfiguration.cs" />
     <Compile Include="StubbedInstanceFactory.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -537,9 +539,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="XmlMapping\ConfigEditor.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XmlMapping\InstanceDefaultManagerMapper.cs">
       <SubType>Code</SubType>
     </Compile>
     <EmbeddedResource Include="StructureMapException.resx">
