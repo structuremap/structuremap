@@ -4,109 +4,105 @@ using System.Runtime.CompilerServices;
 
 namespace StructureMap.DataAccess.Tools.Mocks
 {
-	public class ParameterList : ICloneable
-	{
-		private Hashtable _values;
+    public class ParameterList : ICloneable
+    {
+        private Hashtable _values;
 
-		public ParameterList()
-		{
-			_values = new Hashtable();
-		}
+        public ParameterList()
+        {
+            _values = new Hashtable();
+        }
 
-		[IndexerName("ParameterValue")]
-		public object this[string parameterName]
-		{
-			get
-			{
-				return _values[parameterName];
-			}
-			set
-			{
-				_values[parameterName] = value;
-			}
-		}
+        [IndexerName("ParameterValue")]
+        public object this[string parameterName]
+        {
+            get { return _values[parameterName]; }
+            set { _values[parameterName] = value; }
+        }
 
-		public string[] AllKeys
-		{
-			get
-			{
-				string[] returnValue = new string[_values.Count];
-				_values.Keys.CopyTo(returnValue, 0);
+        public string[] AllKeys
+        {
+            get
+            {
+                string[] returnValue = new string[_values.Count];
+                _values.Keys.CopyTo(returnValue, 0);
 
-				Array.Sort(returnValue);
-				
-				return returnValue;
-			}
-		}
+                Array.Sort(returnValue);
 
-		public object Clone()
-		{
-			ParameterList clone = new ParameterList();
-			clone._values = (Hashtable) _values.Clone();
+                return returnValue;
+            }
+        }
 
-			return clone;
-		}
+        public object Clone()
+        {
+            ParameterList clone = new ParameterList();
+            clone._values = (Hashtable) _values.Clone();
 
-		public void Verify(ParameterList actualList)
-		{
-			ArrayList expectedKeys = new ArrayList(this.AllKeys);
-			ArrayList actualKeys = new ArrayList(actualList.AllKeys);
-			ArrayList unionKeys = new ArrayList();
+            return clone;
+        }
 
-			string[] keys = (string[]) actualKeys.ToArray(typeof (string));
+        public void Verify(ParameterList actualList)
+        {
+            ArrayList expectedKeys = new ArrayList(AllKeys);
+            ArrayList actualKeys = new ArrayList(actualList.AllKeys);
+            ArrayList unionKeys = new ArrayList();
 
-			foreach (string key in keys)
-			{
-				if (expectedKeys.Contains(key))
-				{
-					unionKeys.Add(key);
-					expectedKeys.Remove(key);
-					actualKeys.Remove(key);
-				}
-			}
+            string[] keys = (string[]) actualKeys.ToArray(typeof (string));
 
-			ParameterValidationFailureException failureCondition = new ParameterValidationFailureException();
+            foreach (string key in keys)
+            {
+                if (expectedKeys.Contains(key))
+                {
+                    unionKeys.Add(key);
+                    expectedKeys.Remove(key);
+                    actualKeys.Remove(key);
+                }
+            }
 
-			checkForWrongParameterValues(unionKeys, actualList, failureCondition);
-			checkForMissingParameters(expectedKeys, failureCondition);
-			checkForUnExpectedParameters(actualList, actualKeys, failureCondition);
+            ParameterValidationFailureException failureCondition = new ParameterValidationFailureException();
 
-			failureCondition.ThrowIfExceptions();
-		}
+            checkForWrongParameterValues(unionKeys, actualList, failureCondition);
+            checkForMissingParameters(expectedKeys, failureCondition);
+            checkForUnExpectedParameters(actualList, actualKeys, failureCondition);
 
-		private void checkForWrongParameterValues(ArrayList unionKeys, ParameterList actualList, ParameterValidationFailureException failureCondition)
-		{
-			foreach (string key in unionKeys)
-			{
-				object expected = this[key];
-				object actual = actualList[key];
+            failureCondition.ThrowIfExceptions();
+        }
 
-				if (!expected.Equals(actual))
-				{
-					failureCondition.MarkWrongParameterValue(key, expected, actual);
-				}
-			}
-		}
+        private void checkForWrongParameterValues(ArrayList unionKeys, ParameterList actualList,
+                                                  ParameterValidationFailureException failureCondition)
+        {
+            foreach (string key in unionKeys)
+            {
+                object expected = this[key];
+                object actual = actualList[key];
 
-		private void checkForMissingParameters(ArrayList keys, ParameterValidationFailureException condition)
-		{
-			foreach (string key in keys)
-			{
-				condition.MarkMissingParameter(key, this[key]);
-			}
-		}
+                if (!expected.Equals(actual))
+                {
+                    failureCondition.MarkWrongParameterValue(key, expected, actual);
+                }
+            }
+        }
 
-		private void checkForUnExpectedParameters(ParameterList list, ArrayList keys, ParameterValidationFailureException condition)
-		{
-			foreach (string key in keys)
-			{
-				condition.MarkUnexpectedParameter(key, list[key]);
-			}
-		}
+        private void checkForMissingParameters(ArrayList keys, ParameterValidationFailureException condition)
+        {
+            foreach (string key in keys)
+            {
+                condition.MarkMissingParameter(key, this[key]);
+            }
+        }
 
-		public bool Contains(string parameterName)
-		{
-			return _values.ContainsKey(parameterName);
-		}
-	}
+        private void checkForUnExpectedParameters(ParameterList list, ArrayList keys,
+                                                  ParameterValidationFailureException condition)
+        {
+            foreach (string key in keys)
+            {
+                condition.MarkUnexpectedParameter(key, list[key]);
+            }
+        }
+
+        public bool Contains(string parameterName)
+        {
+            return _values.ContainsKey(parameterName);
+        }
+    }
 }

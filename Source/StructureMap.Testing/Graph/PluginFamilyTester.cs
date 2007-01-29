@@ -8,121 +8,123 @@ using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing.Graph
 {
-	[TestFixture]
-	public class PluginFamilyTester
-	{
-		[Test]
-		public void GetPlugins()
-		{
-			PluginFamily family = new PluginFamily(typeof (IWidget), "DefaultKey", new MemoryMementoSource());
+    [TestFixture]
+    public class PluginFamilyTester
+    {
+        [Test]
+        public void GetPlugins()
+        {
+            PluginFamily family = new PluginFamily(typeof (IWidget), "DefaultKey", new MemoryMementoSource());
 
-			AssemblyGraph graph = new AssemblyGraph("StructureMap.Testing.Widget");
-			family.SearchAssemblyGraph(graph);
+            AssemblyGraph graph = new AssemblyGraph("StructureMap.Testing.Widget");
+            family.SearchAssemblyGraph(graph);
 
-			Assert.AreEqual(3, family.Plugins.Count, "Plugin Count");
-			foreach (Plugin plugin in family.Plugins)
-			{
-				Assert.IsNotNull(plugin);
-			}
+            Assert.AreEqual(3, family.Plugins.Count, "Plugin Count");
+            foreach (Plugin plugin in family.Plugins)
+            {
+                Assert.IsNotNull(plugin);
+            }
+        }
 
-		}
+        [Test]
+        public void AddAPluggedType()
+        {
+            PluginFamily family = new PluginFamily(typeof (IWidget), "DefaultKey", new MemoryMementoSource());
+            family.Plugins.Add(typeof (NotPluggableWidget), "NotPlugged");
 
-		[Test]
-		public void AddAPluggedType()
-		{
-			PluginFamily family = new PluginFamily(typeof (IWidget), "DefaultKey", new MemoryMementoSource());
-			family.Plugins.Add(typeof (NotPluggableWidget), "NotPlugged");
+            Assert.AreEqual(1, family.Plugins.Count, "Plugin Count");
+        }
 
-			Assert.AreEqual(1, family.Plugins.Count, "Plugin Count");
-		}
+        [Test, ExpectedException(typeof (StructureMapException))]
+        public void AddAWrongType()
+        {
+            PluginFamily family = new PluginFamily(typeof (IWidget), "DefaultKey", new MemoryMementoSource());
+            family.Plugins.Add(typeof (Rule), "Rule");
+        }
 
-		[Test, ExpectedException(typeof (StructureMapException))]
-		public void AddAWrongType()
-		{
-			PluginFamily family = new PluginFamily(typeof (IWidget), "DefaultKey", new MemoryMementoSource());
-			family.Plugins.Add(typeof (Rule), "Rule");
-		}
+        [Test, ExpectedException(typeof (StructureMapException))]
+        public void CreateExplicitWithNonexistentAssembly()
+        {
+            TypePath path = new TypePath("NonexistentAssembly", "NonexistentAssembly.Class1");
 
-		[Test, ExpectedException(typeof (StructureMapException))]
-		public void CreateExplicitWithNonexistentAssembly()
-		{
-			TypePath path = new TypePath("NonexistentAssembly", "NonexistentAssembly.Class1");
+            PluginFamily family = new PluginFamily(path, "");
+        }
 
-			PluginFamily family = new PluginFamily(path, "");
-		}
+        [Test, ExpectedException(typeof (StructureMapException))]
+        public void CreateExplicitWithNonexistentClass()
+        {
+            TypePath path =
+                new TypePath("StructureMap.Testing.Widget", "StructureMap.Testing.Widget.NonExistentInterface");
 
-		[Test, ExpectedException(typeof (StructureMapException))]
-		public void CreateExplicitWithNonexistentClass()
-		{
-			TypePath path = new TypePath("StructureMap.Testing.Widget", "StructureMap.Testing.Widget.NonExistentInterface");
+            PluginFamily family = new PluginFamily(path, "");
+        }
 
-			PluginFamily family = new PluginFamily(path, "");
-		}
+        [Test]
+        public void ImplicitPluginFamilyCreatesASingletonInterceptorWhenIsSingletonIsTrue()
+        {
+            PluginFamily family = new PluginFamily(typeof (ISingletonRepository));
+            Assert.AreEqual(1, family.InterceptionChain.Count);
 
-		[Test]
-		public void ImplicitPluginFamilyCreatesASingletonInterceptorWhenIsSingletonIsTrue()
-		{
-			PluginFamily family = new PluginFamily(typeof (ISingletonRepository));
-			Assert.AreEqual(1, family.InterceptionChain.Count);
+            InstanceFactoryInterceptor interceptor = family.InterceptionChain[0];
+            Assert.IsTrue(interceptor is SingletonInterceptor);
 
-			InstanceFactoryInterceptor interceptor = family.InterceptionChain[0];
-			Assert.IsTrue(interceptor is SingletonInterceptor);
+            PluginFamily family2 = new PluginFamily(typeof (IDevice));
+            Assert.AreEqual(0, family2.InterceptionChain.Count);
+        }
 
-			PluginFamily family2 = new PluginFamily(typeof (IDevice));
-			Assert.AreEqual(0, family2.InterceptionChain.Count);
-		}
+        [Test]
+        public void PluginFamilyImplicitlyConfiguredAsASingletonBehavesAsASingleton()
+        {
+            PluginGraph pluginGraph = new PluginGraph();
+            pluginGraph.Assemblies.Add(Assembly.GetExecutingAssembly());
+            pluginGraph.Seal();
 
-		[Test]
-		public void PluginFamilyImplicitlyConfiguredAsASingletonBehavesAsASingleton()
-		{
-			PluginGraph pluginGraph = new PluginGraph();
-			pluginGraph.Assemblies.Add(Assembly.GetExecutingAssembly());
-			pluginGraph.Seal();
+            PluginFamily family = pluginGraph.PluginFamilies[typeof (ISingletonRepository)];
+            Assert.AreEqual(1, family.InterceptionChain.Count);
+            Assert.IsTrue(family.InterceptionChain[0] is SingletonInterceptor);
 
-			PluginFamily family = pluginGraph.PluginFamilies[typeof(ISingletonRepository)];
-			Assert.AreEqual(1, family.InterceptionChain.Count);
-			Assert.IsTrue(family.InterceptionChain[0] is SingletonInterceptor);
+            InstanceManager manager = new InstanceManager(pluginGraph);
 
-			InstanceManager manager = new InstanceManager(pluginGraph);
+            ISingletonRepository repository1 =
+                (ISingletonRepository) manager.CreateInstance(typeof (ISingletonRepository));
+            ISingletonRepository repository2 =
+                (ISingletonRepository) manager.CreateInstance(typeof (ISingletonRepository));
+            ISingletonRepository repository3 =
+                (ISingletonRepository) manager.CreateInstance(typeof (ISingletonRepository));
+            ISingletonRepository repository4 =
+                (ISingletonRepository) manager.CreateInstance(typeof (ISingletonRepository));
+            ISingletonRepository repository5 =
+                (ISingletonRepository) manager.CreateInstance(typeof (ISingletonRepository));
 
-			ISingletonRepository repository1 = (ISingletonRepository) manager.CreateInstance(typeof(ISingletonRepository));
-			ISingletonRepository repository2 = (ISingletonRepository) manager.CreateInstance(typeof(ISingletonRepository));
-			ISingletonRepository repository3 = (ISingletonRepository) manager.CreateInstance(typeof(ISingletonRepository));
-			ISingletonRepository repository4 = (ISingletonRepository) manager.CreateInstance(typeof(ISingletonRepository));
-			ISingletonRepository repository5 = (ISingletonRepository) manager.CreateInstance(typeof(ISingletonRepository));
-		
-			Assert.AreSame(repository1, repository2);
-			Assert.AreSame(repository1, repository3);
-			Assert.AreSame(repository1, repository4);
-			Assert.AreSame(repository1, repository5);
-		}
+            Assert.AreSame(repository1, repository2);
+            Assert.AreSame(repository1, repository3);
+            Assert.AreSame(repository1, repository4);
+            Assert.AreSame(repository1, repository5);
+        }
+    }
 
+    /// <summary>
+    /// Specifying the default instance is "Default" and marking the PluginFamily
+    /// as an injected Singleton
+    /// </summary>
+    [PluginFamily("Default", IsSingleton = true)]
+    public interface ISingletonRepository
+    {
+    }
 
-	}
+    [Pluggable("Default")]
+    public class SingletonRepository : ISingletonRepository
+    {
+        private Guid _id = Guid.NewGuid();
 
-	/// <summary>
-	/// Specifying the default instance is "Default" and marking the PluginFamily
-	/// as an injected Singleton
-	/// </summary>
-	[PluginFamily("Default", IsSingleton = true)]
-	public interface ISingletonRepository
-	{
-	}
+        public Guid Id
+        {
+            get { return _id; }
+        }
+    }
 
-	[Pluggable("Default")]
-	public class SingletonRepository : ISingletonRepository
-	{
-		private Guid _id = Guid.NewGuid();
-
-		public Guid Id
-		{
-			get { return _id; }
-		}
-	}
-
-	[PluginFamily(IsSingleton = false)]
-	public interface IDevice
-	{
-	}
-
+    [PluginFamily(IsSingleton = false)]
+    public interface IDevice
+    {
+    }
 }

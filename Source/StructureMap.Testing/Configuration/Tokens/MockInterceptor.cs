@@ -3,37 +3,36 @@ using StructureMap.Interceptors;
 
 namespace StructureMap.Testing.Configuration.Tokens
 {
-	[Pluggable("Mock")]
-	public class MockInterceptor : InstanceFactoryInterceptor
-	{
+    [Pluggable("Mock")]
+    public class MockInterceptor : InstanceFactoryInterceptor
+    {
+        public static InstanceMemento CreateFailureMemento()
+        {
+            MemoryInstanceMemento memento = new MemoryInstanceMemento("Mock", "failure");
+            memento.SetProperty("success", false.ToString());
 
-		public static InstanceMemento CreateFailureMemento()
-		{
-			MemoryInstanceMemento memento = new MemoryInstanceMemento("Mock", "failure");
-			memento.SetProperty("success", false.ToString());
+            return memento;
+        }
 
-			return memento;
-		}
+        public static InstanceMemento CreateSuccessMemento()
+        {
+            MemoryInstanceMemento memento = new MemoryInstanceMemento("Mock", "failure");
+            memento.SetProperty("success", true.ToString());
 
-		public static InstanceMemento CreateSuccessMemento()
-		{
-			MemoryInstanceMemento memento = new MemoryInstanceMemento("Mock", "failure");
-			memento.SetProperty("success", true.ToString());
+            return memento;
+        }
 
-			return memento;
-		}
+        public MockInterceptor(bool success) : base()
+        {
+            if (!success)
+            {
+                throw new ApplicationException("Bad");
+            }
+        }
 
-		public MockInterceptor(bool success) : base()
-		{
-			if (!success)
-			{
-				throw new ApplicationException("Bad");
-			}
-		}
-
-	    public override object Clone()
-	    {
-            return this.MemberwiseClone();
-	    }
-	}
+        public override object Clone()
+        {
+            return MemberwiseClone();
+        }
+    }
 }

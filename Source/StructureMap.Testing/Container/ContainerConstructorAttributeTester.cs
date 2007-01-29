@@ -4,22 +4,20 @@ using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing.Container
 {
-	[TestFixture]
-	public class ContainerConstructorAttributeTester
-	{
-		public ContainerConstructorAttributeTester()
-		{
-		}
+    [TestFixture]
+    public class ContainerConstructorAttributeTester
+    {
+        public ContainerConstructorAttributeTester()
+        {
+        }
 
-		[Test]
-		public void GetConstructor()
-		{
-			ConstructorInfo constructor = DefaultConstructorAttribute.GetConstructor(
-				typeof (ComplexRule));
+        [Test]
+        public void GetConstructor()
+        {
+            ConstructorInfo constructor = DefaultConstructorAttribute.GetConstructor(
+                typeof (ComplexRule));
 
-			Assert.IsNotNull(constructor);
-		}
-
-
-	}
+            Assert.IsNotNull(constructor);
+        }
+    }
 }

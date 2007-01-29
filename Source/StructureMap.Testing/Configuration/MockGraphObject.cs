@@ -4,59 +4,56 @@ using StructureMap.Configuration;
 
 namespace StructureMap.Testing.Configuration
 {
-	public class MockGraphObject : GraphObject
-	{
-		private bool _acceptWasCalled = false;
-		private ArrayList _children = new ArrayList();
-		
-		public MockGraphObject()
-		{
-		}
+    public class MockGraphObject : GraphObject
+    {
+        private bool _acceptWasCalled = false;
+        private ArrayList _children = new ArrayList();
 
-		public void AddChild()
-		{
-			MockGraphObject child = new MockGraphObject();
-			_children.Add(child);
-		}
+        public MockGraphObject()
+        {
+        }
 
-		public void AddDescendant(int[] indices)
-		{
-			MockGraphObject node = this;
+        public void AddChild()
+        {
+            MockGraphObject child = new MockGraphObject();
+            _children.Add(child);
+        }
 
-			for (int i = 0; i < indices.Length; i++)
-			{
-				node = (MockGraphObject) node._children[indices[i]];
-			}
+        public void AddDescendant(int[] indices)
+        {
+            MockGraphObject node = this;
 
-			node.AddChild();
-		}
+            for (int i = 0; i < indices.Length; i++)
+            {
+                node = (MockGraphObject) node._children[indices[i]];
+            }
 
-		public override GraphObject[] Children
-		{
-			get
-			{
-				return (GraphObject[]) _children.ToArray(typeof (GraphObject))	;
-			}
-		}
+            node.AddChild();
+        }
 
-		public override void AcceptVisitor(IConfigurationVisitor visitor)
-		{
-			_acceptWasCalled = true;
-		}
+        public override GraphObject[] Children
+        {
+            get { return (GraphObject[]) _children.ToArray(typeof (GraphObject)); }
+        }
 
-		protected override string key
-		{
-			get { return string.Empty; }
-		}
+        public override void AcceptVisitor(IConfigurationVisitor visitor)
+        {
+            _acceptWasCalled = true;
+        }
 
-		public void VerifyAcceptVisitor()
-		{
-			Assert.IsTrue(_acceptWasCalled);
+        protected override string key
+        {
+            get { return string.Empty; }
+        }
 
-			foreach (MockGraphObject child in _children)
-			{
-				child.VerifyAcceptVisitor();
-			}
-		}
-	}
+        public void VerifyAcceptVisitor()
+        {
+            Assert.IsTrue(_acceptWasCalled);
+
+            foreach (MockGraphObject child in _children)
+            {
+                child.VerifyAcceptVisitor();
+            }
+        }
+    }
 }

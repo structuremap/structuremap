@@ -1,7 +1,7 @@
 namespace StructureMap.DataAccess
 {
-	public interface IConnectionStringProvider
-	{
-		string GetConnectionString();
-	}
+    public interface IConnectionStringProvider
+    {
+        string GetConnectionString();
+    }
 }

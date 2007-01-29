@@ -2,55 +2,55 @@ using System.Data;
 
 namespace StructureMap.DataAccess.Commands
 {
-	public abstract class QueryFilter : IQueryFilter
-	{
-		private readonly string _parameterName;
-		protected string _sqlSnippet;
-		protected object _innerValue = null;
-		protected const string REPLACEMENT_VALUE = "{Value}";
+    public abstract class QueryFilter : IQueryFilter
+    {
+        private readonly string _parameterName;
+        protected string _sqlSnippet;
+        protected object _innerValue = null;
+        protected const string REPLACEMENT_VALUE = "{Value}";
 
-		
-		public QueryFilter(string parameterName, string sqlSnippet)
-		{
-			_parameterName = parameterName;
-			_sqlSnippet = sqlSnippet;
-		}
 
-		protected string sqlSnippet
-		{
-			get { return _sqlSnippet; }
-			set {_sqlSnippet = value;}
-		}
+        public QueryFilter(string parameterName, string sqlSnippet)
+        {
+            _parameterName = parameterName;
+            _sqlSnippet = sqlSnippet;
+        }
 
-		public void SetProperty(object propertyValue)
-		{
-			_innerValue = propertyValue;
-		}
+        protected string sqlSnippet
+        {
+            get { return _sqlSnippet; }
+            set { _sqlSnippet = value; }
+        }
 
-		public object GetProperty()
-		{
-			return _innerValue;
-		}
+        public void SetProperty(object propertyValue)
+        {
+            _innerValue = propertyValue;
+        }
 
-		public abstract void Initialize(IDatabaseEngine engine, IDbCommand command);
+        public object GetProperty()
+        {
+            return _innerValue;
+        }
 
-		public bool IsActive()
-		{
-			return _innerValue != null;
-		}
+        public abstract void Initialize(IDatabaseEngine engine, IDbCommand command);
 
-		public abstract string GetWhereClause();
+        public bool IsActive()
+        {
+            return _innerValue != null;
+        }
 
-		public abstract void AttachParameters(IDbCommand command);
+        public abstract string GetWhereClause();
 
-		public string ParameterName
-		{
-			get { return _parameterName; }
-		}
+        public abstract void AttachParameters(IDbCommand command);
 
-		public void OverrideParameterType(System.Data.DbType dbtype)
-		{
-			// no-op;
-		}
-	}
+        public string ParameterName
+        {
+            get { return _parameterName; }
+        }
+
+        public void OverrideParameterType(DbType dbtype)
+        {
+            // no-op;
+        }
+    }
 }

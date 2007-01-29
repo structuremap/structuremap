@@ -1,2 +1,2 @@
 using System.Reflection;
-[assembly : AssemblyTitle( "StructureMap.Testing.Widget5" )]
+[assembly : AssemblyTitle("StructureMap.Testing.Widget5")]

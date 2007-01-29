@@ -9,49 +9,49 @@ using StructureMap.Client.TreeNodes;
 
 namespace StructureMap.Client.Shell
 {
-	/// <summary>
-	/// Summary description for ApplicationShell.
-	/// </summary>
-	public class ApplicationShell : Form, IApplicationShell
-	{
-		private Panel topPanel;
-		private Label label1;
-		private TextBox configPathTextBox;
-		private Button configFileButton;
-		private Button binaryFolderButton;
-		private TextBox binaryFolderTextBox;
-		private Label label2;
-		private CheckBox lockFolderCheckbox;
-		private Button refreshButton;
-		private Panel mainPanel;
-		private TreeView treeView;
-		private WebBrowser browser;
-		private Splitter splitter;
-		private FolderBrowserDialog folderBrowserDialog;
-		private OpenFileDialog openFileDialog;
-		private HtmlElement _mainDiv;
+    /// <summary>
+    /// Summary description for ApplicationShell.
+    /// </summary>
+    public class ApplicationShell : Form, IApplicationShell
+    {
+        private Panel topPanel;
+        private Label label1;
+        private TextBox configPathTextBox;
+        private Button configFileButton;
+        private Button binaryFolderButton;
+        private TextBox binaryFolderTextBox;
+        private Label label2;
+        private CheckBox lockFolderCheckbox;
+        private Button refreshButton;
+        private Panel mainPanel;
+        private TreeView treeView;
+        private WebBrowser browser;
+        private Splitter splitter;
+        private FolderBrowserDialog folderBrowserDialog;
+        private OpenFileDialog openFileDialog;
+        private HtmlElement _mainDiv;
 
-		private ApplicationController _controller;
-		private ImageList images;
-		private IContainer components;
+        private ApplicationController _controller;
+        private ImageList images;
+        private IContainer components;
 
-		public ApplicationShell()
-		{
-			//
-			// Required for Windows Form Designer support
-			//
-			InitializeComponent();
+        public ApplicationShell()
+        {
+            //
+            // Required for Windows Form Designer support
+            //
+            InitializeComponent();
 
-			_controller = new ApplicationController(this, new ReportSource());
-			treeView.MouseDown += new MouseEventHandler(treeView_MouseDown);
+            _controller = new ApplicationController(this, new ReportSource());
+            treeView.MouseDown += new MouseEventHandler(treeView_MouseDown);
 
 
-		    browser.Navigate("about:blank");
+            browser.Navigate("about:blank");
             browser.Navigated += new WebBrowserNavigatedEventHandler(browser_Navigated);
-            browser.NewWindow += new CancelEventHandler(browser_NewWindow);		    
-		}
+            browser.NewWindow += new CancelEventHandler(browser_NewWindow);
+        }
 
-        void browser_NewWindow(object sender, CancelEventArgs e)
+        private void browser_NewWindow(object sender, CancelEventArgs e)
         {
             e.Cancel = true;
 
@@ -59,7 +59,7 @@ namespace StructureMap.Client.Shell
             string search = browser.Url.ToString();
 
             SearchPart[] searchParts = SearchPart.ParseParts(search);
-            GraphObjectNode targetNode = (GraphObjectNode)treeView.TopNode;
+            GraphObjectNode targetNode = (GraphObjectNode) treeView.TopNode;
             foreach (SearchPart part in searchParts)
             {
                 targetNode = part.FindNode(targetNode);
@@ -77,41 +77,43 @@ namespace StructureMap.Client.Shell
             }
         }
 
-        void browser_Navigated(object sender, WebBrowserNavigatedEventArgs e)
+        private void browser_Navigated(object sender, WebBrowserNavigatedEventArgs e)
         {
-            Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(this.GetType(), "Template.htm");
+            Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(GetType(), "Template.htm");
             StreamReader reader = new StreamReader(stream);
 
             string html = reader.ReadToEnd();
 
             browser.Document.Body.InnerHtml = html;
-            _mainDiv = browser.Document.GetElementById("divContents");            
+            _mainDiv = browser.Document.GetElementById("divContents");
         }
 
-		/// <summary>
-		/// Clean up any resources being used.
-		/// </summary>
-		protected override void Dispose( bool disposing )
-		{
-			if( disposing )
-			{
-				if(components != null)
-				{
-					components.Dispose();
-				}
-			}
-			base.Dispose( disposing );
-		}
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (components != null)
+                {
+                    components.Dispose();
+                }
+            }
+            base.Dispose(disposing);
+        }
 
-		#region Windows Form Designer generated code
-		/// <summary>
-		/// Required method for Designer support - do not modify
-		/// the contents of this method with the code editor.
-		/// </summary>
-		private void InitializeComponent()
-		{
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ApplicationShell));
+            System.ComponentModel.ComponentResourceManager resources =
+                new System.ComponentModel.ComponentResourceManager(typeof (ApplicationShell));
             this.topPanel = new System.Windows.Forms.Panel();
             this.refreshButton = new System.Windows.Forms.Button();
             this.lockFolderCheckbox = new System.Windows.Forms.CheckBox();
@@ -258,7 +260,8 @@ namespace StructureMap.Client.Shell
             // 
             // images
             // 
-            this.images.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("images.ImageStream")));
+            this.images.ImageStream =
+                ((System.Windows.Forms.ImageListStreamer) (resources.GetObject("images.ImageStream")));
             this.images.TransparentColor = System.Drawing.Color.Transparent;
             this.images.Images.SetKeyName(0, "");
             this.images.Images.SetKeyName(1, "");
@@ -281,93 +284,88 @@ namespace StructureMap.Client.Shell
             this.topPanel.PerformLayout();
             this.mainPanel.ResumeLayout(false);
             this.ResumeLayout(false);
+        }
 
-		}
-		#endregion
+        #endregion
 
-		public GraphObjectNode TopNode
-		{
-			get { return treeView.TopNode as GraphObjectNode; }
-			set
-			{
-				treeView.Nodes.Clear();
-				treeView.Nodes.Add(value);
+        public GraphObjectNode TopNode
+        {
+            get { return treeView.TopNode as GraphObjectNode; }
+            set
+            {
+                treeView.Nodes.Clear();
+                treeView.Nodes.Add(value);
 
-				value.Expand();
-				foreach (TreeNode node in value.Nodes)
-				{
-					node.Expand();
-				}
+                value.Expand();
+                foreach (TreeNode node in value.Nodes)
+                {
+                    node.Expand();
+                }
 
-				_controller.ShowView(value.ViewName, value.Subject);
-			}
-		}
+                _controller.ShowView(value.ViewName, value.Subject);
+            }
+        }
 
-		public string ConfigurationPath
-		{
-			get { return configPathTextBox.Text; }
-		}
+        public string ConfigurationPath
+        {
+            get { return configPathTextBox.Text; }
+        }
 
-		public string AssemblyFolder
-		{
-			get { return binaryFolderTextBox.Text; }
-		}
+        public string AssemblyFolder
+        {
+            get { return binaryFolderTextBox.Text; }
+        }
 
-		public bool LockFolders
-		{
-			get { return lockFolderCheckbox.Checked; }
-		}
+        public bool LockFolders
+        {
+            get { return lockFolderCheckbox.Checked; }
+        }
 
-		public void DisplayHTML(string html)
-		{
-			_mainDiv.InnerHtml = html;
-		}
+        public void DisplayHTML(string html)
+        {
+            _mainDiv.InnerHtml = html;
+        }
 
-		private void configFileButton_Click(object sender, EventArgs e)
-		{
-			if (openFileDialog.ShowDialog() == DialogResult.OK)
-			{
-				configPathTextBox.Text = openFileDialog.FileName;
-			}
-		}
+        private void configFileButton_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                configPathTextBox.Text = openFileDialog.FileName;
+            }
+        }
 
-		private void binaryFolderButton_Click(object sender, EventArgs e)
-		{
-			if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
-			{
-				binaryFolderTextBox.Text = folderBrowserDialog.SelectedPath;
-			}
-		}
+        private void binaryFolderButton_Click(object sender, EventArgs e)
+        {
+            if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+            {
+                binaryFolderTextBox.Text = folderBrowserDialog.SelectedPath;
+            }
+        }
 
-		private void refreshButton_Click(object sender, EventArgs e)
-		{
-			_controller.RefreshReport();
-		}
+        private void refreshButton_Click(object sender, EventArgs e)
+        {
+            _controller.RefreshReport();
+        }
 
-		private void treeView_MouseDown(object sender, MouseEventArgs e)
-		{
-			if (e.Button != MouseButtons.Left)
-			{
-				return;
-			}
+        private void treeView_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Left)
+            {
+                return;
+            }
 
-			Point point = new Point(e.X, e.Y);
-			GraphObjectNode node = treeView.GetNodeAt(point) as GraphObjectNode;
-			if (node != null)
-			{
-				_controller.ShowView(node.ViewName, node.Subject);
-			}
-		}
-
-
+            Point point = new Point(e.X, e.Y);
+            GraphObjectNode node = treeView.GetNodeAt(point) as GraphObjectNode;
+            if (node != null)
+            {
+                _controller.ShowView(node.ViewName, node.Subject);
+            }
+        }
 
 
-		private void lockFolderCheckbox_CheckedChanged(object sender, EventArgs e)
-		{
-			binaryFolderButton.Enabled = binaryFolderTextBox.Enabled = !lockFolderCheckbox.Checked;
-		}
-
-		
-
-	}
+        private void lockFolderCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            binaryFolderButton.Enabled = binaryFolderTextBox.Enabled = !lockFolderCheckbox.Checked;
+        }
+    }
 }

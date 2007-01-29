@@ -3,12 +3,19 @@ using StructureMap.Attributes;
 
 namespace StructureMap.Testing.GenericWidgets
 {
-    public interface ISimpleThing<T>{}
-    public class SimpleThing<T> : ISimpleThing<T>{}
-    
+    public interface ISimpleThing<T>
+    {
+    }
+
+    public class SimpleThing<T> : ISimpleThing<T>
+    {
+    }
+
     [PluginFamily]
-    public interface IService<T>{}
-    
+    public interface IService<T>
+    {
+    }
+
     [Pluggable("Default")]
     public class Service<T> : IService<T>
     {
@@ -38,7 +45,7 @@ namespace StructureMap.Testing.GenericWidgets
     [PluginFamily("Default")]
     public interface IPlug<T>
     {
-        Type PlugType { get;}
+        Type PlugType { get; }
     }
 
     [Pluggable("Default")]
@@ -49,9 +56,11 @@ namespace StructureMap.Testing.GenericWidgets
             get { return typeof (T); }
         }
     }
-    
-    public interface IThing<T, U, V>{}
-    
+
+    public interface IThing<T, U, V>
+    {
+    }
+
     public class ColorThing<T, U, V> : IThing<T, U, V>
     {
         private readonly string _color;
@@ -66,7 +75,7 @@ namespace StructureMap.Testing.GenericWidgets
             get { return _color; }
         }
     }
-    
+
     public class ComplexThing<T, U, V> : IThing<T, U, V>
     {
         private readonly string _name;
@@ -75,9 +84,9 @@ namespace StructureMap.Testing.GenericWidgets
 
         public ComplexThing(string name, int age, bool ready)
         {
-            this._name = name;
-            this._age = age;
-            this._ready = ready;
+            _name = name;
+            _age = age;
+            _ready = ready;
         }
 
         public string Name
@@ -95,7 +104,7 @@ namespace StructureMap.Testing.GenericWidgets
             get { return _ready; }
         }
     }
-    
+
     [PluginFamily("Default", Scope = InstanceScope.Singleton)]
     public abstract class AbstractClass<T>
     {
@@ -105,19 +114,25 @@ namespace StructureMap.Testing.GenericWidgets
         {
             get { return _id; }
         }
-        
+
         public Type GetT()
         {
             return typeof (T);
         }
     }
-    
+
     [Pluggable("Default")]
-    public class ConcreteClass<T> : AbstractClass<T>{}    
-    
+    public class ConcreteClass<T> : AbstractClass<T>
+    {
+    }
+
     [PluginFamily("Default")]
-    public interface ILotsOfTemplatedTypes<T,U,V>{}
-    
+    public interface ILotsOfTemplatedTypes<T, U, V>
+    {
+    }
+
     [Pluggable("Default")]
-    public class LotsOfTemplatedTypes<T,U,V> : ILotsOfTemplatedTypes<T, U, V>{}
+    public class LotsOfTemplatedTypes<T, U, V> : ILotsOfTemplatedTypes<T, U, V>
+    {
+    }
 }

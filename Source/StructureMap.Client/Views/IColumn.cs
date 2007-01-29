@@ -3,13 +3,13 @@ using StructureMap.Configuration;
 
 namespace StructureMap.Client.Views
 {
-	[PluginFamily]
-	public interface IColumn
-	{
-		void Initialize(Type subjectType);
+    [PluginFamily]
+    public interface IColumn
+    {
+        void Initialize(Type subjectType);
 
-		string HeaderText { get; }
+        string HeaderText { get; }
 
-		void CreateCell(TableMaker maker, GraphObject subject);
-	}
+        void CreateCell(TableMaker maker, GraphObject subject);
+    }
 }

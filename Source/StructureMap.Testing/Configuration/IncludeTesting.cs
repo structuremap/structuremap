@@ -5,53 +5,51 @@ using StructureMap.Testing.Widget4;
 
 namespace StructureMap.Testing.Configuration
 {
-	[TestFixture]
-	public class IncludeTesting
-	{
-		[TestFixtureSetUp]
-		public void TestFixtureSetUp()
-		{
-			DataMother.WriteDocument("Master.xml");
-			DataMother.WriteDocument("Include1.xml");
-			DataMother.WriteDocument("Include2.xml");
-		}
+    [TestFixture]
+    public class IncludeTesting
+    {
+        [TestFixtureSetUp]
+        public void TestFixtureSetUp()
+        {
+            DataMother.WriteDocument("Master.xml");
+            DataMother.WriteDocument("Include1.xml");
+            DataMother.WriteDocument("Include2.xml");
+        }
 
-		private PluginGraph buildGraph()
-		{
-		    return DataMother.GetDiagnosticPluginGraph("Master.xml");
-		}
+        private PluginGraph buildGraph()
+        {
+            return DataMother.GetDiagnosticPluginGraph("Master.xml");
+        }
 
-		[Test]
-		public void GetAssembliesFromIncludes()
-		{
-			PluginGraph graph = buildGraph();
+        [Test]
+        public void GetAssembliesFromIncludes()
+        {
+            PluginGraph graph = buildGraph();
 
-			Assert.AreEqual(4, graph.Assemblies.Count);
+            Assert.AreEqual(4, graph.Assemblies.Count);
 
-			Assert.IsTrue(graph.Assemblies.Contains("StructureMap.Testing.Widget"));
-			Assert.IsTrue(graph.Assemblies.Contains("StructureMap.Testing.Widget2"));
-			Assert.IsTrue(graph.Assemblies.Contains("StructureMap.Testing.Widget3"));
-			Assert.IsTrue(graph.Assemblies.Contains("StructureMap.Testing.Widget4"));
-		}
+            Assert.IsTrue(graph.Assemblies.Contains("StructureMap.Testing.Widget"));
+            Assert.IsTrue(graph.Assemblies.Contains("StructureMap.Testing.Widget2"));
+            Assert.IsTrue(graph.Assemblies.Contains("StructureMap.Testing.Widget3"));
+            Assert.IsTrue(graph.Assemblies.Contains("StructureMap.Testing.Widget4"));
+        }
 
-		[Test]
-		public void GetFamilyFromIncludeAndMaster()
-		{
-			PluginGraph graph = buildGraph();
+        [Test]
+        public void GetFamilyFromIncludeAndMaster()
+        {
+            PluginGraph graph = buildGraph();
 
-			Assert.IsTrue(graph.PluginFamilies.Contains(typeof(IStrategy)));
-		}
+            Assert.IsTrue(graph.PluginFamilies.Contains(typeof (IStrategy)));
+        }
 
-		[Test]
-		public void AddAnInstanceFromMasterConfigToAFamilyInInclude()
-		{
-			PluginGraph graph = buildGraph();
-			PluginFamily family = graph.PluginFamilies[typeof(IStrategy)];
-			Assert.IsNotNull(family.Source.GetMemento("Blue"));
-			Assert.IsNotNull(family.Source.GetMemento("Red"));
-			Assert.IsNotNull(family.Source.GetMemento("DeepTest")); // from include
-
-			
-		}
-	}
+        [Test]
+        public void AddAnInstanceFromMasterConfigToAFamilyInInclude()
+        {
+            PluginGraph graph = buildGraph();
+            PluginFamily family = graph.PluginFamilies[typeof (IStrategy)];
+            Assert.IsNotNull(family.Source.GetMemento("Blue"));
+            Assert.IsNotNull(family.Source.GetMemento("Red"));
+            Assert.IsNotNull(family.Source.GetMemento("DeepTest")); // from include
+        }
+    }
 }

@@ -6,40 +6,40 @@ using StructureMap.DataAccess.MSSQL;
 
 namespace StructureMap.Testing.DataAccess.MSSQL
 {
-	[TestFixture, Explicit]
-	public class MSSQLDatabaseEngineTester
-	{
-		public const string CREATION_SPROC_NAME = "sp_CreationTestProcedure";
+    [TestFixture, Explicit]
+    public class MSSQLDatabaseEngineTester
+    {
+        public const string CREATION_SPROC_NAME = "sp_CreationTestProcedure";
 
-		[Test]
-		public void CreateConnection()
-		{
-			string theConnectionString = "Data Source=localhost;database=test";
+        [Test]
+        public void CreateConnection()
+        {
+            string theConnectionString = "Data Source=localhost;database=test";
 
-			IDatabaseEngine database = new MSSQLDatabaseEngine(theConnectionString);
-		
-			SqlConnection connection = (SqlConnection) database.GetConnection();
-			Assert.AreEqual(theConnectionString, connection.ConnectionString);
-		}
+            IDatabaseEngine database = new MSSQLDatabaseEngine(theConnectionString);
 
-		[Test]
-		public void CreateCommand()
-		{
-			string theConnectionString = "Data Source=localhost;database=test";
+            SqlConnection connection = (SqlConnection) database.GetConnection();
+            Assert.AreEqual(theConnectionString, connection.ConnectionString);
+        }
 
-			IDatabaseEngine database = new MSSQLDatabaseEngine(theConnectionString);
-			SqlCommand command = (SqlCommand) database.GetCommand();
-		}
+        [Test]
+        public void CreateCommand()
+        {
+            string theConnectionString = "Data Source=localhost;database=test";
 
-		[Test]
-		public void CreateDataAdapter()
-		{
-			string theConnectionString = "Data Source=localhost;database=test";
-			IDatabaseEngine database = new MSSQLDatabaseEngine(theConnectionString);
-			SqlDataAdapter adapter = (SqlDataAdapter) database.GetDataAdapter();
-		
-			Assert.IsNotNull(adapter);
-		}
+            IDatabaseEngine database = new MSSQLDatabaseEngine(theConnectionString);
+            SqlCommand command = (SqlCommand) database.GetCommand();
+        }
+
+        [Test]
+        public void CreateDataAdapter()
+        {
+            string theConnectionString = "Data Source=localhost;database=test";
+            IDatabaseEngine database = new MSSQLDatabaseEngine(theConnectionString);
+            SqlDataAdapter adapter = (SqlDataAdapter) database.GetDataAdapter();
+
+            Assert.IsNotNull(adapter);
+        }
 
 /*
 CREATE PROCEDURE sp_CreationTestProcedure (
@@ -57,47 +57,47 @@ as
 GO
  */
 
-		[Test]
-		public void CreateStoredProcedureCommand()
-		{
-			MSSQLDatabaseEngine engine = ObjectMother.MSSQLDatabaseEngine();
+        [Test]
+        public void CreateStoredProcedureCommand()
+        {
+            MSSQLDatabaseEngine engine = ObjectMother.MSSQLDatabaseEngine();
 
-			SqlCommand command = (SqlCommand) engine.CreateStoredProcedureCommand(CREATION_SPROC_NAME);
+            SqlCommand command = (SqlCommand) engine.CreateStoredProcedureCommand(CREATION_SPROC_NAME);
 
-			Assert.AreEqual(CREATION_SPROC_NAME, command.CommandText);
-			Assert.AreEqual(CommandType.StoredProcedure, command.CommandType);
+            Assert.AreEqual(CREATION_SPROC_NAME, command.CommandText);
+            Assert.AreEqual(CommandType.StoredProcedure, command.CommandType);
 
-			Assert.AreEqual(6, command.Parameters.Count, "5 parameters + RETURN_VALUE");
+            Assert.AreEqual(6, command.Parameters.Count, "5 parameters + RETURN_VALUE");
 
-			Assert.IsTrue(command.Parameters.Contains("@param1"));
-			Assert.IsTrue(command.Parameters.Contains("@param2"));
-			Assert.IsTrue(command.Parameters.Contains("@param3"));
-			Assert.IsTrue(command.Parameters.Contains("@param4"));
-			Assert.IsTrue(command.Parameters.Contains("@param5"));
-		}
+            Assert.IsTrue(command.Parameters.Contains("@param1"));
+            Assert.IsTrue(command.Parameters.Contains("@param2"));
+            Assert.IsTrue(command.Parameters.Contains("@param3"));
+            Assert.IsTrue(command.Parameters.Contains("@param4"));
+            Assert.IsTrue(command.Parameters.Contains("@param5"));
+        }
 
-		[Test]
-		public void CreateStringParameter()
-		{
-			MSSQLDatabaseEngine engine = ObjectMother.MSSQLDatabaseEngine();
+        [Test]
+        public void CreateStringParameter()
+        {
+            MSSQLDatabaseEngine engine = ObjectMother.MSSQLDatabaseEngine();
 
-			SqlParameter parameter = (SqlParameter) engine.CreateStringParameter("param1", 30, true);
+            SqlParameter parameter = (SqlParameter) engine.CreateStringParameter("param1", 30, true);
 
-			Assert.AreEqual( "@param1", parameter.ParameterName);
-			Assert.AreEqual(30, parameter.Size);
-			Assert.AreEqual(true, parameter.IsNullable);
-			Assert.AreEqual(DbType.String, parameter.DbType);
-		}
+            Assert.AreEqual("@param1", parameter.ParameterName);
+            Assert.AreEqual(30, parameter.Size);
+            Assert.AreEqual(true, parameter.IsNullable);
+            Assert.AreEqual(DbType.String, parameter.DbType);
+        }
 
-		[Test]
-		public void CreateParameter()
-		{
-			MSSQLDatabaseEngine engine = ObjectMother.MSSQLDatabaseEngine();
-			SqlParameter parameter = (SqlParameter) engine.CreateParameter("param2", DbType.Int32, false);
+        [Test]
+        public void CreateParameter()
+        {
+            MSSQLDatabaseEngine engine = ObjectMother.MSSQLDatabaseEngine();
+            SqlParameter parameter = (SqlParameter) engine.CreateParameter("param2", DbType.Int32, false);
 
-			Assert.AreEqual("@param2", parameter.ParameterName);
-			Assert.AreEqual(DbType.Int32, parameter.DbType);
-			Assert.AreEqual(false, parameter.IsNullable);
-		}
-	}
+            Assert.AreEqual("@param2", parameter.ParameterName);
+            Assert.AreEqual(DbType.Int32, parameter.DbType);
+            Assert.AreEqual(false, parameter.IsNullable);
+        }
+    }
 }

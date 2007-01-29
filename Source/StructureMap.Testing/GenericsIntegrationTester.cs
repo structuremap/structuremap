@@ -1,4 +1,3 @@
-using System.Xml;
 using NUnit.Framework;
 using StructureMap.Graph;
 using StructureMap.Testing.GenericWidgets;
@@ -10,7 +9,7 @@ namespace StructureMap.Testing
     public class GenericsIntegrationTester
     {
         private InstanceManager manager;
-        
+
         [SetUp]
         public void SetUp()
         {
@@ -22,18 +21,21 @@ namespace StructureMap.Testing
         public void SimpleInstanceManagerTestWithGenerics()
         {
             Service<int> intService = (Service<int>) manager.CreateInstance(typeof (IService<int>), "Default");
-            Assert.AreEqual(typeof(int), intService.GetT());
-            
-            Service<string> stringService = (Service<string>) manager.CreateInstance(typeof (IService<string>), "Default");
-            Assert.AreEqual(typeof(string), stringService.GetT());
+            Assert.AreEqual(typeof (int), intService.GetT());
+
+            Service<string> stringService =
+                (Service<string>) manager.CreateInstance(typeof (IService<string>), "Default");
+            Assert.AreEqual(typeof (string), stringService.GetT());
         }
 
         [Test]
         public void MultipleGenericTypes()
         {
             IService<int> intService = (IService<int>) manager.CreateInstance(typeof (IService<int>), "Default");
-            IService<string> stringService = (IService<string>) manager.CreateInstance(typeof (IService<string>), "Default");
-            IService<double> doubleService = (IService<double>) manager.CreateInstance(typeof (IService<double>), "Default");
+            IService<string> stringService =
+                (IService<string>) manager.CreateInstance(typeof (IService<string>), "Default");
+            IService<double> doubleService =
+                (IService<double>) manager.CreateInstance(typeof (IService<double>), "Default");
         }
 
         [Test]
@@ -46,18 +48,20 @@ namespace StructureMap.Testing
         [Test, Ignore("Generics with more than 2 parameters")]
         public void ImplicitPluginFamilyWithLotsOfTemplatedParameters()
         {
-            ILotsOfTemplatedTypes<int, bool, string> thing = 
-                (ILotsOfTemplatedTypes<int, bool, string>) manager.CreateInstance(typeof(ILotsOfTemplatedTypes<int, bool, string>));
-            
+            ILotsOfTemplatedTypes<int, bool, string> thing =
+                (ILotsOfTemplatedTypes<int, bool, string>)
+                manager.CreateInstance(typeof (ILotsOfTemplatedTypes<int, bool, string>));
+
             Assert.IsNotNull(thing);
         }
 
         [Test, Ignore("Generics with more than 2 parameters")]
         public void PicksUpAnExplicitlyDefinedGenericPluginFamilyFromConfiguration()
         {
-            IThing<int, string, bool> thing = (IThing<int, string, bool>) manager.CreateInstance(typeof(IThing<int, string, bool>));
+            IThing<int, string, bool> thing =
+                (IThing<int, string, bool>) manager.CreateInstance(typeof (IThing<int, string, bool>));
             ColorThing<int, string, bool> redThing = (ColorThing<int, string, bool>) thing;
-            
+
             Assert.AreEqual("Red", redThing.Color);
         }
 
@@ -68,15 +72,18 @@ namespace StructureMap.Testing
             AbstractClass<int> object2 = (AbstractClass<int>) manager.CreateInstance(typeof (AbstractClass<int>));
             AbstractClass<int> object3 = (AbstractClass<int>) manager.CreateInstance(typeof (AbstractClass<int>));
 
-            AbstractClass<string> object4 = (AbstractClass<string>)manager.CreateInstance(typeof(AbstractClass<string>));
-            AbstractClass<string> object5 = (AbstractClass<string>)manager.CreateInstance(typeof(AbstractClass<string>));
-            AbstractClass<string> object6 = (AbstractClass<string>)manager.CreateInstance(typeof(AbstractClass<string>));
-            
+            AbstractClass<string> object4 =
+                (AbstractClass<string>) manager.CreateInstance(typeof (AbstractClass<string>));
+            AbstractClass<string> object5 =
+                (AbstractClass<string>) manager.CreateInstance(typeof (AbstractClass<string>));
+            AbstractClass<string> object6 =
+                (AbstractClass<string>) manager.CreateInstance(typeof (AbstractClass<string>));
+
             Assert.AreSame(object1, object2);
             Assert.AreSame(object1, object3);
             Assert.AreSame(object4, object5);
             Assert.AreSame(object4, object6);
-            
+
             Assert.AreNotSame(object1, object4);
         }
     }

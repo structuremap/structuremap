@@ -170,9 +170,9 @@ namespace StructureMap.Testing.Graph
 
         [
             Test,
-                ExpectedException(typeof (StructureMapException),
-                    "StructureMap Exception Code:  112\nMissing a mandatory \"ConcreteKey\" attribute in a <Plugin> node for Type \"StructureMap.Testing.Widget.NotPluggableWidget\""
-                    )]
+            ExpectedException(typeof (StructureMapException),
+                "StructureMap Exception Code:  112\nMissing a mandatory \"ConcreteKey\" attribute in a <Plugin> node for Type \"StructureMap.Testing.Widget.NotPluggableWidget\""
+                )]
         public void AddAPluggedTypeWithoutAConcreteKey()
         {
             TypePath path = new TypePath("StructureMap.Testing.Widget",
@@ -194,7 +194,7 @@ namespace StructureMap.Testing.Graph
 
         [
             Test,
-                ExpectedException(typeof (StructureMapException))]
+            ExpectedException(typeof (StructureMapException))]
         public void CreateAPluginWithANonExistentClass()
         {
             TypePath path = new TypePath("StructureMap.Testing.Widget",

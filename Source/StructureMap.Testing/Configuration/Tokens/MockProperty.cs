@@ -5,26 +5,26 @@ using StructureMap.Configuration.Tokens.Properties;
 
 namespace StructureMap.Testing.Configuration.Tokens
 {
-	public class MockProperty : Property
-	{
-		private readonly string _propertyName;
-		private bool _validateWasCalled = false;
+    public class MockProperty : Property
+    {
+        private readonly string _propertyName;
+        private bool _validateWasCalled = false;
 
-		public MockProperty(string propertyName)
-			: base(new PropertyDefinition(propertyName, typeof(string), 
-					PropertyDefinitionType.Constructor, ArgumentType.Primitive))
-		{
-			_propertyName = propertyName;
-		}
+        public MockProperty(string propertyName)
+            : base(new PropertyDefinition(propertyName, typeof (string),
+                                          PropertyDefinitionType.Constructor, ArgumentType.Primitive))
+        {
+            _propertyName = propertyName;
+        }
 
-		public override void Validate(IInstanceValidator validator)
-		{
-			_validateWasCalled = true;
-		}
+        public override void Validate(IInstanceValidator validator)
+        {
+            _validateWasCalled = true;
+        }
 
-		public void Verify()
-		{
-			Assert.IsTrue(_validateWasCalled, "Validate(IInstanceValidator) was called");
-		}
-	}
+        public void Verify()
+        {
+            Assert.IsTrue(_validateWasCalled, "Validate(IInstanceValidator) was called");
+        }
+    }
 }

@@ -3,33 +3,33 @@ using System.Runtime.CompilerServices;
 
 namespace StructureMap.DataAccess.Tools.Mocks
 {
-	public class StubbedCommandCollection : ICommandCollection
-	{
-		private Hashtable _commands;
+    public class StubbedCommandCollection : ICommandCollection
+    {
+        private Hashtable _commands;
 
-		public StubbedCommandCollection()
-		{
-			_commands = new Hashtable();
-		}
+        public StubbedCommandCollection()
+        {
+            _commands = new Hashtable();
+        }
 
-		[IndexerName("Command")]
-		public ICommand this[string commandName]
-		{
-			get
-			{
-				if (!_commands.ContainsKey(commandName))
-				{
-					MockCommand command = new MockCommand(commandName);
-					_commands.Add(commandName, command);
-				}
+        [IndexerName("Command")]
+        public ICommand this[string commandName]
+        {
+            get
+            {
+                if (!_commands.ContainsKey(commandName))
+                {
+                    MockCommand command = new MockCommand(commandName);
+                    _commands.Add(commandName, command);
+                }
 
-				return (ICommand) _commands[commandName];
-			}
-		}
+                return (ICommand) _commands[commandName];
+            }
+        }
 
-		public IEnumerator GetEnumerator()
-		{
-			return _commands.Values.GetEnumerator();
-		}
-	}
+        public IEnumerator GetEnumerator()
+        {
+            return _commands.Values.GetEnumerator();
+        }
+    }
 }

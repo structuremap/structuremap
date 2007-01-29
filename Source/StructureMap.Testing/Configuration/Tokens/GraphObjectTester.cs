@@ -7,125 +7,118 @@ using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Configuration.Tokens
 {
-	[TestFixture]
-	public class GraphObjectTester
-	{
-		private DynamicMock _visitorMock;
-		private IConfigurationVisitor _visitor;
-		private PluginGraphReport _report;
+    [TestFixture]
+    public class GraphObjectTester
+    {
+        private DynamicMock _visitorMock;
+        private IConfigurationVisitor _visitor;
+        private PluginGraphReport _report;
 
-		[SetUp]
-		public void SetUp()
-		{
-			ObjectMother.Reset();
+        [SetUp]
+        public void SetUp()
+        {
+            ObjectMother.Reset();
 
-			_visitorMock = new DynamicMock(typeof(IConfigurationVisitor));
-			_visitor = (IConfigurationVisitor) _visitorMock.MockInstance;
-			_report = ObjectMother.Report();
-		}
+            _visitorMock = new DynamicMock(typeof (IConfigurationVisitor));
+            _visitor = (IConfigurationVisitor) _visitorMock.MockInstance;
+            _report = ObjectMother.Report();
+        }
 
-		[Test]
-		public void AssemblyTokenAcceptVisitor()
-		{
-			AssemblyToken token = new AssemblyToken();
-			_visitorMock.Expect("HandleAssembly", token);
-		
-			token.AcceptVisitor(_visitor);
+        [Test]
+        public void AssemblyTokenAcceptVisitor()
+        {
+            AssemblyToken token = new AssemblyToken();
+            _visitorMock.Expect("HandleAssembly", token);
 
-			_visitorMock.Verify();
-		}
+            token.AcceptVisitor(_visitor);
 
-		[Test]
-		public void AssemblyTokenChildren()
-		{
-			AssemblyToken token = new AssemblyToken();
-			Assert.AreEqual(new GraphObject[0], token.Children);
-		}
+            _visitorMock.Verify();
+        }
 
-		[Test]
-		public void FamilyTokenAcceptVisitor()
-		{
-            FamilyToken token = new FamilyToken(new TypePath(typeof(IGateway)), null, new string[0]);
-			_visitorMock.Expect("HandleFamily", token);
+        [Test]
+        public void AssemblyTokenChildren()
+        {
+            AssemblyToken token = new AssemblyToken();
+            Assert.AreEqual(new GraphObject[0], token.Children);
+        }
 
-			token.AcceptVisitor(_visitor);
+        [Test]
+        public void FamilyTokenAcceptVisitor()
+        {
+            FamilyToken token = new FamilyToken(new TypePath(typeof (IGateway)), null, new string[0]);
+            _visitorMock.Expect("HandleFamily", token);
 
-			_visitorMock.Verify();
-		}
+            token.AcceptVisitor(_visitor);
 
-		[Test]
-		public void FamilyTokenChildren()
-		{
-			foreach (FamilyToken family in _report.Families)
-			{
-				int childCount = family.Plugins.Length + family.Interceptors.Length + family.Instances.Length;
-				if (family.SourceInstance != null)
-				{
-					childCount++;
-				}
+            _visitorMock.Verify();
+        }
 
-				Assert.AreEqual(childCount, family.Children.Length, family.PluginTypeName);
-			}
-		}
+        [Test]
+        public void FamilyTokenChildren()
+        {
+            foreach (FamilyToken family in _report.Families)
+            {
+                int childCount = family.Plugins.Length + family.Interceptors.Length + family.Instances.Length;
+                if (family.SourceInstance != null)
+                {
+                    childCount++;
+                }
 
-		[Test]
-		public void PluginAcceptVisitor()
-		{
-			PluginToken token = new PluginToken();
-			_visitorMock.Expect("HandlePlugin", token);
-			token.AcceptVisitor(_visitor);
-			_visitorMock.Verify();
-		}
+                Assert.AreEqual(childCount, family.Children.Length, family.PluginTypeName);
+            }
+        }
 
-		[Test]
-		public void PluginChildren()
-		{
-			foreach (FamilyToken family in _report.Families)
-			{
-				foreach (PluginToken plugin in family.Plugins)
-				{
-					Assert.AreEqual(plugin.Properties, plugin.Children);
-				}
-			}
-		}
+        [Test]
+        public void PluginAcceptVisitor()
+        {
+            PluginToken token = new PluginToken();
+            _visitorMock.Expect("HandlePlugin", token);
+            token.AcceptVisitor(_visitor);
+            _visitorMock.Verify();
+        }
 
-
-		[Test]
-		public void InstanceAcceptVisitor()
-		{
-			InstanceToken token = new InstanceToken();
-			_visitorMock.Expect("HandleInstance", token);
-			token.AcceptVisitor(_visitor);
-			_visitorMock.Verify();
-		}
-
-		[Test]
-		public void InstanceChildren()
-		{
-			foreach (FamilyToken family in _report.Families)
-			{
-				foreach (InstanceToken instance in family.Instances)
-				{
-					Assert.AreEqual(instance.Properties, instance.Children);
-				}
-			}
-		}
-
-		
-		[Test]
-		public void PropertyDefinitionAcceptVisitor()
-		{
-			PropertyDefinition token = new PropertyDefinition();
-			_visitorMock.Expect("HandlePropertyDefinition", token);
-			token.AcceptVisitor(_visitor);
-			_visitorMock.Verify();
-		}
+        [Test]
+        public void PluginChildren()
+        {
+            foreach (FamilyToken family in _report.Families)
+            {
+                foreach (PluginToken plugin in family.Plugins)
+                {
+                    Assert.AreEqual(plugin.Properties, plugin.Children);
+                }
+            }
+        }
 
 
+        [Test]
+        public void InstanceAcceptVisitor()
+        {
+            InstanceToken token = new InstanceToken();
+            _visitorMock.Expect("HandleInstance", token);
+            token.AcceptVisitor(_visitor);
+            _visitorMock.Verify();
+        }
+
+        [Test]
+        public void InstanceChildren()
+        {
+            foreach (FamilyToken family in _report.Families)
+            {
+                foreach (InstanceToken instance in family.Instances)
+                {
+                    Assert.AreEqual(instance.Properties, instance.Children);
+                }
+            }
+        }
 
 
-
-
-
-	}
+        [Test]
+        public void PropertyDefinitionAcceptVisitor()
+        {
+            PropertyDefinition token = new PropertyDefinition();
+            _visitorMock.Expect("HandlePropertyDefinition", token);
+            token.AcceptVisitor(_visitor);
+            _visitorMock.Verify();
+        }
+    }
 }

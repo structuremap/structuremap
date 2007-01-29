@@ -3,35 +3,34 @@ using StructureMap.Configuration;
 
 namespace StructureMap.Client.Views
 {
-	[Pluggable("Problems")]
-	public class ProblemColumn : IColumn
-	{
-		public ProblemColumn()
-		{
+    [Pluggable("Problems")]
+    public class ProblemColumn : IColumn
+    {
+        public ProblemColumn()
+        {
+        }
 
-		}
+        public void Initialize(Type subjectType)
+        {
+            // no-op;
+        }
 
-		public void Initialize(Type subjectType)
-		{
-			// no-op;
-		}
+        public string HeaderText
+        {
+            get { return "Problems"; }
+        }
 
-		public string HeaderText
-		{
-			get { return "Problems"; }
-		}
-
-		public void CreateCell(TableMaker maker, GraphObject subject)
-		{
-			int problemCount = subject.Problems.Length;
-			if (problemCount > 0)
-			{
-				maker.AddCenteredCell(problemCount.ToString());
-			}
-			else
-			{
-				maker.AddCell("");
-			}
-		}
-	}
+        public void CreateCell(TableMaker maker, GraphObject subject)
+        {
+            int problemCount = subject.Problems.Length;
+            if (problemCount > 0)
+            {
+                maker.AddCenteredCell(problemCount.ToString());
+            }
+            else
+            {
+                maker.AddCell("");
+            }
+        }
+    }
 }

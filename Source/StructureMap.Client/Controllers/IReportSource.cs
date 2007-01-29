@@ -2,8 +2,8 @@ using StructureMap.Configuration;
 
 namespace StructureMap.Client.Controllers
 {
-	public interface IReportSource
-	{
-		PluginGraphReport FetchReport(string configurationPath, string assemblyFolder);
-	}
+    public interface IReportSource
+    {
+        PluginGraphReport FetchReport(string configurationPath, string assemblyFolder);
+    }
 }

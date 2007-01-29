@@ -14,7 +14,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void CanFindType()
         {
-            TypePath path = new TypePath(this.GetType().Assembly.GetName().Name, this.GetType().FullName);
+            TypePath path = new TypePath(GetType().Assembly.GetName().Name, GetType().FullName);
             Assert.IsTrue(path.CanFindType());
             Assert.IsNotNull(path.FindType());
         }
@@ -22,7 +22,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void CanBuildTypeCreatedFromType()
         {
-            TypePath path = new TypePath(this.GetType());
+            TypePath path = new TypePath(GetType());
             path.FindType();
         }
     }

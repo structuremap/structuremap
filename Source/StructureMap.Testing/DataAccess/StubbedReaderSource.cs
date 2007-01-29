@@ -6,78 +6,72 @@ using StructureMap.DataAccess;
 
 namespace StructureMap.Testing.DataAccess
 {
-	public class StubbedReaderSource : IReaderSource, IInitializable
-	{
-		private readonly IDataReader _reader;
-		private string _name;
-		private Hashtable _parameters;
-		private IDataSession _session;
-		private bool _wasInitialized = false;
+    public class StubbedReaderSource : IReaderSource, IInitializable
+    {
+        private readonly IDataReader _reader;
+        private string _name;
+        private Hashtable _parameters;
+        private IDataSession _session;
+        private bool _wasInitialized = false;
 
-		public StubbedReaderSource(IDataReader reader)
-		{
-			_reader = reader;
-			_parameters = new Hashtable();
-		}
+        public StubbedReaderSource(IDataReader reader)
+        {
+            _reader = reader;
+            _parameters = new Hashtable();
+        }
 
-		public string Name
-		{
-			get { return _name; }
-			set { _name = value; }
-		}
+        public string Name
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
 
-		public IDataReader ExecuteReader()
-		{
-			return _reader;
-		}
+        public IDataReader ExecuteReader()
+        {
+            return _reader;
+        }
 
-		public DataSet ExecuteDataSet()
-		{
-			throw new NotImplementedException();
-		}
+        public DataSet ExecuteDataSet()
+        {
+            throw new NotImplementedException();
+        }
 
-		public object ExecuteScalar()
-		{
-			throw new NotImplementedException();
-		}
+        public object ExecuteScalar()
+        {
+            throw new NotImplementedException();
+        }
 
-		[IndexerName("Parameter")]
-		public object this[string parameterName]
-		{
-			get
-			{
-				return _parameters[parameterName];
-			}
-			set
-			{
-				_parameters[parameterName] = value;
-			}
-		}
+        [IndexerName("Parameter")]
+        public object this[string parameterName]
+        {
+            get { return _parameters[parameterName]; }
+            set { _parameters[parameterName] = value; }
+        }
 
-		public void Attach(IDataSession session)
-		{
-			_session = session;
-		}
+        public void Attach(IDataSession session)
+        {
+            _session = session;
+        }
 
-		public string ExecuteJSON()
-		{
-			throw new NotImplementedException();
-		}
+        public string ExecuteJSON()
+        {
+            throw new NotImplementedException();
+        }
 
-		public IDataSession Session
-		{
-			get { return _session; }
-			set { _session = value; }
-		}
+        public IDataSession Session
+        {
+            get { return _session; }
+            set { _session = value; }
+        }
 
-		public bool WasInitialized
-		{
-			get { return _wasInitialized; }
-		}
+        public bool WasInitialized
+        {
+            get { return _wasInitialized; }
+        }
 
-		public void Initialize(IDatabaseEngine engine)
-		{
-			_wasInitialized = true;
-		}
-	}
+        public void Initialize(IDatabaseEngine engine)
+        {
+            _wasInitialized = true;
+        }
+    }
 }

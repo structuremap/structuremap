@@ -5,75 +5,73 @@ using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing.Graph
 {
-	[TestFixture]
-	public class InterceptionChainTester
-	{
-		private InterceptionChain _chain;
-		private SingletonInterceptor _singleton1;
-		private SingletonInterceptor _singleton2;
+    [TestFixture]
+    public class InterceptionChainTester
+    {
+        private InterceptionChain _chain;
+        private SingletonInterceptor _singleton1;
+        private SingletonInterceptor _singleton2;
 
-		[SetUp]
-		public void SetUp()
-		{
-			_singleton1 = new SingletonInterceptor();
-			_singleton2 = new SingletonInterceptor();
+        [SetUp]
+        public void SetUp()
+        {
+            _singleton1 = new SingletonInterceptor();
+            _singleton2 = new SingletonInterceptor();
 
-			_chain = new InterceptionChain();
-			_chain.AddInterceptor(_singleton1);
-			_chain.AddInterceptor(_singleton2);
-		}
+            _chain = new InterceptionChain();
+            _chain.AddInterceptor(_singleton1);
+            _chain.AddInterceptor(_singleton2);
+        }
 
-	    [Test]
-	    public void tryIt()
-	    {
+        [Test]
+        public void tryIt()
+        {
             ObjectMother.Reset();
-	    }
+        }
 
 
-		[Test]
-		public void CreateInterceptionChainWithTwoInterceptors()
-		{
-			PluginFamily family = ObjectMother.GetPluginFamily(typeof (Rule));
-			InstanceFactory factory = new InstanceFactory(family, true);
+        [Test]
+        public void CreateInterceptionChainWithTwoInterceptors()
+        {
+            PluginFamily family = ObjectMother.GetPluginFamily(typeof (Rule));
+            InstanceFactory factory = new InstanceFactory(family, true);
 
-			IInstanceFactory wrappedFactory = _chain.WrapInstanceFactory(factory);
+            IInstanceFactory wrappedFactory = _chain.WrapInstanceFactory(factory);
 
-			Assert.IsNotNull(wrappedFactory);
+            Assert.IsNotNull(wrappedFactory);
 
-			// Cast exception if wrappedFactory is not a Singleton
-			SingletonInterceptor singletonWrapper = (SingletonInterceptor) wrappedFactory;
+            // Cast exception if wrappedFactory is not a Singleton
+            SingletonInterceptor singletonWrapper = (SingletonInterceptor) wrappedFactory;
 
-			Assert.AreSame(_singleton1, singletonWrapper);
-			Assert.AreSame(_singleton2, _singleton1.InnerInstanceFactory);
-			Assert.AreSame(factory, _singleton2.InnerInstanceFactory);
-		}
+            Assert.AreSame(_singleton1, singletonWrapper);
+            Assert.AreSame(_singleton2, _singleton1.InnerInstanceFactory);
+            Assert.AreSame(factory, _singleton2.InnerInstanceFactory);
+        }
 
-		[Test]
-		public void CreateInterceptionChainWithOneIntercepter()
-		{
-			InterceptionChain chain = new InterceptionChain();
-			chain.AddInterceptor(_singleton1);
+        [Test]
+        public void CreateInterceptionChainWithOneIntercepter()
+        {
+            InterceptionChain chain = new InterceptionChain();
+            chain.AddInterceptor(_singleton1);
 
-			PluginFamily family = ObjectMother.GetPluginFamily(typeof (Rule));
-			InstanceFactory factory = new InstanceFactory(family, true);
+            PluginFamily family = ObjectMother.GetPluginFamily(typeof (Rule));
+            InstanceFactory factory = new InstanceFactory(family, true);
 
-			IInstanceFactory wrappedFactory = chain.WrapInstanceFactory(factory);
-			Assert.AreSame(_singleton1, wrappedFactory);
-			Assert.AreSame(factory, _singleton1.InnerInstanceFactory);
-		}
+            IInstanceFactory wrappedFactory = chain.WrapInstanceFactory(factory);
+            Assert.AreSame(_singleton1, wrappedFactory);
+            Assert.AreSame(factory, _singleton1.InnerInstanceFactory);
+        }
 
-		[Test]
-		public void CreateInterceptionChainWithNoIntercepters()
-		{
-			InterceptionChain chain = new InterceptionChain();
-			PluginFamily family = ObjectMother.GetPluginFamily(typeof (Rule));
-			InstanceFactory factory = new InstanceFactory(family, true);
+        [Test]
+        public void CreateInterceptionChainWithNoIntercepters()
+        {
+            InterceptionChain chain = new InterceptionChain();
+            PluginFamily family = ObjectMother.GetPluginFamily(typeof (Rule));
+            InstanceFactory factory = new InstanceFactory(family, true);
 
-			IInstanceFactory wrappedFactory = chain.WrapInstanceFactory(factory);
+            IInstanceFactory wrappedFactory = chain.WrapInstanceFactory(factory);
 
-			Assert.AreSame(factory, wrappedFactory);
-		}
-	}
-
-
+            Assert.AreSame(factory, wrappedFactory);
+        }
+    }
 }

@@ -5,20 +5,20 @@ using StructureMap.Configuration.Tokens;
 
 namespace StructureMap.Testing.Configuration.Tokens
 {
-	[TestFixture]
-	public class TemplateTokenTester
-	{
-		[Test]
-		public void TemplateTokenCallsCorrectMethodOnIVisitor()
-		{
-			IMock visitorMock = new DynamicMock(typeof(IConfigurationVisitor));
-			
-			TemplateToken template = new TemplateToken();
+    [TestFixture]
+    public class TemplateTokenTester
+    {
+        [Test]
+        public void TemplateTokenCallsCorrectMethodOnIVisitor()
+        {
+            IMock visitorMock = new DynamicMock(typeof (IConfigurationVisitor));
 
-			visitorMock.Expect("HandleTemplate", template);
+            TemplateToken template = new TemplateToken();
 
-			template.AcceptVisitor((IConfigurationVisitor)visitorMock.MockInstance);
-			visitorMock.Verify();
-		}
-	}
+            visitorMock.Expect("HandleTemplate", template);
+
+            template.AcceptVisitor((IConfigurationVisitor) visitorMock.MockInstance);
+            visitorMock.Verify();
+        }
+    }
 }

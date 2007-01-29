@@ -173,6 +173,7 @@
     <Compile Include="Client\GraphObjectNodeTester.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Configuration\ConfigurationParserTester.cs" />
     <Compile Include="Configuration\DiagnosticGraphBuilderTester.cs">
       <SubType>Code</SubType>
     </Compile>
