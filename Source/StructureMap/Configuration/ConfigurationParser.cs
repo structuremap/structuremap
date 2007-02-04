@@ -14,16 +14,24 @@ namespace StructureMap.Configuration
 
         public static ConfigurationParser[] GetParsers(XmlDocument document, string includePath)
         {
+            XmlElement node = document.DocumentElement;
+
+            return GetParsers(node, includePath);
+        }
+
+        public static ConfigurationParser[] GetParsers(XmlNode node, string includePath)
+        {
             string folder = string.IsNullOrEmpty(includePath) ? string.Empty : Path.GetDirectoryName(includePath);
 
             ArrayList list = new ArrayList();
-            list.Add(new ConfigurationParser(document.DocumentElement));
+            
+            list.Add(new ConfigurationParser(node));
 
             string includedPath = null;
 
             try
             {
-                XmlNodeList includeNodes = document.DocumentElement.SelectNodes(XmlConstants.INCLUDE_NODE);
+                XmlNodeList includeNodes = node.SelectNodes(XmlConstants.INCLUDE_NODE);
                 foreach (XmlElement includeElement in includeNodes)
                 {
                     XmlDocument includedDoc = new XmlDocument();
@@ -91,6 +99,15 @@ namespace StructureMap.Configuration
         public ConfigurationParser(XmlNode structureMapNode)
         {
             _structureMapNode = structureMapNode;
+        }
+
+        public string Id
+        {
+            get
+            {
+                XmlAttribute att = _structureMapNode.Attributes["Id"];
+                return att == null ? string.Empty : att.Value;
+            }
         }
 
         public void ParseAssemblies(IGraphBuilder builder)

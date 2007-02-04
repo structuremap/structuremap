@@ -1,4 +1,4 @@
-<StructureMap>
+<StructureMap Id="Include2">
 	<Assembly Name="StructureMap.Testing.Widget4"/>
 	
 	<PluginFamily Type="StructureMap.Testing.Widget4.IStrategy" Assembly="StructureMap.Testing.Widget4" DefaultKey="Blue">

@@ -81,25 +81,12 @@ namespace StructureMap
                 lock (_lockObject)
                 {
                     _profile = value;
-
-                    PluginGraphBuilder builder = new PluginGraphBuilder();
-
-                    setDefaults(builder, manager);
+                    manager.SetDefaultsToProfile(_profile);
                 }
             }
             get { return _profile; }
         }
 
-        private static void setDefaults(PluginGraphBuilder builder, InstanceManager instanceManager)
-        {
-            // The authenticated user may not have required privileges to read from Environment
-            string machineName = InstanceDefaultManager.GetMachineName();
-
-            InstanceDefaultManager instanceDefaultManager = builder.DefaultManager;
-            Profile defaultProfile = instanceDefaultManager.CalculateDefaults(machineName, Profile);
-
-            instanceManager.SetDefaults(defaultProfile);
-        }
 
 
         /// <summary>
@@ -135,13 +122,12 @@ namespace StructureMap
 
         private static InstanceManager buildManager()
         {
-            PluginGraphBuilder builder = new PluginGraphBuilder();
-            PluginGraph graph = builder.Build();
+            PluginGraph graph = StructureMapConfiguration.GetPluginGraph();
 
-            InstanceManager manager = new InstanceManager(graph);
-            setDefaults(builder, manager);
+            InstanceManager instanceManager = new InstanceManager(graph);
+            instanceManager.SetDefaultsToProfile(_profile);
 
-            return manager;
+            return instanceManager;
         }
 
         #endregion

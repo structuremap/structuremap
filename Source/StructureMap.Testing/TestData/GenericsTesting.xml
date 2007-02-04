@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<StructureMap>
+<StructureMap Id="Generics">
   <Assembly Name="StructureMap.Testing.GenericWidgets"/>
 
   <PluginFamily Assembly="StructureMap.Testing.GenericWidgets" Type="StructureMap.Testing.GenericWidgets.IThing`3" DefaultKey="Red">

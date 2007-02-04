@@ -208,6 +208,7 @@
     <Compile Include="Configuration\ConfigurationParser.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Configuration\ConfigurationParserCollection.cs" />
     <Compile Include="Configuration\DiagnosticGraphBuilder.cs">
       <SubType>Code</SubType>
     </Compile>

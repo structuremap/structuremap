@@ -18,6 +18,7 @@ namespace StructureMap
         private HybridDictionary _filledTypeFactories;
         private bool _failOnException = true;
         private GenericsPluginGraph _genericsGraph;
+        private InstanceDefaultManager _defaultManager;
 
         /// <summary>
         /// Default constructor
@@ -48,6 +49,7 @@ namespace StructureMap
         public InstanceManager(PluginGraph pluginGraph, bool failOnException) : this()
         {
             _failOnException = failOnException;
+            _defaultManager = pluginGraph.DefaultManager;
 
             if (!pluginGraph.IsSealed)
             {
@@ -65,6 +67,11 @@ namespace StructureMap
                     registerPluginFamily(family);
                 }
             }
+        }
+
+        public InstanceDefaultManager DefaultManager
+        {
+            get { return _defaultManager; }
         }
 
         private IInstanceFactory registerPluginFamily(PluginFamily family)
@@ -471,6 +478,14 @@ namespace StructureMap
         public IList GetAllInstances(Type type)
         {
             return this[type].GetAllInstances();
+        }
+
+        public void SetDefaultsToProfile(string profile)
+        {
+            // The authenticated user may not have required privileges to read from Environment
+            string machineName = InstanceDefaultManager.GetMachineName();
+            Profile defaultProfile = _defaultManager.CalculateDefaults(machineName, profile);
+            SetDefaults(defaultProfile);
         }
     }
 }

@@ -62,20 +62,7 @@ namespace StructureMap
             _parsers = parsers;
         }
 
-        /// <summary>
-        /// Creates a PluginGraphBuilder from a %lt;StructureMap%gt; node
-        /// </summary>
-        /// <param name="structureMapNode"></param>
-        [Obsolete("Elimating direct usage of PluginGraphBuilder")]
-        public PluginGraphBuilder(XmlNode structureMapNode)
-        {
-            _parsers = new ConfigurationParser[] {new ConfigurationParser(structureMapNode)};
-        }
 
-        [Obsolete("Elimating direct usage of PluginGraphBuilder")]
-        public PluginGraphBuilder(XmlDocument document) : this(document.DocumentElement)
-        {
-        }
 
         /// <summary>
         /// Creates a PluginGraphBuilder that reads configuration from the filePath

@@ -130,5 +130,16 @@ namespace StructureMap.Testing.Container
             Assert.AreEqual(stringService, factory.PluginType);
 	    }
 
+	    [Test]
+	    public void PullsTheInstanceDefaultManagerFromPluginGraph()
+	    {
+            Type serviceType = typeof(IService<>);
+            PluginGraph pluginGraph = PluginGraph.BuildGraphFromAssembly(serviceType.Assembly);
+            Assert.IsNotNull(pluginGraph.DefaultManager);
+
+            InstanceManager manager = new InstanceManager(pluginGraph);
+            Assert.AreSame(pluginGraph.DefaultManager, manager.DefaultManager);
+	    }
+
 	}
 }

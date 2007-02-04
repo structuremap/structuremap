@@ -1,4 +1,4 @@
-<StructureMap>
+<StructureMap Id="Master">
 	<Include File="Include1.xml" />
 	<Include File="Include2.xml" />
 
