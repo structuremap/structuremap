@@ -143,6 +143,7 @@
       <Link>CommonAssemblyInfo.cs</Link>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="AlternativeConfigurationTester.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -450,6 +451,10 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="TestData\GenericsTesting.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestData\Config1.xml" />
+    <EmbeddedResource Include="TestData\Config2.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

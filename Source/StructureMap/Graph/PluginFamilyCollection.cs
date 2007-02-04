@@ -36,17 +36,15 @@ namespace StructureMap.Graph
 
         public PluginFamily Add(PluginFamily family)
         {
-            if (family.PluginTypeName.Contains("GrandChild"))
-            {
-                int x = 0;
-            }
-
             verifyNotSealed();
 
             Type key = family.PluginType;
             if (_pluginFamilies.ContainsKey(key))
             {
-                _pluginFamilies[key] = family;
+                if (_pluginFamilies[family.PluginType].DefinitionSource == DefinitionSource.Implicit)
+                {
+                    _pluginFamilies[key] = family;
+                }
             }
             else
             {

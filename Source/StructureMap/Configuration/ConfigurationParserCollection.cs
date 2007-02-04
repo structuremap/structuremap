@@ -5,10 +5,13 @@ using System.Xml;
 
 namespace StructureMap.Configuration
 {
+    public delegate XmlNode FetchNodeDelegate();
+
     public class ConfigurationParserCollection
     {
         private bool _useDefaultFile = true;
         private List<string> _otherFiles = new List<string>();
+        private List<FetchNodeDelegate> _fetchers = new List<FetchNodeDelegate>();
 
         public ConfigurationParser[] GetParsers()
         {
@@ -22,6 +25,12 @@ namespace StructureMap.Configuration
             foreach (string file in _otherFiles)
             {
                 addParsersFromFile(file, list);
+            }
+
+            foreach (FetchNodeDelegate fetcher in _fetchers)
+            {
+                XmlNode node = fetcher();
+                addParsersFromDocument(node, string.Empty, list);
             }
 
             return list.ToArray();
@@ -58,6 +67,11 @@ namespace StructureMap.Configuration
         public void IncludeFile(string filename)
         {
             _otherFiles.Add(filename);
+        }
+
+        public void IncludeNode(FetchNodeDelegate fetcher)
+        {
+            _fetchers.Add(fetcher);
         }
     }
 }

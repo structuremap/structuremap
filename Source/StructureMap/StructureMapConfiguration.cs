@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Xml;
 using StructureMap.Configuration;
 using StructureMap.Graph;
 
@@ -54,7 +55,30 @@ namespace StructureMap
         public static PluginGraph GetDiagnosticPluginGraph()
         {
             PluginGraphBuilder builder = createBuilder();
-            return builder.BuildDiagnosticPluginGraph();            
+            return builder.BuildDiagnosticPluginGraph();
+        }
+
+        public static void IncludeConfigurationFromFile(string filename)
+        {
+            _collection.IncludeFile(filename);
+        }
+
+        public static void IncludeConfigurationFrom(FetchNodeDelegate fetcher)
+        {
+            _collection.IncludeNode(fetcher);
+        }
+
+        public static void IncludeConfigurationFromNode(XmlNode node)
+        {
+            _collection.IncludeNode(
+                delegate { return node; }
+                );
+        }
+
+        public static bool UseDefaultStructureMapConfigFile
+        {
+            get { return _collection.UseDefaultFile; }
+            set { _collection.UseDefaultFile = value; }
         }
     }
 }

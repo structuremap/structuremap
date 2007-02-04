@@ -1,4 +1,5 @@
 using System;
+using System.Xml;
 using NUnit.Framework;
 using StructureMap.Configuration;
 using StructureMap.Testing.TestData;
@@ -87,6 +88,21 @@ namespace StructureMap.Testing.Configuration
             _collection.IncludeFile("Master.xml");
 
             assertParserIdList("Generics", "Include1", "Include2", "Main", "Master");
+        }
+
+        [Test]
+        public void GetXmlFromSomewhereElse()
+        {
+            string xml = "<StructureMap Id=\"Somewhere\"/>";
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(xml);
+
+            FetchNodeDelegate fetcher = delegate { return doc.DocumentElement; };
+
+            _collection.IncludeNode(fetcher);
+            _collection.UseDefaultFile = false;
+
+            assertParserIdList("Somewhere");
         }
     }
 }

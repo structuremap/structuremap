@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace StructureMap.Graph
@@ -8,11 +9,11 @@ namespace StructureMap.Graph
     /// </summary>
     public class AssemblyGraphCollection : PluginGraphObjectCollection
     {
-        private Hashtable _assemblies;
+        private Dictionary<string, AssemblyGraph> _assemblies;
 
         public AssemblyGraphCollection(PluginGraph pluginGraph) : base(pluginGraph)
         {
-            _assemblies = new Hashtable();
+            _assemblies = new Dictionary<string, AssemblyGraph>();
         }
 
         protected override ICollection innerCollection
@@ -35,13 +36,18 @@ namespace StructureMap.Graph
         {
             verifyNotSealed();
 
+            if (_assemblies.ContainsKey(assemblyGraph.AssemblyName))
+            {
+                return _assemblies[assemblyGraph.AssemblyName];
+            }
+
             _assemblies.Add(assemblyGraph.AssemblyName, assemblyGraph);
             return assemblyGraph;
         }
 
         public AssemblyGraph this[string assemblyName]
         {
-            get { return _assemblies[assemblyName] as AssemblyGraph; }
+            get { return _assemblies[assemblyName]; }
         }
 
         public AssemblyGraph this[int index]

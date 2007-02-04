@@ -48,8 +48,10 @@ namespace StructureMap
             }
         }
 
-
-        internal static void Reset()
+        /// <summary>
+        /// Restarts ObjectFactory.  Use with caution.
+        /// </summary>
+        public static void Reset()
         {
             _manager = buildManager();
 
