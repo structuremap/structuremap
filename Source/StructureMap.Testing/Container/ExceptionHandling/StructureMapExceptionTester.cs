@@ -110,12 +110,6 @@ namespace StructureMap.Testing.Container.ExceptionHandling
         }
 
         [Test]
-        public void DuplicateConcreteKeyOnPluginFamily()
-        {
-            _testRunner.ExecuteExceptionTestFromResetDefaults(113);
-        }
-
-        [Test]
         public void CouldNotBuildTheDesignatedMementoSourceForAPluginFamily()
         {
             _testRunner.ExecuteExceptionTestFromResetDefaults(120);

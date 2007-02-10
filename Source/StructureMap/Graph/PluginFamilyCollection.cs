@@ -155,5 +155,10 @@ namespace StructureMap.Graph
         {
             return _pluginFamilies.ContainsKey(pluginType);
         }
+
+        public bool Contains<T>()
+        {
+            return Contains(typeof (T));
+        }
     }
 }

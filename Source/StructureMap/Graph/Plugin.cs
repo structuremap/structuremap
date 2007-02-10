@@ -102,17 +102,12 @@ namespace StructureMap.Graph
             PluggableAttribute att = PluggableAttribute.InstanceOf(pluggedType);
             if (att == null)
             {
-                string message = string.Format(
-                    "The class *{0}* is not marked as Pluggable",
-                    pluggedType.AssemblyQualifiedName);
-
-                throw new ApplicationException(message);
+                return new Plugin(pluggedType, TypePath.GetAssemblyQualifiedName(pluggedType), Graph.DefinitionSource.Implicit);    
             }
-
-            Plugin plugin =
-                new Plugin(pluggedType, att.ConcreteKey, DefinitionSource.Implicit);
-
-            return plugin;
+            else
+            {
+                return new Plugin(pluggedType, att.ConcreteKey, DefinitionSource.Implicit);
+            }
         }
 
         /// <summary>
@@ -237,6 +232,7 @@ namespace StructureMap.Graph
         public string ConcreteKey
         {
             get { return _concreteKey; }
+            set { _concreteKey = value; }
         }
 
 

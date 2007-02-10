@@ -155,5 +155,10 @@ namespace StructureMap.Graph
             AssemblyGraph peer = (AssemblyGraph) obj;
             return AssemblyName.CompareTo(peer.AssemblyName);
         }
+
+        public static AssemblyGraph ContainingType<T>()
+        {
+            return new AssemblyGraph(typeof(T).Assembly);
+        }
     }
 }

@@ -137,6 +137,11 @@ namespace StructureMap
 
         public PluginFamily BuildPluginFamily(Type exportedType)
         {
+            if (!MarkedAsPluginFamily(exportedType))
+            {
+                return new PluginFamily(exportedType);
+            }
+
             MementoSource source = CreateSource(exportedType);
             PluginFamily family = new PluginFamily(exportedType, DefaultKey, source);
 

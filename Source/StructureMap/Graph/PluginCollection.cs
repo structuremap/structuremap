@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace StructureMap.Graph
 {
@@ -9,7 +10,7 @@ namespace StructureMap.Graph
     public class PluginCollection : PluginGraphObjectCollection
     {
         private readonly PluginFamily _family;
-        private Hashtable _plugins = new Hashtable();
+        private Dictionary<string, Plugin> _plugins = new Dictionary<string, Plugin>();
 
         public PluginCollection(PluginFamily family) : base(null)
         {
@@ -44,6 +45,13 @@ namespace StructureMap.Graph
             // Reject if a duplicate ConcreteKey
             if (_plugins.ContainsKey(plugin.ConcreteKey))
             {
+                // Don't duplicate
+                Plugin peer = this[plugin.ConcreteKey];
+                if (peer.PluggedType == plugin.PluggedType)
+                {
+                    return;
+                }
+
                 throw new StructureMapException(113, plugin.ConcreteKey, _family.PluginTypeName);
             }
 

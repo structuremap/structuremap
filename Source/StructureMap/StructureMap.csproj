@@ -212,6 +212,11 @@
     <Compile Include="Configuration\DiagnosticGraphBuilder.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Configuration\DSL\CreatePluginFamilyExpression.cs" />
+    <Compile Include="Configuration\DSL\DefaultExpression.cs" />
+    <Compile Include="Configuration\DSL\IExpression.cs" />
+    <Compile Include="Configuration\DSL\Registry.cs" />
+    <Compile Include="Configuration\DSL\ScanAssembliesExpression.cs" />
     <Compile Include="Configuration\FamilyParser.cs">
       <SubType>Code</SubType>
     </Compile>

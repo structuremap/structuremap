@@ -45,14 +45,6 @@ namespace StructureMap.Testing.Graph
             Assert.AreEqual(DefinitionSource.Implicit, _plugin.DefinitionSource);
         }
 
-
-        [Test, ExpectedException(typeof (ApplicationException))]
-        public void NotAPluggableClass()
-        {
-            _plugin = Plugin.CreateImplicitPlugin(typeof (NotPluggable));
-        }
-
-
         [Test]
         public void ValidationMethods()
         {
@@ -294,6 +286,13 @@ namespace StructureMap.Testing.Graph
                     "StructureMap Exception Code:  180\nCannot construct a Plugin for Class ClassWithNoConstructor, No public constructor found.",
                     ex.Message);
             }
+        }
+
+        [Test]
+        public void CreatePluginFromTypeThatDoesNotHaveAnAttributeDetermineTheConcreteKey()
+        {
+            Plugin plugin = Plugin.CreateImplicitPlugin(this.GetType());
+            Assert.AreEqual(TypePath.GetAssemblyQualifiedName(this.GetType()), plugin.ConcreteKey);
         }
     }
 

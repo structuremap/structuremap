@@ -82,6 +82,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\NUnit\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="Rhino.Mocks, Version=2.9.1.10183, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\Rhino.Mocks.dll</HintPath>
+    </Reference>
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
@@ -179,6 +183,9 @@
     <Compile Include="Configuration\DiagnosticGraphBuilderTester.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Configuration\DSL\CreatePluginFamilyTester.cs" />
+    <Compile Include="Configuration\DSL\RegistryTester.cs" />
+    <Compile Include="Configuration\DSL\ScanAssembliesTester.cs" />
     <Compile Include="Configuration\FamilyParserTester.cs">
       <SubType>Code</SubType>
     </Compile>
