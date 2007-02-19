@@ -1,7 +1,9 @@
 using NUnit.Framework;
 using Rhino.Mocks;
+using StructureMap.Attributes;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
+using StructureMap.Interceptors;
 using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Configuration.DSL
@@ -61,6 +63,51 @@ namespace StructureMap.Testing.Configuration.DSL
         }
 
         [Test]
+        public void BuildPluginFamilyAsPerRequest()
+        {
+            PluginGraph pluginGraph = new PluginGraph();
+            using (Registry registry = new Registry(pluginGraph))
+            {
+                CreatePluginFamilyExpression expression =
+                    registry.BuildInstancesOfType<IGateway>();
+                Assert.IsNotNull(expression);
+            }
+
+            PluginFamily family = pluginGraph.PluginFamilies[typeof(IGateway)];
+            Assert.AreEqual(0, family.InterceptionChain.Count);
+        }
+
+        [Test]
+        public void AsAnotherScope()
+        {
+            PluginGraph pluginGraph = new PluginGraph();
+            using (Registry registry = new Registry(pluginGraph))
+            {
+                CreatePluginFamilyExpression expression =
+                    registry.BuildInstancesOfType<IGateway>().CacheInstanceAtScope(InstanceScope.ThreadLocal);
+                Assert.IsNotNull(expression);
+            }
+
+            PluginFamily family = pluginGraph.PluginFamilies[typeof(IGateway)];
+            Assert.IsTrue(family.InterceptionChain.Contains(typeof(ThreadLocalStorageInterceptor)));
+        }
+
+        [Test]
+        public void BuildPluginFamilyAsSingleton()
+        {
+            PluginGraph pluginGraph = new PluginGraph();
+            using (Registry registry = new Registry(pluginGraph))
+            {
+                CreatePluginFamilyExpression expression = 
+                    registry.BuildInstancesOfType<IGateway>().AsASingleton();
+                Assert.IsNotNull(expression);
+            }
+
+            PluginFamily family = pluginGraph.PluginFamilies[typeof (IGateway)];
+            Assert.IsTrue(family.InterceptionChain.Contains(typeof(SingletonInterceptor)));
+        }
+
+        [Test]
         public void CanOverrideTheDefaultInstanceAndCreateAnAllNewPluginOnTheFly()
         {
             PluginGraph pluginGraph = new PluginGraph();
@@ -83,10 +130,10 @@ namespace StructureMap.Testing.Configuration.DSL
             Registry registry = new Registry();
 
             registry.BuildInstancesOfType<IGateway>()
-                .PlugConcreteType<FakeGateway>().WithAlias("Fake")
-                .PlugConcreteType<Fake2Gateway>()
-                .PlugConcreteType<StubbedGateway>()
-                .PlugConcreteType<Fake3Gateway>().WithAlias("Fake3");
+                .PluginConcreteType<FakeGateway>().AliasedAs("Fake")
+                .PluginConcreteType<Fake2Gateway>()
+                .PluginConcreteType<StubbedGateway>()
+                .PluginConcreteType<Fake3Gateway>().AliasedAs("Fake3");
 
             InstanceManager manager = registry.BuildInstanceManager();
             IGateway gateway = (IGateway)manager.CreateInstance(typeof(IGateway), "Fake");

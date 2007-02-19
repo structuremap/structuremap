@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using StructureMap.Attributes;
 using StructureMap.Graph;
+using StructureMap.Interceptors;
 
 namespace StructureMap.Configuration.DSL
 {
@@ -11,6 +13,7 @@ namespace StructureMap.Configuration.DSL
         private Type _pluginType;
         private List<AlterPluginFamilyDelegate> _alterations = new List<AlterPluginFamilyDelegate>();
         private Plugin _lastPlugin;
+        private InstanceScope _scope = InstanceScope.PerRequest;
 
         public CreatePluginFamilyExpression(Type pluginType)
         {
@@ -22,6 +25,9 @@ namespace StructureMap.Configuration.DSL
         public void Configure(PluginGraph graph)
         {
             PluginFamily family = PluginFamilyAttribute.CreatePluginFamily(_pluginType);
+            InterceptorChainBuilder builder = new InterceptorChainBuilder();
+            family.InterceptionChain = builder.Build(_scope);
+
             foreach (AlterPluginFamilyDelegate alteration in _alterations)
             {
                 alteration(family);
@@ -57,16 +63,28 @@ namespace StructureMap.Configuration.DSL
             return plugin;
         }
 
-        public CreatePluginFamilyExpression PlugConcreteType<T>()
+        public CreatePluginFamilyExpression PluginConcreteType<T>()
         {
             _lastPlugin = addPlugin<T>();
 
             return this;
         }
 
-        public CreatePluginFamilyExpression WithAlias(string concreteKey)
+        public CreatePluginFamilyExpression AliasedAs(string concreteKey)
         {
             _lastPlugin.ConcreteKey = concreteKey;
+            return this;
+        }
+
+        public CreatePluginFamilyExpression AsASingleton()
+        {
+            _scope = InstanceScope.Singleton;
+            return this;
+        }
+
+        public CreatePluginFamilyExpression CacheInstanceAtScope(InstanceScope scope)
+        {
+            _scope = scope;
             return this;
         }
     }

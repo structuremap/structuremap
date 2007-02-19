@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using StructureMap.Interceptors;
@@ -54,6 +55,19 @@ namespace StructureMap.Graph
         public IEnumerator GetEnumerator()
         {
             return _interceptorList.GetEnumerator();
+        }
+
+        public bool Contains(Type interceptorType)
+        {
+            foreach (InstanceFactoryInterceptor interceptor in _interceptorList)
+            {
+                if (interceptor.GetType() == interceptorType)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }
