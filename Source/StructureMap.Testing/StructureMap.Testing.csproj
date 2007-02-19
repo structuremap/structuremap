@@ -195,6 +195,7 @@
     <Compile Include="Configuration\IncludeTesting.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Configuration\InlineInstanceDefinitionInProfileAndMachineNodesTester.cs" />
     <Compile Include="Configuration\InstanceValidatorTester.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -405,12 +406,14 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Graph\TypePathTester.cs" />
+    <Compile Include="ImplicitPluginFromPluggedTypeAttributeTester.cs" />
     <Compile Include="ObjectFactoryTester.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ObjectMother.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="StructureMapConfigCreator.cs" />
     <Compile Include="StructureMapConfigurationTester.cs" />
     <Compile Include="TestData\DataMother.cs">
       <SubType>Code</SubType>
@@ -462,6 +465,15 @@
   <ItemGroup>
     <EmbeddedResource Include="TestData\Config1.xml" />
     <EmbeddedResource Include="TestData\Config2.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestData\AttributeNormalized.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestData\PluggedTypeTest.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestData\InlineInstanceInProfileAndMachine.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

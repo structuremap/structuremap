@@ -384,5 +384,19 @@ namespace StructureMap.Graph
 
             return !cannotBeFilled;
         }
+
+
+        public override bool Equals(object obj)
+        {
+            if (this == obj) return true;
+            Plugin plugin = obj as Plugin;
+            if (plugin == null) return false;
+            return Equals(_pluggedType, plugin._pluggedType) && Equals(_concreteKey, plugin._concreteKey);
+        }
+
+        public override int GetHashCode()
+        {
+            return (_pluggedType != null ? _pluggedType.GetHashCode() : 0) + 29*(_concreteKey != null ? _concreteKey.GetHashCode() : 0);
+        }
     }
 }

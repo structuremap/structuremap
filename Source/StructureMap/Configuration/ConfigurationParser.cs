@@ -24,7 +24,7 @@ namespace StructureMap.Configuration
             string folder = string.IsNullOrEmpty(includePath) ? string.Empty : Path.GetDirectoryName(includePath);
 
             ArrayList list = new ArrayList();
-            
+
             list.Add(new ConfigurationParser(node));
 
             string includedPath = null;
@@ -95,10 +95,28 @@ namespace StructureMap.Configuration
         #endregion
 
         private readonly XmlNode _structureMapNode;
+        private readonly XmlMementoCreator _mementoCreator;
 
         public ConfigurationParser(XmlNode structureMapNode)
         {
             _structureMapNode = structureMapNode;
+            XmlMementoStyle mementoStyle = XmlMementoStyle.NodeNormalized;
+
+
+            XmlAttribute att = _structureMapNode.Attributes[XmlConstants.MEMENTO_STYLE];
+            if (att != null)
+            {
+                if (att.Value == XmlConstants.ATTRIBUTE_STYLE)
+                {
+                    mementoStyle = XmlMementoStyle.AttributeNormalized;
+                }
+            }
+
+
+            _mementoCreator = new XmlMementoCreator(
+                mementoStyle,
+                XmlConstants.TYPE_ATTRIBUTE,
+                XmlConstants.KEY_ATTRIBUTE);
         }
 
         public string Id
@@ -161,7 +179,7 @@ namespace StructureMap.Configuration
         }
 
 
-        private static void attachInstances(TypePath pluginTypePath, XmlElement familyElement, IGraphBuilder builder)
+        private void attachInstances(TypePath pluginTypePath, XmlElement familyElement, IGraphBuilder builder)
         {
             foreach (XmlNode instanceNode in familyElement.ChildNodes)
             {
@@ -170,8 +188,7 @@ namespace StructureMap.Configuration
                     continue;
                 }
 
-                XmlNodeInstanceMemento memento =
-                    new XmlNodeInstanceMemento(instanceNode, XmlConstants.TYPE_ATTRIBUTE, XmlConstants.KEY_ATTRIBUTE);
+                InstanceMemento memento = _mementoCreator.CreateMemento(instanceNode);
                 builder.RegisterMemento(pluginTypePath, memento);
             }
         }
@@ -189,8 +206,7 @@ namespace StructureMap.Configuration
                 string pluginTypeName = instanceNode.Name;
                 TypePath typePath = TypePath.TypePathForFullName(pluginTypeName);
 
-                XmlNodeInstanceMemento memento =
-                    new XmlNodeInstanceMemento(instanceNode, XmlConstants.TYPE_ATTRIBUTE, XmlConstants.KEY_ATTRIBUTE);
+                InstanceMemento memento = _mementoCreator.CreateMemento(instanceNode);
 
                 builder.RegisterMemento(typePath, memento);
             }
@@ -199,44 +215,10 @@ namespace StructureMap.Configuration
 
         public void ParseProfilesAndMachines(IGraphBuilder builder)
         {
-            XmlNode defaultProfileNode = _structureMapNode.Attributes.GetNamedItem(XmlConstants.DEFAULT_PROFILE);
-            if (defaultProfileNode != null)
-            {
-                builder.DefaultManager.DefaultProfileName = defaultProfileNode.InnerText;
-            }
-
-            foreach (XmlElement profileElement in findNodes(XmlConstants.PROFILE_NODE))
-            {
-                string profileName = profileElement.GetAttribute(XmlConstants.NAME);
-                builder.AddProfile(profileName);
-
-                writeOverrides(profileElement,
-                               delegate(string fullName, string defaultKey) { builder.OverrideProfile(fullName, defaultKey); });
-            }
-
-            foreach (XmlElement machineElement in findNodes(XmlConstants.MACHINE_NODE))
-            {
-                string machineName = machineElement.GetAttribute(XmlConstants.NAME);
-                string profileName = machineElement.GetAttribute(XmlConstants.PROFILE_NODE);
-
-                builder.AddMachine(machineName, profileName);
-
-                writeOverrides(machineElement,
-                               delegate(string fullName, string defaultKey) { builder.OverrideMachine(fullName, defaultKey); });
-            }
+            ProfileAndMachineParser parser = new ProfileAndMachineParser(builder, _structureMapNode, _mementoCreator);
+            parser.Parse();
         }
 
-        private delegate void WriteOverride(string fullTypeName, string defaultKey);
 
-        private static void writeOverrides(XmlElement parentElement, WriteOverride function)
-        {
-            foreach (XmlElement overrideElement in parentElement.SelectNodes(XmlConstants.OVERRIDE))
-            {
-                string fullName = overrideElement.GetAttribute(XmlConstants.TYPE_ATTRIBUTE);
-                string defaultKey = overrideElement.GetAttribute(XmlConstants.DEFAULT_KEY_ATTRIBUTE);
-
-                function(fullName, defaultKey);
-            }
-        }
     }
 }

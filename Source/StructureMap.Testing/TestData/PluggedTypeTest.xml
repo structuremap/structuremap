@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<StructureMap DefaultProfile="TheDefaultProfile" MementoStyle="Attribute">
+  <PluginFamily Type="StructureMap.Testing.Widget.IWidget" Assembly="StructureMap.Testing.Widget">
+    <Instance Key="Me" PluggedType="StructureMap.Testing.Widget.NotPluggableWidget,StructureMap.Testing.Widget" name="Jeremy"/>
+  </PluginFamily>
+</StructureMap>

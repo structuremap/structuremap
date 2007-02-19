@@ -29,5 +29,6 @@ namespace StructureMap.Graph.Configuration
         void OverrideProfile(string fullTypeName, string instanceKey);
         void AddMachine(string machineName, string profileName);
         void OverrideMachine(string fullTypeName, string instanceKey);
+        TypePath LocateOrCreateFamilyForType(string fullName);
     }
 }

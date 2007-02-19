@@ -2,6 +2,9 @@ using System.Xml;
 using NUnit.Framework;
 using StructureMap.Configuration;
 using StructureMap.Graph;
+using StructureMap.Source;
+using StructureMap.Testing.TestData;
+using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing.Configuration
 {
@@ -100,6 +103,25 @@ namespace StructureMap.Testing.Configuration
         {
             string[] names = _defaults.GetMachineNames();
             Assert.AreEqual(new string[] {"SERVER", "GREEN-BOX"}, names);
+        }
+
+        [Test]
+        public void SwitchToAttributeNormalizedMode()
+        {
+            XmlDocument document = DataMother.GetXmlDocument("AttributeNormalized.xml");
+            ConfigurationParser parser = new ConfigurationParser(document.DocumentElement);
+
+            PluginGraphBuilder builder = new PluginGraphBuilder(parser);
+            PluginGraph graph = builder.Build();
+
+            InstanceManager manager = new InstanceManager(graph);
+
+            GrandChild tommy = (GrandChild) manager.CreateInstance(typeof (GrandChild), "Tommy");
+            Assert.AreEqual(false, tommy.RightHanded);
+            Assert.AreEqual(1972, tommy.BirthYear);
+
+            ColorWidget blue = (ColorWidget) manager.CreateInstance(typeof (IWidget), "Blue");
+            Assert.AreEqual("Blue", blue.Color);
         }
     }
 }

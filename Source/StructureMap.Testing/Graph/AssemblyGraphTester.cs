@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using NUnit.Framework;
 using StructureMap.Graph;
@@ -59,6 +60,24 @@ namespace StructureMap.Testing.Graph
             Assert.IsTrue(list.Contains("StructureMap.Testing.Widget2"));
             Assert.IsTrue(list.Contains("StructureMap.Testing.Widget3"));
             Assert.IsTrue(list.Contains("StructureMap.Testing.Widget4"));
+        }
+
+        [Test]
+        public void FindTypeByFullNameSuccess()
+        {
+            AssemblyGraph assemblyGraph = new AssemblyGraph("StructureMap.Testing.Widget");
+            Type type = typeof (IWidget);
+
+            Type actualType = assemblyGraph.FindTypeByFullName(type.FullName);
+
+            Assert.AreEqual(type, actualType);
+        }
+
+        [Test]
+        public void FindTypeByFullNameReturnsNullIfTypeNotFound()
+        {
+            AssemblyGraph assemblyGraph = new AssemblyGraph("StructureMap.Testing.Widget");
+            Assert.IsNull(assemblyGraph.FindTypeByFullName("something that does not exist"));
         }
     }
 }

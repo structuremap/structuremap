@@ -22,12 +22,12 @@ namespace StructureMap.Source
 
         #region InstanceMemento Members
 
-        public override string ConcreteKey
+        protected override string innerConcreteKey
         {
             get { return getAttribute(_typeAttribute); }
         }
 
-        public override string InstanceKey
+        protected override string innerInstanceKey
         {
             get { return getAttribute(_keyAttribute); }
         }
@@ -45,6 +45,10 @@ namespace StructureMap.Source
         protected override string getPropertyValue(string Key)
         {
             XmlNode nodeProperty = getChildNode(Key);
+            if (nodeProperty == null)
+            {
+                return null;
+            }
 
             if (nodeProperty.InnerText != string.Empty)
             {

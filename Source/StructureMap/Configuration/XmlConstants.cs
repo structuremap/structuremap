@@ -26,6 +26,10 @@ namespace StructureMap.Configuration
         public const string MACHINE_NODE = "Machine";
         public const string OVERRIDE = "Override";
         public const string DEFAULT_PROFILE = "DefaultProfile";
+        public const string MEMENTO_STYLE = "MementoStyle";
+        public const string NODE_STYLE = "Node";
+        public const string ATTRIBUTE_STYLE = "Attribute";
+        public const string PLUGGED_TYPE = "PluggedType";
 
 
         private XmlConstants()

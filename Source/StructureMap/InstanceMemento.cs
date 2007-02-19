@@ -1,4 +1,5 @@
 using System;
+using StructureMap.Configuration;
 using StructureMap.Configuration.Tokens;
 using StructureMap.Graph;
 
@@ -14,17 +15,59 @@ namespace StructureMap
         public const string SUBSTITUTIONS_ATTRIBUTE = "Substitutions";
         private string _lastKey = string.Empty;
         private DefinitionSource _definitionSource = DefinitionSource.Explicit;
+        private string _concreteKey;
+        private string _instanceKey;
 
         /// <summary>
         /// The named type of the object instance represented by the InstanceMemento.  Translates to a concrete
         /// type
         /// </summary>
-        public abstract string ConcreteKey { get; }
+        public string ConcreteKey
+        {
+            get
+            {
+                if (_concreteKey == null)
+                {
+                    _concreteKey = innerConcreteKey;
+                    if (string.IsNullOrEmpty(_concreteKey))
+                    {
+                        Plugin plugin = this.CreateInferredPlugin();
+                        if (plugin != null)
+                        {
+                            _concreteKey = plugin.ConcreteKey;
+                        }
+                    }
+                }
+
+                return _concreteKey;
+            }
+        }
+
+        protected abstract string innerConcreteKey { get; }
 
         /// <summary>
         /// The named key of the object instance represented by the InstanceMemento
         /// </summary>
-        public abstract string InstanceKey { get; }
+        public string InstanceKey
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_instanceKey))
+                {
+                    return innerInstanceKey;
+                }
+                else
+                {
+                    return _instanceKey;
+                }
+            }
+            set
+            {
+                _instanceKey = value;
+            }
+        }
+
+        protected abstract string innerInstanceKey { get; }
 
         /// <summary>
         /// Retrieves the named property value as a string
@@ -202,6 +245,20 @@ namespace StructureMap
         {
             get { return _definitionSource; }
             set { _definitionSource = value; }
+        }
+
+        public Plugin CreateInferredPlugin()
+        {
+            string pluggedTypeName = getPropertyValue(XmlConstants.PLUGGED_TYPE);
+            if (string.IsNullOrEmpty(pluggedTypeName))
+            {
+                return null;
+            }
+            else
+            {
+                Type pluggedType = TypePath.GetTypePath(pluggedTypeName).FindType();
+                return Plugin.CreateImplicitPlugin(pluggedType);
+            }
         }
     }
 }

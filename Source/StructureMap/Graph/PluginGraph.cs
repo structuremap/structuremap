@@ -49,24 +49,29 @@ namespace StructureMap.Graph
         /// </summary>
         public void Seal()
         {
-            if (_sealed == false)
+            if (_sealed)
             {
-                foreach (AssemblyGraph assembly in _assemblies)
-                {
-                    addImplicitPluginFamilies(assembly);
-                }
+                return;
+            }
 
-                foreach (PluginFamily family in _pluginFamilies)
-                {
-                    foreach (AssemblyGraph assembly in _assemblies)
-                    {
-                        family.SearchAssemblyGraph(assembly);
-                    }
-                }
+            foreach (AssemblyGraph assembly in _assemblies)
+            {
+                addImplicitPluginFamilies(assembly);
+            }
 
-                _defaultManager.ReadDefaultsFromPluginGraph(this);
+            foreach (PluginFamily family in _pluginFamilies)
+            {
+                attachImplicitPlugins(family);
+            }
 
-                _sealed = true;
+            _sealed = true;
+        }
+
+        private void attachImplicitPlugins(PluginFamily family)
+        {
+            foreach (AssemblyGraph assembly in _assemblies)
+            {
+                family.SearchAssemblyGraph(assembly);
             }
         }
 
@@ -133,6 +138,37 @@ namespace StructureMap.Graph
         {
             get { return _report; }
             set { _report = value; }
+        }
+
+        public TypePath LocateOrCreateFamilyForType(string fullName)
+        {
+            Type pluginType = findTypeByFullName(fullName);
+            if (!_pluginFamilies.Contains(pluginType))
+            {
+                PluginFamily family = _pluginFamilies.Add(pluginType, string.Empty);
+                attachImplicitPlugins(family);
+            }
+
+            return new TypePath(pluginType);
+        }
+
+        private Type findTypeByFullName(string fullName)
+        {
+            foreach (AssemblyGraph assembly in _assemblies)
+            {
+                Type type = assembly.FindTypeByFullName(fullName);
+                if (type != null)
+                {
+                    return type;
+                }
+            }
+
+            throw new StructureMapException(300, fullName);
+        }
+
+        public void ReadDefaults()
+        {
+            _defaultManager.ReadDefaultsFromPluginGraph(this);
         }
     }
 }

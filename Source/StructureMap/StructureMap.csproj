@@ -250,6 +250,7 @@
     <Compile Include="Configuration\ProblemFinder.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Configuration\ProfileAndMachineParser.cs" />
     <Compile Include="Configuration\Tokens\AssemblyToken.cs">
       <SubType>Code</SubType>
     </Compile>

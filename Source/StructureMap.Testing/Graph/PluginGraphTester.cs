@@ -126,6 +126,45 @@ namespace StructureMap.Testing.Graph
             Assert.AreEqual(3, pluginGraph.Assemblies.Count);
             Assert.AreEqual(8, pluginGraph.PluginFamilies.Count);
         }
+
+        [Test]
+        public void LocateOrCreateFamilyForTypeHappyPathExistingFamily()
+        {
+            PluginGraph pluginGraph = new PluginGraph();
+            pluginGraph.Assemblies.Add("StructureMap.Testing.Widget");
+            pluginGraph.Seal();
+
+            Type type = typeof (WidgetMaker);
+            string fullName = type.FullName;
+
+            TypePath typePath = pluginGraph.LocateOrCreateFamilyForType(fullName);
+            Assert.AreEqual(type, typePath.FindType());
+        }
+
+        [Test]
+        public void LocateOrCreateFamilyForTypeHappyPathNewFamily()
+        {
+            PluginGraph pluginGraph = new PluginGraph();
+            pluginGraph.Assemblies.Add("StructureMap.Testing.Widget");
+            pluginGraph.Assemblies.Add("StructureMap.Testing.Widget2");
+            pluginGraph.Assemblies.Add("StructureMap.Testing.Widget3");
+            pluginGraph.Seal();
+
+            Type type = typeof(IWidget);
+            Assert.IsFalse(pluginGraph.PluginFamilies.Contains(type));
+
+            TypePath typePath = pluginGraph.LocateOrCreateFamilyForType(type.FullName);
+            Assert.AreEqual(type, typePath.FindType());
+
+            Assert.IsTrue(pluginGraph.PluginFamilies.Contains(type));
+        }
+
+        [Test, ExpectedException(typeof(StructureMapException), "StructureMap Exception Code:  300\nThe implied PluginType sometype cannot be found in any of the configured assemblies ")]
+        public void LocateOrCreateFamilyForTypeSadPath()
+        {
+            PluginGraph pluginGraph = new PluginGraph();
+            TypePath path = pluginGraph.LocateOrCreateFamilyForType("sometype");
+        }
     }
 
     [PluginFamily]

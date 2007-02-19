@@ -36,8 +36,6 @@ namespace StructureMap.Graph
 
         public PluginFamily Add(PluginFamily family)
         {
-            verifyNotSealed();
-
             Type key = family.PluginType;
             if (_pluginFamilies.ContainsKey(key))
             {

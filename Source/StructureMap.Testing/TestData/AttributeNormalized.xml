@@ -1,0 +1,30 @@
+﻿<!--<?xml version="1.0" encoding="utf-8" ?>-->
+<StructureMap DefaultProfile="TheDefaultProfile" MementoStyle="Attribute">
+  <Assembly Name="StructureMap.Testing.Widget"/>
+  <Assembly Name="StructureMap.Testing.Widget2"/>
+  <Assembly Name="StructureMap.Testing.Widget3"/>
+
+  <PluginFamily Type="StructureMap.Testing.Widget.IWidget" Assembly="StructureMap.Testing.Widget" DefaultKey="Red">
+    <Instance Key="Red" Type="Color" Color="Red" />
+    <Instance Key="Blue" Type="Color" Color="Blue" />
+    <Plugin Assembly="StructureMap.Testing.Widget" Type="StructureMap.Testing.Widget.NotPluggableWidget" ConcreteKey="NotPluggable"/>
+  </PluginFamily>
+
+
+  <PluginFamily Type="StructureMap.Testing.Widget.Rule" Assembly="StructureMap.Testing.Widget" DefaultKey="Blue">
+    <Instance Key="Red" Type="Color" Color="Red" />
+    <Instance Key="Blue" Type="Color" Color="Blue" />
+    <Instance Key="Bigger" Type="GreaterThan" Attribute="MyDad" Value="10" />
+  </PluginFamily>
+
+  <Instances>
+    <StructureMap.Testing.Widget.GrandChild Type="Default" Key="Tommy" RightHanded="false" BirthYear="1972" />
+    <StructureMap.Testing.Widget.GrandChild Type="Default" Key="Todd" RightHanded="true" BirthYear="1975" />
+    <StructureMap.Testing.Widget.GrandChild Type="Leftie" Key="Trevor" BirthYear="1979" />
+    <StructureMap.Testing.Widget.Child Type="Default" Key="Tom" Name="Tom">
+      <MyGrandChild Type="Leftie" BirthYear="1984" />
+    </StructureMap.Testing.Widget.Child>
+
+  </Instances>
+</StructureMap>
+

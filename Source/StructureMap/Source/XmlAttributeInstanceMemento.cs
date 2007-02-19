@@ -18,7 +18,7 @@ namespace StructureMap.Source
             _element = (XmlElement) node;
         }
 
-        public override string ConcreteKey
+        protected override string innerConcreteKey
         {
             get { return _element.GetAttribute("Type"); }
         }
@@ -28,7 +28,7 @@ namespace StructureMap.Source
             _element.SetAttribute("Type", concreteKey);
         }
 
-        public override string InstanceKey
+        protected override string innerInstanceKey
         {
             get { return _element.GetAttribute("Key"); }
         }

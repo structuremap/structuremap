@@ -37,6 +37,7 @@ namespace StructureMap.Configuration
 
         public PluginGraph CreatePluginGraph()
         {
+            _pluginGraph.ReadDefaults();
             return _pluginGraph;
         }
 
@@ -86,6 +87,11 @@ namespace StructureMap.Configuration
         public void OverrideMachine(string fullTypeName, string instanceKey)
         {
             _machine.AddMachineOverride(fullTypeName, instanceKey);
+        }
+
+        public TypePath LocateOrCreateFamilyForType(string fullName)
+        {
+            return _pluginGraph.LocateOrCreateFamilyForType(fullName);
         }
 
         public void AddAssembly(string assemblyName, string[] deployableTargets)
@@ -180,6 +186,12 @@ namespace StructureMap.Configuration
         public void RegisterMemento(TypePath pluginTypePath, InstanceMemento memento)
         {
             PluginFamily family = _pluginGraph.PluginFamilies[pluginTypePath];
+
+            Plugin inferredPlugin = memento.CreateInferredPlugin();
+            if (inferredPlugin != null)
+            {
+                family.Plugins.Add(inferredPlugin);
+            }
 
             family.Source.AddExternalMemento(memento);
         }

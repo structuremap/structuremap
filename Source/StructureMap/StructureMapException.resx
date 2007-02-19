@@ -228,4 +228,7 @@
   <data name="195" xml:space="preserve">
     <value>The Profile {0} referenced by Machine {1} does not exist</value>
   </data>
+  <data name="300" xml:space="preserve">
+    <value>The implied PluginType {0} cannot be found in any of the configured assemblies </value>
+  </data>
 </root>

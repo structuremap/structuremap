@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Specialized;
+using StructureMap.Graph;
 
 namespace StructureMap
 {
@@ -128,7 +130,7 @@ namespace StructureMap
         /// <summary>
         /// See <cref>InstanceMemento</cref>
         /// </summary>
-        public override string ConcreteKey
+        protected override string innerConcreteKey
         {
             get { return _concreteKey; }
         }
@@ -136,7 +138,7 @@ namespace StructureMap
         /// <summary>
         /// See <cref>InstanceMemento</cref>
         /// </summary>
-        public override string InstanceKey
+        protected override string innerInstanceKey
         {
             get { return _instanceKey; }
         }

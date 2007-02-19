@@ -53,6 +53,22 @@ namespace StructureMap.Configuration
             _innerBuilder.OverrideMachine(fullTypeName, instanceKey);
         }
 
+        public TypePath LocateOrCreateFamilyForType(string fullName)
+        {
+            try
+            {
+                return _innerBuilder.LocateOrCreateFamilyForType(fullName);
+            }
+            catch (Exception e)
+            {
+                string message =
+                    string.Format("Could not find the implied type '{0}' in any of the designated Assemblies", fullName);
+                _report.LogProblem(new Problem(message, e));
+
+                return null;
+            }
+        }
+
         public void AddAssembly(string assemblyName, string[] deployableTargets)
         {
             AssemblyToken assemblyToken = new AssemblyToken(assemblyName, deployableTargets);

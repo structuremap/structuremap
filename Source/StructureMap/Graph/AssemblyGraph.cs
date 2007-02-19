@@ -160,5 +160,10 @@ namespace StructureMap.Graph
         {
             return new AssemblyGraph(typeof(T).Assembly);
         }
+
+        public Type FindTypeByFullName(string fullName)
+        {
+            return _assembly.GetType(fullName, false);
+        }
     }
 }

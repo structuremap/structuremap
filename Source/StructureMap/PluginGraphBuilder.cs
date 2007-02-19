@@ -131,6 +131,8 @@ namespace StructureMap
             {
                 parser.ParseProfilesAndMachines(graphBuilder);
             }
+
+            
         }
 
         private void readFamilies(IGraphBuilder graphBuilder)
