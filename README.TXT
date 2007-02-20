@@ -5,7 +5,7 @@ A copy of the StructureMap website and documentation is in the "Docs" folder.
 
 Contact jeremydmiller@yahoo.com with any questions or bugs.
 
-Thanks for trying StructureMap.
-
 The latest code and documentation is available on SourceForge:
 http://structuremap.sourceforge.net/
+
+Thanks for trying StructureMap.
