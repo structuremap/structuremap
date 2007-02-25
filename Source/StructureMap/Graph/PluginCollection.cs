@@ -153,5 +153,13 @@ namespace StructureMap.Graph
                 }
             }
         }
+
+        public Plugin FindOrCreate(Type pluggedType)
+        {
+            Plugin plugin = Plugin.CreateImplicitPlugin(pluggedType);
+            Add(plugin);
+
+            return plugin;
+        }
     }
 }

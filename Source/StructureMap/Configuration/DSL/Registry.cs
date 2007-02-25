@@ -7,7 +7,7 @@ namespace StructureMap.Configuration.DSL
     public class Registry : IDisposable
     {
         private List<IExpression> _expressions = new List<IExpression>();
-        private readonly PluginGraph _graph;
+        private PluginGraph _graph;
 
         public Registry(PluginGraph graph)
         {
@@ -16,7 +16,17 @@ namespace StructureMap.Configuration.DSL
 
         public Registry()
         {
+            _graph = new PluginGraph();
+        }
 
+
+
+        /// <summary>
+        /// Implement this method to 
+        /// </summary>
+        protected virtual void configure()
+        {
+            // no-op;
         }
 
         protected void addExpression(IExpression expression)
@@ -24,17 +34,26 @@ namespace StructureMap.Configuration.DSL
             _expressions.Add(expression);
         }
 
-        public void Configure(PluginGraph graph)
+        private void configurePluginGraph(PluginGraph graph)
         {
             foreach (IExpression expression in _expressions)
             {
-                expression.Configure(graph);
+                configureExpression(expression, graph);
+            }
+        }
+
+        private static void configureExpression(IExpression expression, PluginGraph graph)
+        {
+            expression.Configure(graph);
+            foreach (IExpression childExpression in expression.ChildExpressions)
+            {
+                configureExpression(childExpression, graph);
             }
         }
 
         public void Dispose()
         {
-            Configure(_graph);
+            configurePluginGraph(_graph);
         }
 
         public ScanAssembliesExpression ScanAssemblies()
@@ -56,8 +75,25 @@ namespace StructureMap.Configuration.DSL
         public InstanceManager BuildInstanceManager()
         {
             PluginGraph graph = new PluginGraph();
-            Configure(graph);
+            configurePluginGraph(graph);
             return new InstanceManager(graph);
+        }
+
+        public InstanceExpression AddInstanceOf<T>()
+        {
+            InstanceExpression expression = new InstanceExpression(typeof(T));
+            addExpression(expression);
+            return expression;
+        }
+
+        public static InstanceExpression Instance<T>()
+        {
+            return new InstanceExpression(typeof(T));
+        }
+
+        public PrototypeExpression AddInstanceOf<T>(T prototype)
+        {
+            return new PrototypeExpression();
         }
     }
 }

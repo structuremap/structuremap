@@ -156,16 +156,9 @@ namespace StructureMap
             return instanceFactory.GetInstance(instanceKey);
         }
 
-        /// <summary>
-        /// Creates the named instance of the PluginTypeName
-        /// </summary>
-        /// <param name="pluginTypeName">Fully qualified name of the CLR Type to create</param>
-        /// <param name="instanceKey"></param>
-        /// <returns></returns>
-        public object CreateInstance(string pluginTypeName, string instanceKey)
+        public T CreateInstance<T>(string instanceKey)
         {
-            IInstanceFactory instanceFactory = this[pluginTypeName];
-            return instanceFactory.GetInstance(instanceKey);
+            return (T) CreateInstance(typeof (T), instanceKey);
         }
 
         /// <summary>
@@ -177,6 +170,11 @@ namespace StructureMap
         {
             IInstanceFactory instanceFactory = this[pluginType];
             return instanceFactory.GetInstance();
+        }
+
+        public T CreateInstance<T>()
+        {
+            return (T)CreateInstance(typeof(T));
         }
 
         /// <summary>
@@ -202,6 +200,8 @@ namespace StructureMap
             IInstanceFactory instanceFactory = this[pluginTypeName];
             return instanceFactory.GetInstance(instanceMemento);
         }
+
+
 
         /// <summary>
         /// Creates a new instance of the requested type using the InstanceMemento.  Mostly used from other
@@ -329,6 +329,11 @@ namespace StructureMap
 
             InstanceFactory factory = getFilledTypeFactory(type);
             return factory.GetInstance();
+        }
+
+        public T FillDependencies<T>()
+        {
+            return (T) FillDependencies(typeof (T));
         }
 
         private InstanceFactory getFilledTypeFactory(Type type)

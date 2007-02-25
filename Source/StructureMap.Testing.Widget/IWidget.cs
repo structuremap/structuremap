@@ -33,6 +33,20 @@ namespace StructureMap.Testing.Widget
         #endregion
     }
 
+    [Pluggable("AWidget")]
+    public class AWidget : IWidget
+    {
+        public AWidget()
+        {
+        }
+
+
+        public void DoSomething()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class NotPluggableWidget : IWidget
     {
         private readonly string _name;
@@ -40,6 +54,12 @@ namespace StructureMap.Testing.Widget
         public NotPluggableWidget(string name)
         {
             _name = name;
+        }
+
+
+        public string Name
+        {
+            get { return _name; }
         }
 
         #region IWidget Members

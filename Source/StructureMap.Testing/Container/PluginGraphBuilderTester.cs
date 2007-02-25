@@ -163,7 +163,7 @@ namespace StructureMap.Testing.Container
         public void GotRightNumberOfPluginsForIWidget()
         {
             PluginFamily pluginFamily = graph.PluginFamilies[typeof (IWidget)];
-            Assert.AreEqual(4, pluginFamily.Plugins.Count, "Should be 4 total");
+            Assert.AreEqual(5, pluginFamily.Plugins.Count, "Should be 5 total");
         }
 
 

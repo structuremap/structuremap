@@ -398,5 +398,19 @@ namespace StructureMap.Graph
         {
             return (_pluggedType != null ? _pluggedType.GetHashCode() : 0) + 29*(_concreteKey != null ? _concreteKey.GetHashCode() : 0);
         }
+
+        public string FindFirstConstructorArgumentOfType<T>()
+        {
+            ConstructorInfo ctor = this.GetConstructor();
+            foreach (ParameterInfo info in ctor.GetParameters())
+            {
+                if (info.ParameterType.Equals(typeof(T)))
+                {
+                    return info.Name;
+                }
+            }
+
+            throw new StructureMapException(302, typeof (T).FullName, _pluggedType.FullName);
+        }
     }
 }

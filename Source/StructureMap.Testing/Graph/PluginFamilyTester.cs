@@ -19,7 +19,7 @@ namespace StructureMap.Testing.Graph
             AssemblyGraph graph = new AssemblyGraph("StructureMap.Testing.Widget");
             family.SearchAssemblyGraph(graph);
 
-            Assert.AreEqual(3, family.Plugins.Count, "Plugin Count");
+            Assert.AreEqual(4, family.Plugins.Count, "Plugin Count");
             foreach (Plugin plugin in family.Plugins)
             {
                 Assert.IsNotNull(plugin);

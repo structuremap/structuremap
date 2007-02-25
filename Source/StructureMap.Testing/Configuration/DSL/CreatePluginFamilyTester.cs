@@ -4,16 +4,29 @@ using StructureMap.Attributes;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
+using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Configuration.DSL
 {
-    [TestFixture]
+    [TestFixture, Explicit]
     public class CreatePluginFamilyTester
     {
         [SetUp]
         public void SetUp()
         {
+            PluginGraph pluginGraph = new PluginGraph();
+            using (Registry registry = new Registry(pluginGraph))
+            {
+                // Define the default instance of IWidget
+                registry.BuildInstancesOfType<IWidget>().AndTheDefaultIs(
+                    Registry.Instance<IWidget>()
+                        .UsingConcreteType<ColorWidget>()
+                        .WithProperty("Color").EqualTo("Red")
+                    );
+
+                
+            }
         }
 
         [Test]
@@ -51,6 +64,7 @@ namespace StructureMap.Testing.Configuration.DSL
             PluginGraph pluginGraph = new PluginGraph();
             using (Registry registry = new Registry(pluginGraph))
             {
+                // Specify the default implementation for an interface
                 registry.BuildInstancesOfType<IGateway>().WithDefaultConcreteType<StubbedGateway>();
             }
 

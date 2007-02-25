@@ -17,5 +17,10 @@ namespace StructureMap.Configuration.DSL
         {
             _configure(graph);
         }
+
+        IExpression[] IExpression.ChildExpressions
+        {
+            get { return new IExpression[0]; }
+        }
     }
 }

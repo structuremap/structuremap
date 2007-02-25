@@ -12,7 +12,7 @@ namespace StructureMap
     /// <summary>
     /// Default implementation of IInstanceFactory
     /// </summary>
-    public class InstanceFactory : IInstanceFactory
+    public class InstanceFactory : IInstanceFactory, IInstanceCreator
     {
         private Type _pluginType;
         private string _assemblyName;
@@ -204,11 +204,13 @@ namespace StructureMap
         {
             // Let the MementoSource fill in Templates, resolve references, etc.
             InstanceMemento resolvedMemento = _source.ResolveMemento(memento);
-            return buildFromInstanceBuilder(resolvedMemento);
+
+
+            return resolvedMemento.Build(this);
         }
 
 
-        private object buildFromInstanceBuilder(InstanceMemento memento)
+        public object BuildInstance(InstanceMemento memento)
         {
             if (!_instanceBuilders.Contains(memento.ConcreteKey))
             {

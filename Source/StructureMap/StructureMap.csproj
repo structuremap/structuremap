@@ -103,6 +103,7 @@
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
+    <Reference Include="System.configuration" />
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
@@ -212,9 +213,14 @@
     <Compile Include="Configuration\DiagnosticGraphBuilder.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Configuration\DSL\ChildInstanceExpression.cs" />
     <Compile Include="Configuration\DSL\CreatePluginFamilyExpression.cs" />
     <Compile Include="Configuration\DSL\DefaultExpression.cs" />
     <Compile Include="Configuration\DSL\IExpression.cs" />
+    <Compile Include="Configuration\DSL\InstanceExpression.cs" />
+    <Compile Include="Configuration\DSL\ProfileExpression.cs" />
+    <Compile Include="Configuration\DSL\PropertyExpression.cs" />
+    <Compile Include="Configuration\DSL\PrototypeExpression.cs" />
     <Compile Include="Configuration\DSL\Registry.cs" />
     <Compile Include="Configuration\DSL\ScanAssembliesExpression.cs" />
     <Compile Include="Configuration\FamilyParser.cs">
@@ -435,6 +441,7 @@
     <Compile Include="Graph\TypePath.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="IInstanceCreator.cs" />
     <Compile Include="IInstanceFactory.cs">
       <SubType>Code</SubType>
     </Compile>

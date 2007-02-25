@@ -44,7 +44,7 @@ namespace StructureMap.Testing.Graph
             AssemblyGraph graph = new AssemblyGraph("StructureMap.Testing.Widget");
             Plugin[] plugins = graph.FindPlugins(typeof (IWidget));
             Assert.IsNotNull(plugins);
-            Assert.AreEqual(3, plugins.Length);
+            Assert.AreEqual(4, plugins.Length);
             Assert.AreEqual(DefinitionSource.Implicit, plugins[0].DefinitionSource);
         }
 

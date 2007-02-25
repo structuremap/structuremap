@@ -89,6 +89,7 @@
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
+    <Reference Include="System.configuration" />
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
@@ -183,7 +184,10 @@
     <Compile Include="Configuration\DiagnosticGraphBuilderTester.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Configuration\DSL\AddInstanceTester.cs" />
     <Compile Include="Configuration\DSL\CreatePluginFamilyTester.cs" />
+    <Compile Include="Configuration\DSL\CreateProfileTester.cs" />
+    <Compile Include="Configuration\DSL\InstanceExpressionTester.cs" />
     <Compile Include="Configuration\DSL\RegistryTester.cs" />
     <Compile Include="Configuration\DSL\ScanAssembliesTester.cs" />
     <Compile Include="Configuration\FamilyParserTester.cs">
@@ -422,6 +426,9 @@
       <SubType>Code</SubType>
     </Compile>
     <None Include="StructureMap.config" />
+    <None Include="StructureMap.Testing.dll.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <EmbeddedResource Include="Container\Source\EmbeddedMementoFile.xml" />
     <EmbeddedResource Include="Container\Source\Mementos\Instance1.xml" />
     <EmbeddedResource Include="Container\Source\Mementos\Instance2.xml" />

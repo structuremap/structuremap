@@ -20,6 +20,11 @@ namespace StructureMap.Configuration.DSL
             }
         }
 
+        public IExpression[] ChildExpressions
+        {
+            get { return new IExpression[0]; }
+        }
+
         public ScanAssembliesExpression IncludeTheCallingAssembly()
         {
             Assembly callingAssembly = findTheCallingAssembly();

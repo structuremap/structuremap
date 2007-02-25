@@ -143,13 +143,24 @@ namespace StructureMap.Graph
         public TypePath LocateOrCreateFamilyForType(string fullName)
         {
             Type pluginType = findTypeByFullName(fullName);
+            buildFamilyIfMissing(pluginType);
+
+            return new TypePath(pluginType);
+        }
+
+        private void buildFamilyIfMissing(Type pluginType)
+        {
             if (!_pluginFamilies.Contains(pluginType))
             {
                 PluginFamily family = _pluginFamilies.Add(pluginType, string.Empty);
                 attachImplicitPlugins(family);
             }
+        }
 
-            return new TypePath(pluginType);
+        public PluginFamily LocateOrCreateFamilyForType(Type pluginType)
+        {
+            buildFamilyIfMissing(pluginType);
+            return this.PluginFamilies[pluginType];
         }
 
         private Type findTypeByFullName(string fullName)
@@ -170,5 +181,7 @@ namespace StructureMap.Graph
         {
             _defaultManager.ReadDefaultsFromPluginGraph(this);
         }
+
+        
     }
 }

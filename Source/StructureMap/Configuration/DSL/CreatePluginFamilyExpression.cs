@@ -39,6 +39,11 @@ namespace StructureMap.Configuration.DSL
             graph.Assemblies.Add(assembly);
         }
 
+        IExpression[] IExpression.ChildExpressions
+        {
+            get { return new IExpression[0]; }
+        }
+
         public CreatePluginFamilyExpression WithDefaultConcreteType<T>()
         {
             Plugin plugin = addPlugin<T>();
@@ -86,6 +91,11 @@ namespace StructureMap.Configuration.DSL
         {
             _scope = scope;
             return this;
+        }
+
+        public void AndTheDefaultIs(InstanceExpression expression)
+        {
+            throw new NotImplementedException();
         }
     }
 }

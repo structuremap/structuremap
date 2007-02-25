@@ -41,6 +41,7 @@ namespace StructureMap
 
                 return _concreteKey;
             }
+            set { _concreteKey = value; }
         }
 
         protected abstract string innerConcreteKey { get; }
@@ -259,6 +260,11 @@ namespace StructureMap
                 Type pluggedType = TypePath.GetTypePath(pluggedTypeName).FindType();
                 return Plugin.CreateImplicitPlugin(pluggedType);
             }
+        }
+
+        public virtual object Build(IInstanceCreator creator)
+        {
+            return creator.BuildInstance(this);
         }
     }
 }

@@ -231,4 +231,10 @@
   <data name="300" xml:space="preserve">
     <value>The implied PluginType {0} cannot be found in any of the configured assemblies </value>
   </data>
+  <data name="301" xml:space="preserve">
+    <value>No concrete type or concrete key is specified for instance {0} for PluginType {1}</value>
+  </data>
+  <data name="302" xml:space="preserve">
+    <value>There is no argument of type {0} for concrete type {1}</value>
+  </data>
 </root>

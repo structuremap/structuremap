@@ -75,7 +75,7 @@ namespace StructureMap.Testing.Graph
             Plugin[] plugs = Plugin.GetPlugins(assem, typeof (IWidget));
 
             Assert.IsNotNull(plugs);
-            Assert.AreEqual(3, plugs.Length);
+            Assert.AreEqual(4, plugs.Length);
         }
 
 
@@ -293,6 +293,23 @@ namespace StructureMap.Testing.Graph
         {
             Plugin plugin = Plugin.CreateImplicitPlugin(this.GetType());
             Assert.AreEqual(TypePath.GetAssemblyQualifiedName(this.GetType()), plugin.ConcreteKey);
+        }
+
+        [Test]
+        public void FindFirstConstructorArgumentOfType()
+        {
+            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (GrandPrix));
+            string expected = "engine";
+
+            string actual = plugin.FindFirstConstructorArgumentOfType<IEngine>();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test, ExpectedException(typeof(StructureMapException), "StructureMap Exception Code:  302\nThere is no argument of type StructureMap.Testing.Widget.IWidget for concrete type StructureMap.Testing.Graph.GrandPrix")]
+        public void FindFirstConstructorArgumentOfTypeNegativeCase()
+        {
+            Plugin plugin = Plugin.CreateImplicitPlugin(typeof(GrandPrix));
+            plugin.FindFirstConstructorArgumentOfType<IWidget>();
         }
     }
 

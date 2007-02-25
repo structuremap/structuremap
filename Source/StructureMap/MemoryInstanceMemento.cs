@@ -75,7 +75,7 @@ namespace StructureMap
         }
 
 
-        private MemoryInstanceMemento()
+        public MemoryInstanceMemento()
         {
         }
 
@@ -112,6 +112,12 @@ namespace StructureMap
         public void AddChild(string name, InstanceMemento Memento)
         {
             _children.Add(name, Memento);
+        }
+
+        public void ReferenceChild(string name, string instanceKey)
+        {
+            InstanceMemento child = MemoryInstanceMemento.CreateReferencedInstanceMemento(instanceKey);
+            AddChild(name, child);
         }
 
 

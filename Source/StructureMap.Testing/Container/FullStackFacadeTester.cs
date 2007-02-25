@@ -203,7 +203,7 @@ namespace StructureMap.Testing.Container
 
             IList list = manager.GetAllInstances(typeof (IWidget));
 
-            Assert.AreEqual(6, list.Count);
+            Assert.AreEqual(7, list.Count);
 
             foreach (object target in list)
             {

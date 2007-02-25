@@ -66,7 +66,7 @@ namespace StructureMap.Testing.Graph
 
             Assert.AreEqual("Blue", family.DefaultInstanceKey);
 
-            Assert.AreEqual(3, family.Plugins.Count, "3 different IWidget classes are marked as Pluggable");
+            Assert.AreEqual(4, family.Plugins.Count, "3 different IWidget classes are marked as Pluggable");
         }
 
         [Test]
@@ -89,9 +89,9 @@ namespace StructureMap.Testing.Graph
             Assert.IsNotNull(family);
 
             Assert.AreEqual(
-                4,
+                5,
                 family.Plugins.Count,
-                "4 different IWidget classes are marked as Pluggable, + the manual add");
+                "5 different IWidget classes are marked as Pluggable, + the manual add");
         }
 
         [Test]
