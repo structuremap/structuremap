@@ -14,7 +14,7 @@ namespace StructureMap.Configuration.DSL
         private string _propertyName;
         private MemoryInstanceMemento _memento;
         private List<IExpression> _children = new List<IExpression>();
-        
+        private PrototypeMemento _prototypeMemento;
 
 
         public InstanceExpression(Type pluginType)
@@ -26,21 +26,29 @@ namespace StructureMap.Configuration.DSL
 
         void IExpression.Configure(PluginGraph graph)
         {
-            if (_pluggedType == null && string.IsNullOrEmpty(_memento.ConcreteKey))
+            if (_prototypeMemento == null && _pluggedType == null && string.IsNullOrEmpty(_memento.ConcreteKey))
             {
                 throw new StructureMapException(301, _memento.InstanceKey, TypePath.GetAssemblyQualifiedName(_pluginType));
             }
 
             PluginFamily family = graph.LocateOrCreateFamilyForType(_pluginType);
-            Plugin plugin = _pluggedType == null
-                                ? family.Plugins[_memento.ConcreteKey]
-                                : family.Plugins.FindOrCreate(_pluggedType);
 
-            _memento.ConcreteKey = plugin.ConcreteKey;
+            if (_prototypeMemento == null)
+            {
+                Plugin plugin = _pluggedType == null
+                                    ? family.Plugins[_memento.ConcreteKey]
+                                    : family.Plugins.FindOrCreate(_pluggedType);
 
-            
-            
-            family.Source.AddExternalMemento(_memento);
+                _memento.ConcreteKey = plugin.ConcreteKey;
+                family.Source.AddExternalMemento(_memento);                
+            }
+            else
+            {
+                _prototypeMemento.InstanceKey = _memento.InstanceKey;
+                family.Source.AddExternalMemento(_prototypeMemento);
+            }
+
+
         }
 
 
@@ -84,9 +92,8 @@ namespace StructureMap.Configuration.DSL
 
         public void UsePrototype(ICloneable cloneable)
         {
-            
+            _prototypeMemento = new PrototypeMemento(_memento.InstanceKey, cloneable);
         }
-
 
 
         public InstanceExpression UsingConcreteTypeNamed(string concreteKey)

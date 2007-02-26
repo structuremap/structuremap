@@ -51,17 +51,35 @@ namespace StructureMap.Testing.Configuration.DSL
             
 
 
-                                                // Build an instance for IWidget, then setup StructureMap to return cloned instances of the 
-                                                // "Prototype" (GoF pattern) whenever someone asks for IWidget named "Jeremy"
-                                                registry.AddInstanceOf<IWidget>().WithName("Jeremy").UsePrototype(new CloneableWidget("Jeremy"));
-            
+
                                                 // Return the specific instance when an IWidget named "Julia" is requested
                                                 registry.AddInstanceOf<IWidget>( new CloneableWidget("Julia") ).WithName("Julia");
                                                     */
             manager = registry.BuildInstanceManager();
         }
 
+        [Test]
+        public void UseAPreBuiltObjectForAnInstanceAsAPrototype()
+        {   
+            Registry registry = new Registry();
+            // Build an instance for IWidget, then setup StructureMap to return cloned instances of the 
+            // "Prototype" (GoF pattern) whenever someone asks for IWidget named "Jeremy"
+            registry.AddInstanceOf<IWidget>().WithName("Jeremy").UsePrototype(new CloneableWidget("Jeremy"));
 
+            manager = registry.BuildInstanceManager();
+
+            CloneableWidget widget1 = (CloneableWidget) manager.CreateInstance<IWidget>("Jeremy");
+            CloneableWidget widget2 = (CloneableWidget) manager.CreateInstance<IWidget>("Jeremy");
+            CloneableWidget widget3 = (CloneableWidget) manager.CreateInstance<IWidget>("Jeremy");
+        
+            Assert.AreEqual("Jeremy", widget1.Name);
+            Assert.AreEqual("Jeremy", widget2.Name);
+            Assert.AreEqual("Jeremy", widget3.Name);
+
+            Assert.AreNotSame(widget1, widget2);
+            Assert.AreNotSame(widget1, widget3);
+            Assert.AreNotSame(widget2, widget3);
+        }
 
 
         [Test]
