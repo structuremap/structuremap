@@ -158,5 +158,14 @@ namespace StructureMap.Graph
         {
             return Contains(typeof (T));
         }
+
+        public PluginFamily Add(Type pluginType)
+        {
+            PluginFamilyAttribute att = PluginFamilyAttribute.GetAttribute(pluginType);
+            PluginFamily family = att == null ? new PluginFamily(pluginType) : att.BuildPluginFamily(pluginType);
+            _pluginFamilies.Add(pluginType, family);
+
+            return family;
+        }
     }
 }

@@ -24,10 +24,6 @@ namespace StructureMap.Testing.Configuration.DSL
             IExpression expression2 = mocks.CreateMock<IExpression>();
             IExpression expression3 = mocks.CreateMock<IExpression>();
 
-            Expect.Call(expression1.ChildExpressions).Return(new IExpression[0]);
-            Expect.Call(expression2.ChildExpressions).Return(new IExpression[0]);
-            Expect.Call(expression3.ChildExpressions).Return(new IExpression[0]);
-        
             PluginGraph graph = new PluginGraph();
             expression1.Configure(graph);
             expression2.Configure(graph);
@@ -52,10 +48,6 @@ namespace StructureMap.Testing.Configuration.DSL
             IExpression expression1 = mocks.CreateMock<IExpression>();
             IExpression expression2 = mocks.CreateMock<IExpression>();
             IExpression expression3 = mocks.CreateMock<IExpression>();
-        
-            Expect.Call(expression1.ChildExpressions).Return(new IExpression[0]);
-            Expect.Call(expression2.ChildExpressions).Return(new IExpression[0]);
-            Expect.Call(expression3.ChildExpressions).Return(new IExpression[0]);
         
             PluginGraph graph = new PluginGraph();
             expression1.Configure(graph);

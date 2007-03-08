@@ -217,10 +217,15 @@
     <Compile Include="Configuration\DSL\CreatePluginFamilyExpression.cs" />
     <Compile Include="Configuration\DSL\DefaultExpression.cs" />
     <Compile Include="Configuration\DSL\IExpression.cs" />
+    <Compile Include="Configuration\DSL\IMementoBuilder.cs" />
     <Compile Include="Configuration\DSL\InstanceExpression.cs" />
+    <Compile Include="Configuration\DSL\LiteralExpression.cs" />
+    <Compile Include="Configuration\DSL\LiteralMemento.cs" />
+    <Compile Include="Configuration\DSL\MementoBuilder.cs" />
     <Compile Include="Configuration\DSL\ProfileExpression.cs" />
     <Compile Include="Configuration\DSL\PropertyExpression.cs" />
     <Compile Include="Configuration\DSL\PrototypeExpression.cs" />
+    <Compile Include="Configuration\DSL\PrototypeMemento.cs" />
     <Compile Include="Configuration\DSL\Registry.cs" />
     <Compile Include="Configuration\DSL\ScanAssembliesExpression.cs" />
     <Compile Include="Configuration\FamilyParser.cs">

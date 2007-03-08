@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using StructureMap.Graph;
 
 namespace StructureMap.Configuration.DSL
@@ -10,9 +9,9 @@ namespace StructureMap.Configuration.DSL
         private readonly InstanceExpression _instance;
         private readonly MemoryInstanceMemento _memento;
         private readonly string _propertyName;
-        private Plugin _plugin;
         private Type _childType;
         private List<IExpression> _children = new List<IExpression>();
+        private IMementoBuilder _builder;
 
 
         public ChildInstanceExpression(InstanceExpression instance, MemoryInstanceMemento memento, string propertyName)
@@ -21,7 +20,6 @@ namespace StructureMap.Configuration.DSL
             _memento = memento;
             _propertyName = propertyName;
         }
-
 
 
         public InstanceExpression IsNamedInstance(string instanceKey)
@@ -35,9 +33,11 @@ namespace StructureMap.Configuration.DSL
         // TODO -- negative case if the concrete type cannot be an implicit instance
         public InstanceExpression IsConcreteType<T>()
         {
-            _plugin = Plugin.CreateImplicitPlugin(typeof(T));
-            MemoryInstanceMemento child = MemoryInstanceMemento.CreateReferencedInstanceMemento(_plugin.ConcreteKey);
-            _memento.AddChild(_propertyName, child);
+            InstanceExpression child = new InstanceExpression(_childType);
+            child.UsingConcreteType<T>();
+            _children.Add(child);
+
+            _builder = child;
 
             return _instance;
         }
@@ -45,19 +45,22 @@ namespace StructureMap.Configuration.DSL
 
         void IExpression.Configure(PluginGraph graph)
         {
-            if (_plugin == null || _childType == null)
+            if (_childType == null)
             {
                 return;
             }
 
             PluginFamily family = graph.LocateOrCreateFamilyForType(_childType);
-            family.Plugins.FindOrCreate(_plugin.PluggedType);
-        }
+            if (_builder != null)
+            {
+                InstanceMemento childMemento = _builder.BuildMemento(family);
+                _memento.AddChild(_propertyName, childMemento);
+            }
 
-
-        IExpression[] IExpression.ChildExpressions
-        {
-            get { return _children.ToArray(); }
+            foreach (IExpression child in _children)
+            {
+                child.Configure(graph);
+            }
         }
 
         internal Type ChildType
@@ -68,7 +71,8 @@ namespace StructureMap.Configuration.DSL
         public InstanceExpression Is(InstanceExpression child)
         {
             _children.Add(child);
-            MemoryInstanceMemento childMemento = MemoryInstanceMemento.CreateReferencedInstanceMemento(child.InstanceKey);
+            MemoryInstanceMemento childMemento =
+                MemoryInstanceMemento.CreateReferencedInstanceMemento(child.InstanceKey);
             _memento.AddChild(_propertyName, childMemento);
 
             return _instance;

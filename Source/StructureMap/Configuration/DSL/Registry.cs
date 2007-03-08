@@ -20,7 +20,6 @@ namespace StructureMap.Configuration.DSL
         }
 
 
-
         /// <summary>
         /// Implement this method to 
         /// </summary>
@@ -38,18 +37,10 @@ namespace StructureMap.Configuration.DSL
         {
             foreach (IExpression expression in _expressions)
             {
-                configureExpression(expression, graph);
+                expression.Configure(graph);
             }
         }
 
-        private static void configureExpression(IExpression expression, PluginGraph graph)
-        {
-            expression.Configure(graph);
-            foreach (IExpression childExpression in expression.ChildExpressions)
-            {
-                configureExpression(childExpression, graph);
-            }
-        }
 
         public void Dispose()
         {
@@ -64,9 +55,9 @@ namespace StructureMap.Configuration.DSL
             return expression;
         }
 
-        public CreatePluginFamilyExpression BuildInstancesOfType<T>()
+        public CreatePluginFamilyExpression BuildInstancesOf<T>()
         {
-            CreatePluginFamilyExpression expression = new CreatePluginFamilyExpression(typeof(T));
+            CreatePluginFamilyExpression expression = new CreatePluginFamilyExpression(typeof (T));
             addExpression(expression);
 
             return expression;
@@ -81,19 +72,30 @@ namespace StructureMap.Configuration.DSL
 
         public InstanceExpression AddInstanceOf<T>()
         {
-            InstanceExpression expression = new InstanceExpression(typeof(T));
+            InstanceExpression expression = new InstanceExpression(typeof (T));
             addExpression(expression);
             return expression;
         }
 
         public static InstanceExpression Instance<T>()
         {
-            return new InstanceExpression(typeof(T));
+            return new InstanceExpression(typeof (T));
         }
 
-        public PrototypeExpression AddInstanceOf<T>(T prototype)
+        public LiteralExpression<T> AddInstanceOf<T>(T target)
         {
-            return new PrototypeExpression();
+            LiteralExpression<T> literal = new LiteralExpression<T>(target);
+            addExpression(literal);
+
+            return literal;
+        }
+
+        public PrototypeExpression<T> AddPrototypeInstanceOf<T>(T prototype)
+        {
+            PrototypeExpression<T> expression = new PrototypeExpression<T>(prototype);
+            addExpression(expression);
+
+            return expression;
         }
     }
 }

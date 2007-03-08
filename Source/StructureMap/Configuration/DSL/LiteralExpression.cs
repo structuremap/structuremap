@@ -1,41 +1,40 @@
-using System;
 using StructureMap.Graph;
 
 namespace StructureMap.Configuration.DSL
 {
-    public class PrototypeExpression<T> : MementoBuilder<PrototypeExpression<T>>
+    public class LiteralExpression<T> : MementoBuilder<LiteralExpression<T>>
     {
-        private readonly T _prototype;
-        private PrototypeMemento _memento;
+        private readonly T _target;
+        private LiteralMemento _memento;
 
-        public PrototypeExpression(T prototype) : base(typeof (T))
+        public LiteralExpression(T target) : base(typeof (T))
         {
-            _prototype = prototype;
+            _target = target;
         }
+
 
         protected override InstanceMemento memento
         {
             get { return _memento; }
         }
 
-        protected override PrototypeExpression<T> thisInstance
+        protected override LiteralExpression<T> thisInstance
         {
             get { return this; }
         }
 
         protected override void configureMemento(PluginFamily family)
         {
-            _memento.Prototype = (ICloneable) _prototype;
+            _memento.Instance = _target;
         }
 
         protected override void validate()
         {
-            // TODO
         }
 
         protected override void buildMemento()
         {
-            _memento = new PrototypeMemento(string.Empty, (ICloneable) _prototype);
+            _memento = new LiteralMemento(null);
         }
     }
 }

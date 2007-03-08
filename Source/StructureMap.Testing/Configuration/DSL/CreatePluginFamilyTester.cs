@@ -1,5 +1,4 @@
 using NUnit.Framework;
-using Rhino.Mocks;
 using StructureMap.Attributes;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
@@ -9,24 +8,26 @@ using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Configuration.DSL
 {
-    [TestFixture, Explicit]
+    [TestFixture]
     public class CreatePluginFamilyTester
     {
         [SetUp]
         public void SetUp()
         {
-            PluginGraph pluginGraph = new PluginGraph();
-            using (Registry registry = new Registry(pluginGraph))
-            {
-                // Define the default instance of IWidget
-                registry.BuildInstancesOfType<IWidget>().AndTheDefaultIs(
-                    Registry.Instance<IWidget>()
-                        .UsingConcreteType<ColorWidget>()
-                        .WithProperty("Color").EqualTo("Red")
-                    );
 
-                
-            }
+        }
+
+        [Test]
+        public void TheDefaultInstanceIsConcreteType()
+        {
+            Registry registry = new Registry();
+
+            // Needs to blow up if the concrete type can't be used
+            registry.BuildInstancesOf<Rule>().TheDefaultIsConcreteType<ARule>();
+
+            InstanceManager manager = registry.BuildInstanceManager();
+
+            Assert.IsInstanceOfType(typeof(ARule), manager.CreateInstance<Rule>());
         }
 
         [Test]
@@ -35,7 +36,7 @@ namespace StructureMap.Testing.Configuration.DSL
             PluginGraph pluginGraph = new PluginGraph();
             using (Registry registry = new Registry(pluginGraph))
             {
-                registry.BuildInstancesOfType<IGateway>();
+                registry.BuildInstancesOf<IGateway>();
             }
 
             Assert.IsTrue(pluginGraph.PluginFamilies.Contains<IGateway>());
@@ -47,7 +48,7 @@ namespace StructureMap.Testing.Configuration.DSL
             PluginGraph pluginGraph = new PluginGraph();
             using (Registry registry = new Registry(pluginGraph))
             {
-                registry.BuildInstancesOfType<IGateway>();
+                registry.BuildInstancesOf<IGateway>();
             }
 
             Assert.IsTrue(pluginGraph.PluginFamilies.Contains<IGateway>());
@@ -65,7 +66,7 @@ namespace StructureMap.Testing.Configuration.DSL
             using (Registry registry = new Registry(pluginGraph))
             {
                 // Specify the default implementation for an interface
-                registry.BuildInstancesOfType<IGateway>().WithDefaultConcreteType<StubbedGateway>();
+                registry.BuildInstancesOf<IGateway>().WithDefaultConcreteType<StubbedGateway>();
             }
 
             Assert.IsTrue(pluginGraph.PluginFamilies.Contains<IGateway>());
@@ -77,13 +78,28 @@ namespace StructureMap.Testing.Configuration.DSL
         }
 
         [Test]
+        public void CreatePluginFamilyWithADefault()
+        {
+            Registry registry = new Registry();
+            registry.BuildInstancesOf<IWidget>().TheDefaultIs(
+                Registry.Instance<IWidget>().UsingConcreteType<ColorWidget>().WithProperty("Color").EqualTo("Red")
+                );
+
+            InstanceManager manager = registry.BuildInstanceManager();
+
+            ColorWidget widget = (ColorWidget) manager.CreateInstance<IWidget>();
+            Assert.AreEqual("Red", widget.Color);
+        }
+
+
+        [Test]
         public void BuildPluginFamilyAsPerRequest()
         {
             PluginGraph pluginGraph = new PluginGraph();
             using (Registry registry = new Registry(pluginGraph))
             {
                 CreatePluginFamilyExpression expression =
-                    registry.BuildInstancesOfType<IGateway>();
+                    registry.BuildInstancesOf<IGateway>();
                 Assert.IsNotNull(expression);
             }
 
@@ -97,8 +113,7 @@ namespace StructureMap.Testing.Configuration.DSL
             PluginGraph pluginGraph = new PluginGraph();
             using (Registry registry = new Registry(pluginGraph))
             {
-                CreatePluginFamilyExpression expression =
-                    registry.BuildInstancesOfType<IGateway>().CacheInstanceAtScope(InstanceScope.ThreadLocal);
+                CreatePluginFamilyExpression expression = registry.BuildInstancesOf<IGateway>().CacheBy(InstanceScope.ThreadLocal);
                 Assert.IsNotNull(expression);
             }
 
@@ -113,7 +128,7 @@ namespace StructureMap.Testing.Configuration.DSL
             using (Registry registry = new Registry(pluginGraph))
             {
                 CreatePluginFamilyExpression expression = 
-                    registry.BuildInstancesOfType<IGateway>().AsASingleton();
+                    registry.BuildInstancesOf<IGateway>().AsSingletons();
                 Assert.IsNotNull(expression);
             }
 
@@ -127,7 +142,7 @@ namespace StructureMap.Testing.Configuration.DSL
             PluginGraph pluginGraph = new PluginGraph();
             using (Registry registry = new Registry(pluginGraph))
             {
-                registry.BuildInstancesOfType<IGateway>().WithDefaultConcreteType<FakeGateway>();
+                registry.BuildInstancesOf<IGateway>().WithDefaultConcreteType<FakeGateway>();
             }
 
             Assert.IsTrue(pluginGraph.PluginFamilies.Contains<IGateway>());
@@ -138,24 +153,5 @@ namespace StructureMap.Testing.Configuration.DSL
             Assert.IsInstanceOfType(typeof(FakeGateway), gateway);
         }
 
-        [Test]
-        public void CanAddAdditionalConcreteTypes()
-        {
-            Registry registry = new Registry();
-
-            registry.BuildInstancesOfType<IGateway>()
-                .PluginConcreteType<FakeGateway>().AliasedAs("Fake")
-                .PluginConcreteType<Fake2Gateway>()
-                .PluginConcreteType<StubbedGateway>()
-                .PluginConcreteType<Fake3Gateway>().AliasedAs("Fake3");
-
-            InstanceManager manager = registry.BuildInstanceManager();
-            IGateway gateway = (IGateway)manager.CreateInstance(typeof(IGateway), "Fake");
-
-            Assert.IsInstanceOfType(typeof(FakeGateway), gateway);
-            Assert.IsInstanceOfType(typeof(Fake3Gateway), manager.CreateInstance(typeof(IGateway), "Fake3"));
-            Assert.IsInstanceOfType(typeof(StubbedGateway), manager.CreateInstance(typeof(IGateway), "Stubbed"));
-            Assert.IsInstanceOfType(typeof(Fake2Gateway), manager.CreateInstance(typeof(IGateway), TypePath.GetAssemblyQualifiedName(typeof(Fake2Gateway))));
-        }
     }
 }

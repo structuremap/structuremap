@@ -9,10 +9,5 @@ namespace StructureMap.Configuration.DSL
         {
             throw new NotImplementedException();
         }
-
-        public IExpression[] ChildExpressions
-        {
-            get { throw new NotImplementedException(); }
-        }
     }
 }

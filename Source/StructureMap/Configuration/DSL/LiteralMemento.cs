@@ -2,37 +2,30 @@ using System;
 
 namespace StructureMap.Configuration.DSL
 {
-    public class PrototypeMemento : InstanceMemento
+    public class LiteralMemento : InstanceMemento
     {
-        private readonly string _instanceKey;
-        private ICloneable _prototype;
+        private object _instance;
 
-        public PrototypeMemento(string instanceKey, ICloneable prototype)
+        public LiteralMemento(object instance)
         {
-            _instanceKey = instanceKey;
-            _prototype = prototype;
+            _instance = instance;
         }
 
 
-        public ICloneable Prototype
+        public object Instance
         {
-            get { return _prototype; }
-            set { _prototype = value; }
-        }
-
-        public override object Build(IInstanceCreator creator)
-        {
-            return _prototype.Clone();
+            get { return _instance; }
+            set { _instance = value; }
         }
 
         protected override string innerConcreteKey
         {
-            get { return string.Empty; }
+            get { throw new NotImplementedException(); }
         }
 
         protected override string innerInstanceKey
         {
-            get { return _instanceKey; }
+            get { throw new NotImplementedException(); }
         }
 
         protected override string getPropertyValue(string Key)
@@ -58,6 +51,11 @@ namespace StructureMap.Configuration.DSL
         public override string ReferenceKey
         {
             get { throw new NotImplementedException(); }
+        }
+
+        public override object Build(IInstanceCreator creator)
+        {
+            return _instance;
         }
     }
 }

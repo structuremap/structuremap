@@ -4,7 +4,6 @@ using NUnit.Framework;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Testing.Widget;
-using IList=System.Collections.IList;
 
 namespace StructureMap.Testing.Configuration.DSL
 {
@@ -43,18 +42,6 @@ namespace StructureMap.Testing.Configuration.DSL
 
             registry.AddInstanceOf<IWidget>().UsingConcreteType<AWidget>();
 
-
-            
-
-
-            /*
-            
-
-
-
-                                                // Return the specific instance when an IWidget named "Julia" is requested
-                                                registry.AddInstanceOf<IWidget>( new CloneableWidget("Julia") ).WithName("Julia");
-                                                    */
             manager = registry.BuildInstanceManager();
         }
 
@@ -64,7 +51,8 @@ namespace StructureMap.Testing.Configuration.DSL
             Registry registry = new Registry();
             // Build an instance for IWidget, then setup StructureMap to return cloned instances of the 
             // "Prototype" (GoF pattern) whenever someone asks for IWidget named "Jeremy"
-            registry.AddInstanceOf<IWidget>().WithName("Jeremy").UsePrototype(new CloneableWidget("Jeremy"));
+            CloneableWidget theWidget = new CloneableWidget("Jeremy");
+            registry.AddPrototypeInstanceOf<IWidget>(theWidget).WithName("Jeremy");
 
             manager = registry.BuildInstanceManager();
 
@@ -79,6 +67,26 @@ namespace StructureMap.Testing.Configuration.DSL
             Assert.AreNotSame(widget1, widget2);
             Assert.AreNotSame(widget1, widget3);
             Assert.AreNotSame(widget2, widget3);
+        }
+
+
+        [Test]
+        public void UseAPreBuiltObjectWithAName()
+        {
+            Registry registry = new Registry();
+            // Return the specific instance when an IWidget named "Julia" is requested
+            CloneableWidget julia = new CloneableWidget("Julia");
+            registry.AddInstanceOf<IWidget>(julia).WithName("Julia");
+
+            manager = registry.BuildInstanceManager();
+
+            CloneableWidget widget1 = (CloneableWidget)manager.CreateInstance<IWidget>("Julia");
+            CloneableWidget widget2 = (CloneableWidget)manager.CreateInstance<IWidget>("Julia");
+            CloneableWidget widget3 = (CloneableWidget)manager.CreateInstance<IWidget>("Julia");
+
+            Assert.AreSame(julia, widget1);
+            Assert.AreSame(julia, widget2);
+            Assert.AreSame(julia, widget3);
         }
 
 
@@ -182,7 +190,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
             // Specify a new Instance, override a dependency with a named instance
             registry.AddInstanceOf<Rule>().UsingConcreteType<WidgetRule>().WithName("RuleThatUsesMyInstance")
-                .Child("widget").IsNamedInstance("Purple");
+                .Child<IWidget>("widget").IsNamedInstance("Purple");
 
             manager = registry.BuildInstanceManager();
 

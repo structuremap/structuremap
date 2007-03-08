@@ -12,7 +12,6 @@ namespace StructureMap.Configuration.DSL
     {
         private Type _pluginType;
         private List<AlterPluginFamilyDelegate> _alterations = new List<AlterPluginFamilyDelegate>();
-        private Plugin _lastPlugin;
         private InstanceScope _scope = InstanceScope.PerRequest;
 
         public CreatePluginFamilyExpression(Type pluginType)
@@ -20,11 +19,9 @@ namespace StructureMap.Configuration.DSL
             _pluginType = pluginType;
         }
 
-
-
         public void Configure(PluginGraph graph)
         {
-            PluginFamily family = PluginFamilyAttribute.CreatePluginFamily(_pluginType);
+            PluginFamily family = graph.LocateOrCreateFamilyForType(_pluginType);
             InterceptorChainBuilder builder = new InterceptorChainBuilder();
             family.InterceptionChain = builder.Build(_scope);
 
@@ -32,26 +29,18 @@ namespace StructureMap.Configuration.DSL
             {
                 alteration(family);
             }
-            
+
             graph.PluginFamilies.Add(family);
 
             AssemblyGraph assembly = new AssemblyGraph(_pluginType.Assembly);
             graph.Assemblies.Add(assembly);
         }
 
-        IExpression[] IExpression.ChildExpressions
-        {
-            get { return new IExpression[0]; }
-        }
-
         public CreatePluginFamilyExpression WithDefaultConcreteType<T>()
         {
             Plugin plugin = addPlugin<T>();
 
-            _alterations.Add(delegate (PluginFamily family)
-                                 {
-                                     family.DefaultInstanceKey = plugin.ConcreteKey;
-                                 });
+            _alterations.Add(delegate(PluginFamily family) { family.DefaultInstanceKey = plugin.ConcreteKey; });
 
             return this;
         }
@@ -60,42 +49,50 @@ namespace StructureMap.Configuration.DSL
         {
             Plugin plugin = Plugin.CreateImplicitPlugin(typeof (T));
 
-            _alterations.Add(delegate (PluginFamily family)
-                                 {
-                                     family.Plugins.Add(plugin);
-                                 });
+            _alterations.Add(delegate(PluginFamily family) { family.Plugins.Add(plugin); });
 
             return plugin;
         }
 
-        public CreatePluginFamilyExpression PluginConcreteType<T>()
+        public CreatePluginFamilyExpression TheDefaultIs(IMementoBuilder builder)
         {
-            _lastPlugin = addPlugin<T>();
+            _alterations.Add(delegate(PluginFamily family)
+                                 {
+                                     InstanceMemento memento = builder.BuildMemento(family);
+                                     family.Source.AddExternalMemento(memento);
+                                     family.DefaultInstanceKey = memento.InstanceKey;
+                                 });
 
             return this;
         }
 
-        public CreatePluginFamilyExpression AliasedAs(string concreteKey)
+        public CreatePluginFamilyExpression TheDefaultIsConcreteType<T>()
         {
-            _lastPlugin.ConcreteKey = concreteKey;
+            _alterations.Add(delegate(PluginFamily family)
+                                 {
+                                     Plugin plugin = family.Plugins.FindOrCreate(typeof (T));
+                                     family.DefaultInstanceKey = plugin.ConcreteKey;
+                                 });
+
             return this;
         }
 
-        public CreatePluginFamilyExpression AsASingleton()
+        public CreatePluginFamilyExpression CacheBy(InstanceScope scope)
         {
-            _scope = InstanceScope.Singleton;
+            _alterations.Add(delegate(PluginFamily family)
+                                 {
+                                     InterceptorChainBuilder builder = new InterceptorChainBuilder();
+                                     family.InterceptionChain = builder.Build(scope);
+                                 });
+
             return this;
         }
 
-        public CreatePluginFamilyExpression CacheInstanceAtScope(InstanceScope scope)
+        public CreatePluginFamilyExpression AsSingletons()
         {
-            _scope = scope;
+            _alterations.Add(
+                delegate(PluginFamily family) { family.InterceptionChain.AddInterceptor(new SingletonInterceptor()); });
             return this;
-        }
-
-        public void AndTheDefaultIs(InstanceExpression expression)
-        {
-            throw new NotImplementedException();
         }
     }
 }
