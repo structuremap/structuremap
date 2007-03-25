@@ -1,3 +1,4 @@
+using System;
 using System.Xml;
 using NUnit.Framework;
 using StructureMap.Configuration;
@@ -102,7 +103,8 @@ namespace StructureMap.Testing.Configuration
         public void GotAllMachines()
         {
             string[] names = _defaults.GetMachineNames();
-            Assert.AreEqual(new string[] {"SERVER", "GREEN-BOX"}, names);
+            Array.Sort(names);
+            Assert.AreEqual(new string[] {"GREEN-BOX", "SERVER" }, names);
         }
 
         [Test]

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using StructureMap.Configuration;
 using StructureMap.Configuration.Tokens;
@@ -14,7 +15,7 @@ namespace StructureMap.Graph
     {
         private string _machineName;
         private Profile _profile = new Profile(string.Empty);
-        private Hashtable _defaults;
+        private Dictionary<string, InstanceDefault> _defaults;
 
         public MachineOverride(string machineName, Profile profile)
             : this(machineName)
@@ -28,7 +29,7 @@ namespace StructureMap.Graph
         public MachineOverride(string machineName) : base()
         {
             _machineName = machineName;
-            _defaults = new Hashtable();
+            _defaults = new Dictionary<string, InstanceDefault>();
         }
 
         public string MachineName
@@ -71,7 +72,7 @@ namespace StructureMap.Graph
                 }
                 else
                 {
-                    return ((InstanceDefault) _defaults[pluginTypeName]).DefaultKey;
+                    return _defaults[pluginTypeName].DefaultKey;
                 }
             }
         }

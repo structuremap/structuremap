@@ -485,6 +485,18 @@ namespace StructureMap
             return this[type].GetAllInstances();
         }
 
+        public IList<T> GetAllInstances<T>()
+        {
+            List<T> list = new List<T>();
+
+            foreach (T instance in this[typeof(T)].GetAllInstances())
+            {
+                list.Add(instance);
+            }
+
+            return list;
+        }
+
         public void SetDefaultsToProfile(string profile)
         {
             // The authenticated user may not have required privileges to read from Environment

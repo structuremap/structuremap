@@ -189,6 +189,7 @@
     <Compile Include="Configuration\DSL\CreateProfileTester.cs" />
     <Compile Include="Configuration\DSL\InstanceExpressionTester.cs" />
     <Compile Include="Configuration\DSL\LiteralExpressionTester.cs" />
+    <Compile Include="Configuration\DSL\ProfileExpressionTester.cs" />
     <Compile Include="Configuration\DSL\RegistryTester.cs" />
     <Compile Include="Configuration\DSL\ScanAssembliesTester.cs" />
     <Compile Include="Configuration\FamilyParserTester.cs">
@@ -482,6 +483,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="TestData\InlineInstanceInProfileAndMachine.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Sample.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

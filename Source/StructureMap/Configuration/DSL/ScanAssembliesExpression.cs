@@ -10,17 +10,12 @@ namespace StructureMap.Configuration.DSL
     {
         private List<AssemblyGraph> _assemblies = new List<AssemblyGraph>();
 
-        public void Configure(PluginGraph graph)
+        void IExpression.Configure(PluginGraph graph)
         {
             foreach (AssemblyGraph assembly in _assemblies)
             {
                 graph.Assemblies.Add(assembly);
             }
-        }
-
-        public IExpression[] ChildExpressions
-        {
-            get { return new IExpression[0]; }
         }
 
         public ScanAssembliesExpression IncludeTheCallingAssembly()

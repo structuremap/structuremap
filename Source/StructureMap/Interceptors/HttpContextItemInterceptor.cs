@@ -12,6 +12,7 @@ namespace StructureMap.Interceptors
 
         public HttpContextItemInterceptor() : base()
         {
+            
         }
 
         private string getKey(string instanceKey)

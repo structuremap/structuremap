@@ -9,6 +9,7 @@ namespace StructureMap.Configuration.DSL
     {
         protected readonly Type _pluginType;
         protected List<IExpression> _children = new List<IExpression>();
+        private string _instanceKey = null;
 
         public MementoBuilder(Type pluginType)
         {
@@ -22,6 +23,12 @@ namespace StructureMap.Configuration.DSL
             validate();
             PluginFamily family = graph.LocateOrCreateFamilyForType((Type) _pluginType);
             configureMemento(family);
+            
+            if (!string.IsNullOrEmpty(_instanceKey))
+            {
+                memento.InstanceKey = _instanceKey;
+            }
+
             family.Source.AddExternalMemento(memento);
 
             foreach (IExpression child in _children)
@@ -59,9 +66,26 @@ namespace StructureMap.Configuration.DSL
 
         InstanceMemento IMementoBuilder.BuildMemento(PluginFamily family)
         {
+            return buildMementoFromFamily(family);
+        }
+
+        private InstanceMemento buildMementoFromFamily(PluginFamily family)
+        {
             validate();
             configureMemento(family);
             return memento;
+        }
+
+
+        InstanceMemento IMementoBuilder.BuildMemento(PluginGraph graph)
+        {
+            PluginFamily family = graph.LocateOrCreateFamilyForType(_pluginType);
+            return buildMementoFromFamily(family);
+        }
+
+        public void SetInstanceName(string instanceKey)
+        {
+            _instanceKey = instanceKey;
         }
 
         protected void addChildExpression(IExpression expression)

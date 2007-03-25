@@ -1,0 +1,36 @@
+﻿<StructureMap MementoStyle="Attribute" DefaultProfile="Development">
+  <Assembly Name="SomeAssembly"/>
+
+  <Profile Name="Production">
+    <Override Type="SomeAssembly.IService" DefaultKey="Production"/>
+  </Profile>
+
+  <Profile Name="Testing">
+    <Override Type="SomeAssembly.IService" DefaultKey="Testing"/>
+  </Profile>
+
+  <Profile Name="Development">
+    <Override Type="SomeAssembly.IService" DefaultKey="Development"/>
+  </Profile>
+
+
+  <PluginFamily Type="SomeAssembly.IService" Assembly="SomeAssembly">
+    <Plugin Type="SomeAssembly.ConcreteService" Assembly="SomeAssembly" ConcreteKey="Concrete"/>
+    
+    <Instance Type="Concrete" Key="Production">
+      <Property Name="host" Value="PROD-SERVER"/>
+      <Property Name="port" Value="5050"/>
+    </Instance>
+    
+    <Instance Type="Concrete" Key="Testing">
+      <Property Name="host" Value="TEST-SERVER"/>
+      <Property Name="port" Value="5050"/>
+    </Instance>
+    
+    <Instance Type="Concrete" Key="Development">
+      <Property Name="host" Value="localhost"/>
+      <Property Name="port" Value="2000"/>
+    </Instance>
+  </PluginFamily>
+
+</StructureMap>

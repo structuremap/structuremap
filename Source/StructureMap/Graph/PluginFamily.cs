@@ -230,5 +230,10 @@ namespace StructureMap.Graph
         {
             _plugins.RemoveImplicitChildren();
         }
+
+        public void AddInstance(InstanceMemento memento)
+        {
+            _source.AddExternalMemento(memento);
+        }
     }
 }

@@ -1,4 +1,4 @@
-using System.Collections;
+using System.Collections.Generic;
 
 namespace StructureMap.Graph
 {
@@ -10,11 +10,11 @@ namespace StructureMap.Graph
     {
         public const string ALL = "All";
 
-        private ArrayList _deploymentTargets;
+        private List<string> _deploymentTargets;
 
         public Deployable()
         {
-            _deploymentTargets = new ArrayList();
+            _deploymentTargets = new List<string>();
         }
 
         public Deployable(string[] deploymentTargets) : this()
@@ -27,7 +27,7 @@ namespace StructureMap.Graph
         /// </summary>
         public string[] DeploymentTargets
         {
-            get { return (string[]) _deploymentTargets.ToArray(typeof (string)); }
+            get { return _deploymentTargets.ToArray(); }
             set
             {
                 _deploymentTargets.Clear();

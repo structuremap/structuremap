@@ -215,9 +215,9 @@
     </Compile>
     <Compile Include="Configuration\DSL\ChildInstanceExpression.cs" />
     <Compile Include="Configuration\DSL\CreatePluginFamilyExpression.cs" />
-    <Compile Include="Configuration\DSL\DefaultExpression.cs" />
     <Compile Include="Configuration\DSL\IExpression.cs" />
     <Compile Include="Configuration\DSL\IMementoBuilder.cs" />
+    <Compile Include="Configuration\DSL\InstanceDefaultExpression.cs" />
     <Compile Include="Configuration\DSL\InstanceExpression.cs" />
     <Compile Include="Configuration\DSL\LiteralExpression.cs" />
     <Compile Include="Configuration\DSL\LiteralMemento.cs" />

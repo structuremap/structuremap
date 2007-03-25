@@ -65,9 +65,9 @@ namespace StructureMap.Configuration.DSL
 
         public InstanceManager BuildInstanceManager()
         {
-            PluginGraph graph = new PluginGraph();
-            configurePluginGraph(graph);
-            return new InstanceManager(graph);
+            configurePluginGraph(_graph);
+            _graph.ReadDefaults();
+            return new InstanceManager(_graph);
         }
 
         public InstanceExpression AddInstanceOf<T>()
@@ -82,6 +82,11 @@ namespace StructureMap.Configuration.DSL
             return new InstanceExpression(typeof (T));
         }
 
+        public static PrototypeExpression<T> Prototype<T>(T prototype)
+        {
+            return new PrototypeExpression<T>(prototype);
+        }
+
         public LiteralExpression<T> AddInstanceOf<T>(T target)
         {
             LiteralExpression<T> literal = new LiteralExpression<T>(target);
@@ -93,6 +98,14 @@ namespace StructureMap.Configuration.DSL
         public PrototypeExpression<T> AddPrototypeInstanceOf<T>(T prototype)
         {
             PrototypeExpression<T> expression = new PrototypeExpression<T>(prototype);
+            addExpression(expression);
+
+            return expression;
+        }
+
+        public ProfileExpression CreateProfile(string profileName)
+        {
+            ProfileExpression expression = new ProfileExpression(profileName);
             addExpression(expression);
 
             return expression;

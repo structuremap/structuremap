@@ -1,5 +1,5 @@
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using StructureMap.Configuration;
 
 namespace StructureMap.Graph
@@ -25,16 +25,16 @@ namespace StructureMap.Graph
             return machineName;
         }
 
-        private ArrayList _defaults;
-        private Hashtable _machineOverrides;
-        private Hashtable _profiles;
+        private List<InstanceDefault> _defaults;
+        private Dictionary<string, MachineOverride> _machineOverrides;
+        private Dictionary<string, Profile> _profiles;
         private string _defaultProfileName = string.Empty;
 
         public InstanceDefaultManager() : base()
         {
-            _defaults = new ArrayList();
-            _machineOverrides = new Hashtable();
-            _profiles = new Hashtable();
+            _defaults = new List<InstanceDefault>();
+            _machineOverrides = new Dictionary<string, MachineOverride>();
+            _profiles = new Dictionary<string, Profile>();
         }
 
         /// <summary>
@@ -49,9 +49,12 @@ namespace StructureMap.Graph
 
         public void ReadDefaultsFromPluginGraph(PluginGraph graph)
         {
+            _defaults = new List<InstanceDefault>();
+
             foreach (PluginFamily family in graph.PluginFamilies)
             {
-                AddPluginFamilyDefault(family.PluginType.FullName, family.DefaultInstanceKey);
+                InstanceDefault instanceDefault = new InstanceDefault(family.PluginType, family.DefaultInstanceKey);
+                _defaults.Add(instanceDefault);
             }
         }
 
@@ -106,7 +109,12 @@ namespace StructureMap.Graph
         /// <returns></returns>
         public Profile GetProfile(string profileName)
         {
-            return _profiles[profileName] as Profile;
+            if (!_profiles.ContainsKey(profileName))
+            {
+                return null;
+            }
+
+            return _profiles[profileName];
         }
 
         /// <summary>
@@ -118,7 +126,7 @@ namespace StructureMap.Graph
         {
             if (_machineOverrides.ContainsKey(machineName))
             {
-                return (MachineOverride) _machineOverrides[machineName];
+                return _machineOverrides[machineName];
             }
             else
             {
@@ -133,7 +141,7 @@ namespace StructureMap.Graph
 
             if (_profiles.ContainsKey(profileToFind))
             {
-                return (Profile) _profiles[profileToFind];
+                return _profiles[profileToFind];
             }
             else
             {

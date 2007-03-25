@@ -1,5 +1,5 @@
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using StructureMap.Configuration;
 using StructureMap.Configuration.Tokens;
@@ -13,12 +13,12 @@ namespace StructureMap.Graph
     public class Profile : GraphObject
     {
         private string _profileName;
-        private Hashtable _defaults;
+        private Dictionary<string, InstanceDefault> _defaults;
 
-        public Profile(string profileName) : base()
+        public Profile(string profileName)
         {
             _profileName = profileName;
-            _defaults = new Hashtable();
+            _defaults = new Dictionary<string, InstanceDefault>();
         }
 
         public string ProfileName
@@ -34,7 +34,7 @@ namespace StructureMap.Graph
             {
                 if (_defaults.ContainsKey(pluginTypeName))
                 {
-                    return ((InstanceDefault) _defaults[pluginTypeName]).DefaultKey;
+                    return (_defaults[pluginTypeName]).DefaultKey;
                 }
                 else
                 {
@@ -128,6 +128,11 @@ namespace StructureMap.Graph
         protected override string key
         {
             get { return ProfileName; }
+        }
+
+        public static string InstanceKeyForProfile(string profileName)
+        {
+            return profileName + "-Instance";
         }
     }
 }

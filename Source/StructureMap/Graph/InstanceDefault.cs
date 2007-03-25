@@ -19,6 +19,10 @@ namespace StructureMap.Graph
             _defaultKey = defaultKey;
         }
 
+        public InstanceDefault(Type pluginType, string defaultKey) : this(pluginType.FullName, defaultKey)
+        {
+        }
+
         public string PluginTypeName
         {
             get { return _pluginTypeName; }

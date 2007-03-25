@@ -77,7 +77,7 @@ namespace StructureMap.Configuration
 
         private void createOverrideInstance(string fullName, XmlElement instanceElement, WriteOverride function, string profileName)
         {
-            string key = profileName + "-Instance";
+            string key = Profile.InstanceKeyForProfile(profileName);
             InstanceMemento memento = _creator.CreateMemento(instanceElement);
             memento.InstanceKey = key;
 
