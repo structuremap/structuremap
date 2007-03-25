@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using NMock;
 using StructureMap.Exceptions;
 using StructureMap.Graph;
@@ -12,10 +11,10 @@ namespace StructureMap
     /// <summary>
     /// A collection of IInstanceFactory's.
     /// </summary>
-    public class InstanceManager : IEnumerable
+    public class InstanceManager : IInstanceManager, IEnumerable
     {
         private Dictionary<Type, IInstanceFactory> _factories;
-        private HybridDictionary _filledTypeFactories;
+        private Dictionary<Type, InstanceFactory> _filledTypeFactories;
         private bool _failOnException = true;
         private GenericsPluginGraph _genericsGraph;
         private InstanceDefaultManager _defaultManager;
@@ -26,7 +25,7 @@ namespace StructureMap
         public InstanceManager()
         {
             _factories = new Dictionary<Type, IInstanceFactory>();
-            _filledTypeFactories = new HybridDictionary();
+            _filledTypeFactories = new Dictionary<Type, InstanceFactory>();
             _genericsGraph = new GenericsPluginGraph();
         }
 
@@ -174,7 +173,7 @@ namespace StructureMap
 
         public T CreateInstance<T>()
         {
-            return (T)CreateInstance(typeof(T));
+            return (T) CreateInstance(typeof (T));
         }
 
         /// <summary>
@@ -200,7 +199,6 @@ namespace StructureMap
             IInstanceFactory instanceFactory = this[pluginTypeName];
             return instanceFactory.GetInstance(instanceMemento);
         }
-
 
 
         /// <summary>
@@ -338,11 +336,11 @@ namespace StructureMap
 
         private InstanceFactory getFilledTypeFactory(Type type)
         {
-            if (!_filledTypeFactories.Contains(type))
+            if (!_filledTypeFactories.ContainsKey(type))
             {
                 lock (this)
                 {
-                    if (!_filledTypeFactories.Contains(type))
+                    if (!_filledTypeFactories.ContainsKey(type))
                     {
                         PluginFamily family = PluginFamily.CreateAutoFilledPluginFamily(type);
                         InstanceFactory factory = new InstanceFactory(family, true);
@@ -352,7 +350,7 @@ namespace StructureMap
                 }
             }
 
-            return (InstanceFactory) _filledTypeFactories[type];
+            return _filledTypeFactories[type];
         }
 
         #region mocking
@@ -390,14 +388,10 @@ namespace StructureMap
         /// <returns></returns>
         public bool IsMocked(Type TargetType)
         {
-            bool returnValue = false;
-
-            returnValue = isInstanceFamilyMocked(this[TargetType]);
-
-            return returnValue;
+            return isInstanceFamilyMocked(this[TargetType]);
         }
 
-        private bool isInstanceFamilyMocked(IInstanceFactory instanceFactory)
+        private static bool isInstanceFamilyMocked(IInstanceFactory instanceFactory)
         {
             bool returnValue = false;
 
@@ -473,6 +467,11 @@ namespace StructureMap
             }
         }
 
+        public void Inject<T>(T instance)
+        {
+            InjectStub(typeof(T), instance);
+        }
+
         #endregion
 
         public IEnumerator GetEnumerator()
@@ -489,7 +488,7 @@ namespace StructureMap
         {
             List<T> list = new List<T>();
 
-            foreach (T instance in this[typeof(T)].GetAllInstances())
+            foreach (T instance in this[typeof (T)].GetAllInstances())
             {
                 list.Add(instance);
             }

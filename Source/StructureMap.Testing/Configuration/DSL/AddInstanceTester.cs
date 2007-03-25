@@ -10,7 +10,7 @@ namespace StructureMap.Testing.Configuration.DSL
     [TestFixture]
     public class AddInstanceTester
     {
-        private InstanceManager manager;
+        private IInstanceManager manager;
         private PluginGraph pluginGraph;
 
         [SetUp]
@@ -104,7 +104,7 @@ namespace StructureMap.Testing.Configuration.DSL
                         .WithName("Orange")
                         );
 
-            InstanceManager mgr = registry.BuildInstanceManager();
+            IInstanceManager mgr = registry.BuildInstanceManager();
 
             ColorWidget orange = (ColorWidget) mgr.CreateInstance<IWidget>("Orange");
             Assert.IsNotNull(orange);

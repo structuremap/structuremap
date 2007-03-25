@@ -46,7 +46,7 @@ namespace StructureMap.Testing.Configuration.DSL
                     Registry.Instance<IWidget>().UsingConcreteType<AWidget>()
                 );
 
-            InstanceManager manager = registry.BuildInstanceManager();
+            IInstanceManager manager = registry.BuildInstanceManager();
 
             
 

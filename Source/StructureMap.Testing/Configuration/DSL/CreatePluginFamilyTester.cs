@@ -25,7 +25,7 @@ namespace StructureMap.Testing.Configuration.DSL
             // Needs to blow up if the concrete type can't be used
             registry.BuildInstancesOf<Rule>().TheDefaultIsConcreteType<ARule>();
 
-            InstanceManager manager = registry.BuildInstanceManager();
+            IInstanceManager manager = registry.BuildInstanceManager();
 
             Assert.IsInstanceOfType(typeof(ARule), manager.CreateInstance<Rule>());
         }
@@ -85,7 +85,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 Registry.Instance<IWidget>().UsingConcreteType<ColorWidget>().WithProperty("Color").EqualTo("Red")
                 );
 
-            InstanceManager manager = registry.BuildInstanceManager();
+            IInstanceManager manager = registry.BuildInstanceManager();
 
             ColorWidget widget = (ColorWidget) manager.CreateInstance<IWidget>();
             Assert.AreEqual("Red", widget.Color);

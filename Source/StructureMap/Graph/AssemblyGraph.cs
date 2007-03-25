@@ -158,7 +158,7 @@ namespace StructureMap.Graph
 
         public static AssemblyGraph ContainingType<T>()
         {
-            return new AssemblyGraph(typeof(T).Assembly);
+            return new AssemblyGraph(typeof (T).Assembly);
         }
 
         public Type FindTypeByFullName(string fullName)

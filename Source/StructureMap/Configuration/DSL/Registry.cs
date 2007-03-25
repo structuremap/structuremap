@@ -63,7 +63,7 @@ namespace StructureMap.Configuration.DSL
             return expression;
         }
 
-        public InstanceManager BuildInstanceManager()
+        public IInstanceManager BuildInstanceManager()
         {
             configurePluginGraph(_graph);
             _graph.ReadDefaults();

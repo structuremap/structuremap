@@ -450,6 +450,7 @@
     <Compile Include="IInstanceFactory.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="IInstanceManager.cs" />
     <Compile Include="InstanceBuilder.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -102,7 +102,8 @@ namespace StructureMap.Graph
             PluggableAttribute att = PluggableAttribute.InstanceOf(pluggedType);
             if (att == null)
             {
-                return new Plugin(pluggedType, TypePath.GetAssemblyQualifiedName(pluggedType), Graph.DefinitionSource.Implicit);    
+                return
+                    new Plugin(pluggedType, TypePath.GetAssemblyQualifiedName(pluggedType), DefinitionSource.Implicit);
             }
             else
             {
@@ -396,15 +397,17 @@ namespace StructureMap.Graph
 
         public override int GetHashCode()
         {
-            return (_pluggedType != null ? _pluggedType.GetHashCode() : 0) + 29*(_concreteKey != null ? _concreteKey.GetHashCode() : 0);
+            return
+                (_pluggedType != null ? _pluggedType.GetHashCode() : 0) +
+                29*(_concreteKey != null ? _concreteKey.GetHashCode() : 0);
         }
 
         public string FindFirstConstructorArgumentOfType<T>()
         {
-            ConstructorInfo ctor = this.GetConstructor();
+            ConstructorInfo ctor = GetConstructor();
             foreach (ParameterInfo info in ctor.GetParameters())
             {
-                if (info.ParameterType.Equals(typeof(T)))
+                if (info.ParameterType.Equals(typeof (T)))
                 {
                     return info.Name;
                 }
