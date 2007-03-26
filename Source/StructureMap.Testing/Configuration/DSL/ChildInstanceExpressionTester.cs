@@ -40,7 +40,8 @@ namespace StructureMap.Testing.Configuration.DSL
             MemoryInstanceMemento memento = new MemoryInstanceMemento();
 
             ChildInstanceExpression expression = new ChildInstanceExpression(instance, memento, "a property", typeof(IType));
-            InstanceExpression child = new InstanceExpression(typeof(IType)).UsingConcreteType<AbstractType>();
+            InstanceExpression child = Registry.Instance<IType>().UsingConcreteType<AbstractType>();
+                
             expression.Is(child);
         }
     }

@@ -70,21 +70,27 @@ namespace StructureMap.Configuration.DSL
             return new InstanceManager(_graph);
         }
 
-        public InstanceExpression AddInstanceOf<T>()
+        public InstanceExpression.InstanceTypeExpression AddInstanceOf<T>()
         {
             InstanceExpression expression = new InstanceExpression(typeof (T));
             addExpression(expression);
-            return expression;
+            return expression.TypeExpression();
         }
 
-        public static InstanceExpression Instance<T>()
+        public static InstanceExpression.InstanceTypeExpression Instance<T>()
         {
-            return new InstanceExpression(typeof (T));
+            InstanceExpression expression = new InstanceExpression(typeof (T));
+            return expression.TypeExpression();
         }
 
         public static PrototypeExpression<T> Prototype<T>(T prototype)
         {
             return new PrototypeExpression<T>(prototype);
+        }
+
+        public static LiteralExpression<T> Object<T>(T instance)
+        {
+            return new LiteralExpression<T>(instance);
         }
 
         public LiteralExpression<T> AddInstanceOf<T>(T target)

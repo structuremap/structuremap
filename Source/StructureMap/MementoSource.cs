@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using StructureMap.Configuration.Tokens;
 using StructureMap.Graph;
 using StructureMap.Source;
@@ -15,7 +16,7 @@ namespace StructureMap
     {
         private PluginFamily _family;
         private InstanceMemento _defaultMemento;
-        private Hashtable _externalMementos = new Hashtable();
+        private Dictionary<string, InstanceMemento> _externalMementos = new Dictionary<string, InstanceMemento>();
 
         protected MementoSource() : base()
         {
@@ -32,7 +33,7 @@ namespace StructureMap
 
             if (_externalMementos.ContainsKey(instanceKey))
             {
-                returnValue = (InstanceMemento) _externalMementos[instanceKey];
+                returnValue = _externalMementos[instanceKey];
             }
             else if (containsKey(instanceKey))
             {
@@ -88,6 +89,11 @@ namespace StructureMap
             else if (memento.IsReference)
             {
                 returnValue = GetMemento(memento.ReferenceKey);
+
+                if (returnValue == null)
+                {
+                    throw new StructureMapException(200, memento.ReferenceKey, Family.PluginTypeName);
+                }
             }
 
             return returnValue;

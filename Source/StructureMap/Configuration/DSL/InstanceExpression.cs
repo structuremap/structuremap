@@ -53,22 +53,13 @@ namespace StructureMap.Configuration.DSL
         }
 
 
-        public InstanceExpression UsingConcreteType<T>()
-        {
-            _pluggedType = typeof (T);
-            return this;
-        }
+
 
         public PropertyExpression WithProperty(string propertyName)
         {
             return new PropertyExpression(this, _memento, propertyName);
         }
 
-        public InstanceExpression UsingConcreteTypeNamed(string concreteKey)
-        {
-            _memento.ConcreteKey = concreteKey;
-            return this;
-        }
 
         public ChildInstanceExpression Child<T>(string propertyName)
         {
@@ -108,6 +99,35 @@ namespace StructureMap.Configuration.DSL
             }
 
             ExpressionValidator.ValidatePluggabilityOf(_pluggedType).IntoPluginType(pluginType);
+        }
+
+        internal InstanceTypeExpression TypeExpression()
+        {
+            return new InstanceTypeExpression(this);
+        }
+
+
+        public class InstanceTypeExpression
+        {
+            private readonly InstanceExpression _parent;
+
+            internal InstanceTypeExpression(InstanceExpression parent)
+            {
+                _parent = parent;
+            }
+
+            public InstanceExpression UsingConcreteType<T>()
+            {
+                _parent._pluggedType = typeof(T);
+                return _parent;
+            }
+
+            public InstanceExpression UsingConcreteTypeNamed(string concreteKey)
+            {
+                _parent._memento.ConcreteKey = concreteKey;
+                return _parent;
+            }
+
         }
     }
 }

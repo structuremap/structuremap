@@ -21,20 +21,20 @@ namespace StructureMap.Testing.Configuration.DSL
 
             // Add an instance with properties
             registry.AddInstanceOf<IWidget>()
-                .WithName("DarkGreen")
                 .UsingConcreteType<ColorWidget>()
+                .WithName("DarkGreen")
                 .WithProperty("Color").EqualTo("DarkGreen");
 
             // Add an instance by specifying the ConcreteKey
             registry.AddInstanceOf<IWidget>()
-                .WithName("Purple")
                 .UsingConcreteTypeNamed("Color")
+                .WithName("Purple")
                 .WithProperty("Color").EqualTo("Purple");
 
             // Pull a property from the App config
             registry.AddInstanceOf<IWidget>()
-                .WithName("AppSetting")
                 .UsingConcreteType<ColorWidget>()
+                .WithName("AppSetting")
                 .WithProperty("Color").EqualToAppSetting("Color");
 
 
@@ -184,8 +184,8 @@ namespace StructureMap.Testing.Configuration.DSL
 
             // Add an instance by specifying the ConcreteKey
             registry.AddInstanceOf<IWidget>()
-                .WithName("Purple")
                 .UsingConcreteTypeNamed("Color")
+                .WithName("Purple")
                 .WithProperty("Color").EqualTo("Purple");
 
             // Specify a new Instance, override a dependency with a named instance
@@ -216,6 +216,20 @@ namespace StructureMap.Testing.Configuration.DSL
         public IWidget Widget
         {
             get { return _widget; }
+        }
+
+
+        public override bool Equals(object obj)
+        {
+            if (this == obj) return true;
+            WidgetRule widgetRule = obj as WidgetRule;
+            if (widgetRule == null) return false;
+            return Equals(_widget, widgetRule._widget);
+        }
+
+        public override int GetHashCode()
+        {
+            return _widget != null ? _widget.GetHashCode() : 0;
         }
     }
 

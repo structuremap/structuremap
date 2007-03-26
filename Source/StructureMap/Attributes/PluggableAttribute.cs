@@ -47,7 +47,7 @@ namespace StructureMap
         /// <returns></returns>
         public static PluggableAttribute InstanceOf(Type objectType)
         {
-            return (PluggableAttribute) GetCustomAttribute(objectType, typeof (PluggableAttribute), false);
+            return GetCustomAttribute(objectType, typeof (PluggableAttribute), false) as PluggableAttribute;
         }
 
         /// <summary>

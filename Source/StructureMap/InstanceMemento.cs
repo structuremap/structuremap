@@ -164,18 +164,7 @@ namespace StructureMap
 
             if (memento == null)
             {
-                try
-                {
-                    returnValue = manager.CreateInstance(typeName);
-                }
-                catch (StructureMapException)
-                {
-                    throw;
-                }
-                catch (Exception ex)
-                {
-                    throw new StructureMapException(209, ex, key, typeName);
-                }
+                returnValue = buildDefaultChild(key, manager, typeName);
             }
             else
             {
@@ -183,6 +172,24 @@ namespace StructureMap
             }
 
 
+            return returnValue;
+        }
+
+        private static object buildDefaultChild(string key, InstanceManager manager, string typeName)
+        {
+            object returnValue;
+            try
+            {
+                returnValue = manager.CreateInstance(typeName);
+            }
+            catch (StructureMapException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                throw new StructureMapException(209, ex, key, typeName);
+            }
             return returnValue;
         }
 

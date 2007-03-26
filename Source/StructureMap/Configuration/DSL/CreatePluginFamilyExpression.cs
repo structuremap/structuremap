@@ -13,6 +13,7 @@ namespace StructureMap.Configuration.DSL
         private Type _pluginType;
         private List<AlterPluginFamilyDelegate> _alterations = new List<AlterPluginFamilyDelegate>();
         private InstanceScope _scope = InstanceScope.PerRequest;
+        private List<IExpression> _children = new List<IExpression>();
 
         public CreatePluginFamilyExpression(Type pluginType)
         {
@@ -24,6 +25,11 @@ namespace StructureMap.Configuration.DSL
             PluginFamily family = graph.LocateOrCreateFamilyForType(_pluginType);
             InterceptorChainBuilder builder = new InterceptorChainBuilder();
             family.InterceptionChain = builder.Build(_scope);
+
+            foreach (IExpression child in _children)
+            {
+                child.Configure(graph);
+            }
 
             foreach (AlterPluginFamilyDelegate alteration in _alterations)
             {
@@ -40,6 +46,7 @@ namespace StructureMap.Configuration.DSL
         {
             builder.ValidatePluggability(_pluginType);
 
+            _children.Add(builder);
             _alterations.Add(delegate(PluginFamily family)
                                  {
                                      InstanceMemento memento = builder.BuildMemento(family);

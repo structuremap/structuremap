@@ -8,7 +8,7 @@ namespace StructureMap.Testing.Widget
     }
 
     [Pluggable("Color", "Only for testing")]
-    public class ColorWidget : IWidget
+    public class ColorWidget : IWidget, ICloneable
     {
         private string _Color;
 
@@ -31,6 +31,24 @@ namespace StructureMap.Testing.Widget
         }
 
         #endregion
+
+        public override bool Equals(object obj)
+        {
+            if (this == obj) return true;
+            ColorWidget colorWidget = obj as ColorWidget;
+            if (colorWidget == null) return false;
+            return Equals(_Color, colorWidget._Color);
+        }
+
+        public override int GetHashCode()
+        {
+            return _Color != null ? _Color.GetHashCode() : 0;
+        }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
 
     [Pluggable("AWidget")]

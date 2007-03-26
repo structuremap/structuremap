@@ -41,8 +41,9 @@ namespace StructureMap.Configuration.DSL
             Type pluggedType = typeof (T);
             ExpressionValidator.ValidatePluggabilityOf(pluggedType).IntoPluginType(_childType);
 
+
             InstanceExpression child = new InstanceExpression(_childType);
-            child.UsingConcreteType<T>();
+            child.TypeExpression().UsingConcreteType<T>();
             _children.Add(child);
 
             _builder = child;

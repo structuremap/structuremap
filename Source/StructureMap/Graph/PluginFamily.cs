@@ -35,7 +35,7 @@ namespace StructureMap.Graph
 
         private string _defaultKey = string.Empty;
         private Type _pluginType;
-        private MementoSource _source = new MemoryMementoSource();
+        private MementoSource _source;
         private DefinitionSource _definitionSource = DefinitionSource.Implicit;
         private string _pluginTypeName;
         private InterceptionChain _interceptionChain;
@@ -53,6 +53,8 @@ namespace StructureMap.Graph
             _plugins = new PluginCollection(this);
 
             _interceptionChain = new InterceptionChain();
+
+            Source = new MemoryMementoSource();
         }
 
         public PluginFamily(Type pluginType, string defaultInstanceKey, MementoSource source)
@@ -89,6 +91,8 @@ namespace StructureMap.Graph
             _pluginTypeName = path.AssemblyQualifiedName;
             _interceptionChain = new InterceptionChain();
             initializeExplicit(path, defaultKey);
+
+            Source = new MemoryMementoSource();
         }
 
 

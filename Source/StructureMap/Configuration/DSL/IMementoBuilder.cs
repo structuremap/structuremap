@@ -3,7 +3,7 @@ using StructureMap.Graph;
 
 namespace StructureMap.Configuration.DSL
 {
-    public interface IMementoBuilder
+    public interface IMementoBuilder : IExpression
     {
         InstanceMemento BuildMemento(PluginFamily family);
         InstanceMemento BuildMemento(PluginGraph graph);

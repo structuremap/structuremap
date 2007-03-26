@@ -185,8 +185,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Configuration\DSL\AddInstanceTester.cs" />
+    <Compile Include="Configuration\DSL\ChildInstanceExpressionTester.cs" />
     <Compile Include="Configuration\DSL\CreatePluginFamilyTester.cs" />
     <Compile Include="Configuration\DSL\CreateProfileTester.cs" />
+    <Compile Include="Configuration\DSL\DeepInstanceTester.cs" />
     <Compile Include="Configuration\DSL\InstanceExpressionTester.cs" />
     <Compile Include="Configuration\DSL\LiteralExpressionTester.cs" />
     <Compile Include="Configuration\DSL\ProfileExpressionTester.cs" />

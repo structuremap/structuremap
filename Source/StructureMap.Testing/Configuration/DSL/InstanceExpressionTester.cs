@@ -25,9 +25,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test, ExpectedException(typeof(StructureMapException))]
         public void BlowUpIfNoPropertyIsFoundForType()
         {
-            InstanceExpression expression = new InstanceExpression(typeof(IWidget));
-            expression.UsingConcreteType<AWidget>();
-            expression.Child<Rule>();
+            Registry.Instance<IWidget>().UsingConcreteType<AWidget>().Child<Rule>();
         }
     }
 }
