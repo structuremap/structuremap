@@ -1,3 +1,4 @@
+using System;
 using StructureMap.Graph;
 
 namespace StructureMap.Configuration.DSL
@@ -35,6 +36,11 @@ namespace StructureMap.Configuration.DSL
         protected override void buildMemento()
         {
             _memento = new LiteralMemento(null);
+        }
+
+        public override void ValidatePluggability(Type pluginType)
+        {
+            ExpressionValidator.ValidatePluggabilityOf(_target.GetType()).IntoPluginType(pluginType);
         }
     }
 }

@@ -19,7 +19,7 @@ namespace StructureMap.Configuration.DSL
             _pluginType = pluginType;
         }
 
-        public void Configure(PluginGraph graph)
+        void IExpression.Configure(PluginGraph graph)
         {
             PluginFamily family = graph.LocateOrCreateFamilyForType(_pluginType);
             InterceptorChainBuilder builder = new InterceptorChainBuilder();
@@ -36,26 +36,10 @@ namespace StructureMap.Configuration.DSL
             graph.Assemblies.Add(assembly);
         }
 
-        public CreatePluginFamilyExpression WithDefaultConcreteType<T>()
-        {
-            Plugin plugin = addPlugin<T>();
-
-            _alterations.Add(delegate(PluginFamily family) { family.DefaultInstanceKey = plugin.ConcreteKey; });
-
-            return this;
-        }
-
-        private Plugin addPlugin<T>()
-        {
-            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (T));
-
-            _alterations.Add(delegate(PluginFamily family) { family.Plugins.Add(plugin); });
-
-            return plugin;
-        }
-
         public CreatePluginFamilyExpression TheDefaultIs(IMementoBuilder builder)
         {
+            builder.ValidatePluggability(_pluginType);
+
             _alterations.Add(delegate(PluginFamily family)
                                  {
                                      InstanceMemento memento = builder.BuildMemento(family);
@@ -68,6 +52,8 @@ namespace StructureMap.Configuration.DSL
 
         public CreatePluginFamilyExpression TheDefaultIsConcreteType<T>()
         {
+            ExpressionValidator.ValidatePluggabilityOf(typeof(T)).IntoPluginType(_pluginType);
+
             _alterations.Add(delegate(PluginFamily family)
                                  {
                                      Plugin plugin = family.Plugins.FindOrCreate(typeof (T));

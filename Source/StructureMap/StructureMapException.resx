@@ -237,4 +237,13 @@
   <data name="302" xml:space="preserve">
     <value>There is no argument of type {0} for concrete type {1}</value>
   </data>
+  <data name="303" xml:space="preserve">
+    <value>Type {0} is either abstract or cannot be plugged into Type {1}</value>
+  </data>
+  <data name="304" xml:space="preserve">
+    <value>Profile or Machine default for {0} not completely specified</value>
+  </data>
+  <data name="305" xml:space="preserve">
+    <value>There is no constructor property found of type {0}</value>
+  </data>
 </root>

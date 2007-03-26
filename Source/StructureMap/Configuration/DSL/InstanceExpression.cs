@@ -12,6 +12,12 @@ namespace StructureMap.Configuration.DSL
         {
         }
 
+
+        internal Type PluggedType
+        {
+            get { return _pluggedType; }
+        }
+
         protected override void buildMemento()
         {
             _memento = new MemoryInstanceMemento();
@@ -75,8 +81,13 @@ namespace StructureMap.Configuration.DSL
 
         public ChildInstanceExpression Child<T>()
         {
-            // TODO -- what if the property can't be found
             string propertyName = findPropertyName<T>();
+
+            if (string.IsNullOrEmpty(propertyName))
+            {
+                throw new StructureMapException(305, TypePath.GetAssemblyQualifiedName(typeof (T)));
+            }
+
             ChildInstanceExpression child = new ChildInstanceExpression(this, _memento, propertyName);
             addChildExpression(child);
             child.ChildType = typeof (T);
@@ -87,6 +98,16 @@ namespace StructureMap.Configuration.DSL
         {
             Plugin plugin = Plugin.CreateImplicitPlugin(_pluggedType);
             return plugin.FindFirstConstructorArgumentOfType<T>();
+        }
+
+        public override void ValidatePluggability(Type pluginType)
+        {
+            if (_pluggedType == null)
+            {
+                return;
+            }
+
+            ExpressionValidator.ValidatePluggabilityOf(_pluggedType).IntoPluginType(pluginType);
         }
     }
 }

@@ -37,5 +37,10 @@ namespace StructureMap.Configuration.DSL
         {
             _memento = new PrototypeMemento(string.Empty, (ICloneable) _prototype);
         }
+
+        public override void ValidatePluggability(Type pluginType)
+        {
+            ExpressionValidator.ValidatePluggabilityOf(_prototype.GetType()).IntoPluginType(pluginType);
+        }
     }
 }

@@ -82,6 +82,11 @@ namespace StructureMap.Graph
         /// <returns></returns>
         public static bool CanBeCast(Type pluginType, Type pluggedType)
         {
+            if (pluggedType.IsInterface || pluggedType.IsAbstract)
+            {
+                return false;
+            }
+
             if (GenericsPluginGraph.CanBeCast(pluginType, pluggedType))
             {
                 return true;

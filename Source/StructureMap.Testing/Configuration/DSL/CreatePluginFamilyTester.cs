@@ -17,6 +17,13 @@ namespace StructureMap.Testing.Configuration.DSL
 
         }
 
+        [Test, ExpectedException(typeof(StructureMapException))]
+        public void TheConceteTypeDoesNotCase()
+        {
+            Registry registry = new Registry();
+            registry.BuildInstancesOf<Rule>().TheDefaultIsConcreteType<IWidget>();
+        }
+
         [Test]
         public void TheDefaultInstanceIsConcreteType()
         {
@@ -66,7 +73,7 @@ namespace StructureMap.Testing.Configuration.DSL
             using (Registry registry = new Registry(pluginGraph))
             {
                 // Specify the default implementation for an interface
-                registry.BuildInstancesOf<IGateway>().WithDefaultConcreteType<StubbedGateway>();
+                registry.BuildInstancesOf<IGateway>().TheDefaultIsConcreteType<StubbedGateway>();
             }
 
             Assert.IsTrue(pluginGraph.PluginFamilies.Contains<IGateway>());
@@ -142,7 +149,7 @@ namespace StructureMap.Testing.Configuration.DSL
             PluginGraph pluginGraph = new PluginGraph();
             using (Registry registry = new Registry(pluginGraph))
             {
-                registry.BuildInstancesOf<IGateway>().WithDefaultConcreteType<FakeGateway>();
+                registry.BuildInstancesOf<IGateway>().TheDefaultIsConcreteType<FakeGateway>();
             }
 
             Assert.IsTrue(pluginGraph.PluginFamilies.Contains<IGateway>());

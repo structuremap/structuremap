@@ -21,6 +21,12 @@ namespace StructureMap.Configuration.DSL
             _propertyName = propertyName;
         }
 
+        public ChildInstanceExpression(InstanceExpression instance, MemoryInstanceMemento memento, string propertyName, Type childType)
+            : this(instance, memento, propertyName)
+        {
+            _childType = childType;
+        }
+
 
         public InstanceExpression IsNamedInstance(string instanceKey)
         {
@@ -30,9 +36,11 @@ namespace StructureMap.Configuration.DSL
             return _instance;
         }
 
-        // TODO -- negative case if the concrete type cannot be an implicit instance
         public InstanceExpression IsConcreteType<T>()
         {
+            Type pluggedType = typeof (T);
+            ExpressionValidator.ValidatePluggabilityOf(pluggedType).IntoPluginType(_childType);
+
             InstanceExpression child = new InstanceExpression(_childType);
             child.UsingConcreteType<T>();
             _children.Add(child);
@@ -70,6 +78,11 @@ namespace StructureMap.Configuration.DSL
 
         public InstanceExpression Is(InstanceExpression child)
         {
+            if (child.PluggedType != null && _childType != null)
+            {
+                ExpressionValidator.ValidatePluggabilityOf(child.PluggedType).IntoPluginType(_childType);
+            }
+
             _children.Add(child);
             MemoryInstanceMemento childMemento =
                 MemoryInstanceMemento.CreateReferencedInstanceMemento(child.InstanceKey);

@@ -22,7 +22,7 @@ namespace StructureMap.Configuration.DSL
             return _parent;
         }
 
-        public void Configure(Profile profile, PluginGraph graph)
+        internal void Configure(Profile profile, PluginGraph graph)
         {
             if (!string.IsNullOrEmpty(_instanceKey))
             {
@@ -40,8 +40,10 @@ namespace StructureMap.Configuration.DSL
                 InstanceDefault instanceDefault = new InstanceDefault(_pluginType, defaultKey);
                 profile.AddOverride(instanceDefault);
             }
-
-            // TODO throw up!!!
+            else
+            {
+                throw new StructureMapException(304, TypePath.GetAssemblyQualifiedName(_pluginType));    
+            }            
         }
 
         public ProfileExpression Use(IMementoBuilder mementoBuilder)

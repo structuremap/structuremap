@@ -88,6 +88,8 @@ namespace StructureMap.Configuration.DSL
             _instanceKey = instanceKey;
         }
 
+        public abstract void ValidatePluggability(Type pluginType);
+
         protected void addChildExpression(IExpression expression)
         {
             _children.Add(expression);

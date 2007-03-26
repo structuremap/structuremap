@@ -21,5 +21,13 @@ namespace StructureMap.Testing.Configuration.DSL
             PluginGraph pluginGraph = new PluginGraph();
             ((IExpression)expression).Configure(pluginGraph);
         }
+
+        [Test, ExpectedException(typeof(StructureMapException))]
+        public void BlowUpIfNoPropertyIsFoundForType()
+        {
+            InstanceExpression expression = new InstanceExpression(typeof(IWidget));
+            expression.UsingConcreteType<AWidget>();
+            expression.Child<Rule>();
+        }
     }
 }
