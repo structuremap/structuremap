@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using StructureMap.Configuration;
+using StructureMap.Configuration.DSL;
 
 namespace StructureMap.Graph
 {
@@ -54,6 +56,8 @@ namespace StructureMap.Graph
                 return;
             }
 
+            searchAssembliesForRegistries();
+
             foreach (AssemblyGraph assembly in _assemblies)
             {
                 addImplicitPluginFamilies(assembly);
@@ -65,6 +69,20 @@ namespace StructureMap.Graph
             }
 
             _sealed = true;
+        }
+
+        private void searchAssembliesForRegistries()
+        {
+            List<Registry> list = new List<Registry>();
+            foreach (AssemblyGraph assembly in _assemblies)
+            {
+                list.AddRange(assembly.FindRegistries());
+            }
+
+            foreach (Registry registry in list)
+            {
+                registry.ConfigurePluginGraph(this);
+            }
         }
 
         private void attachImplicitPlugins(PluginFamily family)

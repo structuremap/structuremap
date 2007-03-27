@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using StructureMap.Configuration.DSL;
 
 namespace StructureMap.Graph
 {
@@ -91,17 +93,9 @@ namespace StructureMap.Graph
                 return new PluginFamily[0];
             }
 
-            ArrayList list = new ArrayList();
+            List<PluginFamily> list = new List<PluginFamily>();
 
-            Type[] exportedTypes = null;
-            try
-            {
-                exportedTypes = _assembly.GetExportedTypes();
-            }
-            catch (Exception ex)
-            {
-                throw new StructureMapException(170, ex, AssemblyName);
-            }
+            Type[] exportedTypes = getExportedTypes();
 
             foreach (Type exportedType in exportedTypes)
             {
@@ -112,8 +106,23 @@ namespace StructureMap.Graph
                 }
             }
 
-            return (PluginFamily[]) list.ToArray(typeof (PluginFamily));
+            return list.ToArray();
         }
+
+        private Type[] getExportedTypes()
+        {
+            Type[] exportedTypes = null;
+            try
+            {
+                exportedTypes = _assembly.GetExportedTypes();
+            }
+            catch (Exception ex)
+            {
+                throw new StructureMapException(170, ex, AssemblyName);
+            }
+            return exportedTypes;
+        }
+
 
         /// <summary>
         /// Returns an array of possible Plugin's from the Assembly that match
@@ -164,6 +173,24 @@ namespace StructureMap.Graph
         public Type FindTypeByFullName(string fullName)
         {
             return _assembly.GetType(fullName, false);
+        }
+
+        public List<Registry> FindRegistries()
+        {
+            Type[] exportedTypes = getExportedTypes();
+            List<Registry> returnValue = new List<Registry>();
+
+            foreach (Type type in exportedTypes)
+            {
+                if (Registry.IsPublicRegistry(type))
+                {
+                    Registry registry = (Registry)Activator.CreateInstance(type);
+                    returnValue.Add(registry);
+                }
+                
+            }
+
+            return returnValue;
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using StructureMap.Attributes;
+using StructureMap.Configuration.DSL;
 using StructureMap.Configuration.Tokens;
 using StructureMap.Graph;
 using StructureMap.Graph.Configuration;
@@ -14,9 +15,9 @@ namespace StructureMap.Configuration
         private PluginGraphReport _systemReport;
         private PluginGraphReport _report;
 
-        public DiagnosticGraphBuilder()
+        public DiagnosticGraphBuilder(Registry[] registries)
         {
-            _innerBuilder = new NormalGraphBuilder();
+            _innerBuilder = new NormalGraphBuilder(registries);
             _systemReport = new PluginGraphReport();
             _report = _innerBuilder.PluginGraph.Report;
         }

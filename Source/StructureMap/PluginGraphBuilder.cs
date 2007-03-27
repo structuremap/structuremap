@@ -1,6 +1,7 @@
 using System;
 using System.Xml;
 using StructureMap.Configuration;
+using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Graph.Configuration;
 
@@ -17,7 +18,7 @@ namespace StructureMap
         public static PluginGraph BuildFromXml(XmlDocument document)
         {
             ConfigurationParser[] parsers = ConfigurationParser.GetParsers(document, "");
-            PluginGraphBuilder builder = new PluginGraphBuilder(parsers);
+            PluginGraphBuilder builder = new PluginGraphBuilder(parsers, new Registry[0]);
             return builder.BuildDiagnosticPluginGraph();
         }
 
@@ -49,19 +50,20 @@ namespace StructureMap
         private PluginGraph _graph;
         private PluginGraphReport _report;
         private ConfigurationParser[] _parsers;
+        private readonly Registry[] _registries = new Registry[0];
 
         #region constructors
 
         public PluginGraphBuilder(ConfigurationParser parser)
-            : this(new ConfigurationParser[] {parser})
+            : this(new ConfigurationParser[] {parser}, new Registry[0])
         {
         }
 
-        public PluginGraphBuilder(ConfigurationParser[] parsers)
+        public PluginGraphBuilder(ConfigurationParser[] parsers, Registry[] registries)
         {
             _parsers = parsers;
+            _registries = registries;
         }
-
 
 
         /// <summary>
@@ -102,7 +104,7 @@ namespace StructureMap
         /// <returns></returns>
         public PluginGraph Build()
         {
-            NormalGraphBuilder graphBuilder = new NormalGraphBuilder();
+            NormalGraphBuilder graphBuilder = new NormalGraphBuilder(_registries);
             PluginGraph pluginGraph = buildPluginGraph(graphBuilder);
             return pluginGraph;
         }
@@ -162,7 +164,7 @@ namespace StructureMap
         /// <returns></returns>
         public PluginGraph BuildDiagnosticPluginGraph()
         {
-            DiagnosticGraphBuilder graphBuilder = new DiagnosticGraphBuilder();
+            DiagnosticGraphBuilder graphBuilder = new DiagnosticGraphBuilder(_registries);
             buildPluginGraph(graphBuilder);
 
             _report = graphBuilder.Report;

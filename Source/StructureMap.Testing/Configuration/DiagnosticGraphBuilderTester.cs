@@ -3,6 +3,7 @@ using System.Xml;
 using NUnit.Framework;
 using StructureMap.Attributes;
 using StructureMap.Configuration;
+using StructureMap.Configuration.DSL;
 using StructureMap.Configuration.Tokens;
 using StructureMap.Graph;
 using StructureMap.Testing.Configuration.Tokens;
@@ -22,7 +23,7 @@ namespace StructureMap.Testing.Configuration
             XmlDocument document = new XmlDocument();
             document.LoadXml("<StructureMap/>");
 
-            _builder = new DiagnosticGraphBuilder();
+            _builder = new DiagnosticGraphBuilder(new Registry[0]);
             _report = _builder.Report;
         }
 

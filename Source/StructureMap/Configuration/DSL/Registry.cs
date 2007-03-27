@@ -9,7 +9,7 @@ namespace StructureMap.Configuration.DSL
         private List<IExpression> _expressions = new List<IExpression>();
         private PluginGraph _graph;
 
-        public Registry(PluginGraph graph)
+        public Registry(PluginGraph graph) : this()
         {
             _graph = graph;
         }
@@ -17,6 +17,7 @@ namespace StructureMap.Configuration.DSL
         public Registry()
         {
             _graph = new PluginGraph();
+            configure();
         }
 
 
@@ -28,12 +29,12 @@ namespace StructureMap.Configuration.DSL
             // no-op;
         }
 
-        protected void addExpression(IExpression expression)
+        protected internal void addExpression(IExpression expression)
         {
             _expressions.Add(expression);
         }
 
-        private void configurePluginGraph(PluginGraph graph)
+        internal void ConfigurePluginGraph(PluginGraph graph)
         {
             foreach (IExpression expression in _expressions)
             {
@@ -44,16 +45,9 @@ namespace StructureMap.Configuration.DSL
 
         public void Dispose()
         {
-            configurePluginGraph(_graph);
+            ConfigurePluginGraph(_graph);
         }
 
-        public ScanAssembliesExpression ScanAssemblies()
-        {
-            ScanAssembliesExpression expression = new ScanAssembliesExpression();
-            addExpression(expression);
-
-            return expression;
-        }
 
         public CreatePluginFamilyExpression BuildInstancesOf<T>()
         {
@@ -65,7 +59,7 @@ namespace StructureMap.Configuration.DSL
 
         public IInstanceManager BuildInstanceManager()
         {
-            configurePluginGraph(_graph);
+            ConfigurePluginGraph(_graph);
             _graph.ReadDefaults();
             return new InstanceManager(_graph);
         }
@@ -115,6 +109,21 @@ namespace StructureMap.Configuration.DSL
             addExpression(expression);
 
             return expression;
+        }
+
+        public static bool IsPublicRegistry(Type type)
+        {
+            if (!typeof(Registry).IsAssignableFrom(type))
+            {
+                return false;
+            }
+
+            if (type.IsInterface || type.IsAbstract || type.IsGenericType)
+            {
+                return false;
+            }
+
+            return (type.GetConstructor(new Type[0]) != null);
         }
     }
 }

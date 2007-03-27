@@ -2,6 +2,7 @@ using NMock;
 using NUnit.Framework;
 using StructureMap.Attributes;
 using StructureMap.Configuration;
+using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 
@@ -19,7 +20,7 @@ namespace StructureMap.Testing.Configuration
             builderMock.ExpectAndReturn("Build", chain, theScope);
 
             NormalGraphBuilder graphBuilder =
-                new NormalGraphBuilder((IInterceptorChainBuilder) builderMock.MockInstance);
+                new NormalGraphBuilder((IInterceptorChainBuilder) builderMock.MockInstance, new Registry[0]);
 
             TypePath typePath = new TypePath(GetType());
 
@@ -36,7 +37,7 @@ namespace StructureMap.Testing.Configuration
         [Test]
         public void AddProfile()
         {
-            NormalGraphBuilder graphBuilder = new NormalGraphBuilder();
+            NormalGraphBuilder graphBuilder = new NormalGraphBuilder(new Registry[0]);
             string profileName = "blue";
 
             graphBuilder.AddProfile(profileName);
@@ -49,7 +50,7 @@ namespace StructureMap.Testing.Configuration
         [Test]
         public void AddDefaultForAProfile()
         {
-            NormalGraphBuilder graphBuilder = new NormalGraphBuilder();
+            NormalGraphBuilder graphBuilder = new NormalGraphBuilder(new Registry[0]);
             string profileName = "blue";
             string theTypeName = "the name of the type";
             string theKey = "Key1";
@@ -67,7 +68,7 @@ namespace StructureMap.Testing.Configuration
         [Test]
         public void AddMachineWithExistingProfile()
         {
-            NormalGraphBuilder graphBuilder = new NormalGraphBuilder();
+            NormalGraphBuilder graphBuilder = new NormalGraphBuilder(new Registry[0]);
             string theMachineName = "some machine";
             string theProfileName = "some profile";
             graphBuilder.AddProfile(theProfileName);
@@ -85,7 +86,7 @@ namespace StructureMap.Testing.Configuration
              )]
         public void AddMachineWithProfileThatDoesNotExist()
         {
-            NormalGraphBuilder graphBuilder = new NormalGraphBuilder();
+            NormalGraphBuilder graphBuilder = new NormalGraphBuilder(new Registry[0]);
             string theMachineName = "some machine";
             string theProfileName = "some profile";
 
@@ -95,7 +96,7 @@ namespace StructureMap.Testing.Configuration
         [Test]
         public void AddMachineWithoutProfile()
         {
-            NormalGraphBuilder graphBuilder = new NormalGraphBuilder();
+            NormalGraphBuilder graphBuilder = new NormalGraphBuilder(new Registry[0]);
             string theMachineName = "some machine";
 
             graphBuilder.AddMachine(theMachineName, string.Empty);
@@ -109,7 +110,7 @@ namespace StructureMap.Testing.Configuration
         [Test]
         public void AddAnOverrideToMachine()
         {
-            NormalGraphBuilder graphBuilder = new NormalGraphBuilder();
+            NormalGraphBuilder graphBuilder = new NormalGraphBuilder(new Registry[0]);
             string theMachineName = "some machine";
 
             graphBuilder.AddMachine(theMachineName, string.Empty);

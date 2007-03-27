@@ -1,7 +1,5 @@
 using System.Reflection;
 using NUnit.Framework;
-using Rhino.Mocks;
-using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Testing.Widget3;
 
@@ -13,18 +11,21 @@ namespace StructureMap.Testing.Configuration.DSL
         [SetUp]
         public void SetUp()
         {
+            ObjectFactory.Reset();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            StructureMapConfiguration.ResetAll();
+            ObjectFactory.Reset();
         }
 
         [Test]
         public void ScanCallingAssembly()
         {
-            PluginGraph graph = new PluginGraph();
-
-
-            using (Registry registry = new Registry(graph))
-            {
-                registry.ScanAssemblies().IncludeTheCallingAssembly();
-            }
+            StructureMapConfiguration.ScanAssemblies().IncludeTheCallingAssembly();
+            PluginGraph graph = StructureMapConfiguration.GetPluginGraph();
 
             AssemblyGraph assembly = new AssemblyGraph(Assembly.GetExecutingAssembly());
             Assert.IsTrue(graph.Assemblies.Contains(assembly.AssemblyName));
@@ -33,14 +34,8 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void ScanAssemblyContainingType()
         {
-            PluginGraph graph = new PluginGraph();
-
-
-            using (Registry registry = new Registry(graph))
-            {
-                registry.ScanAssemblies()
-                    .IncludeAssemblyContainingType<IGateway>();
-            }
+            StructureMapConfiguration.ScanAssemblies().IncludeAssemblyContainingType<IGateway>();
+            PluginGraph graph = StructureMapConfiguration.GetPluginGraph();
 
             AssemblyGraph assembly = AssemblyGraph.ContainingType<IGateway>();
             Assert.IsTrue(graph.Assemblies.Contains(assembly.AssemblyName));
@@ -49,15 +44,10 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void Combination1()
         {
-            PluginGraph graph = new PluginGraph();
-
-
-            using (Registry registry = new Registry(graph))
-            {
-                registry.ScanAssemblies()
-                    .IncludeAssemblyContainingType<IGateway>()
-                    .IncludeTheCallingAssembly();
-            }
+            StructureMapConfiguration.ScanAssemblies()
+                .IncludeAssemblyContainingType<IGateway>()
+                .IncludeTheCallingAssembly();
+            PluginGraph graph = StructureMapConfiguration.GetPluginGraph();
 
             AssemblyGraph assembly = AssemblyGraph.ContainingType<IGateway>();
             Assert.IsTrue(graph.Assemblies.Contains(assembly.AssemblyName));
@@ -70,16 +60,10 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void Combination2()
         {
-            PluginGraph graph = new PluginGraph();
-
-
-            using (Registry registry = new Registry(graph))
-            {
-                registry.ScanAssemblies()
-                    .IncludeTheCallingAssembly()
-                    .IncludeAssemblyContainingType<IGateway>();
-
-            }
+            StructureMapConfiguration.ScanAssemblies()
+                .IncludeTheCallingAssembly()
+                .IncludeAssemblyContainingType<IGateway>();
+            PluginGraph graph = StructureMapConfiguration.GetPluginGraph();
 
             AssemblyGraph assembly = AssemblyGraph.ContainingType<IGateway>();
             Assert.IsTrue(graph.Assemblies.Contains(assembly.AssemblyName));
@@ -87,6 +71,5 @@ namespace StructureMap.Testing.Configuration.DSL
             assembly = new AssemblyGraph(Assembly.GetExecutingAssembly());
             Assert.IsTrue(graph.Assemblies.Contains(assembly.AssemblyName));
         }
-
     }
 }

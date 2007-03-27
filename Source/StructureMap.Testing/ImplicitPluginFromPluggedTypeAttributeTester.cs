@@ -5,6 +5,7 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using StructureMap.Attributes;
 using StructureMap.Configuration;
+using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Testing.TestData;
 using StructureMap.Testing.Widget;
@@ -42,7 +43,7 @@ namespace StructureMap.Testing
         [Test]
         public void NormalGraphBuilderHandlesTheInferredPlugin()
         {
-            NormalGraphBuilder builder = new NormalGraphBuilder();
+            NormalGraphBuilder builder = new NormalGraphBuilder(new Registry[0]);
             TypePath pluginTypePath = new TypePath(typeof(IGateway));
             builder.AddPluginFamily(pluginTypePath, "", new string[0], InstanceScope.PerRequest);
 
@@ -61,7 +62,7 @@ namespace StructureMap.Testing
         [Test]
         public void CanBuildTheInstance()
         {
-            NormalGraphBuilder builder = new NormalGraphBuilder();
+            NormalGraphBuilder builder = new NormalGraphBuilder(new Registry[0]);
             TypePath pluginTypePath = new TypePath(typeof(IGateway));
             builder.AddPluginFamily(pluginTypePath, _memento.InstanceKey, new string[0], InstanceScope.PerRequest);
 

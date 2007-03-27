@@ -178,13 +178,15 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             Registry registry = new Registry();
 
-            registry.ScanAssemblies().IncludeAssemblyContainingType<IWidget>();
+            //registry.ScanAssemblies().IncludeAssemblyContainingType<IWidget>();
+
+
 
             registry.AddInstanceOf<Rule>().UsingConcreteType<ARule>().WithName("Alias");
 
             // Add an instance by specifying the ConcreteKey
             registry.AddInstanceOf<IWidget>()
-                .UsingConcreteTypeNamed("Color")
+                .UsingConcreteType<ColorWidget>()
                 .WithName("Purple")
                 .WithProperty("Color").EqualTo("Purple");
 

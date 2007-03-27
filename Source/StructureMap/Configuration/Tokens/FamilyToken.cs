@@ -16,11 +16,14 @@ namespace StructureMap.Configuration.Tokens
 
 
             PluginFamilyAttribute att = PluginFamilyAttribute.GetAttribute(family.PluginType);
-            if (att.Scope != InstanceScope.PerRequest)
+            if (att != null)
             {
-                token.Scope = att.Scope;
-                InterceptorInstanceToken interceptor = new InterceptorInstanceToken(att.Scope);
-                token.AddInterceptor(interceptor);
+                if (att.Scope != InstanceScope.PerRequest)
+                {
+                    token.Scope = att.Scope;
+                    InterceptorInstanceToken interceptor = new InterceptorInstanceToken(att.Scope);
+                    token.AddInterceptor(interceptor);
+                }
             }
 
             return token;

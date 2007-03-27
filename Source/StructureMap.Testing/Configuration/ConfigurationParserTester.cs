@@ -2,6 +2,7 @@ using System;
 using System.Xml;
 using NUnit.Framework;
 using StructureMap.Configuration;
+using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Source;
 using StructureMap.Testing.TestData;
@@ -45,7 +46,7 @@ namespace StructureMap.Testing.Configuration
 
             ConfigurationParser parser = new ConfigurationParser(doc.DocumentElement);
 
-            NormalGraphBuilder builder = new NormalGraphBuilder();
+            NormalGraphBuilder builder = new NormalGraphBuilder(new Registry[0]);
             parser.ParseProfilesAndMachines(builder);
 
             _defaults = builder.DefaultManager;

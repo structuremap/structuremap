@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using StructureMap.Attributes;
+using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Graph.Configuration;
 using StructureMap.Interceptors;
@@ -17,14 +18,20 @@ namespace StructureMap.Configuration
         private MachineOverride _machine;
 
 
-        public NormalGraphBuilder() : this(new InterceptorChainBuilder())
+        public NormalGraphBuilder(Registry[] registries) : this(new InterceptorChainBuilder(), registries)
         {
         }
 
-        public NormalGraphBuilder(IInterceptorChainBuilder builder)
+        public NormalGraphBuilder(IInterceptorChainBuilder builder, Registry[] registries)
         {
             _builder = builder;
+            
             _pluginGraph = new PluginGraph();
+            foreach (Registry registry in registries)
+            {
+                registry.ConfigurePluginGraph(_pluginGraph);
+            }
+
             _systemGraph = new PluginGraph();
             _systemGraph.Assemblies.Add(Assembly.GetExecutingAssembly());
         }
