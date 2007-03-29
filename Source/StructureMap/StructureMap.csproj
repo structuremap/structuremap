@@ -556,9 +556,11 @@
     <Compile Include="StubbedInstanceFactory.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Verification\IStartUp.cs" />
     <Compile Include="Verification\PluginGraphConsoleWriter.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Verification\StartUp.cs" />
     <Compile Include="XmlMapping\ConfigEditor.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -5,6 +5,7 @@ using System.Xml;
 using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
+using StructureMap.Verification;
 
 namespace StructureMap
 {
@@ -14,6 +15,7 @@ namespace StructureMap
         private static ConfigurationParserCollection _collection = new ConfigurationParserCollection();
         private static Registry _registry = new Registry();
         private static List<Registry> _registries = new List<Registry>();
+        private static StartUp _startUp;
 
         static StructureMapConfiguration()
         {
@@ -51,10 +53,16 @@ namespace StructureMap
             _registry = new Registry();
             _registries = new List<Registry>();
             _registries.Add(_registry);
+            _startUp = null;
         }
 
         public static PluginGraph GetPluginGraph()
         {
+            if (_startUp != null)
+            {
+                _startUp.RunDiagnostics();
+            }
+
             PluginGraphBuilder builder = createBuilder();
             return builder.Build();
         }
@@ -65,10 +73,10 @@ namespace StructureMap
             return new PluginGraphBuilder(parsers, _registries.ToArray());
         }
 
-        public static PluginGraph GetDiagnosticPluginGraph()
+        public static PluginGraphReport GetDiagnosticReport()
         {
             PluginGraphBuilder builder = createBuilder();
-            return builder.BuildDiagnosticPluginGraph();
+            return builder.Report;
         }
 
         public static void IncludeConfigurationFromFile(string filename)
@@ -145,6 +153,16 @@ namespace StructureMap
         public static void AddRegistry(Registry registry)
         {
             _registries.Add(registry);
+        }
+
+        public static IStartUp OnStartUp()
+        {
+            if (_startUp == null)
+            {
+                _startUp = new StartUp();
+            }
+
+            return _startUp;
         }
     }
 }
