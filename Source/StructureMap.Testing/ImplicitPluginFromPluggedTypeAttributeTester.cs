@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Specialized;
-using System.Xml;
 using NUnit.Framework;
-using Rhino.Mocks;
 using StructureMap.Attributes;
 using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
@@ -22,7 +20,7 @@ namespace StructureMap.Testing
         [SetUp]
         public void SetUp()
         {
-            Type pluggedType = typeof(StubbedGateway);
+            Type pluggedType = typeof (StubbedGateway);
 
             NameValueCollection values = new NameValueCollection();
             values.Add(XmlConstants.PLUGGED_TYPE, TypePath.GetAssemblyQualifiedName(pluggedType));
@@ -44,14 +42,14 @@ namespace StructureMap.Testing
         public void NormalGraphBuilderHandlesTheInferredPlugin()
         {
             NormalGraphBuilder builder = new NormalGraphBuilder(new Registry[0]);
-            TypePath pluginTypePath = new TypePath(typeof(IGateway));
+            TypePath pluginTypePath = new TypePath(typeof (IGateway));
             builder.AddPluginFamily(pluginTypePath, "", new string[0], InstanceScope.PerRequest);
 
             builder.RegisterMemento(pluginTypePath, _memento);
 
             PluginGraph graph = builder.CreatePluginGraph();
 
-            Assert.IsTrue(graph.PluginFamilies.Contains(typeof(IGateway)));
+            Assert.IsTrue(graph.PluginFamilies.Contains(typeof (IGateway)));
 
             PluginFamily family = graph.PluginFamilies[typeof (IGateway)];
             Plugin plugin = family.Plugins[typeof (StubbedGateway)];
@@ -63,7 +61,7 @@ namespace StructureMap.Testing
         public void CanBuildTheInstance()
         {
             NormalGraphBuilder builder = new NormalGraphBuilder(new Registry[0]);
-            TypePath pluginTypePath = new TypePath(typeof(IGateway));
+            TypePath pluginTypePath = new TypePath(typeof (IGateway));
             builder.AddPluginFamily(pluginTypePath, _memento.InstanceKey, new string[0], InstanceScope.PerRequest);
 
             builder.RegisterMemento(pluginTypePath, _memento);
@@ -72,7 +70,7 @@ namespace StructureMap.Testing
             InstanceManager manager = new InstanceManager(graph);
 
             StubbedGateway gateway = (StubbedGateway) manager.CreateInstance(typeof (IGateway), _memento.InstanceKey);
-        
+
             Assert.IsNotNull(gateway);
         }
 
@@ -85,9 +83,5 @@ namespace StructureMap.Testing
             NotPluggableWidget widget = (NotPluggableWidget) manager.CreateInstance(typeof (IWidget), "Me");
             Assert.AreEqual("Jeremy", widget.Name);
         }
-
-
-
-        
     }
 }

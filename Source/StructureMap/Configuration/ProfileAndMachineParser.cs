@@ -1,4 +1,3 @@
-using System;
 using System.Xml;
 using StructureMap.Graph;
 using StructureMap.Graph.Configuration;
@@ -62,12 +61,12 @@ namespace StructureMap.Configuration
         private void processOverrideElement(WriteOverride function, XmlElement overrideElement, string profileName)
         {
             string fullName = overrideElement.GetAttribute(XmlConstants.TYPE_ATTRIBUTE);
-                
+
             XmlElement instanceElement = (XmlElement) overrideElement.SelectSingleNode(XmlConstants.INSTANCE_NODE);
             if (instanceElement == null)
             {
                 string defaultKey = overrideElement.GetAttribute(XmlConstants.DEFAULT_KEY_ATTRIBUTE);
-                function(fullName, defaultKey);                    
+                function(fullName, defaultKey);
             }
             else
             {
@@ -75,7 +74,8 @@ namespace StructureMap.Configuration
             }
         }
 
-        private void createOverrideInstance(string fullName, XmlElement instanceElement, WriteOverride function, string profileName)
+        private void createOverrideInstance(string fullName, XmlElement instanceElement, WriteOverride function,
+                                            string profileName)
         {
             string key = Profile.InstanceKeyForProfile(profileName);
             InstanceMemento memento = _creator.CreateMemento(instanceElement);
@@ -91,6 +91,5 @@ namespace StructureMap.Configuration
         {
             return _structureMapNode.SelectNodes(nodeName);
         }
-
     }
 }

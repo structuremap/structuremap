@@ -12,7 +12,7 @@ namespace StructureMap.Testing
         [SetUp]
         public void SetUp()
         {
-            StructureMapConfiguration.ResetAll();    
+            StructureMapConfiguration.ResetAll();
             DataMother.WriteDocument("Config1.xml");
             DataMother.WriteDocument("Config2.xml");
         }
@@ -20,11 +20,11 @@ namespace StructureMap.Testing
         [TearDown]
         public void TearDown()
         {
-            StructureMapConfiguration.ResetAll(); 
+            StructureMapConfiguration.ResetAll();
             ObjectFactory.Reset();
         }
 
-  
+
         public void assertTheDefault(string color)
         {
             ColorWidget widget = (ColorWidget) ObjectFactory.GetInstance<IWidget>();
@@ -64,7 +64,7 @@ namespace StructureMap.Testing
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(xml);
 
-            
+
             StructureMapConfiguration.UseDefaultStructureMapConfigFile = true;
             StructureMapConfiguration.IncludeConfigurationFromNode(doc.DocumentElement);
             ObjectFactory.Reset();

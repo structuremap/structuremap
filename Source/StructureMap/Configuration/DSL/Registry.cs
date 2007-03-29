@@ -113,7 +113,7 @@ namespace StructureMap.Configuration.DSL
 
         public static bool IsPublicRegistry(Type type)
         {
-            if (!typeof(Registry).IsAssignableFrom(type))
+            if (!typeof (Registry).IsAssignableFrom(type))
             {
                 return false;
             }

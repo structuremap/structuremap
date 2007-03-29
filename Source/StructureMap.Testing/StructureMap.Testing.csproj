@@ -192,6 +192,7 @@
     <Compile Include="Configuration\DSL\InstanceExpressionTester.cs" />
     <Compile Include="Configuration\DSL\LiteralExpressionTester.cs" />
     <Compile Include="Configuration\DSL\ProfileExpressionTester.cs" />
+    <Compile Include="Configuration\DSL\RegistryIntegratedTester.cs" />
     <Compile Include="Configuration\DSL\RegistryTester.cs" />
     <Compile Include="Configuration\DSL\ScanAssembliesTester.cs" />
     <Compile Include="Configuration\FamilyParserTester.cs">

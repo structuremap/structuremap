@@ -55,12 +55,12 @@ namespace StructureMap.Testing
             Assert.IsNotNull(thing);
         }
 
-        [Test, Ignore("Generics with more than 2 parameters")]
+        [Test]
         public void PicksUpAnExplicitlyDefinedGenericPluginFamilyFromConfiguration()
         {
-            IThing<int, string, bool> thing =
-                (IThing<int, string, bool>) manager.CreateInstance(typeof (IThing<int, string, bool>));
-            ColorThing<int, string, bool> redThing = (ColorThing<int, string, bool>) thing;
+            IThing<int, string> thing =
+                (IThing<int, string>) manager.CreateInstance(typeof (IThing<int, string>));
+            ColorThing<int, string> redThing = (ColorThing<int, string>) thing;
 
             Assert.AreEqual("Red", redThing.Color);
         }

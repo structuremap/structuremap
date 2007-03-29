@@ -2,9 +2,9 @@
 <StructureMap Id="Generics">
   <Assembly Name="StructureMap.Testing.GenericWidgets"/>
 
-  <PluginFamily Assembly="StructureMap.Testing.GenericWidgets" Type="StructureMap.Testing.GenericWidgets.IThing`3" DefaultKey="Red">
-    <Plugin Assembly="StructureMap.Testing.GenericWidgets" Type="StructureMap.Testing.GenericWidgets.ColorThing`3" ConcreteKey="Color" />
-    <Plugin Assembly="StructureMap.Testing.GenericWidgets" Type="StructureMap.Testing.GenericWidgets.ComplexThing`3" ConcreteKey="Complex" />
+  <PluginFamily Assembly="StructureMap.Testing.GenericWidgets" Type="StructureMap.Testing.GenericWidgets.IThing`2" DefaultKey="Red">
+    <Plugin Assembly="StructureMap.Testing.GenericWidgets" Type="StructureMap.Testing.GenericWidgets.ColorThing`2" ConcreteKey="Color" />
+    <Plugin Assembly="StructureMap.Testing.GenericWidgets" Type="StructureMap.Testing.GenericWidgets.ComplexThing`2" ConcreteKey="Complex" />
 
     <Instance Key="Red" Type="Color">
       <Property Name="color" Value="Red"/>

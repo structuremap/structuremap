@@ -1,7 +1,5 @@
-using System;
 using System.Collections;
 using System.Collections.Specialized;
-using StructureMap.Graph;
 
 namespace StructureMap
 {
@@ -116,7 +114,7 @@ namespace StructureMap
 
         public void ReferenceChild(string name, string instanceKey)
         {
-            InstanceMemento child = MemoryInstanceMemento.CreateReferencedInstanceMemento(instanceKey);
+            InstanceMemento child = CreateReferencedInstanceMemento(instanceKey);
             AddChild(name, child);
         }
 

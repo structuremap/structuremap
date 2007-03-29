@@ -31,7 +31,7 @@ namespace StructureMap
                     _concreteKey = innerConcreteKey;
                     if (string.IsNullOrEmpty(_concreteKey))
                     {
-                        Plugin plugin = this.CreateInferredPlugin();
+                        Plugin plugin = CreateInferredPlugin();
                         if (plugin != null)
                         {
                             _concreteKey = plugin.ConcreteKey;
@@ -62,10 +62,7 @@ namespace StructureMap
                     return _instanceKey;
                 }
             }
-            set
-            {
-                _instanceKey = value;
-            }
+            set { _instanceKey = value; }
         }
 
         protected abstract string innerInstanceKey { get; }

@@ -90,7 +90,6 @@ namespace StructureMap
         }
 
 
-
         /// <summary>
         /// Restores all default instance settings according to the StructureMap.config files
         /// </summary>

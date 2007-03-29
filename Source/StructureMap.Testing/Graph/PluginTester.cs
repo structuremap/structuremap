@@ -291,8 +291,8 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void CreatePluginFromTypeThatDoesNotHaveAnAttributeDetermineTheConcreteKey()
         {
-            Plugin plugin = Plugin.CreateImplicitPlugin(this.GetType());
-            Assert.AreEqual(TypePath.GetAssemblyQualifiedName(this.GetType()), plugin.ConcreteKey);
+            Plugin plugin = Plugin.CreateImplicitPlugin(GetType());
+            Assert.AreEqual(TypePath.GetAssemblyQualifiedName(GetType()), plugin.ConcreteKey);
         }
 
         [Test]
@@ -305,10 +305,13 @@ namespace StructureMap.Testing.Graph
             Assert.AreEqual(expected, actual);
         }
 
-        [Test, ExpectedException(typeof(StructureMapException), "StructureMap Exception Code:  302\nThere is no argument of type StructureMap.Testing.Widget.IWidget for concrete type StructureMap.Testing.Graph.GrandPrix")]
+        [Test,
+         ExpectedException(typeof (StructureMapException),
+             "StructureMap Exception Code:  302\nThere is no argument of type StructureMap.Testing.Widget.IWidget for concrete type StructureMap.Testing.Graph.GrandPrix"
+             )]
         public void FindFirstConstructorArgumentOfTypeNegativeCase()
         {
-            Plugin plugin = Plugin.CreateImplicitPlugin(typeof(GrandPrix));
+            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (GrandPrix));
             plugin.FindFirstConstructorArgumentOfType<IWidget>();
         }
     }

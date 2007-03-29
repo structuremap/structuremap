@@ -25,7 +25,7 @@ namespace StructureMap.Configuration
         public NormalGraphBuilder(IInterceptorChainBuilder builder, Registry[] registries)
         {
             _builder = builder;
-            
+
             _pluginGraph = new PluginGraph();
             foreach (Registry registry in registries)
             {
@@ -154,6 +154,13 @@ namespace StructureMap.Configuration
         public Plugin AddPlugin(TypePath pluginTypePath, TypePath pluginPath, string concreteKey)
         {
             PluginFamily family = _pluginGraph.PluginFamilies[pluginTypePath];
+            if (family == null)
+            {
+                string message =
+                    string.Format("Could not find a PluginFamily for {0}", pluginTypePath.AssemblyQualifiedName);
+                throw new ApplicationException(message);
+            }
+
             Plugin plugin = new Plugin(pluginPath, concreteKey);
             plugin.DefinitionSource = DefinitionSource.Explicit;
             family.Plugins.Add(plugin);

@@ -14,10 +14,9 @@ namespace StructureMap.Testing.Configuration.DSL
         [SetUp]
         public void SetUp()
         {
-
         }
 
-        [Test, ExpectedException(typeof(StructureMapException))]
+        [Test, ExpectedException(typeof (StructureMapException))]
         public void TheConceteTypeDoesNotCase()
         {
             Registry registry = new Registry();
@@ -34,7 +33,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
             IInstanceManager manager = registry.BuildInstanceManager();
 
-            Assert.IsInstanceOfType(typeof(ARule), manager.CreateInstance<Rule>());
+            Assert.IsInstanceOfType(typeof (ARule), manager.CreateInstance<Rule>());
         }
 
         [Test]
@@ -61,9 +60,9 @@ namespace StructureMap.Testing.Configuration.DSL
             Assert.IsTrue(pluginGraph.PluginFamilies.Contains<IGateway>());
 
             InstanceManager manager = new InstanceManager(pluginGraph);
-            IGateway gateway = (IGateway)manager.CreateInstance(typeof(IGateway));
+            IGateway gateway = (IGateway) manager.CreateInstance(typeof (IGateway));
 
-            Assert.IsInstanceOfType(typeof(DefaultGateway), gateway);
+            Assert.IsInstanceOfType(typeof (DefaultGateway), gateway);
         }
 
         [Test]
@@ -79,9 +78,9 @@ namespace StructureMap.Testing.Configuration.DSL
             Assert.IsTrue(pluginGraph.PluginFamilies.Contains<IGateway>());
 
             InstanceManager manager = new InstanceManager(pluginGraph);
-            IGateway gateway = (IGateway)manager.CreateInstance(typeof(IGateway));
+            IGateway gateway = (IGateway) manager.CreateInstance(typeof (IGateway));
 
-            Assert.IsInstanceOfType(typeof(StubbedGateway), gateway);
+            Assert.IsInstanceOfType(typeof (StubbedGateway), gateway);
         }
 
         [Test]
@@ -110,7 +109,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 Assert.IsNotNull(expression);
             }
 
-            PluginFamily family = pluginGraph.PluginFamilies[typeof(IGateway)];
+            PluginFamily family = pluginGraph.PluginFamilies[typeof (IGateway)];
             Assert.AreEqual(0, family.InterceptionChain.Count);
         }
 
@@ -120,12 +119,13 @@ namespace StructureMap.Testing.Configuration.DSL
             PluginGraph pluginGraph = new PluginGraph();
             using (Registry registry = new Registry(pluginGraph))
             {
-                CreatePluginFamilyExpression expression = registry.BuildInstancesOf<IGateway>().CacheBy(InstanceScope.ThreadLocal);
+                CreatePluginFamilyExpression expression =
+                    registry.BuildInstancesOf<IGateway>().CacheBy(InstanceScope.ThreadLocal);
                 Assert.IsNotNull(expression);
             }
 
-            PluginFamily family = pluginGraph.PluginFamilies[typeof(IGateway)];
-            Assert.IsTrue(family.InterceptionChain.Contains(typeof(ThreadLocalStorageInterceptor)));
+            PluginFamily family = pluginGraph.PluginFamilies[typeof (IGateway)];
+            Assert.IsTrue(family.InterceptionChain.Contains(typeof (ThreadLocalStorageInterceptor)));
         }
 
         [Test]
@@ -134,13 +134,13 @@ namespace StructureMap.Testing.Configuration.DSL
             PluginGraph pluginGraph = new PluginGraph();
             using (Registry registry = new Registry(pluginGraph))
             {
-                CreatePluginFamilyExpression expression = 
+                CreatePluginFamilyExpression expression =
                     registry.BuildInstancesOf<IGateway>().AsSingletons();
                 Assert.IsNotNull(expression);
             }
 
             PluginFamily family = pluginGraph.PluginFamilies[typeof (IGateway)];
-            Assert.IsTrue(family.InterceptionChain.Contains(typeof(SingletonInterceptor)));
+            Assert.IsTrue(family.InterceptionChain.Contains(typeof (SingletonInterceptor)));
         }
 
         [Test]
@@ -155,10 +155,9 @@ namespace StructureMap.Testing.Configuration.DSL
             Assert.IsTrue(pluginGraph.PluginFamilies.Contains<IGateway>());
 
             InstanceManager manager = new InstanceManager(pluginGraph);
-            IGateway gateway = (IGateway)manager.CreateInstance(typeof(IGateway));
+            IGateway gateway = (IGateway) manager.CreateInstance(typeof (IGateway));
 
-            Assert.IsInstanceOfType(typeof(FakeGateway), gateway);
+            Assert.IsInstanceOfType(typeof (FakeGateway), gateway);
         }
-
     }
 }

@@ -18,6 +18,33 @@ namespace StructureMap.Configuration
         {
         }
 
+        public PluginGraphReport(PluginGraph pluginGraph)
+        {
+            ReadFromPluginGraph(pluginGraph);
+        }
+
+        public void ReadFromPluginGraph(PluginGraph pluginGraph)
+        {
+            ImportImplicitChildren(pluginGraph);
+            AnalyzeInstances(pluginGraph);
+
+            Profile defaultProfile = pluginGraph.DefaultManager.CalculateDefaults();
+
+            InstanceManager manager = new InstanceManager();
+            try
+            {
+                manager = new InstanceManager(pluginGraph);
+            }
+            catch (Exception ex)
+            {
+                Problem problem = new Problem(ConfigurationConstants.FATAL_ERROR, ex);
+                LogProblem(problem);
+            }
+
+            IInstanceValidator validator = new InstanceValidator(pluginGraph, defaultProfile, manager);
+            ValidateInstances(validator);
+        }
+
         public override GraphObject[] Children
         {
             get
@@ -62,6 +89,8 @@ namespace StructureMap.Configuration
                 FamilyToken[] returnValue = new FamilyToken[_families.Count];
                 _families.Values.CopyTo(returnValue, 0);
 
+             
+
                 return returnValue;
             }
         }
@@ -88,6 +117,11 @@ namespace StructureMap.Configuration
             }
 
             return null;
+        }
+
+        public bool HasFamily(Type pluginType)
+        {
+            return _families.ContainsKey(new TypePath(pluginType));
         }
 
         public FamilyToken FindFamily(Type pluginType)

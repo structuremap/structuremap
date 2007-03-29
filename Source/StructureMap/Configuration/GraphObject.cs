@@ -1,12 +1,13 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace StructureMap.Configuration
 {
     [Serializable]
     public abstract class GraphObject : IComparable
     {
-        private ArrayList _problems = new ArrayList();
+        private List<Problem> _problems = new List<Problem>();
         private Guid _id = Guid.NewGuid();
 
         public GraphObject()
@@ -21,8 +22,8 @@ namespace StructureMap.Configuration
 
         public Problem[] Problems
         {
-            get { return (Problem[]) _problems.ToArray(typeof (Problem)); }
-            set { _problems = new ArrayList(value); }
+            get { return _problems.ToArray(); }
+            set { _problems = new List<Problem>(value); }
         }
 
         public void LogProblem(Problem problem)

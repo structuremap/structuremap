@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using StructureMap.Graph;
 
@@ -31,7 +30,7 @@ namespace StructureMap.Configuration.DSL
 
         public InstanceDefaultExpression For<T>()
         {
-            InstanceDefaultExpression defaultExpression = new InstanceDefaultExpression(typeof(T), this);
+            InstanceDefaultExpression defaultExpression = new InstanceDefaultExpression(typeof (T), this);
             _defaults.Add(defaultExpression);
 
             return defaultExpression;

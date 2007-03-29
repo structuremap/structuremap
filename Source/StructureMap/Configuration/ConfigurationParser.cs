@@ -218,7 +218,5 @@ namespace StructureMap.Configuration
             ProfileAndMachineParser parser = new ProfileAndMachineParser(builder, _structureMapNode, _mementoCreator);
             parser.Parse();
         }
-
-
     }
 }

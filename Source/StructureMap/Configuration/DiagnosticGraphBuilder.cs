@@ -19,7 +19,7 @@ namespace StructureMap.Configuration
         {
             _innerBuilder = new NormalGraphBuilder(registries);
             _systemReport = new PluginGraphReport();
-            _report = _innerBuilder.PluginGraph.Report;
+            _report = new PluginGraphReport();
         }
 
         public PluginGraph PluginGraph
@@ -167,6 +167,11 @@ namespace StructureMap.Configuration
                     Problem problem = new Problem(ConfigurationConstants.COULD_NOT_LOAD_TYPE, ex);
                     pluginToken.LogProblem(problem);
                 }
+            }
+            catch (Exception ex)
+            {
+                Problem problem = new Problem(ConfigurationConstants.UNKNOWN_PLUGIN_PROBLEM, ex);
+                pluginToken.LogProblem(problem);
             }
 
             return returnValue;

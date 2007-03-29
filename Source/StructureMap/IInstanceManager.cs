@@ -12,9 +12,6 @@ namespace StructureMap
         IList<T> GetAllInstances<T>();
         void SetDefaultsToProfile(string profile);
 
-        InstanceDefaultManager DefaultManager
-        {
-            get;
-        }
+        InstanceDefaultManager DefaultManager { get; }
     }
 }

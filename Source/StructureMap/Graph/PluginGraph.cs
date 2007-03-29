@@ -19,7 +19,7 @@ namespace StructureMap.Graph
         private bool _sealed = false;
         private PluginFamilyCollection _pluginFamilies;
         private InstanceDefaultManager _defaultManager = new InstanceDefaultManager();
-        private PluginGraphReport _report = new PluginGraphReport();
+
 
         /// <summary>
         /// Default constructor
@@ -28,8 +28,6 @@ namespace StructureMap.Graph
         {
             _assemblies = new AssemblyGraphCollection(this);
             _pluginFamilies = new PluginFamilyCollection(this);
-
-            _report.DefaultManager = _defaultManager;
         }
 
 
@@ -150,12 +148,6 @@ namespace StructureMap.Graph
             pluginGraph.Seal();
 
             return pluginGraph;
-        }
-
-        public PluginGraphReport Report
-        {
-            get { return _report; }
-            set { _report = value; }
         }
 
         public TypePath LocateOrCreateFamilyForType(string fullName)

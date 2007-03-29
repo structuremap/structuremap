@@ -38,8 +38,6 @@ namespace StructureMap.Testing.Configuration.DSL
                 .WithProperty("Color").EqualToAppSetting("Color");
 
 
-
-
             registry.AddInstanceOf<IWidget>().UsingConcreteType<AWidget>();
 
             manager = registry.BuildInstanceManager();
@@ -47,7 +45,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
         [Test]
         public void UseAPreBuiltObjectForAnInstanceAsAPrototype()
-        {   
+        {
             Registry registry = new Registry();
             // Build an instance for IWidget, then setup StructureMap to return cloned instances of the 
             // "Prototype" (GoF pattern) whenever someone asks for IWidget named "Jeremy"
@@ -59,7 +57,7 @@ namespace StructureMap.Testing.Configuration.DSL
             CloneableWidget widget1 = (CloneableWidget) manager.CreateInstance<IWidget>("Jeremy");
             CloneableWidget widget2 = (CloneableWidget) manager.CreateInstance<IWidget>("Jeremy");
             CloneableWidget widget3 = (CloneableWidget) manager.CreateInstance<IWidget>("Jeremy");
-        
+
             Assert.AreEqual("Jeremy", widget1.Name);
             Assert.AreEqual("Jeremy", widget2.Name);
             Assert.AreEqual("Jeremy", widget3.Name);
@@ -80,9 +78,9 @@ namespace StructureMap.Testing.Configuration.DSL
 
             manager = registry.BuildInstanceManager();
 
-            CloneableWidget widget1 = (CloneableWidget)manager.CreateInstance<IWidget>("Julia");
-            CloneableWidget widget2 = (CloneableWidget)manager.CreateInstance<IWidget>("Julia");
-            CloneableWidget widget3 = (CloneableWidget)manager.CreateInstance<IWidget>("Julia");
+            CloneableWidget widget1 = (CloneableWidget) manager.CreateInstance<IWidget>("Julia");
+            CloneableWidget widget2 = (CloneableWidget) manager.CreateInstance<IWidget>("Julia");
+            CloneableWidget widget3 = (CloneableWidget) manager.CreateInstance<IWidget>("Julia");
 
             Assert.AreSame(julia, widget1);
             Assert.AreSame(julia, widget2);
@@ -99,17 +97,17 @@ namespace StructureMap.Testing.Configuration.DSL
             string instanceKey = "OrangeWidgetRule";
             registry.AddInstanceOf<Rule>().UsingConcreteType<WidgetRule>().WithName(instanceKey)
                 .Child<IWidget>().Is(
-                    Registry.Instance<IWidget>().UsingConcreteType<ColorWidget>()
-                        .WithProperty("Color").EqualTo("Orange")
-                        .WithName("Orange")
-                        );
+                Registry.Instance<IWidget>().UsingConcreteType<ColorWidget>()
+                    .WithProperty("Color").EqualTo("Orange")
+                    .WithName("Orange")
+                );
 
             IInstanceManager mgr = registry.BuildInstanceManager();
 
             ColorWidget orange = (ColorWidget) mgr.CreateInstance<IWidget>("Orange");
             Assert.IsNotNull(orange);
 
-            WidgetRule rule = (WidgetRule)mgr.CreateInstance<Rule>(instanceKey);
+            WidgetRule rule = (WidgetRule) mgr.CreateInstance<Rule>(instanceKey);
             ColorWidget widget = (ColorWidget) rule.Widget;
             Assert.AreEqual("Orange", widget.Color);
         }
@@ -126,8 +124,8 @@ namespace StructureMap.Testing.Configuration.DSL
 
             manager = registry.BuildInstanceManager();
 
-            WidgetRule rule = (WidgetRule)manager.CreateInstance<Rule>("AWidgetRule");
-            Assert.IsInstanceOfType(typeof(AWidget), rule.Widget);            
+            WidgetRule rule = (WidgetRule) manager.CreateInstance<Rule>("AWidgetRule");
+            Assert.IsInstanceOfType(typeof (AWidget), rule.Widget);
         }
 
         [Test]
@@ -181,7 +179,6 @@ namespace StructureMap.Testing.Configuration.DSL
             //registry.ScanAssemblies().IncludeAssemblyContainingType<IWidget>();
 
 
-
             registry.AddInstanceOf<Rule>().UsingConcreteType<ARule>().WithName("Alias");
 
             // Add an instance by specifying the ConcreteKey
@@ -196,7 +193,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
             manager = registry.BuildInstanceManager();
 
-            Assert.IsInstanceOfType(typeof(ARule), manager.CreateInstance<Rule>("Alias"));
+            Assert.IsInstanceOfType(typeof (ARule), manager.CreateInstance<Rule>("Alias"));
 
             WidgetRule rule = (WidgetRule) manager.CreateInstance<Rule>("RuleThatUsesMyInstance");
             ColorWidget widget = (ColorWidget) rule.Widget;
@@ -271,6 +268,5 @@ namespace StructureMap.Testing.Configuration.DSL
 
     public class ARule : Rule
     {
-        
     }
 }

@@ -42,5 +42,6 @@ namespace StructureMap.Configuration
             "A fatal error in configuration is preventing StructureMap from functioning correctly";
 
         public const string MISSING_TEMPLATE_VALUE = "A required value for a Templated InstanceMemento is missing";
+        public const string UNKNOWN_PLUGIN_PROBLEM = "Exception occured while attaching a Plugin to a PluginFamily";
     }
 }

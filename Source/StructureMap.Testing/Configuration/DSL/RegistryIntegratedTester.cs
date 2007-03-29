@@ -43,7 +43,7 @@ namespace StructureMap.Testing.Configuration.DSL
             graph.Seal();
 
             List<string> colors = new List<string>();
-            foreach (InstanceMemento memento in graph.PluginFamilies[typeof(IWidget)].Source.GetAllMementos()   )
+            foreach (InstanceMemento memento in graph.PluginFamilies[typeof (IWidget)].Source.GetAllMementos())
             {
                 colors.Add(memento.InstanceKey);
             }

@@ -1,5 +1,4 @@
 using System;
-using System.Reflection;
 using NUnit.Framework;
 using Rhino.Mocks;
 using StructureMap.Configuration.DSL;
@@ -28,7 +27,7 @@ namespace StructureMap.Testing.Configuration.DSL
             expression1.Configure(graph);
             expression2.Configure(graph);
             expression3.Configure(graph);
-        
+
             mocks.ReplayAll();
 
             TestRegistry registry = new TestRegistry(graph);
@@ -48,7 +47,7 @@ namespace StructureMap.Testing.Configuration.DSL
             IExpression expression1 = mocks.CreateMock<IExpression>();
             IExpression expression2 = mocks.CreateMock<IExpression>();
             IExpression expression3 = mocks.CreateMock<IExpression>();
-        
+
             PluginGraph graph = new PluginGraph();
             expression1.Configure(graph);
             expression2.Configure(graph);
@@ -60,15 +59,11 @@ namespace StructureMap.Testing.Configuration.DSL
             {
                 registry.AddExpression(expression1);
                 registry.AddExpression(expression2);
-                registry.AddExpression(expression3);                
+                registry.AddExpression(expression3);
             }
 
             mocks.VerifyAll();
         }
-
-
-
-    
     }
 
     public class TestRegistry : Registry

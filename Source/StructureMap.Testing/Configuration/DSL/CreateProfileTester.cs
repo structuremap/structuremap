@@ -1,8 +1,5 @@
 using NUnit.Framework;
-using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
-using StructureMap.Testing.GenericWidgets;
-using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing.Configuration.DSL
 {
@@ -36,7 +33,6 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void CreateProfile()
         {
-
         }
     }
 }

@@ -469,7 +469,7 @@ namespace StructureMap
 
         public void Inject<T>(T instance)
         {
-            InjectStub(typeof(T), instance);
+            InjectStub(typeof (T), instance);
         }
 
         #endregion

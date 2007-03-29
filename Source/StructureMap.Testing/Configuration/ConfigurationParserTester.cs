@@ -4,7 +4,6 @@ using NUnit.Framework;
 using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
-using StructureMap.Source;
 using StructureMap.Testing.TestData;
 using StructureMap.Testing.Widget;
 
@@ -105,7 +104,7 @@ namespace StructureMap.Testing.Configuration
         {
             string[] names = _defaults.GetMachineNames();
             Array.Sort(names);
-            Assert.AreEqual(new string[] {"GREEN-BOX", "SERVER" }, names);
+            Assert.AreEqual(new string[] {"GREEN-BOX", "SERVER"}, names);
         }
 
         [Test]

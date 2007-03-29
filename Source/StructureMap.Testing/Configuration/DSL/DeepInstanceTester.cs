@@ -1,5 +1,4 @@
 using NUnit.Framework;
-using Rhino.Mocks;
 using StructureMap.Configuration.DSL;
 using StructureMap.Testing.Widget;
 
@@ -36,7 +35,7 @@ namespace StructureMap.Testing.Configuration.DSL
                     .WithProperty("count").EqualTo(4)
                     .WithProperty("average").EqualTo(.333)
                     .Child<Rule>().Is(
-                        ruleExpression
+                    ruleExpression
                     )
                 );
 
@@ -70,7 +69,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             Registry registry = new Registry();
             registry.BuildInstancesOf<IWidget>().TheDefaultIs(
-                Registry.Object(new ColorWidget("yellow"))    
+                Registry.Object(new ColorWidget("yellow"))
                 );
 
             registry.BuildInstancesOf<Rule>().TheDefaultIsConcreteType<WidgetRule>();
@@ -109,7 +108,6 @@ namespace StructureMap.Testing.Configuration.DSL
         }
 
 
-
         [Test]
         public void DeepInstance5()
         {
@@ -136,7 +134,6 @@ namespace StructureMap.Testing.Configuration.DSL
 
             assertThingMatches(registry);
         }
-
     }
 
     public class Thing

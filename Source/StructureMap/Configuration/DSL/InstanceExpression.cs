@@ -53,8 +53,6 @@ namespace StructureMap.Configuration.DSL
         }
 
 
-
-
         public PropertyExpression WithProperty(string propertyName)
         {
             return new PropertyExpression(this, _memento, propertyName);
@@ -118,7 +116,7 @@ namespace StructureMap.Configuration.DSL
 
             public InstanceExpression UsingConcreteType<T>()
             {
-                _parent._pluggedType = typeof(T);
+                _parent._pluggedType = typeof (T);
                 return _parent;
             }
 
@@ -127,7 +125,6 @@ namespace StructureMap.Configuration.DSL
                 _parent._memento.ConcreteKey = concreteKey;
                 return _parent;
             }
-
         }
     }
 }

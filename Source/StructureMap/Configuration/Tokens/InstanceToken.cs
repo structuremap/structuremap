@@ -146,6 +146,11 @@ namespace StructureMap.Configuration.Tokens
                     return;
                 }
 
+                if (_pluginTypePath.FindType().IsGenericType)
+                {
+                    return;
+                }
+
                 object target = validator.CreateObject(_pluginTypePath.FindType(), _memento);
                 validateInstance(target);
             }

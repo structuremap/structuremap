@@ -59,7 +59,7 @@ namespace StructureMap.Configuration.DSL
 
         public CreatePluginFamilyExpression TheDefaultIsConcreteType<T>()
         {
-            ExpressionValidator.ValidatePluggabilityOf(typeof(T)).IntoPluginType(_pluginType);
+            ExpressionValidator.ValidatePluggabilityOf(typeof (T)).IntoPluginType(_pluginType);
 
             _alterations.Add(delegate(PluginFamily family)
                                  {

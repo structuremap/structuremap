@@ -57,11 +57,11 @@ namespace StructureMap.Testing.GenericWidgets
         }
     }
 
-    public interface IThing<T, U, V>
+    public interface IThing<T, U>
     {
     }
 
-    public class ColorThing<T, U, V> : IThing<T, U, V>
+    public class ColorThing<T, U> : IThing<T, U>
     {
         private readonly string _color;
 
@@ -76,7 +76,7 @@ namespace StructureMap.Testing.GenericWidgets
         }
     }
 
-    public class ComplexThing<T, U, V> : IThing<T, U, V>
+    public class ComplexThing<T, U> : IThing<T, U>
     {
         private readonly string _name;
         private readonly int _age;

@@ -21,7 +21,8 @@ namespace StructureMap.Configuration.DSL
             _propertyName = propertyName;
         }
 
-        public ChildInstanceExpression(InstanceExpression instance, MemoryInstanceMemento memento, string propertyName, Type childType)
+        public ChildInstanceExpression(InstanceExpression instance, MemoryInstanceMemento memento, string propertyName,
+                                       Type childType)
             : this(instance, memento, propertyName)
         {
             _childType = childType;

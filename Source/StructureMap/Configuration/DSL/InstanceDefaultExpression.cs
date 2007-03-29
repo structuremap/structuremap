@@ -42,8 +42,8 @@ namespace StructureMap.Configuration.DSL
             }
             else
             {
-                throw new StructureMapException(304, TypePath.GetAssemblyQualifiedName(_pluginType));    
-            }            
+                throw new StructureMapException(304, TypePath.GetAssemblyQualifiedName(_pluginType));
+            }
         }
 
         public ProfileExpression Use(IMementoBuilder mementoBuilder)
@@ -52,7 +52,5 @@ namespace StructureMap.Configuration.DSL
 
             return _parent;
         }
-
-        
     }
 }

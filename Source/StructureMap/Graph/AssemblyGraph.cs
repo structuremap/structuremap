@@ -184,10 +184,9 @@ namespace StructureMap.Graph
             {
                 if (Registry.IsPublicRegistry(type))
                 {
-                    Registry registry = (Registry)Activator.CreateInstance(type);
+                    Registry registry = (Registry) Activator.CreateInstance(type);
                     returnValue.Add(registry);
                 }
-                
             }
 
             return returnValue;

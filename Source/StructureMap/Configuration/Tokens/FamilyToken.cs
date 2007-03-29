@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using StructureMap.Attributes;
 using StructureMap.Graph;
 
@@ -31,7 +32,7 @@ namespace StructureMap.Configuration.Tokens
 
         private DefinitionSource _definitionSource = DefinitionSource.Explicit;
         private string _defaultKey;
-        private Hashtable _plugins = new Hashtable();
+        private Dictionary<string, PluginToken> _plugins = new Dictionary<string, PluginToken>();
         private InstanceToken _sourceInstance;
         private ArrayList _interceptors = new ArrayList();
         private Hashtable _instances = new Hashtable();
@@ -142,7 +143,12 @@ namespace StructureMap.Configuration.Tokens
 
         public PluginToken FindPlugin(string concreteKey)
         {
-            return (PluginToken) _plugins[concreteKey];
+            if (_plugins.ContainsKey(concreteKey))
+            {
+                return _plugins[concreteKey];
+            }
+
+            return null;
         }
 
         public TemplateToken[] Templates
@@ -180,6 +186,14 @@ namespace StructureMap.Configuration.Tokens
 
         public void AddInstance(InstanceToken instance)
         {
+            if (_instances.ContainsKey(instance.InstanceKey))
+            {
+                string message =
+                    string.Format("Duplicate Instance '{0}' of PluginFamily '{1}'", instance.InstanceKey,
+                                  _typePath.AssemblyQualifiedName);
+                throw new ApplicationException(message);
+            }
+
             _instances.Add(instance.InstanceKey, instance);
         }
 

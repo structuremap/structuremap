@@ -150,7 +150,7 @@ namespace StructureMap.Testing.Graph
             pluginGraph.Assemblies.Add("StructureMap.Testing.Widget3");
             pluginGraph.Seal();
 
-            Type type = typeof(IWidget);
+            Type type = typeof (IWidget);
             Assert.IsFalse(pluginGraph.PluginFamilies.Contains(type));
 
             TypePath typePath = pluginGraph.LocateOrCreateFamilyForType(type.FullName);
@@ -159,7 +159,10 @@ namespace StructureMap.Testing.Graph
             Assert.IsTrue(pluginGraph.PluginFamilies.Contains(type));
         }
 
-        [Test, ExpectedException(typeof(StructureMapException), "StructureMap Exception Code:  300\nThe implied PluginType sometype cannot be found in any of the configured assemblies ")]
+        [Test,
+         ExpectedException(typeof (StructureMapException),
+             "StructureMap Exception Code:  300\nThe implied PluginType sometype cannot be found in any of the configured assemblies "
+             )]
         public void LocateOrCreateFamilyForTypeSadPath()
         {
             PluginGraph pluginGraph = new PluginGraph();

@@ -22,7 +22,8 @@ namespace StructureMap.Testing.Configuration
         {
             Array.Sort(expected);
             ConfigurationParser[] parsers = _collection.GetParsers();
-            Converter<ConfigurationParser, string> converter = delegate(ConfigurationParser parser) { return parser.Id; };
+            Converter<ConfigurationParser, string> converter =
+                delegate(ConfigurationParser parser) { return parser.Id; };
 
             string[] actuals = Array.ConvertAll<ConfigurationParser, string>(parsers, converter);
             Array.Sort(actuals);
@@ -47,7 +48,10 @@ namespace StructureMap.Testing.Configuration
             assertParserIdList("Generics");
         }
 
-        [Test, ExpectedException(typeof(StructureMapException), "StructureMap Exception Code:  100\nExpected file \"StructureMap.config\" cannot be opened at DoesNotExist.xml")]
+        [Test,
+         ExpectedException(typeof (StructureMapException),
+             "StructureMap Exception Code:  100\nExpected file \"StructureMap.config\" cannot be opened at DoesNotExist.xml"
+             )]
         public void FileDoesNotExist()
         {
             _collection.UseDefaultFile = false;

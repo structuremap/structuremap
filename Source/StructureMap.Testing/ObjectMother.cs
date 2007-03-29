@@ -1,4 +1,5 @@
 using System;
+using System.Xml;
 using StructureMap.Configuration;
 using StructureMap.Graph;
 using StructureMap.Testing.TestData;
@@ -22,12 +23,16 @@ namespace StructureMap.Testing
         {
             DataMother.WriteDocument("FullTesting.XML");
 
-            _pluginGraph = DataMother.GetDiagnosticPluginGraph("ObjectMother.config");
+            XmlDocument document = DataMother.GetXmlDocument("ObjectMother.config");
+            ConfigurationParser parser = new ConfigurationParser(document.DocumentElement);
+            PluginGraphBuilder builder = new PluginGraphBuilder(parser);
 
+            _pluginGraph = builder.BuildDiagnosticPluginGraph();
+            _report = builder.Report;
 
             _instanceManager = new InstanceManager(_pluginGraph);
             _instanceDefaultManager = _pluginGraph.DefaultManager;
-            _report = _pluginGraph.Report;
+           
         }
 
 

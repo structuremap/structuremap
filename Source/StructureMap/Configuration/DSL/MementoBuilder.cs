@@ -23,7 +23,7 @@ namespace StructureMap.Configuration.DSL
             validate();
             PluginFamily family = graph.LocateOrCreateFamilyForType((Type) _pluginType);
             configureMemento(family);
-            
+
             if (!string.IsNullOrEmpty(_instanceKey))
             {
                 memento.InstanceKey = _instanceKey;

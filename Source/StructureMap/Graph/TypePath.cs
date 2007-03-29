@@ -13,7 +13,7 @@ namespace StructureMap.Graph
     {
         public static string GetTypeIdentifier(Type type)
         {
-            return type.AssemblyQualifiedName;
+            return new TypePath(type).AssemblyQualifiedName;
         }
 
         public static TypePath TypePathForFullName(string fullname)
