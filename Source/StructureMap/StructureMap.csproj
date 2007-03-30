@@ -229,6 +229,7 @@
     <Compile Include="Configuration\DSL\PrototypeMemento.cs" />
     <Compile Include="Configuration\DSL\Registry.cs" />
     <Compile Include="Configuration\DSL\ScanAssembliesExpression.cs" />
+    <Compile Include="Configuration\DSL\UserControlExpression.cs" />
     <Compile Include="Configuration\FamilyParser.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -263,6 +264,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Configuration\ProfileAndMachineParser.cs" />
+    <Compile Include="Configuration\StructureMapConfigurationSection.cs" />
     <Compile Include="Configuration\Tokens\AssemblyToken.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -329,6 +331,7 @@
     <Compile Include="Configuration\Tokens\TemplateToken.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Configuration\UserControlMemento.cs" />
     <Compile Include="Configuration\XmlConstants.cs">
       <SubType>Code</SubType>
     </Compile>

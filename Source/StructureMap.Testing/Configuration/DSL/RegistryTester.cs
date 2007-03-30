@@ -1,6 +1,7 @@
 using System;
 using NUnit.Framework;
 using Rhino.Mocks;
+using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Testing.Widget3;
@@ -63,6 +64,26 @@ namespace StructureMap.Testing.Configuration.DSL
             }
 
             mocks.VerifyAll();
+        }
+
+        [Test]
+        public void LoadControl()
+        {
+            PluginGraph graph = new PluginGraph();
+            Registry registry = new Registry(graph);
+
+            string theUrl = "some url";
+            string theKey = "the memento";
+            registry.LoadControlFromUrl<IGateway>(theUrl).WithName(theKey);
+
+            registry.Dispose();
+
+            PluginFamily family = graph.PluginFamilies[typeof (IGateway)];
+            UserControlMemento memento = (UserControlMemento) family.Source.GetMemento(theKey);
+            Assert.IsNotNull(memento);
+
+            Assert.AreEqual(theUrl, memento.Url);
+            Assert.AreEqual(theKey, memento.InstanceKey);
         }
     }
 

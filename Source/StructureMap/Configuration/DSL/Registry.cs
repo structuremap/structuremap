@@ -103,6 +103,11 @@ namespace StructureMap.Configuration.DSL
             return expression;
         }
 
+        public static UserControlExpression LoadUserControlFrom<T>(string url)
+        {
+            return new UserControlExpression(typeof(T), url);
+        }
+
         public ProfileExpression CreateProfile(string profileName)
         {
             ProfileExpression expression = new ProfileExpression(profileName);
@@ -124,6 +129,14 @@ namespace StructureMap.Configuration.DSL
             }
 
             return (type.GetConstructor(new Type[0]) != null);
+        }
+
+        public UserControlExpression LoadControlFromUrl<T>(string url)
+        {
+            UserControlExpression expression = new UserControlExpression(typeof(T), url);
+            addExpression(expression);
+
+            return expression;
         }
     }
 }

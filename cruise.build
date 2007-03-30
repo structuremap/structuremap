@@ -48,7 +48,7 @@
             <attributes>
                 <attribute type="ComVisibleAttribute" value="false" />
                 <attribute type="AssemblyVersionAttribute" value="${assembly-version}" />
-                <attribute type="AssemblyCopyrightAttribute" value="Copyright (c) 2005, Jeremy D. Miller, Jeffrey Palermo" />
+                <attribute type="AssemblyCopyrightAttribute" value="Copyright (c) 2007, Jeremy D. Miller" />
                 <attribute type="AssemblyProductAttribute" value="StructureMap" />         
 				        <attribute type="AssemblyCompanyAttribute" value="" />
 				        <attribute type="AssemblyConfigurationAttribute" value="${project.config}" />
@@ -118,14 +118,16 @@
 	</target>
 
 	<target name="unit-test">
-        <nunit2 failonerror="true">
-            <formatter type="Xml" outputdir="${results.dir}" usefile="true" extension=".xml"/>
-            <formatter type="Plain" />
-                
-            <test assemblyname="${build.dir}\StructureMap.Testing.dll" appconfig="${nant.location}nant.tests.config" />
-            <test assemblyname="${build.dir}\StructureMap.Testing.DeploymentTasks.dll" appconfig="${nant.location}nant.tests.config" />
-        </nunit2>	
+    <property name="nunit-console.exe" value="bin\NUnit\nunit-console.exe" />
 
+    <exec program="${nunit-console.exe}" workingdir="${build.dir}">
+      <arg value="StructureMap.Testing.dll" /> 
+    </exec>
+<!--
+    <exec program="${nunit-console.exe}" workingdir="${build.dir}">
+      <arg value="StructureMap.Testing.DeploymentTasks.dll" />
+    </exec>
+-->    
 	</target>
 	
 	<target name="runDoctor">

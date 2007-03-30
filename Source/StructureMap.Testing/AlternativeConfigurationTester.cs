@@ -15,6 +15,7 @@ namespace StructureMap.Testing
             StructureMapConfiguration.ResetAll();
             DataMother.WriteDocument("Config1.xml");
             DataMother.WriteDocument("Config2.xml");
+            DataMother.WriteDocument("FullTesting.XML");
         }
 
         [TearDown]

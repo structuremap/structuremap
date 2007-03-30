@@ -142,7 +142,7 @@ namespace StructureMap.Testing.Configuration.DSL
             Assert.AreEqual("Purple", widget.Color);
         }
 
-        [Test]
+        [Test, Explicit]
         public void CreateAnInstancePullAPropertyFromTheApplicationConfig()
         {
             Assert.AreEqual("Blue", ConfigurationManager.AppSettings["Color"]);

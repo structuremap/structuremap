@@ -140,6 +140,7 @@ namespace StructureMap.Verification
             {
                 _writer.WriteLine(problem.Path);
                 _writer.WriteLine(problem.ToString());
+                writeSeparator();
             }
         }
 

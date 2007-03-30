@@ -3,6 +3,7 @@ using System.IO;
 using NUnit.Framework;
 using StructureMap.Configuration;
 using StructureMap.Graph;
+using StructureMap.Testing.GenericWidgets;
 
 namespace StructureMap.Testing
 {
@@ -72,6 +73,19 @@ namespace StructureMap.Testing
 
             Assert.IsTrue(File.Exists(filePath));
         }
+
+
+        [Test, Ignore("Not complete")]
+        public void PullConfigurationFromTheAppConfig()
+        {
+            StructureMapConfiguration.UseDefaultStructureMapConfigFile = false;
+            StructureMapConfiguration.PullConfigurationFromAppConfig = true;
+
+            ColorThing<string, bool> thing = (ColorThing<string, bool>) ObjectFactory.GetInstance < IThing<string, bool>>();
+            Assert.AreEqual("Cornflower", thing.Color, "Cornflower is the color from the App.config file");
+        }
+
+
     }
 
     public interface ISomething

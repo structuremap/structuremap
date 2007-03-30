@@ -195,6 +195,7 @@
     <Compile Include="Configuration\DSL\RegistryIntegratedTester.cs" />
     <Compile Include="Configuration\DSL\RegistryTester.cs" />
     <Compile Include="Configuration\DSL\ScanAssembliesTester.cs" />
+    <Compile Include="Configuration\DSL\UserControlExpressionTester.cs" />
     <Compile Include="Configuration\FamilyParserTester.cs">
       <SubType>Code</SubType>
     </Compile>

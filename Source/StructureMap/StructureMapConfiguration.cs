@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Xml;
 using StructureMap.Configuration;
@@ -16,6 +17,7 @@ namespace StructureMap
         private static Registry _registry = new Registry();
         private static List<Registry> _registries = new List<Registry>();
         private static StartUp _startUp;
+        private static bool _pullConfigurationFromAppConfig;
 
         static StructureMapConfiguration()
         {
@@ -69,6 +71,15 @@ namespace StructureMap
 
         private static PluginGraphBuilder createBuilder()
         {
+            if (_pullConfigurationFromAppConfig)
+            {
+                _collection.IncludeNode(delegate()
+                                            {
+                                                
+                                                return StructureMapConfigurationSection.GetStructureMapConfiguration();
+                                            });
+            }
+
             ConfigurationParser[] parsers = _collection.GetParsers();
             return new PluginGraphBuilder(parsers, _registries.ToArray());
         }
@@ -100,6 +111,17 @@ namespace StructureMap
         {
             get { return _collection.UseDefaultFile; }
             set { _collection.UseDefaultFile = value; }
+        }
+
+        [Obsolete("Not ready yet")]
+        public static bool PullConfigurationFromAppConfig
+        {
+            get { return _pullConfigurationFromAppConfig; }
+            set
+            {
+                throw new NotImplementedException("This feature has not been completed");
+                _pullConfigurationFromAppConfig = value;
+            }
         }
 
         public static ScanAssembliesExpression ScanAssemblies()
