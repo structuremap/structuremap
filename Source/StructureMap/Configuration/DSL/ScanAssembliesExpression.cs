@@ -6,6 +6,10 @@ using StructureMap.Graph;
 
 namespace StructureMap.Configuration.DSL
 {
+    /// <summary>
+    /// Expression that directs StructureMap to scan the named assemblies
+    /// for [PluginFamily] and [Plugin] attributes
+    /// </summary>
     public class ScanAssembliesExpression : IExpression
     {
         private List<AssemblyGraph> _assemblies = new List<AssemblyGraph>();

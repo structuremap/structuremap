@@ -3,6 +3,9 @@ using StructureMap.Graph;
 
 namespace StructureMap.Configuration.DSL
 {
+    /// <summary>
+    /// Use to express the instance of a PluginType for the containing Profile
+    /// </summary>
     public class InstanceDefaultExpression
     {
         private readonly Type _pluginType;
@@ -16,6 +19,11 @@ namespace StructureMap.Configuration.DSL
             _parent = parent;
         }
 
+        /// <summary>
+        /// Use a named, preconfigured instance as the default instance for this profile 
+        /// </summary>
+        /// <param name="instanceKey"></param>
+        /// <returns></returns>
         public ProfileExpression UseNamedInstance(string instanceKey)
         {
             _instanceKey = instanceKey;
@@ -46,6 +54,11 @@ namespace StructureMap.Configuration.DSL
             }
         }
 
+        /// <summary>
+        /// Define the default instance of the PluginType for the containing Profile
+        /// </summary>
+        /// <param name="mementoBuilder"></param>
+        /// <returns></returns>
         public ProfileExpression Use(IMementoBuilder mementoBuilder)
         {
             _mementoBuilder = mementoBuilder;

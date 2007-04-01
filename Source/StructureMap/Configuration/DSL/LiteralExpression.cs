@@ -3,6 +3,10 @@ using StructureMap.Graph;
 
 namespace StructureMap.Configuration.DSL
 {
+    /// <summary>
+    /// Small helper class to represent an object to be plugged into a PluginType as is
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class LiteralExpression<T> : MementoBuilder<LiteralExpression<T>>
     {
         private readonly T _target;

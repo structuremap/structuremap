@@ -8,6 +8,9 @@ namespace StructureMap.Configuration.DSL
 {
     public delegate void AlterPluginFamilyDelegate(PluginFamily family);
 
+    /// <summary>
+    /// Represents the parameters for creating instances of a given Type
+    /// </summary>
     public class CreatePluginFamilyExpression : IExpression
     {
         private Type _pluginType;
@@ -42,6 +45,11 @@ namespace StructureMap.Configuration.DSL
             graph.Assemblies.Add(assembly);
         }
 
+        /// <summary>
+        /// Sets the default instance of a Type to the definition represented by builder
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <returns></returns>
         public CreatePluginFamilyExpression TheDefaultIs(IMementoBuilder builder)
         {
             builder.ValidatePluggability(_pluginType);
@@ -57,6 +65,13 @@ namespace StructureMap.Configuration.DSL
             return this;
         }
 
+        /// <summary>
+        /// Convenience method that sets the default concrete type of the PluginType.  Type T
+        /// can only accept types that do not have any primitive constructor arguments.
+        /// StructureMap has to know how to construct all of the constructor argument types.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public CreatePluginFamilyExpression TheDefaultIsConcreteType<T>()
         {
             ExpressionValidator.ValidatePluggabilityOf(typeof (T)).IntoPluginType(_pluginType);
@@ -70,6 +85,12 @@ namespace StructureMap.Configuration.DSL
             return this;
         }
 
+        /// <summary>
+        /// Sets the object creation of the instances of the PluginType.  For example:  PerRequest,
+        /// Singleton, ThreadLocal, HttpContext, or Hybrid
+        /// </summary>
+        /// <param name="scope"></param>
+        /// <returns></returns>
         public CreatePluginFamilyExpression CacheBy(InstanceScope scope)
         {
             _alterations.Add(delegate(PluginFamily family)
@@ -81,6 +102,10 @@ namespace StructureMap.Configuration.DSL
             return this;
         }
 
+        /// <summary>
+        /// Convenience method to mark a PluginFamily as a Singleton
+        /// </summary>
+        /// <returns></returns>
         public CreatePluginFamilyExpression AsSingletons()
         {
             _alterations.Add(

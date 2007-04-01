@@ -4,6 +4,10 @@ using StructureMap.Graph;
 
 namespace StructureMap.Configuration.DSL
 {
+    /// <summary>
+    /// Part of the Fluent Interface, represents a nonprimitive argument to a 
+    /// constructure function
+    /// </summary>
     public class ChildInstanceExpression : IExpression
     {
         private readonly InstanceExpression _instance;
@@ -28,7 +32,11 @@ namespace StructureMap.Configuration.DSL
             _childType = childType;
         }
 
-
+        /// <summary>
+        /// Use a previously configured and named instance for the child
+        /// </summary>
+        /// <param name="instanceKey"></param>
+        /// <returns></returns>
         public InstanceExpression IsNamedInstance(string instanceKey)
         {
             MemoryInstanceMemento child = MemoryInstanceMemento.CreateReferencedInstanceMemento(instanceKey);
@@ -37,6 +45,11 @@ namespace StructureMap.Configuration.DSL
             return _instance;
         }
 
+        /// <summary>
+        /// Start the definition of a child instance by defining the concrete type
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public InstanceExpression IsConcreteType<T>()
         {
             Type pluggedType = typeof (T);
@@ -78,6 +91,12 @@ namespace StructureMap.Configuration.DSL
             set { _childType = value; }
         }
 
+        /// <summary>
+        /// Registers a configured instance to use as the argument to the parent's
+        /// constructor
+        /// </summary>
+        /// <param name="child"></param>
+        /// <returns></returns>
         public InstanceExpression Is(InstanceExpression child)
         {
             if (child.PluggedType != null && _childType != null)

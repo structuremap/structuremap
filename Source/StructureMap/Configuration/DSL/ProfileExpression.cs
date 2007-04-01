@@ -3,6 +3,9 @@ using StructureMap.Graph;
 
 namespace StructureMap.Configuration.DSL
 {
+    /// <summary>
+    /// Expression class to help define a runtime Profile
+    /// </summary>
     public class ProfileExpression : IExpression
     {
         private readonly string _profileName;
@@ -28,6 +31,11 @@ namespace StructureMap.Configuration.DSL
             }
         }
 
+        /// <summary>
+        /// Starts the definition of the default instance for the containing Profile
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public InstanceDefaultExpression For<T>()
         {
             InstanceDefaultExpression defaultExpression = new InstanceDefaultExpression(typeof (T), this);

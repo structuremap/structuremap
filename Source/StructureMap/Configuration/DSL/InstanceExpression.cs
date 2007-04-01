@@ -3,6 +3,9 @@ using StructureMap.Graph;
 
 namespace StructureMap.Configuration.DSL
 {
+    /// <summary>
+    /// Used to define an Instance in code
+    /// </summary>
     public class InstanceExpression : MementoBuilder<InstanceExpression>
     {
         private Type _pluggedType;
@@ -53,12 +56,24 @@ namespace StructureMap.Configuration.DSL
         }
 
 
+        /// <summary>
+        /// Start the definition of a primitive argument to a constructor argument
+        /// </summary>
+        /// <param name="propertyName"></param>
+        /// <returns></returns>
         public PropertyExpression WithProperty(string propertyName)
         {
             return new PropertyExpression(this, _memento, propertyName);
         }
 
-
+        /// <summary>
+        /// Starts the definition of a child instance specifying the argument name
+        /// in the case of a constructor function that consumes more than one argument
+        /// of type T
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="propertyName"></param>
+        /// <returns></returns>
         public ChildInstanceExpression Child<T>(string propertyName)
         {
             ChildInstanceExpression child = new ChildInstanceExpression(this, _memento, propertyName);
@@ -68,6 +83,11 @@ namespace StructureMap.Configuration.DSL
             return child;
         }
 
+        /// <summary>
+        /// Start the definition of a child instance for type T
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public ChildInstanceExpression Child<T>()
         {
             string propertyName = findPropertyName<T>();
@@ -104,7 +124,9 @@ namespace StructureMap.Configuration.DSL
             return new InstanceTypeExpression(this);
         }
 
-
+        /// <summary>
+        /// Helper class to capture the actual concrete type of an Instance
+        /// </summary>
         public class InstanceTypeExpression
         {
             private readonly InstanceExpression _parent;
@@ -114,12 +136,22 @@ namespace StructureMap.Configuration.DSL
                 _parent = parent;
             }
 
+            /// <summary>
+            /// Use type T for the concrete type of an instance
+            /// </summary>
+            /// <typeparam name="T"></typeparam>
+            /// <returns></returns>
             public InstanceExpression UsingConcreteType<T>()
             {
                 _parent._pluggedType = typeof (T);
                 return _parent;
             }
 
+            /// <summary>
+            /// Use a named Plugin type denoted by a [Pluggable("Key")] attribute
+            /// </summary>
+            /// <param name="concreteKey"></param>
+            /// <returns></returns>
             public InstanceExpression UsingConcreteTypeNamed(string concreteKey)
             {
                 _parent._memento.ConcreteKey = concreteKey;

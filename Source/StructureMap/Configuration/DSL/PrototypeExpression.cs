@@ -3,6 +3,10 @@ using StructureMap.Graph;
 
 namespace StructureMap.Configuration.DSL
 {
+    /// <summary>
+    /// Sets up a Prototype instance of type T
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class PrototypeExpression<T> : MementoBuilder<PrototypeExpression<T>>
     {
         private readonly T _prototype;
