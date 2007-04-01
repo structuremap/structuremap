@@ -123,11 +123,11 @@
     <exec program="${nunit-console.exe}" workingdir="${build.dir}">
       <arg value="StructureMap.Testing.dll" /> 
     </exec>
-<!--
+
     <exec program="${nunit-console.exe}" workingdir="${build.dir}">
       <arg value="StructureMap.Testing.DeploymentTasks.dll" />
     </exec>
--->    
+   
 	</target>
 	
 	<target name="runDoctor">
@@ -148,13 +148,14 @@
 	
 	<target name="post-clean">
 	    <call target="cleanJunk" />
-	    
+
 	    <delete>
 			<fileset basedir="${build.dir}">
 				<include name="*.xml" />
 				<include name="*.config" />
 			</fileset>
 	    </delete>
+
 	</target>
 	
 	<target name="archive">
