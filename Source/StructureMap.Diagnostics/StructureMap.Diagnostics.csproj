@@ -103,6 +103,6 @@
     <PreBuildEvent>
     </PreBuildEvent>
     <PostBuildEvent>copy $(SolutionDir)StructureMap.Testing\TestData\ObjectMother.config $(TargetDir)
-rem copy $(TargetDir)StructureMap.* C:\work\ShareDoc\build\net-1.1.win32\DeSade-2.1.0-debug\bin</PostBuildEvent>
+</PostBuildEvent>
   </PropertyGroup>
 </Project>
