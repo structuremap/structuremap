@@ -61,7 +61,7 @@ namespace StructureMap.Verification
                 PluginGraphConsoleWriter consoleWriter = new PluginGraphConsoleWriter(report);
                 consoleWriter.WriteAll = true;
                 consoleWriter.WriteProblems = true;
-                
+
                 using (TextWriter writer = new StreamWriter(_allFile))
                 {
                     consoleWriter.Write(writer);

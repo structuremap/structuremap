@@ -11,7 +11,7 @@ namespace StructureMap.Testing.TestData
     public class DataMother
     {
         private static ArrayList _files = new ArrayList();
-        
+
 
         private DataMother()
         {

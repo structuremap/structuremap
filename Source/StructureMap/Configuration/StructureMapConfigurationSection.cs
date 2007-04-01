@@ -1,7 +1,4 @@
-
-
 using System.Configuration;
-using System.Diagnostics;
 using System.Xml;
 
 namespace StructureMap.Configuration
@@ -18,7 +15,7 @@ namespace StructureMap.Configuration
         public static XmlNode GetStructureMapConfiguration()
         {
             object config = ConfigurationManager.GetSection(XmlConstants.STRUCTUREMAP);
-            
+
 
             return null;
             /*

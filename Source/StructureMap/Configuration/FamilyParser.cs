@@ -10,10 +10,12 @@ namespace StructureMap.Configuration
     public class FamilyParser
     {
         private readonly IGraphBuilder _builder;
+        private readonly XmlMementoCreator _mementoCreator;
 
-        public FamilyParser(IGraphBuilder builder)
+        public FamilyParser(IGraphBuilder builder, XmlMementoCreator mementoCreator)
         {
             _builder = builder;
+            _mementoCreator = mementoCreator;
         }
 
         public void ParseFamily(XmlElement familyElement)
@@ -30,6 +32,23 @@ namespace StructureMap.Configuration
             attachMementoSource(familyElement, typePath);
             attachPlugins(typePath, familyElement);
             attachInterceptors(typePath, familyElement);
+        }
+
+        public void ParseDefaultElement(XmlElement element)
+        {
+            TypePath pluginTypePath = TypePath.GetTypePath(element.GetAttribute(XmlConstants.PLUGIN_TYPE));
+            InstanceScope scope = findScope(element);
+            string name = element.GetAttribute(XmlConstants.NAME);
+            if (string.IsNullOrEmpty(name))
+            {
+                name = "DefaultInstanceOf" + pluginTypePath.AssemblyQualifiedName;
+            }
+
+            InstanceMemento memento = _mementoCreator.CreateMemento(element);
+            memento.InstanceKey = name;
+
+            _builder.AddPluginFamily(pluginTypePath, name, new string[0], scope);
+            _builder.RegisterMemento(pluginTypePath, memento);
         }
 
         private InstanceScope findScope(XmlElement familyElement)
@@ -87,5 +106,7 @@ namespace StructureMap.Configuration
                 _builder.AddInterceptor(pluginTypePath, interceptorMemento);
             }
         }
+
+
     }
 }

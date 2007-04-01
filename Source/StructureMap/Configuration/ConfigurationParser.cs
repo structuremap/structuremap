@@ -133,10 +133,6 @@ namespace StructureMap.Configuration
             parseAssemblies(builder);
         }
 
-        public void ParseFamilies(IGraphBuilder builder)
-        {
-            parseFamilies(builder);
-        }
 
         public void ParseInstances(IGraphBuilder builder)
         {
@@ -168,13 +164,20 @@ namespace StructureMap.Configuration
         }
 
 
-        private void parseFamilies(IGraphBuilder builder)
+        public void ParseFamilies(IGraphBuilder builder)
         {
-            FamilyParser familyParser = new FamilyParser(builder);
+            FamilyParser familyParser = new FamilyParser(builder, _mementoCreator);
+            
             XmlNodeList familyNodes = findNodes(XmlConstants.PLUGIN_FAMILY_NODE);
             foreach (XmlElement familyElement in familyNodes)
             {
                 familyParser.ParseFamily(familyElement);
+            }
+
+            XmlNodeList defaultNodes = findNodes(XmlConstants.DEFAULT_INSTANCE);
+            foreach (XmlElement element in defaultNodes)
+            {
+                familyParser.ParseDefaultElement(element);
             }
         }
 

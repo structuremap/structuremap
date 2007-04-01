@@ -1,4 +1,5 @@
 using System.Xml;
+using StructureMap.Configuration;
 using StructureMap.Configuration.Tokens;
 
 namespace StructureMap.Source
@@ -32,6 +33,11 @@ namespace StructureMap.Source
             get { return getAttribute(_keyAttribute); }
         }
 
+
+        protected override string getPluggedType()
+        {
+            return getAttribute(XmlConstants.PLUGGED_TYPE);
+        }
 
         private XmlNode getChildNode(string Key)
         {

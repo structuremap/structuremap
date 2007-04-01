@@ -152,6 +152,4 @@ namespace StructureMap.Testing.Widget
             get { return _Value; }
         }
     }
-
-
 }

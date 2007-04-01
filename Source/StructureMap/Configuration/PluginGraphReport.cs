@@ -89,7 +89,6 @@ namespace StructureMap.Configuration
                 FamilyToken[] returnValue = new FamilyToken[_families.Count];
                 _families.Values.CopyTo(returnValue, 0);
 
-             
 
                 return returnValue;
             }

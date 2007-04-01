@@ -254,7 +254,7 @@ namespace StructureMap
 
         public Plugin CreateInferredPlugin()
         {
-            string pluggedTypeName = getPropertyValue(XmlConstants.PLUGGED_TYPE);
+            string pluggedTypeName = getPluggedType();
             if (string.IsNullOrEmpty(pluggedTypeName))
             {
                 return null;
@@ -264,6 +264,11 @@ namespace StructureMap
                 Type pluggedType = TypePath.GetTypePath(pluggedTypeName).FindType();
                 return Plugin.CreateImplicitPlugin(pluggedType);
             }
+        }
+
+        protected virtual string getPluggedType()
+        {
+            return this.getPropertyValue(XmlConstants.PLUGGED_TYPE);   
         }
 
         public virtual object Build(IInstanceCreator creator)

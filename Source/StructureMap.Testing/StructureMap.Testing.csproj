@@ -181,6 +181,7 @@
     </Compile>
     <Compile Include="Configuration\ConfigurationParserCollectionTester.cs" />
     <Compile Include="Configuration\ConfigurationParserTester.cs" />
+    <Compile Include="Configuration\DefaultInstanceNodeTester.cs" />
     <Compile Include="Configuration\DiagnosticGraphBuilderTester.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -490,6 +491,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Sample.xml" />
+    <EmbeddedResource Include="TestData\DefaultInstance.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

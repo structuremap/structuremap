@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Reflection;
 using NUnit.Framework;
 using StructureMap.Configuration;
-using StructureMap.Configuration.DSL;
 using StructureMap.Configuration.Tokens;
 using StructureMap.Graph;
 using StructureMap.Testing.GenericWidgets;
@@ -184,7 +183,7 @@ namespace StructureMap.Testing
         [Test]
         public void TryDiagnosticsWithGenerics()
         {
-            Debug.WriteLine(typeof(ISimpleThing<>).AssemblyQualifiedName);
+            Debug.WriteLine(typeof (ISimpleThing<>).AssemblyQualifiedName);
 
             DataMother.WriteDocument("GenericsTesting.xml");
             PluginGraphReport report = PluginGraphBuilder.BuildReportFromXml("GenericsTesting.xml");

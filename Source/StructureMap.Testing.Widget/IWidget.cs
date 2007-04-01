@@ -47,7 +47,7 @@ namespace StructureMap.Testing.Widget
 
         public object Clone()
         {
-            return this.MemberwiseClone();
+            return MemberwiseClone();
         }
     }
 

@@ -6,6 +6,7 @@ using StructureMap.Attributes;
 using StructureMap.Configuration;
 using StructureMap.Graph;
 using StructureMap.Graph.Configuration;
+using StructureMap.Source;
 using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Configuration
@@ -23,7 +24,7 @@ namespace StructureMap.Testing.Configuration
         public void SetUp()
         {
             _builderMock = new DynamicMock(typeof (IGraphBuilder));
-            _parser = new FamilyParser((IGraphBuilder) _builderMock.MockInstance);
+            _parser = new FamilyParser((IGraphBuilder) _builderMock.MockInstance, new XmlMementoCreator(XmlMementoStyle.NodeNormalized, XmlConstants.TYPE_ATTRIBUTE, XmlConstants.ATTRIBUTE_STYLE));
 
             _document = new XmlDocument();
             _document.LoadXml("<PluginFamily />");

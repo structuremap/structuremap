@@ -15,7 +15,7 @@
 								border="0" alt="SourceForge.net Logo"></A>
 					</p>
 					<P style="LINE-HEIGHT: 25px">
-						<A href="default.htm">Home</A><BR>
+						<A href="Default.htm">Home</A><BR>
 						<a href="http://sourceforge.net/projects/structuremap">StructureMap on SourceForge</a><br>
 						<A href="Basic Architecture.htm">Basic Architecture</A><BR>
 						<A href="Concepts.htm">Concepts</A><BR>
@@ -53,10 +53,26 @@
 						generic flexibility mechanisms. Used judiciously, StructureMap can greatly 
 						enhance the opportunities for code reuse by minimizing direct coupling between 
 						classes and configuration mechanisms.</p>
+                    <p>
+                        StructureMap is released under the permissive Apache 2 OSS license.&nbsp; You are
+                        free to download, modify, or redistribute StructureMap in any way you see fit.</p>
 					<p>
-						New in version 1.0 is the ability to create 
-						self-diagnostic deployment configurations</p>
-					<p>Consider using StructureMap if you…</p>
+						New for version 2.0</p>
+                    <ul>
+                        <li>Full support for pluggable generic types.&nbsp; IService&lt;T&gt; and Service&lt;T&gt;.&nbsp;
+                            Auto wiring support for generic arguments</li>
+                        <li>Simpler, more terse Xml configuration.&nbsp; Fewer steps and less Xml.</li>
+                        <li>Define Profile instances inline for less Xml</li>
+                        <li>New Fluent Interface API for programmatic configuration.&nbsp; If so desired, all configuration can now be done in code at application startup</li>
+                        <li>The default StructureMap.config file is now optional</li>
+                        <li>Use multiple configuration files additively for easier configuration of composite
+                            applications</li>
+                        <li>Pluggable ASP.Net UserControl's</li>
+                        <li>Inject prototype instances</li>
+                        <li>Inject prebuilt singleton instances </li>
+                    </ul>
+                    <p>
+                        Consider using StructureMap if you…</p>
 					<ul>
 						<li>
 						Require significant extensibility
@@ -72,44 +88,14 @@
 					<p>Do not use StructureMap if an application or process requires little 
 						flexibility. The abstraction and indirection afforded by StructureMap is 
 						unnecessary and even harmful in simpler systems or processes.&nbsp;</p>
-					<p>New for version 1.0</p>
-					<ul>
-						<li>New terser <a href="AttributeNormalized.htm">
-						Attribute Normalized Xml</a> configuration style</li>
-						<li>The ability to <a href="Configuration.htm#Include">
-						include secondary configuration files</a></li>
-						<li>Set a default profile at the top level of 
-						configuration</li>
-						<li><a href="StructureMapDoctor.htm">
-						StructureMapExplorer</a>, a WinForms tool to explore and 
-						debug StructureMap configurations</li>
-						<li>New <a href="NAnt%20Tasks.htm">ancillary NAnt tasks</a>, 
-						including functionality to create a file &quot;manifest&quot; to 
-						verify the contents of an application deployment</li>
-						<li>New <a href="MementoSources.htm">configuration 
-						storage choices</a></li>
-						<li>New Instance <a href="Scoping.htm">lifecycle scoping
-						</a>options</li>
-						<li>The &quot;<a href="MementoSources.htm">TemplatedMementoSource</a>&quot; 
-						option for large instance graphs</li>
-						<li>Streamlined codebase with less coupling and greater 
-						test coverage.&nbsp; Greatly improved diagnostics.</li>
-					<li>New methods on ObjectFactory<ul>
-							<li>GetAllInstances() - returns all instances of a 
-							certain type</li>
-							<li>WhatDoIHave() - for runtime troubleshooting</li>
-							<li>GetInstance(Type, InstanceMemento)</li>
-						</ul>
-						</li>
-					</ul>
 					<h3>Status</h3>
-					<p>StructureMap has been in multiple production systems 
+					<p>StructureMap is the oldest IoC/DI tool for .Net development and has been used in multiple production systems 
 					since 
-						June 2004.&nbsp; The current version 1.0 was released in 
-					May 2006.&nbsp; StructureMap is maintained and developed by   
+						June 2004.&nbsp; The current version 2.0 was released in April 2007.&nbsp; StructureMap is maintained and developed by   
 					<a href="mailto:jeremydmiller@yahoo.com?subject=StructureMap">Jeremy D. Miller</a>,
 					<a href="http://codebetter.com/blogs/jeremy.miller">The 
-					Shade Tree Developer</a></p>
+					Shade Tree Developer</a>.&nbsp;
+                    </p>
 					<p>Recent Articles</p>
 					<ul>
 						<li>
@@ -123,9 +109,9 @@
 				</ul>
 					<h3>Feature List</h3>
 					<UL>
-						<LI>
+                        <li>
 							Creates objects using the <a href="http://picocontainer.codehaus.org/Constructor+Injection">
-								Constructor Injection pattern</a>
+								Constructor Injection pattern</a> </li>
 						<LI>
 						Optionally, attach dependencies and other properties through Setter Injection 
 						(v0.90)

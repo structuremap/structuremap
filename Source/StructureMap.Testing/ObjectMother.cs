@@ -32,7 +32,6 @@ namespace StructureMap.Testing
 
             _instanceManager = new InstanceManager(_pluginGraph);
             _instanceDefaultManager = _pluginGraph.DefaultManager;
-           
         }
 
 

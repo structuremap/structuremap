@@ -54,6 +54,7 @@
 						<A href="#log4net">log4net</A><BR>
 						<A href="#Machine">Machine</A><BR>
 						<A href="#PluginFamily">PluginFamily</A><BR>
+						<A href="#DefaultInstance">DefaultInstance</A><BR>
 						<A href="#Profile">Profile</A><BR>
 						<A href="#Instance">Instance</A><BR>
 						<A href="#Interceptors">Interceptors</A><BR>
@@ -63,6 +64,7 @@
 						<A href="#Setter">Setter</A><BR>
 						<A href="#Source">Source</A><BR>
 						<A href="#Property">Property</A></P>
+						
 					<HR width="100%" SIZE="1">
 					<!--StructureMap node-->
 					<A name="StructureMap"></A>
@@ -81,6 +83,10 @@
 									<TD>Directs StructureMap to use the named 
 									Profile as the default profile at runtime</TD>
 								</TR>
+								<tr>
+								    <td>MementoStyle</td>
+								    <td>Specifies the type of Instance Memento definition between "Node" normalized and "Attribute" normalized.  For backwards compatibility, the default value is "Node"</td>
+								</tr>
 							</TABLE>
 						</DIV>
 						<p><A href="#TopOfPage">Back to Top</A><BR>
@@ -175,11 +181,19 @@
 						<HR>
 						<A name="Machine"></A>
 						<H3>&lt;Machine&gt; Element</H3>
-						<P>Machine level overrides for default instances of one or more PluginFamily’s</P>
+						<P>Machine level overrides for default instances of one or more PluginFamily’s.  New in version 2.0 is the ability to define the instance for the type specified by the Type attribute inline in an embedded &lt;Instance&gt; node</P>
 						<H4>Sample</H4>
-						<pre class="xml-sample">&lt;Machine Name="SERVER" Profile="Local"&gt;
+						<pre class="xml-sample">
+&lt;Machine Name="SERVER" Profile="Local"&gt;
 &lt;Override Type="StructureMap.Testing.Widget.IWidget" DefaultKey="Orange"/&gt;
-&lt;/Machine&gt;</pre>
+&lt;/Machine&gt;
+
+    &lt;Override Type="StructureMap.Testing.Widget.Rule"&gt;
+      &lt;Instance Type="Color" Color="Green"/&gt;
+    &lt;/Override>
+
+
+</pre>
 						<H4>Required Attributes</H4>
 						<DIV class="schema-table"><TABLE width="100%" border="1" cellPadding="1" cellSpacing="1" ID="Table3">
 								<TR>
@@ -253,6 +267,62 @@
 						<A href="#TopOfPage">Back to Top</A><BR>
 						<BR>
 						<HR>
+
+
+
+
+						<A name="DefaultInstance"></A>
+						<H3>&lt;DefaultInstance&gt; Element</H3>
+						<P>Shorthand way to explicitly define the default instance of a PluginType in one element. Explicitly directs and 
+							configures StructureMap to create instances of the CLR Type specified by the "PluginType" attribute.  The DefaultInstance node also represents an Instance node, and the arguments to the constructor function and setter properties follow the same rules as an Instance node.</P>
+						<H4>Sample</H4>
+						<pre class="xml-sample">&lt;DefaultInstance PluginType="StructureMap.Testing.Widget.Rule,StructureMap.Testing" PluggedType="StructureMap.Testing.Widget.ColorRule,StructureMap.Testing"  Scope=&quot;Singleton"&gt; Color=&quot;Red&quot;
+	<BR> &lt;/DefaultInstance&gt;</pre>
+						<H4>Required Attributes</H4>
+						<DIV class="schema-table"><TABLE width="100%" border="1" cellPadding="1" cellSpacing="1" ID="Table19">
+								<TR>
+									<TH width="25%">
+										Attribute</TH><TH width="75%">Description</TH></TR>
+								<TR>
+									<TD>PluginType</TD>
+									<TD>Assembly qualified name of the PluginType, as in PluginType instance = ObjectFactory.GetInstance&lt;PluginType&gt;()</TD>
+								</TR>
+								<TR>
+									<TD>PluggedType</TD>
+									<TD>The assembly qualified name of the concrete type</TD>
+								</TR>
+							</TABLE>
+						</DIV>
+						<H4>Optional Attributes</H4>
+						<DIV class="schema-table"><TABLE width="100%" border="1" cellPadding="1" cellSpacing="1" ID="Table20">
+								<TR>
+									<TH width="25%">
+										Attribute</TH><TH width="75%">Description</TH></TR>
+								<TR>
+									<TD>Name</TD>
+									<TD>The InstanceKey of the default instance.  If unspecified, StructureMap will create a default name.  This is mostly for diagnostics.</TD>
+								</TR>
+								<TR>
+									<TD>Scope</TD>
+									<TD>Controls the &quot;scope&quot; of the requested 
+									instance.&nbsp; The default value is 
+									PerRequest.&nbsp; Valid values are 
+									PerRequest, Singleton, ThreadLocal, 
+									HttpContext, and Hybrid (uses HttpContext if 
+									available, otherwise ThreadLocal)</TD>
+								</TR>
+							</TABLE>
+						</DIV>
+						<BR>
+						<A href="#TopOfPage">Back to Top</A><BR>
+						<BR>
+						<HR>
+
+
+
+
+
+
 						<A name="Profile"></A>
 						<H3>&lt;Profile&gt; Element</H3>
 						<P>Models a named set of overrides for default instances of one or more 
@@ -261,7 +331,14 @@
 						<pre class="xml-sample">&lt;Profile Name="Blue"&gt;
 &lt;Override Type="StructureMap.Testing.Widget.Rule" DefaultKey="Blue"/&gt;
 &lt;Override Type="StructureMap.Testing.Widget.IWidget" DefaultKey="Blue"/&gt;
-&lt;/Profile&gt;</pre>
+&lt;/Profile&gt;
+
+&lt;Override Type="StructureMap.Testing.Widget.Rule"&gt;
+  &lt;Instance Type="Color" Color="Green"/&gt;
+&lt;/Override&gt;
+
+
+</pre>
 						<H4>Required Attributes</H4>
 						<DIV class="schema-table"><TABLE width="100%" border="1" cellPadding="1" cellSpacing="1" ID="Table7">
 								<TR>
@@ -285,7 +362,16 @@
 		&lt;Property Name="Attribute" Value="MyDad" /&gt;
 		&lt;Property Name="Value" Value="10" /&gt;
 	&lt;/Instance&gt;<BR>
-&lt;/PluginFamily&gt;</pre>
+&lt;/PluginFamily&gt;
+
+* OR *
+
+&lt;PluginFamily&gt;<BR>	&lt;Instance Key="Bigger" PluggedType="Assembly Qualified Name"&gt;
+		&lt;Property Name="Attribute" Value="MyDad" /&gt;
+		&lt;Property Name="Value" Value="10" /&gt;
+	&lt;/Instance&gt;<BR>
+&lt;/PluginFamily&gt;
+</pre>
 							<H4>Required Attributes</H4>
 							<DIV class="schema-table"><TABLE width="100%" border="1" cellPadding="1" cellSpacing="1" ID="Table8">
 									<TR>
@@ -308,6 +394,10 @@
 								<TR>
 									<TH width="25%">
 										Attribute</TH><TH width="75%">Description</TH></TR>
+								<tr>
+								    <td>PluggedType</td>
+								    <td>An alternative to the Type attribute.  Allows you to specify the assembly qualified type of the concrete class directly</td>
+								</tr>
 								<TR>
 									<TD>Template</TD>
 									<TD>When using the

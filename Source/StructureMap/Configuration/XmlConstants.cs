@@ -30,6 +30,8 @@ namespace StructureMap.Configuration
         public const string NODE_STYLE = "Node";
         public const string ATTRIBUTE_STYLE = "Attribute";
         public const string PLUGGED_TYPE = "PluggedType";
+        public const string PLUGIN_TYPE = "PluginType";
+        public const string DEFAULT_INSTANCE = "DefaultInstance";
 
 
         private XmlConstants()
