@@ -196,6 +196,6 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>copy $(ProjectDir)*.xml $(TargetDir)</PostBuildEvent>
+    <PostBuildEvent>copy "$(ProjectDir)*.xml" "$(TargetDir)"</PostBuildEvent>
   </PropertyGroup>
 </Project>
