@@ -432,7 +432,9 @@
     <Compile Include="XmlWriting\ElementChecker.cs">
       <SubType>Code</SubType>
     </Compile>
-    <None Include="StructureMap.config" />
+    <None Include="StructureMap.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="StructureMap.Testing.dll.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -497,7 +499,7 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>copy $(ProjectDir)\*.config $(TargetDir)
-</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>
