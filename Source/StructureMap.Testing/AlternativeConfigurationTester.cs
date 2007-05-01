@@ -12,6 +12,7 @@ namespace StructureMap.Testing
         [SetUp]
         public void SetUp()
         {
+            ObjectFactory.ReInitialize();
             StructureMapConfiguration.ResetAll();
             DataMother.WriteDocument("Config1.xml");
             DataMother.WriteDocument("Config2.xml");

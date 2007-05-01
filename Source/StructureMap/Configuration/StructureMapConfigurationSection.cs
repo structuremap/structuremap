@@ -5,28 +5,27 @@ namespace StructureMap.Configuration
 {
     public class StructureMapConfigurationSection : IConfigurationSectionHandler
     {
-        private XmlNode _node;
-
         public object Create(object parent, object configContext, XmlNode section)
         {
-            return _node;
+            XmlNode parentNode = parent as XmlNode;
+            if (parentNode == null) return section;
+            // Might need to make this more intelligent, to merge nodes that override eachother
+            foreach (XmlNode childNode in section.ChildNodes)
+            {
+                XmlNode importedNode = parentNode.OwnerDocument.ImportNode(childNode, true);
+                parentNode.AppendChild(importedNode);
+            }
+            return parentNode;
         }
 
         public static XmlNode GetStructureMapConfiguration()
         {
-            object config = ConfigurationManager.GetSection(XmlConstants.STRUCTUREMAP);
-
-
-            return null;
-            /*
-            object o = ConfigurationSettings.GetConfig(XmlConstants.STRUCTUREMAP);
-            XmlNode node = o as XmlNode;
+            XmlNode node = ConfigurationSettings.GetConfig(XmlConstants.STRUCTUREMAP) as XmlNode;
             if (node == null)
             {
-                throw new ApplicationException("No <StructureMap> section was found in the application config file");
+                throw new StructureMapException(105, XmlConstants.STRUCTUREMAP);
             }
             return node;
-             */
         }
     }
 }

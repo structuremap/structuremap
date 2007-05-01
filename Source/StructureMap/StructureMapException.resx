@@ -246,4 +246,7 @@
   <data name="305" xml:space="preserve">
     <value>There is no constructor property found of type {0}</value>
   </data>
+  <data name="105" xml:space="preserve">
+    <value>The &lt;{0}&gt; section could not be loaded from the application configuration file.</value>
+  </data>
 </root>

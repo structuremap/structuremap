@@ -27,6 +27,16 @@ namespace StructureMap
             ObjectFactoryCacheCallback callback = new ObjectFactoryCacheCallback();
         }
 
+        /// <summary>
+        /// Used for testing only (kills singletons). In non-test scenarios, use Reset() instead.
+        /// </summary>
+        public static void ReInitialize()
+        {
+            _profile = string.Empty;
+            _notify = null;
+            _manager = null;
+        }
+
         #region InstanceManager and setting defaults
 
         private static InstanceManager manager

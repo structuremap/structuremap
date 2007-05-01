@@ -12,9 +12,9 @@ namespace StructureMap
     public static class StructureMapConfiguration
     {
         private const string CONFIG_FILE_NAME = "StructureMap.config";
-        private static ConfigurationParserCollection _collection = new ConfigurationParserCollection();
-        private static Registry _registry = new Registry();
-        private static List<Registry> _registries = new List<Registry>();
+        private static ConfigurationParserCollection _collection;
+        private static Registry _registry;
+        private static List<Registry> _registries;
         private static StartUp _startUp;
         private static bool _pullConfigurationFromAppConfig;
 
@@ -58,6 +58,7 @@ namespace StructureMap
             _registries = new List<Registry>();
             _registries.Add(_registry);
             _startUp = null;
+            _pullConfigurationFromAppConfig = false;
         }
 
         /// <summary>
@@ -138,15 +139,10 @@ namespace StructureMap
             set { _collection.UseDefaultFile = value; }
         }
 
-        [Obsolete("Not ready yet")]
         public static bool PullConfigurationFromAppConfig
         {
             get { return _pullConfigurationFromAppConfig; }
-            set
-            {
-                throw new NotImplementedException("This feature has not been completed");
-                _pullConfigurationFromAppConfig = value;
-            }
+            set { _pullConfigurationFromAppConfig = value; }
         }
 
         /// <summary>

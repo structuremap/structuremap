@@ -71,7 +71,7 @@
           <include name="**\bin\${project.config}\*.exe" />
           <include name="**\bin\${project.config}\*.xml" />
           <include name="**\bin\${project.config}\*.xml.actual" />
-          <include name="StructureMap.Testing\StructureMap.config" />
+          <include name="StructureMap.Testing\*.config" />
         </fileset>
       </copy>
     <copy todir="${build.dir}\..\" flatten="true" overwrite="true">
