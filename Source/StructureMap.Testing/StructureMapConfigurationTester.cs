@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using NUnit.Framework;
@@ -90,20 +91,22 @@ namespace StructureMap.Testing
         }
 
         [Test]
-        public void AppConfigShouldIncludeSettingsFromParentConfig()
+        public void SettingsFromAllParentConfigFilesShouldBeIncluded()
         {
             StructureMapConfigurationSection configurationSection = new StructureMapConfigurationSection();
 
             XmlNode fromMachineConfig = createNodeFromText(@"<StructureMap><Assembly Name=""SomeAssembly""/></StructureMap>");
             XmlNode fromWebConfig = createNodeFromText(@"<StructureMap><Assembly Name=""AnotherAssembly""/></StructureMap>");
 
-            XmlNode effectiveConfig = configurationSection.Create(fromMachineConfig, null, fromWebConfig) as XmlNode;
+            IList<XmlNode> parentNodes = new List<XmlNode>();
+            parentNodes.Add(fromMachineConfig);
 
-            Assert.IsNotNull(effectiveConfig, "A configuration node should have been returned.");
-            Assert.AreEqual(2, effectiveConfig.ChildNodes.Count, "Both Assembly entries should have been returned.");
-            Assert.IsTrue(hasAttributeValue("Name", "SomeAssembly", effectiveConfig.ChildNodes[0]), "The parent Assembly entry should have been returned first.");
-            Assert.IsTrue(hasAttributeValue("Name", "AnotherAssembly", effectiveConfig.ChildNodes[1]), "The child Assembly entry should have been returned second.");
+            IList<XmlNode> effectiveConfig = configurationSection.Create(parentNodes, null, fromWebConfig) as IList<XmlNode>;
 
+            Assert.IsNotNull(effectiveConfig, "A list of configuration nodes should have been returned.");
+            Assert.AreEqual(2, effectiveConfig.Count, "Both configurations should have been returned.");
+            Assert.AreEqual(fromMachineConfig, effectiveConfig[0]);
+            Assert.AreEqual(fromWebConfig, effectiveConfig[1]);
         }
 
         private static XmlNode createNodeFromText(string outerXml)
@@ -111,13 +114,6 @@ namespace StructureMap.Testing
             XmlDocument document = new XmlDocument();
             document.LoadXml(outerXml);
             return document.DocumentElement;
-        }
-
-        private static bool hasAttributeValue(string attributeName, string attributeValue, XmlNode node)
-        {
-            XmlAttribute namedAttribute = node.Attributes[attributeName];
-            if (namedAttribute == null) return false;
-            return namedAttribute.Value == attributeValue;
         }
     }
 

@@ -80,8 +80,12 @@ namespace StructureMap
         {
             if (_pullConfigurationFromAppConfig)
             {
-                _collection.IncludeNode(
-                    delegate() { return StructureMapConfigurationSection.GetStructureMapConfiguration(); });
+                IList<XmlNode> appConfigNodes = StructureMapConfigurationSection.GetStructureMapConfiguration();
+                foreach(XmlNode appConfigNode in appConfigNodes)
+                {
+                    _collection.IncludeNode(
+                        delegate() { return appConfigNode; });
+                }
             }
 
             ConfigurationParser[] parsers = _collection.GetParsers();
