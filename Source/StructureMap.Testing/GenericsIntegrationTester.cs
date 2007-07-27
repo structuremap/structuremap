@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using NUnit.Framework;
 using StructureMap.Graph;
 using StructureMap.Testing.GenericWidgets;
@@ -85,6 +87,29 @@ namespace StructureMap.Testing
             Assert.AreSame(object4, object6);
 
             Assert.AreNotSame(object1, object4);
+        }
+
+        [Test]
+        public void AllTypesWithSpecificImplementation()
+        {
+            IList objectConcepts = manager.GetAllInstances(typeof(IConcept<object>));
+
+            Assert.IsNotNull(objectConcepts);
+            Assert.AreEqual(2, objectConcepts.Count);
+
+            IList stringConcepts = manager.GetAllInstances(typeof(IConcept<string>));
+
+            Assert.IsNotNull(stringConcepts);
+            Assert.AreEqual(1, stringConcepts.Count);
+        }
+
+        [Test]
+        public void SpecificImplementation()
+        {
+            IConcept<object> concept = (IConcept<object>)manager.CreateInstance(typeof(IConcept<object>), "Specific");
+
+            Assert.IsNotNull(concept);
+            Assert.IsInstanceOfType(typeof(SpecificConcept), concept);
         }
     }
 }

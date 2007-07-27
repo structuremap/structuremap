@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using StructureMap.Interceptors;
 using StructureMap.Source;
 
@@ -118,7 +119,7 @@ namespace StructureMap.Graph
             Type templatedType = _pluginType.MakeGenericType(templateTypes);
             PluginFamily templatedFamily = new PluginFamily(templatedType);
             templatedFamily._defaultKey = _defaultKey;
-            templatedFamily._source = _source;
+            templatedFamily._source = new MemoryMementoSource();
             templatedFamily._definitionSource = _definitionSource;
 
             foreach (InstanceFactoryInterceptor interceptor in _interceptionChain)
@@ -129,11 +130,48 @@ namespace StructureMap.Graph
 
             foreach (Plugin plugin in _plugins)
             {
-                Plugin templatedPlugin = plugin.CreateTemplatedClone(templateTypes);
-                templatedFamily.Plugins.Add(templatedPlugin);
+                if (IsOfCorrectGenericType(plugin, templateTypes))
+                {
+                    Plugin templatedPlugin = plugin.CreateTemplatedClone(templateTypes);
+                    templatedFamily.Plugins.Add(templatedPlugin);
+                    foreach (InstanceMemento memento in _source.GetAllMementos())
+                    {
+                        if (memento.ConcreteKey == plugin.ConcreteKey)
+                        {
+                            templatedFamily._source.AddExternalMemento(memento);
+                        }
+                    }
+                }
             }
 
             return templatedFamily;
+        }
+
+        private bool IsOfCorrectGenericType(Plugin plugin, params Type[] templateTypes)
+        {
+            bool isValid = true;
+
+            Type interfaceType = plugin.PluggedType.GetInterface(_pluginType.Name);
+            if (interfaceType == null)
+            {
+                interfaceType = plugin.PluggedType.BaseType;
+            }
+            Type[] pluginArgs = _pluginType.GetGenericArguments();
+            Type[] pluggableArgs = interfaceType.GetGenericArguments();
+            
+            if (templateTypes.Length != pluginArgs.Length &&
+                pluginArgs.Length != pluggableArgs.Length)
+            {
+                return false;
+            }
+            
+            for (int i = 0; i < templateTypes.Length; i++)
+            {
+                isValid &= templateTypes[i] == pluggableArgs[i] ||
+                           pluginArgs[i].IsGenericParameter && 
+                           pluggableArgs[i].IsGenericParameter;
+            }
+            return isValid;
         }
 
         #region properties

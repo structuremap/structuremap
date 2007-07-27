@@ -190,7 +190,15 @@ namespace StructureMap.Graph
 
         public Plugin CreateTemplatedClone(params Type[] types)
         {
-            Type templatedType = _pluggedType.MakeGenericType(types);
+            Type templatedType;
+            if (_pluggedType.IsGenericType)
+            {
+                templatedType = _pluggedType.MakeGenericType(types);
+            }
+            else
+            {
+                templatedType = _pluggedType;
+            }
             Plugin templatedPlugin = new Plugin(templatedType, _concreteKey, _definitionSource);
             templatedPlugin._setters = _setters;
 

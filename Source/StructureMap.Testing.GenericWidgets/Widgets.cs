@@ -57,6 +57,21 @@ namespace StructureMap.Testing.GenericWidgets
         }
     }
 
+    [PluginFamily("Default")]
+    public interface IConcept<T>
+    {
+    }
+
+    [Pluggable("Default")]
+    public class GenericConcept<T> : IConcept<T>
+    {
+    }
+
+    [Pluggable("Specific")]
+    public class SpecificConcept : IConcept<object>
+    {
+    }
+
     public interface IThing<T, U>
     {
     }

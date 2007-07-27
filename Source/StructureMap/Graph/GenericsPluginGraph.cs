@@ -7,11 +7,11 @@ namespace StructureMap.Graph
     {
         public static bool CanBeCast(Type pluginType, Type pluggedType)
         {
-            bool isGenericComparison = pluginType.IsGenericType && pluggedType.IsGenericType;
-            if (!isGenericComparison)
-            {
-                return false;
-            }
+            //bool isGenericComparison = pluginType.IsGenericType && pluggedType.IsGenericType;
+            //if (!isGenericComparison)
+            //{
+            //    return false;
+            //}
 
             try
             {
