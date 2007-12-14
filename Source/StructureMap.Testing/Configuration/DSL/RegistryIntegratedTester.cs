@@ -82,5 +82,6 @@ namespace StructureMap.Testing.Configuration.DSL
             Assert.Contains("Brown", colors);
             Assert.Contains("Black", colors);
         }
+
     }
 }

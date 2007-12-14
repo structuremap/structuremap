@@ -162,17 +162,6 @@ namespace StructureMap.Testing.Container
         }
 
         [Test]
-        public void UnMocksOnResetDefaults()
-        {
-            ObjectFactory.ResetDefaults();
-            ObjectFactory.Mock(typeof (IWidget));
-
-            Assert.IsTrue(ObjectFactory.IsMocked(typeof (IWidget)));
-            ObjectFactory.ResetDefaults();
-            Assert.IsTrue(!ObjectFactory.IsMocked(typeof (IWidget)));
-        }
-
-        [Test]
         public void SingletonInterceptorAlwaysReturnsSameInstance()
         {
             Rule rule1 = (Rule) ObjectFactory.GetNamedInstance(typeof (Rule), "Red");

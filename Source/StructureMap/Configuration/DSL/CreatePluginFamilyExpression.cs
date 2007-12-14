@@ -65,20 +65,34 @@ namespace StructureMap.Configuration.DSL
             return this;
         }
 
+        public CreatePluginFamilyExpression AddInstance(IMementoBuilder builder)
+        {
+            builder.ValidatePluggability(_pluginType);
+
+            _children.Add(builder);
+            _alterations.Add(delegate (PluginFamily family)
+                                 {
+                                     InstanceMemento memento = builder.BuildMemento(family);
+                                     family.Source.AddExternalMemento(memento);
+                                 });
+
+            return this;
+        }
+
         /// <summary>
         /// Convenience method that sets the default concrete type of the PluginType.  Type T
         /// can only accept types that do not have any primitive constructor arguments.
         /// StructureMap has to know how to construct all of the constructor argument types.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="CONCRETETYPE"></typeparam>
         /// <returns></returns>
-        public CreatePluginFamilyExpression TheDefaultIsConcreteType<T>()
+        public CreatePluginFamilyExpression TheDefaultIsConcreteType<CONCRETETYPE>()
         {
-            ExpressionValidator.ValidatePluggabilityOf(typeof (T)).IntoPluginType(_pluginType);
+            ExpressionValidator.ValidatePluggabilityOf(typeof (CONCRETETYPE)).IntoPluginType(_pluginType);
 
             _alterations.Add(delegate(PluginFamily family)
                                  {
-                                     Plugin plugin = family.Plugins.FindOrCreate(typeof (T));
+                                     Plugin plugin = family.Plugins.FindOrCreate(typeof (CONCRETETYPE));
                                      family.DefaultInstanceKey = plugin.ConcreteKey;
                                  });
 
@@ -112,5 +126,7 @@ namespace StructureMap.Configuration.DSL
                 delegate(PluginFamily family) { family.InterceptionChain.AddInterceptor(new SingletonInterceptor()); });
             return this;
         }
+
+        
     }
 }

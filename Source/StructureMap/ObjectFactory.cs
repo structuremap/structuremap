@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Security.Permissions;
 using System.Text;
-using NMock;
+using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 
 namespace StructureMap
@@ -109,13 +109,8 @@ namespace StructureMap
             {
                 lock (_lockObject)
                 {
-                    manager.UnMockAll();
                     Profile = string.Empty;
                 }
-            }
-            catch (StructureMapException)
-            {
-                throw;
             }
             catch (TypeInitializationException ex)
             {
@@ -286,50 +281,28 @@ namespace StructureMap
             return (T) _manager.FillDependencies(typeof (T));
         }
 
-        #region Mocking
-
         /// <summary>
-        /// When called, returns an NMock.IMock instance for the TargetType.  Until UnMocked, calling 
-        /// GetInstance(Type TargetType) will return the MockInstance member of the IMock
+        /// Sets up StructureMap to return the object in the "stub" argument anytime
+        /// any instance of the PluginType is requested
         /// </summary>
-        /// <param name="TargetType"></param>
-        /// <returns></returns>
-        public static IMock Mock(Type TargetType)
+        /// <param name="pluginType"></param>
+        /// <param name="stub"></param>
+        public static void InjectStub(Type pluginType, object stub)
         {
-            return manager.Mock(TargetType);
+            manager.InjectStub(pluginType, stub);
         }
 
         /// <summary>
-        /// Sets up the internal InstanceManager to return the object in the "stub" argument anytime
+        /// Sets up StructureMap to return the object in the "stub" argument anytime
         /// any instance of the PluginType is requested
         /// </summary>
         /// <param name="targetType"></param>
         /// <param name="stub"></param>
-        public static void InjectStub(Type targetType, object stub)
+        public static void InjectStub<PLUGINTYPE>(PLUGINTYPE stub)
         {
-            manager.InjectStub(targetType, stub);
+            manager.InjectStub(typeof (PLUGINTYPE), stub);
         }
 
-        /// <summary>
-        /// Is the specified TargetType currently setup as an IMock
-        /// </summary>
-        /// <param name="TargetType"></param>
-        /// <returns></returns>
-        public static bool IsMocked(Type TargetType)
-        {
-            return manager.IsMocked(TargetType);
-        }
-
-        /// <summary>
-        /// Release the NMock behavior of TargetType
-        /// </summary>
-        /// <param name="TargetType"></param>
-        public static void UnMock(Type TargetType)
-        {
-            manager.UnMock(TargetType);
-        }
-
-        #endregion
 
         public static string WhatDoIHave()
         {
@@ -342,6 +315,65 @@ namespace StructureMap
             }
 
             return sb.ToString();
+        }
+
+        /// <summary>
+        /// Sets the default instance of PLUGINTYPE to the object in the instance argument
+        /// </summary>
+        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <param name="instance"></param>
+        public static void Inject<PLUGINTYPE>(PLUGINTYPE instance)
+        {
+            LiteralMemento memento = new LiteralMemento(instance);
+            manager.AddInstance<PLUGINTYPE>(memento);
+            manager.SetDefault(typeof (PLUGINTYPE), memento);
+        }
+
+        /// <summary>
+        /// Injects a new instance of PLUGINTYPE by name.  
+        /// </summary>
+        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <param name="instance"></param>
+        /// <param name="instanceKey"></param>
+        public static void InjectByName<PLUGINTYPE>(PLUGINTYPE instance, string instanceKey)
+        {
+            LiteralMemento memento = new LiteralMemento(instance).Named(instanceKey);
+            manager.AddInstance<PLUGINTYPE>(memento);
+        }
+
+        /// <summary>
+        /// Injects a new instance of CONCRETETYPE to PLUGINTYPE by name.  
+        /// </summary>
+        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <param name="instance"></param>
+        /// <param name="instanceKey"></param>
+        public static void InjectByName<PLUGINTYPE, CONCRETETYPE>(string instanceKey)
+        {
+            manager.AddInstance<PLUGINTYPE, CONCRETETYPE>();
+            GenericMemento<CONCRETETYPE> memento = new GenericMemento<CONCRETETYPE>(instanceKey);
+            manager.AddInstance<PLUGINTYPE>(memento);
+        }
+
+        /// <summary>
+        /// StructureMap will return an instance of CONCRETETYPE whenever
+        /// a PLUGINTYPE is requested
+        /// </summary>
+        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <typeparam name="CONCRETETYPE"></typeparam>
+        public static void InjectDefaultType<PLUGINTYPE, CONCRETETYPE>() where CONCRETETYPE : PLUGINTYPE
+        {
+            manager.AddDefaultInstance<PLUGINTYPE, CONCRETETYPE>();
+        }
+
+        /// <summary>
+        /// Adds a new CONCRETETYPE to StructureMap so that an instance of CONCRETETYPE
+        /// will be returned from a call to ObjectFactory.GetAllInstances<PLUGINTYPE>()
+        /// </summary>
+        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <typeparam name="CONCRETETYPE"></typeparam>
+        public static void AddType<PLUGINTYPE, CONCRETETYPE>() where CONCRETETYPE : PLUGINTYPE
+        {
+            manager.AddInstance<PLUGINTYPE, CONCRETETYPE>();
         }
     }
 }

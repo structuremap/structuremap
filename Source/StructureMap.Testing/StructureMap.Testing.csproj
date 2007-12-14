@@ -74,8 +74,8 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nmock">
-      <Name>nmock</Name>
+    <Reference Include="nmock, Version=1.0.1536.20687, Culture=neutral">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\nmock.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework, Version=2.2.6.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
@@ -187,6 +187,7 @@
     </Compile>
     <Compile Include="Configuration\DSL\AddInstanceTester.cs" />
     <Compile Include="Configuration\DSL\ChildInstanceExpressionTester.cs" />
+    <Compile Include="Configuration\DSL\ConstructorExpressionTester.cs" />
     <Compile Include="Configuration\DSL\CreatePluginFamilyTester.cs" />
     <Compile Include="Configuration\DSL\CreateProfileTester.cs" />
     <Compile Include="Configuration\DSL\DeepInstanceTester.cs" />
@@ -264,12 +265,14 @@
     <Compile Include="Configuration\Tokens\TemplateTokenTester.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ConstructorMementoTester.cs" />
     <Compile Include="Container\ArrayConstructorTester.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Container\ContainerConstructorAttributeTester.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Container\DynamicInjectionTester.cs" />
     <Compile Include="Container\EmittingTester.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -343,9 +346,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Container\Source\XmlTemplaterTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Container\StubbedInstanceFactoryTester.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DataAccess\CommandCollectionTester.cs" />

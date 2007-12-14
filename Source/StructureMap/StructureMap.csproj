@@ -96,10 +96,6 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nmock">
-      <Name>nmock</Name>
-      <HintPath>..\..\bin\nmock.dll</HintPath>
-    </Reference>
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
@@ -214,6 +210,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Configuration\DSL\ChildInstanceExpression.cs" />
+    <Compile Include="Configuration\DSL\ConstructorExpression.cs" />
     <Compile Include="Configuration\DSL\CreatePluginFamilyExpression.cs" />
     <Compile Include="Configuration\DSL\ExpressionValidator.cs" />
     <Compile Include="Configuration\DSL\IExpression.cs" />
@@ -335,6 +332,7 @@
     <Compile Include="Configuration\XmlConstants.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ConstructorMemento.cs" />
     <Compile Include="DeploymentTasks\DeploymentConfiguration.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -498,9 +496,6 @@
     <Compile Include="MemoryInstanceMemento.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MockInstanceFactory.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="ObjectFactory.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -556,9 +551,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="StructureMapConfiguration.cs" />
-    <Compile Include="StubbedInstanceFactory.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Verification\IStartUp.cs" />
     <Compile Include="Verification\PluginGraphConsoleWriter.cs">
       <SubType>Code</SubType>

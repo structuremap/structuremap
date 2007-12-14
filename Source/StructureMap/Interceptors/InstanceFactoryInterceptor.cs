@@ -15,10 +15,6 @@ namespace StructureMap.Interceptors
         private IInstanceFactory _innerInstanceFactory;
 
 
-        public InstanceFactoryInterceptor()
-        {
-        }
-
         public virtual IInstanceFactory InnerInstanceFactory
         {
             get { return _innerInstanceFactory; }
@@ -110,6 +106,16 @@ namespace StructureMap.Interceptors
         public IList GetAllInstances()
         {
             return InnerInstanceFactory.GetAllInstances();
+        }
+
+        public void AddInstance(InstanceMemento memento)
+        {
+            InnerInstanceFactory.AddInstance(memento);
+        }
+
+        public InstanceMemento AddType<T>()
+        {
+            return InnerInstanceFactory.AddType<T>();
         }
 
         /// <summary>

@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using NMock;
+using StructureMap.Configuration.DSL;
 using StructureMap.Exceptions;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
@@ -14,7 +14,6 @@ namespace StructureMap
     public class InstanceManager : IInstanceManager, IEnumerable
     {
         private Dictionary<Type, IInstanceFactory> _factories;
-        private Dictionary<Type, InstanceFactory> _filledTypeFactories;
         private bool _failOnException = true;
         private GenericsPluginGraph _genericsGraph;
         private InstanceDefaultManager _defaultManager;
@@ -25,7 +24,6 @@ namespace StructureMap
         public InstanceManager()
         {
             _factories = new Dictionary<Type, IInstanceFactory>();
-            _filledTypeFactories = new Dictionary<Type, InstanceFactory>();
             _genericsGraph = new GenericsPluginGraph();
         }
 
@@ -325,7 +323,12 @@ namespace StructureMap
                 throw new StructureMapException(230);
             }
 
-            InstanceFactory factory = getFilledTypeFactory(type);
+            IInstanceFactory factory = getOrCreateFactory(type, delegate(Type t)
+                                                                    {
+                                                                        PluginFamily family =
+                                                                            PluginFamily.CreateAutoFilledPluginFamily(t);
+                                                                        return new InstanceFactory(family, true);
+                                                                    });
             return factory.GetInstance();
         }
 
@@ -334,115 +337,24 @@ namespace StructureMap
             return (T) FillDependencies(typeof (T));
         }
 
-        private InstanceFactory getFilledTypeFactory(Type type)
+        private delegate InstanceFactory CreateFactoryDelegate(Type type);
+
+        private IInstanceFactory getOrCreateFactory(Type type, CreateFactoryDelegate createFactory)
         {
-            if (!_filledTypeFactories.ContainsKey(type))
+            if (!_factories.ContainsKey(type))
             {
                 lock (this)
                 {
-                    if (!_filledTypeFactories.ContainsKey(type))
+                    if (!_factories.ContainsKey(type))
                     {
-                        PluginFamily family = PluginFamily.CreateAutoFilledPluginFamily(type);
-                        InstanceFactory factory = new InstanceFactory(family, true);
+                        InstanceFactory factory = createFactory(type);
                         factory.SetInstanceManager(this);
-                        _filledTypeFactories.Add(type, factory);
+                        _factories.Add(type, factory);
                     }
                 }
             }
 
-            return _filledTypeFactories[type];
-        }
-
-        #region mocking
-
-        /// <summary>
-        /// When called, returns an NMock.IMock instance for the TargetType.  Until UnMocked, calling 
-        /// GetInstance(Type TargetType) will return the MockInstance member of the IMock
-        /// </summary>
-        /// <param name="TargetType"></param>
-        /// <returns></returns>
-        public IMock Mock(Type TargetType)
-        {
-            if (IsMocked(TargetType))
-            {
-                string msg = string.Format("The Type {0} is already mocked", TargetType.AssemblyQualifiedName);
-                throw new InvalidOperationException(msg);
-            }
-
-            IInstanceFactory factory = this[TargetType];
-            MockInstanceFactory mockFactory = new MockInstanceFactory(factory);
-            IMock returnValue = mockFactory.GetMock();
-
-            lock (this)
-            {
-                this[TargetType] = mockFactory;
-            }
-
-            return returnValue;
-        }
-
-        /// <summary>
-        /// Is the specified TargetType currently setup as an IMock
-        /// </summary>
-        /// <param name="TargetType"></param>
-        /// <returns></returns>
-        public bool IsMocked(Type TargetType)
-        {
-            return isInstanceFamilyMocked(this[TargetType]);
-        }
-
-        private static bool isInstanceFamilyMocked(IInstanceFactory instanceFactory)
-        {
-            bool returnValue = false;
-
-            InstanceFactoryInterceptor interceptor = instanceFactory as InstanceFactoryInterceptor;
-            if (interceptor != null)
-            {
-                returnValue = interceptor.IsMockedOrStubbed;
-            }
-
-            return returnValue;
-        }
-
-        /// <summary>
-        /// Release the NMock behavior of TargetType
-        /// </summary>
-        /// <param name="TargetType"></param>
-        public void UnMock(Type TargetType)
-        {
-            if (IsMocked(TargetType))
-            {
-                InstanceFactoryInterceptor instanceFactory = (InstanceFactoryInterceptor) this[TargetType];
-                IInstanceFactory innerFactory = instanceFactory.InnerInstanceFactory;
-                lock (this)
-                {
-                    this[TargetType] = innerFactory;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Calls UnMock() on all IInstanceFactory's 
-        /// </summary>
-        public void UnMockAll()
-        {
-            ArrayList typeList = new ArrayList();
-            lock (this)
-            {
-                foreach (IInstanceFactory factory in _factories.Values)
-                {
-                    if (isInstanceFamilyMocked(factory))
-                    {
-                        typeList.Add(factory.PluginType);
-                    }
-                }
-
-
-                foreach (Type type in typeList)
-                {
-                    UnMock(type);
-                }
-            }
+            return _factories[type];
         }
 
         /// <summary>
@@ -459,20 +371,14 @@ namespace StructureMap
                                                 stub.GetType().FullName);
             }
 
-            IInstanceFactory innerFactory = this[pluginType];
-            StubbedInstanceFactory stubbedFactory = new StubbedInstanceFactory(innerFactory, stub);
-            lock (this)
-            {
-                this[pluginType] = stubbedFactory;
-            }
+            LiteralMemento memento = new LiteralMemento(stub);
+            this[pluginType].SetDefault(memento);
         }
 
-        public void Inject<T>(T instance)
+        public void InjectStub<T>(T instance)
         {
             InjectStub(typeof (T), instance);
         }
-
-        #endregion
 
         public IEnumerator GetEnumerator()
         {
@@ -502,6 +408,32 @@ namespace StructureMap
             string machineName = InstanceDefaultManager.GetMachineName();
             Profile defaultProfile = _defaultManager.CalculateDefaults(machineName, profile);
             SetDefaults(defaultProfile);
+        }
+
+        public void AddInstance<T>(InstanceMemento memento)
+        {
+            IInstanceFactory factory = getOrCreateFactory(typeof (T), createFactory);
+            factory.AddInstance(memento);
+        }
+
+        public void AddInstance<PLUGINTYPE, CONCRETETYPE>()
+        {
+            IInstanceFactory factory = getOrCreateFactory(typeof(PLUGINTYPE), createFactory);
+            InstanceMemento memento = factory.AddType<CONCRETETYPE>();
+            factory.AddInstance(memento);
+        }
+
+        private InstanceFactory createFactory(Type pluggedType)
+        {
+            PluginFamily family = new PluginFamily(pluggedType);
+            return new InstanceFactory(family, true);
+        }
+
+        public void AddDefaultInstance<PLUGINTYPE, CONCRETETYPE>()
+        {
+            IInstanceFactory factory = getOrCreateFactory(typeof (PLUGINTYPE), createFactory);
+            InstanceMemento memento = factory.AddType<CONCRETETYPE>();
+            factory.SetDefault(memento);
         }
     }
 }

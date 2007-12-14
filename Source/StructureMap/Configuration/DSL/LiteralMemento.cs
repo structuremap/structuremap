@@ -9,8 +9,14 @@ namespace StructureMap.Configuration.DSL
         public LiteralMemento(object instance)
         {
             _instance = instance;
+            InstanceKey = Guid.NewGuid().ToString();
         }
 
+        public LiteralMemento Named(string name)
+        {
+            InstanceKey = name;
+            return this;
+        }
 
         public object Instance
         {

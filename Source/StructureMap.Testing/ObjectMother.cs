@@ -106,5 +106,10 @@ namespace StructureMap.Testing
             PluginFamily family = pluginGraph.PluginFamilies[pluginType];
             return new InstanceFactory(family, false);
         }
+
+        public static InstanceFactory Factory<T>()
+        {
+            return new InstanceFactory(new PluginFamily(typeof(T)), true);
+        }
     }
 }

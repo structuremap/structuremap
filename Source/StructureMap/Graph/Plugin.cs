@@ -13,6 +13,18 @@ namespace StructureMap.Graph
     {
         #region static
 
+        public static Plugin CreateAutofilledPlugin(Type concreteType)
+        {
+            string pluginKey = Guid.NewGuid().ToString();
+            Plugin plugin = Plugin.CreateExplicitPlugin(concreteType, pluginKey, string.Empty);
+            if (!plugin.CanBeAutoFilled)
+            {
+                throw new StructureMapException(231);
+            }
+
+            return plugin;
+        }
+
         /// <summary>
         /// Finds an array of Plugin objects for a given PluginType in an Assembly object
         /// by searching for all exported types marked with [Pluggable] that can be cast 
@@ -427,6 +439,15 @@ namespace StructureMap.Graph
             }
 
             throw new StructureMapException(302, typeof (T).FullName, _pluggedType.FullName);
+        }
+
+        public void AddToSource(MementoSource source)
+        {
+            InstanceMemento memento = CreateImplicitMemento();
+            if (memento != null)
+            {
+                source.AddExternalMemento(memento);
+            }
         }
     }
 }

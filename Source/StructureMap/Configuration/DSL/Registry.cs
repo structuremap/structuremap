@@ -52,14 +52,30 @@ namespace StructureMap.Configuration.DSL
         /// Direct StructureMap to build instances of type T, and look for concrete classes
         /// marked with the [Pluggable] attribute that implement type T
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <returns></returns>
-        public CreatePluginFamilyExpression BuildInstancesOf<T>()
+        public CreatePluginFamilyExpression BuildInstancesOf<PLUGINTYPE>()
         {
-            CreatePluginFamilyExpression expression = new CreatePluginFamilyExpression(typeof (T));
+            CreatePluginFamilyExpression expression = new CreatePluginFamilyExpression(typeof (PLUGINTYPE));
             addExpression(expression);
 
             return expression;
+        }
+
+        /// <summary>
+        /// Direct StructureMap to build instances of type T, and look for concrete classes
+        /// marked with the [Pluggable] attribute that implement type T.
+        /// 
+        /// This is the equivalent of calling BuildInstancesOf<T>()
+        /// </summary>
+        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <returns></returns>
+        public CreatePluginFamilyExpression ForRequestedType<PLUGINTYPE>()
+        {
+            CreatePluginFamilyExpression expression = new CreatePluginFamilyExpression(typeof(PLUGINTYPE));
+            addExpression(expression);
+
+            return expression; 
         }
 
         public IInstanceManager BuildInstanceManager()
@@ -72,57 +88,59 @@ namespace StructureMap.Configuration.DSL
         /// <summary>
         /// Starts an instance definition of type T
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <returns></returns>
-        public InstanceExpression.InstanceTypeExpression AddInstanceOf<T>()
+        public InstanceExpression.InstanceTypeExpression AddInstanceOf<PLUGINTYPE>()
         {
-            InstanceExpression expression = new InstanceExpression(typeof (T));
+            InstanceExpression expression = new InstanceExpression(typeof (PLUGINTYPE));
             addExpression(expression);
             return expression.TypeExpression();
         }
 
+       
+
         /// <summary>
         /// Convenience method to start the definition of an instance of type T
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <returns></returns>
-        public static InstanceExpression.InstanceTypeExpression Instance<T>()
+        public static InstanceExpression.InstanceTypeExpression Instance<PLUGINTYPE>()
         {
-            InstanceExpression expression = new InstanceExpression(typeof (T));
+            InstanceExpression expression = new InstanceExpression(typeof (PLUGINTYPE));
             return expression.TypeExpression();
         }
 
         /// <summary>
         /// Convenience method to register a prototype instance
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <param name="prototype"></param>
         /// <returns></returns>
-        public static PrototypeExpression<T> Prototype<T>(T prototype)
+        public static PrototypeExpression<PLUGINTYPE> Prototype<PLUGINTYPE>(PLUGINTYPE prototype)
         {
-            return new PrototypeExpression<T>(prototype);
+            return new PrototypeExpression<PLUGINTYPE>(prototype);
         }
 
         /// <summary>
         /// Convenience method to register a preconfigured instance of type T
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <param name="instance"></param>
         /// <returns></returns>
-        public static LiteralExpression<T> Object<T>(T instance)
+        public static LiteralExpression<PLUGINTYPE> Object<PLUGINTYPE>(PLUGINTYPE instance)
         {
-            return new LiteralExpression<T>(instance);
+            return new LiteralExpression<PLUGINTYPE>(instance);
         }
 
         /// <summary>
         /// Registers a preconfigured instance
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <param name="target"></param>
         /// <returns></returns>
-        public LiteralExpression<T> AddInstanceOf<T>(T target)
+        public LiteralExpression<PLUGINTYPE> AddInstanceOf<PLUGINTYPE>(PLUGINTYPE target)
         {
-            LiteralExpression<T> literal = new LiteralExpression<T>(target);
+            LiteralExpression<PLUGINTYPE> literal = new LiteralExpression<PLUGINTYPE>(target);
             addExpression(literal);
 
             return literal;
@@ -131,12 +149,12 @@ namespace StructureMap.Configuration.DSL
         /// <summary>
         /// Add a preconfigured instance as a Prototype
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <param name="prototype"></param>
         /// <returns></returns>
-        public PrototypeExpression<T> AddPrototypeInstanceOf<T>(T prototype)
+        public PrototypeExpression<PLUGINTYPE> AddPrototypeInstanceOf<PLUGINTYPE>(PLUGINTYPE prototype)
         {
-            PrototypeExpression<T> expression = new PrototypeExpression<T>(prototype);
+            PrototypeExpression<PLUGINTYPE> expression = new PrototypeExpression<PLUGINTYPE>(prototype);
             addExpression(expression);
 
             return expression;
@@ -145,12 +163,12 @@ namespace StructureMap.Configuration.DSL
         /// <summary>
         /// convenience method for a UserControl
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <param name="url"></param>
         /// <returns></returns>
-        public static UserControlExpression LoadUserControlFrom<T>(string url)
+        public static UserControlExpression LoadUserControlFrom<PLUGINTYPE>(string url)
         {
-            return new UserControlExpression(typeof (T), url);
+            return new UserControlExpression(typeof (PLUGINTYPE), url);
         }
 
         /// <summary>
@@ -184,15 +202,21 @@ namespace StructureMap.Configuration.DSL
         /// <summary>
         /// Registers a UserControl as an instance 
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <param name="url"></param>
         /// <returns></returns>
-        public UserControlExpression LoadControlFromUrl<T>(string url)
+        public UserControlExpression LoadControlFromUrl<PLUGINTYPE>(string url)
         {
-            UserControlExpression expression = new UserControlExpression(typeof (T), url);
+            UserControlExpression expression = new UserControlExpression(typeof (PLUGINTYPE), url);
             addExpression(expression);
 
             return expression;
+        }
+
+        public static ConstructorExpression<PLUGINTYPE> ConstructedBy<PLUGINTYPE>
+            (BuildObjectDelegate<PLUGINTYPE> builder)
+        {
+            return new ConstructorExpression<PLUGINTYPE>(builder);
         }
     }
 }

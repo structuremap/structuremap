@@ -54,27 +54,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Widgets", "Widgets", "{E1C1
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GUI", "GUI", "{4F638ECF-2A69-4D6A-9B68-05CC40951217}"
 EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "D:\StructureMap\StructureMapTest\", "..\StructureMapTest\", "{6C0DF673-322F-4AB9-A020-924661EF0CAB}"
-	ProjectSection(WebsiteProperties) = preProject
-		ProjectReferences = "{3F36EA80-2F9A-4DAD-BA27-5AC6163A2EE3}|StructureMap.dll;"
-		Debug.AspNetCompiler.VirtualPath = "/StructureMapTest"
-		Debug.AspNetCompiler.PhysicalPath = "..\StructureMapTest\"
-		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\StructureMapTest\"
-		Debug.AspNetCompiler.Updateable = "true"
-		Debug.AspNetCompiler.ForceOverwrite = "true"
-		Debug.AspNetCompiler.FixedNames = "false"
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.VirtualPath = "/StructureMapTest"
-		Release.AspNetCompiler.PhysicalPath = "..\StructureMapTest\"
-		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\StructureMapTest\"
-		Release.AspNetCompiler.Updateable = "true"
-		Release.AspNetCompiler.ForceOverwrite = "true"
-		Release.AspNetCompiler.FixedNames = "false"
-		Release.AspNetCompiler.Debug = "False"
-		VWDPort = "4438"
-		DefaultWebSiteLanguage = "Visual C#"
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Build|.NET = Build|.NET
@@ -298,21 +277,6 @@ Global
 		{DB798C07-0C82-4298-8BAA-D702CF96C28E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DB798C07-0C82-4298-8BAA-D702CF96C28E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{DB798C07-0C82-4298-8BAA-D702CF96C28E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{6C0DF673-322F-4AB9-A020-924661EF0CAB}.Build|.NET.ActiveCfg = Debug|.NET
-		{6C0DF673-322F-4AB9-A020-924661EF0CAB}.Build|.NET.Build.0 = Debug|.NET
-		{6C0DF673-322F-4AB9-A020-924661EF0CAB}.Build|Any CPU.ActiveCfg = Debug|.NET
-		{6C0DF673-322F-4AB9-A020-924661EF0CAB}.Build|Mixed Platforms.ActiveCfg = Debug|.NET
-		{6C0DF673-322F-4AB9-A020-924661EF0CAB}.Build|Mixed Platforms.Build.0 = Debug|.NET
-		{6C0DF673-322F-4AB9-A020-924661EF0CAB}.Debug|.NET.ActiveCfg = Debug|.NET
-		{6C0DF673-322F-4AB9-A020-924661EF0CAB}.Debug|.NET.Build.0 = Debug|.NET
-		{6C0DF673-322F-4AB9-A020-924661EF0CAB}.Debug|Any CPU.ActiveCfg = Debug|.NET
-		{6C0DF673-322F-4AB9-A020-924661EF0CAB}.Debug|Mixed Platforms.ActiveCfg = Debug|.NET
-		{6C0DF673-322F-4AB9-A020-924661EF0CAB}.Debug|Mixed Platforms.Build.0 = Debug|.NET
-		{6C0DF673-322F-4AB9-A020-924661EF0CAB}.Release|.NET.ActiveCfg = Debug|.NET
-		{6C0DF673-322F-4AB9-A020-924661EF0CAB}.Release|.NET.Build.0 = Debug|.NET
-		{6C0DF673-322F-4AB9-A020-924661EF0CAB}.Release|Any CPU.ActiveCfg = Debug|.NET
-		{6C0DF673-322F-4AB9-A020-924661EF0CAB}.Release|Mixed Platforms.ActiveCfg = Debug|.NET
-		{6C0DF673-322F-4AB9-A020-924661EF0CAB}.Release|Mixed Platforms.Build.0 = Debug|.NET
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

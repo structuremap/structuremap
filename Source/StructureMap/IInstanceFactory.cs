@@ -69,5 +69,8 @@ namespace StructureMap
         /// </summary>
         /// <returns></returns>
         IList GetAllInstances();
+
+        void AddInstance(InstanceMemento memento);
+        InstanceMemento AddType<T>();
     }
 }

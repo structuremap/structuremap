@@ -22,6 +22,17 @@ namespace StructureMap.Graph
             get { return _plugins.Values; }
         }
 
+        public Plugin[] All
+        {
+            get
+            {
+                Plugin[] returnValue = new Plugin[_plugins.Count];
+                _plugins.Values.CopyTo(returnValue, 0);
+
+                return returnValue;
+            }
+        }
+
         public void Add(TypePath path, string concreteKey)
         {
             Plugin plugin = new Plugin(path, concreteKey);
@@ -61,11 +72,8 @@ namespace StructureMap.Graph
                 throw new StructureMapException(114, plugin.PluggedType.FullName, _family.PluginTypeName);
             }
 
-            InstanceMemento memento = plugin.CreateImplicitMemento();
-            if (memento != null)
-            {
-                _family.Source.AddExternalMemento(memento);
-            }
+            plugin.AddToSource(_family.Source);
+
 
             _plugins.Add(plugin.ConcreteKey, plugin);
         }

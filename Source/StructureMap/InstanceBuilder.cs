@@ -1,3 +1,6 @@
+using System;
+using StructureMap.Graph;
+
 namespace StructureMap
 {
     /// <summary>
@@ -25,6 +28,12 @@ namespace StructureMap
         public InstanceManager Manager
         {
             get { return _manager; }
+        }
+
+        public bool IsType(Type type)
+        {
+            Type plugged = Type.GetType(PluggedType);
+            return plugged.Equals(type);
         }
     }
 }

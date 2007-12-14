@@ -16,18 +16,13 @@ namespace StructureMap.Graph
 
         public static PluginFamily CreateAutoFilledPluginFamily(Type pluginType)
         {
-            Plugin plugin = Plugin.CreateExplicitPlugin(pluginType, CONCRETE_KEY, string.Empty);
-            if (!plugin.CanBeAutoFilled)
-            {
-                throw new StructureMapException(231);
-            }
+            Plugin plugin = Plugin.CreateAutofilledPlugin(pluginType);
 
             PluginFamily family = new PluginFamily(pluginType);
             family.DefinitionSource = DefinitionSource.Implicit;
 
             family.Plugins.Add(plugin);
-
-            family.DefaultInstanceKey = CONCRETE_KEY;
+            family.DefaultInstanceKey = plugin.ConcreteKey;
 
             return family;
         }

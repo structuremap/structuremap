@@ -8,7 +8,7 @@ namespace StructureMap
         T CreateInstance<T>(string instanceKey);
         T CreateInstance<T>();
         T FillDependencies<T>();
-        void Inject<T>(T instance);
+        void InjectStub<T>(T instance);
         IList<T> GetAllInstances<T>();
         void SetDefaultsToProfile(string profile);
 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data;
 using System.Reflection;
@@ -15,15 +16,14 @@ namespace StructureMap
     public class InstanceFactory : IInstanceFactory, IInstanceCreator
     {
         private Type _pluginType;
-        private string _assemblyName;
-        private HybridDictionary _instanceBuilders;
+        private Dictionary<string, InstanceBuilder> _instanceBuilders;
         private MementoSource _source;
 
         #region constructor functions
 
         private InstanceFactory()
         {
-            _instanceBuilders = new HybridDictionary();
+            _instanceBuilders = new Dictionary<string, InstanceBuilder>();
             _source = new MemoryMementoSource();
         }
 
@@ -42,8 +42,8 @@ namespace StructureMap
             try
             {
                 determineMementoSource(family);
-                setPluginType(family.PluginType);
-                processPlugins(family.Plugins);
+                _pluginType = family.PluginType;
+                processPlugins(family.Plugins.All);
                 determineDefaultKey(family, failOnException);
             }
             catch (Exception e)
@@ -51,6 +51,7 @@ namespace StructureMap
                 throw new StructureMapException(115, e, family.PluginTypeName);
             }
         }
+
 
         private void determineMementoSource(PluginFamily family)
         {
@@ -102,13 +103,6 @@ namespace StructureMap
             }
         }
 
-
-        private void setPluginType(Type PluginType)
-        {
-            _pluginType = PluginType;
-            _assemblyName = Guid.NewGuid().ToString().Replace(".", "") + "InstanceBuilderAssembly";
-        }
-
         #endregion
 
         /// <summary>
@@ -125,21 +119,19 @@ namespace StructureMap
 
         #region create instance builders
 
-        private void processPlugins(PluginCollection plugins)
+        private void processPlugins(Plugin[] plugins)
         {
-            _instanceBuilders.Clear();
-
             Assembly assembly = createInstanceBuilderAssembly(plugins);
-
             foreach (Plugin plugin in plugins)
             {
                 addPlugin(assembly, plugin);
             }
         }
 
-        private Assembly createInstanceBuilderAssembly(PluginCollection plugins)
+        private Assembly createInstanceBuilderAssembly(Plugin[] plugins)
         {
-            InstanceBuilderAssembly builderAssembly = new InstanceBuilderAssembly(_assemblyName, PluginType);
+            string assemblyName = Guid.NewGuid().ToString().Replace(".", "") + "InstanceBuilderAssembly";
+            InstanceBuilderAssembly builderAssembly = new InstanceBuilderAssembly(assemblyName, PluginType);
 
             foreach (Plugin plugin in plugins)
             {
@@ -212,7 +204,7 @@ namespace StructureMap
 
         public object BuildInstance(InstanceMemento memento)
         {
-            if (!_instanceBuilders.Contains(memento.ConcreteKey))
+            if (!_instanceBuilders.ContainsKey(memento.ConcreteKey))
             {
                 throw new StructureMapException(
                     201, memento.ConcreteKey, memento.InstanceKey, PluginType.FullName);
@@ -337,6 +329,31 @@ namespace StructureMap
             }
 
             return list;
+        }
+
+        public void AddInstance(InstanceMemento memento)
+        {
+            _source.AddExternalMemento(memento);
+        }
+
+
+        public InstanceMemento AddType<T>()
+        {
+            Type pluggedType = typeof (T);
+            foreach (KeyValuePair<string, InstanceBuilder> pair in _instanceBuilders)
+            {
+                InstanceBuilder builder = pair.Value;
+                if (builder.IsType(pluggedType))
+                {
+                    return new MemoryInstanceMemento(builder.ConcreteTypeKey, builder.ConcreteTypeKey);
+                }
+            }
+
+            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (T));
+            processPlugins(new Plugin[]{plugin});
+            plugin.AddToSource(_source);
+
+            return plugin.CreateImplicitMemento();
         }
     }
 }

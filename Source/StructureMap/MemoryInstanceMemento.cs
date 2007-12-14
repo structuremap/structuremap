@@ -1,8 +1,16 @@
 using System.Collections;
 using System.Collections.Specialized;
+using StructureMap.Graph;
 
 namespace StructureMap
 {
+    public class GenericMemento<T> : MemoryInstanceMemento
+    {
+        public GenericMemento(string instanceKey)
+            : base(Plugin.CreateImplicitPlugin(typeof(T)).ConcreteKey, instanceKey)
+        {}
+    }
+
     /// <summary>
     /// An in-memory implementation of InstanceMemento.  
     /// </summary>
@@ -58,6 +66,7 @@ namespace StructureMap
             : this(concreteKey, instanceKey, new NameValueCollection())
         {
         }
+
 
         /// <summary>
         /// Constructs a MemoryInstanceMemento with properties

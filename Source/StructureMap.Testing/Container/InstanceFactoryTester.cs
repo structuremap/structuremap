@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using StructureMap.Graph;
 using StructureMap.Source;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget2;
@@ -134,5 +135,7 @@ namespace StructureMap.Testing.Container
             factory.SetDefault("Stubbed");
             Assert.IsTrue(factory.GetInstance() is StubbedGateway);
         }
+
+
     }
 }

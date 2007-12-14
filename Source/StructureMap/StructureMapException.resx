@@ -249,4 +249,7 @@
   <data name="105" xml:space="preserve">
     <value>The &lt;{0}&gt; section could not be loaded from the application configuration file.</value>
   </data>
+  <data name="306" xml:space="preserve">
+    <value>The configured BuilderDelegate of type {0} does not match the PluginFamily type {1}</value>
+  </data>
 </root>
