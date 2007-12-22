@@ -1,9 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Data;
 using System.Reflection;
+using StructureMap.Configuration.DSL;
 using StructureMap.Emitting;
 using StructureMap.Graph;
 using StructureMap.Source;
@@ -18,6 +18,19 @@ namespace StructureMap
         private Type _pluginType;
         private Dictionary<string, InstanceBuilder> _instanceBuilders;
         private MementoSource _source;
+        private InstanceInterceptor _interceptor = new NulloInterceptor();
+
+        #region static constructors
+        public static InstanceFactory CreateFactoryWithDefault(Type pluginType, object defaultInstance)
+        {
+            PluginFamily family = new PluginFamily(pluginType);
+            InstanceFactory factory = new InstanceFactory(family, true);
+            factory.SetDefault(new LiteralMemento(defaultInstance));
+
+            return factory;
+        }
+        #endregion
+
 
         #region constructor functions
 
@@ -41,6 +54,7 @@ namespace StructureMap
 
             try
             {
+                _interceptor = family.InstanceInterceptor;
                 determineMementoSource(family);
                 _pluginType = family.PluginType;
                 processPlugins(family.Plugins.All);
@@ -162,9 +176,7 @@ namespace StructureMap
 
         private InstanceMemento findMemento(string instanceKey)
         {
-            InstanceMemento memento = null;
-
-            memento = _source.GetMemento(instanceKey);
+            InstanceMemento memento = _source.GetMemento(instanceKey);
 
             if (memento == null)
             {
@@ -198,11 +210,12 @@ namespace StructureMap
             InstanceMemento resolvedMemento = _source.ResolveMemento(memento);
 
 
-            return resolvedMemento.Build(this);
+            object instance = resolvedMemento.Build(this);
+            return _interceptor.Process(instance);
         }
 
 
-        public object BuildInstance(InstanceMemento memento)
+        object IInstanceCreator.BuildInstance(InstanceMemento memento)
         {
             if (!_instanceBuilders.ContainsKey(memento.ConcreteKey))
             {
@@ -210,7 +223,7 @@ namespace StructureMap
                     201, memento.ConcreteKey, memento.InstanceKey, PluginType.FullName);
             }
 
-            InstanceBuilder builder = (InstanceBuilder) _instanceBuilders[memento.ConcreteKey];
+            InstanceBuilder builder = _instanceBuilders[memento.ConcreteKey];
 
             try
             {

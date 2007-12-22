@@ -155,6 +155,7 @@
     <Compile Include="Attributes\PluginFamilyAttributeTester.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="AutoMocking\RhinoAutoMockerTester.cs" />
     <Compile Include="Caching\ExpirationTester.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -191,9 +192,13 @@
     <Compile Include="Configuration\DSL\CreatePluginFamilyTester.cs" />
     <Compile Include="Configuration\DSL\CreateProfileTester.cs" />
     <Compile Include="Configuration\DSL\DeepInstanceTester.cs" />
+    <Compile Include="Configuration\DSL\InjectArrayTester.cs" />
     <Compile Include="Configuration\DSL\InstanceExpressionTester.cs" />
+    <Compile Include="Configuration\DSL\InterceptAllInstancesOfPluginTypeTester.cs" />
+    <Compile Include="Configuration\DSL\InterceptorTesting.cs" />
     <Compile Include="Configuration\DSL\LiteralExpressionTester.cs" />
     <Compile Include="Configuration\DSL\ProfileExpressionTester.cs" />
+    <Compile Include="Configuration\DSL\ReferenceMementoBuilderTester.cs" />
     <Compile Include="Configuration\DSL\RegistryIntegratedTester.cs" />
     <Compile Include="Configuration\DSL\RegistryTester.cs" />
     <Compile Include="Configuration\DSL\ScanAssembliesTester.cs" />
@@ -220,6 +225,7 @@
     <Compile Include="Configuration\PluginGraphReportTester.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Configuration\ShortcuttedInstanceNodeTester.cs" />
     <Compile Include="Configuration\Tokens\FamilyTokenTester.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -418,6 +424,7 @@
     </Compile>
     <Compile Include="Graph\TypePathTester.cs" />
     <Compile Include="ImplicitPluginFromPluggedTypeAttributeTester.cs" />
+    <Compile Include="InstanceMementoTester.cs" />
     <Compile Include="ObjectFactoryTester.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -493,6 +500,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Sample.xml" />
+    <EmbeddedResource Include="TestData\ShortInstance.xml" />
     <EmbeddedResource Include="TestData\DefaultInstance.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

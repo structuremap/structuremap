@@ -17,6 +17,7 @@ namespace StructureMap
         private DefinitionSource _definitionSource = DefinitionSource.Explicit;
         private string _concreteKey;
         private string _instanceKey;
+        private InstanceInterceptor _interceptor = new NulloInterceptor();
 
         /// <summary>
         /// The named type of the object instance represented by the InstanceMemento.  Translates to a concrete
@@ -268,12 +269,32 @@ namespace StructureMap
 
         protected virtual string getPluggedType()
         {
-            return this.getPropertyValue(XmlConstants.PLUGGED_TYPE);   
+            return getPropertyValue(XmlConstants.PLUGGED_TYPE);
         }
 
-        public virtual object Build(IInstanceCreator creator)
+        public object Build(IInstanceCreator creator)
+        {
+            object instance = buildInstance(creator);
+            try
+            {
+                return _interceptor.Process(instance);
+            }
+            catch (Exception e)
+            {
+                throw new StructureMapException(308, e, InstanceKey, TypePath.GetAssemblyQualifiedName(instance.GetType()));
+            }
+        }
+
+        protected virtual object buildInstance(IInstanceCreator creator)
         {
             return creator.BuildInstance(this);
+        }
+
+
+        public InstanceInterceptor Interceptor
+        {
+            get { return _interceptor; }
+            set { _interceptor = value; }
         }
     }
 }

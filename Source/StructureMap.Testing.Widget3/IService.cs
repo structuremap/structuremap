@@ -18,5 +18,11 @@ namespace StructureMap.Testing.Widget3
         {
             get { return _color; }
         }
+
+
+        public override string ToString()
+        {
+            return "ColorService:  " + _color;
+        }
     }
 }

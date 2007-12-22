@@ -179,6 +179,13 @@ namespace StructureMap.Configuration
             {
                 familyParser.ParseDefaultElement(element);
             }
+
+            XmlNodeList instanceNodes = findNodes(XmlConstants.ADD_INSTANCE_NODE);
+            foreach (XmlElement element in instanceNodes)
+            {
+                familyParser.ParseInstanceElement(element);
+            }
+
         }
 
 

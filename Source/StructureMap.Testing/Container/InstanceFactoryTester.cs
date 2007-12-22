@@ -32,6 +32,28 @@ namespace StructureMap.Testing.Container
             Assert.IsNotNull(_ruleFactory);
         }
 
+        [Test]
+        public void UsesTheInterceptor()
+        {
+            PluginFamily family = new PluginFamily(typeof(IService));
+            family.Plugins.Add(typeof(ColorService), "Color");
+            MemoryInstanceMemento memento = new MemoryInstanceMemento("Color", "Red");
+            memento.SetProperty("color", "Red");
+            family.AddInstance(memento);
+
+            ColorService recordedService = null;
+
+            StartupInterceptor<ColorService> interceptor = new StartupInterceptor<ColorService>(
+                delegate(ColorService s) { recordedService = s; }
+                );
+            family.InstanceInterceptor = interceptor;
+
+
+            InstanceFactory factory = new InstanceFactory(family, true);
+
+            Assert.AreSame(factory.GetInstance("Red"), recordedService);
+        }
+
 
         [Test]
         public void BuildRule1()
@@ -135,6 +157,8 @@ namespace StructureMap.Testing.Container
             factory.SetDefault("Stubbed");
             Assert.IsTrue(factory.GetInstance() is StubbedGateway);
         }
+
+
 
 
     }

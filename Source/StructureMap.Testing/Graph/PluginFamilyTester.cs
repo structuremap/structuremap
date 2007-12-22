@@ -27,6 +27,13 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
+        public void HasANulloInterceptorUponConstruction()
+        {
+            PluginFamily family = new PluginFamily(typeof(IWidget));
+            Assert.IsInstanceOfType(typeof(NulloInterceptor), family.InstanceInterceptor);
+        }
+
+        [Test]
         public void AddAPluggedType()
         {
             PluginFamily family = new PluginFamily(typeof (IWidget), "DefaultKey", new MemoryMementoSource());

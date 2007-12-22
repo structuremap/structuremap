@@ -11,16 +11,16 @@ namespace StructureMap.Configuration.DSL
     /// <summary>
     /// Represents the parameters for creating instances of a given Type
     /// </summary>
-    public class CreatePluginFamilyExpression : IExpression
+    public class CreatePluginFamilyExpression<PLUGINTYPE> : IExpression
     {
         private Type _pluginType;
         private List<AlterPluginFamilyDelegate> _alterations = new List<AlterPluginFamilyDelegate>();
         private InstanceScope _scope = InstanceScope.PerRequest;
         private List<IExpression> _children = new List<IExpression>();
 
-        public CreatePluginFamilyExpression(Type pluginType)
+        public CreatePluginFamilyExpression()
         {
-            _pluginType = pluginType;
+            _pluginType = typeof(PLUGINTYPE);
         }
 
         void IExpression.Configure(PluginGraph graph)
@@ -50,7 +50,7 @@ namespace StructureMap.Configuration.DSL
         /// </summary>
         /// <param name="builder"></param>
         /// <returns></returns>
-        public CreatePluginFamilyExpression TheDefaultIs(IMementoBuilder builder)
+        public CreatePluginFamilyExpression<PLUGINTYPE> TheDefaultIs(IMementoBuilder builder)
         {
             builder.ValidatePluggability(_pluginType);
 
@@ -65,7 +65,7 @@ namespace StructureMap.Configuration.DSL
             return this;
         }
 
-        public CreatePluginFamilyExpression AddInstance(IMementoBuilder builder)
+        public CreatePluginFamilyExpression<PLUGINTYPE> AddInstance(IMementoBuilder builder)
         {
             builder.ValidatePluggability(_pluginType);
 
@@ -86,7 +86,7 @@ namespace StructureMap.Configuration.DSL
         /// </summary>
         /// <typeparam name="CONCRETETYPE"></typeparam>
         /// <returns></returns>
-        public CreatePluginFamilyExpression TheDefaultIsConcreteType<CONCRETETYPE>()
+        public CreatePluginFamilyExpression<PLUGINTYPE> TheDefaultIsConcreteType<CONCRETETYPE>() where CONCRETETYPE : PLUGINTYPE
         {
             ExpressionValidator.ValidatePluggabilityOf(typeof (CONCRETETYPE)).IntoPluginType(_pluginType);
 
@@ -105,7 +105,7 @@ namespace StructureMap.Configuration.DSL
         /// </summary>
         /// <param name="scope"></param>
         /// <returns></returns>
-        public CreatePluginFamilyExpression CacheBy(InstanceScope scope)
+        public CreatePluginFamilyExpression<PLUGINTYPE> CacheBy(InstanceScope scope)
         {
             _alterations.Add(delegate(PluginFamily family)
                                  {
@@ -120,13 +120,32 @@ namespace StructureMap.Configuration.DSL
         /// Convenience method to mark a PluginFamily as a Singleton
         /// </summary>
         /// <returns></returns>
-        public CreatePluginFamilyExpression AsSingletons()
+        public CreatePluginFamilyExpression<PLUGINTYPE> AsSingletons()
         {
             _alterations.Add(
                 delegate(PluginFamily family) { family.InterceptionChain.AddInterceptor(new SingletonInterceptor()); });
             return this;
         }
 
-        
+
+        public CreatePluginFamilyExpression<PLUGINTYPE> OnCreation(StartupHandler<PLUGINTYPE> handler)
+        {
+            _alterations.Add(delegate (PluginFamily family)
+                                 {
+                                     family.InstanceInterceptor = new StartupInterceptor<PLUGINTYPE>(handler);
+                                 });
+
+            return this;
+        }
+
+        public CreatePluginFamilyExpression<PLUGINTYPE> EnrichWith(EnrichmentHandler<PLUGINTYPE> handler)
+        {
+            _alterations.Add(delegate(PluginFamily family)
+                                 {
+                                     family.InstanceInterceptor = new EnrichmentInterceptor<PLUGINTYPE>(handler);
+                                 });
+
+            return this;
+        }
     }
 }

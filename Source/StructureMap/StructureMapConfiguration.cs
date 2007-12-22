@@ -164,11 +164,11 @@ namespace StructureMap
         /// <summary>
         /// Direct StructureMap to create instances of Type T
         /// </summary>
-        /// <typeparam name="T">The Type to build</typeparam>
+        /// <typeparam name="PLUGINTYPE">The Type to build</typeparam>
         /// <returns></returns>
-        public static CreatePluginFamilyExpression BuildInstancesOf<T>()
+        public static CreatePluginFamilyExpression<PLUGINTYPE> BuildInstancesOf<PLUGINTYPE>()
         {
-            return _registry.BuildInstancesOf<T>();
+            return _registry.BuildInstancesOf<PLUGINTYPE>();
         }
 
         /// <summary>

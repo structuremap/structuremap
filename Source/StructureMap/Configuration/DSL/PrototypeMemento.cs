@@ -20,7 +20,7 @@ namespace StructureMap.Configuration.DSL
             set { _prototype = value; }
         }
 
-        public override object Build(IInstanceCreator creator)
+        protected override object buildInstance(IInstanceCreator creator)
         {
             return _prototype.Clone();
         }

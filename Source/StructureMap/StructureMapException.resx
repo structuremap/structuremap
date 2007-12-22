@@ -252,4 +252,10 @@
   <data name="306" xml:space="preserve">
     <value>The configured BuilderDelegate of type {0} does not match the PluginFamily type {1}</value>
   </data>
+  <data name="307" xml:space="preserve">
+    <value>In the call to ChildArray&lt;T&gt;(), the type T must be an array</value>
+  </data>
+  <data name="308" xml:space="preserve">
+    <value>A configured instance interceptor has failed for Instance '{0}' and concrete type '{1}'</value>
+  </data>
 </root>

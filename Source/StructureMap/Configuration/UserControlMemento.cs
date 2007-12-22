@@ -25,7 +25,7 @@ namespace StructureMap.Configuration
             set { _url = value; }
         }
 
-        public override object Build(IInstanceCreator creator)
+        protected override object buildInstance(IInstanceCreator creator)
         {
             return new Page().LoadControl(_url);
         }

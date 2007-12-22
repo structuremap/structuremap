@@ -1,24 +1,2 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<AssemblyDependencies>
-  <Dependencies_For Assembly="StructureMap">
-    <DependsOn>
-      <DependsOn_Name>nmock</DependsOn_Name>
-    </DependsOn>
-    <ReferencedBy>
-      <ReferencedBy_Name>StructureMap.DeploymentTasks</ReferencedBy_Name>
-      <ReferencedBy_Name>StructureMap.Client</ReferencedBy_Name>
-    </ReferencedBy>
-  </Dependencies_For>
-  <Dependencies_For Assembly="StructureMap.DeploymentTasks">
-    <DependsOn>
-      <DependsOn_Name>nant.core</DependsOn_Name>
-      <DependsOn_Name>StructureMap</DependsOn_Name>
-    </DependsOn>
-  </Dependencies_For>
-  <Dependencies_For Assembly="StructureMap.Client">
-    <DependsOn>
-      <DependsOn_Name>StructureMap</DependsOn_Name>
-      <DependsOn_Name>AxInterop.SHDocVw</DependsOn_Name>
-    </DependsOn>
-  </Dependencies_For>
-</AssemblyDependencies>
+<AssemblyDependencies />

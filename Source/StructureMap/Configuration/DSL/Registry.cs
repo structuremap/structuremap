@@ -54,9 +54,9 @@ namespace StructureMap.Configuration.DSL
         /// </summary>
         /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <returns></returns>
-        public CreatePluginFamilyExpression BuildInstancesOf<PLUGINTYPE>()
+        public CreatePluginFamilyExpression<PLUGINTYPE> BuildInstancesOf<PLUGINTYPE>()
         {
-            CreatePluginFamilyExpression expression = new CreatePluginFamilyExpression(typeof (PLUGINTYPE));
+            CreatePluginFamilyExpression<PLUGINTYPE> expression = new CreatePluginFamilyExpression<PLUGINTYPE>();
             addExpression(expression);
 
             return expression;
@@ -70,9 +70,9 @@ namespace StructureMap.Configuration.DSL
         /// </summary>
         /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <returns></returns>
-        public CreatePluginFamilyExpression ForRequestedType<PLUGINTYPE>()
+        public CreatePluginFamilyExpression<PLUGINTYPE> ForRequestedType<PLUGINTYPE>()
         {
-            CreatePluginFamilyExpression expression = new CreatePluginFamilyExpression(typeof(PLUGINTYPE));
+            CreatePluginFamilyExpression<PLUGINTYPE> expression = new CreatePluginFamilyExpression<PLUGINTYPE>();
             addExpression(expression);
 
             return expression; 
@@ -218,5 +218,11 @@ namespace StructureMap.Configuration.DSL
         {
             return new ConstructorExpression<PLUGINTYPE>(builder);
         }
+
+        public static ReferenceMementoBuilder Instance(string referencedKey)
+        {
+            return new ReferenceMementoBuilder(referencedKey);
+        }
+        
     }
 }

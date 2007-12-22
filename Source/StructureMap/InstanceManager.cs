@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using StructureMap.Configuration.DSL;
 using StructureMap.Exceptions;
 using StructureMap.Graph;
-using StructureMap.Interceptors;
 
 namespace StructureMap
 {
@@ -158,6 +157,11 @@ namespace StructureMap
             return (T) CreateInstance(typeof (T), instanceKey);
         }
 
+        public T CreateInstance<T>(InstanceMemento memento)
+        {
+            return (T) CreateInstance(typeof (T), memento);
+        }
+
         /// <summary>
         /// Creates a new object instance of the requested type
         /// </summary>
@@ -263,7 +267,7 @@ namespace StructureMap
             instanceFactory.SetDefault(instanceKey);
         }
 
-        public IInstanceFactory this[Type pluginType]
+        public virtual IInstanceFactory this[Type pluginType]
         {
             get
             {
@@ -337,9 +341,9 @@ namespace StructureMap
             return (T) FillDependencies(typeof (T));
         }
 
-        private delegate InstanceFactory CreateFactoryDelegate(Type type);
+        protected delegate InstanceFactory CreateFactoryDelegate(Type type);
 
-        private IInstanceFactory getOrCreateFactory(Type type, CreateFactoryDelegate createFactory)
+        protected IInstanceFactory getOrCreateFactory(Type type, CreateFactoryDelegate createFactory)
         {
             if (!_factories.ContainsKey(type))
             {

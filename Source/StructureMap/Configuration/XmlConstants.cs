@@ -17,6 +17,7 @@ namespace StructureMap.Configuration
         public const string CONCRETE_KEY_ATTRIBUTE = "ConcreteKey";
         public const string INTERCEPTORS_NODE = "Interceptors";
         public const string INSTANCE_NODE = "Instance";
+        public const string ADD_INSTANCE_NODE = "AddInstance";
         public const string INSTANCES_NODE = "Instances";
         public const string TYPE_ATTRIBUTE = "Type";
         public const string KEY_ATTRIBUTE = "Key";

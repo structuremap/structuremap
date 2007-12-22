@@ -16,13 +16,6 @@ namespace StructureMap.Testing.Configuration.DSL
         {
         }
 
-        [Test, ExpectedException(typeof (StructureMapException))]
-        public void TheConceteTypeDoesNotCase()
-        {
-            Registry registry = new Registry();
-            registry.BuildInstancesOf<Rule>().TheDefaultIsConcreteType<IWidget>();
-        }
-
         [Test]
         public void TheDefaultInstanceIsConcreteType()
         {
@@ -104,7 +97,7 @@ namespace StructureMap.Testing.Configuration.DSL
             PluginGraph pluginGraph = new PluginGraph();
             using (Registry registry = new Registry(pluginGraph))
             {
-                CreatePluginFamilyExpression expression =
+                CreatePluginFamilyExpression<IGateway> expression =
                     registry.BuildInstancesOf<IGateway>();
                 Assert.IsNotNull(expression);
             }
@@ -119,7 +112,7 @@ namespace StructureMap.Testing.Configuration.DSL
             PluginGraph pluginGraph = new PluginGraph();
             using (Registry registry = new Registry(pluginGraph))
             {
-                CreatePluginFamilyExpression expression =
+                CreatePluginFamilyExpression<IGateway> expression =
                     registry.BuildInstancesOf<IGateway>().CacheBy(InstanceScope.ThreadLocal);
                 Assert.IsNotNull(expression);
             }
@@ -134,7 +127,7 @@ namespace StructureMap.Testing.Configuration.DSL
             PluginGraph pluginGraph = new PluginGraph();
             using (Registry registry = new Registry(pluginGraph))
             {
-                CreatePluginFamilyExpression expression =
+                CreatePluginFamilyExpression<IGateway> expression =
                     registry.BuildInstancesOf<IGateway>().AsSingletons();
                 Assert.IsNotNull(expression);
             }

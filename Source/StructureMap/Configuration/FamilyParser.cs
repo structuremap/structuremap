@@ -51,6 +51,17 @@ namespace StructureMap.Configuration
             _builder.RegisterMemento(pluginTypePath, memento);
         }
 
+        public void ParseInstanceElement(XmlElement element)
+        {
+            TypePath pluginTypePath = TypePath.GetTypePath(element.GetAttribute(XmlConstants.PLUGIN_TYPE));
+            InstanceScope scope = findScope(element);
+
+            InstanceMemento memento = _mementoCreator.CreateMemento(element);
+
+            _builder.AddPluginFamily(pluginTypePath, null, new string[0], scope);
+            _builder.RegisterMemento(pluginTypePath, memento);
+        }
+
         private InstanceScope findScope(XmlElement familyElement)
         {
             InstanceScope returnValue = InstanceScope.PerRequest;
@@ -106,6 +117,7 @@ namespace StructureMap.Configuration
                 _builder.AddInterceptor(pluginTypePath, interceptorMemento);
             }
         }
+
 
 
     }

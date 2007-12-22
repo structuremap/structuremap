@@ -13,5 +13,6 @@ namespace StructureMap
         void SetDefaultsToProfile(string profile);
 
         InstanceDefaultManager DefaultManager { get; }
+        T CreateInstance<T>(InstanceMemento memento);
     }
 }

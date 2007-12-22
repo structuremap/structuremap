@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Xml;
+using StructureMap.Configuration;
 using StructureMap.Configuration.Tokens;
 
 namespace StructureMap.Source
@@ -20,17 +21,17 @@ namespace StructureMap.Source
 
         protected override string innerConcreteKey
         {
-            get { return _element.GetAttribute("Type"); }
+            get { return _element.GetAttribute(XmlConstants.TYPE_ATTRIBUTE); }
         }
 
         public void SetConcreteKey(string concreteKey)
         {
-            _element.SetAttribute("Type", concreteKey);
+            _element.SetAttribute(XmlConstants.TYPE_ATTRIBUTE, concreteKey);
         }
 
         protected override string innerInstanceKey
         {
-            get { return _element.GetAttribute("Key"); }
+            get { return _element.GetAttribute(XmlConstants.KEY_ATTRIBUTE); }
         }
 
         public XmlElement InnerElement

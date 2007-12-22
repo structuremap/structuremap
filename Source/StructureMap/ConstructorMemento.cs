@@ -25,7 +25,7 @@ namespace StructureMap
             
         }
 
-        public override object Build(IInstanceCreator creator)
+        protected override object buildInstance(IInstanceCreator creator)
         {
             return _builder();
         }

@@ -71,42 +71,44 @@ namespace StructureMap.Configuration.DSL
         /// in the case of a constructor function that consumes more than one argument
         /// of type T
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="CONSTRUCTORARGUMENTTYPE"></typeparam>
         /// <param name="propertyName"></param>
         /// <returns></returns>
-        public ChildInstanceExpression Child<T>(string propertyName)
+        public ChildInstanceExpression Child<CONSTRUCTORARGUMENTTYPE>(string propertyName)
         {
             ChildInstanceExpression child = new ChildInstanceExpression(this, _memento, propertyName);
             addChildExpression(child);
-            child.ChildType = typeof (T);
+            child.ChildType = typeof (CONSTRUCTORARGUMENTTYPE);
 
             return child;
         }
 
         /// <summary>
-        /// Start the definition of a child instance for type T
+        /// Start the definition of a child instance for type CONSTRUCTORARGUMENTTYPE
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="CONSTRUCTORARGUMENTTYPE"></typeparam>
         /// <returns></returns>
-        public ChildInstanceExpression Child<T>()
+        public ChildInstanceExpression Child<CONSTRUCTORARGUMENTTYPE>()
         {
-            string propertyName = findPropertyName<T>();
-
-            if (string.IsNullOrEmpty(propertyName))
-            {
-                throw new StructureMapException(305, TypePath.GetAssemblyQualifiedName(typeof (T)));
-            }
+            string propertyName = findPropertyName<CONSTRUCTORARGUMENTTYPE>();
 
             ChildInstanceExpression child = new ChildInstanceExpression(this, _memento, propertyName);
             addChildExpression(child);
-            child.ChildType = typeof (T);
+            child.ChildType = typeof (CONSTRUCTORARGUMENTTYPE);
             return child;
         }
 
         private string findPropertyName<T>()
         {
             Plugin plugin = Plugin.CreateImplicitPlugin(_pluggedType);
-            return plugin.FindFirstConstructorArgumentOfType<T>();
+            string propertyName = plugin.FindFirstConstructorArgumentOfType<T>();
+            
+            if (string.IsNullOrEmpty(propertyName))
+            {
+                throw new StructureMapException(305, TypePath.GetAssemblyQualifiedName(typeof(T)));
+            }
+
+            return propertyName;
         }
 
         public override void ValidatePluggability(Type pluginType)
@@ -158,5 +160,33 @@ namespace StructureMap.Configuration.DSL
                 return _parent;
             }
         }
+
+        public ChildArrayExpression<PLUGINTYPE> ChildArray<PLUGINTYPE>()
+        {
+            validateTypeIsArray<PLUGINTYPE>();
+
+            string propertyName = findPropertyName<PLUGINTYPE>();
+            return ChildArray<PLUGINTYPE>(propertyName);
+        }
+
+        public ChildArrayExpression<PLUGINTYPE> ChildArray<PLUGINTYPE>(string propertyName)
+        {
+            validateTypeIsArray<PLUGINTYPE>();
+
+            ChildArrayExpression<PLUGINTYPE> expression = new ChildArrayExpression<PLUGINTYPE>(this, _memento, propertyName);
+            addChildExpression(expression);
+
+            return expression;
+        }
+
+        private static void validateTypeIsArray<PLUGINTYPE>()
+        {
+            if (!typeof(PLUGINTYPE).IsArray)
+            {
+                throw new StructureMapException(307);
+            }
+        }
+
+
     }
 }

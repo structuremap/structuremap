@@ -51,6 +51,22 @@ namespace StructureMap.Configuration.DSL
             return thisInstance;
         }
 
+        public T OnCreation<TYPE>(StartupHandler<TYPE> handler)
+        {
+            StartupInterceptor<TYPE> interceptor = new StartupInterceptor<TYPE>(handler);
+            memento.Interceptor = interceptor;
+
+            return thisInstance;
+        }
+
+        public T EnrichWith<TYPE>(EnrichmentHandler<TYPE> handler)
+        {
+            EnrichmentInterceptor<TYPE> interceptor = new EnrichmentInterceptor<TYPE>(handler);
+            memento.Interceptor = interceptor;
+
+            return thisInstance;
+        }
+
         public string InstanceKey
         {
             get { return memento.InstanceKey; }

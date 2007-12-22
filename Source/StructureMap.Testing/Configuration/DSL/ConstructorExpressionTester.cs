@@ -1,12 +1,11 @@
 using NUnit.Framework;
-using Rhino.Mocks;
 using StructureMap.Configuration.DSL;
-using StructureMap.Testing.Container;
+using StructureMap.Testing.Graph;
 
 namespace StructureMap.Testing.Configuration.DSL
 {
     [TestFixture]
-    public class ConstructorExpressionTester
+    public class ConstructorExpressionTester : Registry
     {
         [SetUp]
         public void SetUp()
@@ -15,9 +14,13 @@ namespace StructureMap.Testing.Configuration.DSL
             ObjectFactory.Reset();
         }
 
-        public interface Abstraction { }
+        public interface Abstraction
+        {
+        }
 
-        public class Concretion : Abstraction { }
+        public class Concretion : Abstraction
+        {
+        }
 
         [Test]
         public void ConstructSomething()
@@ -26,7 +29,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
             Registry registry = new Registry();
             registry.ForRequestedType<Abstraction>().TheDefaultIs(
-                Registry.ConstructedBy<Abstraction>(delegate { return concretion; })
+                ConstructedBy<Abstraction>(delegate { return concretion; })
                 );
 
             IInstanceManager manager = registry.BuildInstanceManager();
@@ -40,15 +43,14 @@ namespace StructureMap.Testing.Configuration.DSL
 
             Registry registry = new Registry();
             registry.ForRequestedType<Abstraction>().AddInstance(
-                Registry.ConstructedBy<Abstraction>(delegate { return concretion; })
+                ConstructedBy<Abstraction>(delegate { return concretion; })
                 );
 
-            
+
             IInstanceManager manager = registry.BuildInstanceManager();
 
             Abstraction actual = manager.GetAllInstances<Abstraction>()[0];
             Assert.AreSame(concretion, actual);
-
         }
 
         [Test]
@@ -59,18 +61,17 @@ namespace StructureMap.Testing.Configuration.DSL
 
             Registry registry = new Registry();
             registry.ForRequestedType<Abstraction>().AddInstance(
-                Registry.ConstructedBy<Abstraction>(delegate { return concretion1; }).WithName("One")
+                ConstructedBy<Abstraction>(delegate { return concretion1; }).WithName("One")
                 );
 
             registry.ForRequestedType<Abstraction>().AddInstance(
-                Registry.ConstructedBy<Abstraction>(delegate { return concretion2; }).WithName("Two")
+                ConstructedBy<Abstraction>(delegate { return concretion2; }).WithName("Two")
                 );
 
             IInstanceManager manager = registry.BuildInstanceManager();
 
             Assert.AreSame(concretion1, manager.CreateInstance<Abstraction>("One"));
             Assert.AreSame(concretion2, manager.CreateInstance<Abstraction>("Two"));
-
         }
 
         [Test]
@@ -82,19 +83,16 @@ namespace StructureMap.Testing.Configuration.DSL
             Registry registry = new Registry();
             registry.ForRequestedType<Abstraction>()
                 .AddInstance(
-                    Registry.ConstructedBy<Abstraction>(delegate { return concretion1; }).WithName("One")
+                    ConstructedBy<Abstraction>(delegate { return concretion1; }).WithName("One")
                 )
                 .AddInstance(
-                    Registry.ConstructedBy<Abstraction>(delegate { return concretion2; }).WithName("Two")
+                    ConstructedBy<Abstraction>(delegate { return concretion2; }).WithName("Two")
                 );
 
             IInstanceManager manager = registry.BuildInstanceManager();
 
             Assert.AreSame(concretion1, manager.CreateInstance<Abstraction>("One"));
             Assert.AreSame(concretion2, manager.CreateInstance<Abstraction>("Two"));
-
-        }   
+        }
     }
-
-
 }

@@ -59,7 +59,7 @@ namespace StructureMap.Configuration.DSL
             get { throw new NotImplementedException(); }
         }
 
-        public override object Build(IInstanceCreator creator)
+        protected override object buildInstance(IInstanceCreator creator)
         {
             return _instance;
         }

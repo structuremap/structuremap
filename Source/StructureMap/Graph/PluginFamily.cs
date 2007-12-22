@@ -36,6 +36,7 @@ namespace StructureMap.Graph
         private string _pluginTypeName;
         private InterceptionChain _interceptionChain;
         private PluginCollection _plugins;
+        private InstanceInterceptor _instanceInterceptor = new NulloInterceptor();
 
         public const string CONCRETE_KEY = "CONCRETE";
 
@@ -108,6 +109,12 @@ namespace StructureMap.Graph
         }
 
         #endregion
+
+        public InstanceInterceptor InstanceInterceptor
+        {
+            get { return _instanceInterceptor; }
+            set { _instanceInterceptor = value; }
+        }
 
         public PluginFamily CreateTemplatedClone(params Type[] templateTypes)
         {
