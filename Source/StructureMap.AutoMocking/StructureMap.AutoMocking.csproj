@@ -43,6 +43,8 @@
     <Compile Include="AutoMockedInstanceManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RhinoAutoMocker.cs" />
+    <Compile Include="RhinoMocksServiceLocator.cs" />
+    <Compile Include="ServiceLocator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\StructureMap\StructureMap.csproj">

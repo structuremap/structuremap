@@ -1,5 +1,4 @@
 using System;
-using StructureMap.Graph;
 
 namespace StructureMap
 {
@@ -35,5 +34,10 @@ namespace StructureMap
             Type plugged = Type.GetType(PluggedType);
             return plugged.Equals(type);
         }
+
+        //public Type GetPluggedType()
+        //{
+        //    return Type.GetType(PluggedType);
+        //}
     }
 }

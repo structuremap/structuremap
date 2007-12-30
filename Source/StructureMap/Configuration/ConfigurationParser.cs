@@ -167,7 +167,7 @@ namespace StructureMap.Configuration
         public void ParseFamilies(IGraphBuilder builder)
         {
             FamilyParser familyParser = new FamilyParser(builder, _mementoCreator);
-            
+
             XmlNodeList familyNodes = findNodes(XmlConstants.PLUGIN_FAMILY_NODE);
             foreach (XmlElement familyElement in familyNodes)
             {
@@ -185,7 +185,6 @@ namespace StructureMap.Configuration
             {
                 familyParser.ParseInstanceElement(element);
             }
-
         }
 
 

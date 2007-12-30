@@ -102,10 +102,10 @@ namespace StructureMap.Configuration.DSL
         {
             Plugin plugin = Plugin.CreateImplicitPlugin(_pluggedType);
             string propertyName = plugin.FindFirstConstructorArgumentOfType<T>();
-            
+
             if (string.IsNullOrEmpty(propertyName))
             {
-                throw new StructureMapException(305, TypePath.GetAssemblyQualifiedName(typeof(T)));
+                throw new StructureMapException(305, TypePath.GetAssemblyQualifiedName(typeof (T)));
             }
 
             return propertyName;
@@ -173,7 +173,8 @@ namespace StructureMap.Configuration.DSL
         {
             validateTypeIsArray<PLUGINTYPE>();
 
-            ChildArrayExpression<PLUGINTYPE> expression = new ChildArrayExpression<PLUGINTYPE>(this, _memento, propertyName);
+            ChildArrayExpression<PLUGINTYPE> expression =
+                new ChildArrayExpression<PLUGINTYPE>(this, _memento, propertyName);
             addChildExpression(expression);
 
             return expression;
@@ -181,12 +182,10 @@ namespace StructureMap.Configuration.DSL
 
         private static void validateTypeIsArray<PLUGINTYPE>()
         {
-            if (!typeof(PLUGINTYPE).IsArray)
+            if (!typeof (PLUGINTYPE).IsArray)
             {
                 throw new StructureMapException(307);
             }
         }
-
-
     }
 }

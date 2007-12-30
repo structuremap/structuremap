@@ -1,5 +1,4 @@
 using System;
-using System.Reflection;
 using StructureMap.Interceptors;
 using StructureMap.Source;
 
@@ -160,17 +159,17 @@ namespace StructureMap.Graph
             }
             Type[] pluginArgs = _pluginType.GetGenericArguments();
             Type[] pluggableArgs = interfaceType.GetGenericArguments();
-            
+
             if (templateTypes.Length != pluginArgs.Length &&
                 pluginArgs.Length != pluggableArgs.Length)
             {
                 return false;
             }
-            
+
             for (int i = 0; i < templateTypes.Length; i++)
             {
                 isValid &= templateTypes[i] == pluggableArgs[i] ||
-                           pluginArgs[i].IsGenericParameter && 
+                           pluginArgs[i].IsGenericParameter &&
                            pluggableArgs[i].IsGenericParameter;
             }
             return isValid;

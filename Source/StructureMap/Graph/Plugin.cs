@@ -16,7 +16,7 @@ namespace StructureMap.Graph
         public static Plugin CreateAutofilledPlugin(Type concreteType)
         {
             string pluginKey = Guid.NewGuid().ToString();
-            Plugin plugin = Plugin.CreateExplicitPlugin(concreteType, pluginKey, string.Empty);
+            Plugin plugin = CreateExplicitPlugin(concreteType, pluginKey, string.Empty);
             if (!plugin.CanBeAutoFilled)
             {
                 throw new StructureMapException(231);
@@ -140,6 +140,25 @@ namespace StructureMap.Graph
             return new Plugin(pluggedType, concreteKey, DefinitionSource.Explicit);
         }
 
+        public static ConstructorInfo GetGreediestConstructor(Type pluggedType)
+        {
+            ConstructorInfo returnValue = null;
+
+            foreach (ConstructorInfo constructor in pluggedType.GetConstructors())
+            {
+                if (returnValue == null)
+                {
+                    returnValue = constructor;
+                }
+                else if (constructor.GetParameters().Length > returnValue.GetParameters().Length)
+                {
+                    returnValue = constructor;
+                }
+            }
+
+            return returnValue;
+        }
+
         #endregion
 
         private Type _pluggedType;
@@ -231,17 +250,7 @@ namespace StructureMap.Graph
             // if no constructor is marked as the "ContainerConstructor", find the greediest constructor
             if (returnValue == null)
             {
-                foreach (ConstructorInfo constructor in _pluggedType.GetConstructors())
-                {
-                    if (returnValue == null)
-                    {
-                        returnValue = constructor;
-                    }
-                    else if (constructor.GetParameters().Length > returnValue.GetParameters().Length)
-                    {
-                        returnValue = constructor;
-                    }
-                }
+                returnValue = GetGreediestConstructor(_pluggedType);
             }
 
             if (returnValue == null)
@@ -251,6 +260,8 @@ namespace StructureMap.Graph
 
             return returnValue;
         }
+
+
 
         /// <summary>
         /// The ConcreteKey that identifies the Plugin within a PluginFamily

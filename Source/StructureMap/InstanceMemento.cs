@@ -281,7 +281,8 @@ namespace StructureMap
             }
             catch (Exception e)
             {
-                throw new StructureMapException(308, e, InstanceKey, TypePath.GetAssemblyQualifiedName(instance.GetType()));
+                throw new StructureMapException(308, e, InstanceKey,
+                                                TypePath.GetAssemblyQualifiedName(instance.GetType()));
             }
         }
 

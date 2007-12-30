@@ -81,7 +81,7 @@ namespace StructureMap
             if (_pullConfigurationFromAppConfig)
             {
                 IList<XmlNode> appConfigNodes = StructureMapConfigurationSection.GetStructureMapConfiguration();
-                foreach(XmlNode appConfigNode in appConfigNodes)
+                foreach (XmlNode appConfigNode in appConfigNodes)
                 {
                     _collection.IncludeNode(
                         delegate() { return appConfigNode; });

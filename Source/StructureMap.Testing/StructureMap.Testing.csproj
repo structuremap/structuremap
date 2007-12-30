@@ -99,6 +99,10 @@
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
+    <ProjectReference Include="..\StructureMap.AutoMocking\StructureMap.AutoMocking.csproj">
+      <Project>{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}</Project>
+      <Name>StructureMap.AutoMocking</Name>
+    </ProjectReference>
     <ProjectReference Include="..\StructureMap.Client\StructureMap.Client.csproj">
       <Name>StructureMap.Client</Name>
       <Project>{887C4441-07A4-489D-B8D9-EFE9D28A47CA}</Project>

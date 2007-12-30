@@ -1,6 +1,7 @@
 namespace StructureMap
 {
     public delegate T EnrichmentHandler<T>(T target);
+
     public delegate void StartupHandler<T>(T target);
 
     public interface InstanceInterceptor

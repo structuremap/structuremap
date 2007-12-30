@@ -39,7 +39,7 @@ namespace StructureMap.Configuration.DSL
 
         public override void ValidatePluggability(Type pluginType)
         {
-            if (!pluginType.Equals(typeof(PLUGINTYPE)))
+            if (!pluginType.Equals(typeof (PLUGINTYPE)))
             {
                 throw new StructureMapException(306,
                                                 typeof (PLUGINTYPE).FullName, pluginType.FullName);

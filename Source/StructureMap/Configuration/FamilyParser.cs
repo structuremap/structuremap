@@ -117,8 +117,5 @@ namespace StructureMap.Configuration
                 _builder.AddInterceptor(pluginTypePath, interceptorMemento);
             }
         }
-
-
-
     }
 }

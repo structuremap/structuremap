@@ -22,7 +22,6 @@ namespace StructureMap
         public ConstructorMemento(BuildObjectDelegate<PLUGINTYPE> builder)
             : this(Guid.NewGuid().ToString(), builder)
         {
-            
         }
 
         protected override object buildInstance(IInstanceCreator creator)

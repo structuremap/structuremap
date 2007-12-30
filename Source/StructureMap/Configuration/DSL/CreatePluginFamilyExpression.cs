@@ -20,7 +20,7 @@ namespace StructureMap.Configuration.DSL
 
         public CreatePluginFamilyExpression()
         {
-            _pluginType = typeof(PLUGINTYPE);
+            _pluginType = typeof (PLUGINTYPE);
         }
 
         void IExpression.Configure(PluginGraph graph)
@@ -70,7 +70,7 @@ namespace StructureMap.Configuration.DSL
             builder.ValidatePluggability(_pluginType);
 
             _children.Add(builder);
-            _alterations.Add(delegate (PluginFamily family)
+            _alterations.Add(delegate(PluginFamily family)
                                  {
                                      InstanceMemento memento = builder.BuildMemento(family);
                                      family.Source.AddExternalMemento(memento);
@@ -86,7 +86,8 @@ namespace StructureMap.Configuration.DSL
         /// </summary>
         /// <typeparam name="CONCRETETYPE"></typeparam>
         /// <returns></returns>
-        public CreatePluginFamilyExpression<PLUGINTYPE> TheDefaultIsConcreteType<CONCRETETYPE>() where CONCRETETYPE : PLUGINTYPE
+        public CreatePluginFamilyExpression<PLUGINTYPE> TheDefaultIsConcreteType<CONCRETETYPE>()
+            where CONCRETETYPE : PLUGINTYPE
         {
             ExpressionValidator.ValidatePluggabilityOf(typeof (CONCRETETYPE)).IntoPluginType(_pluginType);
 
@@ -130,20 +131,16 @@ namespace StructureMap.Configuration.DSL
 
         public CreatePluginFamilyExpression<PLUGINTYPE> OnCreation(StartupHandler<PLUGINTYPE> handler)
         {
-            _alterations.Add(delegate (PluginFamily family)
-                                 {
-                                     family.InstanceInterceptor = new StartupInterceptor<PLUGINTYPE>(handler);
-                                 });
+            _alterations.Add(
+                delegate(PluginFamily family) { family.InstanceInterceptor = new StartupInterceptor<PLUGINTYPE>(handler); });
 
             return this;
         }
 
         public CreatePluginFamilyExpression<PLUGINTYPE> EnrichWith(EnrichmentHandler<PLUGINTYPE> handler)
         {
-            _alterations.Add(delegate(PluginFamily family)
-                                 {
-                                     family.InstanceInterceptor = new EnrichmentInterceptor<PLUGINTYPE>(handler);
-                                 });
+            _alterations.Add(
+                delegate(PluginFamily family) { family.InstanceInterceptor = new EnrichmentInterceptor<PLUGINTYPE>(handler); });
 
             return this;
         }

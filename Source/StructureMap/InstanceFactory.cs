@@ -21,6 +21,7 @@ namespace StructureMap
         private InstanceInterceptor _interceptor = new NulloInterceptor();
 
         #region static constructors
+
         public static InstanceFactory CreateFactoryWithDefault(Type pluginType, object defaultInstance)
         {
             PluginFamily family = new PluginFamily(pluginType);
@@ -29,8 +30,8 @@ namespace StructureMap
 
             return factory;
         }
-        #endregion
 
+        #endregion
 
         #region constructor functions
 
@@ -363,7 +364,7 @@ namespace StructureMap
             }
 
             Plugin plugin = Plugin.CreateImplicitPlugin(typeof (T));
-            processPlugins(new Plugin[]{plugin});
+            processPlugins(new Plugin[] {plugin});
             plugin.AddToSource(_source);
 
             return plugin.CreateImplicitMemento();

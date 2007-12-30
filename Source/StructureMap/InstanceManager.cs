@@ -422,7 +422,7 @@ namespace StructureMap
 
         public void AddInstance<PLUGINTYPE, CONCRETETYPE>()
         {
-            IInstanceFactory factory = getOrCreateFactory(typeof(PLUGINTYPE), createFactory);
+            IInstanceFactory factory = getOrCreateFactory(typeof (PLUGINTYPE), createFactory);
             InstanceMemento memento = factory.AddType<CONCRETETYPE>();
             factory.AddInstance(memento);
         }

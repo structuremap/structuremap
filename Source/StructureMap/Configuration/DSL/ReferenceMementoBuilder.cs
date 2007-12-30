@@ -24,12 +24,10 @@ namespace StructureMap.Configuration.DSL
 
         void IMementoBuilder.SetInstanceName(string instanceKey)
         {
-           
         }
 
         void IMementoBuilder.ValidatePluggability(Type pluginType)
         {
-
         }
 
 

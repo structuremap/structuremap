@@ -1,12 +1,9 @@
 using System;
+using Rhino.Mocks;
 
 namespace StructureMap.AutoMocking
 {
-    public interface ServiceLocator
-    {
-        T Service<T>();
-        object Service(Type serviceType);
-    }
+
     
     public class AutoMockedInstanceManager : InstanceManager
     {

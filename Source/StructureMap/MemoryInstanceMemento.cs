@@ -7,8 +7,9 @@ namespace StructureMap
     public class GenericMemento<T> : MemoryInstanceMemento
     {
         public GenericMemento(string instanceKey)
-            : base(Plugin.CreateImplicitPlugin(typeof(T)).ConcreteKey, instanceKey)
-        {}
+            : base(Plugin.CreateImplicitPlugin(typeof (T)).ConcreteKey, instanceKey)
+        {
+        }
     }
 
     /// <summary>

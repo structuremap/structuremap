@@ -75,7 +75,7 @@ namespace StructureMap.Configuration.DSL
             CreatePluginFamilyExpression<PLUGINTYPE> expression = new CreatePluginFamilyExpression<PLUGINTYPE>();
             addExpression(expression);
 
-            return expression; 
+            return expression;
         }
 
         public IInstanceManager BuildInstanceManager()
@@ -97,7 +97,6 @@ namespace StructureMap.Configuration.DSL
             return expression.TypeExpression();
         }
 
-       
 
         /// <summary>
         /// Convenience method to start the definition of an instance of type T
@@ -223,6 +222,5 @@ namespace StructureMap.Configuration.DSL
         {
             return new ReferenceMementoBuilder(referencedKey);
         }
-        
     }
 }

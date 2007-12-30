@@ -65,7 +65,8 @@ namespace StructureMap.DeploymentTasks
             _sourceConfigDocument = new XmlDocument();
             _sourceConfigDocument.Load(configPath);
 
-            PluginGraphBuilder builder = new PluginGraphBuilder(new ConfigurationParser(_sourceConfigDocument.DocumentElement));
+            PluginGraphBuilder builder =
+                new PluginGraphBuilder(new ConfigurationParser(_sourceConfigDocument.DocumentElement));
             _report = createPluginGraphReport(builder);
             _defaultManager = builder.DefaultManager;
 
