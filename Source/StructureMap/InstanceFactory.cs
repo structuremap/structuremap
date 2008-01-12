@@ -15,10 +15,10 @@ namespace StructureMap
     /// </summary>
     public class InstanceFactory : IInstanceFactory, IInstanceCreator
     {
-        private Type _pluginType;
-        private Dictionary<string, InstanceBuilder> _instanceBuilders;
+        private readonly Type _pluginType;
+        private readonly Dictionary<string, InstanceBuilder> _instanceBuilders;
         private MementoSource _source;
-        private InstanceInterceptor _interceptor = new NulloInterceptor();
+        private readonly InstanceInterceptor _interceptor = new NulloInterceptor();
 
         #region static constructors
 

@@ -41,6 +41,7 @@
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AutoMockedInstanceManager.cs" />
+    <Compile Include="IntegrationSpecification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RhinoAutoMocker.cs" />
     <Compile Include="RhinoMocksServiceLocator.cs" />

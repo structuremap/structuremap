@@ -13,10 +13,10 @@ using System.Runtime.InteropServices;
 //------------------------------------------------------------------------------
 
 [assembly: ComVisibleAttribute(false)]
-[assembly: AssemblyVersionAttribute("1.0.0.0000")]
+[assembly: AssemblyVersionAttribute("2.5.0.0000")]
 [assembly: AssemblyCopyrightAttribute("Copyright (c) 2007, Jeremy D. Miller")]
 [assembly: AssemblyProductAttribute("StructureMap")]
 [assembly: AssemblyCompanyAttribute("")]
 [assembly: AssemblyConfigurationAttribute("release")]
-[assembly: AssemblyInformationalVersionAttribute("1.0.0.0000")]
+[assembly: AssemblyInformationalVersionAttribute("2.5.0.0000")]
 

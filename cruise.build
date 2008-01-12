@@ -3,7 +3,7 @@
 	<property name="deployment.dir" value="source\StructureMap.Testing.DeploymentTasks\"/>
 	<property name="results.dir" value="results" />
 	<property name="nant.dir" value="bin\nant" />
-	<property name="project.version" value="1.0.0" />
+	<property name="project.version" value="2.5.0" />
 	<property name="project.config" value="release" />
 	<property name="archive.dir" value="d:\builds\StructureMap"/>
 
