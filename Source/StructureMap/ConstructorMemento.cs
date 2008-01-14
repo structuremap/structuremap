@@ -1,4 +1,5 @@
 using System;
+using StructureMap.Configuration.Mementos;
 
 namespace StructureMap
 {

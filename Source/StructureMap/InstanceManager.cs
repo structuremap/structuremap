@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using StructureMap.Configuration.DSL.Expressions;
+using StructureMap.Configuration.Mementos;
 using StructureMap.Exceptions;
 using StructureMap.Graph;
 using StructureMap.Interceptors;

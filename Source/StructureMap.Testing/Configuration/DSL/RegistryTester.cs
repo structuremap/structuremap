@@ -1,8 +1,8 @@
 using System;
 using NUnit.Framework;
 using Rhino.Mocks;
-using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
+using StructureMap.Configuration.Mementos;
 using StructureMap.Graph;
 using StructureMap.Testing.Widget3;
 

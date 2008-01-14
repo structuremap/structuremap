@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using NUnit.Framework;
+using StructureMap.Configuration.Mementos;
 using StructureMap.Graph;
 using StructureMap.Testing.TestData;
 using StructureMap.Testing.Widget;

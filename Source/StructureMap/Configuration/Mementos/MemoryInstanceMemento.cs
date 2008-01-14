@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Specialized;
 using StructureMap.Graph;
 
-namespace StructureMap
+namespace StructureMap.Configuration.Mementos
 {
     public class GenericMemento<T> : MemoryInstanceMemento
     {

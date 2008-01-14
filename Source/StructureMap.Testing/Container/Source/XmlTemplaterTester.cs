@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Xml;
 using NUnit.Framework;
+using StructureMap.Configuration.Mementos;
 using StructureMap.Source;
 using StructureMap.Testing.TestData;
 using StructureMap.Testing.XmlWriting;

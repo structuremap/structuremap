@@ -1,4 +1,5 @@
 using System;
+using StructureMap.Configuration.Mementos;
 using StructureMap.Interceptors;
 
 namespace StructureMap.Testing.Configuration.Tokens

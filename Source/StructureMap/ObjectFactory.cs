@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Security.Permissions;
 using System.Text;
-using StructureMap.Configuration.DSL.Expressions;
+using StructureMap.Configuration.Mementos;
 using StructureMap.Graph;
 
 namespace StructureMap

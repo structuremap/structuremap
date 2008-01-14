@@ -1,4 +1,5 @@
 using System.Configuration;
+using StructureMap.Configuration.Mementos;
 
 namespace StructureMap.Configuration.DSL.Expressions
 {

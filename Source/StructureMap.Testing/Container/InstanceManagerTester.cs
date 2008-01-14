@@ -1,5 +1,6 @@
 using System;
 using NUnit.Framework;
+using StructureMap.Configuration.Mementos;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 using StructureMap.Source;

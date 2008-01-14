@@ -1,4 +1,5 @@
 using System;
+using StructureMap.Configuration.Mementos;
 using StructureMap.Graph;
 
 namespace StructureMap.Configuration.DSL.Expressions

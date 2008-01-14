@@ -2,6 +2,7 @@ using System;
 using NMock;
 using NUnit.Framework;
 using StructureMap.Configuration;
+using StructureMap.Configuration.Mementos;
 using StructureMap.Configuration.Tokens;
 using StructureMap.Configuration.Tokens.Properties;
 using StructureMap.Testing.Widget3;

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Reflection;
+using StructureMap.Configuration.Mementos;
 
 namespace StructureMap.Graph
 {
