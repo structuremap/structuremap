@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using StructureMap.Graph;
+using StructureMap.Interceptors;
 
 namespace StructureMap.Configuration.DSL
 {
@@ -32,6 +33,11 @@ namespace StructureMap.Configuration.DSL
         protected internal void addExpression(IExpression expression)
         {
             _expressions.Add(expression);
+        }
+
+        internal void addExpression(PluginGraphAlteration alteration)
+        {
+            _expressions.Add(new BasicExpression(alteration));
         }
 
         internal void ConfigurePluginGraph(PluginGraph graph)
@@ -221,6 +227,71 @@ namespace StructureMap.Configuration.DSL
         public static ReferenceMementoBuilder Instance(string referencedKey)
         {
             return new ReferenceMementoBuilder(referencedKey);
+        }
+
+        public void RegisterInterceptor(TypeInterceptor interceptor)
+        {
+            addExpression(delegate (PluginGraph pluginGraph)
+                              {
+                                  pluginGraph.InterceptorLibrary.AddInterceptor(interceptor);
+                              });
+        }
+
+        public TypeInterceptorExpression IfTypeMatches(TypeMatchDelegate match)
+        {
+            TypeInterceptorExpression expression = new TypeInterceptorExpression(match);
+            _expressions.Add(expression);
+
+            return expression;
+        }
+    }
+
+    public delegate object InterceptionDelegate(object instance);
+    public delegate bool TypeMatchDelegate(Type type);
+    public class TypeInterceptorExpression : IExpression, TypeInterceptor
+    {
+        private readonly TypeMatchDelegate _match;
+        private InterceptionDelegate _interception;
+
+        internal TypeInterceptorExpression(TypeMatchDelegate match)
+        {
+            _match = match;
+        }
+
+        void IExpression.Configure(PluginGraph graph)
+        {
+            graph.InterceptorLibrary.AddInterceptor(this);
+        }
+
+        public void InterceptWith(InterceptionDelegate interception)
+        {
+            _interception = interception;
+        }
+
+        public bool MatchesType(Type type)
+        {
+            return _match(type);
+        }
+
+        public object Process(object target)
+        {
+            return _interception(target);
+        }
+    }
+
+    internal delegate void PluginGraphAlteration(PluginGraph pluginGraph);
+    internal class BasicExpression : IExpression
+    {
+        private readonly PluginGraphAlteration _alteration;
+
+        internal BasicExpression(PluginGraphAlteration alteration)
+        {
+            _alteration = alteration;
+        }
+
+        public void Configure(PluginGraph graph)
+        {
+            _alteration(graph);
         }
     }
 }

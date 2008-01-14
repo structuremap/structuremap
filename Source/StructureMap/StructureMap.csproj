@@ -335,7 +335,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ConstructorMemento.cs" />
-    <Compile Include="Delegates.cs" />
     <Compile Include="DeploymentTasks\DeploymentConfiguration.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -471,6 +470,8 @@
     <Compile Include="Interceptors\CacheInterceptor.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Interceptors\CompoundInterceptor.cs" />
+    <Compile Include="Interceptors\EnrichmentInterceptor.cs" />
     <Compile Include="Interceptors\HttpContextItemInterceptor.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -483,15 +484,21 @@
     <Compile Include="Interceptors\InstanceFactoryInterceptor.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Interceptors\InstanceInterceptor.cs" />
     <Compile Include="Interceptors\InterceptorChainBuilder.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Interceptors\InterceptorLibrary.cs" />
+    <Compile Include="Interceptors\Interceptors.cs" />
+    <Compile Include="Interceptors\NulloInterceptor.cs" />
     <Compile Include="Interceptors\SingletonInterceptor.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Interceptors\StartupInterceptor.cs" />
     <Compile Include="Interceptors\ThreadLocalStorageInterceptor.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Interceptors\TypeInterceptor.cs" />
     <Compile Include="IPluginGraphSource.cs" />
     <Compile Include="MementoSource.cs">
       <SubType>Code</SubType>

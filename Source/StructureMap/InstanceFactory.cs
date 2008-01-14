@@ -6,6 +6,7 @@ using System.Reflection;
 using StructureMap.Configuration.DSL;
 using StructureMap.Emitting;
 using StructureMap.Graph;
+using StructureMap.Interceptors;
 using StructureMap.Source;
 
 namespace StructureMap
@@ -19,6 +20,7 @@ namespace StructureMap
         private readonly Dictionary<string, InstanceBuilder> _instanceBuilders;
         private MementoSource _source;
         private readonly InstanceInterceptor _interceptor = new NulloInterceptor();
+        private InterceptorLibrary _interceptorLibrary = InterceptorLibrary.Empty;
 
         #region static constructors
 
@@ -123,18 +125,19 @@ namespace StructureMap
         /// <summary>
         /// Links the child InstanceBuilder members to the parent InstanceManager
         /// </summary>
-        /// <param name="Manager"></param>
-        public void SetInstanceManager(InstanceManager Manager)
+        /// <param name="instanceManager"></param>
+        public void SetInstanceManager(InstanceManager instanceManager)
         {
+            _interceptorLibrary = instanceManager.InterceptorLibrary;
             foreach (InstanceBuilder builder in _instanceBuilders.Values)
             {
-                builder.SetInstanceManager(Manager);
+                builder.SetInstanceManager(instanceManager);
             }
         }
 
         #region create instance builders
 
-        private void processPlugins(Plugin[] plugins)
+        private void processPlugins(IEnumerable<Plugin> plugins)
         {
             Assembly assembly = createInstanceBuilderAssembly(plugins);
             foreach (Plugin plugin in plugins)
@@ -143,7 +146,7 @@ namespace StructureMap
             }
         }
 
-        private Assembly createInstanceBuilderAssembly(Plugin[] plugins)
+        private Assembly createInstanceBuilderAssembly(IEnumerable<Plugin> plugins)
         {
             string assemblyName = Guid.NewGuid().ToString().Replace(".", "") + "InstanceBuilderAssembly";
             InstanceBuilderAssembly builderAssembly = new InstanceBuilderAssembly(assemblyName, PluginType);
@@ -218,17 +221,15 @@ namespace StructureMap
 
         object IInstanceCreator.BuildInstance(InstanceMemento memento)
         {
-            if (!_instanceBuilders.ContainsKey(memento.ConcreteKey))
-            {
-                throw new StructureMapException(
-                    201, memento.ConcreteKey, memento.InstanceKey, PluginType.FullName);
-            }
+            assertThatTheConcreteKeyExists(memento);
 
-            InstanceBuilder builder = _instanceBuilders[memento.ConcreteKey];
 
             try
             {
-                return builder.BuildInstance(memento);
+                InstanceBuilder builder = _instanceBuilders[memento.ConcreteKey];
+                object constructedInstance = builder.BuildInstance(memento);
+                CompoundInterceptor interceptor = _interceptorLibrary.FindInterceptor(constructedInstance.GetType());
+                return interceptor.Process(constructedInstance);
             }
             catch (StructureMapException)
             {
@@ -241,6 +242,15 @@ namespace StructureMap
             catch (Exception ex)
             {
                 throw new StructureMapException(207, ex, memento.InstanceKey, PluginType.FullName);
+            }
+        }
+
+        private void assertThatTheConcreteKeyExists(InstanceMemento memento)
+        {
+            if (!_instanceBuilders.ContainsKey(memento.ConcreteKey))
+            {
+                throw new StructureMapException(
+                    201, memento.ConcreteKey, memento.InstanceKey, PluginType.FullName);
             }
         }
 

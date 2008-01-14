@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using StructureMap.Graph;
+using StructureMap.Interceptors;
 
 namespace StructureMap.Configuration.DSL
 {

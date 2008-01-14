@@ -11,8 +11,8 @@ namespace StructureMap
         /// <summary>
         /// Establishes a reference to the parent InstanceManager
         /// </summary>
-        /// <param name="Manager"></param>
-        void SetInstanceManager(InstanceManager Manager);
+        /// <param name="instanceManager"></param>
+        void SetInstanceManager(InstanceManager instanceManager);
 
         /// <summary>
         /// The CLR System.Type that the IInstanceManager builds instances  

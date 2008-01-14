@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using Rhino.Mocks;
+using StructureMap.Interceptors;
 using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing

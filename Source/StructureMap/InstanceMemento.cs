@@ -2,6 +2,7 @@ using System;
 using StructureMap.Configuration;
 using StructureMap.Configuration.Tokens;
 using StructureMap.Graph;
+using StructureMap.Interceptors;
 
 namespace StructureMap
 {

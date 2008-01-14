@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using StructureMap.Configuration.DSL;
+using StructureMap.Interceptors;
 
 namespace StructureMap.Graph
 {
@@ -14,10 +15,11 @@ namespace StructureMap.Graph
     [Serializable]
     public class PluginGraph
     {
-        private AssemblyGraphCollection _assemblies;
+        private readonly AssemblyGraphCollection _assemblies;
         private bool _sealed = false;
-        private PluginFamilyCollection _pluginFamilies;
-        private InstanceDefaultManager _defaultManager = new InstanceDefaultManager();
+        private readonly PluginFamilyCollection _pluginFamilies;
+        private readonly InstanceDefaultManager _defaultManager = new InstanceDefaultManager();
+        private readonly InterceptorLibrary _interceptorLibrary = new InterceptorLibrary();
 
 
         /// <summary>
@@ -114,6 +116,11 @@ namespace StructureMap.Graph
         public InstanceDefaultManager DefaultManager
         {
             get { return _defaultManager; }
+        }
+
+        public InterceptorLibrary InterceptorLibrary
+        {
+            get { return _interceptorLibrary; }
         }
 
         /// <summary>

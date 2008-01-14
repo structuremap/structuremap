@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using StructureMap.Graph;
+using StructureMap.Interceptors;
 using StructureMap.Source;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget2;

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using StructureMap.Configuration.DSL;
 using StructureMap.Exceptions;
 using StructureMap.Graph;
+using StructureMap.Interceptors;
 
 namespace StructureMap
 {
@@ -12,10 +13,11 @@ namespace StructureMap
     /// </summary>
     public class InstanceManager : IInstanceManager, IEnumerable
     {
-        private Dictionary<Type, IInstanceFactory> _factories;
-        private bool _failOnException = true;
-        private GenericsPluginGraph _genericsGraph;
-        private InstanceDefaultManager _defaultManager;
+        private readonly Dictionary<Type, IInstanceFactory> _factories;
+        private readonly bool _failOnException = true;
+        private readonly GenericsPluginGraph _genericsGraph;
+        private readonly InstanceDefaultManager _defaultManager;
+        private readonly InterceptorLibrary _interceptorLibrary;
 
         /// <summary>
         /// Default constructor
@@ -24,6 +26,7 @@ namespace StructureMap
         {
             _factories = new Dictionary<Type, IInstanceFactory>();
             _genericsGraph = new GenericsPluginGraph();
+            _interceptorLibrary = new InterceptorLibrary();
         }
 
         /// <summary>
@@ -46,6 +49,7 @@ namespace StructureMap
         {
             _failOnException = failOnException;
             _defaultManager = pluginGraph.DefaultManager;
+            _interceptorLibrary = pluginGraph.InterceptorLibrary;
 
             if (!pluginGraph.IsSealed)
             {
@@ -68,6 +72,12 @@ namespace StructureMap
         public InstanceDefaultManager DefaultManager
         {
             get { return _defaultManager; }
+        }
+
+
+        public InterceptorLibrary InterceptorLibrary
+        {
+            get { return _interceptorLibrary; }
         }
 
         private IInstanceFactory registerPluginFamily(PluginFamily family)
