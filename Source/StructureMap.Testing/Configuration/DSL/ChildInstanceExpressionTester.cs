@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
+using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.Testing.Widget4;
 
 namespace StructureMap.Testing.Configuration.DSL

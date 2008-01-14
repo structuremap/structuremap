@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using StructureMap.Attributes;
 using StructureMap.Configuration.DSL;
+using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 using StructureMap.Testing.Widget;

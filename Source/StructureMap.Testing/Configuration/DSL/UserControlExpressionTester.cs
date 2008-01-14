@@ -1,6 +1,6 @@
 using NUnit.Framework;
 using StructureMap.Configuration;
-using StructureMap.Configuration.DSL;
+using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.Graph;
 
 namespace StructureMap.Testing.Configuration.DSL

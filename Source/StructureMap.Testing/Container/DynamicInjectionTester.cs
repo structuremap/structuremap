@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
 using Rhino.Mocks;
-using StructureMap.Configuration.DSL;
+using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 using StructureMap.Testing.Widget3;

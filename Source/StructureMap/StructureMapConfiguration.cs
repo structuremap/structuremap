@@ -4,6 +4,7 @@ using System.IO;
 using System.Xml;
 using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
+using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.Graph;
 using StructureMap.Verification;
 

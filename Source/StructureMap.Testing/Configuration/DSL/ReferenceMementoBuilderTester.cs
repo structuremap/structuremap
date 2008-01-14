@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using Rhino.Mocks;
 using StructureMap.Configuration.DSL;
+using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.Graph;
 using StructureMap.Testing.Container;
 

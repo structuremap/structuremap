@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 
