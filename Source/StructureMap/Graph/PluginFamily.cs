@@ -34,14 +34,16 @@ namespace StructureMap.Graph
         private DefinitionSource _definitionSource = DefinitionSource.Implicit;
         private string _pluginTypeName;
         private InterceptionChain _interceptionChain;
-        private PluginCollection _plugins;
+        private readonly PluginCollection _plugins;
         private InstanceInterceptor _instanceInterceptor = new NulloInterceptor();
+        private bool _canUseUnMarkedPlugins = false;
+
 
         public const string CONCRETE_KEY = "CONCRETE";
 
         #region constructors
 
-        public PluginFamily(Type pluginType, string defaultInstanceKey) : base()
+        public PluginFamily(Type pluginType, string defaultInstanceKey) 
         {
             _pluginType = pluginType;
             _pluginTypeName = TypePath.GetAssemblyQualifiedName(_pluginType);
@@ -81,7 +83,7 @@ namespace StructureMap.Graph
         /// </summary>
         /// <param name="path"></param>
         /// <param name="defaultKey"></param>
-        public PluginFamily(TypePath path, string defaultKey) : base()
+        public PluginFamily(TypePath path, string defaultKey)
         {
             _plugins = new PluginCollection(this);
             _pluginTypeName = path.AssemblyQualifiedName;
@@ -115,6 +117,7 @@ namespace StructureMap.Graph
             set { _instanceInterceptor = value; }
         }
 
+        // This code sucks.  What's going on here?
         public PluginFamily CreateTemplatedClone(params Type[] templateTypes)
         {
             Type templatedType = _pluginType.MakeGenericType(templateTypes);
@@ -131,7 +134,7 @@ namespace StructureMap.Graph
 
             foreach (Plugin plugin in _plugins)
             {
-                if (IsOfCorrectGenericType(plugin, templateTypes))
+                if (isOfCorrectGenericType(plugin, templateTypes))
                 {
                     Plugin templatedPlugin = plugin.CreateTemplatedClone(templateTypes);
                     templatedFamily.Plugins.Add(templatedPlugin);
@@ -148,7 +151,8 @@ namespace StructureMap.Graph
             return templatedFamily;
         }
 
-        private bool IsOfCorrectGenericType(Plugin plugin, params Type[] templateTypes)
+        // TODO:  Move this around
+        private bool isOfCorrectGenericType(Plugin plugin, params Type[] templateTypes)
         {
             bool isValid = true;
 
@@ -191,7 +195,7 @@ namespace StructureMap.Graph
         public string DefaultInstanceKey
         {
             get { return _defaultKey; }
-            set { _defaultKey = value == null ? string.Empty : value; }
+            set { _defaultKey = value ?? string.Empty; }
         }
 
         /// <summary>
@@ -248,6 +252,13 @@ namespace StructureMap.Graph
             get { return _pluginType.IsGenericType; }
         }
 
+
+        public bool CanUseUnMarkedPlugins
+        {
+            get { return _canUseUnMarkedPlugins; }
+            set { _canUseUnMarkedPlugins = value; }
+        }
+
         #endregion
 
         /// <summary>
@@ -255,14 +266,29 @@ namespace StructureMap.Graph
         /// collection of Plugin's 
         /// </summary>
         /// <param name="assembly"></param>
-        public void SearchAssemblyGraph(AssemblyGraph assembly)
+        public Plugin[] FindPlugins(AssemblyGraph assembly)
         {
-            Plugin[] plugins = assembly.FindPlugins(PluginType);
+            Predicate<Type> pluggedTypeFilter = delegate(Type type)
+            {
+                return Plugin.IsAnExplicitPlugin(PluginType, type);
+            };
+
+            if (_canUseUnMarkedPlugins)
+            {
+                pluggedTypeFilter = delegate(Type type)
+                                        {
+                                            return Plugin.CanBeCast(PluginType, type);
+                                        };
+            }
+
+            Plugin[] plugins = assembly.FindPlugins(pluggedTypeFilter);
 
             foreach (Plugin plugin in plugins)
             {
                 _plugins.Add(plugin);
             }
+
+            return plugins;
         }
 
 

@@ -1,5 +1,6 @@
 using System.Reflection;
 using NUnit.Framework;
+using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.Graph;
 using StructureMap.Testing.Widget3;
 
@@ -39,6 +40,19 @@ namespace StructureMap.Testing.Configuration.DSL
 
             AssemblyGraph assembly = AssemblyGraph.ContainingType<IGateway>();
             Assert.IsTrue(graph.Assemblies.Contains(assembly.AssemblyName));
+        }
+
+        [Test]
+        public void ScanAssemblyByName()
+        {
+            ScanAssembliesExpression expression = StructureMapConfiguration.ScanAssemblies()
+                .IncludeAssembly(typeof(IGateway).Assembly.FullName);
+            Assert.IsNotNull(expression);
+            
+            PluginGraph graph = StructureMapConfiguration.GetPluginGraph();
+
+            AssemblyGraph assembly = AssemblyGraph.ContainingType<IGateway>();
+            Assert.IsTrue(graph.Assemblies.Contains(assembly.AssemblyName));  
         }
 
         [Test]

@@ -217,14 +217,14 @@
     <Compile Include="Configuration\DSL\IExpression.cs" />
     <Compile Include="Configuration\DSL\Expressions\IMementoBuilder.cs" />
     <Compile Include="Configuration\DSL\Expressions\InstanceDefaultExpression.cs" />
-    <Compile Include="Configuration\DSL\InstanceExpression.cs" />
+    <Compile Include="Configuration\DSL\Expressions\InstanceExpression.cs" />
     <Compile Include="Configuration\DSL\Expressions\LiteralExpression.cs" />
-    <Compile Include="Configuration\DSL\Expressions\LiteralMemento.cs" />
-    <Compile Include="Configuration\DSL\MementoBuilder.cs" />
-    <Compile Include="Configuration\DSL\ProfileExpression.cs" />
+    <Compile Include="Configuration\Mementos\LiteralMemento.cs" />
+    <Compile Include="Configuration\DSL\Expressions\MementoBuilder.cs" />
+    <Compile Include="Configuration\DSL\Expressions\ProfileExpression.cs" />
     <Compile Include="Configuration\DSL\Expressions\PropertyExpression.cs" />
     <Compile Include="Configuration\DSL\Expressions\PrototypeExpression.cs" />
-    <Compile Include="Configuration\DSL\PrototypeMemento.cs" />
+    <Compile Include="Configuration\Mementos\PrototypeMemento.cs" />
     <Compile Include="Configuration\DSL\ReferenceMementoBuilder.cs" />
     <Compile Include="Configuration\DSL\Registry.cs" />
     <Compile Include="Configuration\DSL\Expressions\ScanAssembliesExpression.cs" />
@@ -330,11 +330,12 @@
     <Compile Include="Configuration\Tokens\TemplateToken.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Configuration\UserControlMemento.cs" />
+    <Compile Include="Configuration\Mementos\UserControlMemento.cs" />
     <Compile Include="Configuration\XmlConstants.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ConstructorMemento.cs" />
+    <Compile Include="Delegates.cs" />
     <Compile Include="DeploymentTasks\DeploymentConfiguration.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -498,12 +499,12 @@
     <Compile Include="Interceptors\ThreadLocalStorageInterceptor.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Interceptors\TypeInterceptor.cs" />
+    <Compile Include="Interceptors\FilteredInstanceInterceptor.cs" />
     <Compile Include="IPluginGraphSource.cs" />
     <Compile Include="MementoSource.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MemoryInstanceMemento.cs">
+    <Compile Include="Configuration\Mementos\MemoryInstanceMemento.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ObjectFactory.cs">

@@ -12,7 +12,13 @@ namespace StructureMap.Configuration.DSL.Expressions
     /// </summary>
     public class ScanAssembliesExpression : IExpression
     {
-        private List<AssemblyGraph> _assemblies = new List<AssemblyGraph>();
+        private readonly Registry _registry;
+        private readonly List<AssemblyGraph> _assemblies = new List<AssemblyGraph>();
+
+        public ScanAssembliesExpression(Registry registry)
+        {
+            _registry = registry;
+        }
 
         void IExpression.Configure(PluginGraph graph)
         {
@@ -57,6 +63,24 @@ namespace StructureMap.Configuration.DSL.Expressions
         {
             _assemblies.Add(AssemblyGraph.ContainingType<T>());
 
+            return this;
+        }
+
+        public ScanAssembliesExpression AddAllTypesOf<PLUGINTYPE>()
+        {
+            _registry.addExpression(delegate (PluginGraph pluginGraph)
+                                        {
+                                            PluginFamily family =
+                                                pluginGraph.LocateOrCreateFamilyForType(typeof (PLUGINTYPE));
+                                            family.CanUseUnMarkedPlugins = true;
+                                        });
+
+            return this;
+        }
+
+        public ScanAssembliesExpression IncludeAssembly(string assemblyName)
+        {
+            _assemblies.Add(new AssemblyGraph(assemblyName));
             return this;
         }
     }

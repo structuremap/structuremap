@@ -10,7 +10,7 @@ namespace StructureMap.Configuration.DSL.Expressions
     public class ProfileExpression : IExpression
     {
         private readonly string _profileName;
-        private List<InstanceDefaultExpression> _defaults = new List<InstanceDefaultExpression>();
+        private readonly List<InstanceDefaultExpression> _defaults = new List<InstanceDefaultExpression>();
 
         public ProfileExpression(string profileName)
         {

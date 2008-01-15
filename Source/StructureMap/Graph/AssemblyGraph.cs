@@ -44,8 +44,8 @@ namespace StructureMap.Graph
 
         #endregion
 
-        private Assembly _assembly;
-        private string _assemblyName;
+        private readonly Assembly _assembly;
+        private readonly string _assemblyName;
         private bool _lookForPluginFamilies = true;
 
 
@@ -67,7 +67,7 @@ namespace StructureMap.Graph
             }
         }
 
-        public AssemblyGraph(Assembly assembly) : base()
+        public AssemblyGraph(Assembly assembly)
         {
             _assemblyName = assembly.GetName().Name;
             _assembly = assembly;
@@ -80,6 +80,34 @@ namespace StructureMap.Graph
         {
             get { return _assemblyName; }
         }
+
+
+        /// <summary>
+        /// Reference to the System.Reflection.Assembly object
+        /// </summary>
+        public Assembly InnerAssembly
+        {
+            get { return _assembly; }
+        }
+
+        /// <summary>
+        /// Used to control whether or not the assembly should be searched for implicit attributes
+        /// </summary>
+        public bool LookForPluginFamilies
+        {
+            get { return _lookForPluginFamilies; }
+            set { _lookForPluginFamilies = value; }
+        }
+
+        #region IComparable Members
+
+        public int CompareTo(object obj)
+        {
+            AssemblyGraph peer = (AssemblyGraph) obj;
+            return AssemblyName.CompareTo(peer.AssemblyName);
+        }
+
+        #endregion
 
         /// <summary>
         /// Returns an array of all the CLR Type's in the Assembly that are marked as
@@ -111,7 +139,7 @@ namespace StructureMap.Graph
 
         private Type[] getExportedTypes()
         {
-            Type[] exportedTypes = null;
+            Type[] exportedTypes;
             try
             {
                 exportedTypes = _assembly.GetExportedTypes();
@@ -124,46 +152,13 @@ namespace StructureMap.Graph
         }
 
 
-        /// <summary>
-        /// Returns an array of possible Plugin's from the Assembly that match
-        /// the requested type 
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        public Plugin[] FindPlugins(Type type)
+        public Plugin[] FindPlugins(Predicate<Type> match)
         {
-            if (_assembly == null)
-            {
-                return new Plugin[0];
-            }
-
-            Plugin[] plugins = Plugin.GetPlugins(_assembly, type);
-            return plugins;
+            Type[] types = FindTypes(match);
+            return Array.ConvertAll<Type, Plugin>(types,
+                delegate(Type type) { return Plugin.CreateImplicitPlugin(type); });
         }
 
-
-        /// <summary>
-        /// Reference to the System.Reflection.Assembly object
-        /// </summary>
-        public Assembly InnerAssembly
-        {
-            get { return _assembly; }
-        }
-
-        /// <summary>
-        /// Used to control whether or not the assembly should be searched for implicit attributes
-        /// </summary>
-        public bool LookForPluginFamilies
-        {
-            get { return _lookForPluginFamilies; }
-            set { _lookForPluginFamilies = value; }
-        }
-
-        public int CompareTo(object obj)
-        {
-            AssemblyGraph peer = (AssemblyGraph) obj;
-            return AssemblyName.CompareTo(peer.AssemblyName);
-        }
 
         public static AssemblyGraph ContainingType<T>()
         {
@@ -190,6 +185,11 @@ namespace StructureMap.Graph
             }
 
             return returnValue;
+        }
+
+        public Type[] FindTypes(Predicate<Type> match)
+        {
+            return Array.FindAll(getExportedTypes(), match);
         }
     }
 }

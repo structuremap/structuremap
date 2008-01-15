@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Reflection;
 using NUnit.Framework;
 using StructureMap.Graph;
 using StructureMap.Testing.Widget;
@@ -42,7 +43,8 @@ namespace StructureMap.Testing.Graph
         public void CanFindPlugins()
         {
             AssemblyGraph graph = new AssemblyGraph("StructureMap.Testing.Widget");
-            Plugin[] plugins = graph.FindPlugins(typeof (IWidget));
+            PluginFamily family = new PluginFamily(typeof(IWidget));
+            Plugin[] plugins = family.FindPlugins(graph);
             Assert.IsNotNull(plugins);
             Assert.AreEqual(4, plugins.Length);
             Assert.AreEqual(DefinitionSource.Implicit, plugins[0].DefinitionSource);
@@ -79,5 +81,9 @@ namespace StructureMap.Testing.Graph
             AssemblyGraph assemblyGraph = new AssemblyGraph("StructureMap.Testing.Widget");
             Assert.IsNull(assemblyGraph.FindTypeByFullName("something that does not exist"));
         }
+
+
     }
+
+
 }

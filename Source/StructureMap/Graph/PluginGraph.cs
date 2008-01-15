@@ -88,7 +88,7 @@ namespace StructureMap.Graph
         {
             foreach (AssemblyGraph assembly in _assemblies)
             {
-                family.SearchAssemblyGraph(assembly);
+                family.FindPlugins(assembly);
             }
         }
 

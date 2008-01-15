@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using StructureMap.Attributes;
+using StructureMap.Configuration.Mementos;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 
@@ -13,15 +14,17 @@ namespace StructureMap.Configuration.DSL.Expressions
     /// </summary>
     public class CreatePluginFamilyExpression<PLUGINTYPE> : IExpression
     {
-        private readonly Type _pluginType;
         private readonly List<AlterPluginFamilyDelegate> _alterations = new List<AlterPluginFamilyDelegate>();
-        private readonly InstanceScope _scope = InstanceScope.PerRequest;
         private readonly List<IExpression> _children = new List<IExpression>();
+        private readonly Type _pluginType;
+        private readonly InstanceScope _scope = InstanceScope.PerRequest;
 
         public CreatePluginFamilyExpression()
         {
             _pluginType = typeof (PLUGINTYPE);
         }
+
+        #region IExpression Members
 
         void IExpression.Configure(PluginGraph graph)
         {
@@ -44,6 +47,8 @@ namespace StructureMap.Configuration.DSL.Expressions
             AssemblyGraph assembly = new AssemblyGraph(_pluginType.Assembly);
             graph.Assemblies.Add(assembly);
         }
+
+        #endregion
 
         /// <summary>
         /// Sets the default instance of a Type to the definition represented by builder
@@ -142,6 +147,31 @@ namespace StructureMap.Configuration.DSL.Expressions
             _alterations.Add(
                 delegate(PluginFamily family) { family.InstanceInterceptor = new EnrichmentInterceptor<PLUGINTYPE>(handler); });
 
+            return this;
+        }
+
+        public CreatePluginFamilyExpression<PLUGINTYPE> AddConcreteType<CONCRETETYPE>()
+        {
+            return AddConcreteType<CONCRETETYPE>(Guid.NewGuid().ToString());
+        }
+
+        public CreatePluginFamilyExpression<PLUGINTYPE> AddConcreteType<CONCRETETYPE>(string instanceName)
+        {
+            _alterations.Add(
+                delegate(PluginFamily family)
+                    {
+                        Plugin plugin = Plugin.CreateImplicitPlugin(typeof (CONCRETETYPE));
+                        plugin.ConcreteKey = instanceName;
+                        family.Plugins.Add(plugin);
+                    }
+                );
+
+            return this;
+        }
+
+        public CreatePluginFamilyExpression<PLUGINTYPE> InterceptConstructionWith(InstanceFactoryInterceptor interceptor)
+        {
+            _alterations.Add(delegate(PluginFamily family){family.InterceptionChain.AddInterceptor(interceptor);});
             return this;
         }
     }

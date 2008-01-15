@@ -156,7 +156,7 @@ namespace StructureMap
         /// <returns></returns>
         public static ScanAssembliesExpression ScanAssemblies()
         {
-            ScanAssembliesExpression expression = new ScanAssembliesExpression();
+            ScanAssembliesExpression expression = new ScanAssembliesExpression(_registry);
             _registry.addExpression(expression);
 
             return expression;

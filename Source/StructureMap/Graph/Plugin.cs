@@ -26,45 +26,6 @@ namespace StructureMap.Graph
             return plugin;
         }
 
-        /// <summary>
-        /// Finds an array of Plugin objects for a given PluginType in an Assembly object
-        /// by searching for all exported types marked with [Pluggable] that can be cast 
-        /// to the PluginType
-        /// </summary>
-        /// <param name="assembly"></param>
-        /// <param name="pluginType"></param>
-        /// <returns></returns>
-        public static Plugin[] GetPlugins(Assembly assembly, Type pluginType)
-        {
-            ArrayList plugList = new ArrayList();
-
-            Type[] types = null;
-
-            try
-            {
-                types = assembly.GetExportedTypes();
-            }
-            catch (Exception ex)
-            {
-                throw new StructureMapException(170, ex, assembly.FullName);
-            }
-
-            foreach (Type exportedType in types)
-            {
-                bool canBePluggedIn = CanBePluggedIn(pluginType, exportedType);
-
-                if (canBePluggedIn)
-                {
-                    Plugin plugin = CreateImplicitPlugin(exportedType);
-                    plugList.Add(plugin);
-                }
-            }
-
-            Plugin[] plugins = new Plugin[plugList.Count];
-            plugList.CopyTo(plugins, 0);
-
-            return plugins;
-        }
 
         /// <summary>
         /// Determines if the PluggedType is a valid Plugin into the
@@ -73,7 +34,7 @@ namespace StructureMap.Graph
         /// <param name="pluginType"></param>
         /// <param name="pluggedType"></param>
         /// <returns></returns>
-        public static bool CanBePluggedIn(Type pluginType, Type pluggedType)
+        public static bool IsAnExplicitPlugin(Type pluginType, Type pluggedType)
         {
             bool returnValue = false;
 
@@ -103,6 +64,12 @@ namespace StructureMap.Graph
             if (GenericsPluginGraph.CanBeCast(pluginType, pluggedType))
             {
                 return true;
+            }
+
+            ConstructorInfo constructor = GetGreediestConstructor(pluggedType);
+            if (constructor == null)
+            {
+                return false;
             }
 
             return pluginType.IsAssignableFrom(pluggedType);

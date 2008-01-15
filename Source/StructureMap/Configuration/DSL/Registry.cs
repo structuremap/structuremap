@@ -8,8 +8,8 @@ namespace StructureMap.Configuration.DSL
 {
     public class Registry : IDisposable
     {
-        private List<IExpression> _expressions = new List<IExpression>();
-        private PluginGraph _graph;
+        private readonly List<IExpression> _expressions = new List<IExpression>();
+        private readonly PluginGraph _graph;
 
         public Registry(PluginGraph graph) : this()
         {
@@ -22,6 +22,14 @@ namespace StructureMap.Configuration.DSL
             configure();
         }
 
+        #region IDisposable Members
+
+        public void Dispose()
+        {
+            ConfigurePluginGraph(_graph);
+        }
+
+        #endregion
 
         /// <summary>
         /// Implement this method to 
@@ -49,11 +57,6 @@ namespace StructureMap.Configuration.DSL
             }
         }
 
-
-        public void Dispose()
-        {
-            ConfigurePluginGraph(_graph);
-        }
 
         /// <summary>
         /// Direct StructureMap to build instances of type T, and look for concrete classes
@@ -232,42 +235,53 @@ namespace StructureMap.Configuration.DSL
 
         public void RegisterInterceptor(TypeInterceptor interceptor)
         {
-            addExpression(delegate (PluginGraph pluginGraph)
-                              {
-                                  pluginGraph.InterceptorLibrary.AddInterceptor(interceptor);
-                              });
+            addExpression(
+                delegate(PluginGraph pluginGraph) { pluginGraph.InterceptorLibrary.AddInterceptor(interceptor); });
         }
 
-        public TypeInterceptorExpression IfTypeMatches(TypeMatchDelegate match)
+        public TypeInterceptorExpression IfTypeMatches(Predicate<Type> match)
         {
             TypeInterceptorExpression expression = new TypeInterceptorExpression(match);
             _expressions.Add(expression);
 
             return expression;
         }
+
+
+        /// <summary>
+        /// Programmatically determine Assembly's to be scanned for attribute configuration
+        /// </summary>
+        /// <returns></returns>
+        public ScanAssembliesExpression ScanAssemblies()
+        {
+            ScanAssembliesExpression expression = new ScanAssembliesExpression(this);
+            addExpression(expression);
+
+            return expression;
+        }
     }
 
-    public delegate object InterceptionDelegate(object instance);
-    public delegate bool TypeMatchDelegate(Type type);
+
     public class TypeInterceptorExpression : IExpression, TypeInterceptor
     {
-        private readonly TypeMatchDelegate _match;
+        private readonly Predicate<Type> _match;
         private InterceptionDelegate _interception;
 
-        internal TypeInterceptorExpression(TypeMatchDelegate match)
+        internal TypeInterceptorExpression(Predicate<Type> match)
         {
             _match = match;
         }
+
+        #region IExpression Members
 
         void IExpression.Configure(PluginGraph graph)
         {
             graph.InterceptorLibrary.AddInterceptor(this);
         }
 
-        public void InterceptWith(InterceptionDelegate interception)
-        {
-            _interception = interception;
-        }
+        #endregion
+
+        #region TypeInterceptor Members
 
         public bool MatchesType(Type type)
         {
@@ -278,9 +292,17 @@ namespace StructureMap.Configuration.DSL
         {
             return _interception(target);
         }
+
+        #endregion
+
+        public void InterceptWith(InterceptionDelegate interception)
+        {
+            _interception = interception;
+        }
     }
 
     internal delegate void PluginGraphAlteration(PluginGraph pluginGraph);
+
     internal class BasicExpression : IExpression
     {
         private readonly PluginGraphAlteration _alteration;
@@ -290,9 +312,13 @@ namespace StructureMap.Configuration.DSL
             _alteration = alteration;
         }
 
+        #region IExpression Members
+
         public void Configure(PluginGraph graph)
         {
             _alteration(graph);
         }
+
+        #endregion
     }
 }

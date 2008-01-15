@@ -57,14 +57,14 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void CanPluginWithAttribute()
         {
-            Assert.AreEqual(true, Plugin.CanBePluggedIn(_iwidget, _colorwidget), "ColorWidget plugs into IWidget");
+            Assert.AreEqual(true, Plugin.IsAnExplicitPlugin(_iwidget, _colorwidget), "ColorWidget plugs into IWidget");
         }
 
         [Test]
         public void CanNotPluginWithoutAttribute()
         {
             string msg = "NotPluggableWidget cannot plug into IWidget automatically";
-            Assert.AreEqual(false, Plugin.CanBePluggedIn(_iwidget, typeof (NotPluggable)), msg);
+            Assert.AreEqual(false, Plugin.IsAnExplicitPlugin(_iwidget, typeof (NotPluggable)), msg);
         }
 
 
@@ -72,7 +72,8 @@ namespace StructureMap.Testing.Graph
         public void GetPluginsOfAnInterface()
         {
             Assembly assem = AppDomain.CurrentDomain.Load("StructureMap.Testing.Widget");
-            Plugin[] plugs = Plugin.GetPlugins(assem, typeof (IWidget));
+            PluginFamily family = new PluginFamily(typeof(IWidget));
+            Plugin[] plugs = family.FindPlugins(new AssemblyGraph(assem));
 
             Assert.IsNotNull(plugs);
             Assert.AreEqual(4, plugs.Length);
@@ -83,7 +84,8 @@ namespace StructureMap.Testing.Graph
         public void GetPluginsOfAnAbstractClass()
         {
             Assembly assem = AppDomain.CurrentDomain.Load("StructureMap.Testing.Widget");
-            Plugin[] plugs = Plugin.GetPlugins(assem, typeof (WidgetMaker));
+            PluginFamily family = new PluginFamily(typeof(WidgetMaker));
+            Plugin[] plugs = family.FindPlugins(new AssemblyGraph(assem));
 
             Assert.IsNotNull(plugs);
             Assert.AreEqual(2, plugs.Length);
@@ -93,7 +95,9 @@ namespace StructureMap.Testing.Graph
         public void GetPluginsIncludingTheBaseClass()
         {
             Assembly assem = AppDomain.CurrentDomain.Load("StructureMap.Testing.Widget");
-            Plugin[] plugs = Plugin.GetPlugins(assem, typeof (GrandChild));
+            PluginFamily family = new PluginFamily(typeof(GrandChild));
+            Plugin[] plugs = family.FindPlugins(new AssemblyGraph(assem));
+
 
             Assert.IsNotNull(plugs);
             Assert.AreEqual(2, plugs.Length);

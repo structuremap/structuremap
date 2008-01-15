@@ -191,6 +191,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Configuration\DSL\AddInstanceTester.cs" />
+    <Compile Include="Configuration\DSL\AddTypesTester.cs" />
     <Compile Include="Configuration\DSL\ChildInstanceExpressionTester.cs" />
     <Compile Include="Configuration\DSL\ConstructorExpressionTester.cs" />
     <Compile Include="Configuration\DSL\CreatePluginFamilyTester.cs" />
@@ -362,6 +363,7 @@
     <Compile Include="Container\Source\XmlTemplaterTester.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Container\TypeFindingTester.cs" />
     <Compile Include="DataAccess\CommandCollectionTester.cs" />
     <Compile Include="DataAccess\CommandFactoryTester.cs" />
     <Compile Include="DataAccess\Commands\ParameterizedQueryFilterTester.cs" />

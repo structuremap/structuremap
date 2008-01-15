@@ -17,7 +17,7 @@ namespace StructureMap.Testing.Graph
             PluginFamily family = new PluginFamily(typeof (IWidget), "DefaultKey", new MemoryMementoSource());
 
             AssemblyGraph graph = new AssemblyGraph("StructureMap.Testing.Widget");
-            family.SearchAssemblyGraph(graph);
+            family.FindPlugins(graph);
 
             Assert.AreEqual(4, family.Plugins.Count, "Plugin Count");
             foreach (Plugin plugin in family.Plugins)

@@ -153,5 +153,29 @@ namespace StructureMap.Testing.Configuration.DSL
 
             Assert.IsInstanceOfType(typeof (FakeGateway), gateway);
         }
+
+        [Test]
+        public void PutAnInterceptorIntoTheInterceptionChainOfAPluginFamilyInTheDSL()
+        {
+            StubbedInstanceFactoryInterceptor factoryInterceptor = new StubbedInstanceFactoryInterceptor();
+
+            PluginGraph pluginGraph = new PluginGraph();
+            using (Registry registry = new Registry(pluginGraph))
+            {
+                registry.BuildInstancesOf<IGateway>().InterceptConstructionWith(factoryInterceptor);
+            }
+
+            InterceptionChain chain = pluginGraph.PluginFamilies[typeof (IGateway)].InterceptionChain;
+            Assert.AreEqual(1, chain.Count);
+            Assert.AreSame(factoryInterceptor, chain[0]);
+        }   
+    }
+
+    public class StubbedInstanceFactoryInterceptor : InstanceFactoryInterceptor
+    {
+        public override object Clone()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
