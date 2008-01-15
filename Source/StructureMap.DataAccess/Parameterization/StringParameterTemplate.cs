@@ -5,9 +5,9 @@ namespace StructureMap.DataAccess.Parameterization
     [Pluggable("String")]
     public class StringParameterTemplate : IParameterTemplate
     {
+        private readonly bool _isNullable;
         private readonly string _parameterName;
         private readonly int _size;
-        private readonly bool _isNullable;
 
         public StringParameterTemplate(string parameterName, int size, bool isNullable)
         {
@@ -16,6 +16,7 @@ namespace StructureMap.DataAccess.Parameterization
             _isNullable = isNullable;
         }
 
+        #region IParameterTemplate Members
 
         public IDataParameter ConfigureParameter(IDatabaseEngine database)
         {
@@ -26,5 +27,7 @@ namespace StructureMap.DataAccess.Parameterization
         {
             get { return _parameterName; }
         }
+
+        #endregion
     }
 }

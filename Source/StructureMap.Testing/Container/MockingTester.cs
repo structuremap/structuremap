@@ -1,5 +1,4 @@
 using System;
-using NMock;
 using NUnit.Framework;
 using StructureMap.Graph;
 using StructureMap.Source;
@@ -10,8 +9,7 @@ namespace StructureMap.Testing.Container
     [TestFixture]
     public class MockingTester
     {
-        private InstanceManager _manager;
-        private Type gatewayType = typeof (IGateway);
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -23,5 +21,9 @@ namespace StructureMap.Testing.Container
             _manager = new InstanceManager(graph);
         }
 
+        #endregion
+
+        private InstanceManager _manager;
+        private Type gatewayType = typeof (IGateway);
     }
 }

@@ -10,9 +10,7 @@ namespace StructureMap.Testing.Configuration.Tokens
     [TestFixture]
     public class GraphObjectTester
     {
-        private DynamicMock _visitorMock;
-        private IConfigurationVisitor _visitor;
-        private PluginGraphReport _report;
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -23,6 +21,12 @@ namespace StructureMap.Testing.Configuration.Tokens
             _visitor = (IConfigurationVisitor) _visitorMock.MockInstance;
             _report = ObjectMother.Report();
         }
+
+        #endregion
+
+        private DynamicMock _visitorMock;
+        private IConfigurationVisitor _visitor;
+        private PluginGraphReport _report;
 
         [Test]
         public void AssemblyTokenAcceptVisitor()
@@ -68,27 +72,6 @@ namespace StructureMap.Testing.Configuration.Tokens
             }
         }
 
-        [Test]
-        public void PluginAcceptVisitor()
-        {
-            PluginToken token = new PluginToken();
-            _visitorMock.Expect("HandlePlugin", token);
-            token.AcceptVisitor(_visitor);
-            _visitorMock.Verify();
-        }
-
-        [Test]
-        public void PluginChildren()
-        {
-            foreach (FamilyToken family in _report.Families)
-            {
-                foreach (PluginToken plugin in family.Plugins)
-                {
-                    Assert.AreEqual(plugin.Properties, plugin.Children);
-                }
-            }
-        }
-
 
         [Test]
         public void InstanceAcceptVisitor()
@@ -107,6 +90,27 @@ namespace StructureMap.Testing.Configuration.Tokens
                 foreach (InstanceToken instance in family.Instances)
                 {
                     Assert.AreEqual(instance.Properties, instance.Children);
+                }
+            }
+        }
+
+        [Test]
+        public void PluginAcceptVisitor()
+        {
+            PluginToken token = new PluginToken();
+            _visitorMock.Expect("HandlePlugin", token);
+            token.AcceptVisitor(_visitor);
+            _visitorMock.Verify();
+        }
+
+        [Test]
+        public void PluginChildren()
+        {
+            foreach (FamilyToken family in _report.Families)
+            {
+                foreach (PluginToken plugin in family.Plugins)
+                {
+                    Assert.AreEqual(plugin.Properties, plugin.Children);
                 }
             }
         }

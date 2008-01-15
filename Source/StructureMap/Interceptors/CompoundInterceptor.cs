@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace StructureMap.Interceptors
 {
     public class CompoundInterceptor : InstanceInterceptor
@@ -12,6 +8,14 @@ namespace StructureMap.Interceptors
         {
             _interceptors = interceptors;
         }
+
+
+        public InstanceInterceptor[] Interceptors
+        {
+            get { return _interceptors; }
+        }
+
+        #region InstanceInterceptor Members
 
         public object Process(object target)
         {
@@ -24,10 +28,6 @@ namespace StructureMap.Interceptors
             return returnValue;
         }
 
-
-        public InstanceInterceptor[] Interceptors
-        {
-            get { return _interceptors; }
-        }
+        #endregion
     }
 }

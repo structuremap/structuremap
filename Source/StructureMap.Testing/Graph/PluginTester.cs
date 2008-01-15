@@ -11,11 +11,7 @@ namespace StructureMap.Testing.Graph
     [TestFixture]
     public class PluginTester
     {
-        private Plugin _plugin;
-        private Type _iwidget;
-        private Type _widgetmaker;
-        private Type _colorwidget;
-        private Type _moneywidgetmaker;
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -27,142 +23,13 @@ namespace StructureMap.Testing.Graph
             _moneywidgetmaker = typeof (MoneyWidgetMaker);
         }
 
-        [Test]
-        public void CreateImplicitPluginSetsCorrectName()
-        {
-            Assert.AreEqual("Configuration", _plugin.ConcreteKey);
-        }
+        #endregion
 
-        [Test]
-        public void CreateImplicitPluginSetsCorrectType()
-        {
-            Assert.IsTrue(typeof (ConfigurationWidget).Equals(_plugin.PluggedType));
-        }
-
-        [Test]
-        public void CreateImplicitPluginDefinitionSourceIsImplicity()
-        {
-            Assert.AreEqual(DefinitionSource.Implicit, _plugin.DefinitionSource);
-        }
-
-        [Test]
-        public void ValidationMethods()
-        {
-            MemberInfo[] methods = _plugin.ValidationMethods;
-            Assert.IsNotNull(methods);
-            Assert.AreEqual(methods.Length, 2);
-        }
-
-
-        [Test]
-        public void CanPluginWithAttribute()
-        {
-            Assert.AreEqual(true, Plugin.IsAnExplicitPlugin(_iwidget, _colorwidget), "ColorWidget plugs into IWidget");
-        }
-
-        [Test]
-        public void CanNotPluginWithoutAttribute()
-        {
-            string msg = "NotPluggableWidget cannot plug into IWidget automatically";
-            Assert.AreEqual(false, Plugin.IsAnExplicitPlugin(_iwidget, typeof (NotPluggable)), msg);
-        }
-
-
-        [Test]
-        public void GetPluginsOfAnInterface()
-        {
-            Assembly assem = AppDomain.CurrentDomain.Load("StructureMap.Testing.Widget");
-            PluginFamily family = new PluginFamily(typeof(IWidget));
-            Plugin[] plugs = family.FindPlugins(new AssemblyGraph(assem));
-
-            Assert.IsNotNull(plugs);
-            Assert.AreEqual(4, plugs.Length);
-        }
-
-
-        [Test]
-        public void GetPluginsOfAnAbstractClass()
-        {
-            Assembly assem = AppDomain.CurrentDomain.Load("StructureMap.Testing.Widget");
-            PluginFamily family = new PluginFamily(typeof(WidgetMaker));
-            Plugin[] plugs = family.FindPlugins(new AssemblyGraph(assem));
-
-            Assert.IsNotNull(plugs);
-            Assert.AreEqual(2, plugs.Length);
-        }
-
-        [Test]
-        public void GetPluginsIncludingTheBaseClass()
-        {
-            Assembly assem = AppDomain.CurrentDomain.Load("StructureMap.Testing.Widget");
-            PluginFamily family = new PluginFamily(typeof(GrandChild));
-            Plugin[] plugs = family.FindPlugins(new AssemblyGraph(assem));
-
-
-            Assert.IsNotNull(plugs);
-            Assert.AreEqual(2, plugs.Length);
-        }
-
-
-        [Test]
-        public void GoodPluginToInterface()
-        {
-            Assert.AreEqual(true, Plugin.CanBeCast(_iwidget, _colorwidget), "ColorWidget is an IWidget");
-        }
-
-
-        [Test]
-        public void BadPluginToInterface()
-        {
-            Assert.AreEqual(false, Plugin.CanBeCast(_iwidget, _moneywidgetmaker), "MoneyWidgetMaker is NOT an IWidget");
-        }
-
-        [Test]
-        public void GoodPluginToAbstractClass()
-        {
-            Assert.AreEqual(true, Plugin.CanBeCast(_widgetmaker, _moneywidgetmaker), "MoneyWidgetMaker is a WidgetMaker");
-        }
-
-        [Test]
-        public void BadPluginToAbstractClass()
-        {
-            Assert.AreEqual(false, Plugin.CanBeCast(_widgetmaker, _colorwidget), "ColorWidget is NOT a WidgetMaker");
-        }
-
-        [Test]
-        public void GetGreediestConstructor()
-        {
-            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (GreaterThanRule));
-            ConstructorInfo constructor = plugin.GetConstructor();
-
-            Assert.IsNotNull(constructor);
-            Assert.AreEqual(2, constructor.GetParameters().Length, "Should have 2 inputs");
-        }
-
-        [Test]
-        public void GetFirstMarkedConstructor()
-        {
-            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (ComplexRule));
-            ConstructorInfo constructor = plugin.GetConstructor();
-
-            Assert.IsNotNull(constructor);
-            Assert.AreEqual(7, constructor.GetParameters().Length, "Should have 7 inputs, not 8");
-        }
-
-        [Test]
-        public void CanNotMakeObjectInstanceActivator()
-        {
-            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (ComplexRule));
-            Assert.IsTrue(plugin.HasConstructorArguments(), "ComplexRule cannot be just an activator");
-        }
-
-        [Test]
-        public void CanMakeObjectInstanceActivator()
-        {
-            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (DefaultGateway));
-            Assert.IsTrue(!plugin.HasConstructorArguments(), "DefaultGateway can be just an activator");
-        }
-
+        private Plugin _plugin;
+        private Type _iwidget;
+        private Type _widgetmaker;
+        private Type _colorwidget;
+        private Type _moneywidgetmaker;
 
         [
             Test,
@@ -175,6 +42,78 @@ namespace StructureMap.Testing.Graph
                                          "StructureMap.Testing.Widget.NotPluggableWidget");
 
             Plugin plugin = new Plugin(path, "");
+        }
+
+        [Test]
+        public void BadPluginToAbstractClass()
+        {
+            Assert.AreEqual(false, Plugin.CanBeCast(_widgetmaker, _colorwidget), "ColorWidget is NOT a WidgetMaker");
+        }
+
+        [Test]
+        public void BadPluginToInterface()
+        {
+            Assert.AreEqual(false, Plugin.CanBeCast(_iwidget, _moneywidgetmaker), "MoneyWidgetMaker is NOT an IWidget");
+        }
+
+        [Test]
+        public void CanBeAutoFilledIsFalse()
+        {
+            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (GrandPrix));
+
+            Assert.IsFalse(plugin.CanBeAutoFilled);
+        }
+
+        [Test]
+        public void CanBeAutoFilledIsTrue()
+        {
+            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (Mustang));
+
+            Assert.IsTrue(plugin.CanBeAutoFilled);
+        }
+
+        [Test]
+        public void CanCreateTheAutoFilledInstance()
+        {
+            // Builds a PluginGraph that includes all of the PluginFamily's and Plugin's 
+            // defined in this file
+            PluginGraph pluginGraph = new PluginGraph();
+            pluginGraph.Assemblies.Add(Assembly.GetExecutingAssembly());
+            pluginGraph.Seal();
+
+            InstanceManager manager = new InstanceManager(pluginGraph);
+
+            Mustang mustang = (Mustang) manager.CreateInstance(typeof (IAutomobile), "Mustang");
+
+            Assert.IsNotNull(mustang);
+            Assert.IsTrue(mustang.Engine is PushrodEngine);
+        }
+
+        [Test]
+        public void CanMakeObjectInstanceActivator()
+        {
+            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (DefaultGateway));
+            Assert.IsTrue(!plugin.HasConstructorArguments(), "DefaultGateway can be just an activator");
+        }
+
+        [Test]
+        public void CanNotMakeObjectInstanceActivator()
+        {
+            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (ComplexRule));
+            Assert.IsTrue(plugin.HasConstructorArguments(), "ComplexRule cannot be just an activator");
+        }
+
+        [Test]
+        public void CanNotPluginWithoutAttribute()
+        {
+            string msg = "NotPluggableWidget cannot plug into IWidget automatically";
+            Assert.AreEqual(false, Plugin.IsAnExplicitPlugin(_iwidget, typeof (NotPluggable)), msg);
+        }
+
+        [Test]
+        public void CanPluginWithAttribute()
+        {
+            Assert.AreEqual(true, Plugin.IsAnExplicitPlugin(_iwidget, _colorwidget), "ColorWidget plugs into IWidget");
         }
 
 
@@ -201,14 +140,6 @@ namespace StructureMap.Testing.Graph
 
 
         [Test]
-        public void CreateImplicitMementoWithSomeConstructorArgumentsReturnValueIsNull()
-        {
-            Plugin plugin = Plugin.CreateExplicitPlugin(typeof (Strategy), "Default", string.Empty);
-            InstanceMemento memento = plugin.CreateImplicitMemento();
-            Assert.IsNull(memento);
-        }
-
-        [Test]
         public void CreateImplicitMementoWithNoConstructorArguments()
         {
             Plugin plugin = Plugin.CreateExplicitPlugin(typeof (DefaultGateway), "Default", string.Empty);
@@ -221,19 +152,36 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
-        public void CanBeAutoFilledIsTrue()
+        public void CreateImplicitMementoWithSomeConstructorArgumentsReturnValueIsNull()
         {
-            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (Mustang));
-
-            Assert.IsTrue(plugin.CanBeAutoFilled);
+            Plugin plugin = Plugin.CreateExplicitPlugin(typeof (Strategy), "Default", string.Empty);
+            InstanceMemento memento = plugin.CreateImplicitMemento();
+            Assert.IsNull(memento);
         }
 
         [Test]
-        public void CanBeAutoFilledIsFalse()
+        public void CreateImplicitPluginDefinitionSourceIsImplicity()
         {
-            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (GrandPrix));
+            Assert.AreEqual(DefinitionSource.Implicit, _plugin.DefinitionSource);
+        }
 
-            Assert.IsFalse(plugin.CanBeAutoFilled);
+        [Test]
+        public void CreateImplicitPluginSetsCorrectName()
+        {
+            Assert.AreEqual("Configuration", _plugin.ConcreteKey);
+        }
+
+        [Test]
+        public void CreateImplicitPluginSetsCorrectType()
+        {
+            Assert.IsTrue(typeof (ConfigurationWidget).Equals(_plugin.PluggedType));
+        }
+
+        [Test]
+        public void CreatePluginFromTypeThatDoesNotHaveAnAttributeDetermineTheConcreteKey()
+        {
+            Plugin plugin = Plugin.CreateImplicitPlugin(GetType());
+            Assert.AreEqual(TypePath.GetAssemblyQualifiedName(GetType()), plugin.ConcreteKey);
         }
 
         [Test]
@@ -257,22 +205,90 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
-        public void CanCreateTheAutoFilledInstance()
+        public void FindFirstConstructorArgumentOfType()
         {
-            // Builds a PluginGraph that includes all of the PluginFamily's and Plugin's 
-            // defined in this file
-            PluginGraph pluginGraph = new PluginGraph();
-            pluginGraph.Assemblies.Add(Assembly.GetExecutingAssembly());
-            pluginGraph.Seal();
+            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (GrandPrix));
+            string expected = "engine";
 
-            InstanceManager manager = new InstanceManager(pluginGraph);
-
-            Mustang mustang = (Mustang) manager.CreateInstance(typeof (IAutomobile), "Mustang");
-
-            Assert.IsNotNull(mustang);
-            Assert.IsTrue(mustang.Engine is PushrodEngine);
+            string actual = plugin.FindFirstConstructorArgumentOfType<IEngine>();
+            Assert.AreEqual(expected, actual);
         }
 
+        [Test,
+         ExpectedException(typeof (StructureMapException),
+             "StructureMap Exception Code:  302\nThere is no argument of type StructureMap.Testing.Widget.IWidget for concrete type StructureMap.Testing.Graph.GrandPrix"
+             )]
+        public void FindFirstConstructorArgumentOfTypeNegativeCase()
+        {
+            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (GrandPrix));
+            plugin.FindFirstConstructorArgumentOfType<IWidget>();
+        }
+
+        [Test]
+        public void GetFirstMarkedConstructor()
+        {
+            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (ComplexRule));
+            ConstructorInfo constructor = plugin.GetConstructor();
+
+            Assert.IsNotNull(constructor);
+            Assert.AreEqual(7, constructor.GetParameters().Length, "Should have 7 inputs, not 8");
+        }
+
+        [Test]
+        public void GetGreediestConstructor()
+        {
+            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (GreaterThanRule));
+            ConstructorInfo constructor = plugin.GetConstructor();
+
+            Assert.IsNotNull(constructor);
+            Assert.AreEqual(2, constructor.GetParameters().Length, "Should have 2 inputs");
+        }
+
+        [Test]
+        public void GetPluginsIncludingTheBaseClass()
+        {
+            Assembly assem = AppDomain.CurrentDomain.Load("StructureMap.Testing.Widget");
+            PluginFamily family = new PluginFamily(typeof (GrandChild));
+            Plugin[] plugs = family.FindPlugins(new AssemblyGraph(assem));
+
+
+            Assert.IsNotNull(plugs);
+            Assert.AreEqual(2, plugs.Length);
+        }
+
+        [Test]
+        public void GetPluginsOfAnAbstractClass()
+        {
+            Assembly assem = AppDomain.CurrentDomain.Load("StructureMap.Testing.Widget");
+            PluginFamily family = new PluginFamily(typeof (WidgetMaker));
+            Plugin[] plugs = family.FindPlugins(new AssemblyGraph(assem));
+
+            Assert.IsNotNull(plugs);
+            Assert.AreEqual(2, plugs.Length);
+        }
+
+        [Test]
+        public void GetPluginsOfAnInterface()
+        {
+            Assembly assem = AppDomain.CurrentDomain.Load("StructureMap.Testing.Widget");
+            PluginFamily family = new PluginFamily(typeof (IWidget));
+            Plugin[] plugs = family.FindPlugins(new AssemblyGraph(assem));
+
+            Assert.IsNotNull(plugs);
+            Assert.AreEqual(4, plugs.Length);
+        }
+
+        [Test]
+        public void GoodPluginToAbstractClass()
+        {
+            Assert.AreEqual(true, Plugin.CanBeCast(_widgetmaker, _moneywidgetmaker), "MoneyWidgetMaker is a WidgetMaker");
+        }
+
+        [Test]
+        public void GoodPluginToInterface()
+        {
+            Assert.AreEqual(true, Plugin.CanBeCast(_iwidget, _colorwidget), "ColorWidget is an IWidget");
+        }
 
         [Test]
         public void ThrowGoodExceptionWhenNoPublicConstructorsFound()
@@ -293,30 +309,11 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
-        public void CreatePluginFromTypeThatDoesNotHaveAnAttributeDetermineTheConcreteKey()
+        public void ValidationMethods()
         {
-            Plugin plugin = Plugin.CreateImplicitPlugin(GetType());
-            Assert.AreEqual(TypePath.GetAssemblyQualifiedName(GetType()), plugin.ConcreteKey);
-        }
-
-        [Test]
-        public void FindFirstConstructorArgumentOfType()
-        {
-            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (GrandPrix));
-            string expected = "engine";
-
-            string actual = plugin.FindFirstConstructorArgumentOfType<IEngine>();
-            Assert.AreEqual(expected, actual);
-        }
-
-        [Test,
-         ExpectedException(typeof (StructureMapException),
-             "StructureMap Exception Code:  302\nThere is no argument of type StructureMap.Testing.Widget.IWidget for concrete type StructureMap.Testing.Graph.GrandPrix"
-             )]
-        public void FindFirstConstructorArgumentOfTypeNegativeCase()
-        {
-            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (GrandPrix));
-            plugin.FindFirstConstructorArgumentOfType<IWidget>();
+            MemberInfo[] methods = _plugin.ValidationMethods;
+            Assert.IsNotNull(methods);
+            Assert.AreEqual(methods.Length, 2);
         }
     }
 
@@ -343,8 +340,8 @@ namespace StructureMap.Testing.Graph
     [Pluggable("GrandPrix")]
     public class GrandPrix : IAutomobile
     {
-        private readonly IEngine _engine;
         private readonly string _color;
+        private readonly IEngine _engine;
         private readonly int _horsePower;
 
         public GrandPrix(int horsePower, string color, IEngine engine)

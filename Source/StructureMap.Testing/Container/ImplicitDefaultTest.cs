@@ -17,6 +17,14 @@ namespace StructureMap.Testing.Container
             Assert.IsNotNull(gateway);
         }
 
+
+        [Test]
+        public void CanSetTheDefaultInstanceKeyImplicitlyFromObjectFactory()
+        {
+            DefaultGateway gateway = ObjectFactory.GetInstance(typeof (IGateway)) as DefaultGateway;
+            Assert.IsNotNull(gateway);
+        }
+
         [Test]
         public void GetTheDefaultInstanceKeyFromType()
         {
@@ -27,14 +35,6 @@ namespace StructureMap.Testing.Container
             Assert.AreEqual("Default", default1);
             Assert.AreEqual(string.Empty, default2);
             Assert.AreEqual(string.Empty, default3);
-        }
-
-
-        [Test]
-        public void CanSetTheDefaultInstanceKeyImplicitlyFromObjectFactory()
-        {
-            DefaultGateway gateway = ObjectFactory.GetInstance(typeof (IGateway)) as DefaultGateway;
-            Assert.IsNotNull(gateway);
         }
     }
 }

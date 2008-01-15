@@ -156,7 +156,7 @@ namespace StructureMap.Graph
         {
             Type[] types = FindTypes(match);
             return Array.ConvertAll<Type, Plugin>(types,
-                delegate(Type type) { return Plugin.CreateImplicitPlugin(type); });
+                                                  delegate(Type type) { return Plugin.CreateImplicitPlugin(type); });
         }
 
 

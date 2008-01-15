@@ -14,14 +14,30 @@ namespace StructureMap
     {
         private const string CONFIG_FILE_NAME = "StructureMap.config";
         private static ConfigurationParserCollection _collection;
-        private static Registry _registry;
-        private static List<Registry> _registries;
-        private static StartUp _startUp;
         private static bool _pullConfigurationFromAppConfig;
+        private static List<Registry> _registries;
+        private static Registry _registry;
+        private static StartUp _startUp;
 
         static StructureMapConfiguration()
         {
             ResetAll();
+        }
+
+        /// <summary>
+        /// Flag to enable or disable the usage of the default StructureMap.config
+        /// If set to false, StructureMap will not look for a StructureMap.config file
+        /// </summary>
+        public static bool UseDefaultStructureMapConfigFile
+        {
+            get { return _collection.UseDefaultFile; }
+            set { _collection.UseDefaultFile = value; }
+        }
+
+        public static bool PullConfigurationFromAppConfig
+        {
+            get { return _pullConfigurationFromAppConfig; }
+            set { _pullConfigurationFromAppConfig = value; }
         }
 
 
@@ -135,22 +151,6 @@ namespace StructureMap
         }
 
         /// <summary>
-        /// Flag to enable or disable the usage of the default StructureMap.config
-        /// If set to false, StructureMap will not look for a StructureMap.config file
-        /// </summary>
-        public static bool UseDefaultStructureMapConfigFile
-        {
-            get { return _collection.UseDefaultFile; }
-            set { _collection.UseDefaultFile = value; }
-        }
-
-        public static bool PullConfigurationFromAppConfig
-        {
-            get { return _pullConfigurationFromAppConfig; }
-            set { _pullConfigurationFromAppConfig = value; }
-        }
-
-        /// <summary>
         /// Programmatically determine Assembly's to be scanned for attribute configuration
         /// </summary>
         /// <returns></returns>
@@ -249,6 +249,8 @@ namespace StructureMap
             _registry.addExpression(expression);
         }
 
+        #region Nested type: DefaultProfileExpression
+
         internal class DefaultProfileExpression : IExpression
         {
             private readonly string _profileName;
@@ -258,10 +260,16 @@ namespace StructureMap
                 _profileName = profileName;
             }
 
+            #region IExpression Members
+
             public void Configure(PluginGraph graph)
             {
                 graph.DefaultManager.DefaultProfileName = _profileName;
             }
+
+            #endregion
         }
+
+        #endregion
     }
 }

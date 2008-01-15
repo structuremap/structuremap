@@ -6,6 +6,8 @@ namespace StructureMap.Configuration
 {
     public class StructureMapConfigurationSection : IConfigurationSectionHandler
     {
+        #region IConfigurationSectionHandler Members
+
         public object Create(object parent, object configContext, XmlNode section)
         {
             IList<XmlNode> allNodes = parent as IList<XmlNode>;
@@ -16,6 +18,8 @@ namespace StructureMap.Configuration
             allNodes.Add(section);
             return allNodes;
         }
+
+        #endregion
 
         public static IList<XmlNode> GetStructureMapConfiguration()
         {

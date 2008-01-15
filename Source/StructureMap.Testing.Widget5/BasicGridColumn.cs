@@ -7,12 +7,12 @@ namespace StructureMap.Testing.Widget5
     public class BasicGridColumn : IGridColumn
     {
         private readonly string _headerText;
-        private IWidget _widget;
-        private FontStyleEnum _fontStyle;
         private string _columnName;
-        private Rule[] _rules;
         private bool _displayed;
+        private FontStyleEnum _fontStyle;
+        private Rule[] _rules;
         private int _size;
+        private IWidget _widget;
         private bool _wrapLines;
 
         public BasicGridColumn(string headerText)

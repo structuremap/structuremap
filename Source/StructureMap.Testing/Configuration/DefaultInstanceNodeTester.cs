@@ -8,8 +8,7 @@ namespace StructureMap.Testing.Configuration
     [TestFixture]
     public class DefaultInstanceNodeTester
     {
-        private InstanceManager _manager;
-        private PluginGraph _graph;
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -17,6 +16,11 @@ namespace StructureMap.Testing.Configuration
             _graph = DataMother.GetPluginGraph("DefaultInstance.xml");
             _manager = new InstanceManager(_graph);
         }
+
+        #endregion
+
+        private InstanceManager _manager;
+        private PluginGraph _graph;
 
         [Test]
         public void CreateTheInferredPluginCorrectly()
@@ -35,23 +39,23 @@ namespace StructureMap.Testing.Configuration
         }
 
         [Test]
-        public void GetTheWidget()
-        {
-            ColorWidget widget = (ColorWidget) _manager.CreateInstance<IWidget>();
-            Assert.AreEqual("Red", widget.Color);
-
-            ColorWidget widget2 = (ColorWidget)_manager.CreateInstance<IWidget>();
-            Assert.AreNotSame(widget, widget2);
-        }
-
-        [Test]
         public void GetTheRule()
         {
             ColorRule rule = (ColorRule) _manager.CreateInstance<Rule>();
             Assert.AreEqual("Blue", rule.Color);
 
-            ColorRule rule2 = (ColorRule)_manager.CreateInstance<Rule>();
+            ColorRule rule2 = (ColorRule) _manager.CreateInstance<Rule>();
             Assert.AreSame(rule, rule2);
+        }
+
+        [Test]
+        public void GetTheWidget()
+        {
+            ColorWidget widget = (ColorWidget) _manager.CreateInstance<IWidget>();
+            Assert.AreEqual("Red", widget.Color);
+
+            ColorWidget widget2 = (ColorWidget) _manager.CreateInstance<IWidget>();
+            Assert.AreNotSame(widget, widget2);
         }
     }
 }

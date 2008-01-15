@@ -9,11 +9,7 @@ namespace StructureMap.Testing.Container
     [TestFixture]
     public class IntegratedTester
     {
-        private InstanceManager manager;
-
-        public IntegratedTester()
-        {
-        }
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -36,6 +32,14 @@ namespace StructureMap.Testing.Container
             manager = new InstanceManager(graph);
         }
 
+        #endregion
+
+        private InstanceManager manager;
+
+        public IntegratedTester()
+        {
+        }
+
         [Test]
         public void GetChildWithDefinedGrandChild()
         {
@@ -48,6 +52,12 @@ namespace StructureMap.Testing.Container
             Assert.IsNotNull(grandChild);
             Assert.AreEqual(1984, grandChild.BirthYear, "Has correct BirthYear");
             Assert.IsTrue(grandChild is LeftieGrandChild, "Correct type?");
+        }
+
+        [Test, ExpectedException(typeof (StructureMapException))]
+        public void GetChildWithInvalidGrandChild()
+        {
+            Child child = manager.CreateInstance(typeof (Child), "Monte") as Child;
         }
 
         [Test]
@@ -63,29 +73,15 @@ namespace StructureMap.Testing.Container
             Assert.AreEqual(true, grandChild.RightHanded, "Is Right-Handed?");
         }
 
-        [Test, ExpectedException(typeof (StructureMapException))]
-        public void GetChildWithInvalidGrandChild()
-        {
-            Child child = manager.CreateInstance(typeof (Child), "Monte") as Child;
-        }
-
-
         [Test]
-        public void GetParentWithReferencedChild()
+        public void GetParentWithDefaultChildWhenChildIsNotReferenced()
         {
-            Parent parent = manager.CreateInstance(typeof (Parent), "Jerry") as Parent;
-            Assert.IsNotNull(parent);
-            Assert.AreEqual(72, parent.Age, "Age = 72");
-            Assert.AreEqual("Blue", parent.EyeColor);
+            manager.SetDefault(typeof (Child), "Marsha");
+            Parent parentOfMarsha = (Parent) manager.CreateInstance(typeof (Parent), "ImplicitChild");
 
-            Child child = parent.MyChild;
-            Assert.IsNotNull(child);
-            Assert.AreEqual("Marsha", child.Name);
-
-            GrandChild grandChild = child.MyGrandChild;
-            Assert.IsNotNull(grandChild);
-            Assert.AreEqual(1972, grandChild.BirthYear, "Has correct BirthYear");
-            Assert.AreEqual(true, grandChild.RightHanded, "Is Right-Handed?");
+            // This Parent does not have a Child specified, therefore return the default Child -- Marsha
+            Assert.IsNotNull(parentOfMarsha);
+            Assert.AreEqual("Marsha", parentOfMarsha.MyChild.Name);
         }
 
 
@@ -108,6 +104,24 @@ namespace StructureMap.Testing.Container
         }
 
         [Test]
+        public void GetParentWithReferencedChild()
+        {
+            Parent parent = manager.CreateInstance(typeof (Parent), "Jerry") as Parent;
+            Assert.IsNotNull(parent);
+            Assert.AreEqual(72, parent.Age, "Age = 72");
+            Assert.AreEqual("Blue", parent.EyeColor);
+
+            Child child = parent.MyChild;
+            Assert.IsNotNull(child);
+            Assert.AreEqual("Marsha", child.Name);
+
+            GrandChild grandChild = child.MyGrandChild;
+            Assert.IsNotNull(grandChild);
+            Assert.AreEqual(1972, grandChild.BirthYear, "Has correct BirthYear");
+            Assert.AreEqual(true, grandChild.RightHanded, "Is Right-Handed?");
+        }
+
+        [Test]
         public void GetParentWithReferenceToDefaultGrandChild()
         {
             manager.SetDefault(typeof (GrandChild), "Trevor");
@@ -120,17 +134,6 @@ namespace StructureMap.Testing.Container
             Assert.IsNotNull(grandChild);
             Assert.AreEqual(1979, grandChild.BirthYear, "Has correct BirthYear");
             Assert.IsTrue(grandChild is LeftieGrandChild, "Is a Leftie?");
-        }
-
-        [Test]
-        public void GetParentWithDefaultChildWhenChildIsNotReferenced()
-        {
-            manager.SetDefault(typeof (Child), "Marsha");
-            Parent parentOfMarsha = (Parent) manager.CreateInstance(typeof (Parent), "ImplicitChild");
-
-            // This Parent does not have a Child specified, therefore return the default Child -- Marsha
-            Assert.IsNotNull(parentOfMarsha);
-            Assert.AreEqual("Marsha", parentOfMarsha.MyChild.Name);
         }
     }
 }

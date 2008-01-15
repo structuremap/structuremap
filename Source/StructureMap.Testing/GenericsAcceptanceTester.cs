@@ -14,9 +14,40 @@ namespace StructureMap.Testing
     [TestFixture]
     public class GenericsAcceptanceTester
     {
+        #region Setup/Teardown
+
         [SetUp]
         public void SetUp()
         {
+        }
+
+        #endregion
+
+        [Test]
+        public void BuildFamilyAndPluginThenSealAndCreateInstanceManagerWithGenericTypeWithOpenGenericParameters()
+        {
+            PluginGraph graph = new PluginGraph();
+            graph.Assemblies.Add(Assembly.GetExecutingAssembly());
+            PluginFamily family = graph.PluginFamilies.Add(typeof (IGenericService<>), "Default");
+            family.Plugins.Add(typeof (GenericService<>), "Default");
+
+            graph.Seal();
+
+            InstanceManager manager = new InstanceManager(graph);
+        }
+
+        [Test]
+        public void CanBuildAGenericObjectThatHasAnotherGenericObjectAsAChild()
+        {
+            Type serviceType = typeof (IService<double>);
+            PluginGraph pluginGraph = PluginGraph.BuildGraphFromAssembly(serviceType.Assembly);
+            InstanceManager manager = new InstanceManager(pluginGraph);
+
+            Type doubleServiceType = typeof (IService<double>);
+
+            ServiceWithPlug<double> service =
+                (ServiceWithPlug<double>) manager.CreateInstance(doubleServiceType, "Plugged");
+            Assert.AreEqual(typeof (double), service.Plug.PlugType);
         }
 
         [Test]
@@ -43,63 +74,23 @@ namespace StructureMap.Testing
             Plugin plugin = Plugin.CreateExplicitPlugin(typeof (GenericService<>), "key", string.Empty);
         }
 
-        [Test]
-        public void CanGetPluginFamilyFromPluginGraphWithParameters()
+        [Test, Ignore("Generics with more than 2 parameters")]
+        public void CanEmitForATemplateWithThreeTemplates()
         {
-            PluginGraph graph = new PluginGraph();
-            graph.Assemblies.Add(Assembly.GetExecutingAssembly());
-            PluginFamily family1 = graph.PluginFamilies.Add(typeof (IGenericService<int>), string.Empty);
-            PluginFamily family2 = graph.PluginFamilies.Add(typeof (IGenericService<string>), string.Empty);
+            PluginFamily family = new PluginFamily(typeof (ITarget2<int, string, bool>));
+            family.Plugins.Add(typeof (SpecificTarget2<int, string, bool>), "specific");
 
-            Assert.AreSame(graph.PluginFamilies[typeof (IGenericService<int>)], family1);
-            Assert.AreSame(graph.PluginFamilies[typeof (IGenericService<string>)], family2);
+            InstanceFactory factory = new InstanceFactory(family, true);
         }
 
         [Test]
-        public void CanGetPluginFamilyFromPluginGraphWithNoParameters()
+        public void CanEmitForATemplateWithTwoTemplates()
         {
-            PluginGraph graph = new PluginGraph();
-            graph.Assemblies.Add(Assembly.GetExecutingAssembly());
-            PluginFamily family1 = graph.PluginFamilies.Add(typeof (IGenericService<int>), string.Empty);
-            PluginFamily family2 = graph.PluginFamilies.Add(typeof (IGenericService<string>), string.Empty);
-            PluginFamily family3 = graph.PluginFamilies.Add(typeof (IGenericService<>), string.Empty);
+            PluginFamily family = new PluginFamily(typeof (ITarget<int, string>));
+            family.Plugins.Add(typeof (SpecificTarget<int, string>), "specific");
 
-            Assert.AreSame(graph.PluginFamilies[typeof (IGenericService<int>)], family1);
-            Assert.AreSame(graph.PluginFamilies[typeof (IGenericService<string>)], family2);
-            Assert.AreSame(graph.PluginFamilies[typeof (IGenericService<>)], family3);
+            InstanceFactory factory = new InstanceFactory(family, true);
         }
-
-
-        [Test]
-        public void CanPlugGenericConcreteClassIntoGenericInterfaceWithNoGenericParametersSpecified()
-        {
-            bool canPlug = Plugin.CanBeCast(typeof (IGenericService<>), typeof (GenericService<>));
-            Assert.IsTrue(canPlug);
-        }
-
-        [Test]
-        public void BuildFamilyAndPluginThenSealAndCreateInstanceManagerWithGenericTypeWithOpenGenericParameters()
-        {
-            PluginGraph graph = new PluginGraph();
-            graph.Assemblies.Add(Assembly.GetExecutingAssembly());
-            PluginFamily family = graph.PluginFamilies.Add(typeof (IGenericService<>), "Default");
-            family.Plugins.Add(typeof (GenericService<>), "Default");
-
-            graph.Seal();
-
-            InstanceManager manager = new InstanceManager(graph);
-        }
-
-        [Test]
-        public void GetGenericTypeByString()
-        {
-            Assembly assem = Assembly.GetExecutingAssembly();
-            Type type = assem.GetType("StructureMap.Testing.ITarget`2");
-
-            Type genericType = type.GetGenericTypeDefinition();
-            Assert.AreEqual(typeof (ITarget<,>), genericType);
-        }
-
 
         [Test]
         public void CanEmitInstanceBuilderForATypeWithConstructorArguments()
@@ -119,42 +110,37 @@ namespace StructureMap.Testing
         }
 
         [Test]
-        public void CanEmitForATemplateWithTwoTemplates()
+        public void CanGetPluginFamilyFromPluginGraphWithNoParameters()
         {
-            PluginFamily family = new PluginFamily(typeof (ITarget<int, string>));
-            family.Plugins.Add(typeof (SpecificTarget<int, string>), "specific");
+            PluginGraph graph = new PluginGraph();
+            graph.Assemblies.Add(Assembly.GetExecutingAssembly());
+            PluginFamily family1 = graph.PluginFamilies.Add(typeof (IGenericService<int>), string.Empty);
+            PluginFamily family2 = graph.PluginFamilies.Add(typeof (IGenericService<string>), string.Empty);
+            PluginFamily family3 = graph.PluginFamilies.Add(typeof (IGenericService<>), string.Empty);
 
-            InstanceFactory factory = new InstanceFactory(family, true);
-        }
-
-
-        [Test, Ignore("Generics with more than 2 parameters")]
-        public void CanEmitForATemplateWithThreeTemplates()
-        {
-            PluginFamily family = new PluginFamily(typeof (ITarget2<int, string, bool>));
-            family.Plugins.Add(typeof (SpecificTarget2<int, string, bool>), "specific");
-
-            InstanceFactory factory = new InstanceFactory(family, true);
+            Assert.AreSame(graph.PluginFamilies[typeof (IGenericService<int>)], family1);
+            Assert.AreSame(graph.PluginFamilies[typeof (IGenericService<string>)], family2);
+            Assert.AreSame(graph.PluginFamilies[typeof (IGenericService<>)], family3);
         }
 
         [Test]
-        public void SmokeTestCanBeCaseWithImplementationOfANonGenericInterface()
+        public void CanGetPluginFamilyFromPluginGraphWithParameters()
         {
-            Assert.IsTrue(GenericsPluginGraph.CanBeCast(typeof (ITarget<,>), typeof (DisposableTarget<,>)));
+            PluginGraph graph = new PluginGraph();
+            graph.Assemblies.Add(Assembly.GetExecutingAssembly());
+            PluginFamily family1 = graph.PluginFamilies.Add(typeof (IGenericService<int>), string.Empty);
+            PluginFamily family2 = graph.PluginFamilies.Add(typeof (IGenericService<string>), string.Empty);
+
+            Assert.AreSame(graph.PluginFamilies[typeof (IGenericService<int>)], family1);
+            Assert.AreSame(graph.PluginFamilies[typeof (IGenericService<string>)], family2);
         }
 
+
         [Test]
-        public void CanBuildAGenericObjectThatHasAnotherGenericObjectAsAChild()
+        public void CanPlugGenericConcreteClassIntoGenericInterfaceWithNoGenericParametersSpecified()
         {
-            Type serviceType = typeof (IService<double>);
-            PluginGraph pluginGraph = PluginGraph.BuildGraphFromAssembly(serviceType.Assembly);
-            InstanceManager manager = new InstanceManager(pluginGraph);
-
-            Type doubleServiceType = typeof (IService<double>);
-
-            ServiceWithPlug<double> service =
-                (ServiceWithPlug<double>) manager.CreateInstance(doubleServiceType, "Plugged");
-            Assert.AreEqual(typeof (double), service.Plug.PlugType);
+            bool canPlug = Plugin.CanBeCast(typeof (IGenericService<>), typeof (GenericService<>));
+            Assert.IsTrue(canPlug);
         }
 
         [Test]
@@ -179,6 +165,23 @@ namespace StructureMap.Testing
 
             manager.SetDefaults(profile1);
             Assert.IsInstanceOfType(typeof (Service<string>), manager.CreateInstance(typeof (IService<string>)));
+        }
+
+        [Test]
+        public void GetGenericTypeByString()
+        {
+            Assembly assem = Assembly.GetExecutingAssembly();
+            Type type = assem.GetType("StructureMap.Testing.ITarget`2");
+
+            Type genericType = type.GetGenericTypeDefinition();
+            Assert.AreEqual(typeof (ITarget<,>), genericType);
+        }
+
+
+        [Test]
+        public void SmokeTestCanBeCaseWithImplementationOfANonGenericInterface()
+        {
+            Assert.IsTrue(GenericsPluginGraph.CanBeCast(typeof (ITarget<,>), typeof (DisposableTarget<,>)));
         }
 
         [Test]
@@ -213,8 +216,8 @@ namespace StructureMap.Testing
 
     public class ComplexType<T>
     {
-        private readonly string _name;
         private readonly int _age;
+        private readonly string _name;
 
         public ComplexType(string name, int age)
         {
@@ -253,9 +256,13 @@ namespace StructureMap.Testing
         {
         }
 
+        #region IDisposable Members
+
         public void Dispose()
         {
         }
+
+        #endregion
     }
 
     public interface ITarget2<T, U, V>
@@ -273,10 +280,14 @@ namespace StructureMap.Testing
 
     public class GenericService<T> : IGenericService<T>
     {
+        #region IGenericService<T> Members
+
         public void DoSomething(T thing)
         {
             throw new NotImplementedException();
         }
+
+        #endregion
 
         public Type GetGenericType()
         {

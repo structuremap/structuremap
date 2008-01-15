@@ -30,16 +30,6 @@ namespace StructureMap.DataAccess
             }
         }
 
-        public void AddParameter(IParameter parameter)
-        {
-            _parameters[parameter.ParameterName.ToUpper()] = parameter;
-        }
-
-        public IEnumerator GetEnumerator()
-        {
-            return _parameters.Values.GetEnumerator();
-        }
-
         [IndexerName("Parameter")]
         public IParameter this[string parameterName]
         {
@@ -50,6 +40,20 @@ namespace StructureMap.DataAccess
         public int Count
         {
             get { return _parameters.Count; }
+        }
+
+        #region IEnumerable Members
+
+        public IEnumerator GetEnumerator()
+        {
+            return _parameters.Values.GetEnumerator();
+        }
+
+        #endregion
+
+        public void AddParameter(IParameter parameter)
+        {
+            _parameters[parameter.ParameterName.ToUpper()] = parameter;
         }
     }
 }

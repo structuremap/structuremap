@@ -7,17 +7,6 @@ namespace StructureMap.Testing.DataAccess.Tools.Mocks
     public class ParameterListTester
     {
         [Test]
-        public void SetAndRetrieveParameterValues()
-        {
-            ParameterList list = new ParameterList();
-            string theParameterValue = "something";
-            list["Param1"] = theParameterValue;
-
-            Assert.AreEqual(theParameterValue, list["Param1"]);
-        }
-
-
-        [Test]
         public void GetAllParameterKeys()
         {
             ParameterList list = new ParameterList();
@@ -30,6 +19,16 @@ namespace StructureMap.Testing.DataAccess.Tools.Mocks
             string[] actual = list.AllKeys;
 
             Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void SetAndRetrieveParameterValues()
+        {
+            ParameterList list = new ParameterList();
+            string theParameterValue = "something";
+            list["Param1"] = theParameterValue;
+
+            Assert.AreEqual(theParameterValue, list["Param1"]);
         }
 
         [Test]
@@ -47,7 +46,7 @@ namespace StructureMap.Testing.DataAccess.Tools.Mocks
         }
 
         [Test, ExpectedException(typeof (ParameterValidationFailureException))]
-        public void VerifyFailsWithWrongValue()
+        public void VerifyFailsWithMissingParameter()
         {
             ParameterList list = new ParameterList();
             list["Param1"] = string.Empty;
@@ -56,7 +55,9 @@ namespace StructureMap.Testing.DataAccess.Tools.Mocks
             list["Param4"] = string.Empty;
 
             ParameterList list2 = (ParameterList) list.Clone();
-            list2["Param1"] = "different";
+
+            // Add a parameter to "list" that will be missing in list2
+            list["Param5"] = "different";
 
             list.Verify(list2);
         }
@@ -77,7 +78,7 @@ namespace StructureMap.Testing.DataAccess.Tools.Mocks
         }
 
         [Test, ExpectedException(typeof (ParameterValidationFailureException))]
-        public void VerifyFailsWithMissingParameter()
+        public void VerifyFailsWithWrongValue()
         {
             ParameterList list = new ParameterList();
             list["Param1"] = string.Empty;
@@ -86,9 +87,7 @@ namespace StructureMap.Testing.DataAccess.Tools.Mocks
             list["Param4"] = string.Empty;
 
             ParameterList list2 = (ParameterList) list.Clone();
-
-            // Add a parameter to "list" that will be missing in list2
-            list["Param5"] = "different";
+            list2["Param1"] = "different";
 
             list.Verify(list2);
         }

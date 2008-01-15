@@ -6,12 +6,12 @@ namespace StructureMap.Caching
 {
     public class LazyCache : IManagedCache
     {
-        private string _name;
         private IExpirationPolicy[] _expirations;
+        private HybridDictionary _items;
+        private string _name;
+        private bool _refillOnExpiration;
         private IValueSource _source;
         private IStorageStrategy _storage;
-        private HybridDictionary _items;
-        private bool _refillOnExpiration;
 
 
         public LazyCache(string CacheName, IExpirationPolicy[] Expirations, IValueSource Source,
@@ -26,61 +26,6 @@ namespace StructureMap.Caching
 
             CacheManager.CurrentManager.ManageCache(this);
         }
-
-        #region IManagedCache Members
-
-        public string CacheName
-        {
-            get { return _name; }
-        }
-
-        public void Clear()
-        {
-            lock (this)
-            {
-                _items.Clear();
-            }
-        }
-
-        public void Prune(DateTime currentTime)
-        {
-            lock (this)
-            {
-                foreach (IExpirationPolicy policy in _expirations)
-                {
-                    policy.Calculate(currentTime);
-
-                    foreach (ICacheItem item in _items.Values)
-                    {
-                        if (policy.HasExpired(item))
-                        {
-                            expire(item);
-                        }
-                    }
-                }
-            }
-        }
-
-        private void expire(ICacheItem item)
-        {
-            if (_refillOnExpiration)
-            {
-                item.Value = _source.GetValue(item.Key);
-            }
-            else
-            {
-                _items.Remove(item);
-            }
-        }
-
-        public void AddWatches(CacheManager Manager)
-        {
-            // TODO:  Add LazyCache.AddWatches implementation
-        }
-
-        #endregion
-
-        // TODO -- optimize this.  Go to record level locking
 
         [IndexerName("Value")]
         public object this[object key]
@@ -127,5 +72,60 @@ namespace StructureMap.Caching
                 item.Value = value;
             }
         }
+
+        #region IManagedCache Members
+
+        public string CacheName
+        {
+            get { return _name; }
+        }
+
+        public void Clear()
+        {
+            lock (this)
+            {
+                _items.Clear();
+            }
+        }
+
+        public void Prune(DateTime currentTime)
+        {
+            lock (this)
+            {
+                foreach (IExpirationPolicy policy in _expirations)
+                {
+                    policy.Calculate(currentTime);
+
+                    foreach (ICacheItem item in _items.Values)
+                    {
+                        if (policy.HasExpired(item))
+                        {
+                            expire(item);
+                        }
+                    }
+                }
+            }
+        }
+
+        public void AddWatches(CacheManager Manager)
+        {
+            // TODO:  Add LazyCache.AddWatches implementation
+        }
+
+        #endregion
+
+        private void expire(ICacheItem item)
+        {
+            if (_refillOnExpiration)
+            {
+                item.Value = _source.GetValue(item.Key);
+            }
+            else
+            {
+                _items.Remove(item);
+            }
+        }
+
+        // TODO -- optimize this.  Go to record level locking
     }
 }

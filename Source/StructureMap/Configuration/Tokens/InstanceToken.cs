@@ -9,13 +9,13 @@ namespace StructureMap.Configuration.Tokens
     [Serializable]
     public class InstanceToken : GraphObject
     {
-        private string _instanceKey;
-        private string _concreteKey;
-        private DefinitionSource _source = DefinitionSource.Explicit;
-        private Hashtable _properties;
         private readonly TypePath _pluginTypePath;
+        private string _concreteKey;
+        private string _instanceKey;
         [NonSerialized] private InstanceMemento _memento;
         private string _mementoString;
+        private Hashtable _properties;
+        private DefinitionSource _source = DefinitionSource.Explicit;
         private string _templateKey;
 
         public InstanceToken() : base()
@@ -63,35 +63,6 @@ namespace StructureMap.Configuration.Tokens
             }
         }
 
-        private void buildPropertyFromTemplatedMemento(PluginGraphReport report, InstanceMemento memento)
-        {
-            _templateKey = memento.TemplateName;
-            TemplateToken token = report.FindTemplate(_pluginTypePath, _templateKey);
-            IProperty[] properties = TemplateProperty.GetTemplateProperties(memento, token);
-            foreach (IProperty property in properties)
-            {
-                AddProperty(property);
-            }
-        }
-
-        private void logInvalidPlugin()
-        {
-            string message =
-                string.Format("Looking for Plugin '{0}' for PluginFamily {1}", ConcreteKey,
-                              _pluginTypePath.AssemblyQualifiedName);
-            Problem problem = new Problem(ConfigurationConstants.INVALID_PLUGIN, message);
-            LogProblem(problem);
-        }
-
-        private void buildPropertiesFromPlugin(PluginToken plugin, InstanceMemento memento, PluginGraphReport report)
-        {
-            foreach (PropertyDefinition definition in plugin.Properties)
-            {
-                IProperty property = definition.CreateProperty(memento, report);
-                AddProperty(property);
-            }
-        }
-
         public string InstanceKey
         {
             get { return _instanceKey; }
@@ -130,6 +101,61 @@ namespace StructureMap.Configuration.Tokens
         public IProperty this[string propertyName]
         {
             get { return (IProperty) _properties[propertyName]; }
+        }
+
+        public string PluginTypeName
+        {
+            get { return _pluginTypePath.AssemblyQualifiedName; }
+        }
+
+        public override GraphObject[] Children
+        {
+            get
+            {
+                GraphObject[] returnValue = new GraphObject[_properties.Count];
+                _properties.Values.CopyTo(returnValue, 0);
+
+                return returnValue;
+            }
+        }
+
+        protected override string key
+        {
+            get { return InstanceKey; }
+        }
+
+        public string TemplateKey
+        {
+            get { return _templateKey; }
+        }
+
+        private void buildPropertyFromTemplatedMemento(PluginGraphReport report, InstanceMemento memento)
+        {
+            _templateKey = memento.TemplateName;
+            TemplateToken token = report.FindTemplate(_pluginTypePath, _templateKey);
+            IProperty[] properties = TemplateProperty.GetTemplateProperties(memento, token);
+            foreach (IProperty property in properties)
+            {
+                AddProperty(property);
+            }
+        }
+
+        private void logInvalidPlugin()
+        {
+            string message =
+                string.Format("Looking for Plugin '{0}' for PluginFamily {1}", ConcreteKey,
+                              _pluginTypePath.AssemblyQualifiedName);
+            Problem problem = new Problem(ConfigurationConstants.INVALID_PLUGIN, message);
+            LogProblem(problem);
+        }
+
+        private void buildPropertiesFromPlugin(PluginToken plugin, InstanceMemento memento, PluginGraphReport report)
+        {
+            foreach (PropertyDefinition definition in plugin.Properties)
+            {
+                IProperty property = definition.CreateProperty(memento, report);
+                AddProperty(property);
+            }
         }
 
         public void AddProperty(IProperty property)
@@ -184,35 +210,9 @@ namespace StructureMap.Configuration.Tokens
             }
         }
 
-        public string PluginTypeName
-        {
-            get { return _pluginTypePath.AssemblyQualifiedName; }
-        }
-
-        public override GraphObject[] Children
-        {
-            get
-            {
-                GraphObject[] returnValue = new GraphObject[_properties.Count];
-                _properties.Values.CopyTo(returnValue, 0);
-
-                return returnValue;
-            }
-        }
-
         public override void AcceptVisitor(IConfigurationVisitor visitor)
         {
             visitor.HandleInstance(this);
-        }
-
-        protected override string key
-        {
-            get { return InstanceKey; }
-        }
-
-        public string TemplateKey
-        {
-            get { return _templateKey; }
         }
 
         public override string ToString()

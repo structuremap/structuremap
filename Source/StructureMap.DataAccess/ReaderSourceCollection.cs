@@ -5,8 +5,8 @@ namespace StructureMap.DataAccess
 {
     public class ReaderSourceCollection : IReaderSourceCollection
     {
-        private readonly DataSession _parent;
         private readonly ICommandFactory _commandFactory;
+        private readonly DataSession _parent;
         private Hashtable _sources;
 
         public ReaderSourceCollection(DataSession session, ICommandFactory commandFactory)
@@ -15,6 +15,8 @@ namespace StructureMap.DataAccess
             _commandFactory = commandFactory;
             _sources = new Hashtable();
         }
+
+        #region IReaderSourceCollection Members
 
         public IEnumerator GetEnumerator()
         {
@@ -40,6 +42,8 @@ namespace StructureMap.DataAccess
                 return (IReaderSource) _sources[name];
             }
         }
+
+        #endregion
 
         private void buildSource(string name)
         {

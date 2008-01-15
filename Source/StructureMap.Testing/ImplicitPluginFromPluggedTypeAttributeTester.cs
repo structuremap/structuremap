@@ -15,8 +15,7 @@ namespace StructureMap.Testing
     [TestFixture]
     public class ImplicitPluginFromPluggedTypeAttributeTester
     {
-        private MemoryInstanceMemento _memento;
-        private Plugin _expectedPlugin;
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -28,6 +27,28 @@ namespace StructureMap.Testing
             _memento = new MemoryInstanceMemento(string.Empty, "Frank", values);
 
             _expectedPlugin = Plugin.CreateImplicitPlugin(pluggedType);
+        }
+
+        #endregion
+
+        private MemoryInstanceMemento _memento;
+        private Plugin _expectedPlugin;
+
+        [Test]
+        public void CanBuildTheInstance()
+        {
+            NormalGraphBuilder builder = new NormalGraphBuilder(new Registry[0]);
+            TypePath pluginTypePath = new TypePath(typeof (IGateway));
+            builder.AddPluginFamily(pluginTypePath, _memento.InstanceKey, new string[0], InstanceScope.PerRequest);
+
+            builder.RegisterMemento(pluginTypePath, _memento);
+
+            PluginGraph graph = builder.CreatePluginGraph();
+            InstanceManager manager = new InstanceManager(graph);
+
+            StubbedGateway gateway = (StubbedGateway) manager.CreateInstance(typeof (IGateway), _memento.InstanceKey);
+
+            Assert.IsNotNull(gateway);
         }
 
         [Test]
@@ -57,23 +78,6 @@ namespace StructureMap.Testing
             Assert.AreEqual(_expectedPlugin, plugin);
         }
 
-
-        [Test]
-        public void CanBuildTheInstance()
-        {
-            NormalGraphBuilder builder = new NormalGraphBuilder(new Registry[0]);
-            TypePath pluginTypePath = new TypePath(typeof (IGateway));
-            builder.AddPluginFamily(pluginTypePath, _memento.InstanceKey, new string[0], InstanceScope.PerRequest);
-
-            builder.RegisterMemento(pluginTypePath, _memento);
-
-            PluginGraph graph = builder.CreatePluginGraph();
-            InstanceManager manager = new InstanceManager(graph);
-
-            StubbedGateway gateway = (StubbedGateway) manager.CreateInstance(typeof (IGateway), _memento.InstanceKey);
-
-            Assert.IsNotNull(gateway);
-        }
 
         [Test]
         public void RunThroughXml()

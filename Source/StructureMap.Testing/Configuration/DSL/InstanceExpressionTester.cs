@@ -9,10 +9,14 @@ namespace StructureMap.Testing.Configuration.DSL
     [TestFixture]
     public class InstanceExpressionTester
     {
+        #region Setup/Teardown
+
         [SetUp]
         public void SetUp()
         {
         }
+
+        #endregion
 
         [Test,
          ExpectedException(typeof (StructureMapException),

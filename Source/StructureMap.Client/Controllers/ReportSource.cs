@@ -5,6 +5,8 @@ namespace StructureMap.Client.Controllers
 {
     public class ReportSource : IReportSource
     {
+        #region IReportSource Members
+
         public PluginGraphReport FetchReport(string configurationPath, string assemblyFolder)
         {
             RemoteGraphContainer container = new RemoteGraphContainer(configurationPath, assemblyFolder);
@@ -12,5 +14,7 @@ namespace StructureMap.Client.Controllers
 
             return graph.GetReport();
         }
+
+        #endregion
     }
 }

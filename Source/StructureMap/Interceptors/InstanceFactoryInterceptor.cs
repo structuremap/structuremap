@@ -22,6 +22,22 @@ namespace StructureMap.Interceptors
         }
 
         /// <summary>
+        /// Declares whether or not the interceptor creates a stubbed or mocked version of the PluginType 
+        /// </summary>
+        public virtual bool IsMockedOrStubbed
+        {
+            get { return false; }
+        }
+
+        #region ICloneable Members
+
+        public abstract object Clone();
+
+        #endregion
+
+        #region IInstanceFactory Members
+
+        /// <summary>
         /// Establishes a reference to the parent InstanceManager
         /// </summary>
         /// <param name="instanceManager"></param>
@@ -118,14 +134,6 @@ namespace StructureMap.Interceptors
             return InnerInstanceFactory.AddType<T>();
         }
 
-        /// <summary>
-        /// Declares whether or not the interceptor creates a stubbed or mocked version of the PluginType 
-        /// </summary>
-        public virtual bool IsMockedOrStubbed
-        {
-            get { return false; }
-        }
-
-        public abstract object Clone();
+        #endregion
     }
 }

@@ -11,12 +11,33 @@ namespace StructureMap.Testing.Container.Source
     [TestFixture]
     public class XmlTemplaterTester
     {
-        private XmlDocument _document;
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
         {
             _document = DataMother.GetXmlDocument("Templater.xml");
+        }
+
+        #endregion
+
+        private XmlDocument _document;
+
+        [Test]
+        public void GetSubstititionsExplicitly()
+        {
+            XmlNode node = _document.DocumentElement.FirstChild;
+            XmlElement element = (XmlElement) node;
+            element.SetAttribute(InstanceMemento.SUBSTITUTIONS_ATTRIBUTE, "direction,color");
+
+            XmlTemplater templater = new XmlTemplater(node);
+            string[] substitutions = templater.Substitutions;
+
+            Assert.AreEqual(2, substitutions.Length);
+            ArrayList list = new ArrayList(substitutions);
+
+            Assert.IsTrue(list.Contains("color"));
+            Assert.IsTrue(list.Contains("direction"));
         }
 
         [Test]
@@ -35,21 +56,22 @@ namespace StructureMap.Testing.Container.Source
             Assert.IsTrue(list.Contains("direction"));
         }
 
+
         [Test]
-        public void GetSubstititionsExplicitly()
+        public void HandleStringEmpty()
         {
-            XmlNode node = _document.DocumentElement.FirstChild;
-            XmlElement element = (XmlElement) node;
-            element.SetAttribute(InstanceMemento.SUBSTITUTIONS_ATTRIBUTE, "direction,color");
+            MemoryInstanceMemento memento = new MemoryInstanceMemento("", "");
+            memento.SetProperty("color", "");
 
-            XmlTemplater templater = new XmlTemplater(node);
-            string[] substitutions = templater.Substitutions;
+            XmlDocument doc = new XmlDocument();
+            XmlElement element = doc.CreateElement("top");
+            doc.AppendChild(element);
+            element.SetAttribute("Color", "{color}");
 
-            Assert.AreEqual(2, substitutions.Length);
-            ArrayList list = new ArrayList(substitutions);
+            XmlTemplater templater = new XmlTemplater(element);
 
-            Assert.IsTrue(list.Contains("color"));
-            Assert.IsTrue(list.Contains("direction"));
+            XmlElement result = (XmlElement) templater.SubstituteTemplates(element, memento);
+            Assert.AreEqual(InstanceMemento.EMPTY_STRING, result.GetAttribute("Color"));
         }
 
         [Test]
@@ -71,24 +93,6 @@ namespace StructureMap.Testing.Container.Source
 
             Assert.IsFalse(ReferenceEquals(templateNode, actualElement));
             checker.Check(actualElement);
-        }
-
-
-        [Test]
-        public void HandleStringEmpty()
-        {
-            MemoryInstanceMemento memento = new MemoryInstanceMemento("", "");
-            memento.SetProperty("color", "");
-
-            XmlDocument doc = new XmlDocument();
-            XmlElement element = doc.CreateElement("top");
-            doc.AppendChild(element);
-            element.SetAttribute("Color", "{color}");
-
-            XmlTemplater templater = new XmlTemplater(element);
-
-            XmlElement result = (XmlElement) templater.SubstituteTemplates(element, memento);
-            Assert.AreEqual(InstanceMemento.EMPTY_STRING, result.GetAttribute("Color"));
         }
     }
 }

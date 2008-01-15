@@ -5,10 +5,10 @@ namespace StructureMap.DataAccess.Tools.Mocks
 {
     public class MockCommand : ICommand
     {
-        private string _name;
-        private Queue _expectations;
         private CommandExpectation _currentExpectation;
+        private Queue _expectations;
         private ParameterList _inputs;
+        private string _name;
 
         public MockCommand(string name)
         {
@@ -16,6 +16,8 @@ namespace StructureMap.DataAccess.Tools.Mocks
             _expectations = new Queue();
             _inputs = new ParameterList();
         }
+
+        #region ICommand Members
 
         public string Name
         {
@@ -72,6 +74,7 @@ namespace StructureMap.DataAccess.Tools.Mocks
             // no-op;
         }
 
+        #endregion
 
         public void AddExpectation(CommandExpectation expectation)
         {

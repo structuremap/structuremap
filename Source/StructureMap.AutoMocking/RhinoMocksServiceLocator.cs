@@ -17,6 +17,8 @@ namespace StructureMap.AutoMocking
         {
         }
 
+        #region ServiceLocator Members
+
         public T Service<T>()
         {
             return _mocks.CreateMock<T>();
@@ -26,5 +28,7 @@ namespace StructureMap.AutoMocking
         {
             return _mocks.CreateMock(serviceType);
         }
+
+        #endregion
     }
 }

@@ -21,37 +21,6 @@ namespace StructureMap.Graph
             get { return _pluginFamilies.Values; }
         }
 
-        public PluginFamily Add(Type pluginType, string defaultInstanceKey)
-        {
-            PluginFamily family = new PluginFamily(pluginType, defaultInstanceKey);
-            return Add(family);
-        }
-
-
-        public PluginFamily Add(Type pluginType, string defaultInstanceKey, MementoSource mementoSource)
-        {
-            PluginFamily family = new PluginFamily(pluginType, defaultInstanceKey, mementoSource);
-            return Add(family);
-        }
-
-        public PluginFamily Add(PluginFamily family)
-        {
-            Type key = family.PluginType;
-            if (_pluginFamilies.ContainsKey(key))
-            {
-                if (_pluginFamilies[family.PluginType].DefinitionSource == DefinitionSource.Implicit)
-                {
-                    _pluginFamilies[key] = family;
-                }
-            }
-            else
-            {
-                _pluginFamilies.Add(key, family);
-            }
-
-            return family;
-        }
-
         public PluginFamily this[Type pluginType]
         {
             get
@@ -115,6 +84,37 @@ namespace StructureMap.Graph
                     return this[pluginType];
                 }
             }
+        }
+
+        public PluginFamily Add(Type pluginType, string defaultInstanceKey)
+        {
+            PluginFamily family = new PluginFamily(pluginType, defaultInstanceKey);
+            return Add(family);
+        }
+
+
+        public PluginFamily Add(Type pluginType, string defaultInstanceKey, MementoSource mementoSource)
+        {
+            PluginFamily family = new PluginFamily(pluginType, defaultInstanceKey, mementoSource);
+            return Add(family);
+        }
+
+        public PluginFamily Add(PluginFamily family)
+        {
+            Type key = family.PluginType;
+            if (_pluginFamilies.ContainsKey(key))
+            {
+                if (_pluginFamilies[family.PluginType].DefinitionSource == DefinitionSource.Implicit)
+                {
+                    _pluginFamilies[key] = family;
+                }
+            }
+            else
+            {
+                _pluginFamilies.Add(key, family);
+            }
+
+            return family;
         }
 
         public void Remove(PluginFamily family)

@@ -6,9 +6,8 @@ namespace StructureMap.Client.Views
     [PluginFamily]
     public interface IColumn
     {
-        void Initialize(Type subjectType);
-
         string HeaderText { get; }
+        void Initialize(Type subjectType);
 
         void CreateCell(TableMaker maker, GraphObject subject);
     }

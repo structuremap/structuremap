@@ -12,13 +12,15 @@ namespace StructureMap.Configuration.DSL.Expressions
     /// </summary>
     public class ScanAssembliesExpression : IExpression
     {
-        private readonly Registry _registry;
         private readonly List<AssemblyGraph> _assemblies = new List<AssemblyGraph>();
+        private readonly Registry _registry;
 
         public ScanAssembliesExpression(Registry registry)
         {
             _registry = registry;
         }
+
+        #region IExpression Members
 
         void IExpression.Configure(PluginGraph graph)
         {
@@ -27,6 +29,8 @@ namespace StructureMap.Configuration.DSL.Expressions
                 graph.Assemblies.Add(assembly);
             }
         }
+
+        #endregion
 
         public ScanAssembliesExpression IncludeTheCallingAssembly()
         {
@@ -68,7 +72,7 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         public ScanAssembliesExpression AddAllTypesOf<PLUGINTYPE>()
         {
-            _registry.addExpression(delegate (PluginGraph pluginGraph)
+            _registry.addExpression(delegate(PluginGraph pluginGraph)
                                         {
                                             PluginFamily family =
                                                 pluginGraph.LocateOrCreateFamilyForType(typeof (PLUGINTYPE));

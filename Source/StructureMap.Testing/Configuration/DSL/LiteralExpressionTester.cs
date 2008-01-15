@@ -10,9 +10,27 @@ namespace StructureMap.Testing.Configuration.DSL
     [TestFixture]
     public class LiteralExpressionTester
     {
+        #region Setup/Teardown
+
         [SetUp]
         public void SetUp()
         {
+        }
+
+        #endregion
+
+        [Test]
+        public void BuildFromInstanceManager()
+        {
+            ColorWidget theWidget = new ColorWidget("Red");
+            LiteralExpression<IWidget> expression = new LiteralExpression<IWidget>(theWidget);
+            PluginGraph graph = new PluginGraph();
+            ((IExpression) expression).Configure(graph);
+
+            InstanceManager manager = new InstanceManager(graph);
+
+            IWidget actualWidget = manager.CreateInstance<IWidget>(expression.InstanceKey);
+            Assert.AreSame(theWidget, actualWidget);
         }
 
         [Test]
@@ -28,20 +46,6 @@ namespace StructureMap.Testing.Configuration.DSL
 
             LiteralMemento memento = (LiteralMemento) family.Source.GetMemento(expression.InstanceKey);
             Assert.AreSame(theWidget, memento.Build(null));
-        }
-
-        [Test]
-        public void BuildFromInstanceManager()
-        {
-            ColorWidget theWidget = new ColorWidget("Red");
-            LiteralExpression<IWidget> expression = new LiteralExpression<IWidget>(theWidget);
-            PluginGraph graph = new PluginGraph();
-            ((IExpression) expression).Configure(graph);
-
-            InstanceManager manager = new InstanceManager(graph);
-
-            IWidget actualWidget = manager.CreateInstance<IWidget>(expression.InstanceKey);
-            Assert.AreSame(theWidget, actualWidget);
         }
 
         [Test]

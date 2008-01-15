@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.Graph;
 
 namespace StructureMap.Configuration.DSL.Expressions
@@ -9,13 +8,15 @@ namespace StructureMap.Configuration.DSL.Expressions
     /// </summary>
     public class ProfileExpression : IExpression
     {
-        private readonly string _profileName;
         private readonly List<InstanceDefaultExpression> _defaults = new List<InstanceDefaultExpression>();
+        private readonly string _profileName;
 
         public ProfileExpression(string profileName)
         {
             _profileName = profileName;
         }
+
+        #region IExpression Members
 
         void IExpression.Configure(PluginGraph graph)
         {
@@ -31,6 +32,8 @@ namespace StructureMap.Configuration.DSL.Expressions
                 expression.Configure(profile, graph);
             }
         }
+
+        #endregion
 
         /// <summary>
         /// Starts the definition of the default instance for the containing Profile

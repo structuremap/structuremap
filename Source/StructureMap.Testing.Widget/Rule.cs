@@ -18,28 +18,13 @@ namespace StructureMap.Testing.Widget
     [Pluggable("Complex", "Complex rule for testing")]
     public class ComplexRule : Rule
     {
-        public static InstanceMemento GetMemento()
-        {
-            MemoryInstanceMemento memento = new MemoryInstanceMemento("Complex", "Sample");
-            memento.SetProperty("String", "Red");
-            memento.SetProperty("String2", "Green");
-            memento.SetProperty("Int", "1");
-            memento.SetProperty("Long", "2");
-            memento.SetProperty("Byte", "3");
-            memento.SetProperty("Double", "4");
-            memento.SetProperty("Bool", "true");
-
-            return (InstanceMemento) memento;
-        }
-
-
-        private string _String;
-        private string _String2;
-        private int _Int;
-        private long _Long;
+        private bool _Bool;
         private byte _Byte;
         private double _Double;
-        private bool _Bool;
+        private int _Int;
+        private long _Long;
+        private string _String;
+        private string _String2;
 
         [DefaultConstructor]
         public ComplexRule(string String, string String2, int Int, long Long, byte Byte, double Double, bool Bool)
@@ -104,6 +89,20 @@ namespace StructureMap.Testing.Widget
         public bool Bool
         {
             get { return _Bool; }
+        }
+
+        public static InstanceMemento GetMemento()
+        {
+            MemoryInstanceMemento memento = new MemoryInstanceMemento("Complex", "Sample");
+            memento.SetProperty("String", "Red");
+            memento.SetProperty("String2", "Green");
+            memento.SetProperty("Int", "1");
+            memento.SetProperty("Long", "2");
+            memento.SetProperty("Byte", "3");
+            memento.SetProperty("Double", "4");
+            memento.SetProperty("Bool", "true");
+
+            return (InstanceMemento) memento;
         }
     }
 

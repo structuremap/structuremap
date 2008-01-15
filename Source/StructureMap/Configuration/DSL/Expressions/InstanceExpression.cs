@@ -1,5 +1,4 @@
 using System;
-using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.Configuration.Mementos;
 using StructureMap.Graph;
 
@@ -10,8 +9,8 @@ namespace StructureMap.Configuration.DSL.Expressions
     /// </summary>
     public class InstanceExpression : MementoBuilder<InstanceExpression>
     {
-        private Type _pluggedType;
         private MemoryInstanceMemento _memento;
+        private Type _pluggedType;
 
         public InstanceExpression(Type pluginType) : base(pluginType)
         {
@@ -23,11 +22,6 @@ namespace StructureMap.Configuration.DSL.Expressions
             get { return _pluggedType; }
         }
 
-        protected override void buildMemento()
-        {
-            _memento = new MemoryInstanceMemento();
-        }
-
 
         protected override InstanceMemento memento
         {
@@ -37,6 +31,11 @@ namespace StructureMap.Configuration.DSL.Expressions
         protected override InstanceExpression thisInstance
         {
             get { return this; }
+        }
+
+        protected override void buildMemento()
+        {
+            _memento = new MemoryInstanceMemento();
         }
 
         protected override void configureMemento(PluginFamily family)
@@ -128,6 +127,35 @@ namespace StructureMap.Configuration.DSL.Expressions
             return new InstanceTypeExpression(this);
         }
 
+        public ChildArrayExpression<PLUGINTYPE> ChildArray<PLUGINTYPE>()
+        {
+            validateTypeIsArray<PLUGINTYPE>();
+
+            string propertyName = findPropertyName<PLUGINTYPE>();
+            return ChildArray<PLUGINTYPE>(propertyName);
+        }
+
+        public ChildArrayExpression<PLUGINTYPE> ChildArray<PLUGINTYPE>(string propertyName)
+        {
+            validateTypeIsArray<PLUGINTYPE>();
+
+            ChildArrayExpression<PLUGINTYPE> expression =
+                new ChildArrayExpression<PLUGINTYPE>(this, _memento, propertyName);
+            addChildExpression(expression);
+
+            return expression;
+        }
+
+        private static void validateTypeIsArray<PLUGINTYPE>()
+        {
+            if (!typeof (PLUGINTYPE).IsArray)
+            {
+                throw new StructureMapException(307);
+            }
+        }
+
+        #region Nested type: InstanceTypeExpression
+
         /// <summary>
         /// Helper class to capture the actual concrete type of an Instance
         /// </summary>
@@ -163,31 +191,6 @@ namespace StructureMap.Configuration.DSL.Expressions
             }
         }
 
-        public ChildArrayExpression<PLUGINTYPE> ChildArray<PLUGINTYPE>()
-        {
-            validateTypeIsArray<PLUGINTYPE>();
-
-            string propertyName = findPropertyName<PLUGINTYPE>();
-            return ChildArray<PLUGINTYPE>(propertyName);
-        }
-
-        public ChildArrayExpression<PLUGINTYPE> ChildArray<PLUGINTYPE>(string propertyName)
-        {
-            validateTypeIsArray<PLUGINTYPE>();
-
-            ChildArrayExpression<PLUGINTYPE> expression =
-                new ChildArrayExpression<PLUGINTYPE>(this, _memento, propertyName);
-            addChildExpression(expression);
-
-            return expression;
-        }
-
-        private static void validateTypeIsArray<PLUGINTYPE>()
-        {
-            if (!typeof (PLUGINTYPE).IsArray)
-            {
-                throw new StructureMapException(307);
-            }
-        }
+        #endregion
     }
 }

@@ -11,24 +11,10 @@ namespace StructureMap.Graph
     [Serializable]
     public class InstanceDefaultManager : GraphObject
     {
-        public static string GetMachineName()
-        {
-            string machineName = string.Empty;
-            try
-            {
-                machineName = Environment.MachineName.ToUpper();
-            }
-            finally
-            {
-            }
-
-            return machineName;
-        }
-
+        private string _defaultProfileName = string.Empty;
         private List<InstanceDefault> _defaults;
         private Dictionary<string, MachineOverride> _machineOverrides;
         private Dictionary<string, Profile> _profiles;
-        private string _defaultProfileName = string.Empty;
 
         public InstanceDefaultManager() : base()
         {
@@ -45,6 +31,47 @@ namespace StructureMap.Graph
         {
             get { return _defaultProfileName; }
             set { _defaultProfileName = value == null ? string.Empty : value; }
+        }
+
+        public Profile[] Profiles
+        {
+            get
+            {
+                Profile[] returnValue = new Profile[_profiles.Count];
+                _profiles.Values.CopyTo(returnValue, 0);
+                Array.Sort(returnValue);
+                return returnValue;
+            }
+        }
+
+        public MachineOverride[] MachineOverrides
+        {
+            get
+            {
+                MachineOverride[] returnValue = new MachineOverride[_machineOverrides.Count];
+                _machineOverrides.Values.CopyTo(returnValue, 0);
+                Array.Sort(returnValue);
+                return returnValue;
+            }
+        }
+
+        protected override string key
+        {
+            get { return string.Empty; }
+        }
+
+        public static string GetMachineName()
+        {
+            string machineName = string.Empty;
+            try
+            {
+                machineName = Environment.MachineName.ToUpper();
+            }
+            finally
+            {
+            }
+
+            return machineName;
         }
 
         public void ReadDefaultsFromPluginGraph(PluginGraph graph)
@@ -222,28 +249,6 @@ namespace StructureMap.Graph
             return answer;
         }
 
-        public Profile[] Profiles
-        {
-            get
-            {
-                Profile[] returnValue = new Profile[_profiles.Count];
-                _profiles.Values.CopyTo(returnValue, 0);
-                Array.Sort(returnValue);
-                return returnValue;
-            }
-        }
-
-        public MachineOverride[] MachineOverrides
-        {
-            get
-            {
-                MachineOverride[] returnValue = new MachineOverride[_machineOverrides.Count];
-                _machineOverrides.Values.CopyTo(returnValue, 0);
-                Array.Sort(returnValue);
-                return returnValue;
-            }
-        }
-
         /// <summary>
         /// Removes any InstanceDefault children of both Profile and MachineOverride
         /// objects that belong to a PluginType that has been removed from the PluginGraph
@@ -294,11 +299,6 @@ namespace StructureMap.Graph
             }
 
             return names;
-        }
-
-        protected override string key
-        {
-            get { return string.Empty; }
         }
     }
 }

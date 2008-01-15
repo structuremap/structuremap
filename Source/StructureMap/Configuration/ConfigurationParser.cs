@@ -94,8 +94,8 @@ namespace StructureMap.Configuration
 
         #endregion
 
-        private readonly XmlNode _structureMapNode;
         private readonly XmlMementoCreator _mementoCreator;
+        private readonly XmlNode _structureMapNode;
 
         public ConfigurationParser(XmlNode structureMapNode)
         {

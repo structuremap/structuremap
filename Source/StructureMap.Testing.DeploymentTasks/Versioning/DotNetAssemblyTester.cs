@@ -8,23 +8,6 @@ namespace StructureMap.Testing.Versioning
     public class DotNetAssemblyTester
     {
         [Test]
-        public void CheckVersionIsPerfectlyFine()
-        {
-            DynamicMock versionMock = new DynamicMock(typeof (IVersionReport));
-            IVersionReport report = (IVersionReport) versionMock.MockInstance;
-
-            DotNetAssembly assembly = new DotNetAssembly("some assembly", "1.0.0.0");
-
-            DeployedDirectory directory = new DeployedDirectory();
-            directory.AddAssembly(assembly);
-
-            assembly.CheckVersion(directory, report);
-
-            versionMock.Verify();
-        }
-
-
-        [Test]
         public void CheckVersionFindsAMissingAssembly()
         {
             DynamicMock versionMock = new DynamicMock(typeof (IVersionReport));
@@ -55,6 +38,22 @@ namespace StructureMap.Testing.Versioning
             directory.AddAssembly(assembly2);
 
             versionMock.Expect("VersionMismatchAssembly", assembly.AssemblyName, assembly.Version, assembly2.Version);
+
+            assembly.CheckVersion(directory, report);
+
+            versionMock.Verify();
+        }
+
+        [Test]
+        public void CheckVersionIsPerfectlyFine()
+        {
+            DynamicMock versionMock = new DynamicMock(typeof (IVersionReport));
+            IVersionReport report = (IVersionReport) versionMock.MockInstance;
+
+            DotNetAssembly assembly = new DotNetAssembly("some assembly", "1.0.0.0");
+
+            DeployedDirectory directory = new DeployedDirectory();
+            directory.AddAssembly(assembly);
 
             assembly.CheckVersion(directory, report);
 

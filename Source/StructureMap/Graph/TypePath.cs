@@ -11,6 +11,36 @@ namespace StructureMap.Graph
     [Serializable]
     public class TypePath
     {
+        private string _assemblyName = string.Empty;
+        private string _className;
+
+        public TypePath(string assemblyName, string className)
+        {
+            _className = className;
+            _assemblyName = assemblyName;
+        }
+
+        public TypePath(Type type)
+        {
+            _className = type.FullName;
+            _assemblyName = type.Assembly.GetName().Name;
+        }
+
+        public string AssemblyQualifiedName
+        {
+            get { return _className + "," + _assemblyName; }
+        }
+
+        public string AssemblyName
+        {
+            get { return _assemblyName; }
+        }
+
+        public string ClassName
+        {
+            get { return _className; }
+        }
+
         public static string GetTypeIdentifier(Type type)
         {
             return new TypePath(type).AssemblyQualifiedName;
@@ -35,40 +65,10 @@ namespace StructureMap.Graph
             element.SetAttribute(XmlConstants.ASSEMBLY, type.Assembly.GetName().Name);
         }
 
-        private string _className;
-        private string _assemblyName = string.Empty;
-
-        public string AssemblyQualifiedName
-        {
-            get { return _className + "," + _assemblyName; }
-        }
-
         public static string GetAssemblyQualifiedName(Type type)
         {
             TypePath path = new TypePath(type);
             return path.AssemblyQualifiedName;
-        }
-
-        public string AssemblyName
-        {
-            get { return _assemblyName; }
-        }
-
-        public string ClassName
-        {
-            get { return _className; }
-        }
-
-        public TypePath(string assemblyName, string className)
-        {
-            _className = className;
-            _assemblyName = assemblyName;
-        }
-
-        public TypePath(Type type)
-        {
-            _className = type.FullName;
-            _assemblyName = type.Assembly.GetName().Name;
         }
 
         public Type FindType()

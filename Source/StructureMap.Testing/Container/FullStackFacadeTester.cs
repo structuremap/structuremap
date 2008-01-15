@@ -10,12 +10,95 @@ namespace StructureMap.Testing.Container
     [TestFixture]
     public class FullStackFacadeTester
     {
+        #region Setup/Teardown
+
         [SetUp]
         public void SetUp()
         {
             DataMother.WriteDocument("SampleConfig.xml");
             DataMother.WriteDocument("FullTesting.XML");
             ObjectFactory.ResetDefaults();
+        }
+
+        #endregion
+
+        [Test]
+        public void BuildAllInstances()
+        {
+            DataMother.WriteDocument("FullTesting.XML");
+
+            PluginGraph pluginGraph = DataMother.GetDiagnosticPluginGraph("SampleConfig.xml");
+
+            InstanceManager manager = new InstanceManager(pluginGraph);
+
+            IList list = manager.GetAllInstances(typeof (IWidget));
+
+            Assert.AreEqual(7, list.Count);
+
+            foreach (object target in list)
+            {
+                Assert.IsTrue(target is IWidget);
+            }
+        }
+
+        [Test]
+        public void ChangeDefault()
+        {
+            ObjectFactory.SetDefaultInstanceName(typeof (IWidget), "Green");
+            ColorWidget green = (ColorWidget) ObjectFactory.GetInstance(typeof (IWidget));
+            Assert.IsNotNull(green);
+            Assert.AreEqual("Green", green.Color);
+        }
+
+        [Test]
+        public void ChangeDefaultWithGenericMethod()
+        {
+            ObjectFactory.SetDefaultInstanceName<IWidget>("Green");
+            ColorWidget green = (ColorWidget) ObjectFactory.GetInstance<IWidget>();
+            Assert.IsNotNull(green);
+            Assert.AreEqual("Green", green.Color);
+        }
+
+        [Test]
+        public void FillDependencies()
+        {
+            FilledTarget target = (FilledTarget) ObjectFactory.FillDependencies(typeof (FilledTarget));
+            Assert.IsNotNull(target.Gateway);
+            Assert.IsNotNull(target.Rule);
+        }
+
+
+        [Test]
+        public void GetChildWithDefinedGrandChild()
+        {
+            Child child = ObjectFactory.GetNamedInstance(typeof (Child), "Tom") as Child;
+            Assert.IsNotNull(child);
+            Assert.AreEqual("Tom", child.Name);
+
+
+            GrandChild grandChild = child.MyGrandChild;
+            Assert.IsNotNull(grandChild);
+            Assert.AreEqual(1984, grandChild.BirthYear, "Has correct BirthYear");
+            Assert.IsTrue(grandChild is LeftieGrandChild, "Correct type?");
+        }
+
+        [Test, ExpectedException(typeof (StructureMapException))]
+        public void GetChildWithInvalidGrandChild()
+        {
+            Child child = ObjectFactory.GetNamedInstance(typeof (Child), "Monte") as Child;
+        }
+
+        [Test]
+        public void GetChildWithReferencedGrandChild()
+        {
+            Child child = ObjectFactory.GetNamedInstance(typeof (Child), "Marsha") as Child;
+            Assert.IsNotNull(child);
+            Assert.AreEqual("Marsha", child.Name);
+
+            GrandChild grandChild = child.MyGrandChild;
+            Assert.IsNotNull(grandChild);
+            Assert.AreEqual(1972, grandChild.BirthYear, "Has correct BirthYear");
+            Assert.AreEqual(true, grandChild.RightHanded, "Is Right-Handed?");
         }
 
         [Test]
@@ -38,92 +121,6 @@ namespace StructureMap.Testing.Container
             Assert.IsNotNull(confWidget);
         }
 
-        [Test]
-        public void ChangeDefault()
-        {
-            ObjectFactory.SetDefaultInstanceName(typeof (IWidget), "Green");
-            ColorWidget green = (ColorWidget) ObjectFactory.GetInstance(typeof (IWidget));
-            Assert.IsNotNull(green);
-            Assert.AreEqual("Green", green.Color);
-        }
-
-        [Test]
-        public void ChangeDefaultWithGenericMethod()
-        {
-            ObjectFactory.SetDefaultInstanceName<IWidget>("Green");
-            ColorWidget green = (ColorWidget) ObjectFactory.GetInstance<IWidget>();
-            Assert.IsNotNull(green);
-            Assert.AreEqual("Green", green.Color);
-        }
-
-        [Test]
-        public void GetRules()
-        {
-            ColorRule red = (ColorRule) ObjectFactory.GetNamedInstance(typeof (Rule), "Red");
-            Assert.IsNotNull(red);
-            Assert.AreEqual("Red", red.Color);
-
-            ColorRule blue = (ColorRule) ObjectFactory.GetNamedInstance(typeof (Rule), "Blue");
-            Assert.IsNotNull(blue);
-            Assert.AreEqual("Blue", blue.Color);
-
-            GreaterThanRule bigger = (GreaterThanRule) ObjectFactory.GetNamedInstance(typeof (Rule), "Bigger");
-            Assert.IsNotNull(bigger);
-        }
-
-
-        [Test]
-        public void GetChildWithDefinedGrandChild()
-        {
-            Child child = ObjectFactory.GetNamedInstance(typeof (Child), "Tom") as Child;
-            Assert.IsNotNull(child);
-            Assert.AreEqual("Tom", child.Name);
-
-
-            GrandChild grandChild = child.MyGrandChild;
-            Assert.IsNotNull(grandChild);
-            Assert.AreEqual(1984, grandChild.BirthYear, "Has correct BirthYear");
-            Assert.IsTrue(grandChild is LeftieGrandChild, "Correct type?");
-        }
-
-        [Test]
-        public void GetChildWithReferencedGrandChild()
-        {
-            Child child = ObjectFactory.GetNamedInstance(typeof (Child), "Marsha") as Child;
-            Assert.IsNotNull(child);
-            Assert.AreEqual("Marsha", child.Name);
-
-            GrandChild grandChild = child.MyGrandChild;
-            Assert.IsNotNull(grandChild);
-            Assert.AreEqual(1972, grandChild.BirthYear, "Has correct BirthYear");
-            Assert.AreEqual(true, grandChild.RightHanded, "Is Right-Handed?");
-        }
-
-        [Test, ExpectedException(typeof (StructureMapException))]
-        public void GetChildWithInvalidGrandChild()
-        {
-            Child child = ObjectFactory.GetNamedInstance(typeof (Child), "Monte") as Child;
-        }
-
-
-        [Test]
-        public void GetParentWithReferencedChild()
-        {
-            Parent parent = ObjectFactory.GetNamedInstance(typeof (Parent), "Jerry") as Parent;
-            Assert.IsNotNull(parent);
-            Assert.AreEqual(72, parent.Age, "Age = 72");
-            Assert.AreEqual("Blue", parent.EyeColor);
-
-            Child child = parent.MyChild;
-            Assert.IsNotNull(child);
-            Assert.AreEqual("Marsha", child.Name);
-
-            GrandChild grandChild = child.MyGrandChild;
-            Assert.IsNotNull(grandChild);
-            Assert.AreEqual(1972, grandChild.BirthYear, "Has correct BirthYear");
-            Assert.AreEqual(true, grandChild.RightHanded, "Is Right-Handed?");
-        }
-
 
         [Test]
         public void GetParentWithDefinedChild()
@@ -141,6 +138,24 @@ namespace StructureMap.Testing.Container
             Assert.IsNotNull(grandChild);
             Assert.AreEqual(1992, grandChild.BirthYear, "Has correct BirthYear");
             Assert.IsTrue(grandChild is LeftieGrandChild, "Is a Leftie?");
+        }
+
+        [Test]
+        public void GetParentWithReferencedChild()
+        {
+            Parent parent = ObjectFactory.GetNamedInstance(typeof (Parent), "Jerry") as Parent;
+            Assert.IsNotNull(parent);
+            Assert.AreEqual(72, parent.Age, "Age = 72");
+            Assert.AreEqual("Blue", parent.EyeColor);
+
+            Child child = parent.MyChild;
+            Assert.IsNotNull(child);
+            Assert.AreEqual("Marsha", child.Name);
+
+            GrandChild grandChild = child.MyGrandChild;
+            Assert.IsNotNull(grandChild);
+            Assert.AreEqual(1972, grandChild.BirthYear, "Has correct BirthYear");
+            Assert.AreEqual(true, grandChild.RightHanded, "Is Right-Handed?");
         }
 
         [Test]
@@ -162,6 +177,21 @@ namespace StructureMap.Testing.Container
         }
 
         [Test]
+        public void GetRules()
+        {
+            ColorRule red = (ColorRule) ObjectFactory.GetNamedInstance(typeof (Rule), "Red");
+            Assert.IsNotNull(red);
+            Assert.AreEqual("Red", red.Color);
+
+            ColorRule blue = (ColorRule) ObjectFactory.GetNamedInstance(typeof (Rule), "Blue");
+            Assert.IsNotNull(blue);
+            Assert.AreEqual("Blue", blue.Color);
+
+            GreaterThanRule bigger = (GreaterThanRule) ObjectFactory.GetNamedInstance(typeof (Rule), "Bigger");
+            Assert.IsNotNull(bigger);
+        }
+
+        [Test]
         public void SingletonInterceptorAlwaysReturnsSameInstance()
         {
             Rule rule1 = (Rule) ObjectFactory.GetNamedInstance(typeof (Rule), "Red");
@@ -170,34 +200,6 @@ namespace StructureMap.Testing.Container
 
             Assert.AreSame(rule1, rule2);
             Assert.AreSame(rule1, rule3);
-        }
-
-
-        [Test]
-        public void FillDependencies()
-        {
-            FilledTarget target = (FilledTarget) ObjectFactory.FillDependencies(typeof (FilledTarget));
-            Assert.IsNotNull(target.Gateway);
-            Assert.IsNotNull(target.Rule);
-        }
-
-        [Test]
-        public void BuildAllInstances()
-        {
-            DataMother.WriteDocument("FullTesting.XML");
-
-            PluginGraph pluginGraph = DataMother.GetDiagnosticPluginGraph("SampleConfig.xml");
-
-            InstanceManager manager = new InstanceManager(pluginGraph);
-
-            IList list = manager.GetAllInstances(typeof (IWidget));
-
-            Assert.AreEqual(7, list.Count);
-
-            foreach (object target in list)
-            {
-                Assert.IsTrue(target is IWidget);
-            }
         }
     }
 

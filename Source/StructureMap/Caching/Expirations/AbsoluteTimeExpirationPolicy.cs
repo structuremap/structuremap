@@ -5,8 +5,8 @@ namespace StructureMap.Caching.Expirations
     [Pluggable("AbsoluteTime")]
     public class AbsoluteTimeExpirationPolicy : IExpirationPolicy
     {
-        private long _ticks;
         private DateTime _currentTime;
+        private long _ticks;
 
         public AbsoluteTimeExpirationPolicy(int minutes)
         {

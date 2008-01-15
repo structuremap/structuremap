@@ -33,51 +33,6 @@ namespace StructureMap.Graph
             }
         }
 
-        public void Add(TypePath path, string concreteKey)
-        {
-            Plugin plugin = new Plugin(path, concreteKey);
-            Add(plugin);
-        }
-
-        /// <summary>
-        /// Adds a new Plugin by the PluggedType
-        /// </summary>
-        /// <param name="pluggedType"></param>
-        /// <param name="concreteKey"></param>
-        // TODO -- not wild about this method.
-        public void Add(Type pluggedType, string concreteKey)
-        {
-            Plugin plugin = Plugin.CreateExplicitPlugin(pluggedType, concreteKey, string.Empty);
-            Add(plugin);
-        }
-
-        public void Add(Plugin plugin)
-        {
-            // Reject if a duplicate ConcreteKey
-            if (_plugins.ContainsKey(plugin.ConcreteKey))
-            {
-                // Don't duplicate
-                Plugin peer = this[plugin.ConcreteKey];
-                if (peer.PluggedType == plugin.PluggedType)
-                {
-                    return;
-                }
-
-                throw new StructureMapException(113, plugin.ConcreteKey, _family.PluginTypeName);
-            }
-
-            // Reject if the PluggedType cannot be upcast to the PluginType
-            if (!Plugin.CanBeCast(_family.PluginType, plugin.PluggedType))
-            {
-                throw new StructureMapException(114, plugin.PluggedType.FullName, _family.PluginTypeName);
-            }
-
-            plugin.AddToSource(_family.Source);
-
-
-            _plugins.Add(plugin.ConcreteKey, plugin);
-        }
-
         /// <summary>
         /// Gets a Plugin by its PluggedType
         /// </summary>
@@ -133,6 +88,51 @@ namespace StructureMap.Graph
 
                 throw new ApplicationException(msg);
             }
+        }
+
+        public void Add(TypePath path, string concreteKey)
+        {
+            Plugin plugin = new Plugin(path, concreteKey);
+            Add(plugin);
+        }
+
+        /// <summary>
+        /// Adds a new Plugin by the PluggedType
+        /// </summary>
+        /// <param name="pluggedType"></param>
+        /// <param name="concreteKey"></param>
+        // TODO -- not wild about this method.
+        public void Add(Type pluggedType, string concreteKey)
+        {
+            Plugin plugin = Plugin.CreateExplicitPlugin(pluggedType, concreteKey, string.Empty);
+            Add(plugin);
+        }
+
+        public void Add(Plugin plugin)
+        {
+            // Reject if a duplicate ConcreteKey
+            if (_plugins.ContainsKey(plugin.ConcreteKey))
+            {
+                // Don't duplicate
+                Plugin peer = this[plugin.ConcreteKey];
+                if (peer.PluggedType == plugin.PluggedType)
+                {
+                    return;
+                }
+
+                throw new StructureMapException(113, plugin.ConcreteKey, _family.PluginTypeName);
+            }
+
+            // Reject if the PluggedType cannot be upcast to the PluginType
+            if (!Plugin.CanBeCast(_family.PluginType, plugin.PluggedType))
+            {
+                throw new StructureMapException(114, plugin.PluggedType.FullName, _family.PluginTypeName);
+            }
+
+            plugin.AddToSource(_family.Source);
+
+
+            _plugins.Add(plugin.ConcreteKey, plugin);
         }
 
         /// <summary>

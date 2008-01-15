@@ -7,6 +7,16 @@ namespace StructureMap.Testing.DataAccess.Tools.Mocks
     public class CommandExpectationTester
     {
         [Test]
+        public void IsOutput()
+        {
+            CommandExpectation expectation = new CommandExpectation(1);
+            expectation.SetOutput("param1", 1);
+
+            Assert.IsTrue(expectation.IsOutput("param1"));
+            Assert.IsFalse(expectation.IsOutput("param2"));
+        }
+
+        [Test]
         public void SetAndRetrieveInputs()
         {
             CommandExpectation expectation = new CommandExpectation(1);
@@ -33,16 +43,6 @@ namespace StructureMap.Testing.DataAccess.Tools.Mocks
             expectation.SetOutput("param1", 1);
 
             expectation.GetOutput("param1");
-        }
-
-        [Test]
-        public void IsOutput()
-        {
-            CommandExpectation expectation = new CommandExpectation(1);
-            expectation.SetOutput("param1", 1);
-
-            Assert.IsTrue(expectation.IsOutput("param1"));
-            Assert.IsFalse(expectation.IsOutput("param2"));
         }
 
         [Test]

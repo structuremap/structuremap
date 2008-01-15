@@ -13,6 +13,16 @@ namespace StructureMap.Testing.Configuration
         {
         }
 
+        public override GraphObject[] Children
+        {
+            get { return (GraphObject[]) _children.ToArray(typeof (GraphObject)); }
+        }
+
+        protected override string key
+        {
+            get { return string.Empty; }
+        }
+
         public void AddChild()
         {
             MockGraphObject child = new MockGraphObject();
@@ -31,19 +41,9 @@ namespace StructureMap.Testing.Configuration
             node.AddChild();
         }
 
-        public override GraphObject[] Children
-        {
-            get { return (GraphObject[]) _children.ToArray(typeof (GraphObject)); }
-        }
-
         public override void AcceptVisitor(IConfigurationVisitor visitor)
         {
             _acceptWasCalled = true;
-        }
-
-        protected override string key
-        {
-            get { return string.Empty; }
         }
 
         public void VerifyAcceptVisitor()

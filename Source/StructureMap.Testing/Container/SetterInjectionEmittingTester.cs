@@ -21,18 +21,47 @@ namespace StructureMap.Testing.Container
         }
 
 
+        private InstanceManager buildInstanceManager()
+        {
+            PluginGraph pluginGraph = DataMother.GetDiagnosticPluginGraph("SetterInjectionTesting.xml");
+
+            return new InstanceManager(pluginGraph, true);
+        }
+
         [Test]
-        public void StringSetter()
+        public void ChildArraySetter()
+        {
+            InstanceManager manager = buildInstanceManager();
+
+            WidgetArrayGridColumn column =
+                (WidgetArrayGridColumn) manager.CreateInstance(typeof (IGridColumn), "WidgetArray");
+
+            Assert.AreEqual(3, column.Widgets.Length);
+        }
+
+        [Test]
+        public void ChildObjectSetter()
+        {
+            InstanceManager manager = buildInstanceManager();
+
+
+            WidgetGridColumn column = (WidgetGridColumn) manager.CreateInstance(typeof (IGridColumn), "BlueWidget");
+            Assert.IsTrue(column.Widget is ColorWidget);
+        }
+
+        [Test]
+        public void EnumSetter()
         {
             PluginFamily family = new PluginFamily(typeof (IGridColumn));
-            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (StringGridColumn));
+            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (EnumGridColumn));
             family.Plugins.Add(plugin);
 
             InstanceFactory factory = new InstanceFactory(family, true);
-            InstanceMemento memento = _source.GetMemento("String");
+            InstanceMemento memento = _source.GetMemento("Enum");
 
-            StringGridColumn column = (StringGridColumn) factory.GetInstance(memento);
-            Assert.AreEqual(memento.GetProperty("Name"), column.Name);
+            EnumGridColumn column = (EnumGridColumn) factory.GetInstance(memento);
+
+            Assert.AreEqual(FontStyleEnum.BodyText, column.FontStyle);
         }
 
         [Test]
@@ -52,49 +81,18 @@ namespace StructureMap.Testing.Container
             Assert.AreEqual(count, column.Count);
         }
 
-
         [Test]
-        public void EnumSetter()
+        public void StringSetter()
         {
             PluginFamily family = new PluginFamily(typeof (IGridColumn));
-            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (EnumGridColumn));
+            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (StringGridColumn));
             family.Plugins.Add(plugin);
 
             InstanceFactory factory = new InstanceFactory(family, true);
-            InstanceMemento memento = _source.GetMemento("Enum");
+            InstanceMemento memento = _source.GetMemento("String");
 
-            EnumGridColumn column = (EnumGridColumn) factory.GetInstance(memento);
-
-            Assert.AreEqual(FontStyleEnum.BodyText, column.FontStyle);
-        }
-
-
-        [Test]
-        public void ChildObjectSetter()
-        {
-            InstanceManager manager = buildInstanceManager();
-
-
-            WidgetGridColumn column = (WidgetGridColumn) manager.CreateInstance(typeof (IGridColumn), "BlueWidget");
-            Assert.IsTrue(column.Widget is ColorWidget);
-        }
-
-        [Test]
-        public void ChildArraySetter()
-        {
-            InstanceManager manager = buildInstanceManager();
-
-            WidgetArrayGridColumn column =
-                (WidgetArrayGridColumn) manager.CreateInstance(typeof (IGridColumn), "WidgetArray");
-
-            Assert.AreEqual(3, column.Widgets.Length);
-        }
-
-        private InstanceManager buildInstanceManager()
-        {
-            PluginGraph pluginGraph = DataMother.GetDiagnosticPluginGraph("SetterInjectionTesting.xml");
-
-            return new InstanceManager(pluginGraph, true);
+            StringGridColumn column = (StringGridColumn) factory.GetInstance(memento);
+            Assert.AreEqual(memento.GetProperty("Name"), column.Name);
         }
     }
 }

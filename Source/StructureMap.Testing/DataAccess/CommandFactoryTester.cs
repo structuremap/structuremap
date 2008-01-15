@@ -9,30 +9,15 @@ namespace StructureMap.Testing.DataAccess
     [TestFixture, Ignore("temporary")]
     public class CommandFactoryTester
     {
+        #region Setup/Teardown
+
         [TearDown]
         public void TearDown()
         {
             ObjectFactory.ResetDefaults();
         }
 
-
-        [Test]
-        public void CreateCommand()
-        {
-            IMock engineMock = new DynamicMock(typeof (IDatabaseEngine));
-            StubbedCommand stubbedCommand = new StubbedCommand();
-
-            ObjectFactory.InjectStub(typeof (ICommand), stubbedCommand);
-
-            CommandFactory factory = new CommandFactory((IDatabaseEngine) engineMock.MockInstance);
-
-            string theCommandName = "Name Of The Command";
-            ICommand command = factory.BuildCommand(theCommandName);
-
-            Assert.IsTrue(stubbedCommand.WasInitialized);
-            Assert.AreEqual(theCommandName, command.Name);
-            Assert.AreSame(command, stubbedCommand);
-        }
+        #endregion
 
         [Test]
         public void BuildReaderSource()
@@ -50,6 +35,24 @@ namespace StructureMap.Testing.DataAccess
             Assert.IsTrue(stubbedReaderSource.WasInitialized);
             Assert.AreEqual(theName, readerSource.Name);
             Assert.AreSame(readerSource, stubbedReaderSource);
+        }
+
+        [Test]
+        public void CreateCommand()
+        {
+            IMock engineMock = new DynamicMock(typeof (IDatabaseEngine));
+            StubbedCommand stubbedCommand = new StubbedCommand();
+
+            ObjectFactory.InjectStub(typeof (ICommand), stubbedCommand);
+
+            CommandFactory factory = new CommandFactory((IDatabaseEngine) engineMock.MockInstance);
+
+            string theCommandName = "Name Of The Command";
+            ICommand command = factory.BuildCommand(theCommandName);
+
+            Assert.IsTrue(stubbedCommand.WasInitialized);
+            Assert.AreEqual(theCommandName, command.Name);
+            Assert.AreSame(command, stubbedCommand);
         }
     }
 }

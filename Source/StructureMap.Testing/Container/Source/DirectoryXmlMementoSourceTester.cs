@@ -55,18 +55,18 @@ namespace StructureMap.Testing.Container.Source
             Assert.AreEqual("Red", memento.GetProperty("Color"));
         }
 
-        [Test]
-        public void ValidateIsSuccessfulWithAnExistingDirectory()
-        {
-            _source.Validate();
-        }
-
         [Test, ExpectedException(typeof (ApplicationException))]
         public void ValidateIsNotSuccessfulWithADirectoryItCannotFind()
         {
             DirectoryXmlMementoSource source =
                 new DirectoryXmlMementoSource("NotARealDirectory", "xml", XmlMementoStyle.NodeNormalized);
             source.Validate();
+        }
+
+        [Test]
+        public void ValidateIsSuccessfulWithAnExistingDirectory()
+        {
+            _source.Validate();
         }
     }
 }

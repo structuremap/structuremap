@@ -9,11 +9,7 @@ namespace StructureMap.Testing.DataAccess.DataSetMapping
     [TestFixture]
     public class ReaderToTableMapperTester
     {
-        private DataTable _sourceTable;
-        private DataTable _destinationTable;
-        private IDataReader _reader;
-        private DateTime _texasDate = new DateTime(1846, 12, 29);
-        private DateTime _missouriDate = new DateTime(1821, 8, 10);
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -36,6 +32,14 @@ namespace StructureMap.Testing.DataAccess.DataSetMapping
 
             _reader = new TableDataReader(_sourceTable);
         }
+
+        #endregion
+
+        private DataTable _sourceTable;
+        private DataTable _destinationTable;
+        private IDataReader _reader;
+        private DateTime _texasDate = new DateTime(1846, 12, 29);
+        private DateTime _missouriDate = new DateTime(1821, 8, 10);
 
         [Test]
         public void WriteRowsToDataTable()

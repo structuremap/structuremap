@@ -10,12 +10,12 @@ namespace StructureMap.Configuration
 {
     public class NormalGraphBuilder : IGraphBuilder
     {
+        private readonly IInterceptorChainBuilder _builder;
+        private MachineOverride _machine;
         private PluginGraph _pluginGraph;
+        private Profile _profile;
         private PluginGraph _systemGraph;
         private InstanceManager _systemInstanceManager;
-        private readonly IInterceptorChainBuilder _builder;
-        private Profile _profile;
-        private MachineOverride _machine;
 
 
         public NormalGraphBuilder(Registry[] registries) : this(new InterceptorChainBuilder(), registries)
@@ -36,6 +36,7 @@ namespace StructureMap.Configuration
             _systemGraph.Assemblies.Add(Assembly.GetExecutingAssembly());
         }
 
+        #region IGraphBuilder Members
 
         public void FinishFamilies()
         {
@@ -127,11 +128,6 @@ namespace StructureMap.Configuration
             _pluginGraph.PluginFamilies.Add(family);
         }
 
-        private object buildSystemObject(Type type, InstanceMemento memento)
-        {
-            return _systemInstanceManager.CreateInstance(type, memento);
-        }
-
         public virtual void AttachSource(TypePath pluginTypePath, InstanceMemento sourceMemento)
         {
             try
@@ -208,6 +204,13 @@ namespace StructureMap.Configuration
             }
 
             family.Source.AddExternalMemento(memento);
+        }
+
+        #endregion
+
+        private object buildSystemObject(Type type, InstanceMemento memento)
+        {
+            return _systemInstanceManager.CreateInstance(type, memento);
         }
     }
 }

@@ -6,9 +6,11 @@ namespace StructureMap.Verification
 {
     public class StartUp : IStartUp
     {
-        private string _problemFile = "StructureMap.error";
-        private bool _fail = false;
         private string _allFile;
+        private bool _fail = false;
+        private string _problemFile = "StructureMap.error";
+
+        #region IStartUp Members
 
         public IStartUp WriteProblemsTo(string fileName)
         {
@@ -27,6 +29,8 @@ namespace StructureMap.Verification
             _allFile = fileName;
             return this;
         }
+
+        #endregion
 
         public void RunDiagnostics()
         {

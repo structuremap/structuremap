@@ -26,17 +26,17 @@ namespace StructureMap.DataAccess.Commands
             Attach(session);
         }
 
+        public string CommandText
+        {
+            get { return _commandText; }
+        }
+
         public override void Initialize(IDatabaseEngine engine)
         {
             IDbCommand innerCommand = engine.CreateStoredProcedureCommand(_commandText);
             ParameterCollection parameters = new ParameterCollection(innerCommand.Parameters);
 
             initializeMembers(parameters, innerCommand);
-        }
-
-        public string CommandText
-        {
-            get { return _commandText; }
         }
     }
 }

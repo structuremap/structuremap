@@ -17,11 +17,11 @@ namespace StructureMap.Caching
 
         #endregion
 
-        private HybridDictionary _dispatchers;
+        private EventDispatcher _clearAllDispatcher;
         private bool _continuePolling = true;
+        private HybridDictionary _dispatchers;
         private bool _isPolling = false;
         private int _PollingTimeInMinutes;
-        private EventDispatcher _clearAllDispatcher;
         private EventDispatcher _pruneAllDispatcher;
 
 
@@ -91,7 +91,26 @@ namespace StructureMap.Caching
             _clearAllDispatcher.Dispatch();
         }
 
+        public void DispatchEvent(string EventName)
+        {
+            if (_dispatchers.Contains(EventName))
+            {
+                EventDispatcher _dispatcher = (EventDispatcher) _dispatchers[EventName];
+                _dispatcher.Dispatch();
+            }
+        }
+
         #region polling
+
+        public bool IsPolling
+        {
+            get { return _isPolling; }
+        }
+
+        public int PollingTimeInMinutes
+        {
+            get { return _PollingTimeInMinutes; }
+        }
 
         public void StartPolling()
         {
@@ -106,16 +125,6 @@ namespace StructureMap.Caching
         public void StopPolling()
         {
             _continuePolling = false;
-        }
-
-        public bool IsPolling
-        {
-            get { return _isPolling; }
-        }
-
-        public int PollingTimeInMinutes
-        {
-            get { return _PollingTimeInMinutes; }
         }
 
 
@@ -135,14 +144,5 @@ namespace StructureMap.Caching
         }
 
         #endregion
-
-        public void DispatchEvent(string EventName)
-        {
-            if (_dispatchers.Contains(EventName))
-            {
-                EventDispatcher _dispatcher = (EventDispatcher) _dispatchers[EventName];
-                _dispatcher.Dispatch();
-            }
-        }
     }
 }

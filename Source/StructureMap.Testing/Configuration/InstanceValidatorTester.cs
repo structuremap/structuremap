@@ -10,21 +10,21 @@ namespace StructureMap.Testing.Configuration
     public class InstanceValidatorTester
     {
         [Test]
-        public void InstanceExistsPositive()
-        {
-            PluginGraph pluginGraph = ObjectMother.GetPluginGraph();
-            InstanceManager manager = new InstanceManager(pluginGraph);
-            InstanceValidator validator = new InstanceValidator(pluginGraph, new Profile("profile"), manager);
-            Assert.IsTrue(validator.InstanceExists(typeof (Rule), "Red"));
-        }
-
-        [Test]
         public void InstanceExistsNegative()
         {
             PluginGraph pluginGraph = ObjectMother.GetPluginGraph();
             InstanceManager manager = new InstanceManager(pluginGraph);
             InstanceValidator validator = new InstanceValidator(pluginGraph, new Profile("profile"), manager);
             Assert.IsFalse(validator.InstanceExists(typeof (IGateway), "SomethingWrong"));
+        }
+
+        [Test]
+        public void InstanceExistsPositive()
+        {
+            PluginGraph pluginGraph = ObjectMother.GetPluginGraph();
+            InstanceManager manager = new InstanceManager(pluginGraph);
+            InstanceValidator validator = new InstanceValidator(pluginGraph, new Profile("profile"), manager);
+            Assert.IsTrue(validator.InstanceExists(typeof (Rule), "Red"));
         }
     }
 }

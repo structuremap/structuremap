@@ -5,12 +5,12 @@ namespace StructureMap.DataAccess.Tools
 {
     public class TableDataReader : IDataReader
     {
-        private DataTable[] _tables;
-        private int _tableIndex = -1;
-        private DataTable _currentTable;
         private int _currentPosition;
         private DataRow _currentRow;
+        private DataTable _currentTable;
         private bool _isClosed;
+        private int _tableIndex = -1;
+        private DataTable[] _tables;
 
         public TableDataReader()
             : this(new DataTable())
@@ -29,26 +29,7 @@ namespace StructureMap.DataAccess.Tools
             moveToNextTable();
         }
 
-        private void moveToNextTable()
-        {
-            _tableIndex++;
-            _currentTable = _tables[_tableIndex];
-            _currentPosition = -1;
-        }
-
-        private void moveToNextRow()
-        {
-            _currentPosition++;
-            _currentRow = _currentPosition < _currentTable.Rows.Count ? _currentTable.Rows[_currentPosition] : null;
-        }
-
-        private void assertOpen()
-        {
-            if (_isClosed)
-            {
-                throw new ApplicationException("This DataReader is closed!");
-            }
-        }
+        #region IDataReader Members
 
         public void Close()
         {
@@ -225,6 +206,29 @@ namespace StructureMap.DataAccess.Tools
             {
                 int index = GetOrdinal(name);
                 return GetValue(index);
+            }
+        }
+
+        #endregion
+
+        private void moveToNextTable()
+        {
+            _tableIndex++;
+            _currentTable = _tables[_tableIndex];
+            _currentPosition = -1;
+        }
+
+        private void moveToNextRow()
+        {
+            _currentPosition++;
+            _currentRow = _currentPosition < _currentTable.Rows.Count ? _currentTable.Rows[_currentPosition] : null;
+        }
+
+        private void assertOpen()
+        {
+            if (_isClosed)
+            {
+                throw new ApplicationException("This DataReader is closed!");
             }
         }
     }

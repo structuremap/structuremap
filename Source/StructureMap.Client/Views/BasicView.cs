@@ -8,8 +8,8 @@ namespace StructureMap.Client.Views
     public class BasicView : IHTMLSource
     {
         private readonly string _headerText;
-        private readonly string _subjectMember;
         private readonly IViewPart[] _parts;
+        private readonly string _subjectMember;
 
         public BasicView(string headerText, string subjectMember, IViewPart[] parts)
         {
@@ -18,20 +18,7 @@ namespace StructureMap.Client.Views
             _parts = parts;
         }
 
-        public string GetHeaderText(GraphObject subject)
-        {
-            if (_subjectMember == string.Empty)
-            {
-                return _headerText;
-            }
-            else
-            {
-                PropertyInfo property = subject.GetType().GetProperty(_subjectMember);
-                string headerSuffix = property.GetValue(subject, null).ToString();
-
-                return string.Format("{0}:  {1}", _headerText, headerSuffix);
-            }
-        }
+        #region IHTMLSource Members
 
         public string BuildHTML(GraphObject subject)
         {
@@ -46,6 +33,23 @@ namespace StructureMap.Client.Views
             }
 
             return builder.HTML;
+        }
+
+        #endregion
+
+        public string GetHeaderText(GraphObject subject)
+        {
+            if (_subjectMember == string.Empty)
+            {
+                return _headerText;
+            }
+            else
+            {
+                PropertyInfo property = subject.GetType().GetProperty(_subjectMember);
+                string headerSuffix = property.GetValue(subject, null).ToString();
+
+                return string.Format("{0}:  {1}", _headerText, headerSuffix);
+            }
         }
     }
 }

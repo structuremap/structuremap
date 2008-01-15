@@ -12,11 +12,7 @@ namespace StructureMap.Testing.Client.Controllers
     [TestFixture]
     public class ApplicationControllerTester
     {
-        private DynamicMock shellMock;
-        private DynamicMock reportSourceMock;
-        private DynamicMock factoryMock;
-        private ApplicationController controller;
-
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -29,6 +25,14 @@ namespace StructureMap.Testing.Client.Controllers
                                                    (IReportSource) reportSourceMock.MockInstance,
                                                    (IHTMLSourceFactory) factoryMock.MockInstance);
         }
+
+        #endregion
+
+        private DynamicMock shellMock;
+        private DynamicMock reportSourceMock;
+        private DynamicMock factoryMock;
+        private ApplicationController controller;
+
 
         [Test]
         public void RefreshReportDifferentFolders()

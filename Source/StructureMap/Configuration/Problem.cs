@@ -6,10 +6,10 @@ namespace StructureMap.Configuration
     [Serializable]
     public class Problem
     {
-        private string _title;
         private string _message;
-        private string _path = string.Empty;
         private Guid _objectId = Guid.Empty;
+        private string _path = string.Empty;
+        private string _title;
 
         public Problem()
         {
@@ -19,12 +19,6 @@ namespace StructureMap.Configuration
         {
             _title = title;
             _message = message;
-        }
-
-        public string Path
-        {
-            get { return _path; }
-            set { _path = value; }
         }
 
         public Problem(string title, Exception ex)
@@ -44,6 +38,12 @@ namespace StructureMap.Configuration
             }
 
             _message = sb.ToString();
+        }
+
+        public string Path
+        {
+            get { return _path; }
+            set { _path = value; }
         }
 
         public string Title

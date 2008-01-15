@@ -14,14 +14,14 @@ namespace StructureMap.Configuration.Tokens
         {
         }
 
-        public override void AcceptVisitor(IConfigurationVisitor visitor)
-        {
-            visitor.HandleMementoSource(this);
-        }
-
         protected override string key
         {
             get { return string.Empty; }
+        }
+
+        public override void AcceptVisitor(IConfigurationVisitor visitor)
+        {
+            visitor.HandleMementoSource(this);
         }
     }
 }

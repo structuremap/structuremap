@@ -5,16 +5,18 @@ namespace StructureMap.DataAccess.DataSetMapping
 {
     public class ReaderToColumnMap : IReaderToColumnMap
     {
-        private readonly string _readerName;
         private readonly string _columnName;
-        private int _ordinal;
+        private readonly string _readerName;
         private DataColumn _column;
+        private int _ordinal;
 
         public ReaderToColumnMap(string readerName, string columnName)
         {
             _readerName = readerName;
             _columnName = columnName;
         }
+
+        #region IReaderToColumnMap Members
 
         public void Initialize(DataTable table, IDataReader reader)
         {
@@ -39,6 +41,8 @@ namespace StructureMap.DataAccess.DataSetMapping
             object dataValue = getRawValue(reader);
             row[_column] = dataValue;
         }
+
+        #endregion
 
         protected virtual object getRawValue(IDataReader reader)
         {

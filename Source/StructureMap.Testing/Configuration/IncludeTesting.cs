@@ -22,6 +22,16 @@ namespace StructureMap.Testing.Configuration
         }
 
         [Test]
+        public void AddAnInstanceFromMasterConfigToAFamilyInInclude()
+        {
+            PluginGraph graph = buildGraph();
+            PluginFamily family = graph.PluginFamilies[typeof (IStrategy)];
+            Assert.IsNotNull(family.Source.GetMemento("Blue"));
+            Assert.IsNotNull(family.Source.GetMemento("Red"));
+            Assert.IsNotNull(family.Source.GetMemento("DeepTest")); // from include
+        }
+
+        [Test]
         public void GetAssembliesFromIncludes()
         {
             PluginGraph graph = buildGraph();
@@ -40,16 +50,6 @@ namespace StructureMap.Testing.Configuration
             PluginGraph graph = buildGraph();
 
             Assert.IsTrue(graph.PluginFamilies.Contains(typeof (IStrategy)));
-        }
-
-        [Test]
-        public void AddAnInstanceFromMasterConfigToAFamilyInInclude()
-        {
-            PluginGraph graph = buildGraph();
-            PluginFamily family = graph.PluginFamilies[typeof (IStrategy)];
-            Assert.IsNotNull(family.Source.GetMemento("Blue"));
-            Assert.IsNotNull(family.Source.GetMemento("Red"));
-            Assert.IsNotNull(family.Source.GetMemento("DeepTest")); // from include
         }
     }
 }

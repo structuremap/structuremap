@@ -7,13 +7,13 @@ namespace StructureMap.DataAccess.Parameterization
 {
     public class ParameterizedCommandBuilder
     {
-        private readonly IDatabaseEngine _engine;
         private readonly string _commandTemplate;
-        private string[] _parameterNames;
-        private StringBuilder _commandTextBuilder;
+        private readonly IDatabaseEngine _engine;
         private IDbCommand _command;
-        private ParameterCollection _parameters;
+        private StringBuilder _commandTextBuilder;
         private bool _hasBuilt = false;
+        private string[] _parameterNames;
+        private ParameterCollection _parameters;
 
         public ParameterizedCommandBuilder(IDatabaseEngine engine, string commandTemplate)
         {
@@ -26,6 +26,16 @@ namespace StructureMap.DataAccess.Parameterization
 
             _commandTextBuilder = new StringBuilder(_commandTemplate);
             _command = _engine.GetCommand();
+        }
+
+        public IDbCommand Command
+        {
+            get { return _command; }
+        }
+
+        public ParameterCollection Parameters
+        {
+            get { return _parameters; }
         }
 
         public void Build()
@@ -58,16 +68,6 @@ namespace StructureMap.DataAccess.Parameterization
         {
             string template = "{" + parameterName + "}";
             _commandTextBuilder.Replace(template, innerParameterName);
-        }
-
-        public IDbCommand Command
-        {
-            get { return _command; }
-        }
-
-        public ParameterCollection Parameters
-        {
-            get { return _parameters; }
         }
     }
 }

@@ -20,6 +20,28 @@ namespace StructureMap.Testing.DataAccess
             _parameters = new Hashtable();
         }
 
+        public IDataSession Session
+        {
+            get { return _session; }
+            set { _session = value; }
+        }
+
+        public bool WasInitialized
+        {
+            get { return _wasInitialized; }
+        }
+
+        #region IInitializable Members
+
+        public void Initialize(IDatabaseEngine engine)
+        {
+            _wasInitialized = true;
+        }
+
+        #endregion
+
+        #region IReaderSource Members
+
         public string Name
         {
             get { return _name; }
@@ -58,20 +80,6 @@ namespace StructureMap.Testing.DataAccess
             throw new NotImplementedException();
         }
 
-        public IDataSession Session
-        {
-            get { return _session; }
-            set { _session = value; }
-        }
-
-        public bool WasInitialized
-        {
-            get { return _wasInitialized; }
-        }
-
-        public void Initialize(IDatabaseEngine engine)
-        {
-            _wasInitialized = true;
-        }
+        #endregion
     }
 }

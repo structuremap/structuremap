@@ -10,9 +10,9 @@ namespace StructureMap.DeploymentTasks
     [TaskName("structuremap.dumbmerge")]
     public class DumbConfigMergeTask : Task
     {
+        private string _destinationPath;
         private string _mainConfig;
         private string _secondConfig;
-        private string _destinationPath;
 
         public DumbConfigMergeTask()
         {

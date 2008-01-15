@@ -9,12 +9,7 @@ namespace StructureMap.Testing.DataAccess.DataSetMapping
     [TestFixture]
     public class YesNoReaderToColumnMapTester
     {
-        private DataTable _table;
-        private DataTable _destinationTable;
-        private DataRow _row;
-        private IDataReader _reader;
-        private YesNoReaderToColumnMap _map;
-
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -36,31 +31,13 @@ namespace StructureMap.Testing.DataAccess.DataSetMapping
             _map.Initialize(_destinationTable, _reader);
         }
 
-        [Test]
-        public void MapYesValue()
-        {
-            // position on row #1
-            _reader.Read();
+        #endregion
 
-            _row["Active"] = false;
-            _map.Fill(_row, _reader);
-
-            Assert.AreEqual(true, _row["Active"]);
-        }
-
-
-        [Test]
-        public void MapNoValue()
-        {
-            // position on row #2
-            _reader.Read();
-            _reader.Read();
-
-            _row["Active"] = true;
-            _map.Fill(_row, _reader);
-
-            Assert.AreEqual(false, _row["Active"]);
-        }
+        private DataTable _table;
+        private DataTable _destinationTable;
+        private DataRow _row;
+        private IDataReader _reader;
+        private YesNoReaderToColumnMap _map;
 
 
         [Test]
@@ -89,6 +66,31 @@ namespace StructureMap.Testing.DataAccess.DataSetMapping
 
             _row["Active"] = true;
             _map.Fill(_row, _reader);
+        }
+
+        [Test]
+        public void MapNoValue()
+        {
+            // position on row #2
+            _reader.Read();
+            _reader.Read();
+
+            _row["Active"] = true;
+            _map.Fill(_row, _reader);
+
+            Assert.AreEqual(false, _row["Active"]);
+        }
+
+        [Test]
+        public void MapYesValue()
+        {
+            // position on row #1
+            _reader.Read();
+
+            _row["Active"] = false;
+            _map.Fill(_row, _reader);
+
+            Assert.AreEqual(true, _row["Active"]);
         }
     }
 }

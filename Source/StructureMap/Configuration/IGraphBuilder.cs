@@ -4,6 +4,9 @@ namespace StructureMap.Graph.Configuration
 {
     public interface IGraphBuilder
     {
+        PluginGraph SystemGraph { get; }
+        InstanceDefaultManager DefaultManager { get; }
+        PluginGraph PluginGraph { get; }
         void AddAssembly(string assemblyName, string[] deployableTargets);
 
         void StartFamilies();
@@ -18,12 +21,8 @@ namespace StructureMap.Graph.Configuration
         void FinishFamilies();
 
         PluginGraph CreatePluginGraph();
-        PluginGraph SystemGraph { get; }
-        InstanceDefaultManager DefaultManager { get; }
 
         void RegisterMemento(TypePath pluginTypePath, InstanceMemento memento);
-
-        PluginGraph PluginGraph { get; }
 
         void AddProfile(string profileName);
         void OverrideProfile(string fullTypeName, string instanceKey);

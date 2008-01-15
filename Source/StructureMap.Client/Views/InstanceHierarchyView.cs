@@ -10,22 +10,15 @@ namespace StructureMap.Client.Views
     [Pluggable("InstanceHierarchy")]
     public class InstanceHierarchyView : IViewPart, IConfigurationVisitor
     {
-        private XmlElement _table;
-        private int _level = -1;
         private CellMaker _cell;
+        private int _level = -1;
+        private XmlElement _table;
 
         public InstanceHierarchyView()
         {
         }
 
-        public void WriteHTML(HTMLBuilder builder, GraphObject subject)
-        {
-            builder.AddDivider();
-            _table = builder.AddTable();
-            GraphObjectIterator iterator = new GraphObjectIterator(this);
-            iterator.Visit(subject);
-        }
-
+        #region IConfigurationVisitor Members
 
         public void StartObject(GraphObject node)
         {
@@ -117,15 +110,6 @@ namespace StructureMap.Client.Views
             _cell.AddText(") = Inline Definition");
         }
 
-        private void startChildProperty(ChildProperty property)
-        {
-            string preamble = string.Format("Property:  <b>{0}</b> (", property.PropertyName);
-            _cell.AddText(preamble);
-
-            string familyLink = "PluginType=" + property.PluginTypeName;
-            _cell.AddLink(TypePath.GetAssemblyQualifiedName(property.PropertyType), familyLink);
-        }
-
         public void HandleDefaultChildProperty(ChildProperty property)
         {
             startChildProperty(property);
@@ -177,6 +161,29 @@ namespace StructureMap.Client.Views
             string familyLink = "PluginType=" + property.PropertyType;
             _cell.AddLink(property.PropertyTypeName, familyLink);
             _cell.AddText(")");
+        }
+
+        #endregion
+
+        #region IViewPart Members
+
+        public void WriteHTML(HTMLBuilder builder, GraphObject subject)
+        {
+            builder.AddDivider();
+            _table = builder.AddTable();
+            GraphObjectIterator iterator = new GraphObjectIterator(this);
+            iterator.Visit(subject);
+        }
+
+        #endregion
+
+        private void startChildProperty(ChildProperty property)
+        {
+            string preamble = string.Format("Property:  <b>{0}</b> (", property.PropertyName);
+            _cell.AddText(preamble);
+
+            string familyLink = "PluginType=" + property.PluginTypeName;
+            _cell.AddLink(TypePath.GetAssemblyQualifiedName(property.PropertyType), familyLink);
         }
     }
 }

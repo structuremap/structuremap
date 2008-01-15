@@ -7,6 +7,8 @@ namespace StructureMap.Testing.DeploymentTasks
     [TestFixture]
     public class SubstitutionTaskTester
     {
+        #region Setup/Teardown
+
         [SetUp]
         public void SetUp()
         {
@@ -14,6 +16,8 @@ namespace StructureMap.Testing.DeploymentTasks
             document.LoadXml("<StructureMap DefaultProfile=\"{profile}\" />");
             document.Save("Substitution.xml");
         }
+
+        #endregion
 
         [Test]
         public void ReplaceTextInXml()

@@ -12,6 +12,8 @@ namespace StructureMap.DataAccess.Tools.Mocks
             _commands = new Hashtable();
         }
 
+        #region ICommandCollection Members
+
         [IndexerName("Command")]
         public ICommand this[string commandName]
         {
@@ -31,5 +33,7 @@ namespace StructureMap.DataAccess.Tools.Mocks
         {
             return _commands.Values.GetEnumerator();
         }
+
+        #endregion
     }
 }

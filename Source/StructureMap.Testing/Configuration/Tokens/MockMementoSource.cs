@@ -6,6 +6,22 @@ namespace StructureMap.Testing.Configuration.Tokens
     [Pluggable("Mock")]
     public class MockMementoSource : MementoSource
     {
+        private readonly bool _valid;
+
+        public MockMementoSource(bool valid)
+        {
+            if (!valid)
+            {
+                throw new ApplicationException("Bad");
+            }
+            _valid = valid;
+        }
+
+        public override string Description
+        {
+            get { throw new NotImplementedException(); }
+        }
+
         public static InstanceMemento CreateFailureMemento()
         {
             MemoryInstanceMemento memento = new MemoryInstanceMemento("Mock", "bad");
@@ -20,18 +36,6 @@ namespace StructureMap.Testing.Configuration.Tokens
             memento.SetProperty("valid", true.ToString());
 
             return memento;
-        }
-
-
-        private readonly bool _valid;
-
-        public MockMementoSource(bool valid)
-        {
-            if (!valid)
-            {
-                throw new ApplicationException("Bad");
-            }
-            _valid = valid;
         }
 
         protected override InstanceMemento[] fetchInternalMementos()
@@ -54,11 +58,6 @@ namespace StructureMap.Testing.Configuration.Tokens
         protected override InstanceMemento retrieveMemento(string instanceKey)
         {
             throw new NotImplementedException();
-        }
-
-        public override string Description
-        {
-            get { throw new NotImplementedException(); }
         }
     }
 }

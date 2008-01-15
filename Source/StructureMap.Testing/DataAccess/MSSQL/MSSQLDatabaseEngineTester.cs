@@ -12,6 +12,15 @@ namespace StructureMap.Testing.DataAccess.MSSQL
         public const string CREATION_SPROC_NAME = "sp_CreationTestProcedure";
 
         [Test]
+        public void CreateCommand()
+        {
+            string theConnectionString = "Data Source=localhost;database=test";
+
+            IDatabaseEngine database = new MSSQLDatabaseEngine(theConnectionString);
+            SqlCommand command = (SqlCommand) database.GetCommand();
+        }
+
+        [Test]
         public void CreateConnection()
         {
             string theConnectionString = "Data Source=localhost;database=test";
@@ -23,15 +32,6 @@ namespace StructureMap.Testing.DataAccess.MSSQL
         }
 
         [Test]
-        public void CreateCommand()
-        {
-            string theConnectionString = "Data Source=localhost;database=test";
-
-            IDatabaseEngine database = new MSSQLDatabaseEngine(theConnectionString);
-            SqlCommand command = (SqlCommand) database.GetCommand();
-        }
-
-        [Test]
         public void CreateDataAdapter()
         {
             string theConnectionString = "Data Source=localhost;database=test";
@@ -39,6 +39,17 @@ namespace StructureMap.Testing.DataAccess.MSSQL
             SqlDataAdapter adapter = (SqlDataAdapter) database.GetDataAdapter();
 
             Assert.IsNotNull(adapter);
+        }
+
+        [Test]
+        public void CreateParameter()
+        {
+            MSSQLDatabaseEngine engine = ObjectMother.MSSQLDatabaseEngine();
+            SqlParameter parameter = (SqlParameter) engine.CreateParameter("param2", DbType.Int32, false);
+
+            Assert.AreEqual("@param2", parameter.ParameterName);
+            Assert.AreEqual(DbType.Int32, parameter.DbType);
+            Assert.AreEqual(false, parameter.IsNullable);
         }
 
 /*
@@ -87,17 +98,6 @@ GO
             Assert.AreEqual(30, parameter.Size);
             Assert.AreEqual(true, parameter.IsNullable);
             Assert.AreEqual(DbType.String, parameter.DbType);
-        }
-
-        [Test]
-        public void CreateParameter()
-        {
-            MSSQLDatabaseEngine engine = ObjectMother.MSSQLDatabaseEngine();
-            SqlParameter parameter = (SqlParameter) engine.CreateParameter("param2", DbType.Int32, false);
-
-            Assert.AreEqual("@param2", parameter.ParameterName);
-            Assert.AreEqual(DbType.Int32, parameter.DbType);
-            Assert.AreEqual(false, parameter.IsNullable);
         }
     }
 }

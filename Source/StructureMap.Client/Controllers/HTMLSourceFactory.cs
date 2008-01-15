@@ -15,9 +15,13 @@ namespace StructureMap.Client.Controllers
             _instanceManager = new InstanceManager(pluginGraph);
         }
 
+        #region IHTMLSourceFactory Members
+
         public IHTMLSource GetSource(string viewName)
         {
             return (IHTMLSource) _instanceManager.CreateInstance(typeof (IHTMLSource), viewName);
         }
+
+        #endregion
     }
 }

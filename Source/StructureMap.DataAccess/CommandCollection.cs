@@ -16,6 +16,8 @@ namespace StructureMap.DataAccess
             _commands = new Hashtable();
         }
 
+        #region ICommandCollection Members
+
         [IndexerName("Command")]
         public ICommand this[string commandName]
         {
@@ -30,6 +32,13 @@ namespace StructureMap.DataAccess
             }
         }
 
+        public IEnumerator GetEnumerator()
+        {
+            return _commands.Values.GetEnumerator();
+        }
+
+        #endregion
+
         private void buildCommand(string commandName)
         {
             lock (this)
@@ -42,11 +51,6 @@ namespace StructureMap.DataAccess
                     _commands.Add(commandName, command);
                 }
             }
-        }
-
-        public IEnumerator GetEnumerator()
-        {
-            return _commands.Values.GetEnumerator();
         }
     }
 }

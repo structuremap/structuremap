@@ -25,11 +25,6 @@ namespace StructureMap.Configuration.Mementos
             set { _url = value; }
         }
 
-        protected override object buildInstance(IInstanceCreator creator)
-        {
-            return new Page().LoadControl(_url);
-        }
-
         protected override string innerConcreteKey
         {
             get { return string.Empty; }
@@ -38,6 +33,21 @@ namespace StructureMap.Configuration.Mementos
         protected override string innerInstanceKey
         {
             get { return _instanceKey; }
+        }
+
+        public override bool IsReference
+        {
+            get { return false; }
+        }
+
+        public override string ReferenceKey
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        protected override object buildInstance(IInstanceCreator creator)
+        {
+            return new Page().LoadControl(_url);
         }
 
         protected override string getPropertyValue(string Key)
@@ -53,16 +63,6 @@ namespace StructureMap.Configuration.Mementos
         public override InstanceMemento[] GetChildrenArray(string Key)
         {
             throw new NotImplementedException();
-        }
-
-        public override bool IsReference
-        {
-            get { return false; }
-        }
-
-        public override string ReferenceKey
-        {
-            get { throw new NotImplementedException(); }
         }
     }
 }

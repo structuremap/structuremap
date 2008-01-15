@@ -4,9 +4,9 @@ namespace StructureMap.Caching
 {
     public class FileModificationWatcher : ClearEventDispatcher
     {
+        private string _fullPath;
         private string _key;
         private FileSystemWatcher _watcher;
-        private string _fullPath;
 
         public FileModificationWatcher(string FilePath)
             : base(SubjectNameFromFilePath(FilePath))

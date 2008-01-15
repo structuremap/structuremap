@@ -7,9 +7,9 @@ namespace StructureMap.Testing
     public class StructureMapConfigCreator
     {
         private XmlDocument _document;
-        private XmlNode _root;
         private XmlElement _lastElement;
         private XmlElement _lastFamily;
+        private XmlNode _root;
 
         public StructureMapConfigCreator()
         {

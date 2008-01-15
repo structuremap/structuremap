@@ -8,8 +8,8 @@ namespace StructureMap.Configuration
     public class ProfileAndMachineParser
     {
         private readonly IGraphBuilder _builder;
-        private readonly XmlNode _structureMapNode;
         private readonly XmlMementoCreator _creator;
+        private readonly XmlNode _structureMapNode;
 
         public ProfileAndMachineParser(IGraphBuilder builder, XmlNode structureMapNode, XmlMementoCreator creator)
         {
@@ -47,8 +47,6 @@ namespace StructureMap.Configuration
             }
         }
 
-
-        private delegate void WriteOverride(string fullTypeName, string defaultKey);
 
         private void writeOverrides(XmlElement parentElement, WriteOverride function, string profileName)
         {
@@ -91,5 +89,11 @@ namespace StructureMap.Configuration
         {
             return _structureMapNode.SelectNodes(nodeName);
         }
+
+        #region Nested type: WriteOverride
+
+        private delegate void WriteOverride(string fullTypeName, string defaultKey);
+
+        #endregion
     }
 }

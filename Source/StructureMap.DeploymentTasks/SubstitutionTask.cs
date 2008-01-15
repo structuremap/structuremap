@@ -8,9 +8,9 @@ namespace StructureMap.DeploymentTasks
     [TaskName("structuremap.substitute")]
     public class SubstitutionTask : Task
     {
+        private string _filePath;
         private string _flag;
         private string _value;
-        private string _filePath;
 
         public SubstitutionTask() : base()
         {

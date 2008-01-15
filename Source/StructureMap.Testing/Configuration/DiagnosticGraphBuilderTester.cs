@@ -15,8 +15,7 @@ namespace StructureMap.Testing.Configuration
     [TestFixture]
     public class DiagnosticGraphBuilderTester
     {
-        private DiagnosticGraphBuilder _builder;
-        private PluginGraphReport _report;
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -27,6 +26,11 @@ namespace StructureMap.Testing.Configuration
             _builder = new DiagnosticGraphBuilder(new Registry[0]);
             _report = _builder.Report;
         }
+
+        #endregion
+
+        private DiagnosticGraphBuilder _builder;
+        private PluginGraphReport _report;
 
         [Test]
         public void AddAssembly()
@@ -42,98 +46,6 @@ namespace StructureMap.Testing.Configuration
             AssemblyToken expected = new AssemblyToken(theAssemblyName, theTargets);
 
             Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
-        public void AddNonExistentOrUnreachableAssembly()
-        {
-            _builder.AddAssembly("SomethingThatDoesNotExist", new string[0]);
-            Problem expected = new Problem(ConfigurationConstants.COULD_NOT_LOAD_ASSEMBLY, string.Empty);
-            Assert.AreEqual(new Problem[] {expected}, _report.Assemblies[0].Problems);
-        }
-
-        [Test]
-        public void AddPluginFamily()
-        {
-            TypePath typePath = new TypePath(GetType());
-            string theDefaultKey = "red";
-            string[] theTargets = new string[] {"Client"};
-
-            InstanceScope theScope = InstanceScope.PerRequest;
-            _builder.AddPluginFamily(typePath, theDefaultKey, theTargets, theScope);
-
-            FamilyToken expected = new FamilyToken(typePath, theDefaultKey, theTargets);
-            Assert.AreEqual(new FamilyToken[] {expected}, _report.Families);
-
-            FamilyToken actual = _report.Families[0];
-            Assert.AreEqual(theTargets, actual.DeploymentTargets);
-            Assert.AreEqual(theScope, actual.Scope);
-        }
-
-
-        [Test]
-        public void AddPluginFamilyWithScope()
-        {
-            TypePath typePath = new TypePath(GetType());
-            string theDefaultKey = "red";
-            string[] theTargets = new string[] {"Client"};
-
-            InstanceScope theScope = InstanceScope.Singleton;
-            _builder.AddPluginFamily(typePath, theDefaultKey, theTargets, theScope);
-
-            FamilyToken expected = new FamilyToken(typePath, theDefaultKey, theTargets);
-            Assert.AreEqual(new FamilyToken[] {expected}, _report.Families);
-
-            FamilyToken actual = _report.Families[0];
-            Assert.AreEqual(theScope, actual.Scope);
-        }
-
-
-        [Test]
-        public void AttachSourceAllSuccessful()
-        {
-            string theAssemblyName = Assembly.GetExecutingAssembly().GetName().Name;
-            string[] theTargets = new string[] {"Client", "Server"};
-
-            _builder.AddAssembly(theAssemblyName, theTargets);
-            _builder.StartFamilies();
-
-            TypePath typePath = new TypePath(GetType());
-            string theDefaultKey = "red";
-
-            _builder.AddPluginFamily(typePath, theDefaultKey, theTargets, InstanceScope.PerRequest);
-
-            InstanceMemento sourceMemento = MockMementoSource.CreateSuccessMemento();
-
-            _builder.AttachSource(typePath, sourceMemento);
-
-            FamilyToken family = _report.FindFamily(typePath);
-            Assert.IsNotNull(family.SourceInstance);
-            Assert.AreEqual(0, family.SourceInstance.Problems.Length);
-        }
-
-        [Test]
-        public void AttachSourceCannotCreateMemento()
-        {
-            string theAssemblyName = Assembly.GetExecutingAssembly().GetName().Name;
-            string[] theTargets = new string[] {"Client", "Server"};
-
-            _builder.AddAssembly(theAssemblyName, theTargets);
-            _builder.StartFamilies();
-
-            TypePath typePath = new TypePath(GetType());
-            string theDefaultKey = "red";
-
-            _builder.AddPluginFamily(typePath, theDefaultKey, theTargets, InstanceScope.PerRequest);
-
-            InstanceMemento sourceMemento = MockMementoSource.CreateFailureMemento();
-
-            _builder.AttachSource(typePath, sourceMemento);
-
-            FamilyToken family = _report.FindFamily(typePath);
-
-            Problem expected = new Problem(ConfigurationConstants.COULD_NOT_CREATE_MEMENTO_SOURCE, string.Empty);
-            Assert.AreEqual(new Problem[] {expected}, family.Problems);
         }
 
         [Test]
@@ -186,6 +98,52 @@ namespace StructureMap.Testing.Configuration
             Assert.AreEqual(new Problem[] {expected}, interceptor.Problems);
         }
 
+        [Test]
+        public void AddInvalidSetter()
+        {
+            TypePath familyPath = new TypePath(typeof (IGateway));
+            TypePath pluginPath = new TypePath(typeof (DefaultGateway));
+
+            _builder.AddPluginFamily(familyPath, string.Empty, new string[0], InstanceScope.PerRequest);
+            _builder.AddPlugin(familyPath, pluginPath, "red");
+
+            string theFakePropertyName = "FakeProperty";
+            _builder.AddSetter(familyPath, "red", theFakePropertyName);
+
+            PluginToken pluginToken = _report.FindFamily(familyPath.AssemblyQualifiedName).Plugins[0];
+            PropertyDefinition property = pluginToken[theFakePropertyName];
+
+            Problem expected = new Problem(ConfigurationConstants.INVALID_SETTER, string.Empty);
+
+            Assert.AreEqual(new Problem[] {expected}, property.Problems);
+        }
+
+        [Test]
+        public void AddNonExistentOrUnreachableAssembly()
+        {
+            _builder.AddAssembly("SomethingThatDoesNotExist", new string[0]);
+            Problem expected = new Problem(ConfigurationConstants.COULD_NOT_LOAD_ASSEMBLY, string.Empty);
+            Assert.AreEqual(new Problem[] {expected}, _report.Assemblies[0].Problems);
+        }
+
+        [Test]
+        public void AddPluginFamily()
+        {
+            TypePath typePath = new TypePath(GetType());
+            string theDefaultKey = "red";
+            string[] theTargets = new string[] {"Client"};
+
+            InstanceScope theScope = InstanceScope.PerRequest;
+            _builder.AddPluginFamily(typePath, theDefaultKey, theTargets, theScope);
+
+            FamilyToken expected = new FamilyToken(typePath, theDefaultKey, theTargets);
+            Assert.AreEqual(new FamilyToken[] {expected}, _report.Families);
+
+            FamilyToken actual = _report.Families[0];
+            Assert.AreEqual(theTargets, actual.DeploymentTargets);
+            Assert.AreEqual(theScope, actual.Scope);
+        }
+
 
         [Test]
         public void AddPluginFamilyWithFakeType()
@@ -197,6 +155,23 @@ namespace StructureMap.Testing.Configuration
             FamilyToken family = _report.FindFamily(typePath);
 
             Assert.AreEqual(new Problem[] {expected}, family.Problems);
+        }
+
+        [Test]
+        public void AddPluginFamilyWithScope()
+        {
+            TypePath typePath = new TypePath(GetType());
+            string theDefaultKey = "red";
+            string[] theTargets = new string[] {"Client"};
+
+            InstanceScope theScope = InstanceScope.Singleton;
+            _builder.AddPluginFamily(typePath, theDefaultKey, theTargets, theScope);
+
+            FamilyToken expected = new FamilyToken(typePath, theDefaultKey, theTargets);
+            Assert.AreEqual(new FamilyToken[] {expected}, _report.Families);
+
+            FamilyToken actual = _report.Families[0];
+            Assert.AreEqual(theScope, actual.Scope);
         }
 
         [Test]
@@ -217,24 +192,6 @@ namespace StructureMap.Testing.Configuration
             Assert.AreEqual(new PluginToken[] {expected}, family.Plugins);
         }
 
-        [Test]
-        public void AddPluginWithoutConcreteKey()
-        {
-            TypePath familyPath = new TypePath(typeof (IGateway));
-            TypePath pluginPath = new TypePath(typeof (DefaultGateway));
-
-            _builder.AddPluginFamily(familyPath, string.Empty, new string[0], InstanceScope.PerRequest);
-
-            string[] theSetters = new string[] {"Name", "Color"};
-            _builder.AddPlugin(familyPath, pluginPath, string.Empty);
-
-            PluginToken plugin = _report.FindFamily(familyPath.AssemblyQualifiedName).Plugins[0];
-
-            Problem expected = new Problem(ConfigurationConstants.PLUGIN_IS_MISSING_CONCRETE_KEY, string.Empty);
-
-            Assert.AreEqual(new Problem[] {expected}, plugin.Problems);
-        }
-
 
         [Test]
         public void AddPluginWithBadType()
@@ -250,6 +207,24 @@ namespace StructureMap.Testing.Configuration
             PluginToken plugin = _report.FindFamily(familyPath.AssemblyQualifiedName).Plugins[0];
 
             Problem expected = new Problem(ConfigurationConstants.COULD_NOT_LOAD_TYPE, string.Empty);
+
+            Assert.AreEqual(new Problem[] {expected}, plugin.Problems);
+        }
+
+        [Test]
+        public void AddPluginWithoutConcreteKey()
+        {
+            TypePath familyPath = new TypePath(typeof (IGateway));
+            TypePath pluginPath = new TypePath(typeof (DefaultGateway));
+
+            _builder.AddPluginFamily(familyPath, string.Empty, new string[0], InstanceScope.PerRequest);
+
+            string[] theSetters = new string[] {"Name", "Color"};
+            _builder.AddPlugin(familyPath, pluginPath, string.Empty);
+
+            PluginToken plugin = _report.FindFamily(familyPath.AssemblyQualifiedName).Plugins[0];
+
+            Problem expected = new Problem(ConfigurationConstants.PLUGIN_IS_MISSING_CONCRETE_KEY, string.Empty);
 
             Assert.AreEqual(new Problem[] {expected}, plugin.Problems);
         }
@@ -275,23 +250,57 @@ namespace StructureMap.Testing.Configuration
         }
 
         [Test]
-        public void AddInvalidSetter()
+        public void AttachSourceAllSuccessful()
         {
-            TypePath familyPath = new TypePath(typeof (IGateway));
-            TypePath pluginPath = new TypePath(typeof (DefaultGateway));
+            string theAssemblyName = Assembly.GetExecutingAssembly().GetName().Name;
+            string[] theTargets = new string[] {"Client", "Server"};
 
-            _builder.AddPluginFamily(familyPath, string.Empty, new string[0], InstanceScope.PerRequest);
-            _builder.AddPlugin(familyPath, pluginPath, "red");
+            _builder.AddAssembly(theAssemblyName, theTargets);
+            _builder.StartFamilies();
 
-            string theFakePropertyName = "FakeProperty";
-            _builder.AddSetter(familyPath, "red", theFakePropertyName);
+            TypePath typePath = new TypePath(GetType());
+            string theDefaultKey = "red";
 
-            PluginToken pluginToken = _report.FindFamily(familyPath.AssemblyQualifiedName).Plugins[0];
-            PropertyDefinition property = pluginToken[theFakePropertyName];
+            _builder.AddPluginFamily(typePath, theDefaultKey, theTargets, InstanceScope.PerRequest);
 
-            Problem expected = new Problem(ConfigurationConstants.INVALID_SETTER, string.Empty);
+            InstanceMemento sourceMemento = MockMementoSource.CreateSuccessMemento();
 
-            Assert.AreEqual(new Problem[] {expected}, property.Problems);
+            _builder.AttachSource(typePath, sourceMemento);
+
+            FamilyToken family = _report.FindFamily(typePath);
+            Assert.IsNotNull(family.SourceInstance);
+            Assert.AreEqual(0, family.SourceInstance.Problems.Length);
+        }
+
+        [Test]
+        public void AttachSourceCannotCreateMemento()
+        {
+            string theAssemblyName = Assembly.GetExecutingAssembly().GetName().Name;
+            string[] theTargets = new string[] {"Client", "Server"};
+
+            _builder.AddAssembly(theAssemblyName, theTargets);
+            _builder.StartFamilies();
+
+            TypePath typePath = new TypePath(GetType());
+            string theDefaultKey = "red";
+
+            _builder.AddPluginFamily(typePath, theDefaultKey, theTargets, InstanceScope.PerRequest);
+
+            InstanceMemento sourceMemento = MockMementoSource.CreateFailureMemento();
+
+            _builder.AttachSource(typePath, sourceMemento);
+
+            FamilyToken family = _report.FindFamily(typePath);
+
+            Problem expected = new Problem(ConfigurationConstants.COULD_NOT_CREATE_MEMENTO_SOURCE, string.Empty);
+            Assert.AreEqual(new Problem[] {expected}, family.Problems);
+        }
+
+        [Test]
+        public void GiveItATry()
+        {
+            PluginGraphReport report = PluginGraphBuilder.BuildDefaultReport();
+            Assert.IsNotNull(report);
         }
 
         [Test]
@@ -319,13 +328,6 @@ namespace StructureMap.Testing.Configuration
                 new Problem(ConfigurationConstants.PLUGIN_FAMILY_CANNOT_BE_FOUND_FOR_INSTANCE, string.Empty);
 
             Assert.AreEqual(new Problem[] {expected}, _builder.Report.Problems);
-        }
-
-        [Test]
-        public void GiveItATry()
-        {
-            PluginGraphReport report = PluginGraphBuilder.BuildDefaultReport();
-            Assert.IsNotNull(report);
         }
     }
 }

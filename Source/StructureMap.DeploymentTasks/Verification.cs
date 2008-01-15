@@ -8,8 +8,8 @@ namespace StructureMap.DeploymentTasks
     [TaskName("structuremap.verification")]
     public class Verification : Task
     {
-        private string _configPath;
         private string _binPath = string.Empty;
+        private string _configPath;
 
         public Verification() : base()
         {

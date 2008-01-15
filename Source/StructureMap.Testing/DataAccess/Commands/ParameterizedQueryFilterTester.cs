@@ -9,7 +9,7 @@ namespace StructureMap.Testing.DataAccess.Commands
     [TestFixture]
     public class ParameterizedQueryFilterTester
     {
-        private ParameterizedQueryFilter _filter;
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -17,18 +17,9 @@ namespace StructureMap.Testing.DataAccess.Commands
             _filter = new ParameterizedQueryFilter("Name", "Column = {Value}");
         }
 
-        [Test]
-        public void InitializeAndGetWhereClause()
-        {
-            MSSQLDatabaseEngine engine = ObjectMother.MSSQLDatabaseEngine();
-            IDbCommand command = engine.GetCommand();
+        #endregion
 
-            _filter.Initialize(engine, command);
-
-            Assert.AreEqual(0, command.Parameters.Count);
-
-            Assert.AreEqual("Column = @Name", _filter.GetWhereClause());
-        }
+        private ParameterizedQueryFilter _filter;
 
         [Test]
         public void InitializeAndAttachParameters()
@@ -46,6 +37,19 @@ namespace StructureMap.Testing.DataAccess.Commands
 
             Assert.AreEqual("@Name", parameter.ParameterName);
             Assert.AreEqual(theValue, parameter.Value);
+        }
+
+        [Test]
+        public void InitializeAndGetWhereClause()
+        {
+            MSSQLDatabaseEngine engine = ObjectMother.MSSQLDatabaseEngine();
+            IDbCommand command = engine.GetCommand();
+
+            _filter.Initialize(engine, command);
+
+            Assert.AreEqual(0, command.Parameters.Count);
+
+            Assert.AreEqual("Column = @Name", _filter.GetWhereClause());
         }
     }
 }

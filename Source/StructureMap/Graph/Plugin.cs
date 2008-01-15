@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Reflection;
 using StructureMap.Configuration.Mementos;
 
@@ -129,9 +128,9 @@ namespace StructureMap.Graph
 
         #endregion
 
-        private Type _pluggedType;
         private string _concreteKey;
         private DefinitionSource _definitionSource;
+        private Type _pluggedType;
         private SetterPropertyCollection _setters;
 
 
@@ -172,6 +171,86 @@ namespace StructureMap.Graph
 
             _concreteKey = concreteKey;
             _definitionSource = DefinitionSource.Explicit;
+        }
+
+
+        /// <summary>
+        /// The ConcreteKey that identifies the Plugin within a PluginFamily
+        /// </summary>
+        public string ConcreteKey
+        {
+            get { return _concreteKey; }
+            set { _concreteKey = value; }
+        }
+
+
+        /// <summary>
+        /// The concrete CLR Type represented by the Plugin
+        /// </summary>
+        public Type PluggedType
+        {
+            get { return _pluggedType; }
+        }
+
+        /// <summary>
+        /// Finds any methods on the PluggedType marked with the [ValidationMethod]
+        /// attributes
+        /// </summary>
+        public MethodInfo[] ValidationMethods
+        {
+            get { return ValidationMethodAttribute.GetValidationMethods(_pluggedType); }
+        }
+
+        /// <summary>
+        /// Property's that will be filled by setter injection
+        /// </summary>
+        public SetterPropertyCollection Setters
+        {
+            get
+            {
+                if (_setters == null)
+                {
+                    _setters = new SetterPropertyCollection(this);
+                }
+
+                return _setters;
+            }
+        }
+
+        /// <summary>
+        /// Denotes the source or the definition for this Plugin.  Implicit means the
+        /// Plugin is defined by a [Pluggable] attribute on the PluggedType.  Explicit
+        /// means the Plugin was defined in the StructureMap.config file.
+        /// </summary>
+        public DefinitionSource DefinitionSource
+        {
+            get { return _definitionSource; }
+            set { _definitionSource = value; }
+        }
+
+        /// <summary>
+        /// Determines if the concrete class can be autofilled.
+        /// </summary>
+        public bool CanBeAutoFilled
+        {
+            get
+            {
+                bool returnValue = true;
+
+                ConstructorInfo ctor = GetConstructor();
+                foreach (ParameterInfo parameter in ctor.GetParameters())
+                {
+                    returnValue = returnValue && canTypeBeAutoFilled(parameter.ParameterType);
+                }
+
+                foreach (SetterProperty setter in Setters)
+                {
+                    Type propertyType = setter.Property.PropertyType;
+                    returnValue = returnValue && canTypeBeAutoFilled(propertyType);
+                }
+
+                return returnValue;
+            }
         }
 
         private void setPluggedType(TypePath path, string concreteKey)
@@ -229,51 +308,6 @@ namespace StructureMap.Graph
             return returnValue;
         }
 
-
-
-        /// <summary>
-        /// The ConcreteKey that identifies the Plugin within a PluginFamily
-        /// </summary>
-        public string ConcreteKey
-        {
-            get { return _concreteKey; }
-            set { _concreteKey = value; }
-        }
-
-
-        /// <summary>
-        /// The concrete CLR Type represented by the Plugin
-        /// </summary>
-        public Type PluggedType
-        {
-            get { return _pluggedType; }
-        }
-
-        /// <summary>
-        /// Finds any methods on the PluggedType marked with the [ValidationMethod]
-        /// attributes
-        /// </summary>
-        public MethodInfo[] ValidationMethods
-        {
-            get { return ValidationMethodAttribute.GetValidationMethods(_pluggedType); }
-        }
-
-        /// <summary>
-        /// Property's that will be filled by setter injection
-        /// </summary>
-        public SetterPropertyCollection Setters
-        {
-            get
-            {
-                if (_setters == null)
-                {
-                    _setters = new SetterPropertyCollection(this);
-                }
-
-                return _setters;
-            }
-        }
-
         /// <summary>
         /// Gets a class name for the InstanceBuilder that will be emitted for this Plugin
         /// </summary>
@@ -317,17 +351,6 @@ namespace StructureMap.Graph
             return (GetConstructor().GetParameters().Length > 0);
         }
 
-        /// <summary>
-        /// Denotes the source or the definition for this Plugin.  Implicit means the
-        /// Plugin is defined by a [Pluggable] attribute on the PluggedType.  Explicit
-        /// means the Plugin was defined in the StructureMap.config file.
-        /// </summary>
-        public DefinitionSource DefinitionSource
-        {
-            get { return _definitionSource; }
-            set { _definitionSource = value; }
-        }
-
         public override string ToString()
         {
             return ("Plugin:  " + _concreteKey).PadRight(40) + PluggedType.AssemblyQualifiedName;
@@ -352,31 +375,6 @@ namespace StructureMap.Graph
             }
 
             return returnValue;
-        }
-
-        /// <summary>
-        /// Determines if the concrete class can be autofilled.
-        /// </summary>
-        public bool CanBeAutoFilled
-        {
-            get
-            {
-                bool returnValue = true;
-
-                ConstructorInfo ctor = GetConstructor();
-                foreach (ParameterInfo parameter in ctor.GetParameters())
-                {
-                    returnValue = returnValue && canTypeBeAutoFilled(parameter.ParameterType);
-                }
-
-                foreach (SetterProperty setter in Setters)
-                {
-                    Type propertyType = setter.Property.PropertyType;
-                    returnValue = returnValue && canTypeBeAutoFilled(propertyType);
-                }
-
-                return returnValue;
-            }
         }
 
         private bool canTypeBeAutoFilled(Type parameterType)

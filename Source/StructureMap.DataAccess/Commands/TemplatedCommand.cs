@@ -24,6 +24,11 @@ namespace StructureMap.DataAccess.Commands
             Initialize(engine);
         }
 
+        public string[] Substitutions
+        {
+            get { return _substitutions; }
+        }
+
         public override void Initialize(IDatabaseEngine engine)
         {
             ParameterCollection parameters = new ParameterCollection();
@@ -35,11 +40,6 @@ namespace StructureMap.DataAccess.Commands
 
             IDbCommand command = engine.GetCommand();
             initializeMembers(parameters, command);
-        }
-
-        public string[] Substitutions
-        {
-            get { return _substitutions; }
         }
 
         public string GetSql()

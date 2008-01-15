@@ -33,6 +33,8 @@ namespace StructureMap.DataAccess.Tools.Mocks
             }
         }
 
+        #region ICloneable Members
+
         public object Clone()
         {
             ParameterList clone = new ParameterList();
@@ -40,6 +42,8 @@ namespace StructureMap.DataAccess.Tools.Mocks
 
             return clone;
         }
+
+        #endregion
 
         public void Verify(ParameterList actualList)
         {

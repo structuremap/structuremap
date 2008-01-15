@@ -7,8 +7,7 @@ namespace StructureMap.Testing.Container.Interceptors
     [TestFixture]
     public class TypeInterceptionTester : Registry
     {
-        private Registry registry;
-        private IInstanceManager manager;
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -21,7 +20,72 @@ namespace StructureMap.Testing.Container.Interceptors
                 .AddInstance(Instance<IAnInterfaceOfSomeSort>().UsingConcreteType<RedSomething>().WithName("Red"))
                 .AddInstance(Instance<IAnInterfaceOfSomeSort>().UsingConcreteType<GreenSomething>().WithName("Green"))
                 .AddInstance(Instance<IAnInterfaceOfSomeSort>().UsingConcreteType<BlueSomething>().WithName("Blue"));
+        }
 
+        #endregion
+
+        private Registry registry;
+        private IInstanceManager manager;
+
+        private void assertThisIsType<T>(string name)
+        {
+            if (manager == null)
+            {
+                manager = registry.BuildInstanceManager();
+            }
+
+            Assert.IsInstanceOfType(typeof (T), manager.CreateInstance<IAnInterfaceOfSomeSort>(name));
+        }
+
+        private void assertThatThisIsWrappedSomething<OUTERTYPE, INNERTYPE>(string name)
+            where OUTERTYPE : WrappedSomething
+        {
+            if (manager == null)
+            {
+                manager = registry.BuildInstanceManager();
+            }
+
+            OUTERTYPE something = (OUTERTYPE) manager.CreateInstance<IAnInterfaceOfSomeSort>(name);
+            Assert.IsInstanceOfType(typeof (INNERTYPE), something.Inner);
+        }
+
+        public interface IAnInterfaceOfSomeSort
+        {
+        }
+
+        public class RedSomething : IAnInterfaceOfSomeSort
+        {
+        }
+
+        public class GreenSomething : IAnInterfaceOfSomeSort
+        {
+        }
+
+        public class BlueSomething : IAnInterfaceOfSomeSort
+        {
+        }
+
+        public class WrappedSomething : IAnInterfaceOfSomeSort
+        {
+            private readonly IAnInterfaceOfSomeSort _inner;
+
+            public WrappedSomething(IAnInterfaceOfSomeSort inner)
+            {
+                _inner = inner;
+            }
+
+
+            public IAnInterfaceOfSomeSort Inner
+            {
+                get { return _inner; }
+            }
+        }
+
+        public class WrappedSomething2 : WrappedSomething
+        {
+            public WrappedSomething2(IAnInterfaceOfSomeSort inner) : base(inner)
+            {
+            }
         }
 
         [Test]
@@ -44,65 +108,13 @@ namespace StructureMap.Testing.Container.Interceptors
         [Test]
         public void Register_A_Type_Interceptor_By_The_Fluent_Interface()
         {
-            registry.IfTypeMatches(delegate(Type type) { return type.Equals(typeof(BlueSomething)); })
-                .InterceptWith(delegate(object rawInstance)
-                                   {
-                                       return new WrappedSomething((IAnInterfaceOfSomeSort)rawInstance);
-                                   });
+            registry.IfTypeMatches(delegate(Type type) { return type.Equals(typeof (BlueSomething)); })
+                .InterceptWith(
+                delegate(object rawInstance) { return new WrappedSomething((IAnInterfaceOfSomeSort) rawInstance); });
 
             assertThisIsType<RedSomething>("Red");
             assertThisIsType<GreenSomething>("Green");
             assertThatThisIsWrappedSomething<WrappedSomething, BlueSomething>("Blue");
-        }
-
-        private void assertThisIsType<T>(string name)
-        {
-            if (manager == null)
-            {
-                manager = registry.BuildInstanceManager();
-            }
-
-            Assert.IsInstanceOfType(typeof(T), manager.CreateInstance<IAnInterfaceOfSomeSort>(name));
-        }
-
-        private void assertThatThisIsWrappedSomething<OUTERTYPE, INNERTYPE>(string name) where OUTERTYPE : WrappedSomething
-        {
-            if (manager == null)
-            {
-                manager = registry.BuildInstanceManager();
-            }
-
-            OUTERTYPE something = (OUTERTYPE) manager.CreateInstance<IAnInterfaceOfSomeSort>(name);
-            Assert.IsInstanceOfType(typeof(INNERTYPE), something.Inner);
-        }
-
-        public interface IAnInterfaceOfSomeSort{}
-
-        public class RedSomething : IAnInterfaceOfSomeSort {}
-        public class GreenSomething : IAnInterfaceOfSomeSort {}
-        public class BlueSomething : IAnInterfaceOfSomeSort {}
-    
-        public class WrappedSomething : IAnInterfaceOfSomeSort
-        {
-            private readonly IAnInterfaceOfSomeSort _inner;
-
-            public WrappedSomething(IAnInterfaceOfSomeSort inner)
-            {
-                _inner = inner;
-            }
-
-
-            public IAnInterfaceOfSomeSort Inner
-            {
-                get { return _inner; }
-            }
-        }
-
-        public class WrappedSomething2 : WrappedSomething
-        {
-            public WrappedSomething2(IAnInterfaceOfSomeSort inner) : base(inner)
-            {
-            }
         }
     }
 }

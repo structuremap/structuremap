@@ -4,9 +4,9 @@ namespace StructureMap.DataAccess.Tools.Mocks
 {
     public class CommandExpectation : ICloneable
     {
+        private readonly int _rowsAffected;
         private ParameterList _inputs;
         private ParameterList _outputs;
-        private readonly int _rowsAffected;
         private bool _wasExecuted = false;
 
         public CommandExpectation() : this(1)
@@ -27,11 +27,15 @@ namespace StructureMap.DataAccess.Tools.Mocks
             _rowsAffected = rowsAffected;
         }
 
+        #region ICloneable Members
+
         public object Clone()
         {
             return
                 new CommandExpectation((ParameterList) _inputs.Clone(), (ParameterList) _outputs.Clone(), _rowsAffected);
         }
+
+        #endregion
 
         public void SetInput(string parameterName, object parameterValue)
         {

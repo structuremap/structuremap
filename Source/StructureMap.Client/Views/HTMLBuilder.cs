@@ -13,6 +13,11 @@ namespace StructureMap.Client.Views
             _document.AppendChild(div);
         }
 
+        public string HTML
+        {
+            get { return _document.DocumentElement.OuterXml; }
+        }
+
         public void AddHeader(string headerText)
         {
             XmlElement header = _document.CreateElement("h3");
@@ -30,11 +35,6 @@ namespace StructureMap.Client.Views
             div.AppendChild(table);
 
             return new TableMaker(table);
-        }
-
-        public string HTML
-        {
-            get { return _document.DocumentElement.OuterXml; }
         }
 
         public void AddSubHeader(string headerText)

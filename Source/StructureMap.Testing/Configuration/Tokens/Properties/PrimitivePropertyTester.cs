@@ -11,6 +11,25 @@ namespace StructureMap.Testing.Configuration.Tokens.Properties
     public class PrimitivePropertyTester
     {
         [Test]
+        public void AcceptVisitor()
+        {
+            string theProperty = "Prop1";
+
+            MemoryInstanceMemento memento = new MemoryInstanceMemento("concrete", "instance");
+
+            PropertyDefinition definition =
+                new PropertyDefinition(theProperty, typeof (string),
+                                       PropertyDefinitionType.Constructor, ArgumentType.Primitive);
+
+            PrimitiveProperty property = new PrimitiveProperty(definition, memento);
+
+            DynamicMock visitorMock = new DynamicMock(typeof (IConfigurationVisitor));
+            visitorMock.Expect("HandlePrimitiveProperty", property);
+            property.AcceptVisitor((IConfigurationVisitor) visitorMock.MockInstance);
+            visitorMock.Verify();
+        }
+
+        [Test]
         public void HappyPath()
         {
             string theProperty = "Prop1";
@@ -69,25 +88,6 @@ namespace StructureMap.Testing.Configuration.Tokens.Properties
             Problem expected = new Problem(ConfigurationConstants.MEMENTO_PROPERTY_IS_MISSING, string.Empty);
 
             Assert.AreEqual(new Problem[] {expected}, property.Problems);
-        }
-
-        [Test]
-        public void AcceptVisitor()
-        {
-            string theProperty = "Prop1";
-
-            MemoryInstanceMemento memento = new MemoryInstanceMemento("concrete", "instance");
-
-            PropertyDefinition definition =
-                new PropertyDefinition(theProperty, typeof (string),
-                                       PropertyDefinitionType.Constructor, ArgumentType.Primitive);
-
-            PrimitiveProperty property = new PrimitiveProperty(definition, memento);
-
-            DynamicMock visitorMock = new DynamicMock(typeof (IConfigurationVisitor));
-            visitorMock.Expect("HandlePrimitiveProperty", property);
-            property.AcceptVisitor((IConfigurationVisitor) visitorMock.MockInstance);
-            visitorMock.Verify();
         }
     }
 }

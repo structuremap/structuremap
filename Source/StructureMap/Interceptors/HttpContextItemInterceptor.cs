@@ -5,13 +5,13 @@ namespace StructureMap.Interceptors
     [Pluggable("HttpContext")]
     public class HttpContextItemInterceptor : CacheInterceptor
     {
+        public HttpContextItemInterceptor() : base()
+        {
+        }
+
         public static bool HasContext()
         {
             return HttpContext.Current != null;
-        }
-
-        public HttpContextItemInterceptor() : base()
-        {
         }
 
         private string getKey(string instanceKey)

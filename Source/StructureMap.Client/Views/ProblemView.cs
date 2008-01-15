@@ -18,11 +18,15 @@ namespace StructureMap.Client.Views
             _showPath = showPath;
         }
 
+        #region IViewPart Members
+
         public void WriteHTML(HTMLBuilder builder, GraphObject subject)
         {
             Problem[] problems = subject.Problems;
             WriteProblems(problems, builder);
         }
+
+        #endregion
 
         public void WriteProblems(Problem[] problems, HTMLBuilder builder)
         {

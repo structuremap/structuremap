@@ -9,8 +9,7 @@ namespace StructureMap.Testing.Caching
     [TestFixture, Explicit] //These cause NUnit to throw an exception.  They need to be looked at.
     public class FileModificationWatcherTester
     {
-        private ManualResetEvent _event;
-        private FileModificationWatcher _watcher;
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -23,10 +22,36 @@ namespace StructureMap.Testing.Caching
             _watcher = new FileModificationWatcher("Trigger.xml");
         }
 
+        #endregion
+
+        private ManualResetEvent _event;
+        private FileModificationWatcher _watcher;
+
         [TestFixtureTearDown]
         public void TestFixtureTearDown()
         {
             DataMother.CleanUp();
+        }
+
+
+        private void modifyXml(string FileName)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load(FileName);
+            doc.DocumentElement.Attributes["State"].Value = "Modified";
+            doc.Save(FileName);
+        }
+
+        private void timeout()
+        {
+            Thread thread = new Thread(new ThreadStart(signal));
+            thread.Start();
+        }
+
+        private void signal()
+        {
+            Thread.Sleep(500);
+            _event.Set();
         }
 
         [Test]
@@ -54,27 +79,6 @@ namespace StructureMap.Testing.Caching
             _event.WaitOne();
 
             cache.Verify();
-        }
-
-
-        private void modifyXml(string FileName)
-        {
-            XmlDocument doc = new XmlDocument();
-            doc.Load(FileName);
-            doc.DocumentElement.Attributes["State"].Value = "Modified";
-            doc.Save(FileName);
-        }
-
-        private void timeout()
-        {
-            Thread thread = new Thread(new ThreadStart(signal));
-            thread.Start();
-        }
-
-        private void signal()
-        {
-            Thread.Sleep(500);
-            _event.Set();
         }
     }
 }

@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using NUnit.Framework;
 using StructureMap.Graph;
 using StructureMap.Testing.GenericWidgets;
@@ -10,7 +9,7 @@ namespace StructureMap.Testing
     [TestFixture]
     public class GenericsIntegrationTester
     {
-        private InstanceManager manager;
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -19,32 +18,22 @@ namespace StructureMap.Testing
             manager = new InstanceManager(graph);
         }
 
-        [Test]
-        public void SimpleInstanceManagerTestWithGenerics()
-        {
-            Service<int> intService = (Service<int>) manager.CreateInstance(typeof (IService<int>), "Default");
-            Assert.AreEqual(typeof (int), intService.GetT());
+        #endregion
 
-            Service<string> stringService =
-                (Service<string>) manager.CreateInstance(typeof (IService<string>), "Default");
-            Assert.AreEqual(typeof (string), stringService.GetT());
-        }
+        private InstanceManager manager;
 
         [Test]
-        public void MultipleGenericTypes()
+        public void AllTypesWithSpecificImplementation()
         {
-            IService<int> intService = (IService<int>) manager.CreateInstance(typeof (IService<int>), "Default");
-            IService<string> stringService =
-                (IService<string>) manager.CreateInstance(typeof (IService<string>), "Default");
-            IService<double> doubleService =
-                (IService<double>) manager.CreateInstance(typeof (IService<double>), "Default");
-        }
+            IList objectConcepts = manager.GetAllInstances(typeof (IConcept<object>));
 
-        [Test]
-        public void PicksUpASimpleGenericPluginFamilyFromConfiguration()
-        {
-            ISimpleThing<int> thing = (ISimpleThing<int>) manager.CreateInstance(typeof (ISimpleThing<int>));
-            Assert.IsNotNull(thing);
+            Assert.IsNotNull(objectConcepts);
+            Assert.AreEqual(2, objectConcepts.Count);
+
+            IList stringConcepts = manager.GetAllInstances(typeof (IConcept<string>));
+
+            Assert.IsNotNull(stringConcepts);
+            Assert.AreEqual(1, stringConcepts.Count);
         }
 
         [Test, Ignore("Generics with more than 2 parameters")]
@@ -58,6 +47,16 @@ namespace StructureMap.Testing
         }
 
         [Test]
+        public void MultipleGenericTypes()
+        {
+            IService<int> intService = (IService<int>) manager.CreateInstance(typeof (IService<int>), "Default");
+            IService<string> stringService =
+                (IService<string>) manager.CreateInstance(typeof (IService<string>), "Default");
+            IService<double> doubleService =
+                (IService<double>) manager.CreateInstance(typeof (IService<double>), "Default");
+        }
+
+        [Test]
         public void PicksUpAnExplicitlyDefinedGenericPluginFamilyFromConfiguration()
         {
             IThing<int, string> thing =
@@ -65,6 +64,24 @@ namespace StructureMap.Testing
             ColorThing<int, string> redThing = (ColorThing<int, string>) thing;
 
             Assert.AreEqual("Red", redThing.Color);
+        }
+
+        [Test]
+        public void PicksUpASimpleGenericPluginFamilyFromConfiguration()
+        {
+            ISimpleThing<int> thing = (ISimpleThing<int>) manager.CreateInstance(typeof (ISimpleThing<int>));
+            Assert.IsNotNull(thing);
+        }
+
+        [Test]
+        public void SimpleInstanceManagerTestWithGenerics()
+        {
+            Service<int> intService = (Service<int>) manager.CreateInstance(typeof (IService<int>), "Default");
+            Assert.AreEqual(typeof (int), intService.GetT());
+
+            Service<string> stringService =
+                (Service<string>) manager.CreateInstance(typeof (IService<string>), "Default");
+            Assert.AreEqual(typeof (string), stringService.GetT());
         }
 
         [Test]
@@ -90,26 +107,12 @@ namespace StructureMap.Testing
         }
 
         [Test]
-        public void AllTypesWithSpecificImplementation()
-        {
-            IList objectConcepts = manager.GetAllInstances(typeof(IConcept<object>));
-
-            Assert.IsNotNull(objectConcepts);
-            Assert.AreEqual(2, objectConcepts.Count);
-
-            IList stringConcepts = manager.GetAllInstances(typeof(IConcept<string>));
-
-            Assert.IsNotNull(stringConcepts);
-            Assert.AreEqual(1, stringConcepts.Count);
-        }
-
-        [Test]
         public void SpecificImplementation()
         {
-            IConcept<object> concept = (IConcept<object>)manager.CreateInstance(typeof(IConcept<object>), "Specific");
+            IConcept<object> concept = (IConcept<object>) manager.CreateInstance(typeof (IConcept<object>), "Specific");
 
             Assert.IsNotNull(concept);
-            Assert.IsInstanceOfType(typeof(SpecificConcept), concept);
+            Assert.IsInstanceOfType(typeof (SpecificConcept), concept);
         }
     }
 }

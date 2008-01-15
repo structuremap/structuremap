@@ -6,10 +6,11 @@ namespace StructureMap.DataAccess
     public interface ICommand
     {
         string Name { get; set; }
-        int Execute();
 
         [IndexerName("Parameter")]
         object this[string parameterName] { get; set; }
+
+        int Execute();
 
         void Attach(IDataSession session);
     }

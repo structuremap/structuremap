@@ -12,15 +12,7 @@ namespace StructureMap.Testing.Container
     [TestFixture]
     public class InstanceManagerTester
     {
-        private InstanceManager _manager;
-        private InstanceFactory _ruleFactory;
-        private InstanceFactory _widgetFactory;
-        private InstanceFactory _widgetMakerFactory;
-
-        public InstanceManagerTester()
-        {
-        }
-
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -42,6 +34,18 @@ namespace StructureMap.Testing.Container
             _manager.RegisterType(_widgetMakerFactory);
         }
 
+        #endregion
+
+        private InstanceManager _manager;
+        private InstanceFactory _ruleFactory;
+        private InstanceFactory _widgetFactory;
+        private InstanceFactory _widgetMakerFactory;
+
+        public InstanceManagerTester()
+        {
+        }
+
+
         private void addColorMemento(string Color)
         {
             MemoryInstanceMemento memento = new MemoryInstanceMemento("Color", Color);
@@ -50,46 +54,6 @@ namespace StructureMap.Testing.Container
             ((MemoryMementoSource) _ruleFactory.Source).AddMemento(memento);
             ((MemoryMementoSource) _widgetFactory.Source).AddMemento(memento);
             ((MemoryMementoSource) _widgetMakerFactory.Source).AddMemento(memento);
-        }
-
-        [Test, ExpectedException(typeof (StructureMapException))]
-        public void GetMissingType()
-        {
-            object o = _manager.CreateInstance(typeof (string));
-        }
-
-        [Test]
-        public void GetDefaultInstance()
-        {
-            addColorMemento("Red");
-            addColorMemento("Orange");
-            addColorMemento("Blue");
-
-            _manager.SetDefault(typeof (Rule), "Blue");
-            ColorRule rule = _manager.CreateInstance(typeof (Rule)) as ColorRule;
-
-            Assert.IsNotNull(rule);
-            Assert.AreEqual("Blue", rule.Color);
-        }
-
-        [Test]
-        public void GetInstanceOf3Types()
-        {
-            addColorMemento("Red");
-            addColorMemento("Orange");
-            addColorMemento("Blue");
-
-            ColorRule rule = _manager.CreateInstance(typeof (Rule), "Blue") as ColorRule;
-            Assert.IsNotNull(rule);
-            Assert.AreEqual("Blue", rule.Color);
-
-            ColorWidget widget = _manager.CreateInstance(typeof (IWidget), "Red") as ColorWidget;
-            Assert.IsNotNull(widget);
-            Assert.AreEqual("Red", widget.Color);
-
-            ColorWidgetMaker maker = _manager.CreateInstance(typeof (WidgetMaker), "Orange") as ColorWidgetMaker;
-            Assert.IsNotNull(maker);
-            Assert.AreEqual("Orange", maker.Color);
         }
 
         [Test]
@@ -129,6 +93,46 @@ namespace StructureMap.Testing.Container
 
             IInstanceFactory factory = manager[stringService];
             Assert.AreEqual(stringService, factory.PluginType);
+        }
+
+        [Test]
+        public void GetDefaultInstance()
+        {
+            addColorMemento("Red");
+            addColorMemento("Orange");
+            addColorMemento("Blue");
+
+            _manager.SetDefault(typeof (Rule), "Blue");
+            ColorRule rule = _manager.CreateInstance(typeof (Rule)) as ColorRule;
+
+            Assert.IsNotNull(rule);
+            Assert.AreEqual("Blue", rule.Color);
+        }
+
+        [Test]
+        public void GetInstanceOf3Types()
+        {
+            addColorMemento("Red");
+            addColorMemento("Orange");
+            addColorMemento("Blue");
+
+            ColorRule rule = _manager.CreateInstance(typeof (Rule), "Blue") as ColorRule;
+            Assert.IsNotNull(rule);
+            Assert.AreEqual("Blue", rule.Color);
+
+            ColorWidget widget = _manager.CreateInstance(typeof (IWidget), "Red") as ColorWidget;
+            Assert.IsNotNull(widget);
+            Assert.AreEqual("Red", widget.Color);
+
+            ColorWidgetMaker maker = _manager.CreateInstance(typeof (WidgetMaker), "Orange") as ColorWidgetMaker;
+            Assert.IsNotNull(maker);
+            Assert.AreEqual("Orange", maker.Color);
+        }
+
+        [Test, ExpectedException(typeof (StructureMapException))]
+        public void GetMissingType()
+        {
+            object o = _manager.CreateInstance(typeof (string));
         }
 
         [Test]

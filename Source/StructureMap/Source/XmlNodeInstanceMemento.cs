@@ -11,8 +11,8 @@ namespace StructureMap.Source
     public class XmlNodeInstanceMemento : InstanceMemento
     {
         private XmlNode _innerNode;
-        private string _typeAttribute;
         private string _keyAttribute;
+        private string _typeAttribute;
 
         public XmlNodeInstanceMemento(XmlNode Node, string TypeAttribute, string KeyAttribute)
         {
@@ -20,8 +20,6 @@ namespace StructureMap.Source
             _typeAttribute = TypeAttribute;
             _keyAttribute = KeyAttribute;
         }
-
-        #region InstanceMemento Members
 
         protected override string innerConcreteKey
         {
@@ -31,6 +29,29 @@ namespace StructureMap.Source
         protected override string innerInstanceKey
         {
             get { return getAttribute(_keyAttribute); }
+        }
+
+        public override bool IsReference
+        {
+            get
+            {
+                bool returnValue = false;
+
+                string typeName = getAttribute("Type");
+
+                // If a TypeName is not specified, then "true"
+                if (typeName == string.Empty)
+                {
+                    returnValue = true;
+                }
+
+                return returnValue;
+            }
+        }
+
+        public override string ReferenceKey
+        {
+            get { return getAttribute("Key"); }
         }
 
 
@@ -94,28 +115,6 @@ namespace StructureMap.Source
         }
 
         // TODO -- pull up into abstract class?
-        public override bool IsReference
-        {
-            get
-            {
-                bool returnValue = false;
-
-                string typeName = getAttribute("Type");
-
-                // If a TypeName is not specified, then "true"
-                if (typeName == string.Empty)
-                {
-                    returnValue = true;
-                }
-
-                return returnValue;
-            }
-        }
-
-        public override string ReferenceKey
-        {
-            get { return getAttribute("Key"); }
-        }
 
 
         public override InstanceMemento[] GetChildrenArray(string Key)
@@ -153,8 +152,6 @@ namespace StructureMap.Source
 
             return token;
         }
-
-        #endregion
 
         public override string ToString()
         {

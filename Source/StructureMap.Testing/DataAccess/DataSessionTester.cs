@@ -13,13 +13,7 @@ namespace StructureMap.Testing.DataAccess
     [TestFixture]
     public class DataSessionTester
     {
-        private IMock _factoryMock;
-        private IMock _databaseMock;
-        private DataSession _session;
-        private IDatabaseEngine _database;
-        private ICommandFactory _factory;
-        private IMock _autoCommitMock;
-        private IMock _transactionalMock;
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -41,23 +35,24 @@ namespace StructureMap.Testing.DataAccess
             _session = new DataSession(_database, _factory, autoCommitState, transactionalState);
         }
 
-        [Test]
-        public void IsInTransactionIsFalseBecauseStartTransactionHasNotBeenCalled()
-        {
-            Assert.IsFalse(_session.IsInTransaction);
-        }
+        #endregion
 
-        [Test]
-        public void IsInTransactionIsTrueBecauseStartTransactionHasBeenCalled()
+        private IMock _factoryMock;
+        private IMock _databaseMock;
+        private DataSession _session;
+        private IDatabaseEngine _database;
+        private ICommandFactory _factory;
+        private IMock _autoCommitMock;
+        private IMock _transactionalMock;
+
+        [Test, ExpectedException(typeof (ApplicationException), "A transaction is already started!")]
+        public void CallingStartTransactionTwiceResultsInException()
         {
             _transactionalMock.Expect("BeginTransaction");
 
             _session.BeginTransaction();
-
-            Assert.IsTrue(_session.IsInTransaction);
-            _transactionalMock.Verify();
+            _session.BeginTransaction();
         }
-
 
         [Test]
         public void CommitTransaction()
@@ -72,29 +67,6 @@ namespace StructureMap.Testing.DataAccess
             _transactionalMock.Verify();
         }
 
-
-        [Test]
-        public void RollbackTransaction()
-        {
-            _transactionalMock.Expect("BeginTransaction");
-            _transactionalMock.Expect("RollbackTransaction");
-
-            _session.BeginTransaction();
-            _session.RollbackTransaction();
-
-            Assert.IsFalse(_session.IsInTransaction);
-            _transactionalMock.Verify();
-        }
-
-        [Test, ExpectedException(typeof (ApplicationException), "A transaction is already started!")]
-        public void CallingStartTransactionTwiceResultsInException()
-        {
-            _transactionalMock.Expect("BeginTransaction");
-
-            _session.BeginTransaction();
-            _session.BeginTransaction();
-        }
-
         [Test]
         public void ExecuteCommandAutoCommitHappyPath()
         {
@@ -106,25 +78,6 @@ namespace StructureMap.Testing.DataAccess
             Assert.AreEqual(5, count);
 
             _autoCommitMock.Verify();
-        }
-
-        [Test]
-        public void ExecuteSql()
-        {
-            IDbCommand command = new SqlCommand();
-
-            _databaseMock.ExpectAndReturn("GetCommand", command);
-
-            _autoCommitMock.ExpectAndReturn("Execute", 5, command);
-
-            string theSql = "sql statements";
-            int count = _session.ExecuteSql(theSql);
-            Assert.AreEqual(5, count);
-
-            _autoCommitMock.Verify();
-            _databaseMock.Verify();
-            Assert.AreEqual(theSql, command.CommandText);
-            Assert.AreEqual(CommandType.Text, command.CommandType);
         }
 
         [Test]
@@ -143,6 +96,44 @@ namespace StructureMap.Testing.DataAccess
             catch (CommandFailureException ex)
             {
                 Assert.AreEqual(messageText, ex.InnerException.Message);
+            }
+
+            _autoCommitMock.Verify();
+        }
+
+        [Test]
+        public void ExecuteDataSetHappyPath()
+        {
+            IDbCommand command = new SqlCommand();
+
+            DataSet theDataSet = new DataSet();
+
+            _autoCommitMock.ExpectAndReturn("ExecuteDataSet", theDataSet, command);
+
+            DataSet dataSet = _session.ExecuteDataSet(command);
+
+            Assert.IsTrue(ReferenceEquals(theDataSet, dataSet));
+            _autoCommitMock.Verify();
+        }
+
+        [Test]
+        public void ExecuteDataSetThrownException()
+        {
+            IDbCommand command = new SqlCommand();
+            _autoCommitMock.ExpectAndThrow("ExecuteDataSet", new ApplicationException("I'm tired"), command);
+
+            try
+            {
+                _session.ExecuteDataSet(command);
+                Assert.Fail("Should have thrown an exception");
+            }
+            catch (CommandFailureException)
+            {
+                // All good
+            }
+            catch (Exception)
+            {
+                throw;
             }
 
             _autoCommitMock.Verify();
@@ -207,44 +198,6 @@ namespace StructureMap.Testing.DataAccess
             Assert.AreEqual(CommandType.Text, command.CommandType);
         }
 
-        [Test]
-        public void ExecuteDataSetHappyPath()
-        {
-            IDbCommand command = new SqlCommand();
-
-            DataSet theDataSet = new DataSet();
-
-            _autoCommitMock.ExpectAndReturn("ExecuteDataSet", theDataSet, command);
-
-            DataSet dataSet = _session.ExecuteDataSet(command);
-
-            Assert.IsTrue(ReferenceEquals(theDataSet, dataSet));
-            _autoCommitMock.Verify();
-        }
-
-        [Test]
-        public void ExecuteDataSetThrownException()
-        {
-            IDbCommand command = new SqlCommand();
-            _autoCommitMock.ExpectAndThrow("ExecuteDataSet", new ApplicationException("I'm tired"), command);
-
-            try
-            {
-                _session.ExecuteDataSet(command);
-                Assert.Fail("Should have thrown an exception");
-            }
-            catch (CommandFailureException)
-            {
-                // All good
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-
-            _autoCommitMock.Verify();
-        }
-
 
         [Test]
         public void ExecuteScalarAutoCommitHappyPath()
@@ -281,6 +234,55 @@ namespace StructureMap.Testing.DataAccess
             }
 
             _autoCommitMock.Verify();
+        }
+
+        [Test]
+        public void ExecuteSql()
+        {
+            IDbCommand command = new SqlCommand();
+
+            _databaseMock.ExpectAndReturn("GetCommand", command);
+
+            _autoCommitMock.ExpectAndReturn("Execute", 5, command);
+
+            string theSql = "sql statements";
+            int count = _session.ExecuteSql(theSql);
+            Assert.AreEqual(5, count);
+
+            _autoCommitMock.Verify();
+            _databaseMock.Verify();
+            Assert.AreEqual(theSql, command.CommandText);
+            Assert.AreEqual(CommandType.Text, command.CommandType);
+        }
+
+        [Test]
+        public void IsInTransactionIsFalseBecauseStartTransactionHasNotBeenCalled()
+        {
+            Assert.IsFalse(_session.IsInTransaction);
+        }
+
+        [Test]
+        public void IsInTransactionIsTrueBecauseStartTransactionHasBeenCalled()
+        {
+            _transactionalMock.Expect("BeginTransaction");
+
+            _session.BeginTransaction();
+
+            Assert.IsTrue(_session.IsInTransaction);
+            _transactionalMock.Verify();
+        }
+
+        [Test]
+        public void RollbackTransaction()
+        {
+            _transactionalMock.Expect("BeginTransaction");
+            _transactionalMock.Expect("RollbackTransaction");
+
+            _session.BeginTransaction();
+            _session.RollbackTransaction();
+
+            Assert.IsFalse(_session.IsInTransaction);
+            _transactionalMock.Verify();
         }
     }
 }

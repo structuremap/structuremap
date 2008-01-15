@@ -7,8 +7,20 @@ namespace StructureMap.Testing.DataAccess
     public class StubbedCommand : ICommand, IInitializable
     {
         private string _commandName;
-        private bool _wasInitialized = false;
         private IDataSession _session;
+        private bool _wasInitialized = false;
+
+        public bool WasInitialized
+        {
+            get { return _wasInitialized; }
+        }
+
+        public IDataSession Session
+        {
+            get { return _session; }
+        }
+
+        #region ICommand Members
 
         public string Name
         {
@@ -33,19 +45,15 @@ namespace StructureMap.Testing.DataAccess
             _session = session;
         }
 
+        #endregion
+
+        #region IInitializable Members
+
         public void Initialize(IDatabaseEngine engine)
         {
             _wasInitialized = true;
         }
 
-        public bool WasInitialized
-        {
-            get { return _wasInitialized; }
-        }
-
-        public IDataSession Session
-        {
-            get { return _session; }
-        }
+        #endregion
     }
 }

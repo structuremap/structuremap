@@ -20,11 +20,11 @@ namespace StructureMap.Configuration.Tokens
     [Serializable]
     public class PropertyDefinition : GraphObject
     {
-        private string _propertyName;
-        private Type _propertyType;
+        private ArgumentType _argumentType;
         private PropertyDefinitionType _definitionType;
         private string[] _enumerationValues;
-        private ArgumentType _argumentType;
+        private string _propertyName;
+        private Type _propertyType;
 
 
         public PropertyDefinition() : base()
@@ -79,6 +79,11 @@ namespace StructureMap.Configuration.Tokens
             set { _argumentType = value; }
         }
 
+        protected override string key
+        {
+            get { return PropertyName; }
+        }
+
         public override string ToString()
         {
             return string.Format("Property:  {0}, Type:  {1}", PropertyName, PropertyType);
@@ -127,11 +132,6 @@ namespace StructureMap.Configuration.Tokens
         public override void AcceptVisitor(IConfigurationVisitor visitor)
         {
             visitor.HandlePropertyDefinition(this);
-        }
-
-        protected override string key
-        {
-            get { return PropertyName; }
         }
     }
 }

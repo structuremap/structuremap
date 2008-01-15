@@ -6,7 +6,7 @@ namespace StructureMap.Testing.DataAccess.Commands
     [TestFixture]
     public class TemplatedQueryFilterTester
     {
-        private TemplatedQueryFilter _filter;
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -14,12 +14,24 @@ namespace StructureMap.Testing.DataAccess.Commands
             _filter = new TemplatedQueryFilter("Name", "Column = '{Value}'");
         }
 
+        #endregion
+
+        private TemplatedQueryFilter _filter;
+
         [Test]
         public void GetAndSetProperty()
         {
             Assert.IsNull(_filter.GetProperty());
             _filter.SetProperty("Jeremy");
             Assert.AreEqual("Jeremy", _filter.GetProperty());
+        }
+
+
+        [Test]
+        public void GetWhereClause()
+        {
+            _filter.SetProperty("Jeremy");
+            Assert.AreEqual("Column = 'Jeremy'", _filter.GetWhereClause());
         }
 
         [Test]
@@ -30,14 +42,6 @@ namespace StructureMap.Testing.DataAccess.Commands
 
             _filter.SetProperty("Jeremy");
             Assert.IsTrue(_filter.IsActive());
-        }
-
-
-        [Test]
-        public void GetWhereClause()
-        {
-            _filter.SetProperty("Jeremy");
-            Assert.AreEqual("Column = 'Jeremy'", _filter.GetWhereClause());
         }
     }
 }

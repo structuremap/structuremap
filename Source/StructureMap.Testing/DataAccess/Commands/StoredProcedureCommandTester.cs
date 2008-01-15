@@ -7,8 +7,7 @@ namespace StructureMap.Testing.DataAccess.Commands
     [TestFixture, Explicit]
     public class StoredProcedureCommandTester
     {
-        private StoredProcedureCommand _command;
-        public const string CREATION_SPROC_NAME = "sp_CreationTestProcedure";
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -19,16 +18,10 @@ namespace StructureMap.Testing.DataAccess.Commands
             _command.Initialize(engine);
         }
 
-        [Test]
-        public void Initialize()
-        {
-            Assert.AreEqual(6, _command.Parameters.Count);
-            Assert.IsNotNull(_command.Parameters["@param1"]);
-            Assert.IsNotNull(_command.Parameters["@param2"]);
-            Assert.IsNotNull(_command.Parameters["@param3"]);
-            Assert.IsNotNull(_command.Parameters["@param4"]);
-            Assert.IsNotNull(_command.Parameters["@param5"]);
-        }
+        #endregion
+
+        private StoredProcedureCommand _command;
+        public const string CREATION_SPROC_NAME = "sp_CreationTestProcedure";
 
         /*
 		CREATE PROCEDURE sp_CreationTestProcedure (
@@ -59,6 +52,17 @@ namespace StructureMap.Testing.DataAccess.Commands
 
             Assert.AreEqual("Hello!", (string) _command["@param5"]);
             Assert.AreEqual(2, (int) _command["@param4"]);
+        }
+
+        [Test]
+        public void Initialize()
+        {
+            Assert.AreEqual(6, _command.Parameters.Count);
+            Assert.IsNotNull(_command.Parameters["@param1"]);
+            Assert.IsNotNull(_command.Parameters["@param2"]);
+            Assert.IsNotNull(_command.Parameters["@param3"]);
+            Assert.IsNotNull(_command.Parameters["@param4"]);
+            Assert.IsNotNull(_command.Parameters["@param5"]);
         }
     }
 }

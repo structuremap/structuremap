@@ -13,8 +13,7 @@ namespace StructureMap.Testing.Caching
     [TestFixture]
     public class ObjectFactoryTester
     {
-        private ManualResetEvent _event;
-        private FileModificationWatcher _watcher;
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -22,6 +21,59 @@ namespace StructureMap.Testing.Caching
             _event = new ManualResetEvent(false);
             _watcher = new FileModificationWatcher("StructureMap.config");
             DataMother.WriteDocument("FullTesting.XML");
+        }
+
+        #endregion
+
+        private ManualResetEvent _event;
+        private FileModificationWatcher _watcher;
+
+        private void markDone()
+        {
+            _event.Set();
+        }
+
+        private void modifyXml(string Color)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load("StructureMap.config");
+            XmlNode node =
+                doc.DocumentElement.SelectSingleNode("PluginFamily[@Type='StructureMap.Testing.Widget.Rule']");
+            node.Attributes["DefaultKey"].Value = Color;
+            doc.Save("StructureMap.config");
+        }
+
+        private void timeout()
+        {
+            Thread thread = new Thread(new ThreadStart(signal));
+            thread.Start();
+        }
+
+        private void signal()
+        {
+            Thread.Sleep(500);
+            _event.Set();
+        }
+
+        [Test]
+        public void SmokeTestGetAllInstances()
+        {
+            IList list = ObjectFactory.GetAllInstances(typeof (GrandChild));
+            Assert.IsTrue(list.Count > 0);
+        }
+
+        [Test]
+        public void SmokeTestGetAllInstancesGeneric()
+        {
+            IList<GrandChild> list = ObjectFactory.GetAllInstances<GrandChild>();
+            Assert.IsTrue(list.Count > 0);
+        }
+
+        [Test]
+        public void SmokeTestWhatDoIHave()
+        {
+            string message = ObjectFactory.WhatDoIHave();
+            Debug.WriteLine(message);
         }
 
         [Test, Ignore("Come back to this.")]
@@ -63,54 +115,6 @@ namespace StructureMap.Testing.Caching
             GrandChild defaultGrandChild = ObjectFactory.GetInstance<GrandChild>();
 
             Assert.AreEqual(todd.BirthYear, defaultGrandChild.BirthYear);
-        }
-
-        [Test]
-        public void SmokeTestWhatDoIHave()
-        {
-            string message = ObjectFactory.WhatDoIHave();
-            Debug.WriteLine(message);
-        }
-
-        [Test]
-        public void SmokeTestGetAllInstances()
-        {
-            IList list = ObjectFactory.GetAllInstances(typeof (GrandChild));
-            Assert.IsTrue(list.Count > 0);
-        }
-
-        [Test]
-        public void SmokeTestGetAllInstancesGeneric()
-        {
-            IList<GrandChild> list = ObjectFactory.GetAllInstances<GrandChild>();
-            Assert.IsTrue(list.Count > 0);
-        }
-
-        private void markDone()
-        {
-            _event.Set();
-        }
-
-        private void modifyXml(string Color)
-        {
-            XmlDocument doc = new XmlDocument();
-            doc.Load("StructureMap.config");
-            XmlNode node =
-                doc.DocumentElement.SelectSingleNode("PluginFamily[@Type='StructureMap.Testing.Widget.Rule']");
-            node.Attributes["DefaultKey"].Value = Color;
-            doc.Save("StructureMap.config");
-        }
-
-        private void timeout()
-        {
-            Thread thread = new Thread(new ThreadStart(signal));
-            thread.Start();
-        }
-
-        private void signal()
-        {
-            Thread.Sleep(500);
-            _event.Set();
         }
     }
 }

@@ -11,6 +11,22 @@ namespace StructureMap.Testing.Configuration.Tokens
     public class PluginTokenTester
     {
         [Test]
+        public void CreateImplicitToken()
+        {
+            Type pluggedType = typeof (ComplexRule);
+            Plugin plugin = Plugin.CreateImplicitPlugin(pluggedType);
+            string expectedConcreteKey = "Complex";
+
+            PluginToken token = PluginToken.CreateImplicitToken(plugin);
+
+            PluginToken expected =
+                new PluginToken(new TypePath(pluggedType), expectedConcreteKey, DefinitionSource.Implicit);
+            Assert.AreEqual(expected, token);
+
+            Assert.AreEqual(plugin.GetConstructor().GetParameters().Length, token.Properties.Length);
+        }
+
+        [Test]
         public void ReadProperties()
         {
             Plugin plugin = Plugin.CreateExplicitPlugin(typeof (PluginTokenTarget), "concrete", string.Empty);
@@ -29,30 +45,14 @@ namespace StructureMap.Testing.Configuration.Tokens
 
             Assert.AreEqual(expected, token.Properties);
         }
-
-        [Test]
-        public void CreateImplicitToken()
-        {
-            Type pluggedType = typeof (ComplexRule);
-            Plugin plugin = Plugin.CreateImplicitPlugin(pluggedType);
-            string expectedConcreteKey = "Complex";
-
-            PluginToken token = PluginToken.CreateImplicitToken(plugin);
-
-            PluginToken expected =
-                new PluginToken(new TypePath(pluggedType), expectedConcreteKey, DefinitionSource.Implicit);
-            Assert.AreEqual(expected, token);
-
-            Assert.AreEqual(plugin.GetConstructor().GetParameters().Length, token.Properties.Length);
-        }
     }
 
 
     public class PluginTokenTarget
     {
-        private string _name;
-        private int _age;
         private bool _active;
+        private int _age;
+        private string _name;
 
         public PluginTokenTarget(bool active)
         {

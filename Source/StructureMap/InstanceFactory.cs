@@ -16,11 +16,11 @@ namespace StructureMap
     /// </summary>
     public class InstanceFactory : IInstanceFactory, IInstanceCreator
     {
-        private readonly Type _pluginType;
         private readonly Dictionary<string, InstanceBuilder> _instanceBuilders;
-        private MementoSource _source;
         private readonly InstanceInterceptor _interceptor = new NulloInterceptor();
+        private readonly Type _pluginType;
         private InterceptorLibrary _interceptorLibrary = InterceptorLibrary.Empty;
+        private MementoSource _source;
 
         #region static constructors
 
@@ -123,6 +123,47 @@ namespace StructureMap
         #endregion
 
         /// <summary>
+        /// Retrieves the MementoSource member of the InstanceFactory
+        /// </summary>
+        public MementoSource Source
+        {
+            get { return _source; }
+            set { _source = value; }
+        }
+
+        #region IInstanceCreator Members
+
+        object IInstanceCreator.BuildInstance(InstanceMemento memento)
+        {
+            assertThatTheConcreteKeyExists(memento);
+
+
+            try
+            {
+                InstanceBuilder builder = _instanceBuilders[memento.ConcreteKey];
+                object constructedInstance = builder.BuildInstance(memento);
+                CompoundInterceptor interceptor = _interceptorLibrary.FindInterceptor(constructedInstance.GetType());
+                return interceptor.Process(constructedInstance);
+            }
+            catch (StructureMapException)
+            {
+                throw;
+            }
+            catch (InvalidCastException ex)
+            {
+                throw new StructureMapException(206, ex, memento.InstanceKey);
+            }
+            catch (Exception ex)
+            {
+                throw new StructureMapException(207, ex, memento.InstanceKey, PluginType.FullName);
+            }
+        }
+
+        #endregion
+
+        #region IInstanceFactory Members
+
+        /// <summary>
         /// Links the child InstanceBuilder members to the parent InstanceManager
         /// </summary>
         /// <param name="instanceManager"></param>
@@ -135,59 +176,12 @@ namespace StructureMap
             }
         }
 
-        #region create instance builders
-
-        private void processPlugins(IEnumerable<Plugin> plugins)
-        {
-            Assembly assembly = createInstanceBuilderAssembly(plugins);
-            foreach (Plugin plugin in plugins)
-            {
-                addPlugin(assembly, plugin);
-            }
-        }
-
-        private Assembly createInstanceBuilderAssembly(IEnumerable<Plugin> plugins)
-        {
-            string assemblyName = Guid.NewGuid().ToString().Replace(".", "") + "InstanceBuilderAssembly";
-            InstanceBuilderAssembly builderAssembly = new InstanceBuilderAssembly(assemblyName, PluginType);
-
-            foreach (Plugin plugin in plugins)
-            {
-                builderAssembly.AddPlugin(plugin);
-            }
-
-            return builderAssembly.Compile();
-        }
-
-
-        private void addPlugin(Assembly assembly, Plugin plugin)
-        {
-            string instanceBuilderClassName = plugin.GetInstanceBuilderClassName();
-            InstanceBuilder builder = (InstanceBuilder) assembly.CreateInstance(instanceBuilderClassName);
-            _instanceBuilders.Add(builder.ConcreteTypeKey, builder);
-        }
-
-        #endregion
-
         /// <summary>
         /// The CLR System.Type that the InstanceFactory creates
         /// </summary>
         public Type PluginType
         {
             get { return _pluginType; }
-        }
-
-
-        private InstanceMemento findMemento(string instanceKey)
-        {
-            InstanceMemento memento = _source.GetMemento(instanceKey);
-
-            if (memento == null)
-            {
-                throw new StructureMapException(200, instanceKey, _pluginType.FullName);
-            }
-
-            return memento;
         }
 
 
@@ -216,42 +210,6 @@ namespace StructureMap
 
             object instance = resolvedMemento.Build(this);
             return _interceptor.Process(instance);
-        }
-
-
-        object IInstanceCreator.BuildInstance(InstanceMemento memento)
-        {
-            assertThatTheConcreteKeyExists(memento);
-
-
-            try
-            {
-                InstanceBuilder builder = _instanceBuilders[memento.ConcreteKey];
-                object constructedInstance = builder.BuildInstance(memento);
-                CompoundInterceptor interceptor = _interceptorLibrary.FindInterceptor(constructedInstance.GetType());
-                return interceptor.Process(constructedInstance);
-            }
-            catch (StructureMapException)
-            {
-                throw;
-            }
-            catch (InvalidCastException ex)
-            {
-                throw new StructureMapException(206, ex, memento.InstanceKey);
-            }
-            catch (Exception ex)
-            {
-                throw new StructureMapException(207, ex, memento.InstanceKey, PluginType.FullName);
-            }
-        }
-
-        private void assertThatTheConcreteKeyExists(InstanceMemento memento)
-        {
-            if (!_instanceBuilders.ContainsKey(memento.ConcreteKey))
-            {
-                throw new StructureMapException(
-                    201, memento.ConcreteKey, memento.InstanceKey, PluginType.FullName);
-            }
         }
 
 
@@ -314,15 +272,6 @@ namespace StructureMap
         }
 
         /// <summary>
-        /// Retrieves the MementoSource member of the InstanceFactory
-        /// </summary>
-        public MementoSource Source
-        {
-            get { return _source; }
-            set { _source = value; }
-        }
-
-        /// <summary>
         /// The default instanceKey
         /// </summary>
         public string DefaultInstanceKey
@@ -378,6 +327,63 @@ namespace StructureMap
             plugin.AddToSource(_source);
 
             return plugin.CreateImplicitMemento();
+        }
+
+        #region create instance builders
+
+        private void processPlugins(IEnumerable<Plugin> plugins)
+        {
+            Assembly assembly = createInstanceBuilderAssembly(plugins);
+            foreach (Plugin plugin in plugins)
+            {
+                addPlugin(assembly, plugin);
+            }
+        }
+
+        private Assembly createInstanceBuilderAssembly(IEnumerable<Plugin> plugins)
+        {
+            string assemblyName = Guid.NewGuid().ToString().Replace(".", "") + "InstanceBuilderAssembly";
+            InstanceBuilderAssembly builderAssembly = new InstanceBuilderAssembly(assemblyName, PluginType);
+
+            foreach (Plugin plugin in plugins)
+            {
+                builderAssembly.AddPlugin(plugin);
+            }
+
+            return builderAssembly.Compile();
+        }
+
+
+        private void addPlugin(Assembly assembly, Plugin plugin)
+        {
+            string instanceBuilderClassName = plugin.GetInstanceBuilderClassName();
+            InstanceBuilder builder = (InstanceBuilder) assembly.CreateInstance(instanceBuilderClassName);
+            _instanceBuilders.Add(builder.ConcreteTypeKey, builder);
+        }
+
+        #endregion
+
+        #endregion
+
+        private InstanceMemento findMemento(string instanceKey)
+        {
+            InstanceMemento memento = _source.GetMemento(instanceKey);
+
+            if (memento == null)
+            {
+                throw new StructureMapException(200, instanceKey, _pluginType.FullName);
+            }
+
+            return memento;
+        }
+
+        private void assertThatTheConcreteKeyExists(InstanceMemento memento)
+        {
+            if (!_instanceBuilders.ContainsKey(memento.ConcreteKey))
+            {
+                throw new StructureMapException(
+                    201, memento.ConcreteKey, memento.InstanceKey, PluginType.FullName);
+            }
         }
     }
 }

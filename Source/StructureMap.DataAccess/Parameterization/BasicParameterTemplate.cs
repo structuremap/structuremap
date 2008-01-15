@@ -5,9 +5,9 @@ namespace StructureMap.DataAccess.Parameterization
     [Pluggable("Basic")]
     public class BasicParameterTemplate : IParameterTemplate
     {
-        private readonly string _parameterName;
         private readonly DbType _dbType;
         private readonly bool _isNullable;
+        private readonly string _parameterName;
 
         public BasicParameterTemplate(string parameterName, DbType dbType, bool isNullable)
         {
@@ -22,6 +22,8 @@ namespace StructureMap.DataAccess.Parameterization
             _parameterName = parameterName;
         }
 
+        #region IParameterTemplate Members
+
         public IDataParameter ConfigureParameter(IDatabaseEngine database)
         {
             return database.CreateParameter(_parameterName, _dbType, _isNullable);
@@ -31,5 +33,7 @@ namespace StructureMap.DataAccess.Parameterization
         {
             get { return _parameterName; }
         }
+
+        #endregion
     }
 }

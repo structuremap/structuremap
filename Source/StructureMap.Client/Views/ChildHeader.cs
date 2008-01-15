@@ -12,9 +12,13 @@ namespace StructureMap.Client.Views
             _headerText = headerText;
         }
 
+        #region IViewPart Members
+
         public void WriteHTML(HTMLBuilder builder, GraphObject subject)
         {
             builder.AddSubHeader(_headerText);
         }
+
+        #endregion
     }
 }

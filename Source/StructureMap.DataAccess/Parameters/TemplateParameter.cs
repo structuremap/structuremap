@@ -14,6 +14,8 @@ namespace StructureMap.DataAccess.Parameters
             _parameterName = parameterName;
         }
 
+        #region IParameter Members
+
         public void SetProperty(object propertyValue)
         {
             _value = propertyValue;
@@ -29,6 +31,13 @@ namespace StructureMap.DataAccess.Parameters
             get { return _parameterName; }
         }
 
+        public void OverrideParameterType(DbType dbtype)
+        {
+            // no-op;
+        }
+
+        #endregion
+
         public void Substitute(StringBuilder sb)
         {
             if (_value == null)
@@ -39,11 +48,6 @@ namespace StructureMap.DataAccess.Parameters
 
             string token = "{" + _parameterName + "}";
             sb.Replace(token, _value.ToString());
-        }
-
-        public void OverrideParameterType(DbType dbtype)
-        {
-            // no-op;
         }
     }
 }

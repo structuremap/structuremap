@@ -9,50 +9,7 @@ namespace StructureMap.Testing.DataAccess.Tools
     public class TableDataReaderTester
     {
         [Test]
-        public void ReadWithNoRows()
-        {
-            DataTable table = new DataTable();
-            table.Columns.Add("State", typeof (string));
-
-            TableDataReader reader = new TableDataReader(table);
-
-            // No rows, so it should return false
-            Assert.IsFalse(reader.Read());
-        }
-
-        [Test]
-        public void ReadWithOneRow()
-        {
-            DataTable table = new DataTable();
-            table.Columns.Add("State", typeof (string));
-            table.Rows.Add(new object[] {"TX"});
-
-            TableDataReader reader = new TableDataReader(table);
-
-            // One row, so it should return true the first time, and false the second
-            Assert.IsTrue(reader.Read());
-            Assert.IsFalse(reader.Read());
-        }
-
-        [Test]
-        public void ReadWithTwoRows()
-        {
-            DataTable table = new DataTable();
-            table.Columns.Add("State", typeof (string));
-            table.Rows.Add(new object[] {"TX"});
-            table.Rows.Add(new object[] {"MO"});
-
-            TableDataReader reader = new TableDataReader(table);
-
-            // One row, so it should return true the first time, and false the second
-            Assert.IsTrue(reader.Read());
-            Assert.IsTrue(reader.Read());
-            Assert.IsFalse(reader.Read());
-        }
-
-
-        [Test]
-        public void ReadWithThreeRows()
+        public void ClosingFunctionality()
         {
             DataTable table = new DataTable();
             table.Columns.Add("State", typeof (string));
@@ -62,11 +19,27 @@ namespace StructureMap.Testing.DataAccess.Tools
 
             TableDataReader reader = new TableDataReader(table);
 
-            // One row, so it should return true the first time, and false the second
-            Assert.IsTrue(reader.Read());
-            Assert.IsTrue(reader.Read());
-            Assert.IsTrue(reader.Read());
-            Assert.IsFalse(reader.Read());
+            Assert.IsFalse(reader.IsClosed);
+            reader.Close();
+            Assert.IsTrue(reader.IsClosed);
+
+            reader = new TableDataReader(table);
+            reader.Dispose();
+            Assert.IsTrue(reader.IsClosed);
+        }
+
+        [Test]
+        public void FieldCount()
+        {
+            DataTable table = new DataTable();
+            table.Columns.Add("State", typeof (string));
+            table.Columns.Add("Direction", typeof (string));
+            table.Columns.Add("Count", typeof (int));
+            table.Columns.Add("Sum", typeof (int));
+
+            IDataReader reader = new TableDataReader(table);
+
+            Assert.AreEqual(4, reader.FieldCount);
         }
 
         [Test]
@@ -140,41 +113,6 @@ namespace StructureMap.Testing.DataAccess.Tools
             Assert.IsFalse(reader.IsDBNull(3));
         }
 
-        [Test]
-        public void FieldCount()
-        {
-            DataTable table = new DataTable();
-            table.Columns.Add("State", typeof (string));
-            table.Columns.Add("Direction", typeof (string));
-            table.Columns.Add("Count", typeof (int));
-            table.Columns.Add("Sum", typeof (int));
-
-            IDataReader reader = new TableDataReader(table);
-
-            Assert.AreEqual(4, reader.FieldCount);
-        }
-
-
-        [Test]
-        public void ClosingFunctionality()
-        {
-            DataTable table = new DataTable();
-            table.Columns.Add("State", typeof (string));
-            table.Rows.Add(new object[] {"TX"});
-            table.Rows.Add(new object[] {"MO"});
-            table.Rows.Add(new object[] {"AR"});
-
-            TableDataReader reader = new TableDataReader(table);
-
-            Assert.IsFalse(reader.IsClosed);
-            reader.Close();
-            Assert.IsTrue(reader.IsClosed);
-
-            reader = new TableDataReader(table);
-            reader.Dispose();
-            Assert.IsTrue(reader.IsClosed);
-        }
-
         [Test, ExpectedException(typeof (ApplicationException))]
         public void ReadingAClosedReaderThrowsAnException()
         {
@@ -191,6 +129,66 @@ namespace StructureMap.Testing.DataAccess.Tools
             Assert.IsTrue(reader.IsClosed);
 
             reader.Read();
+        }
+
+        [Test]
+        public void ReadWithNoRows()
+        {
+            DataTable table = new DataTable();
+            table.Columns.Add("State", typeof (string));
+
+            TableDataReader reader = new TableDataReader(table);
+
+            // No rows, so it should return false
+            Assert.IsFalse(reader.Read());
+        }
+
+        [Test]
+        public void ReadWithOneRow()
+        {
+            DataTable table = new DataTable();
+            table.Columns.Add("State", typeof (string));
+            table.Rows.Add(new object[] {"TX"});
+
+            TableDataReader reader = new TableDataReader(table);
+
+            // One row, so it should return true the first time, and false the second
+            Assert.IsTrue(reader.Read());
+            Assert.IsFalse(reader.Read());
+        }
+
+        [Test]
+        public void ReadWithThreeRows()
+        {
+            DataTable table = new DataTable();
+            table.Columns.Add("State", typeof (string));
+            table.Rows.Add(new object[] {"TX"});
+            table.Rows.Add(new object[] {"MO"});
+            table.Rows.Add(new object[] {"AR"});
+
+            TableDataReader reader = new TableDataReader(table);
+
+            // One row, so it should return true the first time, and false the second
+            Assert.IsTrue(reader.Read());
+            Assert.IsTrue(reader.Read());
+            Assert.IsTrue(reader.Read());
+            Assert.IsFalse(reader.Read());
+        }
+
+        [Test]
+        public void ReadWithTwoRows()
+        {
+            DataTable table = new DataTable();
+            table.Columns.Add("State", typeof (string));
+            table.Rows.Add(new object[] {"TX"});
+            table.Rows.Add(new object[] {"MO"});
+
+            TableDataReader reader = new TableDataReader(table);
+
+            // One row, so it should return true the first time, and false the second
+            Assert.IsTrue(reader.Read());
+            Assert.IsTrue(reader.Read());
+            Assert.IsFalse(reader.Read());
         }
     }
 }

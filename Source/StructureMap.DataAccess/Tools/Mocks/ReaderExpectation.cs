@@ -19,16 +19,16 @@ namespace StructureMap.DataAccess.Tools.Mocks
             _result = result;
         }
 
+        public ParameterList Parameters
+        {
+            get { return _parameters; }
+        }
+
         public IDataReader VerifyAndGetReader(ParameterList actualParameters)
         {
             _parameters.Verify(actualParameters);
 
             return _result;
-        }
-
-        public ParameterList Parameters
-        {
-            get { return _parameters; }
         }
     }
 }

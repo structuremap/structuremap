@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Reflection;
 using NUnit.Framework;
 using StructureMap.Graph;
 using StructureMap.Testing.Widget;
@@ -15,16 +14,6 @@ namespace StructureMap.Testing.Graph
         {
             AssemblyGraph graph = new AssemblyGraph("StructureMap.Testing.Widget");
             Assert.AreEqual("StructureMap.Testing.Widget", graph.AssemblyName);
-        }
-
-
-        [Test,
-         ExpectedException(typeof (StructureMapException),
-             "StructureMap Exception Code:  101\nAssembly DoesNotExist referenced by an <Assembly> node in StructureMap.config cannot be loaded into the current AppDomain"
-             )]
-        public void CannotFindAssembly()
-        {
-            AssemblyGraph graph = new AssemblyGraph("DoesNotExist");
         }
 
 
@@ -43,11 +32,38 @@ namespace StructureMap.Testing.Graph
         public void CanFindPlugins()
         {
             AssemblyGraph graph = new AssemblyGraph("StructureMap.Testing.Widget");
-            PluginFamily family = new PluginFamily(typeof(IWidget));
+            PluginFamily family = new PluginFamily(typeof (IWidget));
             Plugin[] plugins = family.FindPlugins(graph);
             Assert.IsNotNull(plugins);
             Assert.AreEqual(4, plugins.Length);
             Assert.AreEqual(DefinitionSource.Implicit, plugins[0].DefinitionSource);
+        }
+
+        [Test,
+         ExpectedException(typeof (StructureMapException),
+             "StructureMap Exception Code:  101\nAssembly DoesNotExist referenced by an <Assembly> node in StructureMap.config cannot be loaded into the current AppDomain"
+             )]
+        public void CannotFindAssembly()
+        {
+            AssemblyGraph graph = new AssemblyGraph("DoesNotExist");
+        }
+
+        [Test]
+        public void FindTypeByFullNameReturnsNullIfTypeNotFound()
+        {
+            AssemblyGraph assemblyGraph = new AssemblyGraph("StructureMap.Testing.Widget");
+            Assert.IsNull(assemblyGraph.FindTypeByFullName("something that does not exist"));
+        }
+
+        [Test]
+        public void FindTypeByFullNameSuccess()
+        {
+            AssemblyGraph assemblyGraph = new AssemblyGraph("StructureMap.Testing.Widget");
+            Type type = typeof (IWidget);
+
+            Type actualType = assemblyGraph.FindTypeByFullName(type.FullName);
+
+            Assert.AreEqual(type, actualType);
         }
 
         [Test]
@@ -63,27 +79,5 @@ namespace StructureMap.Testing.Graph
             Assert.IsTrue(list.Contains("StructureMap.Testing.Widget3"));
             Assert.IsTrue(list.Contains("StructureMap.Testing.Widget4"));
         }
-
-        [Test]
-        public void FindTypeByFullNameSuccess()
-        {
-            AssemblyGraph assemblyGraph = new AssemblyGraph("StructureMap.Testing.Widget");
-            Type type = typeof (IWidget);
-
-            Type actualType = assemblyGraph.FindTypeByFullName(type.FullName);
-
-            Assert.AreEqual(type, actualType);
-        }
-
-        [Test]
-        public void FindTypeByFullNameReturnsNullIfTypeNotFound()
-        {
-            AssemblyGraph assemblyGraph = new AssemblyGraph("StructureMap.Testing.Widget");
-            Assert.IsNull(assemblyGraph.FindTypeByFullName("something that does not exist"));
-        }
-
-
     }
-
-
 }

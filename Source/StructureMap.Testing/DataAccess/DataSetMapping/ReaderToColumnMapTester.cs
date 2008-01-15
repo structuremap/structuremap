@@ -9,11 +9,7 @@ namespace StructureMap.Testing.DataAccess.DataSetMapping
     [TestFixture]
     public class ReaderToColumnMapTester
     {
-        private DataTable _sourceTable;
-        private DataTable _destinationTable;
-        private DataRow _row;
-        private IDataReader _reader;
-        private DateTime _texasDate = new DateTime(1846, 12, 29);
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -36,18 +32,41 @@ namespace StructureMap.Testing.DataAccess.DataSetMapping
             _reader = new TableDataReader(_sourceTable);
         }
 
-        [Test]
-        public void TransferString()
+        #endregion
+
+        private DataTable _sourceTable;
+        private DataTable _destinationTable;
+        private DataRow _row;
+        private IDataReader _reader;
+        private DateTime _texasDate = new DateTime(1846, 12, 29);
+
+        [Test, ExpectedException(typeof (ArgumentOutOfRangeException))]
+        public void InitializeWithAnInvalidColumnNameAndThrowAnException()
         {
-            ReaderToColumnMap map = new ReaderToColumnMap("State", "StateName");
+            ReaderToColumnMap map = new ReaderToColumnMap("StatehoodDate", "NotARealColumn");
+            map.Initialize(_destinationTable, _reader);
+        }
+
+        [Test, ExpectedException(typeof (ArgumentOutOfRangeException))]
+        public void InitializeWithAnInvalidReaderNameAndThrowAnException()
+        {
+            ReaderToColumnMap map = new ReaderToColumnMap("NotARealColumn", "AdmissionDate");
+            map.Initialize(_destinationTable, _reader);
+        }
+
+        [Test]
+        public void TransferADBNull()
+        {
+            ReaderToColumnMap map = new ReaderToColumnMap("StatehoodDate", "AdmissionDate");
             map.Initialize(_destinationTable, _reader);
 
-            // Move to first row
+            // Move to second row
+            _reader.Read();
             _reader.Read();
 
             map.Fill(_row, _reader);
 
-            Assert.AreEqual("Texas", (string) _row["StateName"]);
+            Assert.AreEqual(DBNull.Value, _row["AdmissionDate"]);
         }
 
         [Test]
@@ -79,32 +98,17 @@ namespace StructureMap.Testing.DataAccess.DataSetMapping
         }
 
         [Test]
-        public void TransferADBNull()
+        public void TransferString()
         {
-            ReaderToColumnMap map = new ReaderToColumnMap("StatehoodDate", "AdmissionDate");
+            ReaderToColumnMap map = new ReaderToColumnMap("State", "StateName");
             map.Initialize(_destinationTable, _reader);
 
-            // Move to second row
-            _reader.Read();
+            // Move to first row
             _reader.Read();
 
             map.Fill(_row, _reader);
 
-            Assert.AreEqual(DBNull.Value, _row["AdmissionDate"]);
-        }
-
-        [Test, ExpectedException(typeof (ArgumentOutOfRangeException))]
-        public void InitializeWithAnInvalidReaderNameAndThrowAnException()
-        {
-            ReaderToColumnMap map = new ReaderToColumnMap("NotARealColumn", "AdmissionDate");
-            map.Initialize(_destinationTable, _reader);
-        }
-
-        [Test, ExpectedException(typeof (ArgumentOutOfRangeException))]
-        public void InitializeWithAnInvalidColumnNameAndThrowAnException()
-        {
-            ReaderToColumnMap map = new ReaderToColumnMap("StatehoodDate", "NotARealColumn");
-            map.Initialize(_destinationTable, _reader);
+            Assert.AreEqual("Texas", (string) _row["StateName"]);
         }
     }
 }

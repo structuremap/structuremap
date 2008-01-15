@@ -11,12 +11,12 @@ namespace StructureMap.Source
     public class EmbeddedFolderXmlMementoSource : MementoSource
     {
         private readonly string _assemblyName;
-        private readonly string _folderPath;
         private readonly string _extension;
+        private readonly string _folderPath;
 
-        private NameValueCollection _embeddedFiles;
         private Assembly _assembly;
         private XmlMementoCreator _creator;
+        private NameValueCollection _embeddedFiles;
 
         /// <summary>
         /// Implementation of MementoSource that stores and retrieves an XmlInstanceMemento per Embedded Resource file 
@@ -42,6 +42,17 @@ namespace StructureMap.Source
             _creator = new XmlMementoCreator(style, "Type", "Key");
         }
 
+
+        public override string Description
+        {
+            get
+            {
+                return
+                    string.Format("EmbeddedFolderXml:  Assembly {0}, Folder {1}, Extension {2}", _assemblyName,
+                                  _folderPath, _extension);
+            }
+        }
+
         private void findEmbeddedFiles()
         {
             _embeddedFiles = new NameValueCollection();
@@ -65,17 +76,6 @@ namespace StructureMap.Source
                         _embeddedFiles.Add(parts[0], fileName);
                     }
                 }
-            }
-        }
-
-
-        public override string Description
-        {
-            get
-            {
-                return
-                    string.Format("EmbeddedFolderXml:  Assembly {0}, Folder {1}, Extension {2}", _assemblyName,
-                                  _folderPath, _extension);
             }
         }
 

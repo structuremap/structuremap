@@ -8,22 +8,12 @@ namespace StructureMap.Configuration.Tokens
     [Serializable]
     public class PluginToken : GraphObject
     {
-        public static PluginToken CreateImplicitToken(Plugin plugin)
-        {
-            TypePath path = new TypePath(plugin.PluggedType);
-            PluginToken token = new PluginToken(path, plugin.ConcreteKey, DefinitionSource.Implicit);
-            token.ReadProperties(plugin);
-
-            return token;
-        }
-
-
-        private string _pluggedType;
+        private string _assemblyName;
         private string _concreteKey;
         private DefinitionSource _definitionSource;
-        private string _assemblyName;
-        private Hashtable _properties = new Hashtable();
+        private string _pluggedType;
         private TypePath _pluginType;
+        private Hashtable _properties = new Hashtable();
 
         public PluginToken() : base()
         {
@@ -91,6 +81,25 @@ namespace StructureMap.Configuration.Tokens
             }
         }
 
+        public override GraphObject[] Children
+        {
+            get { return Properties; }
+        }
+
+        protected override string key
+        {
+            get { return ConcreteKey; }
+        }
+
+        public static PluginToken CreateImplicitToken(Plugin plugin)
+        {
+            TypePath path = new TypePath(plugin.PluggedType);
+            PluginToken token = new PluginToken(path, plugin.ConcreteKey, DefinitionSource.Implicit);
+            token.ReadProperties(plugin);
+
+            return token;
+        }
+
         public void AddPropertyDefinition(PropertyDefinition property)
         {
             _properties.Add(property.PropertyName, property);
@@ -145,19 +154,9 @@ namespace StructureMap.Configuration.Tokens
             }
         }
 
-        public override GraphObject[] Children
-        {
-            get { return Properties; }
-        }
-
         public override void AcceptVisitor(IConfigurationVisitor visitor)
         {
             visitor.HandlePlugin(this);
-        }
-
-        protected override string key
-        {
-            get { return ConcreteKey; }
         }
     }
 }

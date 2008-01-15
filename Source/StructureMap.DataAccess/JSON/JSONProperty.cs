@@ -8,6 +8,12 @@ namespace StructureMap.DataAccess.JSON
         private readonly string _name;
         private readonly string _text;
 
+        private JSONProperty(string name, string text)
+        {
+            _name = name;
+            _text = text;
+        }
+
         public static Part Number(string name, object number)
         {
             return new JSONProperty(name, number.ToString());
@@ -36,12 +42,6 @@ namespace StructureMap.DataAccess.JSON
         public static Part Null(string name)
         {
             return new JSONProperty(name, "null");
-        }
-
-        private JSONProperty(string name, string text)
-        {
-            _name = name;
-            _text = text;
         }
 
         public override void Write(StringBuilder sb)

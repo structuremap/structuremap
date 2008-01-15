@@ -7,14 +7,16 @@ namespace StructureMap.Client.Views
     [Pluggable("Grid")]
     public class GridView : IViewPart
     {
-        private readonly string _memberName;
         private readonly IColumn[] _columns;
+        private readonly string _memberName;
 
         public GridView(string memberName, IColumn[] columns)
         {
             _memberName = memberName;
             _columns = columns;
         }
+
+        #region IViewPart Members
 
         public void WriteHTML(HTMLBuilder builder, GraphObject subject)
         {
@@ -38,6 +40,8 @@ namespace StructureMap.Client.Views
                 writeRow(table, displayValue);
             }
         }
+
+        #endregion
 
         private void writeRow(TableMaker table, GraphObject displayValue)
         {

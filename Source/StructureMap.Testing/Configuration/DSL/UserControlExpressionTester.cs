@@ -8,10 +8,14 @@ namespace StructureMap.Testing.Configuration.DSL
     [TestFixture]
     public class UserControlExpressionTester
     {
+        #region Setup/Teardown
+
         [SetUp]
         public void SetUp()
         {
         }
+
+        #endregion
 
         [Test]
         public void CreateMementoHappyPath()

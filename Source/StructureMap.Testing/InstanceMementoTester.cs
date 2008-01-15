@@ -8,10 +8,14 @@ namespace StructureMap.Testing
     [TestFixture]
     public class InstanceMementoTester
     {
+        #region Setup/Teardown
+
         [SetUp]
         public void SetUp()
         {
         }
+
+        #endregion
 
         [Test]
         public void InterceptorTest()
@@ -23,8 +27,8 @@ namespace StructureMap.Testing
                 delegate(IService s) { servicePassedIntoInterceptor = s; });
             InstanceMemento memento = mocks.PartialMock<InstanceMemento>();
             memento.Interceptor = interceptor;
-            
-            
+
+
             IInstanceCreator instanceCreator = mocks.CreateMock<IInstanceCreator>();
 
             ColorService realService = new ColorService("Red");
@@ -35,6 +39,5 @@ namespace StructureMap.Testing
             Assert.AreSame(realService, memento.Build(instanceCreator));
             Assert.AreSame(realService, servicePassedIntoInterceptor);
         }
-
     }
 }

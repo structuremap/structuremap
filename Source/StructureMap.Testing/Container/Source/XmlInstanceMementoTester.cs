@@ -8,11 +8,7 @@ namespace StructureMap.Testing.Container.Source
     [TestFixture]
     public class XmlInstanceMementoTester
     {
-        private XmlNodeInstanceMemento memento;
-
-        public XmlInstanceMementoTester()
-        {
-        }
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -20,6 +16,14 @@ namespace StructureMap.Testing.Container.Source
             XmlDocument doc = DataMother.GetXmlDocument("XmlInstanceMemento.xml");
 
             memento = new XmlNodeInstanceMemento(doc.DocumentElement, "Type", "Key");
+        }
+
+        #endregion
+
+        private XmlNodeInstanceMemento memento;
+
+        public XmlInstanceMementoTester()
+        {
         }
 
 
@@ -34,22 +38,22 @@ namespace StructureMap.Testing.Container.Source
         }
 
         [Test]
-        public void GetLargeStringInNodeMemento()
-        {
-            XmlDocument document = DataMother.GetXmlDocument("CDataTest.xml");
-            XmlNode node = document.DocumentElement.FirstChild;
-
-            XmlNodeInstanceMemento memento = new XmlNodeInstanceMemento(node, "Type", "Key");
-            Assert.AreEqual("select * from table", memento.GetProperty("bigProp"));
-        }
-
-        [Test]
         public void GetLargeStringInAttributeMemento()
         {
             XmlDocument document = DataMother.GetXmlDocument("CDataTest.xml");
             XmlNode node = document.DocumentElement.LastChild;
 
             XmlAttributeInstanceMemento memento = new XmlAttributeInstanceMemento(node);
+            Assert.AreEqual("select * from table", memento.GetProperty("bigProp"));
+        }
+
+        [Test]
+        public void GetLargeStringInNodeMemento()
+        {
+            XmlDocument document = DataMother.GetXmlDocument("CDataTest.xml");
+            XmlNode node = document.DocumentElement.FirstChild;
+
+            XmlNodeInstanceMemento memento = new XmlNodeInstanceMemento(node, "Type", "Key");
             Assert.AreEqual("select * from table", memento.GetProperty("bigProp"));
         }
     }

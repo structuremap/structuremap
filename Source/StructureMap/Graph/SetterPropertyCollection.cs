@@ -26,6 +26,22 @@ namespace StructureMap.Graph
             }
         }
 
+        protected override ICollection innerCollection
+        {
+            get { return _setterProperties.Values; }
+        }
+
+        public SetterProperty[] Setters
+        {
+            get
+            {
+                SetterProperty[] returnValue = new SetterProperty[_setterProperties.Count];
+                _setterProperties.Values.CopyTo(returnValue, 0);
+
+                return returnValue;
+            }
+        }
+
         public SetterProperty Add(string propertyName)
         {
             PropertyInfo property = _plugin.PluggedType.GetProperty(propertyName);
@@ -50,25 +66,9 @@ namespace StructureMap.Graph
             _setterProperties.Add(propertyName, setterProperty);
         }
 
-        protected override ICollection innerCollection
-        {
-            get { return _setterProperties.Values; }
-        }
-
         public bool Contains(string propertyName)
         {
             return _setterProperties.Contains(propertyName);
-        }
-
-        public SetterProperty[] Setters
-        {
-            get
-            {
-                SetterProperty[] returnValue = new SetterProperty[_setterProperties.Count];
-                _setterProperties.Values.CopyTo(returnValue, 0);
-
-                return returnValue;
-            }
         }
     }
 }

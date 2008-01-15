@@ -19,9 +19,9 @@ namespace StructureMap.Testing.Widget
 
     public class DateColumn : Column
     {
+        private string _FieldName;
         private string _HeaderName;
         private int _Width;
-        private string _FieldName;
 
         public DateColumn(string HeaderName, int Width, string FieldName)
         {

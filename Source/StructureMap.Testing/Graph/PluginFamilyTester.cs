@@ -12,28 +12,6 @@ namespace StructureMap.Testing.Graph
     public class PluginFamilyTester
     {
         [Test]
-        public void GetPlugins()
-        {
-            PluginFamily family = new PluginFamily(typeof (IWidget), "DefaultKey", new MemoryMementoSource());
-
-            AssemblyGraph graph = new AssemblyGraph("StructureMap.Testing.Widget");
-            family.FindPlugins(graph);
-
-            Assert.AreEqual(4, family.Plugins.Count, "Plugin Count");
-            foreach (Plugin plugin in family.Plugins)
-            {
-                Assert.IsNotNull(plugin);
-            }
-        }
-
-        [Test]
-        public void HasANulloInterceptorUponConstruction()
-        {
-            PluginFamily family = new PluginFamily(typeof(IWidget));
-            Assert.IsInstanceOfType(typeof(NulloInterceptor), family.InstanceInterceptor);
-        }
-
-        [Test]
         public void AddAPluggedType()
         {
             PluginFamily family = new PluginFamily(typeof (IWidget), "DefaultKey", new MemoryMementoSource());
@@ -64,6 +42,28 @@ namespace StructureMap.Testing.Graph
                 new TypePath("StructureMap.Testing.Widget", "StructureMap.Testing.Widget.NonExistentInterface");
 
             PluginFamily family = new PluginFamily(path, "");
+        }
+
+        [Test]
+        public void GetPlugins()
+        {
+            PluginFamily family = new PluginFamily(typeof (IWidget), "DefaultKey", new MemoryMementoSource());
+
+            AssemblyGraph graph = new AssemblyGraph("StructureMap.Testing.Widget");
+            family.FindPlugins(graph);
+
+            Assert.AreEqual(4, family.Plugins.Count, "Plugin Count");
+            foreach (Plugin plugin in family.Plugins)
+            {
+                Assert.IsNotNull(plugin);
+            }
+        }
+
+        [Test]
+        public void HasANulloInterceptorUponConstruction()
+        {
+            PluginFamily family = new PluginFamily(typeof (IWidget));
+            Assert.IsInstanceOfType(typeof (NulloInterceptor), family.InstanceInterceptor);
         }
 
         [Test]

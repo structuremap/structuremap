@@ -16,13 +16,7 @@ namespace StructureMap.Testing.Client.Controllers
     [TestFixture]
     public class TreeBuilderTester
     {
-        private const string THE_CONCRETE_KEY = "Decorated";
-        private const string THE_PROPERTY_NAME = "innerGateway";
-        private const string ARRAY_PROPERTY_NAME = "innerGatewayArray";
-
-        private TreeNodeExpectation _topNodeExpectation;
-        private PluginGraphReport _report;
-        private TreeBuilder _builder;
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -42,204 +36,15 @@ namespace StructureMap.Testing.Client.Controllers
             _topNodeExpectation = new TreeNodeExpectation("PluginGraph", ViewConstants.SUMMARY, _report);
         }
 
-        [Test]
-        public void GetTheTopNode()
-        {
-            GraphObjectNode topNode = _builder.TopNode;
-            _topNodeExpectation.Verify(topNode);
-        }
+        #endregion
 
-        [Test]
-        public void AsssemblyNode()
-        {
-            AssemblyToken assembly = new AssemblyToken("Assembly1", new string[0]);
-            _builder.HandleAssembly(assembly);
+        private const string THE_CONCRETE_KEY = "Decorated";
+        private const string THE_PROPERTY_NAME = "innerGateway";
+        private const string ARRAY_PROPERTY_NAME = "innerGatewayArray";
 
-            GraphObjectNode topNode = _builder.TopNode;
-
-            _topNodeExpectation.AddChild("Assembly1", ViewConstants.ASSEMBLY, assembly);
-            _topNodeExpectation.Verify(topNode);
-        }
-
-        [Test]
-        public void FamilyNode()
-        {
-            FamilyToken family = new FamilyToken(GetType(), "", new string[0]);
-            _builder.HandleFamily(family);
-
-            TreeNodeExpectation expectation =
-                new TreeNodeExpectation(family.PluginTypeName, ViewConstants.PLUGINFAMILY, family);
-            expectation.Verify(_builder.LastNode);
-        }
-
-        [Test]
-        public void PluginNode()
-        {
-            TypePath path = TypePath.TypePathForFullName("some type name");
-            PluginToken plugin = new PluginToken(path, "concrete", DefinitionSource.Explicit);
-            _builder.HandlePlugin(plugin);
-
-            TreeNodeExpectation expectation = new TreeNodeExpectation("concrete", ViewConstants.PLUGIN, plugin);
-
-            expectation.Verify(_builder.LastNode);
-        }
-
-        [Test]
-        public void PropertyDefinitionNode()
-        {
-            PropertyDefinition property =
-                new PropertyDefinition("property1", typeof (string), PropertyDefinitionType.Constructor,
-                                       ArgumentType.Primitive);
-            _builder.HandlePropertyDefinition(property);
-
-            TreeNodeExpectation expectation =
-                new TreeNodeExpectation("property1", ViewConstants.PROPERTY_DEFINITION, property);
-
-            expectation.Verify(_builder.LastNode);
-        }
-
-        [Test]
-        public void MementoSourceNode()
-        {
-            MementoSourceInstanceToken source = new MementoSourceInstanceToken();
-            _builder.HandleMementoSource(source);
-
-            TreeNodeExpectation expectation =
-                new TreeNodeExpectation(ViewConstants.MEMENTO_SOURCE, ViewConstants.INSTANCE, source);
-            expectation.Verify(_builder.LastNode);
-        }
-
-        [Test]
-        public void InterceptorNode()
-        {
-            InterceptorInstanceToken interceptor = new InterceptorInstanceToken();
-            interceptor.ConcreteKey = "concrete";
-            _builder.HandleInterceptor(interceptor);
-
-            TreeNodeExpectation expectation = new TreeNodeExpectation("concrete", ViewConstants.INSTANCE, interceptor);
-
-            expectation.Verify(_builder.LastNode);
-        }
-
-        [Test]
-        public void InstanceNode()
-        {
-            InstanceToken instance = new InstanceToken();
-            instance.InstanceKey = "Name";
-
-            _builder.HandleInstance(instance);
-
-            TreeNodeExpectation expectation =
-                new TreeNodeExpectation(instance.InstanceKey, ViewConstants.INSTANCE, instance);
-
-            expectation.Verify(_builder.LastNode);
-        }
-
-        [Test]
-        public void PrimitivePropertyNode()
-        {
-            PropertyDefinition definition =
-                new PropertyDefinition("Property1", typeof (string), PropertyDefinitionType.Constructor,
-                                       ArgumentType.Primitive);
-
-            MemoryInstanceMemento memento = new MemoryInstanceMemento("concrete", "");
-            memento.SetProperty(definition.PropertyName, "red");
-
-            PrimitiveProperty property = new PrimitiveProperty(definition, memento);
-
-            _builder.HandlePrimitiveProperty(property);
-
-            TreeNodeExpectation expectation =
-                new TreeNodeExpectation(property.PropertyName, ViewConstants.PRIMITIVE_PROPERTY, property);
-            expectation.Verify(_builder.LastNode);
-        }
-
-        [Test]
-        public void EnumerationPropertyNode()
-        {
-            PropertyDefinition definition =
-                new PropertyDefinition("Property1", typeof (string), PropertyDefinitionType.Constructor,
-                                       ArgumentType.Enumeration);
-
-            MemoryInstanceMemento memento = new MemoryInstanceMemento("concrete", "");
-            memento.SetProperty(definition.PropertyName, "red");
-
-            EnumerationProperty property = new EnumerationProperty(definition, memento);
-
-            _builder.HandleEnumerationProperty(property);
-
-            TreeNodeExpectation expectation =
-                new TreeNodeExpectation(property.PropertyName, ViewConstants.ENUMERATION_PROPERTY, property);
-            expectation.Verify(_builder.LastNode);
-        }
-
-        [Test]
-        public void InlineChildPropertyNode()
-        {
-            MemoryInstanceMemento parent = new MemoryInstanceMemento(THE_CONCRETE_KEY, "decorated");
-            MemoryInstanceMemento child = new MemoryInstanceMemento("Stubbed", "inner");
-            parent.AddChild(THE_PROPERTY_NAME, child);
-
-            InstanceToken instance = new InstanceToken(typeof (IGateway), _report, parent);
-
-            ChildProperty property = (ChildProperty) instance[THE_PROPERTY_NAME];
-
-            _builder.HandleInlineChildProperty(property);
-
-            TreeNodeExpectation expectation =
-                new TreeNodeExpectation(property.PropertyName, ViewConstants.INLINE_CHILD_PROPERTY, property);
-            expectation.Verify(_builder.LastNode);
-        }
-
-        [Test]
-        public void HandleDefaultChildProperty()
-        {
-            MemoryInstanceMemento parent = new MemoryInstanceMemento(THE_CONCRETE_KEY, "decorated");
-            MemoryInstanceMemento child = MemoryInstanceMemento.CreateDefaultInstanceMemento();
-            parent.AddChild(THE_PROPERTY_NAME, child);
-
-            InstanceToken instance = new InstanceToken(typeof (IGateway), _report, parent);
-
-            ChildProperty property = (ChildProperty) instance[THE_PROPERTY_NAME];
-
-            _builder.HandleDefaultChildProperty(property);
-
-            TreeNodeExpectation expectation =
-                new TreeNodeExpectation(property.PropertyName, ViewConstants.DEFAULT_CHILD_PROPERTY, property);
-            expectation.Verify(_builder.LastNode);
-        }
-
-        [Test]
-        public void HandleReferenceChildProperty()
-        {
-            MemoryInstanceMemento parent = new MemoryInstanceMemento(THE_CONCRETE_KEY, "decorated");
-            MemoryInstanceMemento child = MemoryInstanceMemento.CreateReferencedInstanceMemento("ref");
-            parent.AddChild(THE_PROPERTY_NAME, child);
-
-            InstanceToken instance = new InstanceToken(typeof (IGateway), _report, parent);
-
-            ChildProperty property = (ChildProperty) instance[THE_PROPERTY_NAME];
-
-            _builder.HandleReferenceChildProperty(property);
-
-            TreeNodeExpectation expectation =
-                new TreeNodeExpectation(property.PropertyName, ViewConstants.REFERENCE_CHILD_PROPERTY, property);
-            expectation.Verify(_builder.LastNode);
-        }
-
-        [Test]
-        public void HandlePropertyDefinition()
-        {
-            PropertyDefinition definition =
-                new PropertyDefinition("Prop1", typeof (string), PropertyDefinitionType.Constructor,
-                                       ArgumentType.Primitive);
-
-            _builder.HandlePropertyDefinition(definition);
-
-            TreeNodeExpectation expectation =
-                new TreeNodeExpectation(definition.PropertyName, ViewConstants.PROPERTY_DEFINITION, definition);
-            expectation.Verify(_builder.LastNode);
-        }
+        private TreeNodeExpectation _topNodeExpectation;
+        private PluginGraphReport _report;
+        private TreeBuilder _builder;
 
         private ChildArrayProperty createChildArrayProperty()
         {
@@ -260,38 +65,17 @@ namespace StructureMap.Testing.Client.Controllers
             return (ChildArrayProperty) instance[THE_PROPERTY_NAME];
         }
 
-
         [Test]
-        public void HandleChildArrayProperty()
+        public void AsssemblyNode()
         {
-            PropertyDefinition definition =
-                new PropertyDefinition("Prop1", typeof (IGateway), PropertyDefinitionType.Constructor,
-                                       ArgumentType.ChildArray);
+            AssemblyToken assembly = new AssemblyToken("Assembly1", new string[0]);
+            _builder.HandleAssembly(assembly);
 
-            MemoryInstanceMemento memento = new MemoryInstanceMemento("concrete", "instance");
-            memento.AddChildArray("Prop1", new InstanceMemento[0]);
+            GraphObjectNode topNode = _builder.TopNode;
 
-            ChildArrayProperty property = new ChildArrayProperty(definition, memento, new PluginGraphReport());
-
-            _builder.HandleChildArrayProperty(property);
-
-            TreeNodeExpectation expectation =
-                new TreeNodeExpectation(property.PropertyName, ViewConstants.CHILD_ARRAY_PROPERTY, property);
-            expectation.Verify(_builder.LastNode);
+            _topNodeExpectation.AddChild("Assembly1", ViewConstants.ASSEMBLY, assembly);
+            _topNodeExpectation.Verify(topNode);
         }
-
-
-        [Test]
-        public void HandleTemplateProperty()
-        {
-            TemplateProperty property = new TemplateProperty("prop1", "red");
-            _builder.HandleTemplateProperty(property);
-
-            TreeNodeExpectation expectation =
-                new TreeNodeExpectation(property.PropertyName, ViewConstants.TEMPLATE_PROPERTY, property);
-            expectation.Verify(_builder.LastNode);
-        }
-
 
         [Test]
         public void BuildTree()
@@ -347,6 +131,224 @@ namespace StructureMap.Testing.Client.Controllers
 
                 Assert.AreEqual(family.Instances.Length, instances.Nodes.Count);
             }
+        }
+
+        [Test]
+        public void EnumerationPropertyNode()
+        {
+            PropertyDefinition definition =
+                new PropertyDefinition("Property1", typeof (string), PropertyDefinitionType.Constructor,
+                                       ArgumentType.Enumeration);
+
+            MemoryInstanceMemento memento = new MemoryInstanceMemento("concrete", "");
+            memento.SetProperty(definition.PropertyName, "red");
+
+            EnumerationProperty property = new EnumerationProperty(definition, memento);
+
+            _builder.HandleEnumerationProperty(property);
+
+            TreeNodeExpectation expectation =
+                new TreeNodeExpectation(property.PropertyName, ViewConstants.ENUMERATION_PROPERTY, property);
+            expectation.Verify(_builder.LastNode);
+        }
+
+        [Test]
+        public void FamilyNode()
+        {
+            FamilyToken family = new FamilyToken(GetType(), "", new string[0]);
+            _builder.HandleFamily(family);
+
+            TreeNodeExpectation expectation =
+                new TreeNodeExpectation(family.PluginTypeName, ViewConstants.PLUGINFAMILY, family);
+            expectation.Verify(_builder.LastNode);
+        }
+
+        [Test]
+        public void GetTheTopNode()
+        {
+            GraphObjectNode topNode = _builder.TopNode;
+            _topNodeExpectation.Verify(topNode);
+        }
+
+        [Test]
+        public void HandleChildArrayProperty()
+        {
+            PropertyDefinition definition =
+                new PropertyDefinition("Prop1", typeof (IGateway), PropertyDefinitionType.Constructor,
+                                       ArgumentType.ChildArray);
+
+            MemoryInstanceMemento memento = new MemoryInstanceMemento("concrete", "instance");
+            memento.AddChildArray("Prop1", new InstanceMemento[0]);
+
+            ChildArrayProperty property = new ChildArrayProperty(definition, memento, new PluginGraphReport());
+
+            _builder.HandleChildArrayProperty(property);
+
+            TreeNodeExpectation expectation =
+                new TreeNodeExpectation(property.PropertyName, ViewConstants.CHILD_ARRAY_PROPERTY, property);
+            expectation.Verify(_builder.LastNode);
+        }
+
+        [Test]
+        public void HandleDefaultChildProperty()
+        {
+            MemoryInstanceMemento parent = new MemoryInstanceMemento(THE_CONCRETE_KEY, "decorated");
+            MemoryInstanceMemento child = MemoryInstanceMemento.CreateDefaultInstanceMemento();
+            parent.AddChild(THE_PROPERTY_NAME, child);
+
+            InstanceToken instance = new InstanceToken(typeof (IGateway), _report, parent);
+
+            ChildProperty property = (ChildProperty) instance[THE_PROPERTY_NAME];
+
+            _builder.HandleDefaultChildProperty(property);
+
+            TreeNodeExpectation expectation =
+                new TreeNodeExpectation(property.PropertyName, ViewConstants.DEFAULT_CHILD_PROPERTY, property);
+            expectation.Verify(_builder.LastNode);
+        }
+
+        [Test]
+        public void HandlePropertyDefinition()
+        {
+            PropertyDefinition definition =
+                new PropertyDefinition("Prop1", typeof (string), PropertyDefinitionType.Constructor,
+                                       ArgumentType.Primitive);
+
+            _builder.HandlePropertyDefinition(definition);
+
+            TreeNodeExpectation expectation =
+                new TreeNodeExpectation(definition.PropertyName, ViewConstants.PROPERTY_DEFINITION, definition);
+            expectation.Verify(_builder.LastNode);
+        }
+
+        [Test]
+        public void HandleReferenceChildProperty()
+        {
+            MemoryInstanceMemento parent = new MemoryInstanceMemento(THE_CONCRETE_KEY, "decorated");
+            MemoryInstanceMemento child = MemoryInstanceMemento.CreateReferencedInstanceMemento("ref");
+            parent.AddChild(THE_PROPERTY_NAME, child);
+
+            InstanceToken instance = new InstanceToken(typeof (IGateway), _report, parent);
+
+            ChildProperty property = (ChildProperty) instance[THE_PROPERTY_NAME];
+
+            _builder.HandleReferenceChildProperty(property);
+
+            TreeNodeExpectation expectation =
+                new TreeNodeExpectation(property.PropertyName, ViewConstants.REFERENCE_CHILD_PROPERTY, property);
+            expectation.Verify(_builder.LastNode);
+        }
+
+
+        [Test]
+        public void HandleTemplateProperty()
+        {
+            TemplateProperty property = new TemplateProperty("prop1", "red");
+            _builder.HandleTemplateProperty(property);
+
+            TreeNodeExpectation expectation =
+                new TreeNodeExpectation(property.PropertyName, ViewConstants.TEMPLATE_PROPERTY, property);
+            expectation.Verify(_builder.LastNode);
+        }
+
+        [Test]
+        public void InlineChildPropertyNode()
+        {
+            MemoryInstanceMemento parent = new MemoryInstanceMemento(THE_CONCRETE_KEY, "decorated");
+            MemoryInstanceMemento child = new MemoryInstanceMemento("Stubbed", "inner");
+            parent.AddChild(THE_PROPERTY_NAME, child);
+
+            InstanceToken instance = new InstanceToken(typeof (IGateway), _report, parent);
+
+            ChildProperty property = (ChildProperty) instance[THE_PROPERTY_NAME];
+
+            _builder.HandleInlineChildProperty(property);
+
+            TreeNodeExpectation expectation =
+                new TreeNodeExpectation(property.PropertyName, ViewConstants.INLINE_CHILD_PROPERTY, property);
+            expectation.Verify(_builder.LastNode);
+        }
+
+        [Test]
+        public void InstanceNode()
+        {
+            InstanceToken instance = new InstanceToken();
+            instance.InstanceKey = "Name";
+
+            _builder.HandleInstance(instance);
+
+            TreeNodeExpectation expectation =
+                new TreeNodeExpectation(instance.InstanceKey, ViewConstants.INSTANCE, instance);
+
+            expectation.Verify(_builder.LastNode);
+        }
+
+        [Test]
+        public void InterceptorNode()
+        {
+            InterceptorInstanceToken interceptor = new InterceptorInstanceToken();
+            interceptor.ConcreteKey = "concrete";
+            _builder.HandleInterceptor(interceptor);
+
+            TreeNodeExpectation expectation = new TreeNodeExpectation("concrete", ViewConstants.INSTANCE, interceptor);
+
+            expectation.Verify(_builder.LastNode);
+        }
+
+        [Test]
+        public void MementoSourceNode()
+        {
+            MementoSourceInstanceToken source = new MementoSourceInstanceToken();
+            _builder.HandleMementoSource(source);
+
+            TreeNodeExpectation expectation =
+                new TreeNodeExpectation(ViewConstants.MEMENTO_SOURCE, ViewConstants.INSTANCE, source);
+            expectation.Verify(_builder.LastNode);
+        }
+
+        [Test]
+        public void PluginNode()
+        {
+            TypePath path = TypePath.TypePathForFullName("some type name");
+            PluginToken plugin = new PluginToken(path, "concrete", DefinitionSource.Explicit);
+            _builder.HandlePlugin(plugin);
+
+            TreeNodeExpectation expectation = new TreeNodeExpectation("concrete", ViewConstants.PLUGIN, plugin);
+
+            expectation.Verify(_builder.LastNode);
+        }
+
+        [Test]
+        public void PrimitivePropertyNode()
+        {
+            PropertyDefinition definition =
+                new PropertyDefinition("Property1", typeof (string), PropertyDefinitionType.Constructor,
+                                       ArgumentType.Primitive);
+
+            MemoryInstanceMemento memento = new MemoryInstanceMemento("concrete", "");
+            memento.SetProperty(definition.PropertyName, "red");
+
+            PrimitiveProperty property = new PrimitiveProperty(definition, memento);
+
+            _builder.HandlePrimitiveProperty(property);
+
+            TreeNodeExpectation expectation =
+                new TreeNodeExpectation(property.PropertyName, ViewConstants.PRIMITIVE_PROPERTY, property);
+            expectation.Verify(_builder.LastNode);
+        }
+
+        [Test]
+        public void PropertyDefinitionNode()
+        {
+            PropertyDefinition property =
+                new PropertyDefinition("property1", typeof (string), PropertyDefinitionType.Constructor,
+                                       ArgumentType.Primitive);
+            _builder.HandlePropertyDefinition(property);
+
+            TreeNodeExpectation expectation =
+                new TreeNodeExpectation("property1", ViewConstants.PROPERTY_DEFINITION, property);
+
+            expectation.Verify(_builder.LastNode);
         }
     }
 }

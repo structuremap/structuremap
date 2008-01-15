@@ -38,20 +38,6 @@ namespace StructureMap.Testing.DataAccess.JSON
         }
 
         [Test]
-        public void NumericField()
-        {
-            DataTable table = new DataTable();
-            table.Columns.Add("theName", typeof (int));
-            DataRow row = table.Rows.Add(new object[] {34});
-
-            Field field = new NumericField(0, "theName");
-            JSONObject o = new JSONObject();
-            field.Write(o, row);
-
-            Assert.AreEqual("{theName: 34}", o.ToJSON());
-        }
-
-        [Test]
         public void DateTimeField()
         {
             DataTable table = new DataTable();
@@ -64,6 +50,20 @@ namespace StructureMap.Testing.DataAccess.JSON
             field.Write(o, row);
 
             Assert.AreEqual("{theName: new Date(2003, 4, 24, 1, 2, 3)}", o.ToJSON());
+        }
+
+        [Test]
+        public void NumericField()
+        {
+            DataTable table = new DataTable();
+            table.Columns.Add("theName", typeof (int));
+            DataRow row = table.Rows.Add(new object[] {34});
+
+            Field field = new NumericField(0, "theName");
+            JSONObject o = new JSONObject();
+            field.Write(o, row);
+
+            Assert.AreEqual("{theName: 34}", o.ToJSON());
         }
     }
 }

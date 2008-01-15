@@ -18,6 +18,30 @@ namespace StructureMap.Graph
             _interceptorList = new List<InstanceFactoryInterceptor>();
         }
 
+        public int Count
+        {
+            get { return _interceptorList.Count; }
+        }
+
+        public InstanceFactoryInterceptor this[int index]
+        {
+            get { return _interceptorList[index]; }
+        }
+
+        #region IEnumerable<InstanceFactoryInterceptor> Members
+
+        IEnumerator<InstanceFactoryInterceptor> IEnumerable<InstanceFactoryInterceptor>.GetEnumerator()
+        {
+            return _interceptorList.GetEnumerator();
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            return _interceptorList.GetEnumerator();
+        }
+
+        #endregion
+
         public IInstanceFactory WrapInstanceFactory(IInstanceFactory factory)
         {
             IInstanceFactory outerFactory = factory;
@@ -35,26 +59,6 @@ namespace StructureMap.Graph
         public void AddInterceptor(InstanceFactoryInterceptor interceptor)
         {
             _interceptorList.Add(interceptor);
-        }
-
-        public int Count
-        {
-            get { return _interceptorList.Count; }
-        }
-
-        public InstanceFactoryInterceptor this[int index]
-        {
-            get { return _interceptorList[index]; }
-        }
-
-        IEnumerator<InstanceFactoryInterceptor> IEnumerable<InstanceFactoryInterceptor>.GetEnumerator()
-        {
-            return _interceptorList.GetEnumerator();
-        }
-
-        public IEnumerator GetEnumerator()
-        {
-            return _interceptorList.GetEnumerator();
         }
 
         public bool Contains(Type interceptorType)

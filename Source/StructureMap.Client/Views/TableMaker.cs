@@ -6,9 +6,9 @@ namespace StructureMap.Client.Views
     public class TableMaker
     {
         private readonly XmlElement _tableElement;
-        private XmlDocument _ownerDocument;
-        private XmlElement _lastRow;
         private string _alternatingColor = "E8E8E8";
+        private XmlElement _lastRow;
+        private XmlDocument _ownerDocument;
         private bool _useAlternatingColor = false;
 
         public TableMaker(XmlElement tableElement)

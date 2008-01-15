@@ -9,10 +9,14 @@ namespace StructureMap.Testing.Configuration.DSL
     [TestFixture]
     public class ProfileExpressionTester
     {
+        #region Setup/Teardown
+
         [SetUp]
         public void SetUp()
         {
         }
+
+        #endregion
 
         [Test]
         public void AddAProfileWithANamedDefault()

@@ -14,6 +14,8 @@ namespace StructureMap.Configuration.DSL
             _memento = MemoryInstanceMemento.CreateReferencedInstanceMemento(referenceKey);
         }
 
+        #region IMementoBuilder Members
+
         InstanceMemento IMementoBuilder.BuildMemento(PluginFamily family)
         {
             return _memento;
@@ -37,5 +39,7 @@ namespace StructureMap.Configuration.DSL
         {
             // no-op;
         }
+
+        #endregion
     }
 }

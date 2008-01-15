@@ -14,9 +14,9 @@ namespace StructureMap.Configuration.DSL.Expressions
         private readonly InstanceExpression _instance;
         private readonly MemoryInstanceMemento _memento;
         private readonly string _propertyName;
-        private Type _childType;
-        private List<IExpression> _children = new List<IExpression>();
         private IMementoBuilder _builder;
+        private List<IExpression> _children = new List<IExpression>();
+        private Type _childType;
 
 
         public ChildInstanceExpression(InstanceExpression instance, MemoryInstanceMemento memento, string propertyName)
@@ -32,6 +32,35 @@ namespace StructureMap.Configuration.DSL.Expressions
         {
             _childType = childType;
         }
+
+        internal Type ChildType
+        {
+            set { _childType = value; }
+        }
+
+        #region IExpression Members
+
+        void IExpression.Configure(PluginGraph graph)
+        {
+            if (_childType == null)
+            {
+                return;
+            }
+
+            PluginFamily family = graph.LocateOrCreateFamilyForType(_childType);
+            if (_builder != null)
+            {
+                InstanceMemento childMemento = _builder.BuildMemento(family);
+                _memento.AddChild(_propertyName, childMemento);
+            }
+
+            foreach (IExpression child in _children)
+            {
+                child.Configure(graph);
+            }
+        }
+
+        #endregion
 
         /// <summary>
         /// Use a previously configured and named instance for the child
@@ -66,31 +95,6 @@ namespace StructureMap.Configuration.DSL.Expressions
             return _instance;
         }
 
-
-        void IExpression.Configure(PluginGraph graph)
-        {
-            if (_childType == null)
-            {
-                return;
-            }
-
-            PluginFamily family = graph.LocateOrCreateFamilyForType(_childType);
-            if (_builder != null)
-            {
-                InstanceMemento childMemento = _builder.BuildMemento(family);
-                _memento.AddChild(_propertyName, childMemento);
-            }
-
-            foreach (IExpression child in _children)
-            {
-                child.Configure(graph);
-            }
-        }
-
-        internal Type ChildType
-        {
-            set { _childType = value; }
-        }
 
         /// <summary>
         /// Registers a configured instance to use as the argument to the parent's

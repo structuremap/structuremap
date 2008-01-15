@@ -11,19 +11,19 @@ namespace StructureMap.Testing.Container.Interceptors
     {
         private InterceptorChainBuilder builder = new InterceptorChainBuilder();
 
-        [Test]
-        public void PerInstanceMeansNoInterceptors()
-        {
-            InterceptionChain chain = builder.Build(InstanceScope.PerRequest);
-            Assert.AreEqual(0, chain.Count);
-        }
-
         private void assertScopeLeadsToInterceptor(InstanceScope scope, Type interceptorType)
         {
             InterceptionChain chain = builder.Build(scope);
             Assert.AreEqual(1, chain.Count);
             Type actualType = chain[0].GetType();
             Assert.IsTrue(actualType.Equals(interceptorType));
+        }
+
+        [Test]
+        public void PerInstanceMeansNoInterceptors()
+        {
+            InterceptionChain chain = builder.Build(InstanceScope.PerRequest);
+            Assert.AreEqual(0, chain.Count);
         }
 
 

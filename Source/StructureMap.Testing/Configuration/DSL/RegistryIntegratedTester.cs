@@ -10,6 +10,8 @@ namespace StructureMap.Testing.Configuration.DSL
     [TestFixture]
     public class RegistryIntegratedTester
     {
+        #region Setup/Teardown
+
         [SetUp]
         public void SetUp()
         {
@@ -20,6 +22,35 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             StructureMapConfiguration.ResetAll();
             ObjectFactory.Reset();
+        }
+
+        #endregion
+
+        [Test]
+        public void AutomaticallyFindRegistryFromAssembly()
+        {
+            StructureMapConfiguration.ResetAll();
+            StructureMapConfiguration.ScanAssemblies().IncludeAssemblyContainingType<RedGreenRegistry>();
+            ObjectFactory.Reset();
+
+            List<string> colors = new List<string>();
+            foreach (IWidget widget in ObjectFactory.GetAllInstances<IWidget>())
+            {
+                if (!(widget is ColorWidget))
+                {
+                    continue;
+                }
+
+                ColorWidget color = (ColorWidget) widget;
+                colors.Add(color.Color);
+            }
+
+            Assert.Contains("Red", colors);
+            Assert.Contains("Green", colors);
+            Assert.Contains("Yellow", colors);
+            Assert.Contains("Blue", colors);
+            Assert.Contains("Brown", colors);
+            Assert.Contains("Black", colors);
         }
 
 
@@ -55,33 +86,5 @@ namespace StructureMap.Testing.Configuration.DSL
             Assert.Contains("Brown", colors);
             Assert.Contains("Black", colors);
         }
-
-        [Test]
-        public void AutomaticallyFindRegistryFromAssembly()
-        {
-            StructureMapConfiguration.ResetAll();
-            StructureMapConfiguration.ScanAssemblies().IncludeAssemblyContainingType<RedGreenRegistry>();
-            ObjectFactory.Reset();
-
-            List<string> colors = new List<string>();
-            foreach (IWidget widget in ObjectFactory.GetAllInstances<IWidget>())
-            {
-                if (!(widget is ColorWidget))
-                {
-                    continue;
-                }
-
-                ColorWidget color = (ColorWidget) widget;
-                colors.Add(color.Color);
-            }
-
-            Assert.Contains("Red", colors);
-            Assert.Contains("Green", colors);
-            Assert.Contains("Yellow", colors);
-            Assert.Contains("Blue", colors);
-            Assert.Contains("Brown", colors);
-            Assert.Contains("Black", colors);
-        }
-
     }
 }

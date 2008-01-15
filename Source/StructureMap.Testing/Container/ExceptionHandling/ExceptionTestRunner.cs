@@ -9,9 +9,9 @@ namespace StructureMap.Testing.Container.ExceptionHandling
 {
     public class ExceptionTestRunner
     {
-        private XmlDocument doc;
-        private InstanceManager _manager;
         private XmlNode _configNode;
+        private InstanceManager _manager;
+        private XmlDocument doc;
 
         public ExceptionTestRunner()
         {

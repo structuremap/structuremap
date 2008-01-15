@@ -16,6 +16,21 @@ namespace StructureMap.DeploymentTasks
             _report = report;
         }
 
+        public string[] AssembliesToRemove
+        {
+            get { return (string[]) _assemblies.ToArray(typeof (string)); }
+        }
+
+        public string[] FamiliesToRemove
+        {
+            get { return (string[]) _families.ToArray(typeof (string)); }
+        }
+
+        public PluginToken[] PluginsToRemove
+        {
+            get { return (PluginToken[]) _plugins.ToArray(typeof (PluginToken)); }
+        }
+
         public void FilterDeployment(string deploymentTarget)
         {
             filterAssemblies(deploymentTarget);
@@ -57,21 +72,6 @@ namespace StructureMap.DeploymentTasks
                     _assemblies.Add(assembly.AssemblyName);
                 }
             }
-        }
-
-        public string[] AssembliesToRemove
-        {
-            get { return (string[]) _assemblies.ToArray(typeof (string)); }
-        }
-
-        public string[] FamiliesToRemove
-        {
-            get { return (string[]) _families.ToArray(typeof (string)); }
-        }
-
-        public PluginToken[] PluginsToRemove
-        {
-            get { return (PluginToken[]) _plugins.ToArray(typeof (PluginToken)); }
         }
     }
 }

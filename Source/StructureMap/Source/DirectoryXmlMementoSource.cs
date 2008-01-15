@@ -49,6 +49,20 @@ namespace StructureMap.Source
             }
         }
 
+        public override MementoSourceType SourceType
+        {
+            get { return MementoSourceType.External; }
+        }
+
+        public override string Description
+        {
+            get
+            {
+                return string.Format("DirectoryXml MementoSource reading from {0} with extension {1}",
+                                     Path.GetFullPath(_directory), _extension);
+            }
+        }
+
         private string resolvePath(string directory)
         {
             string returnValue = string.Empty;
@@ -113,20 +127,6 @@ namespace StructureMap.Source
         protected virtual InstanceMemento createMemento(XmlDocument doc)
         {
             return _mementoCreator.CreateMemento(doc.DocumentElement);
-        }
-
-        public override MementoSourceType SourceType
-        {
-            get { return MementoSourceType.External; }
-        }
-
-        public override string Description
-        {
-            get
-            {
-                return string.Format("DirectoryXml MementoSource reading from {0} with extension {1}",
-                                     Path.GetFullPath(_directory), _extension);
-            }
         }
 
         [ValidationMethod]

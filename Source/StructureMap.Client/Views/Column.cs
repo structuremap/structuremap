@@ -7,8 +7,8 @@ namespace StructureMap.Client.Views
     [Pluggable("Label")]
     public class Column : IColumn
     {
-        private readonly string _propertyName;
         private readonly string _headerText;
+        private readonly string _propertyName;
         private PropertyInfo _property;
 
         public Column(string propertyName, string headerText)
@@ -16,6 +16,8 @@ namespace StructureMap.Client.Views
             _propertyName = propertyName;
             _headerText = headerText;
         }
+
+        #region IColumn Members
 
         public void Initialize(Type subjectType)
         {
@@ -44,6 +46,8 @@ namespace StructureMap.Client.Views
 
             createCellContents(maker, cellText, subject);
         }
+
+        #endregion
 
         protected virtual void createCellContents(TableMaker maker, string cellText, GraphObject subject)
         {

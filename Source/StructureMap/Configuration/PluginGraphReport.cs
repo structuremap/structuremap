@@ -11,8 +11,8 @@ namespace StructureMap.Configuration
     public class PluginGraphReport : GraphObject
     {
         private Hashtable _assemblies = new Hashtable();
-        private Dictionary<TypePath, FamilyToken> _families = new Dictionary<TypePath, FamilyToken>();
         private InstanceDefaultManager _defaultManager;
+        private Dictionary<TypePath, FamilyToken> _families = new Dictionary<TypePath, FamilyToken>();
 
         public PluginGraphReport()
         {
@@ -21,6 +21,55 @@ namespace StructureMap.Configuration
         public PluginGraphReport(PluginGraph pluginGraph)
         {
             ReadFromPluginGraph(pluginGraph);
+        }
+
+        public override GraphObject[] Children
+        {
+            get
+            {
+                ArrayList list = new ArrayList();
+
+                list.AddRange(_assemblies.Values);
+                list.AddRange(_families.Values);
+
+                list.Sort();
+
+                return (GraphObject[]) list.ToArray(typeof (GraphObject));
+            }
+        }
+
+        public InstanceDefaultManager DefaultManager
+        {
+            get { return _defaultManager; }
+            set { _defaultManager = value; }
+        }
+
+        public AssemblyToken[] Assemblies
+        {
+            get
+            {
+                AssemblyToken[] returnValue = new AssemblyToken[_assemblies.Count];
+                _assemblies.Values.CopyTo(returnValue, 0);
+
+                return returnValue;
+            }
+        }
+
+        public FamilyToken[] Families
+        {
+            get
+            {
+                FamilyToken[] returnValue = new FamilyToken[_families.Count];
+                _families.Values.CopyTo(returnValue, 0);
+
+
+                return returnValue;
+            }
+        }
+
+        protected override string key
+        {
+            get { return string.Empty; }
         }
 
         public void ReadFromPluginGraph(PluginGraph pluginGraph)
@@ -45,53 +94,9 @@ namespace StructureMap.Configuration
             ValidateInstances(validator);
         }
 
-        public override GraphObject[] Children
-        {
-            get
-            {
-                ArrayList list = new ArrayList();
-
-                list.AddRange(_assemblies.Values);
-                list.AddRange(_families.Values);
-
-                list.Sort();
-
-                return (GraphObject[]) list.ToArray(typeof (GraphObject));
-            }
-        }
-
-        public InstanceDefaultManager DefaultManager
-        {
-            get { return _defaultManager; }
-            set { _defaultManager = value; }
-        }
-
         public void AddAssembly(AssemblyToken assemblyToken)
         {
             _assemblies.Add(assemblyToken.AssemblyName, assemblyToken);
-        }
-
-        public AssemblyToken[] Assemblies
-        {
-            get
-            {
-                AssemblyToken[] returnValue = new AssemblyToken[_assemblies.Count];
-                _assemblies.Values.CopyTo(returnValue, 0);
-
-                return returnValue;
-            }
-        }
-
-        public FamilyToken[] Families
-        {
-            get
-            {
-                FamilyToken[] returnValue = new FamilyToken[_families.Count];
-                _families.Values.CopyTo(returnValue, 0);
-
-
-                return returnValue;
-            }
         }
 
         public void AddFamily(FamilyToken family)
@@ -194,11 +199,6 @@ namespace StructureMap.Configuration
         public bool HasAssembly(string assemblyName)
         {
             return _assemblies.ContainsKey(assemblyName);
-        }
-
-        protected override string key
-        {
-            get { return string.Empty; }
         }
 
         public TemplateToken FindTemplate(TypePath pluginTypePath, string templateName)

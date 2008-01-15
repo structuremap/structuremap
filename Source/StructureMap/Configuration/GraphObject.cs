@@ -6,8 +6,8 @@ namespace StructureMap.Configuration
     [Serializable]
     public abstract class GraphObject : IComparable
     {
-        private List<Problem> _problems = new List<Problem>();
         private Guid _id = Guid.NewGuid();
+        private List<Problem> _problems = new List<Problem>();
 
         public GraphObject()
         {
@@ -25,20 +25,14 @@ namespace StructureMap.Configuration
             set { _problems = new List<Problem>(value); }
         }
 
-        public void LogProblem(Problem problem)
-        {
-            _problems.Add(problem);
-        }
-
         public virtual GraphObject[] Children
         {
             get { return new GraphObject[0]; }
         }
 
-        public virtual void AcceptVisitor(IConfigurationVisitor visitor)
-        {
-            // no-op
-        }
+        protected abstract string key { get; }
+
+        #region IComparable Members
 
         public int CompareTo(object obj)
         {
@@ -46,6 +40,16 @@ namespace StructureMap.Configuration
             return key.CompareTo(peer.key);
         }
 
-        protected abstract string key { get; }
+        #endregion
+
+        public void LogProblem(Problem problem)
+        {
+            _problems.Add(problem);
+        }
+
+        public virtual void AcceptVisitor(IConfigurationVisitor visitor)
+        {
+            // no-op
+        }
     }
 }

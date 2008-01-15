@@ -5,14 +5,16 @@ namespace StructureMap.DataAccess.Tools.Mocks
 {
     public class MockDataSession : IDataSession
     {
-        private StubbedReaderSourceCollection _sources;
         private StubbedCommandCollection _commands;
+        private StubbedReaderSourceCollection _sources;
 
         public MockDataSession()
         {
             _sources = new StubbedReaderSourceCollection();
             _commands = new StubbedCommandCollection();
         }
+
+        #region IDataSession Members
 
         public bool IsInTransaction
         {
@@ -98,6 +100,8 @@ namespace StructureMap.DataAccess.Tools.Mocks
         {
             throw new NotImplementedException();
         }
+
+        #endregion
 
         public void AddReaderExpectation(string name, ReaderExpectation expectation)
         {

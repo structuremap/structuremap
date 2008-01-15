@@ -27,6 +27,32 @@ namespace StructureMap.Configuration.Tokens.Properties
         }
 
 
+        public ChildProperty[] InnerProperties
+        {
+            get { return (ChildProperty[]) _innerProperties.ToArray(typeof (ChildProperty)); }
+        }
+
+        public int Count
+        {
+            get { return _innerProperties.Count; }
+        }
+
+        public ChildProperty this[int index]
+        {
+            get { return (ChildProperty) _innerProperties[index]; }
+        }
+
+        public override GraphObject[] Children
+        {
+            get { return InnerProperties; }
+        }
+
+        public string PropertyTypeName
+        {
+            get { return _propertyTypeName; }
+            set { _propertyTypeName = value; }
+        }
+
         private void processChildren(InstanceMemento[] children, PropertyDefinition definition, PluginGraphReport report)
         {
             if (children == null)
@@ -62,38 +88,12 @@ namespace StructureMap.Configuration.Tokens.Properties
             _innerProperties.Add(child);
         }
 
-        public ChildProperty[] InnerProperties
-        {
-            get { return (ChildProperty[]) _innerProperties.ToArray(typeof (ChildProperty)); }
-        }
-
-        public int Count
-        {
-            get { return _innerProperties.Count; }
-        }
-
-        public ChildProperty this[int index]
-        {
-            get { return (ChildProperty) _innerProperties[index]; }
-        }
-
         public override void Validate(IInstanceValidator validator)
         {
             foreach (ChildProperty childProperty in _innerProperties)
             {
                 childProperty.Validate(validator);
             }
-        }
-
-        public override GraphObject[] Children
-        {
-            get { return InnerProperties; }
-        }
-
-        public string PropertyTypeName
-        {
-            get { return _propertyTypeName; }
-            set { _propertyTypeName = value; }
         }
 
         public override void AcceptVisitor(IConfigurationVisitor visitor)

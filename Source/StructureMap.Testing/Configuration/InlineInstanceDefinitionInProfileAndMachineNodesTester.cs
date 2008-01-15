@@ -10,12 +10,24 @@ namespace StructureMap.Testing.Configuration
     [TestFixture]
     public class InlineInstanceDefinitionInProfileAndMachineNodesTester
     {
-        private PluginGraph _graph;
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
         {
             _graph = DataMother.GetPluginGraph("InlineInstanceInProfileAndMachine.xml");
+        }
+
+        #endregion
+
+        private PluginGraph _graph;
+
+
+        [Test]
+        public void CanFindTheTwoPluginFamilies()
+        {
+            Assert.IsTrue(_graph.PluginFamilies.Contains(typeof (IWidget)));
+            Assert.IsTrue(_graph.PluginFamilies.Contains(typeof (Rule)));
         }
 
         [Test]
@@ -29,53 +41,17 @@ namespace StructureMap.Testing.Configuration
             Assert.AreEqual("Elvis", memento.InstanceKey);
         }
 
-
         [Test]
-        public void CanFindTheTwoPluginFamilies()
+        public void GettingTheRightInstanceKeyWhenUsingAMAchineOverrideInCombinationWithProfile()
         {
-            Assert.IsTrue(_graph.PluginFamilies.Contains(typeof (IWidget)));
-            Assert.IsTrue(_graph.PluginFamilies.Contains(typeof (Rule)));
-        }
-
-        [Test]
-        public void HasTheOverrideForProfile()
-        {
-            Profile blueProfile = _graph.DefaultManager.GetProfile("Blue");
-            Assert.IsTrue(blueProfile.HasOverride(typeof (Rule).FullName));
-            Assert.IsTrue(blueProfile.HasOverride(typeof (IWidget).FullName));
-
-            Assert.IsNotEmpty(blueProfile[typeof (Rule).FullName]);
-            Assert.IsNotEmpty(blueProfile[typeof (IWidget).FullName]);
-
-            Debug.WriteLine(blueProfile[typeof (IWidget).FullName]);
-
-            Profile defaults = _graph.DefaultManager.CalculateDefaults(InstanceDefaultManager.GetMachineName(), "Blue");
-            Assert.IsNotEmpty(defaults[typeof (Rule).FullName]);
-        }
-
-        [Test]
-        public void HasADefaultInstanceKey()
-        {
+            MachineOverride machine = _graph.DefaultManager.GetMachineOverride("SERVER");
             InstanceManager manager = new InstanceManager(_graph);
-            manager.SetDefaultsToProfile("Green");
+            string machineKey = machine[typeof (IWidget).FullName];
 
-            string defaultKey = manager[typeof (Rule)].DefaultInstanceKey;
-            Assert.IsNotEmpty(defaultKey);
-        }
+            Profile profile = manager.DefaultManager.CalculateDefaults("SERVER", "");
+            string profileKey = profile[typeof (IWidget).FullName];
 
-        [Test]
-        public void SetTheProfile()
-        {
-            InstanceManager manager = new InstanceManager(_graph);
-            manager.SetDefaultsToProfile("Green");
-
-            ColorRule greenRule = (ColorRule) manager.CreateInstance(typeof (Rule));
-            Assert.AreEqual("Green", greenRule.Color);
-
-            manager.SetDefaultsToProfile("Blue");
-
-            ColorRule blueRule = (ColorRule) manager.CreateInstance(typeof (Rule));
-            Assert.AreEqual("Blue", blueRule.Color);
+            Assert.AreEqual(machineKey, profileKey);
         }
 
         [Test]
@@ -93,16 +69,29 @@ namespace StructureMap.Testing.Configuration
         }
 
         [Test]
-        public void GettingTheRightInstanceKeyWhenUsingAMAchineOverrideInCombinationWithProfile()
+        public void HasADefaultInstanceKey()
         {
-            MachineOverride machine = _graph.DefaultManager.GetMachineOverride("SERVER");
             InstanceManager manager = new InstanceManager(_graph);
-            string machineKey = machine[typeof (IWidget).FullName];
+            manager.SetDefaultsToProfile("Green");
 
-            Profile profile = manager.DefaultManager.CalculateDefaults("SERVER", "");
-            string profileKey = profile[typeof (IWidget).FullName];
+            string defaultKey = manager[typeof (Rule)].DefaultInstanceKey;
+            Assert.IsNotEmpty(defaultKey);
+        }
 
-            Assert.AreEqual(machineKey, profileKey);
+        [Test]
+        public void HasTheOverrideForProfile()
+        {
+            Profile blueProfile = _graph.DefaultManager.GetProfile("Blue");
+            Assert.IsTrue(blueProfile.HasOverride(typeof (Rule).FullName));
+            Assert.IsTrue(blueProfile.HasOverride(typeof (IWidget).FullName));
+
+            Assert.IsNotEmpty(blueProfile[typeof (Rule).FullName]);
+            Assert.IsNotEmpty(blueProfile[typeof (IWidget).FullName]);
+
+            Debug.WriteLine(blueProfile[typeof (IWidget).FullName]);
+
+            Profile defaults = _graph.DefaultManager.CalculateDefaults(InstanceDefaultManager.GetMachineName(), "Blue");
+            Assert.IsNotEmpty(defaults[typeof (Rule).FullName]);
         }
 
 
@@ -131,6 +120,21 @@ namespace StructureMap.Testing.Configuration
 
             ColorWidget widget = (ColorWidget) manager.CreateInstance(typeof (IWidget));
             Assert.AreEqual("Green", widget.Color);
+        }
+
+        [Test]
+        public void SetTheProfile()
+        {
+            InstanceManager manager = new InstanceManager(_graph);
+            manager.SetDefaultsToProfile("Green");
+
+            ColorRule greenRule = (ColorRule) manager.CreateInstance(typeof (Rule));
+            Assert.AreEqual("Green", greenRule.Color);
+
+            manager.SetDefaultsToProfile("Blue");
+
+            ColorRule blueRule = (ColorRule) manager.CreateInstance(typeof (Rule));
+            Assert.AreEqual("Blue", blueRule.Color);
         }
     }
 }

@@ -5,9 +5,9 @@ namespace StructureMap.Testing.Graph
     [Pluggable("Default")]
     public class InstanceTarget
     {
-        private readonly int _quantity;
         private readonly bool _isValid;
         private readonly string _name;
+        private readonly int _quantity;
 
         public InstanceTarget(string name, bool isValid, int quantity)
         {

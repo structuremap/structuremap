@@ -24,11 +24,6 @@ namespace StructureMap.Source
             get { return _element.GetAttribute(XmlConstants.TYPE_ATTRIBUTE); }
         }
 
-        public void SetConcreteKey(string concreteKey)
-        {
-            _element.SetAttribute(XmlConstants.TYPE_ATTRIBUTE, concreteKey);
-        }
-
         protected override string innerInstanceKey
         {
             get { return _element.GetAttribute(XmlConstants.KEY_ATTRIBUTE); }
@@ -37,6 +32,21 @@ namespace StructureMap.Source
         public XmlElement InnerElement
         {
             get { return _element; }
+        }
+
+        public override bool IsReference
+        {
+            get { return (ConcreteKey == string.Empty); }
+        }
+
+        public override string ReferenceKey
+        {
+            get { return InstanceKey; }
+        }
+
+        public void SetConcreteKey(string concreteKey)
+        {
+            _element.SetAttribute(XmlConstants.TYPE_ATTRIBUTE, concreteKey);
         }
 
         protected override InstanceMemento getChild(string key)
@@ -50,16 +60,6 @@ namespace StructureMap.Source
             {
                 return new XmlAttributeInstanceMemento(childNode);
             }
-        }
-
-        public override bool IsReference
-        {
-            get { return (ConcreteKey == string.Empty); }
-        }
-
-        public override string ReferenceKey
-        {
-            get { return InstanceKey; }
         }
 
         protected override string getPropertyValue(string key)

@@ -10,6 +10,7 @@ namespace StructureMap.Configuration.DSL
             return new ValidateExpression(pluggedType);
         }
 
+        #region Nested type: ValidateExpression
 
         public class ValidateExpression
         {
@@ -31,5 +32,7 @@ namespace StructureMap.Configuration.DSL
                 }
             }
         }
+
+        #endregion
     }
 }

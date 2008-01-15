@@ -6,10 +6,17 @@ namespace StructureMap.Testing.DataAccess
     [TestFixture]
     public class TemplatedCommandTester
     {
-        [Test]
-        public void CanResolveSubstitutionsWithNoSubstitutions()
+        private void assertSubstitutions(string template, string testMessage, string[] expected)
         {
-            assertSubstitutions("The Message Body", "no substitutions", new string[0]);
+            TemplatedCommand command = new TemplatedCommand(template, ObjectMother.MSSQLDatabaseEngine());
+            string[] actual = command.Substitutions;
+            Assert.AreEqual(expected, actual);
+
+            Assert.AreEqual(expected.Length, command.Parameters.Count);
+            foreach (string expectedParameter in expected)
+            {
+                Assert.IsNotNull(command.Parameters[expectedParameter]);
+            }
         }
 
         [Test]
@@ -25,14 +32,9 @@ namespace StructureMap.Testing.DataAccess
         }
 
         [Test]
-        public void CanResolveTwoSubstitutions()
+        public void CanResolveSubstitutionsWithNoSubstitutions()
         {
-            assertSubstitutions("{abc}{def}", "two", new string[] {"abc", "def"});
-            assertSubstitutions("{abc}jjjjj{def}", "two", new string[] {"abc", "def"});
-            assertSubstitutions("jjjj{abc}{def}", "two", new string[] {"abc", "def"});
-            assertSubstitutions("{abc}{def}uuuuuu", "two", new string[] {"abc", "def"});
-            assertSubstitutions("34fg{abc}{def}gjjkk", "two", new string[] {"abc", "def"});
-            assertSubstitutions("rrrtrrr{abc}zsdfgsd{def}khgjfghjfgh", "two", new string[] {"abc", "def"});
+            assertSubstitutions("The Message Body", "no substitutions", new string[0]);
         }
 
         [Test]
@@ -53,6 +55,17 @@ namespace StructureMap.Testing.DataAccess
         }
 
         [Test]
+        public void CanResolveTwoSubstitutions()
+        {
+            assertSubstitutions("{abc}{def}", "two", new string[] {"abc", "def"});
+            assertSubstitutions("{abc}jjjjj{def}", "two", new string[] {"abc", "def"});
+            assertSubstitutions("jjjj{abc}{def}", "two", new string[] {"abc", "def"});
+            assertSubstitutions("{abc}{def}uuuuuu", "two", new string[] {"abc", "def"});
+            assertSubstitutions("34fg{abc}{def}gjjkk", "two", new string[] {"abc", "def"});
+            assertSubstitutions("rrrtrrr{abc}zsdfgsd{def}khgjfghjfgh", "two", new string[] {"abc", "def"});
+        }
+
+        [Test]
         public void CreateSql()
         {
             TemplatedCommand command =
@@ -68,20 +81,6 @@ namespace StructureMap.Testing.DataAccess
         [Test, Ignore("Do.")]
         public void IntegratedTest()
         {
-        }
-
-
-        private void assertSubstitutions(string template, string testMessage, string[] expected)
-        {
-            TemplatedCommand command = new TemplatedCommand(template, ObjectMother.MSSQLDatabaseEngine());
-            string[] actual = command.Substitutions;
-            Assert.AreEqual(expected, actual);
-
-            Assert.AreEqual(expected.Length, command.Parameters.Count);
-            foreach (string expectedParameter in expected)
-            {
-                Assert.IsNotNull(command.Parameters[expectedParameter]);
-            }
         }
     }
 }

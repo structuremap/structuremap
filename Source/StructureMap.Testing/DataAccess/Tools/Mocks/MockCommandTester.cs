@@ -6,64 +6,6 @@ namespace StructureMap.Testing.DataAccess.Tools.Mocks
     [TestFixture]
     public class MockCommandTester
     {
-        [Test, ExpectedException(typeof (UnExpectedCallException))]
-        public void ExecuteWithoutExpectation()
-        {
-            MockCommand command = new MockCommand("name");
-            command.Execute();
-        }
-
-
-        [Test]
-        public void ExecuteWithExpectationNoParameters()
-        {
-            MockCommand command = new MockCommand("name");
-
-            CommandExpectation expectation = new CommandExpectation(5);
-            command.AddExpectation(expectation);
-
-            int count = command.Execute();
-
-            Assert.AreEqual(5, count);
-        }
-
-
-        [Test]
-        public void ExecuteWithInputParametersThatMatchExpectation()
-        {
-            MockCommand command = new MockCommand("name");
-            command["param1"] = "Bo";
-            command["param2"] = "Luke";
-            command["param3"] = "Daisy";
-
-            CommandExpectation expectation = new CommandExpectation(5);
-            expectation.SetInput("param1", "Bo");
-            expectation.SetInput("param2", "Luke");
-            expectation.SetInput("param3", "Daisy");
-            command.AddExpectation(expectation);
-
-            int count = command.Execute();
-
-            Assert.AreEqual(5, count);
-        }
-
-        [Test, ExpectedException(typeof (ParameterValidationFailureException))]
-        public void ExecuteWithInputParametersThatDoNotMatchExpectation()
-        {
-            MockCommand command = new MockCommand("name");
-            command["param1"] = "Bo";
-            command["param2"] = "Luke";
-            command["param3"] = "Daisy";
-
-            CommandExpectation expectation = new CommandExpectation(5);
-            expectation.SetInput("param1", "Bo");
-            expectation.SetInput("param2", "Luke");
-            expectation.SetInput("param3", "Boss Hogg");
-            command.AddExpectation(expectation);
-
-            int count = command.Execute();
-        }
-
         [Test]
         public void ExecuteAndGetOutputParameters()
         {
@@ -76,34 +18,6 @@ namespace StructureMap.Testing.DataAccess.Tools.Mocks
             int count = command.Execute();
 
             Assert.AreEqual("Bo", command["param1"]);
-        }
-
-        [Test, ExpectedException(typeof (NotExecutedCommandException))]
-        public void TryToGetOutputParametersBeforeExecute()
-        {
-            MockCommand command = new MockCommand("name");
-
-            CommandExpectation expectation = new CommandExpectation(5);
-            expectation.SetOutput("param1", "Bo");
-            command.AddExpectation(expectation);
-
-            string output = (string) command["param1"];
-        }
-
-        [Test, ExpectedException(typeof (UnKnownOrNotSetParameterException))]
-        public void TryToGetInputParameterThatHasNotBeenSet()
-        {
-            MockCommand command = new MockCommand("name");
-            object answer = command["param1"];
-        }
-
-        [Test]
-        public void TryToGetInputParameterThatHasBeenSet()
-        {
-            MockCommand command = new MockCommand("name");
-            command["param1"] = true;
-
-            Assert.IsTrue((bool) command["param1"]);
         }
 
         [Test, ExpectedException(typeof (UnExpectedCallException))]
@@ -137,6 +51,90 @@ namespace StructureMap.Testing.DataAccess.Tools.Mocks
 
             command.Execute();
             Assert.AreEqual("green", command["answer"]);
+        }
+
+        [Test]
+        public void ExecuteWithExpectationNoParameters()
+        {
+            MockCommand command = new MockCommand("name");
+
+            CommandExpectation expectation = new CommandExpectation(5);
+            command.AddExpectation(expectation);
+
+            int count = command.Execute();
+
+            Assert.AreEqual(5, count);
+        }
+
+        [Test, ExpectedException(typeof (ParameterValidationFailureException))]
+        public void ExecuteWithInputParametersThatDoNotMatchExpectation()
+        {
+            MockCommand command = new MockCommand("name");
+            command["param1"] = "Bo";
+            command["param2"] = "Luke";
+            command["param3"] = "Daisy";
+
+            CommandExpectation expectation = new CommandExpectation(5);
+            expectation.SetInput("param1", "Bo");
+            expectation.SetInput("param2", "Luke");
+            expectation.SetInput("param3", "Boss Hogg");
+            command.AddExpectation(expectation);
+
+            int count = command.Execute();
+        }
+
+        [Test]
+        public void ExecuteWithInputParametersThatMatchExpectation()
+        {
+            MockCommand command = new MockCommand("name");
+            command["param1"] = "Bo";
+            command["param2"] = "Luke";
+            command["param3"] = "Daisy";
+
+            CommandExpectation expectation = new CommandExpectation(5);
+            expectation.SetInput("param1", "Bo");
+            expectation.SetInput("param2", "Luke");
+            expectation.SetInput("param3", "Daisy");
+            command.AddExpectation(expectation);
+
+            int count = command.Execute();
+
+            Assert.AreEqual(5, count);
+        }
+
+        [Test, ExpectedException(typeof (UnExpectedCallException))]
+        public void ExecuteWithoutExpectation()
+        {
+            MockCommand command = new MockCommand("name");
+            command.Execute();
+        }
+
+        [Test]
+        public void TryToGetInputParameterThatHasBeenSet()
+        {
+            MockCommand command = new MockCommand("name");
+            command["param1"] = true;
+
+            Assert.IsTrue((bool) command["param1"]);
+        }
+
+        [Test, ExpectedException(typeof (UnKnownOrNotSetParameterException))]
+        public void TryToGetInputParameterThatHasNotBeenSet()
+        {
+            MockCommand command = new MockCommand("name");
+            object answer = command["param1"];
+        }
+
+        [Test, ExpectedException(typeof (NotExecutedCommandException))]
+        public void TryToGetOutputParametersBeforeExecute()
+        {
+            MockCommand command = new MockCommand("name");
+
+            CommandExpectation expectation = new CommandExpectation(5);
+            expectation.SetOutput("param1", "Bo");
+            command.AddExpectation(expectation);
+
+            string output = (string) command["param1"];
         }
     }
 }

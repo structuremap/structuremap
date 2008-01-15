@@ -34,6 +34,16 @@ namespace StructureMap
             initialize(ErrorCode, args);
         }
 
+        public override string Message
+        {
+            get { return _msg; }
+        }
+
+        public int ErrorCode
+        {
+            get { return _errorCode; }
+        }
+
         private void initialize(int errorCode, params object[] args)
         {
             _errorCode = errorCode;
@@ -54,16 +64,6 @@ namespace StructureMap
             ResourceManager resources = new ResourceManager(GetType());
 
             return resources.GetString(errorCode.ToString());
-        }
-
-        public override string Message
-        {
-            get { return _msg; }
-        }
-
-        public int ErrorCode
-        {
-            get { return _errorCode; }
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)

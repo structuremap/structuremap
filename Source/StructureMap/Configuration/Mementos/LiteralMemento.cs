@@ -12,12 +12,6 @@ namespace StructureMap.Configuration.Mementos
             InstanceKey = Guid.NewGuid().ToString();
         }
 
-        public LiteralMemento Named(string name)
-        {
-            InstanceKey = name;
-            return this;
-        }
-
         public object Instance
         {
             get { return _instance; }
@@ -34,6 +28,22 @@ namespace StructureMap.Configuration.Mementos
             get { throw new NotImplementedException(); }
         }
 
+        public override bool IsReference
+        {
+            get { return false; }
+        }
+
+        public override string ReferenceKey
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public LiteralMemento Named(string name)
+        {
+            InstanceKey = name;
+            return this;
+        }
+
         protected override string getPropertyValue(string Key)
         {
             throw new NotImplementedException();
@@ -47,16 +57,6 @@ namespace StructureMap.Configuration.Mementos
         public override InstanceMemento[] GetChildrenArray(string Key)
         {
             throw new NotImplementedException();
-        }
-
-        public override bool IsReference
-        {
-            get { return false; }
-        }
-
-        public override string ReferenceKey
-        {
-            get { throw new NotImplementedException(); }
         }
 
         protected override object buildInstance(IInstanceCreator creator)

@@ -9,13 +9,17 @@ namespace StructureMap.Testing.Configuration
     [TestFixture]
     public class ConfigurationParserCollectionTester
     {
-        private ConfigurationParserCollection _collection;
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
         {
             _collection = new ConfigurationParserCollection();
         }
+
+        #endregion
+
+        private ConfigurationParserCollection _collection;
 
 
         public void assertParserIdList(params string[] expected)
@@ -29,13 +33,6 @@ namespace StructureMap.Testing.Configuration
             Array.Sort(actuals);
 
             Assert.AreEqual(expected, actuals);
-        }
-
-        [Test]
-        public void SimpleDefaultConfigurationParser()
-        {
-            _collection.UseDefaultFile = true;
-            assertParserIdList("Main");
         }
 
         [Test]
@@ -73,12 +70,6 @@ namespace StructureMap.Testing.Configuration
         }
 
         [Test]
-        public void UseDefaultIsTrueUponConstruction()
-        {
-            Assert.IsTrue(_collection.UseDefaultFile);
-        }
-
-        [Test]
         public void GetMultiples()
         {
             DataMother.WriteDocument("Include1.xml");
@@ -107,6 +98,19 @@ namespace StructureMap.Testing.Configuration
             _collection.UseDefaultFile = false;
 
             assertParserIdList("Somewhere");
+        }
+
+        [Test]
+        public void SimpleDefaultConfigurationParser()
+        {
+            _collection.UseDefaultFile = true;
+            assertParserIdList("Main");
+        }
+
+        [Test]
+        public void UseDefaultIsTrueUponConstruction()
+        {
+            Assert.IsTrue(_collection.UseDefaultFile);
         }
     }
 }

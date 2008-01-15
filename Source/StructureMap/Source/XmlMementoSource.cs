@@ -9,11 +9,11 @@ namespace StructureMap.Source
     /// </summary>
     public abstract class XmlMementoSource : MementoSource
     {
+        private string _keyAttribute;
+        private XmlMementoCreator _mementoCreator;
+        private Hashtable _mementos;
         private string _nodeName;
         private string _typeAttribute;
-        private string _keyAttribute;
-        private Hashtable _mementos;
-        private XmlMementoCreator _mementoCreator;
 
 
         public XmlMementoSource(string NodeName, string TypeAttribute, string KeyAttribute, XmlMementoStyle style)
@@ -39,6 +39,25 @@ namespace StructureMap.Source
         public string KeyAttribute
         {
             get { return _keyAttribute; }
+        }
+
+        private Hashtable mementoHashtable
+        {
+            get
+            {
+                if (_mementos == null)
+                {
+                    lock (this)
+                    {
+                        if (_mementos == null)
+                        {
+                            loadMementos();
+                        }
+                    }
+                }
+
+                return _mementos;
+            }
         }
 
         private void loadMementos()
@@ -67,26 +86,6 @@ namespace StructureMap.Source
         protected InstanceMemento createMemento(XmlNode nodeChild)
         {
             return _mementoCreator.CreateMemento(nodeChild);
-        }
-
-
-        private Hashtable mementoHashtable
-        {
-            get
-            {
-                if (_mementos == null)
-                {
-                    lock (this)
-                    {
-                        if (_mementos == null)
-                        {
-                            loadMementos();
-                        }
-                    }
-                }
-
-                return _mementos;
-            }
         }
 
 

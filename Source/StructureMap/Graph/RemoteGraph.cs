@@ -10,13 +10,18 @@ namespace StructureMap.Graph
     /// </summary>
     public class RemoteGraph : MarshalByRefObject
     {
+        private string _binPath;
         private string _configPath;
         private PluginGraph _pluginGraph;
-        private string _binPath;
         private PluginGraphReport _report;
 
         public RemoteGraph() : base()
         {
+        }
+
+        public string ConfigPath
+        {
+            get { return _configPath; }
         }
 
 
@@ -57,11 +62,6 @@ namespace StructureMap.Graph
             return builder.Build();
         }
 
-
-        public string ConfigPath
-        {
-            get { return _configPath; }
-        }
 
         private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {

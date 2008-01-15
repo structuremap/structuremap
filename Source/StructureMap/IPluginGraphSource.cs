@@ -5,6 +5,10 @@ namespace StructureMap
 {
     public interface IPluginGraphSource
     {
+        InstanceDefaultManager DefaultManager { get; }
+
+        PluginGraphReport Report { get; }
+
         /// <summary>
         /// Reads the configuration information and returns the PluginGraph definition of
         /// plugin families and plugin's
@@ -17,9 +21,5 @@ namespace StructureMap
         /// </summary>
         /// <returns></returns>
         PluginGraph BuildDiagnosticPluginGraph();
-
-        InstanceDefaultManager DefaultManager { get; }
-
-        PluginGraphReport Report { get; }
     }
 }

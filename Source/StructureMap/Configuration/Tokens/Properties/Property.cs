@@ -12,6 +12,18 @@ namespace StructureMap.Configuration.Tokens.Properties
             _definition = definition;
         }
 
+        public PropertyDefinition Definition
+        {
+            get { return _definition; }
+        }
+
+        protected override string key
+        {
+            get { return PropertyName; }
+        }
+
+        #region IProperty Members
+
         public virtual string PropertyName
         {
             get { return _definition.PropertyName; }
@@ -22,19 +34,11 @@ namespace StructureMap.Configuration.Tokens.Properties
             get { return _definition.PropertyType; }
         }
 
-        public PropertyDefinition Definition
-        {
-            get { return _definition; }
-        }
-
         public virtual void Validate(IInstanceValidator validator)
         {
             // no-op
         }
 
-        protected override string key
-        {
-            get { return PropertyName; }
-        }
+        #endregion
     }
 }

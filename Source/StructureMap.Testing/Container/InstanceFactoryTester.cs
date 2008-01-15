@@ -12,8 +12,7 @@ namespace StructureMap.Testing.Container
     [TestFixture]
     public class InstanceFactoryTester
     {
-        private InstanceFactory _ruleFactory;
-        private MemoryMementoSource _source;
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -28,33 +27,10 @@ namespace StructureMap.Testing.Container
             _source = (MemoryMementoSource) _ruleFactory.Source;
         }
 
-        [Test]
-        public void CouldBuildInstanceFactory()
-        {
-            Assert.IsNotNull(_ruleFactory);
-        }
+        #endregion
 
-        [Test]
-        public void UsesTheInterceptor()
-        {
-            PluginFamily family = new PluginFamily(typeof(IService));
-            family.Plugins.Add(typeof(ColorService), "Color");
-            MemoryInstanceMemento memento = new MemoryInstanceMemento("Color", "Red");
-            memento.SetProperty("color", "Red");
-            family.AddInstance(memento);
-
-            ColorService recordedService = null;
-
-            StartupInterceptor<ColorService> interceptor = new StartupInterceptor<ColorService>(
-                delegate(ColorService s) { recordedService = s; }
-                );
-            family.InstanceInterceptor = interceptor;
-
-
-            InstanceFactory factory = new InstanceFactory(family, true);
-
-            Assert.AreSame(factory.GetInstance("Red"), recordedService);
-        }
+        private InstanceFactory _ruleFactory;
+        private MemoryMementoSource _source;
 
 
         [Test]
@@ -67,16 +43,6 @@ namespace StructureMap.Testing.Container
             Assert.IsTrue(rule is Rule1);
         }
 
-        [Test]
-        public void TestComplexRule()
-        {
-            InstanceMemento memento = ComplexRule.GetMemento();
-
-            Rule rule = (Rule) _ruleFactory.GetInstance(memento);
-            Assert.IsNotNull(rule);
-            Assert.IsTrue(rule is ComplexRule);
-        }
-
         [Test, ExpectedException(typeof (StructureMapException))]
         public void BuildRuleThatDoesNotExist()
         {
@@ -84,14 +50,6 @@ namespace StructureMap.Testing.Container
             Rule rule = (Rule) _ruleFactory.GetInstance(memento);
         }
 
-
-        [Test, ExpectedException(typeof (StructureMapException))]
-        public void BuildRuleWithAMissingValue()
-        {
-            MemoryInstanceMemento memento = (MemoryInstanceMemento) ComplexRule.GetMemento();
-            memento.RemoveProperty("String");
-            ComplexRule rule = (ComplexRule) _ruleFactory.GetInstance(memento);
-        }
 
         [Test, ExpectedException(typeof (StructureMapException))]
         public void BuildRuleWithABadValue()
@@ -103,9 +61,45 @@ namespace StructureMap.Testing.Container
         }
 
         [Test, ExpectedException(typeof (StructureMapException))]
+        public void BuildRuleWithAMissingValue()
+        {
+            MemoryInstanceMemento memento = (MemoryInstanceMemento) ComplexRule.GetMemento();
+            memento.RemoveProperty("String");
+            ComplexRule rule = (ComplexRule) _ruleFactory.GetInstance(memento);
+        }
+
+        [Test, ExpectedException(typeof (StructureMapException))]
         public void BuildRuleWithInvalidInstanceKey()
         {
             ComplexRule rule = (ComplexRule) _ruleFactory.GetInstance("NonExistentRule");
+        }
+
+        [Test]
+        public void CanMakeAClassWithNoConstructorParametersADefaultMemento()
+        {
+            InstanceFactory factory = ObjectMother.CreateInstanceFactory(
+                typeof (IGateway),
+                new string[] {"StructureMap.Testing.Widget3"});
+
+            factory.SetDefault("Stubbed");
+            Assert.IsTrue(factory.GetInstance() is StubbedGateway);
+        }
+
+        [Test]
+        public void CanMakeAClassWithNoConstructorParametersWithoutADefinedMemento()
+        {
+            InstanceFactory factory = ObjectMother.CreateInstanceFactory(
+                typeof (IGateway),
+                new string[] {"StructureMap.Testing.Widget3"});
+
+            DefaultGateway gateway = factory.GetInstance("Default") as DefaultGateway;
+            Assert.IsNotNull(gateway);
+        }
+
+        [Test]
+        public void CouldBuildInstanceFactory()
+        {
+            Assert.IsNotNull(_ruleFactory);
         }
 
         [Test]
@@ -132,6 +126,16 @@ namespace StructureMap.Testing.Container
             Assert.AreEqual("Blue", rule.Color);
         }
 
+        [Test]
+        public void TestComplexRule()
+        {
+            InstanceMemento memento = ComplexRule.GetMemento();
+
+            Rule rule = (Rule) _ruleFactory.GetInstance(memento);
+            Assert.IsNotNull(rule);
+            Assert.IsTrue(rule is ComplexRule);
+        }
+
         [Test, ExpectedException(typeof (StructureMapException))]
         public void TryToGetDefaultInstanceWithNoInstance()
         {
@@ -139,29 +143,25 @@ namespace StructureMap.Testing.Container
         }
 
         [Test]
-        public void CanMakeAClassWithNoConstructorParametersWithoutADefinedMemento()
+        public void UsesTheInterceptor()
         {
-            InstanceFactory factory = ObjectMother.CreateInstanceFactory(
-                typeof (IGateway),
-                new string[] {"StructureMap.Testing.Widget3"});
+            PluginFamily family = new PluginFamily(typeof (IService));
+            family.Plugins.Add(typeof (ColorService), "Color");
+            MemoryInstanceMemento memento = new MemoryInstanceMemento("Color", "Red");
+            memento.SetProperty("color", "Red");
+            family.AddInstance(memento);
 
-            DefaultGateway gateway = factory.GetInstance("Default") as DefaultGateway;
-            Assert.IsNotNull(gateway);
+            ColorService recordedService = null;
+
+            StartupInterceptor<ColorService> interceptor = new StartupInterceptor<ColorService>(
+                delegate(ColorService s) { recordedService = s; }
+                );
+            family.InstanceInterceptor = interceptor;
+
+
+            InstanceFactory factory = new InstanceFactory(family, true);
+
+            Assert.AreSame(factory.GetInstance("Red"), recordedService);
         }
-
-        [Test]
-        public void CanMakeAClassWithNoConstructorParametersADefaultMemento()
-        {
-            InstanceFactory factory = ObjectMother.CreateInstanceFactory(
-                typeof (IGateway),
-                new string[] {"StructureMap.Testing.Widget3"});
-
-            factory.SetDefault("Stubbed");
-            Assert.IsTrue(factory.GetInstance() is StubbedGateway);
-        }
-
-
-
-
     }
 }

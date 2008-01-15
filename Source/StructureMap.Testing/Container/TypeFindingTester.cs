@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework;
-using Rhino.Mocks;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 
@@ -11,7 +10,7 @@ namespace StructureMap.Testing.Container
     [TestFixture]
     public class TypeFindingTester
     {
-        private IInstanceManager _manager;
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -23,6 +22,27 @@ namespace StructureMap.Testing.Container
                 .AddAllTypesOf<OtherType>();
 
             _manager = registry.BuildInstanceManager();
+        }
+
+        #endregion
+
+        private IInstanceManager _manager;
+
+        [Test]
+        public void DoNotFindPluginWithNoPublicCTOR()
+        {
+            Assert.IsFalse(Plugin.CanBeCast(typeof (TypeIWantToFind), typeof (GreenType)));
+        }
+
+
+        [Test]
+        public void FindTypes()
+        {
+            AssemblyGraph assemblyGraph = new AssemblyGraph(Assembly.GetExecutingAssembly());
+            Type[] types = assemblyGraph.FindTypes(
+                delegate(Type type) { return type.Equals(typeof (BlueType)); });
+
+            Assert.AreEqual(new Type[] {typeof (BlueType)}, types);
         }
 
         [Test]
@@ -43,52 +63,60 @@ namespace StructureMap.Testing.Container
             IList<INormalType> instances = _manager.GetAllInstances<INormalType>();
             Assert.AreEqual(1, instances.Count);
 
-            Assert.IsInstanceOfType(typeof(NormalTypeWithPluggableAttribute), instances[0]);
-        }
-
-        [Test]
-        public void DoNotFindPluginWithNoPublicCTOR()
-        {
-            Assert.IsFalse(Plugin.CanBeCast(typeof(TypeIWantToFind), typeof(GreenType)));
-        }
-
-
-
-
-        [Test]
-        public void FindTypes()
-        {
-            AssemblyGraph assemblyGraph = new AssemblyGraph(Assembly.GetExecutingAssembly());
-            Type[] types = assemblyGraph.FindTypes(
-                delegate(Type type) { return type.Equals(typeof(BlueType)); });
-
-            Assert.AreEqual(new Type[] { typeof(BlueType) }, types);
+            Assert.IsInstanceOfType(typeof (NormalTypeWithPluggableAttribute), instances[0]);
         }
     }
 
 
     public interface TypeIWantToFind
     {
-
     }
 
-    public class RedType { }
+    public class RedType
+    {
+    }
 
-    public class BlueType : TypeIWantToFind { }
-    public class PurpleType : TypeIWantToFind { }
-    public class YellowType : TypeIWantToFind { }
+    public class BlueType : TypeIWantToFind
+    {
+    }
+
+    public class PurpleType : TypeIWantToFind
+    {
+    }
+
+    public class YellowType : TypeIWantToFind
+    {
+    }
+
     public class GreenType : TypeIWantToFind
     {
-        private GreenType() { }
+        private GreenType()
+        {
+        }
     }
 
-    public abstract class OrangeType : TypeIWantToFind { }
+    public abstract class OrangeType : TypeIWantToFind
+    {
+    }
 
-    public class OtherType{}
-    public class DifferentOtherType : OtherType{}
+    public class OtherType
+    {
+    }
 
-    public interface INormalType{}
-    [Pluggable("First")] public class NormalTypeWithPluggableAttribute : INormalType{}
-    public class SecondNormalType : INormalType{}
+    public class DifferentOtherType : OtherType
+    {
+    }
 
+    public interface INormalType
+    {
+    }
+
+    [Pluggable("First")]
+    public class NormalTypeWithPluggableAttribute : INormalType
+    {
+    }
+
+    public class SecondNormalType : INormalType
+    {
+    }
 }

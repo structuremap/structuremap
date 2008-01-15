@@ -8,23 +8,6 @@ namespace StructureMap.Testing.Versioning
     public class DeployedFileTester
     {
         [Test]
-        public void CheckVersionFindsTheFile()
-        {
-            DynamicMock versionMock = new DynamicMock(typeof (IVersionReport));
-            IVersionReport report = (IVersionReport) versionMock.MockInstance;
-
-            DeployedFile file = new DeployedFile("some file");
-            file.ContentsHash = new byte[0];
-
-            DeployedDirectory directory = new DeployedDirectory();
-            directory.AddFile(file);
-
-            file.CheckVersion(directory, report);
-
-            versionMock.Verify();
-        }
-
-        [Test]
         public void CheckVersionFindsAMissingFile()
         {
             DynamicMock versionMock = new DynamicMock(typeof (IVersionReport));
@@ -59,6 +42,23 @@ namespace StructureMap.Testing.Versioning
             directory.AddFile(otherFile);
 
             versionMock.Expect("VersionMismatchFile", file.FileName);
+
+            file.CheckVersion(directory, report);
+
+            versionMock.Verify();
+        }
+
+        [Test]
+        public void CheckVersionFindsTheFile()
+        {
+            DynamicMock versionMock = new DynamicMock(typeof (IVersionReport));
+            IVersionReport report = (IVersionReport) versionMock.MockInstance;
+
+            DeployedFile file = new DeployedFile("some file");
+            file.ContentsHash = new byte[0];
+
+            DeployedDirectory directory = new DeployedDirectory();
+            directory.AddFile(file);
 
             file.CheckVersion(directory, report);
 

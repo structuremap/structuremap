@@ -10,7 +10,7 @@ namespace StructureMap.Testing.Graph
     [TestFixture]
     public class OverrideTester
     {
-        private InstanceDefaultManager defaultManager;
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -18,15 +18,9 @@ namespace StructureMap.Testing.Graph
             defaultManager = DataMother.GetDiagnosticPluginGraph("ProfileAndMachine.xml").DefaultManager;
         }
 
-        [Test]
-        public void DefaultsNoProfileNoMatchingMachine()
-        {
-            Profile defaults = defaultManager.CalculateDefaults("LOCAL", string.Empty);
-            Assert.IsNotNull(defaults);
+        #endregion
 
-            Assert.AreEqual(string.Empty, defaults["StructureMap.Testing.Widget.Rule"], "Default Rule is string.empty");
-            Assert.AreEqual("Red", defaults["StructureMap.Testing.Widget.IWidget"], "Default IWidget is Red");
-        }
+        private InstanceDefaultManager defaultManager;
 
         [Test]
         public void DefaultsMatchingMachineOnly()
@@ -44,6 +38,16 @@ namespace StructureMap.Testing.Graph
             Assert.IsNotNull(defaults);
             Assert.AreEqual("Blue", defaults["StructureMap.Testing.Widget.Rule"]);
             Assert.AreEqual("Blue", defaults["StructureMap.Testing.Widget.IWidget"]);
+        }
+
+        [Test]
+        public void DefaultsNoProfileNoMatchingMachine()
+        {
+            Profile defaults = defaultManager.CalculateDefaults("LOCAL", string.Empty);
+            Assert.IsNotNull(defaults);
+
+            Assert.AreEqual(string.Empty, defaults["StructureMap.Testing.Widget.Rule"], "Default Rule is string.empty");
+            Assert.AreEqual("Red", defaults["StructureMap.Testing.Widget.IWidget"], "Default IWidget is Red");
         }
 
         [Test]

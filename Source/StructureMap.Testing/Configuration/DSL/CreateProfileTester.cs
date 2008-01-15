@@ -6,8 +6,7 @@ namespace StructureMap.Testing.Configuration.DSL
     [TestFixture]
     public class CreateProfileTester
     {
-        private InstanceManager manager;
-        private PluginGraph pluginGraph;
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -29,6 +28,11 @@ namespace StructureMap.Testing.Configuration.DSL
             manager = registry.BuildInstanceManager();
              */
         }
+
+        #endregion
+
+        private InstanceManager manager;
+        private PluginGraph pluginGraph;
 
         [Test]
         public void CreateProfile()

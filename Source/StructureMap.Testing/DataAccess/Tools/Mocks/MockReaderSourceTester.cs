@@ -8,10 +8,21 @@ namespace StructureMap.Testing.DataAccess.Tools.Mocks
     [TestFixture]
     public class MockReaderSourceTester
     {
-        [Test, ExpectedException(typeof (UnExpectedCallException))]
-        public void FailIfCalledTooManyTimes()
+        [Test, ExpectedException(typeof (ParameterValidationFailureException))]
+        public void ExecuteOnceOkaySecondTimeWithBadParameters()
         {
+            TableDataReader result1 = new TableDataReader();
+            TableDataReader result2 = new TableDataReader();
+
+            ReaderExpectation expectation1 = new ReaderExpectation(new ParameterList(), result1);
+            ReaderExpectation expectation2 = new ReaderExpectation(new ParameterList(), result2);
+
             MockReaderSource source = new MockReaderSource("name");
+            source.AddExpectation(expectation1);
+            source.AddExpectation(expectation2);
+
+            source.ExecuteReader();
+            source["nonsense"] = 0;
             source.ExecuteReader();
         }
 
@@ -83,21 +94,10 @@ namespace StructureMap.Testing.DataAccess.Tools.Mocks
             source.ExecuteReader();
         }
 
-        [Test, ExpectedException(typeof (ParameterValidationFailureException))]
-        public void ExecuteOnceOkaySecondTimeWithBadParameters()
+        [Test, ExpectedException(typeof (UnExpectedCallException))]
+        public void FailIfCalledTooManyTimes()
         {
-            TableDataReader result1 = new TableDataReader();
-            TableDataReader result2 = new TableDataReader();
-
-            ReaderExpectation expectation1 = new ReaderExpectation(new ParameterList(), result1);
-            ReaderExpectation expectation2 = new ReaderExpectation(new ParameterList(), result2);
-
             MockReaderSource source = new MockReaderSource("name");
-            source.AddExpectation(expectation1);
-            source.AddExpectation(expectation2);
-
-            source.ExecuteReader();
-            source["nonsense"] = 0;
             source.ExecuteReader();
         }
     }

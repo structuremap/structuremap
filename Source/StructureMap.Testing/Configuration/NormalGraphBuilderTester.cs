@@ -12,39 +12,16 @@ namespace StructureMap.Testing.Configuration
     public class NormalGraphBuilderTester
     {
         [Test]
-        public void ScopeIsUsedToCreateTheInterceptionChain()
-        {
-            InstanceScope theScope = InstanceScope.PerRequest;
-            InterceptionChain chain = new InterceptionChain();
-            DynamicMock builderMock = new DynamicMock(typeof (IInterceptorChainBuilder));
-            builderMock.ExpectAndReturn("Build", chain, theScope);
-
-            NormalGraphBuilder graphBuilder =
-                new NormalGraphBuilder((IInterceptorChainBuilder) builderMock.MockInstance, new Registry[0]);
-
-            TypePath typePath = new TypePath(GetType());
-
-
-            graphBuilder.AddPluginFamily(typePath, "something", new string[0], theScope);
-
-            PluginFamily family = graphBuilder.PluginGraph.PluginFamilies[GetType()];
-
-            Assert.AreSame(chain, family.InterceptionChain);
-
-            builderMock.Verify();
-        }
-
-        [Test]
-        public void AddProfile()
+        public void AddAnOverrideToMachine()
         {
             NormalGraphBuilder graphBuilder = new NormalGraphBuilder(new Registry[0]);
-            string profileName = "blue";
+            string theMachineName = "some machine";
 
-            graphBuilder.AddProfile(profileName);
+            graphBuilder.AddMachine(theMachineName, string.Empty);
+            graphBuilder.OverrideMachine("some type", "some key");
 
-            InstanceDefaultManager defaultManager = graphBuilder.DefaultManager;
-            Assert.AreEqual(1, defaultManager.Profiles.Length);
-            Assert.AreEqual(profileName, defaultManager.Profiles[0].ProfileName);
+            MachineOverride machine = graphBuilder.DefaultManager.MachineOverrides[0];
+            Assert.AreEqual(new InstanceDefault[] {new InstanceDefault("some type", "some key")}, machine.InnerDefaults);
         }
 
         [Test]
@@ -80,19 +57,6 @@ namespace StructureMap.Testing.Configuration
             Assert.AreEqual(theProfileName, machine.ProfileName);
         }
 
-        [Test,
-         ExpectedException(typeof (StructureMapException),
-             "StructureMap Exception Code:  195\nThe Profile some profile referenced by Machine some machine does not exist"
-             )]
-        public void AddMachineWithProfileThatDoesNotExist()
-        {
-            NormalGraphBuilder graphBuilder = new NormalGraphBuilder(new Registry[0]);
-            string theMachineName = "some machine";
-            string theProfileName = "some profile";
-
-            graphBuilder.AddMachine(theMachineName, theProfileName);
-        }
-
         [Test]
         public void AddMachineWithoutProfile()
         {
@@ -107,17 +71,53 @@ namespace StructureMap.Testing.Configuration
             Assert.IsEmpty(machine.ProfileName);
         }
 
-        [Test]
-        public void AddAnOverrideToMachine()
+        [Test,
+         ExpectedException(typeof (StructureMapException),
+             "StructureMap Exception Code:  195\nThe Profile some profile referenced by Machine some machine does not exist"
+             )]
+        public void AddMachineWithProfileThatDoesNotExist()
         {
             NormalGraphBuilder graphBuilder = new NormalGraphBuilder(new Registry[0]);
             string theMachineName = "some machine";
+            string theProfileName = "some profile";
 
-            graphBuilder.AddMachine(theMachineName, string.Empty);
-            graphBuilder.OverrideMachine("some type", "some key");
+            graphBuilder.AddMachine(theMachineName, theProfileName);
+        }
 
-            MachineOverride machine = graphBuilder.DefaultManager.MachineOverrides[0];
-            Assert.AreEqual(new InstanceDefault[] {new InstanceDefault("some type", "some key")}, machine.InnerDefaults);
+        [Test]
+        public void AddProfile()
+        {
+            NormalGraphBuilder graphBuilder = new NormalGraphBuilder(new Registry[0]);
+            string profileName = "blue";
+
+            graphBuilder.AddProfile(profileName);
+
+            InstanceDefaultManager defaultManager = graphBuilder.DefaultManager;
+            Assert.AreEqual(1, defaultManager.Profiles.Length);
+            Assert.AreEqual(profileName, defaultManager.Profiles[0].ProfileName);
+        }
+
+        [Test]
+        public void ScopeIsUsedToCreateTheInterceptionChain()
+        {
+            InstanceScope theScope = InstanceScope.PerRequest;
+            InterceptionChain chain = new InterceptionChain();
+            DynamicMock builderMock = new DynamicMock(typeof (IInterceptorChainBuilder));
+            builderMock.ExpectAndReturn("Build", chain, theScope);
+
+            NormalGraphBuilder graphBuilder =
+                new NormalGraphBuilder((IInterceptorChainBuilder) builderMock.MockInstance, new Registry[0]);
+
+            TypePath typePath = new TypePath(GetType());
+
+
+            graphBuilder.AddPluginFamily(typePath, "something", new string[0], theScope);
+
+            PluginFamily family = graphBuilder.PluginGraph.PluginFamilies[GetType()];
+
+            Assert.AreSame(chain, family.InterceptionChain);
+
+            builderMock.Verify();
         }
     }
 }

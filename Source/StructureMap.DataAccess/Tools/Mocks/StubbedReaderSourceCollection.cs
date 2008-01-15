@@ -12,6 +12,8 @@ namespace StructureMap.DataAccess.Tools.Mocks
             _sources = new Hashtable();
         }
 
+        #region IReaderSourceCollection Members
+
         public IEnumerator GetEnumerator()
         {
             return _sources.Values.GetEnumerator();
@@ -37,5 +39,7 @@ namespace StructureMap.DataAccess.Tools.Mocks
             }
             set { _sources[name] = value; }
         }
+
+        #endregion
     }
 }

@@ -8,8 +8,8 @@ namespace StructureMap.DataAccess.Commands
     [Pluggable("TemplatedQuery")]
     public class TemplatedQuery : CommandBase
     {
-        private readonly string _selectAndFromClause;
         private readonly IQueryFilter[] _filters;
+        private readonly string _selectAndFromClause;
         private ArrayList _templatedParameters = new ArrayList();
 
         public TemplatedQuery(string selectAndFromClause, IQueryFilter[] filters) : base()

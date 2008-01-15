@@ -10,6 +10,8 @@ namespace StructureMap.DataAccess
             _engine = engine;
         }
 
+        #region ICommandFactory Members
+
         public ICommand BuildCommand(string commandName)
         {
             ICommand command = (ICommand) ObjectFactory.GetNamedInstance(typeof (ICommand), commandName);
@@ -19,15 +21,6 @@ namespace StructureMap.DataAccess
             return command;
         }
 
-        private void initialize(object target)
-        {
-            IInitializable initializable = target as IInitializable;
-            if (initializable != null)
-            {
-                initializable.Initialize(_engine);
-            }
-        }
-
         public IReaderSource BuildReaderSource(string name)
         {
             IReaderSource source = (IReaderSource) ObjectFactory.GetNamedInstance(typeof (IReaderSource), name);
@@ -35,6 +28,17 @@ namespace StructureMap.DataAccess
             source.Name = name;
 
             return source;
+        }
+
+        #endregion
+
+        private void initialize(object target)
+        {
+            IInitializable initializable = target as IInitializable;
+            if (initializable != null)
+            {
+                initializable.Initialize(_engine);
+            }
         }
     }
 }

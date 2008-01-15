@@ -24,15 +24,6 @@ namespace StructureMap.Testing.Caching
             Assert.IsFalse(ReferenceEquals(target1, target2));
         }
 
-        [Test,
-         ExpectedException(typeof (ApplicationException),
-             "Type StructureMap.Testing.Caching.CacheTarget2 is does not implement the ICloneable interface")]
-        public void ThrowsExceptionWhenNotCloneable()
-        {
-            CloneCacheItem item = new CloneCacheItem("key");
-            item.Value = new CacheTarget2();
-        }
-
 
         [Test]
         public void StoreAndRetrieveFromSerializationStorageStrategy()
@@ -52,15 +43,6 @@ namespace StructureMap.Testing.Caching
         }
 
 
-        [Test,
-         ExpectedException(typeof (ApplicationException),
-             "Exception when trying to serialize type StructureMap.Testing.Caching.CacheTarget2")]
-        public void ThrowsExceptionWhenNotSerializable()
-        {
-            SerializationCacheItem item = new SerializationCacheItem("key");
-            item.Value = new CacheTarget2();
-        }
-
         [Test]
         public void StoreAndRetrieveFromSharedStorageStrategy()
         {
@@ -77,6 +59,24 @@ namespace StructureMap.Testing.Caching
             Assert.AreEqual(target1, target2);
             Assert.AreSame(target1, target2);
         }
+
+        [Test,
+         ExpectedException(typeof (ApplicationException),
+             "Type StructureMap.Testing.Caching.CacheTarget2 is does not implement the ICloneable interface")]
+        public void ThrowsExceptionWhenNotCloneable()
+        {
+            CloneCacheItem item = new CloneCacheItem("key");
+            item.Value = new CacheTarget2();
+        }
+
+        [Test,
+         ExpectedException(typeof (ApplicationException),
+             "Exception when trying to serialize type StructureMap.Testing.Caching.CacheTarget2")]
+        public void ThrowsExceptionWhenNotSerializable()
+        {
+            SerializationCacheItem item = new SerializationCacheItem("key");
+            item.Value = new CacheTarget2();
+        }
     }
 
 
@@ -90,6 +90,11 @@ namespace StructureMap.Testing.Caching
             _color = color;
         }
 
+        public string Color
+        {
+            get { return _color; }
+        }
+
         #region ICloneable Members
 
         public object Clone()
@@ -98,11 +103,6 @@ namespace StructureMap.Testing.Caching
         }
 
         #endregion
-
-        public string Color
-        {
-            get { return _color; }
-        }
 
         public override bool Equals(object obj)
         {

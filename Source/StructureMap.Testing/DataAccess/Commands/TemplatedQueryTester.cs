@@ -8,7 +8,7 @@ namespace StructureMap.Testing.DataAccess.Commands
     [TestFixture]
     public class TemplatedQueryTester
     {
-        private TemplatedQuery _query;
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -25,10 +25,39 @@ namespace StructureMap.Testing.DataAccess.Commands
             _query.Initialize(engine);
         }
 
+        #endregion
+
+        private TemplatedQuery _query;
+
         [Test]
         public void CorrectNumberOfParameters()
         {
             Assert.AreEqual(5, _query.Parameters.Count);
+        }
+
+        [Test]
+        public void CreateWithParameterThenSetValueToNullNoParameters()
+        {
+            _query["Column"] = "state";
+            _query["Table"] = "bigtable";
+            _query["Direction"] = "North";
+
+            IDbCommand command = _query.ConfigureInnerCommand();
+
+            Assert.AreEqual("select Count(state) from bigtable where direction = @Direction", command.CommandText);
+            Assert.AreEqual(1, command.Parameters.Count);
+
+            command = _query.ConfigureInnerCommand();
+
+            Assert.AreEqual("select Count(state) from bigtable where direction = @Direction", command.CommandText);
+            Assert.AreEqual(1, command.Parameters.Count);
+
+            _query["Direction"] = null;
+
+            command = _query.ConfigureInnerCommand();
+
+            Assert.AreEqual("select Count(state) from bigtable", command.CommandText);
+            Assert.AreEqual(0, command.Parameters.Count);
         }
 
         [Test]
@@ -94,31 +123,6 @@ namespace StructureMap.Testing.DataAccess.Commands
                 "select Count(state) from bigtable where name = 'Jeremy' and state = 'Missouri' and direction = @Direction",
                 command.CommandText);
             Assert.AreEqual(1, command.Parameters.Count);
-        }
-
-        [Test]
-        public void CreateWithParameterThenSetValueToNullNoParameters()
-        {
-            _query["Column"] = "state";
-            _query["Table"] = "bigtable";
-            _query["Direction"] = "North";
-
-            IDbCommand command = _query.ConfigureInnerCommand();
-
-            Assert.AreEqual("select Count(state) from bigtable where direction = @Direction", command.CommandText);
-            Assert.AreEqual(1, command.Parameters.Count);
-
-            command = _query.ConfigureInnerCommand();
-
-            Assert.AreEqual("select Count(state) from bigtable where direction = @Direction", command.CommandText);
-            Assert.AreEqual(1, command.Parameters.Count);
-
-            _query["Direction"] = null;
-
-            command = _query.ConfigureInnerCommand();
-
-            Assert.AreEqual("select Count(state) from bigtable", command.CommandText);
-            Assert.AreEqual(0, command.Parameters.Count);
         }
     }
 }

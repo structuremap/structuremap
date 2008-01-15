@@ -7,9 +7,9 @@ namespace StructureMap.Testing.Client.Controllers
 {
     public class TreeNodeExpectation
     {
+        private readonly GraphObject _subject;
         private readonly string _text;
         private readonly string _view;
-        private readonly GraphObject _subject;
         private ArrayList _children;
 
         public TreeNodeExpectation(string text, string view, GraphObject subject)
@@ -19,6 +19,11 @@ namespace StructureMap.Testing.Client.Controllers
             _subject = subject;
 
             _children = new ArrayList();
+        }
+
+        public TreeNodeExpectation this[int index]
+        {
+            get { return (TreeNodeExpectation) _children[index]; }
         }
 
         public void Verify(GraphObjectNode node)
@@ -50,11 +55,6 @@ namespace StructureMap.Testing.Client.Controllers
             AddChild(child);
 
             return child;
-        }
-
-        public TreeNodeExpectation this[int index]
-        {
-            get { return (TreeNodeExpectation) _children[index]; }
         }
     }
 }

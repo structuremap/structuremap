@@ -11,13 +11,12 @@ namespace StructureMap.Emitting
     /// </summary>
     public class DynamicAssembly
     {
-        private AssemblyBuilder assemBuilder;
-        private ModuleBuilder module;
-        private string _Name;
-        private string DLLName;
-        private bool _isCompiled = false;
-
         private Hashtable _Classes;
+        private bool _isCompiled = false;
+        private string _Name;
+        private AssemblyBuilder assemBuilder;
+        private string DLLName;
+        private ModuleBuilder module;
 
         public DynamicAssembly(string Name)
         {
@@ -27,6 +26,16 @@ namespace StructureMap.Emitting
             Init();
         }
 
+
+        public string Name
+        {
+            get { return _Name; }
+        }
+
+        public bool IsCompiled
+        {
+            get { return _isCompiled; }
+        }
 
         private void Init()
         {
@@ -43,12 +52,6 @@ namespace StructureMap.Emitting
 
             //module = assemBuilder.DefineDynamicModule(this.Name, DLLName);
             module = assemBuilder.DefineDynamicModule(Name);
-        }
-
-
-        public string Name
-        {
-            get { return _Name; }
         }
 
 
@@ -84,12 +87,6 @@ namespace StructureMap.Emitting
             _isCompiled = true;
             return (Assembly) assemBuilder;
             //return assem;
-        }
-
-
-        public bool IsCompiled
-        {
-            get { return _isCompiled; }
         }
     }
 }

@@ -9,9 +9,24 @@ namespace StructureMap.Testing.Container.ExceptionHandling
     [TestFixture]
     public class StructureMapExceptionTester
     {
-        private ExceptionTestRunner _testRunner;
+        #region Setup/Teardown
 
-        #region utility functions
+        [SetUp]
+        public void SetUp()
+        {
+            //backupConfig();
+            _testRunner = new ExceptionTestRunner();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            //restoreConfig();
+        }
+
+        #endregion
+
+        private ExceptionTestRunner _testRunner;
 
         private void backupConfig()
         {
@@ -39,50 +54,6 @@ namespace StructureMap.Testing.Container.ExceptionHandling
             }
         }
 
-        [SetUp]
-        public void SetUp()
-        {
-            //backupConfig();
-            _testRunner = new ExceptionTestRunner();
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            //restoreConfig();
-        }
-
-        #endregion
-
-        [Test]
-        public void ExceptionMessage()
-        {
-            StructureMapException exception = new StructureMapException(100, "StructureMap.config");
-            string expected =
-                "StructureMap Exception Code:  100\nExpected file \"StructureMap.config\" cannot be opened at StructureMap.config";
-
-            string actual = exception.Message;
-
-            Assert.AreEqual(expected, actual);
-        }
-
-
-        [Test, ExpectedException(typeof (StructureMapException)),
-         Ignore("Issue with MSBUILD causes this to fail in cruise build.")]
-        public void Exception100FromObjectFactory()
-        {
-            try
-            {
-                backupConfig();
-                File.Delete("StructureMap.config");
-                ObjectFactory.ResetDefaults();
-            }
-            finally
-            {
-                restoreConfig();
-            }
-        }
-
         [Test]
         public void CannotLoadAssemblyInAssemblyNode()
         {
@@ -104,50 +75,6 @@ namespace StructureMap.Testing.Container.ExceptionHandling
         }
 
         [Test]
-        public void MissingConcreteKeyOnPluginNode()
-        {
-            _testRunner.ExecuteExceptionTestFromResetDefaults(112);
-        }
-
-        [Test]
-        public void CouldNotBuildTheDesignatedMementoSourceForAPluginFamily()
-        {
-            _testRunner.ExecuteExceptionTestFromResetDefaults(120);
-        }
-
-
-        [Test]
-        public void CouldNotUpcastDesignatedPluggedTypeIntoPluginType()
-        {
-            _testRunner.ExecuteExceptionTestFromResetDefaults(114);
-        }
-
-        [Test]
-        public void CouldNotFindInstanceKey()
-        {
-            _testRunner.ExecuteGetInstance(200, "NonExistentInstanceKey", typeof (IWidget));
-        }
-
-
-        [Test]
-        public void CouldNotFindConcreteKey()
-        {
-            _testRunner.ExecuteGetInstance(201, "BadConcreteKey", typeof (IWidget));
-        }
-
-        [Test]
-        public void DefaultKeyDoesNotExist()
-        {
-            _testRunner.ExecuteGetDefaultInstance(202, typeof (IWidget));
-        }
-
-        [Test]
-        public void InvalidConfigurationOfInterceptors()
-        {
-            _testRunner.ExecuteExceptionTestFromResetDefaults(121);
-        }
-
-        [Test]
         public void CanSerialize()
         {
             ApplicationException ex = new ApplicationException("Oh no!");
@@ -163,6 +90,77 @@ namespace StructureMap.Testing.Container.ExceptionHandling
             Assert.AreNotSame(smapEx, smapEx2);
 
             Assert.AreEqual(smapEx.Message, smapEx2.Message);
+        }
+
+        [Test]
+        public void CouldNotBuildTheDesignatedMementoSourceForAPluginFamily()
+        {
+            _testRunner.ExecuteExceptionTestFromResetDefaults(120);
+        }
+
+
+        [Test]
+        public void CouldNotFindConcreteKey()
+        {
+            _testRunner.ExecuteGetInstance(201, "BadConcreteKey", typeof (IWidget));
+        }
+
+        [Test]
+        public void CouldNotFindInstanceKey()
+        {
+            _testRunner.ExecuteGetInstance(200, "NonExistentInstanceKey", typeof (IWidget));
+        }
+
+        [Test]
+        public void CouldNotUpcastDesignatedPluggedTypeIntoPluginType()
+        {
+            _testRunner.ExecuteExceptionTestFromResetDefaults(114);
+        }
+
+        [Test]
+        public void DefaultKeyDoesNotExist()
+        {
+            _testRunner.ExecuteGetDefaultInstance(202, typeof (IWidget));
+        }
+
+        [Test, ExpectedException(typeof (StructureMapException)),
+         Ignore("Issue with MSBUILD causes this to fail in cruise build.")]
+        public void Exception100FromObjectFactory()
+        {
+            try
+            {
+                backupConfig();
+                File.Delete("StructureMap.config");
+                ObjectFactory.ResetDefaults();
+            }
+            finally
+            {
+                restoreConfig();
+            }
+        }
+
+        [Test]
+        public void ExceptionMessage()
+        {
+            StructureMapException exception = new StructureMapException(100, "StructureMap.config");
+            string expected =
+                "StructureMap Exception Code:  100\nExpected file \"StructureMap.config\" cannot be opened at StructureMap.config";
+
+            string actual = exception.Message;
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void InvalidConfigurationOfInterceptors()
+        {
+            _testRunner.ExecuteExceptionTestFromResetDefaults(121);
+        }
+
+        [Test]
+        public void MissingConcreteKeyOnPluginNode()
+        {
+            _testRunner.ExecuteExceptionTestFromResetDefaults(112);
         }
     }
 }

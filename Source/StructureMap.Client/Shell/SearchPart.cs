@@ -6,23 +6,6 @@ namespace StructureMap.Client.Shell
 {
     public class SearchPart
     {
-        public static SearchPart[] ParseParts(string searchString)
-        {
-            searchString = searchString.Replace("http://", "");
-            searchString = searchString.Replace("/", "");
-
-            string[] searches = searchString.Split(':');
-
-            SearchPart[] returnValue = new SearchPart[searches.Length];
-            for (int i = 0; i < returnValue.Length; i++)
-            {
-                string[] parts = searches[i].Split('=');
-                returnValue[i] = new SearchPart(parts[0], parts[1]);
-            }
-
-            return returnValue;
-        }
-
         private readonly string _searchKey;
         private readonly string _searchValue;
 
@@ -40,6 +23,23 @@ namespace StructureMap.Client.Shell
         public string SearchValue
         {
             get { return _searchValue; }
+        }
+
+        public static SearchPart[] ParseParts(string searchString)
+        {
+            searchString = searchString.Replace("http://", "");
+            searchString = searchString.Replace("/", "");
+
+            string[] searches = searchString.Split(':');
+
+            SearchPart[] returnValue = new SearchPart[searches.Length];
+            for (int i = 0; i < returnValue.Length; i++)
+            {
+                string[] parts = searches[i].Split('=');
+                returnValue[i] = new SearchPart(parts[0], parts[1]);
+            }
+
+            return returnValue;
         }
 
         public GraphObjectNode FindNode(GraphObjectNode targetNode)

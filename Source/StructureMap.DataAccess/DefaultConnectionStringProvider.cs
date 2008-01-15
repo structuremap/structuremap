@@ -10,9 +10,13 @@ namespace StructureMap.DataAccess
             _connectionString = connectionString;
         }
 
+        #region IConnectionStringProvider Members
+
         public string GetConnectionString()
         {
             return _connectionString;
         }
+
+        #endregion
     }
 }

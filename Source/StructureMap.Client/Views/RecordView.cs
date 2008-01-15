@@ -12,6 +12,8 @@ namespace StructureMap.Client.Views
             _columns = columns;
         }
 
+        #region IViewPart Members
+
         public void WriteHTML(HTMLBuilder builder, GraphObject subject)
         {
             TableMaker table = builder.StartTable();
@@ -24,5 +26,7 @@ namespace StructureMap.Client.Views
                 column.CreateCell(table, subject);
             }
         }
+
+        #endregion
     }
 }

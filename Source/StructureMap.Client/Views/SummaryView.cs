@@ -14,6 +14,8 @@ namespace StructureMap.Client.Views
             _builder.AddHeader("Summary");
         }
 
+        #region IHTMLSource Members
+
         public string BuildHTML(GraphObject subject)
         {
             PluginGraphReport report = (PluginGraphReport) subject;
@@ -26,6 +28,8 @@ namespace StructureMap.Client.Views
 
             return _builder.HTML;
         }
+
+        #endregion
 
         private void buildSummaryReport(PluginGraphReport report)
         {

@@ -8,11 +8,6 @@ namespace StructureMap.DataAccess.MSSQL
     [Pluggable("MSSQL")]
     public class MSSQLDatabaseEngine : IDatabaseEngine
     {
-        public static IDataSession BuildSession(string connectionString)
-        {
-            return new DataSession(new MSSQLDatabaseEngine(connectionString));
-        }
-
         private readonly string _connectionString;
 
         [DefaultConstructor]
@@ -25,6 +20,8 @@ namespace StructureMap.DataAccess.MSSQL
         {
             _connectionString = connectionString;
         }
+
+        #region IDatabaseEngine Members
 
         public IDbConnection GetConnection()
         {
@@ -49,13 +46,6 @@ namespace StructureMap.DataAccess.MSSQL
             parameter.Size = size;
             parameter.IsNullable = isNullable;
 
-            return parameter;
-        }
-
-        private SqlParameter createParameter(string logicalName)
-        {
-            SqlParameter parameter = new SqlParameter();
-            parameter.ParameterName = "@" + logicalName;
             return parameter;
         }
 
@@ -111,6 +101,20 @@ namespace StructureMap.DataAccess.MSSQL
 
 
             return command;
+        }
+
+        #endregion
+
+        public static IDataSession BuildSession(string connectionString)
+        {
+            return new DataSession(new MSSQLDatabaseEngine(connectionString));
+        }
+
+        private SqlParameter createParameter(string logicalName)
+        {
+            SqlParameter parameter = new SqlParameter();
+            parameter.ParameterName = "@" + logicalName;
+            return parameter;
         }
 
         public void TestConnection()

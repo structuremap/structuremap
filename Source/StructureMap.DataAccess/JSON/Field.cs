@@ -5,6 +5,31 @@ namespace StructureMap.DataAccess.JSON
 {
     public class Field : IField
     {
+        private readonly int _index;
+        private readonly string _name;
+
+        public Field(int index, string name)
+        {
+            _index = index;
+            _name = name;
+        }
+
+        #region IField Members
+
+        public void Write(JSONObject target, DataRow row)
+        {
+            if (row.IsNull(_index))
+            {
+                target.AddNull(_name);
+            }
+            else
+            {
+                writeProperty(_name, row[_index], target);
+            }
+        }
+
+        #endregion
+
         public static Field[] GetFields(DataTable table)
         {
             Field[] returnValue = new Field[table.Columns.Count];
@@ -33,28 +58,6 @@ namespace StructureMap.DataAccess.JSON
 
                 default:
                     return new NumericField(index, name);
-            }
-        }
-
-        private readonly int _index;
-        private readonly string _name;
-
-        public Field(int index, string name)
-        {
-            _index = index;
-            _name = name;
-        }
-
-
-        public void Write(JSONObject target, DataRow row)
-        {
-            if (row.IsNull(_index))
-            {
-                target.AddNull(_name);
-            }
-            else
-            {
-                writeProperty(_name, row[_index], target);
             }
         }
 

@@ -12,6 +12,8 @@ namespace StructureMap.Client.Views
         {
         }
 
+        #region IColumn Members
+
         public void Initialize(Type subjectType)
         {
             // no-op;
@@ -28,5 +30,7 @@ namespace StructureMap.Client.Views
 
             maker.AddHeader(_index.ToString());
         }
+
+        #endregion
     }
 }

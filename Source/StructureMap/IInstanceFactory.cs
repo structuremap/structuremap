@@ -9,15 +9,20 @@ namespace StructureMap
     public interface IInstanceFactory
     {
         /// <summary>
+        /// The CLR System.Type that the IInstanceManager builds instances  
+        /// </summary>
+        Type PluginType { get; }
+
+        /// <summary>
+        /// The InstanceKey of the default instance built by this IInstanceFactory
+        /// </summary>
+        string DefaultInstanceKey { get; }
+
+        /// <summary>
         /// Establishes a reference to the parent InstanceManager
         /// </summary>
         /// <param name="instanceManager"></param>
         void SetInstanceManager(InstanceManager instanceManager);
-
-        /// <summary>
-        /// The CLR System.Type that the IInstanceManager builds instances  
-        /// </summary>
-        Type PluginType { get; }
 
         /// <summary>
         /// Creates an object instance for the InstanceKey
@@ -58,11 +63,6 @@ namespace StructureMap
         /// <param name="Memento"></param>
         void SetDefault(InstanceMemento Memento);
 
-
-        /// <summary>
-        /// The InstanceKey of the default instance built by this IInstanceFactory
-        /// </summary>
-        string DefaultInstanceKey { get; }
 
         /// <summary>
         /// Returns an IList of all of the configured instances

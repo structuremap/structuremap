@@ -14,26 +14,25 @@ namespace StructureMap.Client.Shell
     /// </summary>
     public class ApplicationShell : Form, IApplicationShell
     {
-        private Panel topPanel;
-        private Label label1;
-        private TextBox configPathTextBox;
-        private Button configFileButton;
+        private ApplicationController _controller;
+        private HtmlElement _mainDiv;
         private Button binaryFolderButton;
         private TextBox binaryFolderTextBox;
+        private WebBrowser browser;
+        private IContainer components;
+        private Button configFileButton;
+        private TextBox configPathTextBox;
+        private FolderBrowserDialog folderBrowserDialog;
+        private ImageList images;
+        private Label label1;
         private Label label2;
         private CheckBox lockFolderCheckbox;
-        private Button refreshButton;
         private Panel mainPanel;
-        private TreeView treeView;
-        private WebBrowser browser;
-        private Splitter splitter;
-        private FolderBrowserDialog folderBrowserDialog;
         private OpenFileDialog openFileDialog;
-        private HtmlElement _mainDiv;
-
-        private ApplicationController _controller;
-        private ImageList images;
-        private IContainer components;
+        private Button refreshButton;
+        private Splitter splitter;
+        private Panel topPanel;
+        private TreeView treeView;
 
         public ApplicationShell()
         {
@@ -50,6 +49,48 @@ namespace StructureMap.Client.Shell
             browser.Navigated += new WebBrowserNavigatedEventHandler(browser_Navigated);
             browser.NewWindow += new CancelEventHandler(browser_NewWindow);
         }
+
+        #region IApplicationShell Members
+
+        public GraphObjectNode TopNode
+        {
+            get { return treeView.TopNode as GraphObjectNode; }
+            set
+            {
+                treeView.Nodes.Clear();
+                treeView.Nodes.Add(value);
+
+                value.Expand();
+                foreach (TreeNode node in value.Nodes)
+                {
+                    node.Expand();
+                }
+
+                _controller.ShowView(value.ViewName, value.Subject);
+            }
+        }
+
+        public string ConfigurationPath
+        {
+            get { return configPathTextBox.Text; }
+        }
+
+        public string AssemblyFolder
+        {
+            get { return binaryFolderTextBox.Text; }
+        }
+
+        public bool LockFolders
+        {
+            get { return lockFolderCheckbox.Checked; }
+        }
+
+        public void DisplayHTML(string html)
+        {
+            _mainDiv.InnerHtml = html;
+        }
+
+        #endregion
 
         private void browser_NewWindow(object sender, CancelEventArgs e)
         {
@@ -101,6 +142,48 @@ namespace StructureMap.Client.Shell
                 }
             }
             base.Dispose(disposing);
+        }
+
+        private void configFileButton_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                configPathTextBox.Text = openFileDialog.FileName;
+            }
+        }
+
+        private void binaryFolderButton_Click(object sender, EventArgs e)
+        {
+            if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+            {
+                binaryFolderTextBox.Text = folderBrowserDialog.SelectedPath;
+            }
+        }
+
+        private void refreshButton_Click(object sender, EventArgs e)
+        {
+            _controller.RefreshReport();
+        }
+
+        private void treeView_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Left)
+            {
+                return;
+            }
+
+            Point point = new Point(e.X, e.Y);
+            GraphObjectNode node = treeView.GetNodeAt(point) as GraphObjectNode;
+            if (node != null)
+            {
+                _controller.ShowView(node.ViewName, node.Subject);
+            }
+        }
+
+
+        private void lockFolderCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            binaryFolderButton.Enabled = binaryFolderTextBox.Enabled = !lockFolderCheckbox.Checked;
         }
 
         #region Windows Form Designer generated code
@@ -287,85 +370,5 @@ namespace StructureMap.Client.Shell
         }
 
         #endregion
-
-        public GraphObjectNode TopNode
-        {
-            get { return treeView.TopNode as GraphObjectNode; }
-            set
-            {
-                treeView.Nodes.Clear();
-                treeView.Nodes.Add(value);
-
-                value.Expand();
-                foreach (TreeNode node in value.Nodes)
-                {
-                    node.Expand();
-                }
-
-                _controller.ShowView(value.ViewName, value.Subject);
-            }
-        }
-
-        public string ConfigurationPath
-        {
-            get { return configPathTextBox.Text; }
-        }
-
-        public string AssemblyFolder
-        {
-            get { return binaryFolderTextBox.Text; }
-        }
-
-        public bool LockFolders
-        {
-            get { return lockFolderCheckbox.Checked; }
-        }
-
-        public void DisplayHTML(string html)
-        {
-            _mainDiv.InnerHtml = html;
-        }
-
-        private void configFileButton_Click(object sender, EventArgs e)
-        {
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                configPathTextBox.Text = openFileDialog.FileName;
-            }
-        }
-
-        private void binaryFolderButton_Click(object sender, EventArgs e)
-        {
-            if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
-            {
-                binaryFolderTextBox.Text = folderBrowserDialog.SelectedPath;
-            }
-        }
-
-        private void refreshButton_Click(object sender, EventArgs e)
-        {
-            _controller.RefreshReport();
-        }
-
-        private void treeView_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button != MouseButtons.Left)
-            {
-                return;
-            }
-
-            Point point = new Point(e.X, e.Y);
-            GraphObjectNode node = treeView.GetNodeAt(point) as GraphObjectNode;
-            if (node != null)
-            {
-                _controller.ShowView(node.ViewName, node.Subject);
-            }
-        }
-
-
-        private void lockFolderCheckbox_CheckedChanged(object sender, EventArgs e)
-        {
-            binaryFolderButton.Enabled = binaryFolderTextBox.Enabled = !lockFolderCheckbox.Checked;
-        }
     }
 }

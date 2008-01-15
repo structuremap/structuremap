@@ -6,8 +6,8 @@ namespace StructureMap.Source
 
     public class XmlMementoCreator
     {
-        private readonly string _typeAttribute;
         private readonly string _keyAttribute;
+        private readonly string _typeAttribute;
         private CreateXmlMementoDelegate _createMemento;
 
         public XmlMementoCreator(XmlMementoStyle style, string typeAttribute, string keyAttribute)

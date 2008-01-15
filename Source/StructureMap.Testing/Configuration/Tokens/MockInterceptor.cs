@@ -7,6 +7,14 @@ namespace StructureMap.Testing.Configuration.Tokens
     [Pluggable("Mock")]
     public class MockInterceptor : InstanceFactoryInterceptor
     {
+        public MockInterceptor(bool success) : base()
+        {
+            if (!success)
+            {
+                throw new ApplicationException("Bad");
+            }
+        }
+
         public static InstanceMemento CreateFailureMemento()
         {
             MemoryInstanceMemento memento = new MemoryInstanceMemento("Mock", "failure");
@@ -21,14 +29,6 @@ namespace StructureMap.Testing.Configuration.Tokens
             memento.SetProperty("success", true.ToString());
 
             return memento;
-        }
-
-        public MockInterceptor(bool success) : base()
-        {
-            if (!success)
-            {
-                throw new ApplicationException("Bad");
-            }
         }
 
         public override object Clone()

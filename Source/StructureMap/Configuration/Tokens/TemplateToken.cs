@@ -5,10 +5,10 @@ namespace StructureMap.Configuration.Tokens
     [Serializable]
     public class TemplateToken : GraphObject
     {
-        private string _templateKey;
-        private string _pluginType;
         private string _concreteKey;
+        private string _pluginType;
         private string[] _properties;
+        private string _templateKey;
 
         public TemplateToken()
         {
@@ -46,14 +46,14 @@ namespace StructureMap.Configuration.Tokens
         }
 
 
-        public override void AcceptVisitor(IConfigurationVisitor visitor)
-        {
-            visitor.HandleTemplate(this);
-        }
-
         protected override string key
         {
             get { return _templateKey; }
+        }
+
+        public override void AcceptVisitor(IConfigurationVisitor visitor)
+        {
+            visitor.HandleTemplate(this);
         }
     }
 }

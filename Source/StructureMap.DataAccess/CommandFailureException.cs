@@ -7,8 +7,8 @@ namespace StructureMap.DataAccess
     [Serializable]
     public class CommandFailureException : ApplicationException
     {
-        private string _message = string.Empty;
         private string _commandName = string.Empty;
+        private string _message = string.Empty;
 
         public CommandFailureException()
         {
@@ -29,6 +29,11 @@ namespace StructureMap.DataAccess
         {
             get { return _commandName; }
             set { _commandName = value; }
+        }
+
+        public override sealed string Message
+        {
+            get { return string.Format("Command:  {0}\n\r{1}", _commandName, _message); }
         }
 
         private void buildMessage(IDbCommand command)
@@ -73,11 +78,6 @@ namespace StructureMap.DataAccess
             SB.Append(":  ");
             SB.Append(propertyValue);
             SB.Append("\n");
-        }
-
-        public override sealed string Message
-        {
-            get { return string.Format("Command:  {0}\n\r{1}", _commandName, _message); }
         }
     }
 }

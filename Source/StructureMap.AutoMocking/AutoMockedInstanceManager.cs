@@ -1,10 +1,7 @@
 using System;
-using Rhino.Mocks;
 
 namespace StructureMap.AutoMocking
 {
-
-    
     public class AutoMockedInstanceManager : InstanceManager
     {
         private readonly ServiceLocator _locator;
@@ -18,17 +15,15 @@ namespace StructureMap.AutoMocking
         {
             get
             {
-                return getOrCreateFactory(pluginType, 
-                    delegate
-                      {
-                          object service = _locator.Service(pluginType);
-                          InstanceFactory factory
-                              = InstanceFactory.CreateFactoryWithDefault(pluginType, service);
-                          
-                          return factory;
-                      });
-                
-                
+                return getOrCreateFactory(pluginType,
+                                          delegate
+                                              {
+                                                  object service = _locator.Service(pluginType);
+                                                  InstanceFactory factory
+                                                      = InstanceFactory.CreateFactoryWithDefault(pluginType, service);
+
+                                                  return factory;
+                                              });
             }
             set { base[pluginType] = value; }
         }

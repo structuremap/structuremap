@@ -7,13 +7,7 @@ namespace StructureMap.Testing.DeploymentTasks
     [TestFixture]
     public class SetOverrideTaskTester
     {
-        private string configXml = "<StructureMap DefaultProfile=\"Blue\">" +
-                                   "<Profile Name=\"Blue\"><Override Type=\"something\" DefaultKey=\"BlueKey\"/></Profile>" +
-                                   "<Profile Name=\"Red\"/>" +
-                                   "<Profile Name=\"Green\"><Override Type=\"something\" DefaultKey=\"GreenKey\"/></Profile>" +
-                                   "</StructureMap>";
-
-        private XmlDocument _document;
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -22,23 +16,15 @@ namespace StructureMap.Testing.DeploymentTasks
             _document.LoadXml(configXml);
         }
 
+        #endregion
 
-        [Test]
-        public void SetAnOverrideOnTheDefaultProfile()
-        {
-            SetOverrideTask task = new SetOverrideTask();
-            task.TypeName = "something";
-            string theNewKey = "newKey";
-            task.DefaultKey = theNewKey;
+        private string configXml = "<StructureMap DefaultProfile=\"Blue\">" +
+                                   "<Profile Name=\"Blue\"><Override Type=\"something\" DefaultKey=\"BlueKey\"/></Profile>" +
+                                   "<Profile Name=\"Red\"/>" +
+                                   "<Profile Name=\"Green\"><Override Type=\"something\" DefaultKey=\"GreenKey\"/></Profile>" +
+                                   "</StructureMap>";
 
-            task.ApplyToDocument(_document);
-
-            XmlNode overrideNode =
-                _document.DocumentElement.SelectSingleNode("Profile[@Name='Blue']/Override[@Type='something']");
-            string actualKey = overrideNode.Attributes["DefaultKey"].InnerText;
-
-            Assert.AreEqual(theNewKey, actualKey);
-        }
+        private XmlDocument _document;
 
 
         [Test]
@@ -91,6 +77,23 @@ namespace StructureMap.Testing.DeploymentTasks
 
             XmlNode overrideNode =
                 _document.DocumentElement.SelectSingleNode("Profile[@Name='Orange']/Override[@Type='something']");
+            string actualKey = overrideNode.Attributes["DefaultKey"].InnerText;
+
+            Assert.AreEqual(theNewKey, actualKey);
+        }
+
+        [Test]
+        public void SetAnOverrideOnTheDefaultProfile()
+        {
+            SetOverrideTask task = new SetOverrideTask();
+            task.TypeName = "something";
+            string theNewKey = "newKey";
+            task.DefaultKey = theNewKey;
+
+            task.ApplyToDocument(_document);
+
+            XmlNode overrideNode =
+                _document.DocumentElement.SelectSingleNode("Profile[@Name='Blue']/Override[@Type='something']");
             string actualKey = overrideNode.Attributes["DefaultKey"].InnerText;
 
             Assert.AreEqual(theNewKey, actualKey);

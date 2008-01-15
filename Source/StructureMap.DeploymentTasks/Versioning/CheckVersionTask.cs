@@ -8,35 +8,13 @@ namespace StructureMap.DeploymentTasks.Versioning
     [TaskName("structuremap.checkversion")]
     public class CheckVersionTask : Task, IVersionReport
     {
-        private string _manifestFile;
-        private string _targetFolder;
-        private bool _succeeded = true;
         private ArrayList _exclusionList = new ArrayList();
+        private string _manifestFile;
+        private bool _succeeded = true;
+        private string _targetFolder;
 
         public CheckVersionTask() : base()
         {
-        }
-
-        protected override void ExecuteTask()
-        {
-            _succeeded = true;
-
-            Log(Level.Info,
-                string.Format("Starting version checking of folder {0} against manifest file {1}", _targetFolder,
-                              _manifestFile));
-
-            DirectoryInfo targetDirectoryInfo = new DirectoryInfo(TargetFolder);
-            DeployedDirectory actualDirectory = new DeployedDirectory(targetDirectoryInfo);
-
-            DeployedDirectory expectedDirectory = DeployedDirectory.ReadFromXml(_manifestFile);
-
-            expectedDirectory.CheckDeployedVersions(actualDirectory, this);
-
-            if (!_succeeded)
-            {
-                string message = string.Format("Version checking for {0} Failed!", _targetFolder);
-                throw new BuildException(message);
-            }
         }
 
         [TaskAttribute("manifest", Required = true)]
@@ -67,6 +45,8 @@ namespace StructureMap.DeploymentTasks.Versioning
             get { return ""; }
         }
 
+        #region IVersionReport Members
+
         public void MissingAssembly(string assemblyName, string version)
         {
             _succeeded = false;
@@ -95,11 +75,6 @@ namespace StructureMap.DeploymentTasks.Versioning
             Log(Level.Error, message);
         }
 
-        private bool isExcluded(string fileName)
-        {
-            return (_exclusionList.Contains(fileName.Trim().ToUpper()));
-        }
-
         public void VersionMismatchFile(string fileName)
         {
             if (isExcluded(fileName))
@@ -110,6 +85,35 @@ namespace StructureMap.DeploymentTasks.Versioning
             _succeeded = false;
             string message = string.Format("Version mismatch detected for file {0}.  Check contents", fileName);
             Log(Level.Error, message);
+        }
+
+        #endregion
+
+        protected override void ExecuteTask()
+        {
+            _succeeded = true;
+
+            Log(Level.Info,
+                string.Format("Starting version checking of folder {0} against manifest file {1}", _targetFolder,
+                              _manifestFile));
+
+            DirectoryInfo targetDirectoryInfo = new DirectoryInfo(TargetFolder);
+            DeployedDirectory actualDirectory = new DeployedDirectory(targetDirectoryInfo);
+
+            DeployedDirectory expectedDirectory = DeployedDirectory.ReadFromXml(_manifestFile);
+
+            expectedDirectory.CheckDeployedVersions(actualDirectory, this);
+
+            if (!_succeeded)
+            {
+                string message = string.Format("Version checking for {0} Failed!", _targetFolder);
+                throw new BuildException(message);
+            }
+        }
+
+        private bool isExcluded(string fileName)
+        {
+            return (_exclusionList.Contains(fileName.Trim().ToUpper()));
         }
     }
 }

@@ -10,8 +10,8 @@ namespace StructureMap.Graph
     [Serializable]
     public class InstanceDefault : GraphObject, ICloneable
     {
-        private string _pluginTypeName;
         private string _defaultKey;
+        private string _pluginTypeName;
 
         public InstanceDefault(string pluginTypeName, string defaultKey) : base()
         {
@@ -35,6 +35,11 @@ namespace StructureMap.Graph
         {
             get { return _defaultKey; }
             set { _defaultKey = value; }
+        }
+
+        protected override string key
+        {
+            get { return PluginTypeName; }
         }
 
         #region ICloneable Members
@@ -62,11 +67,6 @@ namespace StructureMap.Graph
             return
                 (_pluginTypeName != null ? _pluginTypeName.GetHashCode() : 0) +
                 29*(_defaultKey != null ? _defaultKey.GetHashCode() : 0);
-        }
-
-        protected override string key
-        {
-            get { return PluginTypeName; }
         }
     }
 }

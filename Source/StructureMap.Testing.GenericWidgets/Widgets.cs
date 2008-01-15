@@ -51,10 +51,14 @@ namespace StructureMap.Testing.GenericWidgets
     [Pluggable("Default")]
     public class ConcretePlug<T> : IPlug<T>
     {
+        #region IPlug<T> Members
+
         public Type PlugType
         {
             get { return typeof (T); }
         }
+
+        #endregion
     }
 
     [PluginFamily("Default")]
@@ -93,8 +97,8 @@ namespace StructureMap.Testing.GenericWidgets
 
     public class ComplexThing<T, U> : IThing<T, U>
     {
-        private readonly string _name;
         private readonly int _age;
+        private readonly string _name;
         private readonly bool _ready;
 
         public ComplexThing(string name, int age, bool ready)

@@ -10,6 +10,11 @@ namespace StructureMap.DataAccess.Tools.Mocks
         {
         }
 
+        public override string Message
+        {
+            get { return _message; }
+        }
+
         public void MarkWrongParameterValue(string parameterName, object expected, object actual)
         {
             _message +=
@@ -25,11 +30,6 @@ namespace StructureMap.DataAccess.Tools.Mocks
         public void MarkMissingParameter(string parameterName, object expected)
         {
             _message += string.Format("Missing Parameter Value for '{0}', expected '{1}'\n\r", parameterName, expected);
-        }
-
-        public override string Message
-        {
-            get { return _message; }
         }
 
         public void ThrowIfExceptions()

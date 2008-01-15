@@ -23,6 +23,15 @@ namespace StructureMap.Testing.Widget
             set { _Color = value; }
         }
 
+        #region ICloneable Members
+
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
+
+        #endregion
+
         #region IWidget Members
 
         public void DoSomething()
@@ -44,11 +53,6 @@ namespace StructureMap.Testing.Widget
         {
             return _Color != null ? _Color.GetHashCode() : 0;
         }
-
-        public object Clone()
-        {
-            return MemberwiseClone();
-        }
     }
 
     [Pluggable("AWidget")]
@@ -58,11 +62,14 @@ namespace StructureMap.Testing.Widget
         {
         }
 
+        #region IWidget Members
 
         public void DoSomething()
         {
             throw new NotImplementedException();
         }
+
+        #endregion
     }
 
     public class NotPluggableWidget : IWidget
@@ -116,13 +123,13 @@ namespace StructureMap.Testing.Widget
     [Pluggable("Configuration", "Only for testing")]
     public class ConfigurationWidget : IWidget
     {
-        private string _String;
-        private string _String2;
-        private int _Int;
-        private long _Long;
+        private bool _Bool;
         private byte _Byte;
         private double _Double;
-        private bool _Bool;
+        private int _Int;
+        private long _Long;
+        private string _String;
+        private string _String2;
 
         public ConfigurationWidget(string String, string String2, int Int, long Long, byte Byte, double Double,
                                    bool Bool)
@@ -184,6 +191,15 @@ namespace StructureMap.Testing.Widget
             set { _Bool = value; }
         }
 
+        #region IWidget Members
+
+        public void DoSomething()
+        {
+            // TODO:  Add ConfigurationTarget.DoSomething implementation
+        }
+
+        #endregion
+
         [ValidationMethod]
         public void Validate()
         {
@@ -198,14 +214,5 @@ namespace StructureMap.Testing.Widget
         public void Validate2()
         {
         }
-
-        #region IWidget Members
-
-        public void DoSomething()
-        {
-            // TODO:  Add ConfigurationTarget.DoSomething implementation
-        }
-
-        #endregion
     }
 }

@@ -28,22 +28,20 @@ namespace StructureMap.Graph
 
         #endregion
 
-        private string _defaultKey = string.Empty;
-        private Type _pluginType;
-        private MementoSource _source;
-        private DefinitionSource _definitionSource = DefinitionSource.Implicit;
-        private string _pluginTypeName;
-        private InterceptionChain _interceptionChain;
-        private readonly PluginCollection _plugins;
-        private InstanceInterceptor _instanceInterceptor = new NulloInterceptor();
-        private bool _canUseUnMarkedPlugins = false;
-
-
         public const string CONCRETE_KEY = "CONCRETE";
+        private readonly PluginCollection _plugins;
+        private bool _canUseUnMarkedPlugins = false;
+        private string _defaultKey = string.Empty;
+        private DefinitionSource _definitionSource = DefinitionSource.Implicit;
+        private InstanceInterceptor _instanceInterceptor = new NulloInterceptor();
+        private InterceptionChain _interceptionChain;
+        private Type _pluginType;
+        private string _pluginTypeName;
+        private MementoSource _source;
 
         #region constructors
 
-        public PluginFamily(Type pluginType, string defaultInstanceKey) 
+        public PluginFamily(Type pluginType, string defaultInstanceKey)
         {
             _pluginType = pluginType;
             _pluginTypeName = TypePath.GetAssemblyQualifiedName(_pluginType);
@@ -179,6 +177,45 @@ namespace StructureMap.Graph
             return isValid;
         }
 
+        /// <summary>
+        /// Finds Plugin's that match the PluginType from the assembly and add to the internal
+        /// collection of Plugin's 
+        /// </summary>
+        /// <param name="assembly"></param>
+        public Plugin[] FindPlugins(AssemblyGraph assembly)
+        {
+            Predicate<Type> pluggedTypeFilter =
+                delegate(Type type) { return Plugin.IsAnExplicitPlugin(PluginType, type); };
+
+            if (_canUseUnMarkedPlugins)
+            {
+                pluggedTypeFilter = delegate(Type type) { return Plugin.CanBeCast(PluginType, type); };
+            }
+
+            Plugin[] plugins = assembly.FindPlugins(pluggedTypeFilter);
+
+            foreach (Plugin plugin in plugins)
+            {
+                _plugins.Add(plugin);
+            }
+
+            return plugins;
+        }
+
+
+        /// <summary>
+        /// Removes any Implicitly defined Plugin and/or Instance from the PluginFamily
+        /// </summary>
+        public void RemoveImplicitChildren()
+        {
+            _plugins.RemoveImplicitChildren();
+        }
+
+        public void AddInstance(InstanceMemento memento)
+        {
+            _source.AddExternalMemento(memento);
+        }
+
         #region properties
 
         /// <summary>
@@ -260,49 +297,5 @@ namespace StructureMap.Graph
         }
 
         #endregion
-
-        /// <summary>
-        /// Finds Plugin's that match the PluginType from the assembly and add to the internal
-        /// collection of Plugin's 
-        /// </summary>
-        /// <param name="assembly"></param>
-        public Plugin[] FindPlugins(AssemblyGraph assembly)
-        {
-            Predicate<Type> pluggedTypeFilter = delegate(Type type)
-            {
-                return Plugin.IsAnExplicitPlugin(PluginType, type);
-            };
-
-            if (_canUseUnMarkedPlugins)
-            {
-                pluggedTypeFilter = delegate(Type type)
-                                        {
-                                            return Plugin.CanBeCast(PluginType, type);
-                                        };
-            }
-
-            Plugin[] plugins = assembly.FindPlugins(pluggedTypeFilter);
-
-            foreach (Plugin plugin in plugins)
-            {
-                _plugins.Add(plugin);
-            }
-
-            return plugins;
-        }
-
-
-        /// <summary>
-        /// Removes any Implicitly defined Plugin and/or Instance from the PluginFamily
-        /// </summary>
-        public void RemoveImplicitChildren()
-        {
-            _plugins.RemoveImplicitChildren();
-        }
-
-        public void AddInstance(InstanceMemento memento)
-        {
-            _source.AddExternalMemento(memento);
-        }
     }
 }

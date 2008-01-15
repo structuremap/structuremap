@@ -10,8 +10,7 @@ namespace StructureMap.Testing.Configuration.DSL
     [TestFixture]
     public class AddInstanceTester
     {
-        private IInstanceManager manager;
-        private PluginGraph pluginGraph;
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -41,6 +40,122 @@ namespace StructureMap.Testing.Configuration.DSL
             registry.AddInstanceOf<IWidget>().UsingConcreteType<AWidget>();
 
             manager = registry.BuildInstanceManager();
+        }
+
+        #endregion
+
+        private IInstanceManager manager;
+        private PluginGraph pluginGraph;
+
+        [Test]
+        public void AddAnInstanceWithANameAndAPropertySpecifyingConcreteKey()
+        {
+            ColorWidget widget = (ColorWidget) manager.CreateInstance<IWidget>("Purple");
+            Assert.AreEqual("Purple", widget.Color);
+        }
+
+        [Test]
+        public void AddAnInstanceWithANameAndAPropertySpecifyingConcreteType()
+        {
+            ColorWidget widget = (ColorWidget) manager.CreateInstance<IWidget>("DarkGreen");
+            Assert.AreEqual("DarkGreen", widget.Color);
+        }
+
+        [Test]
+        public void AddInstanceAndOverrideTheConcreteTypeForADependency()
+        {
+            Registry registry = new Registry();
+
+            // Specify a new Instance that specifies the concrete type used for a dependency
+            registry.AddInstanceOf<Rule>().UsingConcreteType<WidgetRule>().WithName("AWidgetRule")
+                .Child<IWidget>().IsConcreteType<AWidget>();
+
+            manager = registry.BuildInstanceManager();
+
+            WidgetRule rule = (WidgetRule) manager.CreateInstance<Rule>("AWidgetRule");
+            Assert.IsInstanceOfType(typeof (AWidget), rule.Widget);
+        }
+
+        [Test, Explicit]
+        public void CreateAnInstancePullAPropertyFromTheApplicationConfig()
+        {
+            Assert.AreEqual("Blue", ConfigurationManager.AppSettings["Color"]);
+            ColorWidget widget = (ColorWidget) manager.CreateInstance<IWidget>("AppSetting");
+            Assert.AreEqual("Blue", widget.Color);
+        }
+
+        [Test]
+        public void SimpleCaseByPluginName()
+        {
+            AWidget widget = (AWidget) manager.CreateInstance<IWidget>("AWidget");
+            Assert.IsNotNull(widget);
+        }
+
+        [Test]
+        public void SimpleCaseWithNamedInstance()
+        {
+            Registry registry = new Registry();
+
+            // Specify a new Instance and override the Name
+            registry.AddInstanceOf<IWidget>().UsingConcreteType<AWidget>().WithName("MyInstance");
+
+            manager = registry.BuildInstanceManager();
+
+            AWidget widget = (AWidget) manager.CreateInstance<IWidget>("MyInstance");
+            Assert.IsNotNull(widget);
+        }
+
+        [Test]
+        public void SpecifyANewInstanceOverrideADependencyWithANamedInstance()
+        {
+            Registry registry = new Registry();
+
+            //registry.ScanAssemblies().IncludeAssemblyContainingType<IWidget>();
+
+
+            registry.AddInstanceOf<Rule>().UsingConcreteType<ARule>().WithName("Alias");
+
+            // Add an instance by specifying the ConcreteKey
+            registry.AddInstanceOf<IWidget>()
+                .UsingConcreteType<ColorWidget>()
+                .WithName("Purple")
+                .WithProperty("Color").EqualTo("Purple");
+
+            // Specify a new Instance, override a dependency with a named instance
+            registry.AddInstanceOf<Rule>().UsingConcreteType<WidgetRule>().WithName("RuleThatUsesMyInstance")
+                .Child<IWidget>("widget").IsNamedInstance("Purple");
+
+            manager = registry.BuildInstanceManager();
+
+            Assert.IsInstanceOfType(typeof (ARule), manager.CreateInstance<Rule>("Alias"));
+
+            WidgetRule rule = (WidgetRule) manager.CreateInstance<Rule>("RuleThatUsesMyInstance");
+            ColorWidget widget = (ColorWidget) rule.Widget;
+            Assert.AreEqual("Purple", widget.Color);
+        }
+
+        [Test]
+        public void SpecifyANewInstanceWithADependency()
+        {
+            Registry registry = new Registry();
+
+            // Specify a new Instance, create an instance for a dependency on the fly
+            string instanceKey = "OrangeWidgetRule";
+            registry.AddInstanceOf<Rule>().UsingConcreteType<WidgetRule>().WithName(instanceKey)
+                .Child<IWidget>().Is(
+                Registry.Instance<IWidget>().UsingConcreteType<ColorWidget>()
+                    .WithProperty("Color").EqualTo("Orange")
+                    .WithName("Orange")
+                );
+
+            IInstanceManager mgr = registry.BuildInstanceManager();
+
+            ColorWidget orange = (ColorWidget) mgr.CreateInstance<IWidget>("Orange");
+            Assert.IsNotNull(orange);
+
+            WidgetRule rule = (WidgetRule) mgr.CreateInstance<Rule>(instanceKey);
+            ColorWidget widget = (ColorWidget) rule.Widget;
+            Assert.AreEqual("Orange", widget.Color);
         }
 
         [Test]
@@ -86,119 +201,6 @@ namespace StructureMap.Testing.Configuration.DSL
             Assert.AreSame(julia, widget2);
             Assert.AreSame(julia, widget3);
         }
-
-
-        [Test]
-        public void SpecifyANewInstanceWithADependency()
-        {
-            Registry registry = new Registry();
-
-            // Specify a new Instance, create an instance for a dependency on the fly
-            string instanceKey = "OrangeWidgetRule";
-            registry.AddInstanceOf<Rule>().UsingConcreteType<WidgetRule>().WithName(instanceKey)
-                .Child<IWidget>().Is(
-                Registry.Instance<IWidget>().UsingConcreteType<ColorWidget>()
-                    .WithProperty("Color").EqualTo("Orange")
-                    .WithName("Orange")
-                );
-
-            IInstanceManager mgr = registry.BuildInstanceManager();
-
-            ColorWidget orange = (ColorWidget) mgr.CreateInstance<IWidget>("Orange");
-            Assert.IsNotNull(orange);
-
-            WidgetRule rule = (WidgetRule) mgr.CreateInstance<Rule>(instanceKey);
-            ColorWidget widget = (ColorWidget) rule.Widget;
-            Assert.AreEqual("Orange", widget.Color);
-        }
-
-
-        [Test]
-        public void AddInstanceAndOverrideTheConcreteTypeForADependency()
-        {
-            Registry registry = new Registry();
-
-            // Specify a new Instance that specifies the concrete type used for a dependency
-            registry.AddInstanceOf<Rule>().UsingConcreteType<WidgetRule>().WithName("AWidgetRule")
-                .Child<IWidget>().IsConcreteType<AWidget>();
-
-            manager = registry.BuildInstanceManager();
-
-            WidgetRule rule = (WidgetRule) manager.CreateInstance<Rule>("AWidgetRule");
-            Assert.IsInstanceOfType(typeof (AWidget), rule.Widget);
-        }
-
-        [Test]
-        public void AddAnInstanceWithANameAndAPropertySpecifyingConcreteType()
-        {
-            ColorWidget widget = (ColorWidget) manager.CreateInstance<IWidget>("DarkGreen");
-            Assert.AreEqual("DarkGreen", widget.Color);
-        }
-
-        [Test]
-        public void AddAnInstanceWithANameAndAPropertySpecifyingConcreteKey()
-        {
-            ColorWidget widget = (ColorWidget) manager.CreateInstance<IWidget>("Purple");
-            Assert.AreEqual("Purple", widget.Color);
-        }
-
-        [Test, Explicit]
-        public void CreateAnInstancePullAPropertyFromTheApplicationConfig()
-        {
-            Assert.AreEqual("Blue", ConfigurationManager.AppSettings["Color"]);
-            ColorWidget widget = (ColorWidget) manager.CreateInstance<IWidget>("AppSetting");
-            Assert.AreEqual("Blue", widget.Color);
-        }
-
-        [Test]
-        public void SimpleCaseWithNamedInstance()
-        {
-            Registry registry = new Registry();
-
-            // Specify a new Instance and override the Name
-            registry.AddInstanceOf<IWidget>().UsingConcreteType<AWidget>().WithName("MyInstance");
-
-            manager = registry.BuildInstanceManager();
-
-            AWidget widget = (AWidget) manager.CreateInstance<IWidget>("MyInstance");
-            Assert.IsNotNull(widget);
-        }
-
-        [Test]
-        public void SimpleCaseByPluginName()
-        {
-            AWidget widget = (AWidget) manager.CreateInstance<IWidget>("AWidget");
-            Assert.IsNotNull(widget);
-        }
-
-        [Test]
-        public void SpecifyANewInstanceOverrideADependencyWithANamedInstance()
-        {
-            Registry registry = new Registry();
-
-            //registry.ScanAssemblies().IncludeAssemblyContainingType<IWidget>();
-
-
-            registry.AddInstanceOf<Rule>().UsingConcreteType<ARule>().WithName("Alias");
-
-            // Add an instance by specifying the ConcreteKey
-            registry.AddInstanceOf<IWidget>()
-                .UsingConcreteType<ColorWidget>()
-                .WithName("Purple")
-                .WithProperty("Color").EqualTo("Purple");
-
-            // Specify a new Instance, override a dependency with a named instance
-            registry.AddInstanceOf<Rule>().UsingConcreteType<WidgetRule>().WithName("RuleThatUsesMyInstance")
-                .Child<IWidget>("widget").IsNamedInstance("Purple");
-
-            manager = registry.BuildInstanceManager();
-
-            Assert.IsInstanceOfType(typeof (ARule), manager.CreateInstance<Rule>("Alias"));
-
-            WidgetRule rule = (WidgetRule) manager.CreateInstance<Rule>("RuleThatUsesMyInstance");
-            ColorWidget widget = (ColorWidget) rule.Widget;
-            Assert.AreEqual("Purple", widget.Color);
-        }
     }
 
 
@@ -234,10 +236,14 @@ namespace StructureMap.Testing.Configuration.DSL
 
     public class WidgetThing : IWidget
     {
+        #region IWidget Members
+
         public void DoSomething()
         {
             throw new NotImplementedException();
         }
+
+        #endregion
     }
 
     public class CloneableWidget : IWidget, ICloneable
@@ -255,15 +261,23 @@ namespace StructureMap.Testing.Configuration.DSL
             get { return _name; }
         }
 
-        public void DoSomething()
-        {
-            throw new NotImplementedException();
-        }
+        #region ICloneable Members
 
         public object Clone()
         {
             return MemberwiseClone();
         }
+
+        #endregion
+
+        #region IWidget Members
+
+        public void DoSomething()
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 
     public class ARule : Rule

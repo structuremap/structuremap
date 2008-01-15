@@ -60,6 +60,12 @@ namespace StructureMap.DeploymentTasks
             set { _configuration.MachineOption = value; }
         }
 
+        public string MachineName
+        {
+            get { return _configuration.MachineName; }
+            set { _configuration.MachineName = value; }
+        }
+
 
         protected override void ExecuteTask()
         {
@@ -89,12 +95,6 @@ namespace StructureMap.DeploymentTasks
         {
             Console.WriteLine(
                 "-----------------------------------------------------------------------------------------------");
-        }
-
-        public string MachineName
-        {
-            get { return _configuration.MachineName; }
-            set { _configuration.MachineName = value; }
         }
     }
 }

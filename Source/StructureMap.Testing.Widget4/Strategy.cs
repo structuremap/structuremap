@@ -10,11 +10,20 @@ namespace StructureMap.Testing.Widget4
 
     public class Strategy : IStrategy
     {
-        private string _name;
         private int _count;
-        private double _rating;
-        private long _quantity;
         private bool _isCalculated;
+        private string _name;
+        private long _quantity;
+        private double _rating;
+
+        public Strategy(string name, int count, double rating, long quantity, bool isCalculated)
+        {
+            _name = name;
+            _count = count;
+            _rating = rating;
+            _quantity = quantity;
+            _isCalculated = isCalculated;
+        }
 
         public string Name
         {
@@ -44,15 +53,6 @@ namespace StructureMap.Testing.Widget4
         {
             get { return _isCalculated; }
             set { _isCalculated = value; }
-        }
-
-        public Strategy(string name, int count, double rating, long quantity, bool isCalculated)
-        {
-            _name = name;
-            _count = count;
-            _rating = rating;
-            _quantity = quantity;
-            _isCalculated = isCalculated;
         }
 
         #region IStrategy Members
@@ -100,11 +100,11 @@ namespace StructureMap.Testing.Widget4
 
     public class ComplexStrategy : IStrategy
     {
-        private readonly StrategyType _strategyType;
         private readonly IStrategy _defaultStrategy;
-        private readonly long _quantity;
-        private readonly string _name;
         private readonly IStrategy[] _innerStrategies;
+        private readonly string _name;
+        private readonly long _quantity;
+        private readonly StrategyType _strategyType;
 
         public ComplexStrategy(IStrategy[] innerStrategies, string name, long quantity,
                                IStrategy defaultStrategy, StrategyType strategyType)
@@ -116,11 +116,6 @@ namespace StructureMap.Testing.Widget4
             _strategyType = strategyType;
         }
 
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
-
         #region IStrategy Members
 
         public void DoSomething()
@@ -129,6 +124,11 @@ namespace StructureMap.Testing.Widget4
         }
 
         #endregion
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
 
         public override bool Equals(object obj)
         {
@@ -162,24 +162,18 @@ namespace StructureMap.Testing.Widget4
 
     public class RandomStrategy : IStrategy
     {
-        public double Seed
-        {
-            get { return _seed; }
-            set { _seed = value; }
-        }
+        private double _seed;
 
         public RandomStrategy(double seed)
         {
             _seed = seed;
         }
 
-
-        public override int GetHashCode()
+        public double Seed
         {
-            return base.GetHashCode();
+            get { return _seed; }
+            set { _seed = value; }
         }
-
-        private double _seed;
 
         #region IStrategy Members
 
@@ -189,6 +183,11 @@ namespace StructureMap.Testing.Widget4
         }
 
         #endregion
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
 
         public override bool Equals(object obj)
         {
@@ -209,15 +208,15 @@ namespace StructureMap.Testing.Widget4
     {
         private string _color;
 
+        public ColorStrategy(string color)
+        {
+            _color = color;
+        }
+
         public string Color
         {
             get { return _color; }
             set { _color = value; }
-        }
-
-        public ColorStrategy(string color)
-        {
-            _color = color;
         }
 
         #region IStrategy Members
@@ -251,18 +250,18 @@ namespace StructureMap.Testing.Widget4
 
     public class StrategyDecorator : IStrategy
     {
-        public IStrategy InnerStrategy
-        {
-            get { return _innerStrategy; }
-            set { _innerStrategy = value; }
-        }
+        private IStrategy _innerStrategy;
 
         public StrategyDecorator(IStrategy innerStrategy)
         {
             _innerStrategy = innerStrategy;
         }
 
-        private IStrategy _innerStrategy;
+        public IStrategy InnerStrategy
+        {
+            get { return _innerStrategy; }
+            set { _innerStrategy = value; }
+        }
 
         #region IStrategy Members
 
@@ -297,24 +296,28 @@ namespace StructureMap.Testing.Widget4
     {
         private IStrategy[] _innerStrategies;
 
-        public IStrategy[] InnerStrategies
-        {
-            get { return _innerStrategies; }
-        }
-
         public CompoundStrategy(IStrategy[] innerStrategies)
         {
             _innerStrategies = innerStrategies;
         }
 
-        public override int GetHashCode()
+        public IStrategy[] InnerStrategies
         {
-            return base.GetHashCode();
+            get { return _innerStrategies; }
         }
+
+        #region IStrategy Members
 
         public void DoSomething()
         {
             throw new NotImplementedException();
+        }
+
+        #endregion
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
 
 

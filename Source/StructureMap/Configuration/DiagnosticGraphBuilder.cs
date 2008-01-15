@@ -11,9 +11,9 @@ namespace StructureMap.Configuration
     public class DiagnosticGraphBuilder : IGraphBuilder
     {
         private NormalGraphBuilder _innerBuilder;
-        private InstanceValidator _systemValidator;
-        private PluginGraphReport _systemReport;
         private PluginGraphReport _report;
+        private PluginGraphReport _systemReport;
+        private InstanceValidator _systemValidator;
 
         public DiagnosticGraphBuilder(Registry[] registries)
         {
@@ -21,6 +21,13 @@ namespace StructureMap.Configuration
             _systemReport = new PluginGraphReport();
             _report = new PluginGraphReport();
         }
+
+        public PluginGraphReport Report
+        {
+            get { return _report; }
+        }
+
+        #region IGraphBuilder Members
 
         public PluginGraph PluginGraph
         {
@@ -257,11 +264,6 @@ namespace StructureMap.Configuration
             get { return _innerBuilder.SystemGraph; }
         }
 
-        public PluginGraphReport Report
-        {
-            get { return _report; }
-        }
-
         public InstanceDefaultManager DefaultManager
         {
             get { return _innerBuilder.DefaultManager; }
@@ -279,5 +281,7 @@ namespace StructureMap.Configuration
                 _report.LogProblem(problem);
             }
         }
+
+        #endregion
     }
 }

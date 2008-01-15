@@ -12,6 +12,24 @@ namespace StructureMap.Testing.Configuration
     [TestFixture]
     public class ConfigurationParserTester
     {
+        #region Setup/Teardown
+
+        [SetUp]
+        public void SetUp()
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(xml);
+
+            ConfigurationParser parser = new ConfigurationParser(doc.DocumentElement);
+
+            NormalGraphBuilder builder = new NormalGraphBuilder(new Registry[0]);
+            parser.ParseProfilesAndMachines(builder);
+
+            _defaults = builder.DefaultManager;
+        }
+
+        #endregion
+
         private string xml =
             @"
 <StructureMap DefaultProfile=""Blue"">
@@ -36,34 +54,20 @@ namespace StructureMap.Testing.Configuration
 
         private InstanceDefaultManager _defaults;
 
-
-        [SetUp]
-        public void SetUp()
-        {
-            XmlDocument doc = new XmlDocument();
-            doc.LoadXml(xml);
-
-            ConfigurationParser parser = new ConfigurationParser(doc.DocumentElement);
-
-            NormalGraphBuilder builder = new NormalGraphBuilder(new Registry[0]);
-            parser.ParseProfilesAndMachines(builder);
-
-            _defaults = builder.DefaultManager;
-        }
-
-
         [Test]
-        public void GotTheDefaultProfileName()
+        public void GotAllMachines()
         {
-            Assert.AreEqual("Blue", _defaults.DefaultProfileName);
+            string[] names = _defaults.GetMachineNames();
+            Array.Sort(names);
+            Assert.AreEqual(new string[] {"GREEN-BOX", "SERVER"}, names);
         }
 
         [Test]
-        public void GotProfileOnGreenBox()
+        public void GotAllProfiles()
         {
-            MachineOverride greenBox = _defaults.GetMachineOverride("GREEN-BOX");
-            Assert.AreEqual("Green", greenBox.ProfileName);
+            Assert.AreEqual(new string[] {"Blue", "Green"}, _defaults.GetProfileNames());
         }
+
 
         [Test]
         public void GotDefaultsOnBlueProfile()
@@ -94,17 +98,16 @@ namespace StructureMap.Testing.Configuration
         }
 
         [Test]
-        public void GotAllProfiles()
+        public void GotProfileOnGreenBox()
         {
-            Assert.AreEqual(new string[] {"Blue", "Green"}, _defaults.GetProfileNames());
+            MachineOverride greenBox = _defaults.GetMachineOverride("GREEN-BOX");
+            Assert.AreEqual("Green", greenBox.ProfileName);
         }
 
         [Test]
-        public void GotAllMachines()
+        public void GotTheDefaultProfileName()
         {
-            string[] names = _defaults.GetMachineNames();
-            Array.Sort(names);
-            Assert.AreEqual(new string[] {"GREEN-BOX", "SERVER"}, names);
+            Assert.AreEqual("Blue", _defaults.DefaultProfileName);
         }
 
         [Test]

@@ -7,10 +7,14 @@ namespace StructureMap.Testing.Graph
     [TestFixture]
     public class GenericsPluginGraphTester
     {
+        #region Setup/Teardown
+
         [SetUp]
         public void SetUp()
         {
         }
+
+        #endregion
 
         private void assertCanBeCast(Type pluginType, Type pluggedType)
         {
@@ -20,77 +24,6 @@ namespace StructureMap.Testing.Graph
         private void assertCanNotBeCast(Type pluginType, Type pluggedType)
         {
             Assert.IsFalse(GenericsPluginGraph.CanBeCast(pluginType, pluggedType));
-        }
-
-
-        [Test]
-        public void DirectImplementationOfInterfaceCanBeCast()
-        {
-            assertCanBeCast(typeof (IGenericService<>), typeof (GenericService<>));
-            assertCanNotBeCast(typeof (IGenericService<>), typeof (SpecificService<>));
-        }
-
-        [Test]
-        public void DirectInheritanceOfAbstractClassCanBeCast()
-        {
-            assertCanBeCast(typeof (BaseSpecificService<>), typeof (SpecificService<>));
-        }
-
-        [Test]
-        public void ImplementationOfInterfaceFromBaseType()
-        {
-            assertCanBeCast(typeof (ISomething<>), typeof (SpecificService<>));
-        }
-
-        [Test]
-        public void RecursiveImplementation()
-        {
-            assertCanBeCast(typeof (ISomething<>), typeof (SpecificService<>));
-            assertCanBeCast(typeof (ISomething<>), typeof (GrandChildSpecificService<>));
-        }
-
-        [Test]
-        public void RecursiveInheritance()
-        {
-            assertCanBeCast(typeof (BaseSpecificService<>), typeof (ChildSpecificService<>));
-            assertCanBeCast(typeof (BaseSpecificService<>), typeof (GrandChildSpecificService<>));
-        }
-
-
-        [Test]
-        public void BuildTemplatedFamilyWithOnlyOneTemplateParameter()
-        {
-            PluginFamily family = new PluginFamily(typeof (IGenericService<>));
-            family.Plugins.Add(typeof (GenericService<>), "Default");
-            family.Plugins.Add(typeof (SecondGenericService<>), "Second");
-            family.Plugins.Add(typeof (ThirdGenericService<>), "Third");
-
-            PluginFamily templatedFamily = family.CreateTemplatedClone(typeof (int));
-
-            Assert.IsNotNull(templatedFamily);
-            Assert.AreEqual(typeof (IGenericService<int>), templatedFamily.PluginType);
-
-            Assert.AreEqual(3, templatedFamily.Plugins.Count);
-            Assert.AreEqual(typeof (GenericService<int>), templatedFamily.Plugins["Default"].PluggedType);
-            Assert.AreEqual(typeof (SecondGenericService<int>), templatedFamily.Plugins["Second"].PluggedType);
-            Assert.AreEqual(typeof (ThirdGenericService<int>), templatedFamily.Plugins["Third"].PluggedType);
-        }
-
-        [Test]
-        public void GetTemplatedFamily()
-        {
-            PluginFamily family = new PluginFamily(typeof (IGenericService<>));
-            family.Plugins.Add(typeof (GenericService<>), "Default");
-            family.Plugins.Add(typeof (SecondGenericService<>), "Second");
-            family.Plugins.Add(typeof (ThirdGenericService<>), "Third");
-
-            GenericsPluginGraph genericsGraph = new GenericsPluginGraph();
-            genericsGraph.AddFamily(family);
-
-            PluginFamily templatedFamily = genericsGraph.CreateTemplatedFamily(typeof (IGenericService<int>));
-
-            Assert.IsNotNull(templatedFamily);
-            Assert.AreEqual(typeof (IGenericService<int>), templatedFamily.PluginType);
         }
 
         [Test]
@@ -117,6 +50,24 @@ namespace StructureMap.Testing.Graph
             Assert.AreEqual(typeof (string), stringService.GetT());
         }
 
+        [Test]
+        public void BuildTemplatedFamilyWithOnlyOneTemplateParameter()
+        {
+            PluginFamily family = new PluginFamily(typeof (IGenericService<>));
+            family.Plugins.Add(typeof (GenericService<>), "Default");
+            family.Plugins.Add(typeof (SecondGenericService<>), "Second");
+            family.Plugins.Add(typeof (ThirdGenericService<>), "Third");
+
+            PluginFamily templatedFamily = family.CreateTemplatedClone(typeof (int));
+
+            Assert.IsNotNull(templatedFamily);
+            Assert.AreEqual(typeof (IGenericService<int>), templatedFamily.PluginType);
+
+            Assert.AreEqual(3, templatedFamily.Plugins.Count);
+            Assert.AreEqual(typeof (GenericService<int>), templatedFamily.Plugins["Default"].PluggedType);
+            Assert.AreEqual(typeof (SecondGenericService<int>), templatedFamily.Plugins["Second"].PluggedType);
+            Assert.AreEqual(typeof (ThirdGenericService<int>), templatedFamily.Plugins["Third"].PluggedType);
+        }
 
         [Test]
         public void BuildTemplatedFamilyWithThreeTemplateParameters()
@@ -137,6 +88,57 @@ namespace StructureMap.Testing.Graph
                             templatedFamily.Plugins["Second"].PluggedType);
             Assert.AreEqual(typeof (ThirdGenericService3<int, bool, string>),
                             templatedFamily.Plugins["Third"].PluggedType);
+        }
+
+
+        [Test]
+        public void DirectImplementationOfInterfaceCanBeCast()
+        {
+            assertCanBeCast(typeof (IGenericService<>), typeof (GenericService<>));
+            assertCanNotBeCast(typeof (IGenericService<>), typeof (SpecificService<>));
+        }
+
+        [Test]
+        public void DirectInheritanceOfAbstractClassCanBeCast()
+        {
+            assertCanBeCast(typeof (BaseSpecificService<>), typeof (SpecificService<>));
+        }
+
+        [Test]
+        public void GetTemplatedFamily()
+        {
+            PluginFamily family = new PluginFamily(typeof (IGenericService<>));
+            family.Plugins.Add(typeof (GenericService<>), "Default");
+            family.Plugins.Add(typeof (SecondGenericService<>), "Second");
+            family.Plugins.Add(typeof (ThirdGenericService<>), "Third");
+
+            GenericsPluginGraph genericsGraph = new GenericsPluginGraph();
+            genericsGraph.AddFamily(family);
+
+            PluginFamily templatedFamily = genericsGraph.CreateTemplatedFamily(typeof (IGenericService<int>));
+
+            Assert.IsNotNull(templatedFamily);
+            Assert.AreEqual(typeof (IGenericService<int>), templatedFamily.PluginType);
+        }
+
+        [Test]
+        public void ImplementationOfInterfaceFromBaseType()
+        {
+            assertCanBeCast(typeof (ISomething<>), typeof (SpecificService<>));
+        }
+
+        [Test]
+        public void RecursiveImplementation()
+        {
+            assertCanBeCast(typeof (ISomething<>), typeof (SpecificService<>));
+            assertCanBeCast(typeof (ISomething<>), typeof (GrandChildSpecificService<>));
+        }
+
+        [Test]
+        public void RecursiveInheritance()
+        {
+            assertCanBeCast(typeof (BaseSpecificService<>), typeof (ChildSpecificService<>));
+            assertCanBeCast(typeof (BaseSpecificService<>), typeof (GrandChildSpecificService<>));
         }
     }
 

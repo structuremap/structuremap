@@ -13,11 +13,11 @@ namespace StructureMap.Emitting
         private const TypeAttributes PUBLIC_ATTS =
             TypeAttributes.Class | TypeAttributes.Public | TypeAttributes.BeforeFieldInit;
 
-        private TypeBuilder newTypeBuilder;
-        private Type superType;
         private string _ClassName;
 
         private ArrayList _Methods;
+        private TypeBuilder newTypeBuilder;
+        private Type superType;
 
         public ClassBuilder(ModuleBuilder module, string ClassName) : this(module, ClassName, typeof (Object))
         {
@@ -42,6 +42,11 @@ namespace StructureMap.Emitting
             }
         }
 
+        public string ClassName
+        {
+            get { return _ClassName; }
+        }
+
 
         public void AddMethod(Method method)
         {
@@ -58,12 +63,6 @@ namespace StructureMap.Emitting
             }
 
             newTypeBuilder.CreateType();
-        }
-
-
-        public string ClassName
-        {
-            get { return _ClassName; }
         }
 
 

@@ -10,16 +10,7 @@ namespace StructureMap.Testing.Container
     [TestFixture]
     public class EmittingTester
     {
-        private Assembly assem;
-        private InstanceBuilder builder;
-        private Exception ex;
-        private InstanceMemento memento;
-        private ComplexRule rule;
-
-        public EmittingTester()
-        {
-        }
-
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -54,18 +45,24 @@ namespace StructureMap.Testing.Container
             }
         }
 
-        [Test]
-        public void NoException()
-        {
-            if (ex != null)
-            {
-                Console.Out.WriteLine(ex.Message);
-                Console.Out.WriteLine(ex.Source);
-                Console.Out.WriteLine(ex.StackTrace);
+        #endregion
 
-                Assert.Fail("Had an Exception!!!");
-            }
+        private Assembly assem;
+        private InstanceBuilder builder;
+        private Exception ex;
+        private InstanceMemento memento;
+        private ComplexRule rule;
+
+        public EmittingTester()
+        {
         }
+
+        [Test]
+        public void BoolProperty()
+        {
+            Assert.AreEqual(true, rule.Bool);
+        }
+
 
         [Test]
         public void BuiltTheAssembly()
@@ -80,33 +77,27 @@ namespace StructureMap.Testing.Container
         }
 
         [Test]
+        public void ByteProperty()
+        {
+            Assert.AreEqual(3, rule.Byte);
+        }
+
+        [Test]
         public void ConcreteTypeKey()
         {
             Assert.AreEqual("Complex", builder.ConcreteTypeKey);
         }
 
         [Test]
-        public void PluginType()
+        public void DoubleProperty()
         {
-            Assert.AreEqual("StructureMap.Testing.Widget.Rule,StructureMap.Testing.Widget", builder.PluginType);
+            Assert.AreEqual(4, rule.Double);
         }
 
         [Test]
         public void GotRule()
         {
             Assert.IsNotNull(rule);
-        }
-
-        [Test]
-        public void StringProperty()
-        {
-            Assert.AreEqual("Red", rule.String);
-        }
-
-        [Test]
-        public void String2Property()
-        {
-            Assert.AreEqual("Green", rule.String2);
         }
 
         [Test]
@@ -122,21 +113,34 @@ namespace StructureMap.Testing.Container
         }
 
         [Test]
-        public void ByteProperty()
+        public void NoException()
         {
-            Assert.AreEqual(3, rule.Byte);
+            if (ex != null)
+            {
+                Console.Out.WriteLine(ex.Message);
+                Console.Out.WriteLine(ex.Source);
+                Console.Out.WriteLine(ex.StackTrace);
+
+                Assert.Fail("Had an Exception!!!");
+            }
         }
 
         [Test]
-        public void DoubleProperty()
+        public void PluginType()
         {
-            Assert.AreEqual(4, rule.Double);
+            Assert.AreEqual("StructureMap.Testing.Widget.Rule,StructureMap.Testing.Widget", builder.PluginType);
         }
 
         [Test]
-        public void BoolProperty()
+        public void String2Property()
         {
-            Assert.AreEqual(true, rule.Bool);
+            Assert.AreEqual("Green", rule.String2);
+        }
+
+        [Test]
+        public void StringProperty()
+        {
+            Assert.AreEqual("Red", rule.String);
         }
     }
 }

@@ -16,16 +16,17 @@ namespace StructureMap
     [EnvironmentPermission(SecurityAction.Assert, Read="COMPUTERNAME")]
     public class ObjectFactory
     {
-        private static string _profile = string.Empty;
-        private static event Notify _notify;
-        private static InstanceManager _manager;
         private static object _lockObject = new object();
+        private static InstanceManager _manager;
+        private static string _profile = string.Empty;
 
 
         static ObjectFactory()
         {
             ObjectFactoryCacheCallback callback = new ObjectFactoryCacheCallback();
         }
+
+        private static event Notify _notify;
 
         /// <summary>
         /// Used for testing only (kills singletons). In non-test scenarios, use Reset() instead.
@@ -35,6 +36,117 @@ namespace StructureMap
             _profile = string.Empty;
             _notify = null;
             _manager = null;
+        }
+
+        /// <summary>
+        /// Attempts to create a new instance of the requested type.  Automatically inserts the default
+        /// configured instance for each dependency in the StructureMap constructor function.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static object FillDependencies(Type type)
+        {
+            return _manager.FillDependencies(type);
+        }
+
+        public static T FillDependencies<T>()
+        {
+            return (T) _manager.FillDependencies(typeof (T));
+        }
+
+        /// <summary>
+        /// Sets up StructureMap to return the object in the "stub" argument anytime
+        /// any instance of the PluginType is requested
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="stub"></param>
+        public static void InjectStub(Type pluginType, object stub)
+        {
+            manager.InjectStub(pluginType, stub);
+        }
+
+        /// <summary>
+        /// Sets up StructureMap to return the object in the "stub" argument anytime
+        /// any instance of the PluginType is requested
+        /// </summary>
+        /// <param name="targetType"></param>
+        /// <param name="stub"></param>
+        public static void InjectStub<PLUGINTYPE>(PLUGINTYPE stub)
+        {
+            manager.InjectStub(typeof (PLUGINTYPE), stub);
+        }
+
+
+        public static string WhatDoIHave()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (IInstanceFactory factory in manager)
+            {
+                sb.AppendFormat("PluginType {0}, Default: {1}\r\n", factory.PluginType.AssemblyQualifiedName,
+                                factory.DefaultInstanceKey);
+            }
+
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Sets the default instance of PLUGINTYPE to the object in the instance argument
+        /// </summary>
+        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <param name="instance"></param>
+        public static void Inject<PLUGINTYPE>(PLUGINTYPE instance)
+        {
+            LiteralMemento memento = new LiteralMemento(instance);
+            manager.AddInstance<PLUGINTYPE>(memento);
+            manager.SetDefault(typeof (PLUGINTYPE), memento);
+        }
+
+        /// <summary>
+        /// Injects a new instance of PLUGINTYPE by name.  
+        /// </summary>
+        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <param name="instance"></param>
+        /// <param name="instanceKey"></param>
+        public static void InjectByName<PLUGINTYPE>(PLUGINTYPE instance, string instanceKey)
+        {
+            LiteralMemento memento = new LiteralMemento(instance).Named(instanceKey);
+            manager.AddInstance<PLUGINTYPE>(memento);
+        }
+
+        /// <summary>
+        /// Injects a new instance of CONCRETETYPE to PLUGINTYPE by name.  
+        /// </summary>
+        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <param name="instance"></param>
+        /// <param name="instanceKey"></param>
+        public static void InjectByName<PLUGINTYPE, CONCRETETYPE>(string instanceKey)
+        {
+            manager.AddInstance<PLUGINTYPE, CONCRETETYPE>();
+            GenericMemento<CONCRETETYPE> memento = new GenericMemento<CONCRETETYPE>(instanceKey);
+            manager.AddInstance<PLUGINTYPE>(memento);
+        }
+
+        /// <summary>
+        /// StructureMap will return an instance of CONCRETETYPE whenever
+        /// a PLUGINTYPE is requested
+        /// </summary>
+        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <typeparam name="CONCRETETYPE"></typeparam>
+        public static void InjectDefaultType<PLUGINTYPE, CONCRETETYPE>() where CONCRETETYPE : PLUGINTYPE
+        {
+            manager.AddDefaultInstance<PLUGINTYPE, CONCRETETYPE>();
+        }
+
+        /// <summary>
+        /// Adds a new CONCRETETYPE to StructureMap so that an instance of CONCRETETYPE
+        /// will be returned from a call to ObjectFactory.GetAllInstances<PLUGINTYPE>()
+        /// </summary>
+        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <typeparam name="CONCRETETYPE"></typeparam>
+        public static void AddType<PLUGINTYPE, CONCRETETYPE>() where CONCRETETYPE : PLUGINTYPE
+        {
+            manager.AddInstance<PLUGINTYPE, CONCRETETYPE>();
         }
 
         #region InstanceManager and setting defaults
@@ -59,6 +171,23 @@ namespace StructureMap
         }
 
         /// <summary>
+        /// Gets or sets the current named profile.  When set, overrides the default object instances
+        /// according to the configured profile in StructureMap.config
+        /// </summary>
+        public static string Profile
+        {
+            set
+            {
+                lock (_lockObject)
+                {
+                    _profile = value;
+                    manager.SetDefaultsToProfile(_profile);
+                }
+            }
+            get { return _profile; }
+        }
+
+        /// <summary>
         /// Restarts ObjectFactory.  Use with caution.
         /// </summary>
         public static void Reset()
@@ -79,24 +208,6 @@ namespace StructureMap
         {
             add { _notify += value; }
             remove { _notify -= value; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets the current named profile.  When set, overrides the default object instances
-        /// according to the configured profile in StructureMap.config
-        /// </summary>
-        public static string Profile
-        {
-            set
-            {
-                lock (_lockObject)
-                {
-                    _profile = value;
-                    manager.SetDefaultsToProfile(_profile);
-                }
-            }
-            get { return _profile; }
         }
 
 
@@ -264,116 +375,5 @@ namespace StructureMap
         }
 
         #endregion
-
-        /// <summary>
-        /// Attempts to create a new instance of the requested type.  Automatically inserts the default
-        /// configured instance for each dependency in the StructureMap constructor function.
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        public static object FillDependencies(Type type)
-        {
-            return _manager.FillDependencies(type);
-        }
-
-        public static T FillDependencies<T>()
-        {
-            return (T) _manager.FillDependencies(typeof (T));
-        }
-
-        /// <summary>
-        /// Sets up StructureMap to return the object in the "stub" argument anytime
-        /// any instance of the PluginType is requested
-        /// </summary>
-        /// <param name="pluginType"></param>
-        /// <param name="stub"></param>
-        public static void InjectStub(Type pluginType, object stub)
-        {
-            manager.InjectStub(pluginType, stub);
-        }
-
-        /// <summary>
-        /// Sets up StructureMap to return the object in the "stub" argument anytime
-        /// any instance of the PluginType is requested
-        /// </summary>
-        /// <param name="targetType"></param>
-        /// <param name="stub"></param>
-        public static void InjectStub<PLUGINTYPE>(PLUGINTYPE stub)
-        {
-            manager.InjectStub(typeof (PLUGINTYPE), stub);
-        }
-
-
-        public static string WhatDoIHave()
-        {
-            StringBuilder sb = new StringBuilder();
-
-            foreach (IInstanceFactory factory in manager)
-            {
-                sb.AppendFormat("PluginType {0}, Default: {1}\r\n", factory.PluginType.AssemblyQualifiedName,
-                                factory.DefaultInstanceKey);
-            }
-
-            return sb.ToString();
-        }
-
-        /// <summary>
-        /// Sets the default instance of PLUGINTYPE to the object in the instance argument
-        /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
-        /// <param name="instance"></param>
-        public static void Inject<PLUGINTYPE>(PLUGINTYPE instance)
-        {
-            LiteralMemento memento = new LiteralMemento(instance);
-            manager.AddInstance<PLUGINTYPE>(memento);
-            manager.SetDefault(typeof (PLUGINTYPE), memento);
-        }
-
-        /// <summary>
-        /// Injects a new instance of PLUGINTYPE by name.  
-        /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
-        /// <param name="instance"></param>
-        /// <param name="instanceKey"></param>
-        public static void InjectByName<PLUGINTYPE>(PLUGINTYPE instance, string instanceKey)
-        {
-            LiteralMemento memento = new LiteralMemento(instance).Named(instanceKey);
-            manager.AddInstance<PLUGINTYPE>(memento);
-        }
-
-        /// <summary>
-        /// Injects a new instance of CONCRETETYPE to PLUGINTYPE by name.  
-        /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
-        /// <param name="instance"></param>
-        /// <param name="instanceKey"></param>
-        public static void InjectByName<PLUGINTYPE, CONCRETETYPE>(string instanceKey)
-        {
-            manager.AddInstance<PLUGINTYPE, CONCRETETYPE>();
-            GenericMemento<CONCRETETYPE> memento = new GenericMemento<CONCRETETYPE>(instanceKey);
-            manager.AddInstance<PLUGINTYPE>(memento);
-        }
-
-        /// <summary>
-        /// StructureMap will return an instance of CONCRETETYPE whenever
-        /// a PLUGINTYPE is requested
-        /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
-        /// <typeparam name="CONCRETETYPE"></typeparam>
-        public static void InjectDefaultType<PLUGINTYPE, CONCRETETYPE>() where CONCRETETYPE : PLUGINTYPE
-        {
-            manager.AddDefaultInstance<PLUGINTYPE, CONCRETETYPE>();
-        }
-
-        /// <summary>
-        /// Adds a new CONCRETETYPE to StructureMap so that an instance of CONCRETETYPE
-        /// will be returned from a call to ObjectFactory.GetAllInstances<PLUGINTYPE>()
-        /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
-        /// <typeparam name="CONCRETETYPE"></typeparam>
-        public static void AddType<PLUGINTYPE, CONCRETETYPE>() where CONCRETETYPE : PLUGINTYPE
-        {
-            manager.AddInstance<PLUGINTYPE, CONCRETETYPE>();
-        }
     }
 }

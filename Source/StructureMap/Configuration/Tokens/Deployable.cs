@@ -34,22 +34,6 @@ namespace StructureMap.Configuration.Tokens
         }
 
         /// <summary>
-        /// Returns a boolean flag denoting whether or not the PluginGraphObject is deployed
-        /// for the deploymentTarget
-        /// </summary>
-        /// <param name="deploymentTarget"></param>
-        /// <returns></returns>
-        public bool IsDeployed(string deploymentTarget)
-        {
-            if (_deploymentTargets.Count == 0 || _deploymentTargets.Contains(ALL))
-            {
-                return true;
-            }
-
-            return _deploymentTargets.Contains(deploymentTarget);
-        }
-
-        /// <summary>
         /// Simple string description of the deployment options for the PluginGraphObject
         /// </summary>
         public string DeploymentDescription
@@ -66,6 +50,22 @@ namespace StructureMap.Configuration.Tokens
                     return string.Join(", ", targets);
                 }
             }
+        }
+
+        /// <summary>
+        /// Returns a boolean flag denoting whether or not the PluginGraphObject is deployed
+        /// for the deploymentTarget
+        /// </summary>
+        /// <param name="deploymentTarget"></param>
+        /// <returns></returns>
+        public bool IsDeployed(string deploymentTarget)
+        {
+            if (_deploymentTargets.Count == 0 || _deploymentTargets.Contains(ALL))
+            {
+                return true;
+            }
+
+            return _deploymentTargets.Contains(deploymentTarget);
         }
     }
 }

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 
@@ -18,6 +17,23 @@ namespace StructureMap.Configuration.DSL.Expressions
             buildMemento();
             memento.InstanceKey = Guid.NewGuid().ToString();
         }
+
+        protected abstract InstanceMemento memento { get; }
+
+        protected abstract T thisInstance { get; }
+
+        public string InstanceKey
+        {
+            get { return memento.InstanceKey; }
+            set { memento.InstanceKey = value; }
+        }
+
+        internal Type PluginType
+        {
+            get { return _pluginType; }
+        }
+
+        #region IExpression Members
 
         void IExpression.Configure(PluginGraph graph)
         {
@@ -38,9 +54,29 @@ namespace StructureMap.Configuration.DSL.Expressions
             }
         }
 
-        protected abstract InstanceMemento memento { get; }
+        #endregion
 
-        protected abstract T thisInstance { get; }
+        #region IMementoBuilder Members
+
+        InstanceMemento IMementoBuilder.BuildMemento(PluginFamily family)
+        {
+            return buildMementoFromFamily(family);
+        }
+
+        InstanceMemento IMementoBuilder.BuildMemento(PluginGraph graph)
+        {
+            PluginFamily family = graph.LocateOrCreateFamilyForType(_pluginType);
+            return buildMementoFromFamily(family);
+        }
+
+        public void SetInstanceName(string instanceKey)
+        {
+            _instanceKey = instanceKey;
+        }
+
+        public abstract void ValidatePluggability(Type pluginType);
+
+        #endregion
 
         protected abstract void configureMemento(PluginFamily family);
 
@@ -68,23 +104,7 @@ namespace StructureMap.Configuration.DSL.Expressions
             return thisInstance;
         }
 
-        public string InstanceKey
-        {
-            get { return memento.InstanceKey; }
-            set { memento.InstanceKey = value; }
-        }
-
-        internal Type PluginType
-        {
-            get { return _pluginType; }
-        }
-
         protected abstract void buildMemento();
-
-        InstanceMemento IMementoBuilder.BuildMemento(PluginFamily family)
-        {
-            return buildMementoFromFamily(family);
-        }
 
         private InstanceMemento buildMementoFromFamily(PluginFamily family)
         {
@@ -93,19 +113,6 @@ namespace StructureMap.Configuration.DSL.Expressions
             return memento;
         }
 
-
-        InstanceMemento IMementoBuilder.BuildMemento(PluginGraph graph)
-        {
-            PluginFamily family = graph.LocateOrCreateFamilyForType(_pluginType);
-            return buildMementoFromFamily(family);
-        }
-
-        public void SetInstanceName(string instanceKey)
-        {
-            _instanceKey = instanceKey;
-        }
-
-        public abstract void ValidatePluggability(Type pluginType);
 
         protected void addChildExpression(IExpression expression)
         {

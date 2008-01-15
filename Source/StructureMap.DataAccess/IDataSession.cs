@@ -13,6 +13,8 @@ namespace StructureMap.DataAccess
     public interface IDataSession
     {
         bool IsInTransaction { get; }
+        ICommandCollection Commands { get; }
+        IReaderSourceCollection ReaderSources { get; }
 
         void BeginTransaction();
         void CommitTransaction();
@@ -26,9 +28,6 @@ namespace StructureMap.DataAccess
         DataSet ExecuteDataSet(string sql);
         object ExecuteScalar(IDbCommand command);
         object ExecuteScalar(string sql);
-
-        ICommandCollection Commands { get; }
-        IReaderSourceCollection ReaderSources { get; }
 
         IReaderSource CreateReaderSource(StructureMapCommandType commandType, string commandText);
         ICommand CreateCommand(StructureMapCommandType commandType, string commandText);

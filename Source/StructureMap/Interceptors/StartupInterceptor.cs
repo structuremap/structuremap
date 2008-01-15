@@ -9,11 +9,14 @@ namespace StructureMap.Interceptors
             _handler = handler;
         }
 
+        #region InstanceInterceptor Members
 
         public object Process(object target)
         {
-            _handler((T)target);
+            _handler((T) target);
             return target;
         }
+
+        #endregion
     }
 }

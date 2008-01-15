@@ -13,12 +13,12 @@ namespace StructureMap.Verification
     public class PluginGraphConsoleWriter : MarshalByRefObject
     {
         private readonly PluginGraphReport _report;
-        private TextWriter _writer;
-        private bool _includePlugins = false;
         private bool _includeAllInstances = false;
+        private bool _includePlugins = false;
         private bool _includeSource = false;
         private bool _writeAll = false;
         private bool _writeProblems = false;
+        private TextWriter _writer;
 
         public PluginGraphConsoleWriter(PluginGraphReport report) : base()
         {

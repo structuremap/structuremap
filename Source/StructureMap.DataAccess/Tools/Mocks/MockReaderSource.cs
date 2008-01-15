@@ -7,9 +7,9 @@ namespace StructureMap.DataAccess.Tools.Mocks
 {
     public class MockReaderSource : IReaderSource
     {
+        private Queue _expectations;
         private string _name;
         private ParameterList _parameters;
-        private Queue _expectations;
 
 
         public MockReaderSource(string name)
@@ -18,6 +18,8 @@ namespace StructureMap.DataAccess.Tools.Mocks
             _parameters = new ParameterList();
             _expectations = new Queue();
         }
+
+        #region IReaderSource Members
 
         public string Name
         {
@@ -63,6 +65,8 @@ namespace StructureMap.DataAccess.Tools.Mocks
         {
             throw new NotImplementedException();
         }
+
+        #endregion
 
         public void AddExpectation(ReaderExpectation expectation)
         {

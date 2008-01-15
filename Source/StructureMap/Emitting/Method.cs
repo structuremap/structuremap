@@ -9,15 +9,20 @@ namespace StructureMap.Emitting
     /// </summary>
     public abstract class Method
     {
-        private MethodBuilder methodBuilder;
+        private const MethodAttributes PublicOverride =
+            MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig | MethodAttributes.Final;
+
         private ILGenerator ilgen;
+        private MethodBuilder methodBuilder;
 
         protected Method()
         {
         }
 
-        private const MethodAttributes PublicOverride =
-            MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig | MethodAttributes.Final;
+        public abstract string MethodName { get; }
+
+        public abstract Type[] ArgumentList { get; }
+        public abstract Type ReturnType { get; }
 
         internal void Attach(TypeBuilder newTypeBuilder)
         {
@@ -27,18 +32,12 @@ namespace StructureMap.Emitting
             ilgen = methodBuilder.GetILGenerator();
         }
 
-        public abstract string MethodName { get; }
-
-        public abstract Type[] ArgumentList { get; }
-
         public void Build()
         {
             Generate(ilgen);
         }
 
         protected abstract void Generate(ILGenerator ilgen);
-
-        public abstract Type ReturnType { get; }
 
 
         protected void CallMethod(MethodInfo methodInfo)

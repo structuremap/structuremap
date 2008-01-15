@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using StructureMap.Attributes;
-using StructureMap.Configuration.Mementos;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 
@@ -171,7 +170,7 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         public CreatePluginFamilyExpression<PLUGINTYPE> InterceptConstructionWith(InstanceFactoryInterceptor interceptor)
         {
-            _alterations.Add(delegate(PluginFamily family){family.InterceptionChain.AddInterceptor(interceptor);});
+            _alterations.Add(delegate(PluginFamily family) { family.InterceptionChain.AddInterceptor(interceptor); });
             return this;
         }
     }

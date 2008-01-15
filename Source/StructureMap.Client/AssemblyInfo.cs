@@ -1,9 +1,11 @@
 using System.Reflection;
+
 //
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 //
+
 [assembly : AssemblyTitle("")]
 [assembly : AssemblyDescription("")]
 
@@ -44,6 +46,7 @@ using System.Reflection;
 //   (*) Delay Signing is an advanced option - see the Microsoft .NET Framework
 //       documentation for more information on this.
 //
+
 [assembly : AssemblyDelaySign(false)]
 [assembly : AssemblyKeyFile("")]
 [assembly : AssemblyKeyName("")]

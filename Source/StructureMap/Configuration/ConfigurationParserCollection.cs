@@ -9,9 +9,15 @@ namespace StructureMap.Configuration
 
     public class ConfigurationParserCollection
     {
-        private bool _useDefaultFile = true;
-        private List<string> _otherFiles = new List<string>();
         private List<FetchNodeDelegate> _fetchers = new List<FetchNodeDelegate>();
+        private List<string> _otherFiles = new List<string>();
+        private bool _useDefaultFile = true;
+
+        public bool UseDefaultFile
+        {
+            get { return _useDefaultFile; }
+            set { _useDefaultFile = value; }
+        }
 
         public ConfigurationParser[] GetParsers()
         {
@@ -56,12 +62,6 @@ namespace StructureMap.Configuration
         {
             ConfigurationParser[] parsers = ConfigurationParser.GetParsers(node, includePath);
             list.AddRange(parsers);
-        }
-
-        public bool UseDefaultFile
-        {
-            get { return _useDefaultFile; }
-            set { _useDefaultFile = value; }
         }
 
         public void IncludeFile(string filename)

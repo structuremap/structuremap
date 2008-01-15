@@ -8,8 +8,8 @@ namespace StructureMap.DeploymentTasks
     [TaskName("structuremap.addassembly")]
     public class AddAssembly : Task
     {
-        private string _configPath;
         private string _assemblyName;
+        private string _configPath;
 
         public AddAssembly()
         {

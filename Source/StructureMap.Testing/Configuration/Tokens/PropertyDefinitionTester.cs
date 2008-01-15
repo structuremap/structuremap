@@ -13,14 +13,91 @@ namespace StructureMap.Testing.Configuration.Tokens
     [TestFixture]
     public class PropertyDefinitionTester
     {
-        private Type _type;
-        private ConstructorInfo _ctor;
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
         {
             _type = typeof (DefinitionTarget);
             _ctor = _type.GetConstructors()[0];
+        }
+
+        #endregion
+
+        private Type _type;
+        private ConstructorInfo _ctor;
+
+        private void validateSetter(PropertyDefinition expected, string propertyName)
+        {
+            PropertyInfo property = _type.GetProperty(propertyName);
+            PropertyDefinition actual = PropertyDefinitionBuilder.CreatePropertyDefinition(property);
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void BuildChildArrayProperty()
+        {
+            PropertyDefinition definition =
+                new PropertyDefinition("Color", typeof (string), PropertyDefinitionType.Constructor,
+                                       ArgumentType.ChildArray);
+
+            MemoryInstanceMemento memento = new MemoryInstanceMemento("concrete", "instance");
+            memento.AddChildArray("Color", new InstanceMemento[0]);
+
+            PluginGraphReport report = new PluginGraphReport();
+
+            ChildArrayProperty property = (ChildArrayProperty) definition.CreateProperty(memento, report);
+
+            Assert.AreEqual(definition, property.Definition);
+        }
+
+        [Test]
+        public void BuildChildProperty()
+        {
+            PropertyDefinition definition =
+                new PropertyDefinition("Color", typeof (string), PropertyDefinitionType.Constructor, ArgumentType.Child);
+
+            MemoryInstanceMemento memento = new MemoryInstanceMemento("concrete", "instance");
+            memento.AddChild("Color", MemoryInstanceMemento.CreateDefaultInstanceMemento());
+
+            PluginGraphReport report = new PluginGraphReport();
+
+            ChildProperty property = (ChildProperty) definition.CreateProperty(memento, report);
+
+            Assert.AreEqual(definition, property.Definition);
+        }
+
+        [Test]
+        public void BuildEnumerationProperty()
+        {
+            PropertyDefinition definition =
+                new PropertyDefinition("Color", typeof (string), PropertyDefinitionType.Constructor,
+                                       ArgumentType.Enumeration);
+            definition.EnumerationValues = new string[] {"red", "green", "blue"};
+
+            MemoryInstanceMemento memento = new MemoryInstanceMemento("concrete", "instance");
+            memento.SetProperty("Color", "red");
+
+            EnumerationProperty property = (EnumerationProperty) definition.CreateProperty(memento, null);
+
+            Assert.AreEqual("red", property.Value);
+            Assert.AreEqual(definition, property.Definition);
+        }
+
+        [Test]
+        public void BuildPrimitiveProperty()
+        {
+            PropertyDefinition definition =
+                new PropertyDefinition("Color", typeof (string), PropertyDefinitionType.Constructor,
+                                       ArgumentType.Primitive);
+            MemoryInstanceMemento memento = new MemoryInstanceMemento("concrete", "instance");
+            memento.SetProperty("Color", "red");
+
+            PrimitiveProperty property = (PrimitiveProperty) definition.CreateProperty(memento, null);
+
+            Assert.AreEqual("red", property.Value);
+            Assert.AreEqual(definition, property.Definition);
         }
 
         [Test]
@@ -43,42 +120,6 @@ namespace StructureMap.Testing.Configuration.Tokens
             Assert.AreEqual(expected, actual);
         }
 
-        private void validateSetter(PropertyDefinition expected, string propertyName)
-        {
-            PropertyInfo property = _type.GetProperty(propertyName);
-            PropertyDefinition actual = PropertyDefinitionBuilder.CreatePropertyDefinition(property);
-
-            Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
-        public void PrimitiveSetter()
-        {
-            PropertyDefinition expected =
-                new PropertyDefinition("Name", typeof (string), PropertyDefinitionType.Setter, ArgumentType.Primitive);
-            validateSetter(expected, "Name");
-        }
-
-
-        [Test]
-        public void EnumerationSetter()
-        {
-            PropertyDefinition expected =
-                new PropertyDefinition("Color", typeof (Color), PropertyDefinitionType.Setter, ArgumentType.Enumeration);
-            validateSetter(expected, "Color");
-        }
-
-
-        [Test]
-        public void ChildSetter()
-        {
-            PropertyDefinition expected =
-                new PropertyDefinition("Connection", typeof (IDbConnection), PropertyDefinitionType.Setter,
-                                       ArgumentType.Child);
-            validateSetter(expected, "Connection");
-        }
-
-
         [Test]
         public void ChildArraySetter()
         {
@@ -89,68 +130,28 @@ namespace StructureMap.Testing.Configuration.Tokens
         }
 
         [Test]
-        public void BuildPrimitiveProperty()
+        public void ChildSetter()
         {
-            PropertyDefinition definition =
-                new PropertyDefinition("Color", typeof (string), PropertyDefinitionType.Constructor,
-                                       ArgumentType.Primitive);
-            MemoryInstanceMemento memento = new MemoryInstanceMemento("concrete", "instance");
-            memento.SetProperty("Color", "red");
-
-            PrimitiveProperty property = (PrimitiveProperty) definition.CreateProperty(memento, null);
-
-            Assert.AreEqual("red", property.Value);
-            Assert.AreEqual(definition, property.Definition);
+            PropertyDefinition expected =
+                new PropertyDefinition("Connection", typeof (IDbConnection), PropertyDefinitionType.Setter,
+                                       ArgumentType.Child);
+            validateSetter(expected, "Connection");
         }
 
         [Test]
-        public void BuildEnumerationProperty()
+        public void EnumerationSetter()
         {
-            PropertyDefinition definition =
-                new PropertyDefinition("Color", typeof (string), PropertyDefinitionType.Constructor,
-                                       ArgumentType.Enumeration);
-            definition.EnumerationValues = new string[] {"red", "green", "blue"};
-
-            MemoryInstanceMemento memento = new MemoryInstanceMemento("concrete", "instance");
-            memento.SetProperty("Color", "red");
-
-            EnumerationProperty property = (EnumerationProperty) definition.CreateProperty(memento, null);
-
-            Assert.AreEqual("red", property.Value);
-            Assert.AreEqual(definition, property.Definition);
+            PropertyDefinition expected =
+                new PropertyDefinition("Color", typeof (Color), PropertyDefinitionType.Setter, ArgumentType.Enumeration);
+            validateSetter(expected, "Color");
         }
 
         [Test]
-        public void BuildChildProperty()
+        public void PrimitiveSetter()
         {
-            PropertyDefinition definition =
-                new PropertyDefinition("Color", typeof (string), PropertyDefinitionType.Constructor, ArgumentType.Child);
-
-            MemoryInstanceMemento memento = new MemoryInstanceMemento("concrete", "instance");
-            memento.AddChild("Color", MemoryInstanceMemento.CreateDefaultInstanceMemento());
-
-            PluginGraphReport report = new PluginGraphReport();
-
-            ChildProperty property = (ChildProperty) definition.CreateProperty(memento, report);
-
-            Assert.AreEqual(definition, property.Definition);
-        }
-
-        [Test]
-        public void BuildChildArrayProperty()
-        {
-            PropertyDefinition definition =
-                new PropertyDefinition("Color", typeof (string), PropertyDefinitionType.Constructor,
-                                       ArgumentType.ChildArray);
-
-            MemoryInstanceMemento memento = new MemoryInstanceMemento("concrete", "instance");
-            memento.AddChildArray("Color", new InstanceMemento[0]);
-
-            PluginGraphReport report = new PluginGraphReport();
-
-            ChildArrayProperty property = (ChildArrayProperty) definition.CreateProperty(memento, report);
-
-            Assert.AreEqual(definition, property.Definition);
+            PropertyDefinition expected =
+                new PropertyDefinition("Name", typeof (string), PropertyDefinitionType.Setter, ArgumentType.Primitive);
+            validateSetter(expected, "Name");
         }
     }
 
@@ -163,10 +164,10 @@ namespace StructureMap.Testing.Configuration.Tokens
 
     public class DefinitionTarget
     {
-        private string _name;
         private Color _color;
         private IDbConnection _connection;
         private XmlDocument[] _documents;
+        private string _name;
 
         public DefinitionTarget(string name, Color color, IDbConnection connection, XmlDocument[] documents)
         {

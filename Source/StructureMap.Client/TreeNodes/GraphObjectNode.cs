@@ -31,6 +31,43 @@ namespace StructureMap.Client.TreeNodes
             get { return _viewName; }
         }
 
+        public bool HasProblems
+        {
+            get
+            {
+                bool returnValue = (_subject.Problems.Length > 0);
+
+                if (!returnValue)
+                {
+                    return HasChildrenProblems;
+                }
+
+                return returnValue;
+            }
+        }
+
+        public bool HasChildrenProblems
+        {
+            get
+            {
+                foreach (GraphObjectNode child in Nodes)
+                {
+                    if (child.HasProblems)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        }
+
+        public bool IsAggregate
+        {
+            get { return _isAggregate; }
+            set { _isAggregate = value; }
+        }
+
         public GraphObjectNode FindChild(string text)
         {
             foreach (GraphObjectNode child in Nodes)
@@ -63,37 +100,6 @@ namespace StructureMap.Client.TreeNodes
             return null;
         }
 
-        public bool HasProblems
-        {
-            get
-            {
-                bool returnValue = (_subject.Problems.Length > 0);
-
-                if (!returnValue)
-                {
-                    return HasChildrenProblems;
-                }
-
-                return returnValue;
-            }
-        }
-
-        public bool HasChildrenProblems
-        {
-            get
-            {
-                foreach (GraphObjectNode child in Nodes)
-                {
-                    if (child.HasProblems)
-                    {
-                        return true;
-                    }
-                }
-
-                return false;
-            }
-        }
-
         public void RefreshStatus()
         {
             bool hasProblems = IsAggregate ? HasChildrenProblems : HasProblems;
@@ -113,12 +119,6 @@ namespace StructureMap.Client.TreeNodes
             {
                 child.RefreshStatus();
             }
-        }
-
-        public bool IsAggregate
-        {
-            get { return _isAggregate; }
-            set { _isAggregate = value; }
         }
     }
 }

@@ -5,14 +5,16 @@ namespace StructureMap.DataAccess.ExecutionStates
 {
     public class AutoCommitExecutionState : IExecutionState
     {
-        private readonly IDbConnection _connection;
         private readonly IDbDataAdapter _adapter;
+        private readonly IDbConnection _connection;
 
         public AutoCommitExecutionState(IDbConnection connection, IDbDataAdapter adapter)
         {
             _connection = connection;
             _adapter = adapter;
         }
+
+        #region IExecutionState Members
 
         public int Execute(IDbCommand command)
         {
@@ -25,18 +27,6 @@ namespace StructureMap.DataAccess.ExecutionStates
             {
                 cleanupConnection(command);
             }
-        }
-
-        private void setupConnection(IDbCommand command)
-        {
-            command.Connection = _connection;
-            _connection.Open();
-        }
-
-        private void cleanupConnection(IDbCommand command)
-        {
-            command.Connection = null;
-            _connection.Close();
         }
 
         public IDataReader ExecuteReader(IDbCommand command)
@@ -81,6 +71,20 @@ namespace StructureMap.DataAccess.ExecutionStates
             {
                 cleanupConnection(command);
             }
+        }
+
+        #endregion
+
+        private void setupConnection(IDbCommand command)
+        {
+            command.Connection = _connection;
+            _connection.Open();
+        }
+
+        private void cleanupConnection(IDbCommand command)
+        {
+            command.Connection = null;
+            _connection.Close();
         }
     }
 }

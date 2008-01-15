@@ -6,11 +6,11 @@ namespace StructureMap.DeploymentTasks
     public class DeploymentConfiguration
     {
         private string _configPath = string.Empty;
-        private string _destinationPath = string.Empty;
         private string _deploymentTarget = string.Empty;
-        private string _profile = string.Empty;
-        private MachineSpecificOption _machineOption = MachineSpecificOption.CopyMachineOverrides;
+        private string _destinationPath = string.Empty;
         private string _machineName = string.Empty;
+        private MachineSpecificOption _machineOption = MachineSpecificOption.CopyMachineOverrides;
+        private string _profile = string.Empty;
 
         public DeploymentConfiguration()
         {

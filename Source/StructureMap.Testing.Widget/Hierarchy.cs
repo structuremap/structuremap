@@ -3,8 +3,8 @@ namespace StructureMap.Testing.Widget
     [PluginFamily, Pluggable("Default", "")]
     public class GrandChild
     {
-        private bool _RightHanded;
         private int _BirthYear;
+        private bool _RightHanded;
 
         public GrandChild(bool RightHanded, int BirthYear)
         {
@@ -36,8 +36,8 @@ namespace StructureMap.Testing.Widget
     [PluginFamily, Pluggable("Default", "")]
     public class Child
     {
-        private string _Name;
         private GrandChild _MyGrandChild;
+        private string _Name;
 
         public Child(string Name, GrandChild MyGrandChild)
         {

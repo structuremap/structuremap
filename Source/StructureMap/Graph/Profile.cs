@@ -12,8 +12,8 @@ namespace StructureMap.Graph
     [Serializable]
     public class Profile : GraphObject
     {
-        private string _profileName;
         private Dictionary<string, InstanceDefault> _defaults;
+        private string _profileName;
 
         public Profile(string profileName)
         {
@@ -41,6 +41,27 @@ namespace StructureMap.Graph
                     return string.Empty;
                 }
             }
+        }
+
+        public int Count
+        {
+            get { return _defaults.Count; }
+        }
+
+        public InstanceDefault[] Defaults
+        {
+            get
+            {
+                InstanceDefault[] defaults = getDefaultArray();
+                Array.Sort(defaults);
+
+                return defaults;
+            }
+        }
+
+        protected override string key
+        {
+            get { return ProfileName; }
         }
 
 
@@ -77,22 +98,6 @@ namespace StructureMap.Graph
         }
 
 
-        public int Count
-        {
-            get { return _defaults.Count; }
-        }
-
-        public InstanceDefault[] Defaults
-        {
-            get
-            {
-                InstanceDefault[] defaults = getDefaultArray();
-                Array.Sort(defaults);
-
-                return defaults;
-            }
-        }
-
         private InstanceDefault[] getDefaultArray()
         {
             InstanceDefault[] defaults = new InstanceDefault[_defaults.Count];
@@ -123,11 +128,6 @@ namespace StructureMap.Graph
                     _defaults.Remove(instanceDefault.PluginTypeName);
                 }
             }
-        }
-
-        protected override string key
-        {
-            get { return ProfileName; }
         }
 
         public static string InstanceKeyForProfile(string profileName)

@@ -13,10 +13,10 @@ namespace StructureMap
     /// </summary>
     public class InstanceManager : IInstanceManager, IEnumerable
     {
+        private readonly InstanceDefaultManager _defaultManager;
         private readonly Dictionary<Type, IInstanceFactory> _factories;
         private readonly bool _failOnException = true;
         private readonly GenericsPluginGraph _genericsGraph;
-        private readonly InstanceDefaultManager _defaultManager;
         private readonly InterceptorLibrary _interceptorLibrary;
 
         /// <summary>
@@ -69,16 +69,120 @@ namespace StructureMap
             }
         }
 
-        public InstanceDefaultManager DefaultManager
-        {
-            get { return _defaultManager; }
-        }
-
 
         public InterceptorLibrary InterceptorLibrary
         {
             get { return _interceptorLibrary; }
         }
+
+        public virtual IInstanceFactory this[Type pluginType]
+        {
+            get
+            {
+                if (pluginType.IsGenericType && !_factories.ContainsKey(pluginType))
+                {
+                    PluginFamily family = _genericsGraph.CreateTemplatedFamily(pluginType);
+                    return registerPluginFamily(family);
+                }
+
+                if (!_factories.ContainsKey(pluginType))
+                {
+                    throw new StructureMapException(208, pluginType.FullName);
+                }
+
+                return _factories[pluginType];
+            }
+            set { _factories[pluginType] = value; }
+        }
+
+        public IInstanceFactory this[string pluginTypeName]
+        {
+            get
+            {
+                Type type = Type.GetType(pluginTypeName);
+
+
+                if (type == null)
+                {
+                    foreach (KeyValuePair<Type, IInstanceFactory> pair in _factories)
+                    {
+                        if (pair.Value.PluginType.FullName == pluginTypeName)
+                        {
+                            return pair.Value;
+                        }
+                    }
+
+                    throw new MissingPluginFamilyException(pluginTypeName);
+                }
+                else
+                {
+                    return this[type];
+                }
+            }
+        }
+
+        #region IEnumerable Members
+
+        public IEnumerator GetEnumerator()
+        {
+            return _factories.Values.GetEnumerator();
+        }
+
+        #endregion
+
+        #region IInstanceManager Members
+
+        public InstanceDefaultManager DefaultManager
+        {
+            get { return _defaultManager; }
+        }
+
+        public T CreateInstance<T>(string instanceKey)
+        {
+            return (T) CreateInstance(typeof (T), instanceKey);
+        }
+
+        public T CreateInstance<T>(InstanceMemento memento)
+        {
+            return (T) CreateInstance(typeof (T), memento);
+        }
+
+        public T CreateInstance<T>()
+        {
+            return (T) CreateInstance(typeof (T));
+        }
+
+        public T FillDependencies<T>()
+        {
+            return (T) FillDependencies(typeof (T));
+        }
+
+        public void InjectStub<T>(T instance)
+        {
+            InjectStub(typeof (T), instance);
+        }
+
+        public IList<T> GetAllInstances<T>()
+        {
+            List<T> list = new List<T>();
+
+            foreach (T instance in this[typeof (T)].GetAllInstances())
+            {
+                list.Add(instance);
+            }
+
+            return list;
+        }
+
+        public void SetDefaultsToProfile(string profile)
+        {
+            // The authenticated user may not have required privileges to read from Environment
+            string machineName = InstanceDefaultManager.GetMachineName();
+            Profile defaultProfile = _defaultManager.CalculateDefaults(machineName, profile);
+            SetDefaults(defaultProfile);
+        }
+
+        #endregion
 
         private IInstanceFactory registerPluginFamily(PluginFamily family)
         {
@@ -162,16 +266,6 @@ namespace StructureMap
             return instanceFactory.GetInstance(instanceKey);
         }
 
-        public T CreateInstance<T>(string instanceKey)
-        {
-            return (T) CreateInstance(typeof (T), instanceKey);
-        }
-
-        public T CreateInstance<T>(InstanceMemento memento)
-        {
-            return (T) CreateInstance(typeof (T), memento);
-        }
-
         /// <summary>
         /// Creates a new object instance of the requested type
         /// </summary>
@@ -181,11 +275,6 @@ namespace StructureMap
         {
             IInstanceFactory instanceFactory = this[pluginType];
             return instanceFactory.GetInstance();
-        }
-
-        public T CreateInstance<T>()
-        {
-            return (T) CreateInstance(typeof (T));
         }
 
         /// <summary>
@@ -277,52 +366,6 @@ namespace StructureMap
             instanceFactory.SetDefault(instanceKey);
         }
 
-        public virtual IInstanceFactory this[Type pluginType]
-        {
-            get
-            {
-                if (pluginType.IsGenericType && !_factories.ContainsKey(pluginType))
-                {
-                    PluginFamily family = _genericsGraph.CreateTemplatedFamily(pluginType);
-                    return registerPluginFamily(family);
-                }
-
-                if (!_factories.ContainsKey(pluginType))
-                {
-                    throw new StructureMapException(208, pluginType.FullName);
-                }
-
-                return _factories[pluginType];
-            }
-            set { _factories[pluginType] = value; }
-        }
-
-        public IInstanceFactory this[string pluginTypeName]
-        {
-            get
-            {
-                Type type = Type.GetType(pluginTypeName);
-
-
-                if (type == null)
-                {
-                    foreach (KeyValuePair<Type, IInstanceFactory> pair in _factories)
-                    {
-                        if (pair.Value.PluginType.FullName == pluginTypeName)
-                        {
-                            return pair.Value;
-                        }
-                    }
-
-                    throw new MissingPluginFamilyException(pluginTypeName);
-                }
-                else
-                {
-                    return this[type];
-                }
-            }
-        }
-
 
         /// <summary>
         /// Attempts to create a new instance of the requested type.  Automatically inserts the default
@@ -345,13 +388,6 @@ namespace StructureMap
                                                                     });
             return factory.GetInstance();
         }
-
-        public T FillDependencies<T>()
-        {
-            return (T) FillDependencies(typeof (T));
-        }
-
-        protected delegate InstanceFactory CreateFactoryDelegate(Type type);
 
         protected IInstanceFactory getOrCreateFactory(Type type, CreateFactoryDelegate createFactory)
         {
@@ -389,39 +425,9 @@ namespace StructureMap
             this[pluginType].SetDefault(memento);
         }
 
-        public void InjectStub<T>(T instance)
-        {
-            InjectStub(typeof (T), instance);
-        }
-
-        public IEnumerator GetEnumerator()
-        {
-            return _factories.Values.GetEnumerator();
-        }
-
         public IList GetAllInstances(Type type)
         {
             return this[type].GetAllInstances();
-        }
-
-        public IList<T> GetAllInstances<T>()
-        {
-            List<T> list = new List<T>();
-
-            foreach (T instance in this[typeof (T)].GetAllInstances())
-            {
-                list.Add(instance);
-            }
-
-            return list;
-        }
-
-        public void SetDefaultsToProfile(string profile)
-        {
-            // The authenticated user may not have required privileges to read from Environment
-            string machineName = InstanceDefaultManager.GetMachineName();
-            Profile defaultProfile = _defaultManager.CalculateDefaults(machineName, profile);
-            SetDefaults(defaultProfile);
         }
 
         public void AddInstance<T>(InstanceMemento memento)
@@ -449,5 +455,11 @@ namespace StructureMap
             InstanceMemento memento = factory.AddType<CONCRETETYPE>();
             factory.SetDefault(memento);
         }
+
+        #region Nested type: CreateFactoryDelegate
+
+        protected delegate InstanceFactory CreateFactoryDelegate(Type type);
+
+        #endregion
     }
 }

@@ -5,8 +5,8 @@ namespace StructureMap.DeploymentTasks.Versioning
 {
     public class DeployedFile
     {
-        private string _fileName;
         private byte[] _contentsHash;
+        private string _fileName;
 
         public DeployedFile()
         {

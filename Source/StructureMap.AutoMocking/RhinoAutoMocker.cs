@@ -7,9 +7,8 @@ using StructureMap.Graph;
 namespace StructureMap.AutoMocking
 {
     public delegate void GenericVoidMethod<TARGETCLASS>(TARGETCLASS target);
+
     public delegate void VoidMethod();
-
-
 
 
     public class RhinoAutoMocker<TARGETCLASS> : MockRepository where TARGETCLASS : class
@@ -18,10 +17,8 @@ namespace StructureMap.AutoMocking
 
         public RhinoAutoMocker()
         {
-            
             RhinoMocksServiceLocator locator = new RhinoMocksServiceLocator(this);
             _manager = new AutoMockedInstanceManager(locator);
-            
         }
 
         public TARGETCLASS Create()
@@ -36,7 +33,7 @@ namespace StructureMap.AutoMocking
 
         private object[] getConstructorArgs()
         {
-            ConstructorInfo ctor = Plugin.GetGreediestConstructor(typeof(TARGETCLASS));
+            ConstructorInfo ctor = Plugin.GetGreediestConstructor(typeof (TARGETCLASS));
             List<object> list = new List<object>();
             foreach (ParameterInfo parameterInfo in ctor.GetParameters())
             {

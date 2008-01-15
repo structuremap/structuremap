@@ -12,6 +12,8 @@ namespace StructureMap.Configuration.Tokens.Properties
             _property = property;
         }
 
+        #region IChildPropertyMode Members
+
         public void Validate(IInstanceValidator validator)
         {
             if (!validator.InstanceExists(_property.PluginType, _property.ReferenceKey))
@@ -29,5 +31,7 @@ namespace StructureMap.Configuration.Tokens.Properties
         {
             visitor.HandleReferenceChildProperty(_property);
         }
+
+        #endregion
     }
 }

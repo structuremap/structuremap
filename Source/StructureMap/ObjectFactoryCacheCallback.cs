@@ -17,6 +17,7 @@ namespace StructureMap
             }
         }
 
+        #region IManagedCache Members
 
         public string CacheName
         {
@@ -36,5 +37,7 @@ namespace StructureMap
         public void AddWatches(CacheManager Manager)
         {
         }
+
+        #endregion
     }
 }

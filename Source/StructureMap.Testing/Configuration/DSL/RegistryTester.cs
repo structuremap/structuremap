@@ -11,10 +11,14 @@ namespace StructureMap.Testing.Configuration.DSL
     [TestFixture]
     public class RegistryTester
     {
+        #region Setup/Teardown
+
         [SetUp]
         public void SetUp()
         {
         }
+
+        #endregion
 
         [Test]
         public void CallAllExpressionsOnConfigure()
@@ -106,6 +110,8 @@ namespace StructureMap.Testing.Configuration.DSL
 
     public class FakeGateway : IGateway
     {
+        #region IGateway Members
+
         public void DoSomething()
         {
             throw new NotImplementedException();
@@ -115,10 +121,14 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             get { throw new NotImplementedException(); }
         }
+
+        #endregion
     }
 
     public class Fake2Gateway : IGateway
     {
+        #region IGateway Members
+
         public void DoSomething()
         {
             throw new NotImplementedException();
@@ -128,10 +138,14 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             get { throw new NotImplementedException(); }
         }
+
+        #endregion
     }
 
     public class Fake3Gateway : IGateway
     {
+        #region IGateway Members
+
         public void DoSomething()
         {
             throw new NotImplementedException();
@@ -141,5 +155,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             get { throw new NotImplementedException(); }
         }
+
+        #endregion
     }
 }

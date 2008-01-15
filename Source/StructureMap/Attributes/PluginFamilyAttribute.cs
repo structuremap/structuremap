@@ -12,8 +12,8 @@ namespace StructureMap
     public class PluginFamilyAttribute : Attribute
     {
         private string _default = string.Empty;
-        private Type _source = null;
         private InstanceScope _scope = InstanceScope.PerRequest;
+        private Type _source = null;
 
         public PluginFamilyAttribute()
         {

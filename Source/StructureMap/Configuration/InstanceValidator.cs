@@ -5,8 +5,8 @@ namespace StructureMap.Configuration
 {
     public class InstanceValidator : IInstanceValidator
     {
-        private readonly PluginGraph _pluginGraph;
         private readonly Profile _defaultProfile;
+        private readonly PluginGraph _pluginGraph;
         private InstanceManager _instanceManager;
 
         public InstanceValidator(PluginGraph pluginGraph, Profile defaultProfile, InstanceManager instanceManager)
@@ -20,6 +20,8 @@ namespace StructureMap.Configuration
             _defaultProfile = defaultProfile;
             _instanceManager = instanceManager;
         }
+
+        #region IInstanceValidator Members
 
         public object CreateObject(Type pluginType, InstanceMemento memento)
         {
@@ -51,5 +53,7 @@ namespace StructureMap.Configuration
 
             return returnValue;
         }
+
+        #endregion
     }
 }

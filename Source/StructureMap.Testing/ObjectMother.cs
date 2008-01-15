@@ -8,14 +8,18 @@ namespace StructureMap.Testing
 {
     public class ObjectMother
     {
-        private static PluginGraph _pluginGraph;
-        private static InstanceManager _instanceManager;
         private static InstanceDefaultManager _instanceDefaultManager;
+        private static InstanceManager _instanceManager;
+        private static PluginGraph _pluginGraph;
         private static PluginGraphReport _report;
 
         static ObjectMother()
         {
             Reset();
+        }
+
+        private ObjectMother()
+        {
         }
 
 
@@ -38,10 +42,6 @@ namespace StructureMap.Testing
         public static PluginGraphReport Report()
         {
             return _report;
-        }
-
-        private ObjectMother()
-        {
         }
 
         public static InstanceDefaultManager GetInstanceDefaultManager()
@@ -109,7 +109,7 @@ namespace StructureMap.Testing
 
         public static InstanceFactory Factory<T>()
         {
-            return new InstanceFactory(new PluginFamily(typeof(T)), true);
+            return new InstanceFactory(new PluginFamily(typeof (T)), true);
         }
     }
 }

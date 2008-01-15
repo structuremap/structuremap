@@ -7,69 +7,6 @@ namespace StructureMap.Testing.Graph
     public class OverrideGraphTester
     {
         [Test]
-        public void FindDefaultsWithOnlyPluginFamilyDefaults()
-        {
-            InstanceDefaultManager defaultManager = new InstanceDefaultManager();
-            defaultManager.AddPluginFamilyDefault(new InstanceDefault("Type1", "PluginFamilyDefault"));
-
-            Profile profile = defaultManager.CalculateDefaults(string.Empty, string.Empty);
-            Assert.AreEqual(1, profile.Count);
-            Assert.AreEqual("PluginFamilyDefault", profile["Type1"]);
-        }
-
-        [Test]
-        public void FindDefaultsWithPluginFamilyDefaultsAndAMachineNameThatDoesNotMatch()
-        {
-            InstanceDefaultManager defaultManager = new InstanceDefaultManager();
-            defaultManager.AddPluginFamilyDefault("Type1", "PluginFamilyDefault");
-            MachineOverride machine = new MachineOverride("Machine1");
-            machine.AddMachineOverride("Type1", "MachineSpecificKey");
-
-            Profile profile = defaultManager.CalculateDefaults("Machine2", string.Empty);
-            Assert.AreEqual(1, profile.Count);
-            Assert.AreEqual("PluginFamilyDefault", profile["Type1"]);
-        }
-
-        [Test]
-        public void FindDefaultsWithPluginFamilyDefaultAndAMatchingMachineOverridesDefaultKey()
-        {
-            InstanceDefaultManager defaultManager = new InstanceDefaultManager();
-            defaultManager.AddPluginFamilyDefault("Type1", "PluginFamilyDefault");
-            MachineOverride machine = new MachineOverride("Machine1");
-            machine.AddMachineOverride("Type1", "MachineSpecificKey");
-            defaultManager.AddMachineOverride(machine);
-
-            Profile profile = defaultManager.CalculateDefaults("Machine1", string.Empty);
-            Assert.AreEqual(1, profile.Count);
-            Assert.AreEqual("MachineSpecificKey", profile["Type1"]);
-        }
-
-        [Test]
-        public void FindsDefaultWhenOverridenByProfileWithAndWithoutAMatchingMachineOverride()
-        {
-            InstanceDefaultManager defaultManager = new InstanceDefaultManager();
-            defaultManager.DefaultProfileName = "SomethingElse";
-
-            defaultManager.AddPluginFamilyDefault("Type1", "PluginFamilyDefault");
-            Profile configuredProfile = new Profile("Production");
-            configuredProfile.AddOverride("Type1", "ProfileDefault");
-            defaultManager.AddProfile(configuredProfile);
-
-            Profile profile = defaultManager.CalculateDefaults("Machine1", "Production");
-            Assert.AreEqual(1, profile.Count);
-            Assert.AreEqual("ProfileDefault", profile["Type1"]);
-
-            // Add the machine override, get the same results
-            MachineOverride machine = new MachineOverride("Machine1");
-            machine.AddMachineOverride("Type1", "MachineSpecificKey");
-            defaultManager.AddMachineOverride(machine);
-
-            profile = defaultManager.CalculateDefaults("Machine1", "Production");
-            Assert.AreEqual(1, profile.Count);
-            Assert.AreEqual("ProfileDefault", profile["Type1"]);
-        }
-
-        [Test]
         public void CalculatesAnAggregateOfTypes()
         {
             InstanceDefaultManager defaultManager = new InstanceDefaultManager();
@@ -96,6 +33,69 @@ namespace StructureMap.Testing.Graph
             Assert.AreEqual("MachineSpecificKey2", profile["Type2"]);
             Assert.AreEqual("ProfileDefault3", profile["Type3"]);
             Assert.AreEqual("ProfileDefault4", profile["Type4"]);
+        }
+
+        [Test]
+        public void FindDefaultsWithOnlyPluginFamilyDefaults()
+        {
+            InstanceDefaultManager defaultManager = new InstanceDefaultManager();
+            defaultManager.AddPluginFamilyDefault(new InstanceDefault("Type1", "PluginFamilyDefault"));
+
+            Profile profile = defaultManager.CalculateDefaults(string.Empty, string.Empty);
+            Assert.AreEqual(1, profile.Count);
+            Assert.AreEqual("PluginFamilyDefault", profile["Type1"]);
+        }
+
+        [Test]
+        public void FindDefaultsWithPluginFamilyDefaultAndAMatchingMachineOverridesDefaultKey()
+        {
+            InstanceDefaultManager defaultManager = new InstanceDefaultManager();
+            defaultManager.AddPluginFamilyDefault("Type1", "PluginFamilyDefault");
+            MachineOverride machine = new MachineOverride("Machine1");
+            machine.AddMachineOverride("Type1", "MachineSpecificKey");
+            defaultManager.AddMachineOverride(machine);
+
+            Profile profile = defaultManager.CalculateDefaults("Machine1", string.Empty);
+            Assert.AreEqual(1, profile.Count);
+            Assert.AreEqual("MachineSpecificKey", profile["Type1"]);
+        }
+
+        [Test]
+        public void FindDefaultsWithPluginFamilyDefaultsAndAMachineNameThatDoesNotMatch()
+        {
+            InstanceDefaultManager defaultManager = new InstanceDefaultManager();
+            defaultManager.AddPluginFamilyDefault("Type1", "PluginFamilyDefault");
+            MachineOverride machine = new MachineOverride("Machine1");
+            machine.AddMachineOverride("Type1", "MachineSpecificKey");
+
+            Profile profile = defaultManager.CalculateDefaults("Machine2", string.Empty);
+            Assert.AreEqual(1, profile.Count);
+            Assert.AreEqual("PluginFamilyDefault", profile["Type1"]);
+        }
+
+        [Test]
+        public void FindsDefaultWhenOverridenByProfileWithAndWithoutAMatchingMachineOverride()
+        {
+            InstanceDefaultManager defaultManager = new InstanceDefaultManager();
+            defaultManager.DefaultProfileName = "SomethingElse";
+
+            defaultManager.AddPluginFamilyDefault("Type1", "PluginFamilyDefault");
+            Profile configuredProfile = new Profile("Production");
+            configuredProfile.AddOverride("Type1", "ProfileDefault");
+            defaultManager.AddProfile(configuredProfile);
+
+            Profile profile = defaultManager.CalculateDefaults("Machine1", "Production");
+            Assert.AreEqual(1, profile.Count);
+            Assert.AreEqual("ProfileDefault", profile["Type1"]);
+
+            // Add the machine override, get the same results
+            MachineOverride machine = new MachineOverride("Machine1");
+            machine.AddMachineOverride("Type1", "MachineSpecificKey");
+            defaultManager.AddMachineOverride(machine);
+
+            profile = defaultManager.CalculateDefaults("Machine1", "Production");
+            Assert.AreEqual(1, profile.Count);
+            Assert.AreEqual("ProfileDefault", profile["Type1"]);
         }
 
         [Test]

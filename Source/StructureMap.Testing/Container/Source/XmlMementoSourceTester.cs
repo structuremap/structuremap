@@ -7,12 +7,7 @@ namespace StructureMap.Testing.Container.Source
     [TestFixture]
     public class XmlMementoSourceTester
     {
-        private MementoSource source;
-
-        public XmlMementoSourceTester()
-        {
-        }
-
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -20,6 +15,15 @@ namespace StructureMap.Testing.Container.Source
             DataMother.WriteDocument("RuleSource.xml");
             source = new XmlFileMementoSource("RuleSource.XML", "", "Rule");
         }
+
+        #endregion
+
+        private MementoSource source;
+
+        public XmlMementoSourceTester()
+        {
+        }
+
 
         [Test]
         public void GetAll()

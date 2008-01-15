@@ -1,5 +1,4 @@
 using System;
-using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.Graph;
 
 namespace StructureMap.Configuration.DSL.Expressions
@@ -9,8 +8,8 @@ namespace StructureMap.Configuration.DSL.Expressions
     /// </summary>
     public class InstanceDefaultExpression
     {
-        private readonly Type _pluginType;
         private readonly ProfileExpression _parent;
+        private readonly Type _pluginType;
         private string _instanceKey = string.Empty;
         private IMementoBuilder _mementoBuilder;
 

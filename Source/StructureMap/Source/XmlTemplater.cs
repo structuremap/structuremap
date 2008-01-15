@@ -6,8 +6,8 @@ namespace StructureMap.Source
 {
     public class XmlTemplater
     {
-        private string _templateXml;
         private string[] _substitutions;
+        private string _templateXml;
 
         public XmlTemplater(XmlNode templateNode)
         {
@@ -23,6 +23,11 @@ namespace StructureMap.Source
             {
                 _substitutions = substitutionAttribute.InnerText.Split(',');
             }
+        }
+
+        public string[] Substitutions
+        {
+            get { return _substitutions; }
         }
 
         public XmlNode SubstituteTemplates(XmlNode node, InstanceMemento memento)
@@ -52,10 +57,7 @@ namespace StructureMap.Source
             builder.Replace(searchValue, substitutionValue);
         }
 
-        public string[] Substitutions
-        {
-            get { return _substitutions; }
-        }
+        #region Nested type: Collector
 
         private class Collector
         {
@@ -111,5 +113,7 @@ namespace StructureMap.Source
                 }
             }
         }
+
+        #endregion
     }
 }

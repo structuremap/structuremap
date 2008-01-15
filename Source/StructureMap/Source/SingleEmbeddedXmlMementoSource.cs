@@ -32,6 +32,12 @@ namespace StructureMap.Source
             _path = path;
         }
 
+
+        public override string Description
+        {
+            get { return "Single Embedded File:  " + _path; }
+        }
+
         protected override XmlNode getRootNode()
         {
             Stream stream = _assembly.GetManifestResourceStream(_path);
@@ -39,12 +45,6 @@ namespace StructureMap.Source
             document.Load(stream);
 
             return document.DocumentElement;
-        }
-
-
-        public override string Description
-        {
-            get { return "Single Embedded File:  " + _path; }
         }
     }
 }

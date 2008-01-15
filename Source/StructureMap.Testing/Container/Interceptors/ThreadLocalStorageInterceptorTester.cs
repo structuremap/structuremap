@@ -9,11 +9,7 @@ namespace StructureMap.Testing.Container.Interceptors
     [TestFixture]
     public class ThreadLocalStorageInterceptorTester
     {
-        private ThreadLocalStorageInterceptor _interceptor;
-        private ColorRule _rule1;
-        private ColorRule _rule2;
-        private ColorRule _rule3;
-
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -24,6 +20,14 @@ namespace StructureMap.Testing.Container.Interceptors
             _interceptor = new ThreadLocalStorageInterceptor();
             _interceptor.InnerInstanceFactory = factory;
         }
+
+        #endregion
+
+        private ThreadLocalStorageInterceptor _interceptor;
+        private ColorRule _rule1;
+        private ColorRule _rule2;
+        private ColorRule _rule3;
+
 
         private void findRule1()
         {

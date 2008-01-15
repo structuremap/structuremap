@@ -5,8 +5,8 @@ namespace StructureMap.DataAccess.DataSetMapping
 {
     public class YesNoReaderToColumnMap : ReaderToColumnMap
     {
-        public const string YES = "Y";
         public const string NO = "N";
+        public const string YES = "Y";
 
         public YesNoReaderToColumnMap(string readerName, string columnName) : base(readerName, columnName)
         {

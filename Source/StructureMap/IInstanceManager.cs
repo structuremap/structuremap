@@ -5,6 +5,7 @@ namespace StructureMap
 {
     public interface IInstanceManager
     {
+        InstanceDefaultManager DefaultManager { get; }
         T CreateInstance<T>(string instanceKey);
         T CreateInstance<T>();
         T FillDependencies<T>();
@@ -12,7 +13,6 @@ namespace StructureMap
         IList<T> GetAllInstances<T>();
         void SetDefaultsToProfile(string profile);
 
-        InstanceDefaultManager DefaultManager { get; }
         T CreateInstance<T>(InstanceMemento memento);
     }
 }

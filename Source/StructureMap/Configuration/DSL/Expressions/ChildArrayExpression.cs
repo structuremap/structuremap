@@ -6,8 +6,8 @@ namespace StructureMap.Configuration.DSL.Expressions
 {
     public class ChildArrayExpression<PLUGINTYPE> : IExpression
     {
-        private readonly InstanceExpression _parent;
         private readonly MemoryInstanceMemento _memento;
+        private readonly InstanceExpression _parent;
         private readonly string _propertyName;
         private IMementoBuilder[] _builders;
         private Type _pluginType = typeof (PLUGINTYPE);
@@ -21,6 +21,8 @@ namespace StructureMap.Configuration.DSL.Expressions
             _pluginType = typeof (PLUGINTYPE).GetElementType();
         }
 
+        #region IExpression Members
+
         void IExpression.Configure(PluginGraph graph)
         {
             PluginFamily family = graph.LocateOrCreateFamilyForType(_pluginType);
@@ -33,6 +35,8 @@ namespace StructureMap.Configuration.DSL.Expressions
 
             _memento.AddChildArray(_propertyName, childMementos);
         }
+
+        #endregion
 
         private InstanceMemento processMementoBuilder(IMementoBuilder builder, PluginFamily family, PluginGraph graph)
         {

@@ -7,8 +7,8 @@ namespace StructureMap.DeploymentTasks
     [TaskName("structuremap.removeassembly")]
     public class RemoveAssemblyTask : Task
     {
-        private string _configPath;
         private string _assemblyName;
+        private string _configPath;
 
         public RemoveAssemblyTask() : base()
         {

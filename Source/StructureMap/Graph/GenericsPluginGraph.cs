@@ -5,6 +5,13 @@ namespace StructureMap.Graph
 {
     public class GenericsPluginGraph
     {
+        private Dictionary<Type, PluginFamily> _families;
+
+        public GenericsPluginGraph()
+        {
+            _families = new Dictionary<Type, PluginFamily>();
+        }
+
         public static bool CanBeCast(Type pluginType, Type pluggedType)
         {
             //bool isGenericComparison = pluginType.IsGenericType && pluggedType.IsGenericType;
@@ -58,13 +65,6 @@ namespace StructureMap.Graph
             }
 
             return false;
-        }
-
-        private Dictionary<Type, PluginFamily> _families;
-
-        public GenericsPluginGraph()
-        {
-            _families = new Dictionary<Type, PluginFamily>();
         }
 
         public PluginFamily FindGenericFamily(string pluginTypeName)

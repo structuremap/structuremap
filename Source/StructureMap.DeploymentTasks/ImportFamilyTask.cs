@@ -9,9 +9,9 @@ namespace StructureMap.DeploymentTasks
     [TaskName("structuremap.importfamily")]
     public class ImportFamilyTask : Task
     {
-        private string _targetPath;
-        private string _sourcePath;
         private string _pluginType;
+        private string _sourcePath;
+        private string _targetPath;
 
         public ImportFamilyTask() : base()
         {

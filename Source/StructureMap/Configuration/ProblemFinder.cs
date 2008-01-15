@@ -7,52 +7,16 @@ namespace StructureMap.Configuration
 {
     public class ProblemFinder : IConfigurationVisitor
     {
-        public static Problem[] FindProblems(string configPath)
-        {
-            RemoteGraphContainer container = new RemoteGraphContainer(configPath);
-            RemoteGraph remoteGraph = container.GetRemoteGraph();
-            PluginGraphReport report = remoteGraph.GetReport();
-            ProblemFinder finder = new ProblemFinder(report);
-
-            return finder.GetProblems();
-        }
-
-        public static Problem[] FindProblems(string configPath, string binPath)
-        {
-            if (binPath == string.Empty || binPath == null)
-            {
-                return FindProblems(configPath);
-            }
-
-            RemoteGraphContainer container = new RemoteGraphContainer(configPath, binPath);
-            RemoteGraph remoteGraph = container.GetRemoteGraph();
-            PluginGraphReport report = remoteGraph.GetReport();
-            ProblemFinder finder = new ProblemFinder(report);
-
-            return finder.GetProblems();
-        }
-
-        public static Problem[] FindProblems(PluginGraphReport report)
-        {
-            ProblemFinder finder = new ProblemFinder(report);
-            return finder.GetProblems();
-        }
-
         private readonly PluginGraphReport _report;
-        private ArrayList _problems = new ArrayList();
         private Stack _graphPath = new Stack();
+        private ArrayList _problems = new ArrayList();
 
         public ProblemFinder(PluginGraphReport report)
         {
             _report = report;
         }
 
-        public Problem[] GetProblems()
-        {
-            GraphObjectIterator iterator = new GraphObjectIterator(this);
-            iterator.Visit(_report);
-            return (Problem[]) _problems.ToArray(typeof (Problem));
-        }
+        #region IConfigurationVisitor Members
 
         public void StartObject(GraphObject node)
         {
@@ -75,20 +39,6 @@ namespace StructureMap.Configuration
         public void EndObject(GraphObject node)
         {
             _graphPath.Pop();
-        }
-
-        private string buildPathString()
-        {
-            string pad = "";
-            string path = "";
-
-            foreach (object node in _graphPath)
-            {
-                path += pad + node + "\n";
-                pad += "     ";
-            }
-
-            return path;
         }
 
         public void HandleAssembly(AssemblyToken assembly)
@@ -169,6 +119,60 @@ namespace StructureMap.Configuration
         public void HandleTemplateProperty(TemplateProperty property)
         {
             // no-op
+        }
+
+        #endregion
+
+        public static Problem[] FindProblems(string configPath)
+        {
+            RemoteGraphContainer container = new RemoteGraphContainer(configPath);
+            RemoteGraph remoteGraph = container.GetRemoteGraph();
+            PluginGraphReport report = remoteGraph.GetReport();
+            ProblemFinder finder = new ProblemFinder(report);
+
+            return finder.GetProblems();
+        }
+
+        public static Problem[] FindProblems(string configPath, string binPath)
+        {
+            if (binPath == string.Empty || binPath == null)
+            {
+                return FindProblems(configPath);
+            }
+
+            RemoteGraphContainer container = new RemoteGraphContainer(configPath, binPath);
+            RemoteGraph remoteGraph = container.GetRemoteGraph();
+            PluginGraphReport report = remoteGraph.GetReport();
+            ProblemFinder finder = new ProblemFinder(report);
+
+            return finder.GetProblems();
+        }
+
+        public static Problem[] FindProblems(PluginGraphReport report)
+        {
+            ProblemFinder finder = new ProblemFinder(report);
+            return finder.GetProblems();
+        }
+
+        public Problem[] GetProblems()
+        {
+            GraphObjectIterator iterator = new GraphObjectIterator(this);
+            iterator.Visit(_report);
+            return (Problem[]) _problems.ToArray(typeof (Problem));
+        }
+
+        private string buildPathString()
+        {
+            string pad = "";
+            string path = "";
+
+            foreach (object node in _graphPath)
+            {
+                path += pad + node + "\n";
+                pad += "     ";
+            }
+
+            return path;
         }
     }
 }

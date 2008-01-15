@@ -10,16 +10,33 @@ namespace StructureMap.Testing.Graph
     [TestFixture]
     public class SetterInjectionTester
     {
+        #region Setup/Teardown
+
         [SetUp]
         public void SetUp()
         {
             DataMother.WriteDocument("FullTesting.XML");
         }
 
+        #endregion
 
         private PluginGraph getPluginGraph()
         {
             return DataMother.GetDiagnosticPluginGraph("SetterInjectionTesting.xml");
+        }
+
+        [Test]
+        public void AutoFillDeterminationWithSetterPropertiesIsFalse()
+        {
+            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (CannotBeAutoFilledGridColumn));
+            Assert.IsFalse(plugin.CanBeAutoFilled);
+        }
+
+        [Test]
+        public void AutoFillDeterminationWithSetterPropertiesIsTrue()
+        {
+            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (AutoFilledGridColumn));
+            Assert.IsTrue(plugin.CanBeAutoFilled);
         }
 
         [Test]
@@ -29,6 +46,20 @@ namespace StructureMap.Testing.Graph
             Assert.AreEqual(5, properties.Length);
         }
 
+
+        [Test]
+        public void CreateSetterPropertyCollectionFromExplicitPlugin()
+        {
+            PluginGraph pluginGraph = getPluginGraph();
+            Plugin plugin = pluginGraph.PluginFamilies[typeof (IGridColumn)].Plugins["Other"];
+
+            Assert.AreEqual(5, plugin.Setters.Count);
+            Assert.IsTrue(plugin.Setters.Contains("Widget"));
+            Assert.IsTrue(plugin.Setters.Contains("FontStyle"));
+            Assert.IsTrue(plugin.Setters.Contains("ColumnName"));
+            Assert.IsTrue(plugin.Setters.Contains("Rules"));
+            Assert.IsTrue(plugin.Setters.Contains("WrapLines"));
+        }
 
         [Test]
         public void CreateSetterPropertyCollectionFromImplicitPlugin()
@@ -42,21 +73,6 @@ namespace StructureMap.Testing.Graph
 			 */
 
             Plugin plugin = Plugin.CreateImplicitPlugin(typeof (BasicGridColumn));
-
-            Assert.AreEqual(5, plugin.Setters.Count);
-            Assert.IsTrue(plugin.Setters.Contains("Widget"));
-            Assert.IsTrue(plugin.Setters.Contains("FontStyle"));
-            Assert.IsTrue(plugin.Setters.Contains("ColumnName"));
-            Assert.IsTrue(plugin.Setters.Contains("Rules"));
-            Assert.IsTrue(plugin.Setters.Contains("WrapLines"));
-        }
-
-
-        [Test]
-        public void CreateSetterPropertyCollectionFromExplicitPlugin()
-        {
-            PluginGraph pluginGraph = getPluginGraph();
-            Plugin plugin = pluginGraph.PluginFamilies[typeof (IGridColumn)].Plugins["Other"];
 
             Assert.AreEqual(5, plugin.Setters.Count);
             Assert.IsTrue(plugin.Setters.Contains("Widget"));
@@ -84,20 +100,6 @@ namespace StructureMap.Testing.Graph
         public void TryToCreateAnImplicitPluginWithASetterPropertyThatDoesNotHaveASetMethod()
         {
             Plugin plugin = Plugin.CreateImplicitPlugin(typeof (BadSetterClass));
-        }
-
-        [Test]
-        public void AutoFillDeterminationWithSetterPropertiesIsTrue()
-        {
-            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (AutoFilledGridColumn));
-            Assert.IsTrue(plugin.CanBeAutoFilled);
-        }
-
-        [Test]
-        public void AutoFillDeterminationWithSetterPropertiesIsFalse()
-        {
-            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (CannotBeAutoFilledGridColumn));
-            Assert.IsFalse(plugin.CanBeAutoFilled);
         }
     }
 }

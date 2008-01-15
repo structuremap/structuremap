@@ -12,13 +12,13 @@ namespace StructureMap
     public abstract class InstanceMemento
     {
         public const string EMPTY_STRING = "STRING.EMPTY";
-        public const string TEMPLATE_ATTRIBUTE = "Template";
         public const string SUBSTITUTIONS_ATTRIBUTE = "Substitutions";
-        private string _lastKey = string.Empty;
-        private DefinitionSource _definitionSource = DefinitionSource.Explicit;
+        public const string TEMPLATE_ATTRIBUTE = "Template";
         private string _concreteKey;
+        private DefinitionSource _definitionSource = DefinitionSource.Explicit;
         private string _instanceKey;
         private InstanceInterceptor _interceptor = new NulloInterceptor();
+        private string _lastKey = string.Empty;
 
         /// <summary>
         /// The named type of the object instance represented by the InstanceMemento.  Translates to a concrete
@@ -70,6 +70,59 @@ namespace StructureMap
         protected abstract string innerInstanceKey { get; }
 
         /// <summary>
+        /// Gets the referred template name
+        /// </summary>
+        /// <returns></returns>
+        public string TemplateName
+        {
+            get
+            {
+                string rawValue = getPropertyValue(TEMPLATE_ATTRIBUTE);
+                return rawValue == null ? string.Empty : rawValue.Trim();
+            }
+        }
+
+        /// <summary>
+        /// Returns the last key/value retrieved for exception tracing 
+        /// </summary>
+        public string LastKey
+        {
+            get { return _lastKey; }
+        }
+
+        /// <summary>
+        /// Template pattern property specifying whether the InstanceMemento is simply a reference
+        /// to another named instance.  Useful for child objects.
+        /// </summary>
+        public abstract bool IsReference { get; }
+
+        /// <summary>
+        /// Template pattern property specifying the instance key that the InstanceMemento refers to
+        /// </summary>
+        public abstract string ReferenceKey { get; }
+
+
+        /// <summary>
+        /// Is the InstanceMemento a reference to the default instance of the plugin type?
+        /// </summary>
+        public bool IsDefault
+        {
+            get { return (IsReference && ReferenceKey == string.Empty); }
+        }
+
+        public DefinitionSource DefinitionSource
+        {
+            get { return _definitionSource; }
+            set { _definitionSource = value; }
+        }
+
+        public InstanceInterceptor Interceptor
+        {
+            get { return _interceptor; }
+            set { _interceptor = value; }
+        }
+
+        /// <summary>
         /// Retrieves the named property value as a string
         /// </summary>
         /// <param name="Key"></param>
@@ -101,32 +154,11 @@ namespace StructureMap
         }
 
         /// <summary>
-        /// Gets the referred template name
-        /// </summary>
-        /// <returns></returns>
-        public string TemplateName
-        {
-            get
-            {
-                string rawValue = getPropertyValue(TEMPLATE_ATTRIBUTE);
-                return rawValue == null ? string.Empty : rawValue.Trim();
-            }
-        }
-
-        /// <summary>
         /// Template method for implementation specific retrieval of the named property
         /// </summary>
         /// <param name="Key"></param>
         /// <returns></returns>
         protected abstract string getPropertyValue(string Key);
-
-        /// <summary>
-        /// Returns the last key/value retrieved for exception tracing 
-        /// </summary>
-        public string LastKey
-        {
-            get { return _lastKey; }
-        }
 
         /// <summary>
         /// Returns the named child InstanceMemento
@@ -212,26 +244,6 @@ namespace StructureMap
 
 
         /// <summary>
-        /// Template pattern property specifying whether the InstanceMemento is simply a reference
-        /// to another named instance.  Useful for child objects.
-        /// </summary>
-        public abstract bool IsReference { get; }
-
-        /// <summary>
-        /// Template pattern property specifying the instance key that the InstanceMemento refers to
-        /// </summary>
-        public abstract string ReferenceKey { get; }
-
-
-        /// <summary>
-        /// Is the InstanceMemento a reference to the default instance of the plugin type?
-        /// </summary>
-        public bool IsDefault
-        {
-            get { return (IsReference && ReferenceKey == string.Empty); }
-        }
-
-        /// <summary>
         /// Used to create a templated InstanceMemento
         /// </summary>
         /// <param name="memento"></param>
@@ -246,12 +258,6 @@ namespace StructureMap
         {
             throw new NotSupportedException(
                 "This type of InstanceMemento does not support the CreateTemplateToken() Method");
-        }
-
-        public DefinitionSource DefinitionSource
-        {
-            get { return _definitionSource; }
-            set { _definitionSource = value; }
         }
 
         public Plugin CreateInferredPlugin()
@@ -290,13 +296,6 @@ namespace StructureMap
         protected virtual object buildInstance(IInstanceCreator creator)
         {
             return creator.BuildInstance(this);
-        }
-
-
-        public InstanceInterceptor Interceptor
-        {
-            get { return _interceptor; }
-            set { _interceptor = value; }
         }
     }
 }

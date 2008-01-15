@@ -14,17 +14,16 @@ namespace StructureMap.Testing.Configuration
     [TestFixture]
     public class FamilyParserTester
     {
-        private DynamicMock _builderMock;
-        private FamilyParser _parser;
-        private XmlDocument _document;
-        private XmlElement _familyElement;
-        private TypePath _typePath;
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
         {
             _builderMock = new DynamicMock(typeof (IGraphBuilder));
-            _parser = new FamilyParser((IGraphBuilder) _builderMock.MockInstance, new XmlMementoCreator(XmlMementoStyle.NodeNormalized, XmlConstants.TYPE_ATTRIBUTE, XmlConstants.ATTRIBUTE_STYLE));
+            _parser =
+                new FamilyParser((IGraphBuilder) _builderMock.MockInstance,
+                                 new XmlMementoCreator(XmlMementoStyle.NodeNormalized, XmlConstants.TYPE_ATTRIBUTE,
+                                                       XmlConstants.ATTRIBUTE_STYLE));
 
             _document = new XmlDocument();
             _document.LoadXml("<PluginFamily />");
@@ -35,6 +34,14 @@ namespace StructureMap.Testing.Configuration
 
             TypePath.WriteTypePathToXmlElement(type, _familyElement);
         }
+
+        #endregion
+
+        private DynamicMock _builderMock;
+        private FamilyParser _parser;
+        private XmlDocument _document;
+        private XmlElement _familyElement;
+        private TypePath _typePath;
 
 
         [Test]

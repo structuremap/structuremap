@@ -13,8 +13,8 @@ namespace StructureMap.Testing.Widget2
     public class Cow
     {
         public BreedEnum Breed;
-        public long Weight;
         public string Name;
+        public long Weight;
 
         public Cow(long Weight, BreedEnum Breed, string Name)
         {

@@ -4,22 +4,22 @@ using StructureMap.Interceptors;
 
 namespace StructureMap.Testing.Container.Interceptors
 {
-    
-
     public class MockTypeInterceptor : TypeInterceptor
     {
+        public delegate object InterceptionDelegate<T>(T target);
+
+
+        private readonly Dictionary<Type, InstanceInterceptor> _innerInterceptors
+            = new Dictionary<Type, InstanceInterceptor>();
+
         private readonly List<Type> _types = new List<Type>();
-        private Dictionary<Type, InstanceInterceptor> _innerInterceptors = new Dictionary<Type, InstanceInterceptor>();
 
         public MockTypeInterceptor(params Type[] types)
         {
             _types.AddRange(types);
         }
 
-        public void SetToMatch<T>()
-        {
-            _types.Add(typeof(T));
-        }
+        #region TypeInterceptor Members
 
         public bool MatchesType(Type type)
         {
@@ -28,16 +28,24 @@ namespace StructureMap.Testing.Container.Interceptors
 
         public object Process(object target)
         {
-            return _innerInterceptors[target.GetType()].Process(target);            
+            return _innerInterceptors[target.GetType()].Process(target);
+        }
+
+        #endregion
+
+        public void SetToMatch<T>()
+        {
+            _types.Add(typeof (T));
         }
 
         public void AddHandler<T>(InterceptionDelegate<T> handler)
         {
-            _types.Add(typeof(T));
-            _innerInterceptors.Add(typeof(T), new CommonInterceptor<T>(handler));
+            _types.Add(typeof (T));
+            _innerInterceptors.Add(typeof (T), new CommonInterceptor<T>(handler));
         }
 
-        public delegate object InterceptionDelegate<T>(T target);
+        #region Nested type: CommonInterceptor
+
         public class CommonInterceptor<T> : InstanceInterceptor
         {
             private readonly InterceptionDelegate<T> _handler;
@@ -47,10 +55,16 @@ namespace StructureMap.Testing.Container.Interceptors
                 _handler = handler;
             }
 
+            #region InstanceInterceptor Members
+
             public object Process(object target)
             {
                 return _handler((T) target);
             }
+
+            #endregion
         }
+
+        #endregion
     }
 }

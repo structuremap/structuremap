@@ -9,13 +9,13 @@ namespace StructureMap.DataAccess
     [Pluggable("Default")]
     public class DataSession : IDataSession
     {
+        private readonly ICommandCollection _commands;
         private readonly IDatabaseEngine _database;
-        private readonly ICommandFactory _factory;
         private readonly IExecutionState _defaultState;
+        private readonly ICommandFactory _factory;
+        private readonly ReaderSourceCollection _readerSources;
         private readonly ITransactionalExecutionState _transactionalState;
         private IExecutionState _currentState;
-        private readonly ICommandCollection _commands;
-        private readonly ReaderSourceCollection _readerSources;
 
         [DefaultConstructor]
         public DataSession(IDatabaseEngine database)
@@ -46,6 +46,8 @@ namespace StructureMap.DataAccess
             _commands = new CommandCollection(this, _factory);
             _readerSources = new ReaderSourceCollection(this, _factory);
         }
+
+        #region IDataSession Members
 
         public bool IsInTransaction
         {
@@ -102,14 +104,6 @@ namespace StructureMap.DataAccess
         {
             IDbCommand command = createCommand(sql);
             return ExecuteCommand(command);
-        }
-
-        private IDbCommand createCommand(string sql)
-        {
-            IDbCommand command = _database.GetCommand();
-            command.CommandType = CommandType.Text;
-            command.CommandText = sql;
-            return command;
         }
 
         public IDataReader ExecuteReader(IDbCommand command)
@@ -187,6 +181,21 @@ namespace StructureMap.DataAccess
             return createCommandBase(commandType, commandText);
         }
 
+        public void Initialize(IInitializable initializable)
+        {
+            initializable.Initialize(_database);
+        }
+
+        #endregion
+
+        private IDbCommand createCommand(string sql)
+        {
+            IDbCommand command = _database.GetCommand();
+            command.CommandType = CommandType.Text;
+            command.CommandText = sql;
+            return command;
+        }
+
         private CommandBase createCommandBase(StructureMapCommandType commandType, string commandText)
         {
             CommandBase returnValue = null;
@@ -209,11 +218,6 @@ namespace StructureMap.DataAccess
             returnValue.Attach(this);
 
             return returnValue;
-        }
-
-        public void Initialize(IInitializable initializable)
-        {
-            initializable.Initialize(_database);
         }
 
         [ValidationMethod]

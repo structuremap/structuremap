@@ -47,10 +47,10 @@ namespace StructureMap
 
         #endregion
 
-        private PluginGraph _graph;
-        private PluginGraphReport _report;
-        private ConfigurationParser[] _parsers;
         private readonly Registry[] _registries = new Registry[0];
+        private PluginGraph _graph;
+        private ConfigurationParser[] _parsers;
+        private PluginGraphReport _report;
 
         #region constructors
 
@@ -97,6 +97,8 @@ namespace StructureMap
 
         #endregion
 
+        #region IPluginGraphSource Members
+
         /// <summary>
         /// Reads the configuration information and returns the PluginGraph definition of
         /// plugin families and plugin's
@@ -108,6 +110,48 @@ namespace StructureMap
             PluginGraph pluginGraph = buildPluginGraph(graphBuilder);
             return pluginGraph;
         }
+
+        /// <summary>
+        /// Build a PluginGraph with all instances calculated.  Used in the UI and diagnostic tools.
+        /// </summary>
+        /// <returns></returns>
+        public PluginGraph BuildDiagnosticPluginGraph()
+        {
+            DiagnosticGraphBuilder graphBuilder = new DiagnosticGraphBuilder(_registries);
+            buildPluginGraph(graphBuilder);
+
+            _report = graphBuilder.Report;
+
+            return _graph;
+        }
+
+
+        public InstanceDefaultManager DefaultManager
+        {
+            get
+            {
+                if (_graph == null)
+                {
+                    Build();
+                }
+                return _graph.DefaultManager;
+            }
+        }
+
+
+        public PluginGraphReport Report
+        {
+            get
+            {
+                if (_report == null)
+                {
+                    BuildDiagnosticPluginGraph();
+                }
+                return _report;
+            }
+        }
+
+        #endregion
 
         private PluginGraph buildPluginGraph(IGraphBuilder graphBuilder)
         {
@@ -152,47 +196,6 @@ namespace StructureMap
             foreach (ConfigurationParser parser in _parsers)
             {
                 parser.ParseAssemblies(graphBuilder);
-            }
-        }
-
-
-        /// <summary>
-        /// Build a PluginGraph with all instances calculated.  Used in the UI and diagnostic tools.
-        /// </summary>
-        /// <returns></returns>
-        public PluginGraph BuildDiagnosticPluginGraph()
-        {
-            DiagnosticGraphBuilder graphBuilder = new DiagnosticGraphBuilder(_registries);
-            buildPluginGraph(graphBuilder);
-
-            _report = graphBuilder.Report;
-
-            return _graph;
-        }
-
-
-        public InstanceDefaultManager DefaultManager
-        {
-            get
-            {
-                if (_graph == null)
-                {
-                    Build();
-                }
-                return _graph.DefaultManager;
-            }
-        }
-
-
-        public PluginGraphReport Report
-        {
-            get
-            {
-                if (_report == null)
-                {
-                    BuildDiagnosticPluginGraph();
-                }
-                return _report;
             }
         }
     }

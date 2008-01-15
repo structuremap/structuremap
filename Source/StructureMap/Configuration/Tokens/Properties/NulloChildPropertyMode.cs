@@ -12,6 +12,8 @@ namespace StructureMap.Configuration.Tokens.Properties
             _property = property;
         }
 
+        #region IChildPropertyMode Members
+
         public void Validate(IInstanceValidator validator)
         {
             // no-op
@@ -21,5 +23,7 @@ namespace StructureMap.Configuration.Tokens.Properties
         {
             visitor.HandleNotDefinedChildProperty(_property);
         }
+
+        #endregion
     }
 }

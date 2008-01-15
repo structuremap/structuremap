@@ -13,9 +13,9 @@ namespace StructureMap.Graph
     [Serializable]
     public class MachineOverride : GraphObject
     {
+        private Dictionary<string, InstanceDefault> _defaults;
         private string _machineName;
         private Profile _profile = new Profile(string.Empty);
-        private Dictionary<string, InstanceDefault> _defaults;
 
         public MachineOverride(string machineName, Profile profile)
             : this(machineName)
@@ -35,27 +35,6 @@ namespace StructureMap.Graph
         public string MachineName
         {
             get { return _machineName; }
-        }
-
-        /// <summary>
-        /// Registers an override for the default instance of a certain plugin type.
-        /// </summary>
-        /// <param name="pluginTypeName"></param>
-        /// <param name="defaultKey"></param>
-        public void AddMachineOverride(string pluginTypeName, string defaultKey)
-        {
-            InstanceDefault instanceDefault = new InstanceDefault(pluginTypeName, defaultKey);
-            _defaults.Add(pluginTypeName, instanceDefault);
-        }
-
-        /// <summary>
-        /// Determines if the MachineOverride instance has an overriden default for the plugin type
-        /// </summary>
-        /// <param name="pluginTypeName"></param>
-        /// <returns></returns>
-        public bool HasOverride(string pluginTypeName)
-        {
-            return (_defaults.ContainsKey(pluginTypeName) || _profile.HasOverride(pluginTypeName));
         }
 
         /// <summary>
@@ -113,23 +92,6 @@ namespace StructureMap.Graph
             }
         }
 
-        /// <summary>
-        /// Filters instance defaults for plugin types that are no longer contained by
-        /// the PluginGraph
-        /// </summary>
-        /// <param name="report"></param>
-        public void FilterOutNonExistentPluginTypes(PluginGraphReport report)
-        {
-            foreach (InstanceDefault instanceDefault in Defaults)
-            {
-                FamilyToken family = report.FindFamily(instanceDefault.PluginTypeName);
-                if (family == null)
-                {
-                    _defaults.Remove(instanceDefault.PluginTypeName);
-                }
-            }
-        }
-
 
         public InstanceDefault[] InnerDefaults
         {
@@ -146,6 +108,44 @@ namespace StructureMap.Graph
         protected override string key
         {
             get { return MachineName; }
+        }
+
+        /// <summary>
+        /// Registers an override for the default instance of a certain plugin type.
+        /// </summary>
+        /// <param name="pluginTypeName"></param>
+        /// <param name="defaultKey"></param>
+        public void AddMachineOverride(string pluginTypeName, string defaultKey)
+        {
+            InstanceDefault instanceDefault = new InstanceDefault(pluginTypeName, defaultKey);
+            _defaults.Add(pluginTypeName, instanceDefault);
+        }
+
+        /// <summary>
+        /// Determines if the MachineOverride instance has an overriden default for the plugin type
+        /// </summary>
+        /// <param name="pluginTypeName"></param>
+        /// <returns></returns>
+        public bool HasOverride(string pluginTypeName)
+        {
+            return (_defaults.ContainsKey(pluginTypeName) || _profile.HasOverride(pluginTypeName));
+        }
+
+        /// <summary>
+        /// Filters instance defaults for plugin types that are no longer contained by
+        /// the PluginGraph
+        /// </summary>
+        /// <param name="report"></param>
+        public void FilterOutNonExistentPluginTypes(PluginGraphReport report)
+        {
+            foreach (InstanceDefault instanceDefault in Defaults)
+            {
+                FamilyToken family = report.FindFamily(instanceDefault.PluginTypeName);
+                if (family == null)
+                {
+                    _defaults.Remove(instanceDefault.PluginTypeName);
+                }
+            }
         }
     }
 }

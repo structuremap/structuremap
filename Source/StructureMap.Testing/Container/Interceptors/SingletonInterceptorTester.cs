@@ -10,7 +10,7 @@ namespace StructureMap.Testing.Container.Interceptors
     {
         // "Red", "Blue", "Bigger" are the possible rule choices
 
-        private SingletonInterceptor _interceptor;
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -21,6 +21,10 @@ namespace StructureMap.Testing.Container.Interceptors
             _interceptor = new SingletonInterceptor();
             _interceptor.InnerInstanceFactory = factory;
         }
+
+        #endregion
+
+        private SingletonInterceptor _interceptor;
 
         [Test]
         public void CanSetDefaultAndGetTheDefaultInstance()

@@ -4,9 +4,9 @@ namespace StructureMap.DataAccess
 {
     public interface IParameter
     {
+        string ParameterName { get; }
         void SetProperty(object propertyValue);
         object GetProperty();
-        string ParameterName { get; }
         void OverrideParameterType(DbType dbtype);
     }
 }

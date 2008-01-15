@@ -5,8 +5,8 @@ namespace StructureMap.Caching.Expirations
     [Pluggable("SlidingTime")]
     public class SlidingTimeExpirationPolicy : IExpirationPolicy
     {
-        private long _ticks;
         private DateTime _currentTime;
+        private long _ticks;
 
         public SlidingTimeExpirationPolicy(int minutes)
         {

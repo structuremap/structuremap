@@ -1,15 +1,18 @@
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace StructureMap.Testing
 {
     [TestFixture]
     public class ConstructorMementoTester
     {
+        #region Setup/Teardown
+
         [SetUp]
         public void SetUp()
         {
         }
+
+        #endregion
 
         [Test]
         public void Construct()

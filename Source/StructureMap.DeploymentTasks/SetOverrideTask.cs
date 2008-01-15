@@ -9,9 +9,9 @@ namespace StructureMap.DeploymentTasks
     public class SetOverrideTask : Task
     {
         private string _configPath;
+        private string _defaultKey = string.Empty;
         private string _profileName = string.Empty;
         private string _typeName = string.Empty;
-        private string _defaultKey = string.Empty;
 
         public SetOverrideTask() : base()
         {

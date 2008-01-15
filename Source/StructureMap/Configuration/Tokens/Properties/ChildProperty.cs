@@ -14,23 +14,13 @@ namespace StructureMap.Configuration.Tokens.Properties
     [Serializable]
     public class ChildProperty : Property
     {
-        public static ChildProperty BuildArrayChild(PropertyDefinition definition, InstanceMemento memento,
-                                                    PluginGraphReport report)
-        {
-            ChildProperty child = new ChildProperty(definition);
-            child.initialize(definition, memento, report);
-
-            return child;
-        }
-
-
+        private int _arrayIndex = -1;
         private ChildPropertyType _childType = ChildPropertyType.NotDefined;
         private InstanceToken _innerInstance;
-        private string _referenceKey = string.Empty;
         private IChildPropertyMode _mode;
         private Type _pluginType;
-        private int _arrayIndex = -1;
         private string _pluginTypeName;
+        private string _referenceKey = string.Empty;
 
         protected ChildProperty(PropertyDefinition definition) : base(definition)
         {
@@ -60,6 +50,60 @@ namespace StructureMap.Configuration.Tokens.Properties
         {
             get { return _arrayIndex; }
             set { _arrayIndex = value; }
+        }
+
+        public ChildPropertyType ChildType
+        {
+            get { return _childType; }
+            set { _childType = value; }
+        }
+
+        public InstanceToken InnerInstance
+        {
+            get { return _innerInstance; }
+            set { _innerInstance = value; }
+        }
+
+        public string ReferenceKey
+        {
+            get { return _referenceKey; }
+            set { _referenceKey = value; }
+        }
+
+        public Type PluginType
+        {
+            get { return _pluginType; }
+            set { _pluginType = value; }
+        }
+
+        public override GraphObject[] Children
+        {
+            get
+            {
+                if (_innerInstance == null)
+                {
+                    return new GraphObject[0];
+                }
+                else
+                {
+                    return new GraphObject[] {_innerInstance};
+                }
+            }
+        }
+
+        public string PluginTypeName
+        {
+            get { return _pluginTypeName; }
+            set { _pluginTypeName = value; }
+        }
+
+        public static ChildProperty BuildArrayChild(PropertyDefinition definition, InstanceMemento memento,
+                                                    PluginGraphReport report)
+        {
+            ChildProperty child = new ChildProperty(definition);
+            child.initialize(definition, memento, report);
+
+            return child;
         }
 
         private void initialize(PropertyDefinition definition, InstanceMemento propertyMemento, PluginGraphReport report)
@@ -93,54 +137,9 @@ namespace StructureMap.Configuration.Tokens.Properties
             }
         }
 
-        public ChildPropertyType ChildType
-        {
-            get { return _childType; }
-            set { _childType = value; }
-        }
-
-        public InstanceToken InnerInstance
-        {
-            get { return _innerInstance; }
-            set { _innerInstance = value; }
-        }
-
-        public string ReferenceKey
-        {
-            get { return _referenceKey; }
-            set { _referenceKey = value; }
-        }
-
-        public Type PluginType
-        {
-            get { return _pluginType; }
-            set { _pluginType = value; }
-        }
-
         public override void Validate(IInstanceValidator validator)
         {
             _mode.Validate(validator);
-        }
-
-        public override GraphObject[] Children
-        {
-            get
-            {
-                if (_innerInstance == null)
-                {
-                    return new GraphObject[0];
-                }
-                else
-                {
-                    return new GraphObject[] {_innerInstance};
-                }
-            }
-        }
-
-        public string PluginTypeName
-        {
-            get { return _pluginTypeName; }
-            set { _pluginTypeName = value; }
         }
 
 

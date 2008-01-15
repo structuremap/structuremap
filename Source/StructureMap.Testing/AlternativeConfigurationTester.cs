@@ -9,6 +9,8 @@ namespace StructureMap.Testing
     [TestFixture]
     public class AlternativeConfigurationTester
     {
+        #region Setup/Teardown
+
         [SetUp]
         public void SetUp()
         {
@@ -26,37 +28,12 @@ namespace StructureMap.Testing
             ObjectFactory.Reset();
         }
 
+        #endregion
 
         public void assertTheDefault(string color)
         {
             ColorWidget widget = (ColorWidget) ObjectFactory.GetInstance<IWidget>();
             Assert.AreEqual(color, widget.Color);
-        }
-
-        [Test]
-        public void WithTheDefault()
-        {
-            assertTheDefault("Red");
-        }
-
-        [Test]
-        public void NotTheDefault()
-        {
-            StructureMapConfiguration.UseDefaultStructureMapConfigFile = false;
-            StructureMapConfiguration.IncludeConfigurationFromFile("Config1.xml");
-            ObjectFactory.Reset();
-
-            assertTheDefault("Orange");
-        }
-
-        [Test]
-        public void JustToMakeSureTheSecondFamilyDoesNotOverride()
-        {
-            StructureMapConfiguration.UseDefaultStructureMapConfigFile = true;
-            StructureMapConfiguration.IncludeConfigurationFromFile("Config1.xml");
-            ObjectFactory.Reset();
-
-            assertTheDefault("Red");
         }
 
         [Test]
@@ -73,6 +50,32 @@ namespace StructureMap.Testing
 
             IPlug<string> service = ObjectFactory.GetInstance<IPlug<string>>();
             Assert.IsNotNull(service);
+        }
+
+        [Test]
+        public void JustToMakeSureTheSecondFamilyDoesNotOverride()
+        {
+            StructureMapConfiguration.UseDefaultStructureMapConfigFile = true;
+            StructureMapConfiguration.IncludeConfigurationFromFile("Config1.xml");
+            ObjectFactory.Reset();
+
+            assertTheDefault("Red");
+        }
+
+        [Test]
+        public void NotTheDefault()
+        {
+            StructureMapConfiguration.UseDefaultStructureMapConfigFile = false;
+            StructureMapConfiguration.IncludeConfigurationFromFile("Config1.xml");
+            ObjectFactory.Reset();
+
+            assertTheDefault("Orange");
+        }
+
+        [Test]
+        public void WithTheDefault()
+        {
+            assertTheDefault("Red");
         }
     }
 }

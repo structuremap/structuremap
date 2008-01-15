@@ -12,11 +12,7 @@ namespace StructureMap.Testing.Configuration.Tokens.Properties
     [TestFixture]
     public class ChildArrayPropertyTester
     {
-        private const string THE_CONCRETE_KEY = "Decorated";
-        private const string THE_PROPERTY_NAME = "innerGateway";
-
-        private ReportObjectMother _mother;
-        private PluginGraphReport _report;
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -33,18 +29,13 @@ namespace StructureMap.Testing.Configuration.Tokens.Properties
             _report = _mother.Report;
         }
 
-        [Test]
-        public void CreateChildren()
-        {
-            ChildArrayProperty property = createChildArrayProperty();
+        #endregion
 
-            Assert.AreEqual(4, property.InnerProperties.Length);
+        private const string THE_CONCRETE_KEY = "Decorated";
+        private const string THE_PROPERTY_NAME = "innerGateway";
 
-            Assert.AreEqual(ChildPropertyType.Default, property[0].ChildType);
-            Assert.AreEqual(ChildPropertyType.Reference, property[1].ChildType);
-            Assert.AreEqual(ChildPropertyType.Reference, property[2].ChildType);
-            Assert.AreEqual(ChildPropertyType.Reference, property[3].ChildType);
-        }
+        private ReportObjectMother _mother;
+        private PluginGraphReport _report;
 
         private ChildArrayProperty createChildArrayProperty()
         {
@@ -77,11 +68,35 @@ namespace StructureMap.Testing.Configuration.Tokens.Properties
             visitorMock.Verify();
         }
 
+
         [Test]
-        public void Children()
+        public void ChildArrayIsNotDefinedInTheMemento()
         {
-            ChildArrayProperty property = createChildArrayProperty();
-            Assert.AreEqual(property.InnerProperties, property.Children);
+            MemoryInstanceMemento parent = new MemoryInstanceMemento(THE_CONCRETE_KEY, "decorated");
+            InstanceToken instance = new InstanceToken(typeof (IGateway), _report, parent);
+
+            ChildArrayProperty property = (ChildArrayProperty) instance[THE_PROPERTY_NAME];
+
+            Problem expected = new Problem(ConfigurationConstants.MEMENTO_PROPERTY_IS_MISSING, string.Empty);
+
+            Assert.AreEqual(new Problem[] {expected}, property.Problems);
+        }
+
+
+        [Test]
+        public void ChildArrayIsNotDefinedInTheMementoWhenMementoThrowsException()
+        {
+            PropertyDefinition definition = _report.FindPlugin(typeof (IGateway), THE_CONCRETE_KEY)[THE_PROPERTY_NAME];
+
+            DynamicMock mementoMock = new DynamicMock(typeof (InstanceMemento));
+            mementoMock.ExpectAndThrow("GetChildrenArray", new ApplicationException("Bad"), THE_PROPERTY_NAME);
+
+            ChildArrayProperty property =
+                new ChildArrayProperty(definition, (InstanceMemento) mementoMock.MockInstance, _report);
+
+            Problem expected = new Problem(ConfigurationConstants.MEMENTO_PROPERTY_IS_MISSING, string.Empty);
+
+            Assert.AreEqual(new Problem[] {expected}, property.Problems);
         }
 
         [Test]
@@ -112,35 +127,24 @@ namespace StructureMap.Testing.Configuration.Tokens.Properties
             child3.Verify();
         }
 
-
         [Test]
-        public void ChildArrayIsNotDefinedInTheMemento()
+        public void Children()
         {
-            MemoryInstanceMemento parent = new MemoryInstanceMemento(THE_CONCRETE_KEY, "decorated");
-            InstanceToken instance = new InstanceToken(typeof (IGateway), _report, parent);
-
-            ChildArrayProperty property = (ChildArrayProperty) instance[THE_PROPERTY_NAME];
-
-            Problem expected = new Problem(ConfigurationConstants.MEMENTO_PROPERTY_IS_MISSING, string.Empty);
-
-            Assert.AreEqual(new Problem[] {expected}, property.Problems);
+            ChildArrayProperty property = createChildArrayProperty();
+            Assert.AreEqual(property.InnerProperties, property.Children);
         }
 
-
         [Test]
-        public void ChildArrayIsNotDefinedInTheMementoWhenMementoThrowsException()
+        public void CreateChildren()
         {
-            PropertyDefinition definition = _report.FindPlugin(typeof (IGateway), THE_CONCRETE_KEY)[THE_PROPERTY_NAME];
+            ChildArrayProperty property = createChildArrayProperty();
 
-            DynamicMock mementoMock = new DynamicMock(typeof (InstanceMemento));
-            mementoMock.ExpectAndThrow("GetChildrenArray", new ApplicationException("Bad"), THE_PROPERTY_NAME);
+            Assert.AreEqual(4, property.InnerProperties.Length);
 
-            ChildArrayProperty property =
-                new ChildArrayProperty(definition, (InstanceMemento) mementoMock.MockInstance, _report);
-
-            Problem expected = new Problem(ConfigurationConstants.MEMENTO_PROPERTY_IS_MISSING, string.Empty);
-
-            Assert.AreEqual(new Problem[] {expected}, property.Problems);
+            Assert.AreEqual(ChildPropertyType.Default, property[0].ChildType);
+            Assert.AreEqual(ChildPropertyType.Reference, property[1].ChildType);
+            Assert.AreEqual(ChildPropertyType.Reference, property[2].ChildType);
+            Assert.AreEqual(ChildPropertyType.Reference, property[3].ChildType);
         }
     }
 }

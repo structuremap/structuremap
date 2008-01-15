@@ -50,10 +50,10 @@ namespace StructureMap.Testing.Caching
     /// </summary>
     public class MockCacheItem : ICacheItem
     {
-        private DateTime _created;
-        private DateTime _lastAccessed;
-        private object _key;
         private int _accesses;
+        private DateTime _created;
+        private object _key;
+        private DateTime _lastAccessed;
         private object _value;
 
         #region ICacheItem Members

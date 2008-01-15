@@ -47,6 +47,15 @@ namespace StructureMap.Source
             get { return _xpath; }
         }
 
+        public override string Description
+        {
+            get
+            {
+                string msg = "XmlFileMementoSource:  " + _filePath;
+                return msg;
+            }
+        }
+
 
         protected override XmlNode getRootNode()
         {
@@ -81,16 +90,6 @@ namespace StructureMap.Source
             else
             {
                 return _filePath;
-            }
-        }
-
-
-        public override string Description
-        {
-            get
-            {
-                string msg = "XmlFileMementoSource:  " + _filePath;
-                return msg;
             }
         }
     }

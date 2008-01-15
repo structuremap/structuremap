@@ -14,12 +14,37 @@ namespace StructureMap
     [PluginFamily]
     public abstract class MementoSource
     {
-        private PluginFamily _family;
         private InstanceMemento _defaultMemento;
         private Dictionary<string, InstanceMemento> _externalMementos = new Dictionary<string, InstanceMemento>();
+        private PluginFamily _family;
 
         protected MementoSource() : base()
         {
+        }
+
+        public InstanceMemento DefaultMemento
+        {
+            get { return _defaultMemento; }
+            set { _defaultMemento = value; }
+        }
+
+        /// <summary>
+        /// The type of MementoSource
+        /// </summary>
+        public virtual MementoSourceType SourceType
+        {
+            get { return MementoSourceType.External; }
+        }
+
+        /// <summary>
+        /// String description of the MementoSource.  Used in the StructureMap-Client UI.
+        /// </summary>
+        public abstract string Description { get; }
+
+        public PluginFamily Family
+        {
+            get { return _family; }
+            set { _family = value; }
         }
 
         /// <summary>
@@ -64,12 +89,6 @@ namespace StructureMap
         public void SetDefault(string instanceKey)
         {
             _defaultMemento = GetMemento(instanceKey);
-        }
-
-        public InstanceMemento DefaultMemento
-        {
-            get { return _defaultMemento; }
-            set { _defaultMemento = value; }
         }
 
         public virtual InstanceMemento ResolveMemento(InstanceMemento memento)
@@ -129,25 +148,6 @@ namespace StructureMap
         /// <param name="instanceKey"></param>
         /// <returns></returns>
         protected abstract InstanceMemento retrieveMemento(string instanceKey);
-
-        /// <summary>
-        /// The type of MementoSource
-        /// </summary>
-        public virtual MementoSourceType SourceType
-        {
-            get { return MementoSourceType.External; }
-        }
-
-        /// <summary>
-        /// String description of the MementoSource.  Used in the StructureMap-Client UI.
-        /// </summary>
-        public abstract string Description { get; }
-
-        public PluginFamily Family
-        {
-            get { return _family; }
-            set { _family = value; }
-        }
 
         public virtual TemplateToken[] GetAllTemplates()
         {

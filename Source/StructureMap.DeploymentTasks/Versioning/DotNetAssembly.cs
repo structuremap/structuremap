@@ -6,8 +6,8 @@ namespace StructureMap.DeploymentTasks.Versioning
 {
     public class DotNetAssembly
     {
-        private byte[] _publicKey = new byte[0];
         private string _assemblyName;
+        private byte[] _publicKey = new byte[0];
         private string _version;
 
         public DotNetAssembly()

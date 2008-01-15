@@ -15,6 +15,11 @@ namespace StructureMap.Source
             _mementos = new Hashtable();
         }
 
+        public override string Description
+        {
+            get { return "DefaultMementoSource"; }
+        }
+
         protected override InstanceMemento[] fetchInternalMementos()
         {
             InstanceMemento[] returnValue = new InstanceMemento[_mementos.Count];
@@ -37,11 +42,6 @@ namespace StructureMap.Source
         protected internal override bool containsKey(string Key)
         {
             return _mementos.ContainsKey(Key);
-        }
-
-        public override string Description
-        {
-            get { return "DefaultMementoSource"; }
         }
     }
 }

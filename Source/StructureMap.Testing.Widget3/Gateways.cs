@@ -5,15 +5,27 @@ namespace StructureMap.Testing.Widget3
     [PluginFamily("Default")]
     public interface IGateway
     {
-        void DoSomething();
         string WhoAmI { get; }
+        void DoSomething();
     }
 
     [Pluggable("Default", "")]
     public class DefaultGateway : IGateway
     {
-        private string _name;
         private string _color;
+        private string _name;
+
+        public string Name
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
+
+        public string Color
+        {
+            get { return _color; }
+            set { _color = value; }
+        }
 
         #region IGateway Members
 
@@ -28,18 +40,6 @@ namespace StructureMap.Testing.Widget3
         }
 
         #endregion
-
-        public string Name
-        {
-            get { return _name; }
-            set { _name = value; }
-        }
-
-        public string Color
-        {
-            get { return _color; }
-            set { _color = value; }
-        }
     }
 
     public class DecoratedGateway : IGateway
@@ -51,6 +51,8 @@ namespace StructureMap.Testing.Widget3
             _innerGateway = innerGateway;
         }
 
+        #region IGateway Members
+
         public void DoSomething()
         {
             throw new NotImplementedException();
@@ -60,6 +62,8 @@ namespace StructureMap.Testing.Widget3
         {
             get { throw new NotImplementedException(); }
         }
+
+        #endregion
     }
 
 

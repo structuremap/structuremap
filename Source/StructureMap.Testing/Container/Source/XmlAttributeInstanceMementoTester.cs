@@ -8,7 +8,7 @@ namespace StructureMap.Testing.Container.Source
     [TestFixture]
     public class XmlAttributeInstanceMementoTester
     {
-        private XmlAttributeInstanceMemento _memento;
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -16,6 +16,10 @@ namespace StructureMap.Testing.Container.Source
             string xml = "<Instance Type=\"Color\" Key=\"Red\" color=\"red\"/>";
             _memento = buildMemento(xml);
         }
+
+        #endregion
+
+        private XmlAttributeInstanceMemento _memento;
 
 
         private XmlAttributeInstanceMemento buildMemento(string xml)
@@ -33,37 +37,14 @@ namespace StructureMap.Testing.Container.Source
         }
 
         [Test]
-        public void InstanceKey()
+        public void CreateTemplateToken()
         {
-            Assert.AreEqual("Red", _memento.InstanceKey);
-        }
+            string xml = "<instance Type=\"concrete\" TemplateKey=\"color\" prop1=\"{hue}\" prop2=\"{name}\" />";
+            XmlAttributeInstanceMemento memento = buildMemento(xml);
 
-        [Test]
-        public void GetProperty()
-        {
-            Assert.AreEqual("red", _memento.GetProperty("color"));
-        }
-
-        [Test]
-        public void IsReferenceIsFalse()
-        {
-            Assert.IsFalse(_memento.IsReference);
-        }
-
-        [Test]
-        public void IsDefaultIsFalse()
-        {
-            Assert.IsFalse(_memento.IsDefault);
-        }
-
-        [Test]
-        public void ReferencedMemento()
-        {
-            _memento.InnerElement.SetAttribute("Type", string.Empty);
-
-            Assert.IsTrue(_memento.IsReference);
-            Assert.IsFalse(_memento.IsDefault);
-            Assert.AreEqual("Red", _memento.ReferenceKey);
+            TemplateToken template = memento.CreateTemplateToken();
+            Assert.AreEqual("concrete", template.ConcreteKey);
+            Assert.AreEqual(new string[] {"hue", "name"}, template.Properties);
         }
 
         [Test]
@@ -83,13 +64,6 @@ namespace StructureMap.Testing.Container.Source
             Assert.AreEqual("thePropertyValue", memento.GetProperty("prop1"));
             Assert.IsFalse(memento.IsDefault);
             Assert.IsFalse(memento.IsReference);
-        }
-
-        [Test]
-        public void GetChildReturnsNullIfItDoesNotExist()
-        {
-            InstanceMemento memento = _memento.GetChildMemento("rule");
-            Assert.IsNull(memento);
         }
 
         [Test]
@@ -117,6 +91,19 @@ namespace StructureMap.Testing.Container.Source
         }
 
         [Test]
+        public void GetChildReturnsNullIfItDoesNotExist()
+        {
+            InstanceMemento memento = _memento.GetChildMemento("rule");
+            Assert.IsNull(memento);
+        }
+
+        [Test]
+        public void GetProperty()
+        {
+            Assert.AreEqual("red", _memento.GetProperty("color"));
+        }
+
+        [Test]
         public void IfNoChildrenReturnNull()
         {
             InstanceMemento[] mementoArray = _memento.GetChildrenArray("rules");
@@ -124,14 +111,31 @@ namespace StructureMap.Testing.Container.Source
         }
 
         [Test]
-        public void CreateTemplateToken()
+        public void InstanceKey()
         {
-            string xml = "<instance Type=\"concrete\" TemplateKey=\"color\" prop1=\"{hue}\" prop2=\"{name}\" />";
-            XmlAttributeInstanceMemento memento = buildMemento(xml);
+            Assert.AreEqual("Red", _memento.InstanceKey);
+        }
 
-            TemplateToken template = memento.CreateTemplateToken();
-            Assert.AreEqual("concrete", template.ConcreteKey);
-            Assert.AreEqual(new string[] {"hue", "name"}, template.Properties);
+        [Test]
+        public void IsDefaultIsFalse()
+        {
+            Assert.IsFalse(_memento.IsDefault);
+        }
+
+        [Test]
+        public void IsReferenceIsFalse()
+        {
+            Assert.IsFalse(_memento.IsReference);
+        }
+
+        [Test]
+        public void ReferencedMemento()
+        {
+            _memento.InnerElement.SetAttribute("Type", string.Empty);
+
+            Assert.IsTrue(_memento.IsReference);
+            Assert.IsFalse(_memento.IsDefault);
+            Assert.AreEqual("Red", _memento.ReferenceKey);
         }
     }
 }

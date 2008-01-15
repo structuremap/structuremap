@@ -50,11 +50,11 @@ namespace StructureMap.Configuration.Mementos
 
         #endregion
 
-        private NameValueCollection _properties = new NameValueCollection();
         private Hashtable _children = new Hashtable();
         private string _concreteKey;
         private string _instanceKey;
         private bool _isReference;
+        private NameValueCollection _properties = new NameValueCollection();
         private string _referenceKey;
 
 
@@ -85,6 +85,38 @@ namespace StructureMap.Configuration.Mementos
 
         public MemoryInstanceMemento()
         {
+        }
+
+        /// <summary>
+        /// See <cref>InstanceMemento</cref>
+        /// </summary>
+        protected override string innerConcreteKey
+        {
+            get { return _concreteKey; }
+        }
+
+        /// <summary>
+        /// See <cref>InstanceMemento</cref>
+        /// </summary>
+        protected override string innerInstanceKey
+        {
+            get { return _instanceKey; }
+        }
+
+        /// <summary>
+        /// See <cref>InstanceMemento</cref>
+        /// </summary>
+        public override bool IsReference
+        {
+            get { return _isReference; }
+        }
+
+        /// <summary>
+        /// See <cref>InstanceMemento</cref>
+        /// </summary>
+        public override string ReferenceKey
+        {
+            get { return _referenceKey; }
         }
 
         /// <summary>
@@ -139,24 +171,6 @@ namespace StructureMap.Configuration.Mementos
             _children.Add(name, childMementos);
         }
 
-        #region InstanceMemento Members
-
-        /// <summary>
-        /// See <cref>InstanceMemento</cref>
-        /// </summary>
-        protected override string innerConcreteKey
-        {
-            get { return _concreteKey; }
-        }
-
-        /// <summary>
-        /// See <cref>InstanceMemento</cref>
-        /// </summary>
-        protected override string innerInstanceKey
-        {
-            get { return _instanceKey; }
-        }
-
 
         public void SetInstanceKey(string instanceKey)
         {
@@ -173,22 +187,6 @@ namespace StructureMap.Configuration.Mementos
             return (InstanceMemento) _children[Key];
         }
 
-        /// <summary>
-        /// See <cref>InstanceMemento</cref>
-        /// </summary>
-        public override bool IsReference
-        {
-            get { return _isReference; }
-        }
-
-        /// <summary>
-        /// See <cref>InstanceMemento</cref>
-        /// </summary>
-        public override string ReferenceKey
-        {
-            get { return _referenceKey; }
-        }
-
 
         protected bool hasProperty(string propertyName)
         {
@@ -203,7 +201,5 @@ namespace StructureMap.Configuration.Mementos
         {
             return (InstanceMemento[]) _children[key];
         }
-
-        #endregion
     }
 }

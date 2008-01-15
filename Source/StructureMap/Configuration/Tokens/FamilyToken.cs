@@ -9,35 +9,14 @@ namespace StructureMap.Configuration.Tokens
     [Serializable]
     public class FamilyToken : Deployable
     {
-        public static FamilyToken CreateImplicitFamily(PluginFamily family)
-        {
-            FamilyToken token =
-                new FamilyToken(new TypePath(family.PluginType), family.DefaultInstanceKey, new string[0]);
-            token.DefinitionSource = DefinitionSource.Implicit;
-
-
-            PluginFamilyAttribute att = PluginFamilyAttribute.GetAttribute(family.PluginType);
-            if (att != null)
-            {
-                if (att.Scope != InstanceScope.PerRequest)
-                {
-                    token.Scope = att.Scope;
-                    InterceptorInstanceToken interceptor = new InterceptorInstanceToken(att.Scope);
-                    token.AddInterceptor(interceptor);
-                }
-            }
-
-            return token;
-        }
-
-        private DefinitionSource _definitionSource = DefinitionSource.Explicit;
         private string _defaultKey;
-        private Dictionary<string, PluginToken> _plugins = new Dictionary<string, PluginToken>();
-        private InstanceToken _sourceInstance;
-        private ArrayList _interceptors = new ArrayList();
+        private DefinitionSource _definitionSource = DefinitionSource.Explicit;
         private Hashtable _instances = new Hashtable();
-        private Hashtable _templates = new Hashtable();
+        private ArrayList _interceptors = new ArrayList();
+        private Dictionary<string, PluginToken> _plugins = new Dictionary<string, PluginToken>();
         private InstanceScope _scope = InstanceScope.PerRequest;
+        private InstanceToken _sourceInstance;
+        private Hashtable _templates = new Hashtable();
         private TypePath _typePath;
 
         public FamilyToken() : base()
@@ -89,6 +68,101 @@ namespace StructureMap.Configuration.Tokens
             set { _sourceInstance = value; }
         }
 
+        public PluginToken[] Plugins
+        {
+            get
+            {
+                PluginToken[] returnValue = new PluginToken[_plugins.Count];
+                _plugins.Values.CopyTo(returnValue, 0);
+
+                return returnValue;
+            }
+        }
+
+        public TemplateToken[] Templates
+        {
+            get
+            {
+                TemplateToken[] returnValue = new TemplateToken[_templates.Count];
+                _templates.Values.CopyTo(returnValue, 0);
+
+                return returnValue;
+            }
+        }
+
+        public InstanceToken[] Interceptors
+        {
+            get { return (InstanceToken[]) _interceptors.ToArray(typeof (InstanceToken)); }
+        }
+
+        public InstanceToken[] Instances
+        {
+            get
+            {
+                InstanceToken[] returnValue = new InstanceToken[_instances.Count];
+                _instances.Values.CopyTo(returnValue, 0);
+
+                return returnValue;
+            }
+        }
+
+        public override GraphObject[] Children
+        {
+            get
+            {
+                ArrayList list = new ArrayList();
+                list.AddRange(Plugins);
+                list.AddRange(Interceptors);
+                list.AddRange(Instances);
+                list.AddRange(Templates);
+
+                if (_sourceInstance != null)
+                {
+                    list.Add(_sourceInstance);
+                }
+
+                list.Sort();
+
+                return (GraphObject[]) list.ToArray(typeof (GraphObject));
+            }
+        }
+
+        protected override string key
+        {
+            get { return PluginTypeName; }
+        }
+
+        public TypePath TypePath
+        {
+            get { return _typePath; }
+        }
+
+        public string AssemblyName
+        {
+            get { return _typePath.AssemblyName; }
+        }
+
+        public static FamilyToken CreateImplicitFamily(PluginFamily family)
+        {
+            FamilyToken token =
+                new FamilyToken(new TypePath(family.PluginType), family.DefaultInstanceKey, new string[0]);
+            token.DefinitionSource = DefinitionSource.Implicit;
+
+
+            PluginFamilyAttribute att = PluginFamilyAttribute.GetAttribute(family.PluginType);
+            if (att != null)
+            {
+                if (att.Scope != InstanceScope.PerRequest)
+                {
+                    token.Scope = att.Scope;
+                    InterceptorInstanceToken interceptor = new InterceptorInstanceToken(att.Scope);
+                    token.AddInterceptor(interceptor);
+                }
+            }
+
+            return token;
+        }
+
 
         public override string ToString()
         {
@@ -124,17 +198,6 @@ namespace StructureMap.Configuration.Tokens
         }
 
 
-        public PluginToken[] Plugins
-        {
-            get
-            {
-                PluginToken[] returnValue = new PluginToken[_plugins.Count];
-                _plugins.Values.CopyTo(returnValue, 0);
-
-                return returnValue;
-            }
-        }
-
         public void AddPlugin(PluginToken plugin)
         {
             plugin.PluginType = _typePath;
@@ -151,17 +214,6 @@ namespace StructureMap.Configuration.Tokens
             return null;
         }
 
-        public TemplateToken[] Templates
-        {
-            get
-            {
-                TemplateToken[] returnValue = new TemplateToken[_templates.Count];
-                _templates.Values.CopyTo(returnValue, 0);
-
-                return returnValue;
-            }
-        }
-
         public void AddTemplate(TemplateToken Template)
         {
             Template.PluginType = PluginTypeName;
@@ -176,11 +228,6 @@ namespace StructureMap.Configuration.Tokens
         public void AddInterceptor(InstanceToken instance)
         {
             _interceptors.Add(instance);
-        }
-
-        public InstanceToken[] Interceptors
-        {
-            get { return (InstanceToken[]) _interceptors.ToArray(typeof (InstanceToken)); }
         }
 
 
@@ -200,17 +247,6 @@ namespace StructureMap.Configuration.Tokens
         public InstanceToken FindInstance(string instanceKey)
         {
             return (InstanceToken) _instances[instanceKey];
-        }
-
-        public InstanceToken[] Instances
-        {
-            get
-            {
-                InstanceToken[] returnValue = new InstanceToken[_instances.Count];
-                _instances.Values.CopyTo(returnValue, 0);
-
-                return returnValue;
-            }
         }
 
         public void Validate(IInstanceValidator validator)
@@ -272,45 +308,9 @@ namespace StructureMap.Configuration.Tokens
             }
         }
 
-        public override GraphObject[] Children
-        {
-            get
-            {
-                ArrayList list = new ArrayList();
-                list.AddRange(Plugins);
-                list.AddRange(Interceptors);
-                list.AddRange(Instances);
-                list.AddRange(Templates);
-
-                if (_sourceInstance != null)
-                {
-                    list.Add(_sourceInstance);
-                }
-
-                list.Sort();
-
-                return (GraphObject[]) list.ToArray(typeof (GraphObject));
-            }
-        }
-
         public override void AcceptVisitor(IConfigurationVisitor visitor)
         {
             visitor.HandleFamily(this);
-        }
-
-        protected override string key
-        {
-            get { return PluginTypeName; }
-        }
-
-        public TypePath TypePath
-        {
-            get { return _typePath; }
-        }
-
-        public string AssemblyName
-        {
-            get { return _typePath.AssemblyName; }
         }
 
         public bool HasInstance(string instanceKey)

@@ -7,8 +7,8 @@ namespace StructureMap.Testing.Widget5
     public class CannotBeAutoFilledGridColumn
     {
         private readonly IWidget _widget;
-        private Rule _rule;
         private string _name;
+        private Rule _rule;
 
         public CannotBeAutoFilledGridColumn(IWidget widget)
         {

@@ -7,11 +7,11 @@ namespace StructureMap.Testing.Caching
 {
     public class MockManagedCache : IManagedCache
     {
-        private ManualResetEvent _event;
-        private bool _expectPrune;
-        private bool _expectClear;
-        private bool _pruned = false;
         private bool _cleared = false;
+        private ManualResetEvent _event;
+        private bool _expectClear;
+        private bool _expectPrune;
+        private bool _pruned = false;
 
         public MockManagedCache(ManualResetEvent Event, bool ExpectPrune, bool ExpectClear)
         {
@@ -49,6 +49,13 @@ namespace StructureMap.Testing.Caching
             _event.Set();
         }
 
+        public string CacheName
+        {
+            get { return "MOCK"; }
+        }
+
+        #endregion
+
         public void Verify()
         {
             if (_expectClear && !_cleared)
@@ -61,12 +68,5 @@ namespace StructureMap.Testing.Caching
                 Assert.Fail("Prune() was not called!");
             }
         }
-
-        public string CacheName
-        {
-            get { return "MOCK"; }
-        }
-
-        #endregion
     }
 }

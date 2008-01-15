@@ -13,6 +13,16 @@ namespace StructureMap.Client.Views
             _tdElement = tdElement;
         }
 
+        public int Level
+        {
+            set
+            {
+                int padding = 20*value;
+                string style = string.Format("padding-Left:{0}px", padding.ToString());
+                _tdElement.SetAttribute("style", style);
+            }
+        }
+
         public void AddText(string text)
         {
             XmlElement span = _tdElement.OwnerDocument.CreateElement("span");
@@ -42,16 +52,6 @@ namespace StructureMap.Client.Views
             XmlElement pre = _tdElement.OwnerDocument.CreateElement("pre");
             pre.InnerText = message;
             _tdElement.AppendChild(pre);
-        }
-
-        public int Level
-        {
-            set
-            {
-                int padding = 20*value;
-                string style = string.Format("padding-Left:{0}px", padding.ToString());
-                _tdElement.SetAttribute("style", style);
-            }
         }
 
         public void MarkProblems(GraphObject node)

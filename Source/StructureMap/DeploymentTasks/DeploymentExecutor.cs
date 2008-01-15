@@ -11,15 +11,15 @@ namespace StructureMap.DeploymentTasks
     [EnvironmentPermission(SecurityAction.Assert, Read="COMPUTERNAME")]
     public class DeploymentExecutor : MarshalByRefObject
     {
-        private string _deploymentTarget;
-        private MachineSpecificOption _machineOption;
-        private string _machineName;
-        private string _profileName;
-        private string _destinationPath;
-        private XmlDocument _sourceConfigDocument;
-        private PluginGraphReport _originalGraph;
-        private PluginGraphReport _report;
         private InstanceDefaultManager _defaultManager;
+        private string _deploymentTarget;
+        private string _destinationPath;
+        private string _machineName;
+        private MachineSpecificOption _machineOption;
+        private PluginGraphReport _originalGraph;
+        private string _profileName;
+        private PluginGraphReport _report;
+        private XmlDocument _sourceConfigDocument;
 
 
         public DeploymentExecutor(

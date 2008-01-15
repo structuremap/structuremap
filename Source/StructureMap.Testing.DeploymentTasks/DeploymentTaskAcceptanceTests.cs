@@ -27,6 +27,12 @@ namespace StructureMap.Testing.DeploymentTasks
         }
 
         [Test]
+        public void DeploymentTargetIsClientCopyMachineOverrides()
+        {
+            checkFileAgainstExpectation("DeploymentTargetIsClientCopyMachineOverrides.xml");
+        }
+
+        [Test]
         public void WithProfileAndNothingElseCopyMachineOverrides()
         {
             checkFileAgainstExpectation("WithProfileAndNothingElseCopyMachineOverrides.xml");
@@ -37,12 +43,6 @@ namespace StructureMap.Testing.DeploymentTasks
         public void WithProfileAndNothingElseIgnoreMachineOverrides()
         {
             checkFileAgainstExpectation("WithProfileAndNothingElseIgnoreMachineOverrides.xml");
-        }
-
-        [Test]
-        public void DeploymentTargetIsClientCopyMachineOverrides()
-        {
-            checkFileAgainstExpectation("DeploymentTargetIsClientCopyMachineOverrides.xml");
         }
     }
 }

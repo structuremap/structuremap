@@ -19,6 +19,26 @@ namespace StructureMap.Testing.Container
         }
 
         [Test]
+        public void CanFillDependenciesSuccessfully()
+        {
+            PluginGraph pluginGraph = ObjectMother.GetPluginGraph();
+
+            InstanceManager manager = new InstanceManager(pluginGraph);
+
+            // The dependencies must have a default setting first
+            manager.SetDefault(typeof (IStrategy), "Red");
+            manager.SetDefault(typeof (IWidget), "Blue");
+            IWidget widget = (IWidget) manager.CreateInstance(typeof (IWidget));
+            IStrategy strategy = (IStrategy) manager.CreateInstance(typeof (IStrategy));
+
+            FilledConcreteClass concreteClass =
+                (FilledConcreteClass) manager.FillDependencies(typeof (FilledConcreteClass));
+
+            Assert.IsNotNull(concreteClass.Widget);
+            Assert.IsNotNull(concreteClass.Strategy);
+        }
+
+        [Test]
         public void CreateAutoFilledPluginFamily()
         {
             Assert.IsNotNull(_family);
@@ -40,26 +60,6 @@ namespace StructureMap.Testing.Container
             Assert.IsNotNull(plugin);
 
             Assert.AreEqual(typeof (FilledConcreteClass), plugin.PluggedType);
-        }
-
-        [Test]
-        public void CanFillDependenciesSuccessfully()
-        {
-            PluginGraph pluginGraph = ObjectMother.GetPluginGraph();
-
-            InstanceManager manager = new InstanceManager(pluginGraph);
-
-            // The dependencies must have a default setting first
-            manager.SetDefault(typeof (IStrategy), "Red");
-            manager.SetDefault(typeof (IWidget), "Blue");
-            IWidget widget = (IWidget) manager.CreateInstance(typeof (IWidget));
-            IStrategy strategy = (IStrategy) manager.CreateInstance(typeof (IStrategy));
-
-            FilledConcreteClass concreteClass =
-                (FilledConcreteClass) manager.FillDependencies(typeof (FilledConcreteClass));
-
-            Assert.IsNotNull(concreteClass.Widget);
-            Assert.IsNotNull(concreteClass.Strategy);
         }
 
         [Test, ExpectedException(typeof (StructureMapException))]
@@ -84,8 +84,8 @@ namespace StructureMap.Testing.Container
 
     public class FilledConcreteClass
     {
-        private readonly IWidget _widget;
         private readonly IStrategy _strategy;
+        private readonly IWidget _widget;
 
         public FilledConcreteClass(IStrategy strategy, IWidget widget)
         {

@@ -8,12 +8,7 @@ namespace StructureMap.Testing.Container.Source
     [TestFixture]
     public class TemplatingTester
     {
-        private const string FILE_NAME = "InstanceMementoTemplating.xml";
-        private MementoSource _nodeTemplateSource;
-        private MementoSource _attTemplateSource;
-        private MementoSource _source;
-        private InstanceMemento _referringMemento;
-        private TemplatedMementoSource _templatedSource;
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -29,6 +24,15 @@ namespace StructureMap.Testing.Container.Source
             _templatedSource = new TemplatedMementoSource(_source, _attTemplateSource);
         }
 
+        #endregion
+
+        private const string FILE_NAME = "InstanceMementoTemplating.xml";
+        private MementoSource _nodeTemplateSource;
+        private MementoSource _attTemplateSource;
+        private MementoSource _source;
+        private InstanceMemento _referringMemento;
+        private TemplatedMementoSource _templatedSource;
+
         private void validateCombinedMemento(InstanceMemento combinedMemento)
         {
             Assert.AreEqual("70", combinedMemento.GetProperty("Age"));
@@ -39,26 +43,6 @@ namespace StructureMap.Testing.Container.Source
             Assert.AreEqual("1992", grandChildMemeto.GetProperty("BirthYear"));
         }
 
-
-        [Test]
-        public void GetTemplatedMementoFromNodeNormalizedTemplate()
-        {
-            InstanceMemento templateMemento = _nodeTemplateSource.GetMemento("Grandmother");
-            Assert.IsNotNull(templateMemento);
-            InstanceMemento combinedMemento = templateMemento.Substitute(_referringMemento);
-
-            validateCombinedMemento(combinedMemento);
-        }
-
-        [Test]
-        public void GetTemplatedMementoFromAttributeNormalizedTemplate()
-        {
-            InstanceMemento templateMemento = _attTemplateSource.GetMemento("Grandmother");
-            Assert.IsNotNull(templateMemento);
-            InstanceMemento combinedMemento = templateMemento.Substitute(_referringMemento);
-
-            validateCombinedMemento(combinedMemento);
-        }
 
         [Test]
         public void GetAllMementos()
@@ -87,18 +71,38 @@ namespace StructureMap.Testing.Container.Source
         }
 
         [Test]
-        public void GetTheTemplatedInstance()
-        {
-            InstanceMemento memento = _templatedSource.GetMemento("Jackie");
-            validateCombinedMemento(memento);
-        }
-
-        [Test]
         public void GetNonTemplatedInstance()
         {
             InstanceMemento memento = _templatedSource.GetMemento("Nadine");
             Assert.AreEqual("80", memento.GetProperty("Age"));
             Assert.AreEqual("Blue", memento.GetProperty("EyeColor"));
+        }
+
+        [Test]
+        public void GetTemplatedMementoFromAttributeNormalizedTemplate()
+        {
+            InstanceMemento templateMemento = _attTemplateSource.GetMemento("Grandmother");
+            Assert.IsNotNull(templateMemento);
+            InstanceMemento combinedMemento = templateMemento.Substitute(_referringMemento);
+
+            validateCombinedMemento(combinedMemento);
+        }
+
+        [Test]
+        public void GetTemplatedMementoFromNodeNormalizedTemplate()
+        {
+            InstanceMemento templateMemento = _nodeTemplateSource.GetMemento("Grandmother");
+            Assert.IsNotNull(templateMemento);
+            InstanceMemento combinedMemento = templateMemento.Substitute(_referringMemento);
+
+            validateCombinedMemento(combinedMemento);
+        }
+
+        [Test]
+        public void GetTheTemplatedInstance()
+        {
+            InstanceMemento memento = _templatedSource.GetMemento("Jackie");
+            validateCombinedMemento(memento);
         }
     }
 }

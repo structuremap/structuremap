@@ -13,13 +13,7 @@ namespace StructureMap.Testing.Container
     [TestFixture]
     public class PluginGraphBuilderTester
     {
-        private PluginGraph graph;
-        private PluginGraph diagnosticGraph;
-
-        public PluginGraphBuilderTester()
-        {
-        }
-
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -36,6 +30,16 @@ namespace StructureMap.Testing.Container
             graph = builder.Build();
             diagnosticGraph = builder.BuildDiagnosticPluginGraph();
         }
+
+        #endregion
+
+        private PluginGraph graph;
+        private PluginGraph diagnosticGraph;
+
+        public PluginGraphBuilderTester()
+        {
+        }
+
 
         [Test]
         public void AssemblyDeployTargets()
@@ -56,6 +60,74 @@ namespace StructureMap.Testing.Container
             Assert.IsTrue(assem2.IsDeployed("Remote"));
         }
 
+        [Test]
+        public void BuildsInterceptionChain()
+        {
+            PluginGraph pluginGraph = DataMother.GetDiagnosticPluginGraph("SingletonIntercepterTest.xml");
+
+            PluginFamily family = pluginGraph.PluginFamilies[typeof (Rule)];
+
+            Assert.AreEqual(1, family.InterceptionChain.Count);
+            Assert.IsTrue(family.InterceptionChain[0] is SingletonInterceptor);
+
+            // The PluginFamily for IWidget has no intercepters configured
+            PluginFamily widgetFamily = pluginGraph.PluginFamilies[typeof (IWidget)];
+            Assert.AreEqual(0, widgetFamily.InterceptionChain.Count);
+        }
+
+        [Test]
+        public void CanDefinedSourceBuildMemento()
+        {
+            PluginFamily family = graph.PluginFamilies[typeof (IWidget)];
+
+            MementoSource source = family.Source;
+            InstanceMemento memento = source.GetMemento("Red");
+
+            Assert.IsNotNull(memento);
+        }
+
+        [Test]
+        public void CanImpliedInlineSourceBuildMemento()
+        {
+            PluginFamily family = graph.PluginFamilies[typeof (Rule)];
+
+            MementoSource source = family.Source;
+            InstanceMemento memento = source.GetMemento("Red");
+
+            Assert.IsNotNull(memento);
+        }
+
+
+        [Test]
+        public void CanImpliedNOTInlineSourceBuildMemento()
+        {
+            PluginFamily family = graph.PluginFamilies[typeof (Parent)];
+
+            MementoSource source = family.Source;
+            InstanceMemento memento = source.GetMemento("Jerry");
+
+            Assert.IsNotNull(memento);
+        }
+
+        [Test]
+        public void CorrectlyBuildAMementoSourceWhenDefinedInConfiguration()
+        {
+            PluginFamily family = graph.PluginFamilies[typeof (IWidget)];
+
+            XmlFileMementoSource source = family.Source as XmlFileMementoSource;
+            Assert.IsNotNull(source);
+        }
+
+        [Test]
+        public void ExplicitPluginFamilyDefinitionOverridesImplicitDefinition()
+        {
+            PluginGraph pluginGraph = DataMother.GetPluginGraph("ExplicitPluginFamilyOverridesImplicitPluginFamily.xml");
+
+            PluginFamily family = pluginGraph.PluginFamilies[typeof (GrandChild)];
+            Assert.AreEqual(DefinitionSource.Explicit, family.DefinitionSource);
+            Assert.AreEqual("Fred", family.DefaultInstanceKey);
+        }
+
 
         /*   Expected Families: GrandChild, Child, Parent, WidgetMaker from attributes
 		 *       Rule & Column by configuration
@@ -73,17 +145,14 @@ namespace StructureMap.Testing.Container
 
 
         [Test]
-        public void GotPluginSomeFamilies()
+        public void GotPluginFamiliesThatAreDefinedInConfigXml()
         {
-            Assert.IsNotNull(graph.PluginFamilies);
-            Assert.IsTrue(graph.PluginFamilies.Count > 0);
+            Assert.IsNotNull(graph.PluginFamilies[typeof (Rule)]);
+            Assert.IsNotNull(graph.PluginFamilies[typeof (Column)]);
 
-            foreach (PluginFamily family in graph.PluginFamilies)
-            {
-                Assert.IsNotNull(family);
-            }
+            PluginFamily family = graph.PluginFamilies[typeof (Rule)];
+            Assert.AreEqual(DefinitionSource.Explicit, family.DefinitionSource);
         }
-
 
         [Test]
         public void GotPluginFamiliesThatAreMarkedByAttributes()
@@ -97,22 +166,16 @@ namespace StructureMap.Testing.Container
             Assert.AreEqual(DefinitionSource.Implicit, family.DefinitionSource);
         }
 
-
         [Test]
-        public void GotPluginFamiliesThatAreDefinedInConfigXml()
+        public void GotPluginSomeFamilies()
         {
-            Assert.IsNotNull(graph.PluginFamilies[typeof (Rule)]);
-            Assert.IsNotNull(graph.PluginFamilies[typeof (Column)]);
+            Assert.IsNotNull(graph.PluginFamilies);
+            Assert.IsTrue(graph.PluginFamilies.Count > 0);
 
-            PluginFamily family = graph.PluginFamilies[typeof (Rule)];
-            Assert.AreEqual(DefinitionSource.Explicit, family.DefinitionSource);
-        }
-
-        [Test]
-        public void SetsTheDefaultInstanceKey()
-        {
-            PluginFamily family = graph.PluginFamilies[typeof (IWidget)];
-            Assert.AreEqual("Red", family.DefaultInstanceKey);
+            foreach (PluginFamily family in graph.PluginFamilies)
+            {
+                Assert.IsNotNull(family);
+            }
         }
 
 
@@ -176,64 +239,13 @@ namespace StructureMap.Testing.Container
         }
 
         [Test]
-        public void CorrectlyBuildAMementoSourceWhenDefinedInConfiguration()
+        public void PicksUpTheDefaultProfileAttributeOnTheStructureMapNodeAndSetsTheProfile()
         {
-            PluginFamily family = graph.PluginFamilies[typeof (IWidget)];
+            InstanceDefaultManager defaultManager =
+                DataMother.GetDiagnosticPluginGraph("DefaultProfileConfig.xml").DefaultManager;
 
-            XmlFileMementoSource source = family.Source as XmlFileMementoSource;
-            Assert.IsNotNull(source);
+            Assert.AreEqual("Green", defaultManager.DefaultProfileName);
         }
-
-
-        [Test]
-        public void CanDefinedSourceBuildMemento()
-        {
-            PluginFamily family = graph.PluginFamilies[typeof (IWidget)];
-
-            MementoSource source = family.Source;
-            InstanceMemento memento = source.GetMemento("Red");
-
-            Assert.IsNotNull(memento);
-        }
-
-        [Test]
-        public void CanImpliedInlineSourceBuildMemento()
-        {
-            PluginFamily family = graph.PluginFamilies[typeof (Rule)];
-
-            MementoSource source = family.Source;
-            InstanceMemento memento = source.GetMemento("Red");
-
-            Assert.IsNotNull(memento);
-        }
-
-
-        [Test]
-        public void CanImpliedNOTInlineSourceBuildMemento()
-        {
-            PluginFamily family = graph.PluginFamilies[typeof (Parent)];
-
-            MementoSource source = family.Source;
-            InstanceMemento memento = source.GetMemento("Jerry");
-
-            Assert.IsNotNull(memento);
-        }
-
-        [Test]
-        public void BuildsInterceptionChain()
-        {
-            PluginGraph pluginGraph = DataMother.GetDiagnosticPluginGraph("SingletonIntercepterTest.xml");
-
-            PluginFamily family = pluginGraph.PluginFamilies[typeof (Rule)];
-
-            Assert.AreEqual(1, family.InterceptionChain.Count);
-            Assert.IsTrue(family.InterceptionChain[0] is SingletonInterceptor);
-
-            // The PluginFamily for IWidget has no intercepters configured
-            PluginFamily widgetFamily = pluginGraph.PluginFamilies[typeof (IWidget)];
-            Assert.AreEqual(0, widgetFamily.InterceptionChain.Count);
-        }
-
 
         [Test]
         public void ReadScopeFromXmlConfiguration()
@@ -251,22 +263,10 @@ namespace StructureMap.Testing.Container
         }
 
         [Test]
-        public void PicksUpTheDefaultProfileAttributeOnTheStructureMapNodeAndSetsTheProfile()
+        public void SetsTheDefaultInstanceKey()
         {
-            InstanceDefaultManager defaultManager =
-                DataMother.GetDiagnosticPluginGraph("DefaultProfileConfig.xml").DefaultManager;
-
-            Assert.AreEqual("Green", defaultManager.DefaultProfileName);
-        }
-
-        [Test]
-        public void ExplicitPluginFamilyDefinitionOverridesImplicitDefinition()
-        {
-            PluginGraph pluginGraph = DataMother.GetPluginGraph("ExplicitPluginFamilyOverridesImplicitPluginFamily.xml");
-
-            PluginFamily family = pluginGraph.PluginFamilies[typeof (GrandChild)];
-            Assert.AreEqual(DefinitionSource.Explicit, family.DefinitionSource);
-            Assert.AreEqual("Fred", family.DefaultInstanceKey);
+            PluginFamily family = graph.PluginFamilies[typeof (IWidget)];
+            Assert.AreEqual("Red", family.DefaultInstanceKey);
         }
     }
 }

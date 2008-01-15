@@ -25,16 +25,16 @@ namespace StructureMap
         {
         }
 
-        protected override object buildInstance(IInstanceCreator creator)
-        {
-            return _builder();
-        }
-
 
         public BuildObjectDelegate<PLUGINTYPE> Builder
         {
             get { return _builder; }
             set { _builder = value; }
+        }
+
+        protected override object buildInstance(IInstanceCreator creator)
+        {
+            return _builder();
         }
     }
 }

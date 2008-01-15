@@ -6,10 +6,10 @@ namespace StructureMap.DeploymentTasks.Versioning
 {
     public class DeployedDirectory
     {
-        private string _name;
+        private Hashtable _assemblies;
         private Hashtable _childDirectories;
         private Hashtable _files;
-        private Hashtable _assemblies;
+        private string _name;
 
         public DeployedDirectory()
         {
@@ -40,21 +40,6 @@ namespace StructureMap.DeploymentTasks.Versioning
                     DeployedFile deployedFile = DeployedFile.CreateFile(fileInfo);
                     AddFile(deployedFile);
                 }
-            }
-        }
-
-        public void CheckDeployedVersions(DeployedDirectory deployedDirectory, IVersionReport report)
-        {
-            foreach (DeployedFile file in _files.Values)
-            {
-                file.CheckVersion(deployedDirectory, report);
-            }
-
-            foreach (DotNetAssembly dotNetAssembly in _assemblies.Values)
-            {
-                dotNetAssembly.CheckVersion(deployedDirectory, report);
-            }
-            {
             }
         }
 
@@ -113,17 +98,6 @@ namespace StructureMap.DeploymentTasks.Versioning
             }
         }
 
-        public void AddFile(DeployedFile deployedFile)
-        {
-            _files.Add(deployedFile.FileName.ToUpper(), deployedFile);
-        }
-
-        public DeployedFile FindFile(string fileName)
-        {
-            return _files[fileName] as DeployedFile;
-        }
-
-
         public DotNetAssembly[] Assemblies
         {
             get
@@ -142,6 +116,32 @@ namespace StructureMap.DeploymentTasks.Versioning
                 }
             }
         }
+
+        public void CheckDeployedVersions(DeployedDirectory deployedDirectory, IVersionReport report)
+        {
+            foreach (DeployedFile file in _files.Values)
+            {
+                file.CheckVersion(deployedDirectory, report);
+            }
+
+            foreach (DotNetAssembly dotNetAssembly in _assemblies.Values)
+            {
+                dotNetAssembly.CheckVersion(deployedDirectory, report);
+            }
+            {
+            }
+        }
+
+        public void AddFile(DeployedFile deployedFile)
+        {
+            _files.Add(deployedFile.FileName.ToUpper(), deployedFile);
+        }
+
+        public DeployedFile FindFile(string fileName)
+        {
+            return _files[fileName] as DeployedFile;
+        }
+
 
         public void AddAssembly(DotNetAssembly netAssembly)
         {

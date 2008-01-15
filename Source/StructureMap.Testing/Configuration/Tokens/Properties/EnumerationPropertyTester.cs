@@ -11,7 +11,7 @@ namespace StructureMap.Testing.Configuration.Tokens.Properties
     [TestFixture]
     public class EnumerationPropertyTester
     {
-        private PropertyDefinition _definition;
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -20,6 +20,24 @@ namespace StructureMap.Testing.Configuration.Tokens.Properties
                 new PropertyDefinition("order", typeof (InstanceScope), PropertyDefinitionType.Constructor,
                                        ArgumentType.Enumeration);
             _definition.EnumerationValues = new string[] {"First", "Second", "Third"};
+        }
+
+        #endregion
+
+        private PropertyDefinition _definition;
+
+        [Test]
+        public void AcceptVisitor()
+        {
+            MemoryInstanceMemento memento = new MemoryInstanceMemento("concrete", "instance");
+            memento.SetProperty("order", "First");
+
+            EnumerationProperty property = new EnumerationProperty(_definition, memento);
+
+            DynamicMock visitorMock = new DynamicMock(typeof (IConfigurationVisitor));
+            visitorMock.Expect("HandleEnumerationProperty", property);
+            property.AcceptVisitor((IConfigurationVisitor) visitorMock.MockInstance);
+            visitorMock.Verify();
         }
 
         [Test]
@@ -36,32 +54,6 @@ namespace StructureMap.Testing.Configuration.Tokens.Properties
             Assert.AreEqual(0, property.Problems.Length);
         }
 
-        [Test]
-        public void AcceptVisitor()
-        {
-            MemoryInstanceMemento memento = new MemoryInstanceMemento("concrete", "instance");
-            memento.SetProperty("order", "First");
-
-            EnumerationProperty property = new EnumerationProperty(_definition, memento);
-
-            DynamicMock visitorMock = new DynamicMock(typeof (IConfigurationVisitor));
-            visitorMock.Expect("HandleEnumerationProperty", property);
-            property.AcceptVisitor((IConfigurationVisitor) visitorMock.MockInstance);
-            visitorMock.Verify();
-        }
-
-
-        [Test]
-        public void PropertyIsMissing()
-        {
-            MemoryInstanceMemento memento = new MemoryInstanceMemento("concrete", "instance");
-
-            EnumerationProperty property = new EnumerationProperty(_definition, memento);
-
-            Problem expected = new Problem(ConfigurationConstants.MEMENTO_PROPERTY_IS_MISSING, string.Empty);
-
-            Assert.AreEqual(new Problem[] {expected}, property.Problems);
-        }
 
         [Test]
         public void MementoValueIsNotAnEnumerationValue()
@@ -72,6 +64,18 @@ namespace StructureMap.Testing.Configuration.Tokens.Properties
             EnumerationProperty property = new EnumerationProperty(_definition, memento);
 
             Problem expected = new Problem(ConfigurationConstants.INVALID_ENUMERATION_VALUE, string.Empty);
+
+            Assert.AreEqual(new Problem[] {expected}, property.Problems);
+        }
+
+        [Test]
+        public void PropertyIsMissing()
+        {
+            MemoryInstanceMemento memento = new MemoryInstanceMemento("concrete", "instance");
+
+            EnumerationProperty property = new EnumerationProperty(_definition, memento);
+
+            Problem expected = new Problem(ConfigurationConstants.MEMENTO_PROPERTY_IS_MISSING, string.Empty);
 
             Assert.AreEqual(new Problem[] {expected}, property.Problems);
         }

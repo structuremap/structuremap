@@ -21,6 +21,21 @@ namespace StructureMap.Graph
             get { return _assemblies.Values; }
         }
 
+        public AssemblyGraph this[string assemblyName]
+        {
+            get { return _assemblies[assemblyName]; }
+        }
+
+        public AssemblyGraph this[int index]
+        {
+            get
+            {
+                AssemblyGraph[] array = new AssemblyGraph[_assemblies.Count];
+                _assemblies.Values.CopyTo(array, 0);
+                return array[index];
+            }
+        }
+
         public AssemblyGraph Add(string assemblyName)
         {
             AssemblyGraph assemblyGraph = new AssemblyGraph(assemblyName);
@@ -43,21 +58,6 @@ namespace StructureMap.Graph
 
             _assemblies.Add(assemblyGraph.AssemblyName, assemblyGraph);
             return assemblyGraph;
-        }
-
-        public AssemblyGraph this[string assemblyName]
-        {
-            get { return _assemblies[assemblyName]; }
-        }
-
-        public AssemblyGraph this[int index]
-        {
-            get
-            {
-                AssemblyGraph[] array = new AssemblyGraph[_assemblies.Count];
-                _assemblies.Values.CopyTo(array, 0);
-                return array[index];
-            }
         }
 
         public void Remove(string assemblyName)

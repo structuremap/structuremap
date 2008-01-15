@@ -9,6 +9,8 @@ namespace StructureMap.Interceptors
         {
         }
 
+        #region IInterceptorChainBuilder Members
+
         public InterceptionChain Build(InstanceScope scope)
         {
             InterceptionChain returnValue = new InterceptionChain();
@@ -35,5 +37,7 @@ namespace StructureMap.Interceptors
 
             return returnValue;
         }
+
+        #endregion
     }
 }

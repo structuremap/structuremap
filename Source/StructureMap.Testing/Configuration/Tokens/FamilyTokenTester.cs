@@ -47,51 +47,6 @@ namespace StructureMap.Testing.Configuration.Tokens
         }
 
         [Test]
-        public void ReadInstancesFromSourceAllSuccess()
-        {
-            PluginGraphReport report = new PluginGraphReport();
-
-            PluginFamily family = new PluginFamily(typeof (IGateway));
-            MemoryMementoSource source = new MemoryMementoSource();
-
-            source.AddMemento(new MemoryInstanceMemento("Default", "one"));
-            source.AddMemento(new MemoryInstanceMemento("Stubbed", "two"));
-
-            family.Source = source;
-
-            FamilyToken token = new FamilyToken(family.PluginType, null, new string[0]);
-            report.AddFamily(token);
-
-            token.ReadInstances(family, report);
-
-            Assert.AreEqual(2, token.Instances.Length);
-        }
-
-        [Test]
-        public void ReadInstancesFindsImplicitInstances()
-        {
-            PluginGraphReport report = new PluginGraphReport();
-
-            // DefaultGateway has no constructor arguments, so it should be available as 
-            // an implicit instance
-            PluginFamily family = new PluginFamily(typeof (IGateway));
-            MemoryMementoSource source = new MemoryMementoSource();
-            family.Plugins.Add(typeof (DefaultGateway), "Implicit");
-
-            FamilyToken token = new FamilyToken(family.PluginType, null, new string[0]);
-            report.AddFamily(token);
-            token.ReadInstances(family, report);
-
-            Assert.AreEqual(1, token.Instances.Length);
-            InstanceToken instance = token.FindInstance("Implicit");
-
-            Assert.IsNotNull(instance);
-            Assert.AreEqual(DefinitionSource.Implicit, instance.Source);
-            Assert.AreEqual("Implicit", instance.InstanceKey);
-            Assert.AreEqual("Implicit", instance.ConcreteKey);
-        }
-
-        [Test]
         public void DefaultKeyDoesNotExist()
         {
             PluginGraphReport report = new PluginGraphReport();
@@ -144,6 +99,51 @@ namespace StructureMap.Testing.Configuration.Tokens
         }
 
         [Test]
+        public void ReadInstancesFindsImplicitInstances()
+        {
+            PluginGraphReport report = new PluginGraphReport();
+
+            // DefaultGateway has no constructor arguments, so it should be available as 
+            // an implicit instance
+            PluginFamily family = new PluginFamily(typeof (IGateway));
+            MemoryMementoSource source = new MemoryMementoSource();
+            family.Plugins.Add(typeof (DefaultGateway), "Implicit");
+
+            FamilyToken token = new FamilyToken(family.PluginType, null, new string[0]);
+            report.AddFamily(token);
+            token.ReadInstances(family, report);
+
+            Assert.AreEqual(1, token.Instances.Length);
+            InstanceToken instance = token.FindInstance("Implicit");
+
+            Assert.IsNotNull(instance);
+            Assert.AreEqual(DefinitionSource.Implicit, instance.Source);
+            Assert.AreEqual("Implicit", instance.InstanceKey);
+            Assert.AreEqual("Implicit", instance.ConcreteKey);
+        }
+
+        [Test]
+        public void ReadInstancesFromSourceAllSuccess()
+        {
+            PluginGraphReport report = new PluginGraphReport();
+
+            PluginFamily family = new PluginFamily(typeof (IGateway));
+            MemoryMementoSource source = new MemoryMementoSource();
+
+            source.AddMemento(new MemoryInstanceMemento("Default", "one"));
+            source.AddMemento(new MemoryInstanceMemento("Stubbed", "two"));
+
+            family.Source = source;
+
+            FamilyToken token = new FamilyToken(family.PluginType, null, new string[0]);
+            report.AddFamily(token);
+
+            token.ReadInstances(family, report);
+
+            Assert.AreEqual(2, token.Instances.Length);
+        }
+
+        [Test]
         public void ReadInstancesMementoSourceFails()
         {
             PluginGraphReport report = new PluginGraphReport();
@@ -172,6 +172,11 @@ namespace StructureMap.Testing.Configuration.Tokens
 
     public class BadMementoSource : MementoSource
     {
+        public override string Description
+        {
+            get { throw new NotImplementedException(); }
+        }
+
         protected override InstanceMemento[] fetchInternalMementos()
         {
             throw new NotImplementedException();
@@ -185,11 +190,6 @@ namespace StructureMap.Testing.Configuration.Tokens
         protected override InstanceMemento retrieveMemento(string instanceKey)
         {
             throw new NotImplementedException();
-        }
-
-        public override string Description
-        {
-            get { throw new NotImplementedException(); }
         }
     }
 }

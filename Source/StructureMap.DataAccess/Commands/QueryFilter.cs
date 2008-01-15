@@ -4,10 +4,10 @@ namespace StructureMap.DataAccess.Commands
 {
     public abstract class QueryFilter : IQueryFilter
     {
-        private readonly string _parameterName;
-        protected string _sqlSnippet;
-        protected object _innerValue = null;
         protected const string REPLACEMENT_VALUE = "{Value}";
+        private readonly string _parameterName;
+        protected object _innerValue = null;
+        protected string _sqlSnippet;
 
 
         public QueryFilter(string parameterName, string sqlSnippet)
@@ -21,6 +21,8 @@ namespace StructureMap.DataAccess.Commands
             get { return _sqlSnippet; }
             set { _sqlSnippet = value; }
         }
+
+        #region IQueryFilter Members
 
         public void SetProperty(object propertyValue)
         {
@@ -52,5 +54,7 @@ namespace StructureMap.DataAccess.Commands
         {
             // no-op;
         }
+
+        #endregion
     }
 }

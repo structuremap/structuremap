@@ -7,12 +7,13 @@ namespace StructureMap.DataAccess
     public interface IReaderSource
     {
         string Name { get; set; }
-        IDataReader ExecuteReader();
-        DataSet ExecuteDataSet();
-        object ExecuteScalar();
 
         [IndexerName("Parameter")]
         object this[string parameterName] { get; set; }
+
+        IDataReader ExecuteReader();
+        DataSet ExecuteDataSet();
+        object ExecuteScalar();
 
         void Attach(IDataSession session);
 

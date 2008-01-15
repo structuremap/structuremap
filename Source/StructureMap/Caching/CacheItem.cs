@@ -5,12 +5,12 @@ namespace StructureMap.Caching
 {
     public abstract class CacheItem : ICacheItem
     {
+        private int _accesses;
+        private DateTime _created;
+        private bool _isEmpty = false;
         private object _key;
         private DateTime _lastAccessed;
-        private DateTime _created;
-        private int _accesses;
         private ReaderWriterLock rwl;
-        private bool _isEmpty = false;
 
         public CacheItem(object Key)
         {
@@ -19,6 +19,13 @@ namespace StructureMap.Caching
 
             reset();
         }
+
+        public bool IsEmpty
+        {
+            get { return _isEmpty; }
+        }
+
+        #region ICacheItem Members
 
         public object Key
         {
@@ -40,23 +47,6 @@ namespace StructureMap.Caching
             get { return _accesses; }
         }
 
-
-        private void reset()
-        {
-            _accesses = 0;
-            _lastAccessed = _created = DateTime.Now;
-        }
-
-        private void markAccess()
-        {
-            lock (this)
-            {
-                _accesses++;
-                _lastAccessed = DateTime.Now;
-            }
-        }
-
-
         public object Value
         {
             get
@@ -77,9 +67,21 @@ namespace StructureMap.Caching
             }
         }
 
-        public bool IsEmpty
+        #endregion
+
+        private void reset()
         {
-            get { return _isEmpty; }
+            _accesses = 0;
+            _lastAccessed = _created = DateTime.Now;
+        }
+
+        private void markAccess()
+        {
+            lock (this)
+            {
+                _accesses++;
+                _lastAccessed = DateTime.Now;
+            }
         }
 
 

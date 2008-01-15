@@ -5,9 +5,9 @@ namespace StructureMap.Testing.Widget5
     public class LinkGridColumn : IGridColumn
     {
         private readonly string _columnName;
+        private bool _displayed;
         private IWidget _widget;
         private int _width;
-        private bool _displayed;
 
         public LinkGridColumn(string columnName)
         {

@@ -16,10 +16,10 @@ namespace StructureMap.Graph
     public class PluginGraph
     {
         private readonly AssemblyGraphCollection _assemblies;
-        private bool _sealed = false;
-        private readonly PluginFamilyCollection _pluginFamilies;
         private readonly InstanceDefaultManager _defaultManager = new InstanceDefaultManager();
         private readonly InterceptorLibrary _interceptorLibrary = new InterceptorLibrary();
+        private readonly PluginFamilyCollection _pluginFamilies;
+        private bool _sealed = false;
 
 
         /// <summary>
@@ -43,6 +43,21 @@ namespace StructureMap.Graph
         }
 
         #region seal
+
+        public bool IsSealed
+        {
+            get { return _sealed; }
+        }
+
+        public InstanceDefaultManager DefaultManager
+        {
+            get { return _defaultManager; }
+        }
+
+        public InterceptorLibrary InterceptorLibrary
+        {
+            get { return _interceptorLibrary; }
+        }
 
         /// <summary>
         /// Closes the PluginGraph for adding or removing members.  Searches all of the
@@ -107,21 +122,6 @@ namespace StructureMap.Graph
             }
         }
 
-
-        public bool IsSealed
-        {
-            get { return _sealed; }
-        }
-
-        public InstanceDefaultManager DefaultManager
-        {
-            get { return _defaultManager; }
-        }
-
-        public InterceptorLibrary InterceptorLibrary
-        {
-            get { return _interceptorLibrary; }
-        }
 
         /// <summary>
         /// Un-seals a PluginGraph.  Makes  the PluginGraph editable

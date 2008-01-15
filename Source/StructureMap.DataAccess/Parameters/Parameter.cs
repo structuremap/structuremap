@@ -17,6 +17,16 @@ namespace StructureMap.DataAccess.Parameters
             _parameterName = parameterName;
         }
 
+        /// <summary>
+        /// Only exposed for unit testing
+        /// </summary>
+        public IDataParameter InnerParameter
+        {
+            get { return _innerParameter; }
+        }
+
+        #region IParameter Members
+
         public void SetProperty(object propertyValue)
         {
             _innerParameter.Value = propertyValue;
@@ -32,17 +42,11 @@ namespace StructureMap.DataAccess.Parameters
             get { return _parameterName; }
         }
 
-        /// <summary>
-        /// Only exposed for unit testing
-        /// </summary>
-        public IDataParameter InnerParameter
-        {
-            get { return _innerParameter; }
-        }
-
         public void OverrideParameterType(DbType dbtype)
         {
             _innerParameter.DbType = dbtype;
         }
+
+        #endregion
     }
 }

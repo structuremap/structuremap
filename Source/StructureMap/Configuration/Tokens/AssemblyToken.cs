@@ -22,6 +22,11 @@ namespace StructureMap.Configuration.Tokens
             set { _assemblyName = value; }
         }
 
+        protected override string key
+        {
+            get { return AssemblyName; }
+        }
+
         public override string ToString()
         {
             return string.Format("Assembly:  {0}, Deployed to {1}", _assemblyName, DeploymentTargets);
@@ -52,11 +57,6 @@ namespace StructureMap.Configuration.Tokens
         public override void AcceptVisitor(IConfigurationVisitor visitor)
         {
             visitor.HandleAssembly(this);
-        }
-
-        protected override string key
-        {
-            get { return AssemblyName; }
         }
     }
 }

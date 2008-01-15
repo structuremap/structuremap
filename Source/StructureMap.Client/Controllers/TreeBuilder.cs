@@ -12,8 +12,8 @@ namespace StructureMap.Client.Controllers
     public class TreeBuilder : IConfigurationVisitor
     {
         private readonly PluginGraphReport _report;
-        private GraphObjectNode _topNode;
         private Stack _nodes;
+        private GraphObjectNode _topNode;
 
         public TreeBuilder(PluginGraphReport report)
         {
@@ -30,22 +30,6 @@ namespace StructureMap.Client.Controllers
             get { return _topNode; }
         }
 
-        public GraphObjectNode PushNodeOntoStack(string text, string view, GraphObject subject)
-        {
-            if (subject == null)
-            {
-                throw new ArgumentNullException("subject");
-            }
-
-            GraphObjectNode node = new GraphObjectNode(text, subject, view);
-            LastNode.Nodes.Add(node);
-            _nodes.Push(node);
-
-            Debug.WriteLine("Push:  " + subject.ToString() + ", count = " + _nodes.Count);
-
-            return node;
-        }
-
         public GraphObjectNode LastNode
         {
             get
@@ -58,6 +42,8 @@ namespace StructureMap.Client.Controllers
                 return (GraphObjectNode) _nodes.Peek();
             }
         }
+
+        #region IConfigurationVisitor Members
 
         public void StartObject(GraphObject node)
         {
@@ -154,6 +140,24 @@ namespace StructureMap.Client.Controllers
         public void HandleTemplateProperty(TemplateProperty property)
         {
             PushNodeOntoStack(property.PropertyName, ViewConstants.TEMPLATE_PROPERTY, property);
+        }
+
+        #endregion
+
+        public GraphObjectNode PushNodeOntoStack(string text, string view, GraphObject subject)
+        {
+            if (subject == null)
+            {
+                throw new ArgumentNullException("subject");
+            }
+
+            GraphObjectNode node = new GraphObjectNode(text, subject, view);
+            LastNode.Nodes.Add(node);
+            _nodes.Push(node);
+
+            Debug.WriteLine("Push:  " + subject.ToString() + ", count = " + _nodes.Count);
+
+            return node;
         }
 
 

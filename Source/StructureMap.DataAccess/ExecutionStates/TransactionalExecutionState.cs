@@ -5,8 +5,8 @@ namespace StructureMap.DataAccess.ExecutionStates
 {
     public class TransactionalExecutionState : ITransactionalExecutionState
     {
-        private readonly IDbConnection _connection;
         private readonly IDbDataAdapter _adapter;
+        private readonly IDbConnection _connection;
         private IDbTransaction _transaction;
 
         public TransactionalExecutionState(IDbConnection connection, IDbDataAdapter adapter)
@@ -20,6 +20,8 @@ namespace StructureMap.DataAccess.ExecutionStates
             _adapter = adapter;
         }
 
+        #region ITransactionalExecutionState Members
+
         public int Execute(IDbCommand command)
         {
             try
@@ -31,12 +33,6 @@ namespace StructureMap.DataAccess.ExecutionStates
             {
                 command.Connection = null;
             }
-        }
-
-        private void prepareCommand(IDbCommand command)
-        {
-            command.Connection = _connection;
-            command.Transaction = _transaction;
         }
 
         public IDataReader ExecuteReader(IDbCommand command)
@@ -91,21 +87,6 @@ namespace StructureMap.DataAccess.ExecutionStates
             }
         }
 
-        private void forceClose()
-        {
-            try
-            {
-                if (_connection.State != ConnectionState.Closed)
-                {
-                    _connection.Close();
-                }
-            }
-            catch (Exception)
-            {
-                // Just trap the exception
-            }
-        }
-
         public void CommitTransaction()
         {
             try
@@ -138,6 +119,29 @@ namespace StructureMap.DataAccess.ExecutionStates
         public void Dispose()
         {
             forceClose();
+        }
+
+        #endregion
+
+        private void prepareCommand(IDbCommand command)
+        {
+            command.Connection = _connection;
+            command.Transaction = _transaction;
+        }
+
+        private void forceClose()
+        {
+            try
+            {
+                if (_connection.State != ConnectionState.Closed)
+                {
+                    _connection.Close();
+                }
+            }
+            catch (Exception)
+            {
+                // Just trap the exception
+            }
         }
     }
 }
