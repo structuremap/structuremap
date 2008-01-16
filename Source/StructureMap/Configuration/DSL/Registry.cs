@@ -6,6 +6,8 @@ using StructureMap.Interceptors;
 
 namespace StructureMap.Configuration.DSL
 {
+    public delegate object InterceptionDelegate(object target);
+
     public class Registry : IDisposable
     {
         private readonly List<IExpression> _expressions = new List<IExpression>();

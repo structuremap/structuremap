@@ -335,7 +335,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ConstructorMemento.cs" />
-    <Compile Include="Delegates.cs" />
     <Compile Include="DeploymentTasks\DeploymentConfiguration.cs">
       <SubType>Code</SubType>
     </Compile>
