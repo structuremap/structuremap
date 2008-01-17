@@ -385,5 +385,11 @@ namespace StructureMap
                     201, memento.ConcreteKey, memento.InstanceKey, PluginType.FullName);
             }
         }
+
+
+        InstanceMemento IInstanceCreator.DefaultMemento
+        {
+            get { return _source.DefaultMemento; }
+        }
     }
 }

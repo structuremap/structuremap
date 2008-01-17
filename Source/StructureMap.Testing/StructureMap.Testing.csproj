@@ -296,6 +296,7 @@
     <Compile Include="Container\ExceptionHandling\StructureMapExceptionTester.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Container\ExplicitArgumentTester.cs" />
     <Compile Include="Container\FillDependenciesTester.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -16,8 +16,8 @@ namespace StructureMap
     [EnvironmentPermission(SecurityAction.Assert, Read="COMPUTERNAME")]
     public class ObjectFactory
     {
-        private static object _lockObject = new object();
-        private static InstanceManager _manager;
+        private static readonly object _lockObject = new object();
+        private static IInstanceManager _manager;
         private static string _profile = string.Empty;
 
 
@@ -79,15 +79,7 @@ namespace StructureMap
 
         public static string WhatDoIHave()
         {
-            StringBuilder sb = new StringBuilder();
-
-            foreach (IInstanceFactory factory in manager)
-            {
-                sb.AppendFormat("PluginType {0}, Default: {1}\r\n", factory.PluginType.AssemblyQualifiedName,
-                                factory.DefaultInstanceKey);
-            }
-
-            return sb.ToString();
+            return _manager.WhatDoIHave();
         }
 
         /// <summary>
@@ -151,7 +143,7 @@ namespace StructureMap
 
         #region InstanceManager and setting defaults
 
-        private static InstanceManager manager
+        private static IInstanceManager manager
         {
             get
             {
@@ -198,6 +190,15 @@ namespace StructureMap
             {
                 _notify();
             }
+        }
+
+        /// <summary>
+        /// Strictly used for testing scenarios
+        /// </summary>
+        /// <param name="manager"></param>
+        internal static void ReplaceManager(IInstanceManager manager)
+        {
+            _manager = manager;
         }
 
 
@@ -372,6 +373,57 @@ namespace StructureMap
             }
 
             return specificInstances;
+        }
+
+        public static ExplicitArgsExpression With<T>(T arg)
+        {
+            return new ExplicitArgsExpression(manager).With<T>(arg);
+        }
+
+        public static IExplicitProperty With(string argName)
+        {
+            return new ExplicitArgsExpression(manager).With(argName);
+        }
+
+        public interface IExplicitProperty
+        {
+            ExplicitArgsExpression EqualTo(object value);
+        }
+
+        public class ExplicitArgsExpression : IExplicitProperty
+        {
+            private readonly IInstanceManager _manager;
+            private readonly ExplicitArguments _args = new ExplicitArguments();
+            private string _lastArgName;
+
+            internal ExplicitArgsExpression(IInstanceManager manager)
+            {
+                _manager = manager;
+            }
+
+            public ExplicitArgsExpression With<T>(T arg)
+            {
+                _args.Set<T>(arg);
+                return this;
+            }
+
+            public IExplicitProperty With(string argName)
+            {
+                _lastArgName = argName;
+                return this;
+            }
+
+
+            public T GetInstance<T>()
+            {
+                return _manager.CreateInstance<T>(_args);
+            }
+
+            ExplicitArgsExpression IExplicitProperty.EqualTo(object value)
+            {
+                _args.SetArg(_lastArgName, value);
+                return this;
+            }
         }
 
         #endregion

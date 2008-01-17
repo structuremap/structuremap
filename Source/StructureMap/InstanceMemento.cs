@@ -180,6 +180,7 @@ namespace StructureMap
         /// <returns></returns>
         protected abstract InstanceMemento getChild(string Key);
 
+
         /// <summary>
         /// Using InstanceManager and the TypeName, creates an object instance using the
         /// child InstanceMemento specified by Key
@@ -188,7 +189,7 @@ namespace StructureMap
         /// <param name="typeName"></param>
         /// <param name="manager"></param>
         /// <returns></returns>
-        public object GetChild(string key, string typeName, InstanceManager manager)
+        public virtual object GetChild(string key, string typeName, InstanceManager manager)
         {
             InstanceMemento memento = GetChildMemento(key);
             object returnValue = null;

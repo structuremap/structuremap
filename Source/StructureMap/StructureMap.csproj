@@ -219,6 +219,8 @@
     <Compile Include="Configuration\DSL\Expressions\InstanceDefaultExpression.cs" />
     <Compile Include="Configuration\DSL\Expressions\InstanceExpression.cs" />
     <Compile Include="Configuration\DSL\Expressions\LiteralExpression.cs" />
+    <Compile Include="Configuration\Mementos\ExplicitArgumentMemento.cs" />
+    <Compile Include="Configuration\Mementos\ExplicitArguments.cs" />
     <Compile Include="Configuration\Mementos\LiteralMemento.cs" />
     <Compile Include="Configuration\DSL\Expressions\MementoBuilder.cs" />
     <Compile Include="Configuration\DSL\Expressions\ProfileExpression.cs" />

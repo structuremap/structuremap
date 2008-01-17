@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 //
 // General Information about an assembly is controlled through the following 
@@ -8,3 +9,4 @@ using System.Reflection;
 
 [assembly : AssemblyTitle("StructureMap")]
 [assembly : AssemblyDescription("Main Library")]
+[assembly : InternalsVisibleTo("StructureMap.AutoMocking")]

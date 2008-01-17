@@ -67,6 +67,13 @@ namespace StructureMap.Testing.Container
             Assert.IsNotNull(target.Rule);
         }
 
+        [Test]
+        public void FillDependenc1ies2()
+        {
+            FilledTarget target = ObjectFactory.FillDependencies<FilledTarget>();
+            Assert.IsNotNull(target.Gateway);
+            Assert.IsNotNull(target.Rule);
+        }
 
         [Test]
         public void GetChildWithDefinedGrandChild()

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using StructureMap.Configuration.Mementos;
 using StructureMap.Exceptions;
 using StructureMap.Graph;
@@ -147,6 +148,13 @@ namespace StructureMap
             return (T) CreateInstance(typeof (T), memento);
         }
 
+        public PLUGINTYPE CreateInstance<PLUGINTYPE>(ExplicitArguments args)
+        {
+            ExplicitArgumentMemento memento = new ExplicitArgumentMemento(args, null);
+            return CreateInstance<PLUGINTYPE>(memento);
+            
+        }
+
         public T CreateInstance<T>()
         {
             return (T) CreateInstance(typeof (T));
@@ -265,6 +273,8 @@ namespace StructureMap
             IInstanceFactory instanceFactory = this[pluginType];
             return instanceFactory.GetInstance(instanceKey);
         }
+
+
 
         /// <summary>
         /// Creates a new object instance of the requested type
@@ -461,5 +471,18 @@ namespace StructureMap
         protected delegate InstanceFactory CreateFactoryDelegate(Type type);
 
         #endregion
+
+        public string WhatDoIHave()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (IInstanceFactory factory in this)
+            {
+                sb.AppendFormat("PluginType {0}, Default: {1}\r\n", factory.PluginType.AssemblyQualifiedName,
+                                factory.DefaultInstanceKey);
+            }
+
+            return sb.ToString();
+        }
     }
 }

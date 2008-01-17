@@ -13,12 +13,17 @@ namespace StructureMap.AutoMocking
 
     public class RhinoAutoMocker<TARGETCLASS> : MockRepository where TARGETCLASS : class
     {
-        private AutoMockedInstanceManager _manager;
+        private readonly AutoMockedInstanceManager _manager;
 
         public RhinoAutoMocker()
         {
             RhinoMocksServiceLocator locator = new RhinoMocksServiceLocator(this);
             _manager = new AutoMockedInstanceManager(locator);
+        }
+
+        public void MockObjectFactory()
+        {
+            ObjectFactory.ReplaceManager(_manager);
         }
 
         public TARGETCLASS Create()
