@@ -11,21 +11,31 @@ namespace StructureMap.Configuration
     {
         private List<FetchNodeDelegate> _fetchers = new List<FetchNodeDelegate>();
         private List<string> _otherFiles = new List<string>();
-        private bool _useDefaultFile = true;
+        private bool _UseAndEnforceExistenceOfDefaultFile = false;
+        private bool _ignoreDefaultFile = false;
 
-        public bool UseDefaultFile
+        public bool UseAndEnforceExistenceOfDefaultFile
         {
-            get { return _useDefaultFile; }
-            set { _useDefaultFile = value; }
+            get { return _UseAndEnforceExistenceOfDefaultFile; }
+            set { _UseAndEnforceExistenceOfDefaultFile = value; }
+        }
+
+
+        public bool IgnoreDefaultFile
+        {
+            get { return _ignoreDefaultFile; }
+            set { _ignoreDefaultFile = value; }
         }
 
         public ConfigurationParser[] GetParsers()
         {
             List<ConfigurationParser> list = new List<ConfigurationParser>();
 
-            if (_useDefaultFile)
+            // Pick up the configuration in the default StructureMap.config
+            string pathToStructureMapConfig = StructureMapConfiguration.GetStructureMapConfigurationPath();
+            if ( (_UseAndEnforceExistenceOfDefaultFile || File.Exists(pathToStructureMapConfig)) && !_ignoreDefaultFile)
             {
-                addParsersFromFile(StructureMapConfiguration.GetStructureMapConfigurationPath(), list);
+                addParsersFromFile(pathToStructureMapConfig, list);
             }
 
             foreach (string file in _otherFiles)

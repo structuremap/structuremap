@@ -80,17 +80,25 @@ namespace StructureMap
         {
             get
             {
+                // Preprocess a GenericType
                 if (pluginType.IsGenericType && !_factories.ContainsKey(pluginType))
                 {
                     PluginFamily family = _genericsGraph.CreateTemplatedFamily(pluginType);
                     return registerPluginFamily(family);
                 }
 
+                // Create a new InstanceFactory for a Concrete type
                 if (!_factories.ContainsKey(pluginType))
                 {
-                    throw new StructureMapException(208, pluginType.FullName);
+                    if (pluginType.IsInterface || pluginType.IsAbstract)
+                    {
+                        throw new StructureMapException(208, pluginType.FullName);
+                    }
+
+                    return getOrCreateFactory(pluginType);
                 }
 
+                // Normal usage
                 return _factories[pluginType];
             }
             set { _factories[pluginType] = value; }
@@ -390,13 +398,18 @@ namespace StructureMap
                 throw new StructureMapException(230);
             }
 
-            IInstanceFactory factory = getOrCreateFactory(type, delegate(Type t)
-                                                                    {
-                                                                        PluginFamily family =
-                                                                            PluginFamily.CreateAutoFilledPluginFamily(t);
-                                                                        return new InstanceFactory(family, true);
-                                                                    });
+            IInstanceFactory factory = getOrCreateFactory(type);
             return factory.GetInstance();
+        }
+
+        private IInstanceFactory getOrCreateFactory(Type type)
+        {
+            return getOrCreateFactory(type, delegate(Type t)
+                                                {
+                                                    PluginFamily family =
+                                                        PluginFamily.CreateAutoFilledPluginFamily(t);
+                                                    return new InstanceFactory(family, true);
+                                                });
         }
 
         protected IInstanceFactory getOrCreateFactory(Type type, CreateFactoryDelegate createFactory)

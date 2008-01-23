@@ -1,5 +1,6 @@
 using System;
 using NUnit.Framework;
+using StructureMap.Configuration.DSL;
 using StructureMap.Configuration.Mementos;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
@@ -145,5 +146,56 @@ namespace StructureMap.Testing.Container
             InstanceManager manager = new InstanceManager(pluginGraph);
             Assert.AreSame(pluginGraph.DefaultManager, manager.DefaultManager);
         }
+
+        [Test]
+        public void CanBuildConcreteTypesThatAreNotPreviouslyRegistered()
+        {
+            // Create a new InstanceManager that has a default instance configured for only the
+            // IProvider interface.  InstanceManager is the real "container" behind ObjectFactory
+            Registry registry = new Registry();
+            registry.ForRequestedType<IProvider>().TheDefaultIsConcreteType<Provider>();
+            InstanceManager manager = (InstanceManager) registry.BuildInstanceManager();
+
+            // Now, have that same InstanceManager create a ClassThatUsesProvider.  StructureMap will
+            // see that ClassThatUsesProvider is concrete, determine its constructor args, and build one 
+            // for you with the default IProvider.  No other configuration necessary.
+            ClassThatUsesProvider classThatUsesProvider = manager.CreateInstance<ClassThatUsesProvider>();
+            Assert.IsInstanceOfType(typeof(Provider), classThatUsesProvider.Provider);
+        }
+
+        [Test]
+        public void CanBuildConcreteTypesThatAreNotPreviouslyRegisteredWithArgumentsProvided()
+        {
+            Registry registry = new Registry();
+            registry.ForRequestedType<IProvider>().TheDefaultIsConcreteType<Provider>();
+            InstanceManager manager = (InstanceManager)registry.BuildInstanceManager();
+
+            DifferentProvider differentProvider = new DifferentProvider();
+            ExplicitArguments args = new ExplicitArguments();
+            args.Set<IProvider>(differentProvider);
+
+            ClassThatUsesProvider classThatUsesProvider = manager.CreateInstance<ClassThatUsesProvider>(args);
+            Assert.AreSame(differentProvider, classThatUsesProvider.Provider);
+        }
+
+        public interface IProvider{}
+        public class Provider : IProvider {}
+        public class ClassThatUsesProvider
+        {
+            private readonly IProvider _provider;
+
+            public ClassThatUsesProvider(IProvider provider)
+            {
+                _provider = provider;
+            }
+
+
+            public IProvider Provider
+            {
+                get { return _provider; }
+            }
+        }
+
+        public class DifferentProvider : IProvider{}
     }
 }

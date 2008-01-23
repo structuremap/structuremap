@@ -30,8 +30,15 @@ namespace StructureMap
         /// </summary>
         public static bool UseDefaultStructureMapConfigFile
         {
-            get { return _collection.UseDefaultFile; }
-            set { _collection.UseDefaultFile = value; }
+            get { return _collection.UseAndEnforceExistenceOfDefaultFile; }
+            set { _collection.UseAndEnforceExistenceOfDefaultFile = value; }
+        }
+
+
+        public static bool IgnoreStructureMapConfig
+        {
+            get { return _collection.IgnoreDefaultFile; }
+            set { _collection.IgnoreDefaultFile = value; }
         }
 
         public static bool PullConfigurationFromAppConfig
@@ -76,6 +83,8 @@ namespace StructureMap
             _registries.Add(_registry);
             _startUp = null;
             _pullConfigurationFromAppConfig = false;
+            UseDefaultStructureMapConfigFile = false;
+            IgnoreStructureMapConfig = false;
         }
 
         /// <summary>

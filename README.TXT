@@ -1,4 +1,4 @@
-To start using StructureMap, either use the DLL's in the build folder or click on the RunBuild.BAT file to run the full NAnt build.  There is a known issue with the build "sticking" on the custom NAnt tasks.  If this happens, delete the copies of StructureMap.Dll and StructureMap.DeploymentTasks.Dll in the bin\NAnt folder.
+To start using StructureMap, either use the DLL's in the build folder or click on the RunBuild.BAT file to run the full NAnt build.  There is a known issue with the build "sticking" on the custom NAnt tasks.  If this happens, delete the copies of StructureMap.Dll and StructureMap.DeploymentTasks.Dll in the bin\NAnt folder.  Look in the "build" directory for the build products.
 
 A copy of the StructureMap website and documentation is in the "Docs" folder.
 

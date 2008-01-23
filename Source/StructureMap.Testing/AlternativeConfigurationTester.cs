@@ -14,6 +14,8 @@ namespace StructureMap.Testing
         [SetUp]
         public void SetUp()
         {
+            DataMother.BackupStructureMapConfig();
+
             ObjectFactory.ReInitialize();
             StructureMapConfiguration.ResetAll();
             DataMother.WriteDocument("Config1.xml");
@@ -26,6 +28,9 @@ namespace StructureMap.Testing
         {
             StructureMapConfiguration.ResetAll();
             ObjectFactory.Reset();
+
+
+            DataMother.RestoreStructureMapConfig();
         }
 
         #endregion
@@ -65,11 +70,19 @@ namespace StructureMap.Testing
         [Test]
         public void NotTheDefault()
         {
-            StructureMapConfiguration.UseDefaultStructureMapConfigFile = false;
-            StructureMapConfiguration.IncludeConfigurationFromFile("Config1.xml");
-            ObjectFactory.Reset();
+            try
+            {
+                StructureMapConfiguration.UseDefaultStructureMapConfigFile = false;
+                StructureMapConfiguration.IgnoreStructureMapConfig = true;
+                StructureMapConfiguration.IncludeConfigurationFromFile("Config1.xml");
+                ObjectFactory.Reset();
 
-            assertTheDefault("Orange");
+                assertTheDefault("Orange");
+            }
+            finally
+            {
+                DataMother.RestoreStructureMapConfig();
+            }
         }
 
         [Test]

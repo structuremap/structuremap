@@ -1,4 +1,4 @@
-using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 
@@ -6,8 +6,8 @@ namespace StructureMap.Source
 {
     public class XmlTemplater
     {
-        private string[] _substitutions;
-        private string _templateXml;
+        private readonly string[] _substitutions;
+        private readonly string _templateXml;
 
         public XmlTemplater(XmlNode templateNode)
         {
@@ -62,7 +62,7 @@ namespace StructureMap.Source
         private class Collector
         {
             private readonly XmlNode _templateNode;
-            private ArrayList _substitutionList = new ArrayList();
+            private readonly List<string> _substitutionList = new List<string>();
 
             public Collector(XmlNode templateNode)
             {
@@ -73,7 +73,7 @@ namespace StructureMap.Source
             {
                 searchNode(_templateNode);
 
-                return (string[]) _substitutionList.ToArray(typeof (string));
+                return _substitutionList.ToArray();
             }
 
             private void searchNode(XmlNode node)

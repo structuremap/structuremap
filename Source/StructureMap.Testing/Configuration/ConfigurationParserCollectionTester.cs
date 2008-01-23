@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Xml;
 using NUnit.Framework;
 using StructureMap.Configuration;
@@ -15,6 +16,13 @@ namespace StructureMap.Testing.Configuration
         public void SetUp()
         {
             _collection = new ConfigurationParserCollection();
+            DataMother.BackupStructureMapConfig();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            DataMother.RestoreStructureMapConfig();
         }
 
         #endregion
@@ -38,7 +46,11 @@ namespace StructureMap.Testing.Configuration
         [Test]
         public void DoNotUseDefaultAndUseADifferentFile()
         {
-            _collection.UseDefaultFile = false;
+            DataMother.RemoveStructureMapConfig();
+
+            _collection.UseAndEnforceExistenceOfDefaultFile = false;
+            _collection.IgnoreDefaultFile = true;
+
             DataMother.WriteDocument("GenericsTesting.xml");
 
             _collection.IncludeFile("GenericsTesting.xml");
@@ -51,7 +63,8 @@ namespace StructureMap.Testing.Configuration
              )]
         public void FileDoesNotExist()
         {
-            _collection.UseDefaultFile = false;
+            _collection.UseAndEnforceExistenceOfDefaultFile = false;
+            _collection.IgnoreDefaultFile = true;
             _collection.IncludeFile("DoesNotExist.xml");
             _collection.GetParsers();
         }
@@ -59,11 +72,14 @@ namespace StructureMap.Testing.Configuration
         [Test]
         public void GetIncludes()
         {
+            DataMother.RemoveStructureMapConfig();
+
             DataMother.WriteDocument("Include1.xml");
             DataMother.WriteDocument("Include2.xml");
             DataMother.WriteDocument("Master.xml");
 
-            _collection.UseDefaultFile = false;
+            _collection.UseAndEnforceExistenceOfDefaultFile = false;
+            _collection.IgnoreDefaultFile = true;
             _collection.IncludeFile("Master.xml");
 
             assertParserIdList("Include1", "Include2", "Master");
@@ -79,7 +95,7 @@ namespace StructureMap.Testing.Configuration
             DataMother.WriteDocument("GenericsTesting.xml");
 
             _collection.IncludeFile("GenericsTesting.xml");
-            _collection.UseDefaultFile = true;
+            _collection.UseAndEnforceExistenceOfDefaultFile = true;
             _collection.IncludeFile("Master.xml");
 
             assertParserIdList("Generics", "Include1", "Include2", "Main", "Master");
@@ -88,6 +104,8 @@ namespace StructureMap.Testing.Configuration
         [Test]
         public void GetXmlFromSomewhereElse()
         {
+            DataMother.RemoveStructureMapConfig();
+
             string xml = "<StructureMap Id=\"Somewhere\"/>";
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(xml);
@@ -95,7 +113,8 @@ namespace StructureMap.Testing.Configuration
             FetchNodeDelegate fetcher = delegate { return doc.DocumentElement; };
 
             _collection.IncludeNode(fetcher);
-            _collection.UseDefaultFile = false;
+            _collection.UseAndEnforceExistenceOfDefaultFile = false;
+            _collection.IgnoreDefaultFile = true;
 
             assertParserIdList("Somewhere");
         }
@@ -103,14 +122,14 @@ namespace StructureMap.Testing.Configuration
         [Test]
         public void SimpleDefaultConfigurationParser()
         {
-            _collection.UseDefaultFile = true;
+            _collection.UseAndEnforceExistenceOfDefaultFile = true;
             assertParserIdList("Main");
         }
 
         [Test]
         public void UseDefaultIsTrueUponConstruction()
         {
-            Assert.IsTrue(_collection.UseDefaultFile);
+            Assert.IsFalse(_collection.UseAndEnforceExistenceOfDefaultFile);
         }
     }
 }

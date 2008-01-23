@@ -17,6 +17,26 @@ namespace StructureMap.Testing.TestData
         {
         }
 
+        public static void BackupStructureMapConfig()
+        {
+            if (File.Exists("StructureMap.config.bak")) File.Delete("StructureMap.config.bak");
+            File.Copy("StructureMap.config", "StructureMap.config.bak");
+        }
+
+        public static void RestoreStructureMapConfig()
+        {
+            if (!File.Exists("StructureMap.config"))
+            {
+                File.Copy("StructureMap.config.bak", "StructureMap.config");
+            }
+            
+        }
+
+        public static void RemoveStructureMapConfig()
+        {
+            if (File.Exists("StructureMap.config")) File.Delete("StructureMap.config");
+        }
+
         public static XmlDocument GetXmlDocument(string fileName)
         {
             XmlDocument document = new XmlDocument();
