@@ -6,6 +6,7 @@ using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
 using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.Graph;
+using StructureMap.Interceptors;
 using StructureMap.Verification;
 
 namespace StructureMap
@@ -85,6 +86,11 @@ namespace StructureMap
             _pullConfigurationFromAppConfig = false;
             UseDefaultStructureMapConfigFile = false;
             IgnoreStructureMapConfig = false;
+        }
+
+        public static void RegisterInterceptor(TypeInterceptor interceptor)
+        {
+            _registry.RegisterInterceptor(interceptor);
         }
 
         /// <summary>
