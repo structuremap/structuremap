@@ -269,6 +269,10 @@ namespace StructureMap
         public void SetDefault(InstanceMemento memento)
         {
             _source.DefaultMemento = memento;
+            if (_source.GetMemento(memento.InstanceKey) == null)
+            {
+                _source.AddExternalMemento(memento);
+            }
         }
 
         /// <summary>
