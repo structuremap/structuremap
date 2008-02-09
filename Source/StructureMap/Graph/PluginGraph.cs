@@ -20,7 +20,7 @@ namespace StructureMap.Graph
         private readonly InterceptorLibrary _interceptorLibrary = new InterceptorLibrary();
         private readonly PluginFamilyCollection _pluginFamilies;
         private bool _sealed = false;
-
+        private bool _useExternalRegistries = true;
 
         /// <summary>
         /// Default constructor
@@ -31,6 +31,11 @@ namespace StructureMap.Graph
             _pluginFamilies = new PluginFamilyCollection(this);
         }
 
+
+        public PluginGraph(bool useExternalRegistries) : this()
+        {
+            _useExternalRegistries = useExternalRegistries;
+        }
 
         public AssemblyGraphCollection Assemblies
         {
@@ -70,7 +75,10 @@ namespace StructureMap.Graph
                 return;
             }
 
-            searchAssembliesForRegistries();
+            if (_useExternalRegistries)
+            {
+                searchAssembliesForRegistries();
+            }
 
             foreach (AssemblyGraph assembly in _assemblies)
             {

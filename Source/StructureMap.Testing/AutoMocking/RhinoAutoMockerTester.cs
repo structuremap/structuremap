@@ -157,10 +157,10 @@ namespace StructureMap.Testing.AutoMocking
             StubService stub = new StubService();
             autoMocker.InjectStub<IMockedService>(stub);
 
-            IMockedService2 service2 = autoMocker.Service<IMockedService2>();
-            IMockedService3 service3 = autoMocker.Service<IMockedService3>();
+            IMockedService2 service2 = autoMocker.Get<IMockedService2>();
+            IMockedService3 service3 = autoMocker.Get<IMockedService3>();
 
-            ConcreteClass concreteClass = autoMocker.Create();
+            ConcreteClass concreteClass = autoMocker.ClassUnderTest;
 
             Assert.AreSame(stub, concreteClass.Service);
             Assert.AreSame(service2, concreteClass.Service2);
@@ -172,11 +172,12 @@ namespace StructureMap.Testing.AutoMocking
         {
             RhinoAutoMocker<ConcreteClass> autoMocker = new RhinoAutoMocker<ConcreteClass>();
 
-            IMockedService service = autoMocker.Service<IMockedService>();
-            IMockedService2 service2 = autoMocker.Service<IMockedService2>();
-            IMockedService3 service3 = autoMocker.Service<IMockedService3>();
+            IMockedService service = autoMocker.Get<IMockedService>();
+            IMockedService2 service2 = autoMocker.Get<IMockedService2>();
+            IMockedService3 service3 = autoMocker.Get<IMockedService3>();
 
-            ConcreteClass concreteClass = autoMocker.CreatePartialMocked();
+            autoMocker.PartialMockTheClassUnderTest();
+            ConcreteClass concreteClass = autoMocker.ClassUnderTest;
 
             Assert.AreSame(service, concreteClass.Service);
             Assert.AreSame(service2, concreteClass.Service2);
@@ -190,10 +191,21 @@ namespace StructureMap.Testing.AutoMocking
 
             using (autoMocker.Record())
             {
-                Expect.Call(autoMocker.Service<IMockedService>().Name).Return("Jeremy");
+                Expect.Call(autoMocker.Get<IMockedService>().Name).Return("Jeremy");
             }
 
-            Assert.AreEqual("Jeremy", autoMocker.Create().Name);
+            Assert.AreEqual("Jeremy", autoMocker.ClassUnderTest.Name);
+        }
+
+        [Test]
+        public void GetTheSameConcreteClassTwiceFromCreate()
+        {
+            RhinoAutoMocker<ConcreteClass> autoMocker = new RhinoAutoMocker<ConcreteClass>();
+            ConcreteClass concreteClass = autoMocker.ClassUnderTest;
+
+            Assert.AreSame(concreteClass, autoMocker.ClassUnderTest);
+            Assert.AreSame(concreteClass, autoMocker.ClassUnderTest);
+            Assert.AreSame(concreteClass, autoMocker.ClassUnderTest);
         }
 
         [Test]
@@ -201,7 +213,8 @@ namespace StructureMap.Testing.AutoMocking
         {
             RhinoAutoMocker<ConcreteClass> autoMocker = new RhinoAutoMocker<ConcreteClass>();
 
-            ConcreteClass concreteClass = autoMocker.CreatePartialMocked();
+            autoMocker.PartialMockTheClassUnderTest();
+            ConcreteClass concreteClass = autoMocker.ClassUnderTest;
 
             using (autoMocker.Record())
             {

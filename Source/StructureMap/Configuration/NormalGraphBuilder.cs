@@ -32,7 +32,7 @@ namespace StructureMap.Configuration
                 registry.ConfigurePluginGraph(_pluginGraph);
             }
 
-            _systemGraph = new PluginGraph();
+            _systemGraph = new PluginGraph(false);
             _systemGraph.Assemblies.Add(Assembly.GetExecutingAssembly());
         }
 
