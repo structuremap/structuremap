@@ -21,12 +21,12 @@ namespace StructureMap.AutoMocking
 
         public T Service<T>()
         {
-            return _mocks.CreateMock<T>();
+            return _mocks.DynamicMock<T>();
         }
 
         public object Service(Type serviceType)
         {
-            return _mocks.CreateMock(serviceType);
+            return _mocks.DynamicMock(serviceType);
         }
 
         #endregion

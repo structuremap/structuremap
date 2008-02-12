@@ -79,6 +79,15 @@ namespace StructureMap.AutoMocking
         {
             _manager.InjectStub<T>(stub);
         }
+
+        // So that Aaron Jensen can use his concrete HubService object
+        // Construct whatever T is with all mocks, and make sure that the
+        // ClassUnderTest gets built with a concrete T
+        public void UseConcreteClassFor<T>()
+        {
+            T concreteClass = _manager.FillDependencies<T>();
+            _manager.InjectStub(concreteClass);
+        }
     }
 
 

@@ -26,6 +26,30 @@ namespace StructureMap.Testing.AutoMocking
         private AutoMockedInstanceManager _instanceManager;
 
 
+        public class ConcreteThing
+        {
+            private readonly IMockedService _service;
+            private readonly IMockedService2 _service2;
+
+
+            public ConcreteThing(IMockedService service, IMockedService2 service2)
+            {
+                _service = service;
+                _service2 = service2;
+            }
+
+
+            public IMockedService Service
+            {
+                get { return _service; }
+            }
+
+            public IMockedService2 Service2
+            {
+                get { return _service2; }
+            }
+        }
+
         public class ConcreteClass
         {
             private readonly IMockedService _service;
@@ -103,6 +127,19 @@ namespace StructureMap.Testing.AutoMocking
             }
 
             #endregion
+        }
+
+        [Test]
+        public void UseConcreteClassFor()
+        {
+            RhinoAutoMocker<ConcreteClass> mocker = new RhinoAutoMocker<ConcreteClass>();
+            mocker.UseConcreteClassFor<ConcreteThing>();
+
+            ConcreteThing thing = mocker.Get<ConcreteThing>();
+            Assert.IsInstanceOfType(typeof(ConcreteThing), thing);
+
+            Assert.AreSame(mocker.Get<IMockedService>(), thing.Service);
+            Assert.AreSame(mocker.Get<IMockedService2>(), thing.Service2);
         }
 
         [Test]
