@@ -1,30 +1,82 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap", "StructureMap\StructureMap.csproj", "{3F36EA80-2F9A-4DAD-BA27-5AC6163A2EE3}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Diagnostics", "StructureMap.Diagnostics\StructureMap.Diagnostics.csproj", "{52CDE969-625F-4FB6-8EC5-CD297FD809CA}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Testing", "StructureMap.Testing\StructureMap.Testing.csproj", "{63C2742D-B6E2-484F-AFDB-346873075C5E}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Testing.Widget", "StructureMap.Testing.Widget\StructureMap.Testing.Widget.csproj", "{E21E1651-3E32-47B7-A290-F461E63FEAD2}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Testing.Widget2", "StructureMap.Testing.Widget2\StructureMap.Testing.Widget2.csproj", "{027E996C-75E8-40F8-9073-0E3B77A6BE1F}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Testing.Widget3", "StructureMap.Testing.Widget3\StructureMap.Testing.Widget3.csproj", "{C8878328-281F-4F4F-8D6E-88C60F304B89}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Testing.Widget4", "StructureMap.Testing.Widget4\StructureMap.Testing.Widget4.csproj", "{901D15CB-EF37-4F84-864B-E70F4B5F1DFF}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Testing.Widget5", "StructureMap.Testing.Widget5\StructureMap.Testing.Widget5.csproj", "{CAB97F7F-FB75-410C-898A-88DCAAC036BE}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.DeploymentTasks", "StructureMap.DeploymentTasks\StructureMap.DeploymentTasks.csproj", "{DB6A0B91-873E-4E04-866A-7483E136A8D4}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Testing.DeploymentTasks", "StructureMap.Testing.DeploymentTasks\StructureMap.Testing.DeploymentTasks.csproj", "{195EB3B0-96D2-4047-B091-E858690C741C}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Client", "StructureMap.Client\StructureMap.Client.csproj", "{887C4441-07A4-489D-B8D9-EFE9D28A47CA}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMapExplorer", "StructureMapExplorer\StructureMapExplorer.csproj", "{51039D04-6DB6-44BD-B827-39C86482D9F0}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{93877CE0-BA48-4F28-B372-B8E802CEE085}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 	ProjectSection(SolutionItems) = preProject
 		..\Docs\Basic Architecture.htm = ..\Docs\Basic Architecture.htm
 		CommonAssemblyInfo.cs = CommonAssemblyInfo.cs
@@ -38,6 +90,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\Docs\SingletonInjection.htm = ..\Docs\SingletonInjection.htm
 		..\Docs\structuremap.deployment.htm = ..\Docs\structuremap.deployment.htm
 		StructureMap.ndoc = StructureMap.ndoc
+		structuremap.snk = structuremap.snk
 		..\Docs\structuremap.verification.htm = ..\Docs\structuremap.verification.htm
 		..\Docs\StructureMap.vsd = ..\Docs\StructureMap.vsd
 		..\Docs\StructureMapDoctor.htm = ..\Docs\StructureMapDoctor.htm
@@ -47,14 +100,34 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Testing.GenericWidgets", "StructureMap.Testing.GenericWidgets\StructureMap.Testing.GenericWidgets.csproj", "{C205EA4C-4CD0-4221-A3CB-AFD835F0B263}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.DataAccess", "StructureMap.DataAccess\StructureMap.DataAccess.csproj", "{DB798C07-0C82-4298-8BAA-D702CF96C28E}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Widgets", "Widgets", "{E1C10209-160D-4054-ACB7-478A9FDCF84C}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GUI", "GUI", "{4F638ECF-2A69-4D6A-9B68-05CC40951217}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.AutoMocking", "StructureMap.AutoMocking\StructureMap.AutoMocking.csproj", "{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
