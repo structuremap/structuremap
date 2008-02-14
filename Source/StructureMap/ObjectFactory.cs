@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Permissions;
-using System.Text;
 using StructureMap.Configuration.Mementos;
 using StructureMap.Graph;
 
@@ -110,7 +109,7 @@ namespace StructureMap
         /// Injects a new instance of CONCRETETYPE to PLUGINTYPE by name.  
         /// </summary>
         /// <typeparam name="PLUGINTYPE"></typeparam>
-        /// <param name="instance"></param>
+        /// <typeparam name="CONCRETETYPE"></typeparam>
         /// <param name="instanceKey"></param>
         public static void InjectByName<PLUGINTYPE, CONCRETETYPE>(string instanceKey)
         {
@@ -232,7 +231,7 @@ namespace StructureMap
                 }
                 else
                 {
-                    throw ex;
+                    throw;
                 }
             }
         }
@@ -265,7 +264,7 @@ namespace StructureMap
         /// <summary>
         /// Returns the default instance of the requested System.Type
         /// </summary>
-        /// <param name="TargetType"></param>
+        /// <typeparam name="TargetType"></typeparam>
         /// <returns></returns>
         public static TargetType GetInstance<TargetType>()
         {
@@ -286,7 +285,7 @@ namespace StructureMap
         /// <summary>
         /// Builds an instance of the TargetType for the given InstanceMemento
         /// </summary>
-        /// <param name="TargetType"></param>
+        /// <typeparam name="TargetType"></typeparam>
         /// <param name="memento"></param>
         /// <returns></returns>
         public static TargetType GetInstance<TargetType>(InstanceMemento memento)
@@ -308,7 +307,7 @@ namespace StructureMap
         /// <summary>
         /// Returns the named instance of the requested System.Type
         /// </summary>
-        /// <param name="TargetType"></param>
+        /// <typeparam name="TargetType"></typeparam>
         /// <param name="InstanceName"></param>
         /// <returns></returns>
         public static TargetType GetNamedInstance<TargetType>(string InstanceName)
@@ -329,7 +328,7 @@ namespace StructureMap
         /// <summary>
         /// Sets the default instance of the TargetType
         /// </summary>
-        /// <param name="TargetType"></param>
+        /// <typeparam name="TargetType"></typeparam>
         /// <param name="InstanceName"></param>
         public static void SetDefaultInstanceName<TargetType>(string InstanceName)
         {
@@ -360,7 +359,7 @@ namespace StructureMap
         /// <summary>
         /// Retrieves a list of all of the configured instances for a particular type
         /// </summary>
-        /// <param name="targetType"></param>
+        /// <typeparam name="TargetType"></typeparam>
         /// <returns></returns>
         public static IList<TargetType> GetAllInstances<TargetType>()
         {
