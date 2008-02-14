@@ -132,7 +132,7 @@ namespace StructureMap
 
         /// <summary>
         /// Adds a new CONCRETETYPE to StructureMap so that an instance of CONCRETETYPE
-        /// will be returned from a call to ObjectFactory.GetAllInstances<PLUGINTYPE>()
+        /// will be returned from a call to ObjectFactory.GetAllInstance&lt;PLUGINTYPE&gt;()
         /// </summary>
         /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <typeparam name="CONCRETETYPE"></typeparam>
