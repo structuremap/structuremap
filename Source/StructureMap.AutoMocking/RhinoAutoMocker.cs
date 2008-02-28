@@ -77,7 +77,7 @@ namespace StructureMap.AutoMocking
         // Set the auto mocking container to use a Stub for Type T
         public void InjectStub<T>(T stub)
         {
-            _manager.InjectStub<T>(stub);
+            _manager.Inject<T>(stub);
         }
 
         // So that Aaron Jensen can use his concrete HubService object

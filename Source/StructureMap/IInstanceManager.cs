@@ -80,5 +80,6 @@ namespace StructureMap
         object CreateInstance(Type pluginType, string instanceKey);
 
         PLUGINTYPE CreateInstance<PLUGINTYPE>(ExplicitArguments args);
+        void Inject<PLUGINTYPE>(PLUGINTYPE instance);
     }
 }

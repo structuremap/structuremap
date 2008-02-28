@@ -20,7 +20,7 @@ namespace StructureMap.Graph
             PluginFamily family = new PluginFamily(pluginType);
             family.DefinitionSource = DefinitionSource.Implicit;
 
-            family.Plugins.Add(plugin);
+            family.Plugins.Add(plugin, true);
             family.DefaultInstanceKey = plugin.ConcreteKey;
 
             return family;
@@ -135,7 +135,7 @@ namespace StructureMap.Graph
                 if (isOfCorrectGenericType(plugin, templateTypes))
                 {
                     Plugin templatedPlugin = plugin.CreateTemplatedClone(templateTypes);
-                    templatedFamily.Plugins.Add(templatedPlugin);
+                    templatedFamily.Plugins.Add(templatedPlugin, true);
                     foreach (InstanceMemento memento in _source.GetAllMementos())
                     {
                         if (memento.ConcreteKey == plugin.ConcreteKey)
@@ -196,7 +196,7 @@ namespace StructureMap.Graph
 
             foreach (Plugin plugin in plugins)
             {
-                _plugins.Add(plugin);
+                _plugins.Add(plugin, true);
             }
 
             return plugins;

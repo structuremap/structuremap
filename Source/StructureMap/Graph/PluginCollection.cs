@@ -93,7 +93,7 @@ namespace StructureMap.Graph
         public void Add(TypePath path, string concreteKey)
         {
             Plugin plugin = new Plugin(path, concreteKey);
-            Add(plugin);
+            Add(plugin, true);
         }
 
         /// <summary>
@@ -105,10 +105,10 @@ namespace StructureMap.Graph
         public void Add(Type pluggedType, string concreteKey)
         {
             Plugin plugin = Plugin.CreateExplicitPlugin(pluggedType, concreteKey, string.Empty);
-            Add(plugin);
+            Add(plugin, true);
         }
 
-        public void Add(Plugin plugin)
+        public void Add(Plugin plugin, bool addInstanceOfTypeIfPossible)
         {
             // Reject if a duplicate ConcreteKey
             if (_plugins.ContainsKey(plugin.ConcreteKey))
@@ -129,10 +129,12 @@ namespace StructureMap.Graph
                 throw new StructureMapException(114, plugin.PluggedType.FullName, _family.PluginTypeName);
             }
 
-            plugin.AddToSource(_family.Source);
-
-
             _plugins.Add(plugin.ConcreteKey, plugin);
+
+            if (addInstanceOfTypeIfPossible)
+            {
+                plugin.AddToSource(_family.Source);
+            }
         }
 
         /// <summary>
@@ -162,10 +164,10 @@ namespace StructureMap.Graph
             }
         }
 
-        public Plugin FindOrCreate(Type pluggedType)
+        public Plugin FindOrCreate(Type pluggedType, bool createDefaultInstanceOfType)
         {
             Plugin plugin = Plugin.CreateImplicitPlugin(pluggedType);
-            Add(plugin);
+            Add(plugin, createDefaultInstanceOfType);
 
             return plugin;
         }

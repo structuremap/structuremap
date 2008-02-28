@@ -54,7 +54,7 @@ namespace StructureMap.Testing.Container
         {
             PluginFamily family = new PluginFamily(typeof (IGridColumn));
             Plugin plugin = Plugin.CreateImplicitPlugin(typeof (EnumGridColumn));
-            family.Plugins.Add(plugin);
+            family.Plugins.Add(plugin, true);
 
             InstanceFactory factory = new InstanceFactory(family, true);
             InstanceMemento memento = _source.GetMemento("Enum");
@@ -69,7 +69,7 @@ namespace StructureMap.Testing.Container
         {
             PluginFamily family = new PluginFamily(typeof (IGridColumn));
             Plugin plugin = Plugin.CreateImplicitPlugin(typeof (LongGridColumn));
-            family.Plugins.Add(plugin);
+            family.Plugins.Add(plugin, true);
 
             InstanceFactory factory = new InstanceFactory(family, true);
             InstanceMemento memento = _source.GetMemento("Long");
@@ -86,7 +86,7 @@ namespace StructureMap.Testing.Container
         {
             PluginFamily family = new PluginFamily(typeof (IGridColumn));
             Plugin plugin = Plugin.CreateImplicitPlugin(typeof (StringGridColumn));
-            family.Plugins.Add(plugin);
+            family.Plugins.Add(plugin, true);
 
             InstanceFactory factory = new InstanceFactory(family, true);
             InstanceMemento memento = _source.GetMemento("String");

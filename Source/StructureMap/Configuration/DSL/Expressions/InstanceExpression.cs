@@ -25,7 +25,10 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         protected override InstanceMemento memento
         {
-            get { return _memento; }
+            get
+            {
+                 return _memento;
+            }
         }
 
         protected override InstanceExpression thisInstance
@@ -42,7 +45,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         {
             Plugin plugin = _pluggedType == null
                                 ? family.Plugins[_memento.ConcreteKey]
-                                : family.Plugins.FindOrCreate(_pluggedType);
+                                : family.Plugins.FindOrCreate(_pluggedType, false);
 
             _memento.ConcreteKey = plugin.ConcreteKey;
         }
@@ -176,6 +179,7 @@ namespace StructureMap.Configuration.DSL.Expressions
             public InstanceExpression UsingConcreteType<T>()
             {
                 _parent._pluggedType = typeof (T);
+                _parent._memento.InstanceKey = typeof (T).Name;
                 return _parent;
             }
 

@@ -159,7 +159,7 @@ namespace StructureMap.Configuration
 
             Plugin plugin = new Plugin(pluginPath, concreteKey);
             plugin.DefinitionSource = DefinitionSource.Explicit;
-            family.Plugins.Add(plugin);
+            family.Plugins.Add(plugin, true);
 
             return plugin;
         }
@@ -200,7 +200,7 @@ namespace StructureMap.Configuration
             Plugin inferredPlugin = memento.CreateInferredPlugin();
             if (inferredPlugin != null)
             {
-                family.Plugins.Add(inferredPlugin);
+                family.Plugins.Add(inferredPlugin, true);
             }
 
             family.Source.AddExternalMemento(memento);

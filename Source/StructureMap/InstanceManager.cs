@@ -163,6 +163,13 @@ namespace StructureMap
             
         }
 
+        public void Inject<PLUGINTYPE>(PLUGINTYPE instance)
+        {
+            LiteralMemento memento = new LiteralMemento(instance);
+            AddInstance<PLUGINTYPE>(memento);
+            SetDefault(typeof(PLUGINTYPE), memento);
+        }
+
         public T CreateInstance<T>()
         {
             return (T) CreateInstance(typeof (T));

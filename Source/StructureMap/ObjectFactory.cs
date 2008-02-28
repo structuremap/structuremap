@@ -88,9 +88,7 @@ namespace StructureMap
         /// <param name="instance"></param>
         public static void Inject<PLUGINTYPE>(PLUGINTYPE instance)
         {
-            LiteralMemento memento = new LiteralMemento(instance);
-            manager.AddInstance<PLUGINTYPE>(memento);
-            manager.SetDefault(typeof (PLUGINTYPE), memento);
+            manager.Inject<PLUGINTYPE>(instance);
         }
 
         /// <summary>

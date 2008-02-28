@@ -97,7 +97,7 @@ namespace StructureMap.Configuration.DSL.Expressions
 
             _alterations.Add(delegate(PluginFamily family)
                                  {
-                                     Plugin plugin = family.Plugins.FindOrCreate(typeof (CONCRETETYPE));
+                                     Plugin plugin = family.Plugins.FindOrCreate(typeof (CONCRETETYPE), true);
                                      family.DefaultInstanceKey = plugin.ConcreteKey;
                                  });
 
@@ -161,7 +161,7 @@ namespace StructureMap.Configuration.DSL.Expressions
                     {
                         Plugin plugin = Plugin.CreateImplicitPlugin(typeof (CONCRETETYPE));
                         plugin.ConcreteKey = instanceName;
-                        family.Plugins.Add(plugin);
+                        family.Plugins.Add(plugin, true);
                     }
                 );
 
