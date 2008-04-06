@@ -33,7 +33,7 @@ namespace StructureMap.Emitting
 
         public override Type[] ArgumentList
         {
-            get { return new Type[] {typeof (IConfiguredInstance)}; }
+            get { return new Type[] { typeof(IConfiguredInstance), typeof(StructureMap.Pipeline.IInstanceCreator) }; }
         }
 
         public override string MethodName

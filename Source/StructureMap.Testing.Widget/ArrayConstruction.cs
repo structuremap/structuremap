@@ -68,7 +68,7 @@ namespace StructureMap.Testing.Widget
         }
 
 
-        public override object BuildInstance(IConfiguredInstance instance)
+        public override object BuildInstance(IConfiguredInstance instance, StructureMap.Pipeline.IInstanceCreator creator)
         {
             return null;
         }

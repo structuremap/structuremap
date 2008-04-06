@@ -45,7 +45,7 @@ namespace StructureMap.Testing.Widget2
         }
 
 
-        public override object BuildInstance(IConfiguredInstance instance)
+        public override object BuildInstance(IConfiguredInstance instance, StructureMap.Pipeline.IInstanceCreator creator)
         {
             return new Cow(
                 long.Parse(instance.GetProperty("Weight")),

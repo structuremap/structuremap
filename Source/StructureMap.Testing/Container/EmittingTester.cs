@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Reflection;
 using NUnit.Framework;
 using StructureMap.Emitting;
@@ -36,12 +37,13 @@ namespace StructureMap.Testing.Container
 
                 if (builder != null)
                 {
-                    rule = (ComplexRule) builder.BuildInstance(memento);
+                    rule = (ComplexRule) builder.BuildInstance(memento, null);
                 }
             }
             catch (Exception e)
             {
                 ex = e;
+                Debug.WriteLine(e.ToString());
             }
         }
 

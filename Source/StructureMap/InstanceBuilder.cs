@@ -24,7 +24,7 @@ namespace StructureMap
             get { return _manager; }
         }
 
-        public abstract object BuildInstance(IConfiguredInstance instance);
+        public abstract object BuildInstance(IConfiguredInstance instance, StructureMap.Pipeline.IInstanceCreator creator);
 
         public void SetInstanceManager(InstanceManager manager)
         {
