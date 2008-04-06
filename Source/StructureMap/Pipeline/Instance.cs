@@ -1,4 +1,5 @@
 using System;
+using System.Data;
 using System.Web.UI;
 using StructureMap.Interceptors;
 
@@ -8,6 +9,9 @@ namespace StructureMap.Pipeline
     {
         T CreateInstance<T>(string referenceKey);
         T CreateInstance<T>();
+        Array CreateInstanceArray(string pluginType, InstanceMemento[] instanceMementoes);
+        object CreateInstance(string typeName, InstanceMemento memento);
+        object CreateInstance(string typeName);
     }
 
     public interface IInstanceDiagnostics

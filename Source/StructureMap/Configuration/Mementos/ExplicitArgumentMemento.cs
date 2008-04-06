@@ -54,10 +54,10 @@ namespace StructureMap.Configuration.Mementos
             return _inner.GetChildMemento(Key);
         }
 
-        public override object GetChild(string key, string typeName, InstanceManager manager)
+        public override object GetChild(string key, string typeName, Pipeline.IInstanceCreator instanceCreator)
         {
             Type type = Type.GetType(typeName, true);
-            return _args.Get(type) ?? base.GetChild(key, typeName, manager);
+            return _args.Get(type) ?? base.GetChild(key, typeName, instanceCreator);
         }
 
         public override InstanceMemento[] GetChildrenArray(string Key)

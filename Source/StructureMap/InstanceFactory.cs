@@ -145,7 +145,7 @@ namespace StructureMap
             try
             {
                 InstanceBuilder builder = _instanceBuilders[memento.ConcreteKey];
-                object constructedInstance = builder.BuildInstance(memento, null);
+                object constructedInstance = builder.BuildInstance(memento, builder.Manager);
                 CompoundInterceptor interceptor = _interceptorLibrary.FindInterceptor(constructedInstance.GetType());
                 return interceptor.Process(constructedInstance);
             }

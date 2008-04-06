@@ -34,7 +34,7 @@ namespace StructureMap.Testing.Widget
         public override object BuildInstance(IConfiguredInstance instance, StructureMap.Pipeline.IInstanceCreator creator)
         {
             return new Decision(
-                (Rule[]) Manager.CreateInstanceArray("StructureMap.Testing.Widget", instance.GetChildrenArray("Rules")));
+                (Rule[]) creator.CreateInstanceArray("StructureMap.Testing.Widget", instance.GetChildrenArray("Rules")));
         }
     }
 }

@@ -112,7 +112,7 @@ namespace StructureMap.Testing.Widget
         {
             return new Child(
                 instance.GetProperty("Name"),
-                (GrandChild) instance.GetChild("MyGrandChild", "StructureMap.Testing.Widget.GrandChild", Manager));
+                (GrandChild) instance.GetChild("MyGrandChild", "StructureMap.Testing.Widget.GrandChild", creator));
         }
     }
 }

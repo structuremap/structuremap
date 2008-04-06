@@ -33,15 +33,14 @@ namespace StructureMap.Emitting.Parameters
 
         private void putChildArrayFromInstanceMementoOntoStack(ILGenerator ilgen, Type argumentType, string argumentName)
         {
-            ilgen.Emit(OpCodes.Ldarg_0);
-            callGetInstanceManager(ilgen);
+            ilgen.Emit(OpCodes.Ldarg_2);
             ilgen.Emit(OpCodes.Ldstr, argumentType.GetElementType().AssemblyQualifiedName);
             ilgen.Emit(OpCodes.Ldarg_1);
 
             ilgen.Emit(OpCodes.Ldstr, argumentName);
             callInstanceMemento(ilgen, "GetChildrenArray");
 
-            MethodInfo methodCreateInstanceArray = (typeof (InstanceManager).GetMethod("CreateInstanceArray"));
+            MethodInfo methodCreateInstanceArray = (typeof (StructureMap.Pipeline.IInstanceCreator).GetMethod("CreateInstanceArray"));
             ilgen.Emit(OpCodes.Callvirt, methodCreateInstanceArray);
             cast(ilgen, argumentType);
         }

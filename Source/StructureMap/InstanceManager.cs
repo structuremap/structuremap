@@ -12,7 +12,7 @@ namespace StructureMap
     /// <summary>
     /// A collection of IInstanceFactory's.
     /// </summary>
-    public class InstanceManager : IInstanceManager, IEnumerable
+    public class InstanceManager : IInstanceManager, IEnumerable, StructureMap.Pipeline.IInstanceCreator
     {
         private readonly InstanceDefaultManager _defaultManager;
         private readonly Dictionary<Type, IInstanceFactory> _factories;

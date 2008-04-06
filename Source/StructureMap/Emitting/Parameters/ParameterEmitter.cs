@@ -79,13 +79,6 @@ namespace StructureMap.Emitting.Parameters
             ilgen.Emit(OpCodes.Callvirt, _method);
         }
 
-        protected void callGetInstanceManager(ILGenerator ilgen)
-        {
-            PropertyInfo property = (typeof (InstanceBuilder)).GetProperty("Manager");
-            MethodInfo methodGetInstanceManager = property.GetGetMethod();
-            ilgen.Emit(OpCodes.Call, methodGetInstanceManager);
-        }
-
         protected void cast(ILGenerator ilgen, Type parameterType)
         {
             ilgen.Emit(OpCodes.Castclass, parameterType);

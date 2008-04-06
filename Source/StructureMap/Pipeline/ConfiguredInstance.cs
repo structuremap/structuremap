@@ -6,7 +6,7 @@ namespace StructureMap.Pipeline
     {
         InstanceMemento[] GetChildrenArray(string propertyName);
         string GetProperty(string propertyName);
-        object GetChild(string propertyName, string typeName, InstanceManager manager);
+        object GetChild(string propertyName, string typeName, IInstanceCreator instanceCreator);
     }
 
     public class ConfiguredInstance : Instance

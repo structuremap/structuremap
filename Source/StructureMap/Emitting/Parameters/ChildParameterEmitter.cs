@@ -30,9 +30,8 @@ namespace StructureMap.Emitting.Parameters
             ilgen.Emit(OpCodes.Ldarg_1);
             ilgen.Emit(OpCodes.Ldstr, parameterName);
             ilgen.Emit(OpCodes.Ldstr, fullName);
-            ilgen.Emit(OpCodes.Ldarg_0);
+            ilgen.Emit(OpCodes.Ldarg_2);
 
-            callGetInstanceManager(ilgen);
             callInstanceMemento(ilgen, "GetChild");
             cast(ilgen, parameterType);
         }

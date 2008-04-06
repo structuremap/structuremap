@@ -187,27 +187,27 @@ namespace StructureMap
         /// </summary>
         /// <param name="key"></param>
         /// <param name="typeName"></param>
-        /// <param name="manager"></param>
+        /// <param name="instanceCreator"></param>
         /// <returns></returns>
-        public virtual object GetChild(string key, string typeName, InstanceManager manager)
+        public virtual object GetChild(string key, string typeName, Pipeline.IInstanceCreator instanceCreator)
         {
             InstanceMemento memento = GetChildMemento(key);
             object returnValue = null;
 
             if (memento == null)
             {
-                returnValue = buildDefaultChild(key, manager, typeName);
+                returnValue = buildDefaultChild(key, instanceCreator, typeName);
             }
             else
             {
-                returnValue = manager.CreateInstance(typeName, memento);
+                returnValue = instanceCreator.CreateInstance(typeName, memento);
             }
 
 
             return returnValue;
         }
 
-        private static object buildDefaultChild(string key, InstanceManager manager, string typeName)
+        private static object buildDefaultChild(string key, StructureMap.Pipeline.IInstanceCreator manager, string typeName)
         {
             object returnValue;
             try
