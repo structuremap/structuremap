@@ -1,3 +1,5 @@
+using StructureMap.Pipeline;
+
 namespace StructureMap.Testing.Widget
 {
     public class Decision

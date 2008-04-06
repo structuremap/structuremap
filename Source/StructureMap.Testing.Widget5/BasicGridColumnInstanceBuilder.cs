@@ -1,4 +1,5 @@
 using System;
+using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing.Widget5
@@ -28,9 +29,9 @@ namespace StructureMap.Testing.Widget5
             get { throw new NotImplementedException(); }
         }
 
-        public override object BuildInstance(InstanceMemento memento)
+        public override object BuildInstance(InstanceMemento instance)
         {
-            BasicGridColumn column = new BasicGridColumn(memento.GetProperty("headerText"));
+            BasicGridColumn column = new BasicGridColumn(instance.GetProperty("headerText"));
 
 //			column.Widget = 
 //				(IWidget) Memento.GetChild("Widget", "StructureMap.Testing.Widget.IWidget", this.Manager);
@@ -42,7 +43,7 @@ namespace StructureMap.Testing.Widget5
 
             column.Rules =
                 (Rule[])
-                Manager.CreateInstanceArray("StructureMap.Testing.Widget.Rule", memento.GetChildrenArray("Rules"));
+                Manager.CreateInstanceArray("StructureMap.Testing.Widget.Rule", instance.GetChildrenArray("Rules"));
 
 //
 //			column.WrapLines = bool.Parse(Memento.GetProperty("WrapLines"));

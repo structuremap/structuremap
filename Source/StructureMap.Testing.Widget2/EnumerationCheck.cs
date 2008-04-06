@@ -1,4 +1,5 @@
 using System;
+using StructureMap.Pipeline;
 
 namespace StructureMap.Testing.Widget2
 {
@@ -44,12 +45,12 @@ namespace StructureMap.Testing.Widget2
         }
 
 
-        public override object BuildInstance(InstanceMemento memento)
+        public override object BuildInstance(InstanceMemento instance)
         {
             return new Cow(
-                long.Parse(memento.GetProperty("Weight")),
-                (BreedEnum) Enum.Parse(typeof (BreedEnum), memento.GetProperty("Breed"), true),
-                memento.GetProperty("Name"));
+                long.Parse(instance.GetProperty("Weight")),
+                (BreedEnum) Enum.Parse(typeof (BreedEnum), instance.GetProperty("Breed"), true),
+                instance.GetProperty("Name"));
         }
     }
 }

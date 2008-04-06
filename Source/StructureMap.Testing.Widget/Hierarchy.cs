@@ -1,3 +1,5 @@
+using StructureMap.Pipeline;
+
 namespace StructureMap.Testing.Widget
 {
     [PluginFamily, Pluggable("Default", "")]
@@ -106,11 +108,11 @@ namespace StructureMap.Testing.Widget
         }
 
 
-        public override object BuildInstance(InstanceMemento memento)
+        public override object BuildInstance(InstanceMemento instance)
         {
             return new Child(
-                memento.GetProperty("Name"),
-                (GrandChild) memento.GetChild("MyGrandChild", "StructureMap.Testing.Widget.GrandChild", Manager));
+                instance.GetProperty("Name"),
+                (GrandChild) instance.GetChild("MyGrandChild", "StructureMap.Testing.Widget.GrandChild", Manager));
         }
     }
 }

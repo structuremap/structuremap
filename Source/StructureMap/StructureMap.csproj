@@ -115,6 +115,13 @@
       <Link>CommonAssemblyInfo.cs</Link>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Pipeline\ConfiguredInstance.cs" />
+    <Compile Include="Pipeline\DefaultInstance.cs" />
+    <Compile Include="Pipeline\Instance.cs" />
+    <Compile Include="Pipeline\LiteralInstance.cs" />
+    <Compile Include="Pipeline\PrototypeInstance.cs" />
+    <Compile Include="Pipeline\ReferencedInstance.cs" />
+    <Compile Include="Pipeline\UserControlInstance.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

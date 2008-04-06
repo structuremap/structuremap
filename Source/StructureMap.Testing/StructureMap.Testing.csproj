@@ -365,6 +365,11 @@
     <Compile Include="ObjectMother.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Pipeline\DefaultInstanceTester.cs" />
+    <Compile Include="Pipeline\InstanceTester.cs" />
+    <Compile Include="Pipeline\LiteralInstanceTester.cs" />
+    <Compile Include="Pipeline\PrototypeInstanceTester.cs" />
+    <Compile Include="Pipeline\ReferencedInstanceTester.cs" />
     <Compile Include="StructureMapConfigCreator.cs" />
     <Compile Include="StructureMapConfigurationTester.cs" />
     <Compile Include="TestData\DataMother.cs">
