@@ -7,7 +7,6 @@ using StructureMap.Configuration.DSL;
 using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
-using StructureMap.Verification;
 
 namespace StructureMap
 {
@@ -18,7 +17,6 @@ namespace StructureMap
         private static bool _pullConfigurationFromAppConfig;
         private static List<Registry> _registries;
         private static Registry _registry;
-        private static StartUp _startUp;
 
         static StructureMapConfiguration()
         {
@@ -82,7 +80,6 @@ namespace StructureMap
             _registry = new Registry();
             _registries = new List<Registry>();
             _registries.Add(_registry);
-            _startUp = null;
             _pullConfigurationFromAppConfig = false;
             UseDefaultStructureMapConfigFile = false;
             IgnoreStructureMapConfig = false;
@@ -99,11 +96,6 @@ namespace StructureMap
         /// <returns></returns>
         public static PluginGraph GetPluginGraph()
         {
-            if (_startUp != null)
-            {
-                _startUp.RunDiagnostics();
-            }
-
             PluginGraphBuilder builder = createBuilder();
             return builder.Build();
         }
@@ -115,24 +107,12 @@ namespace StructureMap
                 IList<XmlNode> appConfigNodes = StructureMapConfigurationSection.GetStructureMapConfiguration();
                 foreach (XmlNode appConfigNode in appConfigNodes)
                 {
-                    _collection.IncludeNode(
-                        delegate() { return appConfigNode; });
+                    _collection.IncludeNode(delegate { return appConfigNode; });
                 }
             }
 
             ConfigurationParser[] parsers = _collection.GetParsers();
             return new PluginGraphBuilder(parsers, _registries.ToArray());
-        }
-
-        /// <summary>
-        /// Creates a PluginGraphReport that details the current configuration along with any problems found with the configuration.  
-        /// The PluginGraphReport can be used to troubleshoot problems with the StructureMap configuration.
-        /// </summary>
-        /// <returns></returns>
-        public static PluginGraphReport GetDiagnosticReport()
-        {
-            PluginGraphBuilder builder = createBuilder();
-            return builder.Report;
         }
 
         /// <summary>
@@ -251,21 +231,6 @@ namespace StructureMap
         public static void AddRegistry(Registry registry)
         {
             _registries.Add(registry);
-        }
-
-        /// <summary>
-        /// Controls the reporting and diagnostics of StructureMap on 
-        /// startup
-        /// </summary>
-        /// <returns></returns>
-        public static IStartUp OnStartUp()
-        {
-            if (_startUp == null)
-            {
-                _startUp = new StartUp();
-            }
-
-            return _startUp;
         }
 
         public static void TheDefaultProfileIs(string profileName)

@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using StructureMap.Configuration;
-using StructureMap.Configuration.Tokens;
 
 namespace StructureMap.Graph
 {
@@ -11,7 +10,7 @@ namespace StructureMap.Graph
     /// Models the machine-level overrides for default instances per plugin type.
     /// </summary>
     [Serializable]
-    public class MachineOverride : GraphObject
+    public class MachineOverride
     {
         private Dictionary<string, InstanceDefault> _defaults;
         private string _machineName;
@@ -99,15 +98,8 @@ namespace StructureMap.Graph
             {
                 InstanceDefault[] returnValue = new InstanceDefault[_defaults.Count];
                 _defaults.Values.CopyTo(returnValue, 0);
-                Array.Sort(returnValue);
                 return returnValue;
             }
-        }
-
-
-        protected override string key
-        {
-            get { return MachineName; }
         }
 
         /// <summary>
@@ -131,21 +123,5 @@ namespace StructureMap.Graph
             return (_defaults.ContainsKey(pluginTypeName) || _profile.HasOverride(pluginTypeName));
         }
 
-        /// <summary>
-        /// Filters instance defaults for plugin types that are no longer contained by
-        /// the PluginGraph
-        /// </summary>
-        /// <param name="report"></param>
-        public void FilterOutNonExistentPluginTypes(PluginGraphReport report)
-        {
-            foreach (InstanceDefault instanceDefault in Defaults)
-            {
-                FamilyToken family = report.FindFamily(instanceDefault.PluginTypeName);
-                if (family == null)
-                {
-                    _defaults.Remove(instanceDefault.PluginTypeName);
-                }
-            }
-        }
     }
 }

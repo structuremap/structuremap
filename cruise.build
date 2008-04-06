@@ -7,8 +7,8 @@
 	<property name="project.config" value="release" />
 	<property name="archive.dir" value="d:\builds\StructureMap"/>
 
-	<target name="all" depends="compile, unit-test, runDoctor, post-clean"/>
-	<target name="cruise" depends="compile, unit-test, runDoctor, post-clean, archive" />
+	<target name="all" depends="compile, unit-test, post-clean"/>
+	<target name="cruise" depends="compile, unit-test, post-clean, archive" />
 
 	<target name="pre-clean">
 	    <delete dir="${build.dir}" failonerror="false" />
@@ -91,31 +91,7 @@
 	    </copy>
 	</target>
 
-  <!-- temporarily not used since <loadtasks doesn't work for .Net 2.0 assemblies at this time. -->
-	<target name="runDeploymentTask" depends="compile">
-		<property name="source.config" value="${build.dir}\DeploymentSourceConfig.xml"/>
-		
-		<copy file="${build.dir}\StructureMap.dll" todir="${nant.dir}"/>
-		<loadtasks assembly="${build.dir}\StructureMap.DeploymentTasks.dll"/>
-		
-		<structuremap.deployment configPath="${source.config}"
-			destinationPath="${build.dir}\WithProfileAndNothingElseCopyMachineOverrides.xml.actual"
-			profile="Blue"
-			machineOption="CopyMachineOverrides"/>
 
-		<structuremap.deployment configPath="${source.config}"
-			destinationPath="${build.dir}\WithProfileAndNothingElseIgnoreMachineOverrides.xml.actual"
-			profile="Blue"
-			machineOption="IgnoreMachineOverrides"/>
-			
-		<structuremap.deployment configPath="${source.config}"
-			destinationPath="${build.dir}\DeploymentTargetIsClientCopyMachineOverrides.xml.actual"
-			deploymentTarget = "Client"
-			machineOption="CopyMachineOverrides"/>
-			
-		<structuremap.versionreport directory="${build.dir}" manifest="${build.dir}\manifest.xml" />
-		<structuremap.checkversion directory="${build.dir}" manifest="${build.dir}\manifest.xml" />
-	</target>
 
 	<target name="unit-test">
     <property name="nunit-console.exe" value="bin\NUnit\nunit-console.exe" />
@@ -124,9 +100,6 @@
       <arg value="StructureMap.Testing.dll" /> 
     </exec>
 
-    <exec program="${nunit-console.exe}" workingdir="${build.dir}">
-      <arg value="StructureMap.Testing.DeploymentTasks.dll" />
-    </exec>
    
 	</target>
 	

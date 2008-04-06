@@ -1,6 +1,5 @@
 using System.Xml;
 using NUnit.Framework;
-using StructureMap.Configuration.Tokens;
 using StructureMap.Source;
 
 namespace StructureMap.Testing.Container.Source
@@ -34,17 +33,6 @@ namespace StructureMap.Testing.Container.Source
         public void ConcreteKey()
         {
             Assert.AreEqual("Color", _memento.ConcreteKey);
-        }
-
-        [Test]
-        public void CreateTemplateToken()
-        {
-            string xml = "<instance Type=\"concrete\" TemplateKey=\"color\" prop1=\"{hue}\" prop2=\"{name}\" />";
-            XmlAttributeInstanceMemento memento = buildMemento(xml);
-
-            TemplateToken template = memento.CreateTemplateToken();
-            Assert.AreEqual("concrete", template.ConcreteKey);
-            Assert.AreEqual(new string[] {"hue", "name"}, template.Properties);
         }
 
         [Test]

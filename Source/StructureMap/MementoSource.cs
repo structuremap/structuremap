@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using StructureMap.Configuration.Tokens;
 using StructureMap.Graph;
 using StructureMap.Source;
 
@@ -149,9 +148,5 @@ namespace StructureMap
         /// <returns></returns>
         protected abstract InstanceMemento retrieveMemento(string instanceKey);
 
-        public virtual TemplateToken[] GetAllTemplates()
-        {
-            return new TemplateToken[0];
-        }
     }
 }

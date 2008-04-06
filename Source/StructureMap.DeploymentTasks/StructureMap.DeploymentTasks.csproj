@@ -104,25 +104,10 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Deployment.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DumbConfigMergeTask.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ImportFamilyTask.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="RemoveAssemblyTask.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="SetOverrideTask.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="SubstitutionTask.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Verification.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Versioning\CheckVersionTask.cs">

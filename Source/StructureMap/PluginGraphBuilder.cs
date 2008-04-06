@@ -19,7 +19,7 @@ namespace StructureMap
         {
             ConfigurationParser[] parsers = ConfigurationParser.GetParsers(document, "");
             PluginGraphBuilder builder = new PluginGraphBuilder(parsers, new Registry[0]);
-            return builder.BuildDiagnosticPluginGraph();
+            return builder.Build();
         }
 
         public static PluginGraph BuildFromXml(XmlNode structureMapNode)
@@ -28,29 +28,15 @@ namespace StructureMap
 
             PluginGraphBuilder builder = new PluginGraphBuilder(parser);
 
-            return builder.BuildDiagnosticPluginGraph();
+            return builder.Build();
         }
 
-        public static PluginGraphReport BuildDefaultReport()
-        {
-            PluginGraphBuilder builder =
-                new PluginGraphBuilder(StructureMapConfiguration.GetStructureMapConfigurationPath());
-            builder.BuildDiagnosticPluginGraph();
-            return builder.Report;
-        }
-
-        public static PluginGraphReport BuildReportFromXml(string fileName)
-        {
-            PluginGraphBuilder builder = new PluginGraphBuilder(ConfigurationParser.FromFile(fileName));
-            return builder.Report;
-        }
 
         #endregion
 
         private readonly Registry[] _registries = new Registry[0];
         private PluginGraph _graph;
         private ConfigurationParser[] _parsers;
-        private PluginGraphReport _report;
 
         #region constructors
 
@@ -111,20 +97,6 @@ namespace StructureMap
             return pluginGraph;
         }
 
-        /// <summary>
-        /// Build a PluginGraph with all instances calculated.  Used in the UI and diagnostic tools.
-        /// </summary>
-        /// <returns></returns>
-        public PluginGraph BuildDiagnosticPluginGraph()
-        {
-            DiagnosticGraphBuilder graphBuilder = new DiagnosticGraphBuilder(_registries);
-            buildPluginGraph(graphBuilder);
-
-            _report = graphBuilder.Report;
-
-            return _graph;
-        }
-
 
         public InstanceDefaultManager DefaultManager
         {
@@ -135,19 +107,6 @@ namespace StructureMap
                     Build();
                 }
                 return _graph.DefaultManager;
-            }
-        }
-
-
-        public PluginGraphReport Report
-        {
-            get
-            {
-                if (_report == null)
-                {
-                    BuildDiagnosticPluginGraph();
-                }
-                return _report;
             }
         }
 

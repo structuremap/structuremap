@@ -28,13 +28,11 @@ namespace StructureMap.Testing.Container
 
             PluginGraphBuilder builder = new PluginGraphBuilder(parser);
             graph = builder.Build();
-            diagnosticGraph = builder.BuildDiagnosticPluginGraph();
         }
 
         #endregion
 
         private PluginGraph graph;
-        private PluginGraph diagnosticGraph;
 
         public PluginGraphBuilderTester()
         {
@@ -205,23 +203,6 @@ namespace StructureMap.Testing.Container
             Assert.IsNotNull(widget);
         }
 
-
-        [Test]
-        public void GotPluginThatIsAddedInConfigXmlWhenDiagnostics()
-        {
-            PluginFamily family = diagnosticGraph.PluginFamilies[typeof (IWidget)];
-            Plugin plugin = family.Plugins[typeof (NotPluggableWidget)];
-            Assert.IsNotNull(plugin);
-            Assert.AreEqual("NotPluggable", plugin.ConcreteKey);
-
-            // Just for fun, test with InstanceFactory too.
-            InstanceFactory factory = new InstanceFactory(family, true);
-            MemoryInstanceMemento memento = new MemoryInstanceMemento("NotPluggable", string.Empty);
-            memento.SetProperty("name", "HenryTheOctopus");
-
-            IWidget widget = (IWidget) factory.GetInstance(memento);
-            Assert.IsNotNull(widget);
-        }
 
         [Test]
         public void GotRightNumberOfPluginsForIWidget()

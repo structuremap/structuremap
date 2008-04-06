@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using StructureMap.Configuration;
-using StructureMap.Configuration.Tokens;
 
 namespace StructureMap.Graph
 {
@@ -10,9 +9,9 @@ namespace StructureMap.Graph
     /// A collection of InstanceDefault's overriding the default instances
     /// </summary>
     [Serializable]
-    public class Profile : GraphObject
+    public class Profile
     {
-        private Dictionary<string, InstanceDefault> _defaults;
+        private readonly Dictionary<string, InstanceDefault> _defaults;
         private string _profileName;
 
         public Profile(string profileName)
@@ -53,15 +52,8 @@ namespace StructureMap.Graph
             get
             {
                 InstanceDefault[] defaults = getDefaultArray();
-                Array.Sort(defaults);
-
                 return defaults;
             }
-        }
-
-        protected override string key
-        {
-            get { return ProfileName; }
         }
 
 
@@ -104,20 +96,6 @@ namespace StructureMap.Graph
             _defaults.Values.CopyTo(defaults, 0);
             return defaults;
         }
-
-
-        public void FilterOutNonExistentPluginTypes(PluginGraphReport report)
-        {
-            foreach (InstanceDefault instanceDefault in getDefaultArray())
-            {
-                FamilyToken family = report.FindFamily(instanceDefault.PluginTypeName);
-                if (family == null)
-                {
-                    RemoveOverride(instanceDefault.PluginTypeName);
-                }
-            }
-        }
-
 
         public void FilterBlanks()
         {

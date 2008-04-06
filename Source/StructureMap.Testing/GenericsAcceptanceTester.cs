@@ -4,7 +4,6 @@ using System.Reflection;
 using NUnit.Framework;
 using StructureMap.Configuration;
 using StructureMap.Configuration.Mementos;
-using StructureMap.Configuration.Tokens;
 using StructureMap.Graph;
 using StructureMap.Testing.GenericWidgets;
 using StructureMap.Testing.TestData;
@@ -184,33 +183,6 @@ namespace StructureMap.Testing
             Assert.IsTrue(GenericsPluginGraph.CanBeCast(typeof (ITarget<,>), typeof (DisposableTarget<,>)));
         }
 
-        [Test]
-        public void TryDiagnosticsWithGenerics()
-        {
-            Debug.WriteLine(typeof (ISimpleThing<>).AssemblyQualifiedName);
-
-            DataMother.WriteDocument("GenericsTesting.xml");
-            PluginGraphReport report = PluginGraphBuilder.BuildReportFromXml("GenericsTesting.xml");
-
-            ProblemFinder finder = new ProblemFinder(report);
-
-            foreach (FamilyToken token in report.Families)
-            {
-                Debug.WriteLine(token.PluginTypeName);
-                foreach (PluginToken plugin in token.Plugins)
-                {
-                    Debug.WriteLine("Plugin:  " + plugin.ConcreteKey);
-                }
-            }
-
-            Problem[] problems = finder.GetProblems();
-            foreach (Problem problem in problems)
-            {
-                Debug.WriteLine(problem.ToString());
-            }
-
-            Assert.AreEqual(0, problems.Length);
-        }
     }
 
 

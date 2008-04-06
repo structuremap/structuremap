@@ -135,7 +135,11 @@ namespace StructureMap
 
         object IInstanceCreator.BuildInstance(InstanceMemento memento)
         {
-            assertThatTheConcreteKeyExists(memento);
+            if (!_instanceBuilders.ContainsKey(memento.ConcreteKey))
+            {
+                throw new StructureMapException(
+                    201, memento.ConcreteKey, memento.InstanceKey, PluginType.FullName);
+            }
 
 
             try
@@ -379,15 +383,6 @@ namespace StructureMap
             }
 
             return memento;
-        }
-
-        private void assertThatTheConcreteKeyExists(InstanceMemento memento)
-        {
-            if (!_instanceBuilders.ContainsKey(memento.ConcreteKey))
-            {
-                throw new StructureMapException(
-                    201, memento.ConcreteKey, memento.InstanceKey, PluginType.FullName);
-            }
         }
 
 

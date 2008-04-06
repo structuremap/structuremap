@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Xml;
 using StructureMap.Configuration;
-using StructureMap.Configuration.Tokens;
 
 namespace StructureMap.Source
 {
@@ -107,25 +106,7 @@ namespace StructureMap.Source
             return new XmlAttributeInstanceMemento(substitutedNode);
         }
 
-        public override TemplateToken CreateTemplateToken()
-        {
-            try
-            {
-                TemplateToken token = new TemplateToken();
-                token.ConcreteKey = ConcreteKey;
-                token.TemplateKey = InstanceKey;
-                XmlTemplater templater = new XmlTemplater(_element);
 
-                token.Properties = templater.Substitutions;
-
-                return token;
-            }
-            catch (Exception ex)
-            {
-                string message = "Error creating a TemplateToken for " + _element.OuterXml;
-                throw new ApplicationException(message, ex);
-            }
-        }
 
         public override string ToString()
         {

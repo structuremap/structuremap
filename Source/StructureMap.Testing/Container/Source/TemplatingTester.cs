@@ -1,5 +1,4 @@
 using NUnit.Framework;
-using StructureMap.Configuration.Tokens;
 using StructureMap.Source;
 using StructureMap.Testing.TestData;
 
@@ -56,18 +55,6 @@ namespace StructureMap.Testing.Container.Source
             {
                 Assert.IsNotNull(memento);
             }
-        }
-
-        [Test]
-        public void GetAllTemplates()
-        {
-            TemplateToken[] tokens = _templatedSource.GetAllTemplates();
-            Assert.AreEqual(1, tokens.Length);
-
-            TemplateToken template = tokens[0];
-            Assert.AreEqual("Default", template.ConcreteKey);
-            Assert.AreEqual(3, template.Properties.Length);
-            Assert.AreEqual("Grandmother", template.TemplateKey);
         }
 
         [Test]

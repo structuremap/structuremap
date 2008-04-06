@@ -1,5 +1,3 @@
-using StructureMap.Configuration.Tokens;
-
 namespace StructureMap.Source
 {
     [Pluggable("Templated")]
@@ -79,19 +77,5 @@ namespace StructureMap.Source
             return resolveMemento(intermediateMemento);
         }
 
-
-        public override TemplateToken[] GetAllTemplates()
-        {
-            InstanceMemento[] templateMementos = _templateSource.GetAllMementos();
-            TemplateToken[] returnValue = new TemplateToken[templateMementos.Length];
-
-            for (int i = 0; i < templateMementos.Length; i++)
-            {
-                InstanceMemento memento = templateMementos[i];
-                returnValue[i] = memento.CreateTemplateToken();
-            }
-
-            return returnValue;
-        }
     }
 }

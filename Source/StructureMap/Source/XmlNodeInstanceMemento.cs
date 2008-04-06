@@ -1,6 +1,5 @@
 using System.Xml;
 using StructureMap.Configuration;
-using StructureMap.Configuration.Tokens;
 
 namespace StructureMap.Source
 {
@@ -139,18 +138,6 @@ namespace StructureMap.Source
             XmlTemplater templater = new XmlTemplater(_innerNode);
             XmlNode substitutedNode = templater.SubstituteTemplates(_innerNode, memento);
             return new XmlNodeInstanceMemento(substitutedNode, _typeAttribute, _keyAttribute);
-        }
-
-        public override TemplateToken CreateTemplateToken()
-        {
-            TemplateToken token = new TemplateToken();
-            token.ConcreteKey = ConcreteKey;
-            token.TemplateKey = InstanceKey;
-            XmlTemplater templater = new XmlTemplater(_innerNode);
-
-            token.Properties = templater.Substitutions;
-
-            return token;
         }
 
         public override string ToString()

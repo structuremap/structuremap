@@ -206,9 +206,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Configuration\ConfigurationParserCollection.cs" />
-    <Compile Include="Configuration\DiagnosticGraphBuilder.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Configuration\DSL\Expressions\ChildArrayExpression.cs" />
     <Compile Include="Configuration\DSL\Expressions\ChildInstanceExpression.cs" />
     <Compile Include="Configuration\DSL\Expressions\ConstructorExpression.cs" />
@@ -234,15 +231,6 @@
     <Compile Include="Configuration\FamilyParser.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Configuration\GraphObject.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Configuration\GraphObjectIterator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Configuration\IConfigurationVisitor.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Configuration\IGraphBuilder.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -255,100 +243,16 @@
     <Compile Include="Configuration\NormalGraphBuilder.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Configuration\PluginGraphReport.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Configuration\Problem.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Configuration\ProblemFinder.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Configuration\ProfileAndMachineParser.cs" />
     <Compile Include="Configuration\StructureMapConfigurationSection.cs" />
-    <Compile Include="Configuration\Tokens\AssemblyToken.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Configuration\Tokens\Deployable.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Configuration\Tokens\FamilyToken.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Configuration\Tokens\InstanceToken.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Configuration\Tokens\InterceptorInstanceToken.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Configuration\Tokens\MementoSourceInstanceToken.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Configuration\Tokens\PluginToken.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Configuration\Tokens\Properties\ChildArrayProperty.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Configuration\Tokens\Properties\ChildProperty.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Configuration\Tokens\Properties\DefaultChildPropertyMode.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Configuration\Tokens\Properties\EnumerationProperty.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Configuration\Tokens\Properties\IChildPropertyMode.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Configuration\Tokens\Properties\InlineInstanceChildPropertyMode.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Configuration\Tokens\Properties\IProperty.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Configuration\Tokens\Properties\NulloChildPropertyMode.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Configuration\Tokens\Properties\PrimitiveProperty.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Configuration\Tokens\Properties\Property.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Configuration\Tokens\Properties\ReferencedChildPropertyMode.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Configuration\Tokens\Properties\TemplateProperty.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Configuration\Tokens\PropertyDefinition.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Configuration\Tokens\PropertyDefinitionBuilder.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Configuration\Tokens\TemplateToken.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Configuration\Mementos\UserControlMemento.cs" />
     <Compile Include="Configuration\XmlConstants.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ConstructorMemento.cs" />
-    <Compile Include="DeploymentTasks\DeploymentConfiguration.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DeploymentTasks\DeploymentExecutor.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DeploymentTasks\MachineSpecificOption.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DeploymentTasks\PluginGraphFilter.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Emitting\BuildInstanceMethod.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -435,12 +339,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Graph\Profile.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Graph\RemoteGraph.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Graph\RemoteGraphContainer.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Graph\SetterProperty.cs">
@@ -563,11 +461,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="StructureMapConfiguration.cs" />
-    <Compile Include="Verification\IStartUp.cs" />
-    <Compile Include="Verification\PluginGraphConsoleWriter.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Verification\StartUp.cs" />
     <Compile Include="XmlMapping\ConfigEditor.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using StructureMap.Configuration;
 
 namespace StructureMap.Graph
 {
@@ -9,7 +8,7 @@ namespace StructureMap.Graph
     /// InstanceManager for any combination of profile and machine name.
     /// </summary>
     [Serializable]
-    public class InstanceDefaultManager : GraphObject
+    public class InstanceDefaultManager
     {
         private string _defaultProfileName = string.Empty;
         private List<InstanceDefault> _defaults;
@@ -53,11 +52,6 @@ namespace StructureMap.Graph
                 Array.Sort(returnValue);
                 return returnValue;
             }
-        }
-
-        protected override string key
-        {
-            get { return string.Empty; }
         }
 
         public static string GetMachineName()
@@ -247,24 +241,6 @@ namespace StructureMap.Graph
             }
 
             return answer;
-        }
-
-        /// <summary>
-        /// Removes any InstanceDefault children of both Profile and MachineOverride
-        /// objects that belong to a PluginType that has been removed from the PluginGraph
-        /// </summary>
-        /// <param name="report"></param>
-        public void FilterOutNonExistentPluginTypes(PluginGraphReport report)
-        {
-            foreach (Profile profile in _profiles.Values)
-            {
-                profile.FilterOutNonExistentPluginTypes(report);
-            }
-
-            foreach (MachineOverride machine in _machineOverrides.Values)
-            {
-                machine.FilterOutNonExistentPluginTypes(report);
-            }
         }
 
         public void ClearMachineOverrides()

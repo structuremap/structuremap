@@ -1,5 +1,4 @@
 using System;
-using StructureMap.Graph;
 
 namespace StructureMap.AutoMocking
 {

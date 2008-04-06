@@ -11,7 +11,6 @@ namespace StructureMap.Testing
         private static InstanceDefaultManager _instanceDefaultManager;
         private static InstanceManager _instanceManager;
         private static PluginGraph _pluginGraph;
-        private static PluginGraphReport _report;
 
         static ObjectMother()
         {
@@ -31,17 +30,10 @@ namespace StructureMap.Testing
             ConfigurationParser parser = new ConfigurationParser(document.DocumentElement);
             PluginGraphBuilder builder = new PluginGraphBuilder(parser);
 
-            _pluginGraph = builder.BuildDiagnosticPluginGraph();
-            _report = builder.Report;
+            _pluginGraph = builder.Build();
 
             _instanceManager = new InstanceManager(_pluginGraph);
             _instanceDefaultManager = _pluginGraph.DefaultManager;
-        }
-
-
-        public static PluginGraphReport Report()
-        {
-            return _report;
         }
 
         public static InstanceDefaultManager GetInstanceDefaultManager()

@@ -1,5 +1,4 @@
 using System;
-using StructureMap.Configuration;
 
 namespace StructureMap.Graph
 {
@@ -8,7 +7,7 @@ namespace StructureMap.Graph
     /// and <see cref="MachineOverride"/> classes
     /// </summary>
     [Serializable]
-    public class InstanceDefault : GraphObject, ICloneable
+    public class InstanceDefault : ICloneable
     {
         private string _defaultKey;
         private string _pluginTypeName;
@@ -35,11 +34,6 @@ namespace StructureMap.Graph
         {
             get { return _defaultKey; }
             set { _defaultKey = value; }
-        }
-
-        protected override string key
-        {
-            get { return PluginTypeName; }
         }
 
         #region ICloneable Members

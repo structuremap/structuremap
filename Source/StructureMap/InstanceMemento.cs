@@ -1,6 +1,5 @@
 using System;
 using StructureMap.Configuration;
-using StructureMap.Configuration.Tokens;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 
@@ -252,13 +251,6 @@ namespace StructureMap
         public virtual InstanceMemento Substitute(InstanceMemento memento)
         {
             throw new NotSupportedException("This type of InstanceMemento does not support the Substitute() Method");
-        }
-
-
-        public virtual TemplateToken CreateTemplateToken()
-        {
-            throw new NotSupportedException(
-                "This type of InstanceMemento does not support the CreateTemplateToken() Method");
         }
 
         public Plugin CreateInferredPlugin()

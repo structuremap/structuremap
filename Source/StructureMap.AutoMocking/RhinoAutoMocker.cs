@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Rhino.Mocks;
-using StructureMap.Configuration.Mementos;
 using StructureMap.Graph;
 
 namespace StructureMap.AutoMocking
