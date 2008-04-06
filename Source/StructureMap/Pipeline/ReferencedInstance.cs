@@ -13,19 +13,10 @@ namespace StructureMap.Pipeline
             _referenceKey = referenceKey;
         }
 
-        protected override T build<T>(IInstanceCreator creator)
-        {
-            return creator.CreateInstance<T>(_referenceKey);
-        }
 
-        public override void Diagnose<T>(IInstanceCreator creator, IInstanceDiagnostics diagnostics)
+        protected override object build(Type type, IInstanceCreator creator)
         {
-            throw new NotImplementedException();
-        }
-
-        public override void Describe<T>(IInstanceDiagnostics diagnostics)
-        {
-            throw new NotImplementedException();
+            return creator.CreateInstance(type, _referenceKey);
         }
     }
 }

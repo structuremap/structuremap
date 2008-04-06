@@ -24,12 +24,12 @@ namespace StructureMap.Testing.Pipeline
 
             using (mocks.Record())
             {
-                Expect.Call(instanceCreator.CreateInstance<IReferenced>(theReferenceKey)).Return(returnedValue);
+                Expect.Call(instanceCreator.CreateInstance(typeof(IReferenced), theReferenceKey)).Return(returnedValue);
             }
 
             using (mocks.Playback())
             {
-                Assert.AreSame(returnedValue, instance.Build<IReferenced>(instanceCreator));
+                Assert.AreSame(returnedValue, instance.Build(typeof(IReferenced), instanceCreator));
             }
         }
 

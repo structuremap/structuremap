@@ -17,7 +17,7 @@ namespace StructureMap.Testing.Pipeline
         {
             ATarget target = new ATarget();
             LiteralInstance<ITarget> instance = new LiteralInstance<ITarget>(target);
-            Assert.AreSame(target, instance.Build<ITarget>(null));
+            Assert.AreSame(target, instance.Build(typeof(ITarget), null));
         }
 
         public interface ITarget

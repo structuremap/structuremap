@@ -28,13 +28,13 @@ namespace StructureMap.Testing.Pipeline
 
             using (mocks.Record())
             {
-                Expect.Call(instanceCreator.CreateInstance<IDefault>()).Return(theDefault);
+                Expect.Call(instanceCreator.CreateInstance(typeof(IDefault))).Return(theDefault);
             }
 
             using (mocks.Playback())
             {
                 DefaultInstance instance = new DefaultInstance();
-                Assert.AreSame(theDefault, instance.Build<IDefault>(instanceCreator));
+                Assert.AreSame(theDefault, instance.Build(typeof(IDefault), instanceCreator));
             }
         }
 

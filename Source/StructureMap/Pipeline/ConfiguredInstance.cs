@@ -11,17 +11,7 @@ namespace StructureMap.Pipeline
 
     public class ConfiguredInstance : Instance
     {
-        protected override T build<T>(IInstanceCreator creator)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Diagnose<T>(IInstanceCreator creator, IInstanceDiagnostics diagnostics)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Describe<T>(IInstanceDiagnostics diagnostics)
+        protected override object build(Type type, IInstanceCreator creator)
         {
             throw new NotImplementedException();
         }

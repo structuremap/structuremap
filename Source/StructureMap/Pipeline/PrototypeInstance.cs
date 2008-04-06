@@ -13,20 +13,10 @@ namespace StructureMap.Pipeline
         }
 
 
-        protected override T build<T>(IInstanceCreator creator)
+        protected override object build(Type type, IInstanceCreator creator)
         {
             // TODO:  VALIDATION IF IT CAN'T BE CAST
-            return (T) _prototype.Clone();
-        }
-
-        public override void Diagnose<T>(IInstanceCreator creator, IInstanceDiagnostics diagnostics)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Describe<T>(IInstanceDiagnostics diagnostics)
-        {
-            throw new NotImplementedException();
+            return _prototype.Clone();
         }
     }
 }

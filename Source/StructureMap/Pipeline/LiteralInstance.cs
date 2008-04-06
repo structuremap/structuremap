@@ -4,7 +4,7 @@ namespace StructureMap.Pipeline
 {
     public class LiteralInstance<PLUGINTYPE> : Instance
     {
-        private PLUGINTYPE _object;
+        private readonly PLUGINTYPE _object;
 
         public LiteralInstance(PLUGINTYPE anObject)
         {
@@ -13,22 +13,12 @@ namespace StructureMap.Pipeline
             // TODO:  VALIDATE NOT NULL
         }
 
-        protected override T build<T>(IInstanceCreator creator)
+
+        protected override object build(Type type, IInstanceCreator creator)
         {
-            T returnValue = _object as T;
             // TODO:  VALIDATE THE CAST AND NULL
 
-            return returnValue;
-        }
-
-        public override void Diagnose<T>(IInstanceCreator creator, IInstanceDiagnostics diagnostics)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Describe<T>(IInstanceDiagnostics diagnostics)
-        {
-            throw new NotImplementedException();
+            return _object;
         }
     }
 }

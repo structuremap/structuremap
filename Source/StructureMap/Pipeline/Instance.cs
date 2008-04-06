@@ -7,11 +7,11 @@ namespace StructureMap.Pipeline
 {
     public interface IInstanceCreator
     {
-        T CreateInstance<T>(string referenceKey);
-        T CreateInstance<T>();
+        object CreateInstance(Type type, string referenceKey);
         Array CreateInstanceArray(string pluginType, InstanceMemento[] instanceMementoes);
         object CreateInstance(string typeName, InstanceMemento memento);
         object CreateInstance(string typeName);
+        object CreateInstance(Type type);
     }
 
     public interface IInstanceDiagnostics
@@ -35,15 +35,15 @@ namespace StructureMap.Pipeline
             set { _interceptor = value; }
         }
 
-        public T Build<T>(IInstanceCreator creator) where T : class
+        public object Build(Type type, IInstanceCreator creator)
         {
-            T rawValue = build<T>(creator);
-            return (T) _interceptor.Process(rawValue);
+            object rawValue = build(type, creator);
+            return _interceptor.Process(rawValue);
         }
 
-        protected abstract T build<T>(IInstanceCreator creator) where T : class;
+        protected abstract object build(Type type, IInstanceCreator creator);
 
-        public abstract void Diagnose<T>(IInstanceCreator creator, IInstanceDiagnostics diagnostics) where T : class;
-        public abstract void Describe<T>(IInstanceDiagnostics diagnostics) where T : class;
+        //public abstract void Diagnose<T>(IInstanceCreator creator, IInstanceDiagnostics diagnostics) where T : class;
+        //public abstract void Describe<T>(IInstanceDiagnostics diagnostics) where T : class;
     }
 }

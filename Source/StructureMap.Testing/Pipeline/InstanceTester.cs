@@ -1,3 +1,4 @@
+using System;
 using NUnit.Framework;
 using Rhino.Mocks;
 using StructureMap.Interceptors;
@@ -33,7 +34,7 @@ namespace StructureMap.Testing.Pipeline
 
             using (mocks.Playback())
             {
-                Assert.AreEqual(objectReturnedByInterceptor, instanceUnderTest.Build<object>(null));
+                Assert.AreEqual(objectReturnedByInterceptor, instanceUnderTest.Build(typeof(object), null));
             }
         }
 
@@ -44,19 +45,10 @@ namespace StructureMap.Testing.Pipeline
     {
         public object TheInstanceThatWasBuilt = new object();
 
-        public override void Diagnose<T>(StructureMap.Pipeline.IInstanceCreator creator, IInstanceDiagnostics diagnostics)
-        {
-            throw new System.NotImplementedException();
-        }
 
-        public override void Describe<T>(IInstanceDiagnostics diagnostics)
+        protected override object build(Type type, StructureMap.Pipeline.IInstanceCreator creator)
         {
-            throw new System.NotImplementedException();
-        }
-
-        protected override T build<T>(StructureMap.Pipeline.IInstanceCreator creator)
-        {
-            return (T) TheInstanceThatWasBuilt;
+            return TheInstanceThatWasBuilt;
         }
     }
 }
