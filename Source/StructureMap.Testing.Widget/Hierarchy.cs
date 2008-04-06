@@ -108,7 +108,7 @@ namespace StructureMap.Testing.Widget
         }
 
 
-        public override object BuildInstance(InstanceMemento instance)
+        public override object BuildInstance(IConfiguredInstance instance)
         {
             return new Child(
                 instance.GetProperty("Name"),

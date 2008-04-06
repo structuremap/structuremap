@@ -29,7 +29,7 @@ namespace StructureMap.Testing.Widget5
             get { throw new NotImplementedException(); }
         }
 
-        public override object BuildInstance(InstanceMemento instance)
+        public override object BuildInstance(IConfiguredInstance instance)
         {
             BasicGridColumn column = new BasicGridColumn(instance.GetProperty("headerText"));
 

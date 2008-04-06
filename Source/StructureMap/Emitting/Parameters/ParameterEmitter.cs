@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using System.Reflection.Emit;
+using StructureMap.Pipeline;
 
 namespace StructureMap.Emitting.Parameters
 {
@@ -11,12 +12,12 @@ namespace StructureMap.Emitting.Parameters
     /// </summary>
     public abstract class ParameterEmitter
     {
-        private ParameterEmitter _NextSibling;
+        private ParameterEmitter _nextSibling;
 
         protected ParameterEmitter NextSibling
         {
-            set { _NextSibling = value; }
-            get { return _NextSibling; }
+            set { _nextSibling = value; }
+            get { return _nextSibling; }
         }
 
         public void Generate(ILGenerator ilgen, ParameterInfo parameter)
@@ -25,9 +26,9 @@ namespace StructureMap.Emitting.Parameters
             {
                 generate(ilgen, parameter);
             }
-            else if (_NextSibling != null)
+            else if (_nextSibling != null)
             {
-                _NextSibling.Generate(ilgen, parameter);
+                _nextSibling.Generate(ilgen, parameter);
             }
             else
             {
@@ -44,9 +45,9 @@ namespace StructureMap.Emitting.Parameters
             {
                 generateSetter(ilgen, property);
             }
-            else if (_NextSibling != null)
+            else if (_nextSibling != null)
             {
-                _NextSibling.GenerateSetter(ilgen, property);
+                _nextSibling.GenerateSetter(ilgen, property);
             }
             else
             {
@@ -72,9 +73,9 @@ namespace StructureMap.Emitting.Parameters
         protected abstract bool canProcess(Type parameterType);
         protected abstract void generate(ILGenerator ilgen, ParameterInfo parameter);
 
-        protected void callInstanceMemento(ILGenerator ilgen, string MethodName)
+        protected void callInstanceMemento(ILGenerator ilgen, string methodName)
         {
-            MethodInfo _method = typeof (InstanceMemento).GetMethod(MethodName);
+            MethodInfo _method = typeof (IConfiguredInstance).GetMethod(methodName);
             ilgen.Emit(OpCodes.Callvirt, _method);
         }
 

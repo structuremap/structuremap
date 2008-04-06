@@ -1,18 +1,16 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace StructureMap.Pipeline
 {
     public interface IConfiguredInstance
     {
-        
+        InstanceMemento[] GetChildrenArray(string propertyName);
+        string GetProperty(string propertyName);
+        object GetChild(string propertyName, string typeName, InstanceManager manager);
     }
 
     public class ConfiguredInstance : Instance
     {
-
-
         protected override T build<T>(IInstanceCreator creator)
         {
             throw new NotImplementedException();

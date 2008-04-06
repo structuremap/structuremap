@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using StructureMap.Emitting.Parameters;
 using StructureMap.Graph;
+using StructureMap.Pipeline;
 
 namespace StructureMap.Emitting
 {
@@ -13,8 +14,8 @@ namespace StructureMap.Emitting
     public class BuildInstanceMethod : Method
     {
         private readonly Plugin _plugin;
-        private ConstructorInfo _constructor;
-        private ParameterEmitter _parameterEmitter;
+        private readonly ConstructorInfo _constructor;
+        private readonly ParameterEmitter _parameterEmitter;
 
         public BuildInstanceMethod(Plugin plugin) : base()
         {
@@ -32,7 +33,7 @@ namespace StructureMap.Emitting
 
         public override Type[] ArgumentList
         {
-            get { return new Type[] {typeof (InstanceMemento)}; }
+            get { return new Type[] {typeof (IConfiguredInstance)}; }
         }
 
         public override string MethodName

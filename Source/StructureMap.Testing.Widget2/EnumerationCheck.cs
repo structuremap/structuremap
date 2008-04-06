@@ -45,7 +45,7 @@ namespace StructureMap.Testing.Widget2
         }
 
 
-        public override object BuildInstance(InstanceMemento instance)
+        public override object BuildInstance(IConfiguredInstance instance)
         {
             return new Cow(
                 long.Parse(instance.GetProperty("Weight")),

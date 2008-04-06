@@ -2,13 +2,14 @@ using System;
 using StructureMap.Configuration;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
+using StructureMap.Pipeline;
 
 namespace StructureMap
 {
     /// <summary>
     /// GoF Memento representing an Object Instance
     /// </summary>
-    public abstract class InstanceMemento
+    public abstract class InstanceMemento : IConfiguredInstance
     {
         public const string EMPTY_STRING = "STRING.EMPTY";
         public const string SUBSTITUTIONS_ATTRIBUTE = "Substitutions";

@@ -13,13 +13,13 @@ namespace StructureMap.Emitting
         private const TypeAttributes PUBLIC_ATTS =
             TypeAttributes.Class | TypeAttributes.Public | TypeAttributes.BeforeFieldInit;
 
-        private string _ClassName;
+        private readonly string _className;
 
-        private ArrayList _Methods;
-        private TypeBuilder newTypeBuilder;
-        private Type superType;
+        private readonly ArrayList _methods;
+        private readonly TypeBuilder _newTypeBuilder;
+        private readonly Type _superType;
 
-        public ClassBuilder(ModuleBuilder module, string ClassName) : this(module, ClassName, typeof (Object))
+        public ClassBuilder(ModuleBuilder module, string className) : this(module, className, typeof (Object))
         {
         }
 
@@ -27,11 +27,11 @@ namespace StructureMap.Emitting
         {
             try
             {
-                _Methods = new ArrayList();
+                _methods = new ArrayList();
 
-                newTypeBuilder = module.DefineType(ClassName, PUBLIC_ATTS, superType);
-                this.superType = superType;
-                _ClassName = ClassName;
+                _newTypeBuilder = module.DefineType(ClassName, PUBLIC_ATTS, superType);
+                _superType = superType;
+                _className = ClassName;
 
                 addDefaultConstructor();
             }
@@ -44,25 +44,25 @@ namespace StructureMap.Emitting
 
         public string ClassName
         {
-            get { return _ClassName; }
+            get { return _className; }
         }
 
 
         public void AddMethod(Method method)
         {
-            _Methods.Add(method);
-            method.Attach(newTypeBuilder);
+            _methods.Add(method);
+            method.Attach(_newTypeBuilder);
         }
 
 
         internal void Bake()
         {
-            foreach (Method method in _Methods)
+            foreach (Method method in _methods)
             {
                 method.Build();
             }
 
-            newTypeBuilder.CreateType();
+            _newTypeBuilder.CreateType();
         }
 
 
@@ -71,14 +71,14 @@ namespace StructureMap.Emitting
             MethodAttributes atts = MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig |
                                     MethodAttributes.RTSpecialName;
 
-            ConstructorBuilder construct = newTypeBuilder.DefineConstructor(atts, CallingConventions.Standard, null);
+            ConstructorBuilder construct = _newTypeBuilder.DefineConstructor(atts, CallingConventions.Standard, null);
 
             ILGenerator ilgen = construct.GetILGenerator();
 
             ilgen.Emit(OpCodes.Ldarg_0);
 
 
-            ConstructorInfo constructor = superType.GetConstructor(new Type[0]);
+            ConstructorInfo constructor = _superType.GetConstructor(new Type[0]);
             ilgen.Emit(OpCodes.Call, constructor);
             ilgen.Emit(OpCodes.Ret);
         }
@@ -87,7 +87,7 @@ namespace StructureMap.Emitting
         public void AddReadonlyStringProperty(string PropertyName, string Value, bool Override)
         {
             PropertyBuilder prop =
-                newTypeBuilder.DefineProperty(PropertyName, PropertyAttributes.HasDefault, typeof (string), null);
+                _newTypeBuilder.DefineProperty(PropertyName, PropertyAttributes.HasDefault, typeof (string), null);
 
             MethodAttributes atts = MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig |
                                     MethodAttributes.Final | MethodAttributes.SpecialName;
@@ -95,7 +95,7 @@ namespace StructureMap.Emitting
             string _GetMethodName = "get_" + PropertyName;
 
             MethodBuilder methodGet =
-                newTypeBuilder.DefineMethod(_GetMethodName, atts, CallingConventions.Standard, typeof (string), null);
+                _newTypeBuilder.DefineMethod(_GetMethodName, atts, CallingConventions.Standard, typeof (string), null);
             ILGenerator gen = methodGet.GetILGenerator();
 
             LocalBuilder ilReturn = gen.DeclareLocal(typeof (string));

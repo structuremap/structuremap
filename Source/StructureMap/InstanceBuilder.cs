@@ -1,4 +1,5 @@
 using System;
+using StructureMap.Pipeline;
 
 namespace StructureMap
 {
@@ -23,7 +24,7 @@ namespace StructureMap
             get { return _manager; }
         }
 
-        public abstract object BuildInstance(InstanceMemento memento);
+        public abstract object BuildInstance(IConfiguredInstance instance);
 
         public void SetInstanceManager(InstanceManager manager)
         {
@@ -35,10 +36,5 @@ namespace StructureMap
             Type plugged = Type.GetType(PluggedType);
             return plugged.Equals(type);
         }
-
-        //public Type GetPluggedType()
-        //{
-        //    return Type.GetType(PluggedType);
-        //}
     }
 }

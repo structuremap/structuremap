@@ -68,7 +68,7 @@ namespace StructureMap.Testing.Widget
         }
 
 
-        public override object BuildInstance(InstanceMemento memento)
+        public override object BuildInstance(IConfiguredInstance instance)
         {
             return null;
         }

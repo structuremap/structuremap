@@ -31,10 +31,10 @@ namespace StructureMap.Testing.Widget
             get { return null; }
         }
 
-        public override object BuildInstance(InstanceMemento memento)
+        public override object BuildInstance(IConfiguredInstance instance)
         {
             return new Decision(
-                (Rule[]) Manager.CreateInstanceArray("StructureMap.Testing.Widget", memento.GetChildrenArray("Rules")));
+                (Rule[]) Manager.CreateInstanceArray("StructureMap.Testing.Widget", instance.GetChildrenArray("Rules")));
         }
     }
 }
