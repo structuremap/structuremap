@@ -6,8 +6,11 @@ namespace StructureMap.Testing.Container.Interceptors
 {
     public class MockTypeInterceptor : TypeInterceptor
     {
+        #region Delegates
+
         public delegate object InterceptionDelegate<T>(T target);
 
+        #endregion
 
         private readonly Dictionary<Type, InstanceInterceptor> _innerInterceptors
             = new Dictionary<Type, InstanceInterceptor>();

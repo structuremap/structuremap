@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Xml;
 using StructureMap.Configuration;
@@ -105,7 +104,6 @@ namespace StructureMap.Source
 
             return new XmlAttributeInstanceMemento(substitutedNode);
         }
-
 
 
         public override string ToString()

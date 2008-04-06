@@ -163,6 +163,11 @@ namespace StructureMap
             }
         }
 
+        InstanceMemento IInstanceCreator.DefaultMemento
+        {
+            get { return _source.DefaultMemento; }
+        }
+
         #endregion
 
         #region IInstanceFactory Members
@@ -383,12 +388,6 @@ namespace StructureMap
             }
 
             return memento;
-        }
-
-
-        InstanceMemento IInstanceCreator.DefaultMemento
-        {
-            get { return _source.DefaultMemento; }
         }
     }
 }

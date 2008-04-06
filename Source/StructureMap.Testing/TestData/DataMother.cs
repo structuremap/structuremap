@@ -29,7 +29,6 @@ namespace StructureMap.Testing.TestData
             {
                 File.Copy("StructureMap.config.bak", "StructureMap.config");
             }
-            
         }
 
         public static void RemoveStructureMapConfig()

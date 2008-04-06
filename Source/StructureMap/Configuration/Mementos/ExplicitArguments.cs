@@ -5,12 +5,12 @@ namespace StructureMap.Configuration.Mementos
 {
     public class ExplicitArguments
     {
-        private readonly Dictionary<Type, object> _children = new Dictionary<Type, object>();
         private readonly Dictionary<string, string> _args = new Dictionary<string, string>();
+        private readonly Dictionary<Type, object> _children = new Dictionary<Type, object>();
 
         public T Get<T>() where T : class
         {
-            return (T) Get(typeof(T));
+            return (T) Get(typeof (T));
         }
 
         public object Get(Type type)
@@ -20,7 +20,7 @@ namespace StructureMap.Configuration.Mementos
 
         public void Set<T>(T arg)
         {
-            _children.Add(typeof(T), arg);
+            _children.Add(typeof (T), arg);
         }
 
         public void SetArg(string key, object argValue)

@@ -382,21 +382,28 @@ namespace StructureMap
             return new ExplicitArgsExpression(manager).With(argName);
         }
 
-        public interface IExplicitProperty
-        {
-            ExplicitArgsExpression EqualTo(object value);
-        }
+        #region Nested type: ExplicitArgsExpression
 
         public class ExplicitArgsExpression : IExplicitProperty
         {
-            private readonly IInstanceManager _manager;
             private readonly ExplicitArguments _args = new ExplicitArguments();
+            private readonly IInstanceManager _manager;
             private string _lastArgName;
 
             internal ExplicitArgsExpression(IInstanceManager manager)
             {
                 _manager = manager;
             }
+
+            #region IExplicitProperty Members
+
+            ExplicitArgsExpression IExplicitProperty.EqualTo(object value)
+            {
+                _args.SetArg(_lastArgName, value);
+                return this;
+            }
+
+            #endregion
 
             public ExplicitArgsExpression With<T>(T arg)
             {
@@ -415,13 +422,18 @@ namespace StructureMap
             {
                 return _manager.CreateInstance<T>(_args);
             }
-
-            ExplicitArgsExpression IExplicitProperty.EqualTo(object value)
-            {
-                _args.SetArg(_lastArgName, value);
-                return this;
-            }
         }
+
+        #endregion
+
+        #region Nested type: IExplicitProperty
+
+        public interface IExplicitProperty
+        {
+            ExplicitArgsExpression EqualTo(object value);
+        }
+
+        #endregion
 
         #endregion
     }

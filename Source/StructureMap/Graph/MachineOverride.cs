@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using StructureMap.Configuration;
 
 namespace StructureMap.Graph
 {
@@ -122,6 +121,5 @@ namespace StructureMap.Graph
         {
             return (_defaults.ContainsKey(pluginTypeName) || _profile.HasOverride(pluginTypeName));
         }
-
     }
 }

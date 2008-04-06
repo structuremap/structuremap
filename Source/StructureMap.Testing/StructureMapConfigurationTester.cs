@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Xml;
 using NUnit.Framework;
 using StructureMap.Configuration;
@@ -38,7 +37,6 @@ namespace StructureMap.Testing
         }
 
 
-
         [Test]
         public void PullConfigurationFromTheAppConfig()
         {
@@ -71,7 +69,6 @@ namespace StructureMap.Testing
             Assert.AreEqual(fromMachineConfig, effectiveConfig[0]);
             Assert.AreEqual(fromWebConfig, effectiveConfig[1]);
         }
-
     }
 
     public interface ISomething

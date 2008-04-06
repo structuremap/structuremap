@@ -61,8 +61,8 @@ namespace StructureMap.Source
 
         private class Collector
         {
-            private readonly XmlNode _templateNode;
             private readonly List<string> _substitutionList = new List<string>();
+            private readonly XmlNode _templateNode;
 
             public Collector(XmlNode templateNode)
             {

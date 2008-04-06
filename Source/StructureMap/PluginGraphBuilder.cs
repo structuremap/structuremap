@@ -3,7 +3,6 @@ using System.Xml;
 using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
-using StructureMap.Graph.Configuration;
 
 namespace StructureMap
 {
@@ -30,7 +29,6 @@ namespace StructureMap
 
             return builder.Build();
         }
-
 
         #endregion
 

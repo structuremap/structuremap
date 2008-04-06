@@ -76,6 +76,5 @@ namespace StructureMap.Source
             InstanceMemento intermediateMemento = base.ResolveMemento(memento);
             return resolveMemento(intermediateMemento);
         }
-
     }
 }

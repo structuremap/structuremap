@@ -1,12 +1,9 @@
 using System;
-using System.Diagnostics;
 using System.Reflection;
 using NUnit.Framework;
-using StructureMap.Configuration;
 using StructureMap.Configuration.Mementos;
 using StructureMap.Graph;
 using StructureMap.Testing.GenericWidgets;
-using StructureMap.Testing.TestData;
 
 namespace StructureMap.Testing
 {
@@ -182,7 +179,6 @@ namespace StructureMap.Testing
         {
             Assert.IsTrue(GenericsPluginGraph.CanBeCast(typeof (ITarget<,>), typeof (DisposableTarget<,>)));
         }
-
     }
 
 

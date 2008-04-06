@@ -25,10 +25,7 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         protected override InstanceMemento memento
         {
-            get
-            {
-                 return _memento;
-            }
+            get { return _memento; }
         }
 
         protected override InstanceExpression thisInstance

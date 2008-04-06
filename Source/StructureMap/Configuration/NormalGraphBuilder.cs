@@ -3,7 +3,6 @@ using System.Reflection;
 using StructureMap.Attributes;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
-using StructureMap.Graph.Configuration;
 using StructureMap.Interceptors;
 
 namespace StructureMap.Configuration

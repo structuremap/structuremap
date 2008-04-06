@@ -160,14 +160,13 @@ namespace StructureMap
         {
             ExplicitArgumentMemento memento = new ExplicitArgumentMemento(args, null);
             return CreateInstance<PLUGINTYPE>(memento);
-            
         }
 
         public void Inject<PLUGINTYPE>(PLUGINTYPE instance)
         {
             LiteralMemento memento = new LiteralMemento(instance);
             AddInstance<PLUGINTYPE>(memento);
-            SetDefault(typeof(PLUGINTYPE), memento);
+            SetDefault(typeof (PLUGINTYPE), memento);
         }
 
         public T CreateInstance<T>()
@@ -203,6 +202,152 @@ namespace StructureMap
             string machineName = InstanceDefaultManager.GetMachineName();
             Profile defaultProfile = _defaultManager.CalculateDefaults(machineName, profile);
             SetDefaults(defaultProfile);
+        }
+
+        /// <summary>
+        /// Creates the named instance of the PluginType
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="instanceKey"></param>
+        /// <returns></returns>
+        public object CreateInstance(Type pluginType, string instanceKey)
+        {
+            IInstanceFactory instanceFactory = this[pluginType];
+            return instanceFactory.GetInstance(instanceKey);
+        }
+
+
+        /// <summary>
+        /// Creates a new object instance of the requested type
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <returns></returns>
+        public object CreateInstance(Type pluginType)
+        {
+            IInstanceFactory instanceFactory = this[pluginType];
+            return instanceFactory.GetInstance();
+        }
+
+
+        /// <summary>
+        /// Creates a new instance of the requested type using the InstanceMemento.  Mostly used from other
+        /// classes to link children members
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="instanceMemento"></param>
+        /// <returns></returns>
+        public object CreateInstance(Type pluginType, InstanceMemento instanceMemento)
+        {
+            IInstanceFactory instanceFactory = this[pluginType];
+            return instanceFactory.GetInstance(instanceMemento);
+        }
+
+        /// <summary>
+        /// Sets the default instance for the PluginType
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="instanceMemento"></param>
+        public void SetDefault(Type pluginType, InstanceMemento instanceMemento)
+        {
+            IInstanceFactory instanceFactory = this[pluginType];
+            instanceFactory.SetDefault(instanceMemento);
+        }
+
+        /// <summary>
+        /// Sets the default instance for the PluginType
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="instanceKey"></param>
+        public void SetDefault(Type pluginType, string instanceKey)
+        {
+            IInstanceFactory instanceFactory = this[pluginType];
+            instanceFactory.SetDefault(instanceKey);
+        }
+
+
+        /// <summary>
+        /// Sets the default instance for the PluginType
+        /// </summary>
+        /// <param name="pluginTypeName"></param>
+        /// <param name="instanceKey"></param>
+        public void SetDefault(string pluginTypeName, string instanceKey)
+        {
+            IInstanceFactory instanceFactory = this[pluginTypeName];
+            instanceFactory.SetDefault(instanceKey);
+        }
+
+
+        /// <summary>
+        /// Attempts to create a new instance of the requested type.  Automatically inserts the default
+        /// configured instance for each dependency in the StructureMap constructor function.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public object FillDependencies(Type type)
+        {
+            if (type.IsInterface || type.IsAbstract)
+            {
+                throw new StructureMapException(230);
+            }
+
+            IInstanceFactory factory = getOrCreateFactory(type);
+            return factory.GetInstance();
+        }
+
+        /// <summary>
+        /// Sets up the InstanceManager to return the object in the "stub" argument anytime
+        /// any instance of the PluginType is requested
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="stub"></param>
+        public void InjectStub(Type pluginType, object stub)
+        {
+            if (!Plugin.CanBeCast(pluginType, stub.GetType()))
+            {
+                throw new StructureMapException(220, pluginType.FullName,
+                                                stub.GetType().FullName);
+            }
+
+            LiteralMemento memento = new LiteralMemento(stub);
+            this[pluginType].SetDefault(memento);
+        }
+
+        public IList GetAllInstances(Type type)
+        {
+            return this[type].GetAllInstances();
+        }
+
+        public void AddInstance<T>(InstanceMemento memento)
+        {
+            IInstanceFactory factory = getOrCreateFactory(typeof (T), createFactory);
+            factory.AddInstance(memento);
+        }
+
+        public void AddInstance<PLUGINTYPE, CONCRETETYPE>()
+        {
+            IInstanceFactory factory = getOrCreateFactory(typeof (PLUGINTYPE), createFactory);
+            InstanceMemento memento = factory.AddType<CONCRETETYPE>();
+            factory.AddInstance(memento);
+        }
+
+        public void AddDefaultInstance<PLUGINTYPE, CONCRETETYPE>()
+        {
+            IInstanceFactory factory = getOrCreateFactory(typeof (PLUGINTYPE), createFactory);
+            InstanceMemento memento = factory.AddType<CONCRETETYPE>();
+            factory.SetDefault(memento);
+        }
+
+        public string WhatDoIHave()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (IInstanceFactory factory in this)
+            {
+                sb.AppendFormat("PluginType {0}, Default: {1}\r\n", factory.PluginType.AssemblyQualifiedName,
+                                factory.DefaultInstanceKey);
+            }
+
+            return sb.ToString();
         }
 
         #endregion
@@ -278,31 +423,6 @@ namespace StructureMap
         }
 
         /// <summary>
-        /// Creates the named instance of the PluginType
-        /// </summary>
-        /// <param name="pluginType"></param>
-        /// <param name="instanceKey"></param>
-        /// <returns></returns>
-        public object CreateInstance(Type pluginType, string instanceKey)
-        {
-            IInstanceFactory instanceFactory = this[pluginType];
-            return instanceFactory.GetInstance(instanceKey);
-        }
-
-
-
-        /// <summary>
-        /// Creates a new object instance of the requested type
-        /// </summary>
-        /// <param name="pluginType"></param>
-        /// <returns></returns>
-        public object CreateInstance(Type pluginType)
-        {
-            IInstanceFactory instanceFactory = this[pluginType];
-            return instanceFactory.GetInstance();
-        }
-
-        /// <summary>
         /// Creates a new object instance of the requested type
         /// </summary>
         /// <param name="pluginTypeName">Fully qualified name of the CLR Type to create</param>
@@ -326,20 +446,6 @@ namespace StructureMap
             return instanceFactory.GetInstance(instanceMemento);
         }
 
-
-        /// <summary>
-        /// Creates a new instance of the requested type using the InstanceMemento.  Mostly used from other
-        /// classes to link children members
-        /// </summary>
-        /// <param name="pluginType"></param>
-        /// <param name="instanceMemento"></param>
-        /// <returns></returns>
-        public object CreateInstance(Type pluginType, InstanceMemento instanceMemento)
-        {
-            IInstanceFactory instanceFactory = this[pluginType];
-            return instanceFactory.GetInstance(instanceMemento);
-        }
-
         /// <summary>
         /// Creates an array of object instances of the requested type
         /// </summary>
@@ -355,58 +461,6 @@ namespace StructureMap
 
             IInstanceFactory instanceFactory = this[pluginType];
             return instanceFactory.GetArray(instanceMementoes);
-        }
-
-        /// <summary>
-        /// Sets the default instance for the PluginType
-        /// </summary>
-        /// <param name="pluginType"></param>
-        /// <param name="instanceMemento"></param>
-        public void SetDefault(Type pluginType, InstanceMemento instanceMemento)
-        {
-            IInstanceFactory instanceFactory = this[pluginType];
-            instanceFactory.SetDefault(instanceMemento);
-        }
-
-        /// <summary>
-        /// Sets the default instance for the PluginType
-        /// </summary>
-        /// <param name="pluginType"></param>
-        /// <param name="instanceKey"></param>
-        public void SetDefault(Type pluginType, string instanceKey)
-        {
-            IInstanceFactory instanceFactory = this[pluginType];
-            instanceFactory.SetDefault(instanceKey);
-        }
-
-
-        /// <summary>
-        /// Sets the default instance for the PluginType
-        /// </summary>
-        /// <param name="pluginTypeName"></param>
-        /// <param name="instanceKey"></param>
-        public void SetDefault(string pluginTypeName, string instanceKey)
-        {
-            IInstanceFactory instanceFactory = this[pluginTypeName];
-            instanceFactory.SetDefault(instanceKey);
-        }
-
-
-        /// <summary>
-        /// Attempts to create a new instance of the requested type.  Automatically inserts the default
-        /// configured instance for each dependency in the StructureMap constructor function.
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        public object FillDependencies(Type type)
-        {
-            if (type.IsInterface || type.IsAbstract)
-            {
-                throw new StructureMapException(230);
-            }
-
-            IInstanceFactory factory = getOrCreateFactory(type);
-            return factory.GetInstance();
         }
 
         private IInstanceFactory getOrCreateFactory(Type type)
@@ -437,53 +491,10 @@ namespace StructureMap
             return _factories[type];
         }
 
-        /// <summary>
-        /// Sets up the InstanceManager to return the object in the "stub" argument anytime
-        /// any instance of the PluginType is requested
-        /// </summary>
-        /// <param name="pluginType"></param>
-        /// <param name="stub"></param>
-        public void InjectStub(Type pluginType, object stub)
-        {
-            if (!Plugin.CanBeCast(pluginType, stub.GetType()))
-            {
-                throw new StructureMapException(220, pluginType.FullName,
-                                                stub.GetType().FullName);
-            }
-
-            LiteralMemento memento = new LiteralMemento(stub);
-            this[pluginType].SetDefault(memento);
-        }
-
-        public IList GetAllInstances(Type type)
-        {
-            return this[type].GetAllInstances();
-        }
-
-        public void AddInstance<T>(InstanceMemento memento)
-        {
-            IInstanceFactory factory = getOrCreateFactory(typeof (T), createFactory);
-            factory.AddInstance(memento);
-        }
-
-        public void AddInstance<PLUGINTYPE, CONCRETETYPE>()
-        {
-            IInstanceFactory factory = getOrCreateFactory(typeof (PLUGINTYPE), createFactory);
-            InstanceMemento memento = factory.AddType<CONCRETETYPE>();
-            factory.AddInstance(memento);
-        }
-
         private InstanceFactory createFactory(Type pluggedType)
         {
             PluginFamily family = new PluginFamily(pluggedType);
             return new InstanceFactory(family, true);
-        }
-
-        public void AddDefaultInstance<PLUGINTYPE, CONCRETETYPE>()
-        {
-            IInstanceFactory factory = getOrCreateFactory(typeof (PLUGINTYPE), createFactory);
-            InstanceMemento memento = factory.AddType<CONCRETETYPE>();
-            factory.SetDefault(memento);
         }
 
         #region Nested type: CreateFactoryDelegate
@@ -491,18 +502,5 @@ namespace StructureMap
         protected delegate InstanceFactory CreateFactoryDelegate(Type type);
 
         #endregion
-
-        public string WhatDoIHave()
-        {
-            StringBuilder sb = new StringBuilder();
-
-            foreach (IInstanceFactory factory in this)
-            {
-                sb.AppendFormat("PluginType {0}, Default: {1}\r\n", factory.PluginType.AssemblyQualifiedName,
-                                factory.DefaultInstanceKey);
-            }
-
-            return sb.ToString();
-        }
     }
 }

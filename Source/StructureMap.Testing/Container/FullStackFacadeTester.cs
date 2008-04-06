@@ -60,17 +60,17 @@ namespace StructureMap.Testing.Container
         }
 
         [Test]
-        public void FillDependencies()
+        public void FillDependenc1ies2()
         {
-            FilledTarget target = (FilledTarget) ObjectFactory.FillDependencies(typeof (FilledTarget));
+            FilledTarget target = ObjectFactory.FillDependencies<FilledTarget>();
             Assert.IsNotNull(target.Gateway);
             Assert.IsNotNull(target.Rule);
         }
 
         [Test]
-        public void FillDependenc1ies2()
+        public void FillDependencies()
         {
-            FilledTarget target = ObjectFactory.FillDependencies<FilledTarget>();
+            FilledTarget target = (FilledTarget) ObjectFactory.FillDependencies(typeof (FilledTarget));
             Assert.IsNotNull(target.Gateway);
             Assert.IsNotNull(target.Rule);
         }

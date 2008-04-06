@@ -234,12 +234,6 @@
     <Compile Include="Configuration\IGraphBuilder.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Configuration\IInstanceValidator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Configuration\InstanceValidator.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Configuration\NormalGraphBuilder.cs">
       <SubType>Code</SubType>
     </Compile>

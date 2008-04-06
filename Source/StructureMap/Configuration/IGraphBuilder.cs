@@ -1,6 +1,7 @@
 using StructureMap.Attributes;
+using StructureMap.Graph;
 
-namespace StructureMap.Graph.Configuration
+namespace StructureMap.Configuration
 {
     public interface IGraphBuilder
     {
@@ -28,6 +29,7 @@ namespace StructureMap.Graph.Configuration
         void OverrideProfile(string fullTypeName, string instanceKey);
         void AddMachine(string machineName, string profileName);
         void OverrideMachine(string fullTypeName, string instanceKey);
+
         TypePath LocateOrCreateFamilyForType(string fullName);
     }
 }

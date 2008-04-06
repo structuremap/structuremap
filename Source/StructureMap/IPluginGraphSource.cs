@@ -1,4 +1,3 @@
-using StructureMap.Configuration;
 using StructureMap.Graph;
 
 namespace StructureMap

@@ -22,7 +22,6 @@ namespace StructureMap.Testing.Container
         {
             StructureMapConfiguration.ResetAll();
             ObjectFactory.Reset();
-
         }
 
         #endregion
@@ -176,6 +175,42 @@ namespace StructureMap.Testing.Container
         }
 
         [Test]
+        public void PassAnArgumentIntoExplicitArgumentsForARequestedInterface()
+        {
+            Registry registry = new Registry();
+
+            registry.ForRequestedType<IProvider>().TheDefaultIsConcreteType<LumpProvider>();
+
+            IInstanceManager manager = registry.BuildInstanceManager();
+
+            ExplicitArguments args = new ExplicitArguments();
+            Lump theLump = new Lump();
+            args.Set(theLump);
+
+            LumpProvider instance = (LumpProvider) manager.CreateInstance<IProvider>(args);
+            Assert.AreSame(theLump, instance.Lump);
+        }
+
+        [Test]
+        public void PassAnArgumentIntoExplicitArgumentsForARequestedInterfaceUsingObjectFactory()
+        {
+            StructureMapConfiguration.ForRequestedType<IProvider>().TheDefaultIsConcreteType<LumpProvider>();
+            ObjectFactory.Reset();
+            Lump theLump = new Lump();
+
+            LumpProvider provider = (LumpProvider) ObjectFactory.With(theLump).GetInstance<IProvider>();
+            Assert.AreSame(theLump, provider.Lump);
+        }
+
+        [Test]
+        public void PassAnArgumentIntoExplicitArgumentsThatMightNotAlreadyBeRegistered()
+        {
+            Lump theLump = new Lump();
+            LumpProvider provider = ObjectFactory.With(theLump).GetInstance<LumpProvider>();
+            Assert.AreSame(theLump, provider.Lump);
+        }
+
+        [Test]
         public void PassExplicitArgsIntoInstanceManager()
         {
             Registry registry = new Registry();
@@ -228,45 +263,11 @@ namespace StructureMap.Testing.Container
             args.SetArg("age", 34);
             Assert.AreEqual("34", args.GetArg("age"));
         }
-
-        [Test]
-        public void PassAnArgumentIntoExplicitArgumentsThatMightNotAlreadyBeRegistered()
-        {
-            Lump theLump = new Lump();
-            LumpProvider provider = ObjectFactory.With(theLump).GetInstance<LumpProvider>();
-            Assert.AreSame(theLump, provider.Lump);
-        }
-
-        [Test]
-        public void PassAnArgumentIntoExplicitArgumentsForARequestedInterface()
-        {
-            Registry registry = new Registry();
-
-            registry.ForRequestedType<IProvider>().TheDefaultIsConcreteType<LumpProvider>();
-
-            IInstanceManager manager = registry.BuildInstanceManager();
-
-            ExplicitArguments args = new ExplicitArguments();
-            Lump theLump = new Lump();
-            args.Set(theLump);
-
-            LumpProvider instance = (LumpProvider) manager.CreateInstance<IProvider>(args);
-            Assert.AreSame(theLump, instance.Lump);
-        }
-
-        [Test]
-        public void PassAnArgumentIntoExplicitArgumentsForARequestedInterfaceUsingObjectFactory()
-        {
-            StructureMapConfiguration.ForRequestedType<IProvider>().TheDefaultIsConcreteType<LumpProvider>();
-            ObjectFactory.Reset();
-            Lump theLump = new Lump();
-
-            LumpProvider provider = (LumpProvider) ObjectFactory.With(theLump).GetInstance<IProvider>();
-            Assert.AreSame(theLump, provider.Lump);
-        }
     }
 
-    public class Lump{}
+    public class Lump
+    {
+    }
 
     public class LumpProvider : ExplicitArgumentTester.IProvider
     {

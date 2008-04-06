@@ -3,7 +3,6 @@ using System.Collections;
 using System.IO;
 using System.Xml;
 using StructureMap.Graph;
-using StructureMap.Graph.Configuration;
 using StructureMap.Source;
 
 namespace StructureMap.Configuration

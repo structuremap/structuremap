@@ -195,9 +195,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Configuration\InlineInstanceDefinitionInProfileAndMachineNodesTester.cs" />
-    <Compile Include="Configuration\InstanceValidatorTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Configuration\NormalGraphBuilderTester.cs">
       <SubType>Code</SubType>
     </Compile>

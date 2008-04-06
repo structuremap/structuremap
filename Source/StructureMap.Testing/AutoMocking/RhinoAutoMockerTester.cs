@@ -130,19 +130,6 @@ namespace StructureMap.Testing.AutoMocking
         }
 
         [Test]
-        public void UseConcreteClassFor()
-        {
-            RhinoAutoMocker<ConcreteClass> mocker = new RhinoAutoMocker<ConcreteClass>();
-            mocker.UseConcreteClassFor<ConcreteThing>();
-
-            ConcreteThing thing = mocker.Get<ConcreteThing>();
-            Assert.IsInstanceOfType(typeof(ConcreteThing), thing);
-
-            Assert.AreSame(mocker.Get<IMockedService>(), thing.Service);
-            Assert.AreSame(mocker.Get<IMockedService2>(), thing.Service2);
-        }
-
-        [Test]
         public void AutoFillAConcreteClassWithMocks()
         {
             IMockedService service = _instanceManager.CreateInstance<IMockedService>();
@@ -164,6 +151,17 @@ namespace StructureMap.Testing.AutoMocking
             Assert.IsNotNull(service);
             IMockedObject instance = (IMockedObject) service;
             Assert.AreSame(_mocks, instance.Repository);
+        }
+
+        [Test]
+        public void GetTheSameConcreteClassTwiceFromCreate()
+        {
+            RhinoAutoMocker<ConcreteClass> autoMocker = new RhinoAutoMocker<ConcreteClass>();
+            ConcreteClass concreteClass = autoMocker.ClassUnderTest;
+
+            Assert.AreSame(concreteClass, autoMocker.ClassUnderTest);
+            Assert.AreSame(concreteClass, autoMocker.ClassUnderTest);
+            Assert.AreSame(concreteClass, autoMocker.ClassUnderTest);
         }
 
         [Test]
@@ -222,6 +220,19 @@ namespace StructureMap.Testing.AutoMocking
         }
 
         [Test]
+        public void UseConcreteClassFor()
+        {
+            RhinoAutoMocker<ConcreteClass> mocker = new RhinoAutoMocker<ConcreteClass>();
+            mocker.UseConcreteClassFor<ConcreteThing>();
+
+            ConcreteThing thing = mocker.Get<ConcreteThing>();
+            Assert.IsInstanceOfType(typeof (ConcreteThing), thing);
+
+            Assert.AreSame(mocker.Get<IMockedService>(), thing.Service);
+            Assert.AreSame(mocker.Get<IMockedService2>(), thing.Service2);
+        }
+
+        [Test]
         public void UseTheAutoMockerToStartUpTheConcreteClass()
         {
             RhinoAutoMocker<ConcreteClass> autoMocker = new RhinoAutoMocker<ConcreteClass>();
@@ -232,17 +243,6 @@ namespace StructureMap.Testing.AutoMocking
             }
 
             Assert.AreEqual("Jeremy", autoMocker.ClassUnderTest.Name);
-        }
-
-        [Test]
-        public void GetTheSameConcreteClassTwiceFromCreate()
-        {
-            RhinoAutoMocker<ConcreteClass> autoMocker = new RhinoAutoMocker<ConcreteClass>();
-            ConcreteClass concreteClass = autoMocker.ClassUnderTest;
-
-            Assert.AreSame(concreteClass, autoMocker.ClassUnderTest);
-            Assert.AreSame(concreteClass, autoMocker.ClassUnderTest);
-            Assert.AreSame(concreteClass, autoMocker.ClassUnderTest);
         }
 
         [Test]

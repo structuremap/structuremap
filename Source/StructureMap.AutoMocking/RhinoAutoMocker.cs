@@ -25,10 +25,6 @@ namespace StructureMap.AutoMocking
         // Replaces the inner InstanceManager in ObjectFactory with the mocked
         // InstanceManager from the auto mocking container.  This will make ObjectFactory
         // return mocks for everything.  Use cautiously!!!!!!!!!!!!!!!
-        public void MockObjectFactory()
-        {
-            ObjectFactory.ReplaceManager(_manager);
-        }
 
         // Gets the ClassUnderTest with mock objects (or stubs) pushed in
         // for all of its dependencies
@@ -43,6 +39,11 @@ namespace StructureMap.AutoMocking
 
                 return _classUnderTest;
             }
+        }
+
+        public void MockObjectFactory()
+        {
+            ObjectFactory.ReplaceManager(_manager);
         }
 
         // I find it useful from time to time to use partial mocks for the ClassUnderTest
@@ -88,7 +89,4 @@ namespace StructureMap.AutoMocking
             _manager.InjectStub(concreteClass);
         }
     }
-
-
-
 }

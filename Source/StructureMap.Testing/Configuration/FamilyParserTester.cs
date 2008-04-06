@@ -5,7 +5,6 @@ using NUnit.Framework;
 using StructureMap.Attributes;
 using StructureMap.Configuration;
 using StructureMap.Graph;
-using StructureMap.Graph.Configuration;
 using StructureMap.Source;
 using StructureMap.Testing.Widget3;
 

@@ -2,7 +2,6 @@ using System;
 using System.Xml;
 using StructureMap.Attributes;
 using StructureMap.Graph;
-using StructureMap.Graph.Configuration;
 using StructureMap.Source;
 
 namespace StructureMap.Configuration

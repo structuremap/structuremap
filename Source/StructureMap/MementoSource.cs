@@ -147,6 +147,5 @@ namespace StructureMap
         /// <param name="instanceKey"></param>
         /// <returns></returns>
         protected abstract InstanceMemento retrieveMemento(string instanceKey);
-
     }
 }

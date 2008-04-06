@@ -52,9 +52,9 @@ namespace StructureMap.Configuration.Mementos
 
         private readonly Hashtable _children = new Hashtable();
         private readonly string _concreteKey;
+        private readonly NameValueCollection _properties = new NameValueCollection();
         private string _instanceKey;
         private bool _isReference;
-        private readonly NameValueCollection _properties = new NameValueCollection();
         private string _referenceKey;
 
 
@@ -66,7 +66,6 @@ namespace StructureMap.Configuration.Mementos
         public MemoryInstanceMemento(string concreteKey, string instanceKey)
             : this(concreteKey, instanceKey, new NameValueCollection())
         {
-            
         }
 
 

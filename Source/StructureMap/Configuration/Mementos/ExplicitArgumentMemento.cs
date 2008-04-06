@@ -14,16 +14,6 @@ namespace StructureMap.Configuration.Mementos
         }
 
 
-        protected override object buildInstance(IInstanceCreator creator)
-        {
-            if (_inner == null)
-            {
-                _inner = creator.DefaultMemento;
-            }
-
-            return base.buildInstance(creator);
-        }
-
         protected override string innerConcreteKey
         {
             get { return _inner.ConcreteKey; }
@@ -42,6 +32,16 @@ namespace StructureMap.Configuration.Mementos
         public override string ReferenceKey
         {
             get { return _inner.ReferenceKey; }
+        }
+
+        protected override object buildInstance(IInstanceCreator creator)
+        {
+            if (_inner == null)
+            {
+                _inner = creator.DefaultMemento;
+            }
+
+            return base.buildInstance(creator);
         }
 
         protected override string getPropertyValue(string Key)
