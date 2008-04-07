@@ -196,6 +196,8 @@ namespace StructureMap.Testing.Container
 
             // Just for fun, test with InstanceFactory too.
             InstanceFactory factory = new InstanceFactory(family, true);
+            factory.SetInstanceManager(new InstanceManager());
+
             MemoryInstanceMemento memento = new MemoryInstanceMemento("NotPluggable", string.Empty);
             memento.SetProperty("name", "DorothyTheDinosaur");
 

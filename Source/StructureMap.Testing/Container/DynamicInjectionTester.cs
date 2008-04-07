@@ -112,6 +112,8 @@ namespace StructureMap.Testing.Container
             family.Plugins.Add(typeof (SomethingOne), "One");
 
             InstanceFactory factory = new InstanceFactory(family, true);
+            factory.SetInstanceManager(new InstanceManager());
+
             InstanceMemento memento = factory.AddType<SomethingOne>();
             Assert.AreEqual("One", memento.InstanceKey);
             Assert.AreEqual("One", memento.ConcreteKey);
@@ -127,6 +129,7 @@ namespace StructureMap.Testing.Container
         public void AddPluginForTypeWhenThePluginDoesNotAlreadyExistsDoesNothing()
         {
             InstanceFactory factory = ObjectMother.Factory<ISomething>();
+            factory.SetInstanceManager(new InstanceManager());
             InstanceMemento memento = factory.AddType<SomethingOne>();
 
             Assert.IsNotNull(memento);

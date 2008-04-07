@@ -95,6 +95,7 @@ namespace StructureMap.Testing
             family.Plugins.Add(typeof (ComplexType<int>), "complex");
 
             InstanceFactory factory = new InstanceFactory(family, true);
+            factory.SetInstanceManager(new InstanceManager());
 
             MemoryInstanceMemento memento = new MemoryInstanceMemento("complex", "Me");
             memento.SetProperty("name", "Jeremy");

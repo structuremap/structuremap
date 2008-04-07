@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using Rhino.Mocks;
+using StructureMap.Interceptors;
 using StructureMap.Pipeline;
 
 namespace StructureMap.Testing.Pipeline
@@ -24,6 +25,7 @@ namespace StructureMap.Testing.Pipeline
 
             using (mocks.Record())
             {
+                Expect.Call(instanceCreator.FindInterceptor(returnedValue.GetType())).Return(new NulloInterceptor());
                 Expect.Call(instanceCreator.CreateInstance(typeof(IReferenced), theReferenceKey)).Return(returnedValue);
             }
 

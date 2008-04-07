@@ -12,6 +12,7 @@ namespace StructureMap.Pipeline
         object CreateInstance(string typeName, InstanceMemento memento);
         object CreateInstance(string typeName);
         object CreateInstance(Type type);
+        InstanceInterceptor FindInterceptor(Type type);
     }
 
     public interface IInstanceDiagnostics
@@ -35,10 +36,15 @@ namespace StructureMap.Pipeline
             set { _interceptor = value; }
         }
 
-        public object Build(Type type, IInstanceCreator creator)
+        public virtual object Build(Type type, IInstanceCreator creator)
         {
             object rawValue = build(type, creator);
-            return _interceptor.Process(rawValue);
+            
+            // Intercept with the Instance-specific InstanceInterceptor
+            object interceptedValue = _interceptor.Process(rawValue);
+
+            // Now, give the at large Interceptors a chance to intercept
+            return creator.FindInterceptor(interceptedValue.GetType()).Process(interceptedValue);
         }
 
         protected abstract object build(Type type, IInstanceCreator creator);

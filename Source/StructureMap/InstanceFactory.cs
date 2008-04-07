@@ -19,8 +19,8 @@ namespace StructureMap
         private readonly Dictionary<string, InstanceBuilder> _instanceBuilders;
         private readonly InstanceInterceptor _interceptor = new NulloInterceptor();
         private readonly Type _pluginType;
-        private InterceptorLibrary _interceptorLibrary = InterceptorLibrary.Empty;
         private MementoSource _source;
+        private InstanceManager _manager = new InstanceManager();
 
         #region static constructors
 
@@ -145,8 +145,8 @@ namespace StructureMap
             try
             {
                 InstanceBuilder builder = _instanceBuilders[memento.ConcreteKey];
-                object constructedInstance = builder.BuildInstance(memento, builder.Manager);
-                CompoundInterceptor interceptor = _interceptorLibrary.FindInterceptor(constructedInstance.GetType());
+                object constructedInstance = builder.BuildInstance(memento, _manager);
+                InstanceInterceptor interceptor = _manager.FindInterceptor(constructedInstance.GetType());
                 return interceptor.Process(constructedInstance);
             }
             catch (StructureMapException)
@@ -178,11 +178,7 @@ namespace StructureMap
         /// <param name="instanceManager"></param>
         public void SetInstanceManager(InstanceManager instanceManager)
         {
-            _interceptorLibrary = instanceManager.InterceptorLibrary;
-            foreach (InstanceBuilder builder in _instanceBuilders.Values)
-            {
-                builder.SetInstanceManager(instanceManager);
-            }
+            _manager = instanceManager;
         }
 
         /// <summary>

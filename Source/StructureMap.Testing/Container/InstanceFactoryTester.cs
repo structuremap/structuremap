@@ -160,6 +160,7 @@ namespace StructureMap.Testing.Container
 
 
             InstanceFactory factory = new InstanceFactory(family, true);
+            factory.SetInstanceManager(new InstanceManager());
 
             Assert.AreSame(factory.GetInstance("Red"), recordedService);
         }

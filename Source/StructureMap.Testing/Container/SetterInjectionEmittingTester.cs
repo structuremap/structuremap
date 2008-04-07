@@ -57,6 +57,8 @@ namespace StructureMap.Testing.Container
             family.Plugins.Add(plugin, true);
 
             InstanceFactory factory = new InstanceFactory(family, true);
+            factory.SetInstanceManager(new InstanceManager());
+
             InstanceMemento memento = _source.GetMemento("Enum");
 
             EnumGridColumn column = (EnumGridColumn) factory.GetInstance(memento);
@@ -72,6 +74,8 @@ namespace StructureMap.Testing.Container
             family.Plugins.Add(plugin, true);
 
             InstanceFactory factory = new InstanceFactory(family, true);
+            factory.SetInstanceManager(new InstanceManager());
+
             InstanceMemento memento = _source.GetMemento("Long");
             long count = long.Parse(memento.GetProperty("Count"));
 
@@ -89,6 +93,8 @@ namespace StructureMap.Testing.Container
             family.Plugins.Add(plugin, true);
 
             InstanceFactory factory = new InstanceFactory(family, true);
+            factory.SetInstanceManager(new InstanceManager());
+
             InstanceMemento memento = _source.GetMemento("String");
 
             StringGridColumn column = (StringGridColumn) factory.GetInstance(memento);

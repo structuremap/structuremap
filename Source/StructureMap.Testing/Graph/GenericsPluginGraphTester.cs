@@ -39,8 +39,11 @@ namespace StructureMap.Testing.Graph
             PluginFamily stringFamily = family.CreateTemplatedClone(typeof (string));
 
             InstanceFactory intFactory = new InstanceFactory(intFamily, true);
+            intFactory.SetInstanceManager(new InstanceManager());
+            
             InstanceFactory stringFactory = new InstanceFactory(stringFamily, true);
-
+            stringFactory.SetInstanceManager(new InstanceManager());
+           
             GenericService<int> intService = (GenericService<int>) intFactory.GetInstance();
             Assert.AreEqual(typeof (int), intService.GetT());
 

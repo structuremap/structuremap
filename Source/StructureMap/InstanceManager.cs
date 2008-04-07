@@ -70,12 +70,6 @@ namespace StructureMap
             }
         }
 
-
-        public InterceptorLibrary InterceptorLibrary
-        {
-            get { return _interceptorLibrary; }
-        }
-
         public virtual IInstanceFactory this[Type pluginType]
         {
             get
@@ -502,5 +496,10 @@ namespace StructureMap
         protected delegate InstanceFactory CreateFactoryDelegate(Type type);
 
         #endregion
+
+        public InstanceInterceptor FindInterceptor(Type type)
+        {
+            return _interceptorLibrary.FindInterceptor(type);
+        }
     }
 }

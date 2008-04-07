@@ -22,6 +22,9 @@ namespace StructureMap.Testing.Pipeline
         {
             MockRepository mocks = new MockRepository();
             InstanceInterceptor interceptor = mocks.CreateMock<InstanceInterceptor>();
+            InstanceInterceptor interceptor2 = mocks.CreateMock<InstanceInterceptor>();
+            StructureMap.Pipeline.IInstanceCreator instanceCreator = mocks.CreateMock<StructureMap.Pipeline.IInstanceCreator>();
+
 
             InstanceUnderTest instanceUnderTest = new InstanceUnderTest();
             instanceUnderTest.Interceptor = interceptor;
@@ -30,11 +33,16 @@ namespace StructureMap.Testing.Pipeline
             using (mocks.Record())
             {
                 Expect.Call(interceptor.Process(instanceUnderTest.TheInstanceThatWasBuilt)).Return(objectReturnedByInterceptor);
+                Expect.Call(instanceCreator.FindInterceptor(instanceUnderTest.TheInstanceThatWasBuilt.GetType())).Return
+                    (interceptor2);
+
+                Expect.Call(interceptor2.Process(objectReturnedByInterceptor)).Return(objectReturnedByInterceptor);
             }
 
             using (mocks.Playback())
             {
-                Assert.AreEqual(objectReturnedByInterceptor, instanceUnderTest.Build(typeof(object), null));
+                Assert.AreEqual(objectReturnedByInterceptor, instanceUnderTest.Build(typeof(object), instanceCreator));
+                
             }
         }
 

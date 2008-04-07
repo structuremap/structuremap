@@ -240,13 +240,13 @@ namespace StructureMap.Graph
                 ConstructorInfo ctor = GetConstructor();
                 foreach (ParameterInfo parameter in ctor.GetParameters())
                 {
-                    returnValue = returnValue && canTypeBeAutoFilled(parameter.ParameterType);
+                    returnValue = returnValue && TypeCanBeAutoFilled(parameter.ParameterType);
                 }
 
                 foreach (SetterProperty setter in Setters)
                 {
                     Type propertyType = setter.Property.PropertyType;
-                    returnValue = returnValue && canTypeBeAutoFilled(propertyType);
+                    returnValue = returnValue && TypeCanBeAutoFilled(propertyType);
                 }
 
                 return returnValue;
@@ -377,7 +377,7 @@ namespace StructureMap.Graph
             return returnValue;
         }
 
-        private bool canTypeBeAutoFilled(Type parameterType)
+        public static bool TypeCanBeAutoFilled(Type parameterType)
         {
             bool cannotBeFilled = false;
 
@@ -388,6 +388,11 @@ namespace StructureMap.Graph
             return !cannotBeFilled;
         }
 
+       
+        public static bool TypeIsPrimitive(Type parameterType)
+        {
+            return parameterType.IsValueType || parameterType.Equals(typeof (string));
+        }
 
         public override bool Equals(object obj)
         {

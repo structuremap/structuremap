@@ -43,7 +43,7 @@ namespace StructureMap.Testing.Widget5
 
             column.Rules =
                 (Rule[])
-                Manager.CreateInstanceArray("StructureMap.Testing.Widget.Rule", instance.GetChildrenArray("Rules"));
+                creator.CreateInstanceArray("StructureMap.Testing.Widget.Rule", instance.GetChildrenArray("Rules"));
 
 //
 //			column.WrapLines = bool.Parse(Memento.GetProperty("WrapLines"));

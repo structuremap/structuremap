@@ -17,6 +17,7 @@ namespace StructureMap.Testing.Container.Interceptors
         {
             PluginFamily family = ObjectMother.GetPluginFamily(typeof (Rule));
             InstanceFactory factory = new InstanceFactory(family, true);
+            factory.SetInstanceManager(new InstanceManager());
 
             _interceptor = new SingletonInterceptor();
             _interceptor.InnerInstanceFactory = factory;

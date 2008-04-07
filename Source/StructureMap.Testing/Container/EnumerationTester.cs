@@ -23,6 +23,8 @@ namespace StructureMap.Testing.Container
 
 
             InstanceFactory cowFactory = new InstanceFactory(family, true);
+            cowFactory.SetInstanceManager(new InstanceManager());
+
             MemoryInstanceMemento memento = new MemoryInstanceMemento("Default", "Angus");
 
             memento.SetProperty("Name", "Bessie");

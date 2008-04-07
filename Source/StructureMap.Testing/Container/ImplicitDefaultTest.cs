@@ -13,6 +13,8 @@ namespace StructureMap.Testing.Container
                 typeof (IGateway),
                 new string[] {"StructureMap.Testing.Widget3"});
 
+
+
             DefaultGateway gateway = factory.GetInstance() as DefaultGateway;
             Assert.IsNotNull(gateway);
         }
