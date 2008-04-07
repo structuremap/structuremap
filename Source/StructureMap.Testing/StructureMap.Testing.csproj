@@ -167,6 +167,7 @@
     <Compile Include="Caching\StorageAndCacheItemTester.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Configuration\ConfigurationInstanceReaderTester.cs" />
     <Compile Include="Configuration\ConfigurationParserCollectionTester.cs" />
     <Compile Include="Configuration\ConfigurationParserTester.cs" />
     <Compile Include="Configuration\DefaultInstanceNodeTester.cs" />
