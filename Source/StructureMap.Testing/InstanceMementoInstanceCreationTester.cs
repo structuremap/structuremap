@@ -1,0 +1,262 @@
+using System.Drawing;
+using NUnit.Framework;
+using StructureMap.Configuration;
+using StructureMap.Configuration.Mementos;
+using StructureMap.Graph;
+using StructureMap.Pipeline;
+using StructureMap.Testing.Widget3;
+
+namespace StructureMap.Testing
+{
+    [TestFixture]
+    public class InstanceMementoInstanceCreationTester
+    {
+        private PluginGraph _graph;
+
+        #region Setup/Teardown
+
+        [SetUp]
+        public void SetUp()
+        {
+            _graph = new PluginGraph();
+            PluginFamily family = _graph.PluginFamilies.Add(typeof (IService));
+            family.Plugins.Add(typeof(ColorService), "Color");
+
+            _graph.PluginFamilies.Add(typeof (Rule));
+        }
+
+        #endregion
+
+        public class Rule
+        {
+        }
+
+        public class ComplexRule : Rule
+        {
+            private readonly Color _color;
+            private bool _Bool;
+            private byte _Byte;
+            private double _Double;
+            private int _Int;
+            private long _Long;
+            private string _String;
+
+
+            [DefaultConstructor]
+            public ComplexRule(string String, Color color, int Int, long Long, byte Byte, double Double, bool Bool,
+                               IAutomobile car, IAutomobile[] cars)
+            {
+                _String = String;
+                _color = color;
+                _Int = Int;
+                _Long = Long;
+                _Byte = Byte;
+                _Double = Double;
+                _Bool = Bool;
+            }
+
+            /// <summary>
+            /// Plugin should find the constructor above, not the "greedy" one below.
+            /// </summary>
+            /// <param name="String"></param>
+            /// <param name="String2"></param>
+            /// <param name="Int"></param>
+            /// <param name="Long"></param>
+            /// <param name="Byte"></param>
+            /// <param name="Double"></param>
+            /// <param name="Bool"></param>
+            /// <param name="extra"></param>
+            public ComplexRule(string String, string String2, int Int, long Long, byte Byte, double Double, bool Bool,
+                               string extra)
+            {
+            }
+
+            public string String
+            {
+                get { return _String; }
+            }
+
+
+            public int Int
+            {
+                get { return _Int; }
+            }
+
+            public byte Byte
+            {
+                get { return _Byte; }
+            }
+
+            public long Long
+            {
+                get { return _Long; }
+            }
+
+            public double Double
+            {
+                get { return _Double; }
+            }
+
+            public bool Bool
+            {
+                get { return _Bool; }
+            }
+
+            public static MemoryInstanceMemento GetMemento()
+            {
+                MemoryInstanceMemento memento = new MemoryInstanceMemento("", "Sample");
+                memento.SetProperty("String", "Red");
+                memento.SetProperty("color", "Green");
+                memento.SetProperty("Int", "1");
+                memento.SetProperty("Long", "2");
+                memento.SetProperty("Byte", "3");
+                memento.SetProperty("Double", "4");
+                memento.SetProperty("Bool", "true");
+
+                return memento;
+            }
+        }
+
+
+        public interface IAutomobile
+        {
+        }
+
+        public class GrandPrix : IAutomobile
+        {
+            private readonly string _color;
+            private readonly int _horsePower;
+
+            public GrandPrix(int horsePower, string color)
+            {
+                _horsePower = horsePower;
+                _color = color;
+            }
+        }
+
+        public class Mustang : IAutomobile
+        {
+            public Mustang()
+            {
+            }
+        }
+
+        [Test]
+        public void Create_a_default_instance()
+        {
+            MemoryInstanceMemento memento = MemoryInstanceMemento.CreateDefaultInstanceMemento();
+            Instance instance = memento.ReadInstance(null, null);
+
+            Assert.IsInstanceOfType(typeof (DefaultInstance), instance);
+        }
+
+        [Test]
+        public void Create_a_referenced_instance()
+        {
+            MemoryInstanceMemento memento = MemoryInstanceMemento.CreateReferencedInstanceMemento("blue");
+            ReferencedInstance instance = (ReferencedInstance) memento.ReadInstance(null, null);
+
+            Assert.AreEqual("blue", instance.ReferenceKey);
+        }
+
+
+        [Test]
+        public void Get_the_instance_name()
+        {
+            MemoryInstanceMemento memento = new MemoryInstanceMemento("Color", "Red");
+            memento.SetProperty("Color", "Red");
+            memento.InstanceKey = "Red";
+
+            Assert.AreEqual("Red", memento.ReadInstance(_graph, typeof(IService)).Name);
+        }
+
+        [Test]
+        public void ReadChildArrayProperty()
+        {
+            PluginGraph graph = new PluginGraph();
+            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (ComplexRule));
+
+            graph.PluginFamilies.Add(typeof (Rule)).Plugins.Add(plugin);
+
+            MemoryInstanceMemento memento = ComplexRule.GetMemento();
+            memento.SetProperty(XmlConstants.PLUGGED_TYPE, typeof (ComplexRule).AssemblyQualifiedName);
+            memento.AddChildArray("cars", new InstanceMemento[]
+                                              {
+                                                  MemoryInstanceMemento.CreateReferencedInstanceMemento("Ford"),
+                                                  MemoryInstanceMemento.CreateReferencedInstanceMemento("Chevy"),
+                                                  MemoryInstanceMemento.CreateReferencedInstanceMemento("Dodge"),
+                                              });
+
+            ConfiguredInstance instance = (ConfiguredInstance)memento.ReadInstance(graph, typeof(Rule));
+            Instance[] instances = instance.GetChildArray("cars");
+            Assert.AreEqual(3, instances.Length);
+
+            assertIsReference(instances[0], "Ford");
+            assertIsReference(instances[1], "Chevy");
+            assertIsReference(instances[2], "Dodge");
+
+        }
+
+        private void assertIsReference(Instance instance, string referenceKey)
+        {
+            ReferencedInstance referencedInstance = (ReferencedInstance) instance;
+            Assert.AreEqual(referenceKey, referencedInstance.ReferenceKey);
+        }
+
+        [Test]
+        public void ReadChildProperty_child_property_is_defined_build_child()
+        {
+            PluginGraph graph = new PluginGraph();
+            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (ComplexRule));
+
+            graph.PluginFamilies.Add(typeof (Rule)).Plugins.Add(plugin);
+
+            MemoryInstanceMemento memento = ComplexRule.GetMemento();
+            memento.SetProperty(XmlConstants.PLUGGED_TYPE, typeof (ComplexRule).AssemblyQualifiedName);
+            MemoryInstanceMemento carMemento = MemoryInstanceMemento.CreateReferencedInstanceMemento("GrandPrix");
+            memento.AddChild("car", carMemento);
+
+            ConfiguredInstance instance = (ConfiguredInstance) memento.ReadInstance(graph, typeof (Rule));
+            ReferencedInstance child = (ReferencedInstance) instance.GetChild("car");
+
+            Assert.AreEqual("GrandPrix", child.ReferenceKey);
+        }
+
+        [Test]
+        public void ReadChildProperty_child_property_is_not_defined_so_use_default()
+        {
+            PluginGraph graph = new PluginGraph();
+            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (ComplexRule));
+
+            graph.PluginFamilies.Add(typeof (Rule)).Plugins.Add(plugin);
+
+            MemoryInstanceMemento memento = ComplexRule.GetMemento();
+            memento.SetProperty(XmlConstants.PLUGGED_TYPE, typeof (ComplexRule).AssemblyQualifiedName);
+
+            ConfiguredInstance instance = (ConfiguredInstance) memento.ReadInstance(graph, typeof (Rule));
+            Assert.IsInstanceOfType(typeof (DefaultInstance), instance.GetChild("car"));
+        }
+
+        [Test]
+        public void ReadPrimitivePropertiesHappyPath()
+        {
+            PluginGraph graph = new PluginGraph();
+            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (ComplexRule));
+
+            graph.PluginFamilies.Add(typeof (Rule)).Plugins.Add(plugin);
+
+            MemoryInstanceMemento memento = ComplexRule.GetMemento();
+            memento.SetProperty(XmlConstants.PLUGGED_TYPE, typeof (ComplexRule).AssemblyQualifiedName);
+
+            IConfiguredInstance instance = (IConfiguredInstance) memento.ReadInstance(graph, typeof (Rule));
+
+            Assert.AreEqual(memento.GetProperty("String"), instance.GetProperty("String"));
+            Assert.AreEqual(memento.GetProperty("color"), instance.GetProperty("color"));
+            Assert.AreEqual(memento.GetProperty("Int"), instance.GetProperty("Int"));
+            Assert.AreEqual(memento.GetProperty("Long"), instance.GetProperty("Long"));
+            Assert.AreEqual(memento.GetProperty("Byte"), instance.GetProperty("Byte"));
+            Assert.AreEqual(memento.GetProperty("Double"), instance.GetProperty("Double"));
+            Assert.AreEqual(memento.GetProperty("Bool"), instance.GetProperty("Bool"));
+        }
+    }
+}
