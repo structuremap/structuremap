@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Xml;
 using NUnit.Framework;
 using StructureMap.Configuration;
@@ -28,11 +29,15 @@ namespace StructureMap.Testing.Container.ExceptionHandling
             }
             catch (StructureMapException ex)
             {
+                Debug.WriteLine("Actual:\n" + ex.ToString() + "\n\n\n");
+
                 Assert.AreEqual(expected, ex.Message);
                 return;
             }
             catch (Exception ex)
             {
+                Debug.WriteLine("Actual:\n" + ex.ToString() + "\n\n\n");
+
                 Assert.Fail("Wrong Exception -- " + ex.Message);
             }
 
@@ -50,11 +55,14 @@ namespace StructureMap.Testing.Container.ExceptionHandling
             }
             catch (StructureMapException ex)
             {
+                Debug.WriteLine("Actual:\n\n" + ex.ToString() + "\n\n");
+
                 Assert.AreEqual(expected, ex.Message);
                 return;
             }
             catch (Exception ex)
             {
+                Debug.WriteLine("Actual:\n\n" + ex.ToString() + "\n\n");
                 Assert.Fail("Wrong Exception -- " + ex.Message);
             }
 

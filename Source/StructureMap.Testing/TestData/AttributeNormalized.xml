@@ -17,14 +17,12 @@
     <Instance Key="Bigger" Type="GreaterThan" Attribute="MyDad" Value="10" />
   </PluginFamily>
 
-  <Instances>
-    <StructureMap.Testing.Widget.GrandChild Type="Default" Key="Tommy" RightHanded="false" BirthYear="1972" />
-    <StructureMap.Testing.Widget.GrandChild Type="Default" Key="Todd" RightHanded="true" BirthYear="1975" />
-    <StructureMap.Testing.Widget.GrandChild Type="Leftie" Key="Trevor" BirthYear="1979" />
-    <StructureMap.Testing.Widget.Child Type="Default" Key="Tom" Name="Tom">
-      <MyGrandChild Type="Leftie" BirthYear="1984" />
-    </StructureMap.Testing.Widget.Child>
+  <AddInstance PluginType="StructureMap.Testing.Widget.GrandChild, StructureMap.Testing.Widget"  Type="Default" Key="Tommy" RightHanded="false" BirthYear="1972" />
+  <AddInstance PluginType="StructureMap.Testing.Widget.GrandChild, StructureMap.Testing.Widget"  Type="Default" Key="Todd" RightHanded="true" BirthYear="1975" />
+  <AddInstance PluginType="StructureMap.Testing.Widget.GrandChild, StructureMap.Testing.Widget"   Type="Leftie" Key="Trevor" BirthYear="1979" />
+  <AddInstance PluginType="StructureMap.Testing.Widget.Child, StructureMap.Testing.Widget" Type="Default" Key="Tom" Name="Tom">
+    <MyGrandChild Type="Leftie" BirthYear="1984" />
+  </AddInstance>
 
-  </Instances>
 </StructureMap>
 

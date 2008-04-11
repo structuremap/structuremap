@@ -73,7 +73,7 @@ namespace StructureMap.Testing.Configuration
 
         [Test,
          ExpectedException(typeof (StructureMapException),
-             "StructureMap Exception Code:  195\nThe Profile some profile referenced by Machine some machine does not exist"
+            ExpectedMessage = "StructureMap Exception Code:  195\nThe Profile some profile referenced by Machine some machine does not exist"
              )]
         public void AddMachineWithProfileThatDoesNotExist()
         {
@@ -111,11 +111,11 @@ namespace StructureMap.Testing.Configuration
             TypePath typePath = new TypePath(GetType());
 
 
-            graphBuilder.AddPluginFamily(typePath, "something", new string[0], theScope);
+            graphBuilder.AddPluginFamily(typePath, "something", theScope);
 
             PluginFamily family = graphBuilder.PluginGraph.PluginFamilies[GetType()];
 
-            Assert.AreSame(chain, family.InterceptionChain);
+            Assert.AreEqual(chain, family.InterceptionChain);
 
             builderMock.Verify();
         }

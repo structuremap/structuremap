@@ -63,24 +63,6 @@ namespace StructureMap.Configuration
             return (ConfigurationParser[]) list.ToArray(typeof (ConfigurationParser));
         }
 
-        public static string[] GetDeploymentTargets(XmlNode node)
-        {
-            string[] returnValue = new string[0];
-
-            XmlAttribute att = node.Attributes[XmlConstants.DEPLOYMENT_ATTRIBUTE];
-            if (att != null)
-            {
-                string deployTargetArray = att.Value;
-
-                deployTargetArray = deployTargetArray.Replace(" ,", ",");
-                deployTargetArray = deployTargetArray.Replace(", ", ",");
-
-
-                returnValue = deployTargetArray.Split(',');
-            }
-
-            return returnValue;
-        }
 
         public static ConfigurationParser FromFile(string filename)
         {
@@ -135,8 +117,6 @@ namespace StructureMap.Configuration
 
         public void ParseInstances(IGraphBuilder builder)
         {
-            parseInstances(builder);
-
             XmlNodeList familyNodes = findNodes(XmlConstants.PLUGIN_FAMILY_NODE);
             foreach (XmlElement familyElement in familyNodes)
             {
@@ -151,9 +131,8 @@ namespace StructureMap.Configuration
             foreach (XmlNode assemblyNode in assemblyNodes)
             {
                 string assemblyName = assemblyNode.Attributes[XmlConstants.NAME].Value;
-                string[] deploymentTargets = GetDeploymentTargets(assemblyNode);
 
-                builder.AddAssembly(assemblyName, deploymentTargets);
+                builder.AddAssembly(assemblyName);
             }
         }
 
@@ -200,26 +179,6 @@ namespace StructureMap.Configuration
                 builder.RegisterMemento(pluginTypePath, memento);
             }
         }
-
-        private void parseInstances(IGraphBuilder builder)
-        {
-            XmlNode instancesNode = _structureMapNode[XmlConstants.INSTANCES_NODE];
-            if (instancesNode == null)
-            {
-                return;
-            }
-
-            foreach (XmlNode instanceNode in instancesNode)
-            {
-                string pluginTypeName = instanceNode.Name;
-                TypePath typePath = TypePath.TypePathForFullName(pluginTypeName);
-
-                InstanceMemento memento = _mementoCreator.CreateMemento(instanceNode);
-
-                builder.RegisterMemento(typePath, memento);
-            }
-        }
-
 
         public void ParseProfilesAndMachines(IGraphBuilder builder)
         {

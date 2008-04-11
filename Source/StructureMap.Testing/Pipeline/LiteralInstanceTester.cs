@@ -16,7 +16,7 @@ namespace StructureMap.Testing.Pipeline
         public void Build_happy_path()
         {
             ATarget target = new ATarget();
-            LiteralInstance<ITarget> instance = new LiteralInstance<ITarget>(target);
+            LiteralInstance instance = new LiteralInstance(target);
             Assert.AreSame(target, instance.Build(typeof(ITarget), new StubInstanceCreator()));
         }
 

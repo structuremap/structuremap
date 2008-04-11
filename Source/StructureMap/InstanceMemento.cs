@@ -9,13 +9,11 @@ namespace StructureMap
     /// <summary>
     /// GoF Memento representing an Object Instance
     /// </summary>
-    public abstract class InstanceMemento : IConfiguredInstance
+    public abstract class InstanceMemento
     {
         public const string EMPTY_STRING = "STRING.EMPTY";
         public const string SUBSTITUTIONS_ATTRIBUTE = "Substitutions";
         public const string TEMPLATE_ATTRIBUTE = "Template";
-        private string _concreteKey;
-        private DefinitionSource _definitionSource = DefinitionSource.Explicit;
         private string _instanceKey;
         private InstanceInterceptor _interceptor = new NulloInterceptor();
         private string _lastKey = string.Empty;
@@ -24,27 +22,43 @@ namespace StructureMap
         /// The named type of the object instance represented by the InstanceMemento.  Translates to a concrete
         /// type
         /// </summary>
-        public string ConcreteKey
+        [Obsolete] public string ConcreteKey
         {
-            get
-            {
-                if (_concreteKey == null)
-                {
-                    _concreteKey = innerConcreteKey;
-                    if (string.IsNullOrEmpty(_concreteKey))
-                    {
-                        Plugin plugin = CreateInferredPlugin();
-                        if (plugin != null)
-                        {
-                            _concreteKey = plugin.ConcreteKey;
-                        }
-                    }
-                }
-
-                return _concreteKey;
-            }
-            set { _concreteKey = value; }
+            get { return innerConcreteKey; }
         }
+
+        [Obsolete] public InstanceBuilder FindBuilder(InstanceBuilderList builders)
+        {
+            if (string.IsNullOrEmpty(innerConcreteKey))
+            {
+                string pluggedTypeName = getPluggedType();
+                Type pluggedType = TypePath.GetTypePath(pluggedTypeName).FindType();
+
+                return builders.FindByType(pluggedType);
+            }
+
+            return builders.FindByConcreteKey(innerConcreteKey);
+        }
+
+        public virtual Plugin FindPlugin(PluginFamily family)
+        {
+            if (string.IsNullOrEmpty(innerConcreteKey))
+            {
+                string pluggedTypeName = getPluggedType();
+                Type pluggedType = TypePath.GetTypePath(pluggedTypeName).FindType();
+
+                return family.Plugins.FindOrCreate(pluggedType, false);
+            }
+
+
+            if (family.Plugins.HasPlugin(innerConcreteKey))
+            {
+                return family.Plugins[innerConcreteKey];
+            }
+
+            throw new StructureMapException(201, innerConcreteKey, InstanceKey, family.PluginTypeName);
+        }
+
 
         protected abstract string innerConcreteKey { get; }
 
@@ -105,15 +119,9 @@ namespace StructureMap
         /// <summary>
         /// Is the InstanceMemento a reference to the default instance of the plugin type?
         /// </summary>
-        public bool IsDefault
+        [Obsolete] public bool IsDefault
         {
             get { return (IsReference && ReferenceKey == string.Empty); }
-        }
-
-        public DefinitionSource DefinitionSource
-        {
-            get { return _definitionSource; }
-            set { _definitionSource = value; }
         }
 
         public InstanceInterceptor Interceptor
@@ -189,22 +197,23 @@ namespace StructureMap
         /// <param name="typeName"></param>
         /// <param name="instanceCreator"></param>
         /// <returns></returns>
-        public virtual object GetChild(string key, string typeName, Pipeline.IInstanceCreator instanceCreator)
+        [Obsolete("Removing in favor of Instance")]public virtual object GetChild(string key, string typeName, Pipeline.IInstanceCreator instanceCreator)
         {
-            InstanceMemento memento = GetChildMemento(key);
-            object returnValue = null;
+            throw new NotImplementedException();
+            //InstanceMemento memento = GetChildMemento(key);
+            //object returnValue = null;
 
-            if (memento == null)
-            {
-                returnValue = buildDefaultChild(key, instanceCreator, typeName);
-            }
-            else
-            {
-                returnValue = instanceCreator.CreateInstance(typeName, memento);
-            }
+            //if (memento == null)
+            //{
+            //    returnValue = buildDefaultChild(key, instanceCreator, typeName);
+            //}
+            //else
+            //{
+            //    returnValue = instanceCreator.CreateInstance(typeName, memento);
+            //}
 
 
-            return returnValue;
+            //return returnValue;
         }
 
         private static object buildDefaultChild(string key, StructureMap.Pipeline.IInstanceCreator manager, string typeName)
@@ -254,42 +263,47 @@ namespace StructureMap
             throw new NotSupportedException("This type of InstanceMemento does not support the Substitute() Method");
         }
 
-        public Plugin CreateInferredPlugin()
-        {
-            string pluggedTypeName = getPluggedType();
-            if (string.IsNullOrEmpty(pluggedTypeName))
-            {
-                return null;
-            }
-            else
-            {
-                Type pluggedType = TypePath.GetTypePath(pluggedTypeName).FindType();
-                return Plugin.CreateImplicitPlugin(pluggedType);
-            }
-        }
+
 
         protected virtual string getPluggedType()
         {
             return getPropertyValue(XmlConstants.PLUGGED_TYPE);
         }
 
-        public object Build(IInstanceCreator creator)
+        public Instance ReadInstance(PluginGraph pluginGraph, Type pluginType)
         {
-            object instance = buildInstance(creator);
             try
             {
-                return _interceptor.Process(instance);
+                Instance instance = readInstance(pluginGraph, pluginType);
+                instance.Name = InstanceKey;
+            
+                return instance;
+            }
+            catch (StructureMapException)
+            {
+                throw;
             }
             catch (Exception e)
             {
-                throw new StructureMapException(308, e, InstanceKey,
-                                                TypePath.GetAssemblyQualifiedName(instance.GetType()));
+                throw new StructureMapException(260, InstanceKey, pluginType.FullName);
             }
         }
 
-        protected virtual object buildInstance(IInstanceCreator creator)
+        protected virtual Instance readInstance(PluginGraph pluginGraph, Type pluginType)
         {
-            return creator.BuildInstance(this);
+            if (IsDefault)
+            {
+                return new DefaultInstance();
+            }
+
+            if (IsReference)
+            {
+                return new ReferencedInstance(this.ReferenceKey);
+            }
+
+            return new ConfiguredInstance(this, pluginGraph, pluginType);
         }
+
+
     }
 }

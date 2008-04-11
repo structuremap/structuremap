@@ -21,12 +21,11 @@ namespace StructureMap.Configuration
         {
             TypePath typePath = TypePath.CreateFromXmlNode(familyElement);
             string defaultKey = familyElement.GetAttribute(XmlConstants.DEFAULT_KEY_ATTRIBUTE);
-            string[] deploymentTargets = ConfigurationParser.GetDeploymentTargets(familyElement);
 
 
             InstanceScope scope = findScope(familyElement);
 
-            _builder.AddPluginFamily(typePath, defaultKey, deploymentTargets, scope);
+            _builder.AddPluginFamily(typePath, defaultKey, scope);
 
             attachMementoSource(familyElement, typePath);
             attachPlugins(typePath, familyElement);
@@ -46,7 +45,7 @@ namespace StructureMap.Configuration
             InstanceMemento memento = _mementoCreator.CreateMemento(element);
             memento.InstanceKey = name;
 
-            _builder.AddPluginFamily(pluginTypePath, name, new string[0], scope);
+            _builder.AddPluginFamily(pluginTypePath, name, scope);
             _builder.RegisterMemento(pluginTypePath, memento);
         }
 
@@ -57,7 +56,6 @@ namespace StructureMap.Configuration
 
             InstanceMemento memento = _mementoCreator.CreateMemento(element);
 
-            _builder.AddPluginFamily(pluginTypePath, null, new string[0], scope);
             _builder.RegisterMemento(pluginTypePath, memento);
         }
 

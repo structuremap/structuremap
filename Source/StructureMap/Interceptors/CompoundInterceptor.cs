@@ -29,5 +29,14 @@ namespace StructureMap.Interceptors
         }
 
         #endregion
+
+        public InstanceInterceptor Merge(InstanceInterceptor interceptor)
+        {
+            InstanceInterceptor[] interceptors = new InstanceInterceptor[_interceptors.Length + 1];
+            _interceptors.CopyTo(interceptors, 0);
+            interceptors[interceptors.Length - 1] = interceptor;
+
+            return new CompoundInterceptor(interceptors);
+        }
     }
 }

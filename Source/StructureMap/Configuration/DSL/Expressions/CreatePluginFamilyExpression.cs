@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using StructureMap.Attributes;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
+using StructureMap.Pipeline;
 
 namespace StructureMap.Configuration.DSL.Expressions
 {
@@ -54,30 +55,23 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="builder"></param>
         /// <returns></returns>
-        public CreatePluginFamilyExpression<PLUGINTYPE> TheDefaultIs(IMementoBuilder builder)
+        public CreatePluginFamilyExpression<PLUGINTYPE> TheDefaultIs(Instance instance)
         {
-            builder.ValidatePluggability(_pluginType);
-
-            _children.Add(builder);
             _alterations.Add(delegate(PluginFamily family)
                                  {
-                                     InstanceMemento memento = builder.BuildMemento(family);
-                                     family.Source.AddExternalMemento(memento);
-                                     family.DefaultInstanceKey = memento.InstanceKey;
+                                     family.AddInstance(instance);
+                                     family.DefaultInstanceKey = instance.Name;
                                  });
 
             return this;
         }
 
-        public CreatePluginFamilyExpression<PLUGINTYPE> AddInstance(IMementoBuilder builder)
+        public CreatePluginFamilyExpression<PLUGINTYPE> AddInstance(Instance instance)
         {
-            builder.ValidatePluggability(_pluginType);
-
-            _children.Add(builder);
+            // TODO:  Validate pluggability
             _alterations.Add(delegate(PluginFamily family)
                                  {
-                                     InstanceMemento memento = builder.BuildMemento(family);
-                                     family.Source.AddExternalMemento(memento);
+                                     family.AddInstance(instance);
                                  });
 
             return this;
@@ -144,7 +138,10 @@ namespace StructureMap.Configuration.DSL.Expressions
         public CreatePluginFamilyExpression<PLUGINTYPE> EnrichWith(EnrichmentHandler<PLUGINTYPE> handler)
         {
             _alterations.Add(
-                delegate(PluginFamily family) { family.InstanceInterceptor = new EnrichmentInterceptor<PLUGINTYPE>(handler); });
+                delegate(PluginFamily family)
+                    {
+                        family.InstanceInterceptor = new EnrichmentInterceptor<PLUGINTYPE>(handler);
+                    });
 
             return this;
         }
@@ -161,7 +158,7 @@ namespace StructureMap.Configuration.DSL.Expressions
                     {
                         Plugin plugin = Plugin.CreateImplicitPlugin(typeof (CONCRETETYPE));
                         plugin.ConcreteKey = instanceName;
-                        family.Plugins.Add(plugin, true);
+                        family.Plugins.Add(plugin);
                     }
                 );
 

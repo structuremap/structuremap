@@ -30,7 +30,7 @@ namespace StructureMap.Testing.Pipeline
             using (mocks.Record())
             {
                 Expect.Call(instanceCreator.CreateInstance(typeof(IDefault))).Return(theDefault);
-                Expect.Call(instanceCreator.FindInterceptor(theDefault.GetType())).Return(new NulloInterceptor());
+                Expect.Call(instanceCreator.ApplyInterception(typeof(IDefault), theDefault)).Return(theDefault);
             }
 
             using (mocks.Playback())

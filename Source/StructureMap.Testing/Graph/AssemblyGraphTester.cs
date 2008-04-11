@@ -25,7 +25,6 @@ namespace StructureMap.Testing.Graph
 
             Assert.IsNotNull(families);
             Assert.AreEqual(4, families.Length);
-            Assert.AreEqual(DefinitionSource.Implicit, families[0].DefinitionSource);
         }
 
         [Test]
@@ -36,12 +35,11 @@ namespace StructureMap.Testing.Graph
             Plugin[] plugins = family.FindPlugins(graph);
             Assert.IsNotNull(plugins);
             Assert.AreEqual(4, plugins.Length);
-            Assert.AreEqual(DefinitionSource.Implicit, plugins[0].DefinitionSource);
         }
 
         [Test,
          ExpectedException(typeof (StructureMapException),
-             "StructureMap Exception Code:  101\nAssembly DoesNotExist referenced by an <Assembly> node in StructureMap.config cannot be loaded into the current AppDomain"
+            ExpectedMessage = "StructureMap Exception Code:  101\nAssembly DoesNotExist referenced by an <Assembly> node in StructureMap.config cannot be loaded into the current AppDomain"
              )]
         public void CannotFindAssembly()
         {

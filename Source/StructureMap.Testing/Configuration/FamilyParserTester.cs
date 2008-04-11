@@ -46,7 +46,7 @@ namespace StructureMap.Testing.Configuration
         [Test]
         public void ScopeIsBlank()
         {
-            _builderMock.Expect("AddPluginFamily", _typePath, string.Empty, new string[0], InstanceScope.PerRequest);
+            _builderMock.Expect("AddPluginFamily", _typePath, string.Empty, InstanceScope.PerRequest);
 
             _parser.ParseFamily(_familyElement);
 
@@ -58,7 +58,7 @@ namespace StructureMap.Testing.Configuration
         public void ScopeIsBlank2()
         {
             _familyElement.SetAttribute(XmlConstants.SCOPE_ATTRIBUTE, "");
-            _builderMock.Expect("AddPluginFamily", _typePath, string.Empty, new string[0], InstanceScope.PerRequest);
+            _builderMock.Expect("AddPluginFamily", _typePath, string.Empty, InstanceScope.PerRequest);
 
             _parser.ParseFamily(_familyElement);
 
@@ -70,7 +70,7 @@ namespace StructureMap.Testing.Configuration
         public void ScopeIsSingleton()
         {
             _familyElement.SetAttribute(XmlConstants.SCOPE_ATTRIBUTE, InstanceScope.Singleton.ToString());
-            _builderMock.Expect("AddPluginFamily", _typePath, string.Empty, new string[0], InstanceScope.Singleton);
+            _builderMock.Expect("AddPluginFamily", _typePath, string.Empty, InstanceScope.Singleton);
 
             _parser.ParseFamily(_familyElement);
 
@@ -82,7 +82,7 @@ namespace StructureMap.Testing.Configuration
         public void ScopeIsThreadLocal()
         {
             _familyElement.SetAttribute(XmlConstants.SCOPE_ATTRIBUTE, InstanceScope.ThreadLocal.ToString());
-            _builderMock.Expect("AddPluginFamily", _typePath, string.Empty, new string[0], InstanceScope.ThreadLocal);
+            _builderMock.Expect("AddPluginFamily", _typePath, string.Empty, InstanceScope.ThreadLocal);
 
             _parser.ParseFamily(_familyElement);
 

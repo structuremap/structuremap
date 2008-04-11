@@ -25,7 +25,7 @@ namespace StructureMap.Testing.Pipeline
 
             using (mocks.Record())
             {
-                Expect.Call(instanceCreator.FindInterceptor(returnedValue.GetType())).Return(new NulloInterceptor());
+                Expect.Call(instanceCreator.ApplyInterception(typeof(IReferenced), returnedValue)).Return(returnedValue);
                 Expect.Call(instanceCreator.CreateInstance(typeof(IReferenced), theReferenceKey)).Return(returnedValue);
             }
 

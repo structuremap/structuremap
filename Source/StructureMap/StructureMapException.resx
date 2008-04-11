@@ -148,7 +148,7 @@
     <value>Type {0} specified as a Plugin cannot be plugged into Type {1}</value>
   </data>
   <data name="200" xml:space="preserve">
-    <value>Could not find an InstanceMemento for the requested InstanceKey "{0}" of PluginFamily {1}</value>
+    <value>Could not find an Instance named "{0}" for PluginType {1}</value>
   </data>
   <data name="201" xml:space="preserve">
     <value>Unrecognized ConcreteKey "{0}" configured for InstanceKey "{1}" of PluginFamily {2}</value>
@@ -257,5 +257,11 @@
   </data>
   <data name="308" xml:space="preserve">
     <value>A configured instance interceptor has failed for Instance '{0}' and concrete type '{1}'</value>
+  </data>
+  <data name="215" xml:space="preserve">
+    <value>The requested default instance {0} for type {1} cannot be found</value>
+  </data>
+  <data name="260" xml:space="preserve">
+    <value>Malformed InstanceMemento {0} of PluginType {1}</value>
   </data>
 </root>

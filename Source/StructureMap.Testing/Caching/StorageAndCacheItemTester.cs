@@ -62,7 +62,7 @@ namespace StructureMap.Testing.Caching
 
         [Test,
          ExpectedException(typeof (ApplicationException),
-             "Type StructureMap.Testing.Caching.CacheTarget2 is does not implement the ICloneable interface")]
+            ExpectedMessage = "Type StructureMap.Testing.Caching.CacheTarget2 is does not implement the ICloneable interface")]
         public void ThrowsExceptionWhenNotCloneable()
         {
             CloneCacheItem item = new CloneCacheItem("key");
@@ -71,7 +71,7 @@ namespace StructureMap.Testing.Caching
 
         [Test,
          ExpectedException(typeof (ApplicationException),
-             "Exception when trying to serialize type StructureMap.Testing.Caching.CacheTarget2")]
+            ExpectedMessage = "Exception when trying to serialize type StructureMap.Testing.Caching.CacheTarget2")]
         public void ThrowsExceptionWhenNotSerializable()
         {
             SerializationCacheItem item = new SerializationCacheItem("key");

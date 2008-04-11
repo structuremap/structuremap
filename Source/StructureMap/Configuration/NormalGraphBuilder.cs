@@ -1,9 +1,11 @@
 using System;
+using System.Diagnostics;
 using System.Reflection;
 using StructureMap.Attributes;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
+using StructureMap.Pipeline;
 
 namespace StructureMap.Configuration
 {
@@ -101,10 +103,9 @@ namespace StructureMap.Configuration
             return _pluginGraph.LocateOrCreateFamilyForType(fullName);
         }
 
-        public void AddAssembly(string assemblyName, string[] deployableTargets)
+        public void AddAssembly(string assemblyName)
         {
             AssemblyGraph assemblyGraph = new AssemblyGraph(assemblyName);
-            assemblyGraph.DeploymentTargets = deployableTargets;
             _pluginGraph.Assemblies.Add(assemblyGraph);
 
             AssemblyGraph systemAssemblyGraph = new AssemblyGraph(assemblyName);
@@ -118,13 +119,25 @@ namespace StructureMap.Configuration
             _systemInstanceManager = new InstanceManager(_systemGraph);
         }
 
-        public void AddPluginFamily(TypePath typePath, string defaultKey, string[] deploymentTargets,
-                                    InstanceScope scope)
+        public void AddPluginFamily(TypePath typePath, string defaultKey, InstanceScope scope)
         {
-            PluginFamily family = new PluginFamily(typePath, defaultKey);
-            family.DefinitionSource = DefinitionSource.Explicit;
-            family.InterceptionChain = _builder.Build(scope);
-            _pluginGraph.PluginFamilies.Add(family);
+            Type pluginType;
+            try
+            {
+                pluginType = typePath.FindType();
+            }
+            catch (Exception ex)
+            {
+                throw new StructureMapException(103, ex, typePath.ClassName, typePath.AssemblyName);
+            }
+
+
+            PluginFamily family = _pluginGraph.LocateOrCreateFamilyForType(pluginType);
+
+            // Xml configuration wins
+            family.DefaultInstanceKey = defaultKey;
+            InterceptionChain interceptionChain = _builder.Build(scope);
+            family.AddInterceptionChain(interceptionChain);
         }
 
         public virtual void AttachSource(TypePath pluginTypePath, InstanceMemento sourceMemento)
@@ -143,7 +156,7 @@ namespace StructureMap.Configuration
         public void AttachSource(TypePath pluginTypePath, MementoSource source)
         {
             PluginFamily family = _pluginGraph.PluginFamilies[pluginTypePath];
-            family.Source = source;
+            family.AddMementoSource(source);
         }
 
         public Plugin AddPlugin(TypePath pluginTypePath, TypePath pluginPath, string concreteKey)
@@ -157,8 +170,7 @@ namespace StructureMap.Configuration
             }
 
             Plugin plugin = new Plugin(pluginPath, concreteKey);
-            plugin.DefinitionSource = DefinitionSource.Explicit;
-            family.Plugins.Add(plugin, true);
+            family.Plugins.Add(plugin);
 
             return plugin;
         }
@@ -194,22 +206,16 @@ namespace StructureMap.Configuration
 
         public void RegisterMemento(TypePath pluginTypePath, InstanceMemento memento)
         {
-            PluginFamily family = _pluginGraph.PluginFamilies[pluginTypePath];
-
-            Plugin inferredPlugin = memento.CreateInferredPlugin();
-            if (inferredPlugin != null)
-            {
-                family.Plugins.Add(inferredPlugin, true);
-            }
-
-            family.Source.AddExternalMemento(memento);
+            PluginFamily family = _pluginGraph.LocateOrCreateFamilyForType(pluginTypePath.FindType());
+            family.AddInstance(memento);
         }
 
         #endregion
 
         private object buildSystemObject(Type type, InstanceMemento memento)
         {
-            return _systemInstanceManager.CreateInstance(type, memento);
+            Instance instance = memento.ReadInstance(_systemGraph, type);
+            return _systemInstanceManager.CreateInstance(type, instance);
         }
     }
 }

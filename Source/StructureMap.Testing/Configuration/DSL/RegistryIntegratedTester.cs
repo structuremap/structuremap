@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
+using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget5;
 
@@ -31,6 +32,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             StructureMapConfiguration.ResetAll();
             StructureMapConfiguration.ScanAssemblies().IncludeAssemblyContainingType<RedGreenRegistry>();
+
             ObjectFactory.Reset();
 
             List<string> colors = new List<string>();
@@ -74,9 +76,9 @@ namespace StructureMap.Testing.Configuration.DSL
             graph.Seal();
 
             List<string> colors = new List<string>();
-            foreach (InstanceMemento memento in graph.PluginFamilies[typeof (IWidget)].Source.GetAllMementos())
+            foreach (Instance instance in graph.PluginFamilies[typeof (IWidget)].GetAllInstances())
             {
-                colors.Add(memento.InstanceKey);
+                colors.Add(instance.Name);
             }
 
             Assert.Contains("Red", colors);

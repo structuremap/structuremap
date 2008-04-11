@@ -39,7 +39,7 @@ namespace StructureMap.Testing
         {
             NormalGraphBuilder builder = new NormalGraphBuilder(new Registry[0]);
             TypePath pluginTypePath = new TypePath(typeof (IGateway));
-            builder.AddPluginFamily(pluginTypePath, _memento.InstanceKey, new string[0], InstanceScope.PerRequest);
+            builder.AddPluginFamily(pluginTypePath, _memento.InstanceKey, InstanceScope.PerRequest);
 
             builder.RegisterMemento(pluginTypePath, _memento);
 
@@ -49,33 +49,6 @@ namespace StructureMap.Testing
             StubbedGateway gateway = (StubbedGateway) manager.CreateInstance(typeof (IGateway), _memento.InstanceKey);
 
             Assert.IsNotNull(gateway);
-        }
-
-        [Test]
-        public void InstanceMementoKnowsHowToBuildPluginForPluggedType()
-        {
-            Assert.AreEqual(_expectedPlugin.ConcreteKey, _memento.ConcreteKey);
-
-            Plugin inferredPlugin = _memento.CreateInferredPlugin();
-            Assert.AreEqual(_expectedPlugin, inferredPlugin);
-        }
-
-        [Test]
-        public void NormalGraphBuilderHandlesTheInferredPlugin()
-        {
-            NormalGraphBuilder builder = new NormalGraphBuilder(new Registry[0]);
-            TypePath pluginTypePath = new TypePath(typeof (IGateway));
-            builder.AddPluginFamily(pluginTypePath, "", new string[0], InstanceScope.PerRequest);
-
-            builder.RegisterMemento(pluginTypePath, _memento);
-
-            PluginGraph graph = builder.CreatePluginGraph();
-
-            Assert.IsTrue(graph.PluginFamilies.Contains(typeof (IGateway)));
-
-            PluginFamily family = graph.PluginFamilies[typeof (IGateway)];
-            Plugin plugin = family.Plugins[typeof (StubbedGateway)];
-            Assert.AreEqual(_expectedPlugin, plugin);
         }
 
 

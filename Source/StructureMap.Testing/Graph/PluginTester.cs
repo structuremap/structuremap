@@ -1,6 +1,8 @@
 using System;
+using System.Drawing;
 using System.Reflection;
 using NUnit.Framework;
+using Rhino.Mocks;
 using StructureMap.Graph;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
@@ -34,7 +36,7 @@ namespace StructureMap.Testing.Graph
         [
             Test,
             ExpectedException(typeof (StructureMapException),
-                "StructureMap Exception Code:  112\nMissing a mandatory \"ConcreteKey\" attribute in a <Plugin> node for Type \"StructureMap.Testing.Widget.NotPluggableWidget\""
+                ExpectedMessage = "StructureMap Exception Code:  112\nMissing a mandatory \"ConcreteKey\" attribute in a <Plugin> node for Type \"StructureMap.Testing.Widget.NotPluggableWidget\""
                 )]
         public void AddAPluggedTypeWithoutAConcreteKey()
         {
@@ -148,7 +150,6 @@ namespace StructureMap.Testing.Graph
             Assert.IsNotNull(memento);
             Assert.AreEqual("Default", memento.InstanceKey);
             Assert.AreEqual("Default", memento.ConcreteKey);
-            Assert.AreEqual(DefinitionSource.Implicit, memento.DefinitionSource);
         }
 
         [Test]
@@ -157,12 +158,6 @@ namespace StructureMap.Testing.Graph
             Plugin plugin = Plugin.CreateExplicitPlugin(typeof (Strategy), "Default", string.Empty);
             InstanceMemento memento = plugin.CreateImplicitMemento();
             Assert.IsNull(memento);
-        }
-
-        [Test]
-        public void CreateImplicitPluginDefinitionSourceIsImplicity()
-        {
-            Assert.AreEqual(DefinitionSource.Implicit, _plugin.DefinitionSource);
         }
 
         [Test]
@@ -216,7 +211,7 @@ namespace StructureMap.Testing.Graph
 
         [Test,
          ExpectedException(typeof (StructureMapException),
-             "StructureMap Exception Code:  302\nThere is no argument of type StructureMap.Testing.Widget.IWidget for concrete type StructureMap.Testing.Graph.GrandPrix"
+            ExpectedMessage = "StructureMap Exception Code:  302\nThere is no argument of type StructureMap.Testing.Widget.IWidget for concrete type StructureMap.Testing.Graph.GrandPrix"
              )]
         public void FindFirstConstructorArgumentOfTypeNegativeCase()
         {
@@ -314,6 +309,73 @@ namespace StructureMap.Testing.Graph
             MemberInfo[] methods = _plugin.ValidationMethods;
             Assert.IsNotNull(methods);
             Assert.AreEqual(methods.Length, 2);
+        }
+
+        [Test]
+        public void Visit_arguments()
+        {
+            MockRepository mocks = new MockRepository();
+            IPluginArgumentVisitor visitor = mocks.CreateMock<IPluginArgumentVisitor>();
+
+            using (mocks.Record())
+            {
+                visitor.Child("engine", typeof(IEngine));
+                visitor.ChildArray("engines", typeof(IEngine));
+                visitor.Primitive("name");
+                visitor.Primitive("age");
+                visitor.Primitive("color");
+                visitor.Primitive("LastName");
+                visitor.Primitive("Income");
+                visitor.Child("Car", typeof(IAutomobile));
+                visitor.ChildArray("Fleet", typeof(IAutomobile));
+            }
+
+            using (mocks.Playback())
+            {
+                Plugin plugin = Plugin.CreateImplicitPlugin(typeof (LotsOfStuff));
+                plugin.VisitArguments(visitor);
+            }
+        }
+    }
+
+    public class LotsOfStuff
+    {
+        private string _lastName;
+        private double _income;
+        private IAutomobile _car;
+        private IAutomobile[] _fleet;
+
+        public LotsOfStuff(IEngine engine, IEngine[] engines, string name, int age, Color color)
+        {
+            
+        }
+
+        [StructureMap.Attributes.SetterProperty]
+        public string LastName
+        {
+            get { return _lastName; }
+            set { _lastName = value; }
+        }
+
+        [StructureMap.Attributes.SetterProperty]
+        public double Income
+        {
+            get { return _income; }
+            set { _income = value; }
+        }
+
+        [StructureMap.Attributes.SetterProperty]
+        public IAutomobile Car
+        {
+            get { return _car; }
+            set { _car = value; }
+        }
+
+        [StructureMap.Attributes.SetterProperty]
+        public IAutomobile[] Fleet
+        {
+            get { return _fleet; }
+            set { _fleet = value; }
         }
     }
 

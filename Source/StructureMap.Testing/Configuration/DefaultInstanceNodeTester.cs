@@ -23,15 +23,6 @@ namespace StructureMap.Testing.Configuration
         private PluginGraph _graph;
 
         [Test]
-        public void CreateTheInferredPluginCorrectly()
-        {
-            // Who needs the Law of Demeter?
-            InstanceMemento memento = _graph.PluginFamilies[typeof (IWidget)].Source.GetAllMementos()[0];
-            Assert.IsNotEmpty(memento.ConcreteKey);
-            Assert.IsNotNull(memento.ConcreteKey);
-        }
-
-        [Test]
         public void DefaultNameOfRule()
         {
             PluginFamily family = _graph.PluginFamilies[typeof (Rule)];

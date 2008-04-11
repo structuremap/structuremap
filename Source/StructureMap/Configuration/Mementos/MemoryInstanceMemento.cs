@@ -1,10 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Specialized;
 using StructureMap.Graph;
+using StructureMap.Pipeline;
 
 namespace StructureMap.Configuration.Mementos
 {
-    public class GenericMemento<T> : MemoryInstanceMemento
+    [Obsolete("Think this is unnecessary")] public class GenericMemento<T> : MemoryInstanceMemento
     {
         public GenericMemento(string instanceKey)
             : base(Plugin.CreateImplicitPlugin(typeof (T)).ConcreteKey, instanceKey)
@@ -51,7 +53,7 @@ namespace StructureMap.Configuration.Mementos
         #endregion
 
         private readonly Hashtable _children = new Hashtable();
-        private readonly string _concreteKey;
+        private string _concreteKey;
         private readonly NameValueCollection _properties = new NameValueCollection();
         private string _instanceKey;
         private bool _isReference;
@@ -93,6 +95,12 @@ namespace StructureMap.Configuration.Mementos
         protected override string innerConcreteKey
         {
             get { return _concreteKey; }
+        }
+
+        [Obsolete("Temporary")]
+        public void SetConcreteKey(string concreteKey)
+        {
+            _concreteKey = concreteKey;
         }
 
         /// <summary>

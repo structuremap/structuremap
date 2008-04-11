@@ -11,7 +11,7 @@ namespace StructureMap.Graph
     /// <summary>
     /// Models an assembly reference in a PluginGraph
     /// </summary>
-    public class AssemblyGraph : Deployable, IComparable
+    public class AssemblyGraph : IComparable
     {
         #region statics
 

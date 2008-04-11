@@ -7,19 +7,14 @@ namespace StructureMap.Graph
     /// <summary>
     /// Custom collection for Plugin objects
     /// </summary>
-    public class PluginCollection : PluginGraphObjectCollection
+    public class PluginCollection : IEnumerable<Plugin>
     {
         private readonly PluginFamily _family;
-        private Dictionary<string, Plugin> _plugins = new Dictionary<string, Plugin>();
+        private readonly Dictionary<string, Plugin> _plugins = new Dictionary<string, Plugin>();
 
-        public PluginCollection(PluginFamily family) : base(null)
+        public PluginCollection(PluginFamily family)
         {
             _family = family;
-        }
-
-        protected override ICollection innerCollection
-        {
-            get { return _plugins.Values; }
         }
 
         public Plugin[] All
@@ -31,6 +26,11 @@ namespace StructureMap.Graph
 
                 return returnValue;
             }
+        }
+
+        public int Count
+        {
+            get { return _plugins.Count; }
         }
 
         /// <summary>
@@ -57,16 +57,6 @@ namespace StructureMap.Graph
             }
         }
 
-        public Plugin this[int index]
-        {
-            get
-            {
-                ArrayList list = new ArrayList(this);
-                return (Plugin) list[index];
-            }
-        }
-
-
         /// <summary>
         /// Retrieves a Plugin by its ConcreteKey
         /// </summary>
@@ -81,19 +71,14 @@ namespace StructureMap.Graph
                     return _plugins[concreteKey] as Plugin;
                 }
 
-                string msg = string.Format(
-                    "Plugin *{0}* for PluginFamily *{1}* does not exist",
-                    concreteKey,
-                    _family.PluginTypeName);
-
-                throw new ApplicationException(msg);
+                return null;
             }
         }
 
         public void Add(TypePath path, string concreteKey)
         {
             Plugin plugin = new Plugin(path, concreteKey);
-            Add(plugin, true);
+            Add(plugin);
         }
 
         /// <summary>
@@ -105,22 +90,25 @@ namespace StructureMap.Graph
         public void Add(Type pluggedType, string concreteKey)
         {
             Plugin plugin = Plugin.CreateExplicitPlugin(pluggedType, concreteKey, string.Empty);
-            Add(plugin, true);
+            Add(plugin);
         }
 
-        public void Add(Plugin plugin, bool addInstanceOfTypeIfPossible)
+        public void Add(Plugin plugin)
         {
             // Reject if a duplicate ConcreteKey
             if (_plugins.ContainsKey(plugin.ConcreteKey))
             {
-                // Don't duplicate
+                // Don't duplicate, but merge setters
                 Plugin peer = this[plugin.ConcreteKey];
                 if (peer.PluggedType == plugin.PluggedType)
                 {
+                    peer.MergeSetters(plugin);
                     return;
                 }
-
-                throw new StructureMapException(113, plugin.ConcreteKey, _family.PluginTypeName);
+                else
+                {
+                    throw new StructureMapException(113, plugin.ConcreteKey, _family.PluginTypeName);
+                }
             }
 
             // Reject if the PluggedType cannot be upcast to the PluginType
@@ -130,11 +118,6 @@ namespace StructureMap.Graph
             }
 
             _plugins.Add(plugin.ConcreteKey, plugin);
-
-            if (addInstanceOfTypeIfPossible)
-            {
-                plugin.AddToSource(_family.Source);
-            }
         }
 
         /// <summary>
@@ -153,23 +136,36 @@ namespace StructureMap.Graph
             _plugins.Remove(concreteKey);
         }
 
-        public void RemoveImplicitChildren()
-        {
-            foreach (Plugin plugin in this)
-            {
-                if (plugin.DefinitionSource == DefinitionSource.Implicit)
-                {
-                    Remove(plugin.ConcreteKey);
-                }
-            }
-        }
-
         public Plugin FindOrCreate(Type pluggedType, bool createDefaultInstanceOfType)
         {
             Plugin plugin = Plugin.CreateImplicitPlugin(pluggedType);
-            Add(plugin, createDefaultInstanceOfType);
+            Add(plugin);
 
             return plugin;
+        }
+
+        IEnumerator<Plugin> IEnumerable<Plugin>.GetEnumerator()
+        {
+            return _plugins.Values.GetEnumerator();
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            return ((IEnumerable<Plugin>) this).GetEnumerator();
+        }
+
+        public List<Plugin> FindAutoFillablePlugins()
+        {
+            List<Plugin> list = new List<Plugin>();
+            foreach (Plugin plugin in _plugins.Values)
+            {
+                if (plugin.CanBeAutoFilled)
+                {
+                    list.Add(plugin);
+                }
+            }
+
+            return list;
         }
     }
 }

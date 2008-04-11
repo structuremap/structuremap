@@ -17,8 +17,10 @@ namespace StructureMap.Testing.Container
         [Test]
         public void BuildClassWithEnumeration()
         {
-            MemoryMementoSource source = new MemoryMementoSource();
-            PluginFamily family = new PluginFamily(typeof (Cow), string.Empty, source);
+            PluginGraph graph = new PluginGraph();
+
+
+            PluginFamily family = graph.PluginFamilies.Add(typeof (Cow), string.Empty);
             family.Plugins.Add(typeof (Cow), "Default");
 
 
@@ -30,7 +32,8 @@ namespace StructureMap.Testing.Container
             memento.SetProperty("Name", "Bessie");
             memento.SetProperty("Breed", "Angus");
             memento.SetProperty("Weight", "1200");
-            source.AddMemento(memento);
+
+            cowFactory.AddInstance(memento.ReadInstance(graph, typeof(Cow)));
 
             Cow angus = cowFactory.GetInstance("Angus") as Cow;
 

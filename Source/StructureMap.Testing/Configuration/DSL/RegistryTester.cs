@@ -4,6 +4,7 @@ using Rhino.Mocks;
 using StructureMap.Configuration.DSL;
 using StructureMap.Configuration.Mementos;
 using StructureMap.Graph;
+using StructureMap.Pipeline;
 using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Configuration.DSL
@@ -83,11 +84,11 @@ namespace StructureMap.Testing.Configuration.DSL
             registry.Dispose();
 
             PluginFamily family = graph.PluginFamilies[typeof (IGateway)];
-            UserControlMemento memento = (UserControlMemento) family.Source.GetMemento(theKey);
-            Assert.IsNotNull(memento);
+            UserControlInstance instance = (UserControlInstance) family.GetInstance(theKey);
+            Assert.IsNotNull(instance);
 
-            Assert.AreEqual(theUrl, memento.Url);
-            Assert.AreEqual(theKey, memento.InstanceKey);
+            Assert.AreEqual(theUrl, instance.Url);
+            Assert.AreEqual(theKey, instance.Name);
         }
     }
 

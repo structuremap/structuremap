@@ -2,6 +2,7 @@ using NUnit.Framework;
 using StructureMap.Configuration.Mementos;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
+using StructureMap.Pipeline;
 using StructureMap.Source;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget2;
@@ -24,21 +25,19 @@ namespace StructureMap.Testing.Container
                 };
 
             _ruleFactory = ObjectMother.CreateInstanceFactory(typeof (Rule), assemblyNames);
-            _source = (MemoryMementoSource) _ruleFactory.Source;
         }
 
         #endregion
 
         private InstanceFactory _ruleFactory;
-        private MemoryMementoSource _source;
 
 
         [Test]
         public void BuildRule1()
         {
-            MemoryInstanceMemento memento = new MemoryInstanceMemento("Rule1", string.Empty);
+            ConfiguredInstance instance = new ConfiguredInstance().WithConcreteKey("Rule1");
 
-            Rule rule = (Rule) _ruleFactory.GetInstance(memento);
+            Rule rule = (Rule)_ruleFactory.GetInstance(instance, null);
             Assert.IsNotNull(rule);
             Assert.IsTrue(rule is Rule1);
         }
@@ -46,26 +45,24 @@ namespace StructureMap.Testing.Container
         [Test, ExpectedException(typeof (StructureMapException))]
         public void BuildRuleThatDoesNotExist()
         {
-            MemoryInstanceMemento memento = new MemoryInstanceMemento("Invalid", string.Empty);
-            Rule rule = (Rule) _ruleFactory.GetInstance(memento);
+            Rule rule = (Rule)_ruleFactory.GetInstance(new ConfiguredInstance().WithConcreteKey("Invalid"), null);
         }
 
 
         [Test, ExpectedException(typeof (StructureMapException))]
         public void BuildRuleWithABadValue()
         {
-            MemoryInstanceMemento memento = (MemoryInstanceMemento) ComplexRule.GetMemento();
-            memento.RemoveProperty("Int");
-            memento.SetProperty("Int", "abc");
-            ComplexRule rule = (ComplexRule) _ruleFactory.GetInstance(memento);
+            ConfiguredInstance instance = (ConfiguredInstance) ComplexRule.GetInstance();
+            instance.SetProperty("Int", "abc");
+            ComplexRule rule = (ComplexRule)_ruleFactory.GetInstance(instance, null);
         }
 
         [Test, ExpectedException(typeof (StructureMapException))]
         public void BuildRuleWithAMissingValue()
         {
-            MemoryInstanceMemento memento = (MemoryInstanceMemento) ComplexRule.GetMemento();
-            memento.RemoveProperty("String");
-            ComplexRule rule = (ComplexRule) _ruleFactory.GetInstance(memento);
+            ConfiguredInstance instance = (ConfiguredInstance)ComplexRule.GetInstance();
+            instance.RemoveKey("String");
+            ComplexRule rule = (ComplexRule) _ruleFactory.GetInstance(instance, null);
         }
 
         [Test, ExpectedException(typeof (StructureMapException))]
@@ -105,19 +102,18 @@ namespace StructureMap.Testing.Container
         [Test]
         public void SetDefaultInstanceByString()
         {
-            MemoryInstanceMemento red = new MemoryInstanceMemento("Color", "Red");
-            red.SetProperty("Color", "Red");
+            ConfiguredInstance red = new ConfiguredInstance("Red").WithConcreteKey("Color")
+                .SetProperty("Color", "Red");
 
-            MemoryInstanceMemento blue = new MemoryInstanceMemento("Color", "Blue");
-            blue.SetProperty("Color", "Blue");
+            ConfiguredInstance blue = new ConfiguredInstance("Blue").WithConcreteKey("Color")
+                .SetProperty("Color", "Blue");
 
-            MemoryInstanceMemento orange = new MemoryInstanceMemento("Color", "Orange");
-            orange.SetProperty("Color", "Orange");
+            ConfiguredInstance orange = new ConfiguredInstance("Orange").WithConcreteKey("Color")
+                .SetProperty("Color", "Orange");
 
-
-            _source.AddMemento(red);
-            _source.AddMemento(blue);
-            _source.AddMemento(orange);
+            _ruleFactory.AddInstance(red);
+            _ruleFactory.AddInstance(blue);
+            _ruleFactory.AddInstance(orange);
 
             _ruleFactory.SetDefault("Blue");
             ColorRule rule = _ruleFactory.GetInstance() as ColorRule;
@@ -129,9 +125,7 @@ namespace StructureMap.Testing.Container
         [Test]
         public void TestComplexRule()
         {
-            InstanceMemento memento = ComplexRule.GetMemento();
-
-            Rule rule = (Rule) _ruleFactory.GetInstance(memento);
+            Rule rule = (Rule)_ruleFactory.GetInstance(ComplexRule.GetInstance(), null);
             Assert.IsNotNull(rule);
             Assert.IsTrue(rule is ComplexRule);
         }
@@ -142,27 +136,5 @@ namespace StructureMap.Testing.Container
             ColorRule rule = _ruleFactory.GetInstance() as ColorRule;
         }
 
-        [Test]
-        public void UsesTheInterceptor()
-        {
-            PluginFamily family = new PluginFamily(typeof (IService));
-            family.Plugins.Add(typeof (ColorService), "Color");
-            MemoryInstanceMemento memento = new MemoryInstanceMemento("Color", "Red");
-            memento.SetProperty("color", "Red");
-            family.AddInstance(memento);
-
-            ColorService recordedService = null;
-
-            StartupInterceptor<ColorService> interceptor = new StartupInterceptor<ColorService>(
-                delegate(ColorService s) { recordedService = s; }
-                );
-            family.InstanceInterceptor = interceptor;
-
-
-            InstanceFactory factory = new InstanceFactory(family, true);
-            factory.SetInstanceManager(new InstanceManager());
-
-            Assert.AreSame(factory.GetInstance("Red"), recordedService);
-        }
     }
 }

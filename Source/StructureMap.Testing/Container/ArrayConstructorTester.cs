@@ -26,9 +26,12 @@ namespace StructureMap.Testing.Container
             XmlMementoSource source = new XmlFileMementoSource("Array.xml", string.Empty, "Decision");
 
             PluginGraph graph = ObjectMother.GetPluginGraph();
-            graph.UnSeal();
-            graph.PluginFamilies.Add(typeof (Decision), string.Empty, source);
-            PluginFamily family = graph.PluginFamilies[typeof (Decision)];
+
+            // Used to UnSeal
+
+            PluginFamily family = graph.PluginFamilies.Add(typeof(Decision), string.Empty);
+            family.AddMementoSource(source);            
+
             family.Plugins.Add(typeof (Decision), "Default");
             graph.Seal();
 

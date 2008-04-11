@@ -1,5 +1,6 @@
 using System;
 using StructureMap.Configuration.Mementos;
+using StructureMap.Pipeline;
 
 namespace StructureMap.Testing.Widget
 {
@@ -91,9 +92,12 @@ namespace StructureMap.Testing.Widget
             get { return _Bool; }
         }
 
-        public static InstanceMemento GetMemento()
+        public static IConfiguredInstance GetInstance()
         {
-            MemoryInstanceMemento memento = new MemoryInstanceMemento("Complex", "Sample");
+            ConfiguredInstance memento = new ConfiguredInstance();
+            memento.ConcreteKey = "Complex";
+            memento.Name = "Sample";
+
             memento.SetProperty("String", "Red");
             memento.SetProperty("String2", "Green");
             memento.SetProperty("Int", "1");
@@ -102,7 +106,7 @@ namespace StructureMap.Testing.Widget
             memento.SetProperty("Double", "4");
             memento.SetProperty("Bool", "true");
 
-            return (InstanceMemento) memento;
+            return memento;
         }
     }
 

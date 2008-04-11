@@ -17,6 +17,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             pluginGraph = new PluginGraph();
             Registry registry = new Registry(pluginGraph);
+            registry.ScanAssemblies().IncludeAssemblyContainingType<ColorWidget>();
 
             // Add an instance with properties
             registry.AddInstanceOf<IWidget>()
@@ -150,8 +151,6 @@ namespace StructureMap.Testing.Configuration.DSL
 
             IInstanceManager mgr = registry.BuildInstanceManager();
 
-            ColorWidget orange = (ColorWidget) mgr.CreateInstance<IWidget>("Orange");
-            Assert.IsNotNull(orange);
 
             WidgetRule rule = (WidgetRule) mgr.CreateInstance<Rule>(instanceKey);
             ColorWidget widget = (ColorWidget) rule.Widget;

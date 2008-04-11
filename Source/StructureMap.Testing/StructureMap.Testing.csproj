@@ -93,6 +93,7 @@
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms">
       <Name>System.Windows.Forms</Name>
     </Reference>
@@ -167,13 +168,11 @@
     <Compile Include="Caching\StorageAndCacheItemTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Configuration\ConfigurationInstanceReaderTester.cs" />
     <Compile Include="Configuration\ConfigurationParserCollectionTester.cs" />
     <Compile Include="Configuration\ConfigurationParserTester.cs" />
     <Compile Include="Configuration\DefaultInstanceNodeTester.cs" />
     <Compile Include="Configuration\DSL\AddInstanceTester.cs" />
     <Compile Include="Configuration\DSL\AddTypesTester.cs" />
-    <Compile Include="Configuration\DSL\ChildInstanceExpressionTester.cs" />
     <Compile Include="Configuration\DSL\ConstructorExpressionTester.cs" />
     <Compile Include="Configuration\DSL\CreatePluginFamilyTester.cs" />
     <Compile Include="Configuration\DSL\CreateProfileTester.cs" />
@@ -182,13 +181,10 @@
     <Compile Include="Configuration\DSL\InstanceExpressionTester.cs" />
     <Compile Include="Configuration\DSL\InterceptAllInstancesOfPluginTypeTester.cs" />
     <Compile Include="Configuration\DSL\InterceptorTesting.cs" />
-    <Compile Include="Configuration\DSL\LiteralExpressionTester.cs" />
     <Compile Include="Configuration\DSL\ProfileExpressionTester.cs" />
-    <Compile Include="Configuration\DSL\ReferenceMementoBuilderTester.cs" />
     <Compile Include="Configuration\DSL\RegistryIntegratedTester.cs" />
     <Compile Include="Configuration\DSL\RegistryTester.cs" />
     <Compile Include="Configuration\DSL\ScanAssembliesTester.cs" />
-    <Compile Include="Configuration\DSL\UserControlExpressionTester.cs" />
     <Compile Include="Configuration\FamilyParserTester.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -200,7 +196,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Configuration\ShortcuttedInstanceNodeTester.cs" />
-    <Compile Include="ConstructorMementoTester.cs" />
     <Compile Include="Container\ArrayConstructorTester.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -327,9 +322,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Graph\GenericsPluginGraphTester.cs" />
-    <Compile Include="Graph\GraphDeploymentTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Graph\InstanceTarget.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -359,7 +351,7 @@
     </Compile>
     <Compile Include="Graph\TypePathTester.cs" />
     <Compile Include="ImplicitPluginFromPluggedTypeAttributeTester.cs" />
-    <Compile Include="InstanceMementoTester.cs" />
+    <Compile Include="InstanceMementoInstanceCreationTester.cs" />
     <Compile Include="ObjectFactoryTester.cs">
       <SubType>Code</SubType>
     </Compile>

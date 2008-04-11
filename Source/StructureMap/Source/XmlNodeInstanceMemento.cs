@@ -1,5 +1,8 @@
+using System;
+using System.Collections.Generic;
 using System.Xml;
 using StructureMap.Configuration;
+using StructureMap.Pipeline;
 
 namespace StructureMap.Source
 {
@@ -15,6 +18,11 @@ namespace StructureMap.Source
 
         public XmlNodeInstanceMemento(XmlNode Node, string TypeAttribute, string KeyAttribute)
         {
+            if (Node == null)
+            {
+                throw new ArgumentNullException("Node");
+            }
+
             _innerNode = Node;
             _typeAttribute = TypeAttribute;
             _keyAttribute = KeyAttribute;
@@ -124,13 +132,16 @@ namespace StructureMap.Source
                 return null;
             }
 
-            InstanceMemento[] returnValue = new InstanceMemento[nodeChild.ChildNodes.Count];
-            for (int i = 0; i < returnValue.Length; i++)
+            List<InstanceMemento> list = new List<InstanceMemento>();
+            foreach (XmlNode childNode in nodeChild.ChildNodes)
             {
-                returnValue[i] = new XmlNodeInstanceMemento(nodeChild.ChildNodes[i], _typeAttribute, _keyAttribute);
+                if (childNode.NodeType == XmlNodeType.Element)
+                {
+                    list.Add(new XmlNodeInstanceMemento(childNode, _typeAttribute, _keyAttribute));
+                }
             }
 
-            return returnValue;
+            return list.ToArray();
         }
 
         public override InstanceMemento Substitute(InstanceMemento memento)

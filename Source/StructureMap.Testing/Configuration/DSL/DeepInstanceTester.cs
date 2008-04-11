@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
 using StructureMap.Configuration.DSL.Expressions;
+using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing.Configuration.DSL
@@ -44,7 +45,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             Registry registry = new Registry();
             registry.BuildInstancesOf<IWidget>().TheDefaultIs(
-                Registry.Object(new ColorWidget("yellow"))
+                Registry.Object<IWidget>(new ColorWidget("yellow"))
                 );
 
             registry.BuildInstancesOf<Rule>().TheDefaultIsConcreteType<WidgetRule>();
@@ -66,7 +67,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             Registry registry = new Registry();
             registry.BuildInstancesOf<IWidget>().TheDefaultIs(
-                Registry.Prototype(new ColorWidget("yellow"))
+                Registry.Prototype<IWidget>(new ColorWidget("yellow"))
                 );
 
             registry.BuildInstancesOf<Rule>().TheDefaultIsConcreteType<WidgetRule>();
@@ -114,11 +115,11 @@ namespace StructureMap.Testing.Configuration.DSL
         public void DeepInstanceTest1()
         {
             Registry registry = new Registry();
-            InstanceExpression widgetExpression = Registry.Instance<IWidget>()
+            ConfiguredInstance widgetExpression = Registry.Instance<IWidget>()
                 .UsingConcreteType<ColorWidget>()
                 .WithProperty("Color").EqualTo("yellow");
 
-            InstanceExpression ruleExpression = Registry.Instance<Rule>()
+            ConfiguredInstance ruleExpression = Registry.Instance<Rule>()
                 .UsingConcreteType<WidgetRule>()
                 .Child<IWidget>().Is(widgetExpression);
 

@@ -1,5 +1,6 @@
 using System;
 using StructureMap.Graph;
+using StructureMap.Pipeline;
 
 namespace StructureMap.Configuration.DSL.Expressions
 {
@@ -11,7 +12,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         private readonly ProfileExpression _parent;
         private readonly Type _pluginType;
         private string _instanceKey = string.Empty;
-        private IMementoBuilder _mementoBuilder;
+        private Instance _instance;
 
         public InstanceDefaultExpression(Type pluginType, ProfileExpression parent)
         {
@@ -37,13 +38,12 @@ namespace StructureMap.Configuration.DSL.Expressions
                 InstanceDefault instanceDefault = new InstanceDefault(_pluginType, _instanceKey);
                 profile.AddOverride(instanceDefault);
             }
-            else if (_mementoBuilder != null)
+            else if (_instance != null)
             {
                 string defaultKey = Profile.InstanceKeyForProfile(profile.ProfileName);
-                InstanceMemento memento = _mementoBuilder.BuildMemento(graph);
-                memento.InstanceKey = defaultKey;
-
-                graph.PluginFamilies[_pluginType].AddInstance(memento);
+                
+                _instance.Name = defaultKey;
+                graph.LocateOrCreateFamilyForType(_pluginType).AddInstance(_instance);
 
                 InstanceDefault instanceDefault = new InstanceDefault(_pluginType, defaultKey);
                 profile.AddOverride(instanceDefault);
@@ -59,9 +59,9 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="mementoBuilder"></param>
         /// <returns></returns>
-        public ProfileExpression Use(IMementoBuilder mementoBuilder)
+        public ProfileExpression Use(Instance instance)
         {
-            _mementoBuilder = mementoBuilder;
+            _instance = instance;
 
             return _parent;
         }

@@ -58,7 +58,7 @@ namespace StructureMap.Testing.Configuration.DSL
             _registry.ForRequestedType<IService>()
                 .EnrichWith(delegate(IService s) { return new DecoratorService(s); })
                 .AddInstance(
-                ConstructedBy<IService>(delegate { return new ColorService("Green"); })
+                    ConstructedBy<IService>(delegate { return new ColorService("Green"); })
                     .WithName("Green"))
                 ;
 

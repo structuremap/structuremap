@@ -6,9 +6,9 @@ namespace StructureMap.Pipeline
 {
     public class DefaultInstance : Instance
     {
-        protected override object build(Type type, IInstanceCreator creator)
+        protected override object build(Type pluginType, IInstanceCreator creator)
         {
-            return creator.CreateInstance(type);
+            return creator.CreateInstance(pluginType);
         }
     }
 }

@@ -8,11 +8,11 @@ namespace StructureMap.Configuration
         PluginGraph SystemGraph { get; }
         InstanceDefaultManager DefaultManager { get; }
         PluginGraph PluginGraph { get; }
-        void AddAssembly(string assemblyName, string[] deployableTargets);
+        void AddAssembly(string assemblyName);
 
         void StartFamilies();
 
-        void AddPluginFamily(TypePath typePath, string defaultKey, string[] deploymentTargets, InstanceScope scope);
+        void AddPluginFamily(TypePath typePath, string defaultKey, InstanceScope scope);
         void AttachSource(TypePath pluginTypePath, InstanceMemento sourceMemento);
         void AttachSource(TypePath pluginTypePath, MementoSource source);
         Plugin AddPlugin(TypePath pluginTypePath, TypePath pluginPath, string concreteKey);

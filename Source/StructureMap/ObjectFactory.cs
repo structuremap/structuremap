@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Security.Permissions;
 using StructureMap.Configuration.Mementos;
 using StructureMap.Graph;
+using StructureMap.Pipeline;
 
 namespace StructureMap
 {
@@ -78,12 +79,12 @@ namespace StructureMap
 
         public static string WhatDoIHave()
         {
-            return _manager.WhatDoIHave();
+            return manager.WhatDoIHave();
         }
 
         /// <summary>
         /// Sets the default instance of PLUGINTYPE to the object in the instance argument
-        /// </summary>
+        /// </summary
         /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <param name="instance"></param>
         public static void Inject<PLUGINTYPE>(PLUGINTYPE instance)
@@ -99,8 +100,10 @@ namespace StructureMap
         /// <param name="instanceKey"></param>
         public static void InjectByName<PLUGINTYPE>(PLUGINTYPE instance, string instanceKey)
         {
-            LiteralMemento memento = new LiteralMemento(instance).Named(instanceKey);
-            manager.AddInstance<PLUGINTYPE>(memento);
+            LiteralInstance literalInstance = new LiteralInstance(instance);
+            literalInstance.Name = instanceKey;
+
+            manager.AddInstance<PLUGINTYPE>(literalInstance);
         }
 
         /// <summary>
@@ -111,9 +114,11 @@ namespace StructureMap
         /// <param name="instanceKey"></param>
         public static void InjectByName<PLUGINTYPE, CONCRETETYPE>(string instanceKey)
         {
-            manager.AddInstance<PLUGINTYPE, CONCRETETYPE>();
-            GenericMemento<CONCRETETYPE> memento = new GenericMemento<CONCRETETYPE>(instanceKey);
-            manager.AddInstance<PLUGINTYPE>(memento);
+            ConfiguredInstance instance = new ConfiguredInstance();
+            instance.PluggedType = typeof (CONCRETETYPE);
+            instance.Name = instanceKey;
+            
+            manager.AddInstance<PLUGINTYPE>(instance);
         }
 
         /// <summary>
@@ -273,22 +278,22 @@ namespace StructureMap
         /// Builds an instance of the TargetType for the given InstanceMemento
         /// </summary>
         /// <param name="TargetType"></param>
-        /// <param name="memento"></param>
+        /// <param name="instance"></param>
         /// <returns></returns>
-        public static object GetInstance(Type TargetType, InstanceMemento memento)
+        public static object GetInstance(Type TargetType, Instance instance)
         {
-            return manager.CreateInstance(TargetType, memento);
+            return manager.CreateInstance(TargetType, instance);
         }
 
         /// <summary>
         /// Builds an instance of the TargetType for the given InstanceMemento
         /// </summary>
         /// <typeparam name="TargetType"></typeparam>
-        /// <param name="memento"></param>
+        /// <param name="instance"></param>
         /// <returns></returns>
-        public static TargetType GetInstance<TargetType>(InstanceMemento memento)
+        public static TargetType GetInstance<TargetType>(Instance instance)
         {
-            return (TargetType) manager.CreateInstance(typeof (TargetType), memento);
+            return (TargetType) manager.CreateInstance(typeof (TargetType), instance);
         }
 
         /// <summary>

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Xml;
 using StructureMap.Configuration;
+using StructureMap.Pipeline;
 
 namespace StructureMap.Source
 {
@@ -34,7 +35,7 @@ namespace StructureMap.Source
 
         public override bool IsReference
         {
-            get { return (ConcreteKey == string.Empty); }
+            get { return (ConcreteKey == string.Empty && string.IsNullOrEmpty(getPluggedType())); }
         }
 
         public override string ReferenceKey

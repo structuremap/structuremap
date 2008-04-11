@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
+using StructureMap.Pipeline;
 
 namespace StructureMap.Configuration.DSL
 {
@@ -102,23 +103,30 @@ namespace StructureMap.Configuration.DSL
         /// </summary>
         /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <returns></returns>
-        public InstanceExpression.InstanceTypeExpression AddInstanceOf<PLUGINTYPE>()
+        public ConfiguredInstance AddInstanceOf<PLUGINTYPE>()
         {
-            InstanceExpression expression = new InstanceExpression(typeof (PLUGINTYPE));
-            addExpression(expression);
-            return expression.TypeExpression();
+            ConfiguredInstance instance = new ConfiguredInstance();
+
+            addExpression(delegate (PluginGraph pluginGraph)
+                              {
+                                  pluginGraph.LocateOrCreateFamilyForType(typeof(PLUGINTYPE)).AddInstance(instance);
+                              });
+
+            return instance;
         }
 
 
         /// <summary>
         /// Convenience method to start the definition of an instance of type T
         /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <typeparam name="PLUGGEDTYPE"></typeparam>
         /// <returns></returns>
-        public static InstanceExpression.InstanceTypeExpression Instance<PLUGINTYPE>()
+        public static ConfiguredInstance Instance<PLUGGEDTYPE>()
         {
-            InstanceExpression expression = new InstanceExpression(typeof (PLUGINTYPE));
-            return expression.TypeExpression();
+            ConfiguredInstance instance = new ConfiguredInstance();
+            instance.PluggedType = typeof (PLUGGEDTYPE);
+
+            return instance;
         }
 
         /// <summary>
@@ -127,9 +135,9 @@ namespace StructureMap.Configuration.DSL
         /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <param name="prototype"></param>
         /// <returns></returns>
-        public static PrototypeExpression<PLUGINTYPE> Prototype<PLUGINTYPE>(PLUGINTYPE prototype)
+        public static PrototypeInstance Prototype<PLUGINTYPE>(PLUGINTYPE prototype)
         {
-            return new PrototypeExpression<PLUGINTYPE>(prototype);
+            return new PrototypeInstance((ICloneable) prototype);
         }
 
         /// <summary>
@@ -138,9 +146,9 @@ namespace StructureMap.Configuration.DSL
         /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <param name="instance"></param>
         /// <returns></returns>
-        public static LiteralExpression<PLUGINTYPE> Object<PLUGINTYPE>(PLUGINTYPE instance)
+        public static LiteralInstance Object<PLUGINTYPE>(PLUGINTYPE instance)
         {
-            return new LiteralExpression<PLUGINTYPE>(instance);
+            return new LiteralInstance(instance);
         }
 
         /// <summary>
@@ -149,10 +157,10 @@ namespace StructureMap.Configuration.DSL
         /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <param name="target"></param>
         /// <returns></returns>
-        public LiteralExpression<PLUGINTYPE> AddInstanceOf<PLUGINTYPE>(PLUGINTYPE target)
+        public LiteralInstance AddInstanceOf<PLUGINTYPE>(PLUGINTYPE target)
         {
-            LiteralExpression<PLUGINTYPE> literal = new LiteralExpression<PLUGINTYPE>(target);
-            addExpression(literal);
+            LiteralInstance literal = new LiteralInstance(target);
+            _graph.LocateOrCreateFamilyForType(typeof(PLUGINTYPE)).AddInstance(literal);
 
             return literal;
         }
@@ -163,10 +171,10 @@ namespace StructureMap.Configuration.DSL
         /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <param name="prototype"></param>
         /// <returns></returns>
-        public PrototypeExpression<PLUGINTYPE> AddPrototypeInstanceOf<PLUGINTYPE>(PLUGINTYPE prototype)
+        public PrototypeInstance AddPrototypeInstanceOf<PLUGINTYPE>(PLUGINTYPE prototype)
         {
-            PrototypeExpression<PLUGINTYPE> expression = new PrototypeExpression<PLUGINTYPE>(prototype);
-            addExpression(expression);
+            PrototypeInstance expression = new PrototypeInstance((ICloneable) prototype);
+            _graph.LocateOrCreateFamilyForType(typeof(PLUGINTYPE)).AddInstance(expression);
 
             return expression;
         }
@@ -177,9 +185,9 @@ namespace StructureMap.Configuration.DSL
         /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <param name="url"></param>
         /// <returns></returns>
-        public static UserControlExpression LoadUserControlFrom<PLUGINTYPE>(string url)
+        public static UserControlInstance LoadUserControlFrom<PLUGINTYPE>(string url)
         {
-            return new UserControlExpression(typeof (PLUGINTYPE), url);
+            return new UserControlInstance(url);
         }
 
         /// <summary>
@@ -216,23 +224,25 @@ namespace StructureMap.Configuration.DSL
         /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <param name="url"></param>
         /// <returns></returns>
-        public UserControlExpression LoadControlFromUrl<PLUGINTYPE>(string url)
+        public UserControlInstance LoadControlFromUrl<PLUGINTYPE>(string url)
         {
-            UserControlExpression expression = new UserControlExpression(typeof (PLUGINTYPE), url);
-            addExpression(expression);
+            UserControlInstance instance = new UserControlInstance(url);
 
-            return expression;
+            PluginFamily family = _graph.LocateOrCreateFamilyForType(typeof (PLUGINTYPE));
+            family.AddInstance(instance);
+            
+            return instance;
         }
 
-        public static ConstructorExpression<PLUGINTYPE> ConstructedBy<PLUGINTYPE>
-            (BuildObjectDelegate<PLUGINTYPE> builder)
+        public static ConstructorInstance ConstructedBy<PLUGINTYPE>
+            (BuildObjectDelegate builder)
         {
-            return new ConstructorExpression<PLUGINTYPE>(builder);
+            return new ConstructorInstance(builder);
         }
 
-        public static ReferenceMementoBuilder Instance(string referencedKey)
+        public static ReferencedInstance Instance(string referencedKey)
         {
-            return new ReferenceMementoBuilder(referencedKey);
+            return new ReferencedInstance(referencedKey);
         }
 
         public void RegisterInterceptor(TypeInterceptor interceptor)

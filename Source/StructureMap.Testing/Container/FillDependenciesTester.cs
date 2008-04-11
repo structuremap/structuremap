@@ -43,20 +43,14 @@ namespace StructureMap.Testing.Container
         {
             Assert.IsNotNull(_family);
             Assert.AreEqual(typeof (FilledConcreteClass), _family.PluginType);
-            Assert.AreEqual(DefinitionSource.Implicit, _family.DefinitionSource);
         }
 
-        [Test]
-        public void CreatesMementoSource()
-        {
-            MemoryMementoSource source = (MemoryMementoSource) _family.Source;
-        }
 
         [Test]
         public void CreatesPlugin()
         {
             Assert.AreEqual(1, _family.Plugins.Count);
-            Plugin plugin = _family.Plugins[0];
+            Plugin plugin = _family.Plugins.All[0];
             Assert.IsNotNull(plugin);
 
             Assert.AreEqual(typeof (FilledConcreteClass), plugin.PluggedType);

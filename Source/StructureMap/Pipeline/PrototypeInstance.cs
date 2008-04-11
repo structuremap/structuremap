@@ -2,7 +2,7 @@ using System;
 
 namespace StructureMap.Pipeline
 {
-    public class PrototypeInstance : Instance
+    public class PrototypeInstance : ExpressedInstance<PrototypeInstance>
     {
         private ICloneable _prototype;
 
@@ -12,8 +12,13 @@ namespace StructureMap.Pipeline
             _prototype = prototype;
         }
 
+        protected override PrototypeInstance thisInstance
+        {
+            get { return this; }
+        }
 
-        protected override object build(Type type, IInstanceCreator creator)
+
+        protected override object build(Type pluginType, IInstanceCreator creator)
         {
             // TODO:  VALIDATION IF IT CAN'T BE CAST
             return _prototype.Clone();

@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using StructureMap.Interceptors;
+using StructureMap.Pipeline;
 
 namespace StructureMap
 {
@@ -34,22 +36,15 @@ namespace StructureMap
         /// <summary>
         /// Creates an object instance directly from the Memento
         /// </summary>
-        /// <param name="Memento">A representation of an object instance</param>
+        /// <param name="instance">A representation of an object instance</param>
         /// <returns></returns>
-        object GetInstance(InstanceMemento Memento);
+        object GetInstance(IConfiguredInstance instance, IInstanceCreator instanceCreator);
 
         /// <summary>
         /// Creates a new object instance of the default instance memento
         /// </summary>
         /// <returns></returns>
         object GetInstance();
-
-        /// <summary>
-        /// Returns an array of objects, one for each InstanceMemento passed in
-        /// </summary>
-        /// <param name="Mementos"></param>
-        /// <returns>An array of InstanceMemento's to build out into objects</returns>
-        Array GetArray(InstanceMemento[] Mementos);
 
         /// <summary>
         /// Sets the default instance 
@@ -60,8 +55,8 @@ namespace StructureMap
         /// <summary>
         /// Makes the InstanceMemento the basis of the default instance
         /// </summary>
-        /// <param name="Memento"></param>
-        void SetDefault(InstanceMemento Memento);
+        /// <param name="instance"></param>
+        void SetDefault(Instance instance);
 
 
         /// <summary>
@@ -70,7 +65,9 @@ namespace StructureMap
         /// <returns></returns>
         IList GetAllInstances();
 
-        void AddInstance(InstanceMemento memento);
-        InstanceMemento AddType<T>();
+        void AddInstance(Instance instance);
+        Instance AddType<T>();
+        Instance GetDefault();
+        object ApplyInterception(object rawValue);
     }
 }

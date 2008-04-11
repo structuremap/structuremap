@@ -26,9 +26,9 @@ namespace StructureMap.Testing.Configuration
         {
             PluginGraph graph = buildGraph();
             PluginFamily family = graph.PluginFamilies[typeof (IStrategy)];
-            Assert.IsNotNull(family.Source.GetMemento("Blue"));
-            Assert.IsNotNull(family.Source.GetMemento("Red"));
-            Assert.IsNotNull(family.Source.GetMemento("DeepTest")); // from include
+            Assert.IsNotNull(family.GetMemento("Blue"));
+            Assert.IsNotNull(family.GetMemento("Red"));
+            Assert.IsNotNull(family.GetMemento("DeepTest")); // from include
         }
 
         [Test]

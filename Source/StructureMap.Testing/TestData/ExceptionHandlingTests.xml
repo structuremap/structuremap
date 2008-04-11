@@ -124,7 +124,7 @@ Type StructureMap.Testing.Widget.ComplexRule specified as a Plugin cannot be plu
 		</StructureMap>
 		<Expectation><![CDATA[
 StructureMap Exception Code:  200
-Could not find an InstanceMemento for the requested InstanceKey "NonExistentInstanceKey" of PluginFamily StructureMap.Testing.Widget.IWidget
+Could not find an Instance named "NonExistentInstanceKey" for PluginType StructureMap.Testing.Widget.IWidget
 		]]></Expectation>
 	</Test>
 	<Test ErrorCode="201">
@@ -135,9 +135,10 @@ Could not find an InstanceMemento for the requested InstanceKey "NonExistentInst
 				<Instance Key="BadConcreteKey" Type="NotARealConcreteKey"></Instance>
 			</PluginFamily>						
 		</StructureMap>
-		<Expectation><![CDATA[
+		<Expectation>
+  <![CDATA[
 StructureMap Exception Code:  201
-Unrecognized ConcreteKey "NotARealConcreteKey" configured for InstanceKey "BadConcreteKey" of PluginFamily StructureMap.Testing.Widget.IWidget
+Unrecognized ConcreteKey "NotARealConcreteKey" configured for InstanceKey "BadConcreteKey" of PluginFamily StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget
 		]]></Expectation>
 	</Test>
 	<Test ErrorCode="202">

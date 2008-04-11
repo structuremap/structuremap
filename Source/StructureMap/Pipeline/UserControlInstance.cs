@@ -3,7 +3,7 @@ using System.Web.UI;
 
 namespace StructureMap.Pipeline
 {
-    public class UserControlInstance : Instance
+    public class UserControlInstance : ExpressedInstance<UserControlInstance>
     {
         private readonly string _url;
 
@@ -12,11 +12,22 @@ namespace StructureMap.Pipeline
             _url = url;
         }
 
+        protected override UserControlInstance thisInstance
+        {
+            get { return this; }
+        }
 
-        protected override object build(Type type, IInstanceCreator creator)
+
+        protected override object build(Type pluginType, IInstanceCreator creator)
         {
             // TODO:  VALIDATE that the type works
             return new Page().LoadControl(_url);
+        }
+
+
+        public string Url
+        {
+            get { return _url; }
         }
     }
 }

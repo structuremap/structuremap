@@ -4,13 +4,13 @@
 
 	<Assembly Name="StructureMap.Testing.Widget"/>
 	<Assembly Name="StructureMap.Testing.Widget2"/>
-	
-	<Instances>
-		<StructureMap.Testing.Widget4.IStrategy Key="Red" Type="Color">
-			<Property Name="color" Value="Red" />
-		</StructureMap.Testing.Widget4.IStrategy>
-		<StructureMap.Testing.Widget4.IStrategy Key="Blue" Type="Color">
-			<Property Name="color" Value="Blue" />
-		</StructureMap.Testing.Widget4.IStrategy>
-	</Instances>
+
+  <AddInstance PluginType="StructureMap.Testing.Widget4.IStrategy, StructureMap.Testing.Widget4" Key="Red" Type="Color">
+      <Property Name="color" Value="Red" />
+  </AddInstance>
+
+  <AddInstance PluginType="StructureMap.Testing.Widget4.IStrategy, StructureMap.Testing.Widget4" Key="Blue" Type="Color">
+    <Property Name="color" Value="Blue" />
+  </AddInstance>
+
 </StructureMap>

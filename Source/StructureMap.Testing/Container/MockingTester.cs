@@ -16,7 +16,7 @@ namespace StructureMap.Testing.Container
         {
             PluginGraph graph = new PluginGraph();
             graph.Assemblies.Add("StructureMap.Testing.Widget3");
-            graph.PluginFamilies.Add(gatewayType, string.Empty, new MemoryMementoSource());
+            graph.PluginFamilies.Add(gatewayType, string.Empty);
             graph.Seal();
             _manager = new InstanceManager(graph);
         }

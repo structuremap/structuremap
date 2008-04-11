@@ -37,7 +37,7 @@ namespace StructureMap.Testing
         }
 
 
-        [Test]
+        [Test, Ignore("Temporarily suspending Generics support")]
         public void PullConfigurationFromTheAppConfig()
         {
             StructureMapConfiguration.UseDefaultStructureMapConfigFile = false;

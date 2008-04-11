@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using StructureMap.Pipeline;
 
 namespace StructureMap.Interceptors
 {
@@ -67,11 +68,11 @@ namespace StructureMap.Interceptors
         /// <summary>
         /// Creates an object instance directly from the Memento
         /// </summary>
-        /// <param name="Memento">A representation of an object instance</param>
+        /// <param name="instance">A representation of an object instance</param>
         /// <returns></returns>
-        public virtual object GetInstance(InstanceMemento Memento)
+        public virtual object GetInstance(IConfiguredInstance instance, IInstanceCreator instanceCreator)
         {
-            return InnerInstanceFactory.GetInstance(Memento);
+            return InnerInstanceFactory.GetInstance(instance, instanceCreator);
         }
 
         /// <summary>
@@ -81,16 +82,6 @@ namespace StructureMap.Interceptors
         public virtual object GetInstance()
         {
             return InnerInstanceFactory.GetInstance();
-        }
-
-        /// <summary>
-        /// Returns an array of objects, one for each InstanceMemento passed in
-        /// </summary>
-        /// <param name="Mementos"></param>
-        /// <returns>An array of InstanceMemento's to build out into objects</returns>
-        public Array GetArray(InstanceMemento[] Mementos)
-        {
-            return InnerInstanceFactory.GetArray(Mementos);
         }
 
         /// <summary>
@@ -105,10 +96,10 @@ namespace StructureMap.Interceptors
         /// <summary>
         /// Makes the InstanceMemento the basis of the default instance
         /// </summary>
-        /// <param name="Memento"></param>
-        public void SetDefault(InstanceMemento Memento)
+        /// <param name="instance"></param>
+        public void SetDefault(Instance instance)
         {
-            InnerInstanceFactory.SetDefault(Memento);
+            InnerInstanceFactory.SetDefault(instance);
         }
 
         /// <summary>
@@ -124,14 +115,25 @@ namespace StructureMap.Interceptors
             return InnerInstanceFactory.GetAllInstances();
         }
 
-        public void AddInstance(InstanceMemento memento)
+        public void AddInstance(Instance instance)
         {
-            InnerInstanceFactory.AddInstance(memento);
+            InnerInstanceFactory.AddInstance(instance);
         }
 
-        public InstanceMemento AddType<T>()
+        public Instance AddType<T>()
         {
             return InnerInstanceFactory.AddType<T>();
+        }
+
+        public Instance GetDefault()
+        {
+            return InnerInstanceFactory.GetDefault();
+        }
+
+
+        public virtual object ApplyInterception(object rawValue)
+        {
+            return InnerInstanceFactory.ApplyInterception(rawValue);
         }
 
         #endregion

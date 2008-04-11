@@ -58,7 +58,7 @@ namespace StructureMap.Testing.Configuration
 
         [Test,
          ExpectedException(typeof (StructureMapException),
-             "StructureMap Exception Code:  100\nExpected file \"StructureMap.config\" cannot be opened at DoesNotExist.xml"
+            ExpectedMessage = "StructureMap Exception Code:  100\nExpected file \"StructureMap.config\" cannot be opened at DoesNotExist.xml"
              )]
         public void FileDoesNotExist()
         {

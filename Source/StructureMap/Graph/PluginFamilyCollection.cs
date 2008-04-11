@@ -7,18 +7,15 @@ namespace StructureMap.Graph
     /// <summary>
     /// Custom collection class for PluginFamily's
     /// </summary>
-    public class PluginFamilyCollection : PluginGraphObjectCollection
+    public class PluginFamilyCollection : IEnumerable<PluginFamily>
     {
+        private readonly PluginGraph _pluginGraph;
         private Dictionary<Type, PluginFamily> _pluginFamilies;
 
-        public PluginFamilyCollection(PluginGraph pluginGraph) : base(pluginGraph)
+        public PluginFamilyCollection(PluginGraph pluginGraph)
         {
+            _pluginGraph = pluginGraph;
             _pluginFamilies = new Dictionary<Type, PluginFamily>();
-        }
-
-        protected override ICollection innerCollection
-        {
-            get { return _pluginFamilies.Values; }
         }
 
         public PluginFamily this[Type pluginType]
@@ -56,7 +53,6 @@ namespace StructureMap.Graph
             get
             {
                 PluginFamily[] families = new PluginFamily[_pluginFamilies.Count];
-                CopyTo(families, 0);
                 return families[index];
             }
         }
@@ -86,28 +82,34 @@ namespace StructureMap.Graph
             }
         }
 
+        public int Count
+        {
+            get { return _pluginFamilies.Count; }
+        }
+
         public PluginFamily Add(Type pluginType, string defaultInstanceKey)
         {
             PluginFamily family = new PluginFamily(pluginType, defaultInstanceKey);
             return Add(family);
         }
 
-
-        public PluginFamily Add(Type pluginType, string defaultInstanceKey, MementoSource mementoSource)
+        public PluginFamily Add(Type pluginType)
         {
-            PluginFamily family = new PluginFamily(pluginType, defaultInstanceKey, mementoSource);
-            return Add(family);
+            PluginFamilyAttribute att = PluginFamilyAttribute.GetAttribute(pluginType);
+            PluginFamily family = att == null ? new PluginFamily(pluginType) : att.BuildPluginFamily(pluginType);
+            Add(family);
+
+            return family;
         }
 
         public PluginFamily Add(PluginFamily family)
         {
+            family.Parent = _pluginGraph;
+
             Type key = family.PluginType;
             if (_pluginFamilies.ContainsKey(key))
             {
-                if (_pluginFamilies[family.PluginType].DefinitionSource == DefinitionSource.Implicit)
-                {
-                    _pluginFamilies[key] = family;
-                }
+                _pluginFamilies[key] = family;
             }
             else
             {
@@ -122,33 +124,6 @@ namespace StructureMap.Graph
             _pluginFamilies.Remove(family.PluginType);
         }
 
-        public void FilterByDeploymentTarget(string deploymentTarget)
-        {
-            foreach (PluginFamily family in this)
-            {
-                if (!family.IsDeployed(deploymentTarget))
-                {
-                    Remove(family);
-                }
-            }
-        }
-
-        public void RemoveImplicitChildren()
-        {
-            ArrayList families = new ArrayList(_pluginFamilies.Values);
-            foreach (PluginFamily family in families)
-            {
-                if (family.DefinitionSource == DefinitionSource.Implicit)
-                {
-                    Remove(family);
-                }
-                else
-                {
-                    family.Plugins.RemoveImplicitChildren();
-                }
-            }
-        }
-
         public bool Contains(Type pluginType)
         {
             return _pluginFamilies.ContainsKey(pluginType);
@@ -159,13 +134,16 @@ namespace StructureMap.Graph
             return Contains(typeof (T));
         }
 
-        public PluginFamily Add(Type pluginType)
-        {
-            PluginFamilyAttribute att = PluginFamilyAttribute.GetAttribute(pluginType);
-            PluginFamily family = att == null ? new PluginFamily(pluginType) : att.BuildPluginFamily(pluginType);
-            _pluginFamilies.Add(pluginType, family);
 
-            return family;
+
+        IEnumerator<PluginFamily> IEnumerable<PluginFamily>.GetEnumerator()
+        {
+            return _pluginFamilies.Values.GetEnumerator();
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            return ((IEnumerable<PluginFamily>) this).GetEnumerator();
         }
     }
 }

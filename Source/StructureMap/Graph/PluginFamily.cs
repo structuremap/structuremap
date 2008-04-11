@@ -1,6 +1,9 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
 using StructureMap.Interceptors;
-using StructureMap.Source;
+using StructureMap.Pipeline;
 
 namespace StructureMap.Graph
 {
@@ -9,18 +12,18 @@ namespace StructureMap.Graph
     /// the system.  A PluginFamily defines a CLR Type that StructureMap can build, and all of the possible
     /// Plugin’s implementing the CLR Type.
     /// </summary>
-    public class PluginFamily : Deployable
+    public class PluginFamily
     {
         #region statics
 
+        [Obsolete]
         public static PluginFamily CreateAutoFilledPluginFamily(Type pluginType)
         {
             Plugin plugin = Plugin.CreateAutofilledPlugin(pluginType);
 
             PluginFamily family = new PluginFamily(pluginType);
-            family.DefinitionSource = DefinitionSource.Implicit;
 
-            family.Plugins.Add(plugin, true);
+            family.Plugins.Add(plugin);
             family.DefaultInstanceKey = plugin.ConcreteKey;
 
             return family;
@@ -29,15 +32,16 @@ namespace StructureMap.Graph
         #endregion
 
         public const string CONCRETE_KEY = "CONCRETE";
+        private readonly List<InstanceMemento> _mementoList = new List<InstanceMemento>();
         private readonly PluginCollection _plugins;
         private bool _canUseUnMarkedPlugins = false;
         private string _defaultKey = string.Empty;
-        private DefinitionSource _definitionSource = DefinitionSource.Implicit;
         private InstanceInterceptor _instanceInterceptor = new NulloInterceptor();
         private InterceptionChain _interceptionChain;
+        private PluginGraph _parent;
         private Type _pluginType;
         private string _pluginTypeName;
-        private MementoSource _source;
+        private List<Instance> _instances = new List<Instance>();
 
         #region constructors
 
@@ -49,17 +53,8 @@ namespace StructureMap.Graph
             _plugins = new PluginCollection(this);
 
             _interceptionChain = new InterceptionChain();
-
-            Source = new MemoryMementoSource();
         }
 
-        public PluginFamily(Type pluginType, string defaultInstanceKey, MementoSource source)
-            : this(pluginType, defaultInstanceKey)
-        {
-            Source = source;
-            _definitionSource = DefinitionSource.Explicit;
-            _pluginTypeName = TypePath.GetAssemblyQualifiedName(_pluginType);
-        }
 
         /// <summary>
         /// Testing constructor
@@ -87,10 +82,14 @@ namespace StructureMap.Graph
             _pluginTypeName = path.AssemblyQualifiedName;
             _interceptionChain = new InterceptionChain();
             initializeExplicit(path, defaultKey);
-
-            Source = new MemoryMementoSource();
         }
 
+
+        public PluginGraph Parent
+        {
+            get { return _parent; }
+            set { _parent = value; }
+        }
 
         private void initializeExplicit(TypePath path, string defaultKey)
         {
@@ -115,14 +114,13 @@ namespace StructureMap.Graph
             set { _instanceInterceptor = value; }
         }
 
-        // This code sucks.  What's going on here?
+        // TODO:  This code sucks.  What's going on here?
         public PluginFamily CreateTemplatedClone(params Type[] templateTypes)
         {
             Type templatedType = _pluginType.MakeGenericType(templateTypes);
             PluginFamily templatedFamily = new PluginFamily(templatedType);
             templatedFamily._defaultKey = _defaultKey;
-            templatedFamily._source = new MemoryMementoSource();
-            templatedFamily._definitionSource = _definitionSource;
+            templatedFamily.Parent = Parent;
 
             foreach (InstanceFactoryInterceptor interceptor in _interceptionChain)
             {
@@ -130,51 +128,26 @@ namespace StructureMap.Graph
                 templatedFamily.InterceptionChain.AddInterceptor(clonedInterceptor);
             }
 
+            // Add Plugins
             foreach (Plugin plugin in _plugins)
             {
-                if (isOfCorrectGenericType(plugin, templateTypes))
+                if (plugin.CanBePluggedIntoGenericType(_pluginType, templateTypes))
                 {
                     Plugin templatedPlugin = plugin.CreateTemplatedClone(templateTypes);
-                    templatedFamily.Plugins.Add(templatedPlugin, true);
-                    foreach (InstanceMemento memento in _source.GetAllMementos())
-                    {
-                        if (memento.ConcreteKey == plugin.ConcreteKey)
-                        {
-                            templatedFamily._source.AddExternalMemento(memento);
-                        }
-                    }
+                    templatedFamily.Plugins.Add(templatedPlugin);
                 }
             }
 
+            // TODO -- Got a big problem here.  Intances need to be copied over
+            foreach (Instance instance in GetAllInstances())
+            {
+                throw new NotImplementedException();
+            }
+
+            // Need to attach the new PluginFamily to the old PluginGraph
+            Parent.PluginFamilies.Add(templatedFamily);
+
             return templatedFamily;
-        }
-
-        // TODO:  Move this around
-        private bool isOfCorrectGenericType(Plugin plugin, params Type[] templateTypes)
-        {
-            bool isValid = true;
-
-            Type interfaceType = plugin.PluggedType.GetInterface(_pluginType.Name);
-            if (interfaceType == null)
-            {
-                interfaceType = plugin.PluggedType.BaseType;
-            }
-            Type[] pluginArgs = _pluginType.GetGenericArguments();
-            Type[] pluggableArgs = interfaceType.GetGenericArguments();
-
-            if (templateTypes.Length != pluginArgs.Length &&
-                pluginArgs.Length != pluggableArgs.Length)
-            {
-                return false;
-            }
-
-            for (int i = 0; i < templateTypes.Length; i++)
-            {
-                isValid &= templateTypes[i] == pluggableArgs[i] ||
-                           pluginArgs[i].IsGenericParameter &&
-                           pluggableArgs[i].IsGenericParameter;
-            }
-            return isValid;
         }
 
         /// <summary>
@@ -196,24 +169,66 @@ namespace StructureMap.Graph
 
             foreach (Plugin plugin in plugins)
             {
-                _plugins.Add(plugin, true);
+                _plugins.Add(plugin);
             }
 
             return plugins;
         }
 
-
-        /// <summary>
-        /// Removes any Implicitly defined Plugin and/or Instance from the PluginFamily
-        /// </summary>
-        public void RemoveImplicitChildren()
-        {
-            _plugins.RemoveImplicitChildren();
-        }
-
         public void AddInstance(InstanceMemento memento)
         {
-            _source.AddExternalMemento(memento);
+            _mementoList.Add(memento);
+        }
+
+        public void AddInstance(Instance instance)
+        {
+            _instances.Add(instance);
+        }
+
+        public void AddMementoSource(MementoSource source)
+        {
+            _mementoList.AddRange(source.GetAllMementos());
+        }
+
+        public InstanceMemento[] GetAllMementos()
+        {
+            return _mementoList.ToArray();
+        }
+
+        // For testing
+        public InstanceMemento GetMemento(string instanceKey)
+        {
+            return _mementoList.Find(delegate(InstanceMemento m) { return m.InstanceKey == instanceKey; });
+        }
+
+        public void AddInterceptionChain(InterceptionChain chain)
+        {
+            if (_interceptionChain == null)
+            {
+                _interceptionChain = chain;
+            }
+            else
+            {
+                foreach (InstanceFactoryInterceptor interceptor in chain)
+                {
+                    _interceptionChain.AddInterceptor(interceptor);
+                }
+            }
+        }
+
+        public void DiscoverImplicitInstances()
+        {
+            List<Plugin> list = _plugins.FindAutoFillablePlugins();
+            foreach (InstanceMemento memento in _mementoList)
+            {
+                Plugin plugin = memento.FindPlugin(this);
+                list.Remove(plugin);
+            }
+
+            foreach (Plugin plugin in list)
+            {
+                AddInstance(plugin.CreateImplicitMemento());
+            }
         }
 
         #region properties
@@ -235,34 +250,6 @@ namespace StructureMap.Graph
             set { _defaultKey = value ?? string.Empty; }
         }
 
-        /// <summary>
-        /// Denotes the source or the definition for this Plugin.  Implicit means the
-        /// Plugin is defined by a [Pluggable] attribute on the PluggedType.  Explicit
-        /// means the Plugin was defined in the StructureMap.config file.
-        /// </summary>
-        public DefinitionSource DefinitionSource
-        {
-            get { return _definitionSource; }
-            set { _definitionSource = value; }
-        }
-
-        /// <summary>
-        /// The MementoSource that fetches InstanceMemento definitions for the PluginFamily
-        /// </summary>
-        public MementoSource Source
-        {
-            get { return _source; }
-            set
-            {
-                _source = value;
-
-                if (_source != null)
-                {
-                    _source.Family = this;
-                }
-            }
-        }
-
         public InterceptionChain InterceptionChain
         {
             get { return _interceptionChain; }
@@ -279,12 +266,12 @@ namespace StructureMap.Graph
             get { return _pluginTypeName; }
         }
 
-        public string SourceDescription
+        public bool IsGenericTemplate
         {
-            get { return Source.Description; }
+            get { return _pluginType.IsGenericTypeDefinition; }
         }
 
-        public bool IsGeneric
+        public bool IsGenericType
         {
             get { return _pluginType.IsGenericType; }
         }
@@ -297,5 +284,23 @@ namespace StructureMap.Graph
         }
 
         #endregion
+
+        public Instance[] GetAllInstances()
+        {
+            List<Instance> list = new List<Instance>();
+            foreach (InstanceMemento memento in _mementoList)
+            {
+                list.Add(memento.ReadInstance(Parent, _pluginType));
+            }
+
+            list.AddRange(_instances);
+
+            return list.ToArray();
+        }
+
+        public Instance GetInstance(string name)
+        {
+            return _instances.Find(delegate(Instance i) { return i.Name == name; });
+        }
     }
 }

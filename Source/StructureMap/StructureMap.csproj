@@ -115,10 +115,13 @@
       <Link>CommonAssemblyInfo.cs</Link>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Configuration\ConfiguredInstanceReader.cs" />
+    <Compile Include="InstanceBuilderList.cs" />
     <Compile Include="Pipeline\ConfiguredInstance.cs" />
+    <Compile Include="Pipeline\ConstructorInstance.cs" />
     <Compile Include="Pipeline\DefaultInstance.cs" />
+    <Compile Include="Pipeline\IConfiguredInstance.cs" />
     <Compile Include="Pipeline\Instance.cs" />
+    <Compile Include="Pipeline\InstanceMementoPropertyReader.cs" />
     <Compile Include="Pipeline\LiteralInstance.cs" />
     <Compile Include="Pipeline\PrototypeInstance.cs" />
     <Compile Include="Pipeline\ReferencedInstance.cs" />
@@ -214,28 +217,16 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Configuration\ConfigurationParserCollection.cs" />
-    <Compile Include="Configuration\DSL\Expressions\ChildArrayExpression.cs" />
-    <Compile Include="Configuration\DSL\Expressions\ChildInstanceExpression.cs" />
-    <Compile Include="Configuration\DSL\Expressions\ConstructorExpression.cs" />
     <Compile Include="Configuration\DSL\Expressions\CreatePluginFamilyExpression.cs" />
     <Compile Include="Configuration\DSL\ExpressionValidator.cs" />
     <Compile Include="Configuration\DSL\IExpression.cs" />
-    <Compile Include="Configuration\DSL\Expressions\IMementoBuilder.cs" />
     <Compile Include="Configuration\DSL\Expressions\InstanceDefaultExpression.cs" />
-    <Compile Include="Configuration\DSL\Expressions\InstanceExpression.cs" />
-    <Compile Include="Configuration\DSL\Expressions\LiteralExpression.cs" />
-    <Compile Include="Configuration\Mementos\ExplicitArgumentMemento.cs" />
     <Compile Include="Configuration\Mementos\ExplicitArguments.cs" />
     <Compile Include="Configuration\Mementos\LiteralMemento.cs" />
-    <Compile Include="Configuration\DSL\Expressions\MementoBuilder.cs" />
     <Compile Include="Configuration\DSL\Expressions\ProfileExpression.cs" />
-    <Compile Include="Configuration\DSL\Expressions\PropertyExpression.cs" />
-    <Compile Include="Configuration\DSL\Expressions\PrototypeExpression.cs" />
     <Compile Include="Configuration\Mementos\PrototypeMemento.cs" />
-    <Compile Include="Configuration\DSL\ReferenceMementoBuilder.cs" />
     <Compile Include="Configuration\DSL\Registry.cs" />
     <Compile Include="Configuration\DSL\Expressions\ScanAssembliesExpression.cs" />
-    <Compile Include="Configuration\DSL\Expressions\UserControlExpression.cs" />
     <Compile Include="Configuration\FamilyParser.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -254,7 +245,6 @@
     <Compile Include="Configuration\XmlConstants.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ConstructorMemento.cs" />
     <Compile Include="Emitting\BuildInstanceMethod.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -303,12 +293,6 @@
     <Compile Include="Graph\AssemblyGraphCollection.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Graph\DefinitionSource.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Graph\Deployable.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Graph\GenericsPluginGraph.cs" />
     <Compile Include="Graph\InstanceDefault.cs">
       <SubType>Code</SubType>
@@ -337,9 +321,6 @@
     <Compile Include="Graph\PluginGraph.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Graph\PluginGraphObjectCollection.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Graph\Profile.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -352,7 +333,6 @@
     <Compile Include="Graph\TypePath.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IInstanceCreator.cs" />
     <Compile Include="IInstanceFactory.cs">
       <SubType>Code</SubType>
     </Compile>

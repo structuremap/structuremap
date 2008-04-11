@@ -1,3 +1,5 @@
+using System;
+
 namespace StructureMap.Configuration
 {
     /// <summary>
@@ -16,7 +18,6 @@ namespace StructureMap.Configuration
         public const string DEPLOYMENT_ATTRIBUTE = "Deploy";
         public const string INCLUDE_NODE = "Include";
         public const string INSTANCE_NODE = "Instance";
-        public const string INSTANCES_NODE = "Instances";
         public const string INTERCEPTORS_NODE = "Interceptors";
         public const string KEY_ATTRIBUTE = "Key";
         public const string MACHINE_NODE = "Machine";

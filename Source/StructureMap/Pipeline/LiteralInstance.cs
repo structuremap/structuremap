@@ -2,11 +2,11 @@ using System;
 
 namespace StructureMap.Pipeline
 {
-    public class LiteralInstance<PLUGINTYPE> : Instance
+    public class LiteralInstance : ExpressedInstance<LiteralInstance>
     {
-        private readonly PLUGINTYPE _object;
+        private readonly object _object;
 
-        public LiteralInstance(PLUGINTYPE anObject)
+        public LiteralInstance(object anObject)
         {
             _object = anObject;
 
@@ -14,11 +14,17 @@ namespace StructureMap.Pipeline
         }
 
 
-        protected override object build(Type type, IInstanceCreator creator)
+        protected override LiteralInstance thisInstance
+        {
+            get { return this; }
+        }
+
+        protected override object build(Type pluginType, IInstanceCreator creator)
         {
             // TODO:  VALIDATE THE CAST AND NULL
 
             return _object;
         }
+
     }
 }

@@ -7,18 +7,13 @@ namespace StructureMap.Graph
     /// <summary>
     /// Custom collection for AssemblyGraph's
     /// </summary>
-    public class AssemblyGraphCollection : PluginGraphObjectCollection
+    public class AssemblyGraphCollection : IEnumerable<AssemblyGraph>
     {
         private Dictionary<string, AssemblyGraph> _assemblies;
 
-        public AssemblyGraphCollection(PluginGraph pluginGraph) : base(pluginGraph)
+        public AssemblyGraphCollection(PluginGraph pluginGraph)
         {
             _assemblies = new Dictionary<string, AssemblyGraph>();
-        }
-
-        protected override ICollection innerCollection
-        {
-            get { return _assemblies.Values; }
         }
 
         public AssemblyGraph this[string assemblyName]
@@ -36,6 +31,11 @@ namespace StructureMap.Graph
             }
         }
 
+        public int Count
+        {
+            get { return _assemblies.Count; }
+        }
+
         public AssemblyGraph Add(string assemblyName)
         {
             AssemblyGraph assemblyGraph = new AssemblyGraph(assemblyName);
@@ -49,8 +49,6 @@ namespace StructureMap.Graph
 
         public AssemblyGraph Add(AssemblyGraph assemblyGraph)
         {
-            verifyNotSealed();
-
             if (_assemblies.ContainsKey(assemblyGraph.AssemblyName))
             {
                 return _assemblies[assemblyGraph.AssemblyName];
@@ -62,7 +60,6 @@ namespace StructureMap.Graph
 
         public void Remove(string assemblyName)
         {
-            verifyNotSealed();
             _assemblies.Remove(assemblyName);
         }
 
@@ -74,6 +71,16 @@ namespace StructureMap.Graph
         public bool Contains(string assemblyName)
         {
             return _assemblies.ContainsKey(assemblyName);
+        }
+
+        IEnumerator<AssemblyGraph> IEnumerable<AssemblyGraph>.GetEnumerator()
+        {
+            return _assemblies.Values.GetEnumerator();
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            return ((IEnumerable<AssemblyGraph>) this).GetEnumerator();
         }
     }
 }

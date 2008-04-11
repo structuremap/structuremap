@@ -4,6 +4,7 @@ using StructureMap.Configuration.DSL;
 using StructureMap.Configuration.Mementos;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
+using StructureMap.Pipeline;
 using StructureMap.Source;
 using StructureMap.Testing.GenericWidgets;
 using StructureMap.Testing.Widget;
@@ -25,10 +26,6 @@ namespace StructureMap.Testing.Container
             _widgetMakerFactory =
                 ObjectMother.CreateInstanceFactory(typeof (WidgetMaker), assemblyNames);
 
-            _ruleFactory.Source = new MemoryMementoSource();
-            _widgetFactory.Source = new MemoryMementoSource();
-            _widgetMakerFactory.Source = new MemoryMementoSource();
-
             _manager = new InstanceManager();
             _manager.RegisterType(_ruleFactory);
             _manager.RegisterType(_widgetFactory);
@@ -49,12 +46,11 @@ namespace StructureMap.Testing.Container
 
         private void addColorMemento(string Color)
         {
-            MemoryInstanceMemento memento = new MemoryInstanceMemento("Color", Color);
-            memento.SetProperty("Color", Color);
-
-            ((MemoryMementoSource) _ruleFactory.Source).AddMemento(memento);
-            ((MemoryMementoSource) _widgetFactory.Source).AddMemento(memento);
-            ((MemoryMementoSource) _widgetMakerFactory.Source).AddMemento(memento);
+            ConfiguredInstance instance = new ConfiguredInstance(Color).WithConcreteKey("Color").SetProperty("Color", Color);
+            
+            _ruleFactory.AddInstance(instance);
+            _widgetFactory.AddInstance(instance);
+            _widgetMakerFactory.AddInstance(instance);
         }
 
         public interface IProvider
@@ -141,7 +137,7 @@ namespace StructureMap.Testing.Container
         }
 
 
-        [Test]
+        [Test, Ignore("Temporarily suspending generics support")]
         public void FindAPluginFamilyForAGenericTypeFromPluginTypeName()
         {
             Type serviceType = typeof (IService<string>);

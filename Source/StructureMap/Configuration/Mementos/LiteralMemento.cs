@@ -1,7 +1,10 @@
 using System;
+using StructureMap.Graph;
+using StructureMap.Pipeline;
 
 namespace StructureMap.Configuration.Mementos
 {
+    [Obsolete("Eliminate!")]
     public class LiteralMemento : InstanceMemento
     {
         private object _instance;
@@ -59,9 +62,16 @@ namespace StructureMap.Configuration.Mementos
             throw new NotImplementedException();
         }
 
-        protected override object buildInstance(IInstanceCreator creator)
+
+        protected override Instance readInstance(PluginGraph pluginGraph, Type pluginType)
         {
-            return _instance;
+            return new LiteralInstance(_instance);
+        }
+
+
+        public override Plugin FindPlugin(PluginFamily family)
+        {
+            return null;
         }
     }
 }

@@ -4,6 +4,15 @@ using StructureMap.Configuration.Mementos;
 
 namespace StructureMap.Graph
 {
+    public interface IPluginArgumentVisitor
+    {
+        void Primitive(string name);
+        void Child(string name, Type childType);
+        void ChildArray(string name, Type childType);
+    }
+
+
+
     /// <summary>
     /// Represents a concrete class that can be built by StructureMap as an instance of the parent 
     /// PluginFamily’s PluginType. The properties of a Plugin are the CLR Type of the concrete class, 
@@ -87,11 +96,11 @@ namespace StructureMap.Graph
             if (att == null)
             {
                 return
-                    new Plugin(pluggedType, TypePath.GetAssemblyQualifiedName(pluggedType), DefinitionSource.Implicit);
+                    new Plugin(pluggedType, TypePath.GetAssemblyQualifiedName(pluggedType));
             }
             else
             {
-                return new Plugin(pluggedType, att.ConcreteKey, DefinitionSource.Implicit);
+                return new Plugin(pluggedType, att.ConcreteKey);
             }
         }
 
@@ -104,7 +113,7 @@ namespace StructureMap.Graph
         /// <param name="description"></param>
         public static Plugin CreateExplicitPlugin(Type pluggedType, string concreteKey, string description)
         {
-            return new Plugin(pluggedType, concreteKey, DefinitionSource.Explicit);
+            return new Plugin(pluggedType, concreteKey);
         }
 
         public static ConstructorInfo GetGreediestConstructor(Type pluggedType)
@@ -129,10 +138,10 @@ namespace StructureMap.Graph
         #endregion
 
         private string _concreteKey;
-        private DefinitionSource _definitionSource;
         private Type _pluggedType;
         private SetterPropertyCollection _setters;
 
+        #region constructors
 
         /// <summary>
         /// Creates an Explicit Plugin for the pluggedType with the entered
@@ -140,7 +149,7 @@ namespace StructureMap.Graph
         /// </summary>
         /// <param name="pluggedType"></param>
         /// <param name="concreteKey"></param>
-        private Plugin(Type pluggedType, string concreteKey, DefinitionSource definitionSource) : base()
+        private Plugin(Type pluggedType, string concreteKey) : base()
         {
             if (concreteKey == string.Empty)
             {
@@ -149,7 +158,6 @@ namespace StructureMap.Graph
 
             _pluggedType = pluggedType;
             _concreteKey = concreteKey;
-            _definitionSource = definitionSource;
             _setters = new SetterPropertyCollection(this);
         }
 
@@ -170,8 +178,9 @@ namespace StructureMap.Graph
             _setters = new SetterPropertyCollection(this);
 
             _concreteKey = concreteKey;
-            _definitionSource = DefinitionSource.Explicit;
         }
+
+        #endregion
 
 
         /// <summary>
@@ -217,16 +226,6 @@ namespace StructureMap.Graph
             }
         }
 
-        /// <summary>
-        /// Denotes the source or the definition for this Plugin.  Implicit means the
-        /// Plugin is defined by a [Pluggable] attribute on the PluggedType.  Explicit
-        /// means the Plugin was defined in the StructureMap.config file.
-        /// </summary>
-        public DefinitionSource DefinitionSource
-        {
-            get { return _definitionSource; }
-            set { _definitionSource = value; }
-        }
 
         /// <summary>
         /// Determines if the concrete class can be autofilled.
@@ -277,7 +276,7 @@ namespace StructureMap.Graph
             {
                 templatedType = _pluggedType;
             }
-            Plugin templatedPlugin = new Plugin(templatedType, _concreteKey, _definitionSource);
+            Plugin templatedPlugin = new Plugin(templatedType, _concreteKey);
             templatedPlugin._setters = _setters;
 
             return templatedPlugin;
@@ -369,8 +368,6 @@ namespace StructureMap.Graph
             if (CanBeAutoFilled)
             {
                 MemoryInstanceMemento memento = new MemoryInstanceMemento(ConcreteKey, ConcreteKey);
-                memento.DefinitionSource = DefinitionSource.Implicit;
-
                 returnValue = memento;
             }
 
@@ -423,13 +420,72 @@ namespace StructureMap.Graph
             throw new StructureMapException(302, typeof (T).FullName, _pluggedType.FullName);
         }
 
-        public void AddToSource(MementoSource source)
+        public void VisitArguments(IPluginArgumentVisitor visitor)
         {
-            InstanceMemento memento = CreateImplicitMemento();
-            if (memento != null)
+            foreach (ParameterInfo parameter in GetConstructor().GetParameters())
             {
-                source.AddExternalMemento(memento);
+                visitMember(parameter.ParameterType, parameter.Name, visitor);
             }
+
+            foreach (SetterProperty setter in _setters)
+            {
+                visitMember(setter.Property.PropertyType, setter.Property.Name, visitor);
+            }
+        }
+
+        private static void visitMember(Type type, string name, IPluginArgumentVisitor visitor)
+        {
+            if (TypeIsPrimitive(type))
+            {
+                visitor.Primitive(name);
+            }
+            else if (type.IsArray)
+            {
+                visitor.ChildArray(name, type.GetElementType());
+            }
+            else
+            {
+                visitor.Child(name, type);
+            }
+        }
+
+        public void MergeSetters(Plugin plugin)
+        {
+            foreach (SetterProperty setter in plugin.Setters)
+            {
+                if (!_setters.Contains(setter.Name))
+                {
+                    _setters.Add(setter.Name);
+                }
+            }
+        }
+
+        public bool CanBePluggedIntoGenericType(Type pluginType, params Type[] templateTypes)
+        {
+            bool isValid = true;
+
+            Type interfaceType = PluggedType.GetInterface(pluginType.Name);
+            if (interfaceType == null)
+            {
+                interfaceType = PluggedType.BaseType;
+            }
+
+            Type[] pluginArgs = pluginType.GetGenericArguments();
+            Type[] pluggableArgs = interfaceType.GetGenericArguments();
+
+            if (templateTypes.Length != pluginArgs.Length &&
+                pluginArgs.Length != pluggableArgs.Length)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < templateTypes.Length; i++)
+            {
+                isValid &= templateTypes[i] == pluggableArgs[i] ||
+                           pluginArgs[i].IsGenericParameter &&
+                           pluggableArgs[i].IsGenericParameter;
+            }
+            return isValid;
         }
     }
 }

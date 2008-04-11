@@ -4,6 +4,7 @@ using StructureMap.Configuration;
 using StructureMap.Configuration.Mementos;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
+using StructureMap.Pipeline;
 using StructureMap.Source;
 using StructureMap.Testing.TestData;
 using StructureMap.Testing.Widget;
@@ -38,26 +39,6 @@ namespace StructureMap.Testing.Container
         {
         }
 
-
-        [Test]
-        public void AssemblyDeployTargets()
-        {
-            AssemblyGraph assem1 = graph.Assemblies["StructureMap.Testing.Widget"];
-            AssemblyGraph assem2 = graph.Assemblies["StructureMap.Testing.Widget2"];
-
-            Assert.AreEqual(3, assem1.DeploymentTargets.Length);
-            Assert.IsTrue(assem1.IsDeployed("Client"));
-            Assert.IsTrue(assem1.IsDeployed("Test"));
-            Assert.IsTrue(assem1.IsDeployed("Server"));
-            Assert.IsFalse(assem1.IsDeployed("Remote"));
-
-            Assert.AreEqual(1, assem2.DeploymentTargets.Length);
-            Assert.IsFalse(assem2.IsDeployed("Client"));
-            Assert.IsFalse(assem2.IsDeployed("Test"));
-            Assert.IsFalse(assem2.IsDeployed("Server"));
-            Assert.IsTrue(assem2.IsDeployed("Remote"));
-        }
-
         [Test]
         public void BuildsInterceptionChain()
         {
@@ -78,8 +59,7 @@ namespace StructureMap.Testing.Container
         {
             PluginFamily family = graph.PluginFamilies[typeof (IWidget)];
 
-            MementoSource source = family.Source;
-            InstanceMemento memento = source.GetMemento("Red");
+            InstanceMemento memento = family.GetMemento("Red");
 
             Assert.IsNotNull(memento);
         }
@@ -89,8 +69,7 @@ namespace StructureMap.Testing.Container
         {
             PluginFamily family = graph.PluginFamilies[typeof (Rule)];
 
-            MementoSource source = family.Source;
-            InstanceMemento memento = source.GetMemento("Red");
+            InstanceMemento memento = family.GetMemento("Red");
 
             Assert.IsNotNull(memento);
         }
@@ -101,19 +80,9 @@ namespace StructureMap.Testing.Container
         {
             PluginFamily family = graph.PluginFamilies[typeof (Parent)];
 
-            MementoSource source = family.Source;
-            InstanceMemento memento = source.GetMemento("Jerry");
+            InstanceMemento memento = family.GetMemento("Jerry");
 
             Assert.IsNotNull(memento);
-        }
-
-        [Test]
-        public void CorrectlyBuildAMementoSourceWhenDefinedInConfiguration()
-        {
-            PluginFamily family = graph.PluginFamilies[typeof (IWidget)];
-
-            XmlFileMementoSource source = family.Source as XmlFileMementoSource;
-            Assert.IsNotNull(source);
         }
 
         [Test]
@@ -122,7 +91,6 @@ namespace StructureMap.Testing.Container
             PluginGraph pluginGraph = DataMother.GetPluginGraph("ExplicitPluginFamilyOverridesImplicitPluginFamily.xml");
 
             PluginFamily family = pluginGraph.PluginFamilies[typeof (GrandChild)];
-            Assert.AreEqual(DefinitionSource.Explicit, family.DefinitionSource);
             Assert.AreEqual("Fred", family.DefaultInstanceKey);
         }
 
@@ -149,7 +117,6 @@ namespace StructureMap.Testing.Container
             Assert.IsNotNull(graph.PluginFamilies[typeof (Column)]);
 
             PluginFamily family = graph.PluginFamilies[typeof (Rule)];
-            Assert.AreEqual(DefinitionSource.Explicit, family.DefinitionSource);
         }
 
         [Test]
@@ -161,7 +128,6 @@ namespace StructureMap.Testing.Container
             Assert.IsNotNull(graph.PluginFamilies[typeof (WidgetMaker)]);
 
             PluginFamily family = graph.PluginFamilies[typeof (Child)];
-            Assert.AreEqual(DefinitionSource.Implicit, family.DefinitionSource);
         }
 
         [Test]
@@ -198,10 +164,11 @@ namespace StructureMap.Testing.Container
             InstanceFactory factory = new InstanceFactory(family, true);
             factory.SetInstanceManager(new InstanceManager());
 
-            MemoryInstanceMemento memento = new MemoryInstanceMemento("NotPluggable", string.Empty);
-            memento.SetProperty("name", "DorothyTheDinosaur");
+            ConfiguredInstance instance = new ConfiguredInstance();
+            instance.ConcreteKey = "NotPluggable";
+            instance.SetProperty("name", "DorothyTheDinosaur");
 
-            IWidget widget = (IWidget) factory.GetInstance(memento);
+            IWidget widget = (IWidget)factory.GetInstance(instance, null);
             Assert.IsNotNull(widget);
         }
 

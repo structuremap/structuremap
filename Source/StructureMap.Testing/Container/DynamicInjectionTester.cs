@@ -5,6 +5,7 @@ using NUnit.Framework;
 using StructureMap.Configuration.Mementos;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
+using StructureMap.Pipeline;
 using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Container
@@ -59,8 +60,8 @@ namespace StructureMap.Testing.Container
         public void AddInstanceToInstanceManagerWhenTheInstanceFactoryDoesNotExist()
         {
             InstanceManager manager = new InstanceManager();
-            manager.AddInstance<IService>(new LiteralMemento(_red).Named("Red"));
-            manager.AddInstance<IService>(new LiteralMemento(_blue).Named("Blue"));
+            manager.AddInstance<IService>(new LiteralInstance(_red).WithName("Red"));
+            manager.AddInstance<IService>(new LiteralInstance(_blue).WithName("Blue"));
 
             Assert.AreSame(_red, manager.CreateInstance(typeof (IService), "Red"));
             Assert.AreSame(_blue, manager.CreateInstance(typeof (IService), "Blue"));
@@ -74,8 +75,8 @@ namespace StructureMap.Testing.Container
             InstanceFactory factory = ObjectMother.Factory<IService>();
             interceptor.InnerInstanceFactory = factory;
 
-            interceptor.AddInstance(new LiteralMemento(_red).Named("Red"));
-            interceptor.AddInstance(new LiteralMemento(_blue).Named("Blue"));
+            interceptor.AddInstance(new LiteralInstance(_red).WithName("Red"));
+            interceptor.AddInstance(new LiteralInstance(_blue).WithName("Blue"));
 
             Assert.AreSame(_red, interceptor.GetInstance("Red"));
             Assert.AreSame(_blue, interceptor.GetInstance("Blue"));
@@ -108,37 +109,36 @@ namespace StructureMap.Testing.Container
         [Test]
         public void AddPluginForTypeWhenThePluginAlreadyExists()
         {
-            PluginFamily family = new PluginFamily(typeof (ISomething));
+            PluginGraph pluginGraph = new PluginGraph();
+            PluginFamily family = pluginGraph.PluginFamilies.Add(typeof(ISomething));
             family.Plugins.Add(typeof (SomethingOne), "One");
 
-            InstanceFactory factory = new InstanceFactory(family, true);
-            factory.SetInstanceManager(new InstanceManager());
+            InstanceManager manager = new InstanceManager(pluginGraph);
+            IInstanceFactory factory = manager[typeof (ISomething)];
 
-            InstanceMemento memento = factory.AddType<SomethingOne>();
-            Assert.AreEqual("One", memento.InstanceKey);
-            Assert.AreEqual("One", memento.ConcreteKey);
+            ConfiguredInstance instance = (ConfiguredInstance) factory.AddType<SomethingOne>();
+            Assert.AreEqual("One", instance.Name);
+            Assert.AreEqual("One", instance.ConcreteKey);
 
-            Assert.IsInstanceOfType(typeof (SomethingOne), factory.GetInstance(memento));
+            Assert.IsInstanceOfType(typeof(SomethingOne), factory.GetInstance(instance, manager));
 
             IList list = factory.GetAllInstances();
             Assert.AreEqual(1, list.Count);
-            Assert.IsInstanceOfType(typeof (SomethingOne), list[0]);
+            Assert.IsInstanceOfType(typeof(SomethingOne), list[0]);
         }
 
         [Test]
         public void AddPluginForTypeWhenThePluginDoesNotAlreadyExistsDoesNothing()
         {
-            InstanceFactory factory = ObjectMother.Factory<ISomething>();
-            factory.SetInstanceManager(new InstanceManager());
-            InstanceMemento memento = factory.AddType<SomethingOne>();
+            PluginGraph pluginGraph = new PluginGraph();
+            InstanceManager manager = new InstanceManager(pluginGraph);
 
-            Assert.IsNotNull(memento);
+            manager.AddInstance<ISomething, SomethingOne>();
 
-            Assert.IsInstanceOfType(typeof (SomethingOne), factory.GetInstance(memento));
+            IList<ISomething> list = manager.GetAllInstances<ISomething>();
 
-            IList list = factory.GetAllInstances();
             Assert.AreEqual(1, list.Count);
-            Assert.IsInstanceOfType(typeof (SomethingOne), list[0]);
+            Assert.IsInstanceOfType(typeof(SomethingOne), list[0]);
         }
 
         [Test]
@@ -151,13 +151,21 @@ namespace StructureMap.Testing.Container
         [Test]
         public void CanAddMementosDirectlyToAnInstanceFactory()
         {
-            InstanceFactory factory = ObjectMother.Factory<IService>();
+            IInstanceFactory factory = getISomethingFactory();
 
-            factory.AddInstance(new LiteralMemento(_red).Named("Red"));
-            factory.AddInstance(new LiteralMemento(_blue).Named("Blue"));
+            factory.AddInstance(new LiteralInstance(_red).WithName("Red"));
+            factory.AddInstance(new LiteralInstance(_blue).WithName("Blue"));
 
             Assert.AreSame(_red, factory.GetInstance("Red"));
             Assert.AreSame(_blue, factory.GetInstance("Blue"));
+        }
+
+        private IInstanceFactory getISomethingFactory()
+        {
+            PluginGraph pluginGraph = new PluginGraph();
+            pluginGraph.PluginFamilies.Add(typeof (ISomething));
+            InstanceManager manager = new InstanceManager(pluginGraph);
+            return manager[typeof(ISomething)];
         }
 
         [Test]
@@ -179,13 +187,13 @@ namespace StructureMap.Testing.Container
         [Test]
         public void NowOverwriteAPreviouslyAttachedMemento()
         {
-            InstanceFactory factory = ObjectMother.Factory<IService>();
+            IInstanceFactory factory = getISomethingFactory();
 
-            factory.AddInstance(new LiteralMemento(_red).Named("Red"));
-            factory.AddInstance(new LiteralMemento(_blue).Named("Blue"));
+            factory.AddInstance(new LiteralInstance(_red).WithName("Red"));
+            factory.AddInstance(new LiteralInstance(_blue).WithName("Blue"));
 
             // Replace Blue
-            factory.AddInstance(new LiteralMemento(_orange).Named("Blue"));
+            factory.AddInstance(new LiteralInstance(_orange).WithName("Blue"));
 
             Assert.AreSame(_orange, factory.GetInstance("Blue"));
         }

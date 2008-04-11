@@ -25,9 +25,9 @@ namespace StructureMap.Testing.Container
             MementoSource source2 = new XmlFileMementoSource("IntegratedTest.XML", "Children", "Child");
             MementoSource source3 = new XmlFileMementoSource("IntegratedTest.XML", "Parents", "Parent");
 
-            graph.PluginFamilies[typeof (GrandChild)].Source = source1;
-            graph.PluginFamilies[typeof (Child)].Source = source2;
-            graph.PluginFamilies[typeof (Parent)].Source = source3;
+            graph.PluginFamilies[typeof(GrandChild)].AddMementoSource(source1);
+            graph.PluginFamilies[typeof(Child)].AddMementoSource(source2);
+            graph.PluginFamilies[typeof(Parent)].AddMementoSource(source3);
 
             manager = new InstanceManager(graph);
         }

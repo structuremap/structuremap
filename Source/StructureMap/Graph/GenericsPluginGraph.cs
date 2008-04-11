@@ -99,13 +99,7 @@ namespace StructureMap.Graph
             }
             else
             {
-                string configuredTypes = "";
-                foreach (KeyValuePair<Type, PluginFamily> pair in _families)
-                {
-                    configuredTypes += "\n" + pair.Value.PluginTypeName + ";";
-                }
-
-                throw new StructureMapException(190, templatedType.FullName, basicType.FullName, configuredTypes);
+                return null;
             }
         }
 

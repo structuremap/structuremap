@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 using StructureMap.Configuration.DSL;
 using StructureMap.Interceptors;
@@ -88,10 +89,12 @@ namespace StructureMap.Graph
             foreach (PluginFamily family in _pluginFamilies)
             {
                 attachImplicitPlugins(family);
+                family.DiscoverImplicitInstances();
             }
 
             _sealed = true;
         }
+
 
         private void searchAssembliesForRegistries()
         {
@@ -122,33 +125,12 @@ namespace StructureMap.Graph
 
             foreach (PluginFamily family in families)
             {
-                // Do not replace an explicitly defined PluginFamily with the implicit version
-                if (!_pluginFamilies.Contains(family.PluginType))
+                if (_pluginFamilies.Contains(family.PluginType))
                 {
-                    _pluginFamilies.Add(family);
+                    continue;
                 }
-            }
-        }
 
-
-        /// <summary>
-        /// Un-seals a PluginGraph.  Makes  the PluginGraph editable
-        /// </summary>
-        public void UnSeal()
-        {
-            _sealed = false;
-
-            ArrayList list = new ArrayList(_pluginFamilies);
-            foreach (PluginFamily family in list)
-            {
-                if (family.DefinitionSource == DefinitionSource.Implicit)
-                {
-                    _pluginFamilies.Remove(family);
-                }
-                else
-                {
-                    family.RemoveImplicitChildren();
-                }
+                _pluginFamilies.Add(family);
             }
         }
 

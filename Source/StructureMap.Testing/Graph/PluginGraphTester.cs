@@ -26,8 +26,8 @@ namespace StructureMap.Testing.Graph
 
             graph.Assemblies.Add("StructureMap.Testing.Widget");
 
-            graph.PluginFamilies.Add(typeof (IWidget), "Blue", new MemoryMementoSource());
-            graph.PluginFamilies.Add(typeof (WidgetMaker), "", new MemoryMementoSource());
+            graph.PluginFamilies.Add(typeof (IWidget), "Blue");
+            graph.PluginFamilies.Add(typeof (WidgetMaker), "");
 
             graph.Seal();
 
@@ -90,7 +90,7 @@ namespace StructureMap.Testing.Graph
 
         [Test,
          ExpectedException(typeof (StructureMapException),
-             "StructureMap Exception Code:  300\nThe implied PluginType sometype cannot be found in any of the configured assemblies "
+            ExpectedMessage = "StructureMap Exception Code:  300\nThe implied PluginType sometype cannot be found in any of the configured assemblies "
              )]
         public void LocateOrCreateFamilyForTypeSadPath()
         {
@@ -104,7 +104,7 @@ namespace StructureMap.Testing.Graph
             PluginGraph graph = new PluginGraph();
 
             graph.Assemblies.Add("StructureMap.Testing.Widget");
-            graph.PluginFamilies.Add(typeof (IWidget), "Blue", new MemoryMementoSource());
+            graph.PluginFamilies.Add(typeof (IWidget), "Blue");
             TypePath path =
                 new TypePath("StructureMap.Testing.Widget", "StructureMap.Testing.Widget.NotPluggableWidget");
 
@@ -129,7 +129,7 @@ namespace StructureMap.Testing.Graph
             PluginGraph graph = new PluginGraph();
 
             graph.Assemblies.Add("StructureMap.Testing.Widget");
-            graph.PluginFamilies.Add(typeof (IWidget), "Blue", new MemoryMementoSource());
+            graph.PluginFamilies.Add(typeof (IWidget), "Blue");
             graph.Seal();
 
             PluginFamily family = graph.PluginFamilies[typeof (IWidget)];
@@ -140,38 +140,7 @@ namespace StructureMap.Testing.Graph
             Assert.AreEqual(4, family.Plugins.Count, "3 different IWidget classes are marked as Pluggable");
         }
 
-        [Test]
-        public void RecalculateAddingAnAssemblyAddsPluginFamilies()
-        {
-            PluginGraph pluginGraph = new PluginGraph();
-            pluginGraph.Assemblies.Add("StructureMap.Testing.Widget");
-            pluginGraph.Seal();
 
-            Assert.AreEqual(4, pluginGraph.PluginFamilies.Count);
-
-            pluginGraph.UnSeal();
-            pluginGraph.Assemblies.Add("StructureMap.Testing.Widget3");
-            pluginGraph.Seal();
-
-            Assert.AreEqual(6, pluginGraph.PluginFamilies.Count);
-        }
-
-        [Test]
-        public void RecalculateDeletingAnAssemblyRemovesPluginFamilies()
-        {
-            PluginGraph pluginGraph = ObjectMother.GetPluginGraph();
-
-
-            Assert.AreEqual(10, pluginGraph.PluginFamilies.Count);
-            Assert.AreEqual(4, pluginGraph.Assemblies.Count);
-
-            pluginGraph.UnSeal();
-            pluginGraph.Assemblies.Remove("StructureMap.Testing.Widget3");
-            pluginGraph.Seal();
-
-            Assert.AreEqual(3, pluginGraph.Assemblies.Count);
-            Assert.AreEqual(8, pluginGraph.PluginFamilies.Count);
-        }
     }
 
     [PluginFamily]

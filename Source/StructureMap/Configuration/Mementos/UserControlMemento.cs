@@ -1,8 +1,10 @@
 using System;
 using System.Web.UI;
+using StructureMap.Pipeline;
 
 namespace StructureMap.Configuration.Mementos
 {
+    [Obsolete("Eliminate")]
     public class UserControlMemento : InstanceMemento
     {
         private readonly string _instanceKey;
@@ -43,11 +45,6 @@ namespace StructureMap.Configuration.Mementos
         public override string ReferenceKey
         {
             get { throw new NotImplementedException(); }
-        }
-
-        protected override object buildInstance(IInstanceCreator creator)
-        {
-            return new Page().LoadControl(_url);
         }
 
         protected override string getPropertyValue(string Key)

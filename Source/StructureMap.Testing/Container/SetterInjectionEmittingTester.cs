@@ -52,16 +52,16 @@ namespace StructureMap.Testing.Container
         [Test]
         public void EnumSetter()
         {
-            PluginFamily family = new PluginFamily(typeof (IGridColumn));
-            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (EnumGridColumn));
-            family.Plugins.Add(plugin, true);
+            PluginGraph graph = new PluginGraph();
+            PluginFamily family = graph.PluginFamilies.Add(typeof (IGridColumn));
+            Plugin plugin = Plugin.CreateImplicitPlugin(typeof(EnumGridColumn));
+            family.Plugins.Add(plugin);
 
-            InstanceFactory factory = new InstanceFactory(family, true);
-            factory.SetInstanceManager(new InstanceManager());
+            family.AddInstance(_source.GetMemento("Enum"));
 
-            InstanceMemento memento = _source.GetMemento("Enum");
+            InstanceManager manager = new InstanceManager(graph);
 
-            EnumGridColumn column = (EnumGridColumn) factory.GetInstance(memento);
+            EnumGridColumn column = (EnumGridColumn) manager.CreateInstance<IGridColumn>("Enum");
 
             Assert.AreEqual(FontStyleEnum.BodyText, column.FontStyle);
         }
@@ -69,35 +69,38 @@ namespace StructureMap.Testing.Container
         [Test]
         public void PrimitiveNonStringSetter()
         {
-            PluginFamily family = new PluginFamily(typeof (IGridColumn));
-            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (LongGridColumn));
-            family.Plugins.Add(plugin, true);
-
-            InstanceFactory factory = new InstanceFactory(family, true);
-            factory.SetInstanceManager(new InstanceManager());
+            PluginGraph graph = new PluginGraph();
+            PluginFamily family = graph.PluginFamilies.Add(typeof(IGridColumn));
+            Plugin plugin = Plugin.CreateImplicitPlugin(typeof(LongGridColumn));
+            family.Plugins.Add(plugin);
 
             InstanceMemento memento = _source.GetMemento("Long");
             long count = long.Parse(memento.GetProperty("Count"));
+            family.AddInstance(memento);
 
-            LongGridColumn column = (LongGridColumn) factory.GetInstance(memento);
+            InstanceManager manager = new InstanceManager(graph);
 
 
+            LongGridColumn column = (LongGridColumn) manager.CreateInstance<IGridColumn>("Long");
             Assert.AreEqual(count, column.Count);
         }
 
         [Test]
         public void StringSetter()
         {
-            PluginFamily family = new PluginFamily(typeof (IGridColumn));
-            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (StringGridColumn));
-            family.Plugins.Add(plugin, true);
-
-            InstanceFactory factory = new InstanceFactory(family, true);
-            factory.SetInstanceManager(new InstanceManager());
+            PluginGraph graph = new PluginGraph();
+            PluginFamily family = graph.PluginFamilies.Add(typeof(IGridColumn));
+            Plugin plugin = Plugin.CreateImplicitPlugin(typeof(StringGridColumn));
+            family.Plugins.Add(plugin);
 
             InstanceMemento memento = _source.GetMemento("String");
+            family.AddInstance(memento);
 
-            StringGridColumn column = (StringGridColumn) factory.GetInstance(memento);
+            InstanceManager manager = new InstanceManager(graph);
+            StringGridColumn column = (StringGridColumn) manager.CreateInstance<IGridColumn>("String");
+
+
+
             Assert.AreEqual(memento.GetProperty("Name"), column.Name);
         }
     }

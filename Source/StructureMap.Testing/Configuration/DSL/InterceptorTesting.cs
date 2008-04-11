@@ -103,7 +103,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
         [Test,
          ExpectedException(typeof (StructureMapException),
-             "StructureMap Exception Code:  308\nA configured instance interceptor has failed for Instance 'Bad' and concrete type 'StructureMap.Testing.Widget3.ColorService,StructureMap.Testing.Widget3'"
+            ExpectedMessage = "StructureMap Exception Code:  308\nA configured instance interceptor has failed for Instance 'Bad' and concrete type 'StructureMap.Testing.Widget3.ColorService,StructureMap.Testing.Widget3'"
              )]
         public void TrapFailureInInterceptor()
         {

@@ -14,9 +14,14 @@ namespace StructureMap.Pipeline
         }
 
 
-        protected override object build(Type type, IInstanceCreator creator)
+        public string ReferenceKey
         {
-            return creator.CreateInstance(type, _referenceKey);
+            get { return _referenceKey; }
+        }
+
+        protected override object build(Type pluginType, IInstanceCreator creator)
+        {
+            return creator.CreateInstance(pluginType, _referenceKey);
         }
     }
 }

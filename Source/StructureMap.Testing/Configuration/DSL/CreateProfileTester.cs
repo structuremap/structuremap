@@ -31,9 +31,6 @@ namespace StructureMap.Testing.Configuration.DSL
 
         #endregion
 
-        private InstanceManager manager;
-        private PluginGraph pluginGraph;
-
         [Test]
         public void CreateProfile()
         {

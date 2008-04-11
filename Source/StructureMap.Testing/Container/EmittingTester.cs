@@ -4,6 +4,7 @@ using System.Reflection;
 using NUnit.Framework;
 using StructureMap.Emitting;
 using StructureMap.Graph;
+using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing.Container
@@ -16,7 +17,7 @@ namespace StructureMap.Testing.Container
         [SetUp]
         public void SetUp()
         {
-            memento = ComplexRule.GetMemento();
+            instance = ComplexRule.GetInstance();
 
             try
             {
@@ -37,7 +38,7 @@ namespace StructureMap.Testing.Container
 
                 if (builder != null)
                 {
-                    rule = (ComplexRule) builder.BuildInstance(memento, null);
+                    rule = (ComplexRule) builder.BuildInstance(instance, new InstanceManager());
                 }
             }
             catch (Exception e)
@@ -52,7 +53,7 @@ namespace StructureMap.Testing.Container
         private Assembly assem;
         private InstanceBuilder builder;
         private Exception ex;
-        private InstanceMemento memento;
+        private IConfiguredInstance instance;
         private ComplexRule rule;
 
         public EmittingTester()

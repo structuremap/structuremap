@@ -9,9 +9,9 @@ namespace StructureMap.Testing.Widget3
     {
         private readonly string _color;
 
-        public ColorService(string Color)
+        public ColorService(string color)
         {
-            _color = Color;
+            _color = color;
         }
 
         public string Color

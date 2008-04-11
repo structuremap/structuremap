@@ -6,13 +6,14 @@ using StructureMap.Configuration.Mementos;
 using StructureMap.Exceptions;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
+using StructureMap.Pipeline;
 
 namespace StructureMap
 {
     /// <summary>
     /// A collection of IInstanceFactory's.
     /// </summary>
-    public class InstanceManager : IInstanceManager, IEnumerable, StructureMap.Pipeline.IInstanceCreator
+    public class InstanceManager : IInstanceManager, IEnumerable, IInstanceCreator
     {
         private readonly InstanceDefaultManager _defaultManager;
         private readonly Dictionary<Type, IInstanceFactory> _factories;
@@ -59,7 +60,7 @@ namespace StructureMap
 
             foreach (PluginFamily family in pluginGraph.PluginFamilies)
             {
-                if (family.IsGeneric)
+                if (family.IsGenericTemplate)
                 {
                     _genericsGraph.AddFamily(family);
                 }
@@ -145,22 +146,25 @@ namespace StructureMap
             return (T) CreateInstance(typeof (T), instanceKey);
         }
 
-        public T CreateInstance<T>(InstanceMemento memento)
+        public T CreateInstance<T>(Instance instance)
         {
-            return (T) CreateInstance(typeof (T), memento);
+            return (T) CreateInstance(typeof (T), instance);
         }
 
         public PLUGINTYPE CreateInstance<PLUGINTYPE>(ExplicitArguments args)
         {
-            ExplicitArgumentMemento memento = new ExplicitArgumentMemento(args, null);
-            return CreateInstance<PLUGINTYPE>(memento);
+            IInstanceFactory factory = getOrCreateFactory(typeof (PLUGINTYPE));
+            Instance defaultInstance = factory.GetDefault();
+
+            ExplicitInstance<PLUGINTYPE> instance = new ExplicitInstance<PLUGINTYPE>(args, defaultInstance);
+            return CreateInstance<PLUGINTYPE>(instance);
         }
 
         public void Inject<PLUGINTYPE>(PLUGINTYPE instance)
         {
-            LiteralMemento memento = new LiteralMemento(instance);
-            AddInstance<PLUGINTYPE>(memento);
-            SetDefault(typeof (PLUGINTYPE), memento);
+            LiteralInstance literalInstance = new LiteralInstance(instance);
+            AddInstance<PLUGINTYPE>(literalInstance);
+            SetDefault(typeof (PLUGINTYPE), literalInstance);
         }
 
         public T CreateInstance<T>()
@@ -206,7 +210,7 @@ namespace StructureMap
         /// <returns></returns>
         public object CreateInstance(Type pluginType, string instanceKey)
         {
-            IInstanceFactory instanceFactory = this[pluginType];
+            IInstanceFactory instanceFactory = getOrCreateFactory(pluginType);
             return instanceFactory.GetInstance(instanceKey);
         }
 
@@ -228,23 +232,22 @@ namespace StructureMap
         /// classes to link children members
         /// </summary>
         /// <param name="pluginType"></param>
-        /// <param name="instanceMemento"></param>
+        /// <param name="instance"></param>
         /// <returns></returns>
-        public object CreateInstance(Type pluginType, InstanceMemento instanceMemento)
+        public object CreateInstance(Type pluginType, Instance instance)
         {
-            IInstanceFactory instanceFactory = this[pluginType];
-            return instanceFactory.GetInstance(instanceMemento);
+            return instance.Build(pluginType, this);
         }
 
         /// <summary>
         /// Sets the default instance for the PluginType
         /// </summary>
         /// <param name="pluginType"></param>
-        /// <param name="instanceMemento"></param>
-        public void SetDefault(Type pluginType, InstanceMemento instanceMemento)
+        /// <param name="instance"></param>
+        public void SetDefault(Type pluginType, Instance instance)
         {
             IInstanceFactory instanceFactory = this[pluginType];
-            instanceFactory.SetDefault(instanceMemento);
+            instanceFactory.SetDefault(instance);
         }
 
         /// <summary>
@@ -302,33 +305,32 @@ namespace StructureMap
                                                 stub.GetType().FullName);
             }
 
-            LiteralMemento memento = new LiteralMemento(stub);
-            this[pluginType].SetDefault(memento);
+            LiteralInstance instance = new LiteralInstance(stub);
+            this[pluginType].SetDefault(instance);
         }
 
         public IList GetAllInstances(Type type)
         {
-            return this[type].GetAllInstances();
+            return getOrCreateFactory(type).GetAllInstances();
         }
 
-        public void AddInstance<T>(InstanceMemento memento)
+        public void AddInstance<T>(Instance instance)
         {
             IInstanceFactory factory = getOrCreateFactory(typeof (T), createFactory);
-            factory.AddInstance(memento);
+            factory.AddInstance(instance);
         }
 
-        public void AddInstance<PLUGINTYPE, CONCRETETYPE>()
+        public void AddInstance<PLUGINTYPE, CONCRETETYPE>() where CONCRETETYPE : PLUGINTYPE
         {
             IInstanceFactory factory = getOrCreateFactory(typeof (PLUGINTYPE), createFactory);
-            InstanceMemento memento = factory.AddType<CONCRETETYPE>();
-            factory.AddInstance(memento);
+            Instance instance = factory.AddType<CONCRETETYPE>();
+            factory.AddInstance(instance);
         }
 
         public void AddDefaultInstance<PLUGINTYPE, CONCRETETYPE>()
         {
             IInstanceFactory factory = getOrCreateFactory(typeof (PLUGINTYPE), createFactory);
-            InstanceMemento memento = factory.AddType<CONCRETETYPE>();
-            factory.SetDefault(memento);
+            factory.SetDefault(factory.AddType<CONCRETETYPE>());
         }
 
         public string WhatDoIHave()
@@ -428,42 +430,49 @@ namespace StructureMap
         }
 
         /// <summary>
-        /// Creates a new instance of the requested type using the InstanceMemento.  Mostly used from other
+        /// Creates a new instance of the requested type using the Instance.  Mostly used from other
         /// classes to link children members
         /// </summary>
         /// <param name="pluginTypeName"></param>
-        /// <param name="instanceMemento"></param>
+        /// <param name="instance"></param>
         /// <returns></returns>
-        public object CreateInstance(string pluginTypeName, InstanceMemento instanceMemento)
+        public object CreateInstance(string pluginTypeName, IConfiguredInstance instance)
         {
             IInstanceFactory instanceFactory = this[pluginTypeName];
-            return instanceFactory.GetInstance(instanceMemento);
+            return instanceFactory.GetInstance(instance, this);
         }
 
         /// <summary>
         /// Creates an array of object instances of the requested type
         /// </summary>
-        /// <param name="pluginType"></param>
-        /// <param name="instanceMementoes"></param>
+        /// <param name="pluginTypeName"></param>
+        /// <param name="instances"></param>
         /// <returns></returns>
-        public Array CreateInstanceArray(string pluginType, InstanceMemento[] instanceMementoes)
+        Array IInstanceCreator.CreateInstanceArray(string pluginTypeName, Instance[] instances)
         {
-            if (instanceMementoes == null)
+            // TODO -- default to returning all
+            if (instances == null)
             {
-                throw new StructureMapException(205, pluginType, "UNKNOWN");
+                throw new StructureMapException(205, pluginTypeName, "UNKNOWN");
             }
 
-            IInstanceFactory instanceFactory = this[pluginType];
-            return instanceFactory.GetArray(instanceMementoes);
+            Type pluginType = Type.GetType(pluginTypeName);
+            Array array = Array.CreateInstance(pluginType, instances.Length);
+            for (int i = 0; i < instances.Length; i++)
+            {
+                Instance instance = instances[i];
+                object arrayValue = CreateInstance(pluginType, instance);
+                array.SetValue(arrayValue, i);
+            }
+
+            return array;
         }
 
         private IInstanceFactory getOrCreateFactory(Type type)
         {
             return getOrCreateFactory(type, delegate(Type t)
                                                 {
-                                                    PluginFamily family =
-                                                        PluginFamily.CreateAutoFilledPluginFamily(t);
-                                                    return new InstanceFactory(family, true);
+                                                    return createFactory(t);
                                                 });
         }
 
@@ -487,8 +496,13 @@ namespace StructureMap
 
         private InstanceFactory createFactory(Type pluggedType)
         {
-            PluginFamily family = new PluginFamily(pluggedType);
-            return new InstanceFactory(family, true);
+            if (pluggedType.IsGenericType)
+            {
+                PluginFamily family = _genericsGraph.CreateTemplatedFamily(pluggedType);
+                if (family != null) return new InstanceFactory(family, true);
+            }
+
+            return InstanceFactory.CreateInstanceFactoryForType(pluggedType);
         }
 
         #region Nested type: CreateFactoryDelegate
@@ -497,9 +511,26 @@ namespace StructureMap
 
         #endregion
 
-        public InstanceInterceptor FindInterceptor(Type type)
+        //public InstanceInterceptor FindInterceptor(Type pluginType, Type actualType)
+        //{
+        //    InstanceInterceptor interceptor = getOrCreateFactory(pluginType).GetInterceptor();
+        //    CompoundInterceptor compoundInterceptor = _interceptorLibrary.FindInterceptor(actualType);
+            
+        //    return compoundInterceptor.Merge(interceptor);
+        //}
+
+
+        object IInstanceCreator.ApplyInterception(Type pluginType, object actualValue)
         {
-            return _interceptorLibrary.FindInterceptor(type);
+            IInstanceFactory factory = getOrCreateFactory(pluginType);
+            object interceptedValue = factory.ApplyInterception(actualValue);
+
+            return _interceptorLibrary.FindInterceptor(interceptedValue.GetType()).Process(interceptedValue);
+        }
+
+        object IInstanceCreator.CreateInstance(Type pluginType, IConfiguredInstance instance)
+        {
+            return getOrCreateFactory(pluginType).GetInstance(instance, this);
         }
     }
 }

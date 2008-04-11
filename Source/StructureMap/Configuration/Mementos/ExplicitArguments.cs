@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using StructureMap.Pipeline;
 
 namespace StructureMap.Configuration.Mementos
 {
@@ -31,6 +32,63 @@ namespace StructureMap.Configuration.Mementos
         public string GetArg(string key)
         {
             return _args.ContainsKey(key) ? _args[key] : null;
+        }
+
+        public void Configure(ConfiguredInstance instance)
+        {
+            foreach (KeyValuePair<string, string> arg in _args)
+            {
+                instance.SetProperty(arg.Key, arg.Value);
+                instance.SetChild(arg.Key, new LiteralInstance(arg.Value));
+            }
+        }
+
+        public bool Has(Type type)
+        {
+            return _children.ContainsKey(type);
+        }
+
+        public bool Has(string propertyName)
+        {
+            return _args.ContainsKey(propertyName);
+        }
+    }
+
+    public class ExplicitInstance<PLUGINTYPE> : ConfiguredInstance
+    {
+        private readonly ExplicitArguments _args;
+
+        public ExplicitInstance(ExplicitArguments args, Instance defaultInstance)
+        {
+            args.Configure(this);
+            _args = args;
+
+            ConfiguredInstance defaultConfiguration = defaultInstance as ConfiguredInstance;
+            if (defaultConfiguration != null)
+            {
+                merge(defaultConfiguration);
+                PluggedType = defaultConfiguration.PluggedType;
+            }
+            else
+            {
+                PluggedType = typeof(PLUGINTYPE);
+            }
+        }
+
+
+        protected override object getChild(string propertyName, Type pluginType, IInstanceCreator instanceCreator)
+        {
+            if (_args.Has(pluginType))
+            {
+                return _args.Get(pluginType);
+            }
+
+            if (_args.Has(propertyName))
+            {
+                return _args.GetArg(propertyName);
+            }
+            
+            return base.getChild(propertyName, pluginType, instanceCreator);
         }
     }
 }

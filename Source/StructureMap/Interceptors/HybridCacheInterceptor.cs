@@ -1,3 +1,5 @@
+using StructureMap.Pipeline;
+
 namespace StructureMap.Interceptors
 {
     [Pluggable("Hybrid")]
@@ -28,9 +30,9 @@ namespace StructureMap.Interceptors
             return _innerInterceptor.GetInstance(instanceKey);
         }
 
-        public override object GetInstance(InstanceMemento Memento)
+        public override object GetInstance(IConfiguredInstance instance, IInstanceCreator instanceCreator)
         {
-            return _innerInterceptor.GetInstance(Memento);
+            return _innerInterceptor.GetInstance(instance, instanceCreator);
         }
 
         public override object GetInstance()

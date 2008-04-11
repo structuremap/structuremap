@@ -27,7 +27,7 @@ namespace StructureMap.Testing.Configuration
         public void CreateTheInferredPluginCorrectly()
         {
             // Who needs the Law of Demeter?
-            InstanceMemento[] mementoArray = _graph.PluginFamilies[typeof (IWidget)].Source.GetAllMementos();
+            InstanceMemento[] mementoArray = _graph.PluginFamilies[typeof (IWidget)].GetAllMementos();
             Assert.AreEqual(4, mementoArray.Length);
         }
 
@@ -43,9 +43,6 @@ namespace StructureMap.Testing.Configuration
         {
             ColorRule rule = (ColorRule) _manager.CreateInstance<Rule>("Blue");
             Assert.AreEqual("Blue", rule.Color);
-
-            ColorRule rule2 = (ColorRule) _manager.CreateInstance<Rule>("Blue");
-            Assert.AreSame(rule, rule2);
         }
 
         [Test]

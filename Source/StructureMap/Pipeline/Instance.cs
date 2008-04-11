@@ -1,6 +1,7 @@
 using System;
 using System.Data;
 using System.Web.UI;
+using StructureMap.Graph;
 using StructureMap.Interceptors;
 
 namespace StructureMap.Pipeline
@@ -8,20 +9,18 @@ namespace StructureMap.Pipeline
     public interface IInstanceCreator
     {
         object CreateInstance(Type type, string referenceKey);
-        Array CreateInstanceArray(string pluginType, InstanceMemento[] instanceMementoes);
-        object CreateInstance(string typeName, InstanceMemento memento);
+        Array CreateInstanceArray(string pluginTypeName, Instance[] instances);
         object CreateInstance(string typeName);
-        object CreateInstance(Type type);
-        InstanceInterceptor FindInterceptor(Type type);
+        object CreateInstance(Type pluginType);
+
+        object CreateInstance(Type pluginType, IConfiguredInstance instance);
+        object ApplyInterception(Type pluginType, object actualValue);
     }
 
-    public interface IInstanceDiagnostics
-    {
-    }
 
     public abstract class Instance
     {
-        private string _name;
+        private string _name = Guid.NewGuid().ToString();
         private InstanceInterceptor _interceptor = new NulloInterceptor();
 
         public string Name
@@ -36,20 +35,56 @@ namespace StructureMap.Pipeline
             set { _interceptor = value; }
         }
 
-        public virtual object Build(Type type, IInstanceCreator creator)
+        public virtual object Build(Type pluginType, IInstanceCreator creator)
         {
-            object rawValue = build(type, creator);
+            object rawValue = build(pluginType, creator);
             
-            // Intercept with the Instance-specific InstanceInterceptor
-            object interceptedValue = _interceptor.Process(rawValue);
+            try
+            {
+                // Intercept with the Instance-specific InstanceInterceptor
+                object interceptedValue = _interceptor.Process(rawValue);
 
-            // Now, give the at large Interceptors a chance to intercept
-            return creator.FindInterceptor(interceptedValue.GetType()).Process(interceptedValue);
+                return creator.ApplyInterception(pluginType, interceptedValue);
+            }
+            catch (Exception e)
+            {
+                throw new StructureMapException(308, e, Name,
+                                TypePath.GetAssemblyQualifiedName(rawValue.GetType()));
+            }
         }
 
-        protected abstract object build(Type type, IInstanceCreator creator);
+        protected abstract object build(Type pluginType, IInstanceCreator creator);
+
+
 
         //public abstract void Diagnose<T>(IInstanceCreator creator, IInstanceDiagnostics diagnostics) where T : class;
         //public abstract void Describe<T>(IInstanceDiagnostics diagnostics) where T : class;
+    }
+
+    public abstract class ExpressedInstance<T> : Instance
+    {
+        protected abstract T thisInstance { get;}
+
+        public T WithName(string instanceKey)
+        {
+            Name = instanceKey;
+            return thisInstance;
+        }
+
+        public T OnCreation<TYPE>(StartupHandler<TYPE> handler)
+        {
+            StartupInterceptor<TYPE> interceptor = new StartupInterceptor<TYPE>(handler);
+            Interceptor = interceptor;
+
+            return thisInstance;
+        }
+
+        public T EnrichWith<TYPE>(EnrichmentHandler<TYPE> handler)
+        {
+            EnrichmentInterceptor<TYPE> interceptor = new EnrichmentInterceptor<TYPE>(handler);
+            Interceptor = interceptor;
+
+            return thisInstance;
+        }
     }
 }

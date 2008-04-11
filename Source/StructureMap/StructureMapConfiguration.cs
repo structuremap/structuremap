@@ -7,6 +7,7 @@ using StructureMap.Configuration.DSL;
 using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
+using StructureMap.Pipeline;
 
 namespace StructureMap
 {
@@ -182,7 +183,7 @@ namespace StructureMap
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static InstanceExpression.InstanceTypeExpression AddInstanceOf<T>()
+        public static ConfiguredInstance AddInstanceOf<T>()
         {
             return _registry.AddInstanceOf<T>();
         }
@@ -195,7 +196,7 @@ namespace StructureMap
         /// <typeparam name="T"></typeparam>
         /// <param name="target"></param>
         /// <returns></returns>
-        public static LiteralExpression<T> AddInstanceOf<T>(T target)
+        public static LiteralInstance AddInstanceOf<T>(T target)
         {
             return _registry.AddInstanceOf(target);
         }
@@ -208,7 +209,7 @@ namespace StructureMap
         /// <typeparam name="T"></typeparam>
         /// <param name="prototype"></param>
         /// <returns></returns>
-        public static PrototypeExpression<T> AddPrototypeInstanceOf<T>(T prototype)
+        public static PrototypeInstance AddPrototypeInstanceOf<T>(T prototype)
         {
             return _registry.AddPrototypeInstanceOf(prototype);
         }

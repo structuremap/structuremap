@@ -95,11 +95,8 @@ namespace StructureMap.Testing
             pluginGraph.PluginFamilies.Add(pluginType, string.Empty);
             pluginGraph.Seal();
 
-            PluginFamily family = pluginGraph.PluginFamilies[pluginType];
-            InstanceFactory factory = new InstanceFactory(family, false);
-            factory.SetInstanceManager(new InstanceManager());
-
-            return factory;
+            InstanceManager manager = new InstanceManager(pluginGraph);
+            return (InstanceFactory) manager[pluginType];
         }
 
         public static InstanceFactory Factory<T>()

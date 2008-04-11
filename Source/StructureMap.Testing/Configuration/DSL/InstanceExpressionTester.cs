@@ -18,17 +18,6 @@ namespace StructureMap.Testing.Configuration.DSL
 
         #endregion
 
-        [Test,
-         ExpectedException(typeof (StructureMapException),
-             "StructureMap Exception Code:  301\nNo concrete type or concrete key is specified for instance TheInstanceKey for PluginType StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget"
-             )]
-        public void BlowUpIfNoConcreteKeyOrTypeDefinied()
-        {
-            InstanceExpression expression = new InstanceExpression(typeof (IWidget));
-            expression.InstanceKey = "TheInstanceKey";
-            PluginGraph pluginGraph = new PluginGraph();
-            ((IExpression) expression).Configure(pluginGraph);
-        }
 
         [Test, ExpectedException(typeof (StructureMapException))]
         public void BlowUpIfNoPropertyIsFoundForType()

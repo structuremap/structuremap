@@ -1,7 +1,10 @@
 using System;
+using StructureMap.Graph;
+using StructureMap.Pipeline;
 
 namespace StructureMap.Configuration.Mementos
 {
+    [Obsolete("Eliminate!")]
     public class PrototypeMemento : InstanceMemento
     {
         private readonly string _instanceKey;
@@ -13,6 +16,10 @@ namespace StructureMap.Configuration.Mementos
             _prototype = prototype;
         }
 
+        public override Plugin FindPlugin(PluginFamily family)
+        {
+            return null;
+        }
 
         public ICloneable Prototype
         {
@@ -40,10 +47,6 @@ namespace StructureMap.Configuration.Mementos
             get { throw new NotImplementedException(); }
         }
 
-        protected override object buildInstance(IInstanceCreator creator)
-        {
-            return _prototype.Clone();
-        }
 
         protected override string getPropertyValue(string Key)
         {
@@ -58,6 +61,12 @@ namespace StructureMap.Configuration.Mementos
         public override InstanceMemento[] GetChildrenArray(string Key)
         {
             throw new NotImplementedException();
+        }
+
+
+        protected override Instance readInstance(PluginGraph pluginGraph, Type pluginType)
+        {
+            return new PrototypeInstance(_prototype);
         }
     }
 }

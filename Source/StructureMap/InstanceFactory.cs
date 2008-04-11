@@ -2,11 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Reflection;
 using StructureMap.Configuration.Mementos;
-using StructureMap.Emitting;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
+using StructureMap.Pipeline;
 using StructureMap.Source;
 
 namespace StructureMap
@@ -14,13 +13,14 @@ namespace StructureMap
     /// <summary>
     /// Default implementation of IInstanceFactory
     /// </summary>
-    public class InstanceFactory : IInstanceFactory, IInstanceCreator
+    public class InstanceFactory : IInstanceFactory
     {
-        private readonly Dictionary<string, InstanceBuilder> _instanceBuilders;
+        private readonly InstanceBuilderList _instanceBuilders;
         private readonly InstanceInterceptor _interceptor = new NulloInterceptor();
         private readonly Type _pluginType;
-        private MementoSource _source;
         private InstanceManager _manager = new InstanceManager();
+        private readonly Dictionary<string, Instance> _instances = new Dictionary<string, Instance>();
+        private Instance _defaultInstance;
 
         #region static constructors
 
@@ -28,7 +28,9 @@ namespace StructureMap
         {
             PluginFamily family = new PluginFamily(pluginType);
             InstanceFactory factory = new InstanceFactory(family, true);
-            factory.SetDefault(new LiteralMemento(defaultInstance));
+
+            LiteralInstance instance = new LiteralInstance(defaultInstance);
+            factory.SetDefault(instance);
 
             return factory;
         }
@@ -37,18 +39,12 @@ namespace StructureMap
 
         #region constructor functions
 
-        private InstanceFactory()
-        {
-            _instanceBuilders = new Dictionary<string, InstanceBuilder>();
-            _source = new MemoryMementoSource();
-        }
-
         /// <summary>
         /// Constructor to use when troubleshooting possible configuration issues.
         /// </summary>
         /// <param name="family"></param>
         /// <param name="failOnException">Toggles error trapping.  Set to "true" for diagnostics</param>
-        public InstanceFactory(PluginFamily family, bool failOnException) : this()
+        public InstanceFactory(PluginFamily family, bool failOnException)
         {
             if (family == null)
             {
@@ -58,10 +54,20 @@ namespace StructureMap
             try
             {
                 _interceptor = family.InstanceInterceptor;
-                determineMementoSource(family);
+
                 _pluginType = family.PluginType;
-                processPlugins(family.Plugins.All);
+                _instanceBuilders = new InstanceBuilderList(family.PluginType, family.Plugins.All);
+
+                foreach (Instance instance in family.GetAllInstances())
+                {
+                    AddInstance(instance);
+                }
+
                 determineDefaultKey(family, failOnException);
+            }
+            catch (StructureMapException)
+            {
+                throw;
             }
             catch (Exception e)
             {
@@ -69,18 +75,38 @@ namespace StructureMap
             }
         }
 
-
-        private void determineMementoSource(PluginFamily family)
+        public static InstanceFactory CreateInstanceFactoryForType(Type concreteType)
         {
-            if (family.Source == null)
+            return new InstanceFactory(concreteType);
+        }
+
+        private InstanceFactory(Type concreteType)
+        {
+            _interceptor = new NulloInterceptor();
+            _pluginType = concreteType;
+            _instanceBuilders = new InstanceBuilderList(_pluginType, new Plugin[0]);
+
+            if (_pluginType.IsAbstract || _pluginType.IsInterface)
             {
-                _source = new MemoryMementoSource();
+                return;
             }
-            else
+
+            Plugin plugin = new Plugin(new TypePath(concreteType), Guid.NewGuid().ToString());
+            if (plugin.CanBeAutoFilled)
             {
-                _source = family.Source;
+                _instanceBuilders = new InstanceBuilderList(_pluginType, new Plugin[]{plugin});
+
+                ConfiguredInstance instance = new ConfiguredInstance();
+                instance.PluggedType = concreteType;
+                instance.Name = concreteType.FullName;
+
+                _instances.Add(instance.Name, instance);
+
+                _defaultInstance = instance;
             }
         }
+
+
 
         private void determineDefaultKey(PluginFamily family, bool failOnException)
         {
@@ -122,51 +148,48 @@ namespace StructureMap
 
         #endregion
 
-        /// <summary>
-        /// Retrieves the MementoSource member of the InstanceFactory
-        /// </summary>
-        public MementoSource Source
-        {
-            get { return _source; }
-            set { _source = value; }
-        }
 
         #region IInstanceCreator Members
 
-        object IInstanceCreator.BuildInstance(InstanceMemento memento)
-        {
-            if (!_instanceBuilders.ContainsKey(memento.ConcreteKey))
-            {
-                throw new StructureMapException(
-                    201, memento.ConcreteKey, memento.InstanceKey, PluginType.FullName);
-            }
+        // TODO:  This code needs to move somewhere else
+        //object IInstanceCreator.BuildInstance(InstanceMemento memento)
+        //{
+        //    InstanceBuilder builder = memento.FindBuilder(_instanceBuilders);
 
+        //    if (builder == null)
+        //    {
+        //        throw new StructureMapException(
+        //            201, memento.ConcreteKey, memento.InstanceKey, PluginType.FullName);
+        //    }
 
-            try
-            {
-                InstanceBuilder builder = _instanceBuilders[memento.ConcreteKey];
-                object constructedInstance = builder.BuildInstance(memento, _manager);
-                InstanceInterceptor interceptor = _manager.FindInterceptor(constructedInstance.GetType());
-                return interceptor.Process(constructedInstance);
-            }
-            catch (StructureMapException)
-            {
-                throw;
-            }
-            catch (InvalidCastException ex)
-            {
-                throw new StructureMapException(206, ex, memento.InstanceKey);
-            }
-            catch (Exception ex)
-            {
-                throw new StructureMapException(207, ex, memento.InstanceKey, PluginType.FullName);
-            }
-        }
+        //    try
+        //    {
+        //        object constructedInstance = builder.BuildInstance(memento, _manager);
+        //        InstanceInterceptor interceptor = _manager.FindInterceptor(constructedInstance.GetType());
+        //        return interceptor.Process(constructedInstance);
+        //    }
+        //    catch (StructureMapException)
+        //    {
+        //        throw;
+        //    }
+        //    catch (InvalidCastException ex)
+        //    {
+        //        throw new StructureMapException(206, ex, memento.InstanceKey);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new StructureMapException(207, ex, memento.InstanceKey, PluginType.FullName);
+        //    }
+        //}
 
-        InstanceMemento IInstanceCreator.DefaultMemento
-        {
-            get { return _source.DefaultMemento; }
-        }
+        //InstanceMemento IInstanceCreator.DefaultMemento
+        //{
+        //    get
+        //    {
+        //        throw new NotImplementedException();
+        //        //return _source.DefaultMemento;
+        //    }
+        //}
 
         #endregion
 
@@ -197,24 +220,47 @@ namespace StructureMap
         /// <returns></returns>
         public object GetInstance(string instanceKey)
         {
-            InstanceMemento memento = findMemento(instanceKey);
-            return GetInstance(memento);
+            if (!_instances.ContainsKey(instanceKey))
+            {
+                throw new StructureMapException(200, instanceKey, _pluginType.FullName);
+            }
+
+            Instance instance = _instances[instanceKey];
+
+            return instance.Build(_pluginType, _manager);
         }
 
 
         /// <summary>
         /// Creates an object instance for the supplied InstanceMemento
         /// </summary>
-        /// <param name="memento"></param>
+        /// <param name="instance"></param>
         /// <returns></returns>
-        public object GetInstance(InstanceMemento memento)
+        public object GetInstance(IConfiguredInstance instance, IInstanceCreator instanceCreator)
         {
-            // Let the MementoSource fill in Templates, resolve references, etc.
-            InstanceMemento resolvedMemento = _source.ResolveMemento(memento);
+            InstanceBuilder builder = instance.FindBuilder(_instanceBuilders);
+            if (builder == null)
+            {
+                throw new StructureMapException(
+                    201, instance.ConcreteKey, instance.Name, PluginType.FullName);
+            }
 
-
-            object instance = resolvedMemento.Build(this);
-            return _interceptor.Process(instance);
+            try
+            {
+                return builder.BuildInstance(instance, instanceCreator);
+            }
+            catch (StructureMapException)
+            {
+                throw;
+            }
+            catch (InvalidCastException ex)
+            {
+                throw new StructureMapException(206, ex, instance.Name);
+            }
+            catch (Exception ex)
+            {
+                throw new StructureMapException(207, ex, instance.Name, PluginType.FullName);
+            }
         }
 
 
@@ -224,30 +270,13 @@ namespace StructureMap
         /// <returns></returns>
         public object GetInstance()
         {
-            if (_source.DefaultMemento == null)
+            if (_defaultInstance == null)
             {
                 throw new StructureMapException(202, PluginType.FullName);
             }
 
-            return GetInstance(_source.DefaultMemento);
-        }
-
-
-        /// <summary>
-        /// Builds an array of object instances for every InstanceMemento passed in
-        /// </summary>
-        /// <param name="Mementos"></param>
-        /// <returns></returns>
-        public Array GetArray(InstanceMemento[] Mementos)
-        {
-            Array array = Array.CreateInstance(PluginType, Mementos.Length);
-            for (int i = 0; i < Mementos.Length; i++)
-            {
-                object member = GetInstance(Mementos[i]);
-                array.SetValue(member, i);
-            }
-
-            return array;
+            object builtObject = _defaultInstance.Build(_pluginType, _manager);
+            return _interceptor.Process(builtObject);
         }
 
 
@@ -259,25 +288,26 @@ namespace StructureMap
         {
             if (instanceKey == string.Empty || instanceKey == null)
             {
-                _source.DefaultMemento = null;
+                _defaultInstance = null;
             }
             else
             {
-                _source.DefaultMemento = findMemento(instanceKey);
+                if (!_instances.ContainsKey(instanceKey))
+                {
+                    throw new StructureMapException(215, instanceKey, _pluginType.FullName);
+                }
+
+                _defaultInstance = _instances[instanceKey];
             }
         }
 
         /// <summary>
         /// Sets the default InstanceMemento
         /// </summary>
-        /// <param name="memento"></param>
-        public void SetDefault(InstanceMemento memento)
+        /// <param name="instance"></param>
+        public void SetDefault(Instance instance)
         {
-            _source.DefaultMemento = memento;
-            if (_source.GetMemento(memento.InstanceKey) == null)
-            {
-                _source.AddExternalMemento(memento);
-            }
+            _defaultInstance = instance;
         }
 
         /// <summary>
@@ -287,16 +317,7 @@ namespace StructureMap
         {
             get
             {
-                InstanceMemento memento = _source.DefaultMemento;
-
-                if (memento == null)
-                {
-                    return string.Empty;
-                }
-                else
-                {
-                    return memento.InstanceKey;
-                }
+                return _defaultInstance == null ? string.Empty : _defaultInstance.Name;
             }
         }
 
@@ -304,86 +325,51 @@ namespace StructureMap
         {
             IList list = new ArrayList();
 
-            foreach (InstanceMemento memento in _source.GetAllMementos())
+            foreach (KeyValuePair<string, Instance> pair in _instances)
             {
-                object instance = GetInstance(memento);
+                object instance = pair.Value.Build(_pluginType, _manager);
                 list.Add(instance);
             }
 
             return list;
         }
 
-        public void AddInstance(InstanceMemento memento)
+        public void AddInstance(Instance instance)
         {
-            _source.AddExternalMemento(memento);
-        }
-
-
-        public InstanceMemento AddType<T>()
-        {
-            Type pluggedType = typeof (T);
-            foreach (KeyValuePair<string, InstanceBuilder> pair in _instanceBuilders)
+            if (_instances.ContainsKey(instance.Name))
             {
-                InstanceBuilder builder = pair.Value;
-                if (builder.IsType(pluggedType))
-                {
-                    return new MemoryInstanceMemento(builder.ConcreteTypeKey, builder.ConcreteTypeKey);
-                }
+                _instances[instance.Name] = instance;
             }
-
-            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (T));
-            processPlugins(new Plugin[] {plugin});
-            plugin.AddToSource(_source);
-
-            return plugin.CreateImplicitMemento();
-        }
-
-        #region create instance builders
-
-        private void processPlugins(IEnumerable<Plugin> plugins)
-        {
-            Assembly assembly = createInstanceBuilderAssembly(plugins);
-            foreach (Plugin plugin in plugins)
+            else
             {
-                addPlugin(assembly, plugin);
+                _instances.Add(instance.Name, instance);
             }
         }
 
-        private Assembly createInstanceBuilderAssembly(IEnumerable<Plugin> plugins)
+
+        public Instance AddType<T>()
         {
-            string assemblyName = Guid.NewGuid().ToString().Replace(".", "") + "InstanceBuilderAssembly";
-            InstanceBuilderAssembly builderAssembly = new InstanceBuilderAssembly(assemblyName, PluginType);
+            InstanceBuilder builder = _instanceBuilders.FindByType(typeof (T));
+            ConfiguredInstance instance = new ConfiguredInstance();
+            instance.ConcreteKey = builder.ConcreteTypeKey;
+            instance.Name = instance.ConcreteKey;
+            
 
-            foreach (Plugin plugin in plugins)
-            {
-                builderAssembly.AddPlugin(plugin);
-            }
+            return instance;
+        }
 
-            return builderAssembly.Compile();
+        public Instance GetDefault()
+        {
+            return _defaultInstance;
         }
 
 
-        private void addPlugin(Assembly assembly, Plugin plugin)
+        public object ApplyInterception(object rawValue)
         {
-            string instanceBuilderClassName = plugin.GetInstanceBuilderClassName();
-            InstanceBuilder builder = (InstanceBuilder) assembly.CreateInstance(instanceBuilderClassName);
-            _instanceBuilders.Add(builder.ConcreteTypeKey, builder);
+            return _interceptor.Process(rawValue);
         }
 
         #endregion
 
-        #endregion
-
-        private InstanceMemento findMemento(string instanceKey)
-        {
-            InstanceMemento memento = _source.GetMemento(instanceKey);
-
-            if (memento == null)
-            {
-                throw new StructureMapException(200, instanceKey, _pluginType.FullName);
-            }
-
-            return memento;
-        }
     }
 }

@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Reflection;
 using StructureMap.Attributes;
@@ -8,14 +10,14 @@ namespace StructureMap.Graph
     /// <summary>
     /// Custom collection class for SetterProperty objects
     /// </summary>
-    public class SetterPropertyCollection : PluginGraphObjectCollection
+    public class SetterPropertyCollection : IEnumerable<SetterProperty>
     {
         private readonly Plugin _plugin;
-        private ListDictionary _setterProperties;
+        private Dictionary<string, SetterProperty> _properties;
 
-        public SetterPropertyCollection(Plugin plugin) : base(null)
+        public SetterPropertyCollection(Plugin plugin)
         {
-            _setterProperties = new ListDictionary();
+            _properties = new Dictionary<string, SetterProperty>();
             _plugin = plugin;
 
 
@@ -26,20 +28,20 @@ namespace StructureMap.Graph
             }
         }
 
-        protected override ICollection innerCollection
-        {
-            get { return _setterProperties.Values; }
-        }
-
         public SetterProperty[] Setters
         {
             get
             {
-                SetterProperty[] returnValue = new SetterProperty[_setterProperties.Count];
-                _setterProperties.Values.CopyTo(returnValue, 0);
-
+                SetterProperty[] returnValue = new SetterProperty[_properties.Count];
+                _properties.Values.CopyTo(returnValue, 0);
+                
                 return returnValue;
             }
+        }
+
+        public int Count
+        {
+            get { return _properties.Count; }
         }
 
         public SetterProperty Add(string propertyName)
@@ -47,7 +49,7 @@ namespace StructureMap.Graph
             PropertyInfo property = _plugin.PluggedType.GetProperty(propertyName);
             addSetterProperty(property, propertyName);
 
-            return (SetterProperty) _setterProperties[propertyName];
+            return _properties[propertyName];
         }
 
         private void addSetterProperty(PropertyInfo property, string propertyName)
@@ -63,12 +65,22 @@ namespace StructureMap.Graph
             }
 
             SetterProperty setterProperty = new SetterProperty(property);
-            _setterProperties.Add(propertyName, setterProperty);
+            _properties.Add(propertyName, setterProperty);
         }
 
         public bool Contains(string propertyName)
         {
-            return _setterProperties.Contains(propertyName);
+            return _properties.ContainsKey(propertyName);
+        }
+
+        IEnumerator<SetterProperty> IEnumerable<SetterProperty>.GetEnumerator()
+        {
+            return _properties.Values.GetEnumerator();
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            return ((IEnumerable<SetterProperty>) this).GetEnumerator();
         }
     }
 }

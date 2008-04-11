@@ -40,7 +40,7 @@ namespace StructureMap.Testing.Attributes
 
             protected override InstanceMemento[] fetchInternalMementos()
             {
-                throw new NotImplementedException();
+                return new InstanceMemento[0];
             }
 
             protected override bool containsKey(string instanceKey)

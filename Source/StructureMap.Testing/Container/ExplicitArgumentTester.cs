@@ -2,6 +2,7 @@ using NUnit.Framework;
 using StructureMap.Configuration.DSL;
 using StructureMap.Configuration.Mementos;
 using StructureMap.Graph;
+using StructureMap.Pipeline;
 
 namespace StructureMap.Testing.Container
 {
@@ -28,31 +29,33 @@ namespace StructureMap.Testing.Container
 
         public void GetTypedArgumentsFromAnExplicitArgumentsMementoIfThereIsAnExplicitArgument()
         {
-            PluginGraph pluginGraph = new PluginGraph();
-            using (Registry registry = new Registry(pluginGraph))
-            {
-                registry.ForRequestedType<ExplicitTarget>().TheDefaultIs(
-                    Registry.Instance<ExplicitTarget>()
-                        .UsingConcreteType<ExplicitTarget>()
-                        .Child<IProvider>().IsConcreteType<RedProvider>()
-                        .WithProperty("name").EqualTo("Jeremy")
-                    );
-            }
+            Assert.Fail("Redo");
 
-            InstanceMemento inner = pluginGraph.PluginFamilies[typeof (ExplicitTarget)].Source.GetAllMementos()[0];
-            ExplicitArguments args = new ExplicitArguments();
-            ExplicitArgumentMemento memento = new ExplicitArgumentMemento(args, inner);
+            //PluginGraph pluginGraph = new PluginGraph();
+            //using (Registry registry = new Registry(pluginGraph))
+            //{
+            //    registry.ForRequestedType<ExplicitTarget>().TheDefaultIs(
+            //        Registry.Instance<ExplicitTarget>()
+            //            .UsingConcreteType<ExplicitTarget>()
+            //            .Child<IProvider>().IsConcreteType<RedProvider>()
+            //            .WithProperty("name").EqualTo("Jeremy")
+            //        );
+            //}
 
-            InstanceManager manager = new InstanceManager(pluginGraph);
+            //InstanceMemento inner = pluginGraph.PluginFamilies[typeof (ExplicitTarget)].Source.GetAllMementos()[0];
+            //ExplicitArguments args = new ExplicitArguments();
+            //ExplicitArgumentMemento memento = new ExplicitArgumentMemento(args, inner);
 
-            // Get the ExplicitTarget without setting an explicit arg for IProvider
-            ExplicitTarget firstTarget = manager.CreateInstance<ExplicitTarget>(memento);
-            Assert.IsInstanceOfType(typeof (RedProvider), firstTarget.Provider);
+            //InstanceManager manager = new InstanceManager(pluginGraph);
 
-            // Now, set the explicit arg for IProvider
-            args.Set<IProvider>(new BlueProvider());
-            ExplicitTarget secondTarget = manager.CreateInstance<ExplicitTarget>(memento);
-            Assert.IsInstanceOfType(typeof (BlueProvider), secondTarget.Provider);
+            //// Get the ExplicitTarget without setting an explicit arg for IProvider
+            //ExplicitTarget firstTarget = manager.CreateInstance<ExplicitTarget>(memento);
+            //Assert.IsInstanceOfType(typeof (RedProvider), firstTarget.Provider);
+
+            //// Now, set the explicit arg for IProvider
+            //args.Set<IProvider>(new BlueProvider());
+            //ExplicitTarget secondTarget = manager.CreateInstance<ExplicitTarget>(memento);
+            //Assert.IsInstanceOfType(typeof (BlueProvider), secondTarget.Provider);
         }
 
 
@@ -146,33 +149,6 @@ namespace StructureMap.Testing.Container
             Assert.AreEqual("Julia", secondTarget.Name);
         }
 
-        [Test]
-        public void OverridePrimitiveArgs()
-        {
-            PluginGraph pluginGraph = new PluginGraph();
-            using (Registry registry = new Registry(pluginGraph))
-            {
-                registry.ForRequestedType<ExplicitTarget>().TheDefaultIs(
-                    Registry.Instance<ExplicitTarget>()
-                        .UsingConcreteType<ExplicitTarget>()
-                        .Child<IProvider>().IsConcreteType<RedProvider>()
-                        .WithProperty("name").EqualTo("Jeremy")
-                    );
-            }
-
-            InstanceMemento inner = pluginGraph.PluginFamilies[typeof (ExplicitTarget)].Source.GetAllMementos()[0];
-            ExplicitArguments args = new ExplicitArguments();
-            ExplicitArgumentMemento memento = new ExplicitArgumentMemento(args, inner);
-
-            InstanceManager manager = new InstanceManager(pluginGraph);
-
-            // Once without an explicit arg set
-            Assert.AreEqual("Jeremy", manager.CreateInstance<ExplicitTarget>(memento).Name);
-
-            // Now, set the explicit arg
-            args.SetArg("name", "Max");
-            Assert.AreEqual("Max", manager.CreateInstance<ExplicitTarget>(memento).Name);
-        }
 
         [Test]
         public void PassAnArgumentIntoExplicitArgumentsForARequestedInterface()

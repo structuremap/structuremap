@@ -143,7 +143,8 @@ namespace StructureMap
             }
 
             MementoSource source = CreateSource(exportedType);
-            PluginFamily family = new PluginFamily(exportedType, DefaultKey, source);
+            PluginFamily family = new PluginFamily(exportedType, DefaultKey);
+            family.AddMementoSource(source);
 
             InterceptorChainBuilder builder = new InterceptorChainBuilder();
             family.InterceptionChain = builder.Build(Scope);
@@ -155,8 +156,6 @@ namespace StructureMap
         {
             PluginFamilyAttribute att = GetAttribute(exportedType);
             PluginFamily family = att.BuildPluginFamily(exportedType);
-
-            family.DefinitionSource = DefinitionSource.Implicit;
 
             return family;
         }

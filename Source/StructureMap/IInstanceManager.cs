@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using StructureMap.Configuration.Mementos;
 using StructureMap.Graph;
+using StructureMap.Pipeline;
 
 namespace StructureMap
 {
@@ -17,7 +18,7 @@ namespace StructureMap
         IList<T> GetAllInstances<T>();
         void SetDefaultsToProfile(string profile);
 
-        T CreateInstance<T>(InstanceMemento memento);
+        T CreateInstance<T>(Instance instance);
 
         /// <summary>
         /// Sets up the InstanceManager to return the object in the "stub" argument anytime
@@ -28,8 +29,8 @@ namespace StructureMap
         void InjectStub(Type pluginType, object stub);
 
         IList GetAllInstances(Type type);
-        void AddInstance<T>(InstanceMemento memento);
-        void AddInstance<PLUGINTYPE, CONCRETETYPE>();
+        void AddInstance<T>(Instance instance);
+        void AddInstance<PLUGINTYPE, CONCRETETYPE>() where CONCRETETYPE : PLUGINTYPE;
         void AddDefaultInstance<PLUGINTYPE, CONCRETETYPE>();
         string WhatDoIHave();
 
@@ -37,8 +38,8 @@ namespace StructureMap
         /// Sets the default instance for the PluginType
         /// </summary>
         /// <param name="pluginType"></param>
-        /// <param name="instanceMemento"></param>
-        void SetDefault(Type pluginType, InstanceMemento instanceMemento);
+        /// <param name="instance"></param>
+        void SetDefault(Type pluginType, Instance instance);
 
         /// <summary>
         /// Sets the default instance for the PluginType
@@ -67,9 +68,9 @@ namespace StructureMap
         /// classes to link children members
         /// </summary>
         /// <param name="pluginType"></param>
-        /// <param name="instanceMemento"></param>
+        /// <param name="instance"></param>
         /// <returns></returns>
-        object CreateInstance(Type pluginType, InstanceMemento instanceMemento);
+        object CreateInstance(Type pluginType, Instance instance);
 
         /// <summary>
         /// Creates the named instance of the PluginType
