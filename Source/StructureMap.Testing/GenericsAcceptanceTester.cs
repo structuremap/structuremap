@@ -8,7 +8,7 @@ using StructureMap.Testing.GenericWidgets;
 
 namespace StructureMap.Testing
 {
-    [TestFixture, Ignore("Temporarily suspending generics support")]
+    [TestFixture]
     public class GenericsAcceptanceTester
     {
         #region Setup/Teardown

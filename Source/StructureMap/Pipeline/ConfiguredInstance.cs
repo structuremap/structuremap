@@ -92,12 +92,24 @@ namespace StructureMap.Pipeline
 
         InstanceBuilder IConfiguredInstance.FindBuilder(InstanceBuilderList builders)
         {
+            if (!string.IsNullOrEmpty(ConcreteKey))
+            {
+                InstanceBuilder builder = builders.FindByConcreteKey(ConcreteKey);
+                if (builder != null) return builder;
+            }
+
             if (_pluggedType != null)
             {
                 return builders.FindByType(_pluggedType);
             }
 
-            return builders.FindByConcreteKey(_concreteKey);
+            return null;
+        }
+
+
+        protected override bool canBePartOfPluginFamily(PluginFamily family)
+        {
+            return family.Plugins.HasPlugin(ConcreteKey);
         }
 
         public ConfiguredInstance SetProperty(string propertyName, string propertyValue)
@@ -421,6 +433,8 @@ namespace StructureMap.Pipeline
 
                 return _instance;
             }
+
+
         }
     }
 }

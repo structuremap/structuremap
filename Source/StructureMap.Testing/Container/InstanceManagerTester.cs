@@ -137,7 +137,7 @@ namespace StructureMap.Testing.Container
         }
 
 
-        [Test, Ignore("Temporarily suspending generics support")]
+        [Test]
         public void FindAPluginFamilyForAGenericTypeFromPluginTypeName()
         {
             Type serviceType = typeof (IService<string>);

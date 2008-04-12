@@ -6,7 +6,7 @@ using StructureMap.Testing.TestData;
 
 namespace StructureMap.Testing
 {
-    [TestFixture, Ignore("Temporarily suspending generics support")]
+    [TestFixture]
     public class GenericsIntegrationTester
     {
         #region Setup/Teardown

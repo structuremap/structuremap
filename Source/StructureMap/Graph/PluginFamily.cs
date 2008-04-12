@@ -139,9 +139,12 @@ namespace StructureMap.Graph
             }
 
             // TODO -- Got a big problem here.  Intances need to be copied over
-            foreach (Instance instance in GetAllInstances())
+            foreach (IDiagnosticInstance instance in GetAllInstances())
             {
-                throw new NotImplementedException();
+                if (instance.CanBePartOfPluginFamily(templatedFamily))
+                {
+                    templatedFamily.AddInstance((Instance)instance);
+                }
             }
 
             // Need to attach the new PluginFamily to the old PluginGraph

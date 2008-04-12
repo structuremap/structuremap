@@ -1,6 +1,8 @@
 using NUnit.Framework;
 using Rhino.Mocks;
+using StructureMap.Graph;
 using StructureMap.Pipeline;
+using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Pipeline
 {
@@ -43,6 +45,25 @@ namespace StructureMap.Testing.Pipeline
             {
                 Assert.AreEqual(205, ex.ErrorCode);
             }
+        }
+
+        [Test]
+        public void CanBePartOfPluginFamily_is_false_if_the_plugin_cannot_be_found()
+        {
+            PluginFamily family = new PluginFamily(typeof(IService));
+            family.Plugins.Add(typeof(ColorService), "Color");
+
+            ConfiguredInstance instance = new ConfiguredInstance();
+            instance.ConcreteKey = "Color";
+
+            IDiagnosticInstance diagnosticInstance = instance;
+
+            Assert.IsTrue(diagnosticInstance.CanBePartOfPluginFamily(family));
+
+            instance.ConcreteKey = "something else";
+            Assert.IsFalse(diagnosticInstance.CanBePartOfPluginFamily(family));
+
+
         }
     }
 }

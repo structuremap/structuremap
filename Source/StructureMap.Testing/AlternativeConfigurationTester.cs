@@ -41,7 +41,7 @@ namespace StructureMap.Testing
             Assert.AreEqual(color, widget.Color);
         }
 
-        [Test, Ignore("Until Generics support is fixed")]
+        [Test]
         public void AddNodeDirectly()
         {
             string xml = "<StructureMap><Assembly Name=\"StructureMap.Testing.GenericWidgets\"/></StructureMap>";

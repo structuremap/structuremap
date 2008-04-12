@@ -4,7 +4,7 @@ using StructureMap.Graph;
 
 namespace StructureMap.Testing.Graph
 {
-    [TestFixture, Ignore("Temporarily suspending generics support")]
+    [TestFixture]
     public class GenericsPluginGraphTester
     {
         #region Setup/Teardown
@@ -36,21 +36,14 @@ namespace StructureMap.Testing.Graph
             family.Plugins.Add(typeof (SecondGenericService<>), "Second");
             family.Plugins.Add(typeof (ThirdGenericService<>), "Third");
 
-            PluginFamily intFamily = family.CreateTemplatedClone(typeof (int));
-            PluginFamily stringFamily = family.CreateTemplatedClone(typeof (string));
+            InstanceManager manager = new InstanceManager(pluginGraph);
 
-            InstanceFactory intFactory = new InstanceFactory(intFamily, true);
-            intFactory.SetInstanceManager(new InstanceManager());
-            
-            InstanceFactory stringFactory = new InstanceFactory(stringFamily, true);
-            stringFactory.SetInstanceManager(new InstanceManager());
-           
-            GenericService<int> intService = (GenericService<int>) intFactory.GetInstance();
+            GenericService<int> intService = (GenericService<int>) manager.CreateInstance<IGenericService<int>>();
             Assert.AreEqual(typeof (int), intService.GetT());
 
-            Assert.IsInstanceOfType(typeof (SecondGenericService<int>), intFactory.GetInstance("Second"));
+            Assert.IsInstanceOfType(typeof(SecondGenericService<int>), manager.CreateInstance<IGenericService<int>>("Second"));
 
-            GenericService<string> stringService = (GenericService<string>) stringFactory.GetInstance();
+            GenericService<string> stringService = (GenericService<string>) manager.CreateInstance<IGenericService<string>>();
             Assert.AreEqual(typeof (string), stringService.GetT());
         }
 

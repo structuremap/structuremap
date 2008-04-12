@@ -17,8 +17,12 @@ namespace StructureMap.Pipeline
         object ApplyInterception(Type pluginType, object actualValue);
     }
 
+    public interface IDiagnosticInstance
+    {
+        bool CanBePartOfPluginFamily(PluginFamily family);
+    }
 
-    public abstract class Instance
+    public abstract class Instance : IDiagnosticInstance
     {
         private string _name = Guid.NewGuid().ToString();
         private InstanceInterceptor _interceptor = new NulloInterceptor();
@@ -56,9 +60,15 @@ namespace StructureMap.Pipeline
         protected abstract object build(Type pluginType, IInstanceCreator creator);
 
 
+        bool IDiagnosticInstance.CanBePartOfPluginFamily(PluginFamily family)
+        {
+            return canBePartOfPluginFamily(family);
+        }
 
-        //public abstract void Diagnose<T>(IInstanceCreator creator, IInstanceDiagnostics diagnostics) where T : class;
-        //public abstract void Describe<T>(IInstanceDiagnostics diagnostics) where T : class;
+        protected virtual bool canBePartOfPluginFamily(PluginFamily family)
+        {
+            return true;
+        }
     }
 
     public abstract class ExpressedInstance<T> : Instance
