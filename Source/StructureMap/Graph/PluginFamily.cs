@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using StructureMap.Attributes;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
 
@@ -255,6 +256,7 @@ namespace StructureMap.Graph
             set { _defaultKey = value ?? string.Empty; }
         }
 
+        [Obsolete("Make this go away")]
         public InterceptionChain InterceptionChain
         {
             get { return _interceptionChain; }
@@ -314,5 +316,32 @@ namespace StructureMap.Graph
             return _instances.Find(delegate(Instance i) { return i.Name == name; });
         }
 
+        public void SetScopeTo(InstanceScope scope)
+        {
+            switch(scope)
+            {
+                case InstanceScope.Singleton:
+                    AddInterceptor(new SingletonPolicy());
+                    break;
+
+                case InstanceScope.HttpContext:
+                    AddInterceptor(new HttpContextBuildPolicy());
+                    break;
+
+                case InstanceScope.ThreadLocal:
+                    AddInterceptor(new ThreadLocalStoragePolicy());
+                    break;
+
+                case InstanceScope.Hybrid:
+                    AddInterceptor(new HybridBuildPolicy());
+                    break;
+            }
+        }
+
+        public void AddInterceptor(IInstanceInterceptor interceptor)
+        {
+            interceptor.InnerPolicy = _buildPolicy;
+            _buildPolicy = interceptor;
+        }
     }
 }

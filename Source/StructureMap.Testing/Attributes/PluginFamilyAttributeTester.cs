@@ -3,6 +3,7 @@ using NUnit.Framework;
 using StructureMap.Attributes;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
+using StructureMap.Pipeline;
 using StructureMap.Source;
 
 namespace StructureMap.Testing.Attributes
@@ -16,9 +17,7 @@ namespace StructureMap.Testing.Attributes
             att.Scope = scope;
 
             PluginFamily family = att.BuildPluginFamily(typeof (Target1));
-            Assert.AreEqual(1, family.InterceptionChain.Count);
-            Type actualType = family.InterceptionChain[0].GetType();
-            Assert.IsTrue(actualType.Equals(interceptorType));
+            Assert.IsInstanceOfType(interceptorType, family.Policy);
         }
 
         [PluginFamily]
@@ -92,10 +91,10 @@ namespace StructureMap.Testing.Attributes
         [Test]
         public void ScopeToInterceptorTypes()
         {
-            assertScopeLeadsToInterceptor(InstanceScope.HttpContext, typeof (HttpContextItemInterceptor));
-            assertScopeLeadsToInterceptor(InstanceScope.Hybrid, typeof (HybridCacheInterceptor));
-            assertScopeLeadsToInterceptor(InstanceScope.Singleton, typeof (SingletonInterceptor));
-            assertScopeLeadsToInterceptor(InstanceScope.ThreadLocal, typeof (ThreadLocalStorageInterceptor));
+            assertScopeLeadsToInterceptor(InstanceScope.HttpContext, typeof (HttpContextBuildPolicy));
+            assertScopeLeadsToInterceptor(InstanceScope.Hybrid, typeof (HybridBuildPolicy));
+            assertScopeLeadsToInterceptor(InstanceScope.Singleton, typeof (SingletonPolicy));
+            assertScopeLeadsToInterceptor(InstanceScope.ThreadLocal, typeof (ThreadLocalStoragePolicy));
         }
 
         [Test]

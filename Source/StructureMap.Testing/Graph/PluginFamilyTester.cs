@@ -1,8 +1,10 @@
 using System;
 using System.Reflection;
 using NUnit.Framework;
+using StructureMap.Attributes;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
+using StructureMap.Pipeline;
 using StructureMap.Source;
 using StructureMap.Testing.Widget;
 
@@ -86,10 +88,6 @@ namespace StructureMap.Testing.Graph
             pluginGraph.Assemblies.Add(Assembly.GetExecutingAssembly());
             pluginGraph.Seal();
 
-            PluginFamily family = pluginGraph.PluginFamilies[typeof (ISingletonRepository)];
-            Assert.AreEqual(1, family.InterceptionChain.Count);
-            Assert.IsTrue(family.InterceptionChain[0] is SingletonInterceptor);
-
             InstanceManager manager = new InstanceManager(pluginGraph);
 
             ISingletonRepository repository1 =
@@ -108,7 +106,53 @@ namespace StructureMap.Testing.Graph
             Assert.AreSame(repository1, repository4);
             Assert.AreSame(repository1, repository5);
         }
+
+
+        [Test]
+        public void SetScopeToSingleton()
+        {
+            PluginFamily family = new PluginFamily(typeof(IServiceProvider));
+            Assert.IsInstanceOfType(typeof(BuildPolicy), family.Policy);
+
+            family.SetScopeTo(InstanceScope.Singleton);
+            Assert.IsInstanceOfType(typeof(SingletonPolicy), family.Policy);
+        }
+
+        [Test]
+        public void SetScopeToThreadLocal()
+        {
+            PluginFamily family = new PluginFamily(typeof(IServiceProvider));
+            Assert.IsInstanceOfType(typeof(BuildPolicy), family.Policy);
+
+            family.SetScopeTo(InstanceScope.ThreadLocal);
+            Assert.IsInstanceOfType(typeof(ThreadLocalStoragePolicy), family.Policy);
+        }
+
+
+        [Test]
+        public void SetScopeToHttpContext()
+        {
+            PluginFamily family = new PluginFamily(typeof(IServiceProvider));
+            Assert.IsInstanceOfType(typeof(BuildPolicy), family.Policy);
+
+            family.SetScopeTo(InstanceScope.HttpContext);
+            Assert.IsInstanceOfType(typeof(HttpContextBuildPolicy), family.Policy);
+        }
+
+
+        [Test]
+        public void SetScopeToHybrid()
+        {
+            PluginFamily family = new PluginFamily(typeof(IServiceProvider));
+            Assert.IsInstanceOfType(typeof(BuildPolicy), family.Policy);
+
+            family.SetScopeTo(InstanceScope.Hybrid);
+            Assert.IsInstanceOfType(typeof(HybridBuildPolicy), family.Policy);
+        }
+
     }
+
+
 
     /// <summary>
     /// Specifying the default instance is "Default" and marking the PluginFamily

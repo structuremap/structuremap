@@ -146,8 +146,9 @@ namespace StructureMap
             PluginFamily family = new PluginFamily(exportedType, DefaultKey);
             family.AddMementoSource(source);
 
-            InterceptorChainBuilder builder = new InterceptorChainBuilder();
-            family.InterceptionChain = builder.Build(Scope);
+            family.SetScopeTo(Scope);
+            //InterceptorChainBuilder builder = new InterceptorChainBuilder();
+            //family.InterceptionChain = builder.Build(Scope);
 
             return family;
         }
