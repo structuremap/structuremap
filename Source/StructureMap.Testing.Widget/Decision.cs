@@ -20,17 +20,6 @@ namespace StructureMap.Testing.Widget
             get { return null; }
         }
 
-        public override string PluggedType
-        {
-            get { return null; }
-        }
-
-
-        public override string PluginType
-        {
-            get { return null; }
-        }
-
         public override object BuildInstance(IConfiguredInstance instance, StructureMap.Pipeline.IInstanceCreator creator)
         {
             return new Decision(

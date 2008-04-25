@@ -8,7 +8,7 @@ namespace StructureMap.Graph
     /// InstanceManager for any combination of profile and machine name.
     /// </summary>
     [Serializable]
-    public class InstanceDefaultManager
+    [Obsolete] public class InstanceDefaultManager
     {
         private string _defaultProfileName = string.Empty;
         private List<InstanceDefault> _defaults;
@@ -202,55 +202,6 @@ namespace StructureMap.Graph
             }
 
             return answer;
-        }
-
-        /// <summary>
-        /// Returns the defaults for the current machine name and the default profile
-        /// </summary>
-        /// <returns></returns>
-        public Profile CalculateDefaults()
-        {
-            string profileName = DefaultProfileName;
-            string machinceName = GetMachineName();
-
-            return CalculateDefaults(machinceName, profileName);
-        }
-
-        /// <summary>
-        /// Determines ONLY overriden defaults.  Used by the Deployment NAnt task to 
-        /// filter a PluginGraph prior to deploying a subset of the StructureMap.config
-        /// file
-        /// </summary>
-        /// <param name="machineName"></param>
-        /// <param name="profileName"></param>
-        /// <returns></returns>
-        public Profile CalculateOverridenDefaults(string machineName, string profileName)
-        {
-            MachineOverride machine = GetMachineOverride(machineName);
-            Profile profile = findCurrentProfile(profileName);
-
-            Profile answer = new Profile("Defaults");
-            foreach (InstanceDefault instance in machine.Defaults)
-            {
-                answer.AddOverride((InstanceDefault) instance.Clone());
-            }
-
-            foreach (InstanceDefault instance in profile.Defaults)
-            {
-                answer.AddOverride((InstanceDefault) instance.Clone());
-            }
-
-            return answer;
-        }
-
-        public void ClearMachineOverrides()
-        {
-            _machineOverrides.Clear();
-        }
-
-        public void ClearProfiles()
-        {
-            _profiles.Clear();
         }
 
         public string[] GetMachineNames()

@@ -1,8 +1,10 @@
+using System;
 using StructureMap.Attributes;
 using StructureMap.Graph;
 
 namespace StructureMap.Interceptors
 {
+    [Obsolete]
     public class InterceptorChainBuilder : IInterceptorChainBuilder
     {
         public InterceptorChainBuilder()
@@ -11,6 +13,7 @@ namespace StructureMap.Interceptors
 
         #region IInterceptorChainBuilder Members
 
+        [Obsolete]
         public InterceptionChain Build(InstanceScope scope)
         {
             InterceptionChain returnValue = new InterceptionChain();

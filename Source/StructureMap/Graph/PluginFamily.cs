@@ -42,6 +42,7 @@ namespace StructureMap.Graph
         private Type _pluginType;
         private string _pluginTypeName;
         private List<Instance> _instances = new List<Instance>();
+        private IBuildPolicy _buildPolicy = new BuildPolicy();
 
         #region constructors
 
@@ -121,6 +122,7 @@ namespace StructureMap.Graph
             PluginFamily templatedFamily = new PluginFamily(templatedType);
             templatedFamily._defaultKey = _defaultKey;
             templatedFamily.Parent = Parent;
+            templatedFamily._buildPolicy = _buildPolicy.Clone();
 
             foreach (InstanceFactoryInterceptor interceptor in _interceptionChain)
             {
@@ -286,6 +288,11 @@ namespace StructureMap.Graph
             set { _canUseUnMarkedPlugins = value; }
         }
 
+        public IBuildPolicy Policy
+        {
+            get { return _buildPolicy; }
+        }
+
         #endregion
 
         public Instance[] GetAllInstances()
@@ -293,7 +300,8 @@ namespace StructureMap.Graph
             List<Instance> list = new List<Instance>();
             foreach (InstanceMemento memento in _mementoList)
             {
-                list.Add(memento.ReadInstance(Parent, _pluginType));
+                Instance instance = memento.ReadInstance(Parent, _pluginType);
+                list.Add(instance);
             }
 
             list.AddRange(_instances);
@@ -305,5 +313,6 @@ namespace StructureMap.Graph
         {
             return _instances.Find(delegate(Instance i) { return i.Name == name; });
         }
+
     }
 }

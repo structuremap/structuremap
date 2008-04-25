@@ -115,16 +115,24 @@
       <Link>CommonAssemblyInfo.cs</Link>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Diagnostics\Tokens.cs" />
     <Compile Include="InstanceBuilderList.cs" />
+    <Compile Include="InstanceFamily.cs" />
+    <Compile Include="Pipeline\BuildStrategies.cs" />
     <Compile Include="Pipeline\ConfiguredInstance.cs" />
     <Compile Include="Pipeline\ConstructorInstance.cs" />
     <Compile Include="Pipeline\DefaultInstance.cs" />
+    <Compile Include="Pipeline\HttpContextBuildPolicy.cs" />
     <Compile Include="Pipeline\IConfiguredInstance.cs" />
+    <Compile Include="Pipeline\ILocationPolicy.cs" />
     <Compile Include="Pipeline\Instance.cs" />
     <Compile Include="Pipeline\InstanceMementoPropertyReader.cs" />
     <Compile Include="Pipeline\LiteralInstance.cs" />
+    <Compile Include="Pipeline\Profile.cs" />
     <Compile Include="Pipeline\PrototypeInstance.cs" />
     <Compile Include="Pipeline\ReferencedInstance.cs" />
+    <Compile Include="Pipeline\SingletonPolicy.cs" />
+    <Compile Include="Pipeline\ThreadLocalStoragePolicy.cs" />
     <Compile Include="Pipeline\UserControlInstance.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -443,9 +451,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="StructureMapConfiguration.cs" />
-    <Compile Include="XmlMapping\ConfigEditor.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <EmbeddedResource Include="StructureMapException.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>

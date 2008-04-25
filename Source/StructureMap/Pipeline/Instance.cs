@@ -1,6 +1,7 @@
 using System;
 using System.Data;
 using System.Web.UI;
+using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 
@@ -26,6 +27,7 @@ namespace StructureMap.Pipeline
     {
         private string _name = Guid.NewGuid().ToString();
         private InstanceInterceptor _interceptor = new NulloInterceptor();
+        private Type _pluginType = typeof(object);
 
         public string Name
         {
@@ -39,6 +41,13 @@ namespace StructureMap.Pipeline
             set { _interceptor = value; }
         }
 
+        internal Type PluginType
+        {
+            get { return _pluginType; }
+            set { _pluginType = value; }
+        }
+
+        // TODO : remove pluginType from signature
         public virtual object Build(Type pluginType, IInstanceCreator creator)
         {
             object rawValue = build(pluginType, creator);
@@ -68,6 +77,11 @@ namespace StructureMap.Pipeline
         protected virtual bool canBePartOfPluginFamily(PluginFamily family)
         {
             return true;
+        }
+
+        public InstanceToken CreateToken()
+        {
+            throw new NotImplementedException();
         }
     }
 

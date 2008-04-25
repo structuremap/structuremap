@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using StructureMap.Configuration.DSL;
+using StructureMap.Diagnostics;
 using StructureMap.Interceptors;
 
 namespace StructureMap.Graph
@@ -21,7 +22,8 @@ namespace StructureMap.Graph
         private readonly InterceptorLibrary _interceptorLibrary = new InterceptorLibrary();
         private readonly PluginFamilyCollection _pluginFamilies;
         private bool _sealed = false;
-        private bool _useExternalRegistries = true;
+        private readonly bool _useExternalRegistries = true;
+        private readonly GraphLog _log = new GraphLog();
 
         /// <summary>
         /// Default constructor
@@ -46,6 +48,12 @@ namespace StructureMap.Graph
         public PluginFamilyCollection PluginFamilies
         {
             get { return _pluginFamilies; }
+        }
+
+
+        public GraphLog Log
+        {
+            get { return _log; }
         }
 
         #region seal
@@ -183,6 +191,7 @@ namespace StructureMap.Graph
             throw new StructureMapException(300, fullName);
         }
 
+        [Obsolete]
         public void ReadDefaults()
         {
             _defaultManager.ReadDefaultsFromPluginGraph(this);

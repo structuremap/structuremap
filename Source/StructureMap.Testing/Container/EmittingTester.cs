@@ -128,11 +128,6 @@ namespace StructureMap.Testing.Container
             }
         }
 
-        [Test]
-        public void PluginType()
-        {
-            Assert.AreEqual("StructureMap.Testing.Widget.Rule,StructureMap.Testing.Widget", builder.PluginType);
-        }
 
         [Test]
         public void String2Property()

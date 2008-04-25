@@ -14,16 +14,6 @@ namespace StructureMap.Testing.Widget5
         }
 
 
-        public override string PluginType
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public override string PluggedType
-        {
-            get { throw new NotImplementedException(); }
-        }
-
         public override string ConcreteTypeKey
         {
             get { throw new NotImplementedException(); }

@@ -73,10 +73,8 @@ namespace StructureMap.Pipeline
             return _properties[propertyName];
         }
 
-        object IConfiguredInstance.GetChild(string propertyName, string typeName, IInstanceCreator instanceCreator)
+        object IConfiguredInstance.GetChild(string propertyName, Type pluginType, IInstanceCreator instanceCreator)
         {
-            Type pluginType = Type.GetType(typeName);
-
             return getChild(propertyName, pluginType, instanceCreator);
         }
 

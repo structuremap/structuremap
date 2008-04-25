@@ -1,4 +1,6 @@
+using System;
 using System.Diagnostics;
+using System.Reflection;
 using NUnit.Framework;
 using StructureMap.DataAccess;
 using StructureMap.DataAccess.MSSQL;
@@ -23,6 +25,18 @@ namespace StructureMap.Testing.DataAccess
             string json = command.ExecuteJSON();
 
             Debug.WriteLine(json);
+        }
+
+        [Test]
+        public void TryingOutTypeMethod()
+        {
+            foreach (MethodInfo info in typeof(Type).GetMethods())
+            {
+                Debug.WriteLine(info.Name);
+            }
+
+            MethodInfo method = typeof(Type).GetMethod("GetTypeFromHandle");
+            Assert.IsNotNull(method);
         }
     }
 }

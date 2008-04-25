@@ -96,23 +96,12 @@ namespace StructureMap.Testing.Widget
             get { return null; }
         }
 
-        public override string PluggedType
-        {
-            get { return null; }
-        }
-
-
-        public override string PluginType
-        {
-            get { return null; }
-        }
-
 
         public override object BuildInstance(IConfiguredInstance instance, StructureMap.Pipeline.IInstanceCreator creator)
         {
             return new Child(
                 instance.GetProperty("Name"),
-                (GrandChild) instance.GetChild("MyGrandChild", "StructureMap.Testing.Widget.GrandChild", creator));
+                (GrandChild) instance.GetChild("MyGrandChild", typeof(GrandChild), creator));
         }
     }
 }

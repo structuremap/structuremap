@@ -1,9 +1,11 @@
+using System;
 using System.Xml;
 using StructureMap.Graph;
 using StructureMap.Source;
 
 namespace StructureMap.Configuration
 {
+    [Obsolete("This puppy needs to be rewritten")]
     public class ProfileAndMachineParser
     {
         private readonly IGraphBuilder _builder;

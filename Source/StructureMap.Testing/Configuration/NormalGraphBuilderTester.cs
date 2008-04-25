@@ -71,10 +71,7 @@ namespace StructureMap.Testing.Configuration
             Assert.IsEmpty(machine.ProfileName);
         }
 
-        [Test,
-         ExpectedException(typeof (StructureMapException),
-            ExpectedMessage = "StructureMap Exception Code:  195\nThe Profile some profile referenced by Machine some machine does not exist"
-             )]
+        [Test]
         public void AddMachineWithProfileThatDoesNotExist()
         {
             NormalGraphBuilder graphBuilder = new NormalGraphBuilder(new Registry[0]);
@@ -82,6 +79,8 @@ namespace StructureMap.Testing.Configuration
             string theProfileName = "some profile";
 
             graphBuilder.AddMachine(theMachineName, theProfileName);
+
+            graphBuilder.CreatePluginGraph().Log.AssertHasError(195, "The Profile some profile referenced by Machine some machine does not exist");
         }
 
         [Test]

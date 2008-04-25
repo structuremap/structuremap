@@ -83,7 +83,8 @@ namespace StructureMap.Configuration
 
                 if (profile == null)
                 {
-                    throw new StructureMapException(195, profileName, machineName);
+                    _pluginGraph.Log.RegisterError(195, profileName, machineName);
+                    return;
                 }
 
                 _machine = new MachineOverride(machineName, profile);
@@ -155,13 +156,13 @@ namespace StructureMap.Configuration
 
         public void AttachSource(TypePath pluginTypePath, MementoSource source)
         {
-            PluginFamily family = _pluginGraph.PluginFamilies[pluginTypePath];
+            PluginFamily family = _pluginGraph.PluginFamilies[pluginTypePath.FindType()];
             family.AddMementoSource(source);
         }
 
         public Plugin AddPlugin(TypePath pluginTypePath, TypePath pluginPath, string concreteKey)
         {
-            PluginFamily family = _pluginGraph.PluginFamilies[pluginTypePath];
+            PluginFamily family = _pluginGraph.PluginFamilies[pluginTypePath.FindType()];
             if (family == null)
             {
                 string message =
@@ -177,14 +178,14 @@ namespace StructureMap.Configuration
 
         public SetterProperty AddSetter(TypePath pluginTypePath, string concreteKey, string setterName)
         {
-            PluginFamily family = _pluginGraph.PluginFamilies[pluginTypePath];
+            PluginFamily family = _pluginGraph.PluginFamilies[pluginTypePath.FindType()];
             Plugin plugin = family.Plugins[concreteKey];
             return plugin.Setters.Add(setterName);
         }
 
         public virtual void AddInterceptor(TypePath pluginTypePath, InstanceMemento interceptorMemento)
         {
-            PluginFamily family = _pluginGraph.PluginFamilies[pluginTypePath];
+            PluginFamily family = _pluginGraph.PluginFamilies[pluginTypePath.FindType()];
             try
             {
                 InstanceFactoryInterceptor interceptor =

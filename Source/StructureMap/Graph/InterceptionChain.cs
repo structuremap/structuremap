@@ -9,7 +9,7 @@ namespace StructureMap.Graph
     /// Manages a list of InstanceFactoryInterceptor's.  Design-time model of an array
     /// of decorators to alter the InstanceFactory behavior for a PluginType.
     /// </summary>
-    public class InterceptionChain : IEnumerable<InstanceFactoryInterceptor>, IEquatable<InterceptionChain>
+    [Obsolete] public class InterceptionChain : IEnumerable<InstanceFactoryInterceptor>, IEquatable<InterceptionChain>
     {
         private List<InstanceFactoryInterceptor> _interceptorList;
 

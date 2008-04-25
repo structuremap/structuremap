@@ -1,6 +1,7 @@
 using System;
 using NUnit.Framework;
 using Rhino.Mocks;
+using StructureMap.Graph;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
 
@@ -43,6 +44,8 @@ namespace StructureMap.Testing.Pipeline
                 Assert.AreEqual(objectReturnedByInterceptor, instanceUnderTest.Build(typeof (object), instanceCreator));
             }
         }
+
+
     }
 
     public class InstanceUnderTest : Instance

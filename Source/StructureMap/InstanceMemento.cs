@@ -27,18 +27,6 @@ namespace StructureMap
             get { return innerConcreteKey; }
         }
 
-        [Obsolete] public InstanceBuilder FindBuilder(InstanceBuilderList builders)
-        {
-            if (string.IsNullOrEmpty(innerConcreteKey))
-            {
-                string pluggedTypeName = getPluggedType();
-                Type pluggedType = TypePath.GetTypePath(pluggedTypeName).FindType();
-
-                return builders.FindByType(pluggedType);
-            }
-
-            return builders.FindByConcreteKey(innerConcreteKey);
-        }
 
         public virtual Plugin FindPlugin(PluginFamily family)
         {
@@ -94,14 +82,6 @@ namespace StructureMap
                 string rawValue = getPropertyValue(TEMPLATE_ATTRIBUTE);
                 return rawValue == null ? string.Empty : rawValue.Trim();
             }
-        }
-
-        /// <summary>
-        /// Returns the last key/value retrieved for exception tracing 
-        /// </summary>
-        public string LastKey
-        {
-            get { return _lastKey; }
         }
 
         /// <summary>
@@ -216,35 +196,6 @@ namespace StructureMap
             //return returnValue;
         }
 
-        private static object buildDefaultChild(string key, StructureMap.Pipeline.IInstanceCreator manager, string typeName)
-        {
-            object returnValue;
-            try
-            {
-                returnValue = manager.CreateInstance(typeName);
-            }
-            catch (StructureMapException)
-            {
-                throw;
-            }
-            catch (Exception ex)
-            {
-                throw new StructureMapException(209, ex, key, typeName);
-            }
-            return returnValue;
-        }
-
-
-        /// <summary>
-        /// Not used yet.
-        /// </summary>
-        /// <param name="Key"></param>
-        /// <returns></returns>
-        public string[] GetStringArray(string Key)
-        {
-            string _value = GetProperty(Key);
-            return _value.Split(new char[] {','});
-        }
 
         /// <summary>
         /// This method is made public for testing.  It is not necessary for normal usage.
@@ -276,6 +227,7 @@ namespace StructureMap
             {
                 Instance instance = readInstance(pluginGraph, pluginType);
                 instance.Name = InstanceKey;
+                instance.PluginType = pluginType;
             
                 return instance;
             }

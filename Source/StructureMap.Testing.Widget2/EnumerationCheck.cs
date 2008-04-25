@@ -33,15 +33,12 @@ namespace StructureMap.Testing.Widget2
             get { return "Default"; }
         }
 
-        public override string PluggedType
+        public Type ThePluginType
         {
-            get { return null; }
-        }
-
-
-        public override string PluginType
-        {
-            get { return null; }
+            get
+            {
+                return typeof (Cow);
+            }
         }
 
 

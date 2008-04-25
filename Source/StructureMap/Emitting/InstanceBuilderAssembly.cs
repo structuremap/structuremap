@@ -42,9 +42,6 @@ namespace StructureMap.Emitting
         private void configureClassBuilder(ClassBuilder builderClass, Plugin plugin)
         {
             builderClass.AddReadonlyStringProperty("ConcreteTypeKey", plugin.ConcreteKey, true);
-            builderClass.AddReadonlyStringProperty("PluginType", TypePath.GetAssemblyQualifiedName(_pluginType), true);
-            builderClass.AddReadonlyStringProperty("PluggedType", TypePath.GetAssemblyQualifiedName(plugin.PluggedType),
-                                                   true);
 
             BuildInstanceMethod method = new BuildInstanceMethod(plugin);
             builderClass.AddMethod(method);

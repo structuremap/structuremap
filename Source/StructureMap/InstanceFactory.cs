@@ -2,11 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using StructureMap.Configuration.Mementos;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
-using StructureMap.Source;
 
 namespace StructureMap
 {
@@ -16,11 +14,12 @@ namespace StructureMap
     public class InstanceFactory : IInstanceFactory
     {
         private readonly InstanceBuilderList _instanceBuilders;
+        private readonly Dictionary<string, Instance> _instances = new Dictionary<string, Instance>();
         private readonly InstanceInterceptor _interceptor = new NulloInterceptor();
         private readonly Type _pluginType;
-        private InstanceManager _manager = new InstanceManager();
-        private readonly Dictionary<string, Instance> _instances = new Dictionary<string, Instance>();
         private Instance _defaultInstance;
+        private InstanceManager _manager = new InstanceManager();
+        private IBuildPolicy _policy = new BuildPolicy();
 
         #region static constructors
 
@@ -54,6 +53,7 @@ namespace StructureMap
             try
             {
                 _interceptor = family.InstanceInterceptor;
+                _policy = family.Policy;
 
                 _pluginType = family.PluginType;
                 _instanceBuilders = new InstanceBuilderList(family.PluginType, family.Plugins.All);
@@ -75,11 +75,6 @@ namespace StructureMap
             }
         }
 
-        public static InstanceFactory CreateInstanceFactoryForType(Type concreteType)
-        {
-            return new InstanceFactory(concreteType);
-        }
-
         private InstanceFactory(Type concreteType)
         {
             _interceptor = new NulloInterceptor();
@@ -94,7 +89,7 @@ namespace StructureMap
             Plugin plugin = new Plugin(new TypePath(concreteType), Guid.NewGuid().ToString());
             if (plugin.CanBeAutoFilled)
             {
-                _instanceBuilders = new InstanceBuilderList(_pluginType, new Plugin[]{plugin});
+                _instanceBuilders = new InstanceBuilderList(_pluginType, new Plugin[] {plugin});
 
                 ConfiguredInstance instance = new ConfiguredInstance();
                 instance.PluggedType = concreteType;
@@ -106,6 +101,10 @@ namespace StructureMap
             }
         }
 
+        public static InstanceFactory CreateInstanceFactoryForType(Type concreteType)
+        {
+            return new InstanceFactory(concreteType);
+        }
 
 
         private void determineDefaultKey(PluginFamily family, bool failOnException)
@@ -148,51 +147,6 @@ namespace StructureMap
 
         #endregion
 
-
-        #region IInstanceCreator Members
-
-        // TODO:  This code needs to move somewhere else
-        //object IInstanceCreator.BuildInstance(InstanceMemento memento)
-        //{
-        //    InstanceBuilder builder = memento.FindBuilder(_instanceBuilders);
-
-        //    if (builder == null)
-        //    {
-        //        throw new StructureMapException(
-        //            201, memento.ConcreteKey, memento.InstanceKey, PluginType.FullName);
-        //    }
-
-        //    try
-        //    {
-        //        object constructedInstance = builder.BuildInstance(memento, _manager);
-        //        InstanceInterceptor interceptor = _manager.FindInterceptor(constructedInstance.GetType());
-        //        return interceptor.Process(constructedInstance);
-        //    }
-        //    catch (StructureMapException)
-        //    {
-        //        throw;
-        //    }
-        //    catch (InvalidCastException ex)
-        //    {
-        //        throw new StructureMapException(206, ex, memento.InstanceKey);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new StructureMapException(207, ex, memento.InstanceKey, PluginType.FullName);
-        //    }
-        //}
-
-        //InstanceMemento IInstanceCreator.DefaultMemento
-        //{
-        //    get
-        //    {
-        //        throw new NotImplementedException();
-        //        //return _source.DefaultMemento;
-        //    }
-        //}
-
-        #endregion
-
         #region IInstanceFactory Members
 
         /// <summary>
@@ -227,7 +181,7 @@ namespace StructureMap
 
             Instance instance = _instances[instanceKey];
 
-            return instance.Build(_pluginType, _manager);
+            return _policy.Build(_manager, PluginType, instance);
         }
 
 
@@ -268,14 +222,14 @@ namespace StructureMap
         /// Builds a new instance of the default instance of the PluginType
         /// </summary>
         /// <returns></returns>
-        public object GetInstance()
+        [Obsolete("Want to remove this eventually")] public object GetInstance()
         {
             if (_defaultInstance == null)
             {
                 throw new StructureMapException(202, PluginType.FullName);
             }
 
-            object builtObject = _defaultInstance.Build(_pluginType, _manager);
+            object builtObject = _policy.Build(_manager, PluginType, _defaultInstance);
             return _interceptor.Process(builtObject);
         }
 
@@ -315,10 +269,7 @@ namespace StructureMap
         /// </summary>
         public string DefaultInstanceKey
         {
-            get
-            {
-                return _defaultInstance == null ? string.Empty : _defaultInstance.Name;
-            }
+            get { return _defaultInstance == null ? string.Empty : _defaultInstance.Name; }
         }
 
         public IList GetAllInstances()
@@ -327,7 +278,7 @@ namespace StructureMap
 
             foreach (KeyValuePair<string, Instance> pair in _instances)
             {
-                object instance = pair.Value.Build(_pluginType, _manager);
+                object instance = _policy.Build(_manager, PluginType, pair.Value);
                 list.Add(instance);
             }
 
@@ -353,7 +304,7 @@ namespace StructureMap
             ConfiguredInstance instance = new ConfiguredInstance();
             instance.ConcreteKey = builder.ConcreteTypeKey;
             instance.Name = instance.ConcreteKey;
-            
+
 
             return instance;
         }
@@ -370,6 +321,5 @@ namespace StructureMap
         }
 
         #endregion
-
     }
 }

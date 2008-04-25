@@ -10,7 +10,7 @@ namespace StructureMap.Graph
     public class PluginFamilyCollection : IEnumerable<PluginFamily>
     {
         private readonly PluginGraph _pluginGraph;
-        private Dictionary<Type, PluginFamily> _pluginFamilies;
+        private readonly Dictionary<Type, PluginFamily> _pluginFamilies;
 
         public PluginFamilyCollection(PluginGraph pluginGraph)
         {
@@ -31,22 +31,6 @@ namespace StructureMap.Graph
             }
         }
 
-
-        public PluginFamily this[TypePath pluginTypePath]
-        {
-            get
-            {
-                foreach (KeyValuePair<Type, PluginFamily> pair in _pluginFamilies)
-                {
-                    if (pluginTypePath.Matches(pair.Key))
-                    {
-                        return pair.Value;
-                    }
-                }
-
-                return null;
-            }
-        }
 
         public PluginFamily this[int index]
         {

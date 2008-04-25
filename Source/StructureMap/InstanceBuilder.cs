@@ -15,16 +15,8 @@ namespace StructureMap
         {
         }
 
-        public abstract string PluginType { get; }
-        public abstract string PluggedType { get; }
         public abstract string ConcreteTypeKey { get; }
 
         public abstract object BuildInstance(IConfiguredInstance instance, StructureMap.Pipeline.IInstanceCreator creator);
-
-        public bool IsType(Type type)
-        {
-            Type plugged = Type.GetType(PluggedType);
-            return plugged.Equals(type);
-        }
     }
 }
