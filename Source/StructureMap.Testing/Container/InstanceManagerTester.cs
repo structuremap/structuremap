@@ -112,29 +112,7 @@ namespace StructureMap.Testing.Container
             Assert.AreSame(differentProvider, classThatUsesProvider.Provider);
         }
 
-        [Test]
-        public void CreatesInterceptionChainOnInstanceFactory()
-        {
-            // Create a PluginFamily with one Interceptor in the InterceptionChain of the Family
-            PluginFamily family = new PluginFamily(typeof (Rule));
-            SingletonInterceptor interceptor = new SingletonInterceptor();
-            family.InterceptionChain.AddInterceptor(interceptor);
 
-            // Create a PluginGraph with the PluginFamily
-            PluginGraph pluginGraph = new PluginGraph();
-            pluginGraph.Assemblies.Add("StructureMap.Testing.Widget");
-            pluginGraph.PluginFamilies.Add(family);
-            pluginGraph.Seal();
-
-            // Create an InstanceManager and examine the InstanceFactory for the PluginFamily
-            InstanceManager instanceManager = new InstanceManager(pluginGraph);
-
-            IInstanceFactory wrappedFactory = instanceManager[typeof (Rule)];
-            Assert.AreSame(interceptor, wrappedFactory);
-
-            InstanceFactory factory = (InstanceFactory) interceptor.InnerInstanceFactory;
-            Assert.AreEqual(typeof (Rule), factory.PluginType);
-        }
 
 
         [Test]

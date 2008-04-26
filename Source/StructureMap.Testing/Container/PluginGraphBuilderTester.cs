@@ -45,14 +45,12 @@ namespace StructureMap.Testing.Container
             PluginGraph pluginGraph = DataMother.GetDiagnosticPluginGraph("SingletonIntercepterTest.xml");
 
             PluginFamily family = pluginGraph.PluginFamilies[typeof (Rule)];
-
-            Assert.AreEqual(1, family.InterceptionChain.Count);
-            Assert.IsTrue(family.InterceptionChain[0] is SingletonInterceptor);
+            Assert.IsInstanceOfType(typeof(SingletonPolicy), family.Policy);
 
             // The PluginFamily for IWidget has no intercepters configured
             PluginFamily widgetFamily = pluginGraph.PluginFamilies[typeof (IWidget)];
-            Assert.AreEqual(0, widgetFamily.InterceptionChain.Count);
-        }
+            Assert.IsInstanceOfType(typeof(BuildPolicy), widgetFamily.Policy);
+        }   
 
         [Test]
         public void CanDefinedSourceBuildMemento()
@@ -197,20 +195,6 @@ namespace StructureMap.Testing.Container
             Assert.AreEqual("Green", defaultManager.DefaultProfileName);
         }
 
-        [Test]
-        public void ReadScopeFromXmlConfiguration()
-        {
-            PluginGraph pluginGraph = DataMother.GetDiagnosticPluginGraph("ScopeInFamily.xml");
-            PluginFamily family = pluginGraph.PluginFamilies[typeof (Column)];
-
-            Assert.AreEqual(1, family.InterceptionChain.Count);
-            Assert.IsTrue(family.InterceptionChain[0] is ThreadLocalStorageInterceptor);
-
-            // The PluginFamily for IWidget has no intercepters configured
-            PluginFamily widgetFamily = pluginGraph.PluginFamilies[typeof (IWidget)];
-            Assert.AreEqual(1, widgetFamily.InterceptionChain.Count);
-            Assert.IsTrue(widgetFamily.InterceptionChain[0] is HttpContextItemInterceptor);
-        }
 
         [Test]
         public void SetsTheDefaultInstanceKey()

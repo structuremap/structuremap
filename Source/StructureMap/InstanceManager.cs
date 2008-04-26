@@ -351,11 +351,9 @@ namespace StructureMap
         private IInstanceFactory registerPluginFamily(PluginFamily family)
         {
             InstanceFactory factory = new InstanceFactory(family, _failOnException);
-            IInstanceFactory wrappedFactory = family.InterceptionChain.WrapInstanceFactory(factory);
+            RegisterType(factory);
 
-            RegisterType(wrappedFactory);
-
-            return wrappedFactory;
+            return factory;
         }
 
         /// <summary>
@@ -510,14 +508,6 @@ namespace StructureMap
         protected delegate InstanceFactory CreateFactoryDelegate(Type type);
 
         #endregion
-
-        //public InstanceInterceptor FindInterceptor(Type pluginType, Type actualType)
-        //{
-        //    InstanceInterceptor interceptor = getOrCreateFactory(pluginType).GetInterceptor();
-        //    CompoundInterceptor compoundInterceptor = _interceptorLibrary.FindInterceptor(actualType);
-            
-        //    return compoundInterceptor.Merge(interceptor);
-        //}
 
 
         object IInstanceCreator.ApplyInterception(Type pluginType, object actualValue)

@@ -147,8 +147,6 @@ namespace StructureMap
             family.AddMementoSource(source);
 
             family.SetScopeTo(Scope);
-            //InterceptorChainBuilder builder = new InterceptorChainBuilder();
-            //family.InterceptionChain = builder.Build(Scope);
 
             return family;
         }

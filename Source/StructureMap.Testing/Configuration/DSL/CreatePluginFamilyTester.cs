@@ -6,6 +6,7 @@ using StructureMap.Configuration.DSL;
 using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
+using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
 
@@ -73,7 +74,7 @@ namespace StructureMap.Testing.Configuration.DSL
             }
 
             PluginFamily family = pluginGraph.PluginFamilies[typeof (IGateway)];
-            Assert.IsTrue(family.InterceptionChain.Contains(typeof (ThreadLocalStorageInterceptor)));
+            Assert.IsInstanceOfType(typeof(ThreadLocalStoragePolicy), family.Policy);
         }
 
         [Test]
@@ -101,7 +102,7 @@ namespace StructureMap.Testing.Configuration.DSL
             }
 
             PluginFamily family = pluginGraph.PluginFamilies[typeof (IGateway)];
-            Assert.AreEqual(0, family.InterceptionChain.Count);
+            Assert.IsInstanceOfType(typeof(BuildPolicy), family.Policy);
         }
 
         [Test]
@@ -116,7 +117,7 @@ namespace StructureMap.Testing.Configuration.DSL
             }
 
             PluginFamily family = pluginGraph.PluginFamilies[typeof (IGateway)];
-            Assert.IsTrue(family.InterceptionChain.Contains(typeof (SingletonInterceptor)));
+            Assert.IsInstanceOfType(typeof(SingletonPolicy), family.Policy);
         }
 
         [Test]
@@ -179,9 +180,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 registry.BuildInstancesOf<IGateway>().InterceptConstructionWith(factoryInterceptor);
             }
 
-            InterceptionChain chain = pluginGraph.PluginFamilies[typeof (IGateway)].InterceptionChain;
-            Assert.AreEqual(1, chain.Count);
-            Assert.AreSame(factoryInterceptor, chain[0]);
+            Assert.AreSame(pluginGraph.PluginFamilies[typeof(IGateway)].Policy, factoryInterceptor);
         }
 
         [Test]
@@ -215,9 +214,20 @@ namespace StructureMap.Testing.Configuration.DSL
         }
     }
 
-    public class StubbedInstanceFactoryInterceptor : InstanceFactoryInterceptor
+    public class StubbedInstanceFactoryInterceptor : IInstanceInterceptor
     {
-        public override object Clone()
+        public IBuildPolicy InnerPolicy
+        {
+            get { throw new NotImplementedException(); }
+            set {  }
+        }
+
+        public object Build(IInstanceCreator instanceCreator, Type pluginType, Instance instance)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IBuildPolicy Clone()
         {
             throw new NotImplementedException();
         }

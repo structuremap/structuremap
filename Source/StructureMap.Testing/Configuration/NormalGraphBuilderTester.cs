@@ -96,27 +96,6 @@ namespace StructureMap.Testing.Configuration
             Assert.AreEqual(profileName, defaultManager.Profiles[0].ProfileName);
         }
 
-        [Test]
-        public void ScopeIsUsedToCreateTheInterceptionChain()
-        {
-            InstanceScope theScope = InstanceScope.PerRequest;
-            InterceptionChain chain = new InterceptionChain();
-            DynamicMock builderMock = new DynamicMock(typeof (IInterceptorChainBuilder));
-            builderMock.ExpectAndReturn("Build", chain, theScope);
 
-            NormalGraphBuilder graphBuilder =
-                new NormalGraphBuilder((IInterceptorChainBuilder) builderMock.MockInstance, new Registry[0]);
-
-            TypePath typePath = new TypePath(GetType());
-
-
-            graphBuilder.AddPluginFamily(typePath, "something", theScope);
-
-            PluginFamily family = graphBuilder.PluginGraph.PluginFamilies[GetType()];
-
-            Assert.AreEqual(chain, family.InterceptionChain);
-
-            builderMock.Verify();
-        }
     }
 }

@@ -29,8 +29,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         void IExpression.Configure(PluginGraph graph)
         {
             PluginFamily family = graph.LocateOrCreateFamilyForType(_pluginType);
-            InterceptorChainBuilder builder = new InterceptorChainBuilder();
-            family.InterceptionChain = builder.Build(_scope);
+            family.SetScopeTo(_scope);
 
             foreach (IExpression child in _children)
             {
@@ -108,8 +107,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         {
             _alterations.Add(delegate(PluginFamily family)
                                  {
-                                     InterceptorChainBuilder builder = new InterceptorChainBuilder();
-                                     family.InterceptionChain = builder.Build(scope);
+                                     family.SetScopeTo(scope);
                                  });
 
             return this;
@@ -122,7 +120,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         public CreatePluginFamilyExpression<PLUGINTYPE> AsSingletons()
         {
             _alterations.Add(
-                delegate(PluginFamily family) { family.InterceptionChain.AddInterceptor(new SingletonInterceptor()); });
+                delegate(PluginFamily family) { family.SetScopeTo(InstanceScope.Singleton); });
             return this;
         }
 
@@ -165,9 +163,12 @@ namespace StructureMap.Configuration.DSL.Expressions
             return this;
         }
 
-        public CreatePluginFamilyExpression<PLUGINTYPE> InterceptConstructionWith(InstanceFactoryInterceptor interceptor)
+        public CreatePluginFamilyExpression<PLUGINTYPE> InterceptConstructionWith(IInstanceInterceptor interceptor)
         {
-            _alterations.Add(delegate(PluginFamily family) { family.InterceptionChain.AddInterceptor(interceptor); });
+            _alterations.Add(delegate(PluginFamily family)
+                                 {
+                                     family.AddInterceptor(interceptor);
+                                 });
             return this;
         }
     }

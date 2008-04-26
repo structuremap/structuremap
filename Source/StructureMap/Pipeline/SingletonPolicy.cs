@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace StructureMap.Pipeline
 {
+    [Pluggable("Singleton")]
     public class SingletonPolicy : CacheInterceptor
     {
         private readonly Dictionary<string, object> _instances = new Dictionary<string, object>();

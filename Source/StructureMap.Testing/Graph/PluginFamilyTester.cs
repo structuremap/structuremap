@@ -72,13 +72,10 @@ namespace StructureMap.Testing.Graph
         public void ImplicitPluginFamilyCreatesASingletonInterceptorWhenIsSingletonIsTrue()
         {
             PluginFamily family = new PluginFamily(typeof (ISingletonRepository));
-            Assert.AreEqual(1, family.InterceptionChain.Count);
-
-            InstanceFactoryInterceptor interceptor = family.InterceptionChain[0];
-            Assert.IsTrue(interceptor is SingletonInterceptor);
+            Assert.IsInstanceOfType(typeof(SingletonPolicy), family.Policy);
 
             PluginFamily family2 = new PluginFamily(typeof (IDevice));
-            Assert.AreEqual(0, family2.InterceptionChain.Count);
+            Assert.IsInstanceOfType(typeof(BuildPolicy), family2.Policy);
         }
 
         [Test]

@@ -11,22 +11,14 @@ namespace StructureMap.Configuration
 {
     public class NormalGraphBuilder : IGraphBuilder
     {
-        private readonly IInterceptorChainBuilder _builder;
         private MachineOverride _machine;
         private PluginGraph _pluginGraph;
         private Profile _profile;
         private PluginGraph _systemGraph;
         private InstanceManager _systemInstanceManager;
 
-
-        public NormalGraphBuilder(Registry[] registries) : this(new InterceptorChainBuilder(), registries)
+        public NormalGraphBuilder(Registry[] registries)
         {
-        }
-
-        public NormalGraphBuilder(IInterceptorChainBuilder builder, Registry[] registries)
-        {
-            _builder = builder;
-
             _pluginGraph = new PluginGraph();
             foreach (Registry registry in registries)
             {
@@ -137,8 +129,7 @@ namespace StructureMap.Configuration
 
             // Xml configuration wins
             family.DefaultInstanceKey = defaultKey;
-            InterceptionChain interceptionChain = _builder.Build(scope);
-            family.AddInterceptionChain(interceptionChain);
+            family.SetScopeTo(scope);
         }
 
         public virtual void AttachSource(TypePath pluginTypePath, InstanceMemento sourceMemento)
@@ -188,11 +179,11 @@ namespace StructureMap.Configuration
             PluginFamily family = _pluginGraph.PluginFamilies[pluginTypePath.FindType()];
             try
             {
-                InstanceFactoryInterceptor interceptor =
-                    (InstanceFactoryInterceptor)
-                    buildSystemObject(typeof (InstanceFactoryInterceptor), interceptorMemento);
+                IInstanceInterceptor interceptor =
+                    (IInstanceInterceptor)
+                    buildSystemObject(typeof(IInstanceInterceptor), interceptorMemento);
 
-                family.InterceptionChain.AddInterceptor(interceptor);
+                family.AddInterceptor(interceptor);
             }
             catch (Exception ex)
             {

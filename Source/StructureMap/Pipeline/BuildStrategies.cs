@@ -25,6 +25,7 @@ namespace StructureMap.Pipeline
         #endregion
     }
 
+    [PluginFamily]
     public interface IInstanceInterceptor : IBuildPolicy
     {
         IBuildPolicy InnerPolicy { get; set; }

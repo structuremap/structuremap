@@ -308,9 +308,6 @@
     <Compile Include="Graph\InstanceDefaultManager.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Graph\InterceptionChain.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Graph\MachineOverride.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -357,37 +354,13 @@
     <Compile Include="InstanceMemento.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Interceptors\CacheInterceptor.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Interceptors\CompoundInterceptor.cs" />
     <Compile Include="Interceptors\EnrichmentInterceptor.cs" />
-    <Compile Include="Interceptors\HttpContextItemInterceptor.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Interceptors\HybridCacheInterceptor.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Interceptors\IInterceptorChainBuilder.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Interceptors\InstanceFactoryInterceptor.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Interceptors\InstanceInterceptor.cs" />
-    <Compile Include="Interceptors\InterceptorChainBuilder.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Interceptors\InterceptorLibrary.cs" />
     <Compile Include="Interceptors\Interceptors.cs" />
     <Compile Include="Interceptors\NulloInterceptor.cs" />
-    <Compile Include="Interceptors\SingletonInterceptor.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Interceptors\StartupInterceptor.cs" />
-    <Compile Include="Interceptors\ThreadLocalStorageInterceptor.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Interceptors\FilteredInstanceInterceptor.cs" />
     <Compile Include="IPluginGraphSource.cs" />
     <Compile Include="MementoSource.cs">

@@ -235,17 +235,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Container\Interceptors\CompoundInterceptorTester.cs" />
-    <Compile Include="Container\Interceptors\InteceptorChainBuilderTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Container\Interceptors\InterceptorLibraryTester.cs" />
     <Compile Include="Container\Interceptors\MockTypeInterceptor.cs" />
-    <Compile Include="Container\Interceptors\SingletonInterceptorTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Container\Interceptors\ThreadLocalStorageInterceptorTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Container\Interceptors\TypeInterceptionTester.cs" />
     <Compile Include="Container\MockingTester.cs">
       <SubType>Code</SubType>
@@ -323,9 +314,6 @@
     </Compile>
     <Compile Include="Graph\GenericsPluginGraphTester.cs" />
     <Compile Include="Graph\InstanceTarget.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Graph\InterceptionChainTester.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Graph\OverrideGraphTester.cs">

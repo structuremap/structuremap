@@ -67,20 +67,6 @@ namespace StructureMap.Testing.Container
             Assert.AreSame(_blue, manager.CreateInstance(typeof (IService), "Blue"));
         }
 
-        [Test]
-        public void AddInstanceWithInstanceFactoryInterceptor()
-        {
-            InstanceFactoryInterceptor interceptor = new FakeInstanceFactoryInterceptor();
-
-            InstanceFactory factory = ObjectMother.Factory<IService>();
-            interceptor.InnerInstanceFactory = factory;
-
-            interceptor.AddInstance(new LiteralInstance(_red).WithName("Red"));
-            interceptor.AddInstance(new LiteralInstance(_blue).WithName("Blue"));
-
-            Assert.AreSame(_red, interceptor.GetInstance("Red"));
-            Assert.AreSame(_blue, interceptor.GetInstance("Blue"));
-        }
 
         [Test]
         public void AddNamedInstanceByType()
@@ -219,9 +205,20 @@ namespace StructureMap.Testing.Container
         }
     }
 
-    public class FakeInstanceFactoryInterceptor : InstanceFactoryInterceptor
+    public class FakeInstanceFactoryInterceptor : IInstanceInterceptor
     {
-        public override object Clone()
+        public IBuildPolicy InnerPolicy
+        {
+            get { throw new NotImplementedException(); }
+            set { throw new NotImplementedException(); }
+        }
+
+        public object Build(IInstanceCreator instanceCreator, Type pluginType, Instance instance)
+        {
+            throw new NotImplementedException();
+        }
+
+        IBuildPolicy IBuildPolicy.Clone()
         {
             throw new NotImplementedException();
         }

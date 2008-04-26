@@ -38,7 +38,6 @@ namespace StructureMap.Graph
         private bool _canUseUnMarkedPlugins = false;
         private string _defaultKey = string.Empty;
         private InstanceInterceptor _instanceInterceptor = new NulloInterceptor();
-        private InterceptionChain _interceptionChain;
         private PluginGraph _parent;
         private Type _pluginType;
         private string _pluginTypeName;
@@ -53,11 +52,9 @@ namespace StructureMap.Graph
             _pluginTypeName = TypePath.GetAssemblyQualifiedName(_pluginType);
             _defaultKey = defaultInstanceKey;
             _plugins = new PluginCollection(this);
-
-            _interceptionChain = new InterceptionChain();
         }
 
-
+        // TODO:  Need to unit test the scope from the attribute
         /// <summary>
         /// Testing constructor
         /// </summary>
@@ -65,10 +62,12 @@ namespace StructureMap.Graph
         public PluginFamily(Type pluginType) :
             this(pluginType, PluginFamilyAttribute.GetDefaultKey(pluginType))
         {
-            if (PluginFamilyAttribute.IsMarkedAsSingleton(pluginType))
+            PluginFamilyAttribute attribute = PluginFamilyAttribute.GetAttribute(pluginType);
+            if (attribute != null)
             {
-                InterceptionChain.AddInterceptor(new SingletonInterceptor());
+                SetScopeTo(attribute.Scope);
             }
+            
         }
 
 
@@ -82,7 +81,6 @@ namespace StructureMap.Graph
         {
             _plugins = new PluginCollection(this);
             _pluginTypeName = path.AssemblyQualifiedName;
-            _interceptionChain = new InterceptionChain();
             initializeExplicit(path, defaultKey);
         }
 
@@ -124,12 +122,6 @@ namespace StructureMap.Graph
             templatedFamily._defaultKey = _defaultKey;
             templatedFamily.Parent = Parent;
             templatedFamily._buildPolicy = _buildPolicy.Clone();
-
-            foreach (InstanceFactoryInterceptor interceptor in _interceptionChain)
-            {
-                InstanceFactoryInterceptor clonedInterceptor = (InstanceFactoryInterceptor) interceptor.Clone();
-                templatedFamily.InterceptionChain.AddInterceptor(clonedInterceptor);
-            }
 
             // Add Plugins
             foreach (Plugin plugin in _plugins)
@@ -207,21 +199,6 @@ namespace StructureMap.Graph
             return _mementoList.Find(delegate(InstanceMemento m) { return m.InstanceKey == instanceKey; });
         }
 
-        public void AddInterceptionChain(InterceptionChain chain)
-        {
-            if (_interceptionChain == null)
-            {
-                _interceptionChain = chain;
-            }
-            else
-            {
-                foreach (InstanceFactoryInterceptor interceptor in chain)
-                {
-                    _interceptionChain.AddInterceptor(interceptor);
-                }
-            }
-        }
-
         public void DiscoverImplicitInstances()
         {
             List<Plugin> list = _plugins.FindAutoFillablePlugins();
@@ -254,13 +231,6 @@ namespace StructureMap.Graph
         {
             get { return _defaultKey; }
             set { _defaultKey = value ?? string.Empty; }
-        }
-
-        [Obsolete("Make this go away")]
-        public InterceptionChain InterceptionChain
-        {
-            get { return _interceptionChain; }
-            set { _interceptionChain = value; }
         }
 
         public PluginCollection Plugins

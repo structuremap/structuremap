@@ -78,7 +78,7 @@ namespace StructureMap.Testing.Attributes
             att.Scope = InstanceScope.PerRequest;
 
             PluginFamily family = att.BuildPluginFamily(typeof (Target1));
-            Assert.AreEqual(0, family.InterceptionChain.Count);
+            Assert.IsInstanceOfType(typeof(BuildPolicy), family.Policy);
         }
 
         [Test]
