@@ -115,6 +115,7 @@
       <Link>CommonAssemblyInfo.cs</Link>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Configuration\ProfileBuilder.cs" />
     <Compile Include="Diagnostics\Tokens.cs" />
     <Compile Include="InstanceBuilderList.cs" />
     <Compile Include="InstanceFamily.cs" />
@@ -129,6 +130,7 @@
     <Compile Include="Pipeline\InstanceMementoPropertyReader.cs" />
     <Compile Include="Pipeline\LiteralInstance.cs" />
     <Compile Include="Pipeline\Profile.cs" />
+    <Compile Include="Pipeline\ProfileManager.cs" />
     <Compile Include="Pipeline\PrototypeInstance.cs" />
     <Compile Include="Pipeline\ReferencedInstance.cs" />
     <Compile Include="Pipeline\SingletonPolicy.cs" />
@@ -302,15 +304,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Graph\GenericsPluginGraph.cs" />
-    <Compile Include="Graph\InstanceDefault.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Graph\InstanceDefaultManager.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Graph\MachineOverride.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Graph\Plugin.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -324,9 +317,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Graph\PluginGraph.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Graph\Profile.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Graph\SetterProperty.cs">

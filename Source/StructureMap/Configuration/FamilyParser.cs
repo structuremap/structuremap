@@ -34,7 +34,7 @@ namespace StructureMap.Configuration
 
         public void ParseDefaultElement(XmlElement element)
         {
-            TypePath pluginTypePath = TypePath.GetTypePath(element.GetAttribute(XmlConstants.PLUGIN_TYPE));
+            TypePath pluginTypePath = new TypePath(element.GetAttribute(XmlConstants.PLUGIN_TYPE));
             InstanceScope scope = findScope(element);
             string name = element.GetAttribute(XmlConstants.NAME);
             if (string.IsNullOrEmpty(name))
@@ -51,7 +51,7 @@ namespace StructureMap.Configuration
 
         public void ParseInstanceElement(XmlElement element)
         {
-            TypePath pluginTypePath = TypePath.GetTypePath(element.GetAttribute(XmlConstants.PLUGIN_TYPE));
+            TypePath pluginTypePath = new TypePath(element.GetAttribute(XmlConstants.PLUGIN_TYPE));
             InstanceScope scope = findScope(element);
 
             InstanceMemento memento = _mementoCreator.CreateMemento(element);

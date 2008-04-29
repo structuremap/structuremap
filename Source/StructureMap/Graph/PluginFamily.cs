@@ -267,18 +267,18 @@ namespace StructureMap.Graph
 
         #endregion
 
-        public Instance[] GetAllInstances()
+        public void Seal()
         {
-            List<Instance> list = new List<Instance>();
             foreach (InstanceMemento memento in _mementoList)
             {
                 Instance instance = memento.ReadInstance(Parent, _pluginType);
-                list.Add(instance);
+                _instances.Add(instance);
             }
+        }
 
-            list.AddRange(_instances);
-
-            return list.ToArray();
+        public Instance[] GetAllInstances()
+        {
+            return _instances.ToArray();
         }
 
         public Instance GetInstance(string name)
@@ -313,5 +313,7 @@ namespace StructureMap.Graph
             interceptor.InnerPolicy = _buildPolicy;
             _buildPolicy = interceptor;
         }
+
+
     }
 }

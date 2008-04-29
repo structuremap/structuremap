@@ -11,7 +11,6 @@ namespace StructureMap.Pipeline
     {
         object CreateInstance(Type type, string referenceKey);
         Array CreateInstanceArray(string pluginTypeName, Instance[] instances);
-        object CreateInstance(string typeName);
         object CreateInstance(Type pluginType);
 
         object CreateInstance(Type pluginType, IConfiguredInstance instance);
@@ -21,6 +20,7 @@ namespace StructureMap.Pipeline
     public interface IDiagnosticInstance
     {
         bool CanBePartOfPluginFamily(PluginFamily family);
+        Instance FindMasterInstance(PluginFamily family);
     }
 
     public abstract class Instance : IDiagnosticInstance
@@ -72,6 +72,16 @@ namespace StructureMap.Pipeline
         bool IDiagnosticInstance.CanBePartOfPluginFamily(PluginFamily family)
         {
             return canBePartOfPluginFamily(family);
+        }
+
+        Instance IDiagnosticInstance.FindMasterInstance(PluginFamily family)
+        {
+            return findMasterInstance(family);
+        }
+
+        protected virtual Instance findMasterInstance(PluginFamily family)
+        {
+            return this;
         }
 
         protected virtual bool canBePartOfPluginFamily(PluginFamily family)

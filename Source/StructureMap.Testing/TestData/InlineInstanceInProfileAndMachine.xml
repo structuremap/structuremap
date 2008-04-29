@@ -2,19 +2,19 @@
   <Assembly Name="StructureMap.Testing.Widget"/>
 
   <Profile Name="Blue">
-    <Override Type="StructureMap.Testing.Widget.IWidget">
+    <Override Type="StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget">
       <Instance Type="Color" Color="Blue"/>
     </Override>
-    <Override Type="StructureMap.Testing.Widget.Rule">
+    <Override Type="StructureMap.Testing.Widget.Rule,StructureMap.Testing.Widget">
       <Instance Type="Color" Color="Blue"/>
     </Override>
   </Profile>
 
   <Profile Name="Green">
-    <Override Type="StructureMap.Testing.Widget.IWidget">
+    <Override Type="StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget">
       <Instance Type="Color" Color="Green"/>
     </Override>
-    <Override Type="StructureMap.Testing.Widget.Rule">
+    <Override Type="StructureMap.Testing.Widget.Rule,StructureMap.Testing.Widget">
       <Instance Type="Color" Color="Green"/>
     </Override>
   </Profile>
@@ -22,7 +22,7 @@
   <Machine Name="GREEN-BOX" Profile="Green"/>
 
   <Machine Name="SERVER">
-    <Override Type="StructureMap.Testing.Widget.IWidget">
+    <Override Type="StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget">
       <Instance Type="Color" Color="Orange"/>
     </Override>
   </Machine>

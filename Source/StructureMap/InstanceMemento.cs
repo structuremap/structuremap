@@ -33,7 +33,7 @@ namespace StructureMap
             if (string.IsNullOrEmpty(innerConcreteKey))
             {
                 string pluggedTypeName = getPluggedType();
-                Type pluggedType = TypePath.GetTypePath(pluggedTypeName).FindType();
+                Type pluggedType = new TypePath(pluggedTypeName).FindType();
 
                 return family.Plugins.FindOrCreate(pluggedType, false);
             }

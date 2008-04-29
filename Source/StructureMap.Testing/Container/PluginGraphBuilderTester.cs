@@ -1,11 +1,8 @@
 using System.Xml;
 using NUnit.Framework;
 using StructureMap.Configuration;
-using StructureMap.Configuration.Mementos;
 using StructureMap.Graph;
-using StructureMap.Interceptors;
 using StructureMap.Pipeline;
-using StructureMap.Source;
 using StructureMap.Testing.TestData;
 using StructureMap.Testing.Widget;
 
@@ -45,12 +42,12 @@ namespace StructureMap.Testing.Container
             PluginGraph pluginGraph = DataMother.GetDiagnosticPluginGraph("SingletonIntercepterTest.xml");
 
             PluginFamily family = pluginGraph.PluginFamilies[typeof (Rule)];
-            Assert.IsInstanceOfType(typeof(SingletonPolicy), family.Policy);
+            Assert.IsInstanceOfType(typeof (SingletonPolicy), family.Policy);
 
             // The PluginFamily for IWidget has no intercepters configured
             PluginFamily widgetFamily = pluginGraph.PluginFamilies[typeof (IWidget)];
-            Assert.IsInstanceOfType(typeof(BuildPolicy), widgetFamily.Policy);
-        }   
+            Assert.IsInstanceOfType(typeof (BuildPolicy), widgetFamily.Policy);
+        }
 
         [Test]
         public void CanDefinedSourceBuildMemento()
@@ -166,7 +163,7 @@ namespace StructureMap.Testing.Container
             instance.ConcreteKey = "NotPluggable";
             instance.SetProperty("name", "DorothyTheDinosaur");
 
-            IWidget widget = (IWidget)factory.GetInstance(instance, null);
+            IWidget widget = (IWidget) factory.GetInstance(instance, null);
             Assert.IsNotNull(widget);
         }
 
@@ -189,10 +186,8 @@ namespace StructureMap.Testing.Container
         [Test]
         public void PicksUpTheDefaultProfileAttributeOnTheStructureMapNodeAndSetsTheProfile()
         {
-            InstanceDefaultManager defaultManager =
-                DataMother.GetDiagnosticPluginGraph("DefaultProfileConfig.xml").DefaultManager;
-
-            Assert.AreEqual("Green", defaultManager.DefaultProfileName);
+            PluginGraph graph = DataMother.GetDiagnosticPluginGraph("DefaultProfileConfig.xml");
+            Assert.AreEqual("Green", graph.ProfileManager.DefaultProfileName);
         }
 
 

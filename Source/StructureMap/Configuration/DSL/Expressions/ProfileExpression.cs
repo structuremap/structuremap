@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using StructureMap.Graph;
 
@@ -20,16 +21,9 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         void IExpression.Configure(PluginGraph graph)
         {
-            Profile profile = graph.DefaultManager.GetProfile(_profileName);
-            if (profile == null)
-            {
-                profile = new Profile(_profileName);
-                graph.DefaultManager.AddProfile(profile);
-            }
-
             foreach (InstanceDefaultExpression expression in _defaults)
             {
-                expression.Configure(profile, graph);
+                expression.Configure(_profileName, graph);
             }
         }
 

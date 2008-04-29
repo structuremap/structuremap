@@ -9,7 +9,6 @@ namespace StructureMap
 {
     public interface IInstanceManager
     {
-        InstanceDefaultManager DefaultManager { get; }
         T CreateInstance<T>(string instanceKey);
         T CreateInstance<T>();
         T FillDependencies<T>();
@@ -47,13 +46,6 @@ namespace StructureMap
         /// <param name="pluginType"></param>
         /// <param name="instanceKey"></param>
         void SetDefault(Type pluginType, string instanceKey);
-
-        /// <summary>
-        /// Sets the default instance for the PluginType
-        /// </summary>
-        /// <param name="pluginTypeName"></param>
-        /// <param name="instanceKey"></param>
-        void SetDefault(string pluginTypeName, string instanceKey);
 
         /// <summary>
         /// Creates a new object instance of the requested type

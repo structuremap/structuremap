@@ -95,19 +95,6 @@ namespace StructureMap
             return pluginGraph;
         }
 
-
-        public InstanceDefaultManager DefaultManager
-        {
-            get
-            {
-                if (_graph == null)
-                {
-                    Build();
-                }
-                return _graph.DefaultManager;
-            }
-        }
-
         #endregion
 
         private PluginGraph buildPluginGraph(IGraphBuilder graphBuilder)
@@ -115,8 +102,6 @@ namespace StructureMap
             readAssemblies(graphBuilder);
 
             readFamilies(graphBuilder);
-
-            readInstanceDefaults(graphBuilder);
 
             foreach (ConfigurationParser parser in _parsers)
             {
@@ -145,7 +130,9 @@ namespace StructureMap
                 parser.ParseFamilies(graphBuilder);
             }
 
-            graphBuilder.FinishFamilies();
+            readInstanceDefaults(graphBuilder);
+
+            
         }
 
         private void readAssemblies(IGraphBuilder graphBuilder)

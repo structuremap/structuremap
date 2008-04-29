@@ -6,6 +6,7 @@ using System.Reflection;
 using StructureMap.Configuration.DSL;
 using StructureMap.Diagnostics;
 using StructureMap.Interceptors;
+using StructureMap.Pipeline;
 
 namespace StructureMap.Graph
 {
@@ -18,12 +19,12 @@ namespace StructureMap.Graph
     public class PluginGraph
     {
         private readonly AssemblyGraphCollection _assemblies;
-        private readonly InstanceDefaultManager _defaultManager = new InstanceDefaultManager();
         private readonly InterceptorLibrary _interceptorLibrary = new InterceptorLibrary();
         private readonly PluginFamilyCollection _pluginFamilies;
         private bool _sealed = false;
         private readonly bool _useExternalRegistries = true;
         private readonly GraphLog _log = new GraphLog();
+        private readonly ProfileManager _profileManager = new ProfileManager();
 
         /// <summary>
         /// Default constructor
@@ -50,6 +51,10 @@ namespace StructureMap.Graph
             get { return _pluginFamilies; }
         }
 
+        public ProfileManager ProfileManager
+        {
+            get { return _profileManager; }
+        }
 
         public GraphLog Log
         {
@@ -61,11 +66,6 @@ namespace StructureMap.Graph
         public bool IsSealed
         {
             get { return _sealed; }
-        }
-
-        public InstanceDefaultManager DefaultManager
-        {
-            get { return _defaultManager; }
         }
 
         public InterceptorLibrary InterceptorLibrary
@@ -99,6 +99,13 @@ namespace StructureMap.Graph
                 attachImplicitPlugins(family);
                 family.DiscoverImplicitInstances();
             }
+
+            foreach (PluginFamily family in _pluginFamilies)
+            {
+                family.Seal();
+            }
+
+            _profileManager.Seal(this);
 
             _sealed = true;
         }
@@ -154,13 +161,6 @@ namespace StructureMap.Graph
             return pluginGraph;
         }
 
-        public TypePath LocateOrCreateFamilyForType(string fullName)
-        {
-            Type pluginType = findTypeByFullName(fullName);
-            buildFamilyIfMissing(pluginType);
-
-            return new TypePath(pluginType);
-        }
 
         private void buildFamilyIfMissing(Type pluginType)
         {
@@ -177,24 +177,5 @@ namespace StructureMap.Graph
             return PluginFamilies[pluginType];
         }
 
-        private Type findTypeByFullName(string fullName)
-        {
-            foreach (AssemblyGraph assembly in _assemblies)
-            {
-                Type type = assembly.FindTypeByFullName(fullName);
-                if (type != null)
-                {
-                    return type;
-                }
-            }
-
-            throw new StructureMapException(300, fullName);
-        }
-
-        [Obsolete]
-        public void ReadDefaults()
-        {
-            _defaultManager.ReadDefaultsFromPluginGraph(this);
-        }
     }
 }

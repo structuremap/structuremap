@@ -1,11 +1,10 @@
+using System;
 using StructureMap.Graph;
 
 namespace StructureMap
 {
-    public interface IPluginGraphSource
+    [Obsolete] public interface IPluginGraphSource
     {
-        InstanceDefaultManager DefaultManager { get; }
-
         /// <summary>
         /// Reads the configuration information and returns the PluginGraph definition of
         /// plugin families and plugin's

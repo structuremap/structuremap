@@ -94,7 +94,6 @@ namespace StructureMap.Configuration.DSL
         public IInstanceManager BuildInstanceManager()
         {
             ConfigurePluginGraph(_graph);
-            _graph.ReadDefaults();
             return new InstanceManager(_graph);
         }
 

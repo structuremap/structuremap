@@ -1,20 +1,22 @@
 using System;
 using System.Xml;
 using StructureMap.Graph;
+using StructureMap.Pipeline;
 using StructureMap.Source;
 
 namespace StructureMap.Configuration
 {
-    [Obsolete("This puppy needs to be rewritten")]
     public class ProfileAndMachineParser
     {
-        private readonly IGraphBuilder _builder;
+        private readonly IProfileBuilder _profileBuilder;
+        private readonly IGraphBuilder _graphBuilder;
         private readonly XmlMementoCreator _creator;
         private readonly XmlNode _structureMapNode;
 
-        public ProfileAndMachineParser(IGraphBuilder builder, XmlNode structureMapNode, XmlMementoCreator creator)
+        public ProfileAndMachineParser(IGraphBuilder graphBuilder, XmlNode structureMapNode, XmlMementoCreator creator)
         {
-            _builder = builder;
+            _profileBuilder = graphBuilder.GetProfileBuilder();
+            _graphBuilder = graphBuilder;
             _structureMapNode = structureMapNode;
             _creator = creator;
         }
@@ -24,16 +26,16 @@ namespace StructureMap.Configuration
             XmlNode defaultProfileNode = _structureMapNode.Attributes.GetNamedItem(XmlConstants.DEFAULT_PROFILE);
             if (defaultProfileNode != null)
             {
-                _builder.DefaultManager.DefaultProfileName = defaultProfileNode.InnerText;
+                _profileBuilder.SetDefaultProfileName(defaultProfileNode.InnerText);
             }
 
             foreach (XmlElement profileElement in findNodes(XmlConstants.PROFILE_NODE))
             {
                 string profileName = profileElement.GetAttribute(XmlConstants.NAME);
-                _builder.AddProfile(profileName);
+                _profileBuilder.AddProfile(profileName);
 
                 writeOverrides(profileElement,
-                               delegate(string fullName, string defaultKey) { _builder.OverrideProfile(fullName, defaultKey); }, profileName);
+                               delegate(string fullName, string defaultKey) { _profileBuilder.OverrideProfile(new TypePath(fullName), defaultKey); }, profileName);
             }
 
             foreach (XmlElement machineElement in findNodes(XmlConstants.MACHINE_NODE))
@@ -41,10 +43,10 @@ namespace StructureMap.Configuration
                 string machineName = machineElement.GetAttribute(XmlConstants.NAME);
                 string profileName = machineElement.GetAttribute(XmlConstants.PROFILE_NODE);
 
-                _builder.AddMachine(machineName, profileName);
+                _profileBuilder.AddMachine(machineName, profileName);
 
                 writeOverrides(machineElement,
-                               delegate(string fullName, string defaultKey) { _builder.OverrideMachine(fullName, defaultKey); }, machineName);
+                               delegate(string fullName, string defaultKey) { _profileBuilder.OverrideMachine(new TypePath(fullName), defaultKey); }, machineName);
             }
         }
 
@@ -80,8 +82,8 @@ namespace StructureMap.Configuration
             InstanceMemento memento = _creator.CreateMemento(instanceElement);
             memento.InstanceKey = key;
 
-            TypePath familyPath = _builder.LocateOrCreateFamilyForType(fullName);
-            _builder.RegisterMemento(familyPath, memento);
+            TypePath familyPath = new TypePath(fullName);
+            _graphBuilder.RegisterMemento(familyPath, memento);
 
             function(fullName, key);
         }

@@ -2,6 +2,7 @@ using NUnit.Framework;
 using StructureMap.Configuration.DSL;
 using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.Graph;
+using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing.Configuration.DSL
@@ -30,12 +31,12 @@ namespace StructureMap.Testing.Configuration.DSL
             Assert.AreSame(expression, expression2);
 
             PluginGraph graph = new PluginGraph();
-            ((IExpression) expression).Configure(graph);
+            ((IExpression)expression).Configure(graph);
 
-            Profile profile = graph.DefaultManager.GetProfile(theProfileName);
-            Assert.IsNotNull(profile);
-            Assert.AreEqual(new InstanceDefault[] {new InstanceDefault(typeof (IWidget), theDefaultName)},
-                            profile.Defaults);
+
+            ProfileManager manager = graph.ProfileManager;
+            ReferencedInstance defaultInstance = (ReferencedInstance) manager.GetDefault(typeof (IWidget), theProfileName);
+            Assert.AreEqual(theDefaultName, defaultInstance.ReferenceKey);
         }
 
         [Test]
@@ -52,13 +53,13 @@ namespace StructureMap.Testing.Configuration.DSL
 
             IInstanceManager manager = registry.BuildInstanceManager();
 
+            ProfileManager profileManager = graph.ProfileManager;
+            Instance defaultInstance = profileManager.GetDefault(typeof(IWidget), theProfileName);
 
-            Profile profile = manager.DefaultManager.GetProfile(theProfileName);
-            InstanceDefault instanceDefault = profile.Defaults[0];
-            Assert.AreEqual(Profile.InstanceKeyForProfile(theProfileName), instanceDefault.DefaultKey);
+            Assert.AreEqual(Profile.InstanceKeyForProfile(theProfileName), defaultInstance.Name);
 
             manager.SetDefaultsToProfile(theProfileName);
-            AWidget widget = (AWidget) manager.CreateInstance<IWidget>();
+            AWidget widget = (AWidget)manager.CreateInstance<IWidget>();
             Assert.IsNotNull(widget);
         }
     }

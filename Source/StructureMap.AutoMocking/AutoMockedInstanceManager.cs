@@ -1,4 +1,6 @@
 using System;
+using StructureMap.Graph;
+using StructureMap.Pipeline;
 
 namespace StructureMap.AutoMocking
 {
@@ -11,21 +13,20 @@ namespace StructureMap.AutoMocking
             _locator = locator;
         }
 
-        public override IInstanceFactory this[Type pluginType]
+        
+        protected override InstanceFactory createFactory(Type pluginType)
         {
-            get
+            if (!pluginType.IsAbstract && pluginType.IsClass)
             {
-                return getOrCreateFactory(pluginType,
-                                          delegate
-                                              {
-                                                  object service = _locator.Service(pluginType);
-                                                  InstanceFactory factory
-                                                      = InstanceFactory.CreateFactoryWithDefault(pluginType, service);
-
-                                                  return factory;
-                                              });
+                return base.createFactory(pluginType);
             }
-            set { base[pluginType] = value; }
+
+            object service = _locator.Service(pluginType);
+            InstanceFactory factory = new InstanceFactory(new PluginFamily(pluginType), true);
+            LiteralInstance instance = new LiteralInstance(service);
+            SetDefault(pluginType, instance);
+
+            return factory;
         }
     }
 }

@@ -338,16 +338,6 @@ namespace StructureMap
             manager.SetDefault(typeof (TargetType), InstanceName);
         }
 
-        /// <summary>
-        /// Sets the default instance of the TargetType
-        /// </summary>
-        /// <param name="TargetTypeName"></param>
-        /// <param name="InstanceName"></param>
-        public static void SetDefaultInstanceName(string TargetTypeName, string InstanceName)
-        {
-            manager.SetDefault(TargetTypeName, InstanceName);
-        }
-
 
         /// <summary>
         /// Retrieves a list of all of the configured instances for a particular type

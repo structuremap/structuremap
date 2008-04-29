@@ -17,24 +17,8 @@ namespace StructureMap
         private readonly Dictionary<string, Instance> _instances = new Dictionary<string, Instance>();
         private readonly InstanceInterceptor _interceptor = new NulloInterceptor();
         private readonly Type _pluginType;
-        private Instance _defaultInstance;
         private InstanceManager _manager = new InstanceManager();
-        private IBuildPolicy _policy = new BuildPolicy();
-
-        #region static constructors
-
-        public static InstanceFactory CreateFactoryWithDefault(Type pluginType, object defaultInstance)
-        {
-            PluginFamily family = new PluginFamily(pluginType);
-            InstanceFactory factory = new InstanceFactory(family, true);
-
-            LiteralInstance instance = new LiteralInstance(defaultInstance);
-            factory.SetDefault(instance);
-
-            return factory;
-        }
-
-        #endregion
+        private readonly IBuildPolicy _policy = new BuildPolicy();
 
         #region constructor functions
 
@@ -62,8 +46,6 @@ namespace StructureMap
                 {
                     AddInstance(instance);
                 }
-
-                determineDefaultKey(family, failOnException);
             }
             catch (StructureMapException)
             {
@@ -75,7 +57,7 @@ namespace StructureMap
             }
         }
 
-        private InstanceFactory(Type concreteType)
+        private InstanceFactory(Type concreteType, ProfileManager profileManager)
         {
             _interceptor = new NulloInterceptor();
             _pluginType = concreteType;
@@ -97,53 +79,15 @@ namespace StructureMap
 
                 _instances.Add(instance.Name, instance);
 
-                _defaultInstance = instance;
+                profileManager.SetDefault(concreteType, instance);
             }
         }
 
-        public static InstanceFactory CreateInstanceFactoryForType(Type concreteType)
+        public static InstanceFactory CreateInstanceFactoryForType(Type concreteType, ProfileManager profileManager)
         {
-            return new InstanceFactory(concreteType);
+            return new InstanceFactory(concreteType, profileManager);
         }
 
-
-        private void determineDefaultKey(PluginFamily family, bool failOnException)
-        {
-            if (family.DefaultInstanceKey != null && family.DefaultInstanceKey != string.Empty)
-            {
-                try
-                {
-                    SetDefault(family.DefaultInstanceKey);
-                }
-                catch (Exception)
-                {
-                    if (failOnException)
-                    {
-                        throw;
-                    }
-                }
-            }
-            else
-            {
-                setDefaultFromAttribute();
-            }
-        }
-
-        private void setDefaultFromAttribute()
-        {
-            string defaultKey = PluginFamilyAttribute.GetDefaultKey(PluginType);
-            if (defaultKey != string.Empty)
-            {
-                try
-                {
-                    SetDefault(defaultKey);
-                }
-                catch (Exception ex)
-                {
-                    throw new StructureMapException(10, ex, defaultKey, PluginType.FullName);
-                }
-            }
-        }
 
         #endregion
 
@@ -181,6 +125,11 @@ namespace StructureMap
 
             Instance instance = _instances[instanceKey];
 
+            return Build(instance);
+        }
+
+        public object Build(Instance instance)
+        {
             return _policy.Build(_manager, PluginType, instance);
         }
 
@@ -215,61 +164,6 @@ namespace StructureMap
             {
                 throw new StructureMapException(207, ex, instance.Name, PluginType.FullName);
             }
-        }
-
-
-        /// <summary>
-        /// Builds a new instance of the default instance of the PluginType
-        /// </summary>
-        /// <returns></returns>
-        [Obsolete("Want to remove this eventually")] public object GetInstance()
-        {
-            if (_defaultInstance == null)
-            {
-                throw new StructureMapException(202, PluginType.FullName);
-            }
-
-            object builtObject = _policy.Build(_manager, PluginType, _defaultInstance);
-            return _interceptor.Process(builtObject);
-        }
-
-
-        /// <summary>
-        /// Sets the default InstanceMemento
-        /// </summary>
-        /// <param name="instanceKey"></param>
-        public void SetDefault(string instanceKey)
-        {
-            if (instanceKey == string.Empty || instanceKey == null)
-            {
-                _defaultInstance = null;
-            }
-            else
-            {
-                if (!_instances.ContainsKey(instanceKey))
-                {
-                    throw new StructureMapException(215, instanceKey, _pluginType.FullName);
-                }
-
-                _defaultInstance = _instances[instanceKey];
-            }
-        }
-
-        /// <summary>
-        /// Sets the default InstanceMemento
-        /// </summary>
-        /// <param name="instance"></param>
-        public void SetDefault(Instance instance)
-        {
-            _defaultInstance = instance;
-        }
-
-        /// <summary>
-        /// The default instanceKey
-        /// </summary>
-        public string DefaultInstanceKey
-        {
-            get { return _defaultInstance == null ? string.Empty : _defaultInstance.Name; }
         }
 
         public IList GetAllInstances()
@@ -309,16 +203,12 @@ namespace StructureMap
             return instance;
         }
 
-        public Instance GetDefault()
-        {
-            return _defaultInstance;
-        }
-
-
         public object ApplyInterception(object rawValue)
         {
             return _interceptor.Process(rawValue);
         }
+
+
 
         #endregion
     }

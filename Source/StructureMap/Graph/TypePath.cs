@@ -26,6 +26,18 @@ namespace StructureMap.Graph
             _assemblyName = type.Assembly.GetName().Name;
         }
 
+        public TypePath(string assemblyQualifiedName)
+        {
+            string[] parts = assemblyQualifiedName.Split(',');
+            if (parts.Length < 2)
+            {
+                throw new StructureMapException(107, assemblyQualifiedName);
+            }
+
+            _className = parts[0].Trim();
+            _assemblyName = parts[1].Trim();
+        }
+
         public string AssemblyQualifiedName
         {
             get { return _className + "," + _assemblyName; }
@@ -127,24 +139,6 @@ namespace StructureMap.Graph
         public override string ToString()
         {
             return AssemblyQualifiedName;
-        }
-
-        public static TypePath GetTypePath(string name)
-        {
-            try
-            {
-                Type type = Type.GetType(name);
-                if (type != null)
-                {
-                    return new TypePath(type);
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("here!");
-            }
-
-            return TypePathForFullName(name);
         }
     }
 }

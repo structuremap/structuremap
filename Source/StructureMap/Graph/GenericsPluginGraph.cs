@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using StructureMap.Pipeline;
 
 namespace StructureMap.Graph
 {
@@ -86,7 +87,7 @@ namespace StructureMap.Graph
         }
 
 
-        public PluginFamily CreateTemplatedFamily(Type templatedType)
+        public PluginFamily CreateTemplatedFamily(Type templatedType, ProfileManager profileManager)
         {
             Type basicType = templatedType.GetGenericTypeDefinition();
 
@@ -95,24 +96,14 @@ namespace StructureMap.Graph
                 PluginFamily basicFamily = _families[basicType];
                 Type[] templatedParameterTypes = templatedType.GetGenericArguments();
 
+                profileManager.CopyDefaults(basicType, templatedType);
+
                 return basicFamily.CreateTemplatedClone(templatedParameterTypes);
             }
             else
             {
                 return null;
             }
-        }
-
-        public PluginFamily CreateTemplatedFamily(string pluginTypeName)
-        {
-            Type type = Type.GetType(pluginTypeName, true);
-
-            if (!type.IsGenericType)
-            {
-                return null;
-            }
-
-            return CreateTemplatedFamily(type);
         }
     }
 }

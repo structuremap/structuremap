@@ -255,7 +255,7 @@ namespace StructureMap
 
             public void Configure(PluginGraph graph)
             {
-                graph.DefaultManager.DefaultProfileName = _profileName;
+                throw new NotImplementedException();
             }
 
             #endregion

@@ -31,22 +31,22 @@ namespace StructureMap.Configuration.DSL.Expressions
             return _parent;
         }
 
-        internal void Configure(Profile profile, PluginGraph graph)
+        internal void Configure(string profileName, PluginGraph pluginGraph)
         {
-            if (!string.IsNullOrEmpty(_instanceKey))
+            if (_instance != null)
             {
-                InstanceDefault instanceDefault = new InstanceDefault(_pluginType, _instanceKey);
-                profile.AddOverride(instanceDefault);
+                _instanceKey = Profile.InstanceKeyForProfile(profileName);
+                _instance.Name = _instanceKey;
+                pluginGraph.LocateOrCreateFamilyForType(_pluginType).AddInstance(_instance);   
             }
-            else if (_instance != null)
+            else if (!string.IsNullOrEmpty(_instanceKey))
             {
-                string defaultKey = Profile.InstanceKeyForProfile(profile.ProfileName);
-                
-                _instance.Name = defaultKey;
-                graph.LocateOrCreateFamilyForType(_pluginType).AddInstance(_instance);
+                _instance = new ReferencedInstance(_instanceKey);
+            }
 
-                InstanceDefault instanceDefault = new InstanceDefault(_pluginType, defaultKey);
-                profile.AddOverride(instanceDefault);
+            if (_instance != null)
+            {
+                pluginGraph.ProfileManager.SetDefault(profileName, _pluginType, _instance);   
             }
             else
             {

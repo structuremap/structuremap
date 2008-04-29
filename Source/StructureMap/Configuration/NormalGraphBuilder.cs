@@ -1,21 +1,19 @@
 using System;
-using System.Diagnostics;
 using System.Reflection;
 using StructureMap.Attributes;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
-using StructureMap.Interceptors;
 using StructureMap.Pipeline;
 
 namespace StructureMap.Configuration
 {
     public class NormalGraphBuilder : IGraphBuilder
     {
-        private MachineOverride _machine;
-        private PluginGraph _pluginGraph;
+        private readonly PluginGraph _pluginGraph;
+        private readonly PluginGraph _systemGraph;
         private Profile _profile;
-        private PluginGraph _systemGraph;
         private InstanceManager _systemInstanceManager;
+
 
         public NormalGraphBuilder(Registry[] registries)
         {
@@ -36,9 +34,8 @@ namespace StructureMap.Configuration
             _pluginGraph.Seal();
         }
 
-        public PluginGraph CreatePluginGraph()
+        [Obsolete("Do away?")] public PluginGraph CreatePluginGraph()
         {
-            _pluginGraph.ReadDefaults();
             return _pluginGraph;
         }
 
@@ -50,50 +47,6 @@ namespace StructureMap.Configuration
         public PluginGraph PluginGraph
         {
             get { return _pluginGraph; }
-        }
-
-        public void AddProfile(string profileName)
-        {
-            _profile = new Profile(profileName);
-            _pluginGraph.DefaultManager.AddProfile(_profile);
-        }
-
-        public void OverrideProfile(string fullTypeName, string instanceKey)
-        {
-            _profile.AddOverride(fullTypeName, instanceKey);
-        }
-
-        public void AddMachine(string machineName, string profileName)
-        {
-            if (string.IsNullOrEmpty(profileName))
-            {
-                _machine = new MachineOverride(machineName, null);
-            }
-            else
-            {
-                Profile profile = _pluginGraph.DefaultManager.GetProfile(profileName);
-
-                if (profile == null)
-                {
-                    _pluginGraph.Log.RegisterError(195, profileName, machineName);
-                    return;
-                }
-
-                _machine = new MachineOverride(machineName, profile);
-            }
-
-
-            _pluginGraph.DefaultManager.AddMachineOverride(_machine);
-        }
-
-        public void OverrideMachine(string fullTypeName, string instanceKey)
-        {
-            _machine.AddMachineOverride(fullTypeName, instanceKey);
-        }
-
-        public TypePath LocateOrCreateFamilyForType(string fullName)
-        {
-            return _pluginGraph.LocateOrCreateFamilyForType(fullName);
         }
 
         public void AddAssembly(string assemblyName)
@@ -181,7 +134,7 @@ namespace StructureMap.Configuration
             {
                 IInstanceInterceptor interceptor =
                     (IInstanceInterceptor)
-                    buildSystemObject(typeof(IInstanceInterceptor), interceptorMemento);
+                    buildSystemObject(typeof (IInstanceInterceptor), interceptorMemento);
 
                 family.AddInterceptor(interceptor);
             }
@@ -191,15 +144,15 @@ namespace StructureMap.Configuration
             }
         }
 
-        public InstanceDefaultManager DefaultManager
-        {
-            get { return _pluginGraph.DefaultManager; }
-        }
-
         public void RegisterMemento(TypePath pluginTypePath, InstanceMemento memento)
         {
             PluginFamily family = _pluginGraph.LocateOrCreateFamilyForType(pluginTypePath.FindType());
             family.AddInstance(memento);
+        }
+
+        public IProfileBuilder GetProfileBuilder()
+        {
+            return new ProfileBuilder(_pluginGraph);
         }
 
         #endregion

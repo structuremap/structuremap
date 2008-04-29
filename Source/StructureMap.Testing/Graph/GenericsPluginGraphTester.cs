@@ -1,6 +1,7 @@
 using System;
 using NUnit.Framework;
 using StructureMap.Graph;
+using StructureMap.Pipeline;
 
 namespace StructureMap.Testing.Graph
 {
@@ -115,7 +116,7 @@ namespace StructureMap.Testing.Graph
             GenericsPluginGraph genericsGraph = new GenericsPluginGraph();
             genericsGraph.AddFamily(family);
 
-            PluginFamily templatedFamily = genericsGraph.CreateTemplatedFamily(typeof (IGenericService<int>));
+            PluginFamily templatedFamily = genericsGraph.CreateTemplatedFamily(typeof (IGenericService<int>), new ProfileManager());
 
             Assert.IsNotNull(templatedFamily);
             Assert.AreEqual(typeof (IGenericService<int>), templatedFamily.PluginType);

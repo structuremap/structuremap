@@ -8,7 +8,6 @@ namespace StructureMap.Testing
 {
     public class ObjectMother
     {
-        private static InstanceDefaultManager _instanceDefaultManager;
         private static InstanceManager _instanceManager;
         private static PluginGraph _pluginGraph;
 
@@ -33,17 +32,6 @@ namespace StructureMap.Testing
             _pluginGraph = builder.Build();
 
             _instanceManager = new InstanceManager(_pluginGraph);
-            _instanceDefaultManager = _pluginGraph.DefaultManager;
-        }
-
-        public static InstanceDefaultManager GetInstanceDefaultManager()
-        {
-            return _instanceDefaultManager;
-        }
-
-        public static MachineOverride GetMachineOverride(string machineName)
-        {
-            return GetInstanceDefaultManager().GetMachineOverride(machineName);
         }
 
 
@@ -56,13 +44,6 @@ namespace StructureMap.Testing
         {
             PluginFamily family = GetPluginFamily(pluginType);
             return family.Plugins[concreteKey];
-        }
-
-
-        public static Profile GetProfile(string profileName)
-        {
-            InstanceDefaultManager defaultManager = GetInstanceDefaultManager();
-            return defaultManager.GetProfile(profileName);
         }
 
         public static PluginGraph GetPluginGraph()

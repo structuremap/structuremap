@@ -15,9 +15,13 @@ namespace StructureMap.Testing.Container
         [SetUp]
         public void SetUp()
         {
+            StructureMapConfiguration.ResetAll();
+            
+
             DataMother.WriteDocument("SampleConfig.xml");
             DataMother.WriteDocument("FullTesting.XML");
-            ObjectFactory.ResetDefaults();
+            
+            ObjectFactory.Reset();
         }
 
         #endregion

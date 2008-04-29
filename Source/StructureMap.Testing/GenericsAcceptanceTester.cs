@@ -1,7 +1,6 @@
 using System;
 using System.Reflection;
 using NUnit.Framework;
-using StructureMap.Configuration.Mementos;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.GenericWidgets;
@@ -93,8 +92,8 @@ namespace StructureMap.Testing
         public void CanEmitInstanceBuilderForATypeWithConstructorArguments()
         {
             PluginGraph graph = new PluginGraph();
-            PluginFamily family = graph.PluginFamilies.Add(typeof(ComplexType<int>));
-            family.Plugins.Add(typeof(ComplexType<int>), "complex");
+            PluginFamily family = graph.PluginFamilies.Add(typeof (ComplexType<int>));
+            family.Plugins.Add(typeof (ComplexType<int>), "complex");
 
             InstanceManager manager = new InstanceManager(graph);
 
@@ -145,25 +144,23 @@ namespace StructureMap.Testing
         [Test]
         public void GenericsTypeAndProfileOrMachine()
         {
-            string typeName = "StructureMap.Testing.GenericWidgets.IService`1";
-            Profile profile1 = new Profile("1");
-            profile1.AddOverride(typeName, "Default");
-
-            Profile profile2 = new Profile("2");
-            profile2.AddOverride(typeName, "Plugged");
-
-            PluginGraph pluginGraph = PluginGraph.BuildGraphFromAssembly(typeof (IService<>).Assembly);
+            PluginGraph pluginGraph = PluginGraph.BuildGraphFromAssembly(typeof(IService<>).Assembly);
+            pluginGraph.ProfileManager.SetDefault("1", typeof(IService<>),new ReferencedInstance("Default"));
+            pluginGraph.ProfileManager.SetDefault("2", typeof(IService<>),new ReferencedInstance("Plugged"));
+            
 
             InstanceManager manager = new InstanceManager(pluginGraph);
 
-            manager.SetDefaults(profile1);
-            Assert.IsInstanceOfType(typeof (Service<string>), manager.CreateInstance(typeof (IService<string>)));
+            IPlug<string> plug = manager.CreateInstance<IPlug<string>>();
 
-            manager.SetDefaults(profile2);
-            Assert.IsInstanceOfType(typeof (ServiceWithPlug<string>), manager.CreateInstance(typeof (IService<string>)));
+            manager.SetDefaultsToProfile("1");
+            Assert.IsInstanceOfType(typeof(Service<string>), manager.CreateInstance(typeof(IService<string>)));
 
-            manager.SetDefaults(profile1);
-            Assert.IsInstanceOfType(typeof (Service<string>), manager.CreateInstance(typeof (IService<string>)));
+            manager.SetDefaultsToProfile("2");
+            Assert.IsInstanceOfType(typeof(ServiceWithPlug<string>), manager.CreateInstance(typeof(IService<string>)));
+
+            manager.SetDefaultsToProfile("1");
+            Assert.IsInstanceOfType(typeof(Service<string>), manager.CreateInstance(typeof(IService<string>)));
         }
 
         [Test]

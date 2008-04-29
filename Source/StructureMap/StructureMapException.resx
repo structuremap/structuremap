@@ -187,7 +187,7 @@
     <value>Cannot "Stub" type {0} with an object of type {1}</value>
   </data>
   <data name="230" xml:space="preserve">
-    <value>Cannot call "FillDependencies" on an abstract or interface type.</value>
+    <value>Cannot call "FillDependencies" on type {0}.  Check that the type is concrete and has no primitive arguments</value>
   </data>
   <data name="231" xml:space="preserve">
     <value>Primitive Type arguments in the constructor!</value>
@@ -263,5 +263,8 @@
   </data>
   <data name="260" xml:space="preserve">
     <value>Malformed InstanceMemento {0} of PluginType {1}</value>
+  </data>
+  <data name="107" xml:space="preserve">
+    <value>Type named {0} cannot be resolved.  Make sure the type is defined in Assembly Qualified Name form</value>
   </data>
 </root>

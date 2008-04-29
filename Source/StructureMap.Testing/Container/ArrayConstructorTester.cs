@@ -22,17 +22,18 @@ namespace StructureMap.Testing.Container
         [Test]
         public void BuildDecisionWithRules()
         {
+            DataMother.WriteDocument("FullTesting.XML");
             DataMother.WriteDocument("Array.xml");
+
+            PluginGraph graph = DataMother.GetPluginGraph("ObjectMother.config");
+
             XmlMementoSource source = new XmlFileMementoSource("Array.xml", string.Empty, "Decision");
-
-            PluginGraph graph = ObjectMother.GetPluginGraph();
-
-            // Used to UnSeal
 
             PluginFamily family = graph.PluginFamilies.Add(typeof(Decision), string.Empty);
             family.AddMementoSource(source);            
 
             family.Plugins.Add(typeof (Decision), "Default");
+            
             graph.Seal();
 
             InstanceManager manager = new InstanceManager(graph);

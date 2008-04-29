@@ -16,11 +16,6 @@ namespace StructureMap
         Type PluginType { get; }
 
         /// <summary>
-        /// The InstanceKey of the default instance built by this IInstanceFactory
-        /// </summary>
-        string DefaultInstanceKey { get; }
-
-        /// <summary>
         /// Establishes a reference to the parent InstanceManager
         /// </summary>
         /// <param name="instanceManager"></param>
@@ -41,25 +36,6 @@ namespace StructureMap
         object GetInstance(IConfiguredInstance instance, IInstanceCreator instanceCreator);
 
         /// <summary>
-        /// Creates a new object instance of the default instance memento
-        /// </summary>
-        /// <returns></returns>
-        object GetInstance();
-
-        /// <summary>
-        /// Sets the default instance 
-        /// </summary>
-        /// <param name="InstanceKey"></param>
-        void SetDefault(string InstanceKey);
-
-        /// <summary>
-        /// Makes the InstanceMemento the basis of the default instance
-        /// </summary>
-        /// <param name="instance"></param>
-        void SetDefault(Instance instance);
-
-
-        /// <summary>
         /// Returns an IList of all of the configured instances
         /// </summary>
         /// <returns></returns>
@@ -67,7 +43,8 @@ namespace StructureMap
 
         void AddInstance(Instance instance);
         Instance AddType<T>();
-        Instance GetDefault();
+
         object ApplyInterception(object rawValue);
+        object Build(Instance instance);
     }
 }

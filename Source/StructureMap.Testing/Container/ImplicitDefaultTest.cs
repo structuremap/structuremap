@@ -7,20 +7,6 @@ namespace StructureMap.Testing.Container
     public class ImplicitDefaultTest
     {
         [Test]
-        public void CanSetTheDefaultInstanceKeyImplicitly()
-        {
-            InstanceFactory factory = ObjectMother.CreateInstanceFactory(
-                typeof (IGateway),
-                new string[] {"StructureMap.Testing.Widget3"});
-
-
-
-            DefaultGateway gateway = factory.GetInstance() as DefaultGateway;
-            Assert.IsNotNull(gateway);
-        }
-
-
-        [Test]
         public void CanSetTheDefaultInstanceKeyImplicitlyFromObjectFactory()
         {
             DefaultGateway gateway = ObjectFactory.GetInstance(typeof (IGateway)) as DefaultGateway;

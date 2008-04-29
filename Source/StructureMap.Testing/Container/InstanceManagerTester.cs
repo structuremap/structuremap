@@ -8,11 +8,12 @@ using StructureMap.Pipeline;
 using StructureMap.Source;
 using StructureMap.Testing.GenericWidgets;
 using StructureMap.Testing.Widget;
+using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Container
 {
     [TestFixture]
-    public class InstanceManagerTester
+    public class InstanceManagerTester : Registry
     {
         #region Setup/Teardown
 
@@ -169,15 +170,69 @@ namespace StructureMap.Testing.Container
             object o = _manager.CreateInstance(typeof (string));
         }
 
-        [Test]
-        public void PullsTheInstanceDefaultManagerFromPluginGraph()
-        {
-            Type serviceType = typeof (IService<>);
-            PluginGraph pluginGraph = PluginGraph.BuildGraphFromAssembly(serviceType.Assembly);
-            Assert.IsNotNull(pluginGraph.DefaultManager);
 
-            InstanceManager manager = new InstanceManager(pluginGraph);
-            Assert.AreSame(pluginGraph.DefaultManager, manager.DefaultManager);
+        private void assertColorIs(IInstanceManager manager, string color)
+        {
+            ColorService rule = (ColorService) manager.CreateInstance<IService>();
+            Assert.AreEqual(color, rule.Color);
         }
+
+        [Test]
+        public void SetDefaultInstanceByString()
+        {
+            Registry registry = new Registry();
+            registry.ForRequestedType<IService>()
+                .AddInstance(Instance<ColorService>().WithName("Red").WithProperty("color").EqualTo("Red"))
+                .AddInstance(Instance<ColorService>().WithName("Blue").WithProperty("color").EqualTo("Blue"))
+                .AddInstance(Instance<ColorService>().WithName("Green").WithProperty("color").EqualTo("Green"));
+
+            IInstanceManager manager = registry.BuildInstanceManager();
+            manager.SetDefault(typeof(IService), "Red");
+            assertColorIs(manager, "Red");
+
+            manager.SetDefault(typeof(IService), "Green");
+            assertColorIs(manager, "Green");
+
+            manager.SetDefault(typeof(IService), "Blue");
+            assertColorIs(manager, "Blue");
+        }
+
+        [Test]
+        public void Can_set_profile_name_and_reset_defaults()
+        {
+            Registry registry = new Registry();
+            registry.ForRequestedType<IService>()
+                .TheDefaultIs(Instance<ColorService>().WithName("Orange").WithProperty("color").EqualTo("Orange"))
+                .AddInstance(Instance<ColorService>().WithName("Red").WithProperty("color").EqualTo("Red"))
+                .AddInstance(Instance<ColorService>().WithName("Blue").WithProperty("color").EqualTo("Blue"))
+                .AddInstance(Instance<ColorService>().WithName("Green").WithProperty("color").EqualTo("Green"));
+
+            registry.CreateProfile("Red").For<IService>().UseNamedInstance("Red");
+            registry.CreateProfile("Blue").For<IService>().UseNamedInstance("Blue");
+
+            IInstanceManager manager = registry.BuildInstanceManager();
+
+            assertColorIs(manager, "Orange");
+
+            manager.SetDefaultsToProfile("Red");
+            assertColorIs(manager, "Red");
+
+            manager.SetDefaultsToProfile("Blue");
+            assertColorIs(manager, "Blue");
+            
+            manager.SetDefaultsToProfile(string.Empty);
+            assertColorIs(manager, "Orange");
+
+
+
+        }
+
+        [Test, ExpectedException(typeof(StructureMapException))]
+        public void TryToGetDefaultInstanceWithNoInstance()
+        {
+            InstanceManager manager = new InstanceManager(new PluginGraph());
+            manager.CreateInstance<IService>();
+        }
+
     }
 }

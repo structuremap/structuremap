@@ -192,9 +192,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Configuration\InlineInstanceDefinitionInProfileAndMachineNodesTester.cs" />
-    <Compile Include="Configuration\NormalGraphBuilderTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Configuration\ProfileBuilderTester.cs" />
     <Compile Include="Configuration\ShortcuttedInstanceNodeTester.cs" />
     <Compile Include="Container\ArrayConstructorTester.cs">
       <SubType>Code</SubType>
@@ -316,12 +314,6 @@
     <Compile Include="Graph\InstanceTarget.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Graph\OverrideGraphTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Graph\OverrideTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Graph\ParameterInfoCollection.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -351,6 +343,8 @@
     <Compile Include="Pipeline\DefaultInstanceTester.cs" />
     <Compile Include="Pipeline\InstanceTester.cs" />
     <Compile Include="Pipeline\LiteralInstanceTester.cs" />
+    <Compile Include="Pipeline\ProfileManagerTester.cs" />
+    <Compile Include="Pipeline\ProfileTester.cs" />
     <Compile Include="Pipeline\PrototypeInstanceTester.cs" />
     <Compile Include="Pipeline\ReferencedInstanceTester.cs" />
     <Compile Include="Pipeline\StubInstanceCreator.cs" />

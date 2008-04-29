@@ -5,20 +5,20 @@
 	<Assembly Name="StructureMap.Testing.Widget4" Deploy="Server"/>
 	
 	<Profile Name="Blue">
-		<Override Type="StructureMap.Testing.Widget.IWidget" DefaultKey="Blue"/>
-		<Override Type="StructureMap.Testing.Widget.Rule" DefaultKey="Blue"/>
-		<Override Type="StructureMap.Testing.Widget4.IStrategy" DefaultKey="Blue"/>
+		<Override Type="StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget" DefaultKey="Blue"/>
+		<Override Type="StructureMap.Testing.Widget.Rule,StructureMap.Testing.Widget" DefaultKey="Blue"/>
+		<Override Type="StructureMap.Testing.Widget4.IStrategy,StructureMap.Testing.Widget4" DefaultKey="Blue"/>
 	</Profile>
 
 	<Profile Name="Green">
-		<Override Type="StructureMap.Testing.Widget.IWidget" DefaultKey="Green"/>
-		<Override Type="StructureMap.Testing.Widget.Rule" DefaultKey="Green"/>
+		<Override Type="StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget" DefaultKey="Green"/>
+		<Override Type="StructureMap.Testing.Widget.Rule,StructureMap.Testing.Widget" DefaultKey="Green"/>
 	</Profile>	
 
 	<Machine Name="GREEN-BOX" Profile="Green"/>
 	
 	<Machine Name="SERVER">
-		<Override Type="StructureMap.Testing.Widget.IWidget" DefaultKey="Orange"/>
+		<Override Type="StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget" DefaultKey="Orange"/>
 	</Machine>
 	
 			
