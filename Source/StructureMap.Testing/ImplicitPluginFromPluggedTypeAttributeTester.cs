@@ -42,7 +42,7 @@ namespace StructureMap.Testing
             PluginFamily family = builder.PluginGraph.FindFamily(thePluginType);
             family.DefaultInstanceKey = _memento.InstanceKey;
 
-            builder.RegisterMemento(thePluginType, _memento);
+            family.AddInstance(_memento);
 
             PluginGraph graph = builder.CreatePluginGraph();
             InstanceManager manager = new InstanceManager(graph);

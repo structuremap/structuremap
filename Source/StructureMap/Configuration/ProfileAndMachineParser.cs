@@ -85,12 +85,15 @@ namespace StructureMap.Configuration
             memento.InstanceKey = key;
 
             TypePath familyPath = new TypePath(fullName);
-            // TODO:  failure point
-            Type pluginType = familyPath.FindType();
 
-            _graphBuilder.RegisterMemento(pluginType, memento);
+            _graphBuilder.ConfigureFamily(familyPath, delegate(PluginFamily family)
+                                                          {
+                                                              family.AddInstance(memento);
+                                                              function(fullName, key);
+                                                          });
 
-            function(fullName, key);
+
+            
         }
 
         private XmlNodeList findNodes(string nodeName)

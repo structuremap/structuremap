@@ -2,6 +2,8 @@ using System;
 using System.Xml;
 using StructureMap.Attributes;
 using StructureMap.Graph;
+using StructureMap.Interceptors;
+using StructureMap.Pipeline;
 using StructureMap.Source;
 
 namespace StructureMap.Configuration
@@ -29,11 +31,9 @@ namespace StructureMap.Configuration
                                                        InstanceScope scope = findScope(familyElement);
                                                        family.SetScopeTo(scope);
 
-                                                       // TODO:  Very temporary
-                                                       Type pluginType = family.PluginType;
-                                                       attachMementoSource(pluginType, familyElement);
-                                                       attachPlugins(pluginType, familyElement);
-                                                       attachInterceptors(pluginType, familyElement);
+                                                       attachMementoSource(family, familyElement);
+                                                       attachPlugins(family, familyElement);
+                                                       attachInterceptors(family, familyElement);
                                                    });
         }
 
@@ -63,21 +63,19 @@ namespace StructureMap.Configuration
 
                                              family.DefaultInstanceKey = name;
 
-                                             _builder.RegisterMemento(pluginType, memento);
+                                             family.AddInstance(memento);
                                          });
         }
 
         public void ParseInstanceElement(XmlElement element)
         {
             TypePath pluginTypePath = new TypePath(element.GetAttribute(XmlConstants.PLUGIN_TYPE));
-            // TODO:  gotta throw if type cannot be found
-            Type pluginType = pluginTypePath.FindType();
-
-            InstanceScope scope = findScope(element);
-
-            InstanceMemento memento = _mementoCreator.CreateMemento(element);
-
-            _builder.RegisterMemento(pluginType, memento);
+            
+            _builder.ConfigureFamily(pluginTypePath, delegate(PluginFamily family)
+                                                         {
+                                                             InstanceMemento memento = _mementoCreator.CreateMemento(element);
+                                                             family.AddInstance(memento);
+                                                         });
         }
 
         private InstanceScope findScope(XmlElement familyElement)
@@ -94,17 +92,24 @@ namespace StructureMap.Configuration
         }
 
         // TODO:  change to many
-        private void attachMementoSource(Type pluginType, XmlElement familyElement)
+        private void attachMementoSource(PluginFamily family, XmlElement familyElement)
         {
             XmlNode sourceNode = familyElement[XmlConstants.MEMENTO_SOURCE_NODE];
             if (sourceNode != null)
             {
                 InstanceMemento sourceMemento = new XmlAttributeInstanceMemento(sourceNode);
-                _builder.AttachSource(pluginType, sourceMemento);
+
+                string context = "MementoSource for " + TypePath.GetAssemblyQualifiedName(family.PluginType);
+                _builder.WithSystemObject<MementoSource>(sourceMemento, context, delegate (MementoSource source)
+                                                                                     {
+                                                                                         family.AddMementoSource(source);
+                                                                                     });
+
+
             }
         }
 
-        private void attachPlugins(Type pluginType, XmlElement familyElement)
+        private void attachPlugins(PluginFamily family, XmlElement familyElement)
         {
             // TODO:  3.5 lambda cleanup
             XmlNodeList pluginNodes = familyElement.SelectNodes(XmlConstants.PLUGIN_NODE);
@@ -113,18 +118,26 @@ namespace StructureMap.Configuration
                 TypePath pluginPath = TypePath.CreateFromXmlNode(pluginElement);
                 string concreteKey = pluginElement.GetAttribute(XmlConstants.CONCRETE_KEY_ATTRIBUTE);
 
-                _builder.AddPlugin(pluginType, pluginPath, concreteKey);
+                string context = "creating a Plugin for " + family.PluginTypeName;
+                _builder.WithType(pluginPath, context, delegate(Type pluggedType)
+                                                           {
+                                                               Plugin plugin =
+                                                                   Plugin.CreateExplicitPlugin(pluggedType, concreteKey, "");
+                                                               family.Plugins.Add(plugin);
 
-                foreach (XmlElement setterElement in pluginElement.ChildNodes)
-                {
-                    string setterName = setterElement.GetAttribute("Name");
-                    _builder.AddSetter(pluginType, concreteKey, setterName);
-                }
+                                                               foreach (XmlElement setterElement in pluginElement.ChildNodes)
+                                                               {
+                                                                   string setterName = setterElement.GetAttribute("Name");
+                                                                   plugin.Setters.Add(setterName);
+                                                               }
+                                                           });
+
+
             }
         }
 
         // TODO:  3.5 lambda cleanup
-        private void attachInterceptors(Type pluginType, XmlElement familyElement)
+        private void attachInterceptors(PluginFamily family, XmlElement familyElement)
         {
             XmlNode interceptorChainNode = familyElement[XmlConstants.INTERCEPTORS_NODE];
             if (interceptorChainNode == null)
@@ -132,10 +145,17 @@ namespace StructureMap.Configuration
                 return;
             }
 
+            string context = "Creating an InstanceInterceptor for " + TypePath.GetAssemblyQualifiedName(family.PluginType);
             foreach (XmlNode interceptorNode in interceptorChainNode.ChildNodes)
             {
                 XmlAttributeInstanceMemento interceptorMemento = new XmlAttributeInstanceMemento(interceptorNode);
-                _builder.AddInterceptor(pluginType, interceptorMemento);
+
+
+                _builder.WithSystemObject<IInstanceInterceptor>(interceptorMemento, context, delegate(IInstanceInterceptor interceptor)
+                                                                                                 {
+                                                                                                     family.AddInterceptor(interceptor);
+                                                                                                 });
+                
             }
         }
     }

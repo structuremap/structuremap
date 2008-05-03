@@ -128,10 +128,12 @@ namespace StructureMap.Configuration
             {
                 TypePath typePath = TypePath.CreateFromXmlNode(familyElement);
                 
-                // TODO:  Edge case if the PluginType cannot be found
-                Type pluginType = typePath.FindType();
+                builder.ConfigureFamily(typePath, delegate(PluginFamily family)
+                                                      {
+                                                          attachInstances(family, familyElement, builder);
+                                                      });
 
-                attachInstances(pluginType, familyElement, builder);
+                
             }
         }
 
@@ -176,7 +178,7 @@ namespace StructureMap.Configuration
         }
 
 
-        private void attachInstances(Type pluginType, XmlElement familyElement, IGraphBuilder builder)
+        private void attachInstances(PluginFamily family, XmlElement familyElement, IGraphBuilder builder)
         {
             foreach (XmlNode instanceNode in familyElement.ChildNodes)
             {
@@ -186,7 +188,7 @@ namespace StructureMap.Configuration
                 }
 
                 InstanceMemento memento = _mementoCreator.CreateMemento(instanceNode);
-                builder.RegisterMemento(pluginType, memento);
+                family.AddInstance(memento);
             }
         }
 

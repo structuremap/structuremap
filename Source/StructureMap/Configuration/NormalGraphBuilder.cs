@@ -64,89 +64,8 @@ namespace StructureMap.Configuration
 
         public void StartFamilies()
         {
+            // TODO:  is this a problem here?
             _systemGraph.Seal();
-            _systemInstanceManager = new InstanceManager(_systemGraph);
-        }
-
-        // TODO:  Cleanup
-        //public void AddPluginFamily(Type pluginType, string defaultKey, InstanceScope scope)
-        //{
-        //    PluginFamily family = _pluginGraph.FindFamily(pluginType);
-
-        //    // Xml configuration wins
-        //    family.DefaultInstanceKey = defaultKey;
-        //    family.SetScopeTo(scope);
-        //}
-
-        public virtual void AttachSource(Type pluginType, InstanceMemento sourceMemento)
-        {
-            try
-            {
-                MementoSource source = (MementoSource) buildSystemObject(typeof (MementoSource), sourceMemento);
-                AttachSource(pluginType, source);
-            }
-            catch (Exception ex)
-            {
-                // TODO:  put error in PluginGraph
-                throw new StructureMapException(120, ex, TypePath.GetAssemblyQualifiedName(pluginType));
-            }
-        }
-
-        public void AttachSource(Type pluginType, MementoSource source)
-        {
-            PluginFamily family = _pluginGraph.PluginFamilies[pluginType];
-            family.AddMementoSource(source);
-        }
-
-        public Plugin AddPlugin(Type pluginType, TypePath pluginPath, string concreteKey)
-        {
-            // TODO:  Make this go through PluginGraph.FindFamily()
-            PluginFamily family = _pluginGraph.PluginFamilies[pluginType];
-            if (family == null)
-            {
-                string message =
-                    string.Format("Could not find a PluginFamily for {0}", pluginType.AssemblyQualifiedName);
-
-                // TODO:  put error in PluginGraph
-                throw new ApplicationException(message);
-            }
-
-            Plugin plugin = new Plugin(pluginPath, concreteKey);
-            family.Plugins.Add(plugin);
-
-            return plugin;
-        }
-
-        public SetterProperty AddSetter(Type pluginType, string concreteKey, string setterName)
-        {
-            // TODO:  Make this go through PluginGraph.FindFamily()
-            PluginFamily family = _pluginGraph.PluginFamilies[pluginType];
-            Plugin plugin = family.Plugins[concreteKey];
-            return plugin.Setters.Add(setterName);
-        }
-
-        public virtual void AddInterceptor(Type pluginType, InstanceMemento interceptorMemento)
-        {
-            PluginFamily family = _pluginGraph.PluginFamilies[pluginType];
-            try
-            {
-                IInstanceInterceptor interceptor =
-                    (IInstanceInterceptor)
-                    buildSystemObject(typeof (IInstanceInterceptor), interceptorMemento);
-
-                family.AddInterceptor(interceptor);
-            }
-            catch (Exception ex)
-            {
-                // TODO:  put error in PluginGraph
-                throw new StructureMapException(121, ex, TypePath.GetAssemblyQualifiedName(pluginType));
-            }
-        }
-
-        public void RegisterMemento(Type pluginType, InstanceMemento memento)
-        {
-            PluginFamily family = _pluginGraph.FindFamily(pluginType);
-            family.AddInstance(memento);
         }
 
         public IProfileBuilder GetProfileBuilder()
@@ -173,7 +92,41 @@ namespace StructureMap.Configuration
         private object buildSystemObject(Type type, InstanceMemento memento)
         {
             Instance instance = memento.ReadInstance(_systemGraph, type);
+
+            if (_systemInstanceManager == null)
+            {
+                _systemInstanceManager = new InstanceManager(_systemGraph);
+            }
+
             return _systemInstanceManager.CreateInstance(type, instance);
+        }
+
+
+        public void WithSystemObject<T>(InstanceMemento memento, string context, Action<T> action)
+        {
+            try
+            {
+                T systemObject = (T) buildSystemObject(typeof (T), memento);
+                action(systemObject);
+            }
+            catch (Exception ex)
+            {
+                _pluginGraph.Log.RegisterError(130, ex, context);
+            }
+        }
+
+
+        public void WithType(TypePath path, string context, Action<Type> action)
+        {
+            try
+            {
+                Type type = path.FindType();
+                action(type);
+            }
+            catch (Exception ex)
+            {
+                _pluginGraph.Log.RegisterError(131, ex, path.AssemblyQualifiedName, context);
+            }
         }
     }
 }

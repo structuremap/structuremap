@@ -267,4 +267,10 @@
   <data name="107" xml:space="preserve">
     <value>Type named {0} cannot be resolved.  Make sure the type is defined in Assembly Qualified Name form</value>
   </data>
+  <data name="130" xml:space="preserve">
+    <value>System object for {0} could not be created</value>
+  </data>
+  <data name="131" xml:space="preserve">
+    <value>Requested type {0} could not be found while {1}</value>
+  </data>
 </root>
