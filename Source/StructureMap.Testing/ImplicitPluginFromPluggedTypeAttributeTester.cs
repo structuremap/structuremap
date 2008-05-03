@@ -39,7 +39,8 @@ namespace StructureMap.Testing
         {
             NormalGraphBuilder builder = new NormalGraphBuilder(new Registry[0]);
             Type thePluginType = typeof (IGateway);
-            builder.AddPluginFamily(thePluginType, _memento.InstanceKey, InstanceScope.PerRequest);
+            PluginFamily family = builder.PluginGraph.FindFamily(thePluginType);
+            family.DefaultInstanceKey = _memento.InstanceKey;
 
             builder.RegisterMemento(thePluginType, _memento);
 

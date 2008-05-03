@@ -21,29 +21,20 @@ namespace StructureMap.Configuration
         public void ParseFamily(XmlElement familyElement)
         {
             TypePath typePath = TypePath.CreateFromXmlNode(familyElement);
+            _builder.ConfigureFamily(typePath, delegate(PluginFamily family)
+                                                   {
+                                                       family.DefaultInstanceKey =
+                                                           familyElement.GetAttribute(XmlConstants.DEFAULT_KEY_ATTRIBUTE);
 
-            // TODO:  throw error if PluginType cannot be found.  Right here!
-            Type pluginType;
-            try
-            {
-                pluginType = typePath.FindType();
-            }
-            catch (Exception ex)
-            {
-                // TODO:  put error in PluginGraph
-                throw new StructureMapException(103, ex, typePath.ClassName, typePath.AssemblyName);
-            }
+                                                       InstanceScope scope = findScope(familyElement);
+                                                       family.SetScopeTo(scope);
 
-
-            string defaultKey = familyElement.GetAttribute(XmlConstants.DEFAULT_KEY_ATTRIBUTE);
-
-            InstanceScope scope = findScope(familyElement);
-
-            _builder.AddPluginFamily(pluginType, defaultKey, scope);
-
-            attachMementoSource(pluginType, familyElement);
-            attachPlugins(pluginType, familyElement);
-            attachInterceptors(pluginType, familyElement);
+                                                       // TODO:  Very temporary
+                                                       Type pluginType = family.PluginType;
+                                                       attachMementoSource(pluginType, familyElement);
+                                                       attachPlugins(pluginType, familyElement);
+                                                       attachInterceptors(pluginType, familyElement);
+                                                   });
         }
 
         public void ParseDefaultElement(XmlElement element)
@@ -51,21 +42,29 @@ namespace StructureMap.Configuration
             TypePath pluginTypePath = new TypePath(element.GetAttribute(XmlConstants.PLUGIN_TYPE));
             // TODO:  Gotta throw exception if the type cannot be found
 
-            Type pluginType = pluginTypePath.FindType();
 
+            _builder.ConfigureFamily(pluginTypePath,
+                                     delegate(PluginFamily family)
+                                         {
+                                             // TODO:  there's a little duplication here
+                                             InstanceScope scope = findScope(element);
+                                             family.SetScopeTo(scope);
 
-            InstanceScope scope = findScope(element);
-            string name = element.GetAttribute(XmlConstants.NAME);
-            if (string.IsNullOrEmpty(name))
-            {
-                name = "DefaultInstanceOf" + pluginTypePath.AssemblyQualifiedName;
-            }
+                                             Type pluginType = family.PluginType;
 
-            InstanceMemento memento = _mementoCreator.CreateMemento(element);
-            memento.InstanceKey = name;
+                                             string name = element.GetAttribute(XmlConstants.NAME);
+                                             if (string.IsNullOrEmpty(name))
+                                             {
+                                                 name = "DefaultInstanceOf" + pluginTypePath.AssemblyQualifiedName;
+                                             }
 
-            _builder.AddPluginFamily(pluginType, name, scope);
-            _builder.RegisterMemento(pluginType, memento);
+                                             InstanceMemento memento = _mementoCreator.CreateMemento(element);
+                                             memento.InstanceKey = name;
+
+                                             family.DefaultInstanceKey = name;
+
+                                             _builder.RegisterMemento(pluginType, memento);
+                                         });
         }
 
         public void ParseInstanceElement(XmlElement element)

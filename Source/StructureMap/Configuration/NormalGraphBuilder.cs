@@ -68,14 +68,15 @@ namespace StructureMap.Configuration
             _systemInstanceManager = new InstanceManager(_systemGraph);
         }
 
-        public void AddPluginFamily(Type pluginType, string defaultKey, InstanceScope scope)
-        {
-            PluginFamily family = _pluginGraph.FindFamily(pluginType);
+        // TODO:  Cleanup
+        //public void AddPluginFamily(Type pluginType, string defaultKey, InstanceScope scope)
+        //{
+        //    PluginFamily family = _pluginGraph.FindFamily(pluginType);
 
-            // Xml configuration wins
-            family.DefaultInstanceKey = defaultKey;
-            family.SetScopeTo(scope);
-        }
+        //    // Xml configuration wins
+        //    family.DefaultInstanceKey = defaultKey;
+        //    family.SetScopeTo(scope);
+        //}
 
         public virtual void AttachSource(Type pluginType, InstanceMemento sourceMemento)
         {

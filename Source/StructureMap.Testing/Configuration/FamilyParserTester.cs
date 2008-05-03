@@ -4,7 +4,9 @@ using NMock;
 using NUnit.Framework;
 using StructureMap.Attributes;
 using StructureMap.Configuration;
+using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
+using StructureMap.Pipeline;
 using StructureMap.Source;
 using StructureMap.Testing.Widget3;
 
@@ -18,9 +20,11 @@ namespace StructureMap.Testing.Configuration
         [SetUp]
         public void SetUp()
         {
-            _builderMock = new DynamicMock(typeof (IGraphBuilder));
+            NormalGraphBuilder builder = new NormalGraphBuilder(new Registry[0]);
+            _graph = builder.PluginGraph;
+
             _parser =
-                new FamilyParser((IGraphBuilder) _builderMock.MockInstance,
+                new FamilyParser(builder,
                                  new XmlMementoCreator(XmlMementoStyle.NodeNormalized, XmlConstants.TYPE_ATTRIBUTE,
                                                        XmlConstants.ATTRIBUTE_STYLE));
 
@@ -35,21 +39,25 @@ namespace StructureMap.Testing.Configuration
 
         #endregion
 
-        private DynamicMock _builderMock;
         private FamilyParser _parser;
         private XmlDocument _document;
         private XmlElement _familyElement;
         private Type thePluginType;
+        private PluginGraph _graph;
+
+        private void assertThatTheFamilyPolicyIs<T>()
+        {
+            _parser.ParseFamily(_familyElement);
+
+            PluginFamily family = _graph.FindFamily(thePluginType);
+            Assert.IsInstanceOfType(typeof(T), family.Policy);
+        }
 
 
         [Test]
         public void ScopeIsBlank()
         {
-            _builderMock.Expect("AddPluginFamily", thePluginType, string.Empty, InstanceScope.PerRequest);
-
-            _parser.ParseFamily(_familyElement);
-
-            _builderMock.Verify();
+            assertThatTheFamilyPolicyIs<BuildPolicy>();
         }
 
 
@@ -57,11 +65,7 @@ namespace StructureMap.Testing.Configuration
         public void ScopeIsBlank2()
         {
             _familyElement.SetAttribute(XmlConstants.SCOPE_ATTRIBUTE, "");
-            _builderMock.Expect("AddPluginFamily", thePluginType, string.Empty, InstanceScope.PerRequest);
-
-            _parser.ParseFamily(_familyElement);
-
-            _builderMock.Verify();
+            assertThatTheFamilyPolicyIs<BuildPolicy>();
         }
 
 
@@ -69,11 +73,7 @@ namespace StructureMap.Testing.Configuration
         public void ScopeIsSingleton()
         {
             _familyElement.SetAttribute(XmlConstants.SCOPE_ATTRIBUTE, InstanceScope.Singleton.ToString());
-            _builderMock.Expect("AddPluginFamily", thePluginType, string.Empty, InstanceScope.Singleton);
-
-            _parser.ParseFamily(_familyElement);
-
-            _builderMock.Verify();
+            assertThatTheFamilyPolicyIs<SingletonPolicy>();
         }
 
 
@@ -81,11 +81,7 @@ namespace StructureMap.Testing.Configuration
         public void ScopeIsThreadLocal()
         {
             _familyElement.SetAttribute(XmlConstants.SCOPE_ATTRIBUTE, InstanceScope.ThreadLocal.ToString());
-            _builderMock.Expect("AddPluginFamily", thePluginType, string.Empty, InstanceScope.ThreadLocal);
-
-            _parser.ParseFamily(_familyElement);
-
-            _builderMock.Verify();
+            assertThatTheFamilyPolicyIs<ThreadLocalStoragePolicy>();
         }
     }
 }
