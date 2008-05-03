@@ -7,6 +7,9 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.Configuration
 {
+    // TODO:  Kill in 3.5
+    public delegate void Action<T>(T subject);
+
     public class NormalGraphBuilder : IGraphBuilder
     {
         private readonly PluginGraph _pluginGraph;
@@ -148,6 +151,20 @@ namespace StructureMap.Configuration
         public IProfileBuilder GetProfileBuilder()
         {
             return new ProfileBuilder(_pluginGraph);
+        }
+
+        public void ConfigureFamily(TypePath pluginTypePath, Action<PluginFamily> action)
+        {
+            try
+            {
+                Type pluginType = pluginTypePath.FindType();
+                PluginFamily family = _pluginGraph.FindFamily(pluginType);
+                action(family);
+            }
+            catch (Exception ex)
+            {
+                _pluginGraph.Log.RegisterError(103, ex, pluginTypePath.ClassName, pluginTypePath.AssemblyName);
+            }
         }
 
         #endregion

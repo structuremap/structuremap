@@ -24,15 +24,20 @@ namespace StructureMap.Configuration
         void FinishFamilies();
         PluginGraph CreatePluginGraph();
 
+
+        // All of these need to DIE!
         void AddPluginFamily(Type pluginType, string defaultKey, InstanceScope scope);
         void AttachSource(Type pluginType, InstanceMemento sourceMemento);
         void AttachSource(Type pluginType, MementoSource source);
         Plugin AddPlugin(Type pluginType, TypePath pluginPath, string concreteKey);
         SetterProperty AddSetter(Type pluginType, string concreteKey, string setterName);
         void AddInterceptor(Type pluginType, InstanceMemento interceptorMemento);
-
         void RegisterMemento(Type pluginType, InstanceMemento memento);
 
+
+
         IProfileBuilder GetProfileBuilder();
+
+        void ConfigureFamily(TypePath pluginTypePath, Action<PluginFamily> action);
     }
 }

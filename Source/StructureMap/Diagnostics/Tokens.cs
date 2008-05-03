@@ -33,6 +33,13 @@ namespace StructureMap.Diagnostics
             addError(error);
         }
 
+        public void RegisterError(int code, Exception ex, params object[] args)
+        {
+            Error error = new Error(code, ex, args);
+            addError(error);
+        }
+
+
         private void addError(Error error)
         {
             error.Source = _currentSource;
@@ -52,6 +59,19 @@ namespace StructureMap.Diagnostics
 
                 throw new ApplicationException(msg);
             }
+        }
+
+        public void AssertHasError(int errorCode)
+        {
+            foreach (Error error in _errors)
+            {
+                if (error.Code == errorCode)
+                {
+                    return;
+                }
+            }
+
+            throw new ApplicationException("No error with code " + errorCode);
         }
     }
 
@@ -211,6 +231,18 @@ namespace StructureMap.Diagnostics
             if (template == null) template = string.Empty;
 
             _message = string.Format(template, args);
+        }
+
+        public Error(int errorCode, Exception ex, params object[] args) : this(errorCode, args)
+        {
+            _message += "\n\n" + ex.ToString();
+            _stackTrace = ex.StackTrace;
+        }
+
+
+        public int Code
+        {
+            get { return _code; }
         }
 
         public Error(StructureMapException exception)
