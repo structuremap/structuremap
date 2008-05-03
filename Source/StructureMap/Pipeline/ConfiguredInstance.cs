@@ -136,7 +136,7 @@ namespace StructureMap.Pipeline
 
         public void Read(InstanceMemento memento, PluginGraph graph, Type pluginType)
         {
-            PluginFamily family = graph.LocateOrCreateFamilyForType(pluginType);
+            PluginFamily family = graph.FindFamily(pluginType);
             Plugin plugin = memento.FindPlugin(family);
 
 

@@ -422,14 +422,23 @@ namespace StructureMap.Graph
 
         public void VisitArguments(IPluginArgumentVisitor visitor)
         {
-            foreach (ParameterInfo parameter in GetConstructor().GetParameters())
-            {
-                visitMember(parameter.ParameterType, parameter.Name, visitor);
-            }
+            VisitConstructorArguments(visitor);
+            VisitSetterArguments(visitor);
+        }
 
+        private void VisitSetterArguments(IPluginArgumentVisitor visitor)
+        {
             foreach (SetterProperty setter in _setters)
             {
                 visitMember(setter.Property.PropertyType, setter.Property.Name, visitor);
+            }
+        }
+
+        private void VisitConstructorArguments(IPluginArgumentVisitor visitor)
+        {
+            foreach (ParameterInfo parameter in GetConstructor().GetParameters())
+            {
+                visitMember(parameter.ParameterType, parameter.Name, visitor);
             }
         }
 

@@ -75,7 +75,7 @@ namespace StructureMap.Configuration.DSL.Expressions
             _registry.addExpression(delegate(PluginGraph pluginGraph)
                                         {
                                             PluginFamily family =
-                                                pluginGraph.LocateOrCreateFamilyForType(typeof (PLUGINTYPE));
+                                                pluginGraph.FindFamily(typeof (PLUGINTYPE));
                                             family.CanUseUnMarkedPlugins = true;
                                         });
 

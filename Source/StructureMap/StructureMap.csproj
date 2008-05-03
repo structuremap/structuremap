@@ -117,6 +117,7 @@
     </Compile>
     <Compile Include="Configuration\ProfileBuilder.cs" />
     <Compile Include="Diagnostics\Tokens.cs" />
+    <Compile Include="Emitting\ConstructorEmitter.cs" />
     <Compile Include="InstanceBuilderList.cs" />
     <Compile Include="InstanceFamily.cs" />
     <Compile Include="Pipeline\BuildStrategies.cs" />
@@ -157,69 +158,6 @@
     <Compile Include="Attributes\ValidationMethodAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Caching\CacheItem.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Caching\CacheManager.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Caching\ClearEventDispatcher.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Caching\CloneCacheItem.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Caching\CloneStorageStrategy.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Caching\EagerInstanceCache.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Caching\EventDispatcher.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Caching\Expirations\AbsoluteTimeExpirationPolicy.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Caching\Expirations\SlidingTimeExpirationPolicy.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Caching\FileModificationWatcher.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Caching\ICacheItem.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Caching\IExpirationPolicy.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Caching\IManagedCache.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Caching\IStorageStrategy.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Caching\IValueSource.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Caching\LazyCache.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Caching\PruneEventDispatcher.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Caching\SerializationCacheItem.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Caching\SerializationStorageStrategy.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Caching\SharedCacheItem.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Caching\SharedStorageStrategy.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Configuration\ConfigurationConstants.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -244,9 +182,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Configuration\NormalGraphBuilder.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Configuration\Problem.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Configuration\ProfileAndMachineParser.cs" />
@@ -360,9 +295,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ObjectFactory.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ObjectFactoryCacheCallback.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="PluginGraphBuilder.cs">

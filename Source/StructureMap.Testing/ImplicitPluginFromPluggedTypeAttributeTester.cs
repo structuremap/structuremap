@@ -38,10 +38,10 @@ namespace StructureMap.Testing
         public void CanBuildTheInstance()
         {
             NormalGraphBuilder builder = new NormalGraphBuilder(new Registry[0]);
-            TypePath pluginTypePath = new TypePath(typeof (IGateway));
-            builder.AddPluginFamily(pluginTypePath, _memento.InstanceKey, InstanceScope.PerRequest);
+            Type thePluginType = typeof (IGateway);
+            builder.AddPluginFamily(thePluginType, _memento.InstanceKey, InstanceScope.PerRequest);
 
-            builder.RegisterMemento(pluginTypePath, _memento);
+            builder.RegisterMemento(thePluginType, _memento);
 
             PluginGraph graph = builder.CreatePluginGraph();
             InstanceManager manager = new InstanceManager(graph);

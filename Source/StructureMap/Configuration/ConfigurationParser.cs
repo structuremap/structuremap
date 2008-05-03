@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using StructureMap.Graph;
@@ -14,15 +15,15 @@ namespace StructureMap.Configuration
         public static ConfigurationParser[] GetParsers(XmlDocument document, string includePath)
         {
             XmlElement node = document.DocumentElement;
-
             return GetParsers(node, includePath);
         }
 
+        // TODO -- Clean up.  Maybe use some Lambda magic with .Net 3.5?
         public static ConfigurationParser[] GetParsers(XmlNode node, string includePath)
         {
             string folder = string.IsNullOrEmpty(includePath) ? string.Empty : Path.GetDirectoryName(includePath);
 
-            ArrayList list = new ArrayList();
+            List<ConfigurationParser> list = new List<ConfigurationParser>();
 
             list.Add(new ConfigurationParser(node));
 
@@ -38,6 +39,7 @@ namespace StructureMap.Configuration
 
                     if (fileName == string.Empty)
                     {
+                        // TODO: get rid of throw, put on PluginGraph here
                         throw new ApplicationException("The File attribute on the Include node is required");
                     }
 
@@ -46,6 +48,7 @@ namespace StructureMap.Configuration
                         includedPath = Path.Combine(folder, fileName);
                         includedDoc.Load(includedPath);
 
+                        // TODO: get rid of throw, put on PluginGraph here
                         ConfigurationParser parser = new ConfigurationParser(includedDoc.DocumentElement);
                         list.Add(parser);
                     }
@@ -57,10 +60,11 @@ namespace StructureMap.Configuration
             }
             catch (Exception ex)
             {
+                // TODO: get rid of throw, put on PluginGraph here
                 throw new StructureMapException(100, includedPath, ex);
             }
 
-            return (ConfigurationParser[]) list.ToArray(typeof (ConfigurationParser));
+            return list.ToArray();
         }
 
 
@@ -81,6 +85,8 @@ namespace StructureMap.Configuration
         public ConfigurationParser(XmlNode structureMapNode)
         {
             _structureMapNode = structureMapNode;
+            
+            // TODO:  3.5 cleanup with extension method
             XmlMementoStyle mementoStyle = XmlMementoStyle.NodeNormalized;
 
 
@@ -121,7 +127,11 @@ namespace StructureMap.Configuration
             foreach (XmlElement familyElement in familyNodes)
             {
                 TypePath typePath = TypePath.CreateFromXmlNode(familyElement);
-                attachInstances(typePath, familyElement, builder);
+                
+                // TODO:  Edge case if the PluginType cannot be found
+                Type pluginType = typePath.FindType();
+
+                attachInstances(pluginType, familyElement, builder);
             }
         }
 
@@ -166,7 +176,7 @@ namespace StructureMap.Configuration
         }
 
 
-        private void attachInstances(TypePath pluginTypePath, XmlElement familyElement, IGraphBuilder builder)
+        private void attachInstances(Type pluginType, XmlElement familyElement, IGraphBuilder builder)
         {
             foreach (XmlNode instanceNode in familyElement.ChildNodes)
             {
@@ -176,7 +186,7 @@ namespace StructureMap.Configuration
                 }
 
                 InstanceMemento memento = _mementoCreator.CreateMemento(instanceNode);
-                builder.RegisterMemento(pluginTypePath, memento);
+                builder.RegisterMemento(pluginType, memento);
             }
         }
 

@@ -37,7 +37,7 @@ namespace StructureMap.Configuration.DSL.Expressions
             {
                 _instanceKey = Profile.InstanceKeyForProfile(profileName);
                 _instance.Name = _instanceKey;
-                pluginGraph.LocateOrCreateFamilyForType(_pluginType).AddInstance(_instance);   
+                pluginGraph.FindFamily(_pluginType).AddInstance(_instance);   
             }
             else if (!string.IsNullOrEmpty(_instanceKey))
             {

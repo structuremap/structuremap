@@ -5,19 +5,20 @@ using System.Xml;
 
 namespace StructureMap.Configuration
 {
+    // TODO:  3.5 cleanup here
     public delegate XmlNode FetchNodeDelegate();
 
     public class ConfigurationParserCollection
     {
-        private List<FetchNodeDelegate> _fetchers = new List<FetchNodeDelegate>();
+        private readonly List<FetchNodeDelegate> _fetchers = new List<FetchNodeDelegate>();
         private bool _ignoreDefaultFile = false;
-        private List<string> _otherFiles = new List<string>();
-        private bool _UseAndEnforceExistenceOfDefaultFile = false;
+        private readonly List<string> _otherFiles = new List<string>();
+        private bool _useAndEnforceExistenceOfDefaultFile = false;
 
         public bool UseAndEnforceExistenceOfDefaultFile
         {
-            get { return _UseAndEnforceExistenceOfDefaultFile; }
-            set { _UseAndEnforceExistenceOfDefaultFile = value; }
+            get { return _useAndEnforceExistenceOfDefaultFile; }
+            set { _useAndEnforceExistenceOfDefaultFile = value; }
         }
 
 
@@ -33,7 +34,7 @@ namespace StructureMap.Configuration
 
             // Pick up the configuration in the default StructureMap.config
             string pathToStructureMapConfig = StructureMapConfiguration.GetStructureMapConfigurationPath();
-            if ((_UseAndEnforceExistenceOfDefaultFile || File.Exists(pathToStructureMapConfig)) && !_ignoreDefaultFile)
+            if (shouldUseStructureMapConfigFile(pathToStructureMapConfig))
             {
                 addParsersFromFile(pathToStructureMapConfig, list);
             }
@@ -50,6 +51,11 @@ namespace StructureMap.Configuration
             }
 
             return list.ToArray();
+        }
+
+        private bool shouldUseStructureMapConfigFile(string pathToStructureMapConfig)
+        {
+            return (_useAndEnforceExistenceOfDefaultFile || File.Exists(pathToStructureMapConfig)) && !_ignoreDefaultFile;
         }
 
         private static void addParsersFromFile(string filename, List<ConfigurationParser> list)

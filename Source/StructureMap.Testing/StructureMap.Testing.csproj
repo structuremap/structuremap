@@ -156,18 +156,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AutoMocking\RhinoAutoMockerTester.cs" />
-    <Compile Include="Caching\ExpirationTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Caching\FileModificationWatcherTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Caching\MockManagedCache.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Caching\StorageAndCacheItemTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Configuration\ConfigurationParserCollectionTester.cs" />
     <Compile Include="Configuration\ConfigurationParserTester.cs" />
     <Compile Include="Configuration\DefaultInstanceNodeTester.cs" />

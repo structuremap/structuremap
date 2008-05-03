@@ -20,12 +20,6 @@ namespace StructureMap
         private static IInstanceManager _manager;
         private static string _profile = string.Empty;
 
-
-        static ObjectFactory()
-        {
-            ObjectFactoryCacheCallback callback = new ObjectFactoryCacheCallback();
-        }
-
         private static event Notify _notify;
 
         /// <summary>

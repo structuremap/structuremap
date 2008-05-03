@@ -65,52 +65,45 @@ namespace StructureMap.Configuration
             _systemInstanceManager = new InstanceManager(_systemGraph);
         }
 
-        public void AddPluginFamily(TypePath typePath, string defaultKey, InstanceScope scope)
+        public void AddPluginFamily(Type pluginType, string defaultKey, InstanceScope scope)
         {
-            Type pluginType;
-            try
-            {
-                pluginType = typePath.FindType();
-            }
-            catch (Exception ex)
-            {
-                throw new StructureMapException(103, ex, typePath.ClassName, typePath.AssemblyName);
-            }
-
-
-            PluginFamily family = _pluginGraph.LocateOrCreateFamilyForType(pluginType);
+            PluginFamily family = _pluginGraph.FindFamily(pluginType);
 
             // Xml configuration wins
             family.DefaultInstanceKey = defaultKey;
             family.SetScopeTo(scope);
         }
 
-        public virtual void AttachSource(TypePath pluginTypePath, InstanceMemento sourceMemento)
+        public virtual void AttachSource(Type pluginType, InstanceMemento sourceMemento)
         {
             try
             {
                 MementoSource source = (MementoSource) buildSystemObject(typeof (MementoSource), sourceMemento);
-                AttachSource(pluginTypePath, source);
+                AttachSource(pluginType, source);
             }
             catch (Exception ex)
             {
-                throw new StructureMapException(120, ex, pluginTypePath);
+                // TODO:  put error in PluginGraph
+                throw new StructureMapException(120, ex, TypePath.GetAssemblyQualifiedName(pluginType));
             }
         }
 
-        public void AttachSource(TypePath pluginTypePath, MementoSource source)
+        public void AttachSource(Type pluginType, MementoSource source)
         {
-            PluginFamily family = _pluginGraph.PluginFamilies[pluginTypePath.FindType()];
+            PluginFamily family = _pluginGraph.PluginFamilies[pluginType];
             family.AddMementoSource(source);
         }
 
-        public Plugin AddPlugin(TypePath pluginTypePath, TypePath pluginPath, string concreteKey)
+        public Plugin AddPlugin(Type pluginType, TypePath pluginPath, string concreteKey)
         {
-            PluginFamily family = _pluginGraph.PluginFamilies[pluginTypePath.FindType()];
+            // TODO:  Make this go through PluginGraph.FindFamily()
+            PluginFamily family = _pluginGraph.PluginFamilies[pluginType];
             if (family == null)
             {
                 string message =
-                    string.Format("Could not find a PluginFamily for {0}", pluginTypePath.AssemblyQualifiedName);
+                    string.Format("Could not find a PluginFamily for {0}", pluginType.AssemblyQualifiedName);
+
+                // TODO:  put error in PluginGraph
                 throw new ApplicationException(message);
             }
 
@@ -120,16 +113,17 @@ namespace StructureMap.Configuration
             return plugin;
         }
 
-        public SetterProperty AddSetter(TypePath pluginTypePath, string concreteKey, string setterName)
+        public SetterProperty AddSetter(Type pluginType, string concreteKey, string setterName)
         {
-            PluginFamily family = _pluginGraph.PluginFamilies[pluginTypePath.FindType()];
+            // TODO:  Make this go through PluginGraph.FindFamily()
+            PluginFamily family = _pluginGraph.PluginFamilies[pluginType];
             Plugin plugin = family.Plugins[concreteKey];
             return plugin.Setters.Add(setterName);
         }
 
-        public virtual void AddInterceptor(TypePath pluginTypePath, InstanceMemento interceptorMemento)
+        public virtual void AddInterceptor(Type pluginType, InstanceMemento interceptorMemento)
         {
-            PluginFamily family = _pluginGraph.PluginFamilies[pluginTypePath.FindType()];
+            PluginFamily family = _pluginGraph.PluginFamilies[pluginType];
             try
             {
                 IInstanceInterceptor interceptor =
@@ -140,13 +134,14 @@ namespace StructureMap.Configuration
             }
             catch (Exception ex)
             {
-                throw new StructureMapException(121, ex, pluginTypePath);
+                // TODO:  put error in PluginGraph
+                throw new StructureMapException(121, ex, TypePath.GetAssemblyQualifiedName(pluginType));
             }
         }
 
-        public void RegisterMemento(TypePath pluginTypePath, InstanceMemento memento)
+        public void RegisterMemento(Type pluginType, InstanceMemento memento)
         {
-            PluginFamily family = _pluginGraph.LocateOrCreateFamilyForType(pluginTypePath.FindType());
+            PluginFamily family = _pluginGraph.FindFamily(pluginType);
             family.AddInstance(memento);
         }
 

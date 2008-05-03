@@ -21,7 +21,7 @@ namespace StructureMap.Testing.Pipeline
 
         private void setDefault<T>(string key)
         {
-            PluginFamily family = _pluginGraph.LocateOrCreateFamilyForType(typeof (T));
+            PluginFamily family = _pluginGraph.FindFamily(typeof (T));
             family.AddInstance(new LiteralInstance(null).WithName(key));
 
             _profile.SetDefault(typeof(T), new ReferencedInstance(key));

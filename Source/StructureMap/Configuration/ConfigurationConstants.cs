@@ -1,6 +1,6 @@
 namespace StructureMap.Configuration
 {
-    public class ConfigurationConstants
+    public static class ConfigurationConstants
     {
         public const string CONFIGURED_DEFAULT_KEY_CANNOT_BE_FOUND =
             "The default instance key configured for this PluginFamily cannot be found";
@@ -45,9 +45,5 @@ namespace StructureMap.Configuration
 
         public const string UNKNOWN_PLUGIN_PROBLEM = "Exception occured while attaching a Plugin to a PluginFamily";
         public const string VALIDATION_METHOD_FAILURE = "A Validation Method Failed";
-
-        private ConfigurationConstants()
-        {
-        }
     }
 }

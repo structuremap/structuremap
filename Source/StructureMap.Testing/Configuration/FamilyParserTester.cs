@@ -28,10 +28,9 @@ namespace StructureMap.Testing.Configuration
             _document.LoadXml("<PluginFamily />");
             _familyElement = _document.DocumentElement;
 
-            Type type = typeof (IGateway);
-            _typePath = new TypePath(type);
+            thePluginType = typeof (IGateway);
 
-            TypePath.WriteTypePathToXmlElement(type, _familyElement);
+            TypePath.WriteTypePathToXmlElement(thePluginType, _familyElement);
         }
 
         #endregion
@@ -40,13 +39,13 @@ namespace StructureMap.Testing.Configuration
         private FamilyParser _parser;
         private XmlDocument _document;
         private XmlElement _familyElement;
-        private TypePath _typePath;
+        private Type thePluginType;
 
 
         [Test]
         public void ScopeIsBlank()
         {
-            _builderMock.Expect("AddPluginFamily", _typePath, string.Empty, InstanceScope.PerRequest);
+            _builderMock.Expect("AddPluginFamily", thePluginType, string.Empty, InstanceScope.PerRequest);
 
             _parser.ParseFamily(_familyElement);
 
@@ -58,7 +57,7 @@ namespace StructureMap.Testing.Configuration
         public void ScopeIsBlank2()
         {
             _familyElement.SetAttribute(XmlConstants.SCOPE_ATTRIBUTE, "");
-            _builderMock.Expect("AddPluginFamily", _typePath, string.Empty, InstanceScope.PerRequest);
+            _builderMock.Expect("AddPluginFamily", thePluginType, string.Empty, InstanceScope.PerRequest);
 
             _parser.ParseFamily(_familyElement);
 
@@ -70,7 +69,7 @@ namespace StructureMap.Testing.Configuration
         public void ScopeIsSingleton()
         {
             _familyElement.SetAttribute(XmlConstants.SCOPE_ATTRIBUTE, InstanceScope.Singleton.ToString());
-            _builderMock.Expect("AddPluginFamily", _typePath, string.Empty, InstanceScope.Singleton);
+            _builderMock.Expect("AddPluginFamily", thePluginType, string.Empty, InstanceScope.Singleton);
 
             _parser.ParseFamily(_familyElement);
 
@@ -82,7 +81,7 @@ namespace StructureMap.Testing.Configuration
         public void ScopeIsThreadLocal()
         {
             _familyElement.SetAttribute(XmlConstants.SCOPE_ATTRIBUTE, InstanceScope.ThreadLocal.ToString());
-            _builderMock.Expect("AddPluginFamily", _typePath, string.Empty, InstanceScope.ThreadLocal);
+            _builderMock.Expect("AddPluginFamily", thePluginType, string.Empty, InstanceScope.ThreadLocal);
 
             _parser.ParseFamily(_familyElement);
 

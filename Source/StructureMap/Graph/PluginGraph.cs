@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Reflection;
 using StructureMap.Configuration.DSL;
 using StructureMap.Diagnostics;
@@ -20,11 +18,11 @@ namespace StructureMap.Graph
     {
         private readonly AssemblyGraphCollection _assemblies;
         private readonly InterceptorLibrary _interceptorLibrary = new InterceptorLibrary();
-        private readonly PluginFamilyCollection _pluginFamilies;
-        private bool _sealed = false;
-        private readonly bool _useExternalRegistries = true;
         private readonly GraphLog _log = new GraphLog();
+        private readonly PluginFamilyCollection _pluginFamilies;
         private readonly ProfileManager _profileManager = new ProfileManager();
+        private readonly bool _useExternalRegistries = true;
+        private bool _sealed = false;
 
         /// <summary>
         /// Default constructor
@@ -171,11 +169,10 @@ namespace StructureMap.Graph
             }
         }
 
-        public PluginFamily LocateOrCreateFamilyForType(Type pluginType)
+        public PluginFamily FindFamily(Type pluginType)
         {
             buildFamilyIfMissing(pluginType);
             return PluginFamilies[pluginType];
         }
-
     }
 }

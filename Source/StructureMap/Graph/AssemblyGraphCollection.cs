@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
@@ -7,7 +8,7 @@ namespace StructureMap.Graph
     /// <summary>
     /// Custom collection for AssemblyGraph's
     /// </summary>
-    public class AssemblyGraphCollection : IEnumerable<AssemblyGraph>
+    [Obsolete("Kill!")] public class AssemblyGraphCollection : IEnumerable<AssemblyGraph>
     {
         private Dictionary<string, AssemblyGraph> _assemblies;
 

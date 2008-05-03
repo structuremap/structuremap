@@ -3,12 +3,11 @@ using System.Diagnostics;
 using System.Threading;
 using System.Xml;
 using NUnit.Framework;
-using StructureMap.Caching;
 using StructureMap.Testing.TestData;
 using StructureMap.Testing.Widget;
 using IList=System.Collections.IList;
 
-namespace StructureMap.Testing.Caching
+namespace StructureMap.Testing
 {
     [TestFixture]
     public class ObjectFactoryTester
@@ -19,14 +18,12 @@ namespace StructureMap.Testing.Caching
         public void SetUp()
         {
             _event = new ManualResetEvent(false);
-            _watcher = new FileModificationWatcher("StructureMap.config");
             DataMother.WriteDocument("FullTesting.XML");
         }
 
         #endregion
 
         private ManualResetEvent _event;
-        private FileModificationWatcher _watcher;
 
         private void markDone()
         {

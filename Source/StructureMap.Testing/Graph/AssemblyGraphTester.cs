@@ -64,18 +64,5 @@ namespace StructureMap.Testing.Graph
             Assert.AreEqual(type, actualType);
         }
 
-        [Test]
-        public void GetAllAssembliesAtPath()
-        {
-            string[] assemblies = AssemblyGraph.GetAllAssembliesAtPath(".");
-            ArrayList list = new ArrayList(assemblies);
-
-            Assert.IsTrue(list.Contains("StructureMap.Testing"));
-            Assert.IsTrue(list.Contains("StructureMap"));
-            Assert.IsTrue(list.Contains("StructureMap.Testing.Widget"));
-            Assert.IsTrue(list.Contains("StructureMap.Testing.Widget2"));
-            Assert.IsTrue(list.Contains("StructureMap.Testing.Widget3"));
-            Assert.IsTrue(list.Contains("StructureMap.Testing.Widget4"));
-        }
     }
 }

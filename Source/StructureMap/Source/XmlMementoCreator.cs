@@ -4,6 +4,7 @@ namespace StructureMap.Source
 {
     public delegate InstanceMemento CreateXmlMementoDelegate(XmlNode node);
 
+    // TODO:  3.5, eliminate this with lambdas in ConfigurationParser
     public class XmlMementoCreator
     {
         private readonly string _keyAttribute;

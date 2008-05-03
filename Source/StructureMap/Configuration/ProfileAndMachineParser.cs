@@ -6,6 +6,7 @@ using StructureMap.Source;
 
 namespace StructureMap.Configuration
 {
+    // TODO:  3.5 cleanup
     public class ProfileAndMachineParser
     {
         private readonly IProfileBuilder _profileBuilder;
@@ -23,6 +24,7 @@ namespace StructureMap.Configuration
 
         public void Parse()
         {
+            // TODO:  3.5 cleanup
             XmlNode defaultProfileNode = _structureMapNode.Attributes.GetNamedItem(XmlConstants.DEFAULT_PROFILE);
             if (defaultProfileNode != null)
             {
@@ -83,7 +85,10 @@ namespace StructureMap.Configuration
             memento.InstanceKey = key;
 
             TypePath familyPath = new TypePath(fullName);
-            _graphBuilder.RegisterMemento(familyPath, memento);
+            // TODO:  failure point
+            Type pluginType = familyPath.FindType();
+
+            _graphBuilder.RegisterMemento(pluginType, memento);
 
             function(fullName, key);
         }

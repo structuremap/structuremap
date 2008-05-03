@@ -28,7 +28,7 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         void IExpression.Configure(PluginGraph graph)
         {
-            PluginFamily family = graph.LocateOrCreateFamilyForType(_pluginType);
+            PluginFamily family = graph.FindFamily(_pluginType);
             family.SetScopeTo(_scope);
 
             foreach (IExpression child in _children)

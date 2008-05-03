@@ -1,8 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Reflection;
 using StructureMap.Configuration.DSL;
 
@@ -11,39 +8,9 @@ namespace StructureMap.Graph
     /// <summary>
     /// Models an assembly reference in a PluginGraph
     /// </summary>
+    [Obsolete("Kill!")]
     public class AssemblyGraph : IComparable
     {
-        #region statics
-
-        /// <summary>
-        /// Finds a string array of all the assembly files in a path.  Used
-        /// by the UI
-        /// </summary>
-        /// <param name="folderPath"></param>
-        /// <returns></returns>
-        public static string[] GetAllAssembliesAtPath(string folderPath)
-        {
-            ArrayList list = new ArrayList();
-
-            string[] files = Directory.GetFiles(folderPath, "*dll");
-            foreach (string fileName in files)
-            {
-                try
-                {
-                    Assembly assembly = Assembly.LoadFrom(fileName);
-                    list.Add(assembly.GetName().Name);
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.Message);
-                }
-            }
-
-            return (string[]) list.ToArray(typeof (string));
-        }
-
-        #endregion
-
         private readonly Assembly _assembly;
         private readonly string _assemblyName;
         private bool _lookForPluginFamilies = true;
@@ -63,6 +30,7 @@ namespace StructureMap.Graph
             }
             catch (Exception ex)
             {
+                // TODO:  Register error with PluginGraph.  Maybe do this at configuration time
                 throw new StructureMapException(101, ex, assemblyName);
             }
         }
@@ -114,6 +82,7 @@ namespace StructureMap.Graph
         /// [PluginFamily]
         /// </summary>
         /// <returns></returns>
+        // TODO:  Move into the new TypeScanner
         public PluginFamily[] FindPluginFamilies()
         {
             if (_assembly == null || !LookForPluginFamilies)
@@ -137,6 +106,7 @@ namespace StructureMap.Graph
             return list.ToArray();
         }
 
+        // TODO:  Move to TypeScanner
         private Type[] getExportedTypes()
         {
             Type[] exportedTypes;
@@ -170,6 +140,8 @@ namespace StructureMap.Graph
             return _assembly.GetType(fullName, false);
         }
 
+
+        // TODO:  Move into the new TypeScanner
         public List<Registry> FindRegistries()
         {
             Type[] exportedTypes = getExportedTypes();
