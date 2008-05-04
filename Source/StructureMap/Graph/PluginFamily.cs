@@ -15,23 +15,6 @@ namespace StructureMap.Graph
     /// </summary>
     public class PluginFamily
     {
-        #region statics
-
-        [Obsolete]
-        public static PluginFamily CreateAutoFilledPluginFamily(Type pluginType)
-        {
-            Plugin plugin = Plugin.CreateAutofilledPlugin(pluginType);
-
-            PluginFamily family = new PluginFamily(pluginType);
-
-            family.Plugins.Add(plugin);
-            family.DefaultInstanceKey = plugin.ConcreteKey;
-
-            return family;
-        }
-
-        #endregion
-
         public const string CONCRETE_KEY = "CONCRETE";
         private readonly List<InstanceMemento> _mementoList = new List<InstanceMemento>();
         private readonly PluginCollection _plugins;
@@ -72,39 +55,10 @@ namespace StructureMap.Graph
         }
 
 
-        /// <summary>
-        /// Troubleshooting constructor to find potential problems with a PluginFamily's
-        /// configuration
-        /// </summary>
-        /// <param name="path"></param>
-        /// <param name="defaultKey"></param>
-        public PluginFamily(TypePath path, string defaultKey)
-        {
-            _plugins = new PluginCollection(this);
-            _pluginTypeName = path.AssemblyQualifiedName;
-            initializeExplicit(path, defaultKey);
-        }
-
-
         public PluginGraph Parent
         {
             get { return _parent; }
             set { _parent = value; }
-        }
-
-        private void initializeExplicit(TypePath path, string defaultKey)
-        {
-            try
-            {
-                _pluginType = path.FindType();
-                _pluginTypeName = TypePath.GetAssemblyQualifiedName(_pluginType);
-            }
-            catch (Exception ex)
-            {
-                throw new StructureMapException(103, ex, path.ClassName, path.AssemblyName);
-            }
-
-            _defaultKey = defaultKey;
         }
 
         #endregion

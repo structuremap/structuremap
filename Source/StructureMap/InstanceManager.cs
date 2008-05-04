@@ -273,11 +273,13 @@ namespace StructureMap
         /// <returns></returns>
         public object FillDependencies(Type type)
         {
+            // TODO:  Want all type knowledge into Plugin
             if (type.IsInterface || type.IsAbstract)
             {
                 throw new StructureMapException(230, type.FullName);
             }
 
+            // TODO:  Little bit of smelliness here
             Plugin plugin = Plugin.CreateImplicitPlugin(type);
             if (!plugin.CanBeAutoFilled)
             {

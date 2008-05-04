@@ -29,22 +29,6 @@ namespace StructureMap.Testing.Graph
             family.Plugins.Add(typeof (Rule), "Rule");
         }
 
-        [Test, ExpectedException(typeof (StructureMapException))]
-        public void CreateExplicitWithNonexistentAssembly()
-        {
-            TypePath path = new TypePath("NonexistentAssembly", "NonexistentAssembly.Class1");
-
-            PluginFamily family = new PluginFamily(path, "");
-        }
-
-        [Test, ExpectedException(typeof (StructureMapException))]
-        public void CreateExplicitWithNonexistentClass()
-        {
-            TypePath path =
-                new TypePath("StructureMap.Testing.Widget", "StructureMap.Testing.Widget.NonExistentInterface");
-
-            PluginFamily family = new PluginFamily(path, "");
-        }
 
         [Test]
         public void GetPlugins()

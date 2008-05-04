@@ -9,15 +9,6 @@ namespace StructureMap.Testing.Container
     [TestFixture]
     public class FillDependenciesTester
     {
-        private PluginFamily _family;
-
-        [TestFixtureSetUp]
-        public void TestFixtureSetUp()
-        {
-            _family = PluginFamily.CreateAutoFilledPluginFamily(typeof (FilledConcreteClass));
-            Assert.IsNotNull(_family);
-        }
-
         [Test]
         public void CanFillDependenciesSuccessfully()
         {
@@ -36,24 +27,6 @@ namespace StructureMap.Testing.Container
 
             Assert.IsNotNull(concreteClass.Widget);
             Assert.IsNotNull(concreteClass.Strategy);
-        }
-
-        [Test]
-        public void CreateAutoFilledPluginFamily()
-        {
-            Assert.IsNotNull(_family);
-            Assert.AreEqual(typeof (FilledConcreteClass), _family.PluginType);
-        }
-
-
-        [Test]
-        public void CreatesPlugin()
-        {
-            Assert.AreEqual(1, _family.Plugins.Count);
-            Plugin plugin = _family.Plugins.All[0];
-            Assert.IsNotNull(plugin);
-
-            Assert.AreEqual(typeof (FilledConcreteClass), plugin.PluggedType);
         }
 
         [Test, ExpectedException(typeof (StructureMapException))]
