@@ -169,7 +169,7 @@ namespace StructureMap.Graph
         {
             if (!_pluginFamilies.Contains(pluginType))
             {
-                PluginFamily family = PluginFamilyAttribute.CreatePluginFamily(pluginType);
+                PluginFamily family = new PluginFamily(pluginType);
                 _pluginFamilies.Add(family);
                 attachImplicitPlugins(family);
             }

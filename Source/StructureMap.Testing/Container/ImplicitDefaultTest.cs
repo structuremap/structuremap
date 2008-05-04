@@ -13,16 +13,5 @@ namespace StructureMap.Testing.Container
             Assert.IsNotNull(gateway);
         }
 
-        [Test]
-        public void GetTheDefaultInstanceKeyFromType()
-        {
-            string default1 = PluginFamilyAttribute.GetDefaultKey(typeof (IGateway));
-            string default2 = PluginFamilyAttribute.GetDefaultKey(typeof (IService));
-            string default3 = PluginFamilyAttribute.GetDefaultKey(typeof (IWorker));
-
-            Assert.AreEqual("Default", default1);
-            Assert.AreEqual(string.Empty, default2);
-            Assert.AreEqual(string.Empty, default3);
-        }
     }
 }

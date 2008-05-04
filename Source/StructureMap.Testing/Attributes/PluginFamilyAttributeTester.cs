@@ -1,5 +1,7 @@
 using System;
 using NUnit.Framework;
+using Rhino.Mocks;
+using Rhino.Mocks.Constraints;
 using StructureMap.Attributes;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
@@ -16,17 +18,19 @@ namespace StructureMap.Testing.Attributes
             PluginFamilyAttribute att = new PluginFamilyAttribute("something");
             att.Scope = scope;
 
-            PluginFamily family = att.BuildPluginFamily(typeof (Target1));
+            PluginFamily family = new PluginFamily(typeof(TypeThatDoesNotHaveCustomMementoSource));
+            att.Configure(family);
+            
             Assert.IsInstanceOfType(interceptorType, family.Policy);
         }
 
         [PluginFamily]
-        public class Target1
+        public class TypeThatDoesNotHaveCustomMementoSource
         {
         }
 
         [PluginFamily(SourceType = typeof (CustomMementoSource))]
-        public class Target2
+        public class TypeWithDesignatedMementoSource
         {
         }
 
@@ -56,36 +60,63 @@ namespace StructureMap.Testing.Attributes
         [Test]
         public void CreateMemoryMementoSourceWhenTheMementoSourceIsExplicitlyDefinedInAttribute()
         {
-            PluginFamilyAttribute att = PluginFamilyAttribute.GetAttribute(typeof (Target2));
+            MockRepository mocks = new MockRepository();
+            IPluginFamily family = mocks.DynamicMock<IPluginFamily>();
 
-            MementoSource source = att.CreateSource(typeof (Target2));
-            Assert.IsTrue(source is CustomMementoSource);
+            using (mocks.Record())
+            {
+                SetupResult.For(family.PluginType).Return(typeof (TypeWithDesignatedMementoSource));
+
+                family.AddMementoSource(null);
+                LastCall.Constraints(Is.TypeOf<CustomMementoSource>());
+            }
+
+            using (mocks.Playback())
+            {
+                PluginFamilyAttribute.ConfigureFamily(family);
+            }
         }
 
         [Test]
-        public void CreatesAConfigInstanceMementoSourceByDefault()
+        public void Do_not_add_a_memento_source_if_it_is_not_defined()
         {
-            PluginFamilyAttribute att = PluginFamilyAttribute.GetAttribute(typeof (Target1));
+            MockRepository mocks = new MockRepository();
+            IPluginFamily family = mocks.DynamicMock<IPluginFamily>();
 
-            MementoSource source = att.CreateSource(typeof (Target1));
-            Assert.IsTrue(source is MemoryMementoSource);
+            using (mocks.Record())
+            {
+                SetupResult.For(family.PluginType).Return(typeof(TypeThatDoesNotHaveCustomMementoSource));
+
+                family.AddMementoSource(null);
+                LastCall.Repeat.Never();
+            }
+
+            using (mocks.Playback())
+            {
+                PluginFamilyAttribute.ConfigureFamily(family);
+            }
         }
 
+        
         [Test]
-        public void PerRequestDoesNotHaveAnyInterceptors()
+        public void PerRequest_DoesNot_call_SetScopeTo_on_family()
         {
             PluginFamilyAttribute att = new PluginFamilyAttribute("something");
             att.Scope = InstanceScope.PerRequest;
 
-            PluginFamily family = att.BuildPluginFamily(typeof (Target1));
-            Assert.IsInstanceOfType(typeof(BuildPolicy), family.Policy);
-        }
+            MockRepository mocks = new MockRepository();
+            IPluginFamily family = mocks.DynamicMock<IPluginFamily>();
 
-        [Test]
-        public void ScopeIsPerRequestByDefault()
-        {
-            PluginFamilyAttribute att = new PluginFamilyAttribute();
-            Assert.AreEqual(InstanceScope.PerRequest, att.Scope);
+            using (mocks.Record())
+            {
+                family.SetScopeTo(InstanceScope.PerRequest);
+                LastCall.Repeat.Never();
+            }
+
+            using (mocks.Playback())
+            {
+                att.Configure(family);
+            }
         }
 
         [Test]

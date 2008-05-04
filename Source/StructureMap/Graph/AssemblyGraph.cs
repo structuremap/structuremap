@@ -98,7 +98,7 @@ namespace StructureMap.Graph
             {
                 if (PluginFamilyAttribute.MarkedAsPluginFamily(exportedType))
                 {
-                    PluginFamily family = PluginFamilyAttribute.CreatePluginFamily(exportedType);
+                    PluginFamily family = new PluginFamily(exportedType);
                     list.Add(family);
                 }
             }

@@ -1,8 +1,6 @@
 using System;
 using StructureMap.Attributes;
 using StructureMap.Graph;
-using StructureMap.Interceptors;
-using StructureMap.Source;
 
 namespace StructureMap
 {
@@ -60,24 +58,6 @@ namespace StructureMap
             set { _scope = value ? InstanceScope.Singleton : InstanceScope.PerRequest; }
         }
 
-        public MementoSource CreateSource(Type exportedType)
-        {
-            if (SourceType != null)
-            {
-                try
-                {
-                    return (MementoSource) Activator.CreateInstance(SourceType);
-                }
-                catch (Exception ex)
-                {
-                    throw new StructureMapException(122, ex, SourceType.FullName, exportedType.FullName);
-                }
-            }
-            else
-            {
-                return new MemoryMementoSource();
-            }
-        }
 
         /// <summary>
         /// Determines if a Type object is marked as a PluginFamily
@@ -91,84 +71,36 @@ namespace StructureMap
             return (att != null);
         }
 
-        /// <summary>
-        /// Gets the default instance key from a Type marked as a PluginFamily
-        /// </summary>
-        /// <param name="objectType"></param>
-        /// <returns></returns>
-        public static string GetDefaultKey(Type objectType)
+        public static void ConfigureFamily(IPluginFamily family)
         {
             PluginFamilyAttribute att =
-                GetCustomAttribute(objectType, typeof (PluginFamilyAttribute), false) as PluginFamilyAttribute;
-            if (att == null)
-            {
-                return string.Empty;
-            }
-            else
-            {
-                return att.DefaultKey;
-            }
-        }
-
-        /// <summary>
-        /// Interrogates the attribute on the pluginType and determines if the PluginFamily is
-        /// marked as a Singleton
-        /// </summary>
-        /// <param name="pluginType"></param>
-        /// <returns></returns>
-        public static bool IsMarkedAsSingleton(Type pluginType)
-        {
-            bool returnValue = false;
-
-            PluginFamilyAttribute att =
-                GetCustomAttribute(
-                    pluginType,
-                    typeof (PluginFamilyAttribute), false)
+                GetCustomAttribute(family.PluginType, typeof (PluginFamilyAttribute), false)
                 as PluginFamilyAttribute;
-
 
             if (att != null)
             {
-                returnValue = att.IsSingleton;
+                att.Configure(family);
             }
-
-            return returnValue;
         }
 
-        public PluginFamily BuildPluginFamily(Type exportedType)
+        public void Configure(IPluginFamily family)
         {
-            if (!MarkedAsPluginFamily(exportedType))
+            if (SourceType != null)
             {
-                return new PluginFamily(exportedType);
+                try
+                {
+                    MementoSource source = (MementoSource) Activator.CreateInstance(SourceType);
+                    family.AddMementoSource(source);
+                }
+                catch (Exception ex)
+                {
+                    throw new StructureMapException(122, ex, SourceType.FullName, family.PluginTypeName);
+                }
             }
 
-            MementoSource source = CreateSource(exportedType);
-            PluginFamily family = new PluginFamily(exportedType);
-            family.DefaultInstanceKey = DefaultKey;
-            family.AddMementoSource(source);
 
-            family.SetScopeTo(Scope);
-
-            return family;
-        }
-
-        public static PluginFamily CreatePluginFamily(Type exportedType)
-        {
-            PluginFamilyAttribute att = GetAttribute(exportedType);
-
-            if (att == null)
-            {
-                return new PluginFamily(exportedType);
-            }
-
-            PluginFamily family = att.BuildPluginFamily(exportedType);
-
-            return family;
-        }
-
-        public static PluginFamilyAttribute GetAttribute(Type exportedType)
-        {
-            return GetCustomAttribute(exportedType, typeof (PluginFamilyAttribute), false) as PluginFamilyAttribute;
+            if (!string.IsNullOrEmpty(DefaultKey)) family.DefaultInstanceKey = DefaultKey;
+            if (Scope != InstanceScope.PerRequest) family.SetScopeTo(Scope);
         }
     }
 }

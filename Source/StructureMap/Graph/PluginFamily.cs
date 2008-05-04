@@ -13,7 +13,7 @@ namespace StructureMap.Graph
     /// the system.  A PluginFamily defines a CLR Type that StructureMap can build, and all of the possible
     /// Plugin’s implementing the CLR Type.
     /// </summary>
-    public class PluginFamily
+    public class PluginFamily : IPluginFamily
     {
         public const string CONCRETE_KEY = "CONCRETE";
         private readonly List<InstanceMemento> _mementoList = new List<InstanceMemento>();
@@ -39,13 +39,7 @@ namespace StructureMap.Graph
             _pluginTypeName = TypePath.GetAssemblyQualifiedName(_pluginType);
             _plugins = new PluginCollection(this);
 
-            // TODO -- Merge functionality with PluginFamilyAttribute
-            PluginFamilyAttribute attribute = PluginFamilyAttribute.GetAttribute(pluginType);
-            if (attribute != null)
-            {
-                SetScopeTo(attribute.Scope);
-            }
-            
+            PluginFamilyAttribute.ConfigureFamily(this);
         }
 
 
