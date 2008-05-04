@@ -25,7 +25,7 @@ namespace StructureMap.Testing.Configuration
         [Test]
         public void DefaultNameOfRule()
         {
-            PluginFamily family = _graph.PluginFamilies[typeof (Rule)];
+            PluginFamily family = _graph.FindFamily(typeof (Rule));
             Assert.AreEqual("TheBlueOne", family.DefaultInstanceKey);
         }
 

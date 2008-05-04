@@ -19,10 +19,10 @@ namespace StructureMap.Testing
         public void SetUp()
         {
             _graph = new PluginGraph();
-            PluginFamily family = _graph.PluginFamilies.Add(typeof (IService));
+            PluginFamily family = _graph.FindFamily(typeof (IService));
             family.Plugins.Add(typeof(ColorService), "Color");
 
-            _graph.PluginFamilies.Add(typeof (Rule));
+            _graph.FindFamily(typeof (Rule));
         }
 
         #endregion
@@ -176,7 +176,7 @@ namespace StructureMap.Testing
             PluginGraph graph = new PluginGraph();
             Plugin plugin = Plugin.CreateImplicitPlugin(typeof (ComplexRule));
 
-            graph.PluginFamilies.Add(typeof (Rule)).Plugins.Add(plugin);
+            graph.FindFamily(typeof (Rule)).Plugins.Add(plugin);
 
             MemoryInstanceMemento memento = ComplexRule.GetMemento();
             memento.SetProperty(XmlConstants.PLUGGED_TYPE, typeof (ComplexRule).AssemblyQualifiedName);
@@ -209,7 +209,7 @@ namespace StructureMap.Testing
             PluginGraph graph = new PluginGraph();
             Plugin plugin = Plugin.CreateImplicitPlugin(typeof (ComplexRule));
 
-            graph.PluginFamilies.Add(typeof (Rule)).Plugins.Add(plugin);
+            graph.FindFamily(typeof (Rule)).Plugins.Add(plugin);
 
             MemoryInstanceMemento memento = ComplexRule.GetMemento();
             memento.SetProperty(XmlConstants.PLUGGED_TYPE, typeof (ComplexRule).AssemblyQualifiedName);
@@ -228,7 +228,7 @@ namespace StructureMap.Testing
             PluginGraph graph = new PluginGraph();
             Plugin plugin = Plugin.CreateImplicitPlugin(typeof (ComplexRule));
 
-            graph.PluginFamilies.Add(typeof (Rule)).Plugins.Add(plugin);
+            graph.FindFamily(typeof (Rule)).Plugins.Add(plugin);
 
             MemoryInstanceMemento memento = ComplexRule.GetMemento();
             memento.SetProperty(XmlConstants.PLUGGED_TYPE, typeof (ComplexRule).AssemblyQualifiedName);
@@ -243,7 +243,7 @@ namespace StructureMap.Testing
             PluginGraph graph = new PluginGraph();
             Plugin plugin = Plugin.CreateImplicitPlugin(typeof (ComplexRule));
 
-            graph.PluginFamilies.Add(typeof (Rule)).Plugins.Add(plugin);
+            graph.FindFamily(typeof (Rule)).Plugins.Add(plugin);
 
             MemoryInstanceMemento memento = ComplexRule.GetMemento();
             memento.SetProperty(XmlConstants.PLUGGED_TYPE, typeof (ComplexRule).AssemblyQualifiedName);

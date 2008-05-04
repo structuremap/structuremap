@@ -37,7 +37,7 @@ namespace StructureMap.Testing
 
         public static PluginFamily GetPluginFamily(Type pluginType)
         {
-            return _pluginGraph.PluginFamilies[pluginType];
+            return _pluginGraph.FindFamily(pluginType);
         }
 
         public static Plugin GetPlugin(Type pluginType, string concreteKey)
@@ -73,7 +73,7 @@ namespace StructureMap.Testing
         public static InstanceFactory CreateInstanceFactory(Type pluginType, string[] assemblyNames)
         {
             PluginGraph pluginGraph = createPluginGraphFromAssemblyNames(assemblyNames);
-            pluginGraph.PluginFamilies.Add(pluginType, string.Empty);
+            pluginGraph.FindFamily(pluginType);
             pluginGraph.Seal();
 
             InstanceManager manager = new InstanceManager(pluginGraph);

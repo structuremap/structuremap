@@ -29,7 +29,7 @@ namespace StructureMap.Testing.Container
 
             XmlMementoSource source = new XmlFileMementoSource("Array.xml", string.Empty, "Decision");
 
-            PluginFamily family = graph.PluginFamilies.Add(typeof(Decision), string.Empty);
+            PluginFamily family = graph.FindFamily(typeof(Decision));
             family.AddMementoSource(source);            
 
             family.Plugins.Add(typeof (Decision), "Default");

@@ -62,6 +62,7 @@ namespace StructureMap.Graph
         public PluginFamily(Type pluginType) :
             this(pluginType, PluginFamilyAttribute.GetDefaultKey(pluginType))
         {
+            // TODO -- Merge functionality with PluginFamilyAttribute
             PluginFamilyAttribute attribute = PluginFamilyAttribute.GetAttribute(pluginType);
             if (attribute != null)
             {

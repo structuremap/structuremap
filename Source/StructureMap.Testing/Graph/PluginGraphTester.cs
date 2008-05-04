@@ -26,8 +26,8 @@ namespace StructureMap.Testing.Graph
 
             graph.Assemblies.Add("StructureMap.Testing.Widget");
 
-            graph.PluginFamilies.Add(typeof (IWidget), "Blue");
-            graph.PluginFamilies.Add(typeof (WidgetMaker), "");
+            graph.FindFamily(typeof (IWidget)).DefaultInstanceKey = "Blue";
+            graph.FindFamily(typeof (WidgetMaker));
 
             graph.Seal();
 
@@ -37,7 +37,7 @@ namespace StructureMap.Testing.Graph
                 Console.WriteLine(family.PluginType.AssemblyQualifiedName);
             }
 
-            Assert.AreEqual(5, graph.PluginFamilies.Count);
+            Assert.AreEqual(5, graph.FamilyCount);
         }
 
         [Test]
@@ -47,11 +47,11 @@ namespace StructureMap.Testing.Graph
 
             graph.Assemblies.Add("StructureMap.Testing.Widget");
             graph.Assemblies.Add("StructureMap.Testing.Widget2");
-            graph.PluginFamilies.Add(typeof (Rule), string.Empty);
+            graph.FindFamily(typeof (Rule));
 
             graph.Seal();
 
-            PluginFamily family = graph.PluginFamilies[typeof (Rule)];
+            PluginFamily family = graph.FindFamily(typeof (Rule));
             Assert.IsNotNull(family);
             Assert.AreEqual(5, family.Plugins.Count, "There are 5 Rule classes in the two assemblies");
         }
@@ -63,12 +63,12 @@ namespace StructureMap.Testing.Graph
             PluginGraph graph = new PluginGraph();
 
             graph.Assemblies.Add("StructureMap.Testing.Widget");
-            graph.PluginFamilies.Add(typeof (IWidget), "Blue");
+            graph.FindFamily(typeof (IWidget)).DefaultInstanceKey = "Blue";
             TypePath path =
                 new TypePath("StructureMap.Testing.Widget", "StructureMap.Testing.Widget.NotPluggableWidget");
 
 
-            PluginFamily family = graph.PluginFamilies[typeof (IWidget)];
+            PluginFamily family = graph.FindFamily(typeof (IWidget));
 
             family.Plugins.Add(path, "NotPluggable");
             graph.Seal();
@@ -88,10 +88,10 @@ namespace StructureMap.Testing.Graph
             PluginGraph graph = new PluginGraph();
 
             graph.Assemblies.Add("StructureMap.Testing.Widget");
-            graph.PluginFamilies.Add(typeof (IWidget), "Blue");
+            graph.FindFamily(typeof (IWidget)).DefaultInstanceKey = "Blue";
             graph.Seal();
 
-            PluginFamily family = graph.PluginFamilies[typeof (IWidget)];
+            PluginFamily family = graph.FindFamily(typeof (IWidget));
             Assert.IsNotNull(family);
 
             Assert.AreEqual("Blue", family.DefaultInstanceKey);

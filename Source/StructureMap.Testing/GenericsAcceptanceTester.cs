@@ -24,7 +24,8 @@ namespace StructureMap.Testing
         {
             PluginGraph graph = new PluginGraph();
             graph.Assemblies.Add(Assembly.GetExecutingAssembly());
-            PluginFamily family = graph.PluginFamilies.Add(typeof (IGenericService<>), "Default");
+            PluginFamily family = graph.FindFamily(typeof (IGenericService<>));
+            family.DefaultInstanceKey = "Default";
             family.Plugins.Add(typeof (GenericService<>), "Default");
 
             graph.Seal();
@@ -92,7 +93,7 @@ namespace StructureMap.Testing
         public void CanEmitInstanceBuilderForATypeWithConstructorArguments()
         {
             PluginGraph graph = new PluginGraph();
-            PluginFamily family = graph.PluginFamilies.Add(typeof (ComplexType<int>));
+            PluginFamily family = graph.FindFamily(typeof (ComplexType<int>));
             family.Plugins.Add(typeof (ComplexType<int>), "complex");
 
             InstanceManager manager = new InstanceManager(graph);
@@ -112,13 +113,13 @@ namespace StructureMap.Testing
         {
             PluginGraph graph = new PluginGraph();
             graph.Assemblies.Add(Assembly.GetExecutingAssembly());
-            PluginFamily family1 = graph.PluginFamilies.Add(typeof (IGenericService<int>), string.Empty);
-            PluginFamily family2 = graph.PluginFamilies.Add(typeof (IGenericService<string>), string.Empty);
-            PluginFamily family3 = graph.PluginFamilies.Add(typeof (IGenericService<>), string.Empty);
+            PluginFamily family1 = graph.FindFamily(typeof (IGenericService<int>));
+            PluginFamily family2 = graph.FindFamily(typeof (IGenericService<string>));
+            PluginFamily family3 = graph.FindFamily(typeof (IGenericService<>));
 
-            Assert.AreSame(graph.PluginFamilies[typeof (IGenericService<int>)], family1);
-            Assert.AreSame(graph.PluginFamilies[typeof (IGenericService<string>)], family2);
-            Assert.AreSame(graph.PluginFamilies[typeof (IGenericService<>)], family3);
+            Assert.AreSame(graph.FindFamily(typeof(IGenericService<int>)), family1);
+            Assert.AreSame(graph.FindFamily(typeof(IGenericService<string>)), family2);
+            Assert.AreSame(graph.FindFamily(typeof(IGenericService<>)), family3);
         }
 
         [Test]
@@ -126,11 +127,11 @@ namespace StructureMap.Testing
         {
             PluginGraph graph = new PluginGraph();
             graph.Assemblies.Add(Assembly.GetExecutingAssembly());
-            PluginFamily family1 = graph.PluginFamilies.Add(typeof (IGenericService<int>), string.Empty);
-            PluginFamily family2 = graph.PluginFamilies.Add(typeof (IGenericService<string>), string.Empty);
+            PluginFamily family1 = graph.FindFamily(typeof (IGenericService<int>));
+            PluginFamily family2 = graph.FindFamily(typeof (IGenericService<string>));
 
-            Assert.AreSame(graph.PluginFamilies[typeof (IGenericService<int>)], family1);
-            Assert.AreSame(graph.PluginFamilies[typeof (IGenericService<string>)], family2);
+            Assert.AreSame(graph.FindFamily(typeof (IGenericService<int>)), family1);
+            Assert.AreSame(graph.FindFamily(typeof (IGenericService<string>)), family2);
         }
 
 

@@ -41,18 +41,18 @@ namespace StructureMap.Testing.Container
         {
             PluginGraph pluginGraph = DataMother.GetDiagnosticPluginGraph("SingletonIntercepterTest.xml");
 
-            PluginFamily family = pluginGraph.PluginFamilies[typeof (Rule)];
+            PluginFamily family = pluginGraph.FindFamily(typeof (Rule));
             Assert.IsInstanceOfType(typeof (SingletonPolicy), family.Policy);
 
             // The PluginFamily for IWidget has no intercepters configured
-            PluginFamily widgetFamily = pluginGraph.PluginFamilies[typeof (IWidget)];
+            PluginFamily widgetFamily = pluginGraph.FindFamily(typeof (IWidget));
             Assert.IsInstanceOfType(typeof (BuildPolicy), widgetFamily.Policy);
         }
 
         [Test]
         public void CanDefinedSourceBuildMemento()
         {
-            PluginFamily family = graph.PluginFamilies[typeof (IWidget)];
+            PluginFamily family = graph.FindFamily(typeof (IWidget));
 
             InstanceMemento memento = family.GetMemento("Red");
 
@@ -62,7 +62,7 @@ namespace StructureMap.Testing.Container
         [Test]
         public void CanImpliedInlineSourceBuildMemento()
         {
-            PluginFamily family = graph.PluginFamilies[typeof (Rule)];
+            PluginFamily family = graph.FindFamily(typeof (Rule));
 
             InstanceMemento memento = family.GetMemento("Red");
 
@@ -73,7 +73,7 @@ namespace StructureMap.Testing.Container
         [Test]
         public void CanImpliedNOTInlineSourceBuildMemento()
         {
-            PluginFamily family = graph.PluginFamilies[typeof (Parent)];
+            PluginFamily family = graph.FindFamily(typeof (Parent));
 
             InstanceMemento memento = family.GetMemento("Jerry");
 
@@ -85,7 +85,7 @@ namespace StructureMap.Testing.Container
         {
             PluginGraph pluginGraph = DataMother.GetPluginGraph("ExplicitPluginFamilyOverridesImplicitPluginFamily.xml");
 
-            PluginFamily family = pluginGraph.PluginFamilies[typeof (GrandChild)];
+            PluginFamily family = pluginGraph.FindFamily(typeof (GrandChild));
             Assert.AreEqual("Fred", family.DefaultInstanceKey);
         }
 
@@ -108,21 +108,21 @@ namespace StructureMap.Testing.Container
         [Test]
         public void GotPluginFamiliesThatAreDefinedInConfigXml()
         {
-            Assert.IsNotNull(graph.PluginFamilies[typeof (Rule)]);
-            Assert.IsNotNull(graph.PluginFamilies[typeof (Column)]);
+            Assert.IsNotNull(graph.FindFamily(typeof (Rule)));
+            Assert.IsNotNull(graph.FindFamily(typeof (Column)));
 
-            PluginFamily family = graph.PluginFamilies[typeof (Rule)];
+            PluginFamily family = graph.FindFamily(typeof (Rule));
         }
 
         [Test]
         public void GotPluginFamiliesThatAreMarkedByAttributes()
         {
-            Assert.IsNotNull(graph.PluginFamilies[typeof (GrandChild)]);
-            Assert.IsNotNull(graph.PluginFamilies[typeof (Child)]);
-            Assert.IsNotNull(graph.PluginFamilies[typeof (Parent)]);
-            Assert.IsNotNull(graph.PluginFamilies[typeof (WidgetMaker)]);
+            Assert.IsNotNull(graph.FindFamily(typeof (GrandChild)));
+            Assert.IsNotNull(graph.FindFamily(typeof (Child)));
+            Assert.IsNotNull(graph.FindFamily(typeof (Parent)));
+            Assert.IsNotNull(graph.FindFamily(typeof (WidgetMaker)));
 
-            PluginFamily family = graph.PluginFamilies[typeof (Child)];
+            PluginFamily family = graph.FindFamily(typeof (Child));
         }
 
         [Test]
@@ -141,7 +141,7 @@ namespace StructureMap.Testing.Container
         [Test]
         public void GotPluginsThatAreMarkedAsPluggable()
         {
-            PluginFamily pluginFamily = graph.PluginFamilies[typeof (IWidget)];
+            PluginFamily pluginFamily = graph.FindFamily(typeof (IWidget));
             Plugin plugin = pluginFamily.Plugins[typeof (ColorWidget)];
             Assert.IsNotNull(plugin);
         }
@@ -150,7 +150,7 @@ namespace StructureMap.Testing.Container
         [Test]
         public void GotPluginThatIsAddedInConfigXml()
         {
-            PluginFamily family = graph.PluginFamilies[typeof (IWidget)];
+            PluginFamily family = graph.FindFamily(typeof (IWidget));
             Plugin plugin = family.Plugins[typeof (NotPluggableWidget)];
             Assert.IsNotNull(plugin);
             Assert.AreEqual("NotPluggable", plugin.ConcreteKey);
@@ -171,7 +171,7 @@ namespace StructureMap.Testing.Container
         [Test]
         public void GotRightNumberOfPluginsForIWidget()
         {
-            PluginFamily pluginFamily = graph.PluginFamilies[typeof (IWidget)];
+            PluginFamily pluginFamily = graph.FindFamily(typeof (IWidget));
             Assert.AreEqual(5, pluginFamily.Plugins.Count, "Should be 5 total");
         }
 
@@ -179,7 +179,7 @@ namespace StructureMap.Testing.Container
         [Test]
         public void GotRightNumberOfPluginsForMultipleAssemblies()
         {
-            PluginFamily pluginFamily = graph.PluginFamilies[typeof (Rule)];
+            PluginFamily pluginFamily = graph.FindFamily(typeof (Rule));
             Assert.AreEqual(5, pluginFamily.Plugins.Count, "Should be 5 total");
         }
 
@@ -194,7 +194,7 @@ namespace StructureMap.Testing.Container
         [Test]
         public void SetsTheDefaultInstanceKey()
         {
-            PluginFamily family = graph.PluginFamilies[typeof (IWidget)];
+            PluginFamily family = graph.FindFamily(typeof (IWidget));
             Assert.AreEqual("Red", family.DefaultInstanceKey);
         }
     }

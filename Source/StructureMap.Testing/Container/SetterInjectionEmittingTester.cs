@@ -53,7 +53,7 @@ namespace StructureMap.Testing.Container
         public void EnumSetter()
         {
             PluginGraph graph = new PluginGraph();
-            PluginFamily family = graph.PluginFamilies.Add(typeof (IGridColumn));
+            PluginFamily family = graph.FindFamily(typeof (IGridColumn));
             Plugin plugin = Plugin.CreateImplicitPlugin(typeof(EnumGridColumn));
             family.Plugins.Add(plugin);
 
@@ -70,7 +70,7 @@ namespace StructureMap.Testing.Container
         public void PrimitiveNonStringSetter()
         {
             PluginGraph graph = new PluginGraph();
-            PluginFamily family = graph.PluginFamilies.Add(typeof(IGridColumn));
+            PluginFamily family = graph.FindFamily(typeof(IGridColumn));
             Plugin plugin = Plugin.CreateImplicitPlugin(typeof(LongGridColumn));
             family.Plugins.Add(plugin);
 
@@ -89,7 +89,7 @@ namespace StructureMap.Testing.Container
         public void StringSetter()
         {
             PluginGraph graph = new PluginGraph();
-            PluginFamily family = graph.PluginFamilies.Add(typeof(IGridColumn));
+            PluginFamily family = graph.FindFamily(typeof(IGridColumn));
             Plugin plugin = Plugin.CreateImplicitPlugin(typeof(StringGridColumn));
             family.Plugins.Add(plugin);
 

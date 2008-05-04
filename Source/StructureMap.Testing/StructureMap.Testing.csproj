@@ -225,9 +225,6 @@
     <Compile Include="Container\Interceptors\InterceptorLibraryTester.cs" />
     <Compile Include="Container\Interceptors\MockTypeInterceptor.cs" />
     <Compile Include="Container\Interceptors\TypeInterceptionTester.cs" />
-    <Compile Include="Container\MockingTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Container\PluggableAttributeTester.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -73,7 +73,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 Assert.IsNotNull(expression);
             }
 
-            PluginFamily family = pluginGraph.PluginFamilies[typeof (IGateway)];
+            PluginFamily family = pluginGraph.FindFamily(typeof (IGateway));
             Assert.IsInstanceOfType(typeof(ThreadLocalStoragePolicy), family.Policy);
         }
 
@@ -86,7 +86,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 registry.BuildInstancesOf<IGateway>();
             }
 
-            Assert.IsTrue(pluginGraph.PluginFamilies.Contains<IGateway>());
+            Assert.IsTrue(pluginGraph.ContainsFamily(typeof(IGateway)));
         }
 
 
@@ -101,7 +101,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 Assert.IsNotNull(expression);
             }
 
-            PluginFamily family = pluginGraph.PluginFamilies[typeof (IGateway)];
+            PluginFamily family = pluginGraph.FindFamily(typeof (IGateway));
             Assert.IsInstanceOfType(typeof(BuildPolicy), family.Policy);
         }
 
@@ -116,7 +116,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 Assert.IsNotNull(expression);
             }
 
-            PluginFamily family = pluginGraph.PluginFamilies[typeof (IGateway)];
+            PluginFamily family = pluginGraph.FindFamily(typeof (IGateway));
             Assert.IsInstanceOfType(typeof(SingletonPolicy), family.Policy);
         }
 
@@ -130,7 +130,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 registry.BuildInstancesOf<IGateway>().TheDefaultIsConcreteType<StubbedGateway>();
             }
 
-            Assert.IsTrue(pluginGraph.PluginFamilies.Contains<IGateway>());
+            Assert.IsTrue(pluginGraph.ContainsFamily(typeof(IGateway)));
 
             InstanceManager manager = new InstanceManager(pluginGraph);
             IGateway gateway = (IGateway) manager.CreateInstance(typeof (IGateway));
@@ -147,7 +147,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 registry.BuildInstancesOf<IGateway>().TheDefaultIsConcreteType<FakeGateway>();
             }
 
-            Assert.IsTrue(pluginGraph.PluginFamilies.Contains<IGateway>());
+            Assert.IsTrue(pluginGraph.ContainsFamily(typeof(IGateway)));
 
             InstanceManager manager = new InstanceManager(pluginGraph);
             IGateway gateway = (IGateway) manager.CreateInstance(typeof (IGateway));
@@ -180,7 +180,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 registry.BuildInstancesOf<IGateway>().InterceptConstructionWith(factoryInterceptor);
             }
 
-            Assert.AreSame(pluginGraph.PluginFamilies[typeof(IGateway)].Policy, factoryInterceptor);
+            Assert.AreSame(pluginGraph.FindFamily(typeof(IGateway)).Policy, factoryInterceptor);
         }
 
         [Test]
@@ -205,7 +205,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 registry.BuildInstancesOf<IGateway>();
             }
 
-            Assert.IsTrue(pluginGraph.PluginFamilies.Contains<IGateway>());
+            Assert.IsTrue(pluginGraph.ContainsFamily(typeof(IGateway)));
 
             InstanceManager manager = new InstanceManager(pluginGraph);
             IGateway gateway = (IGateway) manager.CreateInstance(typeof (IGateway));

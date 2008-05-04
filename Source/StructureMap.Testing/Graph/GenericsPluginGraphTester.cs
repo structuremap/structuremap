@@ -31,7 +31,7 @@ namespace StructureMap.Testing.Graph
         public void BuildAnInstanceManagerFromTemplatedPluginFamily()
         {
             PluginGraph pluginGraph = new PluginGraph();
-            PluginFamily family = pluginGraph.PluginFamilies.Add(typeof (IGenericService<>));
+            PluginFamily family = pluginGraph.FindFamily(typeof (IGenericService<>));
             family.DefaultInstanceKey = "Default";
             family.Plugins.Add(typeof (GenericService<>), "Default");
             family.Plugins.Add(typeof (SecondGenericService<>), "Second");
@@ -52,7 +52,7 @@ namespace StructureMap.Testing.Graph
         public void BuildTemplatedFamilyWithOnlyOneTemplateParameter()
         {
             PluginGraph pluginGraph = new PluginGraph();
-            PluginFamily family = pluginGraph.PluginFamilies.Add(typeof(IGenericService<>));
+            PluginFamily family = pluginGraph.FindFamily(typeof(IGenericService<>));
             family.Plugins.Add(typeof (GenericService<>), "Default");
             family.Plugins.Add(typeof (SecondGenericService<>), "Second");
             family.Plugins.Add(typeof (ThirdGenericService<>), "Third");
@@ -72,7 +72,7 @@ namespace StructureMap.Testing.Graph
         public void BuildTemplatedFamilyWithThreeTemplateParameters()
         {
             PluginGraph pluginGraph = new PluginGraph();
-            PluginFamily family = pluginGraph.PluginFamilies.Add(typeof(IGenericService3<,,>));
+            PluginFamily family = pluginGraph.FindFamily(typeof(IGenericService3<,,>));
             family.Plugins.Add(typeof (GenericService3<,,>), "Default");
             family.Plugins.Add(typeof (SecondGenericService3<,,>), "Second");
             family.Plugins.Add(typeof (ThirdGenericService3<,,>), "Third");
@@ -108,7 +108,7 @@ namespace StructureMap.Testing.Graph
         public void GetTemplatedFamily()
         {
             PluginGraph pluginGraph = new PluginGraph();
-            PluginFamily family = pluginGraph.PluginFamilies.Add(typeof(IGenericService<>));
+            PluginFamily family = pluginGraph.FindFamily(typeof(IGenericService<>));
             family.Plugins.Add(typeof (GenericService<>), "Default");
             family.Plugins.Add(typeof (SecondGenericService<>), "Second");
             family.Plugins.Add(typeof (ThirdGenericService<>), "Third");

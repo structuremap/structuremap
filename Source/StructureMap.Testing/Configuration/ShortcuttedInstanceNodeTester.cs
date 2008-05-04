@@ -27,7 +27,7 @@ namespace StructureMap.Testing.Configuration
         public void CreateTheInferredPluginCorrectly()
         {
             // Who needs the Law of Demeter?
-            InstanceMemento[] mementoArray = _graph.PluginFamilies[typeof (IWidget)].GetAllMementos();
+            InstanceMemento[] mementoArray = _graph.FindFamily(typeof (IWidget)).GetAllMementos();
             Assert.AreEqual(4, mementoArray.Length);
         }
 

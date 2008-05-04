@@ -154,6 +154,12 @@ namespace StructureMap
         public static PluginFamily CreatePluginFamily(Type exportedType)
         {
             PluginFamilyAttribute att = GetAttribute(exportedType);
+
+            if (att == null)
+            {
+                return new PluginFamily(exportedType);
+            }
+
             PluginFamily family = att.BuildPluginFamily(exportedType);
 
             return family;

@@ -41,8 +41,6 @@ namespace StructureMap.Configuration.DSL.Expressions
                 alteration(family);
             }
 
-            graph.PluginFamilies.Add(family);
-
             AssemblyGraph assembly = new AssemblyGraph(_pluginType.Assembly);
             graph.Assemblies.Add(assembly);
         }

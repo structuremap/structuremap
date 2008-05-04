@@ -71,6 +71,11 @@ namespace StructureMap.Graph
             get { return _interceptorLibrary; }
         }
 
+        public int FamilyCount
+        {
+            get { return _pluginFamilies.Count; }
+        }
+
         /// <summary>
         /// Closes the PluginGraph for adding or removing members.  Searches all of the
         /// AssemblyGraph's for implicit Plugin and PluginFamily's
@@ -164,7 +169,8 @@ namespace StructureMap.Graph
         {
             if (!_pluginFamilies.Contains(pluginType))
             {
-                PluginFamily family = _pluginFamilies.Add(pluginType);
+                PluginFamily family = PluginFamilyAttribute.CreatePluginFamily(pluginType);
+                _pluginFamilies.Add(family);
                 attachImplicitPlugins(family);
             }
         }
@@ -173,6 +179,11 @@ namespace StructureMap.Graph
         {
             buildFamilyIfMissing(pluginType);
             return PluginFamilies[pluginType];
+        }
+
+        public bool ContainsFamily(Type pluginType)
+        {
+            return _pluginFamilies.Contains(pluginType);
         }
     }
 }

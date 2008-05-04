@@ -96,7 +96,7 @@ namespace StructureMap.Testing.Container
         public void AddPluginForTypeWhenThePluginAlreadyExists()
         {
             PluginGraph pluginGraph = new PluginGraph();
-            PluginFamily family = pluginGraph.PluginFamilies.Add(typeof(ISomething));
+            PluginFamily family = pluginGraph.FindFamily(typeof(ISomething));
             family.Plugins.Add(typeof (SomethingOne), "One");
 
             InstanceManager manager = new InstanceManager(pluginGraph);
@@ -149,7 +149,7 @@ namespace StructureMap.Testing.Container
         private IInstanceFactory getISomethingFactory()
         {
             PluginGraph pluginGraph = new PluginGraph();
-            pluginGraph.PluginFamilies.Add(typeof (ISomething));
+            pluginGraph.FindFamily(typeof (ISomething));
             InstanceManager manager = new InstanceManager(pluginGraph);
             return manager[typeof(ISomething)];
         }

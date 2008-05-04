@@ -76,7 +76,7 @@ namespace StructureMap.Testing.Configuration.DSL
             graph.Seal();
 
             List<string> colors = new List<string>();
-            foreach (Instance instance in graph.PluginFamilies[typeof (IWidget)].GetAllInstances())
+            foreach (Instance instance in graph.FindFamily(typeof (IWidget)).GetAllInstances())
             {
                 colors.Add(instance.Name);
             }

@@ -20,7 +20,7 @@ namespace StructureMap.Testing.Container
             PluginGraph graph = new PluginGraph();
 
 
-            PluginFamily family = graph.PluginFamilies.Add(typeof (Cow), string.Empty);
+            PluginFamily family = graph.FindFamily(typeof (Cow));
             family.Plugins.Add(typeof (Cow), "Default");
 
 

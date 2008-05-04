@@ -71,20 +71,6 @@ namespace StructureMap.Graph
             get { return _pluginFamilies.Count; }
         }
 
-        public PluginFamily Add(Type pluginType, string defaultInstanceKey)
-        {
-            PluginFamily family = new PluginFamily(pluginType, defaultInstanceKey);
-            return Add(family);
-        }
-
-        public PluginFamily Add(Type pluginType)
-        {
-            PluginFamilyAttribute att = PluginFamilyAttribute.GetAttribute(pluginType);
-            PluginFamily family = att == null ? new PluginFamily(pluginType) : att.BuildPluginFamily(pluginType);
-            Add(family);
-
-            return family;
-        }
 
         public PluginFamily Add(PluginFamily family)
         {

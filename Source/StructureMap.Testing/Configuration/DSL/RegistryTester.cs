@@ -83,7 +83,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
             registry.Dispose();
 
-            PluginFamily family = graph.PluginFamilies[typeof (IGateway)];
+            PluginFamily family = graph.FindFamily(typeof (IGateway));
             UserControlInstance instance = (UserControlInstance) family.GetInstance(theKey);
             Assert.IsNotNull(instance);
 
