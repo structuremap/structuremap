@@ -27,24 +27,18 @@ namespace StructureMap.Graph
         private List<Instance> _instances = new List<Instance>();
         private IBuildPolicy _buildPolicy = new BuildPolicy();
 
-        #region constructors
-
-        public PluginFamily(Type pluginType, string defaultInstanceKey)
-        {
-            _pluginType = pluginType;
-            _pluginTypeName = TypePath.GetAssemblyQualifiedName(_pluginType);
-            _defaultKey = defaultInstanceKey;
-            _plugins = new PluginCollection(this);
-        }
 
         // TODO:  Need to unit test the scope from the attribute
         /// <summary>
         /// Testing constructor
         /// </summary>
         /// <param name="pluginType"></param>
-        public PluginFamily(Type pluginType) :
-            this(pluginType, PluginFamilyAttribute.GetDefaultKey(pluginType))
+        public PluginFamily(Type pluginType)
         {
+            _pluginType = pluginType;
+            _pluginTypeName = TypePath.GetAssemblyQualifiedName(_pluginType);
+            _plugins = new PluginCollection(this);
+
             // TODO -- Merge functionality with PluginFamilyAttribute
             PluginFamilyAttribute attribute = PluginFamilyAttribute.GetAttribute(pluginType);
             if (attribute != null)
@@ -60,8 +54,6 @@ namespace StructureMap.Graph
             get { return _parent; }
             set { _parent = value; }
         }
-
-        #endregion
 
         public InstanceInterceptor InstanceInterceptor
         {
@@ -103,12 +95,13 @@ namespace StructureMap.Graph
             return templatedFamily;
         }
 
+        // TODO:  Move this into TypeScanner
         /// <summary>
         /// Finds Plugin's that match the PluginType from the assembly and add to the internal
         /// collection of Plugin's 
         /// </summary>
         /// <param name="assembly"></param>
-        public Plugin[] FindPlugins(AssemblyGraph assembly)
+        [Obsolete] public Plugin[] FindPlugins(AssemblyGraph assembly)
         {
             Predicate<Type> pluggedTypeFilter =
                 delegate(Type type) { return Plugin.IsAnExplicitPlugin(PluginType, type); };
@@ -143,17 +136,13 @@ namespace StructureMap.Graph
             _mementoList.AddRange(source.GetAllMementos());
         }
 
-        public InstanceMemento[] GetAllMementos()
-        {
-            return _mementoList.ToArray();
-        }
-
         // For testing
         public InstanceMemento GetMemento(string instanceKey)
         {
             return _mementoList.Find(delegate(InstanceMemento m) { return m.InstanceKey == instanceKey; });
         }
 
+        // TODO -- Move out into TypeScanner
         public void DiscoverImplicitInstances()
         {
             List<Plugin> list = _plugins.FindAutoFillablePlugins();

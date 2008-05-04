@@ -44,7 +44,7 @@ namespace StructureMap.Testing
 
             family.AddInstance(_memento);
 
-            PluginGraph graph = builder.CreatePluginGraph();
+            PluginGraph graph = builder.PluginGraph;
             InstanceManager manager = new InstanceManager(graph);
 
             StubbedGateway gateway = (StubbedGateway) manager.CreateInstance(typeof (IGateway), _memento.InstanceKey);

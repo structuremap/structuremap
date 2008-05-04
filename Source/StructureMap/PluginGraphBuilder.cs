@@ -32,9 +32,9 @@ namespace StructureMap
 
         #endregion
 
+        private readonly ConfigurationParser[] _parsers;
         private readonly Registry[] _registries = new Registry[0];
         private PluginGraph _graph;
-        private ConfigurationParser[] _parsers;
 
         #region constructors
 
@@ -47,36 +47,7 @@ namespace StructureMap
         {
             _parsers = parsers;
             _registries = registries;
-        }
-
-
-        /// <summary>
-        /// Creates a PluginGraphBuilder that reads configuration from the filePath
-        /// </summary>
-        /// <param name="filePath">The path to the configuration file</param>
-        [Obsolete("Elimating direct usage of PluginGraphBuilder")]
-        public PluginGraphBuilder(string filePath)
-        {
-            try
-            {
-                XmlDocument doc = new XmlDocument();
-                doc.Load(filePath);
-
-                _parsers = ConfigurationParser.GetParsers(doc, filePath);
-            }
-            catch (Exception ex)
-            {
-                throw new StructureMapException(100, filePath, ex);
-            }
-        }
-
-        /// <summary>
-        /// Default constructor reads configuration from the StructureMap.config file
-        /// in the application folder
-        /// </summary>
-        [Obsolete("Elimating direct usage of PluginGraphBuilder")]
-        public PluginGraphBuilder() : this(StructureMapConfiguration.GetStructureMapConfigurationPath())
-        {
+            _graph = new PluginGraph();
         }
 
         #endregion
@@ -90,57 +61,33 @@ namespace StructureMap
         /// <returns></returns>
         public PluginGraph Build()
         {
-            NormalGraphBuilder graphBuilder = new NormalGraphBuilder(_registries);
-            PluginGraph pluginGraph = buildPluginGraph(graphBuilder);
-            return pluginGraph;
+            NormalGraphBuilder graphBuilder = new NormalGraphBuilder(_registries, _graph);
+            buildPluginGraph(graphBuilder);
+            return _graph;
         }
 
         #endregion
 
-        private PluginGraph buildPluginGraph(IGraphBuilder graphBuilder)
-        {
-            readAssemblies(graphBuilder);
-
-            readFamilies(graphBuilder);
-
-            foreach (ConfigurationParser parser in _parsers)
-            {
-                parser.ParseInstances(graphBuilder);
-            }
-
-            _graph = graphBuilder.CreatePluginGraph();
-
-            return _graph;
-        }
-
-        private void readInstanceDefaults(IGraphBuilder graphBuilder)
+        private void forAllParsers(Action<ConfigurationParser> action)
         {
             foreach (ConfigurationParser parser in _parsers)
             {
-                parser.ParseProfilesAndMachines(graphBuilder);
+                action(parser);
             }
         }
 
-        private void readFamilies(IGraphBuilder graphBuilder)
+        private void buildPluginGraph(IGraphBuilder graphBuilder)
         {
+            forAllParsers(delegate(ConfigurationParser p) { p.ParseAssemblies(graphBuilder); });
+
             graphBuilder.StartFamilies();
 
-            foreach (ConfigurationParser parser in _parsers)
-            {
-                parser.ParseFamilies(graphBuilder);
-            }
-
-            readInstanceDefaults(graphBuilder);
-
-            
-        }
-
-        private void readAssemblies(IGraphBuilder graphBuilder)
-        {
-            foreach (ConfigurationParser parser in _parsers)
-            {
-                parser.ParseAssemblies(graphBuilder);
-            }
+            forAllParsers(delegate(ConfigurationParser p)
+                              {
+                                  p.ParseFamilies(graphBuilder);
+                                  p.ParseProfilesAndMachines(graphBuilder);
+                                  p.ParseInstances(graphBuilder);
+                              });
         }
     }
 }

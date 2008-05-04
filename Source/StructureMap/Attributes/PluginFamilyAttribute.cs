@@ -143,7 +143,8 @@ namespace StructureMap
             }
 
             MementoSource source = CreateSource(exportedType);
-            PluginFamily family = new PluginFamily(exportedType, DefaultKey);
+            PluginFamily family = new PluginFamily(exportedType);
+            family.DefaultInstanceKey = DefaultKey;
             family.AddMementoSource(source);
 
             family.SetScopeTo(Scope);

@@ -19,7 +19,6 @@ namespace StructureMap.Configuration
             _mementoCreator = mementoCreator;
         }
 
-        // TODO:  Standard way in this class to get a PluginType, Maybe more into IGraphBuilder
         public void ParseFamily(XmlElement familyElement)
         {
             TypePath typePath = TypePath.CreateFromXmlNode(familyElement);
@@ -40,7 +39,6 @@ namespace StructureMap.Configuration
         public void ParseDefaultElement(XmlElement element)
         {
             TypePath pluginTypePath = new TypePath(element.GetAttribute(XmlConstants.PLUGIN_TYPE));
-            // TODO:  Gotta throw exception if the type cannot be found
 
 
             _builder.ConfigureFamily(pluginTypePath,

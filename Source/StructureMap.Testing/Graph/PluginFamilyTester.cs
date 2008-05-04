@@ -16,7 +16,8 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void AddAPluggedType()
         {
-            PluginFamily family = new PluginFamily(typeof (IWidget), "DefaultKey");
+            PluginFamily family = new PluginFamily(typeof (IWidget));
+            family.DefaultInstanceKey = "DefaultKey";
             family.Plugins.Add(typeof (NotPluggableWidget), "NotPlugged");
 
             Assert.AreEqual(1, family.Plugins.Count, "Plugin Count");
@@ -25,7 +26,8 @@ namespace StructureMap.Testing.Graph
         [Test, ExpectedException(typeof (StructureMapException))]
         public void AddAWrongType()
         {
-            PluginFamily family = new PluginFamily(typeof (IWidget), "DefaultKey");
+            PluginFamily family = new PluginFamily(typeof(IWidget));
+            family.DefaultInstanceKey = "DefaultKey";
             family.Plugins.Add(typeof (Rule), "Rule");
         }
 
@@ -33,7 +35,8 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void GetPlugins()
         {
-            PluginFamily family = new PluginFamily(typeof (IWidget), "DefaultKey");
+            PluginFamily family = new PluginFamily(typeof(IWidget));
+            family.DefaultInstanceKey = "DefaultKey";
 
             AssemblyGraph graph = new AssemblyGraph("StructureMap.Testing.Widget");
             family.FindPlugins(graph);

@@ -1,15 +1,11 @@
 using System;
 using System.Reflection;
-using StructureMap.Attributes;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 
 namespace StructureMap.Configuration
 {
-    // TODO:  Kill in 3.5
-    public delegate void Action<T>(T subject);
-
     public class NormalGraphBuilder : IGraphBuilder
     {
         private readonly PluginGraph _pluginGraph;
@@ -18,9 +14,13 @@ namespace StructureMap.Configuration
         private InstanceManager _systemInstanceManager;
 
 
-        public NormalGraphBuilder(Registry[] registries)
+        public NormalGraphBuilder(Registry[] registries) : this(registries, new PluginGraph())
         {
-            _pluginGraph = new PluginGraph();
+        }
+
+        public NormalGraphBuilder(Registry[] registries, PluginGraph pluginGraph)
+        {
+            _pluginGraph = pluginGraph;
             foreach (Registry registry in registries)
             {
                 registry.ConfigurePluginGraph(_pluginGraph);
@@ -35,11 +35,6 @@ namespace StructureMap.Configuration
         public void FinishFamilies()
         {
             _pluginGraph.Seal();
-        }
-
-        [Obsolete("Do away?")] public PluginGraph CreatePluginGraph()
-        {
-            return _pluginGraph;
         }
 
         public PluginGraph SystemGraph
@@ -87,20 +82,6 @@ namespace StructureMap.Configuration
             }
         }
 
-        #endregion
-
-        private object buildSystemObject(Type type, InstanceMemento memento)
-        {
-            Instance instance = memento.ReadInstance(_systemGraph, type);
-
-            if (_systemInstanceManager == null)
-            {
-                _systemInstanceManager = new InstanceManager(_systemGraph);
-            }
-
-            return _systemInstanceManager.CreateInstance(type, instance);
-        }
-
 
         public void WithSystemObject<T>(InstanceMemento memento, string context, Action<T> action)
         {
@@ -127,6 +108,20 @@ namespace StructureMap.Configuration
             {
                 _pluginGraph.Log.RegisterError(131, ex, path.AssemblyQualifiedName, context);
             }
+        }
+
+        #endregion
+
+        private object buildSystemObject(Type type, InstanceMemento memento)
+        {
+            Instance instance = memento.ReadInstance(_systemGraph, type);
+
+            if (_systemInstanceManager == null)
+            {
+                _systemInstanceManager = new InstanceManager(_systemGraph);
+            }
+
+            return _systemInstanceManager.CreateInstance(type, instance);
         }
     }
 }

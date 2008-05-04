@@ -22,7 +22,6 @@ namespace StructureMap.Configuration
 
         void StartFamilies();
         void FinishFamilies();
-        PluginGraph CreatePluginGraph();
 
         IProfileBuilder GetProfileBuilder();
 
