@@ -28,14 +28,14 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void AutoFillDeterminationWithSetterPropertiesIsFalse()
         {
-            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (CannotBeAutoFilledGridColumn));
+            Plugin plugin = new Plugin(typeof (CannotBeAutoFilledGridColumn));
             Assert.IsFalse(plugin.CanBeAutoFilled);
         }
 
         [Test]
         public void AutoFillDeterminationWithSetterPropertiesIsTrue()
         {
-            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (AutoFilledGridColumn));
+            Plugin plugin = new Plugin(typeof (AutoFilledGridColumn));
             Assert.IsTrue(plugin.CanBeAutoFilled);
         }
 
@@ -72,7 +72,7 @@ namespace StructureMap.Testing.Graph
 			 *    WrapLines
 			 */
 
-            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (BasicGridColumn));
+            Plugin plugin = new Plugin(typeof (BasicGridColumn));
 
             Assert.AreEqual(5, plugin.Setters.Count);
             Assert.IsTrue(plugin.Setters.Contains("Widget"));
@@ -85,21 +85,21 @@ namespace StructureMap.Testing.Graph
         [Test, ExpectedException(typeof (StructureMapException))]
         public void TryToAddANonExistentSetterProperty()
         {
-            Plugin plugin = Plugin.CreateExplicitPlugin(typeof (BasicGridColumn), "Basic", string.Empty);
+            Plugin plugin = new Plugin(typeof (BasicGridColumn), "Basic");
             plugin.Setters.Add("NonExistentPropertyName");
         }
 
         [Test, ExpectedException(typeof (StructureMapException))]
         public void TryToAddASetterPropertyThatDoesNotHaveASetter()
         {
-            Plugin plugin = Plugin.CreateExplicitPlugin(typeof (BasicGridColumn), "Basic", string.Empty);
+            Plugin plugin = new Plugin(typeof (BasicGridColumn), "Basic");
             plugin.Setters.Add("HeaderText");
         }
 
         [Test, ExpectedException(typeof (StructureMapException))]
         public void TryToCreateAnImplicitPluginWithASetterPropertyThatDoesNotHaveASetMethod()
         {
-            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (BadSetterClass));
+            Plugin plugin = new Plugin(typeof (BadSetterClass));
         }
     }
 }

@@ -7,7 +7,7 @@ namespace StructureMap.Testing.Widget
         int Count { get; }
     }
 
-    [Pluggable("String", "")]
+    [Pluggable("String")]
     public class StringList : IList
     {
         public string[] values;
@@ -27,7 +27,7 @@ namespace StructureMap.Testing.Widget
         #endregion
     }
 
-    [Pluggable("Integer", "")]
+    [Pluggable("Integer")]
     public class IntegerList : IList
     {
         public int[] values;

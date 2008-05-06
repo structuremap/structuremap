@@ -9,7 +9,7 @@ namespace StructureMap.Testing.Widget3
         void DoSomething();
     }
 
-    [Pluggable("Default", "")]
+    [Pluggable("Default")]
     public class DefaultGateway : IGateway
     {
         private string _color;
@@ -67,7 +67,7 @@ namespace StructureMap.Testing.Widget3
     }
 
 
-    [Pluggable("Stubbed", "")]
+    [Pluggable("Stubbed")]
     public class StubbedGateway : IGateway
     {
         #region IGateway Members

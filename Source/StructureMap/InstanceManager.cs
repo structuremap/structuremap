@@ -280,7 +280,7 @@ namespace StructureMap
             }
 
             // TODO:  Little bit of smelliness here
-            Plugin plugin = Plugin.CreateImplicitPlugin(type);
+            Plugin plugin = new Plugin(type);
             if (!plugin.CanBeAutoFilled)
             {
                 throw new StructureMapException(230, type.FullName);

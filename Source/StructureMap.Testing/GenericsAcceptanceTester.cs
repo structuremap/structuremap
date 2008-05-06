@@ -62,13 +62,13 @@ namespace StructureMap.Testing
         [Test]
         public void CanCreatePluginForGenericTypeWithGenericParameter()
         {
-            Plugin plugin = Plugin.CreateExplicitPlugin(typeof (GenericService<int>), "key", string.Empty);
+            Plugin plugin = new Plugin(typeof (GenericService<int>), "key");
         }
 
         [Test]
         public void CanCreatePluginForGenericTypeWithoutGenericParameter()
         {
-            Plugin plugin = Plugin.CreateExplicitPlugin(typeof (GenericService<>), "key", string.Empty);
+            Plugin plugin = new Plugin(typeof (GenericService<>), "key");
         }
 
         [Test, Ignore("Generics with more than 2 parameters")]

@@ -119,8 +119,7 @@ namespace StructureMap.Configuration
                 string context = "creating a Plugin for " + family.PluginTypeName;
                 _builder.WithType(pluginPath, context, delegate(Type pluggedType)
                                                            {
-                                                               Plugin plugin =
-                                                                   Plugin.CreateExplicitPlugin(pluggedType, concreteKey, "");
+                                                               Plugin plugin = new Plugin(pluggedType, concreteKey);
                                                                family.Plugins.Add(plugin);
 
                                                                foreach (XmlElement setterElement in pluginElement.ChildNodes)

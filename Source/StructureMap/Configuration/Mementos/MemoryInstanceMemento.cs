@@ -9,7 +9,7 @@ namespace StructureMap.Configuration.Mementos
     [Obsolete("Think this is unnecessary")] public class GenericMemento<T> : MemoryInstanceMemento
     {
         public GenericMemento(string instanceKey)
-            : base(Plugin.CreateImplicitPlugin(typeof (T)).ConcreteKey, instanceKey)
+            : base(new Plugin(typeof (T)).ConcreteKey, instanceKey)
         {
         }
     }

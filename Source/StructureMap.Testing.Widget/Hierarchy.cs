@@ -2,7 +2,7 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.Testing.Widget
 {
-    [PluginFamily, Pluggable("Default", "")]
+    [PluginFamily, Pluggable("Default")]
     public class GrandChild
     {
         private int _BirthYear;
@@ -26,7 +26,7 @@ namespace StructureMap.Testing.Widget
     }
 
 
-    [Pluggable("Leftie", "")]
+    [Pluggable("Leftie")]
     public class LeftieGrandChild : GrandChild
     {
         public LeftieGrandChild(int BirthYear) : base(false, BirthYear)
@@ -35,7 +35,7 @@ namespace StructureMap.Testing.Widget
     }
 
 
-    [PluginFamily, Pluggable("Default", "")]
+    [PluginFamily, Pluggable("Default")]
     public class Child
     {
         private GrandChild _MyGrandChild;
@@ -58,7 +58,7 @@ namespace StructureMap.Testing.Widget
         }
     }
 
-    [PluginFamily, Pluggable("Default", "")]
+    [PluginFamily, Pluggable("Default")]
     public class Parent
     {
         private int _Age;

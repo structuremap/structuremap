@@ -8,7 +8,7 @@ namespace StructureMap.Source
     /// Implementation of XmlMementoSource that reads InstanceMemento's from an external file.
     /// Useful to break the StructureMap.config file into smaller pieces.
     /// </summary>
-    [Pluggable("XmlFile", "")]
+    [Pluggable("XmlFile")]
     public class XmlFileMementoSource : XmlMementoSource
     {
         private string _filePath;

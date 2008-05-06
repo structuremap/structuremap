@@ -29,7 +29,7 @@ namespace StructureMap
             // Add a missing PluggedType if we can
             if (Plugin.CanBeCast(_pluginType, pluggedType))
             {
-                Plugin plugin = Plugin.CreateImplicitPlugin(pluggedType);
+                Plugin plugin = new Plugin(pluggedType);
                 processPlugins(new Plugin[]{plugin});
 
                 return _builders[pluggedType];

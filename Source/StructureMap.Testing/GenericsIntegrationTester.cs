@@ -39,7 +39,7 @@ namespace StructureMap.Testing
         [Test]
         public void Plugin_can_service_a_generic_type()
         {
-            Plugin plugin = Plugin.CreateImplicitPlugin(typeof(SpecificConcept));
+            Plugin plugin = new Plugin(typeof(SpecificConcept));
             Assert.IsTrue(plugin.CanBePluggedIntoGenericType(typeof(IConcept<>), typeof(object)));
             Assert.IsFalse(plugin.CanBePluggedIntoGenericType(typeof(IConcept<>), typeof(string)));
             Assert.IsFalse(plugin.CanBePluggedIntoGenericType(typeof(IConcept<>), typeof(int)));

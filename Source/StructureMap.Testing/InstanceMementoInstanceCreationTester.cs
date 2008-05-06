@@ -174,7 +174,7 @@ namespace StructureMap.Testing
         public void ReadChildArrayProperty()
         {
             PluginGraph graph = new PluginGraph();
-            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (ComplexRule));
+            Plugin plugin = new Plugin(typeof (ComplexRule));
 
             graph.FindFamily(typeof (Rule)).Plugins.Add(plugin);
 
@@ -207,7 +207,7 @@ namespace StructureMap.Testing
         public void ReadChildProperty_child_property_is_defined_build_child()
         {
             PluginGraph graph = new PluginGraph();
-            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (ComplexRule));
+            Plugin plugin = new Plugin(typeof (ComplexRule));
 
             graph.FindFamily(typeof (Rule)).Plugins.Add(plugin);
 
@@ -226,7 +226,7 @@ namespace StructureMap.Testing
         public void ReadChildProperty_child_property_is_not_defined_so_use_default()
         {
             PluginGraph graph = new PluginGraph();
-            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (ComplexRule));
+            Plugin plugin = new Plugin(typeof (ComplexRule));
 
             graph.FindFamily(typeof (Rule)).Plugins.Add(plugin);
 
@@ -241,7 +241,7 @@ namespace StructureMap.Testing
         public void ReadPrimitivePropertiesHappyPath()
         {
             PluginGraph graph = new PluginGraph();
-            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (ComplexRule));
+            Plugin plugin = new Plugin(typeof (ComplexRule));
 
             graph.FindFamily(typeof (Rule)).Plugins.Add(plugin);
 

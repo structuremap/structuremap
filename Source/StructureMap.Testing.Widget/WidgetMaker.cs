@@ -6,7 +6,7 @@ namespace StructureMap.Testing.Widget
         public abstract IWidget MakeWidget();
     }
 
-    [Pluggable("Color", "Only for testing")]
+    [Pluggable("Color")]
     public class ColorWidgetMaker : WidgetMaker
     {
         private string _Color;
@@ -28,7 +28,7 @@ namespace StructureMap.Testing.Widget
         }
     }
 
-    [Pluggable("Money", "Only for testing")]
+    [Pluggable("Money")]
     public class MoneyWidgetMaker : WidgetMaker
     {
         private double _Amount;

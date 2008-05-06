@@ -75,6 +75,7 @@ namespace StructureMap.Graph
             }
         }
 
+        [Obsolete("Get rid of this")]
         public void Add(TypePath path, string concreteKey)
         {
             Plugin plugin = new Plugin(path, concreteKey);
@@ -87,9 +88,10 @@ namespace StructureMap.Graph
         /// <param name="pluggedType"></param>
         /// <param name="concreteKey"></param>
         // TODO -- not wild about this method.
+        [Obsolete("Get rid of this")]
         public void Add(Type pluggedType, string concreteKey)
         {
-            Plugin plugin = Plugin.CreateExplicitPlugin(pluggedType, concreteKey, string.Empty);
+            Plugin plugin = new Plugin(pluggedType, concreteKey);
             Add(plugin);
         }
 
@@ -138,7 +140,7 @@ namespace StructureMap.Graph
 
         public Plugin FindOrCreate(Type pluggedType, bool createDefaultInstanceOfType)
         {
-            Plugin plugin = Plugin.CreateImplicitPlugin(pluggedType);
+            Plugin plugin = new Plugin(pluggedType);
             Add(plugin);
 
             return plugin;

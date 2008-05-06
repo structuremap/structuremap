@@ -53,16 +53,6 @@ namespace StructureMap.Graph
             get { return _className; }
         }
 
-        public static string GetTypeIdentifier(Type type)
-        {
-            return new TypePath(type).AssemblyQualifiedName;
-        }
-
-        public static TypePath TypePathForFullName(string fullname)
-        {
-            return new TypePath(string.Empty, fullname);
-        }
-
         public static TypePath CreateFromXmlNode(XmlNode node)
         {
             string typeName = node.Attributes[XmlConstants.TYPE_ATTRIBUTE].Value;
@@ -96,16 +86,6 @@ namespace StructureMap.Graph
             }
         }
 
-        public bool Matches(string typeName)
-        {
-            return (AssemblyQualifiedName == typeName || ClassName == typeName);
-        }
-
-        public bool Matches(Type type)
-        {
-            return (AssemblyQualifiedName == type.AssemblyQualifiedName || ClassName == type.FullName);
-        }
-
         public override bool Equals(object obj)
         {
             TypePath peer = obj as TypePath;
@@ -120,20 +100,6 @@ namespace StructureMap.Graph
         public override int GetHashCode()
         {
             return AssemblyQualifiedName.GetHashCode();
-        }
-
-
-        public bool CanFindType()
-        {
-            try
-            {
-                Type type = FindType();
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
         }
 
         public override string ToString()

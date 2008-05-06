@@ -150,7 +150,7 @@ namespace StructureMap.Configuration.DSL.Expressions
             _alterations.Add(
                 delegate(PluginFamily family)
                     {
-                        Plugin plugin = Plugin.CreateImplicitPlugin(typeof (CONCRETETYPE));
+                        Plugin plugin = new Plugin(typeof (CONCRETETYPE));
                         plugin.ConcreteKey = instanceName;
                         family.Plugins.Add(plugin);
                     }

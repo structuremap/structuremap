@@ -21,7 +21,7 @@ namespace StructureMap.Testing.Container
 
             try
             {
-                Plugin plugin = Plugin.CreateImplicitPlugin(typeof (ComplexRule));
+                Plugin plugin = new Plugin(typeof (ComplexRule));
 
                 InstanceBuilderAssembly _InstanceBuilderAssembly =
                     new InstanceBuilderAssembly("StructureMap.EmittingTesterAssembly", typeof (Rule));

@@ -7,7 +7,7 @@ namespace StructureMap.Testing.Widget
         void DoSomething();
     }
 
-    [Pluggable("Color", "Only for testing")]
+    [Pluggable("Color")]
     public class ColorWidget : IWidget, ICloneable
     {
         private string _Color;
@@ -97,7 +97,7 @@ namespace StructureMap.Testing.Widget
         #endregion
     }
 
-    [Pluggable("Money", "Only for testing")]
+    [Pluggable("Money")]
     public class MoneyWidget : IWidget
     {
         private double _Amount;
@@ -120,7 +120,7 @@ namespace StructureMap.Testing.Widget
     }
 
 
-    [Pluggable("Configuration", "Only for testing")]
+    [Pluggable("Configuration")]
     public class ConfigurationWidget : IWidget
     {
         private bool _Bool;

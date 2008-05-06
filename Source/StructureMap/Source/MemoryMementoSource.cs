@@ -5,7 +5,7 @@ namespace StructureMap.Source
     /// <summary>
     /// An in-memory MementoSource
     /// </summary>
-    [Pluggable("Default", "")]
+    [Pluggable("Default")]
     public class MemoryMementoSource : MementoSource
     {
         private Hashtable _mementos;

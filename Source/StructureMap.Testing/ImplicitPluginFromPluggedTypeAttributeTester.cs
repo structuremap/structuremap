@@ -26,7 +26,7 @@ namespace StructureMap.Testing
             values.Add(XmlConstants.PLUGGED_TYPE, TypePath.GetAssemblyQualifiedName(pluggedType));
             _memento = new MemoryInstanceMemento(string.Empty, "Frank", values);
 
-            _expectedPlugin = Plugin.CreateImplicitPlugin(pluggedType);
+            _expectedPlugin = new Plugin(pluggedType);
         }
 
         #endregion

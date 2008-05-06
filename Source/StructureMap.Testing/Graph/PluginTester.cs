@@ -18,7 +18,7 @@ namespace StructureMap.Testing.Graph
         [SetUp]
         public void SetUp()
         {
-            _plugin = Plugin.CreateImplicitPlugin(typeof (ConfigurationWidget));
+            _plugin = new Plugin(typeof (ConfigurationWidget));
             _iwidget = typeof (IWidget);
             _widgetmaker = typeof (WidgetMaker);
             _colorwidget = typeof (ColorWidget);
@@ -59,9 +59,16 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
+        public void Get_concrete_key_from_attribute_if_it_exists()
+        {
+            Plugin plugin = new Plugin(typeof(ColorWidget));
+            Assert.AreEqual("Color", plugin.ConcreteKey);
+        }
+
+        [Test]
         public void CanBeAutoFilledIsFalse()
         {
-            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (GrandPrix));
+            Plugin plugin = new Plugin(typeof (GrandPrix));
 
             Assert.IsFalse(plugin.CanBeAutoFilled);
         }
@@ -69,7 +76,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void CanBeAutoFilledIsTrue()
         {
-            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (Mustang));
+            Plugin plugin = new Plugin(typeof (Mustang));
 
             Assert.IsTrue(plugin.CanBeAutoFilled);
         }
@@ -94,14 +101,14 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void CanMakeObjectInstanceActivator()
         {
-            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (DefaultGateway));
+            Plugin plugin = new Plugin(typeof (DefaultGateway));
             Assert.IsTrue(!plugin.HasConstructorArguments(), "DefaultGateway can be just an activator");
         }
 
         [Test]
         public void CanNotMakeObjectInstanceActivator()
         {
-            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (ComplexRule));
+            Plugin plugin = new Plugin(typeof (ComplexRule));
             Assert.IsTrue(plugin.HasConstructorArguments(), "ComplexRule cannot be just an activator");
         }
 
@@ -109,13 +116,13 @@ namespace StructureMap.Testing.Graph
         public void CanNotPluginWithoutAttribute()
         {
             string msg = "NotPluggableWidget cannot plug into IWidget automatically";
-            Assert.AreEqual(false, Plugin.IsAnExplicitPlugin(_iwidget, typeof (NotPluggable)), msg);
+            Assert.AreEqual(false, Plugin.IsExplicitlyMarkedAsPlugin(_iwidget, typeof (NotPluggable)), msg);
         }
 
         [Test]
         public void CanPluginWithAttribute()
         {
-            Assert.AreEqual(true, Plugin.IsAnExplicitPlugin(_iwidget, _colorwidget), "ColorWidget plugs into IWidget");
+            Assert.AreEqual(true, Plugin.IsExplicitlyMarkedAsPlugin(_iwidget, _colorwidget), "ColorWidget plugs into IWidget");
         }
 
 
@@ -144,7 +151,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void CreateImplicitMementoWithNoConstructorArguments()
         {
-            Plugin plugin = Plugin.CreateExplicitPlugin(typeof (DefaultGateway), "Default", string.Empty);
+            Plugin plugin = new Plugin(typeof (DefaultGateway), "Default");
 
             InstanceMemento memento = plugin.CreateImplicitMemento();
             Assert.IsNotNull(memento);
@@ -155,7 +162,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void CreateImplicitMementoWithSomeConstructorArgumentsReturnValueIsNull()
         {
-            Plugin plugin = Plugin.CreateExplicitPlugin(typeof (Strategy), "Default", string.Empty);
+            Plugin plugin = new Plugin(typeof (Strategy), "Default");
             InstanceMemento memento = plugin.CreateImplicitMemento();
             Assert.IsNull(memento);
         }
@@ -175,14 +182,14 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void CreatePluginFromTypeThatDoesNotHaveAnAttributeDetermineTheConcreteKey()
         {
-            Plugin plugin = Plugin.CreateImplicitPlugin(GetType());
-            Assert.AreEqual(TypePath.GetAssemblyQualifiedName(GetType()), plugin.ConcreteKey);
+            Plugin plugin = new Plugin(GetType());
+            Assert.AreEqual(GetType().AssemblyQualifiedName, plugin.ConcreteKey);
         }
 
         [Test]
         public void CreatesAnImplicitMementoForAPluggedTypeThatCanBeAutoFilled()
         {
-            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (Mustang));
+            Plugin plugin = new Plugin(typeof (Mustang));
             InstanceMemento memento = plugin.CreateImplicitMemento();
 
             Assert.IsNotNull(memento);
@@ -193,7 +200,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void DoesNotCreateAnImplicitMementoForAPluggedTypeThatCanBeAutoFilled()
         {
-            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (GrandPrix));
+            Plugin plugin = new Plugin(typeof (GrandPrix));
             InstanceMemento memento = plugin.CreateImplicitMemento();
 
             Assert.IsNull(memento);
@@ -202,7 +209,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void FindFirstConstructorArgumentOfType()
         {
-            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (GrandPrix));
+            Plugin plugin = new Plugin(typeof (GrandPrix));
             string expected = "engine";
 
             string actual = plugin.FindFirstConstructorArgumentOfType<IEngine>();
@@ -215,14 +222,14 @@ namespace StructureMap.Testing.Graph
              )]
         public void FindFirstConstructorArgumentOfTypeNegativeCase()
         {
-            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (GrandPrix));
+            Plugin plugin = new Plugin(typeof (GrandPrix));
             plugin.FindFirstConstructorArgumentOfType<IWidget>();
         }
 
         [Test]
         public void GetFirstMarkedConstructor()
         {
-            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (ComplexRule));
+            Plugin plugin = new Plugin(typeof (ComplexRule));
             ConstructorInfo constructor = plugin.GetConstructor();
 
             Assert.IsNotNull(constructor);
@@ -232,7 +239,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void GetGreediestConstructor()
         {
-            Plugin plugin = Plugin.CreateImplicitPlugin(typeof (GreaterThanRule));
+            Plugin plugin = new Plugin(typeof (GreaterThanRule));
             ConstructorInfo constructor = plugin.GetConstructor();
 
             Assert.IsNotNull(constructor);
@@ -257,7 +264,7 @@ namespace StructureMap.Testing.Graph
         {
             try
             {
-                Plugin plugin = Plugin.CreateImplicitPlugin(typeof (ClassWithNoConstructor));
+                Plugin plugin = new Plugin(typeof (ClassWithNoConstructor));
                 plugin.GetConstructor();
                 Assert.Fail("Should have thrown a StructureMapException");
             }
@@ -299,7 +306,7 @@ namespace StructureMap.Testing.Graph
 
             using (mocks.Playback())
             {
-                Plugin plugin = Plugin.CreateImplicitPlugin(typeof (LotsOfStuff));
+                Plugin plugin = new Plugin(typeof (LotsOfStuff));
                 plugin.VisitArguments(visitor);
             }
         }

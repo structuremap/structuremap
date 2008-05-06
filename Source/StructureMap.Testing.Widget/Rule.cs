@@ -16,7 +16,7 @@ namespace StructureMap.Testing.Widget
         }
     }
 
-    [Pluggable("Complex", "Complex rule for testing")]
+    [Pluggable("Complex")]
     public class ComplexRule : Rule
     {
         private bool _Bool;
@@ -111,7 +111,7 @@ namespace StructureMap.Testing.Widget
     }
 
 
-    [Pluggable("Color", "Color rule for testing")]
+    [Pluggable("Color")]
     public class ColorRule : Rule
     {
         private string _Color;
@@ -130,7 +130,7 @@ namespace StructureMap.Testing.Widget
     }
 
 
-    [Pluggable("GreaterThan", "")]
+    [Pluggable("GreaterThan")]
     public class GreaterThanRule : Rule
     {
         private string _Attribute;

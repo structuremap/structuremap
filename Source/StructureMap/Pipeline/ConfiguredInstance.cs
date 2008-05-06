@@ -223,7 +223,7 @@ namespace StructureMap.Pipeline
 
         private string findPropertyName<T>()
         {
-            Plugin plugin = Plugin.CreateImplicitPlugin(_pluggedType);
+            Plugin plugin = new Plugin(_pluggedType);
             string propertyName = plugin.FindFirstConstructorArgumentOfType<T>();
 
             if (string.IsNullOrEmpty(propertyName))

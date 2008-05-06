@@ -9,18 +9,12 @@ namespace StructureMap
     public class PluggableAttribute : Attribute
     {
         private string _concreteKey;
-        private string _description;
 
         public PluggableAttribute(string concreteKey)
-            : this(concreteKey, string.Empty)
         {
+            _concreteKey = concreteKey;
         }
 
-        public PluggableAttribute(string TypeName, string Description)
-        {
-            _concreteKey = TypeName;
-            _description = Description;
-        }
 
         /// <summary>
         /// The ConcreteKey alias of the Type
@@ -29,15 +23,6 @@ namespace StructureMap
         {
             get { return _concreteKey; }
             set { _concreteKey = value; }
-        }
-
-        /// <summary>
-        /// Description of the pluggable class type
-        /// </summary>
-        public string Description
-        {
-            get { return _description; }
-            set { _description = value; }
         }
 
         /// <summary>

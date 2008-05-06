@@ -44,7 +44,7 @@ namespace StructureMap.Graph
 
             PluginFamilyAttribute.ConfigureFamily(this);
 
-            _explicitlyMarkedPluginFilter = delegate(Type type) { return Plugin.IsAnExplicitPlugin(PluginType, type); };
+            _explicitlyMarkedPluginFilter = delegate(Type type) { return Plugin.IsExplicitlyMarkedAsPlugin(PluginType, type); };
             _implicitPluginFilter = delegate(Type type) { return Plugin.CanBeCast(PluginType, type); };
             _pluginFilter = _explicitlyMarkedPluginFilter;
         }
@@ -255,7 +255,7 @@ namespace StructureMap.Graph
             {
                 if (!HasPlugin(pluggedType))
                 {
-                    Plugin plugin = Plugin.CreateImplicitPlugin(pluggedType);
+                    Plugin plugin = new Plugin(pluggedType);
                     _plugins.Add(plugin);
                 }
             }
@@ -270,13 +270,13 @@ namespace StructureMap.Graph
         {
             if (!HasPlugin(pluggedType))
             {
-                _plugins.Add(Plugin.CreateImplicitPlugin(pluggedType));
+                _plugins.Add(new Plugin(pluggedType));
             }
         }
 
         public void AddPlugin(Type pluggedType, string key)
         {
-            Plugin plugin = Plugin.CreateExplicitPlugin(pluggedType, key, string.Empty);
+            Plugin plugin = new Plugin(pluggedType, key);
             _plugins.Add(plugin);
             
         }

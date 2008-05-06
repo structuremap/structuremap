@@ -22,18 +22,6 @@ namespace StructureMap.Graph
     {
         #region static
 
-        public static Plugin CreateAutofilledPlugin(Type concreteType)
-        {
-            string pluginKey = Guid.NewGuid().ToString();
-            Plugin plugin = CreateExplicitPlugin(concreteType, pluginKey, string.Empty);
-            if (!plugin.CanBeAutoFilled)
-            {
-                throw new StructureMapException(231);
-            }
-
-            return plugin;
-        }
-
 
         /// <summary>
         /// Determines if the PluggedType is a valid Plugin into the
@@ -42,7 +30,7 @@ namespace StructureMap.Graph
         /// <param name="pluginType"></param>
         /// <param name="pluggedType"></param>
         /// <returns></returns>
-        public static bool IsAnExplicitPlugin(Type pluginType, Type pluggedType)
+        public static bool IsExplicitlyMarkedAsPlugin(Type pluginType, Type pluggedType)
         {
             bool returnValue = false;
 
@@ -84,38 +72,6 @@ namespace StructureMap.Graph
         }
 
 
-        /// <summary>
-        /// Creates an Implicit Plugin that discovers its ConcreteKey from a [Pluggable]
-        /// attribute on the PluggedType 
-        /// </summary>
-        /// <param name="pluggedType"></param>
-        /// <returns></returns>
-        public static Plugin CreateImplicitPlugin(Type pluggedType)
-        {
-            PluggableAttribute att = PluggableAttribute.InstanceOf(pluggedType);
-            if (att == null)
-            {
-                return
-                    new Plugin(pluggedType, TypePath.GetAssemblyQualifiedName(pluggedType));
-            }
-            else
-            {
-                return new Plugin(pluggedType, att.ConcreteKey);
-            }
-        }
-
-        /// <summary>
-        /// Creates an Explicit Plugin for the pluggedType with the entered
-        /// concreteKey
-        /// </summary>
-        /// <param name="pluggedType"></param>
-        /// <param name="concreteKey"></param>
-        /// <param name="description"></param>
-        public static Plugin CreateExplicitPlugin(Type pluggedType, string concreteKey, string description)
-        {
-            return new Plugin(pluggedType, concreteKey);
-        }
-
         public static ConstructorInfo GetGreediestConstructor(Type pluggedType)
         {
             ConstructorInfo returnValue = null;
@@ -149,7 +105,7 @@ namespace StructureMap.Graph
         /// </summary>
         /// <param name="pluggedType"></param>
         /// <param name="concreteKey"></param>
-        private Plugin(Type pluggedType, string concreteKey) : base()
+        public Plugin(Type pluggedType, string concreteKey) : base()
         {
             if (concreteKey == string.Empty)
             {
@@ -161,13 +117,23 @@ namespace StructureMap.Graph
             _setters = new SetterPropertyCollection(this);
         }
 
+        public Plugin(Type pluggedType)
+        {
+            PluggableAttribute att = PluggableAttribute.InstanceOf(pluggedType);
+            _concreteKey = att == null ? pluggedType.AssemblyQualifiedName : att.ConcreteKey;
+
+            _pluggedType = pluggedType;
+            _setters = new SetterPropertyCollection(this);
+            
+        }
+
         /// <summary>
         /// Troubleshooting constructor used by PluginGraphBuilder to find possible problems
         /// with the configured Plugin
         /// </summary>
         /// <param name="path"></param>
         /// <param name="concreteKey"></param>
-        public Plugin(TypePath path, string concreteKey) : base()
+        [Obsolete("Get rid of this.  All of this should go through NormalGraphBuilder")] public Plugin(TypePath path, string concreteKey) : base()
         {
             if (concreteKey == string.Empty)
             {

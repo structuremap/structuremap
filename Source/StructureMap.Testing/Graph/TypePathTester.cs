@@ -23,14 +23,6 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
-        public void CanFindType()
-        {
-            TypePath path = new TypePath(GetType().Assembly.GetName().Name, GetType().FullName);
-            Assert.IsTrue(path.CanFindType());
-            Assert.IsNotNull(path.FindType());
-        }
-
-        [Test]
         public void Define_with_out_assembly_qualified_name_throws_exception()
         {
             try
