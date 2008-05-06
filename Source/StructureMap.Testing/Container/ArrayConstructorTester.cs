@@ -1,4 +1,6 @@
 using NUnit.Framework;
+using StructureMap.Configuration;
+using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Source;
 using StructureMap.Testing.TestData;
@@ -22,19 +24,19 @@ namespace StructureMap.Testing.Container
         [Test]
         public void BuildDecisionWithRules()
         {
+            
+
             DataMother.WriteDocument("FullTesting.XML");
             DataMother.WriteDocument("Array.xml");
+            DataMother.WriteDocument("ObjectMother.config");
 
-            PluginGraph graph = DataMother.GetPluginGraph("ObjectMother.config");
-
+            Registry registry = new Registry();
             XmlMementoSource source = new XmlFileMementoSource("Array.xml", string.Empty, "Decision");
+            registry.ForRequestedType<Decision>().AddInstancesFrom(source).AliasConcreteType<Decision>("Default");
 
-            PluginFamily family = graph.FindFamily(typeof(Decision));
-            family.AddMementoSource(source);            
+            PluginGraphBuilder builder = new PluginGraphBuilder(new ConfigurationParser[]{ConfigurationParser.FromFile("ObjectMother.config")}, new Registry[]{registry});
 
-            family.Plugins.Add(typeof (Decision), "Default");
-            
-            graph.Seal();
+            PluginGraph graph = builder.Build();
 
             InstanceManager manager = new InstanceManager(graph);
 

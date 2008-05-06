@@ -63,6 +63,9 @@ namespace StructureMap
         {
             NormalGraphBuilder graphBuilder = new NormalGraphBuilder(_registries, _graph);
             buildPluginGraph(graphBuilder);
+
+            _graph.Seal();
+
             return _graph;
         }
 
@@ -80,7 +83,7 @@ namespace StructureMap
         {
             forAllParsers(delegate(ConfigurationParser p) { p.ParseAssemblies(graphBuilder); });
 
-            graphBuilder.StartFamilies();
+            graphBuilder.PrepareSystemObjects();
 
             forAllParsers(delegate(ConfigurationParser p)
                               {

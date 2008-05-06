@@ -203,6 +203,7 @@ namespace StructureMap.Testing.Configuration.DSL
             using (Registry registry = new Registry(pluginGraph))
             {
                 registry.BuildInstancesOf<IGateway>();
+                registry.ScanAssemblies().IncludeAssemblyContainingType<IGateway>();
             }
 
             Assert.IsTrue(pluginGraph.ContainsFamily(typeof(IGateway)));

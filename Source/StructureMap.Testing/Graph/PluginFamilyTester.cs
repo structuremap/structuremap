@@ -32,21 +32,6 @@ namespace StructureMap.Testing.Graph
         }
 
 
-        [Test]
-        public void GetPlugins()
-        {
-            PluginFamily family = new PluginFamily(typeof(IWidget));
-            family.DefaultInstanceKey = "DefaultKey";
-
-            AssemblyGraph graph = new AssemblyGraph("StructureMap.Testing.Widget");
-            family.FindPlugins(graph);
-
-            Assert.AreEqual(4, family.Plugins.Count, "Plugin Count");
-            foreach (Plugin plugin in family.Plugins)
-            {
-                Assert.IsNotNull(plugin);
-            }
-        }
 
         [Test]
         public void HasANulloInterceptorUponConstruction()
@@ -134,6 +119,72 @@ namespace StructureMap.Testing.Graph
             Assert.IsInstanceOfType(typeof(HybridBuildPolicy), family.Policy);
         }
 
+
+        [Test]
+        public void Analyze_a_type_for_a_plugin_that_does_not_match()
+        {
+            PluginFamily family = new PluginFamily(typeof(ISingletonRepository));
+            family.AnalyzeTypeForPlugin(typeof (RandomClass));
+
+            Assert.AreEqual(0, family.PluginCount);
+        }
+
+        [Test]
+        public void PluginFamily_only_looks_for_explicit_plugins_by_default()
+        {
+            PluginFamily family = new PluginFamily(typeof(ISingletonRepository));
+            Assert.IsFalse(family.SearchForImplicitPlugins);
+        }
+
+        [Test]
+        public void PluginFamily_adds_an_explicitly_marked_Plugin_when_only_looking_for_Explicit_plugins()
+        {
+            PluginFamily family = new PluginFamily(typeof(ISingletonRepository));
+            family.SearchForImplicitPlugins = false;
+            family.AnalyzeTypeForPlugin(typeof(SingletonRepositoryWithAttribute));   
+
+            Assert.AreEqual(1, family.PluginCount);
+            Assert.IsTrue(family.HasPlugin(typeof(SingletonRepositoryWithAttribute)));
+        }
+
+        [Test]
+        public void Do_not_add_Plugin_that_already_exists()
+        {
+            PluginFamily family = new PluginFamily(typeof(ISingletonRepository));
+            family.AddPlugin(typeof (SingletonRepositoryWithAttribute));
+
+
+            family.AnalyzeTypeForPlugin(typeof(SingletonRepositoryWithAttribute));
+            family.AnalyzeTypeForPlugin(typeof(SingletonRepositoryWithAttribute));
+            family.AnalyzeTypeForPlugin(typeof(SingletonRepositoryWithAttribute));
+            family.AnalyzeTypeForPlugin(typeof(SingletonRepositoryWithAttribute));
+
+            Assert.AreEqual(1, family.PluginCount);
+        }
+
+        [Test]
+        public void Analyze_a_type_for_a_plugin_that_is_not_explicitly_marked_when_the_family_is_not_considering_implicit_plugins()
+        {
+            PluginFamily family = new PluginFamily(typeof(ISingletonRepository));
+            family.SearchForImplicitPlugins = false;
+
+            family.AnalyzeTypeForPlugin(typeof(SingletonRepositoryWithoutPluginAttribute));
+
+            Assert.AreEqual(0, family.PluginCount);
+        }
+
+        [Test]
+        public void Analyze_a_type_for_implicit_plugins()
+        {
+            PluginFamily family = new PluginFamily(typeof(ISingletonRepository));
+            family.SearchForImplicitPlugins = true;
+
+            family.AnalyzeTypeForPlugin(typeof(SingletonRepositoryWithoutPluginAttribute));
+
+            Assert.AreEqual(1, family.PluginCount);
+            Assert.IsTrue(family.HasPlugin(typeof(SingletonRepositoryWithoutPluginAttribute)));
+        }
+
     }
 
 
@@ -148,7 +199,7 @@ namespace StructureMap.Testing.Graph
     }
 
     [Pluggable("Default")]
-    public class SingletonRepository : ISingletonRepository
+    public class SingletonRepositoryWithAttribute : ISingletonRepository
     {
         private Guid _id = Guid.NewGuid();
 
@@ -156,6 +207,16 @@ namespace StructureMap.Testing.Graph
         {
             get { return _id; }
         }
+    }
+
+    public class SingletonRepositoryWithoutPluginAttribute : ISingletonRepository
+    {
+        
+    }
+
+    public class RandomClass
+    {
+        
     }
 
     [PluginFamily(IsSingleton = false)]

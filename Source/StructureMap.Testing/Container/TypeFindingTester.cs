@@ -36,16 +36,6 @@ namespace StructureMap.Testing.Container
 
 
         [Test]
-        public void FindTypes()
-        {
-            AssemblyGraph assemblyGraph = new AssemblyGraph(Assembly.GetExecutingAssembly());
-            Type[] types = assemblyGraph.FindTypes(
-                delegate(Type type) { return type.Equals(typeof (BlueType)); });
-
-            Assert.AreEqual(new Type[] {typeof (BlueType)}, types);
-        }
-
-        [Test]
         public void FoundTheRightNumberOfInstancesForATypeWithNoPlugins()
         {
             Assert.AreEqual(3, _manager.GetAllInstances<TypeIWantToFind>().Count);

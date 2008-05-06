@@ -2,6 +2,7 @@ using System;
 
 namespace StructureMap.Pipeline
 {
+
     public interface IBuildPolicy
     {
         object Build(IInstanceCreator instanceCreator, Type pluginType, Instance instance);

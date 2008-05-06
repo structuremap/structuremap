@@ -4,6 +4,7 @@ using StructureMap.Attributes;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
+using StructureMap.Source;
 
 namespace StructureMap.Configuration.DSL.Expressions
 {
@@ -40,9 +41,6 @@ namespace StructureMap.Configuration.DSL.Expressions
             {
                 alteration(family);
             }
-
-            AssemblyGraph assembly = new AssemblyGraph(_pluginType.Assembly);
-            graph.Assemblies.Add(assembly);
         }
 
         #endregion
@@ -167,6 +165,26 @@ namespace StructureMap.Configuration.DSL.Expressions
                                  {
                                      family.AddInterceptor(interceptor);
                                  });
+            return this;
+        }
+
+        public CreatePluginFamilyExpression<PLUGINTYPE> AddInstancesFrom(MementoSource source)
+        {
+            _alterations.Add(delegate(PluginFamily family)
+                                 {
+                                     family.AddMementoSource(source);
+                                 });
+
+            return this;
+        }
+
+        public CreatePluginFamilyExpression<PLUGINTYPE> AliasConcreteType<PLUGGEDTYPE>(string concreteKey)
+        {
+            _alterations.Add(delegate(PluginFamily family)
+                                 {
+                                     family.AddPlugin(typeof(PLUGGEDTYPE), concreteKey);
+                                 });
+
             return this;
         }
     }

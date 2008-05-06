@@ -57,22 +57,10 @@ namespace StructureMap.Testing.Configuration.DSL
 
 
         [Test]
-        public void FindRegistries()
-        {
-            AssemblyGraph assembly = new AssemblyGraph("StructureMap.Testing.Widget5");
-            List<Registry> list = assembly.FindRegistries();
-
-            Assert.AreEqual(3, list.Count);
-            Assert.Contains(new RedGreenRegistry(), list);
-            Assert.Contains(new YellowBlueRegistry(), list);
-            Assert.Contains(new BrownBlackRegistry(), list);
-        }
-
-        [Test]
         public void FindRegistriesWithinPluginGraphSeal()
         {
             PluginGraph graph = new PluginGraph();
-            graph.Assemblies.Add("StructureMap.Testing.Widget5");
+            graph.Assemblies.Add(typeof(RedGreenRegistry).Assembly);
             graph.Seal();
 
             List<string> colors = new List<string>();

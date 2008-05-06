@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
@@ -12,7 +13,7 @@ namespace StructureMap.Configuration.DSL.Expressions
     /// </summary>
     public class ScanAssembliesExpression : IExpression
     {
-        private readonly List<AssemblyGraph> _assemblies = new List<AssemblyGraph>();
+        private readonly List<Assembly> _assemblies = new List<Assembly>();
         private readonly Registry _registry;
 
         public ScanAssembliesExpression(Registry registry)
@@ -24,7 +25,7 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         void IExpression.Configure(PluginGraph graph)
         {
-            foreach (AssemblyGraph assembly in _assemblies)
+            foreach (Assembly assembly in _assemblies)
             {
                 graph.Assemblies.Add(assembly);
             }
@@ -38,7 +39,7 @@ namespace StructureMap.Configuration.DSL.Expressions
 
             if (callingAssembly != null)
             {
-                _assemblies.Add(new AssemblyGraph(callingAssembly));
+                _assemblies.Add(callingAssembly);
             }
 
             return this;
@@ -65,18 +66,19 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         public ScanAssembliesExpression IncludeAssemblyContainingType<T>()
         {
-            _assemblies.Add(AssemblyGraph.ContainingType<T>());
+            _assemblies.Add(typeof(T).Assembly);
 
             return this;
         }
 
         public ScanAssembliesExpression AddAllTypesOf<PLUGINTYPE>()
         {
+            // TODO:  Do this by adding something to TypeScanner
             _registry.addExpression(delegate(PluginGraph pluginGraph)
                                         {
                                             PluginFamily family =
                                                 pluginGraph.FindFamily(typeof (PLUGINTYPE));
-                                            family.CanUseUnMarkedPlugins = true;
+                                            family.SearchForImplicitPlugins = true;
                                         });
 
             return this;
@@ -84,7 +86,9 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         public ScanAssembliesExpression IncludeAssembly(string assemblyName)
         {
-            _assemblies.Add(new AssemblyGraph(assemblyName));
+            Assembly assembly = AppDomain.CurrentDomain.Load(assemblyName);
+            _assemblies.Add(assembly);
+
             return this;
         }
     }

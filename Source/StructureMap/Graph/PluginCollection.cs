@@ -167,5 +167,18 @@ namespace StructureMap.Graph
 
             return list;
         }
+
+        public bool HasPlugin(Type pluggedType)
+        {
+            foreach (KeyValuePair<string, Plugin> pair in _plugins)
+            {
+                if (pair.Value.PluggedType == pluggedType)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }

@@ -34,11 +34,10 @@ namespace StructureMap.Testing.Configuration.DSL
                 .IncludeTheCallingAssembly();
             PluginGraph graph = StructureMapConfiguration.GetPluginGraph();
 
-            AssemblyGraph assembly = AssemblyGraph.ContainingType<IGateway>();
-            Assert.IsTrue(graph.Assemblies.Contains(assembly.AssemblyName));
+            Assembly assembly = typeof(IGateway).Assembly;
+            Assert.IsTrue(graph.Assemblies.Contains(assembly.GetName().Name));
 
-            assembly = new AssemblyGraph(Assembly.GetExecutingAssembly());
-            Assert.IsTrue(graph.Assemblies.Contains(assembly.AssemblyName));
+            Assert.IsTrue(graph.Assemblies.Contains(Assembly.GetExecutingAssembly().GetName().Name));
         }
 
 
@@ -50,11 +49,10 @@ namespace StructureMap.Testing.Configuration.DSL
                 .IncludeAssemblyContainingType<IGateway>();
             PluginGraph graph = StructureMapConfiguration.GetPluginGraph();
 
-            AssemblyGraph assembly = AssemblyGraph.ContainingType<IGateway>();
-            Assert.IsTrue(graph.Assemblies.Contains(assembly.AssemblyName));
+            Assembly assembly = typeof(IGateway).Assembly;
+            Assert.IsTrue(graph.Assemblies.Contains(assembly.GetName().Name));
 
-            assembly = new AssemblyGraph(Assembly.GetExecutingAssembly());
-            Assert.IsTrue(graph.Assemblies.Contains(assembly.AssemblyName));
+            Assert.IsTrue(graph.Assemblies.Contains(Assembly.GetExecutingAssembly().GetName().Name));
         }
 
         [Test]
@@ -66,8 +64,8 @@ namespace StructureMap.Testing.Configuration.DSL
 
             PluginGraph graph = StructureMapConfiguration.GetPluginGraph();
 
-            AssemblyGraph assembly = AssemblyGraph.ContainingType<IGateway>();
-            Assert.IsTrue(graph.Assemblies.Contains(assembly.AssemblyName));
+            Assembly assembly = typeof(IGateway).Assembly;
+            Assert.IsTrue(graph.Assemblies.Contains(assembly.GetName().Name));
         }
 
         [Test]
@@ -76,8 +74,8 @@ namespace StructureMap.Testing.Configuration.DSL
             StructureMapConfiguration.ScanAssemblies().IncludeAssemblyContainingType<IGateway>();
             PluginGraph graph = StructureMapConfiguration.GetPluginGraph();
 
-            AssemblyGraph assembly = AssemblyGraph.ContainingType<IGateway>();
-            Assert.IsTrue(graph.Assemblies.Contains(assembly.AssemblyName));
+            Assembly assembly = typeof(IGateway).Assembly;
+            Assert.IsTrue(graph.Assemblies.Contains(assembly.GetName().Name));
         }
 
         [Test]
@@ -86,8 +84,7 @@ namespace StructureMap.Testing.Configuration.DSL
             StructureMapConfiguration.ScanAssemblies().IncludeTheCallingAssembly();
             PluginGraph graph = StructureMapConfiguration.GetPluginGraph();
 
-            AssemblyGraph assembly = new AssemblyGraph(Assembly.GetExecutingAssembly());
-            Assert.IsTrue(graph.Assemblies.Contains(assembly.AssemblyName));
+            Assert.IsTrue(graph.Assemblies.Contains(Assembly.GetExecutingAssembly().GetName().Name));
         }
     }
 }

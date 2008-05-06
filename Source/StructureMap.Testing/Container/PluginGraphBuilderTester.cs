@@ -1,6 +1,7 @@
 using System.Xml;
 using NUnit.Framework;
 using StructureMap.Configuration;
+using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.TestData;
@@ -141,7 +142,13 @@ namespace StructureMap.Testing.Container
         [Test]
         public void GotPluginsThatAreMarkedAsPluggable()
         {
-            PluginFamily pluginFamily = graph.FindFamily(typeof (IWidget));
+            Registry registry = new Registry();
+            registry.ScanAssemblies().IncludeAssemblyContainingType<IWidget>();
+            registry.BuildInstancesOf<IWidget>();
+            PluginGraph pluginGraph = registry.Build();
+
+
+            PluginFamily pluginFamily = pluginGraph.FindFamily(typeof(IWidget));
             Plugin plugin = pluginFamily.Plugins[typeof (ColorWidget)];
             Assert.IsNotNull(plugin);
         }

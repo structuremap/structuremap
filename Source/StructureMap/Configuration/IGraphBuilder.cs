@@ -20,7 +20,7 @@ namespace StructureMap.Configuration
         PluginGraph PluginGraph { get; }
         void AddAssembly(string assemblyName);
 
-        void StartFamilies();
+        void PrepareSystemObjects();
         void FinishFamilies();
 
         IProfileBuilder GetProfileBuilder();

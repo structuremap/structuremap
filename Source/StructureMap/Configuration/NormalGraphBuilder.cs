@@ -49,15 +49,19 @@ namespace StructureMap.Configuration
 
         public void AddAssembly(string assemblyName)
         {
-            AssemblyGraph assemblyGraph = new AssemblyGraph(assemblyName);
-            _pluginGraph.Assemblies.Add(assemblyGraph);
-
-            AssemblyGraph systemAssemblyGraph = new AssemblyGraph(assemblyName);
-            systemAssemblyGraph.LookForPluginFamilies = false;
-            _systemGraph.Assemblies.Add(systemAssemblyGraph);
+            try
+            {
+                Assembly assembly = AppDomain.CurrentDomain.Load(assemblyName);
+                _pluginGraph.Assemblies.Add(assembly);
+                _systemGraph.Assemblies.Add(assembly);
+            }
+            catch (Exception ex)
+            {
+                _pluginGraph.Log.RegisterError(101, ex, assemblyName);
+            }
         }
 
-        public void StartFamilies()
+        public void PrepareSystemObjects()
         {
             // TODO:  is this a problem here?
             _systemGraph.Seal();

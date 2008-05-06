@@ -97,6 +97,14 @@ namespace StructureMap.Configuration.DSL
             return new InstanceManager(_graph);
         }
 
+        public PluginGraph Build()
+        {
+            ConfigurePluginGraph(_graph);
+            _graph.Seal();
+
+            return _graph;
+        }
+
         /// <summary>
         /// Starts an instance definition of type T
         /// </summary>

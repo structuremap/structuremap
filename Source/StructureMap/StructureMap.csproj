@@ -119,6 +119,7 @@
     <Compile Include="Diagnostics\Tokens.cs" />
     <Compile Include="Emitting\ConstructorEmitter.cs" />
     <Compile Include="Graph\IPluginFamily.cs" />
+    <Compile Include="Graph\AssemblyScanner.cs" />
     <Compile Include="InstanceBuilderList.cs" />
     <Compile Include="InstanceFamily.cs" />
     <Compile Include="Pipeline\BuildStrategies.cs" />
@@ -231,12 +232,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Exceptions\StructureMapException.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Graph\AssemblyGraph.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Graph\AssemblyGraphCollection.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Graph\GenericsPluginGraph.cs" />

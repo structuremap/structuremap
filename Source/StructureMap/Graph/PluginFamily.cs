@@ -18,14 +18,17 @@ namespace StructureMap.Graph
         public const string CONCRETE_KEY = "CONCRETE";
         private readonly List<InstanceMemento> _mementoList = new List<InstanceMemento>();
         private readonly PluginCollection _plugins;
-        private bool _canUseUnMarkedPlugins = false;
         private string _defaultKey = string.Empty;
         private InstanceInterceptor _instanceInterceptor = new NulloInterceptor();
         private PluginGraph _parent;
-        private Type _pluginType;
-        private string _pluginTypeName;
-        private List<Instance> _instances = new List<Instance>();
+        private readonly Type _pluginType;
+        private readonly string _pluginTypeName;
+        private readonly List<Instance> _instances = new List<Instance>();
         private IBuildPolicy _buildPolicy = new BuildPolicy();
+
+        private readonly Predicate<Type> _explicitlyMarkedPluginFilter;
+        private readonly Predicate<Type> _implicitPluginFilter;
+        private Predicate<Type> _pluginFilter;
 
 
         // TODO:  Need to unit test the scope from the attribute
@@ -40,6 +43,10 @@ namespace StructureMap.Graph
             _plugins = new PluginCollection(this);
 
             PluginFamilyAttribute.ConfigureFamily(this);
+
+            _explicitlyMarkedPluginFilter = delegate(Type type) { return Plugin.IsAnExplicitPlugin(PluginType, type); };
+            _implicitPluginFilter = delegate(Type type) { return Plugin.CanBeCast(PluginType, type); };
+            _pluginFilter = _explicitlyMarkedPluginFilter;
         }
 
 
@@ -89,31 +96,7 @@ namespace StructureMap.Graph
             return templatedFamily;
         }
 
-        // TODO:  Move this into TypeScanner
-        /// <summary>
-        /// Finds Plugin's that match the PluginType from the assembly and add to the internal
-        /// collection of Plugin's 
-        /// </summary>
-        /// <param name="assembly"></param>
-        [Obsolete] public Plugin[] FindPlugins(AssemblyGraph assembly)
-        {
-            Predicate<Type> pluggedTypeFilter =
-                delegate(Type type) { return Plugin.IsAnExplicitPlugin(PluginType, type); };
 
-            if (_canUseUnMarkedPlugins)
-            {
-                pluggedTypeFilter = delegate(Type type) { return Plugin.CanBeCast(PluginType, type); };
-            }
-
-            Plugin[] plugins = assembly.FindPlugins(pluggedTypeFilter);
-
-            foreach (Plugin plugin in plugins)
-            {
-                _plugins.Add(plugin);
-            }
-
-            return plugins;
-        }
 
         public void AddInstance(InstanceMemento memento)
         {
@@ -136,21 +119,7 @@ namespace StructureMap.Graph
             return _mementoList.Find(delegate(InstanceMemento m) { return m.InstanceKey == instanceKey; });
         }
 
-        // TODO -- Move out into TypeScanner
-        public void DiscoverImplicitInstances()
-        {
-            List<Plugin> list = _plugins.FindAutoFillablePlugins();
-            foreach (InstanceMemento memento in _mementoList)
-            {
-                Plugin plugin = memento.FindPlugin(this);
-                list.Remove(plugin);
-            }
 
-            foreach (Plugin plugin in list)
-            {
-                AddInstance(plugin.CreateImplicitMemento());
-            }
-        }
 
         #region properties
 
@@ -191,11 +160,16 @@ namespace StructureMap.Graph
             get { return _pluginType.IsGenericType; }
         }
 
-
-        public bool CanUseUnMarkedPlugins
+        public bool SearchForImplicitPlugins
         {
-            get { return _canUseUnMarkedPlugins; }
-            set { _canUseUnMarkedPlugins = value; }
+            get
+            {
+                return ReferenceEquals(_pluginFilter, _implicitPluginFilter);
+            }
+            set
+            {
+                _pluginFilter = value ? _implicitPluginFilter : _explicitlyMarkedPluginFilter;
+            }
         }
 
         public IBuildPolicy Policy
@@ -203,14 +177,36 @@ namespace StructureMap.Graph
             get { return _buildPolicy; }
         }
 
+        public int PluginCount
+        {
+            get { return _plugins.Count; }
+        }
+
         #endregion
 
         public void Seal()
         {
+            discoverImplicitInstances();
+
             foreach (InstanceMemento memento in _mementoList)
             {
                 Instance instance = memento.ReadInstance(Parent, _pluginType);
                 _instances.Add(instance);
+            }
+        }
+
+        private void discoverImplicitInstances()
+        {
+            List<Plugin> list = _plugins.FindAutoFillablePlugins();
+            foreach (InstanceMemento memento in _mementoList)
+            {
+                Plugin plugin = memento.FindPlugin(this);
+                list.Remove(plugin);
+            }
+
+            foreach (Plugin plugin in list)
+            {
+                AddInstance(plugin.CreateImplicitMemento());
             }
         }
 
@@ -253,5 +249,36 @@ namespace StructureMap.Graph
         }
 
 
+        public void AnalyzeTypeForPlugin(Type pluggedType)
+        {
+            if (_pluginFilter(pluggedType))
+            {
+                if (!HasPlugin(pluggedType))
+                {
+                    Plugin plugin = Plugin.CreateImplicitPlugin(pluggedType);
+                    _plugins.Add(plugin);
+                }
+            }
+        }
+
+        public bool HasPlugin(Type pluggedType)
+        {
+            return _plugins.HasPlugin(pluggedType);
+        }
+
+        public void AddPlugin(Type pluggedType)
+        {
+            if (!HasPlugin(pluggedType))
+            {
+                _plugins.Add(Plugin.CreateImplicitPlugin(pluggedType));
+            }
+        }
+
+        public void AddPlugin(Type pluggedType, string key)
+        {
+            Plugin plugin = Plugin.CreateExplicitPlugin(pluggedType, key, string.Empty);
+            _plugins.Add(plugin);
+            
+        }
     }
 }

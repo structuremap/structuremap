@@ -239,39 +239,6 @@ namespace StructureMap.Testing.Graph
             Assert.AreEqual(2, constructor.GetParameters().Length, "Should have 2 inputs");
         }
 
-        [Test]
-        public void GetPluginsIncludingTheBaseClass()
-        {
-            Assembly assem = AppDomain.CurrentDomain.Load("StructureMap.Testing.Widget");
-            PluginFamily family = new PluginFamily(typeof (GrandChild));
-            Plugin[] plugs = family.FindPlugins(new AssemblyGraph(assem));
-
-
-            Assert.IsNotNull(plugs);
-            Assert.AreEqual(2, plugs.Length);
-        }
-
-        [Test]
-        public void GetPluginsOfAnAbstractClass()
-        {
-            Assembly assem = AppDomain.CurrentDomain.Load("StructureMap.Testing.Widget");
-            PluginFamily family = new PluginFamily(typeof (WidgetMaker));
-            Plugin[] plugs = family.FindPlugins(new AssemblyGraph(assem));
-
-            Assert.IsNotNull(plugs);
-            Assert.AreEqual(2, plugs.Length);
-        }
-
-        [Test]
-        public void GetPluginsOfAnInterface()
-        {
-            Assembly assem = AppDomain.CurrentDomain.Load("StructureMap.Testing.Widget");
-            PluginFamily family = new PluginFamily(typeof (IWidget));
-            Plugin[] plugs = family.FindPlugins(new AssemblyGraph(assem));
-
-            Assert.IsNotNull(plugs);
-            Assert.AreEqual(4, plugs.Length);
-        }
 
         [Test]
         public void GoodPluginToAbstractClass()

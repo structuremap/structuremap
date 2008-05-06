@@ -16,7 +16,7 @@ namespace StructureMap.Graph
     [Serializable]
     public class PluginGraph
     {
-        private readonly AssemblyGraphCollection _assemblies;
+        private readonly AssemblyScanner _assemblies;
         private readonly InterceptorLibrary _interceptorLibrary = new InterceptorLibrary();
         private readonly GraphLog _log = new GraphLog();
         private readonly PluginFamilyCollection _pluginFamilies;
@@ -29,7 +29,7 @@ namespace StructureMap.Graph
         /// </summary>
         public PluginGraph() : base()
         {
-            _assemblies = new AssemblyGraphCollection(this);
+            _assemblies = new AssemblyScanner(_log);
             _pluginFamilies = new PluginFamilyCollection(this);
         }
 
@@ -39,7 +39,7 @@ namespace StructureMap.Graph
             _useExternalRegistries = useExternalRegistries;
         }
 
-        public AssemblyGraphCollection Assemblies
+        public AssemblyScanner Assemblies
         {
             get { return _assemblies; }
         }
@@ -89,18 +89,11 @@ namespace StructureMap.Graph
 
             if (_useExternalRegistries)
             {
-                searchAssembliesForRegistries();
+                _assemblies.ScanForAll(this);
             }
-
-            foreach (AssemblyGraph assembly in _assemblies)
+            else
             {
-                addImplicitPluginFamilies(assembly);
-            }
-
-            foreach (PluginFamily family in _pluginFamilies)
-            {
-                attachImplicitPlugins(family);
-                family.DiscoverImplicitInstances();
+                _assemblies.ScanForStructureMapObjects(this);
             }
 
             foreach (PluginFamily family in _pluginFamilies)
@@ -114,43 +107,6 @@ namespace StructureMap.Graph
         }
 
 
-        private void searchAssembliesForRegistries()
-        {
-            List<Registry> list = new List<Registry>();
-            foreach (AssemblyGraph assembly in _assemblies)
-            {
-                list.AddRange(assembly.FindRegistries());
-            }
-
-            foreach (Registry registry in list)
-            {
-                registry.ConfigurePluginGraph(this);
-            }
-        }
-
-        private void attachImplicitPlugins(PluginFamily family)
-        {
-            foreach (AssemblyGraph assembly in _assemblies)
-            {
-                family.FindPlugins(assembly);
-            }
-        }
-
-
-        private void addImplicitPluginFamilies(AssemblyGraph assemblyGraph)
-        {
-            PluginFamily[] families = assemblyGraph.FindPluginFamilies();
-
-            foreach (PluginFamily family in families)
-            {
-                if (_pluginFamilies.Contains(family.PluginType))
-                {
-                    continue;
-                }
-
-                _pluginFamilies.Add(family);
-            }
-        }
 
         #endregion
 
@@ -171,7 +127,6 @@ namespace StructureMap.Graph
             {
                 PluginFamily family = new PluginFamily(pluginType);
                 _pluginFamilies.Add(family);
-                attachImplicitPlugins(family);
             }
         }
 
@@ -184,6 +139,12 @@ namespace StructureMap.Graph
         public bool ContainsFamily(Type pluginType)
         {
             return _pluginFamilies.Contains(pluginType);
+        }
+
+        public void CreateFamily(Type pluginType)
+        {
+            // Just guarantee that this PluginFamily exists
+            FindFamily(pluginType);
         }
     }
 }

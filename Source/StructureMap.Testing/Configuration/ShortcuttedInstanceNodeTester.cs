@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using NUnit.Framework;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
@@ -31,6 +32,10 @@ namespace StructureMap.Testing.Configuration
             _graph.Seal();
 
             Instance[] instances = _graph.FindFamily(typeof (IWidget)).GetAllInstances();
+            foreach (Instance instance in instances)
+            {
+                Debug.WriteLine(instance.Name + ", " + instance.GetType().FullName);
+            }
             Assert.AreEqual(4, instances.Length);
         }
 

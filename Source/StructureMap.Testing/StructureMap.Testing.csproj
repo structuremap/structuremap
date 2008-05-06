@@ -293,9 +293,6 @@
     <Compile Include="DataAccess\Tools\TableDataReaderTester.cs" />
     <Compile Include="GenericsAcceptanceTester.cs" />
     <Compile Include="GenericsIntegrationTester.cs" />
-    <Compile Include="Graph\AssemblyGraphTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Graph\GenericsPluginGraphTester.cs" />
     <Compile Include="Graph\InstanceTarget.cs">
       <SubType>Code</SubType>
