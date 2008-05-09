@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using NUnit.Framework;
@@ -24,17 +25,10 @@ namespace StructureMap.Testing.Container
                 Plugin plugin = new Plugin(typeof (ComplexRule));
 
                 InstanceBuilderAssembly _InstanceBuilderAssembly =
-                    new InstanceBuilderAssembly("StructureMap.EmittingTesterAssembly", typeof (Rule));
+                    new InstanceBuilderAssembly(typeof (Rule), new Plugin[]{plugin});
 
-                _InstanceBuilderAssembly.AddPlugin(plugin);
-                assem = _InstanceBuilderAssembly.Compile();
-
-                if (assem != null)
-                {
-                    string builderName = plugin.GetInstanceBuilderClassName();
-
-                    builder = assem.CreateInstance(builderName) as InstanceBuilder;
-                }
+                List<InstanceBuilder> list = _InstanceBuilderAssembly.Compile();
+                builder = list[0];
 
                 if (builder != null)
                 {
@@ -64,13 +58,6 @@ namespace StructureMap.Testing.Container
         public void BoolProperty()
         {
             Assert.AreEqual(true, rule.Bool);
-        }
-
-
-        [Test]
-        public void BuiltTheAssembly()
-        {
-            Assert.IsNotNull(assem);
         }
 
         [Test]

@@ -82,7 +82,7 @@ namespace StructureMap.Testing
 
         public static InstanceFactory Factory<T>()
         {
-            return new InstanceFactory(new PluginFamily(typeof (T)), true);
+            return new InstanceFactory(new PluginFamily(typeof (T)));
         }
     }
 }

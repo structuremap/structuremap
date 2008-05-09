@@ -79,12 +79,68 @@ namespace StructureMap.Graph
 
                 profileManager.CopyDefaults(basicType, templatedType);
 
-                return basicFamily.CreateTemplatedClone(templatedParameterTypes);
+                return CreateTemplatedClone(basicFamily, templatedParameterTypes);
             }
             else
             {
                 return null;
             }
+        }
+
+        // TODO:  This code sucks.  What's going on here?
+        public static PluginFamily CreateTemplatedClone(PluginFamily baseFamily, params Type[] templateTypes)
+        {
+            Type templatedType = baseFamily.PluginType.MakeGenericType(templateTypes);
+            PluginFamily templatedFamily = new PluginFamily(templatedType);
+            templatedFamily.DefaultInstanceKey = baseFamily.DefaultInstanceKey;
+            templatedFamily.Parent = baseFamily.Parent;
+            templatedFamily.Policy = baseFamily.Policy.Clone();
+
+            // Add Plugins
+            foreach (Plugin plugin in baseFamily.Plugins)
+            {
+                if (plugin.CanBePluggedIntoGenericType(baseFamily.PluginType, templateTypes))
+                {
+                    Plugin templatedPlugin = CreateTemplatedClone(plugin, templateTypes);
+                    templatedFamily.Plugins.Add(templatedPlugin);
+                }
+            }
+
+            // TODO -- Got a big problem here.  Intances need to be copied over
+            foreach (IDiagnosticInstance instance in baseFamily.GetAllInstances())
+            {
+                if (instance.CanBePartOfPluginFamily(templatedFamily))
+                {
+                    templatedFamily.AddInstance((Instance)instance);
+                }
+            }
+
+            // Need to attach the new PluginFamily to the old PluginGraph
+            baseFamily.Parent.PluginFamilies.Add(templatedFamily);
+
+            return templatedFamily;
+        }
+
+
+
+        public static Plugin CreateTemplatedClone(Plugin plugin, params Type[] types)
+        {
+            Type templatedType;
+            if (plugin.PluggedType.IsGenericType)
+            {
+                templatedType = plugin.PluggedType.MakeGenericType(types);
+            }
+            else
+            {
+                templatedType = plugin.PluggedType;
+            }
+            Plugin templatedPlugin = new Plugin(templatedType, plugin.ConcreteKey);
+            foreach (SetterProperty setter in plugin.Setters)
+            {
+                templatedPlugin.Setters.Add(setter.Name);
+            }
+
+            return templatedPlugin;
         }
     }
 }

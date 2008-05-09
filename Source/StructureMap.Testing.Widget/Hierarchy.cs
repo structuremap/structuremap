@@ -1,3 +1,4 @@
+using System;
 using StructureMap.Pipeline;
 
 namespace StructureMap.Testing.Widget
@@ -94,6 +95,11 @@ namespace StructureMap.Testing.Widget
         public override string ConcreteTypeKey
         {
             get { return null; }
+        }
+
+        public override Type PluggedType
+        {
+            get { throw new NotImplementedException(); }
         }
 
 

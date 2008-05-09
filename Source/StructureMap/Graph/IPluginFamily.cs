@@ -21,12 +21,7 @@ namespace StructureMap.Graph
             get;
         }
 
-        string PluginTypeName
-        {
-            get;
-        }
-
         void SetScopeTo(InstanceScope scope);
-        void AddInterceptor(IInstanceInterceptor interceptor);
+        void AddInterceptor(IBuildInterceptor interceptor);
     }
 }

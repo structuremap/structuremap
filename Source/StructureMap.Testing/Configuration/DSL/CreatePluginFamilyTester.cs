@@ -215,7 +215,7 @@ namespace StructureMap.Testing.Configuration.DSL
         }
     }
 
-    public class StubbedInstanceFactoryInterceptor : IInstanceInterceptor
+    public class StubbedInstanceFactoryInterceptor : IBuildInterceptor
     {
         public IBuildPolicy InnerPolicy
         {

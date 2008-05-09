@@ -77,7 +77,7 @@ namespace StructureMap.Testing
             PluginFamily family = new PluginFamily(typeof (ITarget2<int, string, bool>));
             family.Plugins.Add(typeof (SpecificTarget2<int, string, bool>), "specific");
 
-            InstanceFactory factory = new InstanceFactory(family, true);
+            InstanceFactory factory = new InstanceFactory(family);
         }
 
         [Test]
@@ -86,7 +86,7 @@ namespace StructureMap.Testing
             PluginFamily family = new PluginFamily(typeof (ITarget<int, string>));
             family.Plugins.Add(typeof (SpecificTarget<int, string>), "specific");
 
-            InstanceFactory factory = new InstanceFactory(family, true);
+            InstanceFactory factory = new InstanceFactory(family);
         }
 
         [Test]

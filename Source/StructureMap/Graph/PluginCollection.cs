@@ -75,13 +75,6 @@ namespace StructureMap.Graph
             }
         }
 
-        [Obsolete("Get rid of this")]
-        public void Add(TypePath path, string concreteKey)
-        {
-            Plugin plugin = new Plugin(path, concreteKey);
-            Add(plugin);
-        }
-
         /// <summary>
         /// Adds a new Plugin by the PluggedType
         /// </summary>
@@ -109,14 +102,14 @@ namespace StructureMap.Graph
                 }
                 else
                 {
-                    throw new StructureMapException(113, plugin.ConcreteKey, _family.PluginTypeName);
+                    throw new StructureMapException(113, plugin.ConcreteKey, _family.PluginType.AssemblyQualifiedName);
                 }
             }
 
             // Reject if the PluggedType cannot be upcast to the PluginType
             if (!Plugin.CanBeCast(_family.PluginType, plugin.PluggedType))
             {
-                throw new StructureMapException(114, plugin.PluggedType.FullName, _family.PluginTypeName);
+                throw new StructureMapException(114, plugin.PluggedType.FullName, _family.PluginType.AssemblyQualifiedName);
             }
 
             _plugins.Add(plugin.ConcreteKey, plugin);

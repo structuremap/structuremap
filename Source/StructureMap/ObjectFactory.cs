@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Permissions;
-using StructureMap.Configuration.Mementos;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 

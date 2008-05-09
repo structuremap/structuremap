@@ -163,7 +163,7 @@ namespace StructureMap.Testing.Container
             Assert.AreEqual("NotPluggable", plugin.ConcreteKey);
 
             // Just for fun, test with InstanceFactory too.
-            InstanceFactory factory = new InstanceFactory(family, true);
+            InstanceFactory factory = new InstanceFactory(family);
             factory.SetInstanceManager(new InstanceManager());
 
             ConfiguredInstance instance = new ConfiguredInstance();

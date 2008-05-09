@@ -27,12 +27,12 @@ namespace StructureMap.Pipeline
     }
 
     [PluginFamily]
-    public interface IInstanceInterceptor : IBuildPolicy
+    public interface IBuildInterceptor : IBuildPolicy
     {
         IBuildPolicy InnerPolicy { get; set; }
     }
 
-    public abstract class CacheInterceptor : IInstanceInterceptor
+    public abstract class CacheInterceptor : IBuildInterceptor
     {
         private readonly object _locker = new object();
         private IBuildPolicy _innerPolicy = new BuildPolicy();
@@ -80,15 +80,15 @@ namespace StructureMap.Pipeline
         protected abstract object retrieveFromCache(string instanceKey, Type pluginType);
     }
 
-    public class HybridBuildPolicy : IInstanceInterceptor
+    public class HybridBuildPolicy : IBuildInterceptor
     {
-        private readonly IInstanceInterceptor _innerInterceptor;
+        private readonly IBuildInterceptor _innerInterceptor;
 
 
         public HybridBuildPolicy()
         {
             _innerInterceptor = HttpContextBuildPolicy.HasContext()
-                                    ? (IInstanceInterceptor) new HttpContextBuildPolicy()
+                                    ? (IBuildInterceptor) new HttpContextBuildPolicy()
                                     : new ThreadLocalStoragePolicy();
         }
 

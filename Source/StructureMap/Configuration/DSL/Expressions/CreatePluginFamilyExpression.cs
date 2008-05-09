@@ -8,14 +8,13 @@ using StructureMap.Source;
 
 namespace StructureMap.Configuration.DSL.Expressions
 {
-    public delegate void AlterPluginFamilyDelegate(PluginFamily family);
 
     /// <summary>
     /// Represents the parameters for creating instances of a given Type
     /// </summary>
     public class CreatePluginFamilyExpression<PLUGINTYPE> : IExpression
     {
-        private readonly List<AlterPluginFamilyDelegate> _alterations = new List<AlterPluginFamilyDelegate>();
+        private readonly List<Action<PluginFamily>> _alterations = new List<Action<PluginFamily>>();
         private readonly List<IExpression> _children = new List<IExpression>();
         private readonly Type _pluginType;
         private readonly InstanceScope _scope = InstanceScope.PerRequest;
@@ -37,13 +36,15 @@ namespace StructureMap.Configuration.DSL.Expressions
                 child.Configure(graph);
             }
 
-            foreach (AlterPluginFamilyDelegate alteration in _alterations)
+            foreach (Action<PluginFamily> alteration in _alterations)
             {
                 alteration(family);
             }
         }
 
         #endregion
+
+        // TODO:  Try alterAndContinue(f => {});
 
         /// <summary>
         /// Sets the default instance of a Type to the definition represented by builder
@@ -159,7 +160,7 @@ namespace StructureMap.Configuration.DSL.Expressions
             return this;
         }
 
-        public CreatePluginFamilyExpression<PLUGINTYPE> InterceptConstructionWith(IInstanceInterceptor interceptor)
+        public CreatePluginFamilyExpression<PLUGINTYPE> InterceptConstructionWith(IBuildInterceptor interceptor)
         {
             _alterations.Add(delegate(PluginFamily family)
                                  {

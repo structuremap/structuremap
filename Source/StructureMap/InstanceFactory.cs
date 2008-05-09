@@ -27,7 +27,7 @@ namespace StructureMap
         /// </summary>
         /// <param name="family"></param>
         /// <param name="failOnException">Toggles error trapping.  Set to "true" for diagnostics</param>
-        public InstanceFactory(PluginFamily family, bool failOnException)
+        public InstanceFactory(PluginFamily family)
         {
             if (family == null)
             {
@@ -53,7 +53,7 @@ namespace StructureMap
             }
             catch (Exception e)
             {
-                throw new StructureMapException(115, e, family.PluginTypeName);
+                throw new StructureMapException(115, e, family.PluginType.AssemblyQualifiedName);
             }
         }
 
@@ -68,7 +68,7 @@ namespace StructureMap
                 return;
             }
 
-            Plugin plugin = new Plugin(new TypePath(concreteType), Guid.NewGuid().ToString());
+            Plugin plugin = new Plugin(concreteType, Guid.NewGuid().ToString());
             if (plugin.CanBeAutoFilled)
             {
                 _instanceBuilders = new InstanceBuilderList(_pluginType, new Plugin[] {plugin});
@@ -83,7 +83,7 @@ namespace StructureMap
             }
         }
 
-        public static InstanceFactory CreateInstanceFactoryForType(Type concreteType, ProfileManager profileManager)
+        public static InstanceFactory CreateFactoryForConcreteType(Type concreteType, ProfileManager profileManager)
         {
             return new InstanceFactory(concreteType, profileManager);
         }

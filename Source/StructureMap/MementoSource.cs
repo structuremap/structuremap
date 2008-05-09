@@ -98,7 +98,7 @@ namespace StructureMap
             {
                 if (_defaultMemento == null)
                 {
-                    string pluginTypeName = Family == null ? "UNKNOWN" : Family.PluginTypeName;
+                    string pluginTypeName = Family == null ? "UNKNOWN" : Family.PluginType.AssemblyQualifiedName;
                     throw new StructureMapException(202, pluginTypeName);
                 }
 
@@ -110,7 +110,7 @@ namespace StructureMap
 
                 if (returnValue == null)
                 {
-                    throw new StructureMapException(200, memento.ReferenceKey, Family.PluginTypeName);
+                    throw new StructureMapException(200, memento.ReferenceKey, Family.PluginType.AssemblyQualifiedName);
                 }
             }
 

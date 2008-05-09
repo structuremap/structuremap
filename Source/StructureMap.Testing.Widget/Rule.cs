@@ -1,5 +1,4 @@
 using System;
-using StructureMap.Configuration.Mementos;
 using StructureMap.Pipeline;
 
 namespace StructureMap.Testing.Widget

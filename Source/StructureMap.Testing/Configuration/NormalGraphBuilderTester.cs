@@ -3,7 +3,6 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
-using StructureMap.Configuration.Mementos;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Source;
@@ -90,7 +89,7 @@ namespace StructureMap.Testing.Configuration
 
             NormalGraphBuilder builder = new NormalGraphBuilder(new Registry[0]);
             builder.PrepareSystemObjects();
-            builder.WithSystemObject<IInstanceInterceptor>(memento, "singleton", delegate(IInstanceInterceptor policy)
+            builder.WithSystemObject<IBuildInterceptor>(memento, "singleton", delegate(IBuildInterceptor policy)
                                                                              {
                                                                                  Assert.IsInstanceOfType(typeof(SingletonPolicy), policy);
                                                                                  iWasCalled = true;

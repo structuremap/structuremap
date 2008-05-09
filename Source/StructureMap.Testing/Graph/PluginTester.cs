@@ -33,18 +33,6 @@ namespace StructureMap.Testing.Graph
         private Type _colorwidget;
         private Type _moneywidgetmaker;
 
-        [
-            Test,
-            ExpectedException(typeof (StructureMapException),
-                ExpectedMessage = "StructureMap Exception Code:  112\nMissing a mandatory \"ConcreteKey\" attribute in a <Plugin> node for Type \"StructureMap.Testing.Widget.NotPluggableWidget\""
-                )]
-        public void AddAPluggedTypeWithoutAConcreteKey()
-        {
-            TypePath path = new TypePath("StructureMap.Testing.Widget",
-                                         "StructureMap.Testing.Widget.NotPluggableWidget");
-
-            Plugin plugin = new Plugin(path, "");
-        }
 
         [Test]
         public void BadPluginToAbstractClass()
@@ -123,28 +111,6 @@ namespace StructureMap.Testing.Graph
         public void CanPluginWithAttribute()
         {
             Assert.AreEqual(true, Plugin.IsExplicitlyMarkedAsPlugin(_iwidget, _colorwidget), "ColorWidget plugs into IWidget");
-        }
-
-
-        [Test, ExpectedException(typeof (StructureMapException))]
-        public void CreateAPluginWithANonExistentAssembly()
-        {
-            TypePath path = new TypePath("IDontExist.Assembly",
-                                         "IDontExist.Assembly.NotPluggableWidget");
-
-            Plugin plugin = new Plugin(path, "default");
-        }
-
-
-        [
-            Test,
-            ExpectedException(typeof (StructureMapException))]
-        public void CreateAPluginWithANonExistentClass()
-        {
-            TypePath path = new TypePath("StructureMap.Testing.Widget",
-                                         "StructureMap.Testing.Widget.NonExistentClass");
-
-            Plugin plugin = new Plugin(path, "default");
         }
 
 

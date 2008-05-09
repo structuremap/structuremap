@@ -41,6 +41,11 @@ namespace StructureMap.Testing.Widget2
             }
         }
 
+        public override Type PluggedType
+        {
+            get { return typeof (Cow); }
+        }
+
 
         public override object BuildInstance(IConfiguredInstance instance, StructureMap.Pipeline.IInstanceCreator creator)
         {

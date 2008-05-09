@@ -171,10 +171,8 @@
     <Compile Include="Configuration\DSL\ExpressionValidator.cs" />
     <Compile Include="Configuration\DSL\IExpression.cs" />
     <Compile Include="Configuration\DSL\Expressions\InstanceDefaultExpression.cs" />
-    <Compile Include="Configuration\Mementos\ExplicitArguments.cs" />
-    <Compile Include="Configuration\Mementos\LiteralMemento.cs" />
+    <Compile Include="Pipeline\ExplicitArguments.cs" />
     <Compile Include="Configuration\DSL\Expressions\ProfileExpression.cs" />
-    <Compile Include="Configuration\Mementos\PrototypeMemento.cs" />
     <Compile Include="Configuration\DSL\Registry.cs" />
     <Compile Include="Configuration\DSL\Expressions\ScanAssembliesExpression.cs" />
     <Compile Include="Configuration\FamilyParser.cs">
@@ -188,7 +186,6 @@
     </Compile>
     <Compile Include="Configuration\ProfileAndMachineParser.cs" />
     <Compile Include="Configuration\StructureMapConfigurationSection.cs" />
-    <Compile Include="Configuration\Mementos\UserControlMemento.cs" />
     <Compile Include="Configuration\XmlConstants.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -283,11 +280,10 @@
     <Compile Include="Interceptors\NulloInterceptor.cs" />
     <Compile Include="Interceptors\StartupInterceptor.cs" />
     <Compile Include="Interceptors\FilteredInstanceInterceptor.cs" />
-    <Compile Include="IPluginGraphSource.cs" />
     <Compile Include="MementoSource.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Configuration\Mementos\MemoryInstanceMemento.cs">
+    <Compile Include="MemoryInstanceMemento.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ObjectFactory.cs">

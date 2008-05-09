@@ -31,41 +31,6 @@ namespace StructureMap.Graph
             }
         }
 
-
-        public PluginFamily this[int index]
-        {
-            get
-            {
-                PluginFamily[] families = new PluginFamily[_pluginFamilies.Count];
-                return families[index];
-            }
-        }
-
-        public PluginFamily this[string pluginTypeName]
-        {
-            get
-            {
-                Type pluginType = Type.GetType(pluginTypeName);
-
-                if (pluginType == null)
-                {
-                    foreach (KeyValuePair<Type, PluginFamily> pair in _pluginFamilies)
-                    {
-                        if (pair.Value.PluginType.FullName == pluginTypeName)
-                        {
-                            return pair.Value;
-                        }
-                    }
-
-                    throw new ApplicationException("Could not find PluginFamily " + pluginTypeName);
-                }
-                else
-                {
-                    return this[pluginType];
-                }
-            }
-        }
-
         public int Count
         {
             get { return _pluginFamilies.Count; }

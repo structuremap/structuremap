@@ -116,7 +116,7 @@ namespace StructureMap.Configuration
                 TypePath pluginPath = TypePath.CreateFromXmlNode(pluginElement);
                 string concreteKey = pluginElement.GetAttribute(XmlConstants.CONCRETE_KEY_ATTRIBUTE);
 
-                string context = "creating a Plugin for " + family.PluginTypeName;
+                string context = "creating a Plugin for " + family.PluginType.AssemblyQualifiedName;
                 _builder.WithType(pluginPath, context, delegate(Type pluggedType)
                                                            {
                                                                Plugin plugin = new Plugin(pluggedType, concreteKey);
@@ -148,7 +148,7 @@ namespace StructureMap.Configuration
                 XmlAttributeInstanceMemento interceptorMemento = new XmlAttributeInstanceMemento(interceptorNode);
 
 
-                _builder.WithSystemObject<IInstanceInterceptor>(interceptorMemento, context, delegate(IInstanceInterceptor interceptor)
+                _builder.WithSystemObject<IBuildInterceptor>(interceptorMemento, context, delegate(IBuildInterceptor interceptor)
                                                                                                  {
                                                                                                      family.AddInterceptor(interceptor);
                                                                                                  });

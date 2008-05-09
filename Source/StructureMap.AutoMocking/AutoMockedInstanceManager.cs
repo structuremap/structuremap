@@ -22,7 +22,7 @@ namespace StructureMap.AutoMocking
             }
 
             object service = _locator.Service(pluginType);
-            InstanceFactory factory = new InstanceFactory(new PluginFamily(pluginType), true);
+            InstanceFactory factory = new InstanceFactory(new PluginFamily(pluginType));
             LiteralInstance instance = new LiteralInstance(service);
             SetDefault(pluginType, instance);
 

@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using StructureMap.Configuration.Mementos;
 using StructureMap.Exceptions;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
@@ -353,7 +352,7 @@ namespace StructureMap
 
         private IInstanceFactory registerPluginFamily(PluginFamily family)
         {
-            InstanceFactory factory = new InstanceFactory(family, _failOnException);
+            InstanceFactory factory = new InstanceFactory(family);
             RegisterType(factory);
 
             return factory;
@@ -420,10 +419,10 @@ namespace StructureMap
             if (pluggedType.IsGenericType)
             {
                 PluginFamily family = _genericsGraph.CreateTemplatedFamily(pluggedType, _profileManager);
-                if (family != null) return new InstanceFactory(family, true);
+                if (family != null) return new InstanceFactory(family);
             }
 
-            return InstanceFactory.CreateInstanceFactoryForType(pluggedType, _profileManager);
+            return InstanceFactory.CreateFactoryForConcreteType(pluggedType, _profileManager);
         }
 
         #region Nested type: CreateFactoryDelegate

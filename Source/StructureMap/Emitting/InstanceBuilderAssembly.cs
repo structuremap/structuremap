@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using StructureMap.Graph;
 
@@ -9,23 +10,66 @@ namespace StructureMap.Emitting
     /// </summary>
     public class InstanceBuilderAssembly
     {
-        private DynamicAssembly _dynamicAssembly;
-        private Type _pluginType;
+        private readonly DynamicAssembly _dynamicAssembly;
+        private readonly Type _pluginType;
+        private readonly List<string> _classNames = new List<string>();
 
-        public InstanceBuilderAssembly(string assemblyName, Type pluginType)
+        public InstanceBuilderAssembly(Type pluginType, IEnumerable<Plugin> plugins)
         {
+            string assemblyName = Guid.NewGuid().ToString().Replace(".", "") + "InstanceBuilderAssembly";
             _dynamicAssembly = new DynamicAssembly(assemblyName);
             _pluginType = pluginType;
+
+            foreach (Plugin plugin in plugins)
+            {
+                processPlugin(plugin);
+            }
         }
 
-        public void AddPlugin(Plugin plugin)
+        /// <summary>
+        /// Gets a class name for the InstanceBuilder that will be emitted for this Plugin
+        /// </summary>
+        /// <returns></returns>
+        public static string getInstanceBuilderClassName(Type pluggedType)
+        {
+            string className = "";
+
+            if (pluggedType.IsGenericType)
+            {
+                className += escapeClassName(pluggedType);
+
+                Type[] args = pluggedType.GetGenericArguments();
+                foreach (Type arg in args)
+                {
+                    className += escapeClassName(arg);
+                }
+            }
+            else
+            {
+                className = escapeClassName(pluggedType);
+            }
+
+            return className + "InstanceBuilder";
+        }
+
+        private static string escapeClassName(Type type)
+        {
+            string typeName = type.Namespace + type.Name;
+            string returnValue = typeName.Replace(".", string.Empty);
+            return returnValue.Replace("`", string.Empty);
+        }
+
+        private void processPlugin(Plugin plugin)
         {
             if (Plugin.CanBeCast(_pluginType, plugin.PluggedType))
             {
+                string className = getInstanceBuilderClassName(plugin.PluggedType);
                 ClassBuilder builderClass =
-                    _dynamicAssembly.AddClass(plugin.GetInstanceBuilderClassName(), typeof (InstanceBuilder));
+                    _dynamicAssembly.AddClass(className, typeof (InstanceBuilder));
 
                 configureClassBuilder(builderClass, plugin);
+
+                _classNames.Add(className);
             }
             else
             {
@@ -33,15 +77,21 @@ namespace StructureMap.Emitting
             }
         }
 
-        public Assembly Compile()
+        public List<InstanceBuilder> Compile()
         {
-            return _dynamicAssembly.Compile();
+            Assembly assembly = _dynamicAssembly.Compile();
+
+            return _classNames.ConvertAll<InstanceBuilder>(delegate(string typeName)
+                                                        {
+                                                            return (InstanceBuilder) assembly.CreateInstance(typeName);
+                                                        });
         }
 
 
         private void configureClassBuilder(ClassBuilder builderClass, Plugin plugin)
         {
             builderClass.AddReadonlyStringProperty("ConcreteTypeKey", plugin.ConcreteKey, true);
+            builderClass.AddPluggedTypeGetter(plugin.PluggedType);
 
             BuildInstanceMethod method = new BuildInstanceMethod(plugin);
             builderClass.AddMethod(method);

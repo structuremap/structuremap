@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Reflection;
-using StructureMap.Configuration.DSL;
 using StructureMap.Diagnostics;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
@@ -105,8 +103,6 @@ namespace StructureMap.Graph
 
             _sealed = true;
         }
-
-
 
         #endregion
 

@@ -1,5 +1,4 @@
 using NUnit.Framework;
-using StructureMap.Configuration.Mementos;
 using StructureMap.Graph;
 using StructureMap.Source;
 using StructureMap.Testing.Widget2;
@@ -24,7 +23,7 @@ namespace StructureMap.Testing.Container
             family.Plugins.Add(typeof (Cow), "Default");
 
 
-            InstanceFactory cowFactory = new InstanceFactory(family, true);
+            InstanceFactory cowFactory = new InstanceFactory(family);
             cowFactory.SetInstanceManager(new InstanceManager());
 
             MemoryInstanceMemento memento = new MemoryInstanceMemento("Default", "Angus");

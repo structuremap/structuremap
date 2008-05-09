@@ -1,6 +1,5 @@
 using System;
 using System.Reflection;
-using StructureMap.Configuration.Mementos;
 
 namespace StructureMap.Graph
 {
@@ -127,25 +126,6 @@ namespace StructureMap.Graph
             
         }
 
-        /// <summary>
-        /// Troubleshooting constructor used by PluginGraphBuilder to find possible problems
-        /// with the configured Plugin
-        /// </summary>
-        /// <param name="path"></param>
-        /// <param name="concreteKey"></param>
-        [Obsolete("Get rid of this.  All of this should go through NormalGraphBuilder")] public Plugin(TypePath path, string concreteKey) : base()
-        {
-            if (concreteKey == string.Empty)
-            {
-                throw new StructureMapException(112, path.ClassName);
-            }
-
-            setPluggedType(path, concreteKey);
-            _setters = new SetterPropertyCollection(this);
-
-            _concreteKey = concreteKey;
-        }
-
         #endregion
 
 
@@ -218,36 +198,6 @@ namespace StructureMap.Graph
             }
         }
 
-        private void setPluggedType(TypePath path, string concreteKey)
-        {
-            try
-            {
-                _pluggedType = path.FindType();
-            }
-            catch (Exception ex)
-            {
-                throw new StructureMapException(111, ex, path.ClassName, concreteKey);
-            }
-        }
-
-
-        public Plugin CreateTemplatedClone(params Type[] types)
-        {
-            Type templatedType;
-            if (_pluggedType.IsGenericType)
-            {
-                templatedType = _pluggedType.MakeGenericType(types);
-            }
-            else
-            {
-                templatedType = _pluggedType;
-            }
-            Plugin templatedPlugin = new Plugin(templatedType, _concreteKey);
-            templatedPlugin._setters = _setters;
-
-            return templatedPlugin;
-        }
-
 
         /// <summary>
         /// Returns the System.Reflection.ConstructorInfo for the PluggedType.  Uses either
@@ -271,39 +221,6 @@ namespace StructureMap.Graph
             }
 
             return returnValue;
-        }
-
-        /// <summary>
-        /// Gets a class name for the InstanceBuilder that will be emitted for this Plugin
-        /// </summary>
-        /// <returns></returns>
-        public string GetInstanceBuilderClassName()
-        {
-            string className = "";
-
-            if (_pluggedType.IsGenericType)
-            {
-                className += escapeClassName(_pluggedType);
-
-                Type[] args = _pluggedType.GetGenericArguments();
-                foreach (Type arg in args)
-                {
-                    className += escapeClassName(arg);
-                }
-            }
-            else
-            {
-                className = escapeClassName(_pluggedType);
-            }
-
-            return className + "InstanceBuilder";
-        }
-
-        private string escapeClassName(Type type)
-        {
-            string typeName = type.Namespace + type.Name;
-            string returnValue = typeName.Replace(".", string.Empty);
-            return returnValue.Replace("`", string.Empty);
         }
 
 
@@ -435,6 +352,8 @@ namespace StructureMap.Graph
             }
         }
 
+        // TODO: Move to Generics.  This code is insanely stupid.  Just make the templated type and do
+        // IsAssignableFrom.  Duh!
         public bool CanBePluggedIntoGenericType(Type pluginType, params Type[] templateTypes)
         {
             bool isValid = true;

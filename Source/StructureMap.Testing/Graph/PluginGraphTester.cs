@@ -64,13 +64,11 @@ namespace StructureMap.Testing.Graph
 
             graph.Assemblies.Add("StructureMap.Testing.Widget");
             graph.FindFamily(typeof (IWidget)).DefaultInstanceKey = "Blue";
-            TypePath path =
-                new TypePath("StructureMap.Testing.Widget", "StructureMap.Testing.Widget.NotPluggableWidget");
-
+            
 
             PluginFamily family = graph.FindFamily(typeof (IWidget));
 
-            family.Plugins.Add(path, "NotPluggable");
+            family.Plugins.Add(typeof(NotPluggableWidget), "NotPluggable");
             graph.Seal();
 
 

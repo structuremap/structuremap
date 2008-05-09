@@ -44,7 +44,7 @@ namespace StructureMap
                 return family.Plugins[innerConcreteKey];
             }
 
-            throw new StructureMapException(201, innerConcreteKey, InstanceKey, family.PluginTypeName);
+            throw new StructureMapException(201, innerConcreteKey, InstanceKey, family.PluginType.AssemblyQualifiedName);
         }
 
 

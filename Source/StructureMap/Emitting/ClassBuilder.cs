@@ -84,24 +84,54 @@ namespace StructureMap.Emitting
         }
 
 
-        public void AddReadonlyStringProperty(string PropertyName, string Value, bool Override)
+        public void AddReadonlyStringProperty(string propertyName, string propertyValue, bool @override)
         {
             PropertyBuilder prop =
-                _newTypeBuilder.DefineProperty(PropertyName, PropertyAttributes.HasDefault, typeof (string), null);
+                _newTypeBuilder.DefineProperty(propertyName, PropertyAttributes.HasDefault, typeof (string), null);
 
             MethodAttributes atts = MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig |
                                     MethodAttributes.Final | MethodAttributes.SpecialName;
 
-            string _GetMethodName = "get_" + PropertyName;
+            string getterMethodName = "get_" + propertyName;
 
             MethodBuilder methodGet =
-                _newTypeBuilder.DefineMethod(_GetMethodName, atts, CallingConventions.Standard, typeof (string), null);
+                _newTypeBuilder.DefineMethod(getterMethodName, atts, CallingConventions.Standard, typeof (string), null);
             ILGenerator gen = methodGet.GetILGenerator();
 
             LocalBuilder ilReturn = gen.DeclareLocal(typeof (string));
 
-            gen.Emit(OpCodes.Ldstr, Value);
+            gen.Emit(OpCodes.Ldstr, propertyValue);
             gen.Emit(OpCodes.Stloc_0);
+            gen.Emit(OpCodes.Ldloc_0);
+            gen.Emit(OpCodes.Ret);
+
+            prop.SetGetMethod(methodGet);
+        }
+
+        public void AddPluggedTypeGetter(Type pluggedType)
+        {
+            PropertyBuilder prop =
+                _newTypeBuilder.DefineProperty("PluggedType", PropertyAttributes.HasDefault, typeof(Type), null);
+
+            MethodAttributes atts = MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig |
+                                    MethodAttributes.Final | MethodAttributes.SpecialName;
+
+            string getterMethodName = "get_PluggedType";
+
+            MethodBuilder methodGet =
+                _newTypeBuilder.DefineMethod(getterMethodName, atts, CallingConventions.Standard, typeof(Type), null);
+            ILGenerator gen = methodGet.GetILGenerator();
+
+            LocalBuilder ilReturn = gen.DeclareLocal(typeof(Type));
+
+            gen.Emit(OpCodes.Nop);
+            gen.Emit(OpCodes.Ldtoken, pluggedType);
+
+            MethodInfo method = typeof(Type).GetMethod("GetTypeFromHandle");
+            gen.Emit(OpCodes.Call, method);
+
+            gen.Emit(OpCodes.Stloc_0);
+            
             gen.Emit(OpCodes.Ldloc_0);
             gen.Emit(OpCodes.Ret);
 

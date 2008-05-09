@@ -1,7 +1,6 @@
 using System.Drawing;
 using NUnit.Framework;
 using StructureMap.Configuration;
-using StructureMap.Configuration.Mementos;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget3;

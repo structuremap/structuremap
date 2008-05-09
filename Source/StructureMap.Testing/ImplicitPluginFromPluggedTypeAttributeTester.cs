@@ -4,7 +4,6 @@ using NUnit.Framework;
 using StructureMap.Attributes;
 using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
-using StructureMap.Configuration.Mementos;
 using StructureMap.Graph;
 using StructureMap.Testing.TestData;
 using StructureMap.Testing.Widget;

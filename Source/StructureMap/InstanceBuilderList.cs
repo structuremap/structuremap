@@ -58,33 +58,17 @@ namespace StructureMap
 
         private void processPlugins(IEnumerable<Plugin> plugins)
         {
-            Assembly assembly = createInstanceBuilderAssembly(plugins);
-            foreach (Plugin plugin in plugins)
+            List<InstanceBuilder> list = createInstanceBuilders(plugins);
+            foreach (InstanceBuilder builder in list)
             {
-                addPlugin(assembly, plugin);
+                _builders.Add(builder.PluggedType, builder);
             }
         }
 
-        private Assembly createInstanceBuilderAssembly(IEnumerable<Plugin> plugins)
+        private List<InstanceBuilder> createInstanceBuilders(IEnumerable<Plugin> plugins)
         {
-            string assemblyName = Guid.NewGuid().ToString().Replace(".", "") + "InstanceBuilderAssembly";
-            InstanceBuilderAssembly builderAssembly = new InstanceBuilderAssembly(assemblyName, _pluginType);
-
-            foreach (Plugin plugin in plugins)
-            {
-                builderAssembly.AddPlugin(plugin);
-            }
-
+            InstanceBuilderAssembly builderAssembly = new InstanceBuilderAssembly(_pluginType, plugins);
             return builderAssembly.Compile();
-        }
-
-
-        private void addPlugin(Assembly assembly, Plugin plugin)
-        {
-            string instanceBuilderClassName = plugin.GetInstanceBuilderClassName();
-            InstanceBuilder builder = (InstanceBuilder)assembly.CreateInstance(instanceBuilderClassName);
-
-            _builders.Add(plugin.PluggedType, builder);
         }
     }
 }

@@ -19,6 +19,11 @@ namespace StructureMap.Testing.Widget5
             get { throw new NotImplementedException(); }
         }
 
+        public override Type PluggedType
+        {
+            get { throw new NotImplementedException(); }
+        }
+
         public override object BuildInstance(IConfiguredInstance instance, StructureMap.Pipeline.IInstanceCreator creator)
         {
             BasicGridColumn column = new BasicGridColumn(instance.GetProperty("headerText"));

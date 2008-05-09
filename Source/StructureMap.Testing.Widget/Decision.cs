@@ -1,3 +1,4 @@
+using System;
 using StructureMap.Pipeline;
 
 namespace StructureMap.Testing.Widget
@@ -24,6 +25,12 @@ namespace StructureMap.Testing.Widget
         {
             return new Decision(
                 (Rule[]) creator.CreateInstanceArray("StructureMap.Testing.Widget", instance.GetChildrenArray("Rules")));
+        }
+
+
+        public override Type PluggedType
+        {
+            get { return typeof (Decision); }
         }
     }
 }

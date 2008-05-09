@@ -10,7 +10,7 @@ namespace StructureMap
     /// Reads configuration XML documents and builds the structures necessary to initialize
     /// the InstanceManager/IInstanceFactory/InstanceBuilder/ObjectInstanceActivator objects
     /// </summary>
-    public class PluginGraphBuilder : IPluginGraphSource
+    public class PluginGraphBuilder
     {
         #region statics
 
@@ -34,7 +34,7 @@ namespace StructureMap
 
         private readonly ConfigurationParser[] _parsers;
         private readonly Registry[] _registries = new Registry[0];
-        private PluginGraph _graph;
+        private readonly PluginGraph _graph;
 
         #region constructors
 
@@ -52,8 +52,6 @@ namespace StructureMap
 
         #endregion
 
-        #region IPluginGraphSource Members
-
         /// <summary>
         /// Reads the configuration information and returns the PluginGraph definition of
         /// plugin families and plugin's
@@ -68,8 +66,6 @@ namespace StructureMap
 
             return _graph;
         }
-
-        #endregion
 
         private void forAllParsers(Action<ConfigurationParser> action)
         {

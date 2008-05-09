@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
-using StructureMap.Configuration.Mementos;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
@@ -205,7 +204,7 @@ namespace StructureMap.Testing.Container
         }
     }
 
-    public class FakeInstanceFactoryInterceptor : IInstanceInterceptor
+    public class FakeInstanceFactoryInterceptor : IBuildInterceptor
     {
         public IBuildPolicy InnerPolicy
         {

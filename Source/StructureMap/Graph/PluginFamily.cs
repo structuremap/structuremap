@@ -15,20 +15,19 @@ namespace StructureMap.Graph
     /// </summary>
     public class PluginFamily : IPluginFamily
     {
-        public const string CONCRETE_KEY = "CONCRETE";
         private readonly List<InstanceMemento> _mementoList = new List<InstanceMemento>();
         private readonly PluginCollection _plugins;
         private string _defaultKey = string.Empty;
         private InstanceInterceptor _instanceInterceptor = new NulloInterceptor();
         private PluginGraph _parent;
-        private readonly Type _pluginType;
-        private readonly string _pluginTypeName;
         private readonly List<Instance> _instances = new List<Instance>();
         private IBuildPolicy _buildPolicy = new BuildPolicy();
+        private readonly Type _pluginType;
 
         private readonly Predicate<Type> _explicitlyMarkedPluginFilter;
         private readonly Predicate<Type> _implicitPluginFilter;
         private Predicate<Type> _pluginFilter;
+        private IBuildPolicy _policy;
 
 
         // TODO:  Need to unit test the scope from the attribute
@@ -39,7 +38,6 @@ namespace StructureMap.Graph
         public PluginFamily(Type pluginType)
         {
             _pluginType = pluginType;
-            _pluginTypeName = TypePath.GetAssemblyQualifiedName(_pluginType);
             _plugins = new PluginCollection(this);
 
             PluginFamilyAttribute.ConfigureFamily(this);
@@ -60,40 +58,6 @@ namespace StructureMap.Graph
         {
             get { return _instanceInterceptor; }
             set { _instanceInterceptor = value; }
-        }
-
-        // TODO:  This code sucks.  What's going on here?
-        public PluginFamily CreateTemplatedClone(params Type[] templateTypes)
-        {
-            Type templatedType = _pluginType.MakeGenericType(templateTypes);
-            PluginFamily templatedFamily = new PluginFamily(templatedType);
-            templatedFamily._defaultKey = _defaultKey;
-            templatedFamily.Parent = Parent;
-            templatedFamily._buildPolicy = _buildPolicy.Clone();
-
-            // Add Plugins
-            foreach (Plugin plugin in _plugins)
-            {
-                if (plugin.CanBePluggedIntoGenericType(_pluginType, templateTypes))
-                {
-                    Plugin templatedPlugin = plugin.CreateTemplatedClone(templateTypes);
-                    templatedFamily.Plugins.Add(templatedPlugin);
-                }
-            }
-
-            // TODO -- Got a big problem here.  Intances need to be copied over
-            foreach (IDiagnosticInstance instance in GetAllInstances())
-            {
-                if (instance.CanBePartOfPluginFamily(templatedFamily))
-                {
-                    templatedFamily.AddInstance((Instance)instance);
-                }
-            }
-
-            // Need to attach the new PluginFamily to the old PluginGraph
-            Parent.PluginFamilies.Add(templatedFamily);
-
-            return templatedFamily;
         }
 
 
@@ -145,11 +109,6 @@ namespace StructureMap.Graph
             get { return _plugins; }
         }
 
-        public string PluginTypeName
-        {
-            get { return _pluginTypeName; }
-        }
-
         public bool IsGenericTemplate
         {
             get { return _pluginType.IsGenericTypeDefinition; }
@@ -175,6 +134,7 @@ namespace StructureMap.Graph
         public IBuildPolicy Policy
         {
             get { return _buildPolicy; }
+            set { _policy = value; }
         }
 
         public int PluginCount
@@ -242,7 +202,7 @@ namespace StructureMap.Graph
             }
         }
 
-        public void AddInterceptor(IInstanceInterceptor interceptor)
+        public void AddInterceptor(IBuildInterceptor interceptor)
         {
             interceptor.InnerPolicy = _buildPolicy;
             _buildPolicy = interceptor;
