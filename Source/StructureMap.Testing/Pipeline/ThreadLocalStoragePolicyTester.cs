@@ -30,34 +30,34 @@ namespace StructureMap.Testing.Pipeline
 
         private void findRule1()
         {
-            _rule1 = (ColorRule) _policy.Build(new StubInstanceCreator(), typeof(IService), _instance);
+            _rule1 = (ColorRule) _policy.Build(new StubBuildSession(), typeof(IService), _instance);
 
-            ColorRule rule = (ColorRule)_policy.Build(new StubInstanceCreator(), typeof(IService), _instance);
+            ColorRule rule = (ColorRule)_policy.Build(new StubBuildSession(), typeof(IService), _instance);
             Assert.AreSame(_rule1, rule);
         }
 
         private void findRule2()
         {
-            _rule2 = (ColorRule)_policy.Build(new StubInstanceCreator(), typeof(IService), _instance);
+            _rule2 = (ColorRule)_policy.Build(new StubBuildSession(), typeof(IService), _instance);
 
-            ColorRule rule = (ColorRule)_policy.Build(new StubInstanceCreator(), typeof(IService), _instance);
+            ColorRule rule = (ColorRule)_policy.Build(new StubBuildSession(), typeof(IService), _instance);
             Assert.AreSame(_rule2, rule);
         }
 
         private void findRule3()
         {
-            _rule3 = (ColorRule)_policy.Build(new StubInstanceCreator(), typeof(IService), _instance);
+            _rule3 = (ColorRule)_policy.Build(new StubBuildSession(), typeof(IService), _instance);
 
-            ColorRule rule = (ColorRule)_policy.Build(new StubInstanceCreator(), typeof(IService), _instance);
+            ColorRule rule = (ColorRule)_policy.Build(new StubBuildSession(), typeof(IService), _instance);
             Assert.AreSame(_rule3, rule);
 
-            rule = (ColorRule)_policy.Build(new StubInstanceCreator(), typeof(IService), _instance);
+            rule = (ColorRule)_policy.Build(new StubBuildSession(), typeof(IService), _instance);
             Assert.AreSame(_rule3, rule);
 
-            rule = (ColorRule)_policy.Build(new StubInstanceCreator(), typeof(IService), _instance);
+            rule = (ColorRule)_policy.Build(new StubBuildSession(), typeof(IService), _instance);
             Assert.AreSame(_rule3, rule);
 
-            rule = (ColorRule)_policy.Build(new StubInstanceCreator(), typeof(IService), _instance);
+            rule = (ColorRule)_policy.Build(new StubBuildSession(), typeof(IService), _instance);
             Assert.AreSame(_rule3, rule);
         }
 

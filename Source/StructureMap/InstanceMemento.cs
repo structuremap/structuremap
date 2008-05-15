@@ -15,36 +15,45 @@ namespace StructureMap
         public const string SUBSTITUTIONS_ATTRIBUTE = "Substitutions";
         public const string TEMPLATE_ATTRIBUTE = "Template";
         private string _instanceKey;
-        private InstanceInterceptor _interceptor = new NulloInterceptor();
         private string _lastKey = string.Empty;
 
         /// <summary>
         /// The named type of the object instance represented by the InstanceMemento.  Translates to a concrete
         /// type
         /// </summary>
-        [Obsolete] public string ConcreteKey
+        public string ConcreteKey
         {
-            get { return innerConcreteKey; }
+            get
+            {
+                return innerConcreteKey;
+            }
         }
 
 
         public virtual Plugin FindPlugin(PluginFamily family)
         {
-            if (string.IsNullOrEmpty(innerConcreteKey))
-            {
-                string pluggedTypeName = getPluggedType();
-                Type pluggedType = new TypePath(pluggedTypeName).FindType();
+            Plugin plugin = family.Plugins[innerConcreteKey] ?? getPluginByType(family) ??
+                            family.Plugins[Plugin.DEFAULT];
 
-                return family.Plugins.FindOrCreate(pluggedType, false);
+            if (plugin == null)
+            {
+                throw new StructureMapException(201, innerConcreteKey, InstanceKey, family.PluginType.AssemblyQualifiedName);    
             }
 
+            return plugin;
+        }
 
-            if (family.Plugins.HasPlugin(innerConcreteKey))
+        private Plugin getPluginByType(PluginFamily family)
+        {
+            string pluggedTypeName = getPluggedType();
+            if (string.IsNullOrEmpty(pluggedTypeName))
             {
-                return family.Plugins[innerConcreteKey];
+                return null;
             }
 
-            throw new StructureMapException(201, innerConcreteKey, InstanceKey, family.PluginType.AssemblyQualifiedName);
+            Type pluggedType = new TypePath(pluggedTypeName).FindType();
+
+            return family.Plugins.FindOrCreate(pluggedType, false);
         }
 
 
@@ -99,15 +108,9 @@ namespace StructureMap
         /// <summary>
         /// Is the InstanceMemento a reference to the default instance of the plugin type?
         /// </summary>
-        [Obsolete] public bool IsDefault
+        public bool IsDefault
         {
             get { return (IsReference && ReferenceKey == string.Empty); }
-        }
-
-        public InstanceInterceptor Interceptor
-        {
-            get { return _interceptor; }
-            set { _interceptor = value; }
         }
 
         /// <summary>
@@ -168,33 +171,6 @@ namespace StructureMap
         /// <returns></returns>
         protected abstract InstanceMemento getChild(string Key);
 
-
-        /// <summary>
-        /// Using InstanceManager and the TypeName, creates an object instance using the
-        /// child InstanceMemento specified by Key
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="typeName"></param>
-        /// <param name="instanceCreator"></param>
-        /// <returns></returns>
-        [Obsolete("Removing in favor of Instance")]public virtual object GetChild(string key, string typeName, Pipeline.IInstanceCreator instanceCreator)
-        {
-            throw new NotImplementedException();
-            //InstanceMemento memento = GetChildMemento(key);
-            //object returnValue = null;
-
-            //if (memento == null)
-            //{
-            //    returnValue = buildDefaultChild(key, instanceCreator, typeName);
-            //}
-            //else
-            //{
-            //    returnValue = instanceCreator.CreateInstance(typeName, memento);
-            //}
-
-
-            //return returnValue;
-        }
 
 
         /// <summary>

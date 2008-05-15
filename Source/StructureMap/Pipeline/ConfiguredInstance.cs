@@ -2,19 +2,19 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using StructureMap.Configuration.DSL;
-using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.Graph;
 
 namespace StructureMap.Pipeline
 {
+    // TODO:  Move the FI stuff into a partial class
     public class ConfiguredInstance : ExpressedInstance<ConfiguredInstance>, IConfiguredInstance
     {
-        private readonly Dictionary<string, string> _properties = new Dictionary<string, string>();
         private readonly Dictionary<string, Instance> _children = new Dictionary<string, Instance>();
+        private readonly Dictionary<string, string> _properties = new Dictionary<string, string>();
         private Dictionary<string, Instance[]> _arrays = new Dictionary<string, Instance[]>();
 
-        private Type _pluggedType;
         private string _concreteKey;
+        private Type _pluggedType;
 
 
         public ConfiguredInstance()
@@ -31,89 +31,10 @@ namespace StructureMap.Pipeline
             Name = name;
         }
 
-        protected void merge(ConfiguredInstance instance)
+
+        public ConfiguredInstance(Type pluggedType)
         {
-            foreach (KeyValuePair<string, string> pair in instance._properties)
-            {
-                if (!_properties.ContainsKey(pair.Key))
-                {
-                    _properties.Add(pair.Key, pair.Value);
-                }
-            }
-
-            foreach (KeyValuePair<string, Instance> pair in instance._children)
-            {
-                if (!_children.ContainsKey(pair.Key))
-                {
-                    _children.Add(pair.Key, pair.Value);
-                }
-            }
-
-            _arrays = instance._arrays;
-        }
-
-        protected override object build(Type pluginType, IInstanceCreator creator)
-        {
-            return creator.CreateInstance(pluginType, this);
-        }
-
-        Instance[] IConfiguredInstance.GetChildrenArray(string propertyName)
-        {
-            // TODO:  Validate and throw exception if missing
-            return _arrays[propertyName];
-        }
-
-        string IConfiguredInstance.GetProperty(string propertyName)
-        {
-            if (!_properties.ContainsKey(propertyName))
-            {
-                throw new StructureMapException(205, propertyName, Name);
-            }
-
-            return _properties[propertyName];
-        }
-
-        object IConfiguredInstance.GetChild(string propertyName, Type pluginType, IInstanceCreator instanceCreator)
-        {
-            return getChild(propertyName, pluginType, instanceCreator);
-        }
-
-        protected virtual object getChild(string propertyName, Type pluginType, IInstanceCreator instanceCreator)
-        {
-            Instance childInstance = _children.ContainsKey(propertyName)
-                                         ? _children[propertyName]
-                                         : new DefaultInstance();
-
-            
-            return childInstance.Build(pluginType, instanceCreator);
-        }
-
-        InstanceBuilder IConfiguredInstance.FindBuilder(InstanceBuilderList builders)
-        {
-            if (!string.IsNullOrEmpty(ConcreteKey))
-            {
-                InstanceBuilder builder = builders.FindByConcreteKey(ConcreteKey);
-                if (builder != null) return builder;
-            }
-
-            if (_pluggedType != null)
-            {
-                return builders.FindByType(_pluggedType);
-            }
-
-            return null;
-        }
-
-
-        protected override bool canBePartOfPluginFamily(PluginFamily family)
-        {
-            return family.Plugins.HasPlugin(ConcreteKey);
-        }
-
-        public ConfiguredInstance SetProperty(string propertyName, string propertyValue)
-        {
-            _properties[propertyName] = propertyValue;
-            return this;
+            _pluggedType = pluggedType;
         }
 
         public Type PluggedType
@@ -134,15 +55,122 @@ namespace StructureMap.Pipeline
             get { return this; }
         }
 
+        Instance[] IConfiguredInstance.GetChildrenArray(string propertyName)
+        {
+            // TODO:  Validate and throw exception if missing
+            return _arrays[propertyName];
+        }
+
+        string IConfiguredInstance.GetProperty(string propertyName)
+        {
+            if (!_properties.ContainsKey(propertyName))
+            {
+                throw new StructureMapException(205, propertyName, Name);
+            }
+
+            return _properties[propertyName];
+        }
+
+        object IConfiguredInstance.GetChild(string propertyName, Type pluginType, IBuildSession buildSession)
+        {
+            return getChild(propertyName, pluginType, buildSession);
+        }
+
+
+        protected void mergeIntoThis(ConfiguredInstance instance)
+        {
+            _pluggedType = instance._pluggedType;
+            _concreteKey = instance._concreteKey;
+
+            foreach (KeyValuePair<string, string> pair in instance._properties)
+            {
+                if (!_properties.ContainsKey(pair.Key))
+                {
+                    _properties.Add(pair.Key, pair.Value);
+                }
+            }
+
+            foreach (KeyValuePair<string, Instance> pair in instance._children)
+            {
+                if (!_children.ContainsKey(pair.Key))
+                {
+                    _children.Add(pair.Key, pair.Value);
+                }
+            }
+
+            _arrays = instance._arrays;
+        }
+
+        protected override object build(Type pluginType, IBuildSession session)
+        {
+            InstanceBuilder builder = session.FindBuilderByType(pluginType, _pluggedType) ??
+                                      session.FindBuilderByConcreteKey(pluginType, _concreteKey);
+
+            return Build(pluginType, session, builder);
+        }
+
+        // Only open for testing
+        public object Build(Type pluginType, IBuildSession session, InstanceBuilder builder)
+        {
+            if (builder == null)
+            {
+                throw new StructureMapException(
+                    201, _concreteKey, Name, pluginType);
+            }
+
+
+            try
+            {
+                return builder.BuildInstance(this, session);
+            }
+            catch (StructureMapException)
+            {
+                throw;
+            }
+            catch (InvalidCastException ex)
+            {
+                throw new StructureMapException(206, ex, Name);
+            }
+            catch (Exception ex)
+            {
+                throw new StructureMapException(207, ex, Name, PluginType.FullName);
+            }
+        }
+
+        protected virtual object getChild(string propertyName, Type pluginType, IBuildSession buildSession)
+        {
+            Instance childInstance = _children.ContainsKey(propertyName)
+                                         ? _children[propertyName]
+                                         : new DefaultInstance();
+
+
+            return childInstance.Build(pluginType, buildSession);
+        }
+
+
+        protected override bool canBePartOfPluginFamily(PluginFamily family)
+        {
+            return family.Plugins.HasPlugin(_concreteKey);
+        }
+
+        internal override bool Matches(Plugin plugin)
+        {
+            return plugin.ConcreteKey == _concreteKey || plugin.PluggedType == _pluggedType;
+        }
+
+        public ConfiguredInstance SetProperty(string propertyName, string propertyValue)
+        {
+            _properties[propertyName] = propertyValue;
+            return this;
+        }
+
         public void Read(InstanceMemento memento, PluginGraph graph, Type pluginType)
         {
             PluginFamily family = graph.FindFamily(pluginType);
             Plugin plugin = memento.FindPlugin(family);
 
-
-
             PluggedType = plugin.PluggedType;
-            ConcreteKey = plugin.ConcreteKey;
+            _concreteKey = plugin.ConcreteKey;
 
             InstanceMementoPropertyReader reader = new InstanceMementoPropertyReader(this, memento, graph, pluginType);
             plugin.VisitArguments(reader);
@@ -172,6 +200,7 @@ namespace StructureMap.Pipeline
 
         public ConfiguredInstance WithConcreteKey(string concreteKey)
         {
+            replaceNameIfNotAlreadySet(concreteKey);
             _concreteKey = concreteKey;
             return this;
         }
@@ -202,7 +231,7 @@ namespace StructureMap.Pipeline
         public ChildInstanceExpression Child<CONSTRUCTORARGUMENTTYPE>(string propertyName)
         {
             ChildInstanceExpression child = new ChildInstanceExpression(this, propertyName);
-            child.ChildType = typeof(CONSTRUCTORARGUMENTTYPE);
+            child.ChildType = typeof (CONSTRUCTORARGUMENTTYPE);
 
             return child;
         }
@@ -217,7 +246,7 @@ namespace StructureMap.Pipeline
             string propertyName = findPropertyName<CONSTRUCTORARGUMENTTYPE>();
 
             ChildInstanceExpression child = new ChildInstanceExpression(this, propertyName);
-            child.ChildType = typeof(CONSTRUCTORARGUMENTTYPE);
+            child.ChildType = typeof (CONSTRUCTORARGUMENTTYPE);
             return child;
         }
 
@@ -228,7 +257,7 @@ namespace StructureMap.Pipeline
 
             if (string.IsNullOrEmpty(propertyName))
             {
-                throw new StructureMapException(305, TypePath.GetAssemblyQualifiedName(typeof(T)));
+                throw new StructureMapException(305, typeof(T));
             }
 
             return propertyName;
@@ -254,7 +283,7 @@ namespace StructureMap.Pipeline
 
         private static void validateTypeIsArray<PLUGINTYPE>()
         {
-            if (!typeof(PLUGINTYPE).IsArray)
+            if (!typeof (PLUGINTYPE).IsArray)
             {
                 throw new StructureMapException(307);
             }
@@ -267,7 +296,7 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public ConfiguredInstance UsingConcreteType<T>()
         {
-            _pluggedType = typeof(T);
+            _pluggedType = typeof (T);
             return this;
         }
 
@@ -278,55 +307,46 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public ConfiguredInstance UsingConcreteTypeNamed(string concreteKey)
         {
-            ConcreteKey = concreteKey;
+            _concreteKey = concreteKey;
             return this;
         }
 
-        /// <summary>
-        /// Defines the value of a primitive argument to a constructur argument
-        /// </summary>
-        public class PropertyExpression
+        #region Nested type: ChildArrayExpression
+
+        public class ChildArrayExpression<PLUGINTYPE> : IExpression
         {
             private readonly ConfiguredInstance _instance;
             private readonly string _propertyName;
+            private Type _pluginType = typeof (PLUGINTYPE);
 
-            public PropertyExpression(ConfiguredInstance instance, string propertyName)
+            public ChildArrayExpression(ConfiguredInstance instance, string propertyName)
             {
                 _instance = instance;
                 _propertyName = propertyName;
+
+                _pluginType = typeof (PLUGINTYPE).GetElementType();
             }
 
-            /// <summary>
-            /// Sets the value of the constructor argument
-            /// </summary>
-            /// <param name="propertyValue"></param>
-            /// <returns></returns>
-            public ConfiguredInstance EqualTo(object propertyValue)
+            #region IExpression Members
+
+            void IExpression.Configure(PluginGraph graph)
             {
-                _instance.SetProperty(_propertyName, propertyValue.ToString());
-                return _instance;
+                // no-op
             }
 
-            /// <summary>
-            /// Sets the value of the constructor argument to the key/value in the 
-            /// AppSettings
-            /// </summary>
-            /// <param name="appSettingKey"></param>
-            /// <returns></returns>
-            public ConfiguredInstance EqualToAppSetting(string appSettingKey)
+            #endregion
+
+            public ConfiguredInstance Contains(params Instance[] instances)
             {
-                string propertyValue = ConfigurationManager.AppSettings[appSettingKey];
-                _instance.SetProperty(_propertyName, propertyValue);
+                _instance.SetChildArray(_propertyName, instances);
+
                 return _instance;
             }
         }
 
+        #endregion
 
-
-
-
-
-
+        #region Nested type: ChildInstanceExpression
 
         /// <summary>
         /// Part of the Fluent Interface, represents a nonprimitive argument to a 
@@ -378,7 +398,7 @@ namespace StructureMap.Pipeline
             /// <returns></returns>
             public ConfiguredInstance IsConcreteType<T>()
             {
-                Type pluggedType = typeof(T);
+                Type pluggedType = typeof (T);
                 ExpressionValidator.ValidatePluggabilityOf(pluggedType).IntoPluginType(_childType);
 
                 ConfiguredInstance childInstance = new ConfiguredInstance();
@@ -402,37 +422,49 @@ namespace StructureMap.Pipeline
             }
         }
 
-        public class ChildArrayExpression<PLUGINTYPE> : IExpression
+        #endregion
+
+        #region Nested type: PropertyExpression
+
+        /// <summary>
+        /// Defines the value of a primitive argument to a constructur argument
+        /// </summary>
+        public class PropertyExpression
         {
             private readonly ConfiguredInstance _instance;
             private readonly string _propertyName;
-            private Type _pluginType = typeof(PLUGINTYPE);
 
-            public ChildArrayExpression(ConfiguredInstance instance, string propertyName)
+            public PropertyExpression(ConfiguredInstance instance, string propertyName)
             {
                 _instance = instance;
                 _propertyName = propertyName;
-
-                _pluginType = typeof(PLUGINTYPE).GetElementType();
             }
 
-            #region IExpression Members
-
-            void IExpression.Configure(PluginGraph graph)
+            /// <summary>
+            /// Sets the value of the constructor argument
+            /// </summary>
+            /// <param name="propertyValue"></param>
+            /// <returns></returns>
+            public ConfiguredInstance EqualTo(object propertyValue)
             {
-                // no-op
-            }
-
-            #endregion
-
-            public ConfiguredInstance Contains(params Instance[] instances)
-            {
-                _instance.SetChildArray(_propertyName, instances);
-
+                _instance.SetProperty(_propertyName, propertyValue.ToString());
                 return _instance;
             }
 
-
+            /// <summary>
+            /// Sets the value of the constructor argument to the key/value in the 
+            /// AppSettings
+            /// </summary>
+            /// <param name="appSettingKey"></param>
+            /// <returns></returns>
+            public ConfiguredInstance EqualToAppSetting(string appSettingKey)
+            {
+                string propertyValue = ConfigurationManager.AppSettings[appSettingKey];
+                _instance.SetProperty(_propertyName, propertyValue);
+                return _instance;
+            }
         }
+
+        #endregion
     }
 }

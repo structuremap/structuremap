@@ -7,8 +7,6 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.Configuration.DSL
 {
-    public delegate object InterceptionDelegate(object target);
-
     public class Registry : IDisposable
     {
         private readonly List<IExpression> _expressions = new List<IExpression>();
@@ -284,7 +282,7 @@ namespace StructureMap.Configuration.DSL
     public class TypeInterceptorExpression : IExpression, TypeInterceptor
     {
         private readonly Predicate<Type> _match;
-        private InterceptionDelegate _interception;
+        private InterceptionFunction _interception;
 
         internal TypeInterceptorExpression(Predicate<Type> match)
         {
@@ -314,7 +312,7 @@ namespace StructureMap.Configuration.DSL
 
         #endregion
 
-        public void InterceptWith(InterceptionDelegate interception)
+        public void InterceptWith(InterceptionFunction interception)
         {
             _interception = interception;
         }

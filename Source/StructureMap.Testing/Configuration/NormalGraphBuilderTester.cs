@@ -21,7 +21,7 @@ namespace StructureMap.Testing.Configuration
         [Test]
         public void Configure_a_family_that_does_not_exist_and_log_an_error_with_PluginGraph()
         {
-            NormalGraphBuilder builder = new NormalGraphBuilder(new Registry[0]);
+            GraphBuilder builder = new GraphBuilder(new Registry[0]);
             builder.ConfigureFamily(new TypePath("a,a"), delegate (PluginFamily f){});
 
             builder.PluginGraph.Log.AssertHasError(103);
@@ -30,7 +30,7 @@ namespace StructureMap.Testing.Configuration
         [Test]
         public void Do_not_call_the_action_on_ConfigureFamily_if_the_type_path_blows_up()
         {
-            NormalGraphBuilder builder = new NormalGraphBuilder(new Registry[0]);
+            GraphBuilder builder = new GraphBuilder(new Registry[0]);
             builder.ConfigureFamily(new TypePath("a,a"), delegate(PluginFamily f)
                                                              {
                                                                  Assert.Fail("Should not be called");
@@ -44,7 +44,7 @@ namespace StructureMap.Testing.Configuration
             TypePath typePath = new TypePath(typeof(IGateway));
 
             bool iWasCalled = false;
-            NormalGraphBuilder builder = new NormalGraphBuilder(new Registry[0]);
+            GraphBuilder builder = new GraphBuilder(new Registry[0]);
             builder.ConfigureFamily(typePath, delegate(PluginFamily f)
                                                   {
                                                       Assert.AreEqual(typeof(IGateway), f.PluginType);
@@ -59,7 +59,7 @@ namespace StructureMap.Testing.Configuration
         public void Log_an_error_for_a_requested_system_object_if_it_cannot_be_created()
         {
             MemoryInstanceMemento memento = new MemoryInstanceMemento();
-            NormalGraphBuilder builder = new NormalGraphBuilder(new Registry[0]);
+            GraphBuilder builder = new GraphBuilder(new Registry[0]);
 
             builder.WithSystemObject<MementoSource>(memento, "I am going to break here", delegate(MementoSource source){});
 
@@ -70,7 +70,7 @@ namespace StructureMap.Testing.Configuration
         public void Do_not_try_to_execute_the_action_when_requested_system_object_if_it_cannot_be_created()
         {
             MemoryInstanceMemento memento = new MemoryInstanceMemento();
-            NormalGraphBuilder builder = new NormalGraphBuilder(new Registry[0]);
+            GraphBuilder builder = new GraphBuilder(new Registry[0]);
 
             builder.WithSystemObject<MementoSource>(memento, "I am going to break here", delegate(MementoSource source)
                                                                                              {
@@ -87,7 +87,7 @@ namespace StructureMap.Testing.Configuration
 
             bool iWasCalled = false;
 
-            NormalGraphBuilder builder = new NormalGraphBuilder(new Registry[0]);
+            GraphBuilder builder = new GraphBuilder(new Registry[0]);
             builder.PrepareSystemObjects();
             builder.WithSystemObject<IBuildInterceptor>(memento, "singleton", delegate(IBuildInterceptor policy)
                                                                              {
@@ -101,7 +101,7 @@ namespace StructureMap.Testing.Configuration
         [Test]
         public void WithType_fails_and_logs_error_with_the_context()
         {
-            NormalGraphBuilder builder = new NormalGraphBuilder(new Registry[0]);
+            GraphBuilder builder = new GraphBuilder(new Registry[0]);
             builder.WithType(new TypePath("a,a"), "creating a Plugin", delegate(Type t){Assert.Fail("Should not be called");});
 
             builder.PluginGraph.Log.AssertHasError(131);
@@ -110,7 +110,7 @@ namespace StructureMap.Testing.Configuration
         [Test]
         public void WithType_calls_through_to_the_Action_if_the_type_can_be_found()
         {
-            NormalGraphBuilder builder = new NormalGraphBuilder(new Registry[0]);
+            GraphBuilder builder = new GraphBuilder(new Registry[0]);
             bool iWasCalled = true;
 
             builder.WithType(new TypePath(this.GetType()), "creating a Plugin", delegate(Type t)
@@ -125,7 +125,7 @@ namespace StructureMap.Testing.Configuration
         [Test]
         public void AddAssembly_HappyPath()
         {
-            NormalGraphBuilder builder = new NormalGraphBuilder(new Registry[0]);
+            GraphBuilder builder = new GraphBuilder(new Registry[0]);
             string assemblyName = this.GetType().Assembly.GetName().Name;
             builder.AddAssembly(assemblyName);
 
@@ -136,7 +136,7 @@ namespace StructureMap.Testing.Configuration
         [Test]
         public void AddAssembly_SadPath()
         {
-            NormalGraphBuilder builder = new NormalGraphBuilder(new Registry[0]);
+            GraphBuilder builder = new GraphBuilder(new Registry[0]);
             builder.AddAssembly("something");
 
             builder.PluginGraph.Log.AssertHasError(101);

@@ -103,11 +103,11 @@ namespace StructureMap.Testing.Widget
         }
 
 
-        public override object BuildInstance(IConfiguredInstance instance, StructureMap.Pipeline.IInstanceCreator creator)
+        public override object BuildInstance(IConfiguredInstance instance, StructureMap.Pipeline.IBuildSession session)
         {
             return new Child(
                 instance.GetProperty("Name"),
-                (GrandChild) instance.GetChild("MyGrandChild", typeof(GrandChild), creator));
+                (GrandChild) instance.GetChild("MyGrandChild", typeof(GrandChild), session));
         }
     }
 }

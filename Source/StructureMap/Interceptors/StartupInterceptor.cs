@@ -1,10 +1,12 @@
+using System;
+
 namespace StructureMap.Interceptors
 {
     public class StartupInterceptor<T> : InstanceInterceptor
     {
-        private readonly StartupHandler<T> _handler;
+        private readonly Action<T> _handler;
 
-        public StartupInterceptor(StartupHandler<T> handler)
+        public StartupInterceptor(Action<T> handler)
         {
             _handler = handler;
         }

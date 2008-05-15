@@ -44,11 +44,21 @@ namespace StructureMap
             get { return _errorCode; }
         }
 
+        // TODO:  Centralize this code somewhere so it isn't duplicated
         private void initialize(int errorCode, params object[] args)
         {
             _errorCode = errorCode;
             _msg = "StructureMap Exception Code:  " + _errorCode + "\n";
 
+            for (int i = 0; i < args.Length; i++)
+            {
+                object arg = args[i];
+                Type type = arg as Type;
+                if (type != null)
+                {
+                    args[i] = type.AssemblyQualifiedName;
+                }
+            }
 
             string errorMsg = getMessage(ErrorCode);
             if (errorMsg == null)

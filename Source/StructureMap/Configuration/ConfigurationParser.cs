@@ -48,12 +48,13 @@ namespace StructureMap.Configuration
                         includedPath = Path.Combine(folder, fileName);
                         includedDoc.Load(includedPath);
 
-                        // TODO: get rid of throw, put on PluginGraph here
+                        
                         ConfigurationParser parser = new ConfigurationParser(includedDoc.DocumentElement);
                         list.Add(parser);
                     }
                     catch (Exception ex)
                     {
+                        // TODO: get rid of throw, put on PluginGraph here
                         throw new StructureMapException(150, ex, fileName);
                     }
                 }

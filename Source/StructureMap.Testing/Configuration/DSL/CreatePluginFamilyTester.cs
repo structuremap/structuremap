@@ -24,7 +24,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
         #endregion
 
-        public class Something
+        public interface Something
         {
         }
 
@@ -223,7 +223,7 @@ namespace StructureMap.Testing.Configuration.DSL
             set {  }
         }
 
-        public object Build(IInstanceCreator instanceCreator, Type pluginType, Instance instance)
+        public object Build(IBuildSession buildSession, Type pluginType, Instance instance)
         {
             throw new NotImplementedException();
         }

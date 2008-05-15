@@ -19,7 +19,7 @@ namespace StructureMap.Testing.Pipeline
             PrototypeTarget target = new PrototypeTarget("Jeremy");
             PrototypeInstance instance = new PrototypeInstance(target);
 
-            object returnedValue = instance.Build(typeof(PrototypeTarget), new StubInstanceCreator());
+            object returnedValue = instance.Build(typeof(PrototypeTarget), new StubBuildSession());
 
             Assert.AreEqual(target, returnedValue);
             Assert.AreNotSame(target, returnedValue);

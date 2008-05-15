@@ -7,6 +7,7 @@ using StructureMap.Interceptors;
 using StructureMap.Pipeline;
 using StructureMap.Source;
 using StructureMap.Testing.Widget;
+using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Graph
 {
@@ -18,7 +19,7 @@ namespace StructureMap.Testing.Graph
         {
             PluginFamily family = new PluginFamily(typeof (IWidget));
             family.DefaultInstanceKey = "DefaultKey";
-            family.Plugins.Add(typeof (NotPluggableWidget), "NotPlugged");
+            family.AddPlugin(typeof (NotPluggableWidget), "NotPlugged");
 
             Assert.AreEqual(1, family.Plugins.Count, "Plugin Count");
         }
@@ -28,16 +29,7 @@ namespace StructureMap.Testing.Graph
         {
             PluginFamily family = new PluginFamily(typeof(IWidget));
             family.DefaultInstanceKey = "DefaultKey";
-            family.Plugins.Add(typeof (Rule), "Rule");
-        }
-
-
-
-        [Test]
-        public void HasANulloInterceptorUponConstruction()
-        {
-            PluginFamily family = new PluginFamily(typeof (IWidget));
-            Assert.IsInstanceOfType(typeof (NulloInterceptor), family.InstanceInterceptor);
+            family.AddPlugin(typeof (Rule), "Rule");
         }
 
         [Test]
@@ -185,6 +177,55 @@ namespace StructureMap.Testing.Graph
             Assert.IsTrue(family.HasPlugin(typeof(SingletonRepositoryWithoutPluginAttribute)));
         }
 
+        [Test]
+        public void If_PluginType_is_concrete_automatically_add_a_plugin_called_default()
+        {
+            PluginFamily family = new PluginFamily(this.GetType());
+            Assert.AreEqual(1, family.PluginCount);
+
+            Plugin plugin = family.Plugins[this.GetType()];
+            Assert.AreEqual(Plugin.DEFAULT, plugin.ConcreteKey);
+            Assert.AreEqual(this.GetType(), plugin.PluggedType);
+        }
+
+        [Test]
+        public void If_PluginFamily_only_has_one_instance_make_that_the_default()
+        {
+            PluginFamily family = new PluginFamily(typeof(IGateway));
+            string theInstanceKey = "the default";
+            family.AddInstance(new ConfiguredInstance().UsingConcreteType<TheGateway>().WithName(theInstanceKey));
+
+            family.Seal();
+
+            Assert.AreEqual(theInstanceKey, family.DefaultInstanceKey);
+        }
+
+        [Test]
+        public void Create_PluginFamily_for_concrete_type_that_can_be_autofilled_and_create_default_instance()
+        {
+            PluginFamily family = new PluginFamily(this.GetType());
+            family.Seal();
+
+            Assert.AreEqual(Plugin.DEFAULT, family.DefaultInstanceKey);
+            Assert.AreEqual(1, family.PluginCount);
+            Assert.AreEqual(1, family.GetAllInstances().Length);
+            ConfiguredInstance instance = (ConfiguredInstance) family.GetAllInstances()[0];
+            Assert.AreEqual(Plugin.DEFAULT, instance.Name);
+            Assert.AreEqual(this.GetType(), instance.PluggedType);
+        }
+
+        public class TheGateway : IGateway
+        {
+            public string WhoAmI
+            {
+                get { throw new NotImplementedException(); }
+            }
+
+            public void DoSomething()
+            {
+                throw new NotImplementedException();
+            }
+        }
     }
 
 

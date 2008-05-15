@@ -9,10 +9,10 @@ namespace StructureMap
     public class InstanceBuilderList
     {
         private readonly Dictionary<Type, InstanceBuilder> _builders = new Dictionary<Type, InstanceBuilder>();
-        private Type _pluginType;
+        private readonly Type _pluginType;
 
 
-        public InstanceBuilderList(Type pluginType, Plugin[] plugins)
+        public InstanceBuilderList(Type pluginType, IEnumerable<Plugin> plugins)
         {
             _pluginType = pluginType;
             processPlugins(plugins);
@@ -21,13 +21,18 @@ namespace StructureMap
 
         public InstanceBuilder FindByType(Type pluggedType)
         {
+            if (pluggedType == null)
+            {
+                return null;
+            }
+
             if (_builders.ContainsKey(pluggedType))
             {
                 return _builders[pluggedType];
             }
 
             // Add a missing PluggedType if we can
-            if (Plugin.CanBeCast(_pluginType, pluggedType))
+            if (TypeRules.CanBeCast(_pluginType, pluggedType))
             {
                 Plugin plugin = new Plugin(pluggedType);
                 processPlugins(new Plugin[]{plugin});

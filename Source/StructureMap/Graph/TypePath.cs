@@ -11,8 +11,8 @@ namespace StructureMap.Graph
     [Serializable]
     public class TypePath
     {
-        private string _assemblyName = string.Empty;
-        private string _className;
+        private readonly string _assemblyName = string.Empty;
+        private readonly string _className;
 
         public TypePath(string assemblyName, string className)
         {

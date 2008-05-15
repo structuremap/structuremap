@@ -161,17 +161,6 @@ namespace StructureMap.Testing.Container
             Plugin plugin = family.Plugins[typeof (NotPluggableWidget)];
             Assert.IsNotNull(plugin);
             Assert.AreEqual("NotPluggable", plugin.ConcreteKey);
-
-            // Just for fun, test with InstanceFactory too.
-            InstanceFactory factory = new InstanceFactory(family);
-            factory.SetInstanceManager(new InstanceManager());
-
-            ConfiguredInstance instance = new ConfiguredInstance();
-            instance.ConcreteKey = "NotPluggable";
-            instance.SetProperty("name", "DorothyTheDinosaur");
-
-            IWidget widget = (IWidget) factory.GetInstance(instance, null);
-            Assert.IsNotNull(widget);
         }
 
 

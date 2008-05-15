@@ -6,7 +6,7 @@ namespace StructureMap.Pipeline
 {
     public interface ILocationPolicy
     {
-        object Build(IInstanceCreator creator, Instance instance);
+        object Build(IBuildSession session, Instance instance);
     }
 
     //public class DefaultPolicy : ILocationPolicy

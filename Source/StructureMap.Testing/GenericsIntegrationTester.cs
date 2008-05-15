@@ -39,10 +39,9 @@ namespace StructureMap.Testing
         [Test]
         public void Plugin_can_service_a_generic_type()
         {
-            Plugin plugin = new Plugin(typeof(SpecificConcept));
-            Assert.IsTrue(plugin.CanBePluggedIntoGenericType(typeof(IConcept<>), typeof(object)));
-            Assert.IsFalse(plugin.CanBePluggedIntoGenericType(typeof(IConcept<>), typeof(string)));
-            Assert.IsFalse(plugin.CanBePluggedIntoGenericType(typeof(IConcept<>), typeof(int)));
+            Assert.IsTrue(GenericsPluginGraph.CanBePluggedIntoGenericType(typeof(IConcept<>), typeof(SpecificConcept), typeof(object)));
+            Assert.IsFalse(GenericsPluginGraph.CanBePluggedIntoGenericType(typeof(IConcept<>), typeof(SpecificConcept), typeof(string)));
+            Assert.IsFalse(GenericsPluginGraph.CanBePluggedIntoGenericType(typeof(IConcept<>), typeof(SpecificConcept), typeof(int)));
         }
 
         [Test, Ignore("Generics with more than 2 parameters")]

@@ -19,38 +19,26 @@ namespace StructureMap.Testing.Container
         [SetUp]
         public void SetUp()
         {
-            string[] assemblyNames = new string[] {"StructureMap.Testing.Widget"};
+            Registry registry = new Registry();
+            registry.ScanAssemblies().IncludeAssembly("StructureMap.Testing.Widget");
+            registry.BuildInstancesOf<Rule>();
+            registry.BuildInstancesOf<IWidget>();
+            registry.BuildInstancesOf<WidgetMaker>();
 
-            _ruleFactory = ObjectMother.CreateInstanceFactory(typeof (Rule), assemblyNames);
-            _widgetFactory = ObjectMother.CreateInstanceFactory(typeof (IWidget), assemblyNames);
-            _widgetMakerFactory =
-                ObjectMother.CreateInstanceFactory(typeof (WidgetMaker), assemblyNames);
-
-            _manager = new InstanceManager();
-            _manager.RegisterType(_ruleFactory);
-            _manager.RegisterType(_widgetFactory);
-            _manager.RegisterType(_widgetMakerFactory);
+            _manager = registry.BuildInstanceManager();
         }
 
         #endregion
 
-        private InstanceManager _manager;
-        private InstanceFactory _ruleFactory;
-        private InstanceFactory _widgetFactory;
-        private InstanceFactory _widgetMakerFactory;
-
-        public InstanceManagerTester()
-        {
-        }
-
+        private IInstanceManager _manager;
 
         private void addColorMemento(string Color)
         {
             ConfiguredInstance instance = new ConfiguredInstance(Color).WithConcreteKey("Color").SetProperty("Color", Color);
             
-            _ruleFactory.AddInstance(instance);
-            _widgetFactory.AddInstance(instance);
-            _widgetMakerFactory.AddInstance(instance);
+            _manager.AddInstance<Rule>(instance);
+            _manager.AddInstance<IWidget>(instance);
+            _manager.AddInstance<WidgetMaker>(instance);
         }
 
         public interface IProvider
@@ -120,12 +108,11 @@ namespace StructureMap.Testing.Container
         {
             Type serviceType = typeof (IService<string>);
             PluginGraph pluginGraph = PluginGraph.BuildGraphFromAssembly(serviceType.Assembly);
-
-            InstanceManager manager = new InstanceManager(pluginGraph);
+            PipelineGraph pipelineGraph = new PipelineGraph(pluginGraph);
 
             Type stringService = typeof (IService<string>);
 
-            IInstanceFactory factory = manager[stringService];
+            IInstanceFactory factory = pipelineGraph.ForType(stringService);
             Assert.AreEqual(stringService, factory.PluginType);
         }
 

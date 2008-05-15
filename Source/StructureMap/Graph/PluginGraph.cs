@@ -116,19 +116,8 @@ namespace StructureMap.Graph
             return pluginGraph;
         }
 
-
-        private void buildFamilyIfMissing(Type pluginType)
-        {
-            if (!_pluginFamilies.Contains(pluginType))
-            {
-                PluginFamily family = new PluginFamily(pluginType);
-                _pluginFamilies.Add(family);
-            }
-        }
-
         public PluginFamily FindFamily(Type pluginType)
         {
-            buildFamilyIfMissing(pluginType);
             return PluginFamilies[pluginType];
         }
 

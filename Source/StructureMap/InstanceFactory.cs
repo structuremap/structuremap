@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using StructureMap.Graph;
-using StructureMap.Interceptors;
 using StructureMap.Pipeline;
 
 namespace StructureMap
@@ -15,9 +14,7 @@ namespace StructureMap
     {
         private readonly InstanceBuilderList _instanceBuilders;
         private readonly Dictionary<string, Instance> _instances = new Dictionary<string, Instance>();
-        private readonly InstanceInterceptor _interceptor = new NulloInterceptor();
         private readonly Type _pluginType;
-        private InstanceManager _manager = new InstanceManager();
         private readonly IBuildPolicy _policy = new BuildPolicy();
 
         #region constructor functions
@@ -26,17 +23,15 @@ namespace StructureMap
         /// Constructor to use when troubleshooting possible configuration issues.
         /// </summary>
         /// <param name="family"></param>
-        /// <param name="failOnException">Toggles error trapping.  Set to "true" for diagnostics</param>
         public InstanceFactory(PluginFamily family)
         {
             if (family == null)
             {
-                throw new NoNullAllowedException("'family' cannot be null");
+                throw new ArgumentNullException("family");
             }
 
             try
             {
-                _interceptor = family.InstanceInterceptor;
                 _policy = family.Policy;
 
                 _pluginType = family.PluginType;
@@ -57,126 +52,39 @@ namespace StructureMap
             }
         }
 
-        private InstanceFactory(Type concreteType, ProfileManager profileManager)
+        public static InstanceFactory CreateFactoryForType(Type concreteType, ProfileManager profileManager)
         {
-            _interceptor = new NulloInterceptor();
-            _pluginType = concreteType;
-            _instanceBuilders = new InstanceBuilderList(_pluginType, new Plugin[0]);
+            PluginFamily family = new PluginFamily(concreteType);
+            family.Seal();
 
-            if (_pluginType.IsAbstract || _pluginType.IsInterface)
+            InstanceFactory factory = new InstanceFactory(family);
+
+            Instance instance = family.GetDefaultInstance();
+            if (instance != null)
             {
-                return;
-            }
-
-            Plugin plugin = new Plugin(concreteType, Guid.NewGuid().ToString());
-            if (plugin.CanBeAutoFilled)
-            {
-                _instanceBuilders = new InstanceBuilderList(_pluginType, new Plugin[] {plugin});
-
-                ConfiguredInstance instance = new ConfiguredInstance();
-                instance.PluggedType = concreteType;
-                instance.Name = concreteType.FullName;
-
-                _instances.Add(instance.Name, instance);
-
                 profileManager.SetDefault(concreteType, instance);
             }
-        }
 
-        public static InstanceFactory CreateFactoryForConcreteType(Type concreteType, ProfileManager profileManager)
-        {
-            return new InstanceFactory(concreteType, profileManager);
+            return factory;
         }
-
 
         #endregion
 
         #region IInstanceFactory Members
 
-        /// <summary>
-        /// Links the child InstanceBuilder members to the parent InstanceManager
-        /// </summary>
-        /// <param name="instanceManager"></param>
-        public void SetInstanceManager(InstanceManager instanceManager)
-        {
-            _manager = instanceManager;
-        }
-
-        /// <summary>
-        /// The CLR System.Type that the InstanceFactory creates
-        /// </summary>
         public Type PluginType
         {
             get { return _pluginType; }
         }
 
-
-        /// <summary>
-        /// Creates an object instance for the named InstanceKey
-        /// </summary>
-        /// <param name="instanceKey"></param>
-        /// <returns></returns>
-        public object GetInstance(string instanceKey)
+        public InstanceBuilder FindBuilderByType(Type pluggedType)
         {
-            if (!_instances.ContainsKey(instanceKey))
-            {
-                throw new StructureMapException(200, instanceKey, _pluginType.FullName);
-            }
-
-            Instance instance = _instances[instanceKey];
-
-            return Build(instance);
+            return _instanceBuilders.FindByType(pluggedType);
         }
 
-        public object Build(Instance instance)
+        public InstanceBuilder FindBuilderByConcreteKey(string concreteKey)
         {
-            return _policy.Build(_manager, PluginType, instance);
-        }
-
-
-        /// <summary>
-        /// Creates an object instance for the supplied InstanceMemento
-        /// </summary>
-        /// <param name="instance"></param>
-        /// <returns></returns>
-        public object GetInstance(IConfiguredInstance instance, IInstanceCreator instanceCreator)
-        {
-            InstanceBuilder builder = instance.FindBuilder(_instanceBuilders);
-            if (builder == null)
-            {
-                throw new StructureMapException(
-                    201, instance.ConcreteKey, instance.Name, PluginType.FullName);
-            }
-
-            try
-            {
-                return builder.BuildInstance(instance, instanceCreator);
-            }
-            catch (StructureMapException)
-            {
-                throw;
-            }
-            catch (InvalidCastException ex)
-            {
-                throw new StructureMapException(206, ex, instance.Name);
-            }
-            catch (Exception ex)
-            {
-                throw new StructureMapException(207, ex, instance.Name, PluginType.FullName);
-            }
-        }
-
-        public IList GetAllInstances()
-        {
-            IList list = new ArrayList();
-
-            foreach (KeyValuePair<string, Instance> pair in _instances)
-            {
-                object instance = _policy.Build(_manager, PluginType, pair.Value);
-                list.Add(instance);
-            }
-
-            return list;
+            return _instanceBuilders.FindByConcreteKey(concreteKey);
         }
 
         public void AddInstance(Instance instance)
@@ -196,19 +104,41 @@ namespace StructureMap
         {
             InstanceBuilder builder = _instanceBuilders.FindByType(typeof (T));
             ConfiguredInstance instance = new ConfiguredInstance();
-            instance.ConcreteKey = builder.ConcreteTypeKey;
-            instance.Name = instance.ConcreteKey;
+            instance.WithConcreteKey(builder.ConcreteTypeKey).WithName(builder.ConcreteTypeKey);
 
+            AddInstance(instance);
 
             return instance;
         }
 
-        public object ApplyInterception(object rawValue)
+        public IList GetAllInstances(IBuildSession session)
         {
-            return _interceptor.Process(rawValue);
+            IList list = new ArrayList();
+
+            foreach (KeyValuePair<string, Instance> pair in _instances)
+            {
+                object instance = Build(session, pair.Value);
+                list.Add(instance);
+            }
+
+            return list;
         }
 
+        public object Build(IBuildSession session, Instance instance)
+        {
+            return _policy.Build(session, PluginType, instance);
+        }
 
+        public object Build(IBuildSession session, string instanceKey)
+        {
+            if (!_instances.ContainsKey(instanceKey))
+            {
+                throw new StructureMapException(200, instanceKey, _pluginType.FullName);
+            }
+
+            Instance instance = _instances[instanceKey];
+            return Build(session, instance);
+        }
 
         #endregion
     }

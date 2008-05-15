@@ -20,7 +20,7 @@ namespace StructureMap.Testing.Configuration
         [SetUp]
         public void SetUp()
         {
-            NormalGraphBuilder builder = new NormalGraphBuilder(new Registry[0]);
+            GraphBuilder builder = new GraphBuilder(new Registry[0]);
             _graph = builder.PluginGraph;
 
             _parser =

@@ -36,7 +36,7 @@ namespace StructureMap.Testing
         [Test]
         public void CanBuildTheInstance()
         {
-            NormalGraphBuilder builder = new NormalGraphBuilder(new Registry[0]);
+            GraphBuilder builder = new GraphBuilder(new Registry[0]);
             Type thePluginType = typeof (IGateway);
             PluginFamily family = builder.PluginGraph.FindFamily(thePluginType);
             family.DefaultInstanceKey = _memento.InstanceKey;

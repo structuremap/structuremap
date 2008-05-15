@@ -18,7 +18,7 @@ namespace StructureMap.Pipeline
         }
 
 
-        protected override object build(Type pluginType, IInstanceCreator creator)
+        protected override object build(Type pluginType, IBuildSession session)
         {
             // TODO:  VALIDATION IF IT CAN'T BE CAST
             return _prototype.Clone();

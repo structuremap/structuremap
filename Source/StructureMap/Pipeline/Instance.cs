@@ -1,22 +1,10 @@
 using System;
-using System.Data;
-using System.Web.UI;
 using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 
 namespace StructureMap.Pipeline
 {
-    public interface IInstanceCreator
-    {
-        object CreateInstance(Type type, string referenceKey);
-        Array CreateInstanceArray(string pluginTypeName, Instance[] instances);
-        object CreateInstance(Type pluginType);
-
-        object CreateInstance(Type pluginType, IConfiguredInstance instance);
-        object ApplyInterception(Type pluginType, object actualValue);
-    }
-
     public interface IDiagnosticInstance
     {
         bool CanBePartOfPluginFamily(PluginFamily family);
@@ -25,9 +13,16 @@ namespace StructureMap.Pipeline
 
     public abstract class Instance : IDiagnosticInstance
     {
-        private string _name = Guid.NewGuid().ToString();
+        private readonly string _originalName;
         private InstanceInterceptor _interceptor = new NulloInterceptor();
-        private Type _pluginType = typeof(object);
+        private string _name = Guid.NewGuid().ToString();
+        private Type _pluginType = typeof (object);
+
+
+        protected Instance()
+        {
+            _originalName = _name;
+        }
 
         public string Name
         {
@@ -47,27 +42,9 @@ namespace StructureMap.Pipeline
             set { _pluginType = value; }
         }
 
-        // TODO : remove pluginType from signature
-        public virtual object Build(Type pluginType, IInstanceCreator creator)
-        {
-            object rawValue = build(pluginType, creator);
-            
-            try
-            {
-                // Intercept with the Instance-specific InstanceInterceptor
-                object interceptedValue = _interceptor.Process(rawValue);
+        // TODO : remove pluginType from signature?
 
-                return creator.ApplyInterception(pluginType, interceptedValue);
-            }
-            catch (Exception e)
-            {
-                throw new StructureMapException(308, e, Name,
-                                TypePath.GetAssemblyQualifiedName(rawValue.GetType()));
-            }
-        }
-
-        protected abstract object build(Type pluginType, IInstanceCreator creator);
-
+        #region IDiagnosticInstance Members
 
         bool IDiagnosticInstance.CanBePartOfPluginFamily(PluginFamily family)
         {
@@ -77,6 +54,39 @@ namespace StructureMap.Pipeline
         Instance IDiagnosticInstance.FindMasterInstance(PluginFamily family)
         {
             return findMasterInstance(family);
+        }
+
+        #endregion
+
+        protected void replaceNameIfNotAlreadySet(string name)
+        {
+            if (_name == _originalName)
+            {
+                _name = name;
+            }
+        }
+
+        public virtual object Build(Type pluginType, IBuildSession session)
+        {
+            object rawValue = build(pluginType, session);
+
+            try
+            {
+                // Intercept with the Instance-specific InstanceInterceptor
+                return _interceptor.Process(rawValue);
+            }
+            catch (Exception e)
+            {
+                throw new StructureMapException(308, e, Name,
+                                                TypePath.GetAssemblyQualifiedName(rawValue.GetType()));
+            }
+        }
+
+        protected abstract object build(Type pluginType, IBuildSession session);
+
+        protected virtual Plugin findPlugin(PluginCollection plugins)
+        {
+            return null;
         }
 
         protected virtual Instance findMasterInstance(PluginFamily family)
@@ -93,11 +103,16 @@ namespace StructureMap.Pipeline
         {
             throw new NotImplementedException();
         }
+
+        internal virtual bool Matches(Plugin plugin)
+        {
+            return false;
+        }
     }
 
     public abstract class ExpressedInstance<T> : Instance
     {
-        protected abstract T thisInstance { get;}
+        protected abstract T thisInstance { get; }
 
         public T WithName(string instanceKey)
         {
@@ -105,7 +120,7 @@ namespace StructureMap.Pipeline
             return thisInstance;
         }
 
-        public T OnCreation<TYPE>(StartupHandler<TYPE> handler)
+        public T OnCreation<TYPE>(Action<TYPE> handler)
         {
             StartupInterceptor<TYPE> interceptor = new StartupInterceptor<TYPE>(handler);
             Interceptor = interceptor;

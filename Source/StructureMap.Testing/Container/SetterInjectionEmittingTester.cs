@@ -25,7 +25,7 @@ namespace StructureMap.Testing.Container
         {
             PluginGraph pluginGraph = DataMother.GetDiagnosticPluginGraph("SetterInjectionTesting.xml");
 
-            return new InstanceManager(pluginGraph, true);
+            return new InstanceManager(pluginGraph);
         }
 
         [Test]
@@ -55,7 +55,7 @@ namespace StructureMap.Testing.Container
             PluginGraph graph = new PluginGraph();
             PluginFamily family = graph.FindFamily(typeof (IGridColumn));
             Plugin plugin = new Plugin(typeof(EnumGridColumn));
-            family.Plugins.Add(plugin);
+            family.AddPlugin(plugin);
 
             family.AddInstance(_source.GetMemento("Enum"));
 
@@ -72,7 +72,7 @@ namespace StructureMap.Testing.Container
             PluginGraph graph = new PluginGraph();
             PluginFamily family = graph.FindFamily(typeof(IGridColumn));
             Plugin plugin = new Plugin(typeof(LongGridColumn));
-            family.Plugins.Add(plugin);
+            family.AddPlugin(plugin);
 
             InstanceMemento memento = _source.GetMemento("Long");
             long count = long.Parse(memento.GetProperty("Count"));
@@ -91,7 +91,7 @@ namespace StructureMap.Testing.Container
             PluginGraph graph = new PluginGraph();
             PluginFamily family = graph.FindFamily(typeof(IGridColumn));
             Plugin plugin = new Plugin(typeof(StringGridColumn));
-            family.Plugins.Add(plugin);
+            family.AddPlugin(plugin);
 
             InstanceMemento memento = _source.GetMemento("String");
             family.AddInstance(memento);

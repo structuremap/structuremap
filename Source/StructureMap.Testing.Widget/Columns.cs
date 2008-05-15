@@ -57,7 +57,6 @@ namespace StructureMap.Testing.Widget
 
         public void Display()
         {
-            // TODO:  Add DateColumn.Display implementation
         }
 
         #endregion
@@ -70,7 +69,6 @@ namespace StructureMap.Testing.Widget
 
         public void Display()
         {
-            // TODO:  Add NumberColumn.Display implementation
         }
 
         #endregion

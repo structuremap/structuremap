@@ -99,7 +99,7 @@ namespace StructureMap.Graph
             // Add Plugins
             foreach (Plugin plugin in baseFamily.Plugins)
             {
-                if (plugin.CanBePluggedIntoGenericType(baseFamily.PluginType, templateTypes))
+                if (CanBePluggedIntoGenericType(baseFamily.PluginType, plugin.PluggedType, templateTypes))
                 {
                     Plugin templatedPlugin = CreateTemplatedClone(plugin, templateTypes);
                     templatedFamily.Plugins.Add(templatedPlugin);
@@ -141,6 +141,35 @@ namespace StructureMap.Graph
             }
 
             return templatedPlugin;
+        }
+
+
+        public static bool CanBePluggedIntoGenericType(Type pluginType, Type pluggedType, params Type[] templateTypes)
+        {
+            bool isValid = true;
+
+            Type interfaceType = pluggedType.GetInterface(pluginType.Name);
+            if (interfaceType == null)
+            {
+                interfaceType = pluggedType.BaseType;
+            }
+
+            Type[] pluginArgs = pluginType.GetGenericArguments();
+            Type[] pluggableArgs = interfaceType.GetGenericArguments();
+
+            if (templateTypes.Length != pluginArgs.Length &&
+                pluginArgs.Length != pluggableArgs.Length)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < templateTypes.Length; i++)
+            {
+                isValid &= templateTypes[i] == pluggableArgs[i] ||
+                           pluginArgs[i].IsGenericParameter &&
+                           pluggableArgs[i].IsGenericParameter;
+            }
+            return isValid;
         }
     }
 }

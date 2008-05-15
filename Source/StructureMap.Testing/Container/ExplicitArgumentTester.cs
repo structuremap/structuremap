@@ -153,9 +153,7 @@ namespace StructureMap.Testing.Container
         public void PassAnArgumentIntoExplicitArgumentsForARequestedInterface()
         {
             Registry registry = new Registry();
-
             registry.ForRequestedType<IProvider>().TheDefaultIsConcreteType<LumpProvider>();
-
             IInstanceManager manager = registry.BuildInstanceManager();
 
             ExplicitArguments args = new ExplicitArguments();

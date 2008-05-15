@@ -1,3 +1,4 @@
+using System;
 using NUnit.Framework;
 using Rhino.Mocks;
 using StructureMap.Graph;
@@ -9,7 +10,7 @@ namespace StructureMap.Testing.Pipeline
     [TestFixture]
     public class ConfiguredInstanceTester
     {
-        private ConfiguredInstance instance;
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -17,11 +18,96 @@ namespace StructureMap.Testing.Pipeline
             instance = new ConfiguredInstance();
         }
 
+        #endregion
+
+        private ConfiguredInstance instance;
+
+        private delegate void Action();
+
+        private void assertActionThrowsErrorCode(int errorCode, Action action)
+        {
+            try
+            {
+                action();
+
+                Assert.Fail("Should have thrown StructureMapException");
+            }
+            catch (StructureMapException ex)
+            {
+                Assert.AreEqual(errorCode, ex.ErrorCode);
+            }
+        }
+
+        [Test]
+        public void AttachDependencies_should_find_the_InstanceBuilder_by_ConcreteKey_if_PluggedType_does_not_exists()
+        {
+            MockRepository mocks = new MockRepository();
+            IBuildSession session = mocks.CreateMock<IBuildSession>();
+            InstanceBuilder builder = mocks.CreateMock<InstanceBuilder>();
+            string theConcreteKey = "something";
+
+            Type thePluginType = typeof (IGateway);
+
+            using (mocks.Record())
+            {
+                Expect.Call(session.FindBuilderByType(thePluginType, null)).Return(null);
+                Expect.Call(session.FindBuilderByConcreteKey(thePluginType, theConcreteKey)).Return(builder);
+                Expect.Call(builder.BuildInstance(null, null)).Return(new object());
+                LastCall.IgnoreArguments();
+            }
+
+            using (mocks.Playback())
+            {
+                ConfiguredInstance instance = new ConfiguredInstance().WithConcreteKey(theConcreteKey);
+                instance.Build(thePluginType, session);
+            }
+        }
+
+        [Test]
+        public void Build_happy_path()
+        {
+            MockRepository mocks = new MockRepository();
+            InstanceBuilder builder = mocks.CreateMock<InstanceBuilder>();
+            IBuildSession session = mocks.CreateMock<IBuildSession>();
+            object theObjectBuilt = new object();
+
+            ConfiguredInstance instance = new ConfiguredInstance();
+
+
+            using (mocks.Record())
+            {
+                Expect.Call(builder.BuildInstance(instance, session)).Return(theObjectBuilt);
+            }
+
+            using (mocks.Playback())
+            {
+                object actualObject = instance.Build(GetType(), session, builder);
+                Assert.AreSame(theObjectBuilt, actualObject);
+            }
+        }
+
+        [Test]
+        public void CanBePartOfPluginFamily_is_false_if_the_plugin_cannot_be_found()
+        {
+            PluginFamily family = new PluginFamily(typeof (IService));
+            family.AddPlugin(typeof (ColorService), "Color");
+
+            ConfiguredInstance instance = new ConfiguredInstance();
+            instance.ConcreteKey = "Color";
+
+            IDiagnosticInstance diagnosticInstance = instance;
+
+            Assert.IsTrue(diagnosticInstance.CanBePartOfPluginFamily(family));
+
+            instance.ConcreteKey = "something else";
+            Assert.IsFalse(diagnosticInstance.CanBePartOfPluginFamily(family));
+        }
+
         [Test]
         public void GetProperty_happy_path()
         {
             instance.SetProperty("Color", "Red")
-                    .SetProperty("Age", "34");
+                .SetProperty("Age", "34");
 
             IConfiguredInstance configuredInstance = instance;
 
@@ -48,22 +134,73 @@ namespace StructureMap.Testing.Pipeline
         }
 
         [Test]
-        public void CanBePartOfPluginFamily_is_false_if_the_plugin_cannot_be_found()
+        public void Should_find_the_InstanceBuilder_by_PluggedType_if_it_exists()
         {
-            PluginFamily family = new PluginFamily(typeof(IService));
-            family.Plugins.Add(typeof(ColorService), "Color");
+            MockRepository mocks = new MockRepository();
+            IBuildSession session = mocks.DynamicMock<IBuildSession>();
 
-            ConfiguredInstance instance = new ConfiguredInstance();
-            instance.ConcreteKey = "Color";
+            Type thePluginType = typeof (IGateway);
+            Type thePluggedType = GetType();
+            InstanceBuilder builder = mocks.CreateMock<InstanceBuilder>();
 
-            IDiagnosticInstance diagnosticInstance = instance;
+            ConfiguredInstance instance = new ConfiguredInstance(thePluggedType);
 
-            Assert.IsTrue(diagnosticInstance.CanBePartOfPluginFamily(family));
+            using (mocks.Record())
+            {
+                Expect.Call(session.FindBuilderByType(thePluginType, thePluggedType)).Return(builder);
+                Expect.Call(builder.BuildInstance(instance, session)).Return(new object());
+            }
 
-            instance.ConcreteKey = "something else";
-            Assert.IsFalse(diagnosticInstance.CanBePartOfPluginFamily(family));
+            using (mocks.Playback())
+            {
+                instance.Build(thePluginType, session);
+            }
+        }
 
+        [Test]
+        public void Trying_to_build_with_an_InvalidCastException_will_throw_error_206()
+        {
+            MockRepository mocks = new MockRepository();
+            InstanceBuilder builder = mocks.CreateMock<InstanceBuilder>();
+            Expect.Call(builder.BuildInstance(null, null)).Throw(new InvalidCastException());
+            LastCall.IgnoreArguments();
+            mocks.Replay(builder);
 
+            assertActionThrowsErrorCode(206, delegate()
+                                                 {
+                                                     ConfiguredInstance instance = new ConfiguredInstance();
+                                                     instance.Build(GetType(), new StubBuildSession(), builder);
+                                                 });
+        }
+
+        [Test]
+        public void Trying_to_build_with_an_unknown_exception_will_throw_error_207()
+        {
+            MockRepository mocks = new MockRepository();
+            InstanceBuilder builder = mocks.CreateMock<InstanceBuilder>();
+            Expect.Call(builder.BuildInstance(null, null)).Throw(new Exception());
+            LastCall.IgnoreArguments();
+            mocks.Replay(builder);
+
+            assertActionThrowsErrorCode(207, delegate()
+                                                 {
+                                                     ConfiguredInstance instance = new ConfiguredInstance();
+                                                     instance.Build(GetType(), new StubBuildSession(), builder);
+                                                 });
+        }
+
+        [Test]
+        public void Trying_to_build_without_an_InstanceBuilder_throws_exception()
+        {
+            assertActionThrowsErrorCode(201, delegate()
+                                                 {
+                                                     string theConcreteKey = "the concrete key";
+                                                     ConfiguredInstance instance =
+                                                         new ConfiguredInstance(GetType()).WithConcreteKey(
+                                                             theConcreteKey);
+
+                                                     instance.Build(GetType(), null, null);
+                                                 });
         }
     }
 }

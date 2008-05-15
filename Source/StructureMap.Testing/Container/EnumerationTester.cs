@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using StructureMap.Graph;
+using StructureMap.Pipeline;
 using StructureMap.Source;
 using StructureMap.Testing.Widget2;
 
@@ -20,21 +21,21 @@ namespace StructureMap.Testing.Container
 
 
             PluginFamily family = graph.FindFamily(typeof (Cow));
-            family.Plugins.Add(typeof (Cow), "Default");
+            family.AddPlugin(typeof (Cow), "Default");
 
+            InstanceManager manager = new InstanceManager(graph);
 
-            InstanceFactory cowFactory = new InstanceFactory(family);
-            cowFactory.SetInstanceManager(new InstanceManager());
+            ConfiguredInstance instance = new ConfiguredInstance()
+                .WithConcreteKey("Default").WithName("Angus")
+                .WithProperty("Name").EqualTo("Bessie")
+                .WithProperty("Breed").EqualTo("Angus")
+                .WithProperty("Weight").EqualTo("1200");
 
-            MemoryInstanceMemento memento = new MemoryInstanceMemento("Default", "Angus");
+            
+            
+            manager.AddInstance<Cow>(instance);
 
-            memento.SetProperty("Name", "Bessie");
-            memento.SetProperty("Breed", "Angus");
-            memento.SetProperty("Weight", "1200");
-
-            cowFactory.AddInstance(memento.ReadInstance(graph, typeof(Cow)));
-
-            Cow angus = cowFactory.GetInstance("Angus") as Cow;
+            Cow angus = manager.CreateInstance<Cow>("Angus");
 
             Assert.IsNotNull(angus);
             Assert.AreEqual("Bessie", angus.Name, "Name");

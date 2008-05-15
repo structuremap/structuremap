@@ -25,7 +25,7 @@ namespace StructureMap.Pipeline
             get { return this; }
         }
 
-        protected override object build(Type pluginType, IInstanceCreator creator)
+        protected override object build(Type pluginType, IBuildSession session)
         {
             return _builder();
         }

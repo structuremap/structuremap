@@ -51,7 +51,6 @@ namespace StructureMap.Testing.Widget
 
     public class StringListBuilder : InstanceBuilder
     {
-        private Type _pluggedType;
 
         public override string ConcreteTypeKey
         {
@@ -60,7 +59,7 @@ namespace StructureMap.Testing.Widget
 
 
 
-        public override object BuildInstance(IConfiguredInstance instance, StructureMap.Pipeline.IInstanceCreator creator)
+        public override object BuildInstance(IConfiguredInstance instance, StructureMap.Pipeline.IBuildSession session)
         {
             return null;
         }
@@ -68,7 +67,7 @@ namespace StructureMap.Testing.Widget
 
         public override Type PluggedType
         {
-            get { return _pluggedType; }
+            get { return null; }
         }
     }
 }

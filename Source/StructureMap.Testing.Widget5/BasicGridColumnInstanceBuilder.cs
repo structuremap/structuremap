@@ -24,7 +24,7 @@ namespace StructureMap.Testing.Widget5
             get { throw new NotImplementedException(); }
         }
 
-        public override object BuildInstance(IConfiguredInstance instance, StructureMap.Pipeline.IInstanceCreator creator)
+        public override object BuildInstance(IConfiguredInstance instance, StructureMap.Pipeline.IBuildSession session)
         {
             BasicGridColumn column = new BasicGridColumn(instance.GetProperty("headerText"));
 
@@ -38,7 +38,7 @@ namespace StructureMap.Testing.Widget5
 
             column.Rules =
                 (Rule[])
-                creator.CreateInstanceArray("StructureMap.Testing.Widget.Rule", instance.GetChildrenArray("Rules"));
+                session.CreateInstanceArray(typeof(Rule), instance.GetChildrenArray("Rules"));
 
 //
 //			column.WrapLines = bool.Parse(Memento.GetProperty("WrapLines"));

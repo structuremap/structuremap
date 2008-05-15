@@ -23,7 +23,7 @@ namespace StructureMap.Configuration.DSL
 
             public void IntoPluginType(Type pluginType)
             {
-                if (!Plugin.CanBeCast(pluginType, _pluggedType))
+                if (!TypeRules.CanBeCast(pluginType, _pluggedType))
                 {
                     throw new StructureMapException(
                         303,

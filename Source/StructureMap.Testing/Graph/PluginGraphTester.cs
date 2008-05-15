@@ -67,8 +67,8 @@ namespace StructureMap.Testing.Graph
             
 
             PluginFamily family = graph.FindFamily(typeof (IWidget));
+            family.AddPlugin(typeof (NotPluggableWidget), "NotPluggable");
 
-            family.Plugins.Add(typeof(NotPluggableWidget), "NotPluggable");
             graph.Seal();
 
 

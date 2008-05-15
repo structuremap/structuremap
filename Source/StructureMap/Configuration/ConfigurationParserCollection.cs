@@ -70,6 +70,7 @@ namespace StructureMap.Configuration
             }
             catch (Exception ex)
             {
+                // TODO -- needs to log to PluginGraph instead
                 throw new StructureMapException(100, filename, ex);
             }
         }

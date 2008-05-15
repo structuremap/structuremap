@@ -86,13 +86,6 @@ namespace StructureMap.Testing.Configuration.DSL
         }
 
         [Test]
-        public void SimpleCaseByPluginName()
-        {
-            AWidget widget = (AWidget) manager.CreateInstance<IWidget>("AWidget");
-            Assert.IsNotNull(widget);
-        }
-
-        [Test]
         public void SimpleCaseWithNamedInstance()
         {
             Registry registry = new Registry();

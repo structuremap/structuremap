@@ -6,7 +6,7 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.Configuration
 {
-    public class NormalGraphBuilder : IGraphBuilder
+    public class GraphBuilder : IGraphBuilder
     {
         private readonly PluginGraph _pluginGraph;
         private readonly PluginGraph _systemGraph;
@@ -14,11 +14,11 @@ namespace StructureMap.Configuration
         private InstanceManager _systemInstanceManager;
 
 
-        public NormalGraphBuilder(Registry[] registries) : this(registries, new PluginGraph())
+        public GraphBuilder(Registry[] registries) : this(registries, new PluginGraph())
         {
         }
 
-        public NormalGraphBuilder(Registry[] registries, PluginGraph pluginGraph)
+        public GraphBuilder(Registry[] registries, PluginGraph pluginGraph)
         {
             _pluginGraph = pluginGraph;
             foreach (Registry registry in registries)

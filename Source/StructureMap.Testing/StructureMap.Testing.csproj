@@ -156,6 +156,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AutoMocking\RhinoAutoMockerTester.cs" />
+    <Compile Include="BuildSessionTester.cs" />
     <Compile Include="Configuration\ConfigurationParserCollectionTester.cs" />
     <Compile Include="Configuration\ConfigurationParserTester.cs" />
     <Compile Include="Configuration\DefaultInstanceNodeTester.cs" />
@@ -315,6 +316,7 @@
     <Compile Include="Graph\TypePathTester.cs" />
     <Compile Include="ImplicitPluginFromPluggedTypeAttributeTester.cs" />
     <Compile Include="InstanceMementoInstanceCreationTester.cs" />
+    <Compile Include="MementoTester.cs" />
     <Compile Include="ObjectFactoryTester.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -330,8 +332,9 @@
     <Compile Include="Pipeline\ProfileTester.cs" />
     <Compile Include="Pipeline\PrototypeInstanceTester.cs" />
     <Compile Include="Pipeline\ReferencedInstanceTester.cs" />
-    <Compile Include="Pipeline\StubInstanceCreator.cs" />
+    <Compile Include="Pipeline\StubBuildSession.cs" />
     <Compile Include="Pipeline\ThreadLocalStoragePolicyTester.cs" />
+    <Compile Include="Pipeline\TypeRulesTester.cs" />
     <Compile Include="StructureMapConfigCreator.cs" />
     <Compile Include="StructureMapConfigurationTester.cs" />
     <Compile Include="TestData\DataMother.cs">

@@ -26,7 +26,7 @@ namespace StructureMap.Testing
             graph.Assemblies.Add(Assembly.GetExecutingAssembly());
             PluginFamily family = graph.FindFamily(typeof (IGenericService<>));
             family.DefaultInstanceKey = "Default";
-            family.Plugins.Add(typeof (GenericService<>), "Default");
+            family.AddPlugin(typeof (GenericService<>), "Default");
 
             graph.Seal();
 
@@ -75,7 +75,7 @@ namespace StructureMap.Testing
         public void CanEmitForATemplateWithThreeTemplates()
         {
             PluginFamily family = new PluginFamily(typeof (ITarget2<int, string, bool>));
-            family.Plugins.Add(typeof (SpecificTarget2<int, string, bool>), "specific");
+            family.AddPlugin(typeof (SpecificTarget2<int, string, bool>), "specific");
 
             InstanceFactory factory = new InstanceFactory(family);
         }
@@ -84,7 +84,9 @@ namespace StructureMap.Testing
         public void CanEmitForATemplateWithTwoTemplates()
         {
             PluginFamily family = new PluginFamily(typeof (ITarget<int, string>));
-            family.Plugins.Add(typeof (SpecificTarget<int, string>), "specific");
+            
+
+            family.AddPlugin(typeof (SpecificTarget<int, string>), "specific");
 
             InstanceFactory factory = new InstanceFactory(family);
         }
@@ -94,14 +96,13 @@ namespace StructureMap.Testing
         {
             PluginGraph graph = new PluginGraph();
             PluginFamily family = graph.FindFamily(typeof (ComplexType<int>));
-            family.Plugins.Add(typeof (ComplexType<int>), "complex");
+            family.AddPlugin(new Plugin(typeof(ComplexType<int>), "complex"));
 
             InstanceManager manager = new InstanceManager(graph);
 
-            ConfiguredInstance instance = new ConfiguredInstance();
-            instance.ConcreteKey = "complex";
-            instance.SetProperty("name", "Jeremy");
-            instance.SetProperty("age", "32");
+            ConfiguredInstance instance = new ConfiguredInstance().WithConcreteKey("complex")
+                .WithProperty("name").EqualTo("Jeremy")
+                .WithProperty("age").EqualTo(32);
 
             ComplexType<int> com = manager.CreateInstance<ComplexType<int>>(instance);
             Assert.AreEqual("Jeremy", com.Name);
@@ -138,7 +139,7 @@ namespace StructureMap.Testing
         [Test]
         public void CanPlugGenericConcreteClassIntoGenericInterfaceWithNoGenericParametersSpecified()
         {
-            bool canPlug = Plugin.CanBeCast(typeof (IGenericService<>), typeof (GenericService<>));
+            bool canPlug = TypeRules.CanBeCast(typeof (IGenericService<>), typeof (GenericService<>));
             Assert.IsTrue(canPlug);
         }
 

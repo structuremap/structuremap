@@ -16,7 +16,7 @@ namespace StructureMap.Emitting
 
         public InstanceBuilderAssembly(Type pluginType, IEnumerable<Plugin> plugins)
         {
-            string assemblyName = Guid.NewGuid().ToString().Replace(".", "") + "InstanceBuilderAssembly";
+            string assemblyName = guidString() + "InstanceBuilderAssembly";
             _dynamicAssembly = new DynamicAssembly(assemblyName);
             _pluginType = pluginType;
 
@@ -24,6 +24,11 @@ namespace StructureMap.Emitting
             {
                 processPlugin(plugin);
             }
+        }
+
+        private static string guidString()
+        {
+            return Guid.NewGuid().ToString().Replace(".", "");
         }
 
         /// <summary>
@@ -49,7 +54,7 @@ namespace StructureMap.Emitting
                 className = escapeClassName(pluggedType);
             }
 
-            return className + "InstanceBuilder";
+            return className + "InstanceBuilder" + guidString();
         }
 
         private static string escapeClassName(Type type)
@@ -61,7 +66,7 @@ namespace StructureMap.Emitting
 
         private void processPlugin(Plugin plugin)
         {
-            if (Plugin.CanBeCast(_pluginType, plugin.PluggedType))
+            if (TypeRules.CanBeCast(_pluginType, plugin.PluggedType))
             {
                 string className = getInstanceBuilderClassName(plugin.PluggedType);
                 ClassBuilder builderClass =

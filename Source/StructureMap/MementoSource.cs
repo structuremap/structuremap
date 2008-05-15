@@ -79,17 +79,6 @@ namespace StructureMap
             return returnValue;
         }
 
-        public void AddExternalMemento(InstanceMemento memento)
-        {
-            _externalMementos[memento.InstanceKey] = memento;
-        }
-
-
-        public void SetDefault(string instanceKey)
-        {
-            _defaultMemento = GetMemento(instanceKey);
-        }
-
         public virtual InstanceMemento ResolveMemento(InstanceMemento memento)
         {
             InstanceMemento returnValue = memento;

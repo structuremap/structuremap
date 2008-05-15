@@ -56,11 +56,13 @@ namespace StructureMap.Graph
         {
             if (property == null)
             {
+                // TODO -- log this
                 throw new StructureMapException(240, propertyName, _plugin.PluggedType);
             }
 
             if (property.GetSetMethod() == null)
             {
+                // TODO -- log this
                 throw new StructureMapException(241, propertyName, _plugin.PluggedType);
             }
 
@@ -81,6 +83,50 @@ namespace StructureMap.Graph
         public IEnumerator GetEnumerator()
         {
             return ((IEnumerable<SetterProperty>) this).GetEnumerator();
+        }
+
+        public void Merge(SetterPropertyCollection setters)
+        {
+            foreach (SetterProperty setter in setters)
+            {
+                if (!Contains(setter.Name))
+                {
+                    Add(setter.Name);
+                }
+            }
+        }
+
+        public void Visit(IArgumentVisitor visitor)
+        {
+            foreach (SetterProperty setter in this)
+            {
+                setter.Visit(visitor);
+            }
+        }
+
+        public bool CanBeAutoFilled()
+        {
+            bool returnValue = true;
+
+            foreach (SetterProperty setterProperty in this)
+            {
+                returnValue = returnValue && setterProperty.CanBeAutoFilled;
+            }
+
+            return returnValue;
+        }
+
+        public string FindFirstConstructorArgumentOfType<T>()
+        {
+            foreach (SetterProperty setterProperty in this)
+            {
+                if (setterProperty.Property.PropertyType.Equals(typeof(T)))
+                {
+                    return setterProperty.Name;
+                }
+            }
+
+            return null;
         }
     }
 }

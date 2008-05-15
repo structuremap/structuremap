@@ -14,26 +14,26 @@ namespace StructureMap.Emitting
     public class BuildInstanceMethod : Method
     {
         private readonly Plugin _plugin;
-        private readonly ConstructorInfo _constructor;
-        private readonly ParameterEmitter _parameterEmitter;
+        //private readonly ConstructorInfo _constructor;
+        //private readonly ParameterEmitter _parameterEmitter;
 
         public BuildInstanceMethod(Plugin plugin) : base()
         {
-            _constructor = plugin.GetConstructor();
+            //_constructor = plugin.GetConstructor();
 
-            _parameterEmitter = new StringParameterEmitter();
+            //_parameterEmitter = new StringParameterEmitter();
 
-            _parameterEmitter.AttachNextSibling(new PrimitiveParameterEmitter());
-            _parameterEmitter.AttachNextSibling(new EnumParameterEmitter());
-            _parameterEmitter.AttachNextSibling(new ChildParameterEmitter());
-            _parameterEmitter.AttachNextSibling(new ChildArrayParameterEmitter());
+            //_parameterEmitter.AttachNextSibling(new PrimitiveParameterEmitter());
+            //_parameterEmitter.AttachNextSibling(new EnumParameterEmitter());
+            //_parameterEmitter.AttachNextSibling(new ChildParameterEmitter());
+            //_parameterEmitter.AttachNextSibling(new ChildArrayParameterEmitter());
             _plugin = plugin;
         }
 
 
         public override Type[] ArgumentList
         {
-            get { return new Type[] { typeof(IConfiguredInstance), typeof(StructureMap.Pipeline.IInstanceCreator) }; }
+            get { return new Type[] { typeof(IConfiguredInstance), typeof(StructureMap.Pipeline.IBuildSession) }; }
         }
 
         public override string MethodName
@@ -51,20 +51,15 @@ namespace StructureMap.Emitting
         protected override void Generate(ILGenerator ilgen)
         {
             ilgen.DeclareLocal(typeof (object));
+            ArgumentEmitter arguments = new ArgumentEmitter(ilgen);
 
-            foreach (ParameterInfo parameter in _constructor.GetParameters())
-            {
-                _parameterEmitter.Generate(ilgen, parameter);
-            }
+            _plugin.VisitConstructor(arguments);
 
-            ilgen.Emit(OpCodes.Newobj, _constructor);
+            ilgen.Emit(OpCodes.Newobj, _plugin.GetConstructor());
             Label label = ilgen.DefineLabel();
             ilgen.Emit(OpCodes.Stloc_0);
 
-            foreach (SetterProperty setter in _plugin.Setters)
-            {
-                _parameterEmitter.GenerateSetter(ilgen, setter.Property);
-            }
+            _plugin.VisitSetters(arguments);
 
             ilgen.Emit(OpCodes.Br_S, label);
             ilgen.MarkLabel(label);

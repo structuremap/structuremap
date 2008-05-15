@@ -24,7 +24,8 @@ namespace StructureMap.Graph
             {
                 if (!_pluginFamilies.ContainsKey(pluginType))
                 {
-                    throw new StructureMapException(116, pluginType.FullName);
+                    PluginFamily family = new PluginFamily(pluginType);
+                    Add(family);
                 }
 
                 return _pluginFamilies[pluginType];

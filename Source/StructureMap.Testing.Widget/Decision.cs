@@ -21,10 +21,10 @@ namespace StructureMap.Testing.Widget
             get { return null; }
         }
 
-        public override object BuildInstance(IConfiguredInstance instance, StructureMap.Pipeline.IInstanceCreator creator)
+        public override object BuildInstance(IConfiguredInstance instance, StructureMap.Pipeline.IBuildSession session)
         {
             return new Decision(
-                (Rule[]) creator.CreateInstanceArray("StructureMap.Testing.Widget", instance.GetChildrenArray("Rules")));
+                (Rule[]) session.CreateInstanceArray(typeof(Rule), instance.GetChildrenArray("Rules")));
         }
 
 

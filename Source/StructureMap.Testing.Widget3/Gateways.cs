@@ -31,7 +31,6 @@ namespace StructureMap.Testing.Widget3
 
         public void DoSomething()
         {
-            // TODO:  Add DefaultGateway.DoSomething implementation
         }
 
         public string WhoAmI
@@ -74,7 +73,6 @@ namespace StructureMap.Testing.Widget3
 
         public void DoSomething()
         {
-            // TODO:  Add StubbedGateway.DoSomething implementation
         }
 
         public string WhoAmI

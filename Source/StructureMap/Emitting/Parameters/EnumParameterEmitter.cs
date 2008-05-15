@@ -9,12 +9,7 @@ namespace StructureMap.Emitting.Parameters
     /// </summary>
     public class EnumParameterEmitter : ParameterEmitter
     {
-        protected override bool canProcess(Type parameterType)
-        {
-            return (parameterType.IsEnum);
-        }
-
-        protected override void generate(ILGenerator ilgen, ParameterInfo parameter)
+        public void Ctor(ILGenerator ilgen, ParameterInfo parameter)
         {
             Type parameterType = parameter.ParameterType;
             string parameterName = parameter.Name;
@@ -44,7 +39,7 @@ namespace StructureMap.Emitting.Parameters
             ilgen.Emit(OpCodes.Ldind_I4);
         }
 
-        protected override void generateSetter(ILGenerator ilgen, PropertyInfo property)
+        public void Setter(ILGenerator ilgen, PropertyInfo property)
         {
             ilgen.Emit(OpCodes.Ldloc_0);
             putEnumerationValueFromMementoOntoStack(ilgen, property.PropertyType, property.Name);

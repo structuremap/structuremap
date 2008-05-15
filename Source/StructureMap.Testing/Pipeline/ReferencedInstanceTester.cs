@@ -18,7 +18,7 @@ namespace StructureMap.Testing.Pipeline
         public void Create_referenced_instance_happy_path()
         {
             MockRepository mocks = new MockRepository();
-            StructureMap.Pipeline.IInstanceCreator instanceCreator = mocks.CreateMock<StructureMap.Pipeline.IInstanceCreator>();
+            StructureMap.Pipeline.IBuildSession buildSession = mocks.CreateMock<StructureMap.Pipeline.IBuildSession>();
 
             ConcreteReferenced returnedValue = new ConcreteReferenced();
             string theReferenceKey = "theReferenceKey";
@@ -26,13 +26,12 @@ namespace StructureMap.Testing.Pipeline
 
             using (mocks.Record())
             {
-                Expect.Call(instanceCreator.ApplyInterception(typeof(IReferenced), returnedValue)).Return(returnedValue);
-                Expect.Call(instanceCreator.CreateInstance(typeof(IReferenced), theReferenceKey)).Return(returnedValue);
+                Expect.Call(buildSession.CreateInstance(typeof(IReferenced), theReferenceKey)).Return(returnedValue);
             }
 
             using (mocks.Playback())
             {
-                Assert.AreSame(returnedValue, instance.Build(typeof(IReferenced), instanceCreator));
+                Assert.AreSame(returnedValue, instance.Build(typeof(IReferenced), buildSession));
             }
         }
 

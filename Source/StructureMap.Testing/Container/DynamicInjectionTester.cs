@@ -5,6 +5,7 @@ using NUnit.Framework;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
+using StructureMap.Testing.Pipeline;
 using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Container
@@ -58,7 +59,7 @@ namespace StructureMap.Testing.Container
         [Test]
         public void AddInstanceToInstanceManagerWhenTheInstanceFactoryDoesNotExist()
         {
-            InstanceManager manager = new InstanceManager();
+            InstanceManager manager = new InstanceManager(new PluginGraph());
             manager.AddInstance<IService>(new LiteralInstance(_red).WithName("Red"));
             manager.AddInstance<IService>(new LiteralInstance(_blue).WithName("Blue"));
 
@@ -96,18 +97,14 @@ namespace StructureMap.Testing.Container
         {
             PluginGraph pluginGraph = new PluginGraph();
             PluginFamily family = pluginGraph.FindFamily(typeof(ISomething));
-            family.Plugins.Add(typeof (SomethingOne), "One");
+            family.AddPlugin(typeof (SomethingOne), "One");
 
             InstanceManager manager = new InstanceManager(pluginGraph);
-            IInstanceFactory factory = manager[typeof (ISomething)];
 
-            ConfiguredInstance instance = (ConfiguredInstance) factory.AddType<SomethingOne>();
-            Assert.AreEqual("One", instance.Name);
-            Assert.AreEqual("One", instance.ConcreteKey);
+            ConfiguredInstance instance = new ConfiguredInstance().WithConcreteKey("One").WithName("One");
+            manager.AddInstance<ISomething>(instance);
 
-            Assert.IsInstanceOfType(typeof(SomethingOne), factory.GetInstance(instance, manager));
-
-            IList list = factory.GetAllInstances();
+            IList<ISomething> list = manager.GetAllInstances<ISomething>();
             Assert.AreEqual(1, list.Count);
             Assert.IsInstanceOfType(typeof(SomethingOne), list[0]);
         }
@@ -134,23 +131,21 @@ namespace StructureMap.Testing.Container
         }
 
         [Test]
-        public void CanAddMementosDirectlyToAnInstanceFactory()
+        public void CanAddInstancesDirectlyToAnInstanceFactory()
         {
             IInstanceFactory factory = getISomethingFactory();
 
             factory.AddInstance(new LiteralInstance(_red).WithName("Red"));
             factory.AddInstance(new LiteralInstance(_blue).WithName("Blue"));
 
-            Assert.AreSame(_red, factory.GetInstance("Red"));
-            Assert.AreSame(_blue, factory.GetInstance("Blue"));
+            Assert.AreSame(_red, factory.Build(new StubBuildSession(), "Red"));
+            Assert.AreSame(_blue, factory.Build(new StubBuildSession(), "Blue"));
         }
 
         private IInstanceFactory getISomethingFactory()
         {
-            PluginGraph pluginGraph = new PluginGraph();
-            pluginGraph.FindFamily(typeof (ISomething));
-            InstanceManager manager = new InstanceManager(pluginGraph);
-            return manager[typeof(ISomething)];
+            PluginFamily family = new PluginFamily(typeof(ISomething));
+            return new InstanceFactory(family);
         }
 
         [Test]
@@ -170,7 +165,7 @@ namespace StructureMap.Testing.Container
         }
 
         [Test]
-        public void NowOverwriteAPreviouslyAttachedMemento()
+        public void NowOverwriteAPreviouslyAttachedInstance()
         {
             IInstanceFactory factory = getISomethingFactory();
 
@@ -180,7 +175,7 @@ namespace StructureMap.Testing.Container
             // Replace Blue
             factory.AddInstance(new LiteralInstance(_orange).WithName("Blue"));
 
-            Assert.AreSame(_orange, factory.GetInstance("Blue"));
+            Assert.AreSame(_orange, factory.Build(new StubBuildSession(), "Blue"));
         }
 
         [Test]
@@ -212,7 +207,7 @@ namespace StructureMap.Testing.Container
             set { throw new NotImplementedException(); }
         }
 
-        public object Build(IInstanceCreator instanceCreator, Type pluginType, Instance instance)
+        public object Build(IBuildSession buildSession, Type pluginType, Instance instance)
         {
             throw new NotImplementedException();
         }

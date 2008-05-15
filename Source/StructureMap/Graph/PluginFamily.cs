@@ -13,12 +13,11 @@ namespace StructureMap.Graph
     /// the system.  A PluginFamily defines a CLR Type that StructureMap can build, and all of the possible
     /// Plugin’s implementing the CLR Type.
     /// </summary>
-    public class PluginFamily : IPluginFamily
+    public class PluginFamily : TypeRules, IPluginFamily
     {
         private readonly List<InstanceMemento> _mementoList = new List<InstanceMemento>();
         private readonly PluginCollection _plugins;
         private string _defaultKey = string.Empty;
-        private InstanceInterceptor _instanceInterceptor = new NulloInterceptor();
         private PluginGraph _parent;
         private readonly List<Instance> _instances = new List<Instance>();
         private IBuildPolicy _buildPolicy = new BuildPolicy();
@@ -29,12 +28,6 @@ namespace StructureMap.Graph
         private Predicate<Type> _pluginFilter;
         private IBuildPolicy _policy;
 
-
-        // TODO:  Need to unit test the scope from the attribute
-        /// <summary>
-        /// Testing constructor
-        /// </summary>
-        /// <param name="pluginType"></param>
         public PluginFamily(Type pluginType)
         {
             _pluginType = pluginType;
@@ -42,9 +35,15 @@ namespace StructureMap.Graph
 
             PluginFamilyAttribute.ConfigureFamily(this);
 
-            _explicitlyMarkedPluginFilter = delegate(Type type) { return Plugin.IsExplicitlyMarkedAsPlugin(PluginType, type); };
-            _implicitPluginFilter = delegate(Type type) { return Plugin.CanBeCast(PluginType, type); };
+            _explicitlyMarkedPluginFilter = delegate(Type type) { return TypeRules.IsExplicitlyMarkedAsPlugin(PluginType, type); };
+            _implicitPluginFilter = delegate(Type type) { return TypeRules.CanBeCast(PluginType, type); };
             _pluginFilter = _explicitlyMarkedPluginFilter;
+
+            if (IsConcrete(pluginType))
+            {
+                Plugin plugin = new Plugin(pluginType, Plugin.DEFAULT);
+                Plugins.Add(plugin);
+            }
         }
 
 
@@ -53,14 +52,6 @@ namespace StructureMap.Graph
             get { return _parent; }
             set { _parent = value; }
         }
-
-        public InstanceInterceptor InstanceInterceptor
-        {
-            get { return _instanceInterceptor; }
-            set { _instanceInterceptor = value; }
-        }
-
-
 
         public void AddInstance(InstanceMemento memento)
         {
@@ -72,6 +63,7 @@ namespace StructureMap.Graph
             _instances.Add(instance);
         }
 
+        // TODO -- eliminate this.  Move to GraphBuilder, and wrap error handling around it
         public void AddMementoSource(MementoSource source)
         {
             _mementoList.AddRange(source.GetAllMementos());
@@ -114,11 +106,6 @@ namespace StructureMap.Graph
             get { return _pluginType.IsGenericTypeDefinition; }
         }
 
-        public bool IsGenericType
-        {
-            get { return _pluginType.IsGenericType; }
-        }
-
         public bool SearchForImplicitPlugins
         {
             get
@@ -146,27 +133,35 @@ namespace StructureMap.Graph
 
         public void Seal()
         {
-            discoverImplicitInstances();
-
-            foreach (InstanceMemento memento in _mementoList)
+            _mementoList.ForEach(delegate(InstanceMemento memento)
             {
                 Instance instance = memento.ReadInstance(Parent, _pluginType);
                 _instances.Add(instance);
+            });
+
+            discoverImplicitInstances();
+
+            if (_instances.Count == 1)
+            {
+                _defaultKey = _instances[0].Name;
             }
         }
 
         private void discoverImplicitInstances()
         {
+            // TODO:  Apply some 3.5 lambda magic.  Maybe move to PluginCollection
             List<Plugin> list = _plugins.FindAutoFillablePlugins();
-            foreach (InstanceMemento memento in _mementoList)
-            {
-                Plugin plugin = memento.FindPlugin(this);
-                list.Remove(plugin);
-            }
+            list.RemoveAll(delegate(Plugin plugin)
+                               {
+                                   return _instances.Exists(delegate(Instance instance)
+                                                         {
+                                                             return instance.Matches(plugin);
+                                                         });
+                               });
 
             foreach (Plugin plugin in list)
             {
-                AddInstance(plugin.CreateImplicitMemento());
+                AddInstance(plugin.CreateImplicitInstance());
             }
         }
 
@@ -234,11 +229,22 @@ namespace StructureMap.Graph
             }
         }
 
-        public void AddPlugin(Type pluggedType, string key)
+        public Plugin AddPlugin(Type pluggedType, string key)
         {
             Plugin plugin = new Plugin(pluggedType, key);
             _plugins.Add(plugin);
-            
+
+            return plugin;
+        }
+
+        public void AddPlugin(Plugin plugin)
+        {
+            _plugins.Add(plugin);
+        }
+
+        public Instance GetDefaultInstance()
+        {
+            return string.IsNullOrEmpty(_defaultKey) ? null : GetInstance(_defaultKey);
         }
     }
 }

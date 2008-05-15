@@ -55,7 +55,7 @@ namespace StructureMap.AutoMocking
 
         private object[] getConstructorArgs()
         {
-            ConstructorInfo ctor = Plugin.GetGreediestConstructor(typeof (TARGETCLASS));
+            ConstructorInfo ctor = Constructor.GetGreediestConstructor(typeof (TARGETCLASS));
             List<object> list = new List<object>();
             foreach (ParameterInfo parameterInfo in ctor.GetParameters())
             {

@@ -1,19 +1,25 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using StructureMap.Graph;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
 
 namespace StructureMap.Testing.Pipeline
 {
-    public class StubInstanceCreator : StructureMap.Pipeline.IInstanceCreator
+    public class StubBuildSession : StructureMap.Pipeline.IBuildSession
     {
-        public object CreateInstance(Type type, string referenceKey)
+        public object CreateInstance(Type type, string name)
         {
             throw new NotImplementedException();
         }
 
-        public Array CreateInstanceArray(string pluginTypeName, Instance[] instances)
+        public object CreateInstance(Type pluginType, Instance instance)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Array CreateInstanceArray(Type pluginType, Instance[] instances)
         {
             throw new NotImplementedException();
         }
@@ -52,6 +58,22 @@ namespace StructureMap.Testing.Pipeline
         public object ApplyInterception(Type pluginType, object actualValue)
         {
             return actualValue;
+        }
+
+        public InstanceBuilder FindBuilderByType(Type pluginType, Type pluggedType)
+        {
+            if (pluggedType == null)
+            {
+                return null;
+            }
+
+            InstanceBuilderList list = new InstanceBuilderList(pluginType, new Plugin[]{new Plugin(pluggedType), });
+            return list.FindByType(pluggedType);
+        }
+
+        public InstanceBuilder FindBuilderByConcreteKey(Type pluginType, string concreteKey)
+        {
+            throw new NotImplementedException();
         }
     }
 }

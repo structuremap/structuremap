@@ -20,9 +20,9 @@ namespace StructureMap.Pipeline
             get { return _referenceKey; }
         }
 
-        protected override object build(Type pluginType, IInstanceCreator creator)
+        protected override object build(Type pluginType, IBuildSession session)
         {
-            return creator.CreateInstance(pluginType, _referenceKey);
+            return session.CreateInstance(pluginType, _referenceKey);
         }
 
 

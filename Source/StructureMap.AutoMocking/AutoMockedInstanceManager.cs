@@ -11,22 +11,24 @@ namespace StructureMap.AutoMocking
         public AutoMockedInstanceManager(ServiceLocator locator)
         {
             _locator = locator;
+
+            onMissingFactory = delegate(Type pluginType, ProfileManager profileManager)
+                                   {
+                                       if (!pluginType.IsAbstract && pluginType.IsClass)
+                                       {
+                                           return null;
+                                       }
+
+                                       object service = _locator.Service(pluginType);
+                                       InstanceFactory factory = new InstanceFactory(new PluginFamily(pluginType));
+
+                                       LiteralInstance instance = new LiteralInstance(service);
+
+                                       profileManager.SetDefault(pluginType, instance);
+
+                                       return factory;
+                                   };
         }
 
-        
-        protected override InstanceFactory createFactory(Type pluginType)
-        {
-            if (!pluginType.IsAbstract && pluginType.IsClass)
-            {
-                return base.createFactory(pluginType);
-            }
-
-            object service = _locator.Service(pluginType);
-            InstanceFactory factory = new InstanceFactory(new PluginFamily(pluginType));
-            LiteralInstance instance = new LiteralInstance(service);
-            SetDefault(pluginType, instance);
-
-            return factory;
-        }
     }
 }

@@ -3,6 +3,7 @@ using NUnit.Framework;
 using StructureMap.Configuration;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
+using StructureMap.Testing.Widget2;
 using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing
@@ -19,7 +20,7 @@ namespace StructureMap.Testing
         {
             _graph = new PluginGraph();
             PluginFamily family = _graph.FindFamily(typeof (IService));
-            family.Plugins.Add(typeof(ColorService), "Color");
+            family.AddPlugin(typeof(ColorService), "Color");
 
             _graph.FindFamily(typeof (Rule));
         }
@@ -32,7 +33,7 @@ namespace StructureMap.Testing
 
         public class ComplexRule : Rule
         {
-            private readonly Color _color;
+            private readonly BreedEnum _color;
             private bool _Bool;
             private byte _Byte;
             private double _Double;
@@ -42,11 +43,11 @@ namespace StructureMap.Testing
 
 
             [DefaultConstructor]
-            public ComplexRule(string String, Color color, int Int, long Long, byte Byte, double Double, bool Bool,
+            public ComplexRule(string String, BreedEnum Color, int Int, long Long, byte Byte, double Double, bool Bool,
                                IAutomobile car, IAutomobile[] cars)
             {
                 _String = String;
-                _color = color;
+                _color = Color;
                 _Int = Int;
                 _Long = Long;
                 _Byte = Byte;
@@ -105,7 +106,7 @@ namespace StructureMap.Testing
             {
                 MemoryInstanceMemento memento = new MemoryInstanceMemento("", "Sample");
                 memento.SetProperty("String", "Red");
-                memento.SetProperty("color", "Green");
+                memento.SetProperty("Color", "Green");
                 memento.SetProperty("Int", "1");
                 memento.SetProperty("Long", "2");
                 memento.SetProperty("Byte", "3");
@@ -250,7 +251,7 @@ namespace StructureMap.Testing
             IConfiguredInstance instance = (IConfiguredInstance) memento.ReadInstance(graph, typeof (Rule));
 
             Assert.AreEqual(memento.GetProperty("String"), instance.GetProperty("String"));
-            Assert.AreEqual(memento.GetProperty("color"), instance.GetProperty("color"));
+            Assert.AreEqual(memento.GetProperty("Color"), instance.GetProperty("Color"));
             Assert.AreEqual(memento.GetProperty("Int"), instance.GetProperty("Int"));
             Assert.AreEqual(memento.GetProperty("Long"), instance.GetProperty("Long"));
             Assert.AreEqual(memento.GetProperty("Byte"), instance.GetProperty("Byte"));

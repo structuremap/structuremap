@@ -7,12 +7,12 @@ namespace StructureMap.Source
     /// </summary>
     public class BasicXmlMementoSource : XmlMementoSource
     {
-        private XmlNode _Node;
+        private readonly XmlNode _node;
 
         public BasicXmlMementoSource(XmlNode Node, string NodeName)
             : base(NodeName, "Type", "Key", XmlMementoStyle.NodeNormalized)
         {
-            _Node = Node;
+            _node = Node;
         }
 
         public override string Description
@@ -22,7 +22,7 @@ namespace StructureMap.Source
 
         protected override XmlNode getRootNode()
         {
-            return _Node;
+            return _node;
         }
     }
 }

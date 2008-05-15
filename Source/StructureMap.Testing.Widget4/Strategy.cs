@@ -59,7 +59,6 @@ namespace StructureMap.Testing.Widget4
 
         public void DoSomething()
         {
-            // TODO:  Add Strategy.DoSomething implementation
         }
 
         #endregion
@@ -120,7 +119,6 @@ namespace StructureMap.Testing.Widget4
 
         public void DoSomething()
         {
-            // TODO:  Add ComplexStrategy.DoSomething implementation
         }
 
         #endregion
@@ -179,7 +177,6 @@ namespace StructureMap.Testing.Widget4
 
         public void DoSomething()
         {
-            // TODO:  Add RandomStrategy.DoSomething implementation
         }
 
         #endregion
@@ -223,7 +220,6 @@ namespace StructureMap.Testing.Widget4
 
         public void DoSomething()
         {
-            // TODO:  Add ColorStrategy.DoSomething implementation
         }
 
         #endregion
@@ -267,7 +263,6 @@ namespace StructureMap.Testing.Widget4
 
         public void DoSomething()
         {
-            // TODO:  Add StrategyDecorator.DoSomething implementation
         }
 
         #endregion

@@ -36,7 +36,6 @@ namespace StructureMap.Testing.Widget
 
         public void DoSomething()
         {
-            // TODO:  Add ColorWidget.DoSomething implementation
         }
 
         #endregion
@@ -91,7 +90,6 @@ namespace StructureMap.Testing.Widget
 
         public void DoSomething()
         {
-            // TODO:  Add NotPluggableWidget.DoSomething implementation
         }
 
         #endregion
@@ -113,7 +111,6 @@ namespace StructureMap.Testing.Widget
 
         public void DoSomething()
         {
-            // TODO:  Add MoneyWidget.DoSomething implementation
         }
 
         #endregion
@@ -195,7 +192,6 @@ namespace StructureMap.Testing.Widget
 
         public void DoSomething()
         {
-            // TODO:  Add ConfigurationTarget.DoSomething implementation
         }
 
         #endregion

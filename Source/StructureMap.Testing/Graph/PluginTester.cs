@@ -1,10 +1,12 @@
 using System;
-using System.Drawing;
 using System.Reflection;
 using NUnit.Framework;
 using Rhino.Mocks;
+using StructureMap.Attributes;
 using StructureMap.Graph;
+using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
+using StructureMap.Testing.Widget2;
 using StructureMap.Testing.Widget3;
 using StructureMap.Testing.Widget4;
 
@@ -21,7 +23,7 @@ namespace StructureMap.Testing.Graph
             _plugin = new Plugin(typeof (ConfigurationWidget));
             _iwidget = typeof (IWidget);
             _widgetmaker = typeof (WidgetMaker);
-            _colorwidget = typeof (ColorWidget);
+            _colorWidget = typeof (ColorWidget);
             _moneywidgetmaker = typeof (MoneyWidgetMaker);
         }
 
@@ -30,27 +32,39 @@ namespace StructureMap.Testing.Graph
         private Plugin _plugin;
         private Type _iwidget;
         private Type _widgetmaker;
-        private Type _colorwidget;
+        private Type _colorWidget;
         private Type _moneywidgetmaker;
+
+        private ParameterInfo param(string name)
+        {
+            Constructor ctor = new Constructor(typeof (LotsOfStuff));
+            foreach (ParameterInfo parameterInfo in ctor.Ctor.GetParameters())
+            {
+                if (parameterInfo.Name == name)
+                {
+                    return parameterInfo;
+                }
+            }
+
+            throw new NotImplementedException();
+        }
+
+        private PropertyInfo prop(string name)
+        {
+            return typeof (LotsOfStuff).GetProperty(name);
+        }
 
 
         [Test]
         public void BadPluginToAbstractClass()
         {
-            Assert.AreEqual(false, Plugin.CanBeCast(_widgetmaker, _colorwidget), "ColorWidget is NOT a WidgetMaker");
+            Assert.AreEqual(false, TypeRules.CanBeCast(_widgetmaker, _colorWidget), "ColorWidget is NOT a WidgetMaker");
         }
 
         [Test]
         public void BadPluginToInterface()
         {
-            Assert.AreEqual(false, Plugin.CanBeCast(_iwidget, _moneywidgetmaker), "MoneyWidgetMaker is NOT an IWidget");
-        }
-
-        [Test]
-        public void Get_concrete_key_from_attribute_if_it_exists()
-        {
-            Plugin plugin = new Plugin(typeof(ColorWidget));
-            Assert.AreEqual("Color", plugin.ConcreteKey);
+            Assert.AreEqual(false, TypeRules.CanBeCast(_iwidget, _moneywidgetmaker), "MoneyWidgetMaker is NOT an IWidget");
         }
 
         [Test]
@@ -86,19 +100,6 @@ namespace StructureMap.Testing.Graph
             Assert.IsTrue(mustang.Engine is PushrodEngine);
         }
 
-        [Test]
-        public void CanMakeObjectInstanceActivator()
-        {
-            Plugin plugin = new Plugin(typeof (DefaultGateway));
-            Assert.IsTrue(!plugin.HasConstructorArguments(), "DefaultGateway can be just an activator");
-        }
-
-        [Test]
-        public void CanNotMakeObjectInstanceActivator()
-        {
-            Plugin plugin = new Plugin(typeof (ComplexRule));
-            Assert.IsTrue(plugin.HasConstructorArguments(), "ComplexRule cannot be just an activator");
-        }
 
         [Test]
         public void CanNotPluginWithoutAttribute()
@@ -110,7 +111,8 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void CanPluginWithAttribute()
         {
-            Assert.AreEqual(true, Plugin.IsExplicitlyMarkedAsPlugin(_iwidget, _colorwidget), "ColorWidget plugs into IWidget");
+            Assert.AreEqual(true, Plugin.IsExplicitlyMarkedAsPlugin(_iwidget, _colorWidget),
+                            "ColorWidget plugs into IWidget");
         }
 
 
@@ -118,19 +120,12 @@ namespace StructureMap.Testing.Graph
         public void CreateImplicitMementoWithNoConstructorArguments()
         {
             Plugin plugin = new Plugin(typeof (DefaultGateway), "Default");
+            Assert.IsTrue(plugin.CanBeAutoFilled);
 
-            InstanceMemento memento = plugin.CreateImplicitMemento();
-            Assert.IsNotNull(memento);
-            Assert.AreEqual("Default", memento.InstanceKey);
-            Assert.AreEqual("Default", memento.ConcreteKey);
-        }
+            ConfiguredInstance instance = (ConfiguredInstance) plugin.CreateImplicitInstance();
 
-        [Test]
-        public void CreateImplicitMementoWithSomeConstructorArgumentsReturnValueIsNull()
-        {
-            Plugin plugin = new Plugin(typeof (Strategy), "Default");
-            InstanceMemento memento = plugin.CreateImplicitMemento();
-            Assert.IsNull(memento);
+            Assert.AreEqual("Default", instance.Name);
+            Assert.AreEqual(typeof(DefaultGateway), instance.PluggedType);
         }
 
         [Test]
@@ -153,23 +148,10 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
-        public void CreatesAnImplicitMementoForAPluggedTypeThatCanBeAutoFilled()
-        {
-            Plugin plugin = new Plugin(typeof (Mustang));
-            InstanceMemento memento = plugin.CreateImplicitMemento();
-
-            Assert.IsNotNull(memento);
-            Assert.AreEqual(plugin.ConcreteKey, memento.InstanceKey);
-            Assert.AreEqual(plugin.ConcreteKey, memento.ConcreteKey);
-        }
-
-        [Test]
         public void DoesNotCreateAnImplicitMementoForAPluggedTypeThatCanBeAutoFilled()
         {
             Plugin plugin = new Plugin(typeof (GrandPrix));
-            InstanceMemento memento = plugin.CreateImplicitMemento();
-
-            Assert.IsNull(memento);
+            Assert.IsFalse(plugin.CanBeAutoFilled);
         }
 
         [Test]
@@ -182,9 +164,35 @@ namespace StructureMap.Testing.Graph
             Assert.AreEqual(expected, actual);
         }
 
+        [Test]
+        public void FindFirstConstructorArgumentOfType_in_a_setter_too()
+        {
+            Plugin plugin = new Plugin(typeof(GTO));
+
+            Assert.AreEqual("Engine", plugin.FindFirstConstructorArgumentOfType<IEngine>());
+        }
+
+        public class GTO
+        {
+            private IEngine _engine;
+
+
+            public GTO(string name, double price)
+            {
+            }
+
+            [SetterProperty]
+            public IEngine Engine
+            {
+                get { return _engine; }
+                set { _engine = value; }
+            }
+        }
+
         [Test,
          ExpectedException(typeof (StructureMapException),
-            ExpectedMessage = "StructureMap Exception Code:  302\nThere is no argument of type StructureMap.Testing.Widget.IWidget for concrete type StructureMap.Testing.Graph.GrandPrix"
+             ExpectedMessage =
+             "StructureMap Exception Code:  302\nThere is no argument of type StructureMap.Testing.Widget.IWidget for concrete type StructureMap.Testing.Graph.GrandPrix"
              )]
         public void FindFirstConstructorArgumentOfTypeNegativeCase()
         {
@@ -193,10 +201,17 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
+        public void Get_concrete_key_from_attribute_if_it_exists()
+        {
+            Plugin plugin = new Plugin(typeof (ColorWidget));
+            Assert.AreEqual("Color", plugin.ConcreteKey);
+        }
+
+        [Test]
         public void GetFirstMarkedConstructor()
         {
-            Plugin plugin = new Plugin(typeof (ComplexRule));
-            ConstructorInfo constructor = plugin.GetConstructor();
+            Constructor ctor = new Constructor(typeof (ComplexRule));
+            ConstructorInfo constructor = ctor.Ctor;
 
             Assert.IsNotNull(constructor);
             Assert.AreEqual(7, constructor.GetParameters().Length, "Should have 7 inputs, not 8");
@@ -205,8 +220,8 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void GetGreediestConstructor()
         {
-            Plugin plugin = new Plugin(typeof (GreaterThanRule));
-            ConstructorInfo constructor = plugin.GetConstructor();
+            Constructor ctor = new Constructor(typeof (GreaterThanRule));
+            ConstructorInfo constructor = ctor.Ctor;
 
             Assert.IsNotNull(constructor);
             Assert.AreEqual(2, constructor.GetParameters().Length, "Should have 2 inputs");
@@ -216,13 +231,13 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void GoodPluginToAbstractClass()
         {
-            Assert.AreEqual(true, Plugin.CanBeCast(_widgetmaker, _moneywidgetmaker), "MoneyWidgetMaker is a WidgetMaker");
+            Assert.AreEqual(true, TypeRules.CanBeCast(_widgetmaker, _moneywidgetmaker), "MoneyWidgetMaker is a WidgetMaker");
         }
 
         [Test]
         public void GoodPluginToInterface()
         {
-            Assert.AreEqual(true, Plugin.CanBeCast(_iwidget, _colorwidget), "ColorWidget is an IWidget");
+            Assert.AreEqual(true, TypeRules.CanBeCast(_iwidget, _colorWidget), "ColorWidget is an IWidget");
         }
 
         [Test]
@@ -230,8 +245,7 @@ namespace StructureMap.Testing.Graph
         {
             try
             {
-                Plugin plugin = new Plugin(typeof (ClassWithNoConstructor));
-                plugin.GetConstructor();
+                Constructor ctor = new Constructor(typeof (ClassWithNoConstructor));
                 Assert.Fail("Should have thrown a StructureMapException");
             }
             catch (StructureMapException ex)
@@ -244,30 +258,23 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
-        public void ValidationMethods()
-        {
-            MemberInfo[] methods = _plugin.ValidationMethods;
-            Assert.IsNotNull(methods);
-            Assert.AreEqual(methods.Length, 2);
-        }
-
-        [Test]
         public void Visit_arguments()
         {
             MockRepository mocks = new MockRepository();
-            IPluginArgumentVisitor visitor = mocks.CreateMock<IPluginArgumentVisitor>();
+            IArgumentVisitor visitor = mocks.CreateMock<IArgumentVisitor>();
 
             using (mocks.Record())
             {
-                visitor.Child("engine", typeof(IEngine));
-                visitor.ChildArray("engines", typeof(IEngine));
-                visitor.Primitive("name");
-                visitor.Primitive("age");
-                visitor.Primitive("color");
-                visitor.Primitive("LastName");
-                visitor.Primitive("Income");
-                visitor.Child("Car", typeof(IAutomobile));
-                visitor.ChildArray("Fleet", typeof(IAutomobile));
+                visitor.ChildParameter(param("engine"));
+                visitor.ChildArrayParameter(param("engines"));
+                visitor.StringParameter(param("name"));
+                visitor.PrimitiveParameter(param("age"));
+                visitor.EnumParameter(param("breed"));
+                visitor.StringSetter(prop("LastName"));
+                visitor.PrimitiveSetter(prop("Income"));
+                visitor.ChildSetter(prop("Car"));
+                visitor.ChildArraySetter(prop("Fleet"));
+                visitor.EnumSetter(prop("OtherBreed"));
             }
 
             using (mocks.Playback())
@@ -280,42 +287,49 @@ namespace StructureMap.Testing.Graph
 
     public class LotsOfStuff
     {
-        private string _lastName;
-        private double _income;
         private IAutomobile _car;
         private IAutomobile[] _fleet;
+        private double _income;
+        private string _lastName;
+        private BreedEnum _otherBreed;
 
-        public LotsOfStuff(IEngine engine, IEngine[] engines, string name, int age, Color color)
+        public LotsOfStuff(IEngine engine, IEngine[] engines, string name, int age, BreedEnum breed)
         {
-            
         }
 
-        [StructureMap.Attributes.SetterProperty]
+        [SetterProperty]
         public string LastName
         {
             get { return _lastName; }
             set { _lastName = value; }
         }
 
-        [StructureMap.Attributes.SetterProperty]
+        [SetterProperty]
         public double Income
         {
             get { return _income; }
             set { _income = value; }
         }
 
-        [StructureMap.Attributes.SetterProperty]
+        [SetterProperty]
         public IAutomobile Car
         {
             get { return _car; }
             set { _car = value; }
         }
 
-        [StructureMap.Attributes.SetterProperty]
+        [SetterProperty]
         public IAutomobile[] Fleet
         {
             get { return _fleet; }
             set { _fleet = value; }
+        }
+
+        [SetterProperty]
+        public BreedEnum OtherBreed
+        {
+            get { return _otherBreed; }
+            set { _otherBreed = value; }
         }
     }
 
@@ -342,14 +356,14 @@ namespace StructureMap.Testing.Graph
     [Pluggable("GrandPrix")]
     public class GrandPrix : IAutomobile
     {
-        private readonly string _color;
+        private readonly string _breed;
         private readonly IEngine _engine;
         private readonly int _horsePower;
 
-        public GrandPrix(int horsePower, string color, IEngine engine)
+        public GrandPrix(int horsePower, string breed, IEngine engine)
         {
             _horsePower = horsePower;
-            _color = color;
+            _breed = breed;
             _engine = engine;
         }
     }

@@ -24,24 +24,22 @@ namespace StructureMap.Testing.Pipeline
         {
             MockRepository mocks = new MockRepository();
             InstanceInterceptor interceptor = mocks.CreateMock<InstanceInterceptor>();
-            IInstanceCreator instanceCreator = mocks.CreateMock<IInstanceCreator>();
+            IBuildSession buildSession = mocks.CreateMock<IBuildSession>();
 
 
             InstanceUnderTest instanceUnderTest = new InstanceUnderTest();
             instanceUnderTest.Interceptor = interceptor;
 
             object objectReturnedByInterceptor = new object();
+            
             using (mocks.Record())
             {
                 Expect.Call(interceptor.Process(instanceUnderTest.TheInstanceThatWasBuilt)).Return(objectReturnedByInterceptor);
-
-                Expect.Call(instanceCreator.ApplyInterception(typeof(object), objectReturnedByInterceptor))
-                    .Return(objectReturnedByInterceptor);
             }
 
             using (mocks.Playback())
             {
-                Assert.AreEqual(objectReturnedByInterceptor, instanceUnderTest.Build(typeof (object), instanceCreator));
+                Assert.AreEqual(objectReturnedByInterceptor, instanceUnderTest.Build(typeof (object), buildSession));
             }
         }
 
@@ -53,7 +51,7 @@ namespace StructureMap.Testing.Pipeline
         public object TheInstanceThatWasBuilt = new object();
 
 
-        protected override object build(Type pluginType, IInstanceCreator creator)
+        protected override object build(Type pluginType, IBuildSession session)
         {
             return TheInstanceThatWasBuilt;
         }

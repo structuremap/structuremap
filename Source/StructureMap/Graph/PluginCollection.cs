@@ -10,7 +10,7 @@ namespace StructureMap.Graph
     public class PluginCollection : IEnumerable<Plugin>
     {
         private readonly PluginFamily _family;
-        private readonly Dictionary<string, Plugin> _plugins = new Dictionary<string, Plugin>();
+        private readonly Dictionary<Type, Plugin> _plugins = new Dictionary<Type, Plugin>();
 
         public PluginCollection(PluginFamily family)
         {
@@ -42,18 +42,7 @@ namespace StructureMap.Graph
         {
             get
             {
-                Plugin returnValue = null;
-
-                foreach (Plugin plugin in _plugins.Values)
-                {
-                    if (plugin.PluggedType.Equals(PluggedType))
-                    {
-                        returnValue = plugin;
-                        break;
-                    }
-                }
-
-                return returnValue;
+                return _plugins[PluggedType];
             }
         }
 
@@ -66,9 +55,12 @@ namespace StructureMap.Graph
         {
             get
             {
-                if (_plugins.ContainsKey(concreteKey))
+                foreach (KeyValuePair<Type, Plugin> pair in _plugins)
                 {
-                    return _plugins[concreteKey] as Plugin;
+                    if (pair.Value.ConcreteKey == concreteKey)
+                    {
+                        return pair.Value;
+                    }
                 }
 
                 return null;
@@ -90,29 +82,26 @@ namespace StructureMap.Graph
 
         public void Add(Plugin plugin)
         {
-            // Reject if a duplicate ConcreteKey
-            if (_plugins.ContainsKey(plugin.ConcreteKey))
+            if (_plugins.ContainsKey(plugin.PluggedType))
             {
-                // Don't duplicate, but merge setters
-                Plugin peer = this[plugin.ConcreteKey];
-                if (peer.PluggedType == plugin.PluggedType)
-                {
-                    peer.MergeSetters(plugin);
-                    return;
-                }
-                else
-                {
-                    throw new StructureMapException(113, plugin.ConcreteKey, _family.PluginType.AssemblyQualifiedName);
-                }
+                Plugin peer = this[plugin.PluggedType];
+                peer.MergeSetters(plugin);
+
+                // Last ConcreteKey wins
+                peer.ConcreteKey = plugin.ConcreteKey;
+
+                return;
             }
 
+
             // Reject if the PluggedType cannot be upcast to the PluginType
-            if (!Plugin.CanBeCast(_family.PluginType, plugin.PluggedType))
+            if (!TypeRules.CanBeCast(_family.PluginType, plugin.PluggedType))
             {
+                // TODO -- get this logged
                 throw new StructureMapException(114, plugin.PluggedType.FullName, _family.PluginType.AssemblyQualifiedName);
             }
 
-            _plugins.Add(plugin.ConcreteKey, plugin);
+            _plugins.Add(plugin.PluggedType, plugin);
         }
 
         /// <summary>
@@ -122,13 +111,14 @@ namespace StructureMap.Graph
         /// <returns></returns>
         public bool HasPlugin(string concreteKey)
         {
-            return _plugins.ContainsKey(concreteKey);
+            return this[concreteKey] != null;
         }
 
 
         public void Remove(string concreteKey)
         {
-            _plugins.Remove(concreteKey);
+            Plugin plugin = this[concreteKey];
+            _plugins.Remove(plugin.PluggedType);
         }
 
         public Plugin FindOrCreate(Type pluggedType, bool createDefaultInstanceOfType)
@@ -165,15 +155,7 @@ namespace StructureMap.Graph
 
         public bool HasPlugin(Type pluggedType)
         {
-            foreach (KeyValuePair<string, Plugin> pair in _plugins)
-            {
-                if (pair.Value.PluggedType == pluggedType)
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return _plugins.ContainsKey(pluggedType);
         }
     }
 }

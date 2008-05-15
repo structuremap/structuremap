@@ -59,7 +59,7 @@ namespace StructureMap
         /// <returns></returns>
         public PluginGraph Build()
         {
-            NormalGraphBuilder graphBuilder = new NormalGraphBuilder(_registries, _graph);
+            GraphBuilder graphBuilder = new GraphBuilder(_registries, _graph);
             buildPluginGraph(graphBuilder);
 
             _graph.Seal();

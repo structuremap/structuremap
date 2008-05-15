@@ -22,7 +22,7 @@ namespace StructureMap.Testing.Configuration
 
             ConfigurationParser parser = new ConfigurationParser(doc.DocumentElement);
 
-            NormalGraphBuilder builder = new NormalGraphBuilder(new Registry[0]);
+            GraphBuilder builder = new GraphBuilder(new Registry[0]);
             parser.ParseProfilesAndMachines(builder);
 
         }

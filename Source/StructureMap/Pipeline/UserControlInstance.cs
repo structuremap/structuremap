@@ -18,7 +18,7 @@ namespace StructureMap.Pipeline
         }
 
 
-        protected override object build(Type pluginType, IInstanceCreator creator)
+        protected override object build(Type pluginType, IBuildSession session)
         {
             // TODO:  VALIDATE that the type works
             return new Page().LoadControl(_url);

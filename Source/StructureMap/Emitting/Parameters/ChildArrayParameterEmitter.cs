@@ -10,19 +10,7 @@ namespace StructureMap.Emitting.Parameters
     /// </summary>
     public class ChildArrayParameterEmitter : ParameterEmitter
     {
-        protected override bool canProcess(Type parameterType)
-        {
-            bool returnValue = false;
-
-            if (parameterType.IsArray)
-            {
-                returnValue = (!parameterType.GetElementType().IsPrimitive);
-            }
-
-            return returnValue;
-        }
-
-        protected override void generate(ILGenerator ilgen, ParameterInfo parameter)
+        public void Ctor(ILGenerator ilgen, ParameterInfo parameter)
         {
             Type parameterType = parameter.ParameterType;
             string parameterName = parameter.Name;
@@ -34,18 +22,23 @@ namespace StructureMap.Emitting.Parameters
         private void putChildArrayFromInstanceMementoOntoStack(ILGenerator ilgen, Type argumentType, string argumentName)
         {
             ilgen.Emit(OpCodes.Ldarg_2);
-            ilgen.Emit(OpCodes.Ldstr, argumentType.GetElementType().AssemblyQualifiedName);
+            
+            //ilgen.Emit(OpCodes.Ldstr, argumentType.GetElementType().AssemblyQualifiedName);
+            ilgen.Emit(OpCodes.Ldtoken, argumentType.GetElementType());
+            MethodInfo method = typeof(Type).GetMethod("GetTypeFromHandle");
+            ilgen.Emit(OpCodes.Call, method);
+            
             ilgen.Emit(OpCodes.Ldarg_1);
 
             ilgen.Emit(OpCodes.Ldstr, argumentName);
             callInstanceMemento(ilgen, "GetChildrenArray");
 
-            MethodInfo methodCreateInstanceArray = (typeof (StructureMap.Pipeline.IInstanceCreator).GetMethod("CreateInstanceArray"));
+            MethodInfo methodCreateInstanceArray = (typeof (StructureMap.Pipeline.IBuildSession).GetMethod("CreateInstanceArray"));
             ilgen.Emit(OpCodes.Callvirt, methodCreateInstanceArray);
             cast(ilgen, argumentType);
         }
 
-        protected override void generateSetter(ILGenerator ilgen, PropertyInfo property)
+        public void Setter(ILGenerator ilgen, PropertyInfo property)
         {
             ilgen.Emit(OpCodes.Ldloc_0);
             putChildArrayFromInstanceMementoOntoStack(ilgen, property.PropertyType, property.Name);

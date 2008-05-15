@@ -6,6 +6,7 @@ using NUnit.Framework;
 using StructureMap.Emitting;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
+using StructureMap.Testing.Pipeline;
 using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing.Container
@@ -32,7 +33,7 @@ namespace StructureMap.Testing.Container
 
                 if (builder != null)
                 {
-                    rule = (ComplexRule) builder.BuildInstance(instance, new InstanceManager());
+                    rule = (ComplexRule) builder.BuildInstance(instance, new StubBuildSession());
                 }
             }
             catch (Exception e)
@@ -44,7 +45,6 @@ namespace StructureMap.Testing.Container
 
         #endregion
 
-        private Assembly assem;
         private InstanceBuilder builder;
         private Exception ex;
         private IConfiguredInstance instance;

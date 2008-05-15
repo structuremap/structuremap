@@ -9,12 +9,7 @@ namespace StructureMap.Emitting.Parameters
     /// </summary>
     public class PrimitiveParameterEmitter : ParameterEmitter
     {
-        protected override bool canProcess(Type parameterType)
-        {
-            return (parameterType.IsPrimitive && !parameterType.Equals(typeof (string)));
-        }
-
-        protected override void generate(ILGenerator ilgen, ParameterInfo parameter)
+        public void Ctor(ILGenerator ilgen, ParameterInfo parameter)
         {
             ilgen.Emit(OpCodes.Ldarg_1);
             ilgen.Emit(OpCodes.Ldstr, parameter.Name);
@@ -31,7 +26,7 @@ namespace StructureMap.Emitting.Parameters
         }
 
 
-        protected override void generateSetter(ILGenerator ilgen, PropertyInfo property)
+        public void Setter(ILGenerator ilgen, PropertyInfo property)
         {
             ilgen.Emit(OpCodes.Ldloc_0);
             ilgen.Emit(OpCodes.Ldarg_1);

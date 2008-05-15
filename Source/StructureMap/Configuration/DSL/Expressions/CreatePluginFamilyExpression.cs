@@ -15,7 +15,7 @@ namespace StructureMap.Configuration.DSL.Expressions
     public class CreatePluginFamilyExpression<PLUGINTYPE> : IExpression
     {
         private readonly List<Action<PluginFamily>> _alterations = new List<Action<PluginFamily>>();
-        private readonly List<IExpression> _children = new List<IExpression>();
+        private readonly List<Action<PluginGraph>> _children = new List<Action<PluginGraph>>();
         private readonly Type _pluginType;
         private readonly InstanceScope _scope = InstanceScope.PerRequest;
 
@@ -31,20 +31,14 @@ namespace StructureMap.Configuration.DSL.Expressions
             PluginFamily family = graph.FindFamily(_pluginType);
             family.SetScopeTo(_scope);
 
-            foreach (IExpression child in _children)
-            {
-                child.Configure(graph);
-            }
-
-            foreach (Action<PluginFamily> alteration in _alterations)
-            {
-                alteration(family);
-            }
+            // TODO:  clean up with 3.5
+            _children.ForEach(delegate(Action<PluginGraph> action) { action(graph); });
+            _alterations.ForEach(delegate(Action<PluginFamily> action) { action(family); });
         }
 
         #endregion
 
-        // TODO:  Try alterAndContinue(f => {});
+        // TODO:  3.5, Try alterAndContinue(f => {});
 
         /// <summary>
         /// Sets the default instance of a Type to the definition represented by builder
@@ -122,21 +116,37 @@ namespace StructureMap.Configuration.DSL.Expressions
         }
 
 
-        public CreatePluginFamilyExpression<PLUGINTYPE> OnCreation(StartupHandler<PLUGINTYPE> handler)
+        public CreatePluginFamilyExpression<PLUGINTYPE> OnCreation(Action<PLUGINTYPE> handler)
         {
-            _alterations.Add(
-                delegate(PluginFamily family) { family.InstanceInterceptor = new StartupInterceptor<PLUGINTYPE>(handler); });
+            _children.Add(
+                delegate(PluginGraph graph)
+                    {
+                        InterceptionFunction function = delegate(object target)
+                                                            {
+                                                                handler((PLUGINTYPE) target);
+                                                                return target;
+                                                            };
+
+                        PluginTypeInterceptor interceptor = new PluginTypeInterceptor(typeof(PLUGINTYPE), function);
+                        graph.InterceptorLibrary.AddInterceptor(interceptor);
+                    });
 
             return this;
         }
 
         public CreatePluginFamilyExpression<PLUGINTYPE> EnrichWith(EnrichmentHandler<PLUGINTYPE> handler)
         {
-            _alterations.Add(
-                delegate(PluginFamily family)
-                    {
-                        family.InstanceInterceptor = new EnrichmentInterceptor<PLUGINTYPE>(handler);
-                    });
+            _children.Add(
+                delegate(PluginGraph graph)
+                {
+                    InterceptionFunction function = delegate(object target)
+                                                        {
+                                                            return handler((PLUGINTYPE)target);
+                                                        };
+
+                    PluginTypeInterceptor interceptor = new PluginTypeInterceptor(typeof(PLUGINTYPE), function);
+                    graph.InterceptorLibrary.AddInterceptor(interceptor);
+                });
 
             return this;
         }

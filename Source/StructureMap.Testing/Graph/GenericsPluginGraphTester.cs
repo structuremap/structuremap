@@ -33,9 +33,9 @@ namespace StructureMap.Testing.Graph
             PluginGraph pluginGraph = new PluginGraph();
             PluginFamily family = pluginGraph.FindFamily(typeof (IGenericService<>));
             family.DefaultInstanceKey = "Default";
-            family.Plugins.Add(typeof (GenericService<>), "Default");
-            family.Plugins.Add(typeof (SecondGenericService<>), "Second");
-            family.Plugins.Add(typeof (ThirdGenericService<>), "Third");
+            family.AddPlugin(typeof (GenericService<>), "Default");
+            family.AddPlugin(typeof (SecondGenericService<>), "Second");
+            family.AddPlugin(typeof (ThirdGenericService<>), "Third");
 
             InstanceManager manager = new InstanceManager(pluginGraph);
 
@@ -53,9 +53,9 @@ namespace StructureMap.Testing.Graph
         {
             PluginGraph pluginGraph = new PluginGraph();
             PluginFamily family = pluginGraph.FindFamily(typeof(IGenericService<>));
-            family.Plugins.Add(typeof (GenericService<>), "Default");
-            family.Plugins.Add(typeof (SecondGenericService<>), "Second");
-            family.Plugins.Add(typeof (ThirdGenericService<>), "Third");
+            family.AddPlugin(typeof (GenericService<>), "Default");
+            family.AddPlugin(typeof (SecondGenericService<>), "Second");
+            family.AddPlugin(typeof (ThirdGenericService<>), "Third");
 
             PluginFamily templatedFamily = GenericsPluginGraph.CreateTemplatedClone(family, typeof(int));
 
@@ -73,9 +73,9 @@ namespace StructureMap.Testing.Graph
         {
             PluginGraph pluginGraph = new PluginGraph();
             PluginFamily family = pluginGraph.FindFamily(typeof(IGenericService3<,,>));
-            family.Plugins.Add(typeof (GenericService3<,,>), "Default");
-            family.Plugins.Add(typeof (SecondGenericService3<,,>), "Second");
-            family.Plugins.Add(typeof (ThirdGenericService3<,,>), "Third");
+            family.AddPlugin(typeof (GenericService3<,,>), "Default");
+            family.AddPlugin(typeof (SecondGenericService3<,,>), "Second");
+            family.AddPlugin(typeof (ThirdGenericService3<,,>), "Third");
 
             PluginFamily templatedFamily = GenericsPluginGraph.CreateTemplatedClone(family, typeof (int), typeof (bool), typeof (string));
 
@@ -110,9 +110,9 @@ namespace StructureMap.Testing.Graph
         {
             PluginGraph pluginGraph = new PluginGraph();
             PluginFamily family = pluginGraph.FindFamily(typeof(IGenericService<>));
-            family.Plugins.Add(typeof (GenericService<>), "Default");
-            family.Plugins.Add(typeof (SecondGenericService<>), "Second");
-            family.Plugins.Add(typeof (ThirdGenericService<>), "Third");
+            family.AddPlugin(typeof (GenericService<>), "Default");
+            family.AddPlugin(typeof (SecondGenericService<>), "Second");
+            family.AddPlugin(typeof (ThirdGenericService<>), "Third");
 
             GenericsPluginGraph genericsGraph = new GenericsPluginGraph();
             genericsGraph.AddFamily(family);

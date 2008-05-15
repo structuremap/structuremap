@@ -1,5 +1,6 @@
 using System;
 using System.Xml;
+using NUnit.Framework;
 using StructureMap.Configuration;
 using StructureMap.Graph;
 using StructureMap.Testing.TestData;
@@ -68,16 +69,6 @@ namespace StructureMap.Testing
                 pluginGraph.Assemblies.Add(assemblyName);
             }
             return pluginGraph;
-        }
-
-        public static InstanceFactory CreateInstanceFactory(Type pluginType, string[] assemblyNames)
-        {
-            PluginGraph pluginGraph = createPluginGraphFromAssemblyNames(assemblyNames);
-            pluginGraph.FindFamily(pluginType);
-            pluginGraph.Seal();
-
-            InstanceManager manager = new InstanceManager(pluginGraph);
-            return (InstanceFactory) manager[pluginType];
         }
 
         public static InstanceFactory Factory<T>()

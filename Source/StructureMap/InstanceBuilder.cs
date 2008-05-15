@@ -19,6 +19,6 @@ namespace StructureMap
 
         public abstract Type PluggedType { get; }
 
-        public abstract object BuildInstance(IConfiguredInstance instance, StructureMap.Pipeline.IInstanceCreator creator);
+        public abstract object BuildInstance(IConfiguredInstance instance, IBuildSession session);
     }
 }

@@ -6,15 +6,9 @@ namespace StructureMap.Pipeline
     {
         Instance[] GetChildrenArray(string propertyName);
         string GetProperty(string propertyName);
-        object GetChild(string propertyName, Type pluginType, IInstanceCreator instanceCreator);
-        InstanceBuilder FindBuilder(InstanceBuilderList builders);
-
-        string ConcreteKey
-        {
-            get;
-            set;
-        }
+        object GetChild(string propertyName, Type pluginType, IBuildSession buildSession);
 
         string Name { get;}
+        string ConcreteKey { get; set;}
     }
 }

@@ -115,18 +115,28 @@
       <Link>CommonAssemblyInfo.cs</Link>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="BuildSession.cs" />
     <Compile Include="Configuration\ProfileBuilder.cs" />
     <Compile Include="Diagnostics\Tokens.cs" />
-    <Compile Include="Emitting\ConstructorEmitter.cs" />
+    <Compile Include="Emitting\ArgumentEmitter.cs" />
+    <Compile Include="Graph\Constructor.cs" />
+    <Compile Include="Graph\IArgumentVisitor.cs" />
     <Compile Include="Graph\IPluginFamily.cs" />
     <Compile Include="Graph\AssemblyScanner.cs" />
+    <Compile Include="Graph\TypeRules.cs" />
     <Compile Include="InstanceBuilderList.cs" />
     <Compile Include="InstanceFamily.cs" />
-    <Compile Include="Pipeline\BuildStrategies.cs" />
+    <Compile Include="PipelineGraph.cs" />
+    <Compile Include="Pipeline\BuildPolicy.cs" />
+    <Compile Include="Pipeline\CacheInterceptor.cs" />
     <Compile Include="Pipeline\ConfiguredInstance.cs" />
     <Compile Include="Pipeline\ConstructorInstance.cs" />
     <Compile Include="Pipeline\DefaultInstance.cs" />
     <Compile Include="Pipeline\HttpContextBuildPolicy.cs" />
+    <Compile Include="Pipeline\HybridBuildPolicy.cs" />
+    <Compile Include="Pipeline\IBuildInterceptor.cs" />
+    <Compile Include="Pipeline\IBuildPolicy.cs" />
+    <Compile Include="Pipeline\IBuildSession.cs" />
     <Compile Include="Pipeline\IConfiguredInstance.cs" />
     <Compile Include="Pipeline\ILocationPolicy.cs" />
     <Compile Include="Pipeline\Instance.cs" />
@@ -181,7 +191,7 @@
     <Compile Include="Configuration\IGraphBuilder.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Configuration\NormalGraphBuilder.cs">
+    <Compile Include="Configuration\GraphBuilder.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Configuration\ProfileAndMachineParser.cs" />

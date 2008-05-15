@@ -31,7 +31,7 @@ namespace StructureMap.Testing.Container
         [Test]
         public void DoNotFindPluginWithNoPublicCTOR()
         {
-            Assert.IsFalse(Plugin.CanBeCast(typeof (TypeIWantToFind), typeof (GreenType)));
+            Assert.IsFalse(TypeRules.CanBeCast(typeof (TypeIWantToFind), typeof (GreenType)));
         }
 
 

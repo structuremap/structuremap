@@ -21,22 +21,21 @@ namespace StructureMap.Testing.Pipeline
         public void Build_happy_path()
         {
             MockRepository mocks = new MockRepository();
-            StructureMap.Pipeline.IInstanceCreator instanceCreator =
-                mocks.CreateMock<StructureMap.Pipeline.IInstanceCreator>();
+            StructureMap.Pipeline.IBuildSession buildSession =
+                mocks.CreateMock<StructureMap.Pipeline.IBuildSession>();
 
             DefaultClass theDefault = new DefaultClass();
 
 
             using (mocks.Record())
             {
-                Expect.Call(instanceCreator.CreateInstance(typeof(IDefault))).Return(theDefault);
-                Expect.Call(instanceCreator.ApplyInterception(typeof(IDefault), theDefault)).Return(theDefault);
+                Expect.Call(buildSession.CreateInstance(typeof(IDefault))).Return(theDefault);
             }
 
             using (mocks.Playback())
             {
                 DefaultInstance instance = new DefaultInstance();
-                Assert.AreSame(theDefault, instance.Build(typeof(IDefault), instanceCreator));
+                Assert.AreSame(theDefault, instance.Build(typeof(IDefault), buildSession));
             }
         }
 
