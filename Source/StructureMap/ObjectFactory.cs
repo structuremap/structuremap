@@ -110,7 +110,7 @@ namespace StructureMap
             ConfiguredInstance instance = new ConfiguredInstance();
             instance.PluggedType = typeof (CONCRETETYPE);
             instance.Name = instanceKey;
-            
+
             manager.AddInstance<PLUGINTYPE>(instance);
         }
 

@@ -44,15 +44,17 @@ namespace StructureMap.Pipeline
         }
 
 
+        protected override ConfiguredInstance thisInstance
+        {
+            get { return this; }
+        }
+
+        #region IConfiguredInstance Members
+
         public string ConcreteKey
         {
             get { return _concreteKey; }
             set { _concreteKey = value; }
-        }
-
-        protected override ConfiguredInstance thisInstance
-        {
-            get { return this; }
         }
 
         Instance[] IConfiguredInstance.GetChildrenArray(string propertyName)
@@ -76,6 +78,7 @@ namespace StructureMap.Pipeline
             return getChild(propertyName, pluginType, buildSession);
         }
 
+        #endregion
 
         protected void mergeIntoThis(ConfiguredInstance instance)
         {
@@ -257,7 +260,7 @@ namespace StructureMap.Pipeline
 
             if (string.IsNullOrEmpty(propertyName))
             {
-                throw new StructureMapException(305, typeof(T));
+                throw new StructureMapException(305, typeof (T));
             }
 
             return propertyName;

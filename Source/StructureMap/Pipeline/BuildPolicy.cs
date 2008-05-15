@@ -1,5 +1,4 @@
 using System;
-using System.Data;
 
 namespace StructureMap.Pipeline
 {
@@ -15,7 +14,7 @@ namespace StructureMap.Pipeline
             }
 
             object builtObject = instance.Build(pluginType, buildSession);
-            
+
             // TODO:  error handling around the interception
             return buildSession.ApplyInterception(pluginType, builtObject);
         }

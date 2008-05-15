@@ -1,7 +1,5 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Reflection;
 using StructureMap.Attributes;
 
@@ -34,7 +32,7 @@ namespace StructureMap.Graph
             {
                 SetterProperty[] returnValue = new SetterProperty[_properties.Count];
                 _properties.Values.CopyTo(returnValue, 0);
-                
+
                 return returnValue;
             }
         }
@@ -43,6 +41,20 @@ namespace StructureMap.Graph
         {
             get { return _properties.Count; }
         }
+
+        #region IEnumerable<SetterProperty> Members
+
+        IEnumerator<SetterProperty> IEnumerable<SetterProperty>.GetEnumerator()
+        {
+            return _properties.Values.GetEnumerator();
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            return ((IEnumerable<SetterProperty>) this).GetEnumerator();
+        }
+
+        #endregion
 
         public SetterProperty Add(string propertyName)
         {
@@ -73,16 +85,6 @@ namespace StructureMap.Graph
         public bool Contains(string propertyName)
         {
             return _properties.ContainsKey(propertyName);
-        }
-
-        IEnumerator<SetterProperty> IEnumerable<SetterProperty>.GetEnumerator()
-        {
-            return _properties.Values.GetEnumerator();
-        }
-
-        public IEnumerator GetEnumerator()
-        {
-            return ((IEnumerable<SetterProperty>) this).GetEnumerator();
         }
 
         public void Merge(SetterPropertyCollection setters)
@@ -120,7 +122,7 @@ namespace StructureMap.Graph
         {
             foreach (SetterProperty setterProperty in this)
             {
-                if (setterProperty.Property.PropertyType.Equals(typeof(T)))
+                if (setterProperty.Property.PropertyType.Equals(typeof (T)))
                 {
                     return setterProperty.Name;
                 }

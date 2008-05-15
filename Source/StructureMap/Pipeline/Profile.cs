@@ -6,8 +6,8 @@ namespace StructureMap.Pipeline
 {
     public class Profile
     {
-        private string _name;
         private Dictionary<Type, Instance> _instances = new Dictionary<Type, Instance>();
+        private string _name;
 
         public Profile(string name)
         {

@@ -44,7 +44,5 @@ namespace StructureMap.Interceptors
         {
             return FindInterceptor(type).Interceptors;
         }
-
-
     }
 }

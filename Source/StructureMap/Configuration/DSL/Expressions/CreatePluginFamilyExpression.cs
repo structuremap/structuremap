@@ -4,11 +4,9 @@ using StructureMap.Attributes;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
-using StructureMap.Source;
 
 namespace StructureMap.Configuration.DSL.Expressions
 {
-
     /// <summary>
     /// Represents the parameters for creating instances of a given Type
     /// </summary>
@@ -59,10 +57,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         public CreatePluginFamilyExpression<PLUGINTYPE> AddInstance(Instance instance)
         {
             // TODO:  Validate pluggability
-            _alterations.Add(delegate(PluginFamily family)
-                                 {
-                                     family.AddInstance(instance);
-                                 });
+            _alterations.Add(delegate(PluginFamily family) { family.AddInstance(instance); });
 
             return this;
         }
@@ -96,10 +91,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <returns></returns>
         public CreatePluginFamilyExpression<PLUGINTYPE> CacheBy(InstanceScope scope)
         {
-            _alterations.Add(delegate(PluginFamily family)
-                                 {
-                                     family.SetScopeTo(scope);
-                                 });
+            _alterations.Add(delegate(PluginFamily family) { family.SetScopeTo(scope); });
 
             return this;
         }
@@ -127,7 +119,7 @@ namespace StructureMap.Configuration.DSL.Expressions
                                                                 return target;
                                                             };
 
-                        PluginTypeInterceptor interceptor = new PluginTypeInterceptor(typeof(PLUGINTYPE), function);
+                        PluginTypeInterceptor interceptor = new PluginTypeInterceptor(typeof (PLUGINTYPE), function);
                         graph.InterceptorLibrary.AddInterceptor(interceptor);
                     });
 
@@ -138,15 +130,12 @@ namespace StructureMap.Configuration.DSL.Expressions
         {
             _children.Add(
                 delegate(PluginGraph graph)
-                {
-                    InterceptionFunction function = delegate(object target)
-                                                        {
-                                                            return handler((PLUGINTYPE)target);
-                                                        };
+                    {
+                        InterceptionFunction function = delegate(object target) { return handler((PLUGINTYPE) target); };
 
-                    PluginTypeInterceptor interceptor = new PluginTypeInterceptor(typeof(PLUGINTYPE), function);
-                    graph.InterceptorLibrary.AddInterceptor(interceptor);
-                });
+                        PluginTypeInterceptor interceptor = new PluginTypeInterceptor(typeof (PLUGINTYPE), function);
+                        graph.InterceptorLibrary.AddInterceptor(interceptor);
+                    });
 
             return this;
         }
@@ -172,29 +161,20 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         public CreatePluginFamilyExpression<PLUGINTYPE> InterceptConstructionWith(IBuildInterceptor interceptor)
         {
-            _alterations.Add(delegate(PluginFamily family)
-                                 {
-                                     family.AddInterceptor(interceptor);
-                                 });
+            _alterations.Add(delegate(PluginFamily family) { family.AddInterceptor(interceptor); });
             return this;
         }
 
         public CreatePluginFamilyExpression<PLUGINTYPE> AddInstancesFrom(MementoSource source)
         {
-            _alterations.Add(delegate(PluginFamily family)
-                                 {
-                                     family.AddMementoSource(source);
-                                 });
+            _alterations.Add(delegate(PluginFamily family) { family.AddMementoSource(source); });
 
             return this;
         }
 
         public CreatePluginFamilyExpression<PLUGINTYPE> AliasConcreteType<PLUGGEDTYPE>(string concreteKey)
         {
-            _alterations.Add(delegate(PluginFamily family)
-                                 {
-                                     family.AddPlugin(typeof(PLUGGEDTYPE), concreteKey);
-                                 });
+            _alterations.Add(delegate(PluginFamily family) { family.AddPlugin(typeof (PLUGGEDTYPE), concreteKey); });
 
             return this;
         }

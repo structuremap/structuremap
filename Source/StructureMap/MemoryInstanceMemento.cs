@@ -1,8 +1,5 @@
-using System;
 using System.Collections;
 using System.Collections.Specialized;
-using StructureMap.Graph;
-using StructureMap.Pipeline;
 
 namespace StructureMap
 {
@@ -45,8 +42,8 @@ namespace StructureMap
         #endregion
 
         private readonly Hashtable _children = new Hashtable();
-        private string _concreteKey;
         private readonly NameValueCollection _properties = new NameValueCollection();
+        private string _concreteKey;
         private string _instanceKey;
         private bool _isReference;
         private string _referenceKey;
@@ -89,11 +86,6 @@ namespace StructureMap
             get { return _concreteKey; }
         }
 
-        public void SetConcreteKey(string concreteKey)
-        {
-            _concreteKey = concreteKey;
-        }
-
         /// <summary>
         /// See <cref>InstanceMemento</cref>
         /// </summary>
@@ -116,6 +108,11 @@ namespace StructureMap
         public override string ReferenceKey
         {
             get { return _referenceKey; }
+        }
+
+        public void SetConcreteKey(string concreteKey)
+        {
+            _concreteKey = concreteKey;
         }
 
         /// <summary>

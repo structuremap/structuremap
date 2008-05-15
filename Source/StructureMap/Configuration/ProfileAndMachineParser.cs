@@ -1,4 +1,3 @@
-using System;
 using System.Xml;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
@@ -9,9 +8,9 @@ namespace StructureMap.Configuration
     // TODO:  3.5 cleanup
     public class ProfileAndMachineParser
     {
-        private readonly IProfileBuilder _profileBuilder;
-        private readonly IGraphBuilder _graphBuilder;
         private readonly XmlMementoCreator _creator;
+        private readonly IGraphBuilder _graphBuilder;
+        private readonly IProfileBuilder _profileBuilder;
         private readonly XmlNode _structureMapNode;
 
         public ProfileAndMachineParser(IGraphBuilder graphBuilder, XmlNode structureMapNode, XmlMementoCreator creator)
@@ -91,9 +90,6 @@ namespace StructureMap.Configuration
                                                               family.AddInstance(memento);
                                                               function(fullName, key);
                                                           });
-
-
-            
         }
 
         private XmlNodeList findNodes(string nodeName)

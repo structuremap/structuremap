@@ -40,10 +40,7 @@ namespace StructureMap.Graph
         /// <returns></returns>
         public Plugin this[Type PluggedType]
         {
-            get
-            {
-                return _plugins[PluggedType];
-            }
+            get { return _plugins[PluggedType]; }
         }
 
         /// <summary>
@@ -66,6 +63,20 @@ namespace StructureMap.Graph
                 return null;
             }
         }
+
+        #region IEnumerable<Plugin> Members
+
+        IEnumerator<Plugin> IEnumerable<Plugin>.GetEnumerator()
+        {
+            return _plugins.Values.GetEnumerator();
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            return ((IEnumerable<Plugin>) this).GetEnumerator();
+        }
+
+        #endregion
 
         /// <summary>
         /// Adds a new Plugin by the PluggedType
@@ -98,7 +109,8 @@ namespace StructureMap.Graph
             if (!TypeRules.CanBeCast(_family.PluginType, plugin.PluggedType))
             {
                 // TODO -- get this logged
-                throw new StructureMapException(114, plugin.PluggedType.FullName, _family.PluginType.AssemblyQualifiedName);
+                throw new StructureMapException(114, plugin.PluggedType.FullName,
+                                                _family.PluginType.AssemblyQualifiedName);
             }
 
             _plugins.Add(plugin.PluggedType, plugin);
@@ -127,16 +139,6 @@ namespace StructureMap.Graph
             Add(plugin);
 
             return plugin;
-        }
-
-        IEnumerator<Plugin> IEnumerable<Plugin>.GetEnumerator()
-        {
-            return _plugins.Values.GetEnumerator();
-        }
-
-        public IEnumerator GetEnumerator()
-        {
-            return ((IEnumerable<Plugin>) this).GetEnumerator();
         }
 
         public List<Plugin> FindAutoFillablePlugins()

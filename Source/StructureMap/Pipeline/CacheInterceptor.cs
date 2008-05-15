@@ -7,7 +7,7 @@ namespace StructureMap.Pipeline
         private readonly object _locker = new object();
         private IBuildPolicy _innerPolicy = new BuildPolicy();
 
-        #region IInstanceInterceptor Members
+        #region IBuildInterceptor Members
 
         public IBuildPolicy InnerPolicy
         {
@@ -41,9 +41,9 @@ namespace StructureMap.Pipeline
             return clonedCache;
         }
 
-        protected abstract CacheInterceptor clone();
-
         #endregion
+
+        protected abstract CacheInterceptor clone();
 
         protected abstract void storeInCache(string instanceKey, Type pluginType, object instance);
         protected abstract bool isCached(string instanceKey, Type pluginType);

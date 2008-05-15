@@ -1,5 +1,3 @@
-using System;
-
 namespace StructureMap.Configuration
 {
     /// <summary>

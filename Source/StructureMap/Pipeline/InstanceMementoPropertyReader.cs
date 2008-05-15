@@ -11,7 +11,8 @@ namespace StructureMap.Pipeline
         private readonly PluginGraph _pluginGraph;
         private readonly Type _pluginType;
 
-        public InstanceMementoPropertyReader(ConfiguredInstance instance, InstanceMemento memento, PluginGraph pluginGraph, Type pluginType)
+        public InstanceMementoPropertyReader(ConfiguredInstance instance, InstanceMemento memento,
+                                             PluginGraph pluginGraph, Type pluginType)
         {
             _instance = instance;
             _memento = memento;
@@ -19,39 +20,7 @@ namespace StructureMap.Pipeline
             _pluginType = pluginType;
         }
 
-        private void copyPrimitive(string name)
-        {
-            _instance.SetProperty(name, _memento.GetProperty(name));
-        }
-
-        private void copyChild(string name, Type childType)
-        {
-            InstanceMemento child = _memento.GetChildMemento(name);
-            
-            Instance childInstance = child == null ? new DefaultInstance() : child.ReadInstance(_pluginGraph, childType);
-            _instance.SetChild(name, childInstance);
-        }
-
-        private void copyChildArray(string name, Type childType)
-        {
-            InstanceMemento[] mementoes = _memento.GetChildrenArray(name);
-
-            // TODO -- want to default to mementoes == null is all
-            if (mementoes == null)
-            {
-                mementoes = new InstanceMemento[0];
-            }
-
-            Instance[] children = new Instance[mementoes.Length];
-            for (int i = 0; i < mementoes.Length; i++)
-            {
-                InstanceMemento memento = mementoes[i];
-                children[i] = memento.ReadInstance(_pluginGraph, childType);
-            }
-
-            _instance.SetChildArray(name, children);
-        }
-
+        #region IArgumentVisitor Members
 
         public void PrimitiveSetter(PropertyInfo property)
         {
@@ -101,6 +70,41 @@ namespace StructureMap.Pipeline
         public void ChildArrayParameter(ParameterInfo parameter)
         {
             copyChildArray(parameter.Name, parameter.ParameterType.GetElementType());
+        }
+
+        #endregion
+
+        private void copyPrimitive(string name)
+        {
+            _instance.SetProperty(name, _memento.GetProperty(name));
+        }
+
+        private void copyChild(string name, Type childType)
+        {
+            InstanceMemento child = _memento.GetChildMemento(name);
+
+            Instance childInstance = child == null ? new DefaultInstance() : child.ReadInstance(_pluginGraph, childType);
+            _instance.SetChild(name, childInstance);
+        }
+
+        private void copyChildArray(string name, Type childType)
+        {
+            InstanceMemento[] mementoes = _memento.GetChildrenArray(name);
+
+            // TODO -- want to default to mementoes == null is all
+            if (mementoes == null)
+            {
+                mementoes = new InstanceMemento[0];
+            }
+
+            Instance[] children = new Instance[mementoes.Length];
+            for (int i = 0; i < mementoes.Length; i++)
+            {
+                InstanceMemento memento = mementoes[i];
+                children[i] = memento.ReadInstance(_pluginGraph, childType);
+            }
+
+            _instance.SetChildArray(name, children);
         }
     }
 }

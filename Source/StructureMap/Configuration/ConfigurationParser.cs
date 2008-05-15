@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
@@ -48,7 +47,7 @@ namespace StructureMap.Configuration
                         includedPath = Path.Combine(folder, fileName);
                         includedDoc.Load(includedPath);
 
-                        
+
                         ConfigurationParser parser = new ConfigurationParser(includedDoc.DocumentElement);
                         list.Add(parser);
                     }
@@ -86,7 +85,7 @@ namespace StructureMap.Configuration
         public ConfigurationParser(XmlNode structureMapNode)
         {
             _structureMapNode = structureMapNode;
-            
+
             // TODO:  3.5 cleanup with extension method
             XmlMementoStyle mementoStyle = XmlMementoStyle.NodeNormalized;
 
@@ -128,13 +127,9 @@ namespace StructureMap.Configuration
             foreach (XmlElement familyElement in familyNodes)
             {
                 TypePath typePath = TypePath.CreateFromXmlNode(familyElement);
-                
-                builder.ConfigureFamily(typePath, delegate(PluginFamily family)
-                                                      {
-                                                          attachInstances(family, familyElement, builder);
-                                                      });
 
-                
+                builder.ConfigureFamily(typePath,
+                                        delegate(PluginFamily family) { attachInstances(family, familyElement, builder); });
             }
         }
 

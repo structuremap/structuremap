@@ -84,11 +84,10 @@ namespace StructureMap.Graph
         {
             return type.IsArray && !IsSimple(type.GetElementType());
         }
-        
+
         protected bool IsConcrete(Type type)
         {
             return !type.IsInterface && !type.IsAbstract;
         }
-
     }
 }

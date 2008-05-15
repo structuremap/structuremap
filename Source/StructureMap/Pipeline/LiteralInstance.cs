@@ -25,6 +25,5 @@ namespace StructureMap.Pipeline
 
             return _object;
         }
-
     }
 }

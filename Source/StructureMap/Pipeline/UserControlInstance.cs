@@ -18,16 +18,15 @@ namespace StructureMap.Pipeline
         }
 
 
+        public string Url
+        {
+            get { return _url; }
+        }
+
         protected override object build(Type pluginType, IBuildSession session)
         {
             // TODO:  VALIDATE that the type works
             return new Page().LoadControl(_url);
-        }
-
-
-        public string Url
-        {
-            get { return _url; }
         }
     }
 }

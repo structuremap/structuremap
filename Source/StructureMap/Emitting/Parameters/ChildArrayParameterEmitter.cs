@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using System.Reflection.Emit;
+using StructureMap.Pipeline;
 
 namespace StructureMap.Emitting.Parameters
 {
@@ -22,18 +23,18 @@ namespace StructureMap.Emitting.Parameters
         private void putChildArrayFromInstanceMementoOntoStack(ILGenerator ilgen, Type argumentType, string argumentName)
         {
             ilgen.Emit(OpCodes.Ldarg_2);
-            
+
             //ilgen.Emit(OpCodes.Ldstr, argumentType.GetElementType().AssemblyQualifiedName);
             ilgen.Emit(OpCodes.Ldtoken, argumentType.GetElementType());
-            MethodInfo method = typeof(Type).GetMethod("GetTypeFromHandle");
+            MethodInfo method = typeof (Type).GetMethod("GetTypeFromHandle");
             ilgen.Emit(OpCodes.Call, method);
-            
+
             ilgen.Emit(OpCodes.Ldarg_1);
 
             ilgen.Emit(OpCodes.Ldstr, argumentName);
             callInstanceMemento(ilgen, "GetChildrenArray");
 
-            MethodInfo methodCreateInstanceArray = (typeof (StructureMap.Pipeline.IBuildSession).GetMethod("CreateInstanceArray"));
+            MethodInfo methodCreateInstanceArray = (typeof (IBuildSession).GetMethod("CreateInstanceArray"));
             ilgen.Emit(OpCodes.Callvirt, methodCreateInstanceArray);
             cast(ilgen, argumentType);
         }

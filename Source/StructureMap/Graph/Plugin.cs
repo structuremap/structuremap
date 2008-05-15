@@ -1,6 +1,5 @@
 using System;
 using System.Reflection;
-using StructureMap.Emitting;
 using StructureMap.Pipeline;
 
 namespace StructureMap.Graph
@@ -13,11 +12,11 @@ namespace StructureMap.Graph
     public class Plugin : TypeRules
     {
         public static readonly string DEFAULT = "DEFAULT";
+        private readonly Constructor _constructor;
 
-        private string _concreteKey;
         private readonly Type _pluggedType;
         private readonly SetterPropertyCollection _setters;
-        private readonly Constructor _constructor;
+        private string _concreteKey;
 
         #region constructors
 
@@ -44,7 +43,6 @@ namespace StructureMap.Graph
 
         #endregion
 
-
         /// <summary>
         /// The ConcreteKey that identifies the Plugin within a PluginFamily
         /// </summary>
@@ -68,18 +66,12 @@ namespace StructureMap.Graph
         /// </summary>
         public SetterPropertyCollection Setters
         {
-            get
-            {
-                return _setters;
-            }
+            get { return _setters; }
         }
 
         public bool CanBeAutoFilled
         {
-            get
-            {
-                return _constructor.CanBeAutoFilled() && _setters.CanBeAutoFilled();
-            }
+            get { return _constructor.CanBeAutoFilled() && _setters.CanBeAutoFilled(); }
         }
 
         public override string ToString()
@@ -95,13 +87,13 @@ namespace StructureMap.Graph
 
         public string FindFirstConstructorArgumentOfType<T>()
         {
-            string returnValue = 
+            string returnValue =
                 _constructor.FindFirstConstructorArgumentOfType<T>() ??
                 _setters.FindFirstConstructorArgumentOfType<T>();
 
             if (returnValue == null)
             {
-                throw new StructureMapException(302, typeof(T).FullName, _pluggedType.FullName);    
+                throw new StructureMapException(302, typeof (T).FullName, _pluggedType.FullName);
             }
 
             return returnValue;
@@ -133,5 +125,4 @@ namespace StructureMap.Graph
             _setters.Visit(arguments);
         }
     }
-
 }

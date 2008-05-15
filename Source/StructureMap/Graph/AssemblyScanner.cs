@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 using StructureMap.Configuration.DSL;
 using StructureMap.Diagnostics;
 
@@ -13,8 +12,8 @@ namespace StructureMap.Graph
     // TODO:  redo in 3.5 w/ Lambdas
     public class AssemblyScanner
     {
-        private readonly GraphLog _log;
         private readonly List<Assembly> _assemblies = new List<Assembly>();
+        private readonly GraphLog _log;
 
         public AssemblyScanner(GraphLog log)
         {
@@ -33,7 +32,7 @@ namespace StructureMap.Graph
                           {
                               if (Registry.IsPublicRegistry(type))
                               {
-                                  Registry registry = (Registry)Activator.CreateInstance(type);
+                                  Registry registry = (Registry) Activator.CreateInstance(type);
                                   registry.ConfigurePluginGraph(pluginGraph);
                               }
                           });
@@ -45,12 +44,12 @@ namespace StructureMap.Graph
         private void findFamiliesAndPlugins(PluginGraph pluginGraph)
         {
             scanTypes(delegate(Type type)
-              {
-                  if (PluginFamilyAttribute.MarkedAsPluginFamily(type))
-                  {
-                      pluginGraph.CreateFamily(type);
-                  }
-              });
+                          {
+                              if (PluginFamilyAttribute.MarkedAsPluginFamily(type))
+                              {
+                                  pluginGraph.CreateFamily(type);
+                              }
+                          });
 
             scanTypes(delegate(Type type)
                           {
@@ -69,7 +68,7 @@ namespace StructureMap.Graph
 
         private void scanTypes(Action<Type> action)
         {
-            scanTypes(new Action<Type>[]{action});
+            scanTypes(new Action<Type>[] {action});
         }
 
         private void scanTypes(IEnumerable<Action<Type>> actions)

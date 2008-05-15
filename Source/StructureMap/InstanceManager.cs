@@ -18,7 +18,6 @@ namespace StructureMap
 
         public InstanceManager() : this(new PluginGraph())
         {
-            
         }
 
         /// <summary>
@@ -41,10 +40,7 @@ namespace StructureMap
 
         protected MissingFactoryFunction onMissingFactory
         {
-            set
-            {
-                _pipelineGraph.OnMissingFactory = value;
-            }
+            set { _pipelineGraph.OnMissingFactory = value; }
         }
 
         #region IInstanceManager Members
@@ -93,7 +89,7 @@ namespace StructureMap
 
             IBuildSession session = withNewSession();
 
-            foreach (T instance in forType(typeof(T)).GetAllInstances(session))
+            foreach (T instance in forType(typeof (T)).GetAllInstances(session))
             {
                 list.Add(instance);
             }
@@ -115,11 +111,6 @@ namespace StructureMap
         public object CreateInstance(Type pluginType, string instanceKey)
         {
             return withNewSession().CreateInstance(pluginType, instanceKey);
-        }
-
-        private IBuildSession withNewSession()
-        {
-            return new BuildSession(_pipelineGraph, _interceptorLibrary);
         }
 
 
@@ -245,6 +236,11 @@ namespace StructureMap
         }
 
         #endregion
+
+        private IBuildSession withNewSession()
+        {
+            return new BuildSession(_pipelineGraph, _interceptorLibrary);
+        }
 
 
         protected IInstanceFactory forType(Type type)

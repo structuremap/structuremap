@@ -66,7 +66,7 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         public ScanAssembliesExpression IncludeAssemblyContainingType<T>()
         {
-            _assemblies.Add(typeof(T).Assembly);
+            _assemblies.Add(typeof (T).Assembly);
 
             return this;
         }

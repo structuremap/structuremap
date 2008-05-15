@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
 
@@ -8,8 +6,8 @@ namespace StructureMap
 {
     public class BuildSession : IBuildSession
     {
-        private readonly PipelineGraph _pipelineGraph;
         private readonly InterceptorLibrary _interceptorLibrary;
+        private readonly PipelineGraph _pipelineGraph;
 
         public BuildSession(PipelineGraph pipelineGraph, InterceptorLibrary interceptorLibrary)
         {
@@ -17,10 +15,7 @@ namespace StructureMap
             _interceptorLibrary = interceptorLibrary;
         }
 
-        private IInstanceFactory forType(Type pluginType)
-        {
-            return _pipelineGraph.ForType(pluginType);
-        }
+        #region IBuildSession Members
 
         public object CreateInstance(Type type, string name)
         {
@@ -78,6 +73,13 @@ namespace StructureMap
         public InstanceBuilder FindBuilderByConcreteKey(Type pluginType, string concreteKey)
         {
             return forType(pluginType).FindBuilderByConcreteKey(concreteKey);
+        }
+
+        #endregion
+
+        private IInstanceFactory forType(Type pluginType)
+        {
+            return _pipelineGraph.ForType(pluginType);
         }
     }
 }

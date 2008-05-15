@@ -20,16 +20,19 @@ namespace StructureMap.Pipeline
             get { return _referenceKey; }
         }
 
-        protected override object build(Type pluginType, IBuildSession session)
-        {
-            return session.CreateInstance(pluginType, _referenceKey);
-        }
-
+        #region IEquatable<ReferencedInstance> Members
 
         public bool Equals(ReferencedInstance referencedInstance)
         {
             if (referencedInstance == null) return false;
             return Equals(_referenceKey, referencedInstance._referenceKey);
+        }
+
+        #endregion
+
+        protected override object build(Type pluginType, IBuildSession session)
+        {
+            return session.CreateInstance(pluginType, _referenceKey);
         }
 
         public override bool Equals(object obj)

@@ -6,8 +6,6 @@ namespace StructureMap.Graph
 {
     public interface IPluginFamily
     {
-        void AddMementoSource(MementoSource source);
-
         /// <summary>
         /// The InstanceKey of the default instance of the PluginFamily
         /// </summary>
@@ -16,10 +14,9 @@ namespace StructureMap.Graph
         /// <summary>
         /// The CLR Type that defines the "Plugin" interface for the PluginFamily
         /// </summary>
-        Type PluginType
-        {
-            get;
-        }
+        Type PluginType { get; }
+
+        void AddMementoSource(MementoSource source);
 
         void SetScopeTo(InstanceScope scope);
         void AddInterceptor(IBuildInterceptor interceptor);

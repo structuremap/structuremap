@@ -11,8 +11,8 @@ namespace StructureMap.Configuration.DSL.Expressions
     {
         private readonly ProfileExpression _parent;
         private readonly Type _pluginType;
-        private string _instanceKey = string.Empty;
         private Instance _instance;
+        private string _instanceKey = string.Empty;
 
         public InstanceDefaultExpression(Type pluginType, ProfileExpression parent)
         {
@@ -37,7 +37,7 @@ namespace StructureMap.Configuration.DSL.Expressions
             {
                 _instanceKey = Profile.InstanceKeyForProfile(profileName);
                 _instance.Name = _instanceKey;
-                pluginGraph.FindFamily(_pluginType).AddInstance(_instance);   
+                pluginGraph.FindFamily(_pluginType).AddInstance(_instance);
             }
             else if (!string.IsNullOrEmpty(_instanceKey))
             {
@@ -46,7 +46,7 @@ namespace StructureMap.Configuration.DSL.Expressions
 
             if (_instance != null)
             {
-                pluginGraph.ProfileManager.SetDefault(profileName, _pluginType, _instance);   
+                pluginGraph.ProfileManager.SetDefault(profileName, _pluginType, _instance);
             }
             else
             {

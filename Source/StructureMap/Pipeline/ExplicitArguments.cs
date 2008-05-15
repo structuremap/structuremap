@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using StructureMap.Pipeline;
 
 namespace StructureMap.Pipeline
 {
@@ -70,7 +69,7 @@ namespace StructureMap.Pipeline
             }
             else
             {
-                PluggedType = typeof(PLUGINTYPE);
+                PluggedType = typeof (PLUGINTYPE);
             }
         }
 
@@ -86,7 +85,7 @@ namespace StructureMap.Pipeline
             {
                 return _args.GetArg(propertyName);
             }
-            
+
             return base.getChild(propertyName, pluginType, buildSession);
         }
     }

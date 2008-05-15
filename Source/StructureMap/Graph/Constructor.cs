@@ -5,6 +5,20 @@ namespace StructureMap.Graph
 {
     public class Constructor : TypeRules
     {
+        private readonly Type _pluggedType;
+        private ConstructorInfo _ctor;
+
+        public Constructor(Type pluggedType)
+        {
+            _pluggedType = pluggedType;
+            _ctor = GetConstructor(pluggedType);
+        }
+
+        public ConstructorInfo Ctor
+        {
+            get { return _ctor; }
+        }
+
         /// <summary>
         /// Returns the System.Reflection.ConstructorInfo for the PluggedType.  Uses either
         /// the "greediest" constructor with the most arguments or the constructor function
@@ -48,16 +62,6 @@ namespace StructureMap.Graph
             return returnValue;
         }
 
-
-        private readonly Type _pluggedType;
-        private ConstructorInfo _ctor;
-
-        public Constructor(Type pluggedType)
-        {
-            _pluggedType = pluggedType;
-            _ctor = GetConstructor(pluggedType);
-        }
-
         public bool CanBeAutoFilled()
         {
             foreach (ParameterInfo parameter in _ctor.GetParameters())
@@ -75,7 +79,7 @@ namespace StructureMap.Graph
         {
             foreach (ParameterInfo info in _ctor.GetParameters())
             {
-                if (info.ParameterType.Equals(typeof(T)))
+                if (info.ParameterType.Equals(typeof (T)))
                 {
                     return info.Name;
                 }
@@ -84,11 +88,6 @@ namespace StructureMap.Graph
             return null;
         }
 
-
-        public ConstructorInfo Ctor
-        {
-            get { return _ctor; }
-        }
 
         public void Visit(IArgumentVisitor visitor)
         {

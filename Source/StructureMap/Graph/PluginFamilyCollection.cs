@@ -9,8 +9,8 @@ namespace StructureMap.Graph
     /// </summary>
     public class PluginFamilyCollection : IEnumerable<PluginFamily>
     {
-        private readonly PluginGraph _pluginGraph;
         private readonly Dictionary<Type, PluginFamily> _pluginFamilies;
+        private readonly PluginGraph _pluginGraph;
 
         public PluginFamilyCollection(PluginGraph pluginGraph)
         {
@@ -37,6 +37,19 @@ namespace StructureMap.Graph
             get { return _pluginFamilies.Count; }
         }
 
+        #region IEnumerable<PluginFamily> Members
+
+        IEnumerator<PluginFamily> IEnumerable<PluginFamily>.GetEnumerator()
+        {
+            return _pluginFamilies.Values.GetEnumerator();
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            return ((IEnumerable<PluginFamily>) this).GetEnumerator();
+        }
+
+        #endregion
 
         public PluginFamily Add(PluginFamily family)
         {
@@ -68,18 +81,6 @@ namespace StructureMap.Graph
         public bool Contains<T>()
         {
             return Contains(typeof (T));
-        }
-
-
-
-        IEnumerator<PluginFamily> IEnumerable<PluginFamily>.GetEnumerator()
-        {
-            return _pluginFamilies.Values.GetEnumerator();
-        }
-
-        public IEnumerator GetEnumerator()
-        {
-            return ((IEnumerable<PluginFamily>) this).GetEnumerator();
         }
     }
 }

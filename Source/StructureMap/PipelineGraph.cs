@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 
@@ -13,10 +12,13 @@ namespace StructureMap
         private readonly Dictionary<Type, IInstanceFactory> _factories = new Dictionary<Type, IInstanceFactory>();
         private readonly GenericsPluginGraph _genericsGraph = new GenericsPluginGraph();
         private readonly ProfileManager _profileManager;
-        private MissingFactoryFunction _missingFactory = 
-            delegate(Type pluginType, ProfileManager profileManager) {
-                                                                                                                      return
-                                                                                                                          null; };
+
+        private MissingFactoryFunction _missingFactory =
+            delegate(Type pluginType, ProfileManager profileManager)
+                {
+                    return
+                        null;
+                };
 
         public PipelineGraph(PluginGraph graph)
         {
@@ -101,25 +103,25 @@ namespace StructureMap
 
         public Instance AddInstance<PLUGINTYPE, PLUGGEDTYPE>()
         {
-            return ForType(typeof(PLUGINTYPE)).AddType<PLUGGEDTYPE>();
+            return ForType(typeof (PLUGINTYPE)).AddType<PLUGGEDTYPE>();
         }
 
         public void AddInstance<T>(Instance instance)
         {
-            ForType(typeof(T)).AddInstance(instance);
+            ForType(typeof (T)).AddInstance(instance);
         }
 
         public void AddDefaultInstance<PLUGINTYPE, PLUGGEDTYPE>()
         {
             Instance instance = AddInstance<PLUGINTYPE, PLUGGEDTYPE>();
-            _profileManager.SetDefault(typeof(PLUGINTYPE), instance);
+            _profileManager.SetDefault(typeof (PLUGINTYPE), instance);
         }
 
         public void Inject<PLUGINTYPE>(PLUGINTYPE instance)
         {
             LiteralInstance literalInstance = new LiteralInstance(instance);
-            ForType(typeof(PLUGINTYPE)).AddInstance(literalInstance);
-            SetDefault(typeof(PLUGINTYPE), literalInstance);
+            ForType(typeof (PLUGINTYPE)).AddInstance(literalInstance);
+            SetDefault(typeof (PLUGINTYPE), literalInstance);
         }
     }
 }

@@ -10,9 +10,9 @@ namespace StructureMap.Emitting
     /// </summary>
     public class InstanceBuilderAssembly
     {
+        private readonly List<string> _classNames = new List<string>();
         private readonly DynamicAssembly _dynamicAssembly;
         private readonly Type _pluginType;
-        private readonly List<string> _classNames = new List<string>();
 
         public InstanceBuilderAssembly(Type pluginType, IEnumerable<Plugin> plugins)
         {
@@ -86,10 +86,9 @@ namespace StructureMap.Emitting
         {
             Assembly assembly = _dynamicAssembly.Compile();
 
-            return _classNames.ConvertAll<InstanceBuilder>(delegate(string typeName)
-                                                        {
-                                                            return (InstanceBuilder) assembly.CreateInstance(typeName);
-                                                        });
+            return
+                _classNames.ConvertAll<InstanceBuilder>(
+                    delegate(string typeName) { return (InstanceBuilder) assembly.CreateInstance(typeName); });
         }
 
 

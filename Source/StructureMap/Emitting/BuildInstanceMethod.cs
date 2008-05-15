@@ -1,7 +1,5 @@
 using System;
-using System.Reflection;
 using System.Reflection.Emit;
-using StructureMap.Emitting.Parameters;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 
@@ -33,7 +31,7 @@ namespace StructureMap.Emitting
 
         public override Type[] ArgumentList
         {
-            get { return new Type[] { typeof(IConfiguredInstance), typeof(StructureMap.Pipeline.IBuildSession) }; }
+            get { return new Type[] {typeof (IConfiguredInstance), typeof (IBuildSession)}; }
         }
 
         public override string MethodName

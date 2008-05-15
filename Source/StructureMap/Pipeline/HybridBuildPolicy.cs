@@ -14,7 +14,7 @@ namespace StructureMap.Pipeline
                                     : new ThreadLocalStoragePolicy();
         }
 
-        #region IInstanceInterceptor Members
+        #region IBuildInterceptor Members
 
         public IBuildPolicy InnerPolicy
         {

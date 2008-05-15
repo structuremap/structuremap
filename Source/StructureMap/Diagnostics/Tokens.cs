@@ -8,9 +8,9 @@ namespace StructureMap.Diagnostics
 {
     public class GraphLog
     {
-        private List<Error> _errors = new List<Error>();
         private readonly List<Source> _sources = new List<Source>();
         private Source _currentSource;
+        private List<Error> _errors = new List<Error>();
 
         public int ErrorCount
         {
@@ -245,11 +245,6 @@ namespace StructureMap.Diagnostics
         }
 
 
-        public int Code
-        {
-            get { return _code; }
-        }
-
         public Error(StructureMapException exception)
         {
             _code = exception.ErrorCode;
@@ -257,12 +252,12 @@ namespace StructureMap.Diagnostics
             _stackTrace = exception.StackTrace;
         }
 
-        private string getMessage(int errorCode)
+        public int Code
         {
-            ResourceManager resources = new ResourceManager(typeof(StructureMapException));
-            return resources.GetString(errorCode.ToString());
+            get { return _code; }
         }
 
+        #region IEquatable<Error> Members
 
         public bool Equals(Error error)
         {
@@ -274,6 +269,14 @@ namespace StructureMap.Diagnostics
             if (!Equals(PluginType, error.PluginType)) return false;
             if (!Equals(Source, error.Source)) return false;
             return true;
+        }
+
+        #endregion
+
+        private string getMessage(int errorCode)
+        {
+            ResourceManager resources = new ResourceManager(typeof (StructureMapException));
+            return resources.GetString(errorCode.ToString());
         }
 
         public override bool Equals(object obj)

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using StructureMap.Emitting;
 using StructureMap.Graph;
 
@@ -35,7 +34,7 @@ namespace StructureMap
             if (TypeRules.CanBeCast(_pluginType, pluggedType))
             {
                 Plugin plugin = new Plugin(pluggedType);
-                processPlugins(new Plugin[]{plugin});
+                processPlugins(new Plugin[] {plugin});
 
                 return _builders[pluggedType];
             }

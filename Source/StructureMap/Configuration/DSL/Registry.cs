@@ -112,10 +112,8 @@ namespace StructureMap.Configuration.DSL
         {
             ConfiguredInstance instance = new ConfiguredInstance();
 
-            addExpression(delegate (PluginGraph pluginGraph)
-                              {
-                                  pluginGraph.FindFamily(typeof(PLUGINTYPE)).AddInstance(instance);
-                              });
+            addExpression(
+                delegate(PluginGraph pluginGraph) { pluginGraph.FindFamily(typeof (PLUGINTYPE)).AddInstance(instance); });
 
             return instance;
         }
@@ -165,7 +163,7 @@ namespace StructureMap.Configuration.DSL
         public LiteralInstance AddInstanceOf<PLUGINTYPE>(PLUGINTYPE target)
         {
             LiteralInstance literal = new LiteralInstance(target);
-            _graph.FindFamily(typeof(PLUGINTYPE)).AddInstance(literal);
+            _graph.FindFamily(typeof (PLUGINTYPE)).AddInstance(literal);
 
             return literal;
         }
@@ -179,7 +177,7 @@ namespace StructureMap.Configuration.DSL
         public PrototypeInstance AddPrototypeInstanceOf<PLUGINTYPE>(PLUGINTYPE prototype)
         {
             PrototypeInstance expression = new PrototypeInstance((ICloneable) prototype);
-            _graph.FindFamily(typeof(PLUGINTYPE)).AddInstance(expression);
+            _graph.FindFamily(typeof (PLUGINTYPE)).AddInstance(expression);
 
             return expression;
         }
@@ -235,7 +233,7 @@ namespace StructureMap.Configuration.DSL
 
             PluginFamily family = _graph.FindFamily(typeof (PLUGINTYPE));
             family.AddInstance(instance);
-            
+
             return instance;
         }
 

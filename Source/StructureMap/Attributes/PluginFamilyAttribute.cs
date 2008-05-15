@@ -94,7 +94,8 @@ namespace StructureMap
                 }
                 catch (Exception ex)
                 {
-                    throw new StructureMapException(122, ex, SourceType.FullName, family.PluginType.AssemblyQualifiedName);
+                    throw new StructureMapException(122, ex, SourceType.FullName,
+                                                    family.PluginType.AssemblyQualifiedName);
                 }
             }
 

@@ -7,11 +7,11 @@ namespace StructureMap.Pipeline
     public class ProfileManager
     {
         private readonly Profile _default = new Profile("");
-        private readonly Dictionary<string, Profile> _profiles = new Dictionary<string, Profile>();
-        private string _defaultProfileName;
-        private string _defaultMachineProfileName;
         private readonly Profile _machineProfile = new Profile("MACHINE");
+        private readonly Dictionary<string, Profile> _profiles = new Dictionary<string, Profile>();
         private Profile _currentProfile;
+        private string _defaultMachineProfileName;
+        private string _defaultProfileName;
 
 
         public ProfileManager()
@@ -37,7 +37,7 @@ namespace StructureMap.Pipeline
             set
             {
                 // TODO:  Profile cannot be found
-                
+
                 if (string.IsNullOrEmpty(value))
                 {
                     _currentProfile = _default;

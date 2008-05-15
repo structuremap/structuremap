@@ -1,5 +1,4 @@
 using System;
-using StructureMap.Attributes;
 using StructureMap.Graph;
 
 namespace StructureMap.Configuration
@@ -30,5 +29,4 @@ namespace StructureMap.Configuration
         void WithSystemObject<T>(InstanceMemento memento, string context, Action<T> action);
         void WithType(TypePath path, string context, Action<Type> action);
     }
-
 }

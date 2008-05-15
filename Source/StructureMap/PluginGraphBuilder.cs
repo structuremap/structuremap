@@ -32,9 +32,9 @@ namespace StructureMap
 
         #endregion
 
+        private readonly PluginGraph _graph;
         private readonly ConfigurationParser[] _parsers;
         private readonly Registry[] _registries = new Registry[0];
-        private readonly PluginGraph _graph;
 
         #region constructors
 

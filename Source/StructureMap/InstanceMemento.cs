@@ -1,7 +1,6 @@
 using System;
 using StructureMap.Configuration;
 using StructureMap.Graph;
-using StructureMap.Interceptors;
 using StructureMap.Pipeline;
 
 namespace StructureMap
@@ -23,37 +22,7 @@ namespace StructureMap
         /// </summary>
         public string ConcreteKey
         {
-            get
-            {
-                return innerConcreteKey;
-            }
-        }
-
-
-        public virtual Plugin FindPlugin(PluginFamily family)
-        {
-            Plugin plugin = family.Plugins[innerConcreteKey] ?? getPluginByType(family) ??
-                            family.Plugins[Plugin.DEFAULT];
-
-            if (plugin == null)
-            {
-                throw new StructureMapException(201, innerConcreteKey, InstanceKey, family.PluginType.AssemblyQualifiedName);    
-            }
-
-            return plugin;
-        }
-
-        private Plugin getPluginByType(PluginFamily family)
-        {
-            string pluggedTypeName = getPluggedType();
-            if (string.IsNullOrEmpty(pluggedTypeName))
-            {
-                return null;
-            }
-
-            Type pluggedType = new TypePath(pluggedTypeName).FindType();
-
-            return family.Plugins.FindOrCreate(pluggedType, false);
+            get { return innerConcreteKey; }
         }
 
 
@@ -111,6 +80,33 @@ namespace StructureMap
         public bool IsDefault
         {
             get { return (IsReference && ReferenceKey == string.Empty); }
+        }
+
+        public virtual Plugin FindPlugin(PluginFamily family)
+        {
+            Plugin plugin = family.Plugins[innerConcreteKey] ?? getPluginByType(family) ??
+                            family.Plugins[Plugin.DEFAULT];
+
+            if (plugin == null)
+            {
+                throw new StructureMapException(201, innerConcreteKey, InstanceKey,
+                                                family.PluginType.AssemblyQualifiedName);
+            }
+
+            return plugin;
+        }
+
+        private Plugin getPluginByType(PluginFamily family)
+        {
+            string pluggedTypeName = getPluggedType();
+            if (string.IsNullOrEmpty(pluggedTypeName))
+            {
+                return null;
+            }
+
+            Type pluggedType = new TypePath(pluggedTypeName).FindType();
+
+            return family.Plugins.FindOrCreate(pluggedType, false);
         }
 
         /// <summary>
@@ -172,7 +168,6 @@ namespace StructureMap
         protected abstract InstanceMemento getChild(string Key);
 
 
-
         /// <summary>
         /// This method is made public for testing.  It is not necessary for normal usage.
         /// </summary>
@@ -191,7 +186,6 @@ namespace StructureMap
         }
 
 
-
         protected virtual string getPluggedType()
         {
             return getPropertyValue(XmlConstants.PLUGGED_TYPE);
@@ -204,7 +198,7 @@ namespace StructureMap
                 Instance instance = readInstance(pluginGraph, pluginType);
                 instance.Name = InstanceKey;
                 instance.PluginType = pluginType;
-            
+
                 return instance;
             }
             catch (StructureMapException)
@@ -226,12 +220,10 @@ namespace StructureMap
 
             if (IsReference)
             {
-                return new ReferencedInstance(this.ReferenceKey);
+                return new ReferencedInstance(ReferenceKey);
             }
 
             return new ConfiguredInstance(this, pluginGraph, pluginType);
         }
-
-
     }
 }

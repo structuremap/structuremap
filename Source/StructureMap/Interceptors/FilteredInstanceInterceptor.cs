@@ -10,14 +10,16 @@ namespace StructureMap.Interceptors
 
     public class PluginTypeInterceptor : TypeInterceptor
     {
-        private readonly Type _pluginType;
         private readonly InterceptionFunction _function;
+        private readonly Type _pluginType;
 
         public PluginTypeInterceptor(Type pluginType, InterceptionFunction function)
         {
             _pluginType = pluginType;
             _function = function;
         }
+
+        #region TypeInterceptor Members
 
         public bool MatchesType(Type type)
         {
@@ -28,5 +30,7 @@ namespace StructureMap.Interceptors
         {
             return _function(target);
         }
+
+        #endregion
     }
 }

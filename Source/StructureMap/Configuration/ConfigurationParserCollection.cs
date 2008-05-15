@@ -11,8 +11,8 @@ namespace StructureMap.Configuration
     public class ConfigurationParserCollection
     {
         private readonly List<FetchNodeDelegate> _fetchers = new List<FetchNodeDelegate>();
-        private bool _ignoreDefaultFile = false;
         private readonly List<string> _otherFiles = new List<string>();
+        private bool _ignoreDefaultFile = false;
         private bool _useAndEnforceExistenceOfDefaultFile = false;
 
         public bool UseAndEnforceExistenceOfDefaultFile
@@ -55,7 +55,8 @@ namespace StructureMap.Configuration
 
         private bool shouldUseStructureMapConfigFile(string pathToStructureMapConfig)
         {
-            return (_useAndEnforceExistenceOfDefaultFile || File.Exists(pathToStructureMapConfig)) && !_ignoreDefaultFile;
+            return
+                (_useAndEnforceExistenceOfDefaultFile || File.Exists(pathToStructureMapConfig)) && !_ignoreDefaultFile;
         }
 
         private static void addParsersFromFile(string filename, List<ConfigurationParser> list)

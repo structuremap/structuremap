@@ -111,7 +111,7 @@ namespace StructureMap.Graph
             {
                 if (instance.CanBePartOfPluginFamily(templatedFamily))
                 {
-                    templatedFamily.AddInstance((Instance)instance);
+                    templatedFamily.AddInstance((Instance) instance);
                 }
             }
 
@@ -120,7 +120,6 @@ namespace StructureMap.Graph
 
             return templatedFamily;
         }
-
 
 
         public static Plugin CreateTemplatedClone(Plugin plugin, params Type[] types)

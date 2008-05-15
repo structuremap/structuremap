@@ -1,7 +1,6 @@
 using System;
 using System.Reflection;
 using System.Reflection.Emit;
-using StructureMap.Graph;
 using StructureMap.Pipeline;
 
 namespace StructureMap.Emitting.Parameters
@@ -22,6 +21,6 @@ namespace StructureMap.Emitting.Parameters
         protected void cast(ILGenerator ilgen, Type parameterType)
         {
             ilgen.Emit(OpCodes.Castclass, parameterType);
-        }   
+        }
     }
 }

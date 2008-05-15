@@ -111,7 +111,7 @@ namespace StructureMap.Emitting
         public void AddPluggedTypeGetter(Type pluggedType)
         {
             PropertyBuilder prop =
-                _newTypeBuilder.DefineProperty("PluggedType", PropertyAttributes.HasDefault, typeof(Type), null);
+                _newTypeBuilder.DefineProperty("PluggedType", PropertyAttributes.HasDefault, typeof (Type), null);
 
             MethodAttributes atts = MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig |
                                     MethodAttributes.Final | MethodAttributes.SpecialName;
@@ -119,19 +119,19 @@ namespace StructureMap.Emitting
             string getterMethodName = "get_PluggedType";
 
             MethodBuilder methodGet =
-                _newTypeBuilder.DefineMethod(getterMethodName, atts, CallingConventions.Standard, typeof(Type), null);
+                _newTypeBuilder.DefineMethod(getterMethodName, atts, CallingConventions.Standard, typeof (Type), null);
             ILGenerator gen = methodGet.GetILGenerator();
 
-            LocalBuilder ilReturn = gen.DeclareLocal(typeof(Type));
+            LocalBuilder ilReturn = gen.DeclareLocal(typeof (Type));
 
             gen.Emit(OpCodes.Nop);
             gen.Emit(OpCodes.Ldtoken, pluggedType);
 
-            MethodInfo method = typeof(Type).GetMethod("GetTypeFromHandle");
+            MethodInfo method = typeof (Type).GetMethod("GetTypeFromHandle");
             gen.Emit(OpCodes.Call, method);
 
             gen.Emit(OpCodes.Stloc_0);
-            
+
             gen.Emit(OpCodes.Ldloc_0);
             gen.Emit(OpCodes.Ret);
 

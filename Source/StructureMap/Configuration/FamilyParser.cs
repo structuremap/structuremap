@@ -2,7 +2,6 @@ using System;
 using System.Xml;
 using StructureMap.Attributes;
 using StructureMap.Graph;
-using StructureMap.Interceptors;
 using StructureMap.Pipeline;
 using StructureMap.Source;
 
@@ -68,10 +67,11 @@ namespace StructureMap.Configuration
         public void ParseInstanceElement(XmlElement element)
         {
             TypePath pluginTypePath = new TypePath(element.GetAttribute(XmlConstants.PLUGIN_TYPE));
-            
+
             _builder.ConfigureFamily(pluginTypePath, delegate(PluginFamily family)
                                                          {
-                                                             InstanceMemento memento = _mementoCreator.CreateMemento(element);
+                                                             InstanceMemento memento =
+                                                                 _mementoCreator.CreateMemento(element);
                                                              family.AddInstance(memento);
                                                          });
         }
@@ -98,12 +98,8 @@ namespace StructureMap.Configuration
                 InstanceMemento sourceMemento = new XmlAttributeInstanceMemento(sourceNode);
 
                 string context = "MementoSource for " + TypePath.GetAssemblyQualifiedName(family.PluginType);
-                _builder.WithSystemObject<MementoSource>(sourceMemento, context, delegate (MementoSource source)
-                                                                                     {
-                                                                                         family.AddMementoSource(source);
-                                                                                     });
-
-
+                _builder.WithSystemObject<MementoSource>(sourceMemento, context,
+                                                         delegate(MementoSource source) { family.AddMementoSource(source); });
             }
         }
 
@@ -122,14 +118,14 @@ namespace StructureMap.Configuration
                                                                Plugin plugin = new Plugin(pluggedType, concreteKey);
                                                                family.Plugins.Add(plugin);
 
-                                                               foreach (XmlElement setterElement in pluginElement.ChildNodes)
+                                                               foreach (
+                                                                   XmlElement setterElement in pluginElement.ChildNodes)
                                                                {
-                                                                   string setterName = setterElement.GetAttribute("Name");
+                                                                   string setterName =
+                                                                       setterElement.GetAttribute("Name");
                                                                    plugin.Setters.Add(setterName);
                                                                }
                                                            });
-
-
             }
         }
 
@@ -142,17 +138,15 @@ namespace StructureMap.Configuration
                 return;
             }
 
-            string context = "Creating an InstanceInterceptor for " + TypePath.GetAssemblyQualifiedName(family.PluginType);
+            string context = "Creating an InstanceInterceptor for " +
+                             TypePath.GetAssemblyQualifiedName(family.PluginType);
             foreach (XmlNode interceptorNode in interceptorChainNode.ChildNodes)
             {
                 XmlAttributeInstanceMemento interceptorMemento = new XmlAttributeInstanceMemento(interceptorNode);
 
 
-                _builder.WithSystemObject<IBuildInterceptor>(interceptorMemento, context, delegate(IBuildInterceptor interceptor)
-                                                                                                 {
-                                                                                                     family.AddInterceptor(interceptor);
-                                                                                                 });
-                
+                _builder.WithSystemObject<IBuildInterceptor>(interceptorMemento, context,
+                                                             delegate(IBuildInterceptor interceptor) { family.AddInterceptor(interceptor); });
             }
         }
     }

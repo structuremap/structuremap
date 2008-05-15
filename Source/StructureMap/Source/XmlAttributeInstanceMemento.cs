@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Xml;
 using StructureMap.Configuration;
-using StructureMap.Pipeline;
 
 namespace StructureMap.Source
 {

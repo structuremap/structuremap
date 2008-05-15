@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 
@@ -8,25 +6,11 @@ namespace StructureMap.Configuration
 {
     public class ProfileBuilder : IProfileBuilder
     {
-        public static string GetMachineName()
-        {
-            string machineName = string.Empty;
-            try
-            {
-                machineName = Environment.MachineName.ToUpper();
-            }
-            finally
-            {
-            }
-
-            return machineName;
-        }
-
-        private readonly PluginGraph _pluginGraph;
         private readonly string _machineName;
+        private readonly PluginGraph _pluginGraph;
+        private readonly ProfileManager _profileManager;
         private string _lastProfile;
         private bool _useMachineOverrides;
-        private readonly ProfileManager _profileManager;
 
 
         public ProfileBuilder(PluginGraph pluginGraph, string machineName)
@@ -41,6 +25,8 @@ namespace StructureMap.Configuration
             : this(pluginGraph, GetMachineName())
         {
         }
+
+        #region IProfileBuilder Members
 
         public void AddProfile(string profileName)
         {
@@ -80,6 +66,22 @@ namespace StructureMap.Configuration
         public void SetDefaultProfileName(string profileName)
         {
             _profileManager.DefaultProfileName = profileName;
+        }
+
+        #endregion
+
+        public static string GetMachineName()
+        {
+            string machineName = string.Empty;
+            try
+            {
+                machineName = Environment.MachineName.ToUpper();
+            }
+            finally
+            {
+            }
+
+            return machineName;
         }
     }
 }
