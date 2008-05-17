@@ -34,10 +34,10 @@ namespace StructureMap.Testing.Configuration.DSL
             Registry registry = new Registry();
             registry.ForRequestedType<Abstraction>()
                 .AddInstance(
-                ConstructedBy<Abstraction>(delegate { return concretion1; }).WithName("One")
+                    ConstructedBy<Abstraction>(delegate { return concretion1; }).WithName("One")
                 )
                 .AddInstance(
-                ConstructedBy<Abstraction>(delegate { return concretion2; }).WithName("Two")
+                    ConstructedBy<Abstraction>(delegate { return concretion2; }).WithName("Two")
                 );
 
             IInstanceManager manager = registry.BuildInstanceManager();

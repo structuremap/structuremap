@@ -1,3 +1,4 @@
+using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
@@ -11,10 +12,11 @@ using System.Runtime.InteropServices;
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly : ComVisible(false)]
-[assembly : AssemblyVersion("2.5.0.0000")]
-[assembly : AssemblyCopyrightAttribute("Copyright (c) 2007, Jeremy D. Miller")]
-[assembly : AssemblyProductAttribute("StructureMap")]
-[assembly : AssemblyCompanyAttribute("")]
-[assembly : AssemblyConfigurationAttribute("release")]
-[assembly : AssemblyInformationalVersionAttribute("2.5.0.0000")]
+[assembly: ComVisibleAttribute(false)]
+[assembly: AssemblyVersionAttribute("2.5.0.0000")]
+[assembly: AssemblyCopyrightAttribute("Copyright (c) 2007, Jeremy D. Miller")]
+[assembly: AssemblyProductAttribute("StructureMap")]
+[assembly: AssemblyCompanyAttribute("")]
+[assembly: AssemblyConfigurationAttribute("release")]
+[assembly: AssemblyInformationalVersionAttribute("2.5.0.0000")]
+

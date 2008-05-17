@@ -17,6 +17,17 @@ namespace StructureMap.Testing.TestData
         {
         }
 
+        public static PluginGraph CreateFromXml(string xml)
+        {
+            xml = xml.Replace("'", "\"");
+            XmlDocument document = new XmlDocument();
+            document.LoadXml(xml);
+
+            ConfigurationParser parser = new ConfigurationParser(document.DocumentElement);
+            PluginGraphBuilder builder = new PluginGraphBuilder(parser);
+            return builder.Build();
+        }
+
         public static void BackupStructureMapConfig()
         {
             if (File.Exists("StructureMap.config.bak")) File.Delete("StructureMap.config.bak");
@@ -60,6 +71,14 @@ namespace StructureMap.Testing.TestData
             PluginGraphBuilder builder = new PluginGraphBuilder(parser);
 
             return builder.Build();
+        }
+
+        public static void WriteDocument(string fileName, string xml)
+        {
+            XmlDocument document = new XmlDocument();
+            document.LoadXml(xml);
+
+            document.Save(fileName);
         }
 
         public static void WriteDocument(string fileName)

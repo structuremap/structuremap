@@ -25,7 +25,13 @@ namespace StructureMap.Graph
         private IBuildPolicy _policy;
 
         public PluginFamily(Type pluginType)
+            : this(pluginType, new PluginGraph())
         {
+        }
+
+        public PluginFamily(Type pluginType, PluginGraph parent)
+        {
+            _parent = parent;
             _pluginType = pluginType;
             _plugins = new PluginCollection(this);
 
@@ -93,10 +99,15 @@ namespace StructureMap.Graph
 
         public void AddInstance(Instance instance)
         {
+            IDiagnosticInstance diagnosticInstance = instance;
+            if (!diagnosticInstance.CanBePartOfPluginFamily(this))
+            {
+                _parent.Log.RegisterError(106, instance.CreateToken(), _pluginType);
+            }
+
             _instances.Add(instance);
         }
 
-        // TODO -- eliminate this.  Move to GraphBuilder, and wrap error handling around it
 
         // For testing
         public InstanceMemento GetMemento(string instanceKey)
@@ -108,10 +119,13 @@ namespace StructureMap.Graph
         public void Seal()
         {
             _mementoList.ForEach(delegate(InstanceMemento memento)
-                                     {
-                                         Instance instance = memento.ReadInstance(Parent, _pluginType);
-                                         _instances.Add(instance);
-                                     });
+            {
+                _parent.Log.Try(delegate()
+                {
+                    Instance instance = memento.ReadInstance(Parent, _pluginType);
+                    _instances.Add(instance);
+                }).AndLogAnyErrors();
+            });
 
             discoverImplicitInstances();
 
@@ -166,20 +180,26 @@ namespace StructureMap.Graph
         {
             if (!HasPlugin(pluggedType))
             {
-                _plugins.Add(new Plugin(pluggedType));
+                AddPlugin(new Plugin(pluggedType));
             }
         }
 
         public Plugin AddPlugin(Type pluggedType, string key)
         {
             Plugin plugin = new Plugin(pluggedType, key);
-            _plugins.Add(plugin);
+            AddPlugin(plugin);
 
             return plugin;
         }
 
         public void AddPlugin(Plugin plugin)
         {
+            if (_plugins.HasPlugin(plugin.ConcreteKey))
+            {
+                _parent.Log.RegisterError(113, plugin.ConcreteKey, _pluginType);
+            }
+
+
             _plugins.Add(plugin);
         }
 

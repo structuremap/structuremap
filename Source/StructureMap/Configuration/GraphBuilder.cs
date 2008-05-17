@@ -82,7 +82,7 @@ namespace StructureMap.Configuration
             }
             catch (Exception ex)
             {
-                _pluginGraph.Log.RegisterError(103, ex, pluginTypePath.ClassName, pluginTypePath.AssemblyName);
+                _pluginGraph.Log.RegisterError(103, ex, pluginTypePath.AssemblyQualifiedName);
             }
         }
 
@@ -107,6 +107,10 @@ namespace StructureMap.Configuration
             {
                 Type type = path.FindType();
                 action(type);
+            }
+            catch (StructureMapException ex)
+            {
+                _pluginGraph.Log.RegisterError(ex);
             }
             catch (Exception ex)
             {

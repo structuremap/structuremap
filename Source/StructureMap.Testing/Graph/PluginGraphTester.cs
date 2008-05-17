@@ -113,7 +113,6 @@ namespace StructureMap.Testing.Graph
 
         public void Go()
         {
-            // TODO:  Add BigThingy.Go implementation
         }
 
         #endregion

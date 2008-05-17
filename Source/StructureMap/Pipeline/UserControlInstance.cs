@@ -1,5 +1,6 @@
 using System;
 using System.Web.UI;
+using StructureMap.Graph;
 
 namespace StructureMap.Pipeline
 {
@@ -25,8 +26,20 @@ namespace StructureMap.Pipeline
 
         protected override object build(Type pluginType, IBuildSession session)
         {
-            // TODO:  VALIDATE that the type works
-            return new Page().LoadControl(_url);
+            Control control = new Page().LoadControl(_url);
+
+            Type pluggedType = control.GetType();
+            if (!TypeRules.CanBeCast(pluginType, pluggedType))
+            {
+                throw new StructureMapException(303, pluginType, pluggedType);
+            }
+
+            return control;
+        }
+
+        protected override string getDescription()
+        {
+            return "UserControl at " + _url;
         }
     }
 }

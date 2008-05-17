@@ -2,6 +2,7 @@ using System;
 using System.Xml;
 using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
+using StructureMap.Diagnostics;
 using StructureMap.Graph;
 
 namespace StructureMap
@@ -14,19 +15,14 @@ namespace StructureMap
     {
         #region statics
 
+        // Only used in testing
         public static PluginGraph BuildFromXml(XmlDocument document)
         {
-            ConfigurationParser[] parsers = ConfigurationParser.GetParsers(document, "");
-            PluginGraphBuilder builder = new PluginGraphBuilder(parsers, new Registry[0]);
-            return builder.Build();
-        }
+            GraphLog log = new GraphLog();
 
-        public static PluginGraph BuildFromXml(XmlNode structureMapNode)
-        {
-            ConfigurationParser parser = new ConfigurationParser(structureMapNode);
-
-            PluginGraphBuilder builder = new PluginGraphBuilder(parser);
-
+            ConfigurationParser[] parsers = ConfigurationParserBuilder.GetParsers(document.DocumentElement, log);
+            PluginGraphBuilder builder = new PluginGraphBuilder(parsers, new Registry[0], log);
+            
             return builder.Build();
         }
 
@@ -39,15 +35,16 @@ namespace StructureMap
         #region constructors
 
         public PluginGraphBuilder(ConfigurationParser parser)
-            : this(new ConfigurationParser[] {parser}, new Registry[0])
+            : this(new ConfigurationParser[] {parser}, new Registry[0], new GraphLog())
         {
         }
 
-        public PluginGraphBuilder(ConfigurationParser[] parsers, Registry[] registries)
+        public PluginGraphBuilder(ConfigurationParser[] parsers, Registry[] registries, GraphLog log)
         {
             _parsers = parsers;
             _registries = registries;
             _graph = new PluginGraph();
+            _graph.Log = log;
         }
 
         #endregion

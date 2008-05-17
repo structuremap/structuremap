@@ -1,6 +1,7 @@
 using System;
 using NUnit.Framework;
 using Rhino.Mocks;
+using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
@@ -43,6 +44,19 @@ namespace StructureMap.Testing.Pipeline
             }
         }
 
+        [Test]
+        public void Build_the_InstanceToken()
+        {
+            InstanceUnderTest instance = new InstanceUnderTest();
+            instance.Name = "name of instance";
+            IDiagnosticInstance diagnosticInstance = instance;
+
+            InstanceToken token = diagnosticInstance.CreateToken();
+
+            Assert.AreEqual(instance.Name, token.Name);
+            Assert.AreEqual("InstanceUnderTest", token.Description);
+        }
+
 
     }
 
@@ -54,6 +68,11 @@ namespace StructureMap.Testing.Pipeline
         protected override object build(Type pluginType, IBuildSession session)
         {
             return TheInstanceThatWasBuilt;
+        }
+
+        protected override string getDescription()
+        {
+            return "InstanceUnderTest";
         }
     }
 }

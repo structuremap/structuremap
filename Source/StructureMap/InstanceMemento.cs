@@ -197,7 +197,6 @@ namespace StructureMap
             {
                 Instance instance = readInstance(pluginGraph, pluginType);
                 instance.Name = InstanceKey;
-                instance.PluginType = pluginType;
 
                 return instance;
             }

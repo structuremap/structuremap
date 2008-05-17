@@ -93,10 +93,7 @@ namespace StructureMap
         /// <param name="instanceKey"></param>
         public static void InjectByName<PLUGINTYPE>(PLUGINTYPE instance, string instanceKey)
         {
-            LiteralInstance literalInstance = new LiteralInstance(instance);
-            literalInstance.Name = instanceKey;
-
-            manager.AddInstance<PLUGINTYPE>(literalInstance);
+            manager.InjectByName<PLUGINTYPE>(instance, instanceKey);
         }
 
         /// <summary>
@@ -107,11 +104,7 @@ namespace StructureMap
         /// <param name="instanceKey"></param>
         public static void InjectByName<PLUGINTYPE, CONCRETETYPE>(string instanceKey)
         {
-            ConfiguredInstance instance = new ConfiguredInstance();
-            instance.PluggedType = typeof (CONCRETETYPE);
-            instance.Name = instanceKey;
-
-            manager.AddInstance<PLUGINTYPE>(instance);
+            manager.InjectByName<PLUGINTYPE, CONCRETETYPE>(instanceKey);
         }
 
         /// <summary>
@@ -349,15 +342,7 @@ namespace StructureMap
         /// <returns></returns>
         public static IList<TargetType> GetAllInstances<TargetType>()
         {
-            IList instances = manager.GetAllInstances(typeof (TargetType));
-            IList<TargetType> specificInstances = new List<TargetType>();
-            foreach (object instance in instances)
-            {
-                TargetType obj = (TargetType) instance;
-                specificInstances.Add(obj);
-            }
-
-            return specificInstances;
+            return manager.GetAllInstances<TargetType>();
         }
 
         public static ExplicitArgsExpression With<T>(T arg)

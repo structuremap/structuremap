@@ -18,6 +18,12 @@ namespace StructureMap.Testing.Pipeline
         #endregion
 
         [Test]
+        public void Get_description()
+        {
+            TestUtility.AssertDescriptionIs(new DefaultInstance(), "Default");
+        }
+
+        [Test]
         public void Build_happy_path()
         {
             MockRepository mocks = new MockRepository();

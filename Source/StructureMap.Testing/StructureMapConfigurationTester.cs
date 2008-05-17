@@ -48,6 +48,8 @@ namespace StructureMap.Testing
             Assert.AreEqual("Cornflower", thing.Color, "Cornflower is the color from the App.config file");
         }
 
+        
+
         [Test]
         public void SettingsFromAllParentConfigFilesShouldBeIncluded()
         {

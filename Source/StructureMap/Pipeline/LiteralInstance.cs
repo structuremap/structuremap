@@ -1,4 +1,5 @@
 using System;
+using StructureMap.Graph;
 
 namespace StructureMap.Pipeline
 {
@@ -8,9 +9,12 @@ namespace StructureMap.Pipeline
 
         public LiteralInstance(object anObject)
         {
-            _object = anObject;
+            if (anObject == null)
+            {
+                throw new ArgumentNullException("anObject");
+            }
 
-            // TODO:  VALIDATE NOT NULL
+            _object = anObject;
         }
 
 
@@ -21,9 +25,18 @@ namespace StructureMap.Pipeline
 
         protected override object build(Type pluginType, IBuildSession session)
         {
-            // TODO:  VALIDATE THE CAST AND NULL
-
             return _object;
+        }
+
+
+        protected override bool canBePartOfPluginFamily(PluginFamily family)
+        {
+            return TypeRules.CanBeCast(family.PluginType, _object.GetType());
+        }
+
+        protected override string getDescription()
+        {
+            return "Object:  " + _object.ToString();
         }
     }
 }

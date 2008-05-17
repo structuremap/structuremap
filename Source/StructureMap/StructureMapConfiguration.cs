@@ -5,6 +5,7 @@ using System.Xml;
 using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
 using StructureMap.Configuration.DSL.Expressions;
+using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
@@ -14,10 +15,10 @@ namespace StructureMap
     public static class StructureMapConfiguration
     {
         private const string CONFIG_FILE_NAME = "StructureMap.config";
-        private static ConfigurationParserCollection _collection;
-        private static bool _pullConfigurationFromAppConfig;
+        private static GraphLog _log;
         private static List<Registry> _registries;
         private static Registry _registry;
+        private static ConfigurationParserBuilder builder;
 
         static StructureMapConfiguration()
         {
@@ -30,21 +31,21 @@ namespace StructureMap
         /// </summary>
         public static bool UseDefaultStructureMapConfigFile
         {
-            get { return _collection.UseAndEnforceExistenceOfDefaultFile; }
-            set { _collection.UseAndEnforceExistenceOfDefaultFile = value; }
+            get { return builder.UseAndEnforceExistenceOfDefaultFile; }
+            set { builder.UseAndEnforceExistenceOfDefaultFile = value; }
         }
 
 
         public static bool IgnoreStructureMapConfig
         {
-            get { return _collection.IgnoreDefaultFile; }
-            set { _collection.IgnoreDefaultFile = value; }
+            get { return builder.IgnoreDefaultFile; }
+            set { builder.IgnoreDefaultFile = value; }
         }
 
         public static bool PullConfigurationFromAppConfig
         {
-            get { return _pullConfigurationFromAppConfig; }
-            set { _pullConfigurationFromAppConfig = value; }
+            get { return builder.PullConfigurationFromAppConfig; }
+            set { builder.PullConfigurationFromAppConfig = value; }
         }
 
 
@@ -77,11 +78,11 @@ namespace StructureMap
         /// </summary>
         public static void ResetAll()
         {
-            _collection = new ConfigurationParserCollection();
+            _log = new GraphLog();
+            builder = new ConfigurationParserBuilder(_log);
             _registry = new Registry();
             _registries = new List<Registry>();
             _registries.Add(_registry);
-            _pullConfigurationFromAppConfig = false;
             UseDefaultStructureMapConfigFile = false;
             IgnoreStructureMapConfig = false;
         }
@@ -103,17 +104,8 @@ namespace StructureMap
 
         private static PluginGraphBuilder createBuilder()
         {
-            if (_pullConfigurationFromAppConfig)
-            {
-                IList<XmlNode> appConfigNodes = StructureMapConfigurationSection.GetStructureMapConfiguration();
-                foreach (XmlNode appConfigNode in appConfigNodes)
-                {
-                    _collection.IncludeNode(delegate { return appConfigNode; });
-                }
-            }
-
-            ConfigurationParser[] parsers = _collection.GetParsers();
-            return new PluginGraphBuilder(parsers, _registries.ToArray());
+            ConfigurationParser[] parsers = builder.GetParsers();
+            return new PluginGraphBuilder(parsers, _registries.ToArray(), _log);
         }
 
         /// <summary>
@@ -122,17 +114,7 @@ namespace StructureMap
         /// <param name="filename"></param>
         public static void IncludeConfigurationFromFile(string filename)
         {
-            _collection.IncludeFile(filename);
-        }
-
-        /// <summary>
-        /// Register a FetchNodeDelegate delegate to retrieve a &lt;StructureMap&gt;
-        /// node to include Xml configuration
-        /// </summary>
-        /// <param name="fetcher"></param>
-        public static void IncludeConfigurationFrom(FetchNodeDelegate fetcher)
-        {
-            _collection.IncludeNode(fetcher);
+            builder.IncludeFile(filename);
         }
 
         /// <summary>
@@ -141,9 +123,7 @@ namespace StructureMap
         /// <param name="node"></param>
         public static void IncludeConfigurationFromNode(XmlNode node)
         {
-            _collection.IncludeNode(
-                delegate { return node; }
-                );
+            builder.IncludeNode(node);
         }
 
         /// <summary>

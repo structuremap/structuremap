@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
+using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Source;
 
@@ -11,76 +12,28 @@ namespace StructureMap.Configuration
     {
         #region statics
 
-        public static ConfigurationParser[] GetParsers(XmlDocument document, string includePath)
-        {
-            XmlElement node = document.DocumentElement;
-            return GetParsers(node, includePath);
-        }
-
-        // TODO -- Clean up.  Maybe use some Lambda magic with .Net 3.5?
-        public static ConfigurationParser[] GetParsers(XmlNode node, string includePath)
-        {
-            string folder = string.IsNullOrEmpty(includePath) ? string.Empty : Path.GetDirectoryName(includePath);
-
-            List<ConfigurationParser> list = new List<ConfigurationParser>();
-
-            list.Add(new ConfigurationParser(node));
-
-            string includedPath = null;
-
-            try
-            {
-                XmlNodeList includeNodes = node.SelectNodes(XmlConstants.INCLUDE_NODE);
-                foreach (XmlElement includeElement in includeNodes)
-                {
-                    XmlDocument includedDoc = new XmlDocument();
-                    string fileName = includeElement.GetAttribute("File");
-
-                    if (fileName == string.Empty)
-                    {
-                        // TODO: get rid of throw, put on PluginGraph here
-                        throw new ApplicationException("The File attribute on the Include node is required");
-                    }
-
-                    try
-                    {
-                        includedPath = Path.Combine(folder, fileName);
-                        includedDoc.Load(includedPath);
-
-
-                        ConfigurationParser parser = new ConfigurationParser(includedDoc.DocumentElement);
-                        list.Add(parser);
-                    }
-                    catch (Exception ex)
-                    {
-                        // TODO: get rid of throw, put on PluginGraph here
-                        throw new StructureMapException(150, ex, fileName);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                // TODO: get rid of throw, put on PluginGraph here
-                throw new StructureMapException(100, includedPath, ex);
-            }
-
-            return list.ToArray();
-        }
-
-
         public static ConfigurationParser FromFile(string filename)
         {
             XmlDocument document = new XmlDocument();
             document.Load(filename);
 
             XmlNode structureMapNode = document.SelectSingleNode("//" + XmlConstants.STRUCTUREMAP);
-            return new ConfigurationParser(structureMapNode);
+            if (structureMapNode == null)
+            {
+                throw new StructureMapException(155, filename);
+            }
+
+            ConfigurationParser parser = new ConfigurationParser(structureMapNode);
+            parser.FilePath = filename;
+            
+            return parser;
         }
 
         #endregion
 
         private readonly XmlMementoCreator _mementoCreator;
         private readonly XmlNode _structureMapNode;
+        private string _filePath = string.Empty;
 
         public ConfigurationParser(XmlNode structureMapNode)
         {
@@ -106,6 +59,36 @@ namespace StructureMap.Configuration
                 XmlConstants.KEY_ATTRIBUTE);
         }
 
+        public void ForEachFile(GraphLog log, Action<string> action)
+        {
+            // TODO:  Clean up with 3.5
+            string includePath = getIncludePath();
+            XmlNodeList includeNodes = _structureMapNode.SelectNodes(XmlConstants.INCLUDE_NODE);
+            foreach (XmlElement includeElement in includeNodes)
+            {
+                string fileName = includeElement.GetAttribute("File");
+                if (string.IsNullOrEmpty(fileName))
+                {
+                    log.RegisterError(156, _filePath);
+                }
+                else
+                {
+                    string includedFile = Path.Combine(includePath, fileName);
+                    action(includedFile);
+                }
+            }
+        }
+
+        private string getIncludePath()
+        {
+            if (string.IsNullOrEmpty(_filePath))
+            {
+                return string.Empty;
+            }
+
+            return Path.GetDirectoryName(_filePath);
+        }
+
         public string Id
         {
             get
@@ -113,6 +96,13 @@ namespace StructureMap.Configuration
                 XmlAttribute att = _structureMapNode.Attributes["Id"];
                 return att == null ? string.Empty : att.Value;
             }
+        }
+
+
+        public string FilePath
+        {
+            get { return _filePath; }
+            set { _filePath = value; }
         }
 
         public void ParseAssemblies(IGraphBuilder builder)

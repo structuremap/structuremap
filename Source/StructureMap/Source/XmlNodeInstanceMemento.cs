@@ -120,7 +120,6 @@ namespace StructureMap.Source
             return returnValue;
         }
 
-        // TODO -- pull up into abstract class?
 
 
         public override InstanceMemento[] GetChildrenArray(string Key)

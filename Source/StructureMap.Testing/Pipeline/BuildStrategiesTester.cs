@@ -100,6 +100,11 @@ namespace StructureMap.Testing.Pipeline
             {
                 return _constructedObject;
             }
+
+            protected override string getDescription()
+            {
+                return "Stubbed";
+            }
         }
     }
 }

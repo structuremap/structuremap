@@ -66,7 +66,7 @@ namespace StructureMap.Testing
             Assert.IsTrue(list.Count > 0);
         }
 
-        [Test, Ignore("Gonna redo this")]
+        [Test]
         public void SmokeTestWhatDoIHave()
         {
             string message = ObjectFactory.WhatDoIHave();

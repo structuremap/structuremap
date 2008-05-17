@@ -8,7 +8,8 @@ namespace StructureMap.Pipeline
     public interface IDiagnosticInstance
     {
         bool CanBePartOfPluginFamily(PluginFamily family);
-        Instance FindMasterInstance(PluginFamily family);
+        Instance FindInstanceForProfile(PluginFamily family, string profileName, GraphLog log);
+        InstanceToken CreateToken();
     }
 
     public abstract class Instance : IDiagnosticInstance
@@ -16,7 +17,6 @@ namespace StructureMap.Pipeline
         private readonly string _originalName;
         private InstanceInterceptor _interceptor = new NulloInterceptor();
         private string _name = Guid.NewGuid().ToString();
-        private Type _pluginType = typeof (object);
 
 
         protected Instance()
@@ -36,13 +36,7 @@ namespace StructureMap.Pipeline
             set { _interceptor = value; }
         }
 
-        internal Type PluginType
-        {
-            get { return _pluginType; }
-            set { _pluginType = value; }
-        }
 
-        // TODO : remove pluginType from signature?
 
         #region IDiagnosticInstance Members
 
@@ -51,10 +45,17 @@ namespace StructureMap.Pipeline
             return canBePartOfPluginFamily(family);
         }
 
-        Instance IDiagnosticInstance.FindMasterInstance(PluginFamily family)
+        Instance IDiagnosticInstance.FindInstanceForProfile(PluginFamily family, string profileName, GraphLog log)
         {
-            return findMasterInstance(family);
+            return findMasterInstance(family, profileName, log);
         }
+
+        public InstanceToken CreateToken()
+        {
+            return new InstanceToken(Name, getDescription());
+        }
+
+        protected abstract string getDescription();
 
         #endregion
 
@@ -89,7 +90,7 @@ namespace StructureMap.Pipeline
             return null;
         }
 
-        protected virtual Instance findMasterInstance(PluginFamily family)
+        protected virtual Instance findMasterInstance(PluginFamily family, string profileName, GraphLog log)
         {
             return this;
         }
@@ -99,10 +100,7 @@ namespace StructureMap.Pipeline
             return true;
         }
 
-        public InstanceToken CreateToken()
-        {
-            throw new NotImplementedException();
-        }
+
 
         internal virtual bool Matches(Plugin plugin)
         {

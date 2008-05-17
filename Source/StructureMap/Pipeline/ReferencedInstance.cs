@@ -1,4 +1,5 @@
 using System;
+using StructureMap.Diagnostics;
 using StructureMap.Graph;
 
 namespace StructureMap.Pipeline
@@ -47,10 +48,21 @@ namespace StructureMap.Pipeline
         }
 
 
-        protected override Instance findMasterInstance(PluginFamily family)
+        protected override Instance findMasterInstance(PluginFamily family, string profileName, GraphLog log)
         {
-            // TODO:  Sad Path
-            return family.GetInstance(_referenceKey);
+            Instance instance = family.GetInstance(_referenceKey);
+
+            if (instance == null)
+            {
+                log.RegisterError(196, ReferenceKey, family.PluginType, profileName);
+            }
+
+            return instance;
+        }
+
+        protected override string getDescription()
+        {
+            return string.Format("\"{0}\"", _referenceKey);
         }
     }
 }

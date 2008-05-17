@@ -24,7 +24,7 @@ namespace StructureMap.Graph
             {
                 if (!_pluginFamilies.ContainsKey(pluginType))
                 {
-                    PluginFamily family = new PluginFamily(pluginType);
+                    PluginFamily family = new PluginFamily(pluginType, _pluginGraph);
                     Add(family);
                 }
 

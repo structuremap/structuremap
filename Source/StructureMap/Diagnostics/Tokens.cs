@@ -6,11 +6,13 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.Diagnostics
 {
+    public delegate void Action();
+
     public class GraphLog
     {
         private readonly List<Source> _sources = new List<Source>();
         private Source _currentSource;
-        private List<Error> _errors = new List<Error>();
+        private readonly List<Error> _errors = new List<Error>();
 
         public int ErrorCount
         {
@@ -45,6 +47,13 @@ namespace StructureMap.Diagnostics
         }
 
 
+
+        public void RegisterError(StructureMapException ex)
+        {
+            Error error = new Error(ex);
+            addError(error);
+        }
+
         private void addError(Error error)
         {
             error.Source = _currentSource;
@@ -68,16 +77,75 @@ namespace StructureMap.Diagnostics
 
         public void AssertHasError(int errorCode)
         {
+            string message = "No error with code " + errorCode + "\nHad errors: ";
             foreach (Error error in _errors)
             {
+                message += error.Code + ", ";
                 if (error.Code == errorCode)
                 {
                     return;
                 }
             }
 
-            throw new ApplicationException("No error with code " + errorCode);
+            throw new ApplicationException(message);
         }
+
+        public void AssertHasNoError(int errorCode)
+        {
+            foreach (Error error in _errors)
+            {
+                if (error.Code == errorCode)
+                {
+                    throw new ApplicationException("Has error " + errorCode);
+                }
+            }
+        }
+
+        public TryAction Try(Action action)
+        {
+            return new TryAction(action, this);
+        }
+
+        public class TryAction
+        {
+            private readonly Action _action;
+            private readonly GraphLog _log;
+
+            internal TryAction(Action action, GraphLog log)
+            {
+                _action = action;
+                _log = log;
+            }
+
+            public void AndReportErrorAs(int code, params object[] args)
+            {
+                try
+                {
+                    _action();
+                }
+                catch (Exception ex)
+                {
+                    _log.RegisterError(code, ex, args);
+                }
+            }
+
+            public void AndLogAnyErrors()
+            {
+                try
+                {
+                    _action();
+                }
+                catch (StructureMapException ex)
+                {
+                    _log.RegisterError(ex);
+                }
+                catch (Exception ex)
+                {
+                    _log.RegisterError(400, ex);
+                }
+            }
+        }
+
     }
 
     public class Source
@@ -154,13 +222,11 @@ namespace StructureMap.Diagnostics
     {
         private readonly string _description;
         private readonly string _name;
-        private PluginType _pluginType;
 
-        public InstanceToken(string name, string description, PluginType pluginType)
+        public InstanceToken(string name, string description)
         {
             _name = name;
             _description = description;
-            _pluginType = pluginType;
         }
 
 
@@ -174,12 +240,6 @@ namespace StructureMap.Diagnostics
             get { return _description; }
         }
 
-
-        public PluginType PluginType
-        {
-            get { return _pluginType; }
-        }
-
         #region IEquatable<InstanceToken> Members
 
         public bool Equals(InstanceToken instanceToken)
@@ -187,7 +247,6 @@ namespace StructureMap.Diagnostics
             if (instanceToken == null) return false;
             if (!Equals(_name, instanceToken._name)) return false;
             if (!Equals(_description, instanceToken._description)) return false;
-            if (!Equals(_pluginType, instanceToken._pluginType)) return false;
             return true;
         }
 
@@ -208,7 +267,6 @@ namespace StructureMap.Diagnostics
         {
             int result = _name != null ? _name.GetHashCode() : 0;
             result = 29*result + (_description != null ? _description.GetHashCode() : 0);
-            result = 29*result + (_pluginType != null ? _pluginType.GetHashCode() : 0);
             return result;
         }
     }

@@ -14,12 +14,11 @@ namespace StructureMap.Testing.Container.Interceptors
         {
             manager = null;
 
-            // TODO:  Want a shorthand for Type
             registry = new Registry();
             registry.ForRequestedType<IAnInterfaceOfSomeSort>()
-                .AddInstance(Instance<IAnInterfaceOfSomeSort>().UsingConcreteType<RedSomething>().WithName("Red"))
-                .AddInstance(Instance<IAnInterfaceOfSomeSort>().UsingConcreteType<GreenSomething>().WithName("Green"))
-                .AddInstance(Instance<IAnInterfaceOfSomeSort>().UsingConcreteType<BlueSomething>().WithName("Blue"));
+                .AddInstance(Instance<RedSomething>().WithName("Red"))
+                .AddInstance(Instance<GreenSomething>().WithName("Green"))
+                .AddInstance(Instance<BlueSomething>().WithName("Blue"));
         }
 
         #endregion

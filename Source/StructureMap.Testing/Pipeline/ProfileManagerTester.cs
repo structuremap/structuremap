@@ -23,7 +23,7 @@ namespace StructureMap.Testing.Pipeline
 
         private void addDefaultToPluginFamily<T>(string name)
         {
-            LiteralInstance instance = new LiteralInstance(null).WithName(name);
+            ConstructorInstance instance = new ConstructorInstance(null).WithName(name);
             PluginFamily family = _pluginGraph.FindFamily(typeof (T));
             family.AddInstance(instance);
             family.DefaultInstanceKey = instance.Name;
@@ -33,12 +33,12 @@ namespace StructureMap.Testing.Pipeline
         {
             _manager.SetDefault(profile, typeof (T), new ReferencedInstance(name));
             PluginFamily family = _pluginGraph.FindFamily(typeof (T));
-            family.AddInstance(new LiteralInstance(null).WithName(name));
+            family.AddInstance(new ConstructorInstance(null).WithName(name));
         }
 
         private void addDefaultToMachine<T>(string name)
         {
-            LiteralInstance instance = new LiteralInstance(null).WithName(name);
+            ConfiguredInstance instance = new ConfiguredInstance().WithName(name);
             PluginFamily family = _pluginGraph.FindFamily(typeof (T));
             family.AddInstance(instance);
 
@@ -184,7 +184,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void Only_programmatic_override_so_use_the_programmatic_override()
         {
-            _manager.SetDefault(typeof (ISomething), new LiteralInstance(null).WithName("Red"));
+            _manager.SetDefault(typeof (ISomething), new ConfiguredInstance().WithName("Red"));
             assertDefaultInstanceNameIs<ISomething>("Red");
         }
 

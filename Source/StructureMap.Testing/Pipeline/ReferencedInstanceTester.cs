@@ -3,6 +3,7 @@ using Rhino.Mocks;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
+using StructureMap.Testing.Container;
 
 namespace StructureMap.Testing.Pipeline
 {
@@ -12,6 +13,15 @@ namespace StructureMap.Testing.Pipeline
         [SetUp]
         public void SetUp()
         {
+        }
+
+        [Test]
+        public void GetDescription()
+        {
+            string theReferenceKey = "theReferenceKey";
+            ReferencedInstance instance = new ReferencedInstance(theReferenceKey);
+
+            TestUtility.AssertDescriptionIs(instance, "\"theReferenceKey\"");
         }
 
         [Test]
@@ -39,12 +49,12 @@ namespace StructureMap.Testing.Pipeline
         public void FindMaster_Instance_happy_path()
         {
             PluginFamily family = new PluginFamily(typeof(ISomething));
-            LiteralInstance redInstance = new LiteralInstance(null).WithName("Red");
+            LiteralInstance redInstance = new LiteralInstance(new SomethingOne()).WithName("Red");
             family.AddInstance(redInstance);
-            family.AddInstance(new LiteralInstance(null).WithName("Blue"));
+            family.AddInstance(new LiteralInstance(new SomethingOne()).WithName("Blue"));
 
             ReferencedInstance instance = new ReferencedInstance("Red");
-            Assert.AreSame(redInstance, ((IDiagnosticInstance)instance).FindMasterInstance(family));
+            Assert.AreSame(redInstance, ((IDiagnosticInstance)instance).FindInstanceForProfile(family, null, null));
         }
 
         public interface IReferenced

@@ -37,6 +37,11 @@ namespace StructureMap.Configuration.DSL.Expressions
         #endregion
 
         // TODO:  3.5, Try alterAndContinue(f => {});
+        private CreatePluginFamilyExpression<PLUGINTYPE> alterAndContinue(Action<PluginFamily> action)
+        {
+            _alterations.Add(action);
+            return this;
+        }
 
         /// <summary>
         /// Sets the default instance of a Type to the definition represented by builder
@@ -45,21 +50,17 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <returns></returns>
         public CreatePluginFamilyExpression<PLUGINTYPE> TheDefaultIs(Instance instance)
         {
-            _alterations.Add(delegate(PluginFamily family)
+            return alterAndContinue(delegate(PluginFamily family)
                                  {
                                      family.AddInstance(instance);
                                      family.DefaultInstanceKey = instance.Name;
                                  });
-
-            return this;
         }
 
         public CreatePluginFamilyExpression<PLUGINTYPE> AddInstance(Instance instance)
         {
-            // TODO:  Validate pluggability
-            _alterations.Add(delegate(PluginFamily family) { family.AddInstance(instance); });
-
-            return this;
+            return alterAndContinue(
+                delegate(PluginFamily family) { family.AddInstance(instance); });
         }
 
         /// <summary>
@@ -74,9 +75,9 @@ namespace StructureMap.Configuration.DSL.Expressions
         {
             ExpressionValidator.ValidatePluggabilityOf(typeof (CONCRETETYPE)).IntoPluginType(_pluginType);
 
-            _alterations.Add(delegate(PluginFamily family)
+            return alterAndContinue(delegate(PluginFamily family)
                                  {
-                                     Plugin plugin = family.Plugins.FindOrCreate(typeof (CONCRETETYPE), true);
+                                     Plugin plugin = family.Plugins.FindOrCreate(typeof(CONCRETETYPE), true);
                                      family.DefaultInstanceKey = plugin.ConcreteKey;
                                  });
 
@@ -91,9 +92,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <returns></returns>
         public CreatePluginFamilyExpression<PLUGINTYPE> CacheBy(InstanceScope scope)
         {
-            _alterations.Add(delegate(PluginFamily family) { family.SetScopeTo(scope); });
-
-            return this;
+            return alterAndContinue(delegate(PluginFamily family) { family.SetScopeTo(scope); });
         }
 
         /// <summary>
@@ -147,6 +146,8 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         public CreatePluginFamilyExpression<PLUGINTYPE> AddConcreteType<CONCRETETYPE>(string instanceName)
         {
+            ExpressionValidator.ValidatePluggabilityOf(typeof(CONCRETETYPE)).IntoPluginType(typeof(PLUGINTYPE));
+
             _alterations.Add(
                 delegate(PluginFamily family)
                     {
@@ -174,6 +175,8 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         public CreatePluginFamilyExpression<PLUGINTYPE> AliasConcreteType<PLUGGEDTYPE>(string concreteKey)
         {
+            ExpressionValidator.ValidatePluggabilityOf(typeof(PLUGGEDTYPE)).IntoPluginType(typeof(PLUGINTYPE));
+
             _alterations.Add(delegate(PluginFamily family) { family.AddPlugin(typeof (PLUGGEDTYPE), concreteKey); });
 
             return this;

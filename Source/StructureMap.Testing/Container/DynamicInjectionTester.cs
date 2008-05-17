@@ -138,8 +138,9 @@ namespace StructureMap.Testing.Container
             factory.AddInstance(new LiteralInstance(_red).WithName("Red"));
             factory.AddInstance(new LiteralInstance(_blue).WithName("Blue"));
 
-            Assert.AreSame(_red, factory.Build(new StubBuildSession(), "Red"));
-            Assert.AreSame(_blue, factory.Build(new StubBuildSession(), "Blue"));
+
+            Assert.AreSame(_red, factory.Build(new StubBuildSession(), factory.FindInstance("Red")));
+            Assert.AreSame(_blue, factory.Build(new StubBuildSession(), factory.FindInstance("Blue")));
         }
 
         private IInstanceFactory getISomethingFactory()
@@ -175,7 +176,7 @@ namespace StructureMap.Testing.Container
             // Replace Blue
             factory.AddInstance(new LiteralInstance(_orange).WithName("Blue"));
 
-            Assert.AreSame(_orange, factory.Build(new StubBuildSession(), "Blue"));
+            Assert.AreSame(_orange, factory.Build(new StubBuildSession(), factory.FindInstance("Blue")));
         }
 
         [Test]
@@ -216,11 +217,6 @@ namespace StructureMap.Testing.Container
         {
             throw new NotImplementedException();
         }
-    }
-
-    public interface ISomething
-    {
-        void Go();
     }
 
     public class SomethingOne : ISomething

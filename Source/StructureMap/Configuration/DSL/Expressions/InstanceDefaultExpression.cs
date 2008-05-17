@@ -33,21 +33,27 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         internal void Configure(string profileName, PluginGraph pluginGraph)
         {
+            // The profile instance is defined inline
             if (_instance != null)
             {
                 _instanceKey = Profile.InstanceKeyForProfile(profileName);
                 _instance.Name = _instanceKey;
                 pluginGraph.FindFamily(_pluginType).AddInstance(_instance);
             }
+
+            // Using a referenced key for the profile
             else if (!string.IsNullOrEmpty(_instanceKey))
             {
                 _instance = new ReferencedInstance(_instanceKey);
             }
 
+            // Set the default instance in the Profile
             if (_instance != null)
             {
                 pluginGraph.ProfileManager.SetDefault(profileName, _pluginType, _instance);
             }
+
+            // Blow up if the Profile expression is not complete.
             else
             {
                 throw new StructureMapException(304, TypePath.GetAssemblyQualifiedName(_pluginType));
@@ -61,6 +67,8 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <returns></returns>
         public ProfileExpression Use(Instance instance)
         {
+            // TODO -- validate that the instance can be plugged into the PluginType
+
             _instance = instance;
 
             return _parent;

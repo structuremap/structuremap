@@ -107,5 +107,10 @@ namespace StructureMap.Graph
             if (IsEnum(parameterType)) visitor.EnumParameter(info);
             if (IsString(parameterType)) visitor.StringParameter(info);
         }
+
+        public bool HasArguments()
+        {
+            return _ctor.GetParameters().Length > 0;
+        }
     }
 }

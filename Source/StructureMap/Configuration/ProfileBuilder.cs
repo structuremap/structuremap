@@ -6,6 +6,18 @@ namespace StructureMap.Configuration
 {
     public class ProfileBuilder : IProfileBuilder
     {
+        private static string _overriden_machine_name;
+
+        public static void OverrideMachineName(string machineName)
+        {
+            _overriden_machine_name = machineName;
+        }
+
+        public static void ResetMachineName()
+        {
+            _overriden_machine_name = string.Empty;
+        }
+
         private readonly string _machineName;
         private readonly PluginGraph _pluginGraph;
         private readonly ProfileManager _profileManager;
@@ -72,6 +84,11 @@ namespace StructureMap.Configuration
 
         public static string GetMachineName()
         {
+            if (!string.IsNullOrEmpty(_overriden_machine_name))
+            {
+                return _overriden_machine_name;
+            }
+
             string machineName = string.Empty;
             try
             {

@@ -16,9 +16,10 @@ namespace StructureMap
 
         IList GetAllInstances(IBuildSession session);
         object Build(IBuildSession session, Instance instance);
-        object Build(IBuildSession session, string instanceKey);
+        Instance FindInstance(string name);
 
         InstanceBuilder FindBuilderByType(Type pluggedType);
         InstanceBuilder FindBuilderByConcreteKey(string concreteKey);
+        void ForEachInstance(Action<Instance> action);
     }
 }

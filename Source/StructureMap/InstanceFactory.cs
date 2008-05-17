@@ -86,6 +86,14 @@ namespace StructureMap
             return _instanceBuilders.FindByConcreteKey(concreteKey);
         }
 
+        public void ForEachInstance(Action<Instance> action)
+        {
+            foreach (KeyValuePair<string, Instance> pair in _instances)
+            {
+                action(pair.Value);
+            }
+        }
+
         public void AddInstance(Instance instance)
         {
             if (_instances.ContainsKey(instance.Name))
@@ -128,15 +136,14 @@ namespace StructureMap
             return _policy.Build(session, PluginType, instance);
         }
 
-        public object Build(IBuildSession session, string instanceKey)
+        public Instance FindInstance(string name)
         {
-            if (!_instances.ContainsKey(instanceKey))
+            if (!_instances.ContainsKey(name))
             {
-                throw new StructureMapException(200, instanceKey, _pluginType.FullName);
+                return null;
             }
 
-            Instance instance = _instances[instanceKey];
-            return Build(session, instance);
+            return _instances[name];
         }
 
         #endregion

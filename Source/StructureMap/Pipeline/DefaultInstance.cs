@@ -8,5 +8,10 @@ namespace StructureMap.Pipeline
         {
             return session.CreateInstance(pluginType);
         }
+
+        protected override string getDescription()
+        {
+            return "Default";
+        }
     }
 }

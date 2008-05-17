@@ -29,6 +29,10 @@ namespace StructureMap
         void AddInstance<T>(Instance instance);
         void AddInstance<PLUGINTYPE, CONCRETETYPE>() where CONCRETETYPE : PLUGINTYPE;
         void AddDefaultInstance<PLUGINTYPE, CONCRETETYPE>();
+        void Inject<PLUGINTYPE>(PLUGINTYPE instance);
+        void InjectByName<PLUGINTYPE>(PLUGINTYPE instance, string instanceKey);
+        void InjectByName<PLUGINTYPE, CONCRETETYPE>(string instanceKey);
+
         string WhatDoIHave();
 
         /// <summary>
@@ -71,6 +75,6 @@ namespace StructureMap
         object CreateInstance(Type pluginType, string instanceKey);
 
         PLUGINTYPE CreateInstance<PLUGINTYPE>(ExplicitArguments args);
-        void Inject<PLUGINTYPE>(PLUGINTYPE instance);
+        
     }
 }

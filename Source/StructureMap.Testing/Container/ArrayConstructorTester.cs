@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
+using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Source;
 using StructureMap.Testing.TestData;
@@ -34,7 +35,7 @@ namespace StructureMap.Testing.Container
             XmlMementoSource source = new XmlFileMementoSource("Array.xml", string.Empty, "Decision");
             registry.ForRequestedType<Decision>().AddInstancesFrom(source).AliasConcreteType<Decision>("Default");
 
-            PluginGraphBuilder builder = new PluginGraphBuilder(new ConfigurationParser[]{ConfigurationParser.FromFile("ObjectMother.config")}, new Registry[]{registry});
+            PluginGraphBuilder builder = new PluginGraphBuilder(new ConfigurationParser[]{ConfigurationParser.FromFile("ObjectMother.config")}, new Registry[]{registry}, new GraphLog());
 
             PluginGraph graph = builder.Build();
 

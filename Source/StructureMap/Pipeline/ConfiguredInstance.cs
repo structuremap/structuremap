@@ -136,7 +136,7 @@ namespace StructureMap.Pipeline
             }
             catch (Exception ex)
             {
-                throw new StructureMapException(207, ex, Name, PluginType.FullName);
+                throw new StructureMapException(207, ex, Name, pluginType.FullName);
             }
         }
 
@@ -469,5 +469,24 @@ namespace StructureMap.Pipeline
         }
 
         #endregion
+
+        protected override string getDescription()
+        {
+            if (_pluggedType == null)
+            {
+                return string.Format("Configured '{0}'", _concreteKey);
+            }
+
+            string typeName = TypePath.GetAssemblyQualifiedName(_pluggedType);
+            Constructor ctor = new Constructor(_pluggedType);
+            if (ctor.HasArguments())
+            {
+                return "Configured " + typeName;
+            }
+            else
+            {
+                return typeName;
+            }
+        }
     }
 }

@@ -51,7 +51,8 @@ namespace StructureMap.Testing.Graph
         public void CreateSetterPropertyCollectionFromExplicitPlugin()
         {
             PluginGraph pluginGraph = getPluginGraph();
-            Plugin plugin = pluginGraph.FindFamily(typeof (IGridColumn)).Plugins["Other"];
+            PluginFamily family = pluginGraph.FindFamily(typeof (IGridColumn));
+            Plugin plugin = family.Plugins["Other"];
 
             Assert.AreEqual(5, plugin.Setters.Count);
             Assert.IsTrue(plugin.Setters.Contains("Widget"));

@@ -117,7 +117,13 @@
     </Compile>
     <Compile Include="BuildSession.cs" />
     <Compile Include="Configuration\ProfileBuilder.cs" />
+    <Compile Include="Diagnostics\CharacterWidth.cs" />
+    <Compile Include="Diagnostics\DividerLine.cs" />
+    <Compile Include="Diagnostics\Line.cs" />
+    <Compile Include="Diagnostics\TextLine.cs" />
+    <Compile Include="Diagnostics\TextReportWriter.cs" />
     <Compile Include="Diagnostics\Tokens.cs" />
+    <Compile Include="Diagnostics\WhatDoIHaveWriter.cs" />
     <Compile Include="Emitting\ArgumentEmitter.cs" />
     <Compile Include="Graph\Constructor.cs" />
     <Compile Include="Graph\IArgumentVisitor.cs" />
@@ -125,6 +131,7 @@
     <Compile Include="Graph\AssemblyScanner.cs" />
     <Compile Include="Graph\TypeRules.cs" />
     <Compile Include="InstanceBuilderList.cs" />
+    <Compile Include="InstanceCache.cs" />
     <Compile Include="InstanceFamily.cs" />
     <Compile Include="PipelineGraph.cs" />
     <Compile Include="Pipeline\BuildPolicy.cs" />
@@ -176,7 +183,7 @@
     <Compile Include="Configuration\ConfigurationParser.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Configuration\ConfigurationParserCollection.cs" />
+    <Compile Include="Configuration\ConfigurationParserBuilder.cs" />
     <Compile Include="Configuration\DSL\Expressions\CreatePluginFamilyExpression.cs" />
     <Compile Include="Configuration\DSL\ExpressionValidator.cs" />
     <Compile Include="Configuration\DSL\IExpression.cs" />

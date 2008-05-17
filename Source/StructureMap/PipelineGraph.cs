@@ -7,18 +7,22 @@ namespace StructureMap
 {
     public delegate InstanceFactory MissingFactoryFunction(Type pluginType, ProfileManager profileManager);
 
+    public interface IPipelineGraphVisitor
+    {
+        void PluginType(Type pluginType, Instance defaultInstance);
+        void Instance(Type pluginType, Instance instance);
+    }
+
     public class PipelineGraph
     {
-        private readonly Dictionary<Type, IInstanceFactory> _factories = new Dictionary<Type, IInstanceFactory>();
+        private readonly Dictionary<Type, IInstanceFactory> _factories
+            = new Dictionary<Type, IInstanceFactory>();
+
         private readonly GenericsPluginGraph _genericsGraph = new GenericsPluginGraph();
         private readonly ProfileManager _profileManager;
 
         private MissingFactoryFunction _missingFactory =
-            delegate(Type pluginType, ProfileManager profileManager)
-                {
-                    return
-                        null;
-                };
+            delegate(Type pluginType, ProfileManager profileManager) { return null; };
 
         public PipelineGraph(PluginGraph graph)
         {
@@ -47,6 +51,21 @@ namespace StructureMap
         {
             get { return _profileManager.CurrentProfile; }
             set { _profileManager.CurrentProfile = value; }
+        }
+
+        public void Visit(IPipelineGraphVisitor visitor)
+        {
+            foreach (KeyValuePair<Type, IInstanceFactory> pair in _factories)
+            {
+                Type pluginType = pair.Value.PluginType;
+                Instance defaultInstance = _profileManager.GetDefault(pluginType);
+
+                visitor.PluginType(pluginType, defaultInstance);
+                pair.Value.ForEachInstance(delegate(Instance instance)
+                {
+                    visitor.Instance(pluginType, instance);
+                });
+            }
         }
 
         public IInstanceFactory ForType(Type pluginType)

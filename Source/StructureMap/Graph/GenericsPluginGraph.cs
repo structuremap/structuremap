@@ -91,9 +91,8 @@ namespace StructureMap.Graph
         public static PluginFamily CreateTemplatedClone(PluginFamily baseFamily, params Type[] templateTypes)
         {
             Type templatedType = baseFamily.PluginType.MakeGenericType(templateTypes);
-            PluginFamily templatedFamily = new PluginFamily(templatedType);
+            PluginFamily templatedFamily = new PluginFamily(templatedType, baseFamily.Parent);
             templatedFamily.DefaultInstanceKey = baseFamily.DefaultInstanceKey;
-            templatedFamily.Parent = baseFamily.Parent;
             templatedFamily.Policy = baseFamily.Policy.Clone();
 
             // Add Plugins

@@ -2,19 +2,19 @@ using System;
 
 namespace StructureMap.Pipeline
 {
-    public delegate object BuildObjectDelegate();
+    
+    public delegate T Func<T>();
 
     public class ConstructorInstance : ExpressedInstance<ConstructorInstance>
     {
-        private BuildObjectDelegate _builder;
+        private Func<object> _builder;
 
-
-        public ConstructorInstance(BuildObjectDelegate builder)
+        public ConstructorInstance(Func<object> builder)
         {
             _builder = builder;
         }
 
-        public BuildObjectDelegate Builder
+        public Func<object> Builder
         {
             get { return _builder; }
             set { _builder = value; }
@@ -28,6 +28,11 @@ namespace StructureMap.Pipeline
         protected override object build(Type pluginType, IBuildSession session)
         {
             return _builder();
+        }
+
+        protected override string getDescription()
+        {
+            return "Instance is created by Func<object> function:  " + _builder.ToString();
         }
     }
 }

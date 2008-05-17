@@ -18,7 +18,7 @@ namespace StructureMap.Pipeline
 
         public object Build(IBuildSession buildSession, Type pluginType, Instance instance)
         {
-            if (!isCached(instance.Name, instance.PluginType))
+            if (!isCached(instance.Name, pluginType))
             {
                 lock (_locker)
                 {

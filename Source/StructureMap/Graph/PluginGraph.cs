@@ -16,7 +16,7 @@ namespace StructureMap.Graph
     {
         private readonly AssemblyScanner _assemblies;
         private readonly InterceptorLibrary _interceptorLibrary = new InterceptorLibrary();
-        private readonly GraphLog _log = new GraphLog();
+        private GraphLog _log = new GraphLog();
         private readonly PluginFamilyCollection _pluginFamilies;
         private readonly ProfileManager _profileManager = new ProfileManager();
         private readonly bool _useExternalRegistries = true;
@@ -55,6 +55,7 @@ namespace StructureMap.Graph
         public GraphLog Log
         {
             get { return _log; }
+            set { _log = value; }
         }
 
         #region seal

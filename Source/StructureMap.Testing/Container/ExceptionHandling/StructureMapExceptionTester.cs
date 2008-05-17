@@ -1,77 +1,76 @@
 using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Xml;
 using NUnit.Framework;
+using StructureMap.Configuration;
+using StructureMap.Graph;
+using StructureMap.Testing.TestData;
 using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing.Container.ExceptionHandling
 {
-    [TestFixture, Ignore("Busted at the moment")]
+    [TestFixture]
     public class StructureMapExceptionTester
     {
-        #region Setup/Teardown
-
-        [SetUp]
-        public void SetUp()
+        private void assertErrorIsLogged(int errorCode, string xml)
         {
-            //backupConfig();
-            _testRunner = new ExceptionTestRunner();
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            //restoreConfig();
-        }
-
-        #endregion
-
-        private ExceptionTestRunner _testRunner;
-
-        private void backupConfig()
-        {
-            try
-            {
-                File.Move("StructureMap.config", "StructureMap.Bak");
-            }
-            catch (Exception ex)
-            {
-                Console.Write(ex);
-            }
-        }
-
-
-        private void restoreConfig()
-        {
-            try
-            {
-                File.Delete("StructureMap.config");
-                File.Move("StructureMap.Bak", "StructureMap.config");
-            }
-            catch (Exception ex)
-            {
-                Console.Write(ex);
-            }
-        }
-
-        [Test]
-        public void CannotLoadAssemblyInAssemblyNode()
-        {
-            _testRunner.ExecuteExceptionTestFromResetDefaults(101);
+            PluginGraph graph = DataMother.CreateFromXml(xml);
+            graph.Log.AssertHasError(errorCode);
         }
 
 
         [Test]
-        public void CannotLoadTypeFromPluginFamilyNode()
+        public void Log_101_if_CannotLoadAssemblyInAssemblyNode()
         {
-            _testRunner.ExecuteExceptionTestFromResetDefaults(103);
+            assertErrorIsLogged(101, @"
+		        <StructureMap>
+			        <Assembly Name='StructureMap.NonExistent'/>
+		        </StructureMap>
+            ");
         }
 
 
         [Test]
-        public void CannotLoadTypeFromPluginNode()
+        public void Log_103_CannotLoadTypeFromPluginFamilyNode()
         {
-            _testRunner.ExecuteExceptionTestFromResetDefaults(111);
+            assertErrorIsLogged(103, @"
+		        <StructureMap>
+			        <PluginFamily Assembly='StructureMap.Testing.Widget' Type='StructureMap.Testing.Widget.NotARealType'/>
+		        </StructureMap>
+            ");
+        }
+
+
+        [Test]
+        public void Log_113_if_a_duplicate_Plugin_ConcreteKey_is_detected()
+        {
+            assertErrorIsLogged(113, @"
+
+		        <StructureMap>
+			        <Assembly Name='StructureMap.Testing.Widget'/>
+        					
+			        <PluginFamily Type='StructureMap.Testing.Widget.IWidget' Assembly='StructureMap.Testing.Widget' DefaultKey=''>
+				        <Plugin Assembly='StructureMap.Testing.Widget' Type='StructureMap.Testing.Widget.NotPluggableWidget' ConcreteKey='Dup'/>
+				        <Plugin Assembly='StructureMap.Testing.Widget' Type='StructureMap.Testing.Widget.NotPluggableWidget' ConcreteKey='Dup'/>
+			        </PluginFamily>							
+		        </StructureMap>
+
+");
+        }
+
+        [Test]
+        public void Log_131_if_Plugin_type_could_not_be_loaded_from_Xml_configuration()
+        {
+            assertErrorIsLogged(131, @"
+		        <StructureMap>
+			        <Assembly Name='StructureMap.Testing.Widget'/>
+        					
+			        <PluginFamily Type='StructureMap.Testing.Widget.IWidget' Assembly='StructureMap.Testing.Widget' DefaultKey=''>
+				        <Plugin Assembly='StructureMap.Testing' Type='StructureMap.Testing.Widget.NotARealClass' ConcreteKey='NotReal'/>
+			        </PluginFamily>	
+		        </StructureMap>	
+            ");
         }
 
         [Test]
@@ -93,50 +92,107 @@ namespace StructureMap.Testing.Container.ExceptionHandling
         }
 
         [Test]
-        public void CouldNotBuildTheDesignatedMementoSourceForAPluginFamily()
+        public void Log_130_if_there_is_an_error_while_creating_TheDesignatedMementoSourceForAPluginFamily()
         {
-            _testRunner.ExecuteExceptionTestFromResetDefaults(120);
+            assertErrorIsLogged(130, @"
+		<StructureMap>
+			<Assembly Name='StructureMap.Testing.Widget'/>
+					
+			<PluginFamily Type='StructureMap.Testing.Widget.IWidget' Assembly='StructureMap.Testing.Widget' DefaultKey=''>
+				<Plugin Assembly='StructureMap.Testing.Widget' Type='StructureMap.Testing.Widget.NotPluggableWidget' ConcreteKey='Dup'/>
+				<Source Type='Nonexistent'/>
+			</PluginFamily>							
+		</StructureMap>
+");
+
         }
 
+        private void assertErrorIsThrown(int errorCode, string xml, Action<InstanceManager> action)
+        {
+            XmlDocument document = new XmlDocument();
+            document.LoadXml(xml.Replace("\"", "'"));
+
+            ConfigurationParser parser = new ConfigurationParser(document.DocumentElement);
+            PluginGraphBuilder builder = new PluginGraphBuilder(parser);
+            InstanceManager manager = new InstanceManager(builder.Build());
+
+            try
+            {
+                action(manager);
+                Assert.Fail("Should have thrown exception");
+            }
+            catch (StructureMapException ex)
+            {
+                Assert.AreEqual(errorCode, ex.ErrorCode, "Expected error code");
+            }
+        }
 
         [Test]
         public void CouldNotFindConcreteKey()
         {
-            _testRunner.ExecuteGetInstance(201, "BadConcreteKey", typeof (IWidget));
+            assertErrorIsLogged(201, 
+            @"
+		        <StructureMap>
+			        <Assembly Name='StructureMap.Testing.Widget'/>
+        					
+			        <PluginFamily Type='StructureMap.Testing.Widget.IWidget' Assembly='StructureMap.Testing.Widget' DefaultKey=''>			
+				        <Instance Key='BadConcreteKey' Type='NotARealConcreteKey'></Instance>
+			        </PluginFamily>						
+		        </StructureMap>
+            ");
+
         }
 
         [Test]
         public void CouldNotFindInstanceKey()
         {
-            _testRunner.ExecuteGetInstance(200, "NonExistentInstanceKey", typeof (IWidget));
+            assertErrorIsThrown(200, 
+                @"
+		            <StructureMap>
+			            <Assembly Name='StructureMap.Testing.Widget'/>
+            					
+			            <PluginFamily Type='StructureMap.Testing.Widget.IWidget' Assembly='StructureMap.Testing.Widget' DefaultKey=''>			</PluginFamily>			
+		            </StructureMap>
+                ",
+                 delegate (InstanceManager manager)
+                     {
+                         manager.CreateInstance<IWidget>("NotAnActualInstanceName");
+                     }
+                 
+                 );
         }
 
         [Test]
         public void CouldNotUpcastDesignatedPluggedTypeIntoPluginType()
         {
-            _testRunner.ExecuteExceptionTestFromResetDefaults(114);
+            assertErrorIsLogged(104, @"
+		        <StructureMap>
+			        <Assembly Name='StructureMap.Testing.Widget'/>
+        					
+			        <PluginFamily Type='StructureMap.Testing.Widget.IWidget' Assembly='StructureMap.Testing.Widget' DefaultKey=''>
+				        <Plugin Assembly='StructureMap.Testing.Widget' Type='StructureMap.Testing.Widget.ComplexRule' ConcreteKey='Rule'/>
+			        </PluginFamily>			
+		        </StructureMap>
+            ");
         }
 
         [Test]
-        public void DefaultKeyDoesNotExist()
+        public void Throw_202_when_DefaultKeyDoesNotExist()
         {
-            _testRunner.ExecuteGetDefaultInstance(202, typeof (IWidget));
-        }
+            assertErrorIsThrown(202, 
+                @"
+		            <StructureMap>
+			            <Assembly Name='StructureMap.Testing.Widget'/>
+            					
+			            <PluginFamily Type='StructureMap.Testing.Widget.IWidget' Assembly='StructureMap.Testing.Widget' DefaultKey=''></PluginFamily>			
+		            </StructureMap>
+                ",
+                delegate (InstanceManager manager)
+                    {
+                        manager.CreateInstance<IWidget>();
+                    }
+                );
 
-        [Test, ExpectedException(typeof (StructureMapException)),
-         Ignore("Issue with MSBUILD causes this to fail in cruise build.")]
-        public void Exception100FromObjectFactory()
-        {
-            try
-            {
-                backupConfig();
-                File.Delete("StructureMap.config");
-                ObjectFactory.ResetDefaults();
-            }
-            finally
-            {
-                restoreConfig();
-            }
         }
 
         [Test]
@@ -152,15 +208,33 @@ namespace StructureMap.Testing.Container.ExceptionHandling
         }
 
         [Test]
-        public void InvalidConfigurationOfInterceptors()
+        public void Log_130_if_an_error_occurs_when_trying_to_create_an_interceptor_configured_in_xml()
         {
-            _testRunner.ExecuteExceptionTestFromResetDefaults(121);
+            assertErrorIsLogged(130, @"
+		        <StructureMap>
+			        <Assembly Name='StructureMap.Testing.Widget'/>
+        					
+			        <PluginFamily Type='StructureMap.Testing.Widget.IWidget' Assembly='StructureMap.Testing.Widget' DefaultKey=''>
+				        <Interceptors>
+					        <Interceptor Type='NotARealType'></Interceptor>
+				        </Interceptors>
+			        </PluginFamily>						
+		        </StructureMap>
+");
         }
 
         [Test]
-        public void MissingConcreteKeyOnPluginNode()
+        public void Log_112_if_MissingConcreteKeyOnPluginNode()
         {
-            _testRunner.ExecuteExceptionTestFromResetDefaults(112);
+            assertErrorIsLogged(112, @"
+		        <StructureMap>
+			        <Assembly Name='StructureMap.Testing.Widget'/>
+        					
+			        <PluginFamily Type='StructureMap.Testing.Widget.IWidget' Assembly='StructureMap.Testing.Widget' DefaultKey=''>
+				        <Plugin Assembly='StructureMap.Testing.Widget' Type='StructureMap.Testing.Widget.NotPluggableWidget' ConcreteKey=''/>
+			        </PluginFamily>				
+		        </StructureMap>
+");
         }
     }
 }

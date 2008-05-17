@@ -38,6 +38,29 @@ namespace StructureMap.Testing.Pipeline
             }
         }
 
+
+        [Test]
+        public void Create_description_if_has_pluggedType_and_plugged_type_has_arguments()
+        {
+            ConfiguredInstance instance = new ConfiguredInstance(typeof(ColorService));
+            TestUtility.AssertDescriptionIs(instance, "Configured " + TypePath.GetAssemblyQualifiedName(typeof(ColorService)));
+        }
+
+        [Test]
+        public void Create_description_if_has_only_concrete_key()
+        {
+            ConfiguredInstance instance = new ConfiguredInstance().WithConcreteKey("Concrete");
+            TestUtility.AssertDescriptionIs(instance, "Configured 'Concrete'");
+        }
+
+        [Test]
+        public void Create_description_if_has_plugged_type_and_plugged_type_has_no_arguments()
+        {
+            ConfiguredInstance instance = new ConfiguredInstance(GetType());
+            TestUtility.AssertDescriptionIs(instance, TypePath.GetAssemblyQualifiedName(GetType()));
+        }
+
+
         [Test]
         public void AttachDependencies_should_find_the_InstanceBuilder_by_ConcreteKey_if_PluggedType_does_not_exists()
         {

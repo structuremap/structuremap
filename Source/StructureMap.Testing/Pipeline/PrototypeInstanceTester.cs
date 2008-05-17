@@ -1,6 +1,7 @@
 using System;
 using NUnit.Framework;
 using Rhino.Mocks;
+using StructureMap.Graph;
 using StructureMap.Pipeline;
 
 namespace StructureMap.Testing.Pipeline
@@ -14,6 +15,15 @@ namespace StructureMap.Testing.Pipeline
         }
 
         [Test]
+        public void Get_description()
+        {
+            PrototypeTarget target = new PrototypeTarget("Jeremy");
+            PrototypeInstance instance = new PrototypeInstance(target);
+
+            TestUtility.AssertDescriptionIs(instance, "Prototype of " + target.ToString());
+        }
+
+        [Test]
         public void Build_a_clone()
         {
             PrototypeTarget target = new PrototypeTarget("Jeremy");
@@ -23,6 +33,20 @@ namespace StructureMap.Testing.Pipeline
 
             Assert.AreEqual(target, returnedValue);
             Assert.AreNotSame(target, returnedValue);
+        }
+
+        [Test]
+        public void Can_be_part_of_PluginFamily()
+        {
+            PrototypeTarget target = new PrototypeTarget("Jeremy");
+            PrototypeInstance instance = new PrototypeInstance(target);
+            IDiagnosticInstance diagnosticInstance = instance;
+
+            PluginFamily family1 = new PluginFamily(typeof(PrototypeTarget));
+            Assert.IsTrue(diagnosticInstance.CanBePartOfPluginFamily(family1));
+
+            PluginFamily family2 = new PluginFamily(GetType());
+            Assert.IsFalse(diagnosticInstance.CanBePartOfPluginFamily(family2));
         }
 
         public class PrototypeTarget : ICloneable, IEquatable<PrototypeTarget>

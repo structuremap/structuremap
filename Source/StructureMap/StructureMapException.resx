@@ -127,16 +127,8 @@
     <value>Assembly {0} referenced in a &lt;PluginFamily&gt; node for PluginType "{1}" in StructureMap.config cannot be loaded into the current AppDomain</value>
     <comment>delete?</comment>
   </data>
-  <data name="103" xml:space="preserve">
-    <value>PluginType "{0}" referenced in a &lt;PluginFamily&gt; node in StructureMap.config cannot be loaded from Assembly {1}</value>
-    <comment>delete?</comment>
-  </data>
   <data name="110" xml:space="preserve">
     <value>Assembly referenced by a &lt;Plugin&gt; for Type "{0}", concrete key "{1}" node in StructureMap.config cannot be loaded into the current AppDomain.</value>
-    <comment>delete?</comment>
-  </data>
-  <data name="111" xml:space="preserve">
-    <value>Type referenced in a &lt;Plugin&gt; for Type "{0}", concrete type "{1}" cannot be loaded from named assembly</value>
     <comment>delete?</comment>
   </data>
   <data name="112" xml:space="preserve">
@@ -145,10 +137,6 @@
   </data>
   <data name="113" xml:space="preserve">
     <value>Duplicate ConcreteKey ({0}) values in PluginType "{1}"</value>
-  </data>
-  <data name="114" xml:space="preserve">
-    <value>Type {0} specified as a Plugin cannot be plugged into Type {1}</value>
-    <comment>duplicate from 104.  Delete</comment>
   </data>
   <data name="200" xml:space="preserve">
     <value>Could not find an Instance named "{0}" for PluginType {1}</value>
@@ -177,9 +165,6 @@
   </data>
   <data name="104" xml:space="preserve">
     <value>Type {0} cannot be plugged into type {1}</value>
-  </data>
-  <data name="121" xml:space="preserve">
-    <value>Could not build the configured InstanceFactoryInterceptor for PluginFamily {0}</value>
   </data>
   <data name="220" xml:space="preserve">
     <value>Cannot "Stub" type {0} with an object of type {1}</value>
@@ -211,9 +196,6 @@
   <data name="115" xml:space="preserve">
     <value>An exception occurred while trying to create an InstanceFactory for PluginType {0}</value>
   </data>
-  <data name="190" xml:space="preserve">
-    <value>Can not create a Generic PluginFamily for PluginFamily {0}.  Check that the basic type {1} is configured as a PluginFamily.  These Generic types are configured within StructureMap as PluginFamily's:  {2}</value>
-  </data>
   <data name="195" xml:space="preserve">
     <value>The Profile {0} referenced by Machine {1} does not exist</value>
   </data>
@@ -241,9 +223,6 @@
   <data name="308" xml:space="preserve">
     <value>A configured instance interceptor has failed for Instance '{0}' and concrete type '{1}'</value>
   </data>
-  <data name="215" xml:space="preserve">
-    <value>The requested default instance {0} for type {1} cannot be found</value>
-  </data>
   <data name="260" xml:space="preserve">
     <value>Malformed InstanceMemento {0} of PluginType {1}</value>
   </data>
@@ -255,5 +234,26 @@
   </data>
   <data name="131" xml:space="preserve">
     <value>Requested type {0} could not be found while {1}</value>
+  </data>
+  <data name="155" xml:space="preserve">
+    <value>Cannot find required &lt;StructureMap&gt; node in file {0}</value>
+  </data>
+  <data name="156" xml:space="preserve">
+    <value>Missing @File attribute on &lt;Include&gt; node on file {0}</value>
+  </data>
+  <data name="160" xml:space="preserve">
+    <value>Cannot open Xml configuration from file {0}</value>
+  </data>
+  <data name="103" xml:space="preserve">
+    <value>Requested PluginType {0} configured in Xml cannot be found</value>
+  </data>
+  <data name="400" xml:space="preserve">
+    <value>Unknown error</value>
+  </data>
+  <data name="196" xml:space="preserve">
+    <value>Could not find referenced instance named {0} of PluginType {1} for Profile {2}</value>
+  </data>
+  <data name="106" xml:space="preserve">
+    <value>Instance '{0}' cannot be added to PluginType {1}</value>
   </data>
 </root>

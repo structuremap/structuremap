@@ -2,6 +2,8 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
+using StructureMap.Testing.Container;
+using StructureMap.Testing.Widget3;
 using Profile=StructureMap.Pipeline.Profile;
 
 namespace StructureMap.Testing.Pipeline
@@ -22,7 +24,7 @@ namespace StructureMap.Testing.Pipeline
         private void setDefault<T>(string key)
         {
             PluginFamily family = _pluginGraph.FindFamily(typeof (T));
-            family.AddInstance(new LiteralInstance(null).WithName(key));
+            family.AddInstance(new ConfiguredInstance().WithName(key));
 
             _profile.SetDefault(typeof(T), new ReferencedInstance(key));
         }
@@ -47,8 +49,8 @@ namespace StructureMap.Testing.Pipeline
         public void A_call_to_fill_is_ignored_if_there_is_already_a_default_for_that_type()
         {
             Profile profile = new Profile("something");
-            profile.SetDefault(typeof(ISomething), new LiteralInstance(null).WithName("Red"));
-            profile.FillTypeInto(typeof(ISomething), new LiteralInstance(null).WithName("Blue"));
+            profile.SetDefault(typeof(ISomething), new ConfiguredInstance().WithName("Red"));
+            profile.FillTypeInto(typeof(ISomething), new ConfiguredInstance().WithName("Blue"));
 
             Assert.AreEqual("Red", profile.GetDefault(typeof(ISomething)).Name);
         }
@@ -57,7 +59,7 @@ namespace StructureMap.Testing.Pipeline
         public void A_call_to_fill_sets_the_default_for_a_plugin_type_if_no_previous_default_is_known()
         {
             Profile profile = new Profile("something");
-            profile.FillTypeInto(typeof(ISomething), new LiteralInstance(null).WithName("Blue"));
+            profile.FillTypeInto(typeof(ISomething), new ConfiguredInstance().WithName("Blue"));
 
             Assert.AreEqual("Blue", profile.GetDefault(typeof(ISomething)).Name);
         }
@@ -66,14 +68,14 @@ namespace StructureMap.Testing.Pipeline
         public void FillAll_pushes_in_all_types()
         {
             Profile source = new Profile("Source");
-            source.SetDefault(typeof(ISomething), new LiteralInstance(null).WithName("Red"));
-            source.SetDefault(typeof(string), new LiteralInstance(null).WithName("Red"));
-            source.SetDefault(typeof(int), new LiteralInstance(null).WithName("Red"));
-            source.SetDefault(typeof(bool), new LiteralInstance(null).WithName("Red"));
+            source.SetDefault(typeof(ISomething), new LiteralInstance(new SomethingOne()).WithName("Red"));
+            source.SetDefault(typeof(string), new LiteralInstance(new SomethingOne()).WithName("Red"));
+            source.SetDefault(typeof(int), new LiteralInstance(new SomethingOne()).WithName("Red"));
+            source.SetDefault(typeof(bool), new LiteralInstance(new SomethingOne()).WithName("Red"));
 
             Profile destination = new Profile("Destination");
-            destination.SetDefault(typeof(string), new LiteralInstance(null).WithName("Blue"));
-            destination.SetDefault(typeof(int), new LiteralInstance(null).WithName("Blue"));
+            destination.SetDefault(typeof(string), new LiteralInstance(new SomethingOne()).WithName("Blue"));
+            destination.SetDefault(typeof(int), new LiteralInstance(new SomethingOne()).WithName("Blue"));
 
             source.FillAllTypesInto(destination);
 
@@ -102,6 +104,20 @@ namespace StructureMap.Testing.Pipeline
             assertThatMasterInstanceWasFound<ISomething>("Red");
             assertThatMasterInstanceWasFound<IBuildPolicy>("Green");
             assertThatMasterInstanceWasFound<IConstraint>("Blue");
+        }
+
+        [Test]
+        public void FindMasterInstances_sad_path()
+        {
+            TestUtility.AssertErrorIsLogged(196, delegate(PluginGraph graph)
+                                                     {
+                                                         string theInstanceName = "something";
+
+                                                         Profile profile = new Profile("something");
+                                                         profile.SetDefault(typeof(IGateway), new ReferencedInstance(theInstanceName));
+
+                                                         profile.FindMasterInstances(graph);
+                                                     });
         }
     }
 }

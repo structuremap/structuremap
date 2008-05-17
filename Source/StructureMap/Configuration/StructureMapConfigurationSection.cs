@@ -26,7 +26,6 @@ namespace StructureMap.Configuration
             IList<XmlNode> nodes = ConfigurationSettings.GetConfig(XmlConstants.STRUCTUREMAP) as IList<XmlNode>;
             if (nodes == null)
             {
-                // TODO -- need to get this into PluginGraph instead
                 throw new StructureMapException(105, XmlConstants.STRUCTUREMAP);
             }
             return nodes;

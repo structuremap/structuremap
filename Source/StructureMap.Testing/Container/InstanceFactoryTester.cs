@@ -90,9 +90,12 @@ namespace StructureMap.Testing.Container
             PluginGraph graph = registry.Build();
             PipelineGraph pipelineGraph = new PipelineGraph(graph);
 
-            IInstanceFactory factory = pipelineGraph.ForType(typeof (IGateway));
+            BuildSession session = new BuildSession(graph);
 
-            DefaultGateway gateway = factory.Build(_session, "Default") as DefaultGateway;
+
+            DefaultGateway gateway = 
+                (DefaultGateway) session.CreateInstance(typeof (IGateway), "Default");
+
             Assert.IsNotNull(gateway);
         }
 

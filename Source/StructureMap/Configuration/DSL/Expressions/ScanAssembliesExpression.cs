@@ -73,7 +73,6 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         public ScanAssembliesExpression AddAllTypesOf<PLUGINTYPE>()
         {
-            // TODO:  Do this by adding something to TypeScanner
             _registry.addExpression(delegate(PluginGraph pluginGraph)
                                         {
                                             PluginFamily family =

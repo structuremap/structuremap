@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
+using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
@@ -66,6 +68,23 @@ namespace StructureMap
         public void Inject<PLUGINTYPE>(PLUGINTYPE instance)
         {
             _pipelineGraph.Inject(instance);
+        }
+
+        public void InjectByName<PLUGINTYPE>(PLUGINTYPE instance, string instanceKey)
+        {
+            LiteralInstance literalInstance = new LiteralInstance(instance);
+            literalInstance.Name = instanceKey;
+
+            AddInstance<PLUGINTYPE>(literalInstance);
+        }
+
+        public void InjectByName<PLUGINTYPE, CONCRETETYPE>(string instanceKey)
+        {
+            ConfiguredInstance instance = new ConfiguredInstance();
+            instance.PluggedType = typeof(CONCRETETYPE);
+            instance.Name = instanceKey;
+
+            AddInstance<PLUGINTYPE>(instance);
         }
 
         public T CreateInstance<T>()
@@ -223,16 +242,8 @@ namespace StructureMap
 
         public string WhatDoIHave()
         {
-            StringBuilder sb = new StringBuilder();
-
-            throw new NotImplementedException("Redo");
-            //foreach (IInstanceFactory factory in this)
-            //{
-            //    sb.AppendFormat("PluginType {0}, Default: {1}\r\n", factory.PluginType.AssemblyQualifiedName,
-            //                    factory.DefaultInstanceKey);
-            //}
-
-            return sb.ToString();
+            WhatDoIHaveWriter writer = new WhatDoIHaveWriter(_pipelineGraph);
+            return writer.GetText();
         }
 
         #endregion

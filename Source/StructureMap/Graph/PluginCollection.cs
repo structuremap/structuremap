@@ -78,18 +78,6 @@ namespace StructureMap.Graph
 
         #endregion
 
-        /// <summary>
-        /// Adds a new Plugin by the PluggedType
-        /// </summary>
-        /// <param name="pluggedType"></param>
-        /// <param name="concreteKey"></param>
-        // TODO -- not wild about this method.
-        [Obsolete("Get rid of this")]
-        public void Add(Type pluggedType, string concreteKey)
-        {
-            Plugin plugin = new Plugin(pluggedType, concreteKey);
-            Add(plugin);
-        }
 
         public void Add(Plugin plugin)
         {
@@ -108,9 +96,7 @@ namespace StructureMap.Graph
             // Reject if the PluggedType cannot be upcast to the PluginType
             if (!TypeRules.CanBeCast(_family.PluginType, plugin.PluggedType))
             {
-                // TODO -- get this logged
-                throw new StructureMapException(114, plugin.PluggedType.FullName,
-                                                _family.PluginType.AssemblyQualifiedName);
+                throw new StructureMapException(104, plugin.PluggedType, _family.PluginType);
             }
 
             _plugins.Add(plugin.PluggedType, plugin);

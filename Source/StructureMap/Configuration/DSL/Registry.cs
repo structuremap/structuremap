@@ -238,9 +238,9 @@ namespace StructureMap.Configuration.DSL
         }
 
         public static ConstructorInstance ConstructedBy<PLUGINTYPE>
-            (BuildObjectDelegate builder)
+            (Func<PLUGINTYPE> builder)
         {
-            return new ConstructorInstance(builder);
+            return new ConstructorInstance(delegate() { return builder(); });
         }
 
         public static ReferencedInstance Instance(string referencedKey)
