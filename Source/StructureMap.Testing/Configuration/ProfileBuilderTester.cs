@@ -81,5 +81,18 @@ namespace StructureMap.Testing.Configuration
 
             Assert.AreEqual(theProfileName, _graph.ProfileManager.DefaultProfileName);
         }
+
+        [Test]
+        public void Override_profile_with_a_bad_TypePath_should_log_107()
+        {
+            PluginGraph graph = new PluginGraph();
+
+            ProfileBuilder builder = new ProfileBuilder(graph);
+
+            builder.AddProfile("something");
+            builder.OverrideProfile(new TypePath("a type that does not exist"), "key");
+
+            graph.Log.AssertHasError(107);
+        }
     }
 }

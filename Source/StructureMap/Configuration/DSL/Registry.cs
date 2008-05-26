@@ -9,7 +9,7 @@ namespace StructureMap.Configuration.DSL
 {
     public class Registry : IDisposable
     {
-        private readonly List<IExpression> _expressions = new List<IExpression>();
+        private readonly List<Action<PluginGraph>> _actions = new List<Action<PluginGraph>>();
         private readonly PluginGraph _graph;
 
         public Registry(PluginGraph graph) : this()
@@ -40,21 +40,18 @@ namespace StructureMap.Configuration.DSL
             // no-op;
         }
 
-        protected internal void addExpression(IExpression expression)
+        internal void addExpression(Action<PluginGraph> alteration)
         {
-            _expressions.Add(expression);
-        }
-
-        internal void addExpression(PluginGraphAlteration alteration)
-        {
-            _expressions.Add(new BasicExpression(alteration));
+            _actions.Add(alteration);
         }
 
         internal void ConfigurePluginGraph(PluginGraph graph)
         {
-            foreach (IExpression expression in _expressions)
+            graph.Log.StartSource("Registry:  " + TypePath.GetAssemblyQualifiedName(GetType()));
+
+            foreach (Action<PluginGraph> action in _actions)
             {
-                expression.Configure(graph);
+                action(graph);
             }
         }
 
@@ -67,10 +64,7 @@ namespace StructureMap.Configuration.DSL
         /// <returns></returns>
         public CreatePluginFamilyExpression<PLUGINTYPE> BuildInstancesOf<PLUGINTYPE>()
         {
-            CreatePluginFamilyExpression<PLUGINTYPE> expression = new CreatePluginFamilyExpression<PLUGINTYPE>();
-            addExpression(expression);
-
-            return expression;
+            return new CreatePluginFamilyExpression<PLUGINTYPE>(this);
         }
 
         /// <summary>
@@ -83,10 +77,7 @@ namespace StructureMap.Configuration.DSL
         /// <returns></returns>
         public CreatePluginFamilyExpression<PLUGINTYPE> ForRequestedType<PLUGINTYPE>()
         {
-            CreatePluginFamilyExpression<PLUGINTYPE> expression = new CreatePluginFamilyExpression<PLUGINTYPE>();
-            addExpression(expression);
-
-            return expression;
+            return new CreatePluginFamilyExpression<PLUGINTYPE>(this);
         }
 
         public IInstanceManager BuildInstanceManager()
@@ -113,7 +104,10 @@ namespace StructureMap.Configuration.DSL
             ConfiguredInstance instance = new ConfiguredInstance();
 
             addExpression(
-                delegate(PluginGraph pluginGraph) { pluginGraph.FindFamily(typeof (PLUGINTYPE)).AddInstance(instance); });
+                delegate(PluginGraph pluginGraph)
+                {
+                    pluginGraph.FindFamily(typeof (PLUGINTYPE)).AddInstance(instance);
+                });
 
             return instance;
         }
@@ -200,8 +194,7 @@ namespace StructureMap.Configuration.DSL
         /// <returns></returns>
         public ProfileExpression CreateProfile(string profileName)
         {
-            ProfileExpression expression = new ProfileExpression(profileName);
-            addExpression(expression);
+            ProfileExpression expression = new ProfileExpression(profileName, this);
 
             return expression;
         }
@@ -254,12 +247,12 @@ namespace StructureMap.Configuration.DSL
                 delegate(PluginGraph pluginGraph) { pluginGraph.InterceptorLibrary.AddInterceptor(interceptor); });
         }
 
-        public TypeInterceptorExpression IfTypeMatches(Predicate<Type> match)
+        public MatchedTypeInterceptor IfTypeMatches(Predicate<Type> match)
         {
-            TypeInterceptorExpression expression = new TypeInterceptorExpression(match);
-            _expressions.Add(expression);
+            MatchedTypeInterceptor interceptor = new MatchedTypeInterceptor(match);
+            _actions.Add(delegate(PluginGraph graph) { graph.InterceptorLibrary.AddInterceptor(interceptor); });
 
-            return expression;
+            return interceptor;
         }
 
 
@@ -269,32 +262,31 @@ namespace StructureMap.Configuration.DSL
         /// <returns></returns>
         public ScanAssembliesExpression ScanAssemblies()
         {
-            ScanAssembliesExpression expression = new ScanAssembliesExpression(this);
-            addExpression(expression);
+            return new ScanAssembliesExpression(this);
+        }
 
-            return expression;
+
+        public void AddInstanceOf(Type pluginType, Instance instance)
+        {
+            _actions.Add(delegate(PluginGraph graph) { graph.FindFamily(pluginType).AddInstance(instance); });
+        }
+
+        public void AddInstanceOf<PLUGINTYPE>(Instance instance)
+        {
+            _actions.Add(delegate(PluginGraph graph) { graph.FindFamily(typeof (PLUGINTYPE)).AddInstance(instance); });
         }
     }
 
 
-    public class TypeInterceptorExpression : IExpression, TypeInterceptor
+    public class MatchedTypeInterceptor : TypeInterceptor
     {
         private readonly Predicate<Type> _match;
         private InterceptionFunction _interception;
 
-        internal TypeInterceptorExpression(Predicate<Type> match)
+        internal MatchedTypeInterceptor(Predicate<Type> match)
         {
             _match = match;
         }
-
-        #region IExpression Members
-
-        void IExpression.Configure(PluginGraph graph)
-        {
-            graph.InterceptorLibrary.AddInterceptor(this);
-        }
-
-        #endregion
 
         #region TypeInterceptor Members
 
@@ -314,26 +306,5 @@ namespace StructureMap.Configuration.DSL
         {
             _interception = interception;
         }
-    }
-
-    internal delegate void PluginGraphAlteration(PluginGraph pluginGraph);
-
-    internal class BasicExpression : IExpression
-    {
-        private readonly PluginGraphAlteration _alteration;
-
-        internal BasicExpression(PluginGraphAlteration alteration)
-        {
-            _alteration = alteration;
-        }
-
-        #region IExpression Members
-
-        public void Configure(PluginGraph graph)
-        {
-            _alteration(graph);
-        }
-
-        #endregion
     }
 }

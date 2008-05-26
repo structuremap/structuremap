@@ -20,55 +20,6 @@ namespace StructureMap.Testing.Configuration.DSL
 
         #endregion
 
-        [Test]
-        public void CallAllExpressionsOnConfigure()
-        {
-            MockRepository mocks = new MockRepository();
-            IExpression expression1 = mocks.CreateMock<IExpression>();
-            IExpression expression2 = mocks.CreateMock<IExpression>();
-            IExpression expression3 = mocks.CreateMock<IExpression>();
-
-            PluginGraph graph = new PluginGraph();
-            expression1.Configure(graph);
-            expression2.Configure(graph);
-            expression3.Configure(graph);
-
-            mocks.ReplayAll();
-
-            TestRegistry registry = new TestRegistry(graph);
-            registry.AddExpression(expression1);
-            registry.AddExpression(expression2);
-            registry.AddExpression(expression3);
-
-            registry.Dispose();
-
-            mocks.VerifyAll();
-        }
-
-        [Test]
-        public void DisposeCallsConfigure()
-        {
-            MockRepository mocks = new MockRepository();
-            IExpression expression1 = mocks.CreateMock<IExpression>();
-            IExpression expression2 = mocks.CreateMock<IExpression>();
-            IExpression expression3 = mocks.CreateMock<IExpression>();
-
-            PluginGraph graph = new PluginGraph();
-            expression1.Configure(graph);
-            expression2.Configure(graph);
-            expression3.Configure(graph);
-
-            mocks.ReplayAll();
-
-            using (TestRegistry registry = new TestRegistry(graph))
-            {
-                registry.AddExpression(expression1);
-                registry.AddExpression(expression2);
-                registry.AddExpression(expression3);
-            }
-
-            mocks.VerifyAll();
-        }
 
         [Test]
         public void LoadControl()
@@ -102,10 +53,6 @@ namespace StructureMap.Testing.Configuration.DSL
         {
         }
 
-        public void AddExpression(IExpression expression)
-        {
-            addExpression(expression);
-        }
     }
 
     public class FakeGateway : IGateway

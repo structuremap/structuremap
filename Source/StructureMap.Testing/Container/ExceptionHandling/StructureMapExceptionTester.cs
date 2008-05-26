@@ -15,7 +15,7 @@ namespace StructureMap.Testing.Container.ExceptionHandling
     {
         private void assertErrorIsLogged(int errorCode, string xml)
         {
-            PluginGraph graph = DataMother.CreateFromXml(xml);
+            PluginGraph graph = DataMother.BuildPluginGraphFromXml(xml);
             graph.Log.AssertHasError(errorCode);
         }
 

@@ -22,6 +22,11 @@ namespace StructureMap.Pipeline
 
         public void SetDefault(Type pluginType, Instance instance)
         {
+            if (instance == null)
+            {
+                throw new ArgumentNullException("instance");
+            }
+
             if (_instances.ContainsKey(pluginType))
             {
                 _instances[pluginType] = instance;

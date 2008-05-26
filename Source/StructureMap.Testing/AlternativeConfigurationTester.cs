@@ -50,7 +50,7 @@ namespace StructureMap.Testing
 
 
             StructureMapConfiguration.UseDefaultStructureMapConfigFile = true;
-            StructureMapConfiguration.IncludeConfigurationFromNode(doc.DocumentElement);
+            StructureMapConfiguration.IncludeConfigurationFromNode(doc.DocumentElement, string.Empty);
             ObjectFactory.Reset();
 
             IPlug<string> service = ObjectFactory.GetInstance<IPlug<string>>();

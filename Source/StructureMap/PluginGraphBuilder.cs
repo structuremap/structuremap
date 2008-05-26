@@ -57,7 +57,21 @@ namespace StructureMap
         public PluginGraph Build()
         {
             GraphBuilder graphBuilder = new GraphBuilder(_registries, _graph);
-            buildPluginGraph(graphBuilder);
+            
+            forAllParsers(delegate(ConfigurationParser p)
+            {
+                _graph.Log.StartSource(p.Description);
+                p.ParseAssemblies(graphBuilder);
+            });
+
+            graphBuilder.PrepareSystemObjects();
+
+            forAllParsers(delegate(ConfigurationParser p)
+                              {
+                                  p.ParseFamilies(graphBuilder);
+                                  p.ParseProfilesAndMachines(graphBuilder);
+                                  p.ParseInstances(graphBuilder);
+                              });
 
             _graph.Seal();
 
@@ -72,18 +86,5 @@ namespace StructureMap
             }
         }
 
-        private void buildPluginGraph(IGraphBuilder graphBuilder)
-        {
-            forAllParsers(delegate(ConfigurationParser p) { p.ParseAssemblies(graphBuilder); });
-
-            graphBuilder.PrepareSystemObjects();
-
-            forAllParsers(delegate(ConfigurationParser p)
-                              {
-                                  p.ParseFamilies(graphBuilder);
-                                  p.ParseProfilesAndMachines(graphBuilder);
-                                  p.ParseInstances(graphBuilder);
-                              });
-        }
     }
 }

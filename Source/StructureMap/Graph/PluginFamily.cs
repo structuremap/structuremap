@@ -99,12 +99,6 @@ namespace StructureMap.Graph
 
         public void AddInstance(Instance instance)
         {
-            IDiagnosticInstance diagnosticInstance = instance;
-            if (!diagnosticInstance.CanBePartOfPluginFamily(this))
-            {
-                _parent.Log.RegisterError(106, instance.CreateToken(), _pluginType);
-            }
-
             _instances.Add(instance);
         }
 
@@ -129,9 +123,30 @@ namespace StructureMap.Graph
 
             discoverImplicitInstances();
 
+            validatePluggabilityOfInstances();
+
             if (_instances.Count == 1)
             {
                 _defaultKey = _instances[0].Name;
+            }
+        }
+
+        private void validatePluggabilityOfInstances()
+        {
+            foreach (Instance instance in _instances)
+            {
+                IDiagnosticInstance diagnosticInstance = instance;
+
+                _parent.Log.Try(delegate()
+                {
+                    diagnosticInstance.Preprocess(this);    
+                }).AndReportErrorAs(104, diagnosticInstance.CreateToken(), _pluginType);
+
+                
+                if (!diagnosticInstance.CanBePartOfPluginFamily(this))
+                {
+                    _parent.Log.RegisterError(104, diagnosticInstance.CreateToken(), _pluginType);
+                }
             }
         }
 
@@ -255,5 +270,20 @@ namespace StructureMap.Graph
         }
 
         #endregion
+
+        public Plugin FindPlugin(Type pluggedType)
+        {
+            if (HasPlugin(pluggedType))
+            {
+                return Plugins[pluggedType];
+            }
+            else
+            {
+                Plugin plugin = new Plugin(pluggedType);
+                Plugins.Add(plugin);
+
+                return plugin;
+            }
+        }
     }
 }

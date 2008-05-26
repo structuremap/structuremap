@@ -14,7 +14,33 @@ namespace StructureMap.Testing
         [SetUp]
         public void SetUp()
         {
-            PluginGraph graph = DataMother.GetDiagnosticPluginGraph("GenericsTesting.xml");
+            string xml = @"
+<StructureMap Id='Generics'>
+  <Assembly Name='StructureMap.Testing.GenericWidgets'/>
+
+  <PluginFamily Assembly='StructureMap.Testing.GenericWidgets' Type='StructureMap.Testing.GenericWidgets.IThing`2' DefaultKey='Red'>
+    <Plugin Assembly='StructureMap.Testing.GenericWidgets' Type='StructureMap.Testing.GenericWidgets.ColorThing`2' ConcreteKey='Color' />
+    <Plugin Assembly='StructureMap.Testing.GenericWidgets' Type='StructureMap.Testing.GenericWidgets.ComplexThing`2' ConcreteKey='Complex' />
+
+    <Instance Key='Red' Type='Color'>
+      <Property Name='color' Value='Red'/>
+    </Instance>
+
+    <Instance Key='Complicated' Type='Complex'>
+      <Property Name='name' Value='Jeremy' />
+      <Property Name='age' Value='32' />
+      <Property Name='ready' Value='true' />
+    </Instance>
+  </PluginFamily>
+
+  <PluginFamily Assembly='StructureMap.Testing.GenericWidgets' Type='StructureMap.Testing.GenericWidgets.ISimpleThing`1' DefaultKey='Simple'>
+    <Plugin Assembly='StructureMap.Testing.GenericWidgets' Type='StructureMap.Testing.GenericWidgets.SimpleThing`1' ConcreteKey='Simple' />
+  </PluginFamily>
+  
+</StructureMap>
+";
+
+            PluginGraph graph = DataMother.BuildPluginGraphFromXml(xml);
             manager = new InstanceManager(graph);
         }
 
@@ -44,15 +70,6 @@ namespace StructureMap.Testing
             Assert.IsFalse(GenericsPluginGraph.CanBePluggedIntoGenericType(typeof(IConcept<>), typeof(SpecificConcept), typeof(int)));
         }
 
-        [Test, Ignore("Generics with more than 2 parameters")]
-        public void ImplicitPluginFamilyWithLotsOfTemplatedParameters()
-        {
-            ILotsOfTemplatedTypes<int, bool, string> thing =
-                (ILotsOfTemplatedTypes<int, bool, string>)
-                manager.CreateInstance(typeof (ILotsOfTemplatedTypes<int, bool, string>));
-
-            Assert.IsNotNull(thing);
-        }
 
         [Test]
         public void MultipleGenericTypes()

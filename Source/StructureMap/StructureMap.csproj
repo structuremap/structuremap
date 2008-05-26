@@ -117,14 +117,20 @@
     </Compile>
     <Compile Include="BuildSession.cs" />
     <Compile Include="Configuration\ProfileBuilder.cs" />
+    <Compile Include="Delegates.cs" />
+    <Compile Include="Diagnostics\BuildError.cs" />
     <Compile Include="Diagnostics\CharacterWidth.cs" />
     <Compile Include="Diagnostics\DividerLine.cs" />
+    <Compile Include="Diagnostics\Error.cs" />
+    <Compile Include="Diagnostics\ErrorCollection.cs" />
+    <Compile Include="Diagnostics\GraphLog.cs" />
+    <Compile Include="Diagnostics\InstanceToken.cs" />
     <Compile Include="Diagnostics\Line.cs" />
     <Compile Include="Diagnostics\TextLine.cs" />
     <Compile Include="Diagnostics\TextReportWriter.cs" />
-    <Compile Include="Diagnostics\Tokens.cs" />
     <Compile Include="Diagnostics\WhatDoIHaveWriter.cs" />
     <Compile Include="Emitting\ArgumentEmitter.cs" />
+    <Compile Include="Exceptions\StructureMapConfigurationException.cs" />
     <Compile Include="Graph\Constructor.cs" />
     <Compile Include="Graph\IArgumentVisitor.cs" />
     <Compile Include="Graph\IPluginFamily.cs" />
@@ -186,8 +192,6 @@
     <Compile Include="Configuration\ConfigurationParserBuilder.cs" />
     <Compile Include="Configuration\DSL\Expressions\CreatePluginFamilyExpression.cs" />
     <Compile Include="Configuration\DSL\ExpressionValidator.cs" />
-    <Compile Include="Configuration\DSL\IExpression.cs" />
-    <Compile Include="Configuration\DSL\Expressions\InstanceDefaultExpression.cs" />
     <Compile Include="Pipeline\ExplicitArguments.cs" />
     <Compile Include="Configuration\DSL\Expressions\ProfileExpression.cs" />
     <Compile Include="Configuration\DSL\Registry.cs" />
@@ -355,6 +359,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="StructureMapConfiguration.cs" />
+    <Compile Include="Diagnostics\ValidationBuildSession.cs" />
     <EmbeddedResource Include="StructureMapException.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>

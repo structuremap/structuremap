@@ -3,6 +3,7 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
+using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Pipeline
@@ -22,7 +23,6 @@ namespace StructureMap.Testing.Pipeline
 
         private ConfiguredInstance instance;
 
-        private delegate void Action();
 
         private void assertActionThrowsErrorCode(int errorCode, Action action)
         {
@@ -225,5 +225,47 @@ namespace StructureMap.Testing.Pipeline
                                                      instance.Build(GetType(), null, null);
                                                  });
         }
+
+        [Test]
+        public void Can_be_plugged_in_by_concrete_key()
+        {
+            ConfiguredInstance instance = new ConfiguredInstance().WithConcreteKey("Color");
+            PluginFamily family = new PluginFamily(typeof(IWidget));
+            family.AddPlugin(typeof (ColorWidget), "Color");
+
+            IDiagnosticInstance diagnosticInstance = instance;
+            Assert.IsTrue(diagnosticInstance.CanBePartOfPluginFamily(family));
+        }
+
+        [Test]
+        public void Can_be_plugged_in_if_there_is_a_plugged_type_and_the_plugged_type_can_be_cast_to_the_plugintype()
+        {
+            ConfiguredInstance instance = new ConfiguredInstance().UsingConcreteType<ColorWidget>();
+            PluginFamily family = new PluginFamily(typeof(IWidget));
+
+            IDiagnosticInstance diagnosticInstance = instance;
+            Assert.IsTrue(diagnosticInstance.CanBePartOfPluginFamily(family));
+        }
+
+        [Test]
+        public void Can_NOT_be_plugged_in_if_no_plugged_type_and_concrete_key_cannot_be_found_in_family()
+        {
+            ConfiguredInstance instance = new ConfiguredInstance().WithConcreteKey("SomethingThatDoesNotExist");
+            PluginFamily family = new PluginFamily(typeof(IWidget));
+
+            IDiagnosticInstance diagnosticInstance = instance;
+            Assert.IsFalse(diagnosticInstance.CanBePartOfPluginFamily(family));            
+        }
+
+        [Test]
+        public void Can_NOT_be_plugged_in_if_plugged_type_cannot_be_cast_to_the_plugin_type()
+        {
+            ConfiguredInstance instance = new ConfiguredInstance().UsingConcreteType<ColorRule>();
+            PluginFamily family = new PluginFamily(typeof(IWidget));
+
+            IDiagnosticInstance diagnosticInstance = instance;
+            Assert.IsFalse(diagnosticInstance.CanBePartOfPluginFamily(family));
+        }
+
     }
 }

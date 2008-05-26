@@ -289,6 +289,7 @@
     <Compile Include="DataAccess\Tools\Mocks\MockReaderSourceTester.cs" />
     <Compile Include="DataAccess\Tools\Mocks\ParameterListTester.cs" />
     <Compile Include="DataAccess\Tools\TableDataReaderTester.cs" />
+    <Compile Include="Diagnostics\IntegrationTester.cs" />
     <Compile Include="Diagnostics\TextReportWriterSmokeTester.cs" />
     <Compile Include="GenericsAcceptanceTester.cs" />
     <Compile Include="GenericsIntegrationTester.cs" />
@@ -340,6 +341,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="TestUtility.cs" />
+    <Compile Include="Diagnostics\ValidationBuildSessionTester.cs" />
     <Compile Include="XmlWriting\ElementChecker.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -17,7 +17,7 @@ namespace StructureMap.Testing.TestData
         {
         }
 
-        public static PluginGraph CreateFromXml(string xml)
+        public static PluginGraph BuildPluginGraphFromXml(string xml)
         {
             xml = xml.Replace("'", "\"");
             XmlDocument document = new XmlDocument();
@@ -27,6 +27,7 @@ namespace StructureMap.Testing.TestData
             PluginGraphBuilder builder = new PluginGraphBuilder(parser);
             return builder.Build();
         }
+
 
         public static void BackupStructureMapConfig()
         {

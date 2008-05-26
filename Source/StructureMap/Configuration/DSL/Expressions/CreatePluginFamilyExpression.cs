@@ -10,31 +10,28 @@ namespace StructureMap.Configuration.DSL.Expressions
     /// <summary>
     /// Represents the parameters for creating instances of a given Type
     /// </summary>
-    public class CreatePluginFamilyExpression<PLUGINTYPE> : IExpression
+    public class CreatePluginFamilyExpression<PLUGINTYPE>
     {
         private readonly List<Action<PluginFamily>> _alterations = new List<Action<PluginFamily>>();
         private readonly List<Action<PluginGraph>> _children = new List<Action<PluginGraph>>();
         private readonly Type _pluginType;
         private readonly InstanceScope _scope = InstanceScope.PerRequest;
 
-        public CreatePluginFamilyExpression()
+        public CreatePluginFamilyExpression(Registry registry)
         {
             _pluginType = typeof (PLUGINTYPE);
+
+            registry.addExpression(delegate(PluginGraph graph)
+            {
+                PluginFamily family = graph.FindFamily(_pluginType);
+                family.SetScopeTo(_scope);
+
+                // TODO:  clean up with 3.5
+                _children.ForEach(delegate(Action<PluginGraph> action) { action(graph); });
+                _alterations.ForEach(delegate(Action<PluginFamily> action) { action(family); });
+            });
         }
 
-        #region IExpression Members
-
-        void IExpression.Configure(PluginGraph graph)
-        {
-            PluginFamily family = graph.FindFamily(_pluginType);
-            family.SetScopeTo(_scope);
-
-            // TODO:  clean up with 3.5
-            _children.ForEach(delegate(Action<PluginGraph> action) { action(graph); });
-            _alterations.ForEach(delegate(Action<PluginFamily> action) { action(family); });
-        }
-
-        #endregion
 
         // TODO:  3.5, Try alterAndContinue(f => {});
         private CreatePluginFamilyExpression<PLUGINTYPE> alterAndContinue(Action<PluginFamily> action)
@@ -51,10 +48,10 @@ namespace StructureMap.Configuration.DSL.Expressions
         public CreatePluginFamilyExpression<PLUGINTYPE> TheDefaultIs(Instance instance)
         {
             return alterAndContinue(delegate(PluginFamily family)
-                                 {
-                                     family.AddInstance(instance);
-                                     family.DefaultInstanceKey = instance.Name;
-                                 });
+            {
+                family.AddInstance(instance);
+                family.DefaultInstanceKey = instance.Name;
+            });
         }
 
         public CreatePluginFamilyExpression<PLUGINTYPE> AddInstance(Instance instance)
@@ -76,10 +73,10 @@ namespace StructureMap.Configuration.DSL.Expressions
             ExpressionValidator.ValidatePluggabilityOf(typeof (CONCRETETYPE)).IntoPluginType(_pluginType);
 
             return alterAndContinue(delegate(PluginFamily family)
-                                 {
-                                     Plugin plugin = family.Plugins.FindOrCreate(typeof(CONCRETETYPE), true);
-                                     family.DefaultInstanceKey = plugin.ConcreteKey;
-                                 });
+            {
+                Plugin plugin = family.Plugins.FindOrCreate(typeof (CONCRETETYPE), true);
+                family.DefaultInstanceKey = plugin.ConcreteKey;
+            });
 
             return this;
         }
@@ -111,16 +108,16 @@ namespace StructureMap.Configuration.DSL.Expressions
         {
             _children.Add(
                 delegate(PluginGraph graph)
+                {
+                    InterceptionFunction function = delegate(object target)
                     {
-                        InterceptionFunction function = delegate(object target)
-                                                            {
-                                                                handler((PLUGINTYPE) target);
-                                                                return target;
-                                                            };
+                        handler((PLUGINTYPE) target);
+                        return target;
+                    };
 
-                        PluginTypeInterceptor interceptor = new PluginTypeInterceptor(typeof (PLUGINTYPE), function);
-                        graph.InterceptorLibrary.AddInterceptor(interceptor);
-                    });
+                    PluginTypeInterceptor interceptor = new PluginTypeInterceptor(typeof (PLUGINTYPE), function);
+                    graph.InterceptorLibrary.AddInterceptor(interceptor);
+                });
 
             return this;
         }
@@ -129,12 +126,12 @@ namespace StructureMap.Configuration.DSL.Expressions
         {
             _children.Add(
                 delegate(PluginGraph graph)
-                    {
-                        InterceptionFunction function = delegate(object target) { return handler((PLUGINTYPE) target); };
+                {
+                    InterceptionFunction function = delegate(object target) { return handler((PLUGINTYPE) target); };
 
-                        PluginTypeInterceptor interceptor = new PluginTypeInterceptor(typeof (PLUGINTYPE), function);
-                        graph.InterceptorLibrary.AddInterceptor(interceptor);
-                    });
+                    PluginTypeInterceptor interceptor = new PluginTypeInterceptor(typeof (PLUGINTYPE), function);
+                    graph.InterceptorLibrary.AddInterceptor(interceptor);
+                });
 
             return this;
         }
@@ -146,15 +143,15 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         public CreatePluginFamilyExpression<PLUGINTYPE> AddConcreteType<CONCRETETYPE>(string instanceName)
         {
-            ExpressionValidator.ValidatePluggabilityOf(typeof(CONCRETETYPE)).IntoPluginType(typeof(PLUGINTYPE));
+            ExpressionValidator.ValidatePluggabilityOf(typeof (CONCRETETYPE)).IntoPluginType(typeof (PLUGINTYPE));
 
             _alterations.Add(
                 delegate(PluginFamily family)
-                    {
-                        Plugin plugin = new Plugin(typeof (CONCRETETYPE));
-                        plugin.ConcreteKey = instanceName;
-                        family.Plugins.Add(plugin);
-                    }
+                {
+                    Plugin plugin = new Plugin(typeof (CONCRETETYPE));
+                    plugin.ConcreteKey = instanceName;
+                    family.Plugins.Add(plugin);
+                }
                 );
 
             return this;
@@ -175,7 +172,7 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         public CreatePluginFamilyExpression<PLUGINTYPE> AliasConcreteType<PLUGGEDTYPE>(string concreteKey)
         {
-            ExpressionValidator.ValidatePluggabilityOf(typeof(PLUGGEDTYPE)).IntoPluginType(typeof(PLUGINTYPE));
+            ExpressionValidator.ValidatePluggabilityOf(typeof (PLUGGEDTYPE)).IntoPluginType(typeof (PLUGINTYPE));
 
             _alterations.Add(delegate(PluginFamily family) { family.AddPlugin(typeof (PLUGGEDTYPE), concreteKey); });
 

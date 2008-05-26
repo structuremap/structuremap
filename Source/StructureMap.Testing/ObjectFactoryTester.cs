@@ -73,24 +73,6 @@ namespace StructureMap.Testing
             Debug.WriteLine(message);
         }
 
-        [Test, Ignore("Come back to this.")]
-        public void TestTheRefresh()
-        {
-            ColorRule rule1 = (ColorRule) ObjectFactory.GetInstance(typeof (Rule));
-            Assert.AreEqual("Blue", rule1.Color, "Starts with Blue");
-
-            ObjectFactory.Refresh += new Notify(markDone);
-            modifyXml("Red");
-            timeout();
-            _event.WaitOne();
-
-            ColorRule rule2 = (ColorRule) ObjectFactory.GetInstance(typeof (Rule));
-            Assert.AreEqual("Red", rule2.Color, "Changed the default color to Red");
-
-
-            modifyXml("Blue");
-        }
-
         [Test]
         public void TheDefaultProfileIsSet()
         {

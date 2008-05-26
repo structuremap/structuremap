@@ -253,7 +253,4 @@
   <data name="196" xml:space="preserve">
     <value>Could not find referenced instance named {0} of PluginType {1} for Profile {2}</value>
   </data>
-  <data name="106" xml:space="preserve">
-    <value>Instance '{0}' cannot be added to PluginType {1}</value>
-  </data>
 </root>

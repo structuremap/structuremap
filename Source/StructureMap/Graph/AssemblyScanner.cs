@@ -6,8 +6,6 @@ using StructureMap.Diagnostics;
 
 namespace StructureMap.Graph
 {
-    // TODO:  dies in 3.5
-    public delegate void Action<T, U>(T t, U u);
 
     // TODO:  redo in 3.5 w/ Lambdas
     public class AssemblyScanner

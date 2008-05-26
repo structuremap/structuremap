@@ -4,11 +4,12 @@ using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
+using StructureMap.Testing.Widget2;
 
 namespace StructureMap.Testing.Configuration.DSL
 {
     [TestFixture]
-    public class ProfileExpressionTester
+    public class ProfileExpressionTester : Registry
     {
         #region Setup/Teardown
 
@@ -24,19 +25,17 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             string theProfileName = "TheProfile";
             string theDefaultName = "TheDefaultName";
+            
+            Registry registry = new Registry();
+            registry.CreateProfile(theProfileName)
+                .For<IWidget>().UseNamedInstance(theDefaultName)
+                .For<Rule>().UseNamedInstance("DefaultRule");
 
-            ProfileExpression expression = new ProfileExpression(theProfileName);
+            LiteralInstance masterInstance = new LiteralInstance(new AWidget()).WithName(theDefaultName);
+            registry.AddInstanceOf<IWidget>(masterInstance);
 
-            ProfileExpression expression2 = expression.For<IWidget>().UseNamedInstance(theDefaultName);
-            Assert.AreSame(expression, expression2);
-
-            PluginGraph graph = new PluginGraph();
-            ((IExpression)expression).Configure(graph);
-
-
-            ProfileManager manager = graph.ProfileManager;
-            ReferencedInstance defaultInstance = (ReferencedInstance) manager.GetDefault(typeof (IWidget), theProfileName);
-            Assert.AreEqual(theDefaultName, defaultInstance.ReferenceKey);
+            ProfileManager manager = registry.Build().ProfileManager;
+            Assert.AreSame(masterInstance, manager.GetDefault(typeof(IWidget), theProfileName));
         }
 
         [Test]
@@ -48,7 +47,7 @@ namespace StructureMap.Testing.Configuration.DSL
             Registry registry = new Registry(graph);
             registry.CreateProfile(theProfileName)
                 .For<IWidget>().Use(
-                Registry.Instance<IWidget>().UsingConcreteType<AWidget>()
+                    Instance<IWidget>().UsingConcreteType<AWidget>()
                 );
 
             IInstanceManager manager = registry.BuildInstanceManager();
@@ -61,6 +60,76 @@ namespace StructureMap.Testing.Configuration.DSL
             manager.SetDefaultsToProfile(theProfileName);
             AWidget widget = (AWidget)manager.CreateInstance<IWidget>();
             Assert.IsNotNull(widget);
+        }
+
+        [Test]
+        public void Add_default_instance_with_literal()
+        {
+            Registry registry = new Registry();
+            AWidget theWidget = new AWidget();
+
+            string theProfileName = "something";
+            registry.CreateProfile(theProfileName)
+                .For<IWidget>().Use(theWidget);
+
+            PluginGraph graph = registry.Build();
+            LiteralInstance instance = (LiteralInstance) graph.ProfileManager.GetDefault(typeof (IWidget), "something");
+
+            Assert.AreSame(theWidget, instance.Object);
+        }
+
+        [Test]
+        public void Add_default_instance_with_concrete_type()
+        {
+            string theProfileName = "something";
+            Registry registry = new Registry();
+            registry.CreateProfile(theProfileName)
+                .For<IWidget>().UseConcreteType<AWidget>()
+                .For<Rule>().UseConcreteType<DefaultRule>();
+
+            IInstanceManager manager = registry.BuildInstanceManager();
+            manager.SetDefaultsToProfile(theProfileName);
+
+            Assert.IsInstanceOfType(typeof(AWidget), manager.CreateInstance<IWidget>());
+            Assert.IsInstanceOfType(typeof(DefaultRule), manager.CreateInstance<Rule>());
+            
+        }
+
+        [Test]
+        public void Add_default_instance_by_lambda()
+        {
+            string theProfileName = "something";
+            Registry registry = new Registry();
+            registry.CreateProfile(theProfileName)
+                .For<IWidget>().Use(delegate() { return new AWidget(); })
+                .For<Rule>().Use(delegate() { return new DefaultRule(); });
+
+            IInstanceManager manager = registry.BuildInstanceManager();
+            manager.SetDefaultsToProfile(theProfileName);
+
+            Assert.IsInstanceOfType(typeof(AWidget), manager.CreateInstance<IWidget>());
+            Assert.IsInstanceOfType(typeof(DefaultRule), manager.CreateInstance<Rule>());
+        }
+
+        [Test]
+        public void Add_default_instance_by_prototype()
+        {
+            string theProfileName = "something";
+            IWidget theTemplate = new AWidget();
+
+            Registry registry = new Registry();
+            registry.CreateProfile(theProfileName)
+                .For<IWidget>().UsePrototypeOf(theTemplate);
+
+            IInstanceManager manager = registry.BuildInstanceManager();
+            manager.SetDefaultsToProfile(theProfileName);
+
+            IWidget widget1 = manager.CreateInstance<IWidget>();
+            IWidget widget2 = manager.CreateInstance<IWidget>();
+
+            Assert.IsNotNull(widget1);
+            Assert.IsNotNull(widget2);
+            Assert.AreNotSame(widget1, widget2);
         }
     }
 }

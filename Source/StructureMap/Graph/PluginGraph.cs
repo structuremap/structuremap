@@ -132,5 +132,11 @@ namespace StructureMap.Graph
             // Just guarantee that this PluginFamily exists
             FindFamily(pluginType);
         }
+
+        public void SetDefault(string profileName, Type pluginType, Instance instance)
+        {
+            FindFamily(pluginType).AddInstance(instance);
+            _profileManager.SetDefault(profileName, pluginType, instance);
+        }
     }
 }

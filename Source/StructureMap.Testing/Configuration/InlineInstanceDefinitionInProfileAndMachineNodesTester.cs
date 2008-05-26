@@ -51,7 +51,7 @@ namespace StructureMap.Testing.Configuration
 ";
 
 
-                return DataMother.CreateFromXml(xml);                
+                return DataMother.BuildPluginGraphFromXml(xml);                
             }
         }
 

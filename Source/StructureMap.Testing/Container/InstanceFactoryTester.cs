@@ -19,7 +19,7 @@ namespace StructureMap.Testing.Container
         {
             PluginGraph graph = new PluginGraph();
             Registry registry = new Registry(graph);
-            registry.BuildInstancesOf<Rule>().AliasConcreteType<ComplexRule>("Complex");
+            registry.BuildInstancesOf<Rule>();
             registry.ScanAssemblies()
                 .IncludeAssembly("StructureMap.Testing.Widget")
                 .IncludeAssembly("StructureMap.Testing.Widget2");

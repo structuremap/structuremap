@@ -22,18 +22,5 @@ namespace StructureMap.Testing.Graph
             path.FindType();
         }
 
-        [Test]
-        public void Define_with_out_assembly_qualified_name_throws_exception()
-        {
-            try
-            {
-                new TypePath(this.GetType().FullName);
-                Assert.Fail("Did not throw exception");
-            }
-            catch (StructureMapException ex)
-            {
-                Assert.AreEqual(107, ex.ErrorCode);
-            }
-        }
     }
 }

@@ -6,7 +6,7 @@ using StructureMap.DataAccess.Tools;
 
 namespace StructureMap.Testing.DataAccess
 {
-    [TestFixture, Ignore("temporary")]
+    [TestFixture, Explicit]
     public class CommandFactoryTester
     {
         #region Setup/Teardown

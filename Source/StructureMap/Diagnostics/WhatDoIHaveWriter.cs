@@ -49,7 +49,7 @@ namespace StructureMap.Diagnostics
 
         private void setContents(string[] contents, Instance instance)
         {
-            InstanceToken token = instance.CreateToken();
+            InstanceToken token = ((IDiagnosticInstance)instance).CreateToken();
             contents[1] = token.Name;
             contents[2] = token.Description;
 

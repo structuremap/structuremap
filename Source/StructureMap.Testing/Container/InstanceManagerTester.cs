@@ -1,6 +1,7 @@
 using System;
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
+using StructureMap.Exceptions;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
@@ -208,9 +209,6 @@ namespace StructureMap.Testing.Container
             
             manager.SetDefaultsToProfile(string.Empty);
             assertColorIs(manager, "Orange");
-
-
-
         }
 
         [Test, ExpectedException(typeof(StructureMapException))]
@@ -220,5 +218,13 @@ namespace StructureMap.Testing.Container
             manager.CreateInstance<IService>();
         }
 
+        [Test, ExpectedException(typeof(StructureMapConfigurationException))]
+        public void CTOR_throws_StructureMapConfigurationException_if_there_is_an_error()
+        {
+            PluginGraph graph = new PluginGraph();
+            graph.Log.RegisterError(400, new ApplicationException("Bad!"));
+
+            new InstanceManager(graph);
+        }
     }
 }

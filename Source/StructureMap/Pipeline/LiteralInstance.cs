@@ -23,6 +23,11 @@ namespace StructureMap.Pipeline
             get { return this; }
         }
 
+        public object Object
+        {
+            get { return _object; }
+        }
+
         protected override object build(Type pluginType, IBuildSession session)
         {
             return _object;

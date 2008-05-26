@@ -32,7 +32,6 @@ namespace StructureMap.Testing.Configuration
         private ConfigurationParserBuilder builder;
         private GraphLog _log;
 
-        private delegate void Action();
         private void assertErrorIsLogged(int errorCode, Action action)
         {
             action();
@@ -72,6 +71,26 @@ namespace StructureMap.Testing.Configuration
 
             builder.IncludeFile("GenericsTesting.xml");
             assertParserIdList("Generics");
+        }
+
+        [Test]
+        public void Put_the_file_name_onto_ConfigurationParser()
+        {
+            builder.UseAndEnforceExistenceOfDefaultFile = false;
+            builder.IgnoreDefaultFile = true;
+
+            DataMother.WriteDocument("GenericsTesting.xml");
+
+            builder.IncludeFile("GenericsTesting.xml");
+
+            ConfigurationParser[] parsers = builder.GetParsers();
+            Assert.AreEqual("GenericsTesting.xml", parsers[0].Description);
+        }
+
+        [Test]
+        public void If_adding_a_node_directly_use_stacktrace_to_get_the_node()
+        {
+
         }
 
         [Test]

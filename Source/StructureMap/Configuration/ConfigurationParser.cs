@@ -31,6 +31,8 @@ namespace StructureMap.Configuration
 
         #endregion
 
+        public string Description = string.Empty;
+
         private readonly XmlMementoCreator _mementoCreator;
         private readonly XmlNode _structureMapNode;
         private string _filePath = string.Empty;

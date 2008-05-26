@@ -37,6 +37,8 @@ namespace StructureMap
                 pluginGraph.Seal();
             }
 
+            pluginGraph.Log.AssertFailures();
+
             _pipelineGraph = new PipelineGraph(pluginGraph);
         }
 

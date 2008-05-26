@@ -47,10 +47,12 @@ namespace StructureMap.Configuration
 
         public void OverrideProfile(TypePath typePath, string instanceKey)
         {
-            // TODO:  what if the Type cannot be found?
-
-            ReferencedInstance instance = new ReferencedInstance(instanceKey);
-            _profileManager.SetDefault(_lastProfile, typePath.FindType(), instance);
+            _pluginGraph.Log.Try(delegate()
+            {
+                ReferencedInstance instance = new ReferencedInstance(instanceKey);
+                _pluginGraph.SetDefault(_lastProfile, typePath.FindType(), instance);
+                
+            }).AndReportErrorAs(107, typePath.AssemblyQualifiedName);
         }
 
         public void AddMachine(string machineName, string profileName)

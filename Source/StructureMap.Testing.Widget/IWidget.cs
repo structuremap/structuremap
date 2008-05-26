@@ -55,7 +55,7 @@ namespace StructureMap.Testing.Widget
     }
 
     [Pluggable("AWidget")]
-    public class AWidget : IWidget
+    public class AWidget : IWidget, ICloneable
     {
         public AWidget()
         {
@@ -69,6 +69,11 @@ namespace StructureMap.Testing.Widget
         }
 
         #endregion
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
 
     public class NotPluggableWidget : IWidget

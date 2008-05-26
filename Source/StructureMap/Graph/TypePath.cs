@@ -28,13 +28,10 @@ namespace StructureMap.Graph
         public TypePath(string assemblyQualifiedName)
         {
             string[] parts = assemblyQualifiedName.Split(',');
-            if (parts.Length < 2)
-            {
-                throw new StructureMapException(107, assemblyQualifiedName);
-            }
 
             _className = parts[0].Trim();
-            _assemblyName = parts[1].Trim();
+
+            if (parts.Length > 1) _assemblyName = parts[1].Trim();
         }
 
         public string AssemblyQualifiedName

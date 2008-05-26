@@ -71,7 +71,10 @@
 		<Instance Key="Red" Type="Color">
 			<Property Name="Color" Value="Red" />
 		</Instance>
-	</PluginFamily>
+    <Instance Key="Green" Type="Color">
+      <Property Name="Color" Value="Green" />
+    </Instance>
+  </PluginFamily>
 	
 	
 	<PluginFamily Type="StructureMap.Testing.Widget4.IStrategy" Assembly="StructureMap.Testing.Widget4" DefaultKey="Red">

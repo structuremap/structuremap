@@ -10,7 +10,7 @@ namespace StructureMap
     {
         private readonly InterceptorLibrary _interceptorLibrary;
         private readonly PipelineGraph _pipelineGraph;
-        private InstanceCache _cache = new InstanceCache();
+        private readonly InstanceCache _cache = new InstanceCache();
 
         public BuildSession(PipelineGraph pipelineGraph, InterceptorLibrary interceptorLibrary)
         {
@@ -22,6 +22,12 @@ namespace StructureMap
             : this(new PipelineGraph(graph), graph.InterceptorLibrary)
         {
             
+        }
+
+
+        protected PipelineGraph pipelineGraph
+        {
+            get { return _pipelineGraph; }
         }
 
         #region IBuildSession Members
@@ -37,7 +43,7 @@ namespace StructureMap
             return CreateInstance(pluginType, instance);
         }
 
-        public object CreateInstance(Type pluginType, Instance instance)
+        public virtual object CreateInstance(Type pluginType, Instance instance)
         {
             object result = _cache.Get(pluginType, instance);
             

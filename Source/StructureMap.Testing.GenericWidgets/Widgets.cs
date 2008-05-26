@@ -25,6 +25,14 @@ namespace StructureMap.Testing.GenericWidgets
         }
     }
 
+    public class Service2<T> : IService<T>
+    {
+        public Type GetT()
+        {
+            return typeof(T);
+        }
+    }
+
     [Pluggable("Plugged")]
     public class ServiceWithPlug<T> : IService<T>
     {

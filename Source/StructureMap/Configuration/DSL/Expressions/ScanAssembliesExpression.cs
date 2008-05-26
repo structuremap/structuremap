@@ -11,7 +11,7 @@ namespace StructureMap.Configuration.DSL.Expressions
     /// Expression that directs StructureMap to scan the named assemblies
     /// for [PluginFamily] and [Plugin] attributes
     /// </summary>
-    public class ScanAssembliesExpression : IExpression
+    public class ScanAssembliesExpression
     {
         private readonly List<Assembly> _assemblies = new List<Assembly>();
         private readonly Registry _registry;
@@ -19,19 +19,14 @@ namespace StructureMap.Configuration.DSL.Expressions
         public ScanAssembliesExpression(Registry registry)
         {
             _registry = registry;
-        }
-
-        #region IExpression Members
-
-        void IExpression.Configure(PluginGraph graph)
-        {
-            foreach (Assembly assembly in _assemblies)
+            _registry.addExpression(delegate(PluginGraph graph)
             {
-                graph.Assemblies.Add(assembly);
-            }
+                foreach (Assembly assembly in _assemblies)
+                {
+                    graph.Assemblies.Add(assembly);
+                }
+            });
         }
-
-        #endregion
 
         public ScanAssembliesExpression IncludeTheCallingAssembly()
         {
@@ -74,11 +69,11 @@ namespace StructureMap.Configuration.DSL.Expressions
         public ScanAssembliesExpression AddAllTypesOf<PLUGINTYPE>()
         {
             _registry.addExpression(delegate(PluginGraph pluginGraph)
-                                        {
-                                            PluginFamily family =
-                                                pluginGraph.FindFamily(typeof (PLUGINTYPE));
-                                            family.SearchForImplicitPlugins = true;
-                                        });
+            {
+                PluginFamily family =
+                    pluginGraph.FindFamily(typeof (PLUGINTYPE));
+                family.SearchForImplicitPlugins = true;
+            });
 
             return this;
         }

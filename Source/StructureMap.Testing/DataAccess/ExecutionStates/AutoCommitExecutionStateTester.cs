@@ -31,24 +31,6 @@ namespace StructureMap.Testing.DataAccess.ExecutionStates
         private AutoCommitExecutionState _executionState;
         private IMock _adapterMock;
 
-        [Test, Ignore("Problem with mocking IDbDataAdapter.Fill()")]
-        public void ExecuteDataSetHappyPath()
-        {
-            _connectionMock.Expect("Open");
-            _commandMock.Expect("Connection", _connectionMock.MockInstance);
-            _commandMock.Expect("Connection", new IsNull());
-            _adapterMock.Expect("Fill", new IsTypeOf(typeof (DataSet)));
-            _adapterMock.Expect("SelectCommand", _commandMock.MockInstance);
-
-            IDbCommand command = (IDbCommand) _commandMock.MockInstance;
-            DataSet dataSet = _executionState.ExecuteDataSet(command);
-
-            Assert.IsNotNull(dataSet);
-
-            _connectionMock.Verify();
-            _commandMock.Verify();
-            _adapterMock.Verify();
-        }
 
         [Test]
         public void ExecuteDataSetThrowsException()

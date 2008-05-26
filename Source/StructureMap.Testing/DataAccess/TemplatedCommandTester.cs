@@ -78,9 +78,5 @@ namespace StructureMap.Testing.DataAccess
             Assert.AreEqual("update LOG set UPDATE_DATE = '5/1/2005'", actual);
         }
 
-        [Test, Ignore("Do.")]
-        public void IntegratedTest()
-        {
-        }
     }
 }

@@ -145,9 +145,9 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
-        public void Log_106_if_instance_cannot_be_added_into_PluginFamily()
+        public void Log_104_if_instance_cannot_be_added_into_PluginFamily()
         {
-            TestUtility.AssertErrorIsLogged(106, delegate(PluginGraph graph)
+            TestUtility.AssertErrorIsLogged(104, delegate(PluginGraph graph)
             {
                 PluginFamily family = new PluginFamily(typeof (IGateway), graph);
                 ConfiguredInstance instance = new ConfiguredInstance(typeof (Rule));
@@ -155,6 +155,8 @@ namespace StructureMap.Testing.Graph
                 Assert.IsFalse(TypeRules.CanBeCast(typeof (IGateway), typeof (Rule)));
 
                 family.AddInstance(instance);
+
+                family.Seal();
             });
         }
 

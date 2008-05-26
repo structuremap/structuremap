@@ -39,12 +39,12 @@ namespace StructureMap
         /// <returns></returns>
         public static object FillDependencies(Type type)
         {
-            return _manager.FillDependencies(type);
+            return manager.FillDependencies(type);
         }
 
         public static T FillDependencies<T>()
         {
-            return (T) _manager.FillDependencies(typeof (T));
+            return (T) manager.FillDependencies(typeof (T));
         }
 
         /// <summary>

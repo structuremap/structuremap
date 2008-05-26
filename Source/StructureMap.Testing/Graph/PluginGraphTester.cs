@@ -1,5 +1,6 @@
 using System;
 using NUnit.Framework;
+using StructureMap.Exceptions;
 using StructureMap.Graph;
 using StructureMap.Source;
 using StructureMap.Testing.Widget;
@@ -95,6 +96,24 @@ namespace StructureMap.Testing.Graph
             Assert.AreEqual("Blue", family.DefaultInstanceKey);
 
             Assert.AreEqual(4, family.Plugins.Count, "3 different IWidget classes are marked as Pluggable");
+        }
+
+        [Test]
+        public void Seal_does_not_throw_an_exception_if_there_are_no_errors()
+        {
+            PluginGraph graph = new PluginGraph();
+            Assert.AreEqual(0, graph.Log.ErrorCount);
+
+            graph.Seal();
+        }
+
+        [Test, ExpectedException(typeof(StructureMapConfigurationException))]
+        public void AssertErrors_throws_StructureMapConfigurationException_if_there_is_an_error()
+        {
+            PluginGraph graph = new PluginGraph();
+            graph.Log.RegisterError(400, new ApplicationException("Bad!"));
+
+            graph.Log.AssertFailures();
         }
 
 

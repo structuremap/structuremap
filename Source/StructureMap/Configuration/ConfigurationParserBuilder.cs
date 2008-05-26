@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
@@ -8,12 +7,12 @@ namespace StructureMap.Configuration
 {
     public class ConfigurationParserBuilder
     {
-        private readonly List<XmlNode> _nodes = new List<XmlNode>();
+        private readonly GraphLog _log;
+        private readonly List<ConfigurationParser> _parsers = new List<ConfigurationParser>();
         private readonly List<string> _otherFiles = new List<string>();
         private bool _ignoreDefaultFile = false;
-        private readonly GraphLog _log;
-        private bool _useAndEnforceExistenceOfDefaultFile = false;
         private bool _pullConfigurationFromAppConfig;
+        private bool _useAndEnforceExistenceOfDefaultFile = false;
 
 
         public ConfigurationParserBuilder(GraphLog log)
@@ -37,10 +36,7 @@ namespace StructureMap.Configuration
         public bool PullConfigurationFromAppConfig
         {
             get { return _pullConfigurationFromAppConfig; }
-            set
-            {
-                _pullConfigurationFromAppConfig = value;
-            }
+            set { _pullConfigurationFromAppConfig = value; }
         }
 
         // TODO:  Clean up with 3.5
@@ -53,53 +49,47 @@ namespace StructureMap.Configuration
             if (shouldUseStructureMapConfigFileAt(pathToStructureMapConfig))
             {
                 _log.Try(delegate()
-                             {
-                                 ConfigurationParser parser = ConfigurationParser.FromFile(pathToStructureMapConfig);
-                                 list.Add(parser);
-                             }).AndReportErrorAs(100, pathToStructureMapConfig);
+                {
+                    ConfigurationParser parser = ConfigurationParser.FromFile(pathToStructureMapConfig);
+                    list.Add(parser);
+                }).AndReportErrorAs(100, pathToStructureMapConfig);
             }
 
             foreach (string filename in _otherFiles)
             {
                 _log.Try(delegate()
-                             {
-                                 ConfigurationParser parser = ConfigurationParser.FromFile(filename);
-                                 list.Add(parser);
-                             }).AndReportErrorAs(160, filename);
+                {
+                    ConfigurationParser parser = ConfigurationParser.FromFile(filename);
+                    parser.Description = filename;
+                    list.Add(parser);
+                }).AndReportErrorAs(160, filename);
             }
 
             if (_pullConfigurationFromAppConfig)
             {
                 _log.Try(delegate()
-                             {
-                                 IList<XmlNode> appConfigNodes = StructureMapConfigurationSection.GetStructureMapConfiguration();
-                                 foreach (XmlNode appConfigNode in appConfigNodes)
-                                 {
-                                     IncludeNode(appConfigNode);
-                                 }
-                             }).AndLogAnyErrors();
-
+                {
+                    IList<XmlNode> appConfigNodes = StructureMapConfigurationSection.GetStructureMapConfiguration();
+                    foreach (XmlNode appConfigNode in appConfigNodes)
+                    {
+                        IncludeNode(appConfigNode, string.Empty);
+                    }
+                }).AndLogAnyErrors();
             }
 
-            // TODO -- some error handling here, or somewhere else.  Need to create ConfigurationParser 
-            // as soon as the node is added to try to determine errors
-            foreach (XmlNode node in _nodes)
-            {
-                ConfigurationParser parser = new ConfigurationParser(node);
-                list.Add(parser);
-            }
+            list.AddRange(_parsers);
 
-            foreach (ConfigurationParser parser in list.ToArray())
+                foreach (ConfigurationParser parser in list.ToArray())
             {
                 parser.ForEachFile(_log,
                                    delegate(string filename)
+                                   {
+                                       _log.Try(delegate()
                                        {
-                                           _log.Try(delegate()
-                                                        {
-                                                            ConfigurationParser childParser = ConfigurationParser.FromFile(filename);
-                                                            list.Add(childParser);
-                                                        }).AndReportErrorAs(150, filename);
-                                       });
+                                           ConfigurationParser childParser = ConfigurationParser.FromFile(filename);
+                                           list.Add(childParser);
+                                       }).AndReportErrorAs(150, filename);
+                                   });
             }
 
 
@@ -109,8 +99,8 @@ namespace StructureMap.Configuration
         private bool shouldUseStructureMapConfigFileAt(string pathToStructureMapConfig)
         {
             return
-                (_useAndEnforceExistenceOfDefaultFile || 
-                File.Exists(pathToStructureMapConfig)) && !_ignoreDefaultFile;
+                (_useAndEnforceExistenceOfDefaultFile ||
+                 File.Exists(pathToStructureMapConfig)) && !_ignoreDefaultFile;
         }
 
 
@@ -119,15 +109,19 @@ namespace StructureMap.Configuration
             _otherFiles.Add(filename);
         }
 
-        public void IncludeNode(XmlNode node)
+
+        public void IncludeNode(XmlNode node, string description)
         {
-            _nodes.Add(node);
+            ConfigurationParser parser = new ConfigurationParser(node);
+            parser.Description = description;
+
+            _parsers.Add(parser);
         }
 
         public static ConfigurationParser[] GetParsers(XmlNode node, GraphLog log)
         {
             ConfigurationParserBuilder builder = new ConfigurationParserBuilder(log);
-            builder.IncludeNode(node);
+            builder.IncludeNode(node, string.Empty);
             builder.IgnoreDefaultFile = true;
 
             return builder.GetParsers();

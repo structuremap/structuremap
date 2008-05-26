@@ -71,6 +71,9 @@
 		<Instance Key="Red" Type="Color">
 			<Property Name="Color" Value="Red" />
 		</Instance>
+    <Instance Key="Green" Type="Color">
+      <Property Name="Color" Value="Green" />
+    </Instance>
 	</PluginFamily>
 	
 	

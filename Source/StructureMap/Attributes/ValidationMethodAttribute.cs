@@ -51,19 +51,5 @@ namespace StructureMap
 
             return returnValue;
         }
-
-
-        /// <summary>
-        /// Executes the marked validation methods, if any, on an object
-        /// </summary>
-        /// <param name="target"></param>
-        public static void CallValidationMethods(object target)
-        {
-            MethodInfo[] methods = GetValidationMethods(target.GetType());
-            foreach (MethodInfo method in methods)
-            {
-                method.Invoke(target, new object[0]);
-            }
-        }
     }
 }

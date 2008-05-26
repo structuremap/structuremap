@@ -10,6 +10,7 @@ namespace StructureMap.Pipeline
         bool CanBePartOfPluginFamily(PluginFamily family);
         Instance FindInstanceForProfile(PluginFamily family, string profileName, GraphLog log);
         InstanceToken CreateToken();
+        void Preprocess(PluginFamily family);
     }
 
     public abstract class Instance : IDiagnosticInstance
@@ -50,9 +51,19 @@ namespace StructureMap.Pipeline
             return findMasterInstance(family, profileName, log);
         }
 
-        public InstanceToken CreateToken()
+        InstanceToken IDiagnosticInstance.CreateToken()
         {
             return new InstanceToken(Name, getDescription());
+        }
+
+        void IDiagnosticInstance.Preprocess(PluginFamily family)
+        {
+            preprocess(family);
+        }
+
+        protected virtual void preprocess(PluginFamily family)
+        {
+            // no-op;
         }
 
         protected abstract string getDescription();
@@ -69,8 +80,28 @@ namespace StructureMap.Pipeline
 
         public virtual object Build(Type pluginType, IBuildSession session)
         {
-            object rawValue = build(pluginType, session);
+            object rawValue = createRawObject(pluginType, session);
+            return applyInterception(rawValue);
+        }
 
+        private object createRawObject(Type pluginType, IBuildSession session)
+        {
+            try
+            {
+                return build(pluginType, session);
+            }
+            catch (StructureMapException ex)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                throw new StructureMapException(400, ex);
+            }
+        }
+
+        private object applyInterception(object rawValue)
+        {
             try
             {
                 // Intercept with the Instance-specific InstanceInterceptor

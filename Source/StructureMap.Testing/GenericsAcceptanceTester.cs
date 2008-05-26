@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using NUnit.Framework;
+using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.GenericWidgets;
@@ -71,14 +72,6 @@ namespace StructureMap.Testing
             Plugin plugin = new Plugin(typeof (GenericService<>), "key");
         }
 
-        [Test, Ignore("Generics with more than 2 parameters")]
-        public void CanEmitForATemplateWithThreeTemplates()
-        {
-            PluginFamily family = new PluginFamily(typeof (ITarget2<int, string, bool>));
-            family.AddPlugin(typeof (SpecificTarget2<int, string, bool>), "specific");
-
-            InstanceFactory factory = new InstanceFactory(family);
-        }
 
         [Test]
         public void CanEmitForATemplateWithTwoTemplates()
@@ -147,8 +140,8 @@ namespace StructureMap.Testing
         public void GenericsTypeAndProfileOrMachine()
         {
             PluginGraph pluginGraph = PluginGraph.BuildGraphFromAssembly(typeof(IService<>).Assembly);
-            pluginGraph.ProfileManager.SetDefault("1", typeof(IService<>),new ReferencedInstance("Default"));
-            pluginGraph.ProfileManager.SetDefault("2", typeof(IService<>),new ReferencedInstance("Plugged"));
+            pluginGraph.SetDefault("1", typeof(IService<>),new ReferencedInstance("Default"));
+            pluginGraph.SetDefault("2", typeof(IService<>),new ReferencedInstance("Plugged"));
             
 
             InstanceManager manager = new InstanceManager(pluginGraph);
@@ -164,6 +157,44 @@ namespace StructureMap.Testing
             manager.SetDefaultsToProfile("1");
             Assert.IsInstanceOfType(typeof(Service<string>), manager.CreateInstance(typeof(IService<string>)));
         }
+
+        [Test]
+        public void Define_profile_with_generics_with_named_instance()
+        {
+            Registry registry = new Registry();
+            registry.AddInstanceOf(typeof (IService<>), new ConfiguredInstance(typeof(Service<>)).WithName("Service1"));
+            registry.AddInstanceOf(typeof (IService<>), new ConfiguredInstance(typeof(Service2<>)).WithName("Service2"));
+            registry.CreateProfile("1").For(typeof (IService<>)).UseNamedInstance("Service1");
+            registry.CreateProfile("2").For(typeof (IService<>)).UseNamedInstance("Service2");
+
+            IInstanceManager manager = registry.BuildInstanceManager();
+            manager.SetDefaultsToProfile("1");
+
+            Assert.IsInstanceOfType(typeof(Service<string>), manager.CreateInstance<IService<string>>());
+
+            manager.SetDefaultsToProfile("2");
+            Assert.IsInstanceOfType(typeof(Service2<int>), manager.CreateInstance<IService<int>>());
+        }
+
+        
+
+        [Test]
+        public void Define_profile_with_generics_and_concrete_type()
+        {
+            Registry registry = new Registry();
+            registry.CreateProfile("1").For(typeof (IService<>)).UseConcreteType(typeof (Service<>));
+            registry.CreateProfile("2").For(typeof(IService<>)).UseConcreteType(typeof(Service2<>));
+
+            IInstanceManager manager = registry.BuildInstanceManager();
+            manager.SetDefaultsToProfile("1");
+
+            Assert.IsInstanceOfType(typeof(Service<string>), manager.CreateInstance<IService<string>>());
+
+            manager.SetDefaultsToProfile("2");
+            Assert.IsInstanceOfType(typeof(Service2<int>), manager.CreateInstance<IService<int>>());
+
+        }
+
 
         [Test]
         public void GetGenericTypeByString()

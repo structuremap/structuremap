@@ -19,8 +19,6 @@ namespace StructureMap.Testing
 
         #endregion
 
-        private delegate void Action();
-
         private void assertActionThrowsErrorCode(int errorCode, Action action)
         {
             try

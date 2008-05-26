@@ -2,8 +2,7 @@ using System;
 
 namespace StructureMap.Pipeline
 {
-    
-    public delegate T Func<T>();
+
 
     public class ConstructorInstance : ExpressedInstance<ConstructorInstance>
     {
@@ -27,6 +26,7 @@ namespace StructureMap.Pipeline
 
         protected override object build(Type pluginType, IBuildSession session)
         {
+            // TODO:  specific error message
             return _builder();
         }
 

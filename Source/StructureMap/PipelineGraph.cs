@@ -68,6 +68,27 @@ namespace StructureMap
             }
         }
 
+        // Useful for the validation logic
+        public List<Instance> GetAllInstances()
+        {
+            PipelineGraphFlattener flattener = new PipelineGraphFlattener();
+            Visit(flattener);
+
+            return flattener.Instances;
+        }
+
+        internal class PipelineGraphFlattener : IPipelineGraphVisitor
+        {
+            internal List<Instance> Instances = new List<Instance>();
+
+            public void PluginType(Type pluginType, Instance defaultInstance){}
+
+            public void Instance(Type pluginType, Instance instance)
+            {
+                Instances.Add(instance);
+            }
+        }
+
         public IInstanceFactory ForType(Type pluginType)
         {
             createFactoryIfMissing(pluginType);

@@ -18,7 +18,7 @@ namespace StructureMap
         private static GraphLog _log;
         private static List<Registry> _registries;
         private static Registry _registry;
-        private static ConfigurationParserBuilder builder;
+        private static ConfigurationParserBuilder _parserBuilder;
 
         static StructureMapConfiguration()
         {
@@ -31,21 +31,21 @@ namespace StructureMap
         /// </summary>
         public static bool UseDefaultStructureMapConfigFile
         {
-            get { return builder.UseAndEnforceExistenceOfDefaultFile; }
-            set { builder.UseAndEnforceExistenceOfDefaultFile = value; }
+            get { return _parserBuilder.UseAndEnforceExistenceOfDefaultFile; }
+            set { _parserBuilder.UseAndEnforceExistenceOfDefaultFile = value; }
         }
 
 
         public static bool IgnoreStructureMapConfig
         {
-            get { return builder.IgnoreDefaultFile; }
-            set { builder.IgnoreDefaultFile = value; }
+            get { return _parserBuilder.IgnoreDefaultFile; }
+            set { _parserBuilder.IgnoreDefaultFile = value; }
         }
 
         public static bool PullConfigurationFromAppConfig
         {
-            get { return builder.PullConfigurationFromAppConfig; }
-            set { builder.PullConfigurationFromAppConfig = value; }
+            get { return _parserBuilder.PullConfigurationFromAppConfig; }
+            set { _parserBuilder.PullConfigurationFromAppConfig = value; }
         }
 
 
@@ -79,7 +79,7 @@ namespace StructureMap
         public static void ResetAll()
         {
             _log = new GraphLog();
-            builder = new ConfigurationParserBuilder(_log);
+            _parserBuilder = new ConfigurationParserBuilder(_log);
             _registry = new Registry();
             _registries = new List<Registry>();
             _registries.Add(_registry);
@@ -98,14 +98,9 @@ namespace StructureMap
         /// <returns></returns>
         public static PluginGraph GetPluginGraph()
         {
-            PluginGraphBuilder builder = createBuilder();
-            return builder.Build();
-        }
-
-        private static PluginGraphBuilder createBuilder()
-        {
-            ConfigurationParser[] parsers = builder.GetParsers();
-            return new PluginGraphBuilder(parsers, _registries.ToArray(), _log);
+            ConfigurationParser[] parsers = _parserBuilder.GetParsers();
+            PluginGraphBuilder pluginGraphBuilder = new PluginGraphBuilder(parsers, _registries.ToArray(), _log);
+            return pluginGraphBuilder.Build();
         }
 
         /// <summary>
@@ -114,16 +109,17 @@ namespace StructureMap
         /// <param name="filename"></param>
         public static void IncludeConfigurationFromFile(string filename)
         {
-            builder.IncludeFile(filename);
+            _parserBuilder.IncludeFile(filename);
         }
 
         /// <summary>
         /// Programmatically adds a &lt;StructureMap&gt; node containing Xml configuration
         /// </summary>
         /// <param name="node"></param>
-        public static void IncludeConfigurationFromNode(XmlNode node)
+        /// <param name="description">A description of this node source for troubleshooting purposes</param>
+        public static void IncludeConfigurationFromNode(XmlNode node, string description)
         {
-            builder.IncludeNode(node);
+            _parserBuilder.IncludeNode(node, string.Empty);
         }
 
         /// <summary>
@@ -132,10 +128,7 @@ namespace StructureMap
         /// <returns></returns>
         public static ScanAssembliesExpression ScanAssemblies()
         {
-            ScanAssembliesExpression expression = new ScanAssembliesExpression(_registry);
-            _registry.addExpression(expression);
-
-            return expression;
+            return new ScanAssembliesExpression(_registry);
         }
 
         /// <summary>
@@ -216,31 +209,12 @@ namespace StructureMap
 
         public static void TheDefaultProfileIs(string profileName)
         {
-            DefaultProfileExpression expression = new DefaultProfileExpression(profileName);
-            _registry.addExpression(expression);
+            _registry.addExpression(delegate(PluginGraph graph)
+            {
+                graph.ProfileManager.DefaultProfileName = profileName;
+            });
         }
 
-        #region Nested type: DefaultProfileExpression
 
-        internal class DefaultProfileExpression : IExpression
-        {
-            private readonly string _profileName;
-
-            public DefaultProfileExpression(string profileName)
-            {
-                _profileName = profileName;
-            }
-
-            #region IExpression Members
-
-            public void Configure(PluginGraph graph)
-            {
-                throw new NotImplementedException();
-            }
-
-            #endregion
-        }
-
-        #endregion
     }
 }

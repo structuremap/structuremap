@@ -53,7 +53,10 @@ namespace StructureMap.Pipeline
 
         public string ConcreteKey
         {
-            get { return _concreteKey; }
+            get
+            {
+                return _concreteKey;
+            }
             set { _concreteKey = value; }
         }
 
@@ -107,7 +110,7 @@ namespace StructureMap.Pipeline
         protected override object build(Type pluginType, IBuildSession session)
         {
             InstanceBuilder builder = session.FindBuilderByType(pluginType, _pluggedType) ??
-                                      session.FindBuilderByConcreteKey(pluginType, _concreteKey);
+                                      session.FindBuilderByConcreteKey(pluginType, ConcreteKey);
 
             return Build(pluginType, session, builder);
         }
@@ -118,7 +121,7 @@ namespace StructureMap.Pipeline
             if (builder == null)
             {
                 throw new StructureMapException(
-                    201, _concreteKey, Name, pluginType);
+                    201, ConcreteKey, Name, pluginType);
             }
 
 
@@ -153,7 +156,18 @@ namespace StructureMap.Pipeline
 
         protected override bool canBePartOfPluginFamily(PluginFamily family)
         {
-            return family.Plugins.HasPlugin(_concreteKey);
+            // F-ing generics.  You have to check concrete key first
+            if (!string.IsNullOrEmpty(_concreteKey))
+            {
+                return family.Plugins.HasPlugin(_concreteKey);
+            }
+
+            if (PluggedType != null)
+            {
+                return TypeRules.CanBeCast(family.PluginType, PluggedType);
+            }
+
+            return false;
         }
 
         internal override bool Matches(Plugin plugin)
@@ -316,7 +330,7 @@ namespace StructureMap.Pipeline
 
         #region Nested type: ChildArrayExpression
 
-        public class ChildArrayExpression<PLUGINTYPE> : IExpression
+        public class ChildArrayExpression<PLUGINTYPE>
         {
             private readonly ConfiguredInstance _instance;
             private readonly string _propertyName;
@@ -329,15 +343,6 @@ namespace StructureMap.Pipeline
 
                 _pluginType = typeof (PLUGINTYPE).GetElementType();
             }
-
-            #region IExpression Members
-
-            void IExpression.Configure(PluginGraph graph)
-            {
-                // no-op
-            }
-
-            #endregion
 
             public ConfiguredInstance Contains(params Instance[] instances)
             {
@@ -359,7 +364,6 @@ namespace StructureMap.Pipeline
         {
             private readonly ConfiguredInstance _instance;
             private readonly string _propertyName;
-            private List<IExpression> _children = new List<IExpression>();
             private Type _childType;
 
 
@@ -469,6 +473,15 @@ namespace StructureMap.Pipeline
         }
 
         #endregion
+
+        protected override void preprocess(PluginFamily family)
+        {
+            if (_pluggedType != null)
+            {
+                Plugin plugin = family.FindPlugin(_pluggedType);
+                _concreteKey = plugin.ConcreteKey;
+            }
+        }
 
         protected override string getDescription()
         {
