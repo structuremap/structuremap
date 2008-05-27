@@ -42,24 +42,11 @@ namespace StructureMap.Configuration
 
             _builder.ConfigureFamily(pluginTypePath, delegate(PluginFamily family)
             {
-                // TODO:  there's a little duplication here
                 InstanceScope scope = findScope(element);
                 family.SetScopeTo(scope);
 
-                Type pluginType = family.PluginType;
-
-                string name = element.GetAttribute(XmlConstants.NAME);
-                if (string.IsNullOrEmpty(name))
-                {
-                    name = "DefaultInstanceOf" + pluginTypePath.AssemblyQualifiedName;
-                }
-
                 InstanceMemento memento = _mementoCreator.CreateMemento(element);
-                memento.InstanceKey = name;
-
-                family.DefaultInstanceKey = name;
-
-                family.AddInstance(memento);
+                family.AddDefaultMemento(memento);
             });
         }
 

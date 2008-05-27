@@ -15,8 +15,14 @@ namespace StructureMap.Pipeline
 
             object builtObject = instance.Build(pluginType, buildSession);
 
-            // TODO:  error handling around the interception
-            return buildSession.ApplyInterception(pluginType, builtObject);
+            try
+            {
+                return buildSession.ApplyInterception(pluginType, builtObject);
+            }
+            catch (Exception e)
+            {
+                throw new StructureMapException(308, e, instance.Name, builtObject.GetType());
+            }
         }
 
         public IBuildPolicy Clone()

@@ -13,7 +13,14 @@ namespace StructureMap.Testing.Configuration
         [SetUp]
         public void SetUp()
         {
-            _graph = DataMother.GetPluginGraph("DefaultInstance.xml");
+            string xml = @"
+<StructureMap MementoStyle='Attribute'>
+  <DefaultInstance PluginType='StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget' PluggedType='StructureMap.Testing.Widget.ColorWidget,StructureMap.Testing.Widget' Color='Red' />  
+  <DefaultInstance PluginType='StructureMap.Testing.Widget.Rule,StructureMap.Testing.Widget' PluggedType='StructureMap.Testing.Widget.ColorRule,StructureMap.Testing.Widget' Color='Blue' Scope='Singleton' Key='TheBlueOne'/>  
+</StructureMap>
+";
+
+            _graph = DataMother.BuildPluginGraphFromXml(xml);
             _manager = new InstanceManager(_graph);
         }
 

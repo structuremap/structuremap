@@ -187,7 +187,7 @@ namespace StructureMap.Testing
                                                   MemoryInstanceMemento.CreateReferencedInstanceMemento("Dodge"),
                                               });
 
-            ConfiguredInstance instance = (ConfiguredInstance)memento.ReadInstance(graph, typeof(Rule));
+            IStructuredInstance instance = (IStructuredInstance)memento.ReadInstance(graph, typeof(Rule));
             Instance[] instances = instance.GetChildArray("cars");
             Assert.AreEqual(3, instances.Length);
 
@@ -216,7 +216,7 @@ namespace StructureMap.Testing
             MemoryInstanceMemento carMemento = MemoryInstanceMemento.CreateReferencedInstanceMemento("GrandPrix");
             memento.AddChild("car", carMemento);
 
-            ConfiguredInstance instance = (ConfiguredInstance) memento.ReadInstance(graph, typeof (Rule));
+            IStructuredInstance instance = (IStructuredInstance)memento.ReadInstance(graph, typeof(Rule));
             ReferencedInstance child = (ReferencedInstance) instance.GetChild("car");
 
             Assert.AreEqual("GrandPrix", child.ReferenceKey);
@@ -233,7 +233,7 @@ namespace StructureMap.Testing
             MemoryInstanceMemento memento = ComplexRule.GetMemento();
             memento.SetProperty(XmlConstants.PLUGGED_TYPE, typeof (ComplexRule).AssemblyQualifiedName);
 
-            ConfiguredInstance instance = (ConfiguredInstance) memento.ReadInstance(graph, typeof (Rule));
+            IStructuredInstance instance = (IStructuredInstance)memento.ReadInstance(graph, typeof(Rule));
             Assert.IsInstanceOfType(typeof (DefaultInstance), instance.GetChild("car"));
         }
 

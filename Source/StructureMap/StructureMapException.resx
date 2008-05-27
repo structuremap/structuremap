@@ -253,4 +253,7 @@
   <data name="196" xml:space="preserve">
     <value>Could not find referenced instance named {0} of PluginType {1} for Profile {2}</value>
   </data>
+  <data name="270" xml:space="preserve">
+    <value>Instance specific interception failed for {0} of PluginType {1}</value>
+  </data>
 </root>

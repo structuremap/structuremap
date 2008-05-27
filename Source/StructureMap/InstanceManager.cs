@@ -96,8 +96,7 @@ namespace StructureMap
 
         public void InjectByName<PLUGINTYPE, CONCRETETYPE>(string instanceKey)
         {
-            ConfiguredInstance instance = new ConfiguredInstance();
-            instance.PluggedType = typeof(CONCRETETYPE);
+            ConfiguredInstance instance = new ConfiguredInstance(typeof(CONCRETETYPE));
             instance.Name = instanceKey;
 
             AddInstance<PLUGINTYPE>(instance);
@@ -207,7 +206,6 @@ namespace StructureMap
                 throw new StructureMapException(230, type.FullName);
             }
 
-            // TODO:  Little bit of smelliness here
             Plugin plugin = new Plugin(type);
             if (!plugin.CanBeAutoFilled)
             {

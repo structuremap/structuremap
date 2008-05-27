@@ -68,13 +68,11 @@ namespace StructureMap.Graph
         {
             if (property == null)
             {
-                // TODO -- log this
                 throw new StructureMapException(240, propertyName, _plugin.PluggedType);
             }
 
             if (property.GetSetMethod() == null)
             {
-                // TODO -- log this
                 throw new StructureMapException(241, propertyName, _plugin.PluggedType);
             }
 

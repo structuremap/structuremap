@@ -139,5 +139,45 @@ namespace StructureMap.Testing.Graph
         {
             Plugin plugin = new Plugin(typeof (BadSetterClass));
         }
+
+
+
+        [Test]
+        public void Log_240_when_a_designated_setter_does_not_exist()
+        {
+            string errorXml = @"
+                <StructureMap>
+	                <PluginFamily Type='StructureMap.Testing.Widget5.IGridColumn' Assembly='StructureMap.Testing.Widget5' DefaultKey=''>
+		                <Plugin Assembly='StructureMap.Testing.Widget5' Type='StructureMap.Testing.Widget5.OtherGridColumn' ConcreteKey='Other'>
+			                <Setter Name='Does not exist' />
+		                </Plugin>
+	                </PluginFamily>
+                </StructureMap>
+                ";
+
+
+            PluginGraph graph = DataMother.BuildPluginGraphFromXml(errorXml);
+            graph.Log.AssertHasError(240);
+        }
+
+
+        [Test]
+        public void Log_241_when_a_designated_setter_does_not_exist()
+        {
+            string errorXml = @"
+                <StructureMap>
+	                <PluginFamily Type='StructureMap.Testing.Widget5.IGridColumn' Assembly='StructureMap.Testing.Widget5' DefaultKey=''>
+		                <Plugin Assembly='StructureMap.Testing.Widget5' Type='StructureMap.Testing.Widget5.OtherGridColumn' ConcreteKey='Other'>
+			                <Setter Name='ReadOnly' />
+		                </Plugin>
+	                </PluginFamily>
+                </StructureMap>
+                ";
+
+
+            PluginGraph graph = DataMother.BuildPluginGraphFromXml(errorXml);
+            graph.Log.AssertHasError(241);
+        }
+
     }
 }

@@ -101,13 +101,18 @@ namespace StructureMap.Testing.Configuration.DSL
             Assert.AreSame(_lastService, interceptedService);
         }
 
-        [Test,
-         ExpectedException(typeof (StructureMapException),
-            ExpectedMessage = "StructureMap Exception Code:  308\nA configured instance interceptor has failed for Instance 'Bad' and concrete type 'StructureMap.Testing.Widget3.ColorService,StructureMap.Testing.Widget3'"
-             )]
+        [Test]
         public void TrapFailureInInterceptor()
         {
-            _manager.CreateInstance<IService>("Bad");
+            try
+            {
+                _manager.CreateInstance<IService>("Bad");
+                Assert.Fail("Should have thrown an error");
+            }
+            catch (StructureMapException e)
+            {
+                Assert.AreEqual(270, e.ErrorCode);
+            }
         }
     }
 

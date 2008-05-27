@@ -63,7 +63,6 @@ namespace StructureMap.Configuration
 
         public void PrepareSystemObjects()
         {
-            // TODO:  is this a problem here?
             _systemGraph.Seal();
         }
 

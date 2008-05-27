@@ -286,5 +286,16 @@ namespace StructureMap.Graph
                 return plugin;
             }
         }
+
+        public void AddDefaultMemento(InstanceMemento memento)
+        {
+            if (string.IsNullOrEmpty(memento.InstanceKey))
+            {
+                memento.InstanceKey = "DefaultInstanceOf" + TypePath.GetAssemblyQualifiedName(PluginType);
+            }
+
+            AddInstance(memento);
+            DefaultInstanceKey = memento.InstanceKey;
+        }
     }
 }

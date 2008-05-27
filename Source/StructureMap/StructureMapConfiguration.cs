@@ -151,6 +151,11 @@ namespace StructureMap
             return _registry.BuildInstancesOf<PLUGINTYPE>();
         }
 
+        public static GenericFamilyExpression ForRequestedType(Type pluginType)
+        {
+            return _registry.ForRequestedType(pluginType);
+        }
+
         /// <summary>
         /// Adds a new configured instance of Type T
         /// </summary>

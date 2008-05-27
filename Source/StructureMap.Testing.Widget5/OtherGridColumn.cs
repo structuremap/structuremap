@@ -18,6 +18,14 @@ namespace StructureMap.Testing.Widget5
             set { _widget = value; }
         }
 
+        public string ReadOnly
+        {
+            get
+            {
+                return "whatever";
+            }
+        }
+
         public FontStyleEnum FontStyle
         {
             get { return _fontStyle; }

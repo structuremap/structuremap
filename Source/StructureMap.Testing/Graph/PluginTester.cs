@@ -157,7 +157,7 @@ namespace StructureMap.Testing.Graph
             Plugin plugin = new Plugin(typeof (DefaultGateway), "Default");
             Assert.IsTrue(plugin.CanBeAutoFilled);
 
-            ConfiguredInstance instance = (ConfiguredInstance) plugin.CreateImplicitInstance();
+            IConfiguredInstance instance = (ConfiguredInstance) plugin.CreateImplicitInstance();
 
             Assert.AreEqual("Default", instance.Name);
             Assert.AreEqual(typeof(DefaultGateway), instance.PluggedType);

@@ -147,6 +147,7 @@
     <Compile Include="Pipeline\BuildPolicy.cs" />
     <Compile Include="Pipeline\CacheInterceptor.cs" />
     <Compile Include="Pipeline\ConfiguredInstance.cs" />
+    <Compile Include="Pipeline\ConfiguredInstance.Expressions.cs" />
     <Compile Include="Pipeline\ConstructorInstance.cs" />
     <Compile Include="Pipeline\DefaultInstance.cs" />
     <Compile Include="Pipeline\HttpContextBuildPolicy.cs" />
@@ -372,6 +373,8 @@
     <None Include="..\structuremap.snk">
       <Link>Properties\structuremap.snk</Link>
     </None>
+    <Compile Include="Pipeline\ConfiguredInstance.Building.cs" />
+    <Compile Include="Pipeline\IStructuredInstance.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

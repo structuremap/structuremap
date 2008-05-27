@@ -12,8 +12,7 @@ namespace StructureMap.Configuration.DSL
         /// <returns></returns>
         public static ConfiguredInstance Instance<PLUGGEDTYPE>()
         {
-            ConfiguredInstance instance = new ConfiguredInstance();
-            instance.PluggedType = typeof (PLUGGEDTYPE);
+            ConfiguredInstance instance = new ConfiguredInstance(typeof (PLUGGEDTYPE));
 
             return instance;
         }

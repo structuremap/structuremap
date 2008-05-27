@@ -47,7 +47,7 @@ namespace StructureMap.Pipeline
             foreach (KeyValuePair<string, object> arg in _args)
             {
                 instance.SetProperty(arg.Key, arg.Value.ToString());
-                instance.SetChild(arg.Key, new LiteralInstance(arg.Value));
+                instance.Child(arg.Key).Is(arg.Value);
             }
         }
 
@@ -78,7 +78,7 @@ namespace StructureMap.Pipeline
             }
             else
             {
-                PluggedType = typeof (PLUGINTYPE);
+                setPluggedType(typeof(PLUGINTYPE));
             }
         }
 

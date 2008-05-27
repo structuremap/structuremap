@@ -44,6 +44,23 @@ namespace StructureMap.Testing.Pipeline
             }
         }
 
+        [Test]
+        public void BuildPolicy_should_throw_270_if_interception_fails()
+        {
+            try
+            {
+                LiteralInstance instance = new LiteralInstance("something")
+                    .OnCreation<object>(delegate(object o){throw new NotImplementedException();});
+
+                BuildPolicy policy = new BuildPolicy();
+                policy.Build(new StubBuildSession(), typeof (string), instance);
+            }
+            catch (StructureMapException e)
+            {
+                Assert.AreEqual(270, e.ErrorCode);
+            }
+        }
+
 
         [Test]
         public void Singleton_build_policy()

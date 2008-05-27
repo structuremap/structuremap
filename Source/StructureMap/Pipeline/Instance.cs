@@ -81,7 +81,7 @@ namespace StructureMap.Pipeline
         public virtual object Build(Type pluginType, IBuildSession session)
         {
             object rawValue = createRawObject(pluginType, session);
-            return applyInterception(rawValue);
+            return applyInterception(rawValue, pluginType);
         }
 
         private object createRawObject(Type pluginType, IBuildSession session)
@@ -100,7 +100,7 @@ namespace StructureMap.Pipeline
             }
         }
 
-        private object applyInterception(object rawValue)
+        private object applyInterception(object rawValue, Type pluginType)
         {
             try
             {
@@ -109,8 +109,7 @@ namespace StructureMap.Pipeline
             }
             catch (Exception e)
             {
-                throw new StructureMapException(308, e, Name,
-                                                TypePath.GetAssemblyQualifiedName(rawValue.GetType()));
+                throw new StructureMapException(270, e, Name, pluginType);
             }
         }
 

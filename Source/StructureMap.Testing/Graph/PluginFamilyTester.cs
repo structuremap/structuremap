@@ -91,7 +91,7 @@ namespace StructureMap.Testing.Graph
             Assert.AreEqual(Plugin.DEFAULT, family.DefaultInstanceKey);
             Assert.AreEqual(1, family.PluginCount);
             Assert.AreEqual(1, family.GetAllInstances().Length);
-            ConfiguredInstance instance = (ConfiguredInstance) family.GetAllInstances()[0];
+            IConfiguredInstance instance = (IConfiguredInstance) family.GetAllInstances()[0];
             Assert.AreEqual(Plugin.DEFAULT, instance.Name);
             Assert.AreEqual(GetType(), instance.PluggedType);
         }

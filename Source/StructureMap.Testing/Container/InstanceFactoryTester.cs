@@ -40,39 +40,9 @@ namespace StructureMap.Testing.Container
         private BuildSession _session;
 
 
-        [Test]
-        public void BuildRule1()
-        {
-            // TODO: Move to ConfiguredInstanceTester
-            ConfiguredInstance instance = new ConfiguredInstance().WithConcreteKey("Rule1");
-
-            Rule rule = (Rule) instance.Build(typeof(Rule), _session);
-            Assert.IsNotNull(rule);
-            Assert.IsTrue(rule is Rule1);
-        }
 
 
-        [Test, ExpectedException(typeof (StructureMapException))]
-        public void BuildRuleWithABadValue()
-        {
-            // TODO -- move to ConfiguredInstanceTester
-            
-            ConfiguredInstance instance = (ConfiguredInstance) ComplexRule.GetInstance();
 
-            instance.SetProperty("Int", "abc");
-            ComplexRule rule = (ComplexRule)instance.Build(typeof(Rule), _session);
-        }
-
-        [Test, ExpectedException(typeof (StructureMapException))]
-        public void BuildRuleWithAMissingValue()
-        {
-            // TODO:  Move to ConfiguredInstanceTester
-
-            ConfiguredInstance instance = (ConfiguredInstance) ComplexRule.GetInstance();
-            instance.RemoveKey("String");
-
-            ComplexRule rule = (ComplexRule)instance.Build(typeof(Rule), _session);
-        }
 
         [Test, ExpectedException(typeof (StructureMapException))]
         public void GetInstanceWithInvalidInstanceKey()
@@ -100,17 +70,7 @@ namespace StructureMap.Testing.Container
         }
 
 
-        [Test]
-        public void TestComplexRule()
-        {
-            // TODO:  Move to ConfiguredInstanceTester
 
-            ConfiguredInstance instance = (ConfiguredInstance) ComplexRule.GetInstance();
-
-            Rule rule = (Rule) instance.Build(typeof(Rule), _session);
-            Assert.IsNotNull(rule);
-            Assert.IsTrue(rule is ComplexRule);
-        }
 
 
     }

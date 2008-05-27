@@ -84,18 +84,12 @@ namespace StructureMap.Pipeline
             InstanceMemento child = _memento.GetChildMemento(name);
 
             Instance childInstance = child == null ? new DefaultInstance() : child.ReadInstance(_pluginGraph, childType);
-            _instance.SetChild(name, childInstance);
+            _instance.Child(name).Is(childInstance);
         }
 
         private void copyChildArray(string name, Type childType)
         {
-            InstanceMemento[] mementoes = _memento.GetChildrenArray(name);
-
-            // TODO -- want to default to mementoes == null is all
-            if (mementoes == null)
-            {
-                mementoes = new InstanceMemento[0];
-            }
+            InstanceMemento[] mementoes = _memento.GetChildrenArray(name) ?? new InstanceMemento[0];
 
             Instance[] children = new Instance[mementoes.Length];
             for (int i = 0; i < mementoes.Length; i++)
@@ -104,7 +98,7 @@ namespace StructureMap.Pipeline
                 children[i] = memento.ReadInstance(_pluginGraph, childType);
             }
 
-            _instance.SetChildArray(name, children);
+            _instance.ChildArray(name, childType).Contains(children);
         }
     }
 }
