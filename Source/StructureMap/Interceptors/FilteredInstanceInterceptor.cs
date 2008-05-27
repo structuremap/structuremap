@@ -10,10 +10,10 @@ namespace StructureMap.Interceptors
 
     public class PluginTypeInterceptor : TypeInterceptor
     {
-        private readonly InterceptionFunction _function;
+        private readonly Func<object, object> _function;
         private readonly Type _pluginType;
 
-        public PluginTypeInterceptor(Type pluginType, InterceptionFunction function)
+        public PluginTypeInterceptor(Type pluginType, Func<object, object> function)
         {
             _pluginType = pluginType;
             _function = function;

@@ -109,7 +109,7 @@ namespace StructureMap.Configuration.DSL.Expressions
             _children.Add(
                 delegate(PluginGraph graph)
                 {
-                    InterceptionFunction function = delegate(object target)
+                    Func<object, object> function = delegate(object target)
                     {
                         handler((PLUGINTYPE) target);
                         return target;
@@ -127,7 +127,7 @@ namespace StructureMap.Configuration.DSL.Expressions
             _children.Add(
                 delegate(PluginGraph graph)
                 {
-                    InterceptionFunction function = delegate(object target) { return handler((PLUGINTYPE) target); };
+                    Func<object, object> function = delegate(object target) { return handler((PLUGINTYPE) target); };
 
                     PluginTypeInterceptor interceptor = new PluginTypeInterceptor(typeof (PLUGINTYPE), function);
                     graph.InterceptorLibrary.AddInterceptor(interceptor);
@@ -178,5 +178,29 @@ namespace StructureMap.Configuration.DSL.Expressions
 
             return this;
         }
+
+        public CreatePluginFamilyExpression<PLUGINTYPE> TheDefaultIs(PLUGINTYPE @object)
+        {
+            return TheDefaultIs(new LiteralInstance(@object));
+        }
+
+        public CreatePluginFamilyExpression<PLUGINTYPE> TheDefaultIs(Func<PLUGINTYPE> func)
+        {
+            ConstructorInstance instance = new ConstructorInstance(delegate() { return func(); });
+            return TheDefaultIs(instance);
+        }
+
+        public CreatePluginFamilyExpression<PLUGINTYPE> AddInstance(PLUGINTYPE @object)
+        {
+            LiteralInstance instance = new LiteralInstance(@object);
+            return AddInstance(instance);
+        }
+
+        public CreatePluginFamilyExpression<PLUGINTYPE> AddInstance(Func<PLUGINTYPE> func)
+        {
+            ConstructorInstance instance = new ConstructorInstance(delegate(){ return func();});
+            return AddInstance(instance);
+        }
+
     }
 }

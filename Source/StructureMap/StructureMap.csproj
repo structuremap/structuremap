@@ -116,6 +116,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="BuildSession.cs" />
+    <Compile Include="Configuration\DSL\Expressions\GenericFamilyExpression.cs" />
+    <Compile Include="Configuration\DSL\RegistryExpressions.cs" />
     <Compile Include="Configuration\ProfileBuilder.cs" />
     <Compile Include="Delegates.cs" />
     <Compile Include="Diagnostics\BuildError.cs" />
@@ -140,6 +142,7 @@
     <Compile Include="InstanceBuilderList.cs" />
     <Compile Include="InstanceCache.cs" />
     <Compile Include="InstanceFamily.cs" />
+    <Compile Include="Interceptors\MatchedTypeInterceptor.cs" />
     <Compile Include="PipelineGraph.cs" />
     <Compile Include="Pipeline\BuildPolicy.cs" />
     <Compile Include="Pipeline\CacheInterceptor.cs" />

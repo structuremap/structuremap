@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using StructureMap.Configuration.DSL;
 using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
@@ -15,8 +16,16 @@ namespace StructureMap
     /// </summary>
     public class InstanceManager : TypeRules, IInstanceManager
     {
-        private readonly InterceptorLibrary _interceptorLibrary;
-        private readonly PipelineGraph _pipelineGraph;
+        private InterceptorLibrary _interceptorLibrary;
+        private PipelineGraph _pipelineGraph;
+
+        public InstanceManager(Action<Registry> action)
+        {
+            Registry registry = new Registry();
+            action(registry);
+
+            construct(registry.Build());
+        }
 
         public InstanceManager() : this(new PluginGraph())
         {
@@ -29,6 +38,11 @@ namespace StructureMap
         /// for the InstanceManager</param>
         /// <param name="failOnException">Flags the InstanceManager to fail or trap exceptions</param>
         public InstanceManager(PluginGraph pluginGraph)
+        {
+            construct(pluginGraph);
+        }
+
+        private void construct(PluginGraph pluginGraph)
         {
             _interceptorLibrary = pluginGraph.InterceptorLibrary;
 

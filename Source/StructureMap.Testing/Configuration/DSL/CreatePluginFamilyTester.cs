@@ -213,6 +213,54 @@ namespace StructureMap.Testing.Configuration.DSL
 
             Assert.IsInstanceOfType(typeof (DefaultGateway), gateway);
         }
+
+        [Test]
+        public void Set_the_default_to_a_built_object()
+        {
+            AWidget aWidget = new AWidget();
+
+            InstanceManager manager = new InstanceManager(delegate(Registry registry)
+            {
+                registry.ForRequestedType<IWidget>().TheDefaultIs(aWidget);
+            });
+
+            Assert.AreSame(aWidget, manager.CreateInstance<IWidget>());
+        }
+
+        [Test]
+        public void Set_the_default_by_a_lambda()
+        {
+            InstanceManager manager = new InstanceManager(delegate(Registry registry)
+            {
+                registry.ForRequestedType<IWidget>().TheDefaultIs(delegate() { return new AWidget(); });
+            });
+
+            Assert.IsInstanceOfType(typeof(AWidget), manager.CreateInstance<IWidget>());
+        }
+
+        [Test]
+        public void Add_an_instance_by_literal()
+        {
+            AWidget aWidget = new AWidget();
+
+            InstanceManager manager = new InstanceManager(delegate(Registry registry)
+            {
+                registry.ForRequestedType<IWidget>().AddInstance(aWidget);
+            });
+
+            Assert.IsInstanceOfType(typeof(AWidget), manager.GetAllInstances<IWidget>()[0]);
+        }
+
+        [Test]
+        public void Add_an_instance_by_lambda()
+        {
+            InstanceManager manager = new InstanceManager(delegate(Registry registry)
+            {
+                registry.ForRequestedType<IWidget>().AddInstance(delegate() { return new AWidget(); });
+            });
+
+            Assert.IsInstanceOfType(typeof(AWidget), manager.GetAllInstances<IWidget>()[0]);
+        }
     }
 
     public class StubbedInstanceFactoryInterceptor : IBuildInterceptor

@@ -20,26 +20,6 @@ namespace StructureMap.Testing.Configuration.DSL
 
         #endregion
 
-
-        [Test]
-        public void LoadControl()
-        {
-            PluginGraph graph = new PluginGraph();
-            Registry registry = new Registry(graph);
-
-            string theUrl = "some url";
-            string theKey = "the memento";
-            registry.LoadControlFromUrl<IGateway>(theUrl).WithName(theKey);
-
-            registry.Dispose();
-
-            PluginFamily family = graph.FindFamily(typeof (IGateway));
-            UserControlInstance instance = (UserControlInstance) family.GetInstance(theKey);
-            Assert.IsNotNull(instance);
-
-            Assert.AreEqual(theUrl, instance.Url);
-            Assert.AreEqual(theKey, instance.Name);
-        }
     }
 
     public class TestRegistry : Registry

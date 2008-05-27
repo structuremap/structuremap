@@ -3,8 +3,6 @@ using System.Collections.Generic;
 
 namespace StructureMap.Interceptors
 {
-    public delegate object InterceptionFunction(object target);
-
     public class InterceptorLibrary
     {
         public static readonly InterceptorLibrary Empty = new InterceptorLibrary();

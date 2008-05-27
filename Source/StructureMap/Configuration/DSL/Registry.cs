@@ -7,7 +7,7 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.Configuration.DSL
 {
-    public class Registry : IDisposable
+    public class Registry : RegistryExpressions, IDisposable
     {
         private readonly List<Action<PluginGraph>> _actions = new List<Action<PluginGraph>>();
         private readonly PluginGraph _graph;
@@ -67,6 +67,12 @@ namespace StructureMap.Configuration.DSL
             return new CreatePluginFamilyExpression<PLUGINTYPE>(this);
         }
 
+
+        public GenericFamilyExpression ForRequestedType(Type pluginType)
+        {
+            return new GenericFamilyExpression(pluginType, this);
+        }
+
         /// <summary>
         /// Direct StructureMap to build instances of type T, and look for concrete classes
         /// marked with the [Pluggable] attribute that implement type T.
@@ -112,41 +118,6 @@ namespace StructureMap.Configuration.DSL
             return instance;
         }
 
-
-        /// <summary>
-        /// Convenience method to start the definition of an instance of type T
-        /// </summary>
-        /// <typeparam name="PLUGGEDTYPE"></typeparam>
-        /// <returns></returns>
-        public static ConfiguredInstance Instance<PLUGGEDTYPE>()
-        {
-            ConfiguredInstance instance = new ConfiguredInstance();
-            instance.PluggedType = typeof (PLUGGEDTYPE);
-
-            return instance;
-        }
-
-        /// <summary>
-        /// Convenience method to register a prototype instance
-        /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
-        /// <param name="prototype"></param>
-        /// <returns></returns>
-        public static PrototypeInstance Prototype<PLUGINTYPE>(PLUGINTYPE prototype)
-        {
-            return new PrototypeInstance((ICloneable) prototype);
-        }
-
-        /// <summary>
-        /// Convenience method to register a preconfigured instance of type T
-        /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
-        /// <param name="instance"></param>
-        /// <returns></returns>
-        public static LiteralInstance Object<PLUGINTYPE>(PLUGINTYPE instance)
-        {
-            return new LiteralInstance(instance);
-        }
 
         /// <summary>
         /// Registers a preconfigured instance
@@ -214,33 +185,6 @@ namespace StructureMap.Configuration.DSL
             return (type.GetConstructor(new Type[0]) != null);
         }
 
-        /// <summary>
-        /// Registers a UserControl as an instance 
-        /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
-        /// <param name="url"></param>
-        /// <returns></returns>
-        public UserControlInstance LoadControlFromUrl<PLUGINTYPE>(string url)
-        {
-            UserControlInstance instance = new UserControlInstance(url);
-
-            PluginFamily family = _graph.FindFamily(typeof (PLUGINTYPE));
-            family.AddInstance(instance);
-
-            return instance;
-        }
-
-        public static ConstructorInstance ConstructedBy<PLUGINTYPE>
-            (Func<PLUGINTYPE> builder)
-        {
-            return new ConstructorInstance(delegate() { return builder(); });
-        }
-
-        public static ReferencedInstance Instance(string referencedKey)
-        {
-            return new ReferencedInstance(referencedKey);
-        }
-
         public void RegisterInterceptor(TypeInterceptor interceptor)
         {
             addExpression(
@@ -274,37 +218,6 @@ namespace StructureMap.Configuration.DSL
         public void AddInstanceOf<PLUGINTYPE>(Instance instance)
         {
             _actions.Add(delegate(PluginGraph graph) { graph.FindFamily(typeof (PLUGINTYPE)).AddInstance(instance); });
-        }
-    }
-
-
-    public class MatchedTypeInterceptor : TypeInterceptor
-    {
-        private readonly Predicate<Type> _match;
-        private InterceptionFunction _interception;
-
-        internal MatchedTypeInterceptor(Predicate<Type> match)
-        {
-            _match = match;
-        }
-
-        #region TypeInterceptor Members
-
-        public bool MatchesType(Type type)
-        {
-            return _match(type);
-        }
-
-        public object Process(object target)
-        {
-            return _interception(target);
-        }
-
-        #endregion
-
-        public void InterceptWith(InterceptionFunction interception)
-        {
-            _interception = interception;
         }
     }
 }
