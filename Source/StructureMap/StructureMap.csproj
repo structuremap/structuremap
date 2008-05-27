@@ -373,6 +373,7 @@
     <None Include="..\structuremap.snk">
       <Link>Properties\structuremap.snk</Link>
     </None>
+    <Compile Include="ErrorMessages.cs" />
     <Compile Include="Pipeline\ConfiguredInstance.Building.cs" />
     <Compile Include="Pipeline\IStructuredInstance.cs" />
   </ItemGroup>

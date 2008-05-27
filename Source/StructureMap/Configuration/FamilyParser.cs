@@ -75,7 +75,6 @@ namespace StructureMap.Configuration
             return returnValue;
         }
 
-        // TODO:  change to many
         private void attachMementoSource(PluginFamily family, XmlElement familyElement)
         {
             XmlNode sourceNode = familyElement[XmlConstants.MEMENTO_SOURCE_NODE];

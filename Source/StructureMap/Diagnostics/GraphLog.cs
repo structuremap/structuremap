@@ -127,6 +127,23 @@ namespace StructureMap.Diagnostics
             }
         }
 
+        public void WithType(TypePath path, string context, Action<Type> action)
+        {
+            try
+            {
+                Type type = path.FindType();
+                action(type);
+            }
+            catch (StructureMapException ex)
+            {
+                RegisterError(ex);
+            }
+            catch (Exception ex)
+            {
+                RegisterError(131, ex, path.AssemblyQualifiedName, context);
+            }
+        }
+
         public TryAction Try(Action action)
         {
             return new TryAction(action, this);

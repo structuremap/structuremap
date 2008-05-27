@@ -326,6 +326,7 @@
     <Compile Include="PipelineGraphTester.cs" />
     <Compile Include="Pipeline\BuildStrategiesTester.cs" />
     <Compile Include="Pipeline\ConfiguredInstanceTester.cs" />
+    <Compile Include="Pipeline\ConstructorInstanceTester.cs" />
     <Compile Include="Pipeline\DefaultInstanceTester.cs" />
     <Compile Include="Pipeline\InstanceTester.cs" />
     <Compile Include="Pipeline\LiteralInstanceTester.cs" />

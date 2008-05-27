@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using StructureMap.Diagnostics;
 using StructureMap.Graph;
 
 namespace StructureMap.Pipeline
@@ -36,17 +37,25 @@ namespace StructureMap.Pipeline
             get { return _currentProfile.Name; }
             set
             {
-                // TODO:  Profile cannot be found
-
                 if (string.IsNullOrEmpty(value))
                 {
                     _currentProfile = _default;
                 }
                 else
                 {
+                    validateHasProfile(value);
+
                     _currentProfile = getProfile(value);
                     _default.FillAllTypesInto(_currentProfile);
                 }
+            }
+        }
+
+        private void validateHasProfile(string profileName)
+        {
+            if (!_profiles.ContainsKey(profileName))
+            {
+                throw new StructureMapException(280, profileName);
             }
         }
 
@@ -98,7 +107,7 @@ namespace StructureMap.Pipeline
         {
             findMasterInstances(graph);
 
-            setProfileDefaults();
+            setProfileDefaults(graph.Log);
 
             processMachineDefaults(graph);
 
@@ -117,14 +126,18 @@ namespace StructureMap.Pipeline
             }
         }
 
-        private void setProfileDefaults()
+        private void setProfileDefaults(GraphLog log)
         {
             if (string.IsNullOrEmpty(_defaultProfileName))
             {
                 return;
             }
 
-            // TODO:  What if Profile doesn't exist?
+            if (!_profiles.ContainsKey(_defaultProfileName))
+            {
+                log.RegisterError(280, _defaultProfileName);
+            }
+
             Profile profile = getProfile(_defaultProfileName);
             profile.FillAllTypesInto(_default);
         }
@@ -152,7 +165,10 @@ namespace StructureMap.Pipeline
 
             if (!string.IsNullOrEmpty(_defaultMachineProfileName))
             {
-                // TODO:  Machine profile name cannot be found
+                if (!_profiles.ContainsKey(_defaultMachineProfileName))
+                {
+                    graph.Log.RegisterError(280, _defaultMachineProfileName);
+                }
                 Profile profile = getProfile(_defaultMachineProfileName);
                 profile.FillAllTypesInto(_default);
             }

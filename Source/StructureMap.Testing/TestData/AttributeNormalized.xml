@@ -1,5 +1,5 @@
 ﻿<!--<?xml version="1.0" encoding="utf-8" ?>-->
-<StructureMap DefaultProfile="TheDefaultProfile" MementoStyle="Attribute">
+<StructureMap MementoStyle="Attribute">
   <Assembly Name="StructureMap.Testing.Widget"/>
   <Assembly Name="StructureMap.Testing.Widget2"/>
   <Assembly Name="StructureMap.Testing.Widget3"/>

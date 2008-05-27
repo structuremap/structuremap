@@ -22,10 +22,7 @@ namespace StructureMap.Diagnostics
         public Error(int errorCode, params object[] args)
         {
             _code = errorCode;
-            string template = getMessage(errorCode);
-            if (template == null) template = string.Empty;
-
-            _message = string.Format(template, args);
+            _message = ErrorMessages.GetMessage(errorCode, args);
         }
 
         public Error(int errorCode, Exception ex, params object[] args) : this(errorCode, args)
@@ -62,11 +59,6 @@ namespace StructureMap.Diagnostics
 
         #endregion
 
-        private static string getMessage(int errorCode)
-        {
-            ResourceManager resources = new ResourceManager(typeof (StructureMapException));
-            return resources.GetString(errorCode.ToString());
-        }
 
         public override bool Equals(object obj)
         {

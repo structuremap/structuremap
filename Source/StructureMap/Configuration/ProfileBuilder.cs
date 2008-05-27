@@ -47,12 +47,11 @@ namespace StructureMap.Configuration
 
         public void OverrideProfile(TypePath typePath, string instanceKey)
         {
-            _pluginGraph.Log.Try(delegate()
+            _pluginGraph.Log.WithType(typePath, "while trying to add an override for a Profile", delegate(Type pluginType)
             {
                 ReferencedInstance instance = new ReferencedInstance(instanceKey);
-                _pluginGraph.SetDefault(_lastProfile, typePath.FindType(), instance);
-                
-            }).AndReportErrorAs(107, typePath.AssemblyQualifiedName);
+                _pluginGraph.SetDefault(_lastProfile, pluginType, instance);                
+            });
         }
 
         public void AddMachine(string machineName, string profileName)
@@ -72,9 +71,13 @@ namespace StructureMap.Configuration
                 return;
             }
 
-            // TODO:  what if the Type cannot be found?
-            ReferencedInstance instance = new ReferencedInstance(instanceKey);
-            _profileManager.SetMachineDefault(typePath.FindType(), instance);
+            _pluginGraph.Log.WithType(typePath, 
+                "trying to configure a Machine Override", 
+                delegate(Type pluginType)
+            {
+                ReferencedInstance instance = new ReferencedInstance(instanceKey);
+                _profileManager.SetMachineDefault(pluginType, instance);                
+            });
         }
 
         public void SetDefaultProfileName(string profileName)

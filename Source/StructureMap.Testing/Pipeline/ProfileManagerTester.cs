@@ -243,5 +243,30 @@ namespace StructureMap.Testing.Pipeline
             Assert.AreSame(_manager.GetDefault(typeof(IBuildPolicy), "Profile"), _manager.GetDefault(typeof(ISomething), "Profile"));
             Assert.AreSame(_manager.GetDefault(typeof(IBuildPolicy), "Profile2"), _manager.GetDefault(typeof(ISomething), "Profile2"));
         }
+
+        [Test]
+        public void Log_280_if_the_default_profile_does_not_exist_upon_call_to_Seal()
+        {
+            ProfileManager manager = new ProfileManager();
+            manager.DefaultProfileName = "something that doesn't exist";
+
+            PluginGraph graph = new PluginGraph();
+            manager.Seal(graph);
+
+            graph.Log.AssertHasError(280);
+
+        }
+
+        [Test]
+        public void Log_280_if_the_machine_default_profile_cannot_be_found()
+        {
+            ProfileManager manager = new ProfileManager();
+            manager.DefaultMachineProfileName = "something that doesn't exist";
+
+            PluginGraph graph = new PluginGraph();
+            manager.Seal(graph);
+
+            graph.Log.AssertHasError(280);
+        }
     }
 }

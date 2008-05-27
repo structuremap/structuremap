@@ -99,22 +99,9 @@ namespace StructureMap.Configuration
             }
         }
 
-
         public void WithType(TypePath path, string context, Action<Type> action)
         {
-            try
-            {
-                Type type = path.FindType();
-                action(type);
-            }
-            catch (StructureMapException ex)
-            {
-                _pluginGraph.Log.RegisterError(ex);
-            }
-            catch (Exception ex)
-            {
-                _pluginGraph.Log.RegisterError(131, ex, path.AssemblyQualifiedName, context);
-            }
+            _pluginGraph.Log.WithType(path, context, action);
         }
 
         #endregion

@@ -25,13 +25,17 @@ namespace StructureMap
 
         public StructureMapException(int ErrorCode, params object[] args) : base()
         {
-            initialize(ErrorCode, args);
+            _errorCode = ErrorCode;
+            _msg = string.Format("StructureMap Exception Code:  {0}\n", _errorCode);
+            _msg += ErrorMessages.GetMessage(ErrorCode, args);
         }
 
         public StructureMapException(int ErrorCode, Exception InnerException, params object[] args)
             : base(string.Empty, InnerException)
         {
-            initialize(ErrorCode, args);
+            _errorCode = ErrorCode;
+            _msg = string.Format("StructureMap Exception Code:  {0}\n", _errorCode);
+            _msg += ErrorMessages.GetMessage(ErrorCode, args);
         }
 
         public override string Message
@@ -44,37 +48,7 @@ namespace StructureMap
             get { return _errorCode; }
         }
 
-        // TODO:  Centralize this code somewhere so it isn't duplicated
-        private void initialize(int errorCode, params object[] args)
-        {
-            _errorCode = errorCode;
-            _msg = "StructureMap Exception Code:  " + _errorCode + "\n";
 
-            for (int i = 0; i < args.Length; i++)
-            {
-                object arg = args[i];
-                Type type = arg as Type;
-                if (type != null)
-                {
-                    args[i] = type.AssemblyQualifiedName;
-                }
-            }
-
-            string errorMsg = getMessage(ErrorCode);
-            if (errorMsg == null)
-            {
-                errorMsg = string.Empty;
-            }
-
-            _msg += string.Format(errorMsg, args);
-        }
-
-        private string getMessage(int errorCode)
-        {
-            ResourceManager resources = new ResourceManager(GetType());
-
-            return resources.GetString(errorCode.ToString());
-        }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {

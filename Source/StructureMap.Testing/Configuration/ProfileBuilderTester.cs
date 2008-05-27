@@ -63,6 +63,29 @@ namespace StructureMap.Testing.Configuration
             Assert.AreEqual(instance, _graph.ProfileManager.GetMachineDefault(this.GetType()));
         }
 
+        [Test]
+        public void Log_131_if_trying_to_register_override_for_a_machine_when_the_PluginType_cannot_be_found()
+        {
+            _builder.AddMachine(THE_MACHINE_NAME, "TheProfile");
+            
+            _graph.Log.AssertHasNoError(131);
+            
+            _builder.OverrideMachine(new TypePath("not a real type"), "Purple");
+
+            _graph.Log.AssertHasError(131);
+        }
+
+        [Test]
+        public void Log_131_if_trying_to_register_override_for_a_profile_when_the_PluginType_cannot_be_found()
+        {
+            _builder.AddProfile("TheProfile");
+
+            _graph.Log.AssertHasNoError(131);
+
+            _builder.OverrideProfile(new TypePath("not a real type"), "Purple");
+
+            _graph.Log.AssertHasError(131);
+        }
 
         [Test]
         public void Do_not_register_a_machine_override_if_it_is_NOT_the_matching_machine()
@@ -71,6 +94,23 @@ namespace StructureMap.Testing.Configuration
             _builder.OverrideMachine(new TypePath(this.GetType()), "Purple");
 
             Assert.IsNull(_graph.ProfileManager.GetMachineDefault(this.GetType()));
+        }
+
+
+        [Test]
+        public void Throw_280_if_requesting_an_invalid_profile()
+        {
+            try
+            {
+                ProfileManager manager = new ProfileManager();
+                manager.CurrentProfile = "some profile that does not exist";
+
+                Assert.Fail("Should have thrown error");
+            }
+            catch (StructureMapException ex)
+            {
+                Assert.AreEqual(280, ex.ErrorCode);
+            }
         }
 
         [Test]
@@ -82,17 +122,6 @@ namespace StructureMap.Testing.Configuration
             Assert.AreEqual(theProfileName, _graph.ProfileManager.DefaultProfileName);
         }
 
-        [Test]
-        public void Override_profile_with_a_bad_TypePath_should_log_107()
-        {
-            PluginGraph graph = new PluginGraph();
 
-            ProfileBuilder builder = new ProfileBuilder(graph);
-
-            builder.AddProfile("something");
-            builder.OverrideProfile(new TypePath("a type that does not exist"), "key");
-
-            graph.Log.AssertHasError(107);
-        }
     }
 }

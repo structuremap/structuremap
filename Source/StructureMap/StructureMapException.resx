@@ -161,7 +161,7 @@
     <value>Invalid property value(s), InstanceKey "{0}"</value>
   </data>
   <data name="207" xml:space="preserve">
-    <value>Internal exception in the constructor function of the targeted concrete type.  InstanceKey "{0}", PluginFamily {1}</value>
+    <value>Internal exception while creating Instance '{0}' of PluginType {1}.  Check the inner exception for more details.</value>
   </data>
   <data name="104" xml:space="preserve">
     <value>Type {0} cannot be plugged into type {1}</value>
@@ -258,5 +258,8 @@
   </data>
   <data name="210" xml:space="preserve">
     <value>The designated default instance '{0}' for PluginType {1} cannot be found</value>
+  </data>
+  <data name="280" xml:space="preserve">
+    <value>Requested Profile {0} cannot be found</value>
   </data>
 </root>

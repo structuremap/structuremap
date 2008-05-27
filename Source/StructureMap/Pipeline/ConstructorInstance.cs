@@ -26,8 +26,14 @@ namespace StructureMap.Pipeline
 
         protected override object build(Type pluginType, IBuildSession session)
         {
-            // TODO:  specific error message
-            return _builder();
+            try
+            {
+                return _builder();
+            }
+            catch (Exception ex)
+            {
+                throw new StructureMapException(207, ex, Name, pluginType);
+            }
         }
 
         protected override string getDescription()

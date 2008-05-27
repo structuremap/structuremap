@@ -24,7 +24,6 @@ namespace StructureMap.Graph
         {
             if (concreteKey == string.Empty)
             {
-                // TODO:  Move into PluginFamily and get the exception logged somewhere
                 throw new StructureMapException(112, pluggedType.FullName);
             }
 
