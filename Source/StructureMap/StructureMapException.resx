@@ -256,4 +256,7 @@
   <data name="270" xml:space="preserve">
     <value>Instance specific interception failed for {0} of PluginType {1}</value>
   </data>
+  <data name="210" xml:space="preserve">
+    <value>The designated default instance '{0}' for PluginType {1} cannot be found</value>
+  </data>
 </root>

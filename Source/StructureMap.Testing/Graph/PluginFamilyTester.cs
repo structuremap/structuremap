@@ -112,6 +112,32 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
+        public void FillDefault_happy_path()
+        {
+            PluginFamily family = new PluginFamily(typeof (IWidget));
+            family.Parent = new PluginGraph();
+            family.AddInstance(new ConfiguredInstance().WithName("Default"));
+            family.DefaultInstanceKey = "Default";
+            
+
+            family.FillDefault(new Profile("theProfile"));
+
+            family.Parent.Log.AssertHasNoError(210);
+        }
+
+        [Test]
+        public void FillDefault_sad_path_when_the_default_instance_key_does_not_exist_throws_210()
+        {
+            PluginFamily family = new PluginFamily(typeof (IWidget));
+            family.Parent = new PluginGraph();
+
+            family.DefaultInstanceKey = "something that cannot be found";
+            family.FillDefault(new Profile("theProfile"));
+
+            family.Parent.Log.AssertHasError(210);
+        }
+
+        [Test]
         public void If_PluginFamily_only_has_one_instance_make_that_the_default()
         {
             PluginFamily family = new PluginFamily(typeof (IGateway));
@@ -259,7 +285,7 @@ namespace StructureMap.Testing.Graph
     [Pluggable("Default")]
     public class SingletonRepositoryWithAttribute : ISingletonRepository
     {
-        private Guid _id = Guid.NewGuid();
+        private readonly Guid _id = Guid.NewGuid();
 
         public Guid Id
         {

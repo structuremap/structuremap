@@ -133,7 +133,7 @@ namespace StructureMap.Pipeline
         {
             foreach (PluginFamily family in graph.PluginFamilies)
             {
-                findDefaultFromPluginFamily(family);
+                family.FillDefault(_default);
             }
         }
 
@@ -156,19 +156,6 @@ namespace StructureMap.Pipeline
                 Profile profile = getProfile(_defaultMachineProfileName);
                 profile.FillAllTypesInto(_default);
             }
-        }
-
-        private void findDefaultFromPluginFamily(PluginFamily family)
-        {
-            // TODO:  Sad path here if the default instance key cannot be found
-            // TODO:  Pull inside of PluginFamily itself
-            if (string.IsNullOrEmpty(family.DefaultInstanceKey))
-            {
-                return;
-            }
-
-            Instance defaultInstance = family.GetInstance(family.DefaultInstanceKey);
-            _default.FillTypeInto(family.PluginType, defaultInstance);
         }
 
         public void CopyDefaults(Type basicType, Type templatedType)

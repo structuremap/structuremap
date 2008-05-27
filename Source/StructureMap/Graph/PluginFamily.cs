@@ -297,5 +297,21 @@ namespace StructureMap.Graph
             AddInstance(memento);
             DefaultInstanceKey = memento.InstanceKey;
         }
+
+        public void FillDefault(Profile profile)
+        {
+            if (string.IsNullOrEmpty(DefaultInstanceKey))
+            {
+                return;
+            }
+
+            Instance defaultInstance = GetInstance(DefaultInstanceKey);
+            if (defaultInstance == null)
+            {
+                Parent.Log.RegisterError(210, DefaultInstanceKey, PluginType);
+            }
+
+            profile.FillTypeInto(PluginType, defaultInstance);
+        }
     }
 }
