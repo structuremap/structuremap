@@ -66,7 +66,7 @@ namespace StructureMap.Graph
         {
             foreach (ParameterInfo parameter in _ctor.GetParameters())
             {
-                if (!IsChild(parameter.ParameterType))
+                if (!IsAutoFillable(parameter.ParameterType))
                 {
                     return false;
                 }

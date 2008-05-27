@@ -238,7 +238,6 @@ namespace StructureMap
 
         #endregion
 
-        #region GetInstance
 
         /// <summary>
         /// Returns the default instance of the requested System.Type
@@ -347,67 +346,16 @@ namespace StructureMap
 
         public static ExplicitArgsExpression With<T>(T arg)
         {
-            return new ExplicitArgsExpression(manager).With<T>(arg);
+            return manager.With(arg);
         }
 
         public static IExplicitProperty With(string argName)
         {
-            return new ExplicitArgsExpression(manager).With(argName);
+            return manager.With(argName);
         }
 
-        #region Nested type: ExplicitArgsExpression
 
-        public class ExplicitArgsExpression : IExplicitProperty
-        {
-            private readonly ExplicitArguments _args = new ExplicitArguments();
-            private readonly IInstanceManager _manager;
-            private string _lastArgName;
-
-            internal ExplicitArgsExpression(IInstanceManager manager)
-            {
-                _manager = manager;
-            }
-
-            #region IExplicitProperty Members
-
-            ExplicitArgsExpression IExplicitProperty.EqualTo(object value)
-            {
-                _args.SetArg(_lastArgName, value);
-                return this;
-            }
-
-            #endregion
-
-            public ExplicitArgsExpression With<T>(T arg)
-            {
-                _args.Set<T>(arg);
-                return this;
-            }
-
-            public IExplicitProperty With(string argName)
-            {
-                _lastArgName = argName;
-                return this;
-            }
-
-
-            public T GetInstance<T>()
-            {
-                return _manager.CreateInstance<T>(_args);
-            }
-        }
-
-        #endregion
-
-        #region Nested type: IExplicitProperty
-
-        public interface IExplicitProperty
-        {
-            ExplicitArgsExpression EqualTo(object value);
-        }
-
-        #endregion
-
-        #endregion
     }
+
+
 }

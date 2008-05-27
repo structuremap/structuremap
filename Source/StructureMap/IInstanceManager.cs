@@ -75,6 +75,8 @@ namespace StructureMap
         object CreateInstance(Type pluginType, string instanceKey);
 
         PLUGINTYPE CreateInstance<PLUGINTYPE>(ExplicitArguments args);
-        
+
+        ExplicitArgsExpression With<T>(T arg);
+        IExplicitProperty With(string argName);
     }
 }

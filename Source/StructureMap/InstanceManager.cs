@@ -248,6 +248,16 @@ namespace StructureMap
             return writer.GetText();
         }
 
+        public ExplicitArgsExpression With<T>(T arg)
+        {
+            return new ExplicitArgsExpression(this).With<T>(arg);
+        }
+
+        public IExplicitProperty With(string argName)
+        {
+            return new ExplicitArgsExpression(this).With(argName);
+        }
+
         #endregion
 
         private IBuildSession withNewSession()
@@ -260,5 +270,7 @@ namespace StructureMap
         {
             return _pipelineGraph.ForType(type);
         }
+
+        
     }
 }

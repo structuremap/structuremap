@@ -131,6 +131,7 @@
     <Compile Include="Diagnostics\WhatDoIHaveWriter.cs" />
     <Compile Include="Emitting\ArgumentEmitter.cs" />
     <Compile Include="Exceptions\StructureMapConfigurationException.cs" />
+    <Compile Include="ExplicitArgsExpression.cs" />
     <Compile Include="Graph\Constructor.cs" />
     <Compile Include="Graph\IArgumentVisitor.cs" />
     <Compile Include="Graph\IPluginFamily.cs" />

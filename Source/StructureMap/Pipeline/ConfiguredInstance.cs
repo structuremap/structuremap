@@ -62,8 +62,12 @@ namespace StructureMap.Pipeline
 
         Instance[] IConfiguredInstance.GetChildrenArray(string propertyName)
         {
-            // TODO:  Validate and throw exception if missing
-            return _arrays[propertyName];
+            if (_arrays.ContainsKey(propertyName))
+            {
+                return _arrays[propertyName];
+            }
+
+            return null;
         }
 
         string IConfiguredInstance.GetProperty(string propertyName)

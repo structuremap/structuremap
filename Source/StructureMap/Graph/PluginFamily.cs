@@ -140,7 +140,8 @@ namespace StructureMap.Graph
                 _parent.Log.Try(delegate()
                 {
                     diagnosticInstance.Preprocess(this);    
-                }).AndReportErrorAs(104, diagnosticInstance.CreateToken(), _pluginType);
+                })
+                .AndReportErrorAs(104, diagnosticInstance.CreateToken(), _pluginType);
 
                 
                 if (!diagnosticInstance.CanBePartOfPluginFamily(this))

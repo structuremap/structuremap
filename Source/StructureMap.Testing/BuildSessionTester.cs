@@ -134,5 +134,34 @@ namespace StructureMap.Testing
             Assert.AreNotSame(result1, result3);
             Assert.AreSame(result3, result4);
         }
+
+        [Test]
+        public void If_no_child_array_is_explicitly_defined_return_all_instances()
+        {
+            Registry registry = new Registry();
+            registry.AddInstanceOf<IWidget>(new ColorWidget("Red"));
+            registry.AddInstanceOf<IWidget>(new ColorWidget("Blue"));
+            registry.AddInstanceOf<IWidget>(new ColorWidget("Green"));
+
+            IInstanceManager manager = registry.BuildInstanceManager();
+
+            WidgetHolder holder = manager.CreateInstance<WidgetHolder>();
+            Assert.AreEqual(3, holder.Widgets.Length);
+        }
+
+        public class WidgetHolder
+        {
+            private readonly IWidget[] _widgets;
+
+            public WidgetHolder(IWidget[] widgets)
+            {
+                _widgets = widgets;
+            }
+
+            public IWidget[] Widgets
+            {
+                get { return _widgets; }
+            }
+        }
     }
 }

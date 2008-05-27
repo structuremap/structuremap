@@ -27,7 +27,7 @@ namespace StructureMap.Graph
 
         public bool CanBeAutoFilled
         {
-            get { return IsChild(_property.PropertyType); }
+            get { return IsAutoFillable(_property.PropertyType); }
         }
 
         public void Visit(IArgumentVisitor visitor)

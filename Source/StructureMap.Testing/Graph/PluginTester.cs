@@ -76,6 +76,41 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
+        public void CanBeAutoFilled_with_child_array_in_ctor()
+        {
+            Constructor ctor = new Constructor(typeof(CanBeAutoFilledWithArray));
+            Assert.IsTrue(ctor.CanBeAutoFilled());
+        }
+
+        public class CanBeAutoFilledWithArray
+        {
+            public CanBeAutoFilledWithArray(IWidget[] widgets)
+            {
+                
+            }
+
+            [SetterProperty]
+            public IWidget[] More
+            {
+                get
+                {
+                    return null;
+                }
+                set
+                {
+                    
+                }
+            }
+        }
+
+        [Test]
+        public void CanBeAutoFilled_with_child_array_in_setter()
+        {
+            SetterPropertyCollection setters = new SetterPropertyCollection(new Plugin(typeof(CanBeAutoFilledWithArray)));
+            Assert.IsTrue(setters.CanBeAutoFilled());
+        }
+
+        [Test]
         public void CanBeAutoFilledIsTrue()
         {
             Plugin plugin = new Plugin(typeof (Mustang));

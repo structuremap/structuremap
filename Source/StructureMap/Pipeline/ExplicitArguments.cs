@@ -5,8 +5,17 @@ namespace StructureMap.Pipeline
 {
     public class ExplicitArguments
     {
-        private readonly Dictionary<string, string> _args = new Dictionary<string, string>();
+        private readonly Dictionary<string, object> _args;
         private readonly Dictionary<Type, object> _children = new Dictionary<Type, object>();
+
+        public ExplicitArguments(Dictionary<string, object> args)
+        {
+            _args = args;
+        }
+
+        public ExplicitArguments() : this(new Dictionary<string, object>())
+        {
+        }
 
         public T Get<T>() where T : class
         {
@@ -25,19 +34,19 @@ namespace StructureMap.Pipeline
 
         public void SetArg(string key, object argValue)
         {
-            _args.Add(key, argValue.ToString());
+            _args.Add(key, argValue);
         }
 
-        public string GetArg(string key)
+        public object GetArg(string key)
         {
             return _args.ContainsKey(key) ? _args[key] : null;
         }
 
         public void Configure(ConfiguredInstance instance)
         {
-            foreach (KeyValuePair<string, string> arg in _args)
+            foreach (KeyValuePair<string, object> arg in _args)
             {
-                instance.SetProperty(arg.Key, arg.Value);
+                instance.SetProperty(arg.Key, arg.Value.ToString());
                 instance.SetChild(arg.Key, new LiteralInstance(arg.Value));
             }
         }

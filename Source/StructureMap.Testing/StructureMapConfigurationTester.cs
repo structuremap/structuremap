@@ -5,6 +5,7 @@ using NUnit.Framework;
 using StructureMap.Configuration;
 using StructureMap.Graph;
 using StructureMap.Testing.GenericWidgets;
+using StructureMap.Testing.TestData;
 
 namespace StructureMap.Testing
 {
@@ -16,6 +17,7 @@ namespace StructureMap.Testing
         [SetUp]
         public void SetUp()
         {
+            DataMother.RestoreStructureMapConfig();
             ObjectFactory.ReInitialize();
             StructureMapConfiguration.ResetAll();
         }
@@ -33,6 +35,37 @@ namespace StructureMap.Testing
             XmlDocument document = new XmlDocument();
             document.LoadXml(outerXml);
             return document.DocumentElement;
+        }
+
+        [Test]
+        public void StructureMap_functions_without_StructureMapconfig_file_in_the_default_mode()
+        {
+            StructureMapConfiguration.ResetAll();
+            DataMother.RemoveStructureMapConfig();
+
+            PluginGraph graph = StructureMapConfiguration.GetPluginGraph();
+
+        }
+
+        [Test]
+        public void Ignore_the_StructureMap_config_file_even_if_it_exists()
+        {
+            StructureMapConfiguration.ResetAll();
+            StructureMapConfiguration.IgnoreStructureMapConfig = true;
+
+            PluginGraph graph = StructureMapConfiguration.GetPluginGraph();
+
+            Assert.AreEqual(0, graph.FamilyCount);
+        }
+
+        [Test]
+        public void Use_the_StructureMap_config_file_if_it_exists()
+        {
+            StructureMapConfiguration.ResetAll();
+            DataMother.RestoreStructureMapConfig();
+
+            PluginGraph graph = StructureMapConfiguration.GetPluginGraph();
+            Assert.IsTrue(graph.FamilyCount > 0);
         }
 
         [Test]

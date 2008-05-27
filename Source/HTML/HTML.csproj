@@ -36,4 +36,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <Content Include="ExplicitArguments.htm" />
+  </ItemGroup>
 </Project>

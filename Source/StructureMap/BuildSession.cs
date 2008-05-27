@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
@@ -58,20 +59,28 @@ namespace StructureMap
 
         public Array CreateInstanceArray(Type pluginType, Instance[] instances)
         {
-            // TODO -- default to returning all
+            Array array;
+
             if (instances == null)
             {
-                throw new StructureMapException(205, pluginType, "UNKNOWN");
+                IList list = forType(pluginType).GetAllInstances(this);
+                array = Array.CreateInstance(pluginType, list.Count);
+                for (int i = 0; i < list.Count; i++)
+                {
+                    array.SetValue(list[i], i);
+                }
             }
-
-            // TODO:  3.5, move this to an extension method of Array?
-            Array array = Array.CreateInstance(pluginType, instances.Length);
-            for (int i = 0; i < instances.Length; i++)
+            else
             {
-                Instance instance = instances[i];
+                // TODO:  3.5, move this to an extension method of Array?
+                array = Array.CreateInstance(pluginType, instances.Length);
+                for (int i = 0; i < instances.Length; i++)
+                {
+                    Instance instance = instances[i];
 
-                object arrayValue = forType(pluginType).Build(this, instance);
-                array.SetValue(arrayValue, i);
+                    object arrayValue = forType(pluginType).Build(this, instance);
+                    array.SetValue(arrayValue, i);
+                }    
             }
 
             return array;

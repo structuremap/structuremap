@@ -89,5 +89,11 @@ namespace StructureMap.Graph
         {
             return !type.IsInterface && !type.IsAbstract;
         }
+
+
+        protected bool IsAutoFillable(Type type)
+        {
+            return IsChild(type) || IsChildArray(type);
+        }
     }
 }

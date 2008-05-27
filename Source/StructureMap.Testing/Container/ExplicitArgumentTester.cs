@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
+using StructureMap.Testing.Pipeline;
 
 namespace StructureMap.Testing.Container
 {
@@ -25,37 +27,6 @@ namespace StructureMap.Testing.Container
         }
 
         #endregion
-
-        public void GetTypedArgumentsFromAnExplicitArgumentsMementoIfThereIsAnExplicitArgument()
-        {
-            Assert.Fail("Redo");
-
-            //PluginGraph pluginGraph = new PluginGraph();
-            //using (Registry registry = new Registry(pluginGraph))
-            //{
-            //    registry.ForRequestedType<ExplicitTarget>().TheDefaultIs(
-            //        Registry.Instance<ExplicitTarget>()
-            //            .UsingConcreteType<ExplicitTarget>()
-            //            .Child<IProvider>().IsConcreteType<RedProvider>()
-            //            .WithProperty("name").EqualTo("Jeremy")
-            //        );
-            //}
-
-            //InstanceMemento inner = pluginGraph.PluginFamilies[typeof (ExplicitTarget)].Source.GetAllMementos()[0];
-            //ExplicitArguments args = new ExplicitArguments();
-            //ExplicitArgumentMemento memento = new ExplicitArgumentMemento(args, inner);
-
-            //InstanceManager manager = new InstanceManager(pluginGraph);
-
-            //// Get the ExplicitTarget without setting an explicit arg for IProvider
-            //ExplicitTarget firstTarget = manager.CreateInstance<ExplicitTarget>(memento);
-            //Assert.IsInstanceOfType(typeof (RedProvider), firstTarget.Provider);
-
-            //// Now, set the explicit arg for IProvider
-            //args.Set<IProvider>(new BlueProvider());
-            //ExplicitTarget secondTarget = manager.CreateInstance<ExplicitTarget>(memento);
-            //Assert.IsInstanceOfType(typeof (BlueProvider), secondTarget.Provider);
-        }
 
 
         public interface IExplicitTarget
@@ -234,8 +205,62 @@ namespace StructureMap.Testing.Container
             Assert.AreEqual("Jeremy", args.GetArg("name"));
 
             args.SetArg("age", 34);
-            Assert.AreEqual("34", args.GetArg("age"));
+            Assert.AreEqual(34, args.GetArg("age"));
         }
+
+        [Test]
+        public void Fill_in_argument_by_name()
+        {
+            InstanceManager manager = new InstanceManager();
+            manager.AddDefaultInstance<IView, View>();
+
+            Node theNode = new Node();
+            Trade theTrade = new Trade();
+
+            Command command = manager
+                .With("node").EqualTo(theNode)
+                .With<Trade>(theTrade)
+                .GetInstance<Command>();
+
+            Assert.IsInstanceOfType(typeof(View), command.View);
+            Assert.AreSame(theNode, command.Node);
+            Assert.AreSame(theTrade, command.Trade);
+        }
+
+        [Test]
+        public void Pass_in_arguments_as_dictionary()
+        {
+            InstanceManager manager = new InstanceManager();
+            manager.AddDefaultInstance<IView, View>();
+
+            Node theNode = new Node();
+            Trade theTrade = new Trade();
+
+            ExplicitArguments args = new ExplicitArguments();
+            args.Set<Node>(theNode);
+            args.SetArg("trade", theTrade);
+
+            Command command = manager.CreateInstance<Command>(args);
+
+            Assert.IsInstanceOfType(typeof(View), command.View);
+            Assert.AreSame(theNode, command.Node);
+            Assert.AreSame(theTrade, command.Trade);            
+        }
+
+        [Test]
+        public void ExplicitArguments_can_return_child_by_name()
+        {
+            ExplicitArguments args = new ExplicitArguments();
+            Node theNode = new Node();
+            args.SetArg("node", theNode);
+
+            IConfiguredInstance instance = new ExplicitInstance<Command>(args, null);
+            
+            Assert.AreSame(theNode, instance.GetChild("node", typeof(Node), new StubBuildSession()));
+        }
+        
+
+        
     }
 
     public class Lump
@@ -257,4 +282,42 @@ namespace StructureMap.Testing.Container
             get { return _lump; }
         }
     }
+
+
+    public class Trade{}
+    public class Node{}
+    public interface IView{}
+    public class View : IView {}
+
+    public class Command
+    {
+        private readonly Trade _trade;
+        private readonly Node _node;
+        private readonly IView _view;
+
+        public Command(Trade trade, Node node, IView view)
+        {
+            _trade = trade;
+            _node = node;
+            _view = view;
+        }
+
+        public Trade Trade
+        {
+            get { return _trade; }
+        }
+
+        public Node Node
+        {
+            get { return _node; }
+        }
+
+        public IView View
+        {
+            get { return _view; }
+        }
+    }
+   
+
+    
 }
