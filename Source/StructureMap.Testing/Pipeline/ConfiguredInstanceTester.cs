@@ -18,23 +18,20 @@ namespace StructureMap.Testing.Pipeline
         [SetUp]
         public void SetUp()
         {
-            PluginGraph graph = new PluginGraph();
-            Registry registry = new Registry(graph);
+            Registry registry = new Registry();
             registry.BuildInstancesOf<Rule>();
             registry.ScanAssemblies()
                 .IncludeAssembly("StructureMap.Testing.Widget")
                 .IncludeAssembly("StructureMap.Testing.Widget2");
 
-            registry.Build();
+            PluginGraph graph = registry.Build();
 
             PipelineGraph pipelineGraph = new PipelineGraph(graph);
             _session = new BuildSession(pipelineGraph, graph.InterceptorLibrary);
-            instance = new ConfiguredInstance();
         }
 
         #endregion
 
-        private ConfiguredInstance instance;
         private IBuildSession _session;
 
 
@@ -50,16 +47,6 @@ namespace StructureMap.Testing.Pipeline
             {
                 Assert.AreEqual(errorCode, ex.ErrorCode);
             }
-        }
-
-        [Test]
-        public void TestComplexRule()
-        {
-            ConfiguredInstance instance = (ConfiguredInstance)ComplexRule.GetInstance();
-
-            Rule rule = (Rule)instance.Build(typeof(Rule), _session);
-            Assert.IsNotNull(rule);
-            Assert.IsTrue(rule is ComplexRule);
         }
 
 
@@ -106,7 +93,7 @@ namespace StructureMap.Testing.Pipeline
 
             using (mocks.Playback())
             {
-                object actualObject = ((IConfiguredInstance)instance).Build(GetType(), session, builder);
+                object actualObject = ((IConfiguredInstance) instance).Build(GetType(), session, builder);
                 Assert.AreSame(theObjectBuilt, actualObject);
             }
         }
@@ -134,10 +121,10 @@ namespace StructureMap.Testing.Pipeline
         [Test, ExpectedException(typeof (StructureMapException))]
         public void BuildRuleWithAMissingValue()
         {
-            IStructuredInstance instance = (IStructuredInstance)ComplexRule.GetInstance();
+            IStructuredInstance instance = (IStructuredInstance) ComplexRule.GetInstance();
             instance.RemoveKey("String");
 
-            ComplexRule rule = (ComplexRule) ((Instance)instance).Build(typeof (Rule), _session);
+            ComplexRule rule = (ComplexRule) ((Instance) instance).Build(typeof (Rule), _session);
         }
 
         [Test]
@@ -225,7 +212,8 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void GetProperty_happy_path()
         {
-            instance.SetProperty("Color", "Red")
+            ConfiguredInstance instance = new ConfiguredInstance()
+                .SetProperty("Color", "Red")
                 .SetProperty("Age", "34");
 
             IConfiguredInstance configuredInstance = instance;
@@ -242,7 +230,7 @@ namespace StructureMap.Testing.Pipeline
         {
             try
             {
-                IConfiguredInstance configuredInstance = instance;
+                IConfiguredInstance configuredInstance = new ConfiguredInstance();
                 configuredInstance.GetProperty("anything");
                 Assert.Fail("Did not throw exception");
             }
@@ -274,6 +262,16 @@ namespace StructureMap.Testing.Pipeline
             {
                 instance.Build(thePluginType, session);
             }
+        }
+
+        [Test]
+        public void TestComplexRule()
+        {
+            ConfiguredInstance instance = (ConfiguredInstance) ComplexRule.GetInstance();
+
+            Rule rule = (Rule) instance.Build(typeof (Rule), _session);
+            Assert.IsNotNull(rule);
+            Assert.IsTrue(rule is ComplexRule);
         }
 
         [Test]

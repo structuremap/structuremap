@@ -10,16 +10,9 @@ namespace StructureMap.Configuration.DSL
     public class Registry : RegistryExpressions
     {
         private readonly List<Action<PluginGraph>> _actions = new List<Action<PluginGraph>>();
-        private readonly PluginGraph _graph;
-
-        public Registry(PluginGraph graph) : this()
-        {
-            _graph = graph;
-        }
 
         public Registry()
         {
-            _graph = new PluginGraph();
             configure();
         }
 
@@ -79,10 +72,11 @@ namespace StructureMap.Configuration.DSL
 
         public PluginGraph Build()
         {
-            ConfigurePluginGraph(_graph);
-            _graph.Seal();
+            PluginGraph graph = new PluginGraph();
+            ConfigurePluginGraph(graph);
+            graph.Seal();
 
-            return _graph;
+            return graph;
         }
 
         /// <summary>
@@ -95,10 +89,7 @@ namespace StructureMap.Configuration.DSL
             ConfiguredInstance instance = new ConfiguredInstance();
 
             addExpression(
-                delegate(PluginGraph pluginGraph)
-                {
-                    pluginGraph.FindFamily(typeof (PLUGINTYPE)).AddInstance(instance);
-                });
+                delegate(PluginGraph pluginGraph) { pluginGraph.FindFamily(typeof (PLUGINTYPE)).AddInstance(instance); });
 
             return instance;
         }
@@ -113,7 +104,7 @@ namespace StructureMap.Configuration.DSL
         public LiteralInstance AddInstanceOf<PLUGINTYPE>(PLUGINTYPE target)
         {
             LiteralInstance literal = new LiteralInstance(target);
-            _graph.FindFamily(typeof (PLUGINTYPE)).AddInstance(literal);
+            _actions.Add(delegate(PluginGraph graph) { graph.FindFamily(typeof (PLUGINTYPE)).AddInstance(literal); });
 
             return literal;
         }
@@ -126,10 +117,13 @@ namespace StructureMap.Configuration.DSL
         /// <returns></returns>
         public PrototypeInstance AddPrototypeInstanceOf<PLUGINTYPE>(PLUGINTYPE prototype)
         {
-            PrototypeInstance expression = new PrototypeInstance((ICloneable) prototype);
-            _graph.FindFamily(typeof (PLUGINTYPE)).AddInstance(expression);
+            PrototypeInstance instance = new PrototypeInstance((ICloneable) prototype);
+            _actions.Add(delegate(PluginGraph graph)
+            {
+                 graph.FindFamily(typeof (PLUGINTYPE)).AddInstance(instance);
+            });
 
-            return expression;
+            return instance;
         }
 
         /// <summary>
@@ -138,7 +132,7 @@ namespace StructureMap.Configuration.DSL
         /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <param name="url"></param>
         /// <returns></returns>
-        public static UserControlInstance LoadUserControlFrom<PLUGINTYPE>(string url)
+        public static UserControlInstance LoadUserControlFrom(string url)
         {
             return new UserControlInstance(url);
         }

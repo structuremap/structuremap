@@ -24,11 +24,6 @@ namespace StructureMap.Testing.Configuration.DSL
 
     public class TestRegistry : Registry
     {
-        public TestRegistry(PluginGraph graph) : base(graph)
-        {
-        }
-
-
         public TestRegistry()
         {
         }
