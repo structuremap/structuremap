@@ -31,7 +31,7 @@ namespace StructureMap.Testing
 
             graph.Seal();
 
-            InstanceManager manager = new InstanceManager(graph);
+            StructureMap.Container manager = new StructureMap.Container(graph);
         }
 
         [Test]
@@ -39,7 +39,7 @@ namespace StructureMap.Testing
         {
             Type serviceType = typeof (IService<double>);
             PluginGraph pluginGraph = PluginGraph.BuildGraphFromAssembly(serviceType.Assembly);
-            InstanceManager manager = new InstanceManager(pluginGraph);
+            StructureMap.Container manager = new StructureMap.Container(pluginGraph);
 
             Type doubleServiceType = typeof (IService<double>);
 
@@ -91,7 +91,7 @@ namespace StructureMap.Testing
             PluginFamily family = graph.FindFamily(typeof (ComplexType<int>));
             family.AddPlugin(new Plugin(typeof(ComplexType<int>), "complex"));
 
-            InstanceManager manager = new InstanceManager(graph);
+            StructureMap.Container manager = new StructureMap.Container(graph);
 
             ConfiguredInstance instance = new ConfiguredInstance().WithConcreteKey("complex")
                 .WithProperty("name").EqualTo("Jeremy")
@@ -144,7 +144,7 @@ namespace StructureMap.Testing
             pluginGraph.SetDefault("2", typeof(IService<>),new ReferencedInstance("Plugged"));
             
 
-            InstanceManager manager = new InstanceManager(pluginGraph);
+            StructureMap.Container manager = new StructureMap.Container(pluginGraph);
 
             IPlug<string> plug = manager.GetInstance<IPlug<string>>();
 
@@ -161,7 +161,7 @@ namespace StructureMap.Testing
         [Test]
         public void Define_profile_with_generics_with_named_instance()
         {
-            IContainer manager = new InstanceManager(delegate(Registry registry)
+            IContainer manager = new StructureMap.Container(delegate(Registry registry)
             {
                 registry.AddInstanceOf(typeof(IService<>), new ConfiguredInstance(typeof(Service<>)).WithName("Service1"));
                 registry.AddInstanceOf(typeof(IService<>), new ConfiguredInstance(typeof(Service2<>)).WithName("Service2"));
@@ -182,7 +182,7 @@ namespace StructureMap.Testing
         [Test]
         public void Define_profile_with_generics_and_concrete_type()
         {
-            IContainer manager = new InstanceManager(delegate(Registry registry)
+            IContainer manager = new StructureMap.Container(delegate(Registry registry)
             {
                 registry.CreateProfile("1").For(typeof(IService<>)).UseConcreteType(typeof(Service<>));
                 registry.CreateProfile("2").For(typeof(IService<>)).UseConcreteType(typeof(Service2<>));

@@ -17,12 +17,12 @@ namespace StructureMap.Testing.Configuration
         public void SetUp()
         {
             _graph = DataMother.GetPluginGraph("ShortInstance.xml");
-            _manager = new InstanceManager(_graph);
+            _manager = new StructureMap.Container(_graph);
         }
 
         #endregion
 
-        private InstanceManager _manager;
+        private StructureMap.Container _manager;
         private PluginGraph _graph;
 
         [Test]

@@ -138,7 +138,7 @@ namespace StructureMap.Testing
         [Test]
         public void If_no_child_array_is_explicitly_defined_return_all_instances()
         {
-            IContainer manager = new InstanceManager(delegate(Registry registry)
+            IContainer manager = new StructureMap.Container(delegate(Registry registry)
             {
                 registry.AddInstanceOf<IWidget>(new ColorWidget("Red"));
                 registry.AddInstanceOf<IWidget>(new ColorWidget("Blue"));

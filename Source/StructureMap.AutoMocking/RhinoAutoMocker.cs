@@ -22,8 +22,8 @@ namespace StructureMap.AutoMocking
             _manager = new AutoMockedInstanceManager(locator);
         }
 
-        // Replaces the inner InstanceManager in ObjectFactory with the mocked
-        // InstanceManager from the auto mocking container.  This will make ObjectFactory
+        // Replaces the inner Container in ObjectFactory with the mocked
+        // Container from the auto mocking container.  This will make ObjectFactory
         // return mocks for everything.  Use cautiously!!!!!!!!!!!!!!!
 
         // Gets the ClassUnderTest with mock objects (or stubs) pushed in

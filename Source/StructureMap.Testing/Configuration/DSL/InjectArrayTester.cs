@@ -82,7 +82,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void CanStillAddOtherPropertiesAfterTheCallToChildArray()
         {
-            IContainer manager = new InstanceManager(delegate(Registry registry)
+            IContainer manager = new StructureMap.Container(delegate(Registry registry)
             {
                 registry.ForRequestedType<Processor>()
                     .TheDefaultIs(
@@ -103,7 +103,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void InjectPropertiesByName()
         {
-            IContainer manager = new InstanceManager(delegate(Registry registry)
+            IContainer manager = new StructureMap.Container(delegate(Registry registry)
             {
                 registry.ForRequestedType<Processor2>()
                     .TheDefaultIs(
@@ -153,7 +153,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void PlaceMemberInArrayByReference()
         {
-            IContainer manager = new InstanceManager(delegate(Registry registry)
+            IContainer manager = new StructureMap.Container(delegate(Registry registry)
             {
                 registry.AddInstanceOf<IHandler>().UsingConcreteType<Handler1>().WithName("One");
                 registry.AddInstanceOf<IHandler>().UsingConcreteType<Handler2>().WithName("Two");
@@ -178,7 +178,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void ProgrammaticallyInjectArrayAllInline()
         {
-            IContainer manager = new InstanceManager(delegate(Registry registry)
+            IContainer manager = new StructureMap.Container(delegate(Registry registry)
             {
                 registry.ForRequestedType<Processor>()
                     .TheDefaultIs(

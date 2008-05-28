@@ -9,7 +9,7 @@ namespace StructureMap
 {
     /// <summary>
     /// Reads configuration XML documents and builds the structures necessary to initialize
-    /// the InstanceManager/IInstanceFactory/InstanceBuilder/ObjectInstanceActivator objects
+    /// the Container/IInstanceFactory/InstanceBuilder/ObjectInstanceActivator objects
     /// </summary>
     public class PluginGraphBuilder
     {

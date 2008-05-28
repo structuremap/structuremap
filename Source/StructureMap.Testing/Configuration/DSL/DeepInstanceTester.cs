@@ -12,7 +12,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
         private void assertThingMatches(Action<Registry> action)
         {
-            IContainer manager = new InstanceManager(action);
+            IContainer manager = new StructureMap.Container(action);
             Thing actual = manager.GetInstance<Thing>();
             Assert.AreEqual(_prototype, actual);
         }

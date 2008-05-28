@@ -85,7 +85,7 @@ namespace StructureMap.Testing.Configuration
         public void GettingTheRightInstanceKeyWhenUsingAMAchineOverrideInCombinationWithProfile()
         {
             ProfileBuilder.OverrideMachineName("GREEN-BOX");
-            InstanceManager manager = new InstanceManager(graph);
+            StructureMap.Container manager = new StructureMap.Container(graph);
 
             ColorWidget widget = (ColorWidget) manager.GetInstance<IWidget>();
             Assert.AreEqual("Green", widget.Color);
@@ -95,7 +95,7 @@ namespace StructureMap.Testing.Configuration
         public void GotTheInstanceForTheMachineOverride()
         {
             ProfileBuilder.OverrideMachineName("ORANGE-BOX");
-            InstanceManager manager = new InstanceManager(graph);
+            StructureMap.Container manager = new StructureMap.Container(graph);
 
             ColorWidget widget = (ColorWidget)manager.GetInstance<IWidget>();
             Assert.AreEqual("Orange", widget.Color);
@@ -104,7 +104,7 @@ namespace StructureMap.Testing.Configuration
         [Test]
         public void HasADefaultInstanceKey()
         {
-            InstanceManager manager = new InstanceManager(graph);
+            StructureMap.Container manager = new StructureMap.Container(graph);
             
             manager.SetDefaultsToProfile("Green");
 
@@ -115,7 +115,7 @@ namespace StructureMap.Testing.Configuration
         [Test]
         public void HasTheOverrideForProfile()
         {
-            InstanceManager manager = new InstanceManager(graph);
+            StructureMap.Container manager = new StructureMap.Container(graph);
             manager.SetDefaultsToProfile("Blue");
 
             ColorRule rule = (ColorRule) manager.GetInstance<Rule>();
@@ -131,7 +131,7 @@ namespace StructureMap.Testing.Configuration
         public void InlineMachine1()
         {
             ProfileBuilder.OverrideMachineName("ORANGE-BOX");
-            InstanceManager manager = new InstanceManager(graph);
+            StructureMap.Container manager = new StructureMap.Container(graph);
 
             ColorWidget widget = (ColorWidget)manager.GetInstance(typeof(IWidget));
             Assert.AreEqual("Orange", widget.Color);
@@ -141,7 +141,7 @@ namespace StructureMap.Testing.Configuration
         public void InlineMachine2()
         {
             ProfileBuilder.OverrideMachineName("GREEN-BOX");
-            InstanceManager manager = new InstanceManager(graph);
+            StructureMap.Container manager = new StructureMap.Container(graph);
             
             ColorWidget widget = (ColorWidget)manager.GetInstance(typeof(IWidget));
             Assert.AreEqual("Green", widget.Color);
@@ -150,7 +150,7 @@ namespace StructureMap.Testing.Configuration
         [Test]
         public void SetTheProfile()
         {
-            InstanceManager manager = new InstanceManager(graph);
+            StructureMap.Container manager = new StructureMap.Container(graph);
             manager.SetDefaultsToProfile("Green");
 
             ColorRule greenRule = (ColorRule)manager.GetInstance(typeof(Rule));

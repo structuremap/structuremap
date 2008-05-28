@@ -123,7 +123,7 @@ namespace StructureMap.Testing.Container
         [Test]
         public void PassAnArgumentIntoExplicitArgumentsForARequestedInterface()
         {
-            IContainer manager = new InstanceManager(delegate(Registry registry)
+            IContainer manager = new StructureMap.Container(delegate(Registry registry)
             {
                 registry.ForRequestedType<IProvider>().TheDefaultIsConcreteType<LumpProvider>();
             });
@@ -158,7 +158,7 @@ namespace StructureMap.Testing.Container
         [Test]
         public void PassExplicitArgsIntoInstanceManager()
         {
-            IContainer manager = new InstanceManager(delegate(Registry registry)
+            IContainer manager = new StructureMap.Container(delegate(Registry registry)
             {
                 registry.ForRequestedType<ExplicitTarget>().TheDefaultIs(
                     Registry.Instance<ExplicitTarget>()
@@ -211,7 +211,7 @@ namespace StructureMap.Testing.Container
         [Test]
         public void Fill_in_argument_by_name()
         {
-            InstanceManager manager = new InstanceManager();
+            StructureMap.Container manager = new StructureMap.Container();
             manager.AddDefaultInstance<IView, View>();
 
             Node theNode = new Node();
@@ -230,7 +230,7 @@ namespace StructureMap.Testing.Container
         [Test]
         public void Pass_in_arguments_as_dictionary()
         {
-            InstanceManager manager = new InstanceManager();
+            StructureMap.Container manager = new StructureMap.Container();
             manager.AddDefaultInstance<IView, View>();
 
             Node theNode = new Node();

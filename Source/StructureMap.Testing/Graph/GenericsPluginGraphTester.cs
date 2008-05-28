@@ -37,7 +37,7 @@ namespace StructureMap.Testing.Graph
             family.AddPlugin(typeof (SecondGenericService<>), "Second");
             family.AddPlugin(typeof (ThirdGenericService<>), "Third");
 
-            InstanceManager manager = new InstanceManager(pluginGraph);
+            StructureMap.Container manager = new StructureMap.Container(pluginGraph);
 
             GenericService<int> intService = (GenericService<int>) manager.GetInstance<IGenericService<int>>();
             Assert.AreEqual(typeof (int), intService.GetT());

@@ -21,17 +21,17 @@ namespace StructureMap.Testing.Container
         }
 
 
-        private InstanceManager buildInstanceManager()
+        private StructureMap.Container buildInstanceManager()
         {
             PluginGraph pluginGraph = DataMother.GetDiagnosticPluginGraph("SetterInjectionTesting.xml");
 
-            return new InstanceManager(pluginGraph);
+            return new StructureMap.Container(pluginGraph);
         }
 
         [Test]
         public void ChildArraySetter()
         {
-            InstanceManager manager = buildInstanceManager();
+            StructureMap.Container manager = buildInstanceManager();
 
             WidgetArrayGridColumn column =
                 (WidgetArrayGridColumn) manager.GetInstance(typeof (IGridColumn), "WidgetArray");
@@ -42,7 +42,7 @@ namespace StructureMap.Testing.Container
         [Test]
         public void ChildObjectSetter()
         {
-            InstanceManager manager = buildInstanceManager();
+            StructureMap.Container manager = buildInstanceManager();
 
 
             WidgetGridColumn column = (WidgetGridColumn) manager.GetInstance(typeof (IGridColumn), "BlueWidget");
@@ -59,7 +59,7 @@ namespace StructureMap.Testing.Container
 
             family.AddInstance(_source.GetMemento("Enum"));
 
-            InstanceManager manager = new InstanceManager(graph);
+            StructureMap.Container manager = new StructureMap.Container(graph);
 
             EnumGridColumn column = (EnumGridColumn) manager.GetInstance<IGridColumn>("Enum");
 
@@ -78,7 +78,7 @@ namespace StructureMap.Testing.Container
             long count = long.Parse(memento.GetProperty("Count"));
             family.AddInstance(memento);
 
-            InstanceManager manager = new InstanceManager(graph);
+            StructureMap.Container manager = new StructureMap.Container(graph);
 
 
             LongGridColumn column = (LongGridColumn) manager.GetInstance<IGridColumn>("Long");
@@ -96,7 +96,7 @@ namespace StructureMap.Testing.Container
             InstanceMemento memento = _source.GetMemento("String");
             family.AddInstance(memento);
 
-            InstanceManager manager = new InstanceManager(graph);
+            StructureMap.Container manager = new StructureMap.Container(graph);
             StringGridColumn column = (StringGridColumn) manager.GetInstance<IGridColumn>("String");
 
 

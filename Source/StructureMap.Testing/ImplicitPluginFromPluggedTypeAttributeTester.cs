@@ -44,7 +44,7 @@ namespace StructureMap.Testing
             family.AddInstance(_memento);
 
             PluginGraph graph = builder.PluginGraph;
-            InstanceManager manager = new InstanceManager(graph);
+            StructureMap.Container manager = new StructureMap.Container(graph);
 
             StubbedGateway gateway = (StubbedGateway) manager.GetInstance(typeof (IGateway), _memento.InstanceKey);
 
@@ -56,7 +56,7 @@ namespace StructureMap.Testing
         public void RunThroughXml()
         {
             PluginGraph graph = DataMother.GetPluginGraph("PluggedTypeTest.xml");
-            InstanceManager manager = new InstanceManager(graph);
+            StructureMap.Container manager = new StructureMap.Container(graph);
 
             NotPluggableWidget widget = (NotPluggableWidget) manager.GetInstance(typeof (IWidget), "Me");
             Assert.AreEqual("Jeremy", widget.Name);

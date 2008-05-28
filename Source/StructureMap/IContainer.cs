@@ -18,7 +18,7 @@ namespace StructureMap
         T GetInstance<T>(Instance instance);
 
         /// <summary>
-        /// Sets up the InstanceManager to return the object in the "stub" argument anytime
+        /// Sets up the Container to return the object in the "stub" argument anytime
         /// any instance of the PluginType is requested
         /// </summary>
         /// <param name="pluginType"></param>

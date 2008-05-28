@@ -45,7 +45,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void Add_concrete_type()
         {
-            InstanceManager manager = new InstanceManager(delegate(Registry r)
+            StructureMap.Container manager = new StructureMap.Container(delegate(Registry r)
             {
                 r.ForRequestedType(typeof(ITarget)).AddConcreteType(typeof(Target1));
             });
@@ -57,7 +57,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void Add_concrete_type_with_name()
         {
-            InstanceManager manager = new InstanceManager(delegate(Registry r)
+            StructureMap.Container manager = new StructureMap.Container(delegate(Registry r)
             {
                 r.ForRequestedType(typeof(ITarget)).AddConcreteType(typeof(Target1), "1");
                 r.ForRequestedType(typeof(ITarget)).AddConcreteType(typeof(Target2), "2");
@@ -73,7 +73,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void Add_default_by_concrete_type()
         {
-            InstanceManager manager = new InstanceManager(delegate(Registry r)
+            StructureMap.Container manager = new StructureMap.Container(delegate(Registry r)
             {
                 r.ForRequestedType(typeof (ITarget)).TheDefaultIsConcreteType(typeof (Target3));
             });
@@ -84,7 +84,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void Add_default_instance()
         {
-            InstanceManager manager = new InstanceManager(delegate(Registry r)
+            StructureMap.Container manager = new StructureMap.Container(delegate(Registry r)
             {
                 r.ForRequestedType(typeof(ITarget)).TheDefaultIs(Instance<Target2>());
             });
@@ -95,7 +95,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void Add_instance_by_lambda()
         {
-            InstanceManager manager = new InstanceManager(delegate(Registry r)
+            StructureMap.Container manager = new StructureMap.Container(delegate(Registry r)
             {
                 r.ForRequestedType(typeof(ITarget)).TheDefaultIs(delegate() { return new Target1(); });
             });
@@ -106,7 +106,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void Add_instance_directly()
         {
-            InstanceManager manager = new InstanceManager(delegate(Registry r)
+            StructureMap.Container manager = new StructureMap.Container(delegate(Registry r)
             {
                 r.ForRequestedType(typeof (ITarget)).AddInstance(Instance<Target2>());
             });
@@ -118,7 +118,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void Enrichment()
         {
-            InstanceManager manager = new InstanceManager(delegate(Registry r)
+            StructureMap.Container manager = new StructureMap.Container(delegate(Registry r)
             {
                 r.ForRequestedType(typeof(ITarget))
                     .TheDefaultIsConcreteType(typeof(Target1))
@@ -164,7 +164,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             ITarget created = null;
 
-            InstanceManager manager = new InstanceManager(delegate(Registry r)
+            StructureMap.Container manager = new StructureMap.Container(delegate(Registry r)
             {
                 r.ForRequestedType(typeof (ITarget))
                     .TheDefaultIsConcreteType(typeof (Target3))

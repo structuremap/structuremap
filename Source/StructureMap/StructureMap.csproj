@@ -292,7 +292,7 @@
     <Compile Include="InstanceFactory.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="InstanceManager.cs">
+    <Compile Include="Container.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="InstanceMemento.cs">

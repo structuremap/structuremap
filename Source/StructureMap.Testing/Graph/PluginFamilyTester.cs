@@ -211,7 +211,7 @@ namespace StructureMap.Testing.Graph
             pluginGraph.Assemblies.Add(Assembly.GetExecutingAssembly());
             pluginGraph.Seal();
 
-            InstanceManager manager = new InstanceManager(pluginGraph);
+            StructureMap.Container manager = new StructureMap.Container(pluginGraph);
 
             ISingletonRepository repository1 =
                 (ISingletonRepository) manager.GetInstance(typeof (ISingletonRepository));

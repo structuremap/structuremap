@@ -15,7 +15,7 @@ namespace StructureMap.Testing.Container
         [SetUp]
         public void SetUp()
         {
-            _manager = new InstanceManager(delegate(Registry registry)
+            _manager = new StructureMap.Container(delegate(Registry registry)
             {
                 registry.BuildInstancesOf<INormalType>();
                 registry.ScanAssemblies().IncludeTheCallingAssembly()

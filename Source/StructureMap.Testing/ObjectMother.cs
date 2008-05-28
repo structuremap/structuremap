@@ -9,7 +9,7 @@ namespace StructureMap.Testing
 {
     public class ObjectMother
     {
-        private static InstanceManager _instanceManager;
+        private static StructureMap.Container container;
         private static PluginGraph _pluginGraph;
 
         static ObjectMother()
@@ -32,7 +32,7 @@ namespace StructureMap.Testing
 
             _pluginGraph = builder.Build();
 
-            _instanceManager = new InstanceManager(_pluginGraph);
+            container = new StructureMap.Container(_pluginGraph);
         }
 
 

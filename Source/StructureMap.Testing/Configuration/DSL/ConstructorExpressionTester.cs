@@ -31,7 +31,7 @@ namespace StructureMap.Testing.Configuration.DSL
             Concretion concretion1 = new Concretion();
             Concretion concretion2 = new Concretion();
 
-            IContainer manager = new InstanceManager(delegate(Registry registry)
+            IContainer manager = new StructureMap.Container(delegate(Registry registry)
             {
                 registry.ForRequestedType<Abstraction>()
                     .AddInstances(
@@ -49,7 +49,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             Concretion concretion = new Concretion();
 
-            IContainer manager = new InstanceManager(delegate(Registry registry)
+            IContainer manager = new StructureMap.Container(delegate(Registry registry)
             {
                 registry.ForRequestedType<Abstraction>().TheDefaultIs(
                     ConstructedBy<Abstraction>(delegate { return concretion; })
@@ -65,7 +65,7 @@ namespace StructureMap.Testing.Configuration.DSL
             Concretion concretion1 = new Concretion();
             Concretion concretion2 = new Concretion();
 
-            IContainer manager = new InstanceManager(delegate(Registry registry)
+            IContainer manager = new StructureMap.Container(delegate(Registry registry)
             {
                 registry.ForRequestedType<Abstraction>().AddInstance(
                     ConstructedBy<Abstraction>(delegate { return concretion1; }).WithName("One")
@@ -85,7 +85,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             Concretion concretion = new Concretion();
 
-            IContainer manager = new InstanceManager(delegate(Registry registry)
+            IContainer manager = new StructureMap.Container(delegate(Registry registry)
             {
                 registry.ForRequestedType<Abstraction>().AddInstance(
                     ConstructedBy<Abstraction>(delegate { return concretion; })

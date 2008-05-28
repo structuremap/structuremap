@@ -30,7 +30,7 @@ namespace StructureMap.Testing.Container.Interceptors
         {
             if (manager == null)
             {
-                manager = new InstanceManager(registry);
+                manager = new StructureMap.Container(registry);
             }
 
             Assert.IsInstanceOfType(typeof (T), manager.GetInstance<IAnInterfaceOfSomeSort>(name));
@@ -41,7 +41,7 @@ namespace StructureMap.Testing.Container.Interceptors
         {
             if (manager == null)
             {
-                manager = new InstanceManager(registry);
+                manager = new StructureMap.Container(registry);
             }
 
             OUTERTYPE something = (OUTERTYPE) manager.GetInstance<IAnInterfaceOfSomeSort>(name);

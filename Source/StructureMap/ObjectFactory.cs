@@ -129,7 +129,7 @@ namespace StructureMap
             manager.AddInstance<PLUGINTYPE, CONCRETETYPE>();
         }
 
-        #region InstanceManager and setting defaults
+        #region Container and setting defaults
 
         private static IContainer manager
         {
@@ -226,14 +226,14 @@ namespace StructureMap
         }
 
 
-        private static InstanceManager buildManager()
+        private static Container buildManager()
         {
             PluginGraph graph = StructureMapConfiguration.GetPluginGraph();
 
-            InstanceManager instanceManager = new InstanceManager(graph);
-            instanceManager.SetDefaultsToProfile(_profile);
+            Container container = new Container(graph);
+            container.SetDefaultsToProfile(_profile);
 
-            return instanceManager;
+            return container;
         }
 
         #endregion

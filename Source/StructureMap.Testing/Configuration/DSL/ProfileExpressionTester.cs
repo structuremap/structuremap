@@ -56,7 +56,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
             Assert.AreEqual(Profile.InstanceKeyForProfile(theProfileName), defaultInstance.Name);
 
-            InstanceManager manager = new InstanceManager(graph);
+            StructureMap.Container manager = new StructureMap.Container(graph);
             manager.SetDefaultsToProfile(theProfileName);
             AWidget widget = (AWidget)manager.GetInstance<IWidget>();
             Assert.IsNotNull(widget);
@@ -83,7 +83,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             string theProfileName = "something";
 
-            IContainer manager = new InstanceManager(delegate(Registry registry)
+            IContainer manager = new StructureMap.Container(delegate(Registry registry)
             {
                 registry.CreateProfile(theProfileName)
                     .For<IWidget>().UseConcreteType<AWidget>()
@@ -101,7 +101,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             string theProfileName = "something";
             
-            IContainer manager = new InstanceManager(delegate(Registry registry)
+            IContainer manager = new StructureMap.Container(delegate(Registry registry)
             {
                 registry.CreateProfile(theProfileName)
                     .For<IWidget>().Use(delegate() { return new AWidget(); })
@@ -122,7 +122,7 @@ namespace StructureMap.Testing.Configuration.DSL
             string theProfileName = "something";
             IWidget theTemplate = new AWidget();
 
-            IContainer manager = new InstanceManager(delegate(Registry registry)
+            IContainer manager = new StructureMap.Container(delegate(Registry registry)
             {
                 registry.CreateProfile(theProfileName)
                     .For<IWidget>().UsePrototypeOf(theTemplate);

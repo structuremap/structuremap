@@ -60,7 +60,7 @@ namespace StructureMap.Testing.Configuration
             PluginGraphBuilder builder = new PluginGraphBuilder(parser);
             PluginGraph graph = builder.Build();
 
-            InstanceManager manager = new InstanceManager(graph);
+            StructureMap.Container manager = new StructureMap.Container(graph);
 
             GrandChild tommy = (GrandChild) manager.GetInstance(typeof (GrandChild), "Tommy");
             Assert.AreEqual(false, tommy.RightHanded);

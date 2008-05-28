@@ -4,7 +4,7 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.AutoMocking
 {
-    public class AutoMockedInstanceManager : InstanceManager
+    public class AutoMockedInstanceManager : Container
     {
         private readonly ServiceLocator _locator;
 

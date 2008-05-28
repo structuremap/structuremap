@@ -9,7 +9,7 @@ namespace StructureMap
     /// </summary>
     public abstract class InstanceBuilder
     {
-        private InstanceManager _manager;
+        private Container _manager;
 
         public InstanceBuilder()
         {

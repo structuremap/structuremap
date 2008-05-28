@@ -33,7 +33,7 @@ namespace StructureMap.Testing.Container
 
             PluginGraph pluginGraph = DataMother.GetDiagnosticPluginGraph("SampleConfig.xml");
 
-            InstanceManager manager = new InstanceManager(pluginGraph);
+            StructureMap.Container manager = new StructureMap.Container(pluginGraph);
 
             IList list = manager.GetAllInstances(typeof (IWidget));
 

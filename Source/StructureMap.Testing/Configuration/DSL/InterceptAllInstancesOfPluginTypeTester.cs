@@ -38,7 +38,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             if (_manager == null)
             {
-                _manager = new InstanceManager(delegate(Registry registry)
+                _manager = new StructureMap.Container(delegate(Registry registry)
                 {
                     _defaultRegistry(registry);
                     action(registry);

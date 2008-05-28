@@ -39,7 +39,7 @@ namespace StructureMap.Testing.Container
 
             PluginGraph graph = builder.Build();
 
-            InstanceManager manager = new InstanceManager(graph);
+            StructureMap.Container manager = new StructureMap.Container(graph);
 
             Decision d1 = (Decision) manager.GetInstance(typeof (Decision), "RedBlue");
             Assert.IsNotNull(d1);

@@ -59,7 +59,7 @@ namespace StructureMap.Testing.Container
         [Test]
         public void AddInstanceToInstanceManagerWhenTheInstanceFactoryDoesNotExist()
         {
-            InstanceManager manager = new InstanceManager(new PluginGraph());
+            StructureMap.Container manager = new StructureMap.Container(new PluginGraph());
             manager.AddInstance<IService>(new LiteralInstance(_red).WithName("Red"));
             manager.AddInstance<IService>(new LiteralInstance(_blue).WithName("Blue"));
 
@@ -99,7 +99,7 @@ namespace StructureMap.Testing.Container
             PluginFamily family = pluginGraph.FindFamily(typeof(ISomething));
             family.AddPlugin(typeof (SomethingOne), "One");
 
-            InstanceManager manager = new InstanceManager(pluginGraph);
+            StructureMap.Container manager = new StructureMap.Container(pluginGraph);
 
             ConfiguredInstance instance = new ConfiguredInstance().WithConcreteKey("One").WithName("One");
             manager.AddInstance<ISomething>(instance);
@@ -113,7 +113,7 @@ namespace StructureMap.Testing.Container
         public void AddPluginForTypeWhenThePluginDoesNotAlreadyExistsDoesNothing()
         {
             PluginGraph pluginGraph = new PluginGraph();
-            InstanceManager manager = new InstanceManager(pluginGraph);
+            StructureMap.Container manager = new StructureMap.Container(pluginGraph);
 
             manager.AddInstance<ISomething, SomethingOne>();
 

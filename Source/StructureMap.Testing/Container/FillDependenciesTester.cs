@@ -14,7 +14,7 @@ namespace StructureMap.Testing.Container
         {
             PluginGraph pluginGraph = ObjectMother.GetPluginGraph();
 
-            InstanceManager manager = new InstanceManager(pluginGraph);
+            StructureMap.Container manager = new StructureMap.Container(pluginGraph);
 
             // The dependencies must have a default setting first
             manager.SetDefault(typeof (IStrategy), "Red");
@@ -33,7 +33,7 @@ namespace StructureMap.Testing.Container
         public void TryToFillDependenciesOnAbstractClassThrowsException()
         {
             PluginGraph pluginGraph = ObjectMother.GetPluginGraph();
-            InstanceManager manager = new InstanceManager(pluginGraph);
+            StructureMap.Container manager = new StructureMap.Container(pluginGraph);
 
             manager.FillDependencies(typeof (AbstractClass));
         }
@@ -43,7 +43,7 @@ namespace StructureMap.Testing.Container
         public void TryToFillDependenciesOnClassWithPrimitiveArgumentsThrowsException()
         {
             PluginGraph pluginGraph = ObjectMother.GetPluginGraph();
-            InstanceManager manager = new InstanceManager(pluginGraph);
+            StructureMap.Container manager = new StructureMap.Container(pluginGraph);
 
             manager.FillDependencies(typeof (CannotBeFilledConcreteClass));
         }

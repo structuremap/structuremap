@@ -41,12 +41,12 @@ namespace StructureMap.Testing
 ";
 
             PluginGraph graph = DataMother.BuildPluginGraphFromXml(xml);
-            manager = new InstanceManager(graph);
+            manager = new StructureMap.Container(graph);
         }
 
         #endregion
 
-        private InstanceManager manager;
+        private StructureMap.Container manager;
 
         [Test]
         public void AllTypesWithSpecificImplementation()

@@ -20,7 +20,7 @@ namespace StructureMap.Testing.Container
         [SetUp]
         public void SetUp()
         {
-            _manager = new InstanceManager(delegate(Registry registry)
+            _manager = new StructureMap.Container(delegate(Registry registry)
             {
                 registry.ScanAssemblies().IncludeAssembly("StructureMap.Testing.Widget");
                 registry.BuildInstancesOf<Rule>();
@@ -73,14 +73,14 @@ namespace StructureMap.Testing.Container
         [Test]
         public void CanBuildConcreteTypesThatAreNotPreviouslyRegistered()
         {
-            IContainer manager = new InstanceManager(delegate(Registry registry)
+            IContainer manager = new StructureMap.Container(delegate(Registry registry)
             {
-                // Create a new InstanceManager that has a default instance configured for only the
-                // IProvider interface.  InstanceManager is the real "container" behind ObjectFactory
+                // Create a new Container that has a default instance configured for only the
+                // IProvider interface.  Container is the real "container" behind ObjectFactory
                 registry.ForRequestedType<IProvider>().TheDefaultIsConcreteType<Provider>();
             });
 
-            // Now, have that same InstanceManager create a ClassThatUsesProvider.  StructureMap will
+            // Now, have that same Container create a ClassThatUsesProvider.  StructureMap will
             // see that ClassThatUsesProvider is concrete, determine its constructor args, and build one 
             // for you with the default IProvider.  No other configuration necessary.
             ClassThatUsesProvider classThatUsesProvider = manager.GetInstance<ClassThatUsesProvider>();
@@ -90,7 +90,7 @@ namespace StructureMap.Testing.Container
         [Test]
         public void CanBuildConcreteTypesThatAreNotPreviouslyRegisteredWithArgumentsProvided()
         {
-            IContainer manager = new InstanceManager(delegate(Registry registry)
+            IContainer manager = new StructureMap.Container(delegate(Registry registry)
             {
                 registry.ForRequestedType<IProvider>().TheDefaultIsConcreteType<Provider>();
             });
@@ -169,7 +169,7 @@ namespace StructureMap.Testing.Container
         [Test]
         public void SetDefaultInstanceByString()
         {
-            IContainer manager = new InstanceManager(delegate(Registry registry)
+            IContainer manager = new StructureMap.Container(delegate(Registry registry)
             {
                 registry.ForRequestedType<IService>()
                     .AddInstance(Instance<ColorService>().WithName("Red").WithProperty("color").EqualTo("Red"))
@@ -190,7 +190,7 @@ namespace StructureMap.Testing.Container
         [Test]
         public void Can_set_profile_name_and_reset_defaults()
         {
-            IContainer manager = new InstanceManager(delegate(Registry registry)
+            IContainer manager = new StructureMap.Container(delegate(Registry registry)
             {
                 registry.ForRequestedType<IService>()
                     .TheDefaultIs(Instance<ColorService>().WithName("Orange").WithProperty("color").EqualTo("Orange"))
@@ -217,7 +217,7 @@ namespace StructureMap.Testing.Container
         [Test, ExpectedException(typeof(StructureMapException))]
         public void TryToGetDefaultInstanceWithNoInstance()
         {
-            InstanceManager manager = new InstanceManager(new PluginGraph());
+            StructureMap.Container manager = new StructureMap.Container(new PluginGraph());
             manager.GetInstance<IService>();
         }
 
@@ -227,7 +227,7 @@ namespace StructureMap.Testing.Container
             PluginGraph graph = new PluginGraph();
             graph.Log.RegisterError(400, new ApplicationException("Bad!"));
 
-            new InstanceManager(graph);
+            new StructureMap.Container(graph);
         }
     }
 }

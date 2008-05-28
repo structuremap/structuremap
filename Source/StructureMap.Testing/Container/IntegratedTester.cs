@@ -28,12 +28,12 @@ namespace StructureMap.Testing.Container
             graph.FindFamily(typeof(Child)).AddMementoSource(source2);
             graph.FindFamily(typeof(Parent)).AddMementoSource(source3);
 
-            manager = new InstanceManager(graph);
+            manager = new StructureMap.Container(graph);
         }
 
         #endregion
 
-        private InstanceManager manager;
+        private StructureMap.Container manager;
 
         public IntegratedTester()
         {

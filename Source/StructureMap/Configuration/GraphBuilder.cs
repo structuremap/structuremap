@@ -11,7 +11,7 @@ namespace StructureMap.Configuration
         private readonly PluginGraph _pluginGraph;
         private readonly PluginGraph _systemGraph;
         private Profile _profile;
-        private InstanceManager _systemInstanceManager;
+        private Container _systemContainer;
 
 
         public GraphBuilder(Registry[] registries) : this(registries, new PluginGraph())
@@ -110,12 +110,12 @@ namespace StructureMap.Configuration
         {
             Instance instance = memento.ReadInstance(_systemGraph, type);
 
-            if (_systemInstanceManager == null)
+            if (_systemContainer == null)
             {
-                _systemInstanceManager = new InstanceManager(_systemGraph);
+                _systemContainer = new Container(_systemGraph);
             }
 
-            return _systemInstanceManager.GetInstance(type, instance);
+            return _systemContainer.GetInstance(type, instance);
         }
     }
 }

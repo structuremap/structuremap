@@ -17,7 +17,7 @@ namespace StructureMap.Testing.Container
         [SetUp]
         public void SetUp()
         {
-            _manager = new InstanceManager(delegate(Registry registry)
+            _manager = new StructureMap.Container(delegate(Registry registry)
             {
                 registry.BuildInstancesOf<Rule>();
                 registry.ScanAssemblies()
@@ -29,7 +29,7 @@ namespace StructureMap.Testing.Container
 
         #endregion
 
-        private InstanceManager _manager;
+        private StructureMap.Container _manager;
 
 
 

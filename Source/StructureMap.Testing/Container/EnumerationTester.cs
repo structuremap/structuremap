@@ -23,7 +23,7 @@ namespace StructureMap.Testing.Container
             PluginFamily family = graph.FindFamily(typeof (Cow));
             family.AddPlugin(typeof (Cow), "Default");
 
-            InstanceManager manager = new InstanceManager(graph);
+            StructureMap.Container manager = new StructureMap.Container(graph);
 
             ConfiguredInstance instance = new ConfiguredInstance()
                 .WithConcreteKey("Default").WithName("Angus")

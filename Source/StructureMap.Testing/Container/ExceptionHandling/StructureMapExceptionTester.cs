@@ -107,14 +107,14 @@ namespace StructureMap.Testing.Container.ExceptionHandling
 
         }
 
-        private void assertErrorIsThrown(int errorCode, string xml, Action<InstanceManager> action)
+        private void assertErrorIsThrown(int errorCode, string xml, Action<StructureMap.Container> action)
         {
             XmlDocument document = new XmlDocument();
             document.LoadXml(xml.Replace("\"", "'"));
 
             ConfigurationParser parser = new ConfigurationParser(document.DocumentElement);
             PluginGraphBuilder builder = new PluginGraphBuilder(parser);
-            InstanceManager manager = new InstanceManager(builder.Build());
+            StructureMap.Container manager = new StructureMap.Container(builder.Build());
 
             try
             {
@@ -154,7 +154,7 @@ namespace StructureMap.Testing.Container.ExceptionHandling
 			            <PluginFamily Type='StructureMap.Testing.Widget.IWidget' Assembly='StructureMap.Testing.Widget' DefaultKey=''>			</PluginFamily>			
 		            </StructureMap>
                 ",
-                 delegate (InstanceManager manager)
+                 delegate (StructureMap.Container manager)
                      {
                          manager.GetInstance<IWidget>("NotAnActualInstanceName");
                      }
@@ -187,7 +187,7 @@ namespace StructureMap.Testing.Container.ExceptionHandling
 			            <PluginFamily Type='StructureMap.Testing.Widget.IWidget' Assembly='StructureMap.Testing.Widget' DefaultKey=''></PluginFamily>			
 		            </StructureMap>
                 ",
-                delegate (InstanceManager manager)
+                delegate (StructureMap.Container manager)
                     {
                         manager.GetInstance<IWidget>();
                     }
