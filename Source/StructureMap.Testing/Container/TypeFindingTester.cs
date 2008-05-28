@@ -15,13 +15,13 @@ namespace StructureMap.Testing.Container
         [SetUp]
         public void SetUp()
         {
-            Registry registry = new Registry();
-            registry.BuildInstancesOf<INormalType>();
-            registry.ScanAssemblies().IncludeTheCallingAssembly()
-                .AddAllTypesOf<TypeIWantToFind>()
-                .AddAllTypesOf<OtherType>();
-
-            _manager = registry.BuildInstanceManager();
+            _manager = new InstanceManager(delegate(Registry registry)
+            {
+                registry.BuildInstancesOf<INormalType>();
+                registry.ScanAssemblies().IncludeTheCallingAssembly()
+                    .AddAllTypesOf<TypeIWantToFind>()
+                    .AddAllTypesOf<OtherType>();
+            });
         }
 
         #endregion

@@ -15,38 +15,34 @@ namespace StructureMap.Testing.Configuration.DSL
             _lastService = null;
             _manager = null;
 
-            _registry = new Registry();
-            _registry.ForRequestedType<IService>()
-                .AddInstance(
-                Instance<IService>().UsingConcreteType<ColorService>()
-                    .WithName("Red")
-                    .WithProperty("color").EqualTo("Red")
-                )
-                .AddInstance(
-                Object<IService>(new ColorService("Yellow"))
-                    .WithName("Yellow"))
-                .AddInstance(
-                ConstructedBy<IService>(delegate { return new ColorService("Purple"); })
-                    .WithName("Purple")
-                )
-                .AddInstance(
-                Instance<IService>().UsingConcreteType<ColorService>()
-                    .WithName("Decorated")
-                    .WithProperty("color").EqualTo("Orange")
-                );
+            _defaultRegistry = delegate(Registry registry)
+            {
+                registry.ForRequestedType<IService>()
+                    .AddInstances(
+                        Instance<ColorService>().WithName("Red").WithProperty("color").EqualTo("Red"),
+                        Object<IService>(new ColorService("Yellow")).WithName("Yellow"),
+                        ConstructedBy<IService>(delegate { return new ColorService("Purple"); }).WithName("Purple"),
+                        Instance<ColorService>().WithName("Decorated").WithProperty("color").EqualTo("Orange")
+                    );
+                    
+            };
         }
 
         #endregion
 
         private IService _lastService;
         private IInstanceManager _manager;
-        private Registry _registry;
+        private Action<Registry> _defaultRegistry;
 
-        private IService getService(string name)
+        private IService getService(Action<Registry> action, string name)
         {
             if (_manager == null)
             {
-                _manager = _registry.BuildInstanceManager();
+                _manager = new InstanceManager(delegate(Registry registry)
+                {
+                    _defaultRegistry(registry);
+                    action(registry);
+                });
             }
 
             return _manager.CreateInstance<IService>(name);
@@ -55,14 +51,20 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void EnrichForAll()
         {
-            _registry.ForRequestedType<IService>()
-                .EnrichWith(delegate(IService s) { return new DecoratorService(s); })
-                .AddInstance(
+            Action<Registry> action = delegate(Registry registry)
+            {
+                registry.ForRequestedType<IService>()
+                    .EnrichWith(delegate(IService s) { return new DecoratorService(s); })
+                    .AddInstance(
                     ConstructedBy<IService>(delegate { return new ColorService("Green"); })
-                    .WithName("Green"))
-                ;
+                        .WithName("Green"))
+                    ;
+            };
 
-            IService green = getService("Green");
+
+            IService green = getService(action, "Green");
+
+
             DecoratorService decoratorService = (DecoratorService) green;
             ColorService innerService = (ColorService) decoratorService.Inner;
             Assert.AreEqual("Green", innerService.Color);
@@ -71,23 +73,27 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void OnStartupForAll()
         {
-            _registry.ForRequestedType<IService>()
-                .OnCreation(delegate(IService s) { _lastService = s; })
-                .AddInstance(
-                ConstructedBy<IService>(delegate { return new ColorService("Green"); })
-                    .WithName("Green"))
-                ;
+            Action<Registry> action = delegate(Registry registry)
+            {
+                registry.ForRequestedType<IService>()
+                    .OnCreation(delegate(IService s) { _lastService = s; })
+                    .AddInstance(
+                    ConstructedBy<IService>(delegate { return new ColorService("Green"); })
+                        .WithName("Green"))
+                    ;
+            };
 
-            IService red = getService("Red");
+
+            IService red = getService(action, "Red");
             Assert.AreSame(red, _lastService);
 
-            IService purple = getService("Purple");
+            IService purple = getService(action, "Purple");
             Assert.AreSame(purple, _lastService);
 
-            IService green = getService("Green");
+            IService green = getService(action, "Green");
             Assert.AreSame(green, _lastService);
 
-            IService yellow = getService("Yellow");
+            IService yellow = getService(action, "Yellow");
             Assert.AreEqual(yellow, _lastService);
         }
     }

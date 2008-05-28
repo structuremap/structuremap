@@ -123,9 +123,10 @@ namespace StructureMap.Testing.Container
         [Test]
         public void PassAnArgumentIntoExplicitArgumentsForARequestedInterface()
         {
-            Registry registry = new Registry();
-            registry.ForRequestedType<IProvider>().TheDefaultIsConcreteType<LumpProvider>();
-            IInstanceManager manager = registry.BuildInstanceManager();
+            IInstanceManager manager = new InstanceManager(delegate(Registry registry)
+            {
+                registry.ForRequestedType<IProvider>().TheDefaultIsConcreteType<LumpProvider>();
+            });
 
             ExplicitArguments args = new ExplicitArguments();
             Lump theLump = new Lump();
@@ -157,16 +158,15 @@ namespace StructureMap.Testing.Container
         [Test]
         public void PassExplicitArgsIntoInstanceManager()
         {
-            Registry registry = new Registry();
-
-            registry.ForRequestedType<ExplicitTarget>().TheDefaultIs(
-                Registry.Instance<ExplicitTarget>()
-                    .UsingConcreteType<ExplicitTarget>()
-                    .Child<IProvider>().IsConcreteType<RedProvider>()
-                    .WithProperty("name").EqualTo("Jeremy")
-                );
-
-            IInstanceManager manager = registry.BuildInstanceManager();
+            IInstanceManager manager = new InstanceManager(delegate(Registry registry)
+            {
+                registry.ForRequestedType<ExplicitTarget>().TheDefaultIs(
+                    Registry.Instance<ExplicitTarget>()
+                        .UsingConcreteType<ExplicitTarget>()
+                        .Child<IProvider>().IsConcreteType<RedProvider>()
+                        .WithProperty("name").EqualTo("Jeremy")
+                    );
+            });
 
             ExplicitArguments args = new ExplicitArguments();
 

@@ -7,7 +7,7 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.Configuration.DSL
 {
-    public class Registry : RegistryExpressions, IDisposable
+    public class Registry : RegistryExpressions
     {
         private readonly List<Action<PluginGraph>> _actions = new List<Action<PluginGraph>>();
         private readonly PluginGraph _graph;
@@ -22,15 +22,6 @@ namespace StructureMap.Configuration.DSL
             _graph = new PluginGraph();
             configure();
         }
-
-        #region IDisposable Members
-
-        public void Dispose()
-        {
-            ConfigurePluginGraph(_graph);
-        }
-
-        #endregion
 
         /// <summary>
         /// Implement this method to 
@@ -84,12 +75,6 @@ namespace StructureMap.Configuration.DSL
         public CreatePluginFamilyExpression<PLUGINTYPE> ForRequestedType<PLUGINTYPE>()
         {
             return new CreatePluginFamilyExpression<PLUGINTYPE>(this);
-        }
-
-        public IInstanceManager BuildInstanceManager()
-        {
-            ConfigurePluginGraph(_graph);
-            return new InstanceManager(_graph);
         }
 
         public PluginGraph Build()

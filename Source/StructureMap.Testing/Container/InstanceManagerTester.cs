@@ -20,13 +20,13 @@ namespace StructureMap.Testing.Container
         [SetUp]
         public void SetUp()
         {
-            Registry registry = new Registry();
-            registry.ScanAssemblies().IncludeAssembly("StructureMap.Testing.Widget");
-            registry.BuildInstancesOf<Rule>();
-            registry.BuildInstancesOf<IWidget>();
-            registry.BuildInstancesOf<WidgetMaker>();
-
-            _manager = registry.BuildInstanceManager();
+            _manager = new InstanceManager(delegate(Registry registry)
+            {
+                registry.ScanAssemblies().IncludeAssembly("StructureMap.Testing.Widget");
+                registry.BuildInstancesOf<Rule>();
+                registry.BuildInstancesOf<IWidget>();
+                registry.BuildInstancesOf<WidgetMaker>();
+            });
         }
 
         #endregion
@@ -73,11 +73,12 @@ namespace StructureMap.Testing.Container
         [Test]
         public void CanBuildConcreteTypesThatAreNotPreviouslyRegistered()
         {
-            // Create a new InstanceManager that has a default instance configured for only the
-            // IProvider interface.  InstanceManager is the real "container" behind ObjectFactory
-            Registry registry = new Registry();
-            registry.ForRequestedType<IProvider>().TheDefaultIsConcreteType<Provider>();
-            InstanceManager manager = (InstanceManager) registry.BuildInstanceManager();
+            IInstanceManager manager = new InstanceManager(delegate(Registry registry)
+            {
+                // Create a new InstanceManager that has a default instance configured for only the
+                // IProvider interface.  InstanceManager is the real "container" behind ObjectFactory
+                registry.ForRequestedType<IProvider>().TheDefaultIsConcreteType<Provider>();
+            });
 
             // Now, have that same InstanceManager create a ClassThatUsesProvider.  StructureMap will
             // see that ClassThatUsesProvider is concrete, determine its constructor args, and build one 
@@ -89,9 +90,10 @@ namespace StructureMap.Testing.Container
         [Test]
         public void CanBuildConcreteTypesThatAreNotPreviouslyRegisteredWithArgumentsProvided()
         {
-            Registry registry = new Registry();
-            registry.ForRequestedType<IProvider>().TheDefaultIsConcreteType<Provider>();
-            InstanceManager manager = (InstanceManager) registry.BuildInstanceManager();
+            IInstanceManager manager = new InstanceManager(delegate(Registry registry)
+            {
+                registry.ForRequestedType<IProvider>().TheDefaultIsConcreteType<Provider>();
+            });
 
             DifferentProvider differentProvider = new DifferentProvider();
             ExplicitArguments args = new ExplicitArguments();
@@ -167,13 +169,14 @@ namespace StructureMap.Testing.Container
         [Test]
         public void SetDefaultInstanceByString()
         {
-            Registry registry = new Registry();
-            registry.ForRequestedType<IService>()
-                .AddInstance(Instance<ColorService>().WithName("Red").WithProperty("color").EqualTo("Red"))
-                .AddInstance(Instance<ColorService>().WithName("Blue").WithProperty("color").EqualTo("Blue"))
-                .AddInstance(Instance<ColorService>().WithName("Green").WithProperty("color").EqualTo("Green"));
-
-            IInstanceManager manager = registry.BuildInstanceManager();
+            IInstanceManager manager = new InstanceManager(delegate(Registry registry)
+            {
+                registry.ForRequestedType<IService>()
+                    .AddInstance(Instance<ColorService>().WithName("Red").WithProperty("color").EqualTo("Red"))
+                    .AddInstance(Instance<ColorService>().WithName("Blue").WithProperty("color").EqualTo("Blue"))
+                    .AddInstance(Instance<ColorService>().WithName("Green").WithProperty("color").EqualTo("Green"));
+            });
+            
             manager.SetDefault(typeof(IService), "Red");
             assertColorIs(manager, "Red");
 
@@ -187,17 +190,17 @@ namespace StructureMap.Testing.Container
         [Test]
         public void Can_set_profile_name_and_reset_defaults()
         {
-            Registry registry = new Registry();
-            registry.ForRequestedType<IService>()
-                .TheDefaultIs(Instance<ColorService>().WithName("Orange").WithProperty("color").EqualTo("Orange"))
-                .AddInstance(Instance<ColorService>().WithName("Red").WithProperty("color").EqualTo("Red"))
-                .AddInstance(Instance<ColorService>().WithName("Blue").WithProperty("color").EqualTo("Blue"))
-                .AddInstance(Instance<ColorService>().WithName("Green").WithProperty("color").EqualTo("Green"));
+            IInstanceManager manager = new InstanceManager(delegate(Registry registry)
+            {
+                registry.ForRequestedType<IService>()
+                    .TheDefaultIs(Instance<ColorService>().WithName("Orange").WithProperty("color").EqualTo("Orange"))
+                    .AddInstance(Instance<ColorService>().WithName("Red").WithProperty("color").EqualTo("Red"))
+                    .AddInstance(Instance<ColorService>().WithName("Blue").WithProperty("color").EqualTo("Blue"))
+                    .AddInstance(Instance<ColorService>().WithName("Green").WithProperty("color").EqualTo("Green"));
 
-            registry.CreateProfile("Red").For<IService>().UseNamedInstance("Red");
-            registry.CreateProfile("Blue").For<IService>().UseNamedInstance("Blue");
-
-            IInstanceManager manager = registry.BuildInstanceManager();
+                registry.CreateProfile("Red").For<IService>().UseNamedInstance("Red");
+                registry.CreateProfile("Blue").For<IService>().UseNamedInstance("Blue");
+            });
 
             assertColorIs(manager, "Orange");
 

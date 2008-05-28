@@ -166,6 +166,11 @@ namespace StructureMap
             return _registry.AddInstanceOf<T>();
         }
 
+        public static void AddInstanceOf<T>(Instance instance)
+        {
+            _registry.ForRequestedType<T>().AddInstance(instance);
+        }
+
 
         /// <summary>
         /// Adds a preconfigured instance of Type T to StructureMap.  When this instance is requested,

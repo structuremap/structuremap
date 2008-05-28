@@ -1,19 +1,18 @@
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
-using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing.Configuration.DSL
 {
     [TestFixture]
-    public class DeepInstanceTester
+    public class DeepInstanceTester : RegistryExpressions
     {
-        private Thing _prototype = new Thing(4, "Jeremy", .333, new WidgetRule(new ColorWidget("yellow")));
+        private readonly Thing _prototype = new Thing(4, "Jeremy", .333, new WidgetRule(new ColorWidget("yellow")));
 
-        private void assertThingMatches(Registry registry)
+        private void assertThingMatches(Action<Registry> action)
         {
-            IInstanceManager manager = registry.BuildInstanceManager();
+            IInstanceManager manager = new InstanceManager(action);
             Thing actual = manager.CreateInstance<Thing>();
             Assert.AreEqual(_prototype, actual);
         }
@@ -21,129 +20,129 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void DeepInstance2()
         {
-            Registry registry = new Registry();
-            registry.BuildInstancesOf<IWidget>().TheDefaultIs(
-                Registry.Instance<IWidget>().UsingConcreteType<ColorWidget>()
-                    .WithProperty("Color").EqualTo("yellow")
-                );
+            assertThingMatches(delegate(Registry registry)
+            {
+                registry.BuildInstancesOf<IWidget>().TheDefaultIs(
+                    Instance<IWidget>().UsingConcreteType<ColorWidget>()
+                        .WithProperty("Color").EqualTo("yellow")
+                    );
 
-            registry.BuildInstancesOf<Rule>().TheDefaultIsConcreteType<WidgetRule>();
+                registry.BuildInstancesOf<Rule>().TheDefaultIsConcreteType<WidgetRule>();
 
-            registry.BuildInstancesOf<Thing>().TheDefaultIs(
-                Registry.Instance<Thing>()
-                    .UsingConcreteType<Thing>()
-                    .WithProperty("average").EqualTo(.333)
-                    .WithProperty("name").EqualTo("Jeremy")
-                    .WithProperty("count").EqualTo(4)
-                );
-
-            assertThingMatches(registry);
+                registry.BuildInstancesOf<Thing>().TheDefaultIs(
+                    Instance<Thing>()
+                        .UsingConcreteType<Thing>()
+                        .WithProperty("average").EqualTo(.333)
+                        .WithProperty("name").EqualTo("Jeremy")
+                        .WithProperty("count").EqualTo(4)
+                    );
+            });
         }
 
         [Test]
         public void DeepInstance3()
         {
-            Registry registry = new Registry();
-            registry.BuildInstancesOf<IWidget>().TheDefaultIs(
-                Registry.Object<IWidget>(new ColorWidget("yellow"))
-                );
+            assertThingMatches(delegate(Registry registry)
+            {
+                registry.BuildInstancesOf<IWidget>().TheDefaultIs(
+                    Object<IWidget>(new ColorWidget("yellow"))
+                    );
 
-            registry.BuildInstancesOf<Rule>().TheDefaultIsConcreteType<WidgetRule>();
+                registry.BuildInstancesOf<Rule>().TheDefaultIsConcreteType<WidgetRule>();
 
-            registry.BuildInstancesOf<Thing>().TheDefaultIs(
-                Registry.Instance<Thing>()
-                    .UsingConcreteType<Thing>()
-                    .WithProperty("average").EqualTo(.333)
-                    .WithProperty("name").EqualTo("Jeremy")
-                    .WithProperty("count").EqualTo(4)
-                );
-
-            assertThingMatches(registry);
+                registry.BuildInstancesOf<Thing>().TheDefaultIs(
+                    Instance<Thing>()
+                        .UsingConcreteType<Thing>()
+                        .WithProperty("average").EqualTo(.333)
+                        .WithProperty("name").EqualTo("Jeremy")
+                        .WithProperty("count").EqualTo(4)
+                    );
+            });
         }
 
 
         [Test]
         public void DeepInstance4()
         {
-            Registry registry = new Registry();
-            registry.BuildInstancesOf<IWidget>().TheDefaultIs(
-                Registry.Prototype<IWidget>(new ColorWidget("yellow"))
-                );
+            assertThingMatches(delegate(Registry registry)
+            {
+                registry.BuildInstancesOf<IWidget>().TheDefaultIs(
+                    Prototype<IWidget>(new ColorWidget("yellow"))
+                    );
 
-            registry.BuildInstancesOf<Rule>().TheDefaultIsConcreteType<WidgetRule>();
+                registry.BuildInstancesOf<Rule>().TheDefaultIsConcreteType<WidgetRule>();
 
-            registry.BuildInstancesOf<Thing>().TheDefaultIs(
-                Registry.Instance<Thing>()
-                    .UsingConcreteType<Thing>()
-                    .WithProperty("average").EqualTo(.333)
-                    .WithProperty("name").EqualTo("Jeremy")
-                    .WithProperty("count").EqualTo(4)
-                );
-
-            assertThingMatches(registry);
+                registry.BuildInstancesOf<Thing>().TheDefaultIs(
+                    Instance<Thing>()
+                        .UsingConcreteType<Thing>()
+                        .WithProperty("average").EqualTo(.333)
+                        .WithProperty("name").EqualTo("Jeremy")
+                        .WithProperty("count").EqualTo(4)
+                    );
+            });
         }
 
 
         [Test]
         public void DeepInstance5()
         {
-            Registry registry = new Registry();
+            assertThingMatches(delegate(Registry registry)
+            {
+                registry.AddInstanceOf<IWidget>()
+                    .UsingConcreteType<ColorWidget>()
+                    .WithName("Yellow")
+                    .WithProperty("Color").EqualTo("yellow");
 
-            registry.AddInstanceOf<IWidget>()
-                .UsingConcreteType<ColorWidget>()
-                .WithName("Yellow")
-                .WithProperty("Color").EqualTo("yellow");
+                registry.AddInstanceOf<Rule>()
+                    .UsingConcreteType<WidgetRule>()
+                    .WithName("TheWidgetRule")
+                    .Child<IWidget>().IsNamedInstance("Yellow");
 
-            registry.AddInstanceOf<Rule>()
-                .UsingConcreteType<WidgetRule>()
-                .WithName("TheWidgetRule")
-                .Child<IWidget>().IsNamedInstance("Yellow");
-
-            registry.BuildInstancesOf<Thing>().TheDefaultIs(
-                Registry.Instance<Thing>()
-                    .UsingConcreteType<Thing>()
-                    .WithProperty("average").EqualTo(.333)
-                    .WithProperty("name").EqualTo("Jeremy")
-                    .WithProperty("count").EqualTo(4)
-                    .Child<Rule>().IsNamedInstance("TheWidgetRule")
-                );
-
-            assertThingMatches(registry);
+                registry.BuildInstancesOf<Thing>().TheDefaultIs(
+                    Instance<Thing>()
+                        .UsingConcreteType<Thing>()
+                        .WithProperty("average").EqualTo(.333)
+                        .WithProperty("name").EqualTo("Jeremy")
+                        .WithProperty("count").EqualTo(4)
+                        .Child<Rule>().IsNamedInstance("TheWidgetRule")
+                    );
+            });
         }
 
         [Test]
         public void DeepInstanceTest1()
         {
-            Registry registry = new Registry();
-            ConfiguredInstance widgetExpression = Registry.Instance<IWidget>()
+            ConfiguredInstance widgetExpression = Instance<IWidget>()
                 .UsingConcreteType<ColorWidget>()
                 .WithProperty("Color").EqualTo("yellow");
 
-            ConfiguredInstance ruleExpression = Registry.Instance<Rule>()
+            ConfiguredInstance ruleExpression = Instance<Rule>()
                 .UsingConcreteType<WidgetRule>()
                 .Child<IWidget>().Is(widgetExpression);
 
-            registry.BuildInstancesOf<Thing>().TheDefaultIs(
-                Registry.Instance<Thing>()
-                    .UsingConcreteType<Thing>()
-                    .WithProperty("name").EqualTo("Jeremy")
-                    .WithProperty("count").EqualTo(4)
-                    .WithProperty("average").EqualTo(.333)
-                    .Child<Rule>().Is(
-                    ruleExpression
-                    )
-                );
 
-            assertThingMatches(registry);
+            assertThingMatches(delegate(Registry registry)
+            {
+                registry.BuildInstancesOf<Thing>().TheDefaultIs(
+                    Instance<Thing>()
+                        .UsingConcreteType<Thing>()
+                        .WithProperty("name").EqualTo("Jeremy")
+                        .WithProperty("count").EqualTo(4)
+                        .WithProperty("average").EqualTo(.333)
+                        .Child<Rule>().Is(
+                        ruleExpression
+                        )
+                    );
+            });
         }
     }
 
     public class Thing
     {
-        private double _average;
-        private int _count;
-        private string _name;
-        private Rule _rule;
+        private readonly double _average;
+        private readonly int _count;
+        private readonly string _name;
+        private readonly Rule _rule;
 
 
         public Thing(int count, string name, double average, Rule rule)

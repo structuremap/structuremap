@@ -27,6 +27,10 @@ namespace StructureMap
             construct(registry.Build());
         }
 
+        public InstanceManager(Registry registry) : this(registry.Build())
+        {
+        }
+
         public InstanceManager() : this(new PluginGraph())
         {
         }
@@ -283,6 +287,5 @@ namespace StructureMap
             return _pipelineGraph.ForType(type);
         }
 
-        
     }
 }

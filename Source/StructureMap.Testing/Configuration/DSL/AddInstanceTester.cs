@@ -15,38 +15,38 @@ namespace StructureMap.Testing.Configuration.DSL
         [SetUp]
         public void SetUp()
         {
-            pluginGraph = new PluginGraph();
-            Registry registry = new Registry(pluginGraph);
-            registry.ScanAssemblies().IncludeAssemblyContainingType<ColorWidget>();
+            
+            manager = new InstanceManager(delegate(Registry registry)
+            {
+                registry.ScanAssemblies().IncludeAssemblyContainingType<ColorWidget>();
 
-            // Add an instance with properties
-            registry.AddInstanceOf<IWidget>()
-                .UsingConcreteType<ColorWidget>()
-                .WithName("DarkGreen")
-                .WithProperty("Color").EqualTo("DarkGreen");
+                // Add an instance with properties
+                registry.AddInstanceOf<IWidget>()
+                    .UsingConcreteType<ColorWidget>()
+                    .WithName("DarkGreen")
+                    .WithProperty("Color").EqualTo("DarkGreen");
 
-            // Add an instance by specifying the ConcreteKey
-            registry.AddInstanceOf<IWidget>()
-                .UsingConcreteTypeNamed("Color")
-                .WithName("Purple")
-                .WithProperty("Color").EqualTo("Purple");
+                // Add an instance by specifying the ConcreteKey
+                registry.AddInstanceOf<IWidget>()
+                    .UsingConcreteTypeNamed("Color")
+                    .WithName("Purple")
+                    .WithProperty("Color").EqualTo("Purple");
 
-            // Pull a property from the App config
-            registry.AddInstanceOf<IWidget>()
-                .UsingConcreteType<ColorWidget>()
-                .WithName("AppSetting")
-                .WithProperty("Color").EqualToAppSetting("Color");
+                // Pull a property from the App config
+                registry.AddInstanceOf<IWidget>()
+                    .UsingConcreteType<ColorWidget>()
+                    .WithName("AppSetting")
+                    .WithProperty("Color").EqualToAppSetting("Color");
 
 
-            registry.AddInstanceOf<IWidget>().UsingConcreteType<AWidget>();
+                registry.AddInstanceOf<IWidget>().UsingConcreteType<AWidget>();
 
-            manager = registry.BuildInstanceManager();
+            });
         }
 
         #endregion
 
         private IInstanceManager manager;
-        private PluginGraph pluginGraph;
 
         [Test]
         public void AddAnInstanceWithANameAndAPropertySpecifyingConcreteKey()
@@ -65,13 +65,12 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void AddInstanceAndOverrideTheConcreteTypeForADependency()
         {
-            Registry registry = new Registry();
-
-            // Specify a new Instance that specifies the concrete type used for a dependency
-            registry.AddInstanceOf<Rule>().UsingConcreteType<WidgetRule>().WithName("AWidgetRule")
-                .Child<IWidget>().IsConcreteType<AWidget>();
-
-            manager = registry.BuildInstanceManager();
+            IInstanceManager manager = new InstanceManager(delegate(Registry registry)
+            {
+                // Specify a new Instance that specifies the concrete type used for a dependency
+                registry.AddInstanceOf<Rule>().UsingConcreteType<WidgetRule>().WithName("AWidgetRule")
+                    .Child<IWidget>().IsConcreteType<AWidget>();
+            });
 
             WidgetRule rule = (WidgetRule) manager.CreateInstance<Rule>("AWidgetRule");
             Assert.IsInstanceOfType(typeof (AWidget), rule.Widget);
@@ -88,12 +87,11 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void SimpleCaseWithNamedInstance()
         {
-            Registry registry = new Registry();
-
-            // Specify a new Instance and override the Name
-            registry.AddInstanceOf<IWidget>().UsingConcreteType<AWidget>().WithName("MyInstance");
-
-            manager = registry.BuildInstanceManager();
+            manager = new InstanceManager(delegate(Registry registry)
+            {
+                // Specify a new Instance and override the Name
+                registry.AddInstanceOf<IWidget>().UsingConcreteType<AWidget>().WithName("MyInstance");
+            });
 
             AWidget widget = (AWidget) manager.CreateInstance<IWidget>("MyInstance");
             Assert.IsNotNull(widget);
@@ -102,24 +100,20 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void SpecifyANewInstanceOverrideADependencyWithANamedInstance()
         {
-            Registry registry = new Registry();
+            manager = new InstanceManager(delegate(Registry registry)
+            {
+                registry.AddInstanceOf<Rule>().UsingConcreteType<ARule>().WithName("Alias");
 
-            //registry.ScanAssemblies().IncludeAssemblyContainingType<IWidget>();
+                // Add an instance by specifying the ConcreteKey
+                registry.AddInstanceOf<IWidget>()
+                    .UsingConcreteType<ColorWidget>()
+                    .WithName("Purple")
+                    .WithProperty("Color").EqualTo("Purple");
 
-
-            registry.AddInstanceOf<Rule>().UsingConcreteType<ARule>().WithName("Alias");
-
-            // Add an instance by specifying the ConcreteKey
-            registry.AddInstanceOf<IWidget>()
-                .UsingConcreteType<ColorWidget>()
-                .WithName("Purple")
-                .WithProperty("Color").EqualTo("Purple");
-
-            // Specify a new Instance, override a dependency with a named instance
-            registry.AddInstanceOf<Rule>().UsingConcreteType<WidgetRule>().WithName("RuleThatUsesMyInstance")
-                .Child<IWidget>("widget").IsNamedInstance("Purple");
-
-            manager = registry.BuildInstanceManager();
+                // Specify a new Instance, override a dependency with a named instance
+                registry.AddInstanceOf<Rule>().UsingConcreteType<WidgetRule>().WithName("RuleThatUsesMyInstance")
+                    .Child<IWidget>("widget").IsNamedInstance("Purple");
+            });
 
             Assert.IsInstanceOfType(typeof (ARule), manager.CreateInstance<Rule>("Alias"));
 
@@ -131,21 +125,21 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void SpecifyANewInstanceWithADependency()
         {
-            Registry registry = new Registry();
-
             // Specify a new Instance, create an instance for a dependency on the fly
             string instanceKey = "OrangeWidgetRule";
-            registry.AddInstanceOf<Rule>().UsingConcreteType<WidgetRule>().WithName(instanceKey)
-                .Child<IWidget>().Is(
-                Registry.Instance<IWidget>().UsingConcreteType<ColorWidget>()
-                    .WithProperty("Color").EqualTo("Orange")
-                    .WithName("Orange")
-                );
 
-            IInstanceManager mgr = registry.BuildInstanceManager();
+            IInstanceManager manager = new InstanceManager(delegate(Registry registry)
+            {
+                registry.AddInstanceOf<Rule>().UsingConcreteType<WidgetRule>().WithName(instanceKey)
+                    .Child<IWidget>().Is(
+                    Registry.Instance<IWidget>().UsingConcreteType<ColorWidget>()
+                        .WithProperty("Color").EqualTo("Orange")
+                        .WithName("Orange")
+                    );
+            });
 
 
-            WidgetRule rule = (WidgetRule) mgr.CreateInstance<Rule>(instanceKey);
+            WidgetRule rule = (WidgetRule) manager.CreateInstance<Rule>(instanceKey);
             ColorWidget widget = (ColorWidget) rule.Widget;
             Assert.AreEqual("Orange", widget.Color);
         }
@@ -153,13 +147,15 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void UseAPreBuiltObjectForAnInstanceAsAPrototype()
         {
-            Registry registry = new Registry();
             // Build an instance for IWidget, then setup StructureMap to return cloned instances of the 
             // "Prototype" (GoF pattern) whenever someone asks for IWidget named "Jeremy"
             CloneableWidget theWidget = new CloneableWidget("Jeremy");
-            registry.AddPrototypeInstanceOf<IWidget>(theWidget).WithName("Jeremy");
+            
 
-            manager = registry.BuildInstanceManager();
+            manager = new InstanceManager(delegate(Registry registry)
+            {
+                registry.AddPrototypeInstanceOf<IWidget>(theWidget).WithName("Jeremy");
+            });
 
             CloneableWidget widget1 = (CloneableWidget) manager.CreateInstance<IWidget>("Jeremy");
             CloneableWidget widget2 = (CloneableWidget) manager.CreateInstance<IWidget>("Jeremy");
@@ -178,12 +174,13 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void UseAPreBuiltObjectWithAName()
         {
-            Registry registry = new Registry();
             // Return the specific instance when an IWidget named "Julia" is requested
             CloneableWidget julia = new CloneableWidget("Julia");
-            registry.AddInstanceOf<IWidget>(julia).WithName("Julia");
 
-            manager = registry.BuildInstanceManager();
+            manager = new InstanceManager(delegate(Registry registry)
+            {
+                registry.AddInstanceOf<IWidget>(julia).WithName("Julia");
+            });
 
             CloneableWidget widget1 = (CloneableWidget) manager.CreateInstance<IWidget>("Julia");
             CloneableWidget widget2 = (CloneableWidget) manager.CreateInstance<IWidget>("Julia");

@@ -17,27 +17,19 @@ namespace StructureMap.Testing.Container
         [SetUp]
         public void SetUp()
         {
-            PluginGraph graph = new PluginGraph();
-            Registry registry = new Registry(graph);
-            registry.BuildInstancesOf<Rule>();
-            registry.ScanAssemblies()
-                .IncludeAssembly("StructureMap.Testing.Widget")
-                .IncludeAssembly("StructureMap.Testing.Widget2");
+            _manager = new InstanceManager(delegate(Registry registry)
+            {
+                registry.BuildInstancesOf<Rule>();
+                registry.ScanAssemblies()
+                    .IncludeAssembly("StructureMap.Testing.Widget")
+                    .IncludeAssembly("StructureMap.Testing.Widget2");
+            });
 
-            registry.Build();
-
-            PipelineGraph pipelineGraph = new PipelineGraph(graph);
-            _session = new BuildSession(pipelineGraph, graph.InterceptorLibrary);
-
-            _manager = registry.BuildInstanceManager();
-
-            
         }
 
         #endregion
 
-        private IInstanceManager _manager;
-        private BuildSession _session;
+        private InstanceManager _manager;
 
 
 

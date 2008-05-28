@@ -32,6 +32,17 @@ namespace StructureMap.Configuration.DSL.Expressions
             });
         }
 
+        public CreatePluginFamilyExpression<PLUGINTYPE> AddInstances(params Instance[] instances)
+        {
+            return alterAndContinue(delegate(PluginFamily family)
+            {
+                foreach (Instance instance in instances)
+                {
+                    family.AddInstance(instance);
+                }
+            });
+        }
+
 
         // TODO:  3.5, Try alterAndContinue(f => {});
         private CreatePluginFamilyExpression<PLUGINTYPE> alterAndContinue(Action<PluginFamily> action)

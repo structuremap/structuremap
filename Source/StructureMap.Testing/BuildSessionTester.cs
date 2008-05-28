@@ -138,12 +138,12 @@ namespace StructureMap.Testing
         [Test]
         public void If_no_child_array_is_explicitly_defined_return_all_instances()
         {
-            Registry registry = new Registry();
-            registry.AddInstanceOf<IWidget>(new ColorWidget("Red"));
-            registry.AddInstanceOf<IWidget>(new ColorWidget("Blue"));
-            registry.AddInstanceOf<IWidget>(new ColorWidget("Green"));
-
-            IInstanceManager manager = registry.BuildInstanceManager();
+            IInstanceManager manager = new InstanceManager(delegate(Registry registry)
+            {
+                registry.AddInstanceOf<IWidget>(new ColorWidget("Red"));
+                registry.AddInstanceOf<IWidget>(new ColorWidget("Blue"));
+                registry.AddInstanceOf<IWidget>(new ColorWidget("Green"));
+            });
 
             WidgetHolder holder = manager.CreateInstance<WidgetHolder>();
             Assert.AreEqual(3, holder.Widgets.Length);

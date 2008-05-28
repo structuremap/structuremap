@@ -161,13 +161,14 @@ namespace StructureMap.Testing
         [Test]
         public void Define_profile_with_generics_with_named_instance()
         {
-            Registry registry = new Registry();
-            registry.AddInstanceOf(typeof (IService<>), new ConfiguredInstance(typeof(Service<>)).WithName("Service1"));
-            registry.AddInstanceOf(typeof (IService<>), new ConfiguredInstance(typeof(Service2<>)).WithName("Service2"));
-            registry.CreateProfile("1").For(typeof (IService<>)).UseNamedInstance("Service1");
-            registry.CreateProfile("2").For(typeof (IService<>)).UseNamedInstance("Service2");
+            IInstanceManager manager = new InstanceManager(delegate(Registry registry)
+            {
+                registry.AddInstanceOf(typeof(IService<>), new ConfiguredInstance(typeof(Service<>)).WithName("Service1"));
+                registry.AddInstanceOf(typeof(IService<>), new ConfiguredInstance(typeof(Service2<>)).WithName("Service2"));
+                registry.CreateProfile("1").For(typeof(IService<>)).UseNamedInstance("Service1");
+                registry.CreateProfile("2").For(typeof(IService<>)).UseNamedInstance("Service2");
+            });
 
-            IInstanceManager manager = registry.BuildInstanceManager();
             manager.SetDefaultsToProfile("1");
 
             Assert.IsInstanceOfType(typeof(Service<string>), manager.CreateInstance<IService<string>>());
@@ -181,11 +182,12 @@ namespace StructureMap.Testing
         [Test]
         public void Define_profile_with_generics_and_concrete_type()
         {
-            Registry registry = new Registry();
-            registry.CreateProfile("1").For(typeof (IService<>)).UseConcreteType(typeof (Service<>));
-            registry.CreateProfile("2").For(typeof(IService<>)).UseConcreteType(typeof(Service2<>));
+            IInstanceManager manager = new InstanceManager(delegate(Registry registry)
+            {
+                registry.CreateProfile("1").For(typeof(IService<>)).UseConcreteType(typeof(Service<>));
+                registry.CreateProfile("2").For(typeof(IService<>)).UseConcreteType(typeof(Service2<>));
+            });
 
-            IInstanceManager manager = registry.BuildInstanceManager();
             manager.SetDefaultsToProfile("1");
 
             Assert.IsInstanceOfType(typeof(Service<string>), manager.CreateInstance<IService<string>>());

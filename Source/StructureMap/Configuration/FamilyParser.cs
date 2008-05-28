@@ -62,12 +62,12 @@ namespace StructureMap.Configuration
             });
         }
 
-        private InstanceScope findScope(XmlElement familyElement)
+        private static InstanceScope findScope(XmlElement familyElement)
         {
             InstanceScope returnValue = InstanceScope.PerRequest;
 
             string scopeString = familyElement.GetAttribute(XmlConstants.SCOPE_ATTRIBUTE);
-            if (scopeString != null && scopeString != string.Empty)
+            if (!string.IsNullOrEmpty(scopeString))
             {
                 returnValue = (InstanceScope) Enum.Parse(typeof (InstanceScope), scopeString);
             }

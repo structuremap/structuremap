@@ -31,16 +31,14 @@ namespace StructureMap.Testing.Configuration.DSL
             Concretion concretion1 = new Concretion();
             Concretion concretion2 = new Concretion();
 
-            Registry registry = new Registry();
-            registry.ForRequestedType<Abstraction>()
-                .AddInstance(
-                    ConstructedBy<Abstraction>(delegate { return concretion1; }).WithName("One")
-                )
-                .AddInstance(
-                    ConstructedBy<Abstraction>(delegate { return concretion2; }).WithName("Two")
-                );
-
-            IInstanceManager manager = registry.BuildInstanceManager();
+            IInstanceManager manager = new InstanceManager(delegate(Registry registry)
+            {
+                registry.ForRequestedType<Abstraction>()
+                    .AddInstances(
+                        ConstructedBy<Abstraction>(delegate { return concretion1; }).WithName("One"),
+                        ConstructedBy<Abstraction>(delegate { return concretion2; }).WithName("Two")
+                    );
+            });
 
             Assert.AreSame(concretion1, manager.CreateInstance<Abstraction>("One"));
             Assert.AreSame(concretion2, manager.CreateInstance<Abstraction>("Two"));
@@ -51,12 +49,13 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             Concretion concretion = new Concretion();
 
-            Registry registry = new Registry();
-            registry.ForRequestedType<Abstraction>().TheDefaultIs(
-                ConstructedBy<Abstraction>(delegate { return concretion; })
-                );
+            IInstanceManager manager = new InstanceManager(delegate(Registry registry)
+            {
+                registry.ForRequestedType<Abstraction>().TheDefaultIs(
+                    ConstructedBy<Abstraction>(delegate { return concretion; })
+                    );
+            });
 
-            IInstanceManager manager = registry.BuildInstanceManager();
             Assert.AreSame(concretion, manager.CreateInstance<Abstraction>());
         }
 
@@ -66,16 +65,16 @@ namespace StructureMap.Testing.Configuration.DSL
             Concretion concretion1 = new Concretion();
             Concretion concretion2 = new Concretion();
 
-            Registry registry = new Registry();
-            registry.ForRequestedType<Abstraction>().AddInstance(
-                ConstructedBy<Abstraction>(delegate { return concretion1; }).WithName("One")
-                );
+            IInstanceManager manager = new InstanceManager(delegate(Registry registry)
+            {
+                registry.ForRequestedType<Abstraction>().AddInstance(
+                    ConstructedBy<Abstraction>(delegate { return concretion1; }).WithName("One")
+                    );
 
-            registry.ForRequestedType<Abstraction>().AddInstance(
-                ConstructedBy<Abstraction>(delegate { return concretion2; }).WithName("Two")
-                );
-
-            IInstanceManager manager = registry.BuildInstanceManager();
+                registry.ForRequestedType<Abstraction>().AddInstance(
+                    ConstructedBy<Abstraction>(delegate { return concretion2; }).WithName("Two")
+                    );
+            });
 
             Assert.AreSame(concretion1, manager.CreateInstance<Abstraction>("One"));
             Assert.AreSame(concretion2, manager.CreateInstance<Abstraction>("Two"));
@@ -86,13 +85,12 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             Concretion concretion = new Concretion();
 
-            Registry registry = new Registry();
-            registry.ForRequestedType<Abstraction>().AddInstance(
-                ConstructedBy<Abstraction>(delegate { return concretion; })
-                );
-
-
-            IInstanceManager manager = registry.BuildInstanceManager();
+            IInstanceManager manager = new InstanceManager(delegate(Registry registry)
+            {
+                registry.ForRequestedType<Abstraction>().AddInstance(
+                    ConstructedBy<Abstraction>(delegate { return concretion; })
+                    );
+            });
 
             Abstraction actual = manager.GetAllInstances<Abstraction>()[0];
             Assert.AreSame(concretion, actual);

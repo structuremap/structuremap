@@ -15,41 +15,32 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             _lastService = null;
 
-            Registry registry = new Registry();
-            registry.ForRequestedType<IService>()
-                .AddInstance(
-                Instance<IService>().UsingConcreteType<ColorService>()
-                    .OnCreation<ColorService>(delegate(ColorService s) { _lastService = s; })
-                    .WithName("Intercepted")
-                    .WithProperty("color").EqualTo("Red")
-                )
-                .AddInstance(
-                Instance<IService>().UsingConcreteType<ColorService>()
-                    .WithName("NotIntercepted")
-                    .WithProperty("color").EqualTo("Blue")
-                )
-                .AddInstance(
-                Object<IService>(new ColorService("Yellow"))
-                    .WithName("Yellow")
-                    .OnCreation<ColorService>(delegate(ColorService s) { _lastService = s; }))
-                .AddInstance(
-                ConstructedBy<IService>(delegate { return new ColorService("Purple"); })
-                    .WithName("Purple")
-                    .EnrichWith<IService>(delegate(IService s) { return new DecoratorService(s); })
-                )
-                .AddInstance(
-                Instance<IService>().UsingConcreteType<ColorService>()
-                    .WithName("Decorated")
-                    .EnrichWith<IService>(delegate(IService s) { return new DecoratorService(s); })
-                    .WithProperty("color").EqualTo("Orange")
-                )
-                .AddInstance(
-                Object<IService>(new ColorService("Yellow"))
-                    .WithName("Bad")
-                    .OnCreation<ColorService>(delegate { throw new ApplicationException("Bad!"); }))
-                ;
-
-            _manager = registry.BuildInstanceManager();
+            _manager = new InstanceManager(delegate(Registry registry)
+            {
+                registry.ForRequestedType<IService>().AddInstances
+                    (
+                    Instance<ColorService>()
+                        .OnCreation<ColorService>(delegate(ColorService s) { _lastService = s; })
+                        .WithName("Intercepted")
+                        .WithProperty("color").EqualTo("Red"),
+                    Instance<ColorService>()
+                        .WithName("NotIntercepted")
+                        .WithProperty("color").EqualTo("Blue"),
+                    Object<IService>(new ColorService("Yellow"))
+                        .WithName("Yellow")
+                        .OnCreation<ColorService>(delegate(ColorService s) { _lastService = s; }),
+                    ConstructedBy<IService>(delegate { return new ColorService("Purple"); })
+                        .WithName("Purple")
+                        .EnrichWith<IService>(delegate(IService s) { return new DecoratorService(s); }),
+                    Instance<ColorService>()
+                        .WithName("Decorated")
+                        .EnrichWith<IService>(delegate(IService s) { return new DecoratorService(s); })
+                        .WithProperty("color").EqualTo("Orange"),
+                    Object<IService>(new ColorService("Yellow"))
+                        .WithName("Bad")
+                        .OnCreation<ColorService>(delegate { throw new ApplicationException("Bad!"); })
+                    );
+            });
         }
 
         #endregion
