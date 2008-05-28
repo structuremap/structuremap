@@ -42,7 +42,7 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="AutoMockedInstanceManager.cs" />
+    <Compile Include="AutoMockedContainer.cs" />
     <Compile Include="IntegrationSpecification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RhinoAutoMocker.cs" />

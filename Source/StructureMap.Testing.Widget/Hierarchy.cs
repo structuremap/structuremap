@@ -92,11 +92,6 @@ namespace StructureMap.Testing.Widget
 
     public class ChildLoaderTemplate : InstanceBuilder
     {
-        public override string ConcreteTypeKey
-        {
-            get { return null; }
-        }
-
         public override Type PluggedType
         {
             get { throw new NotImplementedException(); }

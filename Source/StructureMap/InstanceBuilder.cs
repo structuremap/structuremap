@@ -15,8 +15,6 @@ namespace StructureMap
         {
         }
 
-        public abstract string ConcreteTypeKey { get; }
-
         public abstract Type PluggedType { get; }
 
         public abstract object BuildInstance(IConfiguredInstance instance, IBuildSession session);

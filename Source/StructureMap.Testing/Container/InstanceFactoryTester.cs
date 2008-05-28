@@ -61,9 +61,38 @@ namespace StructureMap.Testing.Container
             Assert.IsNotNull(gateway);
         }
 
+        [Test]
+        public void Import_from_family_picks_up_new_InstanceBuilders()
+        {
+            InstanceFactory factory = new InstanceFactory(typeof(IWidget));
+            
+            PluginFamily family = new PluginFamily(typeof(IWidget));
+            family.AddPlugin(typeof (AWidget));
+            family.AddPlugin(typeof (ColorWidget));
+            factory.Merge(family);
 
+            InstanceBuilder builder = factory.FindBuilderByType(typeof (AWidget));
+            Assert.IsNotNull(builder);
 
+            builder = factory.FindBuilderByType(typeof(ColorWidget));
+            Assert.IsNotNull(builder);
+        }
 
+        [Test]
+        public void Import_from_family_picks_up_new_instances()
+        {
+            InstanceFactory factory = new InstanceFactory(typeof(IWidget));
 
+            PluginFamily family = new PluginFamily(typeof(IWidget));
+            family.AddInstance(new LiteralInstance(new AWidget()).WithName("New"));
+            family.AddInstance(new LiteralInstance(new AWidget()).WithName("New2"));
+            family.AddInstance(new LiteralInstance(new AWidget()).WithName("New3"));
+
+            factory.Merge(family);
+
+            Assert.IsNotNull(factory.FindInstance("New"));
+            Assert.IsNotNull(factory.FindInstance("New2"));
+            Assert.IsNotNull(factory.FindInstance("New3"));
+        }
     }
 }

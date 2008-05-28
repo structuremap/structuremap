@@ -16,11 +16,6 @@ namespace StructureMap.Testing.Widget
 
     public class DecisionBuilder : InstanceBuilder
     {
-        public override string ConcreteTypeKey
-        {
-            get { return null; }
-        }
-
         public override object BuildInstance(IConfiguredInstance instance, StructureMap.Pipeline.IBuildSession session)
         {
             return new Decision(

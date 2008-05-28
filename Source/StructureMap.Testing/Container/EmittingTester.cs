@@ -73,12 +73,6 @@ namespace StructureMap.Testing.Container
         }
 
         [Test]
-        public void ConcreteTypeKey()
-        {
-            Assert.AreEqual("Complex", builder.ConcreteTypeKey);
-        }
-
-        [Test]
         public void DoubleProperty()
         {
             Assert.AreEqual(4, rule.Double);

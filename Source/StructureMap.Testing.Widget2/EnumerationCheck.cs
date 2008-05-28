@@ -28,11 +28,6 @@ namespace StructureMap.Testing.Widget2
 
     public class CowBuilder : InstanceBuilder
     {
-        public override string ConcreteTypeKey
-        {
-            get { return "Default"; }
-        }
-
         public Type ThePluginType
         {
             get

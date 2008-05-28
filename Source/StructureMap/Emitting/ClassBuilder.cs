@@ -83,31 +83,6 @@ namespace StructureMap.Emitting
             ilgen.Emit(OpCodes.Ret);
         }
 
-
-        public void AddReadonlyStringProperty(string propertyName, string propertyValue, bool @override)
-        {
-            PropertyBuilder prop =
-                _newTypeBuilder.DefineProperty(propertyName, PropertyAttributes.HasDefault, typeof (string), null);
-
-            MethodAttributes atts = MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig |
-                                    MethodAttributes.Final | MethodAttributes.SpecialName;
-
-            string getterMethodName = "get_" + propertyName;
-
-            MethodBuilder methodGet =
-                _newTypeBuilder.DefineMethod(getterMethodName, atts, CallingConventions.Standard, typeof (string), null);
-            ILGenerator gen = methodGet.GetILGenerator();
-
-            LocalBuilder ilReturn = gen.DeclareLocal(typeof (string));
-
-            gen.Emit(OpCodes.Ldstr, propertyValue);
-            gen.Emit(OpCodes.Stloc_0);
-            gen.Emit(OpCodes.Ldloc_0);
-            gen.Emit(OpCodes.Ret);
-
-            prop.SetGetMethod(methodGet);
-        }
-
         public void AddPluggedTypeGetter(Type pluggedType)
         {
             PropertyBuilder prop =

@@ -16,14 +16,14 @@ namespace StructureMap.Testing.AutoMocking
         {
             _mocks = new MockRepository();
             _locator = new RhinoMocksServiceLocator(_mocks);
-            _instanceManager = new AutoMockedInstanceManager(_locator);
+            _container = new AutoMockedContainer(_locator);
         }
 
         #endregion
 
         private MockRepository _mocks;
         private RhinoMocksServiceLocator _locator;
-        private AutoMockedInstanceManager _instanceManager;
+        private AutoMockedContainer _container;
 
 
         public class ConcreteThing
@@ -132,11 +132,11 @@ namespace StructureMap.Testing.AutoMocking
         [Test]
         public void AutoFillAConcreteClassWithMocks()
         {
-            IMockedService service = _instanceManager.GetInstance<IMockedService>();
-            IMockedService2 service2 = _instanceManager.GetInstance<IMockedService2>();
-            IMockedService3 service3 = _instanceManager.GetInstance<IMockedService3>();
+            IMockedService service = _container.GetInstance<IMockedService>();
+            IMockedService2 service2 = _container.GetInstance<IMockedService2>();
+            IMockedService3 service3 = _container.GetInstance<IMockedService3>();
 
-            ConcreteClass concreteClass = _instanceManager.FillDependencies<ConcreteClass>();
+            ConcreteClass concreteClass = _container.FillDependencies<ConcreteClass>();
             
             Assert.AreSame(service, concreteClass.Service);
             Assert.AreSame(service2, concreteClass.Service2);
@@ -146,7 +146,7 @@ namespace StructureMap.Testing.AutoMocking
         [Test]
         public void GetAFullMockForAServiceThatHasNotPreviouslyBeenRequested()
         {
-            IMockedService service = _instanceManager.GetInstance<IMockedService>();
+            IMockedService service = _container.GetInstance<IMockedService>();
 
 
             Assert.IsNotNull(service);
@@ -169,21 +169,21 @@ namespace StructureMap.Testing.AutoMocking
         public void InjectAStubAndGetTheStubBack()
         {
             StubService stub = new StubService();
-            _instanceManager.InjectStub<IMockedService>(stub);
+            _container.InjectStub<IMockedService>(stub);
 
-            Assert.AreSame(stub, _instanceManager.GetInstance<IMockedService>());
-            Assert.AreSame(stub, _instanceManager.GetInstance<IMockedService>());
-            Assert.AreSame(stub, _instanceManager.GetInstance<IMockedService>());
+            Assert.AreSame(stub, _container.GetInstance<IMockedService>());
+            Assert.AreSame(stub, _container.GetInstance<IMockedService>());
+            Assert.AreSame(stub, _container.GetInstance<IMockedService>());
         }
 
         [Test]
         public void RequestTheServiceTwiceAndGetTheExactSameMockObject()
         {
-            IMockedService service = _instanceManager.GetInstance<IMockedService>();
-            Assert.AreSame(service, _instanceManager.GetInstance<IMockedService>());
-            Assert.AreSame(service, _instanceManager.GetInstance<IMockedService>());
-            Assert.AreSame(service, _instanceManager.GetInstance<IMockedService>());
-            Assert.AreSame(service, _instanceManager.GetInstance<IMockedService>());
+            IMockedService service = _container.GetInstance<IMockedService>();
+            Assert.AreSame(service, _container.GetInstance<IMockedService>());
+            Assert.AreSame(service, _container.GetInstance<IMockedService>());
+            Assert.AreSame(service, _container.GetInstance<IMockedService>());
+            Assert.AreSame(service, _container.GetInstance<IMockedService>());
         }
 
         [Test]

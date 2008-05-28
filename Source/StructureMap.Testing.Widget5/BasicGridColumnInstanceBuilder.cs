@@ -13,12 +13,6 @@ namespace StructureMap.Testing.Widget5
         {
         }
 
-
-        public override string ConcreteTypeKey
-        {
-            get { throw new NotImplementedException(); }
-        }
-
         public override Type PluggedType
         {
             get { throw new NotImplementedException(); }

@@ -9,12 +9,23 @@ namespace StructureMap
     {
         private readonly Dictionary<Type, InstanceBuilder> _builders = new Dictionary<Type, InstanceBuilder>();
         private readonly Type _pluginType;
+        private readonly Dictionary<string, Type> _aliases = new Dictionary<string, Type>();
 
 
         public InstanceBuilderList(Type pluginType, IEnumerable<Plugin> plugins)
         {
             _pluginType = pluginType;
             processPlugins(plugins);
+        }
+
+        public InstanceBuilderList(Type pluginType)
+        {
+            _pluginType = pluginType;
+        }
+
+        public int BuilderCount
+        {
+            get { return _builders.Count; }
         }
 
 
@@ -34,7 +45,7 @@ namespace StructureMap
             if (TypeRules.CanBeCast(_pluginType, pluggedType))
             {
                 Plugin plugin = new Plugin(pluggedType);
-                processPlugins(new Plugin[] {plugin});
+                processPlugin(plugin);
 
                 return _builders[pluggedType];
             }
@@ -44,24 +55,32 @@ namespace StructureMap
 
         public InstanceBuilder FindByConcreteKey(string concreteKey)
         {
-            foreach (KeyValuePair<Type, InstanceBuilder> pair in _builders)
+            if (_aliases.ContainsKey(concreteKey))
             {
-                if (pair.Value.ConcreteTypeKey == concreteKey)
-                {
-                    return pair.Value;
-                }
+                Type pluggedType = _aliases[concreteKey];
+                return FindByType(pluggedType);
             }
 
             return null;
         }
 
-        public void Add(Type pluggedType, InstanceBuilder builder)
+        private void processPlugin(Plugin plugin)
         {
-            _builders.Add(pluggedType, builder);
+            processPlugins(new Plugin[] { plugin });
         }
 
         private void processPlugins(IEnumerable<Plugin> plugins)
         {
+            foreach (Plugin plugin in plugins)
+            {
+                if (_aliases.ContainsKey(plugin.ConcreteKey))
+                {
+                    continue;
+                }
+
+                _aliases.Add(plugin.ConcreteKey, plugin.PluggedType);
+            }
+
             List<InstanceBuilder> list = createInstanceBuilders(plugins);
             foreach (InstanceBuilder builder in list)
             {
@@ -71,8 +90,27 @@ namespace StructureMap
 
         private List<InstanceBuilder> createInstanceBuilders(IEnumerable<Plugin> plugins)
         {
-            InstanceBuilderAssembly builderAssembly = new InstanceBuilderAssembly(_pluginType, plugins);
+            List<Plugin> list = new List<Plugin>();
+            foreach (Plugin plugin in plugins)
+            {
+                if (!_builders.ContainsKey(plugin.PluggedType))
+                {
+                    list.Add(plugin);
+                }
+            }
+
+            InstanceBuilderAssembly builderAssembly = new InstanceBuilderAssembly(_pluginType, list);
             return builderAssembly.Compile();
+        }
+
+        public void Add(Plugin plugin)
+        {
+            Add(new Plugin[] {plugin});
+        }
+
+        public void Add(IEnumerable<Plugin> plugins)
+        {
+            processPlugins(plugins);
         }
     }
 }

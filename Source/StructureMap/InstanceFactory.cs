@@ -18,6 +18,11 @@ namespace StructureMap
 
         #region constructor functions
 
+        public InstanceFactory(Type pluginType) : this(new PluginFamily(pluginType))
+        {
+            
+        }
+
         /// <summary>
         /// Constructor to use when troubleshooting possible configuration issues.
         /// </summary>
@@ -107,11 +112,10 @@ namespace StructureMap
         }
 
 
-        public Instance AddType<T>()
+        [Obsolete] public Instance AddType<T>()
         {
             InstanceBuilder builder = _instanceBuilders.FindByType(typeof (T));
-            ConfiguredInstance instance = new ConfiguredInstance();
-            instance.WithConcreteKey(builder.ConcreteTypeKey).WithName(builder.ConcreteTypeKey);
+            ConfiguredInstance instance = new ConfiguredInstance(typeof(T)).WithName(TypePath.GetAssemblyQualifiedName(typeof(T)));
 
             AddInstance(instance);
 
@@ -147,5 +151,14 @@ namespace StructureMap
         }
 
         #endregion
+
+        public void Merge(PluginFamily family)
+        {
+            _instanceBuilders.Add(family.Plugins);
+            foreach (Instance instance in family.GetAllInstances())
+            {
+                AddInstance(instance);
+            }
+        }
     }
 }

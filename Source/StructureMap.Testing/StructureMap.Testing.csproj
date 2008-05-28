@@ -315,8 +315,10 @@
     </Compile>
     <Compile Include="Graph\TypePathTester.cs" />
     <Compile Include="ImplicitPluginFromPluggedTypeAttributeTester.cs" />
+    <Compile Include="InstanceBuilderListTester.cs" />
     <Compile Include="InstanceMementoInstanceCreationTester.cs" />
     <Compile Include="MementoTester.cs" />
+    <Compile Include="MergingTester.cs" />
     <Compile Include="ObjectFactoryTester.cs">
       <SubType>Code</SubType>
     </Compile>

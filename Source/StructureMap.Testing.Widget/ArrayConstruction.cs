@@ -51,14 +51,6 @@ namespace StructureMap.Testing.Widget
 
     public class StringListBuilder : InstanceBuilder
     {
-
-        public override string ConcreteTypeKey
-        {
-            get { return null; }
-        }
-
-
-
         public override object BuildInstance(IConfiguredInstance instance, StructureMap.Pipeline.IBuildSession session)
         {
             return null;
