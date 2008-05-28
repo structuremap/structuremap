@@ -14,7 +14,7 @@ namespace StructureMap
     /// <summary>
     /// A collection of IInstanceFactory's.
     /// </summary>
-    public class InstanceManager : TypeRules, IInstanceManager
+    public class InstanceManager : TypeRules, IContainer
     {
         private InterceptorLibrary _interceptorLibrary;
         private PipelineGraph _pipelineGraph;
@@ -65,24 +65,24 @@ namespace StructureMap
             set { _pipelineGraph.OnMissingFactory = value; }
         }
 
-        #region IInstanceManager Members
+        #region IContainer Members
 
-        public T CreateInstance<T>(string instanceKey)
+        public T GetInstance<T>(string instanceKey)
         {
-            return (T) CreateInstance(typeof (T), instanceKey);
+            return (T) GetInstance(typeof (T), instanceKey);
         }
 
-        public T CreateInstance<T>(Instance instance)
+        public T GetInstance<T>(Instance instance)
         {
-            return (T) CreateInstance(typeof (T), instance);
+            return (T) GetInstance(typeof (T), instance);
         }
 
-        public PLUGINTYPE CreateInstance<PLUGINTYPE>(ExplicitArguments args)
+        public PLUGINTYPE GetInstance<PLUGINTYPE>(ExplicitArguments args)
         {
             Instance defaultInstance = _pipelineGraph.GetDefault(typeof (PLUGINTYPE));
 
             ExplicitInstance<PLUGINTYPE> instance = new ExplicitInstance<PLUGINTYPE>(args, defaultInstance);
-            return CreateInstance<PLUGINTYPE>(instance);
+            return GetInstance<PLUGINTYPE>(instance);
         }
 
         public void Inject<PLUGINTYPE>(PLUGINTYPE instance)
@@ -106,9 +106,9 @@ namespace StructureMap
             AddInstance<PLUGINTYPE>(instance);
         }
 
-        public T CreateInstance<T>()
+        public T GetInstance<T>()
         {
-            return (T) CreateInstance(typeof (T));
+            return (T) GetInstance(typeof (T));
         }
 
         public T FillDependencies<T>()
@@ -146,7 +146,7 @@ namespace StructureMap
         /// <param name="pluginType"></param>
         /// <param name="instanceKey"></param>
         /// <returns></returns>
-        public object CreateInstance(Type pluginType, string instanceKey)
+        public object GetInstance(Type pluginType, string instanceKey)
         {
             return withNewSession().CreateInstance(pluginType, instanceKey);
         }
@@ -157,7 +157,7 @@ namespace StructureMap
         /// </summary>
         /// <param name="pluginType"></param>
         /// <returns></returns>
-        public object CreateInstance(Type pluginType)
+        public object GetInstance(Type pluginType)
         {
             return withNewSession().CreateInstance(pluginType);
         }
@@ -170,7 +170,7 @@ namespace StructureMap
         /// <param name="pluginType"></param>
         /// <param name="instance"></param>
         /// <returns></returns>
-        public object CreateInstance(Type pluginType, Instance instance)
+        public object GetInstance(Type pluginType, Instance instance)
         {
             return withNewSession().CreateInstance(pluginType, instance);
         }
@@ -216,7 +216,7 @@ namespace StructureMap
                 throw new StructureMapException(230, type.FullName);
             }
 
-            return CreateInstance(type);
+            return GetInstance(type);
         }
 
         /// <summary>

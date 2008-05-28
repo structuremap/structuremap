@@ -12,8 +12,8 @@ namespace StructureMap.Testing.Configuration.DSL
 
         private void assertThingMatches(Action<Registry> action)
         {
-            IInstanceManager manager = new InstanceManager(action);
-            Thing actual = manager.CreateInstance<Thing>();
+            IContainer manager = new InstanceManager(action);
+            Thing actual = manager.GetInstance<Thing>();
             Assert.AreEqual(_prototype, actual);
         }
 

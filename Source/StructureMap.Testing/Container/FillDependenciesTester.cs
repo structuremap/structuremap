@@ -19,8 +19,8 @@ namespace StructureMap.Testing.Container
             // The dependencies must have a default setting first
             manager.SetDefault(typeof (IStrategy), "Red");
             manager.SetDefault(typeof (IWidget), "Blue");
-            IWidget widget = (IWidget) manager.CreateInstance(typeof (IWidget));
-            IStrategy strategy = (IStrategy) manager.CreateInstance(typeof (IStrategy));
+            IWidget widget = (IWidget) manager.GetInstance(typeof (IWidget));
+            IStrategy strategy = (IStrategy) manager.GetInstance(typeof (IStrategy));
 
             FilledConcreteClass concreteClass =
                 (FilledConcreteClass) manager.FillDependencies(typeof (FilledConcreteClass));

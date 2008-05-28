@@ -214,15 +214,15 @@ namespace StructureMap.Testing.Graph
             InstanceManager manager = new InstanceManager(pluginGraph);
 
             ISingletonRepository repository1 =
-                (ISingletonRepository) manager.CreateInstance(typeof (ISingletonRepository));
+                (ISingletonRepository) manager.GetInstance(typeof (ISingletonRepository));
             ISingletonRepository repository2 =
-                (ISingletonRepository) manager.CreateInstance(typeof (ISingletonRepository));
+                (ISingletonRepository) manager.GetInstance(typeof (ISingletonRepository));
             ISingletonRepository repository3 =
-                (ISingletonRepository) manager.CreateInstance(typeof (ISingletonRepository));
+                (ISingletonRepository) manager.GetInstance(typeof (ISingletonRepository));
             ISingletonRepository repository4 =
-                (ISingletonRepository) manager.CreateInstance(typeof (ISingletonRepository));
+                (ISingletonRepository) manager.GetInstance(typeof (ISingletonRepository));
             ISingletonRepository repository5 =
-                (ISingletonRepository) manager.CreateInstance(typeof (ISingletonRepository));
+                (ISingletonRepository) manager.GetInstance(typeof (ISingletonRepository));
 
             Assert.AreSame(repository1, repository2);
             Assert.AreSame(repository1, repository3);

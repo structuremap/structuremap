@@ -115,7 +115,7 @@ namespace StructureMap.Configuration
                 _systemInstanceManager = new InstanceManager(_systemGraph);
             }
 
-            return _systemInstanceManager.CreateInstance(type, instance);
+            return _systemInstanceManager.GetInstance(type, instance);
         }
     }
 }

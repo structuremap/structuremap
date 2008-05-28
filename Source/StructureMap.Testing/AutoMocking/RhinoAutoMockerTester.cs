@@ -132,9 +132,9 @@ namespace StructureMap.Testing.AutoMocking
         [Test]
         public void AutoFillAConcreteClassWithMocks()
         {
-            IMockedService service = _instanceManager.CreateInstance<IMockedService>();
-            IMockedService2 service2 = _instanceManager.CreateInstance<IMockedService2>();
-            IMockedService3 service3 = _instanceManager.CreateInstance<IMockedService3>();
+            IMockedService service = _instanceManager.GetInstance<IMockedService>();
+            IMockedService2 service2 = _instanceManager.GetInstance<IMockedService2>();
+            IMockedService3 service3 = _instanceManager.GetInstance<IMockedService3>();
 
             ConcreteClass concreteClass = _instanceManager.FillDependencies<ConcreteClass>();
             
@@ -146,7 +146,7 @@ namespace StructureMap.Testing.AutoMocking
         [Test]
         public void GetAFullMockForAServiceThatHasNotPreviouslyBeenRequested()
         {
-            IMockedService service = _instanceManager.CreateInstance<IMockedService>();
+            IMockedService service = _instanceManager.GetInstance<IMockedService>();
 
 
             Assert.IsNotNull(service);
@@ -171,19 +171,19 @@ namespace StructureMap.Testing.AutoMocking
             StubService stub = new StubService();
             _instanceManager.InjectStub<IMockedService>(stub);
 
-            Assert.AreSame(stub, _instanceManager.CreateInstance<IMockedService>());
-            Assert.AreSame(stub, _instanceManager.CreateInstance<IMockedService>());
-            Assert.AreSame(stub, _instanceManager.CreateInstance<IMockedService>());
+            Assert.AreSame(stub, _instanceManager.GetInstance<IMockedService>());
+            Assert.AreSame(stub, _instanceManager.GetInstance<IMockedService>());
+            Assert.AreSame(stub, _instanceManager.GetInstance<IMockedService>());
         }
 
         [Test]
         public void RequestTheServiceTwiceAndGetTheExactSameMockObject()
         {
-            IMockedService service = _instanceManager.CreateInstance<IMockedService>();
-            Assert.AreSame(service, _instanceManager.CreateInstance<IMockedService>());
-            Assert.AreSame(service, _instanceManager.CreateInstance<IMockedService>());
-            Assert.AreSame(service, _instanceManager.CreateInstance<IMockedService>());
-            Assert.AreSame(service, _instanceManager.CreateInstance<IMockedService>());
+            IMockedService service = _instanceManager.GetInstance<IMockedService>();
+            Assert.AreSame(service, _instanceManager.GetInstance<IMockedService>());
+            Assert.AreSame(service, _instanceManager.GetInstance<IMockedService>());
+            Assert.AreSame(service, _instanceManager.GetInstance<IMockedService>());
+            Assert.AreSame(service, _instanceManager.GetInstance<IMockedService>());
         }
 
         [Test]

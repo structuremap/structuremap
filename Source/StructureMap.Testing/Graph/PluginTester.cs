@@ -129,7 +129,7 @@ namespace StructureMap.Testing.Graph
 
             InstanceManager manager = new InstanceManager(pluginGraph);
 
-            Mustang mustang = (Mustang) manager.CreateInstance(typeof (IAutomobile), "Mustang");
+            Mustang mustang = (Mustang) manager.GetInstance(typeof (IAutomobile), "Mustang");
 
             Assert.IsNotNull(mustang);
             Assert.IsTrue(mustang.Engine is PushrodEngine);

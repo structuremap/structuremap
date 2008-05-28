@@ -41,11 +41,11 @@ namespace StructureMap.Testing.Container
 
             InstanceManager manager = new InstanceManager(graph);
 
-            Decision d1 = (Decision) manager.CreateInstance(typeof (Decision), "RedBlue");
+            Decision d1 = (Decision) manager.GetInstance(typeof (Decision), "RedBlue");
             Assert.IsNotNull(d1);
             Assert.AreEqual(2, d1.Rules.Length, "2 Rules");
 
-            Decision d2 = (Decision) manager.CreateInstance(typeof (Decision), "GreenBluePurple");
+            Decision d2 = (Decision) manager.GetInstance(typeof (Decision), "GreenBluePurple");
             Assert.IsNotNull(d2);
             Assert.AreEqual(3, d2.Rules.Length, "3 Rules");
 

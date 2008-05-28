@@ -60,7 +60,7 @@ namespace StructureMap.AutoMocking
             foreach (ParameterInfo parameterInfo in ctor.GetParameters())
             {
                 Type dependencyType = parameterInfo.ParameterType;
-                object dependency = _manager.CreateInstance(dependencyType);
+                object dependency = _manager.GetInstance(dependencyType);
                 list.Add(dependency);
             }
 
@@ -71,7 +71,7 @@ namespace StructureMap.AutoMocking
         // of the ClassUnderTest
         public T Get<T>()
         {
-            return _manager.CreateInstance<T>();
+            return _manager.GetInstance<T>();
         }
 
         // Set the auto mocking container to use a Stub for Type T

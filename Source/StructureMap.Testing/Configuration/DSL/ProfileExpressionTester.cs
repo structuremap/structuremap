@@ -58,7 +58,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
             InstanceManager manager = new InstanceManager(graph);
             manager.SetDefaultsToProfile(theProfileName);
-            AWidget widget = (AWidget)manager.CreateInstance<IWidget>();
+            AWidget widget = (AWidget)manager.GetInstance<IWidget>();
             Assert.IsNotNull(widget);
         }
 
@@ -83,7 +83,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             string theProfileName = "something";
 
-            IInstanceManager manager = new InstanceManager(delegate(Registry registry)
+            IContainer manager = new InstanceManager(delegate(Registry registry)
             {
                 registry.CreateProfile(theProfileName)
                     .For<IWidget>().UseConcreteType<AWidget>()
@@ -91,8 +91,8 @@ namespace StructureMap.Testing.Configuration.DSL
             });
             manager.SetDefaultsToProfile(theProfileName);
 
-            Assert.IsInstanceOfType(typeof(AWidget), manager.CreateInstance<IWidget>());
-            Assert.IsInstanceOfType(typeof(DefaultRule), manager.CreateInstance<Rule>());
+            Assert.IsInstanceOfType(typeof(AWidget), manager.GetInstance<IWidget>());
+            Assert.IsInstanceOfType(typeof(DefaultRule), manager.GetInstance<Rule>());
             
         }
 
@@ -101,7 +101,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             string theProfileName = "something";
             
-            IInstanceManager manager = new InstanceManager(delegate(Registry registry)
+            IContainer manager = new InstanceManager(delegate(Registry registry)
             {
                 registry.CreateProfile(theProfileName)
                     .For<IWidget>().Use(delegate() { return new AWidget(); })
@@ -112,8 +112,8 @@ namespace StructureMap.Testing.Configuration.DSL
 
             manager.SetDefaultsToProfile(theProfileName);
 
-            Assert.IsInstanceOfType(typeof(AWidget), manager.CreateInstance<IWidget>());
-            Assert.IsInstanceOfType(typeof(DefaultRule), manager.CreateInstance<Rule>());
+            Assert.IsInstanceOfType(typeof(AWidget), manager.GetInstance<IWidget>());
+            Assert.IsInstanceOfType(typeof(DefaultRule), manager.GetInstance<Rule>());
         }
 
         [Test]
@@ -122,7 +122,7 @@ namespace StructureMap.Testing.Configuration.DSL
             string theProfileName = "something";
             IWidget theTemplate = new AWidget();
 
-            IInstanceManager manager = new InstanceManager(delegate(Registry registry)
+            IContainer manager = new InstanceManager(delegate(Registry registry)
             {
                 registry.CreateProfile(theProfileName)
                     .For<IWidget>().UsePrototypeOf(theTemplate);
@@ -130,8 +130,8 @@ namespace StructureMap.Testing.Configuration.DSL
 
             manager.SetDefaultsToProfile(theProfileName);
 
-            IWidget widget1 = manager.CreateInstance<IWidget>();
-            IWidget widget2 = manager.CreateInstance<IWidget>();
+            IWidget widget1 = manager.GetInstance<IWidget>();
+            IWidget widget2 = manager.GetInstance<IWidget>();
 
             Assert.IsNotNull(widget1);
             Assert.IsNotNull(widget2);

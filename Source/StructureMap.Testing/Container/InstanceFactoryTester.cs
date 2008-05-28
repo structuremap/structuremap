@@ -39,7 +39,7 @@ namespace StructureMap.Testing.Container
         [Test, ExpectedException(typeof (StructureMapException))]
         public void GetInstanceWithInvalidInstanceKey()
         {
-            _manager.CreateInstance<Rule>("NonExistentRule");
+            _manager.GetInstance<Rule>("NonExistentRule");
         }
 
         [Test]

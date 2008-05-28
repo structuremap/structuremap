@@ -123,7 +123,7 @@ namespace StructureMap.Testing.Container
         [Test]
         public void PassAnArgumentIntoExplicitArgumentsForARequestedInterface()
         {
-            IInstanceManager manager = new InstanceManager(delegate(Registry registry)
+            IContainer manager = new InstanceManager(delegate(Registry registry)
             {
                 registry.ForRequestedType<IProvider>().TheDefaultIsConcreteType<LumpProvider>();
             });
@@ -132,7 +132,7 @@ namespace StructureMap.Testing.Container
             Lump theLump = new Lump();
             args.Set(theLump);
 
-            LumpProvider instance = (LumpProvider) manager.CreateInstance<IProvider>(args);
+            LumpProvider instance = (LumpProvider) manager.GetInstance<IProvider>(args);
             Assert.AreSame(theLump, instance.Lump);
         }
 
@@ -158,7 +158,7 @@ namespace StructureMap.Testing.Container
         [Test]
         public void PassExplicitArgsIntoInstanceManager()
         {
-            IInstanceManager manager = new InstanceManager(delegate(Registry registry)
+            IContainer manager = new InstanceManager(delegate(Registry registry)
             {
                 registry.ForRequestedType<ExplicitTarget>().TheDefaultIs(
                     Registry.Instance<ExplicitTarget>()
@@ -171,12 +171,12 @@ namespace StructureMap.Testing.Container
             ExplicitArguments args = new ExplicitArguments();
 
             // Get the ExplicitTarget without setting an explicit arg for IProvider
-            ExplicitTarget firstTarget = manager.CreateInstance<ExplicitTarget>(args);
+            ExplicitTarget firstTarget = manager.GetInstance<ExplicitTarget>(args);
             Assert.IsInstanceOfType(typeof (RedProvider), firstTarget.Provider);
 
             // Now, set the explicit arg for IProvider
             args.Set<IProvider>(new BlueProvider());
-            ExplicitTarget secondTarget = manager.CreateInstance<ExplicitTarget>(args);
+            ExplicitTarget secondTarget = manager.GetInstance<ExplicitTarget>(args);
             Assert.IsInstanceOfType(typeof (BlueProvider), secondTarget.Provider);
         }
 
@@ -240,7 +240,7 @@ namespace StructureMap.Testing.Container
             args.Set<Node>(theNode);
             args.SetArg("trade", theTrade);
 
-            Command command = manager.CreateInstance<Command>(args);
+            Command command = manager.GetInstance<Command>(args);
 
             Assert.IsInstanceOfType(typeof(View), command.View);
             Assert.AreSame(theNode, command.Node);

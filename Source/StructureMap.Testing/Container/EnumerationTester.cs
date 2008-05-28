@@ -35,7 +35,7 @@ namespace StructureMap.Testing.Container
             
             manager.AddInstance<Cow>(instance);
 
-            Cow angus = manager.CreateInstance<Cow>("Angus");
+            Cow angus = manager.GetInstance<Cow>("Angus");
 
             Assert.IsNotNull(angus);
             Assert.AreEqual("Bessie", angus.Name, "Name");

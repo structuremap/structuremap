@@ -26,7 +26,7 @@ namespace StructureMap.Testing.Container
 
         #endregion
 
-        private IInstanceManager _manager;
+        private IContainer _manager;
 
         [Test]
         public void DoNotFindPluginWithNoPublicCTOR()

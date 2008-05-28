@@ -16,7 +16,7 @@ namespace StructureMap
     public class ObjectFactory
     {
         private static readonly object _lockObject = new object();
-        private static IInstanceManager _manager;
+        private static IContainer _manager;
         private static string _profile = string.Empty;
 
         private static event Notify _notify;
@@ -131,7 +131,7 @@ namespace StructureMap
 
         #region InstanceManager and setting defaults
 
-        private static IInstanceManager manager
+        private static IContainer manager
         {
             get
             {
@@ -184,7 +184,7 @@ namespace StructureMap
         /// Strictly used for testing scenarios
         /// </summary>
         /// <param name="manager"></param>
-        internal static void ReplaceManager(IInstanceManager manager)
+        internal static void ReplaceManager(IContainer manager)
         {
             _manager = manager;
         }
@@ -246,7 +246,7 @@ namespace StructureMap
         /// <returns></returns>
         public static object GetInstance(Type TargetType)
         {
-            return manager.CreateInstance(TargetType);
+            return manager.GetInstance(TargetType);
         }
 
         /// <summary>
@@ -256,7 +256,7 @@ namespace StructureMap
         /// <returns></returns>
         public static TargetType GetInstance<TargetType>()
         {
-            return (TargetType) manager.CreateInstance(typeof (TargetType));
+            return (TargetType) manager.GetInstance(typeof (TargetType));
         }
 
         /// <summary>
@@ -267,7 +267,7 @@ namespace StructureMap
         /// <returns></returns>
         public static object GetInstance(Type TargetType, Instance instance)
         {
-            return manager.CreateInstance(TargetType, instance);
+            return manager.GetInstance(TargetType, instance);
         }
 
         /// <summary>
@@ -278,7 +278,7 @@ namespace StructureMap
         /// <returns></returns>
         public static TargetType GetInstance<TargetType>(Instance instance)
         {
-            return (TargetType) manager.CreateInstance(typeof (TargetType), instance);
+            return (TargetType) manager.GetInstance(typeof (TargetType), instance);
         }
 
         /// <summary>
@@ -289,7 +289,7 @@ namespace StructureMap
         /// <returns></returns>
         public static object GetNamedInstance(Type TargetType, string InstanceName)
         {
-            return manager.CreateInstance(TargetType, InstanceName);
+            return manager.GetInstance(TargetType, InstanceName);
         }
 
         /// <summary>
@@ -300,7 +300,7 @@ namespace StructureMap
         /// <returns></returns>
         public static TargetType GetNamedInstance<TargetType>(string InstanceName)
         {
-            return (TargetType) manager.CreateInstance(typeof (TargetType), InstanceName);
+            return (TargetType) manager.GetInstance(typeof (TargetType), InstanceName);
         }
 
         /// <summary>

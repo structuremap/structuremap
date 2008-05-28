@@ -47,12 +47,12 @@ namespace StructureMap.Testing.Configuration.DSL
 
         private ColorService _lastService;
 
-        private IInstanceManager _manager;
+        private IContainer _manager;
 
         [Test]
         public void DecorateAConstructedService()
         {
-            IService service = _manager.CreateInstance<IService>("Purple");
+            IService service = _manager.GetInstance<IService>("Purple");
             DecoratorService decoratorService = (DecoratorService) service;
 
             ColorService innerService = (ColorService) decoratorService.Inner;
@@ -62,7 +62,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void DecorateInline()
         {
-            IService service = _manager.CreateInstance<IService>("Decorated");
+            IService service = _manager.GetInstance<IService>("Decorated");
             DecoratorService decoratorService = (DecoratorService) service;
 
             ColorService innerService = (ColorService) decoratorService.Inner;
@@ -74,7 +74,7 @@ namespace StructureMap.Testing.Configuration.DSL
         public void OnCreationWithAConstructedService()
         {
             Assert.IsNull(_lastService);
-            IService interceptedService = _manager.CreateInstance<IService>("Yellow");
+            IService interceptedService = _manager.GetInstance<IService>("Yellow");
             Assert.AreSame(_lastService, interceptedService);
         }
 
@@ -85,10 +85,10 @@ namespace StructureMap.Testing.Configuration.DSL
             // "NotIntercepted" should not.
 
             Assert.IsNull(_lastService);
-            _manager.CreateInstance<IService>("NotIntercepted");
+            _manager.GetInstance<IService>("NotIntercepted");
             Assert.IsNull(_lastService);
 
-            IService interceptedService = _manager.CreateInstance<IService>("Intercepted");
+            IService interceptedService = _manager.GetInstance<IService>("Intercepted");
             Assert.AreSame(_lastService, interceptedService);
         }
 
@@ -97,7 +97,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             try
             {
-                _manager.CreateInstance<IService>("Bad");
+                _manager.GetInstance<IService>("Bad");
                 Assert.Fail("Should have thrown an error");
             }
             catch (StructureMapException e)

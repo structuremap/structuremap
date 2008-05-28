@@ -46,7 +46,7 @@ namespace StructureMap.Testing
             PluginGraph graph = builder.PluginGraph;
             InstanceManager manager = new InstanceManager(graph);
 
-            StubbedGateway gateway = (StubbedGateway) manager.CreateInstance(typeof (IGateway), _memento.InstanceKey);
+            StubbedGateway gateway = (StubbedGateway) manager.GetInstance(typeof (IGateway), _memento.InstanceKey);
 
             Assert.IsNotNull(gateway);
         }
@@ -58,7 +58,7 @@ namespace StructureMap.Testing
             PluginGraph graph = DataMother.GetPluginGraph("PluggedTypeTest.xml");
             InstanceManager manager = new InstanceManager(graph);
 
-            NotPluggableWidget widget = (NotPluggableWidget) manager.CreateInstance(typeof (IWidget), "Me");
+            NotPluggableWidget widget = (NotPluggableWidget) manager.GetInstance(typeof (IWidget), "Me");
             Assert.AreEqual("Jeremy", widget.Name);
         }
     }

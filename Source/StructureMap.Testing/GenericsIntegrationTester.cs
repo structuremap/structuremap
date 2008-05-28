@@ -74,18 +74,18 @@ namespace StructureMap.Testing
         [Test]
         public void MultipleGenericTypes()
         {
-            IService<int> intService = (IService<int>) manager.CreateInstance(typeof (IService<int>), "Default");
+            IService<int> intService = (IService<int>) manager.GetInstance(typeof (IService<int>), "Default");
             IService<string> stringService =
-                (IService<string>) manager.CreateInstance(typeof (IService<string>), "Default");
+                (IService<string>) manager.GetInstance(typeof (IService<string>), "Default");
             IService<double> doubleService =
-                (IService<double>) manager.CreateInstance(typeof (IService<double>), "Default");
+                (IService<double>) manager.GetInstance(typeof (IService<double>), "Default");
         }
 
         [Test]
         public void PicksUpAnExplicitlyDefinedGenericPluginFamilyFromConfiguration()
         {
             IThing<int, string> thing =
-                (IThing<int, string>) manager.CreateInstance(typeof (IThing<int, string>));
+                (IThing<int, string>) manager.GetInstance(typeof (IThing<int, string>));
             ColorThing<int, string> redThing = (ColorThing<int, string>) thing;
 
             Assert.AreEqual("Red", redThing.Color);
@@ -94,34 +94,34 @@ namespace StructureMap.Testing
         [Test]
         public void PicksUpASimpleGenericPluginFamilyFromConfiguration()
         {
-            ISimpleThing<int> thing = (ISimpleThing<int>) manager.CreateInstance(typeof (ISimpleThing<int>));
+            ISimpleThing<int> thing = (ISimpleThing<int>) manager.GetInstance(typeof (ISimpleThing<int>));
             Assert.IsNotNull(thing);
         }
 
         [Test]
         public void SimpleInstanceManagerTestWithGenerics()
         {
-            Service<int> intService = (Service<int>) manager.CreateInstance(typeof (IService<int>), "Default");
+            Service<int> intService = (Service<int>) manager.GetInstance(typeof (IService<int>), "Default");
             Assert.AreEqual(typeof (int), intService.GetT());
 
             Service<string> stringService =
-                (Service<string>) manager.CreateInstance(typeof (IService<string>), "Default");
+                (Service<string>) manager.GetInstance(typeof (IService<string>), "Default");
             Assert.AreEqual(typeof (string), stringService.GetT());
         }
 
         [Test]
         public void SingletonInterceptors()
         {
-            AbstractClass<int> object1 = (AbstractClass<int>) manager.CreateInstance(typeof (AbstractClass<int>));
-            AbstractClass<int> object2 = (AbstractClass<int>) manager.CreateInstance(typeof (AbstractClass<int>));
-            AbstractClass<int> object3 = (AbstractClass<int>) manager.CreateInstance(typeof (AbstractClass<int>));
+            AbstractClass<int> object1 = (AbstractClass<int>) manager.GetInstance(typeof (AbstractClass<int>));
+            AbstractClass<int> object2 = (AbstractClass<int>) manager.GetInstance(typeof (AbstractClass<int>));
+            AbstractClass<int> object3 = (AbstractClass<int>) manager.GetInstance(typeof (AbstractClass<int>));
 
             AbstractClass<string> object4 =
-                (AbstractClass<string>) manager.CreateInstance(typeof (AbstractClass<string>));
+                (AbstractClass<string>) manager.GetInstance(typeof (AbstractClass<string>));
             AbstractClass<string> object5 =
-                (AbstractClass<string>) manager.CreateInstance(typeof (AbstractClass<string>));
+                (AbstractClass<string>) manager.GetInstance(typeof (AbstractClass<string>));
             AbstractClass<string> object6 =
-                (AbstractClass<string>) manager.CreateInstance(typeof (AbstractClass<string>));
+                (AbstractClass<string>) manager.GetInstance(typeof (AbstractClass<string>));
 
             Assert.AreSame(object1, object2);
             Assert.AreSame(object1, object3);
@@ -134,7 +134,7 @@ namespace StructureMap.Testing
         [Test]
         public void SpecificImplementation()
         {
-            IConcept<object> concept = (IConcept<object>) manager.CreateInstance(typeof (IConcept<object>), "Specific");
+            IConcept<object> concept = (IConcept<object>) manager.GetInstance(typeof (IConcept<object>), "Specific");
 
             Assert.IsNotNull(concept);
             Assert.IsInstanceOfType(typeof (SpecificConcept), concept);

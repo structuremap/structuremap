@@ -87,7 +87,7 @@ namespace StructureMap.Testing.Configuration
             ProfileBuilder.OverrideMachineName("GREEN-BOX");
             InstanceManager manager = new InstanceManager(graph);
 
-            ColorWidget widget = (ColorWidget) manager.CreateInstance<IWidget>();
+            ColorWidget widget = (ColorWidget) manager.GetInstance<IWidget>();
             Assert.AreEqual("Green", widget.Color);
         }
 
@@ -97,7 +97,7 @@ namespace StructureMap.Testing.Configuration
             ProfileBuilder.OverrideMachineName("ORANGE-BOX");
             InstanceManager manager = new InstanceManager(graph);
 
-            ColorWidget widget = (ColorWidget)manager.CreateInstance<IWidget>();
+            ColorWidget widget = (ColorWidget)manager.GetInstance<IWidget>();
             Assert.AreEqual("Orange", widget.Color);
         }
 
@@ -108,7 +108,7 @@ namespace StructureMap.Testing.Configuration
             
             manager.SetDefaultsToProfile("Green");
 
-            ColorWidget widget = (ColorWidget)manager.CreateInstance<IWidget>();
+            ColorWidget widget = (ColorWidget)manager.GetInstance<IWidget>();
             Assert.AreEqual("Green", widget.Color);
         }
 
@@ -118,10 +118,10 @@ namespace StructureMap.Testing.Configuration
             InstanceManager manager = new InstanceManager(graph);
             manager.SetDefaultsToProfile("Blue");
 
-            ColorRule rule = (ColorRule) manager.CreateInstance<Rule>();
+            ColorRule rule = (ColorRule) manager.GetInstance<Rule>();
             Assert.AreEqual("Blue", rule.Color);
 
-            ColorWidget widget = (ColorWidget) manager.CreateInstance<IWidget>();
+            ColorWidget widget = (ColorWidget) manager.GetInstance<IWidget>();
             Assert.AreEqual("Blue", widget.Color);
 
         }
@@ -133,7 +133,7 @@ namespace StructureMap.Testing.Configuration
             ProfileBuilder.OverrideMachineName("ORANGE-BOX");
             InstanceManager manager = new InstanceManager(graph);
 
-            ColorWidget widget = (ColorWidget)manager.CreateInstance(typeof(IWidget));
+            ColorWidget widget = (ColorWidget)manager.GetInstance(typeof(IWidget));
             Assert.AreEqual("Orange", widget.Color);
         }
 
@@ -143,7 +143,7 @@ namespace StructureMap.Testing.Configuration
             ProfileBuilder.OverrideMachineName("GREEN-BOX");
             InstanceManager manager = new InstanceManager(graph);
             
-            ColorWidget widget = (ColorWidget)manager.CreateInstance(typeof(IWidget));
+            ColorWidget widget = (ColorWidget)manager.GetInstance(typeof(IWidget));
             Assert.AreEqual("Green", widget.Color);
         }
 
@@ -153,12 +153,12 @@ namespace StructureMap.Testing.Configuration
             InstanceManager manager = new InstanceManager(graph);
             manager.SetDefaultsToProfile("Green");
 
-            ColorRule greenRule = (ColorRule)manager.CreateInstance(typeof(Rule));
+            ColorRule greenRule = (ColorRule)manager.GetInstance(typeof(Rule));
             Assert.AreEqual("Green", greenRule.Color);
 
             manager.SetDefaultsToProfile("Blue");
 
-            ColorRule blueRule = (ColorRule)manager.CreateInstance(typeof(Rule));
+            ColorRule blueRule = (ColorRule)manager.GetInstance(typeof(Rule));
             Assert.AreEqual("Blue", blueRule.Color);
         }
     }

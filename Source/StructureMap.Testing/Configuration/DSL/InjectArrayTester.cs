@@ -82,7 +82,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void CanStillAddOtherPropertiesAfterTheCallToChildArray()
         {
-            IInstanceManager manager = new InstanceManager(delegate(Registry registry)
+            IContainer manager = new InstanceManager(delegate(Registry registry)
             {
                 registry.ForRequestedType<Processor>()
                     .TheDefaultIs(
@@ -96,14 +96,14 @@ namespace StructureMap.Testing.Configuration.DSL
                     );
             });
 
-            Processor processor = manager.CreateInstance<Processor>();
+            Processor processor = manager.GetInstance<Processor>();
             Assert.AreEqual("Jeremy", processor.Name);
         }
 
         [Test]
         public void InjectPropertiesByName()
         {
-            IInstanceManager manager = new InstanceManager(delegate(Registry registry)
+            IContainer manager = new InstanceManager(delegate(Registry registry)
             {
                 registry.ForRequestedType<Processor2>()
                     .TheDefaultIs(
@@ -120,7 +120,7 @@ namespace StructureMap.Testing.Configuration.DSL
             });
 
 
-            Processor2 processor = manager.CreateInstance<Processor2>();
+            Processor2 processor = manager.GetInstance<Processor2>();
 
             Assert.IsInstanceOfType(typeof (Handler1), processor.First[0]);
             Assert.IsInstanceOfType(typeof (Handler2), processor.First[1]);
@@ -153,7 +153,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void PlaceMemberInArrayByReference()
         {
-            IInstanceManager manager = new InstanceManager(delegate(Registry registry)
+            IContainer manager = new InstanceManager(delegate(Registry registry)
             {
                 registry.AddInstanceOf<IHandler>().UsingConcreteType<Handler1>().WithName("One");
                 registry.AddInstanceOf<IHandler>().UsingConcreteType<Handler2>().WithName("Two");
@@ -169,7 +169,7 @@ namespace StructureMap.Testing.Configuration.DSL
                     );
             });
 
-            Processor processor = manager.CreateInstance<Processor>();
+            Processor processor = manager.GetInstance<Processor>();
 
             Assert.IsInstanceOfType(typeof (Handler2), processor.Handlers[0]);
             Assert.IsInstanceOfType(typeof (Handler1), processor.Handlers[1]);
@@ -178,7 +178,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void ProgrammaticallyInjectArrayAllInline()
         {
-            IInstanceManager manager = new InstanceManager(delegate(Registry registry)
+            IContainer manager = new InstanceManager(delegate(Registry registry)
             {
                 registry.ForRequestedType<Processor>()
                     .TheDefaultIs(
@@ -192,7 +192,7 @@ namespace StructureMap.Testing.Configuration.DSL
                     );
             });
 
-            Processor processor = manager.CreateInstance<Processor>();
+            Processor processor = manager.GetInstance<Processor>();
 
             Assert.IsInstanceOfType(typeof (Handler1), processor.Handlers[0]);
             Assert.IsInstanceOfType(typeof (Handler2), processor.Handlers[1]);

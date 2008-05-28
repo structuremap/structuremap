@@ -5,17 +5,17 @@ using StructureMap.Pipeline;
 
 namespace StructureMap
 {
-    public interface IInstanceManager
+    public interface IContainer
     {
-        T CreateInstance<T>(string instanceKey);
-        T CreateInstance<T>();
+        T GetInstance<T>(string instanceKey);
+        T GetInstance<T>();
         T FillDependencies<T>();
         object FillDependencies(Type type);
         void InjectStub<T>(T instance);
         IList<T> GetAllInstances<T>();
         void SetDefaultsToProfile(string profile);
 
-        T CreateInstance<T>(Instance instance);
+        T GetInstance<T>(Instance instance);
 
         /// <summary>
         /// Sets up the InstanceManager to return the object in the "stub" argument anytime
@@ -54,7 +54,7 @@ namespace StructureMap
         /// </summary>
         /// <param name="pluginType"></param>
         /// <returns></returns>
-        object CreateInstance(Type pluginType);
+        object GetInstance(Type pluginType);
 
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace StructureMap
         /// <param name="pluginType"></param>
         /// <param name="instance"></param>
         /// <returns></returns>
-        object CreateInstance(Type pluginType, Instance instance);
+        object GetInstance(Type pluginType, Instance instance);
 
         /// <summary>
         /// Creates the named instance of the PluginType
@@ -72,9 +72,9 @@ namespace StructureMap
         /// <param name="pluginType"></param>
         /// <param name="instanceKey"></param>
         /// <returns></returns>
-        object CreateInstance(Type pluginType, string instanceKey);
+        object GetInstance(Type pluginType, string instanceKey);
 
-        PLUGINTYPE CreateInstance<PLUGINTYPE>(ExplicitArguments args);
+        PLUGINTYPE GetInstance<PLUGINTYPE>(ExplicitArguments args);
 
         ExplicitArgsExpression With<T>(T arg);
         IExplicitProperty With(string argName);

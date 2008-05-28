@@ -63,8 +63,8 @@ namespace StructureMap.Testing.Container
             manager.AddInstance<IService>(new LiteralInstance(_red).WithName("Red"));
             manager.AddInstance<IService>(new LiteralInstance(_blue).WithName("Blue"));
 
-            Assert.AreSame(_red, manager.CreateInstance(typeof (IService), "Red"));
-            Assert.AreSame(_blue, manager.CreateInstance(typeof (IService), "Blue"));
+            Assert.AreSame(_red, manager.GetInstance(typeof (IService), "Red"));
+            Assert.AreSame(_blue, manager.GetInstance(typeof (IService), "Blue"));
         }
 
 

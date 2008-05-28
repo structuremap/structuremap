@@ -31,7 +31,7 @@ namespace StructureMap.Testing.Configuration.DSL
         #endregion
 
         private IService _lastService;
-        private IInstanceManager _manager;
+        private IContainer _manager;
         private Action<Registry> _defaultRegistry;
 
         private IService getService(Action<Registry> action, string name)
@@ -45,7 +45,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 });
             }
 
-            return _manager.CreateInstance<IService>(name);
+            return _manager.GetInstance<IService>(name);
         }
 
         [Test]

@@ -24,7 +24,7 @@ namespace StructureMap.Testing.Container.Interceptors
         #endregion
 
         private Registry registry;
-        private IInstanceManager manager;
+        private IContainer manager;
 
         private void assertThisIsType<T>(string name)
         {
@@ -33,7 +33,7 @@ namespace StructureMap.Testing.Container.Interceptors
                 manager = new InstanceManager(registry);
             }
 
-            Assert.IsInstanceOfType(typeof (T), manager.CreateInstance<IAnInterfaceOfSomeSort>(name));
+            Assert.IsInstanceOfType(typeof (T), manager.GetInstance<IAnInterfaceOfSomeSort>(name));
         }
 
         private void assertThatThisIsWrappedSomething<OUTERTYPE, INNERTYPE>(string name)
@@ -44,7 +44,7 @@ namespace StructureMap.Testing.Container.Interceptors
                 manager = new InstanceManager(registry);
             }
 
-            OUTERTYPE something = (OUTERTYPE) manager.CreateInstance<IAnInterfaceOfSomeSort>(name);
+            OUTERTYPE something = (OUTERTYPE) manager.GetInstance<IAnInterfaceOfSomeSort>(name);
             Assert.IsInstanceOfType(typeof (INNERTYPE), something.Inner);
         }
 

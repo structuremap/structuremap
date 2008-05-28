@@ -44,7 +44,7 @@ namespace StructureMap.Testing
             Type doubleServiceType = typeof (IService<double>);
 
             ServiceWithPlug<double> service =
-                (ServiceWithPlug<double>) manager.CreateInstance(doubleServiceType, "Plugged");
+                (ServiceWithPlug<double>) manager.GetInstance(doubleServiceType, "Plugged");
             Assert.AreEqual(typeof (double), service.Plug.PlugType);
         }
 
@@ -97,7 +97,7 @@ namespace StructureMap.Testing
                 .WithProperty("name").EqualTo("Jeremy")
                 .WithProperty("age").EqualTo(32);
 
-            ComplexType<int> com = manager.CreateInstance<ComplexType<int>>(instance);
+            ComplexType<int> com = manager.GetInstance<ComplexType<int>>(instance);
             Assert.AreEqual("Jeremy", com.Name);
             Assert.AreEqual(32, com.Age);
         }
@@ -146,22 +146,22 @@ namespace StructureMap.Testing
 
             InstanceManager manager = new InstanceManager(pluginGraph);
 
-            IPlug<string> plug = manager.CreateInstance<IPlug<string>>();
+            IPlug<string> plug = manager.GetInstance<IPlug<string>>();
 
             manager.SetDefaultsToProfile("1");
-            Assert.IsInstanceOfType(typeof(Service<string>), manager.CreateInstance(typeof(IService<string>)));
+            Assert.IsInstanceOfType(typeof(Service<string>), manager.GetInstance(typeof(IService<string>)));
 
             manager.SetDefaultsToProfile("2");
-            Assert.IsInstanceOfType(typeof(ServiceWithPlug<string>), manager.CreateInstance(typeof(IService<string>)));
+            Assert.IsInstanceOfType(typeof(ServiceWithPlug<string>), manager.GetInstance(typeof(IService<string>)));
 
             manager.SetDefaultsToProfile("1");
-            Assert.IsInstanceOfType(typeof(Service<string>), manager.CreateInstance(typeof(IService<string>)));
+            Assert.IsInstanceOfType(typeof(Service<string>), manager.GetInstance(typeof(IService<string>)));
         }
 
         [Test]
         public void Define_profile_with_generics_with_named_instance()
         {
-            IInstanceManager manager = new InstanceManager(delegate(Registry registry)
+            IContainer manager = new InstanceManager(delegate(Registry registry)
             {
                 registry.AddInstanceOf(typeof(IService<>), new ConfiguredInstance(typeof(Service<>)).WithName("Service1"));
                 registry.AddInstanceOf(typeof(IService<>), new ConfiguredInstance(typeof(Service2<>)).WithName("Service2"));
@@ -171,10 +171,10 @@ namespace StructureMap.Testing
 
             manager.SetDefaultsToProfile("1");
 
-            Assert.IsInstanceOfType(typeof(Service<string>), manager.CreateInstance<IService<string>>());
+            Assert.IsInstanceOfType(typeof(Service<string>), manager.GetInstance<IService<string>>());
 
             manager.SetDefaultsToProfile("2");
-            Assert.IsInstanceOfType(typeof(Service2<int>), manager.CreateInstance<IService<int>>());
+            Assert.IsInstanceOfType(typeof(Service2<int>), manager.GetInstance<IService<int>>());
         }
 
         
@@ -182,7 +182,7 @@ namespace StructureMap.Testing
         [Test]
         public void Define_profile_with_generics_and_concrete_type()
         {
-            IInstanceManager manager = new InstanceManager(delegate(Registry registry)
+            IContainer manager = new InstanceManager(delegate(Registry registry)
             {
                 registry.CreateProfile("1").For(typeof(IService<>)).UseConcreteType(typeof(Service<>));
                 registry.CreateProfile("2").For(typeof(IService<>)).UseConcreteType(typeof(Service2<>));
@@ -190,10 +190,10 @@ namespace StructureMap.Testing
 
             manager.SetDefaultsToProfile("1");
 
-            Assert.IsInstanceOfType(typeof(Service<string>), manager.CreateInstance<IService<string>>());
+            Assert.IsInstanceOfType(typeof(Service<string>), manager.GetInstance<IService<string>>());
 
             manager.SetDefaultsToProfile("2");
-            Assert.IsInstanceOfType(typeof(Service2<int>), manager.CreateInstance<IService<int>>());
+            Assert.IsInstanceOfType(typeof(Service2<int>), manager.GetInstance<IService<int>>());
 
         }
 

@@ -156,7 +156,7 @@ namespace StructureMap.Testing.Container.ExceptionHandling
                 ",
                  delegate (InstanceManager manager)
                      {
-                         manager.CreateInstance<IWidget>("NotAnActualInstanceName");
+                         manager.GetInstance<IWidget>("NotAnActualInstanceName");
                      }
                  
                  );
@@ -189,7 +189,7 @@ namespace StructureMap.Testing.Container.ExceptionHandling
                 ",
                 delegate (InstanceManager manager)
                     {
-                        manager.CreateInstance<IWidget>();
+                        manager.GetInstance<IWidget>();
                     }
                 );
 

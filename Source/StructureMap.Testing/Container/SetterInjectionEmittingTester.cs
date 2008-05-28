@@ -34,7 +34,7 @@ namespace StructureMap.Testing.Container
             InstanceManager manager = buildInstanceManager();
 
             WidgetArrayGridColumn column =
-                (WidgetArrayGridColumn) manager.CreateInstance(typeof (IGridColumn), "WidgetArray");
+                (WidgetArrayGridColumn) manager.GetInstance(typeof (IGridColumn), "WidgetArray");
 
             Assert.AreEqual(3, column.Widgets.Length);
         }
@@ -45,7 +45,7 @@ namespace StructureMap.Testing.Container
             InstanceManager manager = buildInstanceManager();
 
 
-            WidgetGridColumn column = (WidgetGridColumn) manager.CreateInstance(typeof (IGridColumn), "BlueWidget");
+            WidgetGridColumn column = (WidgetGridColumn) manager.GetInstance(typeof (IGridColumn), "BlueWidget");
             Assert.IsTrue(column.Widget is ColorWidget);
         }
 
@@ -61,7 +61,7 @@ namespace StructureMap.Testing.Container
 
             InstanceManager manager = new InstanceManager(graph);
 
-            EnumGridColumn column = (EnumGridColumn) manager.CreateInstance<IGridColumn>("Enum");
+            EnumGridColumn column = (EnumGridColumn) manager.GetInstance<IGridColumn>("Enum");
 
             Assert.AreEqual(FontStyleEnum.BodyText, column.FontStyle);
         }
@@ -81,7 +81,7 @@ namespace StructureMap.Testing.Container
             InstanceManager manager = new InstanceManager(graph);
 
 
-            LongGridColumn column = (LongGridColumn) manager.CreateInstance<IGridColumn>("Long");
+            LongGridColumn column = (LongGridColumn) manager.GetInstance<IGridColumn>("Long");
             Assert.AreEqual(count, column.Count);
         }
 
@@ -97,7 +97,7 @@ namespace StructureMap.Testing.Container
             family.AddInstance(memento);
 
             InstanceManager manager = new InstanceManager(graph);
-            StringGridColumn column = (StringGridColumn) manager.CreateInstance<IGridColumn>("String");
+            StringGridColumn column = (StringGridColumn) manager.GetInstance<IGridColumn>("String");
 
 
 

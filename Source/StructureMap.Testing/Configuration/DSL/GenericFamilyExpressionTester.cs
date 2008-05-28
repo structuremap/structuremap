@@ -65,9 +65,9 @@ namespace StructureMap.Testing.Configuration.DSL
             });
 
 
-            Assert.IsInstanceOfType(typeof(Target1), manager.CreateInstance<ITarget>("1"));
-            Assert.IsInstanceOfType(typeof(Target2), manager.CreateInstance<ITarget>("2"));
-            Assert.IsInstanceOfType(typeof(Target3), manager.CreateInstance<ITarget>("3"));
+            Assert.IsInstanceOfType(typeof(Target1), manager.GetInstance<ITarget>("1"));
+            Assert.IsInstanceOfType(typeof(Target2), manager.GetInstance<ITarget>("2"));
+            Assert.IsInstanceOfType(typeof(Target3), manager.GetInstance<ITarget>("3"));
         }
 
         [Test]
@@ -78,7 +78,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 r.ForRequestedType(typeof (ITarget)).TheDefaultIsConcreteType(typeof (Target3));
             });
 
-            Assert.IsInstanceOfType(typeof(Target3), manager.CreateInstance<ITarget>());
+            Assert.IsInstanceOfType(typeof(Target3), manager.GetInstance<ITarget>());
         }
 
         [Test]
@@ -89,7 +89,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 r.ForRequestedType(typeof(ITarget)).TheDefaultIs(Instance<Target2>());
             });
 
-            Assert.IsInstanceOfType(typeof(Target2), manager.CreateInstance<ITarget>());
+            Assert.IsInstanceOfType(typeof(Target2), manager.GetInstance<ITarget>());
         }
 
         [Test]
@@ -100,7 +100,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 r.ForRequestedType(typeof(ITarget)).TheDefaultIs(delegate() { return new Target1(); });
             });
 
-            Assert.IsInstanceOfType(typeof(Target1), manager.CreateInstance<ITarget>());
+            Assert.IsInstanceOfType(typeof(Target1), manager.GetInstance<ITarget>());
         }
 
         [Test]
@@ -125,7 +125,7 @@ namespace StructureMap.Testing.Configuration.DSL
                     .EnrichWith(delegate(object raw){ return new WrappedTarget((ITarget) raw);});
             });
 
-            WrappedTarget target = (WrappedTarget) manager.CreateInstance<ITarget>();
+            WrappedTarget target = (WrappedTarget) manager.GetInstance<ITarget>();
             Assert.IsInstanceOfType(typeof(Target1), target.Inner);
         }
 
@@ -171,7 +171,7 @@ namespace StructureMap.Testing.Configuration.DSL
                     .OnCreation(delegate(object raw) { created = (ITarget) raw; });
             });
 
-            manager.CreateInstance<ITarget>();
+            manager.GetInstance<ITarget>();
 
             Assert.IsInstanceOfType(typeof(Target3), created);
         }

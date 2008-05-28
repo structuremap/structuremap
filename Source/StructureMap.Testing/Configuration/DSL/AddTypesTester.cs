@@ -30,7 +30,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void A_concrete_type_is_available_by_name_when_it_is_added_by_the_shorthand_mechanism()
         {
-            IInstanceManager manager = new InstanceManager(delegate(Registry registry)
+            IContainer manager = new InstanceManager(delegate(Registry registry)
             {
                 registry.ForRequestedType<IAddTypes>()
                     .AddConcreteType<RedAddTypes>("Red")
@@ -39,15 +39,15 @@ namespace StructureMap.Testing.Configuration.DSL
                     .AddConcreteType<PurpleAddTypes>();
             });
 
-            Assert.IsInstanceOfType(typeof (RedAddTypes), manager.CreateInstance<IAddTypes>("Red"));
-            Assert.IsInstanceOfType(typeof (GreenAddTypes), manager.CreateInstance<IAddTypes>("Green"));
-            Assert.IsInstanceOfType(typeof (BlueAddTypes), manager.CreateInstance<IAddTypes>("Blue"));
+            Assert.IsInstanceOfType(typeof (RedAddTypes), manager.GetInstance<IAddTypes>("Red"));
+            Assert.IsInstanceOfType(typeof (GreenAddTypes), manager.GetInstance<IAddTypes>("Green"));
+            Assert.IsInstanceOfType(typeof (BlueAddTypes), manager.GetInstance<IAddTypes>("Blue"));
         }
 
         [Test]
         public void A_concrete_type_is_available_when_it_is_added_by_the_shorthand_mechanism()
         {
-            IInstanceManager manager = new InstanceManager(delegate(Registry registry)
+            IContainer manager = new InstanceManager(delegate(Registry registry)
             {
                 registry.ForRequestedType<IAddTypes>()
                     .AddConcreteType<RedAddTypes>()
@@ -64,7 +64,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void Make_sure_that_we_dont_double_dip_instances_when_we_register_a_type_with_a_name()
         {
-            IInstanceManager manager = new InstanceManager(delegate(Registry registry)
+            IContainer manager = new InstanceManager(delegate(Registry registry)
             {
                 registry.ForRequestedType<IAddTypes>()
                     .AddConcreteType<RedAddTypes>("Red")

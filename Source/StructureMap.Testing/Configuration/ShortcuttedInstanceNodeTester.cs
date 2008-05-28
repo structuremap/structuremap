@@ -49,17 +49,17 @@ namespace StructureMap.Testing.Configuration
         [Test]
         public void GetTheRule()
         {
-            ColorRule rule = (ColorRule) _manager.CreateInstance<Rule>("Blue");
+            ColorRule rule = (ColorRule) _manager.GetInstance<Rule>("Blue");
             Assert.AreEqual("Blue", rule.Color);
         }
 
         [Test]
         public void GetTheWidget()
         {
-            ColorWidget widget = (ColorWidget) _manager.CreateInstance<IWidget>("Red");
+            ColorWidget widget = (ColorWidget) _manager.GetInstance<IWidget>("Red");
             Assert.AreEqual("Red", widget.Color);
 
-            ColorWidget widget2 = (ColorWidget) _manager.CreateInstance<IWidget>("Red");
+            ColorWidget widget2 = (ColorWidget) _manager.GetInstance<IWidget>("Red");
             Assert.AreNotSame(widget, widget2);
         }
 

@@ -31,7 +31,7 @@ namespace StructureMap.Testing.Container
 
         #endregion
 
-        private IInstanceManager _manager;
+        private IContainer _manager;
 
         private void addColorMemento(string Color)
         {
@@ -73,7 +73,7 @@ namespace StructureMap.Testing.Container
         [Test]
         public void CanBuildConcreteTypesThatAreNotPreviouslyRegistered()
         {
-            IInstanceManager manager = new InstanceManager(delegate(Registry registry)
+            IContainer manager = new InstanceManager(delegate(Registry registry)
             {
                 // Create a new InstanceManager that has a default instance configured for only the
                 // IProvider interface.  InstanceManager is the real "container" behind ObjectFactory
@@ -83,14 +83,14 @@ namespace StructureMap.Testing.Container
             // Now, have that same InstanceManager create a ClassThatUsesProvider.  StructureMap will
             // see that ClassThatUsesProvider is concrete, determine its constructor args, and build one 
             // for you with the default IProvider.  No other configuration necessary.
-            ClassThatUsesProvider classThatUsesProvider = manager.CreateInstance<ClassThatUsesProvider>();
+            ClassThatUsesProvider classThatUsesProvider = manager.GetInstance<ClassThatUsesProvider>();
             Assert.IsInstanceOfType(typeof (Provider), classThatUsesProvider.Provider);
         }
 
         [Test]
         public void CanBuildConcreteTypesThatAreNotPreviouslyRegisteredWithArgumentsProvided()
         {
-            IInstanceManager manager = new InstanceManager(delegate(Registry registry)
+            IContainer manager = new InstanceManager(delegate(Registry registry)
             {
                 registry.ForRequestedType<IProvider>().TheDefaultIsConcreteType<Provider>();
             });
@@ -99,7 +99,7 @@ namespace StructureMap.Testing.Container
             ExplicitArguments args = new ExplicitArguments();
             args.Set<IProvider>(differentProvider);
 
-            ClassThatUsesProvider classThatUsesProvider = manager.CreateInstance<ClassThatUsesProvider>(args);
+            ClassThatUsesProvider classThatUsesProvider = manager.GetInstance<ClassThatUsesProvider>(args);
             Assert.AreSame(differentProvider, classThatUsesProvider.Provider);
         }
 
@@ -127,7 +127,7 @@ namespace StructureMap.Testing.Container
             addColorMemento("Blue");
 
             _manager.SetDefault(typeof (Rule), "Blue");
-            ColorRule rule = _manager.CreateInstance(typeof (Rule)) as ColorRule;
+            ColorRule rule = _manager.GetInstance(typeof (Rule)) as ColorRule;
 
             Assert.IsNotNull(rule);
             Assert.AreEqual("Blue", rule.Color);
@@ -140,15 +140,15 @@ namespace StructureMap.Testing.Container
             addColorMemento("Orange");
             addColorMemento("Blue");
 
-            ColorRule rule = _manager.CreateInstance(typeof (Rule), "Blue") as ColorRule;
+            ColorRule rule = _manager.GetInstance(typeof (Rule), "Blue") as ColorRule;
             Assert.IsNotNull(rule);
             Assert.AreEqual("Blue", rule.Color);
 
-            ColorWidget widget = _manager.CreateInstance(typeof (IWidget), "Red") as ColorWidget;
+            ColorWidget widget = _manager.GetInstance(typeof (IWidget), "Red") as ColorWidget;
             Assert.IsNotNull(widget);
             Assert.AreEqual("Red", widget.Color);
 
-            ColorWidgetMaker maker = _manager.CreateInstance(typeof (WidgetMaker), "Orange") as ColorWidgetMaker;
+            ColorWidgetMaker maker = _manager.GetInstance(typeof (WidgetMaker), "Orange") as ColorWidgetMaker;
             Assert.IsNotNull(maker);
             Assert.AreEqual("Orange", maker.Color);
         }
@@ -156,20 +156,20 @@ namespace StructureMap.Testing.Container
         [Test, ExpectedException(typeof (StructureMapException))]
         public void GetMissingType()
         {
-            object o = _manager.CreateInstance(typeof (string));
+            object o = _manager.GetInstance(typeof (string));
         }
 
 
-        private void assertColorIs(IInstanceManager manager, string color)
+        private void assertColorIs(IContainer manager, string color)
         {
-            ColorService rule = (ColorService) manager.CreateInstance<IService>();
+            ColorService rule = (ColorService) manager.GetInstance<IService>();
             Assert.AreEqual(color, rule.Color);
         }
 
         [Test]
         public void SetDefaultInstanceByString()
         {
-            IInstanceManager manager = new InstanceManager(delegate(Registry registry)
+            IContainer manager = new InstanceManager(delegate(Registry registry)
             {
                 registry.ForRequestedType<IService>()
                     .AddInstance(Instance<ColorService>().WithName("Red").WithProperty("color").EqualTo("Red"))
@@ -190,7 +190,7 @@ namespace StructureMap.Testing.Container
         [Test]
         public void Can_set_profile_name_and_reset_defaults()
         {
-            IInstanceManager manager = new InstanceManager(delegate(Registry registry)
+            IContainer manager = new InstanceManager(delegate(Registry registry)
             {
                 registry.ForRequestedType<IService>()
                     .TheDefaultIs(Instance<ColorService>().WithName("Orange").WithProperty("color").EqualTo("Orange"))
@@ -218,7 +218,7 @@ namespace StructureMap.Testing.Container
         public void TryToGetDefaultInstanceWithNoInstance()
         {
             InstanceManager manager = new InstanceManager(new PluginGraph());
-            manager.CreateInstance<IService>();
+            manager.GetInstance<IService>();
         }
 
         [Test, ExpectedException(typeof(StructureMapConfigurationException))]

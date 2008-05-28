@@ -62,11 +62,11 @@ namespace StructureMap.Testing.Configuration
 
             InstanceManager manager = new InstanceManager(graph);
 
-            GrandChild tommy = (GrandChild) manager.CreateInstance(typeof (GrandChild), "Tommy");
+            GrandChild tommy = (GrandChild) manager.GetInstance(typeof (GrandChild), "Tommy");
             Assert.AreEqual(false, tommy.RightHanded);
             Assert.AreEqual(1972, tommy.BirthYear);
 
-            ColorWidget blue = (ColorWidget) manager.CreateInstance(typeof (IWidget), "Blue");
+            ColorWidget blue = (ColorWidget) manager.GetInstance(typeof (IWidget), "Blue");
             Assert.AreEqual("Blue", blue.Color);
         }
     }

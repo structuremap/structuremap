@@ -10,10 +10,10 @@ namespace StructureMap
     public class ExplicitArgsExpression : IExplicitProperty
     {
         private readonly ExplicitArguments _args = new ExplicitArguments();
-        private readonly IInstanceManager _manager;
+        private readonly IContainer _manager;
         private string _lastArgName;
 
-        internal ExplicitArgsExpression(IInstanceManager manager)
+        internal ExplicitArgsExpression(IContainer manager)
         {
             _manager = manager;
         }
@@ -43,7 +43,7 @@ namespace StructureMap
 
         public T GetInstance<T>()
         {
-            return _manager.CreateInstance<T>(_args);
+            return _manager.GetInstance<T>(_args);
         }
     }
 }
