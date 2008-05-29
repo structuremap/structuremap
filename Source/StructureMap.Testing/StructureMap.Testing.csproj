@@ -214,7 +214,7 @@
     <Compile Include="Container\InstanceFactoryTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Container\InstanceManagerTester.cs">
+    <Compile Include="Container\ContainerTester.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Container\IntegratedTester.cs">

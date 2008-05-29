@@ -13,7 +13,7 @@ using StructureMap.Testing.Widget3;
 namespace StructureMap.Testing.Container
 {
     [TestFixture]
-    public class InstanceManagerTester : Registry
+    public class ContainerTester : Registry
     {
         #region Setup/Teardown
 

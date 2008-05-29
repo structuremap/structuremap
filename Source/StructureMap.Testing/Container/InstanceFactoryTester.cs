@@ -94,5 +94,21 @@ namespace StructureMap.Testing.Container
             Assert.IsNotNull(factory.FindInstance("New2"));
             Assert.IsNotNull(factory.FindInstance("New3"));
         }
+
+        [Test]
+        public void Merge_from_PluginFamily_will_not_replace_an_existing_instance()
+        {
+            InstanceFactory factory = new InstanceFactory(typeof(IWidget));
+            LiteralInstance instance1 = new LiteralInstance(new AWidget()).WithName("New");
+            factory.AddInstance(instance1);
+
+            PluginFamily family = new PluginFamily(typeof(IWidget));
+            family.AddInstance(new LiteralInstance(new AWidget()).WithName("New"));
+
+            factory.Merge(family);
+
+            Assert.AreSame(instance1, factory.FindInstance("New"));
+
+        }
     }
 }

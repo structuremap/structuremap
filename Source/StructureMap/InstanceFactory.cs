@@ -157,6 +157,11 @@ namespace StructureMap
             _instanceBuilders.Add(family.Plugins);
             foreach (Instance instance in family.GetAllInstances())
             {
+                if (_instances.ContainsKey(instance.Name))
+                {
+                    continue;
+                }
+                
                 AddInstance(instance);
             }
         }
