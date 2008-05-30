@@ -182,5 +182,20 @@ namespace StructureMap.Pipeline
                 pair.Value.CopyDefault(basicType, templatedType);
             }
         }
+
+        public void ImportFrom(ProfileManager source)
+        {
+            foreach (KeyValuePair<string, Profile> pair in source._profiles)
+            {
+                Profile fromProfile = pair.Value;
+                Profile toProfile = getProfile(pair.Key);
+
+                fromProfile.FillAllTypesInto(toProfile);
+            }
+
+            source._default.FillAllTypesInto(_default);
+
+            setProfileDefaults(new GraphLog());
+        }
     }
 }

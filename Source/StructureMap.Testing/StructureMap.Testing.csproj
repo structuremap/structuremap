@@ -332,6 +332,7 @@
     <Compile Include="Pipeline\DefaultInstanceTester.cs" />
     <Compile Include="Pipeline\InstanceTester.cs" />
     <Compile Include="Pipeline\LiteralInstanceTester.cs" />
+    <Compile Include="Pipeline\ProfileManagerMergeTester.cs" />
     <Compile Include="Pipeline\ProfileManagerTester.cs" />
     <Compile Include="Pipeline\ProfileTester.cs" />
     <Compile Include="Pipeline\PrototypeInstanceTester.cs" />
