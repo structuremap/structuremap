@@ -5,7 +5,7 @@ namespace StructureMap.Testing.Graph
 {
     public class ParameterInfoCollection
     {
-        private Hashtable _parameters;
+        private readonly Hashtable _parameters;
 
         public ParameterInfoCollection(ConstructorInfo constructor)
         {

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using StructureMap.Graph;
 using StructureMap.Pipeline;
 
 namespace StructureMap
@@ -21,5 +22,6 @@ namespace StructureMap
         InstanceBuilder FindBuilderByType(Type pluggedType);
         InstanceBuilder FindBuilderByConcreteKey(string concreteKey);
         void ForEachInstance(Action<Instance> action);
+        void ImportFrom(PluginFamily family);
     }
 }

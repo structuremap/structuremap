@@ -1,19 +1,13 @@
 using NUnit.Framework;
+using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
-using StructureMap.Pipeline;
-using StructureMap.Source;
 using StructureMap.Testing.Widget2;
 
-namespace StructureMap.Testing.Container
+namespace StructureMap.Testing.Graph
 {
     [TestFixture]
     public class EnumerationTester
     {
-        public EnumerationTester()
-        {
-        }
-
-
         [Test]
         public void BuildClassWithEnumeration()
         {
@@ -23,17 +17,16 @@ namespace StructureMap.Testing.Container
             PluginFamily family = graph.FindFamily(typeof (Cow));
             family.AddPlugin(typeof (Cow), "Default");
 
-            StructureMap.Container manager = new StructureMap.Container(graph);
+            Container manager = new Container(graph);
 
-            ConfiguredInstance instance = new ConfiguredInstance()
-                .WithConcreteKey("Default").WithName("Angus")
-                .WithProperty("Name").EqualTo("Bessie")
-                .WithProperty("Breed").EqualTo("Angus")
-                .WithProperty("Weight").EqualTo("1200");
-
-            
-            
-            manager.AddInstance<Cow>(instance);
+            manager.Configure(delegate(Registry registry)
+            {
+                registry.AddInstanceOf<Cow>().UsingConcreteTypeNamed("Default")
+                    .WithName("Angus")
+                    .WithProperty("Name").EqualTo("Bessie")
+                    .WithProperty("Breed").EqualTo("Angus")
+                    .WithProperty("Weight").EqualTo("1200");
+            });
 
             Cow angus = manager.GetInstance<Cow>("Angus");
 

@@ -1,7 +1,5 @@
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
-using StructureMap.Configuration.DSL.Expressions;
-using StructureMap.Graph;
 using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing.Configuration.DSL
@@ -18,11 +16,10 @@ namespace StructureMap.Testing.Configuration.DSL
 
         #endregion
 
-
         [Test, ExpectedException(typeof (StructureMapException))]
         public void BlowUpIfNoPropertyIsFoundForType()
         {
-            Registry.Instance<IWidget>().UsingConcreteType<AWidget>().Child<Rule>();
+            RegistryExpressions.Instance<IWidget>().UsingConcreteType<AWidget>().Child<Rule>();
         }
     }
 }

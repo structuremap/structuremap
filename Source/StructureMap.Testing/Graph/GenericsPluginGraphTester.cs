@@ -37,14 +37,16 @@ namespace StructureMap.Testing.Graph
             family.AddPlugin(typeof (SecondGenericService<>), "Second");
             family.AddPlugin(typeof (ThirdGenericService<>), "Third");
 
-            StructureMap.Container manager = new StructureMap.Container(pluginGraph);
+            Container manager = new Container(pluginGraph);
 
             GenericService<int> intService = (GenericService<int>) manager.GetInstance<IGenericService<int>>();
             Assert.AreEqual(typeof (int), intService.GetT());
 
-            Assert.IsInstanceOfType(typeof(SecondGenericService<int>), manager.GetInstance<IGenericService<int>>("Second"));
+            Assert.IsInstanceOfType(typeof (SecondGenericService<int>),
+                                    manager.GetInstance<IGenericService<int>>("Second"));
 
-            GenericService<string> stringService = (GenericService<string>) manager.GetInstance<IGenericService<string>>();
+            GenericService<string> stringService =
+                (GenericService<string>) manager.GetInstance<IGenericService<string>>();
             Assert.AreEqual(typeof (string), stringService.GetT());
         }
 
@@ -52,38 +54,39 @@ namespace StructureMap.Testing.Graph
         public void BuildTemplatedFamilyWithOnlyOneTemplateParameter()
         {
             PluginGraph pluginGraph = new PluginGraph();
-            PluginFamily family = pluginGraph.FindFamily(typeof(IGenericService<>));
+            PluginFamily family = pluginGraph.FindFamily(typeof (IGenericService<>));
             family.AddPlugin(typeof (GenericService<>), "Default");
             family.AddPlugin(typeof (SecondGenericService<>), "Second");
             family.AddPlugin(typeof (ThirdGenericService<>), "Third");
 
-            PluginFamily templatedFamily = GenericsPluginGraph.CreateTemplatedClone(family, typeof(int));
+            PluginFamily templatedFamily = GenericsPluginGraph.CreateTemplatedClone(family, typeof (int));
 
             Assert.IsNotNull(templatedFamily);
             Assert.AreEqual(typeof (IGenericService<int>), templatedFamily.PluginType);
 
             Assert.AreEqual(3, templatedFamily.Plugins.Count);
-            Assert.AreEqual(typeof (GenericService<int>), templatedFamily.Plugins["Default"].PluggedType);
-            Assert.AreEqual(typeof (SecondGenericService<int>), templatedFamily.Plugins["Second"].PluggedType);
-            Assert.AreEqual(typeof (ThirdGenericService<int>), templatedFamily.Plugins["Third"].PluggedType);
+            Assert.IsNotNull(templatedFamily.Plugins[typeof (GenericService<int>)]);
+            Assert.IsNotNull(templatedFamily.Plugins[typeof (SecondGenericService<int>)]);
+            Assert.IsNotNull(templatedFamily.Plugins[typeof (ThirdGenericService<int>)]);
         }
 
         [Test]
         public void BuildTemplatedFamilyWithThreeTemplateParameters()
         {
             PluginGraph pluginGraph = new PluginGraph();
-            PluginFamily family = pluginGraph.FindFamily(typeof(IGenericService3<,,>));
+            PluginFamily family = pluginGraph.FindFamily(typeof (IGenericService3<,,>));
             family.AddPlugin(typeof (GenericService3<,,>), "Default");
             family.AddPlugin(typeof (SecondGenericService3<,,>), "Second");
             family.AddPlugin(typeof (ThirdGenericService3<,,>), "Third");
 
-            PluginFamily templatedFamily = GenericsPluginGraph.CreateTemplatedClone(family, typeof (int), typeof (bool), typeof (string));
+            PluginFamily templatedFamily = GenericsPluginGraph.CreateTemplatedClone(family, typeof (int), typeof (bool),
+                                                                                    typeof (string));
 
             Assert.IsNotNull(templatedFamily);
             Assert.AreEqual(typeof (IGenericService3<int, bool, string>), templatedFamily.PluginType);
 
             Assert.AreEqual(3, templatedFamily.Plugins.Count);
-            
+
             Assert.AreEqual(typeof (GenericService3<int, bool, string>), templatedFamily.Plugins["Default"].PluggedType);
             Assert.AreEqual(typeof (SecondGenericService3<int, bool, string>),
                             templatedFamily.Plugins["Second"].PluggedType);
@@ -109,7 +112,7 @@ namespace StructureMap.Testing.Graph
         public void GetTemplatedFamily()
         {
             PluginGraph pluginGraph = new PluginGraph();
-            PluginFamily family = pluginGraph.FindFamily(typeof(IGenericService<>));
+            PluginFamily family = pluginGraph.FindFamily(typeof (IGenericService<>));
             family.AddPlugin(typeof (GenericService<>), "Default");
             family.AddPlugin(typeof (SecondGenericService<>), "Second");
             family.AddPlugin(typeof (ThirdGenericService<>), "Third");
@@ -117,7 +120,8 @@ namespace StructureMap.Testing.Graph
             GenericsPluginGraph genericsGraph = new GenericsPluginGraph();
             genericsGraph.AddFamily(family);
 
-            PluginFamily templatedFamily = genericsGraph.CreateTemplatedFamily(typeof (IGenericService<int>), new ProfileManager());
+            PluginFamily templatedFamily = genericsGraph.CreateTemplatedFamily(typeof (IGenericService<int>),
+                                                                               new ProfileManager());
 
             Assert.IsNotNull(templatedFamily);
             Assert.AreEqual(typeof (IGenericService<int>), templatedFamily.PluginType);
@@ -127,6 +131,25 @@ namespace StructureMap.Testing.Graph
         public void ImplementationOfInterfaceFromBaseType()
         {
             assertCanBeCast(typeof (ISomething<>), typeof (SpecificService<>));
+        }
+
+        [Test]
+        public void Import_from_adds_all_new_PluginFamily_from_source()
+        {
+            PluginFamily sourceFamily = new PluginFamily(typeof (ISomething<>));
+            PluginFamily sourceFamily2 = new PluginFamily(typeof (ISomething2<>));
+            PluginFamily sourceFamily3 = new PluginFamily(typeof (ISomething3<>));
+            GenericsPluginGraph source = new GenericsPluginGraph();
+            source.AddFamily(sourceFamily);
+            source.AddFamily(sourceFamily2);
+            source.AddFamily(sourceFamily3);
+
+            GenericsPluginGraph destination = new GenericsPluginGraph();
+            destination.ImportFrom(source);
+
+            Assert.AreEqual(3, destination.FamilyCount);
+
+            Assert.AreNotSame(sourceFamily, destination.FindFamily(typeof (ISomething<>)));
         }
 
         [Test]
@@ -165,6 +188,14 @@ namespace StructureMap.Testing.Graph
     }
 
     public interface ISomething<T>
+    {
+    }
+
+    public interface ISomething2<T>
+    {
+    }
+
+    public interface ISomething3<T>
     {
     }
 

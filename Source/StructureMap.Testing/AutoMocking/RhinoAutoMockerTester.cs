@@ -137,7 +137,7 @@ namespace StructureMap.Testing.AutoMocking
             IMockedService3 service3 = _container.GetInstance<IMockedService3>();
 
             ConcreteClass concreteClass = _container.FillDependencies<ConcreteClass>();
-            
+
             Assert.AreSame(service, concreteClass.Service);
             Assert.AreSame(service2, concreteClass.Service2);
             Assert.AreSame(service3, concreteClass.Service3);

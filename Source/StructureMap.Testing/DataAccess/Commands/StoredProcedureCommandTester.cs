@@ -50,7 +50,7 @@ namespace StructureMap.Testing.DataAccess.Commands
 
             _command.Execute();
 
-            Assert.AreEqual("Hello!", (string) _command["@param5"]);
+            Assert.AreEqual("Hello!", _command["@param5"]);
             Assert.AreEqual(2, (int) _command["@param4"]);
         }
 

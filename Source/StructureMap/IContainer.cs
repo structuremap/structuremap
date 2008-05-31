@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using StructureMap.Configuration.DSL;
 using StructureMap.Pipeline;
 
 namespace StructureMap
@@ -11,43 +12,30 @@ namespace StructureMap
         T GetInstance<T>();
         T FillDependencies<T>();
         object FillDependencies(Type type);
-        void InjectStub<T>(T instance);
+        
         IList<T> GetAllInstances<T>();
-        void SetDefaultsToProfile(string profile);
+        
 
         T GetInstance<T>(Instance instance);
 
-        /// <summary>
-        /// Sets up the Container to return the object in the "stub" argument anytime
-        /// any instance of the PluginType is requested
-        /// </summary>
-        /// <param name="pluginType"></param>
-        /// <param name="stub"></param>
-        void InjectStub(Type pluginType, object stub);
-
         IList GetAllInstances(Type type);
-        void AddInstance<T>(Instance instance);
-        void AddInstance<PLUGINTYPE, CONCRETETYPE>() where CONCRETETYPE : PLUGINTYPE;
-        void AddDefaultInstance<PLUGINTYPE, CONCRETETYPE>();
+
+        void Configure(Action<Registry> configure);
         void Inject<PLUGINTYPE>(PLUGINTYPE instance);
-        void InjectByName<PLUGINTYPE>(PLUGINTYPE instance, string instanceKey);
-        void InjectByName<PLUGINTYPE, CONCRETETYPE>(string instanceKey);
+        void InjectStub(Type pluginType, object stub);
+        void InjectStub<T>(T instance);
+        void InjectStub<T>(string name, T instance);
+
+        void SetDefault(Type pluginType, string instanceKey);
+        void SetDefault(Type pluginType, Instance instance);
+        void SetDefault<T>(Instance instance);
+        void SetDefault<PLUGINTYPE, CONCRETETYPE>() where CONCRETETYPE : PLUGINTYPE;
+        void SetDefaultsToProfile(string profile);
 
         string WhatDoIHave();
 
-        /// <summary>
-        /// Sets the default instance for the PluginType
-        /// </summary>
-        /// <param name="pluginType"></param>
-        /// <param name="instance"></param>
-        void SetDefault(Type pluginType, Instance instance);
 
-        /// <summary>
-        /// Sets the default instance for the PluginType
-        /// </summary>
-        /// <param name="pluginType"></param>
-        /// <param name="instanceKey"></param>
-        void SetDefault(Type pluginType, string instanceKey);
+        
 
         /// <summary>
         /// Creates a new object instance of the requested type

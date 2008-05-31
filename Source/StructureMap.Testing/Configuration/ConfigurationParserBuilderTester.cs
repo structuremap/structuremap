@@ -53,10 +53,20 @@ namespace StructureMap.Testing.Configuration
             Converter<ConfigurationParser, string> converter =
                 delegate(ConfigurationParser parser) { return parser.Id; };
 
-            string[] actuals = Array.ConvertAll<ConfigurationParser, string>(parsers, converter);
+            string[] actuals = Array.ConvertAll(parsers, converter);
             Array.Sort(actuals);
 
             Assert.AreEqual(expected, actuals);
+        }
+
+        [Test]
+        public void Do_NOT_Log_exception_100_if_StructureMap_config_is_required_and_missing()
+        {
+            assertNoErrorIsLogged(100, delegate
+            {
+                DataMother.RemoveStructureMapConfig();
+                builder.UseAndEnforceExistenceOfDefaultFile = false;
+            });
         }
 
         [Test]
@@ -71,93 +81,6 @@ namespace StructureMap.Testing.Configuration
 
             builder.IncludeFile("GenericsTesting.xml");
             assertParserIdList("Generics");
-        }
-
-        [Test]
-        public void Put_the_file_name_onto_ConfigurationParser()
-        {
-            builder.UseAndEnforceExistenceOfDefaultFile = false;
-            builder.IgnoreDefaultFile = true;
-
-            DataMother.WriteDocument("GenericsTesting.xml");
-
-            builder.IncludeFile("GenericsTesting.xml");
-
-            ConfigurationParser[] parsers = builder.GetParsers();
-            Assert.AreEqual("GenericsTesting.xml", parsers[0].Description);
-        }
-
-        [Test]
-        public void If_adding_a_node_directly_use_stacktrace_to_get_the_node()
-        {
-
-        }
-
-        [Test]
-        public void Log_exception_100_if_StructureMap_config_is_required_and_missing()
-        {
-            assertErrorIsLogged(100, delegate()
-                                         {
-                                             DataMother.RemoveStructureMapConfig();
-                                             builder.UseAndEnforceExistenceOfDefaultFile = true;
-                                         });
-        }
-
-        [Test]
-        public void Do_NOT_Log_exception_100_if_StructureMap_config_is_required_and_missing()
-        {
-            assertNoErrorIsLogged(100, delegate()
-                                         {
-                                             DataMother.RemoveStructureMapConfig();
-                                             builder.UseAndEnforceExistenceOfDefaultFile = false;
-                                         });
-        }
-
-        [Test]
-        public void Log_exception_160_if_additional_file_cannot_be_opened()
-        {
-            assertErrorIsLogged(160, delegate()
-                                         {
-                                             builder.IncludeFile("FileThatDoesNotExist.xml");
-                                         });
-        }
-
-        [Test]
-        public void Log_exception_160_if_file_is_malformed()
-        {
-            assertErrorIsLogged(160, delegate()
-                             {
-                                 XmlDocument doc = new XmlDocument();
-                                 doc.LoadXml("<a></a>");
-                                 doc.Save("Malformed.xml");
-                                 builder.IncludeFile("Malformed.xml");
-                             });
-        }
-
-
-        [Test]
-        public void Log_error_150_if_a_designated_Include_cannot_be_opened()
-        {
-            assertErrorIsLogged(150, delegate()
-                                         {
-                                             builder.IncludeFile("Master.xml");
-
-                                             DataMother.WriteDocument("Include1.xml");
-                                             File.Delete("Include2.xml");
-                                             DataMother.WriteDocument("Master.xml");
-
-                                             builder.IgnoreDefaultFile = true;
-                                         });
-        }
-
-        [Test]
-        public void Log_error_156_if_Include_node_does_not_have_a_File()
-        {
-            DataMother.WriteDocument("MissingInclude.xml", "<StructureMap><Include></Include></StructureMap>");
-            assertErrorIsLogged(156, delegate()
-                                         {
-                                             builder.IncludeFile("MissingInclude.xml");
-                                         });
         }
 
         [Test]
@@ -191,6 +114,76 @@ namespace StructureMap.Testing.Configuration
 
             assertParserIdList("Generics", "Include1", "Include2", "Main", "Master");
         }
+
+        [Test]
+        public void If_adding_a_node_directly_use_stacktrace_to_get_the_node()
+        {
+        }
+
+        [Test]
+        public void Log_error_150_if_a_designated_Include_cannot_be_opened()
+        {
+            assertErrorIsLogged(150, delegate
+            {
+                builder.IncludeFile("Master.xml");
+
+                DataMother.WriteDocument("Include1.xml");
+                File.Delete("Include2.xml");
+                DataMother.WriteDocument("Master.xml");
+
+                builder.IgnoreDefaultFile = true;
+            });
+        }
+
+        [Test]
+        public void Log_error_156_if_Include_node_does_not_have_a_File()
+        {
+            DataMother.WriteDocument("MissingInclude.xml", "<StructureMap><Include></Include></StructureMap>");
+            assertErrorIsLogged(156, delegate { builder.IncludeFile("MissingInclude.xml"); });
+        }
+
+        [Test]
+        public void Log_exception_100_if_StructureMap_config_is_required_and_missing()
+        {
+            assertErrorIsLogged(100, delegate
+            {
+                DataMother.RemoveStructureMapConfig();
+                builder.UseAndEnforceExistenceOfDefaultFile = true;
+            });
+        }
+
+        [Test]
+        public void Log_exception_160_if_additional_file_cannot_be_opened()
+        {
+            assertErrorIsLogged(160, delegate { builder.IncludeFile("FileThatDoesNotExist.xml"); });
+        }
+
+        [Test]
+        public void Log_exception_160_if_file_is_malformed()
+        {
+            assertErrorIsLogged(160, delegate
+            {
+                XmlDocument doc = new XmlDocument();
+                doc.LoadXml("<a></a>");
+                doc.Save("Malformed.xml");
+                builder.IncludeFile("Malformed.xml");
+            });
+        }
+
+        [Test]
+        public void Put_the_file_name_onto_ConfigurationParser()
+        {
+            builder.UseAndEnforceExistenceOfDefaultFile = false;
+            builder.IgnoreDefaultFile = true;
+
+            DataMother.WriteDocument("GenericsTesting.xml");
+
+            builder.IncludeFile("GenericsTesting.xml");
+
+            ConfigurationParser[] parsers = builder.GetParsers();
+            Assert.AreEqual("GenericsTesting.xml", parsers[0].Description);
+        }
+
 
         [Test]
         public void SimpleDefaultConfigurationParser()

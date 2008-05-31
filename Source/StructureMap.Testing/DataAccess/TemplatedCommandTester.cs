@@ -77,6 +77,5 @@ namespace StructureMap.Testing.DataAccess
             string actual = command.GetSql();
             Assert.AreEqual("update LOG set UPDATE_DATE = '5/1/2005'", actual);
         }
-
     }
 }

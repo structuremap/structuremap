@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using NUnit.Framework;
-using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
@@ -60,14 +59,12 @@ namespace StructureMap.Testing.Configuration.DSL
         public void FindRegistriesWithinPluginGraphSeal()
         {
             PluginGraph graph = new PluginGraph();
-            graph.Assemblies.Add(typeof(RedGreenRegistry).Assembly);
+            graph.Assemblies.Add(typeof (RedGreenRegistry).Assembly);
             graph.Seal();
 
             List<string> colors = new List<string>();
-            foreach (Instance instance in graph.FindFamily(typeof (IWidget)).GetAllInstances())
-            {
-                colors.Add(instance.Name);
-            }
+            PluginFamily family = graph.FindFamily(typeof (IWidget));
+            family.EachInstance(delegate(Instance instance) { colors.Add(instance.Name); });
 
             Assert.Contains("Red", colors);
             Assert.Contains("Green", colors);

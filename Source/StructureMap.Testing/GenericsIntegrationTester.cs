@@ -14,7 +14,8 @@ namespace StructureMap.Testing
         [SetUp]
         public void SetUp()
         {
-            string xml = @"
+            string xml =
+                @"
 <StructureMap Id='Generics'>
   <Assembly Name='StructureMap.Testing.GenericWidgets'/>
 
@@ -41,12 +42,12 @@ namespace StructureMap.Testing
 ";
 
             PluginGraph graph = DataMother.BuildPluginGraphFromXml(xml);
-            manager = new StructureMap.Container(graph);
+            manager = new Container(graph);
         }
 
         #endregion
 
-        private StructureMap.Container manager;
+        private Container manager;
 
         [Test]
         public void AllTypesWithSpecificImplementation()
@@ -60,14 +61,6 @@ namespace StructureMap.Testing
 
             Assert.IsNotNull(stringConcepts);
             Assert.AreEqual(1, stringConcepts.Count);
-        }
-
-        [Test]
-        public void Plugin_can_service_a_generic_type()
-        {
-            Assert.IsTrue(GenericsPluginGraph.CanBePluggedIntoGenericType(typeof(IConcept<>), typeof(SpecificConcept), typeof(object)));
-            Assert.IsFalse(GenericsPluginGraph.CanBePluggedIntoGenericType(typeof(IConcept<>), typeof(SpecificConcept), typeof(string)));
-            Assert.IsFalse(GenericsPluginGraph.CanBePluggedIntoGenericType(typeof(IConcept<>), typeof(SpecificConcept), typeof(int)));
         }
 
 
@@ -96,6 +89,17 @@ namespace StructureMap.Testing
         {
             ISimpleThing<int> thing = (ISimpleThing<int>) manager.GetInstance(typeof (ISimpleThing<int>));
             Assert.IsNotNull(thing);
+        }
+
+        [Test]
+        public void Plugin_can_service_a_generic_type()
+        {
+            Assert.IsTrue(GenericsPluginGraph.CanBePluggedIntoGenericType(typeof (IConcept<>), typeof (SpecificConcept),
+                                                                          typeof (object)));
+            Assert.IsFalse(GenericsPluginGraph.CanBePluggedIntoGenericType(typeof (IConcept<>), typeof (SpecificConcept),
+                                                                           typeof (string)));
+            Assert.IsFalse(GenericsPluginGraph.CanBePluggedIntoGenericType(typeof (IConcept<>), typeof (SpecificConcept),
+                                                                           typeof (int)));
         }
 
         [Test]

@@ -1,9 +1,6 @@
 using System;
 using NUnit.Framework;
-using Rhino.Mocks;
 using StructureMap.Configuration.DSL;
-using StructureMap.Graph;
-using StructureMap.Pipeline;
 using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Configuration.DSL
@@ -19,15 +16,10 @@ namespace StructureMap.Testing.Configuration.DSL
         }
 
         #endregion
-
     }
 
     public class TestRegistry : Registry
     {
-        public TestRegistry()
-        {
-        }
-
     }
 
     public class FakeGateway : IGateway

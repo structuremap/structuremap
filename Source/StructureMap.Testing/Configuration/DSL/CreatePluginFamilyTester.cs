@@ -38,8 +38,8 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void Add_an_instance_by_lambda()
         {
-            StructureMap.Container manager =
-                new StructureMap.Container(
+            Container manager =
+                new Container(
                     delegate(Registry registry) { registry.ForRequestedType<IWidget>().AddInstance(delegate { return new AWidget(); }); });
 
             Assert.IsInstanceOfType(typeof (AWidget), manager.GetAllInstances<IWidget>()[0]);
@@ -50,8 +50,8 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             AWidget aWidget = new AWidget();
 
-            StructureMap.Container manager =
-                new StructureMap.Container(
+            Container manager =
+                new Container(
                     delegate(Registry registry) { registry.ForRequestedType<IWidget>().AddInstance(aWidget); });
 
             Assert.IsInstanceOfType(typeof (AWidget), manager.GetAllInstances<IWidget>()[0]);
@@ -60,11 +60,11 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void AddInstanceByNameOnlyAddsOneInstanceToStructureMap()
         {
-            IContainer manager = new StructureMap.Container(delegate(Registry registry)
+            IContainer manager = new Container(delegate(Registry registry)
             {
                 registry.ForRequestedType<Something>().AddInstance(
-    RegistryExpressions.Instance<Something>().UsingConcreteType<RedSomething>().WithName("Red")
-    );
+                    RegistryExpressions.Instance<Something>().UsingConcreteType<RedSomething>().WithName("Red")
+                    );
             });
             IList<Something> instances = manager.GetAllInstances<Something>();
             Assert.AreEqual(1, instances.Count);
@@ -73,10 +73,9 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void AddInstanceWithNameOnlyAddsOneInstanceToStructureMap()
         {
-            IContainer manager = new StructureMap.Container(delegate(Registry registry)
-            {
-                registry.AddInstanceOf<Something>().UsingConcreteType<RedSomething>().WithName("Red");
-            });
+            IContainer manager =
+                new Container(
+                    delegate(Registry registry) { registry.AddInstanceOf<Something>().UsingConcreteType<RedSomething>().WithName("Red"); });
             IList<Something> instances = manager.GetAllInstances<Something>();
             Assert.AreEqual(1, instances.Count);
         }
@@ -143,7 +142,7 @@ namespace StructureMap.Testing.Configuration.DSL
             PluginGraph pluginGraph = registry.Build();
             Assert.IsTrue(pluginGraph.ContainsFamily(typeof (IGateway)));
 
-            StructureMap.Container manager = new StructureMap.Container(pluginGraph);
+            Container manager = new Container(pluginGraph);
             IGateway gateway = (IGateway) manager.GetInstance(typeof (IGateway));
 
             Assert.IsInstanceOfType(typeof (StubbedGateway), gateway);
@@ -158,7 +157,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
             Assert.IsTrue(pluginGraph.ContainsFamily(typeof (IGateway)));
 
-            StructureMap.Container manager = new StructureMap.Container(pluginGraph);
+            Container manager = new Container(pluginGraph);
             IGateway gateway = (IGateway) manager.GetInstance(typeof (IGateway));
 
             Assert.IsInstanceOfType(typeof (FakeGateway), gateway);
@@ -167,10 +166,11 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void CreatePluginFamilyWithADefault()
         {
-            IContainer manager = new StructureMap.Container(delegate(Registry registry)
+            IContainer manager = new Container(delegate(Registry registry)
             {
                 registry.BuildInstancesOf<IWidget>().TheDefaultIs(
-                    RegistryExpressions.Instance<IWidget>().UsingConcreteType<ColorWidget>().WithProperty("Color").EqualTo(
+                    RegistryExpressions.Instance<IWidget>().UsingConcreteType<ColorWidget>().WithProperty("Color").
+                        EqualTo(
                         "Red")
                     );
             });
@@ -195,8 +195,8 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void Set_the_default_by_a_lambda()
         {
-            StructureMap.Container manager =
-                new StructureMap.Container(
+            Container manager =
+                new Container(
                     delegate(Registry registry) { registry.ForRequestedType<IWidget>().TheDefaultIs(delegate { return new AWidget(); }); });
 
             Assert.IsInstanceOfType(typeof (AWidget), manager.GetInstance<IWidget>());
@@ -207,8 +207,8 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             AWidget aWidget = new AWidget();
 
-            StructureMap.Container manager =
-                new StructureMap.Container(
+            Container manager =
+                new Container(
                     delegate(Registry registry) { registry.ForRequestedType<IWidget>().TheDefaultIs(aWidget); });
 
             Assert.AreSame(aWidget, manager.GetInstance<IWidget>());
@@ -217,7 +217,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void TheDefaultInstanceIsConcreteType()
         {
-            IContainer manager = new StructureMap.Container(delegate(Registry registry)
+            IContainer manager = new Container(delegate(Registry registry)
             {
                 // Needs to blow up if the concrete type can't be used
                 registry.BuildInstancesOf<Rule>().TheDefaultIsConcreteType<ARule>();
@@ -237,7 +237,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
             Assert.IsTrue(pluginGraph.ContainsFamily(typeof (IGateway)));
 
-            StructureMap.Container manager = new StructureMap.Container(pluginGraph);
+            Container manager = new Container(pluginGraph);
             IGateway gateway = (IGateway) manager.GetInstance(typeof (IGateway));
 
             Assert.IsInstanceOfType(typeof (DefaultGateway), gateway);

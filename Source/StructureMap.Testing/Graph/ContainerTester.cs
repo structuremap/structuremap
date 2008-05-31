@@ -3,14 +3,12 @@ using NUnit.Framework;
 using StructureMap.Configuration.DSL;
 using StructureMap.Exceptions;
 using StructureMap.Graph;
-using StructureMap.Interceptors;
 using StructureMap.Pipeline;
-using StructureMap.Source;
 using StructureMap.Testing.GenericWidgets;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
 
-namespace StructureMap.Testing.Container
+namespace StructureMap.Testing.Graph
 {
     [TestFixture]
     public class ContainerTester : Registry
@@ -20,7 +18,7 @@ namespace StructureMap.Testing.Container
         [SetUp]
         public void SetUp()
         {
-            _manager = new StructureMap.Container(delegate(Registry registry)
+            _manager = new Container(delegate(Registry registry)
             {
                 registry.ScanAssemblies().IncludeAssembly("StructureMap.Testing.Widget");
                 registry.BuildInstancesOf<Rule>();
@@ -35,11 +33,15 @@ namespace StructureMap.Testing.Container
 
         private void addColorMemento(string Color)
         {
-            ConfiguredInstance instance = new ConfiguredInstance(Color).WithConcreteKey("Color").SetProperty("Color", Color);
-            
-            _manager.AddInstance<Rule>(instance);
-            _manager.AddInstance<IWidget>(instance);
-            _manager.AddInstance<WidgetMaker>(instance);
+            ConfiguredInstance instance = new ConfiguredInstance(Color).WithConcreteKey("Color").SetProperty("Color",
+                                                                                                             Color);
+
+            _manager.Configure(delegate(Registry registry)
+            {
+                registry.AddInstanceOf<Rule>(instance);
+                registry.AddInstanceOf<IWidget>(instance);
+                registry.AddInstanceOf<WidgetMaker>(instance);
+            });
         }
 
         public interface IProvider
@@ -70,10 +72,43 @@ namespace StructureMap.Testing.Container
         {
         }
 
+        private void assertColorIs(IContainer manager, string color)
+        {
+            ColorService rule = (ColorService) manager.GetInstance<IService>();
+            Assert.AreEqual(color, rule.Color);
+        }
+
+        [Test]
+        public void Can_set_profile_name_and_reset_defaults()
+        {
+            IContainer manager = new Container(delegate(Registry registry)
+            {
+                registry.ForRequestedType<IService>()
+                    .TheDefaultIs(Instance<ColorService>().WithName("Orange").WithProperty("color").EqualTo("Orange"))
+                    .AddInstance(Instance<ColorService>().WithName("Red").WithProperty("color").EqualTo("Red"))
+                    .AddInstance(Instance<ColorService>().WithName("Blue").WithProperty("color").EqualTo("Blue"))
+                    .AddInstance(Instance<ColorService>().WithName("Green").WithProperty("color").EqualTo("Green"));
+
+                registry.CreateProfile("Red").For<IService>().UseNamedInstance("Red");
+                registry.CreateProfile("Blue").For<IService>().UseNamedInstance("Blue");
+            });
+
+            assertColorIs(manager, "Orange");
+
+            manager.SetDefaultsToProfile("Red");
+            assertColorIs(manager, "Red");
+
+            manager.SetDefaultsToProfile("Blue");
+            assertColorIs(manager, "Blue");
+
+            manager.SetDefaultsToProfile(string.Empty);
+            assertColorIs(manager, "Orange");
+        }
+
         [Test]
         public void CanBuildConcreteTypesThatAreNotPreviouslyRegistered()
         {
-            IContainer manager = new StructureMap.Container(delegate(Registry registry)
+            IContainer manager = new Container(delegate(Registry registry)
             {
                 // Create a new Container that has a default instance configured for only the
                 // IProvider interface.  Container is the real "container" behind ObjectFactory
@@ -90,10 +125,9 @@ namespace StructureMap.Testing.Container
         [Test]
         public void CanBuildConcreteTypesThatAreNotPreviouslyRegisteredWithArgumentsProvided()
         {
-            IContainer manager = new StructureMap.Container(delegate(Registry registry)
-            {
-                registry.ForRequestedType<IProvider>().TheDefaultIsConcreteType<Provider>();
-            });
+            IContainer manager =
+                new Container(
+                    delegate(Registry registry) { registry.ForRequestedType<IProvider>().TheDefaultIsConcreteType<Provider>(); });
 
             DifferentProvider differentProvider = new DifferentProvider();
             ExplicitArguments args = new ExplicitArguments();
@@ -103,7 +137,14 @@ namespace StructureMap.Testing.Container
             Assert.AreSame(differentProvider, classThatUsesProvider.Provider);
         }
 
+        [Test, ExpectedException(typeof (StructureMapConfigurationException))]
+        public void CTOR_throws_StructureMapConfigurationException_if_there_is_an_error()
+        {
+            PluginGraph graph = new PluginGraph();
+            graph.Log.RegisterError(400, new ApplicationException("Bad!"));
 
+            new Container(graph);
+        }
 
 
         [Test]
@@ -159,75 +200,40 @@ namespace StructureMap.Testing.Container
             object o = _manager.GetInstance(typeof (string));
         }
 
-
-        private void assertColorIs(IContainer manager, string color)
+        [Test]
+        public void InjectStub_by_name()
         {
-            ColorService rule = (ColorService) manager.GetInstance<IService>();
-            Assert.AreEqual(color, rule.Color);
+            Assert.Fail("Do.");
+            IContainer container = new Container();
         }
+
 
         [Test]
         public void SetDefaultInstanceByString()
         {
-            IContainer manager = new StructureMap.Container(delegate(Registry registry)
+            IContainer manager = new Container(delegate(Registry registry)
             {
                 registry.ForRequestedType<IService>()
                     .AddInstance(Instance<ColorService>().WithName("Red").WithProperty("color").EqualTo("Red"))
                     .AddInstance(Instance<ColorService>().WithName("Blue").WithProperty("color").EqualTo("Blue"))
                     .AddInstance(Instance<ColorService>().WithName("Green").WithProperty("color").EqualTo("Green"));
             });
-            
-            manager.SetDefault(typeof(IService), "Red");
+
+            manager.SetDefault(typeof (IService), "Red");
             assertColorIs(manager, "Red");
 
-            manager.SetDefault(typeof(IService), "Green");
+            manager.SetDefault(typeof (IService), "Green");
             assertColorIs(manager, "Green");
 
-            manager.SetDefault(typeof(IService), "Blue");
+            manager.SetDefault(typeof (IService), "Blue");
             assertColorIs(manager, "Blue");
         }
 
-        [Test]
-        public void Can_set_profile_name_and_reset_defaults()
-        {
-            IContainer manager = new StructureMap.Container(delegate(Registry registry)
-            {
-                registry.ForRequestedType<IService>()
-                    .TheDefaultIs(Instance<ColorService>().WithName("Orange").WithProperty("color").EqualTo("Orange"))
-                    .AddInstance(Instance<ColorService>().WithName("Red").WithProperty("color").EqualTo("Red"))
-                    .AddInstance(Instance<ColorService>().WithName("Blue").WithProperty("color").EqualTo("Blue"))
-                    .AddInstance(Instance<ColorService>().WithName("Green").WithProperty("color").EqualTo("Green"));
-
-                registry.CreateProfile("Red").For<IService>().UseNamedInstance("Red");
-                registry.CreateProfile("Blue").For<IService>().UseNamedInstance("Blue");
-            });
-
-            assertColorIs(manager, "Orange");
-
-            manager.SetDefaultsToProfile("Red");
-            assertColorIs(manager, "Red");
-
-            manager.SetDefaultsToProfile("Blue");
-            assertColorIs(manager, "Blue");
-            
-            manager.SetDefaultsToProfile(string.Empty);
-            assertColorIs(manager, "Orange");
-        }
-
-        [Test, ExpectedException(typeof(StructureMapException))]
+        [Test, ExpectedException(typeof (StructureMapException))]
         public void TryToGetDefaultInstanceWithNoInstance()
         {
-            StructureMap.Container manager = new StructureMap.Container(new PluginGraph());
+            Container manager = new Container(new PluginGraph());
             manager.GetInstance<IService>();
-        }
-
-        [Test, ExpectedException(typeof(StructureMapConfigurationException))]
-        public void CTOR_throws_StructureMapConfigurationException_if_there_is_an_error()
-        {
-            PluginGraph graph = new PluginGraph();
-            graph.Log.RegisterError(400, new ApplicationException("Bad!"));
-
-            new StructureMap.Container(graph);
         }
     }
 }

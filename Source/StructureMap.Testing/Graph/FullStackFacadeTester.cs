@@ -5,7 +5,7 @@ using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
 using IList=System.Collections.IList;
 
-namespace StructureMap.Testing.Container
+namespace StructureMap.Testing.Graph
 {
     [TestFixture]
     public class FullStackFacadeTester
@@ -16,11 +16,11 @@ namespace StructureMap.Testing.Container
         public void SetUp()
         {
             StructureMapConfiguration.ResetAll();
-            
+
 
             DataMother.WriteDocument("SampleConfig.xml");
             DataMother.WriteDocument("FullTesting.XML");
-            
+
             ObjectFactory.Reset();
         }
 
@@ -33,7 +33,7 @@ namespace StructureMap.Testing.Container
 
             PluginGraph pluginGraph = DataMother.GetDiagnosticPluginGraph("SampleConfig.xml");
 
-            StructureMap.Container manager = new StructureMap.Container(pluginGraph);
+            Container manager = new Container(pluginGraph);
 
             IList list = manager.GetAllInstances(typeof (IWidget));
 

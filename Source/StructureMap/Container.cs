@@ -90,22 +90,6 @@ namespace StructureMap
             _pipelineGraph.Inject(instance);
         }
 
-        public void InjectByName<PLUGINTYPE>(PLUGINTYPE instance, string instanceKey)
-        {
-            LiteralInstance literalInstance = new LiteralInstance(instance);
-            literalInstance.Name = instanceKey;
-
-            AddInstance<PLUGINTYPE>(literalInstance);
-        }
-
-        public void InjectByName<PLUGINTYPE, CONCRETETYPE>(string instanceKey)
-        {
-            ConfiguredInstance instance = new ConfiguredInstance(typeof(CONCRETETYPE));
-            instance.Name = instanceKey;
-
-            AddInstance<PLUGINTYPE>(instance);
-        }
-
         public T GetInstance<T>()
         {
             return (T) GetInstance(typeof (T));
@@ -118,7 +102,12 @@ namespace StructureMap
 
         public void InjectStub<T>(T instance)
         {
-            InjectStub(typeof (T), instance);
+            Inject<T>(instance);
+        }
+
+        public void InjectStub<T>(string name, T instance)
+        {
+            throw new NotImplementedException();
         }
 
         public IList<T> GetAllInstances<T>()
@@ -180,7 +169,7 @@ namespace StructureMap
         /// </summary>
         /// <param name="pluginType"></param>
         /// <param name="instance"></param>
-        public void SetDefault(Type pluginType, Instance instance)
+        public void Inject(Type pluginType, Instance instance)
         {
             _pipelineGraph.SetDefault(pluginType, instance);
         }
@@ -194,6 +183,21 @@ namespace StructureMap
         {
             ReferencedInstance reference = new ReferencedInstance(instanceKey);
             _pipelineGraph.SetDefault(pluginType, reference);
+        }
+
+        public void SetDefault(Type pluginType, Instance instance)
+        {
+            _pipelineGraph.SetDefault(pluginType, instance);
+        }
+
+        public void SetDefault<T>(Instance instance)
+        {
+            SetDefault(typeof(T), instance);
+        }
+
+        public void SetDefault<PLUGINTYPE, CONCRETETYPE>() where CONCRETETYPE : PLUGINTYPE
+        {
+            SetDefault<PLUGINTYPE>(new ConfiguredInstance(typeof(CONCRETETYPE)));
         }
 
 
@@ -243,19 +247,20 @@ namespace StructureMap
             return forType(type).GetAllInstances(withNewSession());
         }
 
-        public void AddInstance<T>(Instance instance)
+        public void Configure(Action<Registry> configure)
         {
-            _pipelineGraph.AddInstance<T>(instance);
-        }
+            lock (this)
+            {
+                Registry registry = new Registry();
+                configure(registry);
 
-        public void AddInstance<PLUGINTYPE, CONCRETETYPE>() where CONCRETETYPE : PLUGINTYPE
-        {
-            _pipelineGraph.AddInstance<PLUGINTYPE, CONCRETETYPE>();
-        }
+                PluginGraph graph = registry.Build();
 
-        public void AddDefaultInstance<PLUGINTYPE, CONCRETETYPE>()
-        {
-            _pipelineGraph.AddDefaultInstance<PLUGINTYPE, CONCRETETYPE>();
+                graph.Log.AssertFailures();
+
+                _interceptorLibrary.ImportFrom(graph.InterceptorLibrary);
+                _pipelineGraph.ImportFrom(graph);
+            }
         }
 
         public string WhatDoIHave()

@@ -45,7 +45,7 @@ namespace StructureMap.Testing.DataAccess
         private IMock _autoCommitMock;
         private IMock _transactionalMock;
 
-        [Test, ExpectedException(typeof(ApplicationException), ExpectedMessage = "A transaction is already started!")]
+        [Test, ExpectedException(typeof (ApplicationException), ExpectedMessage = "A transaction is already started!")]
         public void CallingStartTransactionTwiceResultsInException()
         {
             _transactionalMock.Expect("BeginTransaction");

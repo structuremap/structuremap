@@ -12,19 +12,9 @@ namespace StructureMap.Emitting
     public class BuildInstanceMethod : Method
     {
         private readonly Plugin _plugin;
-        //private readonly ConstructorInfo _constructor;
-        //private readonly ParameterEmitter _parameterEmitter;
 
         public BuildInstanceMethod(Plugin plugin) : base()
         {
-            //_constructor = plugin.GetConstructor();
-
-            //_parameterEmitter = new StringParameterEmitter();
-
-            //_parameterEmitter.AttachNextSibling(new PrimitiveParameterEmitter());
-            //_parameterEmitter.AttachNextSibling(new EnumParameterEmitter());
-            //_parameterEmitter.AttachNextSibling(new ChildParameterEmitter());
-            //_parameterEmitter.AttachNextSibling(new ChildArrayParameterEmitter());
             _plugin = plugin;
         }
 

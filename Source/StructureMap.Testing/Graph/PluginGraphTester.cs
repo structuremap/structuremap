@@ -2,7 +2,6 @@ using System;
 using NUnit.Framework;
 using StructureMap.Exceptions;
 using StructureMap.Graph;
-using StructureMap.Source;
 using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing.Graph
@@ -19,6 +18,15 @@ namespace StructureMap.Testing.Graph
         }
 
         #endregion
+
+        [Test, ExpectedException(typeof (StructureMapConfigurationException))]
+        public void AssertErrors_throws_StructureMapConfigurationException_if_there_is_an_error()
+        {
+            PluginGraph graph = new PluginGraph();
+            graph.Log.RegisterError(400, new ApplicationException("Bad!"));
+
+            graph.Log.AssertFailures();
+        }
 
         [Test]
         public void FindPluginFamilies()
@@ -65,7 +73,7 @@ namespace StructureMap.Testing.Graph
 
             graph.Assemblies.Add("StructureMap.Testing.Widget");
             graph.FindFamily(typeof (IWidget)).DefaultInstanceKey = "Blue";
-            
+
 
             PluginFamily family = graph.FindFamily(typeof (IWidget));
             family.AddPlugin(typeof (NotPluggableWidget), "NotPluggable");
@@ -106,17 +114,6 @@ namespace StructureMap.Testing.Graph
 
             graph.Seal();
         }
-
-        [Test, ExpectedException(typeof(StructureMapConfigurationException))]
-        public void AssertErrors_throws_StructureMapConfigurationException_if_there_is_an_error()
-        {
-            PluginGraph graph = new PluginGraph();
-            graph.Log.RegisterError(400, new ApplicationException("Bad!"));
-
-            graph.Log.AssertFailures();
-        }
-
-
     }
 
     [PluginFamily]

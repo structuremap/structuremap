@@ -185,79 +185,79 @@
     <Compile Include="Configuration\NormalGraphBuilderTester.cs" />
     <Compile Include="Configuration\ProfileBuilderTester.cs" />
     <Compile Include="Configuration\ShortcuttedInstanceNodeTester.cs" />
-    <Compile Include="Container\ArrayConstructorTester.cs">
+    <Compile Include="Graph\ArrayConstructorTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Container\ContainerConstructorAttributeTester.cs">
+    <Compile Include="Graph\ContainerConstructorAttributeTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Container\DynamicInjectionTester.cs" />
-    <Compile Include="Container\EmittingTester.cs">
+    <Compile Include="Graph\DynamicInjectionTester.cs" />
+    <Compile Include="Graph\EmittingTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Container\EnumerationTester.cs">
+    <Compile Include="Graph\EnumerationTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Container\ExceptionHandling\StructureMapExceptionTester.cs">
+    <Compile Include="Graph\ExceptionHandling\StructureMapExceptionTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Container\ExplicitArgumentTester.cs" />
-    <Compile Include="Container\FillDependenciesTester.cs">
+    <Compile Include="Graph\ExplicitArgumentTester.cs" />
+    <Compile Include="Graph\FillDependenciesTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Container\FullStackFacadeTester.cs">
+    <Compile Include="Graph\FullStackFacadeTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Container\ImplicitDefaultTest.cs">
+    <Compile Include="Graph\ImplicitDefaultTest.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Container\InstanceFactoryTester.cs">
+    <Compile Include="Graph\InstanceFactoryTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Container\ContainerTester.cs">
+    <Compile Include="Graph\ContainerTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Container\IntegratedTester.cs">
+    <Compile Include="Graph\IntegratedTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Container\Interceptors\CompoundInterceptorTester.cs" />
-    <Compile Include="Container\Interceptors\InterceptorLibraryTester.cs" />
-    <Compile Include="Container\Interceptors\MockTypeInterceptor.cs" />
-    <Compile Include="Container\Interceptors\TypeInterceptionTester.cs" />
-    <Compile Include="Container\PluggableAttributeTester.cs">
+    <Compile Include="Graph\Interceptors\CompoundInterceptorTester.cs" />
+    <Compile Include="Graph\Interceptors\InterceptorLibraryTester.cs" />
+    <Compile Include="Graph\Interceptors\MockTypeInterceptor.cs" />
+    <Compile Include="Graph\Interceptors\TypeInterceptionTester.cs" />
+    <Compile Include="Graph\PluggableAttributeTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Container\PluginGraphBuilderTester.cs">
+    <Compile Include="Graph\PluginGraphBuilderTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Container\SetterInjectionEmittingTester.cs">
+    <Compile Include="Graph\SetterInjectionEmittingTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Container\Source\DirectoryXmlMementoSourceTester.cs">
+    <Compile Include="Graph\Source\DirectoryXmlMementoSourceTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Container\Source\EmbeddedFolderXmlMementoSourceTester.cs">
+    <Compile Include="Graph\Source\EmbeddedFolderXmlMementoSourceTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Container\Source\SingleEmbeddedXmlMementoSourceTester.cs">
+    <Compile Include="Graph\Source\SingleEmbeddedXmlMementoSourceTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Container\Source\TemplatingTester.cs">
+    <Compile Include="Graph\Source\TemplatingTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Container\Source\XmlAttributeInstanceMementoTester.cs">
+    <Compile Include="Graph\Source\XmlAttributeInstanceMementoTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Container\Source\XmlInstanceMementoTester.cs">
+    <Compile Include="Graph\Source\XmlInstanceMementoTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Container\Source\XmlMementoSourceTester.cs">
+    <Compile Include="Graph\Source\XmlMementoSourceTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Container\Source\XmlTemplaterTester.cs">
+    <Compile Include="Graph\Source\XmlTemplaterTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Container\TypeFindingTester.cs" />
+    <Compile Include="Graph\TypeFindingTester.cs" />
     <Compile Include="DataAccess\CommandCollectionTester.cs" />
     <Compile Include="DataAccess\CommandFactoryTester.cs" />
     <Compile Include="DataAccess\Commands\ParameterizedQueryFilterTester.cs" />
@@ -301,6 +301,7 @@
     <Compile Include="Graph\ParameterInfoCollection.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Graph\PluginFamilyMergeTester.cs" />
     <Compile Include="Graph\PluginFamilyTester.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -359,9 +360,9 @@
     <None Include="StructureMap.Testing.dll.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <EmbeddedResource Include="Container\Source\EmbeddedMementoFile.xml" />
-    <EmbeddedResource Include="Container\Source\Mementos\Instance1.xml" />
-    <EmbeddedResource Include="Container\Source\Mementos\Instance2.xml" />
+    <EmbeddedResource Include="Graph\Source\EmbeddedMementoFile.xml" />
+    <EmbeddedResource Include="Graph\Source\Mementos\Instance1.xml" />
+    <EmbeddedResource Include="Graph\Source\Mementos\Instance2.xml" />
     <EmbeddedResource Include="TestData\Array.xml" />
     <EmbeddedResource Include="TestData\CDataTest.xml" />
     <EmbeddedResource Include="TestData\ChildArrayPropertyConfig.xml" />

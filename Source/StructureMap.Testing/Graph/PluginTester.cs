@@ -8,7 +8,6 @@ using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget2;
 using StructureMap.Testing.Widget3;
-using StructureMap.Testing.Widget4;
 
 namespace StructureMap.Testing.Graph
 {
@@ -54,6 +53,37 @@ namespace StructureMap.Testing.Graph
             return typeof (LotsOfStuff).GetProperty(name);
         }
 
+        public class CanBeAutoFilledWithArray
+        {
+            public CanBeAutoFilledWithArray(IWidget[] widgets)
+            {
+            }
+
+            [SetterProperty]
+            public IWidget[] More
+            {
+                get { return null; }
+                set { }
+            }
+        }
+
+        public class GTO
+        {
+            private IEngine _engine;
+
+
+            public GTO(string name, double price)
+            {
+            }
+
+            [SetterProperty]
+            public IEngine Engine
+            {
+                get { return _engine; }
+                set { _engine = value; }
+            }
+        }
+
 
         [Test]
         public void BadPluginToAbstractClass()
@@ -64,7 +94,23 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void BadPluginToInterface()
         {
-            Assert.AreEqual(false, TypeRules.CanBeCast(_iwidget, _moneywidgetmaker), "MoneyWidgetMaker is NOT an IWidget");
+            Assert.AreEqual(false, TypeRules.CanBeCast(_iwidget, _moneywidgetmaker),
+                            "MoneyWidgetMaker is NOT an IWidget");
+        }
+
+        [Test]
+        public void CanBeAutoFilled_with_child_array_in_ctor()
+        {
+            Constructor ctor = new Constructor(typeof (CanBeAutoFilledWithArray));
+            Assert.IsTrue(ctor.CanBeAutoFilled());
+        }
+
+        [Test]
+        public void CanBeAutoFilled_with_child_array_in_setter()
+        {
+            SetterPropertyCollection setters =
+                new SetterPropertyCollection(new Plugin(typeof (CanBeAutoFilledWithArray)));
+            Assert.IsTrue(setters.CanBeAutoFilled());
         }
 
         [Test]
@@ -73,41 +119,6 @@ namespace StructureMap.Testing.Graph
             Plugin plugin = new Plugin(typeof (GrandPrix));
 
             Assert.IsFalse(plugin.CanBeAutoFilled);
-        }
-
-        [Test]
-        public void CanBeAutoFilled_with_child_array_in_ctor()
-        {
-            Constructor ctor = new Constructor(typeof(CanBeAutoFilledWithArray));
-            Assert.IsTrue(ctor.CanBeAutoFilled());
-        }
-
-        public class CanBeAutoFilledWithArray
-        {
-            public CanBeAutoFilledWithArray(IWidget[] widgets)
-            {
-                
-            }
-
-            [SetterProperty]
-            public IWidget[] More
-            {
-                get
-                {
-                    return null;
-                }
-                set
-                {
-                    
-                }
-            }
-        }
-
-        [Test]
-        public void CanBeAutoFilled_with_child_array_in_setter()
-        {
-            SetterPropertyCollection setters = new SetterPropertyCollection(new Plugin(typeof(CanBeAutoFilledWithArray)));
-            Assert.IsTrue(setters.CanBeAutoFilled());
         }
 
         [Test]
@@ -127,7 +138,7 @@ namespace StructureMap.Testing.Graph
             pluginGraph.Assemblies.Add(Assembly.GetExecutingAssembly());
             pluginGraph.Seal();
 
-            StructureMap.Container manager = new StructureMap.Container(pluginGraph);
+            Container manager = new Container(pluginGraph);
 
             Mustang mustang = (Mustang) manager.GetInstance(typeof (IAutomobile), "Mustang");
 
@@ -140,13 +151,13 @@ namespace StructureMap.Testing.Graph
         public void CanNotPluginWithoutAttribute()
         {
             string msg = "NotPluggableWidget cannot plug into IWidget automatically";
-            Assert.AreEqual(false, Plugin.IsExplicitlyMarkedAsPlugin(_iwidget, typeof (NotPluggable)), msg);
+            Assert.AreEqual(false, TypeRules.IsExplicitlyMarkedAsPlugin(_iwidget, typeof (NotPluggable)), msg);
         }
 
         [Test]
         public void CanPluginWithAttribute()
         {
-            Assert.AreEqual(true, Plugin.IsExplicitlyMarkedAsPlugin(_iwidget, _colorWidget),
+            Assert.AreEqual(true, TypeRules.IsExplicitlyMarkedAsPlugin(_iwidget, _colorWidget),
                             "ColorWidget plugs into IWidget");
         }
 
@@ -160,7 +171,7 @@ namespace StructureMap.Testing.Graph
             IConfiguredInstance instance = (ConfiguredInstance) plugin.CreateImplicitInstance();
 
             Assert.AreEqual("Default", instance.Name);
-            Assert.AreEqual(typeof(DefaultGateway), instance.PluggedType);
+            Assert.AreEqual(typeof (DefaultGateway), instance.PluggedType);
         }
 
         [Test]
@@ -202,32 +213,15 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void FindFirstConstructorArgumentOfType_in_a_setter_too()
         {
-            Plugin plugin = new Plugin(typeof(GTO));
+            Plugin plugin = new Plugin(typeof (GTO));
 
             Assert.AreEqual("Engine", plugin.FindFirstConstructorArgumentOfType<IEngine>());
-        }
-
-        public class GTO
-        {
-            private IEngine _engine;
-
-
-            public GTO(string name, double price)
-            {
-            }
-
-            [SetterProperty]
-            public IEngine Engine
-            {
-                get { return _engine; }
-                set { _engine = value; }
-            }
         }
 
         [Test,
          ExpectedException(typeof (StructureMapException),
              ExpectedMessage =
-             "StructureMap Exception Code:  302\nThere is no argument of type StructureMap.Testing.Widget.IWidget for concrete type StructureMap.Testing.Graph.GrandPrix"
+                 "StructureMap Exception Code:  302\nThere is no argument of type StructureMap.Testing.Widget.IWidget for concrete type StructureMap.Testing.Graph.GrandPrix"
              )]
         public void FindFirstConstructorArgumentOfTypeNegativeCase()
         {
@@ -266,7 +260,8 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void GoodPluginToAbstractClass()
         {
-            Assert.AreEqual(true, TypeRules.CanBeCast(_widgetmaker, _moneywidgetmaker), "MoneyWidgetMaker is a WidgetMaker");
+            Assert.AreEqual(true, TypeRules.CanBeCast(_widgetmaker, _moneywidgetmaker),
+                            "MoneyWidgetMaker is a WidgetMaker");
         }
 
         [Test]

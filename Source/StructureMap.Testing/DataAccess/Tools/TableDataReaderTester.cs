@@ -87,8 +87,8 @@ namespace StructureMap.Testing.DataAccess.Tools
             IDataReader reader = new TableDataReader(table);
             reader.Read();
 
-            Assert.AreEqual("TX", (string) reader.GetValue(0));
-            Assert.AreEqual("North", (string) reader.GetValue(1));
+            Assert.AreEqual("TX", reader.GetValue(0));
+            Assert.AreEqual("North", reader.GetValue(1));
             Assert.AreEqual(1, (int) reader.GetValue(2));
             Assert.AreEqual(2, (int) reader.GetValue(3));
         }

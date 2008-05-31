@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Permissions;
+using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 
@@ -85,50 +86,6 @@ namespace StructureMap
             manager.Inject<PLUGINTYPE>(instance);
         }
 
-        /// <summary>
-        /// Injects a new instance of PLUGINTYPE by name.  
-        /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
-        /// <param name="instance"></param>
-        /// <param name="instanceKey"></param>
-        public static void InjectByName<PLUGINTYPE>(PLUGINTYPE instance, string instanceKey)
-        {
-            manager.InjectByName<PLUGINTYPE>(instance, instanceKey);
-        }
-
-        /// <summary>
-        /// Injects a new instance of CONCRETETYPE to PLUGINTYPE by name.  
-        /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
-        /// <typeparam name="CONCRETETYPE"></typeparam>
-        /// <param name="instanceKey"></param>
-        public static void InjectByName<PLUGINTYPE, CONCRETETYPE>(string instanceKey)
-        {
-            manager.InjectByName<PLUGINTYPE, CONCRETETYPE>(instanceKey);
-        }
-
-        /// <summary>
-        /// StructureMap will return an instance of CONCRETETYPE whenever
-        /// a PLUGINTYPE is requested
-        /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
-        /// <typeparam name="CONCRETETYPE"></typeparam>
-        public static void InjectDefaultType<PLUGINTYPE, CONCRETETYPE>() where CONCRETETYPE : PLUGINTYPE
-        {
-            manager.AddDefaultInstance<PLUGINTYPE, CONCRETETYPE>();
-        }
-
-        /// <summary>
-        /// Adds a new CONCRETETYPE to StructureMap so that an instance of CONCRETETYPE
-        /// will be returned from a call to ObjectFactory.GetAllInstance&lt;PLUGINTYPE&gt;()
-        /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
-        /// <typeparam name="CONCRETETYPE"></typeparam>
-        public static void AddType<PLUGINTYPE, CONCRETETYPE>() where CONCRETETYPE : PLUGINTYPE
-        {
-            manager.AddInstance<PLUGINTYPE, CONCRETETYPE>();
-        }
-
         #region Container and setting defaults
 
         private static IContainer manager
@@ -184,9 +141,29 @@ namespace StructureMap
         /// Strictly used for testing scenarios
         /// </summary>
         /// <param name="manager"></param>
-        internal static void ReplaceManager(IContainer manager)
+        internal static void ReplaceManager(IContainer container)
         {
-            _manager = manager;
+            _manager = container;
+        }
+
+        public static void Configure(Action<Registry> configure)
+        {
+            manager.Configure(configure);
+        }
+
+        public static void SetDefault(Type pluginType, Instance instance)
+        {
+            manager.SetDefault(pluginType, instance);
+        }
+        
+        public static void SetDefault<PLUGINTYPE>(Instance instance)
+        {
+            manager.SetDefault<PLUGINTYPE>(instance);
+        }
+
+        public static void SetDefault<PLUGINTYPE, CONCRETETYPE>() where CONCRETETYPE : PLUGINTYPE
+        {
+            manager.SetDefault<PLUGINTYPE, CONCRETETYPE>();
         }
 
 

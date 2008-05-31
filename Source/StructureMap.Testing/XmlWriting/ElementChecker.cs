@@ -9,9 +9,9 @@ namespace StructureMap.Testing.XmlWriting
 {
     public class ElementChecker
     {
+        private readonly NameValueCollection _attributes;
+        private readonly ArrayList _childNodes;
         private readonly string _nodeName;
-        private NameValueCollection _attributes;
-        private ArrayList _childNodes;
 
         public ElementChecker(string nodeName)
         {

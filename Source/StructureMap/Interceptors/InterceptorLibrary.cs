@@ -18,6 +18,15 @@ namespace StructureMap.Interceptors
             _interceptors.Add(interceptor);
         }
 
+        public void ImportFrom(InterceptorLibrary source)
+        {
+            lock (_locker)
+            {
+                _analyzedInterceptors.Clear();
+                _interceptors.AddRange(source._interceptors);
+            }
+        }
+
         public CompoundInterceptor FindInterceptor(Type type)
         {
             if (_analyzedInterceptors.ContainsKey(type))

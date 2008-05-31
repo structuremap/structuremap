@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Reflection;
 using NUnit.Framework;
 using StructureMap.Emitting;
 using StructureMap.Graph;
@@ -9,7 +8,7 @@ using StructureMap.Pipeline;
 using StructureMap.Testing.Pipeline;
 using StructureMap.Testing.Widget;
 
-namespace StructureMap.Testing.Container
+namespace StructureMap.Testing.Graph
 {
     [TestFixture]
     public class EmittingTester
@@ -26,7 +25,7 @@ namespace StructureMap.Testing.Container
                 Plugin plugin = new Plugin(typeof (ComplexRule));
 
                 InstanceBuilderAssembly _InstanceBuilderAssembly =
-                    new InstanceBuilderAssembly(typeof (Rule), new Plugin[]{plugin});
+                    new InstanceBuilderAssembly(typeof (Rule), new Plugin[] {plugin});
 
                 List<InstanceBuilder> list = _InstanceBuilderAssembly.Compile();
                 builder = list[0];
@@ -49,10 +48,6 @@ namespace StructureMap.Testing.Container
         private Exception ex;
         private IConfiguredInstance instance;
         private ComplexRule rule;
-
-        public EmittingTester()
-        {
-        }
 
         [Test]
         public void BoolProperty()

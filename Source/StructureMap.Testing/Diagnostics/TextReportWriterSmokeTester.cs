@@ -1,5 +1,4 @@
 using NUnit.Framework;
-using Rhino.Mocks;
 using StructureMap.Diagnostics;
 
 namespace StructureMap.Testing.Diagnostics
@@ -7,10 +6,14 @@ namespace StructureMap.Testing.Diagnostics
     [TestFixture]
     public class TextReportWriterSmokeTester
     {
+        #region Setup/Teardown
+
         [SetUp]
         public void SetUp()
         {
         }
+
+        #endregion
 
         [Test]
         public void TryWithTwoColumnsAndSomeDividers()

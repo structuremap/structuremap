@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using StructureMap.Attributes;
 using StructureMap.Pipeline;
+using StructureMap.Util;
 
 namespace StructureMap.Graph
 {
@@ -14,7 +15,7 @@ namespace StructureMap.Graph
     {
         private readonly Predicate<Type> _explicitlyMarkedPluginFilter;
         private readonly Predicate<Type> _implicitPluginFilter;
-        private readonly List<Instance> _instances = new List<Instance>();
+        private readonly Cache<string, Instance> _instances = new Cache<string, Instance>(delegate { return null; });
         private readonly List<InstanceMemento> _mementoList = new List<InstanceMemento>();
         private readonly PluginCollection _plugins;
         private readonly Type _pluginType;
@@ -99,7 +100,7 @@ namespace StructureMap.Graph
 
         public void AddInstance(Instance instance)
         {
-            _instances.Add(instance);
+            _instances.Store(instance.Name, instance);
         }
 
 
@@ -117,7 +118,7 @@ namespace StructureMap.Graph
                 _parent.Log.Try(delegate()
                 {
                     Instance instance = memento.ReadInstance(Parent, _pluginType);
-                    _instances.Add(instance);
+                    AddInstance(instance);
                 }).AndLogAnyErrors();
             });
 
@@ -127,28 +128,28 @@ namespace StructureMap.Graph
 
             if (_instances.Count == 1)
             {
-                _defaultKey = _instances[0].Name;
+                _defaultKey = _instances.First.Name;
             }
         }
 
         private void validatePluggabilityOfInstances()
         {
-            foreach (Instance instance in _instances)
+            _instances.Each(delegate(Instance instance)
             {
                 IDiagnosticInstance diagnosticInstance = instance;
 
                 _parent.Log.Try(delegate()
                 {
-                    diagnosticInstance.Preprocess(this);    
+                    diagnosticInstance.Preprocess(this);
                 })
                 .AndReportErrorAs(104, diagnosticInstance.CreateToken(), _pluginType);
 
-                
+
                 if (!diagnosticInstance.CanBePartOfPluginFamily(this))
                 {
                     _parent.Log.RegisterError(104, diagnosticInstance.CreateToken(), _pluginType);
                 }
-            }
+            });
         }
 
         private void discoverImplicitInstances()
@@ -164,14 +165,14 @@ namespace StructureMap.Graph
             }
         }
 
-        public Instance[] GetAllInstances()
+        public void EachInstance(Action<Instance> action)
         {
-            return _instances.ToArray();
+            _instances.Each(action);
         }
 
         public Instance GetInstance(string name)
         {
-            return _instances.Find(delegate(Instance i) { return i.Name == name; });
+            return _instances.Retrieve(name);
         }
 
 
@@ -192,12 +193,17 @@ namespace StructureMap.Graph
             return _plugins.HasPlugin(pluggedType);
         }
 
-        public void AddPlugin(Type pluggedType)
+        public Plugin AddPlugin(Type pluggedType)
         {
             if (!HasPlugin(pluggedType))
             {
-                AddPlugin(new Plugin(pluggedType));
+                Plugin plugin = new Plugin(pluggedType);
+                AddPlugin(plugin);
+
+                return plugin;
             }
+
+            return Plugins[pluggedType];
         }
 
         public Plugin AddPlugin(Type pluggedType, string key)
@@ -270,6 +276,11 @@ namespace StructureMap.Graph
             set { _defaultKey = value ?? string.Empty; }
         }
 
+        public int InstanceCount
+        {
+            get { return _instances.Count; }
+        }
+
         #endregion
 
         public Plugin FindPlugin(Type pluggedType)
@@ -312,6 +323,24 @@ namespace StructureMap.Graph
             }
 
             profile.FillTypeInto(PluginType, defaultInstance);
+        }
+
+        public void ImportFrom(PluginFamily source)
+        {
+            source.EachInstance(delegate(Instance instance)
+            {
+                _instances.Fill(instance.Name, instance);
+            });
+
+            foreach (Plugin plugin in source.Plugins)
+            {
+                Plugins.Fill(plugin);
+            }
+        }
+
+        public Instance FirstInstance()
+        {
+            return _instances.First;
         }
     }
 }

@@ -1,14 +1,12 @@
-using System.Collections.Generic;
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
-using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Pipeline;
 
-namespace StructureMap.Testing.Container
+namespace StructureMap.Testing.Graph
 {
     [TestFixture]
-    public class ExplicitArgumentTester
+    public class ExplicitArgumentTester : RegistryExpressions
     {
         #region Setup/Teardown
 
@@ -27,7 +25,6 @@ namespace StructureMap.Testing.Container
         }
 
         #endregion
-
 
         public interface IExplicitTarget
         {
@@ -77,10 +74,41 @@ namespace StructureMap.Testing.Container
         }
 
         [Test]
+        public void ExplicitArguments_can_return_child_by_name()
+        {
+            ExplicitArguments args = new ExplicitArguments();
+            Node theNode = new Node();
+            args.SetArg("node", theNode);
+
+            IConfiguredInstance instance = new ExplicitInstance<Command>(args, null);
+
+            Assert.AreSame(theNode, instance.GetChild("node", typeof (Node), new StubBuildSession()));
+        }
+
+        [Test]
+        public void Fill_in_argument_by_name()
+        {
+            Container manager = new Container();
+            manager.SetDefault<IView, View>();
+
+            Node theNode = new Node();
+            Trade theTrade = new Trade();
+
+            Command command = manager
+                .With("node").EqualTo(theNode)
+                .With(theTrade)
+                .GetInstance<Command>();
+
+            Assert.IsInstanceOfType(typeof (View), command.View);
+            Assert.AreSame(theNode, command.Node);
+            Assert.AreSame(theTrade, command.Trade);
+        }
+
+        [Test]
         public void NowDoItWithObjectFactoryItself()
         {
             StructureMapConfiguration.ForRequestedType<ExplicitTarget>().TheDefaultIs(
-                Registry.Instance<ExplicitTarget>()
+                Instance<ExplicitTarget>()
                     .UsingConcreteType<ExplicitTarget>()
                     .Child<IProvider>().IsConcreteType<RedProvider>()
                     .WithProperty("name").EqualTo("Jeremy")
@@ -102,7 +130,7 @@ namespace StructureMap.Testing.Container
         public void OverrideAPrimitiveWithObjectFactory()
         {
             StructureMapConfiguration.ForRequestedType<ExplicitTarget>().TheDefaultIs(
-                Registry.Instance<ExplicitTarget>()
+                Instance<ExplicitTarget>()
                     .UsingConcreteType<ExplicitTarget>()
                     .Child<IProvider>().IsConcreteType<RedProvider>()
                     .WithProperty("name").EqualTo("Jeremy")
@@ -119,14 +147,33 @@ namespace StructureMap.Testing.Container
             Assert.AreEqual("Julia", secondTarget.Name);
         }
 
+        [Test]
+        public void Pass_in_arguments_as_dictionary()
+        {
+            Container manager = new Container();
+            manager.SetDefault<IView, View>();
+
+            Node theNode = new Node();
+            Trade theTrade = new Trade();
+
+            ExplicitArguments args = new ExplicitArguments();
+            args.Set(theNode);
+            args.SetArg("trade", theTrade);
+
+            Command command = manager.GetInstance<Command>(args);
+
+            Assert.IsInstanceOfType(typeof (View), command.View);
+            Assert.AreSame(theNode, command.Node);
+            Assert.AreSame(theTrade, command.Trade);
+        }
+
 
         [Test]
         public void PassAnArgumentIntoExplicitArgumentsForARequestedInterface()
         {
-            IContainer manager = new StructureMap.Container(delegate(Registry registry)
-            {
-                registry.ForRequestedType<IProvider>().TheDefaultIsConcreteType<LumpProvider>();
-            });
+            IContainer manager =
+                new Container(
+                    delegate(Registry registry) { registry.ForRequestedType<IProvider>().TheDefaultIsConcreteType<LumpProvider>(); });
 
             ExplicitArguments args = new ExplicitArguments();
             Lump theLump = new Lump();
@@ -158,10 +205,10 @@ namespace StructureMap.Testing.Container
         [Test]
         public void PassExplicitArgsIntoInstanceManager()
         {
-            IContainer manager = new StructureMap.Container(delegate(Registry registry)
+            IContainer manager = new Container(delegate(Registry registry)
             {
                 registry.ForRequestedType<ExplicitTarget>().TheDefaultIs(
-                    Registry.Instance<ExplicitTarget>()
+                    Instance<ExplicitTarget>()
                         .UsingConcreteType<ExplicitTarget>()
                         .Child<IProvider>().IsConcreteType<RedProvider>()
                         .WithProperty("name").EqualTo("Jeremy")
@@ -207,60 +254,6 @@ namespace StructureMap.Testing.Container
             args.SetArg("age", 34);
             Assert.AreEqual(34, args.GetArg("age"));
         }
-
-        [Test]
-        public void Fill_in_argument_by_name()
-        {
-            StructureMap.Container manager = new StructureMap.Container();
-            manager.AddDefaultInstance<IView, View>();
-
-            Node theNode = new Node();
-            Trade theTrade = new Trade();
-
-            Command command = manager
-                .With("node").EqualTo(theNode)
-                .With<Trade>(theTrade)
-                .GetInstance<Command>();
-
-            Assert.IsInstanceOfType(typeof(View), command.View);
-            Assert.AreSame(theNode, command.Node);
-            Assert.AreSame(theTrade, command.Trade);
-        }
-
-        [Test]
-        public void Pass_in_arguments_as_dictionary()
-        {
-            StructureMap.Container manager = new StructureMap.Container();
-            manager.AddDefaultInstance<IView, View>();
-
-            Node theNode = new Node();
-            Trade theTrade = new Trade();
-
-            ExplicitArguments args = new ExplicitArguments();
-            args.Set<Node>(theNode);
-            args.SetArg("trade", theTrade);
-
-            Command command = manager.GetInstance<Command>(args);
-
-            Assert.IsInstanceOfType(typeof(View), command.View);
-            Assert.AreSame(theNode, command.Node);
-            Assert.AreSame(theTrade, command.Trade);            
-        }
-
-        [Test]
-        public void ExplicitArguments_can_return_child_by_name()
-        {
-            ExplicitArguments args = new ExplicitArguments();
-            Node theNode = new Node();
-            args.SetArg("node", theNode);
-
-            IConfiguredInstance instance = new ExplicitInstance<Command>(args, null);
-            
-            Assert.AreSame(theNode, instance.GetChild("node", typeof(Node), new StubBuildSession()));
-        }
-        
-
-        
     }
 
     public class Lump
@@ -284,15 +277,26 @@ namespace StructureMap.Testing.Container
     }
 
 
-    public class Trade{}
-    public class Node{}
-    public interface IView{}
-    public class View : IView {}
+    public class Trade
+    {
+    }
+
+    public class Node
+    {
+    }
+
+    public interface IView
+    {
+    }
+
+    public class View : IView
+    {
+    }
 
     public class Command
     {
-        private readonly Trade _trade;
         private readonly Node _node;
+        private readonly Trade _trade;
         private readonly IView _view;
 
         public Command(Trade trade, Node node, IView view)
@@ -317,7 +321,4 @@ namespace StructureMap.Testing.Container
             get { return _view; }
         }
     }
-   
-
-    
 }

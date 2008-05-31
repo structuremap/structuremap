@@ -31,7 +31,7 @@ namespace StructureMap.Testing
 
             graph.Seal();
 
-            StructureMap.Container manager = new StructureMap.Container(graph);
+            Container manager = new Container(graph);
         }
 
         [Test]
@@ -39,7 +39,7 @@ namespace StructureMap.Testing
         {
             Type serviceType = typeof (IService<double>);
             PluginGraph pluginGraph = PluginGraph.BuildGraphFromAssembly(serviceType.Assembly);
-            StructureMap.Container manager = new StructureMap.Container(pluginGraph);
+            Container manager = new Container(pluginGraph);
 
             Type doubleServiceType = typeof (IService<double>);
 
@@ -77,7 +77,7 @@ namespace StructureMap.Testing
         public void CanEmitForATemplateWithTwoTemplates()
         {
             PluginFamily family = new PluginFamily(typeof (ITarget<int, string>));
-            
+
 
             family.AddPlugin(typeof (SpecificTarget<int, string>), "specific");
 
@@ -89,9 +89,9 @@ namespace StructureMap.Testing
         {
             PluginGraph graph = new PluginGraph();
             PluginFamily family = graph.FindFamily(typeof (ComplexType<int>));
-            family.AddPlugin(new Plugin(typeof(ComplexType<int>), "complex"));
+            family.AddPlugin(new Plugin(typeof (ComplexType<int>), "complex"));
 
-            StructureMap.Container manager = new StructureMap.Container(graph);
+            Container manager = new Container(graph);
 
             ConfiguredInstance instance = new ConfiguredInstance().WithConcreteKey("complex")
                 .WithProperty("name").EqualTo("Jeremy")
@@ -111,9 +111,9 @@ namespace StructureMap.Testing
             PluginFamily family2 = graph.FindFamily(typeof (IGenericService<string>));
             PluginFamily family3 = graph.FindFamily(typeof (IGenericService<>));
 
-            Assert.AreSame(graph.FindFamily(typeof(IGenericService<int>)), family1);
-            Assert.AreSame(graph.FindFamily(typeof(IGenericService<string>)), family2);
-            Assert.AreSame(graph.FindFamily(typeof(IGenericService<>)), family3);
+            Assert.AreSame(graph.FindFamily(typeof (IGenericService<int>)), family1);
+            Assert.AreSame(graph.FindFamily(typeof (IGenericService<string>)), family2);
+            Assert.AreSame(graph.FindFamily(typeof (IGenericService<>)), family3);
         }
 
         [Test]
@@ -136,65 +136,65 @@ namespace StructureMap.Testing
             Assert.IsTrue(canPlug);
         }
 
+
         [Test]
-        public void GenericsTypeAndProfileOrMachine()
+        public void Define_profile_with_generics_and_concrete_type()
         {
-            PluginGraph pluginGraph = PluginGraph.BuildGraphFromAssembly(typeof(IService<>).Assembly);
-            pluginGraph.SetDefault("1", typeof(IService<>),new ReferencedInstance("Default"));
-            pluginGraph.SetDefault("2", typeof(IService<>),new ReferencedInstance("Plugged"));
-            
-
-            StructureMap.Container manager = new StructureMap.Container(pluginGraph);
-
-            IPlug<string> plug = manager.GetInstance<IPlug<string>>();
+            IContainer manager = new Container(delegate(Registry registry)
+            {
+                registry.CreateProfile("1").For(typeof (IService<>)).UseConcreteType(typeof (Service<>));
+                registry.CreateProfile("2").For(typeof (IService<>)).UseConcreteType(typeof (Service2<>));
+            });
 
             manager.SetDefaultsToProfile("1");
-            Assert.IsInstanceOfType(typeof(Service<string>), manager.GetInstance(typeof(IService<string>)));
+
+            Assert.IsInstanceOfType(typeof (Service<string>), manager.GetInstance<IService<string>>());
 
             manager.SetDefaultsToProfile("2");
-            Assert.IsInstanceOfType(typeof(ServiceWithPlug<string>), manager.GetInstance(typeof(IService<string>)));
-
-            manager.SetDefaultsToProfile("1");
-            Assert.IsInstanceOfType(typeof(Service<string>), manager.GetInstance(typeof(IService<string>)));
+            Assert.IsInstanceOfType(typeof (Service2<int>), manager.GetInstance<IService<int>>());
         }
 
         [Test]
         public void Define_profile_with_generics_with_named_instance()
         {
-            IContainer manager = new StructureMap.Container(delegate(Registry registry)
+            IContainer manager = new Container(delegate(Registry registry)
             {
-                registry.AddInstanceOf(typeof(IService<>), new ConfiguredInstance(typeof(Service<>)).WithName("Service1"));
-                registry.AddInstanceOf(typeof(IService<>), new ConfiguredInstance(typeof(Service2<>)).WithName("Service2"));
-                registry.CreateProfile("1").For(typeof(IService<>)).UseNamedInstance("Service1");
-                registry.CreateProfile("2").For(typeof(IService<>)).UseNamedInstance("Service2");
+                registry.AddInstanceOf(typeof (IService<>),
+                                       new ConfiguredInstance(typeof (Service<>)).WithName("Service1"));
+                registry.AddInstanceOf(typeof (IService<>),
+                                       new ConfiguredInstance(typeof (Service2<>)).WithName("Service2"));
+                registry.CreateProfile("1").For(typeof (IService<>)).UseNamedInstance("Service1");
+                registry.CreateProfile("2").For(typeof (IService<>)).UseNamedInstance("Service2");
             });
 
             manager.SetDefaultsToProfile("1");
 
-            Assert.IsInstanceOfType(typeof(Service<string>), manager.GetInstance<IService<string>>());
+            Assert.IsInstanceOfType(typeof (Service<string>), manager.GetInstance<IService<string>>());
 
             manager.SetDefaultsToProfile("2");
-            Assert.IsInstanceOfType(typeof(Service2<int>), manager.GetInstance<IService<int>>());
+            Assert.IsInstanceOfType(typeof (Service2<int>), manager.GetInstance<IService<int>>());
         }
 
-        
-
         [Test]
-        public void Define_profile_with_generics_and_concrete_type()
+        public void GenericsTypeAndProfileOrMachine()
         {
-            IContainer manager = new StructureMap.Container(delegate(Registry registry)
-            {
-                registry.CreateProfile("1").For(typeof(IService<>)).UseConcreteType(typeof(Service<>));
-                registry.CreateProfile("2").For(typeof(IService<>)).UseConcreteType(typeof(Service2<>));
-            });
+            PluginGraph pluginGraph = PluginGraph.BuildGraphFromAssembly(typeof (IService<>).Assembly);
+            pluginGraph.SetDefault("1", typeof (IService<>), new ReferencedInstance("Default"));
+            pluginGraph.SetDefault("2", typeof (IService<>), new ReferencedInstance("Plugged"));
+
+
+            Container manager = new Container(pluginGraph);
+
+            IPlug<string> plug = manager.GetInstance<IPlug<string>>();
 
             manager.SetDefaultsToProfile("1");
-
-            Assert.IsInstanceOfType(typeof(Service<string>), manager.GetInstance<IService<string>>());
+            Assert.IsInstanceOfType(typeof (Service<string>), manager.GetInstance(typeof (IService<string>)));
 
             manager.SetDefaultsToProfile("2");
-            Assert.IsInstanceOfType(typeof(Service2<int>), manager.GetInstance<IService<int>>());
+            Assert.IsInstanceOfType(typeof (ServiceWithPlug<string>), manager.GetInstance(typeof (IService<string>)));
 
+            manager.SetDefaultsToProfile("1");
+            Assert.IsInstanceOfType(typeof (Service<string>), manager.GetInstance(typeof (IService<string>)));
         }
 
 
@@ -255,10 +255,6 @@ namespace StructureMap.Testing
 
     public class DisposableTarget<T, U> : ITarget<T, U>, IDisposable
     {
-        public DisposableTarget()
-        {
-        }
-
         #region IDisposable Members
 
         public void Dispose()

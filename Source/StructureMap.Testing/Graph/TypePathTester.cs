@@ -21,6 +21,5 @@ namespace StructureMap.Testing.Graph
             TypePath path = new TypePath(GetType());
             path.FindType();
         }
-
     }
 }

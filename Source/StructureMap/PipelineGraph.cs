@@ -42,6 +42,23 @@ namespace StructureMap
             }
         }
 
+        public void ImportFrom(PluginGraph graph)
+        {
+            foreach (PluginFamily family in graph.PluginFamilies)
+            {
+                if (family.IsGenericTemplate)
+                {
+                    _genericsGraph.ImportFrom(family);
+                }
+                else
+                {
+                    ForType(family.PluginType).ImportFrom(family);
+                }
+            }
+
+            _profileManager.ImportFrom(graph.ProfileManager);
+        }
+
         public MissingFactoryFunction OnMissingFactory
         {
             set { _missingFactory = value; }

@@ -15,7 +15,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             _lastService = null;
 
-            _manager = new StructureMap.Container(delegate(Registry registry)
+            _manager = new Container(delegate(Registry registry)
             {
                 registry.ForRequestedType<IService>().AddInstances
                     (

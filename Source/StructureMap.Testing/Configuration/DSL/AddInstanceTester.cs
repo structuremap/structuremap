@@ -2,7 +2,6 @@ using System;
 using System.Configuration;
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
-using StructureMap.Graph;
 using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing.Configuration.DSL
@@ -15,8 +14,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [SetUp]
         public void SetUp()
         {
-            
-            manager = new StructureMap.Container(delegate(Registry registry)
+            manager = new Container(delegate(Registry registry)
             {
                 registry.ScanAssemblies().IncludeAssemblyContainingType<ColorWidget>();
 
@@ -40,7 +38,6 @@ namespace StructureMap.Testing.Configuration.DSL
 
 
                 registry.AddInstanceOf<IWidget>().UsingConcreteType<AWidget>();
-
             });
         }
 
@@ -65,7 +62,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void AddInstanceAndOverrideTheConcreteTypeForADependency()
         {
-            IContainer manager = new StructureMap.Container(delegate(Registry registry)
+            IContainer manager = new Container(delegate(Registry registry)
             {
                 // Specify a new Instance that specifies the concrete type used for a dependency
                 registry.AddInstanceOf<Rule>().UsingConcreteType<WidgetRule>().WithName("AWidgetRule")
@@ -87,7 +84,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void SimpleCaseWithNamedInstance()
         {
-            manager = new StructureMap.Container(delegate(Registry registry)
+            manager = new Container(delegate(Registry registry)
             {
                 // Specify a new Instance and override the Name
                 registry.AddInstanceOf<IWidget>().UsingConcreteType<AWidget>().WithName("MyInstance");
@@ -100,7 +97,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void SpecifyANewInstanceOverrideADependencyWithANamedInstance()
         {
-            manager = new StructureMap.Container(delegate(Registry registry)
+            manager = new Container(delegate(Registry registry)
             {
                 registry.AddInstanceOf<Rule>().UsingConcreteType<ARule>().WithName("Alias");
 
@@ -128,11 +125,11 @@ namespace StructureMap.Testing.Configuration.DSL
             // Specify a new Instance, create an instance for a dependency on the fly
             string instanceKey = "OrangeWidgetRule";
 
-            IContainer manager = new StructureMap.Container(delegate(Registry registry)
+            IContainer manager = new Container(delegate(Registry registry)
             {
                 registry.AddInstanceOf<Rule>().UsingConcreteType<WidgetRule>().WithName(instanceKey)
                     .Child<IWidget>().Is(
-                    Registry.Instance<IWidget>().UsingConcreteType<ColorWidget>()
+                    RegistryExpressions.Instance<IWidget>().UsingConcreteType<ColorWidget>()
                         .WithProperty("Color").EqualTo("Orange")
                         .WithName("Orange")
                     );
@@ -150,12 +147,11 @@ namespace StructureMap.Testing.Configuration.DSL
             // Build an instance for IWidget, then setup StructureMap to return cloned instances of the 
             // "Prototype" (GoF pattern) whenever someone asks for IWidget named "Jeremy"
             CloneableWidget theWidget = new CloneableWidget("Jeremy");
-            
 
-            manager = new StructureMap.Container(delegate(Registry registry)
-            {
-                registry.AddPrototypeInstanceOf<IWidget>(theWidget).WithName("Jeremy");
-            });
+
+            manager =
+                new Container(
+                    delegate(Registry registry) { registry.AddPrototypeInstanceOf<IWidget>(theWidget).WithName("Jeremy"); });
 
             CloneableWidget widget1 = (CloneableWidget) manager.GetInstance<IWidget>("Jeremy");
             CloneableWidget widget2 = (CloneableWidget) manager.GetInstance<IWidget>("Jeremy");
@@ -177,10 +173,8 @@ namespace StructureMap.Testing.Configuration.DSL
             // Return the specific instance when an IWidget named "Julia" is requested
             CloneableWidget julia = new CloneableWidget("Julia");
 
-            manager = new StructureMap.Container(delegate(Registry registry)
-            {
-                registry.AddInstanceOf<IWidget>(julia).WithName("Julia");
-            });
+            manager =
+                new Container(delegate(Registry registry) { registry.AddInstanceOf<IWidget>(julia).WithName("Julia"); });
 
             CloneableWidget widget1 = (CloneableWidget) manager.GetInstance<IWidget>("Julia");
             CloneableWidget widget2 = (CloneableWidget) manager.GetInstance<IWidget>("Julia");
@@ -237,7 +231,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
     public class CloneableWidget : IWidget, ICloneable
     {
-        private string _name;
+        private readonly string _name;
 
 
         public CloneableWidget(string name)

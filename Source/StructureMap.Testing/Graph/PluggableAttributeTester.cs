@@ -1,16 +1,11 @@
 using NUnit.Framework;
 using StructureMap.Testing.Widget;
 
-namespace StructureMap.Testing.Container
+namespace StructureMap.Testing.Graph
 {
     [TestFixture]
     public class PluggableAttributeTester
     {
-        public PluggableAttributeTester()
-        {
-        }
-
-
         [Test]
         public void MarkedAsPluggable()
         {

@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using NUnit.Framework;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
@@ -13,10 +11,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void Sad_path_inner_function_throws_exception_207_with_key_and_plugin_type()
         {
-            ConstructorInstance instance = new ConstructorInstance(delegate()
-            {
-                throw new NotImplementedException();
-            });
+            ConstructorInstance instance = new ConstructorInstance(delegate { throw new NotImplementedException(); });
 
             try
             {

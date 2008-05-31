@@ -1,6 +1,5 @@
 using System;
 using System.Xml;
-using NUnit.Framework;
 using StructureMap.Configuration;
 using StructureMap.Graph;
 using StructureMap.Testing.TestData;
@@ -9,8 +8,8 @@ namespace StructureMap.Testing
 {
     public class ObjectMother
     {
-        private static StructureMap.Container container;
         private static PluginGraph _pluginGraph;
+        private static Container container;
 
         static ObjectMother()
         {
@@ -32,7 +31,7 @@ namespace StructureMap.Testing
 
             _pluginGraph = builder.Build();
 
-            container = new StructureMap.Container(_pluginGraph);
+            container = new Container(_pluginGraph);
         }
 
 

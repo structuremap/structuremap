@@ -2,15 +2,11 @@ using System.Reflection;
 using NUnit.Framework;
 using StructureMap.Testing.Widget;
 
-namespace StructureMap.Testing.Container
+namespace StructureMap.Testing.Graph
 {
     [TestFixture]
     public class ContainerConstructorAttributeTester
     {
-        public ContainerConstructorAttributeTester()
-        {
-        }
-
         [Test]
         public void GetConstructor()
         {

@@ -31,12 +31,12 @@ namespace StructureMap.Testing.Configuration.DSL
             Concretion concretion1 = new Concretion();
             Concretion concretion2 = new Concretion();
 
-            IContainer manager = new StructureMap.Container(delegate(Registry registry)
+            IContainer manager = new Container(delegate(Registry registry)
             {
                 registry.ForRequestedType<Abstraction>()
                     .AddInstances(
-                        ConstructedBy<Abstraction>(delegate { return concretion1; }).WithName("One"),
-                        ConstructedBy<Abstraction>(delegate { return concretion2; }).WithName("Two")
+                    ConstructedBy<Abstraction>(delegate { return concretion1; }).WithName("One"),
+                    ConstructedBy<Abstraction>(delegate { return concretion2; }).WithName("Two")
                     );
             });
 
@@ -49,7 +49,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             Concretion concretion = new Concretion();
 
-            IContainer manager = new StructureMap.Container(delegate(Registry registry)
+            IContainer manager = new Container(delegate(Registry registry)
             {
                 registry.ForRequestedType<Abstraction>().TheDefaultIs(
                     ConstructedBy<Abstraction>(delegate { return concretion; })
@@ -65,7 +65,7 @@ namespace StructureMap.Testing.Configuration.DSL
             Concretion concretion1 = new Concretion();
             Concretion concretion2 = new Concretion();
 
-            IContainer manager = new StructureMap.Container(delegate(Registry registry)
+            IContainer manager = new Container(delegate(Registry registry)
             {
                 registry.ForRequestedType<Abstraction>().AddInstance(
                     ConstructedBy<Abstraction>(delegate { return concretion1; }).WithName("One")
@@ -85,7 +85,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             Concretion concretion = new Concretion();
 
-            IContainer manager = new StructureMap.Container(delegate(Registry registry)
+            IContainer manager = new Container(delegate(Registry registry)
             {
                 registry.ForRequestedType<Abstraction>().AddInstance(
                     ConstructedBy<Abstraction>(delegate { return concretion; })

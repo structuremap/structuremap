@@ -38,7 +38,7 @@ namespace StructureMap.Testing.DataAccess.DataSetMapping
         private DataTable _destinationTable;
         private DataRow _row;
         private IDataReader _reader;
-        private DateTime _texasDate = new DateTime(1846, 12, 29);
+        private readonly DateTime _texasDate = new DateTime(1846, 12, 29);
 
         [Test, ExpectedException(typeof (ArgumentOutOfRangeException))]
         public void InitializeWithAnInvalidColumnNameAndThrowAnException()
@@ -108,7 +108,7 @@ namespace StructureMap.Testing.DataAccess.DataSetMapping
 
             map.Fill(_row, _reader);
 
-            Assert.AreEqual("Texas", (string) _row["StateName"]);
+            Assert.AreEqual("Texas", _row["StateName"]);
         }
     }
 }

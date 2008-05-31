@@ -18,10 +18,30 @@ namespace StructureMap.Testing.Pipeline
 
         #endregion
 
+        public class StubInstance : Instance
+        {
+            private readonly object _constructedObject;
+
+
+            public StubInstance(object constructedObject)
+            {
+                _constructedObject = constructedObject;
+            }
+
+            protected override object build(Type pluginType, IBuildSession session)
+            {
+                return _constructedObject;
+            }
+
+            protected override string getDescription()
+            {
+                return "Stubbed";
+            }
+        }
+
         [Test]
         public void BuildPolicy_should_apply_interception()
         {
-            
             MockRepository mocks = new MockRepository();
             IBuildSession buildSession = mocks.CreateMock<IBuildSession>();
 
@@ -50,7 +70,7 @@ namespace StructureMap.Testing.Pipeline
             try
             {
                 LiteralInstance instance = new LiteralInstance("something")
-                    .OnCreation<object>(delegate(object o){throw new NotImplementedException();});
+                    .OnCreation<object>(delegate { throw new NotImplementedException(); });
 
                 BuildPolicy policy = new BuildPolicy();
                 policy.Build(new StubBuildSession(), typeof (string), instance);
@@ -63,23 +83,13 @@ namespace StructureMap.Testing.Pipeline
 
 
         [Test]
-        public void Singleton_build_policy()
+        public void CloneHybrid()
         {
-            SingletonPolicy policy = new SingletonPolicy();
-            ConstructorInstance instance1 = new ConstructorInstance(delegate { return new ColorService("Red"); }).WithName("Red");
-            ConstructorInstance instance2 = new ConstructorInstance(delegate { return new ColorService("Green"); }).WithName("Green");
+            HybridBuildPolicy policy = new HybridBuildPolicy();
 
-            ColorService red1 = (ColorService) policy.Build(new StubBuildSession(), null, instance1);
-            ColorService green1 = (ColorService)policy.Build(new StubBuildSession(), null, instance2);
-            ColorService red2 = (ColorService)policy.Build(new StubBuildSession(), null, instance1);
-            ColorService green2 = (ColorService)policy.Build(new StubBuildSession(), null, instance2);
-            ColorService red3 = (ColorService)policy.Build(new StubBuildSession(), null, instance1);
-            ColorService green3 = (ColorService)policy.Build(new StubBuildSession(), null, instance2);
-        
-            Assert.AreSame(red1, red2);
-            Assert.AreSame(red1, red3);
-            Assert.AreSame(green1, green2);
-            Assert.AreSame(green1, green3);
+            HybridBuildPolicy clone = (HybridBuildPolicy) policy.Clone();
+            Assert.AreNotSame(policy, clone);
+            Assert.IsInstanceOfType(typeof (BuildPolicy), clone.InnerPolicy);
         }
 
         [Test]
@@ -89,39 +99,29 @@ namespace StructureMap.Testing.Pipeline
 
             SingletonPolicy clone = (SingletonPolicy) policy.Clone();
             Assert.AreNotSame(policy, clone);
-            Assert.IsInstanceOfType(typeof(BuildPolicy), clone.InnerPolicy);
+            Assert.IsInstanceOfType(typeof (BuildPolicy), clone.InnerPolicy);
         }
 
         [Test]
-        public void CloneHybrid()
+        public void Singleton_build_policy()
         {
-            HybridBuildPolicy policy = new HybridBuildPolicy();
+            SingletonPolicy policy = new SingletonPolicy();
+            ConstructorInstance instance1 =
+                new ConstructorInstance(delegate { return new ColorService("Red"); }).WithName("Red");
+            ConstructorInstance instance2 =
+                new ConstructorInstance(delegate { return new ColorService("Green"); }).WithName("Green");
 
-            HybridBuildPolicy clone = (HybridBuildPolicy)policy.Clone();
-            Assert.AreNotSame(policy, clone);
-            Assert.IsInstanceOfType(typeof(BuildPolicy), clone.InnerPolicy);
-        }
+            ColorService red1 = (ColorService) policy.Build(new StubBuildSession(), null, instance1);
+            ColorService green1 = (ColorService) policy.Build(new StubBuildSession(), null, instance2);
+            ColorService red2 = (ColorService) policy.Build(new StubBuildSession(), null, instance1);
+            ColorService green2 = (ColorService) policy.Build(new StubBuildSession(), null, instance2);
+            ColorService red3 = (ColorService) policy.Build(new StubBuildSession(), null, instance1);
+            ColorService green3 = (ColorService) policy.Build(new StubBuildSession(), null, instance2);
 
-
-        public class StubInstance : Instance
-        {
-            private object _constructedObject;
-
-
-            public StubInstance(object constructedObject)
-            {
-                _constructedObject = constructedObject;
-            }
-
-            protected override object build(Type pluginType, IBuildSession session)
-            {
-                return _constructedObject;
-            }
-
-            protected override string getDescription()
-            {
-                return "Stubbed";
-            }
+            Assert.AreSame(red1, red2);
+            Assert.AreSame(red1, red3);
+            Assert.AreSame(green1, green2);
+            Assert.AreSame(green1, green3);
         }
     }
 }

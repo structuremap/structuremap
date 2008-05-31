@@ -8,8 +8,6 @@ using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing.Diagnostics
 {
-    
-
     [TestFixture]
     public class ValidationBuildSessionTester : Registry
     {
@@ -34,7 +32,7 @@ namespace StructureMap.Testing.Diagnostics
 
         private ConstructorInstance errorInstance()
         {
-            return ConstructedBy<IWidget>(delegate() { throw new NotSupportedException("You can't make me!"); });
+            return ConstructedBy<IWidget>(delegate { throw new NotSupportedException("You can't make me!"); });
         }
 
         [Test]
@@ -159,16 +157,16 @@ namespace StructureMap.Testing.Diagnostics
             LiteralInstance instance = new LiteralInstance(new WidgetWithOneValidationFailure());
             ValidationBuildSession session =
                 validatedSession(delegate(Registry registry) { registry.AddInstanceOf<IWidget>(instance); });
-        
-        
+
+
             Assert.AreEqual(1, session.ValidationErrors.Length);
 
             ValidationError error = session.ValidationErrors[0];
 
-            Assert.AreEqual(typeof(IWidget), error.PluginType);
+            Assert.AreEqual(typeof (IWidget), error.PluginType);
             Assert.AreEqual(instance, error.Instance);
             Assert.AreEqual("ValidateFailure", error.MethodName);
-            Assert.IsInstanceOfType(typeof(NotImplementedException), error.Exception);
+            Assert.IsInstanceOfType(typeof (NotImplementedException), error.Exception);
         }
     }
 

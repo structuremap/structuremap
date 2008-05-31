@@ -1,10 +1,9 @@
 using NUnit.Framework;
 using StructureMap.Graph;
-using StructureMap.Source;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget4;
 
-namespace StructureMap.Testing.Container
+namespace StructureMap.Testing.Graph
 {
     [TestFixture]
     public class FillDependenciesTester
@@ -14,7 +13,7 @@ namespace StructureMap.Testing.Container
         {
             PluginGraph pluginGraph = ObjectMother.GetPluginGraph();
 
-            StructureMap.Container manager = new StructureMap.Container(pluginGraph);
+            Container manager = new Container(pluginGraph);
 
             // The dependencies must have a default setting first
             manager.SetDefault(typeof (IStrategy), "Red");
@@ -33,7 +32,7 @@ namespace StructureMap.Testing.Container
         public void TryToFillDependenciesOnAbstractClassThrowsException()
         {
             PluginGraph pluginGraph = ObjectMother.GetPluginGraph();
-            StructureMap.Container manager = new StructureMap.Container(pluginGraph);
+            Container manager = new Container(pluginGraph);
 
             manager.FillDependencies(typeof (AbstractClass));
         }
@@ -43,7 +42,7 @@ namespace StructureMap.Testing.Container
         public void TryToFillDependenciesOnClassWithPrimitiveArgumentsThrowsException()
         {
             PluginGraph pluginGraph = ObjectMother.GetPluginGraph();
-            StructureMap.Container manager = new StructureMap.Container(pluginGraph);
+            Container manager = new Container(pluginGraph);
 
             manager.FillDependencies(typeof (CannotBeFilledConcreteClass));
         }

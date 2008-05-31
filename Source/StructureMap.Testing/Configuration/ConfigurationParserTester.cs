@@ -1,4 +1,3 @@
-using System;
 using System.Xml;
 using NUnit.Framework;
 using StructureMap.Configuration;
@@ -24,7 +23,6 @@ namespace StructureMap.Testing.Configuration
 
             GraphBuilder builder = new GraphBuilder(new Registry[0]);
             parser.ParseProfilesAndMachines(builder);
-
         }
 
         #endregion
@@ -60,7 +58,7 @@ namespace StructureMap.Testing.Configuration
             PluginGraphBuilder builder = new PluginGraphBuilder(parser);
             PluginGraph graph = builder.Build();
 
-            StructureMap.Container manager = new StructureMap.Container(graph);
+            Container manager = new Container(graph);
 
             GrandChild tommy = (GrandChild) manager.GetInstance(typeof (GrandChild), "Tommy");
             Assert.AreEqual(false, tommy.RightHanded);

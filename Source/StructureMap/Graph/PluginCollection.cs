@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using StructureMap.Util;
 
 namespace StructureMap.Graph
 {
@@ -10,7 +11,7 @@ namespace StructureMap.Graph
     public class PluginCollection : IEnumerable<Plugin>
     {
         private readonly PluginFamily _family;
-        private readonly Dictionary<Type, Plugin> _plugins = new Dictionary<Type, Plugin>();
+        private readonly Cache<Type, Plugin> _plugins = new Cache<Type, Plugin>();
 
         public PluginCollection(PluginFamily family)
         {
@@ -21,10 +22,7 @@ namespace StructureMap.Graph
         {
             get
             {
-                Plugin[] returnValue = new Plugin[_plugins.Count];
-                _plugins.Values.CopyTo(returnValue, 0);
-
-                return returnValue;
+                return _plugins.GetAll();
             }
         }
 
@@ -34,13 +32,13 @@ namespace StructureMap.Graph
         }
 
         /// <summary>
-        /// Gets a Plugin by its PluggedType
+        /// Gets a Plugin by its pluggedType
         /// </summary>
-        /// <param name="PluggedType"></param>
+        /// <param name="pluggedType"></param>
         /// <returns></returns>
-        public Plugin this[Type PluggedType]
+        public Plugin this[Type pluggedType]
         {
-            get { return _plugins[PluggedType]; }
+            get { return _plugins.Retrieve(pluggedType); }
         }
 
         /// <summary>
@@ -52,15 +50,10 @@ namespace StructureMap.Graph
         {
             get
             {
-                foreach (KeyValuePair<Type, Plugin> pair in _plugins)
+                return _plugins.Find(delegate(Plugin plugin)
                 {
-                    if (pair.Value.ConcreteKey == concreteKey)
-                    {
-                        return pair.Value;
-                    }
-                }
-
-                return null;
+                    return plugin.ConcreteKey == concreteKey;
+                });
             }
         }
 
@@ -68,7 +61,7 @@ namespace StructureMap.Graph
 
         IEnumerator<Plugin> IEnumerable<Plugin>.GetEnumerator()
         {
-            return _plugins.Values.GetEnumerator();
+            return _plugins.GetEnumerator();
         }
 
         public IEnumerator GetEnumerator()
@@ -81,7 +74,7 @@ namespace StructureMap.Graph
 
         public void Add(Plugin plugin)
         {
-            if (_plugins.ContainsKey(plugin.PluggedType))
+            if (_plugins.Has(plugin.PluggedType))
             {
                 Plugin peer = this[plugin.PluggedType];
                 peer.MergeSetters(plugin);
@@ -99,7 +92,8 @@ namespace StructureMap.Graph
                 throw new StructureMapException(104, plugin.PluggedType, _family.PluginType);
             }
 
-            _plugins.Add(plugin.PluggedType, plugin);
+
+            _plugins.Store(plugin.PluggedType, plugin);
         }
 
         /// <summary>
@@ -130,20 +124,25 @@ namespace StructureMap.Graph
         public List<Plugin> FindAutoFillablePlugins()
         {
             List<Plugin> list = new List<Plugin>();
-            foreach (Plugin plugin in _plugins.Values)
+            _plugins.Each(delegate(Plugin plugin)
             {
                 if (plugin.CanBeAutoFilled)
                 {
                     list.Add(plugin);
                 }
-            }
+            });
 
             return list;
         }
 
         public bool HasPlugin(Type pluggedType)
         {
-            return _plugins.ContainsKey(pluggedType);
+            return _plugins.Has(pluggedType);
+        }
+
+        public void Fill(Plugin plugin)
+        {
+            _plugins.Fill(plugin.PluggedType, plugin);
         }
     }
 }

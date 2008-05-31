@@ -30,12 +30,12 @@ namespace StructureMap.Testing.DataAccess
         [Test]
         public void TryingOutTypeMethod()
         {
-            foreach (MethodInfo info in typeof(Type).GetMethods())
+            foreach (MethodInfo info in typeof (Type).GetMethods())
             {
                 Debug.WriteLine(info.Name);
             }
 
-            MethodInfo method = typeof(Type).GetMethod("GetTypeFromHandle");
+            MethodInfo method = typeof (Type).GetMethod("GetTypeFromHandle");
             Assert.IsNotNull(method);
         }
     }

@@ -1,11 +1,9 @@
-using System;
 using System.Collections.Generic;
-using System.Reflection;
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 
-namespace StructureMap.Testing.Container
+namespace StructureMap.Testing.Graph
 {
     [TestFixture]
     public class TypeFindingTester
@@ -15,7 +13,7 @@ namespace StructureMap.Testing.Container
         [SetUp]
         public void SetUp()
         {
-            _manager = new StructureMap.Container(delegate(Registry registry)
+            _manager = new Container(delegate(Registry registry)
             {
                 registry.BuildInstancesOf<INormalType>();
                 registry.ScanAssemblies().IncludeTheCallingAssembly()

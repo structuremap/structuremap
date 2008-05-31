@@ -376,6 +376,7 @@
     <Compile Include="ErrorMessages.cs" />
     <Compile Include="Pipeline\ConfiguredInstance.Building.cs" />
     <Compile Include="Pipeline\IStructuredInstance.cs" />
+    <Compile Include="Util\Cache.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

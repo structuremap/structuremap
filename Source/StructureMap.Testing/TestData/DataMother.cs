@@ -10,7 +10,7 @@ namespace StructureMap.Testing.TestData
 {
     public class DataMother
     {
-        private static ArrayList _files = new ArrayList();
+        private static readonly ArrayList _files = new ArrayList();
 
 
         private DataMother()

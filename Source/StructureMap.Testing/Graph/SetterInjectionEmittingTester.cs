@@ -5,7 +5,7 @@ using StructureMap.Testing.TestData;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget5;
 
-namespace StructureMap.Testing.Container
+namespace StructureMap.Testing.Graph
 {
     [TestFixture]
     public class SetterInjectionEmittingTester
@@ -21,17 +21,17 @@ namespace StructureMap.Testing.Container
         }
 
 
-        private StructureMap.Container buildInstanceManager()
+        private Container buildInstanceManager()
         {
             PluginGraph pluginGraph = DataMother.GetDiagnosticPluginGraph("SetterInjectionTesting.xml");
 
-            return new StructureMap.Container(pluginGraph);
+            return new Container(pluginGraph);
         }
 
         [Test]
         public void ChildArraySetter()
         {
-            StructureMap.Container manager = buildInstanceManager();
+            Container manager = buildInstanceManager();
 
             WidgetArrayGridColumn column =
                 (WidgetArrayGridColumn) manager.GetInstance(typeof (IGridColumn), "WidgetArray");
@@ -42,7 +42,7 @@ namespace StructureMap.Testing.Container
         [Test]
         public void ChildObjectSetter()
         {
-            StructureMap.Container manager = buildInstanceManager();
+            Container manager = buildInstanceManager();
 
 
             WidgetGridColumn column = (WidgetGridColumn) manager.GetInstance(typeof (IGridColumn), "BlueWidget");
@@ -54,12 +54,12 @@ namespace StructureMap.Testing.Container
         {
             PluginGraph graph = new PluginGraph();
             PluginFamily family = graph.FindFamily(typeof (IGridColumn));
-            Plugin plugin = new Plugin(typeof(EnumGridColumn));
+            Plugin plugin = new Plugin(typeof (EnumGridColumn));
             family.AddPlugin(plugin);
 
             family.AddInstance(_source.GetMemento("Enum"));
 
-            StructureMap.Container manager = new StructureMap.Container(graph);
+            Container manager = new Container(graph);
 
             EnumGridColumn column = (EnumGridColumn) manager.GetInstance<IGridColumn>("Enum");
 
@@ -70,15 +70,15 @@ namespace StructureMap.Testing.Container
         public void PrimitiveNonStringSetter()
         {
             PluginGraph graph = new PluginGraph();
-            PluginFamily family = graph.FindFamily(typeof(IGridColumn));
-            Plugin plugin = new Plugin(typeof(LongGridColumn));
+            PluginFamily family = graph.FindFamily(typeof (IGridColumn));
+            Plugin plugin = new Plugin(typeof (LongGridColumn));
             family.AddPlugin(plugin);
 
             InstanceMemento memento = _source.GetMemento("Long");
             long count = long.Parse(memento.GetProperty("Count"));
             family.AddInstance(memento);
 
-            StructureMap.Container manager = new StructureMap.Container(graph);
+            Container manager = new Container(graph);
 
 
             LongGridColumn column = (LongGridColumn) manager.GetInstance<IGridColumn>("Long");
@@ -89,16 +89,15 @@ namespace StructureMap.Testing.Container
         public void StringSetter()
         {
             PluginGraph graph = new PluginGraph();
-            PluginFamily family = graph.FindFamily(typeof(IGridColumn));
-            Plugin plugin = new Plugin(typeof(StringGridColumn));
+            PluginFamily family = graph.FindFamily(typeof (IGridColumn));
+            Plugin plugin = new Plugin(typeof (StringGridColumn));
             family.AddPlugin(plugin);
 
             InstanceMemento memento = _source.GetMemento("String");
             family.AddInstance(memento);
 
-            StructureMap.Container manager = new StructureMap.Container(graph);
+            Container manager = new Container(graph);
             StringGridColumn column = (StringGridColumn) manager.GetInstance<IGridColumn>("String");
-
 
 
             Assert.AreEqual(memento.GetProperty("Name"), column.Name);

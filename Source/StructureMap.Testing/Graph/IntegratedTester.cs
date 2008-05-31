@@ -4,7 +4,7 @@ using StructureMap.Source;
 using StructureMap.Testing.TestData;
 using StructureMap.Testing.Widget;
 
-namespace StructureMap.Testing.Container
+namespace StructureMap.Testing.Graph
 {
     [TestFixture]
     public class IntegratedTester
@@ -24,20 +24,16 @@ namespace StructureMap.Testing.Container
             MementoSource source2 = new XmlFileMementoSource("IntegratedTest.XML", "Children", "Child");
             MementoSource source3 = new XmlFileMementoSource("IntegratedTest.XML", "Parents", "Parent");
 
-            graph.FindFamily(typeof(GrandChild)).AddMementoSource(source1);
-            graph.FindFamily(typeof(Child)).AddMementoSource(source2);
-            graph.FindFamily(typeof(Parent)).AddMementoSource(source3);
+            graph.FindFamily(typeof (GrandChild)).AddMementoSource(source1);
+            graph.FindFamily(typeof (Child)).AddMementoSource(source2);
+            graph.FindFamily(typeof (Parent)).AddMementoSource(source3);
 
-            manager = new StructureMap.Container(graph);
+            manager = new Container(graph);
         }
 
         #endregion
 
-        private StructureMap.Container manager;
-
-        public IntegratedTester()
-        {
-        }
+        private Container manager;
 
         [Test]
         public void GetChildWithDefinedGrandChild()

@@ -1,8 +1,6 @@
 using System.Collections.Generic;
-using System.Diagnostics;
 using NUnit.Framework;
 using StructureMap.Graph;
-using StructureMap.Pipeline;
 using StructureMap.Testing.TestData;
 using StructureMap.Testing.Widget;
 
@@ -17,12 +15,12 @@ namespace StructureMap.Testing.Configuration
         public void SetUp()
         {
             _graph = DataMother.GetPluginGraph("ShortInstance.xml");
-            _manager = new StructureMap.Container(_graph);
+            _manager = new Container(_graph);
         }
 
         #endregion
 
-        private StructureMap.Container _manager;
+        private Container _manager;
         private PluginGraph _graph;
 
         [Test]
@@ -31,12 +29,9 @@ namespace StructureMap.Testing.Configuration
             // Who needs the Law of Demeter?
             _graph.Seal();
 
-            Instance[] instances = _graph.FindFamily(typeof (IWidget)).GetAllInstances();
-            foreach (Instance instance in instances)
-            {
-                Debug.WriteLine(instance.Name + ", " + instance.GetType().FullName);
-            }
-            Assert.AreEqual(4, instances.Length);
+            PluginFamily family = _graph.FindFamily(typeof (IWidget));
+
+            Assert.AreEqual(4, family.InstanceCount);
         }
 
         [Test]

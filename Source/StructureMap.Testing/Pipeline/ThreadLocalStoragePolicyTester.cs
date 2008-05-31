@@ -15,8 +15,7 @@ namespace StructureMap.Testing.Pipeline
         public void SetUp()
         {
             _policy = new ThreadLocalStoragePolicy();
-            _instance = new ConstructorInstance(delegate() { return new ColorRule("Red"); }).WithName("Red");
-            
+            _instance = new ConstructorInstance(delegate { return new ColorRule("Red"); }).WithName("Red");
         }
 
         #endregion
@@ -30,43 +29,43 @@ namespace StructureMap.Testing.Pipeline
 
         private void findRule1()
         {
-            _rule1 = (ColorRule) _policy.Build(new StubBuildSession(), typeof(IService), _instance);
+            _rule1 = (ColorRule) _policy.Build(new StubBuildSession(), typeof (IService), _instance);
 
-            ColorRule rule = (ColorRule)_policy.Build(new StubBuildSession(), typeof(IService), _instance);
+            ColorRule rule = (ColorRule) _policy.Build(new StubBuildSession(), typeof (IService), _instance);
             Assert.AreSame(_rule1, rule);
         }
 
         private void findRule2()
         {
-            _rule2 = (ColorRule)_policy.Build(new StubBuildSession(), typeof(IService), _instance);
+            _rule2 = (ColorRule) _policy.Build(new StubBuildSession(), typeof (IService), _instance);
 
-            ColorRule rule = (ColorRule)_policy.Build(new StubBuildSession(), typeof(IService), _instance);
+            ColorRule rule = (ColorRule) _policy.Build(new StubBuildSession(), typeof (IService), _instance);
             Assert.AreSame(_rule2, rule);
         }
 
         private void findRule3()
         {
-            _rule3 = (ColorRule)_policy.Build(new StubBuildSession(), typeof(IService), _instance);
+            _rule3 = (ColorRule) _policy.Build(new StubBuildSession(), typeof (IService), _instance);
 
-            ColorRule rule = (ColorRule)_policy.Build(new StubBuildSession(), typeof(IService), _instance);
+            ColorRule rule = (ColorRule) _policy.Build(new StubBuildSession(), typeof (IService), _instance);
             Assert.AreSame(_rule3, rule);
 
-            rule = (ColorRule)_policy.Build(new StubBuildSession(), typeof(IService), _instance);
+            rule = (ColorRule) _policy.Build(new StubBuildSession(), typeof (IService), _instance);
             Assert.AreSame(_rule3, rule);
 
-            rule = (ColorRule)_policy.Build(new StubBuildSession(), typeof(IService), _instance);
+            rule = (ColorRule) _policy.Build(new StubBuildSession(), typeof (IService), _instance);
             Assert.AreSame(_rule3, rule);
 
-            rule = (ColorRule)_policy.Build(new StubBuildSession(), typeof(IService), _instance);
+            rule = (ColorRule) _policy.Build(new StubBuildSession(), typeof (IService), _instance);
             Assert.AreSame(_rule3, rule);
         }
 
         [Test]
         public void FindUniqueInstancePerThread()
         {
-            Thread t1 = new Thread(new ThreadStart(findRule1));
-            Thread t2 = new Thread(new ThreadStart(findRule2));
-            Thread t3 = new Thread(new ThreadStart(findRule3));
+            Thread t1 = new Thread(findRule1);
+            Thread t2 = new Thread(findRule2);
+            Thread t3 = new Thread(findRule3);
 
             t1.Start();
             t2.Start();

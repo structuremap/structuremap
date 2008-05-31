@@ -8,7 +8,7 @@ namespace StructureMap.Testing.DataAccess
     {
         private string _commandName;
         private IDataSession _session;
-        private bool _wasInitialized = false;
+        private bool _wasInitialized;
 
         public bool WasInitialized
         {

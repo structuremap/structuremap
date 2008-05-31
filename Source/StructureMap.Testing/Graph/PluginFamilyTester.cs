@@ -90,8 +90,8 @@ namespace StructureMap.Testing.Graph
 
             Assert.AreEqual(Plugin.DEFAULT, family.DefaultInstanceKey);
             Assert.AreEqual(1, family.PluginCount);
-            Assert.AreEqual(1, family.GetAllInstances().Length);
-            IConfiguredInstance instance = (IConfiguredInstance) family.GetAllInstances()[0];
+            Assert.AreEqual(1, family.InstanceCount);
+            IConfiguredInstance instance = (IConfiguredInstance) family.FirstInstance();
             Assert.AreEqual(Plugin.DEFAULT, instance.Name);
             Assert.AreEqual(GetType(), instance.PluggedType);
         }
@@ -118,7 +118,7 @@ namespace StructureMap.Testing.Graph
             family.Parent = new PluginGraph();
             family.AddInstance(new ConfiguredInstance().WithName("Default"));
             family.DefaultInstanceKey = "Default";
-            
+
 
             family.FillDefault(new Profile("theProfile"));
 
@@ -211,7 +211,7 @@ namespace StructureMap.Testing.Graph
             pluginGraph.Assemblies.Add(Assembly.GetExecutingAssembly());
             pluginGraph.Seal();
 
-            StructureMap.Container manager = new StructureMap.Container(pluginGraph);
+            Container manager = new Container(pluginGraph);
 
             ISingletonRepository repository1 =
                 (ISingletonRepository) manager.GetInstance(typeof (ISingletonRepository));

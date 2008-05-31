@@ -7,7 +7,7 @@ using StructureMap.Source;
 using StructureMap.Testing.TestData;
 using StructureMap.Testing.Widget;
 
-namespace StructureMap.Testing.Container
+namespace StructureMap.Testing.Graph
 {
     [TestFixture]
     public class ArrayConstructorTester
@@ -25,8 +25,6 @@ namespace StructureMap.Testing.Container
         [Test]
         public void BuildDecisionWithRules()
         {
-            
-
             DataMother.WriteDocument("FullTesting.XML");
             DataMother.WriteDocument("Array.xml");
             DataMother.WriteDocument("ObjectMother.config");
@@ -35,11 +33,13 @@ namespace StructureMap.Testing.Container
             XmlMementoSource source = new XmlFileMementoSource("Array.xml", string.Empty, "Decision");
             registry.ForRequestedType<Decision>().AddInstancesFrom(source).AliasConcreteType<Decision>("Default");
 
-            PluginGraphBuilder builder = new PluginGraphBuilder(new ConfigurationParser[]{ConfigurationParser.FromFile("ObjectMother.config")}, new Registry[]{registry}, new GraphLog());
+            PluginGraphBuilder builder =
+                new PluginGraphBuilder(new ConfigurationParser[] {ConfigurationParser.FromFile("ObjectMother.config")},
+                                       new Registry[] {registry}, new GraphLog());
 
             PluginGraph graph = builder.Build();
 
-            StructureMap.Container manager = new StructureMap.Container(graph);
+            Container manager = new Container(graph);
 
             Decision d1 = (Decision) manager.GetInstance(typeof (Decision), "RedBlue");
             Assert.IsNotNull(d1);

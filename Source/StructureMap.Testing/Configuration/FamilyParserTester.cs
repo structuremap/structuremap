@@ -1,6 +1,5 @@
 using System;
 using System.Xml;
-using NMock;
 using NUnit.Framework;
 using StructureMap.Attributes;
 using StructureMap.Configuration;
@@ -50,7 +49,7 @@ namespace StructureMap.Testing.Configuration
             _parser.ParseFamily(_familyElement);
 
             PluginFamily family = _graph.FindFamily(thePluginType);
-            Assert.IsInstanceOfType(typeof(T), family.Policy);
+            Assert.IsInstanceOfType(typeof (T), family.Policy);
         }
 
 

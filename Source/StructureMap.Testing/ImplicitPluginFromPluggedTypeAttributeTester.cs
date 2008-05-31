@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Specialized;
 using NUnit.Framework;
-using StructureMap.Attributes;
 using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
@@ -44,7 +43,7 @@ namespace StructureMap.Testing
             family.AddInstance(_memento);
 
             PluginGraph graph = builder.PluginGraph;
-            StructureMap.Container manager = new StructureMap.Container(graph);
+            Container manager = new Container(graph);
 
             StubbedGateway gateway = (StubbedGateway) manager.GetInstance(typeof (IGateway), _memento.InstanceKey);
 
@@ -56,7 +55,8 @@ namespace StructureMap.Testing
         public void RunThroughXml()
         {
             PluginGraph graph = DataMother.GetPluginGraph("PluggedTypeTest.xml");
-            StructureMap.Container manager = new StructureMap.Container(graph);
+            Container manager = new Container(graph);
+
 
             NotPluggableWidget widget = (NotPluggableWidget) manager.GetInstance(typeof (IWidget), "Me");
             Assert.AreEqual("Jeremy", widget.Name);

@@ -7,7 +7,7 @@ using StructureMap.Pipeline;
 using StructureMap.Testing.TestData;
 using StructureMap.Testing.Widget;
 
-namespace StructureMap.Testing.Container
+namespace StructureMap.Testing.Graph
 {
     [TestFixture]
     public class PluginGraphBuilderTester
@@ -32,10 +32,6 @@ namespace StructureMap.Testing.Container
         #endregion
 
         private PluginGraph graph;
-
-        public PluginGraphBuilderTester()
-        {
-        }
 
         [Test]
         public void BuildsInterceptionChain()
@@ -148,7 +144,7 @@ namespace StructureMap.Testing.Container
             PluginGraph pluginGraph = registry.Build();
 
 
-            PluginFamily pluginFamily = pluginGraph.FindFamily(typeof(IWidget));
+            PluginFamily pluginFamily = pluginGraph.FindFamily(typeof (IWidget));
             Plugin plugin = pluginFamily.Plugins[typeof (ColorWidget)];
             Assert.IsNotNull(plugin);
         }

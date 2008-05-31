@@ -1,8 +1,8 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
+using StructureMap.Util;
 
 namespace StructureMap
 {
@@ -12,7 +12,10 @@ namespace StructureMap
     public class InstanceFactory : IInstanceFactory
     {
         private readonly InstanceBuilderList _instanceBuilders;
-        private readonly Dictionary<string, Instance> _instances = new Dictionary<string, Instance>();
+
+        private readonly Cache<string, Instance> _instances =
+            new Cache<string, Instance>(delegate { return null; });
+
         private readonly Type _pluginType;
         private readonly IBuildPolicy _policy = new BuildPolicy();
 
@@ -20,7 +23,6 @@ namespace StructureMap
 
         public InstanceFactory(Type pluginType) : this(new PluginFamily(pluginType))
         {
-            
         }
 
         /// <summary>
@@ -41,10 +43,8 @@ namespace StructureMap
                 _pluginType = family.PluginType;
                 _instanceBuilders = new InstanceBuilderList(family.PluginType, family.Plugins.All);
 
-                foreach (Instance instance in family.GetAllInstances())
-                {
-                    AddInstance(instance);
-                }
+
+                family.EachInstance(delegate(Instance instance) { AddInstance(instance); });
             }
             catch (StructureMapException)
             {
@@ -93,29 +93,21 @@ namespace StructureMap
 
         public void ForEachInstance(Action<Instance> action)
         {
-            foreach (KeyValuePair<string, Instance> pair in _instances)
-            {
-                action(pair.Value);
-            }
+            _instances.Each(action);
         }
 
         public void AddInstance(Instance instance)
         {
-            if (_instances.ContainsKey(instance.Name))
-            {
-                _instances[instance.Name] = instance;
-            }
-            else
-            {
-                _instances.Add(instance.Name, instance);
-            }
+            _instances.Store(instance.Name, instance);
         }
 
 
-        [Obsolete] public Instance AddType<T>()
+        [Obsolete]
+        public Instance AddType<T>()
         {
             InstanceBuilder builder = _instanceBuilders.FindByType(typeof (T));
-            ConfiguredInstance instance = new ConfiguredInstance(typeof(T)).WithName(TypePath.GetAssemblyQualifiedName(typeof(T)));
+            ConfiguredInstance instance =
+                new ConfiguredInstance(typeof (T)).WithName(TypePath.GetAssemblyQualifiedName(typeof (T)));
 
             AddInstance(instance);
 
@@ -126,11 +118,11 @@ namespace StructureMap
         {
             IList list = new ArrayList();
 
-            foreach (KeyValuePair<string, Instance> pair in _instances)
+            _instances.Each(delegate(Instance instance)
             {
-                object instance = Build(session, pair.Value);
-                list.Add(instance);
-            }
+                object builtObject = Build(session, instance);
+                list.Add(builtObject);
+            });
 
             return list;
         }
@@ -142,28 +134,18 @@ namespace StructureMap
 
         public Instance FindInstance(string name)
         {
-            if (!_instances.ContainsKey(name))
-            {
-                return null;
-            }
-
-            return _instances[name];
+            return _instances.Retrieve(name);
         }
 
         #endregion
 
-        public void Merge(PluginFamily family)
+        public void ImportFrom(PluginFamily family)
         {
             _instanceBuilders.Add(family.Plugins);
-            foreach (Instance instance in family.GetAllInstances())
+            family.EachInstance(delegate(Instance instance)
             {
-                if (_instances.ContainsKey(instance.Name))
-                {
-                    continue;
-                }
-                
-                AddInstance(instance);
-            }
+                 _instances.Fill(instance.Name, instance);
+            });
         }
     }
 }

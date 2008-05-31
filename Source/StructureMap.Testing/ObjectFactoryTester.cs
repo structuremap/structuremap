@@ -42,7 +42,7 @@ namespace StructureMap.Testing
 
         private void timeout()
         {
-            Thread thread = new Thread(new ThreadStart(signal));
+            Thread thread = new Thread(signal);
             thread.Start();
         }
 

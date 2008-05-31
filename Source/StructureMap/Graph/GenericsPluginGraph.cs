@@ -1,16 +1,25 @@
 using System;
 using System.Collections.Generic;
 using StructureMap.Pipeline;
+using StructureMap.Util;
 
 namespace StructureMap.Graph
 {
     public class GenericsPluginGraph
     {
-        private readonly Dictionary<Type, PluginFamily> _families;
+        private readonly Cache<Type, PluginFamily> _families;
 
         public GenericsPluginGraph()
         {
-            _families = new Dictionary<Type, PluginFamily>();
+            _families = new Cache<Type, PluginFamily>(delegate(Type pluginType)
+            {
+                return new PluginFamily(pluginType);
+            });
+        }
+
+        public int FamilyCount
+        {
+            get { return _families.Count; }
         }
 
         public static bool CanBeCast(Type pluginType, Type pluggedType)
@@ -64,7 +73,7 @@ namespace StructureMap.Graph
 
         public void AddFamily(PluginFamily family)
         {
-            _families.Add(family.PluginType, family);
+            _families.Store(family.PluginType, family);
         }
 
 
@@ -72,9 +81,9 @@ namespace StructureMap.Graph
         {
             Type basicType = templatedType.GetGenericTypeDefinition();
 
-            if (_families.ContainsKey(basicType))
+            if (_families.Has(basicType))
             {
-                PluginFamily basicFamily = _families[basicType];
+                PluginFamily basicFamily = _families.Retrieve(basicType);
                 Type[] templatedParameterTypes = templatedType.GetGenericArguments();
 
                 profileManager.CopyDefaults(basicType, templatedType);
@@ -106,13 +115,14 @@ namespace StructureMap.Graph
             }
 
             // TODO -- Got a big problem here.  Intances need to be copied over
-            foreach (IDiagnosticInstance instance in baseFamily.GetAllInstances())
+            baseFamily.EachInstance(delegate(Instance i)
             {
+                IDiagnosticInstance instance = i;
                 if (instance.CanBePartOfPluginFamily(templatedFamily))
                 {
-                    templatedFamily.AddInstance((Instance) instance);
+                    templatedFamily.AddInstance((Instance)instance);
                 }
-            }
+            });
 
             // Need to attach the new PluginFamily to the old PluginGraph
             baseFamily.Parent.PluginFamilies.Add(templatedFamily);
@@ -168,6 +178,25 @@ namespace StructureMap.Graph
                            pluggableArgs[i].IsGenericParameter;
             }
             return isValid;
+        }
+
+        public void ImportFrom(GenericsPluginGraph source)
+        {
+            foreach (PluginFamily sourceFamily in source._families)
+            {
+                ImportFrom(sourceFamily);
+            }
+        }
+
+        public void ImportFrom(PluginFamily sourceFamily)
+        {
+            PluginFamily destinationFamily = FindFamily(sourceFamily.PluginType);
+            destinationFamily.ImportFrom(sourceFamily);
+        }
+
+        public PluginFamily FindFamily(Type pluginType)
+        {
+            return _families.Retrieve(pluginType);
         }
     }
 }

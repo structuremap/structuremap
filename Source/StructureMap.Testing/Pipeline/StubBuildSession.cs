@@ -1,14 +1,13 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using StructureMap.Graph;
-using StructureMap.Interceptors;
 using StructureMap.Pipeline;
 
 namespace StructureMap.Testing.Pipeline
 {
-    public class StubBuildSession : StructureMap.Pipeline.IBuildSession
+    public class StubBuildSession : IBuildSession
     {
+        #region IBuildSession Members
+
         public object CreateInstance(Type type, string name)
         {
             throw new NotImplementedException();
@@ -24,17 +23,40 @@ namespace StructureMap.Testing.Pipeline
             throw new NotImplementedException();
         }
 
+        public object CreateInstance(Type pluginType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object ApplyInterception(Type pluginType, object actualValue)
+        {
+            return actualValue;
+        }
+
+        public InstanceBuilder FindBuilderByType(Type pluginType, Type pluggedType)
+        {
+            if (pluggedType == null)
+            {
+                return null;
+            }
+
+            InstanceBuilderList list = new InstanceBuilderList(pluginType, new Plugin[] {new Plugin(pluggedType),});
+            return list.FindByType(pluggedType);
+        }
+
+        public InstanceBuilder FindBuilderByConcreteKey(Type pluginType, string concreteKey)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
         public object CreateInstance(string typeName, IConfiguredInstance instance)
         {
             throw new NotImplementedException();
         }
 
         public object CreateInstance(string typeName)
-        {
-            throw new NotImplementedException();
-        }
-
-        public object CreateInstance(Type pluginType)
         {
             throw new NotImplementedException();
         }
@@ -50,28 +72,6 @@ namespace StructureMap.Testing.Pipeline
         }
 
         public InstanceBuilder FindInstanceBuilder(Type pluginType, Type pluggedType)
-        {
-            throw new NotImplementedException();
-        }
-
-
-        public object ApplyInterception(Type pluginType, object actualValue)
-        {
-            return actualValue;
-        }
-
-        public InstanceBuilder FindBuilderByType(Type pluginType, Type pluggedType)
-        {
-            if (pluggedType == null)
-            {
-                return null;
-            }
-
-            InstanceBuilderList list = new InstanceBuilderList(pluginType, new Plugin[]{new Plugin(pluggedType), });
-            return list.FindByType(pluggedType);
-        }
-
-        public InstanceBuilder FindBuilderByConcreteKey(Type pluginType, string concreteKey)
         {
             throw new NotImplementedException();
         }

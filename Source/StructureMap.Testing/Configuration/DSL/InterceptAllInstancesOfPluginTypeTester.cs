@@ -19,12 +19,11 @@ namespace StructureMap.Testing.Configuration.DSL
             {
                 registry.ForRequestedType<IService>()
                     .AddInstances(
-                        Instance<ColorService>().WithName("Red").WithProperty("color").EqualTo("Red"),
-                        Object<IService>(new ColorService("Yellow")).WithName("Yellow"),
-                        ConstructedBy<IService>(delegate { return new ColorService("Purple"); }).WithName("Purple"),
-                        Instance<ColorService>().WithName("Decorated").WithProperty("color").EqualTo("Orange")
+                    Instance<ColorService>().WithName("Red").WithProperty("color").EqualTo("Red"),
+                    Object<IService>(new ColorService("Yellow")).WithName("Yellow"),
+                    ConstructedBy<IService>(delegate { return new ColorService("Purple"); }).WithName("Purple"),
+                    Instance<ColorService>().WithName("Decorated").WithProperty("color").EqualTo("Orange")
                     );
-                    
             };
         }
 
@@ -38,7 +37,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             if (_manager == null)
             {
-                _manager = new StructureMap.Container(delegate(Registry registry)
+                _manager = new Container(delegate(Registry registry)
                 {
                     _defaultRegistry(registry);
                     action(registry);

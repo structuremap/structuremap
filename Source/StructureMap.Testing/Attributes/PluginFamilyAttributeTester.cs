@@ -4,9 +4,7 @@ using Rhino.Mocks;
 using Rhino.Mocks.Constraints;
 using StructureMap.Attributes;
 using StructureMap.Graph;
-using StructureMap.Interceptors;
 using StructureMap.Pipeline;
-using StructureMap.Source;
 
 namespace StructureMap.Testing.Attributes
 {
@@ -18,9 +16,9 @@ namespace StructureMap.Testing.Attributes
             PluginFamilyAttribute att = new PluginFamilyAttribute("something");
             att.Scope = scope;
 
-            PluginFamily family = new PluginFamily(typeof(TypeThatDoesNotHaveCustomMementoSource));
+            PluginFamily family = new PluginFamily(typeof (TypeThatDoesNotHaveCustomMementoSource));
             att.Configure(family);
-            
+
             Assert.IsInstanceOfType(interceptorType, family.Policy);
         }
 
@@ -85,7 +83,7 @@ namespace StructureMap.Testing.Attributes
 
             using (mocks.Record())
             {
-                SetupResult.For(family.PluginType).Return(typeof(TypeThatDoesNotHaveCustomMementoSource));
+                SetupResult.For(family.PluginType).Return(typeof (TypeThatDoesNotHaveCustomMementoSource));
 
                 family.AddMementoSource(null);
                 LastCall.Repeat.Never();
@@ -97,7 +95,7 @@ namespace StructureMap.Testing.Attributes
             }
         }
 
-        
+
         [Test]
         public void PerRequest_DoesNot_call_SetScopeTo_on_family()
         {

@@ -8,11 +8,11 @@ namespace StructureMap.Testing.DataAccess
 {
     public class StubbedReaderSource : IReaderSource, IInitializable
     {
+        private readonly Hashtable _parameters;
         private readonly IDataReader _reader;
         private string _name;
-        private Hashtable _parameters;
         private IDataSession _session;
-        private bool _wasInitialized = false;
+        private bool _wasInitialized;
 
         public StubbedReaderSource(IDataReader reader)
         {

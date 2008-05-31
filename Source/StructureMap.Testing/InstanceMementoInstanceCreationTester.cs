@@ -1,4 +1,3 @@
-using System.Drawing;
 using NUnit.Framework;
 using StructureMap.Configuration;
 using StructureMap.Graph;
@@ -11,8 +10,6 @@ namespace StructureMap.Testing
     [TestFixture]
     public class InstanceMementoInstanceCreationTester
     {
-        private PluginGraph _graph;
-
         #region Setup/Teardown
 
         [SetUp]
@@ -20,12 +17,14 @@ namespace StructureMap.Testing
         {
             _graph = new PluginGraph();
             PluginFamily family = _graph.FindFamily(typeof (IService));
-            family.AddPlugin(typeof(ColorService), "Color");
+            family.AddPlugin(typeof (ColorService), "Color");
 
             _graph.FindFamily(typeof (Rule));
         }
 
         #endregion
+
+        private PluginGraph _graph;
 
         public class Rule
         {
@@ -33,13 +32,13 @@ namespace StructureMap.Testing
 
         public class ComplexRule : Rule
         {
+            private readonly bool _Bool;
+            private readonly byte _Byte;
             private readonly BreedEnum _color;
-            private bool _Bool;
-            private byte _Byte;
-            private double _Double;
-            private int _Int;
-            private long _Long;
-            private string _String;
+            private readonly double _Double;
+            private readonly int _Int;
+            private readonly long _Long;
+            private readonly string _String;
 
 
             [DefaultConstructor]
@@ -136,9 +135,12 @@ namespace StructureMap.Testing
 
         public class Mustang : IAutomobile
         {
-            public Mustang()
-            {
-            }
+        }
+
+        private void assertIsReference(Instance instance, string referenceKey)
+        {
+            ReferencedInstance referencedInstance = (ReferencedInstance) instance;
+            Assert.AreEqual(referenceKey, referencedInstance.ReferenceKey);
         }
 
         [Test]
@@ -167,7 +169,7 @@ namespace StructureMap.Testing
             memento.SetProperty("Color", "Red");
             memento.InstanceKey = "Red";
 
-            Assert.AreEqual("Red", memento.ReadInstance(_graph, typeof(IService)).Name);
+            Assert.AreEqual("Red", memento.ReadInstance(_graph, typeof (IService)).Name);
         }
 
         [Test]
@@ -187,20 +189,13 @@ namespace StructureMap.Testing
                                                   MemoryInstanceMemento.CreateReferencedInstanceMemento("Dodge"),
                                               });
 
-            IStructuredInstance instance = (IStructuredInstance)memento.ReadInstance(graph, typeof(Rule));
+            IStructuredInstance instance = (IStructuredInstance) memento.ReadInstance(graph, typeof (Rule));
             Instance[] instances = instance.GetChildArray("cars");
             Assert.AreEqual(3, instances.Length);
 
             assertIsReference(instances[0], "Ford");
             assertIsReference(instances[1], "Chevy");
             assertIsReference(instances[2], "Dodge");
-
-        }
-
-        private void assertIsReference(Instance instance, string referenceKey)
-        {
-            ReferencedInstance referencedInstance = (ReferencedInstance) instance;
-            Assert.AreEqual(referenceKey, referencedInstance.ReferenceKey);
         }
 
         [Test]
@@ -216,7 +211,7 @@ namespace StructureMap.Testing
             MemoryInstanceMemento carMemento = MemoryInstanceMemento.CreateReferencedInstanceMemento("GrandPrix");
             memento.AddChild("car", carMemento);
 
-            IStructuredInstance instance = (IStructuredInstance)memento.ReadInstance(graph, typeof(Rule));
+            IStructuredInstance instance = (IStructuredInstance) memento.ReadInstance(graph, typeof (Rule));
             ReferencedInstance child = (ReferencedInstance) instance.GetChild("car");
 
             Assert.AreEqual("GrandPrix", child.ReferenceKey);
@@ -233,7 +228,7 @@ namespace StructureMap.Testing
             MemoryInstanceMemento memento = ComplexRule.GetMemento();
             memento.SetProperty(XmlConstants.PLUGGED_TYPE, typeof (ComplexRule).AssemblyQualifiedName);
 
-            IStructuredInstance instance = (IStructuredInstance)memento.ReadInstance(graph, typeof(Rule));
+            IStructuredInstance instance = (IStructuredInstance) memento.ReadInstance(graph, typeof (Rule));
             Assert.IsInstanceOfType(typeof (DefaultInstance), instance.GetChild("car"));
         }
 

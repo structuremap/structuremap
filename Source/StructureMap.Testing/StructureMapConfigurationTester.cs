@@ -38,13 +38,10 @@ namespace StructureMap.Testing
         }
 
         [Test]
-        public void StructureMap_functions_without_StructureMapconfig_file_in_the_default_mode()
+        public void BuildPluginGraph()
         {
-            StructureMapConfiguration.ResetAll();
-            DataMother.RemoveStructureMapConfig();
-
             PluginGraph graph = StructureMapConfiguration.GetPluginGraph();
-
+            Assert.IsNotNull(graph);
         }
 
         [Test]
@@ -56,23 +53,6 @@ namespace StructureMap.Testing
             PluginGraph graph = StructureMapConfiguration.GetPluginGraph();
 
             Assert.AreEqual(0, graph.FamilyCount);
-        }
-
-        [Test]
-        public void Use_the_StructureMap_config_file_if_it_exists()
-        {
-            StructureMapConfiguration.ResetAll();
-            DataMother.RestoreStructureMapConfig();
-
-            PluginGraph graph = StructureMapConfiguration.GetPluginGraph();
-            Assert.IsTrue(graph.FamilyCount > 0);
-        }
-
-        [Test]
-        public void BuildPluginGraph()
-        {
-            PluginGraph graph = StructureMapConfiguration.GetPluginGraph();
-            Assert.IsNotNull(graph);
         }
 
 
@@ -87,7 +67,6 @@ namespace StructureMap.Testing
             Assert.AreEqual("Cornflower", thing.Color, "Cornflower is the color from the App.config file");
         }
 
-        
 
         [Test]
         public void SettingsFromAllParentConfigFilesShouldBeIncluded()
@@ -112,6 +91,15 @@ namespace StructureMap.Testing
         }
 
         [Test]
+        public void StructureMap_functions_without_StructureMapconfig_file_in_the_default_mode()
+        {
+            StructureMapConfiguration.ResetAll();
+            DataMother.RemoveStructureMapConfig();
+
+            PluginGraph graph = StructureMapConfiguration.GetPluginGraph();
+        }
+
+        [Test]
         public void TheDefaultNameIs_should_set_the_default_profile_name()
         {
             StructureMapConfiguration.IgnoreStructureMapConfig = true;
@@ -121,6 +109,16 @@ namespace StructureMap.Testing
 
             PluginGraph graph = StructureMapConfiguration.GetPluginGraph();
             Assert.AreEqual(theDefaultProfileName, graph.ProfileManager.DefaultProfileName);
+        }
+
+        [Test]
+        public void Use_the_StructureMap_config_file_if_it_exists()
+        {
+            StructureMapConfiguration.ResetAll();
+            DataMother.RestoreStructureMapConfig();
+
+            PluginGraph graph = StructureMapConfiguration.GetPluginGraph();
+            Assert.IsTrue(graph.FamilyCount > 0);
         }
     }
 

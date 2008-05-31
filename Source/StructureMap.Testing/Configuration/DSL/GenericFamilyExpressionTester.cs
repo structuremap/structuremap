@@ -3,7 +3,6 @@ using NUnit.Framework;
 using StructureMap.Attributes;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
-using StructureMap.Interceptors;
 using StructureMap.Pipeline;
 
 namespace StructureMap.Testing.Configuration.DSL
@@ -42,110 +41,14 @@ namespace StructureMap.Testing.Configuration.DSL
             }
         }
 
-        [Test]
-        public void Add_concrete_type()
-        {
-            StructureMap.Container manager = new StructureMap.Container(delegate(Registry r)
-            {
-                r.ForRequestedType(typeof(ITarget)).AddConcreteType(typeof(Target1));
-            });
-
-
-            Assert.IsInstanceOfType(typeof(Target1), manager.GetAllInstances<ITarget>()[0]);
-        }
-
-        [Test]
-        public void Add_concrete_type_with_name()
-        {
-            StructureMap.Container manager = new StructureMap.Container(delegate(Registry r)
-            {
-                r.ForRequestedType(typeof(ITarget)).AddConcreteType(typeof(Target1), "1");
-                r.ForRequestedType(typeof(ITarget)).AddConcreteType(typeof(Target2), "2");
-                r.ForRequestedType(typeof(ITarget)).AddConcreteType(typeof(Target3), "3");
-            });
-
-
-            Assert.IsInstanceOfType(typeof(Target1), manager.GetInstance<ITarget>("1"));
-            Assert.IsInstanceOfType(typeof(Target2), manager.GetInstance<ITarget>("2"));
-            Assert.IsInstanceOfType(typeof(Target3), manager.GetInstance<ITarget>("3"));
-        }
-
-        [Test]
-        public void Add_default_by_concrete_type()
-        {
-            StructureMap.Container manager = new StructureMap.Container(delegate(Registry r)
-            {
-                r.ForRequestedType(typeof (ITarget)).TheDefaultIsConcreteType(typeof (Target3));
-            });
-
-            Assert.IsInstanceOfType(typeof(Target3), manager.GetInstance<ITarget>());
-        }
-
-        [Test]
-        public void Add_default_instance()
-        {
-            StructureMap.Container manager = new StructureMap.Container(delegate(Registry r)
-            {
-                r.ForRequestedType(typeof(ITarget)).TheDefaultIs(Instance<Target2>());
-            });
-
-            Assert.IsInstanceOfType(typeof(Target2), manager.GetInstance<ITarget>());
-        }
-
-        [Test]
-        public void Add_instance_by_lambda()
-        {
-            StructureMap.Container manager = new StructureMap.Container(delegate(Registry r)
-            {
-                r.ForRequestedType(typeof(ITarget)).TheDefaultIs(delegate() { return new Target1(); });
-            });
-
-            Assert.IsInstanceOfType(typeof(Target1), manager.GetInstance<ITarget>());
-        }
-
-        [Test]
-        public void Add_instance_directly()
-        {
-            StructureMap.Container manager = new StructureMap.Container(delegate(Registry r)
-            {
-                r.ForRequestedType(typeof (ITarget)).AddInstance(Instance<Target2>());
-            });
-
-
-            Assert.IsInstanceOfType(typeof(Target2), manager.GetAllInstances<ITarget>()[0]);
-        }
-
-        [Test]
-        public void Enrichment()
-        {
-            StructureMap.Container manager = new StructureMap.Container(delegate(Registry r)
-            {
-                r.ForRequestedType(typeof(ITarget))
-                    .TheDefaultIsConcreteType(typeof(Target1))
-                    .EnrichWith(delegate(object raw){ return new WrappedTarget((ITarget) raw);});
-            });
-
-            WrappedTarget target = (WrappedTarget) manager.GetInstance<ITarget>();
-            Assert.IsInstanceOfType(typeof(Target1), target.Inner);
-        }
-
-        [Test]
-        public void Intercept_construction_with()
-        {
-            Registry registry = new Registry();
-            TestingBuildPolicy policy = new TestingBuildPolicy();
-            registry.ForRequestedType(typeof (ITarget)).InterceptConstructionWith(policy);
-            PluginGraph graph = registry.Build();
-
-            Assert.AreSame(policy, graph.FindFamily(typeof(ITarget)).Policy);
-        }
-
         public class TestingBuildPolicy : IBuildInterceptor
         {
+            #region IBuildInterceptor Members
+
             public IBuildPolicy InnerPolicy
             {
                 get { throw new NotImplementedException(); }
-                set {  }
+                set { }
             }
 
             public object Build(IBuildSession buildSession, Type pluginType, Instance instance)
@@ -157,6 +60,101 @@ namespace StructureMap.Testing.Configuration.DSL
             {
                 throw new NotImplementedException();
             }
+
+            #endregion
+        }
+
+        [Test]
+        public void Add_concrete_type()
+        {
+            Container manager =
+                new Container(
+                    delegate(Registry r) { r.ForRequestedType(typeof (ITarget)).AddConcreteType(typeof (Target1)); });
+
+
+            Assert.IsInstanceOfType(typeof (Target1), manager.GetAllInstances<ITarget>()[0]);
+        }
+
+        [Test]
+        public void Add_concrete_type_with_name()
+        {
+            Container manager = new Container(delegate(Registry r)
+            {
+                r.ForRequestedType(typeof (ITarget)).AddConcreteType(typeof (Target1), "1");
+                r.ForRequestedType(typeof (ITarget)).AddConcreteType(typeof (Target2), "2");
+                r.ForRequestedType(typeof (ITarget)).AddConcreteType(typeof (Target3), "3");
+            });
+
+
+            Assert.IsInstanceOfType(typeof (Target1), manager.GetInstance<ITarget>("1"));
+            Assert.IsInstanceOfType(typeof (Target2), manager.GetInstance<ITarget>("2"));
+            Assert.IsInstanceOfType(typeof (Target3), manager.GetInstance<ITarget>("3"));
+        }
+
+        [Test]
+        public void Add_default_by_concrete_type()
+        {
+            Container manager =
+                new Container(
+                    delegate(Registry r) { r.ForRequestedType(typeof (ITarget)).TheDefaultIsConcreteType(typeof (Target3)); });
+
+            Assert.IsInstanceOfType(typeof (Target3), manager.GetInstance<ITarget>());
+        }
+
+        [Test]
+        public void Add_default_instance()
+        {
+            Container manager =
+                new Container(
+                    delegate(Registry r) { r.ForRequestedType(typeof (ITarget)).TheDefaultIs(Instance<Target2>()); });
+
+            Assert.IsInstanceOfType(typeof (Target2), manager.GetInstance<ITarget>());
+        }
+
+        [Test]
+        public void Add_instance_by_lambda()
+        {
+            Container manager =
+                new Container(
+                    delegate(Registry r) { r.ForRequestedType(typeof (ITarget)).TheDefaultIs(delegate { return new Target1(); }); });
+
+            Assert.IsInstanceOfType(typeof (Target1), manager.GetInstance<ITarget>());
+        }
+
+        [Test]
+        public void Add_instance_directly()
+        {
+            Container manager =
+                new Container(
+                    delegate(Registry r) { r.ForRequestedType(typeof (ITarget)).AddInstance(Instance<Target2>()); });
+
+
+            Assert.IsInstanceOfType(typeof (Target2), manager.GetAllInstances<ITarget>()[0]);
+        }
+
+        [Test]
+        public void Enrichment()
+        {
+            Container manager = new Container(delegate(Registry r)
+            {
+                r.ForRequestedType(typeof (ITarget))
+                    .TheDefaultIsConcreteType(typeof (Target1))
+                    .EnrichWith(delegate(object raw) { return new WrappedTarget((ITarget) raw); });
+            });
+
+            WrappedTarget target = (WrappedTarget) manager.GetInstance<ITarget>();
+            Assert.IsInstanceOfType(typeof (Target1), target.Inner);
+        }
+
+        [Test]
+        public void Intercept_construction_with()
+        {
+            Registry registry = new Registry();
+            TestingBuildPolicy policy = new TestingBuildPolicy();
+            registry.ForRequestedType(typeof (ITarget)).InterceptConstructionWith(policy);
+            PluginGraph graph = registry.Build();
+
+            Assert.AreSame(policy, graph.FindFamily(typeof (ITarget)).Policy);
         }
 
         [Test]
@@ -164,7 +162,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             ITarget created = null;
 
-            StructureMap.Container manager = new StructureMap.Container(delegate(Registry r)
+            Container manager = new Container(delegate(Registry r)
             {
                 r.ForRequestedType(typeof (ITarget))
                     .TheDefaultIsConcreteType(typeof (Target3))
@@ -173,7 +171,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
             manager.GetInstance<ITarget>();
 
-            Assert.IsInstanceOfType(typeof(Target3), created);
+            Assert.IsInstanceOfType(typeof (Target3), created);
         }
 
         [Test]
@@ -183,7 +181,7 @@ namespace StructureMap.Testing.Configuration.DSL
             registry.ForRequestedType(typeof (ITarget)).CacheBy(InstanceScope.ThreadLocal);
             PluginGraph graph = registry.Build();
 
-            Assert.IsInstanceOfType(typeof(ThreadLocalStoragePolicy), graph.FindFamily(typeof(ITarget)).Policy);
+            Assert.IsInstanceOfType(typeof (ThreadLocalStoragePolicy), graph.FindFamily(typeof (ITarget)).Policy);
         }
     }
 }
