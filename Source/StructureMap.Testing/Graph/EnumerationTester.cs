@@ -21,7 +21,7 @@ namespace StructureMap.Testing.Graph
 
             manager.Configure(delegate(Registry registry)
             {
-                registry.AddInstanceOf<Cow>().UsingConcreteTypeNamed("Default")
+                registry.AddInstanceOf<Cow>().UsingConcreteType<Cow>()
                     .WithName("Angus")
                     .WithProperty("Name").EqualTo("Bessie")
                     .WithProperty("Breed").EqualTo("Angus")

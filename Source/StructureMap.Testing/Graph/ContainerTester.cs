@@ -33,14 +33,11 @@ namespace StructureMap.Testing.Graph
 
         private void addColorMemento(string Color)
         {
-            ConfiguredInstance instance = new ConfiguredInstance(Color).WithConcreteKey("Color").SetProperty("Color",
-                                                                                                             Color);
-
             _manager.Configure(delegate(Registry registry)
             {
-                registry.AddInstanceOf<Rule>(instance);
-                registry.AddInstanceOf<IWidget>(instance);
-                registry.AddInstanceOf<WidgetMaker>(instance);
+                registry.AddInstanceOf<Rule>().UsingConcreteType<ColorRule>().SetProperty("Color", Color).WithName(Color);
+                registry.AddInstanceOf<IWidget>().UsingConcreteType<ColorWidget>().SetProperty("Color", Color).WithName(Color);
+                registry.AddInstanceOf<WidgetMaker>().UsingConcreteType<ColorWidgetMaker>().SetProperty("Color", Color).WithName(Color);
             });
         }
 
@@ -203,8 +200,16 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void InjectStub_by_name()
         {
-            Assert.Fail("Do.");
             IContainer container = new Container();
+
+            ColorRule red = new ColorRule("Red");
+            ColorRule blue = new ColorRule("Blue");
+
+            container.InjectStub<Rule>("Red", red);
+            container.InjectStub<Rule>("Blue", blue);
+
+            Assert.AreSame(red, container.GetInstance<Rule>("Red"));
+            Assert.AreSame(blue, container.GetInstance<Rule>("Blue"));
         }
 
 

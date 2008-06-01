@@ -105,9 +105,10 @@ namespace StructureMap
             Inject<T>(instance);
         }
 
-        public void InjectStub<T>(string name, T instance)
+        public void InjectStub<T>(string name, T stub)
         {
-            throw new NotImplementedException();
+            LiteralInstance instance = new LiteralInstance(stub).WithName(name);
+            _pipelineGraph.AddInstance<T>(instance);
         }
 
         public IList<T> GetAllInstances<T>()

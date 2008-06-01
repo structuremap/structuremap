@@ -148,7 +148,7 @@ namespace StructureMap.Testing
             assertActionThrowsErrorCode(200, delegate
             {
                 BuildSession session = new BuildSession(graph, null);
-                session.CreateInstance(typeof (IGateway), "A Name");
+                session.CreateInstance(typeof (IGateway), "Gateway that is not configured");
             });
         }
 
