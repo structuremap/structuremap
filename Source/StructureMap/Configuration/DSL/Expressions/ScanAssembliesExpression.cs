@@ -85,5 +85,16 @@ namespace StructureMap.Configuration.DSL.Expressions
 
             return this;
         }
+
+        public ScanAssembliesExpression With(ITypeScanner scanner)
+        {
+            _registry.addExpression(delegate(PluginGraph graph)
+            {
+                graph.Assemblies.AddScanner(scanner);
+            });
+
+
+            return this;
+        }
     }
 }

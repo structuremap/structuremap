@@ -6,12 +6,12 @@ using StructureMap.Diagnostics;
 
 namespace StructureMap.Graph
 {
-
     // TODO:  redo in 3.5 w/ Lambdas
     public class AssemblyScanner
     {
         private readonly List<Assembly> _assemblies = new List<Assembly>();
         private readonly GraphLog _log;
+        private readonly List<ITypeScanner> _scanners = new List<ITypeScanner>();
 
         public AssemblyScanner(GraphLog log)
         {
@@ -27,35 +27,49 @@ namespace StructureMap.Graph
         {
             // Don't do this for SystemScan
             scanTypes(delegate(Type type)
-                          {
-                              if (Registry.IsPublicRegistry(type))
-                              {
-                                  Registry registry = (Registry) Activator.CreateInstance(type);
-                                  registry.ConfigurePluginGraph(pluginGraph);
-                              }
-                          });
+            {
+                if (!Registry.IsPublicRegistry(type)) return;
+
+                Registry registry = (Registry) Activator.CreateInstance(type);
+                registry.ConfigurePluginGraph(pluginGraph);
+            });
 
 
             findFamiliesAndPlugins(pluginGraph);
+            runScanners(pluginGraph);
+        }
+
+        private void runScanners(PluginGraph graph)
+        {
+            Registry registry = new Registry();
+            scanTypes(delegate(Type type)
+            {
+                foreach (ITypeScanner scanner in _scanners)
+                {
+                    scanner.Process(type, registry);
+                }
+            });
+
+            registry.ConfigurePluginGraph(graph);
         }
 
         private void findFamiliesAndPlugins(PluginGraph pluginGraph)
         {
             scanTypes(delegate(Type type)
-                          {
-                              if (PluginFamilyAttribute.MarkedAsPluginFamily(type))
-                              {
-                                  pluginGraph.CreateFamily(type);
-                              }
-                          });
+            {
+                if (PluginFamilyAttribute.MarkedAsPluginFamily(type))
+                {
+                    pluginGraph.CreateFamily(type);
+                }
+            });
 
             scanTypes(delegate(Type type)
-                          {
-                              foreach (PluginFamily family in pluginGraph.PluginFamilies)
-                              {
-                                  family.AnalyzeTypeForPlugin(type);
-                              }
-                          });
+            {
+                foreach (PluginFamily family in pluginGraph.PluginFamilies)
+                {
+                    family.AnalyzeTypeForPlugin(type);
+                }
+            });
         }
 
 
@@ -120,6 +134,11 @@ namespace StructureMap.Graph
             }
 
             return false;
+        }
+
+        public void AddScanner(ITypeScanner scanner)
+        {
+            _scanners.Add(scanner);
         }
     }
 }

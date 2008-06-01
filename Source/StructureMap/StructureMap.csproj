@@ -374,6 +374,7 @@
       <Link>Properties\structuremap.snk</Link>
     </None>
     <Compile Include="ErrorMessages.cs" />
+    <Compile Include="Graph\ITypeScanner.cs" />
     <Compile Include="Pipeline\ConfiguredInstance.Building.cs" />
     <Compile Include="Pipeline\IStructuredInstance.cs" />
     <Compile Include="Util\Cache.cs" />

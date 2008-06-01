@@ -191,6 +191,7 @@
     <Compile Include="Graph\ContainerConstructorAttributeTester.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Graph\DefaultConventionScanningTester.cs" />
     <Compile Include="Graph\DynamicInjectionTester.cs" />
     <Compile Include="Graph\EmittingTester.cs">
       <SubType>Code</SubType>
