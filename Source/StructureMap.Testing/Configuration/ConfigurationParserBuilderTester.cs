@@ -115,10 +115,7 @@ namespace StructureMap.Testing.Configuration
             assertParserIdList("Generics", "Include1", "Include2", "Main", "Master");
         }
 
-        [Test]
-        public void If_adding_a_node_directly_use_stacktrace_to_get_the_node()
-        {
-        }
+
 
         [Test]
         public void Log_error_150_if_a_designated_Include_cannot_be_opened()
@@ -142,7 +139,7 @@ namespace StructureMap.Testing.Configuration
             assertErrorIsLogged(156, delegate { builder.IncludeFile("MissingInclude.xml"); });
         }
 
-        [Test]
+        [Test, Explicit]
         public void Log_exception_100_if_StructureMap_config_is_required_and_missing()
         {
             assertErrorIsLogged(100, delegate

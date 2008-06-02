@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Testing.TestData;
 using StructureMap.Testing.Widget;
@@ -212,6 +213,36 @@ namespace StructureMap.Testing.Graph
             Assert.AreSame(rule1, rule2);
             Assert.AreSame(rule1, rule3);
         }
+
+        [Test]
+        public void If_there_is_only_one_instance_of_a_type_use_that_as_default()
+        {
+            AClass target = new AClass("Me");
+
+            Container container = new Container(delegate(Registry registry)
+            {
+                registry.AddInstanceOf<AClass>(target);
+            });
+
+
+            Assert.AreSame(target, container.GetInstance<AClass>());
+        }
+
+        public class AClass
+        {
+            private readonly string _name;
+
+            public AClass(string name)
+            {
+                _name = name;
+            }
+
+            public string Name
+            {
+                get { return _name; }
+            }
+        }
+        
     }
 
 

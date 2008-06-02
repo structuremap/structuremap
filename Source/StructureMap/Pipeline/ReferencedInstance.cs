@@ -11,7 +11,11 @@ namespace StructureMap.Pipeline
 
         public ReferencedInstance(string referenceKey)
         {
-            // TODO:  VALIDATION if referenceKey is null or empty
+            if (string.IsNullOrEmpty(referenceKey))
+            {
+                throw new ArgumentNullException("referenceKey");    
+            }
+
             _referenceKey = referenceKey;
         }
 

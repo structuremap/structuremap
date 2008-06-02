@@ -240,5 +240,7 @@ namespace StructureMap.Testing.Graph
             Container manager = new Container(new PluginGraph());
             manager.GetInstance<IService>();
         }
+
+        
     }
 }
