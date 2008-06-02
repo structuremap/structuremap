@@ -14,8 +14,8 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void FindPluginType()
         {
-            Assert.AreEqual(typeof(IConvention), DefaultConventionScanner.FindPluginType(typeof(Convention)));
-            Assert.IsNull(DefaultConventionScanner.FindPluginType(this.GetType()));
+            Assert.AreEqual(typeof(IConvention), new DefaultConventionScanner().FindPluginType(typeof(Convention)));
+            Assert.IsNull(new DefaultConventionScanner().FindPluginType(this.GetType()));
         }
 
 
@@ -42,6 +42,19 @@ namespace StructureMap.Testing.Graph
             {
                 registry.ScanAssemblies().IncludeTheCallingAssembly()
                     .With(new DefaultConventionScanner());
+            });
+
+            Assert.IsInstanceOfType(typeof(Convention), container.GetInstance<IConvention>());
+        }
+
+
+        [Test]
+        public void Process_to_Container_2()
+        {
+            Container container = new Container(delegate(Registry registry)
+            {
+                registry.ScanAssemblies().IncludeTheCallingAssembly()
+                    .With<DefaultConventionScanner>();
             });
 
             Assert.IsInstanceOfType(typeof(Convention), container.GetInstance<IConvention>());

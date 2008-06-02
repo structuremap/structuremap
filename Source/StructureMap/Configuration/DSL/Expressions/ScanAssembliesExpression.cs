@@ -96,5 +96,10 @@ namespace StructureMap.Configuration.DSL.Expressions
 
             return this;
         }
+
+        public ScanAssembliesExpression With<T>() where T : ITypeScanner, new()
+        {
+            return With(new T());
+        }
     }
 }

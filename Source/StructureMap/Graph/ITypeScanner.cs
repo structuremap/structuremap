@@ -23,7 +23,7 @@ namespace StructureMap.Graph
             }
         }
 
-        public static Type FindPluginType(Type concreteType)
+        public virtual Type FindPluginType(Type concreteType)
         {
             string interfaceName = "I" + concreteType.Name;
             Type[] interfaces = concreteType.GetInterfaces();
