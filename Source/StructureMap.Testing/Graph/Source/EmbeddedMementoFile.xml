@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?> 
+<Instances>
+
+	<Instance Type="Type1" Key="Instance1" color="red" state="Texas"/>
+	<Instance Type="Type2" Key="Instance2" color="green" state="Missouri"/>
+	
+</Instances>
