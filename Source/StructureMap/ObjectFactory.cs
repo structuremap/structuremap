@@ -33,6 +33,19 @@ namespace StructureMap
         }
 
         /// <summary>
+        /// Restarts ObjectFactory and blows away all Singleton's and cached instances.  Use with caution.
+        /// </summary>
+        public static void Reset()
+        {
+            _manager = buildManager();
+
+            if (_notify != null)
+            {
+                _notify();
+            }
+        }
+
+        /// <summary>
         /// Attempts to create a new instance of the requested type.  Automatically inserts the default
         /// configured instance for each dependency in the StructureMap constructor function.
         /// </summary>
@@ -68,6 +81,11 @@ namespace StructureMap
         public static void InjectStub<PLUGINTYPE>(PLUGINTYPE stub)
         {
             manager.InjectStub(typeof (PLUGINTYPE), stub);
+        }
+
+        public static void InjectStub<PLUGINTYPE>(string name, PLUGINTYPE stub)
+        {
+            manager.InjectStub<PLUGINTYPE>(name, stub);
         }
 
 
@@ -124,18 +142,7 @@ namespace StructureMap
             get { return _profile; }
         }
 
-        /// <summary>
-        /// Restarts ObjectFactory.  Use with caution.
-        /// </summary>
-        public static void Reset()
-        {
-            _manager = buildManager();
 
-            if (_notify != null)
-            {
-                _notify();
-            }
-        }
 
         /// <summary>
         /// Strictly used for testing scenarios
@@ -178,7 +185,8 @@ namespace StructureMap
 
 
         /// <summary>
-        /// Restores all default instance settings according to the StructureMap.config files
+        /// Restores all default instance settings and removes any Profile settings applied
+        /// at runtime
         /// </summary>
         public static void ResetDefaults()
         {
