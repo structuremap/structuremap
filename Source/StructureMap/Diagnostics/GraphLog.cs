@@ -63,12 +63,12 @@ namespace StructureMap.Diagnostics
                 return;
             }
             
-            string message = WriteFailures();
+            string message = BuildFailureMessage();
 
             throw new StructureMapConfigurationException(message);
         }
 
-        private string WriteFailures()
+        public string BuildFailureMessage()
         {
             StringBuilder sb = new StringBuilder();
             StringWriter writer = new StringWriter(sb);
