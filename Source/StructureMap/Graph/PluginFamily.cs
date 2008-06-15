@@ -148,7 +148,6 @@ namespace StructureMap.Graph
 
         private void discoverImplicitInstances()
         {
-            // TODO:  Apply some 3.5 lambda magic.  Maybe move to PluginCollection
             List<Plugin> list = _plugins.FindAutoFillablePlugins();
             list.RemoveAll(
                 plugin => _instances.Exists(instance => instance.Matches(plugin)));

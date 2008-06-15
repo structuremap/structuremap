@@ -30,10 +30,15 @@ namespace StructureMap.Configuration
                 family.SetScopeTo(scope);
 
                 attachMementoSource(family, familyElement);
-                familyElement.ForEachChild(PLUGIN_NODE).Do(element => attachPlugin(element, family));
+                attachPlugins(family, familyElement);
                 attachInterceptors(family, familyElement);
                 attachInstances(family, familyElement, _builder);
             });
+        }
+
+        private void attachPlugins(PluginFamily family, XmlElement familyElement)
+        {
+            familyElement.ForEachChild(PLUGIN_NODE).Do(element => attachPlugin(element, family));
         }
 
         private void attachInstances(PluginFamily family, XmlElement familyElement, IGraphBuilder builder)
@@ -108,7 +113,6 @@ namespace StructureMap.Configuration
                 family.AddPlugin(plugin);
 
                 pluginElement.ForTextInChild("Setter/@Name").Do(prop => plugin.Setters.Add(prop));
-
             });
         }
 
@@ -119,8 +123,10 @@ namespace StructureMap.Configuration
             {
                 var interceptorMemento = new XmlAttributeInstanceMemento(element);
                 string context = contextBase + element.OuterXml;
-                _builder.WithSystemObject<IBuildInterceptor>(interceptorMemento, context,
-                                                             interceptor => family.AddInterceptor(interceptor));
+                _builder.WithSystemObject<IBuildInterceptor>(
+                    interceptorMemento, 
+                    context,
+                    interceptor => family.AddInterceptor(interceptor));
             });
         }
     }

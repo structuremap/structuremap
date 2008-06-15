@@ -131,14 +131,6 @@ namespace StructureMap.Testing.Configuration
             });
         }
 
-        // TODO:  Decide if this is important or not
-        //[Test]
-        //public void Log_error_156_if_Include_node_does_not_have_a_File()
-        //{
-        //    DataMother.WriteDocument("MissingInclude.xml", "<StructureMap><Include></Include></StructureMap>");
-        //    assertErrorIsLogged(156, () => builder.IncludeFile("MissingInclude.xml"));
-        //}
-
         [Test, Explicit]
         public void Log_exception_100_if_StructureMap_config_is_required_and_missing()
         {

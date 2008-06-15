@@ -88,7 +88,6 @@ namespace StructureMap.Diagnostics
 
         public void Write(StringWriter writer)
         {
-            // TODO:  hit with an extension method for 3.5
             writer.WriteLine("Error:  " + Code);
             if (Instance != null) writer.WriteLine(Instance.ToString());
             writer.WriteLine("Source:  " + Source);
