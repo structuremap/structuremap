@@ -89,7 +89,7 @@ namespace StructureMap.Configuration.DSL
             ConfiguredInstance instance = new ConfiguredInstance();
 
             addExpression(
-                delegate(PluginGraph pluginGraph) { pluginGraph.FindFamily(typeof (PLUGINTYPE)).AddInstance(instance); });
+                pluginGraph => pluginGraph.FindFamily(typeof (PLUGINTYPE)).AddInstance(instance));
 
             return instance;
         }
@@ -104,7 +104,7 @@ namespace StructureMap.Configuration.DSL
         public LiteralInstance AddInstanceOf<PLUGINTYPE>(PLUGINTYPE target)
         {
             LiteralInstance literal = new LiteralInstance(target);
-            _actions.Add(delegate(PluginGraph graph) { graph.FindFamily(typeof (PLUGINTYPE)).AddInstance(literal); });
+            _actions.Add(graph => graph.FindFamily(typeof (PLUGINTYPE)).AddInstance(literal));
 
             return literal;
         }
@@ -118,10 +118,7 @@ namespace StructureMap.Configuration.DSL
         public PrototypeInstance AddPrototypeInstanceOf<PLUGINTYPE>(PLUGINTYPE prototype)
         {
             PrototypeInstance instance = new PrototypeInstance((ICloneable) prototype);
-            _actions.Add(delegate(PluginGraph graph)
-            {
-                 graph.FindFamily(typeof (PLUGINTYPE)).AddInstance(instance);
-            });
+            _actions.Add(graph => graph.FindFamily(typeof (PLUGINTYPE)).AddInstance(instance));
 
             return instance;
         }
@@ -129,7 +126,6 @@ namespace StructureMap.Configuration.DSL
         /// <summary>
         /// convenience method for a UserControl
         /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <param name="url"></param>
         /// <returns></returns>
         public static UserControlInstance LoadUserControlFrom(string url)
@@ -166,14 +162,13 @@ namespace StructureMap.Configuration.DSL
 
         public void RegisterInterceptor(TypeInterceptor interceptor)
         {
-            addExpression(
-                delegate(PluginGraph pluginGraph) { pluginGraph.InterceptorLibrary.AddInterceptor(interceptor); });
+            addExpression(pluginGraph => pluginGraph.InterceptorLibrary.AddInterceptor(interceptor));
         }
 
         public MatchedTypeInterceptor IfTypeMatches(Predicate<Type> match)
         {
             MatchedTypeInterceptor interceptor = new MatchedTypeInterceptor(match);
-            _actions.Add(delegate(PluginGraph graph) { graph.InterceptorLibrary.AddInterceptor(interceptor); });
+            _actions.Add(graph => graph.InterceptorLibrary.AddInterceptor(interceptor));
 
             return interceptor;
         }
@@ -191,12 +186,12 @@ namespace StructureMap.Configuration.DSL
 
         public void AddInstanceOf(Type pluginType, Instance instance)
         {
-            _actions.Add(delegate(PluginGraph graph) { graph.FindFamily(pluginType).AddInstance(instance); });
+            _actions.Add(graph => graph.FindFamily(pluginType).AddInstance(instance));
         }
 
         public void AddInstanceOf<PLUGINTYPE>(Instance instance)
         {
-            _actions.Add(delegate(PluginGraph graph) { graph.FindFamily(typeof (PLUGINTYPE)).AddInstance(instance); });
+            _actions.Add(graph => graph.FindFamily(typeof (PLUGINTYPE)).AddInstance(instance));
         }
     }
 }

@@ -74,5 +74,14 @@ namespace StructureMap.Diagnostics
 
             return null;
         }
+
+        public void ForEach(Action<BuildError> action)
+        {
+            foreach (var pair in _buildErrors)
+            {
+                action(pair.Value);
+            }
+        }
+
     }
 }

@@ -11,10 +11,7 @@ namespace StructureMap.Graph
 
         public GenericsPluginGraph()
         {
-            _families = new Cache<Type, PluginFamily>(delegate(Type pluginType)
-            {
-                return new PluginFamily(pluginType);
-            });
+            _families = new Cache<Type, PluginFamily>(pluginType => new PluginFamily(pluginType));
         }
 
         public int FamilyCount
@@ -115,12 +112,12 @@ namespace StructureMap.Graph
             }
 
             // TODO -- Got a big problem here.  Intances need to be copied over
-            baseFamily.EachInstance(delegate(Instance i)
+            baseFamily.EachInstance(i =>
             {
                 IDiagnosticInstance instance = i;
                 if (instance.CanBePartOfPluginFamily(templatedFamily))
                 {
-                    templatedFamily.AddInstance((Instance)instance);
+                    templatedFamily.AddInstance((Instance) instance);
                 }
             });
 

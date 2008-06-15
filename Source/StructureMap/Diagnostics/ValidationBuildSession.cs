@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
+using System.Text;
 using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
@@ -8,22 +10,6 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.Diagnostics
 {
-    public class ValidationError
-    {
-        public ValidationError(Type pluginType, Instance instance, Exception exception, MethodInfo method)
-        {
-            PluginType = pluginType;
-            Instance = instance;
-            Exception = exception;
-            MethodName = method.Name;
-        }
-
-        public Instance Instance;
-        public Type PluginType;
-        public Exception Exception;
-        public string MethodName;
-    }
-
     public class ValidationBuildSession : BuildSession, IPipelineGraphVisitor
     {
         private ErrorCollection _errors;
@@ -69,7 +55,13 @@ namespace StructureMap.Diagnostics
             }
         }
 
-
+        public bool Success
+        {
+            get
+            {
+                return _errors.BuildErrors.Length == 0 && _validationErrors.Count == 0;
+            }
+        }
 
         public BuildError[] BuildErrors
         {
@@ -138,6 +130,27 @@ namespace StructureMap.Diagnostics
             _errors = new ErrorCollection();
 
             pipelineGraph.Visit(this);
+        }
+
+        public string BuildErrorMessages()
+        {
+            var builder = new StringBuilder();
+            var writer = new StringWriter(builder);
+        
+            _validationErrors.ForEach(e => e.Write(writer));
+            _errors.ForEach(e => e.Write(writer));
+
+            return builder.ToString();
+        }
+
+        public bool HasBuildErrors()
+        {
+            return _errors.BuildErrors.Length > 0;
+        }
+
+        public bool HasValidationErrors()
+        {
+            return _validationErrors.Count > 0;
         }
     }
 

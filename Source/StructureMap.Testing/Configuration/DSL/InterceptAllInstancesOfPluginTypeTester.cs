@@ -1,3 +1,4 @@
+using System;
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
 using StructureMap.Testing.Widget3;
@@ -15,16 +16,22 @@ namespace StructureMap.Testing.Configuration.DSL
             _lastService = null;
             _manager = null;
 
-            _defaultRegistry = delegate(Registry registry)
+            _defaultRegistry = (registry =>
             {
                 registry.ForRequestedType<IService>()
                     .AddInstances(
-                    Instance<ColorService>().WithName("Red").WithProperty("color").EqualTo("Red"),
+                    Instance<ColorService>().WithName("Red").WithProperty("color").
+                        EqualTo(
+                        "Red"),
                     Object<IService>(new ColorService("Yellow")).WithName("Yellow"),
-                    ConstructedBy<IService>(delegate { return new ColorService("Purple"); }).WithName("Purple"),
-                    Instance<ColorService>().WithName("Decorated").WithProperty("color").EqualTo("Orange")
+                    ConstructedBy<IService>(
+                        delegate { return new ColorService("Purple"); })
+                        .WithName("Purple"),
+                    Instance<ColorService>().WithName("Decorated").WithProperty("color")
+                        .
+                        EqualTo("Orange")
                     );
-            };
+            });
         }
 
         #endregion
@@ -37,7 +44,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             if (_manager == null)
             {
-                _manager = new Container(delegate(Registry registry)
+                _manager = new Container(registry =>
                 {
                     _defaultRegistry(registry);
                     action(registry);
@@ -50,37 +57,29 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void EnrichForAll()
         {
-            Action<Registry> action = delegate(Registry registry)
-            {
-                registry.ForRequestedType<IService>()
-                    .EnrichWith(delegate(IService s) { return new DecoratorService(s); })
-                    .AddInstance(
-                    ConstructedBy<IService>(delegate { return new ColorService("Green"); })
-                        .WithName("Green"))
-                    ;
-            };
+            Action<Registry> action = registry => registry.ForRequestedType<IService>()
+                                                      .EnrichWith(s => new DecoratorService(s))
+                                                      .AddInstance(
+                                                      ConstructedBy<IService>(() => new ColorService("Green"))
+                                                          .WithName("Green"));
 
 
             IService green = getService(action, "Green");
 
 
-            DecoratorService decoratorService = (DecoratorService) green;
-            ColorService innerService = (ColorService) decoratorService.Inner;
+            var decoratorService = (DecoratorService) green;
+            var innerService = (ColorService) decoratorService.Inner;
             Assert.AreEqual("Green", innerService.Color);
         }
 
         [Test]
         public void OnStartupForAll()
         {
-            Action<Registry> action = delegate(Registry registry)
-            {
-                registry.ForRequestedType<IService>()
-                    .OnCreation(delegate(IService s) { _lastService = s; })
-                    .AddInstance(
-                    ConstructedBy<IService>(delegate { return new ColorService("Green"); })
-                        .WithName("Green"))
-                    ;
-            };
+            Action<Registry> action = registry => registry.ForRequestedType<IService>()
+                                                      .OnCreation(s => _lastService = s)
+                                                      .AddInstance(
+                                                      ConstructedBy<IService>(() => new ColorService("Green"))
+                                                          .WithName("Green"));
 
 
             IService red = getService(action, "Red");

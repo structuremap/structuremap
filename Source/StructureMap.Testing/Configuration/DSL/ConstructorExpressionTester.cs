@@ -31,14 +31,11 @@ namespace StructureMap.Testing.Configuration.DSL
             Concretion concretion1 = new Concretion();
             Concretion concretion2 = new Concretion();
 
-            IContainer manager = new Container(delegate(Registry registry)
-            {
-                registry.ForRequestedType<Abstraction>()
-                    .AddInstances(
-                    ConstructedBy<Abstraction>(delegate { return concretion1; }).WithName("One"),
-                    ConstructedBy<Abstraction>(delegate { return concretion2; }).WithName("Two")
-                    );
-            });
+            IContainer manager = new Container(registry => registry.ForRequestedType<Abstraction>()
+                                                               .AddInstances(
+                                                                    ConstructedBy<Abstraction>(() => concretion1).WithName("One"),
+                                                                    ConstructedBy<Abstraction>(() => concretion2).WithName("Two")
+                                                               ));
 
             Assert.AreSame(concretion1, manager.GetInstance<Abstraction>("One"));
             Assert.AreSame(concretion2, manager.GetInstance<Abstraction>("Two"));
@@ -49,12 +46,9 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             Concretion concretion = new Concretion();
 
-            IContainer manager = new Container(delegate(Registry registry)
-            {
-                registry.ForRequestedType<Abstraction>().TheDefaultIs(
-                    ConstructedBy<Abstraction>(delegate { return concretion; })
-                    );
-            });
+            IContainer manager = new Container(registry => registry.ForRequestedType<Abstraction>().TheDefaultIs(
+                                                               ConstructedBy<Abstraction>(() => concretion)
+                                                               ));
 
             Assert.AreSame(concretion, manager.GetInstance<Abstraction>());
         }
@@ -65,14 +59,14 @@ namespace StructureMap.Testing.Configuration.DSL
             Concretion concretion1 = new Concretion();
             Concretion concretion2 = new Concretion();
 
-            IContainer manager = new Container(delegate(Registry registry)
+            IContainer manager = new Container(registry =>
             {
                 registry.ForRequestedType<Abstraction>().AddInstance(
-                    ConstructedBy<Abstraction>(delegate { return concretion1; }).WithName("One")
+                    ConstructedBy<Abstraction>(() => concretion1).WithName("One")
                     );
 
                 registry.ForRequestedType<Abstraction>().AddInstance(
-                    ConstructedBy<Abstraction>(delegate { return concretion2; }).WithName("Two")
+                    ConstructedBy<Abstraction>(() => concretion2).WithName("Two")
                     );
             });
 
@@ -85,12 +79,9 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             Concretion concretion = new Concretion();
 
-            IContainer manager = new Container(delegate(Registry registry)
-            {
-                registry.ForRequestedType<Abstraction>().AddInstance(
-                    ConstructedBy<Abstraction>(delegate { return concretion; })
-                    );
-            });
+            IContainer manager = new Container(registry => registry.ForRequestedType<Abstraction>().AddInstance(
+                                                               ConstructedBy<Abstraction>(() => concretion)
+                                                               ));
 
             Abstraction actual = manager.GetAllInstances<Abstraction>()[0];
             Assert.AreSame(concretion, actual);

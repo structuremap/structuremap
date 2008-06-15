@@ -69,7 +69,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             Container manager =
                 new Container(
-                    delegate(Registry r) { r.ForRequestedType(typeof (ITarget)).AddConcreteType(typeof (Target1)); });
+                    r => r.ForRequestedType(typeof (ITarget)).AddConcreteType(typeof (Target1)));
 
 
             Assert.IsInstanceOfType(typeof (Target1), manager.GetAllInstances<ITarget>()[0]);
@@ -78,7 +78,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void Add_concrete_type_with_name()
         {
-            Container manager = new Container(delegate(Registry r)
+            Container manager = new Container(r =>
             {
                 r.ForRequestedType(typeof (ITarget)).AddConcreteType(typeof (Target1), "1");
                 r.ForRequestedType(typeof (ITarget)).AddConcreteType(typeof (Target2), "2");
@@ -96,7 +96,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             Container manager =
                 new Container(
-                    delegate(Registry r) { r.ForRequestedType(typeof (ITarget)).TheDefaultIsConcreteType(typeof (Target3)); });
+                    r => r.ForRequestedType(typeof (ITarget)).TheDefaultIsConcreteType(typeof (Target3)));
 
             Assert.IsInstanceOfType(typeof (Target3), manager.GetInstance<ITarget>());
         }
@@ -106,7 +106,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             Container manager =
                 new Container(
-                    delegate(Registry r) { r.ForRequestedType(typeof (ITarget)).TheDefaultIs(Instance<Target2>()); });
+                    r => r.ForRequestedType(typeof (ITarget)).TheDefaultIs(Instance<Target2>()));
 
             Assert.IsInstanceOfType(typeof (Target2), manager.GetInstance<ITarget>());
         }
@@ -116,7 +116,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             Container manager =
                 new Container(
-                    delegate(Registry r) { r.ForRequestedType(typeof (ITarget)).TheDefaultIs(delegate { return new Target1(); }); });
+                    r => r.ForRequestedType(typeof (ITarget)).TheDefaultIs(delegate { return new Target1(); }));
 
             Assert.IsInstanceOfType(typeof (Target1), manager.GetInstance<ITarget>());
         }
@@ -126,7 +126,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             Container manager =
                 new Container(
-                    delegate(Registry r) { r.ForRequestedType(typeof (ITarget)).AddInstance(Instance<Target2>()); });
+                    r => r.ForRequestedType(typeof (ITarget)).AddInstance(Instance<Target2>()));
 
 
             Assert.IsInstanceOfType(typeof (Target2), manager.GetAllInstances<ITarget>()[0]);
@@ -135,12 +135,9 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void Enrichment()
         {
-            Container manager = new Container(delegate(Registry r)
-            {
-                r.ForRequestedType(typeof (ITarget))
-                    .TheDefaultIsConcreteType(typeof (Target1))
-                    .EnrichWith(delegate(object raw) { return new WrappedTarget((ITarget) raw); });
-            });
+            Container manager = new Container(r => r.ForRequestedType(typeof (ITarget))
+                                                       .TheDefaultIsConcreteType(typeof (Target1))
+                                                       .EnrichWith(raw => new WrappedTarget((ITarget) raw)));
 
             WrappedTarget target = (WrappedTarget) manager.GetInstance<ITarget>();
             Assert.IsInstanceOfType(typeof (Target1), target.Inner);
@@ -162,12 +159,9 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             ITarget created = null;
 
-            Container manager = new Container(delegate(Registry r)
-            {
-                r.ForRequestedType(typeof (ITarget))
-                    .TheDefaultIsConcreteType(typeof (Target3))
-                    .OnCreation(delegate(object raw) { created = (ITarget) raw; });
-            });
+            Container manager = new Container(r => r.ForRequestedType(typeof (ITarget))
+                                                       .TheDefaultIsConcreteType(typeof (Target3))
+                                                       .OnCreation(raw => created = (ITarget) raw));
 
             manager.GetInstance<ITarget>();
 

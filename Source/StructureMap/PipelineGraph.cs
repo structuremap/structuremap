@@ -22,7 +22,7 @@ namespace StructureMap
         private readonly ProfileManager _profileManager;
 
         private MissingFactoryFunction _missingFactory =
-            delegate(Type pluginType, ProfileManager profileManager) { return null; };
+            (pluginType, profileManager) => null;
 
         public PipelineGraph(PluginGraph graph)
         {
@@ -78,10 +78,7 @@ namespace StructureMap
                 Instance defaultInstance = _profileManager.GetDefault(pluginType);
 
                 visitor.PluginType(pluginType, defaultInstance);
-                pair.Value.ForEachInstance(delegate(Instance instance)
-                {
-                    visitor.Instance(pluginType, instance);
-                });
+                pair.Value.ForEachInstance(instance => visitor.Instance(pluginType, instance));
             }
         }
 

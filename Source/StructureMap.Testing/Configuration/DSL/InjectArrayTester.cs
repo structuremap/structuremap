@@ -82,45 +82,40 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void CanStillAddOtherPropertiesAfterTheCallToChildArray()
         {
-            IContainer manager = new Container(delegate(Registry registry)
-            {
-                registry.ForRequestedType<Processor>()
-                    .TheDefaultIs(
-                    Instance<Processor>().UsingConcreteType<Processor>()
-                        .ChildArray<IHandler[]>().Contains(
-                        Instance<IHandler>().UsingConcreteType<Handler1>(),
-                        Instance<IHandler>().UsingConcreteType<Handler2>(),
-                        Instance<IHandler>().UsingConcreteType<Handler3>()
-                        )
-                        .WithProperty("name").EqualTo("Jeremy")
-                    );
-            });
+            IContainer manager = new Container(
+                registry => registry.ForRequestedType<Processor>()
+                                .TheDefaultIs(
+                                Instance<Processor>().UsingConcreteType<Processor>()
+                                    .ChildArray<IHandler[]>().Contains(
+                                    Instance<IHandler>().UsingConcreteType<Handler1>(),
+                                    Instance<IHandler>().UsingConcreteType<Handler2>(),
+                                    Instance<IHandler>().UsingConcreteType<Handler3>()
+                                    )
+                                    .WithProperty("name").EqualTo("Jeremy")
+                                ));
 
-            Processor processor = manager.GetInstance<Processor>();
+            var processor = manager.GetInstance<Processor>();
             Assert.AreEqual("Jeremy", processor.Name);
         }
 
         [Test]
         public void InjectPropertiesByName()
         {
-            IContainer manager = new Container(delegate(Registry registry)
-            {
-                registry.ForRequestedType<Processor2>()
-                    .TheDefaultIs(
-                    Instance<Processor2>().UsingConcreteType<Processor2>()
-                        .ChildArray<IHandler[]>("first").Contains(
-                        Instance<IHandler>().UsingConcreteType<Handler1>(),
-                        Instance<IHandler>().UsingConcreteType<Handler2>()
-                        )
-                        .ChildArray<IHandler[]>("second").Contains(
-                        Instance<IHandler>().UsingConcreteType<Handler2>(),
-                        Instance<IHandler>().UsingConcreteType<Handler3>()
-                        )
-                    );
-            });
+            IContainer manager = new Container(registry => registry.ForRequestedType<Processor2>()
+                                                               .TheDefaultIs(
+                                                               Instance<Processor2>().UsingConcreteType<Processor2>()
+                                                                   .ChildArray<IHandler[]>("first").Contains(
+                                                                   Instance<IHandler>().UsingConcreteType<Handler1>(),
+                                                                   Instance<IHandler>().UsingConcreteType<Handler2>()
+                                                                   )
+                                                                   .ChildArray<IHandler[]>("second").Contains(
+                                                                   Instance<IHandler>().UsingConcreteType<Handler2>(),
+                                                                   Instance<IHandler>().UsingConcreteType<Handler3>()
+                                                                   )
+                                                               ));
 
 
-            Processor2 processor = manager.GetInstance<Processor2>();
+            var processor = manager.GetInstance<Processor2>();
 
             Assert.IsInstanceOfType(typeof (Handler1), processor.First[0]);
             Assert.IsInstanceOfType(typeof (Handler2), processor.First[1]);
@@ -134,7 +129,7 @@ namespace StructureMap.Testing.Configuration.DSL
                  "StructureMap Exception Code:  307\nIn the call to ChildArray<T>(), the type T must be an array")]
         public void InjectPropertiesByNameButUseTheElementType()
         {
-            Registry registry = new Registry();
+            var registry = new Registry();
 
             registry.ForRequestedType<Processor2>()
                 .TheDefaultIs(
@@ -153,7 +148,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void PlaceMemberInArrayByReference()
         {
-            IContainer manager = new Container(delegate(Registry registry)
+            IContainer manager = new Container(registry =>
             {
                 registry.AddInstanceOf<IHandler>().UsingConcreteType<Handler1>().WithName("One");
                 registry.AddInstanceOf<IHandler>().UsingConcreteType<Handler2>().WithName("Two");
@@ -169,7 +164,7 @@ namespace StructureMap.Testing.Configuration.DSL
                     );
             });
 
-            Processor processor = manager.GetInstance<Processor>();
+            var processor = manager.GetInstance<Processor>();
 
             Assert.IsInstanceOfType(typeof (Handler2), processor.Handlers[0]);
             Assert.IsInstanceOfType(typeof (Handler1), processor.Handlers[1]);
@@ -178,21 +173,18 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void ProgrammaticallyInjectArrayAllInline()
         {
-            IContainer manager = new Container(delegate(Registry registry)
-            {
-                registry.ForRequestedType<Processor>()
-                    .TheDefaultIs(
-                    Instance<Processor>()
-                        .ChildArray<IHandler[]>().Contains(
-                        Instance<IHandler>().UsingConcreteType<Handler1>(),
-                        Instance<IHandler>().UsingConcreteType<Handler2>(),
-                        Instance<IHandler>().UsingConcreteType<Handler3>()
-                        )
-                        .WithProperty("name").EqualTo("Jeremy")
-                    );
-            });
+            IContainer manager = new Container(registry => registry.ForRequestedType<Processor>()
+                                                               .TheDefaultIs(
+                                                               Instance<Processor>()
+                                                                   .ChildArray<IHandler[]>().Contains(
+                                                                   Instance<IHandler>().UsingConcreteType<Handler1>(),
+                                                                   Instance<IHandler>().UsingConcreteType<Handler2>(),
+                                                                   Instance<IHandler>().UsingConcreteType<Handler3>()
+                                                                   )
+                                                                   .WithProperty("name").EqualTo("Jeremy")
+                                                               ));
 
-            Processor processor = manager.GetInstance<Processor>();
+            var processor = manager.GetInstance<Processor>();
 
             Assert.IsInstanceOfType(typeof (Handler1), processor.Handlers[0]);
             Assert.IsInstanceOfType(typeof (Handler2), processor.Handlers[1]);
@@ -205,7 +197,7 @@ namespace StructureMap.Testing.Configuration.DSL
                  "StructureMap Exception Code:  307\nIn the call to ChildArray<T>(), the type T must be an array")]
         public void TryToInjectByTheElementTypeInsteadOfTheArrayType()
         {
-            Registry registry = new Registry();
+            var registry = new Registry();
 
             registry.ForRequestedType<Processor>()
                 .TheDefaultIs(

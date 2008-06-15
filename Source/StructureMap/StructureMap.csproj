@@ -1,7 +1,7 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{3F36EA80-2F9A-4DAD-BA27-5AC6163A2EE3}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -26,6 +26,23 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <SignAssembly>true</SignAssembly>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -100,6 +117,9 @@
       <Name>System</Name>
     </Reference>
     <Reference Include="System.configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
@@ -119,7 +139,6 @@
     <Compile Include="Configuration\DSL\Expressions\GenericFamilyExpression.cs" />
     <Compile Include="Configuration\DSL\RegistryExpressions.cs" />
     <Compile Include="Configuration\ProfileBuilder.cs" />
-    <Compile Include="Delegates.cs" />
     <Compile Include="Diagnostics\BuildError.cs" />
     <Compile Include="Diagnostics\CharacterWidth.cs" />
     <Compile Include="Diagnostics\DividerLine.cs" />
@@ -373,13 +392,36 @@
     <None Include="..\structuremap.snk">
       <Link>Properties\structuremap.snk</Link>
     </None>
+    <Compile Include="Configuration\XmlExtensions.cs" />
     <Compile Include="Diagnostics\Doctor.cs" />
+    <Compile Include="Diagnostics\DoctorReport.cs" />
+    <Compile Include="Diagnostics\DoctorResult.cs" />
+    <Compile Include="Diagnostics\DoctorRunner.cs" />
+    <Compile Include="Diagnostics\ValidationError.cs" />
     <Compile Include="ErrorMessages.cs" />
     <Compile Include="Graph\ITypeScanner.cs" />
     <Compile Include="IBootstrapper.cs" />
     <Compile Include="Pipeline\ConfiguredInstance.Building.cs" />
     <Compile Include="Pipeline\IStructuredInstance.cs" />
+    <Compile Include="Pipeline\SerializedInstance.cs" />
     <Compile Include="Util\Cache.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

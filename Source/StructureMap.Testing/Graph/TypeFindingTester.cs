@@ -13,7 +13,7 @@ namespace StructureMap.Testing.Graph
         [SetUp]
         public void SetUp()
         {
-            _manager = new Container(delegate(Registry registry)
+            _manager = new Container(registry =>
             {
                 registry.BuildInstancesOf<INormalType>();
                 registry.ScanAssemblies().IncludeTheCallingAssembly()

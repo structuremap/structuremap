@@ -8,11 +8,11 @@ namespace StructureMap.Configuration
     public class ConfigurationParserBuilder
     {
         private readonly GraphLog _log;
-        private readonly List<ConfigurationParser> _parsers = new List<ConfigurationParser>();
         private readonly List<string> _otherFiles = new List<string>();
-        private bool _ignoreDefaultFile = false;
+        private readonly List<ConfigurationParser> _parsers = new List<ConfigurationParser>();
+        private bool _ignoreDefaultFile;
         private bool _pullConfigurationFromAppConfig;
-        private bool _useAndEnforceExistenceOfDefaultFile = false;
+        private bool _useAndEnforceExistenceOfDefaultFile;
 
 
         public ConfigurationParserBuilder(GraphLog log)
@@ -39,35 +39,39 @@ namespace StructureMap.Configuration
             set { _pullConfigurationFromAppConfig = value; }
         }
 
-        // TODO:  Clean up with 3.5
         public ConfigurationParser[] GetParsers()
         {
-            List<ConfigurationParser> list = new List<ConfigurationParser>();
+            var list = new List<ConfigurationParser>();
 
-            // Pick up the configuration in the default StructureMap.config
-            string pathToStructureMapConfig = StructureMapConfiguration.GetStructureMapConfigurationPath();
-            if (shouldUseStructureMapConfigFileAt(pathToStructureMapConfig))
+            addConfigurationFromStructureMapConfig(list);
+            addConfigurationFromExplicitlyAddedFiles(list);
+            addConfigurationFromApplicationConfigFile();
+
+            list.AddRange(_parsers);
+
+            addConfigurationFromIncludeNodes(list);
+
+            return list.ToArray();
+        }
+
+        private void addConfigurationFromIncludeNodes(List<ConfigurationParser> list)
+        {
+            foreach (ConfigurationParser parser in list.ToArray())
             {
-                _log.Try(delegate()
-                {
-                    ConfigurationParser parser = ConfigurationParser.FromFile(pathToStructureMapConfig);
-                    list.Add(parser);
-                }).AndReportErrorAs(100, pathToStructureMapConfig);
+                parser.ForEachFile(_log,
+                                   filename => _log.Try(() =>
+                                   {
+                                       ConfigurationParser childParser = ConfigurationParser.FromFile(filename);
+                                       list.Add(childParser);
+                                   }).AndReportErrorAs(150, filename));
             }
+        }
 
-            foreach (string filename in _otherFiles)
-            {
-                _log.Try(delegate()
-                {
-                    ConfigurationParser parser = ConfigurationParser.FromFile(filename);
-                    parser.Description = filename;
-                    list.Add(parser);
-                }).AndReportErrorAs(160, filename);
-            }
-
+        private void addConfigurationFromApplicationConfigFile()
+        {
             if (_pullConfigurationFromAppConfig)
             {
-                _log.Try(delegate()
+                _log.Try(() =>
                 {
                     IList<XmlNode> appConfigNodes = StructureMapConfigurationSection.GetStructureMapConfiguration();
                     foreach (XmlNode appConfigNode in appConfigNodes)
@@ -76,24 +80,33 @@ namespace StructureMap.Configuration
                     }
                 }).AndLogAnyErrors();
             }
+        }
 
-            list.AddRange(_parsers);
-
-                foreach (ConfigurationParser parser in list.ToArray())
+        private void addConfigurationFromExplicitlyAddedFiles(List<ConfigurationParser> list)
+        {
+            foreach (string filename in _otherFiles)
             {
-                parser.ForEachFile(_log,
-                                   delegate(string filename)
-                                   {
-                                       _log.Try(delegate()
-                                       {
-                                           ConfigurationParser childParser = ConfigurationParser.FromFile(filename);
-                                           list.Add(childParser);
-                                       }).AndReportErrorAs(150, filename);
-                                   });
+                _log.Try(() =>
+                {
+                    ConfigurationParser parser = ConfigurationParser.FromFile(filename);
+                    parser.Description = filename;
+                    list.Add(parser);
+                }).AndReportErrorAs(160, filename);
             }
+        }
 
-
-            return list.ToArray();
+        private void addConfigurationFromStructureMapConfig(List<ConfigurationParser> list)
+        {
+// Pick up the configuration in the default StructureMap.config
+            string pathToStructureMapConfig = StructureMapConfiguration.GetStructureMapConfigurationPath();
+            if (shouldUseStructureMapConfigFileAt(pathToStructureMapConfig))
+            {
+                _log.Try(() =>
+                {
+                    ConfigurationParser parser = ConfigurationParser.FromFile(pathToStructureMapConfig);
+                    list.Add(parser);
+                }).AndReportErrorAs(100, pathToStructureMapConfig);
+            }
         }
 
         private bool shouldUseStructureMapConfigFileAt(string pathToStructureMapConfig)
@@ -112,7 +125,7 @@ namespace StructureMap.Configuration
 
         public void IncludeNode(XmlNode node, string description)
         {
-            ConfigurationParser parser = new ConfigurationParser(node);
+            var parser = new ConfigurationParser(node);
             parser.Description = description;
 
             _parsers.Add(parser);
@@ -120,7 +133,7 @@ namespace StructureMap.Configuration
 
         public static ConfigurationParser[] GetParsers(XmlNode node, GraphLog log)
         {
-            ConfigurationParserBuilder builder = new ConfigurationParserBuilder(log);
+            var builder = new ConfigurationParserBuilder(log);
             builder.IncludeNode(node, string.Empty);
             builder.IgnoreDefaultFile = true;
 

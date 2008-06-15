@@ -1,3 +1,4 @@
+using System;
 using NUnit.Framework;
 using StructureMap.Graph;
 using StructureMap.Pipeline;

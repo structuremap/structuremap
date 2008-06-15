@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using StructureMap.Graph;
 using StructureMap.Pipeline;
 
 namespace StructureMap.Diagnostics
@@ -75,6 +77,17 @@ namespace StructureMap.Diagnostics
         {
             get { return _exception; }
             set { _exception = value; }
+        }
+
+        public void Write(StringWriter writer)
+        {
+            string description = ((IDiagnosticInstance)Instance).CreateToken().Description;
+
+            writer.WriteLine();
+            writer.WriteLine("-----------------------------------------------------------------------------------------------------");
+            writer.WriteLine("Build Error on Instance '{0}' ({1}) in PluginType {2}", Instance.Name, description, TypePath.GetAssemblyQualifiedName(PluginType));
+            if (Exception != null) writer.WriteLine(Exception.ToString());
+            writer.WriteLine();
         }
     }
 }

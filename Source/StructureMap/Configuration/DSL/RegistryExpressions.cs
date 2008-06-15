@@ -53,7 +53,7 @@ namespace StructureMap.Configuration.DSL
         public static ConstructorInstance ConstructedBy<PLUGINTYPE>
             (Func<PLUGINTYPE> builder)
         {
-            return new ConstructorInstance(delegate() { return builder(); });
+            return new ConstructorInstance(() => builder());
         }
 
         public static ReferencedInstance Instance(string referencedKey)

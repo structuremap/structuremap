@@ -173,7 +173,7 @@ namespace StructureMap.Testing.Graph
         {
             IContainer manager =
                 new Container(
-                    delegate(Registry registry) { registry.ForRequestedType<IProvider>().TheDefaultIsConcreteType<LumpProvider>(); });
+                    registry => registry.ForRequestedType<IProvider>().TheDefaultIsConcreteType<LumpProvider>());
 
             ExplicitArguments args = new ExplicitArguments();
             Lump theLump = new Lump();
@@ -205,15 +205,12 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void PassExplicitArgsIntoInstanceManager()
         {
-            IContainer manager = new Container(delegate(Registry registry)
-            {
-                registry.ForRequestedType<ExplicitTarget>().TheDefaultIs(
-                    Instance<ExplicitTarget>()
-                        .UsingConcreteType<ExplicitTarget>()
-                        .Child<IProvider>().IsConcreteType<RedProvider>()
-                        .WithProperty("name").EqualTo("Jeremy")
-                    );
-            });
+            IContainer manager = new Container(registry => registry.ForRequestedType<ExplicitTarget>().TheDefaultIs(
+                                                               Instance<ExplicitTarget>()
+                                                                   .UsingConcreteType<ExplicitTarget>()
+                                                                   .Child<IProvider>().IsConcreteType<RedProvider>()
+                                                                   .WithProperty("name").EqualTo("Jeremy")
+                                                               ));
 
             ExplicitArguments args = new ExplicitArguments();
 

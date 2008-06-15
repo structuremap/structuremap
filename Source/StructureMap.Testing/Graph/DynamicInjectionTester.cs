@@ -65,7 +65,7 @@ namespace StructureMap.Testing.Graph
         public void AddInstanceToInstanceManagerWhenTheInstanceFactoryDoesNotExist()
         {
             IContainer container = new Container(new PluginGraph());
-            container.Configure(delegate(Registry registry)
+            container.Configure(registry =>
             {
                 registry.AddInstanceOf(_red).WithName("Red");
                 registry.AddInstanceOf(_blue).WithName("Blue");
@@ -79,7 +79,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void AddNamedInstanceByType()
         {
-            ObjectFactory.Configure(delegate(Registry registry)
+            ObjectFactory.Configure(registry =>
             {
                 registry.AddInstanceOf<ISomething>().UsingConcreteType<SomethingOne>().WithName("One");
                 registry.AddInstanceOf<ISomething>().UsingConcreteType<SomethingTwo>().WithName("Two");
@@ -95,7 +95,7 @@ namespace StructureMap.Testing.Graph
             SomethingOne one = new SomethingOne();
             SomethingOne two = new SomethingOne();
 
-            ObjectFactory.Configure(delegate(Registry registry)
+            ObjectFactory.Configure(registry =>
             {
                 registry.AddInstanceOf<ISomething>(one).WithName("One");
                 registry.AddInstanceOf<ISomething>(two).WithName("Two");
@@ -115,7 +115,7 @@ namespace StructureMap.Testing.Graph
             IContainer manager = new Container(pluginGraph);
 
             manager.Configure(
-                delegate(Registry registry)
+                registry =>
                 {
                     registry.ForRequestedType<ISomething>().AliasConcreteType<SomethingOne>("One");
                     registry.AddInstanceOf<ISomething>().WithConcreteKey("One").WithName("One");
@@ -132,7 +132,7 @@ namespace StructureMap.Testing.Graph
             PluginGraph pluginGraph = new PluginGraph();
             IContainer container = new Container(pluginGraph);
             container.Configure(
-                delegate(Registry registry) { registry.AddInstanceOf<ISomething>().UsingConcreteType<SomethingOne>(); });
+                registry => { registry.AddInstanceOf<ISomething>().UsingConcreteType<SomethingOne>(); });
 
             IList<ISomething> list = container.GetAllInstances<ISomething>();
 
@@ -165,7 +165,7 @@ namespace StructureMap.Testing.Graph
         public void InjectType()
         {
             ObjectFactory.Configure(
-                delegate(Registry registry) { registry.AddInstanceOf<ISomething>().UsingConcreteType<SomethingOne>(); });
+                registry => { registry.AddInstanceOf<ISomething>().UsingConcreteType<SomethingOne>(); });
 
             IList<ISomething> list = ObjectFactory.GetAllInstances<ISomething>();
 
@@ -208,7 +208,7 @@ namespace StructureMap.Testing.Graph
         public void Add_generic_stuff_in_configure()
         {
             Container container = new Container();
-            container.Configure(delegate(Registry registry)
+            container.Configure(registry =>
             {
                 registry.ForRequestedType(typeof (IService<>))
                     .AddConcreteType(typeof (Service1<>))
@@ -222,7 +222,7 @@ namespace StructureMap.Testing.Graph
         public void Add_an_assembly_in_the_Configure()
         {
             Container container = new Container();
-            container.Configure(delegate(Registry registry)
+            container.Configure(registry =>
             {
                 registry.ScanAssemblies().IncludeTheCallingAssembly();
             });
@@ -234,7 +234,7 @@ namespace StructureMap.Testing.Graph
         public void Add_an_assembly_on_the_fly_and_pick_up_plugins()
         {
             Container container = new Container();
-            container.Configure(delegate(Registry registry)
+            container.Configure(registry =>
             {
                 registry.ScanAssemblies().IncludeTheCallingAssembly().AddAllTypesOf<IWidget>();
             });

@@ -219,10 +219,7 @@ namespace StructureMap
 
         public static void TheDefaultProfileIs(string profileName)
         {
-            _registry.addExpression(delegate(PluginGraph graph)
-            {
-                graph.ProfileManager.DefaultProfileName = profileName;
-            });
+            _registry.addExpression(graph => graph.ProfileManager.DefaultProfileName = profileName);
         }
 
 

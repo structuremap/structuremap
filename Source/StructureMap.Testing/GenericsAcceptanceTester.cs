@@ -140,7 +140,7 @@ namespace StructureMap.Testing
         [Test]
         public void Define_profile_with_generics_and_concrete_type()
         {
-            IContainer manager = new Container(delegate(Registry registry)
+            IContainer manager = new Container(registry =>
             {
                 registry.CreateProfile("1").For(typeof (IService<>)).UseConcreteType(typeof (Service<>));
                 registry.CreateProfile("2").For(typeof (IService<>)).UseConcreteType(typeof (Service2<>));
@@ -157,7 +157,7 @@ namespace StructureMap.Testing
         [Test]
         public void Define_profile_with_generics_with_named_instance()
         {
-            IContainer manager = new Container(delegate(Registry registry)
+            IContainer manager = new Container(registry =>
             {
                 registry.AddInstanceOf(typeof (IService<>),
                                        new ConfiguredInstance(typeof (Service<>)).WithName("Service1"));

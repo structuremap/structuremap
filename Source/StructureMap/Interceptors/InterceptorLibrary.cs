@@ -39,7 +39,7 @@ namespace StructureMap.Interceptors
                 if (!_analyzedInterceptors.ContainsKey(type))
                 {
                     TypeInterceptor[] interceptorArray =
-                        _interceptors.FindAll(delegate(TypeInterceptor i) { return i.MatchesType(type); }).ToArray();
+                        _interceptors.FindAll(i => i.MatchesType(type)).ToArray();
                     _analyzedInterceptors.Add(type, new CompoundInterceptor(interceptorArray));
                 }
             }

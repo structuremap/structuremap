@@ -38,7 +38,7 @@ namespace StructureMap.Testing.Diagnostics
         [Test]
         public void Attach_dependency_to_the_build_error_but_do_not_create_new_error_for_dependency()
         {
-            ValidationBuildSession session = validatedSession(delegate(Registry registry)
+            ValidationBuildSession session = validatedSession(registry =>
             {
                 registry.AddInstanceOf<IWidget>(errorInstance().WithName("BadInstance"));
 
@@ -61,7 +61,7 @@ namespace StructureMap.Testing.Diagnostics
         {
             ValidationBuildSession session =
                 validatedSession(
-                    delegate(Registry registry) { registry.AddInstanceOf<IWidget>(new ColorWidget("Red")); });
+                    registry => registry.AddInstanceOf<IWidget>(new ColorWidget("Red")));
 
             Assert.AreEqual(0, session.BuildErrors.Length);
         }
@@ -69,7 +69,7 @@ namespace StructureMap.Testing.Diagnostics
         [Test]
         public void Create_an_instance_that_fails_and_an_instance_that_depends_on_that_exception()
         {
-            ValidationBuildSession session = validatedSession(delegate(Registry registry)
+            ValidationBuildSession session = validatedSession(registry =>
             {
                 registry.AddInstanceOf<IWidget>(errorInstance().WithName("BadInstance"));
 
@@ -91,13 +91,11 @@ namespace StructureMap.Testing.Diagnostics
         [Test]
         public void Create_an_instance_that_fails_because_of_an_inline_child()
         {
-            ValidationBuildSession session = validatedSession(delegate(Registry registry)
-            {
-                registry.AddInstanceOf<SomethingThatNeedsAWidget>(
-                    Instance<SomethingThatNeedsAWidget>().WithName("BadInstance")
-                        .Child<IWidget>().Is(errorInstance())
-                    );
-            });
+            ValidationBuildSession session = validatedSession(
+                registry => registry.AddInstanceOf<SomethingThatNeedsAWidget>(
+                                Instance<SomethingThatNeedsAWidget>().WithName("BadInstance")
+                                    .Child<IWidget>().Is(errorInstance())
+                                ));
 
             BuildError error = getFirstAndOnlyError(session);
 
@@ -110,7 +108,7 @@ namespace StructureMap.Testing.Diagnostics
         {
             Instance instance = errorInstance().WithName("Bad");
             ValidationBuildSession session =
-                validatedSession(delegate(Registry registry) { registry.AddInstanceOf<IWidget>(instance); });
+                validatedSession(registry => registry.AddInstanceOf<IWidget>(instance));
 
             BuildError error = getFirstAndOnlyError(session);
 
@@ -124,7 +122,7 @@ namespace StructureMap.Testing.Diagnostics
         {
             ValidationBuildSession session =
                 validatedSession(
-                    delegate(Registry registry) { registry.AddInstanceOf<IWidget>(new ColorWidget("Red")); });
+                    registry => registry.AddInstanceOf<IWidget>(new ColorWidget("Red")));
 
             Assert.AreEqual(0, session.ValidationErrors.Length);
         }
@@ -146,7 +144,7 @@ namespace StructureMap.Testing.Diagnostics
         {
             ValidationBuildSession session =
                 validatedSession(
-                    delegate(Registry registry) { registry.BuildInstancesOf<SomethingThatHasValidationFailures>(); });
+                    registry => registry.BuildInstancesOf<SomethingThatHasValidationFailures>());
 
             Assert.AreEqual(2, session.ValidationErrors.Length);
         }
@@ -156,7 +154,7 @@ namespace StructureMap.Testing.Diagnostics
         {
             LiteralInstance instance = new LiteralInstance(new WidgetWithOneValidationFailure());
             ValidationBuildSession session =
-                validatedSession(delegate(Registry registry) { registry.AddInstanceOf<IWidget>(instance); });
+                validatedSession(registry => registry.AddInstanceOf<IWidget>(instance));
 
 
             Assert.AreEqual(1, session.ValidationErrors.Length);

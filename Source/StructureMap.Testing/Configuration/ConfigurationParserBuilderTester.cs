@@ -50,8 +50,7 @@ namespace StructureMap.Testing.Configuration
         {
             Array.Sort(expected);
             ConfigurationParser[] parsers = builder.GetParsers();
-            Converter<ConfigurationParser, string> converter =
-                delegate(ConfigurationParser parser) { return parser.Id; };
+            Converter<ConfigurationParser, string> converter = parser => parser.Id;
 
             string[] actuals = Array.ConvertAll(parsers, converter);
             Array.Sort(actuals);
@@ -132,12 +131,13 @@ namespace StructureMap.Testing.Configuration
             });
         }
 
-        [Test]
-        public void Log_error_156_if_Include_node_does_not_have_a_File()
-        {
-            DataMother.WriteDocument("MissingInclude.xml", "<StructureMap><Include></Include></StructureMap>");
-            assertErrorIsLogged(156, delegate { builder.IncludeFile("MissingInclude.xml"); });
-        }
+        // TODO:  Decide if this is important or not
+        //[Test]
+        //public void Log_error_156_if_Include_node_does_not_have_a_File()
+        //{
+        //    DataMother.WriteDocument("MissingInclude.xml", "<StructureMap><Include></Include></StructureMap>");
+        //    assertErrorIsLogged(156, () => builder.IncludeFile("MissingInclude.xml"));
+        //}
 
         [Test, Explicit]
         public void Log_exception_100_if_StructureMap_config_is_required_and_missing()

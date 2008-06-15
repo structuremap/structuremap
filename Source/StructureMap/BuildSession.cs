@@ -72,7 +72,6 @@ namespace StructureMap
             }
             else
             {
-                // TODO:  3.5, move this to an extension method of Array?
                 array = Array.CreateInstance(pluginType, instances.Length);
                 for (int i = 0; i < instances.Length; i++)
                 {

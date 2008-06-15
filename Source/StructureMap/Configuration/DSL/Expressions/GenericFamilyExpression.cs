@@ -19,7 +19,7 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         private GenericFamilyExpression alterAndContinue(Action<PluginFamily> action)
         {
-            _registry.addExpression(delegate(PluginGraph graph)
+            _registry.addExpression(graph =>
             {
                 PluginFamily family = graph.FindFamily(_pluginType);
                 action(family);
@@ -36,7 +36,7 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         public GenericFamilyExpression TheDefaultIs(Instance instance)
         {
-            return alterAndContinue(delegate(PluginFamily family)
+            return alterAndContinue(family =>
             {
                 family.AddInstance(instance);
                 family.DefaultInstanceKey = instance.Name;
@@ -51,17 +51,17 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         public GenericFamilyExpression AddInstance(Instance instance)
         {
-            return alterAndContinue(delegate(PluginFamily family) { family.AddInstance(instance); });
+            return alterAndContinue(family => family.AddInstance(instance));
         }
 
         public GenericFamilyExpression CacheBy(InstanceScope scope)
         {
-            return alterAndContinue(delegate(PluginFamily family) { family.SetScopeTo(scope); });
+            return alterAndContinue(family => family.SetScopeTo(scope));
         }
 
         public GenericFamilyExpression OnCreation(Action<object> action)
         {
-            Func<object, object> func = delegate(object raw)
+            Func<object, object> func = raw =>
             {
                 action(raw);
                 return raw;
@@ -71,7 +71,7 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         public GenericFamilyExpression EnrichWith(Func<object, object> func)
         {
-            _registry.addExpression(delegate(PluginGraph graph)
+            _registry.addExpression(graph =>
             {
                 PluginTypeInterceptor interceptor = new PluginTypeInterceptor(_pluginType, func);
                 graph.InterceptorLibrary.AddInterceptor(interceptor);
@@ -83,10 +83,7 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         public GenericFamilyExpression InterceptConstructionWith(IBuildInterceptor interceptor)
         {
-            return alterAndContinue(delegate(PluginFamily family)
-            {
-                family.AddInterceptor(interceptor);
-            });
+            return alterAndContinue(family => family.AddInterceptor(interceptor));
         }
 
         public GenericFamilyExpression AddConcreteType(Type concreteType)

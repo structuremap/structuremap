@@ -38,8 +38,8 @@ namespace StructureMap.Graph
 
             PluginFamilyAttribute.ConfigureFamily(this);
 
-            _explicitlyMarkedPluginFilter = delegate(Type type) { return IsExplicitlyMarkedAsPlugin(PluginType, type); };
-            _implicitPluginFilter = delegate(Type type) { return CanBeCast(PluginType, type); };
+            _explicitlyMarkedPluginFilter = (type => IsExplicitlyMarkedAsPlugin(PluginType, type));
+            _implicitPluginFilter = (type => CanBeCast(PluginType, type));
             _pluginFilter = _explicitlyMarkedPluginFilter;
 
             if (IsConcrete(pluginType))
@@ -107,20 +107,17 @@ namespace StructureMap.Graph
         // For testing
         public InstanceMemento GetMemento(string instanceKey)
         {
-            return _mementoList.Find(delegate(InstanceMemento m) { return m.InstanceKey == instanceKey; });
+            return _mementoList.Find(m => m.InstanceKey == instanceKey);
         }
 
 
         public void Seal()
         {
-            _mementoList.ForEach(delegate(InstanceMemento memento)
+            _mementoList.ForEach(memento => _parent.Log.Try(() =>
             {
-                _parent.Log.Try(delegate()
-                {
-                    Instance instance = memento.ReadInstance(Parent, _pluginType);
-                    AddInstance(instance);
-                }).AndLogAnyErrors();
-            });
+                Instance instance = memento.ReadInstance(Parent, _pluginType);
+                AddInstance(instance);
+            }).AndLogAnyErrors());
 
             discoverImplicitInstances();
 
@@ -134,15 +131,12 @@ namespace StructureMap.Graph
 
         private void validatePluggabilityOfInstances()
         {
-            _instances.Each(delegate(Instance instance)
+            _instances.Each(instance =>
             {
                 IDiagnosticInstance diagnosticInstance = instance;
 
-                _parent.Log.Try(delegate()
-                {
-                    diagnosticInstance.Preprocess(this);
-                })
-                .AndReportErrorAs(104, diagnosticInstance.CreateToken(), _pluginType);
+                _parent.Log.Try(() => diagnosticInstance.Preprocess(this))
+                    .AndReportErrorAs(104, diagnosticInstance.CreateToken(), _pluginType);
 
 
                 if (!diagnosticInstance.CanBePartOfPluginFamily(this))
@@ -157,7 +151,7 @@ namespace StructureMap.Graph
             // TODO:  Apply some 3.5 lambda magic.  Maybe move to PluginCollection
             List<Plugin> list = _plugins.FindAutoFillablePlugins();
             list.RemoveAll(
-                delegate(Plugin plugin) { return _instances.Exists(delegate(Instance instance) { return instance.Matches(plugin); }); });
+                plugin => _instances.Exists(instance => instance.Matches(plugin)));
 
             foreach (Plugin plugin in list)
             {
@@ -327,10 +321,7 @@ namespace StructureMap.Graph
 
         public void ImportFrom(PluginFamily source)
         {
-            source.EachInstance(delegate(Instance instance)
-            {
-                _instances.Fill(instance.Name, instance);
-            });
+            source.EachInstance(instance => _instances.Fill(instance.Name, instance));
 
             foreach (Plugin plugin in source.Plugins)
             {

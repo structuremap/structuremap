@@ -1,15 +1,14 @@
+using System;
 using System.Xml;
 
 namespace StructureMap.Source
 {
-    public delegate InstanceMemento CreateXmlMementoDelegate(XmlNode node);
-
     // TODO:  3.5, eliminate this with lambdas in ConfigurationParser
     public class XmlMementoCreator
     {
         private readonly string _keyAttribute;
         private readonly string _typeAttribute;
-        private CreateXmlMementoDelegate _createMemento;
+        private Func<XmlNode, InstanceMemento> _createMemento;
 
         public XmlMementoCreator(XmlMementoStyle style, string typeAttribute, string keyAttribute)
         {
@@ -17,11 +16,11 @@ namespace StructureMap.Source
             _keyAttribute = keyAttribute;
             if (style == XmlMementoStyle.NodeNormalized)
             {
-                _createMemento = new CreateXmlMementoDelegate(createNodeNormalizedMemento);
+                _createMemento = createNodeNormalizedMemento;
             }
             else
             {
-                _createMemento = new CreateXmlMementoDelegate(createAttributeNormalizedMemento);
+                _createMemento = createAttributeNormalizedMemento;
             }
         }
 

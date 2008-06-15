@@ -40,7 +40,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             Container manager =
                 new Container(
-                    delegate(Registry registry) { registry.ForRequestedType<IWidget>().AddInstance(delegate { return new AWidget(); }); });
+                    registry => registry.ForRequestedType<IWidget>().AddInstance(delegate { return new AWidget(); }));
 
             Assert.IsInstanceOfType(typeof (AWidget), manager.GetAllInstances<IWidget>()[0]);
         }
@@ -51,8 +51,7 @@ namespace StructureMap.Testing.Configuration.DSL
             AWidget aWidget = new AWidget();
 
             Container manager =
-                new Container(
-                    delegate(Registry registry) { registry.ForRequestedType<IWidget>().AddInstance(aWidget); });
+                new Container(registry => registry.ForRequestedType<IWidget>().AddInstance(aWidget));
 
             Assert.IsInstanceOfType(typeof (AWidget), manager.GetAllInstances<IWidget>()[0]);
         }
@@ -60,12 +59,10 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void AddInstanceByNameOnlyAddsOneInstanceToStructureMap()
         {
-            IContainer manager = new Container(delegate(Registry registry)
-            {
-                registry.ForRequestedType<Something>().AddInstance(
-                    RegistryExpressions.Instance<Something>().UsingConcreteType<RedSomething>().WithName("Red")
-                    );
-            });
+            IContainer manager = new Container(registry => registry.ForRequestedType<Something>().AddInstance(
+                                                               RegistryExpressions.Instance<Something>().
+                                                                   UsingConcreteType<RedSomething>().WithName("Red")
+                                                               ));
             IList<Something> instances = manager.GetAllInstances<Something>();
             Assert.AreEqual(1, instances.Count);
         }
@@ -74,8 +71,7 @@ namespace StructureMap.Testing.Configuration.DSL
         public void AddInstanceWithNameOnlyAddsOneInstanceToStructureMap()
         {
             IContainer manager =
-                new Container(
-                    delegate(Registry registry) { registry.AddInstanceOf<Something>().UsingConcreteType<RedSomething>().WithName("Red"); });
+                new Container(registry => registry.AddInstanceOf<Something>().UsingConcreteType<RedSomething>().WithName("Red"));
             IList<Something> instances = manager.GetAllInstances<Something>();
             Assert.AreEqual(1, instances.Count);
         }
@@ -166,14 +162,12 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void CreatePluginFamilyWithADefault()
         {
-            IContainer manager = new Container(delegate(Registry registry)
-            {
-                registry.BuildInstancesOf<IWidget>().TheDefaultIs(
-                    RegistryExpressions.Instance<IWidget>().UsingConcreteType<ColorWidget>().WithProperty("Color").
-                        EqualTo(
-                        "Red")
-                    );
-            });
+            IContainer manager = new Container(registry => registry.BuildInstancesOf<IWidget>().TheDefaultIs(
+                                                               RegistryExpressions.Instance<IWidget>().UsingConcreteType
+                                                                   <ColorWidget>().WithProperty("Color").
+                                                                   EqualTo(
+                                                                   "Red")
+                                                               ));
 
             ColorWidget widget = (ColorWidget) manager.GetInstance<IWidget>();
             Assert.AreEqual("Red", widget.Color);
@@ -197,7 +191,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             Container manager =
                 new Container(
-                    delegate(Registry registry) { registry.ForRequestedType<IWidget>().TheDefaultIs(delegate { return new AWidget(); }); });
+                    registry => registry.ForRequestedType<IWidget>().TheDefaultIs(delegate { return new AWidget(); }));
 
             Assert.IsInstanceOfType(typeof (AWidget), manager.GetInstance<IWidget>());
         }
@@ -209,7 +203,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
             Container manager =
                 new Container(
-                    delegate(Registry registry) { registry.ForRequestedType<IWidget>().TheDefaultIs(aWidget); });
+                    registry => registry.ForRequestedType<IWidget>().TheDefaultIs(aWidget));
 
             Assert.AreSame(aWidget, manager.GetInstance<IWidget>());
         }
@@ -217,11 +211,8 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void TheDefaultInstanceIsConcreteType()
         {
-            IContainer manager = new Container(delegate(Registry registry)
-            {
-                // Needs to blow up if the concrete type can't be used
-                registry.BuildInstancesOf<Rule>().TheDefaultIsConcreteType<ARule>();
-            });
+            IContainer manager = new Container(
+                registry => registry.BuildInstancesOf<Rule>().TheDefaultIsConcreteType<ARule>());
 
             Assert.IsInstanceOfType(typeof (ARule), manager.GetInstance<Rule>());
         }

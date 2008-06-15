@@ -173,7 +173,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void Log_104_if_instance_cannot_be_added_into_PluginFamily()
         {
-            TestUtility.AssertErrorIsLogged(104, delegate(PluginGraph graph)
+            TestUtility.AssertErrorIsLogged(104, graph =>
             {
                 PluginFamily family = new PluginFamily(typeof (IGateway), graph);
                 ConfiguredInstance instance = new ConfiguredInstance(typeof (Rule));

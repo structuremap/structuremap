@@ -44,7 +44,7 @@ namespace StructureMap
                 _instanceBuilders = new InstanceBuilderList(family.PluginType, family.Plugins.All);
 
 
-                family.EachInstance(delegate(Instance instance) { AddInstance(instance); });
+                family.EachInstance(AddInstance);
             }
             catch (StructureMapException)
             {
@@ -118,7 +118,7 @@ namespace StructureMap
         {
             IList list = new ArrayList();
 
-            _instances.Each(delegate(Instance instance)
+            _instances.Each(instance =>
             {
                 object builtObject = Build(session, instance);
                 list.Add(builtObject);
@@ -142,10 +142,7 @@ namespace StructureMap
         public void ImportFrom(PluginFamily family)
         {
             _instanceBuilders.Add(family.Plugins);
-            family.EachInstance(delegate(Instance instance)
-            {
-                 _instances.Fill(instance.Name, instance);
-            });
+            family.EachInstance(instance => _instances.Fill(instance.Name, instance));
         }
     }
 }

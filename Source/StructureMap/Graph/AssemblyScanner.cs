@@ -6,7 +6,6 @@ using StructureMap.Diagnostics;
 
 namespace StructureMap.Graph
 {
-    // TODO:  redo in 3.5 w/ Lambdas
     public class AssemblyScanner
     {
         private readonly List<Assembly> _assemblies = new List<Assembly>();
@@ -26,7 +25,7 @@ namespace StructureMap.Graph
         public void ScanForAll(PluginGraph pluginGraph)
         {
             // Don't do this for SystemScan
-            scanTypes(delegate(Type type)
+            scanTypes(type =>
             {
                 if (!Registry.IsPublicRegistry(type)) return;
 
@@ -42,20 +41,14 @@ namespace StructureMap.Graph
         private void runScanners(PluginGraph graph)
         {
             Registry registry = new Registry();
-            scanTypes(delegate(Type type)
-            {
-                foreach (ITypeScanner scanner in _scanners)
-                {
-                    scanner.Process(type, registry);
-                }
-            });
+            scanTypes(type => _scanners.ForEach(scanner => scanner.Process(type, registry)));
 
             registry.ConfigurePluginGraph(graph);
         }
 
         private void findFamiliesAndPlugins(PluginGraph pluginGraph)
         {
-            scanTypes(delegate(Type type)
+            scanTypes(type =>
             {
                 if (PluginFamilyAttribute.MarkedAsPluginFamily(type))
                 {
@@ -63,7 +56,7 @@ namespace StructureMap.Graph
                 }
             });
 
-            scanTypes(delegate(Type type)
+            scanTypes(type =>
             {
                 foreach (PluginFamily family in pluginGraph.PluginFamilies)
                 {
@@ -80,7 +73,7 @@ namespace StructureMap.Graph
 
         private void scanTypes(Action<Type> action)
         {
-            scanTypes(new Action<Type>[] {action});
+            scanTypes(new[] {action});
         }
 
         private void scanTypes(IEnumerable<Action<Type>> actions)

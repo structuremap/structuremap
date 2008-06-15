@@ -47,10 +47,10 @@ namespace StructureMap.Configuration
 
         public void OverrideProfile(TypePath typePath, string instanceKey)
         {
-            _pluginGraph.Log.WithType(typePath, "while trying to add an override for a Profile", delegate(Type pluginType)
+            _pluginGraph.Log.WithType(typePath, "while trying to add an override for a Profile", pluginType =>
             {
                 ReferencedInstance instance = new ReferencedInstance(instanceKey);
-                _pluginGraph.SetDefault(_lastProfile, pluginType, instance);                
+                _pluginGraph.SetDefault(_lastProfile, pluginType, instance);
             });
         }
 
@@ -72,12 +72,12 @@ namespace StructureMap.Configuration
             }
 
             _pluginGraph.Log.WithType(typePath, 
-                "trying to configure a Machine Override", 
-                delegate(Type pluginType)
-            {
-                ReferencedInstance instance = new ReferencedInstance(instanceKey);
-                _profileManager.SetMachineDefault(pluginType, instance);                
-            });
+                "trying to configure a Machine Override",
+                                      pluginType =>
+                                      {
+                                          ReferencedInstance instance = new ReferencedInstance(instanceKey);
+                                          _profileManager.SetMachineDefault(pluginType, instance);
+                                      });
         }
 
         public void SetDefaultProfileName(string profileName)

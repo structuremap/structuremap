@@ -1,21 +1,5 @@
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap", "StructureMap\StructureMap.csproj", "{3F36EA80-2F9A-4DAD-BA27-5AC6163A2EE3}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Testing", "StructureMap.Testing\StructureMap.Testing.csproj", "{63C2742D-B6E2-484F-AFDB-346873075C5E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Testing.Widget", "StructureMap.Testing.Widget\StructureMap.Testing.Widget.csproj", "{E21E1651-3E32-47B7-A290-F461E63FEAD2}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Testing.Widget2", "StructureMap.Testing.Widget2\StructureMap.Testing.Widget2.csproj", "{027E996C-75E8-40F8-9073-0E3B77A6BE1F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Testing.Widget3", "StructureMap.Testing.Widget3\StructureMap.Testing.Widget3.csproj", "{C8878328-281F-4F4F-8D6E-88C60F304B89}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Testing.Widget4", "StructureMap.Testing.Widget4\StructureMap.Testing.Widget4.csproj", "{901D15CB-EF37-4F84-864B-E70F4B5F1DFF}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Testing.Widget5", "StructureMap.Testing.Widget5\StructureMap.Testing.Widget5.csproj", "{CAB97F7F-FB75-410C-898A-88DCAAC036BE}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.DeploymentTasks", "StructureMap.DeploymentTasks\StructureMap.DeploymentTasks.csproj", "{DB6A0B91-873E-4E04-866A-7483E136A8D4}"
-EndProject
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{93877CE0-BA48-4F28-B372-B8E802CEE085}"
 	ProjectSection(SolutionItems) = preProject
 		..\Docs\Basic Architecture.htm = ..\Docs\Basic Architecture.htm
@@ -39,15 +23,33 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\Docs\ValidationAttribute.htm = ..\Docs\ValidationAttribute.htm
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Testing.GenericWidgets", "StructureMap.Testing.GenericWidgets\StructureMap.Testing.GenericWidgets.csproj", "{C205EA4C-4CD0-4221-A3CB-AFD835F0B263}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.DataAccess", "StructureMap.DataAccess\StructureMap.DataAccess.csproj", "{DB798C07-0C82-4298-8BAA-D702CF96C28E}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Widgets", "Widgets", "{E1C10209-160D-4054-ACB7-478A9FDCF84C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GUI", "GUI", "{4F638ECF-2A69-4D6A-9B68-05CC40951217}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap", "StructureMap\StructureMap.csproj", "{3F36EA80-2F9A-4DAD-BA27-5AC6163A2EE3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Testing", "StructureMap.Testing\StructureMap.Testing.csproj", "{63C2742D-B6E2-484F-AFDB-346873075C5E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Testing.Widget", "StructureMap.Testing.Widget\StructureMap.Testing.Widget.csproj", "{E21E1651-3E32-47B7-A290-F461E63FEAD2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Testing.Widget2", "StructureMap.Testing.Widget2\StructureMap.Testing.Widget2.csproj", "{027E996C-75E8-40F8-9073-0E3B77A6BE1F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Testing.Widget3", "StructureMap.Testing.Widget3\StructureMap.Testing.Widget3.csproj", "{C8878328-281F-4F4F-8D6E-88C60F304B89}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Testing.Widget4", "StructureMap.Testing.Widget4\StructureMap.Testing.Widget4.csproj", "{901D15CB-EF37-4F84-864B-E70F4B5F1DFF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Testing.Widget5", "StructureMap.Testing.Widget5\StructureMap.Testing.Widget5.csproj", "{CAB97F7F-FB75-410C-898A-88DCAAC036BE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.DeploymentTasks", "StructureMap.DeploymentTasks\StructureMap.DeploymentTasks.csproj", "{DB6A0B91-873E-4E04-866A-7483E136A8D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Testing.GenericWidgets", "StructureMap.Testing.GenericWidgets\StructureMap.Testing.GenericWidgets.csproj", "{C205EA4C-4CD0-4221-A3CB-AFD835F0B263}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.DataAccess", "StructureMap.DataAccess\StructureMap.DataAccess.csproj", "{DB798C07-0C82-4298-8BAA-D702CF96C28E}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.AutoMocking", "StructureMap.AutoMocking\StructureMap.AutoMocking.csproj", "{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMapDoctor", "StructureMapDoctor\StructureMapDoctor.csproj", "{9048635D-A2CE-4387-A4F5-9BB1CFF04703}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -227,16 +229,31 @@ Global
 		{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{9048635D-A2CE-4387-A4F5-9BB1CFF04703}.Build|.NET.ActiveCfg = Release|Any CPU
+		{9048635D-A2CE-4387-A4F5-9BB1CFF04703}.Build|Any CPU.ActiveCfg = Release|Any CPU
+		{9048635D-A2CE-4387-A4F5-9BB1CFF04703}.Build|Any CPU.Build.0 = Release|Any CPU
+		{9048635D-A2CE-4387-A4F5-9BB1CFF04703}.Build|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{9048635D-A2CE-4387-A4F5-9BB1CFF04703}.Build|Mixed Platforms.Build.0 = Release|Any CPU
+		{9048635D-A2CE-4387-A4F5-9BB1CFF04703}.Debug|.NET.ActiveCfg = Debug|Any CPU
+		{9048635D-A2CE-4387-A4F5-9BB1CFF04703}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9048635D-A2CE-4387-A4F5-9BB1CFF04703}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9048635D-A2CE-4387-A4F5-9BB1CFF04703}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{9048635D-A2CE-4387-A4F5-9BB1CFF04703}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{9048635D-A2CE-4387-A4F5-9BB1CFF04703}.Release|.NET.ActiveCfg = Release|Any CPU
+		{9048635D-A2CE-4387-A4F5-9BB1CFF04703}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9048635D-A2CE-4387-A4F5-9BB1CFF04703}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9048635D-A2CE-4387-A4F5-9BB1CFF04703}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{9048635D-A2CE-4387-A4F5-9BB1CFF04703}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{E21E1651-3E32-47B7-A290-F461E63FEAD2} = {E1C10209-160D-4054-ACB7-478A9FDCF84C}
 		{027E996C-75E8-40F8-9073-0E3B77A6BE1F} = {E1C10209-160D-4054-ACB7-478A9FDCF84C}
 		{C8878328-281F-4F4F-8D6E-88C60F304B89} = {E1C10209-160D-4054-ACB7-478A9FDCF84C}
 		{901D15CB-EF37-4F84-864B-E70F4B5F1DFF} = {E1C10209-160D-4054-ACB7-478A9FDCF84C}
 		{CAB97F7F-FB75-410C-898A-88DCAAC036BE} = {E1C10209-160D-4054-ACB7-478A9FDCF84C}
 		{C205EA4C-4CD0-4221-A3CB-AFD835F0B263} = {E1C10209-160D-4054-ACB7-478A9FDCF84C}
-		{E21E1651-3E32-47B7-A290-F461E63FEAD2} = {E1C10209-160D-4054-ACB7-478A9FDCF84C}
 	EndGlobalSection
 EndGlobal

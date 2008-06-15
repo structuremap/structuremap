@@ -24,12 +24,9 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             string theProfileName = "something";
 
-            IContainer manager = new Container(delegate(Registry registry)
-            {
-                registry.CreateProfile(theProfileName)
-                    .For<IWidget>().Use(delegate { return new AWidget(); })
-                    .For<Rule>().Use(delegate { return new DefaultRule(); });
-            });
+            IContainer manager = new Container(registry => registry.CreateProfile(theProfileName)
+                                                               .For<IWidget>().Use(delegate { return new AWidget(); })
+                                                               .For<Rule>().Use(delegate { return new DefaultRule(); }));
 
             manager.SetDefaultsToProfile(theProfileName);
 
@@ -43,11 +40,8 @@ namespace StructureMap.Testing.Configuration.DSL
             string theProfileName = "something";
             IWidget theTemplate = new AWidget();
 
-            IContainer manager = new Container(delegate(Registry registry)
-            {
-                registry.CreateProfile(theProfileName)
-                    .For<IWidget>().UsePrototypeOf(theTemplate);
-            });
+            IContainer manager = new Container(registry => registry.CreateProfile(theProfileName)
+                                                               .For<IWidget>().UsePrototypeOf(theTemplate));
 
             manager.SetDefaultsToProfile(theProfileName);
 
@@ -64,12 +58,9 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             string theProfileName = "something";
 
-            IContainer manager = new Container(delegate(Registry registry)
-            {
-                registry.CreateProfile(theProfileName)
-                    .For<IWidget>().UseConcreteType<AWidget>()
-                    .For<Rule>().UseConcreteType<DefaultRule>();
-            });
+            IContainer manager = new Container(registry => registry.CreateProfile(theProfileName)
+                                                               .For<IWidget>().UseConcreteType<AWidget>()
+                                                               .For<Rule>().UseConcreteType<DefaultRule>());
             manager.SetDefaultsToProfile(theProfileName);
 
             Assert.IsInstanceOfType(typeof (AWidget), manager.GetInstance<IWidget>());

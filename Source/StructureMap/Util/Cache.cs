@@ -9,9 +9,9 @@ namespace StructureMap.Util
     public class Cache<KEY, VALUE> : IEnumerable<VALUE> where VALUE : class
     {
         private readonly Dictionary<KEY, VALUE> _values = new Dictionary<KEY, VALUE>();
-        private readonly Func<KEY, VALUE> _onMissing = delegate(KEY key)
+        private readonly Func<KEY, VALUE> _onMissing = key =>
         {
-            string message = string.Format("Key '{0}' could not be found", key); 
+            string message = string.Format("Key '{0}' could not be found", key);
             throw new KeyNotFoundException(message);
         };
 
@@ -103,10 +103,7 @@ namespace StructureMap.Util
         {
             bool returnValue = false;
 
-            Each(delegate(VALUE value)
-            {
-                returnValue |= predicate(value);
-            });
+            Each(value => returnValue |= predicate(value));
 
             return returnValue;
         }

@@ -92,10 +92,10 @@ namespace StructureMap.Testing.Graph.Interceptors
         {
             MockTypeInterceptor interceptor = new MockTypeInterceptor();
             interceptor.AddHandler<RedSomething>(
-                delegate(RedSomething something) { return new WrappedSomething(something); });
+                something => new WrappedSomething(something));
 
             interceptor.AddHandler<GreenSomething>(
-                delegate(GreenSomething something) { return new WrappedSomething2(something); });
+                something => new WrappedSomething2(something));
 
             registry.RegisterInterceptor(interceptor);
 
@@ -107,9 +107,8 @@ namespace StructureMap.Testing.Graph.Interceptors
         [Test]
         public void Register_A_Type_Interceptor_By_The_Fluent_Interface()
         {
-            registry.IfTypeMatches(delegate(Type type) { return type.Equals(typeof (BlueSomething)); })
-                .InterceptWith(
-                delegate(object rawInstance) { return new WrappedSomething((IAnInterfaceOfSomeSort) rawInstance); });
+            registry.IfTypeMatches(type => type.Equals(typeof (BlueSomething)))
+                .InterceptWith(rawInstance => new WrappedSomething((IAnInterfaceOfSomeSort) rawInstance));
 
             assertThisIsType<RedSomething>("Red");
             assertThisIsType<GreenSomething>("Green");

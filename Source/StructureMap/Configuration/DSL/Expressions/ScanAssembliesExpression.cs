@@ -19,7 +19,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         public ScanAssembliesExpression(Registry registry)
         {
             _registry = registry;
-            _registry.addExpression(delegate(PluginGraph graph)
+            _registry.addExpression(graph =>
             {
                 foreach (Assembly assembly in _assemblies)
                 {
@@ -68,7 +68,7 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         public ScanAssembliesExpression AddAllTypesOf<PLUGINTYPE>()
         {
-            _registry.addExpression(delegate(PluginGraph pluginGraph)
+            _registry.addExpression(pluginGraph =>
             {
                 PluginFamily family =
                     pluginGraph.FindFamily(typeof (PLUGINTYPE));
@@ -88,10 +88,7 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         public ScanAssembliesExpression With(ITypeScanner scanner)
         {
-            _registry.addExpression(delegate(PluginGraph graph)
-            {
-                graph.Assemblies.AddScanner(scanner);
-            });
+            _registry.addExpression(graph => graph.Assemblies.AddScanner(scanner));
 
 
             return this;

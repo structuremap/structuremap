@@ -47,7 +47,7 @@ namespace StructureMap.Testing.Configuration
 
             bool iWasCalled = false;
             GraphBuilder builder = new GraphBuilder(new Registry[0]);
-            builder.ConfigureFamily(typePath, delegate(PluginFamily f)
+            builder.ConfigureFamily(typePath, f =>
             {
                 Assert.AreEqual(typeof (IGateway), f.PluginType);
                 iWasCalled = true;
@@ -75,7 +75,7 @@ namespace StructureMap.Testing.Configuration
 
             GraphBuilder builder = new GraphBuilder(new Registry[0]);
             builder.PrepareSystemObjects();
-            builder.WithSystemObject<IBuildInterceptor>(memento, "singleton", delegate(IBuildInterceptor policy)
+            builder.WithSystemObject<IBuildInterceptor>(memento, "singleton", policy =>
             {
                 Assert.IsInstanceOfType(typeof (SingletonPolicy), policy);
                 iWasCalled = true;
@@ -88,7 +88,7 @@ namespace StructureMap.Testing.Configuration
         public void Do_not_call_the_action_on_ConfigureFamily_if_the_type_path_blows_up()
         {
             GraphBuilder builder = new GraphBuilder(new Registry[0]);
-            builder.ConfigureFamily(new TypePath("a,a"), delegate { Assert.Fail("Should not be called"); });
+            builder.ConfigureFamily(new TypePath("a,a"), obj => Assert.Fail("Should not be called"));
         }
 
         [Test]
@@ -118,7 +118,7 @@ namespace StructureMap.Testing.Configuration
             GraphBuilder builder = new GraphBuilder(new Registry[0]);
             bool iWasCalled = true;
 
-            builder.WithType(new TypePath(GetType()), "creating a Plugin", delegate(Type t)
+            builder.WithType(new TypePath(GetType()), "creating a Plugin", t =>
             {
                 iWasCalled = true;
                 Assert.AreEqual(GetType(), t);
@@ -131,7 +131,7 @@ namespace StructureMap.Testing.Configuration
         public void WithType_fails_and_logs_error_with_the_context()
         {
             GraphBuilder builder = new GraphBuilder(new Registry[0]);
-            builder.WithType(new TypePath("a,a"), "creating a Plugin", delegate { Assert.Fail("Should not be called"); });
+            builder.WithType(new TypePath("a,a"), "creating a Plugin", obj => Assert.Fail("Should not be called"));
 
             builder.PluginGraph.Log.AssertHasError(131);
         }

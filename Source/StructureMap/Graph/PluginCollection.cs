@@ -50,10 +50,7 @@ namespace StructureMap.Graph
         {
             get
             {
-                return _plugins.Find(delegate(Plugin plugin)
-                {
-                    return plugin.ConcreteKey == concreteKey;
-                });
+                return _plugins.Find(plugin => plugin.ConcreteKey == concreteKey);
             }
         }
 
@@ -124,7 +121,7 @@ namespace StructureMap.Graph
         public List<Plugin> FindAutoFillablePlugins()
         {
             List<Plugin> list = new List<Plugin>();
-            _plugins.Each(delegate(Plugin plugin)
+            _plugins.Each(plugin =>
             {
                 if (plugin.CanBeAutoFilled)
                 {

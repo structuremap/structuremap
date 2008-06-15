@@ -7,7 +7,7 @@ using StructureMap.Source;
 
 namespace StructureMap.Configuration
 {
-    public class FamilyParser
+    public class FamilyParser : XmlConstants
     {
         private readonly IGraphBuilder _builder;
         private readonly XmlMementoCreator _mementoCreator;
@@ -21,26 +21,36 @@ namespace StructureMap.Configuration
         public void ParseFamily(XmlElement familyElement)
         {
             TypePath typePath = TypePath.CreateFromXmlNode(familyElement);
-            _builder.ConfigureFamily(typePath, delegate(PluginFamily family)
+            _builder.ConfigureFamily(typePath, family =>
             {
                 family.DefaultInstanceKey =
-                    familyElement.GetAttribute(XmlConstants.DEFAULT_KEY_ATTRIBUTE);
+                    familyElement.GetAttribute(DEFAULT_KEY_ATTRIBUTE);
 
                 InstanceScope scope = findScope(familyElement);
                 family.SetScopeTo(scope);
 
                 attachMementoSource(family, familyElement);
-                attachPlugins(family, familyElement);
+                familyElement.ForEachChild(PLUGIN_NODE).Do(element => attachPlugin(element, family));
                 attachInterceptors(family, familyElement);
+                attachInstances(family, familyElement, _builder);
+            });
+        }
+
+        private void attachInstances(PluginFamily family, XmlElement familyElement, IGraphBuilder builder)
+        {
+            familyElement.ForEachChild(INSTANCE_NODE).Do(element =>
+            {
+                InstanceMemento memento = _mementoCreator.CreateMemento(element);
+                family.AddInstance(memento);
             });
         }
 
         public void ParseDefaultElement(XmlElement element)
         {
-            TypePath pluginTypePath = new TypePath(element.GetAttribute(XmlConstants.PLUGIN_TYPE));
+            TypePath pluginTypePath = new TypePath(element.GetAttribute(PLUGIN_TYPE));
 
 
-            _builder.ConfigureFamily(pluginTypePath, delegate(PluginFamily family)
+            _builder.ConfigureFamily(pluginTypePath, family =>
             {
                 InstanceScope scope = findScope(element);
                 family.SetScopeTo(scope);
@@ -52,9 +62,9 @@ namespace StructureMap.Configuration
 
         public void ParseInstanceElement(XmlElement element)
         {
-            TypePath pluginTypePath = new TypePath(element.GetAttribute(XmlConstants.PLUGIN_TYPE));
+            TypePath pluginTypePath = new TypePath(element.GetAttribute(PLUGIN_TYPE));
 
-            _builder.ConfigureFamily(pluginTypePath, delegate(PluginFamily family)
+            _builder.ConfigureFamily(pluginTypePath, family =>
             {
                 InstanceMemento memento =
                     _mementoCreator.CreateMemento(element);
@@ -66,79 +76,52 @@ namespace StructureMap.Configuration
         {
             InstanceScope returnValue = InstanceScope.PerRequest;
 
-            string scopeString = familyElement.GetAttribute(XmlConstants.SCOPE_ATTRIBUTE);
-            if (!string.IsNullOrEmpty(scopeString))
+            familyElement.ForAttributeValue(SCOPE, scope =>
             {
-                returnValue = (InstanceScope) Enum.Parse(typeof (InstanceScope), scopeString);
-            }
+                returnValue = (InstanceScope)Enum.Parse(typeof(InstanceScope), scope);
+            });
 
             return returnValue;
         }
 
         private void attachMementoSource(PluginFamily family, XmlElement familyElement)
         {
-            XmlNode sourceNode = familyElement[XmlConstants.MEMENTO_SOURCE_NODE];
-            if (sourceNode != null)
+            familyElement.IfHasNode(MEMENTO_SOURCE_NODE).Do(node =>
             {
-                InstanceMemento sourceMemento = new XmlAttributeInstanceMemento(sourceNode);
+                InstanceMemento sourceMemento = new XmlAttributeInstanceMemento(node);
 
-                string context = "MementoSource for " + TypePath.GetAssemblyQualifiedName(family.PluginType) + "\n" +
-                                 sourceNode.OuterXml;
+                string context = string.Format("MementoSource for {0}\n{1}", TypePath.GetAssemblyQualifiedName(family.PluginType), node.OuterXml);
                 _builder.WithSystemObject<MementoSource>(sourceMemento, context,
-                                                         delegate(MementoSource source) { family.AddMementoSource(source); });
-            }
-        }
-
-        private void attachPlugins(PluginFamily family, XmlElement familyElement)
-        {
-            // TODO:  3.5 lambda cleanup
-            XmlNodeList pluginNodes = familyElement.SelectNodes(XmlConstants.PLUGIN_NODE);
-            foreach (XmlElement pluginElement in pluginNodes)
-            {
-                attachPlugin(pluginElement, family);
-            }
+                                                         source => family.AddMementoSource(source));
+            });
         }
 
         private void attachPlugin(XmlElement pluginElement, PluginFamily family)
         {
             TypePath pluginPath = TypePath.CreateFromXmlNode(pluginElement);
-            string concreteKey = pluginElement.GetAttribute(XmlConstants.CONCRETE_KEY_ATTRIBUTE);
+            string concreteKey = pluginElement.GetAttribute(CONCRETE_KEY_ATTRIBUTE);
 
             string context = "creating a Plugin for " + family.PluginType.AssemblyQualifiedName;
-            _builder.WithType(pluginPath, context, delegate(Type pluggedType)
+            _builder.WithType(pluginPath, context, pluggedType =>
             {
                 Plugin plugin = new Plugin(pluggedType, concreteKey);
                 family.AddPlugin(plugin);
 
-                foreach (
-                    XmlElement setterElement in pluginElement.ChildNodes)
-                {
-                    string setterName =
-                        setterElement.GetAttribute("Name");
-                    plugin.Setters.Add(setterName);
-                }
+                pluginElement.ForTextInChild("Setter/@Name").Do(prop => plugin.Setters.Add(prop));
+
             });
         }
 
-        // TODO:  3.5 lambda cleanup
         private void attachInterceptors(PluginFamily family, XmlElement familyElement)
         {
-            XmlNode interceptorChainNode = familyElement[XmlConstants.INTERCEPTORS_NODE];
-            if (interceptorChainNode == null)
+            string contextBase = string.Format("creating an InstanceInterceptor for {0}\n", TypePath.GetAssemblyQualifiedName(family.PluginType));
+            familyElement.ForEachChild("*/Interceptor").Do(element =>
             {
-                return;
-            }
-
-            string contextBase = "creating an InstanceInterceptor for " +
-                                 TypePath.GetAssemblyQualifiedName(family.PluginType) + "\n";
-            foreach (XmlNode interceptorNode in interceptorChainNode.ChildNodes)
-            {
-                XmlAttributeInstanceMemento interceptorMemento = new XmlAttributeInstanceMemento(interceptorNode);
-
-                string context = contextBase + interceptorNode.OuterXml;
+                var interceptorMemento = new XmlAttributeInstanceMemento(element);
+                string context = contextBase + element.OuterXml;
                 _builder.WithSystemObject<IBuildInterceptor>(interceptorMemento, context,
-                                                             delegate(IBuildInterceptor interceptor) { family.AddInterceptor(interceptor); });
-            }
+                                                             interceptor => family.AddInterceptor(interceptor));
+            });
         }
     }
 }

@@ -58,7 +58,7 @@ namespace StructureMap
         {
             GraphBuilder graphBuilder = new GraphBuilder(_registries, _graph);
             
-            forAllParsers(delegate(ConfigurationParser p)
+            forAllParsers(p =>
             {
                 _graph.Log.StartSource(p.Description);
                 p.ParseAssemblies(graphBuilder);
@@ -66,12 +66,7 @@ namespace StructureMap
 
             graphBuilder.PrepareSystemObjects();
 
-            forAllParsers(delegate(ConfigurationParser p)
-                              {
-                                  p.ParseFamilies(graphBuilder);
-                                  p.ParseProfilesAndMachines(graphBuilder);
-                                  p.ParseInstances(graphBuilder);
-                              });
+            forAllParsers(p => p.Parse(graphBuilder));
 
             _graph.Seal();
 

@@ -36,14 +36,24 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void BuildsInterceptionChain()
         {
-            PluginGraph pluginGraph = DataMother.GetDiagnosticPluginGraph("SingletonIntercepterTest.xml");
+            PluginGraph pluginGraph = DataMother.BuildPluginGraphFromXml(@"
+<StructureMap>
+	<PluginFamily Type='StructureMap.Testing.Widget.IWidget' Assembly='StructureMap.Testing.Widget' DefaultKey=''>
+		<Plugin Assembly='StructureMap.Testing.Widget' Type='StructureMap.Testing.Widget.NotPluggableWidget' ConcreteKey='NotPluggable'/>
+	</PluginFamily>
+	
+	<PluginFamily Type='StructureMap.Testing.Widget.Rule' Assembly='StructureMap.Testing.Widget' DefaultKey='Blue'>
+		<Interceptors>
+			<Interceptor Type='Singleton'></Interceptor>
+		</Interceptors>
+	</PluginFamily>
+</StructureMap>
+");
 
-            PluginFamily family = pluginGraph.FindFamily(typeof (Rule));
-            Assert.IsInstanceOfType(typeof (SingletonPolicy), family.Policy);
+            pluginGraph.FindFamily(typeof (Rule)).Policy.ShouldBeOfType(typeof (SingletonPolicy));
 
             // The PluginFamily for IWidget has no intercepters configured
-            PluginFamily widgetFamily = pluginGraph.FindFamily(typeof (IWidget));
-            Assert.IsInstanceOfType(typeof (BuildPolicy), widgetFamily.Policy);
+            pluginGraph.FindFamily(typeof (IWidget)).Policy.ShouldBeOfType(typeof(BuildPolicy));
         }
 
         [Test]

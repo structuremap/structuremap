@@ -1,3 +1,4 @@
+using System;
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
 using StructureMap.Pipeline;
@@ -20,7 +21,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void DeepInstance2()
         {
-            assertThingMatches(delegate(Registry registry)
+            assertThingMatches(registry =>
             {
                 registry.BuildInstancesOf<IWidget>().TheDefaultIs(
                     Instance<IWidget>().UsingConcreteType<ColorWidget>()
@@ -42,7 +43,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void DeepInstance3()
         {
-            assertThingMatches(delegate(Registry registry)
+            assertThingMatches(registry =>
             {
                 registry.BuildInstancesOf<IWidget>().TheDefaultIs(
                     Object<IWidget>(new ColorWidget("yellow"))
@@ -64,7 +65,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void DeepInstance4()
         {
-            assertThingMatches(delegate(Registry registry)
+            assertThingMatches(registry =>
             {
                 registry.BuildInstancesOf<IWidget>().TheDefaultIs(
                     Prototype<IWidget>(new ColorWidget("yellow"))
@@ -86,7 +87,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void DeepInstance5()
         {
-            assertThingMatches(delegate(Registry registry)
+            assertThingMatches(registry =>
             {
                 registry.AddInstanceOf<IWidget>()
                     .UsingConcreteType<ColorWidget>()
@@ -121,19 +122,16 @@ namespace StructureMap.Testing.Configuration.DSL
                 .Child<IWidget>().Is(widgetExpression);
 
 
-            assertThingMatches(delegate(Registry registry)
-            {
-                registry.BuildInstancesOf<Thing>().TheDefaultIs(
-                    Instance<Thing>()
-                        .UsingConcreteType<Thing>()
-                        .WithProperty("name").EqualTo("Jeremy")
-                        .WithProperty("count").EqualTo(4)
-                        .WithProperty("average").EqualTo(.333)
-                        .Child<Rule>().Is(
-                        ruleExpression
-                        )
-                    );
-            });
+            assertThingMatches(registry => registry.BuildInstancesOf<Thing>().TheDefaultIs(
+                                               Instance<Thing>()
+                                                   .UsingConcreteType<Thing>()
+                                                   .WithProperty("name").EqualTo("Jeremy")
+                                                   .WithProperty("count").EqualTo(4)
+                                                   .WithProperty("average").EqualTo(.333)
+                                                   .Child<Rule>().Is(
+                                                   ruleExpression
+                                                   )
+                                               ));
         }
     }
 

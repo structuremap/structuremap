@@ -27,10 +27,7 @@ namespace StructureMap.Graph
         {
             string interfaceName = "I" + concreteType.Name;
             Type[] interfaces = concreteType.GetInterfaces();
-            return Array.Find(interfaces, delegate(Type t)
-            {
-                return t.Name == interfaceName;
-            });
+            return Array.Find(interfaces, t => t.Name == interfaceName);
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
@@ -76,7 +77,7 @@ namespace StructureMap.Testing
         [Test]
         public void If_no_child_array_is_explicitly_defined_return_all_instances()
         {
-            IContainer manager = new Container(delegate(Registry registry)
+            IContainer manager = new Container(registry =>
             {
                 registry.AddInstanceOf<IWidget>(new ColorWidget("Red"));
                 registry.AddInstanceOf<IWidget>(new ColorWidget("Blue"));

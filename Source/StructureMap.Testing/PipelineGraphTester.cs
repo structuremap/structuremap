@@ -1,3 +1,4 @@
+using System;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Rhino.Mocks.Constraints;
@@ -49,7 +50,7 @@ namespace StructureMap.Testing
                 .TheDefaultIsConcreteType<SomethingOne>()
                 .AddConcreteType<SomethingTwo>();
 
-            expectVisits(registry, delegate(IPipelineGraphVisitor visitor)
+            expectVisits(registry, visitor =>
             {
                 visitor.PluginType(typeof (ISomething), null);
                 LastCall.Constraints(Is.Equal(typeof (ISomething)), Is.TypeOf(typeof (ConfiguredInstance)));
@@ -68,7 +69,7 @@ namespace StructureMap.Testing
                 .AddConcreteType<SomethingOne>()
                 .AddConcreteType<SomethingTwo>();
 
-            expectVisits(registry, delegate(IPipelineGraphVisitor visitor)
+            expectVisits(registry, visitor =>
             {
                 visitor.PluginType(typeof (ISomething), null);
                 visitor.Instance(typeof (ISomething), null);
@@ -84,7 +85,7 @@ namespace StructureMap.Testing
             registry.BuildInstancesOf<ISomething>()
                 .TheDefaultIsConcreteType<SomethingOne>();
 
-            expectVisits(registry, delegate(IPipelineGraphVisitor visitor)
+            expectVisits(registry, visitor =>
             {
                 visitor.PluginType(typeof (ISomething), null);
                 LastCall.Constraints(Is.Equal(typeof (ISomething)), Is.TypeOf(typeof (ConfiguredInstance)));
@@ -103,7 +104,7 @@ namespace StructureMap.Testing
             registry.BuildInstancesOf<IWidget>();
             registry.BuildInstancesOf<Rule>();
 
-            expectVisits(registry, delegate(IPipelineGraphVisitor visitor)
+            expectVisits(registry, visitor =>
             {
                 visitor.PluginType(typeof (ISomething), null);
                 visitor.PluginType(typeof (IWidget), null);

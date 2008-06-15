@@ -84,7 +84,7 @@ namespace StructureMap.Testing.Graph.ExceptionHandling
 			            <PluginFamily Type='StructureMap.Testing.Widget.IWidget' Assembly='StructureMap.Testing.Widget' DefaultKey=''>			</PluginFamily>			
 		            </StructureMap>
                 ",
-                                delegate(Container manager) { manager.GetInstance<IWidget>("NotAnActualInstanceName"); }
+                                manager => manager.GetInstance<IWidget>("NotAnActualInstanceName")
                 );
         }
 
@@ -230,7 +230,7 @@ namespace StructureMap.Testing.Graph.ExceptionHandling
 			            <PluginFamily Type='StructureMap.Testing.Widget.IWidget' Assembly='StructureMap.Testing.Widget' DefaultKey=''></PluginFamily>			
 		            </StructureMap>
                 ",
-                                delegate(Container manager) { manager.GetInstance<IWidget>(); }
+                                manager => manager.GetInstance<IWidget>()
                 );
         }
     }

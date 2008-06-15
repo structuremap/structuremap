@@ -1,3 +1,4 @@
+using System;
 using System.Xml;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
@@ -5,8 +6,7 @@ using StructureMap.Source;
 
 namespace StructureMap.Configuration
 {
-    // TODO:  3.5 cleanup
-    public class ProfileAndMachineParser
+    public class ProfileAndMachineParser : XmlConstants
     {
         private readonly XmlMementoCreator _creator;
         private readonly IGraphBuilder _graphBuilder;
@@ -23,57 +23,47 @@ namespace StructureMap.Configuration
 
         public void Parse()
         {
-            // TODO:  3.5 cleanup
-            XmlNode defaultProfileNode = _structureMapNode.Attributes.GetNamedItem(XmlConstants.DEFAULT_PROFILE);
-            if (defaultProfileNode != null)
-            {
-                _profileBuilder.SetDefaultProfileName(defaultProfileNode.InnerText);
-            }
+            _structureMapNode.ForAttributeValue(DEFAULT_PROFILE, profileName => _profileBuilder.SetDefaultProfileName(profileName));
 
-            foreach (XmlElement profileElement in findNodes(XmlConstants.PROFILE_NODE))
+            forEachNode(PROFILE_NODE).Do(element =>
             {
-                string profileName = profileElement.GetAttribute(XmlConstants.NAME);
+                string profileName = element.GetAttribute(NAME);
                 _profileBuilder.AddProfile(profileName);
 
-                writeOverrides(profileElement,
-                               delegate(string fullName, string defaultKey) { _profileBuilder.OverrideProfile(new TypePath(fullName), defaultKey); }, profileName);
-            }
+                writeOverrides(element,
+                               (fullName, defaultKey) => _profileBuilder.OverrideProfile(new TypePath(fullName), defaultKey), profileName);
+            });
 
-            foreach (XmlElement machineElement in findNodes(XmlConstants.MACHINE_NODE))
+
+            forEachNode(MACHINE_NODE).Do(element =>
             {
-                string machineName = machineElement.GetAttribute(XmlConstants.NAME);
-                string profileName = machineElement.GetAttribute(XmlConstants.PROFILE_NODE);
+                string machineName = element.GetAttribute(NAME);
+                string profileName = element.GetAttribute(PROFILE_NODE);
 
                 _profileBuilder.AddMachine(machineName, profileName);
 
-                writeOverrides(machineElement,
-                               delegate(string fullName, string defaultKey) { _profileBuilder.OverrideMachine(new TypePath(fullName), defaultKey); }, machineName);
-            }
+                writeOverrides(element,
+                               (fullName, defaultKey) => _profileBuilder.OverrideMachine(new TypePath(fullName), defaultKey), machineName);
+            });
         }
 
 
         private void writeOverrides(XmlElement parentElement, WriteOverride function, string profileName)
         {
-            foreach (XmlElement overrideElement in parentElement.SelectNodes(XmlConstants.OVERRIDE))
-            {
-                processOverrideElement(function, overrideElement, profileName);
-            }
+            parentElement.ForEachChild(OVERRIDE).Do(element => processOverrideElement(function, element, profileName));
         }
 
         private void processOverrideElement(WriteOverride function, XmlElement overrideElement, string profileName)
         {
-            string fullName = overrideElement.GetAttribute(XmlConstants.TYPE_ATTRIBUTE);
+            string fullName = overrideElement.GetAttribute(TYPE_ATTRIBUTE);
 
-            XmlElement instanceElement = (XmlElement) overrideElement.SelectSingleNode(XmlConstants.INSTANCE_NODE);
-            if (instanceElement == null)
-            {
-                string defaultKey = overrideElement.GetAttribute(XmlConstants.DEFAULT_KEY_ATTRIBUTE);
-                function(fullName, defaultKey);
-            }
-            else
-            {
-                createOverrideInstance(fullName, instanceElement, function, profileName);
-            }
+            overrideElement.IfHasNode(INSTANCE_NODE)
+                .Do(element => createOverrideInstance(fullName, element, function, profileName))
+                .Else(() =>
+                {
+                    string defaultKey = overrideElement.GetAttribute(DEFAULT_KEY_ATTRIBUTE);
+                    function(fullName, defaultKey);
+                });
         }
 
         private void createOverrideInstance(string fullName, XmlElement instanceElement, WriteOverride function,
@@ -85,16 +75,16 @@ namespace StructureMap.Configuration
 
             TypePath familyPath = new TypePath(fullName);
 
-            _graphBuilder.ConfigureFamily(familyPath, delegate(PluginFamily family)
-                                                          {
-                                                              family.AddInstance(memento);
-                                                              function(fullName, key);
-                                                          });
+            _graphBuilder.ConfigureFamily(familyPath, family =>
+            {
+                family.AddInstance(memento);
+                function(fullName, key);
+            });
         }
 
-        private XmlNodeList findNodes(string nodeName)
+        private XmlExtensions.XmlNodeExpression forEachNode(string xpath)
         {
-            return _structureMapNode.SelectNodes(nodeName);
+            return _structureMapNode.ForEachChild(xpath);
         }
 
         #region Nested type: WriteOverride

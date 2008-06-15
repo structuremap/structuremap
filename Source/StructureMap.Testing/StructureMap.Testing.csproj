@@ -1,7 +1,7 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{63C2742D-B6E2-484F-AFDB-346873075C5E}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -26,6 +26,23 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <SignAssembly>false</SignAssembly>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -90,6 +107,9 @@
       <Name>System</Name>
     </Reference>
     <Reference Include="System.configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
@@ -185,6 +205,8 @@
     <Compile Include="Configuration\NormalGraphBuilderTester.cs" />
     <Compile Include="Configuration\ProfileBuilderTester.cs" />
     <Compile Include="Configuration\ShortcuttedInstanceNodeTester.cs" />
+    <Compile Include="Diagnostics\DoctorTester.cs" />
+    <Compile Include="Diagnostics\WriterExtensions.cs" />
     <Compile Include="Graph\ArrayConstructorTester.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -339,9 +361,11 @@
     <Compile Include="Pipeline\ProfileTester.cs" />
     <Compile Include="Pipeline\PrototypeInstanceTester.cs" />
     <Compile Include="Pipeline\ReferencedInstanceTester.cs" />
+    <Compile Include="Pipeline\SerializedInstanceTester.cs" />
     <Compile Include="Pipeline\StubBuildSession.cs" />
     <Compile Include="Pipeline\ThreadLocalStoragePolicyTester.cs" />
     <Compile Include="Pipeline\TypeRulesTester.cs" />
+    <Compile Include="SpecificationExtensions.cs" />
     <Compile Include="StructureMapConfigCreator.cs" />
     <Compile Include="StructureMapConfigurationTester.cs" />
     <Compile Include="TestData\DataMother.cs">
@@ -414,6 +438,23 @@
     <Content Include="Sample.xml" />
     <EmbeddedResource Include="TestData\ShortInstance.xml" />
     <EmbeddedResource Include="TestData\DefaultInstance.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

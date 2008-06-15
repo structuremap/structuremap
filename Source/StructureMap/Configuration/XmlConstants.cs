@@ -29,13 +29,8 @@ namespace StructureMap.Configuration
         public const string PLUGIN_NODE = "Plugin";
         public const string PLUGIN_TYPE = "PluginType";
         public const string PROFILE_NODE = "Profile";
-        public const string SCOPE_ATTRIBUTE = "Scope";
+        public const string SCOPE = "Scope";
         public const string STRUCTUREMAP = "StructureMap";
         public const string TYPE_ATTRIBUTE = "Type";
-
-
-        private XmlConstants()
-        {
-        }
     }
 }

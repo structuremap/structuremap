@@ -88,7 +88,7 @@ namespace StructureMap.Emitting
 
             return
                 _classNames.ConvertAll<InstanceBuilder>(
-                    delegate(string typeName) { return (InstanceBuilder) assembly.CreateInstance(typeName); });
+                    typeName => (InstanceBuilder) assembly.CreateInstance(typeName));
         }
 
 

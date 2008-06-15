@@ -111,7 +111,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void FindMasterInstances_sad_path()
         {
-            TestUtility.AssertErrorIsLogged(196, delegate(PluginGraph graph)
+            TestUtility.AssertErrorIsLogged(196, graph =>
             {
                 string theInstanceName = "something";
 

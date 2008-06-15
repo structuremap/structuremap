@@ -63,7 +63,7 @@ namespace StructureMap.Testing.Configuration
         [Test]
         public void ScopeIsBlank2()
         {
-            _familyElement.SetAttribute(XmlConstants.SCOPE_ATTRIBUTE, "");
+            _familyElement.SetAttribute(XmlConstants.SCOPE, "");
             assertThatTheFamilyPolicyIs<BuildPolicy>();
         }
 
@@ -71,7 +71,7 @@ namespace StructureMap.Testing.Configuration
         [Test]
         public void ScopeIsSingleton()
         {
-            _familyElement.SetAttribute(XmlConstants.SCOPE_ATTRIBUTE, InstanceScope.Singleton.ToString());
+            _familyElement.SetAttribute(XmlConstants.SCOPE, InstanceScope.Singleton.ToString());
             assertThatTheFamilyPolicyIs<SingletonPolicy>();
         }
 
@@ -79,7 +79,7 @@ namespace StructureMap.Testing.Configuration
         [Test]
         public void ScopeIsThreadLocal()
         {
-            _familyElement.SetAttribute(XmlConstants.SCOPE_ATTRIBUTE, InstanceScope.ThreadLocal.ToString());
+            _familyElement.SetAttribute(XmlConstants.SCOPE, InstanceScope.ThreadLocal.ToString());
             assertThatTheFamilyPolicyIs<ThreadLocalStoragePolicy>();
         }
     }

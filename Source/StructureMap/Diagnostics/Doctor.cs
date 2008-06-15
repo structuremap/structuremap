@@ -1,48 +1,88 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Text;
-using StructureMap.Graph;
 
 namespace StructureMap.Diagnostics
 {
-
-
-    public class DoctorReport
-    {
-        public string Message;
-        public bool Failure;
-    }
-
-    public class DoctorRunner : MarshalByRefObject
-    {
-        public override object InitializeLifetimeService()
-        {
-            return null;
-        }
-
-        public DoctorReport RunReport(string bootstrapperTypeName)
-        {
-            // TODO:  bootstrapperType cannot be found
-            // TODO:  bootstrapperType blows up
-            TypePath path = new TypePath(bootstrapperTypeName);
-            Type bootstrapperType = path.FindType();
-
-            IBootstrapper bootstrapper = (IBootstrapper) Activator.CreateInstance(bootstrapperType);
-
-            // TODO - random error
-            PluginGraph graph = StructureMapConfiguration.GetPluginGraph();
-
-            // TODO -- Fails on constructor
-            if (graph.Log.ErrorCount > 0)
-            {
-                
-            }
-
-
-        }
-    }
-    
     public class Doctor
     {
+        public string ConfigFile { get; set; }
+        public string BootstrapperType { get; set; }
+        public string BinaryPath { get; set; }
+        public string OutputFile { get; set; }
+
+        public Doctor()
+        {
+            BinaryPath = AppDomain.CurrentDomain.BaseDirectory;
+        }
+
+        public DoctorReport RunReport()
+        {
+            AppDomain domain = null;
+
+            try
+            {
+                var setup = new AppDomainSetup() { ApplicationBase = BinaryPath, ConfigurationFile = ConfigFile };
+                if (BinaryPath != null) setup.PrivateBinPath = BinaryPath;
+                domain = AppDomain.CreateDomain("StructureMap-Diagnostics", null, setup);
+                var doctor = (DoctorRunner)domain.CreateInstanceAndUnwrap(typeof(DoctorRunner).Assembly.FullName, typeof(DoctorRunner).FullName);
+
+                DoctorReport report = doctor.RunReport(BootstrapperType);
+                writeReport(report);
+                writeResults(System.Console.Out, report);
+
+                return report;
+            }
+            finally
+            {
+                AppDomain.Unload(domain);
+            }
+        }
+
+        private void writeReport(DoctorReport report)
+        {
+            if (string.IsNullOrEmpty(OutputFile))
+            {
+                return;
+            }
+
+            using (StreamWriter writer = new StreamWriter(OutputFile))
+            {
+                writeResults(writer, report);
+            }
+        }
+
+        private void writeResults(TextWriter writer, DoctorReport report)
+        {
+            writer.WriteLine("StructureMap Configuration Report written at " + DateTime.Now.ToString());
+            writer.WriteLine("Result:  " + report.Result.ToString());
+            writer.WriteLine();
+            writer.WriteLine("BootStrapper:  " + BootstrapperType);
+            writer.WriteLine("ConfigFile:  " + ConfigFile);
+            writer.WriteLine("BinaryPath:  " + BinaryPath);
+            writer.WriteLine("====================================================================================================");
+            
+            writer.WriteLine();
+            writer.WriteLine();
+
+            if (!string.IsNullOrEmpty(report.ErrorMessages))
+            {
+                writer.WriteLine("====================================================================================================");
+                writer.WriteLine("=                                     Error Messages                                               =");
+                writer.WriteLine("====================================================================================================");
+                writer.WriteLine(report.ErrorMessages);
+                writer.WriteLine();
+                writer.WriteLine();
+            }
+
+            if (!string.IsNullOrEmpty(report.WhatDoIHave)) 
+            {
+                writer.WriteLine(report.WhatDoIHave);
+                writer.WriteLine();
+                writer.WriteLine();
+            }
+        }
     }
 }
