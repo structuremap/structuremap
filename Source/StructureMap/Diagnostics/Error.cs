@@ -8,7 +8,7 @@ namespace StructureMap.Diagnostics
     {
         private readonly int _code;
         private readonly string _message;
-        private readonly string _stackTrace = string.Empty;
+        private string _stackTrace = string.Empty;
         public InstanceToken Instance;
         public string Source;
 
@@ -27,8 +27,9 @@ namespace StructureMap.Diagnostics
 
         public Error(int errorCode, Exception ex, params object[] args) : this(errorCode, args)
         {
-            _message += "\n\n" + ex.ToString();
-            _stackTrace = ex.StackTrace;
+            _message += "\n\n" + ex.Message;
+            
+            writeStackTrace(ex);
         }
 
 
@@ -36,7 +37,20 @@ namespace StructureMap.Diagnostics
         {
             _code = exception.ErrorCode;
             _message = exception.Message;
-            _stackTrace = exception.StackTrace;
+
+            writeStackTrace(exception);
+        }
+
+        private void writeStackTrace(Exception exception)
+        {
+            _stackTrace = string.Empty;
+            Exception ex = exception;
+            while (ex != null)
+            {
+                _stackTrace += exception.ToString();
+                _stackTrace += "\n\n";
+                ex = ex.InnerException;
+            }
         }
 
 

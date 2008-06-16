@@ -1,6 +1,9 @@
+using System;
 using System.Collections;
 using System.Xml;
 using StructureMap.Configuration;
+using StructureMap.Graph;
+using StructureMap.Pipeline;
 
 namespace StructureMap.Source
 {
@@ -109,6 +112,18 @@ namespace StructureMap.Source
         public override string ToString()
         {
             return _element.OuterXml;
+        }
+
+        public override Instance ReadChildInstance(string name, PluginGraph graph, Type childType)
+        {
+            var reader = TypeReaderFactory.GetReader(childType);
+            if (reader == null)
+            {
+                return base.ReadChildInstance(name, graph, childType);
+            }
+
+            XmlElement element = _element[name];
+            return reader.Read(element, childType);
         }
     }
 }

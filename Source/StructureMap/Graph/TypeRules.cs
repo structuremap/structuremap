@@ -77,12 +77,17 @@ namespace StructureMap.Graph
 
         protected bool IsChild(Type type)
         {
-            return !type.IsArray && !IsSimple(type);
+            return IsPrimitiveArray(type) || (!type.IsArray && !IsSimple(type));
         }
 
         protected bool IsChildArray(Type type)
         {
             return type.IsArray && !IsSimple(type.GetElementType());
+        }
+
+        protected bool IsPrimitiveArray(Type type)
+        {
+            return type.IsArray && IsSimple(type.GetElementType());
         }
 
         protected bool IsConcrete(Type type)

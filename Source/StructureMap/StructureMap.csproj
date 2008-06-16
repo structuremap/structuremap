@@ -392,6 +392,10 @@
     <None Include="..\structuremap.snk">
       <Link>Properties\structuremap.snk</Link>
     </None>
+    <Compile Include="Configuration\DictionaryReader.cs" />
+    <Compile Include="Configuration\ITypeReader.cs" />
+    <Compile Include="Configuration\PrimitiveArrayReader.cs" />
+    <Compile Include="Configuration\TypeReaderFactory.cs" />
     <Compile Include="Configuration\XmlExtensions.cs" />
     <Compile Include="Diagnostics\Doctor.cs" />
     <Compile Include="Diagnostics\DoctorReport.cs" />

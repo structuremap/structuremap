@@ -147,6 +147,8 @@ namespace StructureMap
         /// <returns></returns>
         protected abstract string getPropertyValue(string Key);
 
+
+
         /// <summary>
         /// Returns the named child InstanceMemento
         /// </summary>
@@ -158,6 +160,12 @@ namespace StructureMap
 
             InstanceMemento returnValue = getChild(Key);
             return returnValue;
+        }
+
+        public virtual Instance ReadChildInstance(string name, PluginGraph graph, Type childType)
+        {
+            InstanceMemento child = GetChildMemento(name);
+            return child == null ? null : child.ReadInstance(graph, childType);
         }
 
         /// <summary>
@@ -207,7 +215,7 @@ namespace StructureMap
             }
             catch (Exception e)
             {
-                throw new StructureMapException(260, InstanceKey, pluginType.FullName);
+                throw new StructureMapException(260, e, InstanceKey, pluginType.FullName);
             }
         }
 
@@ -225,5 +233,7 @@ namespace StructureMap
 
             return new ConfiguredInstance(this, pluginGraph, pluginType);
         }
+
+
     }
 }

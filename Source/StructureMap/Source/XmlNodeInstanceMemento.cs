@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Xml;
 using StructureMap.Configuration;
+using StructureMap.Graph;
+using StructureMap.Pipeline;
 
 namespace StructureMap.Source
 {
@@ -41,6 +43,11 @@ namespace StructureMap.Source
         {
             get
             {
+                if (!string.IsNullOrEmpty(getPluggedType()))
+                {
+                    return false;
+                }
+
                 bool returnValue = false;
 
                 string typeName = getAttribute("Type");
@@ -66,10 +73,10 @@ namespace StructureMap.Source
             return getAttribute(XmlConstants.PLUGGED_TYPE);
         }
 
-        private XmlNode getChildNode(string Key)
+        private XmlElement getChildNode(string Key)
         {
             string xpath = string.Format("Property[@Name='{0}']", Key);
-            XmlNode nodeProperty = _innerNode.SelectSingleNode(xpath);
+            XmlElement nodeProperty = (XmlElement) _innerNode.SelectSingleNode(xpath);
 
             return nodeProperty;
         }
@@ -93,6 +100,18 @@ namespace StructureMap.Source
             }
         }
 
+
+        public override Instance ReadChildInstance(string name, PluginGraph graph, Type childType)
+        {
+            var reader = TypeReaderFactory.GetReader(childType);
+            if (reader == null)
+            {
+                return base.ReadChildInstance(name, graph, childType);
+            }
+
+            XmlElement element = getChildNode(name);
+            return reader.Read(element, childType);
+        }
 
         protected override InstanceMemento getChild(string Key)
         {

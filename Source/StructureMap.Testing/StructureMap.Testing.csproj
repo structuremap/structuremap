@@ -180,6 +180,8 @@
     <Compile Include="Configuration\ConfigurationParserBuilderTester.cs" />
     <Compile Include="Configuration\ConfigurationParserTester.cs" />
     <Compile Include="Configuration\DefaultInstanceNodeTester.cs" />
+    <Compile Include="Configuration\DictionaryAndArrayArgumentTester.cs" />
+    <Compile Include="Configuration\DictionaryReaderTester.cs" />
     <Compile Include="Configuration\DSL\AddInstanceTester.cs" />
     <Compile Include="Configuration\DSL\AddTypesTester.cs" />
     <Compile Include="Configuration\DSL\ConstructorExpressionTester.cs" />
@@ -203,6 +205,7 @@
     </Compile>
     <Compile Include="Configuration\InlineInstanceDefinitionInProfileAndMachineNodesTester.cs" />
     <Compile Include="Configuration\NormalGraphBuilderTester.cs" />
+    <Compile Include="Configuration\PrimitiveArrayReaderTester.cs" />
     <Compile Include="Configuration\ProfileBuilderTester.cs" />
     <Compile Include="Configuration\ShortcuttedInstanceNodeTester.cs" />
     <Compile Include="Diagnostics\DoctorTester.cs" />

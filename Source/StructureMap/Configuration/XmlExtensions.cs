@@ -5,6 +5,12 @@ namespace StructureMap.Configuration
 {
     public static class XmlExtensions
     {
+        public static string GetAttribute(this XmlNode node, string attributeName, string defaultValue)
+        {
+            var attribute = node.Attributes.GetNamedItem(attributeName);
+            return attribute == null ? defaultValue : attribute.InnerText;
+        }
+
         public static XmlTextExpression ForTextInChild(this XmlNode node, string xpath)
         {
             return new XmlTextExpression(node, xpath);

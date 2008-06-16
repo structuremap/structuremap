@@ -19,13 +19,19 @@ namespace StructureMap.Testing.TestData
 
         public static PluginGraph BuildPluginGraphFromXml(string xml)
         {
-            xml = xml.Replace("'", "\"");
-            XmlDocument document = new XmlDocument();
-            document.LoadXml(xml);
+            XmlDocument document = BuildDocument(xml);
 
             ConfigurationParser parser = new ConfigurationParser(document.DocumentElement);
             PluginGraphBuilder builder = new PluginGraphBuilder(parser);
             return builder.Build();
+        }
+
+        public static XmlDocument BuildDocument(string xml)
+        {
+            xml = xml.Replace("'", "\"");
+            XmlDocument document = new XmlDocument();
+            document.LoadXml(xml);
+            return document;
         }
 
 
