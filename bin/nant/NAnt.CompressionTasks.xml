@@ -109,7 +109,10 @@
             Extracts files from a zip file.
             </summary>
             <remarks>
-              <para>Uses <see href="http://www.icsharpcode.net/OpenSource/SharpZipLib/">#ziplib</see> (SharpZipLib), an open source Zip/GZip library written entirely in C#.</para>
+              <para>
+              Uses <see href="http://www.icsharpcode.net/OpenSource/SharpZipLib/">#ziplib</see>
+              (SharpZipLib), an open source Zip/GZip library written entirely in C#.
+              </para>
             </remarks>
             <example>
               <para>Extracts all the file from the zip, preserving the directory structure.</para>
@@ -125,13 +128,14 @@
             Extracts the files from the zip file.
             </summary>
         </member>
-        <member name="M:NAnt.Compression.Tasks.UnZipTask.ExtractFile(System.IO.Stream,System.String,System.DateTime)">
+        <member name="M:NAnt.Compression.Tasks.UnZipTask.ExtractFile(System.IO.Stream,System.String,System.DateTime,System.Int64)">
             <summary>
             Extracts a file entry from the specified stream.
             </summary>
             <param name="inputStream">The <see cref="T:System.IO.Stream"/> containing the compressed entry.</param>
             <param name="entryName">The name of the entry including directory information.</param>
             <param name="entryDate">The date of the entry.</param>
+            <param name="entrySize">The uncompressed size of the entry.</param>
             <exception cref="T:NAnt.Core.BuildException">
               <para>The destination directory for the entry could not be created.</para>
               <para>-or-</para>
@@ -171,12 +175,21 @@
             entries in the archive. The default is <see langword="true" />.
             </summary>
         </member>
+        <member name="P:NAnt.Compression.Tasks.UnZipTask.Encoding">
+            <summary>
+            The character encoding that has been used for filenames inside the
+            zip file. The default is the system's OEM code page.
+            </summary>
+        </member>
         <member name="T:NAnt.Compression.Tasks.ZipTask">
             <summary>
             Creates a zip file from the specified filesets.
             </summary>
             <remarks>
-              <para>Uses <see href="http://www.icsharpcode.net/OpenSource/SharpZipLib/">#ziplib</see> (SharpZipLib), an open source Tar/Zip/GZip library written entirely in C#.</para>
+              <para>
+              Uses <see href="http://www.icsharpcode.net/OpenSource/SharpZipLib/">#ziplib</see>
+              (SharpZipLib), an open source Tar/Zip/GZip library written entirely in C#.
+              </para>
             </remarks>
             <example>
               <para>
@@ -232,6 +245,38 @@
         <member name="P:NAnt.Compression.Tasks.ZipTask.ZipFileSets">
             <summary>
             The set of files to be included in the archive.
+            </summary>
+        </member>
+        <member name="P:NAnt.Compression.Tasks.ZipTask.DuplicateHandling">
+            <summary>
+            Specifies the behaviour when a duplicate file is found. The default
+            is <see cref="F:NAnt.Compression.Types.DuplicateHandling.Add"/>.
+            </summary>
+        </member>
+        <member name="P:NAnt.Compression.Tasks.ZipTask.Encoding">
+            <summary>
+            The character encoding to use for filenames and comment inside the
+            zip file. The default is the system's OEM code page.
+            </summary>
+        </member>
+        <member name="T:NAnt.Compression.Types.DuplicateHandling">
+            <summary>
+            Specifies how entries with the same name should be processed.
+            </summary>
+        </member>
+        <member name="F:NAnt.Compression.Types.DuplicateHandling.Add">
+            <summary>
+            Overwrite existing entry with same name.
+            </summary>
+        </member>
+        <member name="F:NAnt.Compression.Types.DuplicateHandling.Preserve">
+            <summary>
+            Preserve existing entry with the same name.
+            </summary>
+        </member>
+        <member name="F:NAnt.Compression.Types.DuplicateHandling.Fail">
+            <summary>
+            Report failure when two entries have the same name.
             </summary>
         </member>
         <member name="T:NAnt.Compression.Types.TarFileSet">

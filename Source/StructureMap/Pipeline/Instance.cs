@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using StructureMap.Configuration.DSL;
 using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
@@ -164,4 +166,5 @@ namespace StructureMap.Pipeline
             return thisInstance;
         }
     }
+
 }

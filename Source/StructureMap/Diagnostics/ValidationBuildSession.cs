@@ -107,6 +107,11 @@ namespace StructureMap.Diagnostics
             }
         }
 
+        public void Source(string source)
+        {
+            throw new NotImplementedException();
+        }
+
         private void validate(Type pluginType, Instance instance, object builtObject)
         {
             MethodInfo[] methods = ValidationMethodAttribute.GetValidationMethods(builtObject.GetType());

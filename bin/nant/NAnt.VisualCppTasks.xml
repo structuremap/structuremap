@@ -86,6 +86,17 @@
             The quotes argument value.
             </returns>
         </member>
+        <member name="M:NAnt.VisualCpp.Tasks.ClTask.GetObjOutputFile(System.String,System.String)">
+            <summary>
+            Determines the file name of the OBJ file for the specified source
+            file.
+            </summary>
+            <param name="srcFile">The source file for which the OBJ file should be determined.</param>
+            <param name="objectPath">The path of the object file.</param>
+            <returns>
+            The file name of the OBJ file for the specified source file.
+            </returns>
+        </member>
         <member name="P:NAnt.VisualCpp.Tasks.ClTask.OutputDir">
             <summary>
             Directory where all output files are placed.
@@ -240,6 +251,11 @@
             Creates the library.
             </summary>
         </member>
+        <member name="M:NAnt.VisualCpp.Tasks.LibTask.NeedsCompiling">
+            <summary>
+            Determines if the sources need to be linked.
+            </summary>
+        </member>
         <member name="P:NAnt.VisualCpp.Tasks.LibTask.Options">
             <summary>
             Options to pass to the compiler.
@@ -351,6 +367,11 @@
             A user-specified name for the program database (PDB) that the linker 
             creates. The default file name for the PDB has the base name of the 
             <see cref="P:NAnt.VisualCpp.Tasks.LinkTask.OutputFile"/> and the extension .pdb.
+            </summary>
+        </member>
+        <member name="P:NAnt.VisualCpp.Tasks.LinkTask.DelayLoadedDlls">
+            <summary>
+            Specified DLLs for delay loading.
             </summary>
         </member>
         <member name="P:NAnt.VisualCpp.Tasks.LinkTask.Sources">
@@ -702,6 +723,13 @@
             <summary>
             Determines if the resource need compiling.
             </summary>
+        </member>
+        <member name="M:NAnt.VisualCpp.Tasks.RcTask.CheckResourceTimeStamp(System.String)">
+            <summary>
+            Check if a resource file has been updated.
+            </summary>
+            <param name="filePath"></param>
+            <returns></returns>
         </member>
         <member name="P:NAnt.VisualCpp.Tasks.RcTask.Options">
             <summary>

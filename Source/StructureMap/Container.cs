@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Text;
 using StructureMap.Configuration.DSL;
 using StructureMap.Diagnostics;
+using StructureMap.Exceptions;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
@@ -278,6 +279,17 @@ namespace StructureMap
         public IExplicitProperty With(string argName)
         {
             return new ExplicitArgsExpression(this).With(argName);
+        }
+
+        public void AssertConfigurationIsValid()
+        {
+            ValidationBuildSession session = new ValidationBuildSession(_pipelineGraph, _interceptorLibrary);
+            session.PerformValidations();
+
+            if (!session.Success)
+            {
+                throw new StructureMapConfigurationException(session.BuildErrorMessages());
+            }
         }
 
         #endregion

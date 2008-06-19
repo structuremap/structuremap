@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 
@@ -24,9 +25,12 @@ namespace StructureMap
         private MissingFactoryFunction _missingFactory =
             (pluginType, profileManager) => null;
 
+        private GraphLog _log;
+
         public PipelineGraph(PluginGraph graph)
         {
             _profileManager = graph.ProfileManager;
+            _log = graph.Log;
 
             foreach (PluginFamily family in graph.PluginFamilies)
             {
@@ -40,6 +44,11 @@ namespace StructureMap
                     _factories.Add(family.PluginType, factory);
                 }
             }
+        }
+
+        public GraphLog Log
+        {
+            get { return _log; }
         }
 
         public void ImportFrom(PluginGraph graph)
@@ -80,6 +89,8 @@ namespace StructureMap
                 visitor.PluginType(pluginType, defaultInstance);
                 pair.Value.ForEachInstance(instance => visitor.Instance(pluginType, instance));
             }
+
+
         }
 
         // Useful for the validation logic

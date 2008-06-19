@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -12,15 +13,22 @@ namespace StructureMap.Diagnostics
     {
         private string _currentSource;
         private readonly List<Error> _errors = new List<Error>();
+        private List<string> _sources = new List<string>();
 
         public int ErrorCount
         {
             get { return _errors.Count; }
         }
 
+        public string[] Sources
+        {
+            get { return _sources.ToArray(); }
+        }
+
         public void StartSource(string description)
         {
             _currentSource = description;
+            _sources.Add(description);
         }
 
         public void RegisterError(IDiagnosticInstance instance, int code, params object[] args)

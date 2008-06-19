@@ -4,6 +4,75 @@
         <name>NAnt.Win32Tasks</name>
     </assembly>
     <members>
+        <member name="T:NAnt.Win32.Functions.CygpathFunctions">
+            <summary>
+            Groups a set of functions that convert Windows native filenames to 
+            Cygwin POSIX-style pathnames and vice versa.
+            </summary>
+            <remarks>
+            It can be used when a Cygwin program needs to pass a file name to a 
+            native Windows program, or expects to get a file name from a native 
+            Windows program.
+            </remarks>
+        </member>
+        <member name="M:NAnt.Win32.Functions.CygpathFunctions.#ctor(NAnt.Core.Project,NAnt.Core.PropertyDictionary)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NAnt.Win32.Functions.CygpathFunctions"/>
+            class with the specified <see cref="T:NAnt.Core.Project"/> and properties.
+            </summary>
+            <param name="project">The <see cref="T:NAnt.Core.Project"/> in which the class is used.</param>
+            <param name="properties">The set of properties to use for macro expansion.</param>
+        </member>
+        <member name="M:NAnt.Win32.Functions.CygpathFunctions.GetDosPath(System.String)">
+            <summary>
+            Gets the DOS (short) form of the specified path.
+            </summary>
+            <param name="path">The path to convert.</param>
+            <returns>
+            The DOS (short) form of the specified path.
+            </returns>
+            <exception cref="T:System.ComponentModel.Win32Exception"><c>cygpath</c> could not be started.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="path"/> could not be converted to a short form.</exception>
+        </member>
+        <member name="M:NAnt.Win32.Functions.CygpathFunctions.GetUnixPath(System.String)">
+            <summary>
+            Gets the Unix form of the specified path.
+            </summary>
+            <param name="path">The path to convert.</param>
+            <returns>
+            The Unix form of the specified path.
+            </returns>
+            <exception cref="T:System.ComponentModel.Win32Exception"><c>cygpath</c> could not be started.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="path"/> could not be converted to a Unix form.</exception>
+        </member>
+        <member name="M:NAnt.Win32.Functions.CygpathFunctions.GetWindowsPath(System.String)">
+            <summary>
+            Gets the Windows form of the specified path.
+            </summary>
+            <param name="path">The path to convert.</param>
+            <returns>
+            The Windows form of the specified path.
+            </returns>
+            <exception cref="T:System.ComponentModel.Win32Exception"><c>cygpath</c> could not be started.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="path"/> could not be converted to a Windows form.</exception>
+        </member>
+        <member name="M:NAnt.Win32.Functions.CygpathFunctions.RunCygpathString(NAnt.Core.Types.Argument[])">
+            <summary>
+            Runs cygpath with the specified arguments and returns the result 
+            as a <see cref="T:System.String"/>.
+            </summary>
+            <param name="args">The arguments to pass to cygpath.</param>
+            <returns>
+            The result of running cygpath with the specified arguments.
+            </returns>
+        </member>
+        <member name="M:NAnt.Win32.Functions.CygpathFunctions.GetTask(System.IO.Stream)">
+            <summary>
+            Factory method to return a new instance of ExecTask
+            </summary>
+            <param name="stream"></param>
+            <returns></returns>
+        </member>
         <member name="T:NAnt.Win32.Tasks.AxImpTask">
             <summary>
             Generates a Windows Forms Control that wraps ActiveX Controls defined 
@@ -86,7 +155,14 @@
         <member name="P:NAnt.Win32.Tasks.AxImpTask.RcwFile">
             <summary>
             Assembly to use for Runtime Callable Wrapper rather than generating 
-            new one. Only supported on .NET 1.1 or higher.
+            new one [.NET 1.1 or higher].
+            </summary>
+        </member>
+        <member name="P:NAnt.Win32.Tasks.AxImpTask.SupportsRcw">
+            <summary>
+            Indicates whether <c>aximp</c> supports using an existing Runtime
+            Callable Wrapper for a given target framework. The default is 
+            <see langword="true" />.
             </summary>
         </member>
         <member name="P:NAnt.Win32.Tasks.AxImpTask.ProgramArguments">
@@ -172,6 +248,139 @@
             </summary>
             <remarks>
             <seealso cref="T:Microsoft.Win32.RegistryHive"/>
+            </remarks>
+        </member>
+        <member name="T:NAnt.Win32.Tasks.RegAsmTask">
+            <summary>
+            Registers an assembly, or set of assemblies for use from COM clients.
+            </summary>
+            <remarks>
+              <para>
+              Refer to the <see href="ms-help://MS.VSCC/MS.MSDNVS/cptools/html/cpgrfassemblyregistrationtoolregasmexe.htm">Regasm</see> 
+              documentation for more information on the regasm tool.
+              </para>
+            </remarks>
+            <example>
+              <para>
+              Register types in a single assembly.
+              </para>
+              <code>
+                <![CDATA[
+            <regasm assembly="myAssembly.dll" />
+                ]]>
+              </code>
+            </example>
+            <example>
+              <para>
+              Register types of an assembly and generate a type library containing
+              definitions of accessible types defined within the assembly.
+              </para>
+              <code>
+                <![CDATA[
+            <regasm assembly="myAssembly.dll" typelib="myAssembly.tlb" />
+                ]]>
+              </code>
+            </example>
+            <example>
+              <para>
+              Register types of set of assemblies at once, while specifying a set
+              of reference assemblies.
+              </para>
+              <code>
+                <![CDATA[
+            <regasm codebase="true">
+                <assemblies>
+                    <include name="OutlookAddin.dll" />
+                    <include name="OfficeCoreAddin.dll" />
+                </assemblies>
+                <references>
+                    <include name="CommonTypes.dll" />
+                </references>
+            </regasm>
+                ]]>
+              </code>
+            </example>
+        </member>
+        <member name="M:NAnt.Win32.Tasks.RegAsmTask.PrepareProcess(System.Diagnostics.Process)">
+            <summary>
+            Updates the <see cref="T:System.Diagnostics.ProcessStartInfo"/> of the specified 
+            <see cref="T:System.Diagnostics.Process"/>.
+            </summary>
+            <param name="process">The <see cref="T:System.Diagnostics.Process"/> of which the <see cref="T:System.Diagnostics.ProcessStartInfo"/> should be updated.</param>
+        </member>
+        <member name="M:NAnt.Win32.Tasks.RegAsmTask.ExecuteTask">
+            <summary>
+            Registers or unregisters a single assembly, or a group of assemblies.
+            </summary>
+        </member>
+        <member name="P:NAnt.Win32.Tasks.RegAsmTask.AssemblyFile">
+            <summary>
+            The name of the file to register. This is provided as an alternate 
+            to using the task's <see cref="P:NAnt.Win32.Tasks.RegAsmTask.Assemblies"/>.
+            </summary>
+        </member>
+        <member name="P:NAnt.Win32.Tasks.RegAsmTask.RegistryFile">
+            <summary>
+            Registry file to export to instead of entering the types directly 
+            into the registry.
+            </summary>
+        </member>
+        <member name="P:NAnt.Win32.Tasks.RegAsmTask.CodeBase">
+            <summary>
+            Set the code base registry setting.
+            </summary>
+        </member>
+        <member name="P:NAnt.Win32.Tasks.RegAsmTask.Registered">
+            <summary>
+            Only refer to already registered type libraries.
+            </summary>
+        </member>
+        <member name="P:NAnt.Win32.Tasks.RegAsmTask.TypeLib">
+            <summary>
+            Export the assemblies to the specified type library and register it.
+            </summary>
+        </member>
+        <member name="P:NAnt.Win32.Tasks.RegAsmTask.Unregister">
+            <summary>
+            Unregister the assembly. The default is <see langword="false" />.
+            </summary>
+        </member>
+        <member name="P:NAnt.Win32.Tasks.RegAsmTask.Assemblies">
+            <summary>
+            The set of assemblies to register, or unregister.
+            </summary>
+        </member>
+        <member name="P:NAnt.Win32.Tasks.RegAsmTask.References">
+            <summary>
+            The set of assembly references.
+            </summary>
+        </member>
+        <member name="P:NAnt.Win32.Tasks.RegAsmTask.BaseDirectory">
+            <summary>
+            Gets the working directory for the application.
+            </summary>
+            <value>
+            The working directory for the application.
+            </value>
+        </member>
+        <member name="P:NAnt.Win32.Tasks.RegAsmTask.ProgramArguments">
+            <summary>
+            Gets the command line arguments for the external program.
+            </summary>
+            <value>
+            The command line arguments for the external program.
+            </value>
+        </member>
+        <member name="P:NAnt.Win32.Tasks.RegAsmTask.ProgramFileName">
+            <summary>
+            Gets the filename of the external program to start.
+            </summary>
+            <value>
+            The filename of the external program.
+            </value>
+            <remarks>
+            Override in derived classes to explicitly set the location of the 
+            external tool.
             </remarks>
         </member>
         <member name="T:NAnt.Win32.Tasks.TlbExpTask">
@@ -265,11 +474,43 @@
                 ]]>
               </code>
             </example>
+            <example>
+              <para>
+              Generate an assembly named &quot;Interop.MSVidCtlLib.dll&quot; for the
+              MS Video Control 1.0 Type Library, transforming any [out, retval]
+              parameters of methods on dispinterfaces in the type library into 
+              return values in the managed library.
+              </para>
+              <code>
+                <![CDATA[
+            <tlbimp typelib="msvidctl.dll" output="Interop.MSVidCtlLib.dll" transform="dispret">
+                <references basedir="Interop">
+                    <include name="Interop.TunerLib.dll" />
+                </references>
+            </tlbimp>
+                ]]>
+              </code>
+            </example>
         </member>
         <member name="M:NAnt.Win32.Tasks.TlbImpTask.ExecuteTask">
             <summary>
             Imports the type library to a .NET assembly.
             </summary>
+        </member>
+        <member name="M:NAnt.Win32.Tasks.TlbImpTask.ExtractTypeLibPath(System.String)">
+            <summary>
+            Returns the path of the type library, removing the identifier of 
+            the type library from the specified string.
+            </summary>
+            <param name="path">The path from which to extract the path of the type library.</param>
+            <returns>
+            The path of the type library without the type library identifier.
+            </returns>
+            <remarks>
+            An example of a path which includes the identifier of the type 
+            library (in this case &quot;2&quot;) is
+            <c>C:\WINDOWS\system32\msvidctl.dll\2</c>.
+            </remarks>
         </member>
         <member name="M:NAnt.Win32.Tasks.TlbImpTask.NeedsCompiling">
             <summary>
@@ -404,6 +645,11 @@
             </value>
             <remarks><a href="ms-help://MS.NETFrameworkSDK/cptools/html/cpgrftypelibraryimportertlbimpexe.htm">See the Microsoft.NET Framework SDK documentation for details.</a></remarks>
         </member>
+        <member name="P:NAnt.Win32.Tasks.TlbImpTask.Transform">
+            <summary>
+            Specifies how to transform the metadata [.NET 1.1 or higher].
+            </summary>
+        </member>
         <member name="P:NAnt.Win32.Tasks.TlbImpTask.TypeLib">
             <summary>
             Specifies the source type library that gets passed to the type 
@@ -425,6 +671,12 @@
             checks should be produced; otherwise, <see langword="false" />.
             </value>
             <remarks><a href="ms-help://MS.NETFrameworkSDK/cptools/html/cpgrftypelibraryimportertlbimpexe.htm">See the Microsoft.NET Framework SDK documentation for details.</a></remarks>
+        </member>
+        <member name="P:NAnt.Win32.Tasks.TlbImpTask.SupportsTransform">
+            <summary>
+            Indicates whether <c>tlbimp</c> supports transforming metadata for
+            a given target framework. The default is <see langword="true" />.
+            </summary>
         </member>
         <member name="P:NAnt.Win32.Tasks.TlbImpTask.ProgramArguments">
             <summary>

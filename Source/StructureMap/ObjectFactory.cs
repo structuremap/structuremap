@@ -339,7 +339,10 @@ namespace StructureMap
             return manager.With(argName);
         }
 
-
+        public static void AssertConfigurationIsValid()
+        {
+            manager.AssertConfigurationIsValid();
+        }
     }
 
 

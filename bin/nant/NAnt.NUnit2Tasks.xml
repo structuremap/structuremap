@@ -4,6 +4,45 @@
         <name>NAnt.NUnit2Tasks</name>
     </assembly>
     <members>
+        <member name="T:NAnt.NUnit2.Types.Categories">
+            <summary>
+            Controls the categories of tests to execute using the <see cref="T:NAnt.NUnit2.Tasks.NUnit2Task"/>.
+            </summary>
+            <example>
+              <para>
+              Only include test cases and fixtures that require no internet access.
+              </para>
+              <code>
+                <![CDATA[
+            <categories>
+                <include name="NoInternetAccess" />
+            </categories>
+                ]]>
+              </code>
+            </example>
+            <example>
+              <para>
+              Exclude test cases and fixtures that are known to fail.
+              </para>
+              <code>
+                <![CDATA[
+            <categories>
+                <exclude name="NotWorking" />
+            </categories>
+                ]]>
+              </code>
+            </example>
+        </member>
+        <member name="P:NAnt.NUnit2.Types.Categories.Includes">
+            <summary>
+            Specifies a list of categories to include.
+            </summary>
+        </member>
+        <member name="P:NAnt.NUnit2.Types.Categories.Excludes">
+            <summary>
+            Specifies a list of categories to exclude.
+            </summary>
+        </member>
         <member name="T:NAnt.NUnit2.Types.Category">
             <summary>
             Represents a certain group of test cases or fixtures.
@@ -28,16 +67,25 @@
         </member>
         <member name="T:NAnt.NUnit2.Types.CategoryCollection">
             <summary>
-            Contains a collection of <see cref="T:NAnt.NUnit2.Types.Category"/> items.
+            Contains a collection of <see cref="T:NAnt.NUnit2.Types.Category"/> elements.
             </summary>
         </member>
-        <member name="M:NAnt.NUnit2.Types.CategoryCollection.GetEnumerator">
+        <member name="M:NAnt.NUnit2.Types.CategoryCollection.#ctor">
             <summary>
-            Returns an enumerator that can iterate through the collection.
+            Initializes a new instance of the <see cref="T:NAnt.NUnit2.Types.CategoryCollection"/> class.
             </summary>
-            <returns>
-            A <see cref="T:NAnt.NUnit2.Types.CategoryEnumerator"/> for the entire collection.
-            </returns>
+        </member>
+        <member name="M:NAnt.NUnit2.Types.CategoryCollection.#ctor(NAnt.NUnit2.Types.CategoryCollection)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NAnt.NUnit2.Types.CategoryCollection"/> class
+            with the specified <see cref="T:NAnt.NUnit2.Types.CategoryCollection"/> instance.
+            </summary>
+        </member>
+        <member name="M:NAnt.NUnit2.Types.CategoryCollection.#ctor(NAnt.NUnit2.Types.Category[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:NAnt.NUnit2.Types.CategoryCollection"/> class
+            with the specified array of <see cref="T:NAnt.NUnit2.Types.Category"/> instances.
+            </summary>
         </member>
         <member name="M:NAnt.NUnit2.Types.CategoryCollection.ToString">
             <summary>
@@ -48,113 +96,89 @@
             <see cref="T:System.String"/> if there are no categories.
             </returns>
         </member>
-        <member name="M:NAnt.NUnit2.Types.CategoryCollection.System#Collections#IList#Insert(System.Int32,System.Object)">
-            <summary>
-            Inserts a <see cref="T:NAnt.NUnit2.Types.Category"/> into the collection at the
-            specified index.
-            </summary>
-            <param name="index">The zero-based index at which <paramref name="item"/> should be inserted.</param>
-            <param name="value">The <see cref="T:NAnt.NUnit2.Types.Category"/> to insert.</param>
-        </member>
-        <member name="M:NAnt.NUnit2.Types.CategoryCollection.System#Collections#IList#Remove(System.Object)">
-            <summary>
-            Removes the specified <see cref="T:NAnt.NUnit2.Types.Category"/> from the
-            collection.
-            </summary>
-            <param name="value">The <see cref="T:NAnt.NUnit2.Types.Category"/> to remove from the collection.</param>
-        </member>
-        <member name="M:NAnt.NUnit2.Types.CategoryCollection.System#Collections#IList#Contains(System.Object)">
-            <summary>
-            Determines whether a <see cref="T:NAnt.NUnit2.Types.Category"/> is in the collection.
-            </summary>
-            <param name="value">The <see cref="T:NAnt.NUnit2.Types.Category"/> to locate in the collection.</param> 
-            <returns>
-            <see langword="true"/> if <paramref name="value"/> is found in the 
-            collection; otherwise, <see langword="false"/>.
-            </returns>
-        </member>
-        <member name="M:NAnt.NUnit2.Types.CategoryCollection.System#Collections#IList#IndexOf(System.Object)">
-            <summary>
-            Gets the location of a <see cref="T:NAnt.NUnit2.Types.Category"/> in the collection.
-            </summary>
-            <param name="value">The <see cref="T:NAnt.NUnit2.Types.Category"/> object to locate.</param> 
-            <returns>
-            The zero-based location of the <see cref="T:NAnt.NUnit2.Types.Category"/> in the
-            collection.
-            </returns>
-            <remarks>
-            If the <see cref="T:NAnt.NUnit2.Types.Category"/> is not currently a member of 
-            the collection, -1 is returned.
-            </remarks>
-        </member>
-        <member name="M:NAnt.NUnit2.Types.CategoryCollection.System#Collections#IList#Add(System.Object)">
-            <summary>
-            Adds a <see cref="T:NAnt.NUnit2.Types.Category"/> to the end of the collection.
-            </summary>
-            <param name="value">The <see cref="T:NAnt.NUnit2.Types.Category"/> to be added to the end of the collection.</param> 
-            <returns>
-            The position into which the new item was inserted.
-            </returns>
-        </member>
-        <member name="M:NAnt.NUnit2.Types.CategoryCollection.AddRange(NAnt.NUnit2.Types.CategoryCollection)">
-            <summary>
-            Adds the items of a <see cref="T:NAnt.NUnit2.Types.CategoryCollection"/> to the end of the collection.
-            </summary>
-            <param name="items">The <see cref="T:NAnt.NUnit2.Types.CategoryCollection"/> to be added to the end of the collection.</param> 
-        </member>
         <member name="M:NAnt.NUnit2.Types.CategoryCollection.Add(NAnt.NUnit2.Types.Category)">
             <summary>
             Adds a <see cref="T:NAnt.NUnit2.Types.Category"/> to the end of the collection.
             </summary>
-            <param name="value">The <see cref="T:NAnt.NUnit2.Types.Category"/> to be added to the end of the collection.</param> 
-            <returns>
-            The position into which the new item was inserted.
-            </returns>
+            <param name="item">The <see cref="T:NAnt.NUnit2.Types.Category"/> to be added to the end of the collection.</param> 
+            <returns>The position into which the new element was inserted.</returns>
         </member>
-        <member name="M:NAnt.NUnit2.Types.CategoryCollection.Insert(System.Int32,NAnt.NUnit2.Types.Category)">
+        <member name="M:NAnt.NUnit2.Types.CategoryCollection.AddRange(NAnt.NUnit2.Types.Category[])">
             <summary>
-            Inserts a <see cref="T:NAnt.NUnit2.Types.Category"/> into the collection at the
-            specified index.
+            Adds the elements of a <see cref="T:NAnt.NUnit2.Types.Category"/> array to the end of the collection.
             </summary>
-            <param name="index">The zero-based index at which <paramref name="item"/> should be inserted.</param>
-            <param name="value">The <see cref="T:NAnt.NUnit2.Types.Category"/> to insert.</param>
+            <param name="items">The array of <see cref="T:NAnt.NUnit2.Types.Category"/> elements to be added to the end of the collection.</param> 
         </member>
-        <member name="M:NAnt.NUnit2.Types.CategoryCollection.Remove(NAnt.NUnit2.Types.Category)">
+        <member name="M:NAnt.NUnit2.Types.CategoryCollection.AddRange(NAnt.NUnit2.Types.CategoryCollection)">
             <summary>
-            Removes the specified <see cref="T:NAnt.NUnit2.Types.Category"/> from the
-            collection.
+            Adds the elements of a <see cref="T:NAnt.NUnit2.Types.CategoryCollection"/> to the end of the collection.
             </summary>
-            <param name="value">The <see cref="T:NAnt.NUnit2.Types.Category"/> to remove from the collection.</param>
+            <param name="items">The <see cref="T:NAnt.NUnit2.Types.CategoryCollection"/> to be added to the end of the collection.</param> 
         </member>
         <member name="M:NAnt.NUnit2.Types.CategoryCollection.Contains(NAnt.NUnit2.Types.Category)">
             <summary>
             Determines whether a <see cref="T:NAnt.NUnit2.Types.Category"/> is in the collection.
             </summary>
-            <param name="value">The <see cref="T:NAnt.NUnit2.Types.Category"/> to locate in the collection.</param> 
+            <param name="item">The <see cref="T:NAnt.NUnit2.Types.Category"/> to locate in the collection.</param> 
             <returns>
-            <see langword="true"/> if <paramref name="value"/> is found in the 
+            <see langword="true"/> if <paramref name="item"/> is found in the 
             collection; otherwise, <see langword="false"/>.
             </returns>
         </member>
+        <member name="M:NAnt.NUnit2.Types.CategoryCollection.Contains(System.String)">
+            <summary>
+            Determines whether a <see cref="T:NAnt.NUnit2.Types.Category"/> with the specified
+            value is in the collection.
+            </summary>
+            <param name="value">The argument value to locate in the collection.</param> 
+            <returns>
+            <see langword="true"/> if a <see cref="T:NAnt.NUnit2.Types.Category"/> with value 
+            <paramref name="value"/> is found in the collection; otherwise, 
+            <see langword="false"/>.
+            </returns>
+        </member>
+        <member name="M:NAnt.NUnit2.Types.CategoryCollection.CopyTo(NAnt.NUnit2.Types.Category[],System.Int32)">
+            <summary>
+            Copies the entire collection to a compatible one-dimensional array, starting at the specified index of the target array.        
+            </summary>
+            <param name="array">The one-dimensional array that is the destination of the elements copied from the collection. The array must have zero-based indexing.</param> 
+            <param name="index">The zero-based index in <paramref name="array"/> at which copying begins.</param>
+        </member>
         <member name="M:NAnt.NUnit2.Types.CategoryCollection.IndexOf(NAnt.NUnit2.Types.Category)">
             <summary>
-            Gets the location of a <see cref="T:NAnt.NUnit2.Types.Category"/> in the collection.
+            Retrieves the index of a specified <see cref="T:NAnt.NUnit2.Types.Category"/> object in the collection.
             </summary>
-            <param name="value">The <see cref="T:NAnt.NUnit2.Types.Category"/> object to locate.</param> 
+            <param name="item">The <see cref="T:NAnt.NUnit2.Types.Category"/> object for which the index is returned.</param> 
             <returns>
-            The zero-based location of the <see cref="T:NAnt.NUnit2.Types.Category"/> in the
-            collection.
+            The index of the specified <see cref="T:NAnt.NUnit2.Types.Category"/>. If the <see cref="T:NAnt.NUnit2.Types.Category"/> is not currently a member of the collection, it returns -1.
             </returns>
-            <remarks>
-            If the <see cref="T:NAnt.NUnit2.Types.Category"/> is not currently a member of 
-            the collection, -1 is returned.
-            </remarks>
+        </member>
+        <member name="M:NAnt.NUnit2.Types.CategoryCollection.Insert(System.Int32,NAnt.NUnit2.Types.Category)">
+            <summary>
+            Inserts a <see cref="T:NAnt.NUnit2.Types.Category"/> into the collection at the specified index.
+            </summary>
+            <param name="index">The zero-based index at which <paramref name="item"/> should be inserted.</param>
+            <param name="item">The <see cref="T:NAnt.NUnit2.Types.Category"/> to insert.</param>
+        </member>
+        <member name="M:NAnt.NUnit2.Types.CategoryCollection.GetEnumerator">
+            <summary>
+            Returns an enumerator that can iterate through the collection.
+            </summary>
+            <returns>
+            A <see cref="T:NAnt.NUnit2.Types.CategoryEnumerator"/> for the entire collection.
+            </returns>
+        </member>
+        <member name="M:NAnt.NUnit2.Types.CategoryCollection.Remove(NAnt.NUnit2.Types.Category)">
+            <summary>
+            Removes a member from the collection.
+            </summary>
+            <param name="item">The <see cref="T:NAnt.NUnit2.Types.Category"/> to remove from the collection.</param>
         </member>
         <member name="P:NAnt.NUnit2.Types.CategoryCollection.Item(System.Int32)">
             <summary>
-            Gets or sets the item at the specified index.
+            Gets or sets the element at the specified index.
             </summary>
-            <param name="index">The zero-based index of the item to get or set.</param>
+            <param name="index">The zero-based index of the element to get or set.</param>
         </member>
         <member name="P:NAnt.NUnit2.Types.CategoryCollection.Item(System.String)">
             <summary>
@@ -162,23 +186,9 @@
             </summary>
             <param name="value">The name of the <see cref="T:NAnt.NUnit2.Types.Category"/> to get.</param>
         </member>
-        <member name="P:NAnt.NUnit2.Types.CategoryCollection.ItemType">
-            <summary>
-            Gets the <see cref="T:System.Type"/> of the items in this collection.
-            </summary>
-            <value>
-            The <see cref="T:System.Type"/> of the items in this collection.
-            </value>
-        </member>
-        <member name="P:NAnt.NUnit2.Types.CategoryCollection.System#Collections#IList#$Item$(System.Int32)">
-            <summary>
-            Gets or sets the item at the specified index.
-            </summary>
-            <param name="index">The zero-based index of the item to get or set.</param>
-        </member>
         <member name="T:NAnt.NUnit2.Types.CategoryEnumerator">
             <summary>
-            Enumerates the <see cref="T:NAnt.NUnit2.Types.Category"/> items of a <see cref="T:NAnt.NUnit2.Types.CategoryCollection"/>.
+            Enumerates the <see cref="T:NAnt.NUnit2.Types.Category"/> elements of a <see cref="T:NAnt.NUnit2.Types.CategoryCollection"/>.
             </summary>
         </member>
         <member name="M:NAnt.NUnit2.Types.CategoryEnumerator.#ctor(NAnt.NUnit2.Types.CategoryCollection)">
@@ -190,74 +200,27 @@
         </member>
         <member name="M:NAnt.NUnit2.Types.CategoryEnumerator.MoveNext">
             <summary>
-            Advances the enumerator to the next item of the collection.
+            Advances the enumerator to the next element of the collection.
             </summary>
             <returns>
             <see langword="true" /> if the enumerator was successfully advanced 
-            to the next item; <see langword="false" /> if the enumerator has 
+            to the next element; <see langword="false" /> if the enumerator has 
             passed the end of the collection.
             </returns>
         </member>
         <member name="M:NAnt.NUnit2.Types.CategoryEnumerator.Reset">
             <summary>
             Sets the enumerator to its initial position, which is before the 
-            first item in the collection.
+            first element in the collection.
             </summary>
         </member>
         <member name="P:NAnt.NUnit2.Types.CategoryEnumerator.Current">
             <summary>
-            Gets the current item in the collection.
+            Gets the current element in the collection.
             </summary>
             <returns>
-            The current item in the collection.
+            The current element in the collection.
             </returns>
-        </member>
-        <member name="P:NAnt.NUnit2.Types.CategoryEnumerator.System#Collections#IEnumerator#Current">
-            <summary>
-            Gets the current item in the collection.
-            </summary>
-            <returns>
-            The current item in the collection.
-            </returns>
-        </member>
-        <member name="T:NAnt.NUnit2.Types.CategorySet">
-            <summary>
-            Controls the categories of tests to execute using the <see cref="T:NAnt.NUnit2.Tasks.NUnit2Task"/>.
-            </summary>
-            <example>
-              <para>
-              Only include test cases and fixtures that require no internet access.
-              </para>
-              <code>
-                <![CDATA[
-            <categoryset>
-                <include name="NoInternetAccess" />
-            </categoryset>
-                ]]>
-              </code>
-            </example>
-            <example>
-              <para>
-              Exclude test cases and fixtures that are known to fail.
-              </para>
-              <code>
-                <![CDATA[
-            <categoryset>
-                <exclude name="NotWorking" />
-            </categoryset>
-                ]]>
-              </code>
-            </example>
-        </member>
-        <member name="P:NAnt.NUnit2.Types.CategorySet.Includes">
-            <summary>
-            Specifies a list of categories to include.
-            </summary>
-        </member>
-        <member name="P:NAnt.NUnit2.Types.CategorySet.Excludes">
-            <summary>
-            Specifies a list of categories to exclude.
-            </summary>
         </member>
         <member name="T:NAnt.NUnit2.Types.NUnit2TestCollection">
             <summary>
@@ -404,8 +367,8 @@
               ignore any errors and continue the build.
               </para>
               <para>
-              In order to run a test assembly built with NUnit 2.0 or 2.1 using the 
-              NAnt <see cref="T:NAnt.NUnit2.Tasks.NUnit2Task"/>, you must add the following node to your 
+              In order to run a test assembly built with NUnit 2.0 or 2.1 using 
+              <see cref="T:NAnt.NUnit2.Tasks.NUnit2Task"/>, you must add the following node to your
               test config file :
               </para>
               <code>
@@ -416,8 +379,8 @@
                     <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
                         <dependentAssembly>
                             <assemblyIdentity name="nunit.framework" publicKeyToken="96d09a1eb7f44a77" culture="Neutral" /> 
-                            <bindingRedirect oldVersion="2.0.6.0" newVersion="2.2.0.0" /> 
-                            <bindingRedirect oldVersion="2.1.4.0" newVersion="2.2.0.0" /> 
+                            <bindingRedirect oldVersion="2.0.6.0" newVersion="2.2.8.0" /> 
+                            <bindingRedirect oldVersion="2.1.4.0" newVersion="2.2.8.0" /> 
                         </dependentAssembly>
                     </assemblyBinding>
                 </runtime>
@@ -543,6 +506,12 @@
             to workaround some limitations in it.
             </summary>
         </member>
+        <member name="M:NAnt.NUnit2.Tasks.NUnit2TestDomain.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:NAnt.NUnit2.Tasks.NUnit2TestDomain"/>
+            class.
+            </summary>
+        </member>
         <member name="M:NAnt.NUnit2.Tasks.NUnit2TestDomain.CreateRunner(System.IO.FileInfo,System.IO.FileInfo)">
             <summary>
             Runs a single testcase.
@@ -558,7 +527,7 @@
             Helper class called when an assembly resolve event is raised.
             </summary>
         </member>
-        <member name="M:NAnt.NUnit2.Tasks.NUnit2TestDomain.AssemblyResolveHandler.#ctor(System.Collections.Specialized.StringCollection)">
+        <member name="M:NAnt.NUnit2.Tasks.NUnit2TestDomain.AssemblyResolveHandler.#ctor(System.String[])">
             <summary> 
             Initializes an instanse of the <see cref="T:NAnt.NUnit2.Tasks.NUnit2TestDomain.AssemblyResolveHandler"/> 
             class.
