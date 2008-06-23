@@ -169,7 +169,7 @@ namespace StructureMap.Testing.AutoMocking
         public void InjectAStubAndGetTheStubBack()
         {
             StubService stub = new StubService();
-            _container.InjectStub<IMockedService>(stub);
+            _container.Inject<IMockedService>(stub);
 
             Assert.AreSame(stub, _container.GetInstance<IMockedService>());
             Assert.AreSame(stub, _container.GetInstance<IMockedService>());

@@ -38,29 +38,29 @@ namespace StructureMap.Testing.Configuration
         }
 
         [Test]
-        public void Parse_a_string_array_with_the_default_concatenator()
+        public void Parse_a_string_array_with_the_default_Delimiter()
         {
             parseNode("<node Values='a,b,c,d'></node>", typeof (string[])).ShouldEqual(new string[] {"a", "b", "c", "d"});
         }
 
 
         [Test]
-        public void Parse_a_string_array_with_overridden_concatenator()
+        public void Parse_a_string_array_with_overridden_Delimiter()
         {
-            parseNode("<node Values='a,b,c,d' Concatenator=';'></node>", typeof(string[])).ShouldEqual(new string[] { "a,b,c,d" });
-            parseNode("<node Values='a;b;c;d' Concatenator=';'></node>", typeof(string[])).ShouldEqual(new string[] { "a", "b", "c", "d" });
+            parseNode("<node Values='a,b,c,d' Delimiter=';'></node>", typeof(string[])).ShouldEqual(new string[] { "a,b,c,d" });
+            parseNode("<node Values='a;b;c;d' Delimiter=';'></node>", typeof(string[])).ShouldEqual(new string[] { "a", "b", "c", "d" });
         }
 
 
         [Test]
-        public void Parse_a_string_array_with_the_default_concatenator_and_deal_with_leading_or_trailing_spaces()
+        public void Parse_a_string_array_with_the_default_Delimiter_and_deal_with_leading_or_trailing_spaces()
         {
             parseNode("<node Values='a , b,c,d'></node>", typeof(string[])).ShouldEqual(new string[] { "a", "b", "c", "d" });
         }
 
 
         [Test]
-        public void Parse_an_int_array_with_the_default_concatenator()
+        public void Parse_an_int_array_with_the_default_Delimiter()
         {
             parseNode("<node Values='1,2,3,4'></node>", typeof(int[])).ShouldEqual(new int[] { 1, 2, 3, 4 });
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
@@ -78,10 +79,10 @@ namespace StructureMap.Testing.Configuration
         public void Read_in_a_class_with_primitive_arrays()
         {
             string xml = @"
-<root>
+<Instance>
     <numbers Values='1,2,3'/>
     <strings Values='1,2,3'/>
-</root>
+</Instance>
 ";
 
             var element = DataMother.BuildDocument(xml).DocumentElement;
@@ -96,6 +97,8 @@ namespace StructureMap.Testing.Configuration
 
             theObject.Numbers.ShouldEqual(new int[] {1, 2, 3});
             theObject.Strings.ShouldEqual(new string[] {"1", "2", "3"});
+
+            Debug.WriteLine(theObject.GetType().AssemblyQualifiedName);
         }
     }
 

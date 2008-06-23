@@ -13,13 +13,13 @@ namespace StructureMap.AutoMocking
     // Note that it subclasses the RhinoMocks.MockRepository class
     public class RhinoAutoMocker<TARGETCLASS> : MockRepository where TARGETCLASS : class
     {
-        private readonly AutoMockedContainer _manager;
+        private readonly AutoMockedContainer _container;
         private TARGETCLASS _classUnderTest;
 
         public RhinoAutoMocker()
         {
             RhinoMocksServiceLocator locator = new RhinoMocksServiceLocator(this);
-            _manager = new AutoMockedContainer(locator);
+            _container = new AutoMockedContainer(locator);
         }
 
         // Replaces the inner Container in ObjectFactory with the mocked
@@ -34,7 +34,7 @@ namespace StructureMap.AutoMocking
             {
                 if (_classUnderTest == null)
                 {
-                    _classUnderTest = _manager.FillDependencies<TARGETCLASS>();
+                    _classUnderTest = _container.FillDependencies<TARGETCLASS>();
                 }
 
                 return _classUnderTest;
@@ -43,7 +43,7 @@ namespace StructureMap.AutoMocking
 
         public void MockObjectFactory()
         {
-            ObjectFactory.ReplaceManager(_manager);
+            ObjectFactory.ReplaceManager(_container);
         }
 
         // I find it useful from time to time to use partial mocks for the ClassUnderTest
@@ -60,7 +60,7 @@ namespace StructureMap.AutoMocking
             foreach (ParameterInfo parameterInfo in ctor.GetParameters())
             {
                 Type dependencyType = parameterInfo.ParameterType;
-                object dependency = _manager.GetInstance(dependencyType);
+                object dependency = _container.GetInstance(dependencyType);
                 list.Add(dependency);
             }
 
@@ -71,13 +71,18 @@ namespace StructureMap.AutoMocking
         // of the ClassUnderTest
         public T Get<T>()
         {
-            return _manager.GetInstance<T>();
+            return _container.GetInstance<T>();
         }
 
         // Set the auto mocking container to use a Stub for Type T
         public void InjectStub<T>(T stub)
         {
-            _manager.Inject<T>(stub);
+            _container.Inject<T>(stub);
+        }
+
+        public void Inject(Type pluginType, object stub)
+        {
+            _container.Inject(pluginType, stub);
         }
 
         // So that Aaron Jensen can use his concrete HubService object
@@ -85,8 +90,8 @@ namespace StructureMap.AutoMocking
         // ClassUnderTest gets built with a concrete T
         public void UseConcreteClassFor<T>()
         {
-            T concreteClass = _manager.FillDependencies<T>();
-            _manager.InjectStub(concreteClass);
+            T concreteClass = _container.FillDependencies<T>();
+            _container.Inject(concreteClass);
         }
     }
 }

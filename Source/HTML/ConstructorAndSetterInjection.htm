@@ -1,0 +1,391 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+	<head>
+		<title>Constructor and Setter Injection</title>
+	</head>
+	<body>
+	    <h1>Constructor and Setter Injection</h1>
+	    
+	    <p>StructureMap supports two forms of Dependency Injection:</p>
+	    
+	    <ol>
+            <li>Constructor Injection -- &quot;Pushing&quot; dependencies into a concrete class through 
+                constructor arguments.</li>
+        <li>Setter Injection -- &quot;Pushing&quot; depencencies into a concrete class through public 
+            properties.&nbsp; The &quot;Setter&quot; nomenclature is taken from Java where properties 
+            are getSomething() and setSomething(value).</li>
+    </ol>
+	    
+	    <p>You can certainly mix and match Setter Injection with Constructor Injection on 
+            the same classes, but Constructor Injection will always be used (except for 
+            empty constructors) and Setter Injection has to be explicitly configured.&nbsp; 
+            See
+        <a href="http://martinfowler.com/articles/injection.html#ConstructorVersusSetterInjection">
+        Martin Fowler&#39;s discussion on Constructor versus Setter Injection</a> for more 
+            information.&nbsp; My feeling has always been that Constructor Injection is 
+            preferrable from a design perspective.&nbsp; When you exclusively use 
+            Constructor Injection, the code is somewhat self-documenting because the 
+            constructor arguments will clearly delineate the dependencies of a concrete 
+            class.&nbsp; It&#39;s also important to think about the constructor method of a 
+            class being a contract.&nbsp; If you satisfy all of the arguments of the 
+            constructor method, the class should be ready to function.&nbsp; Relying on 
+            Setter Injection can make a class harder to use because it isn&#39;t always obvious 
+            which setters need to be created externally to use the class.&nbsp; Of course, 
+            not using any form of Dependency Injection can be the worst answer because then 
+            you have no idea what it really takes to bootstrap the service. </p>
+    <h2>Using Constructor Injection</h2>
+    <p>Now, the first question you might ask is how does StructureMap know which 
+        constructor function to use in a class that has multiple constructors?&nbsp; The 
+        answer is that StructureMap will automatically select the &quot;greediest&quot; public 
+        constructor of a class to use for injection.&nbsp; In this case, the &quot;greediest&quot; 
+        constructor is the constructor with the most arguments.&nbsp; In the case of a 
+        tie, StructureMap will use the first constructor that it encountered.&nbsp; For 
+        example, in the code below, the second constructor that takes in two arguments 
+        would be used because it is &quot;greedier.&quot;</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;}??\fs20         \cf3 public\cf0  GreaterThanRule()\par ??        \{\par ??        \}\par ??\par ??        \cf3 public\cf0  GreaterThanRule(\cf3 string\cf0  Attribute, \cf3 int\cf0  Value)\par ??        \{\par ??            _Attribute = Attribute;\par ??            _Value = Value;\par ??        \}}
+-->
+    <div style="font-family: Courier New; font-size: 10pt; color: black; background: white;">
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> 
+            GreaterThanRule()</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        <p style="margin: 0px;">
+            &nbsp;</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> 
+            GreaterThanRule(<span style="color: blue;">string</span> Attribute,
+            <span style="color: blue;">int</span> Value)</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _Attribute = Attribute;</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _Value = Value;</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+    </div>
+<!--EndFragment-->
+<p>&nbsp;</p>
+    <p>You can always override this behavior by decorating the constructor you want 
+        StructureMap to use with the [StructureMap.DefaultConstructor] attribute like 
+        this sample:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red43\green145\blue175;\red0\green0\blue255;}??\fs20         [\cf3 DefaultConstructor\cf0 ]\par ??        \cf4 public\cf0  DataSession(\cf3 IDatabaseEngine\cf0  database)\par ??            : \cf4 this\cf0 (database,\par ??                   \cf4 new\cf0  \cf3 CommandFactory\cf0 (database),\par ??                   \cf4 new\cf0  \cf3 AutoCommitExecutionState\cf0 (database.GetConnection(), database.GetDataAdapter()),\par ??                   \cf4 new\cf0  \cf3 TransactionalExecutionState\cf0 (database.GetConnection(), database.GetDataAdapter()))\par ??        \{\par ??        \}}
+-->
+    <div style="font-family: Courier New; font-size: 10pt; color: black; background: white;">
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<span style="color: #2b91af;">DefaultConstructor</span>]</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> 
+            DataSession(<span style="color: #2b91af;">IDatabaseEngine</span> database)</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :
+            <span style="color: blue;">this</span>(database,</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: blue;">new</span> <span style="color: #2b91af;">
+            CommandFactory</span>(database),</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: blue;">new</span> <span style="color: #2b91af;">
+            AutoCommitExecutionState</span>(database.GetConnection(), 
+            database.GetDataAdapter()),</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: blue;">new</span> <span style="color: #2b91af;">
+            TransactionalExecutionState</span>(database.GetConnection(), 
+            database.GetDataAdapter()))</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+    </div>
+<!--EndFragment-->
+<p>StructureMap will only use public constructors.&nbsp; I&#39;ve had a few complaints 
+    about this issue before from people wanting to use internal constructors, but 
+    for now constructors have to be either public or you have to use the 
+    [InternalsVisibleTo] attribute to give StructureMap access to your own internal 
+    members.&nbsp; StructureMap 2.5 is now strongly signed (thanks to
+    <a href="http://stevenharman.net/">Steve Harman</a>) partially for this 
+    scenario.&nbsp; There is an architectural limitation </p>
+    
+    
+    <h2>Using Setter Injection</h2>
+	<p>Setter injection is a pattern of &quot;injecting&quot; dependencies via public properties.&nbsp; 
+        Setter Injection with StructureMap is admittedly a second class citizen, but 
+        this is partially by design.&nbsp; My strong recommendation is to use 
+        constructor injection for all code that you control, and save setter injection 
+        strictly for classes from external libraries where you do not have any control.&nbsp; </p>
+        
+        <p>Ok, now that you&#39;ve read that I don&#39;t believe that setter injection is a good 
+            idea, but you&#39;re bound and determined to use it anyway, let&#39;s talk about how to 
+            do it with StructureMap.&nbsp; First off, StructureMap needs to be explicitly 
+            told to build a concrete class with each setter.&nbsp; These setter properties 
+            are then considered to be mandatory anytime an Instance of that concrete type is 
+            requested.&nbsp; StructureMap does not support optional setter properties (but 
+            it could easily be done with the new post processing support).&nbsp; That 
+            restriction may be relaxed in later versions.</p>
+    <p>Once StructureMap does know to use a setter in constructing a class, configuring 
+        the actual property values is done no differently than constructor arguments.</p>
+    <p>Let&#39;s say you have a class called Repository with these properties:</p>
+        
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20     \cf3 public\cf0  \cf3 interface\cf0  \cf4 IDataProvider\cf0 \{\}\par ??\par ??    \cf3 public\cf0  \cf3 class\cf0  \cf4 Repository\par ??\cf0     \{\par ??        \cf3 private\cf0  \cf4 IDataProvider\cf0  _provider;\par ??\par ??        \cf3 public\cf0  \cf4 IDataProvider\cf0  Provider\par ??        \{\par ??            \cf3 set\par ??\cf0             \{\par ??                _provider = \cf3 value\cf0 ;\par ??            \}\par ??        \}\par ??    \}}
+-->
+    <div style="font-family: Courier New; font-size: 10pt; color: black; background: white;">
+        <p style="margin: 0px;">
+            &nbsp;</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20     \cf3 public\cf0  \cf3 interface\cf0  \cf4 IDataProvider\cf0 \{\}\par ??\par ??    \cf3 public\cf0  \cf3 class\cf0  \cf4 Repository\par ??\cf0     \{\par ??        \cf3 private\cf0  \cf4 IDataProvider\cf0  _provider;\par ??\par ??        \cf3 public\cf0  \cf4 IDataProvider\cf0  Provider\par ??        \{\par ??            \cf3 set\par ??\cf0             \{\par ??                _provider = \cf3 value\cf0 ;\par ??            \}\par ??        \}\par ??    \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white;">
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20     \cf3 public\cf0  \cf3 interface\cf0  \cf4 IDataProvider\cf0 \{\}\par ??\par ??    \cf3 public\cf0  \cf3 class\cf0  \cf4 Repository\par ??\cf0     \{\par ??        \cf3 private\cf0  \cf4 IDataProvider\cf0  _provider;\par ??\par ??        \cf3 public\cf0  \cf4 IDataProvider\cf0  Provider\par ??        \{\par ??            \cf3 set\par ??\cf0             \{\par ??                _provider = \cf3 value\cf0 ;\par ??            \}\par ??        \}\par ??\par ??\par ??        \cf3 public\cf0  \cf3 bool\cf0  ShouldCache \{ \cf3 get\cf0 ; \cf3 set\cf0 ; \}\par ??    \}}
+-->
+            <div style="font-family: Courier New; font-size: 10pt; color: black; background: white;">
+                <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">interface</span>
+                    <span style="color: #2b91af;">IDataProvider</span>{}</p>
+                <p style="margin: 0px;">
+                    &nbsp;</p>
+                <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">class</span>
+                    <span style="color: #2b91af;">Repository</span></p>
+                <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+                <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">private</span>
+                    <span style="color: #2b91af;">IDataProvider</span> _provider;</p>
+                <p style="margin: 0px;">
+                    &nbsp;</p>
+                <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                    <span style="color: #2b91af;">IDataProvider</span> Provider</p>
+                <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+                <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">set</span></p>
+                <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+                <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _provider 
+                    = <span style="color: blue;">value</span>;</p>
+                <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+                <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+                <p style="margin: 0px;">
+                    &nbsp;</p>
+                <p style="margin: 0px;">
+                    &nbsp;</p>
+                <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                    <span style="color: blue;">bool</span> ShouldCache { <span style="color: blue;">
+                    get</span>; <span style="color: blue;">set</span>; }</p>
+                <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+            </div>
+<!--EndFragment-->
+<p style="margin: 0px;">
+    &nbsp;</p>
+        </div>
+<!--EndFragment-->
+</div>
+<!--EndFragment-->
+<h4>Defining Setter Properties with Attributes</h4>
+<p>Just use the [StructureMap.Attributes.SetterProperty] to denote properties that 
+    need to be filled by StructureMap.&nbsp; If you despise scattering attributes in 
+    your code, and the tight coupling </p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red0\green128\blue0;}??\fs20     \cf3 public\cf0  \cf3 class\cf0  \cf4 Repository\par ??\cf0     \{\par ??        \cf3 private\cf0  \cf4 IDataProvider\cf0  _provider;\par ??\par ??        \cf5 // Adding the SetterProperty to a setter directs\par ??\cf0         \cf5 // StructureMap to use this property when\par ??\cf0         \cf5 // constructing a Repository instance\par ??\cf0         [\cf4 SetterProperty\cf0 ]\par ??        \cf3 public\cf0  \cf4 IDataProvider\cf0  Provider\par ??        \{\par ??            \cf3 set\par ??\cf0             \{\par ??                _provider = \cf3 value\cf0 ;\par ??            \}\par ??        \}\par ??\par ??        [\cf4 SetterProperty\cf0 ]\par ??        \cf3 public\cf0  \cf3 bool\cf0  ShouldCache \{ \cf3 get\cf0 ; \cf3 set\cf0 ; \}\par ??    \}}
+-->
+<div style="font-family: Courier New; font-size: 10pt; color: black; background: white;">
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">
+        class</span> <span style="color: #2b91af;">Repository</span></p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">private</span>
+        <span style="color: #2b91af;">IDataProvider</span> _provider;</p>
+    <p style="margin: 0px;">
+        &nbsp;</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">// Adding the 
+        SetterProperty to a setter directs</span></p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">// StructureMap 
+        to use this property when</span></p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">// constructing a 
+        Repository instance</span></p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<span style="color: #2b91af;">SetterProperty</span>]</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+        <span style="color: #2b91af;">IDataProvider</span> Provider</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span style="color: blue;">set</span></p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        _provider = <span style="color: blue;">value</span>;</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+    <p style="margin: 0px;">
+        &nbsp;</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<span style="color: #2b91af;">SetterProperty</span>]</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+        <span style="color: blue;">bool</span> ShouldCache { <span style="color: blue;">
+        get</span>; <span style="color: blue;">set</span>; }</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+</div>
+<!--EndFragment-->
+<p>&nbsp;</p>
+        
+        <h4>Defining Setter Properties in Xml</h4>
+        <p>Setter properties can be defined in the Xml configuration by explicitly directing 
+            StructureMap to use setter properties while building a concrete type.&nbsp; From 
+            the unit tests, I have a class called OtherGridColumn that exposes several 
+            properties:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red163\green21\blue21;}??\fs20     \cf3 public\cf0  \cf3 class\cf0  \cf4 OtherGridColumn\cf0  : \cf4 IGridColumn\par ??\cf0     \{\par ??        \cf3 public\cf0  \cf4 IWidget\cf0  Widget \{ \cf3 get\cf0 ; \cf3 set\cf0 ; \}\par ??\par ??        \cf3 public\cf0  \cf3 string\cf0  ReadOnly\par ??        \{\par ??            \cf3 get\par ??\cf0             \{\par ??                \cf3 return\cf0  \cf5 "whatever"\cf0 ;\par ??            \}\par ??        \}\par ??\par ??        \cf3 public\cf0  \cf4 FontStyleEnum\cf0  FontStyle \{ \cf3 get\cf0 ; \cf3 set\cf0 ; \}\par ??        \cf3 public\cf0  \cf3 string\cf0  ColumnName \{ \cf3 get\cf0 ; \cf3 set\cf0 ; \}\par ??        \cf3 public\cf0  \cf4 Rule\cf0 [] Rules \{ \cf3 get\cf0 ; \cf3 set\cf0 ; \}\par ??        \cf3 public\cf0  \cf3 bool\cf0  WrapLines \{ \cf3 get\cf0 ; \cf3 set\cf0 ; \}\par ??        \cf3 public\cf0  \cf3 bool\cf0  Displayed \{ \cf3 get\cf0 ; \cf3 set\cf0 ; \}\par ??        \cf3 public\cf0  \cf3 int\cf0  Size \{ \cf3 get\cf0 ; \cf3 set\cf0 ; \}\par ??    \}}
+-->
+    <div style="font-family: Courier New; font-size: 10pt; color: black; background: white;">
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">class</span>
+            <span style="color: #2b91af;">OtherGridColumn</span> :
+            <span style="color: #2b91af;">IGridColumn</span></p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+            <span style="color: #2b91af;">IWidget</span> Widget { <span style="color: blue;">
+            get</span>; <span style="color: blue;">set</span>; }</p>
+        <p style="margin: 0px;">
+            &nbsp;</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+            <span style="color: blue;">string</span> ReadOnly</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: blue;">get</span></p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: blue;">return</span> <span style="color: #a31515;">
+            &quot;whatever&quot;</span>;</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        <p style="margin: 0px;">
+            &nbsp;</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+            <span style="color: #2b91af;">FontStyleEnum</span> FontStyle {
+            <span style="color: blue;">get</span>; <span style="color: blue;">set</span>; }</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+            <span style="color: blue;">string</span> ColumnName { <span style="color: blue;">
+            get</span>; <span style="color: blue;">set</span>; }</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+            <span style="color: #2b91af;">Rule</span>[] Rules { <span style="color: blue;">
+            get</span>; <span style="color: blue;">set</span>; }</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+            <span style="color: blue;">bool</span> WrapLines { <span style="color: blue;">
+            get</span>; <span style="color: blue;">set</span>; }</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+            <span style="color: blue;">bool</span> Displayed { <span style="color: blue;">
+            get</span>; <span style="color: blue;">set</span>; }</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+            <span style="color: blue;">int</span> Size { <span style="color: blue;">get</span>;
+            <span style="color: blue;">set</span>; }</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+    </div>
+<!--EndFragment-->
+<p>I can direct StructureMap to use these properties in a &lt;Plugin&gt; node for 
+    OtherGridColumn.</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue255;\red255\green255\blue255;\red163\green21\blue21;\red255\green0\blue0;\red0\green0\blue0;}??\fs20 \cf1 \tab &lt;\cf3 PluginFamily\cf1  \cf4 Type\cf1 =\cf0 "\cf1 StructureMap.Testing.Widget5.IGridColumn\cf0 "\cf1  \cf4 Assembly\cf1 =\cf0 "\cf1 StructureMap.Testing.Widget5\cf0 "\cf1  \cf4 DefaultKey\cf1 =\cf0 ""\cf1 &gt;\par ??\tab \tab &lt;\cf3 Source\cf1  \cf4 Type\cf1 =\cf0 "\cf1 XmlFile\cf0 "\cf1  \cf4 FilePath\cf1 =\cf0 "\cf1 GridColumnInstances.XML\cf0 "\cf1  \cf4 XPath\cf1 =\cf0 "\cf1 //GridColumns\cf0 "\cf1  \cf4 NodeName\cf1 =\cf0 "\cf1 GridColumn\cf0 "\cf1 /&gt;\par ??\tab \tab &lt;\cf3 Plugin\cf1  \cf4 Assembly\cf1 =\cf0 "\cf1 StructureMap.Testing.Widget5\cf0 "\cf1  \cf4 Type\cf1 =\cf0 "\cf1 StructureMap.Testing.Widget5.OtherGridColumn\cf0 "\cf1  \cf4 ConcreteKey\cf1 =\cf0 "\cf1 Other\cf0 "\cf1 &gt;\par ??\tab \tab \tab &lt;\cf3 Setter\cf1  \cf4 Name\cf1 =\cf0 "\cf1 ColumnName\cf0 "\cf1  /&gt;\par ??\tab \tab \tab &lt;\cf3 Setter\cf1  \cf4 Name\cf1 =\cf0 "\cf1 FontStyle\cf0 "\cf1  /&gt;\par ??\tab \tab \tab &lt;\cf3 Setter\cf1  \cf4 Name\cf1 =\cf0 "\cf1 Rules\cf0 "\cf1  /&gt;\par ??\tab \tab \tab &lt;\cf3 Setter\cf1  \cf4 Name\cf1 =\cf0 "\cf1 Widget\cf0 "\cf1  /&gt;\par ??\tab \tab \tab &lt;\cf3 Setter\cf1  \cf4 Name\cf1 =\cf0 "\cf1 WrapLines\cf0 "\cf1  /&gt;\par ??\tab \tab &lt;/\cf3 Plugin\cf1 &gt;\par ??\tab &lt;/\cf3 PluginFamily\cf1 &gt;}
+-->
+<div style="font-family: Courier New; font-size: 10pt; color: black; background: white;">
+    <p style="margin: 0px;">
+        <span style="color: blue;">&nbsp; &lt;</span><span style="color: #a31515;">PluginFamily</span><span 
+                style="color: blue;"> </span><span style="color: red;">Type</span><span 
+                style="color: blue;">=</span>&quot;<span style="color: blue;">StructureMap.Testing.Widget5.IGridColumn</span>&quot;<span 
+                style="color: blue;"> </span><span style="color: red;">Assembly</span><span 
+                style="color: blue;">=</span>&quot;<span style="color: blue;">StructureMap.Testing.Widget5</span>&quot;<span 
+                style="color: blue;"> </span><span style="color: red;">DefaultKey</span><span 
+                style="color: blue;">=</span>&quot;&quot;<span style="color: blue;">&gt;</span></p>
+        <p style="margin: 0px;">
+            <span style="color: blue;">&nbsp;&nbsp;&nbsp; &lt;</span><span 
+                style="color: #a31515;">Plugin</span><span style="color: blue;"> </span>
+            <span style="color: red;">Assembly</span><span style="color: blue;">=</span>&quot;<span 
+                style="color: blue;">StructureMap.Testing.Widget5</span>&quot;<span 
+                style="color: blue;"> </span><span style="color: red;">Type</span><span 
+                style="color: blue;">=</span>&quot;<span style="color: blue;">StructureMap.Testing.Widget5.OtherGridColumn</span>&quot;<span 
+                style="color: blue;"> </span><span style="color: red;">ConcreteKey</span><span 
+                style="color: blue;">=</span>&quot;<span style="color: blue;">Other</span>&quot;<span 
+                style="color: blue;">&gt;</span></p>
+        <p style="margin: 0px;">
+            <span style="color: blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</span><span 
+                style="color: #a31515;">Setter</span><span style="color: blue;"> </span>
+            <span style="color: red;">Name</span><span style="color: blue;">=</span>&quot;<span 
+                style="color: blue;">ColumnName</span>&quot;<span style="color: blue;"> /&gt;</span></p>
+        <p style="margin: 0px;">
+            <span style="color: blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</span><span 
+                style="color: #a31515;">Setter</span><span style="color: blue;"> </span>
+            <span style="color: red;">Name</span><span style="color: blue;">=</span>&quot;<span 
+                style="color: blue;">FontStyle</span>&quot;<span style="color: blue;"> /&gt;</span></p>
+        <p style="margin: 0px;">
+            <span style="color: blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</span><span 
+                style="color: #a31515;">Setter</span><span style="color: blue;"> </span>
+            <span style="color: red;">Name</span><span style="color: blue;">=</span>&quot;<span 
+                style="color: blue;">Rules</span>&quot;<span style="color: blue;"> /&gt;</span></p>
+        <p style="margin: 0px;">
+            <span style="color: blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</span><span 
+                style="color: #a31515;">Setter</span><span style="color: blue;"> </span>
+            <span style="color: red;">Name</span><span style="color: blue;">=</span>&quot;<span 
+                style="color: blue;">Widget</span>&quot;<span style="color: blue;"> /&gt;</span></p>
+        <p style="margin: 0px;">
+            <span style="color: blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</span><span 
+                style="color: #a31515;">Setter</span><span style="color: blue;"> </span>
+            <span style="color: red;">Name</span><span style="color: blue;">=</span>&quot;<span 
+                style="color: blue;">WrapLines</span>&quot;<span style="color: blue;"> /&gt;</span></p>
+        <p style="margin: 0px;">
+            <span style="color: blue;">&nbsp;&nbsp;&nbsp; &lt;/</span><span 
+                style="color: #a31515;">Plugin</span><span style="color: blue;">&gt;</span></p>
+        <p style="margin: 0px;">
+            <span style="color: blue;">&nbsp; &lt;/</span><span style="color: #a31515;">PluginFamily</span><span 
+                style="color: blue;">&gt;</span></p>
+    </div>
+<!--EndFragment-->
+<p>&nbsp;</p>
+        
+        <h4>Defining Setter Properties with the Fluent Interface</h4>
+        <p>This isn&#39;t possible today, except with a post processing method.&nbsp; This 
+            feature will be added in the next minor release.</p>
+	</body>
+</html>

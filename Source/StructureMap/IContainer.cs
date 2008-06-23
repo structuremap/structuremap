@@ -22,9 +22,8 @@ namespace StructureMap
 
         void Configure(Action<Registry> configure);
         void Inject<PLUGINTYPE>(PLUGINTYPE instance);
-        void InjectStub(Type pluginType, object stub);
-        void InjectStub<T>(T instance);
-        void InjectStub<T>(string name, T instance);
+        void Inject(Type pluginType, object stub);
+        void Inject<T>(string name, T instance);
 
         void SetDefault(Type pluginType, string instanceKey);
         void SetDefault(Type pluginType, Instance instance);

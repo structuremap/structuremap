@@ -17,10 +17,10 @@ namespace StructureMap.Configuration
         public Instance Read(XmlNode node, Type pluginType)
         {
             Type elementType = pluginType.GetElementType();
-            char concatenator = node.GetAttribute("Concatenator", ",").ToCharArray()[0];
+            char Delimiter = node.GetAttribute("Delimiter", ",").ToCharArray()[0];
 
             var valueString = node.GetAttribute("Values", string.Empty);
-            string[] rawValues = valueString.Split(new[]{concatenator}, StringSplitOptions.RemoveEmptyEntries);
+            string[] rawValues = valueString.Split(new[]{Delimiter}, StringSplitOptions.RemoveEmptyEntries);
 
 
             var array = Array.CreateInstance(elementType, rawValues.Length);

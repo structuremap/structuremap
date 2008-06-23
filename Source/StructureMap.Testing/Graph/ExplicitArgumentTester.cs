@@ -88,13 +88,13 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void Fill_in_argument_by_name()
         {
-            Container manager = new Container();
-            manager.SetDefault<IView, View>();
+            Container container = new Container();
+            container.SetDefault<IView, View>();
 
             Node theNode = new Node();
             Trade theTrade = new Trade();
 
-            Command command = manager
+            Command command = container
                 .With("node").EqualTo(theNode)
                 .With(theTrade)
                 .GetInstance<Command>();

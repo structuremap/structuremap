@@ -203,8 +203,8 @@ namespace StructureMap.Testing.Graph
             ColorRule red = new ColorRule("Red");
             ColorRule blue = new ColorRule("Blue");
 
-            container.InjectStub<Rule>("Red", red);
-            container.InjectStub<Rule>("Blue", blue);
+            container.Inject<Rule>("Red", red);
+            container.Inject<Rule>("Blue", blue);
 
             Assert.AreSame(red, container.GetInstance<Rule>("Red"));
             Assert.AreSame(blue, container.GetInstance<Rule>("Blue"));

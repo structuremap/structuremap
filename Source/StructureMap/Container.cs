@@ -101,12 +101,8 @@ namespace StructureMap
             return (T) FillDependencies(typeof (T));
         }
 
-        public void InjectStub<T>(T instance)
-        {
-            Inject<T>(instance);
-        }
 
-        public void InjectStub<T>(string name, T stub)
+        public void Inject<T>(string name, T stub)
         {
             LiteralInstance instance = new LiteralInstance(stub).WithName(name);
             _pipelineGraph.AddInstance<T>(instance);
@@ -231,7 +227,7 @@ namespace StructureMap
         /// </summary>
         /// <param name="pluginType"></param>
         /// <param name="stub"></param>
-        public void InjectStub(Type pluginType, object stub)
+        public void Inject(Type pluginType, object stub)
         {
             if (!CanBeCast(pluginType, stub.GetType()))
             {

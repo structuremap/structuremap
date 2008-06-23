@@ -1,0 +1,28 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+	<head>
+		<title>Scoping</title>
+
+	</head>
+	<body>
+	
+					<h1>Scoping</h1>
+	
+					<p>&nbsp;</p>
+					<ol>
+						<li>PerRequest - The default operation.&nbsp; A new 
+						instance will be created for each request.</li>
+						<li>Singleton - A single instance will be shared across 
+						all requests</li>
+						<li>ThreadLocal - A single instance will be created for 
+						each requesting thread.&nbsp; Caches the instances with 
+						ThreadLocalStorage.</li>
+						<li>HttpContext - A single instance will be created for 
+						each HttpContext.&nbsp; Caches the instances in the 
+						HttpContext.Items collection.</li>
+						<li>Hybrid - Uses HttpContext storage if it exists, 
+						otherwise uses ThreadLocal storage.</li>
+					</ol>
+						
+	</body>
+</html>

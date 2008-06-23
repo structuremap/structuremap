@@ -11,6 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\Docs\Default.htm = ..\Docs\Default.htm
 		..\Deploy.build = ..\Deploy.build
 		..\Docs\FAQ.htm = ..\Docs\FAQ.htm
+		..\Docs\Scoping.htm = ..\Docs\Scoping.htm
 		..\Docs\SingletonInjection.htm = ..\Docs\SingletonInjection.htm
 		..\Docs\structuremap.deployment.htm = ..\Docs\structuremap.deployment.htm
 		StructureMap.ndoc = StructureMap.ndoc

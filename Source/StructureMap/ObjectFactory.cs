@@ -46,47 +46,63 @@ namespace StructureMap
         }
 
         /// <summary>
-        /// Attempts to create a new instance of the requested type.  Automatically inserts the default
-        /// configured instance for each dependency in the StructureMap constructor function.
+        /// Creates an instance of the concrete type specified.  Dependencies are inferred from the constructor function of the type
+        /// and automatically "filled"
         /// </summary>
-        /// <param name="type"></param>
+        /// <param name="type">Must be a concrete type</param>
         /// <returns></returns>
         public static object FillDependencies(Type type)
         {
             return manager.FillDependencies(type);
         }
 
+        /// <summary>
+        /// Creates an instance of the concrete type specified.  Dependencies are inferred from the constructor function of the type
+        /// and automatically "filled"
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public static T FillDependencies<T>()
         {
             return (T) manager.FillDependencies(typeof (T));
         }
 
-        /// <summary>
-        /// Sets up StructureMap to return the object in the "stub" argument anytime
-        /// any instance of the PluginType is requested
-        /// </summary>
-        /// <param name="pluginType"></param>
-        /// <param name="stub"></param>
+        [Obsolete("Please use Inject(Type, object) instead.")]
         public static void InjectStub(Type pluginType, object stub)
         {
-            manager.InjectStub(pluginType, stub);
+            Inject(pluginType, stub);
         }
 
-        /// <summary>
-        /// Sets up StructureMap to return the object in the "stub" argument anytime
-        /// any instance of the PluginType is requested
-        /// </summary>
-        /// <param name="targetType"></param>
-        /// <param name="stub"></param>
+        public static void Inject(Type pluginType, object instance)
+        {
+            manager.Inject(pluginType, instance);
+        }
+
+        [Obsolete("Please use Inject() instead.")]
         public static void InjectStub<PLUGINTYPE>(PLUGINTYPE stub)
         {
-            manager.InjectStub(typeof (PLUGINTYPE), stub);
+            Inject<PLUGINTYPE>(stub);
         }
 
+        public static void Inject<PLUGINTYPE>(PLUGINTYPE instance)
+        {
+            manager.Inject<PLUGINTYPE>(instance);
+        }
+
+        public static void Inject<PLUGINTYPE>(string name, PLUGINTYPE instance)
+        {
+            manager.Inject<PLUGINTYPE>(name, instance);
+        }
+
+        [Obsolete("Please use Inject<PLUGINTYPE>(name) instead.")]
         public static void InjectStub<PLUGINTYPE>(string name, PLUGINTYPE stub)
         {
-            manager.InjectStub<PLUGINTYPE>(name, stub);
+            Inject<PLUGINTYPE>(name, stub);
         }
+
+
+
+
 
 
         public static string WhatDoIHave()
@@ -94,15 +110,11 @@ namespace StructureMap
             return manager.WhatDoIHave();
         }
 
-        /// <summary>
-        /// Sets the default instance of PLUGINTYPE to the object in the instance argument
-        /// </summary
-        /// <typeparam name="PLUGINTYPE"></typeparam>
-        /// <param name="instance"></param>
-        public static void Inject<PLUGINTYPE>(PLUGINTYPE instance)
+        public static void AssertConfigurationIsValid()
         {
-            manager.Inject<PLUGINTYPE>(instance);
+            manager.AssertConfigurationIsValid();
         }
+
 
         #region Container and setting defaults
 
@@ -125,10 +137,7 @@ namespace StructureMap
             }
         }
 
-        /// <summary>
-        /// Gets or sets the current named profile.  When set, overrides the default object instances
-        /// according to the configured profile in StructureMap.config
-        /// </summary>
+
         public static string Profile
         {
             set
@@ -144,10 +153,7 @@ namespace StructureMap
 
 
 
-        /// <summary>
-        /// Strictly used for testing scenarios
-        /// </summary>
-        /// <param name="manager"></param>
+
         internal static void ReplaceManager(IContainer container)
         {
             _manager = container;
@@ -174,9 +180,6 @@ namespace StructureMap
         }
 
 
-        /// <summary>
-        /// Fires when the ObjectFactory is refreshed
-        /// </summary>
         public static event Notify Refresh
         {
             add { _notify += value; }
@@ -184,10 +187,6 @@ namespace StructureMap
         }
 
 
-        /// <summary>
-        /// Restores all default instance settings and removes any Profile settings applied
-        /// at runtime
-        /// </summary>
         public static void ResetDefaults()
         {
             try
@@ -225,124 +224,109 @@ namespace StructureMap
 
 
         /// <summary>
-        /// Returns the default instance of the requested System.Type
+        /// Returns and/or constructs the default instance of the requested System.Type
         /// </summary>
-        /// <param name="TargetType"></param>
+        /// <param name="pluginType"></param>
         /// <returns></returns>
-        public static object GetInstance(Type TargetType)
+        public static object GetInstance(Type pluginType)
         {
-            return manager.GetInstance(TargetType);
+            return manager.GetInstance(pluginType);
         }
 
         /// <summary>
-        /// Returns the default instance of the requested System.Type
+        /// Returns and/or constructs the default instance of the requested System.Type
         /// </summary>
-        /// <typeparam name="TargetType"></typeparam>
+        /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <returns></returns>
-        public static TargetType GetInstance<TargetType>()
+        public static PLUGINTYPE GetInstance<PLUGINTYPE>()
         {
-            return (TargetType) manager.GetInstance(typeof (TargetType));
+            return (PLUGINTYPE) manager.GetInstance(typeof (PLUGINTYPE));
         }
 
-        /// <summary>
-        /// Builds an instance of the TargetType for the given InstanceMemento
-        /// </summary>
-        /// <param name="TargetType"></param>
-        /// <param name="instance"></param>
-        /// <returns></returns>
         public static object GetInstance(Type TargetType, Instance instance)
         {
             return manager.GetInstance(TargetType, instance);
         }
 
-        /// <summary>
-        /// Builds an instance of the TargetType for the given InstanceMemento
-        /// </summary>
-        /// <typeparam name="TargetType"></typeparam>
-        /// <param name="instance"></param>
-        /// <returns></returns>
         public static TargetType GetInstance<TargetType>(Instance instance)
         {
             return (TargetType) manager.GetInstance(typeof (TargetType), instance);
         }
 
         /// <summary>
-        /// Returns the named instance of the requested System.Type
+        /// Retrieves an instance of pluginType by name
         /// </summary>
-        /// <param name="TargetType"></param>
-        /// <param name="InstanceName"></param>
+        /// <param name="pluginType">The PluginType</param>
+        /// <param name="name">The instance name</param>
         /// <returns></returns>
-        public static object GetNamedInstance(Type TargetType, string InstanceName)
+        public static object GetNamedInstance(Type pluginType, string name)
         {
-            return manager.GetInstance(TargetType, InstanceName);
+            return manager.GetInstance(pluginType, name);
         }
 
         /// <summary>
-        /// Returns the named instance of the requested System.Type
+        /// Retrieves an instance of PLUGINTYPE by name
         /// </summary>
-        /// <typeparam name="TargetType"></typeparam>
-        /// <param name="InstanceName"></param>
+        /// <typeparam name="PLUGINTYPE">The PluginType</typeparam>
+        /// <param name="name">The instance name</param>
         /// <returns></returns>
-        public static TargetType GetNamedInstance<TargetType>(string InstanceName)
+        public static PLUGINTYPE GetNamedInstance<PLUGINTYPE>(string name)
         {
-            return (TargetType) manager.GetInstance(typeof (TargetType), InstanceName);
+            return (PLUGINTYPE) manager.GetInstance(typeof (PLUGINTYPE), name);
         }
 
-        /// <summary>
-        /// Sets the default instance of the TargetType
-        /// </summary>
-        /// <param name="TargetType"></param>
-        /// <param name="InstanceName"></param>
         public static void SetDefaultInstanceName(Type TargetType, string InstanceName)
         {
             manager.SetDefault(TargetType, InstanceName);
         }
 
-        /// <summary>
-        /// Sets the default instance of the TargetType
-        /// </summary>
-        /// <typeparam name="TargetType"></typeparam>
-        /// <param name="InstanceName"></param>
         public static void SetDefaultInstanceName<TargetType>(string InstanceName)
         {
             manager.SetDefault(typeof (TargetType), InstanceName);
         }
 
-
         /// <summary>
-        /// Retrieves a list of all of the configured instances for a particular type
+        /// Retrieves all instances of the pluginType
         /// </summary>
-        /// <param name="targetType"></param>
+        /// <param name="pluginType"></param>
         /// <returns></returns>
-        public static IList GetAllInstances(Type targetType)
+        public static IList GetAllInstances(Type pluginType)
         {
-            return manager.GetAllInstances(targetType);
+            return manager.GetAllInstances(pluginType);
         }
 
         /// <summary>
-        /// Retrieves a list of all of the configured instances for a particular type
+        /// Retrieves all instances of the PLUGINTYPE
         /// </summary>
-        /// <typeparam name="TargetType"></typeparam>
+        /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <returns></returns>
-        public static IList<TargetType> GetAllInstances<TargetType>()
+        public static IList<PLUGINTYPE> GetAllInstances<PLUGINTYPE>()
         {
-            return manager.GetAllInstances<TargetType>();
+            return manager.GetAllInstances<PLUGINTYPE>();
         }
 
+        /// <summary>
+        /// Pass in an explicit argument of Type T
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="arg"></param>
+        /// <returns></returns>
         public static ExplicitArgsExpression With<T>(T arg)
         {
             return manager.With(arg);
         }
 
+        /// <summary>
+        /// Pass in an explicit argument by name
+        /// </summary>
+        /// <param name="argName"></param>
+        /// <returns></returns>
         public static IExplicitProperty With(string argName)
         {
             return manager.With(argName);
         }
 
-        public static void AssertConfigurationIsValid()
-        {
-            manager.AssertConfigurationIsValid();
-        }
+
     }
 
 
