@@ -86,7 +86,7 @@ namespace StructureMap.Diagnostics
 
         
 
-        void IPipelineGraphVisitor.PluginType(Type pluginType, Instance defaultInstance)
+        void IPipelineGraphVisitor.PluginType(Type pluginType, Instance defaultInstance, IBuildPolicy policy)
         {
             // don't care
         }

@@ -44,8 +44,11 @@ namespace StructureMap.Graph
 
             if (IsConcrete(pluginType))
             {
-                Plugin plugin = new Plugin(pluginType, Plugin.DEFAULT);
-                Plugins.Add(plugin);
+                Plugin plugin = Plugin.CreateForConcreteType(pluginType);
+                if (plugin != null)
+                {
+                    Plugins.Add(plugin);
+                }
             }
         }
 

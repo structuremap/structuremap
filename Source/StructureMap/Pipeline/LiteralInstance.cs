@@ -43,5 +43,10 @@ namespace StructureMap.Pipeline
         {
             return "Object:  " + _object.ToString();
         }
+
+        public override string ToString()
+        {
+            return string.Format("LiteralInstance: {0}", _object);
+        }
     }
 }

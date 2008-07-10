@@ -5,6 +5,8 @@ namespace StructureMap.Pipeline
 {
     public class HttpContextBuildPolicy : CacheInterceptor
     {
+        private string _prefix = Guid.NewGuid().ToString();
+
         public static bool HasContext()
         {
             return HttpContext.Current != null;
@@ -25,9 +27,9 @@ namespace StructureMap.Pipeline
             return HttpContext.Current.Items[getKey(instanceKey, pluginType)];
         }
 
-        private static string getKey(string instanceKey, Type pluginType)
+        private string getKey(string instanceKey, Type pluginType)
         {
-            return string.Format("{0}:{1}", pluginType.AssemblyQualifiedName, instanceKey);
+            return string.Format("{0}:{1}:{2}", pluginType.AssemblyQualifiedName, instanceKey, _prefix);
         }
 
         protected override CacheInterceptor clone()

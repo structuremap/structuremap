@@ -29,6 +29,14 @@ namespace StructureMap.Graph
             {
                 if (!Registry.IsPublicRegistry(type)) return;
 
+                foreach (var previous in pluginGraph.Registries)
+                {
+                    if (previous.GetType().Equals(type))
+                    {
+                        return;
+                    }
+                }
+
                 Registry registry = (Registry) Activator.CreateInstance(type);
                 registry.ConfigurePluginGraph(pluginGraph);
             });

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
@@ -40,6 +41,8 @@ namespace StructureMap.Testing.Graph
         {
             Container container = new Container(registry => registry.ScanAssemblies().IncludeTheCallingAssembly()
                                                                 .With(new DefaultConventionScanner()));
+
+            Debug.WriteLine(container.WhatDoIHave());
 
             Assert.IsInstanceOfType(typeof(Convention), container.GetInstance<IConvention>());
         }

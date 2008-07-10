@@ -8,7 +8,7 @@ using StructureMap.Attributes;
 
 namespace StructureMap.Testing
 {
-    /*
+    
     public interface IDataProvider{}
 
     public class Repository
@@ -208,17 +208,36 @@ namespace StructureMap.Testing
             }
         }
     }
-    */
 
-    //public class InjectionClass
-    //{
-    //    public InjectionClass()
-    //    {
-    //        ApplicationShell shell = new ApplicationShell();
-    //        Application.Run(shell);
 
-    //        ObjectFactory.Inject<IApplic>();
+    public class QueryController
+    {
+        private IQueryToolBar _toolBar;
 
-    //    }
-    //}
+        public QueryController(IQueryToolBar toolBar)
+        {
+            _toolBar = toolBar;
+        }
+    }
+
+
+    public class InjectionClass
+    {
+        public InjectionClass()
+        {
+            // Familiar stuff for the average WinForms or WPF developer
+            // Create the main form
+            ApplicationShell shell = new ApplicationShell();
+
+            // Put the main form, and some of its children into StructureMap
+            // where other Controllers and Commands can get to them
+            // without being coupled to the main form
+            ObjectFactory.Inject<IApplicationShell>(shell);
+            ObjectFactory.Inject<IQueryToolBar>(shell.QueryToolBar);
+            ObjectFactory.Inject<IExplorerPane>(shell.ExplorerPane);
+
+
+            Application.Run(shell);
+        }
+    }
 }

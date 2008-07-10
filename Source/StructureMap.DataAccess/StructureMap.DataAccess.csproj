@@ -11,8 +11,7 @@
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
     <AssemblyName>StructureMap.DataAccess</AssemblyName>
-    <AssemblyOriginatorKeyFile>
-    </AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>structuremap.snk</AssemblyOriginatorKeyFile>
     <DefaultClientScript>JScript</DefaultClientScript>
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
@@ -27,6 +26,7 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>2.0</OldToolsVersion>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -219,6 +219,7 @@
     <Compile Include="MSSQL\MSSQLDatabaseEngine.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Oracle\OracleDatabaseEngine.cs" />
     <Compile Include="ParameterCollection.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -302,8 +303,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="structuremap.snk" />
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="Exceptions\" />
-    <Folder Include="Oracle\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

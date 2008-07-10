@@ -144,5 +144,11 @@ namespace StructureMap
             _instanceBuilders.Add(family.Plugins);
             family.EachInstance(instance => _instances.Fill(instance.Name, instance));
         }
+
+        public void AcceptVisitor(IPipelineGraphVisitor visitor, Instance defaultInstance)
+        {
+            visitor.PluginType(PluginType, defaultInstance, _policy);
+            ForEachInstance(i => visitor.Instance(PluginType, i));
+        }
     }
 }

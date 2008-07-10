@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using StructureMap.Configuration.DSL;
+using StructureMap.Pipeline;
 
 namespace StructureMap.Graph
 {
@@ -19,7 +20,7 @@ namespace StructureMap.Graph
             Type pluginType = FindPluginType(type);
             if (pluginType != null)
             {
-                registry.ForRequestedType(pluginType).TheDefaultIsConcreteType(type);
+                registry.ForRequestedType(pluginType).AddInstance(new ConfiguredInstance(type));
             }
         }
 

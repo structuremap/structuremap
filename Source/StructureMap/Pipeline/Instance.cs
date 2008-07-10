@@ -33,6 +33,28 @@ namespace StructureMap.Pipeline
             set { _name = value; }
         }
 
+        public virtual object Build(Type pluginType, IBuildSession session)
+        {
+            object rawValue = createRawObject(pluginType, session);
+            return applyInterception(rawValue, pluginType);
+        }
+
+        private object createRawObject(Type pluginType, IBuildSession session)
+        {
+            try
+            {
+                return build(pluginType, session);
+            }
+            catch (StructureMapException ex)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                throw new StructureMapException(400, ex);
+            }
+        }
+
         public InstanceInterceptor Interceptor
         {
             get { return _interceptor; }
@@ -80,27 +102,7 @@ namespace StructureMap.Pipeline
             }
         }
 
-        public virtual object Build(Type pluginType, IBuildSession session)
-        {
-            object rawValue = createRawObject(pluginType, session);
-            return applyInterception(rawValue, pluginType);
-        }
 
-        private object createRawObject(Type pluginType, IBuildSession session)
-        {
-            try
-            {
-                return build(pluginType, session);
-            }
-            catch (StructureMapException ex)
-            {
-                throw;
-            }
-            catch (Exception ex)
-            {
-                throw new StructureMapException(400, ex);
-            }
-        }
 
         private object applyInterception(object rawValue, Type pluginType)
         {

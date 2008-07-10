@@ -53,7 +53,7 @@ namespace StructureMap
         /// <returns></returns>
         public static object FillDependencies(Type type)
         {
-            return manager.FillDependencies(type);
+            return container.FillDependencies(type);
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace StructureMap
         /// <returns></returns>
         public static T FillDependencies<T>()
         {
-            return (T) manager.FillDependencies(typeof (T));
+            return (T) container.FillDependencies(typeof (T));
         }
 
         [Obsolete("Please use Inject(Type, object) instead.")]
@@ -75,7 +75,7 @@ namespace StructureMap
 
         public static void Inject(Type pluginType, object instance)
         {
-            manager.Inject(pluginType, instance);
+            container.Inject(pluginType, instance);
         }
 
         [Obsolete("Please use Inject() instead.")]
@@ -86,12 +86,12 @@ namespace StructureMap
 
         public static void Inject<PLUGINTYPE>(PLUGINTYPE instance)
         {
-            manager.Inject<PLUGINTYPE>(instance);
+            container.Inject<PLUGINTYPE>(instance);
         }
 
         public static void Inject<PLUGINTYPE>(string name, PLUGINTYPE instance)
         {
-            manager.Inject<PLUGINTYPE>(name, instance);
+            container.Inject<PLUGINTYPE>(name, instance);
         }
 
         [Obsolete("Please use Inject<PLUGINTYPE>(name) instead.")]
@@ -107,18 +107,18 @@ namespace StructureMap
 
         public static string WhatDoIHave()
         {
-            return manager.WhatDoIHave();
+            return container.WhatDoIHave();
         }
 
         public static void AssertConfigurationIsValid()
         {
-            manager.AssertConfigurationIsValid();
+            container.AssertConfigurationIsValid();
         }
 
 
         #region Container and setting defaults
 
-        private static IContainer manager
+        private static IContainer container
         {
             get
             {
@@ -136,6 +136,7 @@ namespace StructureMap
                 return _manager;
             }
         }
+         
 
 
         public static string Profile
@@ -145,7 +146,7 @@ namespace StructureMap
                 lock (_lockObject)
                 {
                     _profile = value;
-                    manager.SetDefaultsToProfile(_profile);
+                    container.SetDefaultsToProfile(_profile);
                 }
             }
             get { return _profile; }
@@ -161,22 +162,22 @@ namespace StructureMap
 
         public static void Configure(Action<Registry> configure)
         {
-            manager.Configure(configure);
+            container.Configure(configure);
         }
 
         public static void SetDefault(Type pluginType, Instance instance)
         {
-            manager.SetDefault(pluginType, instance);
+            container.SetDefault(pluginType, instance);
         }
         
         public static void SetDefault<PLUGINTYPE>(Instance instance)
         {
-            manager.SetDefault<PLUGINTYPE>(instance);
+            container.SetDefault<PLUGINTYPE>(instance);
         }
 
         public static void SetDefault<PLUGINTYPE, CONCRETETYPE>() where CONCRETETYPE : PLUGINTYPE
         {
-            manager.SetDefault<PLUGINTYPE, CONCRETETYPE>();
+            container.SetDefault<PLUGINTYPE, CONCRETETYPE>();
         }
 
 
@@ -230,7 +231,7 @@ namespace StructureMap
         /// <returns></returns>
         public static object GetInstance(Type pluginType)
         {
-            return manager.GetInstance(pluginType);
+            return container.GetInstance(pluginType);
         }
 
         /// <summary>
@@ -240,17 +241,17 @@ namespace StructureMap
         /// <returns></returns>
         public static PLUGINTYPE GetInstance<PLUGINTYPE>()
         {
-            return (PLUGINTYPE) manager.GetInstance(typeof (PLUGINTYPE));
+            return (PLUGINTYPE) container.GetInstance(typeof (PLUGINTYPE));
         }
 
         public static object GetInstance(Type TargetType, Instance instance)
         {
-            return manager.GetInstance(TargetType, instance);
+            return container.GetInstance(TargetType, instance);
         }
 
         public static TargetType GetInstance<TargetType>(Instance instance)
         {
-            return (TargetType) manager.GetInstance(typeof (TargetType), instance);
+            return (TargetType) container.GetInstance(typeof (TargetType), instance);
         }
 
         /// <summary>
@@ -261,7 +262,7 @@ namespace StructureMap
         /// <returns></returns>
         public static object GetNamedInstance(Type pluginType, string name)
         {
-            return manager.GetInstance(pluginType, name);
+            return container.GetInstance(pluginType, name);
         }
 
         /// <summary>
@@ -272,17 +273,17 @@ namespace StructureMap
         /// <returns></returns>
         public static PLUGINTYPE GetNamedInstance<PLUGINTYPE>(string name)
         {
-            return (PLUGINTYPE) manager.GetInstance(typeof (PLUGINTYPE), name);
+            return (PLUGINTYPE) container.GetInstance(typeof (PLUGINTYPE), name);
         }
 
         public static void SetDefaultInstanceName(Type TargetType, string InstanceName)
         {
-            manager.SetDefault(TargetType, InstanceName);
+            container.SetDefault(TargetType, InstanceName);
         }
 
         public static void SetDefaultInstanceName<TargetType>(string InstanceName)
         {
-            manager.SetDefault(typeof (TargetType), InstanceName);
+            container.SetDefault(typeof (TargetType), InstanceName);
         }
 
         /// <summary>
@@ -292,7 +293,7 @@ namespace StructureMap
         /// <returns></returns>
         public static IList GetAllInstances(Type pluginType)
         {
-            return manager.GetAllInstances(pluginType);
+            return container.GetAllInstances(pluginType);
         }
 
         /// <summary>
@@ -302,7 +303,7 @@ namespace StructureMap
         /// <returns></returns>
         public static IList<PLUGINTYPE> GetAllInstances<PLUGINTYPE>()
         {
-            return manager.GetAllInstances<PLUGINTYPE>();
+            return container.GetAllInstances<PLUGINTYPE>();
         }
 
         /// <summary>
@@ -313,7 +314,7 @@ namespace StructureMap
         /// <returns></returns>
         public static ExplicitArgsExpression With<T>(T arg)
         {
-            return manager.With(arg);
+            return container.With(arg);
         }
 
         /// <summary>
@@ -323,7 +324,7 @@ namespace StructureMap
         /// <returns></returns>
         public static IExplicitProperty With(string argName)
         {
-            return manager.With(argName);
+            return container.With(argName);
         }
 
 

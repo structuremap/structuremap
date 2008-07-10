@@ -15,4 +15,6 @@ namespace StructureMap.DataAccess
         IDataParameter CreateParameter(string parameterName, DbType dbType, bool isNullable);
         string GetParameterName(string logicalName);
     }
+
+    
 }

@@ -80,7 +80,7 @@ namespace StructureMap.Testing.Graph
             Node theNode = new Node();
             args.SetArg("node", theNode);
 
-            IConfiguredInstance instance = new ExplicitInstance<Command>(args, null);
+            IConfiguredInstance instance = new ExplicitInstance(typeof(Command), args, null);
 
             Assert.AreSame(theNode, instance.GetChild("node", typeof (Node), new StubBuildSession()));
         }

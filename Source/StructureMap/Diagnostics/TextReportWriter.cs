@@ -26,6 +26,11 @@ namespace StructureMap.Diagnostics
             _lines.Add(new TextLine(contents));
         }
 
+        public void AddContent(string contents)
+        {
+            _lines.Add(new PlainLine(contents));
+        }
+
         public void Write(StringWriter writer)
         {
             CharacterWidth[] widths = CharacterWidth.For(_columnCount);
@@ -66,6 +71,28 @@ namespace StructureMap.Diagnostics
         public void DumpToDebug()
         {
             Debug.WriteLine(Write());
+        }
+
+
+    }
+
+    internal class PlainLine : Line
+    {
+        public string Contents { get; set; }
+
+        public PlainLine(string contents)
+        {
+            Contents = contents;
+        }
+
+        public void OverwriteCounts(CharacterWidth[] widths)
+        {
+            // no-op
+        }
+
+        public void Write(TextWriter writer, CharacterWidth[] widths)
+        {
+            writer.WriteLine(Contents);
         }
     }
 }

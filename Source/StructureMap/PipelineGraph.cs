@@ -10,7 +10,7 @@ namespace StructureMap
 
     public interface IPipelineGraphVisitor
     {
-        void PluginType(Type pluginType, Instance defaultInstance);
+        void PluginType(Type pluginType, Instance defaultInstance, IBuildPolicy policy);
         void Instance(Type pluginType, Instance instance);
     }
 
@@ -86,8 +86,7 @@ namespace StructureMap
                 Type pluginType = pair.Value.PluginType;
                 Instance defaultInstance = _profileManager.GetDefault(pluginType);
 
-                visitor.PluginType(pluginType, defaultInstance);
-                pair.Value.ForEachInstance(instance => visitor.Instance(pluginType, instance));
+                pair.Value.AcceptVisitor(visitor, defaultInstance);
             }
 
 
@@ -106,7 +105,10 @@ namespace StructureMap
         {
             internal List<Instance> Instances = new List<Instance>();
 
-            public void PluginType(Type pluginType, Instance defaultInstance){}
+            public void PluginType(Type pluginType, Instance defaultInstance, IBuildPolicy policy)
+            {
+                // don't care
+            }
 
             public void Instance(Type pluginType, Instance instance)
             {

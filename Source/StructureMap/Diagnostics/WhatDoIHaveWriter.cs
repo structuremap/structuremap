@@ -61,7 +61,7 @@ namespace StructureMap.Diagnostics
             writer.WriteLine();
         }
 
-        void IPipelineGraphVisitor.PluginType(Type pluginType, Instance defaultInstance)
+        void IPipelineGraphVisitor.PluginType(Type pluginType, Instance defaultInstance, IBuildPolicy policy)
         {
             _writer.AddDivider('-');
             string[] contents = new string[]{TypePath.GetAssemblyQualifiedName(pluginType), string.Empty, string.Empty};
@@ -73,6 +73,8 @@ namespace StructureMap.Diagnostics
             }
 
             _writer.AddText(contents);
+
+            _writer.AddContent("Built by:  " + policy.ToString());
         }
 
         private void setContents(string[] contents, Instance instance)

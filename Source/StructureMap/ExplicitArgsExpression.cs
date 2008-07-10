@@ -1,3 +1,4 @@
+using System;
 using StructureMap.Pipeline;
 
 namespace StructureMap
@@ -59,6 +60,16 @@ namespace StructureMap
         public T GetInstance<T>()
         {
             return _manager.GetInstance<T>(_args);
+        }
+
+        /// <summary>
+        /// Create an instance using the explicit arguments
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public object GetInstance(Type type)
+        {
+            return _manager.GetInstance(type, _args);
         }
     }
 }

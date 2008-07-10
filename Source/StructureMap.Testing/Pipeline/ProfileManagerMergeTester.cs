@@ -10,7 +10,7 @@ namespace StructureMap.Testing.Pipeline
         private const string PROFILE = "profile";
 
         [Test]
-        public void Import_a_default_for_a_profile_in_destination_does_not_override_existing_default_in_that_profile()
+        public void Import_a_default_for_a_profile_in_destination_will_override_existing_default_in_that_profile()
         {
             ProfileManager source = new ProfileManager();
             ConfiguredInstance sourceInstance = new ConfiguredInstance(typeof (AWidget));
@@ -24,7 +24,7 @@ namespace StructureMap.Testing.Pipeline
             destination.ImportFrom(source);
 
 
-            Assert.AreSame(destinationInstance, destination.GetDefault(typeof (IWidget), PROFILE));
+            Assert.AreSame(sourceInstance, destination.GetDefault(typeof(IWidget), PROFILE));
         }
 
         [Test]

@@ -99,6 +99,7 @@ namespace StructureMap
         public static PluginGraph GetPluginGraph()
         {
             ConfigurationParser[] parsers = _parserBuilder.GetParsers();
+            
             PluginGraphBuilder pluginGraphBuilder = new PluginGraphBuilder(parsers, _registries.ToArray(), _log);
             return pluginGraphBuilder.Build();
         }

@@ -62,7 +62,7 @@
     <Content Include="BestPractices.htm" />
     <Content Include="ChangingDefaultsAtRuntime.htm" />
     <Content Include="CompositeConfiguration.htm" />
-    <Content Include="Concepts.htm" />
+    <Content Include="Glossary.htm" />
     <Content Include="ConcreteTypes.htm" />
     <Content Include="ConfigurationArchitecture.htm" />
     <Content Include="ConfiguringStructureMap.htm" />

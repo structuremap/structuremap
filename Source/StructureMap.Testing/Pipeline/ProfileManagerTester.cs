@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
+using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Pipeline
 {
@@ -65,6 +66,9 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void CopyDefaults()
         {
+            _manager.DefaultProfileName = string.Empty;
+            _manager.CurrentProfile = string.Empty;
+
             addDefaultToProfile<IBuildPolicy>("TheProfile", "Profile");
             addDefaultToProfile<IBuildPolicy>("TheProfile2", "Profile2");
             _manager.SetDefault(typeof (IBuildPolicy), new ReferencedInstance("TheDefault"));
@@ -268,6 +272,25 @@ namespace StructureMap.Testing.Pipeline
 
             assertDefaultInstanceNameIs<IBuildPolicy>("Profile");
             assertDefaultInstanceNameIs<ISomething>("Family");
+        }
+
+        [Test]
+        public void Can_only_add_default_once_to_the_default_profile()
+        {
+            LiteralInstance i1 = new LiteralInstance(1);
+            LiteralInstance i2 = new LiteralInstance(2);
+
+            ProfileManager manager = new ProfileManager();
+
+            manager.SetDefault(typeof(IGateway), i1);
+            manager.GetDefault(typeof(IGateway)).ShouldBeTheSameAs(i1);
+
+            manager.SetDefault(typeof(IGateway), i2);
+            manager.GetDefault(typeof(IGateway)).ShouldBeTheSameAs(i2);
+
+            manager.CurrentProfile = string.Empty;
+
+            manager.GetDefault(typeof(IGateway)).ShouldBeTheSameAs(i1);
         }
     }
 }

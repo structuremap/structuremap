@@ -14,7 +14,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [SetUp]
         public void SetUp()
         {
-            manager = new Container(registry =>
+            container = new Container(registry =>
             {
                 registry.ScanAssemblies().IncludeAssemblyContainingType<ColorWidget>();
 
@@ -43,19 +43,19 @@ namespace StructureMap.Testing.Configuration.DSL
 
         #endregion
 
-        private IContainer manager;
+        private IContainer container;
 
         [Test]
         public void AddAnInstanceWithANameAndAPropertySpecifyingConcreteKey()
         {
-            var widget = (ColorWidget) manager.GetInstance<IWidget>("Purple");
+            var widget = (ColorWidget) container.GetInstance<IWidget>("Purple");
             Assert.AreEqual("Purple", widget.Color);
         }
 
         [Test]
         public void AddAnInstanceWithANameAndAPropertySpecifyingConcreteType()
         {
-            var widget = (ColorWidget) manager.GetInstance<IWidget>("DarkGreen");
+            var widget = (ColorWidget) container.GetInstance<IWidget>("DarkGreen");
             Assert.AreEqual("DarkGreen", widget.Color);
         }
 
@@ -74,24 +74,43 @@ namespace StructureMap.Testing.Configuration.DSL
         public void CreateAnInstancePullAPropertyFromTheApplicationConfig()
         {
             Assert.AreEqual("Blue", ConfigurationManager.AppSettings["Color"]);
-            var widget = (ColorWidget) manager.GetInstance<IWidget>("AppSetting");
+            var widget = (ColorWidget) container.GetInstance<IWidget>("AppSetting");
             Assert.AreEqual("Blue", widget.Color);
         }
 
         [Test]
         public void SimpleCaseWithNamedInstance()
         {
-            manager = new Container(
+            container = new Container(
                 registry => registry.AddInstanceOf<IWidget>().UsingConcreteType<AWidget>().WithName("MyInstance"));
 
-            var widget = (AWidget) manager.GetInstance<IWidget>("MyInstance");
+            var widget = (AWidget) container.GetInstance<IWidget>("MyInstance");
             Assert.IsNotNull(widget);
+        }
+
+        [Test]
+        public void temp()
+        {
+            IContainer container = new Container(registry =>
+            {
+                registry.AddInstanceOf<Rule>().UsingConcreteType<ARule>().WithName("Alias");
+
+                // Add an instance by specifying the ConcreteKey
+                registry.AddInstanceOf<IWidget>()
+                    .UsingConcreteType<ColorWidget>()
+                    .WithName("Purple")
+                    .WithProperty("Color").EqualTo("Purple");
+
+                // Specify a new Instance, override a dependency with a named instance
+                registry.AddInstanceOf<Rule>().UsingConcreteType<WidgetRule>().WithName("RuleThatUsesMyInstance")
+                    .Child<IWidget>("widget").IsNamedInstance("Purple");
+            });
         }
 
         [Test]
         public void SpecifyANewInstanceOverrideADependencyWithANamedInstance()
         {
-            manager = new Container(registry =>
+            container = new Container(registry =>
             {
                 registry.AddInstanceOf<Rule>().UsingConcreteType<ARule>().WithName("Alias");
 
@@ -106,9 +125,9 @@ namespace StructureMap.Testing.Configuration.DSL
                     .Child<IWidget>("widget").IsNamedInstance("Purple");
             });
 
-            Assert.IsInstanceOfType(typeof (ARule), manager.GetInstance<Rule>("Alias"));
+            Assert.IsInstanceOfType(typeof (ARule), container.GetInstance<Rule>("Alias"));
 
-            var rule = (WidgetRule) manager.GetInstance<Rule>("RuleThatUsesMyInstance");
+            var rule = (WidgetRule) container.GetInstance<Rule>("RuleThatUsesMyInstance");
             var widget = (ColorWidget) rule.Widget;
             Assert.AreEqual("Purple", widget.Color);
         }
@@ -141,13 +160,13 @@ namespace StructureMap.Testing.Configuration.DSL
             var theWidget = new CloneableWidget("Jeremy");
 
 
-            manager =
+            container =
                 new Container(
                     registry => registry.AddPrototypeInstanceOf<IWidget>(theWidget).WithName("Jeremy"));
 
-            var widget1 = (CloneableWidget) manager.GetInstance<IWidget>("Jeremy");
-            var widget2 = (CloneableWidget) manager.GetInstance<IWidget>("Jeremy");
-            var widget3 = (CloneableWidget) manager.GetInstance<IWidget>("Jeremy");
+            var widget1 = (CloneableWidget) container.GetInstance<IWidget>("Jeremy");
+            var widget2 = (CloneableWidget) container.GetInstance<IWidget>("Jeremy");
+            var widget3 = (CloneableWidget) container.GetInstance<IWidget>("Jeremy");
 
             Assert.AreEqual("Jeremy", widget1.Name);
             Assert.AreEqual("Jeremy", widget2.Name);
@@ -165,12 +184,12 @@ namespace StructureMap.Testing.Configuration.DSL
             // Return the specific instance when an IWidget named "Julia" is requested
             var julia = new CloneableWidget("Julia");
 
-            manager =
+            container =
                 new Container(registry => registry.AddInstanceOf<IWidget>(julia).WithName("Julia"));
 
-            var widget1 = (CloneableWidget) manager.GetInstance<IWidget>("Julia");
-            var widget2 = (CloneableWidget) manager.GetInstance<IWidget>("Julia");
-            var widget3 = (CloneableWidget) manager.GetInstance<IWidget>("Julia");
+            var widget1 = (CloneableWidget) container.GetInstance<IWidget>("Julia");
+            var widget2 = (CloneableWidget) container.GetInstance<IWidget>("Julia");
+            var widget3 = (CloneableWidget) container.GetInstance<IWidget>("Julia");
 
             Assert.AreSame(julia, widget1);
             Assert.AreSame(julia, widget2);

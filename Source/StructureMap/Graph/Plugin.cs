@@ -123,5 +123,17 @@ namespace StructureMap.Graph
         {
             _setters.Visit(arguments);
         }
+
+        public bool IsValid()
+        {
+            return _constructor.IsValid();
+        }
+
+        public static Plugin CreateForConcreteType(Type type)
+        {
+            if (!Constructor.HasConstructors(type)) return null;
+
+            return new Plugin(type, DEFAULT);
+        }
     }
 }

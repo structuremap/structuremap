@@ -23,5 +23,6 @@ namespace StructureMap
         InstanceBuilder FindBuilderByConcreteKey(string concreteKey);
         void ForEachInstance(Action<Instance> action);
         void ImportFrom(PluginFamily family);
+        void AcceptVisitor(IPipelineGraphVisitor visitor, Instance defaultInstance);
     }
 }

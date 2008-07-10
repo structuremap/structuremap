@@ -43,6 +43,11 @@ namespace StructureMap.Graph
             return returnValue;
         }
 
+        public static bool HasConstructors(Type pluggedType)
+        {
+            return GetGreediestConstructor(pluggedType) != null;
+        }
+
         public static ConstructorInfo GetGreediestConstructor(Type pluggedType)
         {
             ConstructorInfo returnValue = null;
@@ -111,6 +116,11 @@ namespace StructureMap.Graph
         public bool HasArguments()
         {
             return _ctor.GetParameters().Length > 0;
+        }
+
+        public bool IsValid()
+        {
+            return _ctor != null;
         }
     }
 }

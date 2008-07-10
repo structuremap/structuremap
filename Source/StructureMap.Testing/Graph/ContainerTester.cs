@@ -242,6 +242,8 @@ namespace StructureMap.Testing.Graph
             manager.GetInstance<IService>();
         }
 
-        
+
     }
+
+
 }

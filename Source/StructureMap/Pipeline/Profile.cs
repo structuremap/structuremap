@@ -63,6 +63,14 @@ namespace StructureMap.Pipeline
             }
         }
 
+        public void Merge(Profile destination)
+        {
+            foreach (KeyValuePair<Type, Instance> pair in _instances)
+            {
+                destination.SetDefault(pair.Key, pair.Value);
+            }
+        }
+
         public void FindMasterInstances(PluginGraph graph)
         {
             Dictionary<Type, Instance> master = new Dictionary<Type, Instance>();
@@ -92,5 +100,7 @@ namespace StructureMap.Pipeline
                 _instances.Add(destinationType, instance);
             }
         }
+
+
     }
 }

@@ -31,5 +31,22 @@ namespace StructureMap.Pipeline
         }
 
         #endregion
+
+        public bool Equals(BuildPolicy obj)
+        {
+            return !ReferenceEquals(null, obj);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj is BuildPolicy;
+        }
+
+        public override int GetHashCode()
+        {
+            return 0;
+        }
     }
 }

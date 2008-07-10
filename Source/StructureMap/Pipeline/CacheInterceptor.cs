@@ -48,5 +48,10 @@ namespace StructureMap.Pipeline
         protected abstract void storeInCache(string instanceKey, Type pluginType, object instance);
         protected abstract bool isCached(string instanceKey, Type pluginType);
         protected abstract object retrieveFromCache(string instanceKey, Type pluginType);
+
+        public override string ToString()
+        {
+            return GetType().FullName + " / " + _innerPolicy.ToString();
+        }
     }
 }

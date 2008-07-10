@@ -82,8 +82,17 @@ namespace StructureMap
         {
             Instance defaultInstance = _pipelineGraph.GetDefault(typeof (PLUGINTYPE));
 
-            ExplicitInstance<PLUGINTYPE> instance = new ExplicitInstance<PLUGINTYPE>(args, defaultInstance);
+            ExplicitInstance instance = new ExplicitInstance(typeof(PLUGINTYPE), args, defaultInstance);
             return GetInstance<PLUGINTYPE>(instance);
+        }
+
+        public object GetInstance(Type type, ExplicitArguments args)
+        {
+            Instance defaultInstance = _pipelineGraph.GetDefault(type);
+
+            Instance instance = new ExplicitInstance(type, args, defaultInstance);
+
+            return GetInstance(type, instance);
         }
 
         public void Inject<PLUGINTYPE>(PLUGINTYPE instance)
@@ -287,6 +296,8 @@ namespace StructureMap
                 throw new StructureMapConfigurationException(session.BuildErrorMessages());
             }
         }
+
+
 
         #endregion
 

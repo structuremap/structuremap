@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
+using StructureMap.Configuration.DSL;
 using StructureMap.Diagnostics;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
@@ -21,6 +23,8 @@ namespace StructureMap.Graph
         private readonly ProfileManager _profileManager = new ProfileManager();
         private readonly bool _useExternalRegistries = true;
         private bool _sealed = false;
+        private List<Registry> _registries = new List<Registry>();
+        
 
         /// <summary>
         /// Default constructor
@@ -35,6 +39,11 @@ namespace StructureMap.Graph
         public PluginGraph(bool useExternalRegistries) : this()
         {
             _useExternalRegistries = useExternalRegistries;
+        }
+
+        public List<Registry> Registries
+        {
+            get { return _registries; }
         }
 
         public AssemblyScanner Assemblies

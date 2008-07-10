@@ -46,6 +46,8 @@ namespace StructureMap.Pipeline
         {
             foreach (KeyValuePair<string, object> arg in _args)
             {
+                if (arg.Value == null) continue;
+
                 instance.SetProperty(arg.Key, arg.Value.ToString());
                 instance.Child(arg.Key).Is(arg.Value);
             }
@@ -62,11 +64,11 @@ namespace StructureMap.Pipeline
         }
     }
 
-    public class ExplicitInstance<PLUGINTYPE> : ConfiguredInstance
+    public class ExplicitInstance : ConfiguredInstance
     {
         private readonly ExplicitArguments _args;
 
-        public ExplicitInstance(ExplicitArguments args, Instance defaultInstance)
+        public ExplicitInstance(Type pluginType, ExplicitArguments args, Instance defaultInstance)
         {
             args.Configure(this);
             _args = args;
@@ -78,7 +80,7 @@ namespace StructureMap.Pipeline
             }
             else
             {
-                setPluggedType(typeof(PLUGINTYPE));
+                setPluggedType(pluginType);
             }
         }
 

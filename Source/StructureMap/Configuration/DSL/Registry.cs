@@ -31,12 +31,16 @@ namespace StructureMap.Configuration.DSL
 
         internal void ConfigurePluginGraph(PluginGraph graph)
         {
+            if (graph.Registries.Contains(this)) return;
+
             graph.Log.StartSource("Registry:  " + TypePath.GetAssemblyQualifiedName(GetType()));
 
             foreach (Action<PluginGraph> action in _actions)
             {
                 action(graph);
             }
+
+            graph.Registries.Add(this);
         }
 
 
@@ -192,6 +196,29 @@ namespace StructureMap.Configuration.DSL
         public void AddInstanceOf<PLUGINTYPE>(Instance instance)
         {
             _actions.Add(graph => graph.FindFamily(typeof (PLUGINTYPE)).AddInstance(instance));
+        }
+
+        public bool Equals(Registry obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            return GetType().Equals(obj.GetType());
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+
+            if (obj is Registry) return false;
+
+
+            if (obj.GetType() != typeof (Registry)) return false;
+            return Equals((Registry) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return 0;
         }
     }
 }

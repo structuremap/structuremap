@@ -52,11 +52,11 @@ namespace StructureMap.Testing
 
             expectVisits(registry, visitor =>
             {
-                visitor.PluginType(typeof (ISomething), null);
-                LastCall.Constraints(Is.Equal(typeof (ISomething)), Is.TypeOf(typeof (ConfiguredInstance)));
+                visitor.PluginType(typeof (ISomething), null, null);
+                LastCall.Constraints(Is.Equal(typeof (ISomething)), Is.TypeOf(typeof (ConfiguredInstance)), Is.TypeOf<BuildPolicy>());
 
                 visitor.Instance(typeof (ISomething), null);
-                LastCall.Constraints(Is.Equal(typeof (ISomething)), Is.TypeOf(typeof (ConfiguredInstance)))
+                LastCall.Constraints(Is.Equal(typeof(ISomething)), Is.TypeOf(typeof(ConfiguredInstance)))
                     .Repeat.Twice();
             });
         }
@@ -71,7 +71,7 @@ namespace StructureMap.Testing
 
             expectVisits(registry, visitor =>
             {
-                visitor.PluginType(typeof (ISomething), null);
+                visitor.PluginType(typeof(ISomething), null, new BuildPolicy());
                 visitor.Instance(typeof (ISomething), null);
                 LastCall.Constraints(Is.Equal(typeof (ISomething)), Is.TypeOf(typeof (ConfiguredInstance)))
                     .Repeat.Twice();
@@ -87,8 +87,8 @@ namespace StructureMap.Testing
 
             expectVisits(registry, visitor =>
             {
-                visitor.PluginType(typeof (ISomething), null);
-                LastCall.Constraints(Is.Equal(typeof (ISomething)), Is.TypeOf(typeof (ConfiguredInstance)));
+                visitor.PluginType(typeof(ISomething), null, null);
+                LastCall.Constraints(Is.Equal(typeof (ISomething)), Is.TypeOf(typeof (ConfiguredInstance)), Is.TypeOf<BuildPolicy>());
 
                 visitor.Instance(typeof (ISomething), null);
                 LastCall.Constraints(Is.Equal(typeof (ISomething)), Is.TypeOf(typeof (ConfiguredInstance)));
@@ -106,9 +106,9 @@ namespace StructureMap.Testing
 
             expectVisits(registry, visitor =>
             {
-                visitor.PluginType(typeof (ISomething), null);
-                visitor.PluginType(typeof (IWidget), null);
-                visitor.PluginType(typeof (Rule), null);
+                visitor.PluginType(typeof(ISomething), null, new BuildPolicy());
+                visitor.PluginType(typeof(IWidget), null, new BuildPolicy());
+                visitor.PluginType(typeof(Rule), null, new BuildPolicy());
             });
         }
     }

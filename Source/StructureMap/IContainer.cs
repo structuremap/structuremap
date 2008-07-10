@@ -66,5 +66,6 @@ namespace StructureMap
         ExplicitArgsExpression With<T>(T arg);
         IExplicitProperty With(string argName);
         void AssertConfigurationIsValid();
+        object GetInstance(Type type, ExplicitArguments args);
     }
 }
