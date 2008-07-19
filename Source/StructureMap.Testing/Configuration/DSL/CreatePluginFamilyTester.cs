@@ -233,6 +233,16 @@ namespace StructureMap.Testing.Configuration.DSL
 
             Assert.IsInstanceOfType(typeof (DefaultGateway), gateway);
         }
+
+		[Test(Description = "Guid test based on problems encountered by Paul Segaro. See http://groups.google.com/group/structuremap-users/browse_thread/thread/34ddaf549ebb14f7?hl=en")]
+		public void TheDefaultInstanceIsALambdaForGuidNewGuid()
+		{
+			Container manager =
+				new Container(
+					registry => registry.ForRequestedType<Guid>().TheDefaultIs(()=>Guid.NewGuid()));
+
+			Assert.IsInstanceOfType(typeof(Guid), manager.GetInstance<Guid>());
+		}
     }
 
     public class StubbedInstanceFactoryInterceptor : IBuildInterceptor
