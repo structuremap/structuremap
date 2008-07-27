@@ -121,17 +121,14 @@ namespace StructureMap
             try
             {
                 returnValue = getPropertyValue(Key);
+                
             }
             catch (Exception ex)
             {
                 throw new StructureMapException(205, ex, Key, InstanceKey);
             }
 
-            if (returnValue == string.Empty || returnValue == null)
-            {
-                throw new StructureMapException(205, Key, InstanceKey);
-            }
-
+            if (string.IsNullOrEmpty(returnValue)) return null;
             if (returnValue.ToUpper() == EMPTY_STRING)
             {
                 returnValue = string.Empty;

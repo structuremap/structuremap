@@ -27,6 +27,18 @@ namespace StructureMap.Testing.Graph
             Assert.IsFalse(GenericsPluginGraph.CanBeCast(pluginType, pluggedType));
         }
 
+
+        [Test]
+        public void Check_the_generic_plugin_family_expression()
+        {
+            Container container = new Container(r =>
+            {
+                r.ForRequestedType(typeof (IGenericService<>)).TheDefaultIsConcreteType(typeof (GenericService<>));
+            });
+
+            container.GetInstance<IGenericService<string>>().ShouldBeOfType(typeof(GenericService<string>));
+        }
+
         [Test]
         public void BuildAnInstanceManagerFromTemplatedPluginFamily()
         {

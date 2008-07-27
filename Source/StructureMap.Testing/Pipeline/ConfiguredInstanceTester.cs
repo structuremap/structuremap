@@ -319,5 +319,23 @@ namespace StructureMap.Testing.Pipeline
                 instance.Build(GetType(), null, null);
             });
         }
+
+        [Test]
+        public void ForProperty_hit_calls_action()
+        {
+            ConfiguredInstance instance = new ConfiguredInstance().WithProperty("age").EqualTo("34");
+            string theAge = null;
+
+            instance.ForProperty("age", s => theAge = s);
+            theAge.ShouldEqual("34");
+        }
+
+        [Test]
+        public void ForProperty_miss_does_not_call_action()
+        {
+            ConfiguredInstance instance = new ConfiguredInstance().WithProperty("age").EqualTo("34");
+
+            instance.ForProperty("NotAge", s => Assert.Fail("Should not be called"));
+        }
     }
 }

@@ -78,10 +78,53 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
-        public void CanFindMarkedProperties()
+        public void got_the_right_number_of_mandatory_and_optional_properties()
         {
-            PropertyInfo[] properties = SetterPropertyAttribute.FindMarkedProperties(typeof (BasicGridColumn));
-            Assert.AreEqual(5, properties.Length);
+            Plugin plugin = new Plugin(typeof(SetterTarget));
+            plugin.Setters.IsMandatory("Name1").ShouldBeFalse();
+            plugin.Setters.IsMandatory("Name2").ShouldBeTrue();
+            plugin.Setters.IsMandatory("Name3").ShouldBeFalse();
+            plugin.Setters.IsMandatory("Name4").ShouldBeTrue();
+        }
+
+        [Test]
+        public void SetterProperty_picks_up_IsMandatory_from_setter_attribute()
+        {
+            SetterProperty setter1 = new SetterProperty(ReflectionHelper.GetProperty<SetterTarget>(x => x.Name1));
+            setter1.IsMandatory.ShouldBeFalse();
+
+            SetterProperty setter2 = new SetterProperty(ReflectionHelper.GetProperty<SetterTarget>(x => x.Name2));
+            setter2.IsMandatory.ShouldBeTrue();
+        }
+
+
+        public class SetterTarget
+        {
+            public string Name1 { get; set; }
+            
+            [SetterProperty] 
+            public string Name2 { get; set; }
+            
+            public string Name3 { get; set; }
+            
+            [SetterProperty]
+            public string Name4 { get; set; }
+        }
+
+        [Test]
+        public void SetterPropertyCollection_builds_the_correct_number_of_properties()
+        {
+            Plugin plugin = new Plugin(typeof(OtherGridColumn));
+            plugin.Setters.OptionalCount.ShouldEqual(7);
+
+            plugin.Setters.Add("Widget");
+            plugin.Setters.Add("FontStyle");
+            plugin.Setters.Add("ColumnName");
+            plugin.Setters.Add("Rules");
+            plugin.Setters.Add("WrapLines");
+
+            Assert.AreEqual(2, plugin.Setters.OptionalCount);
+            Assert.AreEqual(5, plugin.Setters.MandatoryCount);
         }
 
 
@@ -92,12 +135,16 @@ namespace StructureMap.Testing.Graph
             PluginFamily family = pluginGraph.FindFamily(typeof (IGridColumn));
             Plugin plugin = family.Plugins["Other"];
 
-            Assert.AreEqual(5, plugin.Setters.Count);
-            Assert.IsTrue(plugin.Setters.Contains("Widget"));
-            Assert.IsTrue(plugin.Setters.Contains("FontStyle"));
-            Assert.IsTrue(plugin.Setters.Contains("ColumnName"));
-            Assert.IsTrue(plugin.Setters.Contains("Rules"));
-            Assert.IsTrue(plugin.Setters.Contains("WrapLines"));
+            Assert.AreEqual(2, plugin.Setters.OptionalCount);
+            Assert.AreEqual(5, plugin.Setters.MandatoryCount);
+            
+
+
+            Assert.IsTrue(plugin.Setters.IsMandatory("Widget"));
+            Assert.IsTrue(plugin.Setters.IsMandatory("FontStyle"));
+            Assert.IsTrue(plugin.Setters.IsMandatory("ColumnName"));
+            Assert.IsTrue(plugin.Setters.IsMandatory("Rules"));
+            Assert.IsTrue(plugin.Setters.IsMandatory("WrapLines"));
         }
 
         [Test]
@@ -112,13 +159,12 @@ namespace StructureMap.Testing.Graph
 			 */
 
             Plugin plugin = new Plugin(typeof (BasicGridColumn));
-
-            Assert.AreEqual(5, plugin.Setters.Count);
-            Assert.IsTrue(plugin.Setters.Contains("Widget"));
-            Assert.IsTrue(plugin.Setters.Contains("FontStyle"));
-            Assert.IsTrue(plugin.Setters.Contains("ColumnName"));
-            Assert.IsTrue(plugin.Setters.Contains("Rules"));
-            Assert.IsTrue(plugin.Setters.Contains("WrapLines"));
+            Assert.AreEqual(5, plugin.Setters.MandatoryCount);
+            Assert.IsTrue(plugin.Setters.IsMandatory("Widget"));
+            Assert.IsTrue(plugin.Setters.IsMandatory("FontStyle"));
+            Assert.IsTrue(plugin.Setters.IsMandatory("ColumnName"));
+            Assert.IsTrue(plugin.Setters.IsMandatory("Rules"));
+            Assert.IsTrue(plugin.Setters.IsMandatory("WrapLines"));
         }
 
         [Test]
@@ -157,7 +203,7 @@ namespace StructureMap.Testing.Graph
 
 
             PluginGraph graph = DataMother.BuildPluginGraphFromXml(errorXml);
-            graph.Log.AssertHasError(241);
+            graph.Log.AssertHasError(240);
         }
 
         [Test, ExpectedException(typeof (StructureMapException))]
@@ -174,10 +220,5 @@ namespace StructureMap.Testing.Graph
             plugin.Setters.Add("HeaderText");
         }
 
-        [Test, ExpectedException(typeof (StructureMapException))]
-        public void TryToCreateAnImplicitPluginWithASetterPropertyThatDoesNotHaveASetMethod()
-        {
-            Plugin plugin = new Plugin(typeof (BadSetterClass));
-        }
     }
 }

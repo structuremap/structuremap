@@ -173,10 +173,7 @@
     <value>Cannot call "FillDependencies" on type {0}.  Check that the type is concrete and has no primitive arguments</value>
   </data>
   <data name="240" xml:space="preserve">
-    <value>Property {0} does not exist on the PluggedType {1}</value>
-  </data>
-  <data name="241" xml:space="preserve">
-    <value>Property {0} on PluggedType {1} is not writeable!</value>
+    <value>Property {0} does not exist on the PluggedType {1} or does not have a public setter</value>
   </data>
   <data name="150" xml:space="preserve">
     <value>The file {0} referenced in an &lt;Include&gt; node cannot be opened</value>

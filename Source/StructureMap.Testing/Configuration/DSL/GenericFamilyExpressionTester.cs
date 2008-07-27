@@ -111,6 +111,38 @@ namespace StructureMap.Testing.Configuration.DSL
             Assert.IsInstanceOfType(typeof (Target2), manager.GetInstance<ITarget>());
         }
 
+        [Test, Explicit]
+        public void Add_default_instance2()
+        {
+            Container manager =
+                new Container(r => r.ForRequestedType(typeof (IRepository<>)).TheDefaultIsConcreteType(typeof (OnlineRepository<>)));
+
+            Assert.IsInstanceOfType(typeof(Target2), manager.GetInstance<ITarget>());
+
+
+            IRepository<Invoice> repository = 
+                ObjectFactory.GetInstance<IRepository<Invoice>>();
+        }
+
+        public interface IRepository<T>
+        {
+            void Save(T subject);
+        }
+
+        public class OnlineRepository<T> : IRepository<T>{
+            public void Save(T subject)
+            {
+                throw new NotImplementedException();
+            }
+        }
+        public class OfflineRepository<T> : IRepository<T>{
+            public void Save(T subject)
+            {
+                throw new NotImplementedException();
+            }
+        }
+        public class Invoice{}
+
         [Test]
         public void Add_instance_by_lambda()
         {

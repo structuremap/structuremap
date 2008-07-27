@@ -187,5 +187,13 @@ namespace StructureMap.Pipeline
                 return typeName;
             }
         }
+
+        public void ForProperty(string propertyName, Action<string> action)
+        {
+            if (_properties.ContainsKey(propertyName))
+            {
+                action(_properties[propertyName]);
+            }
+        }
     }
 }

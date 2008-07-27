@@ -21,7 +21,7 @@ namespace StructureMap.Emitting.Parameters
         {
             BindingFlags bindingAttr = BindingFlags.Static | BindingFlags.Public;
             MethodInfo parseMethod =
-                argumentType.GetMethod("Parse", bindingAttr, null, new Type[] {typeof (string)}, null);
+                argumentType.GetMethod("Parse", bindingAttr, null, new [] {typeof (string)}, null);
             ilgen.Emit(OpCodes.Call, parseMethod);
         }
 

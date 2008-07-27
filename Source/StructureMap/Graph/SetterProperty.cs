@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using StructureMap.Attributes;
 
 namespace StructureMap.Graph
 {
@@ -10,9 +11,13 @@ namespace StructureMap.Graph
     {
         private readonly PropertyInfo _property;
 
+
         public SetterProperty(PropertyInfo property) : base()
         {
             _property = property;
+            var att = Attribute.GetCustomAttribute(property, typeof (SetterPropertyAttribute));
+
+            IsMandatory = att != null;
         }
 
         public PropertyInfo Property
@@ -25,6 +30,8 @@ namespace StructureMap.Graph
             get { return _property.Name; }
         }
 
+        public bool IsMandatory { get; set; }
+
         public bool CanBeAutoFilled
         {
             get { return IsAutoFillable(_property.PropertyType); }
@@ -34,11 +41,11 @@ namespace StructureMap.Graph
         {
             Type propertyType = _property.PropertyType;
 
-            if (IsPrimitive(propertyType)) visitor.PrimitiveSetter(_property);
-            if (IsChild(propertyType)) visitor.ChildSetter(_property);
-            if (IsChildArray(propertyType)) visitor.ChildArraySetter(_property);
-            if (IsEnum(propertyType)) visitor.EnumSetter(_property);
-            if (IsString(propertyType)) visitor.StringSetter(_property);
+            if (IsPrimitive(propertyType)) visitor.PrimitiveSetter(_property, IsMandatory);
+            if (IsChild(propertyType)) visitor.ChildSetter(_property, IsMandatory);
+            if (IsChildArray(propertyType)) visitor.ChildArraySetter(_property, IsMandatory);
+            if (IsEnum(propertyType)) visitor.EnumSetter(_property, IsMandatory);
+            if (IsString(propertyType)) visitor.StringSetter(_property, IsMandatory);
         }
     }
 }

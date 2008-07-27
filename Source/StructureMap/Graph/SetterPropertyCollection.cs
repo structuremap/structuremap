@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
@@ -11,42 +12,40 @@ namespace StructureMap.Graph
     public class SetterPropertyCollection : IEnumerable<SetterProperty>
     {
         private readonly Plugin _plugin;
-        private Dictionary<string, SetterProperty> _properties;
+        private List<SetterProperty> _properties;
 
         public SetterPropertyCollection(Plugin plugin)
         {
-            _properties = new Dictionary<string, SetterProperty>();
+            _properties = new List<SetterProperty>();
             _plugin = plugin;
 
 
-            PropertyInfo[] properties = SetterPropertyAttribute.FindMarkedProperties(plugin.PluggedType);
-            foreach (PropertyInfo property in properties)
+            
+            foreach (PropertyInfo property in plugin.PluggedType.GetProperties())
             {
-                addSetterProperty(property, property.Name);
+                if (property.CanWrite)
+                {
+                    SetterProperty setter = new SetterProperty(property);
+                    _properties.Add(setter);
+                }
             }
         }
 
-        public SetterProperty[] Setters
+        public int MandatoryCount
         {
-            get
-            {
-                SetterProperty[] returnValue = new SetterProperty[_properties.Count];
-                _properties.Values.CopyTo(returnValue, 0);
-
-                return returnValue;
-            }
+            get { return _properties.FindAll(p => p.IsMandatory).Count; }
         }
 
-        public int Count
+        public int OptionalCount
         {
-            get { return _properties.Count; }
+            get { return _properties.FindAll(p => !p.IsMandatory).Count; }
         }
 
         #region IEnumerable<SetterProperty> Members
 
         IEnumerator<SetterProperty> IEnumerable<SetterProperty>.GetEnumerator()
         {
-            return _properties.Values.GetEnumerator();
+            return _properties.GetEnumerator();
         }
 
         public IEnumerator GetEnumerator()
@@ -58,38 +57,35 @@ namespace StructureMap.Graph
 
         public SetterProperty Add(string propertyName)
         {
-            PropertyInfo property = _plugin.PluggedType.GetProperty(propertyName);
-            addSetterProperty(property, propertyName);
-
-            return _properties[propertyName];
-        }
-
-        private void addSetterProperty(PropertyInfo property, string propertyName)
-        {
-            if (property == null)
+            var setter = _properties.Find(p => p.Property.Name == propertyName);
+            if (setter == null)
             {
                 throw new StructureMapException(240, propertyName, _plugin.PluggedType);
             }
 
-            if (property.GetSetMethod() == null)
-            {
-                throw new StructureMapException(241, propertyName, _plugin.PluggedType);
-            }
 
-            SetterProperty setterProperty = new SetterProperty(property);
-            _properties.Add(propertyName, setterProperty);
+            setter.IsMandatory = true;
+
+            return setter;
         }
 
-        public bool Contains(string propertyName)
+
+        public bool IsMandatory(string propertyName)
         {
-            return _properties.ContainsKey(propertyName);
+            SetterProperty property = _properties.Find(p => p.Name == propertyName);
+            if (property == null)
+            {
+                return false;
+            }
+
+            return property.IsMandatory;
         }
 
         public void Merge(SetterPropertyCollection setters)
         {
             foreach (SetterProperty setter in setters)
             {
-                if (!Contains(setter.Name))
+                if (!IsMandatory(setter.Name))
                 {
                     Add(setter.Name);
                 }
@@ -110,7 +106,10 @@ namespace StructureMap.Graph
 
             foreach (SetterProperty setterProperty in this)
             {
-                returnValue = returnValue && setterProperty.CanBeAutoFilled;
+                if (setterProperty.IsMandatory)
+                {
+                    returnValue = returnValue && setterProperty.CanBeAutoFilled;
+                }
             }
 
             return returnValue;

@@ -300,11 +300,11 @@ namespace StructureMap.Testing.Graph
                 visitor.StringParameter(param("name"));
                 visitor.PrimitiveParameter(param("age"));
                 visitor.EnumParameter(param("breed"));
-                visitor.StringSetter(prop("LastName"));
-                visitor.PrimitiveSetter(prop("Income"));
-                visitor.ChildSetter(prop("Car"));
-                visitor.ChildArraySetter(prop("Fleet"));
-                visitor.EnumSetter(prop("OtherBreed"));
+                visitor.StringSetter(prop("LastName"), true);
+                visitor.PrimitiveSetter(prop("Income"), true);
+                visitor.ChildSetter(prop("Car"), true);
+                visitor.ChildArraySetter(prop("Fleet"), true);
+                visitor.EnumSetter(prop("OtherBreed"), true);
             }
 
             using (mocks.Playback())

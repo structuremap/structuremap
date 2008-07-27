@@ -22,28 +22,38 @@ namespace StructureMap.Emitting
 
         #region IArgumentVisitor Members
 
-        public void PrimitiveSetter(PropertyInfo property)
+        public void PrimitiveSetter(PropertyInfo property, bool isMandatory)
         {
+            if (!isMandatory) return;
+
             _primitive.Setter(ilgen, property);
         }
 
-        public void StringSetter(PropertyInfo property)
+        public void StringSetter(PropertyInfo property, bool isMandatory)
         {
+            if (!isMandatory) return;
+
             _string.Setter(ilgen, property);
         }
 
-        public void EnumSetter(PropertyInfo property)
+        public void EnumSetter(PropertyInfo property, bool isMandatory)
         {
+            if (!isMandatory) return;
+
             _enum.Setter(ilgen, property);
         }
 
-        public void ChildSetter(PropertyInfo property)
+        public void ChildSetter(PropertyInfo property, bool isMandatory)
         {
+            if (!isMandatory) return;
+
             _child.Setter(ilgen, property);
         }
 
-        public void ChildArraySetter(PropertyInfo property)
+        public void ChildArraySetter(PropertyInfo property, bool isMandatory)
         {
+            if (!isMandatory) return;
+
             _childArray.Setter(ilgen, property);
         }
 

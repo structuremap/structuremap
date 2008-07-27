@@ -50,4 +50,29 @@ namespace StructureMap.Testing.Widget2
                 instance.GetProperty("Name"));
         }
     }
+
+    public class SetterBuilder : InstanceBuilder
+    {
+        public override Type PluggedType
+        {
+            get { throw new System.NotImplementedException(); }
+        }
+
+        public override object BuildInstance(IConfiguredInstance instance, IBuildSession session)
+        {
+            SetterTarget target = new SetterTarget();
+            instance.ForProperty("Name", x => target.Name = x);
+            instance.ForProperty("Age", x => target.Age = (int)Convert.ChangeType(x, typeof (int)));
+            instance.ForProperty("Breed", x => target.Breed = (BreedEnum) Enum.Parse(typeof (BreedEnum), x));
+
+            return target;
+        }
+    }
+
+    public class SetterTarget
+    {
+        public string Name { get; set; }
+        public int Age { get; set; }
+        public BreedEnum Breed { get; set; }
+    }
 }

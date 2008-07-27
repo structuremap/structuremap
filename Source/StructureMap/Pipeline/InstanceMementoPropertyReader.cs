@@ -22,49 +22,49 @@ namespace StructureMap.Pipeline
 
         #region IArgumentVisitor Members
 
-        public void PrimitiveSetter(PropertyInfo property)
+        public void PrimitiveSetter(PropertyInfo property, bool isMandatory)
         {
-            copyPrimitive(property.Name);
+            copyPrimitive(property.Name, isMandatory);
         }
 
-        public void StringSetter(PropertyInfo property)
+        public void StringSetter(PropertyInfo property, bool isMandatory)
         {
-            copyPrimitive(property.Name);
+            copyPrimitive(property.Name, isMandatory);
         }
 
-        public void EnumSetter(PropertyInfo property)
+        public void EnumSetter(PropertyInfo property, bool isMandatory)
         {
-            copyPrimitive(property.Name);
+            copyPrimitive(property.Name, isMandatory);
         }
 
-        public void ChildSetter(PropertyInfo property)
+        public void ChildSetter(PropertyInfo property, bool isMandatory)
         {
-            copyChild(property.Name, property.PropertyType);
+            copyChild(property.Name, property.PropertyType, isMandatory);
         }
 
-        public void ChildArraySetter(PropertyInfo property)
+        public void ChildArraySetter(PropertyInfo property, bool isMandatory)
         {
             copyChildArray(property.Name, property.PropertyType.GetElementType());
         }
 
         public void PrimitiveParameter(ParameterInfo parameter)
         {
-            copyPrimitive(parameter.Name);
+            copyPrimitive(parameter.Name, true);
         }
 
         public void StringParameter(ParameterInfo parameter)
         {
-            copyPrimitive(parameter.Name);
+            copyPrimitive(parameter.Name, true);
         }
 
         public void EnumParameter(ParameterInfo parameter)
         {
-            copyPrimitive(parameter.Name);
+            copyPrimitive(parameter.Name, true);
         }
 
         public void ChildParameter(ParameterInfo parameter)
         {
-            copyChild(parameter.Name, parameter.ParameterType);
+            copyChild(parameter.Name, parameter.ParameterType, true);
         }
 
         public void ChildArrayParameter(ParameterInfo parameter)
@@ -74,16 +74,20 @@ namespace StructureMap.Pipeline
 
         #endregion
 
-        private void copyPrimitive(string name)
+        private void copyPrimitive(string name, bool isMandatory)
         {
-            _instance.SetProperty(name, _memento.GetProperty(name));
+            string propertyValue = _memento.GetProperty(name);
+
+            if (propertyValue == null && isMandatory)
+            {
+                throw new StructureMapException(205, name, _memento.InstanceKey);
+            }
+            
+            _instance.SetProperty(name, propertyValue);
         }
 
-        private void copyChild(string name, Type childType)
+        private void copyChild(string name, Type childType, bool isMandatory)
         {
-            //InstanceMemento child = _memento.GetChildMemento(name);
-            //Instance childInstance = child == null ? new DefaultInstance() : child.ReadInstance(_pluginGraph, childType);
-
             Instance childInstance = _memento.ReadChildInstance(name, _pluginGraph, childType) ?? new DefaultInstance();
             
             _instance.Child(name).Is(childInstance);

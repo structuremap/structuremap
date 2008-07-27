@@ -4,11 +4,11 @@ namespace StructureMap.Graph
 {
     public interface IArgumentVisitor
     {
-        void PrimitiveSetter(PropertyInfo property);
-        void StringSetter(PropertyInfo property);
-        void EnumSetter(PropertyInfo property);
-        void ChildSetter(PropertyInfo property);
-        void ChildArraySetter(PropertyInfo property);
+        void PrimitiveSetter(PropertyInfo property, bool isMandatory);
+        void StringSetter(PropertyInfo property, bool isMandatory);
+        void EnumSetter(PropertyInfo property, bool isMandatory);
+        void ChildSetter(PropertyInfo property, bool isMandatory);
+        void ChildArraySetter(PropertyInfo property, bool isMandatory);
 
         void PrimitiveParameter(ParameterInfo parameter);
         void StringParameter(ParameterInfo parameter);
