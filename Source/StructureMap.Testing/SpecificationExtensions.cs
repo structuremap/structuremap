@@ -46,6 +46,12 @@ namespace StructureMap.Testing
             return expected;
         }
 
+        public static T IsType<T>(this object actual)
+        {
+            actual.ShouldBeOfType(typeof(T));
+            return (T) actual;
+        }
+
         public static object ShouldNotBeTheSameAs(this object actual, object expected)
         {
             Assert.AreNotSame(expected, actual);

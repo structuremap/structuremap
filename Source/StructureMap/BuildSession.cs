@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
+using StructureMap.Util;
 
 namespace StructureMap
 {
@@ -12,11 +13,24 @@ namespace StructureMap
         private readonly InterceptorLibrary _interceptorLibrary;
         private readonly PipelineGraph _pipelineGraph;
         private readonly InstanceCache _cache = new InstanceCache();
+        private readonly Cache<Type, object> _defaults;
 
         public BuildSession(PipelineGraph pipelineGraph, InterceptorLibrary interceptorLibrary)
         {
             _pipelineGraph = pipelineGraph;
             _interceptorLibrary = interceptorLibrary;
+
+            _defaults = new Cache<Type, object>(t =>
+            {
+                Instance instance = _pipelineGraph.GetDefault(t);
+
+                if (instance == null)
+                {
+                    throw new StructureMapException(202, t);
+                }
+
+                return CreateInstance(t, instance);
+            });
         }
 
         public BuildSession(PluginGraph graph)
@@ -87,14 +101,7 @@ namespace StructureMap
 
         public object CreateInstance(Type pluginType)
         {
-            Instance instance = _pipelineGraph.GetDefault(pluginType);
-
-            if (instance == null)
-            {
-                throw new StructureMapException(202, pluginType.FullName);
-            }
-
-            return CreateInstance(pluginType, instance);
+            return _defaults.Retrieve(pluginType);
         }
 
         public object ApplyInterception(Type pluginType, object actualValue)
@@ -110,6 +117,11 @@ namespace StructureMap
         public InstanceBuilder FindBuilderByConcreteKey(Type pluginType, string concreteKey)
         {
             return forType(pluginType).FindBuilderByConcreteKey(concreteKey);
+        }
+
+        public void RegisterDefault(Type pluginType, object defaultObject)
+        {
+            _defaults.Store(pluginType, defaultObject);
         }
 
         #endregion

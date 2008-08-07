@@ -155,7 +155,7 @@ namespace StructureMap
             return InstanceFactory.CreateFactoryForType(pluggedType, _profileManager);
         }
 
-        public Instance GetDefault(Type pluginType)
+        public virtual Instance GetDefault(Type pluginType)
         {
             // Need to ensure that the factory exists first
             createFactoryIfMissing(pluginType);

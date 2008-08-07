@@ -74,13 +74,31 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
+        public void Explicit_services_are_used_throughout_the_object_graph()
+        {
+            var theTrade = new Trade();
+
+            IContainer container = new Container(r =>
+            {
+                r.ForRequestedType<IView>().TheDefaultIsConcreteType<TradeView>();
+                r.ForRequestedType<Node>().TheDefaultIsConcreteType<TradeNode>();
+            });
+
+            Command command = container.With<Trade>(theTrade).GetInstance<Command>();
+
+            command.Trade.ShouldBeTheSameAs(theTrade);
+            command.Node.IsType<TradeNode>().Trade.ShouldBeTheSameAs(theTrade);
+            command.View.IsType<TradeView>().Trade.ShouldBeTheSameAs(theTrade);
+        }
+
+        [Test]
         public void ExplicitArguments_can_return_child_by_name()
         {
-            ExplicitArguments args = new ExplicitArguments();
-            Node theNode = new Node();
+            var args = new ExplicitArguments();
+            var theNode = new Node();
             args.SetArg("node", theNode);
 
-            IConfiguredInstance instance = new ExplicitInstance(typeof(Command), args, null);
+            IConfiguredInstance instance = new ExplicitInstance(typeof (Command), args, null);
 
             Assert.AreSame(theNode, instance.GetChild("node", typeof (Node), new StubBuildSession()));
         }
@@ -88,13 +106,13 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void Fill_in_argument_by_name()
         {
-            Container container = new Container();
+            var container = new Container();
             container.SetDefault<IView, View>();
 
-            Node theNode = new Node();
-            Trade theTrade = new Trade();
+            var theNode = new Node();
+            var theTrade = new Trade();
 
-            Command command = container
+            var command = container
                 .With("node").EqualTo(theNode)
                 .With(theTrade)
                 .GetInstance<Command>();
@@ -117,12 +135,12 @@ namespace StructureMap.Testing.Graph
             ObjectFactory.Reset();
 
             // Get the ExplicitTarget without setting an explicit arg for IProvider
-            ExplicitTarget firstTarget = ObjectFactory.GetInstance<ExplicitTarget>();
+            var firstTarget = ObjectFactory.GetInstance<ExplicitTarget>();
             Assert.IsInstanceOfType(typeof (RedProvider), firstTarget.Provider);
 
             // Now, set the explicit arg for IProvider
-            BlueProvider theBlueProvider = new BlueProvider();
-            ExplicitTarget secondTarget = ObjectFactory.With<IProvider>(theBlueProvider).GetInstance<ExplicitTarget>();
+            var theBlueProvider = new BlueProvider();
+            var secondTarget = ObjectFactory.With<IProvider>(theBlueProvider).GetInstance<ExplicitTarget>();
             Assert.AreSame(theBlueProvider, secondTarget.Provider);
         }
 
@@ -139,28 +157,28 @@ namespace StructureMap.Testing.Graph
             ObjectFactory.Reset();
 
             // Get the ExplicitTarget without setting an explicit arg for IProvider
-            ExplicitTarget firstTarget = ObjectFactory.GetInstance<ExplicitTarget>();
+            var firstTarget = ObjectFactory.GetInstance<ExplicitTarget>();
             Assert.AreEqual("Jeremy", firstTarget.Name);
 
             // Now, set the explicit arg for IProvider
-            ExplicitTarget secondTarget = ObjectFactory.With("name").EqualTo("Julia").GetInstance<ExplicitTarget>();
+            var secondTarget = ObjectFactory.With("name").EqualTo("Julia").GetInstance<ExplicitTarget>();
             Assert.AreEqual("Julia", secondTarget.Name);
         }
 
         [Test]
         public void Pass_in_arguments_as_dictionary()
         {
-            Container manager = new Container();
+            var manager = new Container();
             manager.SetDefault<IView, View>();
 
-            Node theNode = new Node();
-            Trade theTrade = new Trade();
+            var theNode = new Node();
+            var theTrade = new Trade();
 
-            ExplicitArguments args = new ExplicitArguments();
+            var args = new ExplicitArguments();
             args.Set(theNode);
             args.SetArg("trade", theTrade);
 
-            Command command = manager.GetInstance<Command>(args);
+            var command = manager.GetInstance<Command>(args);
 
             Assert.IsInstanceOfType(typeof (View), command.View);
             Assert.AreSame(theNode, command.Node);
@@ -175,11 +193,11 @@ namespace StructureMap.Testing.Graph
                 new Container(
                     registry => registry.ForRequestedType<IProvider>().TheDefaultIsConcreteType<LumpProvider>());
 
-            ExplicitArguments args = new ExplicitArguments();
-            Lump theLump = new Lump();
+            var args = new ExplicitArguments();
+            var theLump = new Lump();
             args.Set(theLump);
 
-            LumpProvider instance = (LumpProvider) manager.GetInstance<IProvider>(args);
+            var instance = (LumpProvider) manager.GetInstance<IProvider>(args);
             Assert.AreSame(theLump, instance.Lump);
         }
 
@@ -188,17 +206,17 @@ namespace StructureMap.Testing.Graph
         {
             StructureMapConfiguration.ForRequestedType<IProvider>().TheDefaultIsConcreteType<LumpProvider>();
             ObjectFactory.Reset();
-            Lump theLump = new Lump();
+            var theLump = new Lump();
 
-            LumpProvider provider = (LumpProvider) ObjectFactory.With(theLump).GetInstance<IProvider>();
+            var provider = (LumpProvider) ObjectFactory.With(theLump).GetInstance<IProvider>();
             Assert.AreSame(theLump, provider.Lump);
         }
 
         [Test]
         public void PassAnArgumentIntoExplicitArgumentsThatMightNotAlreadyBeRegistered()
         {
-            Lump theLump = new Lump();
-            LumpProvider provider = ObjectFactory.With(theLump).GetInstance<LumpProvider>();
+            var theLump = new Lump();
+            var provider = ObjectFactory.With(theLump).GetInstance<LumpProvider>();
             Assert.AreSame(theLump, provider.Lump);
         }
 
@@ -212,25 +230,25 @@ namespace StructureMap.Testing.Graph
                                                                    .WithProperty("name").EqualTo("Jeremy")
                                                                ));
 
-            ExplicitArguments args = new ExplicitArguments();
+            var args = new ExplicitArguments();
 
             // Get the ExplicitTarget without setting an explicit arg for IProvider
-            ExplicitTarget firstTarget = manager.GetInstance<ExplicitTarget>(args);
+            var firstTarget = manager.GetInstance<ExplicitTarget>(args);
             Assert.IsInstanceOfType(typeof (RedProvider), firstTarget.Provider);
 
             // Now, set the explicit arg for IProvider
             args.Set<IProvider>(new BlueProvider());
-            ExplicitTarget secondTarget = manager.GetInstance<ExplicitTarget>(args);
+            var secondTarget = manager.GetInstance<ExplicitTarget>(args);
             Assert.IsInstanceOfType(typeof (BlueProvider), secondTarget.Provider);
         }
 
         [Test]
         public void RegisterAndFindServicesOnTheExplicitArgument()
         {
-            ExplicitArguments args = new ExplicitArguments();
+            var args = new ExplicitArguments();
             Assert.IsNull(args.Get<IProvider>());
 
-            RedProvider red = new RedProvider();
+            var red = new RedProvider();
             args.Set<IProvider>(red);
 
             Assert.AreSame(red, args.Get<IProvider>());
@@ -242,7 +260,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void RegisterAndRetrieveArgs()
         {
-            ExplicitArguments args = new ExplicitArguments();
+            var args = new ExplicitArguments();
             Assert.IsNull(args.GetArg("name"));
 
             args.SetArg("name", "Jeremy");
@@ -276,6 +294,21 @@ namespace StructureMap.Testing.Graph
 
     public class Trade
     {
+    }
+
+    public class TradeView : IView
+    {
+        private readonly Trade _trade;
+
+        public TradeView(Trade trade)
+        {
+            _trade = trade;
+        }
+
+        public Trade Trade
+        {
+            get { return _trade; }
+        }
     }
 
     public class Node
@@ -316,6 +349,21 @@ namespace StructureMap.Testing.Graph
         public IView View
         {
             get { return _view; }
+        }
+    }
+
+    public class TradeNode : Node
+    {
+        private readonly Trade _trade;
+
+        public TradeNode(Trade trade)
+        {
+            _trade = trade;
+        }
+
+        public Trade Trade
+        {
+            get { return _trade; }
         }
     }
 }

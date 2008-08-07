@@ -11,5 +11,6 @@ namespace StructureMap.Pipeline
         object ApplyInterception(Type pluginType, object actualValue);
         InstanceBuilder FindBuilderByType(Type pluginType, Type pluggedType);
         InstanceBuilder FindBuilderByConcreteKey(Type pluginType, string concreteKey);
+        void RegisterDefault(Type pluginType, object defaultObject);
     }
 }

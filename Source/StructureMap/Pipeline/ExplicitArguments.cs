@@ -62,6 +62,14 @@ namespace StructureMap.Pipeline
         {
             return _args.ContainsKey(propertyName);
         }
+
+        public void RegisterDefaults(IBuildSession session)
+        {
+            foreach (var pair in _children)
+            {
+                session.RegisterDefault(pair.Key, pair.Value);
+            }
+        }
     }
 
     public class ExplicitInstance : ConfiguredInstance

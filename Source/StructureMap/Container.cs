@@ -80,10 +80,7 @@ namespace StructureMap
 
         public PLUGINTYPE GetInstance<PLUGINTYPE>(ExplicitArguments args)
         {
-            Instance defaultInstance = _pipelineGraph.GetDefault(typeof (PLUGINTYPE));
-
-            ExplicitInstance instance = new ExplicitInstance(typeof(PLUGINTYPE), args, defaultInstance);
-            return GetInstance<PLUGINTYPE>(instance);
+            return (PLUGINTYPE) GetInstance(typeof(PLUGINTYPE), args);
         }
 
         public object GetInstance(Type type, ExplicitArguments args)
@@ -91,8 +88,11 @@ namespace StructureMap
             Instance defaultInstance = _pipelineGraph.GetDefault(type);
 
             Instance instance = new ExplicitInstance(type, args, defaultInstance);
+            IBuildSession session = withNewSession();
 
-            return GetInstance(type, instance);
+            args.RegisterDefaults(session);
+
+            return session.CreateInstance(type, instance);
         }
 
         public void Inject<PLUGINTYPE>(PLUGINTYPE instance)

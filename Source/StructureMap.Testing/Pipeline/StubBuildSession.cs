@@ -49,6 +49,11 @@ namespace StructureMap.Testing.Pipeline
             throw new NotImplementedException();
         }
 
+        public void RegisterDefault(Type pluginType, object defaultObject)
+        {
+            
+        }
+
         #endregion
 
         public object CreateInstance(string typeName, IConfiguredInstance instance)
