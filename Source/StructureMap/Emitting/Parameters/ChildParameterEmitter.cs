@@ -25,16 +25,15 @@ namespace StructureMap.Emitting.Parameters
 
             ilgen.Emit(OpCodes.Ldtoken, parameterType);
 
-            MethodInfo method = typeof (Type).GetMethod("GetTypeFromHandle");
-            ilgen.Emit(OpCodes.Call, method);
+            ilgen.Emit(OpCodes.Call, Methods.GET_TYPE_FROM_HANDLE);
 
             ilgen.Emit(OpCodes.Ldarg_2);
+            ilgen.Emit(OpCodes.Callvirt, Methods.GET_CHILD);
 
-            callInstanceMemento(ilgen, "GetChild");
             cast(ilgen, parameterType);
         }
 
-        public void Setter(ILGenerator ilgen, PropertyInfo property)
+        public override void MandatorySetter(ILGenerator ilgen, PropertyInfo property)
         {
             ilgen.Emit(OpCodes.Ldloc_0);
 

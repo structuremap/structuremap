@@ -7,7 +7,7 @@ using System.Text;
 
 namespace StructureMap
 {
-    public static class ReflectionHelper
+    internal static class ReflectionHelper
     {
         public static PropertyInfo GetProperty<MODEL>(Expression<Func<MODEL, object>> expression)
         {
@@ -42,7 +42,12 @@ namespace StructureMap
 
         public static MethodInfo GetMethod<T>(Expression<Func<T, object>> expression)
         {
-            MethodCallExpression methodCall = (MethodCallExpression)expression.Body;
+
+            MethodCallExpression methodCall =
+                expression.Body is UnaryExpression
+                    ? (MethodCallExpression) ((UnaryExpression) expression.Body).Operand
+                    : (MethodCallExpression) expression.Body;
+
             return methodCall.Method;
         }
 

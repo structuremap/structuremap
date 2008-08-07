@@ -4,7 +4,7 @@
   
   <PluginFamily Type="StructureMap.Testing.Widget.IWidget" Assembly="StructureMap.Testing.Widget" DefaultKey="Orange">
     <Instance Type="Color" Key="Orange">
-      <Property Name="Color" Value="Orange" />
+      <Property Name="color" Value="Orange" />
     </Instance>
   </PluginFamily>
 </StructureMap>

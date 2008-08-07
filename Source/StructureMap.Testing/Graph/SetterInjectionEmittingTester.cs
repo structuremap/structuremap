@@ -39,10 +39,10 @@ namespace StructureMap.Testing.Graph
 			<Property Name='Value' Value='10' />
 		</Instance>
 		<Instance Key='Blue' Type='Color'>
-			<Property Name='Color' Value='Blue' />
+			<Property Name='color' Value='Blue' />
 		</Instance>
 		<Instance Key='Red' Type='Color'>
-			<Property Name='Color' Value='Red' />
+			<Property Name='color' Value='Red' />
 		</Instance>
 	</PluginFamily>
 

@@ -1,0 +1,311 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+	<head>
+		<title></title>
+	    <style type="text/css">
+            .style1
+            {
+                font-family: "Courier New", Courier, monospace;
+            }
+        </style>
+	</head>
+	<body>
+	<h1>Glossary</h1>
+	<p>There are some terms that reoccur throughout the documentation and show up in the StructureMap configuration.  Understanding these terms and how they relate to StructureMap isn't a prerequisite to using StructureMap, but it helps.</p>
+	<h4>Container</h4>
+	<p>Tools like StructureMap are generally referred to as IoC containers, or in the 
+        Java world sometimes as &quot;lightweight&quot; containers to differentiate them from the 
+        old EJB containers.&nbsp; As far as I know, the term Inversion of Control 
+        Container was coined by members of the PicoContainer team at ThoughtWorks and 
+        popularized by the publication of Martin Fowler&#39;s paper
+        <a href="http://martinfowler.com/articles/injection.html">Inversion of Control 
+        Containers and the Dependency Injection</a> pattern in January 2004.&nbsp; 
+        StructureMap development was already underway when the paper was published.&nbsp; 
+        I was definitely influenced by the paper and PicoContainer itself to a degree, 
+        but I resisted the term &quot;Container&quot; for a long time.&nbsp; StructureMap has a 
+        container class, but it&#39;s always been largely hidden behind the static 
+        ObjectFactory class.&nbsp; New in StructureMap 2.5 is an easy way to use the 
+        Container without StructureMapConfiguration or ObjectFactory like this:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red43\green145\blue175;\red0\green0\blue255;\red163\green21\blue21;\red0\green128\blue0;}??\fs20             \cf3 IContainer\cf0  container = \cf4 new\cf0  \cf3 Container\cf0 (registry =&gt;\par ??            \{\par ??                registry.AddInstanceOf&lt;\cf3 Rule\cf0 &gt;().UsingConcreteType&lt;\cf3 ARule\cf0 &gt;().WithName(\cf5 "Alias"\cf0 );\par ??\par ??                \cf6 // Add an instance by specifying the ConcreteKey\par ??\cf0                 registry.AddInstanceOf&lt;\cf3 IWidget\cf0 &gt;()\par ??                    .UsingConcreteType&lt;\cf3 ColorWidget\cf0 &gt;()\par ??                    .WithName(\cf5 "Purple"\cf0 )\par ??                    .WithProperty(\cf5 "Color"\cf0 ).EqualTo(\cf5 "Purple"\cf0 );\par ??\par ??                \cf6 // Specify a new Instance, override a dependency with a named instance\par ??\cf0                 registry.AddInstanceOf&lt;\cf3 Rule\cf0 &gt;().UsingConcreteType&lt;\cf3 WidgetRule\cf0 &gt;().WithName(\cf5 "RuleThatUsesMyInstance"\cf0 )\par ??                    .Child&lt;\cf3 IWidget\cf0 &gt;(\cf5 "widget"\cf0 ).IsNamedInstance(\cf5 "Purple"\cf0 );\par ??            \});}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #2b91af;">
+                IContainer</span> container = <span style="color: blue;">new</span>
+                <span style="color: #2b91af;">Container</span>(registry =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                registry.AddInstanceOf&lt;<span style="color: #2b91af;">Rule</span>&gt;().UsingConcreteType&lt;<span 
+                    style="color: #2b91af;">ARule</span>&gt;().WithName(<span 
+                    style="color: #a31515;">&quot;Alias&quot;</span>);</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="color: green;">// Add an instance by specifying the ConcreteKey</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                registry.AddInstanceOf&lt;<span style="color: #2b91af;">IWidget</span>&gt;()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .UsingConcreteType&lt;<span style="color: #2b91af;">ColorWidget</span>&gt;()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .WithName(<span style="color: #a31515;">&quot;Purple&quot;</span>)</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .WithProperty(<span style="color: #a31515;">&quot;Color&quot;</span>).EqualTo(<span 
+                    style="color: #a31515;">&quot;Purple&quot;</span>);</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="color: green;">// Specify a new Instance, override a dependency 
+                with a named instance</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                registry.AddInstanceOf&lt;<span style="color: #2b91af;">Rule</span>&gt;().UsingConcreteType&lt;<span 
+                    style="color: #2b91af;">WidgetRule</span>&gt;().WithName(<span 
+                    style="color: #a31515;">&quot;RuleThatUsesMyInstance&quot;</span>)</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .Child&lt;<span style="color: #2b91af;">IWidget</span>&gt;(<span 
+                    style="color: #a31515;">&quot;widget&quot;</span>).IsNamedInstance(<span 
+                    style="color: #a31515;">&quot;Purple&quot;</span>);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+        </div>
+<!--EndFragment-->
+<p>&nbsp;</p>
+	<h4>PluginType &amp; PluggedType</h4>
+	<p>I use the term &quot;PluginType&quot; throughout the code and documentation to mean &quot;the 
+        type that you want.&quot;&nbsp; In my current project I have this line of 
+        configuration:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red43\green145\blue175;}??\fs20             ForRequestedType&lt;\cf3 IRepository\cf0 &gt;().TheDefaultIsConcreteType&lt;\cf3 Repository\cf0 &gt;().CacheBy(\cf3 InstanceScope\cf0 .Hybrid);}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ForRequestedType&lt;<span 
+                    style="color: #2b91af;">IRepository</span>&gt;().TheDefaultIsConcreteType&lt;<span 
+                    style="color: #2b91af;">Repository</span>&gt;().CacheBy(<span 
+                    style="color: #2b91af;">InstanceScope</span>.Hybrid);</p>
+    </div>
+<!--EndFragment-->
+<p>If you request an object of <span class="style1">IRepository,</span> you&#39;ll get 
+    an instance of the<span class="style1"> Repository</span> class.&nbsp; In this 
+    case, <span class="style1">IRepository</span> is the PluginType (what you&#39;re 
+    asking for) and <span class="style1">Repository</span> is the &quot;PluggedType&quot; (the 
+    concrete class you&#39;ll get).</p>
+<p>Another example of the PluginType / PluggedType nomenclature is in the Xml 
+    configuration on the &lt;DefaultInstance&gt; node.&nbsp; The example below configures 
+    the default ISessionSource:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue255;\red255\green255\blue255;\red163\green21\blue21;\red255\green0\blue0;\red0\green0\blue0;}??\fs20 \cf1   &lt;\cf3 DefaultInstance\par ??\cf1     \cf4 PluginType\cf1 =\cf0 "\cf1 ShadeTree.DomainModel.ISessionSource,ShadeTree.DomainModel\cf0 "\par ??\cf1     \cf4 PluggedType\cf1 =\cf0 "\cf1 ShadeTree.DomainModel.SessionSource,ShadeTree.DomainModel\cf0 "\cf1 &gt;\par ??    &lt;\cf3 properties\cf1 &gt;\par ??      &lt;\cf3 Pair\cf1  \cf4 Key\cf1 =\cf0 "\cf1 connection.provider\cf0 "\cf1  \cf4 Value\cf1 =\cf0 "\cf1 NHibernate.Connection.DriverConnectionProvider\cf0 "\cf1  /&gt;\par ??      &lt;\cf3 Pair\cf1  \cf4 Key\cf1 =\cf0 "\cf1 connection.driver_class\cf0 "\cf1  \cf4 Value\cf1 =\cf0 "\cf1 NHibernate.Driver.SqlClientDriver\cf0 "\cf1  /&gt;\par ??      &lt;\cf3 Pair\cf1  \cf4 Key\cf1 =\cf0 "\cf1 dialect\cf0 "\cf1  \cf4 Value\cf1 =\cf0 "\cf1 NHibernate.Dialect.MsSql2000Dialect\cf0 "\cf1  /&gt;\par ??      &lt;\cf3 Pair\cf1  \cf4 Key\cf1 =\cf0 "\cf1 hibernate.dialect\cf0 "\cf1  \cf4 Value\cf1 =\cf0 "\cf1 NHibernate.Dialect.MsSql2000Dialect\cf0 "\cf1  /&gt;\par ??      &lt;\cf3 Pair\cf1  \cf4 Key\cf1 =\cf0 "\cf1 use_outer_join\cf0 "\cf1  \cf4 Value\cf1 =\cf0 "\cf1 true\cf0 "\cf1  /&gt;\par ??      &lt;\cf3 Pair\cf1  \cf4 Key\cf1 =\cf0 "\cf1 connection.connection_string\cf0 "\cf1  \cf4 Value\cf1 =\cf0 "\cf1 Data Source=localhost;Initial Catalog=Blue;Trusted_Connection=yes;\cf0 "\cf1  /&gt;\par ??      &lt;\cf3 Pair\cf1  \cf4 Key\cf1 =\cf0 "\cf1 show_sql\cf0 "\cf1  \cf4 Value\cf1 =\cf0 "\cf1 true\cf0 "\cf1  /&gt;\par ??    &lt;/\cf3 properties\cf1 &gt;\par ??  &lt;/\cf3 DefaultInstance\cf1 &gt;}
+-->
+<div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+    <p style="margin: 0px;">
+        <span style="color: blue;">&nbsp; &lt;</span><span style="color: #a31515;">DefaultInstance</span></p>
+    <p style="margin: 0px;">
+        <span style="color: blue;">&nbsp;&nbsp;&nbsp; </span><span style="color: red;">
+        PluginType</span><span style="color: blue;">=</span>&quot;<span style="color: blue;">ShadeTree.DomainModel.ISessionSource,ShadeTree.DomainModel</span>&quot;</p>
+    <p style="margin: 0px;">
+        <span style="color: blue;">&nbsp;&nbsp;&nbsp; </span><span style="color: red;">
+        PluggedType</span><span style="color: blue;">=</span>&quot;<span 
+            style="color: blue;">ShadeTree.DomainModel.SessionSource,ShadeTree.DomainModel</span>&quot;<span 
+            style="color: blue;">&gt;</span></p>
+    <p style="margin: 0px;">
+        <span style="color: blue;">&nbsp;&nbsp;&nbsp; &lt;</span><span 
+            style="color: #a31515;">properties</span><span style="color: blue;">&gt;</span></p>
+    <p style="margin: 0px;">
+        <span style="color: blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</span><span 
+            style="color: #a31515;">Pair</span><span style="color: blue;"> </span>
+        <span style="color: red;">Key</span><span style="color: blue;">=</span>&quot;<span 
+            style="color: blue;">connection.provider</span>&quot;<span style="color: blue;">
+        </span><span style="color: red;">Value</span><span style="color: blue;">=</span>&quot;<span 
+            style="color: blue;">NHibernate.Connection.DriverConnectionProvider</span>&quot;<span 
+            style="color: blue;"> /&gt;</span></p>
+    <p style="margin: 0px;">
+        <span style="color: blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</span><span 
+            style="color: #a31515;">Pair</span><span style="color: blue;"> </span>
+        <span style="color: red;">Key</span><span style="color: blue;">=</span>&quot;<span 
+            style="color: blue;">connection.driver_class</span>&quot;<span 
+            style="color: blue;"> </span><span style="color: red;">Value</span><span 
+            style="color: blue;">=</span>&quot;<span style="color: blue;">NHibernate.Driver.SqlClientDriver</span>&quot;<span 
+            style="color: blue;"> /&gt;</span></p>
+    <p style="margin: 0px;">
+        <span style="color: blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</span><span 
+            style="color: #a31515;">Pair</span><span style="color: blue;"> </span>
+        <span style="color: red;">Key</span><span style="color: blue;">=</span>&quot;<span 
+            style="color: blue;">dialect</span>&quot;<span style="color: blue;"> </span>
+        <span style="color: red;">Value</span><span style="color: blue;">=</span>&quot;<span 
+            style="color: blue;">NHibernate.Dialect.MsSql2000Dialect</span>&quot;<span 
+            style="color: blue;"> /&gt;</span></p>
+    <p style="margin: 0px;">
+        <span style="color: blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</span><span 
+            style="color: #a31515;">Pair</span><span style="color: blue;"> </span>
+        <span style="color: red;">Key</span><span style="color: blue;">=</span>&quot;<span 
+            style="color: blue;">hibernate.dialect</span>&quot;<span style="color: blue;">
+        </span><span style="color: red;">Value</span><span style="color: blue;">=</span>&quot;<span 
+            style="color: blue;">NHibernate.Dialect.MsSql2000Dialect</span>&quot;<span 
+            style="color: blue;"> /&gt;</span></p>
+    <p style="margin: 0px;">
+        <span style="color: blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</span><span 
+            style="color: #a31515;">Pair</span><span style="color: blue;"> </span>
+        <span style="color: red;">Key</span><span style="color: blue;">=</span>&quot;<span 
+            style="color: blue;">use_outer_join</span>&quot;<span style="color: blue;">
+        </span><span style="color: red;">Value</span><span style="color: blue;">=</span>&quot;<span 
+            style="color: blue;">true</span>&quot;<span style="color: blue;"> /&gt;</span></p>
+    <p style="margin: 0px;">
+        <span style="color: blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</span><span 
+            style="color: #a31515;">Pair</span><span style="color: blue;"> </span>
+        <span style="color: red;">Key</span><span style="color: blue;">=</span>&quot;<span 
+            style="color: blue;">connection.connection_string</span>&quot;<span 
+            style="color: blue;"> </span><span style="color: red;">Value</span><span 
+            style="color: blue;">=</span>&quot;a connection string&quot;<span 
+            style="color: blue;"> /&gt;</span></p>
+    <p style="margin: 0px;">
+        <span style="color: blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</span><span 
+            style="color: #a31515;">Pair</span><span style="color: blue;"> </span>
+        <span style="color: red;">Key</span><span style="color: blue;">=</span>&quot;<span 
+            style="color: blue;">show_sql</span>&quot;<span style="color: blue;"> </span>
+        <span style="color: red;">Value</span><span style="color: blue;">=</span>&quot;<span 
+            style="color: blue;">true</span>&quot;<span style="color: blue;"> /&gt;</span></p>
+    <p style="margin: 0px;">
+        <span style="color: blue;">&nbsp;&nbsp;&nbsp; &lt;/</span><span 
+            style="color: #a31515;">properties</span><span style="color: blue;">&gt;</span></p>
+    <p style="margin: 0px;">
+        <span style="color: blue;">&nbsp; &lt;/</span><span style="color: #a31515;">DefaultInstance</span><span 
+            style="color: blue;">&gt;</span></p>
+</div>
+<!--EndFragment-->
+<p>&nbsp;</p>
+	<h4>Instance</h4>
+	<p>In StructureMap terms, an &quot;Instance&quot; is a named way to build or locate an object 
+        instance for a requested PluginType.&nbsp;&nbsp; There is an actual class in 
+        StructureMap 2.5 that represents an &quot;Instance.&quot;&nbsp; An abreviated version of 
+        the abstract Instance class is shown below:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red0\green128\blue0;}??\fs20     \cf3 public\cf0  \cf3 abstract\cf0  \cf3 class\cf0  \cf4 Instance\cf0  : \cf4 IDiagnosticInstance\par ??\cf0     \{\par ??        \cf3 private\cf0  \cf3 readonly\cf0  \cf3 string\cf0  _originalName;\par ??        \cf3 private\cf0  \cf4 InstanceInterceptor\cf0  _interceptor = \cf3 new\cf0  \cf4 NulloInterceptor\cf0 ();\par ??        \cf3 private\cf0  \cf3 string\cf0  _name = \cf4 Guid\cf0 .NewGuid().ToString();\par ??\par ??\par ??        \cf3 protected\cf0  Instance()\par ??        \{\par ??            _originalName = _name;\par ??        \}\par ??\par ??        \cf3 public\cf0  \cf3 string\cf0  Name\par ??        \{\par ??            \cf3 get\cf0  \{ \cf3 return\cf0  _name; \}\par ??            \cf3 set\cf0  \{ _name = \cf3 value\cf0 ; \}\par ??        \}\par ??\par ??        \cf3 public\cf0  \cf3 virtual\cf0  \cf3 object\cf0  Build(\cf4 Type\cf0  pluginType, \cf4 IBuildSession\cf0  session)\par ??        \{\par ??            \cf3 object\cf0  rawValue = createRawObject(pluginType, session);\par ??            \cf3 return\cf0  applyInterception(rawValue, pluginType);\par ??        \}\par ??\par ??        \cf3 private\cf0  \cf3 object\cf0  createRawObject(\cf4 Type\cf0  pluginType, \cf4 IBuildSession\cf0  session)\par ??        \{\par ??            \cf3 try\par ??\cf0             \{\par ??                \cf3 return\cf0  build(pluginType, session);\par ??            \}\par ??            \cf3 catch\cf0  (\cf4 StructureMapException\cf0  ex)\par ??            \{\par ??                \cf3 throw\cf0 ;\par ??            \}\par ??            \cf3 catch\cf0  (\cf4 Exception\cf0  ex)\par ??            \{\par ??                \cf3 throw\cf0  \cf3 new\cf0  \cf4 StructureMapException\cf0 (400, ex);\par ??            \}\par ??        \}\par ??\par ??        \cf3 protected\cf0  \cf3 abstract\cf0  \cf3 object\cf0  build(\cf4 Type\cf0  pluginType, \cf4 IBuildSession\cf0  session);\par ??\par ??        \cf3 public\cf0  \cf4 InstanceInterceptor\cf0  Interceptor\par ??        \{\par ??            \cf3 get\cf0  \{ \cf3 return\cf0  _interceptor; \}\par ??            \cf3 set\cf0  \{ _interceptor = \cf3 value\cf0 ; \}\par ??        \}\par ??\par ??\par ??\par ??\cf3         #region\cf0  IDiagnosticInstance Members\par ??\par ??        \cf3 bool\cf0  \cf4 IDiagnosticInstance\cf0 .CanBePartOfPluginFamily(\cf4 PluginFamily\cf0  family)\par ??        \{\par ??            \cf3 return\cf0  canBePartOfPluginFamily(family);\par ??        \}\par ??\par ??        \cf4 Instance\cf0  \cf4 IDiagnosticInstance\cf0 .FindInstanceForProfile(\cf4 PluginFamily\cf0  family, \cf3 string\cf0  profileName, \cf4 GraphLog\cf0  log)\par ??        \{\par ??            \cf3 return\cf0  findMasterInstance(family, profileName, log);\par ??        \}\par ??\par ??        \cf4 InstanceToken\cf0  \cf4 IDiagnosticInstance\cf0 .CreateToken()\par ??        \{\par ??            \cf3 return\cf0  \cf3 new\cf0  \cf4 InstanceToken\cf0 (Name, getDescription());\par ??        \}\par ??\par ??        \cf3 void\cf0  \cf4 IDiagnosticInstance\cf0 .Preprocess(\cf4 PluginFamily\cf0  family)\par ??        \{\par ??            preprocess(family);\par ??        \}\par ??\par ??        \cf3 protected\cf0  \cf3 virtual\cf0  \cf3 void\cf0  preprocess(\cf4 PluginFamily\cf0  family)\par ??        \{\par ??            \cf5 // no-op;\par ??\cf0         \}\par ??\par ??        \cf3 protected\cf0  \cf3 abstract\cf0  \cf3 string\cf0  getDescription();\par ??\par ??\cf3         #endregion\par ??\par ??\cf0         \cf3 protected\cf0  \cf3 void\cf0  replaceNameIfNotAlreadySet(\cf3 string\cf0  name)\par ??        \{\par ??            \cf3 if\cf0  (_name == _originalName)\par ??            \{\par ??                _name = name;\par ??            \}\par ??        \}\par ??\par ??\par ??\par ??        \cf3 private\cf0  \cf3 object\cf0  applyInterception(\cf3 object\cf0  rawValue, \cf4 Type\cf0  pluginType)\par ??        \{\par ??            \cf3 try\par ??\cf0             \{\par ??                \cf5 // Intercept with the Instance-specific InstanceInterceptor\par ??\cf0                 \cf3 return\cf0  _interceptor.Process(rawValue);\par ??            \}\par ??            \cf3 catch\cf0  (\cf4 Exception\cf0  e)\par ??            \{\par ??                \cf3 throw\cf0  \cf3 new\cf0  \cf4 StructureMapException\cf0 (270, e, Name, pluginType);\par ??            \}\par ??        \}\par ??\par ??        \cf3 protected\cf0  \cf3 abstract\cf0  \cf3 object\cf0  build(\cf4 Type\cf0  pluginType, \cf4 IBuildSession\cf0  session);\par ??\par ??        \cf3 protected\cf0  \cf3 virtual\cf0  \cf4 Plugin\cf0  findPlugin(\cf4 PluginCollection\cf0  plugins)\par ??        \{\par ??            \cf3 return\cf0  \cf3 null\cf0 ;\par ??        \}\par ??\par ??        \cf3 protected\cf0  \cf3 virtual\cf0  \cf4 Instance\cf0  findMasterInstance(\cf4 PluginFamily\cf0  family, \cf3 string\cf0  profileName, \cf4 GraphLog\cf0  log)\par ??        \{\par ??            \cf3 return\cf0  \cf3 this\cf0 ;\par ??        \}\par ??\par ??        \cf3 protected\cf0  \cf3 virtual\cf0  \cf3 bool\cf0  canBePartOfPluginFamily(\cf4 PluginFamily\cf0  family)\par ??        \{\par ??            \cf3 return\cf0  \cf3 true\cf0 ;\par ??        \}\par ??\par ??\par ??\par ??        \cf3 internal\cf0  \cf3 virtual\cf0  \cf3 bool\cf0  Matches(\cf4 Plugin\cf0  plugin)\par ??        \{\par ??            \cf3 return\cf0  \cf3 false\cf0 ;\par ??        \}\par ??    \}}
+-->
+    <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">
+            abstract</span> <span style="color: blue;">class</span>
+            <span style="color: #2b91af;">Instance</span> : <span style="color: #2b91af;">
+            IDiagnosticInstance</span></p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+            <span style="color: blue;">string</span> Name</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: blue;">get</span> { <span style="color: blue;">return</span> 
+            _name; }</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: blue;">set</span> { _name = <span style="color: blue;">value</span>; 
+            }</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        <p style="margin: 0px;">
+            &nbsp;</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+            <span style="color: blue;">virtual</span> <span style="color: blue;">object</span> 
+            Build(<span style="color: #2b91af;">Type</span> pluginType,
+            <span style="color: #2b91af;">IBuildSession</span> session)</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: blue;">object</span> rawValue = createRawObject(pluginType, 
+            session);</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: blue;">return</span> applyInterception(rawValue, 
+            pluginType);</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        <p style="margin: 0px;">
+            &nbsp;</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">private</span>
+            <span style="color: blue;">object</span> createRawObject(<span 
+                style="color: #2b91af;">Type</span> pluginType,
+            <span style="color: #2b91af;">IBuildSession</span> session)</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: blue;">try</span></p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: blue;">return</span> build(pluginType, session);</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: blue;">catch</span> (<span style="color: #2b91af;">StructureMapException</span> 
+            ex)</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: blue;">throw</span>;</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: blue;">catch</span> (<span style="color: #2b91af;">Exception</span> 
+            ex)</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: blue;">throw</span> <span style="color: blue;">new</span>
+            <span style="color: #2b91af;">StructureMapException</span>(400, ex);</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        <p style="margin: 0px;">
+            &nbsp;</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">protected</span>
+            <span style="color: blue;">abstract</span> <span style="color: blue;">object</span> 
+            build(<span style="color: #2b91af;">Type</span> pluginType,
+            <span style="color: #2b91af;">IBuildSession</span> session);</p>
+        <p style="margin: 0px;">
+            &nbsp;</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+    </div>
+<!--EndFragment-->
+<p>A single Instance can be assigned to a PluginType as the default.&nbsp; When you 
+    call ObjectFactory.GetInstance&lt;T&gt;(), StructureMap looks for the default Instance 
+    object for PluginType T, then executes the Instance.Build(Type, IBuildSession) 
+    method to create a new object or get an existing object.&nbsp; Note the abstract 
+    build(Type, IBuildSession) method.&nbsp; This is a Template Method that can be 
+    overriden to write your own customized Instance type.</p>
+<p>When you call ObjectFactory.Get</p>
+	<h4>Scoping</h4>
+	<p>a;lskdfje</p>
+	<h4>PluginFamily</h4>
+	<p>a;lskdfj</p>
+	<h4>Profile</h4>
+	<p>a;lskdfj</p>
+	<h4>Interceptor</h4>
+	<p>a;lskdfj</p>
+	<h4>PostProcessor</h4>
+	<p>a;lskdfj</p>
+	</body>
+</html>

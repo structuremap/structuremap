@@ -13,30 +13,27 @@ namespace StructureMap.Emitting.Parameters
         {
             ilgen.Emit(OpCodes.Ldarg_1);
             ilgen.Emit(OpCodes.Ldstr, parameter.Name);
-            callInstanceMemento(ilgen, "GetProperty");
+            ilgen.Emit(OpCodes.Callvirt, Methods.GET_PROPERTY);
             callParse(parameter.ParameterType, ilgen);
         }
 
         private void callParse(Type argumentType, ILGenerator ilgen)
         {
-            BindingFlags bindingAttr = BindingFlags.Static | BindingFlags.Public;
-            MethodInfo parseMethod =
-                argumentType.GetMethod("Parse", bindingAttr, null, new [] {typeof (string)}, null);
-            ilgen.Emit(OpCodes.Call, parseMethod);
+            ilgen.Emit(OpCodes.Call, Methods.ParseFor(argumentType));
         }
 
-
-        public void Setter(ILGenerator ilgen, PropertyInfo property)
+        public override void MandatorySetter(ILGenerator ilgen, PropertyInfo property)
         {
             ilgen.Emit(OpCodes.Ldloc_0);
             ilgen.Emit(OpCodes.Ldarg_1);
             ilgen.Emit(OpCodes.Ldstr, property.Name);
 
-            callInstanceMemento(ilgen, "GetProperty");
+            ilgen.Emit(OpCodes.Callvirt, Methods.GET_PROPERTY);
             callParse(property.PropertyType, ilgen);
 
             MethodInfo method = property.GetSetMethod();
             ilgen.Emit(OpCodes.Callvirt, method);
         }
+
     }
 }

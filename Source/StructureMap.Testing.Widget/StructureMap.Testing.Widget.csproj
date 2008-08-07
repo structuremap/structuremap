@@ -101,6 +101,7 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="BuilderSamples.cs" />
     <Compile Include="Columns.cs">
       <SubType>Code</SubType>
     </Compile>

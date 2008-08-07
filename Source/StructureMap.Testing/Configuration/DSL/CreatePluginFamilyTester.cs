@@ -164,7 +164,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             IContainer manager = new Container(registry => registry.BuildInstancesOf<IWidget>().TheDefaultIs(
                                                                RegistryExpressions.Instance<IWidget>().UsingConcreteType
-                                                                   <ColorWidget>().WithProperty("Color").
+                                                                   <ColorWidget>().WithProperty("color").
                                                                    EqualTo(
                                                                    "Red")
                                                                ));

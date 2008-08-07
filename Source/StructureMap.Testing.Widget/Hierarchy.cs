@@ -100,9 +100,10 @@ namespace StructureMap.Testing.Widget
 
         public override object BuildInstance(IConfiguredInstance instance, StructureMap.Pipeline.IBuildSession session)
         {
-            return new Child(
+            var target = new Child(
                 instance.GetProperty("Name"),
                 (GrandChild) instance.GetChild("MyGrandChild", typeof(GrandChild), session));
+            return target;
         }
     }
 }

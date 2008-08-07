@@ -110,7 +110,7 @@ namespace StructureMap.Pipeline
         private string findPropertyName<T>()
         {
             Plugin plugin = new Plugin(_pluggedType);
-            string propertyName = plugin.FindFirstConstructorArgumentOfType<T>();
+            string propertyName = plugin.FindArgumentNameForType<T>();
 
             if (string.IsNullOrEmpty(propertyName))
             {
@@ -231,6 +231,12 @@ namespace StructureMap.Pipeline
             public ConfiguredInstance Is(object value)
             {
                 LiteralInstance instance = new LiteralInstance(value);
+                return Is(instance);
+            }
+
+            public ConfiguredInstance IsAutoFilled()
+            {
+                DefaultInstance instance = new DefaultInstance();
                 return Is(instance);
             }
         }

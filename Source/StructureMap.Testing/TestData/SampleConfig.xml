@@ -45,17 +45,17 @@
 			<Property Name="String2" Value="Green"/>
 		</Instance>
 		<Instance Type="Color" Key="Blue">
-			<Property Name="Color" Value="Blue" />
+			<Property Name="color" Value="Blue" />
 		</Instance>
 		<Instance Type="Color" Key="Green">
-			<Property Name="Color" Value="Green" />
+			<Property Name="color" Value="Green" />
 		</Instance>
 		<Instance Type="NotPluggable" Key="NotPluggableInstance">
 			<Property Name="name" Value="WagsTheDog" />
 		</Instance>
 
 		<Instance Type="Color" Key="Red">
-			<Property Name="Color" Value="Red" />
+			<Property Name="color" Value="Red" />
 		</Instance>
 	</PluginFamily>
 	
@@ -66,13 +66,13 @@
 			<Property Name="Value" Value="10" />
 		</Instance>
 		<Instance Key="Blue" Type="Color">
-			<Property Name="Color" Value="Blue" />
+			<Property Name="color" Value="Blue" />
 		</Instance>
 		<Instance Key="Red" Type="Color">
-			<Property Name="Color" Value="Red" />
+			<Property Name="color" Value="Red" />
 		</Instance>
     <Instance Key="Green" Type="Color">
-      <Property Name="Color" Value="Green" />
+      <Property Name="color" Value="Green" />
     </Instance>
   </PluginFamily>
 	
@@ -198,7 +198,7 @@
     </AddInstance>
 
     <AddInstance PluginType="StructureMap.Testing.Widget.WidgetMaker, StructureMap.Testing.Widget" Type="Color" Key="Red">
-      <Property Name="Color" Value="Red" />
+      <Property Name="color" Value="Red" />
     </AddInstance>
 		
 

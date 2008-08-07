@@ -115,9 +115,9 @@ namespace StructureMap.Testing.Widget
         private string _Color;
         public string ID = Guid.NewGuid().ToString();
 
-        public ColorRule(string Color)
+        public ColorRule(string color)
         {
-            _Color = Color;
+            _Color = color;
         }
 
 

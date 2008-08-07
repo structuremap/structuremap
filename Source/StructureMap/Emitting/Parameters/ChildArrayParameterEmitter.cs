@@ -24,22 +24,18 @@ namespace StructureMap.Emitting.Parameters
         {
             ilgen.Emit(OpCodes.Ldarg_2);
 
-            //ilgen.Emit(OpCodes.Ldstr, argumentType.GetElementType().AssemblyQualifiedName);
             ilgen.Emit(OpCodes.Ldtoken, argumentType.GetElementType());
-            MethodInfo method = typeof (Type).GetMethod("GetTypeFromHandle");
-            ilgen.Emit(OpCodes.Call, method);
+            ilgen.Emit(OpCodes.Call, Methods.GET_TYPE_FROM_HANDLE);
 
             ilgen.Emit(OpCodes.Ldarg_1);
 
             ilgen.Emit(OpCodes.Ldstr, argumentName);
-            callInstanceMemento(ilgen, "GetChildrenArray");
-
-            MethodInfo methodCreateInstanceArray = (typeof (IBuildSession).GetMethod("CreateInstanceArray"));
-            ilgen.Emit(OpCodes.Callvirt, methodCreateInstanceArray);
+            ilgen.Emit(OpCodes.Callvirt, Methods.GET_CHILDREN_ARRAY);
+            ilgen.Emit(OpCodes.Callvirt, Methods.CREATE_INSTANCE_ARRAY);
             cast(ilgen, argumentType);
         }
 
-        public void Setter(ILGenerator ilgen, PropertyInfo property)
+        public override void MandatorySetter(ILGenerator ilgen, PropertyInfo property)
         {
             ilgen.Emit(OpCodes.Ldloc_0);
             putChildArrayFromInstanceMementoOntoStack(ilgen, property.PropertyType, property.Name);

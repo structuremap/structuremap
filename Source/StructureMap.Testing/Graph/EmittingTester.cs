@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using NUnit.Framework;
+using StructureMap.Attributes;
 using StructureMap.Emitting;
+using StructureMap.Emitting.Parameters;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Pipeline;
@@ -48,6 +50,39 @@ namespace StructureMap.Testing.Graph
         private Exception ex;
         private IConfiguredInstance instance;
         private ComplexRule rule;
+
+        [Test]
+        public void can_get_the_parse_method_from_Enum()
+        {
+            Methods.ENUM_PARSE.ShouldNotBeNull();
+        }
+
+        [Test]
+        public void EmitANoArgClass()
+        {
+            Plugin plugin = new Plugin(typeof(NoArgClass));
+            InstanceBuilderAssembly _InstanceBuilderAssembly =
+                    new InstanceBuilderAssembly(typeof(NoArgClass), new Plugin[] { plugin });
+            List<InstanceBuilder> list = _InstanceBuilderAssembly.Compile();
+            builder = list[0];
+
+            var obj = builder.BuildInstance(new ConfiguredInstance(typeof (NoArgClass)), new StubBuildSession());
+            obj.ShouldNotBeNull();
+        }
+
+
+        [Test]
+        public void EmitAOneSetterClass()
+        {
+            Plugin plugin = new Plugin(typeof(WithOneSetter));
+            InstanceBuilderAssembly _InstanceBuilderAssembly =
+                    new InstanceBuilderAssembly(typeof(WithOneSetter), new Plugin[] { plugin });
+            List<InstanceBuilder> list = _InstanceBuilderAssembly.Compile();
+            builder = list[0];
+
+            var obj = builder.BuildInstance(new ConfiguredInstance(typeof(WithOneSetter)).WithProperty("Name").EqualTo("Jeremy"), new StubBuildSession());
+            obj.ShouldNotBeNull();
+        }
 
         [Test]
         public void BoolProperty()
@@ -116,5 +151,16 @@ namespace StructureMap.Testing.Graph
         {
             Assert.AreEqual("Red", rule.String);
         }
+    }
+
+    public class NoArgClass
+    {
+        
+    }
+
+    public class WithOneSetter
+    {
+        [SetterProperty]
+        public string Name { get; set; }
     }
 }

@@ -151,6 +151,8 @@ namespace StructureMap.Pipeline
 
         private void setChild(string name, Instance instance)
         {
+            if (instance == null) return;
+
             _children.Add(name, instance);
         }
 
@@ -188,12 +190,5 @@ namespace StructureMap.Pipeline
             }
         }
 
-        public void ForProperty(string propertyName, Action<string> action)
-        {
-            if (_properties.ContainsKey(propertyName))
-            {
-                action(_properties[propertyName]);
-            }
-        }
     }
 }

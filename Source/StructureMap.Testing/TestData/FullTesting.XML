@@ -1,13 +1,13 @@
 <PluginDefinition>
 	<Widgets>
 		<Widget Type="Color" Key="Red">
-			<Property Name="Color" Value="Red" />
+			<Property Name="color" Value="Red" />
 		</Widget>
 		<Widget Type="Color" Key="Blue">
-			<Property Name="Color" Value="Blue" />
+			<Property Name="color" Value="Blue" />
 		</Widget>
 		<Widget Type="Color" Key="Green">
-			<Property Name="Color" Value="Green" />
+			<Property Name="color" Value="Green" />
 		</Widget>
 		<Widget Type="NotPluggable" Key="NotPluggableInstance">
 			<Property Name="name" Value="Henry"/>

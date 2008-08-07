@@ -11,15 +11,14 @@ namespace StructureMap.Testing.Widget
     {
         private string _Color;
 
-        public ColorWidgetMaker(string Color)
+        public ColorWidgetMaker(string color)
         {
-            _Color = Color;
+            _Color = color;
         }
 
         public string Color
         {
             get { return _Color; }
-            set { _Color = value; }
         }
 
         public override IWidget MakeWidget()

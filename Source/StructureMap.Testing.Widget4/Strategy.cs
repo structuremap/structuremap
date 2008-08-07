@@ -213,7 +213,6 @@ namespace StructureMap.Testing.Widget4
         public string Color
         {
             get { return _color; }
-            set { _color = value; }
         }
 
         #region IStrategy Members

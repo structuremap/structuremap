@@ -66,5 +66,9 @@ namespace StructureMap.Pipeline
             }
         }
 
+        bool IConfiguredInstance.HasProperty(string propertyName)
+        {
+            return _properties.ContainsKey(propertyName) || _children.ContainsKey(propertyName) || _arrays.ContainsKey(propertyName);
+        }
     }
 }

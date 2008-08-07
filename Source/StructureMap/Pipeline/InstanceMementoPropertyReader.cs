@@ -88,7 +88,7 @@ namespace StructureMap.Pipeline
 
         private void copyChild(string name, Type childType, bool isMandatory)
         {
-            Instance childInstance = _memento.ReadChildInstance(name, _pluginGraph, childType) ?? new DefaultInstance();
+            Instance childInstance = _memento.ReadChildInstance(name, _pluginGraph, childType);
             
             _instance.Child(name).Is(childInstance);
         }

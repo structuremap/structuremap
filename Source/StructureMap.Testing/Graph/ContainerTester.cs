@@ -35,10 +35,10 @@ namespace StructureMap.Testing.Graph
         {
             _manager.Configure(registry =>
             {
-                registry.AddInstanceOf<Rule>().UsingConcreteType<ColorRule>().SetProperty("Color", Color).WithName(Color);
-                registry.AddInstanceOf<IWidget>().UsingConcreteType<ColorWidget>().SetProperty("Color", Color).WithName(
+                registry.AddInstanceOf<Rule>().UsingConcreteType<ColorRule>().SetProperty("color", Color).WithName(Color);
+                registry.AddInstanceOf<IWidget>().UsingConcreteType<ColorWidget>().SetProperty("color", Color).WithName(
                     Color);
-                registry.AddInstanceOf<WidgetMaker>().UsingConcreteType<ColorWidgetMaker>().SetProperty("Color", Color).
+                registry.AddInstanceOf<WidgetMaker>().UsingConcreteType<ColorWidgetMaker>().SetProperty("color", Color).
                     WithName(Color);
             });
         }

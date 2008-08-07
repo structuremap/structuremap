@@ -16,8 +16,9 @@ namespace StructureMap.Emitting
 
         public InstanceBuilderAssembly(Type pluginType, IEnumerable<Plugin> plugins)
         {
-            string assemblyName = guidString() + "InstanceBuilderAssembly";
+            string assemblyName = "Builders" + guidString();
             _dynamicAssembly = new DynamicAssembly(assemblyName);
+           
             _pluginType = pluginType;
 
             foreach (Plugin plugin in plugins)
@@ -28,7 +29,7 @@ namespace StructureMap.Emitting
 
         private static string guidString()
         {
-            return Guid.NewGuid().ToString().Replace(".", "");
+            return Guid.NewGuid().ToString().Replace(".", "").Replace("-", "");
         }
 
         /// <summary>
@@ -85,6 +86,7 @@ namespace StructureMap.Emitting
         public List<InstanceBuilder> Compile()
         {
             Assembly assembly = _dynamicAssembly.Compile();
+            
 
             return
                 _classNames.ConvertAll<InstanceBuilder>(

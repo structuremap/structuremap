@@ -403,6 +403,7 @@
     <Compile Include="Diagnostics\DoctorResult.cs" />
     <Compile Include="Diagnostics\DoctorRunner.cs" />
     <Compile Include="Diagnostics\ValidationError.cs" />
+    <Compile Include="Emitting\Parameters\Methods.cs" />
     <Compile Include="ErrorMessages.cs" />
     <Compile Include="Graph\ITypeScanner.cs" />
     <Compile Include="IBootstrapper.cs" />

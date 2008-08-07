@@ -84,7 +84,7 @@ namespace StructureMap.Graph
             return new ConfiguredInstance(PluggedType).WithConcreteKey(ConcreteKey).WithName(ConcreteKey);
         }
 
-        public string FindFirstConstructorArgumentOfType<T>()
+        public string FindArgumentNameForType<T>()
         {
             string returnValue =
                 _constructor.FindFirstConstructorArgumentOfType<T>() ??
@@ -134,6 +134,11 @@ namespace StructureMap.Graph
             if (!Constructor.HasConstructors(type)) return null;
 
             return new Plugin(type, DEFAULT);
+        }
+
+        public bool HasOptionalSetters()
+        {
+            return _setters.OptionalCount > 0;
         }
     }
 }

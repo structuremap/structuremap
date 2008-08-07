@@ -321,21 +321,29 @@ namespace StructureMap.Testing.Pipeline
         }
 
         [Test]
-        public void ForProperty_hit_calls_action()
+        public void HasProperty_for_child()
         {
-            ConfiguredInstance instance = new ConfiguredInstance().WithProperty("age").EqualTo("34");
-            string theAge = null;
+            var instance = new ConfiguredInstance();
 
-            instance.ForProperty("age", s => theAge = s);
-            theAge.ShouldEqual("34");
+            IConfiguredInstance configuredInstance = instance;
+            configuredInstance.HasProperty("prop1").ShouldBeFalse();
+
+            instance.Child("prop1").IsNamedInstance("something");
+            configuredInstance.HasProperty("prop1").ShouldBeTrue();
         }
+
 
         [Test]
-        public void ForProperty_miss_does_not_call_action()
+        public void HasProperty_for_child_array()
         {
-            ConfiguredInstance instance = new ConfiguredInstance().WithProperty("age").EqualTo("34");
+            var instance = new ConfiguredInstance();
 
-            instance.ForProperty("NotAge", s => Assert.Fail("Should not be called"));
+            IConfiguredInstance configuredInstance = instance;
+            configuredInstance.HasProperty("prop1").ShouldBeFalse();
+
+            instance.ChildArray<IGateway[]>("prop1").Contains(new DefaultInstance());
+            configuredInstance.HasProperty("prop1").ShouldBeTrue();
         }
+
     }
 }

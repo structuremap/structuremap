@@ -12,12 +12,6 @@ namespace StructureMap.Emitting.Parameters
     /// </summary>
     public abstract class ParameterEmitter
     {
-        protected void callInstanceMemento(ILGenerator ilgen, string methodName)
-        {
-            MethodInfo _method = typeof (IConfiguredInstance).GetMethod(methodName);
-            ilgen.Emit(OpCodes.Callvirt, _method);
-        }
-
         protected void cast(ILGenerator ilgen, Type parameterType)
         {
 			//NOTE: According to the docs, Unbox_Any, when called on a ref type, will just do a Castclass
@@ -33,6 +27,29 @@ namespace StructureMap.Emitting.Parameters
 				ilgen.Emit(OpCodes.Castclass, parameterType);
 			}
             
+        }
+
+        public abstract void MandatorySetter(ILGenerator ilgen, PropertyInfo property);
+
+        public void OptionalSetter(ILGenerator ilgen, PropertyInfo property)
+        {
+            ilgen.Emit(OpCodes.Ldarg_1);
+            ilgen.Emit(OpCodes.Ldstr, property.Name);
+            ilgen.Emit(OpCodes.Callvirt, Methods.HAS_PROPERTY);
+            ilgen.Emit(OpCodes.Ldc_I4_0);
+            ilgen.Emit(OpCodes.Ceq);
+            ilgen.Emit(OpCodes.Stloc_2);
+            ilgen.Emit(OpCodes.Ldloc_2);
+
+            Label label = ilgen.DefineLabel();
+
+            ilgen.Emit(OpCodes.Brtrue_S, label);
+
+            MandatorySetter(ilgen, property);
+
+            ilgen.Emit(OpCodes.Nop);
+
+            ilgen.MarkLabel(label);
         }
     }
 }

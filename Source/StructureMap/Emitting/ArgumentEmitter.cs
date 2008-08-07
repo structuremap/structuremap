@@ -20,41 +20,43 @@ namespace StructureMap.Emitting
             this.ilgen = ilgen;
         }
 
+        private void addSetter(ParameterEmitter emitter, PropertyInfo property, bool isMandatory )
+        {
+            if (isMandatory)
+            {
+                emitter.MandatorySetter(ilgen, property);
+            }
+            else
+            {
+                emitter.OptionalSetter(ilgen, property);
+            }
+        }
+
         #region IArgumentVisitor Members
 
         public void PrimitiveSetter(PropertyInfo property, bool isMandatory)
         {
-            if (!isMandatory) return;
-
-            _primitive.Setter(ilgen, property);
+            addSetter(_primitive, property, isMandatory);
         }
 
         public void StringSetter(PropertyInfo property, bool isMandatory)
         {
-            if (!isMandatory) return;
-
-            _string.Setter(ilgen, property);
+            addSetter(_string, property, isMandatory);
         }
 
         public void EnumSetter(PropertyInfo property, bool isMandatory)
         {
-            if (!isMandatory) return;
-
-            _enum.Setter(ilgen, property);
+            addSetter(_enum, property, isMandatory);
         }
 
         public void ChildSetter(PropertyInfo property, bool isMandatory)
         {
-            if (!isMandatory) return;
-
-            _child.Setter(ilgen, property);
+            addSetter(_child, property, isMandatory);
         }
 
         public void ChildArraySetter(PropertyInfo property, bool isMandatory)
         {
-            if (!isMandatory) return;
-
-            _childArray.Setter(ilgen, property);
+            addSetter(_childArray, property, isMandatory);
         }
 
         public void PrimitiveParameter(ParameterInfo parameter)

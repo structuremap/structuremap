@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Reflection;
 using System.Reflection.Emit;
+using StructureMap.Emitting.Parameters;
 
 namespace StructureMap.Emitting
 {
@@ -102,8 +103,7 @@ namespace StructureMap.Emitting
             gen.Emit(OpCodes.Nop);
             gen.Emit(OpCodes.Ldtoken, pluggedType);
 
-            MethodInfo method = typeof (Type).GetMethod("GetTypeFromHandle");
-            gen.Emit(OpCodes.Call, method);
+            gen.Emit(OpCodes.Call, Methods.GET_TYPE_FROM_HANDLE);
 
             gen.Emit(OpCodes.Stloc_0);
 

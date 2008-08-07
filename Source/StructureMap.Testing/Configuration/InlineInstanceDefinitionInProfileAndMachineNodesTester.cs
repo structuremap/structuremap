@@ -20,19 +20,19 @@ namespace StructureMap.Testing.Configuration
 
   <Profile Name='Blue'>
     <Override Type='StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget'>
-      <Instance Type='Color' Color='Blue'/>
+      <Instance Type='Color' color='Blue'/>
     </Override>
     <Override Type='StructureMap.Testing.Widget.Rule,StructureMap.Testing.Widget'>
-      <Instance Type='Color' Color='Blue'/>
+      <Instance Type='Color' color='Blue'/>
     </Override>
   </Profile>
 
   <Profile Name='Green'>
     <Override Type='StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget'>
-      <Instance Type='Color' Color='Green'/>
+      <Instance Type='Color' color='Green'/>
     </Override>
     <Override Type='StructureMap.Testing.Widget.Rule,StructureMap.Testing.Widget'>
-      <Instance Type='Color' Color='Green'/>
+      <Instance Type='Color' color='Green'/>
     </Override>
   </Profile>
 
@@ -40,7 +40,7 @@ namespace StructureMap.Testing.Configuration
 
   <Machine Name='ORANGE-BOX'>
     <Override Type='StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget'>
-      <Instance Type='Color' Color='Orange'/>
+      <Instance Type='Color' color='Orange'/>
     </Override>
   </Machine>
 </StructureMap>

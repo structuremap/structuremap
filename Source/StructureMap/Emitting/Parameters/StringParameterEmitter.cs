@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Reflection.Emit;
+using StructureMap.Pipeline;
 
 namespace StructureMap.Emitting.Parameters
 {
@@ -12,19 +13,16 @@ namespace StructureMap.Emitting.Parameters
         {
             ilgen.Emit(OpCodes.Ldarg_1);
             ilgen.Emit(OpCodes.Ldstr, parameter.Name);
-            callInstanceMemento(ilgen, "GetProperty");
+            ilgen.Emit(OpCodes.Callvirt, Methods.GET_PROPERTY);
         }
 
-
-        public void Setter(ILGenerator ilgen, PropertyInfo property)
+        public override void MandatorySetter(ILGenerator ilgen, PropertyInfo property)
         {
             ilgen.Emit(OpCodes.Ldloc_0);
             ilgen.Emit(OpCodes.Ldarg_1);
             ilgen.Emit(OpCodes.Ldstr, property.Name);
-            callInstanceMemento(ilgen, "GetProperty");
-
-            MethodInfo method = property.GetSetMethod();
-            ilgen.Emit(OpCodes.Callvirt, method);
+            ilgen.Emit(OpCodes.Callvirt, Methods.GET_PROPERTY);
+            ilgen.Emit(OpCodes.Callvirt, property.GetSetMethod());
         }
     }
 }

@@ -19,27 +19,20 @@ namespace StructureMap.Emitting.Parameters
 
         private void putEnumerationValueFromMementoOntoStack(ILGenerator ilgen, Type argumentType, string argumentName)
         {
-            Type typeItself = typeof (Type);
-            MethodInfo getTypeFromHandleMethod = typeItself.GetMethod("GetTypeFromHandle");
-
             ilgen.Emit(OpCodes.Ldtoken, argumentType);
-            ilgen.Emit(OpCodes.Call, getTypeFromHandleMethod);
+            ilgen.Emit(OpCodes.Call, Methods.GET_TYPE_FROM_HANDLE);
             ilgen.Emit(OpCodes.Ldarg_1);
             ilgen.Emit(OpCodes.Ldstr, argumentName);
-            callInstanceMemento(ilgen, "GetProperty");
+            ilgen.Emit(OpCodes.Callvirt, Methods.GET_PROPERTY);
             ilgen.Emit(OpCodes.Ldc_I4_1);
 
-
-            Type enumType = typeof (Enum);
-            MethodInfo parseMethod =
-                enumType.GetMethod("Parse", new Type[] {typeItself, typeof (string), typeof (bool)});
-            ilgen.Emit(OpCodes.Call, parseMethod);
+            ilgen.Emit(OpCodes.Call, Methods.ENUM_PARSE);
 
             ilgen.Emit(OpCodes.Unbox, argumentType);
             ilgen.Emit(OpCodes.Ldind_I4);
         }
 
-        public void Setter(ILGenerator ilgen, PropertyInfo property)
+        public override void MandatorySetter(ILGenerator ilgen, PropertyInfo property)
         {
             ilgen.Emit(OpCodes.Ldloc_0);
             putEnumerationValueFromMementoOntoStack(ilgen, property.PropertyType, property.Name);

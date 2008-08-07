@@ -22,19 +22,19 @@ namespace StructureMap.Testing.Configuration.DSL
                 registry.AddInstanceOf<IWidget>()
                     .UsingConcreteType<ColorWidget>()
                     .WithName("DarkGreen")
-                    .WithProperty("Color").EqualTo("DarkGreen");
+                    .WithProperty("color").EqualTo("DarkGreen");
 
                 // Add an instance by specifying the ConcreteKey
                 registry.AddInstanceOf<IWidget>()
                     .UsingConcreteTypeNamed("Color")
                     .WithName("Purple")
-                    .WithProperty("Color").EqualTo("Purple");
+                    .WithProperty("color").EqualTo("Purple");
 
                 // Pull a property from the App config
                 registry.AddInstanceOf<IWidget>()
                     .UsingConcreteType<ColorWidget>()
                     .WithName("AppSetting")
-                    .WithProperty("Color").EqualToAppSetting("Color");
+                    .WithProperty("color").EqualToAppSetting("Color");
 
 
                 registry.AddInstanceOf<IWidget>().UsingConcreteType<AWidget>();
@@ -99,7 +99,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 registry.AddInstanceOf<IWidget>()
                     .UsingConcreteType<ColorWidget>()
                     .WithName("Purple")
-                    .WithProperty("Color").EqualTo("Purple");
+                    .WithProperty("color").EqualTo("Purple");
 
                 // Specify a new Instance, override a dependency with a named instance
                 registry.AddInstanceOf<Rule>().UsingConcreteType<WidgetRule>().WithName("RuleThatUsesMyInstance")
@@ -118,7 +118,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 registry.AddInstanceOf<IWidget>()
                     .UsingConcreteType<ColorWidget>()
                     .WithName("Purple")
-                    .WithProperty("Color").EqualTo("Purple");
+                    .WithProperty("color").EqualTo("Purple");
 
                 // Specify a new Instance, override a dependency with a named instance
                 registry.AddInstanceOf<Rule>().UsingConcreteType<WidgetRule>().WithName("RuleThatUsesMyInstance")
@@ -142,7 +142,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 registry => registry.AddInstanceOf<Rule>().UsingConcreteType<WidgetRule>().WithName(instanceKey)
                                 .Child<IWidget>().Is(
                                 Instance<IWidget>().UsingConcreteType<ColorWidget>()
-                                    .WithProperty("Color").EqualTo("Orange")
+                                    .WithProperty("color").EqualTo("Orange")
                                     .WithName("Orange")
                                 ));
 

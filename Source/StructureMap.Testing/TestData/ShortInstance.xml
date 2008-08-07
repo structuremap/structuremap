@@ -2,28 +2,28 @@
   <DefaultInstance 
     PluginType="StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget" 
     PluggedType="StructureMap.Testing.Widget.ColorWidget,StructureMap.Testing.Widget" 
-    Color="Red" />
+    color="Red" />
 
   <AddInstance 
     Key="Red" 
     PluginType="StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget" 
     PluggedType="StructureMap.Testing.Widget.ColorWidget,StructureMap.Testing.Widget" 
-    Color="Red" />
+    color="Red" />
 
   <AddInstance 
     Key="Green" 
     PluginType="StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget" 
     PluggedType="StructureMap.Testing.Widget.ColorWidget,StructureMap.Testing.Widget" 
-    Color="Green" />
+    color="Green" />
 
   <AddInstance  
     PluginType="StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget" 
     PluggedType="StructureMap.Testing.Widget.ColorWidget,StructureMap.Testing.Widget" 
-    Color="Purple" />
+    color="Purple" />
 
 
   <AddInstance 
     Key="Blue" 
     PluginType="StructureMap.Testing.Widget.Rule,StructureMap.Testing.Widget" 
-    PluggedType="StructureMap.Testing.Widget.ColorRule,StructureMap.Testing.Widget" Color="Blue" Scope="Singleton" Name="TheBlueOne"/>
+    PluggedType="StructureMap.Testing.Widget.ColorRule,StructureMap.Testing.Widget" color="Blue" Scope="Singleton" Name="TheBlueOne"/>
 </StructureMap>

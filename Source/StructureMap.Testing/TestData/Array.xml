@@ -3,10 +3,10 @@
 	<Decision Type="Default" Key="RedBlue">
 		<Property Name="Rules">
 			<Rule Type="Color">
-				<Property Name="Color" Value="Red"/>
+				<Property Name="color" Value="Red"/>
 			</Rule>
 			<Rule Type="Color">
-				<Property Name="Color" Value="Blue"/>
+				<Property Name="color" Value="Blue"/>
 			</Rule>
 		</Property>
 	</Decision>
@@ -14,13 +14,13 @@
 	<Decision Type="Default" Key="GreenBluePurple">
 		<Property Name="Rules">
 			<Rule Type="Color">
-				<Property Name="Color" Value="Green"/>
+				<Property Name="color" Value="Green"/>
 			</Rule>
 			<Rule Type="Color">
-				<Property Name="Color" Value="Blue"/>
+				<Property Name="color" Value="Blue"/>
 			</Rule>
 			<Rule Type="Color">
-				<Property Name="Color" Value="Purple"/>
+				<Property Name="color" Value="Purple"/>
 			</Rule>
 		</Property>
 	</Decision>

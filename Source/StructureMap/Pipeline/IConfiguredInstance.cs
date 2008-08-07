@@ -11,6 +11,6 @@ namespace StructureMap.Pipeline
         string GetProperty(string propertyName);
         object GetChild(string propertyName, Type pluginType, IBuildSession buildSession);
         object Build(Type pluginType, IBuildSession session, InstanceBuilder builder);
-        void ForProperty(string propertyName, Action<string> action);
+        bool HasProperty(string propertyName);
     }
 }

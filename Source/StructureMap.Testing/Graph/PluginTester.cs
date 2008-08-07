@@ -206,7 +206,7 @@ namespace StructureMap.Testing.Graph
             Plugin plugin = new Plugin(typeof (GrandPrix));
             string expected = "engine";
 
-            string actual = plugin.FindFirstConstructorArgumentOfType<IEngine>();
+            string actual = plugin.FindArgumentNameForType<IEngine>();
             Assert.AreEqual(expected, actual);
         }
 
@@ -215,7 +215,7 @@ namespace StructureMap.Testing.Graph
         {
             Plugin plugin = new Plugin(typeof (GTO));
 
-            Assert.AreEqual("Engine", plugin.FindFirstConstructorArgumentOfType<IEngine>());
+            Assert.AreEqual("Engine", plugin.FindArgumentNameForType<IEngine>());
         }
 
         [Test,
@@ -226,7 +226,7 @@ namespace StructureMap.Testing.Graph
         public void FindFirstConstructorArgumentOfTypeNegativeCase()
         {
             Plugin plugin = new Plugin(typeof (GrandPrix));
-            plugin.FindFirstConstructorArgumentOfType<IWidget>();
+            plugin.FindArgumentNameForType<IWidget>();
         }
 
         [Test]

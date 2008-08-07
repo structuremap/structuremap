@@ -17,8 +17,10 @@ namespace StructureMap.Graph
         {
             if (!IsConcrete(type)) return;
 
+            
+
             Type pluginType = FindPluginType(type);
-            if (pluginType != null)
+            if (pluginType != null && Plugin.CreateForConcreteType(type) != null)
             {
                 registry.ForRequestedType(pluginType).AddInstance(new ConfiguredInstance(type));
             }

@@ -25,7 +25,7 @@ namespace StructureMap.Testing.Configuration.DSL
             {
                 registry.BuildInstancesOf<IWidget>().TheDefaultIs(
                     Instance<IWidget>().UsingConcreteType<ColorWidget>()
-                        .WithProperty("Color").EqualTo("yellow")
+                        .WithProperty("color").EqualTo("yellow")
                     );
 
                 registry.BuildInstancesOf<Rule>().TheDefaultIsConcreteType<WidgetRule>();
@@ -92,7 +92,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 registry.AddInstanceOf<IWidget>()
                     .UsingConcreteType<ColorWidget>()
                     .WithName("Yellow")
-                    .WithProperty("Color").EqualTo("yellow");
+                    .WithProperty("color").EqualTo("yellow");
 
                 registry.AddInstanceOf<Rule>()
                     .UsingConcreteType<WidgetRule>()
@@ -115,7 +115,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             ConfiguredInstance widgetExpression = Instance<IWidget>()
                 .UsingConcreteType<ColorWidget>()
-                .WithProperty("Color").EqualTo("yellow");
+                .WithProperty("color").EqualTo("yellow");
 
             ConfiguredInstance ruleExpression = Instance<Rule>()
                 .UsingConcreteType<WidgetRule>()

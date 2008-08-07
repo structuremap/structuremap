@@ -38,7 +38,15 @@ namespace StructureMap.Emitting
 
         protected override void Generate(ILGenerator ilgen)
         {
-            ilgen.DeclareLocal(typeof (object));
+            ilgen.Emit(OpCodes.Nop);
+            ilgen.DeclareLocal(_plugin.PluggedType);
+            ilgen.DeclareLocal(typeof(object));
+
+            for (int i = 0; i < _plugin.Setters.OptionalCount; i++)
+            {
+                ilgen.DeclareLocal(typeof (bool));
+            }
+
             ArgumentEmitter arguments = new ArgumentEmitter(ilgen);
 
             _plugin.VisitConstructor(arguments);
@@ -49,9 +57,12 @@ namespace StructureMap.Emitting
 
             _plugin.VisitSetters(arguments);
 
+            ilgen.Emit(OpCodes.Ldloc_0);
+            ilgen.Emit(OpCodes.Stloc_1);
+
             ilgen.Emit(OpCodes.Br_S, label);
             ilgen.MarkLabel(label);
-            ilgen.Emit(OpCodes.Ldloc_0);
+            ilgen.Emit(OpCodes.Ldloc_1);
             ilgen.Emit(OpCodes.Ret);
         }
     }

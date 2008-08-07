@@ -13,14 +13,14 @@ namespace StructureMap.Emitting
     {
         private Hashtable _Classes;
         private bool _isCompiled = false;
-        private string _Name;
-        private AssemblyBuilder assemBuilder;
+        private string _name;
+        private AssemblyBuilder _assemblyBuilder;
         private string DLLName;
-        private ModuleBuilder module;
+        private ModuleBuilder _module;
 
-        public DynamicAssembly(string Name)
+        public DynamicAssembly(string name)
         {
-            _Name = Name;
+            _name = name;
             _Classes = new Hashtable();
 
             Init();
@@ -29,7 +29,7 @@ namespace StructureMap.Emitting
 
         public string Name
         {
-            get { return _Name; }
+            get { return _name; }
         }
 
         public bool IsCompiled
@@ -46,25 +46,27 @@ namespace StructureMap.Emitting
             assemName.CultureInfo = new CultureInfo("en");
             assemName.SetPublicKeyToken(null);
 
-            DLLName = _Name + ".DLL";
-            //assemBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(assemName, AssemblyBuilderAccess.RunAndSave);
-            assemBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(assemName, AssemblyBuilderAccess.Run);
+            DLLName = Name + ".dll";
+            _assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(assemName, AssemblyBuilderAccess.RunAndSave);
+            //_assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(assemName, AssemblyBuilderAccess.Run);
 
-            //module = assemBuilder.DefineDynamicModule(this.Name, DLLName);
-            module = assemBuilder.DefineDynamicModule(Name);
+            _module = _assemblyBuilder.DefineDynamicModule(this.Name, DLLName);
+            
+            
+            //_module = _assemblyBuilder.DefineDynamicModule(Name);
         }
 
 
         public ClassBuilder AddClass(string ClassName)
         {
-            ClassBuilder newClass = new ClassBuilder(module, ClassName);
+            ClassBuilder newClass = new ClassBuilder(_module, ClassName);
             storeClass(newClass);
             return newClass;
         }
 
         public ClassBuilder AddClass(string ClassName, Type superType)
         {
-            ClassBuilder newClass = new ClassBuilder(module, ClassName, superType);
+            ClassBuilder newClass = new ClassBuilder(_module, ClassName, superType);
             storeClass(newClass);
             return newClass;
         }
@@ -82,10 +84,12 @@ namespace StructureMap.Emitting
                 newClass.Bake();
             }
 
+            _assemblyBuilder.Save(_name + ".dll");
+
             //assemBuilder.Save(DLLName);
             //Assembly assem = AppDomain.CurrentDomain.Load(this.Name);
             _isCompiled = true;
-            return (Assembly) assemBuilder;
+            return (Assembly) _assemblyBuilder;
             //return assem;
         }
     }

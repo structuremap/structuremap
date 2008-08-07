@@ -218,21 +218,6 @@ namespace StructureMap.Testing
         }
 
         [Test]
-        public void ReadChildProperty_child_property_is_not_defined_so_use_default()
-        {
-            PluginGraph graph = new PluginGraph();
-            Plugin plugin = new Plugin(typeof (ComplexRule));
-
-            graph.FindFamily(typeof (Rule)).Plugins.Add(plugin);
-
-            MemoryInstanceMemento memento = ComplexRule.GetMemento();
-            memento.SetProperty(XmlConstants.PLUGGED_TYPE, typeof (ComplexRule).AssemblyQualifiedName);
-
-            IStructuredInstance instance = (IStructuredInstance) memento.ReadInstance(graph, typeof (Rule));
-            Assert.IsInstanceOfType(typeof (DefaultInstance), instance.GetChild("car"));
-        }
-
-        [Test]
         public void ReadPrimitivePropertiesHappyPath()
         {
             PluginGraph graph = new PluginGraph();
