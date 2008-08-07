@@ -81,15 +81,16 @@ namespace StructureMap
 
         public void Visit(IPipelineGraphVisitor visitor)
         {
-            foreach (KeyValuePair<Type, IInstanceFactory> pair in _factories)
+            var factories = new IInstanceFactory[_factories.Count];
+            _factories.Values.CopyTo(factories, 0);
+
+            foreach (IInstanceFactory factory in factories)
             {
-                Type pluginType = pair.Value.PluginType;
+                Type pluginType = factory.PluginType;
                 Instance defaultInstance = _profileManager.GetDefault(pluginType);
 
-                pair.Value.AcceptVisitor(visitor, defaultInstance);
+                factory.AcceptVisitor(visitor, defaultInstance);
             }
-
-
         }
 
         // Useful for the validation logic
