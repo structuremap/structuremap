@@ -43,7 +43,7 @@ namespace StructureMap.Testing
         public static Plugin GetPlugin(Type pluginType, string concreteKey)
         {
             PluginFamily family = GetPluginFamily(pluginType);
-            return family.Plugins[concreteKey];
+            return family.FindPlugin(concreteKey);
         }
 
         public static PluginGraph GetPluginGraph()

@@ -102,14 +102,15 @@ namespace StructureMap.Graph
             templatedFamily.Policy = baseFamily.Policy.Clone();
 
             // Add Plugins
-            foreach (Plugin plugin in baseFamily.Plugins)
+            baseFamily.EachPlugin(plugin =>
             {
                 if (CanBePluggedIntoGenericType(baseFamily.PluginType, plugin.PluggedType, templateTypes))
                 {
                     Plugin templatedPlugin = CreateTemplatedClone(plugin, templateTypes);
-                    templatedFamily.Plugins.Add(templatedPlugin);
+                    templatedFamily.AddPlugin(templatedPlugin);
                 }
-            }
+            });
+
 
             // TODO -- Got a big problem here.  Intances need to be copied over
             baseFamily.EachInstance(i =>
@@ -139,6 +140,7 @@ namespace StructureMap.Graph
             {
                 templatedType = plugin.PluggedType;
             }
+
             Plugin templatedPlugin = new Plugin(templatedType, plugin.ConcreteKey);
             foreach (SetterProperty setter in plugin.Setters)
             {

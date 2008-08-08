@@ -62,7 +62,7 @@ namespace StructureMap.Testing.Graph
 
             PluginFamily family = graph.FindFamily(typeof (Rule));
             Assert.IsNotNull(family);
-            Assert.AreEqual(5, family.Plugins.Count, "There are 5 Rule classes in the two assemblies");
+            Assert.AreEqual(5, family.PluginCount, "There are 5 Rule classes in the two assemblies");
         }
 
 
@@ -85,7 +85,7 @@ namespace StructureMap.Testing.Graph
 
             Assert.AreEqual(
                 5,
-                family.Plugins.Count,
+                family.PluginCount,
                 "5 different IWidget classes are marked as Pluggable, + the manual add");
         }
 
@@ -103,7 +103,7 @@ namespace StructureMap.Testing.Graph
 
             Assert.AreEqual("Blue", family.DefaultInstanceKey);
 
-            Assert.AreEqual(4, family.Plugins.Count, "3 different IWidget classes are marked as Pluggable");
+            Assert.AreEqual(4, family.PluginCount, "3 different IWidget classes are marked as Pluggable");
         }
 
         [Test]

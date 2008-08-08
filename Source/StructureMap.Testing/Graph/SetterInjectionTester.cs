@@ -133,7 +133,7 @@ namespace StructureMap.Testing.Graph
         {
             PluginGraph pluginGraph = getPluginGraph();
             PluginFamily family = pluginGraph.FindFamily(typeof (IGridColumn));
-            Plugin plugin = family.Plugins["Other"];
+            Plugin plugin = family.FindPlugin("Other");
 
             Assert.AreEqual(2, plugin.Setters.OptionalCount);
             Assert.AreEqual(5, plugin.Setters.MandatoryCount);

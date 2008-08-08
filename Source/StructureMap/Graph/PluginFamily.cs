@@ -47,7 +47,7 @@ namespace StructureMap.Graph
                 Plugin plugin = Plugin.CreateForConcreteType(pluginType);
                 if (plugin != null)
                 {
-                    Plugins.Add(plugin);
+                    _plugins.Add(plugin);
                 }
             }
         }
@@ -191,15 +191,7 @@ namespace StructureMap.Graph
 
         public Plugin AddPlugin(Type pluggedType)
         {
-            if (!HasPlugin(pluggedType))
-            {
-                Plugin plugin = new Plugin(pluggedType);
-                AddPlugin(plugin);
-
-                return plugin;
-            }
-
-            return Plugins[pluggedType];
+            return _plugins[pluggedType];
         }
 
         public Plugin AddPlugin(Type pluggedType, string key)
@@ -210,6 +202,7 @@ namespace StructureMap.Graph
             return plugin;
         }
 
+        [Obsolete("Wanna make private")]
         public void AddPlugin(Plugin plugin)
         {
             if (_plugins.HasPlugin(plugin.ConcreteKey))
@@ -228,10 +221,6 @@ namespace StructureMap.Graph
 
         #region properties
 
-        public PluginCollection Plugins
-        {
-            get { return _plugins; }
-        }
 
         public bool IsGenericTemplate
         {
@@ -281,17 +270,7 @@ namespace StructureMap.Graph
 
         public Plugin FindPlugin(Type pluggedType)
         {
-            if (HasPlugin(pluggedType))
-            {
-                return Plugins[pluggedType];
-            }
-            else
-            {
-                Plugin plugin = new Plugin(pluggedType);
-                Plugins.Add(plugin);
-
-                return plugin;
-            }
+            return _plugins[pluggedType];
         }
 
         public void AddDefaultMemento(InstanceMemento memento)
@@ -325,15 +304,38 @@ namespace StructureMap.Graph
         {
             source.EachInstance(instance => _instances.Fill(instance.Name, instance));
 
-            foreach (Plugin plugin in source.Plugins)
+            foreach (Plugin plugin in source._plugins)
             {
-                Plugins.Fill(plugin);
+                _plugins.Fill(plugin);
             }
         }
 
         public Instance FirstInstance()
         {
             return _instances.First;
+        }
+
+        public Plugin FindPlugin(string concreteKey)
+        {
+            return _plugins[concreteKey];
+        }
+
+        public bool HasPlugin(string concreteKey)
+        {
+            return _plugins.HasPlugin(concreteKey);
+        }
+
+        public void EachPlugin(Action<Plugin> action)
+        {
+            foreach (Plugin plugin in _plugins)
+            {
+                action(plugin);
+            }
+        }
+
+        public IEnumerable<Plugin> GetAllPlugins()
+        {
+            return _plugins.All;
         }
     }
 }

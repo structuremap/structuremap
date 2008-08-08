@@ -82,7 +82,7 @@ namespace StructureMap.Configuration.DSL.Expressions
 
             return alterAndContinue(family =>
             {
-                Plugin plugin = family.Plugins.FindOrCreate(typeof (CONCRETETYPE), true);
+                Plugin plugin = family.FindPlugin(typeof (CONCRETETYPE));
                 family.DefaultInstanceKey = plugin.ConcreteKey;
             });
 
@@ -157,7 +157,7 @@ namespace StructureMap.Configuration.DSL.Expressions
                 {
                     Plugin plugin = new Plugin(typeof (CONCRETETYPE));
                     plugin.ConcreteKey = instanceName;
-                    family.Plugins.Add(plugin);
+                    family.AddPlugin(plugin);
                 }
                 );
 

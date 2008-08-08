@@ -47,7 +47,7 @@ namespace StructureMap.Testing.Graph
             Plugin destinationPlugin = destination.AddPlugin(typeof (AWidget));
             destination.ImportFrom(source);
 
-            Assert.AreSame(destinationPlugin, destination.Plugins[typeof (AWidget)]);
+            Assert.AreSame(destinationPlugin, destination.FindPlugin(typeof (AWidget)));
         }
 
         [Test]

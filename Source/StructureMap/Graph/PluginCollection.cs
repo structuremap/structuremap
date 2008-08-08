@@ -11,11 +11,21 @@ namespace StructureMap.Graph
     public class PluginCollection : IEnumerable<Plugin>
     {
         private readonly PluginFamily _family;
-        private readonly Cache<Type, Plugin> _plugins = new Cache<Type, Plugin>();
+        private readonly Cache<Type, Plugin> _plugins;
 
         public PluginCollection(PluginFamily family)
         {
             _family = family;
+            _plugins = new Cache<Type, Plugin>(t =>
+            {
+                // Reject if the PluggedType cannot be upcast to the PluginType
+                if (!TypeRules.CanBeCast(_family.PluginType, t))
+                {
+                    throw new StructureMapException(104, t, _family.PluginType);
+                }
+
+                return new Plugin(t);
+            });
         }
 
         public Plugin[] All
@@ -108,14 +118,6 @@ namespace StructureMap.Graph
         {
             Plugin plugin = this[concreteKey];
             _plugins.Remove(plugin.PluggedType);
-        }
-
-        public Plugin FindOrCreate(Type pluggedType, bool createDefaultInstanceOfType)
-        {
-            Plugin plugin = new Plugin(pluggedType);
-            Add(plugin);
-
-            return plugin;
         }
 
         public List<Plugin> FindAutoFillablePlugins()

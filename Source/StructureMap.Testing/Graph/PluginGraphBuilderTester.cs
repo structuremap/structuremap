@@ -155,7 +155,7 @@ namespace StructureMap.Testing.Graph
 
 
             PluginFamily pluginFamily = pluginGraph.FindFamily(typeof (IWidget));
-            Plugin plugin = pluginFamily.Plugins[typeof (ColorWidget)];
+            Plugin plugin = pluginFamily.FindPlugin(typeof (ColorWidget));
             Assert.IsNotNull(plugin);
         }
 
@@ -164,7 +164,7 @@ namespace StructureMap.Testing.Graph
         public void GotPluginThatIsAddedInConfigXml()
         {
             PluginFamily family = graph.FindFamily(typeof (IWidget));
-            Plugin plugin = family.Plugins[typeof (NotPluggableWidget)];
+            Plugin plugin = family.FindPlugin(typeof (NotPluggableWidget));
             Assert.IsNotNull(plugin);
             Assert.AreEqual("NotPluggable", plugin.ConcreteKey);
         }
@@ -174,7 +174,7 @@ namespace StructureMap.Testing.Graph
         public void GotRightNumberOfPluginsForIWidget()
         {
             PluginFamily pluginFamily = graph.FindFamily(typeof (IWidget));
-            Assert.AreEqual(5, pluginFamily.Plugins.Count, "Should be 5 total");
+            Assert.AreEqual(5, pluginFamily.PluginCount, "Should be 5 total");
         }
 
 
@@ -182,7 +182,7 @@ namespace StructureMap.Testing.Graph
         public void GotRightNumberOfPluginsForMultipleAssemblies()
         {
             PluginFamily pluginFamily = graph.FindFamily(typeof (Rule));
-            Assert.AreEqual(5, pluginFamily.Plugins.Count, "Should be 5 total");
+            Assert.AreEqual(5, pluginFamily.PluginCount, "Should be 5 total");
         }
 
         [Test]

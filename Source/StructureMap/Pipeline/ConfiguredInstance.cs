@@ -114,7 +114,7 @@ namespace StructureMap.Pipeline
             // F-ing generics.  You have to check concrete key first
             if (!string.IsNullOrEmpty(_concreteKey))
             {
-                return family.Plugins.HasPlugin(_concreteKey);
+                return family.HasPlugin(_concreteKey);
             }
 
             if (_pluggedType != null)

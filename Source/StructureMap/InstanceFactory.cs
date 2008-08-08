@@ -41,7 +41,7 @@ namespace StructureMap
                 _policy = family.Policy;
 
                 _pluginType = family.PluginType;
-                _instanceBuilders = new InstanceBuilderList(family.PluginType, family.Plugins.All);
+                _instanceBuilders = new InstanceBuilderList(family.PluginType, family.GetAllPlugins());
 
 
                 family.EachInstance(AddInstance);
@@ -141,7 +141,7 @@ namespace StructureMap
 
         public void ImportFrom(PluginFamily family)
         {
-            _instanceBuilders.Add(family.Plugins);
+            _instanceBuilders.Add(family.GetAllPlugins());
             family.EachInstance(instance => _instances.Fill(instance.Name, instance));
         }
 

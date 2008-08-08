@@ -178,7 +178,7 @@ namespace StructureMap.Testing
             PluginGraph graph = new PluginGraph();
             Plugin plugin = new Plugin(typeof (ComplexRule));
 
-            graph.FindFamily(typeof (Rule)).Plugins.Add(plugin);
+            graph.FindFamily(typeof (Rule)).AddPlugin(plugin);
 
             MemoryInstanceMemento memento = ComplexRule.GetMemento();
             memento.SetProperty(XmlConstants.PLUGGED_TYPE, typeof (ComplexRule).AssemblyQualifiedName);
@@ -204,7 +204,7 @@ namespace StructureMap.Testing
             PluginGraph graph = new PluginGraph();
             Plugin plugin = new Plugin(typeof (ComplexRule));
 
-            graph.FindFamily(typeof (Rule)).Plugins.Add(plugin);
+            graph.FindFamily(typeof(Rule)).AddPlugin(plugin);
 
             MemoryInstanceMemento memento = ComplexRule.GetMemento();
             memento.SetProperty(XmlConstants.PLUGGED_TYPE, typeof (ComplexRule).AssemblyQualifiedName);
@@ -223,7 +223,7 @@ namespace StructureMap.Testing
             PluginGraph graph = new PluginGraph();
             Plugin plugin = new Plugin(typeof (ComplexRule));
 
-            graph.FindFamily(typeof (Rule)).Plugins.Add(plugin);
+            graph.FindFamily(typeof(Rule)).AddPlugin(plugin);
 
             MemoryInstanceMemento memento = ComplexRule.GetMemento();
             memento.SetProperty(XmlConstants.PLUGGED_TYPE, typeof (ComplexRule).AssemblyQualifiedName);

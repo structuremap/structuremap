@@ -36,7 +36,7 @@ namespace StructureMap.Testing.Graph
             family.DefaultInstanceKey = "DefaultKey";
             family.AddPlugin(typeof (NotPluggableWidget), "NotPlugged");
 
-            Assert.AreEqual(1, family.Plugins.Count, "Plugin Count");
+            Assert.AreEqual(1, family.PluginCount, "Plugin Count");
         }
 
         [Test, ExpectedException(typeof (StructureMapException))]
@@ -155,7 +155,7 @@ namespace StructureMap.Testing.Graph
             PluginFamily family = new PluginFamily(GetType());
             Assert.AreEqual(1, family.PluginCount);
 
-            Plugin plugin = family.Plugins[GetType()];
+            Plugin plugin = family.FindPlugin(GetType());
             Assert.AreEqual(Plugin.DEFAULT, plugin.ConcreteKey);
             Assert.AreEqual(GetType(), plugin.PluggedType);
         }
