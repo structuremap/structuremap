@@ -7,25 +7,21 @@ namespace StructureMap.Pipeline
     public partial class ConfiguredInstance : ExpressedInstance<ConfiguredInstance>, IConfiguredInstance,
                                               IStructuredInstance
     {
-        private readonly Dictionary<string, Instance> _children = new Dictionary<string, Instance>();
-        private readonly Dictionary<string, string> _properties = new Dictionary<string, string>();
+        private Dictionary<string, Instance> _children = new Dictionary<string, Instance>();
+        private Dictionary<string, string> _properties = new Dictionary<string, string>();
         private Dictionary<string, Instance[]> _arrays = new Dictionary<string, Instance[]>();
 
-        private string _concreteKey;
         private Type _pluggedType;
 
-
-        public ConfiguredInstance()
-        {
-        }
 
         public ConfiguredInstance(InstanceMemento memento, PluginGraph graph, Type pluginType)
         {
             read(memento, graph, pluginType);
         }
 
-        public ConfiguredInstance(string name)
+        public ConfiguredInstance(Type pluggedType, string name)
         {
+            _pluggedType = pluggedType;
             Name = name;
         }
 
@@ -69,7 +65,6 @@ namespace StructureMap.Pipeline
         protected void mergeIntoThis(ConfiguredInstance instance)
         {
             _pluggedType = instance._pluggedType;
-            _concreteKey = instance._concreteKey;
 
             foreach (KeyValuePair<string, string> pair in instance._properties)
             {
@@ -92,8 +87,7 @@ namespace StructureMap.Pipeline
 
         protected override object build(Type pluginType, IBuildSession session)
         {
-            InstanceBuilder builder = session.FindBuilderByType(pluginType, _pluggedType) ??
-                                      session.FindBuilderByConcreteKey(pluginType, _concreteKey);
+            InstanceBuilder builder = session.FindBuilderByType(pluginType, _pluggedType);
 
             return ((IConfiguredInstance) this).Build(pluginType, session, builder);
         }
@@ -111,23 +105,12 @@ namespace StructureMap.Pipeline
 
         protected override bool canBePartOfPluginFamily(PluginFamily family)
         {
-            // F-ing generics.  You have to check concrete key first
-            if (!string.IsNullOrEmpty(_concreteKey))
-            {
-                return family.HasPlugin(_concreteKey);
-            }
-
-            if (_pluggedType != null)
-            {
-                return TypeRules.CanBeCast(family.PluginType, _pluggedType);
-            }
-
-            return false;
+             return TypeRules.CanBeCast(family.PluginType, _pluggedType);
         }
 
         internal override bool Matches(Plugin plugin)
         {
-            return plugin.ConcreteKey == _concreteKey || plugin.PluggedType == _pluggedType;
+            return plugin.PluggedType == _pluggedType;
         }
 
         public ConfiguredInstance SetProperty(string propertyName, string propertyValue)
@@ -142,7 +125,6 @@ namespace StructureMap.Pipeline
             Plugin plugin = memento.FindPlugin(family);
 
             _pluggedType = plugin.PluggedType;
-            _concreteKey = plugin.ConcreteKey;
 
             InstanceMementoPropertyReader reader = new InstanceMementoPropertyReader(this, memento, graph, pluginType);
             plugin.VisitArguments(reader);
@@ -164,20 +146,11 @@ namespace StructureMap.Pipeline
 
         protected override void preprocess(PluginFamily family)
         {
-            if (_pluggedType != null)
-            {
-                Plugin plugin = family.FindPlugin(_pluggedType);
-                _concreteKey = plugin.ConcreteKey;
-            }
+
         }
 
         protected override string getDescription()
         {
-            if (_pluggedType == null)
-            {
-                return string.Format("Configured '{0}'", _concreteKey);
-            }
-
             string typeName = TypePath.GetAssemblyQualifiedName(_pluggedType);
             Constructor ctor = new Constructor(_pluggedType);
             if (ctor.HasArguments())
@@ -190,5 +163,18 @@ namespace StructureMap.Pipeline
             }
         }
 
+        protected override void addTemplatedInstanceTo(PluginFamily family, Type[] templateTypes)
+        {
+            Type specificType = _pluggedType.IsGenericTypeDefinition ? _pluggedType.MakeGenericType(templateTypes) : _pluggedType;
+            if (TypeRules.CanBeCast(family.PluginType, specificType))
+            {
+                ConfiguredInstance instance = new ConfiguredInstance(specificType);
+                instance._arrays = _arrays;
+                instance._children = _children;
+                instance._properties = _properties;
+                instance.Name = Name;
+                family.AddInstance(instance);
+            }
+        }
     }
 }

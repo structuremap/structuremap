@@ -109,7 +109,7 @@ namespace StructureMap.Testing.Configuration.DSL
             Registry registry = new Registry();
             registry.CreateProfile(theProfileName)
                 .For<IWidget>().Use(
-                Instance<IWidget>().UsingConcreteType<AWidget>()
+                Instance<AWidget>()
                 );
 
             PluginGraph graph = registry.Build();

@@ -7,28 +7,6 @@ namespace StructureMap.Pipeline
 {
     public partial class ConfiguredInstance
     {
-        /// <summary>
-        /// Use a named Plugin type denoted by a [Pluggable("Key")] attribute
-        /// </summary>
-        /// <param name="concreteKey"></param>
-        /// <returns></returns>
-        public ConfiguredInstance UsingConcreteTypeNamed(string concreteKey)
-        {
-            _concreteKey = concreteKey;
-            return this;
-        }
-
-        /// <summary>
-        /// Use type T for the concrete type of an instance
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public ConfiguredInstance UsingConcreteType<T>()
-        {
-            _pluggedType = typeof (T);
-            return this;
-        }
-
         public ChildArrayExpression ChildArray<PLUGINTYPE>(string propertyName)
         {
             validateTypeIsArray<PLUGINTYPE>();
@@ -97,13 +75,6 @@ namespace StructureMap.Pipeline
         public PropertyExpression WithProperty(string propertyName)
         {
             return new PropertyExpression(this, propertyName);
-        }
-
-        public ConfiguredInstance WithConcreteKey(string concreteKey)
-        {
-            replaceNameIfNotAlreadySet(concreteKey);
-            _concreteKey = concreteKey;
-            return this;
         }
 
 
@@ -208,8 +179,7 @@ namespace StructureMap.Pipeline
                 Type pluggedType = typeof (T);
                 ExpressionValidator.ValidatePluggabilityOf(pluggedType).IntoPluginType(_childType);
 
-                ConfiguredInstance childInstance = new ConfiguredInstance();
-                childInstance._pluggedType = pluggedType;
+                ConfiguredInstance childInstance = new ConfiguredInstance(pluggedType);
                 _instance.setChild(_propertyName, childInstance);
 
                 return _instance;

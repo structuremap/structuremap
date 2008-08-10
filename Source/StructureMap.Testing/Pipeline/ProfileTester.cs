@@ -26,9 +26,10 @@ namespace StructureMap.Testing.Pipeline
         private void setDefault<T>(string key)
         {
             PluginFamily family = _pluginGraph.FindFamily(typeof (T));
-            family.AddInstance(new ConfiguredInstance().WithName(key));
+            ConfiguredInstance instance = new ConfiguredInstance(typeof(T)).WithName(key);
+            family.AddInstance(instance);
 
-            _profile.SetDefault(typeof (T), new ReferencedInstance(key));
+            _profile.SetDefault(typeof (T), instance);
         }
 
         private void assertThatMasterInstanceWasFound<T>(string name)
@@ -42,8 +43,8 @@ namespace StructureMap.Testing.Pipeline
         public void A_call_to_fill_is_ignored_if_there_is_already_a_default_for_that_type()
         {
             Profile profile = new Profile("something");
-            profile.SetDefault(typeof (ISomething), new ConfiguredInstance().WithName("Red"));
-            profile.FillTypeInto(typeof (ISomething), new ConfiguredInstance().WithName("Blue"));
+            profile.SetDefault(typeof (ISomething), new ConfiguredInstance(typeof(SomethingOne)).WithName("Red"));
+            profile.FillTypeInto(typeof(ISomething), new ConfiguredInstance(typeof(SomethingOne)).WithName("Blue"));
 
             Assert.AreEqual("Red", profile.GetDefault(typeof (ISomething)).Name);
         }
@@ -52,7 +53,7 @@ namespace StructureMap.Testing.Pipeline
         public void A_call_to_fill_sets_the_default_for_a_plugin_type_if_no_previous_default_is_known()
         {
             Profile profile = new Profile("something");
-            profile.FillTypeInto(typeof (ISomething), new ConfiguredInstance().WithName("Blue"));
+            profile.FillTypeInto(typeof(ISomething), new ConfiguredInstance(typeof(SomethingOne)).WithName("Blue"));
 
             Assert.AreEqual("Blue", profile.GetDefault(typeof (ISomething)).Name);
         }
@@ -60,17 +61,18 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void CopyDefaultsFromOneTypeToAnother()
         {
+
             setDefault<ISomething>("Red");
+            _pluginGraph.FindFamily(typeof(IBuildPolicy)).AddInstance(new ConfiguredInstance(typeof(IBuildPolicy)).WithName("Red"));
 
-            _profile.CopyDefault(typeof (ISomething), typeof (IBuildPolicy));
-
-            Assert.AreSame(_profile.GetDefault(typeof (ISomething)), _profile.GetDefault(typeof (IBuildPolicy)));
+            _profile.CopyDefault(typeof(ISomething), typeof(IBuildPolicy), _pluginGraph.FindFamily(typeof(IBuildPolicy)));
+            _profile.GetDefault(typeof (IBuildPolicy)).Name.ShouldEqual("Red");
         }
 
         [Test]
         public void Do_not_blow_up_when_you_copy_defaults_for_a_source_type_that_does_not_exist()
         {
-            _profile.CopyDefault(typeof (ISomething), typeof (IBuildPolicy));
+            _profile.CopyDefault(typeof (ISomething), typeof (IBuildPolicy), new PluginFamily(typeof(ISomething)));
         }
 
         [Test]

@@ -88,14 +88,36 @@ namespace StructureMap.Configuration.DSL
         /// </summary>
         /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <returns></returns>
-        public ConfiguredInstance AddInstanceOf<PLUGINTYPE>()
+        public ConfiguredInstanceExpression<PLUGINTYPE> AddInstanceOf<PLUGINTYPE>()
         {
+            return new ConfiguredInstanceExpression<PLUGINTYPE>(this);
+        }
+
+        public class ConfiguredInstanceExpression<PLUGINTYPE>
+        {
+            private readonly Registry _registry;
+
+            public ConfiguredInstanceExpression(Registry registry)
+            {
+                _registry = registry;
+            }
+
+            /*
             ConfiguredInstance instance = new ConfiguredInstance();
 
             addExpression(
                 pluginGraph => pluginGraph.FindFamily(typeof (PLUGINTYPE)).AddInstance(instance));
 
             return instance;
+             */
+
+            public ConfiguredInstance UsingConcreteType<T>()
+            {
+                ConfiguredInstance instance = new ConfiguredInstance(typeof(T));
+                _registry.addExpression(graph => graph.FindFamily(typeof(PLUGINTYPE)).AddInstance(instance));
+
+                return instance;
+            }
         }
 
 

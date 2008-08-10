@@ -162,9 +162,14 @@ namespace StructureMap
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static ConfiguredInstance AddInstanceOf<T>()
+        public static Registry.ConfiguredInstanceExpression<T> AddInstanceOf<T>()
         {
             return _registry.AddInstanceOf<T>();
+        }
+
+        public static void AddInstanceOf<T>(Func<T> func)
+        {
+            _registry.AddInstanceOf<T>(new ConstructorInstance(() => func));
         }
 
         public static void AddInstanceOf<T>(Instance instance)

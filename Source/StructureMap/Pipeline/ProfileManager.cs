@@ -195,12 +195,12 @@ namespace StructureMap.Pipeline
             }
         }
 
-        public void CopyDefaults(Type basicType, Type templatedType)
+        public void CopyDefaults(Type basicType, Type templatedType, PluginFamily family)
         {
-            _default.CopyDefault(basicType, templatedType);
+            _default.CopyDefault(basicType, templatedType, family);
             foreach (KeyValuePair<string, Profile> pair in _profiles)
             {
-                pair.Value.CopyDefault(basicType, templatedType);
+                pair.Value.CopyDefault(basicType, templatedType, family);
             }
 
             CurrentProfile = CurrentProfile;

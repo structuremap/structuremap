@@ -82,7 +82,7 @@ namespace StructureMap.Testing.Diagnostics
         {
             DoctorReport report = fetchReport<BootstrapperThatWouldCreateErrors>("");
             report.Result.ShouldEqual(DoctorResult.ConfigurationErrors);
-            report.ErrorMessages.ShouldContain("Something that does not exist");
+            report.ErrorMessages.ShouldContain("cannot be plugged into type");
         }
 
         [Test]
@@ -169,7 +169,7 @@ namespace StructureMap.Testing.Diagnostics
 
         public void BootstrapStructureMap()
         {
-            StructureMapConfiguration.AddInstanceOf<IWidget>().WithConcreteKey("Something that does not exist");
+            StructureMapConfiguration.AddInstanceOf<IWidget>(new ConfiguredInstance(typeof(ColorRule)));
         }
 
         #endregion

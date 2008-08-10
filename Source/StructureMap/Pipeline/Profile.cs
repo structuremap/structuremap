@@ -92,12 +92,18 @@ namespace StructureMap.Pipeline
             return "Default Instance for Profile " + profileName;
         }
 
-        public void CopyDefault(Type sourceType, Type destinationType)
+        public void CopyDefault(Type sourceType, Type destinationType, PluginFamily family)
         {
             if (_instances.ContainsKey(sourceType))
             {
-                Instance instance = _instances[sourceType];
-                _instances.Add(destinationType, instance);
+                Instance sourceInstance = _instances[sourceType];
+                Instance destinationInstance = family.GetInstance(sourceInstance.Name);
+                if (destinationInstance != null)
+                {
+                    _instances.Add(destinationType, destinationInstance);
+                }
+
+                
             }
         }
 

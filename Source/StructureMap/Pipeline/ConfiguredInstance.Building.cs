@@ -31,12 +31,6 @@ namespace StructureMap.Pipeline
             return getChild(propertyName, pluginType, buildSession);
         }
 
-        string IConfiguredInstance.ConcreteKey
-        {
-            get { return _concreteKey; }
-            set { _concreteKey = value; }
-        }
-
 
         // Only open for testing
         object IConfiguredInstance.Build(Type pluginType, IBuildSession session, InstanceBuilder builder)
@@ -44,7 +38,7 @@ namespace StructureMap.Pipeline
             if (builder == null)
             {
                 throw new StructureMapException(
-                    201, _concreteKey, Name, pluginType);
+                    201, _pluggedType.FullName, Name, pluginType);
             }
 
 

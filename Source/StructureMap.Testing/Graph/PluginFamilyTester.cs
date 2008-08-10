@@ -116,7 +116,7 @@ namespace StructureMap.Testing.Graph
         {
             PluginFamily family = new PluginFamily(typeof (IWidget));
             family.Parent = new PluginGraph();
-            family.AddInstance(new ConfiguredInstance().WithName("Default"));
+            family.AddInstance(new ConfiguredInstance(typeof(ColorWidget)).WithName("Default"));
             family.DefaultInstanceKey = "Default";
 
 
@@ -142,7 +142,7 @@ namespace StructureMap.Testing.Graph
         {
             PluginFamily family = new PluginFamily(typeof (IGateway));
             string theInstanceKey = "the default";
-            family.AddInstance(new ConfiguredInstance().UsingConcreteType<TheGateway>().WithName(theInstanceKey));
+            family.AddInstance(new ConfiguredInstance(typeof(TheGateway)).WithName(theInstanceKey));
 
             family.Seal();
 

@@ -24,7 +24,7 @@ namespace StructureMap.Testing.Configuration.DSL
             assertThingMatches(registry =>
             {
                 registry.BuildInstancesOf<IWidget>().TheDefaultIs(
-                    Instance<IWidget>().UsingConcreteType<ColorWidget>()
+                    Instance<ColorWidget>()
                         .WithProperty("color").EqualTo("yellow")
                     );
 
@@ -32,7 +32,6 @@ namespace StructureMap.Testing.Configuration.DSL
 
                 registry.BuildInstancesOf<Thing>().TheDefaultIs(
                     Instance<Thing>()
-                        .UsingConcreteType<Thing>()
                         .WithProperty("average").EqualTo(.333)
                         .WithProperty("name").EqualTo("Jeremy")
                         .WithProperty("count").EqualTo(4)
@@ -53,7 +52,6 @@ namespace StructureMap.Testing.Configuration.DSL
 
                 registry.BuildInstancesOf<Thing>().TheDefaultIs(
                     Instance<Thing>()
-                        .UsingConcreteType<Thing>()
                         .WithProperty("average").EqualTo(.333)
                         .WithProperty("name").EqualTo("Jeremy")
                         .WithProperty("count").EqualTo(4)
@@ -75,7 +73,6 @@ namespace StructureMap.Testing.Configuration.DSL
 
                 registry.BuildInstancesOf<Thing>().TheDefaultIs(
                     Instance<Thing>()
-                        .UsingConcreteType<Thing>()
                         .WithProperty("average").EqualTo(.333)
                         .WithProperty("name").EqualTo("Jeremy")
                         .WithProperty("count").EqualTo(4)
@@ -101,7 +98,6 @@ namespace StructureMap.Testing.Configuration.DSL
 
                 registry.BuildInstancesOf<Thing>().TheDefaultIs(
                     Instance<Thing>()
-                        .UsingConcreteType<Thing>()
                         .WithProperty("average").EqualTo(.333)
                         .WithProperty("name").EqualTo("Jeremy")
                         .WithProperty("count").EqualTo(4)
@@ -113,18 +109,15 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void DeepInstanceTest1()
         {
-            ConfiguredInstance widgetExpression = Instance<IWidget>()
-                .UsingConcreteType<ColorWidget>()
+            ConfiguredInstance widgetExpression = Instance<ColorWidget>()
                 .WithProperty("color").EqualTo("yellow");
 
-            ConfiguredInstance ruleExpression = Instance<Rule>()
-                .UsingConcreteType<WidgetRule>()
+            ConfiguredInstance ruleExpression = Instance<WidgetRule>()
                 .Child<IWidget>().Is(widgetExpression);
 
 
             assertThingMatches(registry => registry.BuildInstancesOf<Thing>().TheDefaultIs(
                                                Instance<Thing>()
-                                                   .UsingConcreteType<Thing>()
                                                    .WithProperty("name").EqualTo("Jeremy")
                                                    .WithProperty("count").EqualTo(4)
                                                    .WithProperty("average").EqualTo(.333)

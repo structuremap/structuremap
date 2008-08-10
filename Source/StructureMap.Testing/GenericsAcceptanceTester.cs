@@ -93,7 +93,7 @@ namespace StructureMap.Testing
 
             Container manager = new Container(graph);
 
-            ConfiguredInstance instance = new ConfiguredInstance().WithConcreteKey("complex")
+            ConfiguredInstance instance = new ConfiguredInstance(typeof(ComplexType<int>))
                 .WithProperty("name").EqualTo("Jeremy")
                 .WithProperty("age").EqualTo(32);
 

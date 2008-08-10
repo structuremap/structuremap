@@ -60,8 +60,7 @@ namespace StructureMap.Testing.Configuration.DSL
         public void AddInstanceByNameOnlyAddsOneInstanceToStructureMap()
         {
             IContainer manager = new Container(registry => registry.ForRequestedType<Something>().AddInstance(
-                                                               RegistryExpressions.Instance<Something>().
-                                                                   UsingConcreteType<RedSomething>().WithName("Red")
+                                                               RegistryExpressions.Instance<RedSomething>().WithName("Red")
                                                                ));
             IList<Something> instances = manager.GetAllInstances<Something>();
             Assert.AreEqual(1, instances.Count);
@@ -163,8 +162,7 @@ namespace StructureMap.Testing.Configuration.DSL
         public void CreatePluginFamilyWithADefault()
         {
             IContainer manager = new Container(registry => registry.BuildInstancesOf<IWidget>().TheDefaultIs(
-                                                               RegistryExpressions.Instance<IWidget>().UsingConcreteType
-                                                                   <ColorWidget>().WithProperty("color").
+                                                               RegistryExpressions.Instance<ColorWidget>().WithProperty("color").
                                                                    EqualTo(
                                                                    "Red")
                                                                ));

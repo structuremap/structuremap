@@ -51,31 +51,6 @@ namespace StructureMap.Testing.Pipeline
 
 
         [Test]
-        public void AttachDependencies_should_find_the_InstanceBuilder_by_ConcreteKey_if_PluggedType_does_not_exists()
-        {
-            MockRepository mocks = new MockRepository();
-            IBuildSession session = mocks.CreateMock<IBuildSession>();
-            InstanceBuilder builder = mocks.CreateMock<InstanceBuilder>();
-            string theConcreteKey = "something";
-
-            Type thePluginType = typeof (IGateway);
-
-            using (mocks.Record())
-            {
-                Expect.Call(session.FindBuilderByType(thePluginType, null)).Return(null);
-                Expect.Call(session.FindBuilderByConcreteKey(thePluginType, theConcreteKey)).Return(builder);
-                Expect.Call(builder.BuildInstance(null, null)).Return(new object());
-                LastCall.IgnoreArguments();
-            }
-
-            using (mocks.Playback())
-            {
-                ConfiguredInstance instance = new ConfiguredInstance().WithConcreteKey(theConcreteKey);
-                instance.Build(thePluginType, session);
-            }
-        }
-
-        [Test]
         public void Build_happy_path()
         {
             MockRepository mocks = new MockRepository();
@@ -83,7 +58,7 @@ namespace StructureMap.Testing.Pipeline
             IBuildSession session = mocks.CreateMock<IBuildSession>();
             object theObjectBuilt = new object();
 
-            ConfiguredInstance instance = new ConfiguredInstance();
+            ConfiguredInstance instance = new ConfiguredInstance(GetType());
 
 
             using (mocks.Record())
@@ -101,7 +76,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void BuildRule1()
         {
-            ConfiguredInstance instance = new ConfiguredInstance().WithConcreteKey("Rule1");
+            ConfiguredInstance instance = new ConfiguredInstance(typeof(Rule1));
 
             Rule rule = (Rule) instance.Build(typeof (Rule), _session);
             Assert.IsNotNull(rule);
@@ -128,69 +103,23 @@ namespace StructureMap.Testing.Pipeline
         }
 
         [Test]
-        public void Can_be_plugged_in_by_concrete_key()
-        {
-            ConfiguredInstance instance = new ConfiguredInstance().WithConcreteKey("Color");
-            PluginFamily family = new PluginFamily(typeof (IWidget));
-            family.AddPlugin(typeof (ColorWidget), "Color");
-
-            IDiagnosticInstance diagnosticInstance = instance;
-            Assert.IsTrue(diagnosticInstance.CanBePartOfPluginFamily(family));
-        }
-
-        [Test]
         public void Can_be_plugged_in_if_there_is_a_plugged_type_and_the_plugged_type_can_be_cast_to_the_plugintype()
         {
-            ConfiguredInstance instance = new ConfiguredInstance().UsingConcreteType<ColorWidget>();
+            ConfiguredInstance instance = new ConfiguredInstance(typeof(ColorWidget));
             PluginFamily family = new PluginFamily(typeof (IWidget));
 
             IDiagnosticInstance diagnosticInstance = instance;
             Assert.IsTrue(diagnosticInstance.CanBePartOfPluginFamily(family));
-        }
-
-        [Test]
-        public void Can_NOT_be_plugged_in_if_no_plugged_type_and_concrete_key_cannot_be_found_in_family()
-        {
-            ConfiguredInstance instance = new ConfiguredInstance().WithConcreteKey("SomethingThatDoesNotExist");
-            PluginFamily family = new PluginFamily(typeof (IWidget));
-
-            IDiagnosticInstance diagnosticInstance = instance;
-            Assert.IsFalse(diagnosticInstance.CanBePartOfPluginFamily(family));
         }
 
         [Test]
         public void Can_NOT_be_plugged_in_if_plugged_type_cannot_be_cast_to_the_plugin_type()
         {
-            ConfiguredInstance instance = new ConfiguredInstance().UsingConcreteType<ColorRule>();
+            ConfiguredInstance instance = new ConfiguredInstance(typeof(ColorRule));
             PluginFamily family = new PluginFamily(typeof (IWidget));
 
             IDiagnosticInstance diagnosticInstance = instance;
             Assert.IsFalse(diagnosticInstance.CanBePartOfPluginFamily(family));
-        }
-
-        [Test]
-        public void CanBePartOfPluginFamily_is_false_if_the_plugin_cannot_be_found()
-        {
-            PluginFamily family = new PluginFamily(typeof (IService));
-            family.AddPlugin(typeof (ColorService), "Color");
-
-            ConfiguredInstance instance = new ConfiguredInstance().WithConcreteKey("Color");
-
-            IDiagnosticInstance diagnosticInstance = instance;
-
-            Assert.IsTrue(diagnosticInstance.CanBePartOfPluginFamily(family));
-
-            diagnosticInstance = new ConfiguredInstance()
-                .WithConcreteKey("a concrete key that does not match anything in the family");
-            Assert.IsFalse(diagnosticInstance.CanBePartOfPluginFamily(family));
-        }
-
-
-        [Test]
-        public void Create_description_if_has_only_concrete_key()
-        {
-            ConfiguredInstance instance = new ConfiguredInstance().WithConcreteKey("Concrete");
-            TestUtility.AssertDescriptionIs(instance, "Configured 'Concrete'");
         }
 
         [Test]
@@ -212,7 +141,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void GetProperty_happy_path()
         {
-            ConfiguredInstance instance = new ConfiguredInstance()
+            ConfiguredInstance instance = new ConfiguredInstance(typeof(ColorRule))
                 .SetProperty("Color", "Red")
                 .SetProperty("Age", "34");
 
@@ -230,7 +159,7 @@ namespace StructureMap.Testing.Pipeline
         {
             try
             {
-                IConfiguredInstance configuredInstance = new ConfiguredInstance();
+                IConfiguredInstance configuredInstance = new ConfiguredInstance(GetType());
                 configuredInstance.GetProperty("anything");
                 Assert.Fail("Did not throw exception");
             }
@@ -285,7 +214,7 @@ namespace StructureMap.Testing.Pipeline
 
             assertActionThrowsErrorCode(206, delegate
             {
-                IConfiguredInstance instance = new ConfiguredInstance();
+                IConfiguredInstance instance = new ConfiguredInstance(GetType());
                 instance.Build(GetType(), new StubBuildSession(), builder);
             });
         }
@@ -301,29 +230,15 @@ namespace StructureMap.Testing.Pipeline
 
             assertActionThrowsErrorCode(207, delegate
             {
-                IConfiguredInstance instance = new ConfiguredInstance();
+                IConfiguredInstance instance = new ConfiguredInstance(GetType());
                 instance.Build(GetType(), new StubBuildSession(), builder);
-            });
-        }
-
-        [Test]
-        public void Trying_to_build_without_an_InstanceBuilder_throws_exception()
-        {
-            assertActionThrowsErrorCode(201, delegate
-            {
-                string theConcreteKey = "the concrete key";
-                IConfiguredInstance instance =
-                    new ConfiguredInstance(GetType()).WithConcreteKey(
-                        theConcreteKey);
-
-                instance.Build(GetType(), null, null);
             });
         }
 
         [Test]
         public void HasProperty_for_child()
         {
-            var instance = new ConfiguredInstance();
+            var instance = new ConfiguredInstance(GetType());
 
             IConfiguredInstance configuredInstance = instance;
             configuredInstance.HasProperty("prop1").ShouldBeFalse();
@@ -336,7 +251,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void HasProperty_for_child_array()
         {
-            var instance = new ConfiguredInstance();
+            var instance = new ConfiguredInstance(GetType());
 
             IConfiguredInstance configuredInstance = instance;
             configuredInstance.HasProperty("prop1").ShouldBeFalse();

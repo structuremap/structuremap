@@ -177,15 +177,6 @@ namespace StructureMap.Configuration.DSL.Expressions
             return this;
         }
 
-        public CreatePluginFamilyExpression<PLUGINTYPE> AliasConcreteType<PLUGGEDTYPE>(string concreteKey)
-        {
-            ExpressionValidator.ValidatePluggabilityOf(typeof (PLUGGEDTYPE)).IntoPluginType(typeof (PLUGINTYPE));
-
-            _alterations.Add(family => family.AddPlugin(typeof (PLUGGEDTYPE), concreteKey));
-
-            return this;
-        }
-
         public CreatePluginFamilyExpression<PLUGINTYPE> TheDefaultIs(PLUGINTYPE @object)
         {
             return TheDefaultIs(new LiteralInstance(@object));

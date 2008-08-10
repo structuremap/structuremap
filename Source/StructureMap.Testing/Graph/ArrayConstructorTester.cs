@@ -25,13 +25,15 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void BuildDecisionWithRules()
         {
+            // May need to add a Plugin for Decision to Decision labelled "Default"
+
             DataMother.WriteDocument("FullTesting.XML");
             DataMother.WriteDocument("Array.xml");
             DataMother.WriteDocument("ObjectMother.config");
 
             Registry registry = new Registry();
             XmlMementoSource source = new XmlFileMementoSource("Array.xml", string.Empty, "Decision");
-            registry.ForRequestedType<Decision>().AddInstancesFrom(source).AliasConcreteType<Decision>("Default");
+            registry.ForRequestedType<Decision>().AddInstancesFrom(source);
 
             PluginGraphBuilder builder =
                 new PluginGraphBuilder(new ConfigurationParser[] {ConfigurationParser.FromFile("ObjectMother.config")},
@@ -41,7 +43,7 @@ namespace StructureMap.Testing.Graph
 
             Container manager = new Container(graph);
 
-            Decision d1 = (Decision) manager.GetInstance(typeof (Decision), "RedBlue");
+            Decision d1 = manager.GetInstance<Decision>("RedBlue");
             Assert.IsNotNull(d1);
             Assert.AreEqual(2, d1.Rules.Length, "2 Rules");
 

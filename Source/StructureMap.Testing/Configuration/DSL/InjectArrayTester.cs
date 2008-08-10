@@ -85,11 +85,11 @@ namespace StructureMap.Testing.Configuration.DSL
             IContainer manager = new Container(
                 registry => registry.ForRequestedType<Processor>()
                                 .TheDefaultIs(
-                                Instance<Processor>().UsingConcreteType<Processor>()
+                                Instance<Processor>()
                                     .ChildArray<IHandler[]>().Contains(
-                                    Instance<IHandler>().UsingConcreteType<Handler1>(),
-                                    Instance<IHandler>().UsingConcreteType<Handler2>(),
-                                    Instance<IHandler>().UsingConcreteType<Handler3>()
+                                    Instance<Handler1>(),
+                                    Instance<Handler2>(),
+                                    Instance<Handler3>()
                                     )
                                     .WithProperty("name").EqualTo("Jeremy")
                                 ));
@@ -103,14 +103,14 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             IContainer manager = new Container(registry => registry.ForRequestedType<Processor2>()
                                                                .TheDefaultIs(
-                                                               Instance<Processor2>().UsingConcreteType<Processor2>()
+                                                               Instance<Processor2>()
                                                                    .ChildArray<IHandler[]>("first").Contains(
-                                                                   Instance<IHandler>().UsingConcreteType<Handler1>(),
-                                                                   Instance<IHandler>().UsingConcreteType<Handler2>()
+                                                                   Instance<Handler1>(),
+                                                                   Instance<Handler2>()
                                                                    )
                                                                    .ChildArray<IHandler[]>("second").Contains(
-                                                                   Instance<IHandler>().UsingConcreteType<Handler2>(),
-                                                                   Instance<IHandler>().UsingConcreteType<Handler3>()
+                                                                   Instance<Handler2>(),
+                                                                   Instance<Handler3>()
                                                                    )
                                                                ));
 
@@ -133,14 +133,14 @@ namespace StructureMap.Testing.Configuration.DSL
 
             registry.ForRequestedType<Processor2>()
                 .TheDefaultIs(
-                Instance<Processor2>().UsingConcreteType<Processor2>()
+                Instance<Processor2>()
                     .ChildArray<IHandler>("first").Contains(
-                    Instance<IHandler>().UsingConcreteType<Handler1>(),
-                    Instance<IHandler>().UsingConcreteType<Handler2>()
+                    Instance<Handler1>(),
+                    Instance<Handler2>()
                     )
                     .ChildArray<IHandler[]>("second").Contains(
-                    Instance<IHandler>().UsingConcreteType<Handler2>(),
-                    Instance<IHandler>().UsingConcreteType<Handler3>()
+                    Instance<Handler2>(),
+                    Instance<Handler3>()
                     )
                 );
         }
@@ -155,7 +155,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
                 registry.ForRequestedType<Processor>()
                     .TheDefaultIs(
-                    Instance<Processor>().UsingConcreteType<Processor>()
+                    Instance<Processor>()
                         .WithProperty("name").EqualTo("Jeremy")
                         .ChildArray<IHandler[]>().Contains(
                         Instance("Two"),
@@ -177,9 +177,9 @@ namespace StructureMap.Testing.Configuration.DSL
                                                                .TheDefaultIs(
                                                                Instance<Processor>()
                                                                    .ChildArray<IHandler[]>().Contains(
-                                                                   Instance<IHandler>().UsingConcreteType<Handler1>(),
-                                                                   Instance<IHandler>().UsingConcreteType<Handler2>(),
-                                                                   Instance<IHandler>().UsingConcreteType<Handler3>()
+                                                                   Instance<Handler1>(),
+                                                                   Instance<Handler2>(),
+                                                                   Instance<Handler3>()
                                                                    )
                                                                    .WithProperty("name").EqualTo("Jeremy")
                                                                ));
@@ -201,10 +201,10 @@ namespace StructureMap.Testing.Configuration.DSL
 
             registry.ForRequestedType<Processor>()
                 .TheDefaultIs(
-                Instance<Processor>().UsingConcreteType<Processor>()
+                Instance<Processor>()
                     .WithProperty("name").EqualTo("Jeremy")
                     .ChildArray<IHandler>().Contains(
-                    Instance<IHandler>().UsingConcreteType<Handler1>())
+                    Instance<Handler1>())
                 );
         }
     }

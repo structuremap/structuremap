@@ -26,7 +26,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
                 // Add an instance by specifying the ConcreteKey
                 registry.AddInstanceOf<IWidget>()
-                    .UsingConcreteTypeNamed("Color")
+                    .UsingConcreteType<ColorWidget>()
                     .WithName("Purple")
                     .WithProperty("color").EqualTo("Purple");
 
@@ -141,7 +141,7 @@ namespace StructureMap.Testing.Configuration.DSL
             IContainer manager = new Container(
                 registry => registry.AddInstanceOf<Rule>().UsingConcreteType<WidgetRule>().WithName(instanceKey)
                                 .Child<IWidget>().Is(
-                                Instance<IWidget>().UsingConcreteType<ColorWidget>()
+                                Instance<ColorWidget>()
                                     .WithProperty("color").EqualTo("Orange")
                                     .WithName("Orange")
                                 ));

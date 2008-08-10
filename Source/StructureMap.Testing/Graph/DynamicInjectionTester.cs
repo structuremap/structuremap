@@ -105,26 +105,6 @@ namespace StructureMap.Testing.Graph
             Assert.AreSame(two, ObjectFactory.GetNamedInstance<ISomething>("Two"));
         }
 
-        [Test]
-        public void AddPluginForTypeWhenThePluginAlreadyExists()
-        {
-            PluginGraph pluginGraph = new PluginGraph();
-            PluginFamily family = pluginGraph.FindFamily(typeof (ISomething));
-            family.AddPlugin(typeof (SomethingOne), "One");
-
-            IContainer manager = new Container(pluginGraph);
-
-            manager.Configure(
-                registry =>
-                {
-                    registry.ForRequestedType<ISomething>().AliasConcreteType<SomethingOne>("One");
-                    registry.AddInstanceOf<ISomething>().WithConcreteKey("One").WithName("One");
-                });
-
-            IList<ISomething> list = manager.GetAllInstances<ISomething>();
-            Assert.AreEqual(1, list.Count);
-            Assert.IsInstanceOfType(typeof (SomethingOne), list[0]);
-        }
 
         [Test]
         public void AddPluginForTypeWhenThePluginDoesNotAlreadyExistsDoesNothing()

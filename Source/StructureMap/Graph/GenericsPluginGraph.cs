@@ -83,9 +83,12 @@ namespace StructureMap.Graph
                 PluginFamily basicFamily = _families.Retrieve(basicType);
                 Type[] templatedParameterTypes = templatedType.GetGenericArguments();
 
-                profileManager.CopyDefaults(basicType, templatedType);
+                
 
-                return CreateTemplatedClone(basicFamily, templatedParameterTypes);
+                PluginFamily family = CreateTemplatedClone(basicFamily, templatedParameterTypes);
+                profileManager.CopyDefaults(basicType, templatedType, family);
+
+                return family;
             }
             else
             {
@@ -115,11 +118,7 @@ namespace StructureMap.Graph
             // TODO -- Got a big problem here.  Intances need to be copied over
             baseFamily.EachInstance(i =>
             {
-                IDiagnosticInstance instance = i;
-                if (instance.CanBePartOfPluginFamily(templatedFamily))
-                {
-                    templatedFamily.AddInstance((Instance) instance);
-                }
+                ((IDiagnosticInstance)i).AddTemplatedInstanceTo(templatedFamily, templateTypes);
             });
 
             // Need to attach the new PluginFamily to the old PluginGraph

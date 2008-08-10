@@ -127,7 +127,6 @@ namespace StructureMap.Testing.Graph
         {
             StructureMapConfiguration.ForRequestedType<ExplicitTarget>().TheDefaultIs(
                 Instance<ExplicitTarget>()
-                    .UsingConcreteType<ExplicitTarget>()
                     .Child<IProvider>().IsConcreteType<RedProvider>()
                     .WithProperty("name").EqualTo("Jeremy")
                 );
@@ -149,7 +148,6 @@ namespace StructureMap.Testing.Graph
         {
             StructureMapConfiguration.ForRequestedType<ExplicitTarget>().TheDefaultIs(
                 Instance<ExplicitTarget>()
-                    .UsingConcreteType<ExplicitTarget>()
                     .Child<IProvider>().IsConcreteType<RedProvider>()
                     .WithProperty("name").EqualTo("Jeremy")
                 );
@@ -225,7 +223,6 @@ namespace StructureMap.Testing.Graph
         {
             IContainer manager = new Container(registry => registry.ForRequestedType<ExplicitTarget>().TheDefaultIs(
                                                                Instance<ExplicitTarget>()
-                                                                   .UsingConcreteType<ExplicitTarget>()
                                                                    .Child<IProvider>().IsConcreteType<RedProvider>()
                                                                    .WithProperty("name").EqualTo("Jeremy")
                                                                ));

@@ -93,7 +93,7 @@ namespace StructureMap.Testing.Widget
 
         public static IConfiguredInstance GetInstance()
         {
-            ConfiguredInstance memento = new ConfiguredInstance().WithConcreteKey("Complex");
+            ConfiguredInstance memento = new ConfiguredInstance(typeof(ComplexRule));
             memento.Name = "Sample";
 
             memento.SetProperty("String", "Red");
