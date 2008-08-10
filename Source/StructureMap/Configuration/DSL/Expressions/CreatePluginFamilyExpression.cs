@@ -155,9 +155,8 @@ namespace StructureMap.Configuration.DSL.Expressions
             _alterations.Add(
                 family =>
                 {
-                    Plugin plugin = new Plugin(typeof (CONCRETETYPE));
-                    plugin.ConcreteKey = instanceName;
-                    family.AddPlugin(plugin);
+                    ConfiguredInstance instance = new ConfiguredInstance(typeof(CONCRETETYPE)).WithName(instanceName);
+                    family.AddInstance(instance);
                 }
                 );
 

@@ -63,13 +63,13 @@ namespace StructureMap.Testing
         [Test]
         public void CanCreatePluginForGenericTypeWithGenericParameter()
         {
-            Plugin plugin = new Plugin(typeof (GenericService<int>), "key");
+            Plugin plugin = new Plugin(typeof (GenericService<int>));
         }
 
         [Test]
         public void CanCreatePluginForGenericTypeWithoutGenericParameter()
         {
-            Plugin plugin = new Plugin(typeof (GenericService<>), "key");
+            Plugin plugin = new Plugin(typeof (GenericService<>));
         }
 
 
@@ -89,7 +89,7 @@ namespace StructureMap.Testing
         {
             PluginGraph graph = new PluginGraph();
             PluginFamily family = graph.FindFamily(typeof (ComplexType<int>));
-            family.AddPlugin(new Plugin(typeof (ComplexType<int>), "complex"));
+            family.AddPlugin(typeof (ComplexType<int>), "complex");
 
             Container manager = new Container(graph);
 

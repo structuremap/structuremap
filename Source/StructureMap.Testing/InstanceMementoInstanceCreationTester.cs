@@ -176,9 +176,8 @@ namespace StructureMap.Testing
         public void ReadChildArrayProperty()
         {
             PluginGraph graph = new PluginGraph();
-            Plugin plugin = new Plugin(typeof (ComplexRule));
 
-            graph.FindFamily(typeof (Rule)).AddPlugin(plugin);
+            graph.FindFamily(typeof(Rule)).AddPlugin(typeof(ComplexRule));
 
             MemoryInstanceMemento memento = ComplexRule.GetMemento();
             memento.SetProperty(XmlConstants.PLUGGED_TYPE, typeof (ComplexRule).AssemblyQualifiedName);
@@ -202,9 +201,8 @@ namespace StructureMap.Testing
         public void ReadChildProperty_child_property_is_defined_build_child()
         {
             PluginGraph graph = new PluginGraph();
-            Plugin plugin = new Plugin(typeof (ComplexRule));
 
-            graph.FindFamily(typeof(Rule)).AddPlugin(plugin);
+            graph.FindFamily(typeof(Rule)).AddPlugin(typeof(ComplexRule));
 
             MemoryInstanceMemento memento = ComplexRule.GetMemento();
             memento.SetProperty(XmlConstants.PLUGGED_TYPE, typeof (ComplexRule).AssemblyQualifiedName);
@@ -221,9 +219,8 @@ namespace StructureMap.Testing
         public void ReadPrimitivePropertiesHappyPath()
         {
             PluginGraph graph = new PluginGraph();
-            Plugin plugin = new Plugin(typeof (ComplexRule));
 
-            graph.FindFamily(typeof(Rule)).AddPlugin(plugin);
+            graph.FindFamily(typeof(Rule)).AddPlugin(typeof(ComplexRule));
 
             MemoryInstanceMemento memento = ComplexRule.GetMemento();
             memento.SetProperty(XmlConstants.PLUGGED_TYPE, typeof (ComplexRule).AssemblyQualifiedName);

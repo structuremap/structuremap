@@ -109,7 +109,7 @@ namespace StructureMap.Graph
             {
                 if (CanBePluggedIntoGenericType(baseFamily.PluginType, plugin.PluggedType, templateTypes))
                 {
-                    Plugin templatedPlugin = CreateTemplatedClone(plugin, templateTypes);
+                    Plugin templatedPlugin = plugin.CreateTemplatedClone(templateTypes);
                     templatedFamily.AddPlugin(templatedPlugin);
                 }
             });
@@ -127,27 +127,6 @@ namespace StructureMap.Graph
             return templatedFamily;
         }
 
-
-        public static Plugin CreateTemplatedClone(Plugin plugin, params Type[] types)
-        {
-            Type templatedType;
-            if (plugin.PluggedType.IsGenericType)
-            {
-                templatedType = plugin.PluggedType.MakeGenericType(types);
-            }
-            else
-            {
-                templatedType = plugin.PluggedType;
-            }
-
-            Plugin templatedPlugin = new Plugin(templatedType, plugin.ConcreteKey);
-            foreach (SetterProperty setter in plugin.Setters)
-            {
-                templatedPlugin.Setters.Add(setter.Name);
-            }
-
-            return templatedPlugin;
-        }
 
 
         public static bool CanBePluggedIntoGenericType(Type pluginType, Type pluggedType, params Type[] templateTypes)

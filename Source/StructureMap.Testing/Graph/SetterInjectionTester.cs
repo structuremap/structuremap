@@ -117,11 +117,11 @@ namespace StructureMap.Testing.Graph
             Plugin plugin = new Plugin(typeof(OtherGridColumn));
             plugin.Setters.OptionalCount.ShouldEqual(7);
 
-            plugin.Setters.Add("Widget");
-            plugin.Setters.Add("FontStyle");
-            plugin.Setters.Add("ColumnName");
-            plugin.Setters.Add("Rules");
-            plugin.Setters.Add("WrapLines");
+            plugin.Setters.MarkSetterAsMandatory("Widget");
+            plugin.Setters.MarkSetterAsMandatory("FontStyle");
+            plugin.Setters.MarkSetterAsMandatory("ColumnName");
+            plugin.Setters.MarkSetterAsMandatory("Rules");
+            plugin.Setters.MarkSetterAsMandatory("WrapLines");
 
             Assert.AreEqual(2, plugin.Setters.OptionalCount);
             Assert.AreEqual(5, plugin.Setters.MandatoryCount);
@@ -210,14 +210,14 @@ namespace StructureMap.Testing.Graph
         public void TryToAddANonExistentSetterProperty()
         {
             Plugin plugin = new Plugin(typeof (BasicGridColumn), "Basic");
-            plugin.Setters.Add("NonExistentPropertyName");
+            plugin.Setters.MarkSetterAsMandatory("NonExistentPropertyName");
         }
 
         [Test, ExpectedException(typeof (StructureMapException))]
         public void TryToAddASetterPropertyThatDoesNotHaveASetter()
         {
             Plugin plugin = new Plugin(typeof (BasicGridColumn), "Basic");
-            plugin.Setters.Add("HeaderText");
+            plugin.Setters.MarkSetterAsMandatory("HeaderText");
         }
 
     }

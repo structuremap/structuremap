@@ -81,24 +81,11 @@ namespace StructureMap.Graph
 
         public void Add(Plugin plugin)
         {
-            if (_plugins.Has(plugin.PluggedType))
-            {
-                Plugin peer = this[plugin.PluggedType];
-                peer.MergeSetters(plugin);
-
-                // Last ConcreteKey wins
-                peer.ConcreteKey = plugin.ConcreteKey;
-
-                return;
-            }
-
-
             // Reject if the PluggedType cannot be upcast to the PluginType
             if (!TypeRules.CanBeCast(_family.PluginType, plugin.PluggedType))
             {
                 throw new StructureMapException(104, plugin.PluggedType, _family.PluginType);
             }
-
 
             _plugins.Store(plugin.PluggedType, plugin);
         }

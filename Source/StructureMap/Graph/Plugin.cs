@@ -140,5 +140,19 @@ namespace StructureMap.Graph
         {
             return _setters.OptionalCount > 0;
         }
+
+        public Plugin CreateTemplatedClone(Type[] types)
+        {
+            Type templatedType = _pluggedType.IsGenericType ? _pluggedType.MakeGenericType(types) : _pluggedType;
+
+            Plugin templatedPlugin = new Plugin(templatedType, ConcreteKey);
+            
+            foreach (SetterProperty setter in Setters)
+            {
+                templatedPlugin.Setters.MarkSetterAsMandatory(setter.Name);
+            }
+
+            return templatedPlugin;
+        }
     }
 }

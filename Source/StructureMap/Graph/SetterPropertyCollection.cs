@@ -55,7 +55,7 @@ namespace StructureMap.Graph
 
         #endregion
 
-        public SetterProperty Add(string propertyName)
+        public SetterProperty MarkSetterAsMandatory(string propertyName)
         {
             var setter = _properties.Find(p => p.Property.Name == propertyName);
             if (setter == null)
@@ -87,7 +87,7 @@ namespace StructureMap.Graph
             {
                 if (!IsMandatory(setter.Name))
                 {
-                    Add(setter.Name);
+                    MarkSetterAsMandatory(setter.Name);
                 }
             }
         }

@@ -94,8 +94,7 @@ namespace StructureMap.Testing.Graph
         {
             PluginGraph graph = new PluginGraph();
             PluginFamily family = graph.FindFamily(typeof (IGridColumn));
-            Plugin plugin = new Plugin(typeof (EnumGridColumn));
-            family.AddPlugin(plugin);
+            family.AddPlugin(typeof(EnumGridColumn));
 
             family.AddInstance(_source.GetMemento("Enum"));
 
@@ -111,8 +110,7 @@ namespace StructureMap.Testing.Graph
         {
             PluginGraph graph = new PluginGraph();
             PluginFamily family = graph.FindFamily(typeof (IGridColumn));
-            Plugin plugin = new Plugin(typeof (LongGridColumn));
-            family.AddPlugin(plugin);
+            family.AddPlugin(typeof(LongGridColumn));
 
             InstanceMemento memento = _source.GetMemento("Long");
             long count = long.Parse(memento.GetProperty("Count"));
@@ -130,8 +128,7 @@ namespace StructureMap.Testing.Graph
         {
             PluginGraph graph = new PluginGraph();
             PluginFamily family = graph.FindFamily(typeof (IGridColumn));
-            Plugin plugin = new Plugin(typeof (StringGridColumn));
-            family.AddPlugin(plugin);
+            family.AddPlugin(typeof(StringGridColumn));
 
             InstanceMemento memento = _source.GetMemento("String");
             family.AddInstance(memento);

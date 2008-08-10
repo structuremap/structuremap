@@ -109,10 +109,9 @@ namespace StructureMap.Configuration
             string context = "creating a Plugin for " + family.PluginType.AssemblyQualifiedName;
             _builder.WithType(pluginPath, context, pluggedType =>
             {
-                Plugin plugin = new Plugin(pluggedType, concreteKey);
-                family.AddPlugin(plugin);
+                Plugin plugin = family.AddPlugin(pluggedType, concreteKey);
 
-                pluginElement.ForTextInChild("Setter/@Name").Do(prop => plugin.Setters.Add(prop));
+                pluginElement.ForTextInChild("Setter/@Name").Do(prop => plugin.Setters.MarkSetterAsMandatory(prop));
             });
         }
 
