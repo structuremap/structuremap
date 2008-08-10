@@ -11,8 +11,6 @@ namespace StructureMap
     /// </summary>
     public class InstanceFactory : IInstanceFactory
     {
-        private readonly InstanceBuilderList _instanceBuilders;
-
         private readonly Cache<string, Instance> _instances =
             new Cache<string, Instance>(delegate { return null; });
 
@@ -41,7 +39,6 @@ namespace StructureMap
                 _policy = family.Policy;
 
                 _pluginType = family.PluginType;
-                _instanceBuilders = new InstanceBuilderList(family.PluginType, family.GetAllPlugins());
 
 
                 family.EachInstance(AddInstance);
@@ -81,16 +78,6 @@ namespace StructureMap
             get { return _pluginType; }
         }
 
-        public InstanceBuilder FindBuilderByType(Type pluggedType)
-        {
-            return _instanceBuilders.FindByType(pluggedType);
-        }
-
-        public InstanceBuilder FindBuilderByConcreteKey(string concreteKey)
-        {
-            return _instanceBuilders.FindByConcreteKey(concreteKey);
-        }
-
         public void ForEachInstance(Action<Instance> action)
         {
             _instances.Each(action);
@@ -105,7 +92,6 @@ namespace StructureMap
         [Obsolete]
         public Instance AddType<T>()
         {
-            InstanceBuilder builder = _instanceBuilders.FindByType(typeof (T));
             ConfiguredInstance instance =
                 new ConfiguredInstance(typeof (T)).WithName(TypePath.GetAssemblyQualifiedName(typeof (T)));
 
@@ -141,7 +127,6 @@ namespace StructureMap
 
         public void ImportFrom(PluginFamily family)
         {
-            _instanceBuilders.Add(family.GetAllPlugins());
             family.EachInstance(instance => _instances.Fill(instance.Name, instance));
         }
 

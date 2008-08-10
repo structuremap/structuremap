@@ -84,7 +84,7 @@ namespace StructureMap
 
         public virtual Plugin FindPlugin(PluginFamily family)
         {
-            Plugin plugin = family.FindPlugin(innerConcreteKey) ?? getPluginByType(family) ??
+            Plugin plugin = getPluginByType(family) ?? family.FindPlugin(innerConcreteKey ?? string.Empty) ?? 
                             family.FindPlugin(Plugin.DEFAULT);
 
             if (plugin == null)
@@ -105,8 +105,7 @@ namespace StructureMap
             }
 
             Type pluggedType = new TypePath(pluggedTypeName).FindType();
-
-            return family.FindPlugin(pluggedType);
+            return PluginCache.GetPlugin(pluggedType);
         }
 
         /// <summary>

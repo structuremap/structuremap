@@ -135,9 +135,6 @@
     <value>Missing a mandatory "ConcreteKey" attribute in a &lt;Plugin&gt; node for Type "{0}"</value>
     <comment>change wording</comment>
   </data>
-  <data name="113" xml:space="preserve">
-    <value>Duplicate ConcreteKey ({0}) values in PluginType "{1}"</value>
-  </data>
   <data name="200" xml:space="preserve">
     <value>Could not find an Instance named "{0}" for PluginType {1}</value>
   </data>
@@ -188,7 +185,7 @@
     <value>Could not create the type {0} specified in the [PluginFamily] attribute on PluginFamily {1}</value>
   </data>
   <data name="180" xml:space="preserve">
-    <value>Cannot construct a Plugin for Class {0}, No public constructor found.</value>
+    <value>StructureMap cannot construct objects of Class {0} because there is no public constructor found.</value>
   </data>
   <data name="115" xml:space="preserve">
     <value>An exception occurred while trying to create an InstanceFactory for PluginType {0}</value>

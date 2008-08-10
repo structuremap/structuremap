@@ -133,11 +133,6 @@ namespace StructureMap.Pipeline
 
         protected abstract object build(Type pluginType, IBuildSession session);
 
-        protected virtual Plugin findPlugin(PluginCollection plugins)
-        {
-            return null;
-        }
-
         protected virtual Instance findMasterInstance(PluginFamily family, string profileName, GraphLog log)
         {
             return this;

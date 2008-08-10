@@ -153,11 +153,8 @@ namespace StructureMap.Testing.Graph
         public void If_PluginType_is_concrete_automatically_add_a_plugin_called_default()
         {
             PluginFamily family = new PluginFamily(GetType());
-            Assert.AreEqual(1, family.PluginCount);
-
-            Plugin plugin = family.FindPlugin(GetType());
-            Assert.AreEqual(Plugin.DEFAULT, plugin.ConcreteKey);
-            Assert.AreEqual(GetType(), plugin.PluggedType);
+            family.PluginCount.ShouldEqual(1);
+            family.FindPlugin(Plugin.DEFAULT).PluggedType.ShouldEqual(GetType());
         }
 
         [Test]

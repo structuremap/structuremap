@@ -22,11 +22,6 @@ namespace StructureMap.Graph
 
         public Plugin(Type pluggedType, string concreteKey) : this(pluggedType)
         {
-            if (concreteKey == string.Empty)
-            {
-                throw new StructureMapException(112, pluggedType.FullName);
-            }
-
             _concreteKey = concreteKey;
         }
 
@@ -129,11 +124,9 @@ namespace StructureMap.Graph
             return _constructor.IsValid();
         }
 
-        public static Plugin CreateForConcreteType(Type type)
+        public bool CanBeCreated()
         {
-            if (!Constructor.HasConstructors(type)) return null;
-
-            return new Plugin(type, DEFAULT);
+            return Constructor.HasConstructors(_pluggedType);
         }
 
         public bool HasOptionalSetters()

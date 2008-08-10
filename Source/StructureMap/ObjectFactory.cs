@@ -218,6 +218,8 @@ namespace StructureMap
             Container container = new Container(graph);
             container.SetDefaultsToProfile(_profile);
 
+            PluginCache.Compile();
+
             return container;
         }
 

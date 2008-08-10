@@ -26,6 +26,11 @@ namespace StructureMap.Util
             _onMissing = onMissing;
         }
 
+        public void Clear()
+        {
+            _values.Clear();
+        }
+
         public Func<VALUE, KEY> GetKey
         {
             get { return _getKey; }
@@ -94,6 +99,14 @@ namespace StructureMap.Util
             }
         }
 
+        public void Each(Action<KEY, VALUE> action)
+        {
+            foreach (var pair in _values)
+            {
+                action(pair.Key, pair.Value);
+            }
+        }
+
         public bool Has(KEY key)
         {
             return _values.ContainsKey(key);
@@ -146,5 +159,6 @@ namespace StructureMap.Util
                 _values.Remove(key);
             }
         }
+
     }
 }

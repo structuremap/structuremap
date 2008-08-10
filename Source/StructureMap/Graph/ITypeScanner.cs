@@ -20,7 +20,7 @@ namespace StructureMap.Graph
             
 
             Type pluginType = FindPluginType(type);
-            if (pluginType != null && Plugin.CreateForConcreteType(type) != null)
+            if (pluginType != null && Constructor.HasConstructors(type))
             {
                 registry.ForRequestedType(pluginType).AddInstance(new ConfiguredInstance(type));
             }

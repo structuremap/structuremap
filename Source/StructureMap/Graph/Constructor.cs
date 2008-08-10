@@ -35,11 +35,6 @@ namespace StructureMap.Graph
                 returnValue = GetGreediestConstructor(pluggedType);
             }
 
-            if (returnValue == null)
-            {
-                throw new StructureMapException(180, pluggedType.Name);
-            }
-
             return returnValue;
         }
 

@@ -17,7 +17,7 @@ namespace StructureMap.Graph
         private readonly Predicate<Type> _implicitPluginFilter;
         private readonly Cache<string, Instance> _instances = new Cache<string, Instance>(delegate { return null; });
         private readonly List<InstanceMemento> _mementoList = new List<InstanceMemento>();
-        private readonly PluginCollection _plugins;
+        private Cache<string, Plugin> _pluggedTypes = new Cache<string, Plugin>();
         private readonly Type _pluginType;
         private IBuildPolicy _buildPolicy = new BuildPolicy();
         private string _defaultKey = string.Empty;
@@ -34,7 +34,6 @@ namespace StructureMap.Graph
         {
             _parent = parent;
             _pluginType = pluginType;
-            _plugins = new PluginCollection(this);
 
             PluginFamilyAttribute.ConfigureFamily(this);
 
@@ -44,10 +43,10 @@ namespace StructureMap.Graph
 
             if (IsConcrete(pluginType))
             {
-                Plugin plugin = Plugin.CreateForConcreteType(pluginType);
-                if (plugin != null)
+                Plugin plugin = PluginCache.GetPlugin(pluginType);
+                if (plugin.CanBeCreated())
                 {
-                    _plugins.Add(plugin);
+                    AddPlugin(pluginType, Plugin.DEFAULT);
                 }
             }
         }
@@ -151,14 +150,19 @@ namespace StructureMap.Graph
 
         private void discoverImplicitInstances()
         {
-            List<Plugin> list = _plugins.FindAutoFillablePlugins();
-            list.RemoveAll(
-                plugin => _instances.Exists(instance => instance.Matches(plugin)));
-
-            foreach (Plugin plugin in list)
+            _pluggedTypes.Each((key, plugin) =>
             {
-                AddInstance(plugin.CreateImplicitInstance());
-            }
+                if (plugin.CanBeAutoFilled && !hasInstanceWithPluggedType(plugin))
+                {
+                    var instance = new ConfiguredInstance(plugin.PluggedType).WithName(key);
+                    AddInstance(instance);
+                }
+            });
+        }
+
+        private bool hasInstanceWithPluggedType(Plugin plugin)
+        {
+            return _instances.Exists(instance => instance.Matches(plugin));
         }
 
         public void EachInstance(Action<Instance> action)
@@ -178,40 +182,47 @@ namespace StructureMap.Graph
             {
                 if (!HasPlugin(pluggedType))
                 {
-                    Plugin plugin = new Plugin(pluggedType);
-                    _plugins.Add(plugin);
+                    AddPlugin(pluggedType);
                 }
             }
         }
 
         public bool HasPlugin(Type pluggedType)
         {
-            return _plugins.HasPlugin(pluggedType);
+            return _pluggedTypes.Exists(plugin => plugin.PluggedType == pluggedType);
+        }
+
+        private void assertPluggability(Type pluggedType)
+        {
+            if (!CanBeCast(_pluginType, pluggedType))
+            {
+                throw new StructureMapException(104, pluggedType, _pluginType);
+            }
+
+            if (!Constructor.HasConstructors(pluggedType))
+            {
+                throw new StructureMapException(180, pluggedType.AssemblyQualifiedName);
+            }
         }
 
         public Plugin AddPlugin(Type pluggedType)
         {
-            return _plugins[pluggedType];
-        }
+            assertPluggability(pluggedType);
 
-        public Plugin AddPlugin(Type pluggedType, string key)
-        {
-            Plugin plugin = new Plugin(pluggedType, key);
-            AddPlugin(plugin);
+            Plugin plugin = PluginCache.GetPlugin(pluggedType);
+            _pluggedTypes.Store(plugin.ConcreteKey, plugin);
 
             return plugin;
         }
 
-        [Obsolete("Wanna make private")]
-        public void AddPlugin(Plugin plugin)
+        public Plugin AddPlugin(Type pluggedType, string key)
         {
-            if (_plugins.HasPlugin(plugin.ConcreteKey))
-            {
-                _parent.Log.RegisterError(113, plugin.ConcreteKey, _pluginType);
-            }
+            assertPluggability(pluggedType);
 
+            Plugin plugin = PluginCache.GetPlugin(pluggedType);
+            _pluggedTypes.Store(key, plugin);
 
-            _plugins.Add(plugin);
+            return plugin;
         }
 
         public Instance GetDefaultInstance()
@@ -241,7 +252,7 @@ namespace StructureMap.Graph
 
         public int PluginCount
         {
-            get { return _plugins.Count; }
+            get { return _pluggedTypes.Count; }
         }
 
         /// <summary>
@@ -268,9 +279,10 @@ namespace StructureMap.Graph
 
         #endregion
 
+        [Obsolete("is this really important?")]
         public Plugin FindPlugin(Type pluggedType)
         {
-            return _plugins[pluggedType];
+            return _pluggedTypes.Find(p => p.PluggedType == pluggedType);
         }
 
         public void AddDefaultMemento(InstanceMemento memento)
@@ -303,11 +315,7 @@ namespace StructureMap.Graph
         public void ImportFrom(PluginFamily source)
         {
             source.EachInstance(instance => _instances.Fill(instance.Name, instance));
-
-            foreach (Plugin plugin in source._plugins)
-            {
-                _plugins.Fill(plugin);
-            }
+            source._pluggedTypes.Each((key, plugin) => _pluggedTypes.Fill(key, plugin));
         }
 
         public Instance FirstInstance()
@@ -317,25 +325,37 @@ namespace StructureMap.Graph
 
         public Plugin FindPlugin(string concreteKey)
         {
-            return _plugins[concreteKey];
+            if (_pluggedTypes.Has(concreteKey))
+            {
+                return _pluggedTypes.Retrieve(concreteKey);
+            }
+
+            return null;
         }
 
         public bool HasPlugin(string concreteKey)
         {
-            return _plugins.HasPlugin(concreteKey);
+            return _pluggedTypes.Has(concreteKey);
         }
 
-        public void EachPlugin(Action<Plugin> action)
+        public PluginFamily CreateTemplatedClone(Type[] templateTypes)
         {
-            foreach (Plugin plugin in _plugins)
+            Type templatedType = _pluginType.MakeGenericType(templateTypes);
+            PluginFamily templatedFamily = new PluginFamily(templatedType, Parent);
+            templatedFamily.DefaultInstanceKey = DefaultInstanceKey;
+            templatedFamily.Policy = Policy.Clone();
+
+
+            // TODO -- Got a big problem here.  Intances need to be copied over
+            EachInstance(i =>
             {
-                action(plugin);
-            }
-        }
+                ((IDiagnosticInstance)i).AddTemplatedInstanceTo(templatedFamily, templateTypes);
+            });
 
-        public IEnumerable<Plugin> GetAllPlugins()
-        {
-            return _plugins.All;
+            // Need to attach the new PluginFamily to the old PluginGraph
+            Parent.PluginFamilies.Add(templatedFamily);
+
+            return templatedFamily;
         }
     }
 }

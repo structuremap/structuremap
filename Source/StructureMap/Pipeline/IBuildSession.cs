@@ -9,8 +9,6 @@ namespace StructureMap.Pipeline
         Array CreateInstanceArray(Type pluginType, Instance[] instances);
         object CreateInstance(Type pluginType);
         object ApplyInterception(Type pluginType, object actualValue);
-        InstanceBuilder FindBuilderByType(Type pluginType, Type pluggedType);
-        InstanceBuilder FindBuilderByConcreteKey(Type pluginType, string concreteKey);
         void RegisterDefault(Type pluginType, object defaultObject);
     }
 }

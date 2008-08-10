@@ -280,9 +280,6 @@
     <Compile Include="Graph\Plugin.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Graph\PluginCollection.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Graph\PluginFamily.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -23,6 +23,11 @@ namespace StructureMap.Configuration.DSL
 
             public void IntoPluginType(Type pluginType)
             {
+                if (!Constructor.HasConstructors(_pluggedType))
+                {
+                    throw new StructureMapException(180, _pluggedType.AssemblyQualifiedName);
+                }
+
                 if (!TypeRules.CanBeCast(pluginType, _pluggedType))
                 {
                     throw new StructureMapException(

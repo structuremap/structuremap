@@ -78,12 +78,15 @@ namespace StructureMap.Configuration.DSL.Expressions
         public CreatePluginFamilyExpression<PLUGINTYPE> TheDefaultIsConcreteType<CONCRETETYPE>()
             where CONCRETETYPE : PLUGINTYPE
         {
-            ExpressionValidator.ValidatePluggabilityOf(typeof (CONCRETETYPE)).IntoPluginType(_pluginType);
+            var concreteType = typeof(CONCRETETYPE);
+
+            ExpressionValidator.ValidatePluggabilityOf(concreteType).IntoPluginType(_pluginType);
 
             return alterAndContinue(family =>
             {
-                Plugin plugin = family.FindPlugin(typeof (CONCRETETYPE));
-                family.DefaultInstanceKey = plugin.ConcreteKey;
+                ConfiguredInstance instance = new ConfiguredInstance(concreteType).WithName(concreteType.AssemblyQualifiedName);
+                family.AddInstance(instance);
+                family.DefaultInstanceKey = instance.Name;
             });
 
             return this;

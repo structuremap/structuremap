@@ -183,7 +183,7 @@ namespace StructureMap.Testing.Pipeline
 
             using (mocks.Record())
             {
-                Expect.Call(session.FindBuilderByType(thePluginType, thePluggedType)).Return(builder);
+                PluginCache.Store(thePluggedType, builder);
                 Expect.Call(builder.BuildInstance(instance, session)).Return(new object());
             }
 

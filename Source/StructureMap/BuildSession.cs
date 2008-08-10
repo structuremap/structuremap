@@ -109,16 +109,6 @@ namespace StructureMap
             return _interceptorLibrary.FindInterceptor(actualValue.GetType()).Process(actualValue);
         }
 
-        public InstanceBuilder FindBuilderByType(Type pluginType, Type pluggedType)
-        {
-            return forType(pluginType).FindBuilderByType(pluggedType);
-        }
-
-        public InstanceBuilder FindBuilderByConcreteKey(Type pluginType, string concreteKey)
-        {
-            return forType(pluginType).FindBuilderByConcreteKey(concreteKey);
-        }
-
         public void RegisterDefault(Type pluginType, object defaultObject)
         {
             _defaults.Store(pluginType, defaultObject);

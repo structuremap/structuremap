@@ -87,8 +87,7 @@ namespace StructureMap.Pipeline
 
         protected override object build(Type pluginType, IBuildSession session)
         {
-            InstanceBuilder builder = session.FindBuilderByType(pluginType, _pluggedType);
-
+            InstanceBuilder builder = PluginCache.FindBuilder(_pluggedType);
             return ((IConfiguredInstance) this).Build(pluginType, session, builder);
         }
 

@@ -99,30 +99,10 @@ namespace StructureMap.Graph
         // TODO:  This code sucks.  What's going on here?
         public static PluginFamily CreateTemplatedClone(PluginFamily baseFamily, params Type[] templateTypes)
         {
-            Type templatedType = baseFamily.PluginType.MakeGenericType(templateTypes);
-            PluginFamily templatedFamily = new PluginFamily(templatedType, baseFamily.Parent);
-            templatedFamily.DefaultInstanceKey = baseFamily.DefaultInstanceKey;
-            templatedFamily.Policy = baseFamily.Policy.Clone();
+            
+            PluginFamily templatedFamily = baseFamily.CreateTemplatedClone(templateTypes);
+                
 
-            // Add Plugins
-            baseFamily.EachPlugin(plugin =>
-            {
-                if (CanBePluggedIntoGenericType(baseFamily.PluginType, plugin.PluggedType, templateTypes))
-                {
-                    Plugin templatedPlugin = plugin.CreateTemplatedClone(templateTypes);
-                    templatedFamily.AddPlugin(templatedPlugin);
-                }
-            });
-
-
-            // TODO -- Got a big problem here.  Intances need to be copied over
-            baseFamily.EachInstance(i =>
-            {
-                ((IDiagnosticInstance)i).AddTemplatedInstanceTo(templatedFamily, templateTypes);
-            });
-
-            // Need to attach the new PluginFamily to the old PluginGraph
-            baseFamily.Parent.PluginFamilies.Add(templatedFamily);
 
             return templatedFamily;
         }

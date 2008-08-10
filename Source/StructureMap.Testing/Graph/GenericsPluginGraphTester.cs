@@ -76,35 +76,8 @@ namespace StructureMap.Testing.Graph
             Assert.IsNotNull(templatedFamily);
             Assert.AreEqual(typeof (IGenericService<int>), templatedFamily.PluginType);
 
-            Assert.AreEqual(3, templatedFamily.PluginCount);
-            Assert.IsNotNull(templatedFamily.FindPlugin(typeof (GenericService<int>)));
-            Assert.IsNotNull(templatedFamily.FindPlugin(typeof (SecondGenericService<int>)));
-            Assert.IsNotNull(templatedFamily.FindPlugin(typeof (ThirdGenericService<int>)));
         }
 
-        [Test]
-        public void BuildTemplatedFamilyWithThreeTemplateParameters()
-        {
-            PluginGraph pluginGraph = new PluginGraph();
-            PluginFamily family = pluginGraph.FindFamily(typeof (IGenericService3<,,>));
-            family.AddPlugin(typeof (GenericService3<,,>), "Default");
-            family.AddPlugin(typeof (SecondGenericService3<,,>), "Second");
-            family.AddPlugin(typeof (ThirdGenericService3<,,>), "Third");
-
-            PluginFamily templatedFamily = GenericsPluginGraph.CreateTemplatedClone(family, typeof (int), typeof (bool),
-                                                                                    typeof (string));
-
-            Assert.IsNotNull(templatedFamily);
-            Assert.AreEqual(typeof (IGenericService3<int, bool, string>), templatedFamily.PluginType);
-
-            Assert.AreEqual(3, templatedFamily.PluginCount);
-
-            Assert.AreEqual(typeof (GenericService3<int, bool, string>), templatedFamily.FindPlugin("Default").PluggedType);
-            Assert.AreEqual(typeof (SecondGenericService3<int, bool, string>),
-                            templatedFamily.FindPlugin("Second").PluggedType);
-            Assert.AreEqual(typeof (ThirdGenericService3<int, bool, string>),
-                            templatedFamily.FindPlugin("Third").PluggedType);
-        }
 
 
         [Test]

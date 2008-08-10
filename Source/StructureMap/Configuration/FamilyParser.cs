@@ -109,6 +109,11 @@ namespace StructureMap.Configuration
             string context = "creating a Plugin for " + family.PluginType.AssemblyQualifiedName;
             _builder.WithType(pluginPath, context, pluggedType =>
             {
+                if (concreteKey == string.Empty)
+                {
+                    throw new StructureMapException(112, pluggedType.FullName);
+                }
+
                 Plugin plugin = family.AddPlugin(pluggedType, concreteKey);
 
                 pluginElement.ForTextInChild("Setter/@Name").Do(prop => plugin.Setters.MarkSetterAsMandatory(prop));

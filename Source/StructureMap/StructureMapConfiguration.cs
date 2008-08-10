@@ -85,6 +85,8 @@ namespace StructureMap
             _registries.Add(_registry);
             UseDefaultStructureMapConfigFile = false;
             IgnoreStructureMapConfig = false;
+
+            PluginCache.ResetAll();
         }
 
         public static void RegisterInterceptor(TypeInterceptor interceptor)

@@ -3,6 +3,7 @@ using System.Reflection;
 using NUnit.Framework;
 using Rhino.Mocks;
 using StructureMap.Attributes;
+using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
@@ -275,17 +276,14 @@ namespace StructureMap.Testing.Graph
         {
             try
             {
-                Constructor ctor = new Constructor(typeof (ClassWithNoConstructor));
-                Assert.Fail("Should have thrown a StructureMapException");
+                new Registry().ForRequestedType<ClassWithNoConstructor>().TheDefaultIsConcreteType<ClassWithNoConstructor>();
             }
             catch (StructureMapException ex)
             {
                 Assert.AreEqual(180, ex.ErrorCode);
-                Assert.AreEqual(
-                    "StructureMap Exception Code:  180\nCannot construct a Plugin for Class ClassWithNoConstructor, No public constructor found.",
-                    ex.Message);
             }
         }
+
 
         [Test]
         public void Visit_arguments()
@@ -312,6 +310,18 @@ namespace StructureMap.Testing.Graph
                 Plugin plugin = new Plugin(typeof (LotsOfStuff));
                 plugin.VisitArguments(visitor);
             }
+        }
+
+        [Test]
+        public void CanBeCreated_positive_with_a_public_constructor()
+        {
+            new Plugin(typeof(LotsOfStuff)).CanBeCreated().ShouldBeTrue();
+        }
+
+        [Test]
+        public void CanBeCreated_is_negative_with_no_public_constructors()
+        {
+            new Plugin(typeof(ClassWithNoConstructor)).CanBeCreated().ShouldBeFalse();
         }
     }
 

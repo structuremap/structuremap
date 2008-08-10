@@ -153,23 +153,6 @@ namespace StructureMap.Testing.Graph.ExceptionHandling
 ");
         }
 
-        [Test]
-        public void Log_113_if_a_duplicate_Plugin_ConcreteKey_is_detected()
-        {
-            assertErrorIsLogged(113,
-                                @"
-
-		        <StructureMap>
-			        <Assembly Name='StructureMap.Testing.Widget'/>
-        					
-			        <PluginFamily Type='StructureMap.Testing.Widget.IWidget' Assembly='StructureMap.Testing.Widget' DefaultKey=''>
-				        <Plugin Assembly='StructureMap.Testing.Widget' Type='StructureMap.Testing.Widget.NotPluggableWidget' ConcreteKey='Dup'/>
-				        <Plugin Assembly='StructureMap.Testing.Widget' Type='StructureMap.Testing.Widget.NotPluggableWidget' ConcreteKey='Dup'/>
-			        </PluginFamily>							
-		        </StructureMap>
-
-");
-        }
 
         [Test]
         public void Log_130_if_an_error_occurs_when_trying_to_create_an_interceptor_configured_in_xml()
