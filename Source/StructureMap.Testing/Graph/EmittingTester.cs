@@ -27,7 +27,7 @@ namespace StructureMap.Testing.Graph
                 Plugin plugin = new Plugin(typeof (ComplexRule));
 
                 InstanceBuilderAssembly _InstanceBuilderAssembly =
-                    new InstanceBuilderAssembly(typeof (Rule), new Plugin[] {plugin});
+                    new InstanceBuilderAssembly(new Plugin[] {plugin});
 
                 List<InstanceBuilder> list = _InstanceBuilderAssembly.Compile();
                 builder = list[0];
@@ -62,7 +62,7 @@ namespace StructureMap.Testing.Graph
         {
             Plugin plugin = new Plugin(typeof(NoArgClass));
             InstanceBuilderAssembly _InstanceBuilderAssembly =
-                    new InstanceBuilderAssembly(typeof(NoArgClass), new Plugin[] { plugin });
+                    new InstanceBuilderAssembly(new Plugin[] { plugin });
             List<InstanceBuilder> list = _InstanceBuilderAssembly.Compile();
             builder = list[0];
 
@@ -76,7 +76,7 @@ namespace StructureMap.Testing.Graph
         {
             Plugin plugin = new Plugin(typeof(WithOneSetter));
             InstanceBuilderAssembly _InstanceBuilderAssembly =
-                    new InstanceBuilderAssembly(typeof(WithOneSetter), new Plugin[] { plugin });
+                    new InstanceBuilderAssembly(new Plugin[] { plugin });
             List<InstanceBuilder> list = _InstanceBuilderAssembly.Compile();
             builder = list[0];
 

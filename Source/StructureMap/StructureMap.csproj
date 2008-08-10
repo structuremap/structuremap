@@ -406,6 +406,7 @@
     <Compile Include="Emitting\Parameters\Methods.cs" />
     <Compile Include="ErrorMessages.cs" />
     <Compile Include="Graph\ITypeScanner.cs" />
+    <Compile Include="Graph\PluginCache.cs" />
     <Compile Include="IBootstrapper.cs" />
     <Compile Include="Pipeline\ConfiguredInstance.Building.cs" />
     <Compile Include="Pipeline\IStructuredInstance.cs" />

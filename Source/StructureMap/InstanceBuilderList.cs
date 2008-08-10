@@ -99,7 +99,7 @@ namespace StructureMap
                 }
             }
 
-            InstanceBuilderAssembly builderAssembly = new InstanceBuilderAssembly(_pluginType, list);
+            InstanceBuilderAssembly builderAssembly = new InstanceBuilderAssembly(list);
             return builderAssembly.Compile();
         }
 

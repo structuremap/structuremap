@@ -12,15 +12,12 @@ namespace StructureMap.Emitting
     {
         private readonly List<string> _classNames = new List<string>();
         private readonly DynamicAssembly _dynamicAssembly;
-        private readonly Type _pluginType;
 
-        public InstanceBuilderAssembly(Type pluginType, IEnumerable<Plugin> plugins)
+        public InstanceBuilderAssembly(IEnumerable<Plugin> plugins)
         {
             string assemblyName = "Builders" + guidString();
             _dynamicAssembly = new DynamicAssembly(assemblyName);
            
-            _pluginType = pluginType;
-
             foreach (Plugin plugin in plugins)
             {
                 processPlugin(plugin);
@@ -67,20 +64,13 @@ namespace StructureMap.Emitting
 
         private void processPlugin(Plugin plugin)
         {
-            if (TypeRules.CanBeCast(_pluginType, plugin.PluggedType))
-            {
-                string className = getInstanceBuilderClassName(plugin.PluggedType);
-                ClassBuilder builderClass =
-                    _dynamicAssembly.AddClass(className, typeof (InstanceBuilder));
+            string className = getInstanceBuilderClassName(plugin.PluggedType);
+            ClassBuilder builderClass =
+                _dynamicAssembly.AddClass(className, typeof (InstanceBuilder));
 
-                configureClassBuilder(builderClass, plugin);
+            configureClassBuilder(builderClass, plugin);
 
-                _classNames.Add(className);
-            }
-            else
-            {
-                throw new StructureMapException(104, plugin.PluggedType.FullName, _pluginType.FullName);
-            }
+            _classNames.Add(className);
         }
 
         public List<InstanceBuilder> Compile()
