@@ -104,7 +104,7 @@ namespace StructureMap.Graph
                 _assemblies.ScanForStructureMapObjects(this);
             }
 
-            foreach (PluginFamily family in _pluginFamilies)
+            foreach (PluginFamily family in _pluginFamilies.All)
             {
                 family.Seal();
             }

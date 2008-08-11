@@ -37,6 +37,16 @@ namespace StructureMap.Graph
             get { return _pluginFamilies.Count; }
         }
 
+        public IEnumerable<PluginFamily> All
+        {
+            get
+            {
+                PluginFamily[] families = new PluginFamily[_pluginFamilies.Count];
+                _pluginFamilies.Values.CopyTo(families, 0);
+                return families;
+            }
+        }
+
         #region IEnumerable<PluginFamily> Members
 
         IEnumerator<PluginFamily> IEnumerable<PluginFamily>.GetEnumerator()
