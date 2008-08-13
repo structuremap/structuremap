@@ -23,7 +23,7 @@ namespace StructureMap.Graph
             
             foreach (PropertyInfo property in plugin.PluggedType.GetProperties())
             {
-                if (property.CanWrite)
+                if (property.CanWrite && property.GetSetMethod(false) != null)
                 {
                     SetterProperty setter = new SetterProperty(property);
                     _properties.Add(setter);

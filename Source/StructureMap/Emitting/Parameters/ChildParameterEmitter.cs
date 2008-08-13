@@ -40,6 +40,14 @@ namespace StructureMap.Emitting.Parameters
             putChildObjectOnStack(ilgen, property.Name, property.PropertyType);
 
             MethodInfo method = property.GetSetMethod();
+
+            if (method == null)
+            {
+                string message = string.Format("Could not find a Setter for property {0} of type {1}", property.Name,
+                                               property.DeclaringType.FullName);
+                throw new ApplicationException(message);
+            }
+
             ilgen.Emit(OpCodes.Callvirt, method);
         }
     }

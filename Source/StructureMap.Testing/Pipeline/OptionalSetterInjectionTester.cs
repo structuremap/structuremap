@@ -179,6 +179,17 @@ namespace StructureMap.Testing.Pipeline
         }
 
         [Test]
+        public void using_the_FillAllPropertiesOf()
+        {
+            var container =
+                new Container(
+                    r =>
+                    r.FillAllPropertiesOfType<Rule>().TheDefaultIs(new ColorRule("Red")));
+
+            container.GetInstance<ClassWithDependency>().Rule.ShouldBeOfType(typeof(ColorRule));
+        }
+
+        [Test]
         public void one_optional_child_array_setter()
         {
             var container = new Container(r => r.ForRequestedType<ClassWithDependency>().TheDefaultIs(

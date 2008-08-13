@@ -242,5 +242,11 @@ namespace StructureMap.Configuration.DSL
         {
             return 0;
         }
+
+        public CreatePluginFamilyExpression<PLUGINTYPE> FillAllPropertiesOfType<PLUGINTYPE>()
+        {
+            PluginCache.AddFilledType(typeof(PLUGINTYPE));
+            return ForRequestedType<PLUGINTYPE>();
+        }
     }
 }

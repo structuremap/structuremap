@@ -23,7 +23,8 @@ namespace StructureMap.Graph
         private readonly ProfileManager _profileManager = new ProfileManager();
         private readonly bool _useExternalRegistries = true;
         private bool _sealed = false;
-        private List<Registry> _registries = new List<Registry>();
+        private readonly List<Registry> _registries = new List<Registry>();
+
         
 
         /// <summary>
@@ -110,6 +111,8 @@ namespace StructureMap.Graph
             }
 
             _profileManager.Seal(this);
+
+            
 
             _sealed = true;
         }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -323,6 +324,50 @@ namespace StructureMap.Testing.Graph
         {
             new Plugin(typeof(ClassWithNoConstructor)).CanBeCreated().ShouldBeFalse();
         }
+
+        public class ClassWithProperties
+        {
+            public IEngine Engine { get; set; }
+            public IAutomobile Car { get; set; }
+            public IGateway Gateway { get; set; }
+        }
+
+        [Test]
+        public void SetFilledTypes_1()
+        {
+            Plugin plugin = new Plugin(typeof(ClassWithProperties));
+            plugin.SetFilledTypes(new List<Type>() {typeof (IEngine), typeof (IAutomobile)});
+
+            plugin.Setters.IsMandatory("Engine").ShouldBeTrue();
+            plugin.Setters.IsMandatory("Car").ShouldBeTrue();
+            plugin.Setters.IsMandatory("Gateway").ShouldBeFalse();
+        }
+
+
+        [Test]
+        public void SetFilledTypes_2()
+        {
+            Plugin plugin = new Plugin(typeof(ClassWithProperties));
+            plugin.SetFilledTypes(new List<Type>() { typeof(IGateway), typeof(IAutomobile) });
+
+            plugin.Setters.IsMandatory("Engine").ShouldBeFalse();
+            plugin.Setters.IsMandatory("Car").ShouldBeTrue();
+            plugin.Setters.IsMandatory("Gateway").ShouldBeTrue();
+        }
+
+
+
+        [Test]
+        public void SetFilledTypes_3()
+        {
+            Plugin plugin = new Plugin(typeof(ClassWithProperties));
+            plugin.SetFilledTypes(new List<Type>() { typeof(IGateway)});
+
+            plugin.Setters.IsMandatory("Engine").ShouldBeFalse();
+            plugin.Setters.IsMandatory("Car").ShouldBeFalse();
+            plugin.Setters.IsMandatory("Gateway").ShouldBeTrue();
+        }
+    
     }
 
     public class LotsOfStuff
@@ -406,7 +451,11 @@ namespace StructureMap.Testing.Graph
             _breed = breed;
             _engine = engine;
         }
+
+
     }
+
+
 
     [Pluggable("Mustang")]
     public class Mustang : IAutomobile

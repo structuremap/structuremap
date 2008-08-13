@@ -59,6 +59,8 @@ namespace StructureMap
             pluginGraph.Log.AssertFailures();
 
             _pipelineGraph = new PipelineGraph(pluginGraph);
+
+            PluginCache.Compile();
         }
 
         protected MissingFactoryFunction onMissingFactory
