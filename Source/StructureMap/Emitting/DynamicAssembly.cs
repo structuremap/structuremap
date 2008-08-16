@@ -84,7 +84,7 @@ namespace StructureMap.Emitting
                 newClass.Bake();
             }
 
-            _assemblyBuilder.Save(_name + ".dll");
+            //_assemblyBuilder.Save(_name + ".dll");
 
             //assemBuilder.Save(DLLName);
             //Assembly assem = AppDomain.CurrentDomain.Load(this.Name);

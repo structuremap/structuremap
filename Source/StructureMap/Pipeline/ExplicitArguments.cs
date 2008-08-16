@@ -63,7 +63,7 @@ namespace StructureMap.Pipeline
             return _args.ContainsKey(propertyName);
         }
 
-        public void RegisterDefaults(IBuildSession session)
+        public void RegisterDefaults(BuildSession session)
         {
             foreach (var pair in _children)
             {
@@ -93,7 +93,7 @@ namespace StructureMap.Pipeline
         }
 
 
-        protected override object getChild(string propertyName, Type pluginType, IBuildSession buildSession)
+        protected override object getChild(string propertyName, Type pluginType, BuildSession buildSession)
         {
             if (_args.Has(pluginType))
             {

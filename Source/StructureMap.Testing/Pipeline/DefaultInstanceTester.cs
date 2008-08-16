@@ -28,8 +28,8 @@ namespace StructureMap.Testing.Pipeline
         public void Build_happy_path()
         {
             MockRepository mocks = new MockRepository();
-            IBuildSession buildSession =
-                mocks.CreateMock<IBuildSession>();
+            BuildSession buildSession =
+                mocks.CreateMock<BuildSession>();
 
             DefaultClass theDefault = new DefaultClass();
 

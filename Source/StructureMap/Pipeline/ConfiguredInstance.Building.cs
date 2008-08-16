@@ -26,14 +26,14 @@ namespace StructureMap.Pipeline
             return _properties[propertyName];
         }
 
-        object IConfiguredInstance.GetChild(string propertyName, Type pluginType, IBuildSession buildSession)
+        object IConfiguredInstance.GetChild(string propertyName, Type pluginType, BuildSession buildSession)
         {
             return getChild(propertyName, pluginType, buildSession);
         }
 
 
         // Only open for testing
-        object IConfiguredInstance.Build(Type pluginType, IBuildSession session, InstanceBuilder builder)
+        object IConfiguredInstance.Build(Type pluginType, BuildSession session, InstanceBuilder builder)
         {
             if (builder == null)
             {
@@ -63,6 +63,11 @@ namespace StructureMap.Pipeline
         bool IConfiguredInstance.HasProperty(string propertyName)
         {
             return _properties.ContainsKey(propertyName) || _children.ContainsKey(propertyName) || _arrays.ContainsKey(propertyName);
+        }
+
+        protected override Type getConcreteType()
+        {
+            return _pluggedType;
         }
     }
 }

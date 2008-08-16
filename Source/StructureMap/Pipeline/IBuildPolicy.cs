@@ -4,7 +4,7 @@ namespace StructureMap.Pipeline
 {
     public interface IBuildPolicy
     {
-        object Build(IBuildSession buildSession, Type pluginType, Instance instance);
+        object Build(BuildSession buildSession, Type pluginType, Instance instance);
         IBuildPolicy Clone();
     }
 }

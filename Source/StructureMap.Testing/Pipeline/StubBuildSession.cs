@@ -1,34 +1,19 @@
 using System;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
+using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing.Pipeline
 {
-    public class StubBuildSession : IBuildSession
+    public class StubBuildSession : BuildSession
     {
-        #region IBuildSession Members
+        #region BuildSession Members
 
-        public object CreateInstance(Type type, string name)
+        public StubBuildSession() : base(new PluginGraph())
         {
-            throw new NotImplementedException();
         }
 
-        public object CreateInstance(Type pluginType, Instance instance)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Array CreateInstanceArray(Type pluginType, Instance[] instances)
-        {
-            throw new NotImplementedException();
-        }
-
-        public object CreateInstance(Type pluginType)
-        {
-            throw new NotImplementedException();
-        }
-
-        public object ApplyInterception(Type pluginType, object actualValue)
+        public override object ApplyInterception(Type pluginType, object actualValue)
         {
             return actualValue;
         }
@@ -52,6 +37,16 @@ namespace StructureMap.Testing.Pipeline
         public void RegisterDefault(Type pluginType, object defaultObject)
         {
             
+        }
+
+        public BuildStack BuildStack
+        {
+            get
+            {
+                var stack = new BuildStack();
+                stack.Push(new BuildFrame(typeof(Rule), "Blue", typeof(ColorRule)));
+                return stack;
+            }
         }
 
         #endregion

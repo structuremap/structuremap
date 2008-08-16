@@ -14,6 +14,7 @@ namespace StructureMap.Pipeline
         InstanceToken CreateToken();
         void Preprocess(PluginFamily family);
         void AddTemplatedInstanceTo(PluginFamily family, Type[] templateTypes);
+        Type ConcreteType { get; }
     }
 
     public abstract class Instance : IDiagnosticInstance
@@ -34,13 +35,17 @@ namespace StructureMap.Pipeline
             set { _name = value; }
         }
 
-        public virtual object Build(Type pluginType, IBuildSession session)
+        public virtual object Build(Type pluginType, BuildSession session)
         {
+            session.BuildStack.Push(new BuildFrame(pluginType, Name, getConcreteType()));
             object rawValue = createRawObject(pluginType, session);
-            return applyInterception(rawValue, pluginType);
+            var finalValue = applyInterception(rawValue, pluginType);
+            session.BuildStack.Pop();
+
+            return finalValue;
         }
 
-        private object createRawObject(Type pluginType, IBuildSession session)
+        private object createRawObject(Type pluginType, BuildSession session)
         {
             try
             {
@@ -91,6 +96,16 @@ namespace StructureMap.Pipeline
             addTemplatedInstanceTo(family, templateTypes);
         }
 
+        Type IDiagnosticInstance.ConcreteType
+        {
+            get { return getConcreteType(); }
+        }
+
+        protected virtual Type getConcreteType()
+        {
+            return null;
+        }
+
         protected virtual void addTemplatedInstanceTo(PluginFamily family, Type[] templateTypes)
         {
             if (canBePartOfPluginFamily(family))
@@ -131,7 +146,7 @@ namespace StructureMap.Pipeline
             }
         }
 
-        protected abstract object build(Type pluginType, IBuildSession session);
+        protected abstract object build(Type pluginType, BuildSession session);
 
         protected virtual Instance findMasterInstance(PluginFamily family, string profileName, GraphLog log)
         {

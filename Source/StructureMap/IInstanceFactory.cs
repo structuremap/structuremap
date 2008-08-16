@@ -15,8 +15,8 @@ namespace StructureMap
         void AddInstance(Instance instance);
         Instance AddType<T>();
 
-        IList GetAllInstances(IBuildSession session);
-        object Build(IBuildSession session, Instance instance);
+        IList GetAllInstances(BuildSession session);
+        object Build(BuildSession session, Instance instance);
         Instance FindInstance(string name);
 
         void ForEachInstance(Action<Instance> action);

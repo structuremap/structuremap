@@ -42,7 +42,7 @@ namespace StructureMap.Testing.Widget2
         }
 
 
-        public override object BuildInstance(IConfiguredInstance instance, StructureMap.Pipeline.IBuildSession session)
+        public override object BuildInstance(IConfiguredInstance instance, BuildSession session)
         {
             return new Cow(
                 long.Parse(instance.GetProperty("Weight")),
@@ -58,7 +58,7 @@ namespace StructureMap.Testing.Widget2
             get { throw new System.NotImplementedException(); }
         }
 
-        public override object BuildInstance(IConfiguredInstance instance, IBuildSession session)
+        public override object BuildInstance(IConfiguredInstance instance, BuildSession session)
         {
             SetterTarget target = new SetterTarget();
 

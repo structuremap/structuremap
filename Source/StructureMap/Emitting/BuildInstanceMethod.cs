@@ -21,7 +21,7 @@ namespace StructureMap.Emitting
 
         public override Type[] ArgumentList
         {
-            get { return new Type[] {typeof (IConfiguredInstance), typeof (IBuildSession)}; }
+            get { return new Type[] {typeof (IConfiguredInstance), typeof (BuildSession)}; }
         }
 
         public override string MethodName

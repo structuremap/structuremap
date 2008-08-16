@@ -90,7 +90,7 @@ namespace StructureMap
             Instance defaultInstance = _pipelineGraph.GetDefault(type);
 
             Instance instance = new ExplicitInstance(type, args, defaultInstance);
-            IBuildSession session = withNewSession();
+            BuildSession session = withNewSession();
 
             args.RegisterDefaults(session);
 
@@ -123,7 +123,7 @@ namespace StructureMap
         {
             List<T> list = new List<T>();
 
-            IBuildSession session = withNewSession();
+            BuildSession session = withNewSession();
 
             foreach (T instance in forType(typeof (T)).GetAllInstances(session))
             {
@@ -303,7 +303,7 @@ namespace StructureMap
 
         #endregion
 
-        private IBuildSession withNewSession()
+        private BuildSession withNewSession()
         {
             return new BuildSession(_pipelineGraph, _interceptorLibrary);
         }

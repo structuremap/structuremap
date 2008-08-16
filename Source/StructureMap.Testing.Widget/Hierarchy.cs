@@ -98,7 +98,7 @@ namespace StructureMap.Testing.Widget
         }
 
 
-        public override object BuildInstance(IConfiguredInstance instance, StructureMap.Pipeline.IBuildSession session)
+        public override object BuildInstance(IConfiguredInstance instance, BuildSession session)
         {
             var target = new Child(
                 instance.GetProperty("Name"),

@@ -22,7 +22,7 @@ namespace StructureMap.Pipeline
             set { _innerInterceptor.InnerPolicy = value; }
         }
 
-        public object Build(IBuildSession buildSession, Type pluginType, Instance instance)
+        public object Build(BuildSession buildSession, Type pluginType, Instance instance)
         {
             return _innerInterceptor.Build(buildSession, pluginType, instance);
         }

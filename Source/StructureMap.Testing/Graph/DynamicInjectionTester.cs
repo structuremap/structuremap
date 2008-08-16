@@ -260,7 +260,7 @@ namespace StructureMap.Testing.Graph
             set { throw new NotImplementedException(); }
         }
 
-        public object Build(IBuildSession buildSession, Type pluginType, Instance instance)
+        public object Build(BuildSession buildSession, Type pluginType, Instance instance)
         {
             throw new NotImplementedException();
         }

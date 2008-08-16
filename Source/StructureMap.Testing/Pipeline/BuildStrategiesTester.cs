@@ -28,7 +28,7 @@ namespace StructureMap.Testing.Pipeline
                 _constructedObject = constructedObject;
             }
 
-            protected override object build(Type pluginType, IBuildSession session)
+            protected override object build(Type pluginType, BuildSession session)
             {
                 return _constructedObject;
             }
@@ -43,7 +43,7 @@ namespace StructureMap.Testing.Pipeline
         public void BuildPolicy_should_apply_interception()
         {
             MockRepository mocks = new MockRepository();
-            IBuildSession buildSession = mocks.CreateMock<IBuildSession>();
+            BuildSession buildSession = mocks.CreateMock<BuildSession>();
 
             object firstValue = "first";
             object secondValue = "second";

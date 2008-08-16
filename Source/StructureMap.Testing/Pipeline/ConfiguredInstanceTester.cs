@@ -32,7 +32,7 @@ namespace StructureMap.Testing.Pipeline
 
         #endregion
 
-        private IBuildSession _session;
+        private BuildSession _session;
 
 
         private void assertActionThrowsErrorCode(int errorCode, Action action)
@@ -49,13 +49,20 @@ namespace StructureMap.Testing.Pipeline
             }
         }
 
+        [Test]
+        public void get_the_concrete_type_from_diagnostic_instance()
+        {
+            var instance = new ConfiguredInstance(typeof (ColorRule)) as IDiagnosticInstance;
+            instance.ConcreteType.ShouldEqual(typeof (ColorRule));
+        }
+
 
         [Test]
         public void Build_happy_path()
         {
             MockRepository mocks = new MockRepository();
             InstanceBuilder builder = mocks.CreateMock<InstanceBuilder>();
-            IBuildSession session = mocks.CreateMock<IBuildSession>();
+            BuildSession session = mocks.CreateMock<BuildSession>();
             object theObjectBuilt = new object();
 
             ConfiguredInstance instance = new ConfiguredInstance(GetType());
@@ -173,7 +180,7 @@ namespace StructureMap.Testing.Pipeline
         public void Should_find_the_InstanceBuilder_by_PluggedType_if_it_exists()
         {
             MockRepository mocks = new MockRepository();
-            IBuildSession session = mocks.DynamicMock<IBuildSession>();
+            BuildSession session = mocks.DynamicMock<BuildSession>();
 
             Type thePluginType = typeof (IGateway);
             Type thePluggedType = GetType();

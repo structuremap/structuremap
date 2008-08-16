@@ -28,7 +28,7 @@ namespace StructureMap.Testing.Widget
             get { throw new System.NotImplementedException(); }
         }
 
-        public override object BuildInstance(IConfiguredInstance instance, IBuildSession session)
+        public override object BuildInstance(IConfiguredInstance instance, BuildSession session)
         {
             SetterTarget target = new SetterTarget();
             return target;
@@ -42,7 +42,7 @@ namespace StructureMap.Testing.Widget
             get { throw new System.NotImplementedException(); }
         }
 
-        public override object BuildInstance(IConfiguredInstance instance, IBuildSession session)
+        public override object BuildInstance(IConfiguredInstance instance, BuildSession session)
         {
             SetterTarget target = new SetterTarget();
             if (instance.HasProperty("Name")) target.Name = instance.GetProperty("Name");
@@ -57,7 +57,7 @@ namespace StructureMap.Testing.Widget
             get { throw new System.NotImplementedException(); }
         }
 
-        public override object BuildInstance(IConfiguredInstance instance, IBuildSession session)
+        public override object BuildInstance(IConfiguredInstance instance, BuildSession session)
         {
             SetterTarget target = new SetterTarget();
             if (instance.HasProperty("Name")) target.Name = instance.GetProperty("Name");

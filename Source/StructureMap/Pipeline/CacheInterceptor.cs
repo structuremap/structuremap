@@ -16,7 +16,7 @@ namespace StructureMap.Pipeline
         }
 
 
-        public object Build(IBuildSession buildSession, Type pluginType, Instance instance)
+        public object Build(BuildSession buildSession, Type pluginType, Instance instance)
         {
             if (!isCached(instance.Name, pluginType))
             {

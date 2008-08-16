@@ -164,5 +164,58 @@ namespace StructureMap.Testing
                 session.CreateInstance(typeof (IGateway));
             });
         }
+
+
+        [Test]
+        public void when_building_an_instance_use_the_register_the_stack_frame()
+        {
+            var recordingInstance = new BuildSessionInstance1();
+            ConfiguredInstance instance = new ConfiguredInstance(typeof(ClassWithRule)).Child("rule").Is(recordingInstance);
+            BuildSession session = new BuildSession(new PluginGraph());
+
+            session.CreateInstance(typeof (IClassWithRule), instance);
+
+            session.BuildStack.Root.ConcreteType.ShouldEqual(typeof (ClassWithRule));
+            session.BuildStack.Root.RequestedType.ShouldEqual(typeof (IClassWithRule));
+            session.BuildStack.Root.Name.ShouldEqual(instance.Name);
+
+            recordingInstance.Current.ConcreteType.ShouldEqual(typeof(ColorRule));
+            recordingInstance.Current.RequestedType.ShouldEqual(typeof(Rule));
+            recordingInstance.Current.Name.ShouldEqual(recordingInstance.Name);
+        }
+    }
+
+    public interface IClassWithRule{}
+
+    public class ClassWithRule : IClassWithRule
+    {
+        public ClassWithRule(Rule rule)
+        {
+            
+        }
+    }
+
+    public class BuildSessionInstance1 : Instance
+    {
+        public BuildFrame Current { get; set; }
+        public BuildFrame Root { get; set; }
+
+        protected override string getDescription()
+        {
+            return string.Empty;
+        }
+
+        protected override Type getConcreteType()
+        {
+            return typeof(ColorRule);
+        }
+
+        protected override object build(Type pluginType, BuildSession session)
+        {
+            Current = session.BuildStack.Current;
+            Root = session.BuildStack.Root;
+
+            return new ColorRule("Red");
+        }
     }
 }

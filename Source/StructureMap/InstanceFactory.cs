@@ -100,7 +100,7 @@ namespace StructureMap
             return instance;
         }
 
-        public IList GetAllInstances(IBuildSession session)
+        public IList GetAllInstances(BuildSession session)
         {
             IList list = new ArrayList();
 
@@ -113,7 +113,7 @@ namespace StructureMap
             return list;
         }
 
-        public object Build(IBuildSession session, Instance instance)
+        public object Build(BuildSession session, Instance instance)
         {
             return _policy.Build(session, PluginType, instance);
         }

@@ -173,7 +173,6 @@
     <Compile Include="Pipeline\HybridBuildPolicy.cs" />
     <Compile Include="Pipeline\IBuildInterceptor.cs" />
     <Compile Include="Pipeline\IBuildPolicy.cs" />
-    <Compile Include="Pipeline\IBuildSession.cs" />
     <Compile Include="Pipeline\IConfiguredInstance.cs" />
     <Compile Include="Pipeline\ILocationPolicy.cs" />
     <Compile Include="Pipeline\Instance.cs" />
@@ -405,6 +404,8 @@
     <Compile Include="Graph\ITypeScanner.cs" />
     <Compile Include="Graph\PluginCache.cs" />
     <Compile Include="IBootstrapper.cs" />
+    <Compile Include="Pipeline\BuildFrame.cs" />
+    <Compile Include="Pipeline\BuildStack.cs" />
     <Compile Include="Pipeline\ConfiguredInstance.Building.cs" />
     <Compile Include="Pipeline\IStructuredInstance.cs" />
     <Compile Include="Pipeline\SerializedInstance.cs" />

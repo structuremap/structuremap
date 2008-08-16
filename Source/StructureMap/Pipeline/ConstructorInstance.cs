@@ -24,7 +24,7 @@ namespace StructureMap.Pipeline
             get { return this; }
         }
 
-        protected override object build(Type pluginType, IBuildSession session)
+        protected override object build(Type pluginType, BuildSession session)
         {
             try
             {

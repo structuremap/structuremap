@@ -51,7 +51,7 @@ namespace StructureMap.Testing.Widget
 
     public class StringListBuilder : InstanceBuilder
     {
-        public override object BuildInstance(IConfiguredInstance instance, StructureMap.Pipeline.IBuildSession session)
+        public override object BuildInstance(IConfiguredInstance instance, BuildSession session)
         {
             return null;
         }

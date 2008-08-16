@@ -8,12 +8,13 @@ using StructureMap.Util;
 
 namespace StructureMap
 {
-    public class BuildSession : IBuildSession
+    public class BuildSession
     {
         private readonly InterceptorLibrary _interceptorLibrary;
         private readonly PipelineGraph _pipelineGraph;
         private readonly InstanceCache _cache = new InstanceCache();
         private readonly Cache<Type, object> _defaults;
+        private readonly BuildStack _buildStack = new BuildStack();
 
         public BuildSession(PipelineGraph pipelineGraph, InterceptorLibrary interceptorLibrary)
         {
@@ -39,15 +40,18 @@ namespace StructureMap
             
         }
 
+        public BuildSession() : this(new PluginGraph())
+        {
+            
+        }
+
 
         protected PipelineGraph pipelineGraph
         {
             get { return _pipelineGraph; }
         }
 
-        #region IBuildSession Members
-
-        public object CreateInstance(Type pluginType, string name)
+        public virtual object CreateInstance(Type pluginType, string name)
         {
             Instance instance = forType(pluginType).FindInstance(name);
             if (instance == null)
@@ -65,13 +69,14 @@ namespace StructureMap
             if (result == null)
             {
                 result = forType(pluginType).Build(this, instance);
+
                 _cache.Set(pluginType, instance, result);
             }
 
             return result;
         }
 
-        public Array CreateInstanceArray(Type pluginType, Instance[] instances)
+        public virtual Array CreateInstanceArray(Type pluginType, Instance[] instances)
         {
             Array array;
 
@@ -99,22 +104,26 @@ namespace StructureMap
             return array;
         }
 
-        public object CreateInstance(Type pluginType)
+        public virtual object CreateInstance(Type pluginType)
         {
             return _defaults.Retrieve(pluginType);
         }
 
-        public object ApplyInterception(Type pluginType, object actualValue)
+        public virtual object ApplyInterception(Type pluginType, object actualValue)
         {
             return _interceptorLibrary.FindInterceptor(actualValue.GetType()).Process(actualValue);
         }
 
-        public void RegisterDefault(Type pluginType, object defaultObject)
+        public virtual void RegisterDefault(Type pluginType, object defaultObject)
         {
             _defaults.Store(pluginType, defaultObject);
         }
 
-        #endregion
+        public BuildStack BuildStack
+        {
+            get { return _buildStack; }
+        }
+
 
         private IInstanceFactory forType(Type pluginType)
         {

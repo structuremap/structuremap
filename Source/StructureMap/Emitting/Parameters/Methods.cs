@@ -13,7 +13,7 @@ namespace StructureMap.Emitting.Parameters
         public static MethodInfo HAS_PROPERTY = ReflectionHelper.GetMethod<IConfiguredInstance>(i => i.HasProperty(null));
         public static MethodInfo GET_CHILDREN_ARRAY = ReflectionHelper.GetMethod<IConfiguredInstance>(i => i.GetChildrenArray(null));
         public static MethodInfo GET_CHILD = ReflectionHelper.GetMethod<IConfiguredInstance>(i => i.GetChild(null, null, null));
-        public static MethodInfo CREATE_INSTANCE_ARRAY = ReflectionHelper.GetMethod<IBuildSession>(i => i.CreateInstanceArray(null, null));
+        public static MethodInfo CREATE_INSTANCE_ARRAY = ReflectionHelper.GetMethod<BuildSession>(i => i.CreateInstanceArray(null, null));
 
         public static MethodInfo GET_TYPE_FROM_HANDLE = typeof(Type).GetMethod("GetTypeFromHandle");
 

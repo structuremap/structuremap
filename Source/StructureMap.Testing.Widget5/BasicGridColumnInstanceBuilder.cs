@@ -18,7 +18,7 @@ namespace StructureMap.Testing.Widget5
             get { throw new NotImplementedException(); }
         }
 
-        public override object BuildInstance(IConfiguredInstance instance, StructureMap.Pipeline.IBuildSession session)
+        public override object BuildInstance(IConfiguredInstance instance, BuildSession session)
         {
             BasicGridColumn column = new BasicGridColumn(instance.GetProperty("headerText"));
 

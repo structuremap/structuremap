@@ -6,7 +6,7 @@ namespace StructureMap.Pipeline
     {
         #region IBuildPolicy Members
 
-        public object Build(IBuildSession buildSession, Type pluginType, Instance instance)
+        public object Build(BuildSession buildSession, Type pluginType, Instance instance)
         {
             if (buildSession == null)
             {

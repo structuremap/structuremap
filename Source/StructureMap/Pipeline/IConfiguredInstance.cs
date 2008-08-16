@@ -8,8 +8,8 @@ namespace StructureMap.Pipeline
         Type PluggedType { get; }
         Instance[] GetChildrenArray(string propertyName);
         string GetProperty(string propertyName);
-        object GetChild(string propertyName, Type pluginType, IBuildSession buildSession);
-        object Build(Type pluginType, IBuildSession session, InstanceBuilder builder);
+        object GetChild(string propertyName, Type pluginType, BuildSession buildSession);
+        object Build(Type pluginType, BuildSession session, InstanceBuilder builder);
         bool HasProperty(string propertyName);
     }
 }

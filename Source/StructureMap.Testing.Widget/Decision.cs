@@ -17,7 +17,7 @@ namespace StructureMap.Testing.Widget
 
     public class DecisionBuilder : InstanceBuilder
     {
-        public override object BuildInstance(IConfiguredInstance instance, StructureMap.Pipeline.IBuildSession session)
+        public override object BuildInstance(IConfiguredInstance instance, BuildSession session)
         {
             return new Decision(
                 (Rule[]) session.CreateInstanceArray(typeof(Rule), instance.GetChildrenArray("Rules")));

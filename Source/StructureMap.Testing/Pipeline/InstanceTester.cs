@@ -37,7 +37,7 @@ namespace StructureMap.Testing.Pipeline
         {
             MockRepository mocks = new MockRepository();
             InstanceInterceptor interceptor = mocks.CreateMock<InstanceInterceptor>();
-            IBuildSession buildSession = mocks.CreateMock<IBuildSession>();
+            BuildSession buildSession = mocks.CreateMock<BuildSession>();
 
 
             InstanceUnderTest instanceUnderTest = new InstanceUnderTest();
@@ -63,7 +63,7 @@ namespace StructureMap.Testing.Pipeline
         public object TheInstanceThatWasBuilt = new object();
 
 
-        protected override object build(Type pluginType, IBuildSession session)
+        protected override object build(Type pluginType, BuildSession session)
         {
             return TheInstanceThatWasBuilt;
         }

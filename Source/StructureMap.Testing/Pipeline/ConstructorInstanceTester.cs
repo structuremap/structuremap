@@ -15,7 +15,7 @@ namespace StructureMap.Testing.Pipeline
 
             try
             {
-                instance.Build(typeof (IWidget), null);
+                instance.Build(typeof (IWidget), new StubBuildSession());
                 Assert.Fail("Should have thrown an exception");
             }
             catch (StructureMapException ex)

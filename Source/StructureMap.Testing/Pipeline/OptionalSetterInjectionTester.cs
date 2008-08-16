@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
+using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.TestData;
 using StructureMap.Testing.Widget;
@@ -17,7 +18,7 @@ namespace StructureMap.Testing.Pipeline
             get { throw new System.NotImplementedException(); }
         }
 
-        public override object BuildInstance(IConfiguredInstance instance, IBuildSession session)
+        public override object BuildInstance(IConfiguredInstance instance, BuildSession session)
         {
             ClassWithOneSetter target = new ClassWithOneSetter();
             if (instance.HasProperty("Name")) target.Name = instance.GetProperty("Name");
@@ -30,6 +31,12 @@ namespace StructureMap.Testing.Pipeline
     [TestFixture]
     public class OptionalSetterInjectionTester : RegistryExpressions
     {
+        [SetUp]
+        public void SetUp()
+        {
+            PluginCache.ResetAll();
+        }
+
         [Test]
         public void optional_setter_injection_with_string()
         {
@@ -267,7 +274,7 @@ namespace StructureMap.Testing.Pipeline
             get { throw new System.NotImplementedException(); }
         }
 
-        public override object BuildInstance(IConfiguredInstance instance, IBuildSession session)
+        public override object BuildInstance(IConfiguredInstance instance, BuildSession session)
         {
             ClassWithOneEnum target = new ClassWithOneEnum();
             if (instance.HasProperty("Color")) target.Color = (ColorEnum) Enum.Parse(typeof (ColorEnum), instance.GetProperty("Color"));

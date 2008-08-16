@@ -253,7 +253,7 @@ namespace StructureMap.Testing.Configuration.DSL
             set { }
         }
 
-        public object Build(IBuildSession buildSession, Type pluginType, Instance instance)
+        public object Build(BuildSession buildSession, Type pluginType, Instance instance)
         {
             throw new NotImplementedException();
         }

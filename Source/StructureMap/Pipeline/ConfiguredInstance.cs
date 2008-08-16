@@ -85,13 +85,13 @@ namespace StructureMap.Pipeline
             _arrays = instance._arrays;
         }
 
-        protected override object build(Type pluginType, IBuildSession session)
+        protected override object build(Type pluginType, BuildSession session)
         {
             InstanceBuilder builder = PluginCache.FindBuilder(_pluggedType);
             return ((IConfiguredInstance) this).Build(pluginType, session, builder);
         }
 
-        protected virtual object getChild(string propertyName, Type pluginType, IBuildSession buildSession)
+        protected virtual object getChild(string propertyName, Type pluginType, BuildSession buildSession)
         {
             Instance childInstance = _children.ContainsKey(propertyName)
                                          ? _children[propertyName]
