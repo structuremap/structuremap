@@ -146,11 +146,13 @@ namespace StructureMap.Configuration.DSL.Expressions
             return this;
         }
 
+        [Obsolete("Kill!")]
         public CreatePluginFamilyExpression<PLUGINTYPE> AddConcreteType<CONCRETETYPE>()
         {
             return AddConcreteType<CONCRETETYPE>(Guid.NewGuid().ToString());
         }
 
+        [Obsolete("Kill!")]
         public CreatePluginFamilyExpression<PLUGINTYPE> AddConcreteType<CONCRETETYPE>(string instanceName)
         {
             ExpressionValidator.ValidatePluggabilityOf(typeof (CONCRETETYPE)).IntoPluginType(typeof (PLUGINTYPE));
@@ -179,23 +181,27 @@ namespace StructureMap.Configuration.DSL.Expressions
             return this;
         }
 
+        [Obsolete("Kill!")]
         public CreatePluginFamilyExpression<PLUGINTYPE> TheDefaultIs(PLUGINTYPE @object)
         {
             return TheDefaultIs(new LiteralInstance(@object));
         }
 
+        [Obsolete("Kill!")]
         public CreatePluginFamilyExpression<PLUGINTYPE> TheDefaultIs(Func<PLUGINTYPE> func)
         {
             ConstructorInstance instance = new ConstructorInstance(() => func());
             return TheDefaultIs(instance);
         }
 
+        [Obsolete("Kill!")]
         public CreatePluginFamilyExpression<PLUGINTYPE> AddInstance(PLUGINTYPE @object)
         {
             LiteralInstance instance = new LiteralInstance(@object);
             return AddInstance(instance);
         }
 
+        [Obsolete("Kill!")]
         public CreatePluginFamilyExpression<PLUGINTYPE> AddInstance(Func<PLUGINTYPE> func)
         {
             ConstructorInstance instance = new ConstructorInstance(() => func());

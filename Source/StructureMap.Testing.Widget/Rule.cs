@@ -96,13 +96,15 @@ namespace StructureMap.Testing.Widget
             ConfiguredInstance memento = new ConfiguredInstance(typeof(ComplexRule));
             memento.Name = "Sample";
 
-            memento.SetProperty("String", "Red");
-            memento.SetProperty("String2", "Green");
-            memento.SetProperty("Int", "1");
-            memento.SetProperty("Long", "2");
-            memento.SetProperty("Byte", "3");
-            memento.SetProperty("Double", "4");
-            memento.SetProperty("Bool", "true");
+            IConfiguredInstance instance = memento;
+
+            instance.SetProperty("String", "Red");
+            instance.SetProperty("String2", "Green");
+            instance.SetProperty("Int", "1");
+            instance.SetProperty("Long", "2");
+            instance.SetProperty("Byte", "3");
+            instance.SetProperty("Double", "4");
+            instance.SetProperty("Bool", "true");
 
             return memento;
         }

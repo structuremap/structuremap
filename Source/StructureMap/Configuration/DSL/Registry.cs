@@ -88,11 +88,13 @@ namespace StructureMap.Configuration.DSL
         /// </summary>
         /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <returns></returns>
+        [Obsolete("Like to go away")]
         public ConfiguredInstanceExpression<PLUGINTYPE> AddInstanceOf<PLUGINTYPE>()
         {
             return new ConfiguredInstanceExpression<PLUGINTYPE>(this);
         }
 
+        [Obsolete("Like to get rid of this")]
         public class ConfiguredInstanceExpression<PLUGINTYPE>
         {
             private readonly Registry _registry;
@@ -102,14 +104,6 @@ namespace StructureMap.Configuration.DSL
                 _registry = registry;
             }
 
-            /*
-            ConfiguredInstance instance = new ConfiguredInstance();
-
-            addExpression(
-                pluginGraph => pluginGraph.FindFamily(typeof (PLUGINTYPE)).AddInstance(instance));
-
-            return instance;
-             */
 
             public ConfiguredInstance UsingConcreteType<T>()
             {
@@ -127,6 +121,7 @@ namespace StructureMap.Configuration.DSL
         /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <param name="target"></param>
         /// <returns></returns>
+        [Obsolete("Like to get rid of this")]
         public LiteralInstance AddInstanceOf<PLUGINTYPE>(PLUGINTYPE target)
         {
             LiteralInstance literal = new LiteralInstance(target);
@@ -141,6 +136,7 @@ namespace StructureMap.Configuration.DSL
         /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <param name="prototype"></param>
         /// <returns></returns>
+        [Obsolete("Like to get rid of this")]
         public PrototypeInstance AddPrototypeInstanceOf<PLUGINTYPE>(PLUGINTYPE prototype)
         {
             PrototypeInstance instance = new PrototypeInstance((ICloneable) prototype);
@@ -154,6 +150,7 @@ namespace StructureMap.Configuration.DSL
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
+        [Obsolete("Like to get rid of this")]
         public static UserControlInstance LoadUserControlFrom(string url)
         {
             return new UserControlInstance(url);
@@ -209,12 +206,13 @@ namespace StructureMap.Configuration.DSL
             return new ScanAssembliesExpression(this);
         }
 
-
+        [Obsolete("Like to get rid of this")]
         public void AddInstanceOf(Type pluginType, Instance instance)
         {
             _actions.Add(graph => graph.FindFamily(pluginType).AddInstance(instance));
         }
 
+        [Obsolete("Like to get rid of this")]
         public void AddInstanceOf<PLUGINTYPE>(Instance instance)
         {
             _actions.Add(graph => graph.FindFamily(typeof (PLUGINTYPE)).AddInstance(instance));

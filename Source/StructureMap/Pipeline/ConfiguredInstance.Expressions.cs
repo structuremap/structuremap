@@ -77,28 +77,6 @@ namespace StructureMap.Pipeline
             return new PropertyExpression(this, propertyName);
         }
 
-
-        private string findPropertyName<T>()
-        {
-            Plugin plugin = new Plugin(_pluggedType);
-            string propertyName = plugin.FindArgumentNameForType<T>();
-
-            if (string.IsNullOrEmpty(propertyName))
-            {
-                throw new StructureMapException(305, typeof (T));
-            }
-
-            return propertyName;
-        }
-
-        private static void validateTypeIsArray<PLUGINTYPE>()
-        {
-            if (!typeof (PLUGINTYPE).IsArray)
-            {
-                throw new StructureMapException(307);
-            }
-        }
-
         #region Nested type: ChildArrayExpression
 
         public class ChildArrayExpression
@@ -236,7 +214,7 @@ namespace StructureMap.Pipeline
             /// <returns></returns>
             public ConfiguredInstance EqualTo(object propertyValue)
             {
-                _instance.SetProperty(_propertyName, propertyValue.ToString());
+                _instance.setProperty(_propertyName, propertyValue.ToString());
                 return _instance;
             }
 
@@ -249,7 +227,7 @@ namespace StructureMap.Pipeline
             public ConfiguredInstance EqualToAppSetting(string appSettingKey)
             {
                 string propertyValue = ConfigurationManager.AppSettings[appSettingKey];
-                _instance.SetProperty(_propertyName, propertyValue);
+                _instance.setProperty(_propertyName, propertyValue);
                 return _instance;
             }
         }

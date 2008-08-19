@@ -42,14 +42,14 @@ namespace StructureMap.Pipeline
             return _args.ContainsKey(key) ? _args[key] : null;
         }
 
-        public void Configure(ConfiguredInstance instance)
+        public void Configure(IConfiguredInstance instance)
         {
             foreach (KeyValuePair<string, object> arg in _args)
             {
                 if (arg.Value == null) continue;
 
                 instance.SetProperty(arg.Key, arg.Value.ToString());
-                instance.Child(arg.Key).Is(arg.Value);
+                instance.SetChild(arg.Key, new LiteralInstance(arg.Value));
             }
         }
 

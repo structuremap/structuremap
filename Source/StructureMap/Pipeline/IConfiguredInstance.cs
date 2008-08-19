@@ -11,5 +11,10 @@ namespace StructureMap.Pipeline
         object GetChild(string propertyName, Type pluginType, BuildSession buildSession);
         object Build(Type pluginType, BuildSession session, InstanceBuilder builder);
         bool HasProperty(string propertyName);
+        void SetProperty(string name, string value);
+        void SetChild(string name, Instance instance);
+        void SetChildArray(string name, Type type, Instance[] children);
     }
+
+   
 }

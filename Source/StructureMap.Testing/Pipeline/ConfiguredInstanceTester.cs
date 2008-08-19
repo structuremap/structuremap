@@ -96,7 +96,7 @@ namespace StructureMap.Testing.Pipeline
         {
             ConfiguredInstance instance = (ConfiguredInstance) ComplexRule.GetInstance();
 
-            instance.SetProperty("Int", "abc");
+            instance.WithProperty("Int").EqualTo("abc");
             ComplexRule rule = (ComplexRule) instance.Build(typeof (Rule), _session);
         }
 
@@ -149,15 +149,14 @@ namespace StructureMap.Testing.Pipeline
         public void GetProperty_happy_path()
         {
             ConfiguredInstance instance = new ConfiguredInstance(typeof(ColorRule))
-                .SetProperty("Color", "Red")
-                .SetProperty("Age", "34");
+                                                                        .WithProperty("Color").EqualTo("Red").WithProperty("Age").EqualTo("34");
 
             IConfiguredInstance configuredInstance = instance;
 
             Assert.AreEqual("Red", configuredInstance.GetProperty("Color"));
             Assert.AreEqual("34", configuredInstance.GetProperty("Age"));
 
-            instance.SetProperty("Color", "Blue");
+            instance.WithProperty("Color").EqualTo("Blue");
             Assert.AreEqual("Blue", configuredInstance.GetProperty("Color"));
         }
 
