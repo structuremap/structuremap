@@ -56,7 +56,7 @@ namespace StructureMap.Testing
 
             BuildSession session = new BuildSession(new PluginGraph());
             BuildSession session2 = new BuildSession(new PluginGraph());
-            ConstructorInstance instance = new ConstructorInstance(delegate
+            ConstructorInstance<ColorRule> instance = new ConstructorInstance<ColorRule>(() =>
             {
                 count++;
                 return new ColorRule("Red");
@@ -94,7 +94,7 @@ namespace StructureMap.Testing
             int count = 0;
 
             BuildSession session = new BuildSession(new PluginGraph());
-            ConstructorInstance instance = new ConstructorInstance(delegate
+            ConstructorInstance<ColorRule> instance = new ConstructorInstance<ColorRule>(() =>
             {
                 count++;
                 return new ColorRule("Red");
@@ -117,7 +117,7 @@ namespace StructureMap.Testing
         {
             int count = 0;
 
-            ConstructorInstance instance = new ConstructorInstance(delegate
+            ConstructorInstance<ColorRule> instance = new ConstructorInstance<ColorRule>( () =>
             {
                 count++;
                 return new ColorRule("Red");

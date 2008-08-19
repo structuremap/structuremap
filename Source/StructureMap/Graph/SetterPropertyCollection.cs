@@ -115,11 +115,11 @@ namespace StructureMap.Graph
             return returnValue;
         }
 
-        public string FindFirstConstructorArgumentOfType<T>()
+        public string FindFirstConstructorArgumentOfType(Type type)
         {
             foreach (SetterProperty setterProperty in this)
             {
-                if (setterProperty.Property.PropertyType.Equals(typeof (T)))
+                if (setterProperty.Property.PropertyType.Equals(type))
                 {
                     return setterProperty.Name;
                 }

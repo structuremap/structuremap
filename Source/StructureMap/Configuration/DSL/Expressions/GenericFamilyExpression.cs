@@ -45,7 +45,7 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         public GenericFamilyExpression TheDefaultIs(Func<object> func)
         {
-            ConstructorInstance instance = new ConstructorInstance(func);
+            ConstructorInstance<object> instance = new ConstructorInstance<object>(func);
             return TheDefaultIs(instance);
         }
 

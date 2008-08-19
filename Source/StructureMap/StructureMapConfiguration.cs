@@ -164,16 +164,19 @@ namespace StructureMap
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
+        [Obsolete]
         public static Registry.ConfiguredInstanceExpression<T> AddInstanceOf<T>()
         {
             return _registry.AddInstanceOf<T>();
         }
 
+        [Obsolete]
         public static void AddInstanceOf<T>(Func<T> func)
         {
-            _registry.AddInstanceOf<T>(new ConstructorInstance(() => func));
+            _registry.AddInstanceOf<T>(new ConstructorInstance<T>(func));
         }
 
+        [Obsolete]
         public static void AddInstanceOf<T>(Instance instance)
         {
             _registry.ForRequestedType<T>().AddInstance(instance);
@@ -187,6 +190,7 @@ namespace StructureMap
         /// <typeparam name="T"></typeparam>
         /// <param name="target"></param>
         /// <returns></returns>
+        [Obsolete]
         public static LiteralInstance AddInstanceOf<T>(T target)
         {
             return _registry.AddInstanceOf(target);

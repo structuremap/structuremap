@@ -82,13 +82,18 @@ namespace StructureMap.Graph
 
         public string FindArgumentNameForType<T>()
         {
+            return FindArgumentNameForType(typeof (T));
+        }
+
+        public string FindArgumentNameForType(Type type)
+        {
             string returnValue =
-                _constructor.FindFirstConstructorArgumentOfType<T>() ??
-                _setters.FindFirstConstructorArgumentOfType<T>();
+                _constructor.FindFirstConstructorArgumentOfType(type) ??
+                _setters.FindFirstConstructorArgumentOfType(type);
 
             if (returnValue == null)
             {
-                throw new StructureMapException(302, typeof (T).FullName, _pluggedType.FullName);
+                throw new StructureMapException(302, type.FullName, _pluggedType.FullName);
             }
 
             return returnValue;

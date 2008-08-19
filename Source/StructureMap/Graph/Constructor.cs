@@ -75,11 +75,11 @@ namespace StructureMap.Graph
             return true;
         }
 
-        public string FindFirstConstructorArgumentOfType<T>()
+        public string FindFirstConstructorArgumentOfType(Type type)
         {
             foreach (ParameterInfo info in _ctor.GetParameters())
             {
-                if (info.ParameterType.Equals(typeof (T)))
+                if (info.ParameterType.Equals(type))
                 {
                     return info.Name;
                 }

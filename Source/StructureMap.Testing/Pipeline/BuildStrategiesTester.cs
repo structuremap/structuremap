@@ -106,10 +106,10 @@ namespace StructureMap.Testing.Pipeline
         public void Singleton_build_policy()
         {
             SingletonPolicy policy = new SingletonPolicy();
-            ConstructorInstance instance1 =
-                new ConstructorInstance(delegate { return new ColorService("Red"); }).WithName("Red");
-            ConstructorInstance instance2 =
-                new ConstructorInstance(delegate { return new ColorService("Green"); }).WithName("Green");
+            ConstructorInstance<ColorService> instance1 =
+                new ConstructorInstance<ColorService>(() => new ColorService("Red")).WithName("Red");
+            ConstructorInstance<ColorService> instance2 =
+                new ConstructorInstance<ColorService>(() => new ColorService("Green")).WithName("Green");
 
             ColorService red1 = (ColorService) policy.Build(new StubBuildSession(), null, instance1);
             ColorService green1 = (ColorService) policy.Build(new StubBuildSession(), null, instance2);

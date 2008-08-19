@@ -190,7 +190,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         [Obsolete("Kill!")]
         public CreatePluginFamilyExpression<PLUGINTYPE> TheDefaultIs(Func<PLUGINTYPE> func)
         {
-            ConstructorInstance instance = new ConstructorInstance(() => func());
+            ConstructorInstance<PLUGINTYPE> instance = new ConstructorInstance<PLUGINTYPE>(func);
             return TheDefaultIs(instance);
         }
 
@@ -204,7 +204,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         [Obsolete("Kill!")]
         public CreatePluginFamilyExpression<PLUGINTYPE> AddInstance(Func<PLUGINTYPE> func)
         {
-            ConstructorInstance instance = new ConstructorInstance(() => func());
+            ConstructorInstance<PLUGINTYPE> instance = new ConstructorInstance<PLUGINTYPE>(func);
             return AddInstance(instance);
         }
 

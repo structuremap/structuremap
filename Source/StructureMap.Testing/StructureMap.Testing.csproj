@@ -370,6 +370,7 @@
     <Compile Include="Pipeline\PrototypeInstanceTester.cs" />
     <Compile Include="Pipeline\ReferencedInstanceTester.cs" />
     <Compile Include="Pipeline\SerializedInstanceTester.cs" />
+    <Compile Include="Pipeline\SmartInstanceTester.cs" />
     <Compile Include="Pipeline\StubBuildSession.cs" />
     <Compile Include="Pipeline\ThreadLocalStoragePolicyTester.cs" />
     <Compile Include="Pipeline\TypeRulesTester.cs" />

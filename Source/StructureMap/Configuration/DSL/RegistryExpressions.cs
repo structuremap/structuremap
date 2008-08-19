@@ -50,10 +50,10 @@ namespace StructureMap.Configuration.DSL
             return new UserControlInstance(url);
         }
 
-        public static ConstructorInstance ConstructedBy<PLUGINTYPE>
-            (Func<PLUGINTYPE> builder)
+        public static ConstructorInstance<T> ConstructedBy<T>
+            (Func<T> builder)
         {
-            return new ConstructorInstance(() => builder());
+            return new ConstructorInstance<T>(() => builder());
         }
 
         public static ReferencedInstance Instance(string referencedKey)

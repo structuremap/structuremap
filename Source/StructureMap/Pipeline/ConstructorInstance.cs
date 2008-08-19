@@ -4,22 +4,21 @@ namespace StructureMap.Pipeline
 {
 
 
-    public class ConstructorInstance : ExpressedInstance<ConstructorInstance>
+    public class ConstructorInstance<T> : ExpressedInstance<ConstructorInstance<T>>
     {
-        private Func<object> _builder;
+        private readonly Func<BuildSession, T> _builder;
 
-        public ConstructorInstance(Func<object> builder)
+        public ConstructorInstance(Func<BuildSession, T> builder)
         {
             _builder = builder;
         }
 
-        public Func<object> Builder
+        public ConstructorInstance(Func<T> func)
         {
-            get { return _builder; }
-            set { _builder = value; }
+            _builder = s => func();
         }
 
-        protected override ConstructorInstance thisInstance
+        protected override ConstructorInstance<T> thisInstance
         {
             get { return this; }
         }
@@ -28,7 +27,7 @@ namespace StructureMap.Pipeline
         {
             try
             {
-                return _builder();
+                return _builder(session);
             }
             catch (Exception ex)
             {

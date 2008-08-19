@@ -30,7 +30,7 @@ namespace StructureMap.Testing.Diagnostics
             return session.BuildErrors[0];
         }
 
-        private ConstructorInstance errorInstance()
+        private ConstructorInstance<IWidget> errorInstance()
         {
             return ConstructedBy<IWidget>(delegate { throw new NotSupportedException("You can't make me!"); });
         }

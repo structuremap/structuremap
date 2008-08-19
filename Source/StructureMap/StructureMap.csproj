@@ -390,6 +390,7 @@
     </None>
     <None Include="ConfigurationClasses.cd" />
     <Compile Include="Configuration\DictionaryReader.cs" />
+    <Compile Include="Configuration\DSL\Expressions\InstanceExpression.cs" />
     <Compile Include="Configuration\ITypeReader.cs" />
     <Compile Include="Configuration\PrimitiveArrayReader.cs" />
     <Compile Include="Configuration\TypeReaderFactory.cs" />
@@ -408,7 +409,9 @@
     <Compile Include="Pipeline\BuildStack.cs" />
     <Compile Include="Pipeline\ConfiguredInstanceBase.cs" />
     <Compile Include="Pipeline\IStructuredInstance.cs" />
+    <Compile Include="Pipeline\PropertyExpression.cs" />
     <Compile Include="Pipeline\SerializedInstance.cs" />
+    <Compile Include="Pipeline\SmartInstance.cs" />
     <Compile Include="ReflectionHelper.cs" />
     <Compile Include="Util\Cache.cs" />
   </ItemGroup>

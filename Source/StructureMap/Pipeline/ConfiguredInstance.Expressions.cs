@@ -1,5 +1,4 @@
 using System;
-using System.Configuration;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 
@@ -72,9 +71,9 @@ namespace StructureMap.Pipeline
         /// </summary>
         /// <param name="propertyName"></param>
         /// <returns></returns>
-        public PropertyExpression WithProperty(string propertyName)
+        public PropertyExpression<ConfiguredInstance> WithProperty(string propertyName)
         {
-            return new PropertyExpression(this, propertyName);
+            return new PropertyExpression<ConfiguredInstance>(this, propertyName);
         }
 
         #region Nested type: ChildArrayExpression
@@ -192,45 +191,6 @@ namespace StructureMap.Pipeline
         #endregion
 
         #region Nested type: PropertyExpression
-
-        /// <summary>
-        /// Defines the value of a primitive argument to a constructur argument
-        /// </summary>
-        public class PropertyExpression
-        {
-            private readonly ConfiguredInstance _instance;
-            private readonly string _propertyName;
-
-            public PropertyExpression(ConfiguredInstance instance, string propertyName)
-            {
-                _instance = instance;
-                _propertyName = propertyName;
-            }
-
-            /// <summary>
-            /// Sets the value of the constructor argument
-            /// </summary>
-            /// <param name="propertyValue"></param>
-            /// <returns></returns>
-            public ConfiguredInstance EqualTo(object propertyValue)
-            {
-                _instance.setProperty(_propertyName, propertyValue.ToString());
-                return _instance;
-            }
-
-            /// <summary>
-            /// Sets the value of the constructor argument to the key/value in the 
-            /// AppSettings
-            /// </summary>
-            /// <param name="appSettingKey"></param>
-            /// <returns></returns>
-            public ConfiguredInstance EqualToAppSetting(string appSettingKey)
-            {
-                string propertyValue = ConfigurationManager.AppSettings[appSettingKey];
-                _instance.setProperty(_propertyName, propertyValue);
-                return _instance;
-            }
-        }
 
         #endregion
     }

@@ -82,7 +82,7 @@ namespace StructureMap.Configuration.DSL.Expressions
 
             public ProfileExpression Use(Func<T> func)
             {
-                ConstructorInstance instance = new ConstructorInstance(delegate { return func(); });
+                ConstructorInstance<T> instance = new ConstructorInstance<T>(func);
                 return Use(instance);
             }
 

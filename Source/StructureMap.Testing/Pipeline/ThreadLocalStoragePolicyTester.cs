@@ -15,7 +15,7 @@ namespace StructureMap.Testing.Pipeline
         public void SetUp()
         {
             _policy = new ThreadLocalStoragePolicy();
-            _instance = new ConstructorInstance(delegate { return new ColorRule("Red"); }).WithName("Red");
+            _instance = new ConstructorInstance<ColorRule>(() => new ColorRule("Red")).WithName("Red");
         }
 
         #endregion
@@ -24,7 +24,7 @@ namespace StructureMap.Testing.Pipeline
         private ColorRule _rule1;
         private ColorRule _rule2;
         private ColorRule _rule3;
-        private ConstructorInstance _instance;
+        private ConstructorInstance<ColorRule> _instance;
 
 
         private void findRule1()
