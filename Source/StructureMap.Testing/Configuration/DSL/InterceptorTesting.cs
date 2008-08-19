@@ -15,41 +15,65 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             _lastService = null;
 
-            _manager = new Container(registry => registry.ForRequestedType<IService>().AddInstances
-                                                     (
-                                                     Instance<ColorService>()
-                                                         .OnCreation<ColorService>(s => _lastService = s)
-                                                         .WithName("Intercepted")
-                                                         .WithProperty("color").EqualTo("Red"),
-                                                     Instance<ColorService>()
-                                                         .WithName("NotIntercepted")
-                                                         .WithProperty("color").EqualTo("Blue"),
-                                                     Object<IService>(new ColorService("Yellow"))
-                                                         .WithName("Yellow")
-                                                         .OnCreation<ColorService>(s => _lastService = s),
-                                                     ConstructedBy<IService>(() => new ColorService("Purple"))
-                                                         .WithName("Purple")
-                                                         .EnrichWith<IService>(s => new DecoratorService(s)),
-                                                     Instance<ColorService>()
-                                                         .WithName("Decorated")
-                                                         .EnrichWith<IService>(s => new DecoratorService(s))
-                                                         .WithProperty("color").EqualTo("Orange"),
-                                                     Object<IService>(new ColorService("Yellow"))
-                                                         .WithName("Bad")
-                                                         .OnCreation<ColorService>(obj => { throw new ApplicationException("Bad!"); })
-                                                     ));
+            //_container = new Container(registry => registry.ForRequestedType<IService>().AddInstances
+            //                                         (
+            //                                         Instance<ColorService>()
+            //                                             .OnCreation<ColorService>(s => _lastService = s)
+            //                                             .WithName("Intercepted")
+            //                                             .WithProperty("color").EqualTo("Red"),
+            //                                         Instance<ColorService>()
+            //                                             .WithName("NotIntercepted")
+            //                                             .WithProperty("color").EqualTo("Blue"),
+            //                                         Object<IService>(new ColorService("Yellow"))
+            //                                             .WithName("Yellow")
+            //                                             .OnCreation<ColorService>(s => _lastService = s),
+            //                                         ConstructedBy<IService>(() => new ColorService("Purple"))
+            //                                             .WithName("Purple")
+            //                                             .EnrichWith<IService>(s => new DecoratorService(s)),
+            //                                         Instance<ColorService>()
+            //                                             .WithName("Decorated")
+            //                                             .EnrichWith<IService>(s => new DecoratorService(s))
+            //                                             .WithProperty("color").EqualTo("Orange"),
+            //                                         Object<IService>(new ColorService("Yellow"))
+            //                                             .WithName("Bad")
+            //                                             .OnCreation<ColorService>(obj => { throw new ApplicationException("Bad!"); })
+            //                                         ));
+
+            _container = new Container(r => r.ForRequestedType<IService>().AddInstances(x =>
+            {
+                x.OfConcreteType<ColorService>()
+                    .OnCreation<ColorService>(s => _lastService = s)
+                    .WithName("Intercepted")
+                    .WithProperty("color").EqualTo("Red");
+
+                x.OfConcreteType<ColorService>()
+                    .WithName("NotIntercepted")
+                    .WithProperty("color").EqualTo("Blue");
+
+                x.Object(new ColorService("Yellow"))
+                    .WithName("Yellow")
+                    .OnCreation<ColorService>(s => _lastService = s);
+
+                x.ConstructedBy(() => new ColorService("Purple")).WithName("Purple").EnrichWith<IService>(s => new DecoratorService(s));
+
+                x.OfConcreteType<ColorService>().WithName("Decorated").EnrichWith<IService>(s => new DecoratorService(s))
+                    .WithCtorArg("color").EqualTo("Orange");
+
+                x.Object(new ColorService("Yellow")).WithName("Bad")
+                    .OnCreation<ColorService>(obj => { throw new ApplicationException("Bad!"); });
+            }));
         }
 
         #endregion
 
         private ColorService _lastService;
 
-        private IContainer _manager;
+        private IContainer _container;
 
         [Test]
         public void DecorateAConstructedService()
         {
-            IService service = _manager.GetInstance<IService>("Purple");
+            IService service = _container.GetInstance<IService>("Purple");
             DecoratorService decoratorService = (DecoratorService) service;
 
             ColorService innerService = (ColorService) decoratorService.Inner;
@@ -59,7 +83,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void DecorateInline()
         {
-            IService service = _manager.GetInstance<IService>("Decorated");
+            IService service = _container.GetInstance<IService>("Decorated");
             DecoratorService decoratorService = (DecoratorService) service;
 
             ColorService innerService = (ColorService) decoratorService.Inner;
@@ -71,7 +95,7 @@ namespace StructureMap.Testing.Configuration.DSL
         public void OnCreationWithAConstructedService()
         {
             Assert.IsNull(_lastService);
-            IService interceptedService = _manager.GetInstance<IService>("Yellow");
+            IService interceptedService = _container.GetInstance<IService>("Yellow");
             Assert.AreSame(_lastService, interceptedService);
         }
 
@@ -82,10 +106,10 @@ namespace StructureMap.Testing.Configuration.DSL
             // "NotIntercepted" should not.
 
             Assert.IsNull(_lastService);
-            _manager.GetInstance<IService>("NotIntercepted");
+            _container.GetInstance<IService>("NotIntercepted");
             Assert.IsNull(_lastService);
 
-            IService interceptedService = _manager.GetInstance<IService>("Intercepted");
+            IService interceptedService = _container.GetInstance<IService>("Intercepted");
             Assert.AreSame(_lastService, interceptedService);
         }
 
@@ -94,7 +118,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             try
             {
-                _manager.GetInstance<IService>("Bad");
+                _container.GetInstance<IService>("Bad");
                 Assert.Fail("Should have thrown an error");
             }
             catch (StructureMapException e)

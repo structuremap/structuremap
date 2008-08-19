@@ -31,11 +31,16 @@ namespace StructureMap.Configuration.DSL.Expressions
             });
         }
 
-        public CreatePluginFamilyExpression<PLUGINTYPE> AddInstances(params Instance[] instances)
+        public CreatePluginFamilyExpression<PLUGINTYPE> AddInstances(Action<InstanceExpression<PLUGINTYPE>> action)
         {
+            List<Instance> list = new List<Instance>();
+
+            InstanceExpression<PLUGINTYPE> child = new InstanceExpression<PLUGINTYPE>(i => list.Add(i));
+            action(child);
+
             return alterAndContinue(family =>
             {
-                foreach (Instance instance in instances)
+                foreach (Instance instance in list)
                 {
                     family.AddInstance(instance);
                 }
@@ -179,6 +184,14 @@ namespace StructureMap.Configuration.DSL.Expressions
             _alterations.Add(family => family.AddMementoSource(source));
 
             return this;
+        }
+
+        public IsExpression<PLUGINTYPE> TheDefault
+        {
+            get
+            {
+                return new InstanceExpression<PLUGINTYPE>(i => TheDefaultIs(i));
+            }
         }
 
         [Obsolete("Kill!")]

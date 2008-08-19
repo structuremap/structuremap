@@ -42,5 +42,25 @@ namespace StructureMap.Configuration.DSL.Expressions
         {
             get { return this; }
         }
+
+        public ReferencedInstance References(string key)
+        {
+            return returnInstance(new ReferencedInstance(key));
+        }
+
+        public DefaultInstance TheDefault()
+        {
+            return returnInstance(new DefaultInstance());
+        }
+
+        public ConstructorInstance<T> ConstructedBy(Func<T> func)
+        {
+            return returnInstance(new ConstructorInstance<T>(func));
+        }
+
+        public ConstructorInstance<T> ConstructedBy(Func<BuildSession, T> func)
+        {
+            return returnInstance(new ConstructorInstance<T>(func));
+        }
     }
 }

@@ -80,6 +80,11 @@ namespace StructureMap.Pipeline
             return new DependencyExpression<T, SETTERTYPE>(this, propertyName);
         }
 
+        public DependencyExpression<T, SETTERTYPE> SetterDependency<SETTERTYPE>()
+        {
+            return CtorDependency<SETTERTYPE>();
+        }
+
         public ArrayDefinitionExpression<T, CHILD> TheArrayOf<CHILD>()
         {
             if (typeof(CHILD).IsArray)
@@ -128,11 +133,10 @@ namespace StructureMap.Pipeline
                 _propertyName = propertyName;
             }
 
-            public SmartInstance<T> Is(Func<InstanceExpression<CHILD>, Instance> func)
+            public SmartInstance<T> Is(Action<InstanceExpression<CHILD>> action)
             {
                 var expression = new InstanceExpression<CHILD>(i => _instance.setChild(_propertyName, i));
-                Instance instance = func(expression);
-                
+                action(expression);
 
                 return _instance;
             }

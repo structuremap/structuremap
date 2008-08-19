@@ -170,6 +170,31 @@ namespace StructureMap.Testing.Configuration.DSL
             Assert.IsInstanceOfType(typeof (Handler1), processor.Handlers[1]);
         }
 
+
+        [Test]
+        public void PlaceMemberInArrayByReference_with_SmartInstance()
+        {
+            IContainer manager = new Container(registry =>
+            {
+                registry.AddInstanceOf<IHandler>().UsingConcreteType<Handler1>().WithName("One");
+                registry.AddInstanceOf<IHandler>().UsingConcreteType<Handler2>().WithName("Two");
+
+                registry.ForRequestedType<Processor>().TheDefault.Is.OfConcreteType<Processor>()
+                    .WithCtorArg("name").EqualTo("Jeremy")
+                    .TheArrayOf<IHandler>().Contains(x =>
+                    {
+                        x.References("Two");
+                        x.References("One");
+                    });
+
+            });
+
+            var processor = manager.GetInstance<Processor>();
+
+            Assert.IsInstanceOfType(typeof(Handler2), processor.Handlers[0]);
+            Assert.IsInstanceOfType(typeof(Handler1), processor.Handlers[1]);
+        }
+
         [Test]
         public void ProgrammaticallyInjectArrayAllInline()
         {
@@ -189,6 +214,30 @@ namespace StructureMap.Testing.Configuration.DSL
             Assert.IsInstanceOfType(typeof (Handler1), processor.Handlers[0]);
             Assert.IsInstanceOfType(typeof (Handler2), processor.Handlers[1]);
             Assert.IsInstanceOfType(typeof (Handler3), processor.Handlers[2]);
+        }
+
+        [Test]
+        public void ProgrammaticallyInjectArrayAllInline_with_smart_instance()
+        {
+            IContainer container = new Container(r =>
+            {
+                r.ForRequestedType<Processor>().TheDefault.Is.OfConcreteType<Processor>()
+                    .WithCtorArg("name").EqualTo("Jeremy")
+                    .TheArrayOf<IHandler>().Contains(x =>
+                    {
+                        x.OfConcreteType<Handler1>();
+                        x.OfConcreteType<Handler2>();
+                        x.OfConcreteType<Handler3>();
+                    });
+
+                int number = 0;
+            });
+
+            var processor = container.GetInstance<Processor>();
+
+            Assert.IsInstanceOfType(typeof(Handler1), processor.Handlers[0]);
+            Assert.IsInstanceOfType(typeof(Handler2), processor.Handlers[1]);
+            Assert.IsInstanceOfType(typeof(Handler3), processor.Handlers[2]);
         }
 
         [Test,

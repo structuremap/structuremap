@@ -126,6 +126,26 @@ namespace StructureMap.Testing.Configuration.DSL
                                                    )
                                                ));
         }
+
+
+        [Test]
+        public void DeepInstanceTest_with_SmartInstance()
+        {
+            assertThingMatches(registry =>
+            {
+                registry.ForRequestedType<Thing>().TheDefault.Is.OfConcreteType<Thing>()
+                    .WithCtorArg("name").EqualTo("Jeremy")
+                    .WithCtorArg("count").EqualTo(4)
+                    .WithCtorArg("average").EqualTo(.333)
+                    .SetterDependency<Rule>().Is(x =>
+                    {
+                        x.OfConcreteType<WidgetRule>().SetterDependency<IWidget>().Is(
+                            c => c.OfConcreteType<ColorWidget>().WithCtorArg("color").EqualTo("yellow"));
+                    });
+            });
+        }
+
+
     }
 
     public class Thing
