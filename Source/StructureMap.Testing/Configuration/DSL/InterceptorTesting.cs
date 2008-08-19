@@ -42,7 +42,7 @@ namespace StructureMap.Testing.Configuration.DSL
             _container = new Container(r => r.ForRequestedType<IService>().AddInstances(x =>
             {
                 x.OfConcreteType<ColorService>()
-                    .OnCreation<ColorService>(s => _lastService = s)
+                    .OnCreation(s => _lastService = s)
                     .WithName("Intercepted")
                     .WithProperty("color").EqualTo("Red");
 

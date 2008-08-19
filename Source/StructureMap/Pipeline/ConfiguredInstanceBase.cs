@@ -4,7 +4,7 @@ using StructureMap.Graph;
 
 namespace StructureMap.Pipeline
 {
-    public abstract class ConfiguredInstanceBase<T> : ExpressedInstance<T>, IConfiguredInstance, IStructuredInstance
+    public abstract class ConfiguredInstanceBase<T> : Instance, IConfiguredInstance, IStructuredInstance
     {
         protected Dictionary<string, Instance> _children = new Dictionary<string, Instance>();
         protected Dictionary<string, string> _properties = new Dictionary<string, string>();

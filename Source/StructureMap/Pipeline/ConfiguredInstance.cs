@@ -19,12 +19,6 @@ namespace StructureMap.Pipeline
         {
         }
 
-
-        protected override ConfiguredInstance thisInstance
-        {
-            get { return this; }
-        }
-
         #region IStructuredInstance Members
 
         #endregion

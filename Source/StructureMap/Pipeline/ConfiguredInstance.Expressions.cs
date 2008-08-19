@@ -1,11 +1,35 @@
 using System;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
+using StructureMap.Interceptors;
 
 namespace StructureMap.Pipeline
 {
     public partial class ConfiguredInstance
     {
+        public ConfiguredInstance WithName(string instanceKey)
+        {
+            Name = instanceKey;
+            return this;
+        }
+
+        public ConfiguredInstance OnCreation<TYPE>(Action<TYPE> handler)
+        {
+            StartupInterceptor<TYPE> interceptor = new StartupInterceptor<TYPE>(handler);
+            Interceptor = interceptor;
+
+            return this;
+        }
+
+        public ConfiguredInstance EnrichWith<TYPE>(EnrichmentHandler<TYPE> handler)
+        {
+            EnrichmentInterceptor<TYPE> interceptor = new EnrichmentInterceptor<TYPE>(handler);
+            Interceptor = interceptor;
+
+            return this;
+        }
+
+
         public ChildArrayExpression ChildArray<PLUGINTYPE>(string propertyName)
         {
             validateTypeIsArray<PLUGINTYPE>();

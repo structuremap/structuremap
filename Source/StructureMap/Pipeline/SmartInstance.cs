@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.Graph;
+using StructureMap.Interceptors;
 
 namespace StructureMap.Pipeline
 {
@@ -14,9 +15,34 @@ namespace StructureMap.Pipeline
         {
         }
 
-        protected override SmartInstance<T> thisInstance
+        public SmartInstance<T> WithName(string instanceKey)
         {
-            get { return this; }
+            Name = instanceKey;
+            return this;
+        }
+
+        public SmartInstance<T> OnCreation(Action<T> handler)
+        {
+            StartupInterceptor<T> interceptor = new StartupInterceptor<T>(handler);
+            Interceptor = interceptor;
+
+            return this;
+        }
+
+        public SmartInstance<T> EnrichWith(EnrichmentHandler<T> handler)
+        {
+            EnrichmentInterceptor<T> interceptor = new EnrichmentInterceptor<T>(handler);
+            Interceptor = interceptor;
+
+            return this;
+        }
+
+        public SmartInstance<T> EnrichWith<PLUGINTYPE>(EnrichmentHandler<PLUGINTYPE> handler)
+        {
+            EnrichmentInterceptor<PLUGINTYPE> interceptor = new EnrichmentInterceptor<PLUGINTYPE>(handler);
+            Interceptor = interceptor;
+
+            return this;
         }
 
         protected override string getDescription()
