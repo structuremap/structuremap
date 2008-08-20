@@ -47,7 +47,7 @@ namespace StructureMap.Pipeline
 
         protected override string getDescription()
         {
-            return "Smart Instance for " + getConcreteType().FullName;
+            return "Smart Instance for " + getConcreteType(null).FullName;
         }
 
         public PropertyExpression<SmartInstance<T>> WithCtorArg(string argumentName)
@@ -91,7 +91,7 @@ namespace StructureMap.Pipeline
 
         private string getArgumentNameForType<CTORTYPE>()
         {
-            Plugin plugin = PluginCache.GetPlugin(getConcreteType());
+            Plugin plugin = PluginCache.GetPlugin(getConcreteType(null));
             return plugin.FindArgumentNameForType<CTORTYPE>();
         }
 

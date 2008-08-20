@@ -222,8 +222,67 @@ namespace StructureMap.Testing.Pipeline
 
             container.GetInstance<ClassWithDependency>().Rule.ShouldBeOfType(typeof(ColorRule));
         }
+
+        private static Logger createLogger(BuildSession session)
+        {
+            return new Logger(session.ParentType);
+        }
+
+        [Test]
+        public void AutoFill_a_property_with_contextual_construction()
+        {
+            var container =
+                new Container(
+                    r =>
+                    r.FillAllPropertiesOfType<Logger>().TheDefault.Is.ConstructedBy(createLogger));
+
+            container.GetInstance<ClassWithLogger>().Logger.Type.ShouldEqual(typeof (ClassWithLogger));
+            container.GetInstance<ClassWithLogger2>().Logger.Type.ShouldEqual(typeof (ClassWithLogger2));
+
+            container.GetInstance<ClassWithClassWithLogger>().ClassWithLogger.Logger.Type.ShouldEqual(
+                typeof (ClassWithLogger));
+        }
     }
 
+    public class ClassWithClassWithLogger
+    {
+        private readonly ClassWithLogger _classWithLogger;
+
+        public ClassWithClassWithLogger(ClassWithLogger classWithLogger)
+        {
+            _classWithLogger = classWithLogger;
+        }
+
+        public ClassWithLogger ClassWithLogger
+        {
+            get { return _classWithLogger; }
+        }
+    }
+
+    public class Logger
+    {
+        private readonly Type _type;
+
+        public Logger(Type type)
+        {
+            _type = type;
+        }
+
+        public Type Type
+        {
+            get { return _type; }
+        }
+    }
+
+    public class ClassWithLogger
+    {
+        public Logger Logger { get; set; }
+    }
+
+    public class ClassWithLogger2
+    {
+        public Logger Logger { get; set; }
+    }
 
     public enum ColorEnum
     {

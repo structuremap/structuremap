@@ -37,12 +37,33 @@ namespace StructureMap.Pipeline
 
         public virtual object Build(Type pluginType, BuildSession session)
         {
-            session.BuildStack.Push(new BuildFrame(pluginType, Name, getConcreteType()));
+            markBuildStackStart(session, pluginType);
+
             object rawValue = createRawObject(pluginType, session);
             var finalValue = applyInterception(rawValue, pluginType);
-            session.BuildStack.Pop();
+
+            markBuildStackFinish(session);
 
             return finalValue;
+        }
+
+        protected virtual void markBuildStackFinish(BuildSession session)
+        {
+            if (!doesRecordOnTheStack) return;
+
+            session.BuildStack.Pop();
+        }
+
+        protected virtual void markBuildStackStart(BuildSession session, Type pluginType)
+        {
+            if (!doesRecordOnTheStack) return;
+
+            session.BuildStack.Push(new BuildFrame(pluginType, Name, getConcreteType(pluginType)));
+        }
+
+        protected virtual bool doesRecordOnTheStack
+        {
+            get { return true; }
         }
 
         private object createRawObject(Type pluginType, BuildSession session)
@@ -98,12 +119,12 @@ namespace StructureMap.Pipeline
 
         Type IDiagnosticInstance.ConcreteType
         {
-            get { return getConcreteType(); }
+            get { return getConcreteType(null); }
         }
 
-        protected virtual Type getConcreteType()
+        protected virtual Type getConcreteType(Type pluginType)
         {
-            return null;
+            return pluginType;
         }
 
         protected virtual void addTemplatedInstanceTo(PluginFamily family, Type[] templateTypes)

@@ -4,8 +4,8 @@ namespace StructureMap.Pipeline
 {
     public class BuildStack
     {
-        private readonly Stack<BuildFrame> _frameStack = new Stack<BuildFrame>();
         private BuildFrame _root;
+        private BuildFrame _current;
 
         internal BuildStack()
         {
@@ -19,18 +19,34 @@ namespace StructureMap.Pipeline
 
         public BuildFrame Current
         {
-            get { return _frameStack.Peek(); }
+            get { return _current; }
+        }
+
+        public BuildFrame Parent
+        {
+            get
+            {
+                return _current.Parent;
+            }
         }
 
         internal void Push(BuildFrame frame)
         {
-            if (_root == null) _root = frame;
-            _frameStack.Push(frame);
+            if (_root == null)
+            {
+                _root = _current = frame;
+            }
+            else
+            {
+                _current.Attach(frame);
+                _current = frame;
+            }
         }
 
         internal void Pop()
         {
-            _frameStack.Pop();
+            _current = _current.Detach();
+            if (_current == null) _root = null;
         }
     }
 }

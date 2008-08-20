@@ -68,5 +68,10 @@ namespace StructureMap.Pipeline
         {
             return string.Format("\"{0}\"", _referenceKey);
         }
+
+        protected override bool doesRecordOnTheStack
+        {
+            get { return false; }
+        }
     }
 }

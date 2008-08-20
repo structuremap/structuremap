@@ -18,5 +18,10 @@ namespace StructureMap.Pipeline
         {
             return "Default";
         }
+
+        protected override bool doesRecordOnTheStack
+        {
+            get { return false; }
+        }
     }
 }

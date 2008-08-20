@@ -124,6 +124,11 @@ namespace StructureMap
             get { return _buildStack; }
         }
 
+        public Type ParentType
+        {
+            get { return _buildStack.Parent.ConcreteType; }
+        }
+
 
         private IInstanceFactory forType(Type pluginType)
         {

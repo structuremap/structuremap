@@ -166,6 +166,7 @@ namespace StructureMap.Testing
         }
 
 
+
         [Test]
         public void when_building_an_instance_use_the_register_the_stack_frame()
         {
@@ -175,9 +176,9 @@ namespace StructureMap.Testing
 
             session.CreateInstance(typeof (IClassWithRule), instance);
 
-            session.BuildStack.Root.ConcreteType.ShouldEqual(typeof (ClassWithRule));
-            session.BuildStack.Root.RequestedType.ShouldEqual(typeof (IClassWithRule));
-            session.BuildStack.Root.Name.ShouldEqual(instance.Name);
+            recordingInstance.Root.ConcreteType.ShouldEqual(typeof(ClassWithRule));
+            recordingInstance.Root.RequestedType.ShouldEqual(typeof(IClassWithRule));
+            recordingInstance.Root.Name.ShouldEqual(instance.Name);
 
             recordingInstance.Current.ConcreteType.ShouldEqual(typeof(ColorRule));
             recordingInstance.Current.RequestedType.ShouldEqual(typeof(Rule));
@@ -205,7 +206,7 @@ namespace StructureMap.Testing
             return string.Empty;
         }
 
-        protected override Type getConcreteType()
+        protected override Type getConcreteType(Type pluginType)
         {
             return typeof(ColorRule);
         }

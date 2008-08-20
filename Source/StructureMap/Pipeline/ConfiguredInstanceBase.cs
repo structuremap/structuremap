@@ -149,7 +149,7 @@ namespace StructureMap.Pipeline
             return _properties.ContainsKey(propertyName) || _children.ContainsKey(propertyName) || _arrays.ContainsKey(propertyName);
         }
 
-        protected override Type getConcreteType()
+        protected override Type getConcreteType(Type pluginType)
         {
             return _pluggedType;
         }
