@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.Serialization;
 
 namespace StructureMap.Exceptions
 {
@@ -11,6 +12,11 @@ namespace StructureMap.Exceptions
     {
         public InstancePropertyValueException(string msg, Exception ex)
             : base(msg, ex)
+        {
+        }
+
+        protected InstancePropertyValueException(SerializationInfo info, StreamingContext context) :
+            base(info, context)
         {
         }
     }

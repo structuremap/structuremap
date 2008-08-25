@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.Serialization;
 
 namespace StructureMap.Exceptions
 {
@@ -6,6 +7,12 @@ namespace StructureMap.Exceptions
     public class StructureMapConfigurationException : ApplicationException
     {
         public StructureMapConfigurationException(string message) : base(message)
+        {
+        }
+
+
+        protected StructureMapConfigurationException(SerializationInfo info, StreamingContext context) :
+            base(info, context)
         {
         }
     }
