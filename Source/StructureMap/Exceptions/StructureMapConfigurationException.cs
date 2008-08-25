@@ -1,9 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace StructureMap.Exceptions
 {
+    [Serializable]
     public class StructureMapConfigurationException : ApplicationException
     {
         public StructureMapConfigurationException(string message) : base(message)

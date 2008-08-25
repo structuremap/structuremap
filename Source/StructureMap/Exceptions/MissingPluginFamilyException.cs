@@ -1,7 +1,9 @@
 using System;
+using System.Runtime.Serialization;
 
 namespace StructureMap.Exceptions
 {
+    [Serializable]
     public class MissingPluginFamilyException : ApplicationException
     {
         private string _message;
@@ -14,6 +16,19 @@ namespace StructureMap.Exceptions
         public override string Message
         {
             get { return _message; }
+        }
+
+        protected MissingPluginFamilyException(SerializationInfo info, StreamingContext context) :
+            base(info, context)
+        {
+            _message = info.GetString("message");
+        }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("message", _message, typeof(string));
+
+            base.GetObjectData(info, context);
         }
     }
 }
