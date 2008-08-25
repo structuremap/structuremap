@@ -5,6 +5,7 @@
     <_SolutionProjectCacheVersion>3.5</_SolutionProjectCacheVersion>
   </PropertyGroup>
   <ItemGroup>
+    <_SolutionProjectProjects Include="HTML\HTML.csproj" />
     <_SolutionProjectProjects Include="StructureMap.AutoMocking\StructureMap.AutoMocking.csproj" />
     <_SolutionProjectProjects Include="StructureMap.DataAccess\StructureMap.DataAccess.csproj" />
     <_SolutionProjectProjects Include="StructureMap.DeploymentTasks\StructureMap.DeploymentTasks.csproj" />
@@ -19,6 +20,7 @@
     <_SolutionProjectProjects Include="StructureMap\StructureMap.csproj" />
   </ItemGroup>
   <ItemGroup Condition=" ('$(Configuration)' == 'Build') and ('$(Platform)' == '.NET') ">
+    <SkipLevel0 Include="HTML" />
     <SkipLevel0 Include="StructureMap" />
     <SkipLevel0 Include="StructureMap.Testing.Widget4" />
     <SkipLevel4 Include="StructureMap.Testing" />
@@ -33,6 +35,10 @@
     <SkipLevel3 Include="StructureMap.Testing.Widget5" />
   </ItemGroup>
   <ItemGroup Condition=" ('$(Configuration)' == 'Build') and ('$(Platform)' == 'Any CPU') ">
+    <BuildLevel0 Include="HTML\HTML.csproj">
+      <Configuration>Release</Configuration>
+      <Platform>AnyCPU</Platform>
+    </BuildLevel0>
     <BuildLevel0 Include="StructureMap.Testing.Widget4\StructureMap.Testing.Widget4.csproj">
       <Configuration>Release</Configuration>
       <Platform>AnyCPU</Platform>
@@ -83,6 +89,10 @@
     </BuildLevel3>
   </ItemGroup>
   <ItemGroup Condition=" ('$(Configuration)' == 'Build') and ('$(Platform)' == 'Mixed Platforms') ">
+    <BuildLevel0 Include="HTML\HTML.csproj">
+      <Configuration>Release</Configuration>
+      <Platform>AnyCPU</Platform>
+    </BuildLevel0>
     <BuildLevel0 Include="StructureMap.Testing.Widget4\StructureMap.Testing.Widget4.csproj">
       <Configuration>Release</Configuration>
       <Platform>AnyCPU</Platform>
@@ -133,6 +143,7 @@
     </BuildLevel3>
   </ItemGroup>
   <ItemGroup Condition=" ('$(Configuration)' == 'Debug') and ('$(Platform)' == '.NET') ">
+    <SkipLevel0 Include="HTML" />
     <SkipLevel0 Include="StructureMap" />
     <SkipLevel0 Include="StructureMap.Testing.Widget4" />
     <SkipLevel4 Include="StructureMap.Testing" />
@@ -147,6 +158,10 @@
     <SkipLevel3 Include="StructureMap.Testing.Widget5" />
   </ItemGroup>
   <ItemGroup Condition=" ('$(Configuration)' == 'Debug') and ('$(Platform)' == 'Any CPU') ">
+    <BuildLevel0 Include="HTML\HTML.csproj">
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </BuildLevel0>
     <BuildLevel0 Include="StructureMap.Testing.Widget4\StructureMap.Testing.Widget4.csproj">
       <Configuration>Debug</Configuration>
       <Platform>AnyCPU</Platform>
@@ -245,8 +260,10 @@
       <Configuration>Debug</Configuration>
       <Platform>AnyCPU</Platform>
     </BuildLevel3>
+    <SkipLevel0 Include="HTML" />
   </ItemGroup>
   <ItemGroup Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == '.NET') ">
+    <SkipLevel0 Include="HTML" />
     <SkipLevel0 Include="StructureMap" />
     <SkipLevel0 Include="StructureMap.Testing.Widget4" />
     <SkipLevel4 Include="StructureMap.Testing" />
@@ -261,6 +278,10 @@
     <SkipLevel3 Include="StructureMap.Testing.Widget5" />
   </ItemGroup>
   <ItemGroup Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == 'Any CPU') ">
+    <BuildLevel0 Include="HTML\HTML.csproj">
+      <Configuration>Release</Configuration>
+      <Platform>AnyCPU</Platform>
+    </BuildLevel0>
     <BuildLevel0 Include="StructureMap.Testing.Widget4\StructureMap.Testing.Widget4.csproj">
       <Configuration>Release</Configuration>
       <Platform>AnyCPU</Platform>
@@ -311,6 +332,10 @@
     </BuildLevel3>
   </ItemGroup>
   <ItemGroup Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == 'Mixed Platforms') ">
+    <BuildLevel0 Include="HTML\HTML.csproj">
+      <Configuration>Release</Configuration>
+      <Platform>AnyCPU</Platform>
+    </BuildLevel0>
     <BuildLevel0 Include="StructureMap.Testing.Widget4\StructureMap.Testing.Widget4.csproj">
       <Configuration>Release</Configuration>
       <Platform>AnyCPU</Platform>
@@ -397,6 +422,7 @@
         <ProjectConfiguration Project="{DB798C07-0C82-4298-8BAA-D702CF96C28E}">Release|AnyCPU</ProjectConfiguration>
         <ProjectConfiguration Project="{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}">Release|AnyCPU</ProjectConfiguration>
         <ProjectConfiguration Project="{9048635D-A2CE-4387-A4F5-9BB1CFF04703}">Release|AnyCPU</ProjectConfiguration>
+        <ProjectConfiguration Project="{A6358895-641F-4CC2-BE8E-C61EBE1DBEB9}">Release|AnyCPU</ProjectConfiguration>
       </SolutionConfiguration>
     </CurrentSolutionConfigurationContents>
   </PropertyGroup>
@@ -415,6 +441,7 @@
         <ProjectConfiguration Project="{DB798C07-0C82-4298-8BAA-D702CF96C28E}">Release|AnyCPU</ProjectConfiguration>
         <ProjectConfiguration Project="{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}">Release|AnyCPU</ProjectConfiguration>
         <ProjectConfiguration Project="{9048635D-A2CE-4387-A4F5-9BB1CFF04703}">Release|AnyCPU</ProjectConfiguration>
+        <ProjectConfiguration Project="{A6358895-641F-4CC2-BE8E-C61EBE1DBEB9}">Release|AnyCPU</ProjectConfiguration>
       </SolutionConfiguration>
     </CurrentSolutionConfigurationContents>
   </PropertyGroup>
@@ -433,6 +460,7 @@
         <ProjectConfiguration Project="{DB798C07-0C82-4298-8BAA-D702CF96C28E}">Release|AnyCPU</ProjectConfiguration>
         <ProjectConfiguration Project="{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}">Release|AnyCPU</ProjectConfiguration>
         <ProjectConfiguration Project="{9048635D-A2CE-4387-A4F5-9BB1CFF04703}">Release|AnyCPU</ProjectConfiguration>
+        <ProjectConfiguration Project="{A6358895-641F-4CC2-BE8E-C61EBE1DBEB9}">Release|AnyCPU</ProjectConfiguration>
       </SolutionConfiguration>
     </CurrentSolutionConfigurationContents>
   </PropertyGroup>
@@ -451,6 +479,7 @@
         <ProjectConfiguration Project="{DB798C07-0C82-4298-8BAA-D702CF96C28E}">Debug|AnyCPU</ProjectConfiguration>
         <ProjectConfiguration Project="{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}">Debug|AnyCPU</ProjectConfiguration>
         <ProjectConfiguration Project="{9048635D-A2CE-4387-A4F5-9BB1CFF04703}">Debug|AnyCPU</ProjectConfiguration>
+        <ProjectConfiguration Project="{A6358895-641F-4CC2-BE8E-C61EBE1DBEB9}">Debug|AnyCPU</ProjectConfiguration>
       </SolutionConfiguration>
     </CurrentSolutionConfigurationContents>
   </PropertyGroup>
@@ -469,6 +498,7 @@
         <ProjectConfiguration Project="{DB798C07-0C82-4298-8BAA-D702CF96C28E}">Debug|AnyCPU</ProjectConfiguration>
         <ProjectConfiguration Project="{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}">Debug|AnyCPU</ProjectConfiguration>
         <ProjectConfiguration Project="{9048635D-A2CE-4387-A4F5-9BB1CFF04703}">Debug|AnyCPU</ProjectConfiguration>
+        <ProjectConfiguration Project="{A6358895-641F-4CC2-BE8E-C61EBE1DBEB9}">Debug|AnyCPU</ProjectConfiguration>
       </SolutionConfiguration>
     </CurrentSolutionConfigurationContents>
   </PropertyGroup>
@@ -487,6 +517,7 @@
         <ProjectConfiguration Project="{DB798C07-0C82-4298-8BAA-D702CF96C28E}">Debug|AnyCPU</ProjectConfiguration>
         <ProjectConfiguration Project="{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}">Debug|AnyCPU</ProjectConfiguration>
         <ProjectConfiguration Project="{9048635D-A2CE-4387-A4F5-9BB1CFF04703}">Debug|AnyCPU</ProjectConfiguration>
+        <ProjectConfiguration Project="{A6358895-641F-4CC2-BE8E-C61EBE1DBEB9}">Debug|AnyCPU</ProjectConfiguration>
       </SolutionConfiguration>
     </CurrentSolutionConfigurationContents>
   </PropertyGroup>
@@ -505,6 +536,7 @@
         <ProjectConfiguration Project="{DB798C07-0C82-4298-8BAA-D702CF96C28E}">Release|AnyCPU</ProjectConfiguration>
         <ProjectConfiguration Project="{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}">Release|AnyCPU</ProjectConfiguration>
         <ProjectConfiguration Project="{9048635D-A2CE-4387-A4F5-9BB1CFF04703}">Release|AnyCPU</ProjectConfiguration>
+        <ProjectConfiguration Project="{A6358895-641F-4CC2-BE8E-C61EBE1DBEB9}">Release|AnyCPU</ProjectConfiguration>
       </SolutionConfiguration>
     </CurrentSolutionConfigurationContents>
   </PropertyGroup>
@@ -523,6 +555,7 @@
         <ProjectConfiguration Project="{DB798C07-0C82-4298-8BAA-D702CF96C28E}">Release|AnyCPU</ProjectConfiguration>
         <ProjectConfiguration Project="{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}">Release|AnyCPU</ProjectConfiguration>
         <ProjectConfiguration Project="{9048635D-A2CE-4387-A4F5-9BB1CFF04703}">Release|AnyCPU</ProjectConfiguration>
+        <ProjectConfiguration Project="{A6358895-641F-4CC2-BE8E-C61EBE1DBEB9}">Release|AnyCPU</ProjectConfiguration>
       </SolutionConfiguration>
     </CurrentSolutionConfigurationContents>
   </PropertyGroup>
@@ -541,6 +574,7 @@
         <ProjectConfiguration Project="{DB798C07-0C82-4298-8BAA-D702CF96C28E}">Release|AnyCPU</ProjectConfiguration>
         <ProjectConfiguration Project="{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}">Release|AnyCPU</ProjectConfiguration>
         <ProjectConfiguration Project="{9048635D-A2CE-4387-A4F5-9BB1CFF04703}">Release|AnyCPU</ProjectConfiguration>
+        <ProjectConfiguration Project="{A6358895-641F-4CC2-BE8E-C61EBE1DBEB9}">Release|AnyCPU</ProjectConfiguration>
       </SolutionConfiguration>
     </CurrentSolutionConfigurationContents>
   </PropertyGroup>
@@ -1367,6 +1401,70 @@
     <Message Text="The project &quot;StructureMapDoctor&quot; is not selected for building in solution configuration &quot;Release|.NET&quot;." Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == '.NET') " />
     <MSBuild Projects="StructureMapDoctor\StructureMapDoctor.csproj" Targets="Publish" Properties="Configuration=Release; Platform=AnyCPU; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == 'Any CPU') " />
     <MSBuild Projects="StructureMapDoctor\StructureMapDoctor.csproj" Targets="Publish" Properties="Configuration=Release; Platform=AnyCPU; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == 'Mixed Platforms') " />
+  </Target>
+  <Target Name="HTML" Condition="'$(CurrentSolutionConfigurationContents)' != ''" Outputs="@(HTMLBuildOutput)">
+    <Message Text="The project &quot;HTML&quot; is not selected for building in solution configuration &quot;Build|.NET&quot;." Condition=" ('$(Configuration)' == 'Build') and ('$(Platform)' == '.NET') " />
+    <MSBuild Projects="HTML\HTML.csproj" Properties="Configuration=Release; Platform=AnyCPU; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Build') and ('$(Platform)' == 'Any CPU') ">
+      <Output TaskParameter="TargetOutputs" ItemName="HTMLBuildOutput" />
+    </MSBuild>
+    <MSBuild Projects="HTML\HTML.csproj" Properties="Configuration=Release; Platform=AnyCPU; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Build') and ('$(Platform)' == 'Mixed Platforms') ">
+      <Output TaskParameter="TargetOutputs" ItemName="HTMLBuildOutput" />
+    </MSBuild>
+    <Message Text="The project &quot;HTML&quot; is not selected for building in solution configuration &quot;Debug|.NET&quot;." Condition=" ('$(Configuration)' == 'Debug') and ('$(Platform)' == '.NET') " />
+    <MSBuild Projects="HTML\HTML.csproj" Properties="Configuration=Debug; Platform=AnyCPU; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Debug') and ('$(Platform)' == 'Any CPU') ">
+      <Output TaskParameter="TargetOutputs" ItemName="HTMLBuildOutput" />
+    </MSBuild>
+    <Message Text="The project &quot;HTML&quot; is not selected for building in solution configuration &quot;Debug|Mixed Platforms&quot;." Condition=" ('$(Configuration)' == 'Debug') and ('$(Platform)' == 'Mixed Platforms') " />
+    <Message Text="The project &quot;HTML&quot; is not selected for building in solution configuration &quot;Release|.NET&quot;." Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == '.NET') " />
+    <MSBuild Projects="HTML\HTML.csproj" Properties="Configuration=Release; Platform=AnyCPU; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == 'Any CPU') ">
+      <Output TaskParameter="TargetOutputs" ItemName="HTMLBuildOutput" />
+    </MSBuild>
+    <MSBuild Projects="HTML\HTML.csproj" Properties="Configuration=Release; Platform=AnyCPU; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == 'Mixed Platforms') ">
+      <Output TaskParameter="TargetOutputs" ItemName="HTMLBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="HTML:Clean" Condition="'$(CurrentSolutionConfigurationContents)' != ''">
+    <Message Text="The project &quot;HTML&quot; is not selected for building in solution configuration &quot;Build|.NET&quot;." Condition=" ('$(Configuration)' == 'Build') and ('$(Platform)' == '.NET') " />
+    <MSBuild Projects="HTML\HTML.csproj" Targets="Clean" Properties="Configuration=Release; Platform=AnyCPU; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Build') and ('$(Platform)' == 'Any CPU') " />
+    <MSBuild Projects="HTML\HTML.csproj" Targets="Clean" Properties="Configuration=Release; Platform=AnyCPU; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Build') and ('$(Platform)' == 'Mixed Platforms') " />
+    <Message Text="The project &quot;HTML&quot; is not selected for building in solution configuration &quot;Debug|.NET&quot;." Condition=" ('$(Configuration)' == 'Debug') and ('$(Platform)' == '.NET') " />
+    <MSBuild Projects="HTML\HTML.csproj" Targets="Clean" Properties="Configuration=Debug; Platform=AnyCPU; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Debug') and ('$(Platform)' == 'Any CPU') " />
+    <Message Text="The project &quot;HTML&quot; is not selected for building in solution configuration &quot;Debug|Mixed Platforms&quot;." Condition=" ('$(Configuration)' == 'Debug') and ('$(Platform)' == 'Mixed Platforms') " />
+    <Message Text="The project &quot;HTML&quot; is not selected for building in solution configuration &quot;Release|.NET&quot;." Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == '.NET') " />
+    <MSBuild Projects="HTML\HTML.csproj" Targets="Clean" Properties="Configuration=Release; Platform=AnyCPU; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == 'Any CPU') " />
+    <MSBuild Projects="HTML\HTML.csproj" Targets="Clean" Properties="Configuration=Release; Platform=AnyCPU; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == 'Mixed Platforms') " />
+  </Target>
+  <Target Name="HTML:Rebuild" Condition="'$(CurrentSolutionConfigurationContents)' != ''" Outputs="@(HTMLBuildOutput)">
+    <Message Text="The project &quot;HTML&quot; is not selected for building in solution configuration &quot;Build|.NET&quot;." Condition=" ('$(Configuration)' == 'Build') and ('$(Platform)' == '.NET') " />
+    <MSBuild Projects="HTML\HTML.csproj" Targets="Rebuild" Properties="Configuration=Release; Platform=AnyCPU; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Build') and ('$(Platform)' == 'Any CPU') ">
+      <Output TaskParameter="TargetOutputs" ItemName="HTMLBuildOutput" />
+    </MSBuild>
+    <MSBuild Projects="HTML\HTML.csproj" Targets="Rebuild" Properties="Configuration=Release; Platform=AnyCPU; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Build') and ('$(Platform)' == 'Mixed Platforms') ">
+      <Output TaskParameter="TargetOutputs" ItemName="HTMLBuildOutput" />
+    </MSBuild>
+    <Message Text="The project &quot;HTML&quot; is not selected for building in solution configuration &quot;Debug|.NET&quot;." Condition=" ('$(Configuration)' == 'Debug') and ('$(Platform)' == '.NET') " />
+    <MSBuild Projects="HTML\HTML.csproj" Targets="Rebuild" Properties="Configuration=Debug; Platform=AnyCPU; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Debug') and ('$(Platform)' == 'Any CPU') ">
+      <Output TaskParameter="TargetOutputs" ItemName="HTMLBuildOutput" />
+    </MSBuild>
+    <Message Text="The project &quot;HTML&quot; is not selected for building in solution configuration &quot;Debug|Mixed Platforms&quot;." Condition=" ('$(Configuration)' == 'Debug') and ('$(Platform)' == 'Mixed Platforms') " />
+    <Message Text="The project &quot;HTML&quot; is not selected for building in solution configuration &quot;Release|.NET&quot;." Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == '.NET') " />
+    <MSBuild Projects="HTML\HTML.csproj" Targets="Rebuild" Properties="Configuration=Release; Platform=AnyCPU; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == 'Any CPU') ">
+      <Output TaskParameter="TargetOutputs" ItemName="HTMLBuildOutput" />
+    </MSBuild>
+    <MSBuild Projects="HTML\HTML.csproj" Targets="Rebuild" Properties="Configuration=Release; Platform=AnyCPU; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == 'Mixed Platforms') ">
+      <Output TaskParameter="TargetOutputs" ItemName="HTMLBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="HTML:Publish" Condition="'$(CurrentSolutionConfigurationContents)' != ''">
+    <Message Text="The project &quot;HTML&quot; is not selected for building in solution configuration &quot;Build|.NET&quot;." Condition=" ('$(Configuration)' == 'Build') and ('$(Platform)' == '.NET') " />
+    <MSBuild Projects="HTML\HTML.csproj" Targets="Publish" Properties="Configuration=Release; Platform=AnyCPU; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Build') and ('$(Platform)' == 'Any CPU') " />
+    <MSBuild Projects="HTML\HTML.csproj" Targets="Publish" Properties="Configuration=Release; Platform=AnyCPU; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Build') and ('$(Platform)' == 'Mixed Platforms') " />
+    <Message Text="The project &quot;HTML&quot; is not selected for building in solution configuration &quot;Debug|.NET&quot;." Condition=" ('$(Configuration)' == 'Debug') and ('$(Platform)' == '.NET') " />
+    <MSBuild Projects="HTML\HTML.csproj" Targets="Publish" Properties="Configuration=Debug; Platform=AnyCPU; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Debug') and ('$(Platform)' == 'Any CPU') " />
+    <Message Text="The project &quot;HTML&quot; is not selected for building in solution configuration &quot;Debug|Mixed Platforms&quot;." Condition=" ('$(Configuration)' == 'Debug') and ('$(Platform)' == 'Mixed Platforms') " />
+    <Message Text="The project &quot;HTML&quot; is not selected for building in solution configuration &quot;Release|.NET&quot;." Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == '.NET') " />
+    <MSBuild Projects="HTML\HTML.csproj" Targets="Publish" Properties="Configuration=Release; Platform=AnyCPU; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == 'Any CPU') " />
+    <MSBuild Projects="HTML\HTML.csproj" Targets="Publish" Properties="Configuration=Release; Platform=AnyCPU; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == 'Mixed Platforms') " />
   </Target>
   <Target Name="Build" Condition="'$(CurrentSolutionConfigurationContents)' != ''" Outputs="@(CollectedBuildOutput)">
     <MSBuild Condition="@(BuildLevel0) != ''" Projects="@(BuildLevel0)" Properties="Configuration=%(Configuration); Platform=%(Platform); BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" BuildInParallel="true" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)">

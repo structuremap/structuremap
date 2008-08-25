@@ -33,7 +33,7 @@ namespace StructureMap.Testing.Pipeline
         public void specify_a_constructor_dependency()
         {
             var widget = new ColorWidget("Red");
-            build<ClassWithWidget>(i => i.CtorDependency<IWidget>("widget").Is(x => x.Object(widget))).Widget.
+            build<ClassWithWidget>(instance => instance.CtorDependency<IWidget>("widget").Is(x => x.Object(widget))).Widget.
                 ShouldBeTheSameAs(widget);
         }
 
@@ -56,7 +56,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void specify_a_simple_property()
         {
-            build<SimplePropertyTarget>(i => i.SetProperty(x => x.Name = "Jeremy")).Name.ShouldEqual("Jeremy");
+            build<SimplePropertyTarget>(instance => instance.SetProperty(x => x.Name = "Jeremy")).Name.ShouldEqual("Jeremy");
             build<SimplePropertyTarget>(i => i.SetProperty(x => x.Age = 16)).Age.ShouldEqual(16);
         }
 

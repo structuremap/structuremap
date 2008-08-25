@@ -110,6 +110,7 @@ namespace StructureMap.Graph
 
         public bool HasArguments()
         {
+            if (_ctor == null) return false;
             return _ctor.GetParameters().Length > 0;
         }
 

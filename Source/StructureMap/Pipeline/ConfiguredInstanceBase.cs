@@ -18,13 +18,15 @@ namespace StructureMap.Pipeline
 
         protected ConfiguredInstanceBase(Type pluggedType, string name)
         {
+            // TODO -- need defensive check HERE!
+            //throw new NotImplementedException("Need to check for public constructor HERE!");
+
             _pluggedType = pluggedType;
             Name = name;
         }
 
-        protected ConfiguredInstanceBase(Type pluggedType)
+        protected ConfiguredInstanceBase(Type pluggedType) : this(pluggedType, Guid.NewGuid().ToString())
         {
-            _pluggedType = pluggedType;
         }
 
 
