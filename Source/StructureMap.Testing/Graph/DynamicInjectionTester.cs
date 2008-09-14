@@ -18,7 +18,7 @@ namespace StructureMap.Testing.Graph
         [SetUp]
         public void SetUp()
         {
-            ObjectFactory.ReInitialize();
+            ObjectFactory.Reset();
             StructureMapConfiguration.ResetAll();
         }
 

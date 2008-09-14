@@ -16,7 +16,6 @@ namespace StructureMap.Testing
         {
             DataMother.BackupStructureMapConfig();
 
-            ObjectFactory.ReInitialize();
             StructureMapConfiguration.ResetAll();
             DataMother.WriteDocument("Config1.xml");
             DataMother.WriteDocument("Config2.xml");
@@ -27,9 +26,6 @@ namespace StructureMap.Testing
         public void TearDown()
         {
             StructureMapConfiguration.ResetAll();
-            ObjectFactory.Reset();
-
-
             DataMother.RestoreStructureMapConfig();
         }
 
@@ -51,7 +47,6 @@ namespace StructureMap.Testing
 
             StructureMapConfiguration.UseDefaultStructureMapConfigFile = true;
             StructureMapConfiguration.IncludeConfigurationFromNode(doc.DocumentElement, string.Empty);
-            ObjectFactory.Reset();
 
             IPlug<string> service = ObjectFactory.GetInstance<IPlug<string>>();
             Assert.IsNotNull(service);
@@ -60,19 +55,11 @@ namespace StructureMap.Testing
         [Test]
         public void NotTheDefault()
         {
-            try
-            {
-                StructureMapConfiguration.UseDefaultStructureMapConfigFile = false;
-                StructureMapConfiguration.IgnoreStructureMapConfig = true;
-                StructureMapConfiguration.IncludeConfigurationFromFile("Config1.xml");
-                ObjectFactory.Reset();
+            StructureMapConfiguration.UseDefaultStructureMapConfigFile = false;
+            StructureMapConfiguration.IgnoreStructureMapConfig = true;
+            StructureMapConfiguration.IncludeConfigurationFromFile("Config1.xml");
 
-                assertTheDefault("Orange");
-            }
-            finally
-            {
-                DataMother.RestoreStructureMapConfig();
-            }
+            assertTheDefault("Orange");
         }
 
         [Test]

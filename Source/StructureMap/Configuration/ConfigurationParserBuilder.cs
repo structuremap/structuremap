@@ -5,7 +5,16 @@ using StructureMap.Diagnostics;
 
 namespace StructureMap.Configuration
 {
-    public class ConfigurationParserBuilder
+    public interface IConfigurationParserBuilder
+    {
+        bool UseAndEnforceExistenceOfDefaultFile { get; set; }
+        bool IgnoreDefaultFile { get; set; }
+        bool PullConfigurationFromAppConfig { get; set; }
+        void IncludeFile(string filename);
+        void IncludeNode(XmlNode node, string description);
+    }
+
+    public class ConfigurationParserBuilder : IConfigurationParserBuilder
     {
         private readonly GraphLog _log;
         private readonly List<string> _otherFiles = new List<string>();

@@ -19,10 +19,28 @@ namespace StructureMap
         private static List<Registry> _registries;
         private static Registry _registry;
         private static ConfigurationParserBuilder _parserBuilder;
+        private static bool _sealed = false;
+       
 
         static StructureMapConfiguration()
         {
             ResetAll();
+        }
+
+        private static IConfigurationParserBuilder parserBuilder
+        {
+            get
+            {
+                return _parserBuilder;
+            }
+        }
+
+        private static Registry registry
+        {
+            get
+            {
+                return _registry;
+            }
         }
 
         /// <summary>
@@ -31,21 +49,31 @@ namespace StructureMap
         /// </summary>
         public static bool UseDefaultStructureMapConfigFile
         {
-            get { return _parserBuilder.UseAndEnforceExistenceOfDefaultFile; }
-            set { _parserBuilder.UseAndEnforceExistenceOfDefaultFile = value; }
+            get { return parserBuilder.UseAndEnforceExistenceOfDefaultFile; }
+            set { parserBuilder.UseAndEnforceExistenceOfDefaultFile = value; }
         }
 
 
         public static bool IgnoreStructureMapConfig
         {
-            get { return _parserBuilder.IgnoreDefaultFile; }
-            set { _parserBuilder.IgnoreDefaultFile = value; }
+            get { return parserBuilder.IgnoreDefaultFile; }
+            set { parserBuilder.IgnoreDefaultFile = value; }
         }
 
         public static bool PullConfigurationFromAppConfig
         {
-            get { return _parserBuilder.PullConfigurationFromAppConfig; }
-            set { _parserBuilder.PullConfigurationFromAppConfig = value; }
+            get { return parserBuilder.PullConfigurationFromAppConfig; }
+            set { parserBuilder.PullConfigurationFromAppConfig = value; }
+        }
+
+        /// <summary>
+        /// Programmatically adds a &lt;StructureMap&gt; node containing Xml configuration
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="description">A description of this node source for troubleshooting purposes</param>
+        public static void IncludeConfigurationFromNode(XmlNode node, string description)
+        {
+            parserBuilder.IncludeNode(node, string.Empty);
         }
 
 
@@ -78,6 +106,10 @@ namespace StructureMap
         /// </summary>
         public static void ResetAll()
         {
+            PluginCache.ResetAll();
+
+            _sealed = false;
+
             _log = new GraphLog();
             _parserBuilder = new ConfigurationParserBuilder(_log);
             _registry = new Registry();
@@ -87,18 +119,19 @@ namespace StructureMap
             IgnoreStructureMapConfig = false;
 
             PluginCache.ResetAll();
+            ObjectFactory.Reset();
         }
 
         public static void RegisterInterceptor(TypeInterceptor interceptor)
         {
-            _registry.RegisterInterceptor(interceptor);
+            registry.RegisterInterceptor(interceptor);
         }
 
         /// <summary>
         /// Builds a PluginGraph object for the current configuration.  Used by ObjectFactory.
         /// </summary>
         /// <returns></returns>
-        public static PluginGraph GetPluginGraph()
+        internal static PluginGraph GetPluginGraph()
         {
             ConfigurationParser[] parsers = _parserBuilder.GetParsers();
             
@@ -112,18 +145,10 @@ namespace StructureMap
         /// <param name="filename"></param>
         public static void IncludeConfigurationFromFile(string filename)
         {
-            _parserBuilder.IncludeFile(filename);
+            parserBuilder.IncludeFile(filename);
         }
 
-        /// <summary>
-        /// Programmatically adds a &lt;StructureMap&gt; node containing Xml configuration
-        /// </summary>
-        /// <param name="node"></param>
-        /// <param name="description">A description of this node source for troubleshooting purposes</param>
-        public static void IncludeConfigurationFromNode(XmlNode node, string description)
-        {
-            _parserBuilder.IncludeNode(node, string.Empty);
-        }
+
 
         /// <summary>
         /// Programmatically determine Assembly's to be scanned for attribute configuration
@@ -131,7 +156,7 @@ namespace StructureMap
         /// <returns></returns>
         public static ScanAssembliesExpression ScanAssemblies()
         {
-            return new ScanAssembliesExpression(_registry);
+            return registry.ScanAssemblies();
         }
 
         /// <summary>
@@ -141,7 +166,7 @@ namespace StructureMap
         /// <returns></returns>
         public static CreatePluginFamilyExpression<PLUGINTYPE> BuildInstancesOf<PLUGINTYPE>()
         {
-            return _registry.BuildInstancesOf<PLUGINTYPE>();
+            return registry.BuildInstancesOf<PLUGINTYPE>();
         }
 
         /// <summary>
@@ -151,12 +176,12 @@ namespace StructureMap
         /// <returns></returns>
         public static CreatePluginFamilyExpression<PLUGINTYPE> ForRequestedType<PLUGINTYPE>()
         {
-            return _registry.BuildInstancesOf<PLUGINTYPE>();
+            return registry.BuildInstancesOf<PLUGINTYPE>();
         }
 
         public static GenericFamilyExpression ForRequestedType(Type pluginType)
         {
-            return _registry.ForRequestedType(pluginType);
+            return registry.ForRequestedType(pluginType);
         }
 
         /// <summary>
@@ -167,19 +192,19 @@ namespace StructureMap
         [Obsolete]
         public static Registry.ConfiguredInstanceExpression<T> AddInstanceOf<T>()
         {
-            return _registry.AddInstanceOf<T>();
+            return registry.AddInstanceOf<T>();
         }
 
         [Obsolete]
         public static void AddInstanceOf<T>(Func<T> func)
         {
-            _registry.AddInstanceOf<T>(new ConstructorInstance<T>(func));
+            registry.AddInstanceOf<T>(new ConstructorInstance<T>(func));
         }
 
         [Obsolete]
         public static void AddInstanceOf<T>(Instance instance)
         {
-            _registry.ForRequestedType<T>().AddInstance(instance);
+            registry.ForRequestedType<T>().AddInstance(instance);
         }
 
 
@@ -193,20 +218,7 @@ namespace StructureMap
         [Obsolete]
         public static LiteralInstance AddInstanceOf<T>(T target)
         {
-            return _registry.AddInstanceOf(target);
-        }
-
-        /// <summary>
-        /// Adds a Prototype (GoF) instance of Type T.  The actual prototype object must implement the
-        /// ICloneable interface.  When this instance of T is requested, StructureMap will
-        /// return a cloned copy of the originally registered prototype object.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="prototype"></param>
-        /// <returns></returns>
-        public static PrototypeInstance AddPrototypeInstanceOf<T>(T prototype)
-        {
-            return _registry.AddPrototypeInstanceOf(prototype);
+            return registry.AddInstanceOf(target);
         }
 
         /// <summary>
@@ -216,7 +228,7 @@ namespace StructureMap
         /// <returns></returns>
         public static ProfileExpression CreateProfile(string profileName)
         {
-            return _registry.CreateProfile(profileName);
+            return registry.CreateProfile(profileName);
         }
 
         /// <summary>
@@ -231,9 +243,18 @@ namespace StructureMap
 
         public static void TheDefaultProfileIs(string profileName)
         {
-            _registry.addExpression(graph => graph.ProfileManager.DefaultProfileName = profileName);
+            registry.addExpression(graph => graph.ProfileManager.DefaultProfileName = profileName);
         }
 
 
+        internal static void Seal()
+        {
+            _sealed = true;
+        }
+
+        internal static void Unseal()
+        {
+            _sealed = false;
+        }
     }
 }

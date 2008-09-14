@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Xml;
 using NUnit.Framework;
 using StructureMap.Configuration;
@@ -18,7 +19,6 @@ namespace StructureMap.Testing
         public void SetUp()
         {
             DataMother.RestoreStructureMapConfig();
-            ObjectFactory.ReInitialize();
             StructureMapConfiguration.ResetAll();
         }
 
@@ -47,7 +47,6 @@ namespace StructureMap.Testing
         [Test]
         public void Ignore_the_StructureMap_config_file_even_if_it_exists()
         {
-            StructureMapConfiguration.ResetAll();
             StructureMapConfiguration.IgnoreStructureMapConfig = true;
 
             PluginGraph graph = StructureMapConfiguration.GetPluginGraph();
@@ -93,7 +92,6 @@ namespace StructureMap.Testing
         [Test]
         public void StructureMap_functions_without_StructureMapconfig_file_in_the_default_mode()
         {
-            StructureMapConfiguration.ResetAll();
             DataMother.RemoveStructureMapConfig();
 
             PluginGraph graph = StructureMapConfiguration.GetPluginGraph();
@@ -114,7 +112,6 @@ namespace StructureMap.Testing
         [Test]
         public void Use_the_StructureMap_config_file_if_it_exists()
         {
-            StructureMapConfiguration.ResetAll();
             DataMother.RestoreStructureMapConfig();
 
             PluginGraph graph = StructureMapConfiguration.GetPluginGraph();
@@ -124,7 +121,6 @@ namespace StructureMap.Testing
 		[Test(Description = "Guid test based on problems encountered by Paul Segaro. See http://groups.google.com/group/structuremap-users/browse_thread/thread/34ddaf549ebb14f7?hl=en")]
 		public void TheDefaultInstanceIsALambdaForGuidNewGuid()
 		{
-			StructureMapConfiguration.ResetAll();
 			StructureMapConfiguration.IgnoreStructureMapConfig = true;
 
 			StructureMapConfiguration.ForRequestedType<Guid>().TheDefaultIs(() => Guid.NewGuid());
@@ -135,7 +131,6 @@ namespace StructureMap.Testing
 		[Test(Description = "Guid test based on problems encountered by Paul Segaro. See http://groups.google.com/group/structuremap-users/browse_thread/thread/34ddaf549ebb14f7?hl=en")]
 		public void TheDefaultInstance_has_a_dependency_upon_a_Guid_NewGuid_lambda_generated_instance()
 		{
-			StructureMapConfiguration.ResetAll();
 			StructureMapConfiguration.IgnoreStructureMapConfig = true;
 
 			StructureMapConfiguration.ForRequestedType<Guid>().TheDefaultIs(() => Guid.NewGuid());

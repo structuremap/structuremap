@@ -21,7 +21,6 @@ namespace StructureMap.Testing.Graph
         public void TearDown()
         {
             StructureMapConfiguration.ResetAll();
-            ObjectFactory.Reset();
         }
 
         #endregion

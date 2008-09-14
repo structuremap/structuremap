@@ -14,14 +14,13 @@ namespace StructureMap.Testing.Configuration.DSL
         [SetUp]
         public void SetUp()
         {
-            ObjectFactory.Reset();
+            StructureMapConfiguration.ResetAll();
         }
 
         [TearDown]
         public void TearDown()
         {
             StructureMapConfiguration.ResetAll();
-            ObjectFactory.Reset();
         }
 
         #endregion

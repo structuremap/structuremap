@@ -12,7 +12,6 @@ namespace StructureMap.Testing.Configuration.DSL
         public void SetUp()
         {
             StructureMapConfiguration.ResetAll();
-            ObjectFactory.Reset();
         }
 
         #endregion

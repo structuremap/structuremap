@@ -23,27 +23,24 @@ namespace StructureMap
         private static event Notify _notify;
 
         /// <summary>
-        /// Used for testing only (kills singletons). In non-test scenarios, use Reset() instead.
-        /// </summary>
-        public static void ReInitialize()
-        {
-            _profile = string.Empty;
-            _notify = null;
-            _manager = null;
-        }
-
-        /// <summary>
         /// Restarts ObjectFactory and blows away all Singleton's and cached instances.  Use with caution.
         /// </summary>
         public static void Reset()
         {
-            _manager = buildManager();
-
-            if (_notify != null)
+            lock (_lockObject)
             {
-                _notify();
+                StructureMapConfiguration.Unseal();
+
+                _manager = null;
+                _profile = string.Empty;
+
+                if (_notify != null)
+                {
+                    _notify();
+                }
             }
         }
+
 
         /// <summary>
         /// Creates an instance of the concrete type specified.  Dependencies are inferred from the constructor function of the type
@@ -128,7 +125,7 @@ namespace StructureMap
                     {
                         if (_manager == null)
                         {
-                            Reset();
+                            _manager = buildManager();
                         }
                     }
                 }
@@ -214,6 +211,7 @@ namespace StructureMap
         private static Container buildManager()
         {
             PluginGraph graph = StructureMapConfiguration.GetPluginGraph();
+            StructureMapConfiguration.Seal();
 
             Container container = new Container(graph);
             container.SetDefaultsToProfile(_profile);

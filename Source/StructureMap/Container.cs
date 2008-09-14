@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
 using StructureMap.Diagnostics;
 using StructureMap.Exceptions;
@@ -12,6 +13,31 @@ using StructureMap.Pipeline;
 
 namespace StructureMap
 {
+    public class ConfigurationExpression
+    {
+        private readonly List<Registry> _registries = new List<Registry>();
+        private readonly List<ConfigurationParser> _parsers = new List<ConfigurationParser>();
+
+        internal ConfigurationExpression(PluginGraphBuilder builder)
+        {
+        }
+
+        public void AddRegistry(Registry registry)
+        {
+            _registries.Add(registry);
+        }
+
+        public void AddConfigurationFromXmlFile(string fileName)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal PluginGraph BuildGraph()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     /// <summary>
     /// A collection of IInstanceFactory's.
     /// </summary>

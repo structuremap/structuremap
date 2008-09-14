@@ -21,7 +21,6 @@ namespace StructureMap.Testing.Configuration.DSL
         public void TearDown()
         {
             StructureMapConfiguration.ResetAll();
-            ObjectFactory.Reset();
         }
 
         #endregion
@@ -31,8 +30,6 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             StructureMapConfiguration.ResetAll();
             StructureMapConfiguration.ScanAssemblies().IncludeAssemblyContainingType<RedGreenRegistry>();
-
-            ObjectFactory.Reset();
 
             List<string> colors = new List<string>();
             foreach (IWidget widget in ObjectFactory.GetAllInstances<IWidget>())

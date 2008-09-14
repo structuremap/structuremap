@@ -62,12 +62,14 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void AddInstanceAndOverrideTheConcreteTypeForADependency()
         {
-            IContainer manager = new Container(
-                registry => registry.AddInstanceOf<Rule>().UsingConcreteType<WidgetRule>().WithName("AWidgetRule")
-                                .Child<IWidget>().IsConcreteType<AWidget>());
+            IContainer container = new Container(
+                registry => registry.AddInstanceOf<Rule>().UsingConcreteType<WidgetRule>()
+                    .WithName("AWidgetRule")
+                    .Child<IWidget>().IsConcreteType<AWidget>());
 
-            var rule = (WidgetRule) manager.GetInstance<Rule>("AWidgetRule");
-            Assert.IsInstanceOfType(typeof (AWidget), rule.Widget);
+            container.GetInstance<Rule>("AWidgetRule")
+                .IsType<WidgetRule>()
+                .Widget.IsType<AWidget>();
         }
 
         [Test, Explicit]
