@@ -29,30 +29,6 @@ namespace StructureMap.Pipeline
         }
 
 
-        protected void mergeIntoThis(ConfiguredInstance instance)
-        {
-            _pluggedType = instance._pluggedType;
-
-            foreach (KeyValuePair<string, string> pair in instance._properties)
-            {
-                if (!_properties.ContainsKey(pair.Key))
-                {
-                    _properties.Add(pair.Key, pair.Value);
-                }
-            }
-
-            foreach (KeyValuePair<string, Instance> pair in instance._children)
-            {
-                if (!_children.ContainsKey(pair.Key))
-                {
-                    _children.Add(pair.Key, pair.Value);
-                }
-            }
-
-            _arrays = instance._arrays;
-        }
-
-
         protected override void preprocess(PluginFamily family)
         {
 

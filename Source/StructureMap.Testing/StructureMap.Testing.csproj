@@ -349,6 +349,7 @@
     <Compile Include="InstanceMementoInstanceCreationTester.cs" />
     <Compile Include="MementoTester.cs" />
     <Compile Include="MergingTester.cs" />
+    <Compile Include="ObjectFactoryInitializeTester.cs" />
     <Compile Include="ObjectFactoryTester.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -381,6 +382,7 @@
     </Compile>
     <Compile Include="SpecificationExtensions.cs" />
     <Compile Include="StructureMapConfigCreator.cs" />
+    <Compile Include="StructureMapConfigurationDefensiveChecksTester.cs" />
     <Compile Include="StructureMapConfigurationTester.cs" />
     <Compile Include="TestData\DataMother.cs">
       <SubType>Code</SubType>

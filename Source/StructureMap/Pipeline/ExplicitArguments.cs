@@ -81,7 +81,7 @@ namespace StructureMap.Pipeline
             args.Configure(this);
             _args = args;
 
-            ConfiguredInstance defaultConfiguration = defaultInstance as ConfiguredInstance;
+            Copyable defaultConfiguration = defaultInstance as Copyable;
             if (defaultConfiguration != null)
             {
                 mergeIntoThis(defaultConfiguration);

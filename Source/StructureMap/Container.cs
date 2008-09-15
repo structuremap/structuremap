@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using System.Xml;
 using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
 using StructureMap.Diagnostics;
@@ -13,13 +14,51 @@ using StructureMap.Pipeline;
 
 namespace StructureMap
 {
-    public class ConfigurationExpression
+    public class InitializationExpression : ConfigurationExpression
     {
-        private readonly List<Registry> _registries = new List<Registry>();
-        private readonly List<ConfigurationParser> _parsers = new List<ConfigurationParser>();
-
-        internal ConfigurationExpression(PluginGraphBuilder builder)
+        internal InitializationExpression()
         {
+            _parserBuilder.IgnoreDefaultFile = false;
+            DefaultProfileName = string.Empty;
+        }
+
+        public bool UseDefaultStructureMapConfigFile
+        {
+            set { _parserBuilder.UseAndEnforceExistenceOfDefaultFile = value; }
+        }
+
+        public bool IgnoreStructureMapConfig
+        {
+            set { _parserBuilder.IgnoreDefaultFile = value; }
+        }
+
+        public bool PullConfigurationFromAppConfig
+        {
+            set { _parserBuilder.PullConfigurationFromAppConfig = value; }
+        }
+
+        public string DefaultProfileName { get; set; }
+    }
+
+    public class ConfigurationExpression : Registry
+    {
+        protected readonly GraphLog _log = new GraphLog();
+        private readonly List<Registry> _registries = new List<Registry>();
+        protected readonly ConfigurationParserBuilder _parserBuilder;
+
+        internal ConfigurationExpression()
+        {
+            _parserBuilder = new ConfigurationParserBuilder(_log);
+            _parserBuilder.IgnoreDefaultFile = true;
+            _parserBuilder.PullConfigurationFromAppConfig = false;
+
+            _registries.Add(this);
+            
+        }
+
+        public void AddRegistry<T>() where T : Registry, new()
+        {
+            AddRegistry(new T());
         }
 
         public void AddRegistry(Registry registry)
@@ -29,12 +68,29 @@ namespace StructureMap
 
         public void AddConfigurationFromXmlFile(string fileName)
         {
-            throw new NotImplementedException();
+            _parserBuilder.IncludeFile(fileName);
+        }
+
+        public void AddConfigurationFromNode(XmlNode node)
+        {
+            _parserBuilder.IncludeNode(node, "Xml configuration");
+        }
+
+        public bool IncludeConfigurationFromConfigFile
+        {
+            set
+            {
+                _parserBuilder.UseAndEnforceExistenceOfDefaultFile = value;
+            }
+            
         }
 
         internal PluginGraph BuildGraph()
         {
-            throw new NotImplementedException();
+            var parsers = _parserBuilder.GetParsers();
+            PluginGraphBuilder builder = new PluginGraphBuilder(parsers, _registries.ToArray(), _log);
+
+            return builder.Build();
         }
     }
 
@@ -46,12 +102,12 @@ namespace StructureMap
         private InterceptorLibrary _interceptorLibrary;
         private PipelineGraph _pipelineGraph;
 
-        public Container(Action<Registry> action)
+        public Container(Action<ConfigurationExpression> action)
         {
-            Registry registry = new Registry();
-            action(registry);
+            ConfigurationExpression expression = new ConfigurationExpression();
+            action(expression);
 
-            construct(registry.Build());
+            construct(expression.BuildGraph());
         }
 
         public Container(Registry registry) : this(registry.Build())

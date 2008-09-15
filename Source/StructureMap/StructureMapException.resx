@@ -256,4 +256,7 @@
   <data name="280" xml:space="preserve">
     <value>Requested Profile {0} cannot be found</value>
   </data>
+  <data name="50" xml:space="preserve">
+    <value>StructureMapConfiguration cannot be used after ObjectFactory is initialized</value>
+  </data>
 </root>

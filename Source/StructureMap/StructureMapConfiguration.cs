@@ -12,6 +12,7 @@ using StructureMap.Pipeline;
 
 namespace StructureMap
 {
+    [Obsolete("Please put configuration into Registry classes and use the ObjectFactory.Initialize() method for configuring the container")]
     public static class StructureMapConfiguration
     {
         private const string CONFIG_FILE_NAME = "StructureMap.config";
@@ -27,10 +28,19 @@ namespace StructureMap
             ResetAll();
         }
 
+        private static void assertIsNotSealed()
+        {
+            if (_sealed)
+            {
+                throw new StructureMapException(50);
+            }
+        }
+
         private static IConfigurationParserBuilder parserBuilder
         {
             get
             {
+                assertIsNotSealed();
                 return _parserBuilder;
             }
         }
@@ -39,6 +49,7 @@ namespace StructureMap
         {
             get
             {
+                assertIsNotSealed();
                 return _registry;
             }
         }
@@ -81,7 +92,7 @@ namespace StructureMap
         /// Returns the path to the StructureMap.config file
         /// </summary>
         /// <returns></returns>
-        public static string GetStructureMapConfigurationPath()
+        internal static string GetStructureMapConfigurationPath()
         {
             string basePath = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
             string configPath = Path.Combine(basePath, CONFIG_FILE_NAME);
@@ -189,19 +200,16 @@ namespace StructureMap
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        [Obsolete]
         public static Registry.ConfiguredInstanceExpression<T> AddInstanceOf<T>()
         {
             return registry.AddInstanceOf<T>();
         }
 
-        [Obsolete]
         public static void AddInstanceOf<T>(Func<T> func)
         {
             registry.AddInstanceOf<T>(new ConstructorInstance<T>(func));
         }
 
-        [Obsolete]
         public static void AddInstanceOf<T>(Instance instance)
         {
             registry.ForRequestedType<T>().AddInstance(instance);
@@ -215,7 +223,6 @@ namespace StructureMap
         /// <typeparam name="T"></typeparam>
         /// <param name="target"></param>
         /// <returns></returns>
-        [Obsolete]
         public static LiteralInstance AddInstanceOf<T>(T target)
         {
             return registry.AddInstanceOf(target);
@@ -238,6 +245,7 @@ namespace StructureMap
         /// <param name="registry"></param>
         public static void AddRegistry(Registry registry)
         {
+            assertIsNotSealed();
             _registries.Add(registry);
         }
 

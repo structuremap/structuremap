@@ -143,6 +143,25 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
+        public void NowDoItWithObjectFactoryItself_with_new_API()
+        {
+            ObjectFactory.Initialize(x =>
+            {
+                x.ForRequestedType<ExplicitTarget>().TheDefault.Is.OfConcreteType<ExplicitTarget>()
+                    .CtorDependency<IProvider>().Is(child => child.OfConcreteType<RedProvider>())
+                    .WithCtorArg("name").EqualTo("Jeremy");
+            });
+
+            // Get the ExplicitTarget without setting an explicit arg for IProvider
+            ObjectFactory.GetInstance<ExplicitTarget>().Provider.IsType<RedProvider>();
+
+            // Now, set the explicit arg for IProvider
+            var theBlueProvider = new BlueProvider();
+            ObjectFactory.With<IProvider>(theBlueProvider).GetInstance<ExplicitTarget>()
+                .Provider.ShouldBeTheSameAs(theBlueProvider);
+        }
+
+        [Test]
         public void OverrideAPrimitiveWithObjectFactory()
         {
             StructureMapConfiguration.ForRequestedType<ExplicitTarget>().TheDefaultIs(

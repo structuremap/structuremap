@@ -41,6 +41,21 @@ namespace StructureMap
             }
         }
 
+        public static void Initialize(Action<InitializationExpression> action)
+        {
+            lock (typeof(ObjectFactory))
+            {
+                InitializationExpression expression = new InitializationExpression();
+                action(expression);
+
+                var graph = expression.BuildGraph();
+                StructureMapConfiguration.Seal();
+
+                _manager = new Container(graph);
+                Profile = expression.DefaultProfileName;
+            }            
+        }
+
 
         /// <summary>
         /// Creates an instance of the concrete type specified.  Dependencies are inferred from the constructor function of the type

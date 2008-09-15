@@ -1,10 +1,20 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using StructureMap.Graph;
 
 namespace StructureMap.Pipeline
 {
-    public abstract class ConfiguredInstanceBase<T> : Instance, IConfiguredInstance, IStructuredInstance
+    public interface Copyable
+    {
+        Type PluggedType { get; }
+        Dictionary<string, string> Properties { get; }
+        Dictionary<string, Instance> Children { get; }
+        Dictionary<string, Instance[]> Arrays { get; }
+    }
+
+
+    public abstract class ConfiguredInstanceBase<T> : Instance, IConfiguredInstance, IStructuredInstance, Copyable
     {
         protected Dictionary<string, Instance> _children = new Dictionary<string, Instance>();
         protected Dictionary<string, string> _properties = new Dictionary<string, string>();
@@ -34,6 +44,8 @@ namespace StructureMap.Pipeline
         {
             get { return _pluggedType; }
         }
+
+
 
         Instance IStructuredInstance.GetChild(string name)
         {
@@ -195,6 +207,49 @@ namespace StructureMap.Pipeline
         void IConfiguredInstance.SetChildArray(string name, Type type, Instance[] children)
         {
             setChildArray(name, children);
+        }
+
+        protected void mergeIntoThis(Copyable instance)
+        {
+            _pluggedType = instance.PluggedType;
+
+            foreach (KeyValuePair<string, string> pair in instance.Properties)
+            {
+                if (!_properties.ContainsKey(pair.Key))
+                {
+                    _properties.Add(pair.Key, pair.Value);
+                }
+            }
+
+            foreach (KeyValuePair<string, Instance> pair in instance.Children)
+            {
+                if (!_children.ContainsKey(pair.Key))
+                {
+                    _children.Add(pair.Key, pair.Value);
+                }
+            }
+
+            _arrays = instance.Arrays;
+        }
+
+        Type Copyable.PluggedType
+        {
+            get { return _pluggedType; }
+        }
+
+        Dictionary<string, string> Copyable.Properties
+        {
+            get { return _properties; }
+        }
+
+        Dictionary<string, Instance> Copyable.Children
+        {
+            get { return _children; }
+        }
+
+        Dictionary<string, Instance[]> Copyable.Arrays
+        {
+            get { return _arrays; }
         }
     }
 }

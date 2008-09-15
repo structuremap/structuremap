@@ -48,10 +48,7 @@ namespace StructureMap.Testing
         public void Ignore_the_StructureMap_config_file_even_if_it_exists()
         {
             StructureMapConfiguration.IgnoreStructureMapConfig = true;
-
-            PluginGraph graph = StructureMapConfiguration.GetPluginGraph();
-
-            Assert.AreEqual(0, graph.FamilyCount);
+            StructureMapConfiguration.GetPluginGraph().FamilyCount.ShouldEqual(0);
         }
 
 
@@ -61,9 +58,8 @@ namespace StructureMap.Testing
             StructureMapConfiguration.UseDefaultStructureMapConfigFile = false;
             StructureMapConfiguration.PullConfigurationFromAppConfig = true;
 
-            ColorThing<string, bool> thing =
-                (ColorThing<string, bool>) ObjectFactory.GetInstance<IThing<string, bool>>();
-            Assert.AreEqual("Cornflower", thing.Color, "Cornflower is the color from the App.config file");
+            ObjectFactory.GetInstance<IThing<string, bool>>()
+                .IsType<ColorThing<string, bool>>().Color.ShouldEqual("Cornflower");
         }
 
 
@@ -94,7 +90,7 @@ namespace StructureMap.Testing
         {
             DataMother.RemoveStructureMapConfig();
 
-            PluginGraph graph = StructureMapConfiguration.GetPluginGraph();
+            StructureMapConfiguration.GetPluginGraph().ShouldNotBeNull();
         }
 
         [Test]
@@ -106,16 +102,14 @@ namespace StructureMap.Testing
             StructureMapConfiguration.TheDefaultProfileIs(theDefaultProfileName);
 
             PluginGraph graph = StructureMapConfiguration.GetPluginGraph();
-            Assert.AreEqual(theDefaultProfileName, graph.ProfileManager.DefaultProfileName);
+            graph.ProfileManager.DefaultProfileName.ShouldEqual(theDefaultProfileName);
         }
 
         [Test]
         public void Use_the_StructureMap_config_file_if_it_exists()
         {
             DataMother.RestoreStructureMapConfig();
-
-            PluginGraph graph = StructureMapConfiguration.GetPluginGraph();
-            Assert.IsTrue(graph.FamilyCount > 0);
+            StructureMapConfiguration.GetPluginGraph().FamilyCount.ShouldBeGreaterThan(0);
         }
 
 		[Test(Description = "Guid test based on problems encountered by Paul Segaro. See http://groups.google.com/group/structuremap-users/browse_thread/thread/34ddaf549ebb14f7?hl=en")]

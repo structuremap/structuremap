@@ -17,40 +17,11 @@ namespace StructureMap.Testing
         [SetUp]
         public void SetUp()
         {
-            _event = new ManualResetEvent(false);
-            DataMother.WriteDocument("FullTesting.XML");
+            DataMother.RestoreStructureMapConfig();
+            ObjectFactory.Initialize(x => x.UseDefaultStructureMapConfigFile = true);
         }
 
         #endregion
-
-        private ManualResetEvent _event;
-
-        private void markDone()
-        {
-            _event.Set();
-        }
-
-        private void modifyXml(string Color)
-        {
-            XmlDocument doc = new XmlDocument();
-            doc.Load("StructureMap.config");
-            XmlNode node =
-                doc.DocumentElement.SelectSingleNode("PluginFamily[@Type='StructureMap.Testing.Widget.Rule']");
-            node.Attributes["DefaultKey"].Value = Color;
-            doc.Save("StructureMap.config");
-        }
-
-        private void timeout()
-        {
-            Thread thread = new Thread(signal);
-            thread.Start();
-        }
-
-        private void signal()
-        {
-            Thread.Sleep(500);
-            _event.Set();
-        }
 
         [Test]
         public void SmokeTestGetAllInstances()

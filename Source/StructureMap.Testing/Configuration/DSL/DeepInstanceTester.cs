@@ -11,7 +11,7 @@ namespace StructureMap.Testing.Configuration.DSL
     {
         private readonly Thing _prototype = new Thing(4, "Jeremy", .333, new WidgetRule(new ColorWidget("yellow")));
 
-        private void assertThingMatches(Action<Registry> action)
+        private void assertThingMatches(Action<ConfigurationExpression> action)
         {
             IContainer manager = new Container(action);
             Thing actual = manager.GetInstance<Thing>();
