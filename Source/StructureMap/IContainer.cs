@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using StructureMap.Configuration.DSL;
+using StructureMap.Graph;
 using StructureMap.Pipeline;
 
 namespace StructureMap
@@ -67,5 +68,6 @@ namespace StructureMap
         IExplicitProperty With(string argName);
         void AssertConfigurationIsValid();
         object GetInstance(Type type, ExplicitArguments args);
+        PluginGraph PluginGraph { get; }
     }
 }

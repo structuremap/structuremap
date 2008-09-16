@@ -61,8 +61,8 @@ namespace StructureMap.Testing.Pipeline
         public void Build_happy_path()
         {
             MockRepository mocks = new MockRepository();
-            InstanceBuilder builder = mocks.CreateMock<InstanceBuilder>();
-            BuildSession session = mocks.CreateMock<BuildSession>();
+            InstanceBuilder builder = mocks.StrictMock<InstanceBuilder>();
+            BuildSession session = mocks.StrictMock<BuildSession>();
             object theObjectBuilt = new object();
 
             ConfiguredInstance instance = new ConfiguredInstance(GetType());
@@ -183,7 +183,7 @@ namespace StructureMap.Testing.Pipeline
 
             Type thePluginType = typeof (IGateway);
             Type thePluggedType = GetType();
-            InstanceBuilder builder = mocks.CreateMock<InstanceBuilder>();
+            InstanceBuilder builder = mocks.StrictMock<InstanceBuilder>();
 
             ConfiguredInstance instance = new ConfiguredInstance(thePluggedType);
 
@@ -213,7 +213,7 @@ namespace StructureMap.Testing.Pipeline
         public void Trying_to_build_with_an_InvalidCastException_will_throw_error_206()
         {
             MockRepository mocks = new MockRepository();
-            InstanceBuilder builder = mocks.CreateMock<InstanceBuilder>();
+            InstanceBuilder builder = mocks.StrictMock<InstanceBuilder>();
             Expect.Call(builder.BuildInstance(null, null)).Throw(new InvalidCastException());
             LastCall.IgnoreArguments();
             mocks.Replay(builder);
@@ -229,7 +229,7 @@ namespace StructureMap.Testing.Pipeline
         public void Trying_to_build_with_an_unknown_exception_will_throw_error_207()
         {
             MockRepository mocks = new MockRepository();
-            InstanceBuilder builder = mocks.CreateMock<InstanceBuilder>();
+            InstanceBuilder builder = mocks.StrictMock<InstanceBuilder>();
             Expect.Call(builder.BuildInstance(null, null)).Throw(new Exception());
             LastCall.IgnoreArguments();
             mocks.Replay(builder);

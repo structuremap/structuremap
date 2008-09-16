@@ -191,7 +191,7 @@ namespace StructureMap.Testing.Pipeline
             var container =
                 new Container(
                     r =>
-                    r.FillAllPropertiesOfType<Rule>().TheDefaultIs(new ColorRule("Red")));
+                    r.FillAllPropertiesOfType<Rule>().TheDefault.Is.Object(new ColorRule("Red")));
 
             container.GetInstance<ClassWithDependency>().Rule.ShouldBeOfType(typeof(ColorRule));
         }
@@ -215,7 +215,7 @@ namespace StructureMap.Testing.Pipeline
                 r.ForRequestedType<ClassWithDependency>().TheDefaultIs(
                     Instance<ClassWithDependency>().Child<Rule>().IsAutoFilled());
 
-                r.ForRequestedType<Rule>().TheDefaultIs(new ColorRule("Green"));
+                r.ForRequestedType<Rule>().TheDefault.Is.Object(new ColorRule("Green"));
             });
 
                                      

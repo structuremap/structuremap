@@ -148,12 +148,12 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void PlaceMemberInArrayByReference()
         {
-            IContainer manager = new Container(registry =>
+            IContainer manager = new Container(r =>
             {
-                registry.AddInstanceOf<IHandler>().UsingConcreteType<Handler1>().WithName("One");
-                registry.AddInstanceOf<IHandler>().UsingConcreteType<Handler2>().WithName("Two");
+                r.InstanceOf<IHandler>().Is.OfConcreteType<Handler1>().WithName("One");
+                r.InstanceOf<IHandler>().Is.OfConcreteType<Handler2>().WithName("Two");
 
-                registry.ForRequestedType<Processor>()
+                r.ForRequestedType<Processor>()
                     .TheDefaultIs(
                     Instance<Processor>()
                         .WithProperty("name").EqualTo("Jeremy")
@@ -176,8 +176,8 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             IContainer manager = new Container(registry =>
             {
-                registry.AddInstanceOf<IHandler>().UsingConcreteType<Handler1>().WithName("One");
-                registry.AddInstanceOf<IHandler>().UsingConcreteType<Handler2>().WithName("Two");
+                registry.InstanceOf<IHandler>().Is.OfConcreteType<Handler1>().WithName("One");
+                registry.InstanceOf<IHandler>().Is.OfConcreteType<Handler2>().WithName("Two");
 
                 registry.ForRequestedType<Processor>().TheDefault.Is.OfConcreteType<Processor>()
                     .WithCtorArg("name").EqualTo("Jeremy")
@@ -221,6 +221,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             IContainer container = new Container(r =>
             {
+// ReSharper disable ConvertToLambdaExpression
                 r.ForRequestedType<Processor>().TheDefault.Is.OfConcreteType<Processor>()
                     .WithCtorArg("name").EqualTo("Jeremy")
                     .TheArrayOf<IHandler>().Contains(x =>
@@ -229,8 +230,8 @@ namespace StructureMap.Testing.Configuration.DSL
                         x.OfConcreteType<Handler2>();
                         x.OfConcreteType<Handler3>();
                     });
+// ReSharper restore ConvertToLambdaExpression
 
-                int number = 0;
             });
 
             var processor = container.GetInstance<Processor>();

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework;
-using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Pipeline;
@@ -18,7 +17,6 @@ namespace StructureMap.Testing.Graph
         [SetUp]
         public void SetUp()
         {
-            ObjectFactory.Reset();
             StructureMapConfiguration.ResetAll();
         }
 
@@ -30,8 +28,87 @@ namespace StructureMap.Testing.Graph
 
         private IInstanceFactory getISomethingFactory()
         {
-            PluginFamily family = new PluginFamily(typeof (ISomething));
+            var family = new PluginFamily(typeof (ISomething));
             return new InstanceFactory(family);
+        }
+
+        public interface IService<T>
+        {
+        }
+
+        public class Service1<T> : IService<T>
+        {
+        }
+
+        public class Service2<T> : IService<T>
+        {
+        }
+
+        public class Service3<T> : IService<T>
+        {
+        }
+
+        [PluginFamily("Default")]
+        public interface IThingy
+        {
+        }
+
+        [Pluggable("Default")]
+        public class TheThingy : IThingy
+        {
+        }
+
+
+        public class TheWidget : IWidget
+        {
+            #region IWidget Members
+
+            public void DoSomething()
+            {
+                throw new NotImplementedException();
+            }
+
+            #endregion
+        }
+
+        [Test]
+        public void Add_an_assembly_in_the_Configure()
+        {
+            var container = new Container();
+            container.Configure(registry => { registry.ScanAssemblies().IncludeTheCallingAssembly(); });
+
+            Assert.IsInstanceOfType(typeof (TheThingy), container.GetInstance<IThingy>());
+        }
+
+        [Test]
+        public void Add_an_assembly_on_the_fly_and_pick_up_plugins()
+        {
+            var container = new Container();
+            container.Configure(
+                registry => { registry.ScanAssemblies().IncludeTheCallingAssembly().AddAllTypesOf<IWidget>(); });
+
+            IList<IWidget> instances = container.GetAllInstances<IWidget>();
+            bool found = false;
+            foreach (IWidget widget in instances)
+            {
+                found |= widget.GetType().Equals(typeof (TheWidget));
+            }
+
+            Assert.IsTrue(found);
+        }
+
+        [Test]
+        public void Add_generic_stuff_in_configure()
+        {
+            var container = new Container();
+            container.Configure(registry =>
+            {
+                registry.ForRequestedType(typeof (IService<>))
+                    .AddConcreteType(typeof (Service1<>))
+                    .AddConcreteType(typeof (Service2<>));
+            });
+
+            Assert.AreEqual(2, container.GetAllInstances<IService<string>>().Count);
         }
 
         [Test]
@@ -55,7 +132,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void AddInstanceFromObjectFactory()
         {
-            SomethingOne one = new SomethingOne();
+            var one = new SomethingOne();
             ObjectFactory.Inject<ISomething>(one);
 
             Assert.AreSame(one, ObjectFactory.GetInstance<ISomething>());
@@ -65,10 +142,13 @@ namespace StructureMap.Testing.Graph
         public void AddInstanceToInstanceManagerWhenTheInstanceFactoryDoesNotExist()
         {
             IContainer container = new Container(new PluginGraph());
-            container.Configure(registry =>
+            container.Configure(r =>
             {
-                registry.AddInstanceOf(_red).WithName("Red");
-                registry.AddInstanceOf(_blue).WithName("Blue");
+                r.ForRequestedType<IService>().AddInstances(x =>
+                {
+                    x.Object(_red).WithName("Red");
+                    x.Object(_blue).WithName("Blue");
+                });
             });
 
             Assert.AreSame(_red, container.GetInstance(typeof (IService), "Red"));
@@ -79,10 +159,13 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void AddNamedInstanceByType()
         {
-            ObjectFactory.Configure(registry =>
+            ObjectFactory.Configure(r =>
             {
-                registry.AddInstanceOf<ISomething>().UsingConcreteType<SomethingOne>().WithName("One");
-                registry.AddInstanceOf<ISomething>().UsingConcreteType<SomethingTwo>().WithName("Two");
+                r.ForRequestedType<ISomething>().AddInstances(x =>
+                {
+                    x.OfConcreteType<SomethingOne>().WithName("One");
+                    x.OfConcreteType<SomethingTwo>().WithName("Two");
+                });
             });
 
             Assert.IsInstanceOfType(typeof (SomethingOne), ObjectFactory.GetNamedInstance<ISomething>("One"));
@@ -92,13 +175,16 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void AddNamedInstanceToobjectFactory()
         {
-            SomethingOne one = new SomethingOne();
-            SomethingOne two = new SomethingOne();
+            var one = new SomethingOne();
+            var two = new SomethingOne();
 
-            ObjectFactory.Configure(registry =>
+            ObjectFactory.Configure(r =>
             {
-                registry.AddInstanceOf<ISomething>(one).WithName("One");
-                registry.AddInstanceOf<ISomething>(two).WithName("Two");
+                r.ForRequestedType<ISomething>().AddInstances(x =>
+                {
+                    x.Object(one).WithName("One");
+                    x.Object(two).WithName("Two");
+                });
             });
 
             Assert.AreSame(one, ObjectFactory.GetNamedInstance<ISomething>("One"));
@@ -109,10 +195,10 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void AddPluginForTypeWhenThePluginDoesNotAlreadyExistsDoesNothing()
         {
-            PluginGraph pluginGraph = new PluginGraph();
+            var pluginGraph = new PluginGraph();
             IContainer container = new Container(pluginGraph);
             container.Configure(
-                registry => { registry.AddInstanceOf<ISomething>().UsingConcreteType<SomethingOne>(); });
+                r => { r.InstanceOf<ISomething>().Is.OfConcreteType<SomethingOne>(); });
 
             IList<ISomething> list = container.GetAllInstances<ISomething>();
 
@@ -145,7 +231,7 @@ namespace StructureMap.Testing.Graph
         public void InjectType()
         {
             ObjectFactory.Configure(
-                registry => { registry.AddInstanceOf<ISomething>().UsingConcreteType<SomethingOne>(); });
+                r => r.InstanceOf<ISomething>().Is.OfConcreteType<SomethingOne>());
 
             IList<ISomething> list = ObjectFactory.GetAllInstances<ISomething>();
 
@@ -176,77 +262,12 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void OverwriteInstanceFromObjectFactory()
         {
-            SomethingOne one = new SomethingOne();
-            SomethingOne two = new SomethingOne();
+            var one = new SomethingOne();
+            var two = new SomethingOne();
             ObjectFactory.Inject<ISomething>(one);
             ObjectFactory.Inject<ISomething>(two);
 
             Assert.AreSame(two, ObjectFactory.GetInstance<ISomething>());
-        }
-
-        [Test]
-        public void Add_generic_stuff_in_configure()
-        {
-            Container container = new Container();
-            container.Configure(registry =>
-            {
-                registry.ForRequestedType(typeof (IService<>))
-                    .AddConcreteType(typeof (Service1<>))
-                    .AddConcreteType(typeof (Service2<>));
-            });
-
-            Assert.AreEqual(2, container.GetAllInstances<IService<string>>().Count);
-        }
-
-        [Test]
-        public void Add_an_assembly_in_the_Configure()
-        {
-            Container container = new Container();
-            container.Configure(registry =>
-            {
-                registry.ScanAssemblies().IncludeTheCallingAssembly();
-            });
-
-            Assert.IsInstanceOfType(typeof(TheThingy), container.GetInstance<IThingy>());
-        }
-
-        [Test]
-        public void Add_an_assembly_on_the_fly_and_pick_up_plugins()
-        {
-            Container container = new Container();
-            container.Configure(registry =>
-            {
-                registry.ScanAssemblies().IncludeTheCallingAssembly().AddAllTypesOf<IWidget>();
-            });
-
-            IList<IWidget> instances = container.GetAllInstances<IWidget>();
-            bool found = false;
-            foreach (IWidget widget in instances)
-            {
-                found |= widget.GetType().Equals(typeof (TheWidget));
-            }
-
-            Assert.IsTrue(found);
-        }
-
-        public interface IService<T>{}
-        public class Service1<T> : IService<T> { }
-        public class Service2<T> : IService<T> { }
-        public class Service3<T> : IService<T> { }
-
-        [PluginFamily("Default")]
-        public interface IThingy{}
-
-        [Pluggable("Default")]
-        public class TheThingy : IThingy{}
-
-
-        public class TheWidget : IWidget
-        {
-            public void DoSomething()
-            {
-                throw new NotImplementedException();
-            }
         }
     }
 

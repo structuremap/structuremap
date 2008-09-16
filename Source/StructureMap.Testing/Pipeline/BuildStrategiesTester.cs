@@ -43,7 +43,7 @@ namespace StructureMap.Testing.Pipeline
         public void BuildPolicy_should_apply_interception()
         {
             MockRepository mocks = new MockRepository();
-            BuildSession buildSession = mocks.CreateMock<BuildSession>();
+            BuildSession buildSession = mocks.StrictMock<BuildSession>();
 
             object firstValue = "first";
             object secondValue = "second";

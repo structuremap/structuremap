@@ -25,7 +25,7 @@ namespace StructureMap.Testing
         private void expectVisits(Registry registry, Action<IPipelineGraphVisitor> action)
         {
             MockRepository mocks = new MockRepository();
-            IPipelineGraphVisitor visitor = mocks.CreateMock<IPipelineGraphVisitor>();
+            IPipelineGraphVisitor visitor = mocks.StrictMock<IPipelineGraphVisitor>();
 
             using (mocks.Record())
             {
@@ -55,9 +55,11 @@ namespace StructureMap.Testing
                 visitor.PluginType(typeof (ISomething), null, null);
                 LastCall.Constraints(Is.Equal(typeof (ISomething)), Is.TypeOf(typeof (ConfiguredInstance)), Is.TypeOf<BuildPolicy>());
 
+                visitor.Instance(typeof(ISomething), null);
+                LastCall.Constraints(Is.Equal(typeof(ISomething)), Is.TypeOf(typeof(ConfiguredInstance)));
+
                 visitor.Instance(typeof (ISomething), null);
-                LastCall.Constraints(Is.Equal(typeof(ISomething)), Is.TypeOf(typeof(ConfiguredInstance)))
-                    .Repeat.Twice();
+                LastCall.Constraints(Is.Equal(typeof(ISomething)), Is.TypeOf(typeof(SmartInstance<SomethingTwo>)));
             });
         }
 
@@ -72,9 +74,12 @@ namespace StructureMap.Testing
             expectVisits(registry, visitor =>
             {
                 visitor.PluginType(typeof(ISomething), null, new BuildPolicy());
+
                 visitor.Instance(typeof (ISomething), null);
-                LastCall.Constraints(Is.Equal(typeof (ISomething)), Is.TypeOf(typeof (ConfiguredInstance)))
-                    .Repeat.Twice();
+                LastCall.Constraints(Is.Equal(typeof (ISomething)), Is.TypeOf(typeof (SmartInstance<SomethingOne>)));
+
+                visitor.Instance(typeof(ISomething), null);
+                LastCall.Constraints(Is.Equal(typeof(ISomething)), Is.TypeOf(typeof(SmartInstance<SomethingTwo>)));
             });
         }
 

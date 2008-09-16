@@ -1,14 +1,11 @@
 using System;
+using StructureMap.Exceptions;
 using StructureMap.Graph;
 
 namespace StructureMap.Diagnostics
 {
     public class DoctorRunner : MarshalByRefObject
     {
-        public DoctorRunner()
-        {
-        }
-
         public override object InitializeLifetimeService()
         {
             return null;
@@ -16,11 +13,11 @@ namespace StructureMap.Diagnostics
 
         public DoctorReport RunReport(string bootstrapperTypeName)
         {
-            var report = new DoctorReport(){Result = DoctorResult.Success};
-            
+            var report = new DoctorReport {Result = DoctorResult.Success};
+
 
             IBootstrapper bootstrapper;
-            try 
+            try
             {
                 var path = new TypePath(bootstrapperTypeName);
                 Type bootstrapperType = path.FindType();
@@ -37,6 +34,28 @@ namespace StructureMap.Diagnostics
             try
             {
                 bootstrapper.BootstrapStructureMap();
+
+                PluginGraph graph = ObjectFactory.PluginGraph;
+
+                if (graph.Log.ErrorCount > 0)
+                {
+                    report.ErrorMessages = graph.Log.BuildFailureMessage();
+                    report.Result = DoctorResult.ConfigurationErrors;
+                }
+                else
+                {
+                    writeConfigurationAndValidate(report, graph);
+                }
+
+
+                return report;
+            }
+            catch (StructureMapConfigurationException ex)
+            {
+                report.ErrorMessages = ex.Message;
+                report.Result = DoctorResult.ConfigurationErrors;
+
+                return report;
             }
             catch (Exception ex)
             {
@@ -46,21 +65,7 @@ namespace StructureMap.Diagnostics
                 return report;
             }
 
-            PluginGraph graph = StructureMapConfiguration.GetPluginGraph();
 
-            if (graph.Log.ErrorCount > 0)
-            {
-                report.ErrorMessages = graph.Log.BuildFailureMessage();
-                report.Result = DoctorResult.ConfigurationErrors;
-            }
-            else
-            {
-                writeConfigurationAndValidate(report, graph);
-            }
-            
-            
-
-            return report;
         }
 
         private void writeConfigurationAndValidate(DoctorReport report, PluginGraph graph)
@@ -69,7 +74,7 @@ namespace StructureMap.Diagnostics
             var writer = new WhatDoIHaveWriter(pipelineGraph);
             report.WhatDoIHave = writer.GetText();
 
-            ValidationBuildSession session = new ValidationBuildSession(pipelineGraph, graph.InterceptorLibrary);
+            var session = new ValidationBuildSession(pipelineGraph, graph.InterceptorLibrary);
             session.PerformValidations();
 
             if (session.HasBuildErrors())
@@ -78,7 +83,7 @@ namespace StructureMap.Diagnostics
             }
             else if (session.HasValidationErrors())
             {
-                report.Result = DoctorResult.ValidationErrors;        
+                report.Result = DoctorResult.ValidationErrors;
             }
 
             if (!session.Success)

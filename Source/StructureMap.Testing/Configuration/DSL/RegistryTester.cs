@@ -54,7 +54,7 @@ namespace StructureMap.Testing.Configuration.DSL
         public void Can_add_an_instance_for_concrete_class_with_no_constructors()
         {
             Registry registry = new Registry();
-            registry.ForRequestedType<ConcreteWithNoConstructor>().TheDefaultIs(() => ConcreteWithNoConstructor.Build());
+            registry.ForRequestedType<ConcreteWithNoConstructor>().TheDefault.Is.ConstructedBy(() => ConcreteWithNoConstructor.Build());
 
             Container container = new Container(registry);
 

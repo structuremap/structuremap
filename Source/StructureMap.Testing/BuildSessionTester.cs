@@ -77,11 +77,14 @@ namespace StructureMap.Testing
         [Test]
         public void If_no_child_array_is_explicitly_defined_return_all_instances()
         {
-            IContainer manager = new Container(registry =>
+            IContainer manager = new Container(r =>
             {
-                registry.AddInstanceOf<IWidget>(new ColorWidget("Red"));
-                registry.AddInstanceOf<IWidget>(new ColorWidget("Blue"));
-                registry.AddInstanceOf<IWidget>(new ColorWidget("Green"));
+                r.ForRequestedType<IWidget>().AddInstances(x =>
+                {
+                    x.Object(new ColorWidget("Red"));
+                    x.Object(new ColorWidget("Blue"));
+                    x.Object(new ColorWidget("Green"));
+                });
             });
 
             WidgetHolder holder = manager.GetInstance<WidgetHolder>();

@@ -86,23 +86,21 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             assertThingMatches(registry =>
             {
-                registry.AddInstanceOf<IWidget>()
-                    .UsingConcreteType<ColorWidget>()
+                registry.InstanceOf<IWidget>()
+                    .Is.OfConcreteType<ColorWidget>()
                     .WithName("Yellow")
                     .WithProperty("color").EqualTo("yellow");
 
-                registry.AddInstanceOf<Rule>()
-                    .UsingConcreteType<WidgetRule>()
+                registry.InstanceOf<Rule>()
+                    .Is.OfConcreteType<WidgetRule>()
                     .WithName("TheWidgetRule")
-                    .Child<IWidget>().IsNamedInstance("Yellow");
+                    .CtorDependency<IWidget>().Is(i => i.References("Yellow"));
 
-                registry.BuildInstancesOf<Thing>().TheDefaultIs(
-                    Instance<Thing>()
-                        .WithProperty("average").EqualTo(.333)
-                        .WithProperty("name").EqualTo("Jeremy")
-                        .WithProperty("count").EqualTo(4)
-                        .Child<Rule>().IsNamedInstance("TheWidgetRule")
-                    );
+                registry.BuildInstancesOf<Thing>().TheDefault.Is.OfConcreteType<Thing>()
+                        .WithCtorArg("average").EqualTo(.333)
+                        .WithCtorArg("name").EqualTo("Jeremy")
+                        .WithCtorArg("count").EqualTo(4)
+                        .CtorDependency<Rule>().Is(i => i.References("TheWidgetRule"));
             });
         }
 

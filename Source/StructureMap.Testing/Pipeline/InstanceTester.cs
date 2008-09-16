@@ -36,8 +36,8 @@ namespace StructureMap.Testing.Pipeline
         public void Instance_Build_Calls_into_its_Interceptor()
         {
             MockRepository mocks = new MockRepository();
-            InstanceInterceptor interceptor = mocks.CreateMock<InstanceInterceptor>();
-            BuildSession buildSession = mocks.CreateMock<BuildSession>();
+            InstanceInterceptor interceptor = mocks.StrictMock<InstanceInterceptor>();
+            BuildSession buildSession = mocks.StrictMock<BuildSession>();
 
 
             InstanceUnderTest instanceUnderTest = new InstanceUnderTest();

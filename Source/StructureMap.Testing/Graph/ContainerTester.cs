@@ -33,11 +33,11 @@ namespace StructureMap.Testing.Graph
 
         private void addColorMemento(string Color)
         {
-            _manager.Configure(registry =>
+            _manager.Configure(r =>
             {
-                registry.AddInstanceOf<Rule>().UsingConcreteType<ColorRule>().WithProperty("color").EqualTo(Color).WithName(Color);
-                registry.AddInstanceOf<IWidget>().UsingConcreteType<ColorWidget>().WithProperty("color").EqualTo(Color).WithName(Color);
-                registry.AddInstanceOf<WidgetMaker>().UsingConcreteType<ColorWidgetMaker>().WithProperty("color").EqualTo(Color).WithName(Color);
+                r.InstanceOf<Rule>().Is.OfConcreteType<ColorRule>().WithCtorArg("color").EqualTo(Color).WithName(Color);
+                r.InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithCtorArg("color").EqualTo(Color).WithName(Color);
+                r.InstanceOf<WidgetMaker>().Is.OfConcreteType<ColorWidgetMaker>().WithCtorArg("color").EqualTo(Color).WithName(Color);
             });
         }
 

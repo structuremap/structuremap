@@ -40,7 +40,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             Container manager =
                 new Container(
-                    registry => registry.ForRequestedType<IWidget>().AddInstance(delegate { return new AWidget(); }));
+                    r => r.InstanceOf<IWidget>().Is.ConstructedBy(() => new AWidget()));
 
             Assert.IsInstanceOfType(typeof (AWidget), manager.GetAllInstances<IWidget>()[0]);
         }
@@ -51,7 +51,7 @@ namespace StructureMap.Testing.Configuration.DSL
             AWidget aWidget = new AWidget();
 
             Container manager =
-                new Container(registry => registry.ForRequestedType<IWidget>().AddInstance(aWidget));
+                new Container(registry => registry.InstanceOf<IWidget>().Is.Object(aWidget));
 
             Assert.IsInstanceOfType(typeof (AWidget), manager.GetAllInstances<IWidget>()[0]);
         }
@@ -70,7 +70,7 @@ namespace StructureMap.Testing.Configuration.DSL
         public void AddInstanceWithNameOnlyAddsOneInstanceToStructureMap()
         {
             IContainer manager =
-                new Container(registry => registry.AddInstanceOf<Something>().UsingConcreteType<RedSomething>().WithName("Red"));
+                new Container(registry => registry.InstanceOf<Something>().Is.OfConcreteType<RedSomething>().WithName("Red"));
             IList<Something> instances = manager.GetAllInstances<Something>();
             Assert.AreEqual(1, instances.Count);
         }
@@ -189,7 +189,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             Container manager =
                 new Container(
-                    registry => registry.ForRequestedType<IWidget>().TheDefaultIs(delegate { return new AWidget(); }));
+                    registry => registry.ForRequestedType<IWidget>().TheDefault.Is.ConstructedBy(() => new AWidget()));
 
             Assert.IsInstanceOfType(typeof (AWidget), manager.GetInstance<IWidget>());
         }
@@ -201,7 +201,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
             Container manager =
                 new Container(
-                    registry => registry.ForRequestedType<IWidget>().TheDefaultIs(aWidget));
+                    registry => registry.ForRequestedType<IWidget>().TheDefault.Is.Object(aWidget));
 
             Assert.AreSame(aWidget, manager.GetInstance<IWidget>());
         }
@@ -237,7 +237,7 @@ namespace StructureMap.Testing.Configuration.DSL
 		{
 			Container manager =
 				new Container(
-					registry => registry.ForRequestedType<Guid>().TheDefaultIs(()=>Guid.NewGuid()));
+					registry => registry.ForRequestedType<Guid>().TheDefault.Is.ConstructedBy(()=>Guid.NewGuid()));
 
 			Assert.IsInstanceOfType(typeof(Guid), manager.GetInstance<Guid>());
 		}

@@ -108,9 +108,9 @@ namespace StructureMap.Testing.Graph.Interceptors
             ()
         {
             MockRepository mocks = new MockRepository();
-            TypeInterceptor interceptor1 = mocks.CreateMock<TypeInterceptor>();
-            TypeInterceptor interceptor2 = mocks.CreateMock<TypeInterceptor>();
-            TypeInterceptor interceptor3 = mocks.CreateMock<TypeInterceptor>();
+            TypeInterceptor interceptor1 = mocks.StrictMock<TypeInterceptor>();
+            TypeInterceptor interceptor2 = mocks.StrictMock<TypeInterceptor>();
+            TypeInterceptor interceptor3 = mocks.StrictMock<TypeInterceptor>();
 
             _library.AddInterceptor(interceptor1);
             _library.AddInterceptor(interceptor2);
@@ -131,9 +131,9 @@ namespace StructureMap.Testing.Graph.Interceptors
             ()
         {
             MockRepository mocks = new MockRepository();
-            TypeInterceptor interceptor1 = mocks.CreateMock<TypeInterceptor>();
-            TypeInterceptor interceptor2 = mocks.CreateMock<TypeInterceptor>();
-            TypeInterceptor interceptor3 = mocks.CreateMock<TypeInterceptor>();
+            TypeInterceptor interceptor1 = mocks.StrictMock<TypeInterceptor>();
+            TypeInterceptor interceptor2 = mocks.StrictMock<TypeInterceptor>();
+            TypeInterceptor interceptor3 = mocks.StrictMock<TypeInterceptor>();
 
             _library.AddInterceptor(interceptor1);
             _library.AddInterceptor(interceptor2);

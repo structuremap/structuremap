@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Xml;
 using NUnit.Framework;
 using StructureMap.Configuration;
+using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Testing.GenericWidgets;
 using StructureMap.Testing.TestData;
+using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing
 {
@@ -32,7 +33,7 @@ namespace StructureMap.Testing
 
         private static XmlNode createNodeFromText(string outerXml)
         {
-            XmlDocument document = new XmlDocument();
+            var document = new XmlDocument();
             document.LoadXml(outerXml);
             return document.DocumentElement;
         }
@@ -52,6 +53,27 @@ namespace StructureMap.Testing
         }
 
 
+        public static void Bootstrap()
+        {
+            StructureMapConfiguration.UseDefaultStructureMapConfigFile = false;
+            StructureMapConfiguration.PullConfigurationFromAppConfig = true;
+
+            StructureMapConfiguration.AddRegistry(new CoreRegistry());
+            StructureMapConfiguration.AddRegistry(new WebRegistry());
+
+            StructureMapConfiguration.ForRequestedType<IGateway>().TheDefaultIsConcreteType<DefaultGateway>();
+
+            IGateway gateway = ObjectFactory.GetInstance<IGateway>();
+        }
+
+        public class WebRegistry : Registry
+        {
+        }
+
+        public class CoreRegistry : Registry
+        {
+        }
+
         [Test]
         public void PullConfigurationFromTheAppConfig()
         {
@@ -66,7 +88,7 @@ namespace StructureMap.Testing
         [Test]
         public void SettingsFromAllParentConfigFilesShouldBeIncluded()
         {
-            StructureMapConfigurationSection configurationSection = new StructureMapConfigurationSection();
+            var configurationSection = new StructureMapConfigurationSection();
 
             XmlNode fromMachineConfig =
                 createNodeFromText(@"<StructureMap><Assembly Name=""SomeAssembly""/></StructureMap>");
@@ -76,7 +98,7 @@ namespace StructureMap.Testing
             IList<XmlNode> parentNodes = new List<XmlNode>();
             parentNodes.Add(fromMachineConfig);
 
-            IList<XmlNode> effectiveConfig =
+            var effectiveConfig =
                 configurationSection.Create(parentNodes, null, fromWebConfig) as IList<XmlNode>;
 
             Assert.IsNotNull(effectiveConfig, "A list of configuration nodes should have been returned.");
@@ -91,6 +113,33 @@ namespace StructureMap.Testing
             DataMother.RemoveStructureMapConfig();
 
             StructureMapConfiguration.GetPluginGraph().ShouldNotBeNull();
+        }
+
+        [Test(
+            Description =
+                "Guid test based on problems encountered by Paul Segaro. See http://groups.google.com/group/structuremap-users/browse_thread/thread/34ddaf549ebb14f7?hl=en"
+            )]
+        public void TheDefaultInstance_has_a_dependency_upon_a_Guid_NewGuid_lambda_generated_instance()
+        {
+            StructureMapConfiguration.IgnoreStructureMapConfig = true;
+
+            StructureMapConfiguration.ForRequestedType<Guid>().TheDefault.Is.ConstructedBy(() => Guid.NewGuid());
+            StructureMapConfiguration.ForRequestedType<IFoo>().TheDefaultIsConcreteType<Foo>();
+
+            Assert.That(ObjectFactory.GetInstance<IFoo>().SomeGuid != Guid.Empty);
+        }
+
+        [Test(
+            Description =
+                "Guid test based on problems encountered by Paul Segaro. See http://groups.google.com/group/structuremap-users/browse_thread/thread/34ddaf549ebb14f7?hl=en"
+            )]
+        public void TheDefaultInstanceIsALambdaForGuidNewGuid()
+        {
+            StructureMapConfiguration.IgnoreStructureMapConfig = true;
+
+            StructureMapConfiguration.ForRequestedType<Guid>().TheDefault.Is.ConstructedBy(() => Guid.NewGuid());
+
+            Assert.That(ObjectFactory.GetInstance<Guid>() != Guid.Empty);
         }
 
         [Test]
@@ -111,41 +160,26 @@ namespace StructureMap.Testing
             DataMother.RestoreStructureMapConfig();
             StructureMapConfiguration.GetPluginGraph().FamilyCount.ShouldBeGreaterThan(0);
         }
-
-		[Test(Description = "Guid test based on problems encountered by Paul Segaro. See http://groups.google.com/group/structuremap-users/browse_thread/thread/34ddaf549ebb14f7?hl=en")]
-		public void TheDefaultInstanceIsALambdaForGuidNewGuid()
-		{
-			StructureMapConfiguration.IgnoreStructureMapConfig = true;
-
-			StructureMapConfiguration.ForRequestedType<Guid>().TheDefaultIs(() => Guid.NewGuid());
-
-			Assert.That(ObjectFactory.GetInstance<Guid>() != Guid.Empty);
-		}
-
-		[Test(Description = "Guid test based on problems encountered by Paul Segaro. See http://groups.google.com/group/structuremap-users/browse_thread/thread/34ddaf549ebb14f7?hl=en")]
-		public void TheDefaultInstance_has_a_dependency_upon_a_Guid_NewGuid_lambda_generated_instance()
-		{
-			StructureMapConfiguration.IgnoreStructureMapConfig = true;
-
-			StructureMapConfiguration.ForRequestedType<Guid>().TheDefaultIs(() => Guid.NewGuid());
-			StructureMapConfiguration.ForRequestedType<IFoo>().TheDefaultIsConcreteType<Foo>();
-
-			Assert.That(ObjectFactory.GetInstance<IFoo>().SomeGuid != Guid.Empty);
-		}
     }
 
-	public interface IFoo { Guid SomeGuid { get; set; } }
+    public interface IFoo
+    {
+        Guid SomeGuid { get; set; }
+    }
 
-	public class Foo : IFoo
-	{
-		public Foo(Guid someGuid)
-		{
-			SomeGuid = someGuid;
-		}
+    public class Foo : IFoo
+    {
+        public Foo(Guid someGuid)
+        {
+            SomeGuid = someGuid;
+        }
 
-		public Guid SomeGuid { get; set; }
+        #region IFoo Members
 
-	}
+        public Guid SomeGuid { get; set; }
+
+        #endregion
+    }
 
     public interface ISomething
     {

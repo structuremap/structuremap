@@ -195,16 +195,6 @@ namespace StructureMap
             return registry.ForRequestedType(pluginType);
         }
 
-        /// <summary>
-        /// Adds a new configured instance of Type T
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public static Registry.ConfiguredInstanceExpression<T> AddInstanceOf<T>()
-        {
-            return registry.AddInstanceOf<T>();
-        }
-
         public static void AddInstanceOf<T>(Func<T> func)
         {
             registry.AddInstanceOf<T>(new ConstructorInstance<T>(func));
@@ -215,18 +205,6 @@ namespace StructureMap
             registry.ForRequestedType<T>().AddInstance(instance);
         }
 
-
-        /// <summary>
-        /// Adds a preconfigured instance of Type T to StructureMap.  When this instance is requested,
-        /// StructureMap will always return the original object.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="target"></param>
-        /// <returns></returns>
-        public static LiteralInstance AddInstanceOf<T>(T target)
-        {
-            return registry.AddInstanceOf(target);
-        }
 
         /// <summary>
         /// Starts the definition of a configuration Profile. 

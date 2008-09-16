@@ -259,4 +259,7 @@
   <data name="50" xml:space="preserve">
     <value>StructureMapConfiguration cannot be used after ObjectFactory is initialized</value>
   </data>
+  <data name="125" xml:space="preserve">
+    <value>Cannot plug an abstract class or an interface</value>
+  </data>
 </root>

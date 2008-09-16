@@ -19,7 +19,7 @@ namespace StructureMap.Testing.Graph
 
             Container manager = new Container(graph);
 
-            manager.Configure(registry => registry.AddInstanceOf<Cow>().UsingConcreteType<Cow>()
+            manager.Configure(r => r.InstanceOf<Cow>().Is.OfConcreteType<Cow>()
                                               .WithName("Angus")
                                               .WithProperty("Name").EqualTo("Bessie")
                                               .WithProperty("Breed").EqualTo("Angus")

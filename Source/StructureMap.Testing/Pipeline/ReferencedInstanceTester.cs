@@ -30,7 +30,7 @@ namespace StructureMap.Testing.Pipeline
         public void Create_referenced_instance_happy_path()
         {
             MockRepository mocks = new MockRepository();
-            BuildSession buildSession = mocks.CreateMock<BuildSession>();
+            BuildSession buildSession = mocks.StrictMock<BuildSession>();
 
             ConcreteReferenced returnedValue = new ConcreteReferenced();
             string theReferenceKey = "theReferenceKey";

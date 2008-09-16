@@ -25,7 +25,7 @@ namespace StructureMap.Testing.Pipeline
                 return null;
             }
 
-            InstanceBuilderList list = new InstanceBuilderList(pluginType, new Plugin[] {new Plugin(pluggedType),});
+            InstanceBuilderList list = new InstanceBuilderList(pluginType, new[] {new Plugin(pluggedType),});
             return list.FindByType(pluggedType);
         }
 
@@ -34,12 +34,8 @@ namespace StructureMap.Testing.Pipeline
             throw new NotImplementedException();
         }
 
-        public void RegisterDefault(Type pluginType, object defaultObject)
-        {
-            
-        }
 
-        public BuildStack BuildStack
+        public new BuildStack BuildStack
         {
             get
             {

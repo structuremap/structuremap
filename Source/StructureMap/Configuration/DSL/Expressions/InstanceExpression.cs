@@ -62,5 +62,10 @@ namespace StructureMap.Configuration.DSL.Expressions
         {
             return returnInstance(new ConstructorInstance<T>(func));
         }
+
+        public PrototypeInstance PrototypeOf(T template)
+        {
+            return returnInstance(new PrototypeInstance((ICloneable) template));
+        }
     }
 }

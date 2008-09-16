@@ -29,7 +29,7 @@ namespace StructureMap.Testing.Pipeline
         {
             MockRepository mocks = new MockRepository();
             BuildSession buildSession =
-                mocks.CreateMock<BuildSession>();
+                mocks.StrictMock<BuildSession>();
 
             DefaultClass theDefault = new DefaultClass();
 

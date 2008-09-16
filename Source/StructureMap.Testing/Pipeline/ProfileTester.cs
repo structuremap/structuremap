@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Graph;
@@ -23,10 +24,10 @@ namespace StructureMap.Testing.Pipeline
         private Profile _profile;
         private PluginGraph _pluginGraph;
 
-        private void setDefault<T>(string key)
+        private void setDefault<T, U>(string key) where U : T, new()
         {
             PluginFamily family = _pluginGraph.FindFamily(typeof (T));
-            ConfiguredInstance instance = new ConfiguredInstance(typeof(T)).WithName(key);
+            ConfiguredInstance instance = new ConfiguredInstance(typeof(U)).WithName(key);
             family.AddInstance(instance);
 
             _profile.SetDefault(typeof (T), instance);
@@ -62,8 +63,8 @@ namespace StructureMap.Testing.Pipeline
         public void CopyDefaultsFromOneTypeToAnother()
         {
 
-            setDefault<ISomething>("Red");
-            _pluginGraph.FindFamily(typeof(IBuildPolicy)).AddInstance(new ConfiguredInstance(typeof(IBuildPolicy)).WithName("Red"));
+            setDefault<ISomething, SomethingOne>("Red");
+            _pluginGraph.FindFamily(typeof(IBuildPolicy)).AddInstance(new ConfiguredInstance(typeof(BuildPolicy)).WithName("Red"));
 
             _profile.CopyDefault(typeof(ISomething), typeof(IBuildPolicy), _pluginGraph.FindFamily(typeof(IBuildPolicy)));
             _profile.GetDefault(typeof (IBuildPolicy)).Name.ShouldEqual("Red");
@@ -99,15 +100,38 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void FindMasterInstances_finds_the_master_copies_of_all()
         {
-            setDefault<ISomething>("Red");
-            setDefault<IBuildPolicy>("Green");
-            setDefault<IConstraint>("Blue");
+            setDefault<ISomething, SomethingOne>("Red");
+            setDefault<IBuildPolicy, BuildPolicy>("Green");
+            setDefault<IConstraint, FakeConstraint>("Blue");
 
             _profile.FindMasterInstances(_pluginGraph);
 
             assertThatMasterInstanceWasFound<ISomething>("Red");
             assertThatMasterInstanceWasFound<IBuildPolicy>("Green");
             assertThatMasterInstanceWasFound<IConstraint>("Blue");
+        }
+
+        public class FakeConstraint : IConstraint
+        {
+            public void WriteMessageTo(MessageWriter writer)
+            {
+                throw new System.NotImplementedException();
+            }
+
+            public bool Matches(object actual)
+            {
+                throw new System.NotImplementedException();
+            }
+
+            public void WriteDescriptionTo(MessageWriter writer)
+            {
+                throw new System.NotImplementedException();
+            }
+
+            public void WriteActualValueTo(MessageWriter writer)
+            {
+                throw new System.NotImplementedException();
+            }
         }
 
         [Test]

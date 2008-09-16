@@ -290,7 +290,7 @@ namespace StructureMap.Testing.Graph
         public void Visit_arguments()
         {
             MockRepository mocks = new MockRepository();
-            IArgumentVisitor visitor = mocks.CreateMock<IArgumentVisitor>();
+            IArgumentVisitor visitor = mocks.StrictMock<IArgumentVisitor>();
 
             using (mocks.Record())
             {

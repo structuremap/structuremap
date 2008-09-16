@@ -29,7 +29,6 @@ namespace StructureMap.Testing
         [Test]
         public void Ensure_defensive_check_is_always_thrown_when_StructureMapConfiguration_is_sealed()
         {
-            shouldThrowExceptionWhenSealed(() => StructureMapConfiguration.AddInstanceOf<IGateway>());
             shouldThrowExceptionWhenSealed(() => StructureMapConfiguration.AddRegistry(null));
             shouldThrowExceptionWhenSealed(() => StructureMapConfiguration.BuildInstancesOf<IGateway>());
             shouldThrowExceptionWhenSealed(() => StructureMapConfiguration.CreateProfile("something"));

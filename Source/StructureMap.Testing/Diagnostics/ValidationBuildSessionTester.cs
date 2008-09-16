@@ -61,7 +61,7 @@ namespace StructureMap.Testing.Diagnostics
         {
             ValidationBuildSession session =
                 validatedSession(
-                    registry => registry.AddInstanceOf<IWidget>(new ColorWidget("Red")));
+                    r => r.InstanceOf<IWidget>().Is.Object(new ColorWidget("Red")));
 
             Assert.AreEqual(0, session.BuildErrors.Length);
         }
@@ -122,7 +122,7 @@ namespace StructureMap.Testing.Diagnostics
         {
             ValidationBuildSession session =
                 validatedSession(
-                    registry => registry.AddInstanceOf<IWidget>(new ColorWidget("Red")));
+                    registry => registry.InstanceOf<IWidget>().Is.Object(new ColorWidget("Red")));
 
             Assert.AreEqual(0, session.ValidationErrors.Length);
         }

@@ -83,77 +83,13 @@ namespace StructureMap.Configuration.DSL
             return graph;
         }
 
-        /// <summary>
-        /// Starts an instance definition of type T
-        /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
-        /// <returns></returns>
-        [Obsolete("Like to go away")]
-        public ConfiguredInstanceExpression<PLUGINTYPE> AddInstanceOf<PLUGINTYPE>()
+        public IsExpression<T> InstanceOf<T>()
         {
-            return new ConfiguredInstanceExpression<PLUGINTYPE>(this);
-        }
-
-        [Obsolete("Like to get rid of this")]
-        public class ConfiguredInstanceExpression<PLUGINTYPE>
-        {
-            private readonly Registry _registry;
-
-            public ConfiguredInstanceExpression(Registry registry)
+            return new InstanceExpression<T>(instance =>
             {
-                _registry = registry;
-            }
-
-
-            public ConfiguredInstance UsingConcreteType<T>()
-            {
-                ConfiguredInstance instance = new ConfiguredInstance(typeof(T));
-                _registry.addExpression(graph => graph.FindFamily(typeof(PLUGINTYPE)).AddInstance(instance));
-
-                return instance;
-            }
-        }
-
-
-        /// <summary>
-        /// Registers a preconfigured instance
-        /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
-        /// <param name="target"></param>
-        /// <returns></returns>
-        [Obsolete("Like to get rid of this")]
-        public LiteralInstance AddInstanceOf<PLUGINTYPE>(PLUGINTYPE target)
-        {
-            LiteralInstance literal = new LiteralInstance(target);
-            _actions.Add(graph => graph.FindFamily(typeof (PLUGINTYPE)).AddInstance(literal));
-
-            return literal;
-        }
-
-        /// <summary>
-        /// Add a preconfigured instance as a Prototype
-        /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
-        /// <param name="prototype"></param>
-        /// <returns></returns>
-        [Obsolete("Like to get rid of this")]
-        public PrototypeInstance AddPrototypeInstanceOf<PLUGINTYPE>(PLUGINTYPE prototype)
-        {
-            PrototypeInstance instance = new PrototypeInstance((ICloneable) prototype);
-            _actions.Add(graph => graph.FindFamily(typeof (PLUGINTYPE)).AddInstance(instance));
-
-            return instance;
-        }
-
-        /// <summary>
-        /// convenience method for a UserControl
-        /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
-        [Obsolete("Like to get rid of this")]
-        public static UserControlInstance LoadUserControlFrom(string url)
-        {
-            return new UserControlInstance(url);
+                Action<PluginGraph> alteration = g => g.FindFamily(typeof (T)).AddInstance(instance);
+                _actions.Add(alteration);
+            });
         }
 
         /// <summary>
@@ -246,5 +182,7 @@ namespace StructureMap.Configuration.DSL
             PluginCache.AddFilledType(typeof(PLUGINTYPE));
             return ForRequestedType<PLUGINTYPE>();
         }
+
+
     }
 }

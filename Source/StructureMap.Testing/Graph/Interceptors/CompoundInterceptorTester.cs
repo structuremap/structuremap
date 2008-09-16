@@ -20,10 +20,10 @@ namespace StructureMap.Testing.Graph.Interceptors
         public void CallAllTheInterceptors()
         {
             MockRepository mocks = new MockRepository();
-            InstanceInterceptor interceptor1 = mocks.CreateMock<InstanceInterceptor>();
-            InstanceInterceptor interceptor2 = mocks.CreateMock<InstanceInterceptor>();
-            InstanceInterceptor interceptor3 = mocks.CreateMock<InstanceInterceptor>();
-            InstanceInterceptor interceptor4 = mocks.CreateMock<InstanceInterceptor>();
+            InstanceInterceptor interceptor1 = mocks.StrictMock<InstanceInterceptor>();
+            InstanceInterceptor interceptor2 = mocks.StrictMock<InstanceInterceptor>();
+            InstanceInterceptor interceptor3 = mocks.StrictMock<InstanceInterceptor>();
+            InstanceInterceptor interceptor4 = mocks.StrictMock<InstanceInterceptor>();
 
             Expect.Call(interceptor1.Process("0")).Return("1");
             Expect.Call(interceptor2.Process("1")).Return("2");

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Security.Permissions;
 using StructureMap.Configuration.DSL;
+using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 
@@ -17,7 +18,7 @@ namespace StructureMap
     public class ObjectFactory
     {
         private static readonly object _lockObject = new object();
-        private static IContainer _manager;
+        private static IContainer _container;
         private static string _profile = string.Empty;
 
         private static event Notify _notify;
@@ -31,7 +32,7 @@ namespace StructureMap
             {
                 StructureMapConfiguration.Unseal();
 
-                _manager = null;
+                _container = null;
                 _profile = string.Empty;
 
                 if (_notify != null)
@@ -51,7 +52,7 @@ namespace StructureMap
                 var graph = expression.BuildGraph();
                 StructureMapConfiguration.Seal();
 
-                _manager = new Container(graph);
+                _container = new Container(graph);
                 Profile = expression.DefaultProfileName;
             }            
         }
@@ -134,18 +135,18 @@ namespace StructureMap
         {
             get
             {
-                if (_manager == null)
+                if (_container == null)
                 {
                     lock (_lockObject)
                     {
-                        if (_manager == null)
+                        if (_container == null)
                         {
-                            _manager = buildManager();
+                            _container = buildManager();
                         }
                     }
                 }
 
-                return _manager;
+                return _container;
             }
         }
          
@@ -164,12 +165,15 @@ namespace StructureMap
             get { return _profile; }
         }
 
-
+        internal static PluginGraph PluginGraph
+        {
+            get { return container.PluginGraph; }
+        }
 
 
         internal static void ReplaceManager(IContainer container)
         {
-            _manager = container;
+            _container = container;
         }
 
         public static void Configure(Action<Registry> configure)

@@ -151,25 +151,10 @@ namespace StructureMap.Configuration.DSL.Expressions
             return this;
         }
 
-        [Obsolete("Kill!")]
-        public CreatePluginFamilyExpression<PLUGINTYPE> AddConcreteType<CONCRETETYPE>()
+
+        public CreatePluginFamilyExpression<PLUGINTYPE> AddConcreteType<PLUGGEDTYPE>()
         {
-            return AddConcreteType<CONCRETETYPE>(Guid.NewGuid().ToString());
-        }
-
-        [Obsolete("Kill!")]
-        public CreatePluginFamilyExpression<PLUGINTYPE> AddConcreteType<CONCRETETYPE>(string instanceName)
-        {
-            ExpressionValidator.ValidatePluggabilityOf(typeof (CONCRETETYPE)).IntoPluginType(typeof (PLUGINTYPE));
-
-            _alterations.Add(
-                family =>
-                {
-                    ConfiguredInstance instance = new ConfiguredInstance(typeof(CONCRETETYPE)).WithName(instanceName);
-                    family.AddInstance(instance);
-                }
-                );
-
+            _alterations.Add(family => family.AddInstance(new SmartInstance<PLUGGEDTYPE>()));
             return this;
         }
 
@@ -193,33 +178,5 @@ namespace StructureMap.Configuration.DSL.Expressions
                 return new InstanceExpression<PLUGINTYPE>(i => TheDefaultIs(i));
             }
         }
-
-        [Obsolete("Kill!")]
-        public CreatePluginFamilyExpression<PLUGINTYPE> TheDefaultIs(PLUGINTYPE @object)
-        {
-            return TheDefaultIs(new LiteralInstance(@object));
-        }
-
-        [Obsolete("Kill!")]
-        public CreatePluginFamilyExpression<PLUGINTYPE> TheDefaultIs(Func<PLUGINTYPE> func)
-        {
-            ConstructorInstance<PLUGINTYPE> instance = new ConstructorInstance<PLUGINTYPE>(func);
-            return TheDefaultIs(instance);
-        }
-
-        [Obsolete("Kill!")]
-        public CreatePluginFamilyExpression<PLUGINTYPE> AddInstance(PLUGINTYPE @object)
-        {
-            LiteralInstance instance = new LiteralInstance(@object);
-            return AddInstance(instance);
-        }
-
-        [Obsolete("Kill!")]
-        public CreatePluginFamilyExpression<PLUGINTYPE> AddInstance(Func<PLUGINTYPE> func)
-        {
-            ConstructorInstance<PLUGINTYPE> instance = new ConstructorInstance<PLUGINTYPE>(func);
-            return AddInstance(instance);
-        }
-
     }
 }

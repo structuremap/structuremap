@@ -40,7 +40,7 @@ namespace StructureMap.Testing.Pipeline
 
         private void addDefaultToMachine<T>(string name)
         {
-            ConfiguredInstance instance = new ConfiguredInstance(typeof(T)).WithName(name);
+            LiteralInstance instance = new LiteralInstance(0).WithName(name);
             PluginFamily family = _pluginGraph.FindFamily(typeof (T));
             family.AddInstance(instance);
 

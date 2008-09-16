@@ -17,11 +17,9 @@ namespace StructureMap.Testing.Diagnostics
     {
         private DoctorReport fetchReport<T>(string config) where T : IBootstrapper
         {
-            StructureMapConfiguration.ResetAll();
-            StructureMapConfiguration.IgnoreStructureMapConfig = true;
-
             var doctor = new Doctor
                              {BinaryPath = Path.GetFullPath("."), BootstrapperType = typeof (T).AssemblyQualifiedName};
+
             if (!string.IsNullOrEmpty(config))
             {
                 var doc = new XmlDocument();
@@ -155,7 +153,7 @@ namespace StructureMap.Testing.Diagnostics
             Assembly assembly = Assembly.GetExecutingAssembly();
             foreach (Type type in assembly.GetExportedTypes())
             {
-                if (typeof(IBootstrapper).IsAssignableFrom(type))
+                if (typeof (IBootstrapper).IsAssignableFrom(type))
                 {
                     Debug.WriteLine(TypePath.GetAssemblyQualifiedName(type));
                 }
@@ -169,7 +167,7 @@ namespace StructureMap.Testing.Diagnostics
 
         public void BootstrapStructureMap()
         {
-            StructureMapConfiguration.AddInstanceOf<IWidget>(new ConfiguredInstance(typeof(ColorRule)));
+            StructureMapConfiguration.AddInstanceOf<IWidget>(new ConfiguredInstance(typeof (ColorRule)));
         }
 
         #endregion
@@ -181,8 +179,12 @@ namespace StructureMap.Testing.Diagnostics
 
         public void BootstrapStructureMap()
         {
-            StructureMapConfiguration.IgnoreStructureMapConfig = true;
-            StructureMapConfiguration.AddInstanceOf(new DoctorTester.ClassThatFails());
+            ObjectFactory.Initialize(x =>
+            {
+                x.IgnoreStructureMapConfig = true;
+
+                x.BuildInstancesOf<DoctorTester.ClassThatFails>().TheDefaultIsConcreteType<DoctorTester.ClassThatFails>();
+            });
         }
 
         #endregion
@@ -208,9 +210,15 @@ namespace StructureMap.Testing.Diagnostics
 
         public void BootstrapStructureMap()
         {
-            Instance bad = RegistryExpressions.ConstructedBy<IWidget>(() => { throw new NotImplementedException(); });
+            ObjectFactory.Initialize(x =>
+            {
+                x.InstanceOf<IWidget>().Is.ConstructedBy(() =>
+                {
+                    throw new NotImplementedException();
+                });
+            });
 
-            StructureMapConfiguration.AddInstanceOf<IWidget>(bad);
+
         }
 
         #endregion
@@ -223,7 +231,7 @@ namespace StructureMap.Testing.Diagnostics
         public void BootstrapStructureMap()
         {
             StructureMapConfiguration.IgnoreStructureMapConfig = true;
-            StructureMapConfiguration.BuildInstancesOf<IWidget>().TheDefaultIs(new ColorWidget("Red"));
+            StructureMapConfiguration.BuildInstancesOf<IWidget>().TheDefault.Is.Object(new ColorWidget("Red"));
         }
 
         #endregion

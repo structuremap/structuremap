@@ -173,7 +173,7 @@ namespace StructureMap.Testing.Graph
             TestUtility.AssertErrorIsLogged(104, graph =>
             {
                 PluginFamily family = new PluginFamily(typeof (IGateway), graph);
-                ConfiguredInstance instance = new ConfiguredInstance(typeof (Rule));
+                ConfiguredInstance instance = new ConfiguredInstance(typeof (ColorRule));
 
                 Assert.IsFalse(TypeRules.CanBeCast(typeof (IGateway), typeof (Rule)));
 

@@ -7,10 +7,8 @@ namespace StructureMap.Testing.Widget5
     {
         protected override void configure()
         {
-            AddInstanceOf<IWidget>().UsingConcreteType<ColorWidget>().WithProperty("color").EqualTo("Red").WithName(
-                "Red");
-            AddInstanceOf<IWidget>().UsingConcreteType<ColorWidget>().WithProperty("color").EqualTo("Green").WithName(
-                "Green");
+            InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithCtorArg("color").EqualTo("Red").WithName("Red");
+            InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithCtorArg("color").EqualTo("Green").WithName("Green");
         }
 
 
@@ -32,10 +30,8 @@ namespace StructureMap.Testing.Widget5
     {
         protected override void configure()
         {
-            AddInstanceOf<IWidget>().UsingConcreteType<ColorWidget>().WithProperty("color").EqualTo("Yellow").WithName(
-                "Yellow");
-            AddInstanceOf<IWidget>().UsingConcreteType<ColorWidget>().WithProperty("color").EqualTo("Blue").WithName(
-                "Blue");
+            InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithCtorArg("color").EqualTo("Yellow").WithName("Yellow");
+            InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithProperty("color").EqualTo("Blue").WithName("Blue");
         }
 
 
@@ -57,9 +53,9 @@ namespace StructureMap.Testing.Widget5
     {
         protected override void configure()
         {
-            AddInstanceOf<IWidget>().UsingConcreteType<ColorWidget>().WithProperty("color").EqualTo("Brown").WithName(
+            InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithProperty("color").EqualTo("Brown").WithName(
                 "Brown");
-            AddInstanceOf<IWidget>().UsingConcreteType<ColorWidget>().WithProperty("color").EqualTo("Black").WithName(
+            InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithProperty("color").EqualTo("Black").WithName(
                 "Black");
         }
 
