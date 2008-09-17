@@ -62,7 +62,8 @@ namespace StructureMap
         /// <returns></returns>
         object GetInstance(Type pluginType, string instanceKey);
 
-        PLUGINTYPE GetInstance<PLUGINTYPE>(ExplicitArguments args);
+        IList<T> GetAllInstances<T>(ExplicitArguments args);
+        T GetInstance<T>(ExplicitArguments args);
 
         ExplicitArgsExpression With<T>(T arg);
         IExplicitProperty With(string argName);

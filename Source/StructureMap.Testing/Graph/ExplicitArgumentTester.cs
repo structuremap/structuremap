@@ -284,6 +284,22 @@ namespace StructureMap.Testing.Graph
             args.SetArg("age", 34);
             Assert.AreEqual(34, args.GetArg("age"));
         }
+
+        [Test]
+        public void pass_explicit_service_into_all_instances()
+        {
+            var container = new Container(r =>
+            {
+                r.ForRequestedType<TradeView>().TheDefaultIsConcreteType<TradeView>().AddConcreteType<SecuredTradeView>();
+            });
+
+            Trade theTrade = new Trade();
+
+            var views = container.With<Trade>(theTrade).GetAllInstances<TradeView>();
+
+            views[0].Trade.ShouldBeTheSameAs(theTrade);
+            views[1].Trade.ShouldBeTheSameAs(theTrade);
+        }
     }
 
     public class Lump
@@ -323,6 +339,13 @@ namespace StructureMap.Testing.Graph
         public Trade Trade
         {
             get { return _trade; }
+        }
+    }
+
+    public class SecuredTradeView : TradeView
+    {
+        public SecuredTradeView(Trade trade) : base(trade)
+        {
         }
     }
 

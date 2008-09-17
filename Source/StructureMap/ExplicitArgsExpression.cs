@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using StructureMap.Pipeline;
 
 namespace StructureMap
@@ -14,9 +15,9 @@ namespace StructureMap
         private readonly IContainer _container;
         private string _lastArgName;
 
-        internal ExplicitArgsExpression(IContainer manager)
+        internal ExplicitArgsExpression(IContainer container)
         {
-            _container = manager;
+            _container = container;
         }
 
         #region IExplicitProperty Members
@@ -70,6 +71,11 @@ namespace StructureMap
         public object GetInstance(Type type)
         {
             return _container.GetInstance(type, _args);
+        }
+
+        public IList<T> GetAllInstances<T>()
+        {
+            return _container.GetAllInstances<T>(_args);
         }
     }
 }

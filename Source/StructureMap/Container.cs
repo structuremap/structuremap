@@ -104,6 +104,15 @@ namespace StructureMap
             return session.CreateInstance(type, instance);
         }
 
+        public IList<T> GetAllInstances<T>(ExplicitArguments args)
+        {
+            BuildSession session = withNewSession();
+
+            args.RegisterDefaults(session);
+
+            return getListOfTypeWithSession<T>(session);
+        }
+
         public void Inject<PLUGINTYPE>(PLUGINTYPE instance)
         {
             _pipelineGraph.Inject(instance);
@@ -128,10 +137,13 @@ namespace StructureMap
 
         public IList<T> GetAllInstances<T>()
         {
-            List<T> list = new List<T>();
-
             BuildSession session = withNewSession();
+            return getListOfTypeWithSession<T>(session);
+        }
 
+        private IList<T> getListOfTypeWithSession<T>(BuildSession session)
+        {
+            List<T> list = new List<T>();
             foreach (T instance in forType(typeof (T)).GetAllInstances(session))
             {
                 list.Add(instance);
@@ -155,6 +167,8 @@ namespace StructureMap
         {
             return withNewSession().CreateInstance(pluginType, instanceKey);
         }
+
+
 
 
         /// <summary>
