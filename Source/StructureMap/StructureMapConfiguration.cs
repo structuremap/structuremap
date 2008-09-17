@@ -12,7 +12,7 @@ using StructureMap.Pipeline;
 
 namespace StructureMap
 {
-    [Obsolete("Please put configuration into Registry classes and use the ObjectFactory.Initialize() method for configuring the container")]
+    [Obsolete("Please use the ObjectFactory.Initialize() method for configuring the container and put configuration into Registry classes")]
     public static class StructureMapConfiguration
     {
         private const string CONFIG_FILE_NAME = "StructureMap.config";
@@ -144,6 +144,8 @@ namespace StructureMap
         /// <returns></returns>
         internal static PluginGraph GetPluginGraph()
         {
+            _sealed = true;
+
             ConfigurationParser[] parsers = _parserBuilder.GetParsers();
             
             PluginGraphBuilder pluginGraphBuilder = new PluginGraphBuilder(parsers, _registries.ToArray(), _log);

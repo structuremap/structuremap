@@ -279,7 +279,6 @@ namespace StructureMap.Graph
 
         #endregion
 
-        [Obsolete("is this really important?")]
         public Plugin FindPlugin(Type pluggedType)
         {
             return _pluggedTypes.Find(p => p.PluggedType == pluggedType);

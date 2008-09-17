@@ -46,7 +46,7 @@ namespace StructureMap.Testing.Pipeline
                     r.ForRequestedType<OptionalSetterTarget>().TheDefaultIs(
                         (Instance<OptionalSetterTarget>()).WithProperty("Name").EqualTo("Jeremy"));
 
-                    r.AddInstanceOf<OptionalSetterTarget>(Instance<OptionalSetterTarget>().WithName("NoName"));
+                    r.InstanceOf<OptionalSetterTarget>().Is.OfConcreteType<OptionalSetterTarget>().WithName("NoName");
                 });
 
             try
