@@ -8,6 +8,10 @@ namespace StructureMap.AutoMocking
     {
         private readonly ServiceLocator _locator;
 
+        public AutoMockedContainer() : this(new RhinoMocksServiceLocator())
+        {
+        }
+
         public AutoMockedContainer(ServiceLocator locator)
         {
             _locator = locator;
@@ -19,12 +23,20 @@ namespace StructureMap.AutoMocking
                     return null;
                 }
 
-                object service = _locator.Service(pluginType);
                 InstanceFactory factory = new InstanceFactory(new PluginFamily(pluginType));
 
-                LiteralInstance instance = new LiteralInstance(service);
+                try
+                {
+                    object service = _locator.Service(pluginType);
 
-                profileManager.SetDefault(pluginType, instance);
+                    LiteralInstance instance = new LiteralInstance(service);
+
+                    profileManager.SetDefault(pluginType, instance);
+                }
+                catch (Exception)
+                {
+                    // ignore errors
+                }
 
                 return factory;
             };

@@ -176,7 +176,7 @@ namespace StructureMap
             _container = container;
         }
 
-        public static void Configure(Action<Registry> configure)
+        public static void Configure(Action<ConfigurationExpression> configure)
         {
             container.Configure(configure);
         }

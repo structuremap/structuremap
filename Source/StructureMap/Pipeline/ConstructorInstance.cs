@@ -6,9 +6,9 @@ namespace StructureMap.Pipeline
 
     public class ConstructorInstance<T> : ExpressedInstance<ConstructorInstance<T>>
     {
-        private readonly Func<BuildSession, T> _builder;
+        private readonly Func<IContext, T> _builder;
 
-        public ConstructorInstance(Func<BuildSession, T> builder)
+        public ConstructorInstance(Func<IContext, T> builder)
         {
             _builder = builder;
         }

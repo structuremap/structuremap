@@ -135,5 +135,10 @@ namespace StructureMap
             visitor.PluginType(PluginType, defaultInstance, _policy);
             ForEachInstance(i => visitor.Instance(PluginType, i));
         }
+
+        public void EjectAllInstances()
+        {
+            _instances.Clear();
+        }
     }
 }

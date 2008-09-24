@@ -21,7 +21,7 @@ namespace StructureMap
 
         IList GetAllInstances(Type type);
 
-        void Configure(Action<Registry> configure);
+        void Configure(Action<ConfigurationExpression> configure);
         void Inject<PLUGINTYPE>(PLUGINTYPE instance);
         void Inject(Type pluginType, object stub);
         void Inject<T>(string name, T instance);

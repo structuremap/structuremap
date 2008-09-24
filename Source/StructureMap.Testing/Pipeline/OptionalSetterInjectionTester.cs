@@ -223,7 +223,7 @@ namespace StructureMap.Testing.Pipeline
             container.GetInstance<ClassWithDependency>().Rule.ShouldBeOfType(typeof(ColorRule));
         }
 
-        private static Logger createLogger(BuildSession session)
+        private static Logger createLogger(IContext session)
         {
             return new Logger(session.ParentType);
         }

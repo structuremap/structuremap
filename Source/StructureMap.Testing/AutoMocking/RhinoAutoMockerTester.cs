@@ -3,6 +3,8 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using Rhino.Mocks.Interfaces;
 using StructureMap.AutoMocking;
+using StructureMap.Graph;
+using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.AutoMocking
 {
@@ -14,6 +16,8 @@ namespace StructureMap.Testing.AutoMocking
         [SetUp]
         public void SetUp()
         {
+            PluginCache.ResetAll();
+
             _mocks = new MockRepository();
             _locator = new RhinoMocksServiceLocator(_mocks);
             _container = new AutoMockedContainer(_locator);
@@ -128,6 +132,69 @@ namespace StructureMap.Testing.AutoMocking
 
             #endregion
         }
+
+        public class ClassWithArray
+        {
+            private IMockedService[] _services;
+
+            public ClassWithArray(IMockedService[] services)
+            {
+                _services = services;
+            }
+
+            public IMockedService[] Services
+            {
+                get { return _services; }
+            }
+        }
+
+        [Test]
+        public void CanInjectAnArrayOfMockServices1()
+        {
+            var mocker = new RhinoAutoMocker<ClassWithArray>();
+
+            IMockedService[] services = mocker.CreateMockArrayFor<IMockedService>(3);
+            ClassWithArray theClass = mocker.ClassUnderTest;
+
+            theClass.Services.Length.ShouldEqual(3);
+        }
+
+        [Test]
+        public void CanInjectAnArrayOfMockServices2()
+        {
+            var mocker = new RhinoAutoMocker<ClassWithArray>();    
+
+            ClassWithArray theClass = mocker.ClassUnderTest;
+
+            theClass.Services.Length.ShouldEqual(0);
+        }
+
+
+        [Test]
+        public void CanInjectAnArrayOfMockServices3()
+        {
+            var mocker = new RhinoAutoMocker<ClassWithArray>();
+
+            IMockedService[] services = mocker.CreateMockArrayFor<IMockedService>(3);
+
+            mocker.PartialMockTheClassUnderTest();
+            ClassWithArray theClass = mocker.ClassUnderTest;
+
+            theClass.Services.Length.ShouldEqual(3);
+        }
+
+        [Test]
+        public void CanInjectAnArrayOfMockServices4()
+        {
+            var mocker = new RhinoAutoMocker<ClassWithArray>();
+
+            mocker.PartialMockTheClassUnderTest();
+            ClassWithArray theClass = mocker.ClassUnderTest;
+
+            theClass.Services.Length.ShouldEqual(0);
+        }
+
+        
 
         [Test]
         public void AutoFillAConcreteClassWithMocks()

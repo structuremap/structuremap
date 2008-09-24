@@ -191,5 +191,10 @@ namespace StructureMap
             ForType(typeof (PLUGINTYPE)).AddInstance(literalInstance);
             SetDefault(typeof (PLUGINTYPE), literalInstance);
         }
+
+        public void EjectAllInstancesOf<T>()
+        {
+            ForType(typeof (T)).EjectAllInstances();
+        }
     }
 }

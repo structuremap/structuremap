@@ -60,8 +60,23 @@ namespace StructureMap.AutoMocking
             foreach (ParameterInfo parameterInfo in ctor.GetParameters())
             {
                 Type dependencyType = parameterInfo.ParameterType;
-                object dependency = _container.GetInstance(dependencyType);
-                list.Add(dependency);
+
+                if (dependencyType.IsArray)
+                {
+                    var values = _container.GetAllInstances(dependencyType.GetElementType());
+                    var array = Array.CreateInstance(dependencyType.GetElementType(), values.Count);
+                    values.CopyTo(array, 0);
+
+                    list.Add(array);
+                    
+                }
+                else
+                {
+                    object dependency = _container.GetInstance(dependencyType);
+                    list.Add(dependency);
+                }
+
+
             }
 
             return list.ToArray();
@@ -85,6 +100,19 @@ namespace StructureMap.AutoMocking
             _container.Inject(pluginType, stub);
         }
 
+        public void Inject<T>(T target)
+        {
+            _container.Inject<T>(target);
+        }
+
+        public T AddAdditionalMockFor<T>()
+        {
+            T mock = DynamicMock<T>();
+            _container.Configure(r => r.InstanceOf<T>().Is.Object(mock));
+
+            return mock;
+        }
+
         // So that Aaron Jensen can use his concrete HubService object
         // Construct whatever T is with all mocks, and make sure that the
         // ClassUnderTest gets built with a concrete T
@@ -92,6 +120,37 @@ namespace StructureMap.AutoMocking
         {
             T concreteClass = _container.FillDependencies<T>();
             _container.Inject(concreteClass);
+        }
+
+        public AutoMockedContainer Container
+        {
+            get { return _container; }
+        }
+
+        public T[] CreateMockArrayFor<T>(int count)
+        {
+            T[] returnValue = new T[count];
+            
+            for (int i = 0; i < returnValue.Length; i++)
+            {
+                returnValue[i] = DynamicMock<T>();
+            }
+
+            InjectArray<T>(returnValue);
+
+            return returnValue;
+        }
+
+        public void InjectArray<T>(T[] stubs)
+        {
+            _container.EjectAllInstancesOf<T>();
+            _container.Configure(x =>
+            {
+                foreach (var t in stubs)
+                {
+                    x.InstanceOf<T>().Is.Object(t);
+                }
+            });
         }
     }
 }

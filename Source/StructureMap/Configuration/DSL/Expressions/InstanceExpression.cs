@@ -33,6 +33,11 @@ namespace StructureMap.Configuration.DSL.Expressions
             return returnInstance(new SmartInstance<PLUGGEDTYPE>());
         }
 
+        public ConfiguredInstance OfConcreteType(Type type)
+        {
+            return returnInstance(new ConfiguredInstance(type));
+        }
+
         public LiteralInstance Object(T theObject)
         {
             return returnInstance(new LiteralInstance(theObject));
@@ -58,7 +63,7 @@ namespace StructureMap.Configuration.DSL.Expressions
             return returnInstance(new ConstructorInstance<T>(func));
         }
 
-        public ConstructorInstance<T> ConstructedBy(Func<BuildSession, T> func)
+        public ConstructorInstance<T> ConstructedBy(Func<IContext, T> func)
         {
             return returnInstance(new ConstructorInstance<T>(func));
         }

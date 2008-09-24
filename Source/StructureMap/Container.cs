@@ -277,11 +277,11 @@ namespace StructureMap
             return forType(type).GetAllInstances(withNewSession());
         }
 
-        public void Configure(Action<Registry> configure)
+        public void Configure(Action<ConfigurationExpression> configure)
         {
             lock (this)
             {
-                Registry registry = new Registry();
+                ConfigurationExpression registry = new ConfigurationExpression();
                 configure(registry);
 
                 PluginGraph graph = registry.Build();
@@ -335,5 +335,9 @@ namespace StructureMap
             return _pipelineGraph.ForType(type);
         }
 
+        public void EjectAllInstancesOf<T>()
+        {
+            _pipelineGraph.EjectAllInstancesOf<T>();
+        }
     }
 }

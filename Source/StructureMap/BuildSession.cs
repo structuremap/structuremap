@@ -8,7 +8,16 @@ using StructureMap.Util;
 
 namespace StructureMap
 {
-    public class BuildSession
+    public interface IContext
+    {
+        T GetInstance<T>();
+
+
+        BuildStack BuildStack { get; }
+        Type ParentType { get; }
+    }
+
+    public class BuildSession : IContext
     {
         private readonly InterceptorLibrary _interceptorLibrary;
         private readonly PipelineGraph _pipelineGraph;
@@ -133,6 +142,11 @@ namespace StructureMap
         private IInstanceFactory forType(Type pluginType)
         {
             return _pipelineGraph.ForType(pluginType);
+        }
+
+        T IContext.GetInstance<T>()
+        {
+            return (T) CreateInstance(typeof (T));
         }
     }
 }
