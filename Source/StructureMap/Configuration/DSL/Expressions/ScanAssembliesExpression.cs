@@ -66,12 +66,24 @@ namespace StructureMap.Configuration.DSL.Expressions
             return this;
         }
 
+        public ScanAssembliesExpression IncludeAssemblyContainingType(Type type)
+        {
+            _assemblies.Add(type.Assembly);
+
+            return this;
+        }
+
         public ScanAssembliesExpression AddAllTypesOf<PLUGINTYPE>()
+        {
+            return AddAllTypesOf(typeof (PLUGINTYPE));
+        }
+
+        public ScanAssembliesExpression AddAllTypesOf(Type pluginType)
         {
             _registry.addExpression(pluginGraph =>
             {
                 PluginFamily family =
-                    pluginGraph.FindFamily(typeof (PLUGINTYPE));
+                    pluginGraph.FindFamily(pluginType);
                 family.SearchForImplicitPlugins = true;
             });
 

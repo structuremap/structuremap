@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using Rhino.Mocks;
@@ -10,7 +11,10 @@ namespace StructureMap.AutoMocking
 
     public delegate void VoidMethod();
 
-    // Note that it subclasses the RhinoMocks.MockRepository class
+    /// <summary>
+    /// Provides an "Auto Mocking Container" for the concrete class TARGETCLASS
+    /// </summary>
+    /// <typeparam name="TARGETCLASS">The concrete class being tested</typeparam>
     public class RhinoAutoMocker<TARGETCLASS> : MockRepository where TARGETCLASS : class
     {
         private readonly AutoMockedContainer _container;
@@ -18,16 +22,15 @@ namespace StructureMap.AutoMocking
 
         public RhinoAutoMocker()
         {
-            RhinoMocksServiceLocator locator = new RhinoMocksServiceLocator(this);
+            var locator = new RhinoMocksServiceLocator(this);
             _container = new AutoMockedContainer(locator);
         }
 
-        // Replaces the inner Container in ObjectFactory with the mocked
-        // Container from the auto mocking container.  This will make ObjectFactory
-        // return mocks for everything.  Use cautiously!!!!!!!!!!!!!!!
 
-        // Gets the ClassUnderTest with mock objects (or stubs) pushed in
+        /// <summary>
+        ///Gets an instance of the ClassUnderTest with mock objects (or stubs) pushed in
         // for all of its dependencies
+        /// </summary>
         public TARGETCLASS ClassUnderTest
         {
             get
@@ -41,13 +44,27 @@ namespace StructureMap.AutoMocking
             }
         }
 
+        /// <summary>
+        /// Accesses the underlying AutoMockedContainer
+        /// </summary>
+        public AutoMockedContainer Container
+        {
+            get { return _container; }
+        }
+
+        /// <summary>
+        /// Use this with EXTREME caution.  This will replace the active "Container" in accessed
+        /// by ObjectFactory with the AutoMockedContainer from this instance
+        /// </summary>
         public void MockObjectFactory()
         {
             ObjectFactory.ReplaceManager(_container);
         }
 
-        // I find it useful from time to time to use partial mocks for the ClassUnderTest
-        // Especially in Presenter testing
+        /// <summary>
+        /// Calling this method will immediately create a "Partial" mock
+        /// for the ClassUnderTest using the "Greediest" constructor.
+        /// </summary>
         public void PartialMockTheClassUnderTest()
         {
             _classUnderTest = PartialMock<TARGETCLASS>(getConstructorArgs());
@@ -56,97 +73,123 @@ namespace StructureMap.AutoMocking
         private object[] getConstructorArgs()
         {
             ConstructorInfo ctor = Constructor.GetGreediestConstructor(typeof (TARGETCLASS));
-            List<object> list = new List<object>();
+            var list = new List<object>();
             foreach (ParameterInfo parameterInfo in ctor.GetParameters())
             {
                 Type dependencyType = parameterInfo.ParameterType;
 
                 if (dependencyType.IsArray)
                 {
-                    var values = _container.GetAllInstances(dependencyType.GetElementType());
-                    var array = Array.CreateInstance(dependencyType.GetElementType(), values.Count);
+                    IList values = _container.GetAllInstances(dependencyType.GetElementType());
+                    Array array = Array.CreateInstance(dependencyType.GetElementType(), values.Count);
                     values.CopyTo(array, 0);
 
                     list.Add(array);
-                    
                 }
                 else
                 {
                     object dependency = _container.GetInstance(dependencyType);
                     list.Add(dependency);
                 }
-
-
             }
 
             return list.ToArray();
         }
 
-        // Get one of the mock objects that are injected into the constructor function
-        // of the ClassUnderTest
+        /// <summary>
+        /// Gets the mock object for type T that would be injected into the constructor function
+        /// of the ClassUnderTest
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public T Get<T>()
         {
             return _container.GetInstance<T>();
         }
 
-        // Set the auto mocking container to use a Stub for Type T
-        public void InjectStub<T>(T stub)
-        {
-            _container.Inject<T>(stub);
-        }
-
+        /// <summary>
+        /// Method to specify the exact object that will be used for 
+        /// "pluginType."  Useful for stub objects and/or static mocks
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="stub"></param>
         public void Inject(Type pluginType, object stub)
         {
             _container.Inject(pluginType, stub);
         }
 
+        /// <summary>
+        /// Method to specify the exact object that will be used for 
+        /// "pluginType."  Useful for stub objects and/or static mocks
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="target"></param>
         public void Inject<T>(T target)
         {
-            _container.Inject<T>(target);
+            _container.Inject(target);
         }
 
+
+        /// <summary>
+        /// Adds an additional mock object for a given T
+        /// Useful for array arguments to the ClassUnderTest
+        /// object
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public T AddAdditionalMockFor<T>()
         {
-            T mock = DynamicMock<T>();
+            var mock = DynamicMock<T>();
             _container.Configure(r => r.InstanceOf<T>().Is.Object(mock));
 
             return mock;
         }
 
-        // So that Aaron Jensen can use his concrete HubService object
-        // Construct whatever T is with all mocks, and make sure that the
-        // ClassUnderTest gets built with a concrete T
+
+        /// <summary>
+        /// So that Aaron Jensen can use his concrete HubService object
+        /// Construct whatever T is with all mocks, and make sure that the
+        /// ClassUnderTest gets built with a concrete T
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
         public void UseConcreteClassFor<T>()
         {
-            T concreteClass = _container.FillDependencies<T>();
+            var concreteClass = _container.FillDependencies<T>();
             _container.Inject(concreteClass);
         }
 
-        public AutoMockedContainer Container
-        {
-            get { return _container; }
-        }
-
+        /// <summary>
+        /// Creates, returns, and registers an array of mock objects for type T.  
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="count"></param>
+        /// <returns></returns>
         public T[] CreateMockArrayFor<T>(int count)
         {
-            T[] returnValue = new T[count];
-            
+            var returnValue = new T[count];
+
             for (int i = 0; i < returnValue.Length; i++)
             {
                 returnValue[i] = DynamicMock<T>();
             }
 
-            InjectArray<T>(returnValue);
+            InjectArray(returnValue);
 
             return returnValue;
         }
 
+        /// <summary>
+        /// Allows you to "inject" an array of known objects for an 
+        /// argument of type T[] in the ClassUnderTest
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="stubs"></param>
         public void InjectArray<T>(T[] stubs)
         {
             _container.EjectAllInstancesOf<T>();
             _container.Configure(x =>
             {
-                foreach (var t in stubs)
+                foreach (T t in stubs)
                 {
                     x.InstanceOf<T>().Is.Object(t);
                 }

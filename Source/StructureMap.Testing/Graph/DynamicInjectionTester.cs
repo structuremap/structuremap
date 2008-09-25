@@ -97,6 +97,36 @@ namespace StructureMap.Testing.Graph
             Assert.IsTrue(found);
         }
 
+
+        [Test]
+        public void Add_an_assembly_on_the_fly_and_pick_up_plugins2()
+        {
+            var container = new Container();
+            container.Configure(
+                registry => { registry.ScanAssemblies().IncludeAssemblyContainingType(typeof(IService<>)).AddAllTypesOf(typeof(IService<>)); });
+
+            IList<IService<string>> instances = container.GetAllInstances<IService<string>>();
+            instances.Count.ShouldBeGreaterThan(0);
+        }
+
+
+        [Test]
+        public void Add_an_assembly_on_the_fly_and_pick_up_plugins3()
+        {
+            var container = new Container();
+            container.Configure(
+                registry => { registry.ScanAssemblies().IncludeTheCallingAssembly().AddAllTypesOf(typeof(IWidget)); });
+
+            IList<IWidget> instances = container.GetAllInstances<IWidget>();
+            bool found = false;
+            foreach (IWidget widget in instances)
+            {
+                found |= widget.GetType().Equals(typeof(TheWidget));
+            }
+
+            Assert.IsTrue(found);
+        }
+
         [Test]
         public void Add_generic_stuff_in_configure()
         {

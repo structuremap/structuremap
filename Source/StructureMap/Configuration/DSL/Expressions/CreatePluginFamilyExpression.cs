@@ -154,7 +154,13 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         public CreatePluginFamilyExpression<PLUGINTYPE> AddConcreteType<PLUGGEDTYPE>()
         {
-            _alterations.Add(family => family.AddInstance(new SmartInstance<PLUGGEDTYPE>()));
+            _alterations.Add(family =>
+            {
+                string name = PluginCache.GetPlugin(typeof (PLUGGEDTYPE)).ConcreteKey;
+                var instance = new SmartInstance<PLUGGEDTYPE>().WithName(name);
+                family.AddInstance(instance);
+            });
+
             return this;
         }
 
