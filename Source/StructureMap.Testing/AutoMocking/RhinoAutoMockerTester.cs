@@ -85,6 +85,11 @@ namespace StructureMap.Testing.AutoMocking
             {
                 get { return _service3; }
             }
+
+            public void CallService()
+            {
+                _service.Go();
+            }
         }
 
         public interface IMockedService
@@ -326,5 +331,16 @@ namespace StructureMap.Testing.AutoMocking
 
             Assert.AreEqual("Max", concreteClass.Name);
         }
+
+        [Test]
+        public void TheAutoMockerOptionallyPushesInMocksInReplayModeToAllowForAAAsyntax()
+        {
+            var autoMocker = new RhinoAutoMocker<ConcreteClass>(MockStyle.DynamicWithAAASupport);
+
+            autoMocker.ClassUnderTest.CallService();
+
+            autoMocker.Get<IMockedService>().AssertWasCalled(s => s.Go());
+        }
+
     }
 }

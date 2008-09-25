@@ -11,6 +11,9 @@ namespace StructureMap.AutoMocking
 
     public delegate void VoidMethod();
 
+    public enum MockStyle { Dynamic, DynamicWithAAASupport }
+
+    // Note that it subclasses the RhinoMocks.MockRepository class
     /// <summary>
     /// Provides an "Auto Mocking Container" for the concrete class TARGETCLASS
     /// </summary>
@@ -20,10 +23,23 @@ namespace StructureMap.AutoMocking
         private readonly AutoMockedContainer _container;
         private TARGETCLASS _classUnderTest;
 
-        public RhinoAutoMocker()
+        public RhinoAutoMocker() : this(MockStyle.Dynamic) {}
+
+        public RhinoAutoMocker(MockStyle mockStyle)
         {
-            var locator = new RhinoMocksServiceLocator(this);
-            _container = new AutoMockedContainer(locator);
+            ServiceLocator serviceLocator;
+            switch (mockStyle)
+            {
+                case MockStyle.DynamicWithAAASupport:
+                    serviceLocator = new RhinoMocksAAAServiceLocator(this);
+                    break;
+                case MockStyle.Dynamic:
+                    serviceLocator = new RhinoMocksServiceLocator(this);
+                    break;
+                default:
+                    throw new InvalidOperationException("Unsupported MockStyle " + mockStyle);
+            }
+            _container = new AutoMockedContainer(serviceLocator);
         }
 
 
