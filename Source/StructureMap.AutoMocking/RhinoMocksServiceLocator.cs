@@ -6,12 +6,17 @@ namespace StructureMap.AutoMocking
     public class RhinoMocksServiceLocator : ServiceLocator
     {
         private readonly MockRepository _mocks;
+        private readonly Func<MockRepository, Type, object> mockCreationStrategy;
 
-        public RhinoMocksServiceLocator(MockRepository mocks)
+        public RhinoMocksServiceLocator(MockRepository mocks, Func<MockRepository, Type, object> mockCreationStrategy)
         {
             _mocks = mocks;
+            this.mockCreationStrategy = mockCreationStrategy;
         }
 
+        public RhinoMocksServiceLocator(MockRepository mocks) : this(mocks, MockCreationStrategy.RecordMode)
+        {
+        }
 
         public RhinoMocksServiceLocator() : this(new MockRepository())
         {
@@ -21,46 +26,30 @@ namespace StructureMap.AutoMocking
 
         public T Service<T>()
         {
-            return _mocks.DynamicMock<T>();
+            return (T)mockCreationStrategy(_mocks, typeof (T));
         }
 
         public object Service(Type serviceType)
         {
-            return _mocks.DynamicMock(serviceType);
+            return mockCreationStrategy(_mocks, serviceType);
         }
 
         #endregion
     }
 
-    public class RhinoMocksAAAServiceLocator : ServiceLocator
+    public static class MockCreationStrategy
     {
-        private readonly MockRepository _mocks;
-
-        public RhinoMocksAAAServiceLocator(MockRepository mocks)
+        public static object RecordMode(MockRepository repository, Type type)
         {
-            _mocks = mocks;
+            return repository.DynamicMock(type);
         }
 
-
-        public RhinoMocksAAAServiceLocator()
-            : this(new MockRepository())
+        public static object ReplayMode(MockRepository repository, Type type)
         {
-        }
-
-        #region ServiceLocator Members
-
-        public T Service<T>()
-        {
-            return MockRepository.GenerateMock<T>();
-        }
-
-        public object Service(Type serviceType)
-        {
-            var mock = _mocks.DynamicMock(serviceType);
-            _mocks.Replay(mock);
+            var mock = repository.DynamicMock(type);
+            repository.Replay(mock);
             return mock;
         }
-
-        #endregion
     }
+
 }

@@ -11,7 +11,7 @@ namespace StructureMap.AutoMocking
 
     public delegate void VoidMethod();
 
-    public enum MockStyle { Dynamic, DynamicWithAAASupport }
+    public enum MockMode { Record, Replay }
 
     // Note that it subclasses the RhinoMocks.MockRepository class
     /// <summary>
@@ -23,23 +23,27 @@ namespace StructureMap.AutoMocking
         private readonly AutoMockedContainer _container;
         private TARGETCLASS _classUnderTest;
 
-        public RhinoAutoMocker() : this(MockStyle.Dynamic) {}
+        public RhinoAutoMocker() : this(MockMode.Record) {}
 
-        public RhinoAutoMocker(MockStyle mockStyle)
+        public RhinoAutoMocker(MockMode mockMode)
         {
-            ServiceLocator serviceLocator;
-            switch (mockStyle)
-            {
-                case MockStyle.DynamicWithAAASupport:
-                    serviceLocator = new RhinoMocksAAAServiceLocator(this);
-                    break;
-                case MockStyle.Dynamic:
-                    serviceLocator = new RhinoMocksServiceLocator(this);
-                    break;
-                default:
-                    throw new InvalidOperationException("Unsupported MockStyle " + mockStyle);
-            }
+            var mockCreationStrategy = getMockCreationStrategy(mockMode);
+            var serviceLocator = new RhinoMocksServiceLocator(this, mockCreationStrategy);
             _container = new AutoMockedContainer(serviceLocator);
+        }
+
+
+        private static Func<MockRepository, Type, object> getMockCreationStrategy(MockMode mockMode)
+        {
+            switch (mockMode)
+            {
+                case MockMode.Record:
+                    return MockCreationStrategy.RecordMode;
+                case MockMode.Replay:
+                    return MockCreationStrategy.ReplayMode;
+                default:
+                    throw new InvalidOperationException("Unsupported MockMode " + mockMode);
+            }
         }
 
 
