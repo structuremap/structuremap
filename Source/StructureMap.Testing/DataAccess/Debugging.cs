@@ -11,6 +11,7 @@ namespace StructureMap.Testing.DataAccess
     [TestFixture]
     public class Debugging
     {
+
         [Test, Explicit]
         public void GiveJSONAWhirl()
         {

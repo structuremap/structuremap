@@ -137,9 +137,12 @@ namespace StructureMap.Configuration.DSL
         /// Programmatically determine Assembly's to be scanned for attribute configuration
         /// </summary>
         /// <returns></returns>
-        public ScanAssembliesExpression ScanAssemblies()
+        public void Scan(Action<AssemblyScanner> action)
         {
-            return new ScanAssembliesExpression(this);
+            var scanner = new AssemblyScanner();
+            action(scanner);
+
+            _actions.Add(graph => graph.AddScanner(scanner));
         }
 
         [Obsolete("Like to get rid of this")]

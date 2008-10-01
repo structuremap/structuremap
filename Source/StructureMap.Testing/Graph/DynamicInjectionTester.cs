@@ -75,7 +75,7 @@ namespace StructureMap.Testing.Graph
         public void Add_an_assembly_in_the_Configure()
         {
             var container = new Container();
-            container.Configure(registry => { registry.ScanAssemblies().IncludeTheCallingAssembly(); });
+            container.Configure(registry => { registry.Scan(x => x.TheCallingAssembly()); });
 
             Assert.IsInstanceOfType(typeof (TheThingy), container.GetInstance<IThingy>());
         }
@@ -85,7 +85,11 @@ namespace StructureMap.Testing.Graph
         {
             var container = new Container();
             container.Configure(
-                registry => { registry.ScanAssemblies().IncludeTheCallingAssembly().AddAllTypesOf<IWidget>(); });
+                registry => registry.Scan(x =>
+                {
+                    x.TheCallingAssembly();
+                    x.AddAllTypesOf<IWidget>();
+                }));
 
             IList<IWidget> instances = container.GetAllInstances<IWidget>();
             bool found = false;
@@ -103,7 +107,15 @@ namespace StructureMap.Testing.Graph
         {
             var container = new Container();
             container.Configure(
-                registry => { registry.ScanAssemblies().IncludeAssemblyContainingType(typeof(IService<>)).AddAllTypesOf(typeof(IService<>)); });
+                registry =>
+                {
+                    registry.Scan(x =>
+                    {
+                        x.AssemblyContainingType(typeof (IService<>));
+                        x.AddAllTypesOf(typeof (IService<>));
+                    });
+                }
+                );
 
             IList<IService<string>> instances = container.GetAllInstances<IService<string>>();
             instances.Count.ShouldBeGreaterThan(0);
@@ -114,14 +126,23 @@ namespace StructureMap.Testing.Graph
         public void Add_an_assembly_on_the_fly_and_pick_up_plugins3()
         {
             var container = new Container();
+
             container.Configure(
-                registry => { registry.ScanAssemblies().IncludeTheCallingAssembly().AddAllTypesOf(typeof(IWidget)); });
+                registry =>
+                {
+                    registry.Scan(x =>
+                    {
+                        x.TheCallingAssembly();
+                        x.AddAllTypesOf(typeof (IWidget));
+                    });
+                }
+                );
 
             IList<IWidget> instances = container.GetAllInstances<IWidget>();
             bool found = false;
             foreach (IWidget widget in instances)
             {
-                found |= widget.GetType().Equals(typeof(TheWidget));
+                found |= widget.GetType().Equals(typeof (TheWidget));
             }
 
             Assert.IsTrue(found);

@@ -38,7 +38,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void Add_an_instance_by_lambda()
         {
-            Container manager =
+            var manager =
                 new Container(
                     r => r.InstanceOf<IWidget>().Is.ConstructedBy(() => new AWidget()));
 
@@ -48,9 +48,9 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void Add_an_instance_by_literal()
         {
-            AWidget aWidget = new AWidget();
+            var aWidget = new AWidget();
 
-            Container manager =
+            var manager =
                 new Container(registry => registry.InstanceOf<IWidget>().Is.Object(aWidget));
 
             Assert.IsInstanceOfType(typeof (AWidget), manager.GetAllInstances<IWidget>()[0]);
@@ -60,7 +60,8 @@ namespace StructureMap.Testing.Configuration.DSL
         public void AddInstanceByNameOnlyAddsOneInstanceToStructureMap()
         {
             IContainer manager = new Container(registry => registry.ForRequestedType<Something>().AddInstance(
-                                                               RegistryExpressions.Instance<RedSomething>().WithName("Red")
+                                                               RegistryExpressions.Instance<RedSomething>().WithName(
+                                                                   "Red")
                                                                ));
             IList<Something> instances = manager.GetAllInstances<Something>();
             Assert.AreEqual(1, instances.Count);
@@ -70,7 +71,8 @@ namespace StructureMap.Testing.Configuration.DSL
         public void AddInstanceWithNameOnlyAddsOneInstanceToStructureMap()
         {
             IContainer manager =
-                new Container(registry => registry.InstanceOf<Something>().Is.OfConcreteType<RedSomething>().WithName("Red"));
+                new Container(
+                    registry => registry.InstanceOf<Something>().Is.OfConcreteType<RedSomething>().WithName("Red"));
             IList<Something> instances = manager.GetAllInstances<Something>();
             Assert.AreEqual(1, instances.Count);
         }
@@ -78,7 +80,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void AsAnotherScope()
         {
-            Registry registry = new Registry();
+            var registry = new Registry();
             CreatePluginFamilyExpression<IGateway> expression =
                 registry.BuildInstancesOf<IGateway>().CacheBy(InstanceScope.ThreadLocal);
             Assert.IsNotNull(expression);
@@ -92,7 +94,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void BuildInstancesOfType()
         {
-            Registry registry = new Registry();
+            var registry = new Registry();
             registry.BuildInstancesOf<IGateway>();
             PluginGraph pluginGraph = registry.Build();
 
@@ -103,7 +105,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void BuildPluginFamilyAsPerRequest()
         {
-            Registry registry = new Registry();
+            var registry = new Registry();
             CreatePluginFamilyExpression<IGateway> expression =
                 registry.BuildInstancesOf<IGateway>();
             Assert.IsNotNull(expression);
@@ -117,7 +119,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void BuildPluginFamilyAsSingleton()
         {
-            Registry registry = new Registry();
+            var registry = new Registry();
             CreatePluginFamilyExpression<IGateway> expression =
                 registry.BuildInstancesOf<IGateway>().AsSingletons();
             Assert.IsNotNull(expression);
@@ -130,15 +132,15 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void CanOverrideTheDefaultInstance1()
         {
-            Registry registry = new Registry();
+            var registry = new Registry();
             // Specify the default implementation for an interface
             registry.BuildInstancesOf<IGateway>().TheDefaultIsConcreteType<StubbedGateway>();
 
             PluginGraph pluginGraph = registry.Build();
             Assert.IsTrue(pluginGraph.ContainsFamily(typeof (IGateway)));
 
-            Container manager = new Container(pluginGraph);
-            IGateway gateway = (IGateway) manager.GetInstance(typeof (IGateway));
+            var manager = new Container(pluginGraph);
+            var gateway = (IGateway) manager.GetInstance(typeof (IGateway));
 
             Assert.IsInstanceOfType(typeof (StubbedGateway), gateway);
         }
@@ -146,14 +148,14 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void CanOverrideTheDefaultInstanceAndCreateAnAllNewPluginOnTheFly()
         {
-            Registry registry = new Registry();
+            var registry = new Registry();
             registry.BuildInstancesOf<IGateway>().TheDefaultIsConcreteType<FakeGateway>();
             PluginGraph pluginGraph = registry.Build();
 
             Assert.IsTrue(pluginGraph.ContainsFamily(typeof (IGateway)));
 
-            Container manager = new Container(pluginGraph);
-            IGateway gateway = (IGateway) manager.GetInstance(typeof (IGateway));
+            var manager = new Container(pluginGraph);
+            var gateway = (IGateway) manager.GetInstance(typeof (IGateway));
 
             Assert.IsInstanceOfType(typeof (FakeGateway), gateway);
         }
@@ -162,21 +164,22 @@ namespace StructureMap.Testing.Configuration.DSL
         public void CreatePluginFamilyWithADefault()
         {
             IContainer manager = new Container(registry => registry.BuildInstancesOf<IWidget>().TheDefaultIs(
-                                                               RegistryExpressions.Instance<ColorWidget>().WithProperty("color").
+                                                               RegistryExpressions.Instance<ColorWidget>().WithProperty(
+                                                                   "color").
                                                                    EqualTo(
                                                                    "Red")
                                                                ));
 
-            ColorWidget widget = (ColorWidget) manager.GetInstance<IWidget>();
+            var widget = (ColorWidget) manager.GetInstance<IWidget>();
             Assert.AreEqual("Red", widget.Color);
         }
 
         [Test]
         public void PutAnInterceptorIntoTheInterceptionChainOfAPluginFamilyInTheDSL()
         {
-            StubbedInstanceFactoryInterceptor factoryInterceptor = new StubbedInstanceFactoryInterceptor();
+            var factoryInterceptor = new StubbedInstanceFactoryInterceptor();
 
-            Registry registry = new Registry();
+            var registry = new Registry();
             registry.BuildInstancesOf<IGateway>().InterceptConstructionWith(factoryInterceptor);
 
             PluginGraph pluginGraph = registry.Build();
@@ -187,7 +190,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void Set_the_default_by_a_lambda()
         {
-            Container manager =
+            var manager =
                 new Container(
                     registry => registry.ForRequestedType<IWidget>().TheDefault.Is.ConstructedBy(() => new AWidget()));
 
@@ -197,13 +200,26 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void Set_the_default_to_a_built_object()
         {
-            AWidget aWidget = new AWidget();
+            var aWidget = new AWidget();
 
-            Container manager =
+            var manager =
                 new Container(
                     registry => registry.ForRequestedType<IWidget>().TheDefault.Is.Object(aWidget));
 
             Assert.AreSame(aWidget, manager.GetInstance<IWidget>());
+        }
+
+        [Test(
+            Description =
+                "Guid test based on problems encountered by Paul Segaro. See http://groups.google.com/group/structuremap-users/browse_thread/thread/34ddaf549ebb14f7?hl=en"
+            )]
+        public void TheDefaultInstanceIsALambdaForGuidNewGuid()
+        {
+            var manager =
+                new Container(
+                    registry => registry.ForRequestedType<Guid>().TheDefault.Is.ConstructedBy(() => Guid.NewGuid()));
+
+            Assert.IsInstanceOfType(typeof (Guid), manager.GetInstance<Guid>());
         }
 
         [Test]
@@ -218,29 +234,19 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void TheDefaultInstanceIsPickedUpFromTheAttribute()
         {
-            Registry registry = new Registry();
+            var registry = new Registry();
             registry.BuildInstancesOf<IGateway>();
-            registry.ScanAssemblies().IncludeAssemblyContainingType<IGateway>();
+            registry.Scan(x => x.AssemblyContainingType<IGateway>());
 
             PluginGraph pluginGraph = registry.Build();
 
             Assert.IsTrue(pluginGraph.ContainsFamily(typeof (IGateway)));
 
-            Container manager = new Container(pluginGraph);
-            IGateway gateway = (IGateway) manager.GetInstance(typeof (IGateway));
+            var manager = new Container(pluginGraph);
+            var gateway = (IGateway) manager.GetInstance(typeof (IGateway));
 
             Assert.IsInstanceOfType(typeof (DefaultGateway), gateway);
         }
-
-		[Test(Description = "Guid test based on problems encountered by Paul Segaro. See http://groups.google.com/group/structuremap-users/browse_thread/thread/34ddaf549ebb14f7?hl=en")]
-		public void TheDefaultInstanceIsALambdaForGuidNewGuid()
-		{
-			Container manager =
-				new Container(
-					registry => registry.ForRequestedType<Guid>().TheDefault.Is.ConstructedBy(()=>Guid.NewGuid()));
-
-			Assert.IsInstanceOfType(typeof(Guid), manager.GetInstance<Guid>());
-		}
     }
 
     public class StubbedInstanceFactoryInterceptor : IBuildInterceptor

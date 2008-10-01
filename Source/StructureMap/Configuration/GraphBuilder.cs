@@ -1,7 +1,6 @@
 using System;
 using System.Reflection;
 using StructureMap.Configuration.DSL;
-using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 
@@ -9,8 +8,10 @@ namespace StructureMap.Configuration
 {
     public class GraphBuilder : IGraphBuilder
     {
+        private readonly AssemblyScanner _assemblyScanner;
         private readonly PluginGraph _pluginGraph;
         private readonly PluginGraph _systemGraph;
+        private readonly AssemblyScanner _systemScanner;
         private Profile _profile;
         private Container _systemContainer;
 
@@ -22,16 +23,19 @@ namespace StructureMap.Configuration
         public GraphBuilder(Registry[] registries, PluginGraph pluginGraph)
         {
             _pluginGraph = pluginGraph;
+            _assemblyScanner = new AssemblyScanner();
+            _pluginGraph.AddScanner(_assemblyScanner);
+
             foreach (Registry registry in registries)
             {
                 registry.ConfigurePluginGraph(_pluginGraph);
             }
 
-            AssemblyScanner scanner = new AssemblyScanner(new GraphLog());
-            scanner.Add(Assembly.GetExecutingAssembly());
-            scanner.IgnoreRegistries();
+            _systemScanner = new AssemblyScanner();
+            _systemScanner.Assembly(Assembly.GetExecutingAssembly());
+            _systemScanner.IgnoreRegistries();
 
-            _systemGraph = new PluginGraph(scanner);
+            _systemGraph = new PluginGraph(_systemScanner);
         }
 
         #region IGraphBuilder Members
@@ -56,8 +60,8 @@ namespace StructureMap.Configuration
             try
             {
                 Assembly assembly = AppDomain.CurrentDomain.Load(assemblyName);
-                _pluginGraph.Assemblies.Add(assembly);
-                _systemGraph.Assemblies.Add(assembly);
+                _assemblyScanner.Assembly(assembly);
+                _systemScanner.Assembly(assembly);
             }
             catch (Exception ex)
             {
@@ -94,7 +98,7 @@ namespace StructureMap.Configuration
         {
             try
             {
-                T systemObject = (T) buildSystemObject(typeof (T), memento);
+                var systemObject = (T) buildSystemObject(typeof (T), memento);
                 action(systemObject);
             }
             catch (Exception ex)

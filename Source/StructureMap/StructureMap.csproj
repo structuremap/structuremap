@@ -218,7 +218,6 @@
     <Compile Include="Pipeline\ExplicitArguments.cs" />
     <Compile Include="Configuration\DSL\Expressions\ProfileExpression.cs" />
     <Compile Include="Configuration\DSL\Registry.cs" />
-    <Compile Include="Configuration\DSL\Expressions\ScanAssembliesExpression.cs" />
     <Compile Include="Configuration\FamilyParser.cs">
       <SubType>Code</SubType>
     </Compile>

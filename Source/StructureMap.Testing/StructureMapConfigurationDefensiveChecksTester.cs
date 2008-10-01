@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -38,7 +38,7 @@ namespace StructureMap.Testing
             shouldThrowExceptionWhenSealed(() => StructureMapConfiguration.IncludeConfigurationFromNode(null, null));
             shouldThrowExceptionWhenSealed(() => StructureMapConfiguration.PullConfigurationFromAppConfig = true);
             shouldThrowExceptionWhenSealed(() => StructureMapConfiguration.RegisterInterceptor(null));
-            shouldThrowExceptionWhenSealed(() => StructureMapConfiguration.ScanAssemblies());
+            shouldThrowExceptionWhenSealed(() => StructureMapConfiguration.Scan(x => {}));
             shouldThrowExceptionWhenSealed(() => StructureMapConfiguration.TheDefaultProfileIs("something"));
             shouldThrowExceptionWhenSealed(() => StructureMapConfiguration.UseDefaultStructureMapConfigFile = true);
         }

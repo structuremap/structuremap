@@ -16,39 +16,46 @@ namespace StructureMap.Graph
     [Serializable]
     public class PluginGraph
     {
-        private readonly AssemblyScanner _assemblies;
         private readonly InterceptorLibrary _interceptorLibrary = new InterceptorLibrary();
-        private GraphLog _log = new GraphLog();
+        private readonly List<Type> _pluggedTypes = new List<Type>();
         private readonly PluginFamilyCollection _pluginFamilies;
         private readonly ProfileManager _profileManager = new ProfileManager();
-        private bool _sealed = false;
         private readonly List<Registry> _registries = new List<Registry>();
-        private readonly List<Type> _pluggedTypes = new List<Type>();
-        
+        private readonly List<AssemblyScanner> _scanners = new List<AssemblyScanner>();
+        private GraphLog _log = new GraphLog();
+        private bool _sealed;
+
 
         /// <summary>
         /// Default constructor
         /// </summary>
-        public PluginGraph() : base()
+        public PluginGraph()
         {
-            _assemblies = new AssemblyScanner(_log);
             _pluginFamilies = new PluginFamilyCollection(this);
         }
 
         public PluginGraph(AssemblyScanner assemblies)
         {
-            _assemblies = assemblies;
             _pluginFamilies = new PluginFamilyCollection(this);
+            _scanners.Add(assemblies);
+        }
+
+        public void Scan(Action<AssemblyScanner> action)
+        {
+            var scanner = new AssemblyScanner();
+            action(scanner);
+
+            AddScanner(scanner);
+        }
+
+        public void ScanThisAssembly()
+        {
+            Scan(x => x.TheCallingAssembly());
         }
 
         public List<Registry> Registries
         {
             get { return _registries; }
-        }
-
-        public AssemblyScanner Assemblies
-        {
-            get { return _assemblies; }
         }
 
         public PluginFamilyCollection PluginFamilies
@@ -95,7 +102,7 @@ namespace StructureMap.Graph
                 return;
             }
 
-            _assemblies.ScanForAll(this);
+            _scanners.ForEach(scanner => scanner.ScanForAll(this));
 
             _pluginFamilies.Each(family => family.AddTypes(_pluggedTypes));
             _pluginFamilies.Each(family => family.Seal());
@@ -107,14 +114,19 @@ namespace StructureMap.Graph
 
         #endregion
 
+        public void AddScanner(AssemblyScanner scanner)
+        {
+            _scanners.Add(scanner);
+        }
+
         public static PluginGraph BuildGraphFromAssembly(Assembly assembly)
         {
-            PluginGraph pluginGraph = new PluginGraph();
-            pluginGraph.Assemblies.Add(assembly);
+            var graph = new PluginGraph();
+            graph.Scan(x => x.Assembly(assembly));
 
-            pluginGraph.Seal();
+            graph.Seal();
 
-            return pluginGraph;
+            return graph;
         }
 
         public PluginFamily FindFamily(Type pluginType)

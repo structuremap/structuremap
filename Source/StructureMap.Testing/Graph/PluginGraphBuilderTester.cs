@@ -19,13 +19,13 @@ namespace StructureMap.Testing.Graph
         {
             DataMother.WriteDocument("FullTesting.XML");
 
-            XmlDocument doc = new XmlDocument();
+            var doc = new XmlDocument();
             doc.Load("StructureMap.config");
             XmlNode node = doc.DocumentElement.SelectSingleNode("//StructureMap");
 
-            ConfigurationParser parser = new ConfigurationParser(node);
+            var parser = new ConfigurationParser(node);
 
-            PluginGraphBuilder builder = new PluginGraphBuilder(parser);
+            var builder = new PluginGraphBuilder(parser);
             graph = builder.Build();
         }
 
@@ -36,7 +36,9 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void BuildsInterceptionChain()
         {
-            PluginGraph pluginGraph = DataMother.BuildPluginGraphFromXml(@"
+            PluginGraph pluginGraph =
+                DataMother.BuildPluginGraphFromXml(
+                    @"
 <StructureMap>
 	<PluginFamily Type='StructureMap.Testing.Widget.IWidget' Assembly='StructureMap.Testing.Widget' DefaultKey=''>
 		<Plugin Assembly='StructureMap.Testing.Widget' Type='StructureMap.Testing.Widget.NotPluggableWidget' ConcreteKey='NotPluggable'/>
@@ -53,7 +55,7 @@ namespace StructureMap.Testing.Graph
             pluginGraph.FindFamily(typeof (Rule)).Policy.ShouldBeOfType(typeof (SingletonPolicy));
 
             // The PluginFamily for IWidget has no intercepters configured
-            pluginGraph.FindFamily(typeof (IWidget)).Policy.ShouldBeOfType(typeof(BuildPolicy));
+            pluginGraph.FindFamily(typeof (IWidget)).Policy.ShouldBeOfType(typeof (BuildPolicy));
         }
 
         [Test]
@@ -148,8 +150,9 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void GotPluginsThatAreMarkedAsPluggable()
         {
-            Registry registry = new Registry();
-            registry.ScanAssemblies().IncludeAssemblyContainingType<IWidget>();
+            var registry = new Registry();
+            registry.Scan(x => x.AssemblyContainingType<IWidget>());
+
             registry.BuildInstancesOf<IWidget>();
             PluginGraph pluginGraph = registry.Build();
 

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using StructureMap.Graph;
-using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget5;
 
@@ -28,10 +27,9 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void AutomaticallyFindRegistryFromAssembly()
         {
-            StructureMapConfiguration.ResetAll();
-            StructureMapConfiguration.ScanAssemblies().IncludeAssemblyContainingType<RedGreenRegistry>();
+            ObjectFactory.Initialize(x => { x.Scan(s => { s.AssemblyContainingType<RedGreenRegistry>(); }); });
 
-            List<string> colors = new List<string>();
+            var colors = new List<string>();
             foreach (IWidget widget in ObjectFactory.GetAllInstances<IWidget>())
             {
                 if (!(widget is ColorWidget))
@@ -39,7 +37,7 @@ namespace StructureMap.Testing.Configuration.DSL
                     continue;
                 }
 
-                ColorWidget color = (ColorWidget) widget;
+                var color = (ColorWidget) widget;
                 colors.Add(color.Color);
             }
 
@@ -55,11 +53,15 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void FindRegistriesWithinPluginGraphSeal()
         {
-            PluginGraph graph = new PluginGraph();
-            graph.Assemblies.Add(typeof (RedGreenRegistry).Assembly);
+            var graph = new PluginGraph();
+
+            var scanner = new AssemblyScanner();
+            scanner.AssemblyContainingType(typeof (RedGreenRegistry));
+            scanner.ScanForAll(graph);
+
             graph.Seal();
 
-            List<string> colors = new List<string>();
+            var colors = new List<string>();
             PluginFamily family = graph.FindFamily(typeof (IWidget));
             family.EachInstance(instance => colors.Add(instance.Name));
 

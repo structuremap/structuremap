@@ -18,9 +18,11 @@ namespace StructureMap.Testing.Graph
             _manager = new Container(registry =>
             {
                 registry.BuildInstancesOf<Rule>();
-                registry.ScanAssemblies()
-                    .IncludeAssembly("StructureMap.Testing.Widget")
-                    .IncludeAssembly("StructureMap.Testing.Widget2");
+                registry.Scan(x =>
+                {
+                    x.Assembly("StructureMap.Testing.Widget");
+                    x.Assembly("StructureMap.Testing.Widget2");
+                });
             });
         }
 
@@ -32,17 +34,17 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void CanMakeAClassWithNoConstructorParametersWithoutADefinedMemento()
         {
-            Registry registry = new Registry();
-            registry.ScanAssemblies().IncludeAssembly("StructureMap.Testing.Widget3");
+            var registry = new Registry();
+            registry.Scan(x => x.Assembly("StructureMap.Testing.Widget3"));
+
             registry.BuildInstancesOf<IGateway>();
 
             PluginGraph graph = registry.Build();
-            PipelineGraph pipelineGraph = new PipelineGraph(graph);
+            var pipelineGraph = new PipelineGraph(graph);
 
-            BuildSession session = new BuildSession(graph);
+            var session = new BuildSession(graph);
 
-
-            DefaultGateway gateway =
+            var gateway =
                 (DefaultGateway) session.CreateInstance(typeof (IGateway), "Default");
 
             Assert.IsNotNull(gateway);
@@ -57,9 +59,9 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void Import_from_family_picks_up_new_instances()
         {
-            InstanceFactory factory = new InstanceFactory(typeof (IWidget));
+            var factory = new InstanceFactory(typeof (IWidget));
 
-            PluginFamily family = new PluginFamily(typeof (IWidget));
+            var family = new PluginFamily(typeof (IWidget));
             family.AddInstance(new LiteralInstance(new AWidget()).WithName("New"));
             family.AddInstance(new LiteralInstance(new AWidget()).WithName("New2"));
             family.AddInstance(new LiteralInstance(new AWidget()).WithName("New3"));
@@ -74,11 +76,11 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void Merge_from_PluginFamily_will_not_replace_an_existing_instance()
         {
-            InstanceFactory factory = new InstanceFactory(typeof (IWidget));
+            var factory = new InstanceFactory(typeof (IWidget));
             LiteralInstance instance1 = new LiteralInstance(new AWidget()).WithName("New");
             factory.AddInstance(instance1);
 
-            PluginFamily family = new PluginFamily(typeof (IWidget));
+            var family = new PluginFamily(typeof (IWidget));
             family.AddInstance(new LiteralInstance(new AWidget()).WithName("New"));
 
             factory.ImportFrom(family);

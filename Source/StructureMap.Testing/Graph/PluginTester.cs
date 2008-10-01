@@ -39,7 +39,7 @@ namespace StructureMap.Testing.Graph
 
         private ParameterInfo param(string name)
         {
-            Constructor ctor = new Constructor(typeof (LotsOfStuff));
+            var ctor = new Constructor(typeof (LotsOfStuff));
             foreach (ParameterInfo parameterInfo in ctor.Ctor.GetParameters())
             {
                 if (parameterInfo.Name == name)
@@ -72,31 +72,19 @@ namespace StructureMap.Testing.Graph
 
         public class GTO
         {
-            private IEngine _engine;
-
-
             public GTO(string name, double price)
             {
             }
 
             [SetterProperty]
-            public IEngine Engine
-            {
-                get { return _engine; }
-                set { _engine = value; }
-            }
+            public IEngine Engine { get; set; }
         }
 
-        [Test]
-        public void Can_get_the_referencedInstance_for_a_type()
+        public class ClassWithProperties
         {
-            Container container = new Container(r => r.ForRequestedType<IEngine>().AddConcreteType<DOHCEngine>());
-
-            Debug.WriteLine(container.WhatDoIHave());
-
-            Instance instance = typeof (DOHCEngine).GetReferenceTo();
-
-            container.GetInstance<IEngine>(instance).ShouldBeOfType(typeof(DOHCEngine));
+            public IEngine Engine { get; set; }
+            public IAutomobile Car { get; set; }
+            public IGateway Gateway { get; set; }
         }
 
         [Test]
@@ -113,16 +101,28 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
+        public void Can_get_the_referencedInstance_for_a_type()
+        {
+            var container = new Container(r => r.ForRequestedType<IEngine>().AddConcreteType<DOHCEngine>());
+
+            Debug.WriteLine(container.WhatDoIHave());
+
+            Instance instance = typeof (DOHCEngine).GetReferenceTo();
+
+            container.GetInstance<IEngine>(instance).ShouldBeOfType(typeof (DOHCEngine));
+        }
+
+        [Test]
         public void CanBeAutoFilled_with_child_array_in_ctor()
         {
-            Constructor ctor = new Constructor(typeof (CanBeAutoFilledWithArray));
+            var ctor = new Constructor(typeof (CanBeAutoFilledWithArray));
             Assert.IsTrue(ctor.CanBeAutoFilled());
         }
 
         [Test]
         public void CanBeAutoFilled_with_child_array_in_setter()
         {
-            SetterPropertyCollection setters =
+            var setters =
                 new SetterPropertyCollection(new Plugin(typeof (CanBeAutoFilledWithArray)));
             Assert.IsTrue(setters.CanBeAutoFilled());
         }
@@ -130,7 +130,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void CanBeAutoFilledIsFalse()
         {
-            Plugin plugin = new Plugin(typeof (GrandPrix));
+            var plugin = new Plugin(typeof (GrandPrix));
 
             Assert.IsFalse(plugin.CanBeAutoFilled);
         }
@@ -138,9 +138,21 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void CanBeAutoFilledIsTrue()
         {
-            Plugin plugin = new Plugin(typeof (Mustang));
+            var plugin = new Plugin(typeof (Mustang));
 
             Assert.IsTrue(plugin.CanBeAutoFilled);
+        }
+
+        [Test]
+        public void CanBeCreated_is_negative_with_no_public_constructors()
+        {
+            new Plugin(typeof (ClassWithNoConstructor)).CanBeCreated().ShouldBeFalse();
+        }
+
+        [Test]
+        public void CanBeCreated_positive_with_a_public_constructor()
+        {
+            new Plugin(typeof (LotsOfStuff)).CanBeCreated().ShouldBeTrue();
         }
 
         [Test]
@@ -148,13 +160,13 @@ namespace StructureMap.Testing.Graph
         {
             // Builds a PluginGraph that includes all of the PluginFamily's and Plugin's 
             // defined in this file
-            PluginGraph pluginGraph = new PluginGraph();
-            pluginGraph.Assemblies.Add(Assembly.GetExecutingAssembly());
+            var pluginGraph = new PluginGraph();
+            pluginGraph.Scan(x => x.Assembly(Assembly.GetExecutingAssembly()));
             pluginGraph.Seal();
 
-            Container manager = new Container(pluginGraph);
+            var manager = new Container(pluginGraph);
 
-            Mustang mustang = (Mustang) manager.GetInstance(typeof (IAutomobile), "Mustang");
+            var mustang = (Mustang) manager.GetInstance(typeof (IAutomobile), "Mustang");
 
             Assert.IsNotNull(mustang);
             Assert.IsTrue(mustang.Engine is PushrodEngine);
@@ -179,7 +191,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void CreateImplicitMementoWithNoConstructorArguments()
         {
-            Plugin plugin = new Plugin(typeof (DefaultGateway), "Default");
+            var plugin = new Plugin(typeof (DefaultGateway), "Default");
             Assert.IsTrue(plugin.CanBeAutoFilled);
 
             IConfiguredInstance instance = (ConfiguredInstance) plugin.CreateImplicitInstance();
@@ -203,21 +215,21 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void CreatePluginFromTypeThatDoesNotHaveAnAttributeDetermineTheConcreteKey()
         {
-            Plugin plugin = new Plugin(GetType());
+            var plugin = new Plugin(GetType());
             Assert.AreEqual(GetType().AssemblyQualifiedName, plugin.ConcreteKey);
         }
 
         [Test]
         public void DoesNotCreateAnImplicitMementoForAPluggedTypeThatCanBeAutoFilled()
         {
-            Plugin plugin = new Plugin(typeof (GrandPrix));
+            var plugin = new Plugin(typeof (GrandPrix));
             Assert.IsFalse(plugin.CanBeAutoFilled);
         }
 
         [Test]
         public void FindFirstConstructorArgumentOfType()
         {
-            Plugin plugin = new Plugin(typeof (GrandPrix));
+            var plugin = new Plugin(typeof (GrandPrix));
             string expected = "engine";
 
             string actual = plugin.FindArgumentNameForType<IEngine>();
@@ -227,7 +239,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void FindFirstConstructorArgumentOfType_in_a_setter_too()
         {
-            Plugin plugin = new Plugin(typeof (GTO));
+            var plugin = new Plugin(typeof (GTO));
 
             Assert.AreEqual("Engine", plugin.FindArgumentNameForType<IEngine>());
         }
@@ -239,21 +251,21 @@ namespace StructureMap.Testing.Graph
              )]
         public void FindFirstConstructorArgumentOfTypeNegativeCase()
         {
-            Plugin plugin = new Plugin(typeof (GrandPrix));
+            var plugin = new Plugin(typeof (GrandPrix));
             plugin.FindArgumentNameForType<IWidget>();
         }
 
         [Test]
         public void Get_concrete_key_from_attribute_if_it_exists()
         {
-            Plugin plugin = new Plugin(typeof (ColorWidget));
+            var plugin = new Plugin(typeof (ColorWidget));
             Assert.AreEqual("Color", plugin.ConcreteKey);
         }
 
         [Test]
         public void GetFirstMarkedConstructor()
         {
-            Constructor ctor = new Constructor(typeof (ComplexRule));
+            var ctor = new Constructor(typeof (ComplexRule));
             ConstructorInfo constructor = ctor.Ctor;
 
             Assert.IsNotNull(constructor);
@@ -263,7 +275,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void GetGreediestConstructor()
         {
-            Constructor ctor = new Constructor(typeof (GreaterThanRule));
+            var ctor = new Constructor(typeof (GreaterThanRule));
             ConstructorInfo constructor = ctor.Ctor;
 
             Assert.IsNotNull(constructor);
@@ -285,11 +297,47 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
+        public void SetFilledTypes_1()
+        {
+            var plugin = new Plugin(typeof (ClassWithProperties));
+            plugin.SetFilledTypes(new List<Type> {typeof (IEngine), typeof (IAutomobile)});
+
+            plugin.Setters.IsMandatory("Engine").ShouldBeTrue();
+            plugin.Setters.IsMandatory("Car").ShouldBeTrue();
+            plugin.Setters.IsMandatory("Gateway").ShouldBeFalse();
+        }
+
+
+        [Test]
+        public void SetFilledTypes_2()
+        {
+            var plugin = new Plugin(typeof (ClassWithProperties));
+            plugin.SetFilledTypes(new List<Type> {typeof (IGateway), typeof (IAutomobile)});
+
+            plugin.Setters.IsMandatory("Engine").ShouldBeFalse();
+            plugin.Setters.IsMandatory("Car").ShouldBeTrue();
+            plugin.Setters.IsMandatory("Gateway").ShouldBeTrue();
+        }
+
+
+        [Test]
+        public void SetFilledTypes_3()
+        {
+            var plugin = new Plugin(typeof (ClassWithProperties));
+            plugin.SetFilledTypes(new List<Type> {typeof (IGateway)});
+
+            plugin.Setters.IsMandatory("Engine").ShouldBeFalse();
+            plugin.Setters.IsMandatory("Car").ShouldBeFalse();
+            plugin.Setters.IsMandatory("Gateway").ShouldBeTrue();
+        }
+
+        [Test]
         public void ThrowGoodExceptionWhenNoPublicConstructorsFound()
         {
             try
             {
-                new Registry().ForRequestedType<ClassWithNoConstructor>().TheDefaultIsConcreteType<ClassWithNoConstructor>();
+                new Registry().ForRequestedType<ClassWithNoConstructor>().TheDefaultIsConcreteType
+                    <ClassWithNoConstructor>();
             }
             catch (StructureMapException ex)
             {
@@ -301,8 +349,8 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void Visit_arguments()
         {
-            MockRepository mocks = new MockRepository();
-            IArgumentVisitor visitor = mocks.StrictMock<IArgumentVisitor>();
+            var mocks = new MockRepository();
+            var visitor = mocks.StrictMock<IArgumentVisitor>();
 
             using (mocks.Record())
             {
@@ -320,114 +368,32 @@ namespace StructureMap.Testing.Graph
 
             using (mocks.Playback())
             {
-                Plugin plugin = new Plugin(typeof (LotsOfStuff));
+                var plugin = new Plugin(typeof (LotsOfStuff));
                 plugin.VisitArguments(visitor);
             }
         }
-
-        [Test]
-        public void CanBeCreated_positive_with_a_public_constructor()
-        {
-            new Plugin(typeof(LotsOfStuff)).CanBeCreated().ShouldBeTrue();
-        }
-
-        [Test]
-        public void CanBeCreated_is_negative_with_no_public_constructors()
-        {
-            new Plugin(typeof(ClassWithNoConstructor)).CanBeCreated().ShouldBeFalse();
-        }
-
-        public class ClassWithProperties
-        {
-            public IEngine Engine { get; set; }
-            public IAutomobile Car { get; set; }
-            public IGateway Gateway { get; set; }
-        }
-
-        [Test]
-        public void SetFilledTypes_1()
-        {
-            Plugin plugin = new Plugin(typeof(ClassWithProperties));
-            plugin.SetFilledTypes(new List<Type>() {typeof (IEngine), typeof (IAutomobile)});
-
-            plugin.Setters.IsMandatory("Engine").ShouldBeTrue();
-            plugin.Setters.IsMandatory("Car").ShouldBeTrue();
-            plugin.Setters.IsMandatory("Gateway").ShouldBeFalse();
-        }
-
-
-        [Test]
-        public void SetFilledTypes_2()
-        {
-            Plugin plugin = new Plugin(typeof(ClassWithProperties));
-            plugin.SetFilledTypes(new List<Type>() { typeof(IGateway), typeof(IAutomobile) });
-
-            plugin.Setters.IsMandatory("Engine").ShouldBeFalse();
-            plugin.Setters.IsMandatory("Car").ShouldBeTrue();
-            plugin.Setters.IsMandatory("Gateway").ShouldBeTrue();
-        }
-
-
-
-        [Test]
-        public void SetFilledTypes_3()
-        {
-            Plugin plugin = new Plugin(typeof(ClassWithProperties));
-            plugin.SetFilledTypes(new List<Type>() { typeof(IGateway)});
-
-            plugin.Setters.IsMandatory("Engine").ShouldBeFalse();
-            plugin.Setters.IsMandatory("Car").ShouldBeFalse();
-            plugin.Setters.IsMandatory("Gateway").ShouldBeTrue();
-        }
-    
     }
 
     public class LotsOfStuff
     {
-        private IAutomobile _car;
-        private IAutomobile[] _fleet;
-        private double _income;
-        private string _lastName;
-        private BreedEnum _otherBreed;
-
         public LotsOfStuff(IEngine engine, IEngine[] engines, string name, int age, BreedEnum breed)
         {
         }
 
         [SetterProperty]
-        public string LastName
-        {
-            get { return _lastName; }
-            set { _lastName = value; }
-        }
+        public string LastName { get; set; }
 
         [SetterProperty]
-        public double Income
-        {
-            get { return _income; }
-            set { _income = value; }
-        }
+        public double Income { get; set; }
 
         [SetterProperty]
-        public IAutomobile Car
-        {
-            get { return _car; }
-            set { _car = value; }
-        }
+        public IAutomobile Car { get; set; }
 
         [SetterProperty]
-        public IAutomobile[] Fleet
-        {
-            get { return _fleet; }
-            set { _fleet = value; }
-        }
+        public IAutomobile[] Fleet { get; set; }
 
         [SetterProperty]
-        public BreedEnum OtherBreed
-        {
-            get { return _otherBreed; }
-            set { _otherBreed = value; }
-        }
+        public BreedEnum OtherBreed { get; set; }
     }
 
     [PluginFamily("Pushrod")]
@@ -463,10 +429,7 @@ namespace StructureMap.Testing.Graph
             _breed = breed;
             _engine = engine;
         }
-
-
     }
-
 
 
     [Pluggable("Mustang")]

@@ -8,15 +8,6 @@ namespace StructureMap.Testing.Graph
     [TestFixture]
     public class ArrayConstructorTester
     {
-        #region Setup/Teardown
-
-        [TearDown]
-        public void TearDown()
-        {
-            ObjectMother.Reset();
-        }
-
-        #endregion
 
         [Test]
         public void BuildDecisionWithRules()

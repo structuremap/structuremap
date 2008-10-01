@@ -38,8 +38,14 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void Process_to_Container()
         {
-            Container container = new Container(registry => registry.ScanAssemblies().IncludeTheCallingAssembly()
-                                                                .With(new DefaultConventionScanner()));
+            Container container = new Container(registry =>
+            {
+                registry.Scan(x =>
+                {
+                    x.TheCallingAssembly();
+                    x.With<DefaultConventionScanner>();
+                });
+            });
 
             Debug.WriteLine(container.WhatDoIHave());
 
@@ -50,8 +56,14 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void Process_to_Container_2()
         {
-            Container container = new Container(registry => registry.ScanAssemblies().IncludeTheCallingAssembly()
-                                                                .With<DefaultConventionScanner>());
+            Container container = new Container(registry =>
+            {
+                registry.Scan(x =>
+                {
+                    x.TheCallingAssembly();
+                    x.With(new DefaultConventionScanner());
+                });
+            });
 
             Assert.IsInstanceOfType(typeof(Convention), container.GetInstance<IConvention>());
         }

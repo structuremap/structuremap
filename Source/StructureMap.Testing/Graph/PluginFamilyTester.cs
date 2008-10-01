@@ -33,10 +33,29 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
+        public void add_plugins_at_seal_from_the_list_of_types()
+        {
+            var family = new PluginFamily(typeof (IServiceProvider));
+            family.AddType(typeof (DataTable));
+
+            // DataView, DataSet, and DataTable are all IServiceProvider implementations, and should get added
+            // to the PluginFamily
+            var pluggedTypes = new List<Type> {typeof (DataView), typeof (DataSet), typeof (DataTable), GetType()};
+
+            family.AddTypes(pluggedTypes);
+
+            family.PluginCount.ShouldEqual(3);
+
+            family.FindPlugin(typeof (DataView)).ShouldNotBeNull();
+            family.FindPlugin(typeof (DataTable)).ShouldNotBeNull();
+            family.FindPlugin(typeof (DataSet)).ShouldNotBeNull();
+        }
+
+        [Test]
         public void add_type_does_not_add_if_the_concrete_type_can_not_be_cast_to_plugintype()
         {
-            var family = new PluginFamily(typeof(IServiceProvider));
-            family.AddType(this.GetType());
+            var family = new PluginFamily(typeof (IServiceProvider));
+            family.AddType(GetType());
 
             family.PluginCount.ShouldEqual(0);
         }
@@ -46,30 +65,11 @@ namespace StructureMap.Testing.Graph
         {
             var family = new PluginFamily(typeof (IServiceProvider));
 
-            family.AddType(typeof(DataTable));
+            family.AddType(typeof (DataTable));
             family.PluginCount.ShouldEqual(1);
 
-            family.AddType(typeof(DataTable));
+            family.AddType(typeof (DataTable));
             family.PluginCount.ShouldEqual(1);
-        }
-
-        [Test]
-        public void add_plugins_at_seal_from_the_list_of_types()
-        {
-            var family = new PluginFamily(typeof(IServiceProvider));
-            family.AddType(typeof(DataTable));
-
-            // DataView, DataSet, and DataTable are all IServiceProvider implementations, and should get added
-            // to the PluginFamily
-            List<Type> pluggedTypes = new List<Type>(){typeof(DataView), typeof(DataSet), typeof(DataTable), GetType()};
-        
-            family.AddTypes(pluggedTypes);
-
-            family.PluginCount.ShouldEqual(3);
-
-            family.FindPlugin(typeof(DataView)).ShouldNotBeNull();
-            family.FindPlugin(typeof(DataTable)).ShouldNotBeNull();
-            family.FindPlugin(typeof(DataSet)).ShouldNotBeNull();
         }
 
         [Test]
@@ -180,7 +180,8 @@ namespace StructureMap.Testing.Graph
         public void PluginFamilyImplicitlyConfiguredAsASingletonBehavesAsASingleton()
         {
             var pluginGraph = new PluginGraph();
-            pluginGraph.Assemblies.Add(Assembly.GetExecutingAssembly());
+            pluginGraph.Scan(x => { x.Assembly(Assembly.GetExecutingAssembly()); });
+
             pluginGraph.Seal();
 
             var manager = new Container(pluginGraph);

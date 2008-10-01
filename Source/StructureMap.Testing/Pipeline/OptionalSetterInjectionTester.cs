@@ -196,10 +196,14 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void one_optional_child_array_setter()
         {
-            var container = new Container(r => r.ForRequestedType<ClassWithDependency>().TheDefaultIs(
-                                                   Instance<ClassWithDependency>().ChildArray<Rule[]>("Rules").Contains(Object<Rule>(new ColorRule("Red")))
-
-                                                   ));
+            var container = new Container(x =>
+            {
+                x.ForRequestedType<ClassWithDependency>().TheDefault.Is.OfConcreteType<ClassWithDependency>()
+                    .TheArrayOf<Rule>().Contains(arr =>
+                    {
+                        arr.IsThis(new ColorRule("Red"));
+                    });
+            });
 
             container.GetInstance<ClassWithDependency>().Rules.Length.ShouldEqual(1);
         }

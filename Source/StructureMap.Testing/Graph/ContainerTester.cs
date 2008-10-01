@@ -20,7 +20,7 @@ namespace StructureMap.Testing.Graph
         {
             _manager = new Container(registry =>
             {
-                registry.ScanAssemblies().IncludeAssembly("StructureMap.Testing.Widget");
+                registry.Scan(x => x.Assembly("StructureMap.Testing.Widget"));
                 registry.BuildInstancesOf<Rule>();
                 registry.BuildInstancesOf<IWidget>();
                 registry.BuildInstancesOf<WidgetMaker>();
@@ -36,8 +36,10 @@ namespace StructureMap.Testing.Graph
             _manager.Configure(r =>
             {
                 r.InstanceOf<Rule>().Is.OfConcreteType<ColorRule>().WithCtorArg("color").EqualTo(Color).WithName(Color);
-                r.InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithCtorArg("color").EqualTo(Color).WithName(Color);
-                r.InstanceOf<WidgetMaker>().Is.OfConcreteType<ColorWidgetMaker>().WithCtorArg("color").EqualTo(Color).WithName(Color);
+                r.InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithCtorArg("color").EqualTo(Color).WithName(
+                    Color);
+                r.InstanceOf<WidgetMaker>().Is.OfConcreteType<ColorWidgetMaker>().WithCtorArg("color").EqualTo(Color).
+                    WithName(Color);
             });
         }
 
@@ -71,7 +73,7 @@ namespace StructureMap.Testing.Graph
 
         private void assertColorIs(IContainer manager, string color)
         {
-            ColorService rule = (ColorService) manager.GetInstance<IService>();
+            var rule = (ColorService) manager.GetInstance<IService>();
             Assert.AreEqual(color, rule.Color);
         }
 
@@ -111,7 +113,7 @@ namespace StructureMap.Testing.Graph
             // Now, have that same Container create a ClassThatUsesProvider.  StructureMap will
             // see that ClassThatUsesProvider is concrete, determine its constructor args, and build one 
             // for you with the default IProvider.  No other configuration necessary.
-            ClassThatUsesProvider classThatUsesProvider = manager.GetInstance<ClassThatUsesProvider>();
+            var classThatUsesProvider = manager.GetInstance<ClassThatUsesProvider>();
             Assert.IsInstanceOfType(typeof (Provider), classThatUsesProvider.Provider);
         }
 
@@ -122,18 +124,18 @@ namespace StructureMap.Testing.Graph
                 new Container(
                     registry => registry.ForRequestedType<IProvider>().TheDefaultIsConcreteType<Provider>());
 
-            DifferentProvider differentProvider = new DifferentProvider();
-            ExplicitArguments args = new ExplicitArguments();
+            var differentProvider = new DifferentProvider();
+            var args = new ExplicitArguments();
             args.Set<IProvider>(differentProvider);
 
-            ClassThatUsesProvider classThatUsesProvider = manager.GetInstance<ClassThatUsesProvider>(args);
+            var classThatUsesProvider = manager.GetInstance<ClassThatUsesProvider>(args);
             Assert.AreSame(differentProvider, classThatUsesProvider.Provider);
         }
 
         [Test, ExpectedException(typeof (StructureMapConfigurationException))]
         public void CTOR_throws_StructureMapConfigurationException_if_there_is_an_error()
         {
-            PluginGraph graph = new PluginGraph();
+            var graph = new PluginGraph();
             graph.Log.RegisterError(400, new ApplicationException("Bad!"));
 
             new Container(graph);
@@ -145,12 +147,12 @@ namespace StructureMap.Testing.Graph
         {
             Type serviceType = typeof (IService<string>);
             PluginGraph pluginGraph = PluginGraph.BuildGraphFromAssembly(serviceType.Assembly);
-            PipelineGraph pipelineGraph = new PipelineGraph(pluginGraph);
+            var pipelineGraph = new PipelineGraph(pluginGraph);
 
             Type stringService = typeof (IService<string>);
 
             IInstanceFactory factory = pipelineGraph.ForType(stringService);
-            Assert.AreEqual(stringService, factory.PluginType);
+            Assert.AreEqual((object) stringService, factory.PluginType);
         }
 
         [Test]
@@ -161,7 +163,7 @@ namespace StructureMap.Testing.Graph
             addColorMemento("Blue");
 
             _manager.SetDefault(typeof (Rule), "Blue");
-            ColorRule rule = _manager.GetInstance(typeof (Rule)) as ColorRule;
+            var rule = _manager.GetInstance(typeof (Rule)) as ColorRule;
 
             Assert.IsNotNull(rule);
             Assert.AreEqual("Blue", rule.Color);
@@ -174,15 +176,15 @@ namespace StructureMap.Testing.Graph
             addColorMemento("Orange");
             addColorMemento("Blue");
 
-            ColorRule rule = _manager.GetInstance(typeof (Rule), "Blue") as ColorRule;
+            var rule = _manager.GetInstance(typeof (Rule), "Blue") as ColorRule;
             Assert.IsNotNull(rule);
             Assert.AreEqual("Blue", rule.Color);
 
-            ColorWidget widget = _manager.GetInstance(typeof (IWidget), "Red") as ColorWidget;
+            var widget = _manager.GetInstance(typeof (IWidget), "Red") as ColorWidget;
             Assert.IsNotNull(widget);
             Assert.AreEqual("Red", widget.Color);
 
-            ColorWidgetMaker maker = _manager.GetInstance(typeof (WidgetMaker), "Orange") as ColorWidgetMaker;
+            var maker = _manager.GetInstance(typeof (WidgetMaker), "Orange") as ColorWidgetMaker;
             Assert.IsNotNull(maker);
             Assert.AreEqual("Orange", maker.Color);
         }
@@ -198,8 +200,8 @@ namespace StructureMap.Testing.Graph
         {
             IContainer container = new Container();
 
-            ColorRule red = new ColorRule("Red");
-            ColorRule blue = new ColorRule("Blue");
+            var red = new ColorRule("Red");
+            var blue = new ColorRule("Blue");
 
             container.Inject<Rule>("Red", red);
             container.Inject<Rule>("Blue", blue);
@@ -236,12 +238,8 @@ namespace StructureMap.Testing.Graph
         [Test, ExpectedException(typeof (StructureMapException))]
         public void TryToGetDefaultInstanceWithNoInstance()
         {
-            Container manager = new Container(new PluginGraph());
+            var manager = new Container(new PluginGraph());
             manager.GetInstance<IService>();
         }
-
-
     }
-
-
 }

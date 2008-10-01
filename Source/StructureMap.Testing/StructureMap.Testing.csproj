@@ -193,7 +193,6 @@
     <Compile Include="Configuration\DSL\ProfileExpressionTester.cs" />
     <Compile Include="Configuration\DSL\RegistryIntegratedTester.cs" />
     <Compile Include="Configuration\DSL\RegistryTester.cs" />
-    <Compile Include="Configuration\DSL\ScanAssembliesTester.cs" />
     <Compile Include="Configuration\FamilyParserTester.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -351,9 +350,6 @@
     <Compile Include="MergingTester.cs" />
     <Compile Include="ObjectFactoryInitializeTester.cs" />
     <Compile Include="ObjectFactoryTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ObjectMother.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="PipelineGraphTester.cs" />

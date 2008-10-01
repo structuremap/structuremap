@@ -32,19 +32,6 @@ namespace StructureMap.Testing.Configuration
         }
 
         [Test]
-        public void GetAssembliesFromIncludes()
-        {
-            PluginGraph graph = buildGraph();
-
-            Assert.AreEqual(4, graph.Assemblies.Count);
-
-            Assert.IsTrue(graph.Assemblies.Contains("StructureMap.Testing.Widget"));
-            Assert.IsTrue(graph.Assemblies.Contains("StructureMap.Testing.Widget2"));
-            Assert.IsTrue(graph.Assemblies.Contains("StructureMap.Testing.Widget3"));
-            Assert.IsTrue(graph.Assemblies.Contains("StructureMap.Testing.Widget4"));
-        }
-
-        [Test]
         public void GetFamilyFromIncludeAndMaster()
         {
             PluginGraph graph = buildGraph();

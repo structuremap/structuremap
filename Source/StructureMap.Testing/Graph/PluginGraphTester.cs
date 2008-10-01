@@ -9,20 +9,28 @@ namespace StructureMap.Testing.Graph
     [TestFixture]
     public class PluginGraphTester
     {
-        #region Setup/Teardown
 
-        [TearDown]
-        public void TearDown()
+
+        [Test]
+        public void add_type_adds_a_plugin_for_type_once_and_only_once()
         {
-            ObjectMother.Reset();
-        }
+            var graph = new PluginGraph();
 
-        #endregion
+            graph.AddType(typeof (IThingy), typeof (BigThingy));
+
+            PluginFamily family = graph.FindFamily(typeof (IThingy));
+            family.PluginCount.ShouldEqual(1);
+            family.FindPlugin(typeof (BigThingy)).ShouldNotBeNull();
+
+            graph.AddType(typeof (IThingy), typeof (BigThingy));
+
+            family.PluginCount.ShouldEqual(1);
+        }
 
         [Test, ExpectedException(typeof (StructureMapConfigurationException))]
         public void AssertErrors_throws_StructureMapConfigurationException_if_there_is_an_error()
         {
-            PluginGraph graph = new PluginGraph();
+            var graph = new PluginGraph();
             graph.Log.RegisterError(400, new ApplicationException("Bad!"));
 
             graph.Log.AssertFailures();
@@ -31,12 +39,11 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void FindPluginFamilies()
         {
-            PluginGraph graph = new PluginGraph();
-
-            graph.Assemblies.Add("StructureMap.Testing.Widget");
+            var graph = new PluginGraph();
+            graph.Scan(x => { x.Assembly("StructureMap.Testing.Widget"); });
 
             graph.FindFamily(typeof (IWidget)).DefaultInstanceKey = "Blue";
-            graph.FindFamily(typeof (WidgetMaker));
+            graph.CreateFamily(typeof (WidgetMaker));
 
             graph.Seal();
 
@@ -52,10 +59,13 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void FindPlugins()
         {
-            PluginGraph graph = new PluginGraph();
+            var graph = new PluginGraph();
+            graph.Scan(x =>
+            {
+                x.Assembly("StructureMap.Testing.Widget");
+                x.Assembly("StructureMap.Testing.Widget2");
+            });
 
-            graph.Assemblies.Add("StructureMap.Testing.Widget");
-            graph.Assemblies.Add("StructureMap.Testing.Widget2");
             graph.FindFamily(typeof (Rule));
 
             graph.Seal();
@@ -69,9 +79,10 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void PicksUpManuallyAddedPlugin()
         {
-            PluginGraph graph = new PluginGraph();
+            var graph = new PluginGraph();
 
-            graph.Assemblies.Add("StructureMap.Testing.Widget");
+            graph.Scan(x => { x.Assembly("StructureMap.Testing.Widget"); });
+
             graph.FindFamily(typeof (IWidget)).DefaultInstanceKey = "Blue";
 
 
@@ -92,9 +103,10 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void PutsRightNumberOfPluginsIntoAFamily()
         {
-            PluginGraph graph = new PluginGraph();
+            var graph = new PluginGraph();
 
-            graph.Assemblies.Add("StructureMap.Testing.Widget");
+            graph.Scan(x => { x.Assembly("StructureMap.Testing.Widget"); });
+
             graph.FindFamily(typeof (IWidget)).DefaultInstanceKey = "Blue";
             graph.Seal();
 
@@ -109,26 +121,10 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void Seal_does_not_throw_an_exception_if_there_are_no_errors()
         {
-            PluginGraph graph = new PluginGraph();
+            var graph = new PluginGraph();
             Assert.AreEqual(0, graph.Log.ErrorCount);
 
             graph.Seal();
-        }
-
-        [Test]
-        public void add_type_adds_a_plugin_for_type_once_and_only_once()
-        {
-            var graph = new PluginGraph();
-
-            graph.AddType(typeof (IThingy), typeof (BigThingy));
-
-            var family = graph.FindFamily(typeof (IThingy));
-            family.PluginCount.ShouldEqual(1);
-            family.FindPlugin(typeof(BigThingy)).ShouldNotBeNull();
-
-            graph.AddType(typeof(IThingy), typeof(BigThingy));
-
-            family.PluginCount.ShouldEqual(1);
         }
     }
 

@@ -1,5 +1,4 @@
 using NUnit.Framework;
-using StructureMap.Graph;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget4;
 
@@ -11,18 +10,14 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void CanFillDependenciesSuccessfully()
         {
-            PluginGraph pluginGraph = ObjectMother.GetPluginGraph();
+            var container = new Container(x =>
+            {
+                x.ForRequestedType<IStrategy>().TheDefault.IsThis(new Strategy("name", 3, 3, 3, true));
+                x.ForRequestedType<IWidget>().TheDefault.IsThis(new ColorWidget("Red"));
+            });
 
-            Container manager = new Container(pluginGraph);
-
-            // The dependencies must have a default setting first
-            manager.SetDefault(typeof (IStrategy), "Red");
-            manager.SetDefault(typeof (IWidget), "Blue");
-            IWidget widget = (IWidget) manager.GetInstance(typeof (IWidget));
-            IStrategy strategy = (IStrategy) manager.GetInstance(typeof (IStrategy));
-
-            FilledConcreteClass concreteClass =
-                (FilledConcreteClass) manager.FillDependencies(typeof (FilledConcreteClass));
+            var concreteClass =
+                (FilledConcreteClass) container.FillDependencies(typeof (FilledConcreteClass));
 
             Assert.IsNotNull(concreteClass.Widget);
             Assert.IsNotNull(concreteClass.Strategy);
@@ -31,9 +26,7 @@ namespace StructureMap.Testing.Graph
         [Test, ExpectedException(typeof (StructureMapException))]
         public void TryToFillDependenciesOnAbstractClassThrowsException()
         {
-            PluginGraph pluginGraph = ObjectMother.GetPluginGraph();
-            Container manager = new Container(pluginGraph);
-
+            var manager = new Container();
             manager.FillDependencies(typeof (AbstractClass));
         }
 
@@ -41,9 +34,7 @@ namespace StructureMap.Testing.Graph
         [Test, ExpectedException(typeof (StructureMapException))]
         public void TryToFillDependenciesOnClassWithPrimitiveArgumentsThrowsException()
         {
-            PluginGraph pluginGraph = ObjectMother.GetPluginGraph();
-            Container manager = new Container(pluginGraph);
-
+            var manager = new Container();
             manager.FillDependencies(typeof (CannotBeFilledConcreteClass));
         }
     }

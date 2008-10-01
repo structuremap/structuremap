@@ -15,14 +15,6 @@ namespace StructureMap.Testing
     [TestFixture]
     public class ObjectFactoryInitializeTester
     {
-        private static XmlNode createNodeFromText(string outerXml)
-        {
-            XmlDocument document = new XmlDocument();
-            document.LoadXml(outerXml);
-            return document.DocumentElement;
-        }
-
-
 
         [Test]
         public void PullConfigurationFromTheAppConfig()

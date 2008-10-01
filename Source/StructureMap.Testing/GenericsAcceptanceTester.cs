@@ -1,7 +1,6 @@
 using System;
 using System.Reflection;
 using NUnit.Framework;
-using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.GenericWidgets;
@@ -20,20 +19,20 @@ namespace StructureMap.Testing
 
         #endregion
 
-
-
         [Test]
         public void BuildFamilyAndPluginThenSealAndCreateInstanceManagerWithGenericTypeWithOpenGenericParameters()
         {
-            PluginGraph graph = new PluginGraph();
-            graph.Assemblies.Add(Assembly.GetExecutingAssembly());
+            var graph = new PluginGraph();
+            graph.Scan(x => x.TheCallingAssembly());
+
+
             PluginFamily family = graph.FindFamily(typeof (IGenericService<>));
             family.DefaultInstanceKey = "Default";
             family.AddPlugin(typeof (GenericService<>), "Default");
 
             graph.Seal();
 
-            Container manager = new Container(graph);
+            var manager = new Container(graph);
         }
 
         [Test]
@@ -41,11 +40,11 @@ namespace StructureMap.Testing
         {
             Type serviceType = typeof (IService<double>);
             PluginGraph pluginGraph = PluginGraph.BuildGraphFromAssembly(serviceType.Assembly);
-            Container manager = new Container(pluginGraph);
+            var manager = new Container(pluginGraph);
 
             Type doubleServiceType = typeof (IService<double>);
 
-            ServiceWithPlug<double> service =
+            var service =
                 (ServiceWithPlug<double>) manager.GetInstance(doubleServiceType, "Plugged");
             Assert.AreEqual(typeof (double), service.Plug.PlugType);
         }
@@ -53,53 +52,53 @@ namespace StructureMap.Testing
         [Test]
         public void CanCreatePluginFamilyForGenericTypeWithGenericParameter()
         {
-            PluginFamily family = new PluginFamily(typeof (IGenericService<int>));
+            var family = new PluginFamily(typeof (IGenericService<int>));
         }
 
         [Test]
         public void CanCreatePluginFamilyForGenericTypeWithoutGenericParameter()
         {
-            PluginFamily family = new PluginFamily(typeof (IGenericService<>));
+            var family = new PluginFamily(typeof (IGenericService<>));
         }
 
         [Test]
         public void CanCreatePluginForGenericTypeWithGenericParameter()
         {
-            Plugin plugin = new Plugin(typeof (GenericService<int>));
+            var plugin = new Plugin(typeof (GenericService<int>));
         }
 
         [Test]
         public void CanCreatePluginForGenericTypeWithoutGenericParameter()
         {
-            Plugin plugin = new Plugin(typeof (GenericService<>));
+            var plugin = new Plugin(typeof (GenericService<>));
         }
 
 
         [Test]
         public void CanEmitForATemplateWithTwoTemplates()
         {
-            PluginFamily family = new PluginFamily(typeof (ITarget<int, string>));
+            var family = new PluginFamily(typeof (ITarget<int, string>));
 
 
             family.AddPlugin(typeof (SpecificTarget<int, string>), "specific");
 
-            InstanceFactory factory = new InstanceFactory(family);
+            var factory = new InstanceFactory(family);
         }
 
         [Test]
         public void CanEmitInstanceBuilderForATypeWithConstructorArguments()
         {
-            PluginGraph graph = new PluginGraph();
+            var graph = new PluginGraph();
             PluginFamily family = graph.FindFamily(typeof (ComplexType<int>));
             family.AddPlugin(typeof (ComplexType<int>), "complex");
 
-            Container manager = new Container(graph);
+            var manager = new Container(graph);
 
-            ConfiguredInstance instance = new ConfiguredInstance(typeof(ComplexType<int>))
+            ConfiguredInstance instance = new ConfiguredInstance(typeof (ComplexType<int>))
                 .WithProperty("name").EqualTo("Jeremy")
                 .WithProperty("age").EqualTo(32);
 
-            ComplexType<int> com = manager.GetInstance<ComplexType<int>>(instance);
+            var com = manager.GetInstance<ComplexType<int>>(instance);
             Assert.AreEqual("Jeremy", com.Name);
             Assert.AreEqual(32, com.Age);
         }
@@ -107,8 +106,9 @@ namespace StructureMap.Testing
         [Test]
         public void CanGetPluginFamilyFromPluginGraphWithNoParameters()
         {
-            PluginGraph graph = new PluginGraph();
-            graph.Assemblies.Add(Assembly.GetExecutingAssembly());
+            var graph = new PluginGraph();
+            graph.Scan(x => x.TheCallingAssembly());
+
             PluginFamily family1 = graph.FindFamily(typeof (IGenericService<int>));
             PluginFamily family2 = graph.FindFamily(typeof (IGenericService<string>));
             PluginFamily family3 = graph.FindFamily(typeof (IGenericService<>));
@@ -121,8 +121,9 @@ namespace StructureMap.Testing
         [Test]
         public void CanGetPluginFamilyFromPluginGraphWithParameters()
         {
-            PluginGraph graph = new PluginGraph();
-            graph.Assemblies.Add(Assembly.GetExecutingAssembly());
+            var graph = new PluginGraph();
+            graph.Scan(x => x.TheCallingAssembly());
+
             PluginFamily family1 = graph.FindFamily(typeof (IGenericService<int>));
             PluginFamily family2 = graph.FindFamily(typeof (IGenericService<string>));
 
@@ -185,9 +186,9 @@ namespace StructureMap.Testing
             pluginGraph.SetDefault("2", typeof (IService<>), new ReferencedInstance("Plugged"));
 
 
-            Container manager = new Container(pluginGraph);
+            var manager = new Container(pluginGraph);
 
-            IPlug<string> plug = manager.GetInstance<IPlug<string>>();
+            var plug = manager.GetInstance<IPlug<string>>();
 
             manager.SetDefaultsToProfile("1");
             Assert.IsInstanceOfType(typeof (Service<string>), manager.GetInstance(typeof (IService<string>)));

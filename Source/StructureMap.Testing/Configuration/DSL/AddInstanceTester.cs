@@ -16,7 +16,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             container = new Container(registry =>
             {
-                registry.ScanAssemblies().IncludeAssemblyContainingType<ColorWidget>();
+                registry.Scan(x => x.AssemblyContainingType<ColorWidget>());
 
                 // Add an instance with properties
                 registry.InstanceOf<IWidget>()
@@ -64,8 +64,8 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             IContainer container = new Container(
                 registry => registry.InstanceOf<Rule>().Is.OfConcreteType<WidgetRule>()
-                    .WithName("AWidgetRule")
-                    .CtorDependency<IWidget>().Is(i => i.OfConcreteType<AWidget>()));
+                                .WithName("AWidgetRule")
+                                .CtorDependency<IWidget>().Is(i => i.OfConcreteType<AWidget>()));
 
             container.GetInstance<Rule>("AWidgetRule")
                 .IsType<WidgetRule>()
@@ -124,9 +124,10 @@ namespace StructureMap.Testing.Configuration.DSL
 
             IContainer manager = new Container(
                 registry => registry.InstanceOf<Rule>().Is.OfConcreteType<WidgetRule>().WithName(instanceKey)
-                                .CtorDependency<IWidget>().Is(i => i.OfConcreteType<ColorWidget>().WithCtorArg("color").EqualTo("Orange").WithName("Orange"))
-                                
-                                );
+                                .CtorDependency<IWidget>().Is(
+                                i =>
+                                i.OfConcreteType<ColorWidget>().WithCtorArg("color").EqualTo("Orange").WithName("Orange"))
+                );
 
             var rule = (WidgetRule) manager.GetInstance<Rule>(instanceKey);
             var widget = (ColorWidget) rule.Widget;
@@ -178,7 +179,6 @@ namespace StructureMap.Testing.Configuration.DSL
         }
     }
 
-    
 
     public class WidgetRule : Rule
     {

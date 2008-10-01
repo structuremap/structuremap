@@ -16,9 +16,13 @@ namespace StructureMap.Testing.Graph
             _manager = new Container(registry =>
             {
                 registry.BuildInstancesOf<INormalType>();
-                registry.ScanAssemblies().IncludeTheCallingAssembly()
-                    .AddAllTypesOf<TypeIWantToFind>()
-                    .AddAllTypesOf<OtherType>();
+                registry.Scan(x =>
+                {
+                    x.TheCallingAssembly();
+                    x.AddAllTypesOf<TypeIWantToFind>();
+                    x.AddAllTypesOf<OtherType>();
+                });
+
             });
         }
 
