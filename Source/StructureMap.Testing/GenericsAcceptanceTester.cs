@@ -20,6 +20,8 @@ namespace StructureMap.Testing
 
         #endregion
 
+
+
         [Test]
         public void BuildFamilyAndPluginThenSealAndCreateInstanceManagerWithGenericTypeWithOpenGenericParameters()
         {

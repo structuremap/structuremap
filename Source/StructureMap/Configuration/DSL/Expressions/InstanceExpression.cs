@@ -6,6 +6,8 @@ namespace StructureMap.Configuration.DSL.Expressions
     public interface IsExpression<T>
     {
         InstanceExpression<T> Is { get; }
+        void IsThis(Instance instance);
+        LiteralInstance IsThis(T obj);
     }
 
     public class InstanceExpression<T> : IsExpression<T>
@@ -17,14 +19,14 @@ namespace StructureMap.Configuration.DSL.Expressions
             _action = action;
         }
 
-        public void Is(Instance instance)
+        public void Instance(Instance instance)
         {
             _action(instance);
         }
 
         private T returnInstance<T>(T instance) where T : Instance
         {
-            Is(instance);
+            Instance(instance);
             return instance;
         }
 
@@ -46,6 +48,16 @@ namespace StructureMap.Configuration.DSL.Expressions
         InstanceExpression<T> IsExpression<T>.Is
         {
             get { return this; }
+        }
+
+        public void IsThis(Instance instance)
+        {
+            returnInstance(instance);
+        }
+
+        public LiteralInstance IsThis(T obj)
+        {
+            return returnInstance(new LiteralInstance(obj));
         }
 
         public ReferencedInstance References(string key)

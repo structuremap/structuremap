@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using StructureMap.Configuration.DSL;
 using StructureMap.Diagnostics;
+using System.Linq;
 
 namespace StructureMap.Graph
 {
@@ -15,6 +16,9 @@ namespace StructureMap.Graph
         public AssemblyScanner(GraphLog log)
         {
             _log = log;
+            AddScanner<FamilyAttributeScanner>();
+            AddScanner<PluggableAttributeScanner>();
+            AddScanner<FindRegistriesScanner>();
         }
 
         public int Count
@@ -41,42 +45,18 @@ namespace StructureMap.Graph
                 registry.ConfigurePluginGraph(pluginGraph);
             });
 
-
-            findFamiliesAndPlugins(pluginGraph);
             runScanners(pluginGraph);
         }
 
         private void runScanners(PluginGraph graph)
         {
-            Registry registry = new Registry();
-            scanTypes(type => _scanners.ForEach(scanner => scanner.Process(type, registry)));
-
-            registry.ConfigurePluginGraph(graph);
+            scanTypes(type => _scanners.ForEach(scanner => scanner.Process(type, graph)));
         }
-
-        private void findFamiliesAndPlugins(PluginGraph pluginGraph)
-        {
-            scanTypes(type =>
-            {
-                if (PluginFamilyAttribute.MarkedAsPluginFamily(type))
-                {
-                    pluginGraph.CreateFamily(type);
-                }
-            });
-
-            scanTypes(type =>
-            {
-                foreach (PluginFamily family in pluginGraph.PluginFamilies)
-                {
-                    family.AnalyzeTypeForPlugin(type);
-                }
-            });
-        }
-
 
         public void ScanForStructureMapObjects(PluginGraph pluginGraph)
         {
-            findFamiliesAndPlugins(pluginGraph);
+            // I think this just needs to look for attributes only
+            throw new NotImplementedException();
         }
 
         private void scanTypes(Action<Type> action)
@@ -139,7 +119,23 @@ namespace StructureMap.Graph
 
         public void AddScanner(ITypeScanner scanner)
         {
+            if (_scanners.Contains(scanner)) return;
+
             _scanners.Add(scanner);
+        }
+
+        public void AddScanner<T>() where T : ITypeScanner, new()
+        {
+            var previous = _scanners.FirstOrDefault(scanner => scanner is T);
+            if (previous == null)
+            {
+                AddScanner(new T());
+            }
+        }
+
+        public void IgnoreRegistries()
+        {
+            _scanners.RemoveAll(x => x is FindRegistriesScanner);
         }
     }
 }

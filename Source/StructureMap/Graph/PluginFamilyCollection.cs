@@ -92,5 +92,13 @@ namespace StructureMap.Graph
         {
             return Contains(typeof (T));
         }
+
+        public void Each(Action<PluginFamily> action)
+        {
+            foreach (var family in All)
+            {
+                action(family);
+            }
+        }
     }
 }

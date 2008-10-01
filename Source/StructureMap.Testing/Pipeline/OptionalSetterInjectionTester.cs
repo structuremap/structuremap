@@ -135,9 +135,6 @@ namespace StructureMap.Testing.Pipeline
         PluggedType='StructureMap.Testing.Pipeline.ClassWithDependency, StructureMap.Testing'>
         
         <Rule PluggedType='StructureMap.Testing.Widget.ColorRule, StructureMap.Testing.Widget' color='Red' />
-        
-
-
     </DefaultInstance>
 </StructureMap>
 

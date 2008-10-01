@@ -203,7 +203,14 @@ namespace StructureMap.Pipeline
                 pair.Value.CopyDefault(basicType, templatedType, family);
             }
 
-            CurrentProfile = CurrentProfile;
+            if (!string.IsNullOrEmpty(CurrentProfile))
+            {
+                Profile theSourceProfile = getProfile(CurrentProfile);
+                theSourceProfile.FillAllTypesInto(_currentProfile);
+            }
+            
+            _default.FillAllTypesInto(_currentProfile);
+            
         }
 
         public void ImportFrom(ProfileManager source)

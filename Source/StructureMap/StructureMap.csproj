@@ -403,7 +403,11 @@
     <Compile Include="Diagnostics\ValidationError.cs" />
     <Compile Include="Emitting\Parameters\Methods.cs" />
     <Compile Include="ErrorMessages.cs" />
+    <Compile Include="Graph\FamilyAttributeScanner.cs" />
+    <Compile Include="Graph\FindAllTypesFilter.cs" />
+    <Compile Include="Graph\FindRegistriesScanner.cs" />
     <Compile Include="Graph\ITypeScanner.cs" />
+    <Compile Include="Graph\PluggableAttributeScanner.cs" />
     <Compile Include="Graph\PluginCache.cs" />
     <Compile Include="IBootstrapper.cs" />
     <Compile Include="InitializationExpression.cs" />

@@ -120,6 +120,7 @@ namespace StructureMap
 
         public virtual object ApplyInterception(Type pluginType, object actualValue)
         {
+            if (actualValue == null) return null;
             return _interceptorLibrary.FindInterceptor(actualValue.GetType()).Process(actualValue);
         }
 

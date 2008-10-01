@@ -13,16 +13,13 @@ namespace StructureMap.Graph
     /// </summary>
     public class PluginFamily : TypeRules, IPluginFamily
     {
-        private readonly Predicate<Type> _explicitlyMarkedPluginFilter;
-        private readonly Predicate<Type> _implicitPluginFilter;
         private readonly Cache<string, Instance> _instances = new Cache<string, Instance>(delegate { return null; });
         private readonly List<InstanceMemento> _mementoList = new List<InstanceMemento>();
-        private Cache<string, Plugin> _pluggedTypes = new Cache<string, Plugin>();
+        private readonly Cache<string, Plugin> _pluggedTypes = new Cache<string, Plugin>();
         private readonly Type _pluginType;
         private IBuildPolicy _buildPolicy = new BuildPolicy();
         private string _defaultKey = string.Empty;
         private PluginGraph _parent;
-        private Predicate<Type> _pluginFilter;
         private IBuildPolicy _policy;
 
         public PluginFamily(Type pluginType)
@@ -36,10 +33,6 @@ namespace StructureMap.Graph
             _pluginType = pluginType;
 
             PluginFamilyAttribute.ConfigureFamily(this);
-
-            _explicitlyMarkedPluginFilter = (type => IsExplicitlyMarkedAsPlugin(PluginType, type));
-            _implicitPluginFilter = (type => CanBeCast(PluginType, type));
-            _pluginFilter = _explicitlyMarkedPluginFilter;
 
             if (IsConcrete(pluginType))
             {
@@ -113,6 +106,11 @@ namespace StructureMap.Graph
         }
 
 
+        public void AddTypes(List<Type> pluggedTypes)
+        {
+            pluggedTypes.ForEach(type => AddType(type));
+        }
+
         public void Seal()
         {
             _mementoList.ForEach(memento => _parent.Log.Try(() =>
@@ -175,18 +173,6 @@ namespace StructureMap.Graph
             return _instances.Retrieve(name);
         }
 
-
-        public void AnalyzeTypeForPlugin(Type pluggedType)
-        {
-            if (_pluginFilter(pluggedType))
-            {
-                if (!HasPlugin(pluggedType))
-                {
-                    AddPlugin(pluggedType);
-                }
-            }
-        }
-
         public bool HasPlugin(Type pluggedType)
         {
             return _pluggedTypes.Exists(plugin => plugin.PluggedType == pluggedType);
@@ -235,13 +221,7 @@ namespace StructureMap.Graph
 
         public bool IsGenericTemplate
         {
-            get { return _pluginType.IsGenericTypeDefinition; }
-        }
-
-        public bool SearchForImplicitPlugins
-        {
-            get { return ReferenceEquals(_pluginFilter, _implicitPluginFilter); }
-            set { _pluginFilter = value ? _implicitPluginFilter : _explicitlyMarkedPluginFilter; }
+            get { return _pluginType.IsGenericTypeDefinition || _pluginType.ContainsGenericParameters; }
         }
 
         public IBuildPolicy Policy
@@ -355,6 +335,16 @@ namespace StructureMap.Graph
             Parent.PluginFamilies.Add(templatedFamily);
 
             return templatedFamily;
+        }
+
+        public void AddType(Type concreteType)
+        {
+            if (!CanBeCast(_pluginType, concreteType)) return;
+
+            if (FindPlugin(concreteType) == null)
+            {
+                AddPlugin(concreteType);
+            }
         }
     }
 }

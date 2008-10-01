@@ -114,6 +114,8 @@ namespace StructureMap.Diagnostics
 
         private void validate(Type pluginType, Instance instance, object builtObject)
         {
+            if (builtObject == null) return;
+
             MethodInfo[] methods = ValidationMethodAttribute.GetValidationMethods(builtObject.GetType());
             foreach (MethodInfo method in methods)
             {

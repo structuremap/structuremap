@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Reflection;
 using NUnit.Framework;
 using StructureMap.Attributes;
@@ -6,6 +8,7 @@ using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
+using Rule=StructureMap.Testing.Widget.Rule;
 
 namespace StructureMap.Testing.Graph
 {
@@ -30,9 +33,49 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
+        public void add_type_does_not_add_if_the_concrete_type_can_not_be_cast_to_plugintype()
+        {
+            var family = new PluginFamily(typeof(IServiceProvider));
+            family.AddType(this.GetType());
+
+            family.PluginCount.ShouldEqual(0);
+        }
+
+        [Test]
+        public void add_type_works_if_the_concrete_type_can_be_cast_to_plugintype()
+        {
+            var family = new PluginFamily(typeof (IServiceProvider));
+
+            family.AddType(typeof(DataTable));
+            family.PluginCount.ShouldEqual(1);
+
+            family.AddType(typeof(DataTable));
+            family.PluginCount.ShouldEqual(1);
+        }
+
+        [Test]
+        public void add_plugins_at_seal_from_the_list_of_types()
+        {
+            var family = new PluginFamily(typeof(IServiceProvider));
+            family.AddType(typeof(DataTable));
+
+            // DataView, DataSet, and DataTable are all IServiceProvider implementations, and should get added
+            // to the PluginFamily
+            List<Type> pluggedTypes = new List<Type>(){typeof(DataView), typeof(DataSet), typeof(DataTable), GetType()};
+        
+            family.AddTypes(pluggedTypes);
+
+            family.PluginCount.ShouldEqual(3);
+
+            family.FindPlugin(typeof(DataView)).ShouldNotBeNull();
+            family.FindPlugin(typeof(DataTable)).ShouldNotBeNull();
+            family.FindPlugin(typeof(DataSet)).ShouldNotBeNull();
+        }
+
+        [Test]
         public void AddAPluggedType()
         {
-            PluginFamily family = new PluginFamily(typeof (IWidget));
+            var family = new PluginFamily(typeof (IWidget));
             family.DefaultInstanceKey = "DefaultKey";
             family.AddPlugin(typeof (NotPluggableWidget), "NotPlugged");
 
@@ -42,81 +85,31 @@ namespace StructureMap.Testing.Graph
         [Test, ExpectedException(typeof (StructureMapException))]
         public void AddAWrongType()
         {
-            PluginFamily family = new PluginFamily(typeof (IWidget));
+            var family = new PluginFamily(typeof (IWidget));
             family.DefaultInstanceKey = "DefaultKey";
             family.AddPlugin(typeof (Rule), "Rule");
-        }
-
-
-        [Test]
-        public void Analyze_a_type_for_a_plugin_that_does_not_match()
-        {
-            PluginFamily family = new PluginFamily(typeof (ISingletonRepository));
-            family.AnalyzeTypeForPlugin(typeof (RandomClass));
-
-            Assert.AreEqual(0, family.PluginCount);
-        }
-
-        [Test]
-        public void
-            Analyze_a_type_for_a_plugin_that_is_not_explicitly_marked_when_the_family_is_not_considering_implicit_plugins
-            ()
-        {
-            PluginFamily family = new PluginFamily(typeof (ISingletonRepository));
-            family.SearchForImplicitPlugins = false;
-
-            family.AnalyzeTypeForPlugin(typeof (SingletonRepositoryWithoutPluginAttribute));
-
-            Assert.AreEqual(0, family.PluginCount);
-        }
-
-        [Test]
-        public void Analyze_a_type_for_implicit_plugins()
-        {
-            PluginFamily family = new PluginFamily(typeof (ISingletonRepository));
-            family.SearchForImplicitPlugins = true;
-
-            family.AnalyzeTypeForPlugin(typeof (SingletonRepositoryWithoutPluginAttribute));
-
-            Assert.AreEqual(1, family.PluginCount);
-            Assert.IsTrue(family.HasPlugin(typeof (SingletonRepositoryWithoutPluginAttribute)));
         }
 
         [Test]
         public void Create_PluginFamily_for_concrete_type_that_can_be_autofilled_and_create_default_instance()
         {
-            PluginFamily family = new PluginFamily(GetType());
+            var family = new PluginFamily(GetType());
             family.Seal();
 
             Assert.AreEqual(Plugin.DEFAULT, family.DefaultInstanceKey);
             Assert.AreEqual(1, family.PluginCount);
             Assert.AreEqual(1, family.InstanceCount);
-            IConfiguredInstance instance = (IConfiguredInstance) family.FirstInstance();
+            var instance = (IConfiguredInstance) family.FirstInstance();
             Assert.AreEqual(Plugin.DEFAULT, instance.Name);
             Assert.AreEqual(GetType(), instance.PluggedType);
         }
 
         [Test]
-        public void Do_not_add_Plugin_that_already_exists()
-        {
-            PluginFamily family = new PluginFamily(typeof (ISingletonRepository));
-            family.AddPlugin(typeof (SingletonRepositoryWithAttribute));
-
-
-            family.AnalyzeTypeForPlugin(typeof (SingletonRepositoryWithAttribute));
-            family.AnalyzeTypeForPlugin(typeof (SingletonRepositoryWithAttribute));
-            family.AnalyzeTypeForPlugin(typeof (SingletonRepositoryWithAttribute));
-            family.AnalyzeTypeForPlugin(typeof (SingletonRepositoryWithAttribute));
-
-            Assert.AreEqual(1, family.PluginCount);
-        }
-
-        [Test]
         public void FillDefault_happy_path()
         {
-            PluginFamily family = new PluginFamily(typeof (IWidget));
+            var family = new PluginFamily(typeof (IWidget));
             family.Parent = new PluginGraph();
-            family.AddInstance(new ConfiguredInstance(typeof(ColorWidget)).WithName("Default"));
+            family.AddInstance(new ConfiguredInstance(typeof (ColorWidget)).WithName("Default"));
             family.DefaultInstanceKey = "Default";
 
 
@@ -128,7 +121,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void FillDefault_sad_path_when_the_default_instance_key_does_not_exist_throws_210()
         {
-            PluginFamily family = new PluginFamily(typeof (IWidget));
+            var family = new PluginFamily(typeof (IWidget));
             family.Parent = new PluginGraph();
 
             family.DefaultInstanceKey = "something that cannot be found";
@@ -140,9 +133,9 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void If_PluginFamily_only_has_one_instance_make_that_the_default()
         {
-            PluginFamily family = new PluginFamily(typeof (IGateway));
+            var family = new PluginFamily(typeof (IGateway));
             string theInstanceKey = "the default";
-            family.AddInstance(new ConfiguredInstance(typeof(TheGateway)).WithName(theInstanceKey));
+            family.AddInstance(new ConfiguredInstance(typeof (TheGateway)).WithName(theInstanceKey));
 
             family.Seal();
 
@@ -152,7 +145,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void If_PluginType_is_concrete_automatically_add_a_plugin_called_default()
         {
-            PluginFamily family = new PluginFamily(GetType());
+            var family = new PluginFamily(GetType());
             family.PluginCount.ShouldEqual(1);
             family.FindPlugin(Plugin.DEFAULT).PluggedType.ShouldEqual(GetType());
         }
@@ -160,10 +153,10 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void ImplicitPluginFamilyCreatesASingletonInterceptorWhenIsSingletonIsTrue()
         {
-            PluginFamily family = new PluginFamily(typeof (ISingletonRepository));
+            var family = new PluginFamily(typeof (ISingletonRepository));
             Assert.IsInstanceOfType(typeof (SingletonPolicy), family.Policy);
 
-            PluginFamily family2 = new PluginFamily(typeof (IDevice));
+            var family2 = new PluginFamily(typeof (IDevice));
             Assert.IsInstanceOfType(typeof (BuildPolicy), family2.Policy);
         }
 
@@ -172,8 +165,8 @@ namespace StructureMap.Testing.Graph
         {
             TestUtility.AssertErrorIsLogged(104, graph =>
             {
-                PluginFamily family = new PluginFamily(typeof (IGateway), graph);
-                ConfiguredInstance instance = new ConfiguredInstance(typeof (ColorRule));
+                var family = new PluginFamily(typeof (IGateway), graph);
+                var instance = new ConfiguredInstance(typeof (ColorRule));
 
                 Assert.IsFalse(TypeRules.CanBeCast(typeof (IGateway), typeof (Rule)));
 
@@ -184,41 +177,23 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
-        public void PluginFamily_adds_an_explicitly_marked_Plugin_when_only_looking_for_Explicit_plugins()
-        {
-            PluginFamily family = new PluginFamily(typeof (ISingletonRepository));
-            family.SearchForImplicitPlugins = false;
-            family.AnalyzeTypeForPlugin(typeof (SingletonRepositoryWithAttribute));
-
-            Assert.AreEqual(1, family.PluginCount);
-            Assert.IsTrue(family.HasPlugin(typeof (SingletonRepositoryWithAttribute)));
-        }
-
-        [Test]
-        public void PluginFamily_only_looks_for_explicit_plugins_by_default()
-        {
-            PluginFamily family = new PluginFamily(typeof (ISingletonRepository));
-            Assert.IsFalse(family.SearchForImplicitPlugins);
-        }
-
-        [Test]
         public void PluginFamilyImplicitlyConfiguredAsASingletonBehavesAsASingleton()
         {
-            PluginGraph pluginGraph = new PluginGraph();
+            var pluginGraph = new PluginGraph();
             pluginGraph.Assemblies.Add(Assembly.GetExecutingAssembly());
             pluginGraph.Seal();
 
-            Container manager = new Container(pluginGraph);
+            var manager = new Container(pluginGraph);
 
-            ISingletonRepository repository1 =
+            var repository1 =
                 (ISingletonRepository) manager.GetInstance(typeof (ISingletonRepository));
-            ISingletonRepository repository2 =
+            var repository2 =
                 (ISingletonRepository) manager.GetInstance(typeof (ISingletonRepository));
-            ISingletonRepository repository3 =
+            var repository3 =
                 (ISingletonRepository) manager.GetInstance(typeof (ISingletonRepository));
-            ISingletonRepository repository4 =
+            var repository4 =
                 (ISingletonRepository) manager.GetInstance(typeof (ISingletonRepository));
-            ISingletonRepository repository5 =
+            var repository5 =
                 (ISingletonRepository) manager.GetInstance(typeof (ISingletonRepository));
 
             Assert.AreSame(repository1, repository2);
@@ -230,7 +205,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void SetScopeToHttpContext()
         {
-            PluginFamily family = new PluginFamily(typeof (IServiceProvider));
+            var family = new PluginFamily(typeof (IServiceProvider));
             Assert.IsInstanceOfType(typeof (BuildPolicy), family.Policy);
 
             family.SetScopeTo(InstanceScope.HttpContext);
@@ -241,7 +216,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void SetScopeToHybrid()
         {
-            PluginFamily family = new PluginFamily(typeof (IServiceProvider));
+            var family = new PluginFamily(typeof (IServiceProvider));
             Assert.IsInstanceOfType(typeof (BuildPolicy), family.Policy);
 
             family.SetScopeTo(InstanceScope.Hybrid);
@@ -251,7 +226,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void SetScopeToSingleton()
         {
-            PluginFamily family = new PluginFamily(typeof (IServiceProvider));
+            var family = new PluginFamily(typeof (IServiceProvider));
             Assert.IsInstanceOfType(typeof (BuildPolicy), family.Policy);
 
             family.SetScopeTo(InstanceScope.Singleton);
@@ -261,7 +236,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void SetScopeToThreadLocal()
         {
-            PluginFamily family = new PluginFamily(typeof (IServiceProvider));
+            var family = new PluginFamily(typeof (IServiceProvider));
             Assert.IsInstanceOfType(typeof (BuildPolicy), family.Policy);
 
             family.SetScopeTo(InstanceScope.ThreadLocal);

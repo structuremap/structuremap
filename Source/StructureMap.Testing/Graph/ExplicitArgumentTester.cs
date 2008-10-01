@@ -288,9 +288,13 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void pass_explicit_service_into_all_instances()
         {
+            // The Container is constructed with 2 instances
+            // of TradeView
             var container = new Container(r =>
             {
-                r.ForRequestedType<TradeView>().TheDefaultIsConcreteType<TradeView>().AddConcreteType<SecuredTradeView>();
+                r.ForRequestedType<TradeView>()
+                    .TheDefaultIsConcreteType<TradeView>()
+                    .AddConcreteType<SecuredTradeView>();
             });
 
             Trade theTrade = new Trade();
@@ -299,6 +303,17 @@ namespace StructureMap.Testing.Graph
 
             views[0].Trade.ShouldBeTheSameAs(theTrade);
             views[1].Trade.ShouldBeTheSameAs(theTrade);
+        }
+
+        [Test]
+        public void Example()
+        {
+            IContainer container = new Container();
+            Trade theTrade = new Trade();
+
+            var view = container.With<Trade>(theTrade).GetInstance<TradeView>();
+
+            view.Trade.ShouldBeTheSameAs(theTrade);
         }
     }
 

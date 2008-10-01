@@ -62,7 +62,7 @@ namespace StructureMap.Graph
 
         protected bool IsPrimitive(Type type)
         {
-            return type.IsPrimitive && !IsString(type);
+            return type.IsPrimitive && !IsString(type) && type != typeof(IntPtr);
         }
 
         protected bool IsSimple(Type type)

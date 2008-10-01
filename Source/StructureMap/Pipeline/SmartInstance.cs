@@ -146,6 +146,13 @@ namespace StructureMap.Pipeline
 
                 return _instance;
             }
+
+            public SmartInstance<T> Contains(Instance[] arrayInstances)
+            {
+                _instance.setChildArray(_propertyName, arrayInstances);
+
+                return _instance;
+            }
         }
 
         public class DependencyExpression<T, CHILD>
@@ -165,6 +172,17 @@ namespace StructureMap.Pipeline
                 action(expression);
 
                 return _instance;
+            }
+
+            public SmartInstance<T> Is(Instance instance)
+            {
+                _instance.setChild(_propertyName, instance);
+                return _instance;
+            }
+
+            public SmartInstance<T> Is(CHILD value)
+            {
+                return Is(new LiteralInstance(value));
             }
         }
     }

@@ -6,6 +6,11 @@ namespace StructureMap.Pipeline
 {
     public partial class ConfiguredInstance : ConfiguredInstanceBase<ConfiguredInstance>
     {
+        public static Type GetGenericType(Type templateType, params Type[] types)
+        {
+            return templateType.MakeGenericType(types);
+        }
+
         public ConfiguredInstance(InstanceMemento memento, PluginGraph graph, Type pluginType) : base(memento, graph, pluginType)
         {
         }
@@ -17,6 +22,11 @@ namespace StructureMap.Pipeline
 
         public ConfiguredInstance(Type pluggedType) : base(pluggedType)
         {
+        }
+
+        public ConfiguredInstance(Type templateType, params Type[] types) : base(GetGenericType(templateType, types))
+        {
+            
         }
 
         #region IStructuredInstance Members

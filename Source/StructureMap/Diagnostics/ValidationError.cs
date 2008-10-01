@@ -27,7 +27,8 @@ namespace StructureMap.Diagnostics
 
             writer.WriteLine();
             writer.WriteLine("-----------------------------------------------------------------------------------------------------");
-            writer.WriteLine("Validation Error in Method {0} of Instance {1} in PluginType {2}", MethodName, description, TypePath.GetAssemblyQualifiedName(PluginType));
+            writer.WriteLine("Validation Error in Method {0} of Instance '{1}' ({2})\n   in PluginType {3}", MethodName, Instance.Name, description, TypePath.GetAssemblyQualifiedName(PluginType));
+            writer.WriteLine();
             writer.WriteLine(Exception.ToString());
             writer.WriteLine();
         }

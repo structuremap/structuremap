@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using StructureMap.Configuration.DSL;
+using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 
@@ -26,8 +27,11 @@ namespace StructureMap.Configuration
                 registry.ConfigurePluginGraph(_pluginGraph);
             }
 
-            _systemGraph = new PluginGraph(false);
-            _systemGraph.Assemblies.Add(Assembly.GetExecutingAssembly());
+            AssemblyScanner scanner = new AssemblyScanner(new GraphLog());
+            scanner.Add(Assembly.GetExecutingAssembly());
+            scanner.IgnoreRegistries();
+
+            _systemGraph = new PluginGraph(scanner);
         }
 
         #region IGraphBuilder Members

@@ -162,7 +162,7 @@ namespace StructureMap.Pipeline
 
         bool IConfiguredInstance.HasProperty(string propertyName)
         {
-            return _properties.ContainsKey(propertyName) || _children.ContainsKey(propertyName) || _arrays.ContainsKey(propertyName);
+           return _properties.ContainsKey(propertyName) || _children.ContainsKey(propertyName) || _arrays.ContainsKey(propertyName);
         }
 
         protected override Type getConcreteType(Type pluginType)
@@ -198,6 +198,7 @@ namespace StructureMap.Pipeline
 
         protected void setProperty(string propertyName, string propertyValue)
         {
+            if (string.IsNullOrEmpty(propertyValue)) return;
             _properties[propertyName] = propertyValue;
         }
 

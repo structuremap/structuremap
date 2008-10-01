@@ -92,7 +92,7 @@ namespace StructureMap
         /// Returns the path to the StructureMap.config file
         /// </summary>
         /// <returns></returns>
-        internal static string GetStructureMapConfigurationPath()
+        public static string GetStructureMapConfigurationPath()
         {
             string basePath = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
             string configPath = Path.Combine(basePath, CONFIG_FILE_NAME);

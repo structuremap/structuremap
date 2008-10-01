@@ -21,10 +21,9 @@ namespace StructureMap.Graph
         private GraphLog _log = new GraphLog();
         private readonly PluginFamilyCollection _pluginFamilies;
         private readonly ProfileManager _profileManager = new ProfileManager();
-        private readonly bool _useExternalRegistries = true;
         private bool _sealed = false;
         private readonly List<Registry> _registries = new List<Registry>();
-
+        private readonly List<Type> _pluggedTypes = new List<Type>();
         
 
         /// <summary>
@@ -36,10 +35,10 @@ namespace StructureMap.Graph
             _pluginFamilies = new PluginFamilyCollection(this);
         }
 
-
-        public PluginGraph(bool useExternalRegistries) : this()
+        public PluginGraph(AssemblyScanner assemblies)
         {
-            _useExternalRegistries = useExternalRegistries;
+            _assemblies = assemblies;
+            _pluginFamilies = new PluginFamilyCollection(this);
         }
 
         public List<Registry> Registries
@@ -96,23 +95,12 @@ namespace StructureMap.Graph
                 return;
             }
 
-            if (_useExternalRegistries)
-            {
-                _assemblies.ScanForAll(this);
-            }
-            else
-            {
-                _assemblies.ScanForStructureMapObjects(this);
-            }
+            _assemblies.ScanForAll(this);
 
-            foreach (PluginFamily family in _pluginFamilies.All)
-            {
-                family.Seal();
-            }
+            _pluginFamilies.Each(family => family.AddTypes(_pluggedTypes));
+            _pluginFamilies.Each(family => family.Seal());
 
             _profileManager.Seal(this);
-
-            
 
             _sealed = true;
         }
@@ -149,6 +137,16 @@ namespace StructureMap.Graph
         {
             FindFamily(pluginType).AddInstance(instance);
             _profileManager.SetDefault(profileName, pluginType, instance);
+        }
+
+        public void AddType(Type pluginType, Type concreteType)
+        {
+            FindFamily(pluginType).AddType(concreteType);
+        }
+
+        public void AddType(Type pluggedType)
+        {
+            _pluggedTypes.Add(pluggedType);
         }
     }
 }

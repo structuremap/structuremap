@@ -63,6 +63,12 @@ namespace StructureMap.Testing
             Assert.IsInstanceOfType(expected, actual);
         }
 
+        public static T ShouldBeOfType<T>(this object actual)
+        {
+            Assert.IsInstanceOfType(typeof(T), actual);
+            return (T) actual;
+        }
+
         public static void ShouldNotBeOfType(this object actual, Type expected)
         {
             Assert.IsNotInstanceOfType(expected, actual);

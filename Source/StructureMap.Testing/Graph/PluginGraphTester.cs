@@ -114,6 +114,22 @@ namespace StructureMap.Testing.Graph
 
             graph.Seal();
         }
+
+        [Test]
+        public void add_type_adds_a_plugin_for_type_once_and_only_once()
+        {
+            var graph = new PluginGraph();
+
+            graph.AddType(typeof (IThingy), typeof (BigThingy));
+
+            var family = graph.FindFamily(typeof (IThingy));
+            family.PluginCount.ShouldEqual(1);
+            family.FindPlugin(typeof(BigThingy)).ShouldNotBeNull();
+
+            graph.AddType(typeof(IThingy), typeof(BigThingy));
+
+            family.PluginCount.ShouldEqual(1);
+        }
     }
 
     [PluginFamily]

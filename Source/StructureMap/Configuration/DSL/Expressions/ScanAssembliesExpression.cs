@@ -82,9 +82,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         {
             _registry.addExpression(pluginGraph =>
             {
-                PluginFamily family =
-                    pluginGraph.FindFamily(pluginType);
-                family.SearchForImplicitPlugins = true;
+                pluginGraph.Assemblies.AddScanner(new FindAllTypesFilter(pluginType));
             });
 
             return this;
@@ -108,7 +106,18 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         public ScanAssembliesExpression With<T>() where T : ITypeScanner, new()
         {
-            return With(new T());
+            _registry.addExpression(graph => graph.Assemblies.AddScanner<T>());
+            return this;
+        }
+
+        // TODO: Need a test here
+        public ScanAssembliesExpression With<T>(Action<T> configure) where T : ITypeScanner, new()
+        {
+            T scanner = new T();
+            configure(scanner);
+
+            _registry.addExpression(graph => graph.Assemblies.AddScanner(scanner));
+            return this;
         }
     }
 }

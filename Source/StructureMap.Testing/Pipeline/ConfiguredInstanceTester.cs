@@ -4,6 +4,7 @@ using Rhino.Mocks;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
+using StructureMap.Testing.GenericWidgets;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget2;
 using StructureMap.Testing.Widget3;
@@ -47,6 +48,15 @@ namespace StructureMap.Testing.Pipeline
             {
                 Assert.AreEqual(errorCode, ex.ErrorCode);
             }
+        }
+
+        [Test]
+        public void can_use_a_configured_instance_with_generic_template_type_and_arguments()
+        {
+            var instance = new ConfiguredInstance(typeof (Service2<>), typeof (string));
+            Container container = new Container();
+
+            container.GetInstance<IService<string>>(instance).ShouldBeOfType(typeof(Service2<string>));
         }
 
         [Test]

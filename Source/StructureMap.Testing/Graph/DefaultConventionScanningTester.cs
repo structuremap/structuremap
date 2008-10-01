@@ -23,16 +23,15 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void Process_to_PluginGraph()
         {
-            Registry registry = new Registry();
+            PluginGraph graph = new PluginGraph();
             DefaultConventionScanner scanner = new DefaultConventionScanner();
-            scanner.Process(typeof(Convention), registry);
-
-            PluginGraph graph = registry.Build();
+            scanner.Process(typeof(Convention), graph);
 
             Assert.IsFalse(graph.PluginFamilies.Contains(typeof(IServer)));
             Assert.IsTrue(graph.PluginFamilies.Contains(typeof(IConvention)));
 
             PluginFamily family = graph.FindFamily(typeof (IConvention));
+            family.Seal();
             Assert.AreEqual(1, family.InstanceCount);
         }
 

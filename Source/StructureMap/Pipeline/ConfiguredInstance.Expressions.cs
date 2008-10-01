@@ -35,14 +35,14 @@ namespace StructureMap.Pipeline
             validateTypeIsArray<PLUGINTYPE>();
 
             ChildArrayExpression expression =
-                new ChildArrayExpression(this, propertyName, typeof (PLUGINTYPE));
+                new ChildArrayExpression(this, propertyName);
 
             return expression;
         }
 
-        public ChildArrayExpression ChildArray(string propertyName, Type childType)
+        public ChildArrayExpression ChildArray(string propertyName)
         {
-            return new ChildArrayExpression(this, propertyName, childType);
+            return new ChildArrayExpression(this, propertyName);
         }
 
         public ChildArrayExpression ChildArray<PLUGINTYPE>()
@@ -104,16 +104,13 @@ namespace StructureMap.Pipeline
 
         public class ChildArrayExpression
         {
-            private readonly Type _childType;
             private readonly ConfiguredInstance _instance;
             private readonly string _propertyName;
 
-            public ChildArrayExpression(ConfiguredInstance instance, string propertyName, Type childType)
+            public ChildArrayExpression(ConfiguredInstance instance, string propertyName)
             {
                 _instance = instance;
                 _propertyName = propertyName;
-
-                _childType = _childType;
             }
 
             public ConfiguredInstance Contains(params Instance[] instances)

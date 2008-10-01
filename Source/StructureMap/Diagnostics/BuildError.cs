@@ -85,7 +85,9 @@ namespace StructureMap.Diagnostics
 
             writer.WriteLine();
             writer.WriteLine("-----------------------------------------------------------------------------------------------------");
-            writer.WriteLine("Build Error on Instance '{0}' ({1}) in PluginType {2}", Instance.Name, description, TypePath.GetAssemblyQualifiedName(PluginType));
+            writer.WriteLine("Build Error on Instance '{0}' ({1})\n    for PluginType {2}", Instance.Name, description, PluginType.AssemblyQualifiedName);
+            writer.WriteLine();
+            
             if (Exception != null) writer.WriteLine(Exception.ToString());
             writer.WriteLine();
         }
