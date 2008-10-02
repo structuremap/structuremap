@@ -18,6 +18,8 @@ namespace StructureMap.Testing.Configuration.DSL
 
         #endregion
 
+
+
         [Test]
         public void Equals_check_true()
         {
@@ -58,6 +60,13 @@ namespace StructureMap.Testing.Configuration.DSL
 
             Container container = new Container(registry);
 
+        }
+
+        [Test]
+        public void use_the_basic_actions_as_part_of_building_a_PluginGraph()
+        {
+            var container = new Container(new BasicActionRegistry());
+            container.GetInstance<IGateway>().ShouldBeOfType<Fake3Gateway>();
         }
     }
 
@@ -141,5 +150,13 @@ namespace StructureMap.Testing.Configuration.DSL
         }
 
         #endregion
+    }
+
+    public class BasicActionRegistry : Registry
+    {
+        public BasicActionRegistry()
+        {
+            registerAction(() => ForRequestedType<IGateway>().TheDefaultIsConcreteType<Fake3Gateway>());
+        }
     }
 }

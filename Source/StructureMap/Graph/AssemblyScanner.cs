@@ -8,22 +8,33 @@ using StructureMap.Diagnostics;
 
 namespace StructureMap.Graph
 {
+    public static class TypeExtensions
+    {
+        public static bool IsInNamespace(this Type type, string nameSpace)
+        {
+            return type.Namespace.StartsWith(nameSpace);
+        }
+    }
+
     public class AssemblyScanner
     {
         private readonly List<Assembly> _assemblies = new List<Assembly>();
         private readonly List<ITypeScanner> _scanners = new List<ITypeScanner>();
+        private readonly List<Predicate<Type>> _includes = new List<Predicate<Type>>();
+        private readonly List<Predicate<Type>> _excludes = new List<Predicate<Type>>();
 
         public AssemblyScanner()
         {
             With<FamilyAttributeScanner>();
             With<PluggableAttributeScanner>();
-            With<FindRegistriesScanner>();
         }
 
         public int Count
         {
             get { return _assemblies.Count; }
         }
+
+
 
         public void ScanForAll(PluginGraph pluginGraph)
         {
@@ -37,6 +48,9 @@ namespace StructureMap.Graph
             {
                 foreach (Type type in assembly.GetExportedTypes())
                 {
+                    if (!isInTheIncludes(type)) continue;
+                    if (isInTheExcludes(type)) continue;
+
                     _scanners.ForEach(scanner => scanner.Process(type, graph));
                 }
             }
@@ -44,6 +58,31 @@ namespace StructureMap.Graph
             {
                 graph.Log.RegisterError(170, ex, assembly.FullName);
             }
+        }
+
+        private bool isInTheExcludes(Type type)
+        {
+            if (_excludes.Count == 0) return false;
+
+            foreach (var exclude in _excludes)
+            {
+                if (exclude(type)) return true;
+            }
+
+            return false;
+        }
+
+        private bool isInTheIncludes(Type type)
+        {
+            if (_includes.Count == 0) return true;
+
+
+            foreach (var include in _includes)
+            {
+                if (include(type)) return true;
+            }
+
+            return false;
         }
 
         public void Assembly(Assembly assembly)
@@ -79,8 +118,15 @@ namespace StructureMap.Graph
             _scanners.Add(scanner);
         }
 
+        public void WithDefaultConventions()
+        {
+            With<DefaultConventionScanner>();
+        }
+
         public void With<T>() where T : ITypeScanner, new()
         {
+            _scanners.RemoveAll(scanner => scanner is T);
+
             ITypeScanner previous = _scanners.FirstOrDefault(scanner => scanner is T);
             if (previous == null)
             {
@@ -88,9 +134,9 @@ namespace StructureMap.Graph
             }
         }
 
-        public void IgnoreRegistries()
+        public void LookForRegistries()
         {
-            _scanners.RemoveAll(x => x is FindRegistriesScanner);
+            With<FindRegistriesScanner>();
         }
 
         public void TheCallingAssembly()
@@ -142,5 +188,46 @@ namespace StructureMap.Graph
             With(new FindAllTypesFilter(pluginType));
         }
 
+        public void IgnoreStructureMapAttributes()
+        {
+            _scanners.RemoveAll(scanner => scanner is FamilyAttributeScanner);
+            _scanners.RemoveAll(scanner => scanner is PluggableAttributeScanner);
+        }
+
+
+        public void Exclude(Predicate<Type> exclude)
+        {
+            _excludes.Add(exclude);
+        }
+
+        public void ExcludeNamespace(string nameSpace)
+        {
+            Exclude(type => type.IsInNamespace(nameSpace));
+        }
+
+        public void ExcludeNamespaceContainingType<T>()
+        {
+            ExcludeNamespace(typeof(T).Namespace);
+        }
+
+        public void Include(Predicate<Type> predicate)
+        {
+            _includes.Add(predicate);
+        }
+
+        public void IncludeNamespace(string nameSpace)
+        {
+            Include(type => type.IsInNamespace(nameSpace));
+        }
+
+        public void IncludeNamespaceContainingType<T>()
+        {
+            IncludeNamespace(typeof (T).Namespace);
+        }
+
+        public void ExcludeType<T>()
+        {
+            Exclude(type => type == typeof (T));
+        }
     }
 }

@@ -346,5 +346,15 @@ namespace StructureMap.Graph
                 AddPlugin(concreteType);
             }
         }
+
+        public void AddType(Type concreteType, string name)
+        {
+            if (!CanBeCast(_pluginType, concreteType)) return;
+
+            if (FindPlugin(name) == null)
+            {
+                AddPlugin(concreteType, name);
+            }
+        }
     }
 }

@@ -156,9 +156,22 @@ namespace StructureMap.Graph
             FindFamily(pluginType).AddType(concreteType);
         }
 
+        public void AddType(Type pluginType, Type concreteType, string name)
+        {
+            FindFamily(pluginType).AddType(concreteType, name);
+        }
+
         public void AddType(Type pluggedType)
         {
             _pluggedTypes.Add(pluggedType);
+        }
+
+        public void Configure(Action<Registry> action)
+        {
+            var registry = new Registry();
+            action(registry);
+
+            registry.ConfigurePluginGraph(this);
         }
     }
 }

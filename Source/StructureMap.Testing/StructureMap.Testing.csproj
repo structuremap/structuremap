@@ -215,6 +215,7 @@
     <Compile Include="Graph\ArrayConstructorTester.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Graph\AssemblyScannerTester.cs" />
     <Compile Include="Graph\ContainerConstructorAttributeTester.cs">
       <SubType>Code</SubType>
     </Compile>

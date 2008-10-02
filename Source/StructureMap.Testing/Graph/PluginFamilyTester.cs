@@ -73,6 +73,17 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
+        public void add_type_by_name()
+        {
+            var family = new PluginFamily(typeof(IServiceProvider));
+            family.AddType(typeof(DataTable), "table");
+
+            family.PluginCount.ShouldEqual(1);
+
+            family.FindPlugin("table").ShouldNotBeNull();
+        }
+
+        [Test]
         public void AddAPluggedType()
         {
             var family = new PluginFamily(typeof (IWidget));

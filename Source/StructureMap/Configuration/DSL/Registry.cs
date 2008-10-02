@@ -9,6 +9,7 @@ namespace StructureMap.Configuration.DSL
 {
     public class Registry : RegistryExpressions
     {
+        private readonly List<Action> _basicActions = new List<Action>();
         private readonly List<Action<PluginGraph>> _actions = new List<Action<PluginGraph>>();
 
         public Registry()
@@ -24,6 +25,11 @@ namespace StructureMap.Configuration.DSL
             // no-op;
         }
 
+        protected void registerAction(Action action)
+        {
+            _basicActions.Add(action);
+        }
+
         internal void addExpression(Action<PluginGraph> alteration)
         {
             _actions.Add(alteration);
@@ -35,10 +41,8 @@ namespace StructureMap.Configuration.DSL
 
             graph.Log.StartSource("Registry:  " + TypePath.GetAssemblyQualifiedName(GetType()));
 
-            foreach (Action<PluginGraph> action in _actions)
-            {
-                action(graph);
-            }
+            _basicActions.ForEach(action => action());
+            _actions.ForEach(action => action(graph));
 
             graph.Registries.Add(this);
         }

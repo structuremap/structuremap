@@ -33,7 +33,6 @@ namespace StructureMap.Configuration
 
             _systemScanner = new AssemblyScanner();
             _systemScanner.Assembly(Assembly.GetExecutingAssembly());
-            _systemScanner.IgnoreRegistries();
 
             _systemGraph = new PluginGraph(_systemScanner);
         }
