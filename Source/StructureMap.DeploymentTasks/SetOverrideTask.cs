@@ -13,32 +13,28 @@ namespace StructureMap.DeploymentTasks
         private string _profileName = string.Empty;
         private string _typeName = string.Empty;
 
-        public SetOverrideTask() : base()
-        {
-        }
-
-        [TaskAttribute("configPath", Required=true)]
+        [TaskAttribute("configPath", Required = true)]
         public string ConfigPath
         {
             get { return _configPath; }
             set { _configPath = value; }
         }
 
-        [TaskAttribute("profileName", Required=false)]
+        [TaskAttribute("profileName", Required = false)]
         public string ProfileName
         {
             get { return _profileName; }
             set { _profileName = value; }
         }
 
-        [TaskAttribute("typeName", Required=true)]
+        [TaskAttribute("typeName", Required = true)]
         public string TypeName
         {
             get { return _typeName; }
             set { _typeName = value; }
         }
 
-        [TaskAttribute("key", Required=true)]
+        [TaskAttribute("key", Required = true)]
         public string DefaultKey
         {
             get { return _defaultKey; }
@@ -48,7 +44,7 @@ namespace StructureMap.DeploymentTasks
 
         protected override void ExecuteTask()
         {
-            XmlDocument document = new XmlDocument();
+            var document = new XmlDocument();
             document.Load(_configPath);
 
             ApplyToDocument(document);
@@ -85,7 +81,7 @@ namespace StructureMap.DeploymentTasks
         private XmlElement findOverrideElement(XmlElement profileElement, XmlDocument document)
         {
             string overrideXPath = string.Format("Override[@Type='{0}']", _typeName);
-            XmlElement overrideElement = (XmlElement) profileElement.SelectSingleNode(overrideXPath);
+            var overrideElement = (XmlElement) profileElement.SelectSingleNode(overrideXPath);
             if (overrideElement == null)
             {
                 overrideElement = document.CreateElement("Override");
@@ -98,7 +94,7 @@ namespace StructureMap.DeploymentTasks
         private XmlElement findProfileElement(string profileName, XmlDocument document)
         {
             string profileXPath = string.Format("Profile[@Name='{0}']", profileName);
-            XmlElement profileElement = (XmlElement) document.DocumentElement.SelectSingleNode(profileXPath);
+            var profileElement = (XmlElement) document.DocumentElement.SelectSingleNode(profileXPath);
             if (profileElement == null)
             {
                 profileElement = document.CreateElement("Profile");

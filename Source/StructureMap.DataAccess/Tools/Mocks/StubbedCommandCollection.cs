@@ -5,7 +5,7 @@ namespace StructureMap.DataAccess.Tools.Mocks
 {
     public class StubbedCommandCollection : ICommandCollection
     {
-        private Hashtable _commands;
+        private readonly Hashtable _commands;
 
         public StubbedCommandCollection()
         {
@@ -21,7 +21,7 @@ namespace StructureMap.DataAccess.Tools.Mocks
             {
                 if (!_commands.ContainsKey(commandName))
                 {
-                    MockCommand command = new MockCommand(commandName);
+                    var command = new MockCommand(commandName);
                     _commands.Add(commandName, command);
                 }
 

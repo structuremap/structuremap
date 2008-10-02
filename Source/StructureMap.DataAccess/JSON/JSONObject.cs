@@ -6,11 +6,7 @@ namespace StructureMap.DataAccess.JSON
 {
     public class JSONObject : Part
     {
-        private ArrayList _parts = new ArrayList();
-
-        public JSONObject()
-        {
-        }
+        private readonly ArrayList _parts = new ArrayList();
 
         public JSONObject AddString(string propertyName, string propertyValue)
         {

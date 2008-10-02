@@ -23,13 +23,13 @@ namespace StructureMap.AutoMocking
                     return null;
                 }
 
-                InstanceFactory factory = new InstanceFactory(new PluginFamily(pluginType));
+                var factory = new InstanceFactory(new PluginFamily(pluginType));
 
                 try
                 {
                     object service = _locator.Service(pluginType);
 
-                    LiteralInstance instance = new LiteralInstance(service);
+                    var instance = new LiteralInstance(service);
 
                     profileManager.SetDefault(pluginType, instance);
                 }

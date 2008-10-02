@@ -8,14 +8,15 @@ namespace StructureMap.Testing.Widget5
         protected override void configure()
         {
             InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithCtorArg("color").EqualTo("Red").WithName("Red");
-            InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithCtorArg("color").EqualTo("Green").WithName("Green");
+            InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithCtorArg("color").EqualTo("Green").WithName(
+                "Green");
         }
 
 
         public override bool Equals(object obj)
         {
             if (this == obj) return true;
-            RedGreenRegistry redGreenRegistry = obj as RedGreenRegistry;
+            var redGreenRegistry = obj as RedGreenRegistry;
             if (redGreenRegistry == null) return false;
             return true;
         }
@@ -30,7 +31,8 @@ namespace StructureMap.Testing.Widget5
     {
         protected override void configure()
         {
-            InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithCtorArg("color").EqualTo("Yellow").WithName("Yellow");
+            InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithCtorArg("color").EqualTo("Yellow").WithName(
+                "Yellow");
             InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithProperty("color").EqualTo("Blue").WithName("Blue");
         }
 
@@ -38,7 +40,7 @@ namespace StructureMap.Testing.Widget5
         public override bool Equals(object obj)
         {
             if (this == obj) return true;
-            YellowBlueRegistry yellowBlueRegistry = obj as YellowBlueRegistry;
+            var yellowBlueRegistry = obj as YellowBlueRegistry;
             if (yellowBlueRegistry == null) return false;
             return true;
         }
@@ -47,6 +49,21 @@ namespace StructureMap.Testing.Widget5
         {
             return 0;
         }
+    }
+
+    [PluginFamily]
+    public interface ITypeThatHasAttributeButIsNotInRegistry
+    {
+    }
+
+    [PluginFamily]
+    public interface IInterfaceInWidget5
+    {
+    }
+
+    [Pluggable("TheType")]
+    public class TypeThatHasAttributeButIsNotInRegistry : ITypeThatHasAttributeButIsNotInRegistry
+    {
     }
 
     public class BrownBlackRegistry : Registry
@@ -63,7 +80,7 @@ namespace StructureMap.Testing.Widget5
         public override bool Equals(object obj)
         {
             if (this == obj) return true;
-            BrownBlackRegistry brownBlackRegistry = obj as BrownBlackRegistry;
+            var brownBlackRegistry = obj as BrownBlackRegistry;
             if (brownBlackRegistry == null) return false;
             return true;
         }

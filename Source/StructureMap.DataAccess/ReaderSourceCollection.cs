@@ -7,7 +7,7 @@ namespace StructureMap.DataAccess
     {
         private readonly ICommandFactory _commandFactory;
         private readonly DataSession _parent;
-        private Hashtable _sources;
+        private readonly Hashtable _sources;
 
         public ReaderSourceCollection(DataSession session, ICommandFactory commandFactory)
         {

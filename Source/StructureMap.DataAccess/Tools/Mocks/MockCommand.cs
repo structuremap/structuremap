@@ -5,25 +5,20 @@ namespace StructureMap.DataAccess.Tools.Mocks
 {
     public class MockCommand : ICommand
     {
+        private readonly Queue _expectations;
+        private readonly ParameterList _inputs;
         private CommandExpectation _currentExpectation;
-        private Queue _expectations;
-        private ParameterList _inputs;
-        private string _name;
 
         public MockCommand(string name)
         {
-            _name = name;
+            Name = name;
             _expectations = new Queue();
             _inputs = new ParameterList();
         }
 
         #region ICommand Members
 
-        public string Name
-        {
-            get { return _name; }
-            set { _name = value; }
-        }
+        public string Name { get; set; }
 
 
         public int Execute()
@@ -57,7 +52,7 @@ namespace StructureMap.DataAccess.Tools.Mocks
 
                 if (_expectations.Count > 0)
                 {
-                    CommandExpectation nextExpectation = (CommandExpectation) _expectations.Peek();
+                    var nextExpectation = (CommandExpectation) _expectations.Peek();
                     if (nextExpectation.IsOutput(parameterName))
                     {
                         throw new NotExecutedCommandException(parameterName, Name);

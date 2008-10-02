@@ -47,7 +47,7 @@ namespace StructureMap.DataAccess.ExecutionStates
             {
                 prepareCommand(command);
                 _adapter.SelectCommand = command;
-                DataSet dataSet = new DataSet();
+                var dataSet = new DataSet();
 
                 _adapter.Fill(dataSet);
 

@@ -7,14 +7,14 @@ namespace StructureMap.DataAccess.Commands
     [Pluggable("Templated")]
     public class TemplatedCommand : CommandBase
     {
-        private string[] _substitutions;
-        private string _template;
+        private readonly string[] _substitutions;
+        private readonly string _template;
 
         [DefaultConstructor]
-        public TemplatedCommand(string template) : base()
+        public TemplatedCommand(string template)
         {
             _template = template;
-            TemplateParser parser = new TemplateParser(template);
+            var parser = new TemplateParser(template);
             _substitutions = parser.Parse();
         }
 
@@ -31,10 +31,10 @@ namespace StructureMap.DataAccess.Commands
 
         public override void Initialize(IDatabaseEngine engine)
         {
-            ParameterCollection parameters = new ParameterCollection();
+            var parameters = new ParameterCollection();
             foreach (string substitution in _substitutions)
             {
-                TemplateParameter parameter = new TemplateParameter(substitution);
+                var parameter = new TemplateParameter(substitution);
                 parameters.AddParameter(parameter);
             }
 
@@ -44,7 +44,7 @@ namespace StructureMap.DataAccess.Commands
 
         public string GetSql()
         {
-            StringBuilder sb = new StringBuilder(_template);
+            var sb = new StringBuilder(_template);
             foreach (TemplateParameter parameter in Parameters)
             {
                 parameter.Substitute(sb);

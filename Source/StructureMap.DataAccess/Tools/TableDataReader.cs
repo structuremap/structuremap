@@ -5,12 +5,12 @@ namespace StructureMap.DataAccess.Tools
 {
     public class TableDataReader : IDataReader
     {
+        private readonly DataTable[] _tables;
         private int _currentPosition;
         private DataRow _currentRow;
         private DataTable _currentTable;
         private bool _isClosed;
         private int _tableIndex = -1;
-        private DataTable[] _tables;
 
         public TableDataReader()
             : this(new DataTable())
@@ -18,7 +18,7 @@ namespace StructureMap.DataAccess.Tools
         }
 
         public TableDataReader(DataTable table)
-            : this(new DataTable[] {table})
+            : this(new[] {table})
         {
         }
 

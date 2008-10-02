@@ -8,10 +8,7 @@ namespace StructureMap.Testing.Widget5
 
         public string ReadOnly
         {
-            get
-            {
-                return "whatever";
-            }
+            get { return "whatever"; }
         }
 
         public FontStyleEnum FontStyle { get; set; }

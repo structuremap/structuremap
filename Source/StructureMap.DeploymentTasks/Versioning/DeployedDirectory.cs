@@ -9,7 +9,6 @@ namespace StructureMap.DeploymentTasks.Versioning
         private Hashtable _assemblies;
         private Hashtable _childDirectories;
         private Hashtable _files;
-        private string _name;
 
         public DeployedDirectory()
         {
@@ -20,7 +19,7 @@ namespace StructureMap.DeploymentTasks.Versioning
 
         public DeployedDirectory(DirectoryInfo directory) : this()
         {
-            _name = directory.Name;
+            Name = directory.Name;
 
 //			foreach (DirectoryInfo childDirectory in directory.GetDirectories())
 //			{
@@ -43,11 +42,7 @@ namespace StructureMap.DeploymentTasks.Versioning
             }
         }
 
-        public string Name
-        {
-            get { return _name; }
-            set { _name = value; }
-        }
+        public string Name { get; set; }
 
 //		public DeployedDirectory[] ChildDeployedDirectories
 //		{
@@ -83,7 +78,7 @@ namespace StructureMap.DeploymentTasks.Versioning
         {
             get
             {
-                DeployedFile[] children = new DeployedFile[_files.Count];
+                var children = new DeployedFile[_files.Count];
                 _files.Values.CopyTo(children, 0);
 
                 return children;
@@ -102,7 +97,7 @@ namespace StructureMap.DeploymentTasks.Versioning
         {
             get
             {
-                DotNetAssembly[] assemblies = new DotNetAssembly[_assemblies.Count];
+                var assemblies = new DotNetAssembly[_assemblies.Count];
                 _assemblies.Values.CopyTo(assemblies, 0);
 
                 return assemblies;
@@ -155,8 +150,8 @@ namespace StructureMap.DeploymentTasks.Versioning
 
         public void WriteToXml(string fileName)
         {
-            XmlSerializer serializer = new XmlSerializer(GetType());
-            using (FileStream stream = new FileStream(fileName, FileMode.Create, FileAccess.Write))
+            var serializer = new XmlSerializer(GetType());
+            using (var stream = new FileStream(fileName, FileMode.Create, FileAccess.Write))
             {
                 serializer.Serialize(stream, this);
             }
@@ -165,8 +160,8 @@ namespace StructureMap.DeploymentTasks.Versioning
 
         public static DeployedDirectory ReadFromXml(string fileName)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof (DeployedDirectory));
-            using (FileStream stream = new FileStream(fileName, FileMode.Open, FileAccess.Read))
+            var serializer = new XmlSerializer(typeof (DeployedDirectory));
+            using (var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read))
             {
                 return (DeployedDirectory) serializer.Deserialize(stream);
             }

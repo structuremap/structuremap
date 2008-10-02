@@ -10,9 +10,9 @@ namespace StructureMap.DataAccess.Commands
     {
         private readonly IQueryFilter[] _filters;
         private readonly string _selectAndFromClause;
-        private ArrayList _templatedParameters = new ArrayList();
+        private readonly ArrayList _templatedParameters = new ArrayList();
 
-        public TemplatedQuery(string selectAndFromClause, IQueryFilter[] filters) : base()
+        public TemplatedQuery(string selectAndFromClause, IQueryFilter[] filters)
         {
             _selectAndFromClause = selectAndFromClause;
             _filters = filters;
@@ -20,14 +20,14 @@ namespace StructureMap.DataAccess.Commands
 
         public override void Initialize(IDatabaseEngine engine)
         {
-            ParameterCollection parameters = new ParameterCollection(_filters);
+            var parameters = new ParameterCollection(_filters);
             IDbCommand command = engine.GetCommand();
 
-            TemplateParser parser = new TemplateParser(_selectAndFromClause);
+            var parser = new TemplateParser(_selectAndFromClause);
             string[] substitutions = parser.Parse();
             foreach (string substitution in substitutions)
             {
-                TemplateParameter parameter = new TemplateParameter(substitution);
+                var parameter = new TemplateParameter(substitution);
                 _templatedParameters.Add(parameter);
                 parameters.AddParameter(parameter);
             }
@@ -44,13 +44,13 @@ namespace StructureMap.DataAccess.Commands
         {
             command.Parameters.Clear();
 
-            StringBuilder sb = new StringBuilder(_selectAndFromClause);
+            var sb = new StringBuilder(_selectAndFromClause);
             foreach (TemplateParameter parameter in _templatedParameters)
             {
                 parameter.Substitute(sb);
             }
 
-            ArrayList whereList = new ArrayList();
+            var whereList = new ArrayList();
             foreach (IQueryFilter filter in _filters)
             {
                 if (filter.IsActive())
@@ -63,7 +63,7 @@ namespace StructureMap.DataAccess.Commands
             if (whereList.Count > 0)
             {
                 sb.Append(" where ");
-                string[] filterStrings = (string[]) whereList.ToArray(typeof (string));
+                var filterStrings = (string[]) whereList.ToArray(typeof (string));
                 string whereClause = string.Join(" and ", filterStrings);
                 sb.Append(whereClause);
             }

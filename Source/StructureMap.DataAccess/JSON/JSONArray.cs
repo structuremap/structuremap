@@ -6,8 +6,8 @@ namespace StructureMap.DataAccess.JSON
 {
     public class JSONArray : Part
     {
-        private ArrayList _parts = new ArrayList();
-        private bool _pretty;
+        private readonly ArrayList _parts = new ArrayList();
+        private readonly bool _pretty;
 
         public JSONArray(bool pretty)
         {

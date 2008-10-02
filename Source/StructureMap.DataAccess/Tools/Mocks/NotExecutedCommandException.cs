@@ -7,7 +7,7 @@ namespace StructureMap.DataAccess.Tools.Mocks
         private readonly string _parameterName;
         private string _commandName = string.Empty;
 
-        public NotExecutedCommandException(string parameterName) : base()
+        public NotExecutedCommandException(string parameterName)
         {
             _parameterName = parameterName;
         }

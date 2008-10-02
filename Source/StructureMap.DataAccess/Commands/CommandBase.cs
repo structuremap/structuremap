@@ -8,7 +8,6 @@ namespace StructureMap.DataAccess.Commands
     public abstract class CommandBase : IInitializable, IReaderSource, ICommand
     {
         private IDbCommand _innerCommand;
-        private string _name;
         private ParameterCollection _parameters;
         private IDataSession _session;
 
@@ -57,11 +56,7 @@ namespace StructureMap.DataAccess.Commands
 
         #region IReaderSource Members
 
-        public string Name
-        {
-            get { return _name; }
-            set { _name = value; }
-        }
+        public string Name { get; set; }
 
         [IndexerName("Parameter")]
         public object this[string parameterName]
@@ -83,7 +78,7 @@ namespace StructureMap.DataAccess.Commands
         public string ExecuteJSON()
         {
             DataSet dataSet = ExecuteDataSet();
-            JSONSerializer serializer = new JSONSerializer(dataSet.Tables[0]);
+            var serializer = new JSONSerializer(dataSet.Tables[0]);
             return serializer.CreateJSON();
         }
 

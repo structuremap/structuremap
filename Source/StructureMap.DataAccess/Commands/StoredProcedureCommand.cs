@@ -34,7 +34,7 @@ namespace StructureMap.DataAccess.Commands
         public override void Initialize(IDatabaseEngine engine)
         {
             IDbCommand innerCommand = engine.CreateStoredProcedureCommand(_commandText);
-            ParameterCollection parameters = new ParameterCollection(innerCommand.Parameters);
+            var parameters = new ParameterCollection(innerCommand.Parameters);
 
             initializeMembers(parameters, innerCommand);
         }

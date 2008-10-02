@@ -6,5 +6,5 @@ using System.Reflection;
 // associated with an assembly.
 //
 
-[assembly : AssemblyTitle("StructureMap DataAccess")]
-[assembly : AssemblyDescription("An interface to databases done the StructureMap way")]
+[assembly: AssemblyTitle("StructureMap DataAccess")]
+[assembly: AssemblyDescription("An interface to databases done the StructureMap way")]

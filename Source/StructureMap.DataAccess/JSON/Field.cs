@@ -32,7 +32,7 @@ namespace StructureMap.DataAccess.JSON
 
         public static Field[] GetFields(DataTable table)
         {
-            Field[] returnValue = new Field[table.Columns.Count];
+            var returnValue = new Field[table.Columns.Count];
 
 
             for (int i = 0; i < table.Columns.Count; i++)

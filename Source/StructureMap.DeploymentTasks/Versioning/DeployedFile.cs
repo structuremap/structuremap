@@ -31,8 +31,8 @@ namespace StructureMap.DeploymentTasks.Versioning
 
         public static DeployedFile CreateFile(FileInfo fileInfo)
         {
-            DeployedFile deployedFile = new DeployedFile(fileInfo.Name);
-            SHA1CryptoServiceProvider crypto = new SHA1CryptoServiceProvider();
+            var deployedFile = new DeployedFile(fileInfo.Name);
+            var crypto = new SHA1CryptoServiceProvider();
 
             using (FileStream stream = fileInfo.OpenRead())
             {

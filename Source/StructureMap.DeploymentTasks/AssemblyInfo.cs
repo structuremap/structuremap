@@ -7,6 +7,6 @@ using System.Security.Permissions;
 // associated with an assembly.
 //
 
-[assembly : AssemblyTitle("StructureMap v0.91")]
-[assembly : AssemblyDescription("Deployment Tasks for NAnt")]
-[assembly : ReflectionPermission(SecurityAction.RequestMinimum, ReflectionEmit=true)]
+[assembly: AssemblyTitle("StructureMap v0.91")]
+[assembly: AssemblyDescription("Deployment Tasks for NAnt")]
+[assembly: ReflectionPermission(SecurityAction.RequestMinimum, ReflectionEmit = true)]

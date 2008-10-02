@@ -38,7 +38,7 @@ namespace StructureMap.DataAccess
 
         private void buildMessage(IDbCommand command)
         {
-            StringBuilder SB = new StringBuilder();
+            var SB = new StringBuilder();
 
             SB.Append("Command Failure!\r\n");
             SB.Append(InnerException.Message);

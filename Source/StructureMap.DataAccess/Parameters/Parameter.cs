@@ -5,7 +5,7 @@ namespace StructureMap.DataAccess.Parameters
     public class Parameter : IParameter
     {
         private readonly IDataParameter _innerParameter;
-        private string _parameterName;
+        private readonly string _parameterName;
 
         public Parameter(IDataParameter innerParameter) : this(innerParameter, innerParameter.ParameterName)
         {

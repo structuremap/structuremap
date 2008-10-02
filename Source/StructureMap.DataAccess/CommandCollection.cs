@@ -6,8 +6,8 @@ namespace StructureMap.DataAccess
     public class CommandCollection : ICommandCollection
     {
         private readonly ICommandFactory _commandFactory;
+        private readonly Hashtable _commands;
         private readonly DataSession _parent;
-        private Hashtable _commands;
 
         public CommandCollection(DataSession parent, ICommandFactory commandFactory)
         {

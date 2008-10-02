@@ -6,7 +6,7 @@ namespace StructureMap.DataAccess.Commands
     {
         protected const string REPLACEMENT_VALUE = "{Value}";
         private readonly string _parameterName;
-        protected object _innerValue = null;
+        protected object _innerValue;
         protected string _sqlSnippet;
 
 

@@ -14,7 +14,7 @@ namespace StructureMap.DataAccess.Parameterization
 
         public override void Initialize(IDatabaseEngine engine)
         {
-            ParameterizedCommandBuilder builder = new ParameterizedCommandBuilder(engine, _commandText);
+            var builder = new ParameterizedCommandBuilder(engine, _commandText);
             builder.Build();
 
             initializeMembers(builder.Parameters, builder.Command);

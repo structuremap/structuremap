@@ -24,13 +24,13 @@ namespace StructureMap.DataAccess
                 throw new ApplicationException(_template);
             }
 
-            string[] tempValues = new string[_leftCurlyIndexes.Length];
+            var tempValues = new string[_leftCurlyIndexes.Length];
             for (int i = 0; i < _leftCurlyIndexes.Length; i++)
             {
                 tempValues[i] = getSubstitution(i);
             }
 
-            ArrayList list = new ArrayList();
+            var list = new ArrayList();
             foreach (string tempValue in tempValues)
             {
                 if (!list.Contains(tempValue))
@@ -58,7 +58,7 @@ namespace StructureMap.DataAccess
 
         private int[] findAllOccurrences(string bracket)
         {
-            ArrayList list = new ArrayList();
+            var list = new ArrayList();
 
             int curlyIndex = _template.IndexOf(bracket, 0);
             while (curlyIndex > -1)

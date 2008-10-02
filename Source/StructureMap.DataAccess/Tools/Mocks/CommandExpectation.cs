@@ -4,10 +4,10 @@ namespace StructureMap.DataAccess.Tools.Mocks
 {
     public class CommandExpectation : ICloneable
     {
+        private readonly ParameterList _inputs;
+        private readonly ParameterList _outputs;
         private readonly int _rowsAffected;
-        private ParameterList _inputs;
-        private ParameterList _outputs;
-        private bool _wasExecuted = false;
+        private bool _wasExecuted;
 
         public CommandExpectation() : this(1)
         {

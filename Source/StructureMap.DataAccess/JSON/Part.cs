@@ -8,7 +8,7 @@ namespace StructureMap.DataAccess.JSON
 
         public string ToJSON()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             Write(sb);
             return sb.ToString().Trim();
         }

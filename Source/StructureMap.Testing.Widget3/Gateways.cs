@@ -12,20 +12,9 @@ namespace StructureMap.Testing.Widget3
     [Pluggable("Default")]
     public class DefaultGateway : IGateway
     {
-        private string _color;
-        private string _name;
+        public string Name { get; set; }
 
-        public string Name
-        {
-            get { return _name; }
-            set { _name = value; }
-        }
-
-        public string Color
-        {
-            get { return _color; }
-            set { _color = value; }
-        }
+        public string Color { get; set; }
 
         #region IGateway Members
 

@@ -16,7 +16,7 @@ namespace StructureMap.DataAccess.JSON
         {
             _fields = Field.GetFields(_table);
 
-            JSONArray array = new JSONArray(true);
+            var array = new JSONArray(true);
 
 
             foreach (DataRow row in _table.Rows)
@@ -29,7 +29,7 @@ namespace StructureMap.DataAccess.JSON
 
         private void writeObject(JSONArray array, DataRow row)
         {
-            JSONObject obj = new JSONObject();
+            var obj = new JSONObject();
 
             foreach (Field field in _fields)
             {

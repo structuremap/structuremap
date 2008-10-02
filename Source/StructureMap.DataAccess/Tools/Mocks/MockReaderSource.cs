@@ -7,25 +7,20 @@ namespace StructureMap.DataAccess.Tools.Mocks
 {
     public class MockReaderSource : IReaderSource
     {
-        private Queue _expectations;
-        private string _name;
-        private ParameterList _parameters;
+        private readonly Queue _expectations;
+        private readonly ParameterList _parameters;
 
 
         public MockReaderSource(string name)
         {
-            _name = name;
+            Name = name;
             _parameters = new ParameterList();
             _expectations = new Queue();
         }
 
         #region IReaderSource Members
 
-        public string Name
-        {
-            get { return _name; }
-            set { _name = value; }
-        }
+        public string Name { get; set; }
 
         public IDataReader ExecuteReader()
         {
@@ -34,7 +29,7 @@ namespace StructureMap.DataAccess.Tools.Mocks
                 throw new UnExpectedCallException(Name);
             }
 
-            ReaderExpectation expectation = (ReaderExpectation) _expectations.Dequeue();
+            var expectation = (ReaderExpectation) _expectations.Dequeue();
 
             return expectation.VerifyAndGetReader(_parameters);
         }

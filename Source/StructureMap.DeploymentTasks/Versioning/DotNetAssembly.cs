@@ -6,9 +6,7 @@ namespace StructureMap.DeploymentTasks.Versioning
 {
     public class DotNetAssembly
     {
-        private string _assemblyName;
         private byte[] _publicKey = new byte[0];
-        private string _version;
 
         public DotNetAssembly()
         {
@@ -17,20 +15,20 @@ namespace StructureMap.DeploymentTasks.Versioning
         public DotNetAssembly(byte[] publicKey, string assemblyName, string version)
         {
             _publicKey = publicKey;
-            _assemblyName = assemblyName;
-            _version = version;
+            AssemblyName = assemblyName;
+            Version = version;
         }
 
         public DotNetAssembly(string assemblyName, string version)
         {
-            _assemblyName = assemblyName;
-            _version = version;
+            AssemblyName = assemblyName;
+            Version = version;
         }
 
         public DotNetAssembly(Assembly assembly)
         {
-            _assemblyName = assembly.GetName().Name;
-            _version = assembly.GetName().Version.ToString();
+            AssemblyName = assembly.GetName().Name;
+            Version = assembly.GetName().Version.ToString();
             _publicKey = assembly.GetName().GetPublicKey();
         }
 
@@ -40,17 +38,9 @@ namespace StructureMap.DeploymentTasks.Versioning
             set { _publicKey = value; }
         }
 
-        public string AssemblyName
-        {
-            get { return _assemblyName; }
-            set { _assemblyName = value; }
-        }
+        public string AssemblyName { get; set; }
 
-        public string Version
-        {
-            get { return _version; }
-            set { _version = value; }
-        }
+        public string Version { get; set; }
 
         public static DotNetAssembly TryCreateAssembly(FileInfo fileInfo)
         {

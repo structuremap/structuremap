@@ -49,7 +49,7 @@ namespace StructureMap.DataAccess.ExecutionStates
             {
                 setupConnection(command);
                 _adapter.SelectCommand = command;
-                DataSet dataSet = new DataSet();
+                var dataSet = new DataSet();
                 _adapter.Fill(dataSet);
 
                 return dataSet;

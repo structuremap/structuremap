@@ -24,7 +24,7 @@ namespace StructureMap.DataAccess.Tools.Mocks
         {
             get
             {
-                string[] returnValue = new string[_values.Count];
+                var returnValue = new string[_values.Count];
                 _values.Keys.CopyTo(returnValue, 0);
 
                 Array.Sort(returnValue);
@@ -37,7 +37,7 @@ namespace StructureMap.DataAccess.Tools.Mocks
 
         public object Clone()
         {
-            ParameterList clone = new ParameterList();
+            var clone = new ParameterList();
             clone._values = (Hashtable) _values.Clone();
 
             return clone;
@@ -47,11 +47,11 @@ namespace StructureMap.DataAccess.Tools.Mocks
 
         public void Verify(ParameterList actualList)
         {
-            ArrayList expectedKeys = new ArrayList(AllKeys);
-            ArrayList actualKeys = new ArrayList(actualList.AllKeys);
-            ArrayList unionKeys = new ArrayList();
+            var expectedKeys = new ArrayList(AllKeys);
+            var actualKeys = new ArrayList(actualList.AllKeys);
+            var unionKeys = new ArrayList();
 
-            string[] keys = (string[]) actualKeys.ToArray(typeof (string));
+            var keys = (string[]) actualKeys.ToArray(typeof (string));
 
             foreach (string key in keys)
             {
@@ -63,7 +63,7 @@ namespace StructureMap.DataAccess.Tools.Mocks
                 }
             }
 
-            ParameterValidationFailureException failureCondition = new ParameterValidationFailureException();
+            var failureCondition = new ParameterValidationFailureException();
 
             checkForWrongParameterValues(unionKeys, actualList, failureCondition);
             checkForMissingParameters(expectedKeys, failureCondition);

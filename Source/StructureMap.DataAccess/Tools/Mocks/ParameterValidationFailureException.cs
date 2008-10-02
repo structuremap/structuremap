@@ -6,10 +6,6 @@ namespace StructureMap.DataAccess.Tools.Mocks
     {
         private string _message = string.Empty;
 
-        public ParameterValidationFailureException() : base()
-        {
-        }
-
         public override string Message
         {
             get { return _message; }

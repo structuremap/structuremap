@@ -1,19 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.Data;
 using System.Data.OracleClient;
-using System.Text;
 
 namespace StructureMap.DataAccess.Oracle
 {
     public class OracleDatabaseEngine : IDatabaseEngine
     {
-        private IConnectionStringProvider _provider;
+        private readonly IConnectionStringProvider _provider;
 
         public OracleDatabaseEngine(IConnectionStringProvider provider)
         {
             _provider = provider;
         }
+
+        #region IDatabaseEngine Members
 
         public IDbConnection GetConnection()
         {
@@ -27,7 +27,7 @@ namespace StructureMap.DataAccess.Oracle
 
         public IDbCommand CreateStoredProcedureCommand(string commandText)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public IDbDataAdapter GetDataAdapter()
@@ -37,17 +37,19 @@ namespace StructureMap.DataAccess.Oracle
 
         public IDataParameter CreateStringParameter(string parameterName, int size, bool isNullable)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public IDataParameter CreateParameter(string parameterName, DbType dbType, bool isNullable)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public string GetParameterName(string logicalName)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
+
+        #endregion
     }
 }

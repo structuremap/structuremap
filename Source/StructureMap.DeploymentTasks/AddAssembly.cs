@@ -11,18 +11,14 @@ namespace StructureMap.DeploymentTasks
         private string _assemblyName;
         private string _configPath;
 
-        public AddAssembly()
-        {
-        }
-
-        [TaskAttribute("configPath", Required=true)]
+        [TaskAttribute("configPath", Required = true)]
         public string ConfigPath
         {
             get { return _configPath; }
             set { _configPath = value; }
         }
 
-        [TaskAttribute("assemblyName", Required=true)]
+        [TaskAttribute("assemblyName", Required = true)]
         public string AssemblyName
         {
             get { return _assemblyName; }
@@ -41,7 +37,7 @@ namespace StructureMap.DeploymentTasks
 
         public XmlDocument AddAssemblyNode()
         {
-            XmlDocument document = new XmlDocument();
+            var document = new XmlDocument();
             document.Load(_configPath);
 
             AddAssemblyToDocument(document);

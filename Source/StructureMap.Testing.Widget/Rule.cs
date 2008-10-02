@@ -5,10 +5,6 @@ namespace StructureMap.Testing.Widget
 {
     public abstract class Rule
     {
-        public Rule()
-        {
-        }
-
         public virtual bool IsTrue()
         {
             return true;
@@ -18,13 +14,13 @@ namespace StructureMap.Testing.Widget
     [Pluggable("Complex")]
     public class ComplexRule : Rule
     {
-        private bool _Bool;
-        private byte _Byte;
-        private double _Double;
-        private int _Int;
-        private long _Long;
-        private string _String;
-        private string _String2;
+        private readonly bool _Bool;
+        private readonly byte _Byte;
+        private readonly double _Double;
+        private readonly int _Int;
+        private readonly long _Long;
+        private readonly string _String;
+        private readonly string _String2;
 
         [DefaultConstructor]
         public ComplexRule(string String, string String2, int Int, long Long, byte Byte, double Double, bool Bool)
@@ -93,7 +89,7 @@ namespace StructureMap.Testing.Widget
 
         public static IConfiguredInstance GetInstance()
         {
-            ConfiguredInstance memento = new ConfiguredInstance(typeof(ComplexRule));
+            var memento = new ConfiguredInstance(typeof (ComplexRule));
             memento.Name = "Sample";
 
             IConfiguredInstance instance = memento;
@@ -114,7 +110,7 @@ namespace StructureMap.Testing.Widget
     [Pluggable("Color")]
     public class ColorRule : Rule
     {
-        private string _Color;
+        private readonly string _Color;
         public string ID = Guid.NewGuid().ToString();
 
         public ColorRule(string color)
@@ -133,8 +129,8 @@ namespace StructureMap.Testing.Widget
     [Pluggable("GreaterThan")]
     public class GreaterThanRule : Rule
     {
-        private string _Attribute;
-        private int _Value;
+        private readonly string _Attribute;
+        private readonly int _Value;
 
         public GreaterThanRule()
         {

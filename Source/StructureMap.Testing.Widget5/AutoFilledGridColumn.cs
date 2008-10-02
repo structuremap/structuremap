@@ -7,7 +7,6 @@ namespace StructureMap.Testing.Widget5
     public class AutoFilledGridColumn
     {
         private readonly IWidget _widget;
-        private Rule _rule;
 
         public AutoFilledGridColumn(IWidget widget)
         {
@@ -20,10 +19,6 @@ namespace StructureMap.Testing.Widget5
         }
 
         [SetterProperty]
-        public Rule Rule
-        {
-            get { return _rule; }
-            set { _rule = value; }
-        }
+        public Rule Rule { get; set; }
     }
 }

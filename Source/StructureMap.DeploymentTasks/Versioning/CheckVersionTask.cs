@@ -8,14 +8,10 @@ namespace StructureMap.DeploymentTasks.Versioning
     [TaskName("structuremap.checkversion")]
     public class CheckVersionTask : Task, IVersionReport
     {
-        private ArrayList _exclusionList = new ArrayList();
+        private readonly ArrayList _exclusionList = new ArrayList();
         private string _manifestFile;
         private bool _succeeded = true;
         private string _targetFolder;
-
-        public CheckVersionTask() : base()
-        {
-        }
 
         [TaskAttribute("manifest", Required = true)]
         public string ManifestFile
@@ -97,8 +93,8 @@ namespace StructureMap.DeploymentTasks.Versioning
                 string.Format("Starting version checking of folder {0} against manifest file {1}", _targetFolder,
                               _manifestFile));
 
-            DirectoryInfo targetDirectoryInfo = new DirectoryInfo(TargetFolder);
-            DeployedDirectory actualDirectory = new DeployedDirectory(targetDirectoryInfo);
+            var targetDirectoryInfo = new DirectoryInfo(TargetFolder);
+            var actualDirectory = new DeployedDirectory(targetDirectoryInfo);
 
             DeployedDirectory expectedDirectory = DeployedDirectory.ReadFromXml(_manifestFile);
 

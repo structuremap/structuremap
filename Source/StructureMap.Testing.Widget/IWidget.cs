@@ -10,7 +10,7 @@ namespace StructureMap.Testing.Widget
     [Pluggable("Color")]
     public class ColorWidget : IWidget, ICloneable
     {
-        private string _Color;
+        private readonly string _Color;
 
         public ColorWidget(string color)
         {
@@ -42,7 +42,7 @@ namespace StructureMap.Testing.Widget
         public override bool Equals(object obj)
         {
             if (this == obj) return true;
-            ColorWidget colorWidget = obj as ColorWidget;
+            var colorWidget = obj as ColorWidget;
             if (colorWidget == null) return false;
             return Equals(_Color, colorWidget._Color);
         }
@@ -56,9 +56,14 @@ namespace StructureMap.Testing.Widget
     [Pluggable("AWidget")]
     public class AWidget : IWidget, ICloneable
     {
-        public AWidget()
+        #region ICloneable Members
+
+        public object Clone()
         {
+            return MemberwiseClone();
         }
+
+        #endregion
 
         #region IWidget Members
 
@@ -68,11 +73,6 @@ namespace StructureMap.Testing.Widget
         }
 
         #endregion
-
-        public object Clone()
-        {
-            return this.MemberwiseClone();
-        }
     }
 
     public class NotPluggableWidget : IWidget
@@ -102,14 +102,7 @@ namespace StructureMap.Testing.Widget
     [Pluggable("Money")]
     public class MoneyWidget : IWidget
     {
-        private double _Amount;
-
-
-        public double Amount
-        {
-            get { return _Amount; }
-            set { _Amount = value; }
-        }
+        public double Amount { get; set; }
 
         #region IWidget Members
 
@@ -124,14 +117,6 @@ namespace StructureMap.Testing.Widget
     [Pluggable("Configuration")]
     public class ConfigurationWidget : IWidget
     {
-        private bool _Bool;
-        private byte _Byte;
-        private double _Double;
-        private int _Int;
-        private long _Long;
-        private string _String;
-        private string _String2;
-
         public ConfigurationWidget(string String, string String2, int Int, long Long, byte Byte, double Double,
                                    bool Bool)
         {
@@ -145,52 +130,24 @@ namespace StructureMap.Testing.Widget
         }
 
 
-        public string String
-        {
-            get { return _String; }
-            set { _String = value; }
-        }
+        public string String { get; set; }
 
-        public string String2
-        {
-            get { return _String2; }
-            set { _String2 = value; }
-        }
+        public string String2 { get; set; }
 
 
-        public int Int
-        {
-            get { return _Int; }
-            set { _Int = value; }
-        }
+        public int Int { get; set; }
 
 
-        public byte Byte
-        {
-            get { return _Byte; }
-            set { _Byte = value; }
-        }
+        public byte Byte { get; set; }
 
 
-        public long Long
-        {
-            get { return _Long; }
-            set { _Long = value; }
-        }
+        public long Long { get; set; }
 
 
-        public double Double
-        {
-            get { return _Double; }
-            set { _Double = value; }
-        }
+        public double Double { get; set; }
 
 
-        public bool Bool
-        {
-            get { return _Bool; }
-            set { _Bool = value; }
-        }
+        public bool Bool { get; set; }
 
         #region IWidget Members
 

@@ -29,7 +29,7 @@ namespace StructureMap.Testing.GenericWidgets
     {
         public Type GetT()
         {
-            return typeof(T);
+            return typeof (T);
         }
     }
 
@@ -135,7 +135,7 @@ namespace StructureMap.Testing.GenericWidgets
     [PluginFamily("Default", Scope = InstanceScope.Singleton)]
     public abstract class AbstractClass<T>
     {
-        private Guid _id = Guid.NewGuid();
+        private readonly Guid _id = Guid.NewGuid();
 
         public Guid Id
         {

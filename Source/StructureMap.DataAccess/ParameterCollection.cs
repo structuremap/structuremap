@@ -7,7 +7,7 @@ namespace StructureMap.DataAccess
 {
     public class ParameterCollection : IEnumerable
     {
-        private Hashtable _parameters = new Hashtable();
+        private readonly Hashtable _parameters = new Hashtable();
 
         public ParameterCollection()
         {
@@ -17,7 +17,7 @@ namespace StructureMap.DataAccess
         {
             foreach (IDataParameter innerParameter in parameters)
             {
-                Parameter parameter = new Parameter(innerParameter);
+                var parameter = new Parameter(innerParameter);
                 AddParameter(parameter);
             }
         }

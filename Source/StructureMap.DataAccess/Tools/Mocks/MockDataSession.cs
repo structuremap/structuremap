@@ -5,8 +5,8 @@ namespace StructureMap.DataAccess.Tools.Mocks
 {
     public class MockDataSession : IDataSession
     {
-        private StubbedCommandCollection _commands;
-        private StubbedReaderSourceCollection _sources;
+        private readonly StubbedCommandCollection _commands;
+        private readonly StubbedReaderSourceCollection _sources;
 
         public MockDataSession()
         {
@@ -105,14 +105,14 @@ namespace StructureMap.DataAccess.Tools.Mocks
 
         public void AddReaderExpectation(string name, ReaderExpectation expectation)
         {
-            MockReaderSource source = (MockReaderSource) _sources[name];
+            var source = (MockReaderSource) _sources[name];
             source.AddExpectation(expectation);
         }
 
 
         public void AddCommandExpectation(string name, CommandExpectation expectation)
         {
-            MockCommand command = (MockCommand) _commands[name];
+            var command = (MockCommand) _commands[name];
             command.AddExpectation(expectation);
         }
     }

@@ -67,7 +67,7 @@ namespace StructureMap.DataAccess.MSSQL
         public IDbCommand CreateStoredProcedureCommand(string commandText)
         {
             SqlCommand command = null;
-            SqlConnection connection = new SqlConnection(_connectionString);
+            var connection = new SqlConnection(_connectionString);
 
             try
             {
@@ -90,8 +90,8 @@ namespace StructureMap.DataAccess.MSSQL
             }
             catch (SqlException e)
             {
-                Exception ex = new Exception("Error connecting or executing database command " + e.Message);
-                throw(ex);
+                var ex = new Exception("Error connecting or executing database command " + e.Message);
+                throw (ex);
             }
             finally
             {
@@ -112,7 +112,7 @@ namespace StructureMap.DataAccess.MSSQL
 
         private SqlParameter createParameter(string logicalName)
         {
-            SqlParameter parameter = new SqlParameter();
+            var parameter = new SqlParameter();
             parameter.ParameterName = "@" + logicalName;
             return parameter;
         }
@@ -124,9 +124,9 @@ namespace StructureMap.DataAccess.MSSQL
 
         private void pruneDuplicates(SqlCommand command)
         {
-            ArrayList list = new ArrayList();
+            var list = new ArrayList();
 
-            SqlParameter[] parameters = new SqlParameter[command.Parameters.Count];
+            var parameters = new SqlParameter[command.Parameters.Count];
             command.Parameters.CopyTo(parameters, 0);
 
             foreach (SqlParameter parameter in parameters)

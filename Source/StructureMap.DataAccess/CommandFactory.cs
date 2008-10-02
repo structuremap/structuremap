@@ -14,7 +14,7 @@ namespace StructureMap.DataAccess
 
         public ICommand BuildCommand(string commandName)
         {
-            ICommand command = (ICommand) ObjectFactory.GetNamedInstance(typeof (ICommand), commandName);
+            var command = (ICommand) ObjectFactory.GetNamedInstance(typeof (ICommand), commandName);
             initialize(command);
             command.Name = commandName;
 
@@ -23,7 +23,7 @@ namespace StructureMap.DataAccess
 
         public IReaderSource BuildReaderSource(string name)
         {
-            IReaderSource source = (IReaderSource) ObjectFactory.GetNamedInstance(typeof (IReaderSource), name);
+            var source = (IReaderSource) ObjectFactory.GetNamedInstance(typeof (IReaderSource), name);
             initialize(source);
             source.Name = name;
 
@@ -34,7 +34,7 @@ namespace StructureMap.DataAccess
 
         private void initialize(object target)
         {
-            IInitializable initializable = target as IInitializable;
+            var initializable = target as IInitializable;
             if (initializable != null)
             {
                 initializable.Initialize(_engine);

@@ -5,7 +5,7 @@ namespace StructureMap.DataAccess.Tools.Mocks
 {
     public class StubbedReaderSourceCollection : IReaderSourceCollection
     {
-        private Hashtable _sources;
+        private readonly Hashtable _sources;
 
         public StubbedReaderSourceCollection()
         {
@@ -31,7 +31,7 @@ namespace StructureMap.DataAccess.Tools.Mocks
             {
                 if (!_sources.ContainsKey(name))
                 {
-                    MockReaderSource source = new MockReaderSource(name);
+                    var source = new MockReaderSource(name);
                     _sources.Add(name, source);
                 }
 
