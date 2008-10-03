@@ -25,9 +25,6 @@ namespace StructureMap.Testing
 
         #endregion
 
-
-
-
         [Test]
         public void can_iterate_through_instances_of_pipelineGraph_for_generics_if_not_registered()
         {
@@ -52,6 +49,7 @@ namespace StructureMap.Testing
 
             pipeline.PluginTypes.Count().ShouldEqual(2);
         }
+
 
         [Test]
         public void can_iterate_through_instance_of_pipelineGraph_for_generics()

@@ -105,6 +105,14 @@ namespace StructureMap
             container.Inject(name, instance);
         }
 
+        public static Model Model
+        {
+            get
+            {
+                return container.Model;
+            }
+        }
+
         [Obsolete("Please use Inject<PLUGINTYPE>(name) instead.")]
         public static void InjectStub<PLUGINTYPE>(string name, PLUGINTYPE stub)
         {

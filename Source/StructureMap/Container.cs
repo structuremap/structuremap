@@ -20,6 +20,7 @@ namespace StructureMap
         private InterceptorLibrary _interceptorLibrary;
         private PipelineGraph _pipelineGraph;
         private PluginGraph _pluginGraph;
+        private Model _model;
 
         public Container(Action<ConfigurationExpression> action)
         {
@@ -66,6 +67,7 @@ namespace StructureMap
             pluginGraph.Log.AssertFailures();
 
             _pipelineGraph = new PipelineGraph(pluginGraph);
+            _model = new Model(_pipelineGraph);
 
             PluginCache.Compile();
         }
@@ -76,6 +78,11 @@ namespace StructureMap
         }
 
         #region IContainer Members
+
+        public Model Model
+        {
+            get { return _model; }
+        }
 
         public T GetInstance<T>(string instanceKey)
         {

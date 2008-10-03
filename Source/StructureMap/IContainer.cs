@@ -9,6 +9,8 @@ namespace StructureMap
 {
     public interface IContainer
     {
+        Model Model { get; }
+
         T GetInstance<T>(string instanceKey);
         T GetInstance<T>();
         T FillDependencies<T>();

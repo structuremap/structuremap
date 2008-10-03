@@ -64,6 +64,8 @@ namespace StructureMap.Graph
 
         public bool CanBeAutoFilled()
         {
+            if (_ctor == null) return false;
+
             foreach (ParameterInfo parameter in _ctor.GetParameters())
             {
                 if (!IsAutoFillable(parameter.ParameterType))

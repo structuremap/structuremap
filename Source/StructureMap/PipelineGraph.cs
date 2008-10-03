@@ -173,7 +173,12 @@ namespace StructureMap
                 return _genericsGraph.FindFamily(pluginType).Instances;
             }
 
-            return ForType(pluginType).Instances;
+            if (_factories.ContainsKey(pluginType))
+            {
+                return _factories[pluginType].Instances;
+            }
+
+            return new IInstance[0];
         }
 
         public IEnumerable<PluginTypeConfiguration> PluginTypes

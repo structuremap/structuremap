@@ -349,6 +349,7 @@
     <Compile Include="InstanceMementoInstanceCreationTester.cs" />
     <Compile Include="MementoTester.cs" />
     <Compile Include="MergingTester.cs" />
+    <Compile Include="ModelQueryTester.cs" />
     <Compile Include="ObjectFactoryInitializeTester.cs" />
     <Compile Include="ObjectFactoryTester.cs">
       <SubType>Code</SubType>

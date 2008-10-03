@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Xml;
 using NUnit.Framework;
@@ -28,6 +29,12 @@ namespace StructureMap.Testing
         {
             IList list = ObjectFactory.GetAllInstances(typeof (GrandChild));
             Assert.IsTrue(list.Count > 0);
+        }
+
+        [Test]
+        public void SmokeTestModelAccess()
+        {
+            ObjectFactory.Model.PluginTypes.Count().ShouldBeGreaterThan(0);
         }
 
         [Test]

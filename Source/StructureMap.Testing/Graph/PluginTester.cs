@@ -112,6 +112,18 @@ namespace StructureMap.Testing.Graph
             container.GetInstance<IEngine>(instance).ShouldBeOfType(typeof (DOHCEngine));
         }
 
+        public class ClassWithNoConstructor
+        {
+            private ClassWithNoConstructor(){}
+        }
+
+        [Test]
+        public void cannot_be_auto_filled_with_no_contructors()
+        {
+            var plugin = new Plugin(typeof (ClassWithNoConstructor));
+            plugin.CanBeAutoFilled.ShouldBeFalse();
+        }
+
         [Test]
         public void CanBeAutoFilled_with_child_array_in_ctor()
         {
