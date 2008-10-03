@@ -108,5 +108,9 @@ namespace StructureMap.Pipeline
         }
 
 
+        public void Remove<T>()
+        {
+            _instances.Remove(typeof (T));
+        }
     }
 }

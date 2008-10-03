@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 
@@ -11,6 +12,8 @@ namespace StructureMap
     public interface IInstanceFactory
     {
         Type PluginType { get; }
+        IEnumerable<IInstance> Instances { get; }
+        IBuildPolicy Policy { get; }
 
         void AddInstance(Instance instance);
         Instance AddType<T>();

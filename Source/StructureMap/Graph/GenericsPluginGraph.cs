@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using StructureMap.Pipeline;
 using StructureMap.Util;
@@ -17,6 +18,17 @@ namespace StructureMap.Graph
         public int FamilyCount
         {
             get { return _families.Count; }
+        }
+
+        public IEnumerable<PluginTypeConfiguration> Families
+        {
+            get
+            {
+                foreach (var family in _families)
+                {
+                    yield return family.GetConfiguration();
+                }
+            }
         }
 
         public static bool CanBeCast(Type pluginType, Type pluggedType)
@@ -101,9 +113,6 @@ namespace StructureMap.Graph
         {
             
             PluginFamily templatedFamily = baseFamily.CreateTemplatedClone(templateTypes);
-                
-
-
             return templatedFamily;
         }
 
@@ -154,6 +163,11 @@ namespace StructureMap.Graph
         public PluginFamily FindFamily(Type pluginType)
         {
             return _families.Retrieve(pluginType);
+        }
+
+        public bool HasFamily(Type pluginType)
+        {
+            return _families.Has(pluginType);
         }
     }
 }

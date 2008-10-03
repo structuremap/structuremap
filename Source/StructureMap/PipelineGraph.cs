@@ -3,15 +3,26 @@ using System.Collections.Generic;
 using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
+using System.Linq;
 
 namespace StructureMap
 {
     public delegate InstanceFactory MissingFactoryFunction(Type pluginType, ProfileManager profileManager);
 
+    [Obsolete("I think we can eliminate this in favor of IEnumerable")]
     public interface IPipelineGraphVisitor
     {
         void PluginType(Type pluginType, Instance defaultInstance, IBuildPolicy policy);
         void Instance(Type pluginType, Instance instance);
+    }
+
+    public class PluginTypeConfiguration
+    {
+        public Type PluginType { get; set; }
+        public IInstance Instance { get; set; }
+        public IBuildPolicy Policy { get; set; }
+
+        public IEnumerable<IInstance> Instances { get; set; }
     }
 
     public class PipelineGraph
@@ -166,6 +177,7 @@ namespace StructureMap
         public void SetDefault(Type pluginType, Instance instance)
         {
             createFactoryIfMissing(pluginType);
+            ForType(pluginType).AddInstance(instance);
             _profileManager.SetDefault(pluginType, instance);
         }
 
@@ -195,6 +207,43 @@ namespace StructureMap
         public void EjectAllInstancesOf<T>()
         {
             ForType(typeof (T)).EjectAllInstances();
+            _profileManager.EjectAllInstancesOf<T>();
+        }
+
+        public IEnumerable<IInstance> InstancesOf(Type pluginType)
+        {
+            if (_genericsGraph.HasFamily(pluginType))
+            {
+                return _genericsGraph.FindFamily(pluginType).Instances;
+            }
+
+            return ForType(pluginType).Instances;
+        }
+
+        public IEnumerable<PluginTypeConfiguration> PluginTypes
+        {
+            get
+            {
+                foreach (PluginTypeConfiguration configuration in _genericsGraph.Families)
+                {
+                    yield return configuration;
+                }
+
+                foreach (var pair in _factories)
+                {
+                    var factory = pair.Value;
+
+                    yield return new PluginTypeConfiguration()
+                                     {
+                                         Instance = _profileManager.GetDefault(factory.PluginType),
+                                         PluginType = factory.PluginType,
+                                         Policy = factory.Policy,
+                                         Instances = factory.Instances
+                                     };
+                }
+            }
+
+
         }
     }
 }

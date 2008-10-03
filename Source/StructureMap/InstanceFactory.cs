@@ -79,6 +79,16 @@ namespace StructureMap
             get { return _pluginType; }
         }
 
+        public IEnumerable<IInstance> Instances
+        {
+            get { return _instances.GetAll(); }
+        }
+
+        public IBuildPolicy Policy
+        {
+            get { return _policy; }
+        }
+
         public void ForEachInstance(Action<Instance> action)
         {
             _instances.Each(action);

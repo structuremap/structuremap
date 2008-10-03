@@ -2,8 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Permissions;
-using StructureMap.Configuration.DSL;
-using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 
@@ -14,7 +12,7 @@ namespace StructureMap
     /// <summary>
     /// The main static Facade for the StructureMap container
     /// </summary>
-    [EnvironmentPermission(SecurityAction.Assert, Read="COMPUTERNAME")]
+    [EnvironmentPermission(SecurityAction.Assert, Read = "COMPUTERNAME")]
     public class ObjectFactory
     {
         private static readonly object _lockObject = new object();
@@ -44,17 +42,17 @@ namespace StructureMap
 
         public static void Initialize(Action<InitializationExpression> action)
         {
-            lock (typeof(ObjectFactory))
+            lock (typeof (ObjectFactory))
             {
-                InitializationExpression expression = new InitializationExpression();
+                var expression = new InitializationExpression();
                 action(expression);
 
-                var graph = expression.BuildGraph();
+                PluginGraph graph = expression.BuildGraph();
                 StructureMapConfiguration.Seal();
 
                 _container = new Container(graph);
                 Profile = expression.DefaultProfileName;
-            }            
+            }
         }
 
 
@@ -94,28 +92,24 @@ namespace StructureMap
         [Obsolete("Please use Inject() instead.")]
         public static void InjectStub<PLUGINTYPE>(PLUGINTYPE stub)
         {
-            Inject<PLUGINTYPE>(stub);
+            Inject(stub);
         }
 
         public static void Inject<PLUGINTYPE>(PLUGINTYPE instance)
         {
-            container.Inject<PLUGINTYPE>(instance);
+            container.Inject(instance);
         }
 
         public static void Inject<PLUGINTYPE>(string name, PLUGINTYPE instance)
         {
-            container.Inject<PLUGINTYPE>(name, instance);
+            container.Inject(name, instance);
         }
 
         [Obsolete("Please use Inject<PLUGINTYPE>(name) instead.")]
         public static void InjectStub<PLUGINTYPE>(string name, PLUGINTYPE stub)
         {
-            Inject<PLUGINTYPE>(name, stub);
+            Inject(name, stub);
         }
-
-
-
-
 
 
         public static string WhatDoIHave()
@@ -127,119 +121,6 @@ namespace StructureMap
         {
             container.AssertConfigurationIsValid();
         }
-
-
-        #region Container and setting defaults
-
-        private static IContainer container
-        {
-            get
-            {
-                if (_container == null)
-                {
-                    lock (_lockObject)
-                    {
-                        if (_container == null)
-                        {
-                            _container = buildManager();
-                        }
-                    }
-                }
-
-                return _container;
-            }
-        }
-         
-
-
-        public static string Profile
-        {
-            set
-            {
-                lock (_lockObject)
-                {
-                    _profile = value;
-                    container.SetDefaultsToProfile(_profile);
-                }
-            }
-            get { return _profile; }
-        }
-
-        internal static PluginGraph PluginGraph
-        {
-            get { return container.PluginGraph; }
-        }
-
-
-        internal static void ReplaceManager(IContainer container)
-        {
-            _container = container;
-        }
-
-        public static void Configure(Action<ConfigurationExpression> configure)
-        {
-            container.Configure(configure);
-        }
-
-        public static void SetDefault(Type pluginType, Instance instance)
-        {
-            container.SetDefault(pluginType, instance);
-        }
-        
-        public static void SetDefault<PLUGINTYPE>(Instance instance)
-        {
-            container.SetDefault<PLUGINTYPE>(instance);
-        }
-
-        public static void SetDefault<PLUGINTYPE, CONCRETETYPE>() where CONCRETETYPE : PLUGINTYPE
-        {
-            container.SetDefault<PLUGINTYPE, CONCRETETYPE>();
-        }
-
-
-        public static event Notify Refresh
-        {
-            add { _notify += value; }
-            remove { _notify -= value; }
-        }
-
-
-        public static void ResetDefaults()
-        {
-            try
-            {
-                lock (_lockObject)
-                {
-                    Profile = string.Empty;
-                }
-            }
-            catch (TypeInitializationException ex)
-            {
-                if (ex.InnerException is StructureMapException)
-                {
-                    throw ex.InnerException;
-                }
-                else
-                {
-                    throw;
-                }
-            }
-        }
-
-
-        private static Container buildManager()
-        {
-            PluginGraph graph = StructureMapConfiguration.GetPluginGraph();
-            StructureMapConfiguration.Seal();
-
-            Container container = new Container(graph);
-            container.SetDefaultsToProfile(_profile);
-
-            return container;
-        }
-
-        #endregion
-
 
         /// <summary>
         /// Returns and/or constructs the default instance of the requested System.Type
@@ -344,8 +225,119 @@ namespace StructureMap
             return container.With(argName);
         }
 
+        public static void EjectAllInstancesOf<T>()
+        {
+            container.EjectAllInstancesOf<T>();
+        }
 
+        #region Container and setting defaults
+
+        private static IContainer container
+        {
+            get
+            {
+                if (_container == null)
+                {
+                    lock (_lockObject)
+                    {
+                        if (_container == null)
+                        {
+                            _container = buildManager();
+                        }
+                    }
+                }
+
+                return _container;
+            }
+        }
+
+
+        public static string Profile
+        {
+            set
+            {
+                lock (_lockObject)
+                {
+                    _profile = value;
+                    container.SetDefaultsToProfile(_profile);
+                }
+            }
+            get { return _profile; }
+        }
+
+        internal static PluginGraph PluginGraph
+        {
+            get { return container.PluginGraph; }
+        }
+
+
+        internal static void ReplaceManager(IContainer container)
+        {
+            _container = container;
+        }
+
+        public static void Configure(Action<ConfigurationExpression> configure)
+        {
+            container.Configure(configure);
+        }
+
+        public static void SetDefault(Type pluginType, Instance instance)
+        {
+            container.SetDefault(pluginType, instance);
+        }
+
+        public static void SetDefault<PLUGINTYPE>(Instance instance)
+        {
+            container.SetDefault<PLUGINTYPE>(instance);
+        }
+
+        public static void SetDefault<PLUGINTYPE, CONCRETETYPE>() where CONCRETETYPE : PLUGINTYPE
+        {
+            container.SetDefault<PLUGINTYPE, CONCRETETYPE>();
+        }
+
+
+        public static event Notify Refresh
+        {
+            add { _notify += value; }
+            remove { _notify -= value; }
+        }
+
+
+        public static void ResetDefaults()
+        {
+            try
+            {
+                lock (_lockObject)
+                {
+                    Profile = string.Empty;
+                }
+            }
+            catch (TypeInitializationException ex)
+            {
+                if (ex.InnerException is StructureMapException)
+                {
+                    throw ex.InnerException;
+                }
+                else
+                {
+                    throw;
+                }
+            }
+        }
+
+
+        private static Container buildManager()
+        {
+            PluginGraph graph = StructureMapConfiguration.GetPluginGraph();
+            StructureMapConfiguration.Seal();
+
+            var container = new Container(graph);
+            container.SetDefaultsToProfile(_profile);
+
+            return container;
+        }
+
+        #endregion
     }
-
-
 }

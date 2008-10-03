@@ -1,7 +1,10 @@
 using System;
 using NUnit.Framework;
+using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
+using StructureMap.Testing.GenericWidgets;
+using System.Linq;
 
 namespace StructureMap.Testing.Graph
 {
@@ -27,6 +30,15 @@ namespace StructureMap.Testing.Graph
             Assert.IsFalse(GenericsPluginGraph.CanBeCast(pluginType, pluggedType));
         }
 
+        [Test]
+        public void can_iterate_through_families()
+        {
+            GenericsPluginGraph graph = new GenericsPluginGraph();
+            graph.FindFamily(typeof(IGenericService<>)).AddType(typeof(GenericService<>));
+            graph.FindFamily(typeof(IService<>)).AddType(typeof(Service<>));
+
+            graph.Families.Count().ShouldEqual(2);
+        }
 
         [Test]
         public void Check_the_generic_plugin_family_expression()

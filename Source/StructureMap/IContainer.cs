@@ -34,9 +34,6 @@ namespace StructureMap
 
         string WhatDoIHave();
 
-
-        
-
         /// <summary>
         /// Creates a new object instance of the requested type
         /// </summary>
@@ -70,5 +67,6 @@ namespace StructureMap
         void AssertConfigurationIsValid();
         object GetInstance(Type type, ExplicitArguments args);
         PluginGraph PluginGraph { get; }
+        void EjectAllInstancesOf<T>();
     }
 }

@@ -231,5 +231,14 @@ namespace StructureMap.Pipeline
 
             CurrentProfile = CurrentProfile;
         }
+
+        public void EjectAllInstancesOf<T>()
+        {
+            _currentProfile.Remove<T>();
+            foreach (var pair in _profiles)
+            {
+                pair.Value.Remove<T>();
+            }
+        }
     }
 }

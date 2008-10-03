@@ -257,6 +257,11 @@ namespace StructureMap.Graph
             get { return _instances.Count; }
         }
 
+        public IEnumerable<IInstance> Instances
+        {
+            get { return _instances.GetAll(); }
+        }
+
         #endregion
 
         public Plugin FindPlugin(Type pluggedType)
@@ -355,6 +360,17 @@ namespace StructureMap.Graph
             {
                 AddPlugin(concreteType, name);
             }
+        }
+
+        public PluginTypeConfiguration GetConfiguration()
+        {
+            return new PluginTypeConfiguration()
+            {
+                Instance = GetDefaultInstance(),
+                PluginType = PluginType,
+                Policy = _buildPolicy,
+                Instances = Instances
+            };
         }
     }
 }

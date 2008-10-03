@@ -27,7 +27,11 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void AutomaticallyFindRegistryFromAssembly()
         {
-            ObjectFactory.Initialize(x => { x.Scan(s => { s.AssemblyContainingType<RedGreenRegistry>(); }); });
+            ObjectFactory.Initialize(x => { x.Scan(s =>
+            {
+                s.AssemblyContainingType<RedGreenRegistry>();
+                s.LookForRegistries();
+            }); });
 
             var colors = new List<string>();
             foreach (IWidget widget in ObjectFactory.GetAllInstances<IWidget>())
@@ -57,6 +61,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
             var scanner = new AssemblyScanner();
             scanner.AssemblyContainingType(typeof (RedGreenRegistry));
+            scanner.LookForRegistries();
             scanner.ScanForAll(graph);
 
             graph.Seal();

@@ -138,7 +138,7 @@ namespace StructureMap.Testing.Pipeline
         public void Create_description_if_has_plugged_type_and_plugged_type_has_no_arguments()
         {
             var instance = new ConfiguredInstance(GetType());
-            TestUtility.AssertDescriptionIs(instance, TypePath.GetAssemblyQualifiedName(GetType()));
+            TestUtility.AssertDescriptionIs(instance, GetType().AssemblyQualifiedName);
         }
 
         [Test]
@@ -146,7 +146,7 @@ namespace StructureMap.Testing.Pipeline
         {
             var instance = new ConfiguredInstance(typeof (ColorService));
             TestUtility.AssertDescriptionIs(instance,
-                                            "Configured " + TypePath.GetAssemblyQualifiedName(typeof (ColorService)));
+                                            "Configured " + typeof (ColorService).AssemblyQualifiedName);
         }
 
         [Test]

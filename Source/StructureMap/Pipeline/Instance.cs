@@ -16,14 +16,20 @@ namespace StructureMap.Pipeline
         } 
     }
 
-    public interface IDiagnosticInstance
+    public interface IInstance
+    {
+        string Name { get; }
+        Type ConcreteType { get; }
+        string Description { get; }
+    }
+
+    public interface IDiagnosticInstance : IInstance
     {
         bool CanBePartOfPluginFamily(PluginFamily family);
         Instance FindInstanceForProfile(PluginFamily family, string profileName, GraphLog log);
         InstanceToken CreateToken();
         void Preprocess(PluginFamily family);
         void AddTemplatedInstanceTo(PluginFamily family, Type[] templateTypes);
-        Type ConcreteType { get; }
     }
 
     public abstract class Instance : IDiagnosticInstance
@@ -126,9 +132,14 @@ namespace StructureMap.Pipeline
             addTemplatedInstanceTo(family, templateTypes);
         }
 
-        Type IDiagnosticInstance.ConcreteType
+        Type IInstance.ConcreteType
         {
             get { return getConcreteType(null); }
+        }
+
+        string IInstance.Description
+        {
+            get { return getDescription(); }
         }
 
         protected virtual Type getConcreteType(Type pluginType)

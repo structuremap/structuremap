@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Reflection;
 using NUnit.Framework;
 using StructureMap.Attributes;
@@ -31,6 +32,29 @@ namespace StructureMap.Testing.Graph
 
             #endregion
         }
+
+        [Test]
+        public void can_get_configuration_object_from_PluginFamily()
+        {
+            PluginFamily family = new PluginFamily(typeof(IWidget));
+
+            var instance1 = new SmartInstance<ColorWidget>().WithCtorArg("color").EqualTo("Red");
+            var instance2 = new SmartInstance<ColorWidget>().WithCtorArg("color").EqualTo("Blue");
+        
+            family.AddInstance(instance1);
+            family.AddInstance(instance2);
+
+            family.DefaultInstanceKey = instance1.Name;
+
+            var configuration = family.GetConfiguration();
+
+            configuration.Instance.ShouldBeTheSameAs(instance1);
+            configuration.PluginType.ShouldEqual(typeof (IWidget));
+            configuration.Policy.ShouldBeTheSameAs(family.Policy);
+
+            configuration.Instances.Count().ShouldEqual(2);
+        }
+
 
         [Test]
         public void add_plugins_at_seal_from_the_list_of_types()

@@ -46,7 +46,7 @@ namespace StructureMap.Pipeline
 
         protected override string getDescription()
         {
-            string typeName = TypePath.GetAssemblyQualifiedName(_pluggedType);
+            string typeName = _pluggedType.AssemblyQualifiedName;
             Constructor ctor = new Constructor(_pluggedType);
             if (ctor.HasArguments())
             {
