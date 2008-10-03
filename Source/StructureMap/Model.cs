@@ -6,7 +6,18 @@ using StructureMap.Pipeline;
 
 namespace StructureMap
 {
-    public class Model : TypeRules
+    public interface IModel
+    {
+        bool HasDefaultImplementationFor(Type pluginType);
+        bool HasDefaultImplementationFor<T>();
+        IEnumerable<PluginTypeConfiguration> PluginTypes { get; }
+        IEnumerable<IInstance> InstancesOf(Type pluginType);
+        IEnumerable<IInstance> InstancesOf<T>();
+        bool HasImplementationsFor(Type pluginType);
+        bool HasImplementationsFor<T>();
+    }
+
+    public class Model : TypeRules, IModel
     {
         private readonly PipelineGraph _graph;
 

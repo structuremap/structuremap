@@ -9,7 +9,7 @@ namespace StructureMap
 {
     public interface IContainer
     {
-        Model Model { get; }
+        IModel Model { get; }
 
         T GetInstance<T>(string instanceKey);
         T GetInstance<T>();

@@ -79,7 +79,7 @@ namespace StructureMap
 
         #region IContainer Members
 
-        public Model Model
+        public IModel Model
         {
             get { return _model; }
         }

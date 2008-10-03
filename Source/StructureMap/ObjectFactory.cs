@@ -105,7 +105,7 @@ namespace StructureMap
             container.Inject(name, instance);
         }
 
-        public static Model Model
+        public static IModel Model
         {
             get
             {
