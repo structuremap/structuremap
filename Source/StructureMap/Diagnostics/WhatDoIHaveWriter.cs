@@ -11,7 +11,7 @@ namespace StructureMap.Diagnostics
     {
         private readonly PipelineGraph _graph;
         private TextReportWriter _writer;
-        private List<Instance> _instances;
+        private List<IInstance> _instances;
 
         public WhatDoIHaveWriter(PipelineGraph graph)
         {
@@ -33,12 +33,15 @@ namespace StructureMap.Diagnostics
         private void writeContentsOfPluginTypes(StringWriter stringWriter)
         {
             _writer = new TextReportWriter(3);
-            _instances = new List<Instance>();
+            _instances = new List<IInstance>();
 
             _writer.AddDivider('=');
             _writer.AddText("PluginType", "Name", "Description");
 
-            _graph.Visit(this);
+            foreach (var pluginType in _graph.PluginTypes)
+            {
+                writePluginType(pluginType);
+            }
 
             _writer.AddDivider('=');
 
@@ -61,6 +64,41 @@ namespace StructureMap.Diagnostics
             writer.WriteLine();
         }
 
+        private void writePluginType(PluginTypeConfiguration pluginType)
+        {
+            _writer.AddDivider('-');
+            string[] contents = new string[] { pluginType.PluginType.AssemblyQualifiedName ?? pluginType.PluginType.Name, string.Empty, string.Empty };
+
+            if (pluginType.Default != null)
+            {
+                setContents(contents, pluginType.Default);
+
+            }
+
+            _writer.AddText(contents);
+
+            _writer.AddContent("Built by:  " + pluginType.Policy.ToString());
+
+            foreach (var instance in pluginType.Instances)
+            {
+                writeInstance(instance);
+            }
+        }
+
+        private void writeInstance(IInstance instance)
+        {
+            if (_instances.Contains(instance))
+            {
+                return;
+            }
+
+            string[] contents = new[] { string.Empty, string.Empty, string.Empty };
+            setContents(contents, instance);
+
+            _writer.AddText(contents);
+        }
+
+
         void IPipelineGraphVisitor.PluginType(Type pluginType, Instance defaultInstance, IBuildPolicy policy)
         {
             _writer.AddDivider('-');
@@ -77,11 +115,10 @@ namespace StructureMap.Diagnostics
             _writer.AddContent("Built by:  " + policy.ToString());
         }
 
-        private void setContents(string[] contents, Instance instance)
+        private void setContents(string[] contents, IInstance instance)
         {
-            InstanceToken token = ((IDiagnosticInstance)instance).CreateToken();
-            contents[1] = token.Name;
-            contents[2] = token.Description;
+            contents[1] = instance.Name;
+            contents[2] = instance.Description;
 
             _instances.Add(instance);
         }

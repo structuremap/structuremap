@@ -48,7 +48,7 @@ namespace StructureMap.Testing.Graph
 
             var configuration = family.GetConfiguration();
 
-            configuration.Instance.ShouldBeTheSameAs(instance1);
+            configuration.Default.ShouldBeTheSameAs(instance1);
             configuration.PluginType.ShouldEqual(typeof (IWidget));
             configuration.Policy.ShouldBeTheSameAs(family.Policy);
 

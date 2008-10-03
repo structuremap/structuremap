@@ -19,7 +19,7 @@ namespace StructureMap
     public class PluginTypeConfiguration
     {
         public Type PluginType { get; set; }
-        public IInstance Instance { get; set; }
+        public IInstance Default { get; set; }
         public IBuildPolicy Policy { get; set; }
 
         public IEnumerable<IInstance> Instances { get; set; }
@@ -235,7 +235,7 @@ namespace StructureMap
 
                     yield return new PluginTypeConfiguration()
                                      {
-                                         Instance = _profileManager.GetDefault(factory.PluginType),
+                                         Default = _profileManager.GetDefault(factory.PluginType),
                                          PluginType = factory.PluginType,
                                          Policy = factory.Policy,
                                          Instances = factory.Instances

@@ -366,7 +366,7 @@ namespace StructureMap.Graph
         {
             return new PluginTypeConfiguration()
             {
-                Instance = GetDefaultInstance(),
+                Default = GetDefaultInstance(),
                 PluginType = PluginType,
                 Policy = _buildPolicy,
                 Instances = Instances

@@ -9,6 +9,11 @@ namespace StructureMap.Diagnostics
         internal TextLine(string[] contents)
         {
             _contents = contents;
+            for (int i = 0; i < contents.Length; i++)
+            {
+                if (contents[i] == null) contents[i] = string.Empty;
+                
+            }
         }
 
         public void OverwriteCounts(CharacterWidth[] widths)
