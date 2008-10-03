@@ -10,13 +10,13 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.Diagnostics
 {
-    public class ValidationBuildSession : BuildSession, IPipelineGraphVisitor
+    public class ValidationBuildSession : BuildSession
     {
         private ErrorCollection _errors;
         
         private readonly List<ValidationError> _validationErrors = new List<ValidationError>();
         private readonly Stack<BuildDependency> _dependencyStack = new Stack<BuildDependency>();
-        private List<Instance> _explicitInstances;
+        private List<IInstance> _explicitInstances;
 
         public ValidationBuildSession(PipelineGraph pipelineGraph, InterceptorLibrary interceptorLibrary)
             : base(pipelineGraph, interceptorLibrary)
@@ -84,14 +84,7 @@ namespace StructureMap.Diagnostics
             return _errors.Find(pluginType, name);
         }
 
-        
-
-        void IPipelineGraphVisitor.PluginType(Type pluginType, Instance defaultInstance, IBuildPolicy policy)
-        {
-            // don't care
-        }
-
-        void IPipelineGraphVisitor.Instance(Type pluginType, Instance instance)
+        private void validateInstance(Type pluginType, Instance instance)
         {
             try
             {
@@ -105,11 +98,6 @@ namespace StructureMap.Diagnostics
             {
                 // All exceptions are being dealt with in another place
             }
-        }
-
-        public void Source(string source)
-        {
-            throw new NotImplementedException();
         }
 
         private void validate(Type pluginType, Instance instance, object builtObject)
@@ -136,7 +124,13 @@ namespace StructureMap.Diagnostics
             _explicitInstances = pipelineGraph.GetAllInstances();
             _errors = new ErrorCollection();
 
-            pipelineGraph.Visit(this);
+            foreach (var pluginType in pipelineGraph.PluginTypes)
+            {
+                foreach (Instance instance in pluginType.Instances)
+                {
+                    validateInstance(pluginType.PluginType, instance);
+                }
+            }
         }
 
         public string BuildErrorMessages()

@@ -24,7 +24,6 @@ namespace StructureMap
 
         void ForEachInstance(Action<Instance> action);
         void ImportFrom(PluginFamily family);
-        void AcceptVisitor(IPipelineGraphVisitor visitor, Instance defaultInstance);
         void EjectAllInstances();
     }
 }

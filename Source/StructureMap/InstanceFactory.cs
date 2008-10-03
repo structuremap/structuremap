@@ -141,12 +141,6 @@ namespace StructureMap
             family.EachInstance(instance => _instances.Fill(instance.Name, instance));
         }
 
-        public void AcceptVisitor(IPipelineGraphVisitor visitor, Instance defaultInstance)
-        {
-            visitor.PluginType(PluginType, defaultInstance, _policy);
-            ForEachInstance(i => visitor.Instance(PluginType, i));
-        }
-
         public void EjectAllInstances()
         {
             _instances.Clear();

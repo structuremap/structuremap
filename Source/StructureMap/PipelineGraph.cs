@@ -9,12 +9,6 @@ namespace StructureMap
 {
     public delegate InstanceFactory MissingFactoryFunction(Type pluginType, ProfileManager profileManager);
 
-    [Obsolete("I think we can eliminate this in favor of IEnumerable")]
-    public interface IPipelineGraphVisitor
-    {
-        void PluginType(Type pluginType, Instance defaultInstance, IBuildPolicy policy);
-        void Instance(Type pluginType, Instance instance);
-    }
 
     public class PluginTypeConfiguration
     {
@@ -88,44 +82,6 @@ namespace StructureMap
         {
             get { return _profileManager.CurrentProfile; }
             set { _profileManager.CurrentProfile = value; }
-        }
-
-        public void Visit(IPipelineGraphVisitor visitor)
-        {
-            var factories = new IInstanceFactory[_factories.Count];
-            _factories.Values.CopyTo(factories, 0);
-
-            foreach (IInstanceFactory factory in factories)
-            {
-                Type pluginType = factory.PluginType;
-                Instance defaultInstance = _profileManager.GetDefault(pluginType);
-
-                factory.AcceptVisitor(visitor, defaultInstance);
-            }
-        }
-
-        // Useful for the validation logic
-        public List<Instance> GetAllInstances()
-        {
-            PipelineGraphFlattener flattener = new PipelineGraphFlattener();
-            Visit(flattener);
-
-            return flattener.Instances;
-        }
-
-        internal class PipelineGraphFlattener : IPipelineGraphVisitor
-        {
-            internal List<Instance> Instances = new List<Instance>();
-
-            public void PluginType(Type pluginType, Instance defaultInstance, IBuildPolicy policy)
-            {
-                // don't care
-            }
-
-            public void Instance(Type pluginType, Instance instance)
-            {
-                Instances.Add(instance);
-            }
         }
 
         public IInstanceFactory ForType(Type pluginType)
@@ -244,6 +200,18 @@ namespace StructureMap
             }
 
 
+        }
+
+        public List<IInstance> GetAllInstances()
+        {
+            List<IInstance> list = new List<IInstance>();
+
+            foreach (var pair in _factories)
+            {
+                list.AddRange(pair.Value.Instances);
+            }
+
+            return list;
         }
     }
 }

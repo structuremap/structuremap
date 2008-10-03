@@ -7,7 +7,7 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.Diagnostics
 {
-    public class WhatDoIHaveWriter : IPipelineGraphVisitor
+    public class WhatDoIHaveWriter
     {
         private readonly PipelineGraph _graph;
         private TextReportWriter _writer;
@@ -99,22 +99,6 @@ namespace StructureMap.Diagnostics
         }
 
 
-        void IPipelineGraphVisitor.PluginType(Type pluginType, Instance defaultInstance, IBuildPolicy policy)
-        {
-            _writer.AddDivider('-');
-            string[] contents = new string[]{TypePath.GetAssemblyQualifiedName(pluginType), string.Empty, string.Empty};
-
-            if (defaultInstance != null)
-            {
-                setContents(contents, defaultInstance);
-                
-            }
-
-            _writer.AddText(contents);
-
-            _writer.AddContent("Built by:  " + policy.ToString());
-        }
-
         private void setContents(string[] contents, IInstance instance)
         {
             contents[1] = instance.Name;
@@ -123,18 +107,6 @@ namespace StructureMap.Diagnostics
             _instances.Add(instance);
         }
 
-        void IPipelineGraphVisitor.Instance(Type pluginType, Instance instance)
-        {
-            if (_instances.Contains(instance))
-            {
-                return;
-            }
-
-            string[] contents = new string[]{string.Empty, string.Empty, string.Empty};
-            setContents(contents, instance);
-
-            _writer.AddText(contents);
-        }
 
     }
 }
