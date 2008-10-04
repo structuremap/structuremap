@@ -4,7 +4,6 @@ using System.IO;
 using System.Reflection;
 using System.Xml;
 using NUnit.Framework;
-using StructureMap.Configuration.DSL;
 using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
@@ -13,7 +12,7 @@ using StructureMap.Testing.Widget;
 namespace StructureMap.Testing.Diagnostics
 {
     [TestFixture]
-    public class DoctorTester : RegistryExpressions
+    public class DoctorTester
     {
         private DoctorReport fetchReport<T>(string config) where T : IBootstrapper
         {
@@ -167,7 +166,8 @@ namespace StructureMap.Testing.Diagnostics
 
         public void BootstrapStructureMap()
         {
-            StructureMapConfiguration.AddInstanceOf<IWidget>(new ConfiguredInstance(typeof (ColorRule)));
+            ObjectFactory.Initialize(
+                x => { x.InstanceOf<IWidget>().IsThis(new ConfiguredInstance(typeof (ColorRule))); });
         }
 
         #endregion
@@ -210,15 +210,8 @@ namespace StructureMap.Testing.Diagnostics
 
         public void BootstrapStructureMap()
         {
-            ObjectFactory.Initialize(x =>
-            {
-                x.InstanceOf<IWidget>().Is.ConstructedBy(() =>
-                {
-                    throw new NotImplementedException();
-                });
-            });
-
-
+            ObjectFactory.Initialize(
+                x => { x.InstanceOf<IWidget>().Is.ConstructedBy(() => { throw new NotImplementedException(); }); });
         }
 
         #endregion
@@ -230,8 +223,11 @@ namespace StructureMap.Testing.Diagnostics
 
         public void BootstrapStructureMap()
         {
-            StructureMapConfiguration.IgnoreStructureMapConfig = true;
-            StructureMapConfiguration.BuildInstancesOf<IWidget>().TheDefault.Is.Object(new ColorWidget("Red"));
+            ObjectFactory.Initialize(x =>
+            {
+                x.IgnoreStructureMapConfig = true;
+                x.BuildInstancesOf<IWidget>().TheDefault.Is.Object(new ColorWidget("Red"));
+            });
         }
 
         #endregion
@@ -243,9 +239,13 @@ namespace StructureMap.Testing.Diagnostics
 
         public void BootstrapStructureMap()
         {
-            StructureMapConfiguration.IgnoreStructureMapConfig = true;
-            StructureMapConfiguration.ForRequestedType<IWidget>().TheDefaultIs(
-                RegistryExpressions.Instance<DoctorTester.NumberWidget>().WithProperty("age").EqualToAppSetting("age"));
+            ObjectFactory.Initialize(x =>
+            {
+                x.IgnoreStructureMapConfig = true;
+                x.ForRequestedType<IWidget>().TheDefault.Is
+                    .OfConcreteType<DoctorTester.NumberWidget>()
+                    .WithCtorArg("age").EqualToAppSetting("age");
+            });
         }
 
         #endregion

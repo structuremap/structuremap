@@ -52,7 +52,7 @@ namespace StructureMap.Testing.Configuration.DSL
         private IContainer _manager;
         private Action<Registry> _defaultRegistry;
 
-        private IService getService(Action<Registry> action, string name)
+        private IService getService(string name, Action<Registry> action)
         {
             if (_manager == null)
             {
@@ -69,41 +69,42 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void EnrichForAll()
         {
-            Action<Registry> action = registry => registry.ForRequestedType<IService>()
-                                                      .EnrichWith(s => new DecoratorService(s))
-                                                      .AddInstance(
-                                                      ConstructedBy<IService>(() => new ColorService("Green"))
-                                                          .WithName("Green"));
+            var green = getService("Green", r =>
+            {
+                r.ForRequestedType<IService>().EnrichWith(s => new DecoratorService(s))
+                    .AddInstances(x =>
+                    {
+                        x.ConstructedBy(() => new ColorService("Green")).WithName("Green");
+                    });
+            });
 
-
-            IService green = getService(action, "Green");
-
-
-            var decoratorService = (DecoratorService) green;
-            var innerService = (ColorService) decoratorService.Inner;
-            Assert.AreEqual("Green", innerService.Color);
+            green.ShouldBeOfType<DecoratorService>()
+                .Inner.ShouldBeOfType<ColorService>().Color.ShouldEqual("Green");
         }
 
         [Test]
         public void OnStartupForAll()
         {
-            Action<Registry> action = registry => registry.ForRequestedType<IService>()
-                                                      .OnCreation(s => _lastService = s)
-                                                      .AddInstance(
-                                                      ConstructedBy<IService>(() => new ColorService("Green"))
-                                                          .WithName("Green"));
+            Action<Registry> action = r => 
+            {
+                r.ForRequestedType<IService>().OnCreation(s => _lastService = s)
+                    .AddInstances(x =>
+                    {
+                        x.ConstructedBy(() => new ColorService("Green")).WithName("Green");
+                    });
+            };
 
-
-            IService red = getService(action, "Red");
+ 
+            IService red = getService("Red", action);
             Assert.AreSame(red, _lastService);
 
-            IService purple = getService(action, "Purple");
+            IService purple = getService("Purple", action);
             Assert.AreSame(purple, _lastService);
 
-            IService green = getService(action, "Green");
+            IService green = getService("Green", action);
             Assert.AreSame(green, _lastService);
 
-            IService yellow = getService(action, "Yellow");
+            IService yellow = getService("Yellow", action);
             Assert.AreEqual(yellow, _lastService);
         }
     }
@@ -157,11 +158,14 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void EnrichForAll()
         {
-            Action<Registry> action = registry => registry.ForRequestedType<IService>()
-                                                      .EnrichWith(s => new DecoratorService(s))
-                                                      .AddInstance(
-                                                      ConstructedBy<IService>(() => new ColorService("Green"))
-                                                          .WithName("Green"));
+            Action<Registry> action = r => 
+            {
+                r.ForRequestedType<IService>().EnrichWith(s => new DecoratorService(s))
+                    .AddInstances(x =>
+                    {
+                        x.ConstructedBy(() => new ColorService("Green")).WithName("Green");
+                    });
+            };
 
 
             IService green = getService(action, "Green");
@@ -175,12 +179,14 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void OnStartupForAll()
         {
-            Action<Registry> action = registry => registry.ForRequestedType<IService>()
-                                                      .OnCreation(s => _lastService = s)
-                                                      .AddInstance(
-                                                      ConstructedBy<IService>(() => new ColorService("Green"))
-                                                          .WithName("Green"));
-
+            Action<Registry> action = r => 
+            {
+                r.ForRequestedType<IService>().OnCreation(s => _lastService = s)
+                    .AddInstances(x =>
+                    {
+                        x.ConstructedBy(() => new ColorService("Green")).WithName("Green");
+                    });
+            };
 
             IService red = getService(action, "Red");
             Assert.AreSame(red, _lastService);

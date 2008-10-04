@@ -8,7 +8,7 @@ using StructureMap.Pipeline;
 namespace StructureMap.Testing.Configuration.DSL
 {
     [TestFixture]
-    public class GenericFamilyExpressionTester : RegistryExpressions
+    public class GenericFamilyExpressionTester
     {
         public interface ITarget
         {
@@ -104,11 +104,12 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void Add_default_instance()
         {
-            Container manager =
-                new Container(
-                    r => r.ForRequestedType(typeof (ITarget)).TheDefaultIs(Instance<Target2>()));
+            var container = new Container(r =>
+            {
+                r.ForRequestedType(typeof (ITarget)).TheDefaultIsConcreteType(typeof (Target2));
+            });
 
-            Assert.IsInstanceOfType(typeof (Target2), manager.GetInstance<ITarget>());
+            container.GetInstance<ITarget>().ShouldBeOfType<Target2>();
         }
 
         [Test, Explicit]
@@ -143,35 +144,29 @@ namespace StructureMap.Testing.Configuration.DSL
         }
         public class Invoice{}
 
-        [Test]
-        public void Add_instance_by_lambda()
-        {
-            Container manager =
-                new Container(
-                    r => r.ForRequestedType(typeof (ITarget)).TheDefaultIs(delegate { return new Target1(); }));
-
-            Assert.IsInstanceOfType(typeof (Target1), manager.GetInstance<ITarget>());
-        }
 
         [Test]
         public void Add_instance_directly()
         {
-            Container manager =
-                new Container(
-                    r => r.ForRequestedType(typeof (ITarget)).AddInstance(Instance<Target2>()));
+            var container = new Container(r =>
+            {
+                r.InstanceOf<ITarget>().Is.OfConcreteType<Target2>();
+            });
 
-
-            Assert.IsInstanceOfType(typeof (Target2), manager.GetAllInstances<ITarget>()[0]);
+            Assert.IsInstanceOfType(typeof (Target2), container.GetAllInstances<ITarget>()[0]);
         }
 
         [Test]
         public void Enrichment()
         {
-            Container manager = new Container(r => r.ForRequestedType(typeof (ITarget))
-                                                       .TheDefaultIsConcreteType(typeof (Target1))
-                                                       .EnrichWith(raw => new WrappedTarget((ITarget) raw)));
+            var container = new Container(r =>
+            {
+                r.ForRequestedType(typeof (ITarget)).EnrichWith(raw => new WrappedTarget((ITarget) raw))
+                    .TheDefaultIsConcreteType(typeof (Target1));
 
-            WrappedTarget target = (WrappedTarget) manager.GetInstance<ITarget>();
+            });
+
+            WrappedTarget target = (WrappedTarget) container.GetInstance<ITarget>();
             Assert.IsInstanceOfType(typeof (Target1), target.Inner);
         }
 
@@ -191,13 +186,13 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             ITarget created = null;
 
-            Container manager = new Container(r => r.ForRequestedType(typeof (ITarget))
-                                                       .TheDefaultIsConcreteType(typeof (Target3))
-                                                       .OnCreation(raw => created = (ITarget) raw));
+            var container = new Container(r =>
+            {
+                r.ForRequestedType(typeof (ITarget)).OnCreation(raw => created = (ITarget) raw)
+                    .TheDefaultIsConcreteType(typeof (Target3));
+            });
 
-            manager.GetInstance<ITarget>();
-
-            Assert.IsInstanceOfType(typeof (Target3), created);
+            container.GetInstance<ITarget>().ShouldBeOfType<Target3>();
         }
 
         [Test]

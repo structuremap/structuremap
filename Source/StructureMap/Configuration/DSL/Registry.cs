@@ -7,7 +7,7 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.Configuration.DSL
 {
-    public class Registry : RegistryExpressions
+    public class Registry
     {
         private readonly List<Action> _basicActions = new List<Action>();
         private readonly List<Action<PluginGraph>> _actions = new List<Action<PluginGraph>>();
@@ -63,6 +63,30 @@ namespace StructureMap.Configuration.DSL
         public GenericFamilyExpression ForRequestedType(Type pluginType)
         {
             return new GenericFamilyExpression(pluginType, this);
+        }
+
+        public class BuildWithExpression<T>
+        {
+            private SmartInstance<T> _instance;
+
+            public BuildWithExpression(SmartInstance<T> instance)
+            {
+                _instance = instance;
+            }
+
+            public SmartInstance<T> Configure
+            {
+                get
+                {
+                    return _instance;
+                }
+            }
+        }
+
+        public BuildWithExpression<T> ForConcreteType<T>()
+        {
+            var instance = ForRequestedType<T>().TheDefault.Is.OfConcreteType<T>();
+            return new BuildWithExpression<T>(instance);
         }
 
         /// <summary>

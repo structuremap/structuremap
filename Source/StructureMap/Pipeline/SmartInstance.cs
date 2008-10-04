@@ -121,7 +121,12 @@ namespace StructureMap.Pipeline
             Plugin plugin = PluginCache.GetPlugin(typeof (T));
             string propertyName = plugin.FindArgumentNameForType(typeof (CHILD).MakeArrayType());
 
-            return new ArrayDefinitionExpression<T, CHILD>(this, propertyName);
+            return TheArrayOf<CHILD>(propertyName);
+        }
+
+        public ArrayDefinitionExpression<T, CHILD> TheArrayOf<CHILD>(string ctorOrPropertyName)
+        {
+            return new ArrayDefinitionExpression<T, CHILD>(this, ctorOrPropertyName);
         }
 
         public class ArrayDefinitionExpression<T, ARRAY>
@@ -147,7 +152,7 @@ namespace StructureMap.Pipeline
                 return _instance;
             }
 
-            public SmartInstance<T> Contains(Instance[] arrayInstances)
+            public SmartInstance<T> Contains(params Instance[] arrayInstances)
             {
                 _instance.setChildArray(_propertyName, arrayInstances);
 
@@ -184,7 +189,19 @@ namespace StructureMap.Pipeline
             {
                 return Is(new LiteralInstance(value));
             }
+
+            public SmartInstance<T> IsTheDefault()
+            {
+                return Is(new DefaultInstance());
+            }
+
+            public SmartInstance<T> Is<CONCRETETYPE>() where CONCRETETYPE : CHILD
+            {
+                return Is(new SmartInstance<CONCRETETYPE>());
+            }
         }
+
+
     }
 
     

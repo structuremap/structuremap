@@ -13,11 +13,11 @@ namespace StructureMap.Testing.Diagnostics
     {
         private ValidationBuildSession validatedSession(Action<Registry> action)
         {
-            Registry registry = new Registry();
+            var registry = new Registry();
             action(registry);
 
             PluginGraph graph = registry.Build();
-            ValidationBuildSession session = new ValidationBuildSession(graph);
+            var session = new ValidationBuildSession(graph);
             session.PerformValidations();
 
             return session;
@@ -32,20 +32,20 @@ namespace StructureMap.Testing.Diagnostics
 
         private ConstructorInstance<IWidget> errorInstance()
         {
-            return ConstructedBy<IWidget>(delegate { throw new NotSupportedException("You can't make me!"); });
+            return
+                new ConstructorInstance<IWidget>(delegate() { throw new NotSupportedException("You can't make me!"); });
         }
 
         [Test]
         public void Attach_dependency_to_the_build_error_but_do_not_create_new_error_for_dependency()
         {
-            ValidationBuildSession session = validatedSession(registry =>
+            ValidationBuildSession session = validatedSession(r =>
             {
-                registry.AddInstanceOf<IWidget>(errorInstance().WithName("BadInstance"));
+                r.AddInstanceOf<IWidget>(errorInstance().WithName("BadInstance"));
 
-                registry.AddInstanceOf<SomethingThatNeedsAWidget>(
-                    Instance<SomethingThatNeedsAWidget>().WithName("DependentInstance")
-                        .Child<IWidget>().IsNamedInstance("BadInstance")
-                    );
+                r.InstanceOf<SomethingThatNeedsAWidget>().Is.OfConcreteType<SomethingThatNeedsAWidget>()
+                    .WithName("DependentInstance")
+                    .CtorDependency<IWidget>().Is(x => x.References("BadInstance"));
             });
 
             BuildError error = getFirstAndOnlyError(session);
@@ -69,14 +69,13 @@ namespace StructureMap.Testing.Diagnostics
         [Test]
         public void Create_an_instance_that_fails_and_an_instance_that_depends_on_that_exception()
         {
-            ValidationBuildSession session = validatedSession(registry =>
+            ValidationBuildSession session = validatedSession(r =>
             {
-                registry.AddInstanceOf<IWidget>(errorInstance().WithName("BadInstance"));
+                r.AddInstanceOf<IWidget>(errorInstance().WithName("BadInstance"));
 
-                registry.AddInstanceOf<SomethingThatNeedsAWidget>(
-                    Instance<SomethingThatNeedsAWidget>().WithName("DependentInstance")
-                        .Child<IWidget>().IsNamedInstance("BadInstance")
-                    );
+                r.InstanceOf<SomethingThatNeedsAWidget>().Is.OfConcreteType<SomethingThatNeedsAWidget>()
+                    .WithName("DependentInstance")
+                    .CtorDependency<IWidget>().Is(x => x.References("BadInstance"));
             });
 
             Assert.AreEqual(1, session.BuildErrors.Length);
@@ -92,10 +91,12 @@ namespace StructureMap.Testing.Diagnostics
         public void Create_an_instance_that_fails_because_of_an_inline_child()
         {
             ValidationBuildSession session = validatedSession(
-                registry => registry.AddInstanceOf<SomethingThatNeedsAWidget>(
-                                Instance<SomethingThatNeedsAWidget>().WithName("BadInstance")
-                                    .Child<IWidget>().Is(errorInstance())
-                                ));
+                r =>
+                {
+                    r.InstanceOf<SomethingThatNeedsAWidget>().Is.OfConcreteType<SomethingThatNeedsAWidget>()
+                        .WithName("BadInstance")
+                        .CtorDependency<IWidget>().Is(errorInstance());
+                });
 
             BuildError error = getFirstAndOnlyError(session);
 
@@ -130,9 +131,9 @@ namespace StructureMap.Testing.Diagnostics
         [Test]
         public void Request_an_instance_for_the_second_time_successfully_and_get_the_same_object()
         {
-            ValidationBuildSession session = new ValidationBuildSession(new PluginGraph());
+            var session = new ValidationBuildSession(new PluginGraph());
 
-            LiteralInstance instance = Object(new ColorWidget("Red"));
+            var instance = new LiteralInstance(new ColorWidget("Red"));
             object widget1 = session.CreateInstance(typeof (IWidget), instance);
             object widget2 = session.CreateInstance(typeof (IWidget), instance);
 
@@ -152,7 +153,7 @@ namespace StructureMap.Testing.Diagnostics
         [Test]
         public void Validate_a_single_object_with_both_a_passing_validation_method_and_a_failing_validation_method()
         {
-            LiteralInstance instance = new LiteralInstance(new WidgetWithOneValidationFailure());
+            var instance = new LiteralInstance(new WidgetWithOneValidationFailure());
             ValidationBuildSession session =
                 validatedSession(registry => registry.AddInstanceOf<IWidget>(instance));
 

@@ -80,28 +80,32 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void Can_set_profile_name_and_reset_defaults()
         {
-            IContainer manager = new Container(registry =>
+            var container = new Container(r =>
             {
-                registry.ForRequestedType<IService>()
-                    .TheDefaultIs(Instance<ColorService>().WithName("Orange").WithProperty("color").EqualTo("Orange"))
-                    .AddInstance(Instance<ColorService>().WithName("Red").WithProperty("color").EqualTo("Red"))
-                    .AddInstance(Instance<ColorService>().WithName("Blue").WithProperty("color").EqualTo("Blue"))
-                    .AddInstance(Instance<ColorService>().WithName("Green").WithProperty("color").EqualTo("Green"));
+                r.ForRequestedType<IService>()
+                    .TheDefault.Is.OfConcreteType<ColorService>().WithName("Orange").WithProperty("color").EqualTo("Orange");
 
-                registry.CreateProfile("Red").For<IService>().UseNamedInstance("Red");
-                registry.CreateProfile("Blue").For<IService>().UseNamedInstance("Blue");
+                r.ForRequestedType<IService>().AddInstances(x =>
+                {
+                    x.OfConcreteType<ColorService>().WithName("Red").WithProperty("color").EqualTo("Red");
+                    x.OfConcreteType<ColorService>().WithName("Blue").WithProperty("color").EqualTo("Blue");
+                    x.OfConcreteType<ColorService>().WithName("Green").WithProperty("color").EqualTo("Green");
+                });
+
+                r.CreateProfile("Red").For<IService>().UseNamedInstance("Red");
+                r.CreateProfile("Blue").For<IService>().UseNamedInstance("Blue");
             });
 
-            assertColorIs(manager, "Orange");
+            assertColorIs(container, "Orange");
 
-            manager.SetDefaultsToProfile("Red");
-            assertColorIs(manager, "Red");
+            container.SetDefaultsToProfile("Red");
+            assertColorIs(container, "Red");
 
-            manager.SetDefaultsToProfile("Blue");
-            assertColorIs(manager, "Blue");
+            container.SetDefaultsToProfile("Blue");
+            assertColorIs(container, "Blue");
 
-            manager.SetDefaultsToProfile(string.Empty);
-            assertColorIs(manager, "Orange");
+            container.SetDefaultsToProfile(string.Empty);
+            assertColorIs(container, "Orange");
         }
 
         [Test]
@@ -214,25 +218,25 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void SetDefaultInstanceByString()
         {
-            IContainer manager = new Container(registry => registry.ForRequestedType<IService>()
-                                                               .AddInstance(
-                                                               Instance<ColorService>().WithName("Red").WithProperty(
-                                                                   "color").EqualTo("Red"))
-                                                               .AddInstance(
-                                                               Instance<ColorService>().WithName("Blue").WithProperty(
-                                                                   "color").EqualTo("Blue"))
-                                                               .AddInstance(
-                                                               Instance<ColorService>().WithName("Green").WithProperty(
-                                                                   "color").EqualTo("Green")));
+            var container = new Container(r =>
+            {
+                r.ForRequestedType<IService>().AddInstances(x =>
+                {
+                    x.OfConcreteType<ColorService>().WithName("Red").WithProperty("color").EqualTo("Red");
+                    x.OfConcreteType<ColorService>().WithName("Blue").WithProperty("color").EqualTo("Blue");
+                    x.OfConcreteType<ColorService>().WithName("Green").WithProperty("color").EqualTo("Green");
+                });
+            });
 
-            manager.SetDefault(typeof (IService), "Red");
-            assertColorIs(manager, "Red");
 
-            manager.SetDefault(typeof (IService), "Green");
-            assertColorIs(manager, "Green");
+            container.SetDefault(typeof(IService), "Red");
+            assertColorIs(container, "Red");
 
-            manager.SetDefault(typeof (IService), "Blue");
-            assertColorIs(manager, "Blue");
+            container.SetDefault(typeof(IService), "Green");
+            assertColorIs(container, "Green");
+
+            container.SetDefault(typeof(IService), "Blue");
+            assertColorIs(container, "Blue");
         }
 
         [Test, ExpectedException(typeof (StructureMapException))]

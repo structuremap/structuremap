@@ -12,19 +12,15 @@ namespace StructureMap.Testing.Graph
     [TestFixture]
     public class DynamicInjectionTester
     {
-        #region Setup/Teardown
+        private readonly IService _red = new ColorService("Red");
+        private readonly IService _blue = new ColorService("Blue");
+        private readonly IService _orange = new ColorService("Orange");
 
         [SetUp]
         public void SetUp()
         {
-            StructureMapConfiguration.ResetAll();
+            ObjectFactory.Initialize(x => { });
         }
-
-        #endregion
-
-        private readonly IService _red = new ColorService("Red");
-        private readonly IService _blue = new ColorService("Blue");
-        private readonly IService _orange = new ColorService("Orange");
 
         private IInstanceFactory getISomethingFactory()
         {
@@ -165,16 +161,23 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void AddANewDefaultTypeForAPluginTypeThatAlreadyExists()
         {
-            StructureMapConfiguration.BuildInstancesOf<ISomething>().TheDefaultIsConcreteType<SomethingTwo>();
+            ObjectFactory.Initialize(x =>
+            {
+                x.BuildInstancesOf<ISomething>().TheDefaultIsConcreteType<SomethingTwo>();
+            });
+
             ObjectFactory.SetDefault<ISomething, SomethingOne>();
-            Assert.IsInstanceOfType(typeof (SomethingOne), ObjectFactory.GetInstance<ISomething>());
+            ObjectFactory.GetInstance<ISomething>().ShouldBeOfType<SomethingOne>();
         }
 
 
         [Test]
         public void AddANewDefaultTypeForAPluginTypeThatAlreadyExists2()
         {
-            StructureMapConfiguration.BuildInstancesOf<ISomething>();
+            ObjectFactory.Initialize(x =>
+            {
+                x.BuildInstancesOf<ISomething>();
+            });
 
             ObjectFactory.SetDefault<ISomething, SomethingOne>();
             Assert.IsInstanceOfType(typeof (SomethingOne), ObjectFactory.GetInstance<ISomething>());
@@ -210,6 +213,8 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void AddNamedInstanceByType()
         {
+            
+
             ObjectFactory.Configure(r =>
             {
                 r.ForRequestedType<ISomething>().AddInstances(x =>

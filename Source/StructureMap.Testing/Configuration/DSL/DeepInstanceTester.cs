@@ -7,7 +7,7 @@ using StructureMap.Testing.Widget;
 namespace StructureMap.Testing.Configuration.DSL
 {
     [TestFixture]
-    public class DeepInstanceTester : RegistryExpressions
+    public class DeepInstanceTester
     {
         private readonly Thing _prototype = new Thing(4, "Jeremy", .333, new WidgetRule(new ColorWidget("yellow")));
 
@@ -21,41 +21,34 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void DeepInstance2()
         {
-            assertThingMatches(registry =>
+            assertThingMatches(r =>
             {
-                registry.BuildInstancesOf<IWidget>().TheDefaultIs(
-                    Instance<ColorWidget>()
-                        .WithProperty("color").EqualTo("yellow")
-                    );
+                r.ForRequestedType<IWidget>().TheDefault.Is.OfConcreteType<ColorWidget>()
+                        .WithProperty("color").EqualTo("yellow");
 
-                registry.BuildInstancesOf<Rule>().TheDefaultIsConcreteType<WidgetRule>();
+                r.ForRequestedType<Rule>().TheDefaultIsConcreteType<WidgetRule>();
 
-                registry.BuildInstancesOf<Thing>().TheDefaultIs(
-                    Instance<Thing>()
-                        .WithProperty("average").EqualTo(.333)
-                        .WithProperty("name").EqualTo("Jeremy")
-                        .WithProperty("count").EqualTo(4)
-                    );
+                r.ForRequestedType<Thing>().TheDefault.Is.OfConcreteType<Thing>()
+                    .WithCtorArg("average").EqualTo(.333)
+                    .WithCtorArg("name").EqualTo("Jeremy")
+                    .WithCtorArg("count").EqualTo(4);
+                    
             });
         }
 
         [Test]
         public void DeepInstance3()
         {
-            assertThingMatches(registry =>
+            assertThingMatches(r =>
             {
-                registry.BuildInstancesOf<IWidget>().TheDefaultIs(
-                    Object<IWidget>(new ColorWidget("yellow"))
-                    );
+                r.ForRequestedType<IWidget>().TheDefault.IsThis(new ColorWidget("yellow"));
 
-                registry.BuildInstancesOf<Rule>().TheDefaultIsConcreteType<WidgetRule>();
+                r.ForRequestedType<Rule>().TheDefaultIsConcreteType<WidgetRule>();
 
-                registry.BuildInstancesOf<Thing>().TheDefaultIs(
-                    Instance<Thing>()
-                        .WithProperty("average").EqualTo(.333)
-                        .WithProperty("name").EqualTo("Jeremy")
-                        .WithProperty("count").EqualTo(4)
-                    );
+                r.ForRequestedType<Thing>().TheDefault.Is.OfConcreteType<Thing>()
+                    .WithProperty("average").EqualTo(.333)
+                    .WithProperty("name").EqualTo("Jeremy")
+                    .WithProperty("count").EqualTo(4);
             });
         }
 
@@ -63,20 +56,16 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void DeepInstance4()
         {
-            assertThingMatches(registry =>
+            assertThingMatches(r =>
             {
-                registry.BuildInstancesOf<IWidget>().TheDefaultIs(
-                    Prototype<IWidget>(new ColorWidget("yellow"))
-                    );
+                r.ForRequestedType<IWidget>().TheDefault.Is.PrototypeOf(new ColorWidget("yellow"));
 
-                registry.BuildInstancesOf<Rule>().TheDefaultIsConcreteType<WidgetRule>();
+                r.BuildInstancesOf<Rule>().TheDefaultIsConcreteType<WidgetRule>();
 
-                registry.BuildInstancesOf<Thing>().TheDefaultIs(
-                    Instance<Thing>()
-                        .WithProperty("average").EqualTo(.333)
-                        .WithProperty("name").EqualTo("Jeremy")
-                        .WithProperty("count").EqualTo(4)
-                    );
+                r.ForRequestedType<Thing>().TheDefault.Is.OfConcreteType<Thing>()
+                    .WithProperty("average").EqualTo(.333)
+                    .WithProperty("name").EqualTo("Jeremy")
+                    .WithProperty("count").EqualTo(4);
             });
         }
 
@@ -107,22 +96,25 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void DeepInstanceTest1()
         {
-            ConfiguredInstance widgetExpression = Instance<ColorWidget>()
-                .WithProperty("color").EqualTo("yellow");
+            assertThingMatches(r =>
+            {
+                r.ForRequestedType<Thing>().TheDefault.Is.OfConcreteType<Thing>()
+                    .WithProperty("name").EqualTo("Jeremy")
+                    .WithProperty("count").EqualTo(4)
+                    .WithProperty("average").EqualTo(.333)
+                    .CtorDependency<Rule>().Is(x =>
+                    {
+                        x.OfConcreteType<WidgetRule>()
+                            .WithCtorArg("color").EqualTo("yellow")
+                            .CtorDependency<IWidget>().Is(
+                            w =>
+                            {
+                                w.OfConcreteType<ColorWidget>().WithProperty("color").EqualTo("yellow");
+                            });
+                    });
+                                                   
+            });
 
-            ConfiguredInstance ruleExpression = Instance<WidgetRule>()
-                .Child<IWidget>().Is(widgetExpression);
-
-
-            assertThingMatches(registry => registry.BuildInstancesOf<Thing>().TheDefaultIs(
-                                               Instance<Thing>()
-                                                   .WithProperty("name").EqualTo("Jeremy")
-                                                   .WithProperty("count").EqualTo(4)
-                                                   .WithProperty("average").EqualTo(.333)
-                                                   .Child<Rule>().Is(
-                                                   ruleExpression
-                                                   )
-                                               ));
         }
 
 

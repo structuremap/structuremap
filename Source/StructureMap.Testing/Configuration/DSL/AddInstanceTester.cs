@@ -7,7 +7,7 @@ using StructureMap.Testing.Widget;
 namespace StructureMap.Testing.Configuration.DSL
 {
     [TestFixture]
-    public class AddInstanceTester : RegistryExpressions
+    public class AddInstanceTester
     {
         #region Setup/Teardown
 
@@ -161,6 +161,32 @@ namespace StructureMap.Testing.Configuration.DSL
 
 
         [Test]
+        public void UseAPreBuiltObjectForAnInstanceAsASerializedCopy()
+        {
+            // Build an instance for IWidget, then setup StructureMap to return cloned instances of the 
+            // "Prototype" (GoF pattern) whenever someone asks for IWidget named "Jeremy"
+            var theWidget = new CloneableWidget("Jeremy");
+
+
+            container =
+                new Container(
+                    registry => registry.InstanceOf<IWidget>().Is.SerializedCopyOf(theWidget).WithName("Jeremy"));
+
+            var widget1 = (CloneableWidget)container.GetInstance<IWidget>("Jeremy");
+            var widget2 = (CloneableWidget)container.GetInstance<IWidget>("Jeremy");
+            var widget3 = (CloneableWidget)container.GetInstance<IWidget>("Jeremy");
+
+            Assert.AreEqual("Jeremy", widget1.Name);
+            Assert.AreEqual("Jeremy", widget2.Name);
+            Assert.AreEqual("Jeremy", widget3.Name);
+
+            Assert.AreNotSame(widget1, widget2);
+            Assert.AreNotSame(widget1, widget3);
+            Assert.AreNotSame(widget2, widget3);
+        }
+
+
+        [Test]
         public void UseAPreBuiltObjectWithAName()
         {
             // Return the specific instance when an IWidget named "Julia" is requested
@@ -222,6 +248,7 @@ namespace StructureMap.Testing.Configuration.DSL
         #endregion
     }
 
+    [Serializable]
     public class CloneableWidget : IWidget, ICloneable
     {
         private readonly string _name;

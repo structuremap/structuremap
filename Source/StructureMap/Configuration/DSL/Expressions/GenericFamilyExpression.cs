@@ -28,26 +28,30 @@ namespace StructureMap.Configuration.DSL.Expressions
             return this;
         }
 
-        public GenericFamilyExpression TheDefaultIsConcreteType(Type concreteType)
+        public ConfiguredInstance TheDefaultIsConcreteType(Type concreteType)
         {
-            ConfiguredInstance instance = new ConfiguredInstance(concreteType);
-            return TheDefaultIs(instance);
-        }
-
-        public GenericFamilyExpression TheDefaultIs(Instance instance)
-        {
-            return alterAndContinue(family =>
+            var instance = new ConfiguredInstance(concreteType);
+            alterAndContinue(family =>
             {
                 family.AddInstance(instance);
                 family.DefaultInstanceKey = instance.Name;
             });
+
+            return instance;
         }
 
-        public GenericFamilyExpression TheDefaultIs(Func<object> func)
+        public ConfiguredInstance AddType(Type concreteType)
         {
-            ConstructorInstance<object> instance = new ConstructorInstance<object>(func);
-            return TheDefaultIs(instance);
+            var instance = new ConfiguredInstance(concreteType);
+
+            alterAndContinue(family =>
+            {
+                family.AddInstance(instance);
+            });
+
+            return instance;
         }
+
 
         public GenericFamilyExpression AddInstance(Instance instance)
         {

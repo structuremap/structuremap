@@ -1,12 +1,12 @@
+using System.Collections.Generic;
 using NUnit.Framework;
-using StructureMap.Configuration.DSL;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Pipeline;
 
 namespace StructureMap.Testing.Graph
 {
     [TestFixture]
-    public class ExplicitArgumentTester : RegistryExpressions
+    public class ExplicitArgumentTester
     {
         #region Setup/Teardown
 
@@ -73,6 +73,17 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
+        public void Example()
+        {
+            IContainer container = new Container();
+            var theTrade = new Trade();
+
+            var view = container.With(theTrade).GetInstance<TradeView>();
+
+            view.Trade.ShouldBeTheSameAs(theTrade);
+        }
+
+        [Test]
         public void Explicit_services_are_used_throughout_the_object_graph()
         {
             var theTrade = new Trade();
@@ -83,7 +94,7 @@ namespace StructureMap.Testing.Graph
                 r.ForRequestedType<Node>().TheDefaultIsConcreteType<TradeNode>();
             });
 
-            Command command = container.With<Trade>(theTrade).GetInstance<Command>();
+            var command = container.With(theTrade).GetInstance<Command>();
 
             command.Trade.ShouldBeTheSameAs(theTrade);
             command.Node.IsType<TradeNode>().Trade.ShouldBeTheSameAs(theTrade);
@@ -124,13 +135,12 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void NowDoItWithObjectFactoryItself()
         {
-            StructureMapConfiguration.ForRequestedType<ExplicitTarget>().TheDefaultIs(
-                Instance<ExplicitTarget>()
-                    .Child<IProvider>().IsConcreteType<RedProvider>()
-                    .WithProperty("name").EqualTo("Jeremy")
-                );
-
-            ObjectFactory.Reset();
+            ObjectFactory.Initialize(x =>
+            {
+                x.ForConcreteType<ExplicitTarget>().Configure
+                    .CtorDependency<IProvider>().Is<RedProvider>()
+                    .WithCtorArg("name").EqualTo("Jeremy");
+            });
 
             // Get the ExplicitTarget without setting an explicit arg for IProvider
             var firstTarget = ObjectFactory.GetInstance<ExplicitTarget>();
@@ -164,13 +174,12 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void OverrideAPrimitiveWithObjectFactory()
         {
-            StructureMapConfiguration.ForRequestedType<ExplicitTarget>().TheDefaultIs(
-                Instance<ExplicitTarget>()
-                    .Child<IProvider>().IsConcreteType<RedProvider>()
-                    .WithProperty("name").EqualTo("Jeremy")
-                );
-
-            ObjectFactory.Reset();
+            ObjectFactory.Initialize(x =>
+            {
+                x.ForConcreteType<ExplicitTarget>().Configure
+                    .CtorDependency<IProvider>().Is<RedProvider>()
+                    .WithCtorArg("name").EqualTo("Jeremy");
+            });
 
             // Get the ExplicitTarget without setting an explicit arg for IProvider
             var firstTarget = ObjectFactory.GetInstance<ExplicitTarget>();
@@ -179,6 +188,26 @@ namespace StructureMap.Testing.Graph
             // Now, set the explicit arg for IProvider
             var secondTarget = ObjectFactory.With("name").EqualTo("Julia").GetInstance<ExplicitTarget>();
             Assert.AreEqual("Julia", secondTarget.Name);
+        }
+
+        [Test]
+        public void pass_explicit_service_into_all_instances()
+        {
+            // The Container is constructed with 2 instances
+            // of TradeView
+            var container = new Container(r =>
+            {
+                r.ForRequestedType<TradeView>()
+                    .TheDefaultIsConcreteType<TradeView>()
+                    .AddConcreteType<SecuredTradeView>();
+            });
+
+            var theTrade = new Trade();
+
+            IList<TradeView> views = container.With(theTrade).GetAllInstances<TradeView>();
+
+            views[0].Trade.ShouldBeTheSameAs(theTrade);
+            views[1].Trade.ShouldBeTheSameAs(theTrade);
         }
 
         [Test]
@@ -220,8 +249,9 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void PassAnArgumentIntoExplicitArgumentsForARequestedInterfaceUsingObjectFactory()
         {
-            StructureMapConfiguration.ForRequestedType<IProvider>().TheDefaultIsConcreteType<LumpProvider>();
-            ObjectFactory.Reset();
+            ObjectFactory.Initialize(x => { x.ForRequestedType<IProvider>().TheDefaultIsConcreteType<LumpProvider>(); });
+
+
             var theLump = new Lump();
 
             var provider = (LumpProvider) ObjectFactory.With(theLump).GetInstance<IProvider>();
@@ -239,21 +269,22 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void PassExplicitArgsIntoInstanceManager()
         {
-            IContainer manager = new Container(registry => registry.ForRequestedType<ExplicitTarget>().TheDefaultIs(
-                                                               Instance<ExplicitTarget>()
-                                                                   .Child<IProvider>().IsConcreteType<RedProvider>()
-                                                                   .WithProperty("name").EqualTo("Jeremy")
-                                                               ));
+            var container = new Container(r =>
+            {
+                r.ForConcreteType<ExplicitTarget>().Configure
+                    .CtorDependency<IProvider>().Is<RedProvider>()
+                    .WithCtorArg("name").EqualTo("Jeremy");
+            });
 
             var args = new ExplicitArguments();
 
             // Get the ExplicitTarget without setting an explicit arg for IProvider
-            var firstTarget = manager.GetInstance<ExplicitTarget>(args);
+            var firstTarget = container.GetInstance<ExplicitTarget>(args);
             Assert.IsInstanceOfType(typeof (RedProvider), firstTarget.Provider);
 
             // Now, set the explicit arg for IProvider
             args.Set<IProvider>(new BlueProvider());
-            var secondTarget = manager.GetInstance<ExplicitTarget>(args);
+            var secondTarget = container.GetInstance<ExplicitTarget>(args);
             Assert.IsInstanceOfType(typeof (BlueProvider), secondTarget.Provider);
         }
 
@@ -283,37 +314,6 @@ namespace StructureMap.Testing.Graph
 
             args.SetArg("age", 34);
             Assert.AreEqual(34, args.GetArg("age"));
-        }
-
-        [Test]
-        public void pass_explicit_service_into_all_instances()
-        {
-            // The Container is constructed with 2 instances
-            // of TradeView
-            var container = new Container(r =>
-            {
-                r.ForRequestedType<TradeView>()
-                    .TheDefaultIsConcreteType<TradeView>()
-                    .AddConcreteType<SecuredTradeView>();
-            });
-
-            Trade theTrade = new Trade();
-
-            var views = container.With<Trade>(theTrade).GetAllInstances<TradeView>();
-
-            views[0].Trade.ShouldBeTheSameAs(theTrade);
-            views[1].Trade.ShouldBeTheSameAs(theTrade);
-        }
-
-        [Test]
-        public void Example()
-        {
-            IContainer container = new Container();
-            Trade theTrade = new Trade();
-
-            var view = container.With<Trade>(theTrade).GetInstance<TradeView>();
-
-            view.Trade.ShouldBeTheSameAs(theTrade);
         }
     }
 

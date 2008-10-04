@@ -29,7 +29,7 @@ namespace StructureMap.Testing.Pipeline
 
 
     [TestFixture]
-    public class OptionalSetterInjectionTester : RegistryExpressions
+    public class OptionalSetterInjectionTester
     {
         [SetUp]
         public void SetUp()
@@ -43,10 +43,10 @@ namespace StructureMap.Testing.Pipeline
             var container = new Container(
                 r =>
                 {
-                    r.ForRequestedType<OptionalSetterTarget>().TheDefaultIs(
-                        (Instance<OptionalSetterTarget>()).WithProperty("Name").EqualTo("Jeremy"));
-
                     r.InstanceOf<OptionalSetterTarget>().Is.OfConcreteType<OptionalSetterTarget>().WithName("NoName");
+                       
+                    r.ForConcreteType<OptionalSetterTarget>().Configure
+                        .WithProperty("Name").EqualTo("Jeremy");
                 });
 
             try
@@ -65,23 +65,23 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void one_optional_setter_injection_with_string()
         {
-            var container =
-                new Container(
-                    r => r.ForRequestedType<ClassWithOneSetter>().TheDefaultIs(Instance<ClassWithOneSetter>().WithProperty("Name").EqualTo("Jeremy")));
+            var container = new Container(r =>
+            {
+                r.ForConcreteType<ClassWithOneSetter>().Configure
+                    .WithProperty("Name").EqualTo("Jeremy");
+            });
 
             container.GetInstance<ClassWithOneSetter>().Name.ShouldEqual("Jeremy");
-
-
         }
 
         [Test]
         public void one_optional_enum_setter()
         {
-            var container =
-                new Container(
-                    r =>
-                    r.ForRequestedType<ClassWithOneEnum>().TheDefaultIs(
-                        Instance<ClassWithOneEnum>().WithProperty("Color").EqualTo("Red")));
+            var container = new Container(r =>
+            {
+                r.ForConcreteType<ClassWithOneEnum>().Configure
+                    .WithProperty("Color").EqualTo("Red");
+            });
 
             container.GetInstance<ClassWithOneEnum>().Color.ShouldEqual(ColorEnum.Red);
         }
@@ -89,11 +89,12 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void one_optional_long_and_one_bool_setter()
         {
-            var container =
-                new Container(
-                    r =>
-                    r.ForRequestedType<ClassWithOneLongAndOneBool>().TheDefaultIs(
-                        Instance<ClassWithOneLongAndOneBool>().WithProperty("Age").EqualTo(34).WithProperty("Active").EqualTo(true)));
+            var container = new Container(r =>
+            {
+                r.ForConcreteType<ClassWithOneLongAndOneBool>().Configure
+                    .WithProperty("Age").EqualTo(34)
+                    .WithProperty("Active").EqualTo(true);
+            });
 
             var instance = container.GetInstance<ClassWithOneLongAndOneBool>();
             instance.Age.ShouldEqual(34);
@@ -103,10 +104,11 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void one_optional_child_setter_with_the_setter_property_defined()
         {
-            var container = new Container(r => r.ForRequestedType<ClassWithDependency>().TheDefaultIs(
-                                                   Instance<ClassWithDependency>().Child("Rule").Is(new ColorRule("Red"))
-
-                                                   ));
+            var container = new Container(r =>
+            {
+                r.ForConcreteType<ClassWithDependency>().Configure
+                    .SetterDependency<Rule>().Is(new ColorRule("Red"));
+            });
 
             container.GetInstance<ClassWithDependency>().Rule.ShouldBeOfType(typeof(ColorRule));
         }
@@ -115,10 +117,10 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void one_optional_child_setter_without_the_setter_property_defined()
         {
-            var container = new Container(r => r.ForRequestedType<ClassWithDependency>().TheDefaultIs(
-                                                   Instance<ClassWithDependency>())
-
-                                                   );
+            var container = new Container(r =>
+            {
+                r.ForConcreteType<ClassWithDependency>();
+            });
 
             container.GetInstance<ClassWithDependency>().Rule.ShouldBeNull();
         }
@@ -174,10 +176,12 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void one_optional_child_setter2()
         {
-            var container = new Container(r => r.ForRequestedType<ClassWithDependency>().TheDefaultIs(
-                                                   Instance<ClassWithDependency>().Child<Rule>().Is(new ColorRule("Red"))
+            var container = new Container(r =>
+            {
+                r.ForConcreteType<ClassWithDependency>().Configure
+                    .SetterDependency<Rule>().Is(new ColorRule("Red"));
 
-                                                   ));
+            });
 
             container.GetInstance<ClassWithDependency>().Rule.ShouldBeOfType(typeof(ColorRule));
         }
@@ -213,13 +217,13 @@ namespace StructureMap.Testing.Pipeline
         {
             var container = new Container(r =>
             {
-                r.ForRequestedType<ClassWithDependency>().TheDefaultIs(
-                    Instance<ClassWithDependency>().Child<Rule>().IsAutoFilled());
+                r.ForConcreteType<ClassWithDependency>().Configure
+                    .SetterDependency<Rule>().IsTheDefault();
 
                 r.ForRequestedType<Rule>().TheDefault.Is.Object(new ColorRule("Green"));
             });
 
-                                     
+                      
 
             container.GetInstance<ClassWithDependency>().Rule.ShouldBeOfType(typeof(ColorRule));
         }

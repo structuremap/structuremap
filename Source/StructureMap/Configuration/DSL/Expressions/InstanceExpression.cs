@@ -84,5 +84,15 @@ namespace StructureMap.Configuration.DSL.Expressions
         {
             return returnInstance(new PrototypeInstance((ICloneable) template));
         }
+
+        public SerializedInstance SerializedCopyOf(T template)
+        {
+            return returnInstance(new SerializedInstance(template));
+        }
+
+        public UserControlInstance LoadControlFrom(string url)
+        {
+            return returnInstance(new UserControlInstance(url));
+        }
     }
 }

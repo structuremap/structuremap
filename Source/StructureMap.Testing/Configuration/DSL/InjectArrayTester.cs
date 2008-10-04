@@ -1,10 +1,11 @@
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
+using StructureMap.Pipeline;
 
 namespace StructureMap.Testing.Configuration.DSL
 {
     [TestFixture]
-    public class InjectArrayTester : RegistryExpressions
+    public class InjectArrayTester
     {
         #region Setup/Teardown
 
@@ -82,40 +83,41 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void CanStillAddOtherPropertiesAfterTheCallToChildArray()
         {
-            IContainer manager = new Container(
-                registry => registry.ForRequestedType<Processor>()
-                                .TheDefaultIs(
-                                Instance<Processor>()
-                                    .ChildArray<IHandler[]>().Contains(
-                                    Instance<Handler1>(),
-                                    Instance<Handler2>(),
-                                    Instance<Handler3>()
-                                    )
-                                    .WithProperty("name").EqualTo("Jeremy")
-                                ));
+            var container = new Container(x =>
+            {
+                x.ForRequestedType<Processor>().TheDefault.Is
+                    .OfConcreteType<Processor>()
+                    .TheArrayOf<IHandler>().Contains(
+                        new SmartInstance<Handler1>(),
+                        new SmartInstance<Handler2>(),
+                        new SmartInstance<Handler3>()
+                    )
+                    .WithCtorArg("name").EqualTo("Jeremy");
+            });
 
-            var processor = manager.GetInstance<Processor>();
-            Assert.AreEqual("Jeremy", processor.Name);
+            container.GetInstance<Processor>().Name.ShouldEqual("Jeremy");
         }
 
         [Test]
         public void InjectPropertiesByName()
         {
-            IContainer manager = new Container(registry => registry.ForRequestedType<Processor2>()
-                                                               .TheDefaultIs(
-                                                               Instance<Processor2>()
-                                                                   .ChildArray<IHandler[]>("first").Contains(
-                                                                   Instance<Handler1>(),
-                                                                   Instance<Handler2>()
-                                                                   )
-                                                                   .ChildArray<IHandler[]>("second").Contains(
-                                                                   Instance<Handler2>(),
-                                                                   Instance<Handler3>()
-                                                                   )
-                                                               ));
+            var container = new Container(r =>
+            {
+                r.ForRequestedType<Processor2>().TheDefault.Is.OfConcreteType<Processor2>()
+                    .TheArrayOf<IHandler>("first").Contains(x =>
+                    {
+                        x.OfConcreteType<Handler1>();
+                        x.OfConcreteType<Handler2>();
+                    })
+                    .TheArrayOf<IHandler>("second").Contains(x =>
+                    {
+                        x.OfConcreteType<Handler2>();
+                        x.OfConcreteType<Handler3>();
+                    });
+            });
 
 
-            var processor = manager.GetInstance<Processor2>();
+            var processor = container.GetInstance<Processor2>();
 
             Assert.IsInstanceOfType(typeof (Handler1), processor.First[0]);
             Assert.IsInstanceOfType(typeof (Handler2), processor.First[1]);
@@ -123,27 +125,6 @@ namespace StructureMap.Testing.Configuration.DSL
             Assert.IsInstanceOfType(typeof (Handler3), processor.Second[1]);
         }
 
-        [Test,
-         ExpectedException(typeof (StructureMapException),
-             ExpectedMessage =
-                 "StructureMap Exception Code:  307\nIn the call to ChildArray<T>(), the type T must be an array")]
-        public void InjectPropertiesByNameButUseTheElementType()
-        {
-            var registry = new Registry();
-
-            registry.ForRequestedType<Processor2>()
-                .TheDefaultIs(
-                Instance<Processor2>()
-                    .ChildArray<IHandler>("first").Contains(
-                    Instance<Handler1>(),
-                    Instance<Handler2>()
-                    )
-                    .ChildArray<IHandler[]>("second").Contains(
-                    Instance<Handler2>(),
-                    Instance<Handler3>()
-                    )
-                );
-        }
 
         [Test]
         public void PlaceMemberInArrayByReference()
@@ -153,15 +134,13 @@ namespace StructureMap.Testing.Configuration.DSL
                 r.InstanceOf<IHandler>().Is.OfConcreteType<Handler1>().WithName("One");
                 r.InstanceOf<IHandler>().Is.OfConcreteType<Handler2>().WithName("Two");
 
-                r.ForRequestedType<Processor>()
-                    .TheDefaultIs(
-                    Instance<Processor>()
-                        .WithProperty("name").EqualTo("Jeremy")
-                        .ChildArray<IHandler[]>().Contains(
-                        Instance("Two"),
-                        Instance("One")
-                        )
-                    );
+                r.ForRequestedType<Processor>().TheDefault.Is.OfConcreteType<Processor>()
+                    .WithCtorArg("name").EqualTo("Jeremy")
+                    .TheArrayOf<IHandler>().Contains(x =>
+                    {
+                        x.References("Two");
+                        x.References("One");
+                    });
             });
 
             var processor = manager.GetInstance<Processor>();
@@ -198,18 +177,20 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void ProgrammaticallyInjectArrayAllInline()
         {
-            IContainer manager = new Container(registry => registry.ForRequestedType<Processor>()
-                                                               .TheDefaultIs(
-                                                               Instance<Processor>()
-                                                                   .ChildArray<IHandler[]>().Contains(
-                                                                   Instance<Handler1>(),
-                                                                   Instance<Handler2>(),
-                                                                   Instance<Handler3>()
-                                                                   )
-                                                                   .WithProperty("name").EqualTo("Jeremy")
-                                                               ));
+            var container = new Container(x =>
+            {
+                x.ForRequestedType<Processor>().TheDefault.Is.OfConcreteType<Processor>()
+                    .WithCtorArg("name").EqualTo("Jeremy")
+                    .TheArrayOf<IHandler>().Contains(y =>
+                    {
+                        y.OfConcreteType<Handler1>();
+                        y.OfConcreteType<Handler2>();
+                        y.OfConcreteType<Handler3>();
+                    });
+            });
 
-            var processor = manager.GetInstance<Processor>();
+
+            var processor = container.GetInstance<Processor>();
 
             Assert.IsInstanceOfType(typeof (Handler1), processor.Handlers[0]);
             Assert.IsInstanceOfType(typeof (Handler2), processor.Handlers[1]);
@@ -221,7 +202,6 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             IContainer container = new Container(r =>
             {
-// ReSharper disable ConvertToLambdaExpression
                 r.ForRequestedType<Processor>().TheDefault.Is.OfConcreteType<Processor>()
                     .WithCtorArg("name").EqualTo("Jeremy")
                     .TheArrayOf<IHandler>().Contains(x =>
@@ -230,7 +210,6 @@ namespace StructureMap.Testing.Configuration.DSL
                         x.OfConcreteType<Handler2>();
                         x.OfConcreteType<Handler3>();
                     });
-// ReSharper restore ConvertToLambdaExpression
 
             });
 
@@ -241,21 +220,5 @@ namespace StructureMap.Testing.Configuration.DSL
             Assert.IsInstanceOfType(typeof(Handler3), processor.Handlers[2]);
         }
 
-        [Test,
-         ExpectedException(typeof (StructureMapException),
-             ExpectedMessage =
-                 "StructureMap Exception Code:  307\nIn the call to ChildArray<T>(), the type T must be an array")]
-        public void TryToInjectByTheElementTypeInsteadOfTheArrayType()
-        {
-            var registry = new Registry();
-
-            registry.ForRequestedType<Processor>()
-                .TheDefaultIs(
-                Instance<Processor>()
-                    .WithProperty("name").EqualTo("Jeremy")
-                    .ChildArray<IHandler>().Contains(
-                    Instance<Handler1>())
-                );
-        }
     }
 }

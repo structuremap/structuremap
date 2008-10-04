@@ -15,10 +15,12 @@ namespace StructureMap.Testing.Graph.Interceptors
             manager = null;
 
             registry = new Registry();
-            registry.ForRequestedType<IAnInterfaceOfSomeSort>()
-                .AddInstance(Instance<RedSomething>().WithName("Red"))
-                .AddInstance(Instance<GreenSomething>().WithName("Green"))
-                .AddInstance(Instance<BlueSomething>().WithName("Blue"));
+            registry.ForRequestedType<IAnInterfaceOfSomeSort>().AddInstances(x =>
+            {
+                x.OfConcreteType<RedSomething>().WithName("Red"); 
+                x.OfConcreteType<GreenSomething>().WithName("Green"); 
+                x.OfConcreteType<BlueSomething>().WithName("Blue"); 
+            });
         }
 
         #endregion

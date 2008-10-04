@@ -9,21 +9,6 @@ namespace StructureMap.Testing.Configuration.DSL
     [TestFixture]
     public class RegistryIntegratedTester
     {
-        #region Setup/Teardown
-
-        [SetUp]
-        public void SetUp()
-        {
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            StructureMapConfiguration.ResetAll();
-        }
-
-        #endregion
-
         [Test]
         public void AutomaticallyFindRegistryFromAssembly()
         {

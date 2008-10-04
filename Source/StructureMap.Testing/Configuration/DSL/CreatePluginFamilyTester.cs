@@ -59,11 +59,12 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void AddInstanceByNameOnlyAddsOneInstanceToStructureMap()
         {
-            IContainer manager = new Container(registry => registry.ForRequestedType<Something>().AddInstance(
-                                                               RegistryExpressions.Instance<RedSomething>().WithName(
-                                                                   "Red")
-                                                               ));
-            IList<Something> instances = manager.GetAllInstances<Something>();
+            var container = new Container(r =>
+            {
+                r.InstanceOf<Something>().Is.OfConcreteType<RedSomething>().WithName("Red");
+            });
+
+            IList<Something> instances = container.GetAllInstances<Something>();
             Assert.AreEqual(1, instances.Count);
         }
 
@@ -163,15 +164,13 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void CreatePluginFamilyWithADefault()
         {
-            IContainer manager = new Container(registry => registry.BuildInstancesOf<IWidget>().TheDefaultIs(
-                                                               RegistryExpressions.Instance<ColorWidget>().WithProperty(
-                                                                   "color").
-                                                                   EqualTo(
-                                                                   "Red")
-                                                               ));
+            var container = new Container(r =>
+            {
+                r.ForRequestedType<IWidget>().TheDefault.Is.OfConcreteType<ColorWidget>()
+                    .WithCtorArg("color").EqualTo("Red");
+            });
 
-            var widget = (ColorWidget) manager.GetInstance<IWidget>();
-            Assert.AreEqual("Red", widget.Color);
+            container.GetInstance<IWidget>().ShouldBeOfType<ColorWidget>().Color.ShouldEqual("Red");
         }
 
         [Test]

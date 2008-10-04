@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
+using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing.Configuration.DSL
@@ -19,7 +20,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test, ExpectedException(typeof (StructureMapException))]
         public void BlowUpIfNoPropertyIsFoundForType()
         {
-            RegistryExpressions.Instance<AWidget>().Child<Rule>();
+            new SmartInstance<AWidget>().CtorDependency<Rule>();
         }
     }
 }

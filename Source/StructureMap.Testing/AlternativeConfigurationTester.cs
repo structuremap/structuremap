@@ -1,3 +1,4 @@
+using System;
 using System.Xml;
 using NUnit.Framework;
 using StructureMap.Testing.GenericWidgets;
@@ -16,7 +17,6 @@ namespace StructureMap.Testing
         {
             DataMother.BackupStructureMapConfig();
 
-            StructureMapConfiguration.ResetAll();
             DataMother.WriteDocument("Config1.xml");
             DataMother.WriteDocument("Config2.xml");
             DataMother.WriteDocument("FullTesting.XML");
@@ -25,16 +25,16 @@ namespace StructureMap.Testing
         [TearDown]
         public void TearDown()
         {
-            StructureMapConfiguration.ResetAll();
             DataMother.RestoreStructureMapConfig();
         }
 
         #endregion
 
-        public void assertTheDefault(string color)
+        public void assertTheDefault(string color, Action<ConfigurationExpression> action)
         {
-            ColorWidget widget = (ColorWidget) ObjectFactory.GetInstance<IWidget>();
-            Assert.AreEqual(color, widget.Color);
+            var container = new Container(action);
+
+            container.GetInstance<IWidget>().ShouldBeOfType<ColorWidget>().Color.ShouldEqual(color);
         }
 
         [Test]
@@ -45,27 +45,33 @@ namespace StructureMap.Testing
             doc.LoadXml(xml);
 
 
-            StructureMapConfiguration.UseDefaultStructureMapConfigFile = true;
-            StructureMapConfiguration.IncludeConfigurationFromNode(doc.DocumentElement, string.Empty);
+            var container = new Container(x =>
+            {
+                x.AddConfigurationFromXmlFile("StructureMap.config");
+                x.AddConfigurationFromNode(doc.DocumentElement);
+            });
 
-            IPlug<string> service = ObjectFactory.GetInstance<IPlug<string>>();
-            Assert.IsNotNull(service);
+            container.GetInstance<IPlug<string>>().ShouldNotBeNull();
         }
 
         [Test]
         public void NotTheDefault()
         {
-            StructureMapConfiguration.UseDefaultStructureMapConfigFile = false;
-            StructureMapConfiguration.IgnoreStructureMapConfig = true;
-            StructureMapConfiguration.IncludeConfigurationFromFile("Config1.xml");
-
-            assertTheDefault("Orange");
+            assertTheDefault("Orange", x =>
+            {
+                x.AddConfigurationFromXmlFile("Config1.xml");
+            });
         }
 
         [Test]
         public void WithTheDefault()
         {
-            assertTheDefault("Red");
+            ObjectFactory.Initialize(x =>
+            {
+                x.UseDefaultStructureMapConfigFile = true;
+            });
+
+            ObjectFactory.GetInstance<IWidget>().ShouldBeOfType<ColorWidget>().Color.ShouldEqual("Red");
         }
     }
 }

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace StructureMap.Pipeline
 {
-    public class SerializedInstance : Instance
+    public class SerializedInstance : ExpressedInstance<SerializedInstance>
     {
         private MemoryStream _stream;
         private object _locker = new object();
@@ -32,6 +32,11 @@ namespace StructureMap.Pipeline
                 BinaryFormatter formatter = new BinaryFormatter();
                 return formatter.Deserialize(_stream);
             }
+        }
+
+        protected override SerializedInstance thisInstance
+        {
+            get { return this; }
         }
     }
 }
