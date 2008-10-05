@@ -23,9 +23,9 @@ namespace StructureMap.Testing.Graph.Source
             string instance3 =
                 "<Instance Key=\"Bigger\" Type=\"GreaterThan\"><Property Name=\"Attribute\" Value=\"MyDad\" /><Property Name=\"Value\" Value=\"10\" /></Instance>";
 
-            writeFile(instance1, @"MementoDirectory\Red.xml");
-            writeFile(instance2, @"MementoDirectory\Blue.xml");
-            writeFile(instance3, @"MementoDirectory\Bigger.xml");
+            writeFile(instance1, Path.Combine("MementoDirectory", "Red.xml"));
+            writeFile(instance2, Path.Combine("MementoDirectory", "Blue.xml"));
+            writeFile(instance3, Path.Combine("MementoDirectory", "Bigger.xml"));
 
             _source = new DirectoryXmlMementoSource("MementoDirectory", "xml", XmlMementoStyle.NodeNormalized);
         }

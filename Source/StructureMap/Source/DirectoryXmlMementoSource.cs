@@ -65,20 +65,12 @@ namespace StructureMap.Source
 
         private string resolvePath(string directory)
         {
-            string returnValue = string.Empty;
-
             if (!Path.IsPathRooted(directory))
             {
-                returnValue = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
-                returnValue += "\\" + directory;
-                returnValue = returnValue.Replace("\\\\", "\\");
-            }
-            else
-            {
-                returnValue = Path.GetFullPath(directory);
+                return Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase, directory);
             }
 
-            return returnValue;
+            return Path.GetFullPath(directory);
         }
 
 
@@ -104,7 +96,7 @@ namespace StructureMap.Source
 
         private string getFilePath(string instanceKey)
         {
-            return string.Format("{0}\\{1}.{2}", _directory, instanceKey, _extension);
+            return Path.Combine(_directory, string.Format("{0}.{1}", instanceKey, _extension));
         }
 
         protected override InstanceMemento retrieveMemento(string instanceKey)

@@ -46,8 +46,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.DeploymentTask
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Testing.GenericWidgets", "StructureMap.Testing.GenericWidgets\StructureMap.Testing.GenericWidgets.csproj", "{C205EA4C-4CD0-4221-A3CB-AFD835F0B263}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.DataAccess", "StructureMap.DataAccess\StructureMap.DataAccess.csproj", "{DB798C07-0C82-4298-8BAA-D702CF96C28E}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.AutoMocking", "StructureMap.AutoMocking\StructureMap.AutoMocking.csproj", "{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMapDoctor", "StructureMapDoctor\StructureMapDoctor.csproj", "{9048635D-A2CE-4387-A4F5-9BB1CFF04703}"
@@ -202,21 +200,6 @@ Global
 		{C205EA4C-4CD0-4221-A3CB-AFD835F0B263}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C205EA4C-4CD0-4221-A3CB-AFD835F0B263}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{C205EA4C-4CD0-4221-A3CB-AFD835F0B263}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{DB798C07-0C82-4298-8BAA-D702CF96C28E}.Build|.NET.ActiveCfg = Release|Any CPU
-		{DB798C07-0C82-4298-8BAA-D702CF96C28E}.Build|Any CPU.ActiveCfg = Release|Any CPU
-		{DB798C07-0C82-4298-8BAA-D702CF96C28E}.Build|Any CPU.Build.0 = Release|Any CPU
-		{DB798C07-0C82-4298-8BAA-D702CF96C28E}.Build|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{DB798C07-0C82-4298-8BAA-D702CF96C28E}.Build|Mixed Platforms.Build.0 = Release|Any CPU
-		{DB798C07-0C82-4298-8BAA-D702CF96C28E}.Debug|.NET.ActiveCfg = Debug|Any CPU
-		{DB798C07-0C82-4298-8BAA-D702CF96C28E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DB798C07-0C82-4298-8BAA-D702CF96C28E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DB798C07-0C82-4298-8BAA-D702CF96C28E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{DB798C07-0C82-4298-8BAA-D702CF96C28E}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{DB798C07-0C82-4298-8BAA-D702CF96C28E}.Release|.NET.ActiveCfg = Release|Any CPU
-		{DB798C07-0C82-4298-8BAA-D702CF96C28E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DB798C07-0C82-4298-8BAA-D702CF96C28E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DB798C07-0C82-4298-8BAA-D702CF96C28E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{DB798C07-0C82-4298-8BAA-D702CF96C28E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}.Build|.NET.ActiveCfg = Release|Any CPU
 		{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}.Build|Any CPU.ActiveCfg = Release|Any CPU
 		{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}.Build|Any CPU.Build.0 = Release|Any CPU

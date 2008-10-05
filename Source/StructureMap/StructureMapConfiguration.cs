@@ -105,7 +105,8 @@ namespace StructureMap
 
                 if (!File.Exists(configPath))
                 {
-                    configPath = Path.Combine(basePath, @"..\" + CONFIG_FILE_NAME);
+                    configPath = Path.Combine(basePath, "..");
+                    configPath = Path.Combine(configPath, CONFIG_FILE_NAME);
                 }
             }
 

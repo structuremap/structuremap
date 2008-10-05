@@ -81,16 +81,10 @@ namespace StructureMap.Source
             // crude work-around for web application problems
             if (!Path.IsPathRooted(_filePath))
             {
-                string relativePath = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
-                relativePath += "\\" + _filePath;
-                relativePath = relativePath.Replace("\\\\", "\\");
+                return Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase, _filePath);
+            }
 
-                return relativePath;
-            }
-            else
-            {
-                return _filePath;
-            }
+            return _filePath;
         }
     }
 }

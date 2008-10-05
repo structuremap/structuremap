@@ -121,10 +121,6 @@
       <Project>{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}</Project>
       <Name>StructureMap.AutoMocking</Name>
     </ProjectReference>
-    <ProjectReference Include="..\StructureMap.DataAccess\StructureMap.DataAccess.csproj">
-      <Project>{DB798C07-0C82-4298-8BAA-D702CF96C28E}</Project>
-      <Name>StructureMap.DataAccess</Name>
-    </ProjectReference>
     <ProjectReference Include="..\StructureMap.Testing.GenericWidgets\StructureMap.Testing.GenericWidgets.csproj">
       <Project>{C205EA4C-4CD0-4221-A3CB-AFD835F0B263}</Project>
       <Name>StructureMap.Testing.GenericWidgets</Name>
@@ -284,38 +280,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Graph\TypeFindingTester.cs" />
-    <Compile Include="DataAccess\CommandCollectionTester.cs" />
-    <Compile Include="DataAccess\CommandFactoryTester.cs" />
-    <Compile Include="DataAccess\Commands\ParameterizedQueryFilterTester.cs" />
-    <Compile Include="DataAccess\Commands\StoredProcedureCommandTester.cs" />
-    <Compile Include="DataAccess\Commands\TemplatedQueryFilterTester.cs" />
-    <Compile Include="DataAccess\Commands\TemplatedQueryTester.cs" />
-    <Compile Include="DataAccess\DataSessionTester.cs" />
-    <Compile Include="DataAccess\DataSetMapping\ReaderToColumnMapTester.cs" />
-    <Compile Include="DataAccess\DataSetMapping\ReaderToTableMapperTester.cs" />
-    <Compile Include="DataAccess\DataSetMapping\YesNoReaderToColumnMapTester.cs" />
-    <Compile Include="DataAccess\Debugging.cs" />
-    <Compile Include="DataAccess\ExecutionStates\AutoCommitExecutionStateTester.cs" />
-    <Compile Include="DataAccess\ExecutionStates\TransactionalExecutionStateTester.cs" />
-    <Compile Include="DataAccess\JSON\ArrayTester.cs" />
-    <Compile Include="DataAccess\JSON\FieldTester.cs" />
-    <Compile Include="DataAccess\JSON\ObjectTester.cs" />
-    <Compile Include="DataAccess\JSON\PropertyTester.cs" />
-    <Compile Include="DataAccess\MSSQL\MSSQLDatabaseEngineTester.cs" />
-    <Compile Include="DataAccess\ObjectMother.cs" />
-    <Compile Include="DataAccess\Parameterization\ParameterizedCommandBuilderTester.cs" />
-    <Compile Include="DataAccess\Parameterization\ParameterTemplateTester.cs" />
-    <Compile Include="DataAccess\Parameters\TemplateParameterTester.cs" />
-    <Compile Include="DataAccess\ReaderSourceCollectionTester.cs" />
-    <Compile Include="DataAccess\StubbedCommand.cs" />
-    <Compile Include="DataAccess\StubbedReaderSource.cs" />
-    <Compile Include="DataAccess\TemplatedCommandTester.cs" />
-    <Compile Include="DataAccess\Tools\Mocks\CommandExpectationTester.cs" />
-    <Compile Include="DataAccess\Tools\Mocks\MockCommandTester.cs" />
-    <Compile Include="DataAccess\Tools\Mocks\MockDataSessionTester.cs" />
-    <Compile Include="DataAccess\Tools\Mocks\MockReaderSourceTester.cs" />
-    <Compile Include="DataAccess\Tools\Mocks\ParameterListTester.cs" />
-    <Compile Include="DataAccess\Tools\TableDataReaderTester.cs" />
     <Compile Include="Diagnostics\IntegrationTester.cs" />
     <Compile Include="Diagnostics\TextReportWriterSmokeTester.cs" />
     <Compile Include="GenericsAcceptanceTester.cs" />

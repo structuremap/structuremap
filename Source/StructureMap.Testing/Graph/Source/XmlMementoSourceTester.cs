@@ -12,8 +12,9 @@ namespace StructureMap.Testing.Graph.Source
         [SetUp]
         public void SetUp()
         {
-            DataMother.WriteDocument("RuleSource.xml");
-            source = new XmlFileMementoSource("RuleSource.XML", "", "Rule");
+            var theFileName = "RuleSource.xml";
+            DataMother.WriteDocument(theFileName);
+            source = new XmlFileMementoSource(theFileName, "", "Rule");
         }
 
         #endregion

@@ -149,7 +149,7 @@ namespace StructureMap.Graph
 
         private static Assembly findTheCallingAssembly()
         {
-            var trace = new StackTrace(Thread.CurrentThread, false);
+            var trace = new StackTrace(false);
 
             Assembly thisAssembly = System.Reflection.Assembly.GetExecutingAssembly();
             Assembly callingAssembly = null;

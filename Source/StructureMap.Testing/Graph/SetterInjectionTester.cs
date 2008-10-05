@@ -47,7 +47,7 @@ namespace StructureMap.Testing.Graph
 	</PluginFamily>
 
 	<PluginFamily Type='StructureMap.Testing.Widget5.IGridColumn' Assembly='StructureMap.Testing.Widget5' DefaultKey=''>
-		<Source Type='XmlFile' FilePath='GridColumnInstances.XML' XPath='//GridColumns' NodeName='GridColumn'/>
+		<Source Type='XmlFile' FilePath='GridColumnInstances.xml' XPath='//GridColumns' NodeName='GridColumn'/>
 		<Plugin Assembly='StructureMap.Testing.Widget5' Type='StructureMap.Testing.Widget5.OtherGridColumn' ConcreteKey='Other'>
 			<Setter Name='ColumnName' />
 			<Setter Name='FontStyle' />
