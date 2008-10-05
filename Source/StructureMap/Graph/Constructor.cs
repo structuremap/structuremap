@@ -5,8 +5,8 @@ namespace StructureMap.Graph
 {
     public class Constructor : TypeRules
     {
+        private readonly ConstructorInfo _ctor;
         private readonly Type _pluggedType;
-        private ConstructorInfo _ctor;
 
         public Constructor(Type pluggedType)
         {

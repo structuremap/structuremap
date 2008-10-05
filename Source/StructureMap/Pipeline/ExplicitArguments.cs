@@ -44,7 +44,7 @@ namespace StructureMap.Pipeline
 
         public void Configure(IConfiguredInstance instance)
         {
-            foreach (KeyValuePair<string, object> arg in _args)
+            foreach (var arg in _args)
             {
                 if (arg.Value == null) continue;
 
@@ -81,7 +81,7 @@ namespace StructureMap.Pipeline
             args.Configure(this);
             _args = args;
 
-            Copyable defaultConfiguration = defaultInstance as Copyable;
+            var defaultConfiguration = defaultInstance as Copyable;
             if (defaultConfiguration != null)
             {
                 mergeIntoThis(defaultConfiguration);

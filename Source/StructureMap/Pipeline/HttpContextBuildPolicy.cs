@@ -5,7 +5,7 @@ namespace StructureMap.Pipeline
 {
     public class HttpContextBuildPolicy : CacheInterceptor
     {
-        private string _prefix = Guid.NewGuid().ToString();
+        private readonly string _prefix = Guid.NewGuid().ToString();
 
         public static bool HasContext()
         {

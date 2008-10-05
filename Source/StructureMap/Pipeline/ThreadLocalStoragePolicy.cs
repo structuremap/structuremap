@@ -6,7 +6,7 @@ namespace StructureMap.Pipeline
     public class ThreadLocalStoragePolicy : CacheInterceptor
     {
         [ThreadStatic] private static Dictionary<string, object> _instances;
-        private object _locker = new object();
+        private readonly object _locker = new object();
 
         private void guaranteeHashExists()
         {

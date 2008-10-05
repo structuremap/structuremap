@@ -13,7 +13,7 @@ namespace StructureMap.Pipeline
         {
             if (string.IsNullOrEmpty(referenceKey))
             {
-                throw new ArgumentNullException("referenceKey");    
+                throw new ArgumentNullException("referenceKey");
             }
 
             _referenceKey = referenceKey;
@@ -23,6 +23,11 @@ namespace StructureMap.Pipeline
         public string ReferenceKey
         {
             get { return _referenceKey; }
+        }
+
+        protected override bool doesRecordOnTheStack
+        {
+            get { return false; }
         }
 
         #region IEquatable<ReferencedInstance> Members
@@ -67,11 +72,6 @@ namespace StructureMap.Pipeline
         protected override string getDescription()
         {
             return string.Format("\"{0}\"", _referenceKey);
-        }
-
-        protected override bool doesRecordOnTheStack
-        {
-            get { return false; }
         }
     }
 }

@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using StructureMap.Graph;
 
@@ -16,10 +15,10 @@ namespace StructureMap.Pipeline
 
     public abstract class ConfiguredInstanceBase<T> : Instance, IConfiguredInstance, IStructuredInstance, Copyable
     {
-        protected Dictionary<string, Instance> _children = new Dictionary<string, Instance>();
-        protected Dictionary<string, string> _properties = new Dictionary<string, string>();
         protected Dictionary<string, Instance[]> _arrays = new Dictionary<string, Instance[]>();
+        protected Dictionary<string, Instance> _children = new Dictionary<string, Instance>();
         protected Type _pluggedType;
+        protected Dictionary<string, string> _properties = new Dictionary<string, string>();
 
         protected ConfiguredInstanceBase(InstanceMemento memento, PluginGraph graph, Type pluginType)
         {
@@ -41,76 +40,35 @@ namespace StructureMap.Pipeline
                 }
         }
 
+        #region Copyable Members
 
-        Type IConfiguredInstance.PluggedType
+        Type Copyable.PluggedType
         {
             get { return _pluggedType; }
         }
 
-
-
-        Instance IStructuredInstance.GetChild(string name)
+        Dictionary<string, string> Copyable.Properties
         {
-            return _children[name];
+            get { return _properties; }
         }
 
-        Instance[] IStructuredInstance.GetChildArray(string name)
+        Dictionary<string, Instance> Copyable.Children
         {
-            return _arrays[name];
+            get { return _children; }
         }
 
-        void IStructuredInstance.RemoveKey(string name)
+        Dictionary<string, Instance[]> Copyable.Arrays
         {
-            _properties.Remove(name);
+            get { return _arrays; }
         }
 
-        protected override object build(Type pluginType, BuildSession session)
+        #endregion
+
+        #region IConfiguredInstance Members
+
+        Type IConfiguredInstance.PluggedType
         {
-            InstanceBuilder builder = PluginCache.FindBuilder(_pluggedType);
-            return ((IConfiguredInstance) this).Build(pluginType, session, builder);
-        }
-
-        protected virtual object getChild(string propertyName, Type pluginType, BuildSession buildSession)
-        {
-            Instance childInstance = _children.ContainsKey(propertyName)
-                                         ? _children[propertyName]
-                                         : new DefaultInstance();
-
-
-            return childInstance.Build(pluginType, buildSession);
-        }
-
-        protected override bool canBePartOfPluginFamily(PluginFamily family)
-        {
-            return TypeRules.CanBeCast(family.PluginType, _pluggedType);
-        }
-
-        internal override bool Matches(Plugin plugin)
-        {
-            return plugin.PluggedType == _pluggedType;
-        }
-
-        private void read(InstanceMemento memento, PluginGraph graph, Type pluginType)
-        {
-            PluginFamily family = graph.FindFamily(pluginType);
-            Plugin plugin = memento.FindPlugin(family);
-
-            _pluggedType = plugin.PluggedType;
-
-            InstanceMementoPropertyReader reader = new InstanceMementoPropertyReader(this, memento, graph, pluginType);
-            plugin.VisitArguments(reader);
-        }
-
-        protected void setChild(string name, Instance instance)
-        {
-            if (instance == null) return;
-
-            _children.Add(name, instance);
-        }
-
-        protected void setChildArray(string name, Instance[] array)
-        {
-            _arrays.Add(name, array);
+            get { return _pluggedType; }
         }
 
         Instance[] IConfiguredInstance.GetChildrenArray(string propertyName)
@@ -162,7 +120,93 @@ namespace StructureMap.Pipeline
 
         bool IConfiguredInstance.HasProperty(string propertyName)
         {
-           return _properties.ContainsKey(propertyName) || _children.ContainsKey(propertyName) || _arrays.ContainsKey(propertyName);
+            return _properties.ContainsKey(propertyName) || _children.ContainsKey(propertyName) ||
+                   _arrays.ContainsKey(propertyName);
+        }
+
+        void IConfiguredInstance.SetProperty(string propertyName, string propertyValue)
+        {
+            setProperty(propertyName, propertyValue);
+        }
+
+        void IConfiguredInstance.SetChild(string name, Instance instance)
+        {
+            setChild(name, instance);
+        }
+
+        void IConfiguredInstance.SetChildArray(string name, Type type, Instance[] children)
+        {
+            setChildArray(name, children);
+        }
+
+        #endregion
+
+        #region IStructuredInstance Members
+
+        Instance IStructuredInstance.GetChild(string name)
+        {
+            return _children[name];
+        }
+
+        Instance[] IStructuredInstance.GetChildArray(string name)
+        {
+            return _arrays[name];
+        }
+
+        void IStructuredInstance.RemoveKey(string name)
+        {
+            _properties.Remove(name);
+        }
+
+        #endregion
+
+        protected override object build(Type pluginType, BuildSession session)
+        {
+            InstanceBuilder builder = PluginCache.FindBuilder(_pluggedType);
+            return ((IConfiguredInstance) this).Build(pluginType, session, builder);
+        }
+
+        protected virtual object getChild(string propertyName, Type pluginType, BuildSession buildSession)
+        {
+            Instance childInstance = _children.ContainsKey(propertyName)
+                                         ? _children[propertyName]
+                                         : new DefaultInstance();
+
+
+            return childInstance.Build(pluginType, buildSession);
+        }
+
+        protected override bool canBePartOfPluginFamily(PluginFamily family)
+        {
+            return TypeRules.CanBeCast(family.PluginType, _pluggedType);
+        }
+
+        internal override bool Matches(Plugin plugin)
+        {
+            return plugin.PluggedType == _pluggedType;
+        }
+
+        private void read(InstanceMemento memento, PluginGraph graph, Type pluginType)
+        {
+            PluginFamily family = graph.FindFamily(pluginType);
+            Plugin plugin = memento.FindPlugin(family);
+
+            _pluggedType = plugin.PluggedType;
+
+            var reader = new InstanceMementoPropertyReader(this, memento, graph, pluginType);
+            plugin.VisitArguments(reader);
+        }
+
+        protected void setChild(string name, Instance instance)
+        {
+            if (instance == null) return;
+
+            _children.Add(name, instance);
+        }
+
+        protected void setChildArray(string name, Instance[] array)
+        {
+            _arrays.Add(name, array);
         }
 
         protected override Type getConcreteType(Type pluginType)
@@ -172,7 +216,7 @@ namespace StructureMap.Pipeline
 
         protected string findPropertyName<T>()
         {
-            Plugin plugin = new Plugin(_pluggedType);
+            var plugin = new Plugin(_pluggedType);
             string propertyName = plugin.FindArgumentNameForType<T>();
 
             if (string.IsNullOrEmpty(propertyName))
@@ -191,32 +235,17 @@ namespace StructureMap.Pipeline
             }
         }
 
-        void IConfiguredInstance.SetProperty(string propertyName, string propertyValue)
-        {
-            setProperty(propertyName, propertyValue);
-        }
-
         protected void setProperty(string propertyName, string propertyValue)
         {
             if (string.IsNullOrEmpty(propertyValue)) return;
             _properties[propertyName] = propertyValue;
         }
 
-        void IConfiguredInstance.SetChild(string name, Instance instance)
-        {
-            setChild(name, instance);
-        }
-
-        void IConfiguredInstance.SetChildArray(string name, Type type, Instance[] children)
-        {
-            setChildArray(name, children);
-        }
-
         protected void mergeIntoThis(Copyable instance)
         {
             _pluggedType = instance.PluggedType;
 
-            foreach (KeyValuePair<string, string> pair in instance.Properties)
+            foreach (var pair in instance.Properties)
             {
                 if (!_properties.ContainsKey(pair.Key))
                 {
@@ -224,7 +253,7 @@ namespace StructureMap.Pipeline
                 }
             }
 
-            foreach (KeyValuePair<string, Instance> pair in instance.Children)
+            foreach (var pair in instance.Children)
             {
                 if (!_children.ContainsKey(pair.Key))
                 {
@@ -233,26 +262,6 @@ namespace StructureMap.Pipeline
             }
 
             _arrays = instance.Arrays;
-        }
-
-        Type Copyable.PluggedType
-        {
-            get { return _pluggedType; }
-        }
-
-        Dictionary<string, string> Copyable.Properties
-        {
-            get { return _properties; }
-        }
-
-        Dictionary<string, Instance> Copyable.Children
-        {
-            get { return _children; }
-        }
-
-        Dictionary<string, Instance[]> Copyable.Arrays
-        {
-            get { return _arrays; }
         }
     }
 }

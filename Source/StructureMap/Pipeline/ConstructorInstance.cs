@@ -2,8 +2,6 @@ using System;
 
 namespace StructureMap.Pipeline
 {
-
-
     public class ConstructorInstance<T> : ExpressedInstance<ConstructorInstance<T>>
     {
         private readonly Func<IContext, T> _builder;
@@ -37,7 +35,7 @@ namespace StructureMap.Pipeline
 
         protected override string getDescription()
         {
-            return "Instance is created by Func<object> function:  " + _builder.ToString();
+            return "Instance is created by Func<object> function:  " + _builder;
         }
     }
 }

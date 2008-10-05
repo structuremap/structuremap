@@ -32,7 +32,7 @@ namespace StructureMap.Interceptors
 
         public InstanceInterceptor Merge(InstanceInterceptor interceptor)
         {
-            InstanceInterceptor[] interceptors = new InstanceInterceptor[_interceptors.Length + 1];
+            var interceptors = new InstanceInterceptor[_interceptors.Length + 1];
             _interceptors.CopyTo(interceptors, 0);
             interceptors[interceptors.Length - 1] = interceptor;
 

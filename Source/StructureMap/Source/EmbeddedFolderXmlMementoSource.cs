@@ -11,11 +11,11 @@ namespace StructureMap.Source
     public class EmbeddedFolderXmlMementoSource : MementoSource
     {
         private readonly string _assemblyName;
+        private readonly XmlMementoCreator _creator;
         private readonly string _extension;
         private readonly string _folderPath;
 
         private Assembly _assembly;
-        private XmlMementoCreator _creator;
         private NameValueCollection _embeddedFiles;
 
         /// <summary>
@@ -31,7 +31,6 @@ namespace StructureMap.Source
         [DefaultConstructor]
         public EmbeddedFolderXmlMementoSource(XmlMementoStyle style, string assemblyName, string folderPath,
                                               string extension)
-            : base()
         {
             _assemblyName = assemblyName;
             _folderPath = folderPath;
@@ -81,7 +80,7 @@ namespace StructureMap.Source
 
         protected override InstanceMemento[] fetchInternalMementos()
         {
-            InstanceMemento[] returnValue = new InstanceMemento[_embeddedFiles.Count];
+            var returnValue = new InstanceMemento[_embeddedFiles.Count];
             int i = 0;
             foreach (string key in _embeddedFiles.AllKeys)
             {
@@ -108,7 +107,7 @@ namespace StructureMap.Source
         private InstanceMemento fetchMementoFromEmbeddedFile(string fileName, string instanceKey)
         {
             Stream stream = _assembly.GetManifestResourceStream(fileName);
-            XmlDocument document = new XmlDocument();
+            var document = new XmlDocument();
             document.Load(stream);
 
             document.DocumentElement.SetAttribute(XmlConstants.KEY_ATTRIBUTE, instanceKey);

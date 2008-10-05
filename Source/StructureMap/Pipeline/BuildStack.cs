@@ -1,15 +1,12 @@
-using System.Collections.Generic;
-
 namespace StructureMap.Pipeline
 {
     public class BuildStack
     {
-        private BuildFrame _root;
         private BuildFrame _current;
+        private BuildFrame _root;
 
         internal BuildStack()
         {
-
         }
 
         public BuildFrame Root
@@ -24,10 +21,7 @@ namespace StructureMap.Pipeline
 
         public BuildFrame Parent
         {
-            get
-            {
-                return _current.Parent;
-            }
+            get { return _current.Parent; }
         }
 
         internal void Push(BuildFrame frame)

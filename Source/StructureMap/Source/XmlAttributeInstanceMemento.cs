@@ -13,7 +13,7 @@ namespace StructureMap.Source
     /// </summary>
     public class XmlAttributeInstanceMemento : InstanceMemento
     {
-        private XmlElement _element;
+        private readonly XmlElement _element;
 
         public XmlAttributeInstanceMemento(XmlNode node)
         {
@@ -84,8 +84,8 @@ namespace StructureMap.Source
                 return null;
             }
 
-            ArrayList list = new ArrayList();
-            XmlElement element = (XmlElement) childrenNode.FirstChild;
+            var list = new ArrayList();
+            var element = (XmlElement) childrenNode.FirstChild;
             while (element != null)
             {
                 if (element.NodeType == XmlNodeType.Element)
@@ -102,7 +102,7 @@ namespace StructureMap.Source
 
         public override InstanceMemento Substitute(InstanceMemento memento)
         {
-            XmlTemplater templater = new XmlTemplater(_element);
+            var templater = new XmlTemplater(_element);
             XmlNode substitutedNode = templater.SubstituteTemplates(_element, memento);
 
             return new XmlAttributeInstanceMemento(substitutedNode);
@@ -116,7 +116,7 @@ namespace StructureMap.Source
 
         public override Instance ReadChildInstance(string name, PluginGraph graph, Type childType)
         {
-            var reader = TypeReaderFactory.GetReader(childType);
+            ITypeReader reader = TypeReaderFactory.GetReader(childType);
             if (reader == null)
             {
                 return base.ReadChildInstance(name, graph, childType);

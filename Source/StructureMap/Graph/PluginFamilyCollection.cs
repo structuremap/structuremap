@@ -24,7 +24,7 @@ namespace StructureMap.Graph
             {
                 if (!_pluginFamilies.ContainsKey(pluginType))
                 {
-                    PluginFamily family = new PluginFamily(pluginType, _pluginGraph);
+                    var family = new PluginFamily(pluginType, _pluginGraph);
                     Add(family);
                 }
 
@@ -41,7 +41,7 @@ namespace StructureMap.Graph
         {
             get
             {
-                PluginFamily[] families = new PluginFamily[_pluginFamilies.Count];
+                var families = new PluginFamily[_pluginFamilies.Count];
                 _pluginFamilies.Values.CopyTo(families, 0);
                 return families;
             }
@@ -95,7 +95,7 @@ namespace StructureMap.Graph
 
         public void Each(Action<PluginFamily> action)
         {
-            foreach (var family in All)
+            foreach (PluginFamily family in All)
             {
                 action(family);
             }

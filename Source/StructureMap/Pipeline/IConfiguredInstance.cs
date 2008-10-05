@@ -15,6 +15,4 @@ namespace StructureMap.Pipeline
         void SetChild(string name, Instance instance);
         void SetChildArray(string name, Type type, Instance[] children);
     }
-
-   
 }

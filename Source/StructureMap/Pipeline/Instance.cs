@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using StructureMap.Configuration.DSL;
 using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
@@ -13,7 +11,7 @@ namespace StructureMap.Pipeline
         {
             string key = PluginCache.GetPlugin(type).ConcreteKey;
             return new ReferencedInstance(key);
-        } 
+        }
     }
 
     public interface IInstance
@@ -44,57 +42,9 @@ namespace StructureMap.Pipeline
             _originalName = _name;
         }
 
-        public string Name
-        {
-            get { return _name; }
-            set { _name = value; }
-        }
-
-        public virtual object Build(Type pluginType, BuildSession session)
-        {
-            markBuildStackStart(session, pluginType);
-
-            object rawValue = createRawObject(pluginType, session);
-            var finalValue = applyInterception(rawValue, pluginType);
-
-            markBuildStackFinish(session);
-
-            return finalValue;
-        }
-
-        protected virtual void markBuildStackFinish(BuildSession session)
-        {
-            if (!doesRecordOnTheStack) return;
-
-            session.BuildStack.Pop();
-        }
-
-        protected virtual void markBuildStackStart(BuildSession session, Type pluginType)
-        {
-            if (!doesRecordOnTheStack) return;
-
-            session.BuildStack.Push(new BuildFrame(pluginType, Name, getConcreteType(pluginType)));
-        }
-
         protected virtual bool doesRecordOnTheStack
         {
             get { return true; }
-        }
-
-        private object createRawObject(Type pluginType, BuildSession session)
-        {
-            try
-            {
-                return build(pluginType, session);
-            }
-            catch (StructureMapException ex)
-            {
-                throw;
-            }
-            catch (Exception ex)
-            {
-                throw new StructureMapException(400, ex);
-            }
         }
 
         public InstanceInterceptor Interceptor
@@ -103,9 +53,13 @@ namespace StructureMap.Pipeline
             set { _interceptor = value; }
         }
 
-
-
         #region IDiagnosticInstance Members
+
+        public string Name
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
 
         bool IDiagnosticInstance.CanBePartOfPluginFamily(PluginFamily family)
         {
@@ -142,6 +96,50 @@ namespace StructureMap.Pipeline
             get { return getDescription(); }
         }
 
+        #endregion
+
+        public virtual object Build(Type pluginType, BuildSession session)
+        {
+            markBuildStackStart(session, pluginType);
+
+            object rawValue = createRawObject(pluginType, session);
+            object finalValue = applyInterception(rawValue, pluginType);
+
+            markBuildStackFinish(session);
+
+            return finalValue;
+        }
+
+        protected virtual void markBuildStackFinish(BuildSession session)
+        {
+            if (!doesRecordOnTheStack) return;
+
+            session.BuildStack.Pop();
+        }
+
+        protected virtual void markBuildStackStart(BuildSession session, Type pluginType)
+        {
+            if (!doesRecordOnTheStack) return;
+
+            session.BuildStack.Push(new BuildFrame(pluginType, Name, getConcreteType(pluginType)));
+        }
+
+        private object createRawObject(Type pluginType, BuildSession session)
+        {
+            try
+            {
+                return build(pluginType, session);
+            }
+            catch (StructureMapException ex)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                throw new StructureMapException(400, ex);
+            }
+        }
+
         protected virtual Type getConcreteType(Type pluginType)
         {
             return pluginType;
@@ -162,8 +160,6 @@ namespace StructureMap.Pipeline
 
         protected abstract string getDescription();
 
-        #endregion
-
         protected void replaceNameIfNotAlreadySet(string name)
         {
             if (_name == _originalName)
@@ -171,7 +167,6 @@ namespace StructureMap.Pipeline
                 _name = name;
             }
         }
-
 
 
         private object applyInterception(object rawValue, Type pluginType)
@@ -200,7 +195,6 @@ namespace StructureMap.Pipeline
         }
 
 
-
         internal virtual bool Matches(Plugin plugin)
         {
             return false;
@@ -219,7 +213,7 @@ namespace StructureMap.Pipeline
 
         public T OnCreation<TYPE>(Action<TYPE> handler)
         {
-            StartupInterceptor<TYPE> interceptor = new StartupInterceptor<TYPE>(handler);
+            var interceptor = new StartupInterceptor<TYPE>(handler);
             Interceptor = interceptor;
 
             return thisInstance;
@@ -227,11 +221,10 @@ namespace StructureMap.Pipeline
 
         public T EnrichWith<TYPE>(EnrichmentHandler<TYPE> handler)
         {
-            EnrichmentInterceptor<TYPE> interceptor = new EnrichmentInterceptor<TYPE>(handler);
+            var interceptor = new EnrichmentInterceptor<TYPE>(handler);
             Interceptor = interceptor;
 
             return thisInstance;
         }
     }
-
 }

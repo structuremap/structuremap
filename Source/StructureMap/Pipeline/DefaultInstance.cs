@@ -9,6 +9,11 @@ namespace StructureMap.Pipeline
             int x = 1;
         }
 
+        protected override bool doesRecordOnTheStack
+        {
+            get { return false; }
+        }
+
         protected override object build(Type pluginType, BuildSession session)
         {
             return session.CreateInstance(pluginType);
@@ -17,11 +22,6 @@ namespace StructureMap.Pipeline
         protected override string getDescription()
         {
             return "Default";
-        }
-
-        protected override bool doesRecordOnTheStack
-        {
-            get { return false; }
         }
     }
 }

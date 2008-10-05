@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
-using StructureMap.Diagnostics;
 
 namespace StructureMap.Graph
 {
@@ -19,9 +18,9 @@ namespace StructureMap.Graph
     public class AssemblyScanner
     {
         private readonly List<Assembly> _assemblies = new List<Assembly>();
-        private readonly List<ITypeScanner> _scanners = new List<ITypeScanner>();
-        private readonly List<Predicate<Type>> _includes = new List<Predicate<Type>>();
         private readonly List<Predicate<Type>> _excludes = new List<Predicate<Type>>();
+        private readonly List<Predicate<Type>> _includes = new List<Predicate<Type>>();
+        private readonly List<ITypeScanner> _scanners = new List<ITypeScanner>();
 
         public AssemblyScanner()
         {
@@ -33,7 +32,6 @@ namespace StructureMap.Graph
         {
             get { return _assemblies.Count; }
         }
-
 
 
         public void ScanForAll(PluginGraph pluginGraph)
@@ -151,7 +149,7 @@ namespace StructureMap.Graph
 
         private static Assembly findTheCallingAssembly()
         {
-            StackTrace trace = new StackTrace(Thread.CurrentThread, false);
+            var trace = new StackTrace(Thread.CurrentThread, false);
 
             Assembly thisAssembly = System.Reflection.Assembly.GetExecutingAssembly();
             Assembly callingAssembly = null;
@@ -170,7 +168,7 @@ namespace StructureMap.Graph
 
         public void AssemblyContainingType<T>()
         {
-            _assemblies.Add(typeof(T).Assembly);
+            _assemblies.Add(typeof (T).Assembly);
         }
 
         public void AssemblyContainingType(Type type)
@@ -180,7 +178,7 @@ namespace StructureMap.Graph
 
         public void AddAllTypesOf<PLUGINTYPE>()
         {
-            AddAllTypesOf(typeof(PLUGINTYPE));
+            AddAllTypesOf(typeof (PLUGINTYPE));
         }
 
         public void AddAllTypesOf(Type pluginType)
@@ -207,7 +205,7 @@ namespace StructureMap.Graph
 
         public void ExcludeNamespaceContainingType<T>()
         {
-            ExcludeNamespace(typeof(T).Namespace);
+            ExcludeNamespace(typeof (T).Namespace);
         }
 
         public void Include(Predicate<Type> predicate)

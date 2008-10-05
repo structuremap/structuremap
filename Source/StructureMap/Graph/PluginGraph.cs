@@ -40,19 +40,6 @@ namespace StructureMap.Graph
             _scanners.Add(assemblies);
         }
 
-        public void Scan(Action<AssemblyScanner> action)
-        {
-            var scanner = new AssemblyScanner();
-            action(scanner);
-
-            AddScanner(scanner);
-        }
-
-        public void ScanThisAssembly()
-        {
-            Scan(x => x.TheCallingAssembly());
-        }
-
         public List<Registry> Registries
         {
             get { return _registries; }
@@ -113,6 +100,19 @@ namespace StructureMap.Graph
         }
 
         #endregion
+
+        public void Scan(Action<AssemblyScanner> action)
+        {
+            var scanner = new AssemblyScanner();
+            action(scanner);
+
+            AddScanner(scanner);
+        }
+
+        public void ScanThisAssembly()
+        {
+            Scan(x => x.TheCallingAssembly());
+        }
 
         public void AddScanner(AssemblyScanner scanner)
         {

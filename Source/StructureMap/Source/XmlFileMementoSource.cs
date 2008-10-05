@@ -11,8 +11,8 @@ namespace StructureMap.Source
     [Pluggable("XmlFile")]
     public class XmlFileMementoSource : XmlMementoSource
     {
-        private string _filePath;
-        private string _xpath;
+        private readonly string _filePath;
+        private readonly string _xpath;
 
         /// <summary>
         /// Default constructor
@@ -59,7 +59,7 @@ namespace StructureMap.Source
 
         protected override XmlNode getRootNode()
         {
-            XmlDocument doc = new XmlDocument();
+            var doc = new XmlDocument();
             doc.Load(getFilePath());
 
             XmlNode node = null;

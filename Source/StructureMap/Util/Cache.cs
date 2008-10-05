@@ -1,19 +1,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
-using StructureMap.Graph;
 
 namespace StructureMap.Util
 {
     public class Cache<KEY, VALUE> : IEnumerable<VALUE> where VALUE : class
     {
-        private readonly Dictionary<KEY, VALUE> _values = new Dictionary<KEY, VALUE>();
         private readonly Func<KEY, VALUE> _onMissing = key =>
         {
             string message = string.Format("Key '{0}' could not be found", key);
             throw new KeyNotFoundException(message);
         };
+
+        private readonly Dictionary<KEY, VALUE> _values = new Dictionary<KEY, VALUE>();
 
         private Func<VALUE, KEY> _getKey = delegate { throw new NotImplementedException(); };
 
@@ -26,11 +25,6 @@ namespace StructureMap.Util
             _onMissing = onMissing;
         }
 
-        public void Clear()
-        {
-            _values.Clear();
-        }
-
         public Func<VALUE, KEY> GetKey
         {
             get { return _getKey; }
@@ -39,23 +33,39 @@ namespace StructureMap.Util
 
         public int Count
         {
-            get
-            {
-                return _values.Count;
-            }
+            get { return _values.Count; }
         }
 
         public VALUE First
         {
             get
             {
-                foreach (KeyValuePair<KEY, VALUE> pair in _values)
+                foreach (var pair in _values)
                 {
                     return pair.Value;
                 }
 
                 return null;
             }
+        }
+
+        #region IEnumerable<VALUE> Members
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable<VALUE>) this).GetEnumerator();
+        }
+
+        public IEnumerator<VALUE> GetEnumerator()
+        {
+            return _values.Values.GetEnumerator();
+        }
+
+        #endregion
+
+        public void Clear()
+        {
+            _values.Clear();
         }
 
         public void Store(KEY key, VALUE value)
@@ -93,7 +103,7 @@ namespace StructureMap.Util
 
         public void Each(Action<VALUE> action)
         {
-            foreach (KeyValuePair<KEY, VALUE> pair in _values)
+            foreach (var pair in _values)
             {
                 action(pair.Value);
             }
@@ -123,7 +133,7 @@ namespace StructureMap.Util
 
         public VALUE Find(Predicate<VALUE> predicate)
         {
-            foreach (KeyValuePair<KEY, VALUE> pair in _values)
+            foreach (var pair in _values)
             {
                 if (predicate(pair.Value))
                 {
@@ -136,20 +146,10 @@ namespace StructureMap.Util
 
         public VALUE[] GetAll()
         {
-            VALUE[] returnValue = new VALUE[Count];
+            var returnValue = new VALUE[Count];
             _values.Values.CopyTo(returnValue, 0);
 
             return returnValue;
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return ((IEnumerable<VALUE>) this).GetEnumerator();
-        }
-
-        public IEnumerator<VALUE> GetEnumerator()
-        {
-            return _values.Values.GetEnumerator();
         }
 
         public void Remove(KEY key)
@@ -159,6 +159,5 @@ namespace StructureMap.Util
                 _values.Remove(key);
             }
         }
-
     }
 }

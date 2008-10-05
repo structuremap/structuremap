@@ -8,32 +8,12 @@ namespace StructureMap.Pipeline
     public class ProfileManager
     {
         private readonly Profile _default = new Profile("");
+        private readonly object _locker = new object();
         private readonly Profile _machineProfile = new Profile("MACHINE");
         private readonly Dictionary<string, Profile> _profiles = new Dictionary<string, Profile>();
         private Profile _currentProfile = new Profile(string.Empty);
         private string _defaultMachineProfileName;
         private string _defaultProfileName;
-        private object _locker = new object();
-
-
-        public ProfileManager()
-        {
-
-        }
-
-        private void setProfile(Profile profile)
-        {
-            lock (_locker)
-            {
-                _currentProfile = new Profile(profile.Name);
-                profile.FillAllTypesInto(_currentProfile);
-
-                if (!ReferenceEquals(profile, _default))
-                {
-                    _default.FillAllTypesInto(_currentProfile);
-                }
-            }
-        }
 
         public string DefaultMachineProfileName
         {
@@ -62,6 +42,20 @@ namespace StructureMap.Pipeline
 
                     Profile profile = getProfile(value);
                     setProfile(profile);
+                }
+            }
+        }
+
+        private void setProfile(Profile profile)
+        {
+            lock (_locker)
+            {
+                _currentProfile = new Profile(profile.Name);
+                profile.FillAllTypesInto(_currentProfile);
+
+                if (!ReferenceEquals(profile, _default))
+                {
+                    _default.FillAllTypesInto(_currentProfile);
                 }
             }
         }
@@ -96,7 +90,7 @@ namespace StructureMap.Pipeline
         {
             if (!_profiles.ContainsKey(profileName))
             {
-                Profile profile = new Profile(profileName);
+                var profile = new Profile(profileName);
                 _profiles.Add(profileName, profile);
             }
 
@@ -141,7 +135,7 @@ namespace StructureMap.Pipeline
 
         private void backfillProfiles()
         {
-            foreach (KeyValuePair<string, Profile> pair in _profiles)
+            foreach (var pair in _profiles)
             {
                 _default.FillAllTypesInto(pair.Value);
             }
@@ -174,7 +168,7 @@ namespace StructureMap.Pipeline
         private void findMasterInstances(PluginGraph graph)
         {
             _machineProfile.FindMasterInstances(graph);
-            foreach (KeyValuePair<string, Profile> pair in _profiles)
+            foreach (var pair in _profiles)
             {
                 pair.Value.FindMasterInstances(graph);
             }
@@ -198,7 +192,7 @@ namespace StructureMap.Pipeline
         public void CopyDefaults(Type basicType, Type templatedType, PluginFamily family)
         {
             _default.CopyDefault(basicType, templatedType, family);
-            foreach (KeyValuePair<string, Profile> pair in _profiles)
+            foreach (var pair in _profiles)
             {
                 pair.Value.CopyDefault(basicType, templatedType, family);
             }
@@ -208,14 +202,13 @@ namespace StructureMap.Pipeline
                 Profile theSourceProfile = getProfile(CurrentProfile);
                 theSourceProfile.FillAllTypesInto(_currentProfile);
             }
-            
+
             _default.FillAllTypesInto(_currentProfile);
-            
         }
 
         public void ImportFrom(ProfileManager source)
         {
-            foreach (KeyValuePair<string, Profile> pair in source._profiles)
+            foreach (var pair in source._profiles)
             {
                 Profile fromProfile = pair.Value;
                 Profile toProfile = getProfile(pair.Key);
@@ -225,7 +218,6 @@ namespace StructureMap.Pipeline
 
             source._default.Merge(_default);
 
-            
 
             setProfileDefaults(new GraphLog());
 

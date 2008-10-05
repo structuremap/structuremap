@@ -7,8 +7,8 @@ namespace StructureMap.Source
     [Pluggable("EmbeddedXmlFile")]
     public class SingleEmbeddedXmlMementoSource : XmlMementoSource
     {
+        private readonly Assembly _assembly;
         private readonly string _path;
-        private Assembly _assembly;
 
         /// <summary>
         /// Retrieves Xml InstanceMemento's from an xml file stored as an embedded resource in an assembly.
@@ -41,7 +41,7 @@ namespace StructureMap.Source
         protected override XmlNode getRootNode()
         {
             Stream stream = _assembly.GetManifestResourceStream(_path);
-            XmlDocument document = new XmlDocument();
+            var document = new XmlDocument();
             document.Load(stream);
 
             return document.DocumentElement;

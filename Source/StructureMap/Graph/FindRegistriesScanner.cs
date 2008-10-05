@@ -5,11 +5,13 @@ namespace StructureMap.Graph
 {
     public class FindRegistriesScanner : ITypeScanner
     {
+        #region ITypeScanner Members
+
         public void Process(Type type, PluginGraph graph)
         {
             if (!Registry.IsPublicRegistry(type)) return;
 
-            foreach (var previous in graph.Registries)
+            foreach (Registry previous in graph.Registries)
             {
                 if (previous.GetType().Equals(type))
                 {
@@ -17,8 +19,10 @@ namespace StructureMap.Graph
                 }
             }
 
-            Registry registry = (Registry)Activator.CreateInstance(type);
+            var registry = (Registry) Activator.CreateInstance(type);
             registry.ConfigurePluginGraph(graph);
         }
+
+        #endregion
     }
 }

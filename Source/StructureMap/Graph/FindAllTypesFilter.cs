@@ -11,6 +11,8 @@ namespace StructureMap.Graph
             _pluginType = pluginType;
         }
 
+        #region ITypeScanner Members
+
         public void Process(Type type, PluginGraph graph)
         {
             if (CanBeCast(_pluginType, type))
@@ -18,5 +20,7 @@ namespace StructureMap.Graph
                 graph.AddType(_pluginType, type);
             }
         }
+
+        #endregion
     }
 }

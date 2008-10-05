@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using StructureMap.Pipeline;
 using StructureMap.Util;
@@ -24,7 +23,7 @@ namespace StructureMap.Graph
         {
             get
             {
-                foreach (var family in _families)
+                foreach (PluginFamily family in _families)
                 {
                     yield return family.GetConfiguration();
                 }
@@ -95,7 +94,6 @@ namespace StructureMap.Graph
                 PluginFamily basicFamily = _families.Retrieve(basicType);
                 Type[] templatedParameterTypes = templatedType.GetGenericArguments();
 
-                
 
                 PluginFamily family = CreateTemplatedClone(basicFamily, templatedParameterTypes);
                 profileManager.CopyDefaults(basicType, templatedType, family);
@@ -111,11 +109,9 @@ namespace StructureMap.Graph
         // TODO:  This code sucks.  What's going on here?
         public static PluginFamily CreateTemplatedClone(PluginFamily baseFamily, params Type[] templateTypes)
         {
-            
             PluginFamily templatedFamily = baseFamily.CreateTemplatedClone(templateTypes);
             return templatedFamily;
         }
-
 
 
         public static bool CanBePluggedIntoGenericType(Type pluginType, Type pluggedType, params Type[] templateTypes)

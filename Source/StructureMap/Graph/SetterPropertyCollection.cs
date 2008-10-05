@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using StructureMap.Attributes;
 
 namespace StructureMap.Graph
 {
@@ -12,7 +11,7 @@ namespace StructureMap.Graph
     public class SetterPropertyCollection : IEnumerable<SetterProperty>
     {
         private readonly Plugin _plugin;
-        private List<SetterProperty> _properties;
+        private readonly List<SetterProperty> _properties;
 
         public SetterPropertyCollection(Plugin plugin)
         {
@@ -20,12 +19,11 @@ namespace StructureMap.Graph
             _plugin = plugin;
 
 
-            
             foreach (PropertyInfo property in plugin.PluggedType.GetProperties())
             {
                 if (property.CanWrite && property.GetSetMethod(false) != null)
                 {
-                    SetterProperty setter = new SetterProperty(property);
+                    var setter = new SetterProperty(property);
                     _properties.Add(setter);
                 }
             }
@@ -57,7 +55,7 @@ namespace StructureMap.Graph
 
         public SetterProperty MarkSetterAsMandatory(string propertyName)
         {
-            var setter = _properties.Find(p => p.Property.Name == propertyName);
+            SetterProperty setter = _properties.Find(p => p.Property.Name == propertyName);
             if (setter == null)
             {
                 throw new StructureMapException(240, propertyName, _plugin.PluggedType);

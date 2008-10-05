@@ -4,9 +4,11 @@ namespace StructureMap.Pipeline
 {
     public class BuildFrame
     {
-        private readonly Type _requestedType;
-        private readonly string _name;
         private readonly Type _concreteType;
+        private readonly string _name;
+        private readonly Type _requestedType;
+        private BuildFrame _next;
+        private BuildFrame _parent;
 
         public BuildFrame(Type requestedType, string name, Type concreteType)
         {
@@ -30,8 +32,10 @@ namespace StructureMap.Pipeline
             get { return _concreteType; }
         }
 
-        private BuildFrame _parent;
-        private BuildFrame _next;
+        internal BuildFrame Parent
+        {
+            get { return _parent; }
+        }
 
         internal void Attach(BuildFrame next)
         {
@@ -45,24 +49,18 @@ namespace StructureMap.Pipeline
             return _parent;
         }
 
-        internal BuildFrame Parent
-        {
-            get
-            {
-                return _parent;
-            }
-        }
-
         public override string ToString()
         {
-            return string.Format("RequestedType: {0}, Name: {1}, ConcreteType: {2}", _requestedType, _name, _concreteType);
+            return string.Format("RequestedType: {0}, Name: {1}, ConcreteType: {2}", _requestedType, _name,
+                                 _concreteType);
         }
 
         public bool Equals(BuildFrame obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return Equals(obj._requestedType, _requestedType) && Equals(obj._name, _name) && Equals(obj._concreteType, _concreteType);
+            return Equals(obj._requestedType, _requestedType) && Equals(obj._name, _name) &&
+                   Equals(obj._concreteType, _concreteType);
         }
 
         public override bool Equals(object obj)

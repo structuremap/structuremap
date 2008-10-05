@@ -12,10 +12,10 @@ namespace StructureMap.Graph
         private readonly PropertyInfo _property;
 
 
-        public SetterProperty(PropertyInfo property) : base()
+        public SetterProperty(PropertyInfo property)
         {
             _property = property;
-            var att = Attribute.GetCustomAttribute(property, typeof (SetterPropertyAttribute));
+            Attribute att = Attribute.GetCustomAttribute(property, typeof (SetterPropertyAttribute));
 
             IsMandatory = att != null;
         }

@@ -9,15 +9,14 @@ namespace StructureMap.Source
     /// </summary>
     public abstract class XmlMementoSource : MementoSource
     {
-        private string _keyAttribute;
-        private XmlMementoCreator _mementoCreator;
+        private readonly string _keyAttribute;
+        private readonly XmlMementoCreator _mementoCreator;
+        private readonly string _nodeName;
+        private readonly string _typeAttribute;
         private Hashtable _mementos;
-        private string _nodeName;
-        private string _typeAttribute;
 
 
         public XmlMementoSource(string NodeName, string TypeAttribute, string KeyAttribute, XmlMementoStyle style)
-            : base()
         {
             _nodeName = NodeName;
             _typeAttribute = TypeAttribute;
@@ -94,7 +93,7 @@ namespace StructureMap.Source
         protected override sealed InstanceMemento[] fetchInternalMementos()
         {
             Hashtable mementos = mementoHashtable;
-            InstanceMemento[] returnValue = new InstanceMemento[mementos.Count];
+            var returnValue = new InstanceMemento[mementos.Count];
             mementos.Values.CopyTo(returnValue, 0);
 
             return returnValue;

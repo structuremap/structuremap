@@ -29,7 +29,7 @@ namespace StructureMap.Pipeline
 
         public IBuildPolicy Clone()
         {
-            HybridBuildPolicy policy = new HybridBuildPolicy();
+            var policy = new HybridBuildPolicy();
             policy.InnerPolicy = InnerPolicy.Clone();
 
             return policy;

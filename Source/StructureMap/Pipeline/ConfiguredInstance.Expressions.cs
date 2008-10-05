@@ -1,6 +1,5 @@
 using System;
 using StructureMap.Configuration.DSL;
-using StructureMap.Graph;
 using StructureMap.Interceptors;
 
 namespace StructureMap.Pipeline
@@ -15,7 +14,7 @@ namespace StructureMap.Pipeline
 
         public ConfiguredInstance OnCreation<TYPE>(Action<TYPE> handler)
         {
-            StartupInterceptor<TYPE> interceptor = new StartupInterceptor<TYPE>(handler);
+            var interceptor = new StartupInterceptor<TYPE>(handler);
             Interceptor = interceptor;
 
             return this;
@@ -23,7 +22,7 @@ namespace StructureMap.Pipeline
 
         public ConfiguredInstance EnrichWith<TYPE>(EnrichmentHandler<TYPE> handler)
         {
-            EnrichmentInterceptor<TYPE> interceptor = new EnrichmentInterceptor<TYPE>(handler);
+            var interceptor = new EnrichmentInterceptor<TYPE>(handler);
             Interceptor = interceptor;
 
             return this;
@@ -34,7 +33,7 @@ namespace StructureMap.Pipeline
         {
             validateTypeIsArray<PLUGINTYPE>();
 
-            ChildArrayExpression expression =
+            var expression =
                 new ChildArrayExpression(this, propertyName);
 
             return expression;
@@ -84,7 +83,7 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public ChildInstanceExpression Child<CONSTRUCTORARGUMENTTYPE>(string propertyName)
         {
-            ChildInstanceExpression child = new ChildInstanceExpression(this, propertyName);
+            var child = new ChildInstanceExpression(this, propertyName);
             child.ChildType = typeof (CONSTRUCTORARGUMENTTYPE);
 
             return child;
@@ -161,7 +160,7 @@ namespace StructureMap.Pipeline
             /// <returns></returns>
             public ConfiguredInstance IsNamedInstance(string instanceKey)
             {
-                ReferencedInstance instance = new ReferencedInstance(instanceKey);
+                var instance = new ReferencedInstance(instanceKey);
                 _instance.setChild(_propertyName, instance);
 
                 return _instance;
@@ -177,7 +176,7 @@ namespace StructureMap.Pipeline
                 Type pluggedType = typeof (T);
                 ExpressionValidator.ValidatePluggabilityOf(pluggedType).IntoPluginType(_childType);
 
-                ConfiguredInstance childInstance = new ConfiguredInstance(pluggedType);
+                var childInstance = new ConfiguredInstance(pluggedType);
                 _instance.setChild(_propertyName, childInstance);
 
                 return _instance;
@@ -198,20 +197,16 @@ namespace StructureMap.Pipeline
 
             public ConfiguredInstance Is(object value)
             {
-                LiteralInstance instance = new LiteralInstance(value);
+                var instance = new LiteralInstance(value);
                 return Is(instance);
             }
 
             public ConfiguredInstance IsAutoFilled()
             {
-                DefaultInstance instance = new DefaultInstance();
+                var instance = new DefaultInstance();
                 return Is(instance);
             }
         }
-
-        #endregion
-
-        #region Nested type: PropertyExpression
 
         #endregion
     }

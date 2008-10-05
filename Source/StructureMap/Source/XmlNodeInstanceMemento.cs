@@ -13,9 +13,9 @@ namespace StructureMap.Source
     /// </summary>
     public class XmlNodeInstanceMemento : InstanceMemento
     {
-        private XmlNode _innerNode;
-        private string _keyAttribute;
-        private string _typeAttribute;
+        private readonly XmlNode _innerNode;
+        private readonly string _keyAttribute;
+        private readonly string _typeAttribute;
 
         public XmlNodeInstanceMemento(XmlNode Node, string TypeAttribute, string KeyAttribute)
         {
@@ -76,7 +76,7 @@ namespace StructureMap.Source
         private XmlElement getChildNode(string Key)
         {
             string xpath = string.Format("Property[@Name='{0}']", Key);
-            XmlElement nodeProperty = (XmlElement) _innerNode.SelectSingleNode(xpath);
+            var nodeProperty = (XmlElement) _innerNode.SelectSingleNode(xpath);
 
             return nodeProperty;
         }
@@ -103,7 +103,7 @@ namespace StructureMap.Source
 
         public override Instance ReadChildInstance(string name, PluginGraph graph, Type childType)
         {
-            var reader = TypeReaderFactory.GetReader(childType);
+            ITypeReader reader = TypeReaderFactory.GetReader(childType);
             if (reader == null)
             {
                 return base.ReadChildInstance(name, graph, childType);
@@ -140,7 +140,6 @@ namespace StructureMap.Source
         }
 
 
-
         public override InstanceMemento[] GetChildrenArray(string Key)
         {
             XmlNode nodeChild = getChildNode(Key);
@@ -149,7 +148,7 @@ namespace StructureMap.Source
                 return null;
             }
 
-            List<InstanceMemento> list = new List<InstanceMemento>();
+            var list = new List<InstanceMemento>();
             foreach (XmlNode childNode in nodeChild.ChildNodes)
             {
                 if (childNode.NodeType == XmlNodeType.Element)
@@ -163,7 +162,7 @@ namespace StructureMap.Source
 
         public override InstanceMemento Substitute(InstanceMemento memento)
         {
-            XmlTemplater templater = new XmlTemplater(_innerNode);
+            var templater = new XmlTemplater(_innerNode);
             XmlNode substitutedNode = templater.SubstituteTemplates(_innerNode, memento);
             return new XmlNodeInstanceMemento(substitutedNode, _typeAttribute, _keyAttribute);
         }

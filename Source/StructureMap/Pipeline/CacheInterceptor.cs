@@ -51,7 +51,7 @@ namespace StructureMap.Pipeline
 
         public override string ToString()
         {
-            return GetType().FullName + " / " + _innerPolicy.ToString();
+            return GetType().FullName + " / " + _innerPolicy;
         }
     }
 }

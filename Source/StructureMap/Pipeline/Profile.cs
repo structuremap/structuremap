@@ -6,8 +6,8 @@ namespace StructureMap.Pipeline
 {
     public class Profile
     {
+        private readonly string _name;
         private Dictionary<Type, Instance> _instances = new Dictionary<Type, Instance>();
-        private string _name;
 
         public Profile(string name)
         {
@@ -57,7 +57,7 @@ namespace StructureMap.Pipeline
 
         public void FillAllTypesInto(Profile destination)
         {
-            foreach (KeyValuePair<Type, Instance> pair in _instances)
+            foreach (var pair in _instances)
             {
                 destination.FillTypeInto(pair.Key, pair.Value);
             }
@@ -65,7 +65,7 @@ namespace StructureMap.Pipeline
 
         public void Merge(Profile destination)
         {
-            foreach (KeyValuePair<Type, Instance> pair in _instances)
+            foreach (var pair in _instances)
             {
                 destination.SetDefault(pair.Key, pair.Value);
             }
@@ -73,14 +73,14 @@ namespace StructureMap.Pipeline
 
         public void FindMasterInstances(PluginGraph graph)
         {
-            Dictionary<Type, Instance> master = new Dictionary<Type, Instance>();
+            var master = new Dictionary<Type, Instance>();
 
-            foreach (KeyValuePair<Type, Instance> pair in _instances)
+            foreach (var pair in _instances)
             {
                 PluginFamily family = graph.FindFamily(pair.Key);
                 Instance masterInstance = ((IDiagnosticInstance) pair.Value)
                     .FindInstanceForProfile(family, _name, graph.Log);
-                
+
                 master.Add(pair.Key, masterInstance);
             }
 
@@ -102,8 +102,6 @@ namespace StructureMap.Pipeline
                 {
                     _instances.Add(destinationType, destinationInstance);
                 }
-
-                
             }
         }
 

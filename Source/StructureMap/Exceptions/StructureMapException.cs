@@ -1,5 +1,4 @@
 using System;
-using System.Resources;
 using System.Runtime.Serialization;
 
 namespace StructureMap
@@ -11,8 +10,8 @@ namespace StructureMap
     [Serializable]
     public class StructureMapException : ApplicationException
     {
-        private int _errorCode;
-        private string _msg;
+        private readonly int _errorCode;
+        private readonly string _msg;
 
 
         protected StructureMapException(SerializationInfo info, StreamingContext context) :
@@ -23,7 +22,7 @@ namespace StructureMap
         }
 
 
-        public StructureMapException(int ErrorCode, params object[] args) : base()
+        public StructureMapException(int ErrorCode, params object[] args)
         {
             _errorCode = ErrorCode;
             _msg = string.Format("StructureMap Exception Code:  {0}\n", _errorCode);
@@ -47,7 +46,6 @@ namespace StructureMap
         {
             get { return _errorCode; }
         }
-
 
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)

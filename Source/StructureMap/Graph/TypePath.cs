@@ -65,7 +65,7 @@ namespace StructureMap.Graph
 
         public static string GetAssemblyQualifiedName(Type type)
         {
-            TypePath path = new TypePath(type);
+            var path = new TypePath(type);
             return path.AssemblyQualifiedName;
         }
 
@@ -84,7 +84,7 @@ namespace StructureMap.Graph
 
         public override bool Equals(object obj)
         {
-            TypePath peer = obj as TypePath;
+            var peer = obj as TypePath;
             if (peer == null)
             {
                 return false;

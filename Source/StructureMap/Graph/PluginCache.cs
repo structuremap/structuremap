@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using StructureMap.Emitting;
@@ -9,8 +9,8 @@ namespace StructureMap.Graph
     public static class PluginCache
     {
         private static readonly Cache<Type, InstanceBuilder> _builders;
+        private static readonly List<Type> _filledTypes = new List<Type>();
         private static readonly Cache<Type, Plugin> _plugins;
-        private static List<Type> _filledTypes = new List<Type>();
 
         static PluginCache()
         {
@@ -37,7 +37,8 @@ namespace StructureMap.Graph
         {
             lock (typeof (PluginCache))
             {
-                IEnumerable<Plugin> plugins = _plugins.Where(plugin => pluginHasNoBuilder(plugin) && plugin.CanBeCreated());
+                IEnumerable<Plugin> plugins =
+                    _plugins.Where(plugin => pluginHasNoBuilder(plugin) && plugin.CanBeCreated());
                 createAndStoreBuilders(plugins);
             }
         }
@@ -65,7 +66,7 @@ namespace StructureMap.Graph
 
         internal static void ResetAll()
         {
-            lock (typeof(PluginCache))
+            lock (typeof (PluginCache))
             {
                 _builders.Clear();
                 _plugins.Clear();

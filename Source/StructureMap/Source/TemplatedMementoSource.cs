@@ -25,7 +25,7 @@ namespace StructureMap.Source
         protected override InstanceMemento[] fetchInternalMementos()
         {
             InstanceMemento[] rawMementos = _innerSource.GetAllMementos();
-            InstanceMemento[] returnValue = new InstanceMemento[rawMementos.Length];
+            var returnValue = new InstanceMemento[rawMementos.Length];
 
             for (int i = 0; i < returnValue.Length; i++)
             {

@@ -32,7 +32,7 @@ namespace StructureMap.Pipeline
 
         protected override string getDescription()
         {
-            return "Prototype of " + _prototype.ToString();
+            return "Prototype of " + _prototype;
         }
     }
 }

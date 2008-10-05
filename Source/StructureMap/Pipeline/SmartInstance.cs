@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using StructureMap.Configuration.DSL.Expressions;
@@ -11,7 +11,7 @@ namespace StructureMap.Pipeline
     {
         private readonly List<Action<T>> _actions = new List<Action<T>>();
 
-        public SmartInstance() : base(typeof(T))
+        public SmartInstance() : base(typeof (T))
         {
         }
 
@@ -23,7 +23,7 @@ namespace StructureMap.Pipeline
 
         public SmartInstance<T> OnCreation(Action<T> handler)
         {
-            StartupInterceptor<T> interceptor = new StartupInterceptor<T>(handler);
+            var interceptor = new StartupInterceptor<T>(handler);
             Interceptor = interceptor;
 
             return this;
@@ -31,7 +31,7 @@ namespace StructureMap.Pipeline
 
         public SmartInstance<T> EnrichWith(EnrichmentHandler<T> handler)
         {
-            EnrichmentInterceptor<T> interceptor = new EnrichmentInterceptor<T>(handler);
+            var interceptor = new EnrichmentInterceptor<T>(handler);
             Interceptor = interceptor;
 
             return this;
@@ -39,7 +39,7 @@ namespace StructureMap.Pipeline
 
         public SmartInstance<T> EnrichWith<PLUGINTYPE>(EnrichmentHandler<PLUGINTYPE> handler)
         {
-            EnrichmentInterceptor<PLUGINTYPE> interceptor = new EnrichmentInterceptor<PLUGINTYPE>(handler);
+            var interceptor = new EnrichmentInterceptor<PLUGINTYPE>(handler);
             Interceptor = interceptor;
 
             return this;
@@ -57,8 +57,8 @@ namespace StructureMap.Pipeline
 
         protected override object build(Type pluginType, BuildSession session)
         {
-            T builtTarget = (T) base.build(pluginType, session);
-            foreach (Action<T> action in _actions)
+            var builtTarget = (T) base.build(pluginType, session);
+            foreach (var action in _actions)
             {
                 action(builtTarget);
             }
@@ -100,7 +100,8 @@ namespace StructureMap.Pipeline
             return new DependencyExpression<T, CTORTYPE>(this, constructorArg);
         }
 
-        public DependencyExpression<T, SETTERTYPE> SetterDependency<SETTERTYPE>(Expression<Func<T, SETTERTYPE>> expression)
+        public DependencyExpression<T, SETTERTYPE> SetterDependency<SETTERTYPE>(
+            Expression<Func<T, SETTERTYPE>> expression)
         {
             string propertyName = ReflectionHelper.GetProperty(expression).Name;
             return new DependencyExpression<T, SETTERTYPE>(this, propertyName);
@@ -113,7 +114,7 @@ namespace StructureMap.Pipeline
 
         public ArrayDefinitionExpression<T, CHILD> TheArrayOf<CHILD>()
         {
-            if (typeof(CHILD).IsArray)
+            if (typeof (CHILD).IsArray)
             {
                 throw new ApplicationException("Please specify the element type in the call to TheArrayOf");
             }
@@ -129,10 +130,12 @@ namespace StructureMap.Pipeline
             return new ArrayDefinitionExpression<T, CHILD>(this, ctorOrPropertyName);
         }
 
+        #region Nested type: ArrayDefinitionExpression
+
         public class ArrayDefinitionExpression<T, ARRAY>
         {
-            private SmartInstance<T> _instance;
-            private string _propertyName;
+            private readonly SmartInstance<T> _instance;
+            private readonly string _propertyName;
 
             internal ArrayDefinitionExpression(SmartInstance<T> instance, string propertyName)
             {
@@ -142,9 +145,9 @@ namespace StructureMap.Pipeline
 
             public SmartInstance<T> Contains(Action<InstanceExpression<ARRAY>> action)
             {
-                List<Instance> list = new List<Instance>();
+                var list = new List<Instance>();
 
-                InstanceExpression<ARRAY> child = new InstanceExpression<ARRAY>(i => list.Add(i));
+                var child = new InstanceExpression<ARRAY>(i => list.Add(i));
                 action(child);
 
                 _instance.setChildArray(_propertyName, list.ToArray());
@@ -159,6 +162,10 @@ namespace StructureMap.Pipeline
                 return _instance;
             }
         }
+
+        #endregion
+
+        #region Nested type: DependencyExpression
 
         public class DependencyExpression<T, CHILD>
         {
@@ -201,8 +208,6 @@ namespace StructureMap.Pipeline
             }
         }
 
-
+        #endregion
     }
-
-    
 }

@@ -16,7 +16,7 @@ namespace StructureMap.Source
             XmlAttribute substitutionAttribute = templateNode.Attributes[InstanceMemento.SUBSTITUTIONS_ATTRIBUTE];
             if (substitutionAttribute == null)
             {
-                Collector collector = new Collector(templateNode);
+                var collector = new Collector(templateNode);
                 _substitutions = collector.FindSubstitutions();
             }
             else
@@ -32,14 +32,14 @@ namespace StructureMap.Source
 
         public XmlNode SubstituteTemplates(XmlNode node, InstanceMemento memento)
         {
-            StringBuilder builder = new StringBuilder(_templateXml);
+            var builder = new StringBuilder(_templateXml);
             foreach (string substitution in _substitutions)
             {
                 string substitutionValue = memento.GetProperty(substitution);
                 makeSubstitution(substitution, substitutionValue, builder);
             }
 
-            XmlDocument document = new XmlDocument();
+            var document = new XmlDocument();
             document.LoadXml(builder.ToString());
 
             return document.DocumentElement;

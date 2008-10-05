@@ -1,22 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.IO;
-using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
 
 namespace StructureMap.Pipeline
 {
     public class SerializedInstance : ExpressedInstance<SerializedInstance>
     {
-        private MemoryStream _stream;
-        private object _locker = new object();
+        private readonly object _locker = new object();
+        private readonly MemoryStream _stream;
 
         public SerializedInstance(object template)
         {
             _stream = new MemoryStream();
-            BinaryFormatter formatter = new BinaryFormatter();
+            var formatter = new BinaryFormatter();
             formatter.Serialize(_stream, template);
+        }
+
+        protected override SerializedInstance thisInstance
+        {
+            get { return this; }
         }
 
         protected override string getDescription()
@@ -29,14 +31,9 @@ namespace StructureMap.Pipeline
             lock (_locker)
             {
                 _stream.Position = 0;
-                BinaryFormatter formatter = new BinaryFormatter();
+                var formatter = new BinaryFormatter();
                 return formatter.Deserialize(_stream);
             }
-        }
-
-        protected override SerializedInstance thisInstance
-        {
-            get { return this; }
         }
     }
 }

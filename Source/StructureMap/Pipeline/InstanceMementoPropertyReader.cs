@@ -82,7 +82,7 @@ namespace StructureMap.Pipeline
             {
                 throw new StructureMapException(205, name, _memento.InstanceKey);
             }
-            
+
             _instance.SetProperty(name, propertyValue);
         }
 
@@ -97,7 +97,7 @@ namespace StructureMap.Pipeline
         {
             InstanceMemento[] mementoes = _memento.GetChildrenArray(name) ?? new InstanceMemento[0];
 
-            Instance[] children = new Instance[mementoes.Length];
+            var children = new Instance[mementoes.Length];
             for (int i = 0; i < mementoes.Length; i++)
             {
                 InstanceMemento memento = mementoes[i];

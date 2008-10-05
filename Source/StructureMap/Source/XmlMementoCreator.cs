@@ -6,9 +6,9 @@ namespace StructureMap.Source
     // TODO:  3.5, eliminate this with lambdas in ConfigurationParser
     public class XmlMementoCreator
     {
+        private readonly Func<XmlNode, InstanceMemento> _createMemento;
         private readonly string _keyAttribute;
         private readonly string _typeAttribute;
-        private Func<XmlNode, InstanceMemento> _createMemento;
 
         public XmlMementoCreator(XmlMementoStyle style, string typeAttribute, string keyAttribute)
         {

@@ -152,7 +152,7 @@ namespace StructureMap.Graph
             {
                 if (plugin.CanBeAutoFilled && !hasInstanceWithPluggedType(plugin))
                 {
-                    var instance = new ConfiguredInstance(plugin.PluggedType).WithName(key);
+                    ConfiguredInstance instance = new ConfiguredInstance(plugin.PluggedType).WithName(key);
                     AddInstance(instance);
                 }
             });
@@ -216,54 +216,6 @@ namespace StructureMap.Graph
             return string.IsNullOrEmpty(_defaultKey) ? null : GetInstance(_defaultKey);
         }
 
-        #region properties
-
-
-        public bool IsGenericTemplate
-        {
-            get { return _pluginType.IsGenericTypeDefinition || _pluginType.ContainsGenericParameters; }
-        }
-
-        public IBuildPolicy Policy
-        {
-            get { return _buildPolicy; }
-            set { _policy = value; }
-        }
-
-        public int PluginCount
-        {
-            get { return _pluggedTypes.Count; }
-        }
-
-        /// <summary>
-        /// The CLR Type that defines the "Plugin" interface for the PluginFamily
-        /// </summary>
-        public Type PluginType
-        {
-            get { return _pluginType; }
-        }
-
-        /// <summary>
-        /// The InstanceKey of the default instance of the PluginFamily
-        /// </summary>
-        public string DefaultInstanceKey
-        {
-            get { return _defaultKey; }
-            set { _defaultKey = value ?? string.Empty; }
-        }
-
-        public int InstanceCount
-        {
-            get { return _instances.Count; }
-        }
-
-        public IEnumerable<IInstance> Instances
-        {
-            get { return _instances.GetAll(); }
-        }
-
-        #endregion
-
         public Plugin FindPlugin(Type pluggedType)
         {
             return _pluggedTypes.Find(p => p.PluggedType == pluggedType);
@@ -325,16 +277,13 @@ namespace StructureMap.Graph
         public PluginFamily CreateTemplatedClone(Type[] templateTypes)
         {
             Type templatedType = _pluginType.MakeGenericType(templateTypes);
-            PluginFamily templatedFamily = new PluginFamily(templatedType, Parent);
+            var templatedFamily = new PluginFamily(templatedType, Parent);
             templatedFamily.DefaultInstanceKey = DefaultInstanceKey;
             templatedFamily.Policy = Policy.Clone();
 
 
             // TODO -- Got a big problem here.  Intances need to be copied over
-            EachInstance(i =>
-            {
-                ((IDiagnosticInstance)i).AddTemplatedInstanceTo(templatedFamily, templateTypes);
-            });
+            EachInstance(i => { ((IDiagnosticInstance) i).AddTemplatedInstanceTo(templatedFamily, templateTypes); });
 
             // Need to attach the new PluginFamily to the old PluginGraph
             Parent.PluginFamilies.Add(templatedFamily);
@@ -364,13 +313,60 @@ namespace StructureMap.Graph
 
         public PluginTypeConfiguration GetConfiguration()
         {
-            return new PluginTypeConfiguration()
-            {
-                Default = GetDefaultInstance(),
-                PluginType = PluginType,
-                Policy = _buildPolicy,
-                Instances = Instances
-            };
+            return new PluginTypeConfiguration
+                       {
+                           Default = GetDefaultInstance(),
+                           PluginType = PluginType,
+                           Policy = _buildPolicy,
+                           Instances = Instances
+                       };
         }
+
+        #region properties
+
+        public bool IsGenericTemplate
+        {
+            get { return _pluginType.IsGenericTypeDefinition || _pluginType.ContainsGenericParameters; }
+        }
+
+        public IBuildPolicy Policy
+        {
+            get { return _buildPolicy; }
+            set { _policy = value; }
+        }
+
+        public int PluginCount
+        {
+            get { return _pluggedTypes.Count; }
+        }
+
+        public int InstanceCount
+        {
+            get { return _instances.Count; }
+        }
+
+        public IEnumerable<IInstance> Instances
+        {
+            get { return _instances.GetAll(); }
+        }
+
+        /// <summary>
+        /// The CLR Type that defines the "Plugin" interface for the PluginFamily
+        /// </summary>
+        public Type PluginType
+        {
+            get { return _pluginType; }
+        }
+
+        /// <summary>
+        /// The InstanceKey of the default instance of the PluginFamily
+        /// </summary>
+        public string DefaultInstanceKey
+        {
+            get { return _defaultKey; }
+            set { _defaultKey = value ?? string.Empty; }
+        }
+
+        #endregion
     }
 }

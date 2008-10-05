@@ -8,7 +8,7 @@ namespace StructureMap.Source
     [Pluggable("Default")]
     public class MemoryMementoSource : MementoSource
     {
-        private Hashtable _mementos;
+        private readonly Hashtable _mementos;
 
         public MemoryMementoSource()
         {
@@ -22,7 +22,7 @@ namespace StructureMap.Source
 
         protected override InstanceMemento[] fetchInternalMementos()
         {
-            InstanceMemento[] returnValue = new InstanceMemento[_mementos.Count];
+            var returnValue = new InstanceMemento[_mementos.Count];
             _mementos.Values.CopyTo(returnValue, 0);
 
             return returnValue;

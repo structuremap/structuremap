@@ -16,7 +16,7 @@ namespace StructureMap.Source
     {
         private readonly string _directory;
         private readonly string _extension;
-        private XmlMementoCreator _mementoCreator;
+        private readonly XmlMementoCreator _mementoCreator;
 
         /// <summary>
         /// Stores an Xml InstanceMemento per file in a directory
@@ -25,7 +25,7 @@ namespace StructureMap.Source
         /// will use the FIRST directory it finds</param>
         /// <param name="extension">The file extension of the InstanceMemento files without a dot.  Typically "xml"</param>
         /// <param name="mementoStyle">NodeNormalized or AttributeNormalized</param>
-        public DirectoryXmlMementoSource(string directory, string extension, XmlMementoStyle mementoStyle) : base()
+        public DirectoryXmlMementoSource(string directory, string extension, XmlMementoStyle mementoStyle)
         {
             _extension = extension;
             _mementoCreator =
@@ -85,7 +85,7 @@ namespace StructureMap.Source
         protected override InstanceMemento[] fetchInternalMementos()
         {
             string[] fileNames = Directory.GetFiles(_directory, "*." + _extension);
-            ArrayList list = new ArrayList();
+            var list = new ArrayList();
             foreach (string fileName in fileNames)
             {
                 InstanceMemento memento = loadMementoFromFile(fileName);
@@ -115,7 +115,7 @@ namespace StructureMap.Source
 
         private InstanceMemento loadMementoFromFile(string filePath)
         {
-            XmlDocument doc = new XmlDocument();
+            var doc = new XmlDocument();
             doc.Load(filePath);
 
             string fileName = Path.GetFileNameWithoutExtension(filePath);

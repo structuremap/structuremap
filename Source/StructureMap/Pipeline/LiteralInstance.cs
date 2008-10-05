@@ -41,7 +41,7 @@ namespace StructureMap.Pipeline
 
         protected override string getDescription()
         {
-            return "Object:  " + _object.ToString();
+            return "Object:  " + _object;
         }
 
         public override string ToString()
