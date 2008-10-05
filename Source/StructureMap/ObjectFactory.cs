@@ -24,7 +24,7 @@ namespace StructureMap
         /// <summary>
         /// Restarts ObjectFactory and blows away all Singleton's and cached instances.  Use with caution.
         /// </summary>
-        public static void Reset()
+        internal static void Reset()
         {
             lock (_lockObject)
             {

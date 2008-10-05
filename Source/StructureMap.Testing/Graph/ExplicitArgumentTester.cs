@@ -13,14 +13,10 @@ namespace StructureMap.Testing.Graph
         [SetUp]
         public void SetUp()
         {
-            StructureMapConfiguration.ResetAll();
-            StructureMapConfiguration.UseDefaultStructureMapConfigFile = false;
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            StructureMapConfiguration.ResetAll();
+            ObjectFactory.Initialize(x =>
+            {
+                x.UseDefaultStructureMapConfigFile = false;
+            });
         }
 
         #endregion

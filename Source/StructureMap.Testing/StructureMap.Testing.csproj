@@ -209,9 +209,6 @@
     <Compile Include="Examples.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Examples\QuickStart.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Graph\ArrayConstructorTester.cs">
       <SubType>Code</SubType>
     </Compile>
