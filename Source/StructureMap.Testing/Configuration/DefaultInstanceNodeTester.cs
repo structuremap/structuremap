@@ -40,20 +40,20 @@ namespace StructureMap.Testing.Configuration
         [Test]
         public void GetTheRule()
         {
-            ColorRule rule = (ColorRule) _manager.GetInstance<Rule>();
+            var rule = (ColorRule) _manager.GetInstance<Rule>();
             Assert.AreEqual("Blue", rule.Color);
 
-            ColorRule rule2 = (ColorRule) _manager.GetInstance<Rule>();
+            var rule2 = (ColorRule) _manager.GetInstance<Rule>();
             Assert.AreSame(rule, rule2);
         }
 
         [Test]
         public void GetTheWidget()
         {
-            ColorWidget widget = (ColorWidget) _manager.GetInstance<IWidget>();
+            var widget = (ColorWidget) _manager.GetInstance<IWidget>();
             Assert.AreEqual("Red", widget.Color);
 
-            ColorWidget widget2 = (ColorWidget) _manager.GetInstance<IWidget>();
+            var widget2 = (ColorWidget) _manager.GetInstance<IWidget>();
             Assert.AreNotSame(widget, widget2);
         }
     }

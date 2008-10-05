@@ -24,10 +24,10 @@ namespace StructureMap.Testing.Graph
 
             try
             {
-                Plugin plugin = new Plugin(typeof (ComplexRule));
+                var plugin = new Plugin(typeof (ComplexRule));
 
-                InstanceBuilderAssembly _InstanceBuilderAssembly =
-                    new InstanceBuilderAssembly(new Plugin[] {plugin});
+                var _InstanceBuilderAssembly =
+                    new InstanceBuilderAssembly(new[] {plugin});
 
                 List<InstanceBuilder> list = _InstanceBuilderAssembly.Compile();
                 builder = list[0];
@@ -52,39 +52,6 @@ namespace StructureMap.Testing.Graph
         private ComplexRule rule;
 
         [Test]
-        public void can_get_the_parse_method_from_Enum()
-        {
-            Methods.ENUM_PARSE.ShouldNotBeNull();
-        }
-
-        [Test]
-        public void EmitANoArgClass()
-        {
-            Plugin plugin = new Plugin(typeof(NoArgClass));
-            InstanceBuilderAssembly _InstanceBuilderAssembly =
-                    new InstanceBuilderAssembly(new Plugin[] { plugin });
-            List<InstanceBuilder> list = _InstanceBuilderAssembly.Compile();
-            builder = list[0];
-
-            var obj = builder.BuildInstance(new ConfiguredInstance(typeof (NoArgClass)), new StubBuildSession());
-            obj.ShouldNotBeNull();
-        }
-
-
-        [Test]
-        public void EmitAOneSetterClass()
-        {
-            Plugin plugin = new Plugin(typeof(WithOneSetter));
-            InstanceBuilderAssembly _InstanceBuilderAssembly =
-                    new InstanceBuilderAssembly(new Plugin[] { plugin });
-            List<InstanceBuilder> list = _InstanceBuilderAssembly.Compile();
-            builder = list[0];
-
-            var obj = builder.BuildInstance(new ConfiguredInstance(typeof(WithOneSetter)).WithProperty("Name").EqualTo("Jeremy"), new StubBuildSession());
-            obj.ShouldNotBeNull();
-        }
-
-        [Test]
         public void BoolProperty()
         {
             Assert.AreEqual(true, rule.Bool);
@@ -103,9 +70,45 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
+        public void can_get_the_parse_method_from_Enum()
+        {
+            Methods.ENUM_PARSE.ShouldNotBeNull();
+        }
+
+        [Test]
         public void DoubleProperty()
         {
             Assert.AreEqual(4, rule.Double);
+        }
+
+        [Test]
+        public void EmitANoArgClass()
+        {
+            var plugin = new Plugin(typeof (NoArgClass));
+            var _InstanceBuilderAssembly =
+                new InstanceBuilderAssembly(new[] {plugin});
+            List<InstanceBuilder> list = _InstanceBuilderAssembly.Compile();
+            builder = list[0];
+
+            object obj = builder.BuildInstance(new ConfiguredInstance(typeof (NoArgClass)), new StubBuildSession());
+            obj.ShouldNotBeNull();
+        }
+
+
+        [Test]
+        public void EmitAOneSetterClass()
+        {
+            var plugin = new Plugin(typeof (WithOneSetter));
+            var _InstanceBuilderAssembly =
+                new InstanceBuilderAssembly(new[] {plugin});
+            List<InstanceBuilder> list = _InstanceBuilderAssembly.Compile();
+            builder = list[0];
+
+            object obj =
+                builder.BuildInstance(
+                    new ConfiguredInstance(typeof (WithOneSetter)).WithProperty("Name").EqualTo("Jeremy"),
+                    new StubBuildSession());
+            obj.ShouldNotBeNull();
         }
 
         [Test]
@@ -155,7 +158,6 @@ namespace StructureMap.Testing.Graph
 
     public class NoArgClass
     {
-        
     }
 
     public class WithOneSetter

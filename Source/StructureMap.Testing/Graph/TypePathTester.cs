@@ -18,7 +18,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void CanBuildTypeCreatedFromType()
         {
-            TypePath path = new TypePath(GetType());
+            var path = new TypePath(GetType());
             path.FindType();
         }
     }

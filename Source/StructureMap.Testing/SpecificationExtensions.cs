@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using NUnit.Framework;
 
@@ -48,7 +48,7 @@ namespace StructureMap.Testing
 
         public static T IsType<T>(this object actual)
         {
-            actual.ShouldBeOfType(typeof(T));
+            actual.ShouldBeOfType(typeof (T));
             return (T) actual;
         }
 
@@ -65,7 +65,7 @@ namespace StructureMap.Testing
 
         public static T ShouldBeOfType<T>(this object actual)
         {
-            Assert.IsInstanceOfType(typeof(T), actual);
+            Assert.IsInstanceOfType(typeof (T), actual);
             return (T) actual;
         }
 

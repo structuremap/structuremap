@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
-using System.Linq;
 
 namespace StructureMap
 {
@@ -25,12 +24,11 @@ namespace StructureMap
             = new Dictionary<Type, IInstanceFactory>();
 
         private readonly GenericsPluginGraph _genericsGraph = new GenericsPluginGraph();
+        private readonly GraphLog _log;
         private readonly ProfileManager _profileManager;
 
         private MissingFactoryFunction _missingFactory =
             (pluginType, profileManager) => null;
-
-        private GraphLog _log;
 
         public PipelineGraph(PluginGraph graph)
         {
@@ -45,7 +43,7 @@ namespace StructureMap
                 }
                 else
                 {
-                    InstanceFactory factory = new InstanceFactory(family);
+                    var factory = new InstanceFactory(family);
                     _factories.Add(family.PluginType, factory);
                 }
             }
@@ -54,6 +52,41 @@ namespace StructureMap
         public GraphLog Log
         {
             get { return _log; }
+        }
+
+        public MissingFactoryFunction OnMissingFactory
+        {
+            set { _missingFactory = value; }
+        }
+
+        public string CurrentProfile
+        {
+            get { return _profileManager.CurrentProfile; }
+            set { _profileManager.CurrentProfile = value; }
+        }
+
+        public IEnumerable<PluginTypeConfiguration> PluginTypes
+        {
+            get
+            {
+                foreach (PluginTypeConfiguration configuration in _genericsGraph.Families)
+                {
+                    yield return configuration;
+                }
+
+                foreach (var pair in _factories)
+                {
+                    IInstanceFactory factory = pair.Value;
+
+                    yield return new PluginTypeConfiguration
+                                     {
+                                         Default = _profileManager.GetDefault(factory.PluginType),
+                                         PluginType = factory.PluginType,
+                                         Policy = factory.Policy,
+                                         Instances = factory.Instances
+                                     };
+                }
+            }
         }
 
         public void ImportFrom(PluginGraph graph)
@@ -71,17 +104,6 @@ namespace StructureMap
             }
 
             _profileManager.ImportFrom(graph.ProfileManager);
-        }
-
-        public MissingFactoryFunction OnMissingFactory
-        {
-            set { _missingFactory = value; }
-        }
-
-        public string CurrentProfile
-        {
-            get { return _profileManager.CurrentProfile; }
-            set { _profileManager.CurrentProfile = value; }
         }
 
         public IInstanceFactory ForType(Type pluginType)
@@ -155,7 +177,7 @@ namespace StructureMap
 
         public void Inject<PLUGINTYPE>(PLUGINTYPE instance)
         {
-            LiteralInstance literalInstance = new LiteralInstance(instance);
+            var literalInstance = new LiteralInstance(instance);
             ForType(typeof (PLUGINTYPE)).AddInstance(literalInstance);
             SetDefault(typeof (PLUGINTYPE), literalInstance);
         }
@@ -181,35 +203,9 @@ namespace StructureMap
             return new IInstance[0];
         }
 
-        public IEnumerable<PluginTypeConfiguration> PluginTypes
-        {
-            get
-            {
-                foreach (PluginTypeConfiguration configuration in _genericsGraph.Families)
-                {
-                    yield return configuration;
-                }
-
-                foreach (var pair in _factories)
-                {
-                    var factory = pair.Value;
-
-                    yield return new PluginTypeConfiguration()
-                                     {
-                                         Default = _profileManager.GetDefault(factory.PluginType),
-                                         PluginType = factory.PluginType,
-                                         Policy = factory.Policy,
-                                         Instances = factory.Instances
-                                     };
-                }
-            }
-
-
-        }
-
         public List<IInstance> GetAllInstances()
         {
-            List<IInstance> list = new List<IInstance>();
+            var list = new List<IInstance>();
 
             foreach (var pair in _factories)
             {

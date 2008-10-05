@@ -1,5 +1,4 @@
 using NUnit.Framework;
-using StructureMap.Configuration.DSL;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 

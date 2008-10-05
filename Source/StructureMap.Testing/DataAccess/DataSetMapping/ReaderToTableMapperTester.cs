@@ -44,7 +44,7 @@ namespace StructureMap.Testing.DataAccess.DataSetMapping
         [Test]
         public void WriteRowsToDataTable()
         {
-            ReaderToTableMapper mapper = new ReaderToTableMapper(
+            var mapper = new ReaderToTableMapper(
                 new IReaderToColumnMap[]
                     {
                         new ReaderToColumnMap("State", "StateName"),

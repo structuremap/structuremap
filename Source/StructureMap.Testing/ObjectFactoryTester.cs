@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
-using System.Xml;
 using NUnit.Framework;
 using StructureMap.Testing.TestData;
 using StructureMap.Testing.Widget;
@@ -32,16 +30,16 @@ namespace StructureMap.Testing
         }
 
         [Test]
-        public void SmokeTestModelAccess()
-        {
-            ObjectFactory.Model.PluginTypes.Count().ShouldBeGreaterThan(0);
-        }
-
-        [Test]
         public void SmokeTestGetAllInstancesGeneric()
         {
             IList<GrandChild> list = ObjectFactory.GetAllInstances<GrandChild>();
             Assert.IsTrue(list.Count > 0);
+        }
+
+        [Test]
+        public void SmokeTestModelAccess()
+        {
+            ObjectFactory.Model.PluginTypes.Count().ShouldBeGreaterThan(0);
         }
 
         [Test]
@@ -57,8 +55,8 @@ namespace StructureMap.Testing
             ObjectFactory.ResetDefaults();
 
             // The default GrandChild is set within the default profile
-            GrandChild defaultGrandChild = (GrandChild) ObjectFactory.GetInstance(typeof (GrandChild));
-            GrandChild todd = (GrandChild) ObjectFactory.GetNamedInstance(typeof (GrandChild), "Todd");
+            var defaultGrandChild = (GrandChild) ObjectFactory.GetInstance(typeof (GrandChild));
+            var todd = (GrandChild) ObjectFactory.GetNamedInstance(typeof (GrandChild), "Todd");
             Assert.AreEqual(todd.BirthYear, defaultGrandChild.BirthYear);
         }
 
@@ -68,8 +66,8 @@ namespace StructureMap.Testing
             ObjectFactory.ResetDefaults();
 
             // The default GrandChild is set within the default profile
-            GrandChild todd = ObjectFactory.GetNamedInstance<GrandChild>("Todd");
-            GrandChild defaultGrandChild = ObjectFactory.GetInstance<GrandChild>();
+            var todd = ObjectFactory.GetNamedInstance<GrandChild>("Todd");
+            var defaultGrandChild = ObjectFactory.GetInstance<GrandChild>();
 
             Assert.AreEqual(todd.BirthYear, defaultGrandChild.BirthYear);
         }

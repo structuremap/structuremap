@@ -20,7 +20,7 @@ namespace StructureMap.Testing
         {
             Type pluggedType = typeof (StubbedGateway);
 
-            NameValueCollection values = new NameValueCollection();
+            var values = new NameValueCollection();
             values.Add(XmlConstants.PLUGGED_TYPE, TypePath.GetAssemblyQualifiedName(pluggedType));
             _memento = new MemoryInstanceMemento(string.Empty, "Frank", values);
 
@@ -35,7 +35,7 @@ namespace StructureMap.Testing
         [Test]
         public void CanBuildTheInstance()
         {
-            GraphBuilder builder = new GraphBuilder(new Registry[0]);
+            var builder = new GraphBuilder(new Registry[0]);
             Type thePluginType = typeof (IGateway);
             PluginFamily family = builder.PluginGraph.FindFamily(thePluginType);
             family.DefaultInstanceKey = _memento.InstanceKey;
@@ -43,9 +43,9 @@ namespace StructureMap.Testing
             family.AddInstance(_memento);
 
             PluginGraph graph = builder.PluginGraph;
-            Container manager = new Container(graph);
+            var manager = new Container(graph);
 
-            StubbedGateway gateway = (StubbedGateway) manager.GetInstance(typeof (IGateway), _memento.InstanceKey);
+            var gateway = (StubbedGateway) manager.GetInstance(typeof (IGateway), _memento.InstanceKey);
 
             Assert.IsNotNull(gateway);
         }
@@ -55,10 +55,10 @@ namespace StructureMap.Testing
         public void RunThroughXml()
         {
             PluginGraph graph = DataMother.GetPluginGraph("PluggedTypeTest.xml");
-            Container manager = new Container(graph);
+            var manager = new Container(graph);
 
 
-            NotPluggableWidget widget = (NotPluggableWidget) manager.GetInstance(typeof (IWidget), "Me");
+            var widget = (NotPluggableWidget) manager.GetInstance(typeof (IWidget), "Me");
             Assert.AreEqual("Jeremy", widget.Name);
         }
     }

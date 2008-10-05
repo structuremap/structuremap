@@ -13,13 +13,10 @@ namespace StructureMap
     [PluginFamily]
     public abstract class MementoSource
     {
-        private InstanceMemento _defaultMemento;
-        private Dictionary<string, InstanceMemento> _externalMementos = new Dictionary<string, InstanceMemento>();
-        private PluginFamily _family;
+        private readonly Dictionary<string, InstanceMemento> _externalMementos =
+            new Dictionary<string, InstanceMemento>();
 
-        protected MementoSource() : base()
-        {
-        }
+        private InstanceMemento _defaultMemento;
 
         public InstanceMemento DefaultMemento
         {
@@ -40,11 +37,7 @@ namespace StructureMap
         /// </summary>
         public abstract string Description { get; }
 
-        public PluginFamily Family
-        {
-            get { return _family; }
-            set { _family = value; }
-        }
+        public PluginFamily Family { get; set; }
 
         /// <summary>
         /// Retrieves the named InstanceMemento
@@ -115,7 +108,7 @@ namespace StructureMap
         /// <returns></returns>
         public InstanceMemento[] GetAllMementos()
         {
-            ArrayList list = new ArrayList();
+            var list = new ArrayList();
             list.AddRange(fetchInternalMementos());
             list.AddRange(_externalMementos.Values);
 

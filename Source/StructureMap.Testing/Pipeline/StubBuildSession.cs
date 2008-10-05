@@ -7,10 +7,18 @@ namespace StructureMap.Testing.Pipeline
 {
     public class StubBuildSession : BuildSession
     {
-        #region BuildSession Members
-
         public StubBuildSession() : base(new PluginGraph())
         {
+        }
+
+        public new BuildStack BuildStack
+        {
+            get
+            {
+                var stack = new BuildStack();
+                stack.Push(new BuildFrame(typeof (Rule), "Blue", typeof (ColorRule)));
+                return stack;
+            }
         }
 
         public override object ApplyInterception(Type pluginType, object actualValue)
@@ -25,7 +33,7 @@ namespace StructureMap.Testing.Pipeline
                 return null;
             }
 
-            InstanceBuilderList list = new InstanceBuilderList(pluginType, new[] {new Plugin(pluggedType),});
+            var list = new InstanceBuilderList(pluginType, new[] {new Plugin(pluggedType),});
             return list.FindByType(pluggedType);
         }
 
@@ -34,18 +42,6 @@ namespace StructureMap.Testing.Pipeline
             throw new NotImplementedException();
         }
 
-
-        public new BuildStack BuildStack
-        {
-            get
-            {
-                var stack = new BuildStack();
-                stack.Push(new BuildFrame(typeof(Rule), "Blue", typeof(ColorRule)));
-                return stack;
-            }
-        }
-
-        #endregion
 
         public object CreateInstance(string typeName, IConfiguredInstance instance)
         {

@@ -10,8 +10,8 @@ namespace StructureMap
     public class ConfigurationExpression : Registry
     {
         protected readonly GraphLog _log = new GraphLog();
-        private readonly List<Registry> _registries = new List<Registry>();
         protected readonly ConfigurationParserBuilder _parserBuilder;
+        private readonly List<Registry> _registries = new List<Registry>();
 
         internal ConfigurationExpression()
         {
@@ -20,7 +20,11 @@ namespace StructureMap
             _parserBuilder.PullConfigurationFromAppConfig = false;
 
             _registries.Add(this);
-            
+        }
+
+        public bool IncludeConfigurationFromConfigFile
+        {
+            set { _parserBuilder.UseAndEnforceExistenceOfDefaultFile = value; }
         }
 
         public void AddRegistry<T>() where T : Registry, new()
@@ -43,19 +47,10 @@ namespace StructureMap
             _parserBuilder.IncludeNode(node, "Xml configuration");
         }
 
-        public bool IncludeConfigurationFromConfigFile
-        {
-            set
-            {
-                _parserBuilder.UseAndEnforceExistenceOfDefaultFile = value;
-            }
-            
-        }
-
         internal PluginGraph BuildGraph()
         {
-            var parsers = _parserBuilder.GetParsers();
-            PluginGraphBuilder builder = new PluginGraphBuilder(parsers, _registries.ToArray(), _log);
+            ConfigurationParser[] parsers = _parserBuilder.GetParsers();
+            var builder = new PluginGraphBuilder(parsers, _registries.ToArray(), _log);
 
             return builder.Build();
         }

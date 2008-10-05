@@ -11,10 +11,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void Sad_path_inner_function_throws_exception_207_with_key_and_plugin_type()
         {
-            ConstructorInstance<object> instance = new ConstructorInstance<object>(() =>
-            {
-                throw new NotImplementedException();
-            });
+            var instance = new ConstructorInstance<object>(() => { throw new NotImplementedException(); });
 
             try
             {

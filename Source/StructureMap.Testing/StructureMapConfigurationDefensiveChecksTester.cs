@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using NUnit.Framework;
 using StructureMap.Testing.Widget3;
 
@@ -32,13 +29,13 @@ namespace StructureMap.Testing
             shouldThrowExceptionWhenSealed(() => StructureMapConfiguration.AddRegistry(null));
             shouldThrowExceptionWhenSealed(() => StructureMapConfiguration.BuildInstancesOf<IGateway>());
             shouldThrowExceptionWhenSealed(() => StructureMapConfiguration.CreateProfile("something"));
-            shouldThrowExceptionWhenSealed(() => StructureMapConfiguration.ForRequestedType(typeof(IGateway)));
+            shouldThrowExceptionWhenSealed(() => StructureMapConfiguration.ForRequestedType(typeof (IGateway)));
             shouldThrowExceptionWhenSealed(() => StructureMapConfiguration.IgnoreStructureMapConfig = true);
             shouldThrowExceptionWhenSealed(() => StructureMapConfiguration.IncludeConfigurationFromFile("something"));
             shouldThrowExceptionWhenSealed(() => StructureMapConfiguration.IncludeConfigurationFromNode(null, null));
             shouldThrowExceptionWhenSealed(() => StructureMapConfiguration.PullConfigurationFromAppConfig = true);
             shouldThrowExceptionWhenSealed(() => StructureMapConfiguration.RegisterInterceptor(null));
-            shouldThrowExceptionWhenSealed(() => StructureMapConfiguration.Scan(x => {}));
+            shouldThrowExceptionWhenSealed(() => StructureMapConfiguration.Scan(x => { }));
             shouldThrowExceptionWhenSealed(() => StructureMapConfiguration.TheDefaultProfileIs("something"));
             shouldThrowExceptionWhenSealed(() => StructureMapConfiguration.UseDefaultStructureMapConfigFile = true);
         }

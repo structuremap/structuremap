@@ -9,7 +9,7 @@ namespace StructureMap.Testing.DataAccess.Tools.Mocks
         [Test]
         public void IsOutput()
         {
-            CommandExpectation expectation = new CommandExpectation(1);
+            var expectation = new CommandExpectation(1);
             expectation.SetOutput("param1", 1);
 
             Assert.IsTrue(expectation.IsOutput("param1"));
@@ -19,7 +19,7 @@ namespace StructureMap.Testing.DataAccess.Tools.Mocks
         [Test]
         public void SetAndRetrieveInputs()
         {
-            CommandExpectation expectation = new CommandExpectation(1);
+            var expectation = new CommandExpectation(1);
             expectation.SetInput("param1", 1);
 
             Assert.AreEqual(1, (int) expectation.GetInput("param1"));
@@ -28,7 +28,7 @@ namespace StructureMap.Testing.DataAccess.Tools.Mocks
         [Test]
         public void SetAndRetrieveOutputsAfterExecution()
         {
-            CommandExpectation expectation = new CommandExpectation(1);
+            var expectation = new CommandExpectation(1);
             expectation.SetOutput("param1", 1);
 
             expectation.VerifyExecution(new ParameterList());
@@ -39,7 +39,7 @@ namespace StructureMap.Testing.DataAccess.Tools.Mocks
         [Test, ExpectedException(typeof (NotExecutedCommandException))]
         public void TryToGetOutputBeforeExecutionAndFail()
         {
-            CommandExpectation expectation = new CommandExpectation(1);
+            var expectation = new CommandExpectation(1);
             expectation.SetOutput("param1", 1);
 
             expectation.GetOutput("param1");
@@ -48,11 +48,11 @@ namespace StructureMap.Testing.DataAccess.Tools.Mocks
         [Test]
         public void VerifyAllIsGoodAndGetOutput()
         {
-            CommandExpectation expectation = new CommandExpectation(1);
+            var expectation = new CommandExpectation(1);
             expectation.SetInput("input", true);
             expectation.SetOutput("output", true);
 
-            ParameterList list = new ParameterList();
+            var list = new ParameterList();
             list["input"] = true;
 
             expectation.VerifyExecution(list);
@@ -63,11 +63,11 @@ namespace StructureMap.Testing.DataAccess.Tools.Mocks
         [Test, ExpectedException(typeof (ParameterValidationFailureException))]
         public void VerifyExecutionCalledWithIncorrectParameters()
         {
-            CommandExpectation expectation = new CommandExpectation();
+            var expectation = new CommandExpectation();
             expectation.SetInput("input", true);
             expectation.SetOutput("output", true);
 
-            ParameterList list = new ParameterList();
+            var list = new ParameterList();
             list["input"] = false;
 
             expectation.VerifyExecution(list);

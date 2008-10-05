@@ -33,28 +33,6 @@ namespace StructureMap.Testing.Graph
             #endregion
         }
 
-        [Test]
-        public void can_get_configuration_object_from_PluginFamily()
-        {
-            PluginFamily family = new PluginFamily(typeof(IWidget));
-
-            var instance1 = new SmartInstance<ColorWidget>().WithCtorArg("color").EqualTo("Red");
-            var instance2 = new SmartInstance<ColorWidget>().WithCtorArg("color").EqualTo("Blue");
-        
-            family.AddInstance(instance1);
-            family.AddInstance(instance2);
-
-            family.DefaultInstanceKey = instance1.Name;
-
-            var configuration = family.GetConfiguration();
-
-            configuration.Default.ShouldBeTheSameAs(instance1);
-            configuration.PluginType.ShouldEqual(typeof (IWidget));
-            configuration.Policy.ShouldBeTheSameAs(family.Policy);
-
-            configuration.Instances.Count().ShouldEqual(2);
-        }
-
 
         [Test]
         public void add_plugins_at_seal_from_the_list_of_types()
@@ -73,6 +51,17 @@ namespace StructureMap.Testing.Graph
             family.FindPlugin(typeof (DataView)).ShouldNotBeNull();
             family.FindPlugin(typeof (DataTable)).ShouldNotBeNull();
             family.FindPlugin(typeof (DataSet)).ShouldNotBeNull();
+        }
+
+        [Test]
+        public void add_type_by_name()
+        {
+            var family = new PluginFamily(typeof (IServiceProvider));
+            family.AddType(typeof (DataTable), "table");
+
+            family.PluginCount.ShouldEqual(1);
+
+            family.FindPlugin("table").ShouldNotBeNull();
         }
 
         [Test]
@@ -97,17 +86,6 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
-        public void add_type_by_name()
-        {
-            var family = new PluginFamily(typeof(IServiceProvider));
-            family.AddType(typeof(DataTable), "table");
-
-            family.PluginCount.ShouldEqual(1);
-
-            family.FindPlugin("table").ShouldNotBeNull();
-        }
-
-        [Test]
         public void AddAPluggedType()
         {
             var family = new PluginFamily(typeof (IWidget));
@@ -123,6 +101,28 @@ namespace StructureMap.Testing.Graph
             var family = new PluginFamily(typeof (IWidget));
             family.DefaultInstanceKey = "DefaultKey";
             family.AddPlugin(typeof (Rule), "Rule");
+        }
+
+        [Test]
+        public void can_get_configuration_object_from_PluginFamily()
+        {
+            var family = new PluginFamily(typeof (IWidget));
+
+            SmartInstance<ColorWidget> instance1 = new SmartInstance<ColorWidget>().WithCtorArg("color").EqualTo("Red");
+            SmartInstance<ColorWidget> instance2 = new SmartInstance<ColorWidget>().WithCtorArg("color").EqualTo("Blue");
+
+            family.AddInstance(instance1);
+            family.AddInstance(instance2);
+
+            family.DefaultInstanceKey = instance1.Name;
+
+            PluginTypeConfiguration configuration = family.GetConfiguration();
+
+            configuration.Default.ShouldBeTheSameAs(instance1);
+            configuration.PluginType.ShouldEqual(typeof (IWidget));
+            configuration.Policy.ShouldBeTheSameAs(family.Policy);
+
+            configuration.Instances.Count().ShouldEqual(2);
         }
 
         [Test]

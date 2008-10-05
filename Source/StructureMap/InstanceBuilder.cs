@@ -11,9 +11,7 @@ namespace StructureMap
     {
         private Container _manager;
 
-        public InstanceBuilder()
-        {
-        }
+        public InstanceBuilder(){}
 
         public abstract Type PluggedType { get; }
 

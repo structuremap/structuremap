@@ -38,7 +38,7 @@ namespace StructureMap
         /// <returns></returns>
         public ExplicitArgsExpression With<T>(T arg)
         {
-            _args.Set<T>(arg);
+            _args.Set(arg);
             return this;
         }
 

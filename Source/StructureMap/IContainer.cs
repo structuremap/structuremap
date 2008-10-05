@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 
@@ -10,14 +9,15 @@ namespace StructureMap
     public interface IContainer
     {
         IModel Model { get; }
+        PluginGraph PluginGraph { get; }
 
         T GetInstance<T>(string instanceKey);
         T GetInstance<T>();
         T FillDependencies<T>();
         object FillDependencies(Type type);
-        
+
         IList<T> GetAllInstances<T>();
-        
+
 
         T GetInstance<T>(Instance instance);
 
@@ -68,7 +68,6 @@ namespace StructureMap
         IExplicitProperty With(string argName);
         void AssertConfigurationIsValid();
         object GetInstance(Type type, ExplicitArguments args);
-        PluginGraph PluginGraph { get; }
         void EjectAllInstancesOf<T>();
     }
 }

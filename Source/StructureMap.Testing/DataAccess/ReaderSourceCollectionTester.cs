@@ -1,7 +1,4 @@
-using System.Data;
 using NUnit.Framework;
-using StructureMap.DataAccess;
-using StructureMap.DataAccess.Tools;
 
 namespace StructureMap.Testing.DataAccess
 {

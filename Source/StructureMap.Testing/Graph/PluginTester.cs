@@ -87,6 +87,13 @@ namespace StructureMap.Testing.Graph
             public IGateway Gateway { get; set; }
         }
 
+        public class ClassWithNoConstructor
+        {
+            private ClassWithNoConstructor()
+            {
+            }
+        }
+
         [Test]
         public void BadPluginToAbstractClass()
         {
@@ -110,18 +117,6 @@ namespace StructureMap.Testing.Graph
             Instance instance = typeof (DOHCEngine).GetReferenceTo();
 
             container.GetInstance<IEngine>(instance).ShouldBeOfType(typeof (DOHCEngine));
-        }
-
-        public class ClassWithNoConstructor
-        {
-            private ClassWithNoConstructor(){}
-        }
-
-        [Test]
-        public void cannot_be_auto_filled_with_no_contructors()
-        {
-            var plugin = new Plugin(typeof (ClassWithNoConstructor));
-            plugin.CanBeAutoFilled.ShouldBeFalse();
         }
 
         [Test]
@@ -182,6 +177,13 @@ namespace StructureMap.Testing.Graph
 
             Assert.IsNotNull(mustang);
             Assert.IsTrue(mustang.Engine is PushrodEngine);
+        }
+
+        [Test]
+        public void cannot_be_auto_filled_with_no_contructors()
+        {
+            var plugin = new Plugin(typeof (ClassWithNoConstructor));
+            plugin.CanBeAutoFilled.ShouldBeFalse();
         }
 
 

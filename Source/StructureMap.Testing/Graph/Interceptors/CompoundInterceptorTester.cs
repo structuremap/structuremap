@@ -19,11 +19,11 @@ namespace StructureMap.Testing.Graph.Interceptors
         [Test]
         public void CallAllTheInterceptors()
         {
-            MockRepository mocks = new MockRepository();
-            InstanceInterceptor interceptor1 = mocks.StrictMock<InstanceInterceptor>();
-            InstanceInterceptor interceptor2 = mocks.StrictMock<InstanceInterceptor>();
-            InstanceInterceptor interceptor3 = mocks.StrictMock<InstanceInterceptor>();
-            InstanceInterceptor interceptor4 = mocks.StrictMock<InstanceInterceptor>();
+            var mocks = new MockRepository();
+            var interceptor1 = mocks.StrictMock<InstanceInterceptor>();
+            var interceptor2 = mocks.StrictMock<InstanceInterceptor>();
+            var interceptor3 = mocks.StrictMock<InstanceInterceptor>();
+            var interceptor4 = mocks.StrictMock<InstanceInterceptor>();
 
             Expect.Call(interceptor1.Process("0")).Return("1");
             Expect.Call(interceptor2.Process("1")).Return("2");
@@ -31,13 +31,13 @@ namespace StructureMap.Testing.Graph.Interceptors
             Expect.Call(interceptor4.Process("3")).Return("4");
 
             mocks.ReplayAll();
-            CompoundInterceptor compoundInterceptor = new CompoundInterceptor(new InstanceInterceptor[]
-                                                                                  {
-                                                                                      interceptor1,
-                                                                                      interceptor2,
-                                                                                      interceptor3,
-                                                                                      interceptor4
-                                                                                  });
+            var compoundInterceptor = new CompoundInterceptor(new[]
+                                                                  {
+                                                                      interceptor1,
+                                                                      interceptor2,
+                                                                      interceptor3,
+                                                                      interceptor4
+                                                                  });
 
             Assert.AreEqual("4", compoundInterceptor.Process("0"));
             mocks.VerifyAll();

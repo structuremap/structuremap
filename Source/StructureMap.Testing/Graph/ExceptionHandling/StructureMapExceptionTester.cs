@@ -22,12 +22,12 @@ namespace StructureMap.Testing.Graph.ExceptionHandling
 
         private void assertErrorIsThrown(int errorCode, string xml, Action<Container> action)
         {
-            XmlDocument document = new XmlDocument();
+            var document = new XmlDocument();
             document.LoadXml(xml.Replace("\"", "'"));
 
-            ConfigurationParser parser = new ConfigurationParser(document.DocumentElement);
-            PluginGraphBuilder builder = new PluginGraphBuilder(parser);
-            Container manager = new Container(builder.Build());
+            var parser = new ConfigurationParser(document.DocumentElement);
+            var builder = new PluginGraphBuilder(parser);
+            var manager = new Container(builder.Build());
 
             try
             {
@@ -43,16 +43,16 @@ namespace StructureMap.Testing.Graph.ExceptionHandling
         [Test]
         public void CanSerialize()
         {
-            ApplicationException ex = new ApplicationException("Oh no!");
-            StructureMapException smapEx = new StructureMapException(200, ex, "a", "b");
+            var ex = new ApplicationException("Oh no!");
+            var smapEx = new StructureMapException(200, ex, "a", "b");
 
-            BinaryFormatter formatter = new BinaryFormatter();
-            MemoryStream stream = new MemoryStream();
+            var formatter = new BinaryFormatter();
+            var stream = new MemoryStream();
             formatter.Serialize(stream, smapEx);
 
             stream.Position = 0;
 
-            StructureMapException smapEx2 = (StructureMapException) formatter.Deserialize(stream);
+            var smapEx2 = (StructureMapException) formatter.Deserialize(stream);
             Assert.AreNotSame(smapEx, smapEx2);
 
             Assert.AreEqual(smapEx.Message, smapEx2.Message);
@@ -106,7 +106,7 @@ namespace StructureMap.Testing.Graph.ExceptionHandling
         [Test]
         public void ExceptionMessage()
         {
-            StructureMapException exception = new StructureMapException(100, "StructureMap.config");
+            var exception = new StructureMapException(100, "StructureMap.config");
             string expected =
                 "StructureMap Exception Code:  100\nExpected file \"StructureMap.config\" cannot be opened at StructureMap.config";
 

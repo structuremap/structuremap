@@ -6,7 +6,6 @@ namespace StructureMap.Testing.DataAccess
 {
     public class StubbedCommand : ICommand, IInitializable
     {
-        private string _commandName;
         private IDataSession _session;
         private bool _wasInitialized;
 
@@ -22,11 +21,7 @@ namespace StructureMap.Testing.DataAccess
 
         #region ICommand Members
 
-        public string Name
-        {
-            get { return _commandName; }
-            set { _commandName = value; }
-        }
+        public string Name { get; set; }
 
         public int Execute()
         {

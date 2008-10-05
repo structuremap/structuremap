@@ -85,7 +85,7 @@ namespace StructureMap.Testing.Configuration
             _builder.AddMachine(THE_MACHINE_NAME, "TheProfile");
             _builder.OverrideMachine(new TypePath(GetType()), "Purple");
 
-            ReferencedInstance instance = new ReferencedInstance("Purple");
+            var instance = new ReferencedInstance("Purple");
             Assert.AreEqual(instance, _graph.ProfileManager.GetMachineDefault(GetType()));
         }
 
@@ -103,7 +103,7 @@ namespace StructureMap.Testing.Configuration
         {
             try
             {
-                ProfileManager manager = new ProfileManager();
+                var manager = new ProfileManager();
                 manager.CurrentProfile = "some profile that does not exist";
 
                 Assert.Fail("Should have thrown error");

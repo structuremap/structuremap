@@ -43,21 +43,21 @@ namespace StructureMap.Testing.DataAccess.DataSetMapping
         [Test, ExpectedException(typeof (ArgumentOutOfRangeException))]
         public void InitializeWithAnInvalidColumnNameAndThrowAnException()
         {
-            ReaderToColumnMap map = new ReaderToColumnMap("StatehoodDate", "NotARealColumn");
+            var map = new ReaderToColumnMap("StatehoodDate", "NotARealColumn");
             map.Initialize(_destinationTable, _reader);
         }
 
         [Test, ExpectedException(typeof (ArgumentOutOfRangeException))]
         public void InitializeWithAnInvalidReaderNameAndThrowAnException()
         {
-            ReaderToColumnMap map = new ReaderToColumnMap("NotARealColumn", "AdmissionDate");
+            var map = new ReaderToColumnMap("NotARealColumn", "AdmissionDate");
             map.Initialize(_destinationTable, _reader);
         }
 
         [Test]
         public void TransferADBNull()
         {
-            ReaderToColumnMap map = new ReaderToColumnMap("StatehoodDate", "AdmissionDate");
+            var map = new ReaderToColumnMap("StatehoodDate", "AdmissionDate");
             map.Initialize(_destinationTable, _reader);
 
             // Move to second row
@@ -72,7 +72,7 @@ namespace StructureMap.Testing.DataAccess.DataSetMapping
         [Test]
         public void TransferDate()
         {
-            ReaderToColumnMap map = new ReaderToColumnMap("StatehoodDate", "AdmissionDate");
+            var map = new ReaderToColumnMap("StatehoodDate", "AdmissionDate");
             map.Initialize(_destinationTable, _reader);
 
             // Move to first row
@@ -86,7 +86,7 @@ namespace StructureMap.Testing.DataAccess.DataSetMapping
         [Test]
         public void TransferLong()
         {
-            ReaderToColumnMap map = new ReaderToColumnMap("Population", "Residents");
+            var map = new ReaderToColumnMap("Population", "Residents");
             map.Initialize(_destinationTable, _reader);
 
             // Move to first row
@@ -100,7 +100,7 @@ namespace StructureMap.Testing.DataAccess.DataSetMapping
         [Test]
         public void TransferString()
         {
-            ReaderToColumnMap map = new ReaderToColumnMap("State", "StateName");
+            var map = new ReaderToColumnMap("State", "StateName");
             map.Initialize(_destinationTable, _reader);
 
             // Move to first row

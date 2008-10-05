@@ -23,7 +23,9 @@ namespace StructureMap.Testing.Graph
 
         private Container buildInstanceManager()
         {
-            PluginGraph pluginGraph = DataMother.BuildPluginGraphFromXml(@"
+            PluginGraph pluginGraph =
+                DataMother.BuildPluginGraphFromXml(
+                    @"
 <StructureMap>
 	<Assembly Name='StructureMap.Testing.Widget'/>
 	<Assembly Name='StructureMap.Testing.Widget5'/>
@@ -62,8 +64,7 @@ namespace StructureMap.Testing.Graph
 
 
 ");
-                
-                
+
 
             return new Container(pluginGraph);
         }
@@ -73,7 +74,7 @@ namespace StructureMap.Testing.Graph
         {
             Container manager = buildInstanceManager();
 
-            WidgetArrayGridColumn column =
+            var column =
                 (WidgetArrayGridColumn) manager.GetInstance(typeof (IGridColumn), "WidgetArray");
 
             Assert.AreEqual(3, column.Widgets.Length);
@@ -85,22 +86,22 @@ namespace StructureMap.Testing.Graph
             Container manager = buildInstanceManager();
 
 
-            WidgetGridColumn column = (WidgetGridColumn) manager.GetInstance(typeof (IGridColumn), "BlueWidget");
+            var column = (WidgetGridColumn) manager.GetInstance(typeof (IGridColumn), "BlueWidget");
             Assert.IsTrue(column.Widget is ColorWidget);
         }
 
         [Test]
         public void EnumSetter()
         {
-            PluginGraph graph = new PluginGraph();
+            var graph = new PluginGraph();
             PluginFamily family = graph.FindFamily(typeof (IGridColumn));
-            family.AddPlugin(typeof(EnumGridColumn));
+            family.AddPlugin(typeof (EnumGridColumn));
 
             family.AddInstance(_source.GetMemento("Enum"));
 
-            Container manager = new Container(graph);
+            var manager = new Container(graph);
 
-            EnumGridColumn column = (EnumGridColumn) manager.GetInstance<IGridColumn>("Enum");
+            var column = (EnumGridColumn) manager.GetInstance<IGridColumn>("Enum");
 
             Assert.AreEqual(FontStyleEnum.BodyText, column.FontStyle);
         }
@@ -108,33 +109,33 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void PrimitiveNonStringSetter()
         {
-            PluginGraph graph = new PluginGraph();
+            var graph = new PluginGraph();
             PluginFamily family = graph.FindFamily(typeof (IGridColumn));
-            family.AddPlugin(typeof(LongGridColumn));
+            family.AddPlugin(typeof (LongGridColumn));
 
             InstanceMemento memento = _source.GetMemento("Long");
             long count = long.Parse(memento.GetProperty("Count"));
             family.AddInstance(memento);
 
-            Container manager = new Container(graph);
+            var manager = new Container(graph);
 
 
-            LongGridColumn column = (LongGridColumn) manager.GetInstance<IGridColumn>("Long");
+            var column = (LongGridColumn) manager.GetInstance<IGridColumn>("Long");
             Assert.AreEqual(count, column.Count);
         }
 
         [Test]
         public void StringSetter()
         {
-            PluginGraph graph = new PluginGraph();
+            var graph = new PluginGraph();
             PluginFamily family = graph.FindFamily(typeof (IGridColumn));
-            family.AddPlugin(typeof(StringGridColumn));
+            family.AddPlugin(typeof (StringGridColumn));
 
             InstanceMemento memento = _source.GetMemento("String");
             family.AddInstance(memento);
 
-            Container manager = new Container(graph);
-            StringGridColumn column = (StringGridColumn) manager.GetInstance<IGridColumn>("String");
+            var manager = new Container(graph);
+            var column = (StringGridColumn) manager.GetInstance<IGridColumn>("String");
 
 
             Assert.AreEqual(memento.GetProperty("Name"), column.Name);

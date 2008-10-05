@@ -19,6 +19,11 @@ namespace StructureMap
         private static IContainer _container;
         private static string _profile = string.Empty;
 
+        public static IModel Model
+        {
+            get { return container.Model; }
+        }
+
         private static event Notify _notify;
 
         /// <summary>
@@ -103,14 +108,6 @@ namespace StructureMap
         public static void Inject<PLUGINTYPE>(string name, PLUGINTYPE instance)
         {
             container.Inject(name, instance);
-        }
-
-        public static IModel Model
-        {
-            get
-            {
-                return container.Model;
-            }
         }
 
         [Obsolete("Please use Inject<PLUGINTYPE>(name) instead.")]

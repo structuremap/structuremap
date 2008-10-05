@@ -10,7 +10,6 @@ namespace StructureMap.Testing.DataAccess
     {
         private readonly Hashtable _parameters;
         private readonly IDataReader _reader;
-        private string _name;
         private IDataSession _session;
         private bool _wasInitialized;
 
@@ -42,11 +41,7 @@ namespace StructureMap.Testing.DataAccess
 
         #region IReaderSource Members
 
-        public string Name
-        {
-            get { return _name; }
-            set { _name = value; }
-        }
+        public string Name { get; set; }
 
         public IDataReader ExecuteReader()
         {

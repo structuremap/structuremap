@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
@@ -93,10 +93,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void scan_but_ignore_registries_by_default()
         {
-            Scan(x =>
-            {
-                x.TheCallingAssembly();
-            });
+            Scan(x => { x.TheCallingAssembly(); });
 
             TestingRegistry.WasUsed.ShouldBeFalse();
         }
@@ -168,6 +165,19 @@ namespace StructureMap.Testing.Graph
             shouldNotHaveFamily<ITypeThatHasAttributeButIsNotInRegistry>();
         }
 
+        [Test]
+        public void use_a_single_exclude_of_type()
+        {
+            Scan(x =>
+            {
+                x.AssemblyContainingType<ITypeThatHasAttributeButIsNotInRegistry>();
+                x.ExcludeType<ITypeThatHasAttributeButIsNotInRegistry>();
+            });
+
+            shouldHaveFamily<IInterfaceInWidget5>();
+            shouldNotHaveFamily<ITypeThatHasAttributeButIsNotInRegistry>();
+        }
+
 
         [Test]
         public void use_a_single_exclude2()
@@ -196,19 +206,6 @@ namespace StructureMap.Testing.Graph
             shouldNotHaveFamily<ITypeThatHasAttributeButIsNotInRegistry>();
         }
 
-
-        [Test]
-        public void use_a_single_exclude_of_type()
-        {
-            Scan(x =>
-            {
-                x.AssemblyContainingType<ITypeThatHasAttributeButIsNotInRegistry>();
-                x.ExcludeType<ITypeThatHasAttributeButIsNotInRegistry>();
-            });
-
-            shouldHaveFamily<IInterfaceInWidget5>();
-            shouldNotHaveFamily<ITypeThatHasAttributeButIsNotInRegistry>();
-        }
 
         [Test]
         public void Use_a_single_include_predicate()

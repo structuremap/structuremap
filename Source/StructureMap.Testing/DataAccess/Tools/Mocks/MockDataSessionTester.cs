@@ -12,10 +12,10 @@ namespace StructureMap.Testing.DataAccess.Tools.Mocks
         [Test]
         public void ExecuteADataReaderSource()
         {
-            MockDataSession session = new MockDataSession();
+            var session = new MockDataSession();
 
-            TableDataReader result = new TableDataReader();
-            ReaderExpectation expectation = new ReaderExpectation(new ParameterList(), result);
+            var result = new TableDataReader();
+            var expectation = new ReaderExpectation(new ParameterList(), result);
 
             string theReaderSourceName = "reader source";
             session.AddReaderExpectation(theReaderSourceName, expectation);
@@ -29,9 +29,9 @@ namespace StructureMap.Testing.DataAccess.Tools.Mocks
         [Test]
         public void ExecuteAMockCommand()
         {
-            MockDataSession session = new MockDataSession();
+            var session = new MockDataSession();
 
-            CommandExpectation expectation = new CommandExpectation(4);
+            var expectation = new CommandExpectation(4);
             expectation.SetInput("input", "me");
             expectation.SetOutput("output", "you");
 

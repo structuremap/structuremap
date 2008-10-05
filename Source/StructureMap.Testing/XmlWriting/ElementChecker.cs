@@ -35,7 +35,7 @@ namespace StructureMap.Testing.XmlWriting
 
             foreach (XmlNode node in element.ChildNodes)
             {
-                XmlElement elemChild = node as XmlElement;
+                var elemChild = node as XmlElement;
                 if (elemChild != null)
                 {
                     _childNodes.Add(new ElementChecker(elemChild));
@@ -78,8 +78,8 @@ namespace StructureMap.Testing.XmlWriting
                                 "Wrong number of child nodes for " + _nodeName);
                 for (int i = 0; i < _childNodes.Count; i++)
                 {
-                    ElementChecker checker = (ElementChecker) _childNodes[i];
-                    XmlElement elemChild = (XmlElement) element.ChildNodes[i];
+                    var checker = (ElementChecker) _childNodes[i];
+                    var elemChild = (XmlElement) element.ChildNodes[i];
 
                     checker.Check(elemChild);
                 }
@@ -110,9 +110,9 @@ namespace StructureMap.Testing.XmlWriting
 
         public static void AssertXmlElement(string xpath, XmlElement expectedRoot, XmlElement actualRoot)
         {
-            XmlElement elemExpected = (XmlElement) expectedRoot.SelectSingleNode(xpath);
-            XmlElement elemActual = (XmlElement) actualRoot.SelectSingleNode(xpath);
-            ElementChecker checker = new ElementChecker(elemExpected);
+            var elemExpected = (XmlElement) expectedRoot.SelectSingleNode(xpath);
+            var elemActual = (XmlElement) actualRoot.SelectSingleNode(xpath);
+            var checker = new ElementChecker(elemExpected);
             checker.Check(elemActual);
         }
     }

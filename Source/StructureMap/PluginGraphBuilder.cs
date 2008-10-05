@@ -18,11 +18,11 @@ namespace StructureMap
         // Only used in testing
         public static PluginGraph BuildFromXml(XmlDocument document)
         {
-            GraphLog log = new GraphLog();
+            var log = new GraphLog();
 
             ConfigurationParser[] parsers = ConfigurationParserBuilder.GetParsers(document.DocumentElement, log);
-            PluginGraphBuilder builder = new PluginGraphBuilder(parsers, new Registry[0], log);
-            
+            var builder = new PluginGraphBuilder(parsers, new Registry[0], log);
+
             return builder.Build();
         }
 
@@ -35,7 +35,7 @@ namespace StructureMap
         #region constructors
 
         public PluginGraphBuilder(ConfigurationParser parser)
-            : this(new ConfigurationParser[] {parser}, new Registry[0], new GraphLog())
+            : this(new[] {parser}, new Registry[0], new GraphLog())
         {
         }
 
@@ -56,8 +56,8 @@ namespace StructureMap
         /// <returns></returns>
         public PluginGraph Build()
         {
-            GraphBuilder graphBuilder = new GraphBuilder(_registries, _graph);
-            
+            var graphBuilder = new GraphBuilder(_registries, _graph);
+
             forAllParsers(p =>
             {
                 _graph.Log.StartSource(p.Description);
@@ -80,6 +80,5 @@ namespace StructureMap
                 action(parser);
             }
         }
-
     }
 }

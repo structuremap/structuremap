@@ -17,7 +17,7 @@ namespace StructureMap.Testing.DataAccess.MSSQL
             string theConnectionString = "Data Source=localhost;database=test";
 
             IDatabaseEngine database = new MSSQLDatabaseEngine(theConnectionString);
-            SqlCommand command = (SqlCommand) database.GetCommand();
+            var command = (SqlCommand) database.GetCommand();
         }
 
         [Test]
@@ -27,7 +27,7 @@ namespace StructureMap.Testing.DataAccess.MSSQL
 
             IDatabaseEngine database = new MSSQLDatabaseEngine(theConnectionString);
 
-            SqlConnection connection = (SqlConnection) database.GetConnection();
+            var connection = (SqlConnection) database.GetConnection();
             Assert.AreEqual(theConnectionString, connection.ConnectionString);
         }
 
@@ -36,7 +36,7 @@ namespace StructureMap.Testing.DataAccess.MSSQL
         {
             string theConnectionString = "Data Source=localhost;database=test";
             IDatabaseEngine database = new MSSQLDatabaseEngine(theConnectionString);
-            SqlDataAdapter adapter = (SqlDataAdapter) database.GetDataAdapter();
+            var adapter = (SqlDataAdapter) database.GetDataAdapter();
 
             Assert.IsNotNull(adapter);
         }
@@ -45,7 +45,7 @@ namespace StructureMap.Testing.DataAccess.MSSQL
         public void CreateParameter()
         {
             MSSQLDatabaseEngine engine = ObjectMother.MSSQLDatabaseEngine();
-            SqlParameter parameter = (SqlParameter) engine.CreateParameter("param2", DbType.Int32, false);
+            var parameter = (SqlParameter) engine.CreateParameter("param2", DbType.Int32, false);
 
             Assert.AreEqual("@param2", parameter.ParameterName);
             Assert.AreEqual(DbType.Int32, parameter.DbType);
@@ -73,7 +73,7 @@ GO
         {
             MSSQLDatabaseEngine engine = ObjectMother.MSSQLDatabaseEngine();
 
-            SqlCommand command = (SqlCommand) engine.CreateStoredProcedureCommand(CREATION_SPROC_NAME);
+            var command = (SqlCommand) engine.CreateStoredProcedureCommand(CREATION_SPROC_NAME);
 
             Assert.AreEqual(CREATION_SPROC_NAME, command.CommandText);
             Assert.AreEqual(CommandType.StoredProcedure, command.CommandType);
@@ -92,7 +92,7 @@ GO
         {
             MSSQLDatabaseEngine engine = ObjectMother.MSSQLDatabaseEngine();
 
-            SqlParameter parameter = (SqlParameter) engine.CreateStringParameter("param1", 30, true);
+            var parameter = (SqlParameter) engine.CreateStringParameter("param1", 30, true);
 
             Assert.AreEqual("@param1", parameter.ParameterName);
             Assert.AreEqual(30, parameter.Size);

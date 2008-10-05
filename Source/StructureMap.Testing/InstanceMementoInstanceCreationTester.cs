@@ -103,7 +103,7 @@ namespace StructureMap.Testing
 
             public static MemoryInstanceMemento GetMemento()
             {
-                MemoryInstanceMemento memento = new MemoryInstanceMemento("", "Sample");
+                var memento = new MemoryInstanceMemento("", "Sample");
                 memento.SetProperty("String", "Red");
                 memento.SetProperty("Color", "Green");
                 memento.SetProperty("Int", "1");
@@ -139,7 +139,7 @@ namespace StructureMap.Testing
 
         private void assertIsReference(Instance instance, string referenceKey)
         {
-            ReferencedInstance referencedInstance = (ReferencedInstance) instance;
+            var referencedInstance = (ReferencedInstance) instance;
             Assert.AreEqual(referenceKey, referencedInstance.ReferenceKey);
         }
 
@@ -156,7 +156,7 @@ namespace StructureMap.Testing
         public void Create_a_referenced_instance()
         {
             MemoryInstanceMemento memento = MemoryInstanceMemento.CreateReferencedInstanceMemento("blue");
-            ReferencedInstance instance = (ReferencedInstance) memento.ReadInstance(null, null);
+            var instance = (ReferencedInstance) memento.ReadInstance(null, null);
 
             Assert.AreEqual("blue", instance.ReferenceKey);
         }
@@ -165,7 +165,7 @@ namespace StructureMap.Testing
         [Test]
         public void Get_the_instance_name()
         {
-            MemoryInstanceMemento memento = new MemoryInstanceMemento("Color", "Red");
+            var memento = new MemoryInstanceMemento("Color", "Red");
             memento.SetProperty("Color", "Red");
             memento.InstanceKey = "Red";
 
@@ -175,9 +175,9 @@ namespace StructureMap.Testing
         [Test]
         public void ReadChildArrayProperty()
         {
-            PluginGraph graph = new PluginGraph();
+            var graph = new PluginGraph();
 
-            graph.FindFamily(typeof(Rule)).AddPlugin(typeof(ComplexRule));
+            graph.FindFamily(typeof (Rule)).AddPlugin(typeof (ComplexRule));
 
             MemoryInstanceMemento memento = ComplexRule.GetMemento();
             memento.SetProperty(XmlConstants.PLUGGED_TYPE, typeof (ComplexRule).AssemblyQualifiedName);
@@ -188,7 +188,7 @@ namespace StructureMap.Testing
                                                   MemoryInstanceMemento.CreateReferencedInstanceMemento("Dodge"),
                                               });
 
-            IStructuredInstance instance = (IStructuredInstance) memento.ReadInstance(graph, typeof (Rule));
+            var instance = (IStructuredInstance) memento.ReadInstance(graph, typeof (Rule));
             Instance[] instances = instance.GetChildArray("cars");
             Assert.AreEqual(3, instances.Length);
 
@@ -200,17 +200,17 @@ namespace StructureMap.Testing
         [Test]
         public void ReadChildProperty_child_property_is_defined_build_child()
         {
-            PluginGraph graph = new PluginGraph();
+            var graph = new PluginGraph();
 
-            graph.FindFamily(typeof(Rule)).AddPlugin(typeof(ComplexRule));
+            graph.FindFamily(typeof (Rule)).AddPlugin(typeof (ComplexRule));
 
             MemoryInstanceMemento memento = ComplexRule.GetMemento();
             memento.SetProperty(XmlConstants.PLUGGED_TYPE, typeof (ComplexRule).AssemblyQualifiedName);
             MemoryInstanceMemento carMemento = MemoryInstanceMemento.CreateReferencedInstanceMemento("GrandPrix");
             memento.AddChild("car", carMemento);
 
-            IStructuredInstance instance = (IStructuredInstance) memento.ReadInstance(graph, typeof (Rule));
-            ReferencedInstance child = (ReferencedInstance) instance.GetChild("car");
+            var instance = (IStructuredInstance) memento.ReadInstance(graph, typeof (Rule));
+            var child = (ReferencedInstance) instance.GetChild("car");
 
             Assert.AreEqual("GrandPrix", child.ReferenceKey);
         }
@@ -218,14 +218,14 @@ namespace StructureMap.Testing
         [Test]
         public void ReadPrimitivePropertiesHappyPath()
         {
-            PluginGraph graph = new PluginGraph();
+            var graph = new PluginGraph();
 
-            graph.FindFamily(typeof(Rule)).AddPlugin(typeof(ComplexRule));
+            graph.FindFamily(typeof (Rule)).AddPlugin(typeof (ComplexRule));
 
             MemoryInstanceMemento memento = ComplexRule.GetMemento();
             memento.SetProperty(XmlConstants.PLUGGED_TYPE, typeof (ComplexRule).AssemblyQualifiedName);
 
-            IConfiguredInstance instance = (IConfiguredInstance) memento.ReadInstance(graph, typeof (Rule));
+            var instance = (IConfiguredInstance) memento.ReadInstance(graph, typeof (Rule));
 
             Assert.AreEqual(memento.GetProperty("String"), instance.GetProperty("String"));
             Assert.AreEqual(memento.GetProperty("Color"), instance.GetProperty("Color"));

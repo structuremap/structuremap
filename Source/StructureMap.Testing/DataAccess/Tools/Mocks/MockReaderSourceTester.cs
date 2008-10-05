@@ -11,13 +11,13 @@ namespace StructureMap.Testing.DataAccess.Tools.Mocks
         [Test, ExpectedException(typeof (ParameterValidationFailureException))]
         public void ExecuteOnceOkaySecondTimeWithBadParameters()
         {
-            TableDataReader result1 = new TableDataReader();
-            TableDataReader result2 = new TableDataReader();
+            var result1 = new TableDataReader();
+            var result2 = new TableDataReader();
 
-            ReaderExpectation expectation1 = new ReaderExpectation(new ParameterList(), result1);
-            ReaderExpectation expectation2 = new ReaderExpectation(new ParameterList(), result2);
+            var expectation1 = new ReaderExpectation(new ParameterList(), result1);
+            var expectation2 = new ReaderExpectation(new ParameterList(), result2);
 
-            MockReaderSource source = new MockReaderSource("name");
+            var source = new MockReaderSource("name");
             source.AddExpectation(expectation1);
             source.AddExpectation(expectation2);
 
@@ -29,9 +29,9 @@ namespace StructureMap.Testing.DataAccess.Tools.Mocks
         [Test]
         public void ExecuteOnceWithExpectationAllSuccess()
         {
-            MockReaderSource source = new MockReaderSource("name");
-            TableDataReader result = new TableDataReader();
-            ReaderExpectation expectation = new ReaderExpectation(new ParameterList(), result);
+            var source = new MockReaderSource("name");
+            var result = new TableDataReader();
+            var expectation = new ReaderExpectation(new ParameterList(), result);
             source.AddExpectation(expectation);
 
             IDataReader reader = source.ExecuteReader();
@@ -42,9 +42,9 @@ namespace StructureMap.Testing.DataAccess.Tools.Mocks
         [Test, ExpectedException(typeof (ParameterValidationFailureException))]
         public void ExecuteOnceWithInvalidParameters()
         {
-            MockReaderSource source = new MockReaderSource("name");
-            TableDataReader result = new TableDataReader();
-            ReaderExpectation expectation = new ReaderExpectation(new ParameterList(), result);
+            var source = new MockReaderSource("name");
+            var result = new TableDataReader();
+            var expectation = new ReaderExpectation(new ParameterList(), result);
             source.AddExpectation(expectation);
 
             source["UnknownParameter"] = "okay";
@@ -55,15 +55,15 @@ namespace StructureMap.Testing.DataAccess.Tools.Mocks
         [Test]
         public void ExecuteThreeTimesNoErrors()
         {
-            TableDataReader result1 = new TableDataReader();
-            TableDataReader result2 = new TableDataReader();
-            TableDataReader result3 = new TableDataReader();
+            var result1 = new TableDataReader();
+            var result2 = new TableDataReader();
+            var result3 = new TableDataReader();
 
-            ReaderExpectation expectation1 = new ReaderExpectation(new ParameterList(), result1);
-            ReaderExpectation expectation2 = new ReaderExpectation(new ParameterList(), result2);
-            ReaderExpectation expectation3 = new ReaderExpectation(new ParameterList(), result3);
+            var expectation1 = new ReaderExpectation(new ParameterList(), result1);
+            var expectation2 = new ReaderExpectation(new ParameterList(), result2);
+            var expectation3 = new ReaderExpectation(new ParameterList(), result3);
 
-            MockReaderSource source = new MockReaderSource("name");
+            var source = new MockReaderSource("name");
             source.AddExpectation(expectation1);
             source.AddExpectation(expectation2);
             source.AddExpectation(expectation3);
@@ -77,13 +77,13 @@ namespace StructureMap.Testing.DataAccess.Tools.Mocks
         [Test, ExpectedException(typeof (UnExpectedCallException))]
         public void ExecuteThreeTimesWithTwoExpectationsFailOnThird()
         {
-            TableDataReader result1 = new TableDataReader();
-            TableDataReader result2 = new TableDataReader();
+            var result1 = new TableDataReader();
+            var result2 = new TableDataReader();
 
-            ReaderExpectation expectation1 = new ReaderExpectation(new ParameterList(), result1);
-            ReaderExpectation expectation2 = new ReaderExpectation(new ParameterList(), result2);
+            var expectation1 = new ReaderExpectation(new ParameterList(), result1);
+            var expectation2 = new ReaderExpectation(new ParameterList(), result2);
 
-            MockReaderSource source = new MockReaderSource("name");
+            var source = new MockReaderSource("name");
             source.AddExpectation(expectation1);
             source.AddExpectation(expectation2);
 
@@ -97,7 +97,7 @@ namespace StructureMap.Testing.DataAccess.Tools.Mocks
         [Test, ExpectedException(typeof (UnExpectedCallException))]
         public void FailIfCalledTooManyTimes()
         {
-            MockReaderSource source = new MockReaderSource("name");
+            var source = new MockReaderSource("name");
             source.ExecuteReader();
         }
     }

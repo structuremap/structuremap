@@ -16,12 +16,12 @@ namespace StructureMap.Testing.Configuration
         [SetUp]
         public void SetUp()
         {
-            XmlDocument doc = new XmlDocument();
+            var doc = new XmlDocument();
             doc.LoadXml(xml);
 
-            ConfigurationParser parser = new ConfigurationParser(doc.DocumentElement);
+            var parser = new ConfigurationParser(doc.DocumentElement);
 
-            GraphBuilder builder = new GraphBuilder(new Registry[0]);
+            var builder = new GraphBuilder(new Registry[0]);
             parser.ParseProfilesAndMachines(builder);
         }
 
@@ -53,18 +53,18 @@ namespace StructureMap.Testing.Configuration
         public void SwitchToAttributeNormalizedMode()
         {
             XmlDocument document = DataMother.GetXmlDocument("AttributeNormalized.xml");
-            ConfigurationParser parser = new ConfigurationParser(document.DocumentElement);
+            var parser = new ConfigurationParser(document.DocumentElement);
 
-            PluginGraphBuilder builder = new PluginGraphBuilder(parser);
+            var builder = new PluginGraphBuilder(parser);
             PluginGraph graph = builder.Build();
 
-            Container manager = new Container(graph);
+            var manager = new Container(graph);
 
-            GrandChild tommy = (GrandChild) manager.GetInstance(typeof (GrandChild), "Tommy");
+            var tommy = (GrandChild) manager.GetInstance(typeof (GrandChild), "Tommy");
             Assert.AreEqual(false, tommy.RightHanded);
             Assert.AreEqual(1972, tommy.BirthYear);
 
-            ColorWidget blue = (ColorWidget) manager.GetInstance(typeof (IWidget), "Blue");
+            var blue = (ColorWidget) manager.GetInstance(typeof (IWidget), "Blue");
             Assert.AreEqual("Blue", blue.Color);
         }
     }

@@ -18,15 +18,23 @@ namespace StructureMap.Testing.Configuration.DSL
 
         #endregion
 
+        [Test]
+        public void Can_add_an_instance_for_concrete_class_with_no_constructors()
+        {
+            var registry = new Registry();
+            registry.ForRequestedType<ConcreteWithNoConstructor>().TheDefault.Is.ConstructedBy(
+                () => ConcreteWithNoConstructor.Build());
 
+            var container = new Container(registry);
+        }
 
         [Test]
         public void Equals_check_true()
         {
-            TestRegistry registry1 = new TestRegistry();
-            TestRegistry registry2 = new TestRegistry();
-            TestRegistry2 registry3 = new TestRegistry2();
-            TestRegistry2 registry4 = new TestRegistry2();
+            var registry1 = new TestRegistry();
+            var registry2 = new TestRegistry();
+            var registry3 = new TestRegistry2();
+            var registry4 = new TestRegistry2();
 
             registry1.Equals(registry1).ShouldBeTrue();
             registry1.Equals(registry2).ShouldBeTrue();
@@ -40,26 +48,16 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void Latch_on_a_PluginGraph()
         {
-            TestRegistry2 registry2 = new TestRegistry2();
-            PluginGraph graph = new PluginGraph();
+            var registry2 = new TestRegistry2();
+            var graph = new PluginGraph();
 
             graph.Registries.Count.ShouldEqual(0);
             registry2.ConfigurePluginGraph(graph);
 
             graph.Registries.Contains(registry2).ShouldBeTrue();
-        
+
             registry2.ConfigurePluginGraph(graph);
             registry2.ExecutedCount.ShouldEqual(1);
-        }
-
-        [Test]
-        public void Can_add_an_instance_for_concrete_class_with_no_constructors()
-        {
-            Registry registry = new Registry();
-            registry.ForRequestedType<ConcreteWithNoConstructor>().TheDefault.Is.ConstructedBy(() => ConcreteWithNoConstructor.Build());
-
-            Container container = new Container(registry);
-
         }
 
         [Test]

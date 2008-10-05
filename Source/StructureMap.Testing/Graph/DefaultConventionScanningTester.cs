@@ -1,11 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 using NUnit.Framework;
-using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
-using StructureMap.Pipeline;
 
 namespace StructureMap.Testing.Graph
 {
@@ -15,30 +11,15 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void FindPluginType()
         {
-            Assert.AreEqual(typeof(IConvention), new DefaultConventionScanner().FindPluginType(typeof(Convention)));
-            Assert.IsNull(new DefaultConventionScanner().FindPluginType(this.GetType()));
+            Assert.AreEqual(typeof (IConvention), new DefaultConventionScanner().FindPluginType(typeof (Convention)));
+            Assert.IsNull(new DefaultConventionScanner().FindPluginType(GetType()));
         }
 
-
-        [Test]
-        public void Process_to_PluginGraph()
-        {
-            PluginGraph graph = new PluginGraph();
-            DefaultConventionScanner scanner = new DefaultConventionScanner();
-            scanner.Process(typeof(Convention), graph);
-
-            Assert.IsFalse(graph.PluginFamilies.Contains(typeof(IServer)));
-            Assert.IsTrue(graph.PluginFamilies.Contains(typeof(IConvention)));
-
-            PluginFamily family = graph.FindFamily(typeof (IConvention));
-            family.Seal();
-            Assert.AreEqual(1, family.InstanceCount);
-        }
 
         [Test]
         public void Process_to_Container()
         {
-            Container container = new Container(registry =>
+            var container = new Container(registry =>
             {
                 registry.Scan(x =>
                 {
@@ -49,14 +30,14 @@ namespace StructureMap.Testing.Graph
 
             Debug.WriteLine(container.WhatDoIHave());
 
-            Assert.IsInstanceOfType(typeof(Convention), container.GetInstance<IConvention>());
+            Assert.IsInstanceOfType(typeof (Convention), container.GetInstance<IConvention>());
         }
 
 
         [Test]
         public void Process_to_Container_2()
         {
-            Container container = new Container(registry =>
+            var container = new Container(registry =>
             {
                 registry.Scan(x =>
                 {
@@ -65,12 +46,33 @@ namespace StructureMap.Testing.Graph
                 });
             });
 
-            Assert.IsInstanceOfType(typeof(Convention), container.GetInstance<IConvention>());
+            Assert.IsInstanceOfType(typeof (Convention), container.GetInstance<IConvention>());
+        }
+
+        [Test]
+        public void Process_to_PluginGraph()
+        {
+            var graph = new PluginGraph();
+            var scanner = new DefaultConventionScanner();
+            scanner.Process(typeof (Convention), graph);
+
+            Assert.IsFalse(graph.PluginFamilies.Contains(typeof (IServer)));
+            Assert.IsTrue(graph.PluginFamilies.Contains(typeof (IConvention)));
+
+            PluginFamily family = graph.FindFamily(typeof (IConvention));
+            family.Seal();
+            Assert.AreEqual(1, family.InstanceCount);
         }
     }
 
-    public interface IConvention{}
-    public interface IServer{}
+    public interface IConvention
+    {
+    }
+
+    public interface IServer
+    {
+    }
+
     public class Convention : IConvention, IServer
     {
         public void Go()
@@ -79,5 +81,7 @@ namespace StructureMap.Testing.Graph
         }
     }
 
-    public class Something : IConvention{}
+    public class Something : IConvention
+    {
+    }
 }

@@ -1,9 +1,6 @@
-﻿using System;
+using System;
 using System.Diagnostics;
-using System.Drawing;
-using System.Linq.Expressions;
 using NUnit.Framework;
-using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.TestData;
@@ -15,12 +12,12 @@ namespace StructureMap.Testing.Pipeline
     {
         public override Type PluggedType
         {
-            get { throw new System.NotImplementedException(); }
+            get { throw new NotImplementedException(); }
         }
 
         public override object BuildInstance(IConfiguredInstance instance, BuildSession session)
         {
-            ClassWithOneSetter target = new ClassWithOneSetter();
+            var target = new ClassWithOneSetter();
             if (instance.HasProperty("Name")) target.Name = instance.GetProperty("Name");
 
             return target;
@@ -31,47 +28,94 @@ namespace StructureMap.Testing.Pipeline
     [TestFixture]
     public class OptionalSetterInjectionTester
     {
+        #region Setup/Teardown
+
         [SetUp]
         public void SetUp()
         {
             PluginCache.ResetAll();
         }
 
-        [Test]
-        public void optional_setter_injection_with_string()
-        {
-            var container = new Container(
-                r =>
-                {
-                    r.InstanceOf<OptionalSetterTarget>().Is.OfConcreteType<OptionalSetterTarget>().WithName("NoName");
-                       
-                    r.ForConcreteType<OptionalSetterTarget>().Configure
-                        .WithProperty("Name").EqualTo("Jeremy");
-                });
+        #endregion
 
-            try
-            {
-                //container.GetInstance<NoSettersTarget>();
-                container.GetInstance<OptionalSetterTarget>().Name.ShouldEqual("Jeremy");
-                container.GetInstance<OptionalSetterTarget>("NoName").Name.ShouldBeNull();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
+        private static Logger createLogger(IContext session)
+        {
+            return new Logger(session.ParentType);
         }
 
         [Test]
-        public void one_optional_setter_injection_with_string()
+        public void AutoFill_a_property()
         {
             var container = new Container(r =>
             {
-                r.ForConcreteType<ClassWithOneSetter>().Configure
-                    .WithProperty("Name").EqualTo("Jeremy");
+                r.ForConcreteType<ClassWithDependency>().Configure
+                    .SetterDependency<Rule>().IsTheDefault();
+
+                r.ForRequestedType<Rule>().TheDefault.Is.Object(new ColorRule("Green"));
             });
 
-            container.GetInstance<ClassWithOneSetter>().Name.ShouldEqual("Jeremy");
+
+            container.GetInstance<ClassWithDependency>().Rule.ShouldBeOfType(typeof (ColorRule));
+        }
+
+        [Test]
+        public void AutoFill_a_property_with_contextual_construction()
+        {
+            var container =
+                new Container(
+                    r =>
+                    r.FillAllPropertiesOfType<Logger>().TheDefault.Is.ConstructedBy(createLogger));
+
+            container.GetInstance<ClassWithLogger>().Logger.Type.ShouldEqual(typeof (ClassWithLogger));
+            container.GetInstance<ClassWithLogger2>().Logger.Type.ShouldEqual(typeof (ClassWithLogger2));
+
+            container.GetInstance<ClassWithClassWithLogger>().ClassWithLogger.Logger.Type.ShouldEqual(
+                typeof (ClassWithLogger));
+        }
+
+        [Test]
+        public void one_optional_child_array_setter()
+        {
+            var container = new Container(x =>
+            {
+                x.ForRequestedType<ClassWithDependency>().TheDefault.Is.OfConcreteType<ClassWithDependency>()
+                    .TheArrayOf<Rule>().Contains(arr => { arr.IsThis(new ColorRule("Red")); });
+            });
+
+            container.GetInstance<ClassWithDependency>().Rules.Length.ShouldEqual(1);
+        }
+
+        [Test]
+        public void one_optional_child_setter_with_the_setter_property_defined()
+        {
+            var container = new Container(r =>
+            {
+                r.ForConcreteType<ClassWithDependency>().Configure
+                    .SetterDependency<Rule>().Is(new ColorRule("Red"));
+            });
+
+            container.GetInstance<ClassWithDependency>().Rule.ShouldBeOfType(typeof (ColorRule));
+        }
+
+
+        [Test]
+        public void one_optional_child_setter_without_the_setter_property_defined()
+        {
+            var container = new Container(r => { r.ForConcreteType<ClassWithDependency>(); });
+
+            container.GetInstance<ClassWithDependency>().Rule.ShouldBeNull();
+        }
+
+        [Test]
+        public void one_optional_child_setter2()
+        {
+            var container = new Container(r =>
+            {
+                r.ForConcreteType<ClassWithDependency>().Configure
+                    .SetterDependency<Rule>().Is(new ColorRule("Red"));
+            });
+
+            container.GetInstance<ClassWithDependency>().Rule.ShouldBeOfType(typeof (ColorRule));
         }
 
         [Test]
@@ -102,35 +146,50 @@ namespace StructureMap.Testing.Pipeline
         }
 
         [Test]
-        public void one_optional_child_setter_with_the_setter_property_defined()
+        public void one_optional_setter_injection_with_string()
         {
             var container = new Container(r =>
             {
-                r.ForConcreteType<ClassWithDependency>().Configure
-                    .SetterDependency<Rule>().Is(new ColorRule("Red"));
+                r.ForConcreteType<ClassWithOneSetter>().Configure
+                    .WithProperty("Name").EqualTo("Jeremy");
             });
 
-            container.GetInstance<ClassWithDependency>().Rule.ShouldBeOfType(typeof(ColorRule));
+            container.GetInstance<ClassWithOneSetter>().Name.ShouldEqual("Jeremy");
         }
 
-
         [Test]
-        public void one_optional_child_setter_without_the_setter_property_defined()
+        public void optional_setter_injection_with_string()
         {
-            var container = new Container(r =>
-            {
-                r.ForConcreteType<ClassWithDependency>();
-            });
+            var container = new Container(
+                r =>
+                {
+                    r.InstanceOf<OptionalSetterTarget>().Is.OfConcreteType<OptionalSetterTarget>().WithName("NoName");
 
-            container.GetInstance<ClassWithDependency>().Rule.ShouldBeNull();
+                    r.ForConcreteType<OptionalSetterTarget>().Configure
+                        .WithProperty("Name").EqualTo("Jeremy");
+                });
+
+            try
+            {
+                //container.GetInstance<NoSettersTarget>();
+                container.GetInstance<OptionalSetterTarget>().Name.ShouldEqual("Jeremy");
+                container.GetInstance<OptionalSetterTarget>("NoName").Name.ShouldBeNull();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         [Test]
         public void read_instance_from_xml_with_optional_setter_defined()
         {
-            Debug.WriteLine(typeof(ClassWithDependency).AssemblyQualifiedName);
+            Debug.WriteLine(typeof (ClassWithDependency).AssemblyQualifiedName);
 
-            var graph = DataMother.BuildPluginGraphFromXml(@"
+            PluginGraph graph =
+                DataMother.BuildPluginGraphFromXml(
+                    @"
 <StructureMap MementoStyle='Attribute'>
     <DefaultInstance 
         PluginType='StructureMap.Testing.Pipeline.ClassWithDependency, StructureMap.Testing' 
@@ -142,19 +201,20 @@ namespace StructureMap.Testing.Pipeline
 
 ");
 
-            Container container = new Container(graph);
+            var container = new Container(graph);
 
             container.GetInstance<ClassWithDependency>().Rule.IsType<ColorRule>().Color.ShouldEqual("Red");
         }
 
 
-
         [Test]
         public void read_instance_from_xml_with_optional_setter_not_defined()
         {
-            Debug.WriteLine(typeof(ClassWithDependency).AssemblyQualifiedName);
+            Debug.WriteLine(typeof (ClassWithDependency).AssemblyQualifiedName);
 
-            var graph = DataMother.BuildPluginGraphFromXml(@"
+            PluginGraph graph =
+                DataMother.BuildPluginGraphFromXml(
+                    @"
 <StructureMap MementoStyle='Attribute'>
     <DefaultInstance 
         PluginType='StructureMap.Testing.Pipeline.ClassWithDependency, StructureMap.Testing' 
@@ -165,26 +225,11 @@ namespace StructureMap.Testing.Pipeline
 
 ");
 
-            Container container = new Container(graph);
+            var container = new Container(graph);
 
             container.GetInstance<ClassWithDependency>().Rule.ShouldBeNull();
         }
 
-
-
-
-        [Test]
-        public void one_optional_child_setter2()
-        {
-            var container = new Container(r =>
-            {
-                r.ForConcreteType<ClassWithDependency>().Configure
-                    .SetterDependency<Rule>().Is(new ColorRule("Red"));
-
-            });
-
-            container.GetInstance<ClassWithDependency>().Rule.ShouldBeOfType(typeof(ColorRule));
-        }
 
         [Test]
         public void using_the_FillAllPropertiesOf()
@@ -194,58 +239,7 @@ namespace StructureMap.Testing.Pipeline
                     r =>
                     r.FillAllPropertiesOfType<Rule>().TheDefault.Is.Object(new ColorRule("Red")));
 
-            container.GetInstance<ClassWithDependency>().Rule.ShouldBeOfType(typeof(ColorRule));
-        }
-
-        [Test]
-        public void one_optional_child_array_setter()
-        {
-            var container = new Container(x =>
-            {
-                x.ForRequestedType<ClassWithDependency>().TheDefault.Is.OfConcreteType<ClassWithDependency>()
-                    .TheArrayOf<Rule>().Contains(arr =>
-                    {
-                        arr.IsThis(new ColorRule("Red"));
-                    });
-            });
-
-            container.GetInstance<ClassWithDependency>().Rules.Length.ShouldEqual(1);
-        }
-
-        [Test]
-        public void AutoFill_a_property()
-        {
-            var container = new Container(r =>
-            {
-                r.ForConcreteType<ClassWithDependency>().Configure
-                    .SetterDependency<Rule>().IsTheDefault();
-
-                r.ForRequestedType<Rule>().TheDefault.Is.Object(new ColorRule("Green"));
-            });
-
-                      
-
-            container.GetInstance<ClassWithDependency>().Rule.ShouldBeOfType(typeof(ColorRule));
-        }
-
-        private static Logger createLogger(IContext session)
-        {
-            return new Logger(session.ParentType);
-        }
-
-        [Test]
-        public void AutoFill_a_property_with_contextual_construction()
-        {
-            var container =
-                new Container(
-                    r =>
-                    r.FillAllPropertiesOfType<Logger>().TheDefault.Is.ConstructedBy(createLogger));
-
-            container.GetInstance<ClassWithLogger>().Logger.Type.ShouldEqual(typeof (ClassWithLogger));
-            container.GetInstance<ClassWithLogger2>().Logger.Type.ShouldEqual(typeof (ClassWithLogger2));
-
-            container.GetInstance<ClassWithClassWithLogger>().ClassWithLogger.Logger.Type.ShouldEqual(
-                typeof (ClassWithLogger));
+            container.GetInstance<ClassWithDependency>().Rule.ShouldBeOfType(typeof (ColorRule));
         }
     }
 
@@ -291,30 +285,16 @@ namespace StructureMap.Testing.Pipeline
 
     public enum ColorEnum
     {
-        Red, Blue, Green
+        Red,
+        Blue,
+        Green
     }
 
     public class OptionalSetterTarget
     {
-        private string _name;
-        public string Name
-        {
-            get { return _name; }
-            set
-            {
-                _name = value;
-            }
-        }
+        public string Name { get; set; }
 
-        private string _name2;
-        public string Name2
-        {
-            get { return _name2; }
-            set
-            {
-                _name2 = value;
-            }
-        }
+        public string Name2 { get; set; }
     }
 
     public class NoSettersTarget
@@ -335,13 +315,14 @@ namespace StructureMap.Testing.Pipeline
     {
         public override Type PluggedType
         {
-            get { throw new System.NotImplementedException(); }
+            get { throw new NotImplementedException(); }
         }
 
         public override object BuildInstance(IConfiguredInstance instance, BuildSession session)
         {
-            ClassWithOneEnum target = new ClassWithOneEnum();
-            if (instance.HasProperty("Color")) target.Color = (ColorEnum) Enum.Parse(typeof (ColorEnum), instance.GetProperty("Color"));
+            var target = new ClassWithOneEnum();
+            if (instance.HasProperty("Color"))
+                target.Color = (ColorEnum) Enum.Parse(typeof (ColorEnum), instance.GetProperty("Color"));
 
             return target;
         }

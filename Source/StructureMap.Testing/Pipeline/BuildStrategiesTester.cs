@@ -42,12 +42,12 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void BuildPolicy_should_apply_interception()
         {
-            MockRepository mocks = new MockRepository();
-            BuildSession buildSession = mocks.StrictMock<BuildSession>();
+            var mocks = new MockRepository();
+            var buildSession = mocks.StrictMock<BuildSession>();
 
             object firstValue = "first";
             object secondValue = "second";
-            StubInstance instance = new StubInstance(firstValue);
+            var instance = new StubInstance(firstValue);
             Type thePluginType = typeof (IGateway);
 
             using (mocks.Record())
@@ -57,7 +57,7 @@ namespace StructureMap.Testing.Pipeline
 
             using (mocks.Playback())
             {
-                BuildPolicy policy = new BuildPolicy();
+                var policy = new BuildPolicy();
                 object returnedObject = policy.Build(buildSession, thePluginType, instance);
 
                 Assert.AreSame(secondValue, returnedObject);
@@ -72,7 +72,7 @@ namespace StructureMap.Testing.Pipeline
                 LiteralInstance instance = new LiteralInstance("something")
                     .OnCreation<object>(delegate { throw new NotImplementedException(); });
 
-                BuildPolicy policy = new BuildPolicy();
+                var policy = new BuildPolicy();
                 policy.Build(new StubBuildSession(), typeof (string), instance);
             }
             catch (StructureMapException e)
@@ -85,9 +85,9 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void CloneHybrid()
         {
-            HybridBuildPolicy policy = new HybridBuildPolicy();
+            var policy = new HybridBuildPolicy();
 
-            HybridBuildPolicy clone = (HybridBuildPolicy) policy.Clone();
+            var clone = (HybridBuildPolicy) policy.Clone();
             Assert.AreNotSame(policy, clone);
             Assert.IsInstanceOfType(typeof (BuildPolicy), clone.InnerPolicy);
         }
@@ -95,9 +95,9 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void CloneSingleton()
         {
-            SingletonPolicy policy = new SingletonPolicy();
+            var policy = new SingletonPolicy();
 
-            SingletonPolicy clone = (SingletonPolicy) policy.Clone();
+            var clone = (SingletonPolicy) policy.Clone();
             Assert.AreNotSame(policy, clone);
             Assert.IsInstanceOfType(typeof (BuildPolicy), clone.InnerPolicy);
         }
@@ -105,18 +105,18 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void Singleton_build_policy()
         {
-            SingletonPolicy policy = new SingletonPolicy();
+            var policy = new SingletonPolicy();
             ConstructorInstance<ColorService> instance1 =
                 new ConstructorInstance<ColorService>(() => new ColorService("Red")).WithName("Red");
             ConstructorInstance<ColorService> instance2 =
                 new ConstructorInstance<ColorService>(() => new ColorService("Green")).WithName("Green");
 
-            ColorService red1 = (ColorService) policy.Build(new StubBuildSession(), null, instance1);
-            ColorService green1 = (ColorService) policy.Build(new StubBuildSession(), null, instance2);
-            ColorService red2 = (ColorService) policy.Build(new StubBuildSession(), null, instance1);
-            ColorService green2 = (ColorService) policy.Build(new StubBuildSession(), null, instance2);
-            ColorService red3 = (ColorService) policy.Build(new StubBuildSession(), null, instance1);
-            ColorService green3 = (ColorService) policy.Build(new StubBuildSession(), null, instance2);
+            var red1 = (ColorService) policy.Build(new StubBuildSession(), null, instance1);
+            var green1 = (ColorService) policy.Build(new StubBuildSession(), null, instance2);
+            var red2 = (ColorService) policy.Build(new StubBuildSession(), null, instance1);
+            var green2 = (ColorService) policy.Build(new StubBuildSession(), null, instance2);
+            var red3 = (ColorService) policy.Build(new StubBuildSession(), null, instance1);
+            var green3 = (ColorService) policy.Build(new StubBuildSession(), null, instance2);
 
             Assert.AreSame(red1, red2);
             Assert.AreSame(red1, red3);

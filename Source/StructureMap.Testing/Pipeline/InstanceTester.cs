@@ -22,7 +22,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void Build_the_InstanceToken()
         {
-            InstanceUnderTest instance = new InstanceUnderTest();
+            var instance = new InstanceUnderTest();
             instance.Name = "name of instance";
             IDiagnosticInstance diagnosticInstance = instance;
 
@@ -35,15 +35,15 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void Instance_Build_Calls_into_its_Interceptor()
         {
-            MockRepository mocks = new MockRepository();
-            InstanceInterceptor interceptor = mocks.StrictMock<InstanceInterceptor>();
-            BuildSession buildSession = mocks.StrictMock<BuildSession>();
+            var mocks = new MockRepository();
+            var interceptor = mocks.StrictMock<InstanceInterceptor>();
+            var buildSession = mocks.StrictMock<BuildSession>();
 
 
-            InstanceUnderTest instanceUnderTest = new InstanceUnderTest();
+            var instanceUnderTest = new InstanceUnderTest();
             instanceUnderTest.Interceptor = interceptor;
 
-            object objectReturnedByInterceptor = new object();
+            var objectReturnedByInterceptor = new object();
 
             using (mocks.Record())
             {

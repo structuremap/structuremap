@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace StructureMap.Testing.Diagnostics
 {
@@ -16,7 +12,8 @@ namespace StructureMap.Testing.Diagnostics
 
         public static void WriteSeparator(this StringWriter writer)
         {
-            writer.WriteLine("-----------------------------------------------------------------------------------------------------");
+            writer.WriteLine(
+                "-----------------------------------------------------------------------------------------------------");
         }
     }
 }

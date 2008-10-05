@@ -32,36 +32,36 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void Build_happy_path()
         {
-            ATarget target = new ATarget();
-            LiteralInstance instance = new LiteralInstance(target);
+            var target = new ATarget();
+            var instance = new LiteralInstance(target);
             Assert.AreSame(target, instance.Build(typeof (ITarget), new StubBuildSession()));
         }
 
         [Test]
         public void Can_be_part_of_PluginFamily()
         {
-            ATarget target = new ATarget();
-            LiteralInstance instance = new LiteralInstance(target);
+            var target = new ATarget();
+            var instance = new LiteralInstance(target);
             IDiagnosticInstance diagnosticInstance = instance;
 
-            PluginFamily family1 = new PluginFamily(typeof (ATarget));
+            var family1 = new PluginFamily(typeof (ATarget));
             Assert.IsTrue(diagnosticInstance.CanBePartOfPluginFamily(family1));
 
-            PluginFamily family2 = new PluginFamily(GetType());
+            var family2 = new PluginFamily(GetType());
             Assert.IsFalse(diagnosticInstance.CanBePartOfPluginFamily(family2));
         }
 
         [Test]
         public void Create_description_should_return_the_ToString_of_the_inner_instance()
         {
-            LiteralInstance instance = new LiteralInstance(this);
+            var instance = new LiteralInstance(this);
             TestUtility.AssertDescriptionIs(instance, "Object:  " + ToString());
         }
 
         [Test, ExpectedException(typeof (ArgumentNullException))]
         public void Throw_NullArgumentException_if_literal_instance_is_null()
         {
-            LiteralInstance instance = new LiteralInstance(null);
+            var instance = new LiteralInstance(null);
         }
     }
 }

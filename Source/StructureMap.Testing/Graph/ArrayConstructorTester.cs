@@ -8,7 +8,6 @@ namespace StructureMap.Testing.Graph
     [TestFixture]
     public class ArrayConstructorTester
     {
-
         [Test]
         public void BuildDecisionWithRules()
         {

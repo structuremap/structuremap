@@ -17,9 +17,9 @@ namespace StructureMap.Testing.DataAccess.Parameterization
             MSSQLDatabaseEngine engine = ObjectMother.MSSQLDatabaseEngine();
             string template = "select * from table where column1 = {flag1}";
 
-            ParameterizedCommandBuilder builder = new ParameterizedCommandBuilder(engine, template);
+            var builder = new ParameterizedCommandBuilder(engine, template);
             builder.Build();
-            SqlCommand command = (SqlCommand) builder.Command;
+            var command = (SqlCommand) builder.Command;
 
             string expectedCommandText = "select * from table where column1 = @flag1";
             Assert.AreEqual(expectedCommandText, command.CommandText);
@@ -41,7 +41,7 @@ namespace StructureMap.Testing.DataAccess.Parameterization
         [Test]
         public void ParameterizedCommandCanBeNulled()
         {
-            ParameterizedCommand command = new ParameterizedCommand("select * from table1 where col1 = {a}");
+            var command = new ParameterizedCommand("select * from table1 where col1 = {a}");
             command.Initialize(new MSSQLDatabaseEngine("something"));
 
             command["a"] = DBNull.Value;

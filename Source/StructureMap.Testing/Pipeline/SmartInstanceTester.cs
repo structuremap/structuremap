@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using NUnit.Framework;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
@@ -33,7 +33,8 @@ namespace StructureMap.Testing.Pipeline
         public void specify_a_constructor_dependency()
         {
             var widget = new ColorWidget("Red");
-            build<ClassWithWidget>(instance => instance.CtorDependency<IWidget>("widget").Is(x => x.Object(widget))).Widget.
+            build<ClassWithWidget>(instance => instance.CtorDependency<IWidget>("widget").Is(x => x.Object(widget))).
+                Widget.
                 ShouldBeTheSameAs(widget);
         }
 
@@ -56,7 +57,8 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void specify_a_simple_property()
         {
-            build<SimplePropertyTarget>(instance => instance.SetProperty(x => x.Name = "Jeremy")).Name.ShouldEqual("Jeremy");
+            build<SimplePropertyTarget>(instance => instance.SetProperty(x => x.Name = "Jeremy")).Name.ShouldEqual(
+                "Jeremy");
             build<SimplePropertyTarget>(i => i.SetProperty(x => x.Age = 16)).Age.ShouldEqual(16);
         }
 
@@ -73,12 +75,6 @@ namespace StructureMap.Testing.Pipeline
         }
 
         [Test]
-        public void successfully_specify_the_constructor_argument_of_a_string()
-        {
-            build<ColorRule>(i => i.WithCtorArg("color").EqualTo("Red")).Color.ShouldEqual("Red");
-        }
-
-        [Test]
         public void specify_an_array_as_a_constructor()
         {
             IWidget widget1 = new AWidget();
@@ -90,7 +86,7 @@ namespace StructureMap.Testing.Pipeline
                 x.Object(widget1);
                 x.Object(widget2);
                 x.Object(widget3);
-            })).Widgets.ShouldEqual(new IWidget[] {widget1, widget2, widget3});
+            })).Widgets.ShouldEqual(new[] {widget1, widget2, widget3});
         }
 
 
@@ -106,7 +102,13 @@ namespace StructureMap.Testing.Pipeline
                 x.Object(widget1);
                 x.Object(widget2);
                 x.Object(widget3);
-            })).Widgets.ShouldEqual(new IWidget[] { widget1, widget2, widget3 });
+            })).Widgets.ShouldEqual(new[] {widget1, widget2, widget3});
+        }
+
+        [Test]
+        public void successfully_specify_the_constructor_argument_of_a_string()
+        {
+            build<ColorRule>(i => i.WithCtorArg("color").EqualTo("Red")).Color.ShouldEqual("Red");
         }
     }
 

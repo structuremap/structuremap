@@ -18,7 +18,7 @@ namespace StructureMap.Testing.Diagnostics
         [Test]
         public void TryWithTwoColumnsAndSomeDividers()
         {
-            TextReportWriter writer = new TextReportWriter(2);
+            var writer = new TextReportWriter(2);
             writer.AddDivider('=');
             writer.AddText("Name", "City");
             writer.AddDivider('=');

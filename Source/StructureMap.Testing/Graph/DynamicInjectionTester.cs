@@ -12,15 +12,19 @@ namespace StructureMap.Testing.Graph
     [TestFixture]
     public class DynamicInjectionTester
     {
-        private readonly IService _red = new ColorService("Red");
-        private readonly IService _blue = new ColorService("Blue");
-        private readonly IService _orange = new ColorService("Orange");
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
         {
             ObjectFactory.Initialize(x => { });
         }
+
+        #endregion
+
+        private readonly IService _red = new ColorService("Red");
+        private readonly IService _blue = new ColorService("Blue");
+        private readonly IService _orange = new ColorService("Orange");
 
         private IInstanceFactory getISomethingFactory()
         {
@@ -161,10 +165,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void AddANewDefaultTypeForAPluginTypeThatAlreadyExists()
         {
-            ObjectFactory.Initialize(x =>
-            {
-                x.BuildInstancesOf<ISomething>().TheDefaultIsConcreteType<SomethingTwo>();
-            });
+            ObjectFactory.Initialize(x => { x.BuildInstancesOf<ISomething>().TheDefaultIsConcreteType<SomethingTwo>(); });
 
             ObjectFactory.SetDefault<ISomething, SomethingOne>();
             ObjectFactory.GetInstance<ISomething>().ShouldBeOfType<SomethingOne>();
@@ -174,10 +175,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void AddANewDefaultTypeForAPluginTypeThatAlreadyExists2()
         {
-            ObjectFactory.Initialize(x =>
-            {
-                x.BuildInstancesOf<ISomething>();
-            });
+            ObjectFactory.Initialize(x => { x.BuildInstancesOf<ISomething>(); });
 
             ObjectFactory.SetDefault<ISomething, SomethingOne>();
             Assert.IsInstanceOfType(typeof (SomethingOne), ObjectFactory.GetInstance<ISomething>());
@@ -213,8 +211,6 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void AddNamedInstanceByType()
         {
-            
-
             ObjectFactory.Configure(r =>
             {
                 r.ForRequestedType<ISomething>().AddInstances(x =>

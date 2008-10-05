@@ -10,7 +10,7 @@ namespace StructureMap.Testing.DataAccess.JSON
         [Test]
         public void Write()
         {
-            JSONObject o = new JSONObject();
+            var o = new JSONObject();
             Assert.AreEqual("{}", o.ToJSON());
 
             o.AddNull("name");

@@ -6,7 +6,8 @@ namespace StructureMap
 {
     internal class InstanceCache
     {
-        private Dictionary<Type, Dictionary<Instance, object>> _objects = new Dictionary<Type, Dictionary<Instance, object>>();
+        private readonly Dictionary<Type, Dictionary<Instance, object>> _objects =
+            new Dictionary<Type, Dictionary<Instance, object>>();
 
         private Dictionary<Instance, object> getCache(Type type)
         {
@@ -16,7 +17,7 @@ namespace StructureMap
             }
             else
             {
-                Dictionary<Instance, object> cache = new Dictionary<Instance, object>();
+                var cache = new Dictionary<Instance, object>();
                 _objects.Add(type, cache);
                 return cache;
             }

@@ -33,7 +33,7 @@ namespace StructureMap.Testing.DataAccess.Commands
             _filter.AttachParameters(command);
 
             Assert.AreEqual(1, command.Parameters.Count);
-            SqlParameter parameter = (SqlParameter) command.Parameters[0];
+            var parameter = (SqlParameter) command.Parameters[0];
 
             Assert.AreEqual("@Name", parameter.ParameterName);
             Assert.AreEqual(theValue, parameter.Value);

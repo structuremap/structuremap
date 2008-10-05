@@ -88,11 +88,11 @@ namespace StructureMap.Testing.Graph.Interceptors
         [Test]
         public void Import_from_gets_all_interceptors_and_resets_the_type_filter()
         {
-            InterceptorLibrary sourceLibrary = new InterceptorLibrary();
+            var sourceLibrary = new InterceptorLibrary();
             sourceLibrary.AddInterceptor(new MockTypeInterceptor(typeof (string)));
             sourceLibrary.FindInterceptor(typeof (string));
 
-            InterceptorLibrary destinationLibrary = new InterceptorLibrary();
+            var destinationLibrary = new InterceptorLibrary();
             destinationLibrary.AddInterceptor(new MockTypeInterceptor(typeof (string)));
 
             destinationLibrary.ImportFrom(sourceLibrary);
@@ -107,10 +107,10 @@ namespace StructureMap.Testing.Graph.Interceptors
             When_Interceptors_Are_Requested_For_A_Type_For_The_First_Time_The_Library_Will_Scan_All_The_TypeInterceptors
             ()
         {
-            MockRepository mocks = new MockRepository();
-            TypeInterceptor interceptor1 = mocks.StrictMock<TypeInterceptor>();
-            TypeInterceptor interceptor2 = mocks.StrictMock<TypeInterceptor>();
-            TypeInterceptor interceptor3 = mocks.StrictMock<TypeInterceptor>();
+            var mocks = new MockRepository();
+            var interceptor1 = mocks.StrictMock<TypeInterceptor>();
+            var interceptor2 = mocks.StrictMock<TypeInterceptor>();
+            var interceptor3 = mocks.StrictMock<TypeInterceptor>();
 
             _library.AddInterceptor(interceptor1);
             _library.AddInterceptor(interceptor2);
@@ -130,10 +130,10 @@ namespace StructureMap.Testing.Graph.Interceptors
         public void When_Interceptors_Are_Requested_For_The_Second_Time_The_Library_Will_NOT_Scan_The_Interceptors_Again
             ()
         {
-            MockRepository mocks = new MockRepository();
-            TypeInterceptor interceptor1 = mocks.StrictMock<TypeInterceptor>();
-            TypeInterceptor interceptor2 = mocks.StrictMock<TypeInterceptor>();
-            TypeInterceptor interceptor3 = mocks.StrictMock<TypeInterceptor>();
+            var mocks = new MockRepository();
+            var interceptor1 = mocks.StrictMock<TypeInterceptor>();
+            var interceptor2 = mocks.StrictMock<TypeInterceptor>();
+            var interceptor3 = mocks.StrictMock<TypeInterceptor>();
 
             _library.AddInterceptor(interceptor1);
             _library.AddInterceptor(interceptor2);

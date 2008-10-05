@@ -1,5 +1,4 @@
 using NUnit.Framework;
-using StructureMap.Configuration.DSL;
 using StructureMap.Pipeline;
 
 namespace StructureMap.Testing.Configuration.DSL
@@ -88,9 +87,9 @@ namespace StructureMap.Testing.Configuration.DSL
                 x.ForRequestedType<Processor>().TheDefault.Is
                     .OfConcreteType<Processor>()
                     .TheArrayOf<IHandler>().Contains(
-                        new SmartInstance<Handler1>(),
-                        new SmartInstance<Handler2>(),
-                        new SmartInstance<Handler3>()
+                    new SmartInstance<Handler1>(),
+                    new SmartInstance<Handler2>(),
+                    new SmartInstance<Handler3>()
                     )
                     .WithCtorArg("name").EqualTo("Jeremy");
             });
@@ -165,13 +164,12 @@ namespace StructureMap.Testing.Configuration.DSL
                         x.References("Two");
                         x.References("One");
                     });
-
             });
 
             var processor = manager.GetInstance<Processor>();
 
-            Assert.IsInstanceOfType(typeof(Handler2), processor.Handlers[0]);
-            Assert.IsInstanceOfType(typeof(Handler1), processor.Handlers[1]);
+            Assert.IsInstanceOfType(typeof (Handler2), processor.Handlers[0]);
+            Assert.IsInstanceOfType(typeof (Handler1), processor.Handlers[1]);
         }
 
         [Test]
@@ -210,15 +208,13 @@ namespace StructureMap.Testing.Configuration.DSL
                         x.OfConcreteType<Handler2>();
                         x.OfConcreteType<Handler3>();
                     });
-
             });
 
             var processor = container.GetInstance<Processor>();
 
-            Assert.IsInstanceOfType(typeof(Handler1), processor.Handlers[0]);
-            Assert.IsInstanceOfType(typeof(Handler2), processor.Handlers[1]);
-            Assert.IsInstanceOfType(typeof(Handler3), processor.Handlers[2]);
+            Assert.IsInstanceOfType(typeof (Handler1), processor.Handlers[0]);
+            Assert.IsInstanceOfType(typeof (Handler2), processor.Handlers[1]);
+            Assert.IsInstanceOfType(typeof (Handler3), processor.Handlers[2]);
         }
-
     }
 }

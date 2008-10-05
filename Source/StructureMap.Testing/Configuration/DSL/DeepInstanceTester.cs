@@ -1,7 +1,5 @@
 using System;
 using NUnit.Framework;
-using StructureMap.Configuration.DSL;
-using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing.Configuration.DSL
@@ -14,7 +12,7 @@ namespace StructureMap.Testing.Configuration.DSL
         private void assertThingMatches(Action<ConfigurationExpression> action)
         {
             IContainer manager = new Container(action);
-            Thing actual = manager.GetInstance<Thing>();
+            var actual = manager.GetInstance<Thing>();
             Assert.AreEqual(_prototype, actual);
         }
 
@@ -24,7 +22,7 @@ namespace StructureMap.Testing.Configuration.DSL
             assertThingMatches(r =>
             {
                 r.ForRequestedType<IWidget>().TheDefault.Is.OfConcreteType<ColorWidget>()
-                        .WithProperty("color").EqualTo("yellow");
+                    .WithProperty("color").EqualTo("yellow");
 
                 r.ForRequestedType<Rule>().TheDefaultIsConcreteType<WidgetRule>();
 
@@ -32,7 +30,6 @@ namespace StructureMap.Testing.Configuration.DSL
                     .WithCtorArg("average").EqualTo(.333)
                     .WithCtorArg("name").EqualTo("Jeremy")
                     .WithCtorArg("count").EqualTo(4);
-                    
             });
         }
 
@@ -86,35 +83,11 @@ namespace StructureMap.Testing.Configuration.DSL
                     .CtorDependency<IWidget>().Is(i => i.References("Yellow"));
 
                 registry.BuildInstancesOf<Thing>().TheDefault.Is.OfConcreteType<Thing>()
-                        .WithCtorArg("average").EqualTo(.333)
-                        .WithCtorArg("name").EqualTo("Jeremy")
-                        .WithCtorArg("count").EqualTo(4)
-                        .CtorDependency<Rule>().Is(i => i.References("TheWidgetRule"));
+                    .WithCtorArg("average").EqualTo(.333)
+                    .WithCtorArg("name").EqualTo("Jeremy")
+                    .WithCtorArg("count").EqualTo(4)
+                    .CtorDependency<Rule>().Is(i => i.References("TheWidgetRule"));
             });
-        }
-
-        [Test]
-        public void DeepInstanceTest1()
-        {
-            assertThingMatches(r =>
-            {
-                r.ForRequestedType<Thing>().TheDefault.Is.OfConcreteType<Thing>()
-                    .WithProperty("name").EqualTo("Jeremy")
-                    .WithProperty("count").EqualTo(4)
-                    .WithProperty("average").EqualTo(.333)
-                    .CtorDependency<Rule>().Is(x =>
-                    {
-                        x.OfConcreteType<WidgetRule>()
-                            .WithCtorArg("color").EqualTo("yellow")
-                            .CtorDependency<IWidget>().Is(
-                            w =>
-                            {
-                                w.OfConcreteType<ColorWidget>().WithProperty("color").EqualTo("yellow");
-                            });
-                    });
-                                                   
-            });
-
         }
 
 
@@ -135,7 +108,24 @@ namespace StructureMap.Testing.Configuration.DSL
             });
         }
 
-
+        [Test]
+        public void DeepInstanceTest1()
+        {
+            assertThingMatches(r =>
+            {
+                r.ForRequestedType<Thing>().TheDefault.Is.OfConcreteType<Thing>()
+                    .WithProperty("name").EqualTo("Jeremy")
+                    .WithProperty("count").EqualTo(4)
+                    .WithProperty("average").EqualTo(.333)
+                    .CtorDependency<Rule>().Is(x =>
+                    {
+                        x.OfConcreteType<WidgetRule>()
+                            .WithCtorArg("color").EqualTo("yellow")
+                            .CtorDependency<IWidget>().Is(
+                            w => { w.OfConcreteType<ColorWidget>().WithProperty("color").EqualTo("yellow"); });
+                    });
+            });
+        }
     }
 
     public class Thing
@@ -158,7 +148,7 @@ namespace StructureMap.Testing.Configuration.DSL
         public override bool Equals(object obj)
         {
             if (this == obj) return true;
-            Thing thing = obj as Thing;
+            var thing = obj as Thing;
             if (thing == null) return false;
             if (_count != thing._count) return false;
             if (!Equals(_name, thing._name)) return false;

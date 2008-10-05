@@ -13,10 +13,10 @@ namespace StructureMap.Testing.Attributes
     {
         private void assertScopeLeadsToInterceptor(InstanceScope scope, Type interceptorType)
         {
-            PluginFamilyAttribute att = new PluginFamilyAttribute("something");
+            var att = new PluginFamilyAttribute("something");
             att.Scope = scope;
 
-            PluginFamily family = new PluginFamily(typeof (TypeThatDoesNotHaveCustomMementoSource));
+            var family = new PluginFamily(typeof (TypeThatDoesNotHaveCustomMementoSource));
             att.Configure(family);
 
             Assert.IsInstanceOfType(interceptorType, family.Policy);
@@ -58,8 +58,8 @@ namespace StructureMap.Testing.Attributes
         [Test]
         public void CreateMemoryMementoSourceWhenTheMementoSourceIsExplicitlyDefinedInAttribute()
         {
-            MockRepository mocks = new MockRepository();
-            IPluginFamily family = mocks.DynamicMock<IPluginFamily>();
+            var mocks = new MockRepository();
+            var family = mocks.DynamicMock<IPluginFamily>();
 
             using (mocks.Record())
             {
@@ -78,8 +78,8 @@ namespace StructureMap.Testing.Attributes
         [Test]
         public void Do_not_add_a_memento_source_if_it_is_not_defined()
         {
-            MockRepository mocks = new MockRepository();
-            IPluginFamily family = mocks.DynamicMock<IPluginFamily>();
+            var mocks = new MockRepository();
+            var family = mocks.DynamicMock<IPluginFamily>();
 
             using (mocks.Record())
             {
@@ -99,11 +99,11 @@ namespace StructureMap.Testing.Attributes
         [Test]
         public void PerRequest_DoesNot_call_SetScopeTo_on_family()
         {
-            PluginFamilyAttribute att = new PluginFamilyAttribute("something");
+            var att = new PluginFamilyAttribute("something");
             att.Scope = InstanceScope.PerRequest;
 
-            MockRepository mocks = new MockRepository();
-            IPluginFamily family = mocks.DynamicMock<IPluginFamily>();
+            var mocks = new MockRepository();
+            var family = mocks.DynamicMock<IPluginFamily>();
 
             using (mocks.Record())
             {
@@ -129,7 +129,7 @@ namespace StructureMap.Testing.Attributes
         [Test]
         public void SettingTheScopeToSingletonSetsIsSingletonToTrue()
         {
-            PluginFamilyAttribute att = new PluginFamilyAttribute();
+            var att = new PluginFamilyAttribute();
             att.Scope = InstanceScope.Singleton;
 
             Assert.IsTrue(att.IsSingleton);
@@ -138,7 +138,7 @@ namespace StructureMap.Testing.Attributes
         [Test]
         public void UseSingletonEqualsTrueSetsScopeToSingleton()
         {
-            PluginFamilyAttribute att = new PluginFamilyAttribute();
+            var att = new PluginFamilyAttribute();
             att.IsSingleton = true;
 
             Assert.AreEqual(InstanceScope.Singleton, att.Scope);

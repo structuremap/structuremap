@@ -50,20 +50,20 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void DecorateAConstructedService()
         {
-            IService service = _container.GetInstance<IService>("Purple");
-            DecoratorService decoratorService = (DecoratorService) service;
+            var service = _container.GetInstance<IService>("Purple");
+            var decoratorService = (DecoratorService) service;
 
-            ColorService innerService = (ColorService) decoratorService.Inner;
+            var innerService = (ColorService) decoratorService.Inner;
             Assert.AreEqual("Purple", innerService.Color);
         }
 
         [Test]
         public void DecorateInline()
         {
-            IService service = _container.GetInstance<IService>("Decorated");
-            DecoratorService decoratorService = (DecoratorService) service;
+            var service = _container.GetInstance<IService>("Decorated");
+            var decoratorService = (DecoratorService) service;
 
-            ColorService innerService = (ColorService) decoratorService.Inner;
+            var innerService = (ColorService) decoratorService.Inner;
             Assert.AreEqual("Orange", innerService.Color);
         }
 
@@ -72,7 +72,7 @@ namespace StructureMap.Testing.Configuration.DSL
         public void OnCreationWithAConstructedService()
         {
             Assert.IsNull(_lastService);
-            IService interceptedService = _container.GetInstance<IService>("Yellow");
+            var interceptedService = _container.GetInstance<IService>("Yellow");
             Assert.AreSame(_lastService, interceptedService);
         }
 
@@ -86,7 +86,7 @@ namespace StructureMap.Testing.Configuration.DSL
             _container.GetInstance<IService>("NotIntercepted");
             Assert.IsNull(_lastService);
 
-            IService interceptedService = _container.GetInstance<IService>("Intercepted");
+            var interceptedService = _container.GetInstance<IService>("Intercepted");
             Assert.AreSame(_lastService, interceptedService);
         }
 

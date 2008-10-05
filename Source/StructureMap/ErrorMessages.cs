@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Resources;
-using System.Text;
 
 namespace StructureMap
 {
@@ -14,7 +12,7 @@ namespace StructureMap
             for (int i = 0; i < args.Length; i++)
             {
                 object arg = args[i];
-                Type type = arg as Type;
+                var type = arg as Type;
                 if (type != null)
                 {
                     args[i] = type.AssemblyQualifiedName;
@@ -32,7 +30,7 @@ namespace StructureMap
 
         private static string getMessage(int errorCode)
         {
-            ResourceManager resources = new ResourceManager(typeof(StructureMapException));
+            var resources = new ResourceManager(typeof (StructureMapException));
             return resources.GetString(errorCode.ToString());
         }
     }

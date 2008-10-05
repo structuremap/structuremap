@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
 using StructureMap.Configuration.DSL;
 using StructureMap.Diagnostics;
 using StructureMap.Exceptions;
@@ -18,13 +16,13 @@ namespace StructureMap
     public class Container : TypeRules, IContainer
     {
         private InterceptorLibrary _interceptorLibrary;
+        private Model _model;
         private PipelineGraph _pipelineGraph;
         private PluginGraph _pluginGraph;
-        private Model _model;
 
         public Container(Action<ConfigurationExpression> action)
         {
-            ConfigurationExpression expression = new ConfigurationExpression();
+            var expression = new ConfigurationExpression();
             action(expression);
 
             construct(expression.BuildGraph());
@@ -38,11 +36,6 @@ namespace StructureMap
         {
         }
 
-        public PluginGraph PluginGraph
-        {
-            get { return _pluginGraph; }
-        }
-
         /// <summary>
         /// Constructor to create an Container
         /// </summary>
@@ -54,30 +47,17 @@ namespace StructureMap
             construct(pluginGraph);
         }
 
-        private void construct(PluginGraph pluginGraph)
-        {
-            _interceptorLibrary = pluginGraph.InterceptorLibrary;
-
-            if (!pluginGraph.IsSealed)
-            {
-                pluginGraph.Seal();
-            }
-
-            _pluginGraph = pluginGraph;
-            pluginGraph.Log.AssertFailures();
-
-            _pipelineGraph = new PipelineGraph(pluginGraph);
-            _model = new Model(_pipelineGraph);
-
-            PluginCache.Compile();
-        }
-
         protected MissingFactoryFunction onMissingFactory
         {
             set { _pipelineGraph.OnMissingFactory = value; }
         }
 
         #region IContainer Members
+
+        public PluginGraph PluginGraph
+        {
+            get { return _pluginGraph; }
+        }
 
         public IModel Model
         {
@@ -96,7 +76,7 @@ namespace StructureMap
 
         public PLUGINTYPE GetInstance<PLUGINTYPE>(ExplicitArguments args)
         {
-            return (PLUGINTYPE) GetInstance(typeof(PLUGINTYPE), args);
+            return (PLUGINTYPE) GetInstance(typeof (PLUGINTYPE), args);
         }
 
         public object GetInstance(Type type, ExplicitArguments args)
@@ -148,17 +128,6 @@ namespace StructureMap
             return getListOfTypeWithSession<T>(session);
         }
 
-        private IList<T> getListOfTypeWithSession<T>(BuildSession session)
-        {
-            List<T> list = new List<T>();
-            foreach (T instance in forType(typeof (T)).GetAllInstances(session))
-            {
-                list.Add(instance);
-            }
-
-            return list;
-        }
-
         public void SetDefaultsToProfile(string profile)
         {
             _pipelineGraph.CurrentProfile = profile;
@@ -174,8 +143,6 @@ namespace StructureMap
         {
             return withNewSession().CreateInstance(pluginType, instanceKey);
         }
-
-
 
 
         /// <summary>
@@ -205,20 +172,10 @@ namespace StructureMap
         /// Sets the default instance for the PluginType
         /// </summary>
         /// <param name="pluginType"></param>
-        /// <param name="instance"></param>
-        public void Inject(Type pluginType, Instance instance)
-        {
-            _pipelineGraph.SetDefault(pluginType, instance);
-        }
-
-        /// <summary>
-        /// Sets the default instance for the PluginType
-        /// </summary>
-        /// <param name="pluginType"></param>
         /// <param name="instanceKey"></param>
         public void SetDefault(Type pluginType, string instanceKey)
         {
-            ReferencedInstance reference = new ReferencedInstance(instanceKey);
+            var reference = new ReferencedInstance(instanceKey);
             _pipelineGraph.SetDefault(pluginType, reference);
         }
 
@@ -229,12 +186,12 @@ namespace StructureMap
 
         public void SetDefault<T>(Instance instance)
         {
-            SetDefault(typeof(T), instance);
+            SetDefault(typeof (T), instance);
         }
 
         public void SetDefault<PLUGINTYPE, CONCRETETYPE>() where CONCRETETYPE : PLUGINTYPE
         {
-            SetDefault<PLUGINTYPE>(new ConfiguredInstance(typeof(CONCRETETYPE)));
+            SetDefault<PLUGINTYPE>(new ConfiguredInstance(typeof (CONCRETETYPE)));
         }
 
 
@@ -251,7 +208,7 @@ namespace StructureMap
                 throw new StructureMapException(230, type.FullName);
             }
 
-            Plugin plugin = new Plugin(type);
+            var plugin = new Plugin(type);
             if (!plugin.CanBeAutoFilled)
             {
                 throw new StructureMapException(230, type.FullName);
@@ -275,7 +232,7 @@ namespace StructureMap
             }
 
 
-            LiteralInstance instance = new LiteralInstance(stub);
+            var instance = new LiteralInstance(stub);
             _pipelineGraph.SetDefault(pluginType, instance);
         }
 
@@ -288,7 +245,7 @@ namespace StructureMap
         {
             lock (this)
             {
-                ConfigurationExpression registry = new ConfigurationExpression();
+                var registry = new ConfigurationExpression();
                 configure(registry);
 
                 PluginGraph graph = registry.Build();
@@ -302,13 +259,13 @@ namespace StructureMap
 
         public string WhatDoIHave()
         {
-            WhatDoIHaveWriter writer = new WhatDoIHaveWriter(_pipelineGraph);
+            var writer = new WhatDoIHaveWriter(_pipelineGraph);
             return writer.GetText();
         }
 
         public ExplicitArgsExpression With<T>(T arg)
         {
-            return new ExplicitArgsExpression(this).With<T>(arg);
+            return new ExplicitArgsExpression(this).With(arg);
         }
 
         public IExplicitProperty With(string argName)
@@ -318,7 +275,7 @@ namespace StructureMap
 
         public void AssertConfigurationIsValid()
         {
-            ValidationBuildSession session = new ValidationBuildSession(_pipelineGraph, _interceptorLibrary);
+            var session = new ValidationBuildSession(_pipelineGraph, _interceptorLibrary);
             session.PerformValidations();
 
             if (!session.Success)
@@ -327,9 +284,51 @@ namespace StructureMap
             }
         }
 
-
+        public void EjectAllInstancesOf<T>()
+        {
+            _pipelineGraph.EjectAllInstancesOf<T>();
+        }
 
         #endregion
+
+        private void construct(PluginGraph pluginGraph)
+        {
+            _interceptorLibrary = pluginGraph.InterceptorLibrary;
+
+            if (!pluginGraph.IsSealed)
+            {
+                pluginGraph.Seal();
+            }
+
+            _pluginGraph = pluginGraph;
+            pluginGraph.Log.AssertFailures();
+
+            _pipelineGraph = new PipelineGraph(pluginGraph);
+            _model = new Model(_pipelineGraph);
+
+            PluginCache.Compile();
+        }
+
+        private IList<T> getListOfTypeWithSession<T>(BuildSession session)
+        {
+            var list = new List<T>();
+            foreach (T instance in forType(typeof (T)).GetAllInstances(session))
+            {
+                list.Add(instance);
+            }
+
+            return list;
+        }
+
+        /// <summary>
+        /// Sets the default instance for the PluginType
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="instance"></param>
+        public void Inject(Type pluginType, Instance instance)
+        {
+            _pipelineGraph.SetDefault(pluginType, instance);
+        }
 
         private BuildSession withNewSession()
         {
@@ -340,11 +339,6 @@ namespace StructureMap
         protected IInstanceFactory forType(Type type)
         {
             return _pipelineGraph.ForType(type);
-        }
-
-        public void EjectAllInstancesOf<T>()
-        {
-            _pipelineGraph.EjectAllInstancesOf<T>();
         }
     }
 }

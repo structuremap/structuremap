@@ -54,9 +54,9 @@ namespace StructureMap.Testing
         {
             int count = 0;
 
-            BuildSession session = new BuildSession(new PluginGraph());
-            BuildSession session2 = new BuildSession(new PluginGraph());
-            ConstructorInstance<ColorRule> instance = new ConstructorInstance<ColorRule>(() =>
+            var session = new BuildSession(new PluginGraph());
+            var session2 = new BuildSession(new PluginGraph());
+            var instance = new ConstructorInstance<ColorRule>(() =>
             {
                 count++;
                 return new ColorRule("Red");
@@ -87,7 +87,7 @@ namespace StructureMap.Testing
                 });
             });
 
-            WidgetHolder holder = manager.GetInstance<WidgetHolder>();
+            var holder = manager.GetInstance<WidgetHolder>();
             Assert.AreEqual(3, holder.Widgets.Length);
         }
 
@@ -96,8 +96,8 @@ namespace StructureMap.Testing
         {
             int count = 0;
 
-            BuildSession session = new BuildSession(new PluginGraph());
-            ConstructorInstance<ColorRule> instance = new ConstructorInstance<ColorRule>(() =>
+            var session = new BuildSession(new PluginGraph());
+            var instance = new ConstructorInstance<ColorRule>(() =>
             {
                 count++;
                 return new ColorRule("Red");
@@ -120,16 +120,16 @@ namespace StructureMap.Testing
         {
             int count = 0;
 
-            ConstructorInstance<ColorRule> instance = new ConstructorInstance<ColorRule>( () =>
+            var instance = new ConstructorInstance<ColorRule>(() =>
             {
                 count++;
                 return new ColorRule("Red");
             });
-            Registry registry = new Registry();
+            var registry = new Registry();
             registry.ForRequestedType<ColorRule>().TheDefault.IsThis(instance);
 
             PluginGraph graph = registry.Build();
-            BuildSession session = new BuildSession(graph);
+            var session = new BuildSession(graph);
 
 
             object result1 = session.CreateInstance(typeof (ColorRule));
@@ -147,55 +147,56 @@ namespace StructureMap.Testing
         [Test]
         public void Throw_200_When_trying_to_build_an_instance_that_cannot_be_found()
         {
-            PipelineGraph graph = new PipelineGraph(new PluginGraph());
+            var graph = new PipelineGraph(new PluginGraph());
 
             assertActionThrowsErrorCode(200, delegate
             {
-                BuildSession session = new BuildSession(graph, null);
+                var session = new BuildSession(graph, null);
                 session.CreateInstance(typeof (IGateway), "Gateway that is not configured");
             });
         }
-
-        [Test]
-        public void When_calling_CreateInstance_if_no_default_can_be_found_throw_202()
-        {
-            PipelineGraph graph = new PipelineGraph(new PluginGraph());
-
-            assertActionThrowsErrorCode(202, delegate
-            {
-                BuildSession session = new BuildSession(graph, null);
-                session.CreateInstance(typeof (IGateway));
-            });
-        }
-
 
 
         [Test]
         public void when_building_an_instance_use_the_register_the_stack_frame()
         {
             var recordingInstance = new BuildSessionInstance1();
-            ConfiguredInstance instance = new ConfiguredInstance(typeof(ClassWithRule)).Child("rule").Is(recordingInstance);
-            BuildSession session = new BuildSession(new PluginGraph());
+            ConfiguredInstance instance =
+                new ConfiguredInstance(typeof (ClassWithRule)).Child("rule").Is(recordingInstance);
+            var session = new BuildSession(new PluginGraph());
 
             session.CreateInstance(typeof (IClassWithRule), instance);
 
-            recordingInstance.Root.ConcreteType.ShouldEqual(typeof(ClassWithRule));
-            recordingInstance.Root.RequestedType.ShouldEqual(typeof(IClassWithRule));
+            recordingInstance.Root.ConcreteType.ShouldEqual(typeof (ClassWithRule));
+            recordingInstance.Root.RequestedType.ShouldEqual(typeof (IClassWithRule));
             recordingInstance.Root.Name.ShouldEqual(instance.Name);
 
-            recordingInstance.Current.ConcreteType.ShouldEqual(typeof(ColorRule));
-            recordingInstance.Current.RequestedType.ShouldEqual(typeof(Rule));
+            recordingInstance.Current.ConcreteType.ShouldEqual(typeof (ColorRule));
+            recordingInstance.Current.RequestedType.ShouldEqual(typeof (Rule));
             recordingInstance.Current.Name.ShouldEqual(recordingInstance.Name);
+        }
+
+        [Test]
+        public void When_calling_CreateInstance_if_no_default_can_be_found_throw_202()
+        {
+            var graph = new PipelineGraph(new PluginGraph());
+
+            assertActionThrowsErrorCode(202, delegate
+            {
+                var session = new BuildSession(graph, null);
+                session.CreateInstance(typeof (IGateway));
+            });
         }
     }
 
-    public interface IClassWithRule{}
+    public interface IClassWithRule
+    {
+    }
 
     public class ClassWithRule : IClassWithRule
     {
         public ClassWithRule(Rule rule)
         {
-            
         }
     }
 
@@ -211,7 +212,7 @@ namespace StructureMap.Testing
 
         protected override Type getConcreteType(Type pluginType)
         {
-            return typeof(ColorRule);
+            return typeof (ColorRule);
         }
 
         protected override object build(Type pluginType, BuildSession session)

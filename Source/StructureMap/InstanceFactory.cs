@@ -56,10 +56,10 @@ namespace StructureMap
 
         public static InstanceFactory CreateFactoryForType(Type concreteType, ProfileManager profileManager)
         {
-            PluginFamily family = new PluginFamily(concreteType);
+            var family = new PluginFamily(concreteType);
             family.Seal();
 
-            InstanceFactory factory = new InstanceFactory(family);
+            var factory = new InstanceFactory(family);
 
             Instance instance = family.GetDefaultInstance();
             if (instance != null)
@@ -134,8 +134,6 @@ namespace StructureMap
             return _instances.Retrieve(name);
         }
 
-        #endregion
-
         public void ImportFrom(PluginFamily family)
         {
             family.EachInstance(instance => _instances.Fill(instance.Name, instance));
@@ -145,5 +143,7 @@ namespace StructureMap
         {
             _instances.Clear();
         }
+
+        #endregion
     }
 }

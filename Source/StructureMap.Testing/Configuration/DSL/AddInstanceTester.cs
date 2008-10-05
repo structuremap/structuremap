@@ -1,7 +1,6 @@
 using System;
 using System.Configuration;
 using NUnit.Framework;
-using StructureMap.Configuration.DSL;
 using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing.Configuration.DSL
@@ -172,9 +171,9 @@ namespace StructureMap.Testing.Configuration.DSL
                 new Container(
                     registry => registry.InstanceOf<IWidget>().Is.SerializedCopyOf(theWidget).WithName("Jeremy"));
 
-            var widget1 = (CloneableWidget)container.GetInstance<IWidget>("Jeremy");
-            var widget2 = (CloneableWidget)container.GetInstance<IWidget>("Jeremy");
-            var widget3 = (CloneableWidget)container.GetInstance<IWidget>("Jeremy");
+            var widget1 = (CloneableWidget) container.GetInstance<IWidget>("Jeremy");
+            var widget2 = (CloneableWidget) container.GetInstance<IWidget>("Jeremy");
+            var widget3 = (CloneableWidget) container.GetInstance<IWidget>("Jeremy");
 
             Assert.AreEqual("Jeremy", widget1.Name);
             Assert.AreEqual("Jeremy", widget2.Name);

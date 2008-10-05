@@ -29,12 +29,12 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void Create_referenced_instance_happy_path()
         {
-            MockRepository mocks = new MockRepository();
-            BuildSession buildSession = mocks.StrictMock<BuildSession>();
+            var mocks = new MockRepository();
+            var buildSession = mocks.StrictMock<BuildSession>();
 
-            ConcreteReferenced returnedValue = new ConcreteReferenced();
+            var returnedValue = new ConcreteReferenced();
             string theReferenceKey = "theReferenceKey";
-            ReferencedInstance instance = new ReferencedInstance(theReferenceKey);
+            var instance = new ReferencedInstance(theReferenceKey);
 
             using (mocks.Record())
             {
@@ -50,12 +50,12 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void FindMaster_Instance_happy_path()
         {
-            PluginFamily family = new PluginFamily(typeof (ISomething));
+            var family = new PluginFamily(typeof (ISomething));
             LiteralInstance redInstance = new LiteralInstance(new SomethingOne()).WithName("Red");
             family.AddInstance(redInstance);
             family.AddInstance(new LiteralInstance(new SomethingOne()).WithName("Blue"));
 
-            ReferencedInstance instance = new ReferencedInstance("Red");
+            var instance = new ReferencedInstance("Red");
             Assert.AreSame(redInstance, ((IDiagnosticInstance) instance).FindInstanceForProfile(family, null, null));
         }
 
@@ -63,7 +63,7 @@ namespace StructureMap.Testing.Pipeline
         public void GetDescription()
         {
             string theReferenceKey = "theReferenceKey";
-            ReferencedInstance instance = new ReferencedInstance(theReferenceKey);
+            var instance = new ReferencedInstance(theReferenceKey);
 
             TestUtility.AssertDescriptionIs(instance, "\"theReferenceKey\"");
         }

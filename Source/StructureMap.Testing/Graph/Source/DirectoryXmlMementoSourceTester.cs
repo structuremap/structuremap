@@ -32,7 +32,7 @@ namespace StructureMap.Testing.Graph.Source
 
         private void writeFile(string text, string path)
         {
-            FileInfo fileInfo = new FileInfo(path);
+            var fileInfo = new FileInfo(path);
             StreamWriter writer = fileInfo.CreateText();
             writer.Write(text);
 
@@ -58,7 +58,7 @@ namespace StructureMap.Testing.Graph.Source
         [Test, ExpectedException(typeof (ApplicationException))]
         public void ValidateIsNotSuccessfulWithADirectoryItCannotFind()
         {
-            DirectoryXmlMementoSource source =
+            var source =
                 new DirectoryXmlMementoSource("NotARealDirectory", "xml", XmlMementoStyle.NodeNormalized);
             source.Validate();
         }

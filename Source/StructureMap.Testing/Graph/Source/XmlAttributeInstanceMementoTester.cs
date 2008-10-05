@@ -23,7 +23,7 @@ namespace StructureMap.Testing.Graph.Source
 
         private XmlAttributeInstanceMemento buildMemento(string xml)
         {
-            XmlDocument doc = new XmlDocument();
+            var doc = new XmlDocument();
             doc.LoadXml(xml);
 
             return new XmlAttributeInstanceMemento(doc.DocumentElement);
@@ -68,7 +68,7 @@ namespace StructureMap.Testing.Graph.Source
             childElement1.SetAttribute("Key", "theInstanceKey");
             childElement1.SetAttribute("prop1", "thePropertyValue");
 
-            XmlElement childElement2 = (XmlElement) childElement1.CloneNode(true);
+            var childElement2 = (XmlElement) childElement1.CloneNode(true);
             childElement2.SetAttribute("prop1", "different");
             rulesElement.AppendChild(childElement2);
 

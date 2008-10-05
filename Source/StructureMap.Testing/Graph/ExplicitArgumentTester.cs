@@ -13,10 +13,7 @@ namespace StructureMap.Testing.Graph
         [SetUp]
         public void SetUp()
         {
-            ObjectFactory.Initialize(x =>
-            {
-                x.UseDefaultStructureMapConfigFile = false;
-            });
+            ObjectFactory.Initialize(x => { x.UseDefaultStructureMapConfigFile = false; });
         }
 
         #endregion

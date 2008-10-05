@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
@@ -10,20 +9,18 @@ namespace StructureMap
 {
     public interface IContext
     {
-        T GetInstance<T>();
-
-
         BuildStack BuildStack { get; }
         Type ParentType { get; }
+        T GetInstance<T>();
     }
 
     public class BuildSession : IContext
     {
-        private readonly InterceptorLibrary _interceptorLibrary;
-        private readonly PipelineGraph _pipelineGraph;
+        private readonly BuildStack _buildStack = new BuildStack();
         private readonly InstanceCache _cache = new InstanceCache();
         private readonly Cache<Type, object> _defaults;
-        private readonly BuildStack _buildStack = new BuildStack();
+        private readonly InterceptorLibrary _interceptorLibrary;
+        private readonly PipelineGraph _pipelineGraph;
 
         public BuildSession(PipelineGraph pipelineGraph, InterceptorLibrary interceptorLibrary)
         {
@@ -46,12 +43,10 @@ namespace StructureMap
         public BuildSession(PluginGraph graph)
             : this(new PipelineGraph(graph), graph.InterceptorLibrary)
         {
-            
         }
 
         public BuildSession() : this(new PluginGraph())
         {
-            
         }
 
 
@@ -59,6 +54,25 @@ namespace StructureMap
         {
             get { return _pipelineGraph; }
         }
+
+        #region IContext Members
+
+        public BuildStack BuildStack
+        {
+            get { return _buildStack; }
+        }
+
+        public Type ParentType
+        {
+            get { return _buildStack.Parent.ConcreteType; }
+        }
+
+        T IContext.GetInstance<T>()
+        {
+            return (T) CreateInstance(typeof (T));
+        }
+
+        #endregion
 
         public virtual object CreateInstance(Type pluginType, string name)
         {
@@ -74,7 +88,7 @@ namespace StructureMap
         public virtual object CreateInstance(Type pluginType, Instance instance)
         {
             object result = _cache.Get(pluginType, instance);
-            
+
             if (result == null)
             {
                 result = forType(pluginType).Build(this, instance);
@@ -107,7 +121,7 @@ namespace StructureMap
 
                     object arrayValue = forType(pluginType).Build(this, instance);
                     array.SetValue(arrayValue, i);
-                }    
+                }
             }
 
             return array;
@@ -129,25 +143,10 @@ namespace StructureMap
             _defaults.Store(pluginType, defaultObject);
         }
 
-        public BuildStack BuildStack
-        {
-            get { return _buildStack; }
-        }
-
-        public Type ParentType
-        {
-            get { return _buildStack.Parent.ConcreteType; }
-        }
-
 
         private IInstanceFactory forType(Type pluginType)
         {
             return _pipelineGraph.ForType(pluginType);
-        }
-
-        T IContext.GetInstance<T>()
-        {
-            return (T) CreateInstance(typeof (T));
         }
     }
 }

@@ -9,7 +9,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void CanSetTheDefaultInstanceKeyImplicitlyFromObjectFactory()
         {
-            DefaultGateway gateway = ObjectFactory.GetInstance(typeof (IGateway)) as DefaultGateway;
+            var gateway = ObjectFactory.GetInstance(typeof (IGateway)) as DefaultGateway;
             Assert.IsNotNull(gateway);
         }
     }

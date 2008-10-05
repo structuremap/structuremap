@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using NUnit.Framework;
-using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 
 namespace StructureMap.Testing.Graph
@@ -22,7 +21,6 @@ namespace StructureMap.Testing.Graph
                     x.AddAllTypesOf<TypeIWantToFind>();
                     x.AddAllTypesOf<OtherType>();
                 });
-
             });
         }
 

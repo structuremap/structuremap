@@ -18,7 +18,7 @@ namespace StructureMap
         /// <returns></returns>
         public static MemoryInstanceMemento CreateReferencedInstanceMemento(string referenceKey)
         {
-            MemoryInstanceMemento memento = new MemoryInstanceMemento();
+            var memento = new MemoryInstanceMemento();
             memento._referenceKey = referenceKey;
             memento._isReference = true;
 
@@ -32,7 +32,7 @@ namespace StructureMap
         /// <returns></returns>
         public static MemoryInstanceMemento CreateDefaultInstanceMemento()
         {
-            MemoryInstanceMemento memento = new MemoryInstanceMemento();
+            var memento = new MemoryInstanceMemento();
             memento._referenceKey = string.Empty;
             memento._isReference = true;
 

@@ -41,7 +41,7 @@ namespace StructureMap.Testing
         public void AddNodeDirectly()
         {
             string xml = "<StructureMap><Assembly Name=\"StructureMap.Testing.GenericWidgets\"/></StructureMap>";
-            XmlDocument doc = new XmlDocument();
+            var doc = new XmlDocument();
             doc.LoadXml(xml);
 
 
@@ -57,19 +57,13 @@ namespace StructureMap.Testing
         [Test]
         public void NotTheDefault()
         {
-            assertTheDefault("Orange", x =>
-            {
-                x.AddConfigurationFromXmlFile("Config1.xml");
-            });
+            assertTheDefault("Orange", x => { x.AddConfigurationFromXmlFile("Config1.xml"); });
         }
 
         [Test]
         public void WithTheDefault()
         {
-            ObjectFactory.Initialize(x =>
-            {
-                x.UseDefaultStructureMapConfigFile = true;
-            });
+            ObjectFactory.Initialize(x => { x.UseDefaultStructureMapConfigFile = true; });
 
             ObjectFactory.GetInstance<IWidget>().ShouldBeOfType<ColorWidget>().Color.ShouldEqual("Red");
         }

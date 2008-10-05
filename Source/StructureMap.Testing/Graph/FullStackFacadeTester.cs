@@ -18,7 +18,7 @@ namespace StructureMap.Testing.Graph
             DataMother.WriteDocument("SampleConfig.xml");
             DataMother.WriteDocument("FullTesting.XML");
 
-            ObjectFactory.Initialize(x => {});
+            ObjectFactory.Initialize(x => { });
         }
 
         #endregion

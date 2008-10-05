@@ -67,8 +67,8 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void Build_a_clone()
         {
-            PrototypeTarget target = new PrototypeTarget("Jeremy");
-            PrototypeInstance instance = new PrototypeInstance(target);
+            var target = new PrototypeTarget("Jeremy");
+            var instance = new PrototypeInstance(target);
 
             object returnedValue = instance.Build(typeof (PrototypeTarget), new StubBuildSession());
 
@@ -79,22 +79,22 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void Can_be_part_of_PluginFamily()
         {
-            PrototypeTarget target = new PrototypeTarget("Jeremy");
-            PrototypeInstance instance = new PrototypeInstance(target);
+            var target = new PrototypeTarget("Jeremy");
+            var instance = new PrototypeInstance(target);
             IDiagnosticInstance diagnosticInstance = instance;
 
-            PluginFamily family1 = new PluginFamily(typeof (PrototypeTarget));
+            var family1 = new PluginFamily(typeof (PrototypeTarget));
             Assert.IsTrue(diagnosticInstance.CanBePartOfPluginFamily(family1));
 
-            PluginFamily family2 = new PluginFamily(GetType());
+            var family2 = new PluginFamily(GetType());
             Assert.IsFalse(diagnosticInstance.CanBePartOfPluginFamily(family2));
         }
 
         [Test]
         public void Get_description()
         {
-            PrototypeTarget target = new PrototypeTarget("Jeremy");
-            PrototypeInstance instance = new PrototypeInstance(target);
+            var target = new PrototypeTarget("Jeremy");
+            var instance = new PrototypeInstance(target);
 
             TestUtility.AssertDescriptionIs(instance, "Prototype of " + target);
         }

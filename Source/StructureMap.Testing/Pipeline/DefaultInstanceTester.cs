@@ -27,11 +27,11 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void Build_happy_path()
         {
-            MockRepository mocks = new MockRepository();
-            BuildSession buildSession =
+            var mocks = new MockRepository();
+            var buildSession =
                 mocks.StrictMock<BuildSession>();
 
-            DefaultClass theDefault = new DefaultClass();
+            var theDefault = new DefaultClass();
 
 
             using (mocks.Record())
@@ -41,7 +41,7 @@ namespace StructureMap.Testing.Pipeline
 
             using (mocks.Playback())
             {
-                DefaultInstance instance = new DefaultInstance();
+                var instance = new DefaultInstance();
                 Assert.AreSame(theDefault, instance.Build(typeof (IDefault), buildSession));
             }
         }

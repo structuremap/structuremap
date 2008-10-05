@@ -83,7 +83,8 @@ namespace StructureMap.Testing.Graph
             var container = new Container(r =>
             {
                 r.ForRequestedType<IService>()
-                    .TheDefault.Is.OfConcreteType<ColorService>().WithName("Orange").WithProperty("color").EqualTo("Orange");
+                    .TheDefault.Is.OfConcreteType<ColorService>().WithName("Orange").WithProperty("color").EqualTo(
+                    "Orange");
 
                 r.ForRequestedType<IService>().AddInstances(x =>
                 {
@@ -229,13 +230,13 @@ namespace StructureMap.Testing.Graph
             });
 
 
-            container.SetDefault(typeof(IService), "Red");
+            container.SetDefault(typeof (IService), "Red");
             assertColorIs(container, "Red");
 
-            container.SetDefault(typeof(IService), "Green");
+            container.SetDefault(typeof (IService), "Green");
             assertColorIs(container, "Green");
 
-            container.SetDefault(typeof(IService), "Blue");
+            container.SetDefault(typeof (IService), "Blue");
             assertColorIs(container, "Blue");
         }
 

@@ -64,10 +64,43 @@ namespace StructureMap.Testing.Configuration.DSL
             #endregion
         }
 
+        public interface IRepository<T>
+        {
+            void Save(T subject);
+        }
+
+        public class OnlineRepository<T> : IRepository<T>
+        {
+            #region IRepository<T> Members
+
+            public void Save(T subject)
+            {
+                throw new NotImplementedException();
+            }
+
+            #endregion
+        }
+
+        public class OfflineRepository<T> : IRepository<T>
+        {
+            #region IRepository<T> Members
+
+            public void Save(T subject)
+            {
+                throw new NotImplementedException();
+            }
+
+            #endregion
+        }
+
+        public class Invoice
+        {
+        }
+
         [Test]
         public void Add_concrete_type()
         {
-            Container manager =
+            var manager =
                 new Container(
                     r => r.ForRequestedType(typeof (ITarget)).AddConcreteType(typeof (Target1)));
 
@@ -78,7 +111,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void Add_concrete_type_with_name()
         {
-            Container manager = new Container(r =>
+            var manager = new Container(r =>
             {
                 r.ForRequestedType(typeof (ITarget)).AddConcreteType(typeof (Target1), "1");
                 r.ForRequestedType(typeof (ITarget)).AddConcreteType(typeof (Target2), "2");
@@ -94,7 +127,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void Add_default_by_concrete_type()
         {
-            Container manager =
+            var manager =
                 new Container(
                     r => r.ForRequestedType(typeof (ITarget)).TheDefaultIsConcreteType(typeof (Target3)));
 
@@ -104,10 +137,8 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void Add_default_instance()
         {
-            var container = new Container(r =>
-            {
-                r.ForRequestedType(typeof (ITarget)).TheDefaultIsConcreteType(typeof (Target2));
-            });
+            var container =
+                new Container(r => { r.ForRequestedType(typeof (ITarget)).TheDefaultIsConcreteType(typeof (Target2)); });
 
             container.GetInstance<ITarget>().ShouldBeOfType<Target2>();
         }
@@ -115,43 +146,23 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test, Explicit]
         public void Add_default_instance2()
         {
-            Container manager =
-                new Container(r => r.ForRequestedType(typeof (IRepository<>)).TheDefaultIsConcreteType(typeof (OnlineRepository<>)));
+            var manager =
+                new Container(
+                    r =>
+                    r.ForRequestedType(typeof (IRepository<>)).TheDefaultIsConcreteType(typeof (OnlineRepository<>)));
 
-            Assert.IsInstanceOfType(typeof(Target2), manager.GetInstance<ITarget>());
+            Assert.IsInstanceOfType(typeof (Target2), manager.GetInstance<ITarget>());
 
 
-            IRepository<Invoice> repository = 
+            var repository =
                 ObjectFactory.GetInstance<IRepository<Invoice>>();
         }
-
-        public interface IRepository<T>
-        {
-            void Save(T subject);
-        }
-
-        public class OnlineRepository<T> : IRepository<T>{
-            public void Save(T subject)
-            {
-                throw new NotImplementedException();
-            }
-        }
-        public class OfflineRepository<T> : IRepository<T>{
-            public void Save(T subject)
-            {
-                throw new NotImplementedException();
-            }
-        }
-        public class Invoice{}
 
 
         [Test]
         public void Add_instance_directly()
         {
-            var container = new Container(r =>
-            {
-                r.InstanceOf<ITarget>().Is.OfConcreteType<Target2>();
-            });
+            var container = new Container(r => { r.InstanceOf<ITarget>().Is.OfConcreteType<Target2>(); });
 
             Assert.IsInstanceOfType(typeof (Target2), container.GetAllInstances<ITarget>()[0]);
         }
@@ -163,18 +174,17 @@ namespace StructureMap.Testing.Configuration.DSL
             {
                 r.ForRequestedType(typeof (ITarget)).EnrichWith(raw => new WrappedTarget((ITarget) raw))
                     .TheDefaultIsConcreteType(typeof (Target1));
-
             });
 
-            WrappedTarget target = (WrappedTarget) container.GetInstance<ITarget>();
+            var target = (WrappedTarget) container.GetInstance<ITarget>();
             Assert.IsInstanceOfType(typeof (Target1), target.Inner);
         }
 
         [Test]
         public void Intercept_construction_with()
         {
-            Registry registry = new Registry();
-            TestingBuildPolicy policy = new TestingBuildPolicy();
+            var registry = new Registry();
+            var policy = new TestingBuildPolicy();
             registry.ForRequestedType(typeof (ITarget)).InterceptConstructionWith(policy);
             PluginGraph graph = registry.Build();
 
@@ -198,7 +208,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void Set_caching()
         {
-            Registry registry = new Registry();
+            var registry = new Registry();
             registry.ForRequestedType(typeof (ITarget)).CacheBy(InstanceScope.ThreadLocal);
             PluginGraph graph = registry.Build();
 

@@ -59,10 +59,8 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void AddInstanceByNameOnlyAddsOneInstanceToStructureMap()
         {
-            var container = new Container(r =>
-            {
-                r.InstanceOf<Something>().Is.OfConcreteType<RedSomething>().WithName("Red");
-            });
+            var container =
+                new Container(r => { r.InstanceOf<Something>().Is.OfConcreteType<RedSomething>().WithName("Red"); });
 
             IList<Something> instances = container.GetAllInstances<Something>();
             Assert.AreEqual(1, instances.Count);

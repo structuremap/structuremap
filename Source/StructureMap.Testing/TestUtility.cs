@@ -9,7 +9,7 @@ namespace StructureMap.Testing
     {
         public static void AssertErrorIsLogged(int errorCode, Action<PluginGraph> action)
         {
-            PluginGraph graph = new PluginGraph();
+            var graph = new PluginGraph();
             action(graph);
             graph.Log.AssertHasError(errorCode);
         }

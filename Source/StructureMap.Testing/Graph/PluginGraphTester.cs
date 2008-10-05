@@ -9,8 +9,6 @@ namespace StructureMap.Testing.Graph
     [TestFixture]
     public class PluginGraphTester
     {
-
-
         [Test]
         public void add_type_adds_a_plugin_for_type_once_and_only_once()
         {

@@ -19,7 +19,8 @@ namespace StructureMap.Emitting.Parameters
                                                                       null,
                                                                       new[]
                                                                           {
-                                                                              typeof (Type), typeof (string), typeof (bool)
+                                                                              typeof (Type), typeof (string),
+                                                                              typeof (bool)
                                                                           }, null);
 
         public static MethodInfo GET_CHILD =

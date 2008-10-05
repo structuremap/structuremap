@@ -8,32 +8,25 @@ using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
-using StructureMap.Pipeline;
 
 namespace StructureMap
 {
-    [Obsolete("Please use the ObjectFactory.Initialize() method for configuring the container and put configuration into Registry classes")]
+    [Obsolete(
+        "Please use the ObjectFactory.Initialize() method for configuring the container and put configuration into Registry classes"
+        )]
     public static class StructureMapConfiguration
     {
         private const string CONFIG_FILE_NAME = "StructureMap.config";
         private static GraphLog _log;
+        private static ConfigurationParserBuilder _parserBuilder;
         private static List<Registry> _registries;
         private static Registry _registry;
-        private static ConfigurationParserBuilder _parserBuilder;
-        private static bool _sealed = false;
-       
+        private static bool _sealed;
+
 
         static StructureMapConfiguration()
         {
             ResetAll();
-        }
-
-        private static void assertIsNotSealed()
-        {
-            if (_sealed)
-            {
-                throw new StructureMapException(50);
-            }
         }
 
         private static IConfigurationParserBuilder parserBuilder
@@ -75,6 +68,14 @@ namespace StructureMap
         {
             get { return parserBuilder.PullConfigurationFromAppConfig; }
             set { parserBuilder.PullConfigurationFromAppConfig = value; }
+        }
+
+        private static void assertIsNotSealed()
+        {
+            if (_sealed)
+            {
+                throw new StructureMapException(50);
+            }
         }
 
         /// <summary>
@@ -147,8 +148,8 @@ namespace StructureMap
             _sealed = true;
 
             ConfigurationParser[] parsers = _parserBuilder.GetParsers();
-            
-            PluginGraphBuilder pluginGraphBuilder = new PluginGraphBuilder(parsers, _registries.ToArray(), _log);
+
+            var pluginGraphBuilder = new PluginGraphBuilder(parsers, _registries.ToArray(), _log);
             return pluginGraphBuilder.Build();
         }
 
@@ -160,7 +161,6 @@ namespace StructureMap
         {
             parserBuilder.IncludeFile(filename);
         }
-
 
 
         /// <summary>

@@ -13,7 +13,7 @@ namespace StructureMap.Testing.DataAccess.JSON
             JSONObject o2 = new JSONObject().AddNumber("age", 35);
             JSONObject o3 = new JSONObject().AddNumber("age", 2);
 
-            JSONArray jsonArray = new JSONArray(false);
+            var jsonArray = new JSONArray(false);
             Assert.AreEqual("[]", jsonArray.ToJSON());
 
             jsonArray.AddObject(o1);

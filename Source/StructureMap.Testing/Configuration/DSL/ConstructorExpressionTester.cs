@@ -17,15 +17,15 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void AddTwoConstructorsConsecutively()
         {
-            Concretion concretion1 = new Concretion();
-            Concretion concretion2 = new Concretion();
+            var concretion1 = new Concretion();
+            var concretion2 = new Concretion();
 
-            IContainer container = new Container(r => 
-                r.ForRequestedType<Abstraction>().AddInstances(x =>
-                {
-                    x.ConstructedBy(() => concretion1).WithName("One");
-                    x.ConstructedBy(() => concretion2).WithName("Two");
-                }));
+            IContainer container = new Container(r =>
+                                                 r.ForRequestedType<Abstraction>().AddInstances(x =>
+                                                 {
+                                                     x.ConstructedBy(() => concretion1).WithName("One");
+                                                     x.ConstructedBy(() => concretion2).WithName("Two");
+                                                 }));
 
             Assert.AreSame(concretion1, container.GetInstance<Abstraction>("One"));
             Assert.AreSame(concretion2, container.GetInstance<Abstraction>("Two"));
@@ -34,17 +34,19 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void ConstructSomething()
         {
-            Concretion concretion = new Concretion();
+            var concretion = new Concretion();
 
-            IContainer container = new Container(registry => registry.ForRequestedType<Abstraction>().TheDefault.Is.ConstructedBy(() => concretion));
+            IContainer container =
+                new Container(
+                    registry => registry.ForRequestedType<Abstraction>().TheDefault.Is.ConstructedBy(() => concretion));
             container.GetInstance<Abstraction>().ShouldBeTheSameAs(concretion);
         }
 
         [Test]
         public void ConstructSomethingByName()
         {
-            Concretion concretion1 = new Concretion();
-            Concretion concretion2 = new Concretion();
+            var concretion1 = new Concretion();
+            var concretion2 = new Concretion();
 
             IContainer manager = new Container(registry =>
             {
@@ -53,7 +55,6 @@ namespace StructureMap.Testing.Configuration.DSL
                     x.ConstructedBy(() => concretion1).WithName("One");
                     x.ConstructedBy(() => concretion2).WithName("Two");
                 });
-
             });
 
             manager.GetInstance<Abstraction>("One").ShouldBeTheSameAs(concretion1);
@@ -63,12 +64,9 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void ConstructSomethingNotByDefault()
         {
-            Concretion concretion = new Concretion();
+            var concretion = new Concretion();
 
-            var container = new Container(r =>
-            {
-                r.InstanceOf<Abstraction>().Is.ConstructedBy(() => concretion);
-            });
+            var container = new Container(r => { r.InstanceOf<Abstraction>().Is.ConstructedBy(() => concretion); });
 
             Abstraction actual = container.GetAllInstances<Abstraction>()[0];
             Assert.AreSame(concretion, actual);

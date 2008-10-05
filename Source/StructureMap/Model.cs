@@ -8,9 +8,9 @@ namespace StructureMap
 {
     public interface IModel
     {
+        IEnumerable<PluginTypeConfiguration> PluginTypes { get; }
         bool HasDefaultImplementationFor(Type pluginType);
         bool HasDefaultImplementationFor<T>();
-        IEnumerable<PluginTypeConfiguration> PluginTypes { get; }
         IEnumerable<IInstance> InstancesOf(Type pluginType);
         IEnumerable<IInstance> InstancesOf<T>();
         bool HasImplementationsFor(Type pluginType);
@@ -26,9 +26,11 @@ namespace StructureMap
             _graph = graph;
         }
 
+        #region IModel Members
+
         public bool HasDefaultImplementationFor(Type pluginType)
         {
-            var family = PluginTypes.FirstOrDefault(x => x.PluginType == pluginType);
+            PluginTypeConfiguration family = PluginTypes.FirstOrDefault(x => x.PluginType == pluginType);
             return family == null ? false : family.Default != null;
         }
 
@@ -39,10 +41,7 @@ namespace StructureMap
 
         public IEnumerable<PluginTypeConfiguration> PluginTypes
         {
-            get
-            {
-                return _graph.PluginTypes;
-            }
+            get { return _graph.PluginTypes; }
         }
 
         public IEnumerable<IInstance> InstancesOf(Type pluginType)
@@ -52,7 +51,7 @@ namespace StructureMap
 
         public IEnumerable<IInstance> InstancesOf<T>()
         {
-            return _graph.InstancesOf(typeof(T));
+            return _graph.InstancesOf(typeof (T));
         }
 
         public bool HasImplementationsFor(Type pluginType)
@@ -62,7 +61,9 @@ namespace StructureMap
 
         public bool HasImplementationsFor<T>()
         {
-            return HasImplementationsFor(typeof(T));
+            return HasImplementationsFor(typeof (T));
         }
+
+        #endregion
     }
 }

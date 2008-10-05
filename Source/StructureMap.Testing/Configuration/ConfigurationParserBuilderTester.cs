@@ -115,7 +115,6 @@ namespace StructureMap.Testing.Configuration
         }
 
 
-
         [Test]
         public void Log_error_150_if_a_designated_Include_cannot_be_opened()
         {
@@ -152,7 +151,7 @@ namespace StructureMap.Testing.Configuration
         {
             assertErrorIsLogged(160, delegate
             {
-                XmlDocument doc = new XmlDocument();
+                var doc = new XmlDocument();
                 doc.LoadXml("<a></a>");
                 doc.Save("Malformed.xml");
                 builder.IncludeFile("Malformed.xml");

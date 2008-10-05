@@ -66,7 +66,7 @@ namespace StructureMap.Testing.Configuration
         [Test]
         public void CanRenameInstanceMemento()
         {
-            MemoryInstanceMemento memento = new MemoryInstanceMemento("concrete", "name");
+            var memento = new MemoryInstanceMemento("concrete", "name");
 
             Assert.AreEqual("name", memento.InstanceKey);
             memento.InstanceKey = "Elvis";
@@ -78,9 +78,9 @@ namespace StructureMap.Testing.Configuration
         public void GettingTheRightInstanceKeyWhenUsingAMAchineOverrideInCombinationWithProfile()
         {
             ProfileBuilder.OverrideMachineName("GREEN-BOX");
-            Container manager = new Container(graph);
+            var manager = new Container(graph);
 
-            ColorWidget widget = (ColorWidget) manager.GetInstance<IWidget>();
+            var widget = (ColorWidget) manager.GetInstance<IWidget>();
             Assert.AreEqual("Green", widget.Color);
         }
 
@@ -88,33 +88,33 @@ namespace StructureMap.Testing.Configuration
         public void GotTheInstanceForTheMachineOverride()
         {
             ProfileBuilder.OverrideMachineName("ORANGE-BOX");
-            Container manager = new Container(graph);
+            var manager = new Container(graph);
 
-            ColorWidget widget = (ColorWidget) manager.GetInstance<IWidget>();
+            var widget = (ColorWidget) manager.GetInstance<IWidget>();
             Assert.AreEqual("Orange", widget.Color);
         }
 
         [Test]
         public void HasADefaultInstanceKey()
         {
-            Container manager = new Container(graph);
+            var manager = new Container(graph);
 
             manager.SetDefaultsToProfile("Green");
 
-            ColorWidget widget = (ColorWidget) manager.GetInstance<IWidget>();
+            var widget = (ColorWidget) manager.GetInstance<IWidget>();
             Assert.AreEqual("Green", widget.Color);
         }
 
         [Test]
         public void HasTheOverrideForProfile()
         {
-            Container manager = new Container(graph);
+            var manager = new Container(graph);
             manager.SetDefaultsToProfile("Blue");
 
-            ColorRule rule = (ColorRule) manager.GetInstance<Rule>();
+            var rule = (ColorRule) manager.GetInstance<Rule>();
             Assert.AreEqual("Blue", rule.Color);
 
-            ColorWidget widget = (ColorWidget) manager.GetInstance<IWidget>();
+            var widget = (ColorWidget) manager.GetInstance<IWidget>();
             Assert.AreEqual("Blue", widget.Color);
         }
 
@@ -123,9 +123,9 @@ namespace StructureMap.Testing.Configuration
         public void InlineMachine1()
         {
             ProfileBuilder.OverrideMachineName("ORANGE-BOX");
-            Container manager = new Container(graph);
+            var manager = new Container(graph);
 
-            ColorWidget widget = (ColorWidget) manager.GetInstance(typeof (IWidget));
+            var widget = (ColorWidget) manager.GetInstance(typeof (IWidget));
             Assert.AreEqual("Orange", widget.Color);
         }
 
@@ -133,24 +133,24 @@ namespace StructureMap.Testing.Configuration
         public void InlineMachine2()
         {
             ProfileBuilder.OverrideMachineName("GREEN-BOX");
-            Container manager = new Container(graph);
+            var manager = new Container(graph);
 
-            ColorWidget widget = (ColorWidget) manager.GetInstance(typeof (IWidget));
+            var widget = (ColorWidget) manager.GetInstance(typeof (IWidget));
             Assert.AreEqual("Green", widget.Color);
         }
 
         [Test]
         public void SetTheProfile()
         {
-            Container manager = new Container(graph);
+            var manager = new Container(graph);
             manager.SetDefaultsToProfile("Green");
 
-            ColorRule greenRule = (ColorRule) manager.GetInstance(typeof (Rule));
+            var greenRule = (ColorRule) manager.GetInstance(typeof (Rule));
             Assert.AreEqual("Green", greenRule.Color);
 
             manager.SetDefaultsToProfile("Blue");
 
-            ColorRule blueRule = (ColorRule) manager.GetInstance(typeof (Rule));
+            var blueRule = (ColorRule) manager.GetInstance(typeof (Rule));
             Assert.AreEqual("Blue", blueRule.Color);
         }
     }

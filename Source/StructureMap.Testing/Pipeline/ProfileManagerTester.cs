@@ -64,6 +64,25 @@ namespace StructureMap.Testing.Pipeline
             _manager.Seal(_pluginGraph);
         }
 
+        [Test]
+        public void Can_only_add_default_once_to_the_default_profile()
+        {
+            var i1 = new LiteralInstance(1);
+            var i2 = new LiteralInstance(2);
+
+            var manager = new ProfileManager();
+
+            manager.SetDefault(typeof (IGateway), i1);
+            manager.GetDefault(typeof (IGateway)).ShouldBeTheSameAs(i1);
+
+            manager.SetDefault(typeof (IGateway), i2);
+            manager.GetDefault(typeof (IGateway)).ShouldBeTheSameAs(i2);
+
+            manager.CurrentProfile = string.Empty;
+
+            manager.GetDefault(typeof (IGateway)).ShouldBeTheSameAs(i1);
+        }
+
         [Test, Ignore("Just too much work")]
         public void CopyDefaults()
         {
@@ -74,7 +93,7 @@ namespace StructureMap.Testing.Pipeline
             addDefaultToProfile<IBuildPolicy>("TheProfile2", "Profile2");
             _manager.SetDefault(typeof (IBuildPolicy), new ReferencedInstance("TheDefault"));
 
-            _manager.CopyDefaults(typeof (IBuildPolicy), typeof (ISomething), new PluginFamily(typeof(ISomething)));
+            _manager.CopyDefaults(typeof (IBuildPolicy), typeof (ISomething), new PluginFamily(typeof (ISomething)));
 
             Assert.AreSame(_manager.GetDefault(typeof (IBuildPolicy)), _manager.GetDefault(typeof (ISomething)));
             Assert.AreSame(_manager.GetDefault(typeof (IBuildPolicy), "Profile"),
@@ -205,10 +224,10 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void Log_280_if_the_default_profile_does_not_exist_upon_call_to_Seal()
         {
-            ProfileManager manager = new ProfileManager();
+            var manager = new ProfileManager();
             manager.DefaultProfileName = "something that doesn't exist";
 
-            PluginGraph graph = new PluginGraph();
+            var graph = new PluginGraph();
             manager.Seal(graph);
 
             graph.Log.AssertHasError(280);
@@ -217,10 +236,10 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void Log_280_if_the_machine_default_profile_cannot_be_found()
         {
-            ProfileManager manager = new ProfileManager();
+            var manager = new ProfileManager();
             manager.DefaultMachineProfileName = "something that doesn't exist";
 
-            PluginGraph graph = new PluginGraph();
+            var graph = new PluginGraph();
             manager.Seal(graph);
 
             graph.Log.AssertHasError(280);
@@ -229,7 +248,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void Only_programmatic_override_so_use_the_programmatic_override()
         {
-            _manager.SetDefault(typeof (ISomething), new ConfiguredInstance(typeof(SomethingOne)).WithName("Red"));
+            _manager.SetDefault(typeof (ISomething), new ConfiguredInstance(typeof (SomethingOne)).WithName("Red"));
             assertDefaultInstanceNameIs<ISomething>("Red");
         }
 
@@ -273,25 +292,6 @@ namespace StructureMap.Testing.Pipeline
 
             assertDefaultInstanceNameIs<IBuildPolicy>("Profile");
             assertDefaultInstanceNameIs<ISomething>("Family");
-        }
-
-        [Test]
-        public void Can_only_add_default_once_to_the_default_profile()
-        {
-            LiteralInstance i1 = new LiteralInstance(1);
-            LiteralInstance i2 = new LiteralInstance(2);
-
-            ProfileManager manager = new ProfileManager();
-
-            manager.SetDefault(typeof(IGateway), i1);
-            manager.GetDefault(typeof(IGateway)).ShouldBeTheSameAs(i1);
-
-            manager.SetDefault(typeof(IGateway), i2);
-            manager.GetDefault(typeof(IGateway)).ShouldBeTheSameAs(i2);
-
-            manager.CurrentProfile = string.Empty;
-
-            manager.GetDefault(typeof(IGateway)).ShouldBeTheSameAs(i1);
         }
     }
 }

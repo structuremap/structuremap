@@ -21,15 +21,15 @@ namespace StructureMap.Testing.TestData
         {
             XmlDocument document = BuildDocument(xml);
 
-            ConfigurationParser parser = new ConfigurationParser(document.DocumentElement);
-            PluginGraphBuilder builder = new PluginGraphBuilder(parser);
+            var parser = new ConfigurationParser(document.DocumentElement);
+            var builder = new PluginGraphBuilder(parser);
             return builder.Build();
         }
 
         public static XmlDocument BuildDocument(string xml)
         {
             xml = xml.Replace("'", "\"");
-            XmlDocument document = new XmlDocument();
+            var document = new XmlDocument();
             document.LoadXml(xml);
             return document;
         }
@@ -56,7 +56,7 @@ namespace StructureMap.Testing.TestData
 
         public static XmlDocument GetXmlDocument(string fileName)
         {
-            XmlDocument document = new XmlDocument();
+            var document = new XmlDocument();
 
             Stream stream =
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(new DataMother().GetType(), fileName);
@@ -74,15 +74,15 @@ namespace StructureMap.Testing.TestData
         public static PluginGraph GetPluginGraph(string fileName)
         {
             XmlDocument document = GetXmlDocument(fileName);
-            ConfigurationParser parser = new ConfigurationParser(document.DocumentElement);
-            PluginGraphBuilder builder = new PluginGraphBuilder(parser);
+            var parser = new ConfigurationParser(document.DocumentElement);
+            var builder = new PluginGraphBuilder(parser);
 
             return builder.Build();
         }
 
         public static void WriteDocument(string fileName, string xml)
         {
-            XmlDocument document = new XmlDocument();
+            var document = new XmlDocument();
             document.LoadXml(xml);
 
             document.Save(fileName);

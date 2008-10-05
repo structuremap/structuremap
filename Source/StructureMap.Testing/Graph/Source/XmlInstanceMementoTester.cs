@@ -39,7 +39,7 @@ namespace StructureMap.Testing.Graph.Source
             XmlDocument document = DataMother.GetXmlDocument("CDataTest.xml");
             XmlNode node = document.DocumentElement.LastChild;
 
-            XmlAttributeInstanceMemento memento = new XmlAttributeInstanceMemento(node);
+            var memento = new XmlAttributeInstanceMemento(node);
             Assert.AreEqual("select * from table", memento.GetProperty("bigProp"));
         }
 
@@ -49,7 +49,7 @@ namespace StructureMap.Testing.Graph.Source
             XmlDocument document = DataMother.GetXmlDocument("CDataTest.xml");
             XmlNode node = document.DocumentElement.FirstChild;
 
-            XmlNodeInstanceMemento memento = new XmlNodeInstanceMemento(node, "Type", "Key");
+            var memento = new XmlNodeInstanceMemento(node, "Type", "Key");
             Assert.AreEqual("select * from table", memento.GetProperty("bigProp"));
         }
     }

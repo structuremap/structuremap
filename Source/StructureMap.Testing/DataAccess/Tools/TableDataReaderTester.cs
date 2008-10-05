@@ -11,13 +11,13 @@ namespace StructureMap.Testing.DataAccess.Tools
         [Test]
         public void ClosingFunctionality()
         {
-            DataTable table = new DataTable();
+            var table = new DataTable();
             table.Columns.Add("State", typeof (string));
             table.Rows.Add(new object[] {"TX"});
             table.Rows.Add(new object[] {"MO"});
             table.Rows.Add(new object[] {"AR"});
 
-            TableDataReader reader = new TableDataReader(table);
+            var reader = new TableDataReader(table);
 
             Assert.IsFalse(reader.IsClosed);
             reader.Close();
@@ -31,7 +31,7 @@ namespace StructureMap.Testing.DataAccess.Tools
         [Test]
         public void FieldCount()
         {
-            DataTable table = new DataTable();
+            var table = new DataTable();
             table.Columns.Add("State", typeof (string));
             table.Columns.Add("Direction", typeof (string));
             table.Columns.Add("Count", typeof (int));
@@ -45,7 +45,7 @@ namespace StructureMap.Testing.DataAccess.Tools
         [Test]
         public void GetOrdinal()
         {
-            DataTable table = new DataTable();
+            var table = new DataTable();
             table.Columns.Add("State", typeof (string));
             table.Columns.Add("Direction", typeof (string));
             table.Columns.Add("Count", typeof (int));
@@ -62,7 +62,7 @@ namespace StructureMap.Testing.DataAccess.Tools
         [Test, ExpectedException(typeof (ArgumentOutOfRangeException))]
         public void GetOrdinalWhenTheOrdinalCannotBeFound()
         {
-            DataTable table = new DataTable();
+            var table = new DataTable();
             table.Columns.Add("State", typeof (string));
             table.Columns.Add("Direction", typeof (string));
             table.Columns.Add("Count", typeof (int));
@@ -76,7 +76,7 @@ namespace StructureMap.Testing.DataAccess.Tools
         [Test]
         public void GetValue()
         {
-            DataTable table = new DataTable();
+            var table = new DataTable();
             table.Columns.Add("State", typeof (string));
             table.Columns.Add("Direction", typeof (string));
             table.Columns.Add("Count", typeof (int));
@@ -96,7 +96,7 @@ namespace StructureMap.Testing.DataAccess.Tools
         [Test]
         public void IsDBNull()
         {
-            DataTable table = new DataTable();
+            var table = new DataTable();
             table.Columns.Add("State", typeof (string));
             table.Columns.Add("Direction", typeof (string));
             table.Columns.Add("Count", typeof (int));
@@ -116,13 +116,13 @@ namespace StructureMap.Testing.DataAccess.Tools
         [Test, ExpectedException(typeof (ApplicationException))]
         public void ReadingAClosedReaderThrowsAnException()
         {
-            DataTable table = new DataTable();
+            var table = new DataTable();
             table.Columns.Add("State", typeof (string));
             table.Rows.Add(new object[] {"TX"});
             table.Rows.Add(new object[] {"MO"});
             table.Rows.Add(new object[] {"AR"});
 
-            TableDataReader reader = new TableDataReader(table);
+            var reader = new TableDataReader(table);
 
             Assert.IsFalse(reader.IsClosed);
             reader.Close();
@@ -134,10 +134,10 @@ namespace StructureMap.Testing.DataAccess.Tools
         [Test]
         public void ReadWithNoRows()
         {
-            DataTable table = new DataTable();
+            var table = new DataTable();
             table.Columns.Add("State", typeof (string));
 
-            TableDataReader reader = new TableDataReader(table);
+            var reader = new TableDataReader(table);
 
             // No rows, so it should return false
             Assert.IsFalse(reader.Read());
@@ -146,11 +146,11 @@ namespace StructureMap.Testing.DataAccess.Tools
         [Test]
         public void ReadWithOneRow()
         {
-            DataTable table = new DataTable();
+            var table = new DataTable();
             table.Columns.Add("State", typeof (string));
             table.Rows.Add(new object[] {"TX"});
 
-            TableDataReader reader = new TableDataReader(table);
+            var reader = new TableDataReader(table);
 
             // One row, so it should return true the first time, and false the second
             Assert.IsTrue(reader.Read());
@@ -160,13 +160,13 @@ namespace StructureMap.Testing.DataAccess.Tools
         [Test]
         public void ReadWithThreeRows()
         {
-            DataTable table = new DataTable();
+            var table = new DataTable();
             table.Columns.Add("State", typeof (string));
             table.Rows.Add(new object[] {"TX"});
             table.Rows.Add(new object[] {"MO"});
             table.Rows.Add(new object[] {"AR"});
 
-            TableDataReader reader = new TableDataReader(table);
+            var reader = new TableDataReader(table);
 
             // One row, so it should return true the first time, and false the second
             Assert.IsTrue(reader.Read());
@@ -178,12 +178,12 @@ namespace StructureMap.Testing.DataAccess.Tools
         [Test]
         public void ReadWithTwoRows()
         {
-            DataTable table = new DataTable();
+            var table = new DataTable();
             table.Columns.Add("State", typeof (string));
             table.Rows.Add(new object[] {"TX"});
             table.Rows.Add(new object[] {"MO"});
 
-            TableDataReader reader = new TableDataReader(table);
+            var reader = new TableDataReader(table);
 
             // One row, so it should return true the first time, and false the second
             Assert.IsTrue(reader.Read());

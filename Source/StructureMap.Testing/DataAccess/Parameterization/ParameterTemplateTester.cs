@@ -1,8 +1,4 @@
-using System.Data;
-using System.Data.SqlClient;
 using NUnit.Framework;
-using StructureMap.DataAccess;
-using StructureMap.DataAccess.Parameterization;
 
 namespace StructureMap.Testing.DataAccess.Parameterization
 {

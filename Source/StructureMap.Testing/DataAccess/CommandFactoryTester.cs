@@ -1,7 +1,4 @@
-using System.Data;
 using NUnit.Framework;
-using StructureMap.DataAccess;
-using StructureMap.DataAccess.Tools;
 
 namespace StructureMap.Testing.DataAccess
 {
@@ -17,6 +14,7 @@ namespace StructureMap.Testing.DataAccess
         }
 
         #endregion
+
         // TODO -- Replace with RhinoMocks
         //[Test]
         //public void BuildReaderSource()

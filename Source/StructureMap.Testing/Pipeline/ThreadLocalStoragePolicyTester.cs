@@ -31,7 +31,7 @@ namespace StructureMap.Testing.Pipeline
         {
             _rule1 = (ColorRule) _policy.Build(new StubBuildSession(), typeof (IService), _instance);
 
-            ColorRule rule = (ColorRule) _policy.Build(new StubBuildSession(), typeof (IService), _instance);
+            var rule = (ColorRule) _policy.Build(new StubBuildSession(), typeof (IService), _instance);
             Assert.AreSame(_rule1, rule);
         }
 
@@ -39,7 +39,7 @@ namespace StructureMap.Testing.Pipeline
         {
             _rule2 = (ColorRule) _policy.Build(new StubBuildSession(), typeof (IService), _instance);
 
-            ColorRule rule = (ColorRule) _policy.Build(new StubBuildSession(), typeof (IService), _instance);
+            var rule = (ColorRule) _policy.Build(new StubBuildSession(), typeof (IService), _instance);
             Assert.AreSame(_rule2, rule);
         }
 
@@ -47,7 +47,7 @@ namespace StructureMap.Testing.Pipeline
         {
             _rule3 = (ColorRule) _policy.Build(new StubBuildSession(), typeof (IService), _instance);
 
-            ColorRule rule = (ColorRule) _policy.Build(new StubBuildSession(), typeof (IService), _instance);
+            var rule = (ColorRule) _policy.Build(new StubBuildSession(), typeof (IService), _instance);
             Assert.AreSame(_rule3, rule);
 
             rule = (ColorRule) _policy.Build(new StubBuildSession(), typeof (IService), _instance);
@@ -63,9 +63,9 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void FindUniqueInstancePerThread()
         {
-            Thread t1 = new Thread(findRule1);
-            Thread t2 = new Thread(findRule2);
-            Thread t3 = new Thread(findRule3);
+            var t1 = new Thread(findRule1);
+            var t2 = new Thread(findRule2);
+            var t3 = new Thread(findRule3);
 
             t1.Start();
             t2.Start();

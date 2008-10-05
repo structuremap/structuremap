@@ -9,9 +9,9 @@ namespace StructureMap.Testing.DataAccess.Tools.Mocks
         [Test]
         public void ExecuteAndGetOutputParameters()
         {
-            MockCommand command = new MockCommand("name");
+            var command = new MockCommand("name");
 
-            CommandExpectation expectation = new CommandExpectation(5);
+            var expectation = new CommandExpectation(5);
             expectation.SetOutput("param1", "Bo");
             command.AddExpectation(expectation);
 
@@ -23,7 +23,7 @@ namespace StructureMap.Testing.DataAccess.Tools.Mocks
         [Test, ExpectedException(typeof (UnExpectedCallException))]
         public void ExecuteTooManyTimes()
         {
-            MockCommand command = new MockCommand("name");
+            var command = new MockCommand("name");
             command.AddExpectation(new CommandExpectation(3));
             command.AddExpectation(new CommandExpectation(3));
 
@@ -35,11 +35,11 @@ namespace StructureMap.Testing.DataAccess.Tools.Mocks
         [Test]
         public void ExecuteTwiceAndGetResultsBothTimes()
         {
-            MockCommand command = new MockCommand("name");
+            var command = new MockCommand("name");
 
-            CommandExpectation expectation1 = new CommandExpectation();
+            var expectation1 = new CommandExpectation();
             expectation1.SetOutput("answer", "red");
-            CommandExpectation expectation2 = new CommandExpectation();
+            var expectation2 = new CommandExpectation();
             expectation2.SetOutput("answer", "green");
 
             command.AddExpectation(expectation1);
@@ -56,9 +56,9 @@ namespace StructureMap.Testing.DataAccess.Tools.Mocks
         [Test]
         public void ExecuteWithExpectationNoParameters()
         {
-            MockCommand command = new MockCommand("name");
+            var command = new MockCommand("name");
 
-            CommandExpectation expectation = new CommandExpectation(5);
+            var expectation = new CommandExpectation(5);
             command.AddExpectation(expectation);
 
             int count = command.Execute();
@@ -69,12 +69,12 @@ namespace StructureMap.Testing.DataAccess.Tools.Mocks
         [Test, ExpectedException(typeof (ParameterValidationFailureException))]
         public void ExecuteWithInputParametersThatDoNotMatchExpectation()
         {
-            MockCommand command = new MockCommand("name");
+            var command = new MockCommand("name");
             command["param1"] = "Bo";
             command["param2"] = "Luke";
             command["param3"] = "Daisy";
 
-            CommandExpectation expectation = new CommandExpectation(5);
+            var expectation = new CommandExpectation(5);
             expectation.SetInput("param1", "Bo");
             expectation.SetInput("param2", "Luke");
             expectation.SetInput("param3", "Boss Hogg");
@@ -86,12 +86,12 @@ namespace StructureMap.Testing.DataAccess.Tools.Mocks
         [Test]
         public void ExecuteWithInputParametersThatMatchExpectation()
         {
-            MockCommand command = new MockCommand("name");
+            var command = new MockCommand("name");
             command["param1"] = "Bo";
             command["param2"] = "Luke";
             command["param3"] = "Daisy";
 
-            CommandExpectation expectation = new CommandExpectation(5);
+            var expectation = new CommandExpectation(5);
             expectation.SetInput("param1", "Bo");
             expectation.SetInput("param2", "Luke");
             expectation.SetInput("param3", "Daisy");
@@ -105,14 +105,14 @@ namespace StructureMap.Testing.DataAccess.Tools.Mocks
         [Test, ExpectedException(typeof (UnExpectedCallException))]
         public void ExecuteWithoutExpectation()
         {
-            MockCommand command = new MockCommand("name");
+            var command = new MockCommand("name");
             command.Execute();
         }
 
         [Test]
         public void TryToGetInputParameterThatHasBeenSet()
         {
-            MockCommand command = new MockCommand("name");
+            var command = new MockCommand("name");
             command["param1"] = true;
 
             Assert.IsTrue((bool) command["param1"]);
@@ -121,20 +121,20 @@ namespace StructureMap.Testing.DataAccess.Tools.Mocks
         [Test, ExpectedException(typeof (UnKnownOrNotSetParameterException))]
         public void TryToGetInputParameterThatHasNotBeenSet()
         {
-            MockCommand command = new MockCommand("name");
+            var command = new MockCommand("name");
             object answer = command["param1"];
         }
 
         [Test, ExpectedException(typeof (NotExecutedCommandException))]
         public void TryToGetOutputParametersBeforeExecute()
         {
-            MockCommand command = new MockCommand("name");
+            var command = new MockCommand("name");
 
-            CommandExpectation expectation = new CommandExpectation(5);
+            var expectation = new CommandExpectation(5);
             expectation.SetOutput("param1", "Bo");
             command.AddExpectation(expectation);
 
-            string output = (string) command["param1"];
+            var output = (string) command["param1"];
         }
     }
 }

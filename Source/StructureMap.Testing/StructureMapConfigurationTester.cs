@@ -38,6 +38,28 @@ namespace StructureMap.Testing
             return document.DocumentElement;
         }
 
+
+        public static void Bootstrap()
+        {
+            StructureMapConfiguration.UseDefaultStructureMapConfigFile = false;
+            StructureMapConfiguration.PullConfigurationFromAppConfig = true;
+
+            StructureMapConfiguration.AddRegistry(new CoreRegistry());
+            StructureMapConfiguration.AddRegistry(new WebRegistry());
+
+            StructureMapConfiguration.ForRequestedType<IGateway>().TheDefaultIsConcreteType<DefaultGateway>();
+
+            var gateway = ObjectFactory.GetInstance<IGateway>();
+        }
+
+        public class WebRegistry : Registry
+        {
+        }
+
+        public class CoreRegistry : Registry
+        {
+        }
+
         [Test]
         public void BuildPluginGraph()
         {
@@ -50,28 +72,6 @@ namespace StructureMap.Testing
         {
             StructureMapConfiguration.IgnoreStructureMapConfig = true;
             StructureMapConfiguration.GetPluginGraph().FamilyCount.ShouldEqual(0);
-        }
-
-
-        public static void Bootstrap()
-        {
-            StructureMapConfiguration.UseDefaultStructureMapConfigFile = false;
-            StructureMapConfiguration.PullConfigurationFromAppConfig = true;
-
-            StructureMapConfiguration.AddRegistry(new CoreRegistry());
-            StructureMapConfiguration.AddRegistry(new WebRegistry());
-
-            StructureMapConfiguration.ForRequestedType<IGateway>().TheDefaultIsConcreteType<DefaultGateway>();
-
-            IGateway gateway = ObjectFactory.GetInstance<IGateway>();
-        }
-
-        public class WebRegistry : Registry
-        {
-        }
-
-        public class CoreRegistry : Registry
-        {
         }
 
         [Test]

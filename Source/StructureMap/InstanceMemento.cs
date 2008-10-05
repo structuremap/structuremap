@@ -84,8 +84,8 @@ namespace StructureMap
 
         public virtual Plugin FindPlugin(PluginFamily family)
         {
-            Plugin plugin = getPluginByType(family) ?? family.FindPlugin(innerConcreteKey ?? string.Empty) ?? 
-                            family.FindPlugin(Plugin.DEFAULT);
+            Plugin plugin = getPluginByType(family) ?? family.FindPlugin(innerConcreteKey ?? string.Empty) ??
+                                                       family.FindPlugin(Plugin.DEFAULT);
 
             if (plugin == null)
             {
@@ -120,7 +120,6 @@ namespace StructureMap
             try
             {
                 returnValue = getPropertyValue(Key);
-                
             }
             catch (Exception ex)
             {
@@ -142,7 +141,6 @@ namespace StructureMap
         /// <param name="Key"></param>
         /// <returns></returns>
         protected abstract string getPropertyValue(string Key);
-
 
 
         /// <summary>
@@ -229,7 +227,5 @@ namespace StructureMap
 
             return new ConfiguredInstance(this, pluginGraph, pluginType);
         }
-
-
     }
 }

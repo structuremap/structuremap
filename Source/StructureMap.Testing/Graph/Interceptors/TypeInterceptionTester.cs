@@ -1,4 +1,3 @@
-using System;
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
 
@@ -17,9 +16,9 @@ namespace StructureMap.Testing.Graph.Interceptors
             registry = new Registry();
             registry.ForRequestedType<IAnInterfaceOfSomeSort>().AddInstances(x =>
             {
-                x.OfConcreteType<RedSomething>().WithName("Red"); 
-                x.OfConcreteType<GreenSomething>().WithName("Green"); 
-                x.OfConcreteType<BlueSomething>().WithName("Blue"); 
+                x.OfConcreteType<RedSomething>().WithName("Red");
+                x.OfConcreteType<GreenSomething>().WithName("Green");
+                x.OfConcreteType<BlueSomething>().WithName("Blue");
             });
         }
 
@@ -46,7 +45,7 @@ namespace StructureMap.Testing.Graph.Interceptors
                 manager = new Container(registry);
             }
 
-            OUTERTYPE something = (OUTERTYPE) manager.GetInstance<IAnInterfaceOfSomeSort>(name);
+            var something = (OUTERTYPE) manager.GetInstance<IAnInterfaceOfSomeSort>(name);
             Assert.IsInstanceOfType(typeof (INNERTYPE), something.Inner);
         }
 
@@ -92,7 +91,7 @@ namespace StructureMap.Testing.Graph.Interceptors
         [Test]
         public void If_An_Interceptor_Is_Registered_At_The_PluginGraph_It_Will_Be_Used_To_Construct_An_Instance()
         {
-            MockTypeInterceptor interceptor = new MockTypeInterceptor();
+            var interceptor = new MockTypeInterceptor();
             interceptor.AddHandler<RedSomething>(
                 something => new WrappedSomething(something));
 
