@@ -3,6 +3,8 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.Configuration.DSL.Expressions
 {
+
+
     /// <summary>
     /// Expression class to help define a runtime Profile
     /// </summary>
@@ -26,6 +28,17 @@ namespace StructureMap.Configuration.DSL.Expressions
         public InstanceDefaultExpression<T> For<T>()
         {
             return new InstanceDefaultExpression<T>(this);
+        }
+
+        public IsExpression<T> Type<T>()
+        {
+            return new InstanceExpression<T>(instance =>
+            {
+                _registry.addExpression(graph =>
+                {
+                    graph.SetDefault(_profileName, typeof(T), instance);
+                });
+            });
         }
 
         /// <summary>

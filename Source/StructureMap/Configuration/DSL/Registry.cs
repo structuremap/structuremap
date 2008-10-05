@@ -121,6 +121,12 @@ namespace StructureMap.Configuration.DSL
             return expression;
         }
 
+        public void CreateProfile(string profileName, Action<ProfileExpression> action)
+        {
+            var expression = new ProfileExpression(profileName, this);
+            action(expression);
+        }
+
         public static bool IsPublicRegistry(Type type)
         {
             if (!typeof (Registry).IsAssignableFrom(type))

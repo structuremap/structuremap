@@ -1,10 +1,22 @@
 using NUnit.Framework;
+using StructureMap.Configuration.DSL;
 using StructureMap.Testing.GenericWidgets;
 using StructureMap.Testing.TestData;
+using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
+using StructureMap.Testing.Widget5;
 
 namespace StructureMap.Testing
 {
+    public class InitializeRegistry : Registry
+    {
+        public InitializeRegistry()
+        {
+            InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithCtorArg("color").EqualTo("Green").WithName(
+                "Green");
+        }
+    }
+
     [TestFixture]
     public class ObjectFactoryInitializeTester
     {
@@ -21,6 +33,18 @@ namespace StructureMap.Testing
                 .IsType<ColorThing<string, bool>>().Color.ShouldEqual("Cornflower");
         }
 
+
+        [Test]
+        public void Add_a_registry_by_generic_signature()
+        {
+            ObjectFactory.Initialize(x =>
+            {
+                x.IgnoreStructureMapConfig = true;
+                x.AddRegistry<InitializeRegistry>();
+            });
+
+            ObjectFactory.GetNamedInstance<IWidget>("Green").ShouldBeOfType<ColorWidget>().Color.ShouldEqual("Green");
+        }
 
         [Test]
         public void StructureMap_functions_without_StructureMapconfig_file_in_the_default_mode()

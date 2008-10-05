@@ -34,6 +34,27 @@ namespace StructureMap.Testing.Configuration.DSL
             Assert.IsInstanceOfType(typeof (DefaultRule), manager.GetInstance<Rule>());
         }
 
+
+        [Test]
+        public void Add_default_instance_by_lambda2()
+        {
+            string theProfileName = "something";
+
+            IContainer manager = new Container(registry =>
+            {
+                registry.CreateProfile(theProfileName, x =>
+                {
+                    x.Type<IWidget>().Is.ConstructedBy(() => new AWidget());
+                    x.Type<Rule>().Is.ConstructedBy(() => new DefaultRule());
+                });
+            });
+
+            manager.SetDefaultsToProfile(theProfileName);
+
+            Assert.IsInstanceOfType(typeof(AWidget), manager.GetInstance<IWidget>());
+            Assert.IsInstanceOfType(typeof(DefaultRule), manager.GetInstance<Rule>());
+        }
+
         [Test]
         public void Add_default_instance_by_prototype()
         {

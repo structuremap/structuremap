@@ -89,12 +89,27 @@ namespace StructureMap.Pipeline
             return child;
         }
 
+        public ChildInstanceExpression CtorDependency<CONSTRUCTORARGUMENTTYPE>(string propertyName)
+        {
+            return Child(propertyName);
+        }
+
+        public ChildInstanceExpression SetterDependency<CONSTRUCTORARGUMENTTYPE>(string propertyName)
+        {
+            return Child(propertyName);
+        }
+
         /// <summary>
         /// Start the definition of a primitive argument to a constructor argument
         /// </summary>
         /// <param name="propertyName"></param>
         /// <returns></returns>
         public PropertyExpression<ConfiguredInstance> WithProperty(string propertyName)
+        {
+            return new PropertyExpression<ConfiguredInstance>(this, propertyName);
+        }
+
+        public PropertyExpression<ConfiguredInstance> WithCtorArg(string propertyName)
         {
             return new PropertyExpression<ConfiguredInstance>(this, propertyName);
         }
