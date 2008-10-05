@@ -20,18 +20,6 @@ namespace StructureMap.Emitting
             this.ilgen = ilgen;
         }
 
-        private void addSetter(ParameterEmitter emitter, PropertyInfo property, bool isMandatory )
-        {
-            if (isMandatory)
-            {
-                emitter.MandatorySetter(ilgen, property);
-            }
-            else
-            {
-                emitter.OptionalSetter(ilgen, property);
-            }
-        }
-
         #region IArgumentVisitor Members
 
         public void PrimitiveSetter(PropertyInfo property, bool isMandatory)
@@ -85,5 +73,17 @@ namespace StructureMap.Emitting
         }
 
         #endregion
+
+        private void addSetter(ParameterEmitter emitter, PropertyInfo property, bool isMandatory)
+        {
+            if (isMandatory)
+            {
+                emitter.MandatorySetter(ilgen, property);
+            }
+            else
+            {
+                emitter.OptionalSetter(ilgen, property);
+            }
+        }
     }
 }

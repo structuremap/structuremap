@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using StructureMap.Graph;
 using StructureMap.Pipeline;
 
 namespace StructureMap.Diagnostics
@@ -10,19 +8,18 @@ namespace StructureMap.Diagnostics
     public class WhatDoIHaveWriter
     {
         private readonly PipelineGraph _graph;
-        private TextReportWriter _writer;
         private List<IInstance> _instances;
+        private TextReportWriter _writer;
 
         public WhatDoIHaveWriter(PipelineGraph graph)
         {
             _graph = graph;
-
         }
 
         public string GetText()
         {
-            StringBuilder sb = new StringBuilder();
-            StringWriter writer = new StringWriter(sb);
+            var sb = new StringBuilder();
+            var writer = new StringWriter(sb);
 
             writeSources(writer);
             writeContentsOfPluginTypes(writer);
@@ -38,7 +35,7 @@ namespace StructureMap.Diagnostics
             _writer.AddDivider('=');
             _writer.AddText("PluginType", "Name", "Description");
 
-            foreach (var pluginType in _graph.PluginTypes)
+            foreach (PluginTypeConfiguration pluginType in _graph.PluginTypes)
             {
                 writePluginType(pluginType);
             }
@@ -50,14 +47,15 @@ namespace StructureMap.Diagnostics
 
         private void writeSources(StringWriter writer)
         {
-            writer.WriteLine("===========================================================================================================");
+            writer.WriteLine(
+                "===========================================================================================================");
             writer.WriteLine("Configuration Sources:");
             writer.WriteLine();
 
             for (int i = 0; i < _graph.Log.Sources.Length; i++)
             {
-                var source = _graph.Log.Sources[i];
-                string message = (i.ToString() + ")").PadRight(5) + source;
+                string source = _graph.Log.Sources[i];
+                string message = (i + ")").PadRight(5) + source;
                 writer.WriteLine(message);
             }
 
@@ -67,19 +65,22 @@ namespace StructureMap.Diagnostics
         private void writePluginType(PluginTypeConfiguration pluginType)
         {
             _writer.AddDivider('-');
-            string[] contents = new string[] { pluginType.PluginType.AssemblyQualifiedName ?? pluginType.PluginType.Name, string.Empty, string.Empty };
+            var contents = new[]
+                               {
+                                   pluginType.PluginType.AssemblyQualifiedName ?? pluginType.PluginType.Name, string.Empty,
+                                   string.Empty
+                               };
 
             if (pluginType.Default != null)
             {
                 setContents(contents, pluginType.Default);
-
             }
 
             _writer.AddText(contents);
 
-            _writer.AddContent("Built by:  " + pluginType.Policy.ToString());
+            _writer.AddContent("Built by:  " + pluginType.Policy);
 
-            foreach (var instance in pluginType.Instances)
+            foreach (IInstance instance in pluginType.Instances)
             {
                 writeInstance(instance);
             }
@@ -92,7 +93,7 @@ namespace StructureMap.Diagnostics
                 return;
             }
 
-            string[] contents = new[] { string.Empty, string.Empty, string.Empty };
+            var contents = new[] {string.Empty, string.Empty, string.Empty};
             setContents(contents, instance);
 
             _writer.AddText(contents);
@@ -106,7 +107,5 @@ namespace StructureMap.Diagnostics
 
             _instances.Add(instance);
         }
-
-
     }
 }

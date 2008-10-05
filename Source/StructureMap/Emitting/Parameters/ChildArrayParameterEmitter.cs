@@ -1,7 +1,6 @@
 using System;
 using System.Reflection;
 using System.Reflection.Emit;
-using StructureMap.Pipeline;
 
 namespace StructureMap.Emitting.Parameters
 {

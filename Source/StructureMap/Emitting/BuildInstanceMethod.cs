@@ -13,7 +13,7 @@ namespace StructureMap.Emitting
     {
         private readonly Plugin _plugin;
 
-        public BuildInstanceMethod(Plugin plugin) : base()
+        public BuildInstanceMethod(Plugin plugin)
         {
             _plugin = plugin;
         }
@@ -21,7 +21,7 @@ namespace StructureMap.Emitting
 
         public override Type[] ArgumentList
         {
-            get { return new Type[] {typeof (IConfiguredInstance), typeof (BuildSession)}; }
+            get { return new[] {typeof (IConfiguredInstance), typeof (BuildSession)}; }
         }
 
         public override string MethodName
@@ -40,14 +40,14 @@ namespace StructureMap.Emitting
         {
             ilgen.Emit(OpCodes.Nop);
             ilgen.DeclareLocal(_plugin.PluggedType);
-            ilgen.DeclareLocal(typeof(object));
+            ilgen.DeclareLocal(typeof (object));
 
             for (int i = 0; i < _plugin.Setters.OptionalCount; i++)
             {
                 ilgen.DeclareLocal(typeof (bool));
             }
 
-            ArgumentEmitter arguments = new ArgumentEmitter(ilgen);
+            var arguments = new ArgumentEmitter(ilgen);
 
             _plugin.VisitConstructor(arguments);
 

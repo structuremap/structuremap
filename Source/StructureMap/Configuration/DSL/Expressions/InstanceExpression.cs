@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using StructureMap.Pipeline;
 
 namespace StructureMap.Configuration.DSL.Expressions
@@ -38,6 +38,25 @@ namespace StructureMap.Configuration.DSL.Expressions
             _action = action;
         }
 
+        #region IsExpression<T> Members
+
+        InstanceExpression<T> IsExpression<T>.Is
+        {
+            get { return this; }
+        }
+
+        public void IsThis(Instance instance)
+        {
+            returnInstance(instance);
+        }
+
+        public LiteralInstance IsThis(T obj)
+        {
+            return returnInstance(new LiteralInstance(obj));
+        }
+
+        #endregion
+
         public void Instance(Instance instance)
         {
             _action(instance);
@@ -62,21 +81,6 @@ namespace StructureMap.Configuration.DSL.Expressions
         public LiteralInstance Object(T theObject)
         {
             return returnInstance(new LiteralInstance(theObject));
-        }
-
-        InstanceExpression<T> IsExpression<T>.Is
-        {
-            get { return this; }
-        }
-
-        public void IsThis(Instance instance)
-        {
-            returnInstance(instance);
-        }
-
-        public LiteralInstance IsThis(T obj)
-        {
-            return returnInstance(new LiteralInstance(obj));
         }
 
         public ReferencedInstance References(string key)

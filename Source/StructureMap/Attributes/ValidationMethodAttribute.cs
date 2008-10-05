@@ -12,10 +12,6 @@ namespace StructureMap
     [AttributeUsage(AttributeTargets.Method)]
     public class ValidationMethodAttribute : Attribute
     {
-        public ValidationMethodAttribute()
-        {
-        }
-
         /// <summary>
         /// Returns an array of any MethodInfo's on a Type that are marked as ValidationMethod
         /// </summary>
@@ -23,12 +19,12 @@ namespace StructureMap
         /// <returns></returns>
         public static MethodInfo[] GetValidationMethods(Type objectType)
         {
-            ArrayList methodList = new ArrayList();
+            var methodList = new ArrayList();
 
             MethodInfo[] methods = objectType.GetMethods();
             foreach (MethodInfo method in methods)
             {
-                ValidationMethodAttribute att =
+                var att =
                     (ValidationMethodAttribute) GetCustomAttribute(method, typeof (ValidationMethodAttribute));
 
                 if (att != null)
@@ -46,7 +42,7 @@ namespace StructureMap
                 }
             }
 
-            MethodInfo[] returnValue = new MethodInfo[methodList.Count];
+            var returnValue = new MethodInfo[methodList.Count];
             methodList.CopyTo(returnValue, 0);
 
             return returnValue;

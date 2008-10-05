@@ -1,7 +1,6 @@
 using System;
 using System.Reflection;
 using System.Reflection.Emit;
-using StructureMap.Pipeline;
 
 namespace StructureMap.Emitting.Parameters
 {
@@ -14,19 +13,18 @@ namespace StructureMap.Emitting.Parameters
     {
         protected void cast(ILGenerator ilgen, Type parameterType)
         {
-			//NOTE: According to the docs, Unbox_Any, when called on a ref type, will just do a Castclass
-			//      but it's probably better to err on the side of being explicit rather than relying 
-			//      on non-obvious side effects
+            //NOTE: According to the docs, Unbox_Any, when called on a ref type, will just do a Castclass
+            //      but it's probably better to err on the side of being explicit rather than relying 
+            //      on non-obvious side effects
 
-			if( parameterType.IsValueType )
-			{
-				ilgen.Emit(OpCodes.Unbox_Any, parameterType);
-			}
-			else
-			{
-				ilgen.Emit(OpCodes.Castclass, parameterType);
-			}
-            
+            if (parameterType.IsValueType)
+            {
+                ilgen.Emit(OpCodes.Unbox_Any, parameterType);
+            }
+            else
+            {
+                ilgen.Emit(OpCodes.Castclass, parameterType);
+            }
         }
 
         public abstract void MandatorySetter(ILGenerator ilgen, PropertyInfo property);

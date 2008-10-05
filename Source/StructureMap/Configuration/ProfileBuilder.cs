@@ -8,16 +8,6 @@ namespace StructureMap.Configuration
     {
         private static string _overriden_machine_name;
 
-        public static void OverrideMachineName(string machineName)
-        {
-            _overriden_machine_name = machineName;
-        }
-
-        public static void ResetMachineName()
-        {
-            _overriden_machine_name = string.Empty;
-        }
-
         private readonly string _machineName;
         private readonly PluginGraph _pluginGraph;
         private readonly ProfileManager _profileManager;
@@ -49,7 +39,7 @@ namespace StructureMap.Configuration
         {
             _pluginGraph.Log.WithType(typePath, "while trying to add an override for a Profile", pluginType =>
             {
-                ReferencedInstance instance = new ReferencedInstance(instanceKey);
+                var instance = new ReferencedInstance(instanceKey);
                 _pluginGraph.SetDefault(_lastProfile, pluginType, instance);
             });
         }
@@ -71,11 +61,11 @@ namespace StructureMap.Configuration
                 return;
             }
 
-            _pluginGraph.Log.WithType(typePath, 
-                "trying to configure a Machine Override",
+            _pluginGraph.Log.WithType(typePath,
+                                      "trying to configure a Machine Override",
                                       pluginType =>
                                       {
-                                          ReferencedInstance instance = new ReferencedInstance(instanceKey);
+                                          var instance = new ReferencedInstance(instanceKey);
                                           _profileManager.SetMachineDefault(pluginType, instance);
                                       });
         }
@@ -86,6 +76,16 @@ namespace StructureMap.Configuration
         }
 
         #endregion
+
+        public static void OverrideMachineName(string machineName)
+        {
+            _overriden_machine_name = machineName;
+        }
+
+        public static void ResetMachineName()
+        {
+            _overriden_machine_name = string.Empty;
+        }
 
         public static string GetMachineName()
         {

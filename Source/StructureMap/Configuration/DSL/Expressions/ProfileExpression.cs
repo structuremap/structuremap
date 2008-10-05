@@ -1,5 +1,4 @@
 using System;
-using StructureMap.Graph;
 using StructureMap.Pipeline;
 
 namespace StructureMap.Configuration.DSL.Expressions
@@ -39,6 +38,43 @@ namespace StructureMap.Configuration.DSL.Expressions
             return new GenericDefaultExpression(this, pluginType);
         }
 
+        #region Nested type: GenericDefaultExpression
+
+        public class GenericDefaultExpression
+        {
+            private readonly ProfileExpression _parent;
+            private readonly Type _pluginType;
+            private readonly Registry _registry;
+
+            internal GenericDefaultExpression(ProfileExpression parent, Type pluginType)
+            {
+                _parent = parent;
+                _registry = parent._registry;
+                _pluginType = pluginType;
+            }
+
+            public ProfileExpression UseConcreteType(Type concreteType)
+            {
+                var instance = new ConfiguredInstance(concreteType);
+                return Use(instance);
+            }
+
+            public ProfileExpression Use(Instance instance)
+            {
+                _registry.addExpression(graph => graph.SetDefault(_parent._profileName, _pluginType, instance));
+
+                return _parent;
+            }
+
+            public ProfileExpression UseNamedInstance(string name)
+            {
+                var instance = new ReferencedInstance(name);
+                return Use(instance);
+            }
+        }
+
+        #endregion
+
         #region Nested type: InstanceDefaultExpression
 
         public class InstanceDefaultExpression<T>
@@ -61,7 +97,8 @@ namespace StructureMap.Configuration.DSL.Expressions
             /// <returns></returns>
             public ProfileExpression UseNamedInstance(string instanceKey)
             {
-                _registry.addExpression(graph => graph.SetDefault(_profileName, typeof (T), new ReferencedInstance(instanceKey)));
+                _registry.addExpression(
+                    graph => graph.SetDefault(_profileName, typeof (T), new ReferencedInstance(instanceKey)));
 
                 return _parent;
             }
@@ -82,62 +119,29 @@ namespace StructureMap.Configuration.DSL.Expressions
 
             public ProfileExpression Use(Func<T> func)
             {
-                ConstructorInstance<T> instance = new ConstructorInstance<T>(func);
+                var instance = new ConstructorInstance<T>(func);
                 return Use(instance);
             }
 
             public ProfileExpression Use(T t)
             {
-                LiteralInstance instance = new LiteralInstance(t);
+                var instance = new LiteralInstance(t);
                 return Use(instance);
             }
 
             public ProfileExpression UseConcreteType<CONCRETETYPE>()
             {
-                ConfiguredInstance instance = new ConfiguredInstance(typeof(CONCRETETYPE));
+                var instance = new ConfiguredInstance(typeof (CONCRETETYPE));
                 return Use(instance);
             }
 
             public ProfileExpression UsePrototypeOf(T template)
             {
-                PrototypeInstance instance = new PrototypeInstance((ICloneable) template);
+                var instance = new PrototypeInstance((ICloneable) template);
                 return Use(instance);
             }
         }
 
         #endregion
-
-        public class GenericDefaultExpression
-        {
-            private readonly ProfileExpression _parent;
-            private readonly Type _pluginType;
-            private readonly Registry _registry;
-
-            internal GenericDefaultExpression(ProfileExpression parent, Type pluginType)
-            {
-                _parent = parent;
-                _registry = parent._registry;
-                _pluginType = pluginType;
-            }
-
-            public ProfileExpression UseConcreteType(Type concreteType)
-            {
-                ConfiguredInstance instance = new ConfiguredInstance(concreteType);
-                return Use(instance);
-            }
-
-            public ProfileExpression Use(Instance instance)
-            {
-                _registry.addExpression(graph => graph.SetDefault(_parent._profileName, _pluginType, instance));
-
-                return _parent;
-            }
-
-            public ProfileExpression UseNamedInstance(string name)
-            {
-                ReferencedInstance instance = new ReferencedInstance(name);
-                return Use(instance);
-            }
-        }
     }
 }

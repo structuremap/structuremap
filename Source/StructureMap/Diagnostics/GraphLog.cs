@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -11,9 +10,9 @@ namespace StructureMap.Diagnostics
 {
     public class GraphLog
     {
-        private string _currentSource;
         private readonly List<Error> _errors = new List<Error>();
-        private List<string> _sources = new List<string>();
+        private readonly List<string> _sources = new List<string>();
+        private string _currentSource;
 
         public int ErrorCount
         {
@@ -33,28 +32,27 @@ namespace StructureMap.Diagnostics
 
         public void RegisterError(IDiagnosticInstance instance, int code, params object[] args)
         {
-            Error error = new Error(code, args);
+            var error = new Error(code, args);
             error.Instance = instance.CreateToken();
             addError(error);
         }
 
         public void RegisterError(int code, params object[] args)
         {
-            Error error = new Error(code, args);
+            var error = new Error(code, args);
             addError(error);
         }
 
         public void RegisterError(int code, Exception ex, params object[] args)
         {
-            Error error = new Error(code, ex, args);
+            var error = new Error(code, ex, args);
             addError(error);
         }
 
 
-
         public void RegisterError(StructureMapException ex)
         {
-            Error error = new Error(ex);
+            var error = new Error(ex);
             addError(error);
         }
 
@@ -70,7 +68,7 @@ namespace StructureMap.Diagnostics
             {
                 return;
             }
-            
+
             string message = BuildFailureMessage();
 
             throw new StructureMapConfigurationException(message);
@@ -78,15 +76,16 @@ namespace StructureMap.Diagnostics
 
         public string BuildFailureMessage()
         {
-            StringBuilder sb = new StringBuilder();
-            StringWriter writer = new StringWriter(sb);
+            var sb = new StringBuilder();
+            var writer = new StringWriter(sb);
 
             writer.WriteLine("StructureMap configuration failures:");
 
             foreach (Error error in _errors)
             {
                 error.Write(writer);
-                writer.WriteLine("-----------------------------------------------------------------------------------------------------");
+                writer.WriteLine(
+                    "-----------------------------------------------------------------------------------------------------");
                 writer.WriteLine();
                 writer.WriteLine();
             }
@@ -102,7 +101,7 @@ namespace StructureMap.Diagnostics
                 string msg = "Did not have the requested Error.  Had:\n\n";
                 foreach (Error err in _errors)
                 {
-                    msg += err.ToString() + "\n";
+                    msg += err + "\n";
                 }
 
                 throw new ApplicationException(msg);
@@ -157,6 +156,8 @@ namespace StructureMap.Diagnostics
             return new TryAction(action, this);
         }
 
+        #region Nested type: TryAction
+
         public class TryAction
         {
             private readonly Action _action;
@@ -197,5 +198,6 @@ namespace StructureMap.Diagnostics
             }
         }
 
+        #endregion
     }
 }

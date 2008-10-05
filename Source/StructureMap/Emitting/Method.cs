@@ -15,10 +15,6 @@ namespace StructureMap.Emitting
         private ILGenerator ilgen;
         private MethodBuilder methodBuilder;
 
-        protected Method()
-        {
-        }
-
         public abstract string MethodName { get; }
 
         public abstract Type[] ArgumentList { get; }

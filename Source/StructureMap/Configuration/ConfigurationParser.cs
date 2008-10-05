@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Xml;
 using StructureMap.Diagnostics;
-using StructureMap.Graph;
 using StructureMap.Source;
 
 namespace StructureMap.Configuration
@@ -40,10 +39,12 @@ namespace StructureMap.Configuration
             _structureMapNode = structureMapNode;
 
             XmlMementoStyle mementoStyle = XmlMementoStyle.NodeNormalized;
-            _structureMapNode.ForAttributeValue(MEMENTO_STYLE, style => 
-            {
-                if (style == ATTRIBUTE_STYLE) mementoStyle = XmlMementoStyle.AttributeNormalized;
-            });
+            _structureMapNode.ForAttributeValue(MEMENTO_STYLE,
+                                                style =>
+                                                {
+                                                    if (style == ATTRIBUTE_STYLE)
+                                                        mementoStyle = XmlMementoStyle.AttributeNormalized;
+                                                });
 
             _mementoCreator = new XmlMementoCreator(
                 mementoStyle,
@@ -114,6 +115,5 @@ namespace StructureMap.Configuration
 
             ParseProfilesAndMachines(builder);
         }
-
     }
 }

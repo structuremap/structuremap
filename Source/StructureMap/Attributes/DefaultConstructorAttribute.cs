@@ -10,10 +10,6 @@ namespace StructureMap
     [AttributeUsage(AttributeTargets.Constructor)]
     public class DefaultConstructorAttribute : Attribute
     {
-        public DefaultConstructorAttribute()
-        {
-        }
-
         /// <summary>
         /// Examines a System.Type object and determines the ConstructorInfo to use in creating
         /// instances of the Type

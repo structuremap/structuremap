@@ -10,7 +10,7 @@ namespace StructureMap.Configuration
 
         public object Create(object parent, object configContext, XmlNode section)
         {
-            IList<XmlNode> allNodes = parent as IList<XmlNode>;
+            var allNodes = parent as IList<XmlNode>;
             if (allNodes == null)
             {
                 allNodes = new List<XmlNode>();
@@ -23,7 +23,7 @@ namespace StructureMap.Configuration
 
         public static IList<XmlNode> GetStructureMapConfiguration()
         {
-            IList<XmlNode> nodes = ConfigurationSettings.GetConfig(XmlConstants.STRUCTUREMAP) as IList<XmlNode>;
+            var nodes = ConfigurationSettings.GetConfig(XmlConstants.STRUCTUREMAP) as IList<XmlNode>;
             if (nodes == null)
             {
                 throw new StructureMapException(105, XmlConstants.STRUCTUREMAP);

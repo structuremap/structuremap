@@ -9,9 +9,8 @@ namespace StructureMap
     /// </summary>
     public class PluginFamilyAttribute : Attribute
     {
-        private string _default = string.Empty;
+        private readonly string _default = string.Empty;
         private InstanceScope _scope = InstanceScope.PerRequest;
-        private Type _source = null;
 
         public PluginFamilyAttribute()
         {
@@ -33,11 +32,7 @@ namespace StructureMap
             set { _scope = value; }
         }
 
-        public Type SourceType
-        {
-            get { return _source; }
-            set { _source = value; }
-        }
+        public Type SourceType { get; set; }
 
         /// <summary>
         /// InstanceKey of the default instance.  Used to implicitly define the default without
@@ -66,14 +61,14 @@ namespace StructureMap
         /// <returns></returns>
         public static bool MarkedAsPluginFamily(Type objectType)
         {
-            PluginFamilyAttribute att =
+            var att =
                 GetCustomAttribute(objectType, typeof (PluginFamilyAttribute), false) as PluginFamilyAttribute;
             return (att != null);
         }
 
         public static void ConfigureFamily(IPluginFamily family)
         {
-            PluginFamilyAttribute att =
+            var att =
                 GetCustomAttribute(family.PluginType, typeof (PluginFamilyAttribute), false)
                 as PluginFamilyAttribute;
 
@@ -89,7 +84,7 @@ namespace StructureMap
             {
                 try
                 {
-                    MementoSource source = (MementoSource) Activator.CreateInstance(SourceType);
+                    var source = (MementoSource) Activator.CreateInstance(SourceType);
                     family.AddMementoSource(source);
                 }
                 catch (Exception ex)

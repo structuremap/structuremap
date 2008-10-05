@@ -19,12 +19,12 @@ namespace StructureMap.Attributes
                 return new PropertyInfo[0];
             }
 
-            ArrayList list = new ArrayList();
+            var list = new ArrayList();
 
             PropertyInfo[] properties = pluggedType.GetProperties();
             foreach (PropertyInfo property in properties)
             {
-                SetterPropertyAttribute att =
+                var att =
                     GetCustomAttribute(property, typeof (SetterPropertyAttribute)) as SetterPropertyAttribute;
 
                 if (att != null)
@@ -37,9 +37,5 @@ namespace StructureMap.Attributes
         }
 
         #endregion
-
-        public SetterPropertyAttribute()
-        {
-        }
     }
 }

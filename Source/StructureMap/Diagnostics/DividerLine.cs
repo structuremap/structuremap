@@ -10,7 +10,9 @@ namespace StructureMap.Diagnostics
         {
             _character = character;
         }
-        
+
+        #region Line Members
+
         public void OverwriteCounts(CharacterWidth[] widths)
         {
             // no-op
@@ -23,5 +25,7 @@ namespace StructureMap.Diagnostics
                 writer.Write(string.Empty.PadRight(width.Width, _character));
             }
         }
+
+        #endregion
     }
 }

@@ -29,6 +29,8 @@ namespace StructureMap.Configuration
             _log = log;
         }
 
+        #region IConfigurationParserBuilder Members
+
         public bool UseAndEnforceExistenceOfDefaultFile
         {
             get { return _useAndEnforceExistenceOfDefaultFile; }
@@ -47,6 +49,22 @@ namespace StructureMap.Configuration
             get { return _pullConfigurationFromAppConfig; }
             set { _pullConfigurationFromAppConfig = value; }
         }
+
+        public void IncludeFile(string filename)
+        {
+            _otherFiles.Add(filename);
+        }
+
+
+        public void IncludeNode(XmlNode node, string description)
+        {
+            var parser = new ConfigurationParser(node);
+            parser.Description = description;
+
+            _parsers.Add(parser);
+        }
+
+        #endregion
 
         public ConfigurationParser[] GetParsers()
         {
@@ -125,20 +143,6 @@ namespace StructureMap.Configuration
                  File.Exists(pathToStructureMapConfig)) && !_ignoreDefaultFile;
         }
 
-
-        public void IncludeFile(string filename)
-        {
-            _otherFiles.Add(filename);
-        }
-
-
-        public void IncludeNode(XmlNode node, string description)
-        {
-            var parser = new ConfigurationParser(node);
-            parser.Description = description;
-
-            _parsers.Add(parser);
-        }
 
         public static ConfigurationParser[] GetParsers(XmlNode node, GraphLog log)
         {

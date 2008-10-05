@@ -8,56 +8,88 @@ namespace StructureMap.Configuration
 {
     public class DictionaryReader : ITypeReader
     {
+        #region ITypeReader Members
+
         public bool CanProcess(Type pluginType)
         {
-            if (pluginType.Equals(typeof(NameValueCollection))) return true;
+            if (pluginType.Equals(typeof (NameValueCollection))) return true;
             if (!pluginType.IsGenericType) return false;
 
-            var definition = pluginType.GetGenericTypeDefinition();
+            Type definition = pluginType.GetGenericTypeDefinition();
             if (definition == null) return false;
 
             return definition.Equals(typeof (IDictionary<,>)) || definition.Equals(typeof (Dictionary<,>));
         }
 
+        public Instance Read(XmlNode node, Type pluginType)
+        {
+            IBuilder builder = findBuilder(pluginType);
+            node.ForEachChild("Pair").Do(
+                element => builder.Read(element.GetAttribute("Key"), element.GetAttribute("Value")));
+
+            return new SerializedInstance(builder.Object);
+        }
+
+        #endregion
+
         private static IBuilder findBuilder(Type pluginType)
         {
-            if (pluginType.Equals(typeof(NameValueCollection))) return new NameValueCollectionBuilder();
+            if (pluginType.Equals(typeof (NameValueCollection))) return new NameValueCollectionBuilder();
 
-            var definition = pluginType.GetGenericTypeDefinition();
-            if (definition.Equals(typeof(IDictionary<,>)) || definition.Equals(typeof(Dictionary<,>)))
+            Type definition = pluginType.GetGenericTypeDefinition();
+            if (definition.Equals(typeof (IDictionary<,>)) || definition.Equals(typeof (Dictionary<,>)))
             {
-                var arguments = pluginType.GetGenericArguments();
-                var builderType = typeof (DictionaryBuilder<,>).MakeGenericType(arguments);
+                Type[] arguments = pluginType.GetGenericArguments();
+                Type builderType = typeof (DictionaryBuilder<,>).MakeGenericType(arguments);
                 return (IBuilder) Activator.CreateInstance(builderType);
             }
 
             return null;
         }
 
-        public Instance Read(XmlNode node, Type pluginType)
-        {
-            var builder = findBuilder(pluginType);
-            node.ForEachChild("Pair").Do(element => builder.Read(element.GetAttribute("Key"), element.GetAttribute("Value")));
+        #region Nested type: DictionaryBuilder
 
-            return new SerializedInstance(builder.Object);
+        internal class DictionaryBuilder<KEY, VALUE> : IBuilder
+        {
+            private readonly Dictionary<KEY, VALUE> _dictionary = new Dictionary<KEY, VALUE>();
+
+            #region IBuilder Members
+
+            public void Read(string name, string value)
+            {
+                var key = (KEY) Convert.ChangeType(name, typeof (KEY));
+                var theValue = (VALUE) Convert.ChangeType(value, typeof (VALUE));
+
+                _dictionary.Add(key, theValue);
+            }
+
+            public object Object
+            {
+                get { return _dictionary; }
+            }
+
+            #endregion
         }
 
-       
+        #endregion
 
-
-
-
-
+        #region Nested type: IBuilder
 
         internal interface IBuilder
         {
-            void Read(string name, string value);
             object Object { get; }
+            void Read(string name, string value);
         }
+
+        #endregion
+
+        #region Nested type: NameValueCollectionBuilder
 
         internal class NameValueCollectionBuilder : IBuilder
         {
             private readonly NameValueCollection _collection = new NameValueCollection();
+
+            #region IBuilder Members
 
             public void Read(string name, string value)
             {
@@ -68,24 +100,10 @@ namespace StructureMap.Configuration
             {
                 get { return _collection; }
             }
+
+            #endregion
         }
 
-        internal class DictionaryBuilder<KEY, VALUE> : IBuilder
-        {
-            private Dictionary<KEY, VALUE> _dictionary = new Dictionary<KEY, VALUE>();
-
-            public void Read(string name, string value)
-            {
-                KEY key = (KEY) Convert.ChangeType(name, typeof (KEY));
-                VALUE theValue = (VALUE) Convert.ChangeType(value, typeof (VALUE));
-
-                _dictionary.Add(key, theValue);
-            }
-
-            public object Object
-            {
-                get { return _dictionary; } 
-            }
-        }
+        #endregion
     }
 }

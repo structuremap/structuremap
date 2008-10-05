@@ -44,10 +44,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         {
             var instance = new ConfiguredInstance(concreteType);
 
-            alterAndContinue(family =>
-            {
-                family.AddInstance(instance);
-            });
+            alterAndContinue(family => { family.AddInstance(instance); });
 
             return instance;
         }
@@ -77,7 +74,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         {
             _registry.addExpression(graph =>
             {
-                PluginTypeInterceptor interceptor = new PluginTypeInterceptor(_pluginType, func);
+                var interceptor = new PluginTypeInterceptor(_pluginType, func);
                 graph.InterceptorLibrary.AddInterceptor(interceptor);
             });
 

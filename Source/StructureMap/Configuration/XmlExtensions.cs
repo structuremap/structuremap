@@ -7,7 +7,7 @@ namespace StructureMap.Configuration
     {
         public static string GetAttribute(this XmlNode node, string attributeName, string defaultValue)
         {
-            var attribute = node.Attributes.GetNamedItem(attributeName);
+            XmlNode attribute = node.Attributes.GetNamedItem(attributeName);
             return attribute == null ? defaultValue : attribute.InnerText;
         }
 
@@ -35,13 +35,15 @@ namespace StructureMap.Configuration
             return new HasXmlElementExpression(node, xpath);
         }
 
+        #region Nested type: HasXmlElementExpression
+
         public class HasXmlElementExpression
         {
-            private XmlElement _element;
+            private readonly XmlElement _element;
 
             internal HasXmlElementExpression(XmlNode parent, string xpath)
             {
-                _element = (XmlElement)parent.SelectSingleNode(xpath);
+                _element = (XmlElement) parent.SelectSingleNode(xpath);
             }
 
             public HasXmlElementExpression Do(Action<XmlElement> action)
@@ -63,10 +65,13 @@ namespace StructureMap.Configuration
             }
         }
 
+        #endregion
+
+        #region Nested type: XmlNodeExpression
 
         public class XmlNodeExpression
         {
-            private XmlNodeList _list;
+            private readonly XmlNodeList _list;
 
             internal XmlNodeExpression(XmlNode parent, string xpath)
             {
@@ -79,10 +84,14 @@ namespace StructureMap.Configuration
 
                 foreach (XmlNode node in _list)
                 {
-                    action((XmlElement)node);
+                    action((XmlElement) node);
                 }
             }
         }
+
+        #endregion
+
+        #region Nested type: XmlTextExpression
 
         public class XmlTextExpression
         {
@@ -104,6 +113,6 @@ namespace StructureMap.Configuration
             }
         }
 
-
+        #endregion
     }
 }

@@ -17,7 +17,7 @@ namespace StructureMap.Emitting
         {
             string assemblyName = "Builders" + guidString();
             _dynamicAssembly = new DynamicAssembly(assemblyName);
-           
+
             foreach (Plugin plugin in plugins)
             {
                 processPlugin(plugin);
@@ -76,10 +76,10 @@ namespace StructureMap.Emitting
         public List<InstanceBuilder> Compile()
         {
             Assembly assembly = _dynamicAssembly.Compile();
-            
+
 
             return
-                _classNames.ConvertAll<InstanceBuilder>(
+                _classNames.ConvertAll(
                     typeName => (InstanceBuilder) assembly.CreateInstance(typeName));
         }
 
@@ -88,7 +88,7 @@ namespace StructureMap.Emitting
         {
             builderClass.AddPluggedTypeGetter(plugin.PluggedType);
 
-            BuildInstanceMethod method = new BuildInstanceMethod(plugin);
+            var method = new BuildInstanceMethod(plugin);
             builderClass.AddMethod(method);
         }
     }

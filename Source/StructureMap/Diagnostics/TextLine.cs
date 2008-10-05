@@ -12,9 +12,10 @@ namespace StructureMap.Diagnostics
             for (int i = 0; i < contents.Length; i++)
             {
                 if (contents[i] == null) contents[i] = string.Empty;
-                
             }
         }
+
+        #region Line Members
 
         public void OverwriteCounts(CharacterWidth[] widths)
         {
@@ -33,5 +34,7 @@ namespace StructureMap.Diagnostics
                 writer.Write(_contents[i].PadRight(width.Width));
             }
         }
+
+        #endregion
     }
 }

@@ -5,7 +5,7 @@ namespace StructureMap.Configuration
 {
     public static class TypeReaderFactory
     {
-        private static List<ITypeReader> _readers = new List<ITypeReader>();
+        private static readonly List<ITypeReader> _readers = new List<ITypeReader>();
 
         static TypeReaderFactory()
         {
@@ -15,7 +15,7 @@ namespace StructureMap.Configuration
 
         public static ITypeReader GetReader(Type pluginType)
         {
-            foreach (var reader in _readers)
+            foreach (ITypeReader reader in _readers)
             {
                 if (reader.CanProcess(pluginType))
                 {

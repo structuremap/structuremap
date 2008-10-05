@@ -2,9 +2,16 @@ namespace StructureMap.Diagnostics
 {
     internal class CharacterWidth
     {
+        private int _width;
+
+        internal int Width
+        {
+            get { return _width; }
+        }
+
         internal static CharacterWidth[] For(int count)
         {
-            CharacterWidth[] widths = new CharacterWidth[count];
+            var widths = new CharacterWidth[count];
             for (int i = 0; i < widths.Length; i++)
             {
                 widths[i] = new CharacterWidth();
@@ -13,8 +20,6 @@ namespace StructureMap.Diagnostics
             return widths;
         }
 
-        private int _width = 0;
-    
         internal void SetWidth(int width)
         {
             if (width > _width)
@@ -26,14 +31,6 @@ namespace StructureMap.Diagnostics
         internal void Add(int add)
         {
             _width += add;
-        }
-
-        internal int Width
-        {
-            get
-            {
-                return _width;
-            }
         }
     }
 }

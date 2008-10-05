@@ -1,4 +1,3 @@
-using System;
 using System.Xml;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
@@ -23,7 +22,8 @@ namespace StructureMap.Configuration
 
         public void Parse()
         {
-            _structureMapNode.ForAttributeValue(DEFAULT_PROFILE, profileName => _profileBuilder.SetDefaultProfileName(profileName));
+            _structureMapNode.ForAttributeValue(DEFAULT_PROFILE,
+                                                profileName => _profileBuilder.SetDefaultProfileName(profileName));
 
             forEachNode(PROFILE_NODE).Do(element =>
             {
@@ -31,7 +31,8 @@ namespace StructureMap.Configuration
                 _profileBuilder.AddProfile(profileName);
 
                 writeOverrides(element,
-                               (fullName, defaultKey) => _profileBuilder.OverrideProfile(new TypePath(fullName), defaultKey), profileName);
+                               (fullName, defaultKey) =>
+                               _profileBuilder.OverrideProfile(new TypePath(fullName), defaultKey), profileName);
             });
 
 
@@ -43,7 +44,8 @@ namespace StructureMap.Configuration
                 _profileBuilder.AddMachine(machineName, profileName);
 
                 writeOverrides(element,
-                               (fullName, defaultKey) => _profileBuilder.OverrideMachine(new TypePath(fullName), defaultKey), machineName);
+                               (fullName, defaultKey) =>
+                               _profileBuilder.OverrideMachine(new TypePath(fullName), defaultKey), machineName);
             });
         }
 
@@ -73,7 +75,7 @@ namespace StructureMap.Configuration
             InstanceMemento memento = _creator.CreateMemento(instanceElement);
             memento.InstanceKey = key;
 
-            TypePath familyPath = new TypePath(fullName);
+            var familyPath = new TypePath(fullName);
 
             _graphBuilder.ConfigureFamily(familyPath, family =>
             {

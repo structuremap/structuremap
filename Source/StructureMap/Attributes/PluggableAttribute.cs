@@ -8,22 +8,16 @@ namespace StructureMap
     [AttributeUsage(AttributeTargets.Class)]
     public class PluggableAttribute : Attribute
     {
-        private string _concreteKey;
-
         public PluggableAttribute(string concreteKey)
         {
-            _concreteKey = concreteKey;
+            ConcreteKey = concreteKey;
         }
 
 
         /// <summary>
         /// The ConcreteKey alias of the Type
         /// </summary>
-        public string ConcreteKey
-        {
-            get { return _concreteKey; }
-            set { _concreteKey = value; }
-        }
+        public string ConcreteKey { get; set; }
 
         /// <summary>
         /// Gets an instance of PluggableAttribute from a Type object 

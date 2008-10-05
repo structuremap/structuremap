@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
-using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
@@ -12,10 +11,9 @@ namespace StructureMap.Diagnostics
 {
     public class ValidationBuildSession : BuildSession
     {
-        private ErrorCollection _errors;
-        
-        private readonly List<ValidationError> _validationErrors = new List<ValidationError>();
         private readonly Stack<BuildDependency> _dependencyStack = new Stack<BuildDependency>();
+        private readonly List<ValidationError> _validationErrors = new List<ValidationError>();
+        private ErrorCollection _errors;
         private List<IInstance> _explicitInstances;
 
         public ValidationBuildSession(PipelineGraph pipelineGraph, InterceptorLibrary interceptorLibrary)
@@ -27,6 +25,21 @@ namespace StructureMap.Diagnostics
         {
         }
 
+
+        public bool Success
+        {
+            get { return _errors.BuildErrors.Length == 0 && _validationErrors.Count == 0; }
+        }
+
+        public BuildError[] BuildErrors
+        {
+            get { return _errors.BuildErrors; }
+        }
+
+        public ValidationError[] ValidationErrors
+        {
+            get { return _validationErrors.ToArray(); }
+        }
 
         public override object CreateInstance(Type pluginType, Instance instance)
         {
@@ -52,30 +65,6 @@ namespace StructureMap.Diagnostics
                 _errors.LogError(instance, pluginType, ex, _dependencyStack);
 
                 throw;
-            }
-        }
-
-        public bool Success
-        {
-            get
-            {
-                return _errors.BuildErrors.Length == 0 && _validationErrors.Count == 0;
-            }
-        }
-
-        public BuildError[] BuildErrors
-        {
-            get
-            {
-                return _errors.BuildErrors;
-            }
-        }
-
-        public ValidationError[] ValidationErrors
-        {
-            get
-            {
-                return _validationErrors.ToArray();
             }
         }
 
@@ -111,9 +100,9 @@ namespace StructureMap.Diagnostics
                 {
                     method.Invoke(builtObject, new object[0]);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
-                    ValidationError error = new ValidationError(pluginType, instance, ex.InnerException, method);
+                    var error = new ValidationError(pluginType, instance, ex.InnerException, method);
                     _validationErrors.Add(error);
                 }
             }
@@ -124,7 +113,7 @@ namespace StructureMap.Diagnostics
             _explicitInstances = pipelineGraph.GetAllInstances();
             _errors = new ErrorCollection();
 
-            foreach (var pluginType in pipelineGraph.PluginTypes)
+            foreach (PluginTypeConfiguration pluginType in pipelineGraph.PluginTypes)
             {
                 foreach (Instance instance in pluginType.Instances)
                 {
@@ -137,15 +126,16 @@ namespace StructureMap.Diagnostics
         {
             var builder = new StringBuilder();
             var writer = new StringWriter(builder);
-        
+
             _validationErrors.ForEach(e => e.Write(writer));
             _errors.ForEach(e => e.Write(writer));
 
             writer.WriteLine();
             writer.WriteLine();
 
-            
-            writer.WriteLine("StructureMap Failures:  {0} Build/Configuration Failures and {1} Validation Errors", _errors.BuildErrors.Length, _validationErrors.Count);
+
+            writer.WriteLine("StructureMap Failures:  {0} Build/Configuration Failures and {1} Validation Errors",
+                             _errors.BuildErrors.Length, _validationErrors.Count);
 
             return builder.ToString();
         }
@@ -160,5 +150,4 @@ namespace StructureMap.Diagnostics
             return _validationErrors.Count > 0;
         }
     }
-
 }

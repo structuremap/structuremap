@@ -9,8 +9,8 @@ namespace StructureMap.Configuration.DSL
 {
     public class Registry
     {
-        private readonly List<Action> _basicActions = new List<Action>();
         private readonly List<Action<PluginGraph>> _actions = new List<Action<PluginGraph>>();
+        private readonly List<Action> _basicActions = new List<Action>();
 
         public Registry()
         {
@@ -65,27 +65,9 @@ namespace StructureMap.Configuration.DSL
             return new GenericFamilyExpression(pluginType, this);
         }
 
-        public class BuildWithExpression<T>
-        {
-            private SmartInstance<T> _instance;
-
-            public BuildWithExpression(SmartInstance<T> instance)
-            {
-                _instance = instance;
-            }
-
-            public SmartInstance<T> Configure
-            {
-                get
-                {
-                    return _instance;
-                }
-            }
-        }
-
         public BuildWithExpression<T> ForConcreteType<T>()
         {
-            var instance = ForRequestedType<T>().TheDefault.Is.OfConcreteType<T>();
+            SmartInstance<T> instance = ForRequestedType<T>().TheDefault.Is.OfConcreteType<T>();
             return new BuildWithExpression<T>(instance);
         }
 
@@ -104,7 +86,7 @@ namespace StructureMap.Configuration.DSL
 
         public PluginGraph Build()
         {
-            PluginGraph graph = new PluginGraph();
+            var graph = new PluginGraph();
             ConfigurePluginGraph(graph);
             graph.Seal();
 
@@ -122,13 +104,9 @@ namespace StructureMap.Configuration.DSL
 
         public GenericIsExpression InstanceOf(Type pluginType)
         {
-            return new GenericIsExpression(instance =>
-            {
-                _actions.Add(graph =>
-                {
-                    graph.FindFamily(pluginType).AddInstance(instance);
-                });
-            });
+            return
+                new GenericIsExpression(
+                    instance => { _actions.Add(graph => { graph.FindFamily(pluginType).AddInstance(instance); }); });
         }
 
         /// <summary>
@@ -138,7 +116,7 @@ namespace StructureMap.Configuration.DSL
         /// <returns></returns>
         public ProfileExpression CreateProfile(string profileName)
         {
-            ProfileExpression expression = new ProfileExpression(profileName, this);
+            var expression = new ProfileExpression(profileName, this);
 
             return expression;
         }
@@ -165,7 +143,7 @@ namespace StructureMap.Configuration.DSL
 
         public MatchedTypeInterceptor IfTypeMatches(Predicate<Type> match)
         {
-            MatchedTypeInterceptor interceptor = new MatchedTypeInterceptor(match);
+            var interceptor = new MatchedTypeInterceptor(match);
             _actions.Add(graph => graph.InterceptorLibrary.AddInterceptor(interceptor));
 
             return interceptor;
@@ -209,10 +187,27 @@ namespace StructureMap.Configuration.DSL
 
         public CreatePluginFamilyExpression<PLUGINTYPE> FillAllPropertiesOfType<PLUGINTYPE>()
         {
-            PluginCache.AddFilledType(typeof(PLUGINTYPE));
+            PluginCache.AddFilledType(typeof (PLUGINTYPE));
             return ForRequestedType<PLUGINTYPE>();
         }
 
+        #region Nested type: BuildWithExpression
 
+        public class BuildWithExpression<T>
+        {
+            private readonly SmartInstance<T> _instance;
+
+            public BuildWithExpression(SmartInstance<T> instance)
+            {
+                _instance = instance;
+            }
+
+            public SmartInstance<T> Configure
+            {
+                get { return _instance; }
+            }
+        }
+
+        #endregion
     }
 }

@@ -64,8 +64,6 @@ namespace StructureMap.Diagnostics
 
                 return report;
             }
-
-
         }
 
         private void writeConfigurationAndValidate(DoctorReport report, PluginGraph graph)

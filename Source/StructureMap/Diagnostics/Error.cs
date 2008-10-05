@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Resources;
 
 namespace StructureMap.Diagnostics
 {
@@ -28,7 +27,7 @@ namespace StructureMap.Diagnostics
         public Error(int errorCode, Exception ex, params object[] args) : this(errorCode, args)
         {
             _message += "\n\n" + ex.Message;
-            
+
             writeStackTrace(ex);
         }
 
@@ -39,18 +38,6 @@ namespace StructureMap.Diagnostics
             _message = exception.Message;
 
             writeStackTrace(exception);
-        }
-
-        private void writeStackTrace(Exception exception)
-        {
-            _stackTrace = string.Empty;
-            Exception ex = exception;
-            while (ex != null)
-            {
-                _stackTrace += exception.ToString();
-                _stackTrace += "\n\n";
-                ex = ex.InnerException;
-            }
         }
 
 
@@ -73,6 +60,17 @@ namespace StructureMap.Diagnostics
 
         #endregion
 
+        private void writeStackTrace(Exception exception)
+        {
+            _stackTrace = string.Empty;
+            Exception ex = exception;
+            while (ex != null)
+            {
+                _stackTrace += exception.ToString();
+                _stackTrace += "\n\n";
+                ex = ex.InnerException;
+            }
+        }
 
         public override bool Equals(object obj)
         {
@@ -105,9 +103,9 @@ namespace StructureMap.Diagnostics
             writer.WriteLine("Error:  " + Code);
             if (Instance != null) writer.WriteLine(Instance.ToString());
             writer.WriteLine("Source:  " + Source);
-            
+
             if (!string.IsNullOrEmpty(_message)) writer.WriteLine(_message);
-            if (!string.IsNullOrEmpty(_stackTrace)) writer.WriteLine(_stackTrace); 
+            if (!string.IsNullOrEmpty(_stackTrace)) writer.WriteLine(_stackTrace);
         }
     }
 }

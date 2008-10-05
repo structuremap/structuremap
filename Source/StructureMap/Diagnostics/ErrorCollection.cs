@@ -6,14 +6,25 @@ namespace StructureMap.Diagnostics
 {
     public class ErrorCollection
     {
-        private readonly Dictionary<Instance, BuildError> _buildErrors = new Dictionary<Instance, BuildError>();
         private readonly List<Instance> _brokenInstances = new List<Instance>();
+        private readonly Dictionary<Instance, BuildError> _buildErrors = new Dictionary<Instance, BuildError>();
+
+        public BuildError[] BuildErrors
+        {
+            get
+            {
+                var errors = new BuildError[_buildErrors.Count];
+                _buildErrors.Values.CopyTo(errors, 0);
+
+                return errors;
+            }
+        }
 
 
         public void LogError(
-            Instance instance, 
-            Type pluginType, 
-            StructureMapException ex, 
+            Instance instance,
+            Type pluginType,
+            StructureMapException ex,
             IEnumerable<BuildDependency> dependencies)
         {
             if (_buildErrors.ContainsKey(instance))
@@ -27,8 +38,8 @@ namespace StructureMap.Diagnostics
                 return;
             }
 
-            InstanceToken token = ((IDiagnosticInstance)instance).CreateToken();
-            BuildError error = new BuildError(pluginType, instance);
+            InstanceToken token = ((IDiagnosticInstance) instance).CreateToken();
+            var error = new BuildError(pluginType, instance);
             error.Exception = ex;
 
             _buildErrors.Add(instance, error);
@@ -36,7 +47,8 @@ namespace StructureMap.Diagnostics
             addDependenciesToError(instance, dependencies, error);
         }
 
-        private void addDependenciesToError(Instance instance, IEnumerable<BuildDependency> dependencies, BuildError error)
+        private void addDependenciesToError(Instance instance, IEnumerable<BuildDependency> dependencies,
+                                            BuildError error)
         {
             foreach (BuildDependency dependency in dependencies)
             {
@@ -50,20 +62,9 @@ namespace StructureMap.Diagnostics
             }
         }
 
-        public BuildError[] BuildErrors
-        {
-            get
-            {
-                BuildError[] errors = new BuildError[_buildErrors.Count];
-                _buildErrors.Values.CopyTo(errors, 0);
-
-                return errors;
-            }
-        }
-
         public BuildError Find(Type pluginType, string name)
         {
-            foreach (KeyValuePair<Instance, BuildError> pair in _buildErrors)
+            foreach (var pair in _buildErrors)
             {
                 BuildError error = pair.Value;
                 if (error.PluginType == pluginType && error.Instance.Name == name)
@@ -82,6 +83,5 @@ namespace StructureMap.Diagnostics
                 action(pair.Value);
             }
         }
-
     }
 }

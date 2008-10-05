@@ -34,6 +34,5 @@ namespace StructureMap.Emitting.Parameters
             MethodInfo method = property.GetSetMethod();
             ilgen.Emit(OpCodes.Callvirt, method);
         }
-
     }
 }

@@ -9,7 +9,7 @@ namespace StructureMap.Diagnostics
     public class TextReportWriter
     {
         private readonly int _columnCount;
-        private List<Line> _lines = new List<Line>();
+        private readonly List<Line> _lines = new List<Line>();
 
         public TextReportWriter(int columnCount)
         {
@@ -55,8 +55,8 @@ namespace StructureMap.Diagnostics
 
         public string Write()
         {
-            StringBuilder sb = new StringBuilder();
-            StringWriter writer = new StringWriter(sb);
+            var sb = new StringBuilder();
+            var writer = new StringWriter(sb);
 
             Write(writer);
 
@@ -65,25 +65,25 @@ namespace StructureMap.Diagnostics
 
         public void DumpToConsole()
         {
-            System.Console.WriteLine(Write());
+            Console.WriteLine(Write());
         }
 
         public void DumpToDebug()
         {
             Debug.WriteLine(Write());
         }
-
-
     }
 
     internal class PlainLine : Line
     {
-        public string Contents { get; set; }
-
         public PlainLine(string contents)
         {
             Contents = contents;
         }
+
+        public string Contents { get; set; }
+
+        #region Line Members
 
         public void OverwriteCounts(CharacterWidth[] widths)
         {
@@ -94,5 +94,7 @@ namespace StructureMap.Diagnostics
         {
             writer.WriteLine(Contents);
         }
+
+        #endregion
     }
 }
