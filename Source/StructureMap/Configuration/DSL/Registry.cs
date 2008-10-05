@@ -120,6 +120,17 @@ namespace StructureMap.Configuration.DSL
             });
         }
 
+        public GenericIsExpression InstanceOf(Type pluginType)
+        {
+            return new GenericIsExpression(instance =>
+            {
+                _actions.Add(graph =>
+                {
+                    graph.FindFamily(pluginType).AddInstance(instance);
+                });
+            });
+        }
+
         /// <summary>
         /// Starts the definition of a new Profile
         /// </summary>
@@ -171,18 +182,6 @@ namespace StructureMap.Configuration.DSL
             action(scanner);
 
             _actions.Add(graph => graph.AddScanner(scanner));
-        }
-
-        [Obsolete("Like to get rid of this")]
-        public void AddInstanceOf(Type pluginType, Instance instance)
-        {
-            _actions.Add(graph => graph.FindFamily(pluginType).AddInstance(instance));
-        }
-
-        [Obsolete("Like to get rid of this")]
-        public void AddInstanceOf<PLUGINTYPE>(Instance instance)
-        {
-            _actions.Add(graph => graph.FindFamily(typeof (PLUGINTYPE)).AddInstance(instance));
         }
 
         public bool Equals(Registry obj)

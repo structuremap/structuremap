@@ -160,14 +160,13 @@ namespace StructureMap.Testing
         [Test]
         public void Define_profile_with_generics_with_named_instance()
         {
-            IContainer manager = new Container(registry =>
+            IContainer manager = new Container(r =>
             {
-                registry.AddInstanceOf(typeof (IService<>),
-                                       new ConfiguredInstance(typeof (Service<>)).WithName("Service1"));
-                registry.AddInstanceOf(typeof (IService<>),
-                                       new ConfiguredInstance(typeof (Service2<>)).WithName("Service2"));
-                registry.CreateProfile("1").For(typeof (IService<>)).UseNamedInstance("Service1");
-                registry.CreateProfile("2").For(typeof (IService<>)).UseNamedInstance("Service2");
+                r.InstanceOf(typeof (IService<>)).Is(typeof (Service<>)).WithName("Service1");
+                r.InstanceOf(typeof (IService<>)).Is(typeof (Service2<>)).WithName("Service2");
+
+                r.CreateProfile("1").For(typeof (IService<>)).UseNamedInstance("Service1");
+                r.CreateProfile("2").For(typeof (IService<>)).UseNamedInstance("Service2");
             });
 
             manager.SetDefaultsToProfile("1");

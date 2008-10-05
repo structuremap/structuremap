@@ -126,7 +126,7 @@ namespace StructureMap.Testing
                 return new ColorRule("Red");
             });
             Registry registry = new Registry();
-            registry.ForRequestedType<ColorRule>().TheDefaultIs(instance);
+            registry.ForRequestedType<ColorRule>().TheDefault.IsThis(instance);
 
             PluginGraph graph = registry.Build();
             BuildSession session = new BuildSession(graph);

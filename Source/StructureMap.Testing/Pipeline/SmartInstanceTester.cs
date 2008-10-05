@@ -25,7 +25,7 @@ namespace StructureMap.Testing.Pipeline
             SmartInstance<T> instance = instanceOf<T>();
             action(instance);
 
-            var container = new Container(r => r.ForRequestedType<T>().TheDefaultIs(instance));
+            var container = new Container(r => r.ForRequestedType<T>().TheDefault.IsThis(instance));
             return container.GetInstance<T>();
         }
 

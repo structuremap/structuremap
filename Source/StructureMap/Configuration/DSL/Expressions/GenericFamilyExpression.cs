@@ -53,7 +53,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         }
 
 
-        public GenericFamilyExpression AddInstance(Instance instance)
+        private GenericFamilyExpression add(Instance instance)
         {
             return alterAndContinue(family => family.AddInstance(instance));
         }
@@ -92,12 +92,12 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         public GenericFamilyExpression AddConcreteType(Type concreteType)
         {
-            return AddInstance(new ConfiguredInstance(concreteType));
+            return add(new ConfiguredInstance(concreteType));
         }
 
         public GenericFamilyExpression AddConcreteType(Type concreteType, string instanceName)
         {
-            return AddInstance(new ConfiguredInstance(concreteType).WithName(instanceName));
+            return add(new ConfiguredInstance(concreteType).WithName(instanceName));
         }
     }
 }

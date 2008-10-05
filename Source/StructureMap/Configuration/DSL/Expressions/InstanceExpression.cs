@@ -10,6 +10,25 @@ namespace StructureMap.Configuration.DSL.Expressions
         LiteralInstance IsThis(T obj);
     }
 
+    public class GenericIsExpression
+    {
+        private readonly Action<Instance> _action;
+
+        public GenericIsExpression(Action<Instance> action)
+        {
+            _action = action;
+        }
+
+
+        public ConfiguredInstance Is(Type concreteType)
+        {
+            var instance = new ConfiguredInstance(concreteType);
+            _action(instance);
+
+            return instance;
+        }
+    }
+
     public class InstanceExpression<T> : IsExpression<T>
     {
         private readonly Action<Instance> _action;

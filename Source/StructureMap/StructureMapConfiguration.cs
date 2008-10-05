@@ -197,16 +197,6 @@ namespace StructureMap
             return registry.ForRequestedType(pluginType);
         }
 
-        public static void AddInstanceOf<T>(Func<T> func)
-        {
-            registry.AddInstanceOf<T>(new ConstructorInstance<T>(func));
-        }
-
-        public static void AddInstanceOf<T>(Instance instance)
-        {
-            registry.ForRequestedType<T>().AddInstance(instance);
-        }
-
 
         /// <summary>
         /// Starts the definition of a configuration Profile. 

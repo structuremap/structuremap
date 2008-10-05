@@ -41,7 +41,7 @@ namespace StructureMap.Testing.Diagnostics
         {
             ValidationBuildSession session = validatedSession(r =>
             {
-                r.AddInstanceOf<IWidget>(errorInstance().WithName("BadInstance"));
+                r.InstanceOf<IWidget>().IsThis(errorInstance().WithName("BadInstance"));
 
                 r.InstanceOf<SomethingThatNeedsAWidget>().Is.OfConcreteType<SomethingThatNeedsAWidget>()
                     .WithName("DependentInstance")
@@ -71,7 +71,8 @@ namespace StructureMap.Testing.Diagnostics
         {
             ValidationBuildSession session = validatedSession(r =>
             {
-                r.AddInstanceOf<IWidget>(errorInstance().WithName("BadInstance"));
+                r.InstanceOf<IWidget>().IsThis(errorInstance().WithName("BadInstance"));
+
 
                 r.InstanceOf<SomethingThatNeedsAWidget>().Is.OfConcreteType<SomethingThatNeedsAWidget>()
                     .WithName("DependentInstance")
@@ -109,7 +110,7 @@ namespace StructureMap.Testing.Diagnostics
         {
             Instance instance = errorInstance().WithName("Bad");
             ValidationBuildSession session =
-                validatedSession(registry => registry.AddInstanceOf<IWidget>(instance));
+                validatedSession(registry => registry.InstanceOf<IWidget>().IsThis(instance));
 
             BuildError error = getFirstAndOnlyError(session);
 
@@ -155,7 +156,7 @@ namespace StructureMap.Testing.Diagnostics
         {
             var instance = new LiteralInstance(new WidgetWithOneValidationFailure());
             ValidationBuildSession session =
-                validatedSession(registry => registry.AddInstanceOf<IWidget>(instance));
+                validatedSession(registry => registry.InstanceOf<IWidget>().IsThis(instance));
 
 
             Assert.AreEqual(1, session.ValidationErrors.Length);

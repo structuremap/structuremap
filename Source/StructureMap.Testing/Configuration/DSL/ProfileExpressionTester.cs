@@ -45,8 +45,8 @@ namespace StructureMap.Testing.Configuration.DSL
 
             manager.SetDefaultsToProfile(theProfileName);
 
-            IWidget widget1 = manager.GetInstance<IWidget>();
-            IWidget widget2 = manager.GetInstance<IWidget>();
+            var widget1 = manager.GetInstance<IWidget>();
+            var widget2 = manager.GetInstance<IWidget>();
 
             Assert.IsNotNull(widget1);
             Assert.IsNotNull(widget2);
@@ -70,15 +70,15 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void Add_default_instance_with_literal()
         {
-            Registry registry = new Registry();
-            AWidget theWidget = new AWidget();
+            var registry = new Registry();
+            var theWidget = new AWidget();
 
             string theProfileName = "something";
             registry.CreateProfile(theProfileName)
                 .For<IWidget>().Use(theWidget);
 
             PluginGraph graph = registry.Build();
-            LiteralInstance instance = (LiteralInstance) graph.ProfileManager.GetDefault(typeof (IWidget), "something");
+            var instance = (LiteralInstance) graph.ProfileManager.GetDefault(typeof (IWidget), "something");
 
             Assert.AreSame(theWidget, instance.Object);
         }
@@ -89,12 +89,13 @@ namespace StructureMap.Testing.Configuration.DSL
             string theProfileName = "TheProfile";
             string theDefaultName = "TheDefaultName";
 
-            Registry registry = new Registry();
+            var registry = new Registry();
             registry.CreateProfile(theProfileName)
                 .For<IWidget>().UseNamedInstance(theDefaultName)
                 .For<Rule>().UseNamedInstance("DefaultRule");
 
-            var masterInstance = registry.InstanceOf<IWidget>().Is.Object(new AWidget()).WithName(theDefaultName);
+            LiteralInstance masterInstance =
+                registry.InstanceOf<IWidget>().Is.Object(new AWidget()).WithName(theDefaultName);
 
             ProfileManager manager = registry.Build().ProfileManager;
             Assert.AreSame(masterInstance, manager.GetDefault(typeof (IWidget), theProfileName));
@@ -105,7 +106,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             string theProfileName = "TheProfile";
 
-            Registry registry = new Registry();
+            var registry = new Registry();
             registry.CreateProfile(theProfileName)
                 .For<IWidget>().UseConcreteType<AWidget>();
 
@@ -116,9 +117,9 @@ namespace StructureMap.Testing.Configuration.DSL
 
             Assert.AreEqual(Profile.InstanceKeyForProfile(theProfileName), defaultInstance.Name);
 
-            Container manager = new Container(graph);
+            var manager = new Container(graph);
             manager.SetDefaultsToProfile(theProfileName);
-            AWidget widget = (AWidget) manager.GetInstance<IWidget>();
+            var widget = (AWidget) manager.GetInstance<IWidget>();
             Assert.IsNotNull(widget);
         }
     }
