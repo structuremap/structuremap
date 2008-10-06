@@ -205,6 +205,7 @@
     <Compile Include="Examples.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Examples\RegisteringWithTheAPI.cs" />
     <Compile Include="Graph\ArrayConstructorTester.cs">
       <SubType>Code</SubType>
     </Compile>

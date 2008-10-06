@@ -58,7 +58,7 @@ namespace StructureMap.Emitting
         private static string escapeClassName(Type type)
         {
             string typeName = type.Namespace + type.Name;
-            string returnValue = typeName.Replace(".", string.Empty);
+            string returnValue = typeName.Replace(".", string.Empty).Replace("[]", "Array");
             return returnValue.Replace("`", string.Empty);
         }
 

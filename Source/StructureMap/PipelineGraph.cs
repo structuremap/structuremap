@@ -74,10 +74,11 @@ namespace StructureMap
                     yield return configuration;
                 }
 
-                foreach (var pair in _factories)
-                {
-                    IInstanceFactory factory = pair.Value;
+                IInstanceFactory[] factories = new IInstanceFactory[_factories.Count];
+                _factories.Values.CopyTo(factories, 0);
 
+                foreach (var factory in factories)
+                {
                     yield return new PluginTypeConfiguration
                                      {
                                          Default = _profileManager.GetDefault(factory.PluginType),

@@ -5,8 +5,22 @@ namespace StructureMap.Configuration.DSL.Expressions
 {
     public interface IsExpression<T>
     {
+        /// <summary>
+        /// Gives you full access to all the different ways to specify an "Instance"
+        /// </summary>
         InstanceExpression<T> Is { get; }
+
+        /// <summary>
+        /// Shortcut to specify a prebuilt Instance
+        /// </summary>
+        /// <param name="instance"></param>
         void IsThis(Instance instance);
+
+        /// <summary>
+        /// Shortcut to directly inject an object
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         LiteralInstance IsThis(T obj);
     }
 

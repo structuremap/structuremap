@@ -23,7 +23,7 @@ namespace StructureMap.Graph
         {
             get
             {
-                foreach (PluginFamily family in _families)
+                foreach (PluginFamily family in _families.GetAll())
                 {
                     yield return family.GetConfiguration();
                 }
