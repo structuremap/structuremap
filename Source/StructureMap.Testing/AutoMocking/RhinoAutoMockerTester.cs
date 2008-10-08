@@ -405,5 +405,15 @@ namespace StructureMap.Testing.AutoMocking
 
             autoMocker.IsInReplayMode(autoMocker.Get<IMockedService>()).ShouldBeTrue();
         }
+
+        [Test]
+        public void PartialMockClassUnderTestPutsTheClassUnderTestInReplayModeWhenUsingAAA()
+        {
+            var autoMocker = new RhinoAutoMocker<ConcreteClass>(MockMode.AAA);
+            autoMocker.PartialMockTheClassUnderTest();
+
+            autoMocker.IsInReplayMode(autoMocker.ClassUnderTest).ShouldBeTrue();
+        }
+
     }
 }

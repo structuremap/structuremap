@@ -23,25 +23,26 @@ namespace StructureMap.AutoMocking
         private readonly AutoMockedContainer _container;
         private TARGETCLASS _classUnderTest;
         private readonly RhinoMocksServiceLocator _serviceLocator;
+        private readonly Func<object, object> _mockDecorator;
 
         public RhinoAutoMocker() : this(MockMode.RecordAndReplay) {}
 
         public RhinoAutoMocker(MockMode mockMode)
         {
-            var mockCreationStrategy = getMockCreationStrategy(mockMode);
-            _serviceLocator = new RhinoMocksServiceLocator(this, mockCreationStrategy);
+            _mockDecorator = getMockDecorator(mockMode);
+            _serviceLocator = new RhinoMocksServiceLocator(this, _mockDecorator);
             _container = new AutoMockedContainer(_serviceLocator);
         }
 
 
-        private static Func<MockRepository, Type, object> getMockCreationStrategy(MockMode mockMode)
+        private static Func<object, object> getMockDecorator(MockMode mockMode)
         {
             switch (mockMode)
             {
                 case MockMode.RecordAndReplay:
-                    return MockCreationStrategy.RecordMode;
+                    return MockDecorator.Nullo;
                 case MockMode.AAA:
-                    return MockCreationStrategy.ReplayMode;
+                    return MockDecorator.PutInReplayMode;
                 default:
                     throw new InvalidOperationException("Unsupported MockMode " + mockMode);
             }
@@ -88,7 +89,7 @@ namespace StructureMap.AutoMocking
         /// </summary>
         public void PartialMockTheClassUnderTest()
         {
-            _classUnderTest = PartialMock<TARGETCLASS>(getConstructorArgs());
+            _classUnderTest = (TARGETCLASS)_mockDecorator(PartialMock<TARGETCLASS>(getConstructorArgs()));
         }
 
         private object[] getConstructorArgs()

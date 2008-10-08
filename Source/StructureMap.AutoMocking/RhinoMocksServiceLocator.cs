@@ -6,15 +6,15 @@ namespace StructureMap.AutoMocking
     public class RhinoMocksServiceLocator : ServiceLocator
     {
         private readonly MockRepository _mocks;
-        private readonly Func<MockRepository, Type, object> mockCreationStrategy;
+        private readonly Func<object, object> _mockDecorator;
 
-        public RhinoMocksServiceLocator(MockRepository mocks, Func<MockRepository, Type, object> mockCreationStrategy)
+        public RhinoMocksServiceLocator(MockRepository mocks, Func<object, object> mockDecorator)
         {
             _mocks = mocks;
-            this.mockCreationStrategy = mockCreationStrategy;
+            _mockDecorator = mockDecorator;
         }
 
-        public RhinoMocksServiceLocator(MockRepository mocks) : this(mocks, MockCreationStrategy.RecordMode)
+        public RhinoMocksServiceLocator(MockRepository mocks) : this(mocks, MockDecorator.Nullo)
         {
         }
 
@@ -26,28 +26,27 @@ namespace StructureMap.AutoMocking
 
         public T Service<T>()
         {
-            return (T)mockCreationStrategy(_mocks, typeof (T));
+            return (T) Service(typeof (T));
         }
 
         public object Service(Type serviceType)
         {
-            return mockCreationStrategy(_mocks, serviceType);
+            return _mockDecorator(_mocks.DynamicMock(serviceType));
         }
 
         #endregion
     }
 
-    public static class MockCreationStrategy
+    public static class MockDecorator
     {
-        public static object RecordMode(MockRepository repository, Type type)
+        public static object Nullo(object mock)
         {
-            return repository.DynamicMock(type);
+            return mock;
         }
 
-        public static object ReplayMode(MockRepository repository, Type type)
+        public static object PutInReplayMode(object mock)
         {
-            var mock = repository.DynamicMock(type);
-            repository.Replay(mock);
+            mock.Replay();
             return mock;
         }
     }
