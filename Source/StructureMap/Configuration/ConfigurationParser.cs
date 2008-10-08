@@ -71,6 +71,9 @@ namespace StructureMap.Configuration
         public void ForEachFile(GraphLog log, Action<string> action)
         {
             string includePath = getIncludePath();
+            
+            // Find the text in every child node of _structureMapNode and
+            // perform an action with that text
             _structureMapNode.ForTextInChild("Include/@File").Do(fileName =>
             {
                 string includedFile = Path.Combine(includePath, fileName);

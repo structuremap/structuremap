@@ -335,7 +335,7 @@ namespace StructureMap.Testing.AutoMocking
         [Test]
         public void TheAutoMockerOptionallyPushesInMocksInReplayModeToAllowForAAAsyntax()
         {
-            var autoMocker = new RhinoAutoMocker<ConcreteClass>(MockMode.Replay);
+            var autoMocker = new RhinoAutoMocker<ConcreteClass>(MockMode.AAA);
 
             autoMocker.ClassUnderTest.CallService();
 

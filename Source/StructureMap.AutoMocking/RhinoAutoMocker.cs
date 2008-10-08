@@ -11,7 +11,7 @@ namespace StructureMap.AutoMocking
 
     public delegate void VoidMethod();
 
-    public enum MockMode { Record, Replay }
+    public enum MockMode { RecordAndReplay, AAA }
 
     // Note that it subclasses the RhinoMocks.MockRepository class
     /// <summary>
@@ -23,7 +23,7 @@ namespace StructureMap.AutoMocking
         private readonly AutoMockedContainer _container;
         private TARGETCLASS _classUnderTest;
 
-        public RhinoAutoMocker() : this(MockMode.Record) {}
+        public RhinoAutoMocker() : this(MockMode.RecordAndReplay) {}
 
         public RhinoAutoMocker(MockMode mockMode)
         {
@@ -37,9 +37,9 @@ namespace StructureMap.AutoMocking
         {
             switch (mockMode)
             {
-                case MockMode.Record:
+                case MockMode.RecordAndReplay:
                     return MockCreationStrategy.RecordMode;
-                case MockMode.Replay:
+                case MockMode.AAA:
                     return MockCreationStrategy.ReplayMode;
                 default:
                     throw new InvalidOperationException("Unsupported MockMode " + mockMode);

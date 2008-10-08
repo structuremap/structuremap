@@ -134,6 +134,7 @@ namespace StructureMap.Diagnostics
             writer.WriteLine();
 
 
+
             writer.WriteLine("StructureMap Failures:  {0} Build/Configuration Failures and {1} Validation Errors",
                              _errors.BuildErrors.Length, _validationErrors.Count);
 

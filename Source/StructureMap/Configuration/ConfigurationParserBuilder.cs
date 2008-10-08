@@ -85,12 +85,12 @@ namespace StructureMap.Configuration
         {
             foreach (ConfigurationParser parser in list.ToArray())
             {
-                parser.ForEachFile(_log,
-                                   filename => _log.Try(() =>
-                                   {
-                                       ConfigurationParser childParser = ConfigurationParser.FromFile(filename);
-                                       list.Add(childParser);
-                                   }).AndReportErrorAs(150, filename));
+                parser.ForEachFile(_log, filename => _log.Try(() =>
+                {
+                    ConfigurationParser childParser = ConfigurationParser.FromFile(filename);
+                    list.Add(childParser);
+                })
+                .AndReportErrorAs(150, filename));
             }
         }
 

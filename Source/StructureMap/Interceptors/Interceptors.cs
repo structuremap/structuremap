@@ -1,4 +1,4 @@
 namespace StructureMap.Interceptors
 {
-    public delegate T EnrichmentHandler<T>(T target);
+    public delegate object EnrichmentHandler<T>(T target);
 }
