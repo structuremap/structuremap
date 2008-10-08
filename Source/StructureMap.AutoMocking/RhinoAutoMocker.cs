@@ -22,14 +22,15 @@ namespace StructureMap.AutoMocking
     {
         private readonly AutoMockedContainer _container;
         private TARGETCLASS _classUnderTest;
+        private readonly RhinoMocksServiceLocator _serviceLocator;
 
         public RhinoAutoMocker() : this(MockMode.RecordAndReplay) {}
 
         public RhinoAutoMocker(MockMode mockMode)
         {
             var mockCreationStrategy = getMockCreationStrategy(mockMode);
-            var serviceLocator = new RhinoMocksServiceLocator(this, mockCreationStrategy);
-            _container = new AutoMockedContainer(serviceLocator);
+            _serviceLocator = new RhinoMocksServiceLocator(this, mockCreationStrategy);
+            _container = new AutoMockedContainer(_serviceLocator);
         }
 
 
@@ -159,7 +160,7 @@ namespace StructureMap.AutoMocking
         /// <returns></returns>
         public T AddAdditionalMockFor<T>() where T : class
         {
-            var mock = DynamicMock<T>();
+            var mock = _serviceLocator.Service<T>();
             _container.Configure(r => r.InstanceOf<T>().Is.Object(mock));
 
             return mock;
@@ -190,7 +191,7 @@ namespace StructureMap.AutoMocking
 
             for (int i = 0; i < returnValue.Length; i++)
             {
-                returnValue[i] = DynamicMock<T>();
+                returnValue[i] = _serviceLocator.Service<T>();
             }
 
             InjectArray(returnValue);

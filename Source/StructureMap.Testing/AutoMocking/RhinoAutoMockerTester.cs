@@ -338,9 +338,72 @@ namespace StructureMap.Testing.AutoMocking
             var autoMocker = new RhinoAutoMocker<ConcreteClass>(MockMode.AAA);
 
             autoMocker.ClassUnderTest.CallService();
+            autoMocker.IsInReplayMode(autoMocker.Get<IMockedService>()).ShouldBeTrue();
 
             autoMocker.Get<IMockedService>().AssertWasCalled(s => s.Go());
         }
 
+        public interface IAnotherService
+        {
+            
+        }
+
+        [Test]
+        public void AddAdditionalMockForCreatesMocksInRecordModeWhenUsingRecordReplay()
+        {
+            var autoMocker = new RhinoAutoMocker<ConcreteClass>(MockMode.RecordAndReplay);
+            autoMocker.AddAdditionalMockFor<IAnotherService>();
+
+            autoMocker.IsInReplayMode(autoMocker.Get<IAnotherService>()).ShouldBeFalse();
+        }
+
+        [Test]
+        public void AddAdditionalMockForCreatesMocksInReplayModeWhenUsingAAA()
+        {
+            var autoMocker = new RhinoAutoMocker<ConcreteClass>(MockMode.AAA);
+            autoMocker.AddAdditionalMockFor<IAnotherService>();
+
+            autoMocker.IsInReplayMode(autoMocker.Get<IAnotherService>()).ShouldBeTrue();
+        }
+
+        [Test]
+        public void CreateMockArrayForCreatesMocksInRecordModeWhenUsingReplayRecord()
+        {
+            var autoMocker = new RhinoAutoMocker<ConcreteClass>(MockMode.RecordAndReplay);
+            var mockArray = autoMocker.CreateMockArrayFor<IAnotherService>(3);
+            foreach (var service in mockArray)
+            {
+                autoMocker.IsInReplayMode(service).ShouldBeFalse();
+            }
+        }
+
+        [Test]
+        public void CreateMockArrayForCreatesMocksInReplayModeWhenUsingAAA()
+        {
+            var autoMocker = new RhinoAutoMocker<ConcreteClass>(MockMode.AAA);
+            var mockArray = autoMocker.CreateMockArrayFor<IAnotherService>(3);
+            foreach (var service in mockArray)
+            {
+                autoMocker.IsInReplayMode(service).ShouldBeTrue();
+            }
+        }
+
+        [Test]
+        public void PartialMockClassUnderTestCreatesMocksInRecordModeWhenUsingRecordReplay()
+        {
+            var autoMocker = new RhinoAutoMocker<ConcreteClass>(MockMode.RecordAndReplay);
+            autoMocker.PartialMockTheClassUnderTest();
+
+            autoMocker.IsInReplayMode(autoMocker.Get<IMockedService>()).ShouldBeFalse();
+        }
+
+        [Test]
+        public void PartialMockClassUnderTestCreatesMocksInReplayModeWhenUsingAAA()
+        {
+            var autoMocker = new RhinoAutoMocker<ConcreteClass>(MockMode.AAA);
+            autoMocker.PartialMockTheClassUnderTest();
+
+            autoMocker.IsInReplayMode(autoMocker.Get<IMockedService>()).ShouldBeTrue();
+        }
     }
 }
