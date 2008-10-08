@@ -157,7 +157,7 @@ namespace StructureMap.AutoMocking
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public T AddAdditionalMockFor<T>()
+        public T AddAdditionalMockFor<T>() where T : class
         {
             var mock = DynamicMock<T>();
             _container.Configure(r => r.InstanceOf<T>().Is.Object(mock));
@@ -184,7 +184,7 @@ namespace StructureMap.AutoMocking
         /// <typeparam name="T"></typeparam>
         /// <param name="count"></param>
         /// <returns></returns>
-        public T[] CreateMockArrayFor<T>(int count)
+        public T[] CreateMockArrayFor<T>(int count) where T : class
         {
             var returnValue = new T[count];
 
