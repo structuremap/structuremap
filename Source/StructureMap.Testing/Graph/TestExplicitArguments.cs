@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
 using StructureMap.Pipeline;
@@ -6,7 +7,7 @@ using StructureMap.Testing.Pipeline;
 namespace StructureMap.Testing.Graph
 {
     [TestFixture]
-    public class ExplicitArgumentTester
+    public class TestExplicitArguments
     {
         #region Setup/Teardown
 
@@ -204,6 +205,27 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
+        public void pass_explicit_service_into_all_instances_and_retrieve_without_generics()
+        {
+            // The Container is constructed with 2 instances
+            // of TradeView
+            var container = new Container(r =>
+            {
+                r.ForRequestedType<TradeView>()
+                    .TheDefaultIsConcreteType<TradeView>()
+                    .AddConcreteType<SecuredTradeView>();
+            });
+
+            var theTrade = new Trade();
+
+            IList views = container.With(theTrade).GetAllInstances(typeof(TradeView));
+
+            ((TradeView)views[0]).Trade.ShouldBeTheSameAs(theTrade);
+            ((TradeView)views[1]).Trade.ShouldBeTheSameAs(theTrade);
+        }
+
+
+        [Test]
         public void Pass_in_arguments_as_dictionary()
         {
             var manager = new Container();
@@ -314,7 +336,7 @@ namespace StructureMap.Testing.Graph
     {
     }
 
-    public class LumpProvider : ExplicitArgumentTester.IProvider
+    public class LumpProvider : TestExplicitArguments.IProvider
     {
         private readonly Lump _lump;
 

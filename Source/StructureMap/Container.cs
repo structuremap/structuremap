@@ -91,6 +91,15 @@ namespace StructureMap
             return session.CreateInstance(type, instance);
         }
 
+        public IList GetAllInstances(Type type, ExplicitArguments args)
+        {
+            BuildSession session = withNewSession();
+
+            args.RegisterDefaults(session);
+
+            return forType(type).GetAllInstances(session);
+        }
+
         public IList<T> GetAllInstances<T>(ExplicitArguments args)
         {
             BuildSession session = withNewSession();

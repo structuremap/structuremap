@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using StructureMap.Pipeline;
 
@@ -77,5 +78,11 @@ namespace StructureMap
         {
             return _container.GetAllInstances<T>(_args);
         }
+
+        public IList GetAllInstances(Type type)
+        {
+            return _container.GetAllInstances(type, _args);
+        }
+
     }
 }
