@@ -69,6 +69,7 @@
         <fileset basedir="source\">
           <include name="**\bin\${project.config}\*.dll" />
           <include name="**\bin\${project.config}\*.exe" />
+          <include name="**\bin\${project.config}\*.pdb" />
           <include name="**\bin\${project.config}\*.xml" />
           <include name="**\bin\${project.config}\*.xml.actual" />
           <include name="StructureMap.Testing\*.config" />
@@ -126,6 +127,7 @@
 			<fileset basedir="${build.dir}">
 				<include name="*.xml" />
 				<include name="*.config" />
+        <exclude name="structuremap.xml" />
 			</fileset>
 	    </delete>
 

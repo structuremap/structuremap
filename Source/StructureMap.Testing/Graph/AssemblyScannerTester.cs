@@ -1,8 +1,10 @@
 using System;
+using System.IO;
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Testing.Widget;
+using System.Linq;
 using StructureMap.Testing.Widget5;
 
 namespace StructureMap.Testing.Graph
@@ -29,17 +31,32 @@ namespace StructureMap.Testing.Graph
     {
         #region Setup/Teardown
 
+        [TestFixtureSetUp]
+        public void FixtureSetUp()
+        {
+            var binFolder = Path.GetDirectoryName(GetType().Assembly.Location);
+            assemblyScanningFolder = Path.Combine(binFolder, "DynamicallyLoaded");
+            if (!Directory.Exists(assemblyScanningFolder)) Directory.CreateDirectory(assemblyScanningFolder);
+
+            var assembly1 = typeof (RedGreenRegistry).Assembly.Location;
+            var assembly2 = typeof(Widget3.IWorker).Assembly.Location;
+
+            File.Copy(assembly1, Path.Combine(assemblyScanningFolder, Path.GetFileName(assembly1)), true);
+            File.Copy(assembly2, Path.Combine(assemblyScanningFolder, Path.GetFileName(assembly2)), true);
+        }
+
         [SetUp]
         public void SetUp()
         {
             TestingRegistry.Reset();
-
+            
             theGraph = null;
         }
 
         #endregion
 
         private PluginGraph theGraph;
+        private string assemblyScanningFolder;
 
         private void Scan(Action<AssemblyScanner> action)
         {
@@ -57,7 +74,20 @@ namespace StructureMap.Testing.Graph
 
         private void shouldNotHaveFamily<T>()
         {
-            theGraph.PluginFamilies.Contains(typeof (T)).ShouldBeFalse();
+            theGraph.PluginFamilies.Contains(typeof(T)).ShouldBeFalse();
+        }
+
+
+        private void shouldHaveFamilyWithSameName<T>()
+        {
+            // The Types may not be "Equal" if their assemblies were loaded in different load contexts (.LoadFrom)
+            // so we will consider them equal if their names match.
+            theGraph.PluginFamilies.Any(family => family.PluginType.FullName == typeof (T).FullName).ShouldBeTrue();
+        }
+
+        private void shouldNotHaveFamilyWithSameName<T>()
+        {
+            theGraph.PluginFamilies.Any(family => family.PluginType.FullName == typeof(T).FullName).ShouldBeFalse();
         }
 
         [Test]
@@ -108,6 +138,24 @@ namespace StructureMap.Testing.Graph
             });
 
             TestingRegistry.WasUsed.ShouldBeTrue();
+        }
+
+        [Test]
+        public void scan_all_assemblies_in_a_folder()
+        {
+            Scan(x => x.AssembliesFromPath(assemblyScanningFolder) );
+            shouldHaveFamilyWithSameName<IInterfaceInWidget5>();
+            shouldHaveFamilyWithSameName<Widget3.IWorker>();
+        }
+
+        [Test]
+        public void scan_specific_assemblies_in_a_folder()
+        {
+            var assemblyToSpecificallyExclude = typeof(Widget3.IWorker).Assembly.GetName().Name;
+            Scan(x => x.AssembliesFromPath(assemblyScanningFolder, asm => asm.GetName().Name != assemblyToSpecificallyExclude));
+            
+            shouldHaveFamilyWithSameName<IInterfaceInWidget5>();
+            shouldNotHaveFamilyWithSameName<Widget3.IWorker>();
         }
 
         [Test]

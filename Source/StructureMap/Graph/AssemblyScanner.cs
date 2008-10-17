@@ -227,5 +227,33 @@ namespace StructureMap.Graph
         {
             Exclude(type => type == typeof (T));
         }
+
+        public void AssembliesFromPath(string path)
+        {
+            AssembliesFromPath(path, a => true);
+        }
+
+        public void AssembliesFromPath(string path, Predicate<Assembly> assemblyFilter)
+        {
+            var assemblyPaths = System.IO.Directory.GetFiles(path).Where(file =>
+                                                                         System.IO.Path.GetExtension(file).Equals(
+                                                                             ".exe", StringComparison.OrdinalIgnoreCase)
+                                                                         ||
+                                                                         System.IO.Path.GetExtension(file).Equals(
+                                                                             ".dll", StringComparison.OrdinalIgnoreCase));
+
+            foreach (var assemblyPath in assemblyPaths)
+            {
+                Assembly assembly = null;
+                try
+                {
+                    assembly = System.Reflection.Assembly.LoadFrom(assemblyPath);
+                }
+                catch
+                {
+                }
+                if (assembly != null && assemblyFilter(assembly)) Assembly(assembly);
+            }
+        }
     }
 }
