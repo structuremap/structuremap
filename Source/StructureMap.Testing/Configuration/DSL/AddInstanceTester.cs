@@ -35,6 +35,12 @@ namespace StructureMap.Testing.Configuration.DSL
                     .WithName("AppSetting")
                     .WithProperty("color").EqualToAppSetting("Color");
 
+                // Pull a property from the App config
+                registry.InstanceOf<IWidget>()
+                    .Is.OfConcreteType<NotPluggableWidget>()
+                    .WithName("UsesDefaultValue")
+                    .WithProperty("name").EqualToAppSetting("WidgetName", "TheDefaultValue");
+
 
                 registry.InstanceOf<IWidget>().Is.OfConcreteType<AWidget>();
             });
@@ -71,12 +77,20 @@ namespace StructureMap.Testing.Configuration.DSL
                 .Widget.IsType<AWidget>();
         }
 
-        [Test, Explicit]
+        [Test]
         public void CreateAnInstancePullAPropertyFromTheApplicationConfig()
         {
             Assert.AreEqual("Blue", ConfigurationManager.AppSettings["Color"]);
             var widget = (ColorWidget) container.GetInstance<IWidget>("AppSetting");
             Assert.AreEqual("Blue", widget.Color);
+        }
+
+        [Test]
+        public void CreateAnInstanceUsingDefaultPropertyValueWhenSettingDoesNotExistInApplicationConfig()
+        {
+            Assert.AreEqual(null, ConfigurationManager.AppSettings["WidgetName"]);
+            var widget = (NotPluggableWidget)container.GetInstance<IWidget>("UsesDefaultValue");
+            Assert.AreEqual("TheDefaultValue", widget.Name);
         }
 
         [Test]
