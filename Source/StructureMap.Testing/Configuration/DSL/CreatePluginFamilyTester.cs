@@ -35,6 +35,29 @@ namespace StructureMap.Testing.Configuration.DSL
         {
         }
 
+        public class ClassWithStringInConstructor
+        {
+            public ClassWithStringInConstructor(string name){}
+        }
+
+        [Test]
+        public void cannot_use_a_class_with_a_primitive_constructor_in_the_TheDefaultIsConcreteType_shortcut()
+        {
+            try
+            {
+                var container = new Container(x =>
+                {
+                    x.ForRequestedType<ClassWithStringInConstructor>().TheDefaultIsConcreteType
+                        <ClassWithStringInConstructor>();
+                });
+                Assert.Fail("Should have thrown exception 231");
+            }
+            catch (StructureMapException e)
+            {
+                e.ErrorCode.ShouldEqual(231);
+            }
+        }
+
         [Test]
         public void Add_an_instance_by_lambda()
         {

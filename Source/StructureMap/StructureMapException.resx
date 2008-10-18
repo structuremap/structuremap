@@ -262,4 +262,7 @@
   <data name="125" xml:space="preserve">
     <value>Cannot plug an abstract class or an interface</value>
   </data>
+  <data name="231" xml:space="preserve">
+    <value>Cannot use the "TheDefaultIsConcreteType" method with an object that has primitive constructor arguments.  Use the "TheDefault.Is.OfConcreteType&lt;T&gt;()" method instead and specify the primitive constructor arguments</value>
+  </data>
 </root>

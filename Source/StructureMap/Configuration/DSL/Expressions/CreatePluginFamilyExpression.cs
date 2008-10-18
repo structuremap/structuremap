@@ -71,6 +71,11 @@ namespace StructureMap.Configuration.DSL.Expressions
 
             ExpressionValidator.ValidatePluggabilityOf(concreteType).IntoPluginType(_pluginType);
 
+            if (!PluginCache.GetPlugin(concreteType).CanBeAutoFilled)
+            {
+                throw new StructureMapException(231);
+            }
+            
             return alterAndContinue(family =>
             {
                 ConfiguredInstance instance =
