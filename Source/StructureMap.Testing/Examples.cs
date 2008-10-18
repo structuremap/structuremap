@@ -1,8 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Windows.Forms;
 using StructureMap.Attributes;
+using StructureMap.Configuration.DSL;
+using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing
 {
@@ -29,31 +32,74 @@ namespace StructureMap.Testing
 
     public interface IShippingService
     {
-        void Go();
+        void ShipIt();
+    }
+
+    public class ShippingWebService : IShippingService
+    {
+        private readonly string _url;
+
+        public ShippingWebService(string url)
+        {
+            _url = url;
+        }
+
+        public void ShipIt()
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+
+    public class InternalShippingService : IShippingService
+    {
+        public void ShipIt()
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+
+    public class ShippingRegistry : Registry
+    {
+        public ShippingRegistry()
+        {
+            ForRequestedType<IShippingService>().AddInstances(x =>
+            {
+                x.OfConcreteType<ShippingWebService>()
+                    .WithCtorArg("url").EqualTo("a url")
+                    .WithName("Domestic");
+
+                x.OfConcreteType<ShippingWebService>()
+                    .WithCtorArg("url").EqualTo("a different url")
+                    .WithName("International");
+
+                x.OfConcreteType<InternalShippingService>().WithName("Internal");
+            });
+        }
     }
 
     public class ClassThatUsesShippingService
     {
         public ClassThatUsesShippingService()
         {
-            // With generics
+            // Accessing the IShippingService Instance's by name
             var internationalService = ObjectFactory.GetNamedInstance<IShippingService>("International");
             var domesticService = ObjectFactory.GetNamedInstance<IShippingService>("Domestic");
+            var internalService = ObjectFactory.GetNamedInstance<IShippingService>("Internal");
 
             // Without generics
             var internationalService2 =
                 (IShippingService) ObjectFactory.GetNamedInstance(typeof (IShippingService), "International");
 
 
-            internationalService.Go();
-            domesticService.Go();
-            internationalService2.Go();
+            internationalService.ShipIt();
+            domesticService.ShipIt();
+            internationalService2.ShipIt();
 
             string serviceName = determineShippingService();
             var service = ObjectFactory.GetNamedInstance<IShippingService>(serviceName);
 
 
-            service.Go();
+            service.ShipIt();
         }
 
 
@@ -106,6 +152,49 @@ namespace StructureMap.Testing
         }
 
         #endregion
+    }
+
+    public class ScanningRegistry : Registry
+    {
+        public ScanningRegistry()
+        {
+            Scan(x =>
+            {
+                // Add assembly by name.
+                x.Assembly("StructureMap.Testing.Widget");
+
+                // Add an assembly directly
+                x.Assembly(Assembly.GetExecutingAssembly());
+
+                // Add the assembly that contains a certain type
+                x.AssemblyContainingType<IService>();
+                // or
+                x.AssemblyContainingType(typeof(IService));
+            });
+
+
+
+            Scan(x =>
+            {
+                // I'm telling StructureMap to sweep a folder called "Extensions" directly
+                // underneath the application root folder for any assemblies
+                x.AssembliesFromPath("Extensions");
+
+                // I also direct StructureMap to add any Registries that it finds in these
+                // assemblies.  I'm assuming that all the StructureMap directives are
+                // contained in Registry classes -- and this is the recommended approach
+                x.LookForRegistries();
+            });
+
+            Scan(x =>
+            {
+                // This time I'm going to specify a filter on the assembly such that 
+                // only assemblies that have "Extension" in their name will be scanned
+                x.AssembliesFromPath("Extensions", assembly => assembly.GetName().Name.Contains("Extension"));
+
+                x.LookForRegistries();
+            });
+        }
     }
 
     public class Invoice

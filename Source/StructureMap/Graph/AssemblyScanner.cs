@@ -17,25 +17,39 @@ namespace StructureMap.Graph
 
     public interface IAssemblyScanner
     {
-        // Determining which assemblies to scan
+        #region Designating Assemblies
+
         void Assembly(Assembly assembly);
         void Assembly(string assemblyName);
         void TheCallingAssembly();
         void AssemblyContainingType<T>();
         void AssemblyContainingType(Type type);
-        
-        // Adding conventions
+        void AssembliesFromPath(string path);
+        void AssembliesFromPath(string path, Predicate<Assembly> assemblyFilter);
+
+        #endregion
+
+        // ... Other methods
+
+        #region Adding TypeScanners
+
         void With(ITypeScanner scanner);
         void WithDefaultConventions();
         void With<T>() where T : ITypeScanner, new();
-        
-        // Other options
+
+        #endregion
+
+        #region Other options
+
         void LookForRegistries();
         void AddAllTypesOf<PLUGINTYPE>();
         void AddAllTypesOf(Type pluginType);
         void IgnoreStructureMapAttributes();
-        
-        // Filtering the types that will be scanned
+
+        #endregion
+
+        #region Filtering types
+
         void Exclude(Predicate<Type> exclude);
         void ExcludeNamespace(string nameSpace);
         void ExcludeNamespaceContainingType<T>();
@@ -43,6 +57,10 @@ namespace StructureMap.Graph
         void IncludeNamespace(string nameSpace);
         void IncludeNamespaceContainingType<T>();
         void ExcludeType<T>();
+
+        // ... Other methods
+        #endregion
+
     }
 
     public class AssemblyScanner : IAssemblyScanner
