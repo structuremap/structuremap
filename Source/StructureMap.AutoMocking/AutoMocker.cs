@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using StructureMap.Graph;
+using System.Linq;
 
 namespace StructureMap.AutoMocking
 {
@@ -87,8 +88,13 @@ namespace StructureMap.AutoMocking
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public T Get<T>()
+        public T Get<T>() where T : class
         {
+            if (!_container.Model.HasDefaultImplementationFor(typeof(T)))
+            {
+                _container.Inject<T>(_serviceLocator.Service<T>());
+            }
+
             return _container.GetInstance<T>();
         }
 
