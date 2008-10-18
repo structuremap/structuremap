@@ -7,6 +7,11 @@ namespace StructureMap
 {
     public interface IExplicitProperty
     {
+        /// <summary>
+        /// Specify the value of this explicit argument
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         ExplicitArgsExpression EqualTo(object value);
     }
 
@@ -55,9 +60,10 @@ namespace StructureMap
         }
 
         /// <summary>
-        /// Create an instance using the explicit arguments
+        /// Gets the default instance of type T using the explicitly configured arguments from the "args"
         /// </summary>
         /// <typeparam name="T"></typeparam>
+        /// <param name="args"></param>
         /// <returns></returns>
         public T GetInstance<T>()
         {
@@ -65,15 +71,22 @@ namespace StructureMap
         }
 
         /// <summary>
-        /// Create an instance using the explicit arguments
+        /// Gets the default instance of the pluginType using the explicitly configured arguments from the "args"
         /// </summary>
-        /// <param name="type"></param>
+        /// <param name="pluginType"></param>
+        /// <param name="args"></param>
         /// <returns></returns>
         public object GetInstance(Type type)
         {
             return _container.GetInstance(type, _args);
         }
 
+        /// <summary>
+        /// Gets all configured instances of type T using explicitly configured arguments
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="args"></param>
+        /// <returns></returns>
         public IList<T> GetAllInstances<T>()
         {
             return _container.GetAllInstances<T>(_args);

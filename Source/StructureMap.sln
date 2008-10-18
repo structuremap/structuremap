@@ -2,6 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{93877CE0-BA48-4F28-B372-B8E802CEE085}"
 	ProjectSection(SolutionItems) = preProject
+		..\Docs\Attributes.htm = ..\Docs\Attributes.htm
 		..\Docs\Basic Architecture.htm = ..\Docs\Basic Architecture.htm
 		CommonAssemblyInfo.cs = CommonAssemblyInfo.cs
 		..\Docs\Concepts.htm = ..\Docs\Concepts.htm

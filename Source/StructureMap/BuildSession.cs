@@ -9,8 +9,21 @@ namespace StructureMap
 {
     public interface IContext
     {
+        /// <summary>
+        /// Gets a reference to the <see cref="BuildStack">BuildStack</see> for this build session
+        /// </summary>
         BuildStack BuildStack { get; }
+
+        /// <summary>
+        /// The concrete type of the immediate parent object in the object graph
+        /// </summary>
         Type ParentType { get; }
+
+        /// <summary>
+        /// Get the object of type T that is valid for this build session.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         T GetInstance<T>();
     }
 

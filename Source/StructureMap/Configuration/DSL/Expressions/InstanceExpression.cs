@@ -41,6 +41,14 @@ namespace StructureMap.Configuration.DSL.Expressions
 
             return instance;
         }
+
+        public ReferencedInstance TheInstanceNamed(string instanceKey)
+        {
+            var instance = new ReferencedInstance(instanceKey);
+            _action(instance);
+
+            return instance;
+        }
     }
 
     public class InstanceExpression<T> : IsExpression<T>
@@ -97,7 +105,7 @@ namespace StructureMap.Configuration.DSL.Expressions
             return returnInstance(new LiteralInstance(theObject));
         }
 
-        public ReferencedInstance References(string key)
+        public ReferencedInstance TheInstanceNamed(string key)
         {
             return returnInstance(new ReferencedInstance(key));
         }

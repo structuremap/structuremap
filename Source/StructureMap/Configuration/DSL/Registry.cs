@@ -157,10 +157,11 @@ namespace StructureMap.Configuration.DSL
 
 
         /// <summary>
-        /// Programmatically determine Assembly's to be scanned for attribute configuration
+        /// Designates a policy for scanning assemblies to auto
+        /// register types
         /// </summary>
         /// <returns></returns>
-        public void Scan(Action<AssemblyScanner> action)
+        public void Scan(Action<IAssemblyScanner> action)
         {
             var scanner = new AssemblyScanner();
             action(scanner);

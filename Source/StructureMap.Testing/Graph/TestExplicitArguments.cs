@@ -110,8 +110,10 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void Fill_in_argument_by_name()
         {
-            var container = new Container();
-            container.SetDefault<IView, View>();
+            var container = new Container(x =>
+            {
+                x.ForRequestedType<IView>().TheDefaultIsConcreteType<View>();
+            });
 
             var theNode = new Node();
             var theTrade = new Trade();
@@ -228,8 +230,10 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void Pass_in_arguments_as_dictionary()
         {
-            var manager = new Container();
-            manager.SetDefault<IView, View>();
+            var container = new Container(x =>
+            {
+                x.ForRequestedType<IView>().TheDefaultIsConcreteType<View>();
+            });
 
             var theNode = new Node();
             var theTrade = new Trade();
@@ -238,7 +242,7 @@ namespace StructureMap.Testing.Graph
             args.Set(theNode);
             args.SetArg("trade", theTrade);
 
-            var command = manager.GetInstance<Command>(args);
+            var command = container.GetInstance<Command>(args);
 
             Assert.IsInstanceOfType(typeof (View), command.View);
             Assert.AreSame(theNode, command.Node);

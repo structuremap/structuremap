@@ -11,7 +11,7 @@
 	    <ol>
             <li>Constructor Injection -- &quot;Pushing&quot; dependencies into a concrete class through 
                 constructor arguments.</li>
-        <li>Setter Injection -- &quot;Pushing&quot; depencencies into a concrete class through public 
+        <li>Setter Injection -- &quot;Pushing&quot; dependencies into a concrete class through public 
             properties.&nbsp; The &quot;Setter&quot; nomenclature is taken from Java where properties 
             are getSomething() and setSomething(value).</li>
     </ol>
@@ -24,7 +24,7 @@
         Martin Fowler&#39;s discussion on Constructor versus Setter Injection</a> for more 
             information.&nbsp; My feeling has always been that Constructor Injection is 
             preferrable from a design perspective.&nbsp; When you exclusively use 
-            Constructor Injection, the code is somewhat self-documenting because the 
+            Constructor Injection, the code is somewhat more self-documenting because the 
             constructor arguments will clearly delineate the dependencies of a concrete 
             class.&nbsp; It&#39;s also important to think about the constructor method of a 
             class being a contract.&nbsp; If you satisfy all of the arguments of the 
@@ -33,10 +33,14 @@
             which setters need to be created externally to use the class.&nbsp; Of course, 
             not using any form of Dependency Injection can be the worst answer because then 
             you have no idea what it really takes to bootstrap the service. </p>
+    <p>Despite my personal distaste for Setter Injection, I gave into user demand and 
+        greatly increased StructureMap&#39;s support for Setter Injection -- and promptly 
+        found that support to be more useful than I thought it would be.</p>
     <h2>Using Constructor Injection</h2>
     <p>Now, the first question you might ask is how does StructureMap know which 
         constructor function to use in a class that has multiple constructors?&nbsp; The 
-        answer is that StructureMap will automatically select the &quot;greediest&quot; public 
+        answer is that StructureMap will automatically select the &quot;greediest&quot; 
+        <b>public</b> 
         constructor of a class to use for injection.&nbsp; In this case, the &quot;greediest&quot; 
         constructor is the constructor with the most arguments.&nbsp; In the case of a 
         tie, StructureMap will use the first constructor that it encountered.&nbsp; For 
@@ -111,95 +115,356 @@
     [InternalsVisibleTo] attribute to give StructureMap access to your own internal 
     members.&nbsp; StructureMap 2.5 is now strongly signed (thanks to
     <a href="http://stevenharman.net/">Steve Harman</a>) partially for this 
-    scenario.&nbsp; There is an architectural limitation </p>
+    scenario. </p>
     
     
     <h2>Using Setter Injection</h2>
 	<p>Setter injection is a pattern of &quot;injecting&quot; dependencies via public properties.&nbsp; 
-        Setter Injection with StructureMap is admittedly a second class citizen, but 
+        Setter Injection with StructureMap is somewhat a second class citizen, but 
         this is partially by design.&nbsp; My strong recommendation is to use 
         constructor injection for all code that you control, and save setter injection 
-        strictly for classes from external libraries where you do not have any control.&nbsp; </p>
+        strictly for classes from external libraries where you do not have any control.&nbsp; 
+        As a summary, these are the Setter Injection features that are described in 
+        detail below:</p>
+    <ul>
+        <li>By default, all public &quot;Setters&quot; are optional, meaning that these setters will 
+            only be set if they are explicitly configured for a specific Instance</li>
+        <li>StructureMap can be directed to &quot;auto wire&quot; a property for a given Instance</li>
+        <li>Setters can be made mandatory by decorating the property with the 
+            [SetterProperty] attribute</li>
+        <li>Any type that StructureMap can use in constructor arguments can be used for 
+            setter properties</li>
+        <li>StructureMap can be directed to automatically inject the default value for any 
+            property of a given type.&nbsp; This was added primarily for &quot;optional&quot; 
+            dependencies like logging.</li>
+        <li>The StructureMap diagnostic tools will check for missing Setter values</li>
+    </ul>
         
-        <p>Ok, now that you&#39;ve read that I don&#39;t believe that setter injection is a good 
-            idea, but you&#39;re bound and determined to use it anyway, let&#39;s talk about how to 
-            do it with StructureMap.&nbsp; First off, StructureMap needs to be explicitly 
-            told to build a concrete class with each setter.&nbsp; These setter properties 
-            are then considered to be mandatory anytime an Instance of that concrete type is 
-            requested.&nbsp; StructureMap does not support optional setter properties (but 
-            it could easily be done with the new post processing support).&nbsp; That 
-            restriction may be relaxed in later versions.</p>
-    <p>Once StructureMap does know to use a setter in constructing a class, configuring 
-        the actual property values is done no differently than constructor arguments.</p>
-    <p>Let&#39;s say you have a class called Repository with these properties:</p>
-        
+        <h4>Configuring Primitive Setter Properties</h4>
+    <p>Ok, now that you&#39;ve read that I don&#39;t believe that setter injection is a good 
+        idea, but you&#39;re bound and determined to use it anyway, let&#39;s talk about how to 
+        do it with StructureMap.&nbsp; Let&#39;s say we have this class with a string 
+        property called &quot;Name&quot;:</p>
 <!--
-{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20     \cf3 public\cf0  \cf3 interface\cf0  \cf4 IDataProvider\cf0 \{\}\par ??\par ??    \cf3 public\cf0  \cf3 class\cf0  \cf4 Repository\par ??\cf0     \{\par ??        \cf3 private\cf0  \cf4 IDataProvider\cf0  _provider;\par ??\par ??        \cf3 public\cf0  \cf4 IDataProvider\cf0  Provider\par ??        \{\par ??            \cf3 set\par ??\cf0             \{\par ??                _provider = \cf3 value\cf0 ;\par ??            \}\par ??        \}\par ??    \}}
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20     \cf3 public\cf0  \cf3 class\cf0  \cf4 OptionalSetterTarget\par ??\cf0     \{\par ??        \cf3 public\cf0  \cf3 string\cf0  Name \{ \cf3 get\cf0 ; \cf3 set\cf0 ; \}\par ??        \cf3 public\cf0  \cf3 string\cf0  Name2 \{ \cf3 get\cf0 ; \cf3 set\cf0 ; \}\par ??    \}}
 -->
-    <div style="font-family: Courier New; font-size: 10pt; color: black; background: white;">
+    <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
         <p style="margin: 0px;">
-            &nbsp;</p>
-<!--
-{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20     \cf3 public\cf0  \cf3 interface\cf0  \cf4 IDataProvider\cf0 \{\}\par ??\par ??    \cf3 public\cf0  \cf3 class\cf0  \cf4 Repository\par ??\cf0     \{\par ??        \cf3 private\cf0  \cf4 IDataProvider\cf0  _provider;\par ??\par ??        \cf3 public\cf0  \cf4 IDataProvider\cf0  Provider\par ??        \{\par ??            \cf3 set\par ??\cf0             \{\par ??                _provider = \cf3 value\cf0 ;\par ??            \}\par ??        \}\par ??    \}}
--->
-        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white;">
-<!--
-{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20     \cf3 public\cf0  \cf3 interface\cf0  \cf4 IDataProvider\cf0 \{\}\par ??\par ??    \cf3 public\cf0  \cf3 class\cf0  \cf4 Repository\par ??\cf0     \{\par ??        \cf3 private\cf0  \cf4 IDataProvider\cf0  _provider;\par ??\par ??        \cf3 public\cf0  \cf4 IDataProvider\cf0  Provider\par ??        \{\par ??            \cf3 set\par ??\cf0             \{\par ??                _provider = \cf3 value\cf0 ;\par ??            \}\par ??        \}\par ??\par ??\par ??        \cf3 public\cf0  \cf3 bool\cf0  ShouldCache \{ \cf3 get\cf0 ; \cf3 set\cf0 ; \}\par ??    \}}
--->
-            <div style="font-family: Courier New; font-size: 10pt; color: black; background: white;">
-                <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">interface</span>
-                    <span style="color: #2b91af;">IDataProvider</span>{}</p>
-                <p style="margin: 0px;">
-                    &nbsp;</p>
-                <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">class</span>
-                    <span style="color: #2b91af;">Repository</span></p>
-                <p style="margin: 0px;">
+            <span style="color: #2b91af;">OptionalSetterTarget</span></p>
+        <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp; {</p>
-                <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">private</span>
-                    <span style="color: #2b91af;">IDataProvider</span> _provider;</p>
-                <p style="margin: 0px;">
-                    &nbsp;</p>
-                <p style="margin: 0px;">
+        <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
-                    <span style="color: #2b91af;">IDataProvider</span> Provider</p>
-                <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
-                <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">set</span></p>
-                <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
-                <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _provider 
-                    = <span style="color: blue;">value</span>;</p>
-                <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
-                <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
-                <p style="margin: 0px;">
-                    &nbsp;</p>
-                <p style="margin: 0px;">
-                    &nbsp;</p>
-                <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
-                    <span style="color: blue;">bool</span> ShouldCache { <span style="color: blue;">
-                    get</span>; <span style="color: blue;">set</span>; }</p>
-                <p style="margin: 0px;">
+            <span style="color: blue;">string</span> Name { <span style="color: blue;">get</span>;             <span style="color: blue;">set</span>;; }</p>
+        <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp; }</p>
-            </div>
+    </div>
 <!--EndFragment-->
-<p style="margin: 0px;">
-    &nbsp;</p>
-        </div>
-<!--EndFragment-->
+<p>I can specify the value of the &quot;Name&quot; property in the configuration API like 
+    this:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red43\green145\blue175;\red0\green0\blue255;\red0\green128\blue0;\red163\green21\blue21;}??\fs20         [\cf3 Test\cf0 ]\par ??        \cf4 public\cf0  \cf4 void\cf0  optional_setter_injection_with_string()\par ??        \{\par ??            \cf4 var\cf0  container = \cf4 new\cf0  \cf3 Container\cf0 (r =&gt;\par ??            \{\par ??                \cf5 // The "Name" property is not configured for this instance\par ??\cf0                 r.InstanceOf&lt;\cf3 OptionalSetterTarget\cf0 &gt;().Is.OfConcreteType&lt;\cf3 OptionalSetterTarget\cf0 &gt;().WithName(\cf6 "NoName"\cf0 );\par ??\par ??                \cf5 // The "Name" property is configured for this instance\par ??\cf0                 r.ForConcreteType&lt;\cf3 OptionalSetterTarget\cf0 &gt;().Configure\par ??                    .WithProperty(\cf6 "Name"\cf0 ).EqualTo(\cf6 "Jeremy"\cf0 );\par ??            \});\par ??\par ??            container.GetInstance&lt;\cf3 OptionalSetterTarget\cf0 &gt;().Name.ShouldEqual(\cf6 "Jeremy"\cf0 );\par ??            container.GetInstance&lt;\cf3 OptionalSetterTarget\cf0 &gt;(\cf6 "NoName"\cf0 ).Name.ShouldBeNull();\par ??        \}}
+-->
+<div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<span style="color: #2b91af;">Test</span>]/p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+        <span style="color: blue;">void</span> optional_setter_injection_with_string()</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span style="color: blue;">var</span> container = <span style="color: blue;">new</span>
+        <span style="color: #2b91af;">Container</span>(r =&gt;</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span style="color: green;">// The &quot;Name&quot; property is not configured for this 
+        instance</span></p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        r.InstanceOf&lt;<span style="color: #2b91af;">OptionalSetterTarget</span>&gt;().Is.OfConcreteType&lt;<span 
+            style="color: #2b91af;">OptionalSetterTarget</span>&gt;().WithName(<span 
+            style="color: #a31515;">&quot;NoName&quot;</span>);</p>
+    <p style="margin: 0px;">
+        &nbsp;</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span style="color: green;">// The &quot;Name&quot; property is configured for this 
+        instance</span></p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        r.ForConcreteType&lt;<span style="color: #2b91af;">OptionalSetterTarget</span>&gt;().Configure</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        .WithProperty(<span style="color: #a31515;">&quot;Name&quot;</span>).EqualTo(<span 
+            style="color: #a31515;">&quot;Jeremy&quot;</span>);</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+    <p style="margin: 0px;">
+        &nbsp;</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        container.GetInstance&lt;<span style="color: #2b91af;">OptionalSetterTarget</span>&gt;().Name.ShouldEqual(<span 
+            style="color: #a31515;">&quot;Jeremy&quot;</span>);</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        container.GetInstance&lt;<span style="color: #2b91af;">OptionalSetterTarget</span>&gt;(<span 
+            style="color: #a31515;">&quot;NoName&quot;</span>).Name.ShouldBeNull();</p>
+    <p style="margin: 0px;">
+&&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
 </div>
 <!--EndFragment-->
-<h4>Defining Setter Properties with Attributes</h4>
-<p>Just use the [StructureMap.Attributes.SetterProperty] to denote properties that 
-    need to be filled by StructureMap.&nbsp; If you despise scattering attributes in 
-    your code, and the tight coupling </p>
+<p>In the case above I specified the value for the &quot;Name&quot; setter directly by 
+    embedding the property value directly with the 
+    WithProperty(&quot;Name&quot;).EqualTo(&quot;Jeremy&quot;).&nbsp; You could also retrieve the value 
+    for the property from the AppSettings portion of a .Net application config file 
+    like this with the WithProperty(&quot;Name&quot;).EqualToAppSetting(&quot;name&quot;) syntax.</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red0\green128\blue0;\red163\green21\blue21;}??\fs20             \cf3 var\cf0  container = \cf3 new\cf0  \cf4 Container\cf0 (r =&gt;\par ??            \{\par ??                \cf5 // The "Name" property is configured for this instance\par ??\cf0                 r.ForConcreteType&lt;\cf4 OptionalSetterTarget\cf0 &gt;().Configure\par ??                    .WithProperty(\cf6 "Name"\cf0 ).EqualToAppSetting(\cf6 "name"\cf0 );\par ??            \});}
+-->
+<div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span style="color: blue;">var</span> container = <span style="color: blue;">new</span>
+        <span style="color: #2b91af;">Container</span>(r =&gt;</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        r.ForConcreteType&lt;<span style="color: #2b91af;">OptionalSetterTarget</span>&gt;().Configure</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        .WithProperty(<span style="color: #a31515;">&quot;Name&quot;</span>).EqualToAppSetting(<span 
+            style="color: #a31515;">&quot;name&quot;</span>);</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+</div>
+<!--EndFragment-->
+<p>In both of the cases above the property name is designated by a string.&nbsp; 
+    Using strings to designate property names is always going to be somewhat 
+    problematic, so there&#39;s a new option in 2.5 to specify property values with a 
+    Lambda expression (inspired by
+    <a href="http://www.udidahan.com/2008/06/13/external-value-configuration-with-ioc/">
+    this post from Udi Dahan</a>) using an Action&lt;T&gt;.</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red43\green145\blue175;\red163\green21\blue21;}??\fs20                 r.ForConcreteType&lt;\cf3 OptionalSetterTarget\cf0 &gt;().Configure\par ??                    .SetProperty(x =&gt; x.Name = \cf4 "Jeremy"\cf0 );}
+-->
+<div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        r.ForConcreteType&lt;<span style="color: #2b91af;">OptionalSetterTarget</span>&gt;().Configure</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        .SetProperty(x =&gt; x.Name = <span style="color: #a31515;">&quot;Jeremy&quot;</span>);</p>
+</div>
+<!--EndFragment-->
+<p>The value of the Lamdba expression mechanism is that it makes the configuration 
+    static-typed with all of the advantages that static typing brings.&nbsp; This 
+    action is executed on the object after creation.&nbsp; Technically, this 
+    mechanism can be used to do anything to the new object before StructureMap 
+    returns the new object to the code that requested it.&nbsp; There is no 
+    limitation to the number of Action&lt;T&gt; handlers you can use. </p>
+<p>&nbsp;</p>
+<h4>Configuring Setter Dependencies</h4>
+    <p>Let&#39;s say you have a class that has a public property for a singular dependency 
+        and another public property for an array of dependencies.</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20     \cf3 public\cf0  \cf3 class\cf0  \cf4 ClassWithDependency\par ??\cf0     \{\par ??        \cf3 public\cf0  \cf4 Rule\cf0  Rule \{ \cf3 get\cf0 ; \cf3 set\cf0 ; \}\par ??        \cf3 public\cf0  \cf4 Rule\cf0 [] Rules \{ \cf3 get\cf0 ; \cf3 set\cf0 ; \}\par ??    \}}
+-->
+    <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">class</span>
+            <span style="color: #2b91af;">ClassWithDependency</span></p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+            <span style="color: #2b91af;">Rule</span> Rule { <span style="color: blue;">get</span>;             <span style="color: blue;">set</span>; }</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+            <span style="color: #2b91af;">Rule</span>[] Rules { <span style="color: blue;">
+            get</span>; <span style="color: blue;">set</span>; }</p>
+        <p style="margin: 0px;">
+&&nbsp;&nbsp;&nbsp; }</p>
+    </div>
+<!--EndFragment-->
+<p>I can explicitly configure what gets injected into the &quot;Rule&quot; property for a 
+    specific Instance of ClassWithDependency like this with the 
+    .SetterDependency&lt;T&gt;() method that will look for the first public setter of type 
+    T:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red43\green145\blue175;\red0\green0\blue255;\red163\green21\blue21;}??\fs20                 r.ForConcreteType&lt;\cf3 ClassWithDependency\cf0 &gt;().Configure\par ??                    .SetterDependency&lt;\cf3 Rule\cf0 &gt;().Is(\cf4 new\cf0  \cf3 ColorRule\cf0 (\cf5 "Red"\cf0 ));}
+-->
+    <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+            r.ForConcreteType&lt;<span style="color: #2b91af;">ClassWithDependency</span>&gt;().Configure</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        .SetterDependency&lt;<span style="color: #2b91af;">Rule</span>&gt;().Is(<span 
+            style="color: blue;">new</span> <span style="color: #2b91af;">ColorRule</span>(<span 
+            style="color: #a31515;">&quot;Red&quot;</span>));</p>
+</div>
+<!--EndFragment-->
+<p>or for cases where a class may have multiple public setters of the same type, you 
+    can specify the exact property with an Expression (.SetterDependency&lt;T&gt;( 
+    expression ) ):</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red163\green21\blue21;}??\fs20             \cf3 var\cf0  container = \cf3 new\cf0  \cf4 Container\cf0 (r =&gt;\par ??            \{\par ??                r.ForConcreteType&lt;\cf4 ClassWithDependency\cf0 &gt;().Configure\par ??                    .SetterDependency&lt;\cf4 Rule\cf0 &gt;().Is(\cf3 new\cf0  \cf4 ColorRule\cf0 (\cf5 "Red"\cf0 ));\par ??            \});}
+-->
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red163\green21\blue21;}??\fs20             \cf3 var\cf0  container = \cf3 new\cf0  \cf4 Container\cf0 (r =&gt;\par ??            \{\par ??                r.ForConcreteType&lt;\cf4 ClassWithDependency\cf0 &gt;().Configure\par ??                    .SetterDependency&lt;\cf4 Rule\cf0 &gt;(x =&gt; x.Rule).Is(\cf3 new\cf0  \cf4 ColorRule\cf0 (\cf5 "Red"\cf0 ));\par ??            \});}
+-->
+<div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span style="color: blue;">var</span> container = <span style="color: blue;">new</span>
+        <span style="color: #2b91af;">Container</span>(r =&gt;</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        r.ForConcreteType&lt;<span style="color: #2b91af;">ClassWithDependency</span>&gt;().Configure</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        .SetterDependency&lt;<span style="color: #2b91af;">Rule</span>&gt;(x =&gt; x.Rule).Is(<span 
+            style="color: blue;">new</span> <span style="color: #2b91af;">ColorRule</span>(<span 
+            style="color: #a31515;">&quot;Red&quot;</span>));</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+</div>
+<!--EndFragment-->
+<p>&nbsp;</p>
+<h4>&quot;Auto Filling&quot; a Setter Dependency</h4>
+<p>Sometimes all you want to do is to simply say &quot;fill in this property for me.&quot;&nbsp; 
+    That&#39;s what the code below does for the &quot;Rule&quot; property with the 
+    .SetterDependency&lt;Rule&gt;().IsTheDefault() syntax:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red163\green21\blue21;}??\fs20             \cf3 var\cf0  container = \cf3 new\cf0  \cf4 Container\cf0 (r =&gt;\par ??            \{\par ??                r.ForConcreteType&lt;\cf4 ClassWithDependency\cf0 &gt;().Configure\par ??                    .SetterDependency&lt;\cf4 Rule\cf0 &gt;().IsTheDefault();\par ??\par ??                r.ForRequestedType&lt;\cf4 Rule\cf0 &gt;().TheDefault.Is.Object(\cf3 new\cf0  \cf4 ColorRule\cf0 (\cf5 "Green"\cf0 ));\par ??            \});}
+-->
+<div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span style="color: blue;">var</span> container = <span style="color: blue;">new</span>
+        <span style="color: #2b91af;">Container</span>(r =&gt;</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        r.ForConcreteType&lt;<span style="color: #2b91af;">ClassWithDependency</span>&gt;().Configure</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        .SetterDependency&lt;<span style="color: #2b91af;">Rule</span>&gt;().IsTheDefault();</p>
+    <p style="margin: 0px;">
+        &nbsp;</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        r.ForRequestedType&lt;<span style="color: #2b91af;">Rule</span>&gt;().TheDefault.Is.Object(<span 
+            style="color: blue;">new</span> <span style="color: #2b91af;">ColorRule</span>(<span 
+            style="color: #a31515;">&quot;Green&quot;</span>));</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+</div>
+<!--EndFragment-->
+<p>For certain dependency types you might want StructureMap to automatically fill 
+    any public property of that type.&nbsp; The first usage that comes to mind is 
+    logging.&nbsp; Let&#39;s say that we have an interface for our logging support 
+    called ILogger.&nbsp; We can specify that any concrete class that has a public 
+    property for the ILogger type will be filled in construction with code like this 
+    (FillAllPropertiesOfType&lt;ILogger&gt;()):</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20             \cf3 var\cf0  container = \cf3 new\cf0  \cf4 Container\cf0 (r =&gt;\par ??            \{\par ??                r.FillAllPropertiesOfType&lt;\cf4 ILogger\cf0 &gt;().TheDefault.Is\par ??                    .ConstructedBy(context =&gt; \cf3 new\cf0  \cf4 Logger\cf0 (context.ParentType));\par ??            \});}
+-->
+<div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span style="color: blue;">var</span> container = <span style="color: blue;">new</span>
+        <span style="color: #2b91af;">Container</span>(r =&gt;</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        r.FillAllPropertiesOfType&lt;<span style="color: #2b91af;">ILogger</span>&gt;().TheDefault.Is</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        .ConstructedBy(context =&gt; <span style="color: blue;">new</span>
+        <span style="color: #2b91af;">Logger</span>(context.ParentType));</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+</div>
+<!--EndFragment-->
+<p>Now, if I have some classes like:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20     \cf3 public\cf0  \cf3 class\cf0  \cf4 ClassWithLogger\par ??\cf0     \{\par ??        \cf3 public\cf0  \cf4 ILogger\cf0  Logger \{ \cf3 get\cf0 ; \cf3 set\cf0 ; \}\par ??    \}\par ??\par ??    \cf3 public\cf0  \cf3 class\cf0  \cf4 ClassWithLogger2\par ??\cf0     \{\par ??        \cf3 public\cf0  \cf4 ILogger\cf0  Logger \{ \cf3 get\cf0 ; \cf3 set\cf0 ; \}\par ??    \}}
+-->
+<div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">
+        class</span> <span style="color: #2b91af;">ClassWithLogger</span></p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+        <span style="color: #2b91af;">ILogger</span> Logger { <span style="color: blue;">
+        get</span>; <span style="color: blue;">set</span>; }</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+    <p style="margin: 0px;">
+        &nbsp;</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">
+        class</span> <span style="color: #2b91af;">ClassWithLogger2</span></p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+        <span style="color: #2b91af;">ILogger</span> Logger { <span style="color: blue;">
+        get</span>; <span style="color: blue;">set</span>; }</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+</div>
+<!--EndFragment-->
+<p>Now, when StructureMap builds new instances of these classes above the Logger 
+    properties will be filled automatically without any explicit configuration for 
+    either type.&nbsp; Here&#39;s a sample from the unit tests that constructs objects 
+    of both ClassWithLogger and ClassWithLogger2 and verifies that the &quot;Logger&quot; 
+    property was filled for both types without any further configuration.</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red43\green145\blue175;\red0\green0\blue255;}??\fs20 \par ??            container.GetInstance&lt;\cf3 ClassWithLogger\cf0 &gt;().Logger.ShouldBeOfType&lt;\cf3 Logger\cf0 &gt;().Type.ShouldEqual(\cf4 typeof\cf0  (\cf3 ClassWithLogger\cf0 ));\par ??            container.GetInstance&lt;\cf3 ClassWithLogger2\cf0 &gt;().Logger.ShouldBeOfType&lt;\cf3 Logger\cf0 &gt;().Type.ShouldEqual(\cf4 typeof\cf0 (\cf3 ClassWithLogger2\cf0 ));\par ??}
+-->
+<div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+    <p style="margin: 0px;">
+        &nbsp;</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        container.GetInstance&lt;<span style="color: #2b91af;">ClassWithLogger</span>&gt;().Logger.ShouldBeOfType&lt;<span 
+            style="color: #2b91af;">Logger</span>&gt;();</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        container.GetInstance&lt;<span style="color: #2b91af;">ClassWithLogger2</span>&gt;().Logger.ShouldBeOfType&lt;<span 
+            style="color: #2b91af;">Logger</span>&gt;();</p>
+    <p style="margin: 0px;">
+        &nbsp;</p>
+</div>
+<!--EndFragment-->
+<p>&nbsp;</p>
+        
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20     \cf3 public\cf0  \cf3 interface\cf0  \cf4 IDataProvider\cf0 \{\}\par ??\par ??    \cf3 public\cf0  \cf3 class\cf0  \cf4 Repository\par ??\cf0     \{\par ??        \cf3 private\cf0  \cf4 IDataProvider\cf0  _provider;\par ??\par ??        \cf3 public\cf0  \cf4 IDataProvider\cf0  Provider\par ??        \{\par ??            \cf3 set\par ??\cf0             \{\par ??                _provider = \cf3 value\cf0 ;\par ??            \}\par ??        \}\par ??    \}}
+-->
+<!--EndFragment-->
+<h4>Defining Setter Properties with Attributes<p>Just use the [StructureMap.Attributes.SetterProperty] to denote properties that 
+    need to be filled by StructureMap.&nbsp; Marking a property with the 
+    [SetterProperty] makes the setter mandatory.&nbsp; StructureMap will throw an 
+    exception if the &quot;ShouldCache&quot; property isn&#39;t specified for the concrete type 
+    shown below.&nbsp; If the &quot;Provider&quot; property isn&#39;t explicitly configured, 
+    StructureMap will use the default instance of IDataProvider for the &quot;Provider&quot; 
+    property (or throw an exception if StructureMap doesn&#39;t know how to build the 
+    type IDataProvider). </p>
 <!--
 {\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red0\green128\blue0;}??\fs20     \cf3 public\cf0  \cf3 class\cf0  \cf4 Repository\par ??\cf0     \{\par ??        \cf3 private\cf0  \cf4 IDataProvider\cf0  _provider;\par ??\par ??        \cf5 // Adding the SetterProperty to a setter directs\par ??\cf0         \cf5 // StructureMap to use this property when\par ??\cf0         \cf5 // constructing a Repository instance\par ??\cf0         [\cf4 SetterProperty\cf0 ]\par ??        \cf3 public\cf0  \cf4 IDataProvider\cf0  Provider\par ??        \{\par ??            \cf3 set\par ??\cf0             \{\par ??                _provider = \cf3 value\cf0 ;\par ??            \}\par ??        \}\par ??\par ??        [\cf4 SetterProperty\cf0 ]\par ??        \cf3 public\cf0  \cf3 bool\cf0  ShouldCache \{ \cf3 get\cf0 ; \cf3 set\cf0 ; \}\par ??    \}}
 -->
@@ -224,7 +489,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">// constructing a 
         Repository instance</span></p>
     <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<span style="color: #2b91af;">SetterProperty</span>]</p>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<span style="color: #2b91af;">SetterProperty</span>]/p>
     <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
         <span style="color: #2b91af;">IDataProvider</span> Provider</p>
@@ -258,81 +523,124 @@
         
         <h4>Defining Setter Properties in Xml</h4>
         <p>Setter properties can be defined in the Xml configuration by explicitly directing 
-            StructureMap to use setter properties while building a concrete type.&nbsp; From 
+            StructureMap to use setter properties while building a concrete type.&nbsp; In 
+            the Xml, Setter configuration is done with the exact syntax as constructor 
+            arguments. &nbsp;For example, the &quot;Name&quot; property of the OptionalSetterTarget 
+            class shown in previous sections can be set just like a constructor argument in 
+            an Xml node:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue255;\red255\green255\blue255;\red163\green21\blue21;\red255\green0\blue0;\red0\green0\blue0;}??\fs20 \cf1 &lt;\cf3 StructureMap\cf1  \cf4 MementoStyle\cf1 =\cf0 "\cf1 Attribute\cf0 "\cf1 &gt;\par ??  &lt;\cf3 DefaultInstance\par ??\cf1       \cf4 PluginType\cf1 =\cf0 "\cf1 StructureMap.Testing.Pipeline.OptionalSetterTarget, StructureMap.Testing\cf0 "\par ??\cf1       \cf4 PluggedType\cf1 =\cf0 "\cf1 StructureMap.Testing.Pipeline.OptionalSetterTarget, StructureMap.Testing\cf0 "\par ??\cf1       \cf4 Name\cf1 =\cf0 "\cf1 Jeremy\cf0 "\cf1  /&gt;\par ??&lt;/\cf3 StructureMap\cf1 &gt;}
+-->
+    <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+        <p style="margin: 0px;">
+            <span style="color: blue;">&nbsp; &lt;</span><span style="color: #a31515;">StructureMap</span><span 
+                style="color: blue;"> </span><span style="color: red;">MementoStyle</span><span 
+                style="color: blue;">=</span>&quot;<span style="color: blue;">Attribute</span>&quot;<span 
+                style="color: blue;">&gt;&nbsp; </span>
+        </p>
+        <p style="margin: 0px;">
+            <span style="color: blue;">&nbsp;&nbsp;&nbsp; &lt;</span><span 
+                style="color: #a31515;">DefaultInstance</span></p>
+        <p style="margin: 0px;">
+            <span style="color: blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>
+            <span style="color: red;">PluginType</span><span style="color: blue;">=</span>&quot;<span 
+                style="color: blue;">StructureMap.Testing.Pipeline.OptionalSetterTarget, 
+            StructureMap.Testing</span>&quot;</p>
+        <p style="margin: 0px;">
+            <span style="color: blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>
+            <span style="color: red;">&nbsp; PluggedType</span><span style="color: blue;">=</span>&quot;<span 
+                style="color: blue;">StructureMap.Testing.Pipeline.OptionalSetterTarget, 
+            StructureMap.Testing</span>&quot;</p>
+        <p style="margin: 0px;">
+            <span style="color: blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>
+            <span style="color: red;">&nbsp; Name</span><span style="color: blue;">=</span>&quot;<span 
+                style="color: blue;">Jeremy</span>&quot;<span style="color: blue;"> /&gt;</span></p>
+        <p style="margin: 0px;">
+            <span style="color: blue;">&nbsp; &lt;/</span><span style="color: #a31515;">StructureMap</span><span 
+                style="color: blue;">&gt;</span></p>
+    </div>
+<!--EndFragment-->
+<p>&nbsp;</p>
+<p>Setter properties can also be designated as mandatory setters with the &lt;Setter&gt; 
+    node in the Xml configuration.&nbsp; From 
             the unit tests, I have a class called OtherGridColumn that exposes several 
             properties:</p>
 <!--
 {\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red163\green21\blue21;}??\fs20     \cf3 public\cf0  \cf3 class\cf0  \cf4 OtherGridColumn\cf0  : \cf4 IGridColumn\par ??\cf0     \{\par ??        \cf3 public\cf0  \cf4 IWidget\cf0  Widget \{ \cf3 get\cf0 ; \cf3 set\cf0 ; \}\par ??\par ??        \cf3 public\cf0  \cf3 string\cf0  ReadOnly\par ??        \{\par ??            \cf3 get\par ??\cf0             \{\par ??                \cf3 return\cf0  \cf5 "whatever"\cf0 ;\par ??            \}\par ??        \}\par ??\par ??        \cf3 public\cf0  \cf4 FontStyleEnum\cf0  FontStyle \{ \cf3 get\cf0 ; \cf3 set\cf0 ; \}\par ??        \cf3 public\cf0  \cf3 string\cf0  ColumnName \{ \cf3 get\cf0 ; \cf3 set\cf0 ; \}\par ??        \cf3 public\cf0  \cf4 Rule\cf0 [] Rules \{ \cf3 get\cf0 ; \cf3 set\cf0 ; \}\par ??        \cf3 public\cf0  \cf3 bool\cf0  WrapLines \{ \cf3 get\cf0 ; \cf3 set\cf0 ; \}\par ??        \cf3 public\cf0  \cf3 bool\cf0  Displayed \{ \cf3 get\cf0 ; \cf3 set\cf0 ; \}\par ??        \cf3 public\cf0  \cf3 int\cf0  Size \{ \cf3 get\cf0 ; \cf3 set\cf0 ; \}\par ??    \}}
 -->
     <div style="font-family: Courier New; font-size: 10pt; color: black; background: white;">
-        <p style="margin: 0px;">
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red163\green21\blue21;}??\fs20     \cf3 public\cf0  \cf3 class\cf0  \cf4 OtherGridColumn\cf0  : \cf4 IGridColumn\par ??\cf0     \{\par ??        \cf3 public\cf0  \cf4 IWidget\cf0  Widget \{ \cf3 get\cf0 ; \cf3 set\cf0 ; \}\par ??\par ??        \cf3 public\cf0  \cf3 string\cf0  ReadOnly\par ??        \{\par ??            \cf3 get\cf0  \{ \cf3 return\cf0  \cf5 "whatever"\cf0 ; \}\par ??        \}\par ??\par ??        \cf3 public\cf0  \cf4 FontStyleEnum\cf0  FontStyle \{ \cf3 get\cf0 ; \cf3 set\cf0 ; \}\par ??        \cf3 public\cf0  \cf3 string\cf0  ColumnName \{ \cf3 get\cf0 ; \cf3 set\cf0 ; \}\par ??        \cf3 public\cf0  \cf4 Rule\cf0 [] Rules \{ \cf3 get\cf0 ; \cf3 set\cf0 ; \}\par ??        \cf3 public\cf0  \cf3 bool\cf0  WrapLines \{ \cf3 get\cf0 ; \cf3 set\cf0 ; \}\par ??        \cf3 public\cf0  \cf3 bool\cf0  Displayed \{ \cf3 get\cf0 ; \cf3 set\cf0 ; \}\par ??        \cf3 public\cf0  \cf3 int\cf0  Size \{ \cf3 get\cf0 ; \cf3 set\cf0 ; \}\par ??    \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">class</span>
-            <span style="color: #2b91af;">OtherGridColumn</span> :
-            <span style="color: #2b91af;">IGridColumn</span></p>
-        <p style="margin: 0px;">
+                <span style="color: #2b91af;">OtherGridColumn</span> :
+                <span style="color: #2b91af;">IGridColumn</span></p>
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp; {</p>
-        <p style="margin: 0px;">
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
-            <span style="color: #2b91af;">IWidget</span> Widget { <span style="color: blue;">
-            get</span>; <span style="color: blue;">set</span>; }</p>
-        <p style="margin: 0px;">
-            &nbsp;</p>
-        <p style="margin: 0px;">
+                <span style="color: #2b91af;">IWidget</span> Widget { <span style="color: blue;">
+                get</span>; <span style="color: blue;">set</span>; }</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
-            <span style="color: blue;">string</span> ReadOnly</p>
-        <p style="margin: 0px;">
+                <span style="color: blue;">string</span> ReadOnly</p>
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
-        <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <span style="color: blue;">get</span></p>
-        <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
-        <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <span style="color: blue;">return</span> <span style="color: #a31515;">
-            &quot;whatever&quot;</span>;</p>
-        <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
-        <p style="margin: 0px;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                get</span> { <span style="color: blue;">return</span>
+                <span style="color: #a31515;">&quot;whatever&quot;</span>; }</p>
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
-        <p style="margin: 0px;">
-            &nbsp;</p>
-        <p style="margin: 0px;">
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
-            <span style="color: #2b91af;">FontStyleEnum</span> FontStyle {
-            <span style="color: blue;">get</span>; <span style="color: blue;">set</span>; }</p>
-        <p style="margin: 0px;">
+                <span style="color: #2b91af;">FontStyleEnum</span> FontStyle {
+                <span style="color: blue;">get</span>; <span style="color: blue;">set</span>; }</p>
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
-            <span style="color: blue;">string</span> ColumnName { <span style="color: blue;">
-            get</span>; <span style="color: blue;">set</span>; }</p>
-        <p style="margin: 0px;">
+                <span style="color: blue;">string</span> ColumnName { <span style="color: blue;">
+                get</span>; <span style="color: blue;">set</span>; }</p>
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
-            <span style="color: #2b91af;">Rule</span>[] Rules { <span style="color: blue;">
-            get</span>; <span style="color: blue;">set</span>; }</p>
-        <p style="margin: 0px;">
+                <span style="color: #2b91af;">Rule</span>[] Rules { <span style="color: blue;">
+                get</span>; <span style="color: blue;">set</span>; }</p>
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
-            <span style="color: blue;">bool</span> WrapLines { <span style="color: blue;">
-            get</span>; <span style="color: blue;">set</span>; }</p>
-        <p style="margin: 0px;">
+                <span style="color: blue;">bool</span> WrapLines { <span style="color: blue;">
+                get</span>; <span style="color: blue;">set</span>; }</p>
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
-            <span style="color: blue;">bool</span> Displayed { <span style="color: blue;">
-            get</span>; <span style="color: blue;">set</span>; }</p>
-        <p style="margin: 0px;">
+                <span style="color: blue;">bool</span> Displayed { <span style="color: blue;">
+                get</span>; <span style="color: blue;">set</span>; }</p>
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
-            <span style="color: blue;">int</span> Size { <span style="color: blue;">get</span>;
-            <span style="color: blue;">set</span>; }</p>
-        <p style="margin: 0px;">
+                <span style="color: blue;">int</span> Size { <span style="color: blue;">get</span>;
+                <span style="color: blue;">set</span>; }</p>
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<p style="margin: 0px;">
+    &nbsp;</p>
     </div>
 <!--EndFragment-->
-<p>I can direct StructureMap to use these properties in a &lt;Plugin&gt; node for 
-    OtherGridColumn.</p>
+<p>I can direct StructureMap to make the properties on the OtherGridColumn class 
+    mandatory in a &lt;Plugin&gt; node for 
+    OtherGridColumn.&nbsp; This probably isn&#39;t necessary with the new optional 
+    setter injection capabilities, but it is still valid and the equivalent of using 
+    the [SetterProperty] attribute.</p>
 <!--
 {\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue255;\red255\green255\blue255;\red163\green21\blue21;\red255\green0\blue0;\red0\green0\blue0;}??\fs20 \cf1 \tab &lt;\cf3 PluginFamily\cf1  \cf4 Type\cf1 =\cf0 "\cf1 StructureMap.Testing.Widget5.IGridColumn\cf0 "\cf1  \cf4 Assembly\cf1 =\cf0 "\cf1 StructureMap.Testing.Widget5\cf0 "\cf1  \cf4 DefaultKey\cf1 =\cf0 ""\cf1 &gt;\par ??\tab \tab &lt;\cf3 Source\cf1  \cf4 Type\cf1 =\cf0 "\cf1 XmlFile\cf0 "\cf1  \cf4 FilePath\cf1 =\cf0 "\cf1 GridColumnInstances.xml\cf0 "\cf1  \cf4 XPath\cf1 =\cf0 "\cf1 //GridColumns\cf0 "\cf1  \cf4 NodeName\cf1 =\cf0 "\cf1 GridColumn\cf0 "\cf1 /&gt;\par ??\tab \tab &lt;\cf3 Plugin\cf1  \cf4 Assembly\cf1 =\cf0 "\cf1 StructureMap.Testing.Widget5\cf0 "\cf1  \cf4 Type\cf1 =\cf0 "\cf1 StructureMap.Testing.Widget5.OtherGridColumn\cf0 "\cf1  \cf4 ConcreteKey\cf1 =\cf0 "\cf1 Other\cf0 "\cf1 &gt;\par ??\tab \tab \tab &lt;\cf3 Setter\cf1  \cf4 Name\cf1 =\cf0 "\cf1 ColumnName\cf0 "\cf1  /&gt;\par ??\tab \tab \tab &lt;\cf3 Setter\cf1  \cf4 Name\cf1 =\cf0 "\cf1 FontStyle\cf0 "\cf1  /&gt;\par ??\tab \tab \tab &lt;\cf3 Setter\cf1  \cf4 Name\cf1 =\cf0 "\cf1 Rules\cf0 "\cf1  /&gt;\par ??\tab \tab \tab &lt;\cf3 Setter\cf1  \cf4 Name\cf1 =\cf0 "\cf1 Widget\cf0 "\cf1  /&gt;\par ??\tab \tab \tab &lt;\cf3 Setter\cf1  \cf4 Name\cf1 =\cf0 "\cf1 WrapLines\cf0 "\cf1  /&gt;\par ??\tab \tab &lt;/\cf3 Plugin\cf1 &gt;\par ??\tab &lt;/\cf3 PluginFamily\cf1 &gt;}
 -->
 <div style="font-family: Courier New; font-size: 10pt; color: black; background: white;">
     <p style="margin: 0px;">
-        <span style="color: blue;">&nbsp; &lt;</span><span style="color: #a31515;">PluginFamily</span><span 
+        <span style="color: blue;">&nbsp; &lt;</span><span style="color: #a31515;">PluginFamily/span><span 
                 style="color: blue;"> </span><span style="color: red;">Type</span><span 
                 style="color: blue;">=</span>&quot;<span style="color: blue;">StructureMap.Testing.Widget5.IGridColumn</span>&quot;<span 
                 style="color: blue;"> </span><span style="color: red;">Assembly</span><span 
@@ -379,13 +687,10 @@
                 style="color: #a31515;">Plugin</span><span style="color: blue;">&gt;</span></p>
         <p style="margin: 0px;">
             <span style="color: blue;">&nbsp; &lt;/</span><span style="color: #a31515;">PluginFamily</span><span 
-                style="color: blue;">&gt;</span></p>
+                style="color: blue;">&&gt;</span></p>
     </div>
 <!--EndFragment-->
 <p>&nbsp;</p>
         
-        <h4>Defining Setter Properties with the Fluent Interface</h4>
-        <p>This isn&#39;t possible today, except with a post processing method.&nbsp; This 
-            feature will be added in the next minor release.</p>
-	</body>
+        </body>
 </html>

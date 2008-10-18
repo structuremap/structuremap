@@ -17,7 +17,14 @@ namespace StructureMap.Pipeline
     public interface IInstance
     {
         string Name { get; }
+        
+        /// <summary>
+        /// The actual concrete type of this Instance.  Not every type of IInstance
+        /// can determine the ConcreteType
+        /// </summary>
         Type ConcreteType { get; }
+
+
         string Description { get; }
     }
 

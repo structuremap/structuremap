@@ -61,15 +61,16 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void AutoFill_a_property_with_contextual_construction()
         {
-            var container =
-                new Container(
-                    r =>
-                    r.FillAllPropertiesOfType<Logger>().TheDefault.Is.ConstructedBy(createLogger));
+            var container = new Container(r =>
+            {
+                r.FillAllPropertiesOfType<ILogger>().TheDefault.Is
+                    .ConstructedBy(context => new Logger(context.ParentType));
+            });
 
-            container.GetInstance<ClassWithLogger>().Logger.Type.ShouldEqual(typeof (ClassWithLogger));
-            container.GetInstance<ClassWithLogger2>().Logger.Type.ShouldEqual(typeof (ClassWithLogger2));
+            container.GetInstance<ClassWithLogger>().Logger.ShouldBeOfType<Logger>().Type.ShouldEqual(typeof (ClassWithLogger));
+            container.GetInstance<ClassWithLogger2>().Logger.ShouldBeOfType<Logger>().Type.ShouldEqual(typeof(ClassWithLogger2));
 
-            container.GetInstance<ClassWithClassWithLogger>().ClassWithLogger.Logger.Type.ShouldEqual(
+            container.GetInstance<ClassWithClassWithLogger>().ClassWithLogger.Logger.ShouldBeOfType<Logger>().Type.ShouldEqual(
                 typeof (ClassWithLogger));
         }
 
@@ -160,26 +161,35 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void optional_setter_injection_with_string()
         {
-            var container = new Container(
-                r =>
-                {
-                    r.InstanceOf<OptionalSetterTarget>().Is.OfConcreteType<OptionalSetterTarget>().WithName("NoName");
-
-                    r.ForConcreteType<OptionalSetterTarget>().Configure
-                        .WithProperty("Name").EqualTo("Jeremy");
-                });
-
-            try
+            var container = new Container(r =>
             {
-                //container.GetInstance<NoSettersTarget>();
-                container.GetInstance<OptionalSetterTarget>().Name.ShouldEqual("Jeremy");
-                container.GetInstance<OptionalSetterTarget>("NoName").Name.ShouldBeNull();
-            }
-            catch (Exception e)
+                // The "Name" property is not configured for this instance
+                r.InstanceOf<OptionalSetterTarget>().Is.OfConcreteType<OptionalSetterTarget>().WithName("NoName");
+
+                // The "Name" property is configured for this instance
+                r.ForConcreteType<OptionalSetterTarget>().Configure
+                    .WithProperty("Name").EqualTo("Jeremy");
+            });
+
+            container.GetInstance<OptionalSetterTarget>().Name.ShouldEqual("Jeremy");
+            container.GetInstance<OptionalSetterTarget>("NoName").Name.ShouldBeNull();
+        }
+
+        [Test]
+        public void optional_setter_with_Action()
+        {
+            var container = new Container(r =>
             {
-                Console.WriteLine(e);
-                throw;
-            }
+                // The "Name" property is not configured for this instance
+                r.InstanceOf<OptionalSetterTarget>().Is.OfConcreteType<OptionalSetterTarget>().WithName("NoName");
+
+                // The "Name" property is configured for this instance
+                r.ForConcreteType<OptionalSetterTarget>().Configure
+                    .WithProperty("Name").EqualTo("Jeremy");
+            });
+
+            container.GetInstance<OptionalSetterTarget>().Name.ShouldEqual("Jeremy");
+            container.GetInstance<OptionalSetterTarget>("NoName").Name.ShouldBeNull();
         }
 
         [Test]
@@ -258,7 +268,12 @@ namespace StructureMap.Testing.Pipeline
         }
     }
 
-    public class Logger
+    public interface ILogger
+    {
+        void LogMessage(string message);
+    }
+
+    public class Logger : ILogger
     {
         private readonly Type _type;
 
@@ -271,16 +286,21 @@ namespace StructureMap.Testing.Pipeline
         {
             get { return _type; }
         }
+
+        public void LogMessage(string message)
+        {
+            
+        }
     }
 
     public class ClassWithLogger
     {
-        public Logger Logger { get; set; }
+        public ILogger Logger { get; set; }
     }
 
     public class ClassWithLogger2
     {
-        public Logger Logger { get; set; }
+        public ILogger Logger { get; set; }
     }
 
     public enum ColorEnum
@@ -293,7 +313,6 @@ namespace StructureMap.Testing.Pipeline
     public class OptionalSetterTarget
     {
         public string Name { get; set; }
-
         public string Name2 { get; set; }
     }
 

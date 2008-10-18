@@ -16,9 +16,12 @@ namespace StructureMap
     public class ObjectFactory
     {
         private static readonly object _lockObject = new object();
-        private static IContainer _container;
+        private static Container _container;
         private static string _profile = string.Empty;
 
+        /// <summary>
+        /// Provides queryable access to the configured PluginType's and Instances of the inner Container
+        /// </summary>
         public static IModel Model
         {
             get { return container.Model; }
@@ -61,23 +64,13 @@ namespace StructureMap
         }
 
 
-        /// <summary>
-        /// Creates an instance of the concrete type specified.  Dependencies are inferred from the constructor function of the type
-        /// and automatically "filled"
-        /// </summary>
-        /// <param name="type">Must be a concrete type</param>
-        /// <returns></returns>
+        [Obsolete("Please use GetInstance(Type) instead")]
         public static object FillDependencies(Type type)
         {
             return container.FillDependencies(type);
         }
 
-        /// <summary>
-        /// Creates an instance of the concrete type specified.  Dependencies are inferred from the constructor function of the type
-        /// and automatically "filled"
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
+        [Obsolete("Please use GetInstance<T>() instead")]
         public static T FillDependencies<T>()
         {
             return (T) container.FillDependencies(typeof (T));
@@ -89,6 +82,13 @@ namespace StructureMap
             Inject(pluginType, stub);
         }
 
+        /// <summary>
+        /// Injects the given object into a Container as the default for the designated
+        /// pluginType.  Mostly used for temporarily setting up return values of the Container
+        /// to introduce mocks or stubs during automated testing scenarios
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="stub"></param>
         public static void Inject(Type pluginType, object instance)
         {
             container.Inject(pluginType, instance);
@@ -100,11 +100,26 @@ namespace StructureMap
             Inject(stub);
         }
 
+        /// <summary>
+        /// Injects the given object into a Container as the default for the designated
+        /// PLUGINTYPE.  Mostly used for temporarily setting up return values of the Container
+        /// to introduce mocks or stubs during automated testing scenarios
+        /// </summary>
+        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <param name="instance"></param>
         public static void Inject<PLUGINTYPE>(PLUGINTYPE instance)
         {
             container.Inject(instance);
         }
 
+        /// <summary>
+        /// Injects the given object into a Container by name for the designated
+        /// pluginType.  Mostly used for temporarily setting up return values of the Container
+        /// to introduce mocks or stubs during automated testing scenarios
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="name"></param>
+        /// <param name="instance"></param>
         public static void Inject<PLUGINTYPE>(string name, PLUGINTYPE instance)
         {
             container.Inject(name, instance);
@@ -116,19 +131,26 @@ namespace StructureMap
             Inject(name, stub);
         }
 
-
+        /// <summary>
+        /// Returns a report detailing the complete configuration of all PluginTypes and Instances
+        /// </summary>
+        /// <returns></returns>
         public static string WhatDoIHave()
         {
             return container.WhatDoIHave();
         }
 
+        /// <summary>
+        /// Use with caution!  Does a full environment test of the configuration of this container.  Will try to create every configured
+        /// instance and afterward calls any methods marked with the [ValidationMethod] attribute
+        /// </summary>
         public static void AssertConfigurationIsValid()
         {
             container.AssertConfigurationIsValid();
         }
 
         /// <summary>
-        /// Returns and/or constructs the default instance of the requested System.Type
+        /// Creates or finds the default instance of the pluginType
         /// </summary>
         /// <param name="pluginType"></param>
         /// <returns></returns>
@@ -138,30 +160,42 @@ namespace StructureMap
         }
 
         /// <summary>
-        /// Returns and/or constructs the default instance of the requested System.Type
+        /// Creates or finds the default instance of type T
         /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         public static PLUGINTYPE GetInstance<PLUGINTYPE>()
         {
-            return (PLUGINTYPE) container.GetInstance(typeof (PLUGINTYPE));
+            return container.GetInstance<PLUGINTYPE>();
         }
 
+        /// <summary>
+        /// Creates a new instance of the requested type using the supplied Instance.  Mostly used internally
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="instance"></param>
+        /// <returns></returns>
         public static object GetInstance(Type TargetType, Instance instance)
         {
             return container.GetInstance(TargetType, instance);
         }
 
-        public static TargetType GetInstance<TargetType>(Instance instance)
+        /// <summary>
+        /// Creates a new instance of the requested type T using the supplied Instance.  Mostly used internally
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="instance"></param>
+        /// <returns></returns>
+        public static T GetInstance<T>(Instance instance)
         {
-            return (TargetType) container.GetInstance(typeof (TargetType), instance);
+            return container.GetInstance<T>(instance);
         }
 
         /// <summary>
-        /// Retrieves an instance of pluginType by name
+        /// Creates or finds the named instance of the pluginType
         /// </summary>
-        /// <param name="pluginType">The PluginType</param>
-        /// <param name="name">The instance name</param>
+        /// <param name="pluginType"></param>
+        /// <param name="instanceKey"></param>
         /// <returns></returns>
         public static object GetNamedInstance(Type pluginType, string name)
         {
@@ -169,28 +203,19 @@ namespace StructureMap
         }
 
         /// <summary>
-        /// Retrieves an instance of PLUGINTYPE by name
+        /// Creates or finds the named instance of T
         /// </summary>
-        /// <typeparam name="PLUGINTYPE">The PluginType</typeparam>
-        /// <param name="name">The instance name</param>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="instanceKey"></param>
         /// <returns></returns>
         public static PLUGINTYPE GetNamedInstance<PLUGINTYPE>(string name)
         {
-            return (PLUGINTYPE) container.GetInstance(typeof (PLUGINTYPE), name);
+            return container.GetInstance<PLUGINTYPE>(name);
         }
 
-        public static void SetDefaultInstanceName(Type TargetType, string InstanceName)
-        {
-            container.SetDefault(TargetType, InstanceName);
-        }
-
-        public static void SetDefaultInstanceName<TargetType>(string InstanceName)
-        {
-            container.SetDefault(typeof (TargetType), InstanceName);
-        }
 
         /// <summary>
-        /// Retrieves all instances of the pluginType
+        /// Creates or resolves all registered instances of the pluginType
         /// </summary>
         /// <param name="pluginType"></param>
         /// <returns></returns>
@@ -200,9 +225,9 @@ namespace StructureMap
         }
 
         /// <summary>
-        /// Retrieves all instances of the PLUGINTYPE
+        /// Creates or resolves all registered instances of type T
         /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         public static IList<PLUGINTYPE> GetAllInstances<PLUGINTYPE>()
         {
@@ -210,7 +235,8 @@ namespace StructureMap
         }
 
         /// <summary>
-        /// Pass in an explicit argument of Type T
+        /// Starts a request for an instance or instances with explicitly configured arguments.  Specifies that any dependency
+        /// of type T should be "arg"
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="arg"></param>
@@ -221,7 +247,8 @@ namespace StructureMap
         }
 
         /// <summary>
-        /// Pass in an explicit argument by name
+        /// Starts a request for an instance or instances with explicitly configured arguments.  Specifies that any dependency or primitive argument
+        /// with the designated name should be the next value.
         /// </summary>
         /// <param name="argName"></param>
         /// <returns></returns>
@@ -230,6 +257,10 @@ namespace StructureMap
             return container.With(argName);
         }
 
+        /// <summary>
+        /// Removes all configured instances of type T from the Container.  Use with caution!
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
         public static void EjectAllInstancesOf<T>()
         {
             container.EjectAllInstancesOf<T>();
@@ -237,7 +268,7 @@ namespace StructureMap
 
         #region Container and setting defaults
 
-        private static IContainer container
+        private static Container container
         {
             get
             {
@@ -256,7 +287,10 @@ namespace StructureMap
             }
         }
 
-
+        /// <summary>
+        /// Sets the default instance for all PluginType's to the designated Profile.
+        /// </summary>
+        /// <param name="profile"></param>
         public static string Profile
         {
             set
@@ -276,31 +310,19 @@ namespace StructureMap
         }
 
 
-        internal static void ReplaceManager(IContainer container)
+        internal static void ReplaceManager(Container container)
         {
             _container = container;
         }
 
+        /// <summary>
+        /// Used to add additional configuration to a Container *after* the initialization.
+        /// </summary>
+        /// <param name="configure"></param>
         public static void Configure(Action<ConfigurationExpression> configure)
         {
             container.Configure(configure);
         }
-
-        public static void SetDefault(Type pluginType, Instance instance)
-        {
-            container.SetDefault(pluginType, instance);
-        }
-
-        public static void SetDefault<PLUGINTYPE>(Instance instance)
-        {
-            container.SetDefault<PLUGINTYPE>(instance);
-        }
-
-        public static void SetDefault<PLUGINTYPE, CONCRETETYPE>() where CONCRETETYPE : PLUGINTYPE
-        {
-            container.SetDefault<PLUGINTYPE, CONCRETETYPE>();
-        }
-
 
         public static event Notify Refresh
         {

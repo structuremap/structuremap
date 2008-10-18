@@ -15,7 +15,37 @@ namespace StructureMap.Graph
         }
     }
 
-    public class AssemblyScanner
+    public interface IAssemblyScanner
+    {
+        // Determining which assemblies to scan
+        void Assembly(Assembly assembly);
+        void Assembly(string assemblyName);
+        void TheCallingAssembly();
+        void AssemblyContainingType<T>();
+        void AssemblyContainingType(Type type);
+        
+        // Adding conventions
+        void With(ITypeScanner scanner);
+        void WithDefaultConventions();
+        void With<T>() where T : ITypeScanner, new();
+        
+        // Other options
+        void LookForRegistries();
+        void AddAllTypesOf<PLUGINTYPE>();
+        void AddAllTypesOf(Type pluginType);
+        void IgnoreStructureMapAttributes();
+        
+        // Filtering the types that will be scanned
+        void Exclude(Predicate<Type> exclude);
+        void ExcludeNamespace(string nameSpace);
+        void ExcludeNamespaceContainingType<T>();
+        void Include(Predicate<Type> predicate);
+        void IncludeNamespace(string nameSpace);
+        void IncludeNamespaceContainingType<T>();
+        void ExcludeType<T>();
+    }
+
+    public class AssemblyScanner : IAssemblyScanner
     {
         private readonly List<Assembly> _assemblies = new List<Assembly>();
         private readonly List<Predicate<Type>> _excludes = new List<Predicate<Type>>();
@@ -34,7 +64,7 @@ namespace StructureMap.Graph
         }
 
 
-        public void ScanForAll(PluginGraph pluginGraph)
+        internal void ScanForAll(PluginGraph pluginGraph)
         {
             _assemblies.ForEach(assem => scanTypesInAssembly(assem, pluginGraph));
         }

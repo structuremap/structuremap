@@ -168,7 +168,7 @@ namespace StructureMap
         /// Programmatically determine Assembly's to be scanned for attribute configuration
         /// </summary>
         /// <returns></returns>
-        public static void Scan(Action<AssemblyScanner> action)
+        public static void Scan(Action<IAssemblyScanner> action)
         {
             registry.Scan(action);
         }

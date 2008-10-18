@@ -119,7 +119,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
                 // Specify a new Instance, override a dependency with a named instance
                 registry.InstanceOf<Rule>().Is.OfConcreteType<WidgetRule>().WithName("RuleThatUsesMyInstance")
-                    .CtorDependency<IWidget>("widget").Is(x => x.References("Purple"));
+                    .CtorDependency<IWidget>("widget").Is(x => x.TheInstanceNamed("Purple"));
             });
 
             Assert.IsInstanceOfType(typeof (ARule), container.GetInstance<Rule>("Alias"));

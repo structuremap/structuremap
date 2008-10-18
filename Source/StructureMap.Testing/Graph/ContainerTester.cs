@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
 using StructureMap.Exceptions;
@@ -18,7 +19,7 @@ namespace StructureMap.Testing.Graph
         [SetUp]
         public void SetUp()
         {
-            _manager = new Container(registry =>
+            _container = new Container(registry =>
             {
                 registry.Scan(x => x.Assembly("StructureMap.Testing.Widget"));
                 registry.BuildInstancesOf<Rule>();
@@ -29,11 +30,11 @@ namespace StructureMap.Testing.Graph
 
         #endregion
 
-        private IContainer _manager;
+        private IContainer _container;
 
-        private void addColorMemento(string Color)
+        private void addColorInstance(string Color)
         {
-            _manager.Configure(r =>
+            _container.Configure(r =>
             {
                 r.InstanceOf<Rule>().Is.OfConcreteType<ColorRule>().WithCtorArg("color").EqualTo(Color).WithName(Color);
                 r.InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithCtorArg("color").EqualTo(Color).WithName(
@@ -71,10 +72,9 @@ namespace StructureMap.Testing.Graph
         {
         }
 
-        private void assertColorIs(IContainer manager, string color)
+        private void assertColorIs(IContainer container, string color)
         {
-            var rule = (ColorService) manager.GetInstance<IService>();
-            Assert.AreEqual(color, rule.Color);
+            container.GetInstance<IService>().ShouldBeOfType<ColorService>().Color.ShouldEqual(color);
         }
 
         [Test]
@@ -163,33 +163,34 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void GetDefaultInstance()
         {
-            addColorMemento("Red");
-            addColorMemento("Orange");
-            addColorMemento("Blue");
+            addColorInstance("Red");
+            addColorInstance("Orange");
+            addColorInstance("Blue");
 
-            _manager.SetDefault(typeof (Rule), "Blue");
-            var rule = _manager.GetInstance(typeof (Rule)) as ColorRule;
+            _container.Configure(x =>
+            {
+                x.ForRequestedType<Rule>().TheDefault.Is.TheInstanceNamed("Blue");
+            });
 
-            Assert.IsNotNull(rule);
-            Assert.AreEqual("Blue", rule.Color);
+            _container.GetInstance<Rule>().ShouldBeOfType<ColorRule>().Color.ShouldEqual("Blue");
         }
 
         [Test]
         public void GetInstanceOf3Types()
         {
-            addColorMemento("Red");
-            addColorMemento("Orange");
-            addColorMemento("Blue");
+            addColorInstance("Red");
+            addColorInstance("Orange");
+            addColorInstance("Blue");
 
-            var rule = _manager.GetInstance(typeof (Rule), "Blue") as ColorRule;
+            var rule = _container.GetInstance(typeof (Rule), "Blue") as ColorRule;
             Assert.IsNotNull(rule);
             Assert.AreEqual("Blue", rule.Color);
 
-            var widget = _manager.GetInstance(typeof (IWidget), "Red") as ColorWidget;
+            var widget = _container.GetInstance(typeof (IWidget), "Red") as ColorWidget;
             Assert.IsNotNull(widget);
             Assert.AreEqual("Red", widget.Color);
 
-            var maker = _manager.GetInstance(typeof (WidgetMaker), "Orange") as ColorWidgetMaker;
+            var maker = _container.GetInstance(typeof (WidgetMaker), "Orange") as ColorWidgetMaker;
             Assert.IsNotNull(maker);
             Assert.AreEqual("Orange", maker.Color);
         }
@@ -197,7 +198,7 @@ namespace StructureMap.Testing.Graph
         [Test, ExpectedException(typeof (StructureMapException))]
         public void GetMissingType()
         {
-            object o = _manager.GetInstance(typeof (string));
+            object o = _container.GetInstance(typeof (string));
         }
 
         [Test]
@@ -215,30 +216,6 @@ namespace StructureMap.Testing.Graph
             Assert.AreSame(blue, container.GetInstance<Rule>("Blue"));
         }
 
-
-        [Test]
-        public void SetDefaultInstanceByString()
-        {
-            var container = new Container(r =>
-            {
-                r.ForRequestedType<IService>().AddInstances(x =>
-                {
-                    x.OfConcreteType<ColorService>().WithName("Red").WithProperty("color").EqualTo("Red");
-                    x.OfConcreteType<ColorService>().WithName("Blue").WithProperty("color").EqualTo("Blue");
-                    x.OfConcreteType<ColorService>().WithName("Green").WithProperty("color").EqualTo("Green");
-                });
-            });
-
-
-            container.SetDefault(typeof (IService), "Red");
-            assertColorIs(container, "Red");
-
-            container.SetDefault(typeof (IService), "Green");
-            assertColorIs(container, "Green");
-
-            container.SetDefault(typeof (IService), "Blue");
-            assertColorIs(container, "Blue");
-        }
 
         [Test, ExpectedException(typeof (StructureMapException))]
         public void TryToGetDefaultInstanceWithNoInstance()

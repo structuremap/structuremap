@@ -167,7 +167,11 @@ namespace StructureMap.Testing.Graph
         {
             ObjectFactory.Initialize(x => { x.BuildInstancesOf<ISomething>().TheDefaultIsConcreteType<SomethingTwo>(); });
 
-            ObjectFactory.SetDefault<ISomething, SomethingOne>();
+            ObjectFactory.Configure(x =>
+            {
+                x.ForRequestedType<ISomething>().TheDefaultIsConcreteType<SomethingOne>();
+            });
+
             ObjectFactory.GetInstance<ISomething>().ShouldBeOfType<SomethingOne>();
         }
 
@@ -177,7 +181,11 @@ namespace StructureMap.Testing.Graph
         {
             ObjectFactory.Initialize(x => { x.BuildInstancesOf<ISomething>(); });
 
-            ObjectFactory.SetDefault<ISomething, SomethingOne>();
+            ObjectFactory.Configure(x =>
+            {
+                x.ForRequestedType<ISomething>().TheDefaultIsConcreteType<SomethingOne>();
+            });
+
             Assert.IsInstanceOfType(typeof (SomethingOne), ObjectFactory.GetInstance<ISomething>());
         }
 
@@ -261,7 +269,10 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void AddTypeThroughObjectFactory()
         {
-            ObjectFactory.SetDefault<ISomething, SomethingOne>();
+            ObjectFactory.Initialize(x =>
+            {
+                x.ForRequestedType<ISomething>().TheDefaultIsConcreteType<SomethingOne>();
+            });
 
             Assert.IsInstanceOfType(typeof (SomethingOne), ObjectFactory.GetInstance<ISomething>());
         }
@@ -293,7 +304,11 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void JustAddATypeWithNoNameAndDefault()
         {
-            ObjectFactory.SetDefault<ISomething, SomethingOne>();
+            ObjectFactory.Initialize(x =>
+            {
+                x.ForRequestedType<ISomething>().TheDefaultIsConcreteType<SomethingOne>();
+            });
+
             Assert.IsInstanceOfType(typeof (SomethingOne), ObjectFactory.GetInstance<ISomething>());
         }
 

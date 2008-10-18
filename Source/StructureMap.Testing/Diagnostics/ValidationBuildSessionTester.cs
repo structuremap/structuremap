@@ -45,7 +45,7 @@ namespace StructureMap.Testing.Diagnostics
 
                 r.InstanceOf<SomethingThatNeedsAWidget>().Is.OfConcreteType<SomethingThatNeedsAWidget>()
                     .WithName("DependentInstance")
-                    .CtorDependency<IWidget>().Is(x => x.References("BadInstance"));
+                    .CtorDependency<IWidget>().Is(x => x.TheInstanceNamed("BadInstance"));
             });
 
             BuildError error = getFirstAndOnlyError(session);
@@ -76,7 +76,7 @@ namespace StructureMap.Testing.Diagnostics
 
                 r.InstanceOf<SomethingThatNeedsAWidget>().Is.OfConcreteType<SomethingThatNeedsAWidget>()
                     .WithName("DependentInstance")
-                    .CtorDependency<IWidget>().Is(x => x.References("BadInstance"));
+                    .CtorDependency<IWidget>().Is(x => x.TheInstanceNamed("BadInstance"));
             });
 
             Assert.AreEqual(1, session.BuildErrors.Length);

@@ -137,8 +137,8 @@ namespace StructureMap.Testing.Configuration.DSL
                     .WithCtorArg("name").EqualTo("Jeremy")
                     .TheArrayOf<IHandler>().Contains(x =>
                     {
-                        x.References("Two");
-                        x.References("One");
+                        x.TheInstanceNamed("Two");
+                        x.TheInstanceNamed("One");
                     });
             });
 
@@ -161,8 +161,8 @@ namespace StructureMap.Testing.Configuration.DSL
                     .WithCtorArg("name").EqualTo("Jeremy")
                     .TheArrayOf<IHandler>().Contains(x =>
                     {
-                        x.References("Two");
-                        x.References("One");
+                        x.TheInstanceNamed("Two");
+                        x.TheInstanceNamed("One");
                     });
             });
 

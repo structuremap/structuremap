@@ -80,13 +80,13 @@ namespace StructureMap.Testing.Configuration.DSL
                 registry.InstanceOf<Rule>()
                     .Is.OfConcreteType<WidgetRule>()
                     .WithName("TheWidgetRule")
-                    .CtorDependency<IWidget>().Is(i => i.References("Yellow"));
+                    .CtorDependency<IWidget>().Is(i => i.TheInstanceNamed("Yellow"));
 
                 registry.BuildInstancesOf<Thing>().TheDefault.Is.OfConcreteType<Thing>()
                     .WithCtorArg("average").EqualTo(.333)
                     .WithCtorArg("name").EqualTo("Jeremy")
                     .WithCtorArg("count").EqualTo(4)
-                    .CtorDependency<Rule>().Is(i => i.References("TheWidgetRule"));
+                    .CtorDependency<Rule>().Is(i => i.TheInstanceNamed("TheWidgetRule"));
             });
         }
 

@@ -17,15 +17,13 @@ namespace StructureMap.Testing.AutoMocking
         {
             PluginCache.ResetAll();
 
-            _mocks = new MockRepository();
-            _locator = new RhinoMocksServiceLocator(_mocks);
+            _locator = new RhinoMocksAAAServiceLocator();
             _container = new AutoMockedContainer(_locator);
         }
 
         #endregion
 
-        private MockRepository _mocks;
-        private RhinoMocksServiceLocator _locator;
+        private RhinoMocksAAAServiceLocator _locator;
         private AutoMockedContainer _container;
 
 
@@ -217,11 +215,7 @@ namespace StructureMap.Testing.AutoMocking
         public void GetAFullMockForAServiceThatHasNotPreviouslyBeenRequested()
         {
             var service = _container.GetInstance<IMockedService>();
-
-
-            Assert.IsNotNull(service);
-            var instance = (IMockedObject) service;
-            Assert.AreSame(_mocks, instance.Repository);
+            service.ShouldBeOfType<IMockedObject>();
         }
 
         [Test]
@@ -308,12 +302,9 @@ namespace StructureMap.Testing.AutoMocking
         {
             var autoMocker = new RhinoAutoMocker<ConcreteClass>();
 
-            using (autoMocker.Record())
-            {
-                Expect.Call(autoMocker.Get<IMockedService>().Name).Return("Jeremy");
-            }
+            autoMocker.Get<IMockedService>().Expect(x => x.Name).Return("Jeremy");
 
-            Assert.AreEqual("Jeremy", autoMocker.ClassUnderTest.Name);
+            autoMocker.ClassUnderTest.Name.ShouldEqual("Jeremy");
         }
 
         [Test]
@@ -324,12 +315,8 @@ namespace StructureMap.Testing.AutoMocking
             autoMocker.PartialMockTheClassUnderTest();
             ConcreteClass concreteClass = autoMocker.ClassUnderTest;
 
-            using (autoMocker.Record())
-            {
-                Expect.Call(concreteClass.Name).Return("Max");
-            }
-
-            Assert.AreEqual("Max", concreteClass.Name);
+            concreteClass.Expect(x => x.Name).Return("Max");
+            concreteClass.Name.ShouldEqual("Max");
         }
 
         [Test]
@@ -338,7 +325,6 @@ namespace StructureMap.Testing.AutoMocking
             var autoMocker = new RhinoAutoMocker<ConcreteClass>(MockMode.AAA);
 
             autoMocker.ClassUnderTest.CallService();
-            autoMocker.IsInReplayMode(autoMocker.Get<IMockedService>()).ShouldBeTrue();
 
             autoMocker.Get<IMockedService>().AssertWasCalled(s => s.Go());
         }
@@ -346,73 +332,6 @@ namespace StructureMap.Testing.AutoMocking
         public interface IAnotherService
         {
             
-        }
-
-        [Test]
-        public void AddAdditionalMockForCreatesMocksInRecordModeWhenUsingRecordReplay()
-        {
-            var autoMocker = new RhinoAutoMocker<ConcreteClass>(MockMode.RecordAndReplay);
-            autoMocker.AddAdditionalMockFor<IAnotherService>();
-
-            autoMocker.IsInReplayMode(autoMocker.Get<IAnotherService>()).ShouldBeFalse();
-        }
-
-        [Test]
-        public void AddAdditionalMockForCreatesMocksInReplayModeWhenUsingAAA()
-        {
-            var autoMocker = new RhinoAutoMocker<ConcreteClass>(MockMode.AAA);
-            autoMocker.AddAdditionalMockFor<IAnotherService>();
-
-            autoMocker.IsInReplayMode(autoMocker.Get<IAnotherService>()).ShouldBeTrue();
-        }
-
-        [Test]
-        public void CreateMockArrayForCreatesMocksInRecordModeWhenUsingReplayRecord()
-        {
-            var autoMocker = new RhinoAutoMocker<ConcreteClass>(MockMode.RecordAndReplay);
-            var mockArray = autoMocker.CreateMockArrayFor<IAnotherService>(3);
-            foreach (var service in mockArray)
-            {
-                autoMocker.IsInReplayMode(service).ShouldBeFalse();
-            }
-        }
-
-        [Test]
-        public void CreateMockArrayForCreatesMocksInReplayModeWhenUsingAAA()
-        {
-            var autoMocker = new RhinoAutoMocker<ConcreteClass>(MockMode.AAA);
-            var mockArray = autoMocker.CreateMockArrayFor<IAnotherService>(3);
-            foreach (var service in mockArray)
-            {
-                autoMocker.IsInReplayMode(service).ShouldBeTrue();
-            }
-        }
-
-        [Test]
-        public void PartialMockClassUnderTestCreatesMocksInRecordModeWhenUsingRecordReplay()
-        {
-            var autoMocker = new RhinoAutoMocker<ConcreteClass>(MockMode.RecordAndReplay);
-            autoMocker.PartialMockTheClassUnderTest();
-
-            autoMocker.IsInReplayMode(autoMocker.Get<IMockedService>()).ShouldBeFalse();
-        }
-
-        [Test]
-        public void PartialMockClassUnderTestCreatesMocksInReplayModeWhenUsingAAA()
-        {
-            var autoMocker = new RhinoAutoMocker<ConcreteClass>(MockMode.AAA);
-            autoMocker.PartialMockTheClassUnderTest();
-
-            autoMocker.IsInReplayMode(autoMocker.Get<IMockedService>()).ShouldBeTrue();
-        }
-
-        [Test]
-        public void PartialMockClassUnderTestPutsTheClassUnderTestInReplayModeWhenUsingAAA()
-        {
-            var autoMocker = new RhinoAutoMocker<ConcreteClass>(MockMode.AAA);
-            autoMocker.PartialMockTheClassUnderTest();
-
-            autoMocker.IsInReplayMode(autoMocker.ClassUnderTest).ShouldBeTrue();
         }
 
     }
