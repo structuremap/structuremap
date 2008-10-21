@@ -26,22 +26,6 @@ namespace StructureMap.Testing.Graph
                 registry.BuildInstancesOf<IWidget>();
                 registry.BuildInstancesOf<WidgetMaker>();
             });
-
-            var container = new Container(x =>
-            {
-                x.Scan(scanner =>
-                {
-                    scanner.Assembly("StructureMap.Testing.Widget");
-                });
-
-                x.ForRequestedType<Rule>().TheDefault.Is.OfConcreteType<ColorRule>()
-                    .WithCtorArg("Color").EqualTo("Blue");
-
-
-                x.IncludeConfigurationFromConfigFile = true;
-
-                x.AddConfigurationFromXmlFile("ExternalFile.xml");
-            });
         }
 
         #endregion
