@@ -52,6 +52,12 @@ namespace StructureMap.Testing.Pipeline
             var widget = new ColorWidget("Red");
             build<ClassWithWidgetProperty>(i => i.SetterDependency(x => x.Widget).Is(x => x.Object(widget))).Widget.
                 ShouldBeTheSameAs(widget);
+
+            var container = new Container(x =>
+            {
+                x.ForConcreteType<ClassWithWidgetProperty>().Configure
+                    .SetterDependency<IWidget>(o => o.Widget).Is(o => o.Object(new ColorWidget("Red")));
+            });
         }
 
         [Test]
@@ -60,6 +66,16 @@ namespace StructureMap.Testing.Pipeline
             build<SimplePropertyTarget>(instance => instance.SetProperty(x => x.Name = "Jeremy")).Name.ShouldEqual(
                 "Jeremy");
             build<SimplePropertyTarget>(i => i.SetProperty(x => x.Age = 16)).Age.ShouldEqual(16);
+
+            var container = new Container(x =>
+            {
+                x.ForConcreteType<SimplePropertyTarget>().Configure
+                    .SetProperty(target =>
+                    {
+                        target.Name = "Max";
+                        target.Age = 4;
+                    });
+            });
         }
 
         [Test]
@@ -72,6 +88,14 @@ namespace StructureMap.Testing.Pipeline
         public void specify_a_simple_property_with_equal_to()
         {
             build<SimplePropertyTarget>(i => i.WithProperty(x => x.Name).EqualTo("Bret")).Name.ShouldEqual("Bret");
+
+            var container = new Container(x =>
+            {
+                x.ForConcreteType<SimplePropertyTarget>().Configure
+                    .WithProperty(o => o.Name).EqualToAppSetting("name")
+                    .WithProperty(o => o.Age).EqualToAppSetting("age");
+
+            });
         }
 
         [Test]

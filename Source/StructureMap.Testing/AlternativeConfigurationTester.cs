@@ -63,7 +63,13 @@ namespace StructureMap.Testing
         [Test]
         public void WithTheDefault()
         {
-            ObjectFactory.Initialize(x => { x.UseDefaultStructureMapConfigFile = true; });
+            // This code enforces the existence of the StructureMap.config file
+            // Initialize() will throw an exception if the StructureMap.config file
+            // cannot be found
+            ObjectFactory.Initialize(x =>
+            {
+                x.UseDefaultStructureMapConfigFile = true;
+            });
 
             ObjectFactory.GetInstance<IWidget>().ShouldBeOfType<ColorWidget>().Color.ShouldEqual("Red");
         }

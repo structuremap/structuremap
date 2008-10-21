@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using StructureMap.Attributes;
 using StructureMap.Configuration.DSL;
+using StructureMap.Testing.Configuration.DSL;
 using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.DocumentationExamples
@@ -194,6 +195,18 @@ namespace StructureMap.Testing.DocumentationExamples
 
                 x.LookForRegistries();
             });
+
+
+            // Adding configuration from an extension Assembly
+            // after ObjectFactory is already configured
+            ObjectFactory.Configure(x =>
+            {
+                x.Scan(scan =>
+                {
+                    scan.Assembly("MyCompany.MyApp.ExtensionAssembly");
+                    scan.LookForRegistries();
+                });
+            });
         }
     }
 
@@ -341,6 +354,40 @@ namespace StructureMap.Testing.DocumentationExamples
 
 
             Application.Run(shell);
+        }
+    }
+
+    public class RemoteService : IService{}
+
+    public class InstanceExampleRegistry : Registry
+    {
+        public InstanceExampleRegistry()
+        {
+            // Shortcut for just specifying "use this type -- with auto wiring"
+            ForRequestedType<IService>().TheDefaultIsConcreteType<RemoteService>();
+            
+            // Set the default Instance of a PluginType
+            ForRequestedType<IService>().TheDefault.Is.OfConcreteType<RemoteService>();
+            
+            // Add an additional Instance of a PluginType
+            InstanceOf<IService>().Is.OfConcreteType<RemoteService>();
+
+            // Add multiple additional Instances of a PluginType
+            ForRequestedType<IService>().AddInstances(x =>
+            {
+                x.ConstructedBy(() => new ColorService("Red"));
+
+                x.OfConcreteType<RemoteService>();
+
+                x.Object(new ColorService("Red"));
+            });
+
+            // Use the InstanceExpression to define the default Instance
+            // of a PluginType within a Profile
+            CreateProfile("Connected", x =>
+            {
+                x.Type<IService>().Is.OfConcreteType<RemoteService>();
+            });
         }
     }
 }

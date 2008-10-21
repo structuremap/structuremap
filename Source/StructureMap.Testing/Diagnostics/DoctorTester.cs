@@ -242,6 +242,7 @@ namespace StructureMap.Testing.Diagnostics
             ObjectFactory.Initialize(x =>
             {
                 x.IgnoreStructureMapConfig = true;
+                
                 x.ForRequestedType<IWidget>().TheDefault.Is
                     .OfConcreteType<DoctorTester.NumberWidget>()
                     .WithCtorArg("age").EqualToAppSetting("age");

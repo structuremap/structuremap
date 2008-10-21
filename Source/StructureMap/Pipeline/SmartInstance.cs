@@ -143,7 +143,7 @@ namespace StructureMap.Pipeline
                 _propertyName = propertyName;
             }
 
-            public SmartInstance<T> Contains(Action<InstanceExpression<ARRAY>> action)
+            public SmartInstance<T> Contains(Action<IInstanceExpression<ARRAY>> action)
             {
                 var list = new List<Instance>();
 
@@ -178,7 +178,7 @@ namespace StructureMap.Pipeline
                 _propertyName = propertyName;
             }
 
-            public SmartInstance<T> Is(Action<InstanceExpression<CHILD>> action)
+            public SmartInstance<T> Is(Action<IInstanceExpression<CHILD>> action)
             {
                 var expression = new InstanceExpression<CHILD>(i => _instance.setChild(_propertyName, i));
                 action(expression);

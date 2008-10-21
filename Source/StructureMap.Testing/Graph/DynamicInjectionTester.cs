@@ -77,7 +77,7 @@ namespace StructureMap.Testing.Graph
             var container = new Container();
             container.Configure(registry => { registry.Scan(x => x.TheCallingAssembly()); });
 
-            Assert.IsInstanceOfType(typeof (TheThingy), container.GetInstance<IThingy>());
+            container.GetInstance<IThingy>().ShouldBeOfType<TheThingy>();
         }
 
         [Test]

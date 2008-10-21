@@ -7,7 +7,35 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.Configuration.DSL
 {
-    public class Registry
+    public interface IRegistry
+    {
+
+        CreatePluginFamilyExpression<PLUGINTYPE> BuildInstancesOf<PLUGINTYPE>();
+
+        GenericFamilyExpression ForRequestedType(Type pluginType);
+        Registry.BuildWithExpression<T> ForConcreteType<T>();
+
+
+        CreatePluginFamilyExpression<PLUGINTYPE> ForRequestedType<PLUGINTYPE>();
+
+        PluginGraph Build();
+        IsExpression<T> InstanceOf<T>();
+        GenericIsExpression InstanceOf(Type pluginType);
+
+
+        ProfileExpression CreateProfile(string profileName);
+
+        void CreateProfile(string profileName, Action<ProfileExpression> action);
+        void RegisterInterceptor(TypeInterceptor interceptor);
+        MatchedTypeInterceptor IfTypeMatches(Predicate<Type> match);
+
+
+        void Scan(Action<IAssemblyScanner> action);
+
+        CreatePluginFamilyExpression<PLUGINTYPE> FillAllPropertiesOfType<PLUGINTYPE>();
+    }
+
+    public class Registry : IRegistry
     {
         private readonly List<Action<PluginGraph>> _actions = new List<Action<PluginGraph>>();
         private readonly List<Action> _basicActions = new List<Action>();

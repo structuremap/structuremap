@@ -8,7 +8,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <summary>
         /// Gives you full access to all the different ways to specify an "Instance"
         /// </summary>
-        InstanceExpression<T> Is { get; }
+        IInstanceExpression<T> Is { get; }
 
         /// <summary>
         /// Shortcut to specify a prebuilt Instance
@@ -51,7 +51,40 @@ namespace StructureMap.Configuration.DSL.Expressions
         }
     }
 
-    public class InstanceExpression<T> : IsExpression<T>
+    public interface IInstanceExpression<T> : IsExpression<T>
+    {
+        // Attach an Instance object that is configured
+        // independently of the DSL
+        void Instance(Instance instance);
+        void IsThis(Instance instance);
+        
+        // Use a pre-built object
+        LiteralInstance IsThis(T obj);
+        LiteralInstance Object(T theObject);
+
+        // Use a type
+        SmartInstance<PLUGGEDTYPE> OfConcreteType<PLUGGEDTYPE>() where PLUGGEDTYPE : T;
+        ConfiguredInstance OfConcreteType(Type type);
+
+        // Build by a Lambda or an Anonymous Delegate
+        ConstructorInstance<T> ConstructedBy(Func<T> func);
+        ConstructorInstance<T> ConstructedBy(Func<IContext, T> func);
+
+        // Refer to a named Instance
+        ReferencedInstance TheInstanceNamed(string key);
+        DefaultInstance TheDefault();
+
+        // Use a cloned copy of the template
+        PrototypeInstance PrototypeOf(T template);
+
+        // Cache the template as a binary serialized blob
+        SerializedInstance SerializedCopyOf(T template);
+        
+        // Load an ASCX control
+        UserControlInstance LoadControlFrom(string url);
+    }
+
+    public class InstanceExpression<T> : IInstanceExpression<T>
     {
         private readonly Action<Instance> _action;
 
@@ -62,7 +95,7 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         #region IsExpression<T> Members
 
-        InstanceExpression<T> IsExpression<T>.Is
+        IInstanceExpression<T> IsExpression<T>.Is
         {
             get { return this; }
         }

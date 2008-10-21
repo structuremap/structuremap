@@ -48,7 +48,7 @@ namespace StructureMap
             }
         }
 
-        public static void Initialize(Action<InitializationExpression> action)
+        public static void Initialize(Action<IInitializationExpression> action)
         {
             lock (typeof (ObjectFactory))
             {

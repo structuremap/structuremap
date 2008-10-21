@@ -34,7 +34,7 @@ namespace StructureMap.Configuration.DSL.Expressions
             get { return new InstanceExpression<PLUGINTYPE>(i => registerDefault(i)); }
         }
 
-        public CreatePluginFamilyExpression<PLUGINTYPE> AddInstances(Action<InstanceExpression<PLUGINTYPE>> action)
+        public CreatePluginFamilyExpression<PLUGINTYPE> AddInstances(Action<IInstanceExpression<PLUGINTYPE>> action)
         {
             var list = new List<Instance>();
 

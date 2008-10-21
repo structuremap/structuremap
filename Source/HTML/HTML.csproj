@@ -58,42 +58,26 @@
   -->
   <ItemGroup>
     <Content Include="AttributeNormalized.htm" />
-    <Content Include="AutoMocking.htm" />
-    <Content Include="BestPractices.htm" />
-    <Content Include="ChangingDefaultsAtRuntime.htm" />
-    <Content Include="CompositeConfiguration.htm" />
+    <Content Include="ConfiguringStructureMap.htm" />
     <Content Include="Example.xml" />
     <Content Include="Glossary.htm" />
-    <Content Include="ConcreteTypes.htm" />
-    <Content Include="ConfigurationArchitecture.htm" />
-    <Content Include="ConfiguringStructureMap.htm" />
-    <Content Include="CreatingContainer.htm" />
     <Content Include="Default.htm" />
     <Content Include="Diagnostics.htm" />
-    <Content Include="EnvironmentTests.htm" />
     <Content Include="ExplicitArguments.htm" />
     <Content Include="ExtendingStructureMap.htm" />
-    <Content Include="FAQ.htm" />
-    <Content Include="FluentInterfaceAPI.htm" />
+    <Content Include="InstanceExpression.htm" />
+    <Content Include="RegistryDSL.htm" />
     <Content Include="Generics.htm" />
-    <Content Include="GentleGuide.htm" />
-    <Content Include="ImplicitInstances.htm" />
     <Content Include="InjectingServicesAtRuntime.htm" />
     <Content Include="Interception.htm" />
     <Content Include="NodeNormalized.htm" />
-    <Content Include="Profiles.htm" />
     <Content Include="QuickStart.htm" />
     <Content Include="RuntimeArchitecture.htm" />
     <Content Include="Sample.xml" />
     <Content Include="ScanningAssemblies.htm" />
-    <Content Include="Scoping.htm" />
     <Content Include="ConstructorAndSetterInjection.htm" />
-    <Content Include="StructureMapAndMocks.htm" />
-    <Content Include="StructureMapDoctor.htm" />
-    <Content Include="TroubleShooting.htm" />
     <Content Include="RetrievingServices.htm" />
     <Content Include="UsingStructureMapWithinUnitTests.htm" />
-    <Content Include="WhatWillStructureMapDoWhenI.htm" />
     <Content Include="XmlConfiguration.htm" />
   </ItemGroup>
   <ItemGroup>
