@@ -7,7 +7,7 @@ using StructureMap.Attributes;
 using StructureMap.Configuration.DSL;
 using StructureMap.Testing.Widget3;
 
-namespace StructureMap.Testing
+namespace StructureMap.Testing.DocumentationExamples
 {
     public interface IDataProvider
     {

@@ -76,6 +76,40 @@ namespace StructureMap
         /// <returns></returns>
         IList GetAllInstances(Type pluginType);
 
+        /// <summary>
+        /// Creates or finds the named instance of the pluginType. Returns null if the named instance is not known to the container.
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="instanceKey"></param>
+        /// <param name="instance"></param>
+        /// <returns></returns>
+        object TryGetInstance(Type pluginType, string instanceKey);
+
+        /// <summary>
+        /// Creates or finds the default instance of the pluginType. Returns null if the pluginType is not known to the container.
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="instance"></param>
+        /// <returns></returns>
+        object TryGetInstance(Type pluginType);
+
+        /// <summary>
+        /// Creates or finds the default instance of type T. Returns the default value of T if it is not known to the container.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="instance"></param>
+        /// <returns></returns>
+        T TryGetInstance<T>();
+
+        /// <summary>
+        /// Creates or finds the named instance of type T. Returns the default value of T if the named instance is not known to the container.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="instance"></param>
+        /// <returns></returns>
+        T TryGetInstance<T>(string instanceKey);
+
+
         [Obsolete("Please use GetInstance<T>() instead.")]
         T FillDependencies<T>();
 
@@ -188,6 +222,5 @@ namespace StructureMap
         /// </summary>
         /// <typeparam name="T"></typeparam>
         void EjectAllInstancesOf<T>();
-
     }
 }

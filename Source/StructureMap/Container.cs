@@ -7,6 +7,7 @@ using StructureMap.Exceptions;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
+using System.Linq;
 
 namespace StructureMap
 {
@@ -215,6 +216,54 @@ namespace StructureMap
             return withNewSession().CreateInstance(pluginType, instanceKey);
         }
 
+        /// <summary>
+        /// Creates or finds the named instance of the pluginType. Returns null if the named instance is not known to the container.
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="instanceKey"></param>
+        /// <param name="instance"></param>
+        /// <returns></returns>
+        public object TryGetInstance(Type pluginType, string instanceKey)
+        {
+            return _pipelineGraph.ForType(pluginType).FindInstance(instanceKey) == null 
+                ? null 
+                : GetInstance(pluginType, instanceKey);
+        }
+
+        /// <summary>
+        /// Creates or finds the default instance of the pluginType. Returns null if the pluginType is not known to the container.
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="instance"></param>
+        /// <returns></returns>
+        public object TryGetInstance(Type pluginType)
+        {
+            return !_pipelineGraph.PluginTypes.Any(p => p.PluginType == pluginType) 
+                ? null 
+                : GetInstance(pluginType);
+        }
+
+        /// <summary>
+        /// Creates or finds the default instance of type T. Returns the default value of T if it is not known to the container.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="instance"></param>
+        /// <returns></returns>
+        public T TryGetInstance<T>()
+        {
+            return (T)(TryGetInstance(typeof (T)) ?? default(T));
+        }
+
+        /// <summary>
+        /// Creates or finds the named instance of type T. Returns the default value of T if the named instance is not known to the container.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="instance"></param>
+        /// <returns></returns>
+        public T TryGetInstance<T>(string instanceKey)
+        {
+            return (T)(TryGetInstance(typeof(T), instanceKey) ?? default(T));
+        }
 
         /// <summary>
         /// Creates or finds the default instance of the pluginType

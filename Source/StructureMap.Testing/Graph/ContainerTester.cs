@@ -195,6 +195,82 @@ namespace StructureMap.Testing.Graph
             Assert.AreEqual("Orange", maker.Color);
         }
 
+        [Test]
+        public void TryGetInstanceViaName_ReturnsNull_WhenNotFound()
+        {
+            addColorInstance("Red");
+            addColorInstance("Orange");
+            addColorInstance("Blue");
+
+            var rule = _container.TryGetInstance(typeof(Rule), "Yellow");
+            rule.ShouldBeNull();
+        }
+
+        [Test]
+        public void TryGetInstanceViaName_ReturnsTheOutInstance_WhenFound()
+        {
+            addColorInstance("Red");
+            addColorInstance("Orange");
+            addColorInstance("Blue");
+
+            var rule = _container.TryGetInstance(typeof(Rule), "Orange");
+            rule.ShouldBeOfType(typeof(ColorRule));
+        }
+
+        [Test]
+        public void TryGetInstance_ReturnsNull_WhenTypeNotFound()
+        {
+            var instance = _container.TryGetInstance(typeof(IProvider));
+            instance.ShouldBeNull();
+        }
+
+        [Test]
+        public void TryGetInstance_ReturnsInstance_WhenTypeFound()
+        {
+            _container.Configure(c => c.ForRequestedType<IProvider>().TheDefaultIsConcreteType<Provider>());
+            var instance = _container.TryGetInstance(typeof(IProvider));
+            instance.ShouldBeOfType(typeof(Provider));
+        }
+
+        [Test]
+        public void TryGetInstanceViaGeneric_ReturnsNull_WhenTypeNotFound()
+        {
+            var instance = _container.TryGetInstance<IProvider>();
+            instance.ShouldBeNull();
+        }
+
+        [Test]
+        public void TryGetInstanceViaGeneric_ReturnsInstance_WhenTypeFound()
+        {
+            _container.Configure(c => c.ForRequestedType<IProvider>().TheDefaultIsConcreteType<Provider>());
+            var instance = _container.TryGetInstance<IProvider>();
+            instance.ShouldBeOfType(typeof(Provider));
+        }
+
+        [Test]
+        public void TryGetInstanceViaNameAndGeneric_ReturnsNull_WhenTypeNotFound()
+        {
+            addColorInstance("Red");
+            addColorInstance("Orange");
+            addColorInstance("Blue");
+
+            var instance = _container.TryGetInstance<Rule>("Yellow");
+            instance.ShouldBeNull();
+        }
+
+        [Test]
+        public void TryGetInstanceViaNameAndGeneric_ReturnsInstance_WhenTypeFound()
+        {
+            addColorInstance("Red");
+            addColorInstance("Orange");
+            addColorInstance("Blue");
+
+            var instance = _container.TryGetInstance<Rule>("Orange");
+            instance.ShouldBeOfType(typeof(ColorRule));
+        }
+
+
+
         [Test, ExpectedException(typeof (StructureMapException))]
         public void GetMissingType()
         {

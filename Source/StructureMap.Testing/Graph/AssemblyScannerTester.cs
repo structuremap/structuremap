@@ -63,7 +63,9 @@ namespace StructureMap.Testing.Graph
             var scanner = new AssemblyScanner();
             action(scanner);
             theGraph = new PluginGraph();
+            scanner.ExcludeNamespaceContainingType<DocumentationExamples.ScanningRegistry>();
             scanner.ScanForAll(theGraph);
+            theGraph.Log.AssertFailures();
         }
 
 
@@ -129,7 +131,7 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
-        public void Search_for_registries_by_default()
+        public void Search_for_registries_when_explicitly_told()
         {
             Scan(x =>
             {
