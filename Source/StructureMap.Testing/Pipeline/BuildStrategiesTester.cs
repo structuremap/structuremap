@@ -85,7 +85,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void CloneHybrid()
         {
-            var policy = new HybridBuildPolicy();
+            var policy = new HybridBuildPolicy(){InnerPolicy = new BuildPolicy()};
 
             var clone = (HybridBuildPolicy) policy.Clone();
             Assert.AreNotSame(policy, clone);

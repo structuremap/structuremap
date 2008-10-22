@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using NUnit.Framework;
+using StructureMap.Pipeline;
+using StructureMap.Testing.Graph;
 using StructureMap.Testing.TestData;
 using StructureMap.Testing.Widget;
 using IList=System.Collections.IList;
@@ -21,6 +23,29 @@ namespace StructureMap.Testing
         }
 
         #endregion
+
+
+        [Test]
+        public void Pass_in_arguments_as_dictionary()
+        {
+            ObjectFactory.Initialize(x =>
+            {
+                x.ForRequestedType<IView>().TheDefaultIsConcreteType<View>();
+            });
+
+            var theNode = new Node();
+            var theTrade = new Trade();
+
+            var args = new ExplicitArguments();
+            args.Set(theNode);
+            args.SetArg("trade", theTrade);
+
+            var command = ObjectFactory.GetInstance<Command>(args);
+
+            Assert.IsInstanceOfType(typeof(View), command.View);
+            Assert.AreSame(theNode, command.Node);
+            Assert.AreSame(theTrade, command.Trade);
+        }
 
         [Test]
         public void SmokeTestGetAllInstances()

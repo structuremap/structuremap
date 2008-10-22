@@ -110,6 +110,7 @@
       <Name>System.Data</Name>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Windows.Forms">
       <Name>System.Windows.Forms</Name>
@@ -322,6 +323,7 @@
     <Compile Include="Pipeline\ConfiguredInstanceTester.cs" />
     <Compile Include="Pipeline\ConstructorInstanceTester.cs" />
     <Compile Include="Pipeline\DefaultInstanceTester.cs" />
+    <Compile Include="Pipeline\HybridBuildPolicyTester.cs" />
     <Compile Include="Pipeline\InstanceTester.cs" />
     <Compile Include="Pipeline\LiteralInstanceTester.cs" />
     <Compile Include="Pipeline\OptionalSetterInjectionTester.cs" />

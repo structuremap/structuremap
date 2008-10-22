@@ -5,10 +5,10 @@ namespace StructureMap.Pipeline
 {
     public class ExplicitArguments
     {
-        private readonly Dictionary<string, object> _args;
-        private readonly Dictionary<Type, object> _children = new Dictionary<Type, object>();
+        private readonly IDictionary<string, object> _args;
+        private readonly IDictionary<Type, object> _children = new Dictionary<Type, object>();
 
-        public ExplicitArguments(Dictionary<string, object> args)
+        public ExplicitArguments(IDictionary<string, object> args)
         {
             _args = args;
         }

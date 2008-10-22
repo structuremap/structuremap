@@ -4,33 +4,35 @@ namespace StructureMap.Pipeline
 {
     public class HybridBuildPolicy : IBuildInterceptor
     {
-        private readonly IBuildInterceptor _innerInterceptor;
+        private IBuildPolicy _innerPolicy;
 
-
-        public HybridBuildPolicy()
+        private IBuildInterceptor interceptor
         {
-            _innerInterceptor = HttpContextBuildPolicy.HasContext()
-                                    ? (IBuildInterceptor) new HttpContextBuildPolicy()
-                                    : new ThreadLocalStoragePolicy();
+            get
+            {
+                return HttpContextBuildPolicy.HasContext()
+                                    ? (IBuildInterceptor)new HttpContextBuildPolicy(){InnerPolicy = _innerPolicy}
+                                    : new ThreadLocalStoragePolicy(){InnerPolicy = _innerPolicy};
+            }
         }
 
         #region IBuildInterceptor Members
 
         public IBuildPolicy InnerPolicy
         {
-            get { return _innerInterceptor.InnerPolicy; }
-            set { _innerInterceptor.InnerPolicy = value; }
+            get { return _innerPolicy; }
+            set { _innerPolicy = value; }
         }
 
         public object Build(BuildSession buildSession, Type pluginType, Instance instance)
         {
-            return _innerInterceptor.Build(buildSession, pluginType, instance);
+            return interceptor.Build(buildSession, pluginType, instance);
         }
 
         public IBuildPolicy Clone()
         {
             var policy = new HybridBuildPolicy();
-            policy.InnerPolicy = InnerPolicy.Clone();
+            policy.InnerPolicy = _innerPolicy.Clone();
 
             return policy;
         }

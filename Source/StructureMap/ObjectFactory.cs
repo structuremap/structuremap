@@ -366,5 +366,10 @@ namespace StructureMap
         }
 
         #endregion
+
+        public static T GetInstance<T>(ExplicitArguments args)
+        {
+            return container.GetInstance<T>(args);
+        }
     }
 }
