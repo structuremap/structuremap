@@ -350,7 +350,7 @@ namespace StructureMap
                 var registry = new ConfigurationExpression();
                 configure(registry);
 
-                PluginGraph graph = registry.Build();
+                PluginGraph graph = registry.BuildGraph();
 
                 graph.Log.AssertFailures();
 

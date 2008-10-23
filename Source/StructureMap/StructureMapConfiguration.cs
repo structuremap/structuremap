@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Xml;
 using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
@@ -16,7 +15,6 @@ namespace StructureMap
         )]
     public static class StructureMapConfiguration
     {
-        private const string CONFIG_FILE_NAME = "StructureMap.config";
         private static GraphLog _log;
         private static ConfigurationParserBuilder _parserBuilder;
         private static List<Registry> _registries;
@@ -93,24 +91,10 @@ namespace StructureMap
         /// Returns the path to the StructureMap.config file
         /// </summary>
         /// <returns></returns>
+        [Obsolete("Use ConfigurationParserBuilder.GetStructureMapConfigurationPath() instead.")]
         public static string GetStructureMapConfigurationPath()
         {
-            string basePath = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
-            string configPath = Path.Combine(basePath, CONFIG_FILE_NAME);
-
-            if (!File.Exists(configPath))
-            {
-                configPath = Path.Combine(basePath, "bin");
-                configPath = Path.Combine(configPath, CONFIG_FILE_NAME);
-
-                if (!File.Exists(configPath))
-                {
-                    configPath = Path.Combine(basePath, "..");
-                    configPath = Path.Combine(configPath, CONFIG_FILE_NAME);
-                }
-            }
-
-            return configPath;
+            return ConfigurationParserBuilder.GetStructureMapConfigurationPath();
         }
 
         /// <summary>

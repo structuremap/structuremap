@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
@@ -103,29 +104,30 @@ namespace StructureMap.Configuration
                     IList<XmlNode> appConfigNodes = StructureMapConfigurationSection.GetStructureMapConfiguration();
                     foreach (XmlNode appConfigNode in appConfigNodes)
                     {
-                        IncludeNode(appConfigNode, string.Empty);
+                        IncludeNode(appConfigNode, String.Empty);
                     }
                 }).AndLogAnyErrors();
             }
         }
 
-        private void addConfigurationFromExplicitlyAddedFiles(List<ConfigurationParser> list)
+        private void addConfigurationFromExplicitlyAddedFiles(ICollection<ConfigurationParser> list)
         {
             foreach (string filename in _otherFiles)
             {
+                var absolutePath = locateFileAsAbsolutePath(filename);
                 _log.Try(() =>
                 {
-                    ConfigurationParser parser = ConfigurationParser.FromFile(filename);
-                    parser.Description = filename;
+                    ConfigurationParser parser = ConfigurationParser.FromFile(absolutePath);
+                    parser.Description = absolutePath;
                     list.Add(parser);
-                }).AndReportErrorAs(160, filename);
+                }).AndReportErrorAs(160, absolutePath);
             }
         }
 
-        private void addConfigurationFromStructureMapConfig(List<ConfigurationParser> list)
+        private void addConfigurationFromStructureMapConfig(ICollection<ConfigurationParser> list)
         {
 // Pick up the configuration in the default StructureMap.config
-            string pathToStructureMapConfig = StructureMapConfiguration.GetStructureMapConfigurationPath();
+            string pathToStructureMapConfig = GetStructureMapConfigurationPath();
             if (shouldUseStructureMapConfigFileAt(pathToStructureMapConfig))
             {
                 _log.Try(() =>
@@ -147,10 +149,45 @@ namespace StructureMap.Configuration
         public static ConfigurationParser[] GetParsers(XmlNode node, GraphLog log)
         {
             var builder = new ConfigurationParserBuilder(log);
-            builder.IncludeNode(node, string.Empty);
+            builder.IncludeNode(node, String.Empty);
             builder.IgnoreDefaultFile = true;
 
             return builder.GetParsers();
+        }
+
+        /// <summary>
+        /// The name of the default configuration file. The value is always <c>StructurMap.config</c>
+        /// </summary>
+        public static readonly string DefaultConfigurationFilename = "StructureMap.config";
+
+        /// <summary>
+        /// Returns the absolute path to the StructureMap.config file
+        /// </summary>
+        /// <returns></returns>
+        public static string GetStructureMapConfigurationPath()
+        {
+            return locateFileAsAbsolutePath(DefaultConfigurationFilename);
+        }
+
+        private static string locateFileAsAbsolutePath(string filename)
+        {
+            if (Path.IsPathRooted(filename)) return filename;
+            var basePath = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+            var configPath = Path.Combine(basePath, filename);
+
+            if (!File.Exists(configPath))
+            {
+                configPath = Path.Combine(basePath, "bin");
+                configPath = Path.Combine(configPath, filename);
+
+                if (!File.Exists(configPath))
+                {
+                    configPath = Path.Combine(basePath, "..");
+                    configPath = Path.Combine(configPath, filename);
+                }
+            }
+
+            return configPath;
         }
     }
 }
