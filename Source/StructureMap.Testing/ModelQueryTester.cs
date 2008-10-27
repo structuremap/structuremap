@@ -14,6 +14,23 @@ namespace StructureMap.Testing
     {
         #region Setup/Teardown
 
+        public class MyDataSet : IServiceProvider
+        {
+            public object GetService(Type serviceType)
+            {
+                throw new System.NotImplementedException();
+            }
+        }
+
+        public class MyDataView : IServiceProvider
+        {
+            public object GetService(Type serviceType)
+            {
+                throw new System.NotImplementedException();
+            }
+        }
+
+
         [SetUp]
         public void SetUp()
         {
@@ -26,7 +43,7 @@ namespace StructureMap.Testing
                 .TheDefaultIsConcreteType<SomethingOne>()
                 .AddConcreteType<SomethingTwo>();
 
-            registry.BuildInstancesOf<IServiceProvider>().AddConcreteType<DataSet>().AddConcreteType<DataView>();
+            registry.BuildInstancesOf<IServiceProvider>().AddConcreteType<MyDataSet>().AddConcreteType<MyDataView>();
 
             PluginGraph graph = registry.Build();
             var pipeline = new PipelineGraph(graph);

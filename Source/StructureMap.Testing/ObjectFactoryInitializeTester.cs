@@ -26,6 +26,10 @@ namespace StructureMap.Testing
             ObjectFactory.Initialize(x =>
             {
                 x.UseDefaultStructureMapConfigFile = false;
+
+                // Tell StructureMap to look for configuration 
+                // from the App.config file
+                // The default is false
                 x.PullConfigurationFromAppConfig = true;
             });
 

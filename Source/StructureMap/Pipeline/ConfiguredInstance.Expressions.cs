@@ -12,6 +12,13 @@ namespace StructureMap.Pipeline
             return this;
         }
 
+        /// <summary>
+        /// Register an Action to perform on the object created by this Instance
+        /// before it is returned to the caller
+        /// </summary>
+        /// <typeparam name="TYPE"></typeparam>
+        /// <param name="handler"></param>
+        /// <returns></returns>
         public ConfiguredInstance OnCreation<TYPE>(Action<TYPE> handler)
         {
             var interceptor = new StartupInterceptor<TYPE>(handler);
@@ -20,6 +27,12 @@ namespace StructureMap.Pipeline
             return this;
         }
 
+        /// <summary>
+        /// Register a Func to potentially enrich or substitute for the object
+        /// created by this Instance before it is returned to the caller
+        /// </summary>
+        /// <param name="handler"></param>
+        /// <returns></returns>
         public ConfiguredInstance EnrichWith<TYPE>(EnrichmentHandler<TYPE> handler)
         {
             var interceptor = new EnrichmentInterceptor<TYPE>(handler);
@@ -28,7 +41,12 @@ namespace StructureMap.Pipeline
             return this;
         }
 
-
+        /// <summary>
+        /// Inline definition of a dependency array like IService[] or IHandler[]
+        /// </summary>
+        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <param name="propertyName"></param>
+        /// <returns></returns>
         public ChildArrayExpression ChildArray<PLUGINTYPE>(string propertyName)
         {
             validateTypeIsArray<PLUGINTYPE>();
@@ -39,11 +57,21 @@ namespace StructureMap.Pipeline
             return expression;
         }
 
+        /// <summary>
+        /// Inline definition of a dependency array like IService[] or IHandler[]
+        /// </summary>
+        /// <param name="propertyName"></param>
+        /// <returns></returns>
         public ChildArrayExpression ChildArray(string propertyName)
         {
             return new ChildArrayExpression(this, propertyName);
         }
 
+        /// <summary>
+        /// Inline definition of a dependency array like IService[] or IHandler[]
+        /// </summary>
+        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <returns></returns>
         public ChildArrayExpression ChildArray<PLUGINTYPE>()
         {
             validateTypeIsArray<PLUGINTYPE>();
@@ -67,6 +95,11 @@ namespace StructureMap.Pipeline
             return child;
         }
 
+        /// <summary>
+        /// Inline definition of a constructor or a setter property dependency
+        /// </summary>
+        /// <param name="propertyName"></param>
+        /// <returns></returns>
         public ChildInstanceExpression Child(string propertyName)
         {
             return new ChildInstanceExpression(this, propertyName);
@@ -89,11 +122,23 @@ namespace StructureMap.Pipeline
             return child;
         }
 
+        /// <summary>
+        /// Inline definition of a constructor dependency
+        /// </summary>
+        /// <typeparam name="CONSTRUCTORARGUMENTTYPE"></typeparam>
+        /// <param name="propertyName"></param>
+        /// <returns></returns>
         public ChildInstanceExpression CtorDependency<CONSTRUCTORARGUMENTTYPE>(string propertyName)
         {
             return Child(propertyName);
         }
 
+        /// <summary>
+        /// Inline definition of a setter dependency
+        /// </summary>
+        /// <typeparam name="CONSTRUCTORARGUMENTTYPE"></typeparam>
+        /// <param name="propertyName"></param>
+        /// <returns></returns>
         public ChildInstanceExpression SetterDependency<CONSTRUCTORARGUMENTTYPE>(string propertyName)
         {
             return Child(propertyName);
@@ -109,6 +154,11 @@ namespace StructureMap.Pipeline
             return new PropertyExpression<ConfiguredInstance>(this, propertyName);
         }
 
+        /// <summary>
+        /// Configure a primitive constructor argument
+        /// </summary>
+        /// <param name="propertyName"></param>
+        /// <returns></returns>
         public PropertyExpression<ConfiguredInstance> WithCtorArg(string propertyName)
         {
             return new PropertyExpression<ConfiguredInstance>(this, propertyName);
@@ -127,6 +177,11 @@ namespace StructureMap.Pipeline
                 _propertyName = propertyName;
             }
 
+            /// <summary>
+            /// Configures an array of Instance's for the array dependency
+            /// </summary>
+            /// <param name="instances"></param>
+            /// <returns></returns>
             public ConfiguredInstance Contains(params Instance[] instances)
             {
                 _instance.setChildArray(_propertyName, instances);
@@ -216,6 +271,11 @@ namespace StructureMap.Pipeline
                 return Is(instance);
             }
 
+            /// <summary>
+            /// Directs StructureMap to fill this dependency with the Default Instance of the 
+            /// constructor or property type
+            /// </summary>
+            /// <returns></returns>
             public ConfiguredInstance IsAutoFilled()
             {
                 var instance = new DefaultInstance();

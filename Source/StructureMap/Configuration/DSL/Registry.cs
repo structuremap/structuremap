@@ -7,35 +7,20 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.Configuration.DSL
 {
-    public interface IRegistry
-    {
-
-        CreatePluginFamilyExpression<PLUGINTYPE> BuildInstancesOf<PLUGINTYPE>();
-
-        GenericFamilyExpression ForRequestedType(Type pluginType);
-        Registry.BuildWithExpression<T> ForConcreteType<T>();
-
-
-        CreatePluginFamilyExpression<PLUGINTYPE> ForRequestedType<PLUGINTYPE>();
-
-        PluginGraph Build();
-        IsExpression<T> InstanceOf<T>();
-        GenericIsExpression InstanceOf(Type pluginType);
-
-
-        ProfileExpression CreateProfile(string profileName);
-
-        void CreateProfile(string profileName, Action<ProfileExpression> action);
-        void RegisterInterceptor(TypeInterceptor interceptor);
-        MatchedTypeInterceptor IfTypeMatches(Predicate<Type> match);
-
-
-        void Scan(Action<IAssemblyScanner> action);
-
-        CreatePluginFamilyExpression<PLUGINTYPE> FillAllPropertiesOfType<PLUGINTYPE>();
-    }
-
-    public class Registry : IRegistry
+    /// <summary>
+    /// A Registry class provides methods and grammars for configuring a Container or ObjectFactory.
+    /// Using a Registry subclass is the recommended way of configuring a StructureMap Container.
+    /// </summary>
+    /// <example>
+    /// public class MyRegistry : Registry
+    /// {
+    ///     public MyRegistry()
+    ///     {
+    ///         ForRequestedType(typeof(IService)).TheDefaultIsConcreteType(typeof(Service));
+    ///     }
+    /// }
+    /// </example>
+    public class Registry
     {
         private readonly List<Action<PluginGraph>> _actions = new List<Action<PluginGraph>>();
         private readonly List<Action> _basicActions = new List<Action>();
@@ -46,7 +31,8 @@ namespace StructureMap.Configuration.DSL
         }
 
         /// <summary>
-        /// Implement this method to 
+        /// You can overide this method as a place to put the Registry DSL
+        /// declarations.  This is not mandatory.
         /// </summary>
         protected virtual void configure()
         {
@@ -77,8 +63,9 @@ namespace StructureMap.Configuration.DSL
 
 
         /// <summary>
-        /// Direct StructureMap to build instances of type T, and look for concrete classes
-        /// marked with the [Pluggable] attribute that implement type T
+        /// Expression Builder used to define policies for a PluginType including
+        /// Scoping, the Default Instance, and interception.  BuildInstancesOf()
+        /// and ForRequestedType() are synonyms
         /// </summary>
         /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <returns></returns>
@@ -87,12 +74,26 @@ namespace StructureMap.Configuration.DSL
             return new CreatePluginFamilyExpression<PLUGINTYPE>(this);
         }
 
-
+        /// <summary>
+        /// Expression Builder used to define policies for a PluginType including
+        /// Scoping, the Default Instance, and interception.  This method is specifically
+        /// meant for registering open generic types
+        /// </summary>
+        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <returns></returns>
         public GenericFamilyExpression ForRequestedType(Type pluginType)
         {
             return new GenericFamilyExpression(pluginType, this);
         }
 
+        /// <summary>
+        /// This method is a shortcut for specifying the default constructor and 
+        /// setter arguments for a ConcreteType.  ForConcreteType is shorthand for:
+        /// ForRequestedType[T]().TheDefault.Is.OfConcreteType[T].**************
+        /// when the PluginType and ConcreteType are the same Type
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public BuildWithExpression<T> ForConcreteType<T>()
         {
             SmartInstance<T> instance = ForRequestedType<T>().TheDefault.Is.OfConcreteType<T>();
@@ -100,10 +101,9 @@ namespace StructureMap.Configuration.DSL
         }
 
         /// <summary>
-        /// Direct StructureMap to build instances of type T, and look for concrete classes
-        /// marked with the [Pluggable] attribute that implement type T.
-        /// 
-        /// This is the equivalent of calling BuildInstancesOf<T>()
+        /// Expression Builder used to define policies for a PluginType including
+        /// Scoping, the Default Instance, and interception.  BuildInstancesOf()
+        /// and ForRequestedType() are synonyms
         /// </summary>
         /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <returns></returns>
@@ -112,6 +112,12 @@ namespace StructureMap.Configuration.DSL
             return new CreatePluginFamilyExpression<PLUGINTYPE>(this);
         }
 
+        /// <summary>
+        /// Uses the configuration expressions of this Registry to create a PluginGraph
+        /// object that could be used to initialize a Container.  This method is 
+        /// mostly for internal usage, but might be helpful for diagnostics
+        /// </summary>
+        /// <returns></returns>
         public PluginGraph Build()
         {
             var graph = new PluginGraph();
@@ -121,6 +127,11 @@ namespace StructureMap.Configuration.DSL
             return graph;
         }
 
+        /// <summary>
+        /// Adds an additional, non-Default Instance to the PluginType T.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public IsExpression<T> InstanceOf<T>()
         {
             return new InstanceExpression<T>(instance =>
@@ -130,6 +141,12 @@ namespace StructureMap.Configuration.DSL
             });
         }
 
+        /// <summary>
+        /// Adds an additional, non-Default Instance to the designated pluginType
+        /// This method is mostly meant for open generic types
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <returns></returns>
         public GenericIsExpression InstanceOf(Type pluginType)
         {
             return
@@ -138,7 +155,8 @@ namespace StructureMap.Configuration.DSL
         }
 
         /// <summary>
-        /// Starts the definition of a new Profile
+        /// Expression Builder to define the defaults for a named Profile.  Each call
+        /// to CreateProfile is additive.
         /// </summary>
         /// <param name="profileName"></param>
         /// <returns></returns>
@@ -149,13 +167,20 @@ namespace StructureMap.Configuration.DSL
             return expression;
         }
 
+        /// <summary>
+        /// An alternative way to use CreateProfile that uses ProfileExpression
+        /// as a Nested Closure.  This usage will result in cleaner code for 
+        /// multiple declarations
+        /// </summary>
+        /// <param name="profileName"></param>
+        /// <param name="action"></param>
         public void CreateProfile(string profileName, Action<ProfileExpression> action)
         {
             var expression = new ProfileExpression(profileName, this);
             action(expression);
         }
 
-        public static bool IsPublicRegistry(Type type)
+        internal static bool IsPublicRegistry(Type type)
         {
             if (!typeof (Registry).IsAssignableFrom(type))
             {
@@ -170,11 +195,23 @@ namespace StructureMap.Configuration.DSL
             return (type.GetConstructor(new Type[0]) != null);
         }
 
+        /// <summary>
+        /// Registers a new TypeInterceptor object with the Container
+        /// </summary>
+        /// <param name="interceptor"></param>
         public void RegisterInterceptor(TypeInterceptor interceptor)
         {
             addExpression(pluginGraph => pluginGraph.InterceptorLibrary.AddInterceptor(interceptor));
         }
 
+        /// <summary>
+        /// Allows you to define a TypeInterceptor inline with Lambdas or anonymous delegates
+        /// </summary>
+        /// <param name="match"></param>
+        /// <returns></returns>
+        /// <example>
+        /// IfTypeMatches( ... ).InterceptWith( o => new ObjectWrapper(o) );
+        /// </example>
         public MatchedTypeInterceptor IfTypeMatches(Predicate<Type> match)
         {
             var interceptor = new MatchedTypeInterceptor(match);
@@ -220,6 +257,12 @@ namespace StructureMap.Configuration.DSL
             return 0;
         }
 
+        /// <summary>
+        /// Directs StructureMap to always inject dependencies into any and all public Setter properties
+        /// of the type PLUGINTYPE.
+        /// </summary>
+        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <returns></returns>
         public CreatePluginFamilyExpression<PLUGINTYPE> FillAllPropertiesOfType<PLUGINTYPE>()
         {
             PluginCache.AddFilledType(typeof (PLUGINTYPE));
@@ -228,6 +271,10 @@ namespace StructureMap.Configuration.DSL
 
         #region Nested type: BuildWithExpression
 
+        /// <summary>
+        /// Define the constructor and setter arguments for the default T
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
         public class BuildWithExpression<T>
         {
             private readonly SmartInstance<T> _instance;

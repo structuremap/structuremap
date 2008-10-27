@@ -55,24 +55,7 @@ namespace StructureMap.Testing.Configuration.DSL
             Assert.IsInstanceOfType(typeof(DefaultRule), manager.GetInstance<Rule>());
         }
 
-        [Test]
-        public void Add_default_instance_by_prototype()
-        {
-            string theProfileName = "something";
-            IWidget theTemplate = new AWidget();
 
-            IContainer manager = new Container(registry => registry.CreateProfile(theProfileName)
-                                                               .For<IWidget>().UsePrototypeOf(theTemplate));
-
-            manager.SetDefaultsToProfile(theProfileName);
-
-            var widget1 = manager.GetInstance<IWidget>();
-            var widget2 = manager.GetInstance<IWidget>();
-
-            Assert.IsNotNull(widget1);
-            Assert.IsNotNull(widget2);
-            Assert.AreNotSame(widget1, widget2);
-        }
 
         [Test]
         public void Add_default_instance_with_concrete_type()

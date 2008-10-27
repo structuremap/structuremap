@@ -8,7 +8,8 @@ using StructureMap.Pipeline;
 namespace StructureMap.Configuration.DSL.Expressions
 {
     /// <summary>
-    /// Represents the parameters for creating instances of a given Type
+    /// Expression Builder that has grammars for defining policies at the 
+    /// PluginType level
     /// </summary>
     public class CreatePluginFamilyExpression<PLUGINTYPE>
     {
@@ -29,11 +30,19 @@ namespace StructureMap.Configuration.DSL.Expressions
             });
         }
 
+        /// <summary>
+        /// Define the Default Instance for this PluginType
+        /// </summary>
         public IsExpression<PLUGINTYPE> TheDefault
         {
             get { return new InstanceExpression<PLUGINTYPE>(i => registerDefault(i)); }
         }
 
+        /// <summary>
+        /// Add multiple Instance's to this PluginType
+        /// </summary>
+        /// <param name="action"></param>
+        /// <returns></returns>
         public CreatePluginFamilyExpression<PLUGINTYPE> AddInstances(Action<IInstanceExpression<PLUGINTYPE>> action)
         {
             var list = new List<Instance>();
@@ -108,7 +117,12 @@ namespace StructureMap.Configuration.DSL.Expressions
             return this;
         }
 
-
+        /// <summary>
+        /// Register an Action to run against any object of this PluginType immediately after
+        /// it is created, but before the new object is passed back to the caller
+        /// </summary>
+        /// <param name="handler"></param>
+        /// <returns></returns>
         public CreatePluginFamilyExpression<PLUGINTYPE> OnCreation(Action<PLUGINTYPE> handler)
         {
             _children.Add(
@@ -127,6 +141,14 @@ namespace StructureMap.Configuration.DSL.Expressions
             return this;
         }
 
+        /// <summary>
+        /// Register a Func to run against any object of this PluginType immediately after it is created,
+        /// but before the new object is passed back to the caller.  Unlike <see cref="OnCreation">OnCreation()</see>,
+        /// EnrichWith() gives the the ability to return a different object.  Use this method for runtime AOP
+        /// scenarios or to return a decorator.
+        /// </summary>
+        /// <param name="handler"></param>
+        /// <returns></returns>
         public CreatePluginFamilyExpression<PLUGINTYPE> EnrichWith(EnrichmentHandler<PLUGINTYPE> handler)
         {
             _children.Add(
@@ -141,9 +163,20 @@ namespace StructureMap.Configuration.DSL.Expressions
             return this;
         }
 
-
+        /// <summary>
+        /// Shortcut method to add an additional Instance to this Plugin Type
+        /// as just a Concrete Type.  This will only work if the Concrete Type
+        /// has no primitive constructor or mandatory Setter arguments.
+        /// </summary>
+        /// <typeparam name="PLUGGEDTYPE"></typeparam>
+        /// <returns></returns>
         public CreatePluginFamilyExpression<PLUGINTYPE> AddConcreteType<PLUGGEDTYPE>()
         {
+            if (!PluginCache.GetPlugin(typeof(PLUGGEDTYPE)).CanBeAutoFilled)
+            {
+                throw new StructureMapException(231);
+            }
+
             _alterations.Add(family =>
             {
                 string name = PluginCache.GetPlugin(typeof (PLUGGEDTYPE)).ConcreteKey;
@@ -154,12 +187,24 @@ namespace StructureMap.Configuration.DSL.Expressions
             return this;
         }
 
+        /// <summary>
+        /// Registers an IBuildInterceptor for this Plugin Type that executes before
+        /// any object of this PluginType is created.  IBuildInterceptor's can be
+        /// used to create a custom scope
+        /// </summary>
+        /// <param name="interceptor"></param>
+        /// <returns></returns>
         public CreatePluginFamilyExpression<PLUGINTYPE> InterceptConstructionWith(IBuildInterceptor interceptor)
         {
             _alterations.Add(family => family.AddInterceptor(interceptor));
             return this;
         }
 
+        /// <summary>
+        /// Largely deprecated and unnecessary with the ability to add Xml configuration files
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
         public CreatePluginFamilyExpression<PLUGINTYPE> AddInstancesFrom(MementoSource source)
         {
             _alterations.Add(family => family.AddMementoSource(source));

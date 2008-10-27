@@ -21,7 +21,8 @@ namespace StructureMap.Configuration.DSL.Expressions
 
 
         /// <summary>
-        /// Starts the definition of the default instance for the containing Profile
+        /// Starts the definition of the default instance for the containing Profile.  This is
+        /// still valid, but Type() is recommended
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
@@ -30,6 +31,12 @@ namespace StructureMap.Configuration.DSL.Expressions
             return new InstanceDefaultExpression<T>(this);
         }
 
+        /// <summary>
+        /// Designate or define the Instance for a type within
+        /// this Profile
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public IsExpression<T> Type<T>()
         {
             return new InstanceExpression<T>(instance =>
@@ -53,6 +60,10 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         #region Nested type: GenericDefaultExpression
 
+        /// <summary>
+        /// Expression Builder inside of a Profile creation for
+        /// open generic types
+        /// </summary>
         public class GenericDefaultExpression
         {
             private readonly ProfileExpression _parent;
@@ -66,12 +77,22 @@ namespace StructureMap.Configuration.DSL.Expressions
                 _pluginType = pluginType;
             }
 
+            /// <summary>
+            /// Use this concreteType for the Instance of this Profile for the PluginType
+            /// </summary>
+            /// <param name="concreteType"></param>
+            /// <returns></returns>
             public ProfileExpression UseConcreteType(Type concreteType)
             {
                 var instance = new ConfiguredInstance(concreteType);
                 return Use(instance);
             }
 
+            /// <summary>
+            /// Use this Instance for the Profile Instance of this Plugin Type
+            /// </summary>
+            /// <param name="instance"></param>
+            /// <returns></returns>
             public ProfileExpression Use(Instance instance)
             {
                 _registry.addExpression(graph => graph.SetDefault(_parent._profileName, _pluginType, instance));
@@ -79,6 +100,12 @@ namespace StructureMap.Configuration.DSL.Expressions
                 return _parent;
             }
 
+
+            /// <summary>
+            /// Use the named Instance as the Profile Instance for this PluginType
+            /// </summary>
+            /// <param name="name"></param>
+            /// <returns></returns>
             public ProfileExpression UseNamedInstance(string name)
             {
                 var instance = new ReferencedInstance(name);
@@ -90,6 +117,11 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         #region Nested type: InstanceDefaultExpression
 
+
+        /// <summary>
+        /// Expression Builder within defining a Profile
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
         public class InstanceDefaultExpression<T>
         {
             private readonly ProfileExpression _parent;
@@ -130,29 +162,39 @@ namespace StructureMap.Configuration.DSL.Expressions
                 return _parent;
             }
 
+            /// <summary>
+            /// For this Profile, use an Instance with this Func
+            /// </summary>
+            /// <param name="func"></param>
+            /// <returns></returns>
             public ProfileExpression Use(Func<T> func)
             {
                 var instance = new ConstructorInstance<T>(func);
                 return Use(instance);
             }
 
+            /// <summary>
+            /// For this Profile, use this object
+            /// </summary>
+            /// <param name="t"></param>
+            /// <returns></returns>
             public ProfileExpression Use(T t)
             {
                 var instance = new LiteralInstance(t);
                 return Use(instance);
             }
 
+            /// <summary>
+            /// For this Profile, use the Concrete Type
+            /// </summary>
+            /// <typeparam name="CONCRETETYPE"></typeparam>
+            /// <returns></returns>
             public ProfileExpression UseConcreteType<CONCRETETYPE>()
             {
                 var instance = new ConfiguredInstance(typeof (CONCRETETYPE));
                 return Use(instance);
             }
 
-            public ProfileExpression UsePrototypeOf(T template)
-            {
-                var instance = new PrototypeInstance((ICloneable) template);
-                return Use(instance);
-            }
         }
 
         #endregion

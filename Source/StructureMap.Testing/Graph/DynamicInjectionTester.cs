@@ -75,7 +75,13 @@ namespace StructureMap.Testing.Graph
         public void Add_an_assembly_in_the_Configure()
         {
             var container = new Container();
-            container.Configure(registry => { registry.Scan(x => x.TheCallingAssembly()); });
+
+            container.Configure(registry =>
+            {
+                registry.Scan(x => x.TheCallingAssembly());
+            });
+
+
 
             container.GetInstance<IThingy>().ShouldBeOfType<TheThingy>();
         }

@@ -6,6 +6,11 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.Configuration.DSL.Expressions
 {
+    /// <summary>
+    /// Expression Builder that has grammars for defining policies at the 
+    /// PluginType level.  This expression is used for registering 
+    /// open generic types
+    /// </summary>
     public class GenericFamilyExpression
     {
         private readonly Type _pluginType;
@@ -28,6 +33,13 @@ namespace StructureMap.Configuration.DSL.Expressions
             return this;
         }
 
+        /// <summary>
+        /// Convenience method that sets the default concrete type of the PluginType.  The "concreteType"
+        /// can only accept types that do not have any primitive constructor arguments.
+        /// StructureMap has to know how to construct all of the constructor argument types.
+        /// </summary>
+        /// <param name="concreteType"></param>
+        /// <returns></returns>
         public ConfiguredInstance TheDefaultIsConcreteType(Type concreteType)
         {
             var instance = new ConfiguredInstance(concreteType);
@@ -39,7 +51,14 @@ namespace StructureMap.Configuration.DSL.Expressions
 
             return instance;
         }
-
+        
+        /// <summary>
+        /// Shortcut method to add an additional Instance to this Plugin Type
+        /// as just a Concrete Type.  This will only work if the Concrete Type
+        /// has no primitive constructor or mandatory Setter arguments.
+        /// </summary>
+        /// <param name="concreteType"></param>
+        /// <returns></returns>
         public ConfiguredInstance AddType(Type concreteType)
         {
             var instance = new ConfiguredInstance(concreteType);
@@ -55,11 +74,23 @@ namespace StructureMap.Configuration.DSL.Expressions
             return alterAndContinue(family => family.AddInstance(instance));
         }
 
+        /// <summary>
+        /// Sets the object creation of the instances of the PluginType.  For example:  PerRequest,
+        /// Singleton, ThreadLocal, HttpContext, or Hybrid
+        /// </summary>
+        /// <param name="scope"></param>
+        /// <returns></returns>
         public GenericFamilyExpression CacheBy(InstanceScope scope)
         {
             return alterAndContinue(family => family.SetScopeTo(scope));
         }
 
+        /// <summary>
+        /// Register an Action to run against any object of this PluginType immediately after
+        /// it is created, but before the new object is passed back to the caller
+        /// </summary>
+        /// <param name="action"></param>
+        /// <returns></returns>
         public GenericFamilyExpression OnCreation(Action<object> action)
         {
             Func<object, object> func = raw =>
@@ -70,6 +101,14 @@ namespace StructureMap.Configuration.DSL.Expressions
             return EnrichWith(func);
         }
 
+        /// <summary>
+        /// Register a Func to run against any object of this PluginType immediately after it is created,
+        /// but before the new object is passed back to the caller.  Unlike <see cref="OnCreation">OnCreation()</see>,
+        /// EnrichWith() gives the the ability to return a different object.  Use this method for runtime AOP
+        /// scenarios or to return a decorator.
+        /// </summary>
+        /// <param name="func"></param>
+        /// <returns></returns>
         public GenericFamilyExpression EnrichWith(Func<object, object> func)
         {
             _registry.addExpression(graph =>
@@ -81,17 +120,38 @@ namespace StructureMap.Configuration.DSL.Expressions
             return this;
         }
 
-
+        /// <summary>
+        /// Registers an IBuildInterceptor for this Plugin Type that executes before
+        /// any object of this PluginType is created.  IBuildInterceptor's can be
+        /// used to create a custom scope
+        /// </summary>
+        /// <param name="interceptor"></param>
+        /// <returns></returns>
         public GenericFamilyExpression InterceptConstructionWith(IBuildInterceptor interceptor)
         {
             return alterAndContinue(family => family.AddInterceptor(interceptor));
         }
 
+        /// <summary>
+        /// Shortcut method to add an additional Instance to this Plugin Type
+        /// as just a Concrete Type.  You can also chain other declarations after
+        /// this method to add constructor and setter arguments
+        /// </summary>
+        /// <param name="concreteType"></param>
+        /// <returns></returns>
         public GenericFamilyExpression AddConcreteType(Type concreteType)
         {
             return add(new ConfiguredInstance(concreteType));
         }
 
+        /// <summary>
+        /// Shortcut method to add an additional Instance to this Plugin Type
+        /// as just a Concrete Type by a specified name.  You can also chain other declarations after
+        /// this method to add constructor and setter arguments
+        /// </summary>
+        /// <param name="concreteType"></param>
+        /// <param name="instanceName"></param>
+        /// <returns></returns>
         public GenericFamilyExpression AddConcreteType(Type concreteType, string instanceName)
         {
             return add(new ConfiguredInstance(concreteType).WithName(instanceName));

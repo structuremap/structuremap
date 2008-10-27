@@ -3,11 +3,23 @@ using StructureMap.Graph;
 
 namespace StructureMap.Interceptors
 {
+    /// <summary>
+    /// A TypeInterceptor that is only applied if the MatchesType()
+    /// method is true for a given Type
+    /// </summary>
     public interface TypeInterceptor : InstanceInterceptor
     {
+        /// <summary>
+        /// Does this TypeInterceptor apply to the given type?
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
         bool MatchesType(Type type);
     }
 
+    /// <summary>
+    /// A TypeInterceptor that always applies to all Instances of a given Plugin Type
+    /// </summary>
     public class PluginTypeInterceptor : TypeInterceptor
     {
         private readonly Func<object, object> _function;

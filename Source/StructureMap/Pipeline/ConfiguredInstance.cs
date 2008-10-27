@@ -3,6 +3,11 @@ using StructureMap.Graph;
 
 namespace StructureMap.Pipeline
 {
+    /// <summary>
+    /// An Instance class that builds objects by calling a constructor function on a concrete type
+    /// and filling setter properties.  ConfiguredInstance should only be used for open generic types.
+    /// Favor <see cref="SmartInstance{T}">SmartInstance{T}</see> for all other usages.
+    /// </summary>
     public partial class ConfiguredInstance : ConfiguredInstanceBase<ConfiguredInstance>
     {
         public ConfiguredInstance(InstanceMemento memento, PluginGraph graph, Type pluginType)

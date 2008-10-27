@@ -7,6 +7,10 @@ using System.Linq;
 
 namespace StructureMap.AutoMocking
 {
+    /// <summary>
+    /// The Auto Mocking Container for StructureMap
+    /// </summary>
+    /// <typeparam name="TARGETCLASS"></typeparam>
     public class AutoMocker<TARGETCLASS> where TARGETCLASS : class
     {
         protected AutoMockedContainer _container;
