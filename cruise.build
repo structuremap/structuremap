@@ -121,17 +121,27 @@
 	
 	
 	<target name="post-clean">
-	    <call target="cleanJunk" />
+	    
+      <delete dir="deploy" failonerror="false" />
+      <mkdir dir="deploy" />
 
-	    <delete>
-			<fileset basedir="${build.dir}">
-				<include name="*.xml" />
-				<include name="*.config" />
-        <exclude name="structuremap.xml" />
-			</fileset>
-	    </delete>
+      <copy todir="deploy" flatten="true" overwrite="true">
+        <fileset basedir="source\StructureMap.Testing\bin\${project.config}">
+          <include name="StructureMap.dll" />
+          <include name="StructureMap.xml" />
+          <include name="StructureMap.AutoMocking.dll" />
+          <include name="StructureMap.AutoMocking.xml" />
+        </fileset>
+      </copy>
 
+      <copy todir="deploy" file="bin\Rhino.Mocks.dll"/>
+      <copy todir="deploy" file="StructureMap.chm"/>
+    
+      <copy todir="deploy" file="Source\StructureMapDoctor\bin\${project.config}\StructureMapDoctor.exe" />
+
+      <call target="cleanJunk" />
 	</target>
+  
 	
 	<target name="archive">
 		<if test="${property::exists('CCNetLabel')}">	      
