@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
@@ -29,6 +30,7 @@ namespace StructureMap.Testing
                 throw new System.NotImplementedException();
             }
         }
+
 
 
         [SetUp]

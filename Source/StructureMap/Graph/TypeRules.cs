@@ -22,12 +22,23 @@ namespace StructureMap.Graph
                 return false;
             }
 
-            if (GenericsPluginGraph.CanBeCast(pluginType, pluggedType))
+            if (IsGeneric(pluginType))
             {
-                return true;
+                return GenericsPluginGraph.CanBeCast(pluginType, pluggedType);
             }
 
+            if (IsGeneric(pluggedType))
+            {
+                return false;
+            }
+
+
             return pluginType.IsAssignableFrom(pluggedType);
+        }
+
+        public static bool IsGeneric(Type pluggedType)
+        {
+            return pluggedType.IsGenericTypeDefinition || pluggedType.ContainsGenericParameters;
         }
 
         /// <summary>

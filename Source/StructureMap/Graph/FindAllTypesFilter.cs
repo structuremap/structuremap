@@ -15,6 +15,8 @@ namespace StructureMap.Graph
 
         public void Process(Type type, PluginGraph graph)
         {
+
+
             if (CanBeCast(_pluginType, type))
             {
                 graph.AddType(_pluginType, type);
