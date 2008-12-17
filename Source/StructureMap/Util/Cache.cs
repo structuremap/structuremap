@@ -15,6 +15,7 @@ namespace StructureMap.Util
         private readonly Dictionary<KEY, VALUE> _values = new Dictionary<KEY, VALUE>();
 
         private Func<VALUE, KEY> _getKey = delegate { throw new NotImplementedException(); };
+        private readonly object _valuesLock = new object();
 
         public Cache()
         {
@@ -70,14 +71,7 @@ namespace StructureMap.Util
 
         public void Store(KEY key, VALUE value)
         {
-            if (_values.ContainsKey(key))
-            {
-                _values[key] = value;
-            }
-            else
-            {
-                _values.Add(key, value);
-            }
+            _values[key] = value;
         }
 
         public void Fill(KEY key, VALUE value)
@@ -94,8 +88,15 @@ namespace StructureMap.Util
         {
             if (!_values.ContainsKey(key))
             {
-                VALUE value = _onMissing(key);
-                _values.Add(key, value);
+                lock (_valuesLock)
+                {
+                    if (!_values.ContainsKey(key))
+                    {
+                        // Potential deadlock if _onMissing attempts to retrieve the same key
+                        VALUE value = _onMissing(key);
+                        _values.Add(key, value);
+                    }
+                }
             }
 
             return _values[key];
@@ -154,10 +155,7 @@ namespace StructureMap.Util
 
         public void Remove(KEY key)
         {
-            if (_values.ContainsKey(key))
-            {
-                _values.Remove(key);
-            }
+            _values.Remove(key);
         }
     }
 }
