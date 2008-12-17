@@ -371,5 +371,51 @@ namespace StructureMap
         {
             return container.GetInstance<T>(args);
         }
+
+        /// <summary>
+        /// Creates or finds the named instance of the pluginType. Returns null if the named instance is not known to the container.
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="instanceKey"></param>
+        /// <param name="instance"></param>
+        /// <returns></returns>
+        public object TryGetInstance(Type pluginType, string instanceKey)
+        {
+            return container.TryGetInstance(pluginType, instanceKey);
+        }
+
+        /// <summary>
+        /// Creates or finds the default instance of the pluginType. Returns null if the pluginType is not known to the container.
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="instance"></param>
+        /// <returns></returns>
+        public object TryGetInstance(Type pluginType)
+        {
+            return container.TryGetInstance(pluginType);
+        }
+
+        /// <summary>
+        /// Creates or finds the default instance of type T. Returns the default value of T if it is not known to the container.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="instance"></param>
+        /// <returns></returns>
+        public T TryGetInstance<T>()
+        {
+            return container.TryGetInstance<T>();
+        }
+
+        /// <summary>
+        /// Creates or finds the named instance of type T. Returns the default value of T if the named instance is not known to the container.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="instance"></param>
+        /// <returns></returns>
+        public T TryGetInstance<T>(string instanceKey)
+        {
+            return container.TryGetInstance<T>(instanceKey);
+        }
+
     }
 }
