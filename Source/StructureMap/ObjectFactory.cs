@@ -13,7 +13,7 @@ namespace StructureMap
     /// The main static Facade for the StructureMap container
     /// </summary>
     [EnvironmentPermission(SecurityAction.Assert, Read = "COMPUTERNAME")]
-    public class ObjectFactory
+    public static class ObjectFactory
     {
         private static readonly object _lockObject = new object();
         private static Container _container;
@@ -379,7 +379,7 @@ namespace StructureMap
         /// <param name="instanceKey"></param>
         /// <param name="instance"></param>
         /// <returns></returns>
-        public object TryGetInstance(Type pluginType, string instanceKey)
+        public static object TryGetInstance(Type pluginType, string instanceKey)
         {
             return container.TryGetInstance(pluginType, instanceKey);
         }
@@ -390,7 +390,7 @@ namespace StructureMap
         /// <param name="pluginType"></param>
         /// <param name="instance"></param>
         /// <returns></returns>
-        public object TryGetInstance(Type pluginType)
+        public static object TryGetInstance(Type pluginType)
         {
             return container.TryGetInstance(pluginType);
         }
@@ -401,7 +401,7 @@ namespace StructureMap
         /// <typeparam name="T"></typeparam>
         /// <param name="instance"></param>
         /// <returns></returns>
-        public T TryGetInstance<T>()
+        public static T TryGetInstance<T>()
         {
             return container.TryGetInstance<T>();
         }
@@ -412,7 +412,7 @@ namespace StructureMap
         /// <typeparam name="T"></typeparam>
         /// <param name="instance"></param>
         /// <returns></returns>
-        public T TryGetInstance<T>(string instanceKey)
+        public static T TryGetInstance<T>(string instanceKey)
         {
             return container.TryGetInstance<T>(instanceKey);
         }

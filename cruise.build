@@ -48,11 +48,12 @@
             <attributes>
                 <attribute type="ComVisibleAttribute" value="false" />
                 <attribute type="AssemblyVersionAttribute" value="${assembly-version}" />
-                <attribute type="AssemblyCopyrightAttribute" value="Copyright (c) 2007, Jeremy D. Miller" />
+                <attribute type="AssemblyCopyrightAttribute" value="Copyright (c) 2003-2008, Jeremy D. Miller" />
                 <attribute type="AssemblyProductAttribute" value="StructureMap" />         
 				        <attribute type="AssemblyCompanyAttribute" value="" />
 				        <attribute type="AssemblyConfigurationAttribute" value="${project.config}" />
 				        <attribute type="AssemblyInformationalVersionAttribute" value="${assembly-version}" />
+                <attribute type="AssemblyFileVersionAttribute" value="${assembly-version}" />
             </attributes>
             <references>
                 <include name="System.dll" />
@@ -100,9 +101,12 @@
     <exec program="${nunit-console.exe}" workingdir="${build.dir}">
       <arg value="StructureMap.Testing.dll" /> 
     </exec>
+    <exec program="${nunit-console.exe}" workingdir="${build.dir}">
+      <arg value="StructureMap.DebuggerVisualizers.Testing.exe" />
+    </exec>
 
-   
-	</target>
+
+  </target>
 	
 	<target name="runDoctor">
 		<echo message="Running StructureMapDoctor" />
