@@ -9,7 +9,7 @@ namespace StructureMap.AutoMocking
     public enum MockMode { RecordAndReplay, AAA }
 
     /// <summary>
-    /// Provides an "Auto Mocking Container" for the concrete class TARGETCLASS
+    /// Provides an "Auto Mocking Container" for the concrete class TARGETCLASS using Rhino.Mocks
     /// </summary>
     /// <typeparam name="TARGETCLASS">The concrete class being tested</typeparam>
     public class RhinoAutoMocker<TARGETCLASS> : AutoMocker<TARGETCLASS> where TARGETCLASS : class
