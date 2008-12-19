@@ -1,5 +1,4 @@
 using System;
-using Rhino.Mocks;
 
 namespace StructureMap.AutoMocking
 {
@@ -12,20 +11,11 @@ namespace StructureMap.AutoMocking
 
     public class RhinoMocksClassicServiceLocator : ServiceLocator
     {
-        private readonly MockRepository _mocks;
-
-        public RhinoMocksClassicServiceLocator(MockRepository repository)
-        {
-            _mocks = repository;
-        }
-
-        public RhinoMocksClassicServiceLocator() : this(new MockRepository())
-        {
-        }
+        private readonly RhinoMockRepositoryProxy _mocks = new RhinoMockRepositoryProxy();
 
         public T Service<T>() where T : class
         {
-            return _mocks.DynamicMock<T>();
+            return (T)_mocks.DynamicMock(typeof(T));
         }
 
         public object Service(Type serviceType)
@@ -35,31 +25,33 @@ namespace StructureMap.AutoMocking
 
         public T PartialMock<T>(params object[] args) where T : class
         {
-            return _mocks.PartialMock<T>(args);
+            return (T)_mocks.PartialMock(typeof(T), args);
         }
     }
 
     public class RhinoMocksAAAServiceLocator : ServiceLocator
     {
+        private readonly RhinoMockRepositoryProxy _mocks = new RhinoMockRepositoryProxy();
+
         public T Service<T>() where T : class
         {
-            return MockRepository.GenerateMock<T>();
+            var instance = (T)_mocks.DynamicMock(typeof (T));
+            _mocks.Replay(instance);
+            return instance;
         }
 
         public object Service(Type serviceType)
         {
-            var mock = new MockRepository().DynamicMock(serviceType);
-            mock.Replay();
-
-            return mock;
+            var instance = _mocks.DynamicMock(serviceType);
+            _mocks.Replay(instance);
+            return instance;
         }
 
         public T PartialMock<T>(params object[] args) where T : class
         {
-            T mock = new MockRepository().PartialMock<T>(args);
-            mock.Replay();
-
-            return mock;
+            var instance = (T)_mocks.PartialMock(typeof(T), args);
+            _mocks.Replay(instance);
+            return instance;
         }
     }
 }

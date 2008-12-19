@@ -170,6 +170,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AutoMocking\RhinoAutoMockerTester.cs" />
+    <Compile Include="AutoMocking\RhinoMockRepositoryProxyTester.cs" />
     <Compile Include="BuildSessionTester.cs" />
     <Compile Include="Configuration\ConfigurationParserBuilderTester.cs" />
     <Compile Include="Configuration\ConfigurationParserTester.cs" />
