@@ -109,7 +109,9 @@ namespace StructureMap
         {
             Instance defaultInstance = _pipelineGraph.GetDefault(pluginType);
 
-            Instance instance = new ExplicitInstance(pluginType, args, defaultInstance);
+            BasicInstance basicInstance = defaultInstance as BasicInstance;
+
+            Instance instance = basicInstance == null ? defaultInstance : new ExplicitInstance(pluginType, args, basicInstance);
             BuildSession session = withNewSession();
 
             args.RegisterDefaults(session);

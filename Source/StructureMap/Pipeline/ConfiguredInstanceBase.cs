@@ -4,7 +4,7 @@ using StructureMap.Graph;
 
 namespace StructureMap.Pipeline
 {
-    public interface Copyable
+    public interface BasicInstance
     {
         Type PluggedType { get; }
         Dictionary<string, string> Properties { get; }
@@ -13,7 +13,7 @@ namespace StructureMap.Pipeline
     }
 
 
-    public abstract class ConfiguredInstanceBase<T> : Instance, IConfiguredInstance, IStructuredInstance, Copyable
+    public abstract class ConfiguredInstanceBase<T> : Instance, IConfiguredInstance, IStructuredInstance, BasicInstance
     {
         protected Dictionary<string, Instance[]> _arrays = new Dictionary<string, Instance[]>();
         protected Dictionary<string, Instance> _children = new Dictionary<string, Instance>();
@@ -42,22 +42,22 @@ namespace StructureMap.Pipeline
 
         #region Copyable Members
 
-        Type Copyable.PluggedType
+        Type BasicInstance.PluggedType
         {
             get { return _pluggedType; }
         }
 
-        Dictionary<string, string> Copyable.Properties
+        Dictionary<string, string> BasicInstance.Properties
         {
             get { return _properties; }
         }
 
-        Dictionary<string, Instance> Copyable.Children
+        Dictionary<string, Instance> BasicInstance.Children
         {
             get { return _children; }
         }
 
-        Dictionary<string, Instance[]> Copyable.Arrays
+        Dictionary<string, Instance[]> BasicInstance.Arrays
         {
             get { return _arrays; }
         }
@@ -241,7 +241,7 @@ namespace StructureMap.Pipeline
             _properties[propertyName] = propertyValue;
         }
 
-        protected void mergeIntoThis(Copyable instance)
+        protected void mergeIntoThis(BasicInstance instance)
         {
             _pluggedType = instance.PluggedType;
 

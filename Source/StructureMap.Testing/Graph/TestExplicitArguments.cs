@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using NUnit.Framework;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Pipeline;
@@ -96,13 +98,58 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
+        public void use_a_type_that_is_not_part_of_the_constructor_in_the_with()
+        {
+            var container = new Container();
+            container.With(new Address()).GetInstance<ClassWithNoArgs>()
+                .ShouldBeOfType<ClassWithNoArgs>();
+        }
+
+        [Test]
+        public void use_explicit_type_arguments_with_custom_instance()
+        {
+            var container = new Container(x =>
+            {
+                x.ForRequestedType<ClassWithNoArgs>().TheDefault.IsThis(new SpecialInstance());
+            });
+
+            Debug.WriteLine(container.WhatDoIHave());
+
+            var address = new Address();
+
+
+            container.With(address).GetInstance<ClassWithNoArgs>()
+                .TheAddress.ShouldBeTheSameAs(address);
+
+        }
+
+        public class ClassWithNoArgs
+        {
+            public Address TheAddress { get; set;}
+        }
+        public class Address{}
+
+        public class SpecialInstance : Instance
+        {
+            protected override string getDescription()
+            {
+                return string.Empty;
+            }
+
+            protected override object build(Type pluginType, BuildSession session)
+            {
+                return new ClassWithNoArgs() {TheAddress = (Address)session.CreateInstance(typeof (Address))};
+            }
+        }
+
+        [Test]
         public void ExplicitArguments_can_return_child_by_name()
         {
             var args = new ExplicitArguments();
             var theNode = new Node();
             args.SetArg("node", theNode);
 
-            IConfiguredInstance instance = new ExplicitInstance(typeof (Command), args, null);
+            IConfiguredInstance instance = new ExplicitInstance(typeof (Command), args, new SmartInstance<Command>());
 
             Assert.AreSame(theNode, instance.GetChild("node", typeof (Node), new StubBuildSession()));
         }

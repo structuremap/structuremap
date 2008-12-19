@@ -76,20 +76,11 @@ namespace StructureMap.Pipeline
     {
         private readonly ExplicitArguments _args;
 
-        public ExplicitInstance(Type pluginType, ExplicitArguments args, Instance defaultInstance) : base(null)
+        public ExplicitInstance(Type pluginType, ExplicitArguments args, BasicInstance defaultInstance) : base(null)
         {
             args.Configure(this);
             _args = args;
-
-            var defaultConfiguration = defaultInstance as Copyable;
-            if (defaultConfiguration != null)
-            {
-                mergeIntoThis(defaultConfiguration);
-            }
-            else
-            {
-                setPluggedType(pluginType);
-            }
+            mergeIntoThis(defaultInstance);
         }
 
 
