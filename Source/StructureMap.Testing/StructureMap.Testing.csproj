@@ -180,6 +180,7 @@
     <Compile Include="AutoMocking\RhinoMockRepositoryProxyTester.cs" />
     <Compile Include="Bugs\IDictionaryAndXmlBugTester.cs" />
     <Compile Include="Bugs\ScanIndexerBugTester.cs" />
+    <Compile Include="Bugs\SpecifyScopeInConfigureTester.cs" />
     <Compile Include="BuildSessionTester.cs" />
     <Compile Include="Configuration\ConfigurationParserBuilderTester.cs" />
     <Compile Include="Configuration\ConfigurationParserTester.cs" />

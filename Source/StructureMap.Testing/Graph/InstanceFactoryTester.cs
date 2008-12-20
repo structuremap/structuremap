@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using StructureMap.Attributes;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
@@ -72,6 +73,39 @@ namespace StructureMap.Testing.Graph
             Assert.IsNotNull(factory.FindInstance("New2"));
             Assert.IsNotNull(factory.FindInstance("New3"));
         }
+
+        [Test]
+        public void import_from_another_family_will_override_the_build_policy_if_the_initial_policy_is_the_default()
+        {
+            var factory = new InstanceFactory(typeof(IWidget));
+
+            var family = new PluginFamily(typeof(IWidget));
+            family.SetScopeTo(InstanceScope.Singleton);
+
+            factory.ImportFrom(family);
+
+            factory.Policy.ShouldBeOfType<SingletonPolicy>();
+        }
+
+        [Test]
+        public void do_not_replace_the_build_policy_if_it_is_the_same_type_as_the_imported_family()
+        {
+            PluginFamily originalFamily = new PluginFamily(typeof(IWidget));
+            originalFamily.SetScopeTo(InstanceScope.Singleton);
+            var factory = new InstanceFactory(originalFamily);
+
+            var originalPolicy = factory.Policy;
+
+
+            var family = new PluginFamily(typeof(IWidget));
+            family.SetScopeTo(InstanceScope.Singleton);
+
+            factory.ImportFrom(family);
+
+            factory.Policy.ShouldBeTheSameAs(originalPolicy);
+        }
+
+
 
         [Test]
         public void Merge_from_PluginFamily_will_not_replace_an_existing_instance()

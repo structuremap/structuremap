@@ -16,7 +16,7 @@ namespace StructureMap
             new Cache<string, Instance>(delegate { return null; });
 
         private readonly Type _pluginType;
-        private readonly IBuildPolicy _policy = new BuildPolicy();
+        private IBuildPolicy _policy = new BuildPolicy();
 
         #region constructor functions
 
@@ -136,6 +136,12 @@ namespace StructureMap
 
         public void ImportFrom(PluginFamily family)
         {
+            if (!_policy.GetType().Equals(family.Policy.GetType()))
+            {
+                // TODO:  Might need to clear out the existing policy when it's ejected
+                _policy = family.Policy;
+            }
+
             family.EachInstance(instance => _instances.Fill(instance.Name, instance));
         }
 

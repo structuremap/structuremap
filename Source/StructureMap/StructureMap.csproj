@@ -418,6 +418,7 @@
     <Compile Include="Pipeline\PropertyExpression.cs" />
     <Compile Include="Pipeline\SerializedInstance.cs" />
     <Compile Include="Pipeline\SmartInstance.cs" />
+    <Compile Include="PluginTypeConfiguration.cs" />
     <Compile Include="ReflectionHelper.cs" />
     <Compile Include="Util\Cache.cs" />
   </ItemGroup>
