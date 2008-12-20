@@ -167,7 +167,6 @@
     <Compile Include="Pipeline\ConfiguredInstance.Expressions.cs" />
     <Compile Include="Pipeline\ConstructorInstance.cs" />
     <Compile Include="Pipeline\DefaultInstance.cs" />
-    <Compile Include="Pipeline\HttpContextBuildPolicy.cs" />
     <Compile Include="Pipeline\HybridBuildPolicy.cs" />
     <Compile Include="Pipeline\IBuildInterceptor.cs" />
     <Compile Include="Pipeline\IBuildPolicy.cs" />
@@ -412,6 +411,8 @@
     <Compile Include="Pipeline\BuildFrame.cs" />
     <Compile Include="Pipeline\BuildStack.cs" />
     <Compile Include="Pipeline\ConfiguredInstanceBase.cs" />
+    <Compile Include="Pipeline\HttpContextBuildStorage.cs" />
+    <Compile Include="Pipeline\InstanceKey.cs" />
     <Compile Include="Pipeline\IStructuredInstance.cs" />
     <Compile Include="Pipeline\PropertyExpression.cs" />
     <Compile Include="Pipeline\SerializedInstance.cs" />

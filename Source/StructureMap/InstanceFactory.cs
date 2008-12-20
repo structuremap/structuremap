@@ -96,7 +96,7 @@ namespace StructureMap
 
         public void AddInstance(Instance instance)
         {
-            _instances.Store(instance.Name, instance);
+            _instances[instance.Name] = instance;
         }
 
 
@@ -131,7 +131,7 @@ namespace StructureMap
 
         public Instance FindInstance(string name)
         {
-            return _instances.Retrieve(name);
+            return _instances[name];
         }
 
         public void ImportFrom(PluginFamily family)

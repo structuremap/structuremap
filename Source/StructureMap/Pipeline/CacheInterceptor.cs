@@ -1,7 +1,15 @@
 using System;
+using StructureMap.Util;
 
 namespace StructureMap.Pipeline
 {
+    public class InstanceCache : Cache<InstanceKey, object>
+    {
+        public InstanceCache(IBuildPolicy innerPolicy) : base(key => innerPolicy.Build(key.Session, key.PluginType, key.Instance))
+        {
+        }
+    }
+
     public abstract class CacheInterceptor : IBuildInterceptor
     {
         private readonly object _locker = new object();
@@ -15,22 +23,17 @@ namespace StructureMap.Pipeline
             set { _innerPolicy = value; }
         }
 
+        protected InstanceCache buildNewCache()
+        {
+            return new InstanceCache(_innerPolicy);
+        }
+
+        protected abstract InstanceCache findCache();
 
         public object Build(BuildSession buildSession, Type pluginType, Instance instance)
         {
-            if (!isCached(instance.Name, pluginType))
-            {
-                lock (_locker)
-                {
-                    if (!isCached(instance.Name, pluginType))
-                    {
-                        object returnValue = _innerPolicy.Build(buildSession, pluginType, instance);
-                        storeInCache(instance.Name, pluginType, returnValue);
-                    }
-                }
-            }
-
-            return retrieveFromCache(instance.Name, pluginType);
+            var key = new InstanceKey{Instance = instance, PluginType = pluginType, Session = buildSession};
+            return findCache()[key];
         }
 
         public IBuildPolicy Clone()
@@ -44,10 +47,6 @@ namespace StructureMap.Pipeline
         #endregion
 
         protected abstract CacheInterceptor clone();
-
-        protected abstract void storeInCache(string instanceKey, Type pluginType, object instance);
-        protected abstract bool isCached(string instanceKey, Type pluginType);
-        protected abstract object retrieveFromCache(string instanceKey, Type pluginType);
 
         public override string ToString()
         {

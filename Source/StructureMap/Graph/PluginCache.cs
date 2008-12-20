@@ -17,7 +17,7 @@ namespace StructureMap.Graph
             _plugins = new Cache<Type, Plugin>(t => new Plugin(t));
             _builders = new Cache<Type, InstanceBuilder>(t =>
             {
-                Plugin plugin = _plugins.Retrieve(t);
+                Plugin plugin = _plugins[t];
                 plugin.SetFilledTypes(_filledTypes);
                 return new InstanceBuilderAssembly(new[] {plugin}).Compile()[0];
             });
@@ -25,12 +25,12 @@ namespace StructureMap.Graph
 
         public static Plugin GetPlugin(Type pluggedType)
         {
-            return _plugins.Retrieve(pluggedType);
+            return _plugins[pluggedType];
         }
 
         public static InstanceBuilder FindBuilder(Type pluggedType)
         {
-            return _builders.Retrieve(pluggedType);
+            return _builders[pluggedType];
         }
 
         public static void Compile()
@@ -51,7 +51,7 @@ namespace StructureMap.Graph
             }
 
             var assembly = new InstanceBuilderAssembly(plugins);
-            assembly.Compile().ForEach(b => _builders.Store(b.PluggedType, b));
+            assembly.Compile().ForEach(b => _builders[b.PluggedType] = b);
         }
 
         private static bool pluginHasNoBuilder(Plugin plugin)
@@ -61,7 +61,7 @@ namespace StructureMap.Graph
 
         public static void Store(Type pluggedType, InstanceBuilder builder)
         {
-            _builders.Store(pluggedType, builder);
+            _builders[pluggedType] = builder;
         }
 
         internal static void ResetAll()

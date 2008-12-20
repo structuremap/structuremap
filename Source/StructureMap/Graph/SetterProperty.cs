@@ -41,6 +41,9 @@ namespace StructureMap.Graph
         {
             Type propertyType = _property.PropertyType;
 
+            // Ignore indexer properties
+            if (_property.GetIndexParameters().Length > 0) return;
+
             if (IsPrimitive(propertyType)) visitor.PrimitiveSetter(_property, IsMandatory);
             if (IsChild(propertyType)) visitor.ChildSetter(_property, IsMandatory);
             if (IsChildArray(propertyType)) visitor.ChildArraySetter(_property, IsMandatory);

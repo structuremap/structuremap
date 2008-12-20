@@ -1,26 +1,25 @@
-using System;
-using System.Collections.Generic;
-
 namespace StructureMap.Pipeline
 {
     [Pluggable("Singleton")]
     public class SingletonPolicy : CacheInterceptor
     {
-        private readonly Dictionary<string, object> _instances = new Dictionary<string, object>();
+        private readonly object _locker = new object();
+        private InstanceCache _cache;
 
-        protected override void storeInCache(string instanceKey, Type pluginType, object instance)
+        protected override InstanceCache findCache()
         {
-            _instances.Add(instanceKey, instance);
-        }
+            if (_cache == null)
+            {
+                lock (_locker)
+                {
+                    if (_cache == null)
+                    {
+                        _cache = buildNewCache();
+                    }
+                }
+            }
 
-        protected override bool isCached(string instanceKey, Type pluginType)
-        {
-            return _instances.ContainsKey(instanceKey);
-        }
-
-        protected override object retrieveFromCache(string instanceKey, Type pluginType)
-        {
-            return _instances[instanceKey];
+            return _cache;
         }
 
         protected override CacheInterceptor clone()

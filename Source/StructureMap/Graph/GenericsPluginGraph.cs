@@ -81,7 +81,7 @@ namespace StructureMap.Graph
 
         public void AddFamily(PluginFamily family)
         {
-            _families.Store(family.PluginType, family);
+            _families[family.PluginType] = family;
         }
 
 
@@ -91,7 +91,7 @@ namespace StructureMap.Graph
 
             if (_families.Has(basicType))
             {
-                PluginFamily basicFamily = _families.Retrieve(basicType);
+                PluginFamily basicFamily = _families[basicType];
                 Type[] templatedParameterTypes = templatedType.GetGenericArguments();
 
 
@@ -158,7 +158,7 @@ namespace StructureMap.Graph
 
         public PluginFamily FindFamily(Type pluginType)
         {
-            return _families.Retrieve(pluginType);
+            return _families[pluginType];
         }
 
         public bool HasFamily(Type pluginType)

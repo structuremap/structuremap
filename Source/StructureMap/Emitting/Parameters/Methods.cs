@@ -39,7 +39,7 @@ namespace StructureMap.Emitting.Parameters
 
         public static MethodInfo ParseFor(Type type)
         {
-            return _parseMethods.Retrieve(type);
+            return _parseMethods[type];
         }
     }
 }

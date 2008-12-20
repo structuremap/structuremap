@@ -95,7 +95,7 @@ namespace StructureMap.Graph
 
         public void AddInstance(Instance instance)
         {
-            _instances.Store(instance.Name, instance);
+            _instances[instance.Name] = instance;
         }
 
 
@@ -170,7 +170,7 @@ namespace StructureMap.Graph
 
         public Instance GetInstance(string name)
         {
-            return _instances.Retrieve(name);
+            return _instances[name];
         }
 
         public bool HasPlugin(Type pluggedType)
@@ -196,7 +196,7 @@ namespace StructureMap.Graph
             assertPluggability(pluggedType);
 
             Plugin plugin = PluginCache.GetPlugin(pluggedType);
-            _pluggedTypes.Store(plugin.ConcreteKey, plugin);
+            _pluggedTypes[plugin.ConcreteKey] = plugin;
 
             return plugin;
         }
@@ -206,7 +206,7 @@ namespace StructureMap.Graph
             assertPluggability(pluggedType);
 
             Plugin plugin = PluginCache.GetPlugin(pluggedType);
-            _pluggedTypes.Store(key, plugin);
+            _pluggedTypes[key] = plugin;
 
             return plugin;
         }
@@ -263,7 +263,7 @@ namespace StructureMap.Graph
         {
             if (_pluggedTypes.Has(concreteKey))
             {
-                return _pluggedTypes.Retrieve(concreteKey);
+                return _pluggedTypes[concreteKey];
             }
 
             return null;

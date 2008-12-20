@@ -142,7 +142,7 @@ namespace StructureMap
 
         public virtual object CreateInstance(Type pluginType)
         {
-            return _defaults.Retrieve(pluginType);
+            return _defaults[pluginType];
         }
 
         public virtual object ApplyInterception(Type pluginType, object actualValue)
@@ -153,7 +153,7 @@ namespace StructureMap
 
         public virtual void RegisterDefault(Type pluginType, object defaultObject)
         {
-            _defaults.Store(pluginType, defaultObject);
+            _defaults[pluginType] = defaultObject;
         }
 
 

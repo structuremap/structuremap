@@ -2,15 +2,17 @@ using System;
 
 namespace StructureMap.Pipeline
 {
-    public class HybridBuildPolicy : IBuildInterceptor
+    public abstract class HttpBuildPolicyBase<HTTP, NONHTTP> : IBuildInterceptor 
+        where HTTP : IBuildInterceptor, new()
+        where NONHTTP : IBuildInterceptor, new()
     {
         private readonly IBuildInterceptor _http;
-        private readonly IBuildInterceptor _threadLocal;
+        private readonly IBuildInterceptor _nonHttp;
 
-        public HybridBuildPolicy()
+        public HttpBuildPolicyBase()
         {
-            _http = new HttpContextBuildPolicy();
-            _threadLocal = new ThreadLocalStoragePolicy();
+            _http = new HTTP();
+            _nonHttp = new NONHTTP();
         }
 
         private IBuildPolicy _innerPolicy;
@@ -22,11 +24,9 @@ namespace StructureMap.Pipeline
             {
                 return HttpContextBuildPolicy.HasContext()
                                     ? _http
-                                    : _threadLocal;
+                                    : _nonHttp;
             }
         }
-
-        #region IBuildInterceptor Members
 
         public IBuildPolicy InnerPolicy
         {
@@ -34,7 +34,7 @@ namespace StructureMap.Pipeline
             set
             {
                 _http.InnerPolicy = value;
-                _threadLocal.InnerPolicy = value;
+                _nonHttp.InnerPolicy = value;
                 _innerPolicy = value;
             }
         }
@@ -44,14 +44,16 @@ namespace StructureMap.Pipeline
             return interceptor.Build(buildSession, pluginType, instance);
         }
 
-        public IBuildPolicy Clone()
-        {
-            var policy = new HybridBuildPolicy();
-            policy.InnerPolicy = _innerPolicy.Clone();
-
-            return policy;
-        }
-
-        #endregion
+        public abstract IBuildPolicy Clone();
     }
+
+
+    public class HybridBuildPolicy : HttpBuildPolicyBase<HttpContextBuildPolicy, ThreadLocalStoragePolicy>
+    {
+        public override IBuildPolicy Clone()
+        {
+            return new HybridBuildPolicy(){InnerPolicy = InnerPolicy.Clone()};
+        }
+    }
+
 }
