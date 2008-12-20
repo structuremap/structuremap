@@ -178,6 +178,7 @@
     <Compile Include="AutoMocking\MoqFactoryTester.cs" />
     <Compile Include="AutoMocking\RhinoAutoMockerTester.cs" />
     <Compile Include="AutoMocking\RhinoMockRepositoryProxyTester.cs" />
+    <Compile Include="Bugs\IDictionaryAndXmlBugTester.cs" />
     <Compile Include="Bugs\ScanIndexerBugTester.cs" />
     <Compile Include="BuildSessionTester.cs" />
     <Compile Include="Configuration\ConfigurationParserBuilderTester.cs" />

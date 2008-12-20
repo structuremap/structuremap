@@ -399,6 +399,7 @@
     <Compile Include="Diagnostics\ValidationError.cs" />
     <Compile Include="Emitting\Parameters\Methods.cs" />
     <Compile Include="ErrorMessages.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Graph\FamilyAttributeScanner.cs" />
     <Compile Include="Graph\FindAllTypesFilter.cs" />
     <Compile Include="Graph\FindRegistriesScanner.cs" />

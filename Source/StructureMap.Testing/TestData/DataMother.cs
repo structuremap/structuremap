@@ -17,6 +17,12 @@ namespace StructureMap.Testing.TestData
         {
         }
 
+        public static Container BuildContainerForXml(string xml)
+        {
+            var graph = BuildPluginGraphFromXml(xml);
+            return new Container(graph);
+        }
+
         public static PluginGraph BuildPluginGraphFromXml(string xml)
         {
             XmlDocument document = BuildDocument(xml);

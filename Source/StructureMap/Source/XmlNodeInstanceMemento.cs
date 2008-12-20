@@ -110,7 +110,7 @@ namespace StructureMap.Source
             }
 
             XmlElement element = getChildNode(name);
-            return reader.Read(element, childType);
+            return element == null ? null : reader.Read(element, childType);
         }
 
         protected override InstanceMemento getChild(string Key)
