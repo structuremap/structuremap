@@ -260,6 +260,15 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
+        public void set_the_scope_to_session()
+        {
+            var family = new PluginFamily(typeof(IServiceProvider));
+            family.SetScopeTo(InstanceScope.HttpSession);
+
+            family.Policy.ShouldBeOfType<HttpSessionBuildPolicy>();
+        }
+
+        [Test]
         public void SetScopeToSingleton()
         {
             var family = new PluginFamily(typeof (IServiceProvider));

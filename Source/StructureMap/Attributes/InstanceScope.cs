@@ -6,6 +6,7 @@ namespace StructureMap.Attributes
         Singleton,
         ThreadLocal,
         HttpContext,
-        Hybrid
+        Hybrid,
+        HttpSession
     }
 }

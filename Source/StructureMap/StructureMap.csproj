@@ -411,7 +411,7 @@
     <Compile Include="Pipeline\BuildFrame.cs" />
     <Compile Include="Pipeline\BuildStack.cs" />
     <Compile Include="Pipeline\ConfiguredInstanceBase.cs" />
-    <Compile Include="Pipeline\HttpContextBuildStorage.cs" />
+    <Compile Include="Pipeline\HttpContextBuildPolicy.cs" />
     <Compile Include="Pipeline\InstanceKey.cs" />
     <Compile Include="Pipeline\IStructuredInstance.cs" />
     <Compile Include="Pipeline\PropertyExpression.cs" />

@@ -77,6 +77,10 @@ namespace StructureMap.Graph
                 case InstanceScope.Hybrid:
                     AddInterceptor(new HybridBuildPolicy());
                     break;
+
+                case InstanceScope.HttpSession:
+                    AddInterceptor(new HttpSessionBuildPolicy());
+                    break;
             }
         }
 
