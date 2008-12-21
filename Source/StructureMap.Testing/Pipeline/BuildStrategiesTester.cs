@@ -102,6 +102,7 @@ namespace StructureMap.Testing.Pipeline
             Assert.IsInstanceOfType(typeof (BuildPolicy), clone.InnerPolicy);
         }
 
+
         [Test]
         public void Singleton_build_policy()
         {
@@ -122,6 +123,83 @@ namespace StructureMap.Testing.Pipeline
             Assert.AreSame(red1, red3);
             Assert.AreSame(green1, green2);
             Assert.AreSame(green1, green3);
+        }
+    }
+
+    [TestFixture]
+    public class when_the_singleton_policy_ejects_all
+    {
+        private SingletonPolicy policy;
+        private StubBuildPolicy inner;
+        private StubDisposable disposable1;
+        private StubDisposable disposable2;
+
+
+        [SetUp]
+        public void SetUp()
+        {
+            policy = new SingletonPolicy();
+            inner = new StubBuildPolicy();
+            policy.InnerPolicy = inner;
+
+            disposable1 = new StubDisposable();
+            disposable2 = new StubDisposable();
+
+            policy.Cache[new InstanceKey() { Name = "a", PluginType = typeof(IGateway) }] = disposable1;
+            policy.Cache[new InstanceKey() {Name = "b", PluginType = typeof (IGateway)}] = disposable2;
+            policy.Cache[new InstanceKey() {Name = "c", PluginType = typeof (IGateway)}] = new object();
+
+            policy.EjectAll();
+        }
+
+        [Test]
+        public void the_count_should_be_zero()
+        {
+            policy.Cache.Count.ShouldEqual(0);
+        }
+
+        [Test]
+        public void should_have_called_dispose_if_it_was_there()
+        {
+            disposable1.DisposedWasCalled.ShouldBeTrue();
+            disposable2.DisposedWasCalled.ShouldBeTrue();
+        }
+
+        [Test]
+        public void inner_policy_was_ejected()
+        {
+            inner.WasEjected.ShouldBeTrue();
+        }
+        
+    }
+
+    public class StubDisposable : IDisposable
+    {
+        public bool DisposedWasCalled;
+
+        public void Dispose()
+        {
+            DisposedWasCalled = true;
+        }
+    }
+
+    public class StubBuildPolicy : IBuildPolicy
+    {
+        public bool WasEjected;
+
+        public object Build(BuildSession buildSession, Type pluginType, Instance instance)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public IBuildPolicy Clone()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void EjectAll()
+        {
+            WasEjected = true;
         }
     }
 }

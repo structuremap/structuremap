@@ -9,5 +9,6 @@ namespace StructureMap.Pipeline
     {
         object Build(BuildSession buildSession, Type pluginType, Instance instance);
         IBuildPolicy Clone();
+        void EjectAll();
     }
 }

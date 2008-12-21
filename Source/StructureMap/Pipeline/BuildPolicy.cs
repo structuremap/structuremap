@@ -30,6 +30,12 @@ namespace StructureMap.Pipeline
             return this;
         }
 
+        public void EjectAll()
+        {
+            // no-op.  Unlike other Container's, StructureMap doesn't hang on to 
+            // objects it created as "Transients"
+        }
+
         #endregion
 
         public bool Equals(BuildPolicy obj)

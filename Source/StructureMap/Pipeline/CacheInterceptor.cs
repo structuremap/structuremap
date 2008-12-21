@@ -44,6 +44,16 @@ namespace StructureMap.Pipeline
             return clonedCache;
         }
 
+        public void EjectAll()
+        {
+            ejectAll();
+            _innerPolicy.EjectAll();
+        }
+
+        protected virtual void ejectAll()
+        {
+        }
+
         #endregion
 
         protected abstract CacheInterceptor clone();

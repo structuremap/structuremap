@@ -87,6 +87,7 @@ namespace StructureMap
         public IBuildPolicy Policy
         {
             get { return _policy; }
+            set { _policy = value; }
         }
 
         public void ForEachInstance(Action<Instance> action)
@@ -147,6 +148,7 @@ namespace StructureMap
 
         public void EjectAllInstances()
         {
+            _policy.EjectAll();
             _instances.Clear();
         }
 

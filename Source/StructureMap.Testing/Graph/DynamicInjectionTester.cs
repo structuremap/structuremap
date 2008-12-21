@@ -364,6 +364,11 @@ namespace StructureMap.Testing.Graph
             throw new NotImplementedException();
         }
 
+        public void EjectAll()
+        {
+            throw new System.NotImplementedException();
+        }
+
         #endregion
     }
 

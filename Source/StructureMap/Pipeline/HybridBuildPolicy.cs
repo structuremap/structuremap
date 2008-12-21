@@ -45,6 +45,11 @@ namespace StructureMap.Pipeline
         }
 
         public abstract IBuildPolicy Clone();
+        public void EjectAll()
+        {
+            _http.EjectAll();
+            _nonHttp.EjectAll();
+        }
     }
 
 

@@ -289,6 +289,11 @@ namespace StructureMap.Testing.Configuration.DSL
             throw new NotImplementedException();
         }
 
+        public void EjectAll()
+        {
+            throw new System.NotImplementedException();
+        }
+
         #endregion
     }
 }

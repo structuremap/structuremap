@@ -1,10 +1,12 @@
 using NUnit.Framework;
+using Rhino.Mocks;
 using StructureMap.Attributes;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
+using System.Linq;
 
 namespace StructureMap.Testing.Graph
 {
@@ -55,6 +57,23 @@ namespace StructureMap.Testing.Graph
         public void GetInstanceWithInvalidInstanceKey()
         {
             _manager.GetInstance<Rule>("NonExistentRule");
+        }
+
+        [Test]
+        public void eject_all_instances_removes_all_instances_and_ejects_from_the_build_policy()
+        {
+            var factory = new InstanceFactory(typeof (IGateway));
+            factory.AddInstance(new SmartInstance<DefaultGateway>());
+            factory.AddInstance(new SmartInstance<DefaultGateway>());
+
+            var policy = MockRepository.GenerateMock<IBuildPolicy>();
+            factory.Policy = policy;
+
+            factory.EjectAllInstances();
+
+            factory.Instances.Count().ShouldEqual(0);
+
+            policy.AssertWasCalled(x => x.EjectAll());
         }
 
         [Test]
