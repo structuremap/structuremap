@@ -420,6 +420,7 @@
     <Compile Include="Pipeline\SmartInstance.cs" />
     <Compile Include="PluginTypeConfiguration.cs" />
     <Compile Include="ReflectionHelper.cs" />
+    <Compile Include="SystemRegistry.cs" />
     <Compile Include="Util\Cache.cs" />
   </ItemGroup>
   <ItemGroup>

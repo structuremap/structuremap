@@ -1,6 +1,5 @@
 namespace StructureMap.Source
 {
-    [Pluggable("Templated")]
     public class TemplatedMementoSource : MementoSource
     {
         private readonly MementoSource _innerSource;

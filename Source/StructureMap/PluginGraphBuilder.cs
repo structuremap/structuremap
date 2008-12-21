@@ -64,8 +64,6 @@ namespace StructureMap
                 p.ParseAssemblies(graphBuilder);
             });
 
-            graphBuilder.PrepareSystemObjects();
-
             forAllParsers(p => p.Parse(graphBuilder));
 
             _graph.Seal();

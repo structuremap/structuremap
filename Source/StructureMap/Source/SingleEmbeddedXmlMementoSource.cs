@@ -4,7 +4,6 @@ using System.Xml;
 
 namespace StructureMap.Source
 {
-    [Pluggable("EmbeddedXmlFile")]
     public class SingleEmbeddedXmlMementoSource : XmlMementoSource
     {
         private readonly Assembly _assembly;

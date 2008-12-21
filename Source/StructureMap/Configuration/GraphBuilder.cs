@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Reflection;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
@@ -10,10 +11,9 @@ namespace StructureMap.Configuration
     {
         private readonly AssemblyScanner _assemblyScanner;
         private readonly PluginGraph _pluginGraph;
-        private readonly PluginGraph _systemGraph;
-        private readonly AssemblyScanner _systemScanner;
         private Profile _profile;
         private Container _systemContainer;
+        private readonly PluginGraph _systemGraph;
 
 
         public GraphBuilder(Registry[] registries) : this(registries, new PluginGraph())
@@ -31,10 +31,8 @@ namespace StructureMap.Configuration
                 registry.ConfigurePluginGraph(_pluginGraph);
             }
 
-            _systemScanner = new AssemblyScanner();
-            _systemScanner.Assembly(Assembly.GetExecutingAssembly());
-
-            _systemGraph = new PluginGraph(_systemScanner);
+            _systemGraph = new SystemRegistry().Build();
+            _systemContainer = new Container(_systemGraph);
         }
 
         #region IGraphBuilder Members
@@ -42,11 +40,6 @@ namespace StructureMap.Configuration
         public void FinishFamilies()
         {
             _pluginGraph.Seal();
-        }
-
-        public PluginGraph SystemGraph
-        {
-            get { return _systemGraph; }
         }
 
         public PluginGraph PluginGraph
@@ -60,17 +53,11 @@ namespace StructureMap.Configuration
             {
                 Assembly assembly = AppDomain.CurrentDomain.Load(assemblyName);
                 _assemblyScanner.Assembly(assembly);
-                _systemScanner.Assembly(assembly);
             }
             catch (Exception ex)
             {
                 _pluginGraph.Log.RegisterError(101, ex, assemblyName);
             }
-        }
-
-        public void PrepareSystemObjects()
-        {
-            _systemGraph.Seal();
         }
 
         public IProfileBuilder GetProfileBuilder()
@@ -116,12 +103,6 @@ namespace StructureMap.Configuration
         private object buildSystemObject(Type type, InstanceMemento memento)
         {
             Instance instance = memento.ReadInstance(_systemGraph, type);
-
-            if (_systemContainer == null)
-            {
-                _systemContainer = new Container(_systemGraph);
-            }
-
             return _systemContainer.GetInstance(type, instance);
         }
     }

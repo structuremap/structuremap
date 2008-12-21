@@ -7,7 +7,6 @@ using StructureMap.Configuration;
 
 namespace StructureMap.Source
 {
-    [Pluggable("EmbeddedXmlFolder")]
     public class EmbeddedFolderXmlMementoSource : MementoSource
     {
         private readonly string _assemblyName;

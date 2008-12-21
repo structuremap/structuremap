@@ -10,7 +10,6 @@ namespace StructureMap
     /// Abstract class that is the supertype of all storage and retrieval mechanisms of
     /// InstanceMemento instances
     /// </summary>
-    [PluginFamily]
     public abstract class MementoSource
     {
         private readonly Dictionary<string, InstanceMemento> _externalMementos =

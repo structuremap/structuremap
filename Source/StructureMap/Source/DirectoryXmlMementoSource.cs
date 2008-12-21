@@ -11,7 +11,6 @@ namespace StructureMap.Source
     /// DirectoryXmlMementoSource is meant to simplify complicated object graph configurations by isolating each instance to a separate
     /// editable file.
     /// </summary>
-    [Pluggable("DirectoryXml")]
     public class DirectoryXmlMementoSource : MementoSource
     {
         private readonly string _directory;

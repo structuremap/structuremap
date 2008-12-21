@@ -62,7 +62,6 @@ namespace StructureMap.Testing.Configuration
             bool iWasCalled = false;
 
             var builder = new GraphBuilder(new Registry[0]);
-            builder.PrepareSystemObjects();
             builder.WithSystemObject<IBuildInterceptor>(memento, "singleton", policy =>
             {
                 Assert.IsInstanceOfType(typeof (SingletonPolicy), policy);

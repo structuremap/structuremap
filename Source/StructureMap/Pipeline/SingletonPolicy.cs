@@ -2,7 +2,6 @@ using System;
 
 namespace StructureMap.Pipeline
 {
-    [Pluggable("Singleton")]
     public class SingletonPolicy : CacheInterceptor
     {
         private readonly object _locker = new object();

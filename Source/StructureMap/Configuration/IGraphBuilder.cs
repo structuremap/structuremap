@@ -15,11 +15,9 @@ namespace StructureMap.Configuration
 
     public interface IGraphBuilder
     {
-        PluginGraph SystemGraph { get; }
         PluginGraph PluginGraph { get; }
         void AddAssembly(string assemblyName);
 
-        void PrepareSystemObjects();
         void FinishFamilies();
 
         IProfileBuilder GetProfileBuilder();
