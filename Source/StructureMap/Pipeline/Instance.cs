@@ -5,14 +5,6 @@ using StructureMap.Interceptors;
 
 namespace StructureMap.Pipeline
 {
-    public static class TypeExtensions
-    {
-        public static ReferencedInstance GetReferenceTo(this Type type)
-        {
-            string key = PluginCache.GetPlugin(type).ConcreteKey;
-            return new ReferencedInstance(key);
-        }
-    }
 
     public interface IInstance
     {

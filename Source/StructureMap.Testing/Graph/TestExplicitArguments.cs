@@ -16,7 +16,10 @@ namespace StructureMap.Testing.Graph
         [SetUp]
         public void SetUp()
         {
-            ObjectFactory.Initialize(x => { x.UseDefaultStructureMapConfigFile = false; });
+            ObjectFactory.Initialize(x =>
+            {
+                x.UseDefaultStructureMapConfigFile = false;
+            });
         }
 
         #endregion
@@ -381,6 +384,14 @@ namespace StructureMap.Testing.Graph
             args.SetArg("age", 34);
             Assert.AreEqual(34, args.GetArg("age"));
         }
+
+        [Test]
+        public void can_build_a_concrete_class_with_constructor_args_that_is_not_previously_registered()
+        {
+            var container = new Container();
+            container.With("name").EqualTo("Jeremy").GetInstance<ConcreteThatNeedsString>()
+                .Name.ShouldEqual("Jeremy");
+        }
     }
 
     public class Lump
@@ -483,6 +494,21 @@ namespace StructureMap.Testing.Graph
         public Trade Trade
         {
             get { return _trade; }
+        }
+    }
+
+    public class ConcreteThatNeedsString
+    {
+        private string _name;
+
+        public ConcreteThatNeedsString(string name)
+        {
+            _name = name;
+        }
+
+        public string Name
+        {
+            get { return _name; }
         }
     }
 }

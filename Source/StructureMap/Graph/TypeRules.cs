@@ -76,7 +76,7 @@ namespace StructureMap.Graph
             return type.IsPrimitive && !IsString(type) && type != typeof (IntPtr);
         }
 
-        protected bool IsSimple(Type type)
+        protected internal bool IsSimple(Type type)
         {
             return type.IsPrimitive || IsString(type) || IsEnum(type);
         }
@@ -101,7 +101,7 @@ namespace StructureMap.Graph
             return type.IsArray && IsSimple(type.GetElementType());
         }
 
-        protected bool IsConcrete(Type type)
+        protected internal bool IsConcrete(Type type)
         {
             return !type.IsInterface && !type.IsAbstract;
         }
@@ -112,4 +112,6 @@ namespace StructureMap.Graph
             return IsChild(type) || IsChildArray(type);
         }
     }
+
+
 }

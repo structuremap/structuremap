@@ -5,7 +5,7 @@ using System.Text;
 
 namespace StructureMap
 {
-    public static class StringExtensions
+    internal static class StringExtensions
     {
         public static string ToFormat(this string template, params object[] parameters)
         {

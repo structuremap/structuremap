@@ -7,14 +7,6 @@ using System.Threading;
 
 namespace StructureMap.Graph
 {
-    public static class TypeExtensions
-    {
-        public static bool IsInNamespace(this Type type, string nameSpace)
-        {
-            return type.Namespace.StartsWith(nameSpace);
-        }
-    }
-
     public interface IAssemblyScanner
     {
         #region Designating Assemblies

@@ -109,6 +109,11 @@ namespace StructureMap
         {
             Instance defaultInstance = _pipelineGraph.GetDefault(pluginType);
 
+            if (defaultInstance == null && pluginType.IsConcrete())
+            {
+                defaultInstance = new ConfiguredInstance(pluginType);
+            }
+
             BasicInstance basicInstance = defaultInstance as BasicInstance;
 
             Instance instance = basicInstance == null ? defaultInstance : new ExplicitInstance(pluginType, args, basicInstance);
