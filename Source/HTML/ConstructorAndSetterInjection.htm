@@ -2,10 +2,12 @@
 <html>
 	<head>
 		<title>Constructor and Setter Injection</title>
+		<link rel="stylesheet" type="text/css" href="style.css" />
+		<script type="text/javascript" src="jquery-1.2.6.js"></script>
+		<script type="text/javascript" src="structuremap.js"></script>
 	</head>
-	<body>
-	    <h1>Constructor and Setter Injection</h1>
-	    
+	<body>	    
+	
 	    <p>StructureMap supports two forms of Dependency Injection:</p>
 	    
 	    <ol>
@@ -23,7 +25,8 @@
         <a href="http://martinfowler.com/articles/injection.html#ConstructorVersusSetterInjection">
         Martin Fowler&#39;s discussion on Constructor versus Setter Injection</a> for more 
             information.&nbsp; My feeling has always been that Constructor Injection is 
-            preferrable from a design perspective.&nbsp; When you exclusively use 
+            preferrable from a design perspective because it creates a stronger, more 
+            intention rea.&nbsp; When you exclusively use 
             Constructor Injection, the code is somewhat more self-documenting because the 
             constructor arguments will clearly delineate the dependencies of a concrete 
             class.&nbsp; It&#39;s also important to think about the constructor method of a 
@@ -35,8 +38,11 @@
             you have no idea what it really takes to bootstrap the service. </p>
     <p>Despite my personal distaste for Setter Injection, I gave into user demand and 
         greatly increased StructureMap&#39;s support for Setter Injection -- and promptly 
-        found that support to be more useful than I thought it would be.</p>
-    <h2>Using Constructor Injection</h2>
+        found that support to be considerably more useful than I thought it would be.&nbsp; 
+        Mea culpa.</p>
+        <p>&nbsp;</p>
+    
+        <h2><a name="ctor"></a>Using Constructor Injection</h2>
     <p>Now, the first question you might ask is how does StructureMap know which 
         constructor function to use in a class that has multiple constructors?&nbsp; The 
         answer is that StructureMap will automatically select the &quot;greediest&quot; 
@@ -71,9 +77,24 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _Value = Value;</p>
         <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        <p style="margin: 0px;">
+            &nbsp;</p>
+
     </div>
+    
+        <p>
+            StructureMap will only use constructor functions that are accessible to the 
+            StructureMap assembly.&nbsp; I&#39;ve had a few complaints 
+    about this issue in the past from people wanting to use internal constructors, but 
+    for now constructors have to be either public or you have to use the 
+    [InternalsVisibleTo] attribute to give StructureMap access to your own internal 
+    members.&nbsp; StructureMap 2.5 is now strongly signed (thanks to
+    <a href="http://stevenharman.net/">Steve Harman</a>) partially for this 
+    scenario.&nbsp; </p>
+        <hr />
+    
 <!--EndFragment-->
-<p>&nbsp;</p>
+<h4>Overriding the Constructor with an Attribute</h4>
     <p>You can always override this behavior by decorating the constructor you want 
         StructureMap to use with the [StructureMap.DefaultConstructor] attribute like 
         this sample:</p>
@@ -107,15 +128,14 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
         <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        <hr />
     </div>
 <!--EndFragment-->
-<p>StructureMap will only use public constructors.&nbsp; I&#39;ve had a few complaints 
-    about this issue before from people wanting to use internal constructors, but 
-    for now constructors have to be either public or you have to use the 
-    [InternalsVisibleTo] attribute to give StructureMap access to your own internal 
-    members.&nbsp; StructureMap 2.5 is now strongly signed (thanks to
-    <a href="http://stevenharman.net/">Steve Harman</a>) partially for this 
-    scenario. </p>
+<h4>Overriding the Constructor in the Registry DSL</h4>
+        <p>TODO</p>
+    
+    
+        <hr />
     
     
     <h2>Using Setter Injection</h2>
@@ -139,6 +159,8 @@
             dependencies like logging.</li>
         <li>The StructureMap diagnostic tools will check for missing Setter values</li>
     </ul>
+        
+        <hr />
         
         <h4>Configuring Primitive Setter Properties</h4>
     <p>Ok, now that you&#39;ve read that I don&#39;t believe that setter injection is a good 
@@ -215,7 +237,7 @@
         container.GetInstance&lt;<span style="color: #2b91af;">OptionalSetterTarget</span>&gt;(<span 
             style="color: #a31515;">&quot;NoName&quot;</span>).Name.ShouldBeNull();</p>
     <p style="margin: 0px;">
-&&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
 </div>
 <!--EndFragment-->
 <p>In the case above I specified the value for the &quot;Name&quot; setter directly by 
@@ -268,7 +290,7 @@
     mechanism can be used to do anything to the new object before StructureMap 
     returns the new object to the code that requested it.&nbsp; There is no 
     limitation to the number of Action&lt;T&gt; handlers you can use. </p>
-<p>&nbsp;</p>
+        <hr />
 <h4>Configuring Setter Dependencies</h4>
     <p>Let&#39;s say you have a class that has a public property for a singular dependency 
         and another public property for an array of dependencies.</p>
@@ -338,8 +360,8 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
 </div>
 <!--EndFragment-->
-<p>&nbsp;</p>
-<h4>&quot;Auto Filling&quot; a Setter Dependency</h4>
+<hr />
+        <h4>&quot;Auto Filling&quot; a Setter Dependency</h4>
 <p>Sometimes all you want to do is to simply say &quot;fill in this property for me.&quot;&nbsp; 
     That&#39;s what the code below does for the &quot;Rule&quot; property with the 
     .SetterDependency&lt;Rule&gt;().IsTheDefault() syntax:</p>
@@ -451,13 +473,20 @@
         &nbsp;</p>
 </div>
 <!--EndFragment-->
-<p>&nbsp;</p>
-        
 <!--
 {\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20     \cf3 public\cf0  \cf3 interface\cf0  \cf4 IDataProvider\cf0 \{\}\par ??\par ??    \cf3 public\cf0  \cf3 class\cf0  \cf4 Repository\par ??\cf0     \{\par ??        \cf3 private\cf0  \cf4 IDataProvider\cf0  _provider;\par ??\par ??        \cf3 public\cf0  \cf4 IDataProvider\cf0  Provider\par ??        \{\par ??            \cf3 set\par ??\cf0             \{\par ??                _provider = \cf3 value\cf0 ;\par ??            \}\par ??        \}\par ??    \}}
 -->
 <!--EndFragment-->
-<h4>Defining Setter Properties with Attributes<p>Just use the [StructureMap.Attributes.SetterProperty] to denote properties that 
+<hr />
+        <h4><a name="SetterPolicies"></a>Creating Policies for Setter Injection</h4><p>TODO</p>
+        <hr />
+        <h4>Applying Setter Injection to an Existing Object (BuildUp)</h4>
+        
+        <p>TODO</p>
+        
+        <hr />
+        
+        <h4>Defining Setter Properties with Attributes</h4><p>Just use the [StructureMap.Attributes.SetterProperty] to denote properties that 
     need to be filled by StructureMap.&nbsp; Marking a property with the 
     [SetterProperty] makes the setter mandatory.&nbsp; StructureMap will throw an 
     exception if the &quot;ShouldCache&quot; property isn&#39;t specified for the concrete type 
@@ -519,8 +548,7 @@
 &nbsp;&nbsp;&nbsp; }</p>
 </div>
 <!--EndFragment-->
-<p>&nbsp;</p>
-        
+<hr />
         <h4>Defining Setter Properties in Xml</h4>
         <p>Setter properties can be defined in the Xml configuration by explicitly directing 
             StructureMap to use setter properties while building a concrete type.&nbsp; In 
@@ -560,7 +588,6 @@
                 style="color: blue;">&gt;</span></p>
     </div>
 <!--EndFragment-->
-<p>&nbsp;</p>
 <p>Setter properties can also be designated as mandatory setters with the &lt;Setter&gt; 
     node in the Xml configuration.&nbsp; From 
             the unit tests, I have a class called OtherGridColumn that exposes several 
@@ -687,10 +714,13 @@
                 style="color: #a31515;">Plugin</span><span style="color: blue;">&gt;</span></p>
         <p style="margin: 0px;">
             <span style="color: blue;">&nbsp; &lt;/</span><span style="color: #a31515;">PluginFamily</span><span 
-                style="color: blue;">&&gt;</span></p>
+                style="color: blue;">&gt;</span></p>
     </div>
+        <p style="margin: 0px">
+            <br />
+        </p>
 <!--EndFragment-->
-<p>&nbsp;</p>
+<hr />
         
         </body>
 </html>

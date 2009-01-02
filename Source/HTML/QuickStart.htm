@@ -1,9 +1,544 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 	<head>
-		<title></title>
+		<title>A Gentle Quickstart</title>
+		<link rel="stylesheet" type="text/css" href="style.css" />
+		<script type="text/javascript" src="jquery-1.2.6.js"></script>
+		<script type="text/javascript" src="structuremap.js"></script>
+
 	</head>
 	<body>
+	
+	    <p>
+            The most general question I get with StructureMap is “how do I get started?”&nbsp; 
+            I’d recommend that you first get comfortable
+            <a href="http://codebetter.com/blogs/jeremy.miller/archive/2008/06/29/some-concepts-to-know-first.aspx">
+            with some concepts</a> and the basic patterns of
+            <a href="http://codebetter.com/blogs/jeremy.miller/archive/2005/10/06/132825.aspx">
+            Dependency Injection</a> and
+            <a href="http://codebetter.com/blogs/jeremy.miller/archive/2005/09/20/132290.aspx">
+            Inversion of Control</a>.&nbsp; Assuming that you’re already familiar with those 
+            concepts, or you’d really rather skip the pedantry and jump right into concrete 
+            code, the first thing to do is go download StructureMap and jump into usage 
+            (then come back to the patterns and pedantry).&nbsp;
+        </p>
+        <h2>Salient Facts</h2>
+        <ul>
+            <li>The latest release is available for download on SourceForge at
+                <a href="http://sourceforge.net/projects/structuremap" 
+                    title="http://sourceforge.net/projects/structuremap">
+                http://sourceforge.net/projects/structuremap</a>
+                <ul>
+                    <li>The only DLL that you need for doing basic Service Locator and/or Dependency 
+                        Injection is the StructureMap.DLL file. </li>
+                </ul>
+            </li>
+            <li>There is a google group for StructureMap support at
+                <a href="http://groups.google.com/group/structuremap-users?hl=en" 
+                    title="http://groups.google.com/group/structuremap-users?hl=en">
+                http://groups.google.com/group/structuremap-users?hl=en</a> </li>
+            <li>StructureMap is released under the Apache 2.0 license, meaning that you can use 
+                it in any application or even modify the source in any way you see fit without 
+                restriction. </li>
+            <li>StructureMap is actually the oldest IoC tool for .Net, with the first 
+                production release coming in June of 2004 </li>
+            <li>The source code is accessible
+                <a href="https://structuremap.svn.sourceforge.net/svnroot/structuremap/trunk">here via Subversion</a> in case you’re curious.&nbsp; No credentials are required to 
+                access the source code. </li>
+            <li>Right now, StructureMap 2.5 will run on .Net 3.5 only.&nbsp; I will most likely NOT 
+                be backporting the new version to 2.0 because of extensive usage of 3.5 features 
+                like Expressions </li>
+            <li>StructureMap 2.5 will run in medium trust on .Net 3.5 – but please post any 
+                problems that you do find with medium trust. </li>
+        </ul>
+        <hr />
+        <h2>The Simplest Possible Usage of StructureMap</h2>
+        <p>
+            Your interaction with StructureMap is going to mostly consist of two activities:</p>
+        <ol>
+            <li>Asking StructureMap for an instance of a service or dependency (the easy part)             </li>
+            <li>Registering “what” and “how” StructureMap should build or find those requested 
+                services (the tedious part, but it’s gotten much better over the years) </li>
+        </ol>
+        <p>
+            In our system we use a service called “IValidator” to exercise validation rules 
+            on our domain model objects (I talked about the approach
+            <a href="http://codebetter.com/blogs/jeremy.miller/archive/2007/06/13/build-your-own-cab-part-9-domain-centric-validation-with-the-notification-pattern.aspx">
+            here</a>).&nbsp; By default, we want any consumer of the IValidator interface to 
+            use the concrete class named Validator.&nbsp; Since we use StructureMap for 
+            resolving dependencies and services, we need to first tell StructureMap to use 
+            Validator anytime somebody asks for an IValidator.&nbsp; You configure 
+            StructureMap by
+            <a href="http://codebetter.com/blogs/jeremy.miller/archive/2008/10/25/initializing-and-configuring-a-structuremap-container.aspx">
+            initializing the container</a> with this code below:</p>
+        <div style="BORDER-RIGHT: black thin solid; BORDER-TOP: black thin solid; FONT-SIZE: 10pt; BACKGROUND: white; OVERFLOW: scroll; BORDER-LEFT: black thin solid; COLOR: black; BORDER-BOTTOM: black thin solid; FONT-FAMILY: courier new">
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">public</span> <span style="COLOR: blue">static</span>
+                <span style="COLOR: blue">class</span> <span style="COLOR: #2b91af">
+                ContainerBootstrapper</span></p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp; {</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">public</span>
+                <span style="COLOR: blue">static</span> <span style="COLOR: blue">void</span> 
+                BootstrapStructureMap()</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: green">// 
+                Initialize the static ObjectFactory container</span></p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: #2b91af">
+                ObjectFactory</span>.Initialize(x =&gt;</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.ForRequestedType&lt;<span style="COLOR: #2b91af">IValidator</span>&gt;().TheDefaultIsConcreteType&lt;<span 
+                    style="COLOR: #2b91af">Validator</span>&gt;();</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+        <p>
+            Now that that code is called somewhere in the application initialization, we can 
+            get an IValidator object from StructureMap like in this sample code by calling 
+            ObjectFactory.GetInstance&lt;IValidator&gt;():</p>
+        <div style="BORDER-RIGHT: black thin solid; BORDER-TOP: black thin solid; FONT-SIZE: 10pt; BACKGROUND: white; OVERFLOW: scroll; BORDER-LEFT: black thin solid; COLOR: black; BORDER-BOTTOM: black thin solid; FONT-FAMILY: courier new">
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">public</span> <span style="COLOR: blue">class</span>
+                <span style="COLOR: #2b91af">ClassThatGetsAnIValidator</span></p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp; {</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">public</span>
+                <span style="COLOR: blue">void</span> SaveObject(<span style="COLOR: blue">object</span> 
+                objectToSave)</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: green">// 
+                Go get the proper IValidator from StructureMap</span></p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                <span style="COLOR: #2b91af">IValidator</span> validator =
+                <span style="COLOR: #2b91af">ObjectFactory</span>.GetInstance&lt;<span 
+                    style="COLOR: #2b91af">IValidator</span>&gt;();</p>
+            <p style="MARGIN: 0px">
+                &nbsp;</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">var</span> 
+                notification = validator.Validate(objectToSave);</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">if</span> 
+                (notification.IsValid())</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="COLOR: green">// save the object</span></p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+        <p>
+            That’s it, your first usage of StructureMap.&nbsp; No messy Xml configuration, 
+            no attributes scattered through your code, just a couple lines of bootstrapping 
+            code.&nbsp;&nbsp; Of course, if that’s all StructureMap did, it wouldn’t be 
+            worth your time to download it.&nbsp; Let’s look at a bit more advanced example.</p>
+        <hr />
+        <h2>
+            Primitive Arguments</h2>
+        <p>
+            I actually like to
+            <a href="http://structuremap.sourceforge.net/ConfigurationManagement.htm">use 
+            StructureMap as a generic configuration tool</a> (which was actually its 
+            original purpose).&nbsp; Let’s say you’re moving to the data access code.&nbsp; 
+            You come up with some sort of
+            <a href="http://martinfowler.com/eaaCatalog/repository.html">Repository</a> 
+            pattern class like this:</p>
+        <div style="BORDER-RIGHT: black thin solid; BORDER-TOP: black thin solid; FONT-SIZE: 10pt; BACKGROUND: white; OVERFLOW: scroll; BORDER-LEFT: black thin solid; COLOR: black; BORDER-BOTTOM: black thin solid; FONT-FAMILY: courier new">
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">public</span> <span style="COLOR: blue">interface</span>
+                <span style="COLOR: #2b91af">IRepository</span></p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp; {</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">void</span> Save(<span 
+                    style="COLOR: blue">object</span> target);</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp; }</p>
+            <p style="MARGIN: 0px">
+                &nbsp;</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">public</span> <span style="COLOR: blue">class</span>
+                <span style="COLOR: #2b91af">Repository</span> : <span style="COLOR: #2b91af">
+                IRepository</span></p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp; {</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">public</span> Repository(<span 
+                    style="COLOR: blue">string</span> connectionString)</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: green">// 
+                set up the persistence infrastructure using the connectionString</span></p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: green">// 
+                from the constructor argument</span></p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="MARGIN: 0px">
+                &nbsp;</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">public</span>
+                <span style="COLOR: blue">void</span> Save(<span style="COLOR: blue">object</span> 
+                target)</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: green">// 
+                save the object</span></p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+        <p>
+            The Repository class needs to be supplied with the “connectionString” in its 
+            constructor.&nbsp; No problem, just set up the value of the constructor argument 
+            in the bootstrapping:</p>
+        <div style="BORDER-RIGHT: black thin solid; BORDER-TOP: black thin solid; FONT-SIZE: 10pt; BACKGROUND: white; OVERFLOW: scroll; BORDER-LEFT: black thin solid; COLOR: black; BORDER-BOTTOM: black thin solid; FONT-FAMILY: courier new">
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: #2b91af">
+                ObjectFactory</span>.Initialize(x =&gt;</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.ForRequestedType&lt;<span style="COLOR: #2b91af">IRepository</span>&gt;().TheDefault.Is.OfConcreteType&lt;<span 
+                    style="COLOR: #2b91af">Repository</span>&gt;()</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .WithCtorArg(<span style="COLOR: #a31515">&quot;connectionString&quot;</span>).EqualTo(<span 
+                    style="COLOR: #a31515">&quot;a connection string&quot;</span>);</p>
+            <p style="MARGIN: 0px">
+                &nbsp;</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="COLOR: green">// Or, since it&#39;s smelly to embed a connection string 
+                directly into code,</span></p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="COLOR: green">// we could pull the connection string from the 
+                AppSettings</span></p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.ForRequestedType&lt;<span style="COLOR: #2b91af">IRepository</span>&gt;().TheDefault.Is.OfConcreteType&lt;<span 
+                    style="COLOR: #2b91af">Repository</span>&gt;()</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .WithCtorArg(<span style="COLOR: #a31515">&quot;connectionString&quot;</span>).EqualToAppSetting(<span 
+                    style="COLOR: #a31515">&quot;CONNECTION-STRING&quot;</span>);</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+        </div>
+        <p>
+            With the bootstrapping out of the way, when we ask StructureMap for an 
+            IRepository in this code:</p>
+        <div style="BORDER-RIGHT: black thin solid; BORDER-TOP: black thin solid; FONT-SIZE: 10pt; BACKGROUND: white; OVERFLOW: scroll; BORDER-LEFT: black thin solid; COLOR: black; BORDER-BOTTOM: black thin solid; FONT-FAMILY: courier new">
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">var</span> 
+                repository = <span style="COLOR: #2b91af">ObjectFactory</span>.GetInstance&lt;<span 
+                    style="COLOR: #2b91af">IRepository</span>&gt;();</p>
+        </div>
+        <p>
+            StructureMap will look up the “CONNECTION-STRING” value in the AppSettings 
+            portion of the App.config file, and use that string value to invoke the 
+            constructor function of the Repository class, then hand back that new Repository 
+            object.&nbsp; Woo hoo.&nbsp; We can build an object that doesn’t depend on 
+            anything, and we can build an object that needs some strings in its constructor 
+            function.&nbsp; How about objects that need other non-primitive objects?</p>
+        <hr />
+        <h2>
+            Auto Wiring</h2>
+        <p>
+            In the code samples above, I used StructureMap as a Service Locator in the 
+            ClassThatGetsAnIValidator.SaveObject() method.&nbsp; Typically, you’ll try to 
+            minimize the number of service locator usages in your system to a bare minimum 
+            (I found 8 in my current system, but I think I’ll find a way to prune half of 
+            those later).&nbsp; Most of the value of an IoC tool is in automatically doing 
+            Dependency Injection.&nbsp; I’m working with the new MVC framework at the 
+            moment, so it’s a handy sample.&nbsp; Let’s say that we have a Controller class 
+            for a typical CRUD screen.&nbsp; That Controller class will generally need to 
+            interact with both validation services and the data access functionality of the 
+            Repository.&nbsp; Here’s a representative Controller class:</p>
+        <div style="BORDER-RIGHT: black thin solid; BORDER-TOP: black thin solid; FONT-SIZE: 10pt; BACKGROUND: white; OVERFLOW: scroll; BORDER-LEFT: black thin solid; COLOR: black; BORDER-BOTTOM: black thin solid; FONT-FAMILY: courier new">
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">public</span> <span style="COLOR: blue">class</span>
+                <span style="COLOR: #2b91af">SomeScreenController</span> :
+                <span style="COLOR: #2b91af">IController</span></p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp; {</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">private</span>
+                <span style="COLOR: blue">readonly</span> <span style="COLOR: #2b91af">
+                IRepository</span> _repository;</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">private</span>
+                <span style="COLOR: blue">readonly</span> <span style="COLOR: #2b91af">
+                IValidator</span> _validator;</p>
+            <p style="MARGIN: 0px">
+                &nbsp;</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: green">// SomeScreenController 
+                depends on both IRepository and IValidator</span></p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">public</span> 
+                SomeScreenController(<span style="COLOR: #2b91af">IRepository</span> repository,
+                <span style="COLOR: #2b91af">IValidator</span> validator)</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _repository = repository;</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _validator = validator;</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="MARGIN: 0px">
+                &nbsp;</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+        <p>
+            So let’s get StructureMap set up for this SomeScreenController class:</p>
+        <div style="BORDER-RIGHT: black thin solid; BORDER-TOP: black thin solid; FONT-SIZE: 10pt; BACKGROUND: white; OVERFLOW: scroll; BORDER-LEFT: black thin solid; COLOR: black; BORDER-BOTTOM: black thin solid; FONT-FAMILY: courier new">
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: #2b91af">
+                ObjectFactory</span>.Initialize(x =&gt;</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="COLOR: green">// Set up the IValidator</span></p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.ForRequestedType&lt;<span style="COLOR: #2b91af">IValidator</span>&gt;().TheDefaultIsConcreteType&lt;<span 
+                    style="COLOR: #2b91af">Validator</span>&gt;();</p>
+            <p style="MARGIN: 0px">
+                &nbsp;</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="COLOR: green">// Set up the IRepository</span></p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.ForRequestedType&lt;<span style="COLOR: #2b91af">IRepository</span>&gt;().TheDefault.Is.OfConcreteType&lt;<span 
+                    style="COLOR: #2b91af">Repository</span>&gt;()</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .WithCtorArg(<span style="COLOR: #a31515">&quot;connectionString&quot;</span>).EqualToAppSetting(<span 
+                    style="COLOR: #a31515">&quot;CONNECTION-STRING&quot;</span>);</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+        </div>
+        <p>
+            You’ll notice that we didn’t make any explicit configuration for the 
+            SomeScreenController class, but yet we could now call:</p>
+        <div style="BORDER-RIGHT: black thin solid; BORDER-TOP: black thin solid; FONT-SIZE: 10pt; BACKGROUND: white; OVERFLOW: scroll; BORDER-LEFT: black thin solid; COLOR: black; BORDER-BOTTOM: black thin solid; FONT-FAMILY: courier new">
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">var</span> 
+                controller = <span style="COLOR: #2b91af">ObjectFactory</span>.GetInstance&lt;<span 
+                    style="COLOR: #2b91af">SomeScreenController</span>&gt;();</p>
+        </div>
+        <p>
+            and StructureMap will happily create a new instance of the SomeScreenController 
+            class by invoking its constructor and passing in a new Validator object and a 
+            new Repository object created with the connection string from the App.config 
+            file.&nbsp; We didn’t need to tell StructureMap how to construct 
+            SomeScreenController because:
+        </p>
+        <ul>
+            <li>StructureMap can look at the constructor function of SomeScreenController and 
+                see that it depends on IValidator and IRepository </li>
+            <li>StructureMap “knows” about the default way to create and return an IValidator 
+                and an IRepository </li>
+        </ul>
+        <p>
+            This feature is known as “auto wiring,” and all the mainstream IoC containers 
+            support this feature to some extent or another.&nbsp;
+        </p>
+        <hr />
+        <h2>
+            What to do when things go wrong?</h2>
+        <p>
+            StructureMap, and any other IoC tool for that matter, is configuration intensive 
+            – which means that their will be problems in that configuration.&nbsp; We’re all 
+            moving to more convention based type registration – which means that more stuff 
+            is happening off stage and out of your sight, making debugging the configuration 
+            even trickier.&nbsp; Not to worry (too much), StructureMap has some diagnostic 
+            abilities to help you solve configuration problems.&nbsp; The quickest tool is 
+            to ask a Container object or ObjectFactory (which is just a static wrapper 
+            around a Container) “what do you have?” with the Container.WhatDoIHave() method 
+            like this below:</p>
+        <div style="BORDER-RIGHT: black thin solid; BORDER-TOP: black thin solid; FONT-SIZE: 10pt; BACKGROUND: white; OVERFLOW: scroll; BORDER-LEFT: black thin solid; COLOR: black; BORDER-BOTTOM: black thin solid; FONT-FAMILY: courier new">
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">var</span> 
+                container = <span style="COLOR: blue">new</span> <span style="COLOR: #2b91af">
+                Container</span>(x =&gt;</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.ForRequestedType&lt;<span style="COLOR: #2b91af">IValidator</span>&gt;().TheDefaultIsConcreteType&lt;<span 
+                    style="COLOR: #2b91af">Validator</span>&gt;();</p>
+            <p style="MARGIN: 0px">
+                &nbsp;</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.ForRequestedType&lt;<span style="COLOR: #2b91af">IRepository</span>&gt;().TheDefault.Is.OfConcreteType&lt;<span 
+                    style="COLOR: #2b91af">Repository</span>&gt;()</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .WithCtorArg(<span style="COLOR: #a31515">&quot;connectionString&quot;</span>).EqualToAppSetting(<span 
+                    style="COLOR: #a31515">&quot;CONNECTION-STRING&quot;</span>);</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+            <p style="MARGIN: 0px">
+                &nbsp;</p>
+            <p style="MARGIN: 0px">
+                &nbsp;</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: #2b91af">
+                Debug</span>.WriteLine(container.WhatDoIHave());</p>
+        </div>
+        <p>
+            Which would spit out this text into your output window:</p>
+        <pre>===========================================================================================================
+Configuration Sources:
+
+0)   Registry:  StructureMap.ConfigurationExpression,StructureMap
+
+
+===============================================================================================================================================================================================================================================================================================================================
+PluginType                                                                                                                Name                                                                                                 Description                                                                                     
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ShadeTree.Validation.IValidator, ShadeTree, Version=0.8.0.0, Culture=neutral, PublicKeyToken=null                         ShadeTree.Validation.Validator, ShadeTree, Version=0.8.0.0, Culture=neutral, PublicKeyToken=null     ShadeTree.Validation.Validator, ShadeTree, Version=0.8.0.0, Culture=neutral, PublicKeyToken=null
+Built by:  StructureMap.Pipeline.BuildPolicy
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+StructureMapSample.IRepository, DovetailCRM.IntegrationTesting, Version=0.9.0.0, Culture=neutral, PublicKeyToken=null     27fdf13e-8adc-4f8f-9f53-cf7b35ada80c                                                                 Smart Instance for StructureMapSample.Repository                                                
+Built by:  StructureMap.Pipeline.BuildPolicy
+
+===============================================================================================================================================================================================================================================================================================================================</pre>
+        <p>
+            which is admittedly, not the prettiest looking thing in the world.</p>
+        <p>
+            You can also “assert” that the configuration for a Container or ObjectFactory is 
+            complete by calling the Container.AssertConfigurationIsValid() method like this 
+            sample below:</p>
+        <div style="BORDER-RIGHT: black thin solid; BORDER-TOP: black thin solid; FONT-SIZE: 10pt; BACKGROUND: white; OVERFLOW: scroll; BORDER-LEFT: black thin solid; COLOR: black; BORDER-BOTTOM: black thin solid; FONT-FAMILY: courier new">
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">var</span> 
+                container = <span style="COLOR: blue">new</span> <span style="COLOR: #2b91af">
+                Container</span>(x =&gt;</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.ForRequestedType&lt;<span style="COLOR: #2b91af">IValidator</span>&gt;().TheDefaultIsConcreteType&lt;<span 
+                    style="COLOR: #2b91af">Validator</span>&gt;();</p>
+            <p style="MARGIN: 0px">
+                &nbsp;</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.ForRequestedType&lt;<span style="COLOR: #2b91af">IRepository</span>&gt;().TheDefault.Is.OfConcreteType&lt;<span 
+                    style="COLOR: #2b91af">Repository</span>&gt;()</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .WithCtorArg(<span style="COLOR: #a31515">&quot;connectionString&quot;</span>).EqualToAppSetting(<span 
+                    style="COLOR: #a31515">&quot;CONNECTION-STRING&quot;</span>);</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+            <p style="MARGIN: 0px">
+                &nbsp;</p>
+            <p style="MARGIN: 0px">
+                &nbsp;</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                container.AssertConfigurationIsValid();</p>
+        </div>
+        <p>
+            This method will analyze every thing in the Container configuration and:</p>
+        <ol>
+            <li>Look for any missing constructor or mandatory setter arguments </li>
+            <li>Look for any unknown dependency types </li>
+            <li>Look for any errors in the Xml configuration (if you’re using Xml configuration)
+            </li>
+            <li>Try to build each and every type and named instance in the configuration – i.e. 
+                this is a complete, but relatively expensive operation </li>
+            <li>Run any environment tests configured with the [ValidationMethod] attribute (<a 
+                    href="http://codebetter.com/blogs/jeremy.miller/archive/2006/04/06/142431.aspx">a 
+                feature that is unique to StructureMap as far as I know</a>) </li>
+        </ol>
+        <p>
+            The previous sample is a valid configuration, but let’s look at an invalid 
+            configuration.&nbsp; Let’s omit the configuration of the “connectionString” 
+            constructor argument for the Repository class and try 
+            AssertConfigurationIsValid():</p>
+        <div style="BORDER-RIGHT: black thin solid; BORDER-TOP: black thin solid; FONT-SIZE: 10pt; BACKGROUND: white; OVERFLOW: scroll; BORDER-LEFT: black thin solid; COLOR: black; BORDER-BOTTOM: black thin solid; FONT-FAMILY: courier new">
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<span style="COLOR: #2b91af">Test</span>]</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">public</span>
+                <span style="COLOR: blue">void</span> lets_see_if_the_container_is_valid()</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: blue">var</span> 
+                container = <span style="COLOR: blue">new</span> <span style="COLOR: #2b91af">
+                Container</span>(x =&gt;</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.ForRequestedType&lt;<span style="COLOR: #2b91af">IRepository</span>&gt;().TheDefault.Is.OfConcreteType&lt;<span 
+                    style="COLOR: #2b91af">Repository</span>&gt;();</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="COLOR: green">
+                //.WithCtorArg(&quot;connectionString&quot;).EqualToAppSetting(&quot;CONNECTION-STRING&quot;);</span></p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+            <p style="MARGIN: 0px">
+                &nbsp;</p>
+            <p style="MARGIN: 0px">
+                &nbsp;</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                container.AssertConfigurationIsValid();</p>
+            <p style="MARGIN: 0px">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+        <p>
+            When I run the unit test above, this is part of the output:</p>
+        <pre>Build Error on Instance &#39;73b7f21b-bbfd-462c-854d-5b2a2f98ba50&#39; (Smart Instance for StructureMapSample.Repository)
+    for PluginType StructureMapSample.IRepository, DovetailCRM.IntegrationTesting, Version=0.9.0.0, Culture=neutral, PublicKeyToken=null
+
+StructureMap.StructureMapException: StructureMap Exception Code:  205
+Missing requested Instance property &quot;connectionString&quot; for InstanceKey &quot;73b7f21b-bbfd-462c-854d-5b2a2f98ba50&quot;</pre>
+        <p>
+            which again, isn’t the prettiest thing in the world, but it does tell me that 
+            the “connectionString” argument is missing for the Repository class.&nbsp; After 
+            seeing this output, I think that this output and error wording will get improved 
+            in an upcoming release.</p>
+        <hr />
 	
 	</body>
 </html>

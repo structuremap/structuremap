@@ -1,22 +1,18 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 	<head>
-		<title></title>
-	    <style type="text/css">
-            .style1
-            {
-                font-family: "Courier New", Courier, monospace;
-            }
-        </style>
+		<title>Glossary of Terms</title>
+		<link rel="stylesheet" type="text/css" href="style.css" />
+		<script type="text/javascript" src="jquery-1.2.6.js"></script>
+		<script type="text/javascript" src="structuremap.js"></script>
 	</head>
 	<body>
-	<h1>Glossary</h1>
 	<p>There are some terms that reoccur throughout the documentation and show up in the StructureMap configuration.  Understanding these terms and how they relate to StructureMap isn't a prerequisite to using StructureMap, but it helps.</p>
-	<h4>Container</h4>
+	<h2>Container</h2>
 	<p>Tools like StructureMap are generally referred to as IoC containers, or in the 
         Java world sometimes as &quot;lightweight&quot; containers to differentiate them from the 
-        old EJB containers.&nbsp; As far as I know, the term Inversion of Control 
-        Container was coined by members of the PicoContainer team at ThoughtWorks and 
+        older EJB containers.&nbsp; As far as I know, the term &quot;Inversion of Control 
+        Container&quot; was coined by members of the PicoContainer team at ThoughtWorks and 
         popularized by the publication of Martin Fowler&#39;s paper
         <a href="http://martinfowler.com/articles/injection.html">Inversion of Control 
         Containers and the Dependency Injection</a> pattern in January 2004.&nbsp; 
@@ -79,8 +75,8 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
         </div>
 <!--EndFragment-->
-<p>&nbsp;</p>
-	<h4>PluginType &amp; PluggedType</h4>
+<hr />
+	<h2>PluginType &amp; PluggedType</h2>
 	<p>I use the term &quot;PluginType&quot; throughout the code and documentation to mean &quot;the 
         type that you want.&quot;&nbsp; In my current project I have this line of 
         configuration:</p>
@@ -99,7 +95,7 @@
     an instance of the<span class="style1"> Repository</span> class.&nbsp; In this 
     case, <span class="style1">IRepository</span> is the PluginType (what you&#39;re 
     asking for) and <span class="style1">Repository</span> is the &quot;PluggedType&quot; (the 
-    concrete class you&#39;ll get).</p>
+    concrete class you&#39;ll get that fulfills implements the PluginType contract).</p>
 <p>Another example of the PluginType / PluggedType nomenclature is in the Xml 
     configuration on the &lt;DefaultInstance&gt; node.&nbsp; The example below configures 
     the default ISessionSource:</p>
@@ -182,8 +178,8 @@
             style="color: blue;">&gt;</span></p>
 </div>
 <!--EndFragment-->
-<p>&nbsp;</p>
-	<h4>Instance</h4>
+<hr />
+	<a name="Instance"></a><h2>Instance</h2>
 	<p>In StructureMap terms, an &quot;Instance&quot; is a named way to build or locate a 
         named object 
         instance for a requested PluginType.&nbsp; An &quot;Instance&quot; does not automatically 
@@ -413,7 +409,8 @@
 <p>When you call ObjectFactory.GetNamedInstance&lt;T&gt;(&quot;the instance that I want&quot;) or 
     ObjectFactory.GetInstance&lt;T&gt;(), the internal Container object is locating the 
     correct Instance object and calling its Build() method.</p>
-	<h4>Scoping (or Lifecycle)</h4>
+	    <hr />
+	<h2>Scoping (or Lifecycle)</h2>
 	<p>When you register a PluginType in the system you can &quot;scope&quot; the Instance&#39;s of 
         that PluginType like this:</p>
 <!--
@@ -457,6 +454,8 @@
 						<li>HttpContext - A single object will be created for 
 						each HttpContext.&nbsp; Caches the instances in the 
 						HttpContext.Items collection.</li>
+                        <li>HttpSession - A single object will be created for each Http Session.&nbsp; 
+                            Caches the intances in the HttpContext.Session collection.</li>
 						<li>Hybrid - Uses HttpContext storage if it exists, 
 						otherwise uses ThreadLocal storage.</li>
 					</ol>
@@ -464,11 +463,15 @@
                         It is possible to create your own type of scoping.&nbsp; See &quot;Extending 
                         StructureMap&quot; [LINK -- doesn&#39;t exist yet] for more information.&nbsp; Also note 
                         that StructureMap provides no functionality for cleaning up resources of the 
-                        objects held by the container.&nbsp; To date, I have not found a need for this 
+                        objects held by the container (Container.EjectAllInstances&lt;T&gt;() will clear out 
+                        singleton objects).&nbsp; To date, I have not found a need for this 
                         behavior or functionality.&nbsp; I generally assume that a combination of basic 
-                        garbage collection and proper class design is sufficient.</p>
-	<h4>&nbsp;</h4>
-    <h4>Profile</h4>
+                        garbage collection and proper class design is sufficient.&nbsp; Please also note 
+                        that StructureMap does not retain a reference to objects that are created as 
+                        &quot;PerRequest/Transient&quot; and there is not need for any kind of Container.Release() 
+                        method like some other IoC tools.</p>
+	    <hr />
+    <h2>Profile</h2>
 	<p>From the very beginning, StructureMap has supported the ability to define a named 
         set of default instances called a &quot;Profile.&quot;&nbsp; The Profile feature was 
         originally meant to be a quick way of switching the connection mode of a smart 
@@ -551,8 +554,8 @@
         container.SetDefaultsToProfile(<span style="color: #2b91af;">CoreRegistry</span>.IN_MEMORY_PROFILE);</p>
 </div>
 <!--EndFragment-->
-<p>&nbsp;</p>
-	<h4>Interceptor</h4>
+<hr />
+	<h2>Interceptor</h2>
 	<p>A new feature for StructureMap 2.5 is the ability to &quot;intercept&quot; an object 
         getting created in StructureMap before the new object is handed back to the 
         requesting code.&nbsp; The intention behind this feature is to support runtime 
@@ -617,5 +620,8 @@
     The Instance class first builds the raw object, then applies any registered 
     interception on the raw object to get the final value.&nbsp;
 </p>
+        <p>
+            See <a href="Interception.htm">Interception</a> for more information.</p>
+	    <hr />
 	</body>
 </html>

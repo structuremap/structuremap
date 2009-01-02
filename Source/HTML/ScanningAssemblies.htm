@@ -17,11 +17,6 @@
         2.4.9 preview release.&nbsp; However, the Xml configuration has remained 
         consistent in both form and function.</p>
     <h4>
-        Table of Contents</h4>
-    <ul>
-        <li>The Scan() Expression</li>
-    </ul>
-    <h4>
         Using the Scan() Expression</h4>
     <p>
         Auto registration begins with the Scan() expression inside a Registry class or 
@@ -236,12 +231,7 @@
     The first thing you need to do to utilize the type scanning is to designate 
     which assemblies to scan.&nbsp; The type scanning will throw an exception if you 
     attempt to call the Scan() expression without designating at least one assembly.&nbsp; 
-    Use one of the following methods on IAssemblyScanner to designate assemblies:\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red0\green128\blue0;}??\fs20     \cf3 public\cf0  \cf3 interface\cf0  \cf4 IAssemblyScanner\par ??\cf0     \{\par ??        \cf5 // Determining which assemblies to scan\par ??\cf0         \cf3 void\cf0  Assembly(\cf4 Assembly\cf0  assembly);\par ??        \cf3 void\cf0  Assembly(\cf3 string\cf0  assemblyName);\par ??        \cf3 void\cf0  TheCallingAssembly();\par ??        \cf3 void\cf0  AssemblyContainingType&lt;T&gt;();\par ??        \cf3 void\cf0  AssemblyContainingType(\cf4 Type\cf0  type);\par ??        \cf3 void\cf0  AssembliesFromPath(\cf3 string\cf0  path);\par ??        \cf3 void\cf0  AssembliesFromPath(\cf3 string\cf0  path, \cf4 Predicate\cf0 &lt;\cf4 Assembly\cf0 &gt; assemblyFilter);\par ??        \par ??        \cf5 // Adding conventions\par ??\cf0         \cf3 void\cf0  With(\cf4 ITypeScanner\cf0  scanner);\par ??        \cf3 void\cf0  WithDefaultConventions();\par ??        \cf3 void\cf0  With&lt;T&gt;() \cf3 where\cf0  T : \cf4 ITypeScanner\cf0 , \cf3 new\cf0 ();\par ??        \par ??        \cf5 // Other options\par ??\cf0         \cf3 void\cf0  LookForRegistries();\par ??        \cf3 void\cf0  AddAllTypesOf&lt;PLUGINTYPE&gt;();\par ??        \cf3 void\cf0  AddAllTypesOf(\cf4 Type\cf0  pluginType);\par ??        \cf3 void\cf0  IgnoreStructureMapAttributes();\par ??        \par ??        \cf5 // Filtering the types that will be scanned\par ??\cf0         \cf3 void\cf0  Exclude(\cf4 Predicate\cf0 &lt;\cf4 Type\cf0 &gt; exclude);\par ??        \cf3 void\cf0  ExcludeNamespace(\cf3 string\cf0  nameSpace);\par ??        \cf3 void\cf0  ExcludeNamespaceContainingType&lt;T&gt;();\par ??        \cf3 void\cf0  Include(\cf4 Predicate\cf0 &lt;\cf4 Type\cf0 &gt; predicate);\par ??        \cf3 void\cf0  IncludeNamespace(\cf3 string\cf0  nameSpace);\par ??        \cf3 void\cf0  IncludeNamespaceContainingType&lt;T&gt;();\par ??        \cf3 void\cf0  ExcludeType&lt;T&gt;();\par ??    \}}
--->
-<!--
-{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red0\green128\blue0;}??\fs20     \cf3 public\cf0  \cf3 interface\cf0  \cf4 IAssemblyScanner\par ??\cf0     \{\par ??\cf3         #region\cf0  Designating Assemblies\par ??\par ??        \cf3 void\cf0  Assembly(\cf4 Assembly\cf0  assembly);\par ??        \cf3 void\cf0  Assembly(\cf3 string\cf0  assemblyName);\par ??        \cf3 void\cf0  TheCallingAssembly();\par ??        \cf3 void\cf0  AssemblyContainingType&lt;T&gt;();\par ??        \cf3 void\cf0  AssemblyContainingType(\cf4 Type\cf0  type);\par ??        \cf3 void\cf0  AssembliesFromPath(\cf3 string\cf0  path);\par ??        \cf3 void\cf0  AssembliesFromPath(\cf3 string\cf0  path, \cf4 Predicate\cf0 &lt;\cf4 Assembly\cf0 &gt; assemblyFilter);\par ??\par ??\cf3         #endregion\par ??\par ??\cf0         \cf5 // ... Other methods\par ??\par ??\cf3         #region\cf0  Adding TypeScanners\par ??\par ??        \cf3 void\cf0  With(\cf4 ITypeScanner\cf0  scanner);\par ??        \cf3 void\cf0  WithDefaultConventions();\par ??        \cf3 void\cf0  With&lt;T&gt;() \cf3 where\cf0  T : \cf4 ITypeScanner\cf0 , \cf3 new\cf0 ();\par ??\par ??\cf3         #endregion\par ??\par ??        #region\cf0  Other options\par ??\par ??        \cf3 void\cf0  LookForRegistries();\par ??        \cf3 void\cf0  AddAllTypesOf&lt;PLUGINTYPE&gt;();\par ??        \cf3 void\cf0  AddAllTypesOf(\cf4 Type\cf0  pluginType);\par ??        \cf3 void\cf0  IgnoreStructureMapAttributes();\par ??\par ??\cf3         #endregion\par ??\par ??        #region\cf0  Filtering types\par ??\par ??        \cf3 void\cf0  Exclude(\cf4 Predicate\cf0 &lt;\cf4 Type\cf0 &gt; exclude);\par ??        \cf3 void\cf0  ExcludeNamespace(\cf3 string\cf0  nameSpace);\par ??        \cf3 void\cf0  ExcludeNamespaceContainingType&lt;T&gt;();\par ??        \cf3 void\cf0  Include(\cf4 Predicate\cf0 &lt;\cf4 Type\cf0 &gt; predicate);\par ??        \cf3 void\cf0  IncludeNamespace(\cf3 string\cf0  nameSpace);\par ??        \cf3 void\cf0  IncludeNamespaceContainingType&lt;T&gt;();\par ??        \cf3 void\cf0  ExcludeType&lt;T&gt;();\par ??\par ??\cf3         #endregion\par ??\par ??\cf0     \}}
--->
-<div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+    Use one of the following methods on IAssemblyScanner to designate assemblies:<div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
     <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">
         interface</span> <span style="color: #2b91af;">IAssemblyScanner</span></p>
@@ -405,8 +395,10 @@
     <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp; }</p>
 </div>
-<p>
-    &nbsp; StructureMap 2.5 has a brand new capability to auto register types in all 
+<h4>
+    &nbsp;Scan all Assemblies in a Given Folder</h4>
+        <p>
+            StructureMap 2.5 has a brand new capability to auto register types in all 
     assemblies in a given folder path.&nbsp; My current project is using this 
     feature for our extensibility mechanism.&nbsp; For customer-specific 
     deployments, we need to add business rules and even all new screens and features 
@@ -434,7 +426,7 @@
         assemblies found in that folder</span></p>
     <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-        x.AssembliesFromPath(<span style="color: #a31515;">&quot;Extensions&quot;</span>);</p>
+        x.AssembliesFromPath(<span style="color: #a31515;">&quot;Extensions&quot;</span>);/p>
     <p style="margin: 0px;">
         &nbsp;</p>
     <p style="margin: 0px;">
@@ -768,21 +760,20 @@
 </div>
 <!--EndFragment-->
 <p>
-        &nbsp; </p>
+        &&nbsp; </p>
 <!--
 {\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red43\green145\blue175;}??\fs20             Scan(x =&gt;\par ??            \{\par ??                x.TheCallingAssembly();\par ??\par ??                x.ExcludeNamespaceContainingType&lt;\cf3 IEvent\cf0 &gt;();\par ??                x.ExcludeNamespaceContainingType&lt;\cf3 SearchModel\cf0 &gt;();\par ??                x.ExcludeNamespaceContainingType&lt;\cf3 AuthenticationService\cf0 &gt;();\par ??                x.ExcludeNamespaceContainingType&lt;\cf3 DovetailController\cf0 &gt;();\par ??\par ??                x.AddAllTypesOf&lt;\cf3 IDomainMap\cf0 &gt;();\par ??                \par ??                x.WithDefaultConventions();\par ??                x.With&lt;\cf3 DomainEntityAliaser\cf0 &gt;();\par ??            \});}
 -->
     <h4>
-    Rules fRules for Adding Types</h4>
+        Rules for Adding Types</h4>
 <h4>
-    Controlling Type Scanning with the [PluginFamily] and [Pluggable] attributes</h4>
+    Controlling Type Scanning with the [PluginFamily] and [Pluggable] attributes/h4>
 <p>
-    A subset of StructureMap functionality can be configured through 
+    AA subset of StructureMap functionality can be configured through 
 					the usage of attributes.&nbsp;
- Looking for Registries</h4>
+ Looking for RegistriesUsing the Default Conventions</h4>
 <h4>
-    Writing a Custom TypeScannerp>
-    &nbsp;</p>
+    Convention Based Type Registration</p>
 <!--
 {\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20     \cf3 public\cf0  \cf3 interface\cf0  \cf4 ITypeScanner\par ??\cf0     \{\par ??        \cf3 void\cf0  Process(\cf4 Type\cf0  type, \cf4 PluginGraph\cf0  graph);\par ??    \}}
 -->
@@ -802,20 +793,6 @@
 </div>
 <!--EndFragment-->
 <p>
-    &nbsp;</p>
-<p>
-    &nbsp;</p>
-<!--
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
-    </div>
-<!--EndFragment-->
-<h4>
-        &nbsp;Using the Default Conventions</h4>
-<!--
-{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red43\green145\blue175;}??\fs20             Scan(x =&gt;\par ??            \{\par ??                x.TheCallingAssembly();\par ??\par ??                x.ExcludeNamespaceContainingType&lt;\cf3 IEvent\cf0 &gt;();\par ??                x.ExcludeNamespaceContainingType&lt;\cf3 SearchModel\cf0 &gt;();\par ??                x.ExcludeNamespaceContainingType&lt;\cf3 AuthenticationService\cf0 &gt;();\par ??                x.ExcludeNamespaceContainingType&lt;\cf3 DovetailController\cf0 &gt;();\par ??\par ??                x.AddAllTypesOf&lt;\cf3 IDomainMap\cf0 &gt;();\par ??                \par ??                x.WithDefaultConventions();\par ??                x.With&lt;\cf3 DomainEntityAliaser\cf0 &gt;();\par ??            \});}
--->
-<h4>
-    Writing a Custom TypeScannerp>
     &nbsp;</p>
 <!--
 {\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20     \cf3 public\cf0  \cf3 interface\cf0  \cf4 ITypeScanner\par ??\cf0     \{\par ??        \cf3 void\cf0  Process(\cf4 Type\cf0  type, \cf4 PluginGraph\cf0  graph);\par ??    \}}
@@ -845,7 +822,7 @@
 <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
     <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
-            style="color: green;"> </span><span style="color: gray;">&lt;summary&gt;ot;concreteType&quot;&gt;&lt;/param&gt;</span></p>
+            style="color: green;"> </span><span style="color: gray;">&lt;summary&gt;ot;concreteType&quot;&gt;&lt;/param&gt;/span></p>
         <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
                 style="color: green;"> </span><span style="color: gray;">&lt;param 
@@ -936,9 +913,9 @@
 <p style="margin: 0px">
     &nbsp;</p>
 <p style="margin: 0px">
-    &nbsp;</p>
+    &&nbsp;</p>
 <p style="margin: 0px">
-    TypeRules</p>
+    &nbsp;</p>
 	    
 	</body>
 </html>

@@ -1,0 +1,405 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+	<head>
+		<title>Changing Configuration at Runtime</title>
+		<link rel="stylesheet" type="text/css" href="style.css" />
+		<script type="text/javascript" src="jquery-1.2.6.js"></script>
+		<script type="text/javascript" src="structuremap.js"></script>
+	</head>
+	<body>
+	<p>In the beginning (late 2003), there was attributes and there was a copious amount of Xml configuration, and I called it good.&nbsp; 
+        Look Ma!&nbsp; I can radically change the behavior of the code without 
+        recompiling, isn&#39;t that a marvelous thing?&nbsp; 
+        Then we started to use StructureMap on a real project and quickly realized that 
+        it would be very useful if we could override some services with mock objects in 
+        our unit tests.&nbsp; In later projects I&#39;ve run into scenarios where it would 
+        be valuable to put an object into StructureMap after it was created.&nbsp; Other 
+        users have asked for the ability to load assemblies or modules of their system 
+        on demand so as to save memory.&nbsp; A major goal of the StructureMap 2.5 
+        release has been to greatly extend its capabilities for service registration at 
+        runtime.&nbsp; With a very few exceptions, you can now make any and all 
+        configuration changes after the first call to ObjectFactory.&nbsp; My 
+        recommendation is to use this behavior simply and with caution because it will 
+        bypass many of the diagnostic abilities built into StructureMap (i.e. 
+        StructureMapDoctor might miss configuration problems introduced outside of the 
+        normal configuration).</p>
+<h2>
+        Adding Configuration to an Existing Container</h2>
+<p>
+        In contrast to Initialize(), the Configure() method allows you to add additional 
+        configuration to an existing Container or ObjectFactory.&nbsp; Think of this 
+        scenario.&nbsp; You&#39;re building a composite application that contains multiple 
+        modules spread over several assemblies, but you might not want to load any of 
+        the configuration or types for a particular module until it&#39;s requested by the 
+        user.&nbsp; In that case, you can use the Configure() method like this:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green128\blue0;\red43\green145\blue175;\red163\green21\blue21;}??\fs20             \cf3 // This code would add any configuration from\par ??\cf0             \cf3 // Registry classes found in the \par ??\cf0             \cf3 // assembly named 'MyApplication.Module1'\par ??\cf0             \cf4 ObjectFactory\cf0 .Configure(x =&gt;\par ??            \{\par ??                x.Scan(scan =&gt;\par ??                \{\par ??                    scan.LookForRegistries();\par ??                    scan.Assembly(\cf5 "MyApplication.Module1"\cf0 );\par ??                \});\par ??            \});}
+-->
+<div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid; overflow: scroll;">
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span style="color: green;">// This code would add any configuration from</span></p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span style="color: green;">// Registry classes found in the </span>
+    </p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span style="color: green;">// assembly named &#39;MyApplication.Module1&#39;</span></p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span style="color: #2b91af;">ObjectFactory</span>.Configure(x =&gt;</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        x.Scan(scan =&gt;</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        {</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        scan.LookForRegistries();</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        scan.Assembly(<span style="color: #a31515;">&quot;MyApplication.Module1&quot;</span>);</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        });</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+</div>
+<!--EndFragment-->
+<p>
+        To summarize, Initialize() completely resets the configuration of a Container, 
+        and Configure() is purely additive.&nbsp; If Configure() should happen to be 
+        called before Initialize(), it will set up the Container with the configuration 
+        in the Configure() call.&nbsp; Configure() offers a subset of the Initialize() 
+        method (it leaves out the directives for the StructureMap.config file), and it 
+        also exposes the entire <a href="RegistryDSL.htm">Registry DSL</a>.&nbsp; You can take advantage of that fact 
+        to add a few types or instances at a time:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red43\green145\blue175;}??\fs20 \par ??            \cf3 ObjectFactory\cf0 .Configure(x =&gt;\par ??            \{\par ??                x.ForRequestedType&lt;\cf3 ISomething\cf0 &gt;().TheDefaultIsConcreteType&lt;\cf3 SomethingOne\cf0 &gt;();\par ??            \});\par ??}
+-->
+<div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid; overflow: scroll;">
+    <p style="margin: 0px;">
+        &nbsp;</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span style="color: #2b91af;">ObjectFactory</span>.Configure(x =&gt;</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        x.ForRequestedType&lt;<span style="color: #2b91af;">ISomething</span>&gt;().TheDefaultIsConcreteType&lt;<span 
+            style="color: #2b91af;">SomethingOne</span>&gt;();</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+</div>
+<!--EndFragment-->
+<hr />
+        
+        <h2>Injecting a Single Service at Runtime</h2>
+        <p>In my desktop applications the main form usually implements some sort of 
+            IApplicationShell interface.&nbsp; I&#39;ve found it valuable to place the main form 
+            itself into StructureMap, as well as several child controls of the main form as 
+            well so that various Controllers, Presenters, and Commands can interact with 
+            parts of the main shell without tight coupling.&nbsp; I probably could build the ApplicationShell 
+            itself inside of StructureMap, but the child controls like (I&#39;m making this up) 
+            IQueryToolBar or IExplorerPane are easiest to create as part of the 
+            ApplicationShell and loaded into StructureMap later.</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20     \cf3 public\cf0  \cf3 class\cf0  \cf4 ApplicationShell\cf0  : \cf4 Form\cf0 , \cf4 IApplicationShell\par ??\cf0     \{\par ??        \par ??    \}}
+-->
+    <div style="font-family: Courier New; font-size: 10pt; color: black; background: white;">
+        <p style="margin: 0px;">
+            &nbsp;</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20     \cf3 public\cf0  \cf3 class\cf0  \cf4 ApplicationShell\cf0  : \cf4 Form\cf0 , \cf4 IApplicationShell\par ??\cf0     \{\par ??        \cf3 public\cf0  \cf4 IQueryToolBar\cf0  QueryToolBar\par ??        \{\par ??            \cf3 get\par ??\cf0             \{\par ??                \cf3 return\cf0  \cf3 null\cf0 ;\par ??            \}\par ??        \}\par ??\par ??        \cf3 public\cf0  \cf4 IExplorerPane\cf0  ExplorerPane\par ??        \{\par ??            \cf3 get\par ??\cf0             \{\par ??                \cf3 return\cf0  \cf3 null\cf0 ;\par ??            \}\par ??        \}\par ??    \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white;" 
+            class="code-sample">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">class</span>
+                <span style="color: #2b91af;">ApplicationShell</span> :
+                <span style="color: #2b91af;">Form</span>, <span style="color: #2b91af;">
+                IApplicationShell</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: #2b91af;">IQueryToolBar</span> QueryToolBar...</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: #2b91af;">IExplorerPane</span> ExplorerPane...</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+</div>
+<!--EndFragment-->
+<p>Easy enough.&nbsp; The main shell has some controls on it.&nbsp; Now, we may want 
+    a centralized class to govern the behavior of just the query tool bar along the 
+    top of the main form.&nbsp; That class obviously needs to find the IQueryToolBar 
+    on the main form, but I need a clean way of connecting the IQueryToolBar to this 
+    new QueryController class.</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20     \cf3 public\cf0  \cf3 class\cf0  \cf4 QueryController\par ??\cf0     \{\par ??        \cf3 private\cf0  \cf4 IQueryToolBar\cf0  _toolBar;\par ??\par ??        \cf3 public\cf0  QueryController(\cf4 IQueryToolBar\cf0  toolBar)\par ??        \{\par ??            _toolBar = toolBar;\par ??        \}\par ??    \}}
+-->
+<div style="font-family: Courier New; font-size: 10pt; color: black; background: white;" 
+            class="code-sample">
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">
+        class</span> <span style="color: #2b91af;">QueryController</span></p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">private</span>
+        <span style="color: #2b91af;">IQueryToolBar</span> _toolBar;</p>
+    <p style="margin: 0px;">
+        &nbsp;</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> 
+        QueryController(<span style="color: #2b91af;">IQueryToolBar</span> toolBar)</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _toolBar = toolBar;</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+</div>
+<!--EndFragment-->
+<p>StructureMap is going to build up the QueryController, but it doesn&#39;t help to 
+    inject in a new IQueryToolBar that isn&#39;t visible anywhere in the application.&nbsp; 
+    We need to get to exactly the right instance of that control.&nbsp; So let&#39;s use 
+    the new Inject&lt;T&gt;(T instance) method on ObjectFactory to register the child 
+    controls from the main form.</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green128\blue0;\red43\green145\blue175;\red0\green0\blue255;}??\fs20             \cf3 // Familiar stuff for the average WinForms or WPF developer\par ??\cf0             \cf3 // Create the main form\par ??\cf0             \cf4 ApplicationShell\cf0  shell = \cf5 new\cf0  \cf4 ApplicationShell\cf0 ();\par ??\par ??            \cf3 // Put the main form, and some of its children into StructureMap\par ??\cf0             \cf3 // where other Controllers and Commands can get to them\par ??\cf0             \cf3 // without being coupled to the main form\par ??\cf0             \cf4 ObjectFactory\cf0 .Inject&lt;\cf4 IApplicationShell\cf0 &gt;(shell);\par ??            \cf4 ObjectFactory\cf0 .Inject&lt;\cf4 IQueryToolBar\cf0 &gt;(shell.QueryToolBar);\par ??            \cf4 ObjectFactory\cf0 .Inject&lt;\cf4 IExplorerPane\cf0 &gt;(shell.ExplorerPane);\par ??\par ??\par ??            \cf4 Application\cf0 .Run(shell);}
+-->
+<div style="font-family: Courier New; font-size: 10pt; color: black; background: white;" 
+            class="code-sample">
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span style="color: green;">// Familiar stuff for the average WinForms or WPF 
+        developer</span></p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span style="color: green;">// Create the main form</span></p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span style="color: #2b91af;">ApplicationShell</span> shell =
+        <span style="color: blue;">new</span> <span style="color: #2b91af;">
+        ApplicationShell</span>();</p>
+    <p style="margin: 0px;">
+        &nbsp;</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span style="color: green;">// Put the main form, and some of its children into 
+        StructureMap</span></p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span style="color: green;">// where other Controllers and Commands can get to 
+        them</span></p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span style="color: green;">// without being coupled to the main form</span></p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span style="color: #2b91af;">ObjectFactory</span>.Inject&lt;<span 
+            style="color: #2b91af;">IApplicationShell</span>&gt;(shell);</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span style="color: #2b91af;">ObjectFactory</span>.Inject&lt;<span 
+            style="color: #2b91af;">IQueryToolBar</span>&gt;(shell.QueryToolBar);</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span style="color: #2b91af;">ObjectFactory</span>.Inject&lt;<span 
+            style="color: #2b91af;">IExplorerPane</span>&gt;(shell.ExplorerPane);</p>
+    <p style="margin: 0px;">
+        &nbsp;</p>
+    <p style="margin: 0px;">
+        &nbsp;</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span style="color: #2b91af;">Application</span>.Run(shell);</p>
+</div>
+<!--EndFragment-->
+</div>
+<!--EndFragment-->
+<p>Now, a call to ObjectFactory.GetInstance&lt;QueryController&gt;() will poke the 
+    IQueryToolBar instance we registered above into the constructor of the new 
+    QueryController object.&nbsp; Remember, one of the primary usages of 
+    StructureMap is simply to get the right service dependencies and metadata to the 
+    right concrete classes so you can concentrate on doing QueryController stuff in 
+    the QueryController class instead of bootstrapping all the stuff it needs.</p>
+<p>I&#39;ve used this exact strategy on three applications now to great success.&nbsp; 
+    The previous design had a lot of &quot;thisThing.ThatThing.QueryToolBar&quot; 
+    (who needs the Law of Demeter?) properties 
+    just to get access to the child controls on the main form.&nbsp; It was 
+    devolving into spaghetti code before I adopted the strategy above.</p>
+<p>The ObjectFactory.Inject&lt;T&gt;(T instance) method is identical to the older 
+    ObjectFactory.InjectStub&lt;T&gt;(T stub) method.&nbsp; I&#39;ve marked the older method 
+    as deprecated because I think the name is misleading.&nbsp; </p>
+<p>Use this strategy for any type of service or component that you need to inject 
+    into other services, but isn&#39;t convenient or possible to build through 
+    StructureMap itself.</p>
+        <h2>Injecting a Mock or a Stub at Runtime</h2>
+    <p>On its maiden cruise in 2004, my team quickly realized that we needed a way to
+On its maiden cruise in 2004, my team quickly realized that we needed a way to 
+        make StructureMap deliver up mock objects in unit tests.&nbsp; It obviously 
+        isn&#39;t efficient to mock with an Xml file for each and every unit test that 
+        requires this function (don&#39;t laugh, I&#39;ve seen people do that with early 
+        versions of a StructureMap container), so we wanted a way to temporarily load ObjectFactory up 
+        with a mock object in place of its normal behavior for a given type.&nbsp; 
+        Originally, there was hard coded support for the NMock framework, but with the 
+        advent of Rhino Mocks and other new mocking frameworks, I&#39;ve removed that 
+        functionality in favor of the simple ObjectFactory/Container.Inject&lt;T&gt;(T object) 
+        methods.</p>
+        <p>My strong advice is to not use the Container or ObjectFactory in unit tests in 
+            the mass majority of cases.&nbsp; Rather, my advice is to use simple Dependency 
+            Injection[LINK] to inject mock objects during unit tests.&nbsp; However, there 
+            are still times when you want or need a class to use the Container or 
+            ObjectFactory itself to get dependencies at runtime.&nbsp; For that case, here 
+            is a sample:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red43\green145\blue175;\red0\green0\blue255;\red0\green128\blue0;\red163\green21\blue21;}??\fs20     [\cf3 TestFixture\cf0 ]\par ??    \cf4 public\cf0  \cf4 class\cf0  \cf3 MockingExample\par ??\cf0     \{\par ??        [\cf3 SetUp\cf0 ]\par ??        \cf4 public\cf0  \cf4 void\cf0  SetUp()\par ??        \{\par ??            \cf5 // Make sure that the container is bootstrapped\par ??\cf0             \cf3 Bootstrapper\cf0 .Restart();\par ??        \}\par ??\par ??        [\cf3 TearDown\cf0 ]\par ??        \cf4 public\cf0  \cf4 void\cf0  TearDown()\par ??        \{\par ??            \cf5 // The problem with injecting mocks is in keeping the \par ??\cf0             \cf5 // mocks from one test getting into another test.\par ??\cf0             \cf5 // If you build the Container individually for each test run,\par ??\cf0             \cf5 // this isn't a problem.  However, if you do inject mocks into\par ??\cf0             \cf5 // the ObjectFactory static container, use the ResetDefaults()\par ??\cf0             \cf5 // method in the [TearDown] (or Dispose() for xUnit.net) to clear\par ??\cf0             \cf5 // out runtime injected services between tests\par ??\cf0             \cf3 ObjectFactory\cf0 .ResetDefaults();\par ??        \}\par ??\par ??        [\cf3 Test\cf0 ]\par ??        \cf4 public\cf0  \cf4 void\cf0  unit_test_that_uses_a_mock()\par ??        \{\par ??            \cf5 // Create a mock object with Rhino Mocks\par ??\cf0             \cf4 var\cf0  serviceMock = \cf3 MockRepository\cf0 .GenerateMock&lt;\cf3 IService\cf0 &gt;();\par ??        \par ??            \cf3 ObjectFactory\cf0 .Inject(serviceMock);\par ??\par ??            \cf5 // or\par ??\par ??\cf0             \cf3 ObjectFactory\cf0 .Inject(\cf6 "theService"\cf0 , serviceMock);\par ??\par ??            \cf5 // WARNING!  Inject is a generic method\par ??\par ??\cf0             \cf5 // This method registers serviceMock as an "IService"\par ??\cf0             \cf3 ObjectFactory\cf0 .Inject(serviceMock);\par ??\par ??            \cf5 // and is NOT equivalent to:\par ??\cf0             \cf3 ObjectFactory\cf0 .Inject&lt;\cf3 IBasicService\cf0 &gt;(serviceMock);\par ??        \}\par ??    \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; [<span style="color: #2b91af;">TestFixture</span>]</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">class</span>
+                <span style="color: #2b91af;">MockingExample</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<span style="color: #2b91af;">SetUp</span>]</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: blue;">void</span> SetUp()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // Make sure that the container is bootstrapped</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #2b91af;">
+                Bootstrapper</span>.Restart();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<span style="color: #2b91af;">TearDown</span>]</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: blue;">void</span> TearDown()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // The problem with injecting mocks is in keeping the </span>
+            </p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // mocks from one test getting into another test.</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // If you build the Container individually for each test run,</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // this isn&#39;t a problem.&nbsp; However, if you do inject mocks into</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // the ObjectFactory static container, use the ResetDefaults()</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // method in the [TearDown] (or Dispose() for xUnit.net) to clear</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // out runtime injected services between tests</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #2b91af;">
+                ObjectFactory</span>.ResetDefaults();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<span style="color: #2b91af;">Test</span>]</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: blue;">void</span> unit_test_that_uses_a_mock()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // Create a mock object with Rhino Mocks</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                var</span> serviceMock = <span style="color: #2b91af;">MockRepository</span>.GenerateMock&lt;<span 
+                    style="color: #2b91af;">IService</span>&gt;();</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #2b91af;">
+                ObjectFactory</span>.Inject(serviceMock);</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // or</span></p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #2b91af;">
+                ObjectFactory</span>.Inject(<span style="color: #a31515;">&quot;theService&quot;</span>, 
+                serviceMock);</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // WARNING!&nbsp; Inject is a generic method</span></p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // This method registers serviceMock as an &quot;IService&quot;</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #2b91af;">
+                ObjectFactory</span>.Inject(serviceMock);</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // and is NOT equivalent to:</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #2b91af;">
+                ObjectFactory</span>.Inject&lt;<span style="color: #2b91af;">IBasicService</span>&gt;(serviceMock);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<p>Please note that the call to Inject&lt;T&gt;(T object) registers the mock object as the 
+    default for the PluginType &quot;T.&quot;&nbsp; With RhinoMocks (my mocking tool of 
+    choice) this hasn&#39;t been as issue because you create mock objects as the 
+    interface in question.&nbsp; I have seen confusion with using other mocking 
+    engines that return the mock objects as &quot;object&quot; (I&#39;m looking at you TypeMock).&nbsp; 
+    In that case, be careful to include the generic parameter in the call to 
+    Inject&lt;T&gt;() to avoid registering your new mock object as &quot;object.&quot;&nbsp; </p>
+        <hr />
+    
+        <h2>Ejecting all Instances of a PluginType</h2>
+        <p>From a user request, StructureMap 2.5.2 introduces the ability to remove all 
+            Instances of a given PluginType by calling the Container.EjectAllInstancesOf<T>&lt;T&gt;() 
+            method, where &quot;T&quot; is the PluginType.&nbsp; This functionality will remove all 
+            object instances of T that are cached with the Singleton scope, but has no 
+            effect on other scopes.</p>
+        <hr />
+	</body>
+</html>

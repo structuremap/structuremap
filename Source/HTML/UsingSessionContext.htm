@@ -1,0 +1,350 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+	<head>
+		<title>Using the Session Context</title>
+		<link rel="stylesheet" type="text/css" href="style.css" />
+		<script type="text/javascript" src="jquery-1.2.6.js"></script>
+		<script type="text/javascript" src="structuremap.js"></script>
+	</head>
+	<body>
+	    <p>A new aspect of the StructureMap internal architecture is the BuildSession class 
+            that tracks the objects being created within a single call to any of the 
+            Container.GetInstance() methods.&nbsp; While it is mostly an internal feature, 
+            in some cases users can take advantage of the exposed IContext interface to 
+            query information about the current request and to even register or retrieve the 
+            dependencies that will be used within that object request.&nbsp; The IContext 
+            interface is shown below:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red128\green128\blue128;\red0\green128\blue0;}??\fs20     \cf3 public\cf0  \cf3 interface\cf0  \cf4 IContext\par ??\cf0     \{\par ??        \cf5 ///\cf6  \cf5 &lt;summary&gt;\par ??\cf0         \cf5 ///\cf6  Gets a reference to the \cf5 &lt;see cref="BuildStack"&gt;\cf6 BuildStack\cf5 &lt;/see&gt;\cf6  for this build session\par ??\cf0         \cf5 ///\cf6  \cf5 &lt;/summary&gt;\par ??\cf0         \cf4 BuildStack\cf0  BuildStack \{ \cf3 get\cf0 ; \}\par ??\par ??        \cf5 ///\cf6  \cf5 &lt;summary&gt;\par ??\cf0         \cf5 ///\cf6  The concrete type of the immediate parent object in the object graph\par ??\cf0         \cf5 ///\cf6  \cf5 &lt;/summary&gt;\par ??\cf0         \cf4 Type\cf0  ParentType \{ \cf3 get\cf0 ; \}\par ??\par ??        \cf5 ///\cf6  \cf5 &lt;summary&gt;\par ??\cf0         \cf5 ///\cf6  Get the object of type T that is valid for this build session.\par ??\cf0         \cf5 ///\cf6  \cf5 &lt;/summary&gt;\par ??\cf0         \cf5 ///\cf6  \cf5 &lt;typeparam name="T"&gt;&lt;/typeparam&gt;\par ??\cf0         \cf5 ///\cf6  \cf5 &lt;returns&gt;&lt;/returns&gt;\par ??\cf0         T GetInstance&lt;T&gt;();\par ??\par ??        \cf5 ///\cf6  \cf5 &lt;summary&gt;\par ??\cf0         \cf5 ///\cf6  Gets the root "frame" of the object request\par ??\cf0         \cf5 ///\cf6  \cf5 &lt;/summary&gt;\par ??\cf0         \cf4 BuildFrame\cf0  Root \{ \cf3 get\cf0 ; \}\par ??\par ??        \cf5 ///\cf6  \cf5 &lt;summary&gt;\par ??\cf0         \cf5 ///\cf6  The requested instance name of the object graph\par ??\cf0         \cf5 ///\cf6  \cf5 &lt;/summary&gt;\par ??\cf0         \cf3 string\cf0  RequestedName \{ \cf3 get\cf0 ; \}\par ??\par ??        \cf5 ///\cf6  \cf5 &lt;summary&gt;\par ??\cf0         \cf5 ///\cf6  Register a default object for the given PluginType that will\par ??\cf0         \cf5 ///\cf6  be used throughout the rest of the current object request\par ??\cf0         \cf5 ///\cf6  \cf5 &lt;/summary&gt;\par ??\cf0         \cf5 ///\cf6  \cf5 &lt;param name="pluginType"&gt;&lt;/param&gt;\par ??\cf0         \cf5 ///\cf6  \cf5 &lt;param name="defaultObject"&gt;&lt;/param&gt;\par ??\cf0         \cf3 void\cf0  RegisterDefault(\cf4 Type\cf0  pluginType, \cf3 object\cf0  defaultObject);\par ??    \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">interface</span>
+                <span style="color: #2b91af;">IContext</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> </span><span style="color: gray;">&lt;summary&gt;</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> Gets a reference to the </span>
+                <span style="color: gray;">&lt;see cref=&quot;BuildStack&quot;&gt;</span><span 
+                    style="color: green;">BuildStack</span><span style="color: gray;">&lt;/see&gt;</span><span 
+                    style="color: green;"> for this build session</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> </span><span style="color: gray;">&lt;/summary&gt;</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #2b91af;">BuildStack</span> 
+                BuildStack { <span style="color: blue;">get</span>; }</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> </span><span style="color: gray;">&lt;summary&gt;</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> The concrete type of the immediate parent object in 
+                the object graph</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> </span><span style="color: gray;">&lt;/summary&gt;</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #2b91af;">Type</span> ParentType 
+                { <span style="color: blue;">get</span>; }</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> </span><span style="color: gray;">&lt;summary&gt;</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> Get the object of type T that is valid for this build 
+                session.</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> </span><span style="color: gray;">&lt;/summary&gt;</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> </span><span style="color: gray;">&lt;typeparam 
+                name=&quot;T&quot;&gt;&lt;/typeparam&gt;</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> </span><span style="color: gray;">&lt;returns&gt;&lt;/returns&gt;</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; T GetInstance&lt;T&gt;();</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> </span><span style="color: gray;">&lt;summary&gt;</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> Gets the root &quot;frame&quot; of the object request</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> </span><span style="color: gray;">&lt;/summary&gt;</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #2b91af;">BuildFrame</span> Root 
+                { <span style="color: blue;">get</span>; }</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> </span><span style="color: gray;">&lt;summary&gt;</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> The requested instance name of the object graph</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> </span><span style="color: gray;">&lt;/summary&gt;</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">string</span> 
+                RequestedName { <span style="color: blue;">get</span>; }</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> </span><span style="color: gray;">&lt;summary&gt;</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> Register a default object for the given PluginType 
+                that will</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> be used throughout the rest of the current object 
+                request</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> </span><span style="color: gray;">&lt;/summary&gt;</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> </span><span style="color: gray;">&lt;param 
+                name=&quot;pluginType&quot;&gt;&lt;/param&gt;</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> </span><span style="color: gray;">&lt;param 
+                name=&quot;defaultObject&quot;&gt;&lt;/param&gt;</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">void</span> 
+                RegisterDefault(<span style="color: #2b91af;">Type</span> pluginType,
+                <span style="color: blue;">object</span> defaultObject);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red128\green128\blue128;\red0\green128\blue0;}??\fs20     \cf3 public\cf0  \cf3 interface\cf0  \cf4 IContext\par ??\cf0     \{\par ??        \cf5 ///\cf6  \cf5 &lt;summary&gt;\par ??\cf0         \cf5 ///\cf6  Gets a reference to the \cf5 &lt;see cref="BuildStack"&gt;\cf6 BuildStack\cf5 &lt;/see&gt;\cf6  for this build session\par ??\cf0         \cf5 ///\cf6  \cf5 &lt;/summary&gt;\par ??\cf0         \cf4 BuildStack\cf0  BuildStack \{ \cf3 get\cf0 ; \}\par ??\par ??        \cf5 ///\cf6  \cf5 &lt;summary&gt;\par ??\cf0         \cf5 ///\cf6  The concrete type of the immediate parent object in the object graph\par ??\cf0         \cf5 ///\cf6  \cf5 &lt;/summary&gt;\par ??\cf0         \cf4 Type\cf0  ParentType \{ \cf3 get\cf0 ; \}\par ??\par ??        \cf5 ///\cf6  \cf5 &lt;summary&gt;\par ??\cf0         \cf5 ///\cf6  Get the object of type T that is valid for this build session.\par ??\cf0         \cf5 ///\cf6  \cf5 &lt;/summary&gt;\par ??\cf0         \cf5 ///\cf6  \cf5 &lt;typeparam name="T"&gt;&lt;/typeparam&gt;\par ??\cf0         \cf5 ///\cf6  \cf5 &lt;returns&gt;&lt;/returns&gt;\par ??\cf0         T GetInstance&lt;T&gt;();\par ??\par ??        \cf5 ///\cf6  \cf5 &lt;summary&gt;\par ??\cf0         \cf5 ///\cf6  Gets the root "frame" of the object request\par ??\cf0         \cf5 ///\cf6  \cf5 &lt;/summary&gt;\par ??\cf0         \cf4 BuildFrame\cf0  Root \{ \cf3 get\cf0 ; \}\par ??\par ??        \cf5 ///\cf6  \cf5 &lt;summary&gt;\par ??\cf0         \cf5 ///\cf6  The requested instance name of the object graph\par ??\cf0         \cf5 ///\cf6  \cf5 &lt;/summary&gt;\par ??\cf0         \cf3 string\cf0  RequestedName \{ \cf3 get\cf0 ; \}\par ??    \}}
+-->
+<!--EndFragment-->
+<hr />
+	    <h2>Using the Build Stack</h2>
+	    <p>You can interrogate the IContext.BuildStack property to access the PluginType and 
+            name of the instance being created at any time.&nbsp; BuildStack will give you 
+            access both to the &quot;root&quot; of the request and the immediate &quot;parent&quot; of the 
+            object being created.&nbsp; The BuildStack keeps track of a BuildFrame (somewhat 
+            modeled on the StackFrame in the BCL) at each level of the request:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red128\green128\blue128;\red0\green128\blue0;}??\fs20     \cf3 public\cf0  \cf3 interface\cf0  \cf4 IBuildFrame\par ??\cf0     \{\par ??        \cf5 ///\cf6  \cf5 &lt;summary&gt;\par ??\cf0         \cf5 ///\cf6  The requested PluginType of the Instance being create\par ??\cf0         \cf5 ///\cf6  \cf5 &lt;/summary&gt;\par ??\cf0         \cf4 Type\cf0  RequestedType \{ \cf3 get\cf0 ; \}\par ??\par ??        \cf5 ///\cf6  \cf5 &lt;summary&gt;\par ??\cf0         \cf5 ///\cf6  The Name of the Instance being created\par ??\cf0         \cf5 ///\cf6  \cf5 &lt;/summary&gt;\par ??\cf0         \cf3 string\cf0  Name \{ \cf3 get\cf0 ; \}\par ??\par ??        \cf5 ///\cf6  \cf5 &lt;summary&gt;\par ??\cf0         \cf5 ///\cf6  The actual ConcreteType being created.  This will not always\par ??\cf0         \cf5 ///\cf6  be available\par ??\cf0         \cf5 ///\cf6  \cf5 &lt;/summary&gt;\par ??\cf0         \cf4 Type\cf0  ConcreteType \{ \cf3 get\cf0 ; \}\par ??    \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">interface</span>
+                <span style="color: #2b91af;">IBuildFrame</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> </span><span style="color: gray;">&lt;summary&gt;</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> The requested PluginType of the Instance being create</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> </span><span style="color: gray;">&lt;/summary&gt;</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #2b91af;">Type</span> 
+                RequestedType { <span style="color: blue;">get</span>; }</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> </span><span style="color: gray;">&lt;summary&gt;</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> The Name of the Instance being created</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> </span><span style="color: gray;">&lt;/summary&gt;</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">string</span> Name {
+                <span style="color: blue;">get</span>; }</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> </span><span style="color: gray;">&lt;summary&gt;</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> The actual ConcreteType being created.&nbsp; This 
+                will not always</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> be available</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> </span><span style="color: gray;">&lt;/summary&gt;</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #2b91af;">Type</span> 
+                ConcreteType { <span style="color: blue;">get</span>; }</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<p>IContext exposes a property for the full BuildStack, but also exposes some 
+    convenience methods for getting at the immediate parent type.&nbsp; The driver 
+    for this property was a request to recreate the Logging Facility from 
+    Windsor[LINK].&nbsp; Let&#39;s say that you want some sort of generic setter policy 
+    for logging.&nbsp; Any time StructureMap builds an object and sees a public 
+    settable property of your &quot;ILogger&quot; instance, it should use the type of being 
+    created to find the properly configured ILogger and then attach that new ILogger 
+    to the parent object.&nbsp; </p>
+        <p>Here&#39;s a sample of code that uses the IContext.ParentType to create the proper 
+            ILogger.</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20             \cf3 var\cf0  container = \cf3 new\cf0  \cf4 Container\cf0 (r =&gt;\par ??            \{\par ??                r.FillAllPropertiesOfType&lt;\cf4 ILogger\cf0 &gt;().TheDefault.Is\par ??                    .ConstructedBy(context =&gt; \cf3 new\cf0  \cf4 Logger\cf0 (context.ParentType));\par ??            \});}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                var</span> container = <span style="color: blue;">new</span>
+                <span style="color: #2b91af;">Container</span>(r =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                r.FillAllPropertiesOfType&lt;<span style="color: #2b91af;">ILogger</span>&gt;().TheDefault.Is</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .ConstructedBy(context =&gt; <span style="color: blue;">new</span>
+                <span style="color: #2b91af;">Logger</span>(context.ParentType));</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+        </div>
+<!--EndFragment-->
+<hr />
+	    <h2>Using the Requested Name</h2>
+	    <p>The IContext interface will allow you to use the instance name that was requested 
+            in a call to Container.GetInstance&lt;T&gt;(name) or 
+            ObjectFactory.GetNamedInstance&lt;T&gt;(name).&nbsp; The most common usage is probably 
+            going to be within the new &quot;Missing Instance[LINK]&quot; feature (inspired by the 
+            Missing Method feature of dynamic languages like Ruby[LINK]).&nbsp;&nbsp; The 
+            immediate way that my team is going to use the Missing Instance functionality is 
+            to build an object for localization support based on the requested culture.&nbsp; </p>
+        <p>Here&#39;s an example of using Missing Instance that queries the 
+            IContext.RequestedName property in order to construct an object:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red43\green145\blue175;\red0\green0\blue255;\red163\green21\blue21;}??\fs20         [\cf3 Test\cf0 ]\par ??        \cf4 public\cf0  \cf4 void\cf0  configure_and_use_missing_instance()\par ??        \{\par ??            \cf4 var\cf0  container = \cf4 new\cf0  \cf3 Container\cf0 (x =&gt;\par ??            \{\par ??                x.ForRequestedType&lt;\cf3 Rule\cf0 &gt;().MissingNamedInstanceIs.ConstructedBy(context =&gt; \cf4 new\cf0  \cf3 ColorRule\cf0 (context.RequestedName));\par ??            \});\par ??\par ??            container.GetInstance&lt;\cf3 Rule\cf0 &gt;(\cf5 "red"\cf0 ).ShouldBeOfType&lt;\cf3 ColorRule\cf0 &gt;().Color.ShouldEqual(\cf5 "red"\cf0 );\par ??            container.GetInstance&lt;\cf3 Rule\cf0 &gt;(\cf5 "green"\cf0 ).ShouldBeOfType&lt;\cf3 ColorRule\cf0 &gt;().Color.ShouldEqual(\cf5 "green"\cf0 );\par ??            container.GetInstance&lt;\cf3 Rule\cf0 &gt;(\cf5 "blue"\cf0 ).ShouldBeOfType&lt;\cf3 ColorRule\cf0 &gt;().Color.ShouldEqual(\cf5 "blue"\cf0 );\par ??        \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<span style="color: #2b91af;">Test</span>]</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: blue;">void</span> configure_and_use_missing_instance()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                var</span> container = <span style="color: blue;">new</span>
+                <span style="color: #2b91af;">Container</span>(x =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.ForRequestedType&lt;<span style="color: #2b91af;">Rule</span>&gt;().MissingNamedInstanceIs.ConstructedBy(context 
+                =&gt; <span style="color: blue;">new</span> <span style="color: #2b91af;">ColorRule</span>(context.RequestedName));</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; container.GetInstance&lt;<span 
+                    style="color: #2b91af;">Rule</span>&gt;(<span style="color: #a31515;">&quot;red&quot;</span>).ShouldBeOfType&lt;<span 
+                    style="color: #2b91af;">ColorRule</span>&gt;().Color.ShouldEqual(<span 
+                    style="color: #a31515;">&quot;red&quot;</span>);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; container.GetInstance&lt;<span 
+                    style="color: #2b91af;">Rule</span>&gt;(<span style="color: #a31515;">&quot;green&quot;</span>).ShouldBeOfType&lt;<span 
+                    style="color: #2b91af;">ColorRule</span>&gt;().Color.ShouldEqual(<span 
+                    style="color: #a31515;">&quot;green&quot;</span>);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; container.GetInstance&lt;<span 
+                    style="color: #2b91af;">Rule</span>&gt;(<span style="color: #a31515;">&quot;blue&quot;</span>).ShouldBeOfType&lt;<span 
+                    style="color: #2b91af;">ColorRule</span>&gt;().Color.ShouldEqual(<span 
+                    style="color: #a31515;">&quot;blue&quot;</span>);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<hr />
+	    <h2>Retrieving a Service from IContext</h2>
+	    <p>You can also retrieve other services from the IContext during object 
+            construction.&nbsp; Because the underlying BuildSession manages the 
+            AutoWiring[LINK], you can generally assume that you&#39;re using the exact same 
+            object instance for a PluginType that other objects in the same object graph 
+            will receive.&nbsp; That&#39;s a helpful feature when you&#39;re talking about using 
+            View&#39;s within any type of desktop application or any kind of NHibernate object 
+            where the state or identity of the object requested is important.</p>
+        <p>My team uses this functionality in our NHibernate bootstrapping.&nbsp; We have an 
+            interface named ISessionSource tht is responsible for creating the NHibernate 
+            ISession objects (it wraps a Sessio).</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20     \cf3 public\cf0  \cf3 interface\cf0  \cf4 ISessionSource\par ??\cf0     \{\par ??        \cf4 PersistenceModel\cf0  Model \{ \cf3 get\cf0 ; \}\par ??        \cf4 ISession\cf0  CreateSession();\par ??        \cf3 void\cf0  BuildSchema();\par ??    \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">interface</span>
+                <span style="color: #2b91af;">ISessionSource</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #2b91af;">ISession</span> 
+                CreateSession();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<p>We can&#39;t just walk up and create an ISession object directly.&nbsp; Instead, you 
+    have to use the ISessionSource to create an ISession for you.&nbsp; We still 
+    want StructureMap to inject the ISession objects into other classes, so we use 
+    the IContext.GetService&lt;ISession&gt;() method from within a Lambda to build 
+    ISession objects:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red43\green145\blue175;}??\fs20             ForRequestedType&lt;\cf3 ISession\cf0 &gt;().TheDefault.Is.ConstructedBy(\par ??                session =&gt; session.GetInstance&lt;\cf3 ISessionSource\cf0 &gt;().CreateSession());}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ForRequestedType&lt;<span 
+                    style="color: #2b91af;">ISession</span>&gt;().TheDefault.Is.ConstructedBy(</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                context =&gt; context.GetInstance&lt;<span style="color: #2b91af;">ISessionSource</span>&gt;().CreateSession());</p>
+        </div>
+<!--EndFragment-->
+<p style="margin: 0px">
+    &nbsp;</p>
+        <p style="margin: 0px">
+            The IContext.GetInstance&lt;T&gt;() function will also allow you to retrieve objects 
+            explicitly passed into the Container through the Container.With&lt;T&gt;(T 
+            target).GetInstance() methods[LINK].</p>
+<hr />
+	    <h2>Registering a Service with IContext</h2>
+	    <p>You can alter the underlying BuildSession and control all following Dependency 
+            Injection by overriding the default objects within a single object request by 
+            using the IContext.RegisterDefault() method.&nbsp; Use this method with extreme caution.</p>
+	    <hr />
+	    
+	</body>
+</html>

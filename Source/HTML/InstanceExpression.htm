@@ -1,26 +1,128 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 	<head>
-		<title>The Instance Expression</title>
+		<title>Configuring Instances</title>
+		<link rel="stylesheet" type="text/css" href="style.css" />
+		<script type="text/javascript" src="jquery-1.2.6.js"></script>
+		<script type="text/javascript" src="structuremap.js"></script>
+	    <style type="text/css">
+            .style1
+            {
+                text-decoration: none;
+            }
+        </style>
 	</head>
 	<body>
-	    <h1>The Instance Expression</h1>
 	<p>
-        One of the most common tasks in the Registry DSL [LINK] is defining how an 
-        Instance will be created.&nbsp; In an effort to standardize the Registry DSL and 
-        make the API more predictable and consistent, we have introduced the 
-        &quot;InstanceExpression&quot; as a shared
+        One of the most common tasks in the Registry DSL [LINK] is defining how a 
+        objects will be created by configuring Instances [LINK].&nbsp; While you can 
+        create a custom Instance class, out of the box StructureMap provides all of the 
+        most common scenarios -- and some that probably aren&#39;t that common.&nbsp; 
+        See <a href="Generics.htm">Using Open Generic Types</a> for more specific 
+        information about configuring open generic types.</p>
+        <p>
+            &nbsp;</p>
+        
+        <h2>Instance Expression</h2>
+        <p>In an effort to standardize the Registry DSL and make the API more predictable 
+            and consistent, we have introduced the &quot;InstanceExpression&quot; as a shared
         <a href="http://martinfowler.com/dslwip/ExpressionBuilder.html">Expression 
-        Builder</a>.&nbsp; As of 2.5, all operations in the Registry DSL that require 
+        Builder</a> that is used in every place that the Registry DSL needs to define an 
+            Instance.&nbsp; Here are several examples of how and when the InstanceExpression is invoked.&nbsp; In the 
+    code sample below, the text &quot;**********;&quot; represents a call to an 
+    InstanceExpression.</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red0\green128\blue0;\red163\green21\blue21;}??\fs20     \cf3 public\cf0  \cf3 class\cf0  \cf4 InstanceExampleRegistry\cf0  : \cf4 Registry\par ??\cf0     \{\par ??        \cf3 public\cf0  InstanceExampleRegistry()\par ??        \{\par ??            \cf5 // Shortcut for just specifying "use this type -- with auto wiring"\par ??\cf0             ForRequestedType&lt;\cf4 IService\cf0 &gt;().TheDefaultIsConcreteType&lt;\cf4 RemoteService\cf0 &gt;();\par ??            \par ??            \cf5 // Set the default Instance of a PluginType\par ??\cf0             ForRequestedType&lt;\cf4 IService\cf0 &gt;().TheDefault.Is.OfConcreteType&lt;\cf4 RemoteService\cf0 &gt;();\par ??            \par ??            \cf5 // Add an additional Instance of a PluginType\par ??\cf0             InstanceOf&lt;\cf4 IService\cf0 &gt;().Is.OfConcreteType&lt;\cf4 RemoteService\cf0 &gt;();\par ??\par ??            \cf5 // Add multiple additional Instances of a PluginType\par ??\cf0             ForRequestedType&lt;\cf4 IService\cf0 &gt;().AddInstances(x =&gt;\par ??            \{\par ??                x.ConstructedBy(() =&gt; \cf3 new\cf0  \cf4 ColorService\cf0 (\cf6 "Red"\cf0 ));\par ??\par ??                x.OfConcreteType&lt;\cf4 RemoteService\cf0 &gt;();\par ??\par ??                x.Object(\cf3 new\cf0  \cf4 ColorService\cf0 (\cf6 "Red"\cf0 ));\par ??            \});\par ??\par ??            \cf5 // Use the InstanceExpression to define the default Instance\par ??\cf0             \cf5 // of a PluginType within a Profile\par ??\cf0             CreateProfile(\cf6 "Connected"\cf0 , x =&gt;\par ??            \{\par ??                x.Type&lt;\cf4 IService\cf0 &gt;().Is.OfConcreteType&lt;\cf4 RemoteService\cf0 &gt;();\par ??            \});\par ??        \}\par ??    \}}
+-->
+    <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">class</span>
+            <span style="color: #2b91af;">InstanceExampleRegistry</span> :
+            <span style="color: #2b91af;">Registry</span></p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> 
+            InstanceExampleRegistry()</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: green;">// Set the default Instance of a PluginType</span></p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ForRequestedType&lt;<span 
+                style="color: #2b91af;">IService</span>&gt;().TheDefault.Is.**********;</p>
+        <p style="margin: 0px;">
+            &nbsp;</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: green;">// Add an additional Instance of a PluginType</span></p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; InstanceOf&lt;<span 
+                style="color: #2b91af;">IService</span>&gt;().Is.**********;</p>
+        <p style="margin: 0px;">
+            &nbsp;</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: green;">// Add multiple additional Instances of a PluginType</span></p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ForRequestedType&lt;<span 
+                style="color: #2b91af;">IService</span>&gt;().AddInstances(x =&gt;</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+            x.**********;</p>
+        <p style="margin: 0px;">
+            &nbsp;</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+            x.**********;</p>
+        <p style="margin: 0px;">
+            &nbsp;</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+            x.**********;</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+        <p style="margin: 0px;">
+            &nbsp;</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: green;">// Use the InstanceExpression to define the default 
+            Instance</span></p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: green;">// of a PluginType within a Profile</span></p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CreateProfile(<span 
+                style="color: #a31515;">&quot;Connected&quot;</span>, x =&gt;</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+            x.Type&lt;<span style="color: #2b91af;">IService</span>&gt;().Is.**********;</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+    </div>
+<!--EndFragment-->
+<hr />
+        <h4>InstanceExpression Operations</h4>
+        <p>As of 2.5+, all operations in the Registry DSL that require 
         the definition of an Instance expose an option to use an InstanceExpression with 
         these options:</p>
+        
 <!--
 {\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red0\green128\blue0;}??\fs20     \cf3 public\cf0  \cf3 interface\cf0  \cf4 IInstanceExpression\cf0 &lt;T&gt; : \cf4 IsExpression\cf0 &lt;T&gt;\par ??    \{\par ??        \cf5 // Attach an Instance object that is configured\par ??\cf0         \cf5 // independently of the DSL\par ??\cf0         \cf3 void\cf0  Instance(\cf4 Instance\cf0  instance);\par ??        \cf3 void\cf0  IsThis(\cf4 Instance\cf0  instance);\par ??        \par ??        \cf5 // Use a pre-built object\par ??\cf0         \cf4 LiteralInstance\cf0  IsThis(T obj);\par ??        \cf4 LiteralInstance\cf0  Object(T theObject);\par ??\par ??        \cf5 // Use a type\par ??\cf0         \cf4 SmartInstance\cf0 &lt;PLUGGEDTYPE&gt; OfConcreteType&lt;PLUGGEDTYPE&gt;() \cf3 where\cf0  PLUGGEDTYPE : T;\par ??        \cf4 ConfiguredInstance\cf0  OfConcreteType(\cf4 Type\cf0  type);\par ??\par ??        \cf5 // Build by a Lambda or an Anonymous Delegate\par ??\cf0         \cf4 ConstructorInstance\cf0 &lt;T&gt; ConstructedBy(\cf4 Func\cf0 &lt;T&gt; func);\par ??        \cf4 ConstructorInstance\cf0 &lt;T&gt; ConstructedBy(\cf4 Func\cf0 &lt;\cf4 IContext\cf0 , T&gt; func);\par ??\par ??        \cf5 // Refer to a named Instance\par ??\cf0         \cf4 ReferencedInstance\cf0  TheInstanceNamed(\cf3 string\cf0  key);\par ??        \cf4 DefaultInstance\cf0  TheDefault();\par ??\par ??        \cf5 // Use a cloned copy of the template\par ??\cf0         \cf4 PrototypeInstance\cf0  PrototypeOf(T template);\par ??\par ??        \cf5 // Cache the template as a binary serialized blob\par ??\cf0         \cf4 SerializedInstance\cf0  SerializedCopyOf(T template);\par ??        \par ??        \cf5 // Load an ASCX control\par ??\cf0         \cf4 UserControlInstance\cf0  LoadControlFrom(\cf3 string\cf0  url);\par ??    \}}
 -->
     <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
         <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">
-            interface</span> <span style="color: #2b91af;">IInstanceExpression</span>&lt;T&gt; :             <span style="color: #2b91af;">IsExpression</span>&lt;T&gt;</p>
+            interface</span> <span style="color: #2b91af;">IInstanceExpression</span>&lt;T&gt; :             span style="color: #2b91af;">IsExpression</span>&lt;T&gt;</p>
         <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp; {</p>
         <p style="margin: 0px;">
@@ -110,102 +212,35 @@
     </div>
 <!--EndFragment-->
 <p>
-    Here&#39;s several examples of how the InstanceExpression is invoked.&nbsp; In the 
-    code sample below, the text &quot;**********;&quot; represents a call to an 
-    InstanceExpression.</p>
+    New for StructureMap 2.5.2+ is the &quot;Conditional&quot; construction choice.</p>
 <!--
-{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red0\green128\blue0;\red163\green21\blue21;}??\fs20     \cf3 public\cf0  \cf3 class\cf0  \cf4 InstanceExampleRegistry\cf0  : \cf4 Registry\par ??\cf0     \{\par ??        \cf3 public\cf0  InstanceExampleRegistry()\par ??        \{\par ??            \cf5 // Shortcut for just specifying "use this type -- with auto wiring"\par ??\cf0             ForRequestedType&lt;\cf4 IService\cf0 &gt;().TheDefaultIsConcreteType&lt;\cf4 RemoteService\cf0 &gt;();\par ??            \par ??            \cf5 // Set the default Instance of a PluginType\par ??\cf0             ForRequestedType&lt;\cf4 IService\cf0 &gt;().TheDefault.Is.OfConcreteType&lt;\cf4 RemoteService\cf0 &gt;();\par ??            \par ??            \cf5 // Add an additional Instance of a PluginType\par ??\cf0             InstanceOf&lt;\cf4 IService\cf0 &gt;().Is.OfConcreteType&lt;\cf4 RemoteService\cf0 &gt;();\par ??\par ??            \cf5 // Add multiple additional Instances of a PluginType\par ??\cf0             ForRequestedType&lt;\cf4 IService\cf0 &gt;().AddInstances(x =&gt;\par ??            \{\par ??                x.ConstructedBy(() =&gt; \cf3 new\cf0  \cf4 ColorService\cf0 (\cf6 "Red"\cf0 ));\par ??\par ??                x.OfConcreteType&lt;\cf4 RemoteService\cf0 &gt;();\par ??\par ??                x.Object(\cf3 new\cf0  \cf4 ColorService\cf0 (\cf6 "Red"\cf0 ));\par ??            \});\par ??\par ??            \cf5 // Use the InstanceExpression to define the default Instance\par ??\cf0             \cf5 // of a PluginType within a Profile\par ??\cf0             CreateProfile(\cf6 "Connected"\cf0 , x =&gt;\par ??            \{\par ??                x.Type&lt;\cf4 IService\cf0 &gt;().Is.OfConcreteType&lt;\cf4 RemoteService\cf0 &gt;();\par ??            \});\par ??        \}\par ??    \}}
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green128\blue0;\red43\green145\blue175;}??\fs20         \cf3 // Conditional object construction\par ??\cf0         \cf4 ConditionalInstance\cf0 &lt;T&gt; Conditional(\cf4 Action\cf0 &lt;\cf4 ConditionalInstance\cf0 &lt;T&gt;.\cf4 ConditionalInstanceExpression\cf0 &lt;T&gt;&gt; configuration);}
 -->
-    <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
-        <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">class</span>
-            <span style="color: #2b91af;">InstanceExampleRegistry</span> :
-            <span style="color: #2b91af;">Registry</span></p>
-        <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp; {</p>
-        <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> 
-            InstanceExampleRegistry()</p>
-        <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
-        <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <span style="color: green;">// Set the default Instance of a PluginType</span></p>
-        <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ForRequestedType&lt;<span 
-                style="color: #2b91af;">IService</span>&gt;().TheDefault.Is.**********;</p>
-        <p style="margin: 0px;">
-            &nbsp;</p>
-        <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <span style="color: green;">// Add an additional Instance of a PluginType</span></p>
-        <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; InstanceOf&lt;<span 
-                style="color: #2b91af;">IService</span>&gt;().Is.**********;</p>
-        <p style="margin: 0px;">
-            &nbsp;</p>
-        <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <span style="color: green;">// Add multiple additional Instances of a PluginType</span></p>
-        <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ForRequestedType&lt;<span 
-                style="color: #2b91af;">IService</span>&gt;().AddInstances(x =&gt;</p>
-        <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
-        <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-            x.**********;</p>
-        <p style="margin: 0px;">
-            &nbsp;</p>
-        <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-            x.**********;</p>
-        <p style="margin: 0px;">
-            &nbsp;</p>
-        <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-            x.**********;</p>
-        <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
-        <p style="margin: 0px;">
-            &nbsp;</p>
-        <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <span style="color: green;">// Use the InstanceExpression to define the default 
-            Instance</span></p>
-        <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <span style="color: green;">// of a PluginType within a Profile</span></p>
-        <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CreateProfile(<span 
-                style="color: #a31515;">&quot;Connected&quot;</span>, x =&gt;</p>
-        <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
-        <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-            x.Type&lt;<span style="color: #2b91af;">IService</span>&gt;().Is.**********;</p>
-        <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
-        <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
-        <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp; }</p>
-    </div>
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">// Conditional object 
+                construction</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #2b91af;">ConditionalInstance</span>&lt;T&gt; 
+                Conditional(<span style="color: #2b91af;">Action</span>&lt;<span 
+                    style="color: #2b91af;">ConditionalInstance</span>&lt;T&gt;.<span 
+                    style="color: #2b91af;">ConditionalInstanceExpression</span>&&lt;T&gt;&gt; 
+                configuration);</p>
+        </div>
 <!--EndFragment-->
-<p>
-    &nbsp;</p>
+<hr />
 <h2>
-    Building Concrete Types with the SmartInstance</h2>
+        Building with Constructors and Setters</h2>
     
 <p>We received a lot of feedback on the Registry DSL introduced in 2.0.&nbsp; 
-    Because of that feedback, StructureMap 2.5 contains a new feature called the 
+    Because of that feedback, StructureMap 2.5+ contains a new feature called the 
     SmartInstance that is just a better Fluent Interface for specifying constructor 
     and setter arguments and dependencies of a concrete type.&#160; The main 
     complaint with the 2.0 API was that SetProperty() is overloaded to mean either 
     setter or constructor arguments.&nbsp; The underlying mechanisms in StructureMap 
     stores the information the same way, but the API was causing real confusion.&nbsp; 
     The SmartInstance API is designed to eliminate the confusion over constructor vs 
-    setter arguments, and also to take advantage of newer .Net 3.5 features.</p>
+    setter arguments, and also to take advantage of newer .Net 3.5 features./p>
 <h4>Designating the Type</h4>
 <p>The first step is to define the actual concrete type of this Instance by using 
     the OfConcreteType&lt;T&gt;() method on InstanceExpression to start the definition of 
@@ -286,7 +321,7 @@
   <p style="margin: 0px">&#160;&#160;&#160;&#160;&#160;&#160;&#160; }</p>
 </div>
 
-<p><strong>Defining primitive setter properties</strong></p>
+<h4>Defining primitive setter properties</h4>
 <p>You have additional options for setting a primitive setter property.&nbsp; The 
     simplest approach is to just use a Lambda expression that will be applied to the object as soon as it’s built.&#160; Intellisense and compiler safety are good things, so you might as well use it.&#160; StructureMap now supports optional setter injection, meaning that you no longer need to do the [Setter] attributes in the concrete classes.&#160; If you specify the value of a setter, StructureMap will use that value regardless of whether or not the [Setter] property exists.&#160; The same rule applies to non-primitive setter dependencies.</p>
 <p>Let&#39;s say I have a class like this:</p>
@@ -308,131 +343,125 @@
         <span style="color: blue;">int</span> Age { <span style="color: blue;">get</span>;
         <span style="color: blue;">set</span>; }</p>
     <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp; }</p>
+        &nbsp;&nbsp;&nbsp; }</p>
 </div>
 <!--EndFragment-->
-<p>To set the setter properties in the configuration I can use the 
-    SetProperty(Action&lt;T&gt;) expression:</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p><strong>Overriding Constructor Dependencies</strong> – Only when you want to override the auto wiring behavior.&#160; I’ve chosen to use a <a href="http://martinfowler&nbsp;&nbsp;&nbsp; }</p>
-    </div>
-<!--EndFragment-->
-<p>To set the setter properties in the configuration I can use the 
-    SetProperty(Action&lt;T&gt;) expression:</p>
+<p>To set the setter properties in the configuration you can use the 
+    SetProperty(Action&lt;T&gt;) expression like this to set as many properties as 
+    you need:</p>
 <!--
 {\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red163\green21\blue21;}??\fs20             \cf3 var\cf0  container = \cf3 new\cf0  \cf4 Container\cf0 (x =&gt;\par ??            \{\par ??                x.ForConcreteType&lt;\cf4 SimplePropertyTarget\cf0 &gt;().Configure\par ??                    .SetProperty(target =&gt;\par ??                    \{\par ??                        target.Name = \cf5 "Max"\cf0 ;\par ??                        target.Age = 4;\par ??                    \});\par ??            \});}
 -->
-<div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
-    <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <span style="color: blue;">var</span> container = <span style="color: blue;">new</span>
-        <span style="color: #2b91af;">Container</span>(x =&gt;</p>
-    <p style="margin: 0px;">
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                var</span> container = <span style="color: blue;">new</span>
+                <span style="color: #2b91af;">Container</span>(x =&gt;</p>
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
-    <p style="margin: 0px;">
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-        x.ForConcreteType&lt;<span style="color: #2b91af;">SimplePropertyTarget</span>&gt;().Configure</p>
-    <p style="margin: 0px;">
+                x.ForConcreteType&lt;<span style="color: #2b91af;">SimplePropertyTarget</span>&gt;().Configure</p>
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-        .SetProperty(target =&gt;</p>
-    <p style="margin: 0px;">
+                .SetProperty(target =&gt;</p>
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-        {</p>
-    <p style="margin: 0px;">
+                {</p>
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-        target.Name = <span style="color: #a31515;">&quot;Max&quot;</span>;</p>
-    <p style="margin: 0px;">
+                target.Name = <span style="color: #a31515;">&quot;Max&quot;</span>;</p>
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-        target.Age = 4;</p>
-    <p style="margin: 0px;">
+                target.Age = 4;</p>
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-        });</p>
-    <p style="margin: 0px;">
+                });</p>
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
-</div>
+        </div>
 <!--EndFragment-->
-<p>You may not want the string values of sett&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
-    </div>
-<!--EndFragment-->
-<p>You may not want the string values of setter properties embedded directly in the 
-    Registry classes.&nbsp; Instead, you may want to keep configuration data like 
-    connection strings and file paths in the AppSettings[LINK] or another source.&nbsp; 
-    In that case, you can use the WithProperty() method instead like this:</p>
-<!--
-{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red163\green21\blue21;}??\fs20             \cf3 var\cf0  container = \cf3 new\cf0  \cf4 Container\cf0 (x =&gt;\par ??            \{\par ??                x.ForConcreteType&lt;\cf4 SimplePropertyTarget\cf0 &gt;().Configure\par ??                    .WithProperty(o =&gt; o.Name).EqualToAppSetting(\cf5 "name"\cf0 )\par ??                    .WithProperty(o =&gt; o.Age).EqualToAppSetting(\cf5 "age"\cf0 );\par ??\par ??            \});}
--->
-<div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
-    <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <span style="color: blue;">var</span> container = <span style="color: blue;">new</span>
-        <span style="color: #2b91af;">Container</span>(x =&gt;</p>
-    <p style="margin: 0px;">
+<hr />
+<h4>Overriding Constructor Dependencies</h4>
+        <p>When you want to override the auto wiring behavior, you can explicitly specify 
+            the constructor dependency of an Instance by using the CtorDependency&lt;T&gt;() 
+            expression:<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red163\green21\blue21;}??\fs20             \cf3 var\cf0  theContainer = \cf3 new\cf0  \cf4 Container\cf0 (registry =&gt;\par ??            \{\par ??                registry.InstanceOf&lt;\cf4 Rule\cf0 &gt;().Is.OfConcreteType&lt;\cf4 WidgetRule\cf0 &gt;().WithName(instanceKey)\par ??                    .CtorDependency&lt;\cf4 IWidget\cf0 &gt;().Is(i =&gt;\par ??                    \{\par ??                        i.OfConcreteType&lt;\cf4 ColorWidget\cf0 &gt;().WithCtorArg(\cf5 "color"\cf0 ).EqualTo(\cf5 "Orange"\cf0 ).WithName(\cf5 "Orange"\cf0 );\par ??                    \});\par ??            \});}
+--><div 
+            style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                var</span> theContainer = <span style="color: blue;">new</span>
+                <span style="color: #2b91af;">Container</span>(registry =&gt;</p>
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
-    <p style="margin: 0px;">
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-        x.ForConcreteType&lt;<span style="color: #2b91af;">SimplePropertyTarget</span>&gt;().Configure</p>
-    <p style="margin: 0px;">
+                registry.InstanceOf&lt;<span style="color: #2b91af;">Rule</span>&gt;().Is.OfConcreteType&lt;<span 
+                    style="color: #2b91af;">WidgetRule</span>&gt;().WithName(instanceKey)</p>
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-        .WithProperty(o =&gt; o.Name).EqualToAppSetting(<span style="color: #a31515;">&quot;name&quot;</span>)</p>
-    <p style="margin: 0px;">
+                .CtorDependency&lt;<span style="color: #2b91af;">IWidget</span>&gt;().Is(i =&gt;</p>
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-        .WithProperty(o =&gt; o.Age).EqualToAppSetting(<span style="color: #a31515;">&quot;age&quot;</span>);</p>
-    <p style="margin: 0px;">
-        &nbsp;</p>
-    <p style="margin: 0px;">
+                {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                i.OfConcreteType&lt;<span style="color: #2b91af;">ColorWidget</span>&gt;().WithCtorArg(<span 
+                    style="color: #a31515;">&quot;color&quot;</span>).EqualTo(<span 
+                    style="color: #a31515;">&quot;Orange&quot;</span>).WithName(<span 
+                    style="color: #a31515;">&quot;Orange&quot;</span>);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                });</p>
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
-</div>
+        </div>
 <!--EndFragment-->
-<p>The EqualToAppSetting(key) method will locate a value from the AppSettings 
-    section of the current AppDomain&#39;s App.Config file.</p>
-<p>&nbsp;</p>
-<h4>Overriding Constructor or Setter Dependencies</h4>
-<p>Sometimes you may want to override the auto wiring[LINK] behavior and explicitly 
-    define the dependencies of a concrete object inline.&nbsp; The SmartInstance 
-    expression uses the CtorDependency and SetterDependency methods to define a 
-    dependency.&nbsp; These methods use an InstanceExpression as a
-    <a href="http://martinfowler.com/dslwip/NestedClosure.html">Nested Closure</a> for defining 
-    an Instance for a child dependency.</p>
-<p>Here&#39;s an example of setting a constructor dependency.&nbsp; </p>
-<!--
-{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red43\green145\blue175;\red163\green21\blue21;}??\fs20                 registry.InstanceOf&lt;\cf3 Rule\cf0 &gt;()\par ??                    .Is.OfConcreteType&lt;\cf3 WidgetRule\cf0 &gt;()\par ??                    .WithName(\cf4 "TheWidgetRule"\cf0 )\par ??                    .CtorDependency&lt;\cf3 IWidget\cf0 &gt;().Is(i =&gt; i.TheInstanceNamed(\cf4 "Yellow"\cf0 ));}
--->
-<div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
-    <p style="margin: 0px;">
-&nbsp;</p>
-    <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-        registry.InstanceOf&lt;<span style="color: #2b91af;">Rule</span>&gt;()</p>
-    <p style="margin: 0px;">
+<p>Or, if a concrete type should have two or more dependencies of the same type, you 
+    can also specify the name of the constructor argument:<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red43\green145\blue175;\red163\green21\blue21;}??\fs20                 registry.InstanceOf&lt;\cf3 Rule\cf0 &gt;().Is.OfConcreteType&lt;\cf3 WidgetRule\cf0 &gt;().WithName(\cf4 "RuleThatUsesMyInstance"\cf0 )\par ??                    .CtorDependency&lt;\cf3 IWidget\cf0 &gt;(\cf4 "widget"\cf0 ).Is(x =&gt; x.TheInstanceNamed(\cf4 "Purple"\cf0 ));}
+--><div 
+            style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                registry.InstanceOf&lt;<span style="color: #2b91af;">Rule</span>&gt;().Is.OfConcreteType&lt;<span 
+                    style="color: #2b91af;">WidgetRule</span>&gt;().WithName(<span 
+                    style="color: #a31515;">&quot;RuleThatUsesMyInstance&quot;</span>)</p>
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-        .Is.OfConcreteType&lt;<span style="color: #2b91af;">WidgetRule</span>&gt;()</p>
-    <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-        .WithName(<span style="color: #a31515;">&quot;TheWidgetRule&quot;</span>)</p>
-    <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-        .CtorDependency&lt;<span style="color: #2b91af;">IWidget</span>&gt;().Is(i =&gt; 
-        i.TheInstanceNamed(<span style="color: #a31515;">&quot;Yellow&quot;</span>));</p>
-    <p style="margin: 0px;">
-        &nbsp;</p>
-</div>
+                .CtorDependency&lt;<span style="color: #2b91af;">IWidget</span>&gt;(<span 
+                    style="color: #a31515;">&quot;widget&quot;</span>).Is(x =&gt; x.TheInstanceNamed(<span 
+                    style="color: #a31515;">&quot;Purple&quot;</span>));</p>
+        </div>
 <!--EndFragment-->
 <p>The Lambda expression inside of &quot;CtorDependency().Is()&quot; is another 
     InstanceExpression, so all the normal options for defining an Instance are 
     available.&nbsp; Please note that I just specified the type of constructor 
     argument in the call to CtorDependency&lt;T&gt;() above.&nbsp; If you have more than 
     one constructor argument of the same type, you&#39;ll need to specify the name of 
-    the constructor argument with the CtorDependency&lt;T&gt;(argumentName) method.</p>
-<p>Here&#39;s an example of configuring a setter dependency inline:</p>
+    the constructor argument with the CtorDependency&lt;T&gt;(argumentName) method.<hr />
+        <a 
+            href="http://martinfowler&nbsp;&nbsp;&nbsp; }</p>
+    </div>
+<!--EndFragment-->
+<p>To set the setter properties in the configuration I can use the 
+    SetProperty(Action&lt;T&gt;) expression:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red163\green21\blue21;}??\fs20             \cf3 var\cf0  container = \cf3 new\cf0  \cf4 Container\cf0 (x =&gt;\par ??            \{\par ??                x.ForConcreteType&lt;\cf4 SimplePropertyTarget\cf0 &gt;().Configure\par ??                    .SetProperty(target =&gt;\par ??                    \{\par ??                        target.Name = \cf5 "
+            Max"\cf0 ;\par ??                        target.Age = 4;\par 
+            ??                    \});\par ??            \});} class="style1"
+-->
+<h4>Overriding Setter Dependencies</h4>
+        </a>
+        <p>Setter dependencies are configured much like constructor dependencies:</p>
 <!--
 {\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red43\green145\blue175;\red163\green21\blue21;}??\fs20                 registry.ForRequestedType&lt;\cf3 Thing\cf0 &gt;().TheDefault.Is.OfConcreteType&lt;\cf3 Thing\cf0 &gt;()\par ??                    .WithCtorArg(\cf4 "name"\cf0 ).EqualTo(\cf4 "Jeremy"\cf0 )\par ??                    .WithCtorArg(\cf4 "count"\cf0 ).EqualTo(4)\par ??                    .WithCtorArg(\cf4 "average"\cf0 ).EqualTo(.333)\par ??                    .SetterDependency&lt;\cf3 Rule\cf0 &gt;().Is(x =&gt;\par ??                    \{\par ??                        x.OfConcreteType&lt;\cf3 WidgetRule\cf0 &gt;().SetterDependency&lt;\cf3 IWidget\cf0 &gt;().Is(\par ??                            c =&gt; c.OfConcreteType&lt;\cf3 ColorWidget\cf0 &gt;().WithCtorArg(\cf4 "color"\cf0 ).EqualTo(\cf4 "yellow"\cf0 ));\par ??                    \});}
 -->
 <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
     <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-        registry.ForRequestedType&lt;<span style="color: #2b91af;">Thing</span>&gt;().TheDefault.Is.OfConcreteType&lt;<span 
+        registry.ForRequestedType&lt;<span style="color: #2b91af;">Thing</span>&gt;().TheDefault.Is.OfConcreteType&lt;span 
             style="color: #2b91af;">Thing</span>&gt;()</p>
     <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
@@ -460,48 +489,37 @@
             style="color: #a31515;">&quot;color&quot;</span>).EqualTo(<span 
             style="color: #a31515;">&quot;yellow&quot;</span>));</p>
     <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+&&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
         });</p>
 </div>
 <!--EndFragment-->
-<p>Again, you might need to specify the specific setter property instead of just rel</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p><strong>Overriding Setter Dependencies</strong> – Setter dependencies (non-primitive types) are specified much like constructor arguments.&#160; Your options are to say:&#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-                });</p>
-    </div>
-<!--EndFragment-->
-<p>Again, you might need to specify the specific setter property instead of just 
-    relying on StructureMap finding the correct property.&nbsp; In this case, you 
-    can use an Expression to specify the property:</p>
+<p>The only difference is that Setter dependencies can also be specified by using an 
+    Expression to declare the property to be injected:</p>
 <!--
 {\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red163\green21\blue21;}??\fs20             \cf3 var\cf0  container = \cf3 new\cf0  \cf4 Container\cf0 (x =&gt;\par ??            \{\par ??                x.ForConcreteType&lt;\cf4 ClassWithWidgetProperty\cf0 &gt;().Configure\par ??                    .SetterDependency&lt;\cf4 IWidget\cf0 &gt;(o =&gt; o.Widget).Is(o =&gt; o.Object(\cf3 new\cf0  \cf4 ColorWidget\cf0 (\cf5 "Red"\cf0 )));\par ??            \});}
 -->
-<div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
-    <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <span style="color: blue;">var</span> container = <span style="color: blue;">new</span>
-        <span style="color: #2b91af;">Container</span>(x =&gt;</p>
-    <p style="margin: 0px;">
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                var</span> container = <span style="color: blue;">new</span>
+                <span style="color: #2b91af;">Container</span>(x =&gt;</p>
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
-    <p style="margin: 0px;">
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-        x.ForConcreteType&lt;<span style="color: #2b91af;">ClassWithWidgetProperty</span>&gt;().Configure</p>
-    <p style="margin: 0px;">
+                x.ForConcreteType&lt;<span style="color: #2b91af;">ClassWithWidgetProperty</span>&gt;().Configure</p>
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-        .SetterDependency&lt;<span style="color: #2b91af;">IWidget</span>&gt;(o =&gt; 
-        o.Widget).Is(o =&gt; o.Object(<span style="color: blue;">new</span>
-        <span style="color: #2b91af;">ColorWidget</span>(<span style="color: #a31515;">&quot;Red&quot;</span>)));</p>
-    <p style="margin: 0px;">
+                .SetterDependency&lt;<span style="color: #2b91af;">IWidget</span>&gt;(o =&gt; 
+                o.Widget).Is(o =&gt; o.Object(<span style="color: blue;">new</span>
+                <span style="color: #2b91af;">ColorWidget</span>(<span style="color: #a31515;">&quot;Red&quot;</span>)));</p>
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
-</div>
+        </div>
 <!--EndFragment-->
-<p>&nbsp;</p>
-<h4>Array Dependencies</h4>
-<p>StructureMap supports Array arguments.&nbsp; An array of dependencies or type T 
+<hr />
+        <h4>Array or Non Primitive Dependencies</h4>
+<p>StructureMap supports Array arguments of non primitive objects.&nbsp; An array of dependencies or type T 
     can be defined with the TheArrayOf&lt;T&gt;() method shown below.</p>
 <!--
 {\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red163\green21\blue21;}??\fs20             \cf3 var\cf0  container = \cf3 new\cf0  \cf4 Container\cf0 (x =&gt;\par ??            \{\par ??                x.ForRequestedType&lt;\cf4 Processor\cf0 &gt;().TheDefault.Is.OfConcreteType&lt;\cf4 Processor\cf0 &gt;()\par ??                    .WithCtorArg(\cf5 "name"\cf0 ).EqualTo(\cf5 "Jeremy"\cf0 )\par ??                    .TheArrayOf&lt;\cf4 IHandler\cf0 &gt;().Contains(y =&gt;\par ??                    \{\par ??                        y.OfConcreteType&lt;\cf4 Handler1\cf0 &gt;();\par ??                        y.OfConcreteType&lt;\cf4 Handler2\cf0 &gt;();\par ??                        y.OfConcreteType&lt;\cf4 Handler3\cf0 &gt;();\par ??                    \});\par ??            \});}
@@ -510,7 +528,7 @@
     <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <span style="color: blue;">var</span> container = <span style="color: blue;">new</span>
-        <span style="color: #2b91af;">Container</span>(x =&gt;</p>
+        <span style="color: #2b91af;">Container</span>(x =&gt;/p>
     <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
     <p style="margin: 0px;">
@@ -545,7 +563,657 @@
 <!--EndFragment-->
 <p>TheArrayOf&lt;T&gt;() method is another Nested Closure that takes in an 
     Action&lt;IInstanceExpression&gt; to configure the child Instance&#39;s in the array.&nbsp; </p>
-<p>&nbsp;</p>
+        <hr />
+        <h4>Primitive Arrays and Dictionaries</h4>
+        <p>Arrays of primitive types (strings, numbers, etc) and Dictionary types can be 
+            configured just by treating them as a child dependency that is configured 
+            inline.&nbsp; Let&#39;s say you have a class like this that needs a couple Array 
+            objects in its constructor function:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20     \cf3 public\cf0  \cf3 class\cf0  \cf4 ClassWithStringAndIntArray\par ??\cf0     \{\par ??        \cf3 private\cf0  \cf3 readonly\cf0  \cf3 int\cf0 [] _numbers;\par ??        \cf3 private\cf0  \cf3 readonly\cf0  \cf3 string\cf0 [] _strings;\par ??\par ??        \cf3 public\cf0  ClassWithStringAndIntArray(\cf3 int\cf0 [] numbers, \cf3 string\cf0 [] strings)\par ??        \{\par ??            _numbers = numbers;\par ??            _strings = strings;\par ??        \}\par ??\par ??        \cf3 public\cf0  \cf3 int\cf0 [] Numbers\par ??        \{\par ??            \cf3 get\cf0  \{ \cf3 return\cf0  _numbers; \}\par ??        \}\par ??\par ??        \cf3 public\cf0  \cf3 string\cf0 [] Strings\par ??        \{\par ??            \cf3 get\cf0  \{ \cf3 return\cf0  _strings; \}\par ??        \}\par ??    \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">class</span>
+                <span style="color: #2b91af;">ClassWithStringAndIntArray</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">private</span>
+                <span style="color: blue;">readonly</span> <span style="color: blue;">int</span>[] 
+                _numbers;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">private</span>
+                <span style="color: blue;">readonly</span> <span style="color: blue;">string</span>[] 
+                _strings;</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> 
+                ClassWithStringAndIntArray(<span style="color: blue;">int</span>[] numbers,
+                <span style="color: blue;">string</span>[] strings)</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _numbers = numbers;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _strings = strings;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: blue;">int</span>[] Numbers</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                get</span> { <span style="color: blue;">return</span> _numbers; }</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: blue;">string</span>[] Strings</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                get</span> { <span style="color: blue;">return</span> _strings; }</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<p>You can configure the values for the &quot;numbers&quot; and &quot;strings&quot; constructor function 
+    arguments like this:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red43\green145\blue175;\red0\green0\blue255;\red163\green21\blue21;}??\fs20         [\cf3 Test\cf0 ]\par ??        \cf4 public\cf0  \cf4 void\cf0  specify_a_string_array()\par ??        \{\par ??            \cf4 var\cf0  container = \cf4 new\cf0  \cf3 Container\cf0 (x =&gt;\par ??            \{\par ??                x.ForConcreteType&lt;\cf3 ClassWithStringAndIntArray\cf0 &gt;().Configure\par ??                    .CtorDependency&lt;\cf4 string\cf0 []&gt;().Is(\cf4 new\cf0 [] \{\cf5 "a"\cf0 , \cf5 "b"\cf0 , \cf5 "c"\cf0 \})\par ??                    .CtorDependency&lt;\cf4 int\cf0 []&gt;().Is(\cf4 new\cf0 [] \{1, 2, 3\});\par ??            \});\par ??\par ??            \cf4 var\cf0  objectWithArrays = container.GetInstance&lt;\cf3 ClassWithStringAndIntArray\cf0 &gt;();\par ??            objectWithArrays.Numbers.ShouldEqual(\cf4 new\cf0 [] \{1, 2, 3\});\par ??            objectWithArrays.Strings.ShouldEqual(\cf4 new\cf0 [] \{\cf5 "a"\cf0 , \cf5 "b"\cf0 , \cf5 "c"\cf0 \});\par ??        \} }
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<span style="color: #2b91af;">Test</span>]</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: blue;">void</span> specify_a_string_array()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                var</span> container = <span style="color: blue;">new</span>
+                <span style="color: #2b91af;">Container</span>(x =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.ForConcreteType&lt;<span style="color: #2b91af;">ClassWithStringAndIntArray</span>&gt;().Configure</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .CtorDependency&lt;<span style="color: blue;">string</span>[]&gt;().Is(<span 
+                    style="color: blue;">new</span>[] {<span style="color: #a31515;">&quot;a&quot;</span>,
+                <span style="color: #a31515;">&quot;b&quot;</span>, <span style="color: #a31515;">&quot;c&quot;</span>})</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .CtorDependency&lt;<span style="color: blue;">int</span>[]&gt;().Is(<span 
+                    style="color: blue;">new</span>[] {1, 2, 3});</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                var</span> objectWithArrays = container.GetInstance&lt;<span 
+                    style="color: #2b91af;">ClassWithStringAndIntArray</span>&gt;();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                objectWithArrays.Numbers.ShouldEqual(<span style="color: blue;">new</span>[] {1, 
+                2, 3});</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                objectWithArrays.Strings.ShouldEqual(<span style="color: blue;">new</span>[] {<span 
+                    style="color: #a31515;">&quot;a&quot;</span>, <span style="color: #a31515;">&quot;b&quot;</span>,
+                <span style="color: #a31515;">&quot;c&quot;</span>});</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+            </p>
+        </div>
+<!--EndFragment-->
+<hr />
     
+    <h2>Using a Custom Instance</h2>
+    <p>Occasionally, it might be advantageous to create a custom form of Instance.&nbsp; 
+        Fortunately, there&#39;s a mechanism in the InstanceExpression to attach Instance 
+        objects built independently of the Registry DSL.&nbsp; Let&#39;s say that you&#39;ve 
+        created a custom Instance called XmlFileInstance<T>&lt;T&gt; that deserializes an 
+        object from an Xml file.&nbsp; The registration of that custom Instance might 
+        look something like this:<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red163\green21\blue21;}??\fs20     \cf3 public\cf0  \cf3 class\cf0  \cf4 CustomInstanceRegistry\cf0  : \cf4 Registry\par ??\cf0     \{\par ??        \cf3 public\cf0  CustomInstanceRegistry()\par ??        \{\par ??            ForRequestedType&lt;\cf4 Address\cf0 &gt;().TheDefault.IsThis(\cf3 new\cf0  \cf4 XmlFileInstance\cf0 &lt;\cf4 Address\cf0 &gt;(\cf5 "address1.xml"\cf0 ));\par ??        \}\par ??    \}}
+--><div 
+            style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">class</span>
+                <span style="color: #2b91af;">CustomInstanceRegistry</span> :
+                <span style="color: #2b91af;">Registry</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> 
+                CustomInstanceRegistry()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ForRequestedType&lt;<span 
+                    style="color: #2b91af;">Address</span>&gt;().TheDefault.IsThis(<span 
+                    style="color: blue;">new</span> <span style="color: #2b91af;">
+                XmlFileInstance</span>&lt;<span style="color: #2b91af;">Address</span>&gt;(<span 
+                    style="color: #a31515;">&quot;address1.xml&quot;</span>));</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<p>See Extending StructureMap for more specific information on using custom Instance 
+    classes.<hr />
+    
+    <h2>Using an Externally Constructed Object</h2>
+    <p>It&#39;s frequently useful to simply inject an existing object into StructureMap.&nbsp; 
+        This frequently arises in desktop applications where parts of the application 
+        shell may be created independently of the container, but you still with these 
+        objects to be injected into other services.&nbsp; Here&#39;s an example from my 
+        current project where we need to programmatically build up some services 
+        (IUrlRegistry, IActionRegistry, and ITypeRegistry) before injecting them into 
+        StructureMap:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20         \cf3 private\cf0  \cf3 readonly\cf0  \cf4 ActionRegistry\cf0  _actionRegistry = \cf3 new\cf0  \cf4 ActionRegistry\cf0 ();\par ??        \cf3 private\cf0  \cf3 readonly\cf0  \cf4 ISpecialCaseRouteRegistry\cf0  _specialCaseRouteRegistry = \cf3 new\cf0  \cf4 SpecialCaseRouteRegistry\cf0 ();\par ??        \cf3 private\cf0  \cf3 readonly\cf0  \cf4 TypeRegistry\cf0  _typeRegistry = \cf3 new\cf0  \cf4 TypeRegistry\cf0 ();\par ??        \cf3 private\cf0  \cf3 readonly\cf0  \cf4 List\cf0 &lt;\cf4 Type\cf0 &gt; _workflowTypes = \cf3 new\cf0  \cf4 List\cf0 &lt;\cf4 Type\cf0 &gt;();\par ??        \cf3 private\cf0  \cf4 UrlGraph\cf0  _graph;\par ??        \cf3 private\cf0  \cf4 ControllerRegistry\cf0  _registry;\par ??\par ??        \cf3 public\cf0  WebRegistry(\cf4 ICollection\cf0 &lt;\cf4 RouteBase\cf0 &gt; routes)\par ??        \{\par ??            createUrlGraph(routes);\par ??\par ??            ForRequestedType&lt;\cf4 IUrlRegistry\cf0 &gt;().TheDefault.Is.Object(_graph);\par ??            ForRequestedType&lt;\cf4 IActionRegistry\cf0 &gt;().TheDefault.Is.Object(_actionRegistry);\par ??            ForRequestedType&lt;\cf4 ITypeRegistry\cf0 &gt;().TheDefault.Is.Object(_typeRegistry);\par ??            ForRequestedType&lt;\cf4 ITypeReport\cf0 &gt;().TheDefaultIsConcreteType&lt;\cf4 WorkflowItemTypeReport\cf0 &gt;();\par ??            ForRequestedType&lt;\cf4 ISpecialCaseRouteRegistry\cf0 &gt;().TheDefault.Is.Object(_specialCaseRouteRegistry);\par ??\par ??            ForRequestedType&lt;\cf4 ILogViewerRegistry\cf0 &gt;()\par ??                .TheDefault.Is.OfConcreteType&lt;\cf4 LogViewerRegistry\cf0 &gt;();\par ??\par ??            ForRequestedType&lt;\cf4 IWebPlatformDetector\cf0 &gt;().TheDefaultIsConcreteType&lt;\cf4 MobileWebPlatformDetector\cf0 &gt;();\par ??\par ??            Scan(x =&gt;\par ??            \{\par ??                x.TheCallingAssembly();\par ??                x.With&lt;\cf4 DefaultConventionScanner\cf0 &gt;();\par ??            \});\par ??\par ??            registerRoutingActions();\par ??            registerSpecialCaseRoutes();\par ??        \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">private</span>
+                <span style="color: blue;">readonly</span> <span style="color: #2b91af;">
+                TypeRegistry</span> _typeRegistry = <span style="color: blue;">new</span>
+                <span style="color: #2b91af;">TypeRegistry</span>();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">private</span>
+                <span style="color: #2b91af;">UrlGraph</span> _graph;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">private</span>
+                <span style="color: #2b91af;">ControllerRegistry</span> _registry;</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> WebRegistry(<span 
+                    style="color: #2b91af;">ICollection</span>&lt;<span style="color: #2b91af;">RouteBase</span>&gt; 
+                routes)</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; createUrlGraph(routes);</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ForRequestedType&lt;<span 
+                    style="color: #2b91af;">IUrlRegistry</span>&gt;().TheDefault.Is.Object(_graph);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ForRequestedType&lt;<span 
+                    style="color: #2b91af;">IActionRegistry</span>&gt;().TheDefault.Is.Object(_actionRegistry);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ForRequestedType&lt;<span 
+                    style="color: #2b91af;">ITypeRegistry</span>&gt;().TheDefault.Is.Object(_typeRegistry);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<p>The Object() method is the pertinant method in the InstanceExpression.&nbsp; 
+    There is also an alternative syntax called &quot;IsThis&quot;:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red163\green21\blue21;}??\fs20             \cf3 var\cf0  container = \cf3 new\cf0  \cf4 Container\cf0 (x =&gt;\par ??            \{\par ??                x.ForRequestedType&lt;\cf4 ClassWithDependency\cf0 &gt;().TheDefault.Is.OfConcreteType&lt;\cf4 ClassWithDependency\cf0 &gt;()\par ??                    .TheArrayOf&lt;\cf4 Rule\cf0 &gt;().Contains(arr =&gt;\par ??                    \{\par ??                        arr.IsThis(\cf3 new\cf0  \cf4 ColorRule\cf0 (\cf5 "Red"\cf0 ));\par ??                    \});\par ??            \});}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                var</span> container = <span style="color: blue;">new</span>
+                <span style="color: #2b91af;">Container</span>(x =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.ForRequestedType&lt;<span style="color: #2b91af;">ClassWithDependency</span>&gt;().TheDefault.Is.OfConcreteType&lt;<span 
+                    style="color: #2b91af;">ClassWithDependency</span>&gt;()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .TheArrayOf&lt;<span style="color: #2b91af;">Rule</span>&gt;().Contains(arr =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                arr.IsThis(<span style="color: blue;">new</span> <span style="color: #2b91af;">
+                ColorRule</span>(<span style="color: #a31515;">&quot;Red&quot;</span>));</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                });</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+        </div>
+<!--EndFragment-->
+<p>&nbsp;Choosing &quot;IsThis&quot; or &quot;Object&quot; is strictly a matter of aesthetics.&nbsp; </p>
+        <p>Also see <a href="ChangingConfigurationAtRuntime.htm">Changing Configuration at 
+            Runtime</a> for some related behavior. </p>
+        <hr />
+        
+    <h2>Constructing Objects with Lambda Functions</h2>
+    <p>Some classes simply cannot be created with constructor functions.&nbsp; Other 
+        objects may need to be located by invoking some sort of other infrastructure 
+        (the built in Provider model in ASP.Net 2.0+ is a good example of this).&nbsp; 
+        In those cases, StructureMap can instead build or find these objects by 
+        registering a Lambda expression with the ConstructedBy() method of 
+        InstanceExpression.&nbsp; </p>
+        <p>Let&#39;s say that your system includes an important legacy class named 
+            WeirdLegacyRepository that manages its own lifecycle somehow, and new instances 
+            can only be accessed by a static method on the WeirdLegacyRepository.&nbsp; You 
+            still want to inject these objects into the classes that depend on 
+            WeirdLegacyRepository, so you might do something like this code below:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red43\green145\blue175;\red163\green21\blue21;}??\fs20                 x.ConstructedBy(() =&gt; \cf3 WeirdLegacyRepository\cf0 .Current).WithName(\cf4 "Weird"\cf0 );}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                ForRequestedType&lt;IRepository&gt;().TheDefault.Is.ConstructedBy(() =&gt;
+                <span style="color: #2b91af;">WeirdLegacyRepository</span>.Current).WithName(<span 
+                    style="color: #a31515;">&quot;Weird&quot;</span>);</p>
+        </div>
+<!--EndFragment-->
+<p>That example used a no argument Lambda function.&nbsp; You can also register a 
+    Lambda expression that uses the current <a href="UsingSessionContext.htm">
+    BuildSession/IContext</a> to access other services:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red43\green145\blue175;}??\fs20             ForRequestedType&lt;\cf3 ISession\cf0 &gt;().TheDefault.Is.ConstructedBy(\par ??                context =&gt; context.GetInstance&lt;\cf3 ISessionSource\cf0 &gt;().CreateSession());\par ??\par ??            ForRequestedType&lt;\cf3 ITransaction\cf0 &gt;().TheDefault.Is.ConstructedBy(\par ??                context =&gt; context.GetInstance&lt;\cf3 ISession\cf0 &gt;().Transaction);}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ForRequestedType&lt;<span 
+                    style="color: #2b91af;">ISession</span>&gt;().TheDefault.Is.ConstructedBy(</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                context =&gt; context.GetInstance&lt;<span style="color: #2b91af;">ISessionSource</span>&gt;().CreateSession());</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ForRequestedType&lt;<span 
+                    style="color: #2b91af;">ITransaction</span>&gt;().TheDefault.Is.ConstructedBy(</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                context =&gt; context.GetInstance&lt;<span style="color: #2b91af;">ISession</span>&gt;().Transaction);</p>
+        </div>
+<!--EndFragment-->
+<p>See <a href="UsingSessionContext.htm">Using the Session Context</a> for more 
+    information.</p>
+    <hr />
+        
+    <h2>Referencing a Named Instance</h2>
+    <p>Many times it is helpful to simply say &quot;use the Instance with this name here&quot; 
+        when configuring array dependencies or overriding the autowiring defaults.&nbsp; 
+        Use the TheInstanceNamed() function as shown below to do this:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red43\green145\blue175;\red0\green0\blue255;\red163\green21\blue21;}??\fs20             \cf3 IContainer\cf0  manager = \cf4 new\cf0  \cf3 Container\cf0 (r =&gt;\par ??            \{\par ??                r.InstanceOf&lt;\cf3 IHandler\cf0 &gt;().Is.OfConcreteType&lt;\cf3 Handler1\cf0 &gt;().WithName(\cf5 "One"\cf0 );\par ??                r.InstanceOf&lt;\cf3 IHandler\cf0 &gt;().Is.OfConcreteType&lt;\cf3 Handler2\cf0 &gt;().WithName(\cf5 "Two"\cf0 );\par ??\par ??                r.ForRequestedType&lt;\cf3 Processor\cf0 &gt;().TheDefault.Is.OfConcreteType&lt;\cf3 Processor\cf0 &gt;()\par ??                    .WithCtorArg(\cf5 "name"\cf0 ).EqualTo(\cf5 "Jeremy"\cf0 )\par ??                    .TheArrayOf&lt;\cf3 IHandler\cf0 &gt;().Contains(x =&gt;\par ??                    \{\par ??                        x.TheInstanceNamed(\cf5 "Two"\cf0 );\par ??                        x.TheInstanceNamed(\cf5 "One"\cf0 );\par ??                    \});\par ??            \});}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #2b91af;">
+                IContainer</span> manager = <span style="color: blue;">new</span>
+                <span style="color: #2b91af;">Container</span>(r =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                r.InstanceOf&lt;<span style="color: #2b91af;">IHandler</span>&gt;().Is.OfConcreteType&lt;<span 
+                    style="color: #2b91af;">Handler1</span>&gt;().WithName(<span 
+                    style="color: #a31515;">&quot;One&quot;</span>);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                r.InstanceOf&lt;<span style="color: #2b91af;">IHandler</span>&gt;().Is.OfConcreteType&lt;<span 
+                    style="color: #2b91af;">Handler2</span>&gt;().WithName(<span 
+                    style="color: #a31515;">&quot;Two&quot;</span>);</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                r.ForRequestedType&lt;<span style="color: #2b91af;">Processor</span>&gt;().TheDefault.Is.OfConcreteType&lt;<span 
+                    style="color: #2b91af;">Processor</span>&gt;()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .WithCtorArg(<span style="color: #a31515;">&quot;name&quot;</span>).EqualTo(<span 
+                    style="color: #a31515;">&quot;Jeremy&quot;</span>)</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .TheArrayOf&lt;<span style="color: #2b91af;">IHandler</span>&gt;().Contains(x =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.TheInstanceNamed(<span style="color: #a31515;">&quot;Two&quot;</span>);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.TheInstanceNamed(<span style="color: #a31515;">&quot;One&quot;</span>);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                });</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+        </div>
+<!--EndFragment-->
+<hr />
+        
+    <h2>Using the Default Instance</h2>
+    <p>Sometimes you may want to just tell StructureMap to use the default Instance of a 
+        type.&nbsp; The most common usage of this is telling StructureMap to inject an 
+        optional setter property.&nbsp; Use the &quot;IsTheDefault()&quot; or &quot;TheDefault()&quot; 
+        method to force the injection of a setter on an Instance by Instance basis.</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red43\green145\blue175;\red0\green0\blue255;\red163\green21\blue21;}??\fs20         [\cf3 Test\cf0 ]\par ??        \cf4 public\cf0  \cf4 void\cf0  AutoFill_a_property()\par ??        \{\par ??            \cf4 var\cf0  container = \cf4 new\cf0  \cf3 Container\cf0 (r =&gt;\par ??            \{\par ??                r.ForConcreteType&lt;\cf3 ClassWithDependency\cf0 &gt;().Configure\par ??                    .SetterDependency&lt;\cf3 Rule\cf0 &gt;().IsTheDefault();\par ??\par ??                r.ForRequestedType&lt;\cf3 Rule\cf0 &gt;().TheDefault.Is.Object(\cf4 new\cf0  \cf3 ColorRule\cf0 (\cf5 "Green"\cf0 ));\par ??            \});\par ??\par ??\par ??            container.GetInstance&lt;\cf3 ClassWithDependency\cf0 &gt;().Rule.ShouldBeOfType(\cf4 typeof\cf0  (\cf3 ColorRule\cf0 ));\par ??        \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<span style="color: #2b91af;">Test</span>]</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: blue;">void</span> AutoFill_a_property()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                var</span> container = <span style="color: blue;">new</span>
+                <span style="color: #2b91af;">Container</span>(r =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                r.ForConcreteType&lt;<span style="color: #2b91af;">ClassWithDependency</span>&gt;().Configure</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .SetterDependency&lt;<span style="color: #2b91af;">Rule</span>&gt;().IsTheDefault();</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                r.ForRequestedType&lt;<span style="color: #2b91af;">Rule</span>&gt;().TheDefault.Is.Object(<span 
+                    style="color: blue;">new</span> <span style="color: #2b91af;">ColorRule</span>(<span 
+                    style="color: #a31515;">&quot;Green&quot;</span>));</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; container.GetInstance&lt;<span 
+                    style="color: #2b91af;">ClassWithDependency</span>&gt;().Rule.ShouldBeOfType(<span 
+                    style="color: blue;">typeof</span> (<span style="color: #2b91af;">ColorRule</span>));</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<p>While this functionality will be supported in the future, it may be better to use 
+    the new Setter Injection Policies[LINK].</p>
+    <hr />
+        
+    <h2>Specifying a Prototype Object with Cloning</h2>
+    <p>You can have StructureMap construct objects by having it simply clone a supplied 
+        template object:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green128\blue0;\red0\green0\blue255;\red43\green145\blue175;\red163\green21\blue21;}??\fs20             \cf3 // Build an instance for IWidget, then setup StructureMap to return cloned instances of the \par ??\cf0             \cf3 // "Prototype" (GoF pattern) whenever someone asks for IWidget named "Jeremy"\par ??\cf0             \cf4 var\cf0  theWidget = \cf4 new\cf0  \cf5 CloneableWidget\cf0 (\cf6 "Jeremy"\cf0 );\par ??\par ??            container = \cf4 new\cf0  \cf5 Container\cf0 (x =&gt;\par ??            \{\par ??                x.InstanceOf&lt;\cf5 IWidget\cf0 &gt;().Is.PrototypeOf(theWidget).WithName(\cf6 "Jeremy"\cf0 );\par ??            \});}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // Build an instance for IWidget, then setup StructureMap to return cloned 
+                instances of the </span>
+            </p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // &quot;Prototype&quot; (GoF pattern) whenever someone asks for IWidget named &quot;Jeremy&quot;</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                var</span> theWidget = <span style="color: blue;">new</span>
+                <span style="color: #2b91af;">CloneableWidget</span>(<span 
+                    style="color: #a31515;">&quot;Jeremy&quot;</span>);</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; container =
+                <span style="color: blue;">new</span> <span style="color: #2b91af;">Container</span>(x 
+                =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.InstanceOf&lt;<span style="color: #2b91af;">IWidget</span>&gt;().Is.PrototypeOf(theWidget).WithName(<span 
+                    style="color: #a31515;">&quot;Jeremy&quot;</span>);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+        </div>
+<!--EndFragment-->
+<p>There is also the option to use binary serialization as the &quot;cloning&quot; method.&nbsp; 
+    The old advice from Microsoft is to use cloning for flat objects, and favor 
+    serialization copying for objects with lots of children.</p>
+    <hr />
+        
+    <h2>Specifying a Prototype Object with Serialization</h2>
+    <p>You can have StructureMap construct objects by having it simply clone a supplied 
+        template object by using binary serialization:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green128\blue0;\red0\green0\blue255;\red43\green145\blue175;\red163\green21\blue21;}??\fs20             \cf3 // Build an instance for IWidget, then setup StructureMap to return cloned instances of the \par ??\cf0             \cf3 // "Prototype" (GoF pattern) whenever someone asks for IWidget named "Jeremy"\par ??\cf0             \cf4 var\cf0  theWidget = \cf4 new\cf0  \cf5 CloneableWidget\cf0 (\cf6 "Jeremy"\cf0 );\par ??\par ??            container = \cf4 new\cf0  \cf5 Container\cf0 (x =&gt;\par ??            \{\par ??                x.InstanceOf&lt;\cf5 IWidget\cf0 &gt;().Is.SerializedCopyOf(theWidget).WithName(\cf6 "Jeremy"\cf0 );\par ??            \});}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // Build an instance for IWidget, then setup StructureMap to return cloned 
+                instances of the </span>
+            </p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // &quot;Prototype&quot; (GoF pattern) whenever someone asks for IWidget named &quot;Jeremy&quot;</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                var</span> theWidget = <span style="color: blue;">new</span>
+                <span style="color: #2b91af;">CloneableWidget</span>(<span 
+                    style="color: #a31515;">&quot;Jeremy&quot;</span>);</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; container =
+                <span style="color: blue;">new</span> <span style="color: #2b91af;">Container</span>(x 
+                =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.InstanceOf&lt;<span style="color: #2b91af;">IWidget</span>&gt;().Is.SerializedCopyOf(theWidget).WithName(<span 
+                    style="color: #a31515;">&quot;Jeremy&quot;</span>);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+        </div>
+<!--EndFragment-->
+<hr />
+        
+    <h2>Configuring Conditional Construction</h2>
+    <p>There have been several questions on the StructureMap users list about doing 
+        conditional construction (i.e., return this object if this condition, else this 
+        other object).&nbsp; In order to meet this apparent need, 
+        StructureMap 2.5.2 introduces the new ConditionalInstance that allows a user to 
+        effectively switch the active Instance based on a Predicate&lt;IContext&gt; boolean 
+        test.&nbsp; Here&#39;s a quick example of using the new Conditional() syntax of 
+        InstanceExpression:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red163\green21\blue21;}??\fs20             \cf3 var\cf0  container = \cf3 new\cf0  \cf4 Container\cf0 (x =&gt;\par ??            \{\par ??                x.ForRequestedType&lt;\cf4 Rule\cf0 &gt;().TheDefault.IsThis(DEFAULT);\par ??                x.InstanceOf&lt;\cf4 Rule\cf0 &gt;().Is.Conditional(o =&gt;\par ??                \{\par ??                    o.If(c =&gt; \cf3 false\cf0 ).ThenIt.Is.OfConcreteType&lt;\cf4 ARule\cf0 &gt;();\par ??                    o.If(c =&gt; \cf3 true\cf0 ).ThenIt.IsThis(GREEN);\par ??                    o.TheDefault.IsThis(RED);\par ??                \}).WithName(\cf5 "conditional"\cf0 );\par ??            \});}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                var</span> container = <span style="color: blue;">new</span>
+                <span style="color: #2b91af;">Container</span>(x =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.InstanceOf&lt;Rule&gt;().Is.Conditional(o =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                o.If(c =&gt; <span style="color: blue;">false</span>).ThenIt.Is.OfConcreteType&lt;<span 
+                    style="color: #2b91af;">ARule</span>&gt;();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                o.If(c =&gt; <span style="color: blue;">true</span>).ThenIt.IsThis(GREEN);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                o.TheDefault.IsThis(RED);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                }).WithName(<span style="color: #a31515;">&quot;conditional&quot;</span>);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+        </div>
+<!--EndFragment-->
+<p>The syntax above is configuring and attaching a ConditionalInstance object.&nbsp; 
+    Internally, this syntax is telling the ConditionalInstance to:</p>
+        <ol>
+            <li>Return the concrete type &quot;ARule&quot; if the condition &quot;c =&gt; false&quot; is met (in real 
+                usage the predicate would do something more intelligent ;-) )</li>
+            <li>Else, return a Rule object specified by the variable named GREEN if the 
+                condition &quot;c =&gt; true&quot; is met</li>
+            <li>Finally, if none of the predicates match, return the Rule object specified by 
+                the variable named RED</li>
+        </ol>
+        <p>The syntax &quot;If( predicate ).*************&quot; uses an InstanceExpression and all 
+            possible Instance types are available.</p>
+        <p>Internally, the ConditionalInstance looks like this:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red0\green128\blue0;\red163\green21\blue21;}??\fs20     \cf3 public\cf0  \cf3 class\cf0  \cf4 ConditionalInstance\cf0 &lt;T&gt; : \cf4 ExpressedInstance\cf0 &lt;\cf4 ConditionalInstance\cf0 &lt;T&gt;&gt;\par ??    \{\par ??        \cf5 // Conditional Instance keeps track of zero or more internal Instance\par ??\cf0         \cf5 // objects against a Predicate&lt;IContext&gt; condition\par ??\cf0         \cf3 private\cf0  \cf3 readonly\cf0  \cf4 List\cf0 &lt;\cf4 InstanceCase\cf0 &gt; _cases = \cf3 new\cf0  \cf4 List\cf0 &lt;\cf4 InstanceCase\cf0 &gt;();\par ??        \par ??        \cf5 // The "default" Instance to use if none of the conditional predicates\par ??\cf0         \cf5 // are met.  If this is not explicitly defined, the ConditionalInstance\par ??\cf0         \cf5 // will simply look for the default Instance of the desired\par ??\cf0         \cf5 // PluginType\par ??\cf0         \cf3 public\cf0  \cf4 Instance\cf0  _default = \cf3 new\cf0  \cf4 DefaultInstance\cf0 ();\par ??\par ??\par ??        \cf3 public\cf0  ConditionalInstance(\cf4 Action\cf0 &lt;\cf4 ConditionalInstanceExpression\cf0 &lt;T&gt;&gt; action)\par ??        \{\par ??            action(\cf3 new\cf0  \cf4 ConditionalInstanceExpression\cf0 &lt;T&gt;(\cf3 this\cf0 ));\par ??        \}\par ??\par ??        \cf3 protected\cf0  \cf3 override\cf0  \cf3 string\cf0  getDescription()\par ??        \{\par ??            \cf3 return\cf0  \cf6 "Conditional Instance of "\cf0  + \cf3 typeof\cf0  (T).FullName;\par ??        \}\par ??\par ??        \cf3 protected\cf0  \cf3 override\cf0  \cf3 object\cf0  build(\cf4 Type\cf0  pluginType, \cf4 BuildSession\cf0  session)\par ??        \{\par ??            \cf3 var\cf0  instanceCase = _cases.Find(c =&gt; c.Predicate(session));\par ??            \cf3 var\cf0  instance = instanceCase == \cf3 null\cf0  ? _default : instanceCase.Instance;\par ??\par ??            \cf3 return\cf0  instance.Build(pluginType, session);\par ??        \}\par ??\par ??        \cf3 public\cf0  \cf3 class\cf0  \cf4 ConditionalInstanceExpression\cf0 &lt;T&gt;\par ??        \{\par ??            \cf3 private\cf0  \cf3 readonly\cf0  \cf4 ConditionalInstance\cf0 &lt;T&gt; _parent;\par ??\par ??            \cf3 public\cf0  ConditionalInstanceExpression(\cf4 ConditionalInstance\cf0 &lt;T&gt; parent)\par ??            \{\par ??                _parent = parent;\par ??            \}\par ??\par ??            \cf3 public\cf0  \cf4 ThenItExpression\cf0 &lt;T&gt; If(\cf4 Predicate\cf0 &lt;\cf4 IContext\cf0 &gt; predicate)\par ??            \{\par ??                \cf3 return\cf0  \cf3 new\cf0  \cf4 InstanceExpression\cf0 &lt;T&gt;(i =&gt;\par ??                \{\par ??                    \cf3 var\cf0  theCase = \cf3 new\cf0  \cf4 InstanceCase\cf0 () \{Instance = i, Predicate = predicate\};\par ??                    _parent._cases.Add(theCase);\par ??                \});\par ??            \}\par ??\par ??            \cf3 public\cf0  \cf4 IsExpression\cf0 &lt;T&gt; TheDefault\par ??            \{\par ??                \cf3 get\par ??\cf0                 \{\par ??                    \cf3 return\cf0  \cf3 new\cf0  \cf4 InstanceExpression\cf0 &lt;T&gt;(i =&gt; _parent._default = i);\par ??                \}\par ??            \}\par ??\par ??            \par ??        \}\par ??\par ??        \cf3 protected\cf0  \cf3 override\cf0  \cf4 ConditionalInstance\cf0 &lt;T&gt; thisInstance\par ??        \{\par ??            \cf3 get\cf0  \{ \cf3 return\cf0  \cf3 this\cf0 ; \}\par ??        \}\par ??    \}\par ??\par ??    \cf3 public\cf0  \cf3 class\cf0  \cf4 InstanceCase\par ??\cf0     \{\par ??        \cf3 public\cf0  \cf4 Predicate\cf0 &lt;\cf4 IContext\cf0 &gt; Predicate \{ \cf3 get\cf0 ; \cf3 set\cf0 ; \}\par ??        \cf3 public\cf0  \cf4 Instance\cf0  Instance \{ \cf3 get\cf0 ; \cf3 set\cf0 ; \}\par ??    \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">class</span>
+                <span style="color: #2b91af;">ConditionalInstance</span>&lt;T&gt; :                 <span style="color: #2b91af;">ExpressedInstance</span>&lt;<span 
+                    style="color: #2b91af;">ConditionalInstance</span>&lt;T&gt;&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">// Conditional Instance 
+                keeps track of zero or more internal Instance</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">// objects against a 
+                Predicate&lt;IContext&gt; condition</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">private</span>
+                <span style="color: blue;">readonly</span> <span style="color: #2b91af;">List</span>&lt;<span 
+                    style="color: #2b91af;">InstanceCase</span>&gt; _cases =
+                <span style="color: blue;">new</span> <span style="color: #2b91af;">List</span>&lt;<span 
+                    style="color: #2b91af;">InstanceCase</span>&gt;();</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">// The &quot;default&quot; Instance 
+                to use if none of the conditional predicates</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">// are met.&nbsp; If this 
+                is not explicitly defined, the ConditionalInstance</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">// will simply look for 
+                the default Instance of the desired</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">// PluginType</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: #2b91af;">Instance</span> _default =
+                <span style="color: blue;">new</span> <span style="color: #2b91af;">
+                DefaultInstance</span>();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">class</span>
+                <span style="color: #2b91af;">InstanceCase</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: #2b91af;">Predicate</span>&lt;<span style="color: #2b91af;">IContext</span>&gt; 
+                Predicate { <span style="color: blue;">get</span>; <span style="color: blue;">
+                set</span>; }</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: #2b91af;">Instance</span> Instance {
+                <span style="color: blue;">get</span>; <span style="color: blue;">set</span>; }</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<p>When a call is made to 
+    container.GetInstance&lt;Rule&gt;(&quot;conditional&quot;):</p>
+        <ol>
+            <li>Internally, the Container object finds the ConditionalInstance object that was 
+                configured and named &quot;conditional&quot; for the PluginType &quot;Rule&quot;</li>
+            <li>The Container invokes the ConditionalInstance.Build(Type, BuildSession) method</li>
+            <li>The ConditionalInstance evaluates its InstanceCase collection to find the first 
+                InstanceCase that matches the current IContext and invokes the internal Instance 
+                of that InstanceCase</li>
+            <li>Lastly, if ConditionalInstance does not find any matching InstanceCase objects, 
+                it will invoke its default Instance to build the requested object</li>
+        </ol>
+        <p>
+            It might be easier to just see the code for this:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red0\green128\blue0;}??\fs20         \cf3 protected\cf0  \cf3 override\cf0  \cf3 object\cf0  build(\cf4 Type\cf0  pluginType, \cf4 BuildSession\cf0  session)\par ??        \{\par ??            \cf5 // Find the first InstanceCase that matches the BuildSession/IContext\par ??\cf0             \cf3 var\cf0  instanceCase = _cases.Find(c =&gt; c.Predicate(session));\par ??\par ??            \cf5 // Use the Instance from the InstanceCase if it exists,\par ??\cf0             \cf5 // otherwise, use the "default"\par ??\cf0             \cf3 var\cf0  instance = instanceCase == \cf3 null\cf0  ? _default : instanceCase.Instance;\par ??\par ??            \cf5 // delegate to the chosen Instance\par ??\cf0             \cf3 return\cf0  instance.Build(pluginType, session);\par ??        \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">protected</span>
+                <span style="color: blue;">override</span> <span style="color: blue;">object</span> 
+                build(<span style="color: #2b91af;">Type</span> pluginType,
+                <span style="color: #2b91af;">BuildSession</span> session)</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // Find the first InstanceCase that matches the BuildSession/IContext</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                var</span> instanceCase = _cases.Find(c =&gt; c.Predicate(session));</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // Use the Instance from the InstanceCase if it exists,</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // otherwise, use the &quot;default&quot;</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                var</span> instance = instanceCase == <span style="color: blue;">null</span> ? 
+                _default : instanceCase.Instance;</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // delegate to the chosen Instance</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                return</span> instance.Build(pluginType, session);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<p>Please see <a href="UsingSessionContext.htm">Using the Session Context</a> for 
+            more information on what is possible with the IContext.</p>
+    <hr />  
 	</body>
 </html>

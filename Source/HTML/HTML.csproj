@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A6358895-641F-4CC2-BE8E-C61EBE1DBEB9}</ProjectGuid>
     <OutputType>Exe</OutputType>
@@ -58,17 +58,28 @@
   -->
   <ItemGroup>
     <Content Include="AttributeNormalized.htm" />
+    <Content Include="AutoMocker.htm" />
+    <Content Include="Concepts.htm" />
+    <Content Include="FeatureList.htm" />
+    <Content Include="HowDoesStructureMapWork.htm" />
+    <Content Include="ModularConfiguration.htm" />
+    <Content Include="Profiles.htm" />
+    <Content Include="Scoping.htm" />
+    <Content Include="SmartInstance.htm" />
+    <Content Include="UsingAttributes.htm" />
+    <Content Include="AutoWiring.htm" />
     <Content Include="ConfiguringStructureMap.htm" />
     <Content Include="Example.xml" />
     <Content Include="Glossary.htm" />
     <Content Include="Default.htm" />
     <Content Include="Diagnostics.htm" />
-    <Content Include="ExplicitArguments.htm" />
     <Content Include="ExtendingStructureMap.htm" />
     <Content Include="InstanceExpression.htm" />
+    <Content Include="jquery-1.2.6.js" />
+    <Content Include="Menu.htm" />
     <Content Include="RegistryDSL.htm" />
     <Content Include="Generics.htm" />
-    <Content Include="InjectingServicesAtRuntime.htm" />
+    <Content Include="ChangingConfigurationAtRuntime.htm" />
     <Content Include="Interception.htm" />
     <Content Include="NodeNormalized.htm" />
     <Content Include="QuickStart.htm" />
@@ -77,8 +88,13 @@
     <Content Include="ScanningAssemblies.htm" />
     <Content Include="ConstructorAndSetterInjection.htm" />
     <Content Include="RetrievingServices.htm" />
+    <Content Include="structuremap.js" />
+    <Content Include="style.css" />
+    <Content Include="UsingSessionContext.htm" />
     <Content Include="UsingStructureMapWithinUnitTests.htm" />
+    <Content Include="UsingTheContainerOutsideOfObjectFactory.htm" />
     <Content Include="XmlConfiguration.htm" />
+    <Content Include="XmlReference.htm" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
