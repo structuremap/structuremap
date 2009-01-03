@@ -11,10 +11,13 @@ namespace StructureMap
     {
         private Container _manager;
 
+        // DO NOT ELIMINATE THIS METHOD
         public InstanceBuilder(){}
 
         public abstract Type PluggedType { get; }
 
         public abstract object BuildInstance(IConfiguredInstance instance, BuildSession session);
+
+        public virtual void BuildUp(IConfiguredInstance instance, BuildSession session, object target) { }
     }
 }

@@ -16,7 +16,8 @@ H1
 }
 H2
 {
-    COLOR: #316592;
+	BACKGROUND-COLOR: #316592; 
+    COLOR: white;
     FONT-FAMILY: Arial;
     FONT-SIZE: large;
     FONT-WEIGHT: bold;

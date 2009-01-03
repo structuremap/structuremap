@@ -249,7 +249,6 @@ namespace StructureMap.Testing.Graph
             });
 
             var theTrade = new Trade();
-
             IList<TradeView> views = container.With(theTrade).GetAllInstances<TradeView>();
 
             views[0].Trade.ShouldBeTheSameAs(theTrade);

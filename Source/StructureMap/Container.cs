@@ -40,7 +40,6 @@ namespace StructureMap
         /// </summary>
         /// <param name="pluginGraph">PluginGraph containing the instance and type definitions 
         /// for the Container</param>
-        /// <param name="failOnException">Flags the Container to fail or trap exceptions</param>
         public Container(PluginGraph pluginGraph)
         {
             construct(pluginGraph);
@@ -80,7 +79,6 @@ namespace StructureMap
         /// <summary>
         /// Creates a new instance of the requested type T using the supplied Instance.  Mostly used internally
         /// </summary>
-        /// <param name="pluginType"></param>
         /// <param name="instance"></param>
         /// <returns></returns>
         public T GetInstance<T>(Instance instance)
@@ -91,7 +89,6 @@ namespace StructureMap
         /// <summary>
         /// Gets the default instance of the pluginType using the explicitly configured arguments from the "args"
         /// </summary>
-        /// <param name="pluginType"></param>
         /// <param name="args"></param>
         /// <returns></returns>
         public PLUGINTYPE GetInstance<PLUGINTYPE>(ExplicitArguments args)
@@ -117,7 +114,7 @@ namespace StructureMap
             BasicInstance basicInstance = defaultInstance as BasicInstance;
 
             Instance instance = basicInstance == null ? defaultInstance : new ExplicitInstance(pluginType, args, basicInstance);
-            BuildSession session = withNewSession();
+            BuildSession session = withNewSession(Plugin.DEFAULT);
 
             args.RegisterDefaults(session);
 
@@ -128,12 +125,12 @@ namespace StructureMap
         /// <summary>
         /// Gets all configured instances of type T using explicitly configured arguments from the "args"
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <param name="type"></param>
         /// <param name="args"></param>
         /// <returns></returns>
         public IList GetAllInstances(Type type, ExplicitArguments args)
         {
-            BuildSession session = withNewSession();
+            BuildSession session = withNewSession(Plugin.DEFAULT);
 
             args.RegisterDefaults(session);
 
@@ -143,7 +140,7 @@ namespace StructureMap
 
         public IList<T> GetAllInstances<T>(ExplicitArguments args)
         {
-            BuildSession session = withNewSession();
+            BuildSession session = withNewSession(Plugin.DEFAULT);
 
             args.RegisterDefaults(session);
 
@@ -185,7 +182,7 @@ namespace StructureMap
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="name"></param>
-        /// <param name="instance"></param>
+        /// <param name="stub"></param>
         public void Inject<T>(string name, T stub)
         {
             LiteralInstance instance = new LiteralInstance(stub).WithName(name);
@@ -199,7 +196,7 @@ namespace StructureMap
         /// <returns></returns>
         public IList<T> GetAllInstances<T>()
         {
-            BuildSession session = withNewSession();
+            BuildSession session = withNewSession(Plugin.DEFAULT);
             return getListOfTypeWithSession<T>(session);
         }
 
@@ -220,7 +217,7 @@ namespace StructureMap
         /// <returns></returns>
         public object GetInstance(Type pluginType, string instanceKey)
         {
-            return withNewSession().CreateInstance(pluginType, instanceKey);
+            return withNewSession(instanceKey).CreateInstance(pluginType, instanceKey);
         }
 
         /// <summary>
@@ -228,7 +225,6 @@ namespace StructureMap
         /// </summary>
         /// <param name="pluginType"></param>
         /// <param name="instanceKey"></param>
-        /// <param name="instance"></param>
         /// <returns></returns>
         public object TryGetInstance(Type pluginType, string instanceKey)
         {
@@ -241,7 +237,6 @@ namespace StructureMap
         /// Creates or finds the default instance of the pluginType. Returns null if the pluginType is not known to the container.
         /// </summary>
         /// <param name="pluginType"></param>
-        /// <param name="instance"></param>
         /// <returns></returns>
         public object TryGetInstance(Type pluginType)
         {
@@ -254,7 +249,6 @@ namespace StructureMap
         /// Creates or finds the default instance of type T. Returns the default value of T if it is not known to the container.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="instance"></param>
         /// <returns></returns>
         public T TryGetInstance<T>()
         {
@@ -262,10 +256,25 @@ namespace StructureMap
         }
 
         /// <summary>
+        /// The "BuildUp" method takes in an already constructed object
+        /// and uses Setter Injection to push in configured dependencies
+        /// of that object
+        /// </summary>
+        /// <param name="target"></param>
+        public void BuildUp(object target)
+        {
+            var pluggedType = target.GetType();
+            IConfiguredInstance instance = _pipelineGraph.GetDefault(pluggedType) as IConfiguredInstance 
+                ?? new ConfiguredInstance(pluggedType);
+
+            var builder = PluginCache.FindBuilder(pluggedType);
+            builder.BuildUp(instance, withNewSession(Plugin.DEFAULT), target);
+        }
+
+        /// <summary>
         /// Creates or finds the named instance of type T. Returns the default value of T if the named instance is not known to the container.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="instance"></param>
         /// <returns></returns>
         public T TryGetInstance<T>(string instanceKey)
         {
@@ -279,7 +288,7 @@ namespace StructureMap
         /// <returns></returns>
         public object GetInstance(Type pluginType)
         {
-            return withNewSession().CreateInstance(pluginType);
+            return withNewSession(Plugin.DEFAULT).CreateInstance(pluginType);
         }
 
 
@@ -291,7 +300,7 @@ namespace StructureMap
         /// <returns></returns>
         public object GetInstance(Type pluginType, Instance instance)
         {
-            return withNewSession().CreateInstance(pluginType, instance);
+            return withNewSession(instance.Name).CreateInstance(pluginType, instance);
         }
 
         public void SetDefault(Type pluginType, Instance instance)
@@ -343,7 +352,7 @@ namespace StructureMap
         /// <returns></returns>
         public IList GetAllInstances(Type pluginType)
         {
-            return forType(pluginType).GetAllInstances(withNewSession());
+            return forType(pluginType).GetAllInstances(withNewSession(Plugin.DEFAULT));
         }
 
         /// <summary>
@@ -464,9 +473,9 @@ namespace StructureMap
             _pipelineGraph.SetDefault(pluginType, instance);
         }
 
-        private BuildSession withNewSession()
+        private BuildSession withNewSession(string name)
         {
-            return new BuildSession(_pipelineGraph, _interceptorLibrary);
+            return new BuildSession(_pipelineGraph, _interceptorLibrary){RequestedName = name};
         }
 
 
@@ -474,5 +483,7 @@ namespace StructureMap
         {
             return _pipelineGraph.ForType(type);
         }
+
+
     }
 }

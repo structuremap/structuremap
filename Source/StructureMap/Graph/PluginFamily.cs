@@ -371,6 +371,8 @@ namespace StructureMap.Graph
             set { _defaultKey = value ?? string.Empty; }
         }
 
+        public Instance MissingInstance { get; set; }
+
         #endregion
     }
 }

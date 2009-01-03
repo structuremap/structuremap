@@ -142,8 +142,10 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void Add_default_instance()
         {
-            var container =
-                new Container(r => { r.ForRequestedType(typeof (ITarget)).TheDefaultIsConcreteType(typeof (Target2)); });
+            var container = new Container(r =>
+            {
+                r.ForRequestedType(typeof (ITarget)).TheDefaultIsConcreteType(typeof (Target2));
+            });
 
             container.GetInstance<ITarget>().ShouldBeOfType<Target2>();
         }
@@ -151,12 +153,12 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test, Explicit]
         public void Add_default_instance2()
         {
-            var manager =
-                new Container(
-                    r =>
-                    r.ForRequestedType(typeof (IRepository<>)).TheDefaultIsConcreteType(typeof (OnlineRepository<>)));
+            var container = new Container(r =>
+            {
+                r.ForRequestedType(typeof (IRepository<>)).TheDefaultIsConcreteType(typeof (OnlineRepository<>));
+            });
 
-            Assert.IsInstanceOfType(typeof (Target2), manager.GetInstance<ITarget>());
+            Assert.IsInstanceOfType(typeof (Target2), container.GetInstance<ITarget>());
 
 
             var repository =

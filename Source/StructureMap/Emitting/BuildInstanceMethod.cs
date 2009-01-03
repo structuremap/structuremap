@@ -47,7 +47,7 @@ namespace StructureMap.Emitting
                 ilgen.DeclareLocal(typeof (bool));
             }
 
-            var arguments = new ArgumentEmitter(ilgen);
+            var arguments = new ArgumentEmitter(ilgen, true);
 
             _plugin.VisitConstructor(arguments);
 

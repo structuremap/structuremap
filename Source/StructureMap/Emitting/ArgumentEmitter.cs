@@ -13,11 +13,13 @@ namespace StructureMap.Emitting
         private readonly PrimitiveParameterEmitter _primitive = new PrimitiveParameterEmitter();
         private readonly StringParameterEmitter _string = new StringParameterEmitter();
         private readonly ILGenerator ilgen;
+        private readonly bool _inConstructor = true;
 
 
-        public ArgumentEmitter(ILGenerator ilgen)
+        public ArgumentEmitter(ILGenerator ilgen, bool inConstructor)
         {
             this.ilgen = ilgen;
+            _inConstructor = inConstructor;
         }
 
         #region IArgumentVisitor Members
@@ -82,7 +84,7 @@ namespace StructureMap.Emitting
             }
             else
             {
-                emitter.OptionalSetter(ilgen, property);
+                emitter.OptionalSetter(ilgen, property, _inConstructor);
             }
         }
     }

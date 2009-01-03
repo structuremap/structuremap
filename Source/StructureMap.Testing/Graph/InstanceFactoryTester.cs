@@ -18,7 +18,7 @@ namespace StructureMap.Testing.Graph
         [SetUp]
         public void SetUp()
         {
-            _manager = new Container(registry =>
+            _container = new Container(registry =>
             {
                 registry.BuildInstancesOf<Rule>();
                 registry.Scan(x =>
@@ -31,7 +31,7 @@ namespace StructureMap.Testing.Graph
 
         #endregion
 
-        private Container _manager;
+        private Container _container;
 
 
         [Test]
@@ -56,7 +56,7 @@ namespace StructureMap.Testing.Graph
         [Test, ExpectedException(typeof (StructureMapException))]
         public void GetInstanceWithInvalidInstanceKey()
         {
-            _manager.GetInstance<Rule>("NonExistentRule");
+            _container.GetInstance<Rule>("NonExistentRule");
         }
 
         [Test]
@@ -140,5 +140,7 @@ namespace StructureMap.Testing.Graph
 
             Assert.AreSame(instance1, factory.FindInstance("New"));
         }
+
+
     }
 }

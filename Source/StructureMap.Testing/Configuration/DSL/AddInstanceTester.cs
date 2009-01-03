@@ -89,15 +89,16 @@ namespace StructureMap.Testing.Configuration.DSL
         public void CreateAnInstanceUsingDefaultPropertyValueWhenSettingDoesNotExistInApplicationConfig()
         {
             Assert.AreEqual(null, ConfigurationManager.AppSettings["WidgetName"]);
-            var widget = (NotPluggableWidget)container.GetInstance<IWidget>("UsesDefaultValue");
+            var widget = (NotPluggableWidget) container.GetInstance<IWidget>("UsesDefaultValue");
             Assert.AreEqual("TheDefaultValue", widget.Name);
         }
 
         [Test]
         public void SimpleCaseWithNamedInstance()
         {
-            container = new Container(
-                registry => registry.InstanceOf<IWidget>().Is.OfConcreteType<AWidget>().WithName("MyInstance"));
+            container =
+                new Container(
+                    registry => { registry.InstanceOf<IWidget>().Is.OfConcreteType<AWidget>().WithName("MyInstance"); });
 
             var widget = (AWidget) container.GetInstance<IWidget>("MyInstance");
             Assert.IsNotNull(widget);
@@ -135,14 +136,14 @@ namespace StructureMap.Testing.Configuration.DSL
             // Specify a new Instance, create an instance for a dependency on the fly
             string instanceKey = "OrangeWidgetRule";
 
-            IContainer manager = new Container(
-                registry => registry.InstanceOf<Rule>().Is.OfConcreteType<WidgetRule>().WithName(instanceKey)
-                                .CtorDependency<IWidget>().Is(
-                                i =>
-                                i.OfConcreteType<ColorWidget>().WithCtorArg("color").EqualTo("Orange").WithName("Orange"))
-                );
+            var theContainer = new Container(registry =>
+            {
+                registry.InstanceOf<Rule>().Is.OfConcreteType<WidgetRule>().WithName(instanceKey)
+                    .CtorDependency<IWidget>().Is(
+                    i => { i.OfConcreteType<ColorWidget>().WithCtorArg("color").EqualTo("Orange").WithName("Orange"); });
+            });
 
-            var rule = (WidgetRule) manager.GetInstance<Rule>(instanceKey);
+            var rule = (WidgetRule) theContainer.GetInstance<Rule>(instanceKey);
             var widget = (ColorWidget) rule.Widget;
             Assert.AreEqual("Orange", widget.Color);
         }
@@ -154,10 +155,10 @@ namespace StructureMap.Testing.Configuration.DSL
             // "Prototype" (GoF pattern) whenever someone asks for IWidget named "Jeremy"
             var theWidget = new CloneableWidget("Jeremy");
 
-
-            container =
-                new Container(
-                    registry => registry.InstanceOf<IWidget>().Is.PrototypeOf(theWidget).WithName("Jeremy"));
+            container = new Container(x =>
+            {
+                x.InstanceOf<IWidget>().Is.PrototypeOf(theWidget).WithName("Jeremy");
+            });
 
             var widget1 = (CloneableWidget) container.GetInstance<IWidget>("Jeremy");
             var widget2 = (CloneableWidget) container.GetInstance<IWidget>("Jeremy");
@@ -180,10 +181,10 @@ namespace StructureMap.Testing.Configuration.DSL
             // "Prototype" (GoF pattern) whenever someone asks for IWidget named "Jeremy"
             var theWidget = new CloneableWidget("Jeremy");
 
-
-            container =
-                new Container(
-                    registry => registry.InstanceOf<IWidget>().Is.SerializedCopyOf(theWidget).WithName("Jeremy"));
+            container = new Container(x =>
+            {
+                x.InstanceOf<IWidget>().Is.SerializedCopyOf(theWidget).WithName("Jeremy");
+            });
 
             var widget1 = (CloneableWidget) container.GetInstance<IWidget>("Jeremy");
             var widget2 = (CloneableWidget) container.GetInstance<IWidget>("Jeremy");

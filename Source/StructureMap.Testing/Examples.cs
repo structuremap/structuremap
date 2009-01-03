@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Windows.Forms;
+using NUnit.Framework;
+using Rhino.Mocks;
 using StructureMap.Attributes;
 using StructureMap.Configuration.DSL;
 using StructureMap.Testing.Configuration.DSL;
@@ -228,10 +230,26 @@ namespace StructureMap.Testing.DocumentationExamples
         private readonly IRepository _repository;
         private readonly IShippingService _service;
 
+
+        // This is the way to write a Constructor Function with an IoC tool
+        // Let the IoC container "inject" services from outside, and keep
+        // ShippingScreenPresenter ignorant of the IoC infrastructure
         public ShippingScreenPresenter(IShippingService service, IRepository repository)
         {
             _service = service;
             _repository = repository;
+        }
+
+        // FAIL!
+        // This is the wrong way to use an IoC container.  Do NOT invoke the container from
+        // the constructor function.  This tightly couples the ShippingScreenPresenter to
+        // the IoC container in a harmful way.  This class cannot be used in either
+        // production or testing without a valid IoC configuration.  Plus, you're writing more
+        // code
+        public ShippingScreenPresenter()
+        {
+            _service = ObjectFactory.GetInstance<IShippingService>();
+            _repository = ObjectFactory.GetInstance<IRepository>();
         }
 
         #region IPresenter Members
@@ -357,6 +375,46 @@ namespace StructureMap.Testing.DocumentationExamples
         }
     }
 
+    public class Bootstrapper : IBootstrapper
+    {
+        private static bool _hasStarted;
+
+        public void BootstrapStructureMap()
+        {
+            ObjectFactory.Initialize(x =>
+            {
+                // initialization
+            });
+        }
+
+        public static void Restart()
+        {
+            if (_hasStarted)
+            {
+                ObjectFactory.ResetDefaults();
+            }
+            else
+            {
+                Bootstrap();
+                _hasStarted = true;
+            }
+        }
+
+        public static void Bootstrap()
+        {
+            new Bootstrapper().BootstrapStructureMap();
+        }
+    }
+
+    public static class Program
+    {
+        [STAThread]
+        public static void Main(params string[] args)
+        {
+            
+        }
+    }
+
     public class RemoteService : IService{}
 
     public class InstanceExampleRegistry : Registry
@@ -388,6 +446,51 @@ namespace StructureMap.Testing.DocumentationExamples
             {
                 x.Type<IService>().Is.OfConcreteType<RemoteService>();
             });
+        }
+    }
+
+    [TestFixture]
+    public class MockingExample
+    {
+        [SetUp]
+        public void SetUp()
+        {
+            // Make sure that the container is bootstrapped
+            Bootstrapper.Restart();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            // The problem with injecting mocks is in keeping the 
+            // mocks from one test getting into another test.
+            // If you build the Container individually for each test run,
+            // this isn't a problem.  However, if you do inject mocks into
+            // the ObjectFactory static container, use the ResetDefaults()
+            // method in the [TearDown] (or Dispose() for xUnit.net) to clear
+            // out runtime injected services between tests
+            ObjectFactory.ResetDefaults();
+        }
+
+        [Test]
+        public void unit_test_that_uses_a_mock()
+        {
+            // Create a mock object with Rhino Mocks
+            var serviceMock = MockRepository.GenerateMock<IService>();
+        
+            ObjectFactory.Inject(serviceMock);
+
+            // or
+
+            ObjectFactory.Inject("theService", serviceMock);
+
+            // WARNING!  Inject is a generic method
+
+            // This method registers serviceMock as an "IService"
+            ObjectFactory.Inject(serviceMock);
+
+            // and is NOT equivalent to:
+            ObjectFactory.Inject<IBasicService>(serviceMock);
         }
     }
 }

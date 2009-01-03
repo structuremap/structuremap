@@ -1,6 +1,10 @@
 namespace StructureMap.Testing.Widget3
 {
-    public interface IService
+    public interface IService : IBasicService
+    {
+    }
+
+    public interface IBasicService  
     {
     }
 

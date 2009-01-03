@@ -1,7 +1,7 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{3F36EA80-2F9A-4DAD-BA27-5AC6163A2EE3}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -75,7 +75,8 @@
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
     <DefineConstants>TRACE</DefineConstants>
-    <DocumentationFile>bin\Release\StructureMap.XML</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
     <DebugSymbols>true</DebugSymbols>
     <FileAlignment>4096</FileAlignment>
     <NoStdLib>false</NoStdLib>
@@ -388,6 +389,7 @@
     <Compile Include="ConfigurationExpression.cs" />
     <Compile Include="Configuration\DictionaryReader.cs" />
     <Compile Include="Configuration\DSL\Expressions\InstanceExpression.cs" />
+    <Compile Include="Configuration\DSL\SetterConvention.cs" />
     <Compile Include="Configuration\ITypeReader.cs" />
     <Compile Include="Configuration\PrimitiveArrayReader.cs" />
     <Compile Include="Configuration\TypeReaderFactory.cs" />
@@ -397,6 +399,7 @@
     <Compile Include="Diagnostics\DoctorResult.cs" />
     <Compile Include="Diagnostics\DoctorRunner.cs" />
     <Compile Include="Diagnostics\ValidationError.cs" />
+    <Compile Include="Emitting\BuildUpMethod.cs" />
     <Compile Include="Emitting\Parameters\Methods.cs" />
     <Compile Include="ErrorMessages.cs" />
     <Compile Include="Extensions.cs" />
@@ -406,6 +409,7 @@
     <Compile Include="Graph\ITypeScanner.cs" />
     <Compile Include="Graph\PluggableAttributeScanner.cs" />
     <Compile Include="Graph\PluginCache.cs" />
+    <Compile Include="Pipeline\ConditionalInstance.cs" />
     <Compile Include="TypeExtensions.cs" />
     <Compile Include="IBootstrapper.cs" />
     <Compile Include="InitializationExpression.cs" />

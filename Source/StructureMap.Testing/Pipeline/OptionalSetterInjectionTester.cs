@@ -80,7 +80,10 @@ namespace StructureMap.Testing.Pipeline
             var container = new Container(x =>
             {
                 x.ForRequestedType<ClassWithDependency>().TheDefault.Is.OfConcreteType<ClassWithDependency>()
-                    .TheArrayOf<Rule>().Contains(arr => { arr.IsThis(new ColorRule("Red")); });
+                    .TheArrayOf<Rule>().Contains(arr =>
+                    {
+                        arr.IsThis(new ColorRule("Red"));
+                    });
             });
 
             container.GetInstance<ClassWithDependency>().Rules.Length.ShouldEqual(1);

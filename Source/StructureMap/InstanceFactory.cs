@@ -17,6 +17,7 @@ namespace StructureMap
 
         private readonly Type _pluginType;
         private IBuildPolicy _policy = new BuildPolicy();
+        
 
         #region constructor functions
 
@@ -40,7 +41,7 @@ namespace StructureMap
                 _policy = family.Policy;
 
                 _pluginType = family.PluginType;
-
+                MissingInstance = family.MissingInstance;
 
                 family.EachInstance(AddInstance);
             }
@@ -73,6 +74,8 @@ namespace StructureMap
         #endregion
 
         #region IInstanceFactory Members
+
+        public Instance MissingInstance { get; set; }
 
         public Type PluginType
         {
@@ -132,7 +135,7 @@ namespace StructureMap
 
         public Instance FindInstance(string name)
         {
-            return _instances[name];
+            return _instances[name] ?? MissingInstance;
         }
 
         public void ImportFrom(PluginFamily family)

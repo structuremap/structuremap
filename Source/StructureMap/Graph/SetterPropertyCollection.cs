@@ -125,5 +125,10 @@ namespace StructureMap.Graph
 
             return null;
         }
+
+        public void UseSetterRule(Predicate<PropertyInfo> rule)
+        {
+            _properties.FindAll(setter => rule(setter.Property)).ForEach(setter => setter.IsMandatory = true);
+        }
     }
 }

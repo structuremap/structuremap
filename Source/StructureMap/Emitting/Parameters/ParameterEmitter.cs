@@ -29,24 +29,30 @@ namespace StructureMap.Emitting.Parameters
 
         public abstract void MandatorySetter(ILGenerator ilgen, PropertyInfo property);
 
-        public void OptionalSetter(ILGenerator ilgen, PropertyInfo property)
+        public void OptionalSetter(ILGenerator ilgen, PropertyInfo property, bool inConstructor)
         {
             ilgen.Emit(OpCodes.Ldarg_1);
             ilgen.Emit(OpCodes.Ldstr, property.Name);
             ilgen.Emit(OpCodes.Callvirt, Methods.HAS_PROPERTY);
             ilgen.Emit(OpCodes.Ldc_I4_0);
             ilgen.Emit(OpCodes.Ceq);
-            ilgen.Emit(OpCodes.Stloc_2);
-            ilgen.Emit(OpCodes.Ldloc_2);
+
+            if (inConstructor)
+            {
+                ilgen.Emit(OpCodes.Stloc_2);
+                ilgen.Emit(OpCodes.Ldloc_2);
+            }
+            else
+            {
+                ilgen.Emit(OpCodes.Stloc_1);
+                ilgen.Emit(OpCodes.Ldloc_1);
+            }
+            
 
             Label label = ilgen.DefineLabel();
-
             ilgen.Emit(OpCodes.Brtrue_S, label);
-
             MandatorySetter(ilgen, property);
-
             ilgen.Emit(OpCodes.Nop);
-
             ilgen.MarkLabel(label);
         }
     }

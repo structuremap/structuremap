@@ -28,6 +28,11 @@ namespace StructureMap.Configuration.DSL.Expressions
         LiteralInstance IsThis(T obj);
     }
 
+    public interface ThenItExpression<T>
+    {
+        IsExpression<T> ThenIt { get; }
+    }
+
     /// <summary>
     /// An Expression Builder to define Instances of a PluginType.
     /// This is mostly used for configuring open generic types
@@ -178,9 +183,17 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <param name="url"></param>
         /// <returns></returns>
         UserControlInstance LoadControlFrom(string url);
+
+        /// <summary>
+        /// Creates an Instance according to conditional rules
+        /// </summary>
+        /// <param name="configuration"></param>
+        /// <returns></returns>
+        // Conditional object construction
+        ConditionalInstance<T> Conditional(Action<ConditionalInstance<T>.ConditionalInstanceExpression<T>> configuration);
     }
 
-    public class InstanceExpression<T> : IInstanceExpression<T>
+    public class InstanceExpression<T> : IInstanceExpression<T>, ThenItExpression<T>
     {
         private readonly Action<Instance> _action;
 
@@ -267,6 +280,16 @@ namespace StructureMap.Configuration.DSL.Expressions
         public UserControlInstance LoadControlFrom(string url)
         {
             return returnInstance(new UserControlInstance(url));
+        }
+
+        public ConditionalInstance<T> Conditional(Action<ConditionalInstance<T>.ConditionalInstanceExpression<T>> configuration)
+        {
+            return returnInstance(new ConditionalInstance<T>(configuration));
+        }
+
+        IsExpression<T> ThenItExpression<T>.ThenIt
+        {
+            get { return this; }
         }
     }
 }

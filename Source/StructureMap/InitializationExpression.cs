@@ -166,6 +166,14 @@ namespace StructureMap
         /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <returns></returns>
         CreatePluginFamilyExpression<PLUGINTYPE> FillAllPropertiesOfType<PLUGINTYPE>();
+
+        /// <summary>
+        /// Creates automatic "policies" for which public setters are considered mandatory
+        /// properties by StructureMap that will be "setter injected" as part of the 
+        /// construction process.
+        /// </summary>
+        /// <param name="action"></param>
+        void SetAllProperties(Action<SetterConvention> action);
     }
 
     public class InitializationExpression : ConfigurationExpression, IInitializationExpression
@@ -178,7 +186,14 @@ namespace StructureMap
 
         public bool UseDefaultStructureMapConfigFile
         {
-            set { _parserBuilder.UseAndEnforceExistenceOfDefaultFile = value; }
+            set
+            {
+                _parserBuilder.UseAndEnforceExistenceOfDefaultFile = value;
+                if (!value)
+                {
+                    _parserBuilder.IgnoreDefaultFile = true;
+                }
+            }
         }
 
         public bool IgnoreStructureMapConfig

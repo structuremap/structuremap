@@ -7,6 +7,37 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.Configuration.DSL
 {
+    public interface IRegistry
+    {
+        // Registering Types -- BuildInstancesOf() and ForRequestedType() are Synonyms
+        CreatePluginFamilyExpression<PLUGINTYPE> BuildInstancesOf<PLUGINTYPE>();
+        CreatePluginFamilyExpression<PLUGINTYPE> ForRequestedType<PLUGINTYPE>();
+        
+        GenericFamilyExpression ForRequestedType(Type pluginType);
+
+        // Shortcut for configuring the default configuration of a concrete type
+        Registry.BuildWithExpression<T> ForConcreteType<T>();
+
+        // Adding additional Instances of a PluginType
+        IsExpression<T> InstanceOf<T>();
+        GenericIsExpression InstanceOf(Type pluginType);
+
+        // Creating or Adding to a Profile
+        ProfileExpression CreateProfile(string profileName);
+        void CreateProfile(string profileName, Action<ProfileExpression> action);
+
+        // Interception
+        void RegisterInterceptor(TypeInterceptor interceptor);
+        MatchedTypeInterceptor IfTypeMatches(Predicate<Type> match);
+
+        // Type Scanning and Auto Registration
+        void Scan(Action<IAssemblyScanner> action);
+
+        // Controlling Setter Injection Behavior
+        CreatePluginFamilyExpression<PLUGINTYPE> FillAllPropertiesOfType<PLUGINTYPE>();
+        void SetAllProperties(Action<SetterConvention> action);
+    }
+
     /// <summary>
     /// A Registry class provides methods and grammars for configuring a Container or ObjectFactory.
     /// Using a Registry subclass is the recommended way of configuring a StructureMap Container.
@@ -20,7 +51,7 @@ namespace StructureMap.Configuration.DSL
     ///     }
     /// }
     /// </example>
-    public class Registry
+    public class Registry : IRegistry
     {
         private readonly List<Action<PluginGraph>> _actions = new List<Action<PluginGraph>>();
         private readonly List<Action> _basicActions = new List<Action>();
@@ -79,7 +110,6 @@ namespace StructureMap.Configuration.DSL
         /// Scoping, the Default Instance, and interception.  This method is specifically
         /// meant for registering open generic types
         /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <returns></returns>
         public GenericFamilyExpression ForRequestedType(Type pluginType)
         {
@@ -182,6 +212,11 @@ namespace StructureMap.Configuration.DSL
 
         internal static bool IsPublicRegistry(Type type)
         {
+            if (type.Assembly == typeof(Registry).Assembly)
+            {
+                return false;
+            }
+
             if (!typeof (Registry).IsAssignableFrom(type))
             {
                 return false;
@@ -291,5 +326,16 @@ namespace StructureMap.Configuration.DSL
         }
 
         #endregion
+
+        /// <summary>
+        /// Creates automatic "policies" for which public setters are considered mandatory
+        /// properties by StructureMap that will be "setter injected" as part of the 
+        /// construction process.
+        /// </summary>
+        /// <param name="action"></param>
+        public void SetAllProperties(Action<SetterConvention> action)
+        {
+            action(new SetterConvention());
+        }
     }
 }

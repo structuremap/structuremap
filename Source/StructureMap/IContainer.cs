@@ -57,7 +57,6 @@ namespace StructureMap
         /// <summary>
         /// Creates a new instance of the requested type T using the supplied Instance.  Mostly used internally
         /// </summary>
-        /// <param name="pluginType"></param>
         /// <param name="instance"></param>
         /// <returns></returns>
         T GetInstance<T>(Instance instance);
@@ -81,7 +80,6 @@ namespace StructureMap
         /// </summary>
         /// <param name="pluginType"></param>
         /// <param name="instanceKey"></param>
-        /// <param name="instance"></param>
         /// <returns></returns>
         object TryGetInstance(Type pluginType, string instanceKey);
 
@@ -89,7 +87,6 @@ namespace StructureMap
         /// Creates or finds the default instance of the pluginType. Returns null if the pluginType is not known to the container.
         /// </summary>
         /// <param name="pluginType"></param>
-        /// <param name="instance"></param>
         /// <returns></returns>
         object TryGetInstance(Type pluginType);
 
@@ -97,7 +94,6 @@ namespace StructureMap
         /// Creates or finds the default instance of type T. Returns the default value of T if it is not known to the container.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="instance"></param>
         /// <returns></returns>
         T TryGetInstance<T>();
 
@@ -105,7 +101,6 @@ namespace StructureMap
         /// Creates or finds the named instance of type T. Returns the default value of T if the named instance is not known to the container.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="instance"></param>
         /// <returns></returns>
         T TryGetInstance<T>(string instanceKey);
 
@@ -183,11 +178,9 @@ namespace StructureMap
         /// <summary>
         /// Gets the default instance of type T using the explicitly configured arguments from the "args"
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <param name="type"></param>
         /// <param name="args"></param>
         /// <returns></returns>
-
-
         IList GetAllInstances(Type type, ExplicitArguments args);
 
         T GetInstance<T>(ExplicitArguments args);
@@ -222,5 +215,15 @@ namespace StructureMap
         /// </summary>
         /// <typeparam name="T"></typeparam>
         void EjectAllInstancesOf<T>();
+
+        /// <summary>
+        /// The "BuildUp" method takes in an already constructed object
+        /// and uses Setter Injection to push in configured dependencies
+        /// of that object
+        /// </summary>
+        /// <param name="target"></param>
+        void BuildUp(object target);
+
+        void SetDefault(Type pluginType, Instance instance);
     }
 }

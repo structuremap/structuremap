@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Reflection;
 using StructureMap.Pipeline;
 
@@ -154,15 +155,14 @@ namespace StructureMap.Graph
             return templatedPlugin;
         }
 
-        public void SetFilledTypes(IList<Type> types)
+        public void UseConstructor(Expression expression)
         {
-            foreach (SetterProperty setter in _setters)
-            {
-                if (types.Contains(setter.Property.PropertyType))
-                {
-                    setter.IsMandatory = true;
-                }
-            }
+            _constructor.UseConstructor(expression);
+        }
+
+        public void UseSetterRule(Predicate<PropertyInfo> rule)
+        {
+            _setters.UseSetterRule(rule);
         }
     }
 }

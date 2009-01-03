@@ -2,12 +2,31 @@ using System;
 
 namespace StructureMap.Pipeline
 {
+    public interface IBuildFrame
+    {
+        /// <summary>
+        /// The requested PluginType of the Instance being create
+        /// </summary>
+        Type RequestedType { get; }
+
+        /// <summary>
+        /// The Name of the Instance being created
+        /// </summary>
+        string Name { get; }
+
+        /// <summary>
+        /// The actual ConcreteType being created.  This will not always
+        /// be available
+        /// </summary>
+        Type ConcreteType { get; }
+    }
+
     /// <summary>
     /// Models the current place in an object graph during the construction of
     /// an instance.  Provides contextual information that can be used
     /// to alter the desired construction of child objects
     /// </summary>
-    public class BuildFrame
+    public class BuildFrame : IBuildFrame
     {
         private readonly Type _concreteType;
         private readonly string _name;

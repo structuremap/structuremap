@@ -64,5 +64,12 @@ namespace StructureMap.Testing.Widget
             if (instance.HasProperty("Name2")) target.Name = instance.GetProperty("Name2");
             return target;
         }
+
+        public override void BuildUp(IConfiguredInstance instance, BuildSession session, object target)
+        {
+            SetterTarget x = (SetterTarget) target;
+            if (instance.HasProperty("Name")) x.Name = instance.GetProperty("Name");
+            if (instance.HasProperty("Name2")) x.Name = instance.GetProperty("Name2");
+        }
     }
 }

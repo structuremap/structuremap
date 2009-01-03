@@ -417,5 +417,16 @@ namespace StructureMap
             return container.TryGetInstance<T>(instanceKey);
         }
 
+        /// <summary>
+        /// The "BuildUp" method takes in an already constructed object
+        /// and uses Setter Injection to push in configured dependencies
+        /// of that object
+        /// </summary>
+        /// <param name="target"></param>
+        public static void BuildUp(object target)
+        {
+            container.BuildUp(target);
+        }
+
     }
 }

@@ -12,8 +12,37 @@ namespace StructureMap.Testing.Examples
 
     public class DatabaseRepository : IRepository
     {
+        private readonly string _connectionString;
+
         public DatabaseRepository(string connectionString)
         {
+            _connectionString = connectionString;
+        }
+    }
+
+    public static class RepositoryBootstrapper
+    {
+        public static void Bootstrap()
+        {
+            ObjectFactory.Initialize(x =>
+            {
+                // In this case, we need to specify the value of "connectionString" argument to
+                // the constructor function
+                x.ForRequestedType<DatabaseRepository>().TheDefault.Is.OfConcreteType<DatabaseRepository>()
+                    .WithCtorArg("connectionString").EqualToAppSetting("connectionString");
+            });
+
+            ObjectFactory.Initialize(x =>
+            {
+                x.ForConcreteType<DatabaseRepository>().Configure
+                    .WithCtorArg("connectionString").EqualToAppSetting("connectionString");
+            });
+
+            // Now, we can request an instance of DatabaseRepository, and
+            // StructureMap knows to create a new object using the 
+            // connection string from the AppSettings section from the App.config
+            // file
+            var repository = ObjectFactory.GetInstance<DatabaseRepository>();
         }
     }
 
@@ -53,6 +82,39 @@ namespace StructureMap.Testing.Examples
                 // Lambda (an anonymous delegate will work as well).
                 x.ConstructedBy(() => WeirdLegacyRepository.Current).WithName("Weird");
             });
+            /*
+            // Example #1
+            var container1 = new Container(new RepositoryRegistry());
+
+            // Example #2
+            var container2 = new Container(x =>
+            {
+                x.AddRegistry<RepositoryRegistry>();
+            });
+
+            // Example #3
+            ObjectFactory.Initialize(x =>
+            {
+                x.AddRegistry<RepositoryRegistry>();
+            });
+
+
+            ObjectFactory.Initialize(x =>
+            {
+                x.ForRequestedType<IRepository>().TheDefaultIsConcreteType<InMemoryRepository>();
+
+                x.ForRequestedType<IRepository>().AddInstances(y =>
+                {
+                    y.OfConcreteType<DatabaseRepository>().WithName("NorthAmerica")
+                        .WithCtorArg("connectionString").EqualTo("database=NorthAmerica");
+
+                    y.OfConcreteType<DatabaseRepository>().WithName("Asia/Pacific")
+                        .WithCtorArg("connectionString").EqualTo("database=AsiaPacific");
+
+                    y.ConstructedBy(() => WeirdLegacyRepository.Current).WithName("Weird");
+                });
+            });
+             */
         }
     }
 }

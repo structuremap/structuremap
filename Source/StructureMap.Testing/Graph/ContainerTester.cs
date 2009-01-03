@@ -254,6 +254,7 @@ namespace StructureMap.Testing.Graph
             addColorInstance("Orange");
             addColorInstance("Blue");
 
+            // "Yellow" does not exist, so return null
             var instance = _container.TryGetInstance<Rule>("Yellow");
             instance.ShouldBeNull();
         }
@@ -265,6 +266,7 @@ namespace StructureMap.Testing.Graph
             addColorInstance("Orange");
             addColorInstance("Blue");
 
+            // "Orange" exists, so an object should be returned
             var instance = _container.TryGetInstance<Rule>("Orange");
             instance.ShouldBeOfType(typeof(ColorRule));
         }

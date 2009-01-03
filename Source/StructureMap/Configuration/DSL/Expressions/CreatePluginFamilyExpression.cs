@@ -38,6 +38,14 @@ namespace StructureMap.Configuration.DSL.Expressions
             get { return new InstanceExpression<PLUGINTYPE>(i => registerDefault(i)); }
         }
 
+        public InstanceExpression<PLUGINTYPE> MissingNamedInstanceIs
+        {
+            get
+            {
+                return new InstanceExpression<PLUGINTYPE>(i => _alterations.Add(family => family.MissingInstance = i));
+            }
+        }
+
         /// <summary>
         /// Add multiple Instance's to this PluginType
         /// </summary>

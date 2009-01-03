@@ -1,11 +1,12 @@
 using System;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace StructureMap.Graph
 {
     public class Constructor : TypeRules
     {
-        private readonly ConstructorInfo _ctor;
+        private ConstructorInfo _ctor;
         private readonly Type _pluggedType;
 
         public Constructor(Type pluggedType)
@@ -119,6 +120,20 @@ namespace StructureMap.Graph
         public bool IsValid()
         {
             return _ctor != null;
+        }
+
+        public void UseConstructor(Expression expression)
+        {
+            var finder = new ConstructorFinderVisitor();
+            finder.Visit(expression);
+
+            var ctor = finder.Constructor;
+            if (ctor == null)
+            {
+                throw new ApplicationException("Not a valid constructor function");
+            }
+
+            _ctor = ctor;
         }
     }
 }

@@ -88,8 +88,11 @@ namespace StructureMap.Emitting
         {
             builderClass.AddPluggedTypeGetter(plugin.PluggedType);
 
-            var method = new BuildInstanceMethod(plugin);
-            builderClass.AddMethod(method);
+            var buildInstanceMethod = new BuildInstanceMethod(plugin);
+            builderClass.AddMethod(buildInstanceMethod);
+
+            var buildUpMethod = new BuildUpMethod(plugin);
+            builderClass.AddMethod(buildUpMethod);
         }
     }
 }

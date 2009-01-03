@@ -85,7 +85,6 @@ namespace StructureMap
         /// Gets all configured instances of type T using explicitly configured arguments
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="args"></param>
         /// <returns></returns>
         public IList<T> GetAllInstances<T>()
         {

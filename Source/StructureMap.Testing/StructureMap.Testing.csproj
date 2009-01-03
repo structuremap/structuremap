@@ -1,7 +1,7 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{63C2742D-B6E2-484F-AFDB-346873075C5E}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -178,10 +178,14 @@
     <Compile Include="AutoMocking\MoqFactoryTester.cs" />
     <Compile Include="AutoMocking\RhinoAutoMockerTester.cs" />
     <Compile Include="AutoMocking\RhinoMockRepositoryProxyTester.cs" />
+    <Compile Include="AutoWiringExamples.cs" />
     <Compile Include="Bugs\IDictionaryAndXmlBugTester.cs" />
     <Compile Include="Bugs\ScanIndexerBugTester.cs" />
+    <Compile Include="Bugs\SingletonShouldBeLazy.cs" />
     <Compile Include="Bugs\SpecifyScopeInConfigureTester.cs" />
     <Compile Include="BuildSessionTester.cs" />
+    <Compile Include="BuildUpIntegratedTester.cs" />
+    <Compile Include="BuildUpTester.cs" />
     <Compile Include="Configuration\ConfigurationParserBuilderTester.cs" />
     <Compile Include="Configuration\ConfigurationParserTester.cs" />
     <Compile Include="Configuration\DefaultInstanceNodeTester.cs" />
@@ -199,6 +203,7 @@
     <Compile Include="Configuration\DSL\InterceptAllInstancesOfPluginTypeTester.cs" />
     <Compile Include="Configuration\DSL\InterceptorTesting.cs" />
     <Compile Include="Configuration\DSL\ProfileExpressionTester.cs" />
+    <Compile Include="Configuration\DSL\ProgrammaticConstructorSelectionTester.cs" />
     <Compile Include="Configuration\DSL\RegistryIntegratedTester.cs" />
     <Compile Include="Configuration\DSL\RegistryTester.cs" />
     <Compile Include="Configuration\FamilyParserTester.cs">
@@ -217,6 +222,7 @@
     <Compile Include="Examples.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Examples\CustomInstance.cs" />
     <Compile Include="Examples\RegisteringWithTheAPI.cs" />
     <Compile Include="Graph\ArrayConstructorTester.cs">
       <SubType>Code</SubType>
@@ -225,6 +231,7 @@
     <Compile Include="Graph\ContainerConstructorAttributeTester.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Graph\ConventionBasedSetterInjectionTester.cs" />
     <Compile Include="Graph\DefaultConventionScanningTester.cs" />
     <Compile Include="Graph\DynamicInjectionTester.cs" />
     <Compile Include="Graph\EmittingTester.cs">
@@ -331,12 +338,14 @@
     <Compile Include="PipelineGraphTester.cs" />
     <Compile Include="Pipeline\BuildStackTester.cs" />
     <Compile Include="Pipeline\BuildStrategiesTester.cs" />
+    <Compile Include="Pipeline\ConditionalInstanceTester.cs" />
     <Compile Include="Pipeline\ConfiguredInstanceTester.cs" />
     <Compile Include="Pipeline\ConstructorInstanceTester.cs" />
     <Compile Include="Pipeline\DefaultInstanceTester.cs" />
     <Compile Include="Pipeline\HybridBuildPolicyTester.cs" />
     <Compile Include="Pipeline\InstanceTester.cs" />
     <Compile Include="Pipeline\LiteralInstanceTester.cs" />
+    <Compile Include="Pipeline\MissingInstanceTester.cs" />
     <Compile Include="Pipeline\OptionalSetterInjectionTester.cs" />
     <Compile Include="Pipeline\ProfileManagerMergeTester.cs" />
     <Compile Include="Pipeline\ProfileManagerTester.cs" />
@@ -348,6 +357,7 @@
     <Compile Include="Pipeline\StubBuildSession.cs" />
     <Compile Include="Pipeline\ThreadLocalStoragePolicyTester.cs" />
     <Compile Include="Pipeline\TypeRulesTester.cs" />
+    <Compile Include="PrimitiveArrayTester.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>

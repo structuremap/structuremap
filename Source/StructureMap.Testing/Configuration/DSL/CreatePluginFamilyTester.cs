@@ -113,6 +113,7 @@ namespace StructureMap.Testing.Configuration.DSL
             Assert.IsInstanceOfType(typeof (ThreadLocalStoragePolicy), family.Policy);
         }
 
+
         [Test]
         public void BuildInstancesOfType()
         {

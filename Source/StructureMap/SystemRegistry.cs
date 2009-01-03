@@ -5,7 +5,7 @@ using StructureMap.Source;
 
 namespace StructureMap
 {
-    public class SystemRegistry : Registry
+    internal class SystemRegistry : Registry
     {
         public SystemRegistry()
         {

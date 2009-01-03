@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using StructureMap.Emitting;
 using StructureMap.Util;
 
@@ -9,16 +10,27 @@ namespace StructureMap.Graph
     public static class PluginCache
     {
         private static readonly Cache<Type, InstanceBuilder> _builders;
-        private static readonly List<Type> _filledTypes = new List<Type>();
         private static readonly Cache<Type, Plugin> _plugins;
+        private static readonly List<Predicate<PropertyInfo>> _setterRules;
 
         static PluginCache()
         {
-            _plugins = new Cache<Type, Plugin>(t => new Plugin(t));
+            _setterRules = new List<Predicate<PropertyInfo>>();
+            _plugins = new Cache<Type, Plugin>(t =>
+            {
+                var plugin = new Plugin(t);
+                foreach (var rule in _setterRules)
+                {
+                    plugin.UseSetterRule(rule);
+                }
+
+                return plugin;
+            });
+
+
             _builders = new Cache<Type, InstanceBuilder>(t =>
             {
                 Plugin plugin = _plugins[t];
-                plugin.SetFilledTypes(_filledTypes);
                 return new InstanceBuilderAssembly(new[] {plugin}).Compile()[0];
             });
         }
@@ -45,11 +57,6 @@ namespace StructureMap.Graph
 
         private static void createAndStoreBuilders(IEnumerable<Plugin> plugins)
         {
-            foreach (Plugin plugin in plugins)
-            {
-                plugin.SetFilledTypes(_filledTypes);
-            }
-
             var assembly = new InstanceBuilderAssembly(plugins);
             assembly.Compile().ForEach(b => _builders[b.PluggedType] = b);
         }
@@ -68,6 +75,7 @@ namespace StructureMap.Graph
         {
             lock (typeof (PluginCache))
             {
+                _setterRules.Clear();
                 _builders.Clear();
                 _plugins.Clear();
             }
@@ -75,7 +83,14 @@ namespace StructureMap.Graph
 
         public static void AddFilledType(Type type)
         {
-            _filledTypes.Add(type);
+            Predicate<PropertyInfo> predicate = prop => prop.PropertyType == type;
+            UseSetterRule(predicate);
+        }
+
+        public static void UseSetterRule(Predicate<PropertyInfo> predicate)
+        {
+            _setterRules.Add(predicate);
+            _plugins.Each(plugin => plugin.UseSetterRule(predicate));
         }
     }
 }

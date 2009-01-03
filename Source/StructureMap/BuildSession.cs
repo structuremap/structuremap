@@ -25,6 +25,24 @@ namespace StructureMap
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         T GetInstance<T>();
+
+        /// <summary>
+        /// Gets the root "frame" of the object request
+        /// </summary>
+        BuildFrame Root { get; }
+
+        /// <summary>
+        /// The requested instance name of the object graph
+        /// </summary>
+        string RequestedName { get; }
+
+        /// <summary>
+        /// Register a default object for the given PluginType that will
+        /// be used throughout the rest of the current object request
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="defaultObject"></param>
+        void RegisterDefault(Type pluginType, object defaultObject);
     }
 
     public class BuildSession : IContext
@@ -63,6 +81,8 @@ namespace StructureMap
         }
 
 
+        public string RequestedName { get; set; }
+
         protected PipelineGraph pipelineGraph
         {
             get { return _pipelineGraph; }
@@ -83,6 +103,11 @@ namespace StructureMap
         T IContext.GetInstance<T>()
         {
             return (T) CreateInstance(typeof (T));
+        }
+
+        BuildFrame IContext.Root
+        {
+            get { return _buildStack.Root; }
         }
 
         #endregion
@@ -111,6 +136,7 @@ namespace StructureMap
 
             return result;
         }
+
 
         public virtual Array CreateInstanceArray(Type pluginType, Instance[] instances)
         {

@@ -14,6 +14,7 @@ namespace StructureMap
         Type PluginType { get; }
         IEnumerable<IInstance> Instances { get; }
         IBuildPolicy Policy { get; }
+        Instance MissingInstance { get; set; }
 
         void AddInstance(Instance instance);
         Instance AddType<T>();

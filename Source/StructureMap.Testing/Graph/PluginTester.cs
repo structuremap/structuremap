@@ -313,8 +313,11 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void SetFilledTypes_1()
         {
-            var plugin = new Plugin(typeof (ClassWithProperties));
-            plugin.SetFilledTypes(new List<Type> {typeof (IEngine), typeof (IAutomobile)});
+            PluginCache.ResetAll();
+            PluginCache.AddFilledType(typeof(IEngine));
+            PluginCache.AddFilledType(typeof(IAutomobile));
+
+            var plugin = PluginCache.GetPlugin(typeof (ClassWithProperties));
 
             plugin.Setters.IsMandatory("Engine").ShouldBeTrue();
             plugin.Setters.IsMandatory("Car").ShouldBeTrue();
@@ -325,8 +328,11 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void SetFilledTypes_2()
         {
-            var plugin = new Plugin(typeof (ClassWithProperties));
-            plugin.SetFilledTypes(new List<Type> {typeof (IGateway), typeof (IAutomobile)});
+            PluginCache.ResetAll();
+            PluginCache.AddFilledType(typeof(IGateway));
+            PluginCache.AddFilledType(typeof(IAutomobile));
+
+            var plugin = PluginCache.GetPlugin(typeof(ClassWithProperties));
 
             plugin.Setters.IsMandatory("Engine").ShouldBeFalse();
             plugin.Setters.IsMandatory("Car").ShouldBeTrue();
@@ -337,8 +343,10 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void SetFilledTypes_3()
         {
-            var plugin = new Plugin(typeof (ClassWithProperties));
-            plugin.SetFilledTypes(new List<Type> {typeof (IGateway)});
+            PluginCache.ResetAll();
+            PluginCache.AddFilledType(typeof(IGateway));
+
+            var plugin = PluginCache.GetPlugin(typeof(ClassWithProperties));
 
             plugin.Setters.IsMandatory("Engine").ShouldBeFalse();
             plugin.Setters.IsMandatory("Car").ShouldBeFalse();
