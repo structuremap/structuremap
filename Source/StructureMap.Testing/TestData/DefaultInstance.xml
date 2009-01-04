@@ -5,5 +5,10 @@
     Color="Red" />
   
   
-  <DefaultInstance PluginType="StructureMap.Testing.Widget.Rule,StructureMap.Testing.Widget" PluggedType="StructureMap.Testing.Widget.ColorRule,StructureMap.Testing.Widget" Color="Blue" Scope="Singleton" Name="TheBlueOne"/>  
+  <DefaultInstance 
+    PluginType="StructureMap.Testing.Widget.Rule,StructureMap.Testing.Widget" 
+    PluggedType="StructureMap.Testing.Widget.ColorRule,StructureMap.Testing.Widget" 
+    Color="Blue" 
+    Scope="Singleton" 
+    Name="TheBlueOne"/>  
 </StructureMap>

@@ -95,13 +95,13 @@ namespace StructureMap.Graph
         /// Add all concrete types of the Plugin Type as Instances of Plugin Type
         /// </summary>
         /// <typeparam name="PLUGINTYPE"></typeparam>
-        void AddAllTypesOf<PLUGINTYPE>();
+        FindAllTypesFilter AddAllTypesOf<PLUGINTYPE>();
 
         /// <summary>
         /// Add all concrete types of the Plugin Type as Instances of Plugin Type
         /// </summary>
         /// <param name="pluginType"></param>
-        void AddAllTypesOf(Type pluginType);
+        FindAllTypesFilter AddAllTypesOf(Type pluginType);
 
         /// <summary>
         /// Makes this scanning operation ignore all [PluginFamily] and [Pluggable] attributes
@@ -323,14 +323,17 @@ namespace StructureMap.Graph
             _assemblies.Add(type.Assembly);
         }
 
-        public void AddAllTypesOf<PLUGINTYPE>()
+        public FindAllTypesFilter AddAllTypesOf<PLUGINTYPE>()
         {
-            AddAllTypesOf(typeof (PLUGINTYPE));
+            return AddAllTypesOf(typeof (PLUGINTYPE));
         }
 
-        public void AddAllTypesOf(Type pluginType)
+        public FindAllTypesFilter AddAllTypesOf(Type pluginType)
         {
-            With(new FindAllTypesFilter(pluginType));
+            var filter = new FindAllTypesFilter(pluginType);
+            With(filter);
+
+            return filter;
         }
 
         public void IgnoreStructureMapAttributes()

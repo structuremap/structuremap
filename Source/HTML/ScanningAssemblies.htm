@@ -2,9 +2,12 @@
 <html>
 	<head>
 		<title>Auto Registration with Type Scanning</title>
+		<link rel="stylesheet" type="text/css" href="style.css" />
+		<script type="text/javascript" src="jquery-1.2.6.js"></script>
+		<script type="text/javascript" src="structuremap.js"></script>
 	</head>
 	<body>
-	    <h1>Auto Registration with Type Scanning</h1>
+
 	    
 	<p>
         StructureMap has always had some ability to register types by by scanning 
@@ -14,10 +17,9 @@
         The auto registration mechanism has been completely revamped in StructureMap 2.5 
         with greatly extended capabilities.&nbsp; The downside is that the &quot;scanning&quot; 
         syntax in v2.5 is completely incompatible with previous versions, including the 
-        2.4.9 preview release.&nbsp; However, the Xml configuration has remained 
+        2.4.9 preview release.&nbsp; However, the Xml configuration usage has remained 
         consistent in both form and function.</p>
-    <h4>
-        Using the Scan() Expression</h4>
+    <h2>Using the Scan() Expression</h2>
     <p>
         Auto registration begins with the Scan() expression inside a Registry class or 
         the now deprecated StructureMapConfiguration class.&nbsp; Here&#39;s an example from 
@@ -209,14 +211,13 @@
     <li>Lastly, custom scanning conventions and policies can be added and used from the 
         Scan() expression.&nbsp; </li>
 </ol>
-<h4>
-    Rules for Auto Registering a Type</h4>
+        <hr />
+<h2>
+    Rules for Auto Registering a Type</h2>
 <p>
     If you are interested in using the Scan() expression for auto registration, the 
     first thing to know is how StructureMap determines whether or not a given 
     concrete type should be registered.&nbsp; </p>
-<p>
-    &nbsp;</p>
 <ul>
     <li>The PluginType is assignable from the concrete type</li>
     <li>The concrete type has a public constructor</li>
@@ -225,8 +226,10 @@
         PluginType</li>
     <li>The scanning can be overridden explicitly</li>
 </ul>
-<h4>
+        <hr />
+<h2>
     Designating Assemblies    
+        </h2>
 <p>
     The first thing you need to do to utilize the type scanning is to designate 
     which assemblies to scan.&nbsp; The type scanning will throw an exception if you 
@@ -395,9 +398,11 @@
     <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp; }</p>
 </div>
-<h4>
-    &nbsp;Scan all Assemblies in a Given Folder</h4>
-        <p>
+        <hr />
+        <h2>
+            Scan all Assemblies in a Given Folder</h2>    
+            
+            <p>
             StructureMap 2.5 has a brand new capability to auto register types in all 
     assemblies in a given folder path.&nbsp; My current project is using this 
     feature for our extensibility mechanism.&nbsp; For customer-specific 
@@ -485,12 +490,9 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
 </div>
 <!--EndFragment-->
-<p>
-    &nbsp;</p>
-<p>
-    &nbsp;</p>
-<h4>
-        Add All Concrete Types for a PluginType</h4>
+<hr />
+<h2>
+        Add All Concrete Types for a PluginType</h2>
 <p>
         Sometimes you may simply want to automatically add all the concrete classes that 
         implement or inherit from a given PluginType.&nbsp; In my current project we are 
@@ -591,10 +593,9 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
 </div>
 <!--EndFragment-->
-<p>
-        &nbsp;</p>
-    <h4>
-        Excluding or Including Types</h4>
+<hr />
+    <h2>
+        Excluding or Including Types</h2>
 <p>
         It&#39;s quite possible that you may only want to scan part of an assembly within a 
         single Scan() operation.&nbsp; You can specify the scope of the Scan() operation 
@@ -759,163 +760,470 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
 </div>
 <!--EndFragment-->
+<hr />
+<h2>Type Scanning with Attributes</h2>
 <p>
-        &&nbsp; </p>
+        A subset of StructureMap functionality can be configured through the usage of 
+    attributes.&nbsp; 
+        Please see <a href="UsingAttributes.htm">Using Attributes</a> for more 
+        information.<hr />
+<h2>Convention Based Type Registration</h2>
+<p>StructureMap 2.5+ adds the ability to do convention based type registration.&nbsp;
+    <a href="http://en.wikipedia.org/wiki/Convention_over_Configuration">Convention 
+    over Configration</a> is becoming increasingly more common as a way to reduce 
+    the overhead of using configuration intensive tools.&nbsp; Type registration 
+    conventions can be mixed and matched with explicit configuration.</p>
+        <h4>The Default Convention</h4>
+        <p>When using StructureMap over the last couple years I saw a lot of type 
+            registrations like:</p>
 <!--
-{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red43\green145\blue175;}??\fs20             Scan(x =&gt;\par ??            \{\par ??                x.TheCallingAssembly();\par ??\par ??                x.ExcludeNamespaceContainingType&lt;\cf3 IEvent\cf0 &gt;();\par ??                x.ExcludeNamespaceContainingType&lt;\cf3 SearchModel\cf0 &gt;();\par ??                x.ExcludeNamespaceContainingType&lt;\cf3 AuthenticationService\cf0 &gt;();\par ??                x.ExcludeNamespaceContainingType&lt;\cf3 DovetailController\cf0 &gt;();\par ??\par ??                x.AddAllTypesOf&lt;\cf3 IDomainMap\cf0 &gt;();\par ??                \par ??                x.WithDefaultConventions();\par ??                x.With&lt;\cf3 DomainEntityAliaser\cf0 &gt;();\par ??            \});}
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red43\green145\blue175;}??\fs20             Start&lt;\cf3 ICommandExecutor\cf0 &gt;().TheDefaultIsConcreteType&lt;\cf3 CommandExecutor\cf0 &gt;().AsSingletons();}
 -->
-    <h4>
-        Rules for Adding Types</h4>
-<h4>
-    Controlling Type Scanning with the [PluginFamily] and [Pluggable] attributes/h4>
-<p>
-    AA subset of StructureMap functionality can be configured through 
-					the usage of attributes.&nbsp;
- Looking for RegistriesUsing the Default Conventions</h4>
-<h4>
-    Convention Based Type Registration</p>
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Start&lt;<span 
+                    style="color: #2b91af;">ICommandExecutor</span>&gt;().TheDefaultIsConcreteType&lt;<span 
+                    style="color: #2b91af;">CommandExecutor</span>&gt;();</p>
+        </div>
+<!--EndFragment-->
+<p>There was a reoccuring pattern.&nbsp; &quot;Foo&quot; was the default implementation of 
+    &quot;IFoo.&quot;&nbsp; The &quot;I&quot; moniker is the last vestige of Hungarian Notation left in 
+    my coding style, but it refuses to go away, so let&#39;s just take advantage of that 
+    naming convention with a new DefaultConvention.&nbsp; </p>
+        <p>Let&#39;s say that we have a class and interface like:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20     \cf3 public\cf0  \cf3 interface\cf0  \cf4 IConvention\par ??\cf0     \{\par ??    \}\par ??\par ??    \cf3 public\cf0  \cf3 interface\cf0  \cf4 IServer\par ??\cf0     \{\par ??    \}\par ??\par ??    \cf3 public\cf0  \cf3 class\cf0  \cf4 Convention\cf0  : \cf4 IConvention\cf0 , \cf4 IServer\par ??\cf0     \{\par ??        \cf3 public\cf0  \cf3 void\cf0  Go()\par ??        \{\par ??            \cf3 throw\cf0  \cf3 new\cf0  \cf4 NotImplementedException\cf0 ();\par ??        \}\par ??    \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">interface</span>
+                <span style="color: #2b91af;">IConvention</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">class</span>
+                <span style="color: #2b91af;">Convention</span> : <span style="color: #2b91af;">
+                IConvention</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<p>To make Convention be the default type for IConvention, I can simply scan the 
+    assembly containing these types with the new default convention:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20             \cf3 var\cf0  container = \cf3 new\cf0  \cf4 Container\cf0 (registry =&gt;\par ??            \{\par ??                registry.Scan(x =&gt;\par ??                \{\par ??                    x.TheCallingAssembly();\par ??                    x.With&lt;\cf4 DefaultConventionScanner\cf0 &gt;();\par ??                \});\par ??            \});\par ??\par ??            container.GetInstance&lt;\cf4 IConvention\cf0 &gt;().ShouldBeOfType&lt;\cf4 Convention\cf0 &gt;();}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                var</span> container = <span style="color: blue;">new</span>
+                <span style="color: #2b91af;">Container</span>(registry =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                registry.Scan(x =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.TheCallingAssembly();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.With&lt;<span style="color: #2b91af;">DefaultConventionScanner</span>&gt;();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; container.GetInstance&lt;<span 
+                    style="color: #2b91af;">IConvention</span>&gt;().ShouldBeOfType&lt;<span 
+                    style="color: #2b91af;">Convention</span>&gt;();</p>
+        </div>
+<!--EndFragment-->
+<hr />
+        <h4>Registering Types by Name</h4>
+        <p>One of the simplest, but yet most useful, ways to use convention based auto 
+            registration is just to add all concrete types that can be cast to a certain 
+            PluginType and use a convention to determine the Instance name.&nbsp; The first 
+            place I used this functionality was at the beginning of our MVC project.&nbsp; 
+            Let&#39;s say that we name our Controller classes like this:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20     \cf3 public\cf0  \cf3 interface\cf0  \cf4 IController\cf0 \{\}\par ??    \cf3 public\cf0  \cf3 class\cf0  \cf4 AddressController\cf0  : \cf4 IController\cf0 \{\}\par ??    \cf3 public\cf0  \cf3 class\cf0  \cf4 SiteController\cf0  : \cf4 IController\cf0 \{\}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">interface</span>
+                <span style="color: #2b91af;">IController</span>{}</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">class</span>
+                <span style="color: #2b91af;">AddressController</span> :
+                <span style="color: #2b91af;">IController</span>{}</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">class</span>
+                <span style="color: #2b91af;">SiteController</span> :
+                <span style="color: #2b91af;">IController</span>{}</p>
+        </div>
+<!--EndFragment-->
+<p>As a convention, we&#39;d like to register AddressController as the &quot;Address&quot; of 
+    IController, and &quot;Site&quot; or IController like this:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red163\green21\blue21;}??\fs20             container = \cf3 new\cf0  \cf4 Container\cf0 (x =&gt;\par ??            \{\par ??                x.ForRequestedType&lt;\cf4 IController\cf0 &gt;().AddInstances(o =&gt;\par ??                \{\par ??                    o.OfConcreteType&lt;\cf4 AddressController\cf0 &gt;().WithName(\cf5 "Address"\cf0 );\par ??                    o.OfConcreteType&lt;\cf4 SiteController\cf0 &gt;().WithName(\cf5 "Site"\cf0 );\par ??                \})\par ??\par ??                x.Scan(o =&gt;\par ??                \{\par ??                    o.TheCallingAssembly();\par ??                    o.AddAllTypesOf&lt;\cf4 IController\cf0 &gt;().NameBy(type =&gt; type.Name.Replace(\cf5 "Controller"\cf0 , \cf5 ""\cf0 ));\par ??                \});\par ??            \});}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; container =
+                <span style="color: blue;">new</span> <span style="color: #2b91af;">Container</span>(x 
+                =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.ForRequestedType&lt;<span style="color: #2b91af;">IController</span>&gt;().AddInstances(o 
+                =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                o.OfConcreteType&lt;<span style="color: #2b91af;">AddressController</span>&gt;().WithName(<span 
+                    style="color: #a31515;">&quot;Address&quot;</span>);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                o.OfConcreteType&lt;<span style="color: #2b91af;">SiteController</span>&gt;().WithName(<span 
+                    style="color: #a31515;">&quot;Site&quot;</span>);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; })</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+        </div>
+<!--EndFragment-->
+<p>Over 50+ Controller classes, that coding is going to get extremely tedious.&nbsp; 
+    Let&#39;s use a convention instead:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red163\green21\blue21;}??\fs20             container = \cf3 new\cf0  \cf4 Container\cf0 (x =&gt;\par ??            \{\par ??                x.Scan(o =&gt;\par ??                \{\par ??                    o.TheCallingAssembly();\par ??                    o.AddAllTypesOf&lt;\cf4 IController\cf0 &gt;().NameBy(type =&gt; type.Name.Replace(\cf5 "Controller"\cf0 , \cf5 ""\cf0 ));\par ??                \});\par ??            \});\par ??\par ??            \cf3 foreach\cf0  (\cf3 var\cf0  instance \cf3 in\cf0  container.Model.InstancesOf&lt;\cf4 IController\cf0 &gt;())\par ??            \{\par ??                \cf4 Debug\cf0 .WriteLine(instance.Name + \cf5 " is "\cf0  + instance.ConcreteType.Name);\par ??            \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; container =
+                <span style="color: blue;">new</span> <span style="color: #2b91af;">Container</span>(x 
+                =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.Scan(o =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                o.TheCallingAssembly();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                o.AddAllTypesOf&lt;<span style="color: #2b91af;">IController</span>&gt;().NameBy(type 
+                =&gt; type.Name.Replace(<span style="color: #a31515;">&quot;Controller&quot;</span>,
+                <span style="color: #a31515;">&quot;&quot;</span>));</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                foreach</span> (<span style="color: blue;">var</span> instance
+                <span style="color: blue;">in</span> container.Model.InstancesOf&lt;<span 
+                    style="color: #2b91af;">IController</span>&gt;())</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="color: #2b91af;">Debug</span>.WriteLine(instance.Name +
+                <span style="color: #a31515;">&quot; is &quot;</span> + instance.ConcreteType.Name);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<p>When this code is executed, we get this output:</p>
+<pre>
+Address is AddressController
+Site is SiteController
+</pre>
+        <p>Here&#39;s the unit test code for this functionality:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red43\green145\blue175;\red0\green0\blue255;\red163\green21\blue21;}??\fs20         [\cf3 Test\cf0 ]\par ??        \cf4 public\cf0  \cf4 void\cf0  can_find_objects_later_by_name()\par ??        \{\par ??            container.GetInstance&lt;\cf3 IController\cf0 &gt;(\cf5 "Address"\cf0 )\par ??                .ShouldBeOfType&lt;\cf3 AddressController\cf0 &gt;();\par ??\par ??            container.GetInstance&lt;\cf3 IController\cf0 &gt;(\cf5 "Site"\cf0 )\par ??                .ShouldBeOfType&lt;\cf3 SiteController\cf0 &gt;();\par ??        \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<span style="color: #2b91af;">Test</span>]</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: blue;">void</span> can_find_objects_later_by_name()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; container.GetInstance&lt;<span 
+                    style="color: #2b91af;">IController</span>&gt;(<span style="color: #a31515;">&quot;Address&quot;</span>)</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .ShouldBeOfType&lt;<span style="color: #2b91af;">AddressController</span>&gt;();</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; container.GetInstance&lt;<span 
+                    style="color: #2b91af;">IController</span>&gt;(<span style="color: #a31515;">&quot;Site&quot;</span>)</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .ShouldBeOfType&lt;<span style="color: #2b91af;">SiteController</span>&gt;();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<hr />
+        <h4>Creating and Using Your Own Convention</h4>
+        <p>To write your own auto registration convention, write a concrete class that 
+            implements the ITypeScanner interface:</p>
 <!--
 {\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20     \cf3 public\cf0  \cf3 interface\cf0  \cf4 ITypeScanner\par ??\cf0     \{\par ??        \cf3 void\cf0  Process(\cf4 Type\cf0  type, \cf4 PluginGraph\cf0  graph);\par ??    \}}
 -->
-<div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
-    <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blA subset of StructureMap functionality can be configured through 
-					the usage of the [PluginFamily] and [Pluggable] attributes.&nbsp;
-    </p>
-    <p>
-        &nbsp;</p>
-    <h4>
-        Looking for Registries&nbsp;&nbsp; <span style="color: blue;">void</span> 
-        Process(<span style="color: #2b91af;">Type</span> type,
-        <span style="color: #2b91af;">PluginGraph</span> graph);</p>
-    <p style="margin: 0px;">
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">interface</span>
+                <span style="color: #2b91af;">ITypeScanner</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">void</span> Process(<span 
+                    style="color: #2b91af;">Type</span> type, <span style="color: #2b91af;">
+                PluginGraph</span> graph);</p>
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp; }</p>
-</div>
+        </div>
 <!--EndFragment-->
-<p>
-    &nbsp;</p>
-<!--
-{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20     \cf3 public\cf0  \cf3 interface\cf0  \cf4 ITypeScanner\par ??\cf0     \{\par ??        \cf3 void\cf0  Process(\cf4 Type\cf0  type, \cf4 PluginGraph\cf0  graph);\par ??    \}}
--->
-<div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
-    <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blA subset of StructureMap functionality can be configured through 
-					the usage of the [PluginFamily] and [Pluggable] attributes.&nbsp;
-    </p>
-    <p>
-        &nbsp;</p>
-    <h4>
-        Looking for Registries&nbsp;&nbsp; <span style="color: blue;">void</span> 
-        Process(<span style="color: #2b91af;">Type</span> type,
-        <span style="color: #2b91af;">PluginGraph</span> graph);</p>
-    <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp; }</p>
-</div>
-<!--EndFragment-->
-<p>
-    &nbsp;</p>
-<p>
-    &nbsp;</p>
+<p>Inside a custom ITypeScanner, you add types to a Container by modifying the 
+    PluginGraph object that is passed into the TypeScanner.&nbsp; While having 
+    access to the PluginGraph allows you to make any possible type of configuration 
+    change (PluginGraph is the
+    <a href="http://martinfowler.com/dslwip/SemanticModel.html">Semantic Model/a> 
+            behind both the Registry DSL and the Xml configuration), in practice you 
+            probably only care about these three methods:</p>
 <!--
 {\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red128\green128\blue128;\red0\green128\blue0;\red0\green0\blue255;\red43\green145\blue175;}??\fs20         \cf3 ///\cf4  \cf3 &lt;summary&gt;\par ??\cf0         \cf3 ///\cf4  Adds the concreteType as an Instance of the pluginType\par ??\cf0         \cf3 ///\cf4  \cf3 &lt;/summary&gt;\par ??\cf0         \cf3 ///\cf4  \cf3 &lt;param name="pluginType"&gt;&lt;/param&gt;\par ??\cf0         \cf3 ///\cf4  \cf3 &lt;param name="concreteType"&gt;&lt;/param&gt;\par ??\cf0         \cf5 void\cf0  AddType(\cf6 Type\cf0  pluginType, \cf6 Type\cf0  concreteType);\par ??\par ??        \cf3 ///\cf4  \cf3 &lt;summary&gt;\par ??\cf0         \cf3 ///\cf4  Adds the concreteType as an Instance of the pluginType with a name\par ??\cf0         \cf3 ///\cf4  \cf3 &lt;/summary&gt;\par ??\cf0         \cf3 ///\cf4  \cf3 &lt;param name="pluginType"&gt;&lt;/param&gt;\par ??\cf0         \cf3 ///\cf4  \cf3 &lt;param name="concreteType"&gt;&lt;/param&gt;\par ??\cf0         \cf3 ///\cf4  \cf3 &lt;param name="name"&gt;&lt;/param&gt;\par ??\cf0         \cf5 void\cf0  AddType(\cf6 Type\cf0  pluginType, \cf6 Type\cf0  concreteType, \cf5 string\cf0  name);\par ??\par ??        \cf3 ///\cf4  \cf3 &lt;summary&gt;\par ??\cf0         \cf3 ///\cf4  Add the pluggedType as an instance to any configured pluginType where pluggedType\par ??\cf0         \cf3 ///\cf4  could be assigned to the pluginType\par ??\cf0         \cf3 ///\cf4  \cf3 &lt;/summary&gt;\par ??\cf0         \cf3 ///\cf4  \cf3 &lt;param name="pluggedType"&gt;&lt;/param&gt;\par ??\cf0         \cf5 void\cf0  AddType(\cf6 Type\cf0  pluggedType);}
 -->
-<div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
-    <p style="margin: 0px;">
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
-            style="color: green;"> </span><span style="color: gray;">&lt;summary&gt;ot;concreteType&quot;&gt;&lt;/param&gt;/span></p>
-        <p style="margin: 0px;">
+                    style="color: green;"> </span><span style="color: gray;">&lt;summary&gt;</span></p>
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
-                style="color: green;"> </span><span style="color: gray;">&lt;param 
-            name=&quot;name&quot;&gt;&lt;/param&gt;</span></p>
-        <p style="margin: 0px;">
+                    style="color: green;"> Adds the concreteType as an Instance of the 
+                pluginType</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> </span><span style="color: gray;">&lt;/summary&gt;</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> </span><span style="color: gray;">&lt;param 
+                name=&quot;pluginType&quot;&gt;&lt;/param&gt;</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> </span><span style="color: gray;">&lt;param 
+                name=&quot;concreteType&quot;&gt;&lt;/param&gt;</span></p>
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">void</span> AddType(<span 
-                style="color: #2b91af;">Type</span> pluginType,
-            <span style="color: #2b91af;">Type</span> concreteType,
-            <span style="color: blue;">string</span> name);</p>
-        <p style="margin: 0px;">
-            &nbsp;</p>
-        <p style="margin: 0px;">
+                    style="color: #2b91af;">Type</span> pluginType,
+                <span style="color: #2b91af;">Type</span> concreteType);</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
-                style="color: green;"> </span><span style="color: gray;">&lt;summary&gt;</span></p>
-        <p style="margin: 0px;">
+                    style="color: green;"> </span><span style="color: gray;">&lt;summary&gt;</span></p>
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
-                style="color: green;"> Add the pluggedType as an instance to any configured 
-            pluginType where pluggedType</span></p>
-        <p style="margin: 0px;">
+                    style="color: green;"> Adds the concreteType as an Instance of the 
+                pluginType with a name</span></p>
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
-                style="color: green;"> could be assigned to the pluginType</span></p>
-        <p style="margin: 0px;">
+                    style="color: green;"> </span><span style="color: gray;">&lt;/summary&gt;</span></p>
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
-                style="color: green;"> </span><span style="color: gray;">&lt;/summary&gt;</span></p>
-        <p style="margin: 0px;">
+                    style="color: green;"> </span><span style="color: gray;">&lt;param 
+                name=&quot;pluginType&quot;&gt;&lt;/param&gt;</span></p>
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
-                style="color: green;"> </span><span style="color: gray;">&lt;param 
-            name=&quot;pluggedType&quot;&gt;&lt;/param&gt;</span></p>
-        <p style="margin: 0px;">
+                    style="color: green;"> </span><span style="color: gray;">&lt;param 
+                name=&quot;concreteType&quot;&gt;&lt;/param&gt;</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> </span><span style="color: gray;">&lt;param 
+                name=&quot;name&quot;&gt;&lt;/param&gt;</span></p>
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">void</span> AddType(<span 
-                style="color: #2b91af;">Type</span> pluggedType);</p>
-    </div>
+                    style="color: #2b91af;">Type</span> pluginType,
+                <span style="color: #2b91af;">Type</span> concreteType,
+                <span style="color: blue;">string</span> name);</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> </span><span style="color: gray;">&lt;summary&gt;</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> Add the pluggedType as an instance to any configured 
+                pluginType where pluggedType</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> could be assigned to the pluginType</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> </span><span style="color: gray;">&lt;/summary&gt;</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> </span><span style="color: gray;">&lt;param 
+                name=&quot;pluggedType&quot;&gt;&lt;/param&gt;</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">void</span> AddType(<span 
+                    style="color: #2b91af;">Type</span>  pluggedType);</p>
+        </div>
 <!--EndFragment-->
-<p style="margin: 0px">
-    &nbsp;</p>
-    <p style="margin: 0px">
-        &nbsp;</p>
-    <p style="margin: 0px">
-        &nbsp;</p>
+<p>Here&#39;s a sample type convention from my current project:</p>
 <!--
-{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green128\blue0;\red0\green0\blue255;\red43\green145\blue175;\red163\green21\blue21;}??\fs20     \cf3 // Mass registration of MVC Controllers\par ??\cf0     \cf3 // registers every concrete type of IController to IController\par ??\cf0     \cf3 // A class named "SiteController" would be registered as "site"\par ??\cf0     \cf4 public\cf0  \cf4 class\cf0  \cf5 ControllerConvention\cf0  : \cf5 TypeRules\cf0 , \cf5 ITypeScanner\par ??\cf0     \{\par ??        \cf4 public\cf0  \cf4 void\cf0  Process(\cf5 Type\cf0  type, \cf5 PluginGraph\cf0  graph)\par ??        \{\par ??            \cf4 if\cf0  (CanBeCast(\cf4 typeof\cf0  (\cf5 IController\cf0 ), type))\par ??            \{\par ??                \cf4 string\cf0  name = type.Name.Replace(\cf6 "Controller"\cf0 , \cf6 ""\cf0 ).ToLower();\par ??                graph.AddType(\cf4 typeof\cf0 (\cf5 IController\cf0 ), type, name);\par ??            \}\par ??        \}\par ??    \}}
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red128\green128\blue128;\red0\green128\blue0;\red0\green0\blue255;\red43\green145\blue175;}??\fs20     \cf3 ///\cf4  \cf3 &lt;summary&gt;\par ??\cf0     \cf3 ///\cf4  This TypeScanner looks for any concrete class that implements\par ??\cf0     \cf3 ///\cf4  an IFlattenerFor\cf3 &lt;T&gt;\cf4  interface, and registers that type\par ??\cf0     \cf3 ///\cf4  against the closed IFlattenerFor\cf3 &lt;T&gt;\cf4  interface,\par ??\cf0     \cf3 ///\cf4  i.e. IFlattenerFor\cf3 &lt;Address&gt;\cf4  or IFlattenerFor\cf3 &lt;Site&gt;\par ??\cf0     \cf3 ///\cf4  \cf3 &lt;/summary&gt;\par ??\cf0     \cf5 public\cf0  \cf5 class\cf0  \cf6 DtoFlattenerConventionScanner\cf0  : \cf6 ITypeScanner\par ??\cf0     \{\par ??        \cf5 public\cf0  \cf5 void\cf0  Process(\cf6 Type\cf0  type, \cf6 PluginGraph\cf0  graph)\par ??        \{\par ??            \cf6 Type\cf0  interfaceType = type.FindInterfaceThatCloses(\cf5 typeof\cf0  (\cf6 IFlattenerFor\cf0 &lt;&gt;));\par ??            \cf5 if\cf0  (interfaceType != \cf5 null\cf0 )\par ??            \{\par ??                graph.AddType(interfaceType, type);\par ??            \}\par ??        \}\par ??    \}}
 -->
-    <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
-        <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp; <span style="color: green;">// Mass registration of MVC Controllers</span></p>
-        <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp; <span style="color: green;">// registers every concrete type of 
-            IController to IController</span></p>
-        <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp; <span style="color: green;">// A class named &quot;SiteController&quot; would be 
-            registered as &quot;site&quot;</span></p>
-        <p style="margin: 0px;">
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span style="color: green;"> </span>
+                <span style="color: gray;">&lt;summary&gt;/span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span style="color: green;"> This 
+                TypeScanner looks for any concrete class that implements</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span style="color: green;"> an 
+                IFlattenerFor</span><span style="color: gray;">&lt;T&gt;</span><span 
+                    style="color: green;"> interface, and registers that type</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span style="color: green;"> against the 
+                closed IFlattenerFor</span><span style="color: gray;">&lt;T&gt;</span><span 
+                    style="color: green;"> interface,</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span style="color: green;"> i.e. 
+                IFlattenerFor</span><span style="color: gray;">&lt;Address&gt;</span><span 
+                    style="color: green;"> or IFlattenerFor</span><span style="color: gray;">&lt;Site&gt;</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span style="color: green;"> </span>
+                <span style="color: gray;">&lt;/summary&gt;</span></p>
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">class</span>
-            <span style="color: #2b91af;">ControllerConvention</span> :
-            <span style="color: #2b91af;">TypeRules</span>, <span style="color: #2b91af;">
-            ITypeScanner</span></p>
-        <p style="margin: 0px;">
+                <span style="color: #2b91af;">DtoFlattenerConventionScanner</span> :
+                <span style="color: #2b91af;">ITypeScanner</span></p>
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp; {</p>
-        <p style="margin: 0px;">
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
-            <span style="color: blue;">void</span> Process(<span style="color: #2b91af;">Type</span> 
-            type, <span style="color: #2b91af;">PluginGraph</span> graph)</p>
-        <p style="margin: 0px;">
+                <span style="color: blue;">void</span> Process(<span style="color: #2b91af;">Type</span> 
+                type, <span style="color: #2b91af;">PluginGraph</span> graph)</p>
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
-        <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <span style="color: blue;">if</span> (CanBeCast(<span style="color: blue;">typeof</span> 
-            (<span style="color: #2b91af;">IController</span>), type))</p>
-        <p style="margin: 0px;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #2b91af;">
+                Type</span> interfaceType = type.FindInterfaceThatCloses(<span 
+                    style="color: blue;">typeof</span> (<span style="color: #2b91af;">IFlattenerFor</span>&lt;&gt;));</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">if</span> 
+                (interfaceType != <span style="color: blue;">null</span>)</p>
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
-        <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <span style="color: blue;">string</span> name = type.Name.Replace(<span 
-                style="color: #a31515;">&quot;Controller&quot;</span>, <span style="color: #a31515;">
-            &quot;&quot;</span>).ToLower();</p>
-        <p style="margin: 0px;">
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-            graph.AddType(<span style="color: blue;">typeof</span>(<span 
-                style="color: #2b91af;">IController</span>), type, name);</p>
-        <p style="margin: 0px;">
+                graph.AddType(interfaceType, type);</p>
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
-        <p style="margin: 0px;">
+            <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
-        <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp; }</p>
-    </div>
+            <p style="margin: 0px;">
+&&nbsp;&nbsp;&nbsp; }</p>
+        </div>
 <!--EndFragment-->
-<p style="margin: 0px">
-    &nbsp;</p>
-<p style="margin: 0px">
-    &&nbsp;</p>
-<p style="margin: 0px">
-    &nbsp;</p>
-	    
+<p>You apply the custom ITypeScanner by simply calling With() inside of a Scan() 
+    block:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green128\blue0;\red43\green145\blue175;}??\fs20             Scan(x =&gt;\par ??            \{\par ??                \cf3 // Scan the types in the assembly that contains this Registry class\par ??\cf0                 x.TheCallingAssembly();\par ??\par ??                \cf3 // The "Core" of our application does NOT include\par ??\cf0                 \cf3 // these namespaces that are specific to either\par ??\cf0                 \cf3 // the user interface or satellite services\par ??\cf0                 x.ExcludeNamespaceContainingType&lt;\cf4 IEvent\cf0 &gt;();\par ??                x.ExcludeNamespaceContainingType&lt;\cf4 FullTextSearchService\cf0 &gt;();\par ??                x.ExcludeNamespaceContainingType&lt;\cf4 AuthenticationService\cf0 &gt;();\par ??                x.ExcludeNamespaceContainingType&lt;\cf4 DovetailController\cf0 &gt;();\par ??\par ??                \cf3 // Specify some scanning conventions\par ??\cf0                 x.AddAllTypesOf&lt;\cf4 IDomainMap\cf0 &gt;();\par ??                x.WithDefaultConventions();\par ??\par ??                \cf3 // scan with a custom ITypeScanner\par ??\cf0                 x.With&lt;\cf4 DomainEntityAliaser\cf0 &gt;();\par ??                x.With&lt;\cf4 QueueItemMappingScanner\cf0 &gt;();\par ??            \});}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Scan(x =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="color: green;">// scan with a custom ITypeScanner</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.With&lt;<span style="color: #2b91af;">DomainEntityAliaser</span>&gt;();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.With&lt;<span style="color: #2b91af;">QueueItemMappingScanner</span>&gt;();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+        </div>
+<!--EndFragment-->
+<hr />
+
+    <h2>Looking for Registries</h2>
+
+    <p>A significant change from StructureMap 2.0 to 2.5 is that automatically scanning 
+        for Registry classes in assemblies is no longer the default option.&nbsp; In 
+        order to use any Registry classes found in the type scanning as part of the 
+        configuration, use this syntax:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green128\blue0;\red163\green21\blue21;}??\fs20             Scan(x =&gt;\par ??            \{\par ??                \cf3 // I'm telling StructureMap to sweep a folder called "Extensions" directly\par ??\cf0                 \cf3 // underneath the application root folder for any assemblies\par ??\cf0                 x.AssembliesFromPath(\cf4 "Extensions"\cf0 );\par ??\par ??                \cf3 // I also direct StructureMap to add any Registries that it finds in these\par ??\cf0                 \cf3 // assemblies.  I'm assuming that all the StructureMap directives are\par ??\cf0                 \cf3 // contained in Registry classes -- and this is the recommended approach\par ??\cf0                 x.LookForRegistries();\par ??            \});}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Scan(x =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="color: green;">// I&#39;m telling StructureMap to sweep a folder called 
+                &quot;Extensions&quot; directly</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="color: green;">// underneath the application root folder for any 
+                assemblies</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.AssembliesFromPath(<span style="color: #a31515;">&quot;Extensions&quot;</span>);</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="color: green;">// I also direct StructureMap to add any Registries 
+                that it finds in these</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="color: green;">// assemblies.&nbsp; I&#39;m assuming that all the 
+                StructureMap directives are</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="color: green;">// contained in Registry classes -- and this is the 
+                recommended approach</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.LookForRegistries();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+        </div>
+<!--EndFragment-->
+<hr />
+
+
 	</body>
 </html>

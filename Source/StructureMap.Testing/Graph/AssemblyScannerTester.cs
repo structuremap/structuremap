@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
@@ -342,5 +343,46 @@ namespace StructureMap.Testing.Graph
             shouldNotHaveFamily<IInterfaceInWidget5>();
             shouldHaveFamily<ITypeThatHasAttributeButIsNotInRegistry>();
         }
+    }
+
+
+    public interface IController{}
+    public class AddressController : IController{}
+    public class SiteController : IController{}
+
+    [TestFixture]
+    public class when_attaching_types_with_naming_pattern
+    {
+        private IContainer container;
+
+        [SetUp]
+        public void SetUp()
+        {
+            container = new Container(x =>
+            {
+                x.Scan(o =>
+                {
+                    o.TheCallingAssembly();
+                    o.AddAllTypesOf<IController>().NameBy(type => type.Name.Replace("Controller", ""));
+                });
+            });
+
+            foreach (var instance in container.Model.InstancesOf<IController>())
+            {
+                Debug.WriteLine(instance.Name + " is " + instance.ConcreteType.Name);
+            }
+        }
+
+        [Test]
+        public void can_find_objects_later_by_name()
+        {
+            container.GetInstance<IController>("Address")
+                .ShouldBeOfType<AddressController>();
+
+            container.GetInstance<IController>("Site")
+                .ShouldBeOfType<SiteController>();
+        }
+
+
     }
 }

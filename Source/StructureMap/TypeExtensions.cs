@@ -21,5 +21,51 @@ namespace StructureMap
         {
             return new TypeRules().IsConcrete(type);
         }
+
+        public static bool IsGeneric(this Type type)
+        {
+            return type.IsGenericTypeDefinition || type.ContainsGenericParameters;
+        }
+
+        public static bool CanBeCastTo(this Type pluggedType, Type pluginType)
+        {
+            return TypeRules.CanBeCast(pluginType, pluggedType);
+        }
+
+        public static bool IsConcreteAndAssignableTo(this Type pluggedType, Type pluginType)
+        {
+            return pluggedType.IsConcrete() && pluginType.IsAssignableFrom(pluggedType);
+        }
+
+        public static bool ImplementsInterfaceTemplate(this Type pluggedType, Type templateType)
+        {
+            if (!pluggedType.IsConcrete()) return false;
+
+            foreach (var interfaceType in pluggedType.GetInterfaces())
+            {
+                if (interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition() == templateType)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public static Type FindInterfaceThatCloses(this Type pluggedType, Type templateType)
+        {
+            if (!pluggedType.IsConcrete()) return null;
+
+            foreach (var interfaceType in pluggedType.GetInterfaces())
+            {
+                if (interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition() == templateType)
+                {
+                    return interfaceType;
+                }
+            }
+
+            return null;
+        }
+
     }
 }

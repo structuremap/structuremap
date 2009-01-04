@@ -428,5 +428,20 @@ namespace StructureMap
             container.BuildUp(target);
         }
 
+        /// <summary>
+        /// Convenience method to request an object using an Open Generic
+        /// Type and its parameter Types
+        /// </summary>
+        /// <param name="templateType"></param>
+        /// <returns></returns>
+        /// <example>
+        /// IFlattener flattener1 = container.ForGenericType(typeof (IFlattener<>))
+        ///     .WithParameters(typeof (Address)).GetInstanceAs<IFlattener>();
+        /// </example>
+        public static Container.OpenGenericTypeExpression ForGenericType(Type templateType)
+        {
+            return container.ForGenericType(templateType);
+        }
+
     }
 }

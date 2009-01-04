@@ -450,6 +450,8 @@ namespace StructureMap
             _model = new Model(_pipelineGraph);
 
             PluginCache.Compile();
+
+            _pipelineGraph.Inject<IContainer>(this);
         }
 
         private IList<T> getListOfTypeWithSession<T>(BuildSession session)
@@ -484,6 +486,53 @@ namespace StructureMap
             return _pipelineGraph.ForType(type);
         }
 
+        /// <summary>
+        /// Convenience method to request an object using an Open Generic
+        /// Type and its parameter Types
+        /// </summary>
+        /// <param name="templateType"></param>
+        /// <returns></returns>
+        /// <example>
+        /// IFlattener flattener1 = container.ForGenericType(typeof (IFlattener<>))
+        ///     .WithParameters(typeof (Address)).GetInstanceAs<IFlattener>();
+        /// </example>
+        public OpenGenericTypeExpression ForGenericType(Type templateType)
+        {
+            return new OpenGenericTypeExpression(templateType, this);
+        }
 
+        public class OpenGenericTypeExpression : GetInstanceAsExpression
+        {
+            private readonly Type _templateType;
+            private readonly Container _container;
+            private Type _pluginType;
+
+            public OpenGenericTypeExpression(Type templateType, Container container)
+            {
+                if (!templateType.IsGeneric())
+                {
+                    throw new StructureMapException(285);
+                }
+
+                _templateType = templateType;
+                _container = container;
+            }
+
+            public GetInstanceAsExpression WithParameters(params Type[] parameterTypes)
+            {
+                _pluginType = _templateType.MakeGenericType(parameterTypes);
+                return this;
+            }
+
+            public T GetInstanceAs<T>()
+            {
+                return (T) _container.GetInstance(_pluginType);
+            }
+        }
+
+        public interface GetInstanceAsExpression
+        {
+            T GetInstanceAs<T>();
+        }
     }
 }

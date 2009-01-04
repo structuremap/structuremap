@@ -82,16 +82,15 @@
         <h2>
             Example</h2>
         <p>
-            Typically, you’ll try to 
-            minimize the number of service locator[LINK] usages in your system to a bare minimum 
-            (I found 8 in my current system, but I think I’ll find a way to prune half of 
-            those later).&nbsp; Most of the value of an IoC tool is in automatically doing 
-            Dependency Injection.&nbsp; I’m working with the new MVC framework at the 
-            moment, so it’s a handy sample.&nbsp; Let’s say that we have a Controller class 
-            for a typical CRUD screen.&nbsp; That Controller class will generally need to 
-            interact with both validation services and the data access functionality of the 
-            Repository.&nbsp; Here’s a representative Controller class:-RIGHT: black thin solid; BORDER-TOP: black thin solid; FONT-SIZE: 10pt; BACKGROUND: white; OVERFLOW: scroll; BORDER-LEFT: black thin solid; COLOR: black; BORDER-BOTTOM: black thin solid; FONT-FAMILY: courier new">
-            <p style="MARGIN: 0px">
+            Typically, you’ll try to minimize the number of service locator[LINK] usages in 
+            your system to a bare minimum (I found 8 in my current system, but I think I’ll 
+            find a way to prune half of those later).&nbsp; Most of the value of an IoC tool 
+            is in automatically doing Dependency Injection.&nbsp; I’m working with the new 
+            MVC framework at the moment, so it’s a handy sample.&nbsp; Let’s say that we 
+            have a Controller class for a typical CRUD screen.&nbsp; That Controller class 
+            will generally need to interact with both validation services and the data 
+            access functionality of the Repository.&nbsp; Here’s a representative Controller 
+            class:<div class="code-sample"><p style="MARGIN: 0px" >
 &nbsp;&nbsp;&nbsp; <span style="COLOR: blue">public</span> <span style="COLOR: blue">class</span>
                 <span style="COLOR: #2b91af">SomeScreenController</span> :
                 <span style="COLOR: #2b91af">IController</span></p>
@@ -216,10 +215,223 @@
     overriden.</p>
         <hr />
         <h4>Object Identity within a Single Request</h4>
-        <p>TODO</p>
+        <p>Within a single object request, StructureMap will only create a single object for 
+            a single Instance configuration.&nbsp; What that means in effect is that if two 
+            or more objects in a single request need the same dependency, those two objects 
+            will get the exact same instance of that dependency.&nbsp; Let&#39;s immediately 
+            jump into code to demonstrate this.</p>
+        <p>This auto wiring policy was intended for objects that need to be shared by lots 
+            of other objects.&nbsp; A common example of this is some sort of DataContext 
+            class:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red163\green21\blue21;}??\fs20         \cf3 public\cf0  \cf3 class\cf0  \cf4 DataContext\par ??\cf0         \{\par ??            \cf3 private\cf0  \cf4 Guid\cf0  _id = \cf4 Guid\cf0 .NewGuid();\par ??\par ??            \cf3 public\cf0  \cf3 override\cf0  \cf3 string\cf0  ToString()\par ??            \{\par ??                \cf3 return\cf0  \cf3 string\cf0 .Format(\cf5 "Id: \{0\}"\cf0 , _id);\par ??            \}\par ??        \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: blue;">class</span> <span style="color: #2b91af;">
+                DataContext</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                private</span> <span style="color: #2b91af;">Guid</span> _id =
+                <span style="color: #2b91af;">Guid</span>.NewGuid();</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                public</span> <span style="color: blue;">override</span>
+                <span style="color: blue;">string</span> ToString()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="color: blue;">return</span> <span style="color: blue;">string</span>.Format(<span 
+                    style="color: #a31515;">&quot;Id: {0}&quot;</span>, _id);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<p>Now, let&#39;s say that I have a hierarchy of classes that all need to work on a 
+    DataContext:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red163\green21\blue21;}??\fs20         \cf3 public\cf0  \cf3 class\cf0  \cf4 Class1\par ??\cf0         \{\par ??            \cf3 private\cf0  \cf3 readonly\cf0  \cf4 DataContext\cf0  _context;\par ??\par ??            \cf3 public\cf0  Class1(\cf4 DataContext\cf0  context)\par ??            \{\par ??                _context = context;\par ??            \}\par ??\par ??            \cf3 public\cf0  \cf3 override\cf0  \cf3 string\cf0  ToString()\par ??            \{\par ??                \cf3 return\cf0  \cf3 string\cf0 .Format(\cf5 "Class1 has Context: \{0\}"\cf0 , _context);\par ??            \}\par ??        \}\par ??\par ??        \cf3 public\cf0  \cf3 class\cf0  \cf4 Class2\par ??\cf0         \{\par ??            \cf3 private\cf0  \cf3 readonly\cf0  \cf4 Class1\cf0  _class1;\par ??            \cf3 private\cf0  \cf3 readonly\cf0  \cf4 DataContext\cf0  _context;\par ??\par ??            \cf3 public\cf0  Class2(\cf4 Class1\cf0  class1, \cf4 DataContext\cf0  context)\par ??            \{\par ??                _class1 = class1;\par ??                _context = context;\par ??            \}\par ??\par ??            \cf3 public\cf0  \cf3 override\cf0  \cf3 string\cf0  ToString()\par ??            \{\par ??                \cf3 return\cf0  \cf3 string\cf0 .Format(\cf5 "Class2 has Context: \{0\}\\n\{1\}"\cf0 , _context, _class1);\par ??            \}\par ??        \}\par ??\par ??        \cf3 public\cf0  \cf3 class\cf0  \cf4 Class3\par ??\cf0         \{\par ??            \cf3 private\cf0  \cf3 readonly\cf0  \cf4 Class2\cf0  _class2;\par ??            \cf3 private\cf0  \cf3 readonly\cf0  \cf4 DataContext\cf0  _context;\par ??\par ??            \cf3 public\cf0  Class3(\cf4 Class2\cf0  class2, \cf4 DataContext\cf0  context)\par ??            \{\par ??                _class2 = class2;\par ??                _context = context;\par ??            \}\par ??\par ??            \cf3 public\cf0  \cf3 override\cf0  \cf3 string\cf0  ToString()\par ??            \{\par ??                \cf3 return\cf0  \cf3 string\cf0 .Format(\cf5 "Class3 has Context: \{0\}\\n\{1\}"\cf0 , _context, _class2);\par ??            \}\par ??        \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: blue;">class</span> <span style="color: #2b91af;">Class1</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                public</span> Class1(<span style="color: #2b91af;">DataContext</span> context){}</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                public</span> <span style="color: blue;">override</span>
+                <span style="color: blue;">string</span> ToString()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="color: blue;">return</span> <span style="color: blue;">string</span>.Format(<span 
+                    style="color: #a31515;">&quot;Class1 has Context: {0}&quot;</span>, _context);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: blue;">class</span> <span style="color: #2b91af;">Class2</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                public</span> Class2(<span style="color: #2b91af;">Class1</span> class1,
+                <span style="color: #2b91af;">DataContext</span> context) {}</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                public</span> <span style="color: blue;">override</span>
+                <span style="color: blue;">string</span> ToString()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="color: blue;">return</span> <span style="color: blue;">string</span>.Format(<span 
+                    style="color: #a31515;">&quot;Class2 has Context: {0}\n{1}&quot;</span>, _context, 
+                _class1);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: blue;">class</span> <span style="color: #2b91af;">Class3</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="color: blue;">public</span> Class3(<span style="color: #2b91af;">Class2</span> 
+                class2, <span style="color: #2b91af;">DataContext</span> context) {}</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                public</span> <span style="color: blue;">override</span>
+                <span style="color: blue;">string</span> ToString()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="color: blue;">return</span> <span style="color: blue;">string</span>.Format(<span 
+                    style="color: #a31515;">&quot;Class3 has Context: {0}\n{1}&quot;</span>, _context, 
+                _class2);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<p>When you request an object of Class3 with a call to 
+    Container.GetInstance&lt;Class3&gt;() like this:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red43\green145\blue175;\red0\green0\blue255;}??\fs20         [\cf3 Test\cf0 ]\par ??        \cf4 public\cf0  \cf4 void\cf0  demonstrate_session_identity()\par ??        \{\par ??            \cf4 var\cf0  class3 = container.GetInstance&lt;\cf3 Class3\cf0 &gt;();\par ??            \cf3 Debug\cf0 .WriteLine(class3);\par ??        \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<span style="color: #2b91af;">Test</span>]</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: blue;">void</span> demonstrate_session_identity()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                var</span> class3 = container.GetInstance&lt;<span style="color: #2b91af;">Class3</span>&gt;();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #2b91af;">
+                Debug</span>.WriteLine(class3);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<p>The output is:</p>
+<pre>
+Class3 has Context: Id: 3abe0330-e94f-48a3-b8c3-56d278eea07f
+Class2 has Context: Id: 3abe0330-e94f-48a3-b8c3-56d278eea07f
+Class1 has Context: Id: 3abe0330-e94f-48a3-b8c3-56d278eea07f
+</pre>
+        <p>In the sample above, when we write out the Class3, Class2, and Class1 objects to Debug.WriteLine, we find that each of these objects have a reference to the same DataContext.  If we were to run this test again, the output might be:</p>
+        <pre>
+Class3 has Context: Id: 109329ce-4058-4a35-9fd1-46d47c1e69e7
+Class2 has Context: Id: 109329ce-4058-4a35-9fd1-46d47c1e69e7
+Class1 has Context: Id: 109329ce-4058-4a35-9fd1-46d47c1e69e7
+        </pre>
+        <p>We see the exact same behavior, but it was a different object instance of DataContext for the new object graph.</p>
+        <p>This behavior also applies to objects passed in to the Container as an explicit argument:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red43\green145\blue175;\red0\green0\blue255;\red163\green21\blue21;}??\fs20         [\cf3 Test\cf0 ]\par ??        \cf4 public\cf0  \cf4 void\cf0  demonstrate_session_identity_with_explicit_argument()\par ??        \{\par ??            \cf3 DataContext\cf0  context = \cf4 new\cf0  \cf3 DataContext\cf0 ();\par ??            \cf3 Debug\cf0 .WriteLine(\cf5 "The context being passed in is "\cf0  + context);\par ??\par ??            \cf4 var\cf0  class3 = container.With(context).GetInstance&lt;\cf3 Class3\cf0 &gt;();\par ??            \cf3 Debug\cf0 .WriteLine(class3);\par ??        \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<span style="color: #2b91af;">Test</span>]</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: blue;">void</span> 
+                demonstrate_session_identity_with_explicit_argument()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #2b91af;">
+                DataContext</span> context = <span style="color: blue;">new</span>
+                <span style="color: #2b91af;">DataContext</span>();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #2b91af;">
+                Debug</span>.WriteLine(<span style="color: #a31515;">&quot;The context being passed 
+                in is &quot;</span> + context);</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                var</span> class3 = container.With(context).GetInstance&lt;<span 
+                    style="color: #2b91af;">Class3</span>&gt;();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #2b91af;">
+                Debug</span>.WriteLine(class3);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<p>The output of this unit test is:</p>
+        <pre>
+The context being passed in is Id: 87ddccfd-a441-41fd-a86d-3f32987496ba
+Class3 has Context: Id: 87ddccfd-a441-41fd-a86d-3f32987496ba
+Class2 has Context: Id: 87ddccfd-a441-41fd-a86d-3f32987496ba
+Class1 has Context: Id: 87ddccfd-a441-41fd-a86d-3f32987496ba
+        </pre>
+        <p>The point of the sample above is just to show that the object instance of DataContext passed into the Container is used to create the Class3, Class2, and Class1 objects.</p>
         <hr />
         <h4>Injecting Arrays of Services</h4>
-        <p>TODO</p>
+        <p>StructureMap has always supported Dependency Injection of arrays of dependency 
+            objects.&nbsp; New in StructureMap 2.5+ is a policy that if any array of 
+            dependencies is not explicitly specified, StructureMap will inject all possible 
+            instances of that dependency type.&nbsp; The sample below illustrates this auto 
+            wiring policy.&nbsp; I have a class called &quot;ClassThatUsesValidators&quot; that needs 
+            an array of IValidator objects.&nbsp; Below, I&#39;ve configured two different 
+            Instances of ClassThatUsesValidator, one that explicitly configures its children 
+            IValidator and another Instance that is just going to let auto wiring inject the 
+            IValidator&#39;s.</p>
 <!--
 {\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red163\green21\blue21;\red0\green128\blue0;}??\fs20     \cf3 public\cf0  \cf3 interface\cf0  \cf4 IValidator\par ??\cf0     \{\par ??    \}\par ??\par ??    \cf3 public\cf0  \cf3 class\cf0  \cf4 Validator\cf0  : \cf4 IValidator\par ??\cf0     \{\par ??        \cf3 private\cf0  \cf3 readonly\cf0  \cf3 string\cf0  _name;\par ??\par ??        \cf3 public\cf0  Validator(\cf3 string\cf0  name)\par ??        \{\par ??            _name = name;\par ??        \}\par ??\par ??        \cf3 public\cf0  \cf3 override\cf0  \cf3 string\cf0  ToString()\par ??        \{\par ??            \cf3 return\cf0  \cf3 string\cf0 .Format(\cf5 "Name: \{0\}"\cf0 , _name);\par ??        \}\par ??    \}\par ??\par ??    \cf3 public\cf0  \cf3 class\cf0  \cf4 ClassThatUsesValidators\par ??\cf0     \{\par ??        \cf3 private\cf0  \cf3 readonly\cf0  \cf4 IValidator\cf0 [] _validators;\par ??\par ??        \cf3 public\cf0  ClassThatUsesValidators(\cf4 IValidator\cf0 [] validators)\par ??        \{\par ??            _validators = validators;\par ??        \}\par ??\par ??        \cf3 public\cf0  \cf3 void\cf0  Write()\par ??        \{\par ??            \cf3 foreach\cf0  (\cf4 IValidator\cf0  validator \cf3 in\cf0  _validators)\par ??            \{\par ??                \cf4 Debug\cf0 .WriteLine(validator);\par ??            \}\par ??        \}\par ??    \}\par ??\par ??    [\cf4 TestFixture\cf0 ]\par ??    \cf3 public\cf0  \cf3 class\cf0  \cf4 ValidatorExamples\par ??\cf0     \{\par ??        \cf3 private\cf0  \cf4 Container\cf0  container;\par ??\par ??        [\cf4 SetUp\cf0 ]\par ??        \cf3 public\cf0  \cf3 void\cf0  SetUp()\par ??        \{\par ??            container = \cf3 new\cf0  \cf4 Container\cf0 (x =&gt;\par ??            \{\par ??                x.ForRequestedType&lt;\cf4 IValidator\cf0 &gt;().AddInstances(o =&gt;\par ??                \{\par ??                    o.OfConcreteType&lt;\cf4 Validator\cf0 &gt;().WithCtorArg(\cf5 "name"\cf0 ).EqualTo(\cf5 "Red"\cf0 ).WithName(\cf5 "Red"\cf0 );\par ??                    o.OfConcreteType&lt;\cf4 Validator\cf0 &gt;().WithCtorArg(\cf5 "name"\cf0 ).EqualTo(\cf5 "Blue"\cf0 ).WithName(\cf5 "Blue"\cf0 );\par ??                    o.OfConcreteType&lt;\cf4 Validator\cf0 &gt;().WithCtorArg(\cf5 "name"\cf0 ).EqualTo(\cf5 "Purple"\cf0 ).WithName(\cf5 "Purple"\cf0 );\par ??                    o.OfConcreteType&lt;\cf4 Validator\cf0 &gt;().WithCtorArg(\cf5 "name"\cf0 ).EqualTo(\cf5 "Green"\cf0 ).WithName(\cf5 "Green"\cf0 );\par ??                \});\par ??\par ??                x.ForRequestedType&lt;\cf4 ClassThatUsesValidators\cf0 &gt;().AddInstances(o =&gt;\par ??                \{\par ??                    \cf6 // Define an Instance of ClassThatUsesValidators that depends on AutoWiring\par ??\cf0                     o.OfConcreteType&lt;\cf4 ClassThatUsesValidators\cf0 &gt;().WithName(\cf5 "WithAutoWiring"\cf0 );\par ??\par ??                    \cf6 // Define an Instance of ClassThatUsesValidators that overrides AutoWiring\par ??\cf0                     o.OfConcreteType&lt;\cf4 ClassThatUsesValidators\cf0 &gt;().WithName(\cf5 "ExplicitArray"\cf0 )\par ??                        .TheArrayOf&lt;\cf4 IValidator\cf0 &gt;().Contains(y =&gt;\par ??                        \{\par ??                            y.TheInstanceNamed(\cf5 "Red"\cf0 );\par ??                            y.TheInstanceNamed(\cf5 "Green"\cf0 );\par ??                        \});\par ??                \});\par ??            \});\par ??        \}\par ??\par ??        [\cf4 Test\cf0 ]\par ??        \cf3 public\cf0  \cf3 void\cf0  what_are_the_validators()\par ??        \{\par ??            \cf4 Debug\cf0 .WriteLine(\cf5 "With Auto Wiring"\cf0 );\par ??            container.GetInstance&lt;\cf4 ClassThatUsesValidators\cf0 &gt;(\cf5 "WithAutoWiring"\cf0 ).Write();\par ??            \cf4 Debug\cf0 .WriteLine(\cf5 "================================="\cf0 );\par ??            \cf4 Debug\cf0 .WriteLine(\cf5 "With Explicit Configuration"\cf0 );\par ??            container.GetInstance&lt;\cf4 ClassThatUsesValidators\cf0 &gt;(\cf5 "ExplicitArray"\cf0 ).Write();\par ??        \}\par ??    \}}
 -->
@@ -454,8 +666,18 @@
 &nbsp;&nbsp;&nbsp; }</p>
         </div>
 <!--EndFragment-->
-<p>&nbsp;</p>
-        <p>&nbsp;</p>
+<p>The output of what_are_the_validators() is:</p>
+<pre>
+With Auto Wiring
+Name: Red
+Name: Blue
+Name: Purple
+Name: Green
+=================================
+With Explicit Configuration
+Name: Red
+Name: Green
+</pre>
         <hr />
 	</body>
 </html>

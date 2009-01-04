@@ -28,9 +28,7 @@ namespace StructureMap.Testing.Graph
                 });
             });
 
-            Debug.WriteLine(container.WhatDoIHave());
-
-            Assert.IsInstanceOfType(typeof (Convention), container.GetInstance<IConvention>());
+            container.GetInstance<IConvention>().ShouldBeOfType<Convention>();
         }
 
 

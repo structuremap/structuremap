@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
@@ -118,7 +119,8 @@ namespace StructureMap.Testing
         [Test]
         public void Iterate_over_pluginTypes_w_container()
         {
-            _container.Model.PluginTypes.Count().ShouldEqual(3);
+            // IContainer is always added to the Container
+            _container.Model.PluginTypes.Count().ShouldEqual(4);
         }
     }
 }

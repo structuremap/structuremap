@@ -225,5 +225,17 @@ namespace StructureMap
         void BuildUp(object target);
 
         void SetDefault(Type pluginType, Instance instance);
+
+        /// <summary>
+        /// Convenience method to request an object using an Open Generic
+        /// Type and its parameter Types
+        /// </summary>
+        /// <param name="templateType"></param>
+        /// <returns></returns>
+        /// <example>
+        /// IFlattener flattener1 = container.ForGenericType(typeof (IFlattener<>))
+        ///     .WithParameters(typeof (Address)).GetInstanceAs<IFlattener>();
+        /// </example>
+        Container.OpenGenericTypeExpression ForGenericType(Type templateType);
     }
 }

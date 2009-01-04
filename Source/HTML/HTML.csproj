@@ -65,7 +65,6 @@
     <Content Include="ModularConfiguration.htm" />
     <Content Include="Profiles.htm" />
     <Content Include="Scoping.htm" />
-    <Content Include="SmartInstance.htm" />
     <Content Include="UsingAttributes.htm" />
     <Content Include="AutoWiring.htm" />
     <Content Include="ConfiguringStructureMap.htm" />

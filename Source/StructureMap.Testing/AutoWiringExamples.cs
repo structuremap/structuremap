@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using NUnit.Framework;
 
 namespace StructureMap.Testing
@@ -82,6 +83,83 @@ namespace StructureMap.Testing
             Debug.WriteLine("=================================");
             Debug.WriteLine("With Explicit Configuration");
             container.GetInstance<ClassThatUsesValidators>("ExplicitArray").Write();
+        }
+
+        [Test]
+        public void demonstrate_session_identity()
+        {
+            var class3 = container.GetInstance<Class3>();
+            Debug.WriteLine(class3);
+        }
+
+        [Test]
+        public void demonstrate_session_identity_with_explicit_argument()
+        {
+            DataContext context = new DataContext();
+            Debug.WriteLine("The context being passed in is " + context);
+
+            var class3 = container.With(context).GetInstance<Class3>();
+            Debug.WriteLine(class3);
+        }
+
+
+        public class DataContext
+        {
+            private Guid _id = Guid.NewGuid();
+
+            public override string ToString()
+            {
+                return string.Format("Id: {0}", _id);
+            }
+        }
+
+        public class Class1
+        {
+            private readonly DataContext _context;
+
+            public Class1(DataContext context)
+            {
+                _context = context;
+            }
+
+            public override string ToString()
+            {
+                return string.Format("Class1 has Context: {0}", _context);
+            }
+        }
+
+        public class Class2
+        {
+            private readonly Class1 _class1;
+            private readonly DataContext _context;
+
+            public Class2(Class1 class1, DataContext context)
+            {
+                _class1 = class1;
+                _context = context;
+            }
+
+            public override string ToString()
+            {
+                return string.Format("Class2 has Context: {0}\n{1}", _context, _class1);
+            }
+        }
+
+        public class Class3
+        {
+            private readonly Class2 _class2;
+            private readonly DataContext _context;
+
+            public Class3(Class2 class2, DataContext context)
+            {
+                _class2 = class2;
+                _context = context;
+            }
+
+            public override string ToString()
+            {
+                return string.Format("Class3 has Context: {0}\n{1}", _context, _class2);
+            }
         }
     }
 }

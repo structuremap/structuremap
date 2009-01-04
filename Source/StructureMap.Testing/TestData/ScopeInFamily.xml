@@ -24,8 +24,13 @@
 			
 
 			
-	<PluginFamily Type="StructureMap.Testing.Widget.Column" Assembly="StructureMap.Testing.Widget" DefaultKey="" Scope="ThreadLocal">
-		<Source Type="XmlFile" FilePath="FullTesting.XML" XPath="Columns" NodeName="Columns" />
+	<PluginFamily 
+    Type="StructureMap.Testing.Widget.Column" 
+    Assembly="StructureMap.Testing.Widget" 
+    DefaultKey="" 
+    Scope="ThreadLocal">
+		
+    <Source Type="XmlFile" FilePath="FullTesting.XML" XPath="Columns" NodeName="Columns" />
 	</PluginFamily>
 			
 			

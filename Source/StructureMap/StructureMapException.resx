@@ -265,4 +265,7 @@
   <data name="231" xml:space="preserve">
     <value>Cannot use the "TheDefaultIsConcreteType" method with an object that has primitive constructor arguments.  Use the "TheDefault.Is.OfConcreteType&lt;T&gt;()" method instead and specify the primitive constructor arguments</value>
   </data>
+  <data name="285" xml:space="preserve">
+    <value>Only open generic types can be used in the call to Container.ForGenericType(type)</value>
+  </data>
 </root>

@@ -341,7 +341,9 @@
     <Compile Include="Pipeline\ConditionalInstanceTester.cs" />
     <Compile Include="Pipeline\ConfiguredInstanceTester.cs" />
     <Compile Include="Pipeline\ConstructorInstanceTester.cs" />
+    <Compile Include="Pipeline\ContainerIsInTheContainerTester.cs" />
     <Compile Include="Pipeline\DefaultInstanceTester.cs" />
+    <Compile Include="Pipeline\GenericsHelperExpressionTester.cs" />
     <Compile Include="Pipeline\HybridBuildPolicyTester.cs" />
     <Compile Include="Pipeline\InstanceTester.cs" />
     <Compile Include="Pipeline\LiteralInstanceTester.cs" />
@@ -372,6 +374,7 @@
     </Compile>
     <Compile Include="TestUtility.cs" />
     <Compile Include="Diagnostics\ValidationBuildSessionTester.cs" />
+    <Compile Include="TypeExtensionsTester.cs" />
     <Compile Include="XmlWriting\ElementChecker.cs">
       <SubType>Code</SubType>
     </Compile>
