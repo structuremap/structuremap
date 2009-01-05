@@ -204,8 +204,9 @@
 <!--EndFragment-->
 <p>IContext exposes a property for the full BuildStack, but also exposes some 
     convenience methods for getting at the immediate parent type.&nbsp; The driver 
-    for this property was a request to recreate the Logging Facility from 
-    Windsor[LINK].&nbsp; Let&#39;s say that you want some sort of generic setter policy 
+    for this property was a request to recreate the 
+    <a href="http://www.castleproject.org/container/facilities/v1rc3/logging/index.html">Logging Facility from 
+    Windsor</a>.&nbsp; Let&#39;s say that you want some sort of generic setter policy 
     for logging.&nbsp; Any time StructureMap builds an object and sees a public 
     settable property of your &quot;ILogger&quot; instance, it should use the type of being 
     created to find the properly configured ILogger and then attach that new ILogger 
@@ -238,8 +239,8 @@
 	    <p>The IContext interface will allow you to use the instance name that was requested 
             in a call to Container.GetInstance&lt;T&gt;(name) or 
             ObjectFactory.GetNamedInstance&lt;T&gt;(name).&nbsp; The most common usage is probably 
-            going to be within the new &quot;Missing Instance[LINK]&quot; feature (inspired by the 
-            Missing Method feature of dynamic languages like Ruby[LINK]).&nbsp;&nbsp; The 
+            going to be within the new &quot;<a href="RegistryDSL.htm">Missing Instance</a>&quot; feature (inspired by the 
+            Missing Method feature of dynamic languages like Ruby).&nbsp;&nbsp; The 
             immediate way that my team is going to use the Missing Instance functionality is 
             to build an object for localization support based on the requested culture.&nbsp; </p>
         <p>Here&#39;s an example of using Missing Instance that queries the 
@@ -292,7 +293,7 @@
 	    <h2>Retrieving a Service from IContext</h2>
 	    <p>You can also retrieve other services from the IContext during object 
             construction.&nbsp; Because the underlying BuildSession manages the 
-            AutoWiring[LINK], you can generally assume that you&#39;re using the exact same 
+            <a href="AutoWiring.htm">Auto Wiring</a>, you can generally assume that you&#39;re using the exact same 
             object instance for a PluginType that other objects in the same object graph 
             will receive.&nbsp; That&#39;s a helpful feature when you&#39;re talking about using 
             View&#39;s within any type of desktop application or any kind of NHibernate object 
@@ -338,7 +339,7 @@
         <p style="margin: 0px">
             The IContext.GetInstance&lt;T&gt;() function will also allow you to retrieve objects 
             explicitly passed into the Container through the Container.With&lt;T&gt;(T 
-            target).GetInstance() methods[LINK].</p>
+            target).GetInstance() methods.</p>
 <hr />
 	    <h2>Registering a Service with IContext</h2>
 	    <p>You can alter the underlying BuildSession and control all following Dependency 

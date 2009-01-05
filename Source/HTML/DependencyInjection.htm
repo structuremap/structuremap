@@ -1,0 +1,1076 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+	<head>
+		<title>Dependency Injection - What is it, and what is it good for?</title>
+		<link rel="stylesheet" type="text/css" href="style.css" />
+		<script type="text/javascript" src="jquery-1.2.6.js"></script>
+		<script type="text/javascript" src="structuremap.js"></script>
+	    <style type="text/css">
+            .style1
+            {
+                font-weight: normal;
+            }
+        </style>
+	</head>
+	<body>
+	
+	    <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            This was originally posted on 
+            <a href="http://codebetter.com/blogs/jeremy.miller/archive/2005/10/06/132825.aspx">Jeremy&#39;s blog</a> way back in 2005.&nbsp; A few things 
+            have changed, specifically the possibility of using mocking tools that can mock 
+            concrete classes and mock without using Dependency Injection (DI) -- but Jeremy 
+            still thinks it&#39;s much cleaner to use DI ;-)</p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            &nbsp;</p>
+        <h2 style="margin: 0in 0in 0pt;">
+            Dependency Injection</h2>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            &nbsp;</p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            Dependency Injection is a specific usage of the larger
+            <a href="InversionOfControl.htm">Inversion of Control</a> concept.<span style="">&nbsp; </span>In a nutshell, dependency injection 
+            just means that a given class or system is no longer responsible for 
+            instantiating their own dependencies.<span style="">&nbsp; </span>In this case 
+            “Inversion of Control” refers to moving the responsibility for locating and 
+            attaching dependency objects to another class or a DI tool.<span style="">&nbsp;
+            </span>That might not sound that terribly profound, but it opens the door for a 
+            lot of interesting scenarios.</p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <o:p>&nbsp;</o:p></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            While there’s a fair amount of unnecessary buzz and hype about the concept, I’ve 
+            found Dependency Injection to be very advantageous for doing Test Driven 
+            Development without pulling your hair out.<span style="">&nbsp; </span>If you’ve 
+            seen articles or blog posts about Dependency Injection but don’t quite 
+            internalize the value of DI yet, here are the facts as I see them:</p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <o:p>&nbsp;</o:p></p>
+        <ol style="margin-top: 0in;" type="1">
+            <li class="MsoNormal" style="margin: 0in 0in 0pt;">Dependency Injection is an 
+                important pattern for creating classes that are easier to unit test in isolation</li>
+            <li class="MsoNormal" style="margin: 0in 0in 0pt;">Promotes loose coupling between 
+                classes and subsystems </li>
+            <li class="MsoNormal" style="margin: 0in 0in 0pt;">Adds potential flexibility to a 
+                codebase for future changes</li>
+            <li class="MsoNormal" style="margin: 0in 0in 0pt;">Can enable better code reuse</li>
+            <li class="MsoNormal" style="margin: 0in 0in 0pt;"><b style="">The implementation is 
+                simple and does *not* require a fancy DI tool<o:p></o:p></b></li>
+        </ol>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <o:p>&nbsp;</o:p></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            The <a href="http://picocontainer.org/" mce_href="http://picocontainer.org/">
+            PicoContainer</a> team even has silly tee shirts printed up that say “I expected 
+            a paradigm shift, but all I got was a lousy constructor function.”<span 
+                style="">&nbsp; </span>DI is certainly a case where a minimum of effort 
+            supplies quite a bit of benefit.<span style="">&nbsp; </span>Don’t blow it off 
+            just because it seems trivial.<span style="">&nbsp; </span>
+        </p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <o:p>&nbsp;</o:p></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            There are tools out there that do Dependency Injection in .Net.<span style="">&nbsp;
+            </span>I use my own tool called <a href="http://structuremap.sourceforge.net/" 
+                mce_href="http://structuremap.sourceforge.net/">StructureMap</a> in my 
+            development, but I’m going to focus on only the concept of DI in this post.</p>
+        <hr />
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <o:p>&nbsp;</o:p></p>
+        <h2 style="margin: 0in 0in 0pt;">
+            <b style="">Example Problem<o:p></o:p></b></h2>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <b style=""><o:p>&nbsp;</o:p></b></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            My first experience with conscious usage of DI was a WinForms client 
+            communicating with the backend via web services that was built with the
+            <a href="http://codebetter.com/blogs/jeremy.miller/articles/129546.aspx" 
+                mce_href="http://codebetter.com/blogs/jeremy.miller/articles/129546.aspx">
+            Model View Presenter</a> (“Humble Dialog Box”) architecture for easier unit 
+            testing.<span style="">&nbsp; </span>Most screens in the client end up with 
+            something like this set of classes:</p>
+        <ul style="margin-top: 0in;" type="disc">
+            <li class="MsoNormal" style="margin: 0in 0in 0pt;">Model – Whatever business 
+                object/DataSet/chunk of data is being displayed or edited</li>
+            <li class="MsoNormal" style="margin: 0in 0in 0pt;">View – A WinForms UserControl 
+                class.<span style="">&nbsp; </span>Displays data to a user and captures user input 
+                and screen events (duh).</li>
+            <li class="MsoNormal" style="margin: 0in 0in 0pt;">Service – A web service proxy 
+                class to send requests to the backend</li>
+            <li class="MsoNormal" style="margin: 0in 0in 0pt;">Presenter – The controller class 
+                that coordinates all of the above.</li>
+        </ul>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <o:p>&nbsp;</o:p></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            The presenter class without Dependency Injection might look like this.</p>
+            <div class="code-sample">
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <o:p>&nbsp;</o:p></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> <span style="color: blue;">class</span> 
+            Presenter<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>{<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">private</span> View _view;<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">private</span> Model _model;<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><o:p>&nbsp;</o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> Presenter(){}<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><o:p>&nbsp;</o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> <span style="color: blue;">
+            object</span> CreateView(Model model)<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>{<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>_model = model;<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>_view = <span style="color: blue;">new</span> View();<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>_view.DisplayModel(model);<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><o:p>&nbsp;</o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">return</span> _view;<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>}<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><o:p>&nbsp;</o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> <span style="color: blue;">void</span> 
+            Close()<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>{<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">bool</span> canClose =
+            <span style="color: blue;">true</span>;<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><o:p></o:p></span>
+        </p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">if</span> (_view.IsDirty())<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>{<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>canClose = _view.CanCloseDirtyScreen();<span style="">&nbsp;&nbsp; </span><o:p></o:p>
+            </span>
+        </p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>}<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><o:p>&nbsp;</o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">if</span> (canClose)<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>{<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>_view.Close();<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>}<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>}<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><o:p>&nbsp;</o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> <span style="color: blue;">void</span> 
+            Save()<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>{<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>Service service = <span style="color: blue;">new</span> Service();<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>service.Persist(_model);<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>}<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>}</span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <o:p>&nbsp;</o:p></p>
+            
+</div>
+            
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            &nbsp;</p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            This code cannot be unit tested in isolation because it has a tight coupling to 
+            a concrete implementation of both the WinForms UserControl (View) and the proxy 
+            class to a web service (Service).<span style="">&nbsp; </span>This code as is 
+            cannot function without both the User Interface and a web server running the 
+            backend.<span style="">&nbsp;&nbsp; </span>The point of using the MVP is to 
+            isolate most of the user interface logic away from the WinForms and web service 
+            mechanics to enable effective unit testing, so we’re missing something here.<span 
+                style="">&nbsp; </span>To unit test the presenter logic we’d like to replace 
+            the user interface and web service dependencies with a
+            <a href="http://martinfowler.com/articles/mocksArentStubs.html" 
+                mce_href="http://martinfowler.com/articles/mocksArentStubs.html">Mock</a> 
+            object inside our test fixture classes.<span style="">&nbsp; </span>In order to 
+            mock the view and service, we first need to use the
+            <a href="http://codebetter.com/blogs/jeremy.miller/articles/129543.aspx" 
+                mce_href="http://codebetter.com/blogs/jeremy.miller/articles/129543.aspx">
+            Dependency Inversion Principle</a> to make the
+            <span style="font-family: 'Courier New';">Presenter</span> class depend on an 
+            abstracted <span style="font-family: 'Courier New';">IView</span> and
+            <span style="font-family: 'Courier New';">IService</span> interface instead of 
+            the concrete <span style="font-family: 'Courier New';">UserControl</span> and
+            <span style="font-family: 'Courier New';">WebProxy</span> classes.<span 
+                style="">&nbsp; </span>The next thing to do is to alter the
+            <span style="font-family: 'Courier New';">Presenter</span> class so that we can 
+            substitute at run time the mock objects instead of the concrete classes within 
+            the unit tests.<span style="">&nbsp; </span>This is where Dependency Injection 
+            comes into play.</p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <o:p>&nbsp;</o:p></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            There are a couple of different flavors of Dependency Injection (via
+            <a href="http://martinfowler.com/articles/injection.html" 
+                mce_href="http://martinfowler.com/articles/injection.html">Martin Fowler</a> 
+            + the Pico guys)</p>
+        <ol style="margin-top: 0in;" type="1">
+            <li class="MsoNormal" style="margin: 0in 0in 0pt;">Constructor Injection – Attach 
+                the dependencies through a constructor function at object creation</li>
+            <li class="MsoNormal" style="margin: 0in 0in 0pt;">Setter Injection – Attach the 
+                dependencies through setter properties</li>
+            <li class="MsoNormal" style="margin: 0in 0in 0pt;">Interface Injection – This is an 
+                odd duck.<span style="">&nbsp; </span>I’ve never used it or seen this used.<span 
+                    style="">&nbsp; </span>I suspect its usage is driven by specific DI tools in the 
+                Java world.</li>
+            <li class="MsoNormal" style="margin: 0in 0in 0pt;">Service Locator – Use a well 
+                known class that knows how to retrieve and create dependencies.<span style="">&nbsp;
+                </span>Not technically DI, but this is what most DI/IoC container tools really 
+                do. </li>
+        </ol>
+        <hr />
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <o:p>&nbsp;</o:p></p>
+        <h2 style="margin: 0in 0in 0pt;">
+            <b style=""><span class="style1">Constructor Injection</span><o:p></o:p></b></h2>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <b style=""><o:p>&nbsp;</o:p></b></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            My preference is to use the “Constructor Injection” flavor of DI.<span style="">&nbsp;
+            </span>The mechanism here is pretty simple; just push the dependencies in 
+            through the constructor function.<span style="">&nbsp; </span>
+        </p>
+   <div class="code-sample">
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <o:p>&nbsp;</o:p></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> <span style="color: blue;">class</span> 
+            Presenter<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>{<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">private</span> IView _view;<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">private</span> Model _model;<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">private</span> IService _service;<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><o:p>&nbsp;</o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> Presenter(IView view, IService 
+            service)<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>{<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>_view = view;<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>_service = service;<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>}<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><o:p>&nbsp;</o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> <span style="color: blue;">
+            object</span> CreateView(Model model){…}<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> <span style="color: blue;">void</span> 
+            Close(){…}<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> <span style="color: blue;">void</span> 
+            Save(){…}<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>}<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><o:p>&nbsp;</o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>[TestFixture]<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> <span style="color: blue;">class</span> 
+            PresenterTestFixture<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>{<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">private</span> IMock _serviceMock;<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">private</span> IMock _viewMock;<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">private</span> Presenter _presenter;<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><o:p>&nbsp;</o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>[SetUp]<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> <span style="color: blue;">void</span> 
+            SetUp()<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>{<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: green;">// Create the dynamic mock classes for 
+            IService and IView<o:p></o:p></span></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>_serviceMock = <span style="color: blue;">new</span> DynamicMock(<span 
+                style="color: blue;">typeof</span>(IService));<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>_viewMock = <span style="color: blue;">new</span> DynamicMock(<span 
+                style="color: blue;">typeof</span>(IView));<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><o:p>&nbsp;</o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: green;">// Create an instance of the Presenter class 
+            using the mock objects<o:p></o:p></span></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>_presenter = <span style="color: blue;">new</span> Presenter(<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>(IView) _viewMock.MockInstance, <o:p></o:p></span>
+        </p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>(IService) _serviceMock.MockInstance);<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>}<span style="">&nbsp;&nbsp;&nbsp;&nbsp; </span><o:p></o:p></span>
+        </p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>}</span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <o:p>&nbsp;</o:p></p>
+  </div>
+            
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            &nbsp;</p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            One of the benefits of using Constructor Injection is that the constructor 
+            function now explicitly declares the dependencies of a class.<span style="">&nbsp;
+            </span>I also thing Constructor Injection makes it easier for other developers 
+            to use your class because it expresses a contract.<span style="">&nbsp; </span>
+            Give the class what it needs in its constructor function and it should be ready 
+            to function.<span style="">&nbsp; </span>It’s usually a best practice to create 
+            a valid object in as few steps as possible for ease of use.<span style="">&nbsp;
+            </span>Using Constructor Injection also allows you to maintain more 
+            encapsulation by eliminating the need to expose getter and setter properties for 
+            dependencies like the <span style="font-family: 'Courier New';">IService</span> 
+            interface that are immutable.</p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            &nbsp;<o:p>&nbsp;</o:p></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            Exposing the dependencies in a constructor function is arguably a violation of 
+            encapsulation because now a client of <span style="font-family: 'Courier New';">
+            Presenter</span> would have to create instances of
+            <span style="font-family: 'Courier New';">IView</span> and
+            <span style="font-family: 'Courier New';">IService</span> first before calling 
+            the constructor function.<span style="">&nbsp; </span>To get around this issue I 
+            usually suggest a compromise.<span style="">&nbsp; </span>Create a second no 
+            argument constructor that builds the default instances for clients of
+            <span style="font-family: 'Courier New';">Presenter</span> to use.<span 
+                style="">&nbsp; </span>The “full” constructor is usually commented as a 
+            testing constructor.<span style="">&nbsp; </span>Some people think this pattern 
+            is evil redundancy, but it gets the job done.</p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <o:p>&nbsp;</o:p></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: green;">// Testing constructor<o:p></o:p></span></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> Presenter(IView view, IService 
+            service)<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>{<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>_view = view;<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>_service = service;<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>}<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><o:p>&nbsp;</o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: green;">// Default constructor<o:p></o:p></span></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> Presenter() :
+            <span style="color: blue;">this</span>(<span style="color: blue;">new</span> 
+            View(), <span style="color: blue;">new</span> Service()){}</span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <b style=""><o:p>&nbsp;</o:p></b></p>
+        <hr />
+        <h2 style="margin: 0in 0in 0pt;">
+            <b style=""><span class="style1">Setter Injection</span><o:p></o:p></b></h2>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <o:p>&nbsp;</o:p></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            Setter injection is just creating a setter property to replace a dependency on a 
+            previously instantiated object.<span style="">&nbsp; </span>I don’t like Setter 
+            Injection because it requires extra, hidden steps to prepare an object to 
+            execute.<span style="">&nbsp; </span>I’ve been burned a couple times in the last 
+            year when I’ve inherited some code that depended on setters to set up 
+            dependencies.<span style="">&nbsp; </span>That being said, Setter Injection does 
+            work and is often necessary when you’re dealing with existing code.<span 
+                style="">&nbsp; </span>Michael Feathers recommends using Setter Injection as 
+            a dependency breaking technique for legacy code when a dependency is too 
+            difficult to expose through a constructor.</p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <o:p>&nbsp;</o:p></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            Here’s the <span style="font-family: 'Courier New';">Presenter</span> class 
+            using Setter Injection.
+        </p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <o:p>&nbsp;</o:p></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> <span style="color: blue;">class</span> 
+            Presenter<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>{<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">private</span> IView _view;<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">private</span> Model _model;<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">private</span> IService _service;<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><o:p>&nbsp;</o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> Presenter()<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>{<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>_view = <span style="color: blue;">new</span> View();<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>_service = <span style="color: blue;">new</span> Service();<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>}<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><o:p>&nbsp;</o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> IView View<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>{<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">get</span> { <span style="color: blue;">return</span> 
+            _view; }<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">set</span> { _view =
+            <span style="color: blue;">value</span>; }<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>}<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><o:p>&nbsp;</o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> IService Service<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>{<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">get</span> { <span style="color: blue;">return</span> 
+            _service; }<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">set</span> { _service =
+            <span style="color: blue;">value</span>; }<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>}<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><o:p>&nbsp;</o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> <span style="color: blue;">
+            object</span> CreateView(Model model){…}<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> <span style="color: blue;">void</span> 
+            Close(){…}<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> <span style="color: blue;">void</span> 
+            Save(){…}<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>}<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><o:p>&nbsp;</o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>[TestFixture]<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> <span style="color: blue;">class</span> 
+            PresenterTestFixture<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>{<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">private</span> IMock _serviceMock;<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">private</span> IMock _viewMock;<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">private</span> Presenter _presenter;<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><o:p>&nbsp;</o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>[SetUp]<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> <span style="color: blue;">void</span> 
+            SetUp()<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>{<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: green;">// Create the dynamic mock classes for 
+            IService and IView<o:p></o:p></span></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>_serviceMock = <span style="color: blue;">new</span> DynamicMock(<span 
+                style="color: blue;">typeof</span>(IService));<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>_viewMock = <span style="color: blue;">new</span> DynamicMock(<span 
+                style="color: blue;">typeof</span>(IView));<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><o:p>&nbsp;</o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: green;">// Create an instance of the Presenter class<o:p></o:p></span></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>_presenter = <span style="color: blue;">new</span> Presenter();<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><o:p>&nbsp;</o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: green;">// Attach the Mock objects<o:p></o:p></span></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>_presenter.View = (IView) _viewMock.MockInstance;<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>_presenter.Service = (IService) _serviceMock.MockInstance;<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>}<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>}<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><o:p>&nbsp;</o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            Here’s a variation on Setter Injection I’ve seen other teams use.<span style="">&nbsp;
+            </span>In the getter of the property, just create the default instance of the 
+            dependency if it hasn’t been created.<span style="">&nbsp; </span>I don’t like 
+            this approach because it hides the dependencies of a class.<span style="">&nbsp;
+            </span>I think this is creating “Mystery Meat” dependencies and brittle code.<span 
+                style="">&nbsp; </span>In practice I thought that this made it difficult to 
+            retrofit unit tests into existing code.<span style="">&nbsp; </span>Of course, 
+            retrofitting unit tests onto existing code is always hard so maybe that’s really 
+            not a drawback.</p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <o:p>&nbsp;</o:p></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: green;">// Always access the _view field through the 
+            Property</span></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> IView View<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>{<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">get<o:p></o:p></span></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>{<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">if</span> (_view == <span style="color: blue;">
+            null</span>)<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>{<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>_view = <span style="color: blue;">new</span> View();<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>}<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><o:p></o:p></span>
+        </p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">return</span> _view;<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>}<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">set</span> { _view =
+            <span style="color: blue;">value</span>; }<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>}</span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <o:p>&nbsp;</o:p></p>
+        <hr />
+        <h2 style="margin: 0in 0in 0pt;">
+            <b style=""><span class="style1">Service Locator</span><o:p></o:p></b></h2>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <b style=""><o:p>&nbsp;</o:p></b></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            An alternative to using Dependency Injection is to use a Service Locator to 
+            fetch the dependency objects.<span style="">&nbsp; </span>Using a Service 
+            Locator creates a level of indirection between a class and its dependencies.<span 
+                style="">&nbsp; </span>Here’s a version of the
+            <span style="font-family: 'Courier New';">Presenter</span> class that gets its
+            <span style="font-family: 'Courier New';">IView</span> and
+            <span style="font-family: 'Courier New';">IService</span> dependencies by asking 
+            StructureMap’s <span style="font-family: 'Courier New';">ObjectFactory</span> 
+            class for the default type and configuration of
+            <span style="font-family: 'Courier New';">IView</span> and
+            <span style="font-family: 'Courier New';">IService</span>.<span style="">&nbsp;
+            </span>While it is generally possible to use the Service Locator to return mock 
+            or stub objects inside test fixtures, I would still prefer to leave a testing 
+            constructor so the unit tests can be simpler.<span style="">&nbsp; </span>I find 
+            that using a Service Locator within a unit test can be confusing because it’s 
+            not clear where the mock object is used.</p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <b style=""><o:p>&nbsp;</o:p></b></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> <span style="color: blue;">class</span> 
+            Presenter<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>{<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">private</span> IView _view;<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">private</span> Model _model;<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">private</span> IService _service;<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><o:p>&nbsp;</o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> Presenter()<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>{<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: green;">// Call to StructureMap to fetch the default 
+            configurations of IView and IService<o:p></o:p></span></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>_view = (IView) StructureMap.ObjectFactory.GetInstance(<span 
+                style="color: blue;">typeof</span>(IView));<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>_service = (IService) StructureMap.ObjectFactory.GetInstance(<span 
+                style="color: blue;">typeof</span>(IService));<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>}<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> <span style="color: blue;">
+            object</span> CreateView(Model model){…}<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> <span style="color: blue;">void</span> 
+            Close(){…}<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> <span style="color: blue;">void</span> 
+            Save(){…}<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><o:p>&nbsp;</o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>}<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><o:p>&nbsp;</o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            I’ve seen several teams go their own way to create custom Service Locator’s, 
+            usually with a Singleton like this.</p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <o:p>&nbsp;</o:p></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> <span style="color: blue;">class</span> 
+            ServiceFactory<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>{<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">private</span> <span style="color: blue;">
+            static</span> IService _instance = <span style="color: blue;">new</span> 
+            Service();<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><o:p>&nbsp;</o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">private</span> ServiceFactory(){}<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><o:p>&nbsp;</o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> <span style="color: blue;">
+            static</span> IService GetInstance()<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>{<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">return</span> _instance;<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>}<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><o:p>&nbsp;</o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: green;">// Used to register mock or stub instances in 
+            place of <o:p></o:p></span></span>
+        </p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: green;">// the concrete Service class</span><o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> <span style="color: blue;">
+            static</span> <span style="color: blue;">void</span> RegisterInstance(IService 
+            instance)<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>{<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>_instance = instance;<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>}<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>}<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <o:p>&nbsp;</o:p></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            I detest this pattern and I’ve been eliminating this from my team’s primary 
+            product.<span style="">&nbsp; </span>There are just too many opportunities to 
+            screw up your tests by not having isolated unit tests.<span style="">&nbsp;
+            </span>It’s also unnecessary because there are existing tools specifically for 
+            this.</p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <o:p>&nbsp;</o:p></p>
+        <hr />
+        <h2 style="margin: 0in 0in 0pt;">
+            <span style="">Good for More than Unit Testing<o:p></o:p></span></h2>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <b style=""><o:p>&nbsp;</o:p></b></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            I’ve focused almost entirely on the value of Dependency Injection for unit 
+            testing and I’ve even bitterly referred to using DI as “Mock Driven Design.”<span 
+                style="">&nbsp; </span>That’s not the whole story though.<span style="">&nbsp;
+            </span>One of original usages for Dependency Injection was to provide smoother 
+            migration paths away from legacy code.<span style="">&nbsp; </span>One 
+            evolutionary approach to replacing legacy code is the “<a 
+                href="http://www.martinfowler.com/bliki/StranglerApplication.html" 
+                mce_href="http://www.martinfowler.com/bliki/StranglerApplication.html">Strangler</a>” 
+            approach.<span style="">&nbsp; </span>Making sure that any new code that depends 
+            on undesirable legacy code uses Dependency Injection leaves an easier migration 
+            path to eliminate the legacy code later with all new code.</p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <o:p>&nbsp;</o:p></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> <span style="color: blue;">
+            interface</span> IDataService{}<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><o:p>&nbsp;</o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: green;">// Now<o:p></o:p></span></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> <span style="color: blue;">class</span> 
+            ProxyToNastyLegacyDataService : IDataService{}<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><o:p>&nbsp;</o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: green;">// Later<o:p></o:p></span></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> <span style="color: blue;">class</span> 
+            CleanNewCodeDataService : IDataService{}<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><o:p>&nbsp;</o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> <span style="color: blue;">class</span> 
+            StranglerApplication<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>{<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> 
+            StranglerApplication(IDataService dataService){}<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>}</span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <o:p>&nbsp;</o:p></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            Another benefit of Dependency Injection is increasing the potential for reuse 
+            later.<span style="">&nbsp; </span>Going back to the MVP architecture, what if 
+            you need to replace the heavy WinForms client with an ASP.NET system?<span 
+                style="">&nbsp; </span>The <span style="font-family: 'Courier New';">View</span> 
+            is obviously useless, and I think it’s probably silly to use a Web Service when 
+            a local class will do for the <span style="font-family: 'Courier New';">IService</span> 
+            implementation.<span style="">&nbsp; </span>We can potentially reuse the 
+            Presenter class; just inject a different implementation for both
+            <span style="font-family: 'Courier New';">IView</span> and
+            <span style="font-family: 'Courier New';">IService</span>.</p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <o:p>&nbsp;</o:p></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> <span style="color: blue;">class</span> 
+            ASPNetView : System.Web.UI.UserControl, IView<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>{<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; color: blue; font-family: 'Courier New';">
+            <span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>…<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>}<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><o:p>&nbsp;</o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> <span style="color: blue;">class</span> 
+            LocalService : IService<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>{<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">…</span><o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>}<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><o:p>&nbsp;</o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> <span style="color: blue;">class</span> 
+            WebClientMasterController<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>{<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> <span style="color: blue;">void</span> 
+            CreateView(Page page)<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>{<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>ASPNetView view = (ASPNetView) page.Controls[0];<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>Model model = <span style="color: blue;">this</span>.GetModel();<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><o:p>&nbsp;</o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>IService service = <span style="color: blue;">new</span> LocalService();<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><o:p>&nbsp;</o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: green;">// Presenter can work with a different 
+            concrete implementation of<o:p></o:p></span></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: green;">// IView and IService</span><o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>Presenter presenter = <span style="color: blue;">new</span> 
+            Presenter(view, service);<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>presenter.CreateView(model);<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>}<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><o:p>&nbsp;</o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><span style="color: blue;">public</span> Model GetModel(){<span 
+                style="color: blue;">return</span> <span style="color: blue;">new</span> 
+            Model();}<o:p></o:p></span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <span style="font-size: 10pt; font-family: 'Courier New';"><span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>}</span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            &nbsp;</p>
+        <hr />
+        <h2 style="margin: 0in 0in 0pt;">
+            <span style="">Using a Dependency Injection Tool<o:p></o:p></span></h2>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            &nbsp;</p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            Using Dependency Injection potentially adds some overhead to using the classes 
+            that don’t create their own dependencies.<span style="">&nbsp; </span>This is 
+            where one of the Dependency Injection tools can pay large dividends by handling 
+            this mechanical work and creating some indirection between clients and 
+            dependencies.<span style="">&nbsp; </span></p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            &nbsp;</p>
+        <p class="MsoNormal" style="margin: 0in 0in 0pt;">
+            <b style="">Links<o:p></o:p></b></p>
+        <ul type="disc">
+            <li class="MsoNormal" style="margin: 0in 0in 0pt;">The canonical article on 
+                Dependency Injection is from
+                <a href="http://martinfowler.com/articles/injection.html" 
+                    mce_href="http://martinfowler.com/articles/injection.html">Martin Fowler</a>.<b 
+                    style=""><o:p></o:p></b></li>
+            <li class="MsoNormal" style="margin: 0in 0in 0pt;">I have some other information on 
+                the <a href="http://structuremap.sourceforge.net/" 
+                    mce_href="http://structuremap.sourceforge.net/">StructureMap</a> website<b 
+                    style=""><o:p></o:p></b></li>
+            <li class="MsoNormal" style="margin: 0in 0in 0pt;">
+                <a href="http://picocontainer.org/" mce_href="http://picocontainer.org/">
+                http://PicoContainer.org</a> has some good information<b style=""><o:p></o:p></b></li>
+            <li class="MsoNormal" style="margin: 0in 0in 0pt;"><st1:place w:st="on"><st1:city w:st="on">
+                Griffin</st1:city></st1:place> Caprio (of Spring.Net) on
+                <a href="http://msdn.microsoft.com/msdnmag/issues/05/09/DesignPatterns/default.aspx" 
+                    mce_href="http://msdn.microsoft.com/msdnmag/issues/05/09/DesignPatterns/default.aspx">
+                MSDN Magazine</a><b style=""><o:p></o:p></b></li>
+            <li class="MsoNormal" style="margin: 0in 0in 0pt;">J.B. Rainsberger in
+                <a href="http://www.diasparsoftware.com/articles/DependencyInjection.pdf" 
+                    mce_href="http://www.diasparsoftware.com/articles/DependencyInjection.pdf">
+                Better Software</a> <b style=""><o:p></o:p></b></li>
+        </ul>
+	
+	</body>
+</html>

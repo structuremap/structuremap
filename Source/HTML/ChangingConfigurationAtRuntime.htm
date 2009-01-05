@@ -259,8 +259,8 @@ On its maiden cruise in 2004, my team quickly realized that we needed a way to
         functionality in favor of the simple ObjectFactory/Container.Inject&lt;T&gt;(T object) 
         methods.</p>
         <p>My strong advice is to not use the Container or ObjectFactory in unit tests in 
-            the mass majority of cases.&nbsp; Rather, my advice is to use simple Dependency 
-            Injection[LINK] to inject mock objects during unit tests.&nbsp; However, there 
+            the mass majority of cases.&nbsp; Rather, my advice is to use simple
+            <a href="DependencyInjection.htm">Dependency Injection</a> to inject mock objects during unit tests.&nbsp; However, there 
             are still times when you want or need a class to use the Container or 
             ObjectFactory itself to get dependencies at runtime.&nbsp; For that case, here 
             is a sample:</p>

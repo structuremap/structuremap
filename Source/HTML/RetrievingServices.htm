@@ -10,7 +10,7 @@
 	<p>Assuming that StructureMap has been configured with all the services and 
         components that your system needs, it&#39;s time to actually get to these services.&nbsp; 
         In normal usage, most service retrieval is done through the static ObjectFactory 
-        class, but the same functionality is available through the Container class[LINK] 
+        class, but the same functionality is available through the Container class 
         by itself.&nbsp; </p>
 	    <h2>
             Get a Service by PluginType</h2>
@@ -45,13 +45,13 @@
 </div>
 <!--EndFragment-->
 <p style="margin: 0px">
-    If there is only one Instance[LINK] for a registered PluginType, that Instance will be assumed to 
+    If there is only one <a href="Glossary.htm">Instance</a> for a registered PluginType, that Instance will be assumed to 
             be the default for the PluginType.&nbsp; Otherwise, if there is more than one 
             Instance for a PluginType, StructureMap must be explicitly told which Instance 
             is the default, otherwise the call to GetInstance() will throw an exception 
             (202).&nbsp; If a call to GetInstance() is made for a concrete type that is not 
             configured, StructureMap will attempt to create a new instance of this class.&nbsp; 
-            See Concrete Types for more information[LINK].</p>
+            See <a href="RetrievingServices.htm">Concrete Types</a> for more information.</p>
 <hr />
     <h2>Get a Service by PluginType and Name</h2>
     
@@ -239,9 +239,10 @@
         StructureMap to construct the class and &quot;fill&quot; it with any of its dependencies.&nbsp; 
         I&#39;ve used this functionality in the past on large desktop clients for 
         configuring navigation and menu commands.&nbsp; In my desktop clients I use the 
-        Application Controller pattern [LINK] to govern screen activation throughout the 
+        <a href="http://martinfowler.com/eaaCatalog/applicationController.html">Application Controller</a> pattern to govern screen activation throughout the 
         entire system.&nbsp; Various screen elements can open new screens by telling the 
-        ApplicationController service to activate a new Presenter[LINK].&nbsp; Let&#39;s say 
+        ApplicationController service to activate a new 
+        <a href="http://msdn.microsoft.com/en-us/magazine/cc188690.aspx">Presenter</a>.&nbsp; Let&#39;s say 
         that I have a screen for configuring shipments in the system.&nbsp; That screen 
         is managed by the ShippingScreenPresenter shown below:</p>
 <!--
@@ -335,9 +336,7 @@
     ObjectFactory.GetInstance&lt;ShippingScreenPresenter&gt;() will behave identically to 
     ObjectFactory.FillInstances&lt;ShippingScreenPresenter&gt;().&nbsp; Originally, I felt 
     that it was important to make this behavior explicit.&nbsp; In later versions of 
-    StructureMap I&#39;ve adopted more of an attitude of &quot;just let it work.&quot;&nbsp; See Concrete 
-    Types[LINK] for more information about the restrictions and capabilities of this 
-    feature.</p>
+    StructureMap I&#39;ve adopted more of an attitude of &quot;just let it work.&quot;&nbsp; </p>
     
     <hr />
     <h2>Passing Arguments to StructureMap at Runtime</h2>

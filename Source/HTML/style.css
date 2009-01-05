@@ -14,9 +14,17 @@
     PADDING-BOTTOM: 2px;
     PADDING-RIGHT: 2px;
     PADDING-TOP: 2px;
-    FONT-WEIGHT: bold;
+
     COLOR: #316592
 }
+
+.left-column A
+{
+	text-decoration: none;
+	color: Blue;
+}
+
+
 
 .right-column
 {

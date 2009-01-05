@@ -60,8 +60,10 @@
     <Content Include="AttributeNormalized.htm" />
     <Content Include="AutoMocker.htm" />
     <Content Include="Concepts.htm" />
+    <Content Include="DependencyInjection.htm" />
     <Content Include="FeatureList.htm" />
     <Content Include="HowDoesStructureMapWork.htm" />
+    <Content Include="InversionOfControl.htm" />
     <Content Include="ModularConfiguration.htm" />
     <Content Include="Profiles.htm" />
     <Content Include="Scoping.htm" />

@@ -7,7 +7,8 @@
 		<script type="text/javascript" src="structuremap.js"></script>
 	</head>
 	<body>
-	    <p>StructureMap directly supports open generic types[LINK]*.&nbsp; This is most 
+	    <p>StructureMap directly supports 
+            <a href="http://msdn.microsoft.com/en-us/library/ms172334.aspx">open generic types</a>*.&nbsp; This is most 
             easily explained by a demonstration.&nbsp; I&#39;m currently working on an MVC 
             application that uses a lot of semi-RESTful services that return Json.&nbsp; 
             These Json service methods are implemented by methods on a Controller class that 
@@ -37,10 +38,12 @@
     the client.&nbsp; It&#39;s worked out well, but there&#39;s one little wrinkle from the 
     code above that we stumbled upon:</p>
         <ol>
-            <li>Continuation is basically a dumb Data Transfer Object[LINK] class that&#39;s 
+            <li>Continuation is basically a dumb
+                <a href="http://martinfowler.com/eaaCatalog/dataTransferObject.html">Data 
+                Transfer Object</a> class that&#39;s 
                 perfectly suited for being Json serialized and consumed by JavaScript on the 
                 client</li>
-            <li>Address is an Entity[LINK] class in our Domain Model, and very poorly suited to 
+            <li>Address is an Entity class in our <a href="http://c2.com/cgi/wiki?DomainModel">Domain Model</a>, and very poorly suited to 
                 Json serialization.&nbsp; Besides the fact that we probably wouldn&#39;t want the 
                 shape of our Domain Model classes to be coupled to the client JavaScript, the 
                 Entity classes are jagged, have lots of lazy loaded members, and contain a fair 
