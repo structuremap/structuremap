@@ -64,7 +64,6 @@
     <Content Include="FeatureList.htm" />
     <Content Include="HowDoesStructureMapWork.htm" />
     <Content Include="InversionOfControl.htm" />
-    <Content Include="ModularConfiguration.htm" />
     <Content Include="Profiles.htm" />
     <Content Include="Scoping.htm" />
     <Content Include="UsingAttributes.htm" />

@@ -5,6 +5,12 @@
 		<link rel="stylesheet" type="text/css" href="style.css" />
 		<script type="text/javascript" src="jquery-1.2.6.js"></script>
 		<script type="text/javascript" src="structuremap.js"></script>
+	    <style type="text/css">
+            .style1
+            {
+                font-weight: normal;
+            }
+        </style>
 	</head>
 	<body class="code">
 					<p>This style is a more terse configuration format that was 
@@ -12,7 +18,7 @@
                         Xml configuration by marking the &lt;StructureMap&gt; node with the 
                         MementoStyle=&quot;Attribute&quot; attribute by default anytime you are using Xml 
                         configuration.&nbsp; </p>
-    <h2>Instance Root Node</h2>
+    <h2 class="style1">Instance Root Node</h2>
     <p>An Instance is defined in Xml starting from a root node.&nbsp; The actual name of 
         the root node varies depending upon the context that an Instance is being 
         configured.&nbsp; For example, the AddInstance, DefaultInstance, 
@@ -109,7 +115,7 @@
 </div>
 <!--EndFragment-->
 <hr />
-					<h2>Primitive Properties (Strings and basic value types)</h2>
+					<h2 class="style1">Primitive Properties (Strings and basic value types)</h2>
 					<p>Primitive constructor or setter arguments are defined by adding an attribute 
                         @propertyName=&quot;propertyValue&quot; to the instance node.&nbsp; A class with 
                         a string argument to the constructor,</p>
@@ -131,7 +137,7 @@
 </div>
 
                     <hr />
-                    <h2>Long Strings</h2>
+                    <h2 class="style1">Long Strings</h2>
 					<p>There is an optional mode to define a property value 
 					inside a CDATA tag for very long strings like sql statements 
 					or Javascript templates.&nbsp; </p>
@@ -149,7 +155,7 @@
 </div>
 
 					<hr />
-                    <h2>Enumeration Properties</h2>
+                    <h2 class="style1">Enumeration Properties</h2>
 					<p>Enumeration arguments are defined the same way as 
 					primitive properties.&nbsp; Use the string names of the 
 					enumeration for the values.</p>
@@ -181,7 +187,7 @@
 <pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: blue;">&lt;</span><span style="color: #800000">Instance</span><span style="color: fuchsia;"> </span><span style="color: red;">Type</span><span style="color: blue;">=&quot;Cow"</span><span style="color: fuchsia;"> </span><span style="color: red;">Key</span><span style="color: blue;">=&quot;Maggie" </span><span style="color: #FF0000">Breed</span><span style="color: blue;">=&quot;Angus" /&gt;</span></pre>
 </div>
 					<hr />
-                    <h2>Child Properties</h2>
+                    <h2 class="style1">Dependency Properties</h2>
 					<p>Child properties of non-primitive types are defined as 
 					embedded memento nodes.&nbsp; Child properties can be either 
 					defined inline or use a reference to a named instance of the 
@@ -230,7 +236,7 @@
 <pre style="margin: 0px;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: blue;">&lt;/</span><span style="color: maroon;">StructureMap.Testing.Widget.Child</span><span style="color: blue;">&gt;</span>&nbsp;&nbsp;&nbsp; </pre>
 </div>
                     <hr />
-                    <h2>Non Primitive Array Property</h2>
+                    <h2 class="style1">Non Primitive Array Property</h2>
 <p>If a property or constructor argument is an array of a non-primitive type, create 
     a child node to the top level instance node with the name of the property.&nbsp; 
     Simply add new InstanceMemento nodes with the name &lt;Child&gt; under the property 
@@ -262,7 +268,7 @@
     <p style="margin: 0px;">&nbsp;</p>
     <hr />
 </div>
-<h2>Primitive Arrays</h2>
+<h2 class="style1">Primitive Arrays</h2>
 					<p>Primitive arrays like string[] or int[] can be defined in Xml.&nbsp; For a class 
                         with arguments like:</p>
 <!--
@@ -358,7 +364,7 @@
 </div>
 <!--EndFragment-->
 <hr />
-                    <h2>Dictionaries and NameValueCollection</h2>
+                    <h2 class="style1">Dictionaries and NameValueCollection</h2>
 <p>Any form of IDictionary&lt;Key, Value&gt; or a NameValueCollection can be configured in 
     Xml by the following syntax.&nbsp; Say you have a class that needs a Dictionary 
     of properties:</p>

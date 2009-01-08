@@ -1,9 +1,549 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 	<head>
-		<title></title>
+		<title>Xml Configuration</title>
+		<link rel="stylesheet" type="text/css" href="style.css" />
+		<script type="text/javascript" src="jquery-1.2.6.js"></script>
+		<script type="text/javascript" src="structuremap.js"></script>
 	</head>
 	<body>
-	
+	    <p>While the <a href="RegistryDSL.htm">Registry DSL</a> is the strongly recommended 
+            means of configuring StructureMap, there will be times when reverting to Xml 
+            configuration is appropriate.&nbsp; It&#39;s certainly best for the type of 
+            configuration values that cannot be hard coded into compiled code (connection 
+            strings, file paths, Url&#39;s, etc.).&nbsp; StructureMap supports a wide range of 
+            Xml configuration capabilities due to its coming of age during the Xml-happy 
+            part of this decade.&nbsp; At this point, the Xml configuration is mostly a 
+            supplement to the Registry DSL.&nbsp; In this document you will find examples 
+            and explanations of the most common ways to use the Xml configuration.&nbsp; A 
+            full reference to the older, but still supported, feature set is in the
+            <a href="XmlReference.htm">Xml Reference</a>.&nbsp; </p>
+        <p>As shown in detail in <a href="ConfiguringStructureMap.htm">Configuring 
+            StructureMap</a>, Xml configuration can be placed into any of the following 
+            sources:</p>
+        <ol>
+            <li>The App.config / Web.config file</li>
+            <li>The StructureMap.config file in the same directory as your App.config file</li>
+            <li>Any file you choose</li>
+            <li>Any possible place that you could put Xml and retrieve it programmatically</li>
+        </ol>
+        <p>
+            &nbsp;</p>
+	    
+	    <h2>&lt;StructureMap&gt; Element</h2>
+	    <p>Any Xml configuration starts with the &lt;StructureMap&gt; root node like this shown 
+            below:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue255;\red255\green255\blue255;\red163\green21\blue21;\red255\green0\blue0;\red0\green0\blue0;}??\fs20 \cf1 &lt;?\cf3 xml\cf1  \cf4 version\cf1 =\cf0 "\cf1 1.0\cf0 "\cf1  \cf4 encoding\cf1 =\cf0 "\cf1 utf-8\cf0 "\cf1  ?&gt;\par ??&lt;\cf3 StructureMap\cf1  \cf4 MementoStyle\cf1 =\cf0 "\cf1 Attribute\cf0 "\cf1  \cf4 DefaultProfile\cf1 =\cf0 "\cf1 Connected\cf0 "\cf1 &gt;\par ??  &lt;\cf3 DefaultInstance\par ??\cf1       \cf4 PluginType\cf1 =\cf0 "\cf1 StructureMap.Testing.Pipeline.OptionalSetterTarget, StructureMap.Testing\cf0 "\par ??\cf1       \cf4 PluggedType\cf1 =\cf0 "\cf1 StructureMap.Testing.Pipeline.OptionalSetterTarget, StructureMap.Testing\cf0 "\par ??\cf1       \cf4 Name\cf1 =\cf0 "\cf1 Jeremy\cf0 "\cf1  /&gt;\par ??&lt;/\cf3 StructureMap\cf1 &gt;}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+                <span style="color: blue;">&lt;?</span><span style="color: #a31515;">xml</span><span 
+                    style="color: blue;"> </span><span style="color: red;">version</span><span 
+                    style="color: blue;">=</span>&quot;<span style="color: blue;">1.0</span>&quot;<span 
+                    style="color: blue;"> </span><span style="color: red;">encoding</span><span 
+                    style="color: blue;">=</span>&quot;<span style="color: blue;">utf-8</span>&quot;<span 
+                    style="color: blue;"> ?&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&lt;</span><span style="color: #a31515;">StructureMap</span><span 
+                    style="color: blue;"> </span><span style="color: red;">MementoStyle</span><span 
+                    style="color: blue;">=</span>&quot;<span style="color: blue;">Attribute</span>&quot;<span 
+                    style="color: blue;"> </span><span style="color: red;">DefaultProfile</span><span 
+                    style="color: blue;">=</span>&quot;<span style="color: blue;">Connected</span>&quot;<span 
+                    style="color: blue;">&gt;</span></p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&lt;/</span><span style="color: #a31515;">StructureMap</span><span 
+                    style="color: blue;">&gt;</span></p>
+        </div>
+<!--EndFragment-->
+<p>The @DefaultInstance attribute is optional.&nbsp; If it does exist, it&#39;s the 
+    equivilant of calling ObjectFactory.Profile = &quot;Connected&quot; to change the 
+    Container or ObjectFactory to that Profile.&nbsp; Setting the DefaultProfile 
+    attribute can be a great way to quickly change the way a system behaves.&nbsp; I 
+    typically use the DefaultProfile as a way to switch a desktop application from 
+    fully connected to stubbed for testing or local usage.&nbsp; </p>
+	    
+	    <h4>Configuring Instances</h4>
+	    <p>The @MementoStyle attribute is very important.&nbsp; This directs StructureMap 
+            how the Instances will be expressed in the Xml.&nbsp; The two choices are:</p>
+        <ul>
+            <li>&quot;Node&quot; -- The older <a href="NodeNormalized.htm">Node Normalized</a> format.&nbsp; 
+                This is the default format if the @MementoStyle attribute is missing (for 
+                backwards compatibility)</li>
+            <li>&quot;Attribute&quot; -- The streamlined <a href="AttributeNormalized.htm">Attribute 
+                Normalized </a>format introduced in the 1.0 release.&nbsp; Attribute Normalized 
+                is highly recommended as it is much more terse.</li>
+        </ul>
+	    <hr />
+	    
+	    
+	    
+	    <h2>Adding a Default Instance for a PluginType</h2>
+	    <p>The most common usage of Xml configuration is to specify the default Instance for 
+            a PluginType.&nbsp; That is done with the &lt;DefaultInstance&gt; node like this one 
+            shown below:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue255;\red255\green255\blue255;\red163\green21\blue21;\red255\green0\blue0;\red0\green0\blue0;}??\fs20 \cf1 &lt;\cf3 StructureMap\cf1  \cf4 MementoStyle\cf1 =\cf0 "\cf1 Attribute\cf0 "\cf1 &gt;\par ??  &lt;\cf3 DefaultInstance\cf1  \par ??    \cf4 PluginType\cf1 =\cf0 "\cf1 StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget\cf0 "\cf1  \par ??    \cf4 PluggedType\cf1 =\cf0 "\cf1 StructureMap.Testing.Widget.ColorWidget,StructureMap.Testing.Widget\cf0 "\cf1  \par ??    \cf4 Scope\cf1 =\cf0 "\cf1 Singleton\cf0 "\cf1  \par ??    \cf4 color\cf1 =\cf0 "\cf1 Red\cf0 "\cf1  /&gt;\par ??\par ??  &lt;\cf3 AddInstance\cf1  \par ??    \cf4 Key\cf1 =\cf0 "\cf1 Red\cf0 "\cf1  \par ??    \cf4 PluginType\cf1 =\cf0 "\cf1 StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget\cf0 "\cf1  \par ??    \cf4 PluggedType\cf1 =\cf0 "\cf1 StructureMap.Testing.Widget.ColorWidget,StructureMap.Testing.Widget\cf0 "\cf1  \par ??    \cf4 color\cf1 =\cf0 "\cf1 Red\cf0 "\cf1  /&gt;\par ??\par ??  &lt;\cf3 AddInstance\cf1  \par ??    \cf4 Key\cf1 =\cf0 "\cf1 Green\cf0 "\cf1  \par ??    \cf4 PluginType\cf1 =\cf0 "\cf1 StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget\cf0 "\cf1  \par ??    \cf4 PluggedType\cf1 =\cf0 "\cf1 StructureMap.Testing.Widget.ColorWidget,StructureMap.Testing.Widget\cf0 "\cf1  \par ??    \cf4 color\cf1 =\cf0 "\cf1 Green\cf0 "\cf1  /&gt;\par ??\par ??  &lt;\cf3 AddInstance\cf1   \par ??    \cf4 PluginType\cf1 =\cf0 "\cf1 StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget\cf0 "\cf1  \par ??    \cf4 PluggedType\cf1 =\cf0 "\cf1 StructureMap.Testing.Widget.ColorWidget,StructureMap.Testing.Widget\cf0 "\cf1  \par ??    \cf4 color\cf1 =\cf0 "\cf1 Purple\cf0 "\cf1  /&gt;\par ??\par ??\par ??  &lt;\cf3 AddInstance\cf1  \par ??    \cf4 Key\cf1 =\cf0 "\cf1 Blue\cf0 "\cf1  \par ??    \cf4 PluginType\cf1 =\cf0 "\cf1 StructureMap.Testing.Widget.Rule,StructureMap.Testing.Widget\cf0 "\cf1  \par ??    \cf4 PluggedType\cf1 =\cf0 "\cf1 StructureMap.Testing.Widget.ColorRule,StructureMap.Testing.Widget\cf0 "\cf1  \par ??    \cf4 color\cf1 =\cf0 "\cf1 Blue\cf0 "\cf1  \par ??    \cf4 Name\cf1 =\cf0 "\cf1 TheBlueOne\cf0 "\cf1 /&gt;\par ??&lt;/\cf3 StructureMap\cf1 &gt;}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+                <span style="color: blue;">&lt;</span><span style="color: #a31515;">StructureMap</span><span 
+                    style="color: blue;"> </span><span style="color: red;">MementoStyle</span><span 
+                    style="color: blue;">=</span>&quot;<span style="color: blue;">Attribute</span>&quot;<span 
+                    style="color: blue;">&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp; &lt;</span><span style="color: #a31515;">DefaultInstance</span><span 
+                    style="color: blue;"> </span>
+            </p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; </span><span style="color: red;">
+                PluginType</span><span style="color: blue;">=</span>&quot;<span style="color: blue;">StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget</span>&quot;<span 
+                    style="color: blue;"> </span>
+            </p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; </span><span style="color: red;">
+                PluggedType</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">StructureMap.Testing.Widget.ColorWidget,StructureMap.Testing.Widget</span>&quot;<span 
+                    style="color: blue;"> </span>
+            </p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; </span><span style="color: red;">
+                Scope</span><span style="color: blue;">=</span>&quot;<span style="color: blue;">Singleton</span>&quot;<span 
+                    style="color: blue;"> </span>
+            </p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; </span><span style="color: red;">
+                color</span><span style="color: blue;">=</span>&quot;<span style="color: blue;">Red</span>&quot;<span 
+                    style="color: blue;"> /&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&lt;/</span><span style="color: #a31515;">StructureMap</span><span 
+                    style="color: blue;">&gt;</span></p>
+        </div>
+<!--EndFragment-->
+<p>In the sample node above, the parts are:</p>
+        <ol>
+            <li>PluginType -- Assembly qualified name of the PluginType (the &quot;T&quot; in 
+                ObjectFactory.GetInstance&lt;T&gt;() )</li>
+            <li>PluggedType -- Assembly qualified name of the actual, concrete PluggedType</li>
+            <li>Scope -- Optionally defines the <a href="Scoping.htm">scope/lifecycle</a> for 
+                this PluginType</li>
+            <li>&quot;color&quot; -- in this case, the ColorWidget class has a parameter in its 
+                constructor function named &quot;color.&quot;&nbsp; Primitive constructor or setter 
+                arguments are just defined as attributes in the Xml node</li>
+        </ol>
+        <p>Here&#39;s a much more complicated example from my project.&nbsp; The first Instance 
+            is related to NHibernate bootstrapping.&nbsp; The second instance is another 
+            service related to sending emal:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue255;\red255\green255\blue255;\red163\green21\blue21;\red255\green0\blue0;\red0\green0\blue0;}??\fs20 \cf1   &lt;\cf3 DefaultInstance\par ??\cf1     \cf4 PluginType\cf1 =\cf0 "\cf1 DovetailCRM.Core.Persistence.ISessionSource,DovetailCRM.Core\cf0 "\par ??\cf1     \cf4 PluggedType\cf1 =\cf0 "\cf1 DovetailCRM.Core.Persistence.NHibernateSessionSource,DovetailCRM.Core\cf0 "\par ??\cf1     \cf4 Scope\cf1 =\cf0 "\cf1 Singleton\cf0 "\cf1 &gt;\par ??    &lt;\cf3 properties\cf1 &gt;\par ??      &lt;\cf3 Pair\cf1  \cf4 Key\cf1 =\cf0 "\cf1 connection.provider\cf0 "\cf1  \cf4 Value\cf1 =\cf0 "\cf1 NHibernate.Connection.DriverConnectionProvider\cf0 "\cf1  /&gt;\par ??      &lt;\cf3 Pair\cf1  \cf4 Key\cf1 =\cf0 "\cf1 connection.driver_class\cf0 "\cf1  \cf4 Value\cf1 =\cf0 "\cf1 NHibernate.Driver.SqlClientDriver\cf0 "\cf1  /&gt;\par ??      &lt;\cf3 Pair\cf1  \cf4 Key\cf1 =\cf0 "\cf1 dialect\cf0 "\cf1  \cf4 Value\cf1 =\cf0 "\cf1 NHibernate.Dialect.MsSql2005Dialect\cf0 "\cf1  /&gt;\par ??      &lt;\cf3 Pair\cf1  \cf4 Key\cf1 =\cf0 "\cf1 hibernate.dialect\cf0 "\cf1  \cf4 Value\cf1 =\cf0 "\cf1 NHibernate.Dialect.MsSql2005Dialect\cf0 "\cf1  /&gt;\par ??      &lt;\cf3 Pair\cf1  \cf4 Key\cf1 =\cf0 "\cf1 use_outer_join\cf0 "\cf1  \cf4 Value\cf1 =\cf0 "\cf1 true\cf0 "\cf1  /&gt;\par ??      &lt;\cf3 Pair\cf1  \cf4 Key\cf1 =\cf0 "\cf1 connection.connection_string\cf0 "\cf1  \cf4 Value\cf1 =\cf0 "\cf1 Data Source=localhost;Initial Catalog=Blue;User Id=sa;Password=sa;\cf0 "\cf1  /&gt;\par ??      &lt;\cf3 Pair\cf1  \cf4 Key\cf1 =\cf0 "\cf1 show_sql\cf0 "\cf1  \cf4 Value\cf1 =\cf0 "\cf1 false\cf0 "\cf1  /&gt;\par ??    &lt;/\cf3 properties\cf1 &gt;\par ??  &lt;/\cf3 DefaultInstance\cf1 &gt;\par ??\par ??  &lt;\cf3 DefaultInstance\par ??\cf1     \cf4 PluginType\cf1 =\cf0 "\cf1 DovetailCRM.Core.UserMessaging.IUserMessageDeliveryService, DovetailCRM.Core\cf0 "\par ??\cf1     \cf4 PluggedType\cf1 =\cf0 "\cf1 DovetailCRM.Core.UserMessaging.EmailUserMessageDeliveryService, DovetailCRM.Core\cf0 "\par ??\cf1     \cf4 Scope\cf1 =\cf0 "\cf1 Singleton\cf0 "\par ??\cf1     \cf4 hostAddress\cf1 =\cf0 "\cf1 127.0.0.1\cf0 "\cf1  \par ??    \cf4 hostPort\cf1 =\cf0 "\cf1 2525\cf0 "\cf1  \par ??    \cf4 defaultFromAddress\cf1 =\cf0 "\cf1 blue@dovetailsoftware.com\cf0 "\cf1  /&gt;}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp; &lt;</span><span style="color: #a31515;">DefaultInstance</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; </span><span style="color: red;">
+                PluginType</span><span style="color: blue;">=</span>&quot;<span style="color: blue;">DovetailCRM.Core.Persistence.ISessionSource,DovetailCRM.Core</span>&quot;</p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; </span><span style="color: red;">
+                PluggedType</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">DovetailCRM.Core.Persistence.NHibernateSessionSource,DovetailCRM.Core</span>&quot;</p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; </span><span style="color: red;">
+                Scope</span><span style="color: blue;">=</span>&quot;<span style="color: blue;">Singleton</span>&quot;<span 
+                    style="color: blue;">&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; &lt;</span><span 
+                    style="color: #a31515;">properties</span><span style="color: blue;">&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</span><span 
+                    style="color: #a31515;">Pair</span><span style="color: blue;"> </span>
+                <span style="color: red;">Key</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">connection.provider</span>&quot;<span style="color: blue;">
+                </span><span style="color: red;">Value</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">NHibernate.Connection.DriverConnectionProvider</span>&quot;<span 
+                    style="color: blue;"> /&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</span><span 
+                    style="color: #a31515;">Pair</span><span style="color: blue;"> </span>
+                <span style="color: red;">Key</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">connection.driver_class</span>&quot;<span 
+                    style="color: blue;"> </span><span style="color: red;">Value</span><span 
+                    style="color: blue;">=</span>&quot;<span style="color: blue;">NHibernate.Driver.SqlClientDriver</span>&quot;<span 
+                    style="color: blue;"> /&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</span><span 
+                    style="color: #a31515;">Pair</span><span style="color: blue;"> </span>
+                <span style="color: red;">Key</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">dialect</span>&quot;<span style="color: blue;"> </span>
+                <span style="color: red;">Value</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">NHibernate.Dialect.MsSql2005Dialect</span>&quot;<span 
+                    style="color: blue;"> /&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</span><span 
+                    style="color: #a31515;">Pair</span><span style="color: blue;"> </span>
+                <span style="color: red;">Key</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">hibernate.dialect</span>&quot;<span style="color: blue;">
+                </span><span style="color: red;">Value</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">NHibernate.Dialect.MsSql2005Dialect</span>&quot;<span 
+                    style="color: blue;"> /&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</span><span 
+                    style="color: #a31515;">Pair</span><span style="color: blue;"> </span>
+                <span style="color: red;">Key</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">use_outer_join</span>&quot;<span style="color: blue;">
+                </span><span style="color: red;">Value</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">true</span>&quot;<span style="color: blue;"> /&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</span><span 
+                    style="color: #a31515;">Pair</span><span style="color: blue;"> </span>
+                <span style="color: red;">Key</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">connection.connection_string</span>&quot;<span 
+                    style="color: blue;"> </span><span style="color: red;">Value</span><span 
+                    style="color: blue;">=</span>&quot;a connection string&quot;<span 
+                    style="color: blue;"> /&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</span><span 
+                    style="color: #a31515;">Pair</span><span style="color: blue;"> </span>
+                <span style="color: red;">Key</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">show_sql</span>&quot;<span style="color: blue;"> </span>
+                <span style="color: red;">Value</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">false</span>&quot;<span style="color: blue;"> /&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; &lt;/</span><span 
+                    style="color: #a31515;">properties</span><span style="color: blue;">&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp; &lt;/</span><span style="color: #a31515;">DefaultInstance</span><span 
+                    style="color: blue;">&gt;</span></p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp; &lt;</span><span style="color: #a31515;">DefaultInstance</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; </span><span style="color: red;">
+                PluginType</span><span style="color: blue;">=</span>&quot;<span style="color: blue;">DovetailCRM.Core.UserMessaging.IUserMessageDeliveryService, 
+                DovetailCRM.Core</span>&quot;</p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; </span><span style="color: red;">
+                PluggedType</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">DovetailCRM.Core.UserMessaging.EmailUserMessageDeliveryService, 
+                DovetailCRM.Core</span>&quot;</p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; </span><span style="color: red;">
+                Scope</span><span style="color: blue;">=</span>&quot;<span style="color: blue;">Singleton</span>&quot;</p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; </span><span style="color: red;">
+                hostAddress</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">127.0.0.1</span>&quot;<span style="color: blue;"> </span>
+            </p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; </span><span style="color: red;">
+                hostPort</span><span style="color: blue;">=</span>&quot;<span style="color: blue;">2525</span>&quot;<span 
+                    style="color: blue;"> </span>
+            </p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; </span><span style="color: red;">
+                defaultFromAddress</span><span style="color: blue;">=</span>&quot;email address&quot;<span 
+                    style="color: blue;"> /&gt;</span></p>
+        </div>
+<!--EndFragment-->
+<hr />
+
+	    
+	    <h2>Adding Additional Instances for a PluginType</h2>
+	    <p>Additional Instances for a PluginType can be added with the &lt;AddInstance&gt; node 
+            with several examples shown below.&nbsp; The key attributes are the @PluginType 
+            (ISomething) and @PluggedType (Something : ISomething).&nbsp; The &lt;AddInstance&gt; 
+            node represents an Instance.&nbsp; See <a href="NodeNormalized.htm">Node 
+            Normalized Instances</a> and <a href="AttributeNormalized.htm">Attribute 
+            Normalized Instances</a> for more information on configuring an Instance in Xml.</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue255;\red255\green255\blue255;\red163\green21\blue21;\red255\green0\blue0;\red0\green0\blue0;}??\fs20 \cf1 &lt;\cf3 StructureMap\cf1  \cf4 MementoStyle\cf1 =\cf0 "\cf1 Attribute\cf0 "\cf1 &gt;\par ??  &lt;\cf3 DefaultInstance\cf1  \par ??    \cf4 PluginType\cf1 =\cf0 "\cf1 StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget\cf0 "\cf1  \par ??    \cf4 PluggedType\cf1 =\cf0 "\cf1 StructureMap.Testing.Widget.ColorWidget,StructureMap.Testing.Widget\cf0 "\cf1  \par ??    \cf4 Scope\cf1 =\cf0 "\cf1 Singleton\cf0 "\cf1  \par ??    \cf4 color\cf1 =\cf0 "\cf1 Red\cf0 "\cf1  /&gt;\par ??\par ??  &lt;\cf3 AddInstance\cf1  \par ??    \cf4 Key\cf1 =\cf0 "\cf1 Red\cf0 "\cf1  \par ??    \cf4 PluginType\cf1 =\cf0 "\cf1 StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget\cf0 "\cf1  \par ??    \cf4 PluggedType\cf1 =\cf0 "\cf1 StructureMap.Testing.Widget.ColorWidget,StructureMap.Testing.Widget\cf0 "\cf1  \par ??    \cf4 color\cf1 =\cf0 "\cf1 Red\cf0 "\cf1  /&gt;\par ??\par ??  &lt;\cf3 AddInstance\cf1  \par ??    \cf4 Key\cf1 =\cf0 "\cf1 Green\cf0 "\cf1  \par ??    \cf4 PluginType\cf1 =\cf0 "\cf1 StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget\cf0 "\cf1  \par ??    \cf4 PluggedType\cf1 =\cf0 "\cf1 StructureMap.Testing.Widget.ColorWidget,StructureMap.Testing.Widget\cf0 "\cf1  \par ??    \cf4 color\cf1 =\cf0 "\cf1 Green\cf0 "\cf1  /&gt;\par ??\par ??  &lt;\cf3 AddInstance\cf1   \par ??    \cf4 PluginType\cf1 =\cf0 "\cf1 StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget\cf0 "\cf1  \par ??    \cf4 PluggedType\cf1 =\cf0 "\cf1 StructureMap.Testing.Widget.ColorWidget,StructureMap.Testing.Widget\cf0 "\cf1  \par ??    \cf4 color\cf1 =\cf0 "\cf1 Purple\cf0 "\cf1  /&gt;\par ??\par ??\par ??  &lt;\cf3 AddInstance\cf1  \par ??    \cf4 Key\cf1 =\cf0 "\cf1 Blue\cf0 "\cf1  \par ??    \cf4 PluginType\cf1 =\cf0 "\cf1 StructureMap.Testing.Widget.Rule,StructureMap.Testing.Widget\cf0 "\cf1  \par ??    \cf4 PluggedType\cf1 =\cf0 "\cf1 StructureMap.Testing.Widget.ColorRule,StructureMap.Testing.Widget\cf0 "\cf1  \par ??    \cf4 color\cf1 =\cf0 "\cf1 Blue\cf0 "\cf1  \par ??    \cf4 Name\cf1 =\cf0 "\cf1 TheBlueOne\cf0 "\cf1 /&gt;\par ??&lt;/\cf3 StructureMap\cf1 &gt;}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+                <span style="color: blue;">&lt;</span><span style="color: #a31515;">StructureMap</span><span 
+                    style="color: blue;"> </span><span style="color: red;">MementoStyle</span><span 
+                    style="color: blue;">=</span>&quot;<span style="color: blue;">Attribute</span>&quot;<span 
+                    style="color: blue;">&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp; &lt;</span><span style="color: #a31515;">AddInstance</span><span 
+                    style="color: blue;"> </span>
+            </p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; </span><span style="color: red;">
+                Key</span><span style="color: blue;">=</span>&quot;<span style="color: blue;">Red</span>&quot;<span 
+                    style="color: blue;"> </span>
+            </p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; </span><span style="color: red;">
+                PluginType</span><span style="color: blue;">=</span>&quot;<span style="color: blue;">StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget</span>&quot;<span 
+                    style="color: blue;"> </span>
+            </p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; </span><span style="color: red;">
+                PluggedType</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">StructureMap.Testing.Widget.ColorWidget,StructureMap.Testing.Widget</span>&quot;<span 
+                    style="color: blue;"> </span>
+            </p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; </span><span style="color: red;">
+                color</span><span style="color: blue;">=</span>&quot;<span style="color: blue;">Red</span>&quot;<span 
+                    style="color: blue;"> /&gt;</span></p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp; &lt;</span><span style="color: #a31515;">AddInstance</span><span 
+                    style="color: blue;"> </span>
+            </p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; </span><span style="color: red;">
+                Key</span><span style="color: blue;">=</span>&quot;<span style="color: blue;">Green</span>&quot;<span 
+                    style="color: blue;"> </span>
+            </p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; </span><span style="color: red;">
+                PluginType</span><span style="color: blue;">=</span>&quot;<span style="color: blue;">StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget</span>&quot;<span 
+                    style="color: blue;"> </span>
+            </p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; </span><span style="color: red;">
+                PluggedType</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">StructureMap.Testing.Widget.ColorWidget,StructureMap.Testing.Widget</span>&quot;<span 
+                    style="color: blue;"> </span>
+            </p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; </span><span style="color: red;">
+                color</span><span style="color: blue;">=</span>&quot;<span style="color: blue;">Green</span>&quot;<span 
+                    style="color: blue;"> /&gt;</span></p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp; &lt;</span><span style="color: #a31515;">AddInstance</span><span 
+                    style="color: blue;">&nbsp; </span>
+            </p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; </span><span style="color: red;">
+                PluginType</span><span style="color: blue;">=</span>&quot;<span style="color: blue;">StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget</span>&quot;<span 
+                    style="color: blue;"> </span>
+            </p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; </span><span style="color: red;">
+                PluggedType</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">StructureMap.Testing.Widget.ColorWidget,StructureMap.Testing.Widget</span>&quot;<span 
+                    style="color: blue;"> </span>
+            </p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; </span><span style="color: red;">
+                color</span><span style="color: blue;">=</span>&quot;<span style="color: blue;">Purple</span>&quot;<span 
+                    style="color: blue;"> /&gt;</span></p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp; &lt;</span><span style="color: #a31515;">AddInstance</span><span 
+                    style="color: blue;"> </span>
+            </p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; </span><span style="color: red;">
+                Key</span><span style="color: blue;">=</span>&quot;<span style="color: blue;">Blue</span>&quot;<span 
+                    style="color: blue;"> </span>
+            </p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; </span><span style="color: red;">
+                PluginType</span><span style="color: blue;">=</span>&quot;<span style="color: blue;">StructureMap.Testing.Widget.Rule,StructureMap.Testing.Widget</span>&quot;<span 
+                    style="color: blue;"> </span>
+            </p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; </span><span style="color: red;">
+                PluggedType</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">StructureMap.Testing.Widget.ColorRule,StructureMap.Testing.Widget</span>&quot;<span 
+                    style="color: blue;"> </span>
+            </p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; </span><span style="color: red;">
+                color</span><span style="color: blue;">=</span>&quot;<span style="color: blue;">Blue</span>&quot;<span 
+                    style="color: blue;"> </span>
+            </p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; </span><span style="color: red;">
+                Name</span><span style="color: blue;">=</span>&quot;<span style="color: blue;">TheBlueOne</span>&quot;<span 
+                    style="color: blue;">/&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&lt;/</span><span style="color: #a31515;">StructureMap</span><span 
+                    style="color: blue;">&gt;</span></p>
+        </div>
+<!--EndFragment-->
+<hr />
+
+	    
+	    <h2>Defining a Profile</h2>
+	    <p>A <a href="Profiles.htm">Profile</a> can be defined with the Xml configuration.&nbsp; 
+            The configuration for the Profile is strictly additive, meaning that any Xml 
+            configuration for a Profile will be combined with all other sources of 
+            configuration.&nbsp; If there is conflicting configuration, the last 
+            configuration source processed will win.&nbsp; Be cautious about splitting 
+            Profile definitions across multiple configuration sources.</p>
+        <p>To define a Profile in the Xml configuration, simply add a new &lt;Profile&gt; node and 
+            set the @Name attribute to the profile name.&nbsp; After that, you need to 
+            include an &lt;Override&gt; node for each PluginType in the Profile.&nbsp; Within the 
+            &lt;Override&gt; node, you can either reference a named Instance for that PluginType 
+            that is defined somewhere else, or configure a new Instance inline by nesting an 
+            &lt;Instance&gt; node within the &lt;Override&gt; node.&nbsp; Examples of both techniques 
+            are shown below:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue255;\red255\green255\blue255;\red163\green21\blue21;\red255\green0\blue0;\red0\green0\blue0;\red0\green128\blue0;}??\fs20 \cf1 &lt;?\cf3 xml\cf1  \cf4 version\cf1 =\cf0 "\cf1 1.0\cf0 "\cf1  \cf4 encoding\cf1 =\cf0 "\cf1 utf-8\cf0 "\cf1  ?&gt;\par ??&lt;\cf3 StructureMap\cf1  \cf4 MementoStyle\cf1 =\cf0 "\cf1 Attribute\cf0 "\cf1 &gt;\par ??  &lt;\cf3 Assembly\cf1  \cf4 Name\cf1 =\cf0 "\cf1 StructureMap.Testing.Widget\cf0 "\cf1 /&gt;\par ??\par ??  &lt;!--\cf6  \par ??    If we already have Instances defined somewhere else, we can just specify\par ??    that the Profile will use the named Instance designated by the DefaultKey\par ??    attribute\par ??  \cf1 --&gt;\par ??  &lt;\cf3 Profile\cf1  \cf4 Name\cf1 =\cf0 "\cf1 Stubbed\cf0 "\cf1 &gt;\par ??    &lt;!--\cf6  The &lt;Override&gt; node sets up the Profile specific override of a single PluginType \cf1 --&gt;\par ??    &lt;\cf3 Override\cf1  \cf4 Type\cf1 =\cf0 "\cf1 SomeAssembly.IService,SomeAssembly\cf0 "\cf1  \cf4 DefaultKey\cf1 =\cf0 "\cf1 Stubbed\cf0 "\cf1 /&gt;\par ??  &lt;/\cf3 Profile\cf1 &gt;\par ??\par ??  &lt;!--\cf6  Defining the Profile Instance inline with the &lt;Instance&gt; Node \cf1 --&gt;\par ??  &lt;\cf3 Profile\cf1  \cf4 Name\cf1 =\cf0 "\cf1 Blue\cf0 "\cf1 &gt;\par ??    &lt;\cf3 Override\cf1  \cf4 Type\cf1 =\cf0 "\cf1 StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget\cf0 "\cf1 &gt;\par ??      &lt;\cf3 Instance\cf1  \cf4 Type\cf1 =\cf0 "\cf1 Color\cf0 "\cf1  \cf4 color\cf1 =\cf0 "\cf1 Blue\cf0 "\cf1 /&gt;\par ??    &lt;/\cf3 Override\cf1 &gt;\par ??    &lt;\cf3 Override\cf1  \cf4 Type\cf1 =\cf0 "\cf1 StructureMap.Testing.Widget.Rule,StructureMap.Testing.Widget\cf0 "\cf1 &gt;\par ??      &lt;\cf3 Instance\cf1  \cf4 Type\cf1 =\cf0 "\cf1 Color\cf0 "\cf1  \cf4 color\cf1 =\cf0 "\cf1 Blue\cf0 "\cf1 /&gt;\par ??    &lt;/\cf3 Override\cf1 &gt;\par ??  &lt;/\cf3 Profile\cf1 &gt;\par ??\par ??\par ??  &lt;!--\cf6  By the way, you can also make "Machine" specific overrides, but use with caution \cf1 --&gt;\par ??  &lt;\cf3 Machine\cf1  \cf4 Name\cf1 =\cf0 "\cf1 GREEN-BOX\cf0 "\cf1  \cf4 Profile\cf1 =\cf0 "\cf1 Green\cf0 "\cf1 /&gt;\par ??\par ??  &lt;\cf3 Machine\cf1  \cf4 Name\cf1 =\cf0 "\cf1 ORANGE-BOX\cf0 "\cf1 &gt;\par ??    &lt;\cf3 Override\cf1  \cf4 Type\cf1 =\cf0 "\cf1 StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget\cf0 "\cf1 &gt;\par ??      &lt;\cf3 Instance\cf1  \cf4 Type\cf1 =\cf0 "\cf1 Color\cf0 "\cf1  \cf4 color\cf1 =\cf0 "\cf1 Orange\cf0 "\cf1 /&gt;\par ??    &lt;/\cf3 Override\cf1 &gt;\par ??  &lt;/\cf3 Machine\cf1 &gt;\par ??&lt;/\cf3 StructureMap\cf1 &gt;}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+                <span style="color: blue;">&lt;?</span><span style="color: #a31515;">xml</span><span 
+                    style="color: blue;"> </span><span style="color: red;">version</span><span 
+                    style="color: blue;">=</span>&quot;<span style="color: blue;">1.0</span>&quot;<span 
+                    style="color: blue;"> </span><span style="color: red;">encoding</span><span 
+                    style="color: blue;">=</span>&quot;<span style="color: blue;">utf-8</span>&quot;<span 
+                    style="color: blue;"> ?&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&lt;</span><span style="color: #a31515;">StructureMap</span><span 
+                    style="color: blue;"> </span><span style="color: red;">MementoStyle</span><span 
+                    style="color: blue;">=</span>&quot;<span style="color: blue;">Attribute</span>&quot;<span 
+                    style="color: blue;">&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp; &lt;</span><span style="color: #a31515;">Assembly</span><span 
+                    style="color: blue;"> </span><span style="color: red;">Name</span><span 
+                    style="color: blue;">=</span>&quot;<span style="color: blue;">StructureMap.Testing.Widget</span>&quot;<span 
+                    style="color: blue;">/&gt;</span></p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp; &lt;!--</span><span style="color: green;"> </span>
+            </p>
+            <p style="margin: 0px;">
+                <span style="color: green;">&nbsp;&nbsp;&nbsp; If we already have Instances 
+                defined somewhere else, we can just specify</span></p>
+            <p style="margin: 0px;">
+                <span style="color: green;">&nbsp;&nbsp;&nbsp; that the Profile will use the 
+                named Instance designated by the DefaultKey</span></p>
+            <p style="margin: 0px;">
+                <span style="color: green;">&nbsp;&nbsp;&nbsp; attribute</span></p>
+            <p style="margin: 0px;">
+                <span style="color: green;">&nbsp; </span><span style="color: blue;">--&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp; &lt;</span><span style="color: #a31515;">Profile</span><span 
+                    style="color: blue;"> </span><span style="color: red;">Name</span><span 
+                    style="color: blue;">=</span>&quot;<span style="color: blue;">Stubbed</span>&quot;<span 
+                    style="color: blue;">&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; &lt;!--</span><span 
+                    style="color: green;"> The &lt;Override&gt; node sets up the Profile specific 
+                override of a single PluginType </span><span style="color: blue;">--&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; &lt;</span><span 
+                    style="color: #a31515;">Override</span><span style="color: blue;"> </span>
+                <span style="color: red;">Type</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">SomeAssembly.IService,SomeAssembly</span>&quot;<span 
+                    style="color: blue;"> </span><span style="color: red;">DefaultKey</span><span 
+                    style="color: blue;">=</span>&quot;<span style="color: blue;">Stubbed</span>&quot;<span 
+                    style="color: blue;">/&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp; &lt;/</span><span style="color: #a31515;">Profile</span><span 
+                    style="color: blue;">&gt;</span></p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp; &lt;!--</span><span style="color: green;"> 
+                Defining the Profile Instance inline with the &lt;Instance&gt; Node </span>
+                <span style="color: blue;">--&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp; &lt;</span><span style="color: #a31515;">Profile</span><span 
+                    style="color: blue;"> </span><span style="color: red;">Name</span><span 
+                    style="color: blue;">=</span>&quot;<span style="color: blue;">Blue</span>&quot;<span 
+                    style="color: blue;">&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; &lt;</span><span 
+                    style="color: #a31515;">Override</span><span style="color: blue;"> </span>
+                <span style="color: red;">Type</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget</span>&quot;<span 
+                    style="color: blue;">&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</span><span 
+                    style="color: #a31515;">Instance</span><span style="color: blue;"> </span>
+                <span style="color: red;">Type</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">Color</span>&quot;<span style="color: blue;"> </span>
+                <span style="color: red;">color</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">Blue</span>&quot;<span style="color: blue;">/&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; &lt;/</span><span 
+                    style="color: #a31515;">Override</span><span style="color: blue;">&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; &lt;</span><span 
+                    style="color: #a31515;">Override</span><span style="color: blue;"> </span>
+                <span style="color: red;">Type</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">StructureMap.Testing.Widget.Rule,StructureMap.Testing.Widget</span>&quot;<span 
+                    style="color: blue;">&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</span><span 
+                    style="color: #a31515;">Instance</span><span style="color: blue;"> </span>
+                <span style="color: red;">Type</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">Color</span>&quot;<span style="color: blue;"> </span>
+                <span style="color: red;">color</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">Blue</span>&quot;<span style="color: blue;">/&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; &lt;/</span><span 
+                    style="color: #a31515;">Override</span><span style="color: blue;">&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp; &lt;/</span><span style="color: #a31515;">Profile</span><span 
+                    style="color: blue;">&gt;</span></p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp; &lt;!--</span><span style="color: green;"> By the 
+                way, you can also make &quot;Machine&quot; specific overrides, but use with caution </span>
+                <span style="color: blue;">--&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp; &lt;</span><span style="color: #a31515;">Machine</span><span 
+                    style="color: blue;"> </span><span style="color: red;">Name</span><span 
+                    style="color: blue;">=</span>&quot;<span style="color: blue;">GREEN-BOX</span>&quot;<span 
+                    style="color: blue;"> </span><span style="color: red;">Profile</span><span 
+                    style="color: blue;">=</span>&quot;<span style="color: blue;">Green</span>&quot;<span 
+                    style="color: blue;">/&gt;</span></p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp; &lt;</span><span style="color: #a31515;">Machine</span><span 
+                    style="color: blue;"> </span><span style="color: red;">Name</span><span 
+                    style="color: blue;">=</span>&quot;<span style="color: blue;">ORANGE-BOX</span>&quot;<span 
+                    style="color: blue;">&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; &lt;</span><span 
+                    style="color: #a31515;">Override</span><span style="color: blue;"> </span>
+                <span style="color: red;">Type</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget</span>&quot;<span 
+                    style="color: blue;">&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</span><span 
+                    style="color: #a31515;">Instance</span><span style="color: blue;"> </span>
+                <span style="color: red;">Type</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">Color</span>&quot;<span style="color: blue;"> </span>
+                <span style="color: red;">color</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">Orange</span>&quot;<span style="color: blue;">/&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; &lt;/</span><span 
+                    style="color: #a31515;">Override</span><span style="color: blue;">&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp; &lt;/</span><span style="color: #a31515;">Machine</span><span 
+                    style="color: blue;">&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&lt;/</span><span style="color: #a31515;">StructureMap</span><span 
+                    style="color: blue;">&gt;</span></p>
+        </div>
+<!--EndFragment-->
+<hr />
+
+	    
+	    
 	</body>
 </html>

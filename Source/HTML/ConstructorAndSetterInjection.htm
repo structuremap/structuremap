@@ -5,6 +5,12 @@
 		<link rel="stylesheet" type="text/css" href="style.css" />
 		<script type="text/javascript" src="jquery-1.2.6.js"></script>
 		<script type="text/javascript" src="structuremap.js"></script>
+	    <style type="text/css">
+            .style1
+            {
+                font-weight: normal;
+            }
+        </style>
 	</head>
 	<body>	    
 	
@@ -132,13 +138,82 @@
     </div>
 <!--EndFragment-->
 <h4>Overriding the Constructor in the Registry DSL</h4>
-        <p>TODO</p>
+        <p>StructureMap has always allowed you to override the constructor choice with an 
+            attribute, but increasingly, many people are unwilling to use attributes in 
+            their code for infrastructure concerns.&nbsp; Other times you may want to 
+            override the constructor choice of a class that you don&#39;t control.&nbsp; Either 
+            way, it would be useful to select the constructor function used by StructureMap 
+            to build a concrete code in the Registry DSL.&nbsp; The syntax to do just that 
+            is shown below:</p>
+        <p>Let&#39;s say that you have this class (from the unit tests):</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red163\green21\blue21;}??\fs20     \cf3 public\cf0  \cf3 class\cf0  \cf4 ClassWithTwoConstructors\par ??\cf0     \{\par ??        \cf3 private\cf0  \cf3 int\cf0  _age;\par ??        \cf3 private\cf0  \cf3 string\cf0  _name;\par ??\par ??        \cf3 public\cf0  ClassWithTwoConstructors(\cf3 int\cf0  age, \cf3 string\cf0  name)\par ??        \{\par ??            \cf4 Assert\cf0 .Fail(\cf5 "Should not be called"\cf0 );\par ??\par ??            _age = age;\par ??            _name = name;\par ??        \}\par ??\par ??        \cf3 public\cf0  \cf3 bool\cf0  WasConstructedWithNarrowCtor = \cf3 false\cf0 ;\par ??        \cf3 public\cf0  ClassWithTwoConstructors(\cf3 int\cf0  age)\par ??        \{\par ??            _age = age;\par ??            WasConstructedWithNarrowCtor = \cf3 true\cf0 ;\par ??        \}\par ??    \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">class</span>
+                <span style="color: #2b91af;">ClassWithTwoConstructors</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> 
+                ClassWithTwoConstructors(<span style="color: blue;">int</span> age,
+                <span style="color: blue;">string</span> name)</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> 
+                ClassWithTwoConstructors(<span style="color: blue;">int</span> age)</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<p>By default, StructureMap would choose the &quot;greediest&quot; constructor.&nbsp; In this 
+    case, it would be the constructor that takes in &quot;age&quot; and &quot;name.&quot;&nbsp; To force 
+    StructureMap into using the other constructor, use the SelectConstructor() 
+    method on the Registry:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red163\green21\blue21;}??\fs20             \cf3 var\cf0  container = \cf3 new\cf0  \cf4 Container\cf0 (x =&gt;\par ??            \{\par ??                x.SelectConstructor&lt;\cf4 ClassWithTwoConstructors\cf0 &gt;(()=&gt;\cf3 new\cf0  \cf4 ClassWithTwoConstructors\cf0 (0));\par ??                x.ForConcreteType&lt;\cf4 ClassWithTwoConstructors\cf0 &gt;().Configure\par ??                    .WithCtorArg(\cf5 "age"\cf0 ).EqualTo(34);\par ??            \});}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                var</span> container = <span style="color: blue;">new</span>
+                <span style="color: #2b91af;">Container</span>(x =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.SelectConstructor&lt;<span style="color: #2b91af;">ClassWithTwoConstructors</span>&gt;(()=&gt;<span 
+                    style="color: blue;">new</span> <span style="color: #2b91af;">
+                ClassWithTwoConstructors</span>(0));</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.ForConcreteType&lt;<span style="color: #2b91af;">ClassWithTwoConstructors</span>&gt;().Configure</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .WithCtorArg(<span style="color: #a31515;">&quot;age&quot;</span>).EqualTo(34);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+        </div>
+<!--EndFragment-->
+<p>The argument to the SelectConstructor is an Expression of type 
+    Expression&lt;Func&lt;T&gt;&gt; where T is the concrete class.&nbsp; StructureMap parses the 
+    Expression to find the constructor function in the Expression object.</p>
     
     
         <hr />
     
     
-    <h2>Using Setter Injection</h2>
+    <h2 class="style1">Using Setter Injection</h2>
 	<p>Setter injection is a pattern of &quot;injecting&quot; dependencies via public properties.&nbsp; 
         Setter Injection with StructureMap is somewhat a second class citizen, but 
         this is partially by design.&nbsp; My strong recommendation is to use 
@@ -478,11 +553,124 @@
 -->
 <!--EndFragment-->
 <hr />
-        <h4><a name="SetterPolicies"></a>Creating Policies for Setter Injection</h4><p>TODO</p>
-        <hr />
         <h4>Applying Setter Injection to an Existing Object (BuildUp)</h4>
         
-        <p>TODO</p>
+        <p>asdf</p>
+        <hr />
+        <h4><a name="SetterPolicies"></a>Creating Policies for Setter Injection</h4>
+        <p>New in StructureMap 2.5.2+ is the ability to create setter injection policies.&nbsp; 
+            What this means is that you create conventions to define which public setter 
+            properties will be mandatory in the construction of objects.&nbsp; </p>
+        <h4>Specify a Setter Policy by Property Name</h4>
+        <p>The sample below will make all public setter properties mandatory where the 
+            property name is suffixed by &quot;Service.&quot;&nbsp; The call to NameMatches() takes in 
+            a Predicate&lt;string&gt; that is a test against the property name.</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red163\green21\blue21;}??\fs20             \cf3 var\cf0  container = \cf3 new\cf0  \cf4 Container\cf0 (x =&gt;\par ??            \{\par ??                x.SetAllProperties(policy =&gt;\par ??                \{\par ??                    policy.NameMatches(name =&gt; name.EndsWith(\cf5 "Name"\cf0 ));\par ??                \});\par ??            \});}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                var</span> container = <span style="color: blue;">new</span>
+                <span style="color: #2b91af;">Container</span>(x =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.SetAllProperties(policy =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                policy.NameMatches(name =&gt; name.EndsWith(<span style="color: #a31515;">&quot;Service&quot;</span>));</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+        </div>
+<!--EndFragment-->
+<hr />
+        <h4>Specify a Setter Policy by Property Type</h4>
+        <p>&nbsp;</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20             \cf3 var\cf0  container = \cf3 new\cf0  \cf4 Container\cf0 (x =&gt;\par ??            \{\par ??                x.SetAllProperties(policy =&gt;\par ??                \{\par ??                    policy.OfType&lt;\cf3 string\cf0 &gt;();\par ??                    policy.OfType&lt;\cf4 IGateway\cf0 &gt;();\par ??                \});\par ??            \});}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                var</span> container = <span style="color: blue;">new</span>
+                <span style="color: #2b91af;">Container</span>(x =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.SetAllProperties(policy =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                policy.OfType&lt;<span style="color: blue;">string</span>&gt;();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                policy.OfType&lt;<span style="color: #2b91af;">IGateway</span>&gt;();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+        </div>
+<!--EndFragment-->
+<p>&nbsp;</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20             \cf3 var\cf0  container = \cf3 new\cf0  \cf4 Container\cf0 (x =&gt;\par ??            \{\par ??                x.SetAllProperties(policy =&gt;\par ??                \{\par ??                    policy.WithAnyTypeFromNamespaceContainingType&lt;\cf4 ClassWithNamedProperties\cf0 &gt;();\par ??                \});\par ??            \});}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                var</span> container = <span style="color: blue;">new</span>
+                <span style="color: #2b91af;">Container</span>(x =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.SetAllProperties(policy =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                policy.WithAnyTypeFromNamespaceContainingType&lt;<span style="color: #2b91af;">ClassWithNamedProperties</span>&gt;();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+        </div>
+<!--EndFragment-->
+<p>&nbsp;</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red163\green21\blue21;}??\fs20             \cf3 var\cf0  container = \cf3 new\cf0  \cf4 Container\cf0 (x =&gt;\par ??            \{\par ??                x.SetAllProperties(policy =&gt;\par ??                \{\par ??                    policy.WithAnyTypeFromNamespace(\cf5 "StructureMap.Testing.Widget3"\cf0 );\par ??                \});\par ??            \});}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                var</span> container = <span style="color: blue;">new</span>
+                <span style="color: #2b91af;">Container</span>(x =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.SetAllProperties(policy =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                policy.WithAnyTypeFromNamespace(<span style="color: #a31515;">&quot;StructureMap.Testing.Widget3&quot;</span>);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+        </div>
+<!--EndFragment-->
+<p>&nbsp;</p>
+        <p>&nbsp;</p>
         
         <hr />
         
