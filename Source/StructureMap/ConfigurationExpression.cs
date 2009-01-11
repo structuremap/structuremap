@@ -86,16 +86,7 @@ namespace StructureMap
             return builder.Build();
         }
 
-        /// <summary>
-        /// Use to programmatically select the constructor function of a concrete
-        /// class.  Applies globally to all Containers in a single AppDomain.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="func"></param>
-        public void SelectConstructor<T>(Expression<Func<T>> expression)
-        {
-            PluginCache.GetPlugin(typeof (T)).UseConstructor(expression);
-        }
+
     }
 
 

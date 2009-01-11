@@ -265,7 +265,7 @@
 -->
 <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
     <p style="margin: 0px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<span style="color: #2b91af;">Test</span>]/p>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<span style="color: #2b91af;">Test</span>]
     <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
         <span style="color: blue;">void</span> optional_setter_injection_with_string()</p>
@@ -553,18 +553,60 @@
 -->
 <!--EndFragment-->
 <hr />
-        <h4>Applying Setter Injection to an Existing Object (BuildUp)</h4>
+        <h2>Applying Setter Injection to an Existing Object (BuildUp)</h2>
         
         <p>asdf</p>
         <hr />
-        <h4><a name="SetterPolicies"></a>Creating Policies for Setter Injection</h4>
+        <h2><a name="SetterPolicies"></a>Creating Policies for Setter Injection</h2>
         <p>New in StructureMap 2.5.2+ is the ability to create setter injection policies.&nbsp; 
             What this means is that you create conventions to define which public setter 
-            properties will be mandatory in the construction of objects.&nbsp; </p>
+            properties will be mandatory in the construction of objects.&nbsp; Setter 
+            Injection policies are set with the new &quot;SetAllProperties&quot; method in the 
+            Registry DSL:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red163\green21\blue21;\red0\green0\blue255;\red43\green145\blue175;}??\fs20                 x.SetAllProperties(policy =&gt;\par ??                \{\par ??                    policy.WithAnyTypeFromNamespace(\cf3 "StructureMap.Testing.Widget3"\cf0 );\par ??\par ??                    policy.Matching(prop =&gt;\par ??                    \{\par ??                        \cf4 return\cf0  prop.PropertyType.CanBeCastTo(\cf4 typeof\cf0  (\cf5 IService\cf0 ))\par ??                               &amp;&amp; !prop.Name.Contains(\cf3 "Ignore"\cf0 );\par ??                    \});\par ??                \});}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.SetAllProperties(policy =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                policy.Matching(prop =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="color: blue;">return</span> prop.PropertyType.CanBeCastTo(<span 
+                    style="color: blue;">typeof</span> (<span style="color: #2b91af;">IService</span>))</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                &amp;&amp; !prop.Name.Contains(<span style="color: #a31515;">&quot;Ignore&quot;</span>);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                });</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+        </div>
+<!--EndFragment-->
+<p>In the end, all you&#39;re doing is telling StructureMap that any public Setter that 
+    matches a Predicate&lt;PropertyInfo&gt; policy should be a mandatory Setter.&nbsp; You 
+    can make multiple declarations inside the
+    <a href="http://martinfowler.com/dslwip/NestedClosure.html">nested closure</a> 
+    for SetAllProperties.&nbsp; <b>Any additional calls to SetAllProperties() are 
+    purely additive.</b></p>
+        <p>In the sections below we&#39;ll look at some helper methods inside 
+            SetAllProperties():</p>
+        <hr />
         <h4>Specify a Setter Policy by Property Name</h4>
         <p>The sample below will make all public setter properties mandatory where the 
             property name is suffixed by &quot;Service.&quot;&nbsp; The call to NameMatches() takes in 
-            a Predicate&lt;string&gt; that is a test against the property name.</p>
+            a Predicate&lt;string&gt; that is a test against the property name.&nbsp; The 
+            NameMatches() method just applies a Predicate&lt;string&gt; test against the name of a 
+            public setter.</p>
 <!--
 {\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red163\green21\blue21;}??\fs20             \cf3 var\cf0  container = \cf3 new\cf0  \cf4 Container\cf0 (x =&gt;\par ??            \{\par ??                x.SetAllProperties(policy =&gt;\par ??                \{\par ??                    policy.NameMatches(name =&gt; name.EndsWith(\cf5 "Name"\cf0 ));\par ??                \});\par ??            \});}
 -->
@@ -591,7 +633,35 @@
 <!--EndFragment-->
 <hr />
         <h4>Specify a Setter Policy by Property Type</h4>
-        <p>&nbsp;</p>
+        <p>Setter injection policies can also be defined by a simple test against the 
+            PropertyInfo.PropertyType.&nbsp; Here&#39;s the shorthand method:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20             \cf3 var\cf0  container = \cf3 new\cf0  \cf4 Container\cf0 (x =&gt;\par ??            \{\par ??                x.ForRequestedType&lt;\cf4 IService\cf0 &gt;().TheDefault.Is.Object(theService);\par ??                x.ForRequestedType&lt;\cf4 IGateway\cf0 &gt;().TheDefaultIsConcreteType&lt;\cf4 DefaultGateway\cf0 &gt;();\par ??\par ??                x.SetAllProperties(policy =&gt;\par ??                \{\par ??                    policy.TypeMatches(type =&gt; type == \cf3 typeof\cf0  (\cf4 IService\cf0 ));\par ??                \});\par ??            \});}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                var</span> container = <span style="color: blue;">new</span>
+                <span style="color: #2b91af;">Container</span>(x =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.SetAllProperties(policy =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                policy.TypeMatches(type =&gt; type == <span style="color: blue;">typeof</span> (<span 
+                    style="color: #2b91af;">IService</span>));</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+        </div>
+<!--EndFragment-->
+<p>The &quot;OfType&lt;T&gt;&quot; method is shorthand for:&nbsp; policy.Matching( property =&gt; 
+    typeof(T).IsAssignableTo(property.PropertyInfo) )</p>
 <!--
 {\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20             \cf3 var\cf0  container = \cf3 new\cf0  \cf4 Container\cf0 (x =&gt;\par ??            \{\par ??                x.SetAllProperties(policy =&gt;\par ??                \{\par ??                    policy.OfType&lt;\cf3 string\cf0 &gt;();\par ??                    policy.OfType&lt;\cf4 IGateway\cf0 &gt;();\par ??                \});\par ??            \});}
 -->
@@ -619,7 +689,10 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
         </div>
 <!--EndFragment-->
-<p>&nbsp;</p>
+<p>You can also specify that all setter dependencies where the property type is 
+    inside a namespace should be a mandatory setter (this check holds true for 
+    subfolders of a namespace).&nbsp; This can be handy if you place all services in 
+    a well known namespace.</p>
 <!--
 {\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20             \cf3 var\cf0  container = \cf3 new\cf0  \cf4 Container\cf0 (x =&gt;\par ??            \{\par ??                x.SetAllProperties(policy =&gt;\par ??                \{\par ??                    policy.WithAnyTypeFromNamespaceContainingType&lt;\cf4 ClassWithNamedProperties\cf0 &gt;();\par ??                \});\par ??            \});}
 -->
@@ -644,7 +717,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
         </div>
 <!--EndFragment-->
-<p>&nbsp;</p>
+<p>Here&#39;s another way to specify the namespace:</p>
 <!--
 {\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red163\green21\blue21;}??\fs20             \cf3 var\cf0  container = \cf3 new\cf0  \cf4 Container\cf0 (x =&gt;\par ??            \{\par ??                x.SetAllProperties(policy =&gt;\par ??                \{\par ??                    policy.WithAnyTypeFromNamespace(\cf5 "StructureMap.Testing.Widget3"\cf0 );\par ??                \});\par ??            \});}
 -->
@@ -669,12 +742,9 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
         </div>
 <!--EndFragment-->
-<p>&nbsp;</p>
-        <p>&nbsp;</p>
+<hr />
         
-        <hr />
-        
-        <h4>Defining Setter Properties with Attributes</h4><p>Just use the [StructureMap.Attributes.SetterProperty] to denote properties that 
+        <h2>Defining Setter Properties with Attributes</h2><p>Just use the [StructureMap.Attributes.SetterProperty] to denote properties that 
     need to be filled by StructureMap.&nbsp; Marking a property with the 
     [SetterProperty] makes the setter mandatory.&nbsp; StructureMap will throw an 
     exception if the &quot;ShouldCache&quot; property isn&#39;t specified for the concrete type 
@@ -737,7 +807,7 @@
 </div>
 <!--EndFragment-->
 <hr />
-        <h4>Defining Setter Properties in Xml</h4>
+        <h2>Defining Setter Properties in Xml</h2>
         <p>Setter properties can be defined in the Xml configuration by explicitly directing 
             StructureMap to use setter properties while building a concrete type.&nbsp; In 
             the Xml, Setter configuration is done with the exact syntax as constructor 

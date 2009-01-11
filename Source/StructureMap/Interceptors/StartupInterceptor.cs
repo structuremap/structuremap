@@ -4,18 +4,18 @@ namespace StructureMap.Interceptors
 {
     public class StartupInterceptor<T> : InstanceInterceptor
     {
-        private readonly Action<T> _handler;
+        private readonly Action<IContext, T> _handler;
 
-        public StartupInterceptor(Action<T> handler)
+        public StartupInterceptor(Action<IContext, T> handler)
         {
             _handler = handler;
         }
 
         #region InstanceInterceptor Members
 
-        public object Process(object target)
+        public object Process(object target, IContext context)
         {
-            _handler((T) target);
+            _handler(context, (T) target);
             return target;
         }
 

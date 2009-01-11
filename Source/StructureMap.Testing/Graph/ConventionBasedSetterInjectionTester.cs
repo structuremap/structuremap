@@ -88,6 +88,27 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
+        public void fill_all_properties_of_types_in_namespace_by_generic()
+        {
+
+            var container = new Container(x =>
+            {
+                x.SetAllProperties(policy =>
+                {
+                    policy.WithAnyTypeFromNamespaceContainingType<IService>();
+                });
+            });
+
+            var plugin = PluginCache.GetPlugin(typeof(ClassWithNamedProperties));
+
+            plugin.Setters.IsMandatory("Age").ShouldBeFalse();
+            plugin.Setters.IsMandatory("FirstName").ShouldBeFalse();
+            plugin.Setters.IsMandatory("LastName").ShouldBeFalse();
+            plugin.Setters.IsMandatory("Gateway").ShouldBeTrue();
+            plugin.Setters.IsMandatory("Service").ShouldBeTrue();
+        }
+
+        [Test]
         public void specify_setter_policy_and_construct_an_object()
         {
             var theService = new ColorService("red");
@@ -106,6 +127,29 @@ namespace StructureMap.Testing.Graph
             var target = container.GetInstance<ClassWithNamedProperties>();
             target.Service.ShouldBeTheSameAs(theService);
             target.Gateway.ShouldBeOfType<DefaultGateway>();
+        }
+
+        [Test]
+        public void specify_setter_policy_by_a_predicate_on_property_type()
+        {
+            var theService = new ColorService("red");
+
+            var container = new Container(x =>
+            {
+                x.ForRequestedType<IService>().TheDefault.Is.Object(theService);
+                x.ForRequestedType<IGateway>().TheDefaultIsConcreteType<DefaultGateway>();
+
+                x.SetAllProperties(policy =>
+                {
+                    policy.TypeMatches(type => type == typeof (IService));
+                });
+            });
+
+            var target = container.GetInstance<ClassWithNamedProperties>();
+            target.Service.ShouldBeTheSameAs(theService);
+            target.Gateway.ShouldBeNull();
+
+
         }
 
 

@@ -19,6 +19,17 @@ namespace StructureMap.Configuration.DSL
         {
             Matching(prop => prop.PropertyType == typeof (T));
         }
+        
+        /// <summary>
+        /// Directs StructureMap to tread all public setters with
+        /// a PropertyType that matches the predicate as a
+        /// mandatory setter
+        /// </summary>
+        /// <param name="predicate"></param>
+        public void TypeMatches(Predicate<Type> predicate)
+        {
+            Matching(prop => predicate(prop.PropertyType));
+        }
 
         /// <summary>
         /// Directs StructureMap to treat all public setters that match the 

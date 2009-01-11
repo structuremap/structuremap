@@ -103,8 +103,6 @@ namespace StructureMap
         /// </summary>
         public static void ResetAll()
         {
-            PluginCache.ResetAll();
-
             _sealed = false;
 
             _log = new GraphLog();
@@ -115,7 +113,6 @@ namespace StructureMap
             UseDefaultStructureMapConfigFile = false;
             IgnoreStructureMapConfig = false;
 
-            PluginCache.ResetAll();
             ObjectFactory.Reset();
         }
 

@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<StructureMap MementoStyle="Attribute">
+  <Assembly Name="StructureMap.Testing.Widget"/>
+
+  <!-- 
+    If we already have Instances defined somewhere else, we can just specify
+    that the Profile will use the named Instance designated by the DefaultKey
+    attribute
+  -->
+  <Profile Name="Stubbed">
+    <!-- The <Override> node sets up the Profile specific override of a single PluginType -->
+    <Override Type="SomeAssembly.IService,SomeAssembly" DefaultKey="Stubbed"/>
+  </Profile>
+
+  <!-- Defining the Profile Instance inline with the <Instance> Node -->
+  <Profile Name="Blue">
+    <Override Type="StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget">
+      <Instance Type="Color" color="Blue"/>
+    </Override>
+    <Override Type="StructureMap.Testing.Widget.Rule,StructureMap.Testing.Widget">
+      <Instance Type="Color" color="Blue"/>
+    </Override>
+  </Profile>
+
+
+  <!-- By the way, you can also make "Machine" specific overrides, but use with caution -->
+  <Machine Name="GREEN-BOX" Profile="Green"/>
+
+  <Machine Name="ORANGE-BOX">
+    <Override Type="StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget">
+      <Instance Type="Color" color="Orange"/>
+    </Override>
+  </Machine>
+</StructureMap>

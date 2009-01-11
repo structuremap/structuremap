@@ -4,7 +4,7 @@ namespace StructureMap.Interceptors
     {
         #region InstanceInterceptor Members
 
-        public object Process(object target)
+        public object Process(object target, IContext context)
         {
             return target;
         }

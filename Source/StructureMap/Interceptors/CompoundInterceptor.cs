@@ -17,12 +17,12 @@ namespace StructureMap.Interceptors
 
         #region InstanceInterceptor Members
 
-        public object Process(object target)
+        public object Process(object target, IContext context)
         {
             object returnValue = target;
             foreach (InstanceInterceptor interceptor in _interceptors)
             {
-                returnValue = interceptor.Process(returnValue);
+                returnValue = interceptor.Process(returnValue, context);
             }
 
             return returnValue;

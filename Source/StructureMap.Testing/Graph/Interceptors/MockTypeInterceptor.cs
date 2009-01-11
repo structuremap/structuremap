@@ -29,9 +29,9 @@ namespace StructureMap.Testing.Graph.Interceptors
             return _types.Contains(type);
         }
 
-        public object Process(object target)
+        public object Process(object target, IContext context)
         {
-            return _innerInterceptors[target.GetType()].Process(target);
+            return _innerInterceptors[target.GetType()].Process(target, context);
         }
 
         #endregion
@@ -60,7 +60,7 @@ namespace StructureMap.Testing.Graph.Interceptors
 
             #region InstanceInterceptor Members
 
-            public object Process(object target)
+            public object Process(object target, IContext context)
             {
                 return _handler((T) target);
             }

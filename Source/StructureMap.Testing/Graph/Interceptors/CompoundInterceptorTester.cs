@@ -25,10 +25,10 @@ namespace StructureMap.Testing.Graph.Interceptors
             var interceptor3 = mocks.StrictMock<InstanceInterceptor>();
             var interceptor4 = mocks.StrictMock<InstanceInterceptor>();
 
-            Expect.Call(interceptor1.Process("0")).Return("1");
-            Expect.Call(interceptor2.Process("1")).Return("2");
-            Expect.Call(interceptor3.Process("2")).Return("3");
-            Expect.Call(interceptor4.Process("3")).Return("4");
+            Expect.Call(interceptor1.Process("0", null)).Return("1");
+            Expect.Call(interceptor2.Process("1", null)).Return("2");
+            Expect.Call(interceptor3.Process("2", null)).Return("3");
+            Expect.Call(interceptor4.Process("3", null)).Return("4");
 
             mocks.ReplayAll();
             var compoundInterceptor = new CompoundInterceptor(new[]
@@ -39,7 +39,7 @@ namespace StructureMap.Testing.Graph.Interceptors
                                                                       interceptor4
                                                                   });
 
-            Assert.AreEqual("4", compoundInterceptor.Process("0"));
+            Assert.AreEqual("4", compoundInterceptor.Process("0", null));
             mocks.VerifyAll();
         }
     }

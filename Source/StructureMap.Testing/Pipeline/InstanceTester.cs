@@ -47,7 +47,7 @@ namespace StructureMap.Testing.Pipeline
 
             using (mocks.Record())
             {
-                Expect.Call(interceptor.Process(instanceUnderTest.TheInstanceThatWasBuilt)).Return(
+                Expect.Call(interceptor.Process(instanceUnderTest.TheInstanceThatWasBuilt, buildSession)).Return(
                     objectReturnedByInterceptor);
             }
 

@@ -5,7 +5,7 @@ namespace StructureMap.Graph
     public class FindAllTypesFilter : TypeRules, ITypeScanner
     {
         private readonly Type _pluginType;
-        private Func<Type, string> _getName = type => type.FullName;
+        private Func<Type, string> _getName = type => PluginCache.GetPlugin(type).ConcreteKey;
 
         public FindAllTypesFilter(Type pluginType)
         {

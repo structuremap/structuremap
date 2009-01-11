@@ -142,7 +142,49 @@ namespace StructureMap.Configuration.DSL.Expressions
                         return target;
                     };
 
-                    var interceptor = new PluginTypeInterceptor(typeof (PLUGINTYPE), function);
+                    var interceptor = new PluginTypeInterceptor(typeof (PLUGINTYPE), (c, o) =>
+                    {
+                        handler((PLUGINTYPE) o);
+                        return o;
+                    });
+
+                    graph.InterceptorLibrary.AddInterceptor(interceptor);
+                });
+
+            return this;
+        }
+
+        public CreatePluginFamilyExpression<PLUGINTYPE> InterceptWith(InstanceInterceptor interceptor)
+        {
+            _children.Add(
+                graph =>
+                {
+                    var typeInterceptor = new PluginTypeInterceptor(typeof(PLUGINTYPE), (c, o) => interceptor.Process(o, c));
+                    graph.InterceptorLibrary.AddInterceptor(typeInterceptor);
+                });
+
+            return this;
+        }
+
+        /// <summary>
+        /// Register an Action to run against any object of this PluginType immediately after
+        /// it is created, but before the new object is passed back to the caller
+        /// </summary>
+        /// <param name="handler"></param>
+        /// <returns></returns>
+        public CreatePluginFamilyExpression<PLUGINTYPE> OnCreation(Action<IContext, PLUGINTYPE> handler)
+        {
+            _children.Add(
+                graph =>
+                {
+                    Func<IContext, object, object> function = (c, o) =>
+                    {
+                        handler(c, (PLUGINTYPE)o);
+                        return o;
+                    };
+
+                    var interceptor = new PluginTypeInterceptor(typeof(PLUGINTYPE), function);
+
                     graph.InterceptorLibrary.AddInterceptor(interceptor);
                 });
 
@@ -162,9 +204,29 @@ namespace StructureMap.Configuration.DSL.Expressions
             _children.Add(
                 graph =>
                 {
-                    Func<object, object> function = target => handler((PLUGINTYPE) target);
+                    Func<IContext, object, object> function = (context, target) => handler((PLUGINTYPE) target);
 
                     var interceptor = new PluginTypeInterceptor(typeof (PLUGINTYPE), function);
+                    graph.InterceptorLibrary.AddInterceptor(interceptor);
+                });
+
+            return this;
+        }
+
+        /// <summary>
+        /// Register a Func to run against any object of this PluginType immediately after it is created,
+        /// but before the new object is passed back to the caller.  Unlike <see cref="OnCreation">OnCreation()</see>,
+        /// EnrichWith() gives the the ability to return a different object.  Use this method for runtime AOP
+        /// scenarios or to return a decorator.
+        /// </summary>
+        /// <param name="handler"></param>
+        /// <returns></returns>
+        public CreatePluginFamilyExpression<PLUGINTYPE> EnrichWith(ContextEnrichmentHandler<PLUGINTYPE> handler)
+        {
+            _children.Add(
+                graph =>
+                {
+                    var interceptor = new PluginTypeInterceptor(typeof(PLUGINTYPE), (c, o) => handler(c, (PLUGINTYPE)o));
                     graph.InterceptorLibrary.AddInterceptor(interceptor);
                 });
 
@@ -203,6 +265,19 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <param name="interceptor"></param>
         /// <returns></returns>
         public CreatePluginFamilyExpression<PLUGINTYPE> InterceptConstructionWith(IBuildInterceptor interceptor)
+        {
+            _alterations.Add(family => family.AddInterceptor(interceptor));
+            return this;
+        }
+
+        /// <summary>
+        /// Registers an IBuildInterceptor for this Plugin Type that executes before
+        /// any object of this PluginType is created.  IBuildInterceptor's can be
+        /// used to create a custom scope
+        /// </summary>
+        /// <param name="interceptor"></param>
+        /// <returns></returns>
+        public CreatePluginFamilyExpression<PLUGINTYPE> BuildPolicyIs(IBuildInterceptor interceptor)
         {
             _alterations.Add(family => family.AddInterceptor(interceptor));
             return this;

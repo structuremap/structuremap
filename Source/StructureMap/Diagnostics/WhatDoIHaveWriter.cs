@@ -67,7 +67,7 @@ namespace StructureMap.Diagnostics
             _writer.AddDivider('-');
             var contents = new[]
                                {
-                                   pluginType.PluginType.AssemblyQualifiedName ?? pluginType.PluginType.Name,
+                                   "{0} ({1})".ToFormat(pluginType.PluginType.GetName(), pluginType.PluginType.GetFullName()),
                                    string.Empty,
                                    string.Empty
                                };

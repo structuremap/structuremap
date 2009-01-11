@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
@@ -36,6 +37,14 @@ namespace StructureMap.Configuration.DSL
         // Controlling Setter Injection Behavior
         CreatePluginFamilyExpression<PLUGINTYPE> FillAllPropertiesOfType<PLUGINTYPE>();
         void SetAllProperties(Action<SetterConvention> action);
+
+        /// <summary>
+        /// Use to programmatically select the constructor function of a concrete
+        /// class.  Applies globally to all Containers in a single AppDomain.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="func"></param>
+        void SelectConstructor<T>(Expression<Func<T>> expression);
     }
 
     /// <summary>
@@ -336,6 +345,17 @@ namespace StructureMap.Configuration.DSL
         public void SetAllProperties(Action<SetterConvention> action)
         {
             action(new SetterConvention());
+        }
+
+        /// <summary>
+        /// Use to programmatically select the constructor function of a concrete
+        /// class.  Applies globally to all Containers in a single AppDomain.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="func"></param>
+        public void SelectConstructor<T>(Expression<Func<T>> expression)
+        {
+            PluginCache.GetPlugin(typeof(T)).UseConstructor(expression);
         }
     }
 }

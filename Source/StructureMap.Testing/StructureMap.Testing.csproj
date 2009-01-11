@@ -223,6 +223,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Examples\CustomInstance.cs" />
+    <Compile Include="Examples\Interception.cs" />
     <Compile Include="Examples\RegisteringWithTheAPI.cs" />
     <Compile Include="Graph\ArrayConstructorTester.cs">
       <SubType>Code</SubType>
@@ -442,6 +443,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Sample.xml" />
+    <Content Include="TestData\ProfileSample.xml" />
     <EmbeddedResource Include="TestData\ShortInstance.xml" />
     <EmbeddedResource Include="TestData\DefaultInstance.xml" />
   </ItemGroup>

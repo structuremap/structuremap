@@ -106,7 +106,7 @@ namespace StructureMap.Pipeline
             
             // Allow the Interceptor a chance to enhance, configure,  
             // wrap with a decorator, or even replace the rawValue
-            object finalValue = applyInterception(rawValue, pluginType);
+            object finalValue = applyInterception(rawValue, pluginType, session);
 
             markBuildStackFinish(session);
 
@@ -172,12 +172,12 @@ namespace StructureMap.Pipeline
         }
 
 
-        private object applyInterception(object rawValue, Type pluginType)
+        private object applyInterception(object rawValue, Type pluginType, IContext context)
         {
             try
             {
                 // Intercept with the Instance-specific InstanceInterceptor
-                return _interceptor.Process(rawValue);
+                return _interceptor.Process(rawValue, context);
             }
             catch (Exception e)
             {
@@ -234,7 +234,7 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public T OnCreation<TYPE>(Action<TYPE> handler)
         {
-            var interceptor = new StartupInterceptor<TYPE>(handler);
+            var interceptor = new StartupInterceptor<TYPE>((c, o) => handler(o));
             Interceptor = interceptor;
 
             return thisInstance;
@@ -248,6 +248,21 @@ namespace StructureMap.Pipeline
         /// <param name="handler"></param>
         /// <returns></returns>
         public T EnrichWith<TYPE>(EnrichmentHandler<TYPE> handler)
+        {
+            var interceptor = new EnrichmentInterceptor<TYPE>((c, o) => handler(o));
+            Interceptor = interceptor;
+
+            return thisInstance;
+        }
+
+        /// <summary>
+        /// Register a Func to potentially enrich or substitute for the object
+        /// created by this Instance before it is returned to the caller
+        /// </summary>
+        /// <typeparam name="TYPE"></typeparam>
+        /// <param name="handler"></param>
+        /// <returns></returns>
+        public T EnrichWith<TYPE>(ContextEnrichmentHandler<TYPE> handler)
         {
             var interceptor = new EnrichmentInterceptor<TYPE>(handler);
             Interceptor = interceptor;

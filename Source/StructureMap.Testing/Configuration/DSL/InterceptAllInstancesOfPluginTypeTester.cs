@@ -1,6 +1,7 @@
 using System;
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
+using StructureMap.Interceptors;
 using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Configuration.DSL
@@ -79,12 +80,39 @@ namespace StructureMap.Testing.Configuration.DSL
         }
 
         [Test]
+        public void custom_interceptor_for_all()
+        {
+            var interceptor = new MockInterceptor();
+            IService service = getService("Green", r =>
+            {
+                r.ForRequestedType<IService>().InterceptWith(interceptor)
+                    .AddInstances(x => { x.ConstructedBy(() => new ColorService("Green")).WithName("Green"); });
+            });
+
+            interceptor.Target.ShouldBeTheSameAs(service);
+        }
+
+        public class MockInterceptor : InstanceInterceptor
+        {
+            public object Process(object target, IContext context)
+            {
+                Target = target;
+                return target;
+            }
+
+            public object Target { get; set; }
+        }
+
+        [Test]
         public void OnStartupForAll()
         {
-            Action<Registry> action = r =>
+            Action<Registry> action = registry =>
             {
-                r.ForRequestedType<IService>().OnCreation(s => _lastService = s)
-                    .AddInstances(x => { x.ConstructedBy(() => new ColorService("Green")).WithName("Green"); });
+                registry.ForRequestedType<IService>().OnCreation(s => _lastService = s)
+                    .AddInstances(x =>
+                    {
+                        x.ConstructedBy(() => new ColorService("Green")).WithName("Green");
+                    });
             };
 
 

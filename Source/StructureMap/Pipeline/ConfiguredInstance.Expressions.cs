@@ -21,6 +21,21 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public ConfiguredInstance OnCreation<TYPE>(Action<TYPE> handler)
         {
+            var interceptor = new StartupInterceptor<TYPE>((c, o) => handler(o));
+            Interceptor = interceptor;
+
+            return this;
+        }
+
+        /// <summary>
+        /// Register an Action to perform on the object created by this Instance
+        /// before it is returned to the caller
+        /// </summary>
+        /// <typeparam name="TYPE"></typeparam>
+        /// <param name="handler"></param>
+        /// <returns></returns>
+        public ConfiguredInstance OnCreation<TYPE>(Action<IContext, TYPE> handler)
+        {
             var interceptor = new StartupInterceptor<TYPE>(handler);
             Interceptor = interceptor;
 
@@ -34,6 +49,20 @@ namespace StructureMap.Pipeline
         /// <param name="handler"></param>
         /// <returns></returns>
         public ConfiguredInstance EnrichWith<TYPE>(EnrichmentHandler<TYPE> handler)
+        {
+            var interceptor = new EnrichmentInterceptor<TYPE>((c, o) => handler(o));
+            Interceptor = interceptor;
+
+            return this;
+        }
+
+        /// <summary>
+        /// Register a Func to potentially enrich or substitute for the object
+        /// created by this Instance before it is returned to the caller
+        /// </summary>
+        /// <param name="handler"></param>
+        /// <returns></returns>
+        public ConfiguredInstance EnrichWith<TYPE>(ContextEnrichmentHandler<TYPE> handler)
         {
             var interceptor = new EnrichmentInterceptor<TYPE>(handler);
             Interceptor = interceptor;

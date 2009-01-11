@@ -5,9 +5,9 @@ namespace StructureMap.Interceptors
     public class MatchedTypeInterceptor : TypeInterceptor
     {
         private readonly Predicate<Type> _match;
-        private Func<object, object> _interception;
+        private Func<IContext, object, object> _interception;
 
-        internal MatchedTypeInterceptor(Predicate<Type> match)
+        public MatchedTypeInterceptor(Predicate<Type> match)
         {
             _match = match;
         }
@@ -19,16 +19,32 @@ namespace StructureMap.Interceptors
             return _match(type);
         }
 
-        public object Process(object target)
+        public object Process(object target, IContext context)
         {
-            return _interception(target);
+            return _interception(context, target);
         }
 
         #endregion
 
+        /// <summary>
+        /// Specify how objects matching the Type predicate
+        /// will be intercepted
+        /// </summary>
+        /// <param name="interception"></param>
         public void InterceptWith(Func<object, object> interception)
+        {
+            _interception = (context, o) => interception(o);
+        }
+
+        /// <summary>
+        /// Specify how objects matching the Type predicate
+        /// will be intercepted
+        /// </summary>
+        /// <param name="interception"></param>
+        public void InterceptWith(Func<IContext, object, object> interception)
         {
             _interception = interception;
         }
+
     }
 }

@@ -67,5 +67,29 @@ namespace StructureMap
             return null;
         }
 
+        public static string GetName(this Type type)
+        {
+            if (type.IsGenericType)
+            {
+                string[] parameters = Array.ConvertAll(type.GetGenericArguments(), t => t.GetName());
+                var parameterList = string.Join(", ", parameters);
+                return "{0}<{1}>".ToFormat(type.Name, parameterList);
+            }
+
+            return type.Name;
+        }
+
+        public static string GetFullName(this Type type)
+        {
+            if (type.IsGenericType)
+            {
+                string[] parameters = Array.ConvertAll(type.GetGenericArguments(), t => t.GetName());
+                var parameterList = string.Join(", ", parameters);
+                return "{0}<{1}>".ToFormat(type.Name, parameterList);
+            }
+
+            return type.FullName;
+        }
+
     }
 }

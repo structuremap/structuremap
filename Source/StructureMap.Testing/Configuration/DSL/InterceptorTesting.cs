@@ -14,31 +14,50 @@ namespace StructureMap.Testing.Configuration.DSL
         public void SetUp()
         {
             _lastService = null;
+            recorder = new ContextRecorder();
 
-            _container = new Container(r => r.ForRequestedType<IService>().AddInstances(x =>
+            _container = new Container(r =>
             {
-                x.OfConcreteType<ColorService>()
-                    .OnCreation(s => _lastService = s)
-                    .WithName("Intercepted")
-                    .WithCtorArg("color").EqualTo("Red");
+                r.ForRequestedType<ContextRecorder>().TheDefault.IsThis(recorder);
 
-                x.OfConcreteType<ColorService>()
-                    .WithName("NotIntercepted")
-                    .WithCtorArg("color").EqualTo("Blue");
+                r.ForRequestedType<IService>().AddInstances(x =>
+                {
+                    x.OfConcreteType<ColorService>()
+                        .OnCreation(s => _lastService = s)
+                        .WithName("Intercepted")
+                        .WithCtorArg("color").EqualTo("Red");
 
-                x.Object(new ColorService("Yellow"))
-                    .WithName("Yellow")
-                    .OnCreation<ColorService>(s => _lastService = s);
+                    x.OfConcreteType<ColorService>()
+                        .OnCreation((c, s) => c.GetInstance<ContextRecorder>().WasTouched = true)
+                        .WithName("InterceptedWithContext")
+                        .WithCtorArg("color").EqualTo("Red");
 
-                x.ConstructedBy(() => new ColorService("Purple")).WithName("Purple")
-                    .EnrichWith<IService>(s => new DecoratorService(s));
+                    x.OfConcreteType<ColorService>()
+                        .WithName("NotIntercepted")
+                        .WithCtorArg("color").EqualTo("Blue");
 
-                x.OfConcreteType<ColorService>().WithName("Decorated").EnrichWith<IService>(s => new DecoratorService(s))
-                    .WithCtorArg("color").EqualTo("Orange");
+                    x.Object(new ColorService("Yellow"))
+                        .WithName("Yellow")
+                        .OnCreation<ColorService>(s => _lastService = s);
 
-                x.Object(new ColorService("Yellow")).WithName("Bad")
-                    .OnCreation<ColorService>(obj => { throw new ApplicationException("Bad!"); });
-            }));
+                    x.ConstructedBy(() => new ColorService("Purple")).WithName("Purple")
+                        .EnrichWith<IService>(s => new DecoratorService(s));
+
+                    x.ConstructedBy(() => new ColorService("Purple")).WithName("DecoratedWithContext")
+                        .EnrichWith<IService>((c, s) =>
+                        {
+                            c.GetInstance<ContextRecorder>().WasTouched = true;
+                            return new DecoratorService(s);
+                        });
+
+                    x.OfConcreteType<ColorService>().WithName("Decorated").EnrichWith<IService>(
+                        s => new DecoratorService(s))
+                        .WithCtorArg("color").EqualTo("Orange");
+
+                    x.Object(new ColorService("Yellow")).WithName("Bad")
+                        .OnCreation<ColorService>(obj => { throw new ApplicationException("Bad!"); });
+                });
+            });
         }
 
         #endregion
@@ -46,6 +65,21 @@ namespace StructureMap.Testing.Configuration.DSL
         private ColorService _lastService;
 
         private IContainer _container;
+        private ContextRecorder recorder;
+
+        [Test]
+        public void call_the_build_context_with_startup()
+        {
+            _container.GetInstance<IService>("InterceptedWithContext");
+            recorder.WasTouched.ShouldBeTrue();
+        }
+
+        [Test]
+        public void call_the_build_context_with_enrich()
+        {
+            _container.GetInstance<IService>("DecoratedWithContext");
+            recorder.WasTouched.ShouldBeTrue();
+        }
 
         [Test]
         public void DecorateAConstructedService()
@@ -119,5 +153,10 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             get { return _inner; }
         }
+    }
+
+    public class ContextRecorder
+    {
+        public bool WasTouched { get; set; }
     }
 }

@@ -8,6 +8,6 @@ namespace StructureMap.Interceptors
     /// </summary>
     public interface InstanceInterceptor
     {
-        object Process(object target);
+        object Process(object target, IContext context);
     }
 }

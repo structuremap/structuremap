@@ -25,7 +25,14 @@
   
   
   
-  <AddInstance PluginType="StructureMap.Testing.Widget.GrandChild, StructureMap.Testing.Widget"  Type="Default" Key="Todd" RightHanded="true" BirthYear="1975" />
+  <AddInstance 
+    PluginType="StructureMap.Testing.Widget.GrandChild, StructureMap.Testing.Widget"  
+    Type="Default" 
+    Key="Todd" 
+    RightHanded="true" 
+    BirthYear="1975" />
+  
+  
   <AddInstance PluginType="StructureMap.Testing.Widget.GrandChild, StructureMap.Testing.Widget"   Type="Leftie" Key="Trevor" BirthYear="1979" />
   <AddInstance PluginType="StructureMap.Testing.Widget.Child, StructureMap.Testing.Widget" Type="Default" Key="Tom" Name="Tom">
     <MyGrandChild Type="Leftie" BirthYear="1984" />

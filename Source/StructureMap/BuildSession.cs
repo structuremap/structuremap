@@ -174,7 +174,7 @@ namespace StructureMap
         public virtual object ApplyInterception(Type pluginType, object actualValue)
         {
             if (actualValue == null) return null;
-            return _interceptorLibrary.FindInterceptor(actualValue.GetType()).Process(actualValue);
+            return _interceptorLibrary.FindInterceptor(actualValue.GetType()).Process(actualValue, this);
         }
 
         public virtual void RegisterDefault(Type pluginType, object defaultObject)

@@ -113,6 +113,25 @@ namespace StructureMap.Configuration.DSL.Expressions
         {
             _registry.addExpression(graph =>
             {
+                var interceptor = new PluginTypeInterceptor(_pluginType, (c, o) => func(o));
+                graph.InterceptorLibrary.AddInterceptor(interceptor);
+            });
+
+            return this;
+        }
+
+        /// <summary>
+        /// Register a Func to run against any object of this PluginType immediately after it is created,
+        /// but before the new object is passed back to the caller.  Unlike <see cref="OnCreation">OnCreation()</see>,
+        /// EnrichWith() gives the the ability to return a different object.  Use this method for runtime AOP
+        /// scenarios or to return a decorator.
+        /// </summary>
+        /// <param name="func"></param>
+        /// <returns></returns>
+        public GenericFamilyExpression EnrichWith(Func<IContext, object, object> func)
+        {
+            _registry.addExpression(graph =>
+            {
                 var interceptor = new PluginTypeInterceptor(_pluginType, func);
                 graph.InterceptorLibrary.AddInterceptor(interceptor);
             });
