@@ -61,7 +61,8 @@
 <!--
 {\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;}??\fs20         \cf3 public\cf0  GreaterThanRule()\par ??        \{\par ??        \}\par ??\par ??        \cf3 public\cf0  GreaterThanRule(\cf3 string\cf0  Attribute, \cf3 int\cf0  Value)\par ??        \{\par ??            _Attribute = Attribute;\par ??            _Value = Value;\par ??        \}}
 -->
-    <div style="font-family: Courier New; font-size: 10pt; color: black; background: white;">
+    <div style="font-family: Courier New; font-size: 10pt; color: black; background: white;" 
+            class="code-sample">
         <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> 
             GreaterThanRule()</p>
@@ -107,7 +108,8 @@
 <!--
 {\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red43\green145\blue175;\red0\green0\blue255;}??\fs20         [\cf3 DefaultConstructor\cf0 ]\par ??        \cf4 public\cf0  DataSession(\cf3 IDatabaseEngine\cf0  database)\par ??            : \cf4 this\cf0 (database,\par ??                   \cf4 new\cf0  \cf3 CommandFactory\cf0 (database),\par ??                   \cf4 new\cf0  \cf3 AutoCommitExecutionState\cf0 (database.GetConnection(), database.GetDataAdapter()),\par ??                   \cf4 new\cf0  \cf3 TransactionalExecutionState\cf0 (database.GetConnection(), database.GetDataAdapter()))\par ??        \{\par ??        \}}
 -->
-    <div style="font-family: Courier New; font-size: 10pt; color: black; background: white;">
+    <div style="font-family: Courier New; font-size: 10pt; color: black; background: white;" 
+            class="code-sample">
         <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<span style="color: #2b91af;">DefaultConstructor</span>]</p>
         <p style="margin: 0px;">
@@ -386,7 +388,7 @@
             <span style="color: #2b91af;">Rule</span>[] Rules { <span style="color: blue;">
             get</span>; <span style="color: blue;">set</span>; }</p>
         <p style="margin: 0px;">
-&&nbsp;&nbsp;&nbsp; }</p>
+            &nbsp;&nbsp;&nbsp; }</p>
     </div>
 <!--EndFragment-->
 <p>I can explicitly configure what gets injected into the &quot;Rule&quot; property for a 
@@ -555,8 +557,192 @@
 <hr />
         <h2>Applying Setter Injection to an Existing Object (BuildUp)</h2>
         
-        <p>asdf</p>
-        <hr />
+        <p>Many times you simply cannot control when an object is going to be created 
+            (ASP.Net WebForms), but you may still want to inject dependencies and even 
+            primitive values into an already constructed object.&nbsp; To fill this gap, 
+            StructureMap 2.5.2+ introduces the &quot;BuildUp()&quot; method on Container and 
+            ObjectFactory.&nbsp; BuildUp() works by finding the default Instance for the 
+            concrete type passed into the BuildUp() method (or create a new Instance if one 
+            does not already exist), then applying any setters from that Instance 
+            configuration.&nbsp; At this time, StructureMap does not apply interception 
+            inside of BuildUp().</p>
+        <p>Let&#39;s say that we have a class called &quot;BuildTarget1&quot; like 
+            this:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20     \cf3 public\cf0  \cf3 class\cf0  \cf4 BuildUpTarget1\par ??\cf0     \{\par ??        \cf3 public\cf0  \cf4 IGateway\cf0  Gateway \{ \cf3 get\cf0 ; \cf3 set\cf0 ; \}\par ??        \cf3 public\cf0  \cf4 IService\cf0  Service \{ \cf3 get\cf0 ; \cf3 set\cf0 ; \}\par ??    \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">class</span>
+                <span style="color: #2b91af;">BuildUpTarget1</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: #2b91af;">IGateway</span> Gateway {
+                <span style="color: blue;">get</span>; <span style="color: blue;">set</span>; }</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</div>
+<p>In usage, we&#39;d like to have the Gateway dependency injected into a new instance of the BuildTarget1 class when we call BuildUp():</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red43\green145\blue175;\red0\green0\blue255;\red0\green128\blue0;}??\fs20         [\cf3 Test\cf0 ]\par ??        \cf4 public\cf0  \cf4 void\cf0  create_a_setter_rule_and_see_it_applied_in_BuildUp_through_ObjectFactory()\par ??        \{\par ??            \cf4 var\cf0  theGateway = \cf4 new\cf0  \cf3 DefaultGateway\cf0 ();\par ??            \cf3 ObjectFactory\cf0 .Initialize(x =&gt;\par ??            \{\par ??                x.IgnoreStructureMapConfig = \cf4 true\cf0 ;\par ??                x.ForRequestedType&lt;\cf3 IGateway\cf0 &gt;().TheDefault.IsThis(theGateway);\par ??                \par ??                \cf5 // First we create a new Setter Injection Policy that\par ??\cf0                 \cf5 // forces StructureMap to inject all public properties\par ??\cf0                 \cf5 // where the PropertyType is IGateway\par ??\cf0                 x.SetAllProperties(y =&gt;\par ??                \{\par ??                    y.OfType&lt;\cf3 IGateway\cf0 &gt;();\par ??                \});\par ??            \});\par ??\par ??            \cf5 // Create an instance of BuildUpTarget1\par ??\cf0             \cf4 var\cf0  target = \cf4 new\cf0  \cf3 BuildUpTarget1\cf0 ();\par ??\par ??            \cf5 // Now, call BuildUp() on target, and\par ??\cf0             \cf5 // we should see the Gateway property assigned\par ??\cf0             \cf3 ObjectFactory\cf0 .BuildUp(target);\par ??\par ??            target.Gateway.ShouldBeTheSameAs(theGateway);\par ??        \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<span style="color: #2b91af;">Test</span>]</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: blue;">void</span> 
+                create_a_setter_rule_and_see_it_applied_in_BuildUp_through_ObjectFactory()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                var</span> theGateway = <span style="color: blue;">new</span>
+                <span style="color: #2b91af;">DefaultGateway</span>();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #2b91af;">
+                ObjectFactory</span>.Initialize(x =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.ForRequestedType&lt;<span style="color: #2b91af;">IGateway</span>&gt;().TheDefault.IsThis(theGateway);</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="color: green;">// First we create a new Setter Injection Policy 
+                that</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="color: green;">// forces StructureMap to inject all public 
+                properties</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="color: green;">// where the PropertyType is IGateway</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.SetAllProperties(y =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                y.OfType&lt;<span style="color: #2b91af;">IGateway</span>&gt;();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // Create an instance of BuildUpTarget1</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                var</span> target = <span style="color: blue;">new</span>
+                <span style="color: #2b91af;">BuildUpTarget1</span>();</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // Now, call BuildUp() on target, and</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // we should see the Gateway property assigned</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #2b91af;">
+                ObjectFactory</span>.BuildUp(target);</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                target.Gateway.ShouldBeTheSameAs(theGateway);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<p>BuildUp() also works with primitive properties (but I&#39;m not sure how useful this 
+    will really be):</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red0\green128\blue0;\red163\green21\blue21;}??\fs20     \cf3 public\cf0  \cf3 class\cf0  \cf4 ClassThatHasConnection\par ??\cf0     \{\par ??        \cf3 public\cf0  \cf3 string\cf0  ConnectionString \{ \cf3 get\cf0 ; \cf3 set\cf0 ; \}\par ??    \}\par ??\par ??    [\cf4 TestFixture\cf0 ]\par ??    \cf3 public\cf0  \cf3 class\cf0  \cf4 demo_the_BuildUp\par ??\cf0     \{\par ??        [\cf4 Test\cf0 ]\par ??        \cf3 public\cf0  \cf3 void\cf0  push_in_a_string_property()\par ??        \{\par ??            \cf5 // There is a limitation to this.  As of StructureMap 2.5.2,\par ??\cf0             \cf5 // you can only use the .WithProperty().EqualTo() syntax\par ??\cf0             \cf5 // for BuildUp()\par ??\cf0             \cf5 // SetProperty() will not work at this time.\par ??\cf0             \cf3 var\cf0  container = \cf3 new\cf0  \cf4 Container\cf0 (x =&gt;\par ??            \{\par ??                x.ForConcreteType&lt;\cf4 ClassThatHasConnection\cf0 &gt;().Configure\par ??                    .WithProperty(o =&gt; o.ConnectionString).EqualTo(\cf6 "connect1"\cf0 );\par ??\par ??            \});\par ??\par ??            \cf3 var\cf0  @class = \cf3 new\cf0  \cf4 ClassThatHasConnection\cf0 ();\par ??            container.BuildUp(@class);\par ??\par ??            @class.ConnectionString.ShouldEqual(\cf6 "connect1"\cf0 );\par ??        \}\par ??    \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">class</span>
+                <span style="color: #2b91af;">ClassThatHasConnection</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: blue;">string</span> ConnectionString {
+                <span style="color: blue;">get</span>; <span style="color: blue;">set</span>; }</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; [<span style="color: #2b91af;">TestFixture</span>]</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">class</span>
+                <span style="color: #2b91af;">demo_the_BuildUp</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<span style="color: #2b91af;">Test</span>]</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: blue;">void</span> push_in_a_string_property()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // There is a limitation to this.&nbsp; As of StructureMap 2.5.2,</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // you can only use the .WithProperty().EqualTo() syntax</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // for BuildUp()</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // SetProperty() will not work at this time.</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                var</span> container = <span style="color: blue;">new</span>
+                <span style="color: #2b91af;">Container</span>(x =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.ForConcreteType&lt;<span style="color: #2b91af;">ClassThatHasConnection</span>&gt;().Configure</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .WithProperty(o =&gt; o.ConnectionString).EqualTo(<span style="color: #a31515;">&quot;connect1&quot;</span>);</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                var</span> @class = <span style="color: blue;">new</span>
+                <span style="color: #2b91af;">ClassThatHasConnection</span>();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; container.BuildUp(@class);</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                @class.ConnectionString.ShouldEqual(<span style="color: #a31515;">&quot;connect1&quot;</span>);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<hr />
         <h2><a name="SetterPolicies"></a>Creating Policies for Setter Injection</h2>
         <p>New in StructureMap 2.5.2+ is the ability to create setter injection policies.&nbsp; 
             What this means is that you create conventions to define which public setter 

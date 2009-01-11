@@ -57,13 +57,21 @@ namespace StructureMap.Testing
             {
                 x.IgnoreStructureMapConfig = true;
                 x.ForRequestedType<IGateway>().TheDefault.IsThis(theGateway);
+                
+                // First we create a new Setter Injection Policy that
+                // forces StructureMap to inject all public properties
+                // where the PropertyType is IGateway
                 x.SetAllProperties(y =>
                 {
                     y.OfType<IGateway>();
                 });
             });
 
+            // Create an instance of BuildUpTarget1
             var target = new BuildUpTarget1();
+
+            // Now, call BuildUp() on target, and
+            // we should see the Gateway property assigned
             ObjectFactory.BuildUp(target);
 
             target.Gateway.ShouldBeTheSameAs(theGateway);

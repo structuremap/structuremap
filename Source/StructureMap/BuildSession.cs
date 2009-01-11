@@ -27,6 +27,13 @@ namespace StructureMap
         T GetInstance<T>();
 
         /// <summary>
+        /// Get the object of type T that is valid for this build session by name.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        T GetInstance<T>(string name);
+
+        /// <summary>
         /// Gets the root "frame" of the object request
         /// </summary>
         BuildFrame Root { get; }
@@ -43,6 +50,23 @@ namespace StructureMap
         /// <param name="pluginType"></param>
         /// <param name="defaultObject"></param>
         void RegisterDefault(Type pluginType, object defaultObject);
+
+        /// <summary>
+        /// Same as GetInstance, but can gracefully return null if 
+        /// the Type does not already exist
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        T TryGetInstance<T>() where T : class;
+
+        /// <summary>
+        /// Same as GetInstance(name), but can gracefully return null if 
+        /// the Type and name does not already exist
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        T TryGetInstance<T>(string name) where T : class;
     }
 
     public class BuildSession : IContext
@@ -103,6 +127,11 @@ namespace StructureMap
         T IContext.GetInstance<T>()
         {
             return (T) CreateInstance(typeof (T));
+        }
+
+        public T GetInstance<T>(string name)
+        {
+            return (T) CreateInstance(typeof (T), name);
         }
 
         BuildFrame IContext.Root
@@ -180,6 +209,23 @@ namespace StructureMap
         public virtual void RegisterDefault(Type pluginType, object defaultObject)
         {
             _defaults[pluginType] = defaultObject;
+        }
+
+        public T TryGetInstance<T>() where T : class
+        {
+            if (_defaults.Has(typeof(T)))
+            {
+                return (T) _defaults[typeof (T)];
+            }
+
+            return _pipelineGraph.HasDefaultForPluginType(typeof (T))
+                       ? ((IContext) this).GetInstance<T>()
+                       : null;
+        }
+
+        public T TryGetInstance<T>(string name) where T : class
+        {
+            return _pipelineGraph.HasInstance(typeof (T), name) ? ((IContext) this).GetInstance<T>(name) : null;
         }
 
 

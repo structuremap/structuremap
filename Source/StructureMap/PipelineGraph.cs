@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
@@ -205,6 +206,17 @@ namespace StructureMap
             }
 
             return list;
+        }
+
+        public bool HasDefaultForPluginType(Type pluginType)
+        {
+            PluginTypeConfiguration configuration = PluginTypes.FirstOrDefault(p => p.PluginType == pluginType);
+            return configuration == null ? false : configuration.Default != null;
+        }
+
+        public bool HasInstance(Type pluginType, string instanceKey)
+        {
+            return ForType(pluginType).FindInstance(instanceKey) != null;
         }
     }
 }

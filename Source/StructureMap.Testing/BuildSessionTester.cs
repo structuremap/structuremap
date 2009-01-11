@@ -187,6 +187,61 @@ namespace StructureMap.Testing
                 session.CreateInstance(typeof (IGateway));
             });
         }
+
+        [Test]
+        public void when_retrieving_with_try_get_instance_for_instance_that_does_not_exists()
+        {
+            var session = new BuildSession(new PluginGraph());
+            session.TryGetInstance<IService>().ShouldBeNull();
+        }
+
+        [Test]
+        public void when_retrieving_by_try_get_instance_for_instance_that_does_exist()
+        {
+            var session = new BuildSession();
+            var theService = new ColorService("red");
+            session.RegisterDefault(typeof(IService), theService);
+
+            session.TryGetInstance<IService>().ShouldBeTheSameAs(theService);
+        }
+
+        [Test]
+        public void when_retrieving_by_try_get_named_instance_that_does_not_exist()
+        {
+            var session = new BuildSession();
+            session.TryGetInstance<IService>("red").ShouldBeNull();
+        }
+
+        [Test]
+        public void when_retrieving_by_try_get_named_instance_that_does_exist()
+        {
+            var red = new ColorService("red");
+            var green = new ColorService("green");
+
+            PluginGraph graph = new PluginGraph();
+            PluginFamily family = graph.FindFamily(typeof(IService));
+            family.AddInstance(new LiteralInstance(red).WithName("red"));
+            family.AddInstance(new LiteralInstance(green).WithName("green"));
+
+            var session = new BuildSession(graph);
+            session.TryGetInstance<IService>("red").ShouldBeTheSameAs(red);
+            session.TryGetInstance<IService>("green").ShouldBeTheSameAs(green);
+        }
+
+        [Test]
+        public void when_retrieving_an_object_by_name()
+        {
+            var red = new ColorService("red");
+            var green = new ColorService("green");
+
+            PluginGraph graph = new PluginGraph();
+            PluginFamily family = graph.FindFamily(typeof(IService));
+            family.AddInstance(new LiteralInstance(red).WithName("red"));
+            family.AddInstance(new LiteralInstance(green).WithName("green"));
+
+            var session = new BuildSession(graph);
+            session.GetInstance<IService>("red").ShouldBeTheSameAs(red);
+        }
     }
 
     public interface IClassWithRule

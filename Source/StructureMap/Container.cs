@@ -228,7 +228,7 @@ namespace StructureMap
         /// <returns></returns>
         public object TryGetInstance(Type pluginType, string instanceKey)
         {
-            return _pipelineGraph.ForType(pluginType).FindInstance(instanceKey) == null 
+            return !_pipelineGraph.HasInstance(pluginType, instanceKey) 
                 ? null 
                 : GetInstance(pluginType, instanceKey);
         }
@@ -240,7 +240,7 @@ namespace StructureMap
         /// <returns></returns>
         public object TryGetInstance(Type pluginType)
         {
-            return !_pipelineGraph.PluginTypes.Any(p => p.PluginType == pluginType) 
+            return !_pipelineGraph.HasDefaultForPluginType(pluginType) 
                 ? null 
                 : GetInstance(pluginType);
         }
