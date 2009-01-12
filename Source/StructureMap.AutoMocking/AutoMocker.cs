@@ -7,11 +7,94 @@ using System.Linq;
 
 namespace StructureMap.AutoMocking
 {
+    public interface IAutoMocker<TARGETCLASS> where TARGETCLASS : class
+    {
+        /// <summary>
+        ///Gets an instance of the ClassUnderTest with mock objects (or stubs) pushed in
+// for all of its dependencies
+        /// </summary>
+        TARGETCLASS ClassUnderTest { get; }
+
+        /// <summary>
+        /// Accesses the underlying AutoMockedContainer
+        /// </summary>
+        AutoMockedContainer Container { get; }
+
+        /// <summary>
+        /// Use this with EXTREME caution.  This will replace the active "Container" in accessed
+        /// by ObjectFactory with the AutoMockedContainer from this instance
+        /// </summary>
+        void MockObjectFactory();
+
+        /// <summary>
+        /// Calling this method will immediately create a "Partial" mock
+        /// for the ClassUnderTest using the "Greediest" constructor.
+        /// </summary>
+        void PartialMockTheClassUnderTest();
+
+        /// <summary>
+        /// Gets the mock object for type T that would be injected into the constructor function
+        /// of the ClassUnderTest
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        T Get<T>() where T : class;
+
+        /// <summary>
+        /// Method to specify the exact object that will be used for 
+        /// "pluginType."  Useful for stub objects and/or static mocks
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="stub"></param>
+        void Inject(Type pluginType, object stub);
+
+        /// <summary>
+        /// Method to specify the exact object that will be used for 
+        /// "pluginType."  Useful for stub objects and/or static mocks
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="target"></param>
+        void Inject<T>(T target);
+
+        /// <summary>
+        /// Adds an additional mock object for a given T
+        /// Useful for array arguments to the ClassUnderTest
+        /// object
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        T AddAdditionalMockFor<T>() where T : class;
+
+        /// <summary>
+        /// So that Aaron Jensen can use his concrete HubService object
+        /// Construct whatever T is with all mocks, and make sure that the
+        /// ClassUnderTest gets built with a concrete T
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        void UseConcreteClassFor<T>();
+
+        /// <summary>
+        /// Creates, returns, and registers an array of mock objects for type T.  
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        T[] CreateMockArrayFor<T>(int count) where T : class;
+
+        /// <summary>
+        /// Allows you to "inject" an array of known objects for an 
+        /// argument of type T[] in the ClassUnderTest
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="stubs"></param>
+        void InjectArray<T>(T[] stubs);
+    }
+
     /// <summary>
     /// The Auto Mocking Container for StructureMap
     /// </summary>
     /// <typeparam name="TARGETCLASS"></typeparam>
-    public class AutoMocker<TARGETCLASS> where TARGETCLASS : class
+    public class AutoMocker<TARGETCLASS> : IAutoMocker<TARGETCLASS> where TARGETCLASS : class
     {
         protected AutoMockedContainer _container;
         private TARGETCLASS _classUnderTest;

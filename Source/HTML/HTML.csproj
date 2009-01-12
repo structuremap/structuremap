@@ -66,6 +66,8 @@
     <Content Include="InversionOfControl.htm" />
     <Content Include="Profiles.htm" />
     <Content Include="Scoping.htm" />
+    <Content Include="TableOfContents.htm" />
+    <Content Include="ToC-Bullet-List.xml" />
     <Content Include="UsingAttributes.htm" />
     <Content Include="AutoWiring.htm" />
     <Content Include="ConfiguringStructureMap.htm" />
@@ -112,5 +114,8 @@
       <ProductName>.NET Framework 3.5</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="StructureMap.chm" />
   </ItemGroup>
 </Project>

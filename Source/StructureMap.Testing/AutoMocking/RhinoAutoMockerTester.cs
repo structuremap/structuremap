@@ -84,10 +84,14 @@ namespace StructureMap.Testing.AutoMocking
         [Test]
         public void TheAutoMockerOptionallyPushesInMocksInReplayModeToAllowForAAAsyntax()
         {
+            // This sets up a Rhino Auto Mocker in the Arrange, Act, Assert mode
             var autoMocker = new RhinoAutoMocker<ConcreteClass>(MockMode.AAA);
 
-            autoMocker.ClassUnderTest.CallService();
+            // Act in the test
+            ConcreteClass @class = autoMocker.ClassUnderTest;
+            @class.CallService();
 
+            // This retrieves the mock object for IMockedService
             autoMocker.Get<IMockedService>().AssertWasCalled(s => s.Go());
         }
 
