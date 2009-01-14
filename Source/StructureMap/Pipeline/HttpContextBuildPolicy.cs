@@ -72,12 +72,12 @@ namespace StructureMap.Pipeline
 
         public void CopyTo(Array array, int index)
         {
-            throw new NotImplementedException();
+            _session.CopyTo(array, index);
         }
 
         public int Count
         {
-            get { throw new NotImplementedException(); }
+            get { return _session.Count; }
         }
 
         public object SyncRoot
@@ -87,7 +87,7 @@ namespace StructureMap.Pipeline
 
         public bool IsSynchronized
         {
-            get { throw new NotImplementedException(); }
+            get { return _session.IsSynchronized; }
         }
 
         public bool Contains(object key)
@@ -102,7 +102,7 @@ namespace StructureMap.Pipeline
 
         public void Clear()
         {
-            throw new NotImplementedException();
+            _session.Clear();
         }
 
         public IDictionaryEnumerator GetEnumerator()
@@ -112,18 +112,18 @@ namespace StructureMap.Pipeline
 
         public void Remove(object key)
         {
-            throw new NotImplementedException();
+            _session.Remove(key.ToString());
         }
 
         public object this[object key]
         {
-            get { throw new NotImplementedException(); }
-            set { throw new NotImplementedException(); }
+            get { return _session[key.ToString()]; }
+            set { _session[key.ToString()] = value; }
         }
 
         public ICollection Keys
         {
-            get { throw new NotImplementedException(); }
+            get { return _session.Keys; }
         }
 
         public ICollection Values
@@ -133,7 +133,7 @@ namespace StructureMap.Pipeline
 
         public bool IsReadOnly
         {
-            get { throw new NotImplementedException(); }
+            get { return _session.IsReadOnly; }
         }
 
         public bool IsFixedSize
