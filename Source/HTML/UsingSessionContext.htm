@@ -382,8 +382,8 @@
             View&#39;s within any type of desktop application or any kind of NHibernate object 
             where the state or identity of the object requested is important.</p>
         <p>My team uses this functionality in our NHibernate bootstrapping.&nbsp; We have an 
-            interface named ISessionSource tht is responsible for creating the NHibernate 
-            ISession objects (it wraps a Sessio).</p>
+            interface named ISessionSource that is responsible for creating the NHibernate 
+            ISession objects (it wraps a Session).</p>
 <!--
 {\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20     \cf3 public\cf0  \cf3 interface\cf0  \cf4 ISessionSource\par ??\cf0     \{\par ??        \cf4 PersistenceModel\cf0  Model \{ \cf3 get\cf0 ; \}\par ??        \cf4 ISession\cf0  CreateSession();\par ??        \cf3 void\cf0  BuildSchema();\par ??    \}}
 -->
