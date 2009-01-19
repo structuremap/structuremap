@@ -22,6 +22,12 @@ namespace StructureMap.Testing.Configuration
         private PluginGraph _graph;
         private ProfileBuilder _builder;
         private const string THE_MACHINE_NAME = "TheMachineName";
+        
+        [Test]
+        public void smoke_test_get_machine_name()
+        {
+            ProfileBuilder.GetMachineName().ShouldNotBeEmpty();
+        }
 
         [Test]
         public void Do_not_register_a_machine_override_if_it_is_NOT_the_matching_machine()

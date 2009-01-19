@@ -12,7 +12,7 @@ namespace StructureMap
     /// <summary>
     /// The main static Facade for the StructureMap container
     /// </summary>
-    [EnvironmentPermission(SecurityAction.Assert, Read = "COMPUTERNAME")]
+    //[EnvironmentPermission(SecurityAction.Assert, Read = "COMPUTERNAME")]
     public static class ObjectFactory
     {
         private static readonly object _lockObject = new object();
