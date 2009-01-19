@@ -8,6 +8,23 @@ namespace StructureMap.Pipeline
         public InstanceCache(IBuildPolicy innerPolicy) : base(key => innerPolicy.Build(key.Session, key.PluginType, key.Instance))
         {
         }
+
+        public void DisposeAndClear()
+        {
+            Each(o =>
+            {
+                IDisposable disposable = o as IDisposable;
+                if (disposable != null)
+                {
+                    try
+                    {
+                        disposable.Dispose();
+                    }
+                    catch (Exception) { }
+                }
+            });
+            Clear();
+        }
     }
 
     public abstract class CacheInterceptor : IBuildInterceptor

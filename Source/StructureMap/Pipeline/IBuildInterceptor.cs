@@ -5,6 +5,6 @@ namespace StructureMap.Pipeline
     /// </summary>
     public interface IBuildInterceptor : IBuildPolicy
     {
-        IBuildPolicy InnerPolicy { get; set; }
+        IBuildPolicy InnerPolicy { get; set; }        
     }
 }

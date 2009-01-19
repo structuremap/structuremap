@@ -38,7 +38,8 @@ $(document).ready(function() {
     $('body').html('<div class="left-column"></div><div class="right-column"></div>');
     $('.right-column').html(html);
 
-    $.get('menu.htm', {}, writeMenu, 'HTML');
+    $.get('Menu.htm', {}, writeMenu, 'HTML');
+    
 });
 
 function writeMenu(data) {

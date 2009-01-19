@@ -391,10 +391,53 @@ namespace StructureMap.Testing.Graph
             container.With("name").EqualTo("Jeremy").GetInstance<ConcreteThatNeedsString>()
                 .Name.ShouldEqual("Jeremy");
         }
+
+        [Test]
+        public void can_build_a_concrete_type_from_explicit_args_passed_into_a_named_instance()
+        {
+            var container = new Container(x =>
+            {
+                x.ForRequestedType<ColorWithLump>().AddInstances(o =>
+                {
+                    o.OfConcreteType<ColorWithLump>().WithCtorArg("color").EqualTo("red").WithName("red");
+                    o.OfConcreteType<ColorWithLump>().WithCtorArg("color").EqualTo("green").WithName("green");
+                    o.OfConcreteType<ColorWithLump>().WithCtorArg("color").EqualTo("blue").WithName("blue");
+                });
+            });
+
+
+            var lump = new Lump();
+
+            ColorWithLump colorLump = container.With(lump).GetInstance<ColorWithLump>("red");
+            colorLump.Lump.ShouldBeTheSameAs(lump);
+            colorLump.Color.ShouldEqual("red");
+        }
     }
 
     public class Lump
     {
+    }
+
+    public class ColorWithLump
+    {
+        private readonly string _color;
+        private readonly Lump _lump;
+
+        public ColorWithLump(string color, Lump lump)
+        {
+            _color = color;
+            _lump = lump;
+        }
+
+        public string Color
+        {
+            get { return _color; }
+        }
+
+        public Lump Lump
+        {
+            get { return _lump; }
+        }
     }
 
     public class LumpProvider : TestExplicitArguments.IProvider

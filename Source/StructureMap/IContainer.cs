@@ -237,5 +237,14 @@ namespace StructureMap
         ///     .WithParameters(typeof (Address)).GetInstanceAs<IFlattener>();
         /// </example>
         Container.OpenGenericTypeExpression ForGenericType(Type templateType);
+
+        /// <summary>
+        /// Gets the named instance of the pluginType using the explicitly configured arguments from the "args"
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="args"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        T GetInstance<T>(ExplicitArguments args, string name);
     }
 }

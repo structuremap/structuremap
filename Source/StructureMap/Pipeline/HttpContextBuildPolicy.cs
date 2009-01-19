@@ -14,6 +14,11 @@ namespace StructureMap.Pipeline
             return HttpContext.Current != null;
         }
 
+        public static void DisposeAndClearAll()
+        {
+            new HttpContextBuildPolicy().findCache().DisposeAndClear();
+        }
+
         protected override InstanceCache findCache()
         {
             IDictionary items = findHttpDictionary();

@@ -35,20 +35,7 @@ namespace StructureMap.Pipeline
         {
             lock (_locker)
             {
-                _cache.Each(o =>
-                {
-                    IDisposable disposable = o as IDisposable;
-                    if (disposable != null)
-                    {
-                        try
-                        {
-                            disposable.Dispose();
-                        }
-                        catch (Exception){}
-                    }
-                });
-
-                _cache.Clear();
+                _cache.DisposeAndClear();
             }
         }
 

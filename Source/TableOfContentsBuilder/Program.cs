@@ -11,7 +11,8 @@ namespace TableOfContentsBuilder
         [STAThread]
         private static void Main(string[] args)
         {
-            FileExtensions.BaseUrl = args.Length == 0 ? string.Empty : args[0];
+            FileExtensions.BaseUrl = "http://structuremap.sourceforge.net";
+            //FileExtensions.BaseUrl = args.Length == 0 ? string.Empty : args[0];
             FileExtensions.Directory = @"file:///c:\code\structuremap\source\Html";
             var reader = new MenuReader();
 
@@ -35,7 +36,7 @@ namespace TableOfContentsBuilder
 
             foreach (Link link in browser.Links)
             {
-                if (link.Url.StartsWith("file:///") && !link.Url.Contains("TableOfContents.htm"))
+                if (link.Url.StartsWith("file:///") && !link.Url.Contains("TableOfContents.htm") && link.Url.EndsWith("htm"))
                 {
                     processFile(link, writer);
                 }

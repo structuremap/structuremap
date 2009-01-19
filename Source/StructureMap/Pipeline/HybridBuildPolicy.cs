@@ -15,6 +15,7 @@ namespace StructureMap.Pipeline
             _nonHttp = new NONHTTP();
         }
 
+
         private IBuildPolicy _innerPolicy;
         
 

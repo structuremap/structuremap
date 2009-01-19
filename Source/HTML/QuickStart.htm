@@ -10,15 +10,15 @@
 	<body>
 	
 	    <p>
-            The most general question I get with StructureMap is “how do I get started?”&nbsp; 
-            I’d recommend that you first get comfortable
+            The most general question I get with StructureMap is "how do I get started?"&nbsp; 
+            I'd recommend that you first get comfortable
             <a href="http://codebetter.com/blogs/jeremy.miller/archive/2008/06/29/some-concepts-to-know-first.aspx">
             with some concepts</a> and the basic patterns of
             <a href="http://codebetter.com/blogs/jeremy.miller/archive/2005/10/06/132825.aspx">
             Dependency Injection</a> and
             <a href="http://codebetter.com/blogs/jeremy.miller/archive/2005/09/20/132290.aspx">
-            Inversion of Control</a>.&nbsp; Assuming that you’re already familiar with those 
-            concepts, or you’d really rather skip the pedantry and jump right into concrete 
+            Inversion of Control</a>.&nbsp; Assuming that you're already familiar with those 
+            concepts, or you'd really rather skip the pedantry and jump right into concrete 
             code, the first thing to do is go download StructureMap and jump into usage 
             (then come back to the patterns and pedantry).&nbsp;
         </p>
@@ -43,7 +43,7 @@
             <li>StructureMap is actually the oldest IoC tool for .Net, with the first 
                 production release coming in June of 2004 </li>
             <li>The source code is accessible
-                <a href="https://structuremap.svn.sourceforge.net/svnroot/structuremap/trunk">here via Subversion</a> in case you’re curious.&nbsp; No credentials are required to 
+                <a href="https://structuremap.svn.sourceforge.net/svnroot/structuremap/trunk">here via Subversion</a> in case you're curious.&nbsp; No credentials are required to 
                 access the source code. </li>
             <li>Right now, StructureMap 2.5 will run on .Net 3.5 only.&nbsp; I will most likely NOT 
                 be backporting the new version to 2.0 because of extensive usage of 3.5 features 
@@ -57,11 +57,11 @@
             Your interaction with StructureMap is going to mostly consist of two activities:</p>
         <ol>
             <li>Asking StructureMap for an instance of a service or dependency (the easy part)             </li>
-            <li>Registering “what” and “how” StructureMap should build or find those requested 
-                services (the tedious part, but it’s gotten much better over the years) </li>
+            <li>Registering "what" and "how" StructureMap should build or find those requested 
+                services (the tedious part, but it's gotten much better over the years) </li>
         </ol>
         <p>
-            In our system we use a service called “IValidator” to exercise validation rules 
+            In our system we use a service called "IValidator" to exercise validation rules 
             on our domain model objects (I talked about the approach
             <a href="http://codebetter.com/blogs/jeremy.miller/archive/2007/06/13/build-your-own-cab-part-9-domain-centric-validation-with-the-notification-pattern.aspx">
             here</a>).&nbsp; By default, we want any consumer of the IValidator interface to 
@@ -148,10 +148,10 @@
 &nbsp;&nbsp;&nbsp; }</p>
         </div>
         <p>
-            That’s it, your first usage of StructureMap.&nbsp; No messy Xml configuration, 
+            That's it, your first usage of StructureMap.&nbsp; No messy Xml configuration, 
             no attributes scattered through your code, just a couple lines of bootstrapping 
-            code.&nbsp;&nbsp; Of course, if that’s all StructureMap did, it wouldn’t be 
-            worth your time to download it.&nbsp; Let’s look at a bit more advanced example.</p>
+            code.&nbsp;&nbsp; Of course, if that's all StructureMap did, it wouldn't be 
+            worth your time to download it.&nbsp; Let's look at a bit more advanced example.</p>
         <hr />
         <h2>
             Primitive Arguments</h2>
@@ -159,7 +159,7 @@
             I actually like to
             <a href="http://structuremap.sourceforge.net/ConfigurationManagement.htm">use 
             StructureMap as a generic configuration tool</a> (which was actually its 
-            original purpose).&nbsp; Let’s say you’re moving to the data access code.&nbsp; 
+            original purpose).&nbsp; Let's say you're moving to the data access code.&nbsp; 
             You come up with some sort of
             <a href="http://martinfowler.com/eaaCatalog/repository.html">Repository</a> 
             pattern class like this:</p>
@@ -212,7 +212,7 @@
 &nbsp;&nbsp;&nbsp; }</p>
         </div>
         <p>
-            The Repository class needs to be supplied with the “connectionString” in its 
+            The Repository class needs to be supplied with the "connectionString" in its 
             constructor.&nbsp; No problem, just set up the value of the constructor argument 
             in the bootstrapping:</p>
         <div style="BORDER-RIGHT: black thin solid; BORDER-TOP: black thin solid; FONT-SIZE: 10pt; BACKGROUND: white; OVERFLOW: scroll; BORDER-LEFT: black thin solid; COLOR: black; BORDER-BOTTOM: black thin solid; FONT-FAMILY: courier new">
@@ -260,10 +260,10 @@
                     style="COLOR: #2b91af">IRepository</span>&gt;();</p>
         </div>
         <p>
-            StructureMap will look up the “CONNECTION-STRING” value in the AppSettings 
+            StructureMap will look up the "CONNECTION-STRING" value in the AppSettings 
             portion of the App.config file, and use that string value to invoke the 
             constructor function of the Repository class, then hand back that new Repository 
-            object.&nbsp; Woo hoo.&nbsp; We can build an object that doesn’t depend on 
+            object.&nbsp; Woo hoo.&nbsp; We can build an object that doesn't depend on 
             anything, and we can build an object that needs some strings in its constructor 
             function.&nbsp; How about objects that need other non-primitive objects?</p>
         <hr />
@@ -271,15 +271,15 @@
             Auto Wiring</h2>
         <p>
             In the code samples above, I used StructureMap as a Service Locator in the 
-            ClassThatGetsAnIValidator.SaveObject() method.&nbsp; Typically, you’ll try to 
+            ClassThatGetsAnIValidator.SaveObject() method.&nbsp; Typically, you'll try to 
             minimize the number of service locator usages in your system to a bare minimum 
-            (I found 8 in my current system, but I think I’ll find a way to prune half of 
+            (I found 8 in my current system, but I think I'll find a way to prune half of 
             those later).&nbsp; Most of the value of an IoC tool is in automatically doing 
-            Dependency Injection.&nbsp; I’m working with the new MVC framework at the 
-            moment, so it’s a handy sample.&nbsp; Let’s say that we have a Controller class 
+            Dependency Injection.&nbsp; I'm working with the new MVC framework at the 
+            moment, so it's a handy sample.&nbsp; Let's say that we have a Controller class 
             for a typical CRUD screen.&nbsp; That Controller class will generally need to 
             interact with both validation services and the data access functionality of the 
-            Repository.&nbsp; Here’s a representative Controller class:</p>
+            Repository.&nbsp; Here's a representative Controller class:</p>
         <div style="BORDER-RIGHT: black thin solid; BORDER-TOP: black thin solid; FONT-SIZE: 10pt; BACKGROUND: white; OVERFLOW: scroll; BORDER-LEFT: black thin solid; COLOR: black; BORDER-BOTTOM: black thin solid; FONT-FAMILY: courier new">
             <p style="MARGIN: 0px">
 &nbsp;&nbsp;&nbsp; <span style="COLOR: blue">public</span> <span style="COLOR: blue">class</span>
@@ -318,7 +318,7 @@
 &nbsp;&nbsp;&nbsp; }</p>
         </div>
         <p>
-            So let’s get StructureMap set up for this SomeScreenController class:</p>
+            So let's get StructureMap set up for this SomeScreenController class:</p>
         <div style="BORDER-RIGHT: black thin solid; BORDER-TOP: black thin solid; FONT-SIZE: 10pt; BACKGROUND: white; OVERFLOW: scroll; BORDER-LEFT: black thin solid; COLOR: black; BORDER-BOTTOM: black thin solid; FONT-FAMILY: courier new">
             <p style="MARGIN: 0px">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="COLOR: #2b91af">
@@ -349,7 +349,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
         </div>
         <p>
-            You’ll notice that we didn’t make any explicit configuration for the 
+            You'll notice that we didn't make any explicit configuration for the 
             SomeScreenController class, but yet we could now call:</p>
         <div style="BORDER-RIGHT: black thin solid; BORDER-TOP: black thin solid; FONT-SIZE: 10pt; BACKGROUND: white; OVERFLOW: scroll; BORDER-LEFT: black thin solid; COLOR: black; BORDER-BOTTOM: black thin solid; FONT-FAMILY: courier new">
             <p style="MARGIN: 0px">
@@ -361,17 +361,17 @@
             and StructureMap will happily create a new instance of the SomeScreenController 
             class by invoking its constructor and passing in a new Validator object and a 
             new Repository object created with the connection string from the App.config 
-            file.&nbsp; We didn’t need to tell StructureMap how to construct 
+            file.&nbsp; We didn't need to tell StructureMap how to construct 
             SomeScreenController because:
         </p>
         <ul>
             <li>StructureMap can look at the constructor function of SomeScreenController and 
                 see that it depends on IValidator and IRepository </li>
-            <li>StructureMap “knows” about the default way to create and return an IValidator 
+            <li>StructureMap "knows" about the default way to create and return an IValidator 
                 and an IRepository </li>
         </ul>
         <p>
-            This feature is known as “auto wiring,” and all the mainstream IoC containers 
+            This feature is known as "auto wiring," and all the mainstream IoC containers 
             support this feature to some extent or another.&nbsp;
         </p>
         <hr />
@@ -379,13 +379,13 @@
             What to do when things go wrong?</h2>
         <p>
             StructureMap, and any other IoC tool for that matter, is configuration intensive 
-            – which means that their will be problems in that configuration.&nbsp; We’re all 
+            – which means that their will be problems in that configuration.&nbsp; We're all 
             moving to more convention based type registration – which means that more stuff 
             is happening off stage and out of your sight, making debugging the configuration 
             even trickier.&nbsp; Not to worry (too much), StructureMap has some diagnostic 
             abilities to help you solve configuration problems.&nbsp; The quickest tool is 
             to ask a Container object or ObjectFactory (which is just a static wrapper 
-            around a Container) “what do you have?” with the Container.WhatDoIHave() method 
+            around a Container) "what do you have?" with the Container.WhatDoIHave() method 
             like this below:</p>
         <div style="BORDER-RIGHT: black thin solid; BORDER-TOP: black thin solid; FONT-SIZE: 10pt; BACKGROUND: white; OVERFLOW: scroll; BORDER-LEFT: black thin solid; COLOR: black; BORDER-BOTTOM: black thin solid; FONT-FAMILY: courier new">
             <p style="MARGIN: 0px">
@@ -440,7 +440,7 @@ Built by:  StructureMap.Pipeline.BuildPolicy
         <p>
             which is admittedly, not the prettiest looking thing in the world.</p>
         <p>
-            You can also “assert” that the configuration for a Container or ObjectFactory is 
+            You can also "assert" that the configuration for a Container or ObjectFactory is 
             complete by calling the Container.AssertConfigurationIsValid() method like this 
             sample below:</p>
         <div style="BORDER-RIGHT: black thin solid; BORDER-TOP: black thin solid; FONT-SIZE: 10pt; BACKGROUND: white; OVERFLOW: scroll; BORDER-LEFT: black thin solid; COLOR: black; BORDER-BOTTOM: black thin solid; FONT-FAMILY: courier new">
@@ -479,7 +479,7 @@ Built by:  StructureMap.Pipeline.BuildPolicy
         <ol>
             <li>Look for any missing constructor or mandatory setter arguments </li>
             <li>Look for any unknown dependency types </li>
-            <li>Look for any errors in the Xml configuration (if you’re using Xml configuration)
+            <li>Look for any errors in the Xml configuration (if you're using Xml configuration)
             </li>
             <li>Try to build each and every type and named instance in the configuration – i.e. 
                 this is a complete, but relatively expensive operation </li>
@@ -488,8 +488,8 @@ Built by:  StructureMap.Pipeline.BuildPolicy
                 feature that is unique to StructureMap as far as I know</a>) </li>
         </ol>
         <p>
-            The previous sample is a valid configuration, but let’s look at an invalid 
-            configuration.&nbsp; Let’s omit the configuration of the “connectionString” 
+            The previous sample is a valid configuration, but let's look at an invalid 
+            configuration.&nbsp; Let's omit the configuration of the "connectionString" 
             constructor argument for the Repository class and try 
             AssertConfigurationIsValid():</p>
         <div style="BORDER-RIGHT: black thin solid; BORDER-TOP: black thin solid; FONT-SIZE: 10pt; BACKGROUND: white; OVERFLOW: scroll; BORDER-LEFT: black thin solid; COLOR: black; BORDER-BOTTOM: black thin solid; FONT-FAMILY: courier new">
@@ -534,8 +534,8 @@ Built by:  StructureMap.Pipeline.BuildPolicy
 StructureMap.StructureMapException: StructureMap Exception Code:  205
 Missing requested Instance property &quot;connectionString&quot; for InstanceKey &quot;73b7f21b-bbfd-462c-854d-5b2a2f98ba50&quot;</pre>
         <p>
-            which again, isn’t the prettiest thing in the world, but it does tell me that 
-            the “connectionString” argument is missing for the Repository class.&nbsp; After 
+            which again, isn't the prettiest thing in the world, but it does tell me that 
+            the "connectionString" argument is missing for the Repository class.&nbsp; After 
             seeing this output, I think that this output and error wording will get improved 
             in an upcoming release.</p>
         <hr />

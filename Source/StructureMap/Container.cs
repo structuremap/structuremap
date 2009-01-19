@@ -96,6 +96,12 @@ namespace StructureMap
             return (PLUGINTYPE) GetInstance(typeof (PLUGINTYPE), args);
         }
 
+        public T GetInstance<T>(ExplicitArguments args, string name)
+        {
+            Instance namedInstance = _pipelineGraph.ForType(typeof (T)).FindInstance(name);
+            return (T) buildInstanceWithArgs(typeof (T), namedInstance, args, name);
+        }
+
         /// <summary>
         /// Gets the default instance of the pluginType using the explicitly configured arguments from the "args"
         /// </summary>
@@ -105,7 +111,13 @@ namespace StructureMap
         public object GetInstance(Type pluginType, ExplicitArguments args)
         {
             Instance defaultInstance = _pipelineGraph.GetDefault(pluginType);
+            var requestedName = Plugin.DEFAULT;
 
+            return buildInstanceWithArgs(pluginType, defaultInstance, args, requestedName);
+        }
+
+        private object buildInstanceWithArgs(Type pluginType, Instance defaultInstance, ExplicitArguments args, string requestedName)
+        {
             if (defaultInstance == null && pluginType.IsConcrete())
             {
                 defaultInstance = new ConfiguredInstance(pluginType);
@@ -114,7 +126,8 @@ namespace StructureMap
             BasicInstance basicInstance = defaultInstance as BasicInstance;
 
             Instance instance = basicInstance == null ? defaultInstance : new ExplicitInstance(pluginType, args, basicInstance);
-            BuildSession session = withNewSession(Plugin.DEFAULT);
+            
+            BuildSession session = withNewSession(requestedName);
 
             args.RegisterDefaults(session);
 
@@ -500,6 +513,8 @@ namespace StructureMap
         {
             return new OpenGenericTypeExpression(templateType, this);
         }
+
+        
 
         public class OpenGenericTypeExpression : GetInstanceAsExpression
         {

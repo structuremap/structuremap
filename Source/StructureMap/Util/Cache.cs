@@ -138,9 +138,12 @@ namespace StructureMap.Util
 
         public void Each(Action<VALUE> action)
         {
-            foreach (var pair in _values)
+            lock (_locker)
             {
-                action(pair.Value);
+                foreach (var pair in _values)
+                {
+                    action(pair.Value);
+                }
             }
         }
 

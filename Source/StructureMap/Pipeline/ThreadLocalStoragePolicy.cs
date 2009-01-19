@@ -7,6 +7,11 @@ namespace StructureMap.Pipeline
         [ThreadStatic] private static InstanceCache _cache;
         private readonly object _locker = new object();
 
+        public static void DisposeAndClearAll()
+        {
+            _cache.DisposeAndClear();
+        }
+
         private void guaranteeHashExists()
         {
             if (_cache == null)
