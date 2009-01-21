@@ -178,7 +178,7 @@ namespace StructureMap.Graph
         /// </summary>
         /// <param name="pluginType"></param>
         /// <param name="concreteType"></param>
-        public void AddType(Type pluginType, Type concreteType)
+        public virtual void AddType(Type pluginType, Type concreteType)
         {
             FindFamily(pluginType).AddType(concreteType);
         }
@@ -189,7 +189,7 @@ namespace StructureMap.Graph
         /// <param name="pluginType"></param>
         /// <param name="concreteType"></param>
         /// <param name="name"></param>
-        public void AddType(Type pluginType, Type concreteType, string name)
+        public virtual void AddType(Type pluginType, Type concreteType, string name)
         {
             FindFamily(pluginType).AddType(concreteType, name);
         }
@@ -199,7 +199,7 @@ namespace StructureMap.Graph
         /// could be assigned to the pluginType
         /// </summary>
         /// <param name="pluggedType"></param>
-        public void AddType(Type pluggedType)
+        public virtual void AddType(Type pluggedType)
         {
             _pluggedTypes.Add(pluggedType);
         }

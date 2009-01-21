@@ -179,6 +179,7 @@
     <Compile Include="AutoMocking\RhinoAutoMockerTester.cs" />
     <Compile Include="AutoMocking\RhinoMockRepositoryProxyTester.cs" />
     <Compile Include="AutoWiringExamples.cs" />
+    <Compile Include="Bugs\BuildUpBug.cs" />
     <Compile Include="Bugs\IDictionaryAndXmlBugTester.cs" />
     <Compile Include="Bugs\ScanIndexerBugTester.cs" />
     <Compile Include="Bugs\SingletonShouldBeLazy.cs" />
