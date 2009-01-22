@@ -214,14 +214,14 @@ namespace StructureMap.Pipeline
             return _pluggedType;
         }
 
-        protected string findPropertyName<T>()
+        protected string findPropertyName<PLUGINTYPE>()
         {
             var plugin = new Plugin(_pluggedType);
             string propertyName = plugin.FindArgumentNameForType<T>();
 
             if (string.IsNullOrEmpty(propertyName))
             {
-                throw new StructureMapException(305, typeof (T));
+                throw new StructureMapException(305, typeof(PLUGINTYPE));
             }
 
             return propertyName;

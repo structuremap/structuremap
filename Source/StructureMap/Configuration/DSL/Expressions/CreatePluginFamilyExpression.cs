@@ -100,8 +100,6 @@ namespace StructureMap.Configuration.DSL.Expressions
                 family.AddInstance(instance);
                 family.DefaultInstanceKey = instance.Name;
             });
-
-            return this;
         }
 
         /// <summary>
@@ -193,7 +191,7 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         /// <summary>
         /// Register a Func to run against any object of this PluginType immediately after it is created,
-        /// but before the new object is passed back to the caller.  Unlike <see cref="OnCreation">OnCreation()</see>,
+        /// but before the new object is passed back to the caller.  Unlike <see cref="OnCreation(Action{PLUGINTYPE})">OnCreation()</see>,
         /// EnrichWith() gives the the ability to return a different object.  Use this method for runtime AOP
         /// scenarios or to return a decorator.
         /// </summary>
@@ -215,7 +213,7 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         /// <summary>
         /// Register a Func to run against any object of this PluginType immediately after it is created,
-        /// but before the new object is passed back to the caller.  Unlike <see cref="OnCreation">OnCreation()</see>,
+        /// but before the new object is passed back to the caller.  Unlike <see cref="OnCreation(Action{IContext,PLUGINTYPE})">OnCreation()</see>,
         /// EnrichWith() gives the the ability to return a different object.  Use this method for runtime AOP
         /// scenarios or to return a decorator.
         /// </summary>

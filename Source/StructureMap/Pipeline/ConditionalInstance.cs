@@ -17,9 +17,9 @@ namespace StructureMap.Pipeline
         public Instance _default = new DefaultInstance();
 
 
-        public ConditionalInstance(Action<ConditionalInstanceExpression<T>> action)
+        public ConditionalInstance(Action<ConditionalInstanceExpression> action)
         {
-            action(new ConditionalInstanceExpression<T>(this));
+            action(new ConditionalInstanceExpression(this));
         }
 
         protected override string getDescription()
@@ -40,7 +40,7 @@ namespace StructureMap.Pipeline
             return instance.Build(pluginType, session);
         }
 
-        public class ConditionalInstanceExpression<T>
+        public class ConditionalInstanceExpression
         {
             private readonly ConditionalInstance<T> _parent;
 

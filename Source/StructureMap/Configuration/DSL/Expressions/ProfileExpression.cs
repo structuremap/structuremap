@@ -151,7 +151,7 @@ namespace StructureMap.Configuration.DSL.Expressions
             /// <summary>
             /// Define the default instance of the PluginType for the containing Profile
             /// </summary>
-            /// <param name="mementoBuilder"></param>
+            /// <param name="instance"></param>
             /// <returns></returns>
             public ProfileExpression Use(Instance instance)
             {

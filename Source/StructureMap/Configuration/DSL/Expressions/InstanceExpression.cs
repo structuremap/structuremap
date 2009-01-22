@@ -15,13 +15,14 @@ namespace StructureMap.Configuration.DSL.Expressions
         IInstanceExpression<T> Is { get; }
 
         /// <summary>
-        /// Shortcut to specify a prebuilt Instance
+        /// Register a previously built Instance.  This provides a "catch all"
+        /// method to attach custom Instance objects.  Synonym for Instance()
         /// </summary>
         /// <param name="instance"></param>
         void IsThis(Instance instance);
 
         /// <summary>
-        /// Shortcut to directly inject an object
+        /// Inject this object directly.  Synonym to Object()
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
@@ -88,20 +89,6 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="instance"></param>
         void Instance(Instance instance);
-
-        /// <summary>
-        /// Register a previously built Instance.  This provides a "catch all"
-        /// method to attach custom Instance objects.  Synonym for Instance()
-        /// </summary>
-        /// <param name="instance"></param>
-        void IsThis(Instance instance);
-        
-        /// <summary>
-        /// Inject this object directly.  Synonym to Object()
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        LiteralInstance IsThis(T obj);
 
         /// <summary>
         /// Inject this object directly.  Synonym to IsThis()
@@ -190,7 +177,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <param name="configuration"></param>
         /// <returns></returns>
         // Conditional object construction
-        ConditionalInstance<T> Conditional(Action<ConditionalInstance<T>.ConditionalInstanceExpression<T>> configuration);
+        ConditionalInstance<T> Conditional(Action<ConditionalInstance<T>.ConditionalInstanceExpression> configuration);
     }
 
     public class InstanceExpression<T> : IInstanceExpression<T>, ThenItExpression<T>
@@ -226,7 +213,7 @@ namespace StructureMap.Configuration.DSL.Expressions
             _action(instance);
         }
 
-        private T returnInstance<T>(T instance) where T : Instance
+        private INSTANCE returnInstance<INSTANCE>(INSTANCE instance) where INSTANCE : Instance
         {
             Instance(instance);
             return instance;
@@ -282,7 +269,7 @@ namespace StructureMap.Configuration.DSL.Expressions
             return returnInstance(new UserControlInstance(url));
         }
 
-        public ConditionalInstance<T> Conditional(Action<ConditionalInstance<T>.ConditionalInstanceExpression<T>> configuration)
+        public ConditionalInstance<T> Conditional(Action<ConditionalInstance<T>.ConditionalInstanceExpression> configuration)
         {
             return returnInstance(new ConditionalInstance<T>(configuration));
         }

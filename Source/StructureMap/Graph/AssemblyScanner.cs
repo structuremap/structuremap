@@ -188,10 +188,9 @@ namespace StructureMap.Graph
 
         private void scanTypesInAssembly(Assembly assembly, PluginGraph graph)
         {
-            Type[] exportedTypes;
             try
             {
-                foreach (Type type in assembly.GetExportedTypes())
+                foreach (var type in assembly.GetExportedTypes())
                 {
                     if (!isInTheIncludes(type)) continue;
                     if (isInTheExcludes(type)) continue;

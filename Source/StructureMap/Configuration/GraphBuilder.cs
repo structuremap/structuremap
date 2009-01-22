@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.Reflection;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
@@ -11,8 +10,7 @@ namespace StructureMap.Configuration
     {
         private readonly AssemblyScanner _assemblyScanner;
         private readonly PluginGraph _pluginGraph;
-        private Profile _profile;
-        private Container _systemContainer;
+        private readonly Container _systemContainer;
         private readonly PluginGraph _systemGraph;
 
 

@@ -88,7 +88,7 @@ namespace StructureMap
         /// to introduce mocks or stubs during automated testing scenarios
         /// </summary>
         /// <param name="pluginType"></param>
-        /// <param name="stub"></param>
+        /// <param name="instance"></param>
         public static void Inject(Type pluginType, object instance)
         {
             container.Inject(pluginType, instance);
@@ -117,7 +117,7 @@ namespace StructureMap
         /// pluginType.  Mostly used for temporarily setting up return values of the Container
         /// to introduce mocks or stubs during automated testing scenarios
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <param name="name"></param>
         /// <param name="instance"></param>
         public static void Inject<PLUGINTYPE>(string name, PLUGINTYPE instance)
@@ -162,7 +162,7 @@ namespace StructureMap
         /// <summary>
         /// Creates or finds the default instance of type T
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <returns></returns>
         public static PLUGINTYPE GetInstance<PLUGINTYPE>()
         {
@@ -172,18 +172,17 @@ namespace StructureMap
         /// <summary>
         /// Creates a new instance of the requested type using the supplied Instance.  Mostly used internally
         /// </summary>
-        /// <param name="pluginType"></param>
+        /// <param name="targetType"></param>
         /// <param name="instance"></param>
         /// <returns></returns>
-        public static object GetInstance(Type TargetType, Instance instance)
+        public static object GetInstance(Type targetType, Instance instance)
         {
-            return container.GetInstance(TargetType, instance);
+            return container.GetInstance(targetType, instance);
         }
 
         /// <summary>
         /// Creates a new instance of the requested type T using the supplied Instance.  Mostly used internally
         /// </summary>
-        /// <param name="pluginType"></param>
         /// <param name="instance"></param>
         /// <returns></returns>
         public static T GetInstance<T>(Instance instance)
@@ -195,7 +194,7 @@ namespace StructureMap
         /// Creates or finds the named instance of the pluginType
         /// </summary>
         /// <param name="pluginType"></param>
-        /// <param name="instanceKey"></param>
+        /// <param name="name"></param>
         /// <returns></returns>
         public static object GetNamedInstance(Type pluginType, string name)
         {
@@ -205,8 +204,8 @@ namespace StructureMap
         /// <summary>
         /// Creates or finds the named instance of T
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="instanceKey"></param>
+        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <param name="name"></param>
         /// <returns></returns>
         public static PLUGINTYPE GetNamedInstance<PLUGINTYPE>(string name)
         {
@@ -227,7 +226,7 @@ namespace StructureMap
         /// <summary>
         /// Creates or resolves all registered instances of type T
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <returns></returns>
         public static IList<PLUGINTYPE> GetAllInstances<PLUGINTYPE>()
         {
@@ -290,7 +289,6 @@ namespace StructureMap
         /// <summary>
         /// Sets the default instance for all PluginType's to the designated Profile.
         /// </summary>
-        /// <param name="profile"></param>
         public static string Profile
         {
             set
@@ -377,7 +375,6 @@ namespace StructureMap
         /// </summary>
         /// <param name="pluginType"></param>
         /// <param name="instanceKey"></param>
-        /// <param name="instance"></param>
         /// <returns></returns>
         public static object TryGetInstance(Type pluginType, string instanceKey)
         {
@@ -388,7 +385,6 @@ namespace StructureMap
         /// Creates or finds the default instance of the pluginType. Returns null if the pluginType is not known to the container.
         /// </summary>
         /// <param name="pluginType"></param>
-        /// <param name="instance"></param>
         /// <returns></returns>
         public static object TryGetInstance(Type pluginType)
         {
@@ -399,7 +395,6 @@ namespace StructureMap
         /// Creates or finds the default instance of type T. Returns the default value of T if it is not known to the container.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="instance"></param>
         /// <returns></returns>
         public static T TryGetInstance<T>()
         {
@@ -410,7 +405,7 @@ namespace StructureMap
         /// Creates or finds the named instance of type T. Returns the default value of T if the named instance is not known to the container.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="instance"></param>
+        /// <param name="instanceKey"></param>
         /// <returns></returns>
         public static T TryGetInstance<T>(string instanceKey)
         {
@@ -435,8 +430,8 @@ namespace StructureMap
         /// <param name="templateType"></param>
         /// <returns></returns>
         /// <example>
-        /// IFlattener flattener1 = container.ForGenericType(typeof (IFlattener<>))
-        ///     .WithParameters(typeof (Address)).GetInstanceAs<IFlattener>();
+        /// IFlattener flattener1 = container.ForGenericType(typeof (IFlattener&lt;&gt;))
+        ///     .WithParameters(typeof (Address)).GetInstanceAs&lt;IFlattener&gt;();
         /// </example>
         public static Container.OpenGenericTypeExpression ForGenericType(Type templateType)
         {

@@ -3,6 +3,7 @@ using StructureMap.Pipeline;
 
 namespace StructureMap
 {
+#pragma warning disable 169
     /// <summary>
     /// Base class for creating an object instance from an InstanceMemento.  SubClasses are
     /// emitted for each concrete Plugin with constructor parameters.
@@ -20,4 +21,5 @@ namespace StructureMap
 
         public virtual void BuildUp(IConfiguredInstance instance, BuildSession session, object target) { }
     }
+#pragma warning restore 169
 }

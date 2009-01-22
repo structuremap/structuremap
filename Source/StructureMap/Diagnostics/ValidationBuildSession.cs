@@ -48,7 +48,6 @@ namespace StructureMap.Diagnostics
             try
             {
                 return base.CreateInstance(pluginType, instance);
-                _dependencyStack.Pop();
             }
             catch (StructureMapException ex)
             {
@@ -81,9 +80,7 @@ namespace StructureMap.Diagnostics
                 object builtInstance = CreateInstance(pluginType, instance);
                 validate(pluginType, instance, builtInstance);
             }
-#pragma warning disable EmptyGeneralCatchClause
             catch (Exception)
-#pragma warning restore EmptyGeneralCatchClause
             {
                 // All exceptions are being dealt with in another place
             }

@@ -233,8 +233,8 @@ namespace StructureMap
         /// <param name="templateType"></param>
         /// <returns></returns>
         /// <example>
-        /// IFlattener flattener1 = container.ForGenericType(typeof (IFlattener<>))
-        ///     .WithParameters(typeof (Address)).GetInstanceAs<IFlattener>();
+        /// IFlattener flattener1 = container.ForGenericType(typeof (IFlattener&lt;&gt;))
+        ///     .WithParameters(typeof (Address)).GetInstanceAs&lt;IFlattener&gt;();
         /// </example>
         Container.OpenGenericTypeExpression ForGenericType(Type templateType);
 

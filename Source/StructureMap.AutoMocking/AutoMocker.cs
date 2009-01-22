@@ -10,8 +10,7 @@ namespace StructureMap.AutoMocking
     public interface IAutoMocker<TARGETCLASS> where TARGETCLASS : class
     {
         /// <summary>
-        ///Gets an instance of the ClassUnderTest with mock objects (or stubs) pushed in
-// for all of its dependencies
+        ///Gets an instance of the ClassUnderTest with mock objects (or stubs) pushed in for all of its dependencies
         /// </summary>
         TARGETCLASS ClassUnderTest { get; }
 
@@ -101,8 +100,7 @@ namespace StructureMap.AutoMocking
         protected ServiceLocator _serviceLocator;
 
         /// <summary>
-        ///Gets an instance of the ClassUnderTest with mock objects (or stubs) pushed in
-        // for all of its dependencies
+        ///Gets an instance of the ClassUnderTest with mock objects (or stubs) pushed in for all of its dependencies
         /// </summary>
         public TARGETCLASS ClassUnderTest
         {

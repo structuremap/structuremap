@@ -43,7 +43,7 @@ namespace StructureMap.Configuration.DSL
         /// class.  Applies globally to all Containers in a single AppDomain.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="func"></param>
+        /// <param name="expression"></param>
         void SelectConstructor<T>(Expression<Func<T>> expression);
     }
 
@@ -352,7 +352,7 @@ namespace StructureMap.Configuration.DSL
         /// class.  Applies globally to all Containers in a single AppDomain.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="func"></param>
+        /// <param name="expression"></param>
         public void SelectConstructor<T>(Expression<Func<T>> expression)
         {
             PluginCache.GetPlugin(typeof(T)).UseConstructor(expression);

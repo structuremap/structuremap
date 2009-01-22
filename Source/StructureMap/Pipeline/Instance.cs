@@ -133,7 +133,7 @@ namespace StructureMap.Pipeline
             {
                 return build(pluginType, session);
             }
-            catch (StructureMapException ex)
+            catch (StructureMapException)
             {
                 throw;
             }

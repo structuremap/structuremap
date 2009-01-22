@@ -34,7 +34,6 @@ namespace StructureMap.Pipeline
         /// Register an Action to perform on the object created by this Instance
         /// before it is returned to the caller
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="handler"></param>
         /// <returns></returns>
         public SmartInstance<T> OnCreation(Action<T> handler)
@@ -49,7 +48,6 @@ namespace StructureMap.Pipeline
         /// Register an Action to perform on the object created by this Instance
         /// before it is returned to the caller
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="handler"></param>
         /// <returns></returns>
         public SmartInstance<T> OnCreation(Action<IContext, T> handler)
@@ -192,7 +190,7 @@ namespace StructureMap.Pipeline
         /// </summary>
         /// <typeparam name="CTORTYPE"></typeparam>
         /// <returns></returns>
-        public DependencyExpression<T, CTORTYPE> CtorDependency<CTORTYPE>()
+        public DependencyExpression<CTORTYPE> CtorDependency<CTORTYPE>()
         {
             string constructorArg = getArgumentNameForType<CTORTYPE>();
             return CtorDependency<CTORTYPE>(constructorArg);
@@ -211,9 +209,9 @@ namespace StructureMap.Pipeline
         /// <typeparam name="CTORTYPE"></typeparam>
         /// <param name="constructorArg"></param>
         /// <returns></returns>
-        public DependencyExpression<T, CTORTYPE> CtorDependency<CTORTYPE>(string constructorArg)
+        public DependencyExpression<CTORTYPE> CtorDependency<CTORTYPE>(string constructorArg)
         {
-            return new DependencyExpression<T, CTORTYPE>(this, constructorArg);
+            return new DependencyExpression<CTORTYPE>(this, constructorArg);
         }
 
         /// <summary>
@@ -222,11 +220,11 @@ namespace StructureMap.Pipeline
         /// <typeparam name="SETTERTYPE"></typeparam>
         /// <param name="expression"></param>
         /// <returns></returns>
-        public DependencyExpression<T, SETTERTYPE> SetterDependency<SETTERTYPE>(
+        public DependencyExpression<SETTERTYPE> SetterDependency<SETTERTYPE>(
             Expression<Func<T, SETTERTYPE>> expression)
         {
             string propertyName = ReflectionHelper.GetProperty(expression).Name;
-            return new DependencyExpression<T, SETTERTYPE>(this, propertyName);
+            return new DependencyExpression<SETTERTYPE>(this, propertyName);
         }
 
         /// <summary>
@@ -235,7 +233,7 @@ namespace StructureMap.Pipeline
         /// </summary>
         /// <typeparam name="SETTERTYPE"></typeparam>
         /// <returns></returns>
-        public DependencyExpression<T, SETTERTYPE> SetterDependency<SETTERTYPE>()
+        public DependencyExpression<SETTERTYPE> SetterDependency<SETTERTYPE>()
         {
             return CtorDependency<SETTERTYPE>();
         }
@@ -246,7 +244,7 @@ namespace StructureMap.Pipeline
         /// </summary>
         /// <typeparam name="CHILD"></typeparam>
         /// <returns></returns>
-        public ArrayDefinitionExpression<T, CHILD> TheArrayOf<CHILD>()
+        public ArrayDefinitionExpression<CHILD> TheArrayOf<CHILD>()
         {
             if (typeof (CHILD).IsArray)
             {
@@ -266,9 +264,9 @@ namespace StructureMap.Pipeline
         /// <typeparam name="CHILD"></typeparam>
         /// <param name="ctorOrPropertyName"></param>
         /// <returns></returns>
-        public ArrayDefinitionExpression<T, CHILD> TheArrayOf<CHILD>(string ctorOrPropertyName)
+        public ArrayDefinitionExpression<CHILD> TheArrayOf<CHILD>(string ctorOrPropertyName)
         {
-            return new ArrayDefinitionExpression<T, CHILD>(this, ctorOrPropertyName);
+            return new ArrayDefinitionExpression<CHILD>(this, ctorOrPropertyName);
         }
 
         #region Nested type: ArrayDefinitionExpression
@@ -276,9 +274,8 @@ namespace StructureMap.Pipeline
         /// <summary>
         /// Expression Builder to help define multiple Instances for an Array dependency
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <typeparam name="ARRAY"></typeparam>
-        public class ArrayDefinitionExpression<T, ARRAY>
+        public class ArrayDefinitionExpression<ARRAY>
         {
             private readonly SmartInstance<T> _instance;
             private readonly string _propertyName;
@@ -298,7 +295,7 @@ namespace StructureMap.Pipeline
             {
                 var list = new List<Instance>();
 
-                var child = new InstanceExpression<ARRAY>(i => list.Add(i));
+                var child = new InstanceExpression<ARRAY>(list.Add);
                 action(child);
 
                 _instance.setChildArray(_propertyName, list.ToArray());
@@ -326,9 +323,8 @@ namespace StructureMap.Pipeline
         /// <summary>
         /// Expression Builder that helps to define child dependencies inline 
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <typeparam name="CHILD"></typeparam>
-        public class DependencyExpression<T, CHILD>
+        public class DependencyExpression<CHILD>
         {
             private readonly SmartInstance<T> _instance;
             private readonly string _propertyName;

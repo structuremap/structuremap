@@ -13,7 +13,7 @@ namespace StructureMap
     public interface IModel
     {
         /// <summary>
-        /// Access to all the <seealso cref="PluginType">PluginType</seealso> registrations 
+        /// Access to all the <seealso cref="PluginTypeConfiguration">Plugin Type</seealso> registrations 
         /// </summary>
         IEnumerable<PluginTypeConfiguration> PluginTypes { get; }
 
@@ -27,7 +27,7 @@ namespace StructureMap
         bool HasDefaultImplementationFor(Type pluginType);
 
         /// <summary>
-        /// Can StructureMap fulfill a request to ObjectFactory.GetInstance<T>() from the 
+        /// Can StructureMap fulfill a request to ObjectFactory.GetInstance&lt;T&gt;() from the 
         /// current configuration.  This does not include concrete classes that could be auto-configured
         /// upon demand
         /// </summary>
@@ -45,7 +45,6 @@ namespace StructureMap
         /// <summary>
         /// Queryable access to all of the <see cref="IInstance">IInstance</see> for a given PluginType
         /// </summary>
-        /// <param name="pluginType"></param>
         /// <returns></returns>
         IEnumerable<IInstance> InstancesOf<T>();
         

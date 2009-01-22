@@ -95,10 +95,5 @@ namespace StructureMap.Testing.AutoMocking
             autoMocker.Get<IMockedService>().AssertWasCalled(s => s.Go());
         }
 
-        public interface IAnotherService
-        {
-            
-        }
-
     }
 }

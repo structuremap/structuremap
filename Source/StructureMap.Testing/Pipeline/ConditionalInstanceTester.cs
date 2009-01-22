@@ -14,7 +14,6 @@ namespace StructureMap.Testing.Pipeline
         private Rule Blue = new ColorRule("blue");
         private Rule Default = new ColorRule("black");
 
-        private Rule _rule;
         private BuildSession _session;
 
         private void TheRequestedNameIs(string name)
@@ -40,7 +39,6 @@ namespace StructureMap.Testing.Pipeline
 
 
             _session = new BuildSession();
-            _rule = null;
         }
 
         [Test]
@@ -90,7 +88,7 @@ namespace StructureMap.Testing.Pipeline
             var container = new Container(x =>
             {
                 x.ForRequestedType<Rule>().TheDefault.IsThis(DEFAULT);
-                x.InstanceOf<Rule>().Is.Conditional(o =>
+                x.InstanceOf<Rule>().Is.Conditional(o => 
                 {
                     o.If(c => false).ThenIt.Is.OfConcreteType<ARule>();
                 }).WithName("conditional");

@@ -85,7 +85,6 @@ namespace StructureMap
         /// Scoping, the Default Instance, and interception.  This method is specifically
         /// meant for registering open generic types
         /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <returns></returns>
         GenericFamilyExpression ForRequestedType(Type pluginType);
 
