@@ -94,11 +94,32 @@ namespace StructureMap.Graph
 
         public void Visit(IArgumentVisitor visitor)
         {
-            foreach (ParameterInfo info in _ctor.GetParameters())
+            try
             {
-                Type parameterType = info.ParameterType;
-
-                visitParameter(info, parameterType, visitor);
+                foreach (ParameterInfo info in _ctor.GetParameters())
+                {
+                    try
+                    {
+                        Type parameterType = info.ParameterType;
+                        visitParameter(info, parameterType, visitor);
+                    }
+                    catch (Exception e)
+                    {
+                        string message =
+                            "Trying to visit parameter {0} of type {1} in the constructor for {2}".ToFormat(info.Name,
+                                                                                                            info.
+                                                                                                                ParameterType,
+                                                                                                            _pluggedType.
+                                                                                                                AssemblyQualifiedName);
+                        throw new ApplicationException(message, e);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                string message = "Failed while trying to visit the constructor for " +
+                                 _pluggedType.AssemblyQualifiedName;
+                throw new ApplicationException(message, e);
             }
         }
 

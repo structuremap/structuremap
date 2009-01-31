@@ -79,7 +79,7 @@ namespace StructureMap.Diagnostics
 
             _writer.AddText(contents);
 
-            _writer.AddContent("Built by:  " + pluginType.Policy);
+            _writer.AddContent("Scoped as:  " + pluginType.Policy);
 
             foreach (IInstance instance in pluginType.Instances)
             {

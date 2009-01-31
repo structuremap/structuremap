@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Web;
 using System.Web.SessionState;
+using StructureMap.Attributes;
 
 namespace StructureMap.Pipeline
 {
@@ -49,6 +50,11 @@ namespace StructureMap.Pipeline
         {
             return this;
         }
+
+        public override string ToString()
+        {
+            return InstanceScope.HttpContext.ToString();
+        }
     }
 
     public class HttpSessionBuildPolicy : HttpContextBuildPolicy
@@ -56,6 +62,11 @@ namespace StructureMap.Pipeline
         protected override IDictionary findHttpDictionary()
         {
             return new SessionWrapper(HttpContext.Current.Session);
+        }
+
+        public override string ToString()
+        {
+            return InstanceScope.HttpSession.ToString();
         }
     }
 

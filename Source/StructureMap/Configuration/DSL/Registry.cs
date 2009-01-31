@@ -47,6 +47,7 @@ namespace StructureMap.Configuration.DSL
         void SelectConstructor<T>(Expression<Func<T>> expression);
     }
 
+
     /// <summary>
     /// A Registry class provides methods and grammars for configuring a Container or ObjectFactory.
     /// Using a Registry subclass is the recommended way of configuring a StructureMap Container.
@@ -74,6 +75,7 @@ namespace StructureMap.Configuration.DSL
         /// You can overide this method as a place to put the Registry DSL
         /// declarations.  This is not mandatory.
         /// </summary>
+        [Obsolete("configure() is unnecessary.  All declarations can be made in the constructor of a Registry or any other method")]
         protected virtual void configure()
         {
             // no-op;
@@ -149,6 +151,16 @@ namespace StructureMap.Configuration.DSL
         public CreatePluginFamilyExpression<PLUGINTYPE> ForRequestedType<PLUGINTYPE>()
         {
             return new CreatePluginFamilyExpression<PLUGINTYPE>(this);
+        }
+
+        /// <summary>
+        /// Convenience method.  Equivalent of ForRequestedType[PluginType]().AsSingletons()
+        /// </summary>
+        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <returns></returns>
+        public CreatePluginFamilyExpression<PLUGINTYPE> ForSingletonOf<PLUGINTYPE>()
+        {
+            return ForRequestedType<PLUGINTYPE>().AsSingletons();
         }
 
         /// <summary>
@@ -357,5 +369,7 @@ namespace StructureMap.Configuration.DSL
         {
             PluginCache.GetPlugin(typeof(T)).UseConstructor(expression);
         }
+
+
     }
 }

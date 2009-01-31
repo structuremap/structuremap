@@ -17,6 +17,11 @@ namespace StructureMap
             return new ReferencedInstance(key);
         }
 
+        public static bool IsSimple(this Type type)
+        {
+            return new TypeRules().IsSimple(type);
+        }
+
         public static bool IsConcrete(this Type type)
         {
             return new TypeRules().IsConcrete(type);

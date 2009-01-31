@@ -1,4 +1,5 @@
 using System;
+using StructureMap.Attributes;
 
 namespace StructureMap.Pipeline
 {
@@ -42,6 +43,11 @@ namespace StructureMap.Pipeline
         protected override CacheInterceptor clone()
         {
             return new SingletonPolicy();
+        }
+
+        public override string ToString()
+        {
+            return InstanceScope.Singleton.ToString();
         }
     }
 }

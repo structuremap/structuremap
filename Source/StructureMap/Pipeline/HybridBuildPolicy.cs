@@ -1,4 +1,5 @@
 using System;
+using StructureMap.Attributes;
 
 namespace StructureMap.Pipeline
 {
@@ -59,6 +60,11 @@ namespace StructureMap.Pipeline
         public override IBuildPolicy Clone()
         {
             return new HybridBuildPolicy(){InnerPolicy = InnerPolicy.Clone()};
+        }
+
+        public override string ToString()
+        {
+            return InstanceScope.Hybrid.ToString();
         }
     }
 

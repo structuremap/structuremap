@@ -1,4 +1,5 @@
 using System;
+using StructureMap.Attributes;
 
 namespace StructureMap.Pipeline
 {
@@ -53,6 +54,11 @@ namespace StructureMap.Pipeline
         public override int GetHashCode()
         {
             return 0;
+        }
+
+        public override string ToString()
+        {
+            return InstanceScope.PerRequest.ToString();
         }
     }
 }
