@@ -62,6 +62,7 @@ namespace StructureMap
             {
                 _graph.Log.StartSource(p.Description);
                 p.ParseAssemblies(graphBuilder);
+                p.ParseRegistries(graphBuilder);
             });
 
             forAllParsers(p => p.Parse(graphBuilder));

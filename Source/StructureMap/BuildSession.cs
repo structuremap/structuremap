@@ -123,7 +123,11 @@ namespace StructureMap
 
         public Type ParentType
         {
-            get { return _buildStack.Parent.ConcreteType; }
+            get
+            {
+                if (_buildStack.Parent != null) return _buildStack.Parent.ConcreteType;
+                return null;
+            }
         }
 
         T IContext.GetInstance<T>()

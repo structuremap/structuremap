@@ -268,4 +268,7 @@
   <data name="285" xml:space="preserve">
     <value>Only open generic types can be used in the call to Container.ForGenericType(type)</value>
   </data>
+  <data name="290" xml:space="preserve">
+    <value>Could not load the designated Registry class '{0}'</value>
+  </data>
 </root>

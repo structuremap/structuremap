@@ -367,6 +367,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="ReadingRegistriesFromXmlTester.cs" />
     <Compile Include="SpecificationExtensions.cs" />
     <Compile Include="StructureMapConfigCreator.cs" />
     <Compile Include="StructureMapConfigurationDefensiveChecksTester.cs" />
@@ -444,6 +445,7 @@
     <EmbeddedResource Include="TestData\PluggedTypeTest.xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Examples\AddRegistryInXml.xml" />
     <Content Include="Sample.xml" />
     <Content Include="TestData\ProfileSample.xml" />
     <EmbeddedResource Include="TestData\ShortInstance.xml" />

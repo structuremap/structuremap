@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<StructureMap>
+  <!-- Configure a Registry by just specifying the Assembly Qualified Name of a Registry Type -->
+  <Registry Type="StructureMap.Testing.XmlFileRegistry, StructureMap.Testing"></Registry>
+</StructureMap>

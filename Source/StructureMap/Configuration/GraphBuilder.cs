@@ -58,6 +58,16 @@ namespace StructureMap.Configuration
             }
         }
 
+        public void AddRegistry(string registryTypeName)
+        {
+            _pluginGraph.Log.Try(()=>
+            {
+                var type = new TypePath(registryTypeName).FindType();
+                Registry registry = (Registry) Activator.CreateInstance(type);
+                registry.ConfigurePluginGraph(_pluginGraph);
+            }).AndReportErrorAs(290, registryTypeName);
+        }
+
         public IProfileBuilder GetProfileBuilder()
         {
             return new ProfileBuilder(_pluginGraph);

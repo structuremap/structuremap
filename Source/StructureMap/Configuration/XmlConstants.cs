@@ -32,5 +32,6 @@ namespace StructureMap.Configuration
         public const string SCOPE = "Scope";
         public const string STRUCTUREMAP = "StructureMap";
         public const string TYPE_ATTRIBUTE = "Type";
+        public const string REGISTRY = "Registry";
     }
 }

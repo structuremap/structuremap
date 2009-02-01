@@ -96,6 +96,11 @@ namespace StructureMap.Configuration
             _structureMapNode.ForTextInChild("Assembly/@Name").Do(name => builder.AddAssembly(name));
         }
 
+        public void ParseRegistries(IGraphBuilder builder)
+        {
+            _structureMapNode.ForTextInChild("Registry/@Type").Do(name => builder.AddRegistry(name));
+        }
+
 
         private XmlExtensions.XmlNodeExpression forEachNode(string xpath)
         {

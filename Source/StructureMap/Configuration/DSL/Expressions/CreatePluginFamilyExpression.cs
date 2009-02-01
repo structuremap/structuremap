@@ -152,6 +152,11 @@ namespace StructureMap.Configuration.DSL.Expressions
             return this;
         }
 
+        /// <summary>
+        /// Adds an Interceptor to only this PluginType
+        /// </summary>
+        /// <param name="interceptor"></param>
+        /// <returns></returns>
         public CreatePluginFamilyExpression<PLUGINTYPE> InterceptWith(InstanceInterceptor interceptor)
         {
             _children.Add(
@@ -302,6 +307,11 @@ namespace StructureMap.Configuration.DSL.Expressions
             });
         }
 
+        /// <summary>
+        /// Forces StructureMap to always use a unique instance to
+        /// stop the "BuildSession" caching
+        /// </summary>
+        /// <returns></returns>
         public CreatePluginFamilyExpression<PLUGINTYPE> AlwaysUnique()
         {
             return InterceptConstructionWith(new UniquePerRequestInterceptor());

@@ -542,8 +542,43 @@
         </div>
 <!--EndFragment-->
 <hr />
-
-	    
+    <h2>Referencing Registries from Xml</h2>
+	<p>StructureMap 2.5.3 adds the ability to include Registry configuration through Xml 
+        configuration.&nbsp; This may be valuable in systems where you might be 
+        completely unable to do programmatic bootstrapping or modify the application 
+        startup to add bootstrapping.&nbsp; Just add a &lt;Registry&gt; node to Xml 
+        configuration and put the assembly qualified name of the Registry class into the 
+        @Type attribute like this:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue255;\red255\green255\blue255;\red163\green21\blue21;\red255\green0\blue0;\red0\green0\blue0;\red0\green128\blue0;}??\fs20 \cf1 &lt;?\cf3 xml\cf1  \cf4 version\cf1 =\cf0 "\cf1 1.0\cf0 "\cf1  \cf4 encoding\cf1 =\cf0 "\cf1 utf-8\cf0 "\cf1  ?&gt;\par ??&lt;\cf3 StructureMap\cf1 &gt;\par ??  &lt;!--\cf6  Configure a Registry by just specifying the Assembly Qualified Name of a Registry Type \cf1 --&gt;\par ??  &lt;\cf3 Registry\cf1  \cf4 Type\cf1 =\cf0 "\cf1 StructureMap.Testing.XmlFileRegistry, StructureMap.Testing\cf0 "\cf1 &gt;&lt;/\cf3 Registry\cf1 &gt;\par ??&lt;/\cf3 StructureMap\cf1 &gt;}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+                <span style="color: blue;">&lt;?</span><span style="color: #a31515;">xml</span><span 
+                    style="color: blue;"> </span><span style="color: red;">version</span><span 
+                    style="color: blue;">=</span>&quot;<span style="color: blue;">1.0</span>&quot;<span 
+                    style="color: blue;"> </span><span style="color: red;">encoding</span><span 
+                    style="color: blue;">=</span>&quot;<span style="color: blue;">utf-8</span>&quot;<span 
+                    style="color: blue;"> ?&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&lt;</span><span style="color: #a31515;">StructureMap</span><span 
+                    style="color: blue;">&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp; &lt;!--</span><span style="color: green;"> 
+                Configure a Registry by just specifying the Assembly Qualified Name of a 
+                Registry Type </span><span style="color: blue;">--&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp; &lt;</span><span style="color: #a31515;">Registry</span><span 
+                    style="color: blue;"> </span><span style="color: red;">Type</span><span 
+                    style="color: blue;">=</span>&quot;<span style="color: blue;">StructureMap.Testing.XmlFileRegistry, 
+                StructureMap.Testing</span>&quot;<span style="color: blue;">&gt;&lt;/</span><span 
+                    style="color: #a31515;">Registry</span><span style="color: blue;">&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&lt;/</span><span style="color: #a31515;">StructureMap</span><span 
+                    style="color: blue;">&gt;</span></p>
+        </div>
+<!--EndFragment-->
+<hr />
 	    
 	</body>
 </html>

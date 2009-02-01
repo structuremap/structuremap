@@ -17,6 +17,7 @@ namespace StructureMap.Configuration
     {
         PluginGraph PluginGraph { get; }
         void AddAssembly(string assemblyName);
+        void AddRegistry(string registryTypeName);
 
         void FinishFamilies();
 
