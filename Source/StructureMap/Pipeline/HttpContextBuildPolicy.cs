@@ -154,7 +154,7 @@ namespace StructureMap.Pipeline
 
         public bool IsFixedSize
         {
-            get { throw new NotImplementedException(); }
+            get { return false; }
         }
 
         #endregion
