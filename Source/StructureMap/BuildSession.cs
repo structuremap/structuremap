@@ -73,7 +73,7 @@ namespace StructureMap
     {
         private readonly BuildStack _buildStack = new BuildStack();
         private readonly InstanceCache _cache = new InstanceCache();
-        private readonly Cache<Type, object> _defaults;
+        private readonly Cache<Type, Func<object>> _defaults;
         private readonly InterceptorLibrary _interceptorLibrary;
         private readonly PipelineGraph _pipelineGraph;
 
@@ -82,7 +82,7 @@ namespace StructureMap
             _pipelineGraph = pipelineGraph;
             _interceptorLibrary = interceptorLibrary;
 
-            _defaults = new Cache<Type, object>(t =>
+            _defaults = new Cache<Type, Func<object>>(t =>
             {
                 Instance instance = _pipelineGraph.GetDefault(t);
 
@@ -91,7 +91,9 @@ namespace StructureMap
                     throw new StructureMapException(202, t);
                 }
 
-                return CreateInstance(t, instance);
+                object createdInstance = CreateInstance(t, instance);
+
+                return () => createdInstance;
             });
         }
 
@@ -197,7 +199,7 @@ namespace StructureMap
 
         public virtual object CreateInstance(Type pluginType)
         {
-            return _defaults[pluginType];
+            return _defaults[pluginType]();
         }
 
         public virtual object ApplyInterception(Type pluginType, object actualValue)
@@ -208,14 +210,19 @@ namespace StructureMap
 
         public virtual void RegisterDefault(Type pluginType, object defaultObject)
         {
-            _defaults[pluginType] = defaultObject;
+            RegisterDefault(pluginType, () => defaultObject);
+        }
+
+        public virtual void RegisterDefault(Type pluginType, Func<object> creator)
+        {
+            _defaults[pluginType] = creator;
         }
 
         public T TryGetInstance<T>() where T : class
         {
             if (_defaults.Has(typeof(T)))
             {
-                return (T) _defaults[typeof (T)];
+                return (T) _defaults[typeof (T)]();
             }
 
             return _pipelineGraph.HasDefaultForPluginType(typeof (T))

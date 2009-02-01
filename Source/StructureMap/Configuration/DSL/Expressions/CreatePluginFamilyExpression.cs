@@ -301,5 +301,10 @@ namespace StructureMap.Configuration.DSL.Expressions
                 family.DefaultInstanceKey = instance.Name;
             });
         }
+
+        public CreatePluginFamilyExpression<PLUGINTYPE> AlwaysUnique()
+        {
+            return InterceptConstructionWith(new UniquePerRequestInterceptor());
+        }
     }
 }

@@ -79,7 +79,11 @@ namespace StructureMap.Graph
                     break;
 
                 case InstanceScope.HttpSession:
-                    AddInterceptor(new HttpSessionBuildPolicy());
+                    AddInterceptor(new HybridSessionBuildPolicy());
+                    break;
+
+                case InstanceScope.HybridHttpSession:
+                    AddInterceptor(new HybridSessionBuildPolicy());
                     break;
             }
         }

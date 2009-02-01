@@ -178,6 +178,7 @@
     <Compile Include="AutoMocking\RhinoMockRepositoryProxyTester.cs" />
     <Compile Include="AutoWiringExamples.cs" />
     <Compile Include="Bugs\BuildUpBug.cs" />
+    <Compile Include="Bugs\HttpSessionNullRefBug.cs" />
     <Compile Include="Bugs\IDictionaryAndXmlBugTester.cs" />
     <Compile Include="Bugs\ScanIndexerBugTester.cs" />
     <Compile Include="Bugs\SingletonShouldBeLazy.cs" />
@@ -373,6 +374,7 @@
     <Compile Include="TestData\DataMother.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="PerRequestInterceptorTester.cs" />
     <Compile Include="TestUtility.cs" />
     <Compile Include="Diagnostics\ValidationBuildSessionTester.cs" />
     <Compile Include="TypeExtensionsTester.cs" />

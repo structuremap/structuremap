@@ -265,7 +265,16 @@ namespace StructureMap.Testing.Graph
             var family = new PluginFamily(typeof(IServiceProvider));
             family.SetScopeTo(InstanceScope.HttpSession);
 
-            family.Policy.ShouldBeOfType<HttpSessionBuildPolicy>();
+            family.Policy.ShouldBeOfType<HybridSessionBuildPolicy>();
+        }
+
+        [Test]
+        public void set_the_scope_to_session_hybrid()
+        {
+            var family = new PluginFamily(typeof(IServiceProvider));
+            family.SetScopeTo(InstanceScope.HybridHttpSession);
+
+            family.Policy.ShouldBeOfType<HybridSessionBuildPolicy>();
         }
 
         [Test]

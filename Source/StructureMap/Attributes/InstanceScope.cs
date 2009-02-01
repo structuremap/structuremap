@@ -7,6 +7,7 @@ namespace StructureMap.Attributes
         ThreadLocal,
         HttpContext,
         Hybrid,
-        HttpSession
+        HttpSession,
+        HybridHttpSession
     }
 }

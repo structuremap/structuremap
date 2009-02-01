@@ -79,7 +79,9 @@ namespace StructureMap.Util
                         if (!_values.ContainsKey(key))
                         {
                             VALUE value = _onMissing(key);
-                            _values.Add(key, value);
+                            //Check to make sure that the onMissing didn't cache this already
+                            if(!_values.ContainsKey(key))
+                                _values.Add(key, value);
                         }
                     }
                 }
