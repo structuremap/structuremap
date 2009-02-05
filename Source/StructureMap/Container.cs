@@ -411,6 +411,18 @@ namespace StructureMap
         }
 
         /// <summary>
+        /// Starts a request for an instance or instances with explicitly configured arguments.  Specifies that any dependency
+        /// of type T should be "arg"
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="arg"></param>
+        /// <returns></returns>
+        public ExplicitArgsExpression With(Type pluginType, object arg)
+        {
+            return new ExplicitArgsExpression(this).With(pluginType, arg);
+        }
+
+        /// <summary>
         /// Starts a request for an instance or instances with explicitly configured arguments.  Specifies that any dependency or primitive argument
         /// with the designated name should be the next value.
         /// </summary>
@@ -549,5 +561,23 @@ namespace StructureMap
         {
             T GetInstanceAs<T>();
         }
+
+        /// <summary>
+        /// Shortcut syntax for using an object to find a service that handles
+        /// that type of object by using an open generic type
+        /// </summary>
+        /// <example>
+        /// IHandler handler = container.ForObject(shipment)
+        ///                        .GetClosedTypeOf(typeof (IHandler<>))
+        ///                        .As<IHandler>();
+        /// </example>
+        /// <param name="subject"></param>
+        /// <returns></returns>
+        public CloseGenericTypeExpression ForObject(object subject)
+        {
+            return new CloseGenericTypeExpression(subject, this);
+        }
     }
+
+
 }

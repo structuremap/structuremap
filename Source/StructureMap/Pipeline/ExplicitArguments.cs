@@ -29,7 +29,12 @@ namespace StructureMap.Pipeline
 
         public void Set<T>(T arg)
         {
-            _children.Add(typeof (T), arg);
+            Set(typeof (T), arg);
+        }
+
+        public void Set(Type pluginType, object arg)
+        {
+            _children.Add(pluginType, arg);
         }
 
         public void SetArg(string key, object argValue)

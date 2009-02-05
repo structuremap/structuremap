@@ -140,4 +140,75 @@ namespace StructureMap.Testing.Pipeline
             return null;
         }
     }
+
+
+    [TestFixture]
+    public class when_getting_a_closed_type_from_an_open_generic_type_by_providing_an_input_parameter
+    {
+        [Test]
+        public void fetch_the_object()
+        {
+            var container = new Container(x =>
+            {
+                x.ForRequestedType<IHandler<Shipment>>().TheDefaultIsConcreteType<ShipmentHandler>();
+            });
+
+            var shipment = new Shipment();
+
+            IHandler handler = container
+                .ForObject(shipment)
+                .GetClosedTypeOf(typeof (IHandler<>))
+                .As<IHandler>();
+
+            handler.ShouldBeOfType<ShipmentHandler>().Shipment.ShouldBeTheSameAs(shipment);
+        }
+    }
+
+    [TestFixture]
+    public class when_getting_a_closed_type_from_an_open_generic_type_by_providing_an_input_parameter_from_ObjectFactory
+    {
+        [Test]
+        public void fetch_the_object()
+        {
+            ObjectFactory.Initialize(x =>
+            {
+                x.ForRequestedType<IHandler<Shipment>>().TheDefaultIsConcreteType<ShipmentHandler>();
+            });
+
+            var shipment = new Shipment();
+            IHandler handler = ObjectFactory.ForObject(shipment).GetClosedTypeOf(typeof(IHandler<>)).As<IHandler>();
+
+            handler.ShouldBeOfType<ShipmentHandler>().Shipment.ShouldBeTheSameAs(shipment);
+        }
+    }
+
+    public class Shipment
+    {
+        
+    }
+
+    public interface IHandler<T> : IHandler
+    {
+        
+    }
+
+    public interface IHandler
+    {
+        
+    }
+
+    public class ShipmentHandler : IHandler<Shipment>
+    {
+        private readonly Shipment _shipment;
+
+        public ShipmentHandler(Shipment shipment)
+        {
+            _shipment = shipment;
+        }
+
+        public Shipment Shipment
+        {
+            get { return _shipment; }
+        }
+    }
 }

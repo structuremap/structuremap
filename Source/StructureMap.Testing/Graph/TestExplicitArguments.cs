@@ -179,6 +179,53 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
+        public void Fill_in_argument_by_type()
+        {
+            var container = new Container(x =>
+            {
+                x.ForRequestedType<IView>().TheDefaultIsConcreteType<View>();
+            });
+
+            var theNode = new SpecialNode();
+            var theTrade = new Trade();
+
+            var command = container
+                .With(typeof(Node), theNode)
+                .With(theTrade)
+                .GetInstance<Command>();
+
+            Assert.IsInstanceOfType(typeof(View), command.View);
+            Assert.AreSame(theNode, command.Node);
+            Assert.AreSame(theTrade, command.Trade);
+        }
+
+        [Test]
+        public void Fill_in_argument_by_type_with_ObjectFactory()
+        {
+            ObjectFactory.Initialize(x =>
+            {
+                x.ForRequestedType<IView>().TheDefaultIsConcreteType<View>();
+            });
+
+            var theNode = new SpecialNode();
+            var theTrade = new Trade();
+
+            var command = ObjectFactory
+                .With(typeof(Node), theNode)
+                .With(theTrade)
+                .GetInstance<Command>();
+
+            Assert.IsInstanceOfType(typeof(View), command.View);
+            Assert.AreSame(theNode, command.Node);
+            Assert.AreSame(theTrade, command.Trade);
+        }
+
+        public class SpecialNode : Node
+        {
+            
+        }
+
+        [Test]
         public void NowDoItWithObjectFactoryItself()
         {
             ObjectFactory.Initialize(x =>

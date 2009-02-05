@@ -69,7 +69,7 @@ namespace StructureMap
                 }
             }
 
-            return null;
+            return pluggedType.BaseType == typeof(object) ? null : pluggedType.BaseType.FindInterfaceThatCloses(templateType);
         }
 
         public static string GetName(this Type type)

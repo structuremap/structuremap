@@ -257,6 +257,18 @@ namespace StructureMap
         }
 
         /// <summary>
+        /// Starts a request for an instance or instances with explicitly configured arguments.  Specifies that any dependency
+        /// of type T should be "arg"
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="arg"></param>
+        /// <returns></returns>
+        public static ExplicitArgsExpression With(Type pluginType, object arg)
+        {
+            return container.With(pluginType, arg);
+        }
+
+        /// <summary>
         /// Removes all configured instances of type T from the Container.  Use with caution!
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -436,6 +448,23 @@ namespace StructureMap
         public static Container.OpenGenericTypeExpression ForGenericType(Type templateType)
         {
             return container.ForGenericType(templateType);
+        }
+
+
+        /// <summary>
+        /// Shortcut syntax for using an object to find a service that handles
+        /// that type of object by using an open generic type
+        /// </summary>
+        /// <example>
+        /// IHandler handler = container.ForObject(shipment)
+        ///                        .GetClosedTypeOf(typeof (IHandler<>))
+        ///                        .As<IHandler>();
+        /// </example>
+        /// <param name="subject"></param>
+        /// <returns></returns>
+        public static CloseGenericTypeExpression ForObject(object subject)
+        {
+            return container.ForObject(subject);
         }
 
     }

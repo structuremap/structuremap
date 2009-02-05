@@ -49,6 +49,18 @@ namespace StructureMap
         }
 
         /// <summary>
+        /// Pass in additional arguments by type
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="arg"></param>
+        /// <returns></returns>
+        public ExplicitArgsExpression With(Type pluginType, object arg)
+        {
+            _args.Set(pluginType, arg);
+            return this;
+        }
+
+        /// <summary>
         /// Pass in additional arguments by name
         /// </summary>
         /// <param name="argName"></param>
