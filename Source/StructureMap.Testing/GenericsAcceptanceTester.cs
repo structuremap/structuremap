@@ -7,7 +7,9 @@ using StructureMap.Testing.GenericWidgets;
 
 namespace StructureMap.Testing
 {
-    [TestFixture]
+	using StructureMap.Attributes;
+
+	[TestFixture]
     public class GenericsAcceptanceTester
     {
         #region Setup/Teardown
@@ -216,6 +218,22 @@ namespace StructureMap.Testing
         {
             Assert.IsTrue(GenericsPluginGraph.CanBeCast(typeof (ITarget<,>), typeof (DisposableTarget<,>)));
         }
+
+		[Test]
+		public void CanGetTheSameInstanceOfGenericInterfaceWithSingletonScope()
+		{
+			Container con = new Container(x =>
+				{
+					x.ForRequestedType(typeof (IService<>))
+						.CacheBy(InstanceScope.Singleton)
+						.TheDefaultIsConcreteType(typeof (Service<>));
+				});
+
+			var first = con.GetInstance<IService<string>>();
+			var second = con.GetInstance<IService<string>>();
+
+			Assert.AreSame(first, second, "The objects are not the same instance");
+		}
     }
 
 

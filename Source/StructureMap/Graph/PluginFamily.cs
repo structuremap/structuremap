@@ -20,7 +20,6 @@ namespace StructureMap.Graph
         private IBuildPolicy _buildPolicy = new BuildPolicy();
         private string _defaultKey = string.Empty;
         private PluginGraph _parent;
-        private IBuildPolicy _policy;
 
         public PluginFamily(Type pluginType)
             : this(pluginType, new PluginGraph())
@@ -260,6 +259,11 @@ namespace StructureMap.Graph
         {
             source.EachInstance(instance => _instances.Fill(instance.Name, instance));
             source._pluggedTypes.Each((key, plugin) => _pluggedTypes.Fill(key, plugin));
+
+            if (source.MissingInstance != null)
+            {
+                MissingInstance = source.MissingInstance;
+            }
         }
 
         public Instance FirstInstance()
@@ -340,7 +344,7 @@ namespace StructureMap.Graph
         public IBuildPolicy Policy
         {
             get { return _buildPolicy; }
-            set { _policy = value; }
+            set { _buildPolicy = value; }
         }
 
         public int PluginCount

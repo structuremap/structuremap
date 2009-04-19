@@ -151,6 +151,11 @@ namespace StructureMap
             }
 
             family.EachInstance(instance => _instances.Fill(instance.Name, instance));
+
+            if (family.MissingInstance != null)
+            {
+                MissingInstance = family.MissingInstance;
+            }
         }
 
         public void EjectAllInstances()

@@ -95,11 +95,13 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void CloneSingleton()
         {
+            var inner = new BuildPolicy();
             var policy = new SingletonPolicy();
+            policy.InnerPolicy = inner;
 
-            var clone = (SingletonPolicy) policy.Clone();
-            Assert.AreNotSame(policy, clone);
-            Assert.IsInstanceOfType(typeof (BuildPolicy), clone.InnerPolicy);
+            var clone = policy.Clone().ShouldBeOfType<SingletonPolicy>();
+            clone.ShouldNotBeTheSameAs(policy);
+            clone.InnerPolicy.ShouldBeOfType<BuildPolicy>();
         }
 
 
