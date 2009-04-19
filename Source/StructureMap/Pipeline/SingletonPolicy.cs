@@ -6,9 +6,9 @@ namespace StructureMap.Pipeline
     public class SingletonPolicy : CacheInterceptor
     {
         private readonly object _locker = new object();
-        private InstanceCache _cache;
+        private ObjectCache _cache;
 
-        protected override InstanceCache findCache()
+        protected override ObjectCache findCache()
         {
             if (_cache == null)
             {
@@ -24,7 +24,7 @@ namespace StructureMap.Pipeline
             return _cache;
         }
 
-        public InstanceCache Cache
+        public ObjectCache Cache
         {
             get
             {

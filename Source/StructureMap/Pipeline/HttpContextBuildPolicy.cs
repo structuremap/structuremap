@@ -19,7 +19,7 @@ namespace StructureMap.Pipeline
             new HttpContextBuildPolicy().findCache().DisposeAndClear();
         }
 
-        protected override InstanceCache findCache()
+        protected override ObjectCache findCache()
         {
             IDictionary items = findHttpDictionary();
 
@@ -29,7 +29,7 @@ namespace StructureMap.Pipeline
                 {
                     if (!items.Contains(ITEM_NAME))
                     {
-                        InstanceCache cache = buildNewCache();
+                        ObjectCache cache = buildNewCache();
                         items.Add(ITEM_NAME, cache);
 
                         return cache;
@@ -37,7 +37,7 @@ namespace StructureMap.Pipeline
                 }
             }
 
-            return (InstanceCache) items[ITEM_NAME];
+            return (ObjectCache) items[ITEM_NAME];
         }
 
         protected virtual IDictionary findHttpDictionary()

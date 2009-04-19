@@ -5,7 +5,7 @@ namespace StructureMap.Pipeline
 {
     public class ThreadLocalStoragePolicy : CacheInterceptor
     {
-        [ThreadStatic] private static InstanceCache _cache;
+        [ThreadStatic] private static ObjectCache _cache;
         private readonly object _locker = new object();
 
         public static void DisposeAndClearAll()
@@ -27,7 +27,7 @@ namespace StructureMap.Pipeline
             }
         }
 
-        protected override InstanceCache findCache()
+        protected override ObjectCache findCache()
         {
             guaranteeHashExists();
             return _cache;

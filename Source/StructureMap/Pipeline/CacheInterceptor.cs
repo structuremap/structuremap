@@ -3,9 +3,9 @@ using StructureMap.Util;
 
 namespace StructureMap.Pipeline
 {
-    public class InstanceCache : Cache<InstanceKey, object>
+    public class ObjectCache : Cache<InstanceKey, object>
     {
-        public InstanceCache(IBuildPolicy innerPolicy) : base(key => innerPolicy.Build(key.Session, key.PluginType, key.Instance))
+        public ObjectCache(IBuildPolicy innerPolicy) : base(key => innerPolicy.Build(key.Session, key.PluginType, key.Instance))
         {
         }
 
@@ -29,7 +29,6 @@ namespace StructureMap.Pipeline
 
     public abstract class CacheInterceptor : IBuildInterceptor
     {
-        private readonly object _locker = new object();
         private IBuildPolicy _innerPolicy = new BuildPolicy();
 
         #region IBuildInterceptor Members
@@ -40,12 +39,12 @@ namespace StructureMap.Pipeline
             set { _innerPolicy = value; }
         }
 
-        protected InstanceCache buildNewCache()
+        protected ObjectCache buildNewCache()
         {
-            return new InstanceCache(_innerPolicy);
+            return new ObjectCache(_innerPolicy);
         }
 
-        protected abstract InstanceCache findCache();
+        protected abstract ObjectCache findCache();
 
         public object Build(BuildSession buildSession, Type pluginType, Instance instance)
         {
