@@ -1,0 +1,43 @@
+using System.Security.Principal;
+using NUnit.Framework;
+
+namespace StructureMap.Testing.Bugs
+{
+
+    [TestFixture] public class LambdaCreatesNullBugTester
+    {
+        [SetUp] public void SetUp()
+        {
+
+        }
+
+        [Test]
+        public void Returning_null_values_in_contructed_by_generates_a_duplicate_cache_entry()
+        {
+            var container = new Container(x =>
+            {
+                x.ForRequestedType<IPrincipal>().TheDefault.Is.ConstructedBy(() => null);
+
+                x.ForRequestedType<TestClass>().TheDefaultIsConcreteType<TestClass>();
+            });
+
+            container.GetInstance<TestClass>().ShouldNotBeNull();
+
+
+            //this throws a duplicate cache entry exception
+            container.AssertConfigurationIsValid();
+        }
+    }
+
+
+        public class TestClass
+        {
+            private IPrincipal principal;
+
+            public TestClass(IPrincipal principal)
+            {
+                this.principal = principal;
+            }
+
+        } 
+}

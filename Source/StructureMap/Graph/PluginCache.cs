@@ -30,8 +30,15 @@ namespace StructureMap.Graph
 
             _builders = new Cache<Type, InstanceBuilder>(t =>
             {
-                Plugin plugin = _plugins[t];
-                return new InstanceBuilderAssembly(new[] {plugin}).Compile()[0];
+                try
+                {
+                    Plugin plugin = _plugins[t];
+                    return new InstanceBuilderAssembly(new[] {plugin}).Compile()[0];
+                }
+                catch (Exception e)
+                {
+                    throw new StructureMapException(245, t.AssemblyQualifiedName, e);
+                }
             });
         }
 

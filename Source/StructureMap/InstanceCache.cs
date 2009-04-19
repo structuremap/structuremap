@@ -38,6 +38,8 @@ namespace StructureMap
 
         public void Set(Type pluginType, Instance Instance, object result)
         {
+            if (result == null) return;
+
             Dictionary<Instance, object> cache = getCache(pluginType);
 
             if (cache.ContainsKey(Instance))

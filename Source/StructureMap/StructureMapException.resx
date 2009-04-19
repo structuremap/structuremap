@@ -274,4 +274,7 @@
   <data name="295" xml:space="preserve">
     <value>Bidirectional Dependency Problem detected with {0}.  The BuildStack is: {1}</value>
   </data>
+  <data name="245" xml:space="preserve">
+    <value>Error while trying to create an InstanceBuilder for {0}</value>
+  </data>
 </root>
