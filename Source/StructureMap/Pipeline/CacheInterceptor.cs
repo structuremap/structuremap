@@ -3,6 +3,10 @@ using StructureMap.Util;
 
 namespace StructureMap.Pipeline
 {
+
+
+
+    [Obsolete("Kill! in favor of MainObjectCache")]
     public class ObjectCache : Cache<InstanceKey, object>
     {
         public ObjectCache(IBuildPolicy innerPolicy) : base(key => innerPolicy.Build(key.Session, key.PluginType, key.Instance))

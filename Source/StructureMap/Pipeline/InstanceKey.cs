@@ -6,21 +6,29 @@ namespace StructureMap.Pipeline
     {
         public string Name { get; set; }
         public Type PluginType { get; set; }
+        [Obsolete("Kill!")]
         private WeakReference _session;
+        [Obsolete("Kill!")]
         private WeakReference _instance;
 
         public InstanceKey()
         {
         }
 
+        public InstanceKey(Instance instance, Type pluginType)
+        {
+            Name = instance.Name;
+            PluginType = pluginType;
+        }
 
-
+        [Obsolete("Kill!")]
         public BuildSession Session
         {
             get { return (BuildSession) _session.Target; }
             set { _session = new WeakReference(value); }
         }
 
+        [Obsolete("Kill!")]
         public Instance Instance
         {
             get

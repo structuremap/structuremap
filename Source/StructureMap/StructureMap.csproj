@@ -407,8 +407,13 @@
     <Compile Include="Graph\PluginCache.cs" />
     <Compile Include="IContext.cs" />
     <Compile Include="Pipeline\ConditionalInstance.cs" />
+    <Compile Include="Pipeline\HttpContextLifecycle.cs" />
+    <Compile Include="Pipeline\HttpLifecycleBase.cs" />
     <Compile Include="Pipeline\HttpSessionBuildPolicy.cs" />
+    <Compile Include="Pipeline\Lifecycle.cs" />
     <Compile Include="Pipeline\SessionWrapper.cs" />
+    <Compile Include="Pipeline\SingletonLifecycle.cs" />
+    <Compile Include="Pipeline\ThreadLocalStorageLifecycle.cs" />
     <Compile Include="Pipeline\UniquePerRequestInterceptor.cs" />
     <Compile Include="TypeExtensions.cs" />
     <Compile Include="IBootstrapper.cs" />

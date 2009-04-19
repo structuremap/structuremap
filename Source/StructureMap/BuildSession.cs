@@ -161,6 +161,7 @@ namespace StructureMap
             return _defaults[pluginType]();
         }
 
+        [Obsolete("get this inlined")]
         public virtual object ApplyInterception(Type pluginType, object actualValue)
         {
             if (actualValue == null) return null;

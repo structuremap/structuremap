@@ -38,6 +38,11 @@ namespace StructureMap.Util
             _values = dictionary;
         }
 
+        public object Locker
+        {
+            get { return _locker; }
+        }
+
         public Func<KEY, VALUE> OnMissing
         {
             set { _onMissing = value; }

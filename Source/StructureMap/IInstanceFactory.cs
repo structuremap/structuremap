@@ -13,6 +13,8 @@ namespace StructureMap
     {
         Type PluginType { get; }
         IEnumerable<IInstance> Instances { get; }
+
+        [Obsolete("Kill!!!!")]
         IBuildPolicy Policy { get; }
         Instance MissingInstance { get; set; }
 
@@ -27,11 +29,17 @@ namespace StructureMap
         [Obsolete("Return the list of Instances instead")]
         IList GetAllInstances(BuildSession session);
 
+        [Obsolete("Kill!!!!")]
         object Build(BuildSession session, Instance instance);
+        
         Instance FindInstance(string name);
 
         void ImportFrom(PluginFamily family);
+
+        [Obsolete("Kill!!!!")]
         void EjectAllInstances();
+
+        ILifecycle Lifecycle {get; }
 
 
     }

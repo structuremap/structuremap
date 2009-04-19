@@ -353,6 +353,7 @@
     <Compile Include="Pipeline\InstanceTester.cs" />
     <Compile Include="Pipeline\LiteralInstanceTester.cs" />
     <Compile Include="Pipeline\MissingInstanceTester.cs" />
+    <Compile Include="Pipeline\ObjectBuilderTester.cs" />
     <Compile Include="Pipeline\OptionalSetterInjectionTester.cs" />
     <Compile Include="Pipeline\ProfileManagerMergeTester.cs" />
     <Compile Include="Pipeline\ProfileManagerTester.cs" />

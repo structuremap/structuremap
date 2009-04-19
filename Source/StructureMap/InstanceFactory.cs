@@ -95,6 +95,7 @@ namespace StructureMap
             }
         }
 
+        [Obsolete("Kill!!!!")]
         public IBuildPolicy Policy
         {
             get { return _policy; }
@@ -132,6 +133,7 @@ namespace StructureMap
             return list;
         }
 
+        [Obsolete("Kill!!!!")]
         public object Build(BuildSession session, Instance instance)
         {
             return _policy.Build(session, PluginType, instance);
@@ -162,6 +164,11 @@ namespace StructureMap
         {
             _policy.EjectAll();
             _instances.Clear();
+        }
+
+        public ILifecycle Lifecycle
+        {
+            get { throw new NotImplementedException(); }
         }
 
         #endregion

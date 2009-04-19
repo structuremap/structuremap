@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Web;
 using StructureMap.Attributes;
@@ -15,6 +16,20 @@ namespace StructureMap.Pipeline
         {
             return InstanceScope.HttpSession.ToString();
         }
+    }
+
+
+    public class HttpSessionLifecycle : HttpContextLifecycle
+    {
+        protected override IDictionary findHttpDictionary()
+        {
+            return new SessionWrapper(HttpContext.Current.Session);
+        }
+    }
+
+    public class HybridSessionLifecycle : HttpLifecycleBase<HttpSessionLifecycle, ThreadLocalStorageLifecycle>
+    {
+        
     }
 
     public class HybridSessionBuildPolicy : HttpBuildPolicyBase<HttpSessionBuildPolicy, ThreadLocalStoragePolicy>

@@ -1,11 +1,9 @@
-using System;
 using System.Collections;
 using System.Web;
-using StructureMap.Attributes;
 
 namespace StructureMap.Pipeline
 {
-    public class HttpContextBuildPolicy : CacheInterceptor
+    public class HttpContextLifecycle : ILifecycle
     {
         public static readonly string ITEM_NAME = "STRUCTUREMAP-INSTANCES";
 
@@ -17,10 +15,15 @@ namespace StructureMap.Pipeline
 
         public static void DisposeAndClearAll()
         {
-            new HttpContextBuildPolicy().findCache().DisposeAndClear();
+            new HttpContextLifecycle().FindCache().DisposeAndClear();
         }
 
-        protected override ObjectCache findCache()
+        public void EjectAll()
+        {
+            FindCache().DisposeAndClear();
+        }
+
+        public IObjectCache FindCache()
         {
             IDictionary items = findHttpDictionary();
 
@@ -30,7 +33,7 @@ namespace StructureMap.Pipeline
                 {
                     if (!items.Contains(ITEM_NAME))
                     {
-                        ObjectCache cache = buildNewCache();
+                        MainObjectCache cache = new MainObjectCache();
                         items.Add(ITEM_NAME, cache);
 
                         return cache;
@@ -38,22 +41,13 @@ namespace StructureMap.Pipeline
                 }
             }
 
-            return (ObjectCache) items[ITEM_NAME];
+            return (IObjectCache)items[ITEM_NAME];
         }
+
 
         protected virtual IDictionary findHttpDictionary()
         {
             return HttpContext.Current.Items;
-        }
-
-        protected override CacheInterceptor clone()
-        {
-            return this;
-        }
-
-        public override string ToString()
-        {
-            return InstanceScope.HttpContext.ToString();
         }
     }
 }

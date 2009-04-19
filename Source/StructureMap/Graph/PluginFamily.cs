@@ -87,6 +87,7 @@ namespace StructureMap.Graph
             }
         }
 
+        [Obsolete("Kill!")]
         public void AddInterceptor(IBuildInterceptor interceptor)
         {
             interceptor.InnerPolicy = _buildPolicy;

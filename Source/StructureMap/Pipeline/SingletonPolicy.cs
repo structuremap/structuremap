@@ -3,6 +3,7 @@ using StructureMap.Attributes;
 
 namespace StructureMap.Pipeline
 {
+    [Obsolete("Kill!")]
     public class SingletonPolicy : CacheInterceptor
     {
         private readonly object _locker = new object();

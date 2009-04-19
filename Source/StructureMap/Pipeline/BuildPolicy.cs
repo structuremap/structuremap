@@ -3,6 +3,7 @@ using StructureMap.Attributes;
 
 namespace StructureMap.Pipeline
 {
+    [Obsolete("Kill!")]
     public sealed class BuildPolicy : IBuildPolicy
     {
         #region IBuildPolicy Members
