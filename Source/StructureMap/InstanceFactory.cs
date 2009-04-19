@@ -87,16 +87,20 @@ namespace StructureMap
             get { return _instances.GetAll(); }
         }
 
+        public Instance[] AllInstances
+        {
+            get
+            {
+                return _instances.GetAll();
+            }
+        }
+
         public IBuildPolicy Policy
         {
             get { return _policy; }
             set { _policy = value; }
         }
 
-        public void ForEachInstance(Action<Instance> action)
-        {
-            _instances.Each(action);
-        }
 
         public void AddInstance(Instance instance)
         {

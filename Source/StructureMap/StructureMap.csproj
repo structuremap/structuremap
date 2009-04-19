@@ -405,6 +405,7 @@
     <Compile Include="Graph\ITypeScanner.cs" />
     <Compile Include="Graph\PluggableAttributeScanner.cs" />
     <Compile Include="Graph\PluginCache.cs" />
+    <Compile Include="IContext.cs" />
     <Compile Include="Pipeline\ConditionalInstance.cs" />
     <Compile Include="Pipeline\HttpSessionBuildPolicy.cs" />
     <Compile Include="Pipeline\SessionWrapper.cs" />

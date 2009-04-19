@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
@@ -124,7 +125,8 @@ namespace StructureMap.Pipeline
         {
             if (!doesRecordOnTheStack) return;
 
-            session.BuildStack.Push(new BuildFrame(pluginType, Name, getConcreteType(pluginType)));
+            var frame = new BuildFrame(pluginType, Name, getConcreteType(pluginType));
+            session.BuildStack.Push(frame);
         }
 
         private object createRawObject(Type pluginType, BuildSession session)

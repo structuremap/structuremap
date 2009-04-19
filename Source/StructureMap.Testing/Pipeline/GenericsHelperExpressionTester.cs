@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using NUnit.Framework;
 
 namespace StructureMap.Testing.Pipeline
@@ -182,6 +183,30 @@ namespace StructureMap.Testing.Pipeline
         }
     }
 
+    [TestFixture]
+    public class when_getting_all_closed_type_from_an_open_generic_type_by_providing_an_input_parameter
+    {
+        [Test]
+        public void fetch_the_objects()
+        {
+            var container = new Container(x =>
+            {
+                x.ForRequestedType<IHandler<Shipment>>().TheDefaultIsConcreteType<ShipmentHandler>();
+                x.ForRequestedType<IHandler<Shipment>>().AddConcreteType<ShipmentHandler2>();
+            });
+
+            var shipment = new Shipment();
+
+            IList<IHandler> handlers = container
+                .ForObject(shipment)
+                .GetAllClosedTypesOf(typeof(IHandler<>))
+                .As<IHandler>();
+
+            handlers[0].ShouldBeOfType<ShipmentHandler>();
+            handlers[1].ShouldBeOfType<ShipmentHandler2>();
+        }
+    }
+
     public class Shipment
     {
         
@@ -202,6 +227,21 @@ namespace StructureMap.Testing.Pipeline
         private readonly Shipment _shipment;
 
         public ShipmentHandler(Shipment shipment)
+        {
+            _shipment = shipment;
+        }
+
+        public Shipment Shipment
+        {
+            get { return _shipment; }
+        }
+    }
+
+    public class ShipmentHandler2 : IHandler<Shipment>
+    {
+        private readonly Shipment _shipment;
+
+        public ShipmentHandler2(Shipment shipment)
         {
             _shipment = shipment;
         }

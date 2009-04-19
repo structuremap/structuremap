@@ -11,7 +11,6 @@ using System.Linq;
 
 namespace StructureMap
 {
-
     public class Container : TypeRules, IContainer
     {
         private InterceptorLibrary _interceptorLibrary;
@@ -147,7 +146,8 @@ namespace StructureMap
 
             args.RegisterDefaults(session);
 
-            return forType(type).GetAllInstances(session);
+            var instances = session.CreateInstanceArray(type, null);
+            return new ArrayList(instances);
         }
 
 
@@ -365,7 +365,8 @@ namespace StructureMap
         /// <returns></returns>
         public IList GetAllInstances(Type pluginType)
         {
-            return forType(pluginType).GetAllInstances(withNewSession(Plugin.DEFAULT));
+            var instances = withNewSession(Plugin.DEFAULT).CreateInstanceArray(pluginType, null);
+            return new ArrayList(instances);
         }
 
         /// <summary>
@@ -482,7 +483,7 @@ namespace StructureMap
         private IList<T> getListOfTypeWithSession<T>(BuildSession session)
         {
             var list = new List<T>();
-            foreach (T instance in forType(typeof (T)).GetAllInstances(session))
+            foreach (T instance in session.CreateInstanceArray(typeof(T), null))
             {
                 list.Add(instance);
             }
@@ -503,12 +504,6 @@ namespace StructureMap
         private BuildSession withNewSession(string name)
         {
             return new BuildSession(_pipelineGraph, _interceptorLibrary){RequestedName = name};
-        }
-
-
-        protected IInstanceFactory forType(Type type)
-        {
-            return _pipelineGraph.ForType(type);
         }
 
         /// <summary>

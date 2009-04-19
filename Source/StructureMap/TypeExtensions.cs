@@ -72,6 +72,16 @@ namespace StructureMap
             return pluggedType.BaseType == typeof(object) ? null : pluggedType.BaseType.FindInterfaceThatCloses(templateType);
         }
 
+        public static bool IsNullable(this Type type)
+        {
+            return type.IsGenericType && type.GetGenericTypeDefinition() == typeof (Nullable<>);
+        }
+
+        public static Type GetInnerTypeFromNullable(this Type nullableType)
+        {
+            return nullableType.GetGenericArguments()[0];
+        }
+
         public static string GetName(this Type type)
         {
             if (type.IsGenericType)

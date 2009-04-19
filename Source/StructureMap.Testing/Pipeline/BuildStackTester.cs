@@ -43,4 +43,26 @@ namespace StructureMap.Testing.Pipeline
             stack.Current.ShouldBeTheSameAs(root);
         }
     }
+
+    [TestFixture] public class when_using_build_frame_contains
+    {
+        [SetUp] public void SetUp()
+        {
+
+        }
+
+        [Test] public void true_if_matching()
+        {
+            var frame1 = new BuildFrame(typeof (IWidget), "red", typeof (ColorWidget));
+            var frame2 = new BuildFrame(typeof (IWidget), "red", typeof (ColorWidget));
+            var frame3 = new BuildFrame(typeof (IWidget), "green", typeof (ColorWidget));
+        
+            frame1.Contains(frame2).ShouldBeTrue();
+            frame1.Contains(frame3).ShouldBeFalse();
+
+            frame3.Attach(frame2);
+
+            frame3.Contains(frame1).ShouldBeTrue();
+        }
+    }
 }

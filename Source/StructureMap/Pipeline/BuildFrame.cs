@@ -115,5 +115,30 @@ namespace StructureMap.Pipeline
                 return result;
             }
         }
+
+        public bool Contains(BuildFrame frame)
+        {
+            if (_requestedType == frame._requestedType && _name == frame._name)
+            {
+                return true;
+            }
+
+            return _next == null ? false : _next.Contains(frame);
+        }
+
+        public string ToStackString()
+        {
+            string message = "\n1.) " + ToString();
+            var next = _next;
+
+            int i = 2;
+            while (next != null)
+            {
+                message += "\n{0}.) {1}".ToFormat(i++, next);
+                next = next._next;
+            }
+
+            return message;
+        }
     }
 }

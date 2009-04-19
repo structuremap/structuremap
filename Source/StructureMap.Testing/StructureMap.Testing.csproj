@@ -177,6 +177,7 @@
     <Compile Include="AutoMocking\RhinoAutoMockerTester.cs" />
     <Compile Include="AutoMocking\RhinoMockRepositoryProxyTester.cs" />
     <Compile Include="AutoWiringExamples.cs" />
+    <Compile Include="BidirectionalDependencies.cs" />
     <Compile Include="Bugs\BuildUpBug.cs" />
     <Compile Include="Bugs\HttpSessionNullRefBug.cs" />
     <Compile Include="Bugs\IDictionaryAndXmlBugTester.cs" />

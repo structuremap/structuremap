@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace StructureMap
 {
@@ -7,7 +9,12 @@ namespace StructureMap
         T As<T>();
     }
 
-    public class CloseGenericTypeExpression : OpenGenericTypeSpecificationExpression
+    public interface OpenGenericTypeListSpecificationExpression
+    {
+        IList<T> As<T>();
+    }
+
+    public class CloseGenericTypeExpression : OpenGenericTypeSpecificationExpression, OpenGenericTypeListSpecificationExpression
     {
         private readonly object _subject;
         private readonly IContainer _container;
@@ -26,13 +33,18 @@ namespace StructureMap
         /// <returns></returns>
         public OpenGenericTypeSpecificationExpression GetClosedTypeOf(Type type)
         {
+            closeType(type);
+            return this;
+        }
+
+        private void closeType(Type type)
+        {
             if (!type.IsGeneric())
             {
                 throw new StructureMapException(285);
             }
 
             _pluginType = type.MakeGenericType(_subject.GetType());
-            return this;
         }
 
         /// <summary>
@@ -43,6 +55,24 @@ namespace StructureMap
         T OpenGenericTypeSpecificationExpression.As<T>()
         {
             return (T) _container.With(_subject.GetType(), _subject).GetInstance(_pluginType);
+        }
+
+        public OpenGenericTypeListSpecificationExpression GetAllClosedTypesOf(Type type)
+        {
+            closeType(type);
+            return this;
+        }
+
+        IList<T> OpenGenericTypeListSpecificationExpression.As<T>()
+        {
+            IList list = _container.With(_subject.GetType(), _subject).GetAllInstances(_pluginType);
+            var returnValue = new List<T>();
+            foreach (var o in list)
+            {
+                returnValue.Add((T) o);
+            }
+
+            return returnValue;
         }
     }
 }

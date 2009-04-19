@@ -39,6 +39,14 @@ namespace StructureMap
         public void Set(Type pluginType, Instance Instance, object result)
         {
             Dictionary<Instance, object> cache = getCache(pluginType);
+
+            if (cache.ContainsKey(Instance))
+            {
+                string message = string.Format("Duplicate Objects detected for Instance {0} of Type {1}", Instance.Name,
+                                               pluginType.AssemblyQualifiedName);
+                throw new ApplicationException(message);
+
+            }
             cache.Add(Instance, result);
         }
     }

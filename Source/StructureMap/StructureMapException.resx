@@ -271,4 +271,7 @@
   <data name="290" xml:space="preserve">
     <value>Could not load the designated Registry class '{0}'</value>
   </data>
+  <data name="295" xml:space="preserve">
+    <value>Bidirectional Dependency Problem detected with {0}.  The BuildStack is: {1}</value>
+  </data>
 </root>

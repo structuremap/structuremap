@@ -1,3 +1,5 @@
+using System;
+
 namespace StructureMap.Pipeline
 {
     /// <summary>
@@ -45,6 +47,13 @@ namespace StructureMap.Pipeline
             }
             else
             {
+                if (_root.Contains(frame))
+                {
+
+
+                    throw new StructureMapException(295, frame.ToString(), _root.ToStackString());
+                }
+
                 _current.Attach(frame);
                 _current = frame;
             }

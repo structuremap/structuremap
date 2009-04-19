@@ -16,15 +16,23 @@ namespace StructureMap
         IBuildPolicy Policy { get; }
         Instance MissingInstance { get; set; }
 
+        Instance[] AllInstances
+        {
+            get;
+        }
+
         void AddInstance(Instance instance);
         Instance AddType<T>();
 
+        [Obsolete("Return the list of Instances instead")]
         IList GetAllInstances(BuildSession session);
+
         object Build(BuildSession session, Instance instance);
         Instance FindInstance(string name);
 
-        void ForEachInstance(Action<Instance> action);
         void ImportFrom(PluginFamily family);
         void EjectAllInstances();
+
+
     }
 }
