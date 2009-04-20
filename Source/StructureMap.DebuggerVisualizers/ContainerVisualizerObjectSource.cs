@@ -37,7 +37,7 @@ namespace StructureMap.DebuggerVisualizers
                     instances.Add(buildInstanceDetail(instance));
                 }
 
-                var pluginTypeDetail = new PluginTypeDetail(pluginType.PluginType, pluginType.Policy.GetType(), instances.ToArray());
+                var pluginTypeDetail = new PluginTypeDetail(pluginType.PluginType, pluginType.Lifecycle.GetType(), instances.ToArray());
                 pluginTypeDetails.Add(pluginTypeDetail);
             }
             

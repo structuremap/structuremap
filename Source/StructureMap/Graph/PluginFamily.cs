@@ -17,7 +17,7 @@ namespace StructureMap.Graph
         private readonly List<InstanceMemento> _mementoList = new List<InstanceMemento>();
         private readonly Cache<string, Plugin> _pluggedTypes = new Cache<string, Plugin>();
         private readonly Type _pluginType;
-        private IBuildPolicy _buildPolicy = new BuildPolicy();
+        private ILifecycle _lifecycle = null;
         private string _defaultKey = string.Empty;
         private PluginGraph _parent;
 
@@ -43,6 +43,15 @@ namespace StructureMap.Graph
             }
         }
 
+        public void SetScopeTo(ILifecycle lifecycle)
+        {
+            _lifecycle = lifecycle;
+        }
+
+        public ILifecycle Lifecycle
+        {
+            get { return _lifecycle; }
+        }
 
         public PluginGraph Parent
         {
@@ -59,40 +68,9 @@ namespace StructureMap.Graph
 
         public void SetScopeTo(InstanceScope scope)
         {
-            switch (scope)
-            {
-                case InstanceScope.Singleton:
-                    AddInterceptor(new SingletonPolicy());
-                    break;
-
-                case InstanceScope.HttpContext:
-                    AddInterceptor(new HttpContextBuildPolicy());
-                    break;
-
-                case InstanceScope.ThreadLocal:
-                    AddInterceptor(new ThreadLocalStoragePolicy());
-                    break;
-
-                case InstanceScope.Hybrid:
-                    AddInterceptor(new HybridBuildPolicy());
-                    break;
-
-                case InstanceScope.HttpSession:
-                    AddInterceptor(new HybridSessionBuildPolicy());
-                    break;
-
-                case InstanceScope.HybridHttpSession:
-                    AddInterceptor(new HybridSessionBuildPolicy());
-                    break;
-            }
+            _lifecycle = Lifecycles.GetLifecycle(scope);
         }
 
-        [Obsolete("Kill!")]
-        public void AddInterceptor(IBuildInterceptor interceptor)
-        {
-            interceptor.InnerPolicy = _buildPolicy;
-            _buildPolicy = interceptor;
-        }
 
         #endregion
 
@@ -292,7 +270,7 @@ namespace StructureMap.Graph
             Type templatedType = _pluginType.MakeGenericType(templateTypes);
             var templatedFamily = new PluginFamily(templatedType, Parent);
             templatedFamily.DefaultInstanceKey = DefaultInstanceKey;
-            templatedFamily.Policy = Policy.Clone();
+            templatedFamily._lifecycle = _lifecycle;
 
 
             // TODO -- Got a big problem here.  Intances need to be copied over
@@ -330,7 +308,7 @@ namespace StructureMap.Graph
                        {
                            Default = GetDefaultInstance(),
                            PluginType = PluginType,
-                           Policy = _buildPolicy,
+                           Lifecycle = _lifecycle,
                            Instances = Instances
                        };
         }
@@ -342,11 +320,7 @@ namespace StructureMap.Graph
             get { return _pluginType.IsGenericTypeDefinition || _pluginType.ContainsGenericParameters; }
         }
 
-        public IBuildPolicy Policy
-        {
-            get { return _buildPolicy; }
-            set { _buildPolicy = value; }
-        }
+        
 
         public int PluginCount
         {

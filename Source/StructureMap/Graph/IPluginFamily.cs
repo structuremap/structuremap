@@ -19,6 +19,8 @@ namespace StructureMap.Graph
         void AddMementoSource(MementoSource source);
 
         void SetScopeTo(InstanceScope scope);
-        void AddInterceptor(IBuildInterceptor interceptor);
+        void SetScopeTo(ILifecycle lifecycle);
+
+        ILifecycle Lifecycle {get; }
     }
 }

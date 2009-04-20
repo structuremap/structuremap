@@ -16,7 +16,7 @@ namespace StructureMap
             new Cache<string, Instance>(delegate { return null; });
 
         private readonly Type _pluginType;
-        private IBuildPolicy _policy = new BuildPolicy();
+        private ILifecycle _lifecycle;
         
 
         #region constructor functions
@@ -38,7 +38,7 @@ namespace StructureMap
 
             try
             {
-                _policy = family.Policy;
+                _lifecycle = family.Lifecycle;
 
                 _pluginType = family.PluginType;
                 MissingInstance = family.MissingInstance;
@@ -95,13 +95,6 @@ namespace StructureMap
             }
         }
 
-        [Obsolete("Kill!!!!")]
-        public IBuildPolicy Policy
-        {
-            get { return _policy; }
-            set { _policy = value; }
-        }
-
 
         public void AddInstance(Instance instance)
         {
@@ -120,25 +113,6 @@ namespace StructureMap
             return instance;
         }
 
-        public IList GetAllInstances(BuildSession session)
-        {
-            IList list = new ArrayList();
-
-            _instances.Each(instance =>
-            {
-                object builtObject = Build(session, instance);
-                list.Add(builtObject);
-            });
-
-            return list;
-        }
-
-        [Obsolete("Kill!!!!")]
-        public object Build(BuildSession session, Instance instance)
-        {
-            return _policy.Build(session, PluginType, instance);
-        }
-
         public Instance FindInstance(string name)
         {
             return _instances[name] ?? MissingInstance;
@@ -146,10 +120,14 @@ namespace StructureMap
 
         public void ImportFrom(PluginFamily family)
         {
-            if (!_policy.GetType().Equals(family.Policy.GetType()))
+            if (_lifecycle == null)
+            {
+                _lifecycle = family.Lifecycle;                
+            }
+            else if (!_lifecycle.GetType().Equals(family.Lifecycle.GetType()))
             {
                 // TODO:  Might need to clear out the existing policy when it's ejected
-                _policy = family.Policy;
+                _lifecycle = family.Lifecycle;
             }
 
             family.EachInstance(instance => _instances.Fill(instance.Name, instance));
@@ -162,13 +140,14 @@ namespace StructureMap
 
         public void EjectAllInstances()
         {
-            _policy.EjectAll();
+            if (_lifecycle != null) _lifecycle.EjectAll();
             _instances.Clear();
         }
 
         public ILifecycle Lifecycle
         {
-            get { throw new NotImplementedException(); }
+            get { return _lifecycle; }
+            set { _lifecycle = value; }
         }
 
         #endregion

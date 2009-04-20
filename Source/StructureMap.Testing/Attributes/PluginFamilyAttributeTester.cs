@@ -19,7 +19,7 @@ namespace StructureMap.Testing.Attributes
             var family = new PluginFamily(typeof (TypeThatDoesNotHaveCustomMementoSource));
             att.Configure(family);
 
-            Assert.IsInstanceOfType(interceptorType, family.Policy);
+            Assert.IsInstanceOfType(interceptorType, family.Lifecycle);
         }
 
         [PluginFamily]
@@ -120,10 +120,10 @@ namespace StructureMap.Testing.Attributes
         [Test]
         public void ScopeToInterceptorTypes()
         {
-            assertScopeLeadsToInterceptor(InstanceScope.HttpContext, typeof (HttpContextBuildPolicy));
-            assertScopeLeadsToInterceptor(InstanceScope.Hybrid, typeof (HybridBuildPolicy));
-            assertScopeLeadsToInterceptor(InstanceScope.Singleton, typeof (SingletonPolicy));
-            assertScopeLeadsToInterceptor(InstanceScope.ThreadLocal, typeof (ThreadLocalStoragePolicy));
+            assertScopeLeadsToInterceptor(InstanceScope.HttpContext, typeof (HttpContextLifecycle));
+            assertScopeLeadsToInterceptor(InstanceScope.Hybrid, typeof (HybridLifecycle));
+            assertScopeLeadsToInterceptor(InstanceScope.Singleton, typeof (SingletonLifecycle));
+            assertScopeLeadsToInterceptor(InstanceScope.ThreadLocal, typeof (ThreadLocalStorageLifecycle));
         }
 
         [Test]

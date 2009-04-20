@@ -1,25 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using StructureMap.Attributes;
 using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture]
-    public class SpecifyScopeInConfigureTester
+    [TestFixture] public class SpecifyScopeInConfigureTester
     {
-        [Test]
-        public void specify_the_scope_in_a_Configure_if_it_is_not_already_set()
+        [Test] public void specify_the_scope_in_a_Configure_if_it_is_not_already_set()
         {
             var container = new Container(x => { });
             container.Configure(x =>
             {
                 x.ForRequestedType<IGateway>().CacheBy(InstanceScope.Singleton)
                     .TheDefaultIsConcreteType<DefaultGateway>();
-
             });
 
             var gateway1 = container.GetInstance<IGateway>();

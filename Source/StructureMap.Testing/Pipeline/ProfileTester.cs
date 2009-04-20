@@ -90,18 +90,18 @@ namespace StructureMap.Testing.Pipeline
         public void CopyDefaultsFromOneTypeToAnother()
         {
             setDefault<ISomething, SomethingOne>("Red");
-            _pluginGraph.FindFamily(typeof (IBuildPolicy)).AddInstance(
-                new ConfiguredInstance(typeof (BuildPolicy)).WithName("Red"));
+            _pluginGraph.FindFamily(typeof (ILifecycle)).AddInstance(
+                new ConfiguredInstance(typeof (SingletonLifecycle)).WithName("Red"));
 
-            _profile.CopyDefault(typeof (ISomething), typeof (IBuildPolicy),
-                                 _pluginGraph.FindFamily(typeof (IBuildPolicy)));
-            _profile.GetDefault(typeof (IBuildPolicy)).Name.ShouldEqual("Red");
+            _profile.CopyDefault(typeof (ISomething), typeof (ILifecycle),
+                                 _pluginGraph.FindFamily(typeof (ILifecycle)));
+            _profile.GetDefault(typeof (ILifecycle)).Name.ShouldEqual("Red");
         }
 
         [Test]
         public void Do_not_blow_up_when_you_copy_defaults_for_a_source_type_that_does_not_exist()
         {
-            _profile.CopyDefault(typeof (ISomething), typeof (IBuildPolicy), new PluginFamily(typeof (ISomething)));
+            _profile.CopyDefault(typeof (ISomething), typeof (ILifecycle), new PluginFamily(typeof (ISomething)));
         }
 
         [Test]
@@ -129,13 +129,13 @@ namespace StructureMap.Testing.Pipeline
         public void FindMasterInstances_finds_the_master_copies_of_all()
         {
             setDefault<ISomething, SomethingOne>("Red");
-            setDefault<IBuildPolicy, BuildPolicy>("Green");
+            setDefault<ILifecycle, SingletonLifecycle>("Green");
             setDefault<IConstraint, FakeConstraint>("Blue");
 
             _profile.FindMasterInstances(_pluginGraph);
 
             assertThatMasterInstanceWasFound<ISomething>("Red");
-            assertThatMasterInstanceWasFound<IBuildPolicy>("Green");
+            assertThatMasterInstanceWasFound<ILifecycle>("Green");
             assertThatMasterInstanceWasFound<IConstraint>("Blue");
         }
 

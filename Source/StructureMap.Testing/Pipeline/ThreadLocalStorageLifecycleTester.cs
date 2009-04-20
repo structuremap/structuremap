@@ -1,5 +1,7 @@
+using System;
 using System.Threading;
 using NUnit.Framework;
+using StructureMap.Attributes;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
@@ -7,56 +9,60 @@ using StructureMap.Testing.Widget3;
 namespace StructureMap.Testing.Pipeline
 {
     [TestFixture]
-    public class ThreadLocalStoragePolicyTester
+    public class ThreadLocalStorageLifecycleTester
     {
         #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
         {
-            _policy = new ThreadLocalStoragePolicy();
-            _instance = new ConstructorInstance<ColorRule>(() => new ColorRule("Red")).WithName("Red");
+            _lifecycle = new ThreadLocalStorageLifecycle();
+
+            container = new Container(x =>
+            {
+                x.ForRequestedType<Rule>().CacheBy(InstanceScope.ThreadLocal).TheDefault.Is.ConstructedBy(() => new ColorRule("Red"));
+            });
         }
 
         #endregion
 
-        private ThreadLocalStoragePolicy _policy;
+        private ThreadLocalStorageLifecycle _lifecycle;
         private ColorRule _rule1;
         private ColorRule _rule2;
         private ColorRule _rule3;
-        private ConstructorInstance<ColorRule> _instance;
+        private Container container;
 
 
         private void findRule1()
         {
-            _rule1 = (ColorRule) _policy.Build(new StubBuildSession(), typeof (IService), _instance);
+            _rule1 = container.GetInstance<Rule>().ShouldBeOfType<ColorRule>();
 
-            var rule = (ColorRule) _policy.Build(new StubBuildSession(), typeof (IService), _instance);
+            var rule = container.GetInstance<Rule>().ShouldBeOfType<ColorRule>();
             Assert.AreSame(_rule1, rule);
         }
 
         private void findRule2()
         {
-            _rule2 = (ColorRule) _policy.Build(new StubBuildSession(), typeof (IService), _instance);
+            _rule2 = container.GetInstance<Rule>().ShouldBeOfType<ColorRule>();
 
-            var rule = (ColorRule) _policy.Build(new StubBuildSession(), typeof (IService), _instance);
+            var rule = container.GetInstance<Rule>().ShouldBeOfType<ColorRule>();
             Assert.AreSame(_rule2, rule);
         }
 
         private void findRule3()
         {
-            _rule3 = (ColorRule) _policy.Build(new StubBuildSession(), typeof (IService), _instance);
+            _rule3 = container.GetInstance<Rule>().ShouldBeOfType<ColorRule>();
 
-            var rule = (ColorRule) _policy.Build(new StubBuildSession(), typeof (IService), _instance);
+            var rule = container.GetInstance<Rule>().ShouldBeOfType<ColorRule>();
             Assert.AreSame(_rule3, rule);
 
-            rule = (ColorRule) _policy.Build(new StubBuildSession(), typeof (IService), _instance);
+            rule = container.GetInstance<Rule>().ShouldBeOfType<ColorRule>();
             Assert.AreSame(_rule3, rule);
 
-            rule = (ColorRule) _policy.Build(new StubBuildSession(), typeof (IService), _instance);
+            rule = container.GetInstance<Rule>().ShouldBeOfType<ColorRule>();
             Assert.AreSame(_rule3, rule);
 
-            rule = (ColorRule) _policy.Build(new StubBuildSession(), typeof (IService), _instance);
+            rule = container.GetInstance<Rule>().ShouldBeOfType<ColorRule>();
             Assert.AreSame(_rule3, rule);
         }
 

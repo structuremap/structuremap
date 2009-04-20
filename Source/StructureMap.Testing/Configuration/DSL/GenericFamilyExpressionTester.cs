@@ -41,33 +41,6 @@ namespace StructureMap.Testing.Configuration.DSL
             }
         }
 
-        public class TestingBuildPolicy : IBuildInterceptor
-        {
-            #region IBuildInterceptor Members
-
-            public IBuildPolicy InnerPolicy
-            {
-                get { throw new NotImplementedException(); }
-                set { }
-            }
-
-            public object Build(BuildSession buildSession, Type pluginType, Instance instance)
-            {
-                throw new NotImplementedException();
-            }
-
-            public IBuildPolicy Clone()
-            {
-                throw new NotImplementedException();
-            }
-
-            public void EjectAll()
-            {
-                throw new System.NotImplementedException();
-            }
-
-            #endregion
-        }
 
         public interface IRepository<T>
         {
@@ -188,17 +161,6 @@ namespace StructureMap.Testing.Configuration.DSL
         }
 
         [Test]
-        public void Intercept_construction_with()
-        {
-            var registry = new Registry();
-            var policy = new TestingBuildPolicy();
-            registry.ForRequestedType(typeof (ITarget)).InterceptConstructionWith(policy);
-            PluginGraph graph = registry.Build();
-
-            Assert.AreSame(policy, graph.FindFamily(typeof (ITarget)).Policy);
-        }
-
-        [Test]
         public void On_creation()
         {
             ITarget created = null;
@@ -219,7 +181,7 @@ namespace StructureMap.Testing.Configuration.DSL
             registry.ForRequestedType(typeof (ITarget)).CacheBy(InstanceScope.ThreadLocal);
             PluginGraph graph = registry.Build();
 
-            Assert.IsInstanceOfType(typeof (ThreadLocalStoragePolicy), graph.FindFamily(typeof (ITarget)).Policy);
+            graph.FindFamily(typeof (ITarget)).Lifecycle.ShouldBeOfType<ThreadLocalStorageLifecycle>();
         }
     }
 }

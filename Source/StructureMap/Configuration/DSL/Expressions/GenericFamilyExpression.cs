@@ -144,11 +144,11 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// any object of this PluginType is created.  IBuildInterceptor's can be
         /// used to create a custom scope
         /// </summary>
-        /// <param name="interceptor"></param>
+        /// <param name="lifecycle"></param>
         /// <returns></returns>
-        public GenericFamilyExpression InterceptConstructionWith(IBuildInterceptor interceptor)
+        public GenericFamilyExpression LifecycleIs(ILifecycle lifecycle)
         {
-            return alterAndContinue(family => family.AddInterceptor(interceptor));
+            return alterAndContinue(family => family.SetScopeTo(lifecycle));
         }
 
         /// <summary>

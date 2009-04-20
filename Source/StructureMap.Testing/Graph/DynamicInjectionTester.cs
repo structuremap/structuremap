@@ -6,6 +6,7 @@ using StructureMap.Pipeline;
 using StructureMap.Testing.Pipeline;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
+using System.Linq;
 
 namespace StructureMap.Testing.Graph
 {
@@ -291,9 +292,9 @@ namespace StructureMap.Testing.Graph
             factory.AddInstance(new LiteralInstance(_red).WithName("Red"));
             factory.AddInstance(new LiteralInstance(_blue).WithName("Blue"));
 
+            factory.FindInstance("Red").ShouldNotBeNull();
 
-            Assert.AreSame(_red, factory.Build(new StubBuildSession(), factory.FindInstance("Red")));
-            Assert.AreSame(_blue, factory.Build(new StubBuildSession(), factory.FindInstance("Blue")));
+
         }
 
         [Test]
@@ -324,12 +325,16 @@ namespace StructureMap.Testing.Graph
             IInstanceFactory factory = getISomethingFactory();
 
             factory.AddInstance(new LiteralInstance(_red).WithName("Red"));
-            factory.AddInstance(new LiteralInstance(_blue).WithName("Blue"));
+            var oldBlue = new LiteralInstance(_blue).WithName("Blue");
+            factory.AddInstance(oldBlue);
 
             // Replace Blue
-            factory.AddInstance(new LiteralInstance(_orange).WithName("Blue"));
+            var newBlue = new LiteralInstance(_orange).WithName("Blue");
+            factory.AddInstance(newBlue);
 
-            Assert.AreSame(_orange, factory.Build(new StubBuildSession(), factory.FindInstance("Blue")));
+            factory.FindInstance("Blue").ShouldBeTheSameAs(newBlue);
+
+            factory.AllInstances.Contains(oldBlue).ShouldBeFalse();
         }
 
         [Test]
@@ -344,33 +349,6 @@ namespace StructureMap.Testing.Graph
         }
     }
 
-    public class FakeInstanceFactoryInterceptor : IBuildInterceptor
-    {
-        #region IBuildInterceptor Members
-
-        public IBuildPolicy InnerPolicy
-        {
-            get { throw new NotImplementedException(); }
-            set { throw new NotImplementedException(); }
-        }
-
-        public object Build(BuildSession buildSession, Type pluginType, Instance instance)
-        {
-            throw new NotImplementedException();
-        }
-
-        IBuildPolicy IBuildPolicy.Clone()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void EjectAll()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        #endregion
-    }
 
     public class SomethingOne : ISomething
     {

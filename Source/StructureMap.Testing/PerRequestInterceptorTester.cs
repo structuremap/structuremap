@@ -6,9 +6,18 @@ namespace StructureMap.Testing
     [TestFixture]
     public class PerRequestInterceptorTester
     {
+
+
         //Think of this as a data session
         public class Session
         {
+            private static int count = 1;
+            private int _number = count++;
+
+            public override string ToString()
+            {
+                return string.Format("Number: {0}", _number);
+            }
         }
 
         public class Model1
@@ -53,10 +62,13 @@ namespace StructureMap.Testing
                     x.BuildInstancesOf<Session>()
                         .AlwaysUnique()
                         .TheDefaultIsConcreteType<Session>();
+
                     x.BuildInstancesOf<Model1>()
                         .TheDefaultIsConcreteType<Model1>();
+
                     x.BuildInstancesOf<Model2>()
                         .TheDefaultIsConcreteType<Model2>();
+
                     x.BuildInstancesOf<Shell>()
                         .TheDefaultIsConcreteType<Shell>();
                 });

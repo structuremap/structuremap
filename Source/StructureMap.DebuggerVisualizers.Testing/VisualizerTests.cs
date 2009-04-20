@@ -12,7 +12,7 @@ namespace StructureMap.DebuggerVisualizers.Testing
         [Test]
         public void can_serialize_container_details()
         {
-            var pluginTypeDetails = new[]{ new PluginTypeDetail(typeof(string), typeof(BuildPolicy), new[]{ new InstanceDetail("First", "First Instance", typeof(string)), }) };
+            var pluginTypeDetails = new[]{ new PluginTypeDetail(typeof(string), typeof(object), new[]{ new InstanceDetail("First", "First Instance", typeof(string)), }) };
             var wrapper = new ContainerDetail(new[]{"config"}, pluginTypeDetails);
             var binaryFormatter = new BinaryFormatter();
             Stream stream = new MemoryStream();

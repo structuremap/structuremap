@@ -21,11 +21,6 @@ namespace StructureMap.Testing.Pipeline
             }
         }
 
-        public override object ApplyInterception(Type pluginType, object actualValue)
-        {
-            return actualValue;
-        }
-
         public InstanceBuilder FindBuilderByType(Type pluginType, Type pluggedType)
         {
             if (pluggedType == null)

@@ -66,14 +66,14 @@ namespace StructureMap.Testing.Graph
             factory.AddInstance(new SmartInstance<DefaultGateway>());
             factory.AddInstance(new SmartInstance<DefaultGateway>());
 
-            var policy = MockRepository.GenerateMock<IBuildPolicy>();
-            factory.Policy = policy;
+            var lifecycle = MockRepository.GenerateMock<ILifecycle>();
+            factory.Lifecycle = lifecycle;
 
             factory.EjectAllInstances();
 
             factory.Instances.Count().ShouldEqual(0);
 
-            policy.AssertWasCalled(x => x.EjectAll());
+            lifecycle.AssertWasCalled(x => x.EjectAll());
         }
 
         [Test]
@@ -103,17 +103,17 @@ namespace StructureMap.Testing.Graph
 
             factory.ImportFrom(family);
 
-            factory.Policy.ShouldBeOfType<SingletonPolicy>();
+            factory.Lifecycle.ShouldBeOfType<SingletonLifecycle>();
         }
 
         [Test]
-        public void do_not_replace_the_build_policy_if_it_is_the_same_type_as_the_imported_family()
+        public void do_not_replace_the_build_Lifecycle_if_it_is_the_same_type_as_the_imported_family()
         {
             PluginFamily originalFamily = new PluginFamily(typeof(IWidget));
             originalFamily.SetScopeTo(InstanceScope.Singleton);
             var factory = new InstanceFactory(originalFamily);
 
-            var originalPolicy = factory.Policy;
+            var originalLifecycle = factory.Lifecycle;
 
 
             var family = new PluginFamily(typeof(IWidget));
@@ -121,7 +121,7 @@ namespace StructureMap.Testing.Graph
 
             factory.ImportFrom(family);
 
-            factory.Policy.ShouldBeTheSameAs(originalPolicy);
+            factory.Lifecycle.ShouldBeTheSameAs(originalLifecycle);
         }
 
 

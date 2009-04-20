@@ -75,7 +75,7 @@ namespace StructureMap
                                      {
                                          Default = _profileManager.GetDefault(factory.PluginType),
                                          PluginType = factory.PluginType,
-                                         Policy = factory.Policy,
+                                         Lifecycle = factory.Lifecycle,
                                          Instances = factory.Instances
                                      };
                 }

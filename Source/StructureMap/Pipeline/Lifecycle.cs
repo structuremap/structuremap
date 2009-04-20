@@ -9,6 +9,12 @@ namespace StructureMap.Pipeline
     public interface IObjectCache
     {
         object Locker { get; }
+
+        int Count
+        {
+            get;
+        }
+
         object Get(Type pluginType, Instance instance);
         void Set(Type pluginType, Instance instance, object value);
         void DisposeAndClear();
@@ -19,6 +25,11 @@ namespace StructureMap.Pipeline
         public object Locker
         {
             get { return new object(); }
+        }
+
+        public int Count
+        {
+            get { return 0; }
         }
 
         public object Get(Type pluginType, Instance instance)
@@ -45,6 +56,11 @@ namespace StructureMap.Pipeline
         public object Locker
         {
             get { return _locker; }
+        }
+
+        public int Count
+        {
+            get { return _objects.Count; }
         }
 
         public object Get(Type pluginType, Instance instance)
@@ -95,6 +111,9 @@ namespace StructureMap.Pipeline
         {
             switch (scope)
             {
+                case InstanceScope.PerRequest:
+                    return null;
+
                 case InstanceScope.Singleton:
                     return new SingletonLifecycle();
 
@@ -133,7 +152,7 @@ namespace StructureMap.Pipeline
 
         public object Resolve(Type pluginType, Instance instance, BuildSession session)
         {
-            var cache = FindCache(instance, session);
+            var cache = FindCache(pluginType, instance, session);
             lock (cache.Locker)
             {
                 var returnValue = cache.Get(pluginType, instance);
@@ -171,9 +190,12 @@ namespace StructureMap.Pipeline
             
         }
 
-        public IObjectCache FindCache(Instance instance, BuildSession session)
+        public IObjectCache FindCache(Type pluginType, Instance instance, BuildSession session)
         {
-            throw new NotImplementedException();
+            var lifecycle = _pipeline.ForType(pluginType).Lifecycle;
+            return lifecycle == null
+                       ? _defaultCache
+                       : lifecycle.FindCache();
         }
     }
 }

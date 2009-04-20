@@ -52,10 +52,10 @@ namespace StructureMap.Testing.Graph
 </StructureMap>
 ");
 
-            pluginGraph.FindFamily(typeof (Rule)).Policy.ShouldBeOfType(typeof (SingletonPolicy));
+            pluginGraph.FindFamily(typeof (Rule)).Lifecycle.ShouldBeOfType(typeof (SingletonLifecycle));
 
             // The PluginFamily for IWidget has no intercepters configured
-            pluginGraph.FindFamily(typeof (IWidget)).Policy.ShouldBeOfType(typeof (BuildPolicy));
+            pluginGraph.FindFamily(typeof (IWidget)).Lifecycle.ShouldBeNull();
         }
 
         [Test]

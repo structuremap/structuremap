@@ -349,7 +349,7 @@
     <Compile Include="Pipeline\ContainerIsInTheContainerTester.cs" />
     <Compile Include="Pipeline\DefaultInstanceTester.cs" />
     <Compile Include="Pipeline\GenericsHelperExpressionTester.cs" />
-    <Compile Include="Pipeline\HybridBuildPolicyTester.cs" />
+    <Compile Include="Pipeline\HybridBuildLifecycleTester.cs" />
     <Compile Include="Pipeline\InstanceTester.cs" />
     <Compile Include="Pipeline\LiteralInstanceTester.cs" />
     <Compile Include="Pipeline\MissingInstanceTester.cs" />
@@ -363,7 +363,7 @@
     <Compile Include="Pipeline\SerializedInstanceTester.cs" />
     <Compile Include="Pipeline\SmartInstanceTester.cs" />
     <Compile Include="Pipeline\StubBuildSession.cs" />
-    <Compile Include="Pipeline\ThreadLocalStoragePolicyTester.cs" />
+    <Compile Include="Pipeline\ThreadLocalStorageLifecycleTester.cs" />
     <Compile Include="Pipeline\TypeRulesTester.cs" />
     <Compile Include="PrimitiveArrayTester.cs" />
     <Compile Include="Properties\Settings.Designer.cs">

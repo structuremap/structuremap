@@ -110,7 +110,8 @@ namespace StructureMap.Testing.Configuration.DSL
             PluginGraph pluginGraph = registry.Build();
 
             PluginFamily family = pluginGraph.FindFamily(typeof (IGateway));
-            Assert.IsInstanceOfType(typeof (ThreadLocalStoragePolicy), family.Policy);
+
+            family.Lifecycle.ShouldBeOfType<ThreadLocalStorageLifecycle>();
         }
 
 
@@ -136,7 +137,7 @@ namespace StructureMap.Testing.Configuration.DSL
             PluginGraph pluginGraph = registry.Build();
 
             PluginFamily family = pluginGraph.FindFamily(typeof (IGateway));
-            Assert.IsInstanceOfType(typeof (BuildPolicy), family.Policy);
+            family.Lifecycle.ShouldBeNull();
         }
 
         [Test]
@@ -149,7 +150,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
             PluginGraph pluginGraph = registry.Build();
             PluginFamily family = pluginGraph.FindFamily(typeof (IGateway));
-            Assert.IsInstanceOfType(typeof (SingletonPolicy), family.Policy);
+            family.Lifecycle.ShouldBeOfType<SingletonLifecycle>();
         }
 
         [Test]
@@ -198,14 +199,14 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void PutAnInterceptorIntoTheInterceptionChainOfAPluginFamilyInTheDSL()
         {
-            var factoryInterceptor = new StubbedInstanceFactoryInterceptor();
+            var lifecycle = new StubbedLifecycle();
 
             var registry = new Registry();
-            registry.BuildInstancesOf<IGateway>().InterceptConstructionWith(factoryInterceptor);
+            registry.BuildInstancesOf<IGateway>().LifecycleIs(lifecycle);
 
             PluginGraph pluginGraph = registry.Build();
 
-            Assert.AreSame(pluginGraph.FindFamily(typeof (IGateway)).Policy, factoryInterceptor);
+            pluginGraph.FindFamily(typeof (IGateway)).Lifecycle.ShouldBeTheSameAs(lifecycle);
         }
 
         [Test]
@@ -270,31 +271,16 @@ namespace StructureMap.Testing.Configuration.DSL
         }
     }
 
-    public class StubbedInstanceFactoryInterceptor : IBuildInterceptor
+    public class StubbedLifecycle : ILifecycle
     {
-        #region IBuildInterceptor Members
-
-        public IBuildPolicy InnerPolicy
-        {
-            get { throw new NotImplementedException(); }
-            set { }
-        }
-
-        public object Build(BuildSession buildSession, Type pluginType, Instance instance)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IBuildPolicy Clone()
-        {
-            throw new NotImplementedException();
-        }
-
         public void EjectAll()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        #endregion
+        public IObjectCache FindCache()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

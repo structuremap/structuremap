@@ -20,7 +20,7 @@ namespace StructureMap
         /// <summary>
         /// The build "policy" for this PluginType.  Used by the WhatDoIHave() diagnostics methods
         /// </summary>
-        public IBuildPolicy Policy { get; set; }
+        public ILifecycle Lifecycle { get; set; }
 
         /// <summary>
         /// All of the <see cref="StructureMap.Pipeline.IInstance">IInstance</see>'s registered

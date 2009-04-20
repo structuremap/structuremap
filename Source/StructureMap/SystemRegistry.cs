@@ -9,7 +9,7 @@ namespace StructureMap
     {
         public SystemRegistry()
         {
-            addExpression(graph => graph.AddType(typeof(MementoSource), typeof(XmlFileMementoSource), "XmlFile"));
+            addExpression(graph => graph.AddType(typeof (MementoSource), typeof (XmlFileMementoSource), "XmlFile"));
 
             ForRequestedType<MementoSource>().TheDefaultIsConcreteType<MemoryMementoSource>();
             AddMementoSourceType<DirectoryXmlMementoSource>("DirectoryXml");
@@ -19,23 +19,23 @@ namespace StructureMap
             AddMementoSourceType<XmlAttributeFileMementoSource>("XmlAttributeFile");
             AddMementoSourceType<XmlFileMementoSource>("XmlFile");
 
+            AddLifecycleType<SingletonLifecycle>(InstanceScope.Singleton);
+            AddLifecycleType<HttpContextLifecycle>(InstanceScope.HttpContext);
+            AddLifecycleType<HttpSessionLifecycle>(InstanceScope.HttpSession);
+            AddLifecycleType<HybridLifecycle>(InstanceScope.Hybrid);
+            AddLifecycleType<HybridSessionLifecycle>(InstanceScope.HybridHttpSession);
+            AddLifecycleType<ThreadLocalStorageLifecycle>(InstanceScope.ThreadLocal);
+        }
 
-            AddInterceptorType<SingletonPolicy>(InstanceScope.Singleton);
-            AddInterceptorType<ThreadLocalStoragePolicy>(InstanceScope.ThreadLocal);
-            AddInterceptorType<HttpContextBuildPolicy>(InstanceScope.HttpContext);
-            AddInterceptorType<HttpSessionBuildPolicy>(InstanceScope.HttpSession);
-            AddInterceptorType<HybridBuildPolicy>(InstanceScope.Hybrid);
 
+        private void AddLifecycleType<T>(InstanceScope scope) where T : ILifecycle
+        {
+            addExpression(graph => graph.AddType(typeof(ILifecycle), typeof(T), scope.ToString()));
         }
 
         private void AddMementoSourceType<T>(string name)
         {
-            addExpression(graph => graph.AddType(typeof(MementoSource), typeof(T), name));
-        }
-
-        private void AddInterceptorType<T>(InstanceScope scope)
-        {
-            addExpression(graph => graph.AddType(typeof(IBuildInterceptor), typeof(T), scope.ToString()));
+            addExpression(graph => graph.AddType(typeof (MementoSource), typeof (T), name));
         }
     }
 }

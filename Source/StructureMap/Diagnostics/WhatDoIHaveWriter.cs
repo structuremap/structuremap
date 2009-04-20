@@ -79,7 +79,14 @@ namespace StructureMap.Diagnostics
 
             _writer.AddText(contents);
 
-            _writer.AddContent("Scoped as:  " + pluginType.Policy);
+            if (pluginType.Lifecycle != null)
+            {
+                _writer.AddContent("Scoped as:  " + pluginType.Lifecycle.GetType().Name);
+            }
+            else
+            {
+                _writer.AddContent("Scoped as:  PerRequest");
+            }
 
             foreach (IInstance instance in pluginType.Instances)
             {

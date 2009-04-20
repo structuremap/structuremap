@@ -120,7 +120,7 @@ namespace StructureMap.Testing.Graph
 
             configuration.Default.ShouldBeTheSameAs(instance1);
             configuration.PluginType.ShouldEqual(typeof (IWidget));
-            configuration.Policy.ShouldBeTheSameAs(family.Policy);
+            configuration.Lifecycle.ShouldBeTheSameAs(family.Lifecycle);
 
             configuration.Instances.Count().ShouldEqual(2);
         }
@@ -189,10 +189,10 @@ namespace StructureMap.Testing.Graph
         public void ImplicitPluginFamilyCreatesASingletonInterceptorWhenIsSingletonIsTrue()
         {
             var family = new PluginFamily(typeof (ISingletonRepository));
-            Assert.IsInstanceOfType(typeof (SingletonPolicy), family.Policy);
+            Assert.IsInstanceOfType(typeof (SingletonLifecycle), family.Lifecycle);
 
             var family2 = new PluginFamily(typeof (IDevice));
-            Assert.IsInstanceOfType(typeof (BuildPolicy), family2.Policy);
+            family2.Lifecycle.ShouldBeNull();
         }
 
         [Test]
@@ -242,10 +242,10 @@ namespace StructureMap.Testing.Graph
         public void SetScopeToHttpContext()
         {
             var family = new PluginFamily(typeof (IServiceProvider));
-            Assert.IsInstanceOfType(typeof (BuildPolicy), family.Policy);
+            family.Lifecycle.ShouldBeNull();
 
             family.SetScopeTo(InstanceScope.HttpContext);
-            Assert.IsInstanceOfType(typeof (HttpContextBuildPolicy), family.Policy);
+            Assert.IsInstanceOfType(typeof (HttpContextLifecycle), family.Lifecycle);
         }
 
 
@@ -253,10 +253,10 @@ namespace StructureMap.Testing.Graph
         public void SetScopeToHybrid()
         {
             var family = new PluginFamily(typeof (IServiceProvider));
-            Assert.IsInstanceOfType(typeof (BuildPolicy), family.Policy);
+            
 
             family.SetScopeTo(InstanceScope.Hybrid);
-            Assert.IsInstanceOfType(typeof (HybridBuildPolicy), family.Policy);
+            Assert.IsInstanceOfType(typeof (HybridLifecycle), family.Lifecycle);
         }
 
         [Test]
@@ -265,7 +265,7 @@ namespace StructureMap.Testing.Graph
             var family = new PluginFamily(typeof(IServiceProvider));
             family.SetScopeTo(InstanceScope.HttpSession);
 
-            family.Policy.ShouldBeOfType<HybridSessionBuildPolicy>();
+            family.Lifecycle.ShouldBeOfType<HttpSessionLifecycle>();
         }
 
         [Test]
@@ -274,27 +274,25 @@ namespace StructureMap.Testing.Graph
             var family = new PluginFamily(typeof(IServiceProvider));
             family.SetScopeTo(InstanceScope.HybridHttpSession);
 
-            family.Policy.ShouldBeOfType<HybridSessionBuildPolicy>();
+            family.Lifecycle.ShouldBeOfType<HybridSessionLifecycle>();
         }
 
         [Test]
         public void SetScopeToSingleton()
         {
             var family = new PluginFamily(typeof (IServiceProvider));
-            Assert.IsInstanceOfType(typeof (BuildPolicy), family.Policy);
 
             family.SetScopeTo(InstanceScope.Singleton);
-            Assert.IsInstanceOfType(typeof (SingletonPolicy), family.Policy);
+            Assert.IsInstanceOfType(typeof (SingletonLifecycle), family.Lifecycle);
         }
 
         [Test]
         public void SetScopeToThreadLocal()
         {
             var family = new PluginFamily(typeof (IServiceProvider));
-            Assert.IsInstanceOfType(typeof (BuildPolicy), family.Policy);
 
             family.SetScopeTo(InstanceScope.ThreadLocal);
-            Assert.IsInstanceOfType(typeof (ThreadLocalStoragePolicy), family.Policy);
+            Assert.IsInstanceOfType(typeof (ThreadLocalStorageLifecycle), family.Lifecycle);
         }
     }
 

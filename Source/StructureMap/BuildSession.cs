@@ -11,13 +11,14 @@ namespace StructureMap
         private readonly BuildStack _buildStack = new BuildStack();
         private readonly InstanceCache _cache = new InstanceCache();
         private readonly Cache<Type, Func<object>> _defaults;
-        private readonly InterceptorLibrary _interceptorLibrary;
         private readonly PipelineGraph _pipelineGraph;
+        private readonly ObjectBuilder _builder;
 
         public BuildSession(PipelineGraph pipelineGraph, InterceptorLibrary interceptorLibrary)
         {
             _pipelineGraph = pipelineGraph;
-            _interceptorLibrary = interceptorLibrary;
+
+            _builder = new ObjectBuilder(_pipelineGraph, interceptorLibrary, new NulloObjectCache());
 
             _defaults = new Cache<Type, Func<object>>(t =>
             {
@@ -28,9 +29,7 @@ namespace StructureMap
                     throw new StructureMapException(202, t);
                 }
 
-                object createdInstance = CreateInstance(t, instance);
-
-                return () => createdInstance;
+                return () => CreateInstance(t, instance);
             });
         }
 
@@ -129,9 +128,14 @@ namespace StructureMap
 
             if (result == null)
             {
-                result = forType(pluginType).Build(this, instance);
+                result = _builder.Resolve(pluginType, instance, this);
 
-                _cache.Set(pluginType, instance, result);
+                // TODO: HACK ATTACK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                var isUnique = forType(pluginType).Lifecycle is UniquePerRequestLifecycle;
+                if (!isUnique)
+                {
+                    _cache.Set(pluginType, instance, result);
+                }
             }
 
             return result;
@@ -159,13 +163,6 @@ namespace StructureMap
         public virtual object CreateInstance(Type pluginType)
         {
             return _defaults[pluginType]();
-        }
-
-        [Obsolete("get this inlined")]
-        public virtual object ApplyInterception(Type pluginType, object actualValue)
-        {
-            if (actualValue == null) return null;
-            return _interceptorLibrary.FindInterceptor(actualValue.GetType()).Process(actualValue, this);
         }
 
         public virtual void RegisterDefault(Type pluginType, Func<object> creator)

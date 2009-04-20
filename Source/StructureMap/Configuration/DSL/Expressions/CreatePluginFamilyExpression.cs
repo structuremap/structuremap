@@ -261,30 +261,18 @@ namespace StructureMap.Configuration.DSL.Expressions
         }
 
         /// <summary>
-        /// Registers an IBuildInterceptor for this Plugin Type that executes before
-        /// any object of this PluginType is created.  IBuildInterceptor's can be
+        /// Registers an ILifecycle for this Plugin Type that executes before
+        /// any object of this PluginType is created.  ILifecycle's can be
         /// used to create a custom scope
         /// </summary>
-        /// <param name="interceptor"></param>
+        /// <param name="lifecycle"></param>
         /// <returns></returns>
-        public CreatePluginFamilyExpression<PLUGINTYPE> InterceptConstructionWith(IBuildInterceptor interceptor)
+        public CreatePluginFamilyExpression<PLUGINTYPE> LifecycleIs(ILifecycle lifecycle)
         {
-            _alterations.Add(family => family.AddInterceptor(interceptor));
+            _alterations.Add(family => family.SetScopeTo(lifecycle));
             return this;
         }
 
-        /// <summary>
-        /// Registers an IBuildInterceptor for this Plugin Type that executes before
-        /// any object of this PluginType is created.  IBuildInterceptor's can be
-        /// used to create a custom scope
-        /// </summary>
-        /// <param name="interceptor"></param>
-        /// <returns></returns>
-        public CreatePluginFamilyExpression<PLUGINTYPE> BuildPolicyIs(IBuildInterceptor interceptor)
-        {
-            _alterations.Add(family => family.AddInterceptor(interceptor));
-            return this;
-        }
 
         /// <summary>
         /// Largely deprecated and unnecessary with the ability to add Xml configuration files
@@ -314,7 +302,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <returns></returns>
         public CreatePluginFamilyExpression<PLUGINTYPE> AlwaysUnique()
         {
-            return InterceptConstructionWith(new UniquePerRequestInterceptor());
+            return this.LifecycleIs(new UniquePerRequestLifecycle());
         }
     }
 }

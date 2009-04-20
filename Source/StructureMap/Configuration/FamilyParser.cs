@@ -127,10 +127,12 @@ namespace StructureMap.Configuration
             {
                 var interceptorMemento = new XmlAttributeInstanceMemento(element);
                 string context = contextBase + element.OuterXml;
-                _builder.WithSystemObject<IBuildInterceptor>(
+
+
+                _builder.WithSystemObject<ILifecycle>(
                     interceptorMemento,
                     context,
-                    interceptor => family.AddInterceptor(interceptor));
+                    lifecycle => family.SetScopeTo(lifecycle));
             });
         }
     }

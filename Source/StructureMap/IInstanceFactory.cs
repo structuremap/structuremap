@@ -13,9 +13,6 @@ namespace StructureMap
     {
         Type PluginType { get; }
         IEnumerable<IInstance> Instances { get; }
-
-        [Obsolete("Kill!!!!")]
-        IBuildPolicy Policy { get; }
         Instance MissingInstance { get; set; }
 
         Instance[] AllInstances
@@ -26,12 +23,6 @@ namespace StructureMap
         void AddInstance(Instance instance);
         Instance AddType<T>();
 
-        [Obsolete("Return the list of Instances instead")]
-        IList GetAllInstances(BuildSession session);
-
-        [Obsolete("Kill!!!!")]
-        object Build(BuildSession session, Instance instance);
-        
         Instance FindInstance(string name);
 
         void ImportFrom(PluginFamily family);

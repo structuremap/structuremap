@@ -83,24 +83,6 @@ namespace StructureMap.Testing.Pipeline
             manager.GetDefault(typeof (IGateway)).ShouldBeTheSameAs(i1);
         }
 
-        [Test, Ignore("Just too much work")]
-        public void CopyDefaults()
-        {
-            _manager.DefaultProfileName = string.Empty;
-            _manager.CurrentProfile = string.Empty;
-
-            addDefaultToProfile<IBuildPolicy>("TheProfile", "Profile");
-            addDefaultToProfile<IBuildPolicy>("TheProfile2", "Profile2");
-            _manager.SetDefault(typeof (IBuildPolicy), new ReferencedInstance("TheDefault"));
-
-            _manager.CopyDefaults(typeof (IBuildPolicy), typeof (ISomething), new PluginFamily(typeof (ISomething)));
-
-            Assert.AreSame(_manager.GetDefault(typeof (IBuildPolicy)), _manager.GetDefault(typeof (ISomething)));
-            Assert.AreSame(_manager.GetDefault(typeof (IBuildPolicy), "Profile"),
-                           _manager.GetDefault(typeof (ISomething), "Profile"));
-            Assert.AreSame(_manager.GetDefault(typeof (IBuildPolicy), "Profile2"),
-                           _manager.GetDefault(typeof (ISomething), "Profile2"));
-        }
 
 
         [Test]
@@ -283,14 +265,14 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void Set_the_profile_but_if_profile_does_not_have_default_for_that_type_try_to_use_base_default()
         {
-            addDefaultToProfile<IBuildPolicy>("TheProfile", "Profile");
+            addDefaultToProfile<ILifecycle>("TheProfile", "Profile");
             addDefaultToPluginFamily<ISomething>("Family");
 
             seal();
 
             _manager.CurrentProfile = "TheProfile";
 
-            assertDefaultInstanceNameIs<IBuildPolicy>("Profile");
+            assertDefaultInstanceNameIs<ILifecycle>("Profile");
             assertDefaultInstanceNameIs<ISomething>("Family");
         }
     }

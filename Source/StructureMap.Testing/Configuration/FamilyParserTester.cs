@@ -44,19 +44,21 @@ namespace StructureMap.Testing.Configuration
         private Type thePluginType;
         private PluginGraph _graph;
 
-        private void assertThatTheFamilyPolicyIs<T>()
+        private void assertThatTheFamilyLifecycleIs<T>()
         {
             _parser.ParseFamily(_familyElement);
 
             PluginFamily family = _graph.FindFamily(thePluginType);
-            Assert.IsInstanceOfType(typeof (T), family.Policy);
+            Assert.IsInstanceOfType(typeof (T), family.Lifecycle);
         }
 
 
         [Test]
         public void ScopeIsBlank()
         {
-            assertThatTheFamilyPolicyIs<BuildPolicy>();
+            _parser.ParseFamily(_familyElement);
+
+            _graph.FindFamily(thePluginType).Lifecycle.ShouldBeNull();
         }
 
 
@@ -64,7 +66,9 @@ namespace StructureMap.Testing.Configuration
         public void ScopeIsBlank2()
         {
             _familyElement.SetAttribute(XmlConstants.SCOPE, "");
-            assertThatTheFamilyPolicyIs<BuildPolicy>();
+            _parser.ParseFamily(_familyElement);
+
+            _graph.FindFamily(thePluginType).Lifecycle.ShouldBeNull();
         }
 
 
@@ -72,7 +76,7 @@ namespace StructureMap.Testing.Configuration
         public void ScopeIsSingleton()
         {
             _familyElement.SetAttribute(XmlConstants.SCOPE, InstanceScope.Singleton.ToString());
-            assertThatTheFamilyPolicyIs<SingletonPolicy>();
+            assertThatTheFamilyLifecycleIs<SingletonLifecycle>();
         }
 
 
@@ -80,7 +84,7 @@ namespace StructureMap.Testing.Configuration
         public void ScopeIsThreadLocal()
         {
             _familyElement.SetAttribute(XmlConstants.SCOPE, InstanceScope.ThreadLocal.ToString());
-            assertThatTheFamilyPolicyIs<ThreadLocalStoragePolicy>();
+            assertThatTheFamilyLifecycleIs<ThreadLocalStorageLifecycle>();
         }
     }
 }
