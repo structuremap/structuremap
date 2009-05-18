@@ -371,5 +371,24 @@ namespace StructureMap.Configuration.DSL
         }
 
 
+        /// <summary>
+        /// Syntactic Sugar for saying ForRequestedType().TheDefault.IsThis( @object )
+        /// </summary>
+        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <param name="object"></param>
+        public void Register<PLUGINTYPE>(PLUGINTYPE @object)
+        {
+            ForRequestedType<PLUGINTYPE>().TheDefault.IsThis(@object);
+        }
+
+        /// <summary>
+        /// Syntactic Sugar for saying ForRequestedType().TheDefault.IsThis( instance )
+        /// </summary>
+        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <param name="instance"></param>
+        public void Register<PLUGINTYPE>(Instance instance)
+        {
+            ForRequestedType<PLUGINTYPE>().TheDefault.IsThis(instance);
+        }
     }
 }

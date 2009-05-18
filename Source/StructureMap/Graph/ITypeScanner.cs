@@ -1,4 +1,5 @@
 using System;
+using StructureMap;
 
 namespace StructureMap.Graph
 {
@@ -29,6 +30,30 @@ namespace StructureMap.Graph
             string interfaceName = "I" + concreteType.Name;
             Type[] interfaces = concreteType.GetInterfaces();
             return Array.Find(interfaces, t => t.Name == interfaceName);
+        }
+    }
+
+    public class GenericConnectionScanner : ITypeScanner
+    {
+        private readonly Type _openType;
+
+        public GenericConnectionScanner(Type openType)
+        {
+            _openType = openType;
+
+            if (!_openType.IsGeneric())
+            {
+                throw new ApplicationException("This scanning convention can only be used with open generic types");
+            }
+        }
+
+        public void Process(Type type, PluginGraph graph)
+        {
+            Type interfaceType = type.FindInterfaceThatCloses(_openType);
+            if (interfaceType != null)
+            {
+                graph.AddType(interfaceType, type);
+            }
         }
     }
 }

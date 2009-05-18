@@ -434,6 +434,15 @@ namespace StructureMap
             return new ExplicitArgsExpression(this).With(argName);
         }
 
+        public ExplicitArgsExpression With(Action<ExplicitArgsExpression> action)
+        {
+            var expression = new ExplicitArgsExpression(this);
+            action(expression);
+
+            return expression;
+        }
+
+
         /// <summary>
         /// Use with caution!  Does a full environment test of the configuration of this container.  Will try to create every configured
         /// instance and afterward calls any methods marked with the [ValidationMethod] attribute

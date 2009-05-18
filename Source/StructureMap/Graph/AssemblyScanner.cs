@@ -160,6 +160,14 @@ namespace StructureMap.Graph
         // ... Other methods
         #endregion
 
+        /// <summary>
+        /// Scans for PluginType's and Concrete Types that close the given open generic type
+        /// </summary>
+        /// <example>
+        /// 
+        /// </example>
+        /// <param name="openGenericType"></param>
+        void ConnectImplementationsToTypesClosing(Type openGenericType);
     }
 
     public class AssemblyScanner : IAssemblyScanner
@@ -375,6 +383,11 @@ namespace StructureMap.Graph
         public void ExcludeType<T>()
         {
             Exclude(type => type == typeof (T));
+        }
+
+        public void ConnectImplementationsToTypesClosing(Type openGenericType)
+        {
+            With(new GenericConnectionScanner(openGenericType));
         }
 
         public void AssembliesFromPath(string path)

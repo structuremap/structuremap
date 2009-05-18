@@ -5,6 +5,50 @@ using StructureMap.Graph;
 
 namespace StructureMap.Testing.Graph
 {
+
+    [TestFixture]
+    public class GenericConnectionScannerTester
+    {
+        private Container container;
+
+        [SetUp]
+        public void SetUp()
+        {
+            container = new Container(x =>
+            {
+                x.Scan(o =>
+                {
+                    o.TheCallingAssembly();
+                    o.ConnectImplementationsToTypesClosing(typeof (IFinder<>));
+                });
+            });
+        }
+
+        [Test]
+        public void can_find_the_closed_finders()
+        {
+            container.GetInstance<IFinder<string>>().ShouldBeOfType<StringFinder>();
+            container.GetInstance<IFinder<int>>().ShouldBeOfType<IntFinder>();
+            container.GetInstance<IFinder<double>>().ShouldBeOfType<DoubleFinder>();
+        }
+
+        [Test, ExpectedException(typeof(ApplicationException))]
+        public void fails_on_closed_type()
+        {
+            new GenericConnectionScanner(typeof (double));
+        }
+    }
+
+    public interface IFinder<T>
+    {
+        
+    }
+
+    public class StringFinder : IFinder<string>{}
+    public class IntFinder : IFinder<int>{}
+    public class DoubleFinder : IFinder<double>{}
+
+
     [TestFixture]
     public class DefaultConventionScanningTester
     {

@@ -467,5 +467,12 @@ namespace StructureMap
             return container.ForObject(subject);
         }
 
+        public static IContainer Container
+        {
+            get
+            {
+                return container;
+            }
+        }
     }
 }

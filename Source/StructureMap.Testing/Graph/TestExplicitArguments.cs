@@ -440,6 +440,17 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
+        public void can_build_a_concrete_class_with_constructor_args_that_is_not_previously_registered_2()
+        {
+            var container = new Container();
+
+            container.With(x =>
+            {
+                x.With("name").EqualTo("Jeremy");
+            }).GetInstance<ConcreteThatNeedsString>().Name.ShouldEqual("Jeremy");
+        }
+
+        [Test]
         public void can_build_a_concrete_type_from_explicit_args_passed_into_a_named_instance()
         {
             var container = new Container(x =>
