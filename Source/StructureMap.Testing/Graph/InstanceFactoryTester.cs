@@ -71,7 +71,7 @@ namespace StructureMap.Testing.Graph
 
             factory.EjectAllInstances();
 
-            factory.Instances.Count().ShouldEqual(0);
+            factory.AllInstances.Count().ShouldEqual(0);
 
             lifecycle.AssertWasCalled(x => x.EjectAll());
         }
@@ -142,5 +142,59 @@ namespace StructureMap.Testing.Graph
         }
 
 
+    }
+
+    [TestFixture]
+    public class when_cloning_an_InstanceFactory
+    {
+        private InstanceFactory factory;
+        private IInstanceFactory clone;
+
+        [SetUp]
+        public void SetUp()
+        {
+            factory = new InstanceFactory(typeof(IGateway));
+            factory.AddInstance(new SmartInstance<DefaultGateway>());
+            factory.AddInstance(new SmartInstance<DefaultGateway>());
+
+            var lifecycle = MockRepository.GenerateMock<ILifecycle>();
+            factory.Lifecycle = lifecycle;
+            factory.MissingInstance = new SmartInstance<DefaultGateway>();
+
+            clone = factory.Clone();
+        }
+
+        [Test]
+        public void missing_instance_is_copied()
+        {
+            clone.MissingInstance.ShouldBeTheSameAs(factory.MissingInstance);
+        }
+
+        [Test]
+        public void lifecycle_is_copied()
+        {
+            clone.Lifecycle.ShouldBeTheSameAs(factory.Lifecycle);
+        }
+
+        [Test]
+        public void plugin_type_is_set_on_the_clone()
+        {
+            clone.PluginType.ShouldEqual(typeof (IGateway));
+        }
+
+        [Test]
+        public void the_instances_are_copied()
+        {
+            clone.AllInstances.Count().ShouldEqual(2);
+        }
+
+        [Test]
+        public void the_instances_are_cloned_so_that_new_instances_are_NOT_injected_into_()
+        {
+            clone.AddInstance(new LiteralInstance(new DefaultGateway()));
+
+            factory.AllInstances.Count().ShouldEqual(2);
+            clone.AllInstances.Count().ShouldEqual(3);
+        }
     }
 }

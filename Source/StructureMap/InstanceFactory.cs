@@ -12,7 +12,7 @@ namespace StructureMap
     /// </summary>
     public class InstanceFactory : IInstanceFactory
     {
-        private readonly Cache<string, Instance> _instances =
+        private Cache<string, Instance> _instances =
             new Cache<string, Instance>(delegate { return null; });
 
         private readonly Type _pluginType;
@@ -82,11 +82,6 @@ namespace StructureMap
             get { return _pluginType; }
         }
 
-        public IEnumerable<IInstance> Instances
-        {
-            get { return _instances.GetAll(); }
-        }
-
         public Instance[] AllInstances
         {
             get
@@ -101,17 +96,6 @@ namespace StructureMap
             _instances[instance.Name] = instance;
         }
 
-
-        [Obsolete]
-        public Instance AddType<T>()
-        {
-            ConfiguredInstance instance =
-                new ConfiguredInstance(typeof (T)).WithName(TypePath.GetAssemblyQualifiedName(typeof (T)));
-
-            AddInstance(instance);
-
-            return instance;
-        }
 
         public Instance FindInstance(string name)
         {
@@ -148,6 +132,17 @@ namespace StructureMap
         {
             get { return _lifecycle; }
             set { _lifecycle = value; }
+        }
+        
+        public IInstanceFactory Clone()
+        {
+            var factory = new InstanceFactory(_pluginType);
+
+            factory.MissingInstance = MissingInstance;
+            factory._lifecycle = _lifecycle;
+            factory._instances = _instances.Clone();
+
+            return factory;
         }
 
         #endregion

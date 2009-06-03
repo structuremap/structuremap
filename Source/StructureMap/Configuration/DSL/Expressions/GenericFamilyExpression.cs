@@ -51,6 +51,16 @@ namespace StructureMap.Configuration.DSL.Expressions
 
             return instance;
         }
+
+        /// <summary>
+        /// Shorter way to call TheDefaultIsConcreteType
+        /// </summary>
+        /// <param name="concreteType"></param>
+        /// <returns></returns>
+        public ConfiguredInstance Use(Type concreteType)
+        {
+            return TheDefaultIsConcreteType(concreteType);
+        }
         
         /// <summary>
         /// Shortcut method to add an additional Instance to this Plugin Type

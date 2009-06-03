@@ -7,11 +7,16 @@ namespace StructureMap.Graph
 {
     public class GenericsPluginGraph
     {
-        private readonly Cache<Type, PluginFamily> _families;
+        private Cache<Type, PluginFamily> _families;
 
         public GenericsPluginGraph()
         {
             _families = new Cache<Type, PluginFamily>(pluginType => new PluginFamily(pluginType));
+        }
+
+        public GenericsPluginGraph Clone()
+        {
+            return new GenericsPluginGraph(){_families = _families.Clone()};
         }
 
         public int FamilyCount

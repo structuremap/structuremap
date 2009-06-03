@@ -404,7 +404,12 @@
     <Compile Include="Pipeline\HttpLifecycleBase.cs" />
     <Compile Include="Pipeline\HttpSessionLifecycle.cs" />
     <Compile Include="Pipeline\HybridSessionLifecycle.cs" />
-    <Compile Include="Pipeline\Lifecycle.cs" />
+    <Compile Include="Pipeline\ILifecycle.cs" />
+    <Compile Include="Pipeline\IObjectCache.cs" />
+    <Compile Include="Pipeline\Lifecycles.cs" />
+    <Compile Include="Pipeline\MainObjectCache.cs" />
+    <Compile Include="Pipeline\NulloObjectCache.cs" />
+    <Compile Include="Pipeline\ObjectBuilder.cs" />
     <Compile Include="Pipeline\SessionWrapper.cs" />
     <Compile Include="Pipeline\SingletonLifecycle.cs" />
     <Compile Include="Pipeline\ThreadLocalStorageLifecycle.cs" />

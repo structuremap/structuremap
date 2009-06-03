@@ -353,6 +353,7 @@
     <Compile Include="Pipeline\InstanceTester.cs" />
     <Compile Include="Pipeline\LiteralInstanceTester.cs" />
     <Compile Include="Pipeline\MissingInstanceTester.cs" />
+    <Compile Include="Pipeline\NestedContainerSupportTester.cs" />
     <Compile Include="Pipeline\ObjectBuilderTester.cs" />
     <Compile Include="Pipeline\OptionalSetterInjectionTester.cs" />
     <Compile Include="Pipeline\ProfileManagerMergeTester.cs" />
@@ -383,6 +384,7 @@
     <Compile Include="TestUtility.cs" />
     <Compile Include="Diagnostics\ValidationBuildSessionTester.cs" />
     <Compile Include="TypeExtensionsTester.cs" />
+    <Compile Include="Util\CacheTester.cs" />
     <Compile Include="XmlWriting\ElementChecker.cs">
       <SubType>Code</SubType>
     </Compile>

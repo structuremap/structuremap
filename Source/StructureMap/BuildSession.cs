@@ -8,17 +8,16 @@ namespace StructureMap
 {
     public class BuildSession : IContext
     {
-        private readonly BuildStack _buildStack = new BuildStack();
+        private BuildStack _buildStack = new BuildStack();
         private readonly InstanceCache _cache = new InstanceCache();
         private readonly Cache<Type, Func<object>> _defaults;
         private readonly PipelineGraph _pipelineGraph;
         private readonly ObjectBuilder _builder;
 
-        public BuildSession(PipelineGraph pipelineGraph, InterceptorLibrary interceptorLibrary)
+        public BuildSession(PipelineGraph pipelineGraph, InterceptorLibrary interceptorLibrary, IObjectCache cache)
         {
+            _builder = new ObjectBuilder(pipelineGraph, interceptorLibrary, cache);
             _pipelineGraph = pipelineGraph;
-
-            _builder = new ObjectBuilder(_pipelineGraph, interceptorLibrary, new NulloObjectCache());
 
             _defaults = new Cache<Type, Func<object>>(t =>
             {
@@ -34,7 +33,7 @@ namespace StructureMap
         }
 
         public BuildSession(PluginGraph graph)
-            : this(new PipelineGraph(graph), graph.InterceptorLibrary)
+            : this(new PipelineGraph(graph), graph.InterceptorLibrary, new NulloObjectCache())
         {
         }
 
@@ -43,6 +42,10 @@ namespace StructureMap
         {
         }
 
+        protected void clearBuildStack()
+        {
+            _buildStack = new BuildStack();
+        }
 
         protected PipelineGraph pipelineGraph
         {

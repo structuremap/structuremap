@@ -47,6 +47,19 @@ namespace StructureMap.Configuration.DSL
         void SelectConstructor<T>(Expression<Func<T>> expression);
     }
 
+    public static class RegistryExtensions
+    {
+        public static CreatePluginFamilyExpression<PLUGINTYPE> For<PLUGINTYPE>(this IRegistry registry)
+        {
+            return registry.ForRequestedType<PLUGINTYPE>();
+        }
+
+        public static GenericFamilyExpression For(this IRegistry registry, Type pluginType)
+        {
+            return registry.ForRequestedType(pluginType);
+        }
+    }
+
 
     /// <summary>
     /// A Registry class provides methods and grammars for configuring a Container or ObjectFactory.

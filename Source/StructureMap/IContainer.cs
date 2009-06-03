@@ -268,5 +268,23 @@ namespace StructureMap
         /// <param name="subject"></param>
         /// <returns></returns>
         CloseGenericTypeExpression ForObject(object subject);
+
+
+
+        /// <summary>
+        /// Starts a "Nested" Container for atomic, isolated access
+        /// </summary>
+        /// <returns></returns>
+        IContainer GetNestedContainer();
+
+        /// <summary>
+        /// Starts a new "Nested" Container for atomic, isolated service location.  Opens 
+        /// </summary>
+        /// <param name="profileName"></param>
+        /// <returns></returns>
+        IContainer GetNestedContainer(string profileName);
     }
+
+
+
 }

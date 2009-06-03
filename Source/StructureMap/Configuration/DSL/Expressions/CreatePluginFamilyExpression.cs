@@ -103,6 +103,16 @@ namespace StructureMap.Configuration.DSL.Expressions
         }
 
         /// <summary>
+        /// Shorthand way of saying TheDefaultIsConcreteType<>
+        /// </summary>
+        /// <typeparam name="CONCRETETYPE"></typeparam>
+        /// <returns></returns>
+        public CreatePluginFamilyExpression<PLUGINTYPE> Use<CONCRETETYPE>() where CONCRETETYPE : PLUGINTYPE
+        {
+            return TheDefaultIsConcreteType<CONCRETETYPE>();
+        }
+
+        /// <summary>
         /// Sets the object creation of the instances of the PluginType.  For example:  PerRequest,
         /// Singleton, ThreadLocal, HttpContext, or Hybrid
         /// </summary>

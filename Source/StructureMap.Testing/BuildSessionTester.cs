@@ -151,7 +151,7 @@ namespace StructureMap.Testing
 
             assertActionThrowsErrorCode(200, delegate
             {
-                var session = new BuildSession(graph, null);
+                var session = new BuildSession(graph, null, new NulloObjectCache());
                 session.CreateInstance(typeof (IGateway), "Gateway that is not configured");
             });
         }
@@ -183,7 +183,7 @@ namespace StructureMap.Testing
 
             assertActionThrowsErrorCode(202, delegate
             {
-                var session = new BuildSession(graph, null);
+                var session = new BuildSession(graph, null, new NulloObjectCache());
                 session.CreateInstance(typeof (IGateway));
             });
         }

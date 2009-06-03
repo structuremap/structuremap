@@ -4,7 +4,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		..\Docs\Attributes.htm = ..\Docs\Attributes.htm
 		..\Docs\Basic Architecture.htm = ..\Docs\Basic Architecture.htm
-		CommonAssemblyInfo.cs = CommonAssemblyInfo.cs
 		..\Docs\Concepts.htm = ..\Docs\Concepts.htm
 		..\Docs\Configuration.htm = ..\Docs\Configuration.htm
 		..\Docs\ConfigurationManagement.htm = ..\Docs\ConfigurationManagement.htm

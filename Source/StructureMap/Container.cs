@@ -7,16 +7,15 @@ using StructureMap.Exceptions;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
-using System.Linq;
 
 namespace StructureMap
 {
     public class Container : TypeRules, IContainer
     {
         private InterceptorLibrary _interceptorLibrary;
-        private Model _model;
         private PipelineGraph _pipelineGraph;
         private PluginGraph _pluginGraph;
+        private IObjectCache _transientCache = new NulloObjectCache();
 
         public Container(Action<ConfigurationExpression> action)
         {
@@ -26,11 +25,13 @@ namespace StructureMap
             construct(expression.BuildGraph());
         }
 
-        public Container(Registry registry) : this(registry.Build())
+        public Container(Registry registry)
+            : this(registry.Build())
         {
         }
 
-        public Container() : this(new PluginGraph())
+        public Container()
+            : this(new PluginGraph())
         {
         }
 
@@ -44,25 +45,16 @@ namespace StructureMap
             construct(pluginGraph);
         }
 
-        protected MissingFactoryFunction onMissingFactory
-        {
-            set { _pipelineGraph.OnMissingFactory = value; }
-        }
+        protected MissingFactoryFunction onMissingFactory { set { _pipelineGraph.OnMissingFactory = value; } }
+
+        public PluginGraph PluginGraph { get { return _pluginGraph; } }
 
         #region IContainer Members
-
-        public PluginGraph PluginGraph
-        {
-            get { return _pluginGraph; }
-        }
 
         /// <summary>
         /// Provides queryable access to the configured PluginType's and Instances of this Container
         /// </summary>
-        public IModel Model
-        {
-            get { return _model; }
-        }
+        public IModel Model { get { return new Model(_pipelineGraph); } }
 
         /// <summary>
         /// Creates or finds the named instance of T
@@ -110,27 +102,9 @@ namespace StructureMap
         public object GetInstance(Type pluginType, ExplicitArguments args)
         {
             Instance defaultInstance = _pipelineGraph.GetDefault(pluginType);
-            var requestedName = Plugin.DEFAULT;
+            string requestedName = Plugin.DEFAULT;
 
             return buildInstanceWithArgs(pluginType, defaultInstance, args, requestedName);
-        }
-
-        private object buildInstanceWithArgs(Type pluginType, Instance defaultInstance, ExplicitArguments args, string requestedName)
-        {
-            if (defaultInstance == null && pluginType.IsConcrete())
-            {
-                defaultInstance = new ConfiguredInstance(pluginType);
-            }
-
-            BasicInstance basicInstance = defaultInstance as BasicInstance;
-
-            Instance instance = basicInstance == null ? defaultInstance : new ExplicitInstance(pluginType, args, basicInstance);
-            
-            BuildSession session = withNewSession(requestedName);
-
-            args.RegisterDefaults(session);
-
-            return session.CreateInstance(pluginType, instance);
         }
 
 
@@ -146,7 +120,7 @@ namespace StructureMap
 
             args.RegisterDefaults(session);
 
-            var instances = session.CreateInstanceArray(type, null);
+            Array instances = session.CreateInstanceArray(type, null);
             return new ArrayList(instances);
         }
 
@@ -241,9 +215,9 @@ namespace StructureMap
         /// <returns></returns>
         public object TryGetInstance(Type pluginType, string instanceKey)
         {
-            return !_pipelineGraph.HasInstance(pluginType, instanceKey) 
-                ? null 
-                : GetInstance(pluginType, instanceKey);
+            return !_pipelineGraph.HasInstance(pluginType, instanceKey)
+                       ? null
+                       : GetInstance(pluginType, instanceKey);
         }
 
         /// <summary>
@@ -253,9 +227,9 @@ namespace StructureMap
         /// <returns></returns>
         public object TryGetInstance(Type pluginType)
         {
-            return !_pipelineGraph.HasDefaultForPluginType(pluginType) 
-                ? null 
-                : GetInstance(pluginType);
+            return !_pipelineGraph.HasDefaultForPluginType(pluginType)
+                       ? null
+                       : GetInstance(pluginType);
         }
 
         /// <summary>
@@ -265,7 +239,7 @@ namespace StructureMap
         /// <returns></returns>
         public T TryGetInstance<T>()
         {
-            return (T)(TryGetInstance(typeof (T)) ?? default(T));
+            return (T) (TryGetInstance(typeof (T)) ?? default(T));
         }
 
         /// <summary>
@@ -276,11 +250,11 @@ namespace StructureMap
         /// <param name="target"></param>
         public void BuildUp(object target)
         {
-            var pluggedType = target.GetType();
-            IConfiguredInstance instance = _pipelineGraph.GetDefault(pluggedType) as IConfiguredInstance 
-                ?? new ConfiguredInstance(pluggedType);
+            Type pluggedType = target.GetType();
+            IConfiguredInstance instance = _pipelineGraph.GetDefault(pluggedType) as IConfiguredInstance
+                                           ?? new ConfiguredInstance(pluggedType);
 
-            var builder = PluginCache.FindBuilder(pluggedType);
+            InstanceBuilder builder = PluginCache.FindBuilder(pluggedType);
             builder.BuildUp(instance, withNewSession(Plugin.DEFAULT), target);
         }
 
@@ -291,7 +265,7 @@ namespace StructureMap
         /// <returns></returns>
         public T TryGetInstance<T>(string instanceKey)
         {
-            return (T)(TryGetInstance(typeof(T), instanceKey) ?? default(T));
+            return (T) (TryGetInstance(typeof (T), instanceKey) ?? default(T));
         }
 
         /// <summary>
@@ -365,7 +339,7 @@ namespace StructureMap
         /// <returns></returns>
         public IList GetAllInstances(Type pluginType)
         {
-            var instances = withNewSession(Plugin.DEFAULT).CreateInstanceArray(pluginType, null);
+            Array instances = withNewSession(Plugin.DEFAULT).CreateInstanceArray(pluginType, null);
             return new ArrayList(instances);
         }
 
@@ -434,14 +408,6 @@ namespace StructureMap
             return new ExplicitArgsExpression(this).With(argName);
         }
 
-        public ExplicitArgsExpression With(Action<ExplicitArgsExpression> action)
-        {
-            var expression = new ExplicitArgsExpression(this);
-            action(expression);
-
-            return expression;
-        }
-
 
         /// <summary>
         /// Use with caution!  Does a full environment test of the configuration of this container.  Will try to create every configured
@@ -467,7 +433,94 @@ namespace StructureMap
             _pipelineGraph.EjectAllInstancesOf<T>();
         }
 
+        /// <summary>
+        /// Convenience method to request an object using an Open Generic
+        /// Type and its parameter Types
+        /// </summary>
+        /// <param name="templateType"></param>
+        /// <returns></returns>
+        /// <example>
+        /// IFlattener flattener1 = container.ForGenericType(typeof (IFlattener&lt;&gt;))
+        ///     .WithParameters(typeof (Address)).GetInstanceAs&lt;IFlattener&gt;();
+        /// </example>
+        public OpenGenericTypeExpression ForGenericType(Type templateType)
+        {
+            return new OpenGenericTypeExpression(templateType, this);
+        }
+
+        /// <summary>
+        /// Shortcut syntax for using an object to find a service that handles
+        /// that type of object by using an open generic type
+        /// </summary>
+        /// <example>
+        /// IHandler handler = container.ForObject(shipment)
+        ///                        .GetClosedTypeOf(typeof (IHandler<>))
+        ///                        .As<IHandler>();
+        /// </example>
+        /// <param name="subject"></param>
+        /// <returns></returns>
+        public CloseGenericTypeExpression ForObject(object subject)
+        {
+            return new CloseGenericTypeExpression(subject, this);
+        }
+
+        /// <summary>
+        /// Starts a "Nested" Container for atomic, isolated access
+        /// </summary>
+        /// <returns></returns>
+        public IContainer GetNestedContainer()
+        {
+            return new Container()
+            {
+                _interceptorLibrary = _interceptorLibrary,
+                _pipelineGraph = _pipelineGraph.Clone(),
+                _transientCache = new MainObjectCache()
+            };
+        }
+
+        /// <summary>
+        /// Starts a new "Nested" Container for atomic, isolated service location.  Opens 
+        /// </summary>
+        /// <param name="profileName"></param>
+        /// <returns></returns>
+        public IContainer GetNestedContainer(string profileName)
+        {
+            var container = GetNestedContainer();
+            container.SetDefaultsToProfile(profileName);
+
+            return container;
+        }
+
         #endregion
+
+        private object buildInstanceWithArgs(Type pluginType, Instance defaultInstance, ExplicitArguments args,
+                                             string requestedName)
+        {
+            if (defaultInstance == null && pluginType.IsConcrete())
+            {
+                defaultInstance = new ConfiguredInstance(pluginType);
+            }
+
+            var basicInstance = defaultInstance as BasicInstance;
+
+            Instance instance = basicInstance == null
+                                    ? defaultInstance
+                                    : new ExplicitInstance(pluginType, args, basicInstance);
+
+            BuildSession session = withNewSession(requestedName);
+
+            args.RegisterDefaults(session);
+
+            return session.CreateInstance(pluginType, instance);
+        }
+
+        public ExplicitArgsExpression With(Action<ExplicitArgsExpression> action)
+        {
+            var expression = new ExplicitArgsExpression(this);
+            action(expression);
+
+            return expression;
+        }
 
         private void construct(PluginGraph pluginGraph)
         {
@@ -482,7 +535,6 @@ namespace StructureMap
             pluginGraph.Log.AssertFailures();
 
             _pipelineGraph = new PipelineGraph(pluginGraph);
-            _model = new Model(_pipelineGraph);
 
             PluginCache.Compile();
 
@@ -492,7 +544,7 @@ namespace StructureMap
         private IList<T> getListOfTypeWithSession<T>(BuildSession session)
         {
             var list = new List<T>();
-            foreach (T instance in session.CreateInstanceArray(typeof(T), null))
+            foreach (T instance in session.CreateInstanceArray(typeof (T), null))
             {
                 list.Add(instance);
             }
@@ -512,30 +564,27 @@ namespace StructureMap
 
         private BuildSession withNewSession(string name)
         {
-            return new BuildSession(_pipelineGraph, _interceptorLibrary){RequestedName = name};
+            return new BuildSession(_pipelineGraph, _interceptorLibrary, _transientCache)
+            {
+                RequestedName = name
+            };
         }
 
-        /// <summary>
-        /// Convenience method to request an object using an Open Generic
-        /// Type and its parameter Types
-        /// </summary>
-        /// <param name="templateType"></param>
-        /// <returns></returns>
-        /// <example>
-        /// IFlattener flattener1 = container.ForGenericType(typeof (IFlattener&lt;&gt;))
-        ///     .WithParameters(typeof (Address)).GetInstanceAs&lt;IFlattener&gt;();
-        /// </example>
-        public OpenGenericTypeExpression ForGenericType(Type templateType)
+        #region Nested type: GetInstanceAsExpression
+
+        public interface GetInstanceAsExpression
         {
-            return new OpenGenericTypeExpression(templateType, this);
+            T GetInstanceAs<T>();
         }
 
-        
+        #endregion
+
+        #region Nested type: OpenGenericTypeExpression
 
         public class OpenGenericTypeExpression : GetInstanceAsExpression
         {
-            private readonly Type _templateType;
             private readonly Container _container;
+            private readonly Type _templateType;
             private Type _pluginType;
 
             public OpenGenericTypeExpression(Type templateType, Container container)
@@ -549,39 +598,22 @@ namespace StructureMap
                 _container = container;
             }
 
-            public GetInstanceAsExpression WithParameters(params Type[] parameterTypes)
-            {
-                _pluginType = _templateType.MakeGenericType(parameterTypes);
-                return this;
-            }
+            #region GetInstanceAsExpression Members
 
             public T GetInstanceAs<T>()
             {
                 return (T) _container.GetInstance(_pluginType);
             }
+
+            #endregion
+
+            public GetInstanceAsExpression WithParameters(params Type[] parameterTypes)
+            {
+                _pluginType = _templateType.MakeGenericType(parameterTypes);
+                return this;
+            }
         }
 
-        public interface GetInstanceAsExpression
-        {
-            T GetInstanceAs<T>();
-        }
-
-        /// <summary>
-        /// Shortcut syntax for using an object to find a service that handles
-        /// that type of object by using an open generic type
-        /// </summary>
-        /// <example>
-        /// IHandler handler = container.ForObject(shipment)
-        ///                        .GetClosedTypeOf(typeof (IHandler<>))
-        ///                        .As<IHandler>();
-        /// </example>
-        /// <param name="subject"></param>
-        /// <returns></returns>
-        public CloseGenericTypeExpression ForObject(object subject)
-        {
-            return new CloseGenericTypeExpression(subject, this);
-        }
+        #endregion
     }
-
-
 }

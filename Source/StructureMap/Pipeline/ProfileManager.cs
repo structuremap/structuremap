@@ -224,6 +224,19 @@ namespace StructureMap.Pipeline
             CurrentProfile = CurrentProfile;
         }
 
+        public ProfileManager Clone()
+        {
+            var clone = new ProfileManager()
+            {
+                DefaultMachineProfileName = DefaultMachineProfileName,
+                DefaultProfileName = DefaultProfileName
+            };
+
+            clone.ImportFrom(this);
+
+            return clone;
+        }
+
         public void EjectAllInstancesOf<T>()
         {
             _currentProfile.Remove<T>();

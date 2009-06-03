@@ -17,7 +17,7 @@ namespace StructureMap.Diagnostics
         private List<IInstance> _explicitInstances;
 
         public ValidationBuildSession(PipelineGraph pipelineGraph, InterceptorLibrary interceptorLibrary)
-            : base(pipelineGraph, interceptorLibrary)
+            : base(pipelineGraph, interceptorLibrary, new NulloObjectCache())
         {
         }
 
@@ -47,6 +47,7 @@ namespace StructureMap.Diagnostics
 
             try
             {
+                //clearBuildStack();
                 return base.CreateInstance(pluginType, instance);
             }
             catch (StructureMapException ex)

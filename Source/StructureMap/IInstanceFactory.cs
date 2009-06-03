@@ -12,19 +12,19 @@ namespace StructureMap
     public interface IInstanceFactory
     {
         Type PluginType { get; }
-        IEnumerable<IInstance> Instances { get; }
-        Instance MissingInstance { get; set; }
+
+        Instance MissingInstance { get; }
 
         Instance[] AllInstances
         {
             get;
         }
 
+        // need to override this
         void AddInstance(Instance instance);
-        Instance AddType<T>();
 
+        
         Instance FindInstance(string name);
-
         void ImportFrom(PluginFamily family);
 
         [Obsolete("Kill!!!!")]
@@ -32,6 +32,7 @@ namespace StructureMap
 
         ILifecycle Lifecycle {get; }
 
-
+        IInstanceFactory Clone();
     }
+
 }

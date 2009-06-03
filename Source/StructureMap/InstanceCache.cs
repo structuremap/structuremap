@@ -25,6 +25,16 @@ namespace StructureMap
 
         public object Get(Type pluginType, Instance instance)
         {
+            if (pluginType == null)
+            {
+                throw new ArgumentNullException("pluginType");
+            }
+
+            if (instance == null)
+            {
+                throw new ArgumentNullException("instance", "Trying to find an Instance of type " + pluginType.AssemblyQualifiedName);
+            }
+
             Dictionary<Instance, object> cache = getCache(pluginType);
             if (cache.ContainsKey(instance))
             {

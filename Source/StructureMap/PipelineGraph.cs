@@ -41,6 +41,27 @@ namespace StructureMap
             }
         }
 
+        private PipelineGraph(ProfileManager profileManager, GenericsPluginGraph genericsGraph)
+        {
+            _profileManager = profileManager;
+            _genericsGraph = genericsGraph;
+        }
+
+        public PipelineGraph Clone()
+        {
+            var clone = new PipelineGraph(_profileManager.Clone(), _genericsGraph.Clone())
+            {
+                _missingFactory = _missingFactory
+            };
+
+            foreach (var pair in _factories)
+            {
+                clone._factories.Add(pair.Key, pair.Value);
+            }
+
+            return clone;
+        }
+
         public GraphLog Log
         {
             get { return _log; }
@@ -76,7 +97,7 @@ namespace StructureMap
                                          Default = _profileManager.GetDefault(factory.PluginType),
                                          PluginType = factory.PluginType,
                                          Lifecycle = factory.Lifecycle,
-                                         Instances = factory.Instances
+                                         Instances = factory.AllInstances
                                      };
                 }
             }
@@ -152,20 +173,10 @@ namespace StructureMap
             _profileManager.SetDefault(pluginType, instance);
         }
 
-        public Instance AddInstance<PLUGINTYPE, PLUGGEDTYPE>()
-        {
-            return ForType(typeof (PLUGINTYPE)).AddType<PLUGGEDTYPE>();
-        }
 
         public void AddInstance<T>(Instance instance)
         {
             ForType(typeof (T)).AddInstance(instance);
-        }
-
-        public void AddDefaultInstance<PLUGINTYPE, PLUGGEDTYPE>()
-        {
-            Instance instance = AddInstance<PLUGINTYPE, PLUGGEDTYPE>();
-            _profileManager.SetDefault(typeof (PLUGINTYPE), instance);
         }
 
         public void Inject<PLUGINTYPE>(PLUGINTYPE instance)
@@ -190,7 +201,7 @@ namespace StructureMap
 
             if (_factories.ContainsKey(pluginType))
             {
-                return _factories[pluginType].Instances;
+                return _factories[pluginType].AllInstances;
             }
 
             return new IInstance[0];
@@ -202,7 +213,7 @@ namespace StructureMap
 
             foreach (var pair in _factories)
             {
-                list.AddRange(pair.Value.Instances);
+                list.AddRange(pair.Value.AllInstances);
             }
 
             return list;

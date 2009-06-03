@@ -206,6 +206,15 @@ namespace StructureMap.Pipeline
 
         protected void setChildArray(string name, Instance[] array)
         {
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (array[i] == null)
+                {
+                    throw new ApplicationException("There is a null value in the array of child Instances");
+                }
+                
+            }
+
             _arrays.Add(name, array);
         }
 

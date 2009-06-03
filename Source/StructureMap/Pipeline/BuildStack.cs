@@ -64,5 +64,10 @@ namespace StructureMap.Pipeline
             _current = _current.Detach();
             if (_current == null) _root = null;
         }
+
+        public void Clear()
+        {
+            _current = _root = null;
+        }
     }
 }

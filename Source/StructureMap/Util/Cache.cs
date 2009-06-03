@@ -9,8 +9,6 @@ namespace StructureMap.Util
         private readonly object _locker = new object();
         private readonly IDictionary<KEY, VALUE> _values;
 
-        private Func<VALUE, KEY> _getKey = delegate { throw new NotImplementedException(); };
-
         private Func<KEY, VALUE> _onMissing = delegate(KEY key)
         {
             string message = string.Format("Key '{0}' could not be found", key);
@@ -38,20 +36,9 @@ namespace StructureMap.Util
             _values = dictionary;
         }
 
-        public object Locker
-        {
-            get { return _locker; }
-        }
-
         public Func<KEY, VALUE> OnMissing
         {
             set { _onMissing = value; }
-        }
-
-        public Func<VALUE, KEY> GetKey
-        {
-            get { return _getKey; }
-            set { _getKey = value; }
         }
 
         public int Count
@@ -135,19 +122,6 @@ namespace StructureMap.Util
             _values.Add(key, value);
         }
 
-        public bool TryRetrieve(KEY key, out VALUE value)
-        {
-            value = default(VALUE);
-
-            if (_values.ContainsKey(key))
-            {
-                value = _values[key];
-                return true;
-            }
-
-            return false;
-        }
-
         public void Each(Action<VALUE> action)
         {
             lock (_locker)
@@ -213,6 +187,14 @@ namespace StructureMap.Util
         public void Clear()
         {
             _values.Clear();
+        }
+
+        public Cache<KEY, VALUE> Clone()
+        {
+            var clone = new Cache<KEY, VALUE>(_onMissing);
+            Each((k, v) => clone[k] = v);
+
+            return clone;
         }
     }
 }
