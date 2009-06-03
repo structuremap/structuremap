@@ -7,8 +7,6 @@
   <property name="project.version" value="2.5.4" />
   <property name="project.config" value="release" />
   <property name="archive.dir" value="archive"/>
-  <property name="cibuild" value="false" />
-  <property name="cibuild" value="true" if="${environment::variable-exists('TEAMCITY_PROJECT_NAME')}" />
   <target name="all" depends="compile, unit-test, post-clean"/>
   <target name="cruise" depends="compile, unit-test, post-clean, archive" />
 
@@ -41,7 +39,7 @@
     </if>
 
     <echo message="Marking this build as version ${assembly-version}" />
-    <tc-buildnumber build-number="${assembly-version}_${'{build.number}'}" />
+    <tc-buildnumber build-number="${'{build.number}'}-${assembly-version}" />
     <asminfo output="Source/CommonAssemblyInfo.cs" language="CSharp">
       <imports>
         <import namespace="System" />
@@ -142,7 +140,7 @@
 
 
   <target name="archive">
-    <if test="${cibuild}">
+    <if test="${environment::variable-exists('TEAMCITY_PROJECT_NAME')}">
       <zip zipfile="${archive.dir}\StructureMap_${environment::get-variable('BUILD_NUMBER')}.zip" if="${environment::variable-exists('BUILD_NUMBER')}">
         <fileset basedir="${build.dir}">
           <include name="*.dll" />
@@ -150,9 +148,6 @@
           <exclude name="*.xml" />
         </fileset>
       </zip>
-
-
-      <nant buildfile="Deploy.build" inheritall="true"/>
     </if>
 
 
