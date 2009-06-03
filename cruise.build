@@ -1,4 +1,5 @@
 <project name="StructureMap" default="all">
+  <loadtasks assembly="bin/nant/extensions/common/2.0/NAntExtensions.TeamCity.dll" />
   <property name="build.dir" value="build" />
   <property name="deployment.dir" value="source\StructureMap.Testing.DeploymentTasks\"/>
   <property name="results.dir" value="results" />
@@ -142,7 +143,7 @@
 
   <target name="archive">
     <if test="${cibuild}">
-      <zip zipfile="${archive.dir}\StructureMap_${BUILD_NUMBER}.zip" if="${property::exists('BUILD_NUMBER')}">
+      <zip zipfile="${archive.dir}\StructureMap_${environment::get-variable('BUILD_NUMBER')}.zip" if="${environment::variable-exists('BUILD_NUMBER')}">
         <fileset basedir="${build.dir}">
           <include name="*.dll" />
           <include name="*.exe" />
