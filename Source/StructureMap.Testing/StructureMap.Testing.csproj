@@ -346,6 +346,7 @@
     <Compile Include="Pipeline\ConditionalInstanceTester.cs" />
     <Compile Include="Pipeline\ConfiguredInstanceTester.cs" />
     <Compile Include="Pipeline\ConstructorInstanceTester.cs" />
+    <Compile Include="Pipeline\ContainerDisposalTester.cs" />
     <Compile Include="Pipeline\ContainerIsInTheContainerTester.cs" />
     <Compile Include="Pipeline\DefaultInstanceTester.cs" />
     <Compile Include="Pipeline\GenericsHelperExpressionTester.cs" />

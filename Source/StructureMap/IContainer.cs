@@ -9,7 +9,7 @@ namespace StructureMap
     /// <summary>
     /// The main "container" object that implements the Service Locator pattern
     /// </summary>
-    public interface IContainer
+    public interface IContainer : IDisposable
     {
         /// <summary>
         /// Provides queryable access to the configured PluginType's and Instances of this Container
@@ -132,8 +132,8 @@ namespace StructureMap
         /// to introduce mocks or stubs during automated testing scenarios
         /// </summary>
         /// <param name="pluginType"></param>
-        /// <param name="stub"></param>
-        void Inject(Type pluginType, object stub);
+        /// <param name="object"></param>
+        void Inject(Type pluginType, object @object);
         
         /// <summary>
         /// Injects the given object into a Container by name for the designated

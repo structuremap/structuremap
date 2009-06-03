@@ -134,17 +134,7 @@ namespace StructureMap
             return getListOfTypeWithSession<T>(session);
         }
 
-        /// <summary>
-        /// Injects the given object into a Container as the default for the designated
-        /// PLUGINTYPE.  Mostly used for temporarily setting up return values of the Container
-        /// to introduce mocks or stubs during automated testing scenarios
-        /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
-        /// <param name="instance"></param>
-        public void Inject<PLUGINTYPE>(PLUGINTYPE instance)
-        {
-            _pipelineGraph.Inject(instance);
-        }
+
 
         /// <summary>
         /// Creates or finds the default instance of type T
@@ -162,19 +152,7 @@ namespace StructureMap
             return (T) FillDependencies(typeof (T));
         }
 
-        /// <summary>
-        /// Injects the given object into a Container by name for the designated
-        /// pluginType.  Mostly used for temporarily setting up return values of the Container
-        /// to introduce mocks or stubs during automated testing scenarios
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="name"></param>
-        /// <param name="stub"></param>
-        public void Inject<T>(string name, T stub)
-        {
-            LiteralInstance instance = new LiteralInstance(stub).WithName(name);
-            _pipelineGraph.AddInstance<T>(instance);
-        }
+
 
         /// <summary>
         /// Creates or resolves all registered instances of type T
@@ -312,25 +290,7 @@ namespace StructureMap
             return GetInstance(type);
         }
 
-        /// <summary>
-        /// Injects the given object into a Container as the default for the designated
-        /// pluginType.  Mostly used for temporarily setting up return values of the Container
-        /// to introduce mocks or stubs during automated testing scenarios
-        /// </summary>
-        /// <param name="pluginType"></param>
-        /// <param name="stub"></param>
-        public void Inject(Type pluginType, object stub)
-        {
-            if (!CanBeCast(pluginType, stub.GetType()))
-            {
-                throw new StructureMapException(220, pluginType.FullName,
-                                                stub.GetType().FullName);
-            }
 
-
-            var instance = new LiteralInstance(stub);
-            _pipelineGraph.SetDefault(pluginType, instance);
-        }
 
         /// <summary>
         /// Creates or resolves all registered instances of the pluginType
@@ -470,7 +430,7 @@ namespace StructureMap
         /// <returns></returns>
         public IContainer GetNestedContainer()
         {
-            return new Container()
+            return new Container
             {
                 _interceptorLibrary = _interceptorLibrary,
                 _pipelineGraph = _pipelineGraph.Clone(),
@@ -485,10 +445,15 @@ namespace StructureMap
         /// <returns></returns>
         public IContainer GetNestedContainer(string profileName)
         {
-            var container = GetNestedContainer();
+            IContainer container = GetNestedContainer();
             container.SetDefaultsToProfile(profileName);
 
             return container;
+        }
+
+        public void Dispose()
+        {
+            _transientCache.DisposeAndClear();
         }
 
         #endregion
@@ -552,15 +517,7 @@ namespace StructureMap
             return list;
         }
 
-        /// <summary>
-        /// Sets the default instance for the PluginType
-        /// </summary>
-        /// <param name="pluginType"></param>
-        /// <param name="instance"></param>
-        public void Inject(Type pluginType, Instance instance)
-        {
-            _pipelineGraph.SetDefault(pluginType, instance);
-        }
+
 
         private BuildSession withNewSession(string name)
         {
@@ -615,5 +572,65 @@ namespace StructureMap
         }
 
         #endregion
+
+
+        /// <summary>
+        /// Injects the given object into a Container by name for the designated
+        /// pluginType.  Mostly used for temporarily setting up return values of the Container
+        /// to introduce mocks or stubs during automated testing scenarios
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="name"></param>
+        /// <param name="object"></param>
+        public void Inject<T>(string name, T @object)
+        {
+            LiteralInstance instance = new LiteralInstance(@object).WithName(name);
+            _transientCache.Set(typeof(T), instance, @object);
+            _pipelineGraph.AddInstance<T>(instance);
+        }
+
+        /// <summary>
+        /// Sets the default instance for the PluginType
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="instance"></param>
+        public void Inject(Type pluginType, Instance instance)
+        {
+            _pipelineGraph.SetDefault(pluginType, instance);
+        }
+
+        /// <summary>
+        /// Injects the given object into a Container as the default for the designated
+        /// pluginType.  Mostly used for temporarily setting up return values of the Container
+        /// to introduce mocks or stubs during automated testing scenarios
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="object"></param>
+        public void Inject(Type pluginType, object @object)
+        {
+            if (!CanBeCast(pluginType, @object.GetType()))
+            {
+                throw new StructureMapException(220, pluginType.FullName,
+                                                @object.GetType().FullName);
+            }
+
+
+            var instance = new LiteralInstance(@object);
+            _transientCache.Set(pluginType, instance, @object);
+            _pipelineGraph.SetDefault(pluginType, instance);
+        }
+
+        /// <summary>
+        /// Injects the given object into a Container as the default for the designated
+        /// PLUGINTYPE.  Mostly used for temporarily setting up return values of the Container
+        /// to introduce mocks or stubs during automated testing scenarios
+        /// </summary>
+        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <param name="object"></param>
+        public void Inject<PLUGINTYPE>(PLUGINTYPE @object)
+        {
+            var instance = _pipelineGraph.Inject(@object);
+            _transientCache.Set(typeof(PLUGINTYPE), instance, @object);
+        }
     }
 }

@@ -179,11 +179,13 @@ namespace StructureMap
             ForType(typeof (T)).AddInstance(instance);
         }
 
-        public void Inject<PLUGINTYPE>(PLUGINTYPE instance)
+        public Instance Inject<PLUGINTYPE>(PLUGINTYPE instance)
         {
             var literalInstance = new LiteralInstance(instance);
             ForType(typeof (PLUGINTYPE)).AddInstance(literalInstance);
             SetDefault(typeof (PLUGINTYPE), literalInstance);
+
+            return literalInstance;
         }
 
         public void EjectAllInstancesOf<T>()

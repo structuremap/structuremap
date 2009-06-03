@@ -14,6 +14,7 @@ namespace StructureMap.Testing.Pipeline
         {
         }
 
+
         [Test]
         public void transient_service_in_the_parent_container_is_effectively_a_singleton_for_the_nested_container()
         {
@@ -33,6 +34,29 @@ namespace StructureMap.Testing.Pipeline
             childWidget1.ShouldBeTheSameAs(childWidget2);
             childWidget1.ShouldBeTheSameAs(childWidget3);
             childWidget1.ShouldNotBeTheSameAs(parentWidget);
+        }
+
+        [Test]
+        public void inject_into_the_child_does_not_affect_the_parent_container()
+        {
+            var parent = new Container(x =>
+            {
+                x.For<IWidget>().Use<AWidget>();
+            });
+
+            var child = parent.GetNestedContainer();
+            var childWidget = new ColorWidget("blue");
+            child.Inject<IWidget>(childWidget);
+
+            // do the check repeatedly
+            child.GetInstance<IWidget>().ShouldBeTheSameAs(childWidget);
+            child.GetInstance<IWidget>().ShouldBeTheSameAs(childWidget);
+            child.GetInstance<IWidget>().ShouldBeTheSameAs(childWidget);
+
+
+            // now, compare to the parent
+            parent.GetInstance<IWidget>().ShouldNotBeTheSameAs(childWidget);
+
         }
 
         [Test]
