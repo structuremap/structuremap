@@ -1,96 +1,98 @@
 <project name="StructureMap" default="all">
-	<property name="build.dir" value="build" />
-	<property name="deployment.dir" value="source\StructureMap.Testing.DeploymentTasks\"/>
-	<property name="results.dir" value="results" />
-	<property name="nant.dir" value="bin\nant" />
-	<property name="project.version" value="2.5.4" />
-	<property name="project.config" value="release" />
-	<property name="archive.dir" value="d:\builds\StructureMap"/>
+  <property name="build.dir" value="build" />
+  <property name="deployment.dir" value="source\StructureMap.Testing.DeploymentTasks\"/>
+  <property name="results.dir" value="results" />
+  <property name="nant.dir" value="bin\nant" />
+  <property name="project.version" value="2.5.4" />
+  <property name="project.config" value="release" />
+  <property name="archive.dir" value="archive"/>
+  <property name="cibuild" value="false" />
+  <property name="cibuild" value="true" if="${environment::variable-exists('TEAMCITY_PROJECT_NAME')}" />
+  <target name="all" depends="compile, unit-test, post-clean"/>
+  <target name="cruise" depends="compile, unit-test, post-clean, archive" />
 
-	<target name="all" depends="compile, unit-test, post-clean"/>
-	<target name="cruise" depends="compile, unit-test, post-clean, archive" />
+  <target name="pre-clean">
+    <delete dir="${build.dir}" failonerror="false" />
+    <delete dir="${results.dir}" failonerror="false"/>
 
-	<target name="pre-clean">
-	    <delete dir="${build.dir}" failonerror="false" />
-	    <delete dir="${results.dir}" failonerror="false"/>
+    <mkdir dir="${build.dir}" />
+    <mkdir dir="${results.dir}" />
+    <mkdir dir="${archive.dir}" unless="${directory::exists(archive.dir)}" />
 
-		<mkdir dir="${build.dir}" />
-		<mkdir dir="${results.dir}" />
-		
-		<call target="cleanJunk" />
-	</target>
-	
-	<target name="cleanJunk">
-	  <delete failonerror="false">
-	  	<fileset basedir=".">
-	  		<include name="source/**/obj/**"/>
-	  		<include name="source/**/bin**"/>
-	   		<include name="**/_ReSharper*"/>
-	   		<include name="source/**/*.resharperoptions"/>
-	   	</fileset>
-	  </delete>	
-	</target>
+    <call target="cleanJunk" />
+  </target>
 
-    <target name="version" description="mark AssemblyInfo builds with the build number">
-		<property name="assembly-version" value="${project.version}.0000" />
-    
-		<if test="${property::exists('CCNetLabel')}">	      
-			<property name="assembly-version" value="${project.version}.${CCNetLabel}" />
-	    </if>
-    
-		<echo message="Marking this build as version ${assembly-version}" />
-        <asminfo output="Source/CommonAssemblyInfo.cs" language="CSharp">
-            <imports>
-                <import namespace="System" />
-                <import namespace="System.Reflection" />
-                <import namespace="System.Runtime.InteropServices" />
-            </imports>
-            <attributes>
-                <attribute type="ComVisibleAttribute" value="false" />
-                <attribute type="AssemblyVersionAttribute" value="${assembly-version}" />
-                <attribute type="AssemblyCopyrightAttribute" value="Copyright (c) 2003-2008, Jeremy D. Miller" />
-                <attribute type="AssemblyProductAttribute" value="StructureMap" />         
-				        <attribute type="AssemblyCompanyAttribute" value="" />
-				        <attribute type="AssemblyConfigurationAttribute" value="${project.config}" />
-				        <attribute type="AssemblyInformationalVersionAttribute" value="${assembly-version}" />
-                <attribute type="AssemblyFileVersionAttribute" value="${assembly-version}" />
-            </attributes>
-            <references>
-                <include name="System.dll" />
-            </references>
-        </asminfo>
-    </target>
+  <target name="cleanJunk">
+    <delete failonerror="false">
+      <fileset basedir=".">
+        <include name="source/**/obj/**"/>
+        <include name="source/**/bin**"/>
+        <include name="**/_ReSharper*"/>
+        <include name="source/**/*.resharperoptions"/>
+      </fileset>
+    </delete>
+  </target>
+
+  <target name="version" description="mark AssemblyInfo builds with the build number">
+    <property name="assembly-version" value="${project.version}.0000" />
+    <if test="${environment::variable-exists('BUILD_VCS_NUMBER_SourceForge_SVN')}">
+      <property name="assembly-version" value="${project.version}.${environment::get-variable('BUILD_VCS_NUMBER_SourceForge_SVN')}" />
+    </if>
+
+    <echo message="Marking this build as version ${assembly-version}" />
+    <tc-buildnumber build-number="${assembly-version}_${'{build.number}'}" />
+    <asminfo output="Source/CommonAssemblyInfo.cs" language="CSharp">
+      <imports>
+        <import namespace="System" />
+        <import namespace="System.Reflection" />
+        <import namespace="System.Runtime.InteropServices" />
+      </imports>
+      <attributes>
+        <attribute type="ComVisibleAttribute" value="false" />
+        <attribute type="AssemblyVersionAttribute" value="${assembly-version}" />
+        <attribute type="AssemblyCopyrightAttribute" value="Copyright (c) 2003-2008, Jeremy D. Miller" />
+        <attribute type="AssemblyProductAttribute" value="StructureMap" />
+        <attribute type="AssemblyCompanyAttribute" value="" />
+        <attribute type="AssemblyConfigurationAttribute" value="${project.config}" />
+        <attribute type="AssemblyInformationalVersionAttribute" value="${assembly-version}" />
+        <attribute type="AssemblyFileVersionAttribute" value="${assembly-version}" />
+      </attributes>
+      <references>
+        <include name="System.dll" />
+      </references>
+    </asminfo>
+  </target>
 
 
-	<target name="compile" depends="pre-clean,version">
+  <target name="compile" depends="pre-clean,version">
     <exec program="${nant.settings.currentframework.frameworkdirectory}\msbuild.exe" commandline="source\StructureMap.sln /t:rebuild /p:Configuration=Release">
     </exec>
 
-      <copy todir="${build.dir}" flatten="true" overwrite="true">
-        <fileset basedir="source\">
-          <include name="**\bin\${project.config}\*.dll" />
-          <include name="**\bin\${project.config}\*.exe" />
-          <include name="**\bin\${project.config}\*.pdb" />
-          <include name="**\bin\${project.config}\*.xml" />
-          <include name="**\bin\${project.config}\*.xml.actual" />
-          <include name="StructureMap.Testing\*.config" />
-        </fileset>
-      </copy>
+    <copy todir="${build.dir}" flatten="true" overwrite="true">
+      <fileset basedir="source\">
+        <include name="**\bin\${project.config}\*.dll" />
+        <include name="**\bin\${project.config}\*.exe" />
+        <include name="**\bin\${project.config}\*.pdb" />
+        <include name="**\bin\${project.config}\*.xml" />
+        <include name="**\bin\${project.config}\*.xml.actual" />
+        <include name="StructureMap.Testing\*.config" />
+      </fileset>
+    </copy>
     <copy todir="${build.dir}\..\" flatten="true" overwrite="true">
       <fileset basedir="source\">
         <include name="StructureMap.Testing\StructureMap.config" />
       </fileset>
     </copy>
 
-	</target>
+  </target>
 
 
 
-	<target name="unit-test">
+  <target name="unit-test">
     <property name="nunit-console.exe" value="bin\NUnit\nunit-console.exe" />
 
     <exec program="${nunit-console.exe}" workingdir="${build.dir}">
-      <arg value="StructureMap.Testing.dll" /> 
+      <arg value="StructureMap.Testing.dll" />
     </exec>
     <exec program="${nunit-console.exe}" workingdir="${build.dir}">
       <arg value="StructureMap.DebuggerVisualizers.Testing.exe" />
@@ -98,61 +100,61 @@
 
 
   </target>
-	
-	<target name="runDoctor">
-		<echo message="Running StructureMapDoctor" />
-		<copy file="source\StructureMap.Testing\TestData\ObjectMother.config" todir="build" verbose="true"/>
-	
-	
-		<exec 
-			program="${build.dir}\StructureMapDoctor.exe" 
-			workingdir="." 
+
+  <target name="runDoctor">
+    <echo message="Running StructureMapDoctor" />
+    <copy file="source\StructureMap.Testing\TestData\ObjectMother.config" todir="build" verbose="true"/>
+
+
+    <exec
+			program="${build.dir}\StructureMapDoctor.exe"
+			workingdir="."
 			commandline="${build.dir}\ObjectMother.config -All"/>
-			
-		<delete file="build/ObjectMother.config" />
-	
-	</target>
 
-	
-	
-	<target name="post-clean">
-	    
-      <delete dir="deploy" failonerror="false" />
-      <mkdir dir="deploy" />
+    <delete file="build/ObjectMother.config" />
 
-      <copy todir="deploy" flatten="true" overwrite="true">
-        <fileset basedir="source\StructureMap.Testing\bin\${project.config}">
-          <include name="StructureMap.dll" />
-          <include name="StructureMap.xml" />
-          <include name="StructureMap.AutoMocking.dll" />
-          <include name="StructureMap.AutoMocking.xml" />
+  </target>
+
+
+
+  <target name="post-clean">
+
+    <delete dir="deploy" failonerror="false" />
+    <mkdir dir="deploy" />
+
+    <copy todir="deploy" flatten="true" overwrite="true">
+      <fileset basedir="source\StructureMap.Testing\bin\${project.config}">
+        <include name="StructureMap.dll" />
+        <include name="StructureMap.xml" />
+        <include name="StructureMap.AutoMocking.dll" />
+        <include name="StructureMap.AutoMocking.xml" />
+      </fileset>
+    </copy>
+
+    <copy todir="deploy" file="bin\Rhino.Mocks.dll"/>
+    <copy todir="deploy" file="StructureMap.chm"/>
+
+    <copy todir="deploy" file="Source\StructureMapDoctor\bin\${project.config}\StructureMapDoctor.exe" />
+
+    <call target="cleanJunk" />
+  </target>
+
+
+  <target name="archive">
+    <if test="${cibuild}">
+      <zip zipfile="${archive.dir}\StructureMap_${BUILD_NUMBER}.zip" if="${property::exists('BUILD_NUMBER')}">
+        <fileset basedir="${build.dir}">
+          <include name="*.dll" />
+          <include name="*.exe" />
+          <exclude name="*.xml" />
         </fileset>
-      </copy>
+      </zip>
 
-      <copy todir="deploy" file="bin\Rhino.Mocks.dll"/>
-      <copy todir="deploy" file="StructureMap.chm"/>
-    
-      <copy todir="deploy" file="Source\StructureMapDoctor\bin\${project.config}\StructureMapDoctor.exe" />
 
-      <call target="cleanJunk" />
-	</target>
-  
-	
-	<target name="archive">
-		<if test="${property::exists('CCNetLabel')}">	      
-			<zip zipfile="${archive.dir}\StructureMap_${CCNetLabel}.zip" if="${property::exists('CCNetLabel')}">
-				<fileset basedir="${build.dir}">
-					<include name="*.dll" />
-					<include name="*.exe" />
-					<exclude name="*.xml" />
-				</fileset>
-			</zip>
-			
-			
-			<nant buildfile="Deploy.build" inheritall="true"/>
-		</if>
-		
-		
-	</target>
+      <nant buildfile="Deploy.build" inheritall="true"/>
+    </if>
+
+
+  </target>
 
 </project>
