@@ -1,2 +1,2 @@
-bin\nant\nant.exe -buildfile:cruise.build cruise
+bin\nant\nant.exe -buildfile:cruise.build %*
 pause
