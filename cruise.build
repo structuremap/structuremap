@@ -139,9 +139,9 @@
   </target>
 
 
-  <target name="archive">
+  <target name="archive" depends="version">
     <if test="${environment::variable-exists('TEAMCITY_PROJECT_NAME')}">
-      <zip zipfile="${archive.dir}\StructureMap_${environment::get-variable('BUILD_NUMBER')}.zip" if="${environment::variable-exists('BUILD_NUMBER')}">
+      <zip zipfile="${archive.dir}\StructureMap_${assembly-version}.zip">
         <fileset basedir="${build.dir}">
           <include name="*.dll" />
           <include name="*.exe" />
