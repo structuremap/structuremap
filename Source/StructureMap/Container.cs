@@ -430,12 +430,17 @@ namespace StructureMap
         /// <returns></returns>
         public IContainer GetNestedContainer()
         {
-            return new Container
+            var container = new Container
             {
                 _interceptorLibrary = _interceptorLibrary,
                 _pipelineGraph = _pipelineGraph.Clone(),
                 _transientCache = new MainObjectCache()
             };
+
+            // Fixes a mild bug.  The child container should inject itself
+            container._pipelineGraph.Inject<IContainer>(container);
+
+            return container;
         }
 
         /// <summary>

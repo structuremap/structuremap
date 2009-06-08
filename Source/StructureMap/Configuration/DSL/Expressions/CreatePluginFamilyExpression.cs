@@ -113,6 +113,16 @@ namespace StructureMap.Configuration.DSL.Expressions
         }
 
         /// <summary>
+        /// Shorthand to say TheDefault.Is.ConstructedBy(func)
+        /// </summary>
+        /// <param name="func"></param>
+        /// <returns></returns>
+        public ConstructorInstance<PLUGINTYPE> Use(Func<IContext, PLUGINTYPE> func)
+        {
+            return TheDefault.Is.ConstructedBy(func);
+        }
+
+        /// <summary>
         /// Sets the object creation of the instances of the PluginType.  For example:  PerRequest,
         /// Singleton, ThreadLocal, HttpContext, or Hybrid
         /// </summary>
