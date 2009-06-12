@@ -103,13 +103,13 @@ namespace StructureMap.Configuration.DSL.Expressions
         }
 
         /// <summary>
-        /// Shorthand way of saying TheDefaultIsConcreteType<>
+        /// Shorthand way of saying TheDefault.Is.OfConcreteType<>
         /// </summary>
         /// <typeparam name="CONCRETETYPE"></typeparam>
         /// <returns></returns>
-        public CreatePluginFamilyExpression<PLUGINTYPE> Use<CONCRETETYPE>() where CONCRETETYPE : PLUGINTYPE
+        public SmartInstance<CONCRETETYPE> Use<CONCRETETYPE>() where CONCRETETYPE : PLUGINTYPE
         {
-            return TheDefaultIsConcreteType<CONCRETETYPE>();
+            return TheDefault.Is.OfConcreteType<CONCRETETYPE>();
         }
 
         /// <summary>

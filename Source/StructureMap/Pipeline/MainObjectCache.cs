@@ -26,8 +26,19 @@ namespace StructureMap.Pipeline
 
         public void Set(Type pluginType, Instance instance, object value)
         {
-            var key = new InstanceKey(instance, pluginType);
-            _objects.Add(key, value);
+            if (value == null) return;
+
+            try
+            {
+                var key = new InstanceKey(instance, pluginType);
+                _objects.Add(key, value);
+            }
+            catch (ArgumentException e)
+            {
+                string message = string.Format("Duplicate key for Instance {0} of PluginType {1}", instance.Name,
+                                               pluginType.AssemblyQualifiedName);
+                throw new ArgumentException(message, e);
+            }
         }
 
         public void DisposeAndClear()
@@ -36,6 +47,8 @@ namespace StructureMap.Pipeline
             {
                 foreach (var @object in _objects.Values)
                 {
+                    if (@object is Container) continue;
+
                     IDisposable disposable = @object as IDisposable;
                     if (disposable != null)
                     {
