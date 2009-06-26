@@ -64,6 +64,15 @@ namespace StructureMap.Graph
 
         private static void createAndStoreBuilders(IEnumerable<Plugin> plugins)
         {
+            // If this is a nested container and there are no new plugins, 
+            // we don't need to create the InstanceBuilderAssembly 
+            // This was causing OutOfMemoryExceptions when using nested containers
+            // repeatedly (i.e. every web request in a web app)
+            if (plugins == null || plugins.Count() == 0) return;
+
+            //NOTE: Calling 'Compile()' on a DynamicAssembly will actually
+            // compile it as a file on the disk and load it into the AppDomain.
+            // If you call it repeatedly, you will eventually run out of memory
             var assembly = new InstanceBuilderAssembly(plugins);
             assembly.Compile().ForEach(b => _builders[b.PluggedType] = b);
         }
