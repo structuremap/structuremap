@@ -5,6 +5,7 @@ using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
+using System.Linq;
 
 namespace StructureMap.Testing
 {
@@ -241,6 +242,44 @@ namespace StructureMap.Testing
 
             var session = new BuildSession(graph);
             session.GetInstance<IService>("red").ShouldBeTheSameAs(red);
+        }
+
+        [Test]
+        public void can_get_all_of_a_type_during_object_creation()
+        {
+            var container = new Container(x =>
+            {
+                x.For<IWidget>().AddInstances(o =>
+                {
+                    o.OfConcreteType<AWidget>();
+                    o.ConstructedBy(() => new ColorWidget("red"));
+                    o.ConstructedBy(() => new ColorWidget("blue"));
+                    o.ConstructedBy(() => new ColorWidget("green"));
+                });
+
+                x.ForConcreteType<TopClass>().Configure.OnCreation((c, top) =>
+                {
+                    top.Widgets = c.All<IWidget>().ToArray();
+                });
+            });
+
+            container.GetInstance<TopClass>().Widgets.Count().ShouldEqual(4);
+        }
+    }
+
+    public class TopClass
+    {
+        public TopClass(ClassWithWidget classWithWidget)
+        {
+        }
+
+        public IWidget[] Widgets { get; set; }
+    }
+
+    public class ClassWithWidget
+    {
+        public ClassWithWidget(IWidget[] widgets)
+        {
         }
     }
 

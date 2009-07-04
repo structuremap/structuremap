@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using StructureMap.Pipeline;
 
 namespace StructureMap
@@ -63,5 +64,13 @@ namespace StructureMap
         /// <param name="name"></param>
         /// <returns></returns>
         T TryGetInstance<T>(string name) where T : class;
+
+        /// <summary>
+        /// Gets all objects in the current object graph that can be cast
+        /// to T
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        IEnumerable<T> All<T>() where T : class;
     }
 }

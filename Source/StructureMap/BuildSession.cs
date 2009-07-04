@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
@@ -109,6 +110,14 @@ namespace StructureMap
         public T TryGetInstance<T>(string name) where T : class
         {
             return _pipelineGraph.HasInstance(typeof (T), name) ? ((IContext) this).GetInstance<T>(name) : null;
+        }
+
+        public IEnumerable<T> All<T>() where T : class
+        {
+            var list = new List<T>();
+            _cache.Each<T>(list.Add);
+
+            return list;
         }
 
         #endregion

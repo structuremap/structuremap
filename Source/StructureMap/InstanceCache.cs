@@ -61,5 +61,20 @@ namespace StructureMap
             }
             cache.Add(Instance, result);
         }
+
+        public void Each<T>(Action<T> action) where T : class
+        {
+            foreach (var dictionary in _objects.Values)
+            {
+                foreach (var o in dictionary.Values)
+                {
+                    T t = o as T;
+                    if (t != null)
+                    {
+                        action(t);
+                    }
+                }
+            }
+        }
     }
 }

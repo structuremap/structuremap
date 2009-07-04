@@ -332,6 +332,7 @@
     <Compile Include="Graph\TypePathTester.cs" />
     <Compile Include="ImplicitPluginFromPluggedTypeAttributeTester.cs" />
     <Compile Include="InstanceBuilderListTester.cs" />
+    <Compile Include="InstanceCacheTester.cs" />
     <Compile Include="InstanceMementoInstanceCreationTester.cs" />
     <Compile Include="MementoTester.cs" />
     <Compile Include="MergingTester.cs" />
