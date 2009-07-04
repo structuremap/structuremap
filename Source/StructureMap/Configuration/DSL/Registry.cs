@@ -410,5 +410,26 @@ namespace StructureMap.Configuration.DSL
         {
             return ForRequestedType(pluginType);
         }
+
+
+        /// <summary>
+        /// Shortcut to make StructureMap return the default object of U casted to T
+        /// whenever T is requested.  I.e.:
+        /// For<T>().TheDefault.Is.ConstructedBy(c => c.GetInstance<U>() as T);
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="U"></typeparam>
+        /// <returns></returns>
+        public ConstructorInstance<T> Redirect<T, U>() where T : class where U : class
+        {
+            return For<T>().TheDefault.Is.ConstructedBy(c =>
+            {
+                var raw = c.GetInstance<U>();
+                var t = raw as T;
+                if (t == null) throw new ApplicationException(raw.GetType().AssemblyQualifiedName + " could not be cast to " + typeof(T).AssemblyQualifiedName);
+
+                return t;
+            });            
+        }
     }
 }

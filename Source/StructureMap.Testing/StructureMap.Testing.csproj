@@ -361,6 +361,7 @@
     <Compile Include="Pipeline\ProfileManagerTester.cs" />
     <Compile Include="Pipeline\ProfileTester.cs" />
     <Compile Include="Pipeline\PrototypeInstanceTester.cs" />
+    <Compile Include="Pipeline\RedirectTester.cs" />
     <Compile Include="Pipeline\ReferencedInstanceTester.cs" />
     <Compile Include="Pipeline\SerializedInstanceTester.cs" />
     <Compile Include="Pipeline\SmartInstanceTester.cs" />
