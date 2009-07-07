@@ -231,5 +231,12 @@ namespace StructureMap
         {
             return ForType(pluginType).FindInstance(instanceKey) != null;
         }
+
+        public void ClearAll()
+        {
+            _factories.Clear();
+            _profileManager.ClearAll();
+            _genericsGraph.ClearAll();
+        }
     }
 }

@@ -170,5 +170,10 @@ namespace StructureMap.Graph
         {
             return _families.Has(pluginType);
         }
+
+        public void ClearAll()
+        {
+            _families.Clear();
+        }
     }
 }

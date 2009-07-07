@@ -459,6 +459,7 @@ namespace StructureMap
         public void Dispose()
         {
             _transientCache.DisposeAndClear();
+            _pipelineGraph.ClearAll();
         }
 
         #endregion

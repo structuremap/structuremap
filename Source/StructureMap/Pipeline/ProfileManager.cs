@@ -245,5 +245,17 @@ namespace StructureMap.Pipeline
                 pair.Value.Remove<T>();
             }
         }
+
+        public void ClearAll()
+        {
+            _currentProfile.Clear();
+            _machineProfile.Clear();
+            _default.Clear();
+
+            foreach (var profile in _profiles)
+            {
+                profile.Value.Clear();
+            }
+        }
     }
 }

@@ -110,5 +110,10 @@ namespace StructureMap.Pipeline
         {
             _instances.Remove(typeof (T));
         }
+
+        public void Clear()
+        {
+            _instances.Clear();
+        }
     }
 }
