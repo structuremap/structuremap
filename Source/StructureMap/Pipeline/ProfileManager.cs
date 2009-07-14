@@ -5,7 +5,7 @@ using StructureMap.Graph;
 
 namespace StructureMap.Pipeline
 {
-    public class ProfileManager
+    public class ProfileManager : IDisposable
     {
         private readonly Profile _default = new Profile("");
         private readonly object _locker = new object();
@@ -246,7 +246,7 @@ namespace StructureMap.Pipeline
             }
         }
 
-        public void ClearAll()
+        public void Dispose()
         {
             _currentProfile.Clear();
             _machineProfile.Clear();

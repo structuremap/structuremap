@@ -146,5 +146,10 @@ namespace StructureMap
         }
 
         #endregion
+
+        public void Dispose()
+        {
+            _instances.Clear();
+        }
     }
 }

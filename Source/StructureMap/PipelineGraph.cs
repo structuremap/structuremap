@@ -10,7 +10,7 @@ namespace StructureMap
     public delegate InstanceFactory MissingFactoryFunction(Type pluginType, ProfileManager profileManager);
 
 
-    public class PipelineGraph
+    public class PipelineGraph : IDisposable
     {
         private readonly Dictionary<Type, IInstanceFactory> _factories
             = new Dictionary<Type, IInstanceFactory>();
@@ -54,10 +54,14 @@ namespace StructureMap
                 _missingFactory = _missingFactory
             };
 
+            
+
             foreach (var pair in _factories)
             {
-                clone._factories.Add(pair.Key, pair.Value);
+                clone._factories.Add(pair.Key, pair.Value.Clone());
             }
+
+            clone.EjectAllInstancesOf<IContainer>();
 
             return clone;
         }
@@ -232,10 +236,26 @@ namespace StructureMap
             return ForType(pluginType).FindInstance(instanceKey) != null;
         }
 
-        public void ClearAll()
+        public void Dispose()
         {
+            if (_factories.ContainsKey(typeof(IContainer)))
+            {
+                foreach (var instance in _factories[typeof(IContainer)].AllInstances)
+                {
+                    IDisposable disposable = instance as IDisposable;
+                    if (disposable != null)
+                    {
+                        disposable.Dispose();
+                    }
+                }
+            }
+
+            foreach (var factory in _factories)
+            {
+                factory.Value.Dispose();
+            }
             _factories.Clear();
-            _profileManager.ClearAll();
+            _profileManager.Dispose();
             _genericsGraph.ClearAll();
         }
     }

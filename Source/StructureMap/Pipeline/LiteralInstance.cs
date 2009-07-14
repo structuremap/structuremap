@@ -3,9 +3,9 @@ using StructureMap.Graph;
 
 namespace StructureMap.Pipeline
 {
-    public class LiteralInstance : ExpressedInstance<LiteralInstance>
+    public class LiteralInstance : ExpressedInstance<LiteralInstance>, IDisposable
     {
-        private readonly object _object;
+        private object _object;
 
         public LiteralInstance(object anObject)
         {
@@ -47,6 +47,11 @@ namespace StructureMap.Pipeline
         public override string ToString()
         {
             return string.Format("LiteralInstance: {0}", _object);
+        }
+
+        public void Dispose()
+        {
+            _object = null;
         }
     }
 }

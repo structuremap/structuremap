@@ -28,6 +28,33 @@ namespace StructureMap.Testing.Pipeline
         }
 
         [Test]
+        public void disposing_the_child_container_does_not_affect_the_parent_container()
+        {
+            var container = new Container(x =>
+            {
+                x.Scan(o =>
+                {
+                    o.TheCallingAssembly();
+                    o.AddAllTypesOf<IBar>();
+                });
+            });
+
+            container.GetAllInstances<IBar>().Count.ShouldBeGreaterThan(0);
+
+            using (var nested = container.GetNestedContainer())
+            {
+                nested.GetAllInstances<IBar>().Count.ShouldBeGreaterThan(0);
+            }
+
+            container.GetAllInstances<IBar>().Count.ShouldBeGreaterThan(0);
+        }
+
+        public interface IBar{}
+        public class AFoo : IBar{}
+        public class BFoo : IBar{}
+        public class CFoo : IBar{}
+
+        [Test]
         public void transient_service_in_the_parent_container_is_effectively_a_singleton_for_the_nested_container()
         {
             var parent = new Container(x =>
