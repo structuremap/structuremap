@@ -381,7 +381,7 @@ namespace StructureMap.Configuration.DSL
 
         public void Forward<FROM, TO>() where FROM : class where TO : class
         {
-            For<FROM>().Use(c => c.GetInstance<TO>() as FROM);
+            For<TO>().AddInstances(x => x.ConstructedBy(c => c.GetInstance<FROM>() as TO));
         }
 
 

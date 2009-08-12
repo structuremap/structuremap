@@ -11,7 +11,7 @@ namespace StructureMap.Testing.Pipeline
             var container = new Container(x =>
             {
                 x.For<IOne>().Use<OneAndTwo>();
-                x.Forward<ITwo, IOne>();
+                x.Forward<IOne, ITwo>();
             });
 
             container.GetInstance<IOne>().ShouldBeOfType<OneAndTwo>();
