@@ -180,7 +180,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         ConditionalInstance<T> Conditional(Action<ConditionalInstance<T>.ConditionalInstanceExpression> configuration);
     }
 
-    public class InstanceExpression<T> : IInstanceExpression<T>, ThenItExpression<T>
+    public class InstanceExpression<T> : IInstanceExpression<T>, ThenItExpression<T> 
     {
         private readonly Action<Instance> _action;
 
@@ -273,6 +273,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         {
             return returnInstance(new ConditionalInstance<T>(configuration));
         }
+
 
         IsExpression<T> ThenItExpression<T>.ThenIt
         {

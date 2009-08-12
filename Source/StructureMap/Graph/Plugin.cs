@@ -29,7 +29,8 @@ namespace StructureMap.Graph
 
         public Plugin(Type pluggedType)
         {
-            PluggableAttribute att = PluggableAttribute.InstanceOf(pluggedType);
+            PluggableAttribute att = 
+                Attribute.GetCustomAttribute(pluggedType, typeof (PluggableAttribute), false) as PluggableAttribute;
             _concreteKey = att == null ? pluggedType.AssemblyQualifiedName : att.ConcreteKey;
 
             _pluggedType = pluggedType;

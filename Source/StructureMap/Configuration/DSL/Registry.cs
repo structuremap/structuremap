@@ -45,6 +45,15 @@ namespace StructureMap.Configuration.DSL
         /// <typeparam name="T"></typeparam>
         /// <param name="expression"></param>
         void SelectConstructor<T>(Expression<Func<T>> expression);
+
+        /// <summary>
+        /// Use to "forward" the request for FROM to the default of TO
+        /// Useful for singleton services that implement multiple
+        /// interface roles
+        /// </summary>
+        /// <typeparam name="FROM"></typeparam>
+        /// <typeparam name="TO"></typeparam>
+        void Forward<FROM, TO>() where FROM : class where TO : class;
     }
 
 
@@ -368,6 +377,11 @@ namespace StructureMap.Configuration.DSL
         public void SelectConstructor<T>(Expression<Func<T>> expression)
         {
             PluginCache.GetPlugin(typeof(T)).UseConstructor(expression);
+        }
+
+        public void Forward<FROM, TO>() where FROM : class where TO : class
+        {
+            For<FROM>().Use(c => c.GetInstance<TO>() as FROM);
         }
 
 

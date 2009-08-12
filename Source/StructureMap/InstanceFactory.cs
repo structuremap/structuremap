@@ -108,7 +108,7 @@ namespace StructureMap
             {
                 _lifecycle = family.Lifecycle;                
             }
-            else if (!_lifecycle.GetType().Equals(family.Lifecycle.GetType()))
+            else if (_lifecycle != null && family.Lifecycle != null && !_lifecycle.GetType().Equals(family.Lifecycle.GetType()))
             {
                 // TODO:  Might need to clear out the existing policy when it's ejected
                 _lifecycle = family.Lifecycle;

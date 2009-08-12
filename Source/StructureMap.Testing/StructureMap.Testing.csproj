@@ -220,6 +220,7 @@
     <Compile Include="Configuration\PrimitiveArrayReaderTester.cs" />
     <Compile Include="Configuration\ProfileBuilderTester.cs" />
     <Compile Include="Configuration\ShortcuttedInstanceNodeTester.cs" />
+    <Compile Include="Debugging.cs" />
     <Compile Include="Diagnostics\DoctorTester.cs" />
     <Compile Include="Diagnostics\WriterExtensions.cs" />
     <Compile Include="Examples.cs">
@@ -362,6 +363,7 @@
     <Compile Include="Pipeline\ProfileManagerTester.cs" />
     <Compile Include="Pipeline\ProfileTester.cs" />
     <Compile Include="Pipeline\PrototypeInstanceTester.cs" />
+    <Compile Include="Pipeline\RedirectingTester.cs" />
     <Compile Include="Pipeline\RedirectTester.cs" />
     <Compile Include="Pipeline\ReferencedInstanceTester.cs" />
     <Compile Include="Pipeline\SerializedInstanceTester.cs" />

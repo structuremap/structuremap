@@ -17,6 +17,8 @@ namespace StructureMap
         /// </summary>
         IEnumerable<PluginTypeConfiguration> PluginTypes { get; }
 
+        IEnumerable<IInstance> AllInstances { get; }
+
         /// <summary>
         /// Can StructureMap fulfill a request to ObjectFactory.GetInstance(pluginType) from the 
         /// current configuration.  This does not include concrete classes that could be auto-configured
@@ -107,6 +109,20 @@ namespace StructureMap
         public bool HasImplementationsFor<T>()
         {
             return HasImplementationsFor(typeof (T));
+        }
+
+        public IEnumerable<IInstance> AllInstances
+        {
+            get
+            {
+                foreach (var pluginType in PluginTypes)
+                {
+                    foreach (IInstance instance in pluginType.Instances)
+                    {
+                        yield return instance;
+                    }
+                }
+            }
         }
 
         #endregion
