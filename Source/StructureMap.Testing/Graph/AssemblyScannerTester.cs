@@ -151,7 +151,7 @@ namespace StructureMap.Testing.Graph
             shouldHaveFamilyWithSameName<Widget3.IWorker>();
         }
 
-        [Test]
+        [Test, Explicit]
         public void scan_all_assemblies_in_application_base_directory()
         {
             Scan(x => x.AssembliesFromApplicationBaseDirectory());
