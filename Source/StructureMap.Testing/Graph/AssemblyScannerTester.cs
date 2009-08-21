@@ -152,6 +152,25 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
+        public void scan_all_assemblies_in_application_base_directory()
+        {
+            Scan(x => x.AssembliesFromApplicationBaseDirectory());
+            shouldHaveFamilyWithSameName<IInterfaceInWidget5>();
+            shouldHaveFamilyWithSameName<Widget3.IWorker>();
+        }
+
+        [Test]
+        public void scan_specific_assemblies_in_application_base_directory()
+        {
+            var assemblyToSpecificallyExclude = typeof(Widget3.IWorker).Assembly.GetName().Name;
+            Scan(x => x.AssembliesFromPath(assemblyScanningFolder, asm => asm.GetName().Name != assemblyToSpecificallyExclude));
+
+            shouldHaveFamilyWithSameName<IInterfaceInWidget5>();
+            shouldNotHaveFamilyWithSameName<Widget3.IWorker>();
+        }
+
+
+        [Test]
         public void scan_specific_assemblies_in_a_folder()
         {
             var assemblyToSpecificallyExclude = typeof(Widget3.IWorker).Assembly.GetName().Name;

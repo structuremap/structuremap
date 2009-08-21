@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
 
 namespace StructureMap.Graph
 {
@@ -55,6 +54,19 @@ namespace StructureMap.Graph
         /// <param name="path"></param>
         /// <param name="assemblyFilter"></param>
         void AssembliesFromPath(string path, Predicate<Assembly> assemblyFilter);
+
+        /// <summary>
+        /// Sweep the application base directory of current app domain and add any Assembly's 
+        /// found to the scanning operation.
+        /// </summary>
+        void AssembliesFromApplicationBaseDirectory();
+
+        /// <summary>
+        /// Sweep the application base directory of current app domain and add any Assembly's 
+        /// found to the scanning operation. The assemblyFilter can be used to filter or limit the 
+        /// Assembly's that are picked up.
+        /// </summary>
+        void AssembliesFromApplicationBaseDirectory(Predicate<Assembly> assemblyFilter);
 
         #endregion
 
@@ -388,6 +400,20 @@ namespace StructureMap.Graph
         public void ConnectImplementationsToTypesClosing(Type openGenericType)
         {
             With(new GenericConnectionScanner(openGenericType));
+        }
+
+        public void AssembliesFromApplicationBaseDirectory()
+        {
+            var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
+            AssembliesFromPath(baseDirectory, a => true);
+        }
+
+        public void AssembliesFromApplicationBaseDirectory(Predicate<Assembly> assemblyFilter)
+        {
+            var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
+            AssembliesFromPath(baseDirectory, assemblyFilter);
         }
 
         public void AssembliesFromPath(string path)

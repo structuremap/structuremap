@@ -123,6 +123,16 @@ namespace StructureMap.Configuration.DSL.Expressions
         }
 
         /// <summary>
+        /// Shorthand to say TheDefault.IsThis(@object)
+        /// </summary>
+        /// <param name="object"></param>
+        /// <returns></returns>
+        public LiteralInstance Use(PLUGINTYPE @object)
+        {
+            return TheDefault.IsThis(@object);
+        }
+
+        /// <summary>
         /// Sets the object creation of the instances of the PluginType.  For example:  PerRequest,
         /// Singleton, ThreadLocal, HttpContext, or Hybrid
         /// </summary>

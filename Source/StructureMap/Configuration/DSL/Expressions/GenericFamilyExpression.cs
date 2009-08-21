@@ -43,13 +43,18 @@ namespace StructureMap.Configuration.DSL.Expressions
         public ConfiguredInstance TheDefaultIsConcreteType(Type concreteType)
         {
             var instance = new ConfiguredInstance(concreteType);
+            Use(instance);
+
+            return instance;
+        }
+
+        public void Use(Instance instance)
+        {
             alterAndContinue(family =>
             {
                 family.AddInstance(instance);
                 family.DefaultInstanceKey = instance.Name;
             });
-
-            return instance;
         }
 
         /// <summary>
@@ -61,6 +66,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         {
             return TheDefaultIsConcreteType(concreteType);
         }
+
         
         /// <summary>
         /// Shortcut method to add an additional Instance to this Plugin Type
