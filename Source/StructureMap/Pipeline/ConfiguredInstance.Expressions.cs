@@ -159,7 +159,7 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public ChildInstanceExpression CtorDependency<CONSTRUCTORARGUMENTTYPE>(string propertyName)
         {
-            return Child(propertyName);
+            return Child<CONSTRUCTORARGUMENTTYPE>(propertyName);
         }
 
         /// <summary>
@@ -170,7 +170,7 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public ChildInstanceExpression SetterDependency<CONSTRUCTORARGUMENTTYPE>(string propertyName)
         {
-            return Child(propertyName);
+            return Child<CONSTRUCTORARGUMENTTYPE>(propertyName);
         }
 
         /// <summary>
@@ -272,7 +272,16 @@ namespace StructureMap.Pipeline
             /// <returns></returns>
             public ConfiguredInstance IsConcreteType<T>()
             {
-                Type pluggedType = typeof (T);
+                return IsConcreteType(typeof (T));
+            }
+
+            /// <summary>
+            /// Start the definition of a child instance by defining the concrete type
+            /// </summary>
+            /// <param name="pluggedType"></param>
+            /// <returns></returns>
+            public ConfiguredInstance IsConcreteType(Type pluggedType)
+            {
                 ExpressionValidator.ValidatePluggabilityOf(pluggedType).IntoPluginType(_childType);
 
                 var childInstance = new ConfiguredInstance(pluggedType);
@@ -280,7 +289,6 @@ namespace StructureMap.Pipeline
 
                 return _instance;
             }
-
 
             /// <summary>
             /// Registers a configured instance to use as the argument to the parent's
