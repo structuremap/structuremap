@@ -126,20 +126,6 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
-        public void Create_PluginFamily_for_concrete_type_that_can_be_autofilled_and_create_default_instance()
-        {
-            var family = new PluginFamily(GetType());
-            family.Seal();
-
-            Assert.AreEqual(Plugin.DEFAULT, family.DefaultInstanceKey);
-            Assert.AreEqual(1, family.PluginCount);
-            Assert.AreEqual(1, family.InstanceCount);
-            var instance = (IConfiguredInstance) family.FirstInstance();
-            Assert.AreEqual(Plugin.DEFAULT, instance.Name);
-            Assert.AreEqual(GetType(), instance.PluggedType);
-        }
-
-        [Test]
         public void FillDefault_happy_path()
         {
             var family = new PluginFamily(typeof (IWidget));
@@ -175,14 +161,6 @@ namespace StructureMap.Testing.Graph
             family.Seal();
 
             Assert.AreEqual(theInstanceKey, family.DefaultInstanceKey);
-        }
-
-        [Test]
-        public void If_PluginType_is_concrete_automatically_add_a_plugin_called_default()
-        {
-            var family = new PluginFamily(GetType());
-            family.PluginCount.ShouldEqual(1);
-            family.FindPlugin(Plugin.DEFAULT).PluggedType.ShouldEqual(GetType());
         }
 
         [Test]

@@ -33,14 +33,14 @@ namespace StructureMap.Graph
 
             PluginFamilyAttribute.ConfigureFamily(this);
 
-            if (IsConcrete(pluginType))
-            {
-                Plugin plugin = PluginCache.GetPlugin(pluginType);
-                if (plugin.CanBeCreated())
-                {
-                    AddPlugin(pluginType, Plugin.DEFAULT);
-                }
-            }
+            //if (IsConcrete(pluginType))
+            //{
+            //    Plugin plugin = PluginCache.GetPlugin(pluginType);
+            //    if (plugin.CanBeCreated())
+            //    {
+            //        AddPlugin(pluginType, Plugin.DEFAULT);
+            //    }
+            //}
         }
 
         public void SetScopeTo(ILifecycle lifecycle)
@@ -109,6 +109,12 @@ namespace StructureMap.Graph
 
             validatePluggabilityOfInstances();
 
+            if (_pluginType.IsConcrete() && PluginCache.GetPlugin(_pluginType).CanBeAutoFilled)
+            {
+                MissingInstance = new ConfiguredInstance(_pluginType);
+            }
+
+
             if (_instances.Count == 1)
             {
                 _defaultKey = _instances.First.Name;
@@ -136,11 +142,12 @@ namespace StructureMap.Graph
         {
             _pluggedTypes.Each((key, plugin) =>
             {
-                if (plugin.CanBeAutoFilled && !hasInstanceWithPluggedType(plugin))
-                {
-                    ConfiguredInstance instance = new ConfiguredInstance(plugin.PluggedType).WithName(key);
-                    AddInstance(instance);
-                }
+                if (!plugin.CanBeAutoFilled) return;
+
+                if (hasInstanceWithPluggedType(plugin)) return;
+                
+                ConfiguredInstance instance = new ConfiguredInstance(plugin.PluggedType).WithName(key);
+                AddInstance(instance);
             });
         }
 

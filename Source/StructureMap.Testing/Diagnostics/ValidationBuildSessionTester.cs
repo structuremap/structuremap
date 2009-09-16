@@ -146,7 +146,7 @@ namespace StructureMap.Testing.Diagnostics
         {
             ValidationBuildSession session =
                 validatedSession(
-                    registry => registry.BuildInstancesOf<SomethingThatHasValidationFailures>());
+                    registry => registry.BuildInstancesOf<SomethingThatHasValidationFailures>().TheDefaultIsConcreteType<SomethingThatHasValidationFailures>());
 
             Assert.AreEqual(2, session.ValidationErrors.Length);
         }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 
@@ -404,9 +405,7 @@ namespace StructureMap.Graph
 
         public void AssembliesFromApplicationBaseDirectory()
         {
-            var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-
-            AssembliesFromPath(baseDirectory, a => true);
+            AssembliesFromApplicationBaseDirectory(a => true);
         }
 
         public void AssembliesFromApplicationBaseDirectory(Predicate<Assembly> assemblyFilter)
@@ -414,6 +413,13 @@ namespace StructureMap.Graph
             var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
 
             AssembliesFromPath(baseDirectory, assemblyFilter);
+            var binPath = AppDomain.CurrentDomain.SetupInformation.PrivateBinPath;
+            if (Directory.Exists(binPath))
+            {
+                AssembliesFromPath(binPath, assemblyFilter);
+            }
+
+            
         }
 
         public void AssembliesFromPath(string path)

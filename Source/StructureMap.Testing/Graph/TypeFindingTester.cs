@@ -12,7 +12,7 @@ namespace StructureMap.Testing.Graph
         [SetUp]
         public void SetUp()
         {
-            _manager = new Container(registry =>
+            container = new Container(registry =>
             {
                 registry.BuildInstancesOf<INormalType>();
                 registry.Scan(x =>
@@ -26,7 +26,7 @@ namespace StructureMap.Testing.Graph
 
         #endregion
 
-        private IContainer _manager;
+        private IContainer container;
 
         [Test]
         public void DoNotFindPluginWithNoPublicCTOR()
@@ -38,19 +38,19 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void FoundTheRightNumberOfInstancesForATypeWithNoPlugins()
         {
-            Assert.AreEqual(3, _manager.GetAllInstances<TypeIWantToFind>().Count);
+            Assert.AreEqual(3, container.GetAllInstances<TypeIWantToFind>().Count);
         }
 
         [Test]
         public void FoundTheRightNumberOfInstancesForATypeWithNoPlugins2()
         {
-            Assert.AreEqual(2, _manager.GetAllInstances<OtherType>().Count);
+            container.GetAllInstances<OtherType>().Count.ShouldEqual(2);
         }
 
         [Test]
         public void ScanAssembliesForAPluginAndOnlyGetExplicitlyAttributedClassesWithPluginAttributes()
         {
-            IList<INormalType> instances = _manager.GetAllInstances<INormalType>();
+            IList<INormalType> instances = container.GetAllInstances<INormalType>();
             Assert.AreEqual(1, instances.Count);
 
             Assert.IsInstanceOfType(typeof (NormalTypeWithPluggableAttribute), instances[0]);

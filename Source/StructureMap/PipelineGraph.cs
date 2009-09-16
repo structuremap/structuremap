@@ -167,7 +167,7 @@ namespace StructureMap
         {
             // Need to ensure that the factory exists first
             createFactoryIfMissing(pluginType);
-            return _profileManager.GetDefault(pluginType);
+            return _profileManager.GetDefault(pluginType) ?? _factories[pluginType].MissingInstance;
         }
 
         public void SetDefault(Type pluginType, Instance instance)

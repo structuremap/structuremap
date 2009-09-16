@@ -189,6 +189,7 @@
     <Compile Include="BuildSessionTester.cs" />
     <Compile Include="BuildUpIntegratedTester.cs" />
     <Compile Include="BuildUpTester.cs" />
+    <Compile Include="ConcreteClassCreationTester.cs" />
     <Compile Include="Configuration\ConfigurationParserBuilderTester.cs" />
     <Compile Include="Configuration\ConfigurationParserTester.cs" />
     <Compile Include="Configuration\DefaultInstanceNodeTester.cs" />
