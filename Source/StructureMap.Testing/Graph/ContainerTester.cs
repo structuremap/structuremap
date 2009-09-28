@@ -272,6 +272,19 @@ namespace StructureMap.Testing.Graph
             instance.ShouldBeOfType(typeof(ColorRule));
         }
 
+        [Test]
+        public void TryGetInstance_returns_instance_for_an_open_generic_that_it_can_close()
+        {
+            var container = new Container(x => x.ForRequestedType(typeof (IOpenGeneric<>)).TheDefaultIsConcreteType(typeof (ConcreteOpenGeneric<>)));
+            container.TryGetInstance<IOpenGeneric<object>>().ShouldNotBeNull();
+        }
+
+        [Test]
+        public void TryGetInstance_returns_null_for_an_open_generic_that_it_cannot_close()
+        {
+            var container = new Container(x => x.ForRequestedType(typeof(IOpenGeneric<>)).TheDefaultIsConcreteType(typeof(ConcreteOpenGeneric<>)));
+            container.TryGetInstance<IAnotherOpenGeneric<object>>().ShouldBeNull();
+        }
 
 
         [Test, ExpectedException(typeof (StructureMapException))]
@@ -303,4 +316,8 @@ namespace StructureMap.Testing.Graph
             manager.GetInstance<IService>();
         }
     }
+
+    public interface IOpenGeneric<T>{}
+    public interface IAnotherOpenGeneric<T>{}
+    public class ConcreteOpenGeneric<T> : IOpenGeneric<T>{}
 }

@@ -227,7 +227,9 @@ namespace StructureMap
 
         public bool HasDefaultForPluginType(Type pluginType)
         {
-            PluginTypeConfiguration configuration = PluginTypes.FirstOrDefault(p => p.PluginType == pluginType);
+            var typeToFind = pluginType.IsGenericType ? pluginType.GetGenericTypeDefinition() : pluginType;
+            var configuration = PluginTypes.FirstOrDefault(p => p.PluginType == typeToFind);
+
             return configuration == null ? false : configuration.Default != null;
         }
 
