@@ -115,6 +115,7 @@ namespace StructureMap.Diagnostics
             {
                 foreach (Instance instance in pluginType.Instances)
                 {
+                    _buildStack = new BuildStack();
                     validateInstance(pluginType.PluginType, instance);
                 }
             }

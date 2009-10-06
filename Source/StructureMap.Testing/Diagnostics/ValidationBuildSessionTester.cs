@@ -4,6 +4,7 @@ using StructureMap.Configuration.DSL;
 using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
+using StructureMap.Testing.Configuration.DSL;
 using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing.Diagnostics
@@ -55,6 +56,28 @@ namespace StructureMap.Testing.Diagnostics
             Assert.AreEqual(typeof (SomethingThatNeedsAWidget), dependency.PluginType);
             Assert.AreEqual("DependentInstance", dependency.Instance.Name);
         }
+
+        [Test]
+        public void do_not_fail_with_the_bidirectional_checks()
+        {
+            var container = new Container(r =>
+            {
+                r.For<IWidget>().Use<ColorWidget>().WithCtorArg("color").EqualTo("red");
+                r.For<Rule>().Use<WidgetRule>();
+
+                r.ForConcreteType<ClassThatNeedsWidgetAndRule1>();
+                r.ForConcreteType<ClassThatNeedsWidgetAndRule2>();
+                r.InstanceOf<ClassThatNeedsWidgetAndRule2>().Is.OfConcreteType<ClassThatNeedsWidgetAndRule2>();
+                r.InstanceOf<ClassThatNeedsWidgetAndRule2>().Is.OfConcreteType<ClassThatNeedsWidgetAndRule2>();
+                r.InstanceOf<ClassThatNeedsWidgetAndRule2>().Is.OfConcreteType<ClassThatNeedsWidgetAndRule2>();
+                r.InstanceOf<ClassThatNeedsWidgetAndRule2>().Is.OfConcreteType<ClassThatNeedsWidgetAndRule2>().CtorDependency<Rule>().Is<ARule>();
+
+
+            });
+
+            container.AssertConfigurationIsValid();
+        }
+
 
         [Test]
         public void Create_an_instance_for_the_first_time_happy_path()
@@ -167,6 +190,20 @@ namespace StructureMap.Testing.Diagnostics
             Assert.AreEqual(instance, error.Instance);
             Assert.AreEqual("ValidateFailure", error.MethodName);
             Assert.IsInstanceOfType(typeof (NotImplementedException), error.Exception);
+        }
+    }
+
+    public class ClassThatNeedsWidgetAndRule1
+    {
+        public ClassThatNeedsWidgetAndRule1(IWidget widget, Rule rule)
+        {
+        }
+    }
+
+    public class ClassThatNeedsWidgetAndRule2
+    {
+        public ClassThatNeedsWidgetAndRule2(IWidget widget, Rule rule, ClassThatNeedsWidgetAndRule1 class1)
+        {
         }
     }
 

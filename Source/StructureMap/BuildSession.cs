@@ -9,7 +9,7 @@ namespace StructureMap
 {
     public class BuildSession : IContext
     {
-        private BuildStack _buildStack = new BuildStack();
+        protected BuildStack _buildStack = new BuildStack();
         private readonly InstanceCache _cache = new InstanceCache();
         private readonly Cache<Type, Func<object>> _defaults;
         private readonly PipelineGraph _pipelineGraph;
