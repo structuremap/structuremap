@@ -18,8 +18,7 @@ namespace StructureMap.Graph
             _properties = new List<SetterProperty>();
             _plugin = plugin;
 
-
-            foreach (PropertyInfo property in plugin.PluggedType.GetProperties())
+            foreach (PropertyInfo property in plugin.PluggedType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
                 if (property.CanWrite && property.GetSetMethod(false) != null)
                 {

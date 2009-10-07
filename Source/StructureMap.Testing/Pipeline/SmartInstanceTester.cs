@@ -98,6 +98,7 @@ namespace StructureMap.Testing.Pipeline
             });
         }
 
+
         [Test]
         public void specify_an_array_as_a_constructor()
         {
@@ -134,6 +135,16 @@ namespace StructureMap.Testing.Pipeline
         {
             build<ColorRule>(i => i.WithCtorArg("color").EqualTo("Red")).Color.ShouldEqual("Red");
         }
+
+        [Test]
+        public void specifying_double_property_should_handle_locale()
+        {
+            var container = new Container(x => x.ForRequestedType<ClassWithDoubleProperty>()
+                                                   .TheDefault.Is.OfConcreteType<ClassWithDoubleProperty>()
+                                                   .WithProperty(o=>o.Double).EqualTo("4,5"));
+
+            Assert.AreEqual(4.5, container.GetInstance<ClassWithDoubleProperty>().Double);
+        }
     }
 
     public class ClassWithWidgetArrayCtor
@@ -149,6 +160,11 @@ namespace StructureMap.Testing.Pipeline
         {
             get { return _widgets; }
         }
+    }
+
+    public class ClassWithDoubleProperty
+    {
+        public double Double { get; set; }    
     }
 
     public class ClassWithWidgetArraySetter
