@@ -23,7 +23,12 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public T EqualTo(object propertyValue)
         {
-            _instance.SetProperty(_propertyName, propertyValue.ToString());
+            if(propertyValue.GetType().IsSimple())
+                _instance.SetProperty(_propertyName, propertyValue.ToString());
+            else
+            {
+                _instance.SetChild(_propertyName,new LiteralInstance(propertyValue));
+            }
             return (T) _instance;
         }
 

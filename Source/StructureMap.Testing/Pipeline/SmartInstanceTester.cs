@@ -98,6 +98,29 @@ namespace StructureMap.Testing.Pipeline
             });
         }
 
+        [Test]
+        public void specify_ctorarg_with_non_simple_argument()
+        {
+            var widget = new ColorWidget("Red");
+            var container = new Container(x => x.ForRequestedType<ClassWithWidget>()
+                                              .TheDefault.Is.OfConcreteType<ClassWithWidget>()
+                                              .WithCtorArg("widget").EqualTo(widget));
+
+            Assert.AreSame(widget, container.GetInstance<ClassWithWidget>().Widget);
+        }
+
+
+        [Test]
+        public void specify_a_non_simple_property_with_equal_to()
+        {
+            var widget = new ColorWidget("Red");
+            var container = new Container(x => x.ForRequestedType<ClassWithWidgetProperty>()
+                                                   .TheDefault.Is.OfConcreteType<ClassWithWidgetProperty>()
+                                                   .WithProperty(o => o.Widget).EqualTo(widget));
+
+            Assert.AreSame(widget, container.GetInstance<ClassWithWidgetProperty>().Widget);
+        }
+
 
         [Test]
         public void specify_an_array_as_a_constructor()
