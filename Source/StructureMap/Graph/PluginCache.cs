@@ -106,7 +106,19 @@ namespace StructureMap.Graph
         public static void UseSetterRule(Predicate<PropertyInfo> predicate)
         {
             _setterRules.Add(predicate);
-            _plugins.Each(plugin => plugin.UseSetterRule(predicate));
+            _plugins.Each(plugin =>
+                              {
+                                  plugin.UseSetterRule(predicate);
+
+                                  //does any of the registered plugins have a setter matching the predicate?
+                                  if (plugin.PluggedType.GetProperties().Any(s => predicate(s)))
+                                  {
+                                      //rebuild the builder if nessesary
+                                      if (_builders[plugin.PluggedType] != null)
+                                          createAndStoreBuilders(new[] { plugin });
+                                  }
+                              });
+
         }
     }
 }

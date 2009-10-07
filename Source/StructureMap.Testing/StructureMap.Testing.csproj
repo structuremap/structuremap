@@ -179,6 +179,7 @@
     <Compile Include="AutoWiringExamples.cs" />
     <Compile Include="BidirectionalDependencies.cs" />
     <Compile Include="Bugs\BuildUpBug.cs" />
+    <Compile Include="Bugs\FillAllPropertiesShouldWorkForAlreadyConfiguredPluginsBug.cs" />
     <Compile Include="Bugs\HttpSessionNullRefBug.cs" />
     <Compile Include="Bugs\IDictionaryAndXmlBugTester.cs" />
     <Compile Include="Bugs\LambdaCreatesNullBugTester.cs" />
@@ -186,6 +187,7 @@
     <Compile Include="Bugs\ScanIndexerBugTester.cs" />
     <Compile Include="Bugs\SingletonShouldBeLazy.cs" />
     <Compile Include="Bugs\SpecifyScopeInConfigureTester.cs" />
+    <Compile Include="Bugs\StaticPropertyCausesJITExceptionTester.cs" />
     <Compile Include="BuildSessionTester.cs" />
     <Compile Include="BuildUpIntegratedTester.cs" />
     <Compile Include="BuildUpTester.cs" />
