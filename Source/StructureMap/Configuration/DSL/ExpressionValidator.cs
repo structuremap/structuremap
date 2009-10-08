@@ -32,8 +32,8 @@ namespace StructureMap.Configuration.DSL
                 {
                     throw new StructureMapException(
                         303,
-                        TypePath.GetAssemblyQualifiedName(_pluggedType),
-                        TypePath.GetAssemblyQualifiedName(pluginType));
+                        _pluggedType.AssemblyQualifiedName,
+                        pluginType.AssemblyQualifiedName);
                 }
             }
         }

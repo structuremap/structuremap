@@ -154,7 +154,7 @@ namespace StructureMap.Testing.Diagnostics
             {
                 if (typeof (IBootstrapper).IsAssignableFrom(type))
                 {
-                    Debug.WriteLine(TypePath.GetAssemblyQualifiedName(type));
+                    Debug.WriteLine(type.AssemblyQualifiedName);
                 }
             }
         }

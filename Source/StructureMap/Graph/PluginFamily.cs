@@ -218,7 +218,7 @@ namespace StructureMap.Graph
         {
             if (string.IsNullOrEmpty(memento.InstanceKey))
             {
-                memento.InstanceKey = "DefaultInstanceOf" + TypePath.GetAssemblyQualifiedName(PluginType);
+                memento.InstanceKey = "DefaultInstanceOf" + PluginType.AssemblyQualifiedName;
             }
 
             AddInstance(memento);

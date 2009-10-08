@@ -1,5 +1,7 @@
 using NUnit.Framework;
 using StructureMap.Graph;
+using StructureMap.Testing.GenericWidgets;
+using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing.Graph
 {
@@ -20,6 +22,16 @@ namespace StructureMap.Testing.Graph
         {
             var path = new TypePath(GetType());
             path.FindType();
+        }
+
+        [Test]
+        public void can_parse_assembly_qualified_generics()
+        {
+            var sampleGenericType = typeof(IConcept<AWidget>);
+            var genericAssemblyQualifiedName = sampleGenericType.AssemblyQualifiedName;
+            
+            var path = new TypePath(genericAssemblyQualifiedName);
+            path.FindType().ShouldEqual(sampleGenericType);
         }
     }
 }

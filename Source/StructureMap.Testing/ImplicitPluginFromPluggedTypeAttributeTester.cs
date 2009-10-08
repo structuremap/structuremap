@@ -21,7 +21,7 @@ namespace StructureMap.Testing
             Type pluggedType = typeof (StubbedGateway);
 
             var values = new NameValueCollection();
-            values.Add(XmlConstants.PLUGGED_TYPE, TypePath.GetAssemblyQualifiedName(pluggedType));
+            values.Add(XmlConstants.PLUGGED_TYPE, pluggedType.AssemblyQualifiedName);
             _memento = new MemoryInstanceMemento(string.Empty, "Frank", values);
 
             _expectedPlugin = new Plugin(pluggedType);

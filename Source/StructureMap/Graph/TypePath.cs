@@ -10,44 +10,22 @@ namespace StructureMap.Graph
     [Serializable]
     public class TypePath
     {
-        private readonly string _assemblyName = string.Empty;
-        private readonly string _className;
-
         public TypePath(string assemblyName, string className)
         {
-            _className = className;
-            _assemblyName = assemblyName;
+            AssemblyQualifiedName = className + "," + assemblyName;    
         }
 
         public TypePath(Type type)
         {
-            _className = type.FullName;
-            _assemblyName = type.Assembly.GetName().Name;
+            AssemblyQualifiedName = type.AssemblyQualifiedName;
         }
 
         public TypePath(string assemblyQualifiedName)
         {
-            string[] parts = assemblyQualifiedName.Split(',');
-
-            _className = parts[0].Trim();
-
-            if (parts.Length > 1) _assemblyName = parts[1].Trim();
+            AssemblyQualifiedName = assemblyQualifiedName;
         }
 
-        public string AssemblyQualifiedName
-        {
-            get { return _className + "," + _assemblyName; }
-        }
-
-        public string AssemblyName
-        {
-            get { return _assemblyName; }
-        }
-
-        public string ClassName
-        {
-            get { return _className; }
-        }
+        public string AssemblyQualifiedName { get; private set; }
 
         public static TypePath CreateFromXmlNode(XmlNode node)
         {
@@ -61,12 +39,6 @@ namespace StructureMap.Graph
         {
             element.SetAttribute(XmlConstants.TYPE_ATTRIBUTE, type.FullName);
             element.SetAttribute(XmlConstants.ASSEMBLY, type.Assembly.GetName().Name);
-        }
-
-        public static string GetAssemblyQualifiedName(Type type)
-        {
-            var path = new TypePath(type);
-            return path.AssemblyQualifiedName;
         }
 
         public Type FindType()

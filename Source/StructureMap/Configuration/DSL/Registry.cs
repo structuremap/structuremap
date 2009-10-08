@@ -104,7 +104,7 @@ namespace StructureMap.Configuration.DSL
         {
             if (graph.Registries.Contains(this)) return;
 
-            graph.Log.StartSource("Registry:  " + TypePath.GetAssemblyQualifiedName(GetType()));
+            graph.Log.StartSource("Registry:  " + GetType().AssemblyQualifiedName);
 
             _basicActions.ForEach(action => action());
             _actions.ForEach(action => action(graph));

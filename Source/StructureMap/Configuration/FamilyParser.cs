@@ -94,7 +94,7 @@ namespace StructureMap.Configuration
                 InstanceMemento sourceMemento = new XmlAttributeInstanceMemento(node);
 
                 string context = string.Format("MementoSource for {0}\n{1}",
-                                               TypePath.GetAssemblyQualifiedName(family.PluginType), node.OuterXml);
+                                               family.PluginType.AssemblyQualifiedName, node.OuterXml);
                 _builder.WithSystemObject<MementoSource>(sourceMemento, context,
                                                          source => family.AddMementoSource(source));
             });
@@ -121,8 +121,7 @@ namespace StructureMap.Configuration
 
         private void attachInterceptors(PluginFamily family, XmlElement familyElement)
         {
-            string contextBase = string.Format("creating an InstanceInterceptor for {0}\n",
-                                               TypePath.GetAssemblyQualifiedName(family.PluginType));
+            string contextBase = string.Format("creating an InstanceInterceptor for {0}\n", family.PluginType.AssemblyQualifiedName);
             familyElement.ForEachChild("*/Interceptor").Do(element =>
             {
                 var interceptorMemento = new XmlAttributeInstanceMemento(element);
