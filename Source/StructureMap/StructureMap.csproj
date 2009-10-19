@@ -395,9 +395,11 @@
     <Compile Include="Graph\FamilyAttributeScanner.cs" />
     <Compile Include="Graph\FindAllTypesFilter.cs" />
     <Compile Include="Graph\FindRegistriesScanner.cs" />
+    <Compile Include="Graph\IHeavyweightTypeScanner.cs" />
     <Compile Include="Graph\ITypeScanner.cs" />
     <Compile Include="Graph\PluggableAttributeScanner.cs" />
     <Compile Include="Graph\PluginCache.cs" />
+    <Compile Include="Graph\SingleImplementationScanner.cs" />
     <Compile Include="IContext.cs" />
     <Compile Include="Pipeline\ConditionalInstance.cs" />
     <Compile Include="Pipeline\HttpContextLifecycle.cs" />

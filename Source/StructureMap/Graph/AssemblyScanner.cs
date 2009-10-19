@@ -81,6 +81,7 @@ namespace StructureMap.Graph
         /// <param name="scanner"></param>
         void With(ITypeScanner scanner);
 
+        void With(IHeavyweightTypeScanner heavyweightScanner);
         /// <summary>
         /// Adds the DefaultConventionScanner to the scanning operations.  I.e., a concrete
         /// class named "Something" that implements "ISomething" will be automatically 
@@ -189,6 +190,7 @@ namespace StructureMap.Graph
         private readonly List<Predicate<Type>> _excludes = new List<Predicate<Type>>();
         private readonly List<Predicate<Type>> _includes = new List<Predicate<Type>>();
         private readonly List<ITypeScanner> _scanners = new List<ITypeScanner>();
+        private readonly List<IHeavyweightTypeScanner> _heavyweightScanners = new List<IHeavyweightTypeScanner>();
 
         public AssemblyScanner()
         {
@@ -204,7 +206,11 @@ namespace StructureMap.Graph
 
         internal void ScanForAll(PluginGraph pluginGraph)
         {
+            var heavyweightScan = configureHeavyweightScan();
+
             _assemblies.ForEach(assem => scanTypesInAssembly(assem, pluginGraph));
+
+            performHeavyweightScan(pluginGraph, heavyweightScan);
         }
 
         private void scanTypesInAssembly(Assembly assembly, PluginGraph graph)
@@ -223,6 +229,23 @@ namespace StructureMap.Graph
             {
                 graph.Log.RegisterError(170, ex, assembly.FullName);
             }
+        }
+
+        private TypeMapBuilder configureHeavyweightScan()
+        {
+            var typeMapBuilder = new TypeMapBuilder();
+            if (_heavyweightScanners.Count > 0)
+            {
+                With(typeMapBuilder);
+            }
+            return typeMapBuilder;
+        }
+
+        private void performHeavyweightScan(PluginGraph pluginGraph, TypeMapBuilder typeMapBuilder)
+        {
+            var typeMaps = typeMapBuilder.GetTypeMaps();
+            _heavyweightScanners.ForEach(scanner => scanner.Process(pluginGraph, typeMaps));
+            typeMapBuilder.Dispose();
         }
 
         private bool isInTheExcludes(Type type)
@@ -281,6 +304,13 @@ namespace StructureMap.Graph
             if (_scanners.Contains(scanner)) return;
 
             _scanners.Add(scanner);
+        }
+        
+        public void With(IHeavyweightTypeScanner heavyweightScanner)
+        {
+            if (_heavyweightScanners.Contains(heavyweightScanner)) return;
+
+            _heavyweightScanners.Add(heavyweightScanner);
         }
 
         public void WithDefaultConventions()

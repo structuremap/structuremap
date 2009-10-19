@@ -252,6 +252,7 @@
     <Compile Include="Graph\ExceptionHandling\StructureMapExceptionTester.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Graph\SingleImplementationScannerTester.cs" />
     <Compile Include="Graph\TestExplicitArguments.cs" />
     <Compile Include="Graph\FillDependenciesTester.cs">
       <SubType>Code</SubType>

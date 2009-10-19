@@ -176,6 +176,11 @@ namespace StructureMap.Util
             return returnValue;
         }
 
+        public IDictionary<KEY, VALUE> Contents()
+        {
+            return _values;
+        }
+
         public void Remove(KEY key)
         {
             if (_values.ContainsKey(key))
