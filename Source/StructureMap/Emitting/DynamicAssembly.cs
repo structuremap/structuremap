@@ -16,7 +16,6 @@ namespace StructureMap.Emitting
         private AssemblyBuilder _assemblyBuilder;
         private bool _isCompiled;
         private ModuleBuilder _module;
-        private string DLLName;
 
         public DynamicAssembly(string name)
         {
@@ -46,14 +45,9 @@ namespace StructureMap.Emitting
             assemName.CultureInfo = new CultureInfo("en");
             assemName.SetPublicKeyToken(null);
 
-            DLLName = Name + ".dll";
-            _assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(assemName, AssemblyBuilderAccess.RunAndSave);
-            //_assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(assemName, AssemblyBuilderAccess.Run);
+            _assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(assemName, AssemblyBuilderAccess.Run);
 
-            _module = _assemblyBuilder.DefineDynamicModule(Name, DLLName);
-
-
-            //_module = _assemblyBuilder.DefineDynamicModule(Name);
+            _module = _assemblyBuilder.DefineDynamicModule(Name);
         }
 
 
@@ -84,13 +78,8 @@ namespace StructureMap.Emitting
                 newClass.Bake();
             }
 
-            //_assemblyBuilder.Save(_name + ".dll");
-
-            //assemBuilder.Save(DLLName);
-            //Assembly assem = AppDomain.CurrentDomain.Load(this.Name);
             _isCompiled = true;
             return _assemblyBuilder;
-            //return assem;
         }
     }
 }

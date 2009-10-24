@@ -126,9 +126,10 @@ namespace StructureMap.Configuration
 
         private void addConfigurationFromStructureMapConfig(ICollection<ConfigurationParser> list)
         {
-// Pick up the configuration in the default StructureMap.config
-            string pathToStructureMapConfig = GetStructureMapConfigurationPath();
-            if (shouldUseStructureMapConfigFileAt(pathToStructureMapConfig))
+            if (_ignoreDefaultFile) return;
+            // Pick up the configuration in the default StructureMap.config
+            var pathToStructureMapConfig = GetStructureMapConfigurationPath();
+            if ((_useAndEnforceExistenceOfDefaultFile || File.Exists(pathToStructureMapConfig)))
             {
                 _log.Try(() =>
                 {
@@ -136,13 +137,6 @@ namespace StructureMap.Configuration
                     list.Add(parser);
                 }).AndReportErrorAs(100, pathToStructureMapConfig);
             }
-        }
-
-        private bool shouldUseStructureMapConfigFileAt(string pathToStructureMapConfig)
-        {
-            return
-                (_useAndEnforceExistenceOfDefaultFile ||
-                 File.Exists(pathToStructureMapConfig)) && !_ignoreDefaultFile;
         }
 
 
