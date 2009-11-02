@@ -64,7 +64,7 @@ namespace StructureMap
         bool HasImplementationsFor<T>();
     }
 
-    public class Model : TypeRules, IModel
+    public class Model : IModel
     {
         private readonly PipelineGraph _graph;
 

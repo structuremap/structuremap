@@ -11,7 +11,7 @@ namespace StructureMap.Graph
     /// the system.  A PluginFamily defines a CLR Type that StructureMap can build, and all of the possible
     /// Plugin’s implementing the CLR Type.
     /// </summary>
-    public class PluginFamily : TypeRules, IPluginFamily
+    public class PluginFamily : IPluginFamily
     {
         private readonly Cache<string, Instance> _instances = new Cache<string, Instance>(delegate { return null; });
         private readonly List<InstanceMemento> _mementoList = new List<InstanceMemento>();
@@ -173,7 +173,7 @@ namespace StructureMap.Graph
 
         private void assertPluggability(Type pluggedType)
         {
-            if (!CanBeCast(_pluginType, pluggedType))
+            if (!pluggedType.CanBeCastTo(_pluginType))
             {
                 throw new StructureMapException(104, pluggedType, _pluginType);
             }
@@ -291,7 +291,7 @@ namespace StructureMap.Graph
 
         public void AddType(Type concreteType)
         {
-            if (!CanBeCast(_pluginType, concreteType)) return;
+            if (!concreteType.CanBeCastTo(_pluginType)) return;
 
             if (FindPlugin(concreteType) == null)
             {
@@ -301,7 +301,7 @@ namespace StructureMap.Graph
 
         public void AddType(Type concreteType, string name)
         {
-            if (!CanBeCast(_pluginType, concreteType)) return;
+            if (!concreteType.CanBeCastTo(_pluginType)) return;
 
             if (FindPlugin(name) == null)
             {

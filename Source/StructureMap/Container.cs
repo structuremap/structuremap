@@ -10,7 +10,7 @@ using StructureMap.Pipeline;
 
 namespace StructureMap
 {
-    public class Container : TypeRules, IContainer
+    public class Container : IContainer
     {
         private InterceptorLibrary _interceptorLibrary;
         private PipelineGraph _pipelineGraph;
@@ -276,7 +276,7 @@ namespace StructureMap
         [Obsolete("Please use GetInstance(Type) instead")]
         public object FillDependencies(Type type)
         {
-            if (!IsConcrete(type))
+            if (!type.IsConcrete())
             {
                 throw new StructureMapException(230, type.FullName);
             }
@@ -614,7 +614,7 @@ namespace StructureMap
         /// <param name="object"></param>
         public void Inject(Type pluginType, object @object)
         {
-            if (!CanBeCast(pluginType, @object.GetType()))
+            if (!@object.GetType().CanBeCastTo(pluginType))
             {
                 throw new StructureMapException(220, pluginType.FullName,
                                                 @object.GetType().FullName);

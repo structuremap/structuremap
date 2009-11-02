@@ -28,7 +28,7 @@ namespace StructureMap.Configuration.DSL
                     throw new StructureMapException(180, _pluggedType.AssemblyQualifiedName);
                 }
 
-                if (!TypeRules.CanBeCast(pluginType, _pluggedType))
+                if (!_pluggedType.CanBeCastTo(pluginType))
                 {
                     throw new StructureMapException(
                         303,

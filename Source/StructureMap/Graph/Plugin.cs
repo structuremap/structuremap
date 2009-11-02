@@ -11,7 +11,7 @@ namespace StructureMap.Graph
     /// PluginFamily’s PluginType. The properties of a Plugin are the CLR Type of the concrete class, 
     /// and the human-friendly concrete key that StructureMap will use to identify the Type.
     /// </summary>
-    public class Plugin : TypeRules
+    public class Plugin
     {
         public static readonly string DEFAULT = "DEFAULT";
         private readonly Constructor _constructor;

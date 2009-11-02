@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace StructureMap.Graph
 {
-    public class SingleImplementationScanner : TypeRules, IHeavyweightTypeScanner
+    public class SingleImplementationScanner : IHeavyweightTypeScanner
     {
         public void Process(PluginGraph graph, IEnumerable<TypeMap> typeMaps)
         {

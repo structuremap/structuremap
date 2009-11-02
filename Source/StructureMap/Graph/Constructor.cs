@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace StructureMap.Graph
 {
-    public class Constructor : TypeRules
+    public class Constructor
     {
         private ConstructorInfo _ctor;
         private readonly Type _pluggedType;
@@ -69,7 +69,7 @@ namespace StructureMap.Graph
 
             foreach (ParameterInfo parameter in _ctor.GetParameters())
             {
-                if (!IsAutoFillable(parameter.ParameterType))
+                if (!parameter.ParameterType.IsAutoFillable())
                 {
                     return false;
                 }
@@ -125,11 +125,11 @@ namespace StructureMap.Graph
 
         private void visitParameter(ParameterInfo info, Type parameterType, IArgumentVisitor visitor)
         {
-            if (IsPrimitive(parameterType)) visitor.PrimitiveParameter(info);
-            if (IsChild(parameterType)) visitor.ChildParameter(info);
-            if (IsChildArray(parameterType)) visitor.ChildArrayParameter(info);
-            if (IsEnum(parameterType)) visitor.EnumParameter(info);
-            if (IsString(parameterType)) visitor.StringParameter(info);
+            if (parameterType.IsPrimitive()) visitor.PrimitiveParameter(info);
+            if (parameterType.IsChild()) visitor.ChildParameter(info);
+            if (parameterType.IsChildArray()) visitor.ChildArrayParameter(info);
+            if (parameterType.IsEnum) visitor.EnumParameter(info);
+            if (parameterType.IsString()) visitor.StringParameter(info);
         }
 
         public bool HasArguments()

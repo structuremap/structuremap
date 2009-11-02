@@ -29,7 +29,7 @@ namespace StructureMap.Pipeline
             Control control = new Page().LoadControl(_url);
 
             Type pluggedType = control.GetType();
-            if (!TypeRules.CanBeCast(pluginType, pluggedType))
+            if (!pluggedType.CanBeCastTo(pluginType))
             {
                 throw new StructureMapException(303, pluginType, pluggedType);
             }

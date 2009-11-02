@@ -24,13 +24,13 @@ namespace StructureMap.Graph
         public Type PluginType { get; private set; }
     }
 
-    internal class TypeMapBuilder : TypeRules, ITypeScanner, IDisposable
+    internal class TypeMapBuilder : ITypeScanner, IDisposable
     {
         private readonly Cache<Type, List<Type>> _implementations = new Cache<Type, List<Type>>(t => new List<Type>());
 
         public void Process(Type type, PluginGraph graph)
         {
-            if (!IsConcrete(type) || !Constructor.HasConstructors(type)) return;
+            if (!type.IsConcrete() || !Constructor.HasConstructors(type)) return;
             var pluginTypes = FindPluginTypes(type);
 
             foreach (var pluginType in pluginTypes)

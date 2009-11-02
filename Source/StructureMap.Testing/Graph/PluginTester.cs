@@ -97,13 +97,13 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void BadPluginToAbstractClass()
         {
-            Assert.AreEqual(false, TypeRules.CanBeCast(_widgetmaker, _colorWidget), "ColorWidget is NOT a WidgetMaker");
+            Assert.AreEqual(false, _colorWidget.CanBeCastTo(_widgetmaker), "ColorWidget is NOT a WidgetMaker");
         }
 
         [Test]
         public void BadPluginToInterface()
         {
-            Assert.AreEqual(false, TypeRules.CanBeCast(_iwidget, _moneywidgetmaker),
+            Assert.AreEqual(false, _moneywidgetmaker.CanBeCastTo(_iwidget),
                             "MoneyWidgetMaker is NOT an IWidget");
         }
 
@@ -190,15 +190,13 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void CanNotPluginWithoutAttribute()
         {
-            string msg = "NotPluggableWidget cannot plug into IWidget automatically";
-            Assert.AreEqual(false, TypeRules.IsExplicitlyMarkedAsPlugin(_iwidget, typeof (NotPluggable)), msg);
+            Assert.IsFalse(typeof (NotPluggable).IsExplicitlyMarkedAsPlugin(_iwidget), "NotPluggableWidget cannot plug into IWidget automatically");
         }
 
         [Test]
         public void CanPluginWithAttribute()
         {
-            Assert.AreEqual(true, TypeRules.IsExplicitlyMarkedAsPlugin(_iwidget, _colorWidget),
-                            "ColorWidget plugs into IWidget");
+            Assert.IsTrue(_colorWidget.IsExplicitlyMarkedAsPlugin(_iwidget), "ColorWidget plugs into IWidget");
         }
 
 
@@ -300,14 +298,14 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void GoodPluginToAbstractClass()
         {
-            Assert.AreEqual(true, TypeRules.CanBeCast(_widgetmaker, _moneywidgetmaker),
+            Assert.AreEqual(true, _moneywidgetmaker.CanBeCastTo(_widgetmaker),
                             "MoneyWidgetMaker is a WidgetMaker");
         }
 
         [Test]
         public void GoodPluginToInterface()
         {
-            Assert.AreEqual(true, TypeRules.CanBeCast(_iwidget, _colorWidget), "ColorWidget is an IWidget");
+            Assert.AreEqual(true, _colorWidget.CanBeCastTo(_iwidget), "ColorWidget is an IWidget");
         }
 
         [Test]

@@ -137,10 +137,9 @@ namespace StructureMap.Testing
         [Test]
         public void CanPlugGenericConcreteClassIntoGenericInterfaceWithNoGenericParametersSpecified()
         {
-            bool canPlug = TypeRules.CanBeCast(typeof (IGenericService<>), typeof (GenericService<>));
+            bool canPlug = typeof (GenericService<>).CanBeCastTo(typeof (IGenericService<>));
             Assert.IsTrue(canPlug);
         }
-
 
         [Test]
         public void Define_profile_with_generics_and_concrete_type()

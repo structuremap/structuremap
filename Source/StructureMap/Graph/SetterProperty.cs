@@ -7,7 +7,7 @@ namespace StructureMap.Graph
     /// <summary>
     /// Represents a PropertyInfo of a Plugin.PluggedType that is filled by Setter Injection
     /// </summary>
-    public class SetterProperty : TypeRules
+    public class SetterProperty
     {
         private readonly PropertyInfo _property;
 
@@ -34,7 +34,7 @@ namespace StructureMap.Graph
 
         public bool CanBeAutoFilled
         {
-            get { return IsAutoFillable(_property.PropertyType); }
+            get { return _property.PropertyType.IsAutoFillable(); }
         }
 
         public void Visit(IArgumentVisitor visitor)
@@ -44,11 +44,11 @@ namespace StructureMap.Graph
             // Ignore indexer properties
             if (_property.GetIndexParameters().Length > 0) return;
 
-            if (IsPrimitive(propertyType)) visitor.PrimitiveSetter(_property, IsMandatory);
-            if (IsChild(propertyType)) visitor.ChildSetter(_property, IsMandatory);
-            if (IsChildArray(propertyType)) visitor.ChildArraySetter(_property, IsMandatory);
-            if (IsEnum(propertyType)) visitor.EnumSetter(_property, IsMandatory);
-            if (IsString(propertyType)) visitor.StringSetter(_property, IsMandatory);
+            if (propertyType.IsPrimitive()) visitor.PrimitiveSetter(_property, IsMandatory);
+            if (propertyType.IsChild()) visitor.ChildSetter(_property, IsMandatory);
+            if (propertyType.IsChildArray()) visitor.ChildArraySetter(_property, IsMandatory);
+            if (propertyType.IsEnum) visitor.EnumSetter(_property, IsMandatory);
+            if (propertyType.IsString()) visitor.StringSetter(_property, IsMandatory);
         }
     }
 }

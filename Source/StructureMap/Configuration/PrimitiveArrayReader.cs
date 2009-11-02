@@ -5,13 +5,13 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.Configuration
 {
-    public class PrimitiveArrayReader : TypeRules, ITypeReader
+    public class PrimitiveArrayReader : ITypeReader
     {
         #region ITypeReader Members
 
         public bool CanProcess(Type pluginType)
         {
-            return IsPrimitiveArray(pluginType);
+            return pluginType.IsPrimitiveArray();
         }
 
         public Instance Read(XmlNode node, Type pluginType)

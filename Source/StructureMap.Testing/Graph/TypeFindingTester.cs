@@ -31,7 +31,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void DoNotFindPluginWithNoPublicCTOR()
         {
-            Assert.IsFalse(TypeRules.CanBeCast(typeof (TypeIWantToFind), typeof (GreenType)));
+            Assert.IsFalse(typeof (GreenType).CanBeCastTo(typeof (TypeIWantToFind)));
         }
 
 

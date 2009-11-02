@@ -35,7 +35,7 @@ namespace StructureMap.Interceptors
 
         public bool MatchesType(Type type)
         {
-            return TypeRules.CanBeCast(_pluginType, type);
+            return type.CanBeCastTo(_pluginType);
         }
 
         public object Process(object target, IContext context)

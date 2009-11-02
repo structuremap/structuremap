@@ -181,7 +181,7 @@ namespace StructureMap.Testing.Graph
                 var family = new PluginFamily(typeof (IGateway), graph);
                 var instance = new ConfiguredInstance(typeof (ColorRule));
 
-                Assert.IsFalse(TypeRules.CanBeCast(typeof (IGateway), typeof (Rule)));
+                Assert.IsFalse(typeof (Rule).CanBeCastTo(typeof (IGateway)));
 
                 family.AddInstance(instance);
 

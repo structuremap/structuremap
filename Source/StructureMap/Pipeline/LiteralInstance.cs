@@ -36,7 +36,7 @@ namespace StructureMap.Pipeline
 
         protected override bool canBePartOfPluginFamily(PluginFamily family)
         {
-            return TypeRules.CanBeCast(family.PluginType, _object.GetType());
+            return _object.GetType().CanBeCastTo(family.PluginType);
         }
 
         protected override string getDescription()

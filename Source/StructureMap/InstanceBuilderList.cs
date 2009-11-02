@@ -42,7 +42,7 @@ namespace StructureMap
             }
 
             // Add a missing PluggedType if we can
-            if (TypeRules.CanBeCast(_pluginType, pluggedType))
+            if (pluggedType.CanBeCastTo(_pluginType))
             {
                 var plugin = new Plugin(pluggedType);
                 processPlugin(plugin);

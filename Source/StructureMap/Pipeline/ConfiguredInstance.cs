@@ -62,7 +62,7 @@ namespace StructureMap.Pipeline
             Type specificType = _pluggedType.IsGenericTypeDefinition
                                     ? _pluggedType.MakeGenericType(templateTypes)
                                     : _pluggedType;
-            if (TypeRules.CanBeCast(family.PluginType, specificType))
+            if (specificType.CanBeCastTo(family.PluginType))
             {
                 var instance = new ConfiguredInstance(specificType);
                 instance._arrays = _arrays;

@@ -151,7 +151,6 @@
     <Compile Include="Graph\IArgumentVisitor.cs" />
     <Compile Include="Graph\IPluginFamily.cs" />
     <Compile Include="Graph\AssemblyScanner.cs" />
-    <Compile Include="Graph\TypeRules.cs" />
     <Compile Include="InstanceBuilderList.cs" />
     <Compile Include="InstanceCache.cs" />
     <Compile Include="InstanceFamily.cs" />

@@ -7,13 +7,13 @@ namespace StructureMap.Graph
         void Process(Type type, PluginGraph graph);
     }
 
-    public class DefaultConventionScanner : TypeRules, ITypeScanner
+    public class DefaultConventionScanner : ITypeScanner
     {
         #region ITypeScanner Members
 
         public void Process(Type type, PluginGraph graph)
         {
-            if (!IsConcrete(type)) return;
+            if (!type.IsConcrete()) return;
 
             Type pluginType = FindPluginType(type);
             if (pluginType != null && Constructor.HasConstructors(type))

@@ -178,7 +178,7 @@ namespace StructureMap.Pipeline
 
         protected override bool canBePartOfPluginFamily(PluginFamily family)
         {
-            return TypeRules.CanBeCast(family.PluginType, _pluggedType);
+            return _pluggedType.CanBeCastTo(family.PluginType);
         }
 
         internal override bool Matches(Plugin plugin)
