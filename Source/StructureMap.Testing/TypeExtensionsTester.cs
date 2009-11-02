@@ -2,6 +2,7 @@
 using StructureMap.Testing.GenericWidgets;
 using StructureMap.Testing.Widget2;
 using StructureMap.Testing.Widget3;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Testing
 {

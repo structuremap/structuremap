@@ -1,4 +1,5 @@
 using System;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Graph
 {

@@ -1,6 +1,7 @@
 using System;
 using System.Web.UI;
 using StructureMap.Graph;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Pipeline
 {

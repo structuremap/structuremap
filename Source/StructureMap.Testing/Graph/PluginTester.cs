@@ -11,6 +11,7 @@ using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget2;
 using StructureMap.Testing.Widget3;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Testing.Graph
 {

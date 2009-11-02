@@ -9,6 +9,7 @@ using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
+using StructureMap.TypeRules;
 using Rule=StructureMap.Testing.Widget.Rule;
 
 namespace StructureMap.Testing.Graph

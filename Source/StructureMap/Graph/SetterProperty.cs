@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using StructureMap.Attributes;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Graph
 {

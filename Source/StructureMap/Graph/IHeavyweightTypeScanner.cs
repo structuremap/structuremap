@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using StructureMap.TypeRules;
 using StructureMap.Util;
 
 namespace StructureMap.Graph

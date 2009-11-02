@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using StructureMap.Emitting;
 using StructureMap.Graph;
+using StructureMap.TypeRules;
 
 namespace StructureMap
 {

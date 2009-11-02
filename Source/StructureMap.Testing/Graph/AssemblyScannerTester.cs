@@ -7,6 +7,7 @@ using StructureMap.Graph;
 using StructureMap.Testing.Widget;
 using System.Linq;
 using StructureMap.Testing.Widget5;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Testing.Graph
 {

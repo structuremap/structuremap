@@ -4,189 +4,192 @@ using StructureMap.Pipeline;
 
 namespace StructureMap
 {
-    public static class TypeExtensions
+    namespace TypeRules
     {
-        public static bool IsInNamespace(this Type type, string nameSpace)
+        public static class TypeExtensions
         {
-            return type.Namespace.StartsWith(nameSpace);
-        }
-
-        public static ReferencedInstance GetReferenceTo(this Type type)
-        {
-            string key = PluginCache.GetPlugin(type).ConcreteKey;
-            return new ReferencedInstance(key);
-        }
-
-        public static bool IsGeneric(this Type type)
-        {
-            return type.IsGenericTypeDefinition || type.ContainsGenericParameters;
-        }
-
-        public static bool IsConcreteAndAssignableTo(this Type pluggedType, Type pluginType)
-        {
-            return pluggedType.IsConcrete() && pluginType.IsAssignableFrom(pluggedType);
-        }
-
-        public static bool ImplementsInterfaceTemplate(this Type pluggedType, Type templateType)
-        {
-            if (!pluggedType.IsConcrete()) return false;
-
-            foreach (var interfaceType in pluggedType.GetInterfaces())
+            public static bool IsInNamespace(this Type type, string nameSpace)
             {
-                if (interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition() == templateType)
+                return type.Namespace.StartsWith(nameSpace);
+            }
+
+            public static ReferencedInstance GetReferenceTo(this Type type)
+            {
+                string key = PluginCache.GetPlugin(type).ConcreteKey;
+                return new ReferencedInstance(key);
+            }
+
+            public static bool IsGeneric(this Type type)
+            {
+                return type.IsGenericTypeDefinition || type.ContainsGenericParameters;
+            }
+
+            public static bool IsConcreteAndAssignableTo(this Type pluggedType, Type pluginType)
+            {
+                return pluggedType.IsConcrete() && pluginType.IsAssignableFrom(pluggedType);
+            }
+
+            public static bool ImplementsInterfaceTemplate(this Type pluggedType, Type templateType)
+            {
+                if (!pluggedType.IsConcrete()) return false;
+
+                foreach (var interfaceType in pluggedType.GetInterfaces())
                 {
-                    return true;
+                    if (interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition() == templateType)
+                    {
+                        return true;
+                    }
                 }
+
+                return false;
             }
 
-            return false;
-        }
-
-        public static Type FindInterfaceThatCloses(this Type pluggedType, Type templateType)
-        {
-            if (!pluggedType.IsConcrete()) return null;
-
-            foreach (var interfaceType in pluggedType.GetInterfaces())
+            public static Type FindInterfaceThatCloses(this Type pluggedType, Type templateType)
             {
-                if (interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition() == templateType)
+                if (!pluggedType.IsConcrete()) return null;
+
+                foreach (var interfaceType in pluggedType.GetInterfaces())
                 {
-                    return interfaceType;
+                    if (interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition() == templateType)
+                    {
+                        return interfaceType;
+                    }
                 }
+
+                return pluggedType.BaseType == typeof(object) ? null : pluggedType.BaseType.FindInterfaceThatCloses(templateType);
             }
 
-            return pluggedType.BaseType == typeof(object) ? null : pluggedType.BaseType.FindInterfaceThatCloses(templateType);
-        }
-
-        public static bool IsNullable(this Type type)
-        {
-            return type.IsGenericType && type.GetGenericTypeDefinition() == typeof (Nullable<>);
-        }
-
-        public static Type GetInnerTypeFromNullable(this Type nullableType)
-        {
-            return nullableType.GetGenericArguments()[0];
-        }
-
-        public static string GetName(this Type type)
-        {
-            if (type.IsGenericType)
+            public static bool IsNullable(this Type type)
             {
-                string[] parameters = Array.ConvertAll(type.GetGenericArguments(), t => t.GetName());
-                var parameterList = String.Join(", ", parameters);
-                return "{0}<{1}>".ToFormat(type.Name, parameterList);
+                return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
             }
 
-            return type.Name;
-        }
-
-        public static string GetFullName(this Type type)
-        {
-            if (type.IsGenericType)
+            public static Type GetInnerTypeFromNullable(this Type nullableType)
             {
-                string[] parameters = Array.ConvertAll(type.GetGenericArguments(), t => t.GetName());
-                var parameterList = String.Join(", ", parameters);
-                return "{0}<{1}>".ToFormat(type.Name, parameterList);
+                return nullableType.GetGenericArguments()[0];
             }
 
-            return type.FullName;
-        }
-
-        /// <summary>
-        /// Determines if the pluggedType can be upcast to the pluginType
-        /// </summary>
-        /// <param name="pluginType"></param>
-        /// <param name="pluggedType"></param>
-        /// <returns></returns>
-        public static bool CanBeCastTo(this Type pluggedType, Type pluginType)
-        {
-            if (pluggedType.IsInterface || pluggedType.IsAbstract)
+            public static string GetName(this Type type)
             {
-                return false;
+                if (type.IsGenericType)
+                {
+                    string[] parameters = Array.ConvertAll(type.GetGenericArguments(), t => t.GetName());
+                    var parameterList = String.Join(", ", parameters);
+                    return "{0}<{1}>".ToFormat(type.Name, parameterList);
+                }
+
+                return type.Name;
             }
 
-            if (noPublicConstructors(pluggedType))
+            public static string GetFullName(this Type type)
             {
-                return false;
+                if (type.IsGenericType)
+                {
+                    string[] parameters = Array.ConvertAll(type.GetGenericArguments(), t => t.GetName());
+                    var parameterList = String.Join(", ", parameters);
+                    return "{0}<{1}>".ToFormat(type.Name, parameterList);
+                }
+
+                return type.FullName;
             }
 
-            if (IsGeneric(pluginType))
+            /// <summary>
+            /// Determines if the pluggedType can be upcast to the pluginType
+            /// </summary>
+            /// <param name="pluginType"></param>
+            /// <param name="pluggedType"></param>
+            /// <returns></returns>
+            public static bool CanBeCastTo(this Type pluggedType, Type pluginType)
             {
-                return GenericsPluginGraph.CanBeCast(pluginType, pluggedType);
+                if (pluggedType.IsInterface || pluggedType.IsAbstract)
+                {
+                    return false;
+                }
+
+                if (noPublicConstructors(pluggedType))
+                {
+                    return false;
+                }
+
+                if (IsGeneric(pluginType))
+                {
+                    return GenericsPluginGraph.CanBeCast(pluginType, pluggedType);
+                }
+
+                if (IsGeneric(pluggedType))
+                {
+                    return false;
+                }
+
+
+                return pluginType.IsAssignableFrom(pluggedType);
             }
 
-            if (IsGeneric(pluggedType))
+
+            /// <summary>
+            /// Determines if the PluggedType is a valid Plugin into the
+            /// PluginType
+            /// </summary>
+            /// <param name="pluginType"></param>
+            /// <param name="pluggedType"></param>
+            /// <returns></returns>
+            public static bool IsExplicitlyMarkedAsPlugin(this Type pluggedType, Type pluginType)
             {
-                return false;
+                bool returnValue = false;
+
+                bool markedAsPlugin = PluggableAttribute.MarkedAsPluggable(pluggedType);
+                if (markedAsPlugin)
+                {
+                    returnValue = CanBeCastTo(pluggedType, pluginType);
+                }
+
+                return returnValue;
             }
 
-
-            return pluginType.IsAssignableFrom(pluggedType);
-        }
-
-
-        /// <summary>
-        /// Determines if the PluggedType is a valid Plugin into the
-        /// PluginType
-        /// </summary>
-        /// <param name="pluginType"></param>
-        /// <param name="pluggedType"></param>
-        /// <returns></returns>
-        public static bool IsExplicitlyMarkedAsPlugin(this Type pluggedType, Type pluginType)
-        {
-            bool returnValue = false;
-
-            bool markedAsPlugin = PluggableAttribute.MarkedAsPluggable(pluggedType);
-            if (markedAsPlugin)
+            private static bool noPublicConstructors(Type pluggedType)
             {
-                returnValue = CanBeCastTo(pluggedType, pluginType);
+                return pluggedType.GetConstructors().Length == 0;
             }
 
-            return returnValue;
-        }
+            public static bool IsString(this Type type)
+            {
+                return type.Equals(typeof(string));
+            }
 
-        private static bool noPublicConstructors(Type pluggedType)
-        {
-            return pluggedType.GetConstructors().Length == 0;
-        }
+            public static bool IsPrimitive(this Type type)
+            {
+                return type.IsPrimitive && !IsString(type) && type != typeof(IntPtr);
+            }
 
-        public static bool IsString(this Type type)
-        {
-            return type.Equals(typeof (string));
-        }
+            public static bool IsSimple(this Type type)
+            {
+                return type.IsPrimitive || IsString(type) || type.IsEnum;
+            }
 
-        public static bool IsPrimitive(this Type type)
-        {
-            return type.IsPrimitive && !IsString(type) && type != typeof (IntPtr);
-        }
+            public static bool IsChild(this Type type)
+            {
+                return IsPrimitiveArray(type) || (!type.IsArray && !IsSimple(type));
+            }
 
-        public static bool IsSimple(this Type type)
-        {
-            return type.IsPrimitive || IsString(type) || type.IsEnum;
-        }
+            public static bool IsChildArray(this Type type)
+            {
+                return type.IsArray && !IsSimple(type.GetElementType());
+            }
 
-        public static bool IsChild(this Type type)
-        {
-            return IsPrimitiveArray(type) || (!type.IsArray && !IsSimple(type));
-        }
+            public static bool IsPrimitiveArray(this Type type)
+            {
+                return type.IsArray && IsSimple(type.GetElementType());
+            }
 
-        public static bool IsChildArray(this Type type)
-        {
-            return type.IsArray && !IsSimple(type.GetElementType());
-        }
+            public static bool IsConcrete(this Type type)
+            {
+                return !type.IsAbstract;
+            }
 
-        public static bool IsPrimitiveArray(this Type type)
-        {
-            return type.IsArray && IsSimple(type.GetElementType());
-        }
-
-        public static bool IsConcrete(this Type type)
-        {
-            return !type.IsAbstract;
-        }
-
-        public static bool IsAutoFillable(this Type type)
-        {
-            return IsChild(type) || IsChildArray(type);
+            public static bool IsAutoFillable(this Type type)
+            {
+                return IsChild(type) || IsChildArray(type);
+            }
         }
     }
 }

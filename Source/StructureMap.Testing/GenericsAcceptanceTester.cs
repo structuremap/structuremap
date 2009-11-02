@@ -4,6 +4,7 @@ using NUnit.Framework;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.GenericWidgets;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Testing
 {

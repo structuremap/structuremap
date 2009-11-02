@@ -7,6 +7,7 @@ using NUnit.Framework;
 using StructureMap.Configuration.DSL;
 using StructureMap.Interceptors;
 using StructureMap;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Testing.Examples
 {

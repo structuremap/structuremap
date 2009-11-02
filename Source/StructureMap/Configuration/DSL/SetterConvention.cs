@@ -2,6 +2,7 @@ using System;
 using System.Reflection;
 using StructureMap.Graph;
 using StructureMap;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Configuration.DSL
 {
