@@ -106,14 +106,21 @@ namespace StructureMap.Testing
             Assert.IsNotEmpty(collection);
         }
 
-        public static void ShouldNotBeEmpty(this string aString)
+        public static string ShouldNotBeEmpty(this string aString)
         {
             Assert.IsNotEmpty(aString);
+            return aString;
         }
 
         public static void ShouldContain(this string actual, string expected)
         {
             StringAssert.Contains(expected, actual);
+        }
+
+        public static string ShouldNotContain(this string actual, string expected)
+        {
+            Assert.IsTrue(!actual.Contains(expected));
+            return actual;
         }
 
         public static string ShouldBeEqualIgnoringCase(this string actual, string expected)

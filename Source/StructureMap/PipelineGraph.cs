@@ -41,15 +41,16 @@ namespace StructureMap
             }
         }
 
-        private PipelineGraph(ProfileManager profileManager, GenericsPluginGraph genericsGraph)
+        private PipelineGraph(ProfileManager profileManager, GenericsPluginGraph genericsGraph, GraphLog log)
         {
             _profileManager = profileManager;
             _genericsGraph = genericsGraph;
+            _log = log;
         }
 
         public PipelineGraph Clone()
         {
-            var clone = new PipelineGraph(_profileManager.Clone(), _genericsGraph.Clone())
+            var clone = new PipelineGraph(_profileManager.Clone(), _genericsGraph.Clone(), _log)
             {
                 _missingFactory = _missingFactory
             };

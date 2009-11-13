@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using StructureMap.Attributes;
-using StructureMap.Configuration.DSL;
 using StructureMap.Testing.GenericWidgets;
+using StructureMap.Testing.Graph;
 using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing.Pipeline
@@ -189,6 +189,18 @@ namespace StructureMap.Testing.Pipeline
 
             parentWidget.ShouldBeOfType<ColorWidget>().Color.ShouldEqual("red");
             childWidget1.ShouldBeOfType<ColorWidget>().Color.ShouldEqual("green");
+        }
+
+        [Test]
+        public void allow_nested_container_to_report_what_it_has()
+        {
+            var container = new Container(x => x.For<IAutomobile>().Use<Mustang>());
+            
+            var nestedContainer = container.GetNestedContainer();
+            nestedContainer.Inject<IEngine>(new PushrodEngine());
+
+            container.WhatDoIHave().ShouldNotBeEmpty().ShouldNotContain(typeof(IEngine).Name);
+            nestedContainer.WhatDoIHave().ShouldNotBeEmpty().ShouldContain(typeof(IEngine).Name);
         }
     }
 }
