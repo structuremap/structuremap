@@ -23,7 +23,15 @@ namespace StructureMap
             var expression = new ConfigurationExpression();
             action(expression);
 
-            construct(expression.BuildGraph());
+            // As explained later in the article,
+            // PluginGraph is part of the Semantic Model
+            // of StructureMap
+            PluginGraph graph = expression.BuildGraph();
+
+            // Take the PluginGraph object graph and
+            // dynamically emit classes to build the
+            // configured objects
+            construct(graph);
         }
 
         public Container(Registry registry)

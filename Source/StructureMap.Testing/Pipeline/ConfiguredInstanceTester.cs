@@ -4,6 +4,7 @@ using Rhino.Mocks;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
+using StructureMap.Testing.Configuration.DSL;
 using StructureMap.Testing.GenericWidgets;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget2;
@@ -62,7 +63,6 @@ namespace StructureMap.Testing.Pipeline
             var theObjectBuilt = new object();
 
             var instance = new ConfiguredInstance(GetType());
-
 
             using (mocks.Record())
             {
@@ -277,5 +277,20 @@ namespace StructureMap.Testing.Pipeline
                 instance.Build(GetType(), new StubBuildSession(), builder);
             });
         }
+
+        [Test]
+        public void use_the_child_function()
+        {
+            var theRule = new ARule();
+
+            var container = new Container(x =>
+            {
+                x.For(typeof (ClassWithDependency)).Use(typeof (ClassWithDependency)).Child(typeof (Rule)).Is(theRule);
+            });
+
+            container.GetInstance<ClassWithDependency>().Rule.ShouldBeTheSameAs(theRule);
+        }
     }
+
+    
 }

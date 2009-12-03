@@ -169,7 +169,7 @@ namespace StructureMap.Configuration.DSL
         /// <returns></returns>
         public CreatePluginFamilyExpression<PLUGINTYPE> ForSingletonOf<PLUGINTYPE>()
         {
-            return ForRequestedType<PLUGINTYPE>().AsSingletons();
+            return ForRequestedType<PLUGINTYPE>().Singleton();
         }
 
         /// <summary>
@@ -412,7 +412,7 @@ namespace StructureMap.Configuration.DSL
         /// <returns></returns>
         public CreatePluginFamilyExpression<PLUGINTYPE> For<PLUGINTYPE>()
         {
-            return ForRequestedType<PLUGINTYPE>();
+            return new CreatePluginFamilyExpression<PLUGINTYPE>(this);
         }
 
         /// <summary>

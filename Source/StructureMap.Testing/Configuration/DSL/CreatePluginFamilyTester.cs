@@ -145,7 +145,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var registry = new Registry();
             CreatePluginFamilyExpression<IGateway> expression =
-                registry.BuildInstancesOf<IGateway>().AsSingletons();
+                registry.BuildInstancesOf<IGateway>().Singleton();
             Assert.IsNotNull(expression);
 
             PluginGraph pluginGraph = registry.Build();

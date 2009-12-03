@@ -109,7 +109,13 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <returns></returns>
         public SmartInstance<CONCRETETYPE> Use<CONCRETETYPE>() where CONCRETETYPE : PLUGINTYPE
         {
-            return TheDefault.Is.OfConcreteType<CONCRETETYPE>();
+            // This is *my* team's naming convention for generic parameters
+            // I know you may not like it, but it's my article so there
+            var instance = new SmartInstance<CONCRETETYPE>();
+            
+            registerDefault(instance);
+            
+            return instance;
         }
 
         /// <summary>
@@ -147,11 +153,35 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// Convenience method to mark a PluginFamily as a Singleton
         /// </summary>
         /// <returns></returns>
-        public CreatePluginFamilyExpression<PLUGINTYPE> AsSingletons()
+        public CreatePluginFamilyExpression<PLUGINTYPE> Singleton()
         {
-            _alterations.Add(family => family.SetScopeTo(InstanceScope.Singleton));
+            return lifecycleIs(InstanceScope.Singleton);
+        }
+
+        private CreatePluginFamilyExpression<PLUGINTYPE> lifecycleIs(InstanceScope lifecycle)
+        {
+            _alterations.Add(family => family.SetScopeTo(lifecycle));
             return this;
         }
+
+        /// <summary>
+        /// Convenience method to mark a PluginFamily as a Hybrid lifecycle
+        /// </summary>
+        /// <returns></returns>
+        public CreatePluginFamilyExpression<PLUGINTYPE> HybridHttpOrThreadLocalScoped()
+        {
+            return lifecycleIs(InstanceScope.Hybrid);
+        }
+
+        /// <summary>
+        /// Convenience method to mark a PluginFamily as HttpContext scoped
+        /// </summary>
+        /// <returns></returns>
+        public CreatePluginFamilyExpression<PLUGINTYPE> HttpContextScoped()
+        {
+            return lifecycleIs(InstanceScope.HttpContext);
+        }
+
 
         /// <summary>
         /// Register an Action to run against any object of this PluginType immediately after

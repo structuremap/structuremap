@@ -200,7 +200,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             IContainer container = new Container(r =>
             {
-                r.ForRequestedType<Processor>().TheDefault.Is.OfConcreteType<Processor>()
+                r.For<Processor>().Use<Processor>()
                     .WithCtorArg("name").EqualTo("Jeremy")
                     .TheArrayOf<IHandler>().Contains(x =>
                     {

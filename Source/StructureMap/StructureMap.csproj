@@ -390,6 +390,7 @@
     <Compile Include="Emitting\BuildUpMethod.cs" />
     <Compile Include="Emitting\Parameters\Methods.cs" />
     <Compile Include="ErrorMessages.cs" />
+    <Compile Include="Example.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Graph\FamilyAttributeScanner.cs" />
     <Compile Include="Graph\FindAllTypesFilter.cs" />

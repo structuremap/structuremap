@@ -116,13 +116,26 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public ChildInstanceExpression Child<CONSTRUCTORARGUMENTTYPE>()
         {
-            string propertyName = findPropertyName<CONSTRUCTORARGUMENTTYPE>();
+            Type dependencyType = typeof(CONSTRUCTORARGUMENTTYPE);
+
+            return Child(dependencyType);
+        }
+
+        /// <summary>
+        /// Start the definition of a child instance for type CONSTRUCTORARGUMENTTYPE
+        /// </summary>
+        /// <typeparam name="CONSTRUCTORARGUMENTTYPE"></typeparam>
+        /// <returns></returns>
+        public ChildInstanceExpression Child(Type dependencyType)
+        {
+            string propertyName = findPropertyName(dependencyType);
 
             ChildInstanceExpression child = Child(propertyName);
-            child.ChildType = typeof (CONSTRUCTORARGUMENTTYPE);
+            child.ChildType = dependencyType;
 
             return child;
         }
+
 
         /// <summary>
         /// Inline definition of a constructor or a setter property dependency

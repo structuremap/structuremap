@@ -59,17 +59,17 @@ namespace StructureMap.Testing
             ObjectFactory.Initialize(
                 x =>
                 {
-                    x.BuildInstancesOf<Session>()
+                    x.ForRequestedType<Session>()
                         .AlwaysUnique()
                         .TheDefaultIsConcreteType<Session>();
 
-                    x.BuildInstancesOf<Model1>()
+                    x.ForRequestedType<Model1>()
                         .TheDefaultIsConcreteType<Model1>();
 
-                    x.BuildInstancesOf<Model2>()
+                    x.ForRequestedType<Model2>()
                         .TheDefaultIsConcreteType<Model2>();
 
-                    x.BuildInstancesOf<Shell>()
+                    x.ForRequestedType<Shell>()
                         .TheDefaultIsConcreteType<Shell>();
                 });
 

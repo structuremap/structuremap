@@ -226,12 +226,19 @@ namespace StructureMap.Pipeline
 
         protected string findPropertyName<PLUGINTYPE>()
         {
+            Type dependencyType = typeof(PLUGINTYPE);
+
+            return findPropertyName(dependencyType);
+        }
+
+        protected string findPropertyName(Type dependencyType)
+        {
             var plugin = new Plugin(_pluggedType);
-            string propertyName = plugin.FindArgumentNameForType<T>();
+            string propertyName = plugin.FindArgumentNameForType(dependencyType);
 
             if (string.IsNullOrEmpty(propertyName))
             {
-                throw new StructureMapException(305, typeof(PLUGINTYPE));
+                throw new StructureMapException(305, dependencyType);
             }
 
             return propertyName;
