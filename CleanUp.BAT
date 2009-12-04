@@ -1,2 +1,2 @@
-bin\nant\nant.exe -buildfile:StructureMap.build post-clean
+bin\nant\nant.exe -buildfile:cruise.build post-clean
 pause

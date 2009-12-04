@@ -13,10 +13,11 @@
   <target name="pre-clean">
     <delete dir="${build.dir}" failonerror="false" />
     <delete dir="${results.dir}" failonerror="false"/>
+    <delete dir="${archive.dir}" failonerror="false" />
 
     <mkdir dir="${build.dir}" />
     <mkdir dir="${results.dir}" />
-    <mkdir dir="${archive.dir}" unless="${directory::exists(archive.dir)}" />
+    <mkdir dir="${archive.dir}" />
 
     <call target="cleanJunk" />
   </target>
