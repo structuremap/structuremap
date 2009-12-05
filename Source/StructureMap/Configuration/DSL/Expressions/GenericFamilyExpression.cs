@@ -85,7 +85,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         }
 
 
-        private GenericFamilyExpression add(Instance instance)
+        public GenericFamilyExpression Add(Instance instance)
         {
             return alterAndContinue(family => family.AddInstance(instance));
         }
@@ -176,8 +176,10 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <returns></returns>
         public GenericFamilyExpression AddConcreteType(Type concreteType)
         {
-            return add(new ConfiguredInstance(concreteType));
+            var instance = new ConfiguredInstance(concreteType);
+            return Add(instance);
         }
+
 
         /// <summary>
         /// Shortcut method to add an additional Instance to this Plugin Type
@@ -189,7 +191,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <returns></returns>
         public GenericFamilyExpression AddConcreteType(Type concreteType, string instanceName)
         {
-            return add(new ConfiguredInstance(concreteType).WithName(instanceName));
+            return Add(new ConfiguredInstance(concreteType).WithName(instanceName));
         }
     }
 }
