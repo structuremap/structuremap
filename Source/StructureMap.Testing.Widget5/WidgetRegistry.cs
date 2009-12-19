@@ -5,7 +5,7 @@ namespace StructureMap.Testing.Widget5
 {
     public class RedGreenRegistry : Registry
     {
-        protected override void configure()
+        public RedGreenRegistry()
         {
             InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithCtorArg("color").EqualTo("Red").WithName("Red");
             InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithCtorArg("color").EqualTo("Green").WithName(
@@ -29,13 +29,12 @@ namespace StructureMap.Testing.Widget5
 
     public class YellowBlueRegistry : Registry
     {
-        protected override void configure()
+        public YellowBlueRegistry()
         {
             InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithCtorArg("color").EqualTo("Yellow").WithName(
                 "Yellow");
             InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithProperty("color").EqualTo("Blue").WithName("Blue");
         }
-
 
         public override bool Equals(object obj)
         {
@@ -68,7 +67,7 @@ namespace StructureMap.Testing.Widget5
 
     public class BrownBlackRegistry : Registry
     {
-        protected override void configure()
+        public BrownBlackRegistry()
         {
             InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithProperty("color").EqualTo("Brown").WithName(
                 "Brown");

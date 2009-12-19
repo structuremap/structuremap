@@ -88,15 +88,17 @@ namespace StructureMap.Testing.Configuration.DSL
     {
         private int _count;
 
+        public TestRegistry2()
+        {
+            _count++;
+        }
+
         public int ExecutedCount
         {
             get { return _count; }
         }
 
-        protected override void configure()
-        {
-            _count++;
-        }
+        
     }
 
     public class FakeGateway : IGateway

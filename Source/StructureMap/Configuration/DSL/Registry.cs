@@ -75,19 +75,22 @@ namespace StructureMap.Configuration.DSL
         private readonly List<Action<PluginGraph>> _actions = new List<Action<PluginGraph>>();
         private readonly List<Action> _basicActions = new List<Action>();
 
-        public Registry()
+        /// <summary>
+        /// Imports the configuration from another registry into this registry.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        public void IncludeRegistry<T>() where T : Registry, new()
         {
-            configure();
+            _actions.Add(g => new T().ConfigurePluginGraph(g));
         }
 
         /// <summary>
-        /// You can overide this method as a place to put the Registry DSL
-        /// declarations.  This is not mandatory.
+        /// Imports the configuration from another registry into this registry.
         /// </summary>
-        [Obsolete("configure() is unnecessary.  All declarations can be made in the constructor of a Registry or any other method")]
-        protected virtual void configure()
+        /// <param name="registry"></param>
+        public void IncludeRegistry(Registry registry)
         {
-            // no-op;
+            _actions.Add(registry.ConfigurePluginGraph);
         }
 
         protected void registerAction(Action action)
