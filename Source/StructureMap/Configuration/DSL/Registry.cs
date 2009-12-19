@@ -8,53 +8,6 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.Configuration.DSL
 {
-    public interface IRegistry
-    {
-        // Registering Types -- BuildInstancesOf() and ForRequestedType() are Synonyms
-        CreatePluginFamilyExpression<PLUGINTYPE> BuildInstancesOf<PLUGINTYPE>();
-        CreatePluginFamilyExpression<PLUGINTYPE> ForRequestedType<PLUGINTYPE>();
-        
-        GenericFamilyExpression ForRequestedType(Type pluginType);
-
-        // Shortcut for configuring the default configuration of a concrete type
-        Registry.BuildWithExpression<T> ForConcreteType<T>();
-
-        // Adding additional Instances of a PluginType
-        IsExpression<T> InstanceOf<T>();
-        GenericIsExpression InstanceOf(Type pluginType);
-
-        // Creating or Adding to a Profile
-        ProfileExpression CreateProfile(string profileName);
-        void CreateProfile(string profileName, Action<ProfileExpression> action);
-
-        // Interception
-        void RegisterInterceptor(TypeInterceptor interceptor);
-        MatchedTypeInterceptor IfTypeMatches(Predicate<Type> match);
-
-        // Type Scanning and Auto Registration
-        void Scan(Action<IAssemblyScanner> action);
-
-        // Controlling Setter Injection Behavior
-        CreatePluginFamilyExpression<PLUGINTYPE> FillAllPropertiesOfType<PLUGINTYPE>();
-        void SetAllProperties(Action<SetterConvention> action);
-
-        /// <summary>
-        /// Use to programmatically select the constructor function of a concrete
-        /// class.  Applies globally to all Containers in a single AppDomain.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="expression"></param>
-        void SelectConstructor<T>(Expression<Func<T>> expression);
-
-        /// <summary>
-        /// Use to "forward" the request for FROM to the default of TO
-        /// Useful for singleton services that implement multiple
-        /// interface roles
-        /// </summary>
-        /// <typeparam name="FROM"></typeparam>
-        /// <typeparam name="TO"></typeparam>
-        void Forward<FROM, TO>() where FROM : class where TO : class;
-    }
 
 
     /// <summary>
@@ -70,7 +23,7 @@ namespace StructureMap.Configuration.DSL
     ///     }
     /// }
     /// </example>
-    public class Registry : IRegistry
+    public class Registry
     {
         private readonly List<Action<PluginGraph>> _actions = new List<Action<PluginGraph>>();
         private readonly List<Action> _basicActions = new List<Action>();
@@ -123,6 +76,7 @@ namespace StructureMap.Configuration.DSL
         /// </summary>
         /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <returns></returns>
+        [Obsolete("Change to For<T>()")]
         public CreatePluginFamilyExpression<PLUGINTYPE> BuildInstancesOf<PLUGINTYPE>()
         {
             return new CreatePluginFamilyExpression<PLUGINTYPE>(this);
@@ -134,6 +88,7 @@ namespace StructureMap.Configuration.DSL
         /// meant for registering open generic types
         /// </summary>
         /// <returns></returns>
+        [Obsolete("Change to For(pluginType)")]
         public GenericFamilyExpression ForRequestedType(Type pluginType)
         {
             return new GenericFamilyExpression(pluginType, this);
@@ -160,6 +115,7 @@ namespace StructureMap.Configuration.DSL
         /// </summary>
         /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <returns></returns>
+        [Obsolete("Change to For<T>()")]
         public CreatePluginFamilyExpression<PLUGINTYPE> ForRequestedType<PLUGINTYPE>()
         {
             return new CreatePluginFamilyExpression<PLUGINTYPE>(this);
@@ -195,6 +151,7 @@ namespace StructureMap.Configuration.DSL
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
+        [Obsolete("Prefer For<T>().Add() instead")]
         public IsExpression<T> InstanceOf<T>()
         {
             return new InstanceExpression<T>(instance =>
@@ -210,6 +167,7 @@ namespace StructureMap.Configuration.DSL
         /// </summary>
         /// <param name="pluginType"></param>
         /// <returns></returns>
+        [Obsolete("Prefer For(type).Add() instead")]
         public GenericIsExpression InstanceOf(Type pluginType)
         {
             return
