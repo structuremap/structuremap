@@ -124,11 +124,6 @@ namespace StructureMap
                     return false;
                 }
 
-                if (noPublicConstructors(pluggedType))
-                {
-                    return false;
-                }
-
                 if (IsGeneric(pluginType))
                 {
                     return GenericsPluginGraph.CanBeCast(pluginType, pluggedType);
@@ -162,11 +157,6 @@ namespace StructureMap
                 }
 
                 return returnValue;
-            }
-
-            private static bool noPublicConstructors(Type pluggedType)
-            {
-                return pluggedType.GetConstructors().Length == 0;
             }
 
             public static bool IsString(this Type type)

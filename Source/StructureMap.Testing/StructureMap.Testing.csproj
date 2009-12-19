@@ -182,6 +182,7 @@
     <Compile Include="Bugs\FillAllPropertiesShouldWorkForAlreadyConfiguredPluginsBug.cs" />
     <Compile Include="Bugs\HttpSessionNullRefBug.cs" />
     <Compile Include="Bugs\IDictionaryAndXmlBugTester.cs" />
+    <Compile Include="Bugs\InjectByFuncWithNoPublicConstructors.cs" />
     <Compile Include="Bugs\LambdaCreatesNullBugTester.cs" />
     <Compile Include="Bugs\MixedConfigureAndInitializeMissingInstanceProblem.cs" />
     <Compile Include="Bugs\ScanIndexerBugTester.cs" />

@@ -22,10 +22,11 @@ namespace StructureMap.Graph
 
         public void Process(Type type, PluginGraph graph)
         {
-            if (!type.CanBeCastTo(_pluginType)) return;
-
-            var name = _getName(type);
-            graph.AddType(_pluginType, type, name);
+            if (type.CanBeCastTo(_pluginType) && Constructor.HasConstructors(type))
+            {
+                var name = _getName(type);
+                graph.AddType(_pluginType, type, name);
+            }
         }
 
         #endregion

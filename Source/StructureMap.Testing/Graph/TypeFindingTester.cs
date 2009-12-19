@@ -29,12 +29,6 @@ namespace StructureMap.Testing.Graph
 
         private IContainer container;
 
-        [Test]
-        public void DoNotFindPluginWithNoPublicCTOR()
-        {
-            Assert.IsFalse(typeof (GreenType).CanBeCastTo(typeof (TypeIWantToFind)));
-        }
-
 
         [Test]
         public void FoundTheRightNumberOfInstancesForATypeWithNoPlugins()
