@@ -447,7 +447,7 @@ namespace StructureMap
             };
 
             // Fixes a mild bug.  The child container should inject itself
-            container._pipelineGraph.Inject<IContainer>(container);
+            container.Configure(x => x.For<IContainer>().Use(container));
 
             return container;
         }

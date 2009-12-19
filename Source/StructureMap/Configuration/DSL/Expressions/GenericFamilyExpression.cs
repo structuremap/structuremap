@@ -90,6 +90,7 @@ namespace StructureMap.Configuration.DSL.Expressions
             return alterAndContinue(family => family.AddInstance(instance));
         }
 
+
         /// <summary>
         /// Sets the object creation of the instances of the PluginType.  For example:  PerRequest,
         /// Singleton, ThreadLocal, HttpContext, or Hybrid

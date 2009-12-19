@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using StructureMap.Pipeline;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Graph
 {
@@ -164,6 +165,11 @@ namespace StructureMap.Graph
         public void UseSetterRule(Predicate<PropertyInfo> rule)
         {
             _setters.UseSetterRule(rule);
+        }
+
+        public bool IsNotOpenGeneric()
+        {
+            return !_pluggedType.IsGeneric();
         }
     }
 }

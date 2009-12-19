@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using StructureMap.Graph;
+using System.Linq;
 
 namespace StructureMap.Emitting
 {
@@ -18,10 +19,7 @@ namespace StructureMap.Emitting
             string assemblyName = "Builders" + guidString();
             _dynamicAssembly = new DynamicAssembly(assemblyName);
 
-            foreach (Plugin plugin in plugins)
-            {
-                processPlugin(plugin);
-            }
+            plugins.Where(x => x.IsNotOpenGeneric()).Each(x => processPlugin(x));
         }
 
         private static string guidString()

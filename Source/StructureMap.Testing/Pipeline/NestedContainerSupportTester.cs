@@ -14,6 +14,31 @@ namespace StructureMap.Testing.Pipeline
         {
         }
 
+        public class ContainerHolder
+        {
+            private readonly IContainer _container;
+
+            public ContainerHolder(IContainer container)
+            {
+                _container = container;
+            }
+
+            public IContainer Container { get { return _container; } }
+        }
+
+        [Test]
+        public void the_nested_container_will_deliver_itself_into_a_constructor_of_something_else()
+        {
+            var parent = new Container(x =>
+            {
+                x.For<IWidget>().Use<AWidget>();
+            });
+
+            var child = parent.GetNestedContainer();
+            child.GetInstance<ContainerHolder>().Container.ShouldBeTheSameAs(child);
+
+        }
+
         [Test]
         public void the_nested_container_delivers_itself_as_the_IContainer()
         {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using StructureMap.Emitting;
 using StructureMap.Util;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Graph
 {

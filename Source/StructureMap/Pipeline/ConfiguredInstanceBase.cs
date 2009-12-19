@@ -202,7 +202,16 @@ namespace StructureMap.Pipeline
         {
             if (instance == null) return;
 
-            _children.Add(name, instance);
+            if (_children.ContainsKey(name))
+            {
+                _children[name] = instance;
+            }
+            else
+            {
+                _children.Add(name, instance);
+            }
+
+            
         }
 
         protected void setChildArray(string name, Instance[] array)

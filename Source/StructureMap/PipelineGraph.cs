@@ -4,6 +4,7 @@ using System.Linq;
 using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
+using StructureMap.TypeRules;
 
 namespace StructureMap
 {
@@ -228,10 +229,13 @@ namespace StructureMap
 
         public bool HasDefaultForPluginType(Type pluginType)
         {
-            var typeToFind = pluginType.IsGenericType ? pluginType.GetGenericTypeDefinition() : pluginType;
-            var configuration = PluginTypes.FirstOrDefault(p => p.PluginType == typeToFind);
-
-            return configuration == null ? false : configuration.Default != null;
+            var factory = ForType(pluginType);
+            if (_profileManager.GetDefault(pluginType) != null)
+            {
+                return true;
+            }
+            
+            return (factory.AllInstances.Count() == 1);
         }
 
         public bool HasInstance(Type pluginType, string instanceKey)

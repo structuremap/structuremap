@@ -8,6 +8,17 @@ namespace StructureMap
     {
         public static class TypeExtensions
         {
+            public static bool Closes(this Type type, Type openType)
+            {
+                var baseType = type.BaseType;
+                if (baseType == null) return false;
+
+                var closes = baseType.IsGenericType && baseType.GetGenericTypeDefinition() == openType;
+                if (closes) return true;
+
+                return type.BaseType == null ? false : type.BaseType.Closes(openType);
+            }
+
             public static bool IsInNamespace(this Type type, string nameSpace)
             {
                 return type.Namespace.StartsWith(nameSpace);
@@ -48,12 +59,19 @@ namespace StructureMap
             {
                 if (!pluggedType.IsConcrete()) return null;
 
-                foreach (var interfaceType in pluggedType.GetInterfaces())
+                if (templateType.IsInterface)
                 {
-                    if (interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition() == templateType)
+                    foreach (var interfaceType in pluggedType.GetInterfaces())
                     {
-                        return interfaceType;
+                        if (interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition() == templateType)
+                        {
+                            return interfaceType;
+                        }
                     }
+                }
+                else if (pluggedType.BaseType.IsGenericType && pluggedType.BaseType.GetGenericTypeDefinition() == templateType)
+                {
+                    return pluggedType.BaseType;
                 }
 
                 return pluggedType.BaseType == typeof(object) ? null : pluggedType.BaseType.FindInterfaceThatCloses(templateType);
@@ -183,7 +201,7 @@ namespace StructureMap
 
             public static bool IsConcrete(this Type type)
             {
-                return !type.IsAbstract;
+                return !type.IsAbstract && !type.IsInterface;
             }
 
             public static bool IsAutoFillable(this Type type)
