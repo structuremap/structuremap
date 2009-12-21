@@ -96,6 +96,14 @@ namespace StructureMap.Pipeline
             return new ChildArrayExpression(this, propertyName);
         }
 
+        public ChildArrayExpression ChildArray(Type pluginType)
+        {
+            //TODO: add validation check
+            validateTypeIsArray(pluginType);
+            var propertyName = findPropertyName(pluginType);
+            return ChildArray(propertyName);
+        }
+
         /// <summary>
         /// Inline definition of a dependency array like IService[] or IHandler[]
         /// </summary>
@@ -103,10 +111,7 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public ChildArrayExpression ChildArray<PLUGINTYPE>()
         {
-            validateTypeIsArray<PLUGINTYPE>();
-
-            string propertyName = findPropertyName<PLUGINTYPE>();
-            return ChildArray<PLUGINTYPE>(propertyName);
+            return ChildArray(typeof (PLUGINTYPE));
         }
 
         /// <summary>

@@ -255,7 +255,12 @@ namespace StructureMap.Pipeline
 
         protected static void validateTypeIsArray<PLUGINTYPE>()
         {
-            if (!typeof (PLUGINTYPE).IsArray)
+            validateTypeIsArray(typeof(PLUGINTYPE));
+        }
+
+        protected static void validateTypeIsArray(Type pluginType)
+        {
+            if (!pluginType.IsArray)
             {
                 throw new StructureMapException(307);
             }

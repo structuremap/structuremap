@@ -198,6 +198,40 @@ namespace StructureMap.Testing.Pipeline
         }
 
         [Test]
+        public void HasProperty_for_generic_child_array_when_property_name_is_inferred()
+        {
+            var instance = new ConfiguredInstance(typeof(UsesGateways));
+
+            IConfiguredInstance configuredInstance = instance;
+            configuredInstance.HasProperty("gateways").ShouldBeFalse();
+
+            instance.ChildArray<IGateway[]>().Contains(new DefaultInstance());
+            configuredInstance.HasProperty("gateways").ShouldBeTrue();
+        }
+
+        [Test]
+        public void HasProperty_for_child_array_when_property_name_is_inferred()
+        {
+            var instance = new ConfiguredInstance(typeof(UsesGateways));
+
+            IConfiguredInstance configuredInstance = instance;
+            configuredInstance.HasProperty("gateways").ShouldBeFalse();
+
+            instance.ChildArray(typeof(IGateway[])).Contains(new DefaultInstance());
+            configuredInstance.HasProperty("gateways").ShouldBeTrue();
+        }
+
+        public class UsesGateways
+        {
+            private readonly IGateway[] _gateways;
+
+            public UsesGateways(IGateway[] gateways)
+            {
+                _gateways = gateways;
+            }
+        }
+
+        [Test]
         public void Property_cannot_be_found_so_throw_205()
         {
             try
