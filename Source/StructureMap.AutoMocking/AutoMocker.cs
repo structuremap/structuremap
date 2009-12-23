@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using StructureMap.Graph;
 using System.Linq;
+using StructureMap.Pipeline;
 
 namespace StructureMap.AutoMocking
 {
@@ -215,7 +216,7 @@ namespace StructureMap.AutoMocking
         public T AddAdditionalMockFor<T>() where T : class
         {
             var mock = _serviceLocator.Service<T>();
-            _container.Configure(r => r.InstanceOf<T>().Is.Object(mock));
+            _container.Configure(r => r.For(typeof (T)).Add(mock));
 
             return mock;
         }
@@ -265,7 +266,7 @@ namespace StructureMap.AutoMocking
             {
                 foreach (T t in stubs)
                 {
-                    x.InstanceOf<T>().Is.Object(t);
+                    x.For(typeof(T)).Add(t);
                 }
             });
         }

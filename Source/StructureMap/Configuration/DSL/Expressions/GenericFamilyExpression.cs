@@ -103,6 +103,11 @@ namespace StructureMap.Configuration.DSL.Expressions
             return alterAndContinue(family => family.AddInstance(instance));
         }
 
+        public GenericFamilyExpression Add(object instance)
+        {
+            return Add(new LiteralInstance(instance));
+        }
+
 
         /// <summary>
         /// Sets the object creation of the instances of the PluginType.  For example:  PerRequest,
