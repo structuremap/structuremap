@@ -178,6 +178,7 @@
     <Compile Include="AutoMocking\RhinoMockRepositoryProxyTester.cs" />
     <Compile Include="AutoWiringExamples.cs" />
     <Compile Include="BidirectionalDependencies.cs" />
+    <Compile Include="Bugs\AddValueDirectlyWithGenericUsage.cs" />
     <Compile Include="Bugs\BuildUpBug.cs" />
     <Compile Include="Bugs\FillAllPropertiesShouldWorkForAlreadyConfiguredPluginsBug.cs" />
     <Compile Include="Bugs\HttpSessionNullRefBug.cs" />

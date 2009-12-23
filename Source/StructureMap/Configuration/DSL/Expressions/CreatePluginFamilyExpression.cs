@@ -81,6 +81,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <typeparam name="CONCRETETYPE"></typeparam>
         /// <returns></returns>
+        [Obsolete("Prefer the usage For<ISomething>().Use<Something>()")]
         public CreatePluginFamilyExpression<PLUGINTYPE> TheDefaultIsConcreteType<CONCRETETYPE>()
             where CONCRETETYPE : PLUGINTYPE
         {

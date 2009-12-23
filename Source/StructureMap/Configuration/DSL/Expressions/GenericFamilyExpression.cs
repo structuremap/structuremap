@@ -67,6 +67,19 @@ namespace StructureMap.Configuration.DSL.Expressions
             return TheDefaultIsConcreteType(concreteType);
         }
 
+        /// <summary>
+        /// Shortcut to add a value by type
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public LiteralInstance Use(object value)
+        {
+            var instance = new LiteralInstance(value);
+            Use(instance);
+
+            return instance;
+        }
+
         
         /// <summary>
         /// Shortcut method to add an additional Instance to this Plugin Type

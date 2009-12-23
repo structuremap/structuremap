@@ -103,6 +103,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <typeparam name="PLUGGEDTYPE"></typeparam>
         /// <returns></returns>
+        [Obsolete("Favor For<ISomething>().Use<Something>()")]
         SmartInstance<PLUGGEDTYPE> OfConcreteType<PLUGGEDTYPE>() where PLUGGEDTYPE : T;
 
         /// <summary>
@@ -112,6 +113,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
+        [Obsolete("Favor For<ISomething>().Use(typeof(Something))")]
         ConfiguredInstance OfConcreteType(Type type);
 
         /// <summary>
@@ -120,6 +122,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="func"></param>
         /// <returns></returns>
+        [Obsolete("Prefer For<T>().Use(Func<T> func) or For<T>().Add(Func<T> func)")]
         ConstructorInstance<T> ConstructedBy(Func<T> func);
 
         /// <summary>
