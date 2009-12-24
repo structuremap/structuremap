@@ -366,7 +366,7 @@ namespace StructureMap.Pipeline
             /// <returns></returns>
             public SmartInstance<T> Is(CHILD value)
             {
-                return Is(new LiteralInstance(value));
+                return Is(new ObjectInstance(value));
             }
 
             /// <summary>

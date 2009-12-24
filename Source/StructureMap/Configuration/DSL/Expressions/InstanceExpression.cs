@@ -26,7 +26,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        LiteralInstance IsThis(T obj);
+        ObjectInstance IsThis(T obj);
     }
 
     public interface ThenItExpression<T>
@@ -95,7 +95,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="theObject"></param>
         /// <returns></returns>
-        LiteralInstance Object(T theObject);
+        ObjectInstance Object(T theObject);
 
         /// <summary>
         /// Build the Instance with the constructor function and setter arguments.  Starts
@@ -123,7 +123,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <param name="func"></param>
         /// <returns></returns>
         [Obsolete("Prefer For<T>().Use(Func<T> func) or For<T>().Add(Func<T> func)")]
-        ConstructorInstance<T> ConstructedBy(Func<T> func);
+        LambdaInstance<T> ConstructedBy(Func<T> func);
 
         /// <summary>
         /// Create an Instance that builds an object by calling a Lambda or
@@ -132,7 +132,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="func"></param>
         /// <returns></returns>
-        ConstructorInstance<T> ConstructedBy(Func<IContext, T> func);
+        LambdaInstance<T> ConstructedBy(Func<IContext, T> func);
 
         /// <summary>
         /// Use the Instance of this PluginType with the specified name.  This is
@@ -204,9 +204,9 @@ namespace StructureMap.Configuration.DSL.Expressions
             returnInstance(instance);
         }
 
-        public LiteralInstance IsThis(T obj)
+        public ObjectInstance IsThis(T obj)
         {
-            return returnInstance(new LiteralInstance(obj));
+            return returnInstance(new ObjectInstance(obj));
         }
 
         #endregion
@@ -232,9 +232,9 @@ namespace StructureMap.Configuration.DSL.Expressions
             return returnInstance(new ConfiguredInstance(type));
         }
 
-        public LiteralInstance Object(T theObject)
+        public ObjectInstance Object(T theObject)
         {
-            return returnInstance(new LiteralInstance(theObject));
+            return returnInstance(new ObjectInstance(theObject));
         }
 
         public ReferencedInstance TheInstanceNamed(string name)
@@ -247,14 +247,14 @@ namespace StructureMap.Configuration.DSL.Expressions
             return returnInstance(new DefaultInstance());
         }
 
-        public ConstructorInstance<T> ConstructedBy(Func<T> func)
+        public LambdaInstance<T> ConstructedBy(Func<T> func)
         {
-            return returnInstance(new ConstructorInstance<T>(func));
+            return returnInstance(new LambdaInstance<T>(func));
         }
 
-        public ConstructorInstance<T> ConstructedBy(Func<IContext, T> func)
+        public LambdaInstance<T> ConstructedBy(Func<IContext, T> func)
         {
-            return returnInstance(new ConstructorInstance<T>(func));
+            return returnInstance(new LambdaInstance<T>(func));
         }
 
         public PrototypeInstance PrototypeOf(T template)

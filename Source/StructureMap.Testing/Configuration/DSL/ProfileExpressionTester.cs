@@ -82,7 +82,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 .For<IWidget>().Use(theWidget);
 
             PluginGraph graph = registry.Build();
-            var instance = (LiteralInstance) graph.ProfileManager.GetDefault(typeof (IWidget), "something");
+            var instance = (ObjectInstance) graph.ProfileManager.GetDefault(typeof (IWidget), "something");
 
             Assert.AreSame(theWidget, instance.Object);
         }
@@ -98,7 +98,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 .For<IWidget>().UseNamedInstance(theDefaultName)
                 .For<Rule>().UseNamedInstance("DefaultRule");
 
-            LiteralInstance masterInstance =
+            ObjectInstance masterInstance =
                 registry.InstanceOf<IWidget>().Is.Object(new AWidget()).WithName(theDefaultName);
 
             ProfileManager manager = registry.Build().ProfileManager;

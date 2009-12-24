@@ -289,8 +289,8 @@ namespace StructureMap.Testing.Graph
         {
             IInstanceFactory factory = getISomethingFactory();
 
-            factory.AddInstance(new LiteralInstance(_red).WithName("Red"));
-            factory.AddInstance(new LiteralInstance(_blue).WithName("Blue"));
+            factory.AddInstance(new ObjectInstance(_red).WithName("Red"));
+            factory.AddInstance(new ObjectInstance(_blue).WithName("Blue"));
 
             factory.FindInstance("Red").ShouldNotBeNull();
 
@@ -324,12 +324,12 @@ namespace StructureMap.Testing.Graph
         {
             IInstanceFactory factory = getISomethingFactory();
 
-            factory.AddInstance(new LiteralInstance(_red).WithName("Red"));
-            var oldBlue = new LiteralInstance(_blue).WithName("Blue");
+            factory.AddInstance(new ObjectInstance(_red).WithName("Red"));
+            var oldBlue = new ObjectInstance(_blue).WithName("Blue");
             factory.AddInstance(oldBlue);
 
             // Replace Blue
-            var newBlue = new LiteralInstance(_orange).WithName("Blue");
+            var newBlue = new ObjectInstance(_orange).WithName("Blue");
             factory.AddInstance(newBlue);
 
             factory.FindInstance("Blue").ShouldBeTheSameAs(newBlue);

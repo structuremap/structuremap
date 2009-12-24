@@ -561,7 +561,7 @@ namespace StructureMap
 
             public OpenGenericTypeExpression(Type templateType, Container container)
             {
-                if (!templateType.IsGeneric())
+                if (!templateType.IsOpenGeneric())
                 {
                     throw new StructureMapException(285);
                 }
@@ -599,7 +599,7 @@ namespace StructureMap
         /// <param name="object"></param>
         public void Inject<T>(string name, T @object)
         {
-            LiteralInstance instance = new LiteralInstance(@object).WithName(name);
+            ObjectInstance instance = new ObjectInstance(@object).WithName(name);
             _transientCache.Set(typeof(T), instance, @object);
             _pipelineGraph.AddInstance<T>(instance);
         }
@@ -630,7 +630,7 @@ namespace StructureMap
             }
 
 
-            var instance = new LiteralInstance(@object);
+            var instance = new ObjectInstance(@object);
             _transientCache.Set(pluginType, instance, @object);
             _pipelineGraph.SetDefault(pluginType, instance);
         }

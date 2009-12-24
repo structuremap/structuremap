@@ -29,7 +29,7 @@ namespace StructureMap.AutoMocking
                 {
                     object service = _locator.Service(pluginType);
 
-                    var instance = new LiteralInstance(service);
+                    var instance = new ObjectInstance(service);
 
                     profileManager.SetDefault(pluginType, instance);
                 }

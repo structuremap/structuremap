@@ -154,7 +154,7 @@ namespace StructureMap.Testing.Graph
 
             IConfiguredInstance instance = new ExplicitInstance(typeof (Command), args, new SmartInstance<Command>());
 
-            Assert.AreSame(theNode, instance.GetChild("node", typeof (Node), new StubBuildSession()));
+            Assert.AreSame(theNode, instance.Get("node", typeof (Node), new StubBuildSession()));
         }
 
         [Test]

@@ -102,7 +102,7 @@ namespace StructureMap.Testing.Widget
         {
             var target = new Child(
                 instance.GetProperty("Name"),
-                (GrandChild) instance.GetChild("MyGrandChild", typeof(GrandChild), session));
+                (GrandChild) instance.Get("MyGrandChild", typeof(GrandChild), session));
             return target;
         }
     }

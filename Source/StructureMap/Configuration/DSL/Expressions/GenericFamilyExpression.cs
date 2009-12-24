@@ -72,9 +72,9 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public LiteralInstance Use(object value)
+        public ObjectInstance Use(object value)
         {
-            var instance = new LiteralInstance(value);
+            var instance = new ObjectInstance(value);
             Use(instance);
 
             return instance;
@@ -105,7 +105,7 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         public GenericFamilyExpression Add(object instance)
         {
-            return Add(new LiteralInstance(instance));
+            return Add(new ObjectInstance(instance));
         }
 
 

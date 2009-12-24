@@ -40,7 +40,7 @@ namespace StructureMap
 
         private void closeType(Type type)
         {
-            if (!type.IsGeneric())
+            if (!type.IsOpenGeneric())
             {
                 throw new StructureMapException(285);
             }

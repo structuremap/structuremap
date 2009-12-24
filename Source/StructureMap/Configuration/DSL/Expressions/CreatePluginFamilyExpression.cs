@@ -124,7 +124,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="func"></param>
         /// <returns></returns>
-        public ConstructorInstance<PLUGINTYPE> Use(Func<IContext, PLUGINTYPE> func)
+        public LambdaInstance<PLUGINTYPE> Use(Func<IContext, PLUGINTYPE> func)
         {
             return TheDefault.Is.ConstructedBy(func);
         }
@@ -134,7 +134,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="object"></param>
         /// <returns></returns>
-        public LiteralInstance Use(PLUGINTYPE @object)
+        public ObjectInstance Use(PLUGINTYPE @object)
         {
             return TheDefault.IsThis(@object);
         }

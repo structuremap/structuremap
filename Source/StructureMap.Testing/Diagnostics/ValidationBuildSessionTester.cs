@@ -31,10 +31,10 @@ namespace StructureMap.Testing.Diagnostics
             return session.BuildErrors[0];
         }
 
-        private ConstructorInstance<IWidget> errorInstance()
+        private LambdaInstance<IWidget> errorInstance()
         {
             return
-                new ConstructorInstance<IWidget>(delegate() { throw new NotSupportedException("You can't make me!"); });
+                new LambdaInstance<IWidget>(delegate() { throw new NotSupportedException("You can't make me!"); });
         }
 
         [Test]
@@ -157,7 +157,7 @@ namespace StructureMap.Testing.Diagnostics
         {
             var session = new ValidationBuildSession(new PluginGraph());
 
-            var instance = new LiteralInstance(new ColorWidget("Red"));
+            var instance = new ObjectInstance(new ColorWidget("Red"));
             object widget1 = session.CreateInstance(typeof (IWidget), instance);
             object widget2 = session.CreateInstance(typeof (IWidget), instance);
 
@@ -177,7 +177,7 @@ namespace StructureMap.Testing.Diagnostics
         [Test]
         public void Validate_a_single_object_with_both_a_passing_validation_method_and_a_failing_validation_method()
         {
-            var instance = new LiteralInstance(new WidgetWithOneValidationFailure());
+            var instance = new ObjectInstance(new WidgetWithOneValidationFailure());
             ValidationBuildSession session =
                 validatedSession(registry => registry.InstanceOf<IWidget>().IsThis(instance));
 

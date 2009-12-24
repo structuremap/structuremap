@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Linq;
 
 namespace StructureMap.Graph
 {
@@ -128,6 +129,13 @@ namespace StructureMap.Graph
         public void UseSetterRule(Predicate<PropertyInfo> rule)
         {
             _properties.FindAll(setter => rule(setter.Property)).ForEach(setter => setter.IsMandatory = true);
+        }
+
+        public Type FindArgumentType(string name)
+        {
+            return _properties
+                .Where(x => x.Name == name)
+                .Select(x => x.Property.PropertyType).FirstOrDefault();
         }
     }
 }

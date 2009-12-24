@@ -356,13 +356,15 @@
     <Compile Include="Pipeline\ConditionalInstanceTester.cs" />
     <Compile Include="Pipeline\ConfiguredInstanceTester.cs" />
     <Compile Include="Pipeline\ConstructorInstanceTester.cs" />
+    <Compile Include="Pipeline\EnumerableInstanceTester.cs" />
+    <Compile Include="Pipeline\LambdaInstanceTester.cs" />
     <Compile Include="Pipeline\ContainerDisposalTester.cs" />
     <Compile Include="Pipeline\ContainerIsInTheContainerTester.cs" />
     <Compile Include="Pipeline\DefaultInstanceTester.cs" />
     <Compile Include="Pipeline\GenericsHelperExpressionTester.cs" />
     <Compile Include="Pipeline\HybridBuildLifecycleTester.cs" />
     <Compile Include="Pipeline\InstanceTester.cs" />
-    <Compile Include="Pipeline\LiteralInstanceTester.cs" />
+    <Compile Include="Pipeline\ObjectInstanceTester.cs" />
     <Compile Include="Pipeline\MissingInstanceTester.cs" />
     <Compile Include="Pipeline\NestedContainerSupportTester.cs" />
     <Compile Include="Pipeline\ObjectBuilderTester.cs" />

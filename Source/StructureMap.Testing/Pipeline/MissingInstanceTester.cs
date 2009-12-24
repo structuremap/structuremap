@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using NUnit.Framework;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
@@ -12,7 +12,7 @@ namespace StructureMap.Testing.Pipeline
         public void returns_missing_instance_if_it_exists_and_the_requested_instance_is_not_found()
         {
             var factory = new InstanceFactory(typeof (IWidget));
-            var missing = new LiteralInstance(new AWidget());
+            var missing = new ObjectInstance(new AWidget());
 
 
             factory.MissingInstance = missing;

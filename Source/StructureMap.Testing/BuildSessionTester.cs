@@ -57,7 +57,7 @@ namespace StructureMap.Testing
 
             var session = new BuildSession(new PluginGraph());
             var session2 = new BuildSession(new PluginGraph());
-            var instance = new ConstructorInstance<ColorRule>(() =>
+            var instance = new LambdaInstance<ColorRule>(() =>
             {
                 count++;
                 return new ColorRule("Red");
@@ -98,7 +98,7 @@ namespace StructureMap.Testing
             int count = 0;
 
             var session = new BuildSession(new PluginGraph());
-            var instance = new ConstructorInstance<ColorRule>(() =>
+            var instance = new LambdaInstance<ColorRule>(() =>
             {
                 count++;
                 return new ColorRule("Red");
@@ -121,7 +121,7 @@ namespace StructureMap.Testing
         {
             int count = 0;
 
-            var instance = new ConstructorInstance<ColorRule>(() =>
+            var instance = new LambdaInstance<ColorRule>(() =>
             {
                 count++;
                 return new ColorRule("Red");
@@ -221,8 +221,8 @@ namespace StructureMap.Testing
 
             PluginGraph graph = new PluginGraph();
             PluginFamily family = graph.FindFamily(typeof(IService));
-            family.AddInstance(new LiteralInstance(red).WithName("red"));
-            family.AddInstance(new LiteralInstance(green).WithName("green"));
+            family.AddInstance(new ObjectInstance(red).WithName("red"));
+            family.AddInstance(new ObjectInstance(green).WithName("green"));
 
             var session = new BuildSession(graph);
             session.TryGetInstance<IService>("red").ShouldBeTheSameAs(red);
@@ -237,8 +237,8 @@ namespace StructureMap.Testing
 
             PluginGraph graph = new PluginGraph();
             PluginFamily family = graph.FindFamily(typeof(IService));
-            family.AddInstance(new LiteralInstance(red).WithName("red"));
-            family.AddInstance(new LiteralInstance(green).WithName("green"));
+            family.AddInstance(new ObjectInstance(red).WithName("red"));
+            family.AddInstance(new ObjectInstance(green).WithName("green"));
 
             var session = new BuildSession(graph);
             session.GetInstance<IService>("red").ShouldBeTheSameAs(red);

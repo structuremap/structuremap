@@ -54,7 +54,7 @@ namespace StructureMap.Pipeline
                 if (arg.Value == null) continue;
 
                 instance.SetProperty(arg.Key, arg.Value.ToString());
-                instance.SetChild(arg.Key, new LiteralInstance(arg.Value));
+                instance.Set(arg.Key, new ObjectInstance(arg.Value));
             }
         }
 

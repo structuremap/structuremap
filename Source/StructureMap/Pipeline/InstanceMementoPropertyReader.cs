@@ -90,7 +90,7 @@ namespace StructureMap.Pipeline
         {
             Instance childInstance = _memento.ReadChildInstance(name, _pluginGraph, childType);
 
-            _instance.SetChild(name, childInstance);
+            _instance.Set(name, childInstance);
         }
 
         private void copyChildArray(string name, Type childType)

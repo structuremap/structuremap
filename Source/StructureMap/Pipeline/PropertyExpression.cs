@@ -28,7 +28,7 @@ namespace StructureMap.Pipeline
                 _instance.SetProperty(_propertyName, propertyValue.ToString());
             else
             {
-                _instance.SetChild(_propertyName,new LiteralInstance(propertyValue));
+                _instance.Set(_propertyName,new ObjectInstance(propertyValue));
             }
             return (T) _instance;
         }

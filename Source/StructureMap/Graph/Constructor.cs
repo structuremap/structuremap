@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using StructureMap.TypeRules;
@@ -81,15 +82,9 @@ namespace StructureMap.Graph
 
         public string FindFirstConstructorArgumentOfType(Type type)
         {
-            foreach (ParameterInfo info in _ctor.GetParameters())
-            {
-                if (info.ParameterType.Equals(type))
-                {
-                    return info.Name;
-                }
-            }
-
-            return null;
+            return _ctor.GetParameters()
+                .Where(x => x.ParameterType == type)
+                .Select(x => x.Name).FirstOrDefault();
         }
 
 
@@ -156,6 +151,13 @@ namespace StructureMap.Graph
             }
 
             _ctor = ctor;
+        }
+
+        public Type FindArgumentType(string name)
+        {
+            return _ctor.GetParameters()
+                .Where(x => x.Name == name)
+                .Select(x => x.ParameterType).FirstOrDefault();
         }
     }
 }

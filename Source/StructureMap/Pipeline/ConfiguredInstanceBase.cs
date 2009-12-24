@@ -87,7 +87,7 @@ namespace StructureMap.Pipeline
             return _properties[propertyName];
         }
 
-        object IConfiguredInstance.GetChild(string propertyName, Type pluginType, BuildSession buildSession)
+        object IConfiguredInstance.Get(string propertyName, Type pluginType, BuildSession buildSession)
         {
             return getChild(propertyName, pluginType, buildSession);
         }
@@ -130,7 +130,7 @@ namespace StructureMap.Pipeline
             setProperty(propertyName, propertyValue);
         }
 
-        void IConfiguredInstance.SetChild(string name, Instance instance)
+        void IConfiguredInstance.Set(string name, Instance instance)
         {
             setChild(name, instance);
         }

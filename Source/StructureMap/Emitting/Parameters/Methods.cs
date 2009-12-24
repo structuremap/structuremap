@@ -24,7 +24,7 @@ namespace StructureMap.Emitting.Parameters
                                                                           }, null);
 
         public static MethodInfo GET_CHILD =
-            ReflectionHelper.GetMethod<IConfiguredInstance>(i => i.GetChild(null, null, null));
+            ReflectionHelper.GetMethod<IConfiguredInstance>(i => i.Get(null, null, null));
 
         public static MethodInfo GET_CHILDREN_ARRAY =
             ReflectionHelper.GetMethod<IConfiguredInstance>(i => i.GetChildrenArray(null));

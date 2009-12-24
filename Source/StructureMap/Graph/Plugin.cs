@@ -169,7 +169,12 @@ namespace StructureMap.Graph
 
         public bool IsNotOpenGeneric()
         {
-            return !_pluggedType.IsGeneric();
+            return !_pluggedType.IsOpenGeneric();
+        }
+
+        public Type FindArgumentType(string argumentName)
+        {
+            return _constructor.FindArgumentType(argumentName) ?? _setters.FindArgumentType(argumentName);
         }
     }
 }

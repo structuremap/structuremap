@@ -108,14 +108,14 @@ namespace StructureMap.Testing.Pipeline
         public void FillAll_pushes_in_all_types()
         {
             var source = new Profile("Source");
-            source.SetDefault(typeof (ISomething), new LiteralInstance(new SomethingOne()).WithName("Red"));
-            source.SetDefault(typeof (string), new LiteralInstance(new SomethingOne()).WithName("Red"));
-            source.SetDefault(typeof (int), new LiteralInstance(new SomethingOne()).WithName("Red"));
-            source.SetDefault(typeof (bool), new LiteralInstance(new SomethingOne()).WithName("Red"));
+            source.SetDefault(typeof (ISomething), new ObjectInstance(new SomethingOne()).WithName("Red"));
+            source.SetDefault(typeof (string), new ObjectInstance(new SomethingOne()).WithName("Red"));
+            source.SetDefault(typeof (int), new ObjectInstance(new SomethingOne()).WithName("Red"));
+            source.SetDefault(typeof (bool), new ObjectInstance(new SomethingOne()).WithName("Red"));
 
             var destination = new Profile("Destination");
-            destination.SetDefault(typeof (string), new LiteralInstance(new SomethingOne()).WithName("Blue"));
-            destination.SetDefault(typeof (int), new LiteralInstance(new SomethingOne()).WithName("Blue"));
+            destination.SetDefault(typeof (string), new ObjectInstance(new SomethingOne()).WithName("Blue"));
+            destination.SetDefault(typeof (int), new ObjectInstance(new SomethingOne()).WithName("Blue"));
 
             source.FillAllTypesInto(destination);
 

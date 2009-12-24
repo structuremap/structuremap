@@ -4,11 +4,24 @@ using StructureMap.TypeRules;
 
 namespace StructureMap.Pipeline
 {
-    public class LiteralInstance : ExpressedInstance<LiteralInstance>, IDisposable
+    public class NullInstance : Instance
+    {
+        protected override string getDescription()
+        {
+            return "NULL";
+        }
+
+        protected override object build(Type pluginType, BuildSession session)
+        {
+            return null;
+        }
+    }
+
+    public class ObjectInstance : ExpressedInstance<ObjectInstance>, IDisposable
     {
         private object _object;
 
-        public LiteralInstance(object anObject)
+        public ObjectInstance(object anObject)
         {
             if (anObject == null)
             {
@@ -19,7 +32,7 @@ namespace StructureMap.Pipeline
         }
 
 
-        protected override LiteralInstance thisInstance
+        protected override ObjectInstance thisInstance
         {
             get { return this; }
         }

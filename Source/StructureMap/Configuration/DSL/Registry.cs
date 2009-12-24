@@ -395,7 +395,7 @@ namespace StructureMap.Configuration.DSL
         /// <typeparam name="T"></typeparam>
         /// <typeparam name="U"></typeparam>
         /// <returns></returns>
-        public ConstructorInstance<T> Redirect<T, U>() where T : class where U : class
+        public LambdaInstance<T> Redirect<T, U>() where T : class where U : class
         {
             return For<T>().TheDefault.Is.ConstructedBy(c =>
             {

@@ -12,7 +12,7 @@ namespace StructureMap.Testing.Graph
         public void Add_instance_that_does_not_exist_in_destination()
         {
             var source = new PluginFamily(typeof (IWidget));
-            var sourceInstance = new LiteralInstance(new AWidget());
+            var sourceInstance = new ObjectInstance(new AWidget());
             source.AddInstance(sourceInstance);
 
             var destination = new PluginFamily(typeof (IWidget));
@@ -25,11 +25,11 @@ namespace StructureMap.Testing.Graph
         public void Do_not_override_named_instance()
         {
             var source = new PluginFamily(typeof (IWidget));
-            LiteralInstance sourceInstance = new LiteralInstance(new AWidget()).WithName("New");
+            ObjectInstance sourceInstance = new ObjectInstance(new AWidget()).WithName("New");
             source.AddInstance(sourceInstance);
 
             var destination = new PluginFamily(typeof (IWidget));
-            LiteralInstance destinationInstance = new LiteralInstance(new AWidget()).WithName("New");
+            ObjectInstance destinationInstance = new ObjectInstance(new AWidget()).WithName("New");
             destination.AddInstance(destinationInstance);
 
             destination.ImportFrom(source);

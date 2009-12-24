@@ -250,6 +250,20 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
+        public void find_argument_type_if_it_is_constructor()
+        {
+            var plugin = new Plugin(typeof(GrandPrix));
+            plugin.FindArgumentType("engine").ShouldEqual(typeof (IEngine));
+        }
+
+        [Test]
+        public void find_argument_type_if_it_is_a_setter()
+        {
+            var plugin = new Plugin(typeof(GTO));
+            plugin.FindArgumentType("Engine").ShouldEqual(typeof (IEngine));
+        }
+
+        [Test]
         public void FindFirstConstructorArgumentOfType_in_a_setter_too()
         {
             var plugin = new Plugin(typeof (GTO));

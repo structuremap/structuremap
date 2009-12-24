@@ -25,7 +25,7 @@ namespace StructureMap.Testing.Pipeline
 
         private void addDefaultToPluginFamily<T>(string name)
         {
-            LiteralInstance instance = new LiteralInstance(0).WithName(name);
+            ObjectInstance instance = new ObjectInstance(0).WithName(name);
             PluginFamily family = _pluginGraph.FindFamily(typeof (T));
             family.AddInstance(instance);
             family.DefaultInstanceKey = instance.Name;
@@ -35,12 +35,12 @@ namespace StructureMap.Testing.Pipeline
         {
             _manager.SetDefault(profile, typeof (T), new ReferencedInstance(name));
             PluginFamily family = _pluginGraph.FindFamily(typeof (T));
-            family.AddInstance(new LiteralInstance(0).WithName(name));
+            family.AddInstance(new ObjectInstance(0).WithName(name));
         }
 
         private void addDefaultToMachine<T>(string name)
         {
-            LiteralInstance instance = new LiteralInstance(0).WithName(name);
+            ObjectInstance instance = new ObjectInstance(0).WithName(name);
             PluginFamily family = _pluginGraph.FindFamily(typeof (T));
             family.AddInstance(instance);
 
@@ -67,8 +67,8 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void Can_only_add_default_once_to_the_default_profile()
         {
-            var i1 = new LiteralInstance(1);
-            var i2 = new LiteralInstance(2);
+            var i1 = new ObjectInstance(1);
+            var i2 = new ObjectInstance(2);
 
             var manager = new ProfileManager();
 

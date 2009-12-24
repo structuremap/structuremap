@@ -187,7 +187,7 @@ namespace StructureMap
 
         public Instance Inject<PLUGINTYPE>(PLUGINTYPE instance)
         {
-            var literalInstance = new LiteralInstance(instance);
+            var literalInstance = new ObjectInstance(instance);
             ForType(typeof (PLUGINTYPE)).AddInstance(literalInstance);
             SetDefault(typeof (PLUGINTYPE), literalInstance);
 

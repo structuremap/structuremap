@@ -30,10 +30,11 @@ namespace StructureMap
                 return new ReferencedInstance(key);
             }
 
-            public static bool IsGeneric(this Type type)
+            public static bool IsOpenGeneric(this Type type)
             {
                 return type.IsGenericTypeDefinition || type.ContainsGenericParameters;
             }
+
 
             public static bool IsConcreteAndAssignableTo(this Type pluggedType, Type pluginType)
             {
@@ -124,12 +125,12 @@ namespace StructureMap
                     return false;
                 }
 
-                if (IsGeneric(pluginType))
+                if (IsOpenGeneric(pluginType))
                 {
                     return GenericsPluginGraph.CanBeCast(pluginType, pluggedType);
                 }
 
-                if (IsGeneric(pluggedType))
+                if (IsOpenGeneric(pluggedType))
                 {
                     return false;
                 }

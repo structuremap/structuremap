@@ -82,9 +82,9 @@ namespace StructureMap.Testing.Graph
             var factory = new InstanceFactory(typeof (IWidget));
 
             var family = new PluginFamily(typeof (IWidget));
-            family.AddInstance(new LiteralInstance(new AWidget()).WithName("New"));
-            family.AddInstance(new LiteralInstance(new AWidget()).WithName("New2"));
-            family.AddInstance(new LiteralInstance(new AWidget()).WithName("New3"));
+            family.AddInstance(new ObjectInstance(new AWidget()).WithName("New"));
+            family.AddInstance(new ObjectInstance(new AWidget()).WithName("New2"));
+            family.AddInstance(new ObjectInstance(new AWidget()).WithName("New3"));
 
             factory.ImportFrom(family);
 
@@ -130,11 +130,11 @@ namespace StructureMap.Testing.Graph
         public void Merge_from_PluginFamily_will_not_replace_an_existing_instance()
         {
             var factory = new InstanceFactory(typeof (IWidget));
-            LiteralInstance instance1 = new LiteralInstance(new AWidget()).WithName("New");
+            ObjectInstance instance1 = new ObjectInstance(new AWidget()).WithName("New");
             factory.AddInstance(instance1);
 
             var family = new PluginFamily(typeof (IWidget));
-            family.AddInstance(new LiteralInstance(new AWidget()).WithName("New"));
+            family.AddInstance(new ObjectInstance(new AWidget()).WithName("New"));
 
             factory.ImportFrom(family);
 
@@ -191,7 +191,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void the_instances_are_cloned_so_that_new_instances_are_NOT_injected_into_()
         {
-            clone.AddInstance(new LiteralInstance(new DefaultGateway()));
+            clone.AddInstance(new ObjectInstance(new DefaultGateway()));
 
             factory.AllInstances.Count().ShouldEqual(2);
             clone.AllInstances.Count().ShouldEqual(3);

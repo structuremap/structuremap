@@ -322,7 +322,7 @@ namespace StructureMap.Pipeline
 
             public ConfiguredInstance Is(object value)
             {
-                var instance = new LiteralInstance(value);
+                var instance = new ObjectInstance(value);
                 return Is(instance);
             }
 

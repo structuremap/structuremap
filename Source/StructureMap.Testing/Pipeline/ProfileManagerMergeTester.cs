@@ -18,7 +18,7 @@ namespace StructureMap.Testing.Pipeline
 
             // Fill in value before the ImportFrom
             var destination = new ProfileManager();
-            var destinationInstance = new LiteralInstance(new AWidget());
+            var destinationInstance = new ObjectInstance(new AWidget());
             destination.SetDefault(PROFILE, typeof (IWidget), destinationInstance);
 
             destination.ImportFrom(source);
@@ -65,7 +65,7 @@ namespace StructureMap.Testing.Pipeline
 
             var destination = new ProfileManager();
             destination.ImportFrom(source);
-            destination.SetDefault(typeof (IWidget), new LiteralInstance(new AWidget()));
+            destination.SetDefault(typeof (IWidget), new ObjectInstance(new AWidget()));
 
             Assert.AreSame(sourceInstance, source.GetDefault(typeof (IWidget)));
         }
@@ -82,7 +82,7 @@ namespace StructureMap.Testing.Pipeline
             destination.ImportFrom(source);
 
             // Source should be unchanged when destination IS changed
-            destination.SetDefault(PROFILE, typeof (IWidget), new LiteralInstance(new AWidget()));
+            destination.SetDefault(PROFILE, typeof (IWidget), new ObjectInstance(new AWidget()));
             Assert.AreSame(profileInstance, source.GetDefault(typeof (IWidget), PROFILE));
         }
 

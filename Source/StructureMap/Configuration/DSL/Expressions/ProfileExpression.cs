@@ -169,7 +169,7 @@ namespace StructureMap.Configuration.DSL.Expressions
             /// <returns></returns>
             public ProfileExpression Use(Func<T> func)
             {
-                var instance = new ConstructorInstance<T>(func);
+                var instance = new LambdaInstance<T>(func);
                 return Use(instance);
             }
 
@@ -180,7 +180,7 @@ namespace StructureMap.Configuration.DSL.Expressions
             /// <returns></returns>
             public ProfileExpression Use(T t)
             {
-                var instance = new LiteralInstance(t);
+                var instance = new ObjectInstance(t);
                 return Use(instance);
             }
 
