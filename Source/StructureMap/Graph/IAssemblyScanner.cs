@@ -185,5 +185,18 @@ namespace StructureMap.Graph
         /// The filters apply
         /// </summary>
         void SingleImplementationsOfInterface();
+
+        /// <summary>
+        /// Adds a registration convention to be applied to all the types in this
+        /// logical "scan" operation
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        void Convention<T>() where T : IRegistrationConvention, new();
+
+        /// <summary>
+        /// Adds a registration convention to be applied to all the types in this
+        /// logical "scan" operation
+        /// </summary>
+        void With(IRegistrationConvention convention);
     }
 }

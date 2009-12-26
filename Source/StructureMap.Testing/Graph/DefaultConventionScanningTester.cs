@@ -1,5 +1,6 @@
 using System;
 using NUnit.Framework;
+using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 
 namespace StructureMap.Testing.Graph
@@ -61,6 +62,14 @@ namespace StructureMap.Testing.Graph
     [TestFixture]
     public class DefaultConventionScanningTester
     {
+        [SetUp]
+        public void SetUp()
+        {
+            PluginCache.ResetAll();
+        }
+
+
+
         [Test]
         public void FindPluginType()
         {
@@ -77,7 +86,7 @@ namespace StructureMap.Testing.Graph
                 registry.Scan(x =>
                 {
                     x.TheCallingAssembly();
-                    x.With<DefaultConventionScanner>();
+                    x.Convention<DefaultConventionScanner>();
                 });
             });
 
@@ -105,7 +114,12 @@ namespace StructureMap.Testing.Graph
         {
             var graph = new PluginGraph();
             var scanner = new DefaultConventionScanner();
-            scanner.Process(typeof (Convention), graph);
+
+            var registry = new Registry();
+
+            scanner.Process(typeof (Convention), registry);
+
+            registry.ConfigurePluginGraph(graph);
 
             Assert.IsFalse(graph.PluginFamilies.Contains(typeof (IServer)));
             Assert.IsTrue(graph.PluginFamilies.Contains(typeof (IConvention)));

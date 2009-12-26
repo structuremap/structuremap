@@ -1,29 +1,32 @@
 using System;
+using StructureMap.Configuration.DSL;
 using StructureMap.TypeRules;
 
 namespace StructureMap.Graph
 {
+    [Obsolete("Favor the new IRegistrationConvention")]
     public interface ITypeScanner
     {
         void Process(Type type, PluginGraph graph);
     }
 
-    public class DefaultConventionScanner : ITypeScanner
+    public interface IRegistrationConvention
     {
-        #region ITypeScanner Members
+        void Process(Type type, Registry registry);
+    }
 
-        public void Process(Type type, PluginGraph graph)
+    public class DefaultConventionScanner : IRegistrationConvention
+    {
+        public void Process(Type type, Registry registry)
         {
             if (!type.IsConcrete()) return;
 
             Type pluginType = FindPluginType(type);
             if (pluginType != null && Constructor.HasConstructors(type))
             {
-                graph.AddType(pluginType, type);
+                registry.For(pluginType).Add(type);
             }
         }
-
-        #endregion
 
         public virtual Type FindPluginType(Type concreteType)
         {

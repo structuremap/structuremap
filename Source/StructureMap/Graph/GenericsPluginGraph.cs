@@ -53,6 +53,9 @@ namespace StructureMap.Graph
 
         private static bool checkGenericType(Type pluggedType, Type pluginType)
         {
+            if (pluginType.IsAssignableFrom(pluggedType)) return true;
+
+
 // check interfaces
             foreach (Type type in pluggedType.GetInterfaces())
             {

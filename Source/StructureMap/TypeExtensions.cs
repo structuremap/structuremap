@@ -172,7 +172,7 @@ namespace StructureMap
                     return false;
                 }
 
-                if (IsOpenGeneric(pluginType))
+                if (pluginType.IsOpenGeneric() && pluggedType.IsGenericType)
                 {
                     return GenericsPluginGraph.CanBeCast(pluginType, pluggedType);
                 }

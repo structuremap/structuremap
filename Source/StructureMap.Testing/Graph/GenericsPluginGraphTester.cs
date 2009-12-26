@@ -3,6 +3,7 @@ using System.Linq;
 using NUnit.Framework;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
+using StructureMap.Testing.Bugs;
 using StructureMap.Testing.GenericWidgets;
 
 namespace StructureMap.Testing.Graph
@@ -27,6 +28,12 @@ namespace StructureMap.Testing.Graph
         private void assertCanNotBeCast(Type pluginType, Type pluggedType)
         {
             Assert.IsFalse(GenericsPluginGraph.CanBeCast(pluginType, pluggedType));
+        }
+
+        [Test]
+        public void checking_can_be_cast()
+        {
+            assertCanBeCast(typeof(IOpenType<>), typeof(OpenType<>));
         }
 
         [Test]

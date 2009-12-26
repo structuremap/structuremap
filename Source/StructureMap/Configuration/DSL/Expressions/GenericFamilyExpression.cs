@@ -88,6 +88,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="concreteType"></param>
         /// <returns></returns>
+        [Obsolete("Switch to Add()")]
         public ConfiguredInstance AddType(Type concreteType)
         {
             var instance = new ConfiguredInstance(concreteType);
@@ -95,6 +96,18 @@ namespace StructureMap.Configuration.DSL.Expressions
             alterAndContinue(family => { family.AddInstance(instance); });
 
             return instance;
+        }
+
+        /// <summary>
+        /// Shortcut method to add an additional Instance to this Plugin Type
+        /// as just a Concrete Type.  This will only work if the Concrete Type
+        /// has no primitive constructor or mandatory Setter arguments.
+        /// </summary>
+        /// <param name="concreteType"></param>
+        /// <returns></returns>
+        public ConfiguredInstance Add(Type concreteType)
+        {
+            return AddType(concreteType);
         }
 
 

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using StructureMap.Configuration.DSL;
 using StructureMap.TypeRules;
 using StructureMap.Util;
 
@@ -39,6 +40,7 @@ namespace StructureMap.Graph
     public class AssemblyScanner : IAssemblyScanner
     {
         private readonly List<Assembly> _assemblies = new List<Assembly>();
+        private readonly List<IRegistrationConvention> _conventions = new List<IRegistrationConvention>();
         private readonly CompositeFilter<Type> _filter = new CompositeFilter<Type>();
         private readonly ImplementationMap _implementationMap = new ImplementationMap();
 
@@ -67,23 +69,32 @@ namespace StructureMap.Graph
             Assembly(AppDomain.CurrentDomain.Load(assemblyName));
         }
 
+        [Obsolete("Replace ITypeScanner with IRegistrationConvention")]
         public void With(ITypeScanner scanner)
         {
-            if (_scanners.Contains(scanner)) return;
-
-            _scanners.Add(scanner);
+            _scanners.Fill(scanner);
         }
 
         public void WithDefaultConventions()
         {
-            With<DefaultConventionScanner>();
+            Convention<DefaultConventionScanner>();
         }
 
+        [Obsolete("Replace ITypeScanner with IRegistrationConvention")]
         public void With<T>() where T : ITypeScanner, new()
         {
             _scanners.RemoveAll(scanner => scanner is T);
 
             ITypeScanner previous = _scanners.FirstOrDefault(scanner => scanner is T);
+            if (previous == null)
+            {
+                With(new T());
+            }
+        }
+
+        public void Convention<T>() where T : IRegistrationConvention, new()
+        {            
+            var previous = _conventions.FirstOrDefault(scanner => scanner is T);
             if (previous == null)
             {
                 With(new T());
@@ -206,14 +217,15 @@ namespace StructureMap.Graph
 
         public void AssembliesFromPath(string path, Predicate<Assembly> assemblyFilter)
         {
-            IEnumerable<string> assemblyPaths = Directory.GetFiles(path).Where(file =>
-                                                                               Path.GetExtension(file).Equals(
-                                                                                   ".exe",
-                                                                                   StringComparison.OrdinalIgnoreCase)
-                                                                               ||
-                                                                               Path.GetExtension(file).Equals(
-                                                                                   ".dll",
-                                                                                   StringComparison.OrdinalIgnoreCase));
+            IEnumerable<string> assemblyPaths = Directory.GetFiles(path)
+                .Where(file =>
+                       Path.GetExtension(file).Equals(
+                           ".exe",
+                           StringComparison.OrdinalIgnoreCase)
+                       ||
+                       Path.GetExtension(file).Equals(
+                           ".dll",
+                           StringComparison.OrdinalIgnoreCase));
 
             foreach (string assemblyPath in assemblyPaths)
             {
@@ -229,11 +241,23 @@ namespace StructureMap.Graph
             }
         }
 
+        public void With(IRegistrationConvention convention)
+        {
+            _conventions.Fill(convention);
+        }
+
         internal void ScanForAll(PluginGraph pluginGraph)
         {
-            pluginGraph.Types.For(_assemblies, _filter).Each(
-                type => { _scanners.Each(x => x.Process(type, pluginGraph)); });
+            var registry = new Registry();
 
+            pluginGraph.Types.For(_assemblies, _filter).Each(
+                type =>
+                {
+                    _scanners.Each(x => x.Process(type, pluginGraph));
+                    _conventions.Each(c => c.Process(type, registry));
+                });
+
+            registry.ConfigurePluginGraph(pluginGraph);
             _postScanningActions.Each(x => x(pluginGraph));
         }
 
