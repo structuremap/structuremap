@@ -153,7 +153,7 @@ namespace StructureMap
 
             public static IEnumerable<Type> AllInterfaces(this Type type)
             {
-                foreach (var @interface in type.GetInterfaces())
+                foreach (Type @interface in type.GetInterfaces())
                 {
                     yield return @interface;
                 }

@@ -4,10 +4,7 @@ namespace StructureMap.Diagnostics
     {
         private int _width;
 
-        internal int Width
-        {
-            get { return _width; }
-        }
+        internal int Width { get { return _width; } }
 
         internal static CharacterWidth[] For(int count)
         {

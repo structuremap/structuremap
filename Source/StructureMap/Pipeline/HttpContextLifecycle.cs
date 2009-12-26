@@ -8,16 +8,6 @@ namespace StructureMap.Pipeline
         public static readonly string ITEM_NAME = "STRUCTUREMAP-INSTANCES";
 
 
-        public static bool HasContext()
-        {
-            return HttpContext.Current != null;
-        }
-
-        public static void DisposeAndClearAll()
-        {
-            new HttpContextLifecycle().FindCache().DisposeAndClear();
-        }
-
         public void EjectAll()
         {
             FindCache().DisposeAndClear();
@@ -33,7 +23,7 @@ namespace StructureMap.Pipeline
                 {
                     if (!items.Contains(ITEM_NAME))
                     {
-                        MainObjectCache cache = new MainObjectCache();
+                        var cache = new MainObjectCache();
                         items.Add(ITEM_NAME, cache);
 
                         return cache;
@@ -41,7 +31,17 @@ namespace StructureMap.Pipeline
                 }
             }
 
-            return (IObjectCache)items[ITEM_NAME];
+            return (IObjectCache) items[ITEM_NAME];
+        }
+
+        public static bool HasContext()
+        {
+            return HttpContext.Current != null;
+        }
+
+        public static void DisposeAndClearAll()
+        {
+            new HttpContextLifecycle().FindCache().DisposeAndClear();
         }
 
 

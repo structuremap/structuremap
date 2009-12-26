@@ -17,6 +17,11 @@ namespace StructureMap.Configuration
 
     public class ConfigurationParserBuilder : IConfigurationParserBuilder
     {
+        /// <summary>
+        /// The name of the default configuration file. The value is always <c>StructurMap.config</c>
+        /// </summary>
+        public static readonly string DefaultConfigurationFilename = "StructureMap.config";
+
         private readonly GraphLog _log;
         private readonly List<string> _otherFiles = new List<string>();
         private readonly List<ConfigurationParser> _parsers = new List<ConfigurationParser>();
@@ -32,24 +37,12 @@ namespace StructureMap.Configuration
 
         #region IConfigurationParserBuilder Members
 
-        public bool UseAndEnforceExistenceOfDefaultFile
-        {
-            get { return _useAndEnforceExistenceOfDefaultFile; }
-            set { _useAndEnforceExistenceOfDefaultFile = value; }
-        }
+        public bool UseAndEnforceExistenceOfDefaultFile { get { return _useAndEnforceExistenceOfDefaultFile; } set { _useAndEnforceExistenceOfDefaultFile = value; } }
 
 
-        public bool IgnoreDefaultFile
-        {
-            get { return _ignoreDefaultFile; }
-            set { _ignoreDefaultFile = value; }
-        }
+        public bool IgnoreDefaultFile { get { return _ignoreDefaultFile; } set { _ignoreDefaultFile = value; } }
 
-        public bool PullConfigurationFromAppConfig
-        {
-            get { return _pullConfigurationFromAppConfig; }
-            set { _pullConfigurationFromAppConfig = value; }
-        }
+        public bool PullConfigurationFromAppConfig { get { return _pullConfigurationFromAppConfig; } set { _pullConfigurationFromAppConfig = value; } }
 
         public void IncludeFile(string filename)
         {
@@ -91,7 +84,7 @@ namespace StructureMap.Configuration
                     ConfigurationParser childParser = ConfigurationParser.FromFile(filename);
                     list.Add(childParser);
                 })
-                .AndReportErrorAs(150, filename));
+                                                         .AndReportErrorAs(150, filename));
             }
         }
 
@@ -114,7 +107,7 @@ namespace StructureMap.Configuration
         {
             foreach (string filename in _otherFiles)
             {
-                var absolutePath = locateFileAsAbsolutePath(filename);
+                string absolutePath = locateFileAsAbsolutePath(filename);
                 _log.Try(() =>
                 {
                     ConfigurationParser parser = ConfigurationParser.FromFile(absolutePath);
@@ -128,7 +121,7 @@ namespace StructureMap.Configuration
         {
             if (_ignoreDefaultFile) return;
             // Pick up the configuration in the default StructureMap.config
-            var pathToStructureMapConfig = GetStructureMapConfigurationPath();
+            string pathToStructureMapConfig = GetStructureMapConfigurationPath();
             if ((_useAndEnforceExistenceOfDefaultFile || File.Exists(pathToStructureMapConfig)))
             {
                 _log.Try(() =>
@@ -150,11 +143,6 @@ namespace StructureMap.Configuration
         }
 
         /// <summary>
-        /// The name of the default configuration file. The value is always <c>StructurMap.config</c>
-        /// </summary>
-        public static readonly string DefaultConfigurationFilename = "StructureMap.config";
-
-        /// <summary>
         /// Returns the absolute path to the StructureMap.config file
         /// </summary>
         /// <returns></returns>
@@ -166,8 +154,8 @@ namespace StructureMap.Configuration
         private static string locateFileAsAbsolutePath(string filename)
         {
             if (Path.IsPathRooted(filename)) return filename;
-            var basePath = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
-            var configPath = Path.Combine(basePath, filename);
+            string basePath = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+            string configPath = Path.Combine(basePath, filename);
 
             if (!File.Exists(configPath))
             {

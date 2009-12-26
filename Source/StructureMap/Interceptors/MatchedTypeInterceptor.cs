@@ -45,6 +45,5 @@ namespace StructureMap.Interceptors
         {
             _interception = interception;
         }
-
     }
 }

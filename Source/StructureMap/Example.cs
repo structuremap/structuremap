@@ -1,5 +1,3 @@
-using System;
-
 namespace StructureMap
 {
     public interface IMessageSender
@@ -21,10 +19,12 @@ namespace StructureMap
             return new SendExpression(text, _messageSender);
         }
 
+        #region Nested type: SendExpression
+
         public class SendExpression : ToExpression
         {
-            private readonly string _text;
             private readonly IMessageSender _messageSender;
+            private readonly string _text;
             private string _sender;
 
             public SendExpression(string text, IMessageSender messageSender)
@@ -33,22 +33,28 @@ namespace StructureMap
                 _messageSender = messageSender;
             }
 
+            void ToExpression.To(string receiver)
+            {
+                _messageSender.SendMessage(_text, _sender, receiver);
+            }
+
             public ToExpression From(string sender)
             {
                 _sender = sender;
                 return this;
             }
-
-            void ToExpression.To(string receiver)
-            {
-                _messageSender.SendMessage(_text, _sender, receiver);
-            }
         }
+
+        #endregion
+
+        #region Nested type: ToExpression
 
         public interface ToExpression
         {
             void To(string receiver);
         }
+
+        #endregion
     }
 
     public class SendMessageRequest
@@ -68,34 +74,34 @@ namespace StructureMap
 
     public class APIConsumer
     {
-    // Snippet from a class that uses IMessageSender
-    public void SendMessage(IMessageSender sender)
-    {
-        // Is this right?
-        sender.SendMessage("the message body", "PARTNER001", "PARTNER002");
-
-        // or this?
-        sender.SendMessage("PARTNER001", "the message body", "PARTNER002");
-
-        // or this?
-        sender.SendMessage("PARTNER001", "PARTNER002", "the message body");
-    }
-
-    public void SendMessageFluently(FluentMessageSender sender)
-    {
-        sender
-            .SendText("the message body")
-            .From("PARTNER001").To("PARTNER002");
-    }
-
-    public void SendMessageAsParameter(ParameterObjectMessageSender sender)
-    {
-        sender.Send(new SendMessageRequest()
+        // Snippet from a class that uses IMessageSender
+        public void SendMessage(IMessageSender sender)
         {
-            Text = "the message body",
-            Receiver = "PARTNER001",
-            Sender = "PARTNER002"
-        });
-    }
+            // Is this right?
+            sender.SendMessage("the message body", "PARTNER001", "PARTNER002");
+
+            // or this?
+            sender.SendMessage("PARTNER001", "the message body", "PARTNER002");
+
+            // or this?
+            sender.SendMessage("PARTNER001", "PARTNER002", "the message body");
+        }
+
+        public void SendMessageFluently(FluentMessageSender sender)
+        {
+            sender
+                .SendText("the message body")
+                .From("PARTNER001").To("PARTNER002");
+        }
+
+        public void SendMessageAsParameter(ParameterObjectMessageSender sender)
+        {
+            sender.Send(new SendMessageRequest
+            {
+                Text = "the message body",
+                Receiver = "PARTNER001",
+                Sender = "PARTNER002"
+            });
+        }
     }
 }

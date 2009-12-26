@@ -1,6 +1,5 @@
 using System;
 using System.Web.UI;
-using StructureMap.Graph;
 using StructureMap.TypeRules;
 
 namespace StructureMap.Pipeline
@@ -14,16 +13,10 @@ namespace StructureMap.Pipeline
             _url = url;
         }
 
-        protected override UserControlInstance thisInstance
-        {
-            get { return this; }
-        }
+        protected override UserControlInstance thisInstance { get { return this; } }
 
 
-        public string Url
-        {
-            get { return _url; }
-        }
+        public string Url { get { return _url; } }
 
         protected override object build(Type pluginType, BuildSession session)
         {

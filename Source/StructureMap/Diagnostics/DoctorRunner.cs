@@ -13,7 +13,10 @@ namespace StructureMap.Diagnostics
 
         public DoctorReport RunReport(string bootstrapperTypeName)
         {
-            var report = new DoctorReport {Result = DoctorResult.Success};
+            var report = new DoctorReport
+            {
+                Result = DoctorResult.Success
+            };
 
 
             IBootstrapper bootstrapper;

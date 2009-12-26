@@ -16,26 +16,6 @@ namespace StructureMap.Configuration
             return new XmlTextExpression(node, xpath);
         }
 
-        public class XmlTextExpression
-        {
-            private readonly XmlNodeList _list;
-
-            internal XmlTextExpression(XmlNode parent, string attributePath)
-            {
-                _list = parent.SelectNodes(attributePath);
-            }
-
-            public void Do(Action<string> action)
-            {
-                if (_list == null) return;
-
-                foreach (XmlNode node in _list)
-                {
-                    action(node.InnerText);
-                }
-            }
-        }
-
         public static XmlNodeExpression ForEachChild(this XmlNode node, string xpath)
         {
             return new XmlNodeExpression(node, xpath);
@@ -113,7 +93,25 @@ namespace StructureMap.Configuration
 
         #region Nested type: XmlTextExpression
 
+        public class XmlTextExpression
+        {
+            private readonly XmlNodeList _list;
 
+            internal XmlTextExpression(XmlNode parent, string attributePath)
+            {
+                _list = parent.SelectNodes(attributePath);
+            }
+
+            public void Do(Action<string> action)
+            {
+                if (_list == null) return;
+
+                foreach (XmlNode node in _list)
+                {
+                    action(node.InnerText);
+                }
+            }
+        }
 
         #endregion
     }

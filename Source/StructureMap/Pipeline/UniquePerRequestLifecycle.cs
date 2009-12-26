@@ -1,5 +1,3 @@
-using System;
-
 namespace StructureMap.Pipeline
 {
     /// <summary>
@@ -9,7 +7,6 @@ namespace StructureMap.Pipeline
     {
         public void EjectAll()
         {
-            
         }
 
         public IObjectCache FindCache()
@@ -18,9 +15,9 @@ namespace StructureMap.Pipeline
         }
 
         //#region IBuildInterceptor Members
-        
+
         //private IBuildPolicy _innerPolicy = new BuildPolicy();
-        
+
         //public IBuildPolicy InnerPolicy
         //{
         //    get { return _innerPolicy; }

@@ -5,18 +5,12 @@ namespace StructureMap.Pipeline
 {
     public class MainObjectCache : IObjectCache
     {
-        private readonly IDictionary<InstanceKey, object> _objects = new Dictionary<InstanceKey,object>();
         private readonly object _locker = new object();
+        private readonly IDictionary<InstanceKey, object> _objects = new Dictionary<InstanceKey, object>();
 
-        public object Locker
-        {
-            get { return _locker; }
-        }
+        public object Locker { get { return _locker; } }
 
-        public int Count
-        {
-            get { return _objects.Count; }
-        }
+        public int Count { get { return _objects.Count; } }
 
         public object Get(Type pluginType, Instance instance)
         {
@@ -45,21 +39,23 @@ namespace StructureMap.Pipeline
         {
             lock (Locker)
             {
-                foreach (var @object in _objects.Values)
+                foreach (object @object in _objects.Values)
                 {
                     if (@object is Container) continue;
 
-                    IDisposable disposable = @object as IDisposable;
+                    var disposable = @object as IDisposable;
                     if (disposable != null)
                     {
                         try
                         {
                             disposable.Dispose();
                         }
-                        catch (Exception) { }
+                        catch (Exception)
+                        {
+                        }
                     }
                 }
-            
+
                 _objects.Clear();
             }
         }

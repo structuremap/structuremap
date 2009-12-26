@@ -67,11 +67,11 @@ namespace StructureMap.Diagnostics
         {
             _writer.AddDivider('-');
             var contents = new[]
-                               {
-                                   "{0} ({1})".ToFormat(pluginType.PluginType.GetName(), pluginType.PluginType.GetFullName()),
-                                   string.Empty,
-                                   string.Empty
-                               };
+            {
+                "{0} ({1})".ToFormat(pluginType.PluginType.GetName(), pluginType.PluginType.GetFullName()),
+                string.Empty,
+                string.Empty
+            };
 
             if (pluginType.Default != null)
             {

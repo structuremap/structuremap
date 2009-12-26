@@ -32,10 +32,7 @@ namespace StructureMap.Graph
             }
         }
 
-        public int Count
-        {
-            get { return _pluginFamilies.Count; }
-        }
+        public int Count { get { return _pluginFamilies.Count; } }
 
         public IEnumerable<PluginFamily> All
         {

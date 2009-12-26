@@ -1,6 +1,5 @@
 using System;
 using System.Xml;
-using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.TypeRules;
 

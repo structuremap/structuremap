@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Reflection;
-using StructureMap.Graph;
 using StructureMap.Pipeline;
 
 namespace StructureMap.Diagnostics

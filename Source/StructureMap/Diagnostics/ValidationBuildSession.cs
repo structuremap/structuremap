@@ -21,25 +21,17 @@ namespace StructureMap.Diagnostics
         {
         }
 
-        public ValidationBuildSession(PluginGraph graph) : base(graph)
+        public ValidationBuildSession(PluginGraph graph)
+            : base(graph)
         {
         }
 
 
-        public bool Success
-        {
-            get { return _errors.BuildErrors.Length == 0 && _validationErrors.Count == 0; }
-        }
+        public bool Success { get { return _errors.BuildErrors.Length == 0 && _validationErrors.Count == 0; } }
 
-        public BuildError[] BuildErrors
-        {
-            get { return _errors.BuildErrors; }
-        }
+        public BuildError[] BuildErrors { get { return _errors.BuildErrors; } }
 
-        public ValidationError[] ValidationErrors
-        {
-            get { return _validationErrors.ToArray(); }
-        }
+        public ValidationError[] ValidationErrors { get { return _validationErrors.ToArray(); } }
 
         public override object CreateInstance(Type pluginType, Instance instance)
         {
@@ -131,7 +123,6 @@ namespace StructureMap.Diagnostics
 
             writer.WriteLine();
             writer.WriteLine();
-
 
 
             writer.WriteLine("StructureMap Failures:  {0} Build/Configuration Failures and {1} Validation Errors",

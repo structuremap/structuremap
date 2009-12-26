@@ -14,10 +14,7 @@ namespace StructureMap.Source
             _mementos = new Hashtable();
         }
 
-        public override string Description
-        {
-            get { return "DefaultMementoSource"; }
-        }
+        public override string Description { get { return "DefaultMementoSource"; } }
 
         protected override InstanceMemento[] fetchInternalMementos()
         {

@@ -30,7 +30,7 @@ namespace StructureMap.Pipeline
                 case InstanceScope.HybridHttpSession:
                     return new HybridSessionLifecycle();
             }
-            
+
             throw new ArgumentOutOfRangeException("scope");
         }
     }

@@ -52,20 +52,11 @@ namespace StructureMap.Diagnostics
             _pluginType = pluginType;
         }
 
-        public List<BuildDependency> Dependencies
-        {
-            get { return _dependencies; }
-        }
+        public List<BuildDependency> Dependencies { get { return _dependencies; } }
 
-        public Instance Instance
-        {
-            get { return _instance; }
-        }
+        public Instance Instance { get { return _instance; } }
 
-        public Type PluginType
-        {
-            get { return _pluginType; }
-        }
+        public Type PluginType { get { return _pluginType; } }
 
         public StructureMapException Exception { get; set; }
 

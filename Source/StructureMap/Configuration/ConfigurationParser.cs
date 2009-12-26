@@ -62,16 +62,12 @@ namespace StructureMap.Configuration
         }
 
 
-        public string FilePath
-        {
-            get { return _filePath; }
-            set { _filePath = value; }
-        }
+        public string FilePath { get { return _filePath; } set { _filePath = value; } }
 
         public void ForEachFile(GraphLog log, Action<string> action)
         {
             string includePath = getIncludePath();
-            
+
             // Find the text in every child node of _structureMapNode and
             // perform an action with that text
             _structureMapNode.ForTextInChild("Include/@File").Do(fileName =>

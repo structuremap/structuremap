@@ -15,10 +15,7 @@ namespace StructureMap.Source
             _node = Node;
         }
 
-        public override string Description
-        {
-            get { return "BasicXmlMementoSource"; }
-        }
+        public override string Description { get { return "BasicXmlMementoSource"; } }
 
         protected override XmlNode getRootNode()
         {

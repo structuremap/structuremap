@@ -21,8 +21,8 @@ namespace StructureMap.Construction
 
         private static FuncCompiler getCompiler(Plugin plugin)
         {
-            var compilerType = typeof (FuncCompiler<>).MakeGenericType(plugin.PluggedType);
-            return (FuncCompiler)Activator.CreateInstance(compilerType);
+            Type compilerType = typeof (FuncCompiler<>).MakeGenericType(plugin.PluggedType);
+            return (FuncCompiler) Activator.CreateInstance(compilerType);
         }
 
         public static Action<IArguments, object> CompileBuildUp(Plugin plugin)
@@ -31,6 +31,8 @@ namespace StructureMap.Construction
 
             return compiler.BuildUp(plugin);
         }
+
+        #region Nested type: FuncCompiler
 
         public interface FuncCompiler
         {
@@ -46,12 +48,12 @@ namespace StructureMap.Construction
 
             public InstanceBuilder CreateBuilder(Plugin plugin)
             {
-                var ctor = new ConstructorFunctionBuilder<T>().CreateBuilder(plugin);
-                var setters = this.buildUp(plugin);
+                Func<IArguments, T> ctor = new ConstructorFunctionBuilder<T>().CreateBuilder(plugin);
+                Action<IArguments, T> setters = buildUp(plugin);
 
                 Func<IArguments, object> creator = args =>
                 {
-                    var target = ctor(args);
+                    T target = ctor(args);
                     setters(args, target);
                     return target;
                 };
@@ -63,27 +65,33 @@ namespace StructureMap.Construction
 
             public Func<IArguments, object> Compile(Plugin plugin)
             {
-                var ctor = new ConstructorFunctionBuilder<T>().CreateBuilder(plugin);
-                var buildUp = this.buildUp(plugin);
+                Func<IArguments, T> ctor = new ConstructorFunctionBuilder<T>().CreateBuilder(plugin);
+                Action<IArguments, T> buildUp = this.buildUp(plugin);
 
                 return args =>
                 {
                     // Call the constructor
-                    var target = ctor(args);
+                    T target = ctor(args);
                     buildUp(args, target);
 
                     return target;
                 };
             }
 
+            public Action<IArguments, object> BuildUp(Plugin plugin)
+            {
+                Action<IArguments, T> func = buildUp(plugin);
+                return (args, raw) => func(args, (T) raw);
+            }
+
             private Action<IArguments, T> buildUp(Plugin plugin)
             {
-                var mandatories = plugin.Setters.Where(x => x.IsMandatory)
-                    .Select(x => _setterBuilder.BuildMandatorySetter((PropertyInfo)x.Property))
+                Action<IArguments, T>[] mandatories = plugin.Setters.Where(x => x.IsMandatory)
+                    .Select(x => _setterBuilder.BuildMandatorySetter((PropertyInfo) x.Property))
                     .ToArray();
 
 
-                var optionals = plugin.Setters.Where(x => !x.IsMandatory)
+                Action<IArguments, T>[] optionals = plugin.Setters.Where(x => !x.IsMandatory)
                     .Select(x => _setterBuilder.BuildOptionalSetter(x.Property))
                     .ToArray();
 
@@ -102,12 +110,8 @@ namespace StructureMap.Construction
                     }
                 };
             }
-
-            public Action<IArguments, object> BuildUp(Plugin plugin)
-            {
-                var func = buildUp(plugin);
-                return (args, raw) => func(args, (T)raw);
-            }
         }
+
+        #endregion
     }
 }

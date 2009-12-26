@@ -15,8 +15,9 @@ namespace StructureMap.Exceptions
         {
         }
 
-        protected InstancePropertyValueException(SerializationInfo info, StreamingContext context) :
-            base(info, context)
+        protected InstancePropertyValueException(SerializationInfo info, StreamingContext context)
+            :
+                base(info, context)
         {
         }
     }

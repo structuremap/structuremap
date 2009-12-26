@@ -24,7 +24,8 @@ namespace StructureMap.Diagnostics
             _message = ErrorMessages.GetMessage(errorCode, args);
         }
 
-        public Error(int errorCode, Exception ex, params object[] args) : this(errorCode, args)
+        public Error(int errorCode, Exception ex, params object[] args)
+            : this(errorCode, args)
         {
             _message += "\n\n" + ex.Message;
 
@@ -41,10 +42,7 @@ namespace StructureMap.Diagnostics
         }
 
 
-        public int Code
-        {
-            get { return _code; }
-        }
+        public int Code { get { return _code; } }
 
         #region IEquatable<Error> Members
 

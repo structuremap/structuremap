@@ -10,10 +10,7 @@ namespace StructureMap.Interceptors
         }
 
 
-        public InstanceInterceptor[] Interceptors
-        {
-            get { return _interceptors; }
-        }
+        public InstanceInterceptor[] Interceptors { get { return _interceptors; } }
 
         #region InstanceInterceptor Members
 

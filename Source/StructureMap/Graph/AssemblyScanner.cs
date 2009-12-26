@@ -40,9 +40,10 @@ namespace StructureMap.Graph
     {
         private readonly List<Assembly> _assemblies = new List<Assembly>();
         private readonly CompositeFilter<Type> _filter = new CompositeFilter<Type>();
+        private readonly ImplementationMap _implementationMap = new ImplementationMap();
 
-        private readonly List<ITypeScanner> _scanners = new List<ITypeScanner>();
         private readonly List<Action<PluginGraph>> _postScanningActions = new List<Action<PluginGraph>>();
+        private readonly List<ITypeScanner> _scanners = new List<ITypeScanner>();
 
         public AssemblyScanner()
         {
@@ -174,8 +175,6 @@ namespace StructureMap.Graph
             With(new GenericConnectionScanner(openGenericType));
         }
 
-        
-        private readonly ImplementationMap _implementationMap = new ImplementationMap();
 
         public void SingleImplementationsOfInterface()
         {
@@ -232,10 +231,8 @@ namespace StructureMap.Graph
 
         internal void ScanForAll(PluginGraph pluginGraph)
         {
-            pluginGraph.Types.For(_assemblies, _filter).Each(type =>
-            {
-                _scanners.Each(x => x.Process(type, pluginGraph));
-            });
+            pluginGraph.Types.For(_assemblies, _filter).Each(
+                type => { _scanners.Each(x => x.Process(type, pluginGraph)); });
 
             _postScanningActions.Each(x => x(pluginGraph));
         }

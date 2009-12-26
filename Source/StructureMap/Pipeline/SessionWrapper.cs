@@ -25,20 +25,11 @@ namespace StructureMap.Pipeline
             _session.CopyTo(array, index);
         }
 
-        public int Count
-        {
-            get { return _session.Count; }
-        }
+        public int Count { get { return _session.Count; } }
 
-        public object SyncRoot
-        {
-            get { return _session.SyncRoot; }
-        }
+        public object SyncRoot { get { return _session.SyncRoot; } }
 
-        public bool IsSynchronized
-        {
-            get { return _session.IsSynchronized; }
-        }
+        public bool IsSynchronized { get { return _session.IsSynchronized; } }
 
         public bool Contains(object key)
         {
@@ -65,31 +56,15 @@ namespace StructureMap.Pipeline
             _session.Remove(key.ToString());
         }
 
-        public object this[object key]
-        {
-            get { return _session[key.ToString()]; }
-            set { _session[key.ToString()] = value; }
-        }
+        public object this[object key] { get { return _session[key.ToString()]; } set { _session[key.ToString()] = value; } }
 
-        public ICollection Keys
-        {
-            get { return _session.Keys; }
-        }
+        public ICollection Keys { get { return _session.Keys; } }
 
-        public ICollection Values
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public ICollection Values { get { throw new NotImplementedException(); } }
 
-        public bool IsReadOnly
-        {
-            get { return _session.IsReadOnly; }
-        }
+        public bool IsReadOnly { get { return _session.IsReadOnly; } }
 
-        public bool IsFixedSize
-        {
-            get { return false; }
-        }
+        public bool IsFixedSize { get { return false; } }
 
         #endregion
     }

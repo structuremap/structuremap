@@ -4,12 +4,8 @@ namespace StructureMap.Pipeline
 {
     public class InstanceKey
     {
-        public string Name { get; set; }
-        public Type PluginType { get; set; }
-        [Obsolete("Kill!")]
-        private WeakReference _session;
-        [Obsolete("Kill!")]
-        private WeakReference _instance;
+        [Obsolete("Kill!")] private WeakReference _instance;
+        [Obsolete("Kill!")] private WeakReference _session;
 
         public InstanceKey()
         {
@@ -21,20 +17,16 @@ namespace StructureMap.Pipeline
             PluginType = pluginType;
         }
 
+        public string Name { get; set; }
+        public Type PluginType { get; set; }
+
         [Obsolete("Kill!")]
-        public BuildSession Session
-        {
-            get { return (BuildSession) _session.Target; }
-            set { _session = new WeakReference(value); }
-        }
+        public BuildSession Session { get { return (BuildSession) _session.Target; } set { _session = new WeakReference(value); } }
 
         [Obsolete("Kill!")]
         public Instance Instance
         {
-            get
-            {
-                return (Instance) _instance.Target;                
-            }
+            get { return (Instance) _instance.Target; }
             set
             {
                 Name = value.Name;
@@ -53,15 +45,16 @@ namespace StructureMap.Pipeline
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != typeof(InstanceKey)) return false;
-            return Equals((InstanceKey)obj);
+            if (obj.GetType() != typeof (InstanceKey)) return false;
+            return Equals((InstanceKey) obj);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                return ((Name != null ? Name.GetHashCode() : 0) * 397) ^ (PluginType != null ? PluginType.GetHashCode() : 0);
+                return ((Name != null ? Name.GetHashCode() : 0)*397) ^
+                       (PluginType != null ? PluginType.GetHashCode() : 0);
             }
         }
     }

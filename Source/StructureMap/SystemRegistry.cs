@@ -30,7 +30,7 @@ namespace StructureMap
 
         private void AddLifecycleType<T>(InstanceScope scope) where T : ILifecycle
         {
-            addExpression(graph => graph.AddType(typeof(ILifecycle), typeof(T), scope.ToString()));
+            addExpression(graph => graph.AddType(typeof (ILifecycle), typeof (T), scope.ToString()));
         }
 
         private void AddMementoSourceType<T>(string name)

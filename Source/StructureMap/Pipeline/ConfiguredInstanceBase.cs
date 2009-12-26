@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using StructureMap.Graph;
-using StructureMap.TypeRules;
 
 namespace StructureMap.Pipeline
 {
@@ -213,7 +211,7 @@ namespace StructureMap.Pipeline
     //            _children.Add(name, instance);
     //        }
 
-            
+
     //    }
 
     //    protected void setChildArray(string name, Instance[] array)
@@ -224,7 +222,7 @@ namespace StructureMap.Pipeline
     //            {
     //                throw new ApplicationException("There is a null value in the array of child Instances");
     //            }
-                
+
     //        }
 
     //        _arrays.Add(name, array);

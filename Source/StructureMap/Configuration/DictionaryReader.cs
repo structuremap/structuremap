@@ -63,10 +63,7 @@ namespace StructureMap.Configuration
                 _dictionary.Add(key, theValue);
             }
 
-            public object Object
-            {
-                get { return _dictionary; }
-            }
+            public object Object { get { return _dictionary; } }
 
             #endregion
         }
@@ -96,10 +93,7 @@ namespace StructureMap.Configuration
                 _collection.Add(name, value);
             }
 
-            public object Object
-            {
-                get { return _collection; }
-            }
+            public object Object { get { return _collection; } }
 
             #endregion
         }
