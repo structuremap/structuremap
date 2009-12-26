@@ -13,7 +13,7 @@ namespace StructureMap.Testing.Graph
             typeof (Type).IsValueType.ShouldBeFalse();
         }
 
-        [Test, Ignore("Come back to this")]
+        [Test]
         public void registers_plugins_that_only_have_a_single_implementation()
         {
             var container = new Container(registry =>
@@ -22,7 +22,7 @@ namespace StructureMap.Testing.Graph
                 {
                     x.TheCallingAssembly();
                     x.IncludeNamespaceContainingType<SingleImplementationScannerTester>();
-                    x.With(new SingleImplementationScanner());
+                    x.SingleImplementationsOfInterface();
                 });
             });
 

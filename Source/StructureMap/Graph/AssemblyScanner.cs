@@ -41,9 +41,8 @@ namespace StructureMap.Graph
         private readonly List<Assembly> _assemblies = new List<Assembly>();
         private readonly CompositeFilter<Type> _filter = new CompositeFilter<Type>();
 
-        private readonly List<IHeavyweightTypeScanner> _heavyweightScanners = new List<IHeavyweightTypeScanner>();
-
         private readonly List<ITypeScanner> _scanners = new List<ITypeScanner>();
+        private readonly List<Action<PluginGraph>> _postScanningActions = new List<Action<PluginGraph>>();
 
         public AssemblyScanner()
         {
@@ -72,13 +71,6 @@ namespace StructureMap.Graph
             if (_scanners.Contains(scanner)) return;
 
             _scanners.Add(scanner);
-        }
-
-        public void With(IHeavyweightTypeScanner heavyweightScanner)
-        {
-            if (_heavyweightScanners.Contains(heavyweightScanner)) return;
-
-            _heavyweightScanners.Add(heavyweightScanner);
         }
 
         public void WithDefaultConventions()
@@ -182,6 +174,15 @@ namespace StructureMap.Graph
             With(new GenericConnectionScanner(openGenericType));
         }
 
+        
+        private readonly ImplementationMap _implementationMap = new ImplementationMap();
+
+        public void SingleImplementationsOfInterface()
+        {
+            _scanners.Fill(_implementationMap);
+            _postScanningActions.Add(graph => _implementationMap.RegisterSingleImplementations(graph));
+        }
+
         public void AssembliesFromApplicationBaseDirectory()
         {
             AssembliesFromApplicationBaseDirectory(a => true);
@@ -231,34 +232,14 @@ namespace StructureMap.Graph
 
         internal void ScanForAll(PluginGraph pluginGraph)
         {
-            //TypeMapBuilder heavyweightScan = configureHeavyweightScan();
-
             pluginGraph.Types.For(_assemblies, _filter).Each(type =>
             {
                 _scanners.Each(x => x.Process(type, pluginGraph));
             });
 
-            //performHeavyweightScan(pluginGraph, heavyweightScan);
+            _postScanningActions.Each(x => x(pluginGraph));
         }
 
-
-        private TypeMapBuilder configureHeavyweightScan()
-        {
-            var typeMapBuilder = new TypeMapBuilder();
-            if (_heavyweightScanners.Count > 0)
-            {
-                With(typeMapBuilder);
-            }
-            return typeMapBuilder;
-        }
-
-        [Obsolete]
-        private void performHeavyweightScan(PluginGraph pluginGraph, TypeMapBuilder typeMapBuilder)
-        {
-            IEnumerable<TypeMap> typeMaps = typeMapBuilder.GetTypeMaps();
-            _heavyweightScanners.ForEach(scanner => scanner.Process(pluginGraph, typeMaps));
-            typeMapBuilder.Dispose();
-        }
 
         public bool Contains(string assemblyName)
         {

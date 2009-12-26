@@ -7,6 +7,13 @@ namespace StructureMap
 {
     public static class BasicExtensions
     {
+        public static void Fill<T>(this IList<T> list, T value)
+        {
+            if (list.Contains(value)) return;
+            list.Add(value);
+        }
+
+
         public static void TryGet<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key,
                                                 Action<TValue> action)
         {
@@ -137,6 +144,19 @@ namespace StructureMap
                 }
 
                 return type.FullName;
+            }
+
+            public static bool CanBeCreated(this Type type)
+            {
+                return type.IsConcrete() && Constructor.HasConstructors(type);
+            }
+
+            public static IEnumerable<Type> AllInterfaces(this Type type)
+            {
+                foreach (var @interface in type.GetInterfaces())
+                {
+                    yield return @interface;
+                }
             }
 
             /// <summary>

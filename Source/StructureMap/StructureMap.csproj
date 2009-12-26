@@ -362,11 +362,10 @@
     <Compile Include="Graph\FindAllTypesFilter.cs" />
     <Compile Include="Graph\FindRegistriesScanner.cs" />
     <Compile Include="Graph\IAssemblyScanner.cs" />
-    <Compile Include="Graph\IHeavyweightTypeScanner.cs" />
+    <Compile Include="Graph\ImplementationMap.cs" />
     <Compile Include="Graph\ITypeScanner.cs" />
     <Compile Include="Graph\PluggableAttributeScanner.cs" />
     <Compile Include="Graph\PluginCache.cs" />
-    <Compile Include="Graph\SingleImplementationScanner.cs" />
     <Compile Include="IContext.cs" />
     <Compile Include="Pipeline\Arguments.cs" />
     <Compile Include="Pipeline\ArrayCoercion.cs" />

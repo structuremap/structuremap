@@ -75,8 +75,6 @@ namespace StructureMap.Graph
         /// <param name="scanner"></param>
         void With(ITypeScanner scanner);
 
-        void With(IHeavyweightTypeScanner heavyweightScanner);
-
         /// <summary>
         /// Adds the DefaultConventionScanner to the scanning operations.  I.e., a concrete
         /// class named "Something" that implements "ISomething" will be automatically 
@@ -180,5 +178,12 @@ namespace StructureMap.Graph
         /// </example>
         /// <param name="openGenericType"></param>
         void ConnectImplementationsToTypesClosing(Type openGenericType);
+
+        /// <summary>
+        /// Directs the scanning to automatically register any type that is the single
+        /// implementation of an interface against that interface.
+        /// The filters apply
+        /// </summary>
+        void SingleImplementationsOfInterface();
     }
 }
