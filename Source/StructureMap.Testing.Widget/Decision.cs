@@ -14,19 +14,4 @@ namespace StructureMap.Testing.Widget
         }
     }
 
-
-    public class DecisionBuilder : InstanceBuilder
-    {
-        public override object BuildInstance(IConfiguredInstance instance, BuildSession session)
-        {
-            return new Decision(
-                (Rule[]) session.CreateInstanceArray(typeof(Rule), instance.GetChildrenArray("Rules")));
-        }
-
-
-        public override Type PluggedType
-        {
-            get { return typeof (Decision); }
-        }
-    }
 }

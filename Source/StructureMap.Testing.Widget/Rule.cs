@@ -94,13 +94,13 @@ namespace StructureMap.Testing.Widget
 
             IConfiguredInstance instance = memento;
 
-            instance.SetProperty("String", "Red");
-            instance.SetProperty("String2", "Green");
-            instance.SetProperty("Int", "1");
-            instance.SetProperty("Long", "2");
-            instance.SetProperty("Byte", "3");
-            instance.SetProperty("Double", "4");
-            instance.SetProperty("Bool", "true");
+            instance.SetValue("String", "Red");
+            instance.SetValue("String2", "Green");
+            instance.SetValue("Int", "1");
+            instance.SetValue("Long", "2");
+            instance.SetValue("Byte", "3");
+            instance.SetValue("Double", "4");
+            instance.SetValue("Bool", "true");
 
             return memento;
         }
@@ -118,6 +118,8 @@ namespace StructureMap.Testing.Widget
             _Color = color;
         }
 
+        public string Name { get; set; }
+        public int Age { get; set; }
 
         public string Color
         {

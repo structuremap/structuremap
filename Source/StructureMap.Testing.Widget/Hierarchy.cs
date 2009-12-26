@@ -89,21 +89,4 @@ namespace StructureMap.Testing.Widget
         }
     }
 
-
-    public class ChildLoaderTemplate : InstanceBuilder
-    {
-        public override Type PluggedType
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-
-        public override object BuildInstance(IConfiguredInstance instance, BuildSession session)
-        {
-            var target = new Child(
-                instance.GetProperty("Name"),
-                (GrandChild) instance.Get("MyGrandChild", typeof(GrandChild), session));
-            return target;
-        }
-    }
 }

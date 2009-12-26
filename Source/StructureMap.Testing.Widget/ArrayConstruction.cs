@@ -48,18 +48,4 @@ namespace StructureMap.Testing.Widget
         #endregion
     }
 
-
-    public class StringListBuilder : InstanceBuilder
-    {
-        public override object BuildInstance(IConfiguredInstance instance, BuildSession session)
-        {
-            return null;
-        }
-
-
-        public override Type PluggedType
-        {
-            get { return null; }
-        }
-    }
 }
