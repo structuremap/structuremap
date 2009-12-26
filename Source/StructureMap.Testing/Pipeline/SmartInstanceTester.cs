@@ -14,6 +14,7 @@ namespace StructureMap.Testing.Pipeline
         private SmartInstance<T> instanceOf<T>()
         {
             var instance = new SmartInstance<T>();
+            
             structuredInstance = instance;
             configuredInstance = instance;
 

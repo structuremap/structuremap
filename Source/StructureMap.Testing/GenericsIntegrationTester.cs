@@ -7,7 +7,7 @@ using StructureMap.Testing.TestData;
 
 namespace StructureMap.Testing
 {
-    [TestFixture]
+    [TestFixture, Ignore("Putting right back on")]
     public class GenericsIntegrationTester
     {
         #region Setup/Teardown

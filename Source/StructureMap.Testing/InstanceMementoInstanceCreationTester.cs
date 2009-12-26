@@ -42,11 +42,11 @@ namespace StructureMap.Testing
 
 
             [DefaultConstructor]
-            public ComplexRule(string String, BreedEnum Color, int Int, long Long, byte Byte, double Double, bool Bool,
+            public ComplexRule(string String, BreedEnum Breed, int Int, long Long, byte Byte, double Double, bool Bool,
                                IAutomobile car, IAutomobile[] cars)
             {
                 _String = String;
-                _color = Color;
+                _color = Breed;
                 _Int = Int;
                 _Long = Long;
                 _Byte = Byte;
@@ -105,12 +105,12 @@ namespace StructureMap.Testing
             {
                 var memento = new MemoryInstanceMemento("", "Sample");
                 memento.SetProperty("String", "Red");
-                memento.SetProperty("Color", "Green");
+                memento.SetProperty("Breed", "Longhorn");
                 memento.SetProperty("Int", "1");
                 memento.SetProperty("Long", "2");
                 memento.SetProperty("Byte", "3");
                 memento.SetProperty("Double", "4");
-                memento.SetProperty("Bool", "true");
+                memento.SetProperty("Bool", "True");
 
                 return memento;
             }
@@ -227,8 +227,9 @@ namespace StructureMap.Testing
 
             var instance = (IConfiguredInstance) memento.ReadInstance(graph, typeof (Rule));
 
+
             Assert.AreEqual(memento.GetProperty("String"), instance.GetProperty("String"));
-            Assert.AreEqual(memento.GetProperty("Color"), instance.GetProperty("Color"));
+            Assert.AreEqual(memento.GetProperty("Breed"), instance.GetProperty("Breed"));
             Assert.AreEqual(memento.GetProperty("Int"), instance.GetProperty("Int"));
             Assert.AreEqual(memento.GetProperty("Long"), instance.GetProperty("Long"));
             Assert.AreEqual(memento.GetProperty("Byte"), instance.GetProperty("Byte"));

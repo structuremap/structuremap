@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 using Rhino.Mocks;
 using StructureMap.Configuration.DSL;
+using StructureMap.Construction;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Configuration.DSL;
@@ -9,6 +11,7 @@ using StructureMap.Testing.GenericWidgets;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget2;
 using StructureMap.Testing.Widget3;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Testing.Pipeline
 {
@@ -50,29 +53,6 @@ namespace StructureMap.Testing.Pipeline
             catch (StructureMapException ex)
             {
                 Assert.AreEqual(errorCode, ex.ErrorCode);
-            }
-        }
-
-
-        [Test]
-        public void Build_happy_path()
-        {
-            var mocks = new MockRepository();
-            var builder = mocks.StrictMock<InstanceBuilder>();
-            var session = mocks.StrictMock<BuildSession>();
-            var theObjectBuilt = new object();
-
-            var instance = new ConfiguredInstance(GetType());
-
-            using (mocks.Record())
-            {
-                Expect.Call(builder.BuildInstance(instance, session)).Return(theObjectBuilt);
-            }
-
-            using (mocks.Playback())
-            {
-                object actualObject = ((IConfiguredInstance) instance).Build(GetType(), session, builder);
-                Assert.AreSame(theObjectBuilt, actualObject);
             }
         }
 
@@ -121,8 +101,7 @@ namespace StructureMap.Testing.Pipeline
             var instance = new ConfiguredInstance(typeof (ColorRule));
             var family = new PluginFamily(typeof (IWidget));
 
-            IDiagnosticInstance diagnosticInstance = instance;
-            Assert.IsFalse(diagnosticInstance.CanBePartOfPluginFamily(family));
+            instance.As<IDiagnosticInstance>().CanBePartOfPluginFamily(family).ShouldBeFalse();
         }
 
         [Test]
@@ -132,21 +111,6 @@ namespace StructureMap.Testing.Pipeline
             var container = new Container();
 
             container.GetInstance<IService<string>>(instance).ShouldBeOfType(typeof (Service2<string>));
-        }
-
-        [Test]
-        public void Create_description_if_has_plugged_type_and_plugged_type_has_no_arguments()
-        {
-            var instance = new ConfiguredInstance(GetType());
-            TestUtility.AssertDescriptionIs(instance, GetType().AssemblyQualifiedName);
-        }
-
-        [Test]
-        public void Create_description_if_has_pluggedType_and_plugged_type_has_arguments()
-        {
-            var instance = new ConfiguredInstance(typeof (ColorService));
-            TestUtility.AssertDescriptionIs(instance,
-                                            "Configured " + typeof (ColorService).AssemblyQualifiedName);
         }
 
         [Test]
@@ -161,15 +125,16 @@ namespace StructureMap.Testing.Pipeline
         public void GetProperty_happy_path()
         {
             ConfiguredInstance instance = new ConfiguredInstance(typeof (ColorRule))
-                .WithProperty("Color").EqualTo("Red").WithProperty("Age").EqualTo("34");
+                .WithProperty("color").EqualTo("Red").WithProperty("Age").EqualTo("34");
 
             IConfiguredInstance configuredInstance = instance;
 
-            Assert.AreEqual("Red", configuredInstance.GetProperty("Color"));
+
+            Assert.AreEqual("Red", configuredInstance.GetProperty("color"));
             Assert.AreEqual("34", configuredInstance.GetProperty("Age"));
 
-            instance.WithProperty("Color").EqualTo("Blue");
-            Assert.AreEqual("Blue", configuredInstance.GetProperty("Color"));
+            instance.WithProperty("color").EqualTo("Blue");
+            Assert.AreEqual("Blue", configuredInstance.GetProperty("color"));
         }
 
         [Test]
@@ -178,12 +143,15 @@ namespace StructureMap.Testing.Pipeline
             var instance = new ConfiguredInstance(GetType());
 
             IConfiguredInstance configuredInstance = instance;
-            configuredInstance.HasProperty("prop1").ShouldBeFalse();
+            configuredInstance.HasProperty("prop1", null).ShouldBeFalse();
 
             instance.Child("prop1").IsNamedInstance("something");
-            configuredInstance.HasProperty("prop1").ShouldBeTrue();
+            configuredInstance.HasProperty("prop1", null).ShouldBeTrue();
         }
 
+
+        public List<string> prop1 { get; set; }
+        public IGateway[] gateways { get; set; }
 
         [Test]
         public void HasProperty_for_child_array()
@@ -191,10 +159,10 @@ namespace StructureMap.Testing.Pipeline
             var instance = new ConfiguredInstance(GetType());
 
             IConfiguredInstance configuredInstance = instance;
-            configuredInstance.HasProperty("prop1").ShouldBeFalse();
+            configuredInstance.HasProperty("prop1", null).ShouldBeFalse();
 
             instance.ChildArray<IGateway[]>("prop1").Contains(new DefaultInstance());
-            configuredInstance.HasProperty("prop1").ShouldBeTrue();
+            configuredInstance.HasProperty("prop1", null).ShouldBeTrue();
         }
 
         [Test]
@@ -203,10 +171,10 @@ namespace StructureMap.Testing.Pipeline
             var instance = new ConfiguredInstance(typeof(UsesGateways));
 
             IConfiguredInstance configuredInstance = instance;
-            configuredInstance.HasProperty("gateways").ShouldBeFalse();
+            configuredInstance.HasProperty("gateways", null).ShouldBeFalse();
 
             instance.ChildArray<IGateway[]>().Contains(new DefaultInstance());
-            configuredInstance.HasProperty("gateways").ShouldBeTrue();
+            configuredInstance.HasProperty("gateways", null).ShouldBeTrue();
         }
 
         [Test]
@@ -215,10 +183,10 @@ namespace StructureMap.Testing.Pipeline
             var instance = new ConfiguredInstance(typeof(UsesGateways));
 
             IConfiguredInstance configuredInstance = instance;
-            configuredInstance.HasProperty("gateways").ShouldBeFalse();
+            configuredInstance.HasProperty("gateways", null).ShouldBeFalse();
 
             instance.ChildArray(typeof(IGateway[])).Contains(new DefaultInstance());
-            configuredInstance.HasProperty("gateways").ShouldBeTrue();
+            configuredInstance.HasProperty("gateways", null).ShouldBeTrue();
         }
 
         public class UsesGateways
@@ -236,9 +204,8 @@ namespace StructureMap.Testing.Pipeline
         {
             try
             {
-                IConfiguredInstance configuredInstance = new ConfiguredInstance(GetType());
-                configuredInstance.GetProperty("anything");
-                Assert.Fail("Did not throw exception");
+                IConfiguredInstance configuredInstance = new ConfiguredInstance(typeof(ClassThatTakesAnything));
+                configuredInstance.Get<string>("anything", new StubBuildSession());
             }
             catch (StructureMapException ex)
             {
@@ -246,29 +213,13 @@ namespace StructureMap.Testing.Pipeline
             }
         }
 
-        [Test]
-        public void Should_find_the_InstanceBuilder_by_PluggedType_if_it_exists()
+        public class ClassThatTakesAnything
         {
-            var mocks = new MockRepository();
-            var session = mocks.DynamicMock<BuildSession>();
-
-            Type thePluginType = typeof (IGateway);
-            Type thePluggedType = GetType();
-            var builder = mocks.StrictMock<InstanceBuilder>();
-
-            var instance = new ConfiguredInstance(thePluggedType);
-
-            using (mocks.Record())
+            public ClassThatTakesAnything(string anything)
             {
-                PluginCache.Store(thePluggedType, builder);
-                Expect.Call(builder.BuildInstance(instance, session)).Return(new object());
-            }
-
-            using (mocks.Playback())
-            {
-                instance.Build(thePluginType, session);
             }
         }
+
 
         [Test]
         public void TestComplexRule()
@@ -284,14 +235,14 @@ namespace StructureMap.Testing.Pipeline
         public void Trying_to_build_with_an_InvalidCastException_will_throw_error_206()
         {
             var mocks = new MockRepository();
-            var builder = mocks.StrictMock<InstanceBuilder>();
-            Expect.Call(builder.BuildInstance(null, null)).Throw(new InvalidCastException());
+            var builder = mocks.StrictMock<IInstanceBuilder>();
+            Expect.Call(builder.BuildInstance(null)).Throw(new InvalidCastException());
             LastCall.IgnoreArguments();
             mocks.Replay(builder);
 
             assertActionThrowsErrorCode(206, delegate
             {
-                IConfiguredInstance instance = new ConfiguredInstance(GetType());
+                var instance = new ConfiguredInstance(GetType());
                 instance.Build(GetType(), new StubBuildSession(), builder);
             });
         }
@@ -300,14 +251,14 @@ namespace StructureMap.Testing.Pipeline
         public void Trying_to_build_with_an_unknown_exception_will_throw_error_207()
         {
             var mocks = new MockRepository();
-            var builder = mocks.StrictMock<InstanceBuilder>();
-            Expect.Call(builder.BuildInstance(null, null)).Throw(new Exception());
+            var builder = mocks.StrictMock<IInstanceBuilder>();
+            Expect.Call(builder.BuildInstance(null)).Throw(new Exception());
             LastCall.IgnoreArguments();
             mocks.Replay(builder);
 
             assertActionThrowsErrorCode(207, delegate
             {
-                IConfiguredInstance instance = new ConfiguredInstance(GetType());
+                var instance = new ConfiguredInstance(GetType());
                 instance.Build(GetType(), new StubBuildSession(), builder);
             });
         }

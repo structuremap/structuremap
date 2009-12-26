@@ -227,6 +227,10 @@
     <Compile Include="Configuration\PrimitiveArrayReaderTester.cs" />
     <Compile Include="Configuration\ProfileBuilderTester.cs" />
     <Compile Include="Configuration\ShortcuttedInstanceNodeTester.cs" />
+    <Compile Include="Construction\BuilderCompilerTester.cs" />
+    <Compile Include="Construction\ConstructorFunctionBuilderTester.cs" />
+    <Compile Include="Construction\SetterBuilderTester.cs" />
+    <Compile Include="Construction\StubArguments.cs" />
     <Compile Include="Debugging.cs" />
     <Compile Include="Diagnostics\DoctorTester.cs" />
     <Compile Include="Diagnostics\WriterExtensions.cs" />
@@ -247,9 +251,6 @@
     <Compile Include="Graph\ConventionBasedSetterInjectionTester.cs" />
     <Compile Include="Graph\DefaultConventionScanningTester.cs" />
     <Compile Include="Graph\DynamicInjectionTester.cs" />
-    <Compile Include="Graph\EmittingTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Graph\EnumerationTester.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -340,7 +341,6 @@
     </Compile>
     <Compile Include="Graph\TypePathTester.cs" />
     <Compile Include="ImplicitPluginFromPluggedTypeAttributeTester.cs" />
-    <Compile Include="InstanceBuilderListTester.cs" />
     <Compile Include="InstanceCacheTester.cs" />
     <Compile Include="InstanceMementoInstanceCreationTester.cs" />
     <Compile Include="MementoTester.cs" />

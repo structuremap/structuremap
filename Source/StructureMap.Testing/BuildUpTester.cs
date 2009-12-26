@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using StructureMap.Attributes;
+using StructureMap.Construction;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget3;
@@ -9,7 +10,7 @@ namespace StructureMap.Testing
     [TestFixture]
     public class BuildUpTester
     {
-        private InstanceBuilder builder;
+        private IInstanceBuilder builder;
         private SmartInstance<ClassWithMixOfSetters> instance;
         private ClassWithMixOfSetters _target;
         private BuildSession _session;
@@ -36,8 +37,10 @@ namespace StructureMap.Testing
                 if (_target == null)
                 {
                     _target = new ClassWithMixOfSetters();
-                    
-                    builder.BuildUp(instance, _session, _target);
+
+                    var args = new Arguments(instance, _session);
+
+                    builder.BuildUp(args, _target);
                 }
 
                 return _target;

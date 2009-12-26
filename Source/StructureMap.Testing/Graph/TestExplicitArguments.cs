@@ -148,13 +148,12 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void ExplicitArguments_can_return_child_by_name()
         {
-            var args = new ExplicitArguments();
             var theNode = new Node();
-            args.SetArg("node", theNode);
-
-            IConfiguredInstance instance = new ExplicitInstance(typeof (Command), args, new SmartInstance<Command>());
-
-            Assert.AreSame(theNode, instance.Get("node", typeof (Node), new StubBuildSession()));
+            var container = new Container(x =>
+            {
+                x.For<IView>().Use<View>();
+            });
+            container.With("node").EqualTo(theNode).GetInstance<Command>().Node.ShouldBeTheSameAs(theNode);
         }
 
         [Test]

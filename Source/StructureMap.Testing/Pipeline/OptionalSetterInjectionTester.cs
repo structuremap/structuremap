@@ -8,21 +8,6 @@ using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing.Pipeline
 {
-    public class ClassWithOneSetterBuilder : InstanceBuilder
-    {
-        public override Type PluggedType
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public override object BuildInstance(IConfiguredInstance instance, BuildSession session)
-        {
-            var target = new ClassWithOneSetter();
-            if (instance.HasProperty("Name")) target.Name = instance.GetProperty("Name");
-
-            return target;
-        }
-    }
 
 
     [TestFixture]
@@ -331,23 +316,6 @@ namespace StructureMap.Testing.Pipeline
     public class ClassWithOneEnum
     {
         public ColorEnum Color { get; set; }
-    }
-
-    public class ClassWithOneEnumBuilder : InstanceBuilder
-    {
-        public override Type PluggedType
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public override object BuildInstance(IConfiguredInstance instance, BuildSession session)
-        {
-            var target = new ClassWithOneEnum();
-            if (instance.HasProperty("Color"))
-                target.Color = (ColorEnum) Enum.Parse(typeof (ColorEnum), instance.GetProperty("Color"));
-
-            return target;
-        }
     }
 
     public class ClassWithOneLongAndOneBool

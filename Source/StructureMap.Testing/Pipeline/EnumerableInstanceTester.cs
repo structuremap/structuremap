@@ -14,6 +14,16 @@ namespace StructureMap.Testing.Pipeline
         }
 
         [Test]
+        public void is_enumerable()
+        {
+            EnumerableInstance.IsEnumerable(typeof (IWidget[])).ShouldBeTrue();
+            EnumerableInstance.IsEnumerable(typeof (IList<IWidget>)).ShouldBeTrue();
+            EnumerableInstance.IsEnumerable(typeof (IEnumerable<IWidget>)).ShouldBeTrue();
+            EnumerableInstance.IsEnumerable(typeof (List<IWidget>)).ShouldBeTrue();
+            EnumerableInstance.IsEnumerable(typeof (IWidget)).ShouldBeFalse();
+        }
+
+        [Test]
         public void build_coercion_strategy_for_an_array()
         {
             EnumerableInstance.DetermineCoercion(typeof (IWidget[])).ShouldBeOfType<ArrayCoercion<IWidget>>();

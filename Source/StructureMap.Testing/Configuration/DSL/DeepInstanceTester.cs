@@ -120,7 +120,6 @@ namespace StructureMap.Testing.Configuration.DSL
                     .CtorDependency<Rule>().Is(x =>
                     {
                         x.OfConcreteType<WidgetRule>()
-                            .WithCtorArg("color").EqualTo("yellow")
                             .CtorDependency<IWidget>().Is(
                             w => { w.OfConcreteType<ColorWidget>().WithProperty("color").EqualTo("yellow"); });
                     });

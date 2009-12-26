@@ -145,18 +145,19 @@ namespace StructureMap.Testing
         [Test]
         public void Define_profile_with_generics_and_concrete_type()
         {
-            IContainer manager = new Container(registry =>
+            var container = new Container(registry =>
             {
                 registry.CreateProfile("1").For(typeof (IService<>)).UseConcreteType(typeof (Service<>));
                 registry.CreateProfile("2").For(typeof (IService<>)).UseConcreteType(typeof (Service2<>));
             });
 
-            manager.SetDefaultsToProfile("1");
+            container.SetDefaultsToProfile("1");
 
-            Assert.IsInstanceOfType(typeof (Service<string>), manager.GetInstance<IService<string>>());
+            container.GetInstance<IService<string>>().ShouldBeOfType<Service<string>>();
 
-            manager.SetDefaultsToProfile("2");
-            Assert.IsInstanceOfType(typeof (Service2<int>), manager.GetInstance<IService<int>>());
+            container.SetDefaultsToProfile("2");
+
+            container.GetInstance<IService<string>>().ShouldBeOfType<Service2<string>>();
         }
 
         [Test]

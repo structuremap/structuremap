@@ -125,7 +125,7 @@ namespace StructureMap.Testing.Diagnostics
 </configuration>
 ");
 
-            report.Result.ShouldEqual(DoctorResult.BuildErrors);
+            report.Result.ShouldEqual(DoctorResult.BootstrapperFailure);
         }
 
         [Test]

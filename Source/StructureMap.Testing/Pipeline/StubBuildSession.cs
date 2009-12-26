@@ -1,4 +1,5 @@
 using System;
+using StructureMap.Construction;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
@@ -21,16 +22,6 @@ namespace StructureMap.Testing.Pipeline
             }
         }
 
-        public InstanceBuilder FindBuilderByType(Type pluginType, Type pluggedType)
-        {
-            if (pluggedType == null)
-            {
-                return null;
-            }
-
-            var list = new InstanceBuilderList(pluginType, new[] {new Plugin(pluggedType),});
-            return list.FindByType(pluggedType);
-        }
 
         public InstanceBuilder FindBuilderByConcreteKey(Type pluginType, string concreteKey)
         {

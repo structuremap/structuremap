@@ -77,8 +77,12 @@ namespace StructureMap.Testing
         [Test]
         public void PullConfigurationFromTheAppConfig()
         {
-            StructureMapConfiguration.UseDefaultStructureMapConfigFile = false;
-            StructureMapConfiguration.PullConfigurationFromAppConfig = true;
+            
+            ObjectFactory.Initialize(x =>
+            {
+                x.UseDefaultStructureMapConfigFile = false;
+                x.PullConfigurationFromAppConfig = true;
+            });
 
             ObjectFactory.GetInstance<IThing<string, bool>>()
                 .IsType<ColorThing<string, bool>>().Color.ShouldEqual("Cornflower");

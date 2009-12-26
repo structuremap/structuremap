@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using NUnit.Framework;
 using StructureMap.Graph;
 using StructureMap.Source;
@@ -21,7 +22,7 @@ namespace StructureMap.Testing.Graph
         }
 
 
-        private Container buildInstanceManager()
+        private Container buildContainer()
         {
             PluginGraph pluginGraph =
                 DataMother.BuildPluginGraphFromXml(
@@ -72,18 +73,16 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void ChildArraySetter()
         {
-            Container manager = buildInstanceManager();
-
-            var column =
-                (WidgetArrayGridColumn) manager.GetInstance(typeof (IGridColumn), "WidgetArray");
-
-            Assert.AreEqual(3, column.Widgets.Length);
+            var container = buildContainer();
+            container.GetInstance<IGridColumn>("WidgetArray")
+                .ShouldBeOfType<WidgetArrayGridColumn>()
+                .Widgets.Length.ShouldEqual(3);
         }
 
         [Test]
         public void ChildObjectSetter()
         {
-            Container manager = buildInstanceManager();
+            Container manager = buildContainer();
 
 
             var column = (WidgetGridColumn) manager.GetInstance(typeof (IGridColumn), "BlueWidget");
