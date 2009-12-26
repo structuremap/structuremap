@@ -19,14 +19,14 @@ namespace StructureMap.Graph
             _properties = new List<SetterProperty>();
             _plugin = plugin;
 
-            foreach (PropertyInfo property in plugin.PluggedType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
-            {
-                if (property.CanWrite && property.GetSetMethod(false) != null)
+
+            plugin.PluggedType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Where(x => x.CanWrite && x.GetSetMethod(false) != null && x.GetSetMethod().GetParameters().Length == 1)
+                .Each(x =>
                 {
-                    var setter = new SetterProperty(property);
+                    var setter = new SetterProperty(x);
                     _properties.Add(setter);
-                }
-            }
+                });
         }
 
         public int MandatoryCount

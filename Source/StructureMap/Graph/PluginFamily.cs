@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using StructureMap.Attributes;
 using StructureMap.Pipeline;
 using StructureMap.TypeRules;
@@ -14,7 +15,10 @@ namespace StructureMap.Graph
     /// </summary>
     public class PluginFamily : IPluginFamily
     {
-        private readonly Cache<string, Instance> _instances = new Cache<string, Instance>(delegate { return null; });
+        private readonly Cache<string, Instance> _instances = new Cache<string, Instance>(delegate
+        {
+            return null;
+        });
         private readonly List<InstanceMemento> _mementoList = new List<InstanceMemento>();
         private readonly Cache<string, Plugin> _pluggedTypes = new Cache<string, Plugin>();
         private readonly Type _pluginType;
@@ -148,8 +152,13 @@ namespace StructureMap.Graph
                 if (hasInstanceWithPluggedType(plugin)) return;
                 
                 ConfiguredInstance instance = new ConfiguredInstance(plugin.PluggedType).WithName(key);
-                AddInstance(instance);
+                FillInstance(instance);
             });
+        }
+
+        private void FillInstance(Instance instance)
+        {
+            _instances.Fill(instance.Name, instance);
         }
 
         private bool hasInstanceWithPluggedType(Plugin plugin)
@@ -280,9 +289,14 @@ namespace StructureMap.Graph
             templatedFamily.DefaultInstanceKey = DefaultInstanceKey;
             templatedFamily._lifecycle = _lifecycle;
 
+            _instances.GetAll().Select(x =>
+            {
+                var clone = x.CloseType(templateTypes);
+                if (clone == null) return null;
 
-            // TODO -- Got a big problem here.  Intances need to be copied over
-            EachInstance(i => { ((IDiagnosticInstance) i).AddTemplatedInstanceTo(templatedFamily, templateTypes); });
+                clone.Name = x.Name;
+                return clone;
+            }).Where(x => x != null).Each(templatedFamily.AddInstance);
 
             // Need to attach the new PluginFamily to the old PluginGraph
             Parent.PluginFamilies.Add(templatedFamily);
@@ -365,5 +379,10 @@ namespace StructureMap.Graph
         public Instance MissingInstance { get; set; }
 
         #endregion
+
+        public void ForInstance(string name, Action<Instance> action)
+        {
+            _instances.WithValue(name, action);
+        }
     }
 }

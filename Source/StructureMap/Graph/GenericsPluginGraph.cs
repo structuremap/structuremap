@@ -100,7 +100,8 @@ namespace StructureMap.Graph
                 Type[] templatedParameterTypes = templatedType.GetGenericArguments();
 
 
-                PluginFamily family = CreateTemplatedClone(basicFamily, templatedParameterTypes);
+                PluginFamily templatedFamily = basicFamily.CreateTemplatedClone(templatedParameterTypes);
+                PluginFamily family = templatedFamily;
                 profileManager.CopyDefaults(basicType, templatedType, family);
 
                 return family;
@@ -111,12 +112,6 @@ namespace StructureMap.Graph
             }
         }
 
-        // TODO:  This code sucks.  What's going on here?
-        public static PluginFamily CreateTemplatedClone(PluginFamily baseFamily, params Type[] templateTypes)
-        {
-            PluginFamily templatedFamily = baseFamily.CreateTemplatedClone(templateTypes);
-            return templatedFamily;
-        }
 
 
         public static bool CanBePluggedIntoGenericType(Type pluginType, Type pluggedType, params Type[] templateTypes)
@@ -149,10 +144,7 @@ namespace StructureMap.Graph
 
         public void ImportFrom(GenericsPluginGraph source)
         {
-            foreach (PluginFamily sourceFamily in source._families)
-            {
-                ImportFrom(sourceFamily);
-            }
+            source._families.Each(ImportFrom);
         }
 
         public void ImportFrom(PluginFamily sourceFamily)

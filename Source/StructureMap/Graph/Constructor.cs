@@ -8,8 +8,8 @@ namespace StructureMap.Graph
 {
     public class Constructor
     {
-        private ConstructorInfo _ctor;
         private readonly Type _pluggedType;
+        private ConstructorInfo _ctor;
 
         public Constructor(Type pluggedType)
         {
@@ -17,10 +17,7 @@ namespace StructureMap.Graph
             _ctor = GetConstructor(pluggedType);
         }
 
-        public ConstructorInfo Ctor
-        {
-            get { return _ctor; }
-        }
+        public ConstructorInfo Ctor { get { return _ctor; } }
 
         /// <summary>
         /// Returns the System.Reflection.ConstructorInfo for the PluggedType.  Uses either
@@ -102,11 +99,8 @@ namespace StructureMap.Graph
                     catch (Exception e)
                     {
                         string message =
-                            "Trying to visit parameter {0} of type {1} in the constructor for {2}".ToFormat(info.Name,
-                                                                                                            info.
-                                                                                                                ParameterType,
-                                                                                                            _pluggedType.
-                                                                                                                AssemblyQualifiedName);
+                            "Trying to visit parameter {0} of type {1} in the constructor for {2}"
+                                .ToFormat(info.Name, info.ParameterType, _pluggedType.AssemblyQualifiedName);
                         throw new ApplicationException(message, e);
                     }
                 }
@@ -144,7 +138,7 @@ namespace StructureMap.Graph
             var finder = new ConstructorFinderVisitor();
             finder.Visit(expression);
 
-            var ctor = finder.Constructor;
+            ConstructorInfo ctor = finder.Constructor;
             if (ctor == null)
             {
                 throw new ApplicationException("Not a valid constructor function");

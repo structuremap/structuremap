@@ -42,18 +42,22 @@ namespace StructureMap.Graph
 
         private IEnumerable<Type> FindPluginTypes(Type type)
         {
+            return new Type[0];
             // lets not worry about abstract base classes for now
             return type.GetInterfaces().Where(t => t.IsPublic);
         }
 
         public IEnumerable<TypeMap> GetTypeMaps()
         {
-            return _implementations.Contents().Select(pair => new TypeMap(pair.Key, pair.Value));
+            return new TypeMap[0];
+            throw new NotImplementedException();
+            //return _implementations.Contents().Select(pair => new TypeMap(pair.Key, pair.Value));
         }
 
         public void Dispose()
         {
-            _implementations.Clear();
+            //throw new NotImplementedException();
+            //_implementations.Clear();
         }
     }
 }

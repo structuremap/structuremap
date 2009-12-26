@@ -176,5 +176,7 @@ namespace StructureMap.Graph
         {
             return _constructor.FindArgumentType(argumentName) ?? _setters.FindArgumentType(argumentName);
         }
+
+        
     }
 }

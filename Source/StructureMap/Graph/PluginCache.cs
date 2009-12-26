@@ -2,15 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using StructureMap.Emitting;
+using StructureMap.Construction;
 using StructureMap.Util;
-using StructureMap.TypeRules;
 
 namespace StructureMap.Graph
 {
     public static class PluginCache
     {
-        private static readonly Cache<Type, InstanceBuilder> _builders;
+        private static readonly Cache<Type, IInstanceBuilder> _builders;
         private static readonly Cache<Type, Plugin> _plugins;
         private static readonly List<Predicate<PropertyInfo>> _setterRules;
 
@@ -29,16 +28,16 @@ namespace StructureMap.Graph
             });
 
 
-            _builders = new Cache<Type, InstanceBuilder>(t =>
+            _builders = new Cache<Type, IInstanceBuilder>(t =>
             {
                 try
                 {
                     Plugin plugin = _plugins[t];
-                    return new InstanceBuilderAssembly(new[] {plugin}).Compile()[0];
+                    return BuilderCompiler.CreateBuilder(plugin);
                 }
                 catch (Exception e)
                 {
-                    throw new StructureMapException(245, t.AssemblyQualifiedName, e);
+                    throw new StructureMapException(245, e, t.AssemblyQualifiedName);
                 }
             });
         }
@@ -48,39 +47,9 @@ namespace StructureMap.Graph
             return _plugins[pluggedType];
         }
 
-        public static InstanceBuilder FindBuilder(Type pluggedType)
+        public static IInstanceBuilder FindBuilder(Type pluggedType)
         {
             return _builders[pluggedType];
-        }
-
-        public static void Compile()
-        {
-            lock (typeof (PluginCache))
-            {
-                IEnumerable<Plugin> plugins =
-                    _plugins.Where(plugin => pluginHasNoBuilder(plugin) && plugin.CanBeCreated());
-                createAndStoreBuilders(plugins);
-            }
-        }
-
-        private static void createAndStoreBuilders(IEnumerable<Plugin> plugins)
-        {
-            // If this is a nested container and there are no new plugins, 
-            // we don't need to create the InstanceBuilderAssembly 
-            // This was causing OutOfMemoryExceptions when using nested containers
-            // repeatedly (i.e. every web request in a web app)
-            if (plugins == null || plugins.Count() == 0) return;
-
-            //NOTE: Calling 'Compile()' on a DynamicAssembly will actually
-            // compile it as a file on the disk and load it into the AppDomain.
-            // If you call it repeatedly, you will eventually run out of memory
-            var assembly = new InstanceBuilderAssembly(plugins);
-            assembly.Compile().ForEach(b => _builders[b.PluggedType] = b);
-        }
-
-        private static bool pluginHasNoBuilder(Plugin plugin)
-        {
-            return !_builders.Has(plugin.PluggedType);
         }
 
         public static void Store(Type pluggedType, InstanceBuilder builder)
@@ -114,9 +83,7 @@ namespace StructureMap.Graph
                                   //does any of the registered plugins have a setter matching the predicate?
                                   if (plugin.PluggedType.GetProperties().Any(s => predicate(s)))
                                   {
-                                      //rebuild the builder if nessesary
-                                      if (_builders[plugin.PluggedType] != null)
-                                          createAndStoreBuilders(new[] { plugin });
+                                      _builders.Remove(plugin.PluggedType);
                                   }
                               });
 
