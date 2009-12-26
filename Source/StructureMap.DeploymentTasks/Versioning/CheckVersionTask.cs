@@ -14,18 +14,10 @@ namespace StructureMap.DeploymentTasks.Versioning
         private string _targetFolder;
 
         [TaskAttribute("manifest", Required = true)]
-        public string ManifestFile
-        {
-            get { return _manifestFile; }
-            set { _manifestFile = value; }
-        }
+        public string ManifestFile { get { return _manifestFile; } set { _manifestFile = value; } }
 
         [TaskAttribute("directory", Required = true)]
-        public string TargetFolder
-        {
-            get { return _targetFolder; }
-            set { _targetFolder = value; }
-        }
+        public string TargetFolder { get { return _targetFolder; } set { _targetFolder = value; } }
 
         [TaskAttribute("exclusions", Required = false)]
         public string Exclusions

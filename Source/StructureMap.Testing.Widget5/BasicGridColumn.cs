@@ -13,10 +13,7 @@ namespace StructureMap.Testing.Widget5
             _headerText = headerText;
         }
 
-        public string HeaderText
-        {
-            get { return _headerText; }
-        }
+        public string HeaderText { get { return _headerText; } }
 
         [SetterProperty]
         public IWidget Widget { get; set; }

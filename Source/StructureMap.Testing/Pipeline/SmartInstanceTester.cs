@@ -14,7 +14,7 @@ namespace StructureMap.Testing.Pipeline
         private SmartInstance<T> instanceOf<T>()
         {
             var instance = new SmartInstance<T>();
-            
+
             structuredInstance = instance;
             configuredInstance = instance;
 
@@ -48,6 +48,17 @@ namespace StructureMap.Testing.Pipeline
         }
 
         [Test]
+        public void specify_a_non_simple_property_with_equal_to()
+        {
+            var widget = new ColorWidget("Red");
+            var container = new Container(x => x.ForRequestedType<ClassWithWidgetProperty>()
+                                                   .TheDefault.Is.OfConcreteType<ClassWithWidgetProperty>()
+                                                   .WithProperty(o => o.Widget).EqualTo(widget));
+
+            Assert.AreSame(widget, container.GetInstance<ClassWithWidgetProperty>().Widget);
+        }
+
+        [Test]
         public void specify_a_property_dependency()
         {
             var widget = new ColorWidget("Red");
@@ -57,7 +68,7 @@ namespace StructureMap.Testing.Pipeline
             var container = new Container(x =>
             {
                 x.ForConcreteType<ClassWithWidgetProperty>().Configure
-                    .SetterDependency<IWidget>(o => o.Widget).Is(o => o.Object(new ColorWidget("Red")));
+                    .SetterDependency(o => o.Widget).Is(o => o.Object(new ColorWidget("Red")));
             });
         }
 
@@ -95,31 +106,7 @@ namespace StructureMap.Testing.Pipeline
                 x.ForConcreteType<SimplePropertyTarget>().Configure
                     .WithProperty(o => o.Name).EqualToAppSetting("name")
                     .WithProperty(o => o.Age).EqualToAppSetting("age");
-
             });
-        }
-
-        [Test]
-        public void specify_ctorarg_with_non_simple_argument()
-        {
-            var widget = new ColorWidget("Red");
-            var container = new Container(x => x.ForRequestedType<ClassWithWidget>()
-                                              .TheDefault.Is.OfConcreteType<ClassWithWidget>()
-                                              .WithCtorArg("widget").EqualTo(widget));
-
-            Assert.AreSame(widget, container.GetInstance<ClassWithWidget>().Widget);
-        }
-
-
-        [Test]
-        public void specify_a_non_simple_property_with_equal_to()
-        {
-            var widget = new ColorWidget("Red");
-            var container = new Container(x => x.ForRequestedType<ClassWithWidgetProperty>()
-                                                   .TheDefault.Is.OfConcreteType<ClassWithWidgetProperty>()
-                                                   .WithProperty(o => o.Widget).EqualTo(widget));
-
-            Assert.AreSame(widget, container.GetInstance<ClassWithWidgetProperty>().Widget);
         }
 
 
@@ -155,12 +142,21 @@ namespace StructureMap.Testing.Pipeline
         }
 
         [Test]
+        public void specify_ctorarg_with_non_simple_argument()
+        {
+            var widget = new ColorWidget("Red");
+            var container = new Container(x => x.ForRequestedType<ClassWithWidget>()
+                                                   .TheDefault.Is.OfConcreteType<ClassWithWidget>()
+                                                   .WithCtorArg("widget").EqualTo(widget));
+
+            Assert.AreSame(widget, container.GetInstance<ClassWithWidget>().Widget);
+        }
+
+        [Test]
         public void successfully_specify_the_constructor_argument_of_a_string()
         {
             build<ColorRule>(i => i.WithCtorArg("color").EqualTo("Red")).Color.ShouldEqual("Red");
         }
-
-       
     }
 
     public class ClassWithWidgetArrayCtor
@@ -172,15 +168,12 @@ namespace StructureMap.Testing.Pipeline
             _widgets = widgets;
         }
 
-        public IWidget[] Widgets
-        {
-            get { return _widgets; }
-        }
+        public IWidget[] Widgets { get { return _widgets; } }
     }
 
     public class ClassWithDoubleProperty
     {
-        public double Double { get; set; }    
+        public double Double { get; set; }
     }
 
     public class ClassWithWidgetArraySetter
@@ -203,10 +196,7 @@ namespace StructureMap.Testing.Pipeline
             _widget = widget;
         }
 
-        public IWidget Widget
-        {
-            get { return _widget; }
-        }
+        public IWidget Widget { get { return _widget; } }
     }
 
     public class ClassWithWidgetProperty

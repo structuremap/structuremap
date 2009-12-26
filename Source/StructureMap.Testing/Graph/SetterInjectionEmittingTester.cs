@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using NUnit.Framework;
 using StructureMap.Graph;
 using StructureMap.Source;
@@ -73,7 +72,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void ChildArraySetter()
         {
-            var container = buildContainer();
+            Container container = buildContainer();
             container.GetInstance<IGridColumn>("WidgetArray")
                 .ShouldBeOfType<WidgetArrayGridColumn>()
                 .Widgets.Length.ShouldEqual(3);

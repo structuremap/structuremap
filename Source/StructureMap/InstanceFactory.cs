@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Util;
@@ -12,16 +10,17 @@ namespace StructureMap
     /// </summary>
     public class InstanceFactory : IInstanceFactory
     {
+        private readonly Type _pluginType;
+
         private Cache<string, Instance> _instances =
             new Cache<string, Instance>(delegate { return null; });
 
-        private readonly Type _pluginType;
         private ILifecycle _lifecycle;
-        
 
         #region constructor functions
 
-        public InstanceFactory(Type pluginType) : this(new PluginFamily(pluginType))
+        public InstanceFactory(Type pluginType)
+            : this(new PluginFamily(pluginType))
         {
         }
 
@@ -77,18 +76,9 @@ namespace StructureMap
 
         public Instance MissingInstance { get; set; }
 
-        public Type PluginType
-        {
-            get { return _pluginType; }
-        }
+        public Type PluginType { get { return _pluginType; } }
 
-        public Instance[] AllInstances
-        {
-            get
-            {
-                return _instances.GetAll();
-            }
-        }
+        public Instance[] AllInstances { get { return _instances.GetAll(); } }
 
 
         public void AddInstance(Instance instance)
@@ -106,9 +96,10 @@ namespace StructureMap
         {
             if (_lifecycle == null)
             {
-                _lifecycle = family.Lifecycle;                
+                _lifecycle = family.Lifecycle;
             }
-            else if (_lifecycle != null && family.Lifecycle != null && !_lifecycle.GetType().Equals(family.Lifecycle.GetType()))
+            else if (_lifecycle != null && family.Lifecycle != null &&
+                     !_lifecycle.GetType().Equals(family.Lifecycle.GetType()))
             {
                 // TODO:  Might need to clear out the existing policy when it's ejected
                 _lifecycle = family.Lifecycle;
@@ -128,12 +119,8 @@ namespace StructureMap
             _instances.Clear();
         }
 
-        public ILifecycle Lifecycle
-        {
-            get { return _lifecycle; }
-            set { _lifecycle = value; }
-        }
-        
+        public ILifecycle Lifecycle { get { return _lifecycle; } set { _lifecycle = value; } }
+
         public IInstanceFactory Clone()
         {
             var factory = new InstanceFactory(_pluginType);

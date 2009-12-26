@@ -14,15 +14,9 @@ namespace StructureMap.Diagnostics
         private readonly List<string> _sources = new List<string>();
         private string _currentSource;
 
-        public int ErrorCount
-        {
-            get { return _errors.Count; }
-        }
+        public int ErrorCount { get { return _errors.Count; } }
 
-        public string[] Sources
-        {
-            get { return _sources.ToArray(); }
-        }
+        public string[] Sources { get { return _sources.ToArray(); } }
 
         public void StartSource(string description)
         {

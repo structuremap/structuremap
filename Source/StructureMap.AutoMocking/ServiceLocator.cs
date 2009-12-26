@@ -15,7 +15,7 @@ namespace StructureMap.AutoMocking
 
         public T Service<T>() where T : class
         {
-            return (T)_mocks.DynamicMock(typeof(T));
+            return (T) _mocks.DynamicMock(typeof (T));
         }
 
         public object Service(Type serviceType)
@@ -25,7 +25,7 @@ namespace StructureMap.AutoMocking
 
         public T PartialMock<T>(params object[] args) where T : class
         {
-            return (T)_mocks.PartialMock(typeof(T), args);
+            return (T) _mocks.PartialMock(typeof (T), args);
         }
     }
 
@@ -35,21 +35,21 @@ namespace StructureMap.AutoMocking
 
         public T Service<T>() where T : class
         {
-            var instance = (T)_mocks.DynamicMock(typeof (T));
+            var instance = (T) _mocks.DynamicMock(typeof (T));
             _mocks.Replay(instance);
             return instance;
         }
 
         public object Service(Type serviceType)
         {
-            var instance = _mocks.DynamicMock(serviceType);
+            object instance = _mocks.DynamicMock(serviceType);
             _mocks.Replay(instance);
             return instance;
         }
 
         public T PartialMock<T>(params object[] args) where T : class
         {
-            var instance = (T)_mocks.PartialMock(typeof(T), args);
+            var instance = (T) _mocks.PartialMock(typeof (T), args);
             _mocks.Replay(instance);
             return instance;
         }
@@ -58,10 +58,10 @@ namespace StructureMap.AutoMocking
     public class MoqServiceLocator : ServiceLocator
     {
         private readonly MoqFactory _moqs = new MoqFactory();
-        
+
         public T Service<T>() where T : class
         {
-            return (T)_moqs.CreateMock(typeof(T));
+            return (T) _moqs.CreateMock(typeof (T));
         }
 
         public object Service(Type serviceType)
@@ -71,7 +71,7 @@ namespace StructureMap.AutoMocking
 
         public T PartialMock<T>(params object[] args) where T : class
         {
-            return (T)_moqs.CreateMockThatCallsBase(typeof (T), args);
+            return (T) _moqs.CreateMockThatCallsBase(typeof (T), args);
         }
     }
 }

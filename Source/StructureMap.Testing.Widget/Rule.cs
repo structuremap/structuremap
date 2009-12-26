@@ -50,42 +50,21 @@ namespace StructureMap.Testing.Widget
         {
         }
 
-        public string String
-        {
-            get { return _String; }
-        }
+        public string String { get { return _String; } }
 
 
-        public string String2
-        {
-            get { return _String2; }
-        }
+        public string String2 { get { return _String2; } }
 
 
-        public int Int
-        {
-            get { return _Int; }
-        }
+        public int Int { get { return _Int; } }
 
-        public byte Byte
-        {
-            get { return _Byte; }
-        }
+        public byte Byte { get { return _Byte; } }
 
-        public long Long
-        {
-            get { return _Long; }
-        }
+        public long Long { get { return _Long; } }
 
-        public double Double
-        {
-            get { return _Double; }
-        }
+        public double Double { get { return _Double; } }
 
-        public bool Bool
-        {
-            get { return _Bool; }
-        }
+        public bool Bool { get { return _Bool; } }
 
         public static IConfiguredInstance GetInstance()
         {
@@ -121,10 +100,7 @@ namespace StructureMap.Testing.Widget
         public string Name { get; set; }
         public int Age { get; set; }
 
-        public string Color
-        {
-            get { return _Color; }
-        }
+        public string Color { get { return _Color; } }
     }
 
 
@@ -144,14 +120,8 @@ namespace StructureMap.Testing.Widget
             _Value = Value;
         }
 
-        public string Attribute
-        {
-            get { return _Attribute; }
-        }
+        public string Attribute { get { return _Attribute; } }
 
-        public int Value
-        {
-            get { return _Value; }
-        }
+        public int Value { get { return _Value; } }
     }
 }

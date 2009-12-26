@@ -14,32 +14,16 @@ namespace StructureMap.DeploymentTasks
         private string _typeName = string.Empty;
 
         [TaskAttribute("configPath", Required = true)]
-        public string ConfigPath
-        {
-            get { return _configPath; }
-            set { _configPath = value; }
-        }
+        public string ConfigPath { get { return _configPath; } set { _configPath = value; } }
 
         [TaskAttribute("profileName", Required = false)]
-        public string ProfileName
-        {
-            get { return _profileName; }
-            set { _profileName = value; }
-        }
+        public string ProfileName { get { return _profileName; } set { _profileName = value; } }
 
         [TaskAttribute("typeName", Required = true)]
-        public string TypeName
-        {
-            get { return _typeName; }
-            set { _typeName = value; }
-        }
+        public string TypeName { get { return _typeName; } set { _typeName = value; } }
 
         [TaskAttribute("key", Required = true)]
-        public string DefaultKey
-        {
-            get { return _defaultKey; }
-            set { _defaultKey = value; }
-        }
+        public string DefaultKey { get { return _defaultKey; } set { _defaultKey = value; } }
 
 
         protected override void ExecuteTask()

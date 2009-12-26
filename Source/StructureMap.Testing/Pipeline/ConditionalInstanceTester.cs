@@ -8,23 +8,7 @@ namespace StructureMap.Testing.Pipeline
     [TestFixture]
     public class ConditionalInstanceTester
     {
-        private ConditionalInstance<Rule> instance;
-        private Rule Red = new ColorRule("red");
-        private Rule Green = new ColorRule("green");
-        private Rule Blue = new ColorRule("blue");
-        private Rule Default = new ColorRule("black");
-
-        private BuildSession _session;
-
-        private void TheRequestedNameIs(string name)
-        {
-            _session.RequestedName = name;
-        }
-
-        private void TheConstructedRuleShouldBe(Rule expected)
-        {
-            instance.Build(typeof (Rule), _session).ShouldBeTheSameAs(expected);
-        }
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -41,11 +25,24 @@ namespace StructureMap.Testing.Pipeline
             _session = new BuildSession();
         }
 
-        [Test]
-        public void use_the_default_if_nothing_matches()
+        #endregion
+
+        private ConditionalInstance<Rule> instance;
+        private readonly Rule Red = new ColorRule("red");
+        private readonly Rule Green = new ColorRule("green");
+        private readonly Rule Blue = new ColorRule("blue");
+        private readonly Rule Default = new ColorRule("black");
+
+        private BuildSession _session;
+
+        private void TheRequestedNameIs(string name)
         {
-            TheRequestedNameIs("nothing that matches");
-            TheConstructedRuleShouldBe(Default);
+            _session.RequestedName = name;
+        }
+
+        private void TheConstructedRuleShouldBe(Rule expected)
+        {
+            instance.Build(typeof (Rule), _session).ShouldBeTheSameAs(expected);
         }
 
         [Test]
@@ -71,30 +68,37 @@ namespace StructureMap.Testing.Pipeline
             TheConstructedRuleShouldBe(Blue);
         }
 
-    
+        [Test]
+        public void use_the_default_if_nothing_matches()
+        {
+            TheRequestedNameIs("nothing that matches");
+            TheConstructedRuleShouldBe(Default);
+        }
     }
 
     [TestFixture]
     public class ConditionalInstanceIntegratedTester
     {
-        private Rule RED = new ColorRule("red");
-        private Rule GREEN = new ColorRule("green");
+        private readonly Rule RED = new ColorRule("red");
+        private readonly Rule GREEN = new ColorRule("green");
         private Rule Blue = new ColorRule("blue");
-        private Rule DEFAULT = new ColorRule("black");
+        private readonly Rule DEFAULT = new ColorRule("black");
 
         [Test]
-        public void use_the_normal_default_if_it_is_not_specified_and_nothing_matches()
+        public void use_a_conditional_instance_if_the_test_is_true()
         {
             var container = new Container(x =>
             {
                 x.ForRequestedType<Rule>().TheDefault.IsThis(DEFAULT);
-                x.InstanceOf<Rule>().Is.Conditional(o => 
+                x.InstanceOf<Rule>().Is.Conditional(o =>
                 {
                     o.If(c => false).ThenIt.Is.OfConcreteType<ARule>();
+                    o.If(c => true).ThenIt.IsThis(GREEN);
+                    o.TheDefault.IsThis(RED);
                 }).WithName("conditional");
             });
 
-            container.GetInstance<Rule>("conditional").ShouldBeTheSameAs(DEFAULT);
+            container.GetInstance<Rule>("conditional").ShouldBeTheSameAs(GREEN);
         }
 
         [Test]
@@ -114,20 +118,16 @@ namespace StructureMap.Testing.Pipeline
         }
 
         [Test]
-        public void use_a_conditional_instance_if_the_test_is_true()
+        public void use_the_normal_default_if_it_is_not_specified_and_nothing_matches()
         {
             var container = new Container(x =>
             {
                 x.ForRequestedType<Rule>().TheDefault.IsThis(DEFAULT);
-                x.InstanceOf<Rule>().Is.Conditional(o =>
-                {
-                    o.If(c => false).ThenIt.Is.OfConcreteType<ARule>();
-                    o.If(c => true).ThenIt.IsThis(GREEN);
-                    o.TheDefault.IsThis(RED);
-                }).WithName("conditional");
+                x.InstanceOf<Rule>().Is.Conditional(o => { o.If(c => false).ThenIt.Is.OfConcreteType<ARule>(); }).
+                    WithName("conditional");
             });
 
-            container.GetInstance<Rule>("conditional").ShouldBeTheSameAs(GREEN);
+            container.GetInstance<Rule>("conditional").ShouldBeTheSameAs(DEFAULT);
         }
     }
 }

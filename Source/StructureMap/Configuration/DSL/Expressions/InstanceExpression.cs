@@ -166,7 +166,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <param name="template"></param>
         /// <returns></returns>
         SerializedInstance SerializedCopyOf(T template);
-        
+
         /// <summary>
         /// Creates an Instance that will load an ASCX user control from the url
         /// </summary>
@@ -183,7 +183,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         ConditionalInstance<T> Conditional(Action<ConditionalInstance<T>.ConditionalInstanceExpression> configuration);
     }
 
-    public class InstanceExpression<T> : IInstanceExpression<T>, ThenItExpression<T> 
+    public class InstanceExpression<T> : IInstanceExpression<T>, ThenItExpression<T>
     {
         private readonly Action<Instance> _action;
 
@@ -194,10 +194,7 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         #region IsExpression<T> Members
 
-        IInstanceExpression<T> IsExpression<T>.Is
-        {
-            get { return this; }
-        }
+        IInstanceExpression<T> IsExpression<T>.Is { get { return this; } }
 
         public void IsThis(Instance instance)
         {
@@ -214,12 +211,6 @@ namespace StructureMap.Configuration.DSL.Expressions
         public void Instance(Instance instance)
         {
             _action(instance);
-        }
-
-        private INSTANCE returnInstance<INSTANCE>(INSTANCE instance) where INSTANCE : Instance
-        {
-            Instance(instance);
-            return instance;
         }
 
         public SmartInstance<PLUGGEDTYPE> OfConcreteType<PLUGGEDTYPE>() where PLUGGEDTYPE : T
@@ -272,15 +263,19 @@ namespace StructureMap.Configuration.DSL.Expressions
             return returnInstance(new UserControlInstance(url));
         }
 
-        public ConditionalInstance<T> Conditional(Action<ConditionalInstance<T>.ConditionalInstanceExpression> configuration)
+        public ConditionalInstance<T> Conditional(
+            Action<ConditionalInstance<T>.ConditionalInstanceExpression> configuration)
         {
             return returnInstance(new ConditionalInstance<T>(configuration));
         }
 
 
-        IsExpression<T> ThenItExpression<T>.ThenIt
+        IsExpression<T> ThenItExpression<T>.ThenIt { get { return this; } }
+
+        private INSTANCE returnInstance<INSTANCE>(INSTANCE instance) where INSTANCE : Instance
         {
-            get { return this; }
+            Instance(instance);
+            return instance;
         }
     }
 }

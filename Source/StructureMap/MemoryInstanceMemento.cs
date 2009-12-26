@@ -81,34 +81,22 @@ namespace StructureMap
         /// <summary>
         /// See <cref>InstanceMemento</cref>
         /// </summary>
-        protected override string innerConcreteKey
-        {
-            get { return _concreteKey; }
-        }
+        protected override string innerConcreteKey { get { return _concreteKey; } }
 
         /// <summary>
         /// See <cref>InstanceMemento</cref>
         /// </summary>
-        protected override string innerInstanceKey
-        {
-            get { return _instanceKey; }
-        }
+        protected override string innerInstanceKey { get { return _instanceKey; } }
 
         /// <summary>
         /// See <cref>InstanceMemento</cref>
         /// </summary>
-        public override bool IsReference
-        {
-            get { return _isReference; }
-        }
+        public override bool IsReference { get { return _isReference; } }
 
         /// <summary>
         /// See <cref>InstanceMemento</cref>
         /// </summary>
-        public override string ReferenceKey
-        {
-            get { return _referenceKey; }
-        }
+        public override string ReferenceKey { get { return _referenceKey; } }
 
         public void SetConcreteKey(string concreteKey)
         {

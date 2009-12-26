@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using NUnit.Framework;
+using StructureMap.Attributes;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.GenericWidgets;
@@ -8,9 +9,7 @@ using StructureMap.TypeRules;
 
 namespace StructureMap.Testing
 {
-	using StructureMap.Attributes;
-
-	[TestFixture]
+    [TestFixture]
     public class GenericsAcceptanceTester
     {
         #region Setup/Teardown
@@ -134,6 +133,22 @@ namespace StructureMap.Testing
             Assert.AreSame(graph.FindFamily(typeof (IGenericService<string>)), family2);
         }
 
+        [Test]
+        public void CanGetTheSameInstanceOfGenericInterfaceWithSingletonScope()
+        {
+            var con = new Container(x =>
+            {
+                x.ForRequestedType(typeof (IService<>))
+                    .CacheBy(InstanceScope.Singleton)
+                    .TheDefaultIsConcreteType(typeof (Service<>));
+            });
+
+            var first = con.GetInstance<IService<string>>();
+            var second = con.GetInstance<IService<string>>();
+
+            Assert.AreSame(first, second, "The objects are not the same instance");
+        }
+
 
         [Test]
         public void CanPlugGenericConcreteClassIntoGenericInterfaceWithNoGenericParametersSpecified()
@@ -219,22 +234,6 @@ namespace StructureMap.Testing
         {
             Assert.IsTrue(GenericsPluginGraph.CanBeCast(typeof (ITarget<,>), typeof (DisposableTarget<,>)));
         }
-
-		[Test]
-		public void CanGetTheSameInstanceOfGenericInterfaceWithSingletonScope()
-		{
-			Container con = new Container(x =>
-				{
-					x.ForRequestedType(typeof (IService<>))
-						.CacheBy(InstanceScope.Singleton)
-						.TheDefaultIsConcreteType(typeof (Service<>));
-				});
-
-			var first = con.GetInstance<IService<string>>();
-			var second = con.GetInstance<IService<string>>();
-
-			Assert.AreSame(first, second, "The objects are not the same instance");
-		}
     }
 
 
@@ -249,15 +248,9 @@ namespace StructureMap.Testing
             _age = age;
         }
 
-        public string Name
-        {
-            get { return _name; }
-        }
+        public string Name { get { return _name; } }
 
-        public int Age
-        {
-            get { return _age; }
-        }
+        public int Age { get { return _age; } }
 
         [ValidationMethod]
         public void Validate()

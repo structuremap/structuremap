@@ -5,9 +5,9 @@ namespace StructureMap.Pipeline
 {
     public class ObjectBuilder
     {
-        private readonly PipelineGraph _pipeline;
-        private readonly InterceptorLibrary _library;
         private readonly IObjectCache _defaultCache;
+        private readonly InterceptorLibrary _library;
+        private readonly PipelineGraph _pipeline;
 
         public ObjectBuilder(PipelineGraph pipeline, InterceptorLibrary library, IObjectCache defaultCache)
         {
@@ -20,14 +20,14 @@ namespace StructureMap.Pipeline
 
         public object Resolve(Type pluginType, Instance instance, BuildSession session)
         {
-            var cache = FindCache(pluginType, instance, session);
+            IObjectCache cache = FindCache(pluginType, instance, session);
             lock (cache.Locker)
             {
-                var returnValue = cache.Get(pluginType, instance);
+                object returnValue = cache.Get(pluginType, instance);
                 if (returnValue == null)
                 {
                     returnValue = ConstructNew(pluginType, instance, session);
-                    
+
 
                     cache.Set(pluginType, instance, returnValue);
                 }
@@ -42,7 +42,8 @@ namespace StructureMap.Pipeline
             return ApplyInterception(pluginType, returnValue, session, instance);
         }
 
-        public virtual object ApplyInterception(Type pluginType, object actualValue, BuildSession session, Instance instance)
+        public virtual object ApplyInterception(Type pluginType, object actualValue, BuildSession session,
+                                                Instance instance)
         {
             if (actualValue == null) return null;
 
@@ -54,13 +55,11 @@ namespace StructureMap.Pipeline
             {
                 throw new StructureMapException(308, e, instance.Name, actualValue.GetType());
             }
-
-            
         }
 
         public IObjectCache FindCache(Type pluginType, Instance instance, BuildSession session)
         {
-            var lifecycle = _pipeline.ForType(pluginType).Lifecycle;
+            ILifecycle lifecycle = _pipeline.ForType(pluginType).Lifecycle;
             return lifecycle == null
                        ? _defaultCache
                        : lifecycle.FindCache();

@@ -84,7 +84,6 @@ namespace StructureMap.Testing.Pipeline
         }
 
 
-
         [Test]
         public void DefaultMachineProfileNotSet_and_pickUp_default_from_family_machine()
         {

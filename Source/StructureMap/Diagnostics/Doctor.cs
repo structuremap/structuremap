@@ -21,7 +21,11 @@ namespace StructureMap.Diagnostics
 
             try
             {
-                var setup = new AppDomainSetup {ApplicationBase = BinaryPath, ConfigurationFile = ConfigFile};
+                var setup = new AppDomainSetup
+                {
+                    ApplicationBase = BinaryPath,
+                    ConfigurationFile = ConfigFile
+                };
                 if (BinaryPath != null) setup.PrivateBinPath = BinaryPath;
                 domain = AppDomain.CreateDomain("StructureMap-Diagnostics", null, setup);
                 var doctor =

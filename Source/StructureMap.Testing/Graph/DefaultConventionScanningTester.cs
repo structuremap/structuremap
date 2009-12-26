@@ -1,15 +1,13 @@
 using System;
-using System.Diagnostics;
 using NUnit.Framework;
 using StructureMap.Graph;
 
 namespace StructureMap.Testing.Graph
 {
-
     [TestFixture]
     public class GenericConnectionScannerTester
     {
-        private Container container;
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -24,6 +22,10 @@ namespace StructureMap.Testing.Graph
             });
         }
 
+        #endregion
+
+        private Container container;
+
         [Test]
         public void can_find_the_closed_finders()
         {
@@ -32,7 +34,7 @@ namespace StructureMap.Testing.Graph
             container.GetInstance<IFinder<double>>().ShouldBeOfType<DoubleFinder>();
         }
 
-        [Test, ExpectedException(typeof(ApplicationException))]
+        [Test, ExpectedException(typeof (ApplicationException))]
         public void fails_on_closed_type()
         {
             new GenericConnectionScanner(typeof (double));
@@ -41,12 +43,19 @@ namespace StructureMap.Testing.Graph
 
     public interface IFinder<T>
     {
-        
     }
 
-    public class StringFinder : IFinder<string>{}
-    public class IntFinder : IFinder<int>{}
-    public class DoubleFinder : IFinder<double>{}
+    public class StringFinder : IFinder<string>
+    {
+    }
+
+    public class IntFinder : IFinder<int>
+    {
+    }
+
+    public class DoubleFinder : IFinder<double>
+    {
+    }
 
 
     [TestFixture]

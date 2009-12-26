@@ -80,7 +80,7 @@ namespace StructureMap.Configuration.DSL.Expressions
             return instance;
         }
 
-        
+
         /// <summary>
         /// Shortcut method to add an additional Instance to this Plugin Type
         /// as just a Concrete Type.  This will only work if the Concrete Type

@@ -70,36 +70,18 @@ namespace StructureMap.Testing
             {
             }
 
-            public string String
-            {
-                get { return _String; }
-            }
+            public string String { get { return _String; } }
 
 
-            public int Int
-            {
-                get { return _Int; }
-            }
+            public int Int { get { return _Int; } }
 
-            public byte Byte
-            {
-                get { return _Byte; }
-            }
+            public byte Byte { get { return _Byte; } }
 
-            public long Long
-            {
-                get { return _Long; }
-            }
+            public long Long { get { return _Long; } }
 
-            public double Double
-            {
-                get { return _Double; }
-            }
+            public double Double { get { return _Double; } }
 
-            public bool Bool
-            {
-                get { return _Bool; }
-            }
+            public bool Bool { get { return _Bool; } }
 
             public static MemoryInstanceMemento GetMemento()
             {
@@ -182,11 +164,11 @@ namespace StructureMap.Testing
             MemoryInstanceMemento memento = ComplexRule.GetMemento();
             memento.SetProperty(XmlConstants.PLUGGED_TYPE, typeof (ComplexRule).AssemblyQualifiedName);
             memento.AddChildArray("cars", new InstanceMemento[]
-                                              {
-                                                  MemoryInstanceMemento.CreateReferencedInstanceMemento("Ford"),
-                                                  MemoryInstanceMemento.CreateReferencedInstanceMemento("Chevy"),
-                                                  MemoryInstanceMemento.CreateReferencedInstanceMemento("Dodge"),
-                                              });
+            {
+                MemoryInstanceMemento.CreateReferencedInstanceMemento("Ford"),
+                MemoryInstanceMemento.CreateReferencedInstanceMemento("Chevy"),
+                MemoryInstanceMemento.CreateReferencedInstanceMemento("Dodge"),
+            });
 
             var instance = (IStructuredInstance) memento.ReadInstance(graph, typeof (Rule));
             Instance[] instances = instance.GetChildArray("cars");

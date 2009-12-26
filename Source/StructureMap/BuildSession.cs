@@ -1,21 +1,20 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
 using StructureMap.Util;
-using System.Linq;
 
 namespace StructureMap
 {
     public class BuildSession : IContext
     {
-        protected BuildStack _buildStack = new BuildStack();
+        private readonly ObjectBuilder _builder;
         private readonly InstanceCache _cache = new InstanceCache();
         private readonly Cache<Type, Func<object>> _defaults;
         private readonly PipelineGraph _pipelineGraph;
-        private readonly ObjectBuilder _builder;
+        protected BuildStack _buildStack = new BuildStack();
 
         public BuildSession(PipelineGraph pipelineGraph, InterceptorLibrary interceptorLibrary, IObjectCache cache)
         {
@@ -45,28 +44,13 @@ namespace StructureMap
         {
         }
 
-        protected void clearBuildStack()
-        {
-            _buildStack = new BuildStack();
-        }
-
-        protected PipelineGraph pipelineGraph
-        {
-            get { return _pipelineGraph; }
-        }
+        protected PipelineGraph pipelineGraph { get { return _pipelineGraph; } }
 
         #region IContext Members
 
-        public string RequestedName
-        {
-            get;
-            set;
-        }
+        public string RequestedName { get; set; }
 
-        public BuildStack BuildStack
-        {
-            get { return _buildStack; }
-        }
+        public BuildStack BuildStack { get { return _buildStack; } }
 
         public Type ParentType
         {
@@ -87,10 +71,7 @@ namespace StructureMap
             return (T) CreateInstance(typeof (T), name);
         }
 
-        BuildFrame IContext.Root
-        {
-            get { return _buildStack.Root; }
-        }
+        BuildFrame IContext.Root { get { return _buildStack.Root; } }
 
         public virtual void RegisterDefault(Type pluginType, object defaultObject)
         {
@@ -122,9 +103,17 @@ namespace StructureMap
             return list;
         }
 
-
-
         #endregion
+
+        public IEnumerable<T> GetAllInstances<T>()
+        {
+            return forType(typeof (T)).AllInstances.Select(x => GetInstance<T>());
+        }
+
+        protected void clearBuildStack()
+        {
+            _buildStack = new BuildStack();
+        }
 
         public virtual object CreateInstance(Type pluginType, string name)
         {
@@ -147,7 +136,7 @@ namespace StructureMap
                 result = _builder.Resolve(pluginType, instance, this);
 
                 // TODO: HACK ATTACK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                var isUnique = forType(pluginType).Lifecycle is UniquePerRequestLifecycle;
+                bool isUnique = forType(pluginType).Lifecycle is UniquePerRequestLifecycle;
                 if (!isUnique)
                 {
                     _cache.Set(pluginType, instance, result);
@@ -174,11 +163,6 @@ namespace StructureMap
             }
 
             return array;
-        }
-
-        public IEnumerable<T> GetAllInstances<T>()
-        {
-            return forType(typeof (T)).AllInstances.Select(x => GetInstance<T>());
         }
 
         public IEnumerable<object> GetAllInstances(Type pluginType)

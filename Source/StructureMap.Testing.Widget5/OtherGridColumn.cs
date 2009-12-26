@@ -6,10 +6,7 @@ namespace StructureMap.Testing.Widget5
     {
         public IWidget Widget { get; set; }
 
-        public string ReadOnly
-        {
-            get { return "whatever"; }
-        }
+        public string ReadOnly { get { return "whatever"; } }
 
         public FontStyleEnum FontStyle { get; set; }
         public string ColumnName { get; set; }

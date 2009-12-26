@@ -9,10 +9,7 @@ namespace StructureMap.Pipeline
             CopyAsIsWhenClosingInstance = true;
         }
 
-        protected override bool doesRecordOnTheStack
-        {
-            get { return false; }
-        }
+        protected override bool doesRecordOnTheStack { get { return false; } }
 
         protected override object build(Type pluginType, BuildSession session)
         {

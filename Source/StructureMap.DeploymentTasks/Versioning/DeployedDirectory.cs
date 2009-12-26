@@ -17,7 +17,8 @@ namespace StructureMap.DeploymentTasks.Versioning
             _assemblies = new Hashtable();
         }
 
-        public DeployedDirectory(DirectoryInfo directory) : this()
+        public DeployedDirectory(DirectoryInfo directory)
+            : this()
         {
             Name = directory.Name;
 

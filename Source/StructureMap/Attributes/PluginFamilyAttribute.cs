@@ -26,11 +26,7 @@ namespace StructureMap
         /// If set, determines the shared "scope" of the instance -- PerRequest, Singleton, ThreadLocal,
         /// HttpContext, etc.
         /// </summary>
-        public InstanceScope Scope
-        {
-            get { return _scope; }
-            set { _scope = value; }
-        }
+        public InstanceScope Scope { get { return _scope; } set { _scope = value; } }
 
         public Type SourceType { get; set; }
 
@@ -38,20 +34,13 @@ namespace StructureMap
         /// InstanceKey of the default instance.  Used to implicitly define the default without
         /// declaring the instance in StructureMap.config
         /// </summary>
-        public string DefaultKey
-        {
-            get { return _default; }
-        }
+        public string DefaultKey { get { return _default; } }
 
         /// <summary>
         /// Declares the target to be built by StructureMap as a Singleton.  One object instance will
         /// be created for each named instance
         /// </summary>
-        public bool IsSingleton
-        {
-            get { return _scope == InstanceScope.Singleton; }
-            set { _scope = value ? InstanceScope.Singleton : InstanceScope.PerRequest; }
-        }
+        public bool IsSingleton { get { return _scope == InstanceScope.Singleton; } set { _scope = value ? InstanceScope.Singleton : InstanceScope.PerRequest; } }
 
 
         /// <summary>

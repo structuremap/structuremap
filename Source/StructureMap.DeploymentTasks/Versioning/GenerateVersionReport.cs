@@ -11,18 +11,10 @@ namespace StructureMap.DeploymentTasks.Versioning
         private string _outputPath;
 
         [TaskAttribute("directory", Required = true)]
-        public string Directory
-        {
-            get { return _directory; }
-            set { _directory = value; }
-        }
+        public string Directory { get { return _directory; } set { _directory = value; } }
 
         [TaskAttribute("manifest", Required = true)]
-        public string OutputPath
-        {
-            get { return _outputPath; }
-            set { _outputPath = value; }
-        }
+        public string OutputPath { get { return _outputPath; } set { _outputPath = value; } }
 
         protected override void ExecuteTask()
         {

@@ -32,12 +32,12 @@ namespace StructureMap.Testing.Graph.Interceptors
 
             mocks.ReplayAll();
             var compoundInterceptor = new CompoundInterceptor(new[]
-                                                                  {
-                                                                      interceptor1,
-                                                                      interceptor2,
-                                                                      interceptor3,
-                                                                      interceptor4
-                                                                  });
+            {
+                interceptor1,
+                interceptor2,
+                interceptor3,
+                interceptor4
+            });
 
             Assert.AreEqual("4", compoundInterceptor.Process("0", null));
             mocks.VerifyAll();

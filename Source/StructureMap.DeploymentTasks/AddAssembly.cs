@@ -12,18 +12,10 @@ namespace StructureMap.DeploymentTasks
         private string _configPath;
 
         [TaskAttribute("configPath", Required = true)]
-        public string ConfigPath
-        {
-            get { return _configPath; }
-            set { _configPath = value; }
-        }
+        public string ConfigPath { get { return _configPath; } set { _configPath = value; } }
 
         [TaskAttribute("assemblyName", Required = true)]
-        public string AssemblyName
-        {
-            get { return _assemblyName; }
-            set { _assemblyName = value; }
-        }
+        public string AssemblyName { get { return _assemblyName; } set { _assemblyName = value; } }
 
         protected override void ExecuteTask()
         {

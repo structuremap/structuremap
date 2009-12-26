@@ -1,11 +1,14 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
+using StructureMap.Pipeline;
+using StructureMap.Testing.DocumentationExamples;
 using StructureMap.Testing.Widget;
-using System.Linq;
+using StructureMap.Testing.Widget3;
 using StructureMap.Testing.Widget5;
 using StructureMap.TypeRules;
 
@@ -33,29 +36,29 @@ namespace StructureMap.Testing.Graph
     {
         #region Setup/Teardown
 
-        [TestFixtureSetUp]
-        public void FixtureSetUp()
-        {
-            var binFolder = Path.GetDirectoryName(GetType().Assembly.Location);
-            assemblyScanningFolder = Path.Combine(binFolder, "DynamicallyLoaded");
-            if (!Directory.Exists(assemblyScanningFolder)) Directory.CreateDirectory(assemblyScanningFolder);
-
-            var assembly1 = typeof (RedGreenRegistry).Assembly.Location;
-            var assembly2 = typeof(Widget3.IWorker).Assembly.Location;
-
-            File.Copy(assembly1, Path.Combine(assemblyScanningFolder, Path.GetFileName(assembly1)), true);
-            File.Copy(assembly2, Path.Combine(assemblyScanningFolder, Path.GetFileName(assembly2)), true);
-        }
-
         [SetUp]
         public void SetUp()
         {
             TestingRegistry.Reset();
-            
+
             theGraph = null;
         }
 
         #endregion
+
+        [TestFixtureSetUp]
+        public void FixtureSetUp()
+        {
+            string binFolder = Path.GetDirectoryName(GetType().Assembly.Location);
+            assemblyScanningFolder = Path.Combine(binFolder, "DynamicallyLoaded");
+            if (!Directory.Exists(assemblyScanningFolder)) Directory.CreateDirectory(assemblyScanningFolder);
+
+            string assembly1 = typeof (RedGreenRegistry).Assembly.Location;
+            string assembly2 = typeof (IWorker).Assembly.Location;
+
+            File.Copy(assembly1, Path.Combine(assemblyScanningFolder, Path.GetFileName(assembly1)), true);
+            File.Copy(assembly2, Path.Combine(assemblyScanningFolder, Path.GetFileName(assembly2)), true);
+        }
 
         private PluginGraph theGraph;
         private string assemblyScanningFolder;
@@ -65,7 +68,7 @@ namespace StructureMap.Testing.Graph
             var scanner = new AssemblyScanner();
             action(scanner);
             theGraph = new PluginGraph();
-            scanner.ExcludeNamespaceContainingType<DocumentationExamples.ScanningRegistry>();
+            scanner.ExcludeNamespaceContainingType<ScanningRegistry>();
             scanner.ScanForAll(theGraph);
             theGraph.Log.AssertFailures();
         }
@@ -78,7 +81,7 @@ namespace StructureMap.Testing.Graph
 
         private void shouldNotHaveFamily<T>()
         {
-            theGraph.PluginFamilies.Contains(typeof(T)).ShouldBeFalse();
+            theGraph.PluginFamilies.Contains(typeof (T)).ShouldBeFalse();
         }
 
 
@@ -91,7 +94,7 @@ namespace StructureMap.Testing.Graph
 
         private void shouldNotHaveFamilyWithSameName<T>()
         {
-            theGraph.PluginFamilies.Any(family => family.PluginType.FullName == typeof(T).FullName).ShouldBeFalse();
+            theGraph.PluginFamilies.Any(family => family.PluginType.FullName == typeof (T).FullName).ShouldBeFalse();
         }
 
         [Test]
@@ -125,11 +128,52 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
+        public void scan_all_assemblies_in_a_folder()
+        {
+            Scan(x => x.AssembliesFromPath(assemblyScanningFolder));
+            shouldHaveFamilyWithSameName<IInterfaceInWidget5>();
+            shouldHaveFamilyWithSameName<IWorker>();
+        }
+
+        [Test, Explicit]
+        public void scan_all_assemblies_in_application_base_directory()
+        {
+            Scan(x => x.AssembliesFromApplicationBaseDirectory());
+            shouldHaveFamilyWithSameName<IInterfaceInWidget5>();
+            shouldHaveFamilyWithSameName<IWorker>();
+        }
+
+        [Test]
         public void scan_but_ignore_registries_by_default()
         {
             Scan(x => { x.TheCallingAssembly(); });
 
             TestingRegistry.WasUsed.ShouldBeFalse();
+        }
+
+
+        [Test]
+        public void scan_specific_assemblies_in_a_folder()
+        {
+            string assemblyToSpecificallyExclude = typeof (IWorker).Assembly.GetName().Name;
+            Scan(
+                x =>
+                x.AssembliesFromPath(assemblyScanningFolder, asm => asm.GetName().Name != assemblyToSpecificallyExclude));
+
+            shouldHaveFamilyWithSameName<IInterfaceInWidget5>();
+            shouldNotHaveFamilyWithSameName<IWorker>();
+        }
+
+        [Test]
+        public void scan_specific_assemblies_in_application_base_directory()
+        {
+            string assemblyToSpecificallyExclude = typeof (IWorker).Assembly.GetName().Name;
+            Scan(
+                x =>
+                x.AssembliesFromPath(assemblyScanningFolder, asm => asm.GetName().Name != assemblyToSpecificallyExclude));
+
+            shouldHaveFamilyWithSameName<IInterfaceInWidget5>();
+            shouldNotHaveFamilyWithSameName<IWorker>();
         }
 
         [Test]
@@ -142,43 +186,6 @@ namespace StructureMap.Testing.Graph
             });
 
             TestingRegistry.WasUsed.ShouldBeTrue();
-        }
-
-        [Test]
-        public void scan_all_assemblies_in_a_folder()
-        {
-            Scan(x => x.AssembliesFromPath(assemblyScanningFolder) );
-            shouldHaveFamilyWithSameName<IInterfaceInWidget5>();
-            shouldHaveFamilyWithSameName<Widget3.IWorker>();
-        }
-
-        [Test, Explicit]
-        public void scan_all_assemblies_in_application_base_directory()
-        {
-            Scan(x => x.AssembliesFromApplicationBaseDirectory());
-            shouldHaveFamilyWithSameName<IInterfaceInWidget5>();
-            shouldHaveFamilyWithSameName<Widget3.IWorker>();
-        }
-
-        [Test]
-        public void scan_specific_assemblies_in_application_base_directory()
-        {
-            var assemblyToSpecificallyExclude = typeof(Widget3.IWorker).Assembly.GetName().Name;
-            Scan(x => x.AssembliesFromPath(assemblyScanningFolder, asm => asm.GetName().Name != assemblyToSpecificallyExclude));
-
-            shouldHaveFamilyWithSameName<IInterfaceInWidget5>();
-            shouldNotHaveFamilyWithSameName<Widget3.IWorker>();
-        }
-
-
-        [Test]
-        public void scan_specific_assemblies_in_a_folder()
-        {
-            var assemblyToSpecificallyExclude = typeof(Widget3.IWorker).Assembly.GetName().Name;
-            Scan(x => x.AssembliesFromPath(assemblyScanningFolder, asm => asm.GetName().Name != assemblyToSpecificallyExclude));
-            
-            shouldHaveFamilyWithSameName<IInterfaceInWidget5>();
-            shouldNotHaveFamilyWithSameName<Widget3.IWorker>();
         }
 
         [Test]
@@ -366,14 +373,22 @@ namespace StructureMap.Testing.Graph
     }
 
 
-    public interface IController{}
-    public class AddressController : IController{}
-    public class SiteController : IController{}
+    public interface IController
+    {
+    }
+
+    public class AddressController : IController
+    {
+    }
+
+    public class SiteController : IController
+    {
+    }
 
     [TestFixture]
     public class when_attaching_types_with_naming_pattern
     {
-        private IContainer container;
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -387,11 +402,15 @@ namespace StructureMap.Testing.Graph
                 });
             });
 
-            foreach (var instance in container.Model.InstancesOf<IController>())
+            foreach (IInstance instance in container.Model.InstancesOf<IController>())
             {
                 Debug.WriteLine(instance.Name + " is " + instance.ConcreteType.Name);
             }
         }
+
+        #endregion
+
+        private IContainer container;
 
         [Test]
         public void can_find_objects_later_by_name()
@@ -402,7 +421,5 @@ namespace StructureMap.Testing.Graph
             container.GetInstance<IController>("Site")
                 .ShouldBeOfType<SiteController>();
         }
-
-
     }
 }

@@ -1,6 +1,5 @@
 using System.Collections;
 using NUnit.Framework;
-using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Testing.GenericWidgets;
 using StructureMap.Testing.TestData;
@@ -74,19 +73,6 @@ namespace StructureMap.Testing
             var doubleService =
                 (IService<double>) manager.GetInstance(typeof (IService<double>), "Default");
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         [Test]

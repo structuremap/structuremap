@@ -21,10 +21,7 @@ namespace StructureMap.Testing.Graph
         {
             #region IGateway Members
 
-            public string WhoAmI
-            {
-                get { throw new NotImplementedException(); }
-            }
+            public string WhoAmI { get { throw new NotImplementedException(); } }
 
             public void DoSomething()
             {
@@ -43,7 +40,13 @@ namespace StructureMap.Testing.Graph
 
             // DataView, DataSet, and DataTable are all IServiceProvider implementations, and should get added
             // to the PluginFamily
-            var pluggedTypes = new List<Type> {typeof (DataView), typeof (DataSet), typeof (DataTable), GetType()};
+            var pluggedTypes = new List<Type>
+            {
+                typeof (DataView),
+                typeof (DataSet),
+                typeof (DataTable),
+                GetType()
+            };
 
             family.AddTypes(pluggedTypes);
 
@@ -218,6 +221,24 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
+        public void set_the_scope_to_session()
+        {
+            var family = new PluginFamily(typeof (IServiceProvider));
+            family.SetScopeTo(InstanceScope.HttpSession);
+
+            family.Lifecycle.ShouldBeOfType<HttpSessionLifecycle>();
+        }
+
+        [Test]
+        public void set_the_scope_to_session_hybrid()
+        {
+            var family = new PluginFamily(typeof (IServiceProvider));
+            family.SetScopeTo(InstanceScope.HybridHttpSession);
+
+            family.Lifecycle.ShouldBeOfType<HybridSessionLifecycle>();
+        }
+
+        [Test]
         public void SetScopeToHttpContext()
         {
             var family = new PluginFamily(typeof (IServiceProvider));
@@ -232,28 +253,10 @@ namespace StructureMap.Testing.Graph
         public void SetScopeToHybrid()
         {
             var family = new PluginFamily(typeof (IServiceProvider));
-            
+
 
             family.SetScopeTo(InstanceScope.Hybrid);
             Assert.IsInstanceOfType(typeof (HybridLifecycle), family.Lifecycle);
-        }
-
-        [Test]
-        public void set_the_scope_to_session()
-        {
-            var family = new PluginFamily(typeof(IServiceProvider));
-            family.SetScopeTo(InstanceScope.HttpSession);
-
-            family.Lifecycle.ShouldBeOfType<HttpSessionLifecycle>();
-        }
-
-        [Test]
-        public void set_the_scope_to_session_hybrid()
-        {
-            var family = new PluginFamily(typeof(IServiceProvider));
-            family.SetScopeTo(InstanceScope.HybridHttpSession);
-
-            family.Lifecycle.ShouldBeOfType<HybridSessionLifecycle>();
         }
 
         [Test]
@@ -290,10 +293,7 @@ namespace StructureMap.Testing.Graph
     {
         private readonly Guid _id = Guid.NewGuid();
 
-        public Guid Id
-        {
-            get { return _id; }
-        }
+        public Guid Id { get { return _id; } }
     }
 
     public class SingletonRepositoryWithoutPluginAttribute : ISingletonRepository

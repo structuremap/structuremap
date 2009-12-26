@@ -29,15 +29,9 @@ namespace StructureMap.Source
             _keyAttribute = KeyAttribute;
         }
 
-        protected override string innerConcreteKey
-        {
-            get { return getAttribute(_typeAttribute); }
-        }
+        protected override string innerConcreteKey { get { return getAttribute(_typeAttribute); } }
 
-        protected override string innerInstanceKey
-        {
-            get { return getAttribute(_keyAttribute); }
-        }
+        protected override string innerInstanceKey { get { return getAttribute(_keyAttribute); } }
 
         public override bool IsReference
         {
@@ -62,10 +56,7 @@ namespace StructureMap.Source
             }
         }
 
-        public override string ReferenceKey
-        {
-            get { return getAttribute("Key"); }
-        }
+        public override string ReferenceKey { get { return getAttribute("Key"); } }
 
 
         protected override string getPluggedType()

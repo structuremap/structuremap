@@ -77,7 +77,6 @@ namespace StructureMap.Testing
         [Test]
         public void PullConfigurationFromTheAppConfig()
         {
-            
             ObjectFactory.Initialize(x =>
             {
                 x.UseDefaultStructureMapConfigFile = false;

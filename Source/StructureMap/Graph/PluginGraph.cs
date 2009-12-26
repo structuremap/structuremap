@@ -60,46 +60,24 @@ namespace StructureMap.Graph
             _scanners.Add(assemblies);
         }
 
-        public List<Registry> Registries
-        {
-            get { return _registries; }
-        }
+        public List<Registry> Registries { get { return _registries; } }
 
-        public PluginFamilyCollection PluginFamilies
-        {
-            get { return _pluginFamilies; }
-        }
+        public PluginFamilyCollection PluginFamilies { get { return _pluginFamilies; } }
 
-        public ProfileManager ProfileManager
-        {
-            get { return _profileManager; }
-        }
+        public ProfileManager ProfileManager { get { return _profileManager; } }
 
-        public GraphLog Log
-        {
-            get { return _log; }
-            set { _log = value; }
-        }
+        public GraphLog Log { get { return _log; } set { _log = value; } }
 
         #region seal
 
         /// <summary>
         /// Designates whether a PluginGraph has been "Sealed."
         /// </summary>
-        public bool IsSealed
-        {
-            get { return _sealed; }
-        }
+        public bool IsSealed { get { return _sealed; } }
 
-        public InterceptorLibrary InterceptorLibrary
-        {
-            get { return _interceptorLibrary; }
-        }
+        public InterceptorLibrary InterceptorLibrary { get { return _interceptorLibrary; } }
 
-        public int FamilyCount
-        {
-            get { return _pluginFamilies.Count; }
-        }
+        public int FamilyCount { get { return _pluginFamilies.Count; } }
 
         /// <summary>
         /// Closes the PluginGraph for adding or removing members.  Runs all the <see cref="AssemblyScanner"> AssemblyScanner's</see>
@@ -123,6 +101,37 @@ namespace StructureMap.Graph
         }
 
         #endregion
+
+        /// <summary>
+        /// Adds the concreteType as an Instance of the pluginType
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="concreteType"></param>
+        public virtual void AddType(Type pluginType, Type concreteType)
+        {
+            FindFamily(pluginType).AddType(concreteType);
+        }
+
+        /// <summary>
+        /// Adds the concreteType as an Instance of the pluginType with a name
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="concreteType"></param>
+        /// <param name="name"></param>
+        public virtual void AddType(Type pluginType, Type concreteType, string name)
+        {
+            FindFamily(pluginType).AddType(concreteType, name);
+        }
+
+        /// <summary>
+        /// Add the pluggedType as an instance to any configured pluginType where pluggedType
+        /// could be assigned to the pluginType
+        /// </summary>
+        /// <param name="pluggedType"></param>
+        public virtual void AddType(Type pluggedType)
+        {
+            _pluggedTypes.Add(pluggedType);
+        }
 
         /// <summary>
         /// Adds an AssemblyScanner to the PluginGraph.  Used for Testing.
@@ -171,37 +180,6 @@ namespace StructureMap.Graph
         {
             FindFamily(pluginType).AddInstance(instance);
             _profileManager.SetDefault(profileName, pluginType, instance);
-        }
-
-        /// <summary>
-        /// Adds the concreteType as an Instance of the pluginType
-        /// </summary>
-        /// <param name="pluginType"></param>
-        /// <param name="concreteType"></param>
-        public virtual void AddType(Type pluginType, Type concreteType)
-        {
-            FindFamily(pluginType).AddType(concreteType);
-        }
-
-        /// <summary>
-        /// Adds the concreteType as an Instance of the pluginType with a name
-        /// </summary>
-        /// <param name="pluginType"></param>
-        /// <param name="concreteType"></param>
-        /// <param name="name"></param>
-        public virtual void AddType(Type pluginType, Type concreteType, string name)
-        {
-            FindFamily(pluginType).AddType(concreteType, name);
-        }
-        
-        /// <summary>
-        /// Add the pluggedType as an instance to any configured pluginType where pluggedType
-        /// could be assigned to the pluginType
-        /// </summary>
-        /// <param name="pluggedType"></param>
-        public virtual void AddType(Type pluggedType)
-        {
-            _pluggedTypes.Add(pluggedType);
         }
 
         /// <summary>

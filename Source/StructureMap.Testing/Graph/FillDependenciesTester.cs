@@ -50,15 +50,9 @@ namespace StructureMap.Testing.Graph
             _widget = widget;
         }
 
-        public IStrategy Strategy
-        {
-            get { return _strategy; }
-        }
+        public IStrategy Strategy { get { return _strategy; } }
 
-        public IWidget Widget
-        {
-            get { return _widget; }
-        }
+        public IWidget Widget { get { return _widget; } }
     }
 
     public class CannotBeFilledConcreteClass

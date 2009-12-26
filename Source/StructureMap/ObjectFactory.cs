@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Security.Permissions;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 
@@ -22,10 +21,9 @@ namespace StructureMap
         /// <summary>
         /// Provides queryable access to the configured PluginType's and Instances of the inner Container
         /// </summary>
-        public static IModel Model
-        {
-            get { return container.Model; }
-        }
+        public static IModel Model { get { return container.Model; } }
+
+        public static IContainer Container { get { return container; } }
 
         private static event Notify _notify;
 
@@ -277,106 +275,6 @@ namespace StructureMap
             container.EjectAllInstancesOf<T>();
         }
 
-        #region Container and setting defaults
-
-        private static Container container
-        {
-            get
-            {
-                if (_container == null)
-                {
-                    lock (_lockObject)
-                    {
-                        if (_container == null)
-                        {
-                            _container = buildManager();
-                        }
-                    }
-                }
-
-                return _container;
-            }
-        }
-
-        /// <summary>
-        /// Sets the default instance for all PluginType's to the designated Profile.
-        /// </summary>
-        public static string Profile
-        {
-            set
-            {
-                lock (_lockObject)
-                {
-                    _profile = value;
-                    container.SetDefaultsToProfile(_profile);
-                }
-            }
-            get { return _profile; }
-        }
-
-        internal static PluginGraph PluginGraph
-        {
-            get { return container.PluginGraph; }
-        }
-
-
-        internal static void ReplaceManager(Container container)
-        {
-            _container = container;
-        }
-
-        /// <summary>
-        /// Used to add additional configuration to a Container *after* the initialization.
-        /// </summary>
-        /// <param name="configure"></param>
-        public static void Configure(Action<ConfigurationExpression> configure)
-        {
-            container.Configure(configure);
-        }
-
-        public static event Notify Refresh
-        {
-            add { _notify += value; }
-            remove { _notify -= value; }
-        }
-
-
-        public static void ResetDefaults()
-        {
-            try
-            {
-                lock (_lockObject)
-                {
-                    Profile = string.Empty;
-                }
-            }
-            catch (TypeInitializationException ex)
-            {
-                if (ex.InnerException is StructureMapException)
-                {
-                    throw ex.InnerException;
-                }
-                else
-                {
-                    throw;
-                }
-            }
-        }
-
-
-        private static Container buildManager()
-        {
-            PluginGraph graph = StructureMapConfiguration.GetPluginGraph();
-            StructureMapConfiguration.Seal();
-
-            var container = new Container(graph);
-            container.SetDefaultsToProfile(_profile);
-
-            return container;
-        }
-
-        #endregion
-
         public static T GetInstance<T>(ExplicitArguments args)
         {
             return container.GetInstance<T>(args);
@@ -467,12 +365,97 @@ namespace StructureMap
             return container.ForObject(subject);
         }
 
-        public static IContainer Container
+        #region Container and setting defaults
+
+        private static Container container
         {
             get
             {
-                return container;
+                if (_container == null)
+                {
+                    lock (_lockObject)
+                    {
+                        if (_container == null)
+                        {
+                            _container = buildManager();
+                        }
+                    }
+                }
+
+                return _container;
             }
         }
+
+        /// <summary>
+        /// Sets the default instance for all PluginType's to the designated Profile.
+        /// </summary>
+        public static string Profile
+        {
+            set
+            {
+                lock (_lockObject)
+                {
+                    _profile = value;
+                    container.SetDefaultsToProfile(_profile);
+                }
+            }
+            get { return _profile; }
+        }
+
+        internal static PluginGraph PluginGraph { get { return container.PluginGraph; } }
+
+
+        internal static void ReplaceManager(Container container)
+        {
+            _container = container;
+        }
+
+        /// <summary>
+        /// Used to add additional configuration to a Container *after* the initialization.
+        /// </summary>
+        /// <param name="configure"></param>
+        public static void Configure(Action<ConfigurationExpression> configure)
+        {
+            container.Configure(configure);
+        }
+
+        public static event Notify Refresh { add { _notify += value; } remove { _notify -= value; } }
+
+
+        public static void ResetDefaults()
+        {
+            try
+            {
+                lock (_lockObject)
+                {
+                    Profile = string.Empty;
+                }
+            }
+            catch (TypeInitializationException ex)
+            {
+                if (ex.InnerException is StructureMapException)
+                {
+                    throw ex.InnerException;
+                }
+                else
+                {
+                    throw;
+                }
+            }
+        }
+
+
+        private static Container buildManager()
+        {
+            PluginGraph graph = StructureMapConfiguration.GetPluginGraph();
+            StructureMapConfiguration.Seal();
+
+            var container = new Container(graph);
+            container.SetDefaultsToProfile(_profile);
+
+            return container;
+        }
+
+        #endregion
     }
 }

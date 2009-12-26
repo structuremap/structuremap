@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using NUnit.Framework;
 using StructureMap.Pipeline;
-using StructureMap.Testing.Pipeline;
 
 namespace StructureMap.Testing.Graph
 {
@@ -16,10 +15,7 @@ namespace StructureMap.Testing.Graph
         [SetUp]
         public void SetUp()
         {
-            ObjectFactory.Initialize(x =>
-            {
-                x.UseDefaultStructureMapConfigFile = false;
-            });
+            ObjectFactory.Initialize(x => { x.UseDefaultStructureMapConfigFile = false; });
         }
 
         #endregion
@@ -48,15 +44,9 @@ namespace StructureMap.Testing.Graph
             }
 
 
-            public string Name
-            {
-                get { return _name; }
-            }
+            public string Name { get { return _name; } }
 
-            public IProvider Provider
-            {
-                get { return _provider; }
-            }
+            public IProvider Provider { get { return _provider; } }
         }
 
         public interface IProvider
@@ -69,6 +59,73 @@ namespace StructureMap.Testing.Graph
 
         public class BlueProvider : IProvider
         {
+        }
+
+        public class ClassWithNoArgs
+        {
+            public Address TheAddress { get; set; }
+        }
+
+        public class Address
+        {
+        }
+
+        public class SpecialInstance : Instance
+        {
+            protected override string getDescription()
+            {
+                return string.Empty;
+            }
+
+            protected override object build(Type pluginType, BuildSession session)
+            {
+                return new ClassWithNoArgs
+                {
+                    TheAddress = (Address) session.CreateInstance(typeof (Address))
+                };
+            }
+        }
+
+        public class SpecialNode : Node
+        {
+        }
+
+        [Test]
+        public void can_build_a_concrete_class_with_constructor_args_that_is_not_previously_registered()
+        {
+            var container = new Container();
+            container.With("name").EqualTo("Jeremy").GetInstance<ConcreteThatNeedsString>()
+                .Name.ShouldEqual("Jeremy");
+        }
+
+        [Test]
+        public void can_build_a_concrete_class_with_constructor_args_that_is_not_previously_registered_2()
+        {
+            var container = new Container();
+
+            container.With(x => { x.With("name").EqualTo("Jeremy"); }).GetInstance<ConcreteThatNeedsString>().Name.
+                ShouldEqual("Jeremy");
+        }
+
+        [Test]
+        public void can_build_a_concrete_type_from_explicit_args_passed_into_a_named_instance()
+        {
+            var container = new Container(x =>
+            {
+                x.ForRequestedType<ColorWithLump>().AddInstances(o =>
+                {
+                    o.OfConcreteType<ColorWithLump>().WithCtorArg("color").EqualTo("red").WithName("red");
+                    o.OfConcreteType<ColorWithLump>().WithCtorArg("color").EqualTo("green").WithName("green");
+                    o.OfConcreteType<ColorWithLump>().WithCtorArg("color").EqualTo("blue").WithName("blue");
+                });
+            });
+
+
+            var lump = new Lump();
+
+            var colorLump = container.With(lump).GetInstance<ColorWithLump>("red");
+            colorLump.Lump.ShouldBeTheSameAs(lump);
+            colorLump.Color.ShouldEqual("red");
         }
 
         [Test]
@@ -101,68 +158,17 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
-        public void use_a_type_that_is_not_part_of_the_constructor_in_the_with()
-        {
-            var container = new Container();
-            container.With(new Address()).GetInstance<ClassWithNoArgs>()
-                .ShouldBeOfType<ClassWithNoArgs>();
-        }
-
-        [Test]
-        public void use_explicit_type_arguments_with_custom_instance()
-        {
-            var container = new Container(x =>
-            {
-                x.ForRequestedType<ClassWithNoArgs>().TheDefault.IsThis(new SpecialInstance());
-            });
-
-            Debug.WriteLine(container.WhatDoIHave());
-
-            var address = new Address();
-
-
-            container.With(address).GetInstance<ClassWithNoArgs>()
-                .TheAddress.ShouldBeTheSameAs(address);
-
-        }
-
-        public class ClassWithNoArgs
-        {
-            public Address TheAddress { get; set;}
-        }
-        public class Address{}
-
-        public class SpecialInstance : Instance
-        {
-            protected override string getDescription()
-            {
-                return string.Empty;
-            }
-
-            protected override object build(Type pluginType, BuildSession session)
-            {
-                return new ClassWithNoArgs() {TheAddress = (Address)session.CreateInstance(typeof (Address))};
-            }
-        }
-
-        [Test]
         public void ExplicitArguments_can_return_child_by_name()
         {
             var theNode = new Node();
-            var container = new Container(x =>
-            {
-                x.For<IView>().Use<View>();
-            });
+            var container = new Container(x => { x.For<IView>().Use<View>(); });
             container.With("node").EqualTo(theNode).GetInstance<Command>().Node.ShouldBeTheSameAs(theNode);
         }
 
         [Test]
         public void Fill_in_argument_by_name()
         {
-            var container = new Container(x =>
-            {
-                x.ForRequestedType<IView>().TheDefaultIsConcreteType<View>();
-            });
+            var container = new Container(x => { x.ForRequestedType<IView>().TheDefaultIsConcreteType<View>(); });
 
             var theNode = new Node();
             var theTrade = new Trade();
@@ -180,20 +186,17 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void Fill_in_argument_by_type()
         {
-            var container = new Container(x =>
-            {
-                x.ForRequestedType<IView>().TheDefaultIsConcreteType<View>();
-            });
+            var container = new Container(x => { x.ForRequestedType<IView>().TheDefaultIsConcreteType<View>(); });
 
             var theNode = new SpecialNode();
             var theTrade = new Trade();
 
             var command = container
-                .With(typeof(Node), theNode)
+                .With(typeof (Node), theNode)
                 .With(theTrade)
                 .GetInstance<Command>();
 
-            Assert.IsInstanceOfType(typeof(View), command.View);
+            Assert.IsInstanceOfType(typeof (View), command.View);
             Assert.AreSame(theNode, command.Node);
             Assert.AreSame(theTrade, command.Trade);
         }
@@ -201,27 +204,19 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void Fill_in_argument_by_type_with_ObjectFactory()
         {
-            ObjectFactory.Initialize(x =>
-            {
-                x.ForRequestedType<IView>().TheDefaultIsConcreteType<View>();
-            });
+            ObjectFactory.Initialize(x => { x.ForRequestedType<IView>().TheDefaultIsConcreteType<View>(); });
 
             var theNode = new SpecialNode();
             var theTrade = new Trade();
 
             var command = ObjectFactory
-                .With(typeof(Node), theNode)
+                .With(typeof (Node), theNode)
                 .With(theTrade)
                 .GetInstance<Command>();
 
-            Assert.IsInstanceOfType(typeof(View), command.View);
+            Assert.IsInstanceOfType(typeof (View), command.View);
             Assert.AreSame(theNode, command.Node);
             Assert.AreSame(theTrade, command.Trade);
-        }
-
-        public class SpecialNode : Node
-        {
-            
         }
 
         [Test]
@@ -315,20 +310,17 @@ namespace StructureMap.Testing.Graph
 
             var theTrade = new Trade();
 
-            IList views = container.With(theTrade).GetAllInstances(typeof(TradeView));
+            IList views = container.With(theTrade).GetAllInstances(typeof (TradeView));
 
-            ((TradeView)views[0]).Trade.ShouldBeTheSameAs(theTrade);
-            ((TradeView)views[1]).Trade.ShouldBeTheSameAs(theTrade);
+            ((TradeView) views[0]).Trade.ShouldBeTheSameAs(theTrade);
+            ((TradeView) views[1]).Trade.ShouldBeTheSameAs(theTrade);
         }
 
 
         [Test]
         public void Pass_in_arguments_as_dictionary()
         {
-            var container = new Container(x =>
-            {
-                x.ForRequestedType<IView>().TheDefaultIsConcreteType<View>();
-            });
+            var container = new Container(x => { x.ForRequestedType<IView>().TheDefaultIsConcreteType<View>(); });
 
             var theNode = new Node();
             var theTrade = new Trade();
@@ -431,43 +423,26 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
-        public void can_build_a_concrete_class_with_constructor_args_that_is_not_previously_registered()
+        public void use_a_type_that_is_not_part_of_the_constructor_in_the_with()
         {
             var container = new Container();
-            container.With("name").EqualTo("Jeremy").GetInstance<ConcreteThatNeedsString>()
-                .Name.ShouldEqual("Jeremy");
+            container.With(new Address()).GetInstance<ClassWithNoArgs>()
+                .ShouldBeOfType<ClassWithNoArgs>();
         }
 
         [Test]
-        public void can_build_a_concrete_class_with_constructor_args_that_is_not_previously_registered_2()
+        public void use_explicit_type_arguments_with_custom_instance()
         {
-            var container = new Container();
+            var container =
+                new Container(x => { x.ForRequestedType<ClassWithNoArgs>().TheDefault.IsThis(new SpecialInstance()); });
 
-            container.With(x =>
-            {
-                x.With("name").EqualTo("Jeremy");
-            }).GetInstance<ConcreteThatNeedsString>().Name.ShouldEqual("Jeremy");
-        }
+            Debug.WriteLine(container.WhatDoIHave());
 
-        [Test]
-        public void can_build_a_concrete_type_from_explicit_args_passed_into_a_named_instance()
-        {
-            var container = new Container(x =>
-            {
-                x.ForRequestedType<ColorWithLump>().AddInstances(o =>
-                {
-                    o.OfConcreteType<ColorWithLump>().WithCtorArg("color").EqualTo("red").WithName("red");
-                    o.OfConcreteType<ColorWithLump>().WithCtorArg("color").EqualTo("green").WithName("green");
-                    o.OfConcreteType<ColorWithLump>().WithCtorArg("color").EqualTo("blue").WithName("blue");
-                });
-            });
+            var address = new Address();
 
 
-            var lump = new Lump();
-
-            ColorWithLump colorLump = container.With(lump).GetInstance<ColorWithLump>("red");
-            colorLump.Lump.ShouldBeTheSameAs(lump);
-            colorLump.Color.ShouldEqual("red");
+            container.With(address).GetInstance<ClassWithNoArgs>()
+                .TheAddress.ShouldBeTheSameAs(address);
         }
     }
 
@@ -486,15 +461,9 @@ namespace StructureMap.Testing.Graph
             _lump = lump;
         }
 
-        public string Color
-        {
-            get { return _color; }
-        }
+        public string Color { get { return _color; } }
 
-        public Lump Lump
-        {
-            get { return _lump; }
-        }
+        public Lump Lump { get { return _lump; } }
     }
 
     public class LumpProvider : TestExplicitArguments.IProvider
@@ -507,10 +476,7 @@ namespace StructureMap.Testing.Graph
         }
 
 
-        public Lump Lump
-        {
-            get { return _lump; }
-        }
+        public Lump Lump { get { return _lump; } }
     }
 
 
@@ -527,15 +493,13 @@ namespace StructureMap.Testing.Graph
             _trade = trade;
         }
 
-        public Trade Trade
-        {
-            get { return _trade; }
-        }
+        public Trade Trade { get { return _trade; } }
     }
 
     public class SecuredTradeView : TradeView
     {
-        public SecuredTradeView(Trade trade) : base(trade)
+        public SecuredTradeView(Trade trade)
+            : base(trade)
         {
         }
     }
@@ -565,20 +529,11 @@ namespace StructureMap.Testing.Graph
             _view = view;
         }
 
-        public Trade Trade
-        {
-            get { return _trade; }
-        }
+        public Trade Trade { get { return _trade; } }
 
-        public Node Node
-        {
-            get { return _node; }
-        }
+        public Node Node { get { return _node; } }
 
-        public IView View
-        {
-            get { return _view; }
-        }
+        public IView View { get { return _view; } }
     }
 
     public class TradeNode : Node
@@ -590,24 +545,18 @@ namespace StructureMap.Testing.Graph
             _trade = trade;
         }
 
-        public Trade Trade
-        {
-            get { return _trade; }
-        }
+        public Trade Trade { get { return _trade; } }
     }
 
     public class ConcreteThatNeedsString
     {
-        private string _name;
+        private readonly string _name;
 
         public ConcreteThatNeedsString(string name)
         {
             _name = name;
         }
 
-        public string Name
-        {
-            get { return _name; }
-        }
+        public string Name { get { return _name; } }
     }
 }

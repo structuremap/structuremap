@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using NUnit.Framework;
 using StructureMap.Attributes;
 using StructureMap.Testing.TestData;

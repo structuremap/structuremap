@@ -1,6 +1,3 @@
-using System;
-using StructureMap.Pipeline;
-
 namespace StructureMap.Testing.Widget
 {
     public interface IList
@@ -20,10 +17,7 @@ namespace StructureMap.Testing.Widget
 
         #region IList Members
 
-        public int Count
-        {
-            get { return values.Length; }
-        }
+        public int Count { get { return values.Length; } }
 
         #endregion
     }
@@ -40,12 +34,8 @@ namespace StructureMap.Testing.Widget
 
         #region IList Members
 
-        public int Count
-        {
-            get { return values.Length; }
-        }
+        public int Count { get { return values.Length; } }
 
         #endregion
     }
-
 }

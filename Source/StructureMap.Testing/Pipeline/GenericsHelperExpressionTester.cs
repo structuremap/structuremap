@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 
@@ -5,21 +6,21 @@ namespace StructureMap.Testing.Pipeline
 {
     public class Address
     {
-        
     }
 
     public class AddressDTO
     {
-        
     }
 
-    public class Continuation{}
+    public class Continuation
+    {
+    }
 
     public class AddressFlattener : IFlattener<Address>
     {
         public object ToDto(object input)
         {
-            var dto = createDTO((Address) input);
+            object dto = createDTO((Address) input);
             return dto;
         }
 
@@ -27,7 +28,7 @@ namespace StructureMap.Testing.Pipeline
         {
             // creates the AddressDTO object from the 
             // Address object passed in
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 
@@ -38,7 +39,6 @@ namespace StructureMap.Testing.Pipeline
 
     public interface IFlattener<T> : IFlattener
     {
-        
     }
 
     public class PassthroughFlattener<T> : IFlattener<T>
@@ -52,7 +52,7 @@ namespace StructureMap.Testing.Pipeline
     [TestFixture]
     public class when_accessing_a_type_registered_as_an_open_generics_type
     {
-        private Container container;
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -61,18 +61,15 @@ namespace StructureMap.Testing.Pipeline
             {
                 // Define the basic open type for IFlattener<>
                 x.ForRequestedType(typeof (IFlattener<>)).TheDefaultIsConcreteType(typeof (PassthroughFlattener<>));
-                
+
                 // Explicitly Register a specific closed type for Address
                 x.ForRequestedType<IFlattener<Address>>().TheDefaultIsConcreteType<AddressFlattener>();
             });
         }
 
-        [Test]
-        public void asking_for_a_closed_type_that_is_not_explicitly_registered_will_close_the_open_type_template()
-        {
-            container.GetInstance<IFlattener<Continuation>>()
-                .ShouldBeOfType<PassthroughFlattener<Continuation>>();
-        }
+        #endregion
+
+        private Container container;
 
         [Test]
         public void asking_for_a_closed_type_that_is_explicitly_registered_returns_the_explicitly_defined_type()
@@ -82,15 +79,10 @@ namespace StructureMap.Testing.Pipeline
         }
 
         [Test]
-        public void using_the_generics_helper_expression()
+        public void asking_for_a_closed_type_that_is_not_explicitly_registered_will_close_the_open_type_template()
         {
-            IFlattener flattener1 = container.ForGenericType(typeof (IFlattener<>))
-                .WithParameters(typeof (Address)).GetInstanceAs<IFlattener>();
-            flattener1.ShouldBeOfType<AddressFlattener>();
-
-            IFlattener flattener2 = container.ForGenericType(typeof(IFlattener<>))
-                .WithParameters(typeof(Continuation)).GetInstanceAs<IFlattener>();
-            flattener2.ShouldBeOfType<PassthroughFlattener<Continuation>>();
+            container.GetInstance<IFlattener<Continuation>>()
+                .ShouldBeOfType<PassthroughFlattener<Continuation>>();
         }
 
         [Test]
@@ -105,6 +97,18 @@ namespace StructureMap.Testing.Pipeline
             {
                 ex.ErrorCode.ShouldEqual(285);
             }
+        }
+
+        [Test]
+        public void using_the_generics_helper_expression()
+        {
+            var flattener1 = container.ForGenericType(typeof (IFlattener<>))
+                .WithParameters(typeof (Address)).GetInstanceAs<IFlattener>();
+            flattener1.ShouldBeOfType<AddressFlattener>();
+
+            var flattener2 = container.ForGenericType(typeof (IFlattener<>))
+                .WithParameters(typeof (Continuation)).GetInstanceAs<IFlattener>();
+            flattener2.ShouldBeOfType<PassthroughFlattener<Continuation>>();
         }
     }
 
@@ -149,14 +153,13 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void fetch_the_object()
         {
-            var container = new Container(x =>
-            {
-                x.ForRequestedType<IHandler<Shipment>>().TheDefaultIsConcreteType<ShipmentHandler>();
-            });
+            var container =
+                new Container(
+                    x => { x.ForRequestedType<IHandler<Shipment>>().TheDefaultIsConcreteType<ShipmentHandler>(); });
 
             var shipment = new Shipment();
 
-            IHandler handler = container
+            var handler = container
                 .ForObject(shipment)
                 .GetClosedTypeOf(typeof (IHandler<>))
                 .As<IHandler>();
@@ -171,13 +174,11 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void fetch_the_object()
         {
-            ObjectFactory.Initialize(x =>
-            {
-                x.ForRequestedType<IHandler<Shipment>>().TheDefaultIsConcreteType<ShipmentHandler>();
-            });
+            ObjectFactory.Initialize(
+                x => { x.ForRequestedType<IHandler<Shipment>>().TheDefaultIsConcreteType<ShipmentHandler>(); });
 
             var shipment = new Shipment();
-            IHandler handler = ObjectFactory.ForObject(shipment).GetClosedTypeOf(typeof(IHandler<>)).As<IHandler>();
+            var handler = ObjectFactory.ForObject(shipment).GetClosedTypeOf(typeof (IHandler<>)).As<IHandler>();
 
             handler.ShouldBeOfType<ShipmentHandler>().Shipment.ShouldBeTheSameAs(shipment);
         }
@@ -199,7 +200,7 @@ namespace StructureMap.Testing.Pipeline
 
             IList<IHandler> handlers = container
                 .ForObject(shipment)
-                .GetAllClosedTypesOf(typeof(IHandler<>))
+                .GetAllClosedTypesOf(typeof (IHandler<>))
                 .As<IHandler>();
 
             handlers[0].ShouldBeOfType<ShipmentHandler>();
@@ -209,17 +210,14 @@ namespace StructureMap.Testing.Pipeline
 
     public class Shipment
     {
-        
     }
 
     public interface IHandler<T> : IHandler
     {
-        
     }
 
     public interface IHandler
     {
-        
     }
 
     public class ShipmentHandler : IHandler<Shipment>
@@ -231,10 +229,7 @@ namespace StructureMap.Testing.Pipeline
             _shipment = shipment;
         }
 
-        public Shipment Shipment
-        {
-            get { return _shipment; }
-        }
+        public Shipment Shipment { get { return _shipment; } }
     }
 
     public class ShipmentHandler2 : IHandler<Shipment>
@@ -246,9 +241,6 @@ namespace StructureMap.Testing.Pipeline
             _shipment = shipment;
         }
 
-        public Shipment Shipment
-        {
-            get { return _shipment; }
-        }
+        public Shipment Shipment { get { return _shipment; } }
     }
 }

@@ -48,10 +48,7 @@ namespace StructureMap.Source
             }
         }
 
-        public override MementoSourceType SourceType
-        {
-            get { return MementoSourceType.External; }
-        }
+        public override MementoSourceType SourceType { get { return MementoSourceType.External; } }
 
         public override string Description
         {

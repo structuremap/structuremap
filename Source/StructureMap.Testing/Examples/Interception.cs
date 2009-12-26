@@ -1,12 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
-using System.Text;
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
 using StructureMap.Interceptors;
-using StructureMap;
 using StructureMap.TypeRules;
 
 namespace StructureMap.Testing.Examples
@@ -18,19 +14,17 @@ namespace StructureMap.Testing.Examples
 
     public class ClassThatNeedsSomeBootstrapping : IConnectionListener
     {
+        public void StartConnection()
+        {
+            throw new NotImplementedException();
+        }
+
         public void Start()
         {
-            
         }
 
         public void Connect(IConnectionPoint connection)
         {
-            
-        }
-
-        public void StartConnection()
-        {
-            throw new NotImplementedException();
         }
     }
 
@@ -43,14 +37,10 @@ namespace StructureMap.Testing.Examples
             _inner = inner;
         }
 
-        public IConnectionListener Inner
-        {
-            get { return _inner; }
-        }
+        public IConnectionListener Inner { get { return _inner; } }
 
         public void StartConnection()
         {
-
         }
     }
 
@@ -63,7 +53,7 @@ namespace StructureMap.Testing.Examples
             ForRequestedType<ClassThatNeedsSomeBootstrapping>().TheDefault.Is
                 .OfConcreteType<ClassThatNeedsSomeBootstrapping>()
                 .OnCreation(x => x.Start());
-                
+
             // or...
 
             // You can also register an Action<IContext, T> to get access
@@ -97,16 +87,12 @@ namespace StructureMap.Testing.Examples
                 .InterceptWith(new CustomInterceptor());
 
 
-
             // Place the Interception at the PluginType level
             ForRequestedType<IConnectionListener>()
-                .OnCreation(x => x.StartConnection())     // OnCreation
+                .OnCreation(x => x.StartConnection()) // OnCreation
                 .EnrichWith(x => new LoggingDecorator(x)) // Enrich
-                .InterceptWith(new CustomInterceptor())   // Custom Interceptor
-
-
+                .InterceptWith(new CustomInterceptor()) // Custom Interceptor
                 .TheDefaultIsConcreteType<ClassThatNeedsSomeBootstrapping>();
-
         }
     }
 
@@ -138,8 +124,6 @@ namespace StructureMap.Testing.Examples
     }
 
 
-    
-
     public interface IEventListener<T>
     {
         void ProcessEvent(T @event);
@@ -151,7 +135,6 @@ namespace StructureMap.Testing.Examples
         void PublishEvent<T>(T @event);
     }
 
-    
 
     public class ListenerInterceptor : TypeInterceptor
     {
@@ -160,11 +143,12 @@ namespace StructureMap.Testing.Examples
             // Assuming that "target" is an implementation of IEventListener<T>,
             // we'll do a little bit of generics sleight of hand
             // to register "target" with IEventAggregator
-            var eventType = target.GetType().FindInterfaceThatCloses(typeof (IEventListener<>)).GetGenericArguments()[0];
-            var type = typeof (Registration<>).MakeGenericType(eventType);
-            Registration registration = (Registration) Activator.CreateInstance(type);
+            Type eventType =
+                target.GetType().FindInterfaceThatCloses(typeof (IEventListener<>)).GetGenericArguments()[0];
+            Type type = typeof (Registration<>).MakeGenericType(eventType);
+            var registration = (Registration) Activator.CreateInstance(type);
             registration.RegisterListener(context, target);
-            
+
             // we didn't change the target object, so just return it
             return target;
         }
@@ -179,6 +163,9 @@ namespace StructureMap.Testing.Examples
 
         // The inner type and interface is just a little trick to
         // grease the generic wheels
+
+        #region Nested type: Registration
+
         public interface Registration
         {
             void RegisterListener(IContext context, object listener);
@@ -189,9 +176,11 @@ namespace StructureMap.Testing.Examples
             public void RegisterListener(IContext context, object listener)
             {
                 var aggregator = context.GetInstance<IEventAggregator>();
-                aggregator.RegisterListener<T>((IEventListener<T>) listener);
+                aggregator.RegisterListener((IEventListener<T>) listener);
             }
         }
+
+        #endregion
     }
 
     public class ListeningRegistry : Registry

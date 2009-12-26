@@ -21,22 +21,13 @@ namespace StructureMap.Graph
             IsMandatory = att != null;
         }
 
-        public PropertyInfo Property
-        {
-            get { return _property; }
-        }
+        public PropertyInfo Property { get { return _property; } }
 
-        public string Name
-        {
-            get { return _property.Name; }
-        }
+        public string Name { get { return _property.Name; } }
 
         public bool IsMandatory { get; set; }
 
-        public bool CanBeAutoFilled
-        {
-            get { return _property.PropertyType.IsAutoFillable(); }
-        }
+        public bool CanBeAutoFilled { get { return _property.PropertyType.IsAutoFillable(); } }
 
         public void Visit(IArgumentVisitor visitor)
         {

@@ -14,15 +14,9 @@ namespace StructureMap.Diagnostics
         }
 
 
-        public string Name
-        {
-            get { return _name; }
-        }
+        public string Name { get { return _name; } }
 
-        public string Description
-        {
-            get { return _description; }
-        }
+        public string Description { get { return _description; } }
 
         #region IEquatable<InstanceToken> Members
 

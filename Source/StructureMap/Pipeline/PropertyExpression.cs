@@ -1,6 +1,5 @@
 using System;
 using System.Configuration;
-using StructureMap.TypeRules;
 
 namespace StructureMap.Pipeline
 {
@@ -54,7 +53,7 @@ namespace StructureMap.Pipeline
             string propertyValue = ConfigurationManager.AppSettings[appSettingKey];
             if (propertyValue == null) propertyValue = defaultValue;
             _instance.SetValue(_propertyName, propertyValue);
-            return (T)_instance;
+            return (T) _instance;
         }
     }
 }

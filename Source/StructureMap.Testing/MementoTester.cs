@@ -21,10 +21,7 @@ namespace StructureMap.Testing
         {
             #region IGateway Members
 
-            public string WhoAmI
-            {
-                get { throw new NotImplementedException(); }
-            }
+            public string WhoAmI { get { throw new NotImplementedException(); } }
 
             public void DoSomething()
             {

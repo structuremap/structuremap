@@ -7,21 +7,25 @@ namespace StructureMap.Testing.Util
     [TestFixture]
     public class CacheTester
     {
+        #region Setup/Teardown
+
         [SetUp]
         public void SetUp()
         {
         }
+
+        #endregion
 
         [Test]
         public void cloning_test()
         {
             var cache = new Cache<string, IWidget>(x => new ColorWidget(x));
 
-            var red = cache["red"];
-            var blue = cache["blue"];
-            var green = cache["green"];
+            IWidget red = cache["red"];
+            IWidget blue = cache["blue"];
+            IWidget green = cache["green"];
 
-            var clone = cache.Clone();
+            Cache<string, IWidget> clone = cache.Clone();
 
             clone["red"].ShouldBeTheSameAs(red);
             clone["blue"].ShouldBeTheSameAs(blue);

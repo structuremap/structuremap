@@ -16,9 +16,6 @@ namespace StructureMap.Testing.Graph
             }
         }
 
-        public ParameterInfo this[string name]
-        {
-            get { return _parameters[name] as ParameterInfo; }
-        }
+        public ParameterInfo this[string name] { get { return _parameters[name] as ParameterInfo; } }
     }
 }

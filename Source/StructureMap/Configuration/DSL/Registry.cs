@@ -8,8 +8,6 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.Configuration.DSL
 {
-
-
     /// <summary>
     /// A Registry class provides methods and grammars for configuring a Container or ObjectFactory.
     /// Using a Registry subclass is the recommended way of configuring a StructureMap Container.
@@ -203,7 +201,7 @@ namespace StructureMap.Configuration.DSL
 
         internal static bool IsPublicRegistry(Type type)
         {
-            if (type.Assembly == typeof(Registry).Assembly)
+            if (type.Assembly == typeof (Registry).Assembly)
             {
                 return false;
             }
@@ -295,29 +293,6 @@ namespace StructureMap.Configuration.DSL
             return ForRequestedType<PLUGINTYPE>();
         }
 
-        #region Nested type: BuildWithExpression
-
-        /// <summary>
-        /// Define the constructor and setter arguments for the default T
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        public class BuildWithExpression<T>
-        {
-            private readonly SmartInstance<T> _instance;
-
-            public BuildWithExpression(SmartInstance<T> instance)
-            {
-                _instance = instance;
-            }
-
-            public SmartInstance<T> Configure
-            {
-                get { return _instance; }
-            }
-        }
-
-        #endregion
-
         /// <summary>
         /// Creates automatic "policies" for which public setters are considered mandatory
         /// properties by StructureMap that will be "setter injected" as part of the 
@@ -337,7 +312,7 @@ namespace StructureMap.Configuration.DSL
         /// <param name="expression"></param>
         public void SelectConstructor<T>(Expression<Func<T>> expression)
         {
-            PluginCache.GetPlugin(typeof(T)).UseConstructor(expression);
+            PluginCache.GetPlugin(typeof (T)).UseConstructor(expression);
         }
 
         public void Forward<FROM, TO>() where FROM : class where TO : class
@@ -401,10 +376,32 @@ namespace StructureMap.Configuration.DSL
             {
                 var raw = c.GetInstance<U>();
                 var t = raw as T;
-                if (t == null) throw new ApplicationException(raw.GetType().AssemblyQualifiedName + " could not be cast to " + typeof(T).AssemblyQualifiedName);
+                if (t == null)
+                    throw new ApplicationException(raw.GetType().AssemblyQualifiedName + " could not be cast to " +
+                                                   typeof (T).AssemblyQualifiedName);
 
                 return t;
-            });            
+            });
         }
+
+        #region Nested type: BuildWithExpression
+
+        /// <summary>
+        /// Define the constructor and setter arguments for the default T
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        public class BuildWithExpression<T>
+        {
+            private readonly SmartInstance<T> _instance;
+
+            public BuildWithExpression(SmartInstance<T> instance)
+            {
+                _instance = instance;
+            }
+
+            public SmartInstance<T> Configure { get { return _instance; } }
+        }
+
+        #endregion
     }
 }

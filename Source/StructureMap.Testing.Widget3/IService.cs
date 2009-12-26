@@ -4,7 +4,7 @@ namespace StructureMap.Testing.Widget3
     {
     }
 
-    public interface IBasicService  
+    public interface IBasicService
     {
     }
 
@@ -18,10 +18,7 @@ namespace StructureMap.Testing.Widget3
             _color = color;
         }
 
-        public string Color
-        {
-            get { return _color; }
-        }
+        public string Color { get { return _color; } }
 
 
         public override string ToString()

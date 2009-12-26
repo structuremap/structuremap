@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 
@@ -15,24 +13,19 @@ namespace StructureMap
 
         Instance MissingInstance { get; }
 
-        Instance[] AllInstances
-        {
-            get;
-        }
+        Instance[] AllInstances { get; }
+        ILifecycle Lifecycle { get; }
 
         // need to override this
         void AddInstance(Instance instance);
 
-        
+
         Instance FindInstance(string name);
         void ImportFrom(PluginFamily family);
 
 
         void EjectAllInstances();
 
-        ILifecycle Lifecycle {get; }
-
         IInstanceFactory Clone();
     }
-
 }

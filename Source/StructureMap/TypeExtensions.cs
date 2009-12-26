@@ -32,16 +32,12 @@ namespace StructureMap
     {
         public static class TypeExtensions
         {
-
-
-
-
             public static bool Closes(this Type type, Type openType)
             {
-                var baseType = type.BaseType;
+                Type baseType = type.BaseType;
                 if (baseType == null) return false;
 
-                var closes = baseType.IsGenericType && baseType.GetGenericTypeDefinition() == openType;
+                bool closes = baseType.IsGenericType && baseType.GetGenericTypeDefinition() == openType;
                 if (closes) return true;
 
                 return type.BaseType == null ? false : type.BaseType.Closes(openType);
@@ -73,7 +69,7 @@ namespace StructureMap
             {
                 if (!pluggedType.IsConcrete()) return false;
 
-                foreach (var interfaceType in pluggedType.GetInterfaces())
+                foreach (Type interfaceType in pluggedType.GetInterfaces())
                 {
                     if (interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition() == templateType)
                     {
@@ -90,7 +86,7 @@ namespace StructureMap
 
                 if (templateType.IsInterface)
                 {
-                    foreach (var interfaceType in pluggedType.GetInterfaces())
+                    foreach (Type interfaceType in pluggedType.GetInterfaces())
                     {
                         if (interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition() == templateType)
                         {
@@ -98,17 +94,20 @@ namespace StructureMap
                         }
                     }
                 }
-                else if (pluggedType.BaseType.IsGenericType && pluggedType.BaseType.GetGenericTypeDefinition() == templateType)
+                else if (pluggedType.BaseType.IsGenericType &&
+                         pluggedType.BaseType.GetGenericTypeDefinition() == templateType)
                 {
                     return pluggedType.BaseType;
                 }
 
-                return pluggedType.BaseType == typeof(object) ? null : pluggedType.BaseType.FindInterfaceThatCloses(templateType);
+                return pluggedType.BaseType == typeof (object)
+                           ? null
+                           : pluggedType.BaseType.FindInterfaceThatCloses(templateType);
             }
 
             public static bool IsNullable(this Type type)
             {
-                return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
+                return type.IsGenericType && type.GetGenericTypeDefinition() == typeof (Nullable<>);
             }
 
             public static Type GetInnerTypeFromNullable(this Type nullableType)
@@ -121,7 +120,7 @@ namespace StructureMap
                 if (type.IsGenericType)
                 {
                     string[] parameters = Array.ConvertAll(type.GetGenericArguments(), t => t.GetName());
-                    var parameterList = String.Join(", ", parameters);
+                    string parameterList = String.Join(", ", parameters);
                     return "{0}<{1}>".ToFormat(type.Name, parameterList);
                 }
 
@@ -133,7 +132,7 @@ namespace StructureMap
                 if (type.IsGenericType)
                 {
                     string[] parameters = Array.ConvertAll(type.GetGenericArguments(), t => t.GetName());
-                    var parameterList = String.Join(", ", parameters);
+                    string parameterList = String.Join(", ", parameters);
                     return "{0}<{1}>".ToFormat(type.Name, parameterList);
                 }
 
@@ -190,12 +189,12 @@ namespace StructureMap
 
             public static bool IsString(this Type type)
             {
-                return type.Equals(typeof(string));
+                return type.Equals(typeof (string));
             }
 
             public static bool IsPrimitive(this Type type)
             {
-                return type.IsPrimitive && !IsString(type) && type != typeof(IntPtr);
+                return type.IsPrimitive && !IsString(type) && type != typeof (IntPtr);
             }
 
             public static bool IsSimple(this Type type)

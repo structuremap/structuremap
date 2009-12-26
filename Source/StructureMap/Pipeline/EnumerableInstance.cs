@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,6 +6,13 @@ namespace StructureMap.Pipeline
 {
     public class EnumerableInstance : Instance
     {
+        private static readonly List<Type> _enumerableTypes = new List<Type>
+        {
+            typeof (IEnumerable<>),
+            typeof (IList<>),
+            typeof (List<>)
+        };
+
         private readonly IEnumerable<Instance> _children;
         private readonly IEnumerableCoercion _coercion;
         private readonly string _description;
@@ -19,13 +25,14 @@ namespace StructureMap.Pipeline
             _coercion = DetermineCoercion(propertyType);
         }
 
+        public IEnumerable<Instance> Children { get { return _children; } }
+
         public static IEnumerableCoercion DetermineCoercion(Type propertyType)
         {
-            var coercionType = determineCoercionType(propertyType);
+            Type coercionType = determineCoercionType(propertyType);
             return (IEnumerableCoercion) Activator.CreateInstance(coercionType);
         }
 
-        private static readonly List<Type> _enumerableTypes = new List<Type>(){typeof(IEnumerable<>), typeof(IList<>), typeof(List<>)};
         private static Type determineCoercionType(Type propertyType)
         {
             if (propertyType.IsArray)
@@ -33,19 +40,19 @@ namespace StructureMap.Pipeline
                 return typeof (ArrayCoercion<>).MakeGenericType(propertyType.GetElementType());
             }
 
-            if (propertyType.IsGenericType )
+            if (propertyType.IsGenericType)
             {
-                var templateType = propertyType.GetGenericTypeDefinition();
+                Type templateType = propertyType.GetGenericTypeDefinition();
                 if (_enumerableTypes.Contains(templateType))
                 {
                     return typeof (ListCoercion<>).MakeGenericType(propertyType.GetGenericArguments().First());
                 }
             }
 
-            throw new ArgumentException("Only IEnumerable<T> types can be passed to this constructor.  {0} is invalid".ToFormat(propertyType.AssemblyQualifiedName));
+            throw new ArgumentException(
+                "Only IEnumerable<T> types can be passed to this constructor.  {0} is invalid".ToFormat(
+                    propertyType.AssemblyQualifiedName));
         }
-
-        public IEnumerable<Instance> Children { get { return _children; } }
 
         protected override string getDescription()
         {
@@ -54,9 +61,9 @@ namespace StructureMap.Pipeline
 
         protected override object build(Type pluginType, BuildSession session)
         {
-            var elementType = _coercion.ElementType;
+            Type elementType = _coercion.ElementType;
 
-            var objects = buildObjects(elementType, session);
+            IEnumerable<object> objects = buildObjects(elementType, session);
             return _coercion.Convert(objects);
         }
 

@@ -57,27 +57,6 @@ namespace StructureMap.Testing.Diagnostics
             Assert.AreEqual("DependentInstance", dependency.Instance.Name);
         }
 
-        [Test]
-        public void do_not_fail_with_the_bidirectional_checks()
-        {
-            var container = new Container(r =>
-            {
-                r.For<IWidget>().Use<ColorWidget>().WithCtorArg("color").EqualTo("red");
-                r.For<Rule>().Use<WidgetRule>();
-
-                r.ForConcreteType<ClassThatNeedsWidgetAndRule1>();
-                r.ForConcreteType<ClassThatNeedsWidgetAndRule2>();
-                r.InstanceOf<ClassThatNeedsWidgetAndRule2>().Is.OfConcreteType<ClassThatNeedsWidgetAndRule2>();
-                r.InstanceOf<ClassThatNeedsWidgetAndRule2>().Is.OfConcreteType<ClassThatNeedsWidgetAndRule2>();
-                r.InstanceOf<ClassThatNeedsWidgetAndRule2>().Is.OfConcreteType<ClassThatNeedsWidgetAndRule2>();
-                r.InstanceOf<ClassThatNeedsWidgetAndRule2>().Is.OfConcreteType<ClassThatNeedsWidgetAndRule2>().CtorDependency<Rule>().Is<ARule>();
-
-
-            });
-
-            container.AssertConfigurationIsValid();
-        }
-
 
         [Test]
         public void Create_an_instance_for_the_first_time_happy_path()
@@ -143,6 +122,26 @@ namespace StructureMap.Testing.Diagnostics
         }
 
         [Test]
+        public void do_not_fail_with_the_bidirectional_checks()
+        {
+            var container = new Container(r =>
+            {
+                r.For<IWidget>().Use<ColorWidget>().WithCtorArg("color").EqualTo("red");
+                r.For<Rule>().Use<WidgetRule>();
+
+                r.ForConcreteType<ClassThatNeedsWidgetAndRule1>();
+                r.ForConcreteType<ClassThatNeedsWidgetAndRule2>();
+                r.InstanceOf<ClassThatNeedsWidgetAndRule2>().Is.OfConcreteType<ClassThatNeedsWidgetAndRule2>();
+                r.InstanceOf<ClassThatNeedsWidgetAndRule2>().Is.OfConcreteType<ClassThatNeedsWidgetAndRule2>();
+                r.InstanceOf<ClassThatNeedsWidgetAndRule2>().Is.OfConcreteType<ClassThatNeedsWidgetAndRule2>();
+                r.InstanceOf<ClassThatNeedsWidgetAndRule2>().Is.OfConcreteType<ClassThatNeedsWidgetAndRule2>().
+                    CtorDependency<Rule>().Is<ARule>();
+            });
+
+            container.AssertConfigurationIsValid();
+        }
+
+        [Test]
         public void Happy_path_with_no_validation_errors()
         {
             ValidationBuildSession session =
@@ -169,7 +168,9 @@ namespace StructureMap.Testing.Diagnostics
         {
             ValidationBuildSession session =
                 validatedSession(
-                    registry => registry.BuildInstancesOf<SomethingThatHasValidationFailures>().TheDefaultIsConcreteType<SomethingThatHasValidationFailures>());
+                    registry =>
+                    registry.BuildInstancesOf<SomethingThatHasValidationFailures>().TheDefaultIsConcreteType
+                        <SomethingThatHasValidationFailures>());
 
             Assert.AreEqual(2, session.ValidationErrors.Length);
         }

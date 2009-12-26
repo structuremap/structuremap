@@ -13,7 +13,8 @@ namespace StructureMap.Pipeline
             _args = args;
         }
 
-        public ExplicitArguments() : this(new Dictionary<string, object>())
+        public ExplicitArguments()
+            : this(new Dictionary<string, object>())
         {
         }
 
@@ -49,15 +50,9 @@ namespace StructureMap.Pipeline
 
         public void Configure(IConfiguredInstance instance)
         {
-            _args.Each(pair =>
-            {
-                instance.SetValue(pair.Key, pair.Value);
-            });
+            _args.Each(pair => { instance.SetValue(pair.Key, pair.Value); });
 
-            _children.Each(pair =>
-            {
-                instance.SetValue(pair.Key, pair.Value);
-            });
+            _children.Each(pair => { instance.SetValue(pair.Key, pair.Value); });
         }
 
         public bool Has(Type type)
@@ -78,5 +73,4 @@ namespace StructureMap.Pipeline
             }
         }
     }
-
 }

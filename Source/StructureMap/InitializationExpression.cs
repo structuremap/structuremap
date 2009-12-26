@@ -28,6 +28,12 @@ namespace StructureMap
         bool PullConfigurationFromAppConfig { set; }
 
         /// <summary>
+        /// Designate the Default Profile.  This will be applied as soon as the 
+        /// Container is initialized.
+        /// </summary>
+        string DefaultProfileName { get; set; }
+
+        /// <summary>
         /// Imports configuration from an Xml file.  The fileName
         /// must point to an Xml file with valid StructureMap
         /// configuration
@@ -54,12 +60,6 @@ namespace StructureMap
         /// </summary>
         /// <param name="registry"></param>
         void AddRegistry(Registry registry);
-
-        /// <summary>
-        /// Designate the Default Profile.  This will be applied as soon as the 
-        /// Container is initialized.
-        /// </summary>
-        string DefaultProfileName { get; set; }
 
 
         /// <summary>
@@ -195,15 +195,9 @@ namespace StructureMap
             }
         }
 
-        public bool IgnoreStructureMapConfig
-        {
-            set { _parserBuilder.IgnoreDefaultFile = value; }
-        }
+        public bool IgnoreStructureMapConfig { set { _parserBuilder.IgnoreDefaultFile = value; } }
 
-        public bool PullConfigurationFromAppConfig
-        {
-            set { _parserBuilder.PullConfigurationFromAppConfig = value; }
-        }
+        public bool PullConfigurationFromAppConfig { set { _parserBuilder.PullConfigurationFromAppConfig = value; } }
 
         public string DefaultProfileName { get; set; }
     }

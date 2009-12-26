@@ -25,10 +25,7 @@ namespace StructureMap.Source
             }
         }
 
-        public string[] Substitutions
-        {
-            get { return _substitutions; }
-        }
+        public string[] Substitutions { get { return _substitutions; } }
 
         public XmlNode SubstituteTemplates(XmlNode node, InstanceMemento memento)
         {

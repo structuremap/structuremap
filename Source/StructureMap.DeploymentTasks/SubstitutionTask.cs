@@ -13,25 +13,13 @@ namespace StructureMap.DeploymentTasks
         private string _value;
 
         [TaskAttribute("flag", Required = true)]
-        public string Flag
-        {
-            get { return _flag; }
-            set { _flag = value; }
-        }
+        public string Flag { get { return _flag; } set { _flag = value; } }
 
         [TaskAttribute("value", Required = true)]
-        public string Value
-        {
-            get { return _value; }
-            set { _value = value; }
-        }
+        public string Value { get { return _value; } set { _value = value; } }
 
         [TaskAttribute("file", Required = true)]
-        public string FilePath
-        {
-            get { return _filePath; }
-            set { _filePath = value; }
-        }
+        public string FilePath { get { return _filePath; } set { _filePath = value; } }
 
 
         protected override void ExecuteTask()

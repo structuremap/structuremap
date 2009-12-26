@@ -155,10 +155,7 @@ namespace StructureMap.Testing.Configuration.DSL
             // "Prototype" (GoF pattern) whenever someone asks for IWidget named "Jeremy"
             var theWidget = new CloneableWidget("Jeremy");
 
-            container = new Container(x =>
-            {
-                x.InstanceOf<IWidget>().Is.PrototypeOf(theWidget).WithName("Jeremy");
-            });
+            container = new Container(x => { x.InstanceOf<IWidget>().Is.PrototypeOf(theWidget).WithName("Jeremy"); });
 
             var widget1 = (CloneableWidget) container.GetInstance<IWidget>("Jeremy");
             var widget2 = (CloneableWidget) container.GetInstance<IWidget>("Jeremy");
@@ -181,10 +178,8 @@ namespace StructureMap.Testing.Configuration.DSL
             // "Prototype" (GoF pattern) whenever someone asks for IWidget named "Jeremy"
             var theWidget = new CloneableWidget("Jeremy");
 
-            container = new Container(x =>
-            {
-                x.InstanceOf<IWidget>().Is.SerializedCopyOf(theWidget).WithName("Jeremy");
-            });
+            container =
+                new Container(x => { x.InstanceOf<IWidget>().Is.SerializedCopyOf(theWidget).WithName("Jeremy"); });
 
             var widget1 = (CloneableWidget) container.GetInstance<IWidget>("Jeremy");
             var widget2 = (CloneableWidget) container.GetInstance<IWidget>("Jeremy");
@@ -230,10 +225,7 @@ namespace StructureMap.Testing.Configuration.DSL
         }
 
 
-        public IWidget Widget
-        {
-            get { return _widget; }
-        }
+        public IWidget Widget { get { return _widget; } }
 
 
         public override bool Equals(object obj)
@@ -273,10 +265,7 @@ namespace StructureMap.Testing.Configuration.DSL
             _name = name;
         }
 
-        public string Name
-        {
-            get { return _name; }
-        }
+        public string Name { get { return _name; } }
 
         #region ICloneable Members
 

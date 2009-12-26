@@ -1,10 +1,8 @@
-using System;
 using System.Threading;
 using NUnit.Framework;
 using StructureMap.Attributes;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
-using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Pipeline
 {
@@ -18,10 +16,13 @@ namespace StructureMap.Testing.Pipeline
         {
             _lifecycle = new ThreadLocalStorageLifecycle();
 
-            container = new Container(x =>
-            {
-                x.ForRequestedType<Rule>().CacheBy(InstanceScope.ThreadLocal).TheDefault.Is.ConstructedBy(() => new ColorRule("Red"));
-            });
+            container =
+                new Container(
+                    x =>
+                    {
+                        x.ForRequestedType<Rule>().CacheBy(InstanceScope.ThreadLocal).TheDefault.Is.ConstructedBy(
+                            () => new ColorRule("Red"));
+                    });
         }
 
         #endregion

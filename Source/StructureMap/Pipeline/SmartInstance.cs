@@ -16,7 +16,8 @@ namespace StructureMap.Pipeline
     {
         private readonly List<Action<T>> _actions = new List<Action<T>>();
 
-        public SmartInstance() : base(typeof(T))
+        public SmartInstance()
+            : base(typeof (T))
         {
         }
 

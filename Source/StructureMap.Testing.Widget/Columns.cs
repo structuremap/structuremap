@@ -19,9 +19,9 @@ namespace StructureMap.Testing.Widget
 
     public class DateColumn : Column
     {
-        private string _FieldName;
-        private string _HeaderName;
-        private int _Width;
+        private readonly string _FieldName;
+        private readonly string _HeaderName;
+        private readonly int _Width;
 
         public DateColumn(string HeaderName, int Width, string FieldName)
         {
@@ -38,20 +38,11 @@ namespace StructureMap.Testing.Widget
         {
         }
 
-        public string HeaderName
-        {
-            get { return _HeaderName; }
-        }
+        public string HeaderName { get { return _HeaderName; } }
 
-        public int Width
-        {
-            get { return _Width; }
-        }
+        public int Width { get { return _Width; } }
 
-        public string FieldName
-        {
-            get { return _FieldName; }
-        }
+        public string FieldName { get { return _FieldName; } }
 
         #region Column Members
 

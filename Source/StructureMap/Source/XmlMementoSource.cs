@@ -25,20 +25,11 @@ namespace StructureMap.Source
             _mementoCreator = new XmlMementoCreator(style, TypeAttribute, KeyAttribute);
         }
 
-        public string NodeName
-        {
-            get { return _nodeName; }
-        }
+        public string NodeName { get { return _nodeName; } }
 
-        public string TypeAttribute
-        {
-            get { return _typeAttribute; }
-        }
+        public string TypeAttribute { get { return _typeAttribute; } }
 
-        public string KeyAttribute
-        {
-            get { return _keyAttribute; }
-        }
+        public string KeyAttribute { get { return _keyAttribute; } }
 
         private Hashtable mementoHashtable
         {

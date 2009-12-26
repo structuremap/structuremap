@@ -1,19 +1,36 @@
 using System;
 using NUnit.Framework;
-using StructureMap.Configuration.DSL;
 
 namespace StructureMap.Testing.Pipeline
 {
     [TestFixture]
     public class ContainerDisposalTester
     {
+        #region Setup/Teardown
+
         [SetUp]
         public void SetUp()
         {
         }
 
+        #endregion
+
         [Test]
-        public void disposing_a_nested_container_should_dispose_all_of_the_transient_objects_created_by_the_nested_container()
+        public void disposing_a_nested_container_does_not_try_to_dispose_objects_created_by_the_parent()
+        {
+            var container = new Container(x => { x.ForSingletonOf<I1>().Use<C1No>(); });
+
+            IContainer child = container.GetNestedContainer();
+
+            // Blows up if the Dispose() is called
+            var notDisposable = child.GetInstance<I1>();
+
+            child.Dispose();
+        }
+
+        [Test]
+        public void
+            disposing_a_nested_container_should_dispose_all_of_the_transient_objects_created_by_the_nested_container()
         {
             var container = new Container(x =>
             {
@@ -26,9 +43,9 @@ namespace StructureMap.Testing.Pipeline
                 });
             });
 
-            var child = container.GetNestedContainer();
+            IContainer child = container.GetNestedContainer();
 
-            var disposables = new Disposable[]
+            var disposables = new[]
             {
                 child.GetInstance<I1>().ShouldBeOfType<Disposable>(),
                 child.GetInstance<I2>().ShouldBeOfType<Disposable>(),
@@ -38,32 +55,16 @@ namespace StructureMap.Testing.Pipeline
 
             child.Dispose();
 
-            foreach (var disposable in disposables)
+            foreach (Disposable disposable in disposables)
             {
                 disposable.WasDisposed.ShouldBeTrue();
             }
         }
 
         [Test]
-        public void disposing_a_nested_container_does_not_try_to_dispose_objects_created_by_the_parent()
-        {
-            var container = new Container(x =>
-            {
-                x.ForSingletonOf<I1>().Use<C1No>();
-            });
-
-            var child = container.GetNestedContainer();
-            
-            // Blows up if the Dispose() is called
-            var notDisposable = child.GetInstance<I1>();
-
-            child.Dispose();
-        }
-
-        [Test]
         public void should_dispose_objects_injected_into_the_container_1()
         {
-            var container = new Container().GetNestedContainer();
+            IContainer container = new Container().GetNestedContainer();
 
             var disposable = new C1Yes();
             container.Inject<I1>(disposable);
@@ -78,7 +79,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void should_dispose_objects_injected_into_the_container_2()
         {
-            var container = new Container().GetNestedContainer();
+            IContainer container = new Container().GetNestedContainer();
 
             var disposable = new C1Yes();
             container.Inject<I1>(disposable);
@@ -91,7 +92,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void should_dispose_objects_injected_into_the_container_3()
         {
-            var container = new Container().GetNestedContainer();
+            IContainer container = new Container().GetNestedContainer();
 
             var disposable = new C1Yes();
             container.Inject<I1>("blue", disposable);
@@ -105,10 +106,10 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void should_dispose_objects_injected_into_the_container_4()
         {
-            var container = new Container().GetNestedContainer();
+            IContainer container = new Container().GetNestedContainer();
 
             var disposable = new C1Yes();
-            container.Inject(typeof(I1), disposable);
+            container.Inject(typeof (I1), disposable);
 
             container.Dispose();
 
@@ -120,14 +121,14 @@ namespace StructureMap.Testing.Pipeline
     {
         private bool _wasDisposed;
 
+        public bool WasDisposed { get { return _wasDisposed; } }
+
         public void Dispose()
         {
             if (_wasDisposed) Assert.Fail("This object should not be disposed twice");
 
             _wasDisposed = true;
         }
-
-        public bool WasDisposed { get { return _wasDisposed; } }
     }
 
     public class NotDisposable : IDisposable
@@ -138,14 +139,39 @@ namespace StructureMap.Testing.Pipeline
         }
     }
 
-    public interface I1{}
-    public interface I2{}
-    public interface I3{}
+    public interface I1
+    {
+    }
 
-    public class C1Yes : Disposable, I1{}
-    public class C1No : NotDisposable, I1{}
-    public class C2Yes : Disposable, I2{}
-    public class C2No : Disposable, I2{}
-    public class C3Yes : Disposable, I3{}
-    public class C3No : Disposable, I3{}
+    public interface I2
+    {
+    }
+
+    public interface I3
+    {
+    }
+
+    public class C1Yes : Disposable, I1
+    {
+    }
+
+    public class C1No : NotDisposable, I1
+    {
+    }
+
+    public class C2Yes : Disposable, I2
+    {
+    }
+
+    public class C2No : Disposable, I2
+    {
+    }
+
+    public class C3Yes : Disposable, I3
+    {
+    }
+
+    public class C3No : Disposable, I3
+    {
+    }
 }

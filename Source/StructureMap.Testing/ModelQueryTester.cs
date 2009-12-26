@@ -1,7 +1,4 @@
-﻿using System;
-using System.Data;
-using System.Data.SqlClient;
-using System.Diagnostics;
+using System;
 using System.Linq;
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
@@ -15,24 +12,6 @@ namespace StructureMap.Testing
     public class ModelQueryTester
     {
         #region Setup/Teardown
-
-        public class MyDataSet : IServiceProvider
-        {
-            public object GetService(Type serviceType)
-            {
-                throw new System.NotImplementedException();
-            }
-        }
-
-        public class MyDataView : IServiceProvider
-        {
-            public object GetService(Type serviceType)
-            {
-                throw new System.NotImplementedException();
-            }
-        }
-
-
 
         [SetUp]
         public void SetUp()
@@ -57,6 +36,23 @@ namespace StructureMap.Testing
         }
 
         #endregion
+
+        public class MyDataSet : IServiceProvider
+        {
+            public object GetService(Type serviceType)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public class MyDataView : IServiceProvider
+        {
+            public object GetService(Type serviceType)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
 
         private Model _model;
         private Container _container;

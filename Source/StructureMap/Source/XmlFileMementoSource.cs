@@ -36,15 +36,9 @@ namespace StructureMap.Source
             _xpath = XPath;
         }
 
-        public string FilePath
-        {
-            get { return _filePath; }
-        }
+        public string FilePath { get { return _filePath; } }
 
-        public string XPath
-        {
-            get { return _xpath; }
-        }
+        public string XPath { get { return _xpath; } }
 
         public override string Description
         {

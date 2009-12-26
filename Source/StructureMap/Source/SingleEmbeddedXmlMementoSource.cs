@@ -32,10 +32,7 @@ namespace StructureMap.Source
         }
 
 
-        public override string Description
-        {
-            get { return "Single Embedded File:  " + _path; }
-        }
+        public override string Description { get { return "Single Embedded File:  " + _path; } }
 
         protected override XmlNode getRootNode()
         {

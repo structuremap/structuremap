@@ -116,6 +116,5 @@ namespace StructureMap
         {
             return _container.GetAllInstances(type, _args);
         }
-
     }
 }

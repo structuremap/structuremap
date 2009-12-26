@@ -1,21 +1,19 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
-using StructureMap.Graph;
 
 namespace StructureMap.Util
 {
     [Serializable]
     public class Cache<TKey, TValue> where TValue : class
     {
-        readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
-        readonly IDictionary<TKey, TValue> _values;
-        Func<TValue, TKey> _getKey = delegate { throw new NotImplementedException(); };
+        private readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
+        private readonly IDictionary<TKey, TValue> _values;
+        private Func<TValue, TKey> _getKey = delegate { throw new NotImplementedException(); };
 
-        Action<TValue> _onAddition = x => { };
+        private Action<TValue> _onAddition = x => { };
 
-        Func<TKey, TValue> _onMissing = delegate(TKey key)
+        private Func<TKey, TValue> _onMissing = delegate(TKey key)
         {
             string message = string.Format("Key '{0}' could not be found", key);
             throw new KeyNotFoundException(message);
@@ -75,7 +73,7 @@ namespace StructureMap.Util
         {
             get
             {
-                using (var @lock = ReadLock())
+                using (ReadLockToken @lock = ReadLock())
                 {
                     if (!_values.ContainsKey(key))
                     {
@@ -94,7 +92,7 @@ namespace StructureMap.Util
             {
                 _onAddition(value);
 
-                using (var @lock = WriteLock())
+                using (WriteLockToken @lock = WriteLock())
                 {
                     if (_values.ContainsKey(key))
                     {
@@ -175,7 +173,7 @@ namespace StructureMap.Util
         public TKey Find(TValue value)
         {
             using (ReadLock())
-                foreach (KeyValuePair<TKey, TValue> pair in _values)
+                foreach (var pair in _values)
                 {
                     if (pair.Value == value)
                     {
@@ -216,32 +214,37 @@ namespace StructureMap.Util
                 _values.TryGet(key, callback);
         }
 
-        ReadLockToken ReadLock()
+        private ReadLockToken ReadLock()
         {
             return new ReadLockToken(_lock);
         }
 
-        WriteLockToken WriteLock()
+        private WriteLockToken WriteLock()
         {
             return new WriteLockToken(_lock);
         }
 
-        class ReadLockToken : IDisposable
+        public Cache<TKey, TValue> Clone()
         {
-            readonly ReaderWriterLockSlim _lock;
-            bool upgraded;
+            var cache = new Cache<TKey, TValue>();
+            cache._onMissing = _onMissing;
+
+            Each((key, value) => cache[key] = value);
+
+            return cache;
+        }
+
+        #region Nested type: ReadLockToken
+
+        private class ReadLockToken : IDisposable
+        {
+            private readonly ReaderWriterLockSlim _lock;
+            private bool upgraded;
 
             public ReadLockToken(ReaderWriterLockSlim @lock)
             {
                 _lock = @lock;
                 _lock.EnterReadLock();
-            }
-
-            public void Upgrade()
-            {
-                _lock.ExitReadLock();
-                _lock.EnterWriteLock();
-                upgraded = true;
             }
 
             public void Dispose()
@@ -251,11 +254,23 @@ namespace StructureMap.Util
                 else
                     _lock.ExitReadLock();
             }
+
+            public void Upgrade()
+            {
+                _lock.ExitReadLock();
+                _lock.EnterWriteLock();
+                upgraded = true;
+            }
         }
 
-        class WriteLockToken : IDisposable
+        #endregion
+
+        #region Nested type: WriteLockToken
+
+        private class WriteLockToken : IDisposable
         {
-            readonly ReaderWriterLockSlim _lock;
+            private readonly ReaderWriterLockSlim _lock;
+
             public WriteLockToken(ReaderWriterLockSlim @lock)
             {
                 _lock = @lock;
@@ -268,14 +283,6 @@ namespace StructureMap.Util
             }
         }
 
-        public Cache<TKey, TValue> Clone()
-        {
-            var cache = new Cache<TKey, TValue>();
-            cache._onMissing = _onMissing;
-            
-            Each((key, value) => cache[key] = value);
-
-            return cache;
-        }
+        #endregion
     }
 }

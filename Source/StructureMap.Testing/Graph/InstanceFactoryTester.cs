@@ -1,3 +1,4 @@
+using System.Linq;
 using NUnit.Framework;
 using Rhino.Mocks;
 using StructureMap.Attributes;
@@ -6,7 +7,6 @@ using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
-using System.Linq;
 
 namespace StructureMap.Testing.Graph
 {
@@ -53,10 +53,22 @@ namespace StructureMap.Testing.Graph
             Assert.IsNotNull(gateway);
         }
 
-        [Test, ExpectedException(typeof (StructureMapException))]
-        public void GetInstanceWithInvalidInstanceKey()
+        [Test]
+        public void do_not_replace_the_build_Lifecycle_if_it_is_the_same_type_as_the_imported_family()
         {
-            _container.GetInstance<Rule>("NonExistentRule");
+            var originalFamily = new PluginFamily(typeof (IWidget));
+            originalFamily.SetScopeTo(InstanceScope.Singleton);
+            var factory = new InstanceFactory(originalFamily);
+
+            ILifecycle originalLifecycle = factory.Lifecycle;
+
+
+            var family = new PluginFamily(typeof (IWidget));
+            family.SetScopeTo(InstanceScope.Singleton);
+
+            factory.ImportFrom(family);
+
+            factory.Lifecycle.ShouldBeTheSameAs(originalLifecycle);
         }
 
         [Test]
@@ -76,6 +88,25 @@ namespace StructureMap.Testing.Graph
             lifecycle.AssertWasCalled(x => x.EjectAll());
         }
 
+        [Test, ExpectedException(typeof (StructureMapException))]
+        public void GetInstanceWithInvalidInstanceKey()
+        {
+            _container.GetInstance<Rule>("NonExistentRule");
+        }
+
+        [Test]
+        public void import_from_another_family_will_override_the_build_policy_if_the_initial_policy_is_the_default()
+        {
+            var factory = new InstanceFactory(typeof (IWidget));
+
+            var family = new PluginFamily(typeof (IWidget));
+            family.SetScopeTo(InstanceScope.Singleton);
+
+            factory.ImportFrom(family);
+
+            factory.Lifecycle.ShouldBeOfType<SingletonLifecycle>();
+        }
+
         [Test]
         public void Import_from_family_picks_up_new_instances()
         {
@@ -93,38 +124,6 @@ namespace StructureMap.Testing.Graph
             Assert.IsNotNull(factory.FindInstance("New3"));
         }
 
-        [Test]
-        public void import_from_another_family_will_override_the_build_policy_if_the_initial_policy_is_the_default()
-        {
-            var factory = new InstanceFactory(typeof(IWidget));
-
-            var family = new PluginFamily(typeof(IWidget));
-            family.SetScopeTo(InstanceScope.Singleton);
-
-            factory.ImportFrom(family);
-
-            factory.Lifecycle.ShouldBeOfType<SingletonLifecycle>();
-        }
-
-        [Test]
-        public void do_not_replace_the_build_Lifecycle_if_it_is_the_same_type_as_the_imported_family()
-        {
-            PluginFamily originalFamily = new PluginFamily(typeof(IWidget));
-            originalFamily.SetScopeTo(InstanceScope.Singleton);
-            var factory = new InstanceFactory(originalFamily);
-
-            var originalLifecycle = factory.Lifecycle;
-
-
-            var family = new PluginFamily(typeof(IWidget));
-            family.SetScopeTo(InstanceScope.Singleton);
-
-            factory.ImportFrom(family);
-
-            factory.Lifecycle.ShouldBeTheSameAs(originalLifecycle);
-        }
-
-
 
         [Test]
         public void Merge_from_PluginFamily_will_not_replace_an_existing_instance()
@@ -140,20 +139,17 @@ namespace StructureMap.Testing.Graph
 
             Assert.AreSame(instance1, factory.FindInstance("New"));
         }
-
-
     }
 
     [TestFixture]
     public class when_cloning_an_InstanceFactory
     {
-        private InstanceFactory factory;
-        private IInstanceFactory clone;
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
         {
-            factory = new InstanceFactory(typeof(IGateway));
+            factory = new InstanceFactory(typeof (IGateway));
             factory.AddInstance(new SmartInstance<DefaultGateway>());
             factory.AddInstance(new SmartInstance<DefaultGateway>());
 
@@ -164,16 +160,21 @@ namespace StructureMap.Testing.Graph
             clone = factory.Clone();
         }
 
-        [Test]
-        public void missing_instance_is_copied()
-        {
-            clone.MissingInstance.ShouldBeTheSameAs(factory.MissingInstance);
-        }
+        #endregion
+
+        private InstanceFactory factory;
+        private IInstanceFactory clone;
 
         [Test]
         public void lifecycle_is_copied()
         {
             clone.Lifecycle.ShouldBeTheSameAs(factory.Lifecycle);
+        }
+
+        [Test]
+        public void missing_instance_is_copied()
+        {
+            clone.MissingInstance.ShouldBeTheSameAs(factory.MissingInstance);
         }
 
         [Test]
@@ -183,18 +184,18 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
-        public void the_instances_are_copied()
-        {
-            clone.AllInstances.Count().ShouldEqual(2);
-        }
-
-        [Test]
         public void the_instances_are_cloned_so_that_new_instances_are_NOT_injected_into_()
         {
             clone.AddInstance(new ObjectInstance(new DefaultGateway()));
 
             factory.AllInstances.Count().ShouldEqual(2);
             clone.AllInstances.Count().ShouldEqual(3);
+        }
+
+        [Test]
+        public void the_instances_are_copied()
+        {
+            clone.AllInstances.Count().ShouldEqual(2);
         }
     }
 }

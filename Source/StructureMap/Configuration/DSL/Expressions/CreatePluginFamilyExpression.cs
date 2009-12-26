@@ -33,18 +33,9 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <summary>
         /// Define the Default Instance for this PluginType
         /// </summary>
-        public IsExpression<PLUGINTYPE> TheDefault
-        {
-            get { return new InstanceExpression<PLUGINTYPE>(i => registerDefault(i)); }
-        }
+        public IsExpression<PLUGINTYPE> TheDefault { get { return new InstanceExpression<PLUGINTYPE>(i => registerDefault(i)); } }
 
-        public InstanceExpression<PLUGINTYPE> MissingNamedInstanceIs
-        {
-            get
-            {
-                return new InstanceExpression<PLUGINTYPE>(i => _alterations.Add(family => family.MissingInstance = i));
-            }
-        }
+        public InstanceExpression<PLUGINTYPE> MissingNamedInstanceIs { get { return new InstanceExpression<PLUGINTYPE>(i => _alterations.Add(family => family.MissingInstance = i)); } }
 
         /// <summary>
         /// Add multiple Instance's to this PluginType
@@ -93,7 +84,7 @@ namespace StructureMap.Configuration.DSL.Expressions
             {
                 throw new StructureMapException(231);
             }
-            
+
             return alterAndContinue(family =>
             {
                 ConfiguredInstance instance =
@@ -113,9 +104,9 @@ namespace StructureMap.Configuration.DSL.Expressions
             // This is *my* team's naming convention for generic parameters
             // I know you may not like it, but it's my article so there
             var instance = new SmartInstance<CONCRETETYPE>();
-            
+
             registerDefault(instance);
-            
+
             return instance;
         }
 
@@ -223,7 +214,8 @@ namespace StructureMap.Configuration.DSL.Expressions
             _children.Add(
                 graph =>
                 {
-                    var typeInterceptor = new PluginTypeInterceptor(typeof(PLUGINTYPE), (c, o) => interceptor.Process(o, c));
+                    var typeInterceptor = new PluginTypeInterceptor(typeof (PLUGINTYPE),
+                                                                    (c, o) => interceptor.Process(o, c));
                     graph.InterceptorLibrary.AddInterceptor(typeInterceptor);
                 });
 
@@ -243,11 +235,11 @@ namespace StructureMap.Configuration.DSL.Expressions
                 {
                     Func<IContext, object, object> function = (c, o) =>
                     {
-                        handler(c, (PLUGINTYPE)o);
+                        handler(c, (PLUGINTYPE) o);
                         return o;
                     };
 
-                    var interceptor = new PluginTypeInterceptor(typeof(PLUGINTYPE), function);
+                    var interceptor = new PluginTypeInterceptor(typeof (PLUGINTYPE), function);
 
                     graph.InterceptorLibrary.AddInterceptor(interceptor);
                 });
@@ -290,7 +282,8 @@ namespace StructureMap.Configuration.DSL.Expressions
             _children.Add(
                 graph =>
                 {
-                    var interceptor = new PluginTypeInterceptor(typeof(PLUGINTYPE), (c, o) => handler(c, (PLUGINTYPE)o));
+                    var interceptor = new PluginTypeInterceptor(typeof (PLUGINTYPE),
+                                                                (c, o) => handler(c, (PLUGINTYPE) o));
                     graph.InterceptorLibrary.AddInterceptor(interceptor);
                 });
 
@@ -306,7 +299,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <returns></returns>
         public CreatePluginFamilyExpression<PLUGINTYPE> AddConcreteType<PLUGGEDTYPE>()
         {
-            if (!PluginCache.GetPlugin(typeof(PLUGGEDTYPE)).CanBeAutoFilled)
+            if (!PluginCache.GetPlugin(typeof (PLUGGEDTYPE)).CanBeAutoFilled)
             {
                 throw new StructureMapException(231);
             }
@@ -363,7 +356,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <returns></returns>
         public CreatePluginFamilyExpression<PLUGINTYPE> AlwaysUnique()
         {
-            return this.LifecycleIs(new UniquePerRequestLifecycle());
+            return LifecycleIs(new UniquePerRequestLifecycle());
         }
     }
 }

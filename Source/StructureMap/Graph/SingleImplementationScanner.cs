@@ -7,7 +7,7 @@ namespace StructureMap.Graph
     {
         public void Process(PluginGraph graph, IEnumerable<TypeMap> typeMaps)
         {
-            foreach(var map in typeMaps.Where(map => map.ConcreteTypes.Count == 1))
+            foreach (TypeMap map in typeMaps.Where(map => map.ConcreteTypes.Count == 1))
             {
                 graph.AddType(map.PluginType, map.ConcreteTypes[0]);
             }

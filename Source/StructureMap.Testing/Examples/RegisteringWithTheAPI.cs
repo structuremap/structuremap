@@ -64,7 +64,7 @@ namespace StructureMap.Testing.Examples
         {
             // First I'll specify the "default" Instance of IRepository
             ForRequestedType<IRepository>().TheDefaultIsConcreteType<InMemoryRepository>();
-            
+
             // Now, I'll add three more Instances of IRepository
             ForRequestedType<IRepository>().AddInstances(x =>
             {

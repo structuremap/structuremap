@@ -32,7 +32,8 @@ namespace StructureMap
 
             if (instance == null)
             {
-                throw new ArgumentNullException("instance", "Trying to find an Instance of type " + pluginType.AssemblyQualifiedName);
+                throw new ArgumentNullException("instance",
+                                                "Trying to find an Instance of type " + pluginType.AssemblyQualifiedName);
             }
 
             Dictionary<Instance, object> cache = getCache(pluginType);
@@ -57,7 +58,6 @@ namespace StructureMap
                 string message = string.Format("Duplicate Objects detected for Instance {0} of Type {1}", Instance.Name,
                                                pluginType.AssemblyQualifiedName);
                 throw new ApplicationException(message);
-
             }
             cache.Add(Instance, result);
         }
@@ -66,9 +66,9 @@ namespace StructureMap
         {
             foreach (var dictionary in _objects.Values)
             {
-                foreach (var o in dictionary.Values)
+                foreach (object o in dictionary.Values)
                 {
-                    T t = o as T;
+                    var t = o as T;
                     if (t != null)
                     {
                         action(t);

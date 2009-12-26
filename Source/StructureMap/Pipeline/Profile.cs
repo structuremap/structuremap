@@ -15,10 +15,7 @@ namespace StructureMap.Pipeline
         }
 
 
-        public string Name
-        {
-            get { return _name; }
-        }
+        public string Name { get { return _name; } }
 
         public void SetDefault(Type pluginType, Instance instance)
         {
@@ -95,22 +92,16 @@ namespace StructureMap.Pipeline
         public void CopyDefault(Type sourceType, Type destinationType, PluginFamily family)
         {
             if (!_instances.ContainsKey(sourceType)) return;
-            
-            var sourceInstance = _instances[sourceType];
+
+            Instance sourceInstance = _instances[sourceType];
             if (sourceInstance.IsReference)
             {
                 _instances.Add(destinationType, sourceInstance);
             }
             else
             {
-                family.ForInstance(sourceInstance.Name, x =>
-                {
-                    _instances.Add(destinationType, x);
-                });
+                family.ForInstance(sourceInstance.Name, x => { _instances.Add(destinationType, x); });
             }
-
-
-
         }
 
 

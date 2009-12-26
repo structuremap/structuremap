@@ -41,35 +41,23 @@ namespace StructureMap.Pipeline
             _concreteType = concreteType;
         }
 
+        internal BuildFrame Parent { get { return _parent; } }
+
         /// <summary>
         /// The requested PluginType of the Instance being create
         /// </summary>
-        public Type RequestedType
-        {
-            get { return _requestedType; }
-        }
-        
+        public Type RequestedType { get { return _requestedType; } }
+
         /// <summary>
         /// The Name of the Instance being created
         /// </summary>
-        public string Name
-        {
-            get { return _name; }
-        }
+        public string Name { get { return _name; } }
 
         /// <summary>
         /// The actual ConcreteType being created.  This will not always
         /// be available
         /// </summary>
-        public Type ConcreteType
-        {
-            get { return _concreteType; }
-        }
-
-        internal BuildFrame Parent
-        {
-            get { return _parent; }
-        }
+        public Type ConcreteType { get { return _concreteType; } }
 
         internal void Attach(BuildFrame next)
         {
@@ -129,7 +117,7 @@ namespace StructureMap.Pipeline
         public string ToStackString()
         {
             string message = "\n1.) " + ToString();
-            var next = _next;
+            BuildFrame next = _next;
 
             int i = 2;
             while (next != null)

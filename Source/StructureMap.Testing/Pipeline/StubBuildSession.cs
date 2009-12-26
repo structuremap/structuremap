@@ -8,7 +8,8 @@ namespace StructureMap.Testing.Pipeline
 {
     public class StubBuildSession : BuildSession
     {
-        public StubBuildSession() : base(new PluginGraph())
+        public StubBuildSession()
+            : base(new PluginGraph())
         {
         }
 

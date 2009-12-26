@@ -5,9 +5,11 @@ using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Pipeline
 {
-    [TestFixture] public class HybridBuildLifecycleTester
+    [TestFixture]
+    public class HybridBuildLifecycleTester
     {
-        [Test] public void run_without_an_httpcontext()
+        [Test]
+        public void run_without_an_httpcontext()
         {
             var container =
                 new Container(

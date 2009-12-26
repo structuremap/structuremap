@@ -20,30 +20,15 @@ namespace StructureMap.Source
             _element = (XmlElement) node;
         }
 
-        protected override string innerConcreteKey
-        {
-            get { return _element.GetAttribute(XmlConstants.TYPE_ATTRIBUTE); }
-        }
+        protected override string innerConcreteKey { get { return _element.GetAttribute(XmlConstants.TYPE_ATTRIBUTE); } }
 
-        protected override string innerInstanceKey
-        {
-            get { return _element.GetAttribute(XmlConstants.KEY_ATTRIBUTE); }
-        }
+        protected override string innerInstanceKey { get { return _element.GetAttribute(XmlConstants.KEY_ATTRIBUTE); } }
 
-        public XmlElement InnerElement
-        {
-            get { return _element; }
-        }
+        public XmlElement InnerElement { get { return _element; } }
 
-        public override bool IsReference
-        {
-            get { return (ConcreteKey == string.Empty && string.IsNullOrEmpty(getPluggedType())); }
-        }
+        public override bool IsReference { get { return (ConcreteKey == string.Empty && string.IsNullOrEmpty(getPluggedType())); } }
 
-        public override string ReferenceKey
-        {
-            get { return InstanceKey; }
-        }
+        public override string ReferenceKey { get { return InstanceKey; } }
 
         public void SetConcreteKey(string concreteKey)
         {

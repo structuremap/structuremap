@@ -1,7 +1,6 @@
 using System;
 using System.Reflection;
 using StructureMap.Graph;
-using StructureMap;
 using StructureMap.TypeRules;
 
 namespace StructureMap.Configuration.DSL
@@ -20,7 +19,7 @@ namespace StructureMap.Configuration.DSL
         {
             Matching(prop => prop.PropertyType == typeof (T));
         }
-        
+
         /// <summary>
         /// Directs StructureMap to tread all public setters with
         /// a PropertyType that matches the predicate as a
@@ -59,7 +58,7 @@ namespace StructureMap.Configuration.DSL
         /// <typeparam name="T"></typeparam>
         public void WithAnyTypeFromNamespaceContainingType<T>()
         {
-            WithAnyTypeFromNamespace(typeof(T).Namespace);
+            WithAnyTypeFromNamespace(typeof (T).Namespace);
         }
 
         /// <summary>

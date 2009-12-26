@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using StructureMap.Graph;
 using StructureMap.Pipeline;
 
 namespace StructureMap
@@ -49,7 +48,7 @@ namespace StructureMap
         /// </summary>
         /// <returns></returns>
         IEnumerable<IInstance> InstancesOf<T>();
-        
+
         /// <summary>
         /// Does the current container have existing configuration for the "pluginType"
         /// </summary>
@@ -86,10 +85,7 @@ namespace StructureMap
             return HasDefaultImplementationFor(typeof (T));
         }
 
-        public IEnumerable<PluginTypeConfiguration> PluginTypes
-        {
-            get { return _graph.PluginTypes; }
-        }
+        public IEnumerable<PluginTypeConfiguration> PluginTypes { get { return _graph.PluginTypes; } }
 
         public IEnumerable<IInstance> InstancesOf(Type pluginType)
         {
@@ -115,7 +111,7 @@ namespace StructureMap
         {
             get
             {
-                foreach (var pluginType in PluginTypes)
+                foreach (PluginTypeConfiguration pluginType in PluginTypes)
                 {
                     foreach (IInstance instance in pluginType.Instances)
                     {

@@ -6,8 +6,8 @@ namespace StructureMap.DebuggerVisualizers
     [Serializable]
     public class ContainerDetail
     {
-        private readonly string[] _sources;
         private readonly PluginTypeDetail[] _pluginTypeDetails;
+        private readonly string[] _sources;
 
         public ContainerDetail(string[] sources, PluginTypeDetail[] types)
         {
@@ -15,24 +15,18 @@ namespace StructureMap.DebuggerVisualizers
             _pluginTypeDetails = types;
         }
 
-        public string[] Sources
-        {
-            get { return _sources; }
-        }
+        public string[] Sources { get { return _sources; } }
 
-        public PluginTypeDetail[] PluginTypes
-        {
-            get { return _pluginTypeDetails; }
-        }
+        public PluginTypeDetail[] PluginTypes { get { return _pluginTypeDetails; } }
     }
 
     [Serializable]
     public class PluginTypeDetail
     {
-        private readonly Type _type;
         private readonly Type _buildPolicyType;
-        private readonly InstanceDetail[] instanceDetails;
         private readonly IList<InstanceDetail> _instances = new List<InstanceDetail>();
+        private readonly Type _type;
+        private readonly InstanceDetail[] instanceDetails;
 
         public PluginTypeDetail(Type type, Type buildPolicyType, InstanceDetail[] instanceDetails)
         {
@@ -41,28 +35,19 @@ namespace StructureMap.DebuggerVisualizers
             this.instanceDetails = instanceDetails;
         }
 
-        public InstanceDetail[] Instances
-        {
-            get { return instanceDetails; }
-        }
+        public InstanceDetail[] Instances { get { return instanceDetails; } }
 
-        public Type BuildPolicy
-        {
-            get { return _buildPolicyType; }
-        }
+        public Type BuildPolicy { get { return _buildPolicyType; } }
 
-        public Type Type
-        {
-            get { return _type; }
-        }
+        public Type Type { get { return _type; } }
     }
 
     [Serializable]
     public class InstanceDetail
     {
-        private readonly string _name;
-        private readonly string _description;
         private readonly Type _concreteType;
+        private readonly string _description;
+        private readonly string _name;
 
         public InstanceDetail(string name, string description, Type concreteType)
         {
@@ -71,20 +56,10 @@ namespace StructureMap.DebuggerVisualizers
             _concreteType = concreteType;
         }
 
-        public Type ConcreteType
-        {
-            get { return _concreteType; }
-        }
+        public Type ConcreteType { get { return _concreteType; } }
 
-        public string Description
-        {
-            get { return _description; }
-        }
+        public string Description { get { return _description; } }
 
-        public string Name
-        {
-            get { return _name; }
-        }
+        public string Name { get { return _name; } }
     }
-
 }

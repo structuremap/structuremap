@@ -15,22 +15,18 @@ namespace StructureMap.Testing.Pipeline
             });
 
             container.GetInstance<IOne>().ShouldBeOfType<OneAndTwo>();
-            
         }
     }
 
     public interface IOne
     {
-        
     }
 
     public interface ITwo
     {
-        
     }
 
     public class OneAndTwo : IOne, ITwo
     {
-        
     }
 }

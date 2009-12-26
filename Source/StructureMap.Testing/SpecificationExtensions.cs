@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 
@@ -9,18 +10,18 @@ namespace StructureMap.Testing
 
     public static class SpecificationExtensions
     {
-        public static void ShouldHaveTheSameElementsAs<T>(this System.Collections.Generic.IEnumerable<T> actual, System.Collections.Generic.IEnumerable<T> expected)
+        public static void ShouldHaveTheSameElementsAs<T>(this IEnumerable<T> actual, IEnumerable<T> expected)
         {
-            IList actualList = (actual is IList) ? (IList)actual : actual.ToList();
-            IList expectedList = (expected is IList) ? (IList)expected : expected.ToList();
+            IList actualList = (actual is IList) ? (IList) actual : actual.ToList();
+            IList expectedList = (expected is IList) ? (IList) expected : expected.ToList();
 
             ShouldHaveTheSameElementsAs(actualList, expectedList);
         }
 
-        public static void ShouldHaveTheSameElementsAs<T>(this System.Collections.Generic.IEnumerable<T> actual, params T[] expected)
+        public static void ShouldHaveTheSameElementsAs<T>(this IEnumerable<T> actual, params T[] expected)
         {
-            IList actualList = (actual is IList) ? (IList)actual : actual.ToList();
-            IList expectedList = (expected is IList) ? (IList)expected : expected.ToList();
+            IList actualList = (actual is IList) ? (IList) actual : actual.ToList();
+            IList expectedList = (expected is IList) ? (IList) expected : expected.ToList();
 
             ShouldHaveTheSameElementsAs(actualList, expectedList);
         }

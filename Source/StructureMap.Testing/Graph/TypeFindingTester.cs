@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using NUnit.Framework;
-using StructureMap.Graph;
-using StructureMap.TypeRules;
 
 namespace StructureMap.Testing.Graph
 {

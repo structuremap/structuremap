@@ -4,7 +4,6 @@ using StructureMap.Testing.GenericWidgets;
 using StructureMap.Testing.TestData;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
-using StructureMap.Testing.Widget5;
 
 namespace StructureMap.Testing
 {
@@ -21,6 +20,18 @@ namespace StructureMap.Testing
     public class ObjectFactoryInitializeTester
     {
         [Test]
+        public void Add_a_registry_by_generic_signature()
+        {
+            ObjectFactory.Initialize(x =>
+            {
+                x.IgnoreStructureMapConfig = true;
+                x.AddRegistry<InitializeRegistry>();
+            });
+
+            ObjectFactory.GetNamedInstance<IWidget>("Green").ShouldBeOfType<ColorWidget>().Color.ShouldEqual("Green");
+        }
+
+        [Test]
         public void PullConfigurationFromTheAppConfig()
         {
             ObjectFactory.Initialize(x =>
@@ -35,19 +46,6 @@ namespace StructureMap.Testing
 
             ObjectFactory.GetInstance<IThing<string, bool>>()
                 .IsType<ColorThing<string, bool>>().Color.ShouldEqual("Cornflower");
-        }
-
-
-        [Test]
-        public void Add_a_registry_by_generic_signature()
-        {
-            ObjectFactory.Initialize(x =>
-            {
-                x.IgnoreStructureMapConfig = true;
-                x.AddRegistry<InitializeRegistry>();
-            });
-
-            ObjectFactory.GetNamedInstance<IWidget>("Green").ShouldBeOfType<ColorWidget>().Color.ShouldEqual("Green");
         }
 
         [Test]

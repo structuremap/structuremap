@@ -34,14 +34,13 @@ namespace StructureMap.Pipeline
         }
 
 
-        protected override ObjectInstance thisInstance
-        {
-            get { return this; }
-        }
+        protected override ObjectInstance thisInstance { get { return this; } }
 
-        public object Object
+        public object Object { get { return _object; } }
+
+        public void Dispose()
         {
-            get { return _object; }
+            _object = null;
         }
 
         protected override object build(Type pluginType, BuildSession session)
@@ -63,11 +62,6 @@ namespace StructureMap.Pipeline
         public override string ToString()
         {
             return string.Format("LiteralInstance: {0}", _object);
-        }
-
-        public void Dispose()
-        {
-            _object = null;
         }
     }
 }

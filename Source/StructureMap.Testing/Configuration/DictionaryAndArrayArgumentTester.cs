@@ -112,15 +112,9 @@ namespace StructureMap.Testing.Configuration
             _strings = strings;
         }
 
-        public int[] Numbers
-        {
-            get { return _numbers; }
-        }
+        public int[] Numbers { get { return _numbers; } }
 
-        public string[] Strings
-        {
-            get { return _strings; }
-        }
+        public string[] Strings { get { return _strings; } }
     }
 
     public class ClassWithDictionary
@@ -132,9 +126,6 @@ namespace StructureMap.Testing.Configuration
             _dictionary = dictionary;
         }
 
-        public IDictionary<string, string> Dictionary
-        {
-            get { return _dictionary; }
-        }
+        public IDictionary<string, string> Dictionary { get { return _dictionary; } }
     }
 }

@@ -47,7 +47,7 @@ namespace StructureMap.Graph
         /// </summary>
         /// <param name="path"></param>
         void AssembliesFromPath(string path);
-        
+
         /// <summary>
         /// Sweep the designated path and add any Assembly's found in this folder to the
         /// scanning operation.  The assemblyFilter can be used to filter or limit the 
@@ -72,8 +72,6 @@ namespace StructureMap.Graph
 
         #endregion
 
-        // ... Other methods
-
         #region Adding TypeScanners
 
         /// <summary>
@@ -83,6 +81,7 @@ namespace StructureMap.Graph
         void With(ITypeScanner scanner);
 
         void With(IHeavyweightTypeScanner heavyweightScanner);
+
         /// <summary>
         /// Adds the DefaultConventionScanner to the scanning operations.  I.e., a concrete
         /// class named "Something" that implements "ISomething" will be automatically 
@@ -173,7 +172,10 @@ namespace StructureMap.Graph
         void ExcludeType<T>();
 
         // ... Other methods
+
         #endregion
+
+        // ... Other methods
 
         /// <summary>
         /// Scans for PluginType's and Concrete Types that close the given open generic type
@@ -189,9 +191,9 @@ namespace StructureMap.Graph
     {
         private readonly List<Assembly> _assemblies = new List<Assembly>();
         private readonly List<Predicate<Type>> _excludes = new List<Predicate<Type>>();
+        private readonly List<IHeavyweightTypeScanner> _heavyweightScanners = new List<IHeavyweightTypeScanner>();
         private readonly List<Predicate<Type>> _includes = new List<Predicate<Type>>();
         private readonly List<ITypeScanner> _scanners = new List<ITypeScanner>();
-        private readonly List<IHeavyweightTypeScanner> _heavyweightScanners = new List<IHeavyweightTypeScanner>();
 
         public AssemblyScanner()
         {
@@ -199,80 +201,8 @@ namespace StructureMap.Graph
             With<PluggableAttributeScanner>();
         }
 
-        public int Count
-        {
-            get { return _assemblies.Count; }
-        }
+        public int Count { get { return _assemblies.Count; } }
 
-
-        internal void ScanForAll(PluginGraph pluginGraph)
-        {
-            var heavyweightScan = configureHeavyweightScan();
-
-            _assemblies.ForEach(assem => scanTypesInAssembly(assem, pluginGraph));
-
-            performHeavyweightScan(pluginGraph, heavyweightScan);
-        }
-
-        private void scanTypesInAssembly(Assembly assembly, PluginGraph graph)
-        {
-            try
-            {
-                foreach (var type in assembly.GetExportedTypes())
-                {
-                    if (!isInTheIncludes(type)) continue;
-                    if (isInTheExcludes(type)) continue;
-
-                    _scanners.ForEach(scanner => scanner.Process(type, graph));
-                }
-            }
-            catch (Exception ex)
-            {
-                graph.Log.RegisterError(170, ex, assembly.FullName);
-            }
-        }
-
-        private TypeMapBuilder configureHeavyweightScan()
-        {
-            var typeMapBuilder = new TypeMapBuilder();
-            if (_heavyweightScanners.Count > 0)
-            {
-                With(typeMapBuilder);
-            }
-            return typeMapBuilder;
-        }
-
-        private void performHeavyweightScan(PluginGraph pluginGraph, TypeMapBuilder typeMapBuilder)
-        {
-            var typeMaps = typeMapBuilder.GetTypeMaps();
-            _heavyweightScanners.ForEach(scanner => scanner.Process(pluginGraph, typeMaps));
-            typeMapBuilder.Dispose();
-        }
-
-        private bool isInTheExcludes(Type type)
-        {
-            if (_excludes.Count == 0) return false;
-
-            foreach (var exclude in _excludes)
-            {
-                if (exclude(type)) return true;
-            }
-
-            return false;
-        }
-
-        private bool isInTheIncludes(Type type)
-        {
-            if (_includes.Count == 0) return true;
-
-
-            foreach (var include in _includes)
-            {
-                if (include(type)) return true;
-            }
-
-            return false;
-        }
 
         public void Assembly(Assembly assembly)
         {
@@ -287,26 +217,13 @@ namespace StructureMap.Graph
             Assembly(AppDomain.CurrentDomain.Load(assemblyName));
         }
 
-        public bool Contains(string assemblyName)
-        {
-            foreach (Assembly assembly in _assemblies)
-            {
-                if (assembly.GetName().Name == assemblyName)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
         public void With(ITypeScanner scanner)
         {
             if (_scanners.Contains(scanner)) return;
 
             _scanners.Add(scanner);
         }
-        
+
         public void With(IHeavyweightTypeScanner heavyweightScanner)
         {
             if (_heavyweightScanners.Contains(heavyweightScanner)) return;
@@ -343,25 +260,6 @@ namespace StructureMap.Graph
             {
                 _assemblies.Add(callingAssembly);
             }
-        }
-
-        private static Assembly findTheCallingAssembly()
-        {
-            var trace = new StackTrace(false);
-
-            Assembly thisAssembly = System.Reflection.Assembly.GetExecutingAssembly();
-            Assembly callingAssembly = null;
-            for (int i = 0; i < trace.FrameCount; i++)
-            {
-                StackFrame frame = trace.GetFrame(i);
-                Assembly assembly = frame.GetMethod().DeclaringType.Assembly;
-                if (assembly != thisAssembly)
-                {
-                    callingAssembly = assembly;
-                    break;
-                }
-            }
-            return callingAssembly;
         }
 
         public void AssemblyContainingType<T>()
@@ -441,16 +339,14 @@ namespace StructureMap.Graph
 
         public void AssembliesFromApplicationBaseDirectory(Predicate<Assembly> assemblyFilter)
         {
-            var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
 
             AssembliesFromPath(baseDirectory, assemblyFilter);
-            var binPath = AppDomain.CurrentDomain.SetupInformation.PrivateBinPath;
+            string binPath = AppDomain.CurrentDomain.SetupInformation.PrivateBinPath;
             if (Directory.Exists(binPath))
             {
                 AssembliesFromPath(binPath, assemblyFilter);
             }
-
-            
         }
 
         public void AssembliesFromPath(string path)
@@ -460,14 +356,16 @@ namespace StructureMap.Graph
 
         public void AssembliesFromPath(string path, Predicate<Assembly> assemblyFilter)
         {
-            var assemblyPaths = System.IO.Directory.GetFiles(path).Where(file =>
-                                                                         System.IO.Path.GetExtension(file).Equals(
-                                                                             ".exe", StringComparison.OrdinalIgnoreCase)
-                                                                         ||
-                                                                         System.IO.Path.GetExtension(file).Equals(
-                                                                             ".dll", StringComparison.OrdinalIgnoreCase));
+            IEnumerable<string> assemblyPaths = Directory.GetFiles(path).Where(file =>
+                                                                               Path.GetExtension(file).Equals(
+                                                                                   ".exe",
+                                                                                   StringComparison.OrdinalIgnoreCase)
+                                                                               ||
+                                                                               Path.GetExtension(file).Equals(
+                                                                                   ".dll",
+                                                                                   StringComparison.OrdinalIgnoreCase));
 
-            foreach (var assemblyPath in assemblyPaths)
+            foreach (string assemblyPath in assemblyPaths)
             {
                 Assembly assembly = null;
                 try
@@ -479,6 +377,107 @@ namespace StructureMap.Graph
                 }
                 if (assembly != null && assemblyFilter(assembly)) Assembly(assembly);
             }
+        }
+
+        internal void ScanForAll(PluginGraph pluginGraph)
+        {
+            TypeMapBuilder heavyweightScan = configureHeavyweightScan();
+
+            _assemblies.ForEach(assem => scanTypesInAssembly(assem, pluginGraph));
+
+            performHeavyweightScan(pluginGraph, heavyweightScan);
+        }
+
+        private void scanTypesInAssembly(Assembly assembly, PluginGraph graph)
+        {
+            try
+            {
+                foreach (Type type in assembly.GetExportedTypes())
+                {
+                    if (!isInTheIncludes(type)) continue;
+                    if (isInTheExcludes(type)) continue;
+
+                    _scanners.ForEach(scanner => scanner.Process(type, graph));
+                }
+            }
+            catch (Exception ex)
+            {
+                graph.Log.RegisterError(170, ex, assembly.FullName);
+            }
+        }
+
+        private TypeMapBuilder configureHeavyweightScan()
+        {
+            var typeMapBuilder = new TypeMapBuilder();
+            if (_heavyweightScanners.Count > 0)
+            {
+                With(typeMapBuilder);
+            }
+            return typeMapBuilder;
+        }
+
+        private void performHeavyweightScan(PluginGraph pluginGraph, TypeMapBuilder typeMapBuilder)
+        {
+            IEnumerable<TypeMap> typeMaps = typeMapBuilder.GetTypeMaps();
+            _heavyweightScanners.ForEach(scanner => scanner.Process(pluginGraph, typeMaps));
+            typeMapBuilder.Dispose();
+        }
+
+        private bool isInTheExcludes(Type type)
+        {
+            if (_excludes.Count == 0) return false;
+
+            foreach (var exclude in _excludes)
+            {
+                if (exclude(type)) return true;
+            }
+
+            return false;
+        }
+
+        private bool isInTheIncludes(Type type)
+        {
+            if (_includes.Count == 0) return true;
+
+
+            foreach (var include in _includes)
+            {
+                if (include(type)) return true;
+            }
+
+            return false;
+        }
+
+        public bool Contains(string assemblyName)
+        {
+            foreach (Assembly assembly in _assemblies)
+            {
+                if (assembly.GetName().Name == assemblyName)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static Assembly findTheCallingAssembly()
+        {
+            var trace = new StackTrace(false);
+
+            Assembly thisAssembly = System.Reflection.Assembly.GetExecutingAssembly();
+            Assembly callingAssembly = null;
+            for (int i = 0; i < trace.FrameCount; i++)
+            {
+                StackFrame frame = trace.GetFrame(i);
+                Assembly assembly = frame.GetMethod().DeclaringType.Assembly;
+                if (assembly != thisAssembly)
+                {
+                    callingAssembly = assembly;
+                    break;
+                }
+            }
+            return callingAssembly;
         }
     }
 }

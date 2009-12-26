@@ -1,11 +1,10 @@
-﻿using System.Windows.Forms;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace StructureMap.DebuggerVisualizers
 {
     public partial class ContainerForm : Form
     {
-
         public ContainerForm()
         {
             InitializeComponent();
@@ -19,8 +18,8 @@ namespace StructureMap.DebuggerVisualizers
 
         private static void buildTree(TreeView tree, ContainerDetail container)
         {
-            var sourcesRoot = buildConfigurationSources(tree, container);
-            var pluginTypesRoot = buildPluginTypes(tree, container);
+            TreeNode sourcesRoot = buildConfigurationSources(tree, container);
+            TreeNode pluginTypesRoot = buildPluginTypes(tree, container);
 
             pluginTypesRoot.Expand();
             sourcesRoot.Expand();
@@ -28,8 +27,8 @@ namespace StructureMap.DebuggerVisualizers
 
         private static TreeNode buildPluginTypes(TreeView tree, ContainerDetail container)
         {
-            var pluginTypesRoot = tree.Nodes.Add("PluginTypes");
-            foreach (var pluginType in container.PluginTypes.OrderBy(t => t.Type.Name))
+            TreeNode pluginTypesRoot = tree.Nodes.Add("PluginTypes");
+            foreach (PluginTypeDetail pluginType in container.PluginTypes.OrderBy(t => t.Type.Name))
             {
                 addPluginType(pluginTypesRoot, pluginType);
             }
@@ -38,8 +37,8 @@ namespace StructureMap.DebuggerVisualizers
 
         private static TreeNode buildConfigurationSources(TreeView tree, ContainerDetail container)
         {
-            var sourcesRoot = tree.Nodes.Add("Configuration Sources");
-            foreach (var source in container.Sources.OrderBy(s => s))
+            TreeNode sourcesRoot = tree.Nodes.Add("Configuration Sources");
+            foreach (string source in container.Sources.OrderBy(s => s))
             {
                 addSource(sourcesRoot, source);
             }
@@ -53,14 +52,14 @@ namespace StructureMap.DebuggerVisualizers
 
         private static void addPluginType(TreeNode pluginTypesRoot, PluginTypeDetail pluginType)
         {
-            var pluginNode = pluginTypesRoot.Nodes.Add(pluginType.Type.AsCSharp());
-            pluginNode.Nodes.Add("FullName: " + pluginType.Type.AsCSharp(t=>t.FullName ?? t.Name));
+            TreeNode pluginNode = pluginTypesRoot.Nodes.Add(pluginType.Type.AsCSharp());
+            pluginNode.Nodes.Add("FullName: " + pluginType.Type.AsCSharp(t => t.FullName ?? t.Name));
             pluginNode.Nodes.Add("Assembly: " + pluginType.Type.Assembly);
             pluginNode.Nodes.Add("BuildPolicy: " + pluginType.BuildPolicy.Name);
             if (pluginType.Instances.Length == 0) return;
-            
-            var instancesRoot = pluginNode.Nodes.Add("Instances");
-            foreach (var instance in pluginType.Instances.OrderBy(i => i.Name))
+
+            TreeNode instancesRoot = pluginNode.Nodes.Add("Instances");
+            foreach (InstanceDetail instance in pluginType.Instances.OrderBy(i => i.Name))
             {
                 addInstance(instancesRoot, instance);
             }
@@ -68,7 +67,7 @@ namespace StructureMap.DebuggerVisualizers
 
         private static void addInstance(TreeNode instancesRoot, InstanceDetail instance)
         {
-            var instanceNode = instancesRoot.Nodes.Add("Name: " + instance.Name);
+            TreeNode instanceNode = instancesRoot.Nodes.Add("Name: " + instance.Name);
             if (instance.Name != instance.Description)
             {
                 instanceNode.Nodes.Add("Description: " + instance.Description);

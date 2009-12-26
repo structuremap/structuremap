@@ -1,4 +1,3 @@
-using System;
 using System.Diagnostics;
 using System.Xml;
 using NUnit.Framework;
@@ -12,10 +11,14 @@ namespace StructureMap.Testing
     [TestFixture]
     public class ReadingRegistriesFromXmlTester
     {
+        #region Setup/Teardown
+
         [SetUp]
         public void SetUp()
         {
         }
+
+        #endregion
 
         public void TheXmlFileRegistryWasLoadedInto(IContainer container)
         {
@@ -27,7 +30,7 @@ namespace StructureMap.Testing
         {
             var graph = new PluginGraph();
             var builder = new GraphBuilder(new Registry[0], graph);
-            builder.AddRegistry(typeof(XmlFileRegistry).AssemblyQualifiedName);
+            builder.AddRegistry(typeof (XmlFileRegistry).AssemblyQualifiedName);
 
             var container = new Container(graph);
             TheXmlFileRegistryWasLoadedInto(container);
@@ -43,7 +46,6 @@ namespace StructureMap.Testing
 
             graph.Log.ErrorCount.ShouldEqual(1);
             graph.Log.AssertHasError(290);
-
         }
 
         [Test]
@@ -57,15 +59,10 @@ namespace StructureMap.Testing
 
             Debug.WriteLine(document.OuterXml);
 
-            var container = new Container(x =>
-            {
-                x.AddConfigurationFromNode(document.DocumentElement);
-            });
+            var container = new Container(x => { x.AddConfigurationFromNode(document.DocumentElement); });
 
             TheXmlFileRegistryWasLoadedInto(container);
-
         }
-
     }
 
     public class XmlFileRegistry : Registry

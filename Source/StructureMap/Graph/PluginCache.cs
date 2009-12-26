@@ -77,16 +77,15 @@ namespace StructureMap.Graph
         {
             _setterRules.Add(predicate);
             _plugins.Each(plugin =>
-                              {
-                                  plugin.UseSetterRule(predicate);
+            {
+                plugin.UseSetterRule(predicate);
 
-                                  //does any of the registered plugins have a setter matching the predicate?
-                                  if (plugin.PluggedType.GetProperties().Any(s => predicate(s)))
-                                  {
-                                      _builders.Remove(plugin.PluggedType);
-                                  }
-                              });
-
+                //does any of the registered plugins have a setter matching the predicate?
+                if (plugin.PluggedType.GetProperties().Any(s => predicate(s)))
+                {
+                    _builders.Remove(plugin.PluggedType);
+                }
+            });
         }
     }
 }

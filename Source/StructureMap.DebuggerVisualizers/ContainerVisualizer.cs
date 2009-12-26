@@ -1,14 +1,15 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using Microsoft.VisualStudio.DebuggerVisualizers;
 using StructureMap;
 using StructureMap.DebuggerVisualizers;
 
-[assembly: DebuggerVisualizer(typeof(ContainerVisualizer), typeof(ContainerVisualizerObjectSource), Target = typeof(Container), Description = "Container Browser")]
+[assembly:
+    DebuggerVisualizer(typeof (ContainerVisualizer), typeof (ContainerVisualizerObjectSource),
+        Target = typeof (Container), Description = "Container Browser")]
 
 namespace StructureMap.DebuggerVisualizers
 {
-
     public class ContainerVisualizer : DialogDebuggerVisualizer
     {
         private IDialogVisualizerService modalService;
@@ -16,9 +17,10 @@ namespace StructureMap.DebuggerVisualizers
         protected override void Show(IDialogVisualizerService windowService, IVisualizerObjectProvider objectProvider)
         {
             modalService = windowService;
-            if (modalService == null) throw new NotSupportedException("This debugger does not support modal visualizers");
-            
-            var containerDetail = (ContainerDetail)objectProvider.GetObject();
+            if (modalService == null)
+                throw new NotSupportedException("This debugger does not support modal visualizers");
+
+            var containerDetail = (ContainerDetail) objectProvider.GetObject();
             var form = new ContainerForm(containerDetail);
             modalService.ShowDialog(form);
         }

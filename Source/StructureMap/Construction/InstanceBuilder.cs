@@ -1,5 +1,4 @@
 using System;
-using StructureMap.Pipeline;
 
 namespace StructureMap.Construction
 {
@@ -16,22 +15,19 @@ namespace StructureMap.Construction
     /// </summary>
     public class InstanceBuilder : IInstanceBuilder
     {
-        private readonly Type _pluggedType;
-        private readonly Func<IArguments, object> _constructor;
         private readonly Action<IArguments, object> _buildUp;
+        private readonly Func<IArguments, object> _constructor;
+        private readonly Type _pluggedType;
 
-        public InstanceBuilder(Type pluggedType, Func<IArguments, object> constructor, Action<IArguments, object> buildUp)
+        public InstanceBuilder(Type pluggedType, Func<IArguments, object> constructor,
+                               Action<IArguments, object> buildUp)
         {
             _pluggedType = pluggedType;
             _constructor = constructor;
             _buildUp = buildUp;
         }
 
-        public Type PluggedType { get
-        {
-            return _pluggedType;
-        } 
-        }
+        public Type PluggedType { get { return _pluggedType; } }
 
         public virtual object BuildInstance(IArguments args)
         {

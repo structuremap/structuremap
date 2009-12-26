@@ -14,15 +14,7 @@ namespace StructureMap.Graph
             _families = new Cache<Type, PluginFamily>(pluginType => new PluginFamily(pluginType));
         }
 
-        public GenericsPluginGraph Clone()
-        {
-            return new GenericsPluginGraph(){_families = _families.Clone()};
-        }
-
-        public int FamilyCount
-        {
-            get { return _families.Count; }
-        }
+        public int FamilyCount { get { return _families.Count; } }
 
         public IEnumerable<PluginTypeConfiguration> Families
         {
@@ -33,6 +25,14 @@ namespace StructureMap.Graph
                     yield return family.GetConfiguration();
                 }
             }
+        }
+
+        public GenericsPluginGraph Clone()
+        {
+            return new GenericsPluginGraph
+            {
+                _families = _families.Clone()
+            };
         }
 
         public static bool CanBeCast(Type pluginType, Type pluggedType)
@@ -111,7 +111,6 @@ namespace StructureMap.Graph
                 return null;
             }
         }
-
 
 
         public static bool CanBePluggedIntoGenericType(Type pluginType, Type pluggedType, params Type[] templateTypes)

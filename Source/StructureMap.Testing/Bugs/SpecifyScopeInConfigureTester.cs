@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using StructureMap.Attributes;
 using StructureMap.Testing.Widget3;
 

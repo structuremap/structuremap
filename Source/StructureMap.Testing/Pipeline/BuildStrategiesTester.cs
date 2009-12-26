@@ -1,6 +1,5 @@
 using System;
 using NUnit.Framework;
-using Rhino.Mocks;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget3;
 
@@ -40,7 +39,6 @@ namespace StructureMap.Testing.Pipeline
         }
 
 
-
         [Test]
         public void Singleton_build_policy()
         {
@@ -51,7 +49,6 @@ namespace StructureMap.Testing.Pipeline
                     o.Is.ConstructedBy(() => new ColorService("Red")).WithName("Red");
                     o.Is.ConstructedBy(() => new ColorService("Green")).WithName("Green");
                 });
-
             });
 
 
@@ -72,6 +69,27 @@ namespace StructureMap.Testing.Pipeline
     [TestFixture]
     public class when_the_singleton_Lifecycle_ejects_all
     {
+        #region Setup/Teardown
+
+        [SetUp]
+        public void SetUp()
+        {
+            lifecycle = new SingletonLifecycle();
+
+            disposable1 = new StubDisposable();
+            disposable2 = new StubDisposable();
+
+
+            lifecycle.FindCache().Set(typeof (IGateway), new StubInstance("a"), disposable1);
+            lifecycle.FindCache().Set(typeof (IGateway), new StubInstance("b"), disposable2);
+            lifecycle.FindCache().Set(typeof (IGateway), new StubInstance("c"), new object());
+
+
+            lifecycle.EjectAll();
+        }
+
+        #endregion
+
         private SingletonLifecycle lifecycle;
         private StubDisposable disposable1;
         private StubDisposable disposable2;
@@ -94,21 +112,11 @@ namespace StructureMap.Testing.Pipeline
             }
         }
 
-        [SetUp]
-        public void SetUp()
+        [Test]
+        public void should_have_called_dispose_if_it_was_there()
         {
-            lifecycle = new SingletonLifecycle();
-
-            disposable1 = new StubDisposable();
-            disposable2 = new StubDisposable();
-
-
-            lifecycle.FindCache().Set(typeof(IGateway), new StubInstance("a"), disposable1);
-            lifecycle.FindCache().Set(typeof(IGateway), new StubInstance("b"), disposable2);
-            lifecycle.FindCache().Set(typeof(IGateway), new StubInstance("c"), new object());
-
-
-            lifecycle.EjectAll();
+            disposable1.DisposedWasCalled.ShouldBeTrue();
+            disposable2.DisposedWasCalled.ShouldBeTrue();
         }
 
         [Test]
@@ -116,14 +124,6 @@ namespace StructureMap.Testing.Pipeline
         {
             lifecycle.FindCache().Count.ShouldEqual(0);
         }
-
-        [Test]
-        public void should_have_called_dispose_if_it_was_there()
-        {
-            disposable1.DisposedWasCalled.ShouldBeTrue();
-            disposable2.DisposedWasCalled.ShouldBeTrue();
-        }
-        
     }
 
     public class StubDisposable : IDisposable
@@ -135,6 +135,4 @@ namespace StructureMap.Testing.Pipeline
             DisposedWasCalled = true;
         }
     }
-
-
 }

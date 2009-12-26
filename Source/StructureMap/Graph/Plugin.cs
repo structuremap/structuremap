@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using StructureMap.Pipeline;
@@ -23,14 +22,15 @@ namespace StructureMap.Graph
 
         #region constructors
 
-        public Plugin(Type pluggedType, string concreteKey) : this(pluggedType)
+        public Plugin(Type pluggedType, string concreteKey)
+            : this(pluggedType)
         {
             _concreteKey = concreteKey;
         }
 
         public Plugin(Type pluggedType)
         {
-            PluggableAttribute att = 
+            var att =
                 Attribute.GetCustomAttribute(pluggedType, typeof (PluggableAttribute), false) as PluggableAttribute;
             _concreteKey = att == null ? pluggedType.AssemblyQualifiedName : att.ConcreteKey;
 
@@ -44,33 +44,20 @@ namespace StructureMap.Graph
         /// <summary>
         /// The ConcreteKey that identifies the Plugin within a PluginFamily
         /// </summary>
-        public string ConcreteKey
-        {
-            get { return _concreteKey; }
-            set { _concreteKey = value; }
-        }
+        public string ConcreteKey { get { return _concreteKey; } set { _concreteKey = value; } }
 
 
         /// <summary>
         /// The concrete CLR Type represented by the Plugin
         /// </summary>
-        public Type PluggedType
-        {
-            get { return _pluggedType; }
-        }
+        public Type PluggedType { get { return _pluggedType; } }
 
         /// <summary>
         /// Property's that will be filled by setter injection
         /// </summary>
-        public SetterPropertyCollection Setters
-        {
-            get { return _setters; }
-        }
+        public SetterPropertyCollection Setters { get { return _setters; } }
 
-        public bool CanBeAutoFilled
-        {
-            get { return _constructor.CanBeAutoFilled() && _setters.CanBeAutoFilled(); }
-        }
+        public bool CanBeAutoFilled { get { return _constructor.CanBeAutoFilled() && _setters.CanBeAutoFilled(); } }
 
         public override string ToString()
         {
@@ -176,7 +163,5 @@ namespace StructureMap.Graph
         {
             return _constructor.FindArgumentType(argumentName) ?? _setters.FindArgumentType(argumentName);
         }
-
-        
     }
 }

@@ -21,10 +21,7 @@ namespace StructureMap.Testing.Graph
             }
         }
 
-        public bool IsValid
-        {
-            get { return _isValid; }
-        }
+        public bool IsValid { get { return _isValid; } }
 
         [ValidationMethod]
         public void Validate()

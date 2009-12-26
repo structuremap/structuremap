@@ -15,17 +15,9 @@ namespace StructureMap.Pipeline
         private string _defaultMachineProfileName;
         private string _defaultProfileName;
 
-        public string DefaultMachineProfileName
-        {
-            get { return _defaultMachineProfileName; }
-            set { _defaultMachineProfileName = value; }
-        }
+        public string DefaultMachineProfileName { get { return _defaultMachineProfileName; } set { _defaultMachineProfileName = value; } }
 
-        public string DefaultProfileName
-        {
-            get { return _defaultProfileName; }
-            set { _defaultProfileName = value; }
-        }
+        public string DefaultProfileName { get { return _defaultProfileName; } set { _defaultProfileName = value; } }
 
         public string CurrentProfile
         {
@@ -43,6 +35,18 @@ namespace StructureMap.Pipeline
                     Profile profile = getProfile(value);
                     setProfile(profile);
                 }
+            }
+        }
+
+        public void Dispose()
+        {
+            _currentProfile.Clear();
+            _machineProfile.Clear();
+            _default.Clear();
+
+            foreach (var profile in _profiles)
+            {
+                profile.Value.Clear();
             }
         }
 
@@ -226,7 +230,7 @@ namespace StructureMap.Pipeline
 
         public ProfileManager Clone()
         {
-            var clone = new ProfileManager()
+            var clone = new ProfileManager
             {
                 DefaultMachineProfileName = DefaultMachineProfileName,
                 DefaultProfileName = DefaultProfileName
@@ -243,18 +247,6 @@ namespace StructureMap.Pipeline
             foreach (var pair in _profiles)
             {
                 pair.Value.Remove<T>();
-            }
-        }
-
-        public void Dispose()
-        {
-            _currentProfile.Clear();
-            _machineProfile.Clear();
-            _default.Clear();
-
-            foreach (var profile in _profiles)
-            {
-                profile.Value.Clear();
             }
         }
     }

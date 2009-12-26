@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using NUnit.Framework;
@@ -64,11 +63,7 @@ namespace StructureMap.Testing.Graph
             }
 
             [SetterProperty]
-            public IWidget[] More
-            {
-                get { return null; }
-                set { }
-            }
+            public IWidget[] More { get { return null; } set { } }
         }
 
         public class GTO
@@ -191,7 +186,8 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void CanNotPluginWithoutAttribute()
         {
-            Assert.IsFalse(typeof (NotPluggable).IsExplicitlyMarkedAsPlugin(_iwidget), "NotPluggableWidget cannot plug into IWidget automatically");
+            Assert.IsFalse(typeof (NotPluggable).IsExplicitlyMarkedAsPlugin(_iwidget),
+                           "NotPluggableWidget cannot plug into IWidget automatically");
         }
 
         [Test]
@@ -240,6 +236,20 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
+        public void find_argument_type_if_it_is_a_setter()
+        {
+            var plugin = new Plugin(typeof (GTO));
+            plugin.FindArgumentType("Engine").ShouldEqual(typeof (IEngine));
+        }
+
+        [Test]
+        public void find_argument_type_if_it_is_constructor()
+        {
+            var plugin = new Plugin(typeof (GrandPrix));
+            plugin.FindArgumentType("engine").ShouldEqual(typeof (IEngine));
+        }
+
+        [Test]
         public void FindFirstConstructorArgumentOfType()
         {
             var plugin = new Plugin(typeof (GrandPrix));
@@ -247,20 +257,6 @@ namespace StructureMap.Testing.Graph
 
             string actual = plugin.FindArgumentNameForType<IEngine>();
             Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
-        public void find_argument_type_if_it_is_constructor()
-        {
-            var plugin = new Plugin(typeof(GrandPrix));
-            plugin.FindArgumentType("engine").ShouldEqual(typeof (IEngine));
-        }
-
-        [Test]
-        public void find_argument_type_if_it_is_a_setter()
-        {
-            var plugin = new Plugin(typeof(GTO));
-            plugin.FindArgumentType("Engine").ShouldEqual(typeof (IEngine));
         }
 
         [Test]
@@ -327,10 +323,10 @@ namespace StructureMap.Testing.Graph
         public void SetFilledTypes_1()
         {
             PluginCache.ResetAll();
-            PluginCache.AddFilledType(typeof(IEngine));
-            PluginCache.AddFilledType(typeof(IAutomobile));
+            PluginCache.AddFilledType(typeof (IEngine));
+            PluginCache.AddFilledType(typeof (IAutomobile));
 
-            var plugin = PluginCache.GetPlugin(typeof (ClassWithProperties));
+            Plugin plugin = PluginCache.GetPlugin(typeof (ClassWithProperties));
 
             plugin.Setters.IsMandatory("Engine").ShouldBeTrue();
             plugin.Setters.IsMandatory("Car").ShouldBeTrue();
@@ -342,10 +338,10 @@ namespace StructureMap.Testing.Graph
         public void SetFilledTypes_2()
         {
             PluginCache.ResetAll();
-            PluginCache.AddFilledType(typeof(IGateway));
-            PluginCache.AddFilledType(typeof(IAutomobile));
+            PluginCache.AddFilledType(typeof (IGateway));
+            PluginCache.AddFilledType(typeof (IAutomobile));
 
-            var plugin = PluginCache.GetPlugin(typeof(ClassWithProperties));
+            Plugin plugin = PluginCache.GetPlugin(typeof (ClassWithProperties));
 
             plugin.Setters.IsMandatory("Engine").ShouldBeFalse();
             plugin.Setters.IsMandatory("Car").ShouldBeTrue();
@@ -357,9 +353,9 @@ namespace StructureMap.Testing.Graph
         public void SetFilledTypes_3()
         {
             PluginCache.ResetAll();
-            PluginCache.AddFilledType(typeof(IGateway));
+            PluginCache.AddFilledType(typeof (IGateway));
 
-            var plugin = PluginCache.GetPlugin(typeof(ClassWithProperties));
+            Plugin plugin = PluginCache.GetPlugin(typeof (ClassWithProperties));
 
             plugin.Setters.IsMandatory("Engine").ShouldBeFalse();
             plugin.Setters.IsMandatory("Car").ShouldBeFalse();
@@ -477,10 +473,7 @@ namespace StructureMap.Testing.Graph
             _engine = engine;
         }
 
-        public IEngine Engine
-        {
-            get { return _engine; }
-        }
+        public IEngine Engine { get { return _engine; } }
     }
 
     [Pluggable("NoConstructor")]

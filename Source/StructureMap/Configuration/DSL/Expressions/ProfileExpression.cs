@@ -3,8 +3,6 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.Configuration.DSL.Expressions
 {
-
-
     /// <summary>
     /// Expression class to help define a runtime Profile
     /// </summary>
@@ -39,13 +37,9 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <returns></returns>
         public IsExpression<T> Type<T>()
         {
-            return new InstanceExpression<T>(instance =>
-            {
-                _registry.addExpression(graph =>
-                {
-                    graph.SetDefault(_profileName, typeof(T), instance);
-                });
-            });
+            return
+                new InstanceExpression<T>(
+                    instance => { _registry.addExpression(graph => { graph.SetDefault(_profileName, typeof (T), instance); }); });
         }
 
         /// <summary>
@@ -116,7 +110,6 @@ namespace StructureMap.Configuration.DSL.Expressions
         #endregion
 
         #region Nested type: InstanceDefaultExpression
-
 
         /// <summary>
         /// Expression Builder within defining a Profile
@@ -194,7 +187,6 @@ namespace StructureMap.Configuration.DSL.Expressions
                 var instance = new ConfiguredInstance(typeof (CONCRETETYPE));
                 return Use(instance);
             }
-
         }
 
         #endregion

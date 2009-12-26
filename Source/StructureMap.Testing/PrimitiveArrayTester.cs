@@ -19,8 +19,6 @@ namespace StructureMap.Testing
             var objectWithArrays = container.GetInstance<ClassWithStringAndIntArray>();
             objectWithArrays.Numbers.ShouldEqual(new[] {1, 2, 3});
             objectWithArrays.Strings.ShouldEqual(new[] {"a", "b", "c"});
-        }    
+        }
     }
-
-
 }

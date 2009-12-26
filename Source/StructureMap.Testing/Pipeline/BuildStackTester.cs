@@ -44,19 +44,25 @@ namespace StructureMap.Testing.Pipeline
         }
     }
 
-    [TestFixture] public class when_using_build_frame_contains
+    [TestFixture]
+    public class when_using_build_frame_contains
     {
-        [SetUp] public void SetUp()
-        {
+        #region Setup/Teardown
 
+        [SetUp]
+        public void SetUp()
+        {
         }
 
-        [Test] public void true_if_matching()
+        #endregion
+
+        [Test]
+        public void true_if_matching()
         {
             var frame1 = new BuildFrame(typeof (IWidget), "red", typeof (ColorWidget));
             var frame2 = new BuildFrame(typeof (IWidget), "red", typeof (ColorWidget));
             var frame3 = new BuildFrame(typeof (IWidget), "green", typeof (ColorWidget));
-        
+
             frame1.Contains(frame2).ShouldBeTrue();
             frame1.Contains(frame3).ShouldBeFalse();
 

@@ -22,10 +22,7 @@ namespace StructureMap.Testing.Widget3
         {
         }
 
-        public string WhoAmI
-        {
-            get { return "Default"; }
-        }
+        public string WhoAmI { get { return "Default"; } }
 
         #endregion
     }
@@ -46,10 +43,7 @@ namespace StructureMap.Testing.Widget3
             throw new NotImplementedException();
         }
 
-        public string WhoAmI
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public string WhoAmI { get { throw new NotImplementedException(); } }
 
         #endregion
     }
@@ -64,10 +58,7 @@ namespace StructureMap.Testing.Widget3
         {
         }
 
-        public string WhoAmI
-        {
-            get { return "Stubbed"; }
-        }
+        public string WhoAmI { get { return "Stubbed"; } }
 
         #endregion
     }

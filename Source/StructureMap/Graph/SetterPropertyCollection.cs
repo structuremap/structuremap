@@ -1,8 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Linq;
+using System.Reflection;
 
 namespace StructureMap.Graph
 {
@@ -29,15 +29,9 @@ namespace StructureMap.Graph
                 });
         }
 
-        public int MandatoryCount
-        {
-            get { return _properties.FindAll(p => p.IsMandatory).Count; }
-        }
+        public int MandatoryCount { get { return _properties.FindAll(p => p.IsMandatory).Count; } }
 
-        public int OptionalCount
-        {
-            get { return _properties.FindAll(p => !p.IsMandatory).Count; }
-        }
+        public int OptionalCount { get { return _properties.FindAll(p => !p.IsMandatory).Count; } }
 
         #region IEnumerable<SetterProperty> Members
 

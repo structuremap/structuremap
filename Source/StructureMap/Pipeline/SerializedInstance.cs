@@ -16,10 +16,7 @@ namespace StructureMap.Pipeline
             formatter.Serialize(_stream, template);
         }
 
-        protected override SerializedInstance thisInstance
-        {
-            get { return this; }
-        }
+        protected override SerializedInstance thisInstance { get { return this; } }
 
         protected override string getDescription()
         {

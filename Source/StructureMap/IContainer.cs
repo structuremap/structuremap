@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using StructureMap.Graph;
 using StructureMap.Pipeline;
 
 namespace StructureMap
@@ -134,7 +133,7 @@ namespace StructureMap
         /// <param name="pluginType"></param>
         /// <param name="object"></param>
         void Inject(Type pluginType, object @object);
-        
+
         /// <summary>
         /// Injects the given object into a Container by name for the designated
         /// pluginType.  Mostly used for temporarily setting up return values of the Container
@@ -162,9 +161,6 @@ namespace StructureMap
         /// instance and afterward calls any methods marked with the [ValidationMethod] attribute
         /// </summary>
         void AssertConfigurationIsValid();
-        
-
-
 
 
         /// <summary>
@@ -270,7 +266,6 @@ namespace StructureMap
         CloseGenericTypeExpression ForObject(object subject);
 
 
-
         /// <summary>
         /// Starts a "Nested" Container for atomic, isolated access
         /// </summary>
@@ -284,7 +279,4 @@ namespace StructureMap
         /// <returns></returns>
         IContainer GetNestedContainer(string profileName);
     }
-
-
-
 }

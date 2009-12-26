@@ -29,12 +29,18 @@ namespace StructureMap.Graph
     {
         private readonly Cache<Type, List<Type>> _implementations = new Cache<Type, List<Type>>(t => new List<Type>());
 
+        public void Dispose()
+        {
+            //throw new NotImplementedException();
+            //_implementations.Clear();
+        }
+
         public void Process(Type type, PluginGraph graph)
         {
             if (!type.IsConcrete() || !Constructor.HasConstructors(type)) return;
-            var pluginTypes = FindPluginTypes(type);
+            IEnumerable<Type> pluginTypes = FindPluginTypes(type);
 
-            foreach (var pluginType in pluginTypes)
+            foreach (Type pluginType in pluginTypes)
             {
                 _implementations[pluginType].Add(type);
             }
@@ -52,12 +58,6 @@ namespace StructureMap.Graph
             return new TypeMap[0];
             throw new NotImplementedException();
             //return _implementations.Contents().Select(pair => new TypeMap(pair.Key, pair.Value));
-        }
-
-        public void Dispose()
-        {
-            //throw new NotImplementedException();
-            //_implementations.Clear();
         }
     }
 }

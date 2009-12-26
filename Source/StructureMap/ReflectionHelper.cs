@@ -87,7 +87,7 @@ namespace StructureMap
                 case ExpressionType.ArrayLength:
                 case ExpressionType.Quote:
                 case ExpressionType.TypeAs:
-                    return VisitUnary((UnaryExpression)exp);
+                    return VisitUnary((UnaryExpression) exp);
                 case ExpressionType.Add:
                 case ExpressionType.AddChecked:
                 case ExpressionType.Subtract:
@@ -111,32 +111,32 @@ namespace StructureMap
                 case ExpressionType.RightShift:
                 case ExpressionType.LeftShift:
                 case ExpressionType.ExclusiveOr:
-                    return VisitBinary((BinaryExpression)exp);
+                    return VisitBinary((BinaryExpression) exp);
                 case ExpressionType.TypeIs:
-                    return VisitTypeIs((TypeBinaryExpression)exp);
+                    return VisitTypeIs((TypeBinaryExpression) exp);
                 case ExpressionType.Conditional:
-                    return VisitConditional((ConditionalExpression)exp);
+                    return VisitConditional((ConditionalExpression) exp);
                 case ExpressionType.Constant:
-                    return VisitConstant((ConstantExpression)exp);
+                    return VisitConstant((ConstantExpression) exp);
                 case ExpressionType.Parameter:
-                    return VisitParameter((ParameterExpression)exp);
+                    return VisitParameter((ParameterExpression) exp);
                 case ExpressionType.MemberAccess:
-                    return VisitMemberAccess((MemberExpression)exp);
+                    return VisitMemberAccess((MemberExpression) exp);
                 case ExpressionType.Call:
-                    return VisitMethodCall((MethodCallExpression)exp);
+                    return VisitMethodCall((MethodCallExpression) exp);
                 case ExpressionType.Lambda:
-                    return VisitLambda((LambdaExpression)exp);
+                    return VisitLambda((LambdaExpression) exp);
                 case ExpressionType.New:
-                    return VisitNew((NewExpression)exp);
+                    return VisitNew((NewExpression) exp);
                 case ExpressionType.NewArrayInit:
                 case ExpressionType.NewArrayBounds:
-                    return VisitNewArray((NewArrayExpression)exp);
+                    return VisitNewArray((NewArrayExpression) exp);
                 case ExpressionType.Invoke:
-                    return VisitInvocation((InvocationExpression)exp);
+                    return VisitInvocation((InvocationExpression) exp);
                 case ExpressionType.MemberInit:
-                    return VisitMemberInit((MemberInitExpression)exp);
+                    return VisitMemberInit((MemberInitExpression) exp);
                 case ExpressionType.ListInit:
-                    return VisitListInit((ListInitExpression)exp);
+                    return VisitListInit((ListInitExpression) exp);
                 default:
                     throw new NotSupportedException(String.Format("Unhandled expression type: '{0}'", exp.NodeType));
             }
@@ -147,11 +147,11 @@ namespace StructureMap
             switch (binding.BindingType)
             {
                 case MemberBindingType.Assignment:
-                    return VisitMemberAssignment((MemberAssignment)binding);
+                    return VisitMemberAssignment((MemberAssignment) binding);
                 case MemberBindingType.MemberBinding:
-                    return VisitMemberMemberBinding((MemberMemberBinding)binding);
+                    return VisitMemberMemberBinding((MemberMemberBinding) binding);
                 case MemberBindingType.ListBinding:
-                    return VisitMemberListBinding((MemberListBinding)binding);
+                    return VisitMemberListBinding((MemberListBinding) binding);
                 default:
                     throw new NotSupportedException(string.Format("Unhandled binding type '{0}'", binding.BindingType));
             }
@@ -453,15 +453,12 @@ namespace StructureMap
     {
         private ConstructorInfo _constructor;
 
+        public ConstructorInfo Constructor { get { return _constructor; } }
+
         protected override NewExpression VisitNew(NewExpression nex)
         {
             _constructor = nex.Constructor;
             return base.VisitNew(nex);
-        }
-
-        public ConstructorInfo Constructor
-        {
-            get { return _constructor; }
         }
     }
 }

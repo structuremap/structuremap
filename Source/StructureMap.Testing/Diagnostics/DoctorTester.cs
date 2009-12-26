@@ -5,7 +5,6 @@ using System.Reflection;
 using System.Xml;
 using NUnit.Framework;
 using StructureMap.Diagnostics;
-using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 
@@ -17,7 +16,10 @@ namespace StructureMap.Testing.Diagnostics
         private DoctorReport fetchReport<T>(string config) where T : IBootstrapper
         {
             var doctor = new Doctor
-                             {BinaryPath = Path.GetFullPath("."), BootstrapperType = typeof (T).AssemblyQualifiedName};
+            {
+                BinaryPath = Path.GetFullPath("."),
+                BootstrapperType = typeof (T).AssemblyQualifiedName
+            };
 
             if (!string.IsNullOrEmpty(config))
             {
@@ -70,7 +72,10 @@ namespace StructureMap.Testing.Diagnostics
         [Test]
         public void Cannot_find_bootstrapper_type()
         {
-            var doctor = new Doctor {BootstrapperType = "SomethingThatCouldNotBeFound"};
+            var doctor = new Doctor
+            {
+                BootstrapperType = "SomethingThatCouldNotBeFound"
+            };
             doctor.RunReport().Result.ShouldEqual(DoctorResult.BootstrapperCouldNotBeFound);
         }
 
@@ -242,7 +247,7 @@ namespace StructureMap.Testing.Diagnostics
             ObjectFactory.Initialize(x =>
             {
                 x.IgnoreStructureMapConfig = true;
-                
+
                 x.ForRequestedType<IWidget>().TheDefault.Is
                     .OfConcreteType<DoctorTester.NumberWidget>()
                     .WithCtorArg("age").EqualToAppSetting("age");

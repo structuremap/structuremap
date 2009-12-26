@@ -17,6 +17,16 @@ namespace StructureMap
         Type ParentType { get; }
 
         /// <summary>
+        /// Gets the root "frame" of the object request
+        /// </summary>
+        BuildFrame Root { get; }
+
+        /// <summary>
+        /// The requested instance name of the object graph
+        /// </summary>
+        string RequestedName { get; }
+
+        /// <summary>
         /// Get the object of type T that is valid for this build session.
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -29,16 +39,6 @@ namespace StructureMap
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         T GetInstance<T>(string name);
-
-        /// <summary>
-        /// Gets the root "frame" of the object request
-        /// </summary>
-        BuildFrame Root { get; }
-
-        /// <summary>
-        /// The requested instance name of the object graph
-        /// </summary>
-        string RequestedName { get; }
 
         /// <summary>
         /// Register a default object for the given PluginType that will

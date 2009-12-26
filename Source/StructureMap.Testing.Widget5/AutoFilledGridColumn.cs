@@ -13,10 +13,7 @@ namespace StructureMap.Testing.Widget5
             _widget = widget;
         }
 
-        public IWidget Widget
-        {
-            get { return _widget; }
-        }
+        public IWidget Widget { get { return _widget; } }
 
         [SetterProperty]
         public Rule Rule { get; set; }

@@ -1,7 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using NUnit.Framework;
 
 namespace StructureMap.Testing.Examples
@@ -25,7 +21,6 @@ namespace StructureMap.Testing.Examples
             {
                 x.ForConcreteType<ClassThatHasConnection>().Configure
                     .WithProperty(o => o.ConnectionString).EqualTo("connect1");
-
             });
 
             var @class = new ClassThatHasConnection();

@@ -1,5 +1,4 @@
 using System;
-using StructureMap.Graph;
 using StructureMap.TypeRules;
 
 namespace StructureMap.Interceptors

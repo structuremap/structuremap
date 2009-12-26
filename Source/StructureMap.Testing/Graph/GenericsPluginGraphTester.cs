@@ -61,7 +61,7 @@ namespace StructureMap.Testing.Graph
             family.AddPlugin(typeof (SecondGenericService<>), "Second");
             family.AddPlugin(typeof (ThirdGenericService<>), "Third");
 
-            PluginFamily templatedFamily1 = family.CreateTemplatedClone(new[]{typeof (int)});
+            PluginFamily templatedFamily1 = family.CreateTemplatedClone(new[] {typeof (int)});
             PluginFamily templatedFamily = templatedFamily1;
 
             Assert.IsNotNull(templatedFamily);

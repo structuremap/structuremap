@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Xml;
@@ -16,7 +16,7 @@ namespace TableOfContentsBuilder
             FileExtensions.Directory = @"file:///c:\code\structuremap\source\Html";
             var reader = new MenuReader();
 
-            var filename = Path.Combine(@"c:\code\structuremap\source\Html", "ToC-Bullet-List.xml");
+            string filename = Path.Combine(@"c:\code\structuremap\source\Html", "ToC-Bullet-List.xml");
             reader.Write().Save(filename);
 
             Process.Start(filename);
@@ -25,8 +25,6 @@ namespace TableOfContentsBuilder
 
     public class MenuReader
     {
-        
-
         public XmlDocument Write()
         {
             IE.Settings.MakeNewIeInstanceVisible = false;
@@ -36,7 +34,8 @@ namespace TableOfContentsBuilder
 
             foreach (Link link in browser.Links)
             {
-                if (link.Url.StartsWith("file:///") && !link.Url.Contains("TableOfContents.htm") && link.Url.EndsWith("htm"))
+                if (link.Url.StartsWith("file:///") && !link.Url.Contains("TableOfContents.htm") &&
+                    link.Url.EndsWith("htm"))
                 {
                     processFile(link, writer);
                 }
@@ -56,14 +55,14 @@ namespace TableOfContentsBuilder
 
             Debug.WriteLine(title + " = " + path);
 
-            
+
             var browser = new IE(path, false);
             foreach (Element header in browser.Elements)
             {
                 if (header.TagName == "H2")
                 {
                     processHeader(header, writer, path);
-                }   
+                }
 
                 if (header.TagName == "H4")
                 {
@@ -95,28 +94,22 @@ namespace TableOfContentsBuilder
     public class XmlWriter
     {
         private readonly XmlDocument _doc = new XmlDocument();
-        private XmlElement _root;
-        private XmlElement _pageContainer;
+        private readonly XmlElement _root;
         private XmlElement _currentSection;
-        private int _section = 0;
+        private XmlElement _pageContainer;
+        private int _section;
 
         public XmlWriter()
         {
             _root = _doc.WithRoot("div").AddElement("ul");
         }
 
-        public XmlDocument XmlDocument
-        {
-            get { return _doc; }
-        }
+        public XmlDocument XmlDocument { get { return _doc; } }
 
         public void WritePage(string title, string path)
         {
             _section = 0;
-            _pageContainer = _root.AddElement("li", x =>
-            {
-                x.WriteLink(title, path);
-            }).AddElement("ul");
+            _pageContainer = _root.AddElement("li", x => { x.WriteLink(title, path); }).AddElement("ul");
         }
 
 
@@ -158,6 +151,4 @@ namespace TableOfContentsBuilder
             element.AddElement("a").WithAtt("href", url.Url()).WithInnerText(title);
         }
     }
-
- 
 }

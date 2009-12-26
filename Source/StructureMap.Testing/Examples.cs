@@ -7,7 +7,6 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using StructureMap.Attributes;
 using StructureMap.Configuration.DSL;
-using StructureMap.Testing.Configuration.DSL;
 using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.DocumentationExamples
@@ -24,10 +23,7 @@ namespace StructureMap.Testing.DocumentationExamples
         // StructureMap to use this property when
         // constructing a Repository instance
         [SetterProperty]
-        public IDataProvider Provider
-        {
-            set { _provider = value; }
-        }
+        public IDataProvider Provider { set { _provider = value; } }
 
         [SetterProperty]
         public bool ShouldCache { get; set; }
@@ -49,7 +45,7 @@ namespace StructureMap.Testing.DocumentationExamples
 
         public void ShipIt()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 
@@ -57,7 +53,7 @@ namespace StructureMap.Testing.DocumentationExamples
     {
         public void ShipIt()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 
@@ -172,9 +168,8 @@ namespace StructureMap.Testing.DocumentationExamples
                 // Add the assembly that contains a certain type
                 x.AssemblyContainingType<IService>();
                 // or
-                x.AssemblyContainingType(typeof(IService));
+                x.AssemblyContainingType(typeof (IService));
             });
-
 
 
             Scan(x =>
@@ -332,15 +327,9 @@ namespace StructureMap.Testing.DocumentationExamples
 
     public class ApplicationShell : Form, IApplicationShell
     {
-        public IQueryToolBar QueryToolBar
-        {
-            get { return null; }
-        }
+        public IQueryToolBar QueryToolBar { get { return null; } }
 
-        public IExplorerPane ExplorerPane
-        {
-            get { return null; }
-        }
+        public IExplorerPane ExplorerPane { get { return null; } }
     }
 
 
@@ -411,11 +400,12 @@ namespace StructureMap.Testing.DocumentationExamples
         [STAThread]
         public static void Main(params string[] args)
         {
-            
         }
     }
 
-    public class RemoteService : IService{}
+    public class RemoteService : IService
+    {
+    }
 
     public class InstanceExampleRegistry : Registry
     {
@@ -423,10 +413,10 @@ namespace StructureMap.Testing.DocumentationExamples
         {
             // Shortcut for just specifying "use this type -- with auto wiring"
             ForRequestedType<IService>().TheDefaultIsConcreteType<RemoteService>();
-            
+
             // Set the default Instance of a PluginType
             ForRequestedType<IService>().TheDefault.Is.OfConcreteType<RemoteService>();
-            
+
             // Add an additional Instance of a PluginType
             InstanceOf<IService>().Is.OfConcreteType<RemoteService>();
 
@@ -442,16 +432,15 @@ namespace StructureMap.Testing.DocumentationExamples
 
             // Use the InstanceExpression to define the default Instance
             // of a PluginType within a Profile
-            CreateProfile("Connected", x =>
-            {
-                x.Type<IService>().Is.OfConcreteType<RemoteService>();
-            });
+            CreateProfile("Connected", x => { x.Type<IService>().Is.OfConcreteType<RemoteService>(); });
         }
     }
 
     [TestFixture]
     public class MockingExample
     {
+        #region Setup/Teardown
+
         [SetUp]
         public void SetUp()
         {
@@ -472,12 +461,14 @@ namespace StructureMap.Testing.DocumentationExamples
             ObjectFactory.ResetDefaults();
         }
 
+        #endregion
+
         [Test]
         public void unit_test_that_uses_a_mock()
         {
             // Create a mock object with Rhino Mocks
             var serviceMock = MockRepository.GenerateMock<IService>();
-        
+
             ObjectFactory.Inject(serviceMock);
 
             // or

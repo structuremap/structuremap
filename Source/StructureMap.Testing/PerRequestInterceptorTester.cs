@@ -1,18 +1,15 @@
 using NUnit.Framework;
-using StructureMap.Pipeline;
 
 namespace StructureMap.Testing
 {
     [TestFixture]
     public class PerRequestInterceptorTester
     {
-
-
         //Think of this as a data session
         public class Session
         {
             private static int count = 1;
-            private int _number = count++;
+            private readonly int _number = count++;
 
             public override string ToString()
             {
@@ -76,7 +73,6 @@ namespace StructureMap.Testing
             var shell = ObjectFactory.GetInstance<Shell>();
 
             shell.Model1.Session.ShouldNotBeTheSameAs(shell.Model2.Session);
-
         }
     }
 }

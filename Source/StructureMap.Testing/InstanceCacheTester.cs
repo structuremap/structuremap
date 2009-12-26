@@ -16,15 +16,15 @@ namespace StructureMap.Testing
             var target4 = MockRepository.GenerateMock<ITypeTarget>();
 
             var cache = new InstanceCache();
-            cache.Set(typeof(int), new SmartInstance<int>(), target1);
-            cache.Set(typeof(int), new SmartInstance<int>(), new object());
-            cache.Set(typeof(int), new SmartInstance<int>(), new object());
-            cache.Set(typeof(bool), new SmartInstance<int>(), target2);
-            cache.Set(typeof(bool), new SmartInstance<int>(), new object());
-            cache.Set(typeof(string), new SmartInstance<int>(), target3);
-            cache.Set(typeof(string), new SmartInstance<int>(), new object());
-            cache.Set(typeof(string), new SmartInstance<int>(), new object());
-            cache.Set(typeof(string), new SmartInstance<int>(), target4);
+            cache.Set(typeof (int), new SmartInstance<int>(), target1);
+            cache.Set(typeof (int), new SmartInstance<int>(), new object());
+            cache.Set(typeof (int), new SmartInstance<int>(), new object());
+            cache.Set(typeof (bool), new SmartInstance<int>(), target2);
+            cache.Set(typeof (bool), new SmartInstance<int>(), new object());
+            cache.Set(typeof (string), new SmartInstance<int>(), target3);
+            cache.Set(typeof (string), new SmartInstance<int>(), new object());
+            cache.Set(typeof (string), new SmartInstance<int>(), new object());
+            cache.Set(typeof (string), new SmartInstance<int>(), target4);
 
             cache.Each<ITypeTarget>(x => x.Go());
 

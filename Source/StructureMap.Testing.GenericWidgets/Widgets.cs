@@ -44,10 +44,7 @@ namespace StructureMap.Testing.GenericWidgets
         }
 
 
-        public IPlug<T> Plug
-        {
-            get { return _plug; }
-        }
+        public IPlug<T> Plug { get { return _plug; } }
     }
 
     [PluginFamily("Default")]
@@ -61,10 +58,7 @@ namespace StructureMap.Testing.GenericWidgets
     {
         #region IPlug<T> Members
 
-        public Type PlugType
-        {
-            get { return typeof (T); }
-        }
+        public Type PlugType { get { return typeof (T); } }
 
         #endregion
     }
@@ -97,10 +91,7 @@ namespace StructureMap.Testing.GenericWidgets
             _color = color;
         }
 
-        public string Color
-        {
-            get { return _color; }
-        }
+        public string Color { get { return _color; } }
     }
 
     public class ComplexThing<T, U> : IThing<T, U>
@@ -116,20 +107,11 @@ namespace StructureMap.Testing.GenericWidgets
             _ready = ready;
         }
 
-        public string Name
-        {
-            get { return _name; }
-        }
+        public string Name { get { return _name; } }
 
-        public int Age
-        {
-            get { return _age; }
-        }
+        public int Age { get { return _age; } }
 
-        public bool Ready
-        {
-            get { return _ready; }
-        }
+        public bool Ready { get { return _ready; } }
     }
 
     [PluginFamily("Default", Scope = InstanceScope.Singleton)]
@@ -137,10 +119,7 @@ namespace StructureMap.Testing.GenericWidgets
     {
         private readonly Guid _id = Guid.NewGuid();
 
-        public Guid Id
-        {
-            get { return _id; }
-        }
+        public Guid Id { get { return _id; } }
 
         public Type GetT()
         {

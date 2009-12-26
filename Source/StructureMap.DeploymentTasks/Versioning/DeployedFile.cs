@@ -17,17 +17,9 @@ namespace StructureMap.DeploymentTasks.Versioning
             _fileName = fileName.ToUpper();
         }
 
-        public string FileName
-        {
-            get { return _fileName; }
-            set { _fileName = value.ToUpper(); }
-        }
+        public string FileName { get { return _fileName; } set { _fileName = value.ToUpper(); } }
 
-        public byte[] ContentsHash
-        {
-            get { return _contentsHash; }
-            set { _contentsHash = value; }
-        }
+        public byte[] ContentsHash { get { return _contentsHash; } set { _contentsHash = value; } }
 
         public static DeployedFile CreateFile(FileInfo fileInfo)
         {

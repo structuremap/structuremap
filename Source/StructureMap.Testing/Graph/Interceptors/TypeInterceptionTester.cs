@@ -75,15 +75,13 @@ namespace StructureMap.Testing.Graph.Interceptors
             }
 
 
-            public IAnInterfaceOfSomeSort Inner
-            {
-                get { return _inner; }
-            }
+            public IAnInterfaceOfSomeSort Inner { get { return _inner; } }
         }
 
         public class WrappedSomething2 : WrappedSomething
         {
-            public WrappedSomething2(IAnInterfaceOfSomeSort inner) : base(inner)
+            public WrappedSomething2(IAnInterfaceOfSomeSort inner)
+                : base(inner)
             {
             }
         }

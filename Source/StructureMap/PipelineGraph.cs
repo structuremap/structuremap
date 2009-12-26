@@ -4,7 +4,6 @@ using System.Linq;
 using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
-using StructureMap.TypeRules;
 
 namespace StructureMap
 {
@@ -49,40 +48,11 @@ namespace StructureMap
             _log = log;
         }
 
-        public PipelineGraph Clone()
-        {
-            var clone = new PipelineGraph(_profileManager.Clone(), _genericsGraph.Clone(), _log)
-            {
-                _missingFactory = _missingFactory
-            };
+        public GraphLog Log { get { return _log; } }
 
-            
+        public MissingFactoryFunction OnMissingFactory { set { _missingFactory = value; } }
 
-            foreach (var pair in _factories)
-            {
-                clone._factories.Add(pair.Key, pair.Value.Clone());
-            }
-
-            clone.EjectAllInstancesOf<IContainer>();
-
-            return clone;
-        }
-
-        public GraphLog Log
-        {
-            get { return _log; }
-        }
-
-        public MissingFactoryFunction OnMissingFactory
-        {
-            set { _missingFactory = value; }
-        }
-
-        public string CurrentProfile
-        {
-            get { return _profileManager.CurrentProfile; }
-            set { _profileManager.CurrentProfile = value; }
-        }
+        public string CurrentProfile { get { return _profileManager.CurrentProfile; } set { _profileManager.CurrentProfile = value; } }
 
         public IEnumerable<PluginTypeConfiguration> PluginTypes
         {
@@ -93,20 +63,61 @@ namespace StructureMap
                     yield return configuration;
                 }
 
-                IInstanceFactory[] factories = new IInstanceFactory[_factories.Count];
+                var factories = new IInstanceFactory[_factories.Count];
                 _factories.Values.CopyTo(factories, 0);
 
-                foreach (var factory in factories)
+                foreach (IInstanceFactory factory in factories)
                 {
                     yield return new PluginTypeConfiguration
-                                     {
-                                         Default = _profileManager.GetDefault(factory.PluginType),
-                                         PluginType = factory.PluginType,
-                                         Lifecycle = factory.Lifecycle,
-                                         Instances = factory.AllInstances
-                                     };
+                    {
+                        Default = _profileManager.GetDefault(factory.PluginType),
+                        PluginType = factory.PluginType,
+                        Lifecycle = factory.Lifecycle,
+                        Instances = factory.AllInstances
+                    };
                 }
             }
+        }
+
+        public void Dispose()
+        {
+            if (_factories.ContainsKey(typeof (IContainer)))
+            {
+                foreach (Instance instance in _factories[typeof (IContainer)].AllInstances)
+                {
+                    var disposable = instance as IDisposable;
+                    if (disposable != null)
+                    {
+                        disposable.Dispose();
+                    }
+                }
+            }
+
+            foreach (var factory in _factories)
+            {
+                factory.Value.Dispose();
+            }
+            _factories.Clear();
+            _profileManager.Dispose();
+            _genericsGraph.ClearAll();
+        }
+
+        public PipelineGraph Clone()
+        {
+            var clone = new PipelineGraph(_profileManager.Clone(), _genericsGraph.Clone(), _log)
+            {
+                _missingFactory = _missingFactory
+            };
+
+
+            foreach (var pair in _factories)
+            {
+                clone._factories.Add(pair.Key, pair.Value.Clone());
+            }
+
+            clone.EjectAllInstancesOf<IContainer>();
+
+            return clone;
         }
 
         public void ImportFrom(PluginGraph graph)
@@ -230,41 +241,18 @@ namespace StructureMap
 
         public bool HasDefaultForPluginType(Type pluginType)
         {
-            var factory = ForType(pluginType);
+            IInstanceFactory factory = ForType(pluginType);
             if (_profileManager.GetDefault(pluginType) != null)
             {
                 return true;
             }
-            
+
             return (factory.AllInstances.Count() == 1);
         }
 
         public bool HasInstance(Type pluginType, string instanceKey)
         {
             return ForType(pluginType).FindInstance(instanceKey) != null;
-        }
-
-        public void Dispose()
-        {
-            if (_factories.ContainsKey(typeof(IContainer)))
-            {
-                foreach (var instance in _factories[typeof(IContainer)].AllInstances)
-                {
-                    IDisposable disposable = instance as IDisposable;
-                    if (disposable != null)
-                    {
-                        disposable.Dispose();
-                    }
-                }
-            }
-
-            foreach (var factory in _factories)
-            {
-                factory.Value.Dispose();
-            }
-            _factories.Clear();
-            _profileManager.Dispose();
-            _genericsGraph.ClearAll();
         }
     }
 }

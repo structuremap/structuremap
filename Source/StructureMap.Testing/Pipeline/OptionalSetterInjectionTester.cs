@@ -2,14 +2,11 @@ using System;
 using System.Diagnostics;
 using NUnit.Framework;
 using StructureMap.Graph;
-using StructureMap.Pipeline;
 using StructureMap.Testing.TestData;
 using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing.Pipeline
 {
-
-
     [TestFixture]
     public class OptionalSetterInjectionTester
     {
@@ -52,10 +49,13 @@ namespace StructureMap.Testing.Pipeline
                     .ConstructedBy(context => new Logger(context.ParentType));
             });
 
-            container.GetInstance<ClassWithLogger>().Logger.ShouldBeOfType<Logger>().Type.ShouldEqual(typeof (ClassWithLogger));
-            container.GetInstance<ClassWithLogger2>().Logger.ShouldBeOfType<Logger>().Type.ShouldEqual(typeof(ClassWithLogger2));
+            container.GetInstance<ClassWithLogger>().Logger.ShouldBeOfType<Logger>().Type.ShouldEqual(
+                typeof (ClassWithLogger));
+            container.GetInstance<ClassWithLogger2>().Logger.ShouldBeOfType<Logger>().Type.ShouldEqual(
+                typeof (ClassWithLogger2));
 
-            container.GetInstance<ClassWithClassWithLogger>().ClassWithLogger.Logger.ShouldBeOfType<Logger>().Type.ShouldEqual(
+            container.GetInstance<ClassWithClassWithLogger>().ClassWithLogger.Logger.ShouldBeOfType<Logger>().Type.
+                ShouldEqual(
                 typeof (ClassWithLogger));
         }
 
@@ -65,10 +65,7 @@ namespace StructureMap.Testing.Pipeline
             var container = new Container(x =>
             {
                 x.ForRequestedType<ClassWithDependency>().TheDefault.Is.OfConcreteType<ClassWithDependency>()
-                    .TheArrayOf<Rule>().Contains(arr =>
-                    {
-                        arr.IsThis(new ColorRule("Red"));
-                    });
+                    .TheArrayOf<Rule>().Contains(arr => { arr.IsThis(new ColorRule("Red")); });
             });
 
             container.GetInstance<ClassWithDependency>().Rules.Length.ShouldEqual(1);
@@ -250,10 +247,7 @@ namespace StructureMap.Testing.Pipeline
             _classWithLogger = classWithLogger;
         }
 
-        public ClassWithLogger ClassWithLogger
-        {
-            get { return _classWithLogger; }
-        }
+        public ClassWithLogger ClassWithLogger { get { return _classWithLogger; } }
     }
 
     public interface ILogger
@@ -270,14 +264,10 @@ namespace StructureMap.Testing.Pipeline
             _type = type;
         }
 
-        public Type Type
-        {
-            get { return _type; }
-        }
+        public Type Type { get { return _type; } }
 
         public void LogMessage(string message)
         {
-            
         }
     }
 

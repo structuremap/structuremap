@@ -15,16 +15,39 @@ namespace StructureMap
         IList<T> As<T>();
     }
 
-    public class CloseGenericTypeExpression : OpenGenericTypeSpecificationExpression, OpenGenericTypeListSpecificationExpression
+    public class CloseGenericTypeExpression : OpenGenericTypeSpecificationExpression,
+                                              OpenGenericTypeListSpecificationExpression
     {
-        private readonly object _subject;
         private readonly IContainer _container;
+        private readonly object _subject;
         private Type _pluginType;
 
         public CloseGenericTypeExpression(object subject, IContainer container)
         {
             _subject = subject;
             _container = container;
+        }
+
+        IList<T> OpenGenericTypeListSpecificationExpression.As<T>()
+        {
+            IList list = _container.With(_subject.GetType(), _subject).GetAllInstances(_pluginType);
+            var returnValue = new List<T>();
+            foreach (object o in list)
+            {
+                returnValue.Add((T) o);
+            }
+
+            return returnValue;
+        }
+
+        /// <summary>
+        /// specify what type you'd like the service returned as
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        T OpenGenericTypeSpecificationExpression.As<T>()
+        {
+            return (T) _container.With(_subject.GetType(), _subject).GetInstance(_pluginType);
         }
 
         /// <summary>
@@ -48,32 +71,10 @@ namespace StructureMap
             _pluginType = type.MakeGenericType(_subject.GetType());
         }
 
-        /// <summary>
-        /// specify what type you'd like the service returned as
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        T OpenGenericTypeSpecificationExpression.As<T>()
-        {
-            return (T) _container.With(_subject.GetType(), _subject).GetInstance(_pluginType);
-        }
-
         public OpenGenericTypeListSpecificationExpression GetAllClosedTypesOf(Type type)
         {
             closeType(type);
             return this;
-        }
-
-        IList<T> OpenGenericTypeListSpecificationExpression.As<T>()
-        {
-            IList list = _container.With(_subject.GetType(), _subject).GetAllInstances(_pluginType);
-            var returnValue = new List<T>();
-            foreach (var o in list)
-            {
-                returnValue.Add((T) o);
-            }
-
-            return returnValue;
         }
     }
 }

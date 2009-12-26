@@ -1,4 +1,6 @@
-﻿namespace StructureMap.DebuggerVisualizers.Testing
+using System;
+
+namespace StructureMap.DebuggerVisualizers.Testing
 {
     public interface IDoThis
     {
@@ -24,7 +26,6 @@
     {
         public void Do()
         {
-            
         }
     }
 
@@ -32,15 +33,13 @@
     {
         public void DoIt()
         {
-            
         }
     }
 
-    public class DoMore<T> :IDoMore<T>
+    public class DoMore<T> : IDoMore<T>
     {
         public void DoDo(T thing)
         {
-            
         }
     }
 
@@ -48,16 +47,14 @@
     {
         public SECOND DoIt(FIRST input)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 
-    public class DoForStrings :IDoMore<string>
+    public class DoForStrings : IDoMore<string>
     {
         public void DoDo(string thing)
         {
-            
-
         }
     }
 }

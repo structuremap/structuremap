@@ -33,6 +33,5 @@ namespace StructureMap.Testing.Graph
             d2.Rules[1].ShouldBeOfType<ColorRule>().Color.ShouldEqual("Blue");
             d2.Rules[2].ShouldBeOfType<ColorRule>().Color.ShouldEqual("Purple");
         }
-
     }
 }

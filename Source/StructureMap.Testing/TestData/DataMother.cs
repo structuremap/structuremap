@@ -19,7 +19,7 @@ namespace StructureMap.Testing.TestData
 
         public static Container BuildContainerForXml(string xml)
         {
-            var graph = BuildPluginGraphFromXml(xml);
+            PluginGraph graph = BuildPluginGraphFromXml(xml);
             return new Container(graph);
         }
 

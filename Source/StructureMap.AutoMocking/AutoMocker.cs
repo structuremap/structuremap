@@ -3,8 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using StructureMap.Graph;
-using System.Linq;
-using StructureMap.Pipeline;
 
 namespace StructureMap.AutoMocking
 {
@@ -96,8 +94,8 @@ namespace StructureMap.AutoMocking
     /// <typeparam name="TARGETCLASS"></typeparam>
     public class AutoMocker<TARGETCLASS> : IAutoMocker<TARGETCLASS> where TARGETCLASS : class
     {
-        protected AutoMockedContainer _container;
         private TARGETCLASS _classUnderTest;
+        protected AutoMockedContainer _container;
         protected ServiceLocator _serviceLocator;
 
         /// <summary>
@@ -119,10 +117,7 @@ namespace StructureMap.AutoMocking
         /// <summary>
         /// Accesses the underlying AutoMockedContainer
         /// </summary>
-        public AutoMockedContainer Container
-        {
-            get { return _container; }
-        }
+        public AutoMockedContainer Container { get { return _container; } }
 
         /// <summary>
         /// Use this with EXTREME caution.  This will replace the active "Container" in accessed
@@ -142,32 +137,6 @@ namespace StructureMap.AutoMocking
             _classUnderTest = _serviceLocator.PartialMock<TARGETCLASS>(getConstructorArgs());
         }
 
-        private object[] getConstructorArgs()
-        {
-            ConstructorInfo ctor = Constructor.GetGreediestConstructor(typeof (TARGETCLASS));
-            var list = new List<object>();
-            foreach (ParameterInfo parameterInfo in ctor.GetParameters())
-            {
-                Type dependencyType = parameterInfo.ParameterType;
-
-                if (dependencyType.IsArray)
-                {
-                    IList values = _container.GetAllInstances(dependencyType.GetElementType());
-                    Array array = Array.CreateInstance(dependencyType.GetElementType(), values.Count);
-                    values.CopyTo(array, 0);
-
-                    list.Add(array);
-                }
-                else
-                {
-                    object dependency = _container.GetInstance(dependencyType);
-                    list.Add(dependency);
-                }
-            }
-
-            return list.ToArray();
-        }
-
         /// <summary>
         /// Gets the mock object for type T that would be injected into the constructor function
         /// of the ClassUnderTest
@@ -176,9 +145,9 @@ namespace StructureMap.AutoMocking
         /// <returns></returns>
         public T Get<T>() where T : class
         {
-            if (!_container.Model.HasDefaultImplementationFor(typeof(T)))
+            if (!_container.Model.HasDefaultImplementationFor(typeof (T)))
             {
-                _container.Inject<T>(_serviceLocator.Service<T>());
+                _container.Inject(_serviceLocator.Service<T>());
             }
 
             return _container.GetInstance<T>();
@@ -266,9 +235,35 @@ namespace StructureMap.AutoMocking
             {
                 foreach (T t in stubs)
                 {
-                    x.For(typeof(T)).Add(t);
+                    x.For(typeof (T)).Add(t);
                 }
             });
+        }
+
+        private object[] getConstructorArgs()
+        {
+            ConstructorInfo ctor = Constructor.GetGreediestConstructor(typeof (TARGETCLASS));
+            var list = new List<object>();
+            foreach (ParameterInfo parameterInfo in ctor.GetParameters())
+            {
+                Type dependencyType = parameterInfo.ParameterType;
+
+                if (dependencyType.IsArray)
+                {
+                    IList values = _container.GetAllInstances(dependencyType.GetElementType());
+                    Array array = Array.CreateInstance(dependencyType.GetElementType(), values.Count);
+                    values.CopyTo(array, 0);
+
+                    list.Add(array);
+                }
+                else
+                {
+                    object dependency = _container.GetInstance(dependencyType);
+                    list.Add(dependency);
+                }
+            }
+
+            return list.ToArray();
         }
     }
 }

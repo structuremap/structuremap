@@ -1,16 +1,14 @@
 using System;
-using System.Diagnostics;
 using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 
 namespace StructureMap.Pipeline
 {
-
     public interface IInstance
     {
         string Name { get; }
-        
+
         /// <summary>
         /// The actual concrete type of this Instance.  Not every type of IInstance
         /// can determine the ConcreteType
@@ -44,27 +42,16 @@ namespace StructureMap.Pipeline
             _originalName = _name;
         }
 
-        protected virtual bool doesRecordOnTheStack
-        {
-            get { return true; }
-        }
+        protected virtual bool doesRecordOnTheStack { get { return true; } }
 
-        public InstanceInterceptor Interceptor
-        {
-            get { return _interceptor; }
-            set { _interceptor = value; }
-        }
+        public InstanceInterceptor Interceptor { get { return _interceptor; } set { _interceptor = value; } }
 
         internal bool IsReference { get; set; }
         internal bool CopyAsIsWhenClosingInstance { get; set; }
 
         #region IDiagnosticInstance Members
 
-        public string Name
-        {
-            get { return _name; }
-            set { _name = value; }
-        }
+        public string Name { get { return _name; } set { _name = value; } }
 
         bool IDiagnosticInstance.CanBePartOfPluginFamily(PluginFamily family)
         {
@@ -92,15 +79,9 @@ namespace StructureMap.Pipeline
             addTemplatedInstanceTo(family, templateTypes);
         }
 
-        Type IInstance.ConcreteType
-        {
-            get { return getConcreteType(null); }
-        }
+        Type IInstance.ConcreteType { get { return getConcreteType(null); } }
 
-        string IInstance.Description
-        {
-            get { return getDescription(); }
-        }
+        string IInstance.Description { get { return getDescription(); } }
 
         #endregion
 
@@ -110,7 +91,7 @@ namespace StructureMap.Pipeline
 
             // "Build" the desired object
             object rawValue = createRawObject(pluginType, session);
-            
+
             // Allow the Interceptor a chance to enhance, configure,  
             // wrap with a decorator, or even replace the rawValue
             object finalValue = applyInterception(rawValue, pluginType, session);

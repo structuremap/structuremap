@@ -26,7 +26,7 @@ namespace StructureMap
         /// <returns></returns>
         public static bool MarkedAsPluggable(Type objectType)
         {
-            PluggableAttribute att = GetCustomAttribute(objectType, typeof (PluggableAttribute), false) as PluggableAttribute;
+            var att = GetCustomAttribute(objectType, typeof (PluggableAttribute), false) as PluggableAttribute;
             return (att != null);
         }
     }

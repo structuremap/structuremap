@@ -1,6 +1,5 @@
 using System;
 using StructureMap.Graph;
-using StructureMap.TypeRules;
 
 namespace StructureMap.Pipeline
 {
@@ -11,29 +10,32 @@ namespace StructureMap.Pipeline
     /// </summary>
     public partial class ConfiguredInstance : ConstructorInstance
     {
-        public ConfiguredInstance(InstanceMemento memento, PluginGraph graph, Type pluginType) : base(memento.FindPlugin(graph.FindFamily(pluginType)))
+        public ConfiguredInstance(InstanceMemento memento, PluginGraph graph, Type pluginType)
+            : base(memento.FindPlugin(graph.FindFamily(pluginType)))
         {
             read(memento, graph, pluginType);
+        }
+
+        public ConfiguredInstance(Type pluggedType, string name)
+            : base(pluggedType, name)
+        {
+        }
+
+
+        public ConfiguredInstance(Type pluggedType)
+            : base(pluggedType)
+        {
+        }
+
+        public ConfiguredInstance(Type templateType, params Type[] types)
+            : base(templateType.MakeGenericType(types))
+        {
         }
 
         private void read(InstanceMemento memento, PluginGraph graph, Type pluginType)
         {
             var reader = new InstanceMementoPropertyReader(this, memento, graph, pluginType);
             plugin.VisitArguments(reader);
-        }
-
-        public ConfiguredInstance(Type pluggedType, string name) : base(pluggedType, name)
-        {
-        }
-
-
-        public ConfiguredInstance(Type pluggedType) : base(pluggedType)
-        {
-
-        }
-
-        public ConfiguredInstance(Type templateType, params Type[] types) : base(templateType.MakeGenericType(types))
-        {
         }
     }
 }

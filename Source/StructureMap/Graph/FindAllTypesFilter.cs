@@ -15,18 +15,18 @@ namespace StructureMap.Graph
 
         #region ITypeScanner Members
 
-        public void NameBy(Func<Type, string> getName)
-        {
-            _getName = getName;
-        }
-
         public void Process(Type type, PluginGraph graph)
         {
             if (type.CanBeCastTo(_pluginType) && Constructor.HasConstructors(type))
             {
-                var name = _getName(type);
+                string name = _getName(type);
                 graph.AddType(_pluginType, type, name);
             }
+        }
+
+        public void NameBy(Func<Type, string> getName)
+        {
+            _getName = getName;
         }
 
         #endregion

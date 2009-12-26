@@ -17,10 +17,7 @@ namespace StructureMap.Testing.Widget
             _Color = color;
         }
 
-        public string Color
-        {
-            get { return _Color; }
-        }
+        public string Color { get { return _Color; } }
 
         #region ICloneable Members
 
@@ -85,10 +82,7 @@ namespace StructureMap.Testing.Widget
         }
 
 
-        public string Name
-        {
-            get { return _name; }
-        }
+        public string Name { get { return _name; } }
 
         #region IWidget Members
 

@@ -15,15 +15,12 @@ namespace StructureMap.Graph
     /// </summary>
     public class PluginFamily : IPluginFamily
     {
-        private readonly Cache<string, Instance> _instances = new Cache<string, Instance>(delegate
-        {
-            return null;
-        });
+        private readonly Cache<string, Instance> _instances = new Cache<string, Instance>(delegate { return null; });
         private readonly List<InstanceMemento> _mementoList = new List<InstanceMemento>();
         private readonly Cache<string, Plugin> _pluggedTypes = new Cache<string, Plugin>();
         private readonly Type _pluginType;
-        private ILifecycle _lifecycle = null;
         private string _defaultKey = string.Empty;
+        private ILifecycle _lifecycle;
         private PluginGraph _parent;
 
         public PluginFamily(Type pluginType)
@@ -48,21 +45,7 @@ namespace StructureMap.Graph
             //}
         }
 
-        public void SetScopeTo(ILifecycle lifecycle)
-        {
-            _lifecycle = lifecycle;
-        }
-
-        public ILifecycle Lifecycle
-        {
-            get { return _lifecycle; }
-        }
-
-        public PluginGraph Parent
-        {
-            get { return _parent; }
-            set { _parent = value; }
-        }
+        public PluginGraph Parent { get { return _parent; } set { _parent = value; } }
 
         #region IPluginFamily Members
 
@@ -76,8 +59,14 @@ namespace StructureMap.Graph
             _lifecycle = Lifecycles.GetLifecycle(scope);
         }
 
-
         #endregion
+
+        public void SetScopeTo(ILifecycle lifecycle)
+        {
+            _lifecycle = lifecycle;
+        }
+
+        public ILifecycle Lifecycle { get { return _lifecycle; } }
 
         public void AddInstance(InstanceMemento memento)
         {
@@ -150,7 +139,7 @@ namespace StructureMap.Graph
                 if (!plugin.CanBeAutoFilled) return;
 
                 if (hasInstanceWithPluggedType(plugin)) return;
-                
+
                 ConfiguredInstance instance = new ConfiguredInstance(plugin.PluggedType).WithName(key);
                 FillInstance(instance);
             });
@@ -291,7 +280,7 @@ namespace StructureMap.Graph
 
             _instances.GetAll().Select(x =>
             {
-                var clone = x.CloseType(templateTypes);
+                Instance clone = x.CloseType(templateTypes);
                 if (clone == null) return null;
 
                 clone.Name = x.Name;
@@ -327,62 +316,41 @@ namespace StructureMap.Graph
         public PluginTypeConfiguration GetConfiguration()
         {
             return new PluginTypeConfiguration
-                       {
-                           Default = GetDefaultInstance(),
-                           PluginType = PluginType,
-                           Lifecycle = _lifecycle,
-                           Instances = Instances
-                       };
+            {
+                Default = GetDefaultInstance(),
+                PluginType = PluginType,
+                Lifecycle = _lifecycle,
+                Instances = Instances
+            };
         }
-
-        #region properties
-
-        public bool IsGenericTemplate
-        {
-            get { return _pluginType.IsGenericTypeDefinition || _pluginType.ContainsGenericParameters; }
-        }
-
-        
-
-        public int PluginCount
-        {
-            get { return _pluggedTypes.Count; }
-        }
-
-        public int InstanceCount
-        {
-            get { return _instances.Count; }
-        }
-
-        public IEnumerable<IInstance> Instances
-        {
-            get { return _instances.GetAll(); }
-        }
-
-        /// <summary>
-        /// The CLR Type that defines the "Plugin" interface for the PluginFamily
-        /// </summary>
-        public Type PluginType
-        {
-            get { return _pluginType; }
-        }
-
-        /// <summary>
-        /// The InstanceKey of the default instance of the PluginFamily
-        /// </summary>
-        public string DefaultInstanceKey
-        {
-            get { return _defaultKey; }
-            set { _defaultKey = value ?? string.Empty; }
-        }
-
-        public Instance MissingInstance { get; set; }
-
-        #endregion
 
         public void ForInstance(string name, Action<Instance> action)
         {
             _instances.WithValue(name, action);
         }
+
+        #region properties
+
+        public bool IsGenericTemplate { get { return _pluginType.IsGenericTypeDefinition || _pluginType.ContainsGenericParameters; } }
+
+
+        public int PluginCount { get { return _pluggedTypes.Count; } }
+
+        public int InstanceCount { get { return _instances.Count; } }
+
+        public IEnumerable<IInstance> Instances { get { return _instances.GetAll(); } }
+        public Instance MissingInstance { get; set; }
+
+        /// <summary>
+        /// The CLR Type that defines the "Plugin" interface for the PluginFamily
+        /// </summary>
+        public Type PluginType { get { return _pluginType; } }
+
+        /// <summary>
+        /// The InstanceKey of the default instance of the PluginFamily
+        /// </summary>
+        public string DefaultInstanceKey { get { return _defaultKey; } set { _defaultKey = value ?? string.Empty; } }
+
+        #endregion
     }
 }

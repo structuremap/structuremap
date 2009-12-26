@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using NUnit.Framework;
 using StructureMap.Attributes;
@@ -15,10 +15,7 @@ namespace StructureMap.Testing.Bugs
 
         #region IGateway Members
 
-        public string WhoAmI
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public string WhoAmI { get { throw new NotImplementedException(); } }
 
         public void DoSomething()
         {
@@ -53,7 +50,8 @@ namespace StructureMap.Testing.Bugs
     {
         private readonly ICrm _crm;
 
-        public CrmService() : this(ObjectFactory.GetInstance<ICrm>())
+        public CrmService()
+            : this(ObjectFactory.GetInstance<ICrm>())
         {
         }
 
@@ -87,7 +85,6 @@ namespace StructureMap.Testing.Bugs
     }
 
 
-
     public interface ICrm
     {
         void Message(string arg);
@@ -96,19 +93,14 @@ namespace StructureMap.Testing.Bugs
 
     public class Crm : ICrm
     {
-    public Crm()
-    {
-        Trace.WriteLine("Initialising CRM");
+        public Crm()
+        {
+            Trace.WriteLine("Initialising CRM");
+        }
+
+        public void Message(string message)
+        {
+            Trace.WriteLine(message);
+        }
     }
-
-    public void Message(string message)
-    {
-        Trace.WriteLine(message);
-    }
-}
-
-
-
-
-
 }

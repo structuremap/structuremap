@@ -32,11 +32,7 @@ namespace StructureMap.DeploymentTasks.Versioning
             _publicKey = assembly.GetName().GetPublicKey();
         }
 
-        public byte[] PublicKey
-        {
-            get { return _publicKey; }
-            set { _publicKey = value; }
-        }
+        public byte[] PublicKey { get { return _publicKey; } set { _publicKey = value; } }
 
         public string AssemblyName { get; set; }
 

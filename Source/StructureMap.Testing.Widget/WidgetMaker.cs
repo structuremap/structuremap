@@ -9,17 +9,14 @@ namespace StructureMap.Testing.Widget
     [Pluggable("Color")]
     public class ColorWidgetMaker : WidgetMaker
     {
-        private string _Color;
+        private readonly string _Color;
 
         public ColorWidgetMaker(string color)
         {
             _Color = color;
         }
 
-        public string Color
-        {
-            get { return _Color; }
-        }
+        public string Color { get { return _Color; } }
 
         public override IWidget MakeWidget()
         {
@@ -30,14 +27,7 @@ namespace StructureMap.Testing.Widget
     [Pluggable("Money")]
     public class MoneyWidgetMaker : WidgetMaker
     {
-        private double _Amount;
-
-
-        public double Amount
-        {
-            get { return _Amount; }
-            set { _Amount = value; }
-        }
+        public double Amount { get; set; }
 
         public override IWidget MakeWidget()
         {

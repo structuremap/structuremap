@@ -12,7 +12,7 @@ namespace StructureMap.Graph
     {
         public TypePath(string assemblyName, string className)
         {
-            AssemblyQualifiedName = className + "," + assemblyName;    
+            AssemblyQualifiedName = className + "," + assemblyName;
         }
 
         public TypePath(Type type)

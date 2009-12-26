@@ -8,15 +8,13 @@ using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing.Pipeline
 {
-    [TestFixture] public class ObjectBuilderTester
+    [TestFixture]
+    public class ObjectBuilderTester
     {
-        private PluginGraph graph;
-        private PipelineGraph pipeline;
-        private InterceptorLibrary library;
-        private IObjectCache theDefaultCache;
-        private ObjectBuilder builder;
+        #region Setup/Teardown
 
-        [SetUp] public void SetUp()
+        [SetUp]
+        public void SetUp()
         {
             graph = new PluginGraph();
             pipeline = new PipelineGraph(graph);
@@ -27,19 +25,13 @@ namespace StructureMap.Testing.Pipeline
             builder = new ObjectBuilder(pipeline, library, theDefaultCache);
         }
 
-        [Test] public void should_apply_interception()
-        {
-            object comingAcross = null;
+        #endregion
 
-            var container = new Container(x =>
-            {
-                x.ForRequestedType<Rule>().OnCreation((c, r) => comingAcross = r)
-                    .TheDefault.Is.ConstructedBy(() => new ColorRule("red"));
-            });
-
-            container.GetInstance<Rule>().ShouldBeTheSameAs(comingAcross);
-            
-        }
+        private PluginGraph graph;
+        private PipelineGraph pipeline;
+        private InterceptorLibrary library;
+        private IObjectCache theDefaultCache;
+        private ObjectBuilder builder;
 
 
         [Test]
@@ -49,11 +41,8 @@ namespace StructureMap.Testing.Pipeline
             {
                 var container = new Container(x =>
                 {
-                    x.ForRequestedType<Rule>().OnCreation((c, r) =>
-                    {
-                        throw new NotImplementedException();
-                    })
-                    .TheDefault.Is.ConstructedBy(() => new ColorRule("red"));
+                    x.ForRequestedType<Rule>().OnCreation((c, r) => { throw new NotImplementedException(); })
+                        .TheDefault.Is.ConstructedBy(() => new ColorRule("red"));
                 });
 
                 container.GetInstance<Rule>();
@@ -65,7 +54,19 @@ namespace StructureMap.Testing.Pipeline
                 Assert.AreEqual(308, e.ErrorCode);
             }
         }
+
+        [Test]
+        public void should_apply_interception()
+        {
+            object comingAcross = null;
+
+            var container = new Container(x =>
+            {
+                x.ForRequestedType<Rule>().OnCreation((c, r) => comingAcross = r)
+                    .TheDefault.Is.ConstructedBy(() => new ColorRule("red"));
+            });
+
+            container.GetInstance<Rule>().ShouldBeTheSameAs(comingAcross);
+        }
     }
-
-
 }

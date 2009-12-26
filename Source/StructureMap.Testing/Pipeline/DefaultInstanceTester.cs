@@ -26,6 +26,18 @@ namespace StructureMap.Testing.Pipeline
         {
         }
 
+        public class ClassWithWidgets
+        {
+            private readonly List<IWidget> _widgets;
+
+            public ClassWithWidgets(List<IWidget> widgets)
+            {
+                _widgets = widgets;
+            }
+
+            public List<IWidget> Widgets { get { return _widgets; } }
+        }
+
         [Test]
         public void Build_happy_path()
         {
@@ -72,18 +84,6 @@ namespace StructureMap.Testing.Pipeline
             });
 
             container.GetInstance<ClassWithWidgets>().Widgets.ShouldHaveTheSameElementsAs(widget1, widget2, widget3);
-        }
-
-        public class ClassWithWidgets
-        {
-            private readonly List<IWidget> _widgets;
-
-            public ClassWithWidgets(List<IWidget> widgets)
-            {
-                _widgets = widgets;
-            }
-
-            public List<IWidget> Widgets { get { return _widgets; } }
         }
     }
 }

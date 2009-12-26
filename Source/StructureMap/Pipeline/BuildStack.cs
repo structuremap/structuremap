@@ -1,5 +1,3 @@
-using System;
-
 namespace StructureMap.Pipeline
 {
     /// <summary>
@@ -18,26 +16,17 @@ namespace StructureMap.Pipeline
         /// <summary>
         /// The top level of the object graph.  Describes the original requested instance
         /// </summary>
-        public BuildFrame Root
-        {
-            get { return _root; }
-        }
+        public BuildFrame Root { get { return _root; } }
 
         /// <summary>
         /// The current BuildFrame
         /// </summary>
-        public BuildFrame Current
-        {
-            get { return _current; }
-        }
+        public BuildFrame Current { get { return _current; } }
 
         /// <summary>
         /// The immediate parent BuildFrame
         /// </summary>
-        public BuildFrame Parent
-        {
-            get { return _current.Parent; }
-        }
+        public BuildFrame Parent { get { return _current.Parent; } }
 
         internal void Push(BuildFrame frame)
         {
@@ -49,8 +38,6 @@ namespace StructureMap.Pipeline
             {
                 if (_root.Contains(frame))
                 {
-
-
                     throw new StructureMapException(295, frame.ToString(), _root.ToStackString());
                 }
 

@@ -20,10 +20,7 @@ namespace StructureMap
         /// The named type of the object instance represented by the InstanceMemento.  Translates to a concrete
         /// type
         /// </summary>
-        public string ConcreteKey
-        {
-            get { return innerConcreteKey; }
-        }
+        public string ConcreteKey { get { return innerConcreteKey; } }
 
 
         protected abstract string innerConcreteKey { get; }
@@ -77,10 +74,7 @@ namespace StructureMap
         /// <summary>
         /// Is the InstanceMemento a reference to the default instance of the plugin type?
         /// </summary>
-        public bool IsDefault
-        {
-            get { return (IsReference && ReferenceKey == string.Empty); }
-        }
+        public bool IsDefault { get { return (IsReference && ReferenceKey == string.Empty); } }
 
         public virtual Plugin FindPlugin(PluginFamily family)
         {

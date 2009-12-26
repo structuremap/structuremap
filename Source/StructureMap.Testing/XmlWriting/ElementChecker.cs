@@ -43,11 +43,7 @@ namespace StructureMap.Testing.XmlWriting
             }
         }
 
-        public string this[string attName]
-        {
-            get { return _attributes[attName]; }
-            set { _attributes[attName] = value; }
-        }
+        public string this[string attName] { get { return _attributes[attName]; } set { _attributes[attName] = value; } }
 
         public void AddChildNode(ElementChecker checker)
         {

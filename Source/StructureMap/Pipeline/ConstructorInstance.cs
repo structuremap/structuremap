@@ -1,35 +1,28 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using StructureMap.Construction;
 using StructureMap.Graph;
 using StructureMap.TypeRules;
 using StructureMap.Util;
-using System.Linq;
 
 namespace StructureMap.Pipeline
 {
-    
-
     public class ConstructorInstance : Instance, IConfiguredInstance, IStructuredInstance
     {
         private readonly Cache<string, Instance> _dependencies = new Cache<string, Instance>();
         private readonly Plugin _plugin;
 
-        public ConstructorInstance(Type pluggedType) : this(PluginCache.GetPlugin(pluggedType))
+        public ConstructorInstance(Type pluggedType)
+            : this(PluginCache.GetPlugin(pluggedType))
         {
-
-        }
-
-        protected override bool canBePartOfPluginFamily(PluginFamily family)
-        {
-            return _plugin.PluggedType.CanBeCastTo(family.PluginType);
         }
 
         public ConstructorInstance(Plugin plugin)
         {
             _plugin = plugin;
-        
+
             _dependencies.OnMissing = key =>
             {
                 if (_plugin.FindArgumentType(key).IsSimple())
@@ -41,37 +34,13 @@ namespace StructureMap.Pipeline
             };
         }
 
-        public ConstructorInstance Override(ExplicitArguments arguments)
-        {
-            var instance = new ConstructorInstance(_plugin);
-            _dependencies.Each((key, i) => instance.SetChild(key, i));
-
-            arguments.Configure(instance);
-
-            return instance;
-        }
-
-        public ConstructorInstance(Type pluggedType, string name) : this(pluggedType)
+        public ConstructorInstance(Type pluggedType, string name)
+            : this(pluggedType)
         {
             Name = name;
         }
 
-        protected override void addTemplatedInstanceTo(PluginFamily family, Type[] templateTypes)
-        {
-            throw new NotImplementedException();   
-        }
-
         protected Plugin plugin { get { return _plugin; } }
-
-        protected sealed override string getDescription()
-        {
-            return "Configured Instance of " + _plugin.PluggedType.AssemblyQualifiedName;
-        }
-
-        protected sealed override Type getConcreteType(Type pluginType)
-        {
-            return _plugin.PluggedType;
-        }
 
         void IConfiguredInstance.SetChild(string name, Instance instance)
         {
@@ -80,7 +49,7 @@ namespace StructureMap.Pipeline
 
         public void SetValue(Type type, object value)
         {
-            var name = _plugin.FindArgumentNameForType(type);
+            string name = _plugin.FindArgumentNameForType(type);
             SetValue(name, value);
         }
 
@@ -99,6 +68,72 @@ namespace StructureMap.Pipeline
             return _dependencies[propertyName].As<ObjectInstance>().Object.ToString();
         }
 
+        public object Get(string propertyName, Type pluginType, BuildSession session)
+        {
+            return _dependencies[propertyName].Build(pluginType, session);
+        }
+
+        public T Get<T>(string propertyName, BuildSession session)
+        {
+            object o = Get(propertyName, typeof (T), session);
+            if (o == null) return default(T);
+
+            return (T) o;
+        }
+
+        public Type PluggedType { get { return _plugin.PluggedType; } }
+
+        public bool HasProperty(string propertyName, BuildSession session)
+        {
+            // TODO -- richer behavior
+            return _dependencies.Has(propertyName);
+        }
+
+        Instance IStructuredInstance.GetChild(string name)
+        {
+            return _dependencies[name];
+        }
+
+        Instance[] IStructuredInstance.GetChildArray(string name)
+        {
+            return _dependencies[name].As<EnumerableInstance>().Children.ToArray();
+        }
+
+        void IStructuredInstance.RemoveKey(string name)
+        {
+            _dependencies.Remove(name);
+        }
+
+        protected override bool canBePartOfPluginFamily(PluginFamily family)
+        {
+            return _plugin.PluggedType.CanBeCastTo(family.PluginType);
+        }
+
+        public ConstructorInstance Override(ExplicitArguments arguments)
+        {
+            var instance = new ConstructorInstance(_plugin);
+            _dependencies.Each((key, i) => instance.SetChild(key, i));
+
+            arguments.Configure(instance);
+
+            return instance;
+        }
+
+        protected override void addTemplatedInstanceTo(PluginFamily family, Type[] templateTypes)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override sealed string getDescription()
+        {
+            return "Configured Instance of " + _plugin.PluggedType.AssemblyQualifiedName;
+        }
+
+        protected override sealed Type getConcreteType(Type pluginType)
+        {
+            return _plugin.PluggedType;
+        }
+
         internal void SetChild(string name, Instance instance)
         {
             if (instance == null)
@@ -113,13 +148,13 @@ namespace StructureMap.Pipeline
         {
             Type dependencyType = getDependencyType(name);
 
-            var instance = buildInstanceForType(dependencyType, value);
+            Instance instance = buildInstanceForType(dependencyType, value);
             SetChild(name, instance);
         }
 
         private Type getDependencyType(string name)
         {
-            var dependencyType = _plugin.FindArgumentType(name);
+            Type dependencyType = _plugin.FindArgumentType(name);
             if (dependencyType == null)
             {
                 throw new ArgumentOutOfRangeException("name",
@@ -138,7 +173,7 @@ namespace StructureMap.Pipeline
 
         protected string findPropertyName<PLUGINTYPE>()
         {
-            Type dependencyType = typeof(PLUGINTYPE);
+            Type dependencyType = typeof (PLUGINTYPE);
 
             return findPropertyName(dependencyType);
         }
@@ -160,14 +195,15 @@ namespace StructureMap.Pipeline
             if (value == null) return new NullInstance();
 
 
-            if (dependencyType.IsSimple() || dependencyType.IsNullable() || dependencyType == typeof(Guid) || dependencyType == typeof(DateTime))
+            if (dependencyType.IsSimple() || dependencyType.IsNullable() || dependencyType == typeof (Guid) ||
+                dependencyType == typeof (DateTime))
             {
                 try
                 {
                     if (value.GetType() == dependencyType) return new ObjectInstance(value);
 
-                    var converter = TypeDescriptor.GetConverter(dependencyType);
-                    var convertedValue = converter.ConvertFrom(value);
+                    TypeConverter converter = TypeDescriptor.GetConverter(dependencyType);
+                    object convertedValue = converter.ConvertFrom(value);
                     return new ObjectInstance(convertedValue);
                 }
                 catch (Exception e)
@@ -180,34 +216,10 @@ namespace StructureMap.Pipeline
             return new ObjectInstance(value);
         }
 
-        public object Get(string propertyName, Type pluginType, BuildSession session)
-        {
-            return _dependencies[propertyName].Build(pluginType, session);
-        }
-
-        public T Get<T>(string propertyName, BuildSession session)
-        {
-            object o = Get(propertyName, typeof (T), session);
-            if (o == null) return default(T);
-
-            return (T)o;
-        }
-
         protected override object build(Type pluginType, BuildSession session)
         {
             IInstanceBuilder builder = PluginCache.FindBuilder(_plugin.PluggedType);
-            return Build(pluginType, session, builder); 
-        }
-
-        public Type PluggedType
-        {
-            get { return _plugin.PluggedType; }
-        }
-
-        public bool HasProperty(string propertyName, BuildSession session)
-        {
-            // TODO -- richer behavior
-            return _dependencies.Has(propertyName);
+            return Build(pluginType, session, builder);
         }
 
         public object Build(Type pluginType, BuildSession session, IInstanceBuilder builder)
@@ -240,29 +252,14 @@ namespace StructureMap.Pipeline
 
         public static ConstructorInstance For<T>()
         {
-            return new ConstructorInstance(typeof(T));
-        }
-
-        Instance IStructuredInstance.GetChild(string name)
-        {
-            return _dependencies[name];
-        }
-
-        Instance[] IStructuredInstance.GetChildArray(string name)
-        {
-            return _dependencies[name].As<EnumerableInstance>().Children.ToArray();
-        }
-
-        void IStructuredInstance.RemoveKey(string name)
-        {
-            _dependencies.Remove(name);
+            return new ConstructorInstance(typeof (T));
         }
 
         public override Instance CloseType(Type[] types)
         {
             if (_plugin.PluggedType.IsOpenGeneric())
             {
-                var closedType = _plugin.PluggedType.MakeGenericType(types);
+                Type closedType = _plugin.PluggedType.MakeGenericType(types);
                 var closedInstance = new ConstructorInstance(closedType);
 
                 _dependencies.Each((key, i) =>

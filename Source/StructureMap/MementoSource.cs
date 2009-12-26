@@ -17,19 +17,12 @@ namespace StructureMap
 
         private InstanceMemento _defaultMemento;
 
-        public InstanceMemento DefaultMemento
-        {
-            get { return _defaultMemento; }
-            set { _defaultMemento = value; }
-        }
+        public InstanceMemento DefaultMemento { get { return _defaultMemento; } set { _defaultMemento = value; } }
 
         /// <summary>
         /// The type of MementoSource
         /// </summary>
-        public virtual MementoSourceType SourceType
-        {
-            get { return MementoSourceType.External; }
-        }
+        public virtual MementoSourceType SourceType { get { return MementoSourceType.External; } }
 
         /// <summary>
         /// String description of the MementoSource.  Used in the StructureMap-Client UI.

@@ -14,7 +14,8 @@ namespace StructureMap.Configuration
         private readonly PluginGraph _systemGraph;
 
 
-        public GraphBuilder(Registry[] registries) : this(registries, new PluginGraph())
+        public GraphBuilder(Registry[] registries)
+            : this(registries, new PluginGraph())
         {
         }
 
@@ -40,10 +41,7 @@ namespace StructureMap.Configuration
             _pluginGraph.Seal();
         }
 
-        public PluginGraph PluginGraph
-        {
-            get { return _pluginGraph; }
-        }
+        public PluginGraph PluginGraph { get { return _pluginGraph; } }
 
         public void AddAssembly(string assemblyName)
         {
@@ -60,10 +58,10 @@ namespace StructureMap.Configuration
 
         public void AddRegistry(string registryTypeName)
         {
-            _pluginGraph.Log.Try(()=>
+            _pluginGraph.Log.Try(() =>
             {
-                var type = new TypePath(registryTypeName).FindType();
-                Registry registry = (Registry) Activator.CreateInstance(type);
+                Type type = new TypePath(registryTypeName).FindType();
+                var registry = (Registry) Activator.CreateInstance(type);
                 registry.ConfigurePluginGraph(_pluginGraph);
             }).AndReportErrorAs(290, registryTypeName);
         }

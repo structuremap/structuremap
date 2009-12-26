@@ -16,10 +16,7 @@ namespace StructureMap.Source
             _templateSource = templateSource;
         }
 
-        public override string Description
-        {
-            get { return "Templated MementoSource"; }
-        }
+        public override string Description { get { return "Templated MementoSource"; } }
 
         protected override InstanceMemento[] fetchInternalMementos()
         {

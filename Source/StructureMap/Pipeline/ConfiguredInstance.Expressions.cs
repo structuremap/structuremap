@@ -96,7 +96,7 @@ namespace StructureMap.Pipeline
 
         public ChildArrayExpression ChildArray(Type pluginType)
         {
-            var propertyName = findPropertyName(pluginType);
+            string propertyName = findPropertyName(pluginType);
             return ChildArray(propertyName);
         }
 
@@ -117,7 +117,7 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public ChildInstanceExpression Child<CONSTRUCTORARGUMENTTYPE>()
         {
-            Type dependencyType = typeof(CONSTRUCTORARGUMENTTYPE);
+            Type dependencyType = typeof (CONSTRUCTORARGUMENTTYPE);
 
             return Child(dependencyType);
         }
@@ -261,10 +261,7 @@ namespace StructureMap.Pipeline
                 _childType = childType;
             }
 
-            internal Type ChildType
-            {
-                set { _childType = value; }
-            }
+            internal Type ChildType { set { _childType = value; } }
 
             /// <summary>
             /// Use a previously configured and named instance for the child

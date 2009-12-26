@@ -11,7 +11,6 @@ using StructureMap.Testing.GenericWidgets;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget2;
 using StructureMap.Testing.Widget3;
-using StructureMap.TypeRules;
 
 namespace StructureMap.Testing.Pipeline
 {
@@ -53,6 +52,26 @@ namespace StructureMap.Testing.Pipeline
             catch (StructureMapException ex)
             {
                 Assert.AreEqual(errorCode, ex.ErrorCode);
+            }
+        }
+
+        public List<string> prop1 { get; set; }
+        public IGateway[] gateways { get; set; }
+
+        public class UsesGateways
+        {
+            private readonly IGateway[] _gateways;
+
+            public UsesGateways(IGateway[] gateways)
+            {
+                _gateways = gateways;
+            }
+        }
+
+        public class ClassThatTakesAnything
+        {
+            public ClassThatTakesAnything(string anything)
+            {
             }
         }
 
@@ -150,9 +169,6 @@ namespace StructureMap.Testing.Pipeline
         }
 
 
-        public List<string> prop1 { get; set; }
-        public IGateway[] gateways { get; set; }
-
         [Test]
         public void HasProperty_for_child_array()
         {
@@ -166,9 +182,21 @@ namespace StructureMap.Testing.Pipeline
         }
 
         [Test]
+        public void HasProperty_for_child_array_when_property_name_is_inferred()
+        {
+            var instance = new ConfiguredInstance(typeof (UsesGateways));
+
+            IConfiguredInstance configuredInstance = instance;
+            configuredInstance.HasProperty("gateways", null).ShouldBeFalse();
+
+            instance.ChildArray(typeof (IGateway[])).Contains(new DefaultInstance());
+            configuredInstance.HasProperty("gateways", null).ShouldBeTrue();
+        }
+
+        [Test]
         public void HasProperty_for_generic_child_array_when_property_name_is_inferred()
         {
-            var instance = new ConfiguredInstance(typeof(UsesGateways));
+            var instance = new ConfiguredInstance(typeof (UsesGateways));
 
             IConfiguredInstance configuredInstance = instance;
             configuredInstance.HasProperty("gateways", null).ShouldBeFalse();
@@ -178,45 +206,16 @@ namespace StructureMap.Testing.Pipeline
         }
 
         [Test]
-        public void HasProperty_for_child_array_when_property_name_is_inferred()
-        {
-            var instance = new ConfiguredInstance(typeof(UsesGateways));
-
-            IConfiguredInstance configuredInstance = instance;
-            configuredInstance.HasProperty("gateways", null).ShouldBeFalse();
-
-            instance.ChildArray(typeof(IGateway[])).Contains(new DefaultInstance());
-            configuredInstance.HasProperty("gateways", null).ShouldBeTrue();
-        }
-
-        public class UsesGateways
-        {
-            private readonly IGateway[] _gateways;
-
-            public UsesGateways(IGateway[] gateways)
-            {
-                _gateways = gateways;
-            }
-        }
-
-        [Test]
         public void Property_cannot_be_found_so_throw_205()
         {
             try
             {
-                IConfiguredInstance configuredInstance = new ConfiguredInstance(typeof(ClassThatTakesAnything));
+                IConfiguredInstance configuredInstance = new ConfiguredInstance(typeof (ClassThatTakesAnything));
                 configuredInstance.Get<string>("anything", new StubBuildSession());
             }
             catch (StructureMapException ex)
             {
                 Assert.AreEqual(205, ex.ErrorCode);
-            }
-        }
-
-        public class ClassThatTakesAnything
-        {
-            public ClassThatTakesAnything(string anything)
-            {
             }
         }
 
@@ -268,14 +267,15 @@ namespace StructureMap.Testing.Pipeline
         {
             var theRule = new ARule();
 
-            var container = new Container(x =>
-            {
-                x.For(typeof (ClassWithDependency)).Use(typeof (ClassWithDependency)).Child(typeof (Rule)).Is(theRule);
-            });
+            var container =
+                new Container(
+                    x =>
+                    {
+                        x.For(typeof (ClassWithDependency)).Use(typeof (ClassWithDependency)).Child(typeof (Rule)).Is(
+                            theRule);
+                    });
 
             container.GetInstance<ClassWithDependency>().Rule.ShouldBeTheSameAs(theRule);
         }
     }
-
-    
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using StructureMap.Diagnostics;
 
 namespace StructureMapDoctor
@@ -21,12 +21,12 @@ namespace StructureMapDoctor
 
 
             var doctor = new Doctor
-                             {
-                                 BinaryPath = AppDomain.CurrentDomain.BaseDirectory,
-                                 BootstrapperType = args[0],
-                                 ConfigFile = string.Empty,
-                                 OutputFile = string.Empty
-                             };
+            {
+                BinaryPath = AppDomain.CurrentDomain.BaseDirectory,
+                BootstrapperType = args[0],
+                ConfigFile = string.Empty,
+                OutputFile = string.Empty
+            };
 
 
             for (int i = 1; i < args.Length; i++)

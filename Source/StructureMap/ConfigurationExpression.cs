@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using System.Xml;
 using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
@@ -33,10 +31,7 @@ namespace StructureMap
         /// If true, directs StructureMap to look for configuration in the App.config.
         /// The default value is false.
         /// </summary>
-        public bool IncludeConfigurationFromConfigFile
-        {
-            set { _parserBuilder.UseAndEnforceExistenceOfDefaultFile = value; }
-        }
+        public bool IncludeConfigurationFromConfigFile { set { _parserBuilder.UseAndEnforceExistenceOfDefaultFile = value; } }
 
         /// <summary>
         /// Creates and adds a Registry object of type T.  
@@ -85,11 +80,5 @@ namespace StructureMap
 
             return builder.Build();
         }
-
-
     }
-
-
-
-
 }

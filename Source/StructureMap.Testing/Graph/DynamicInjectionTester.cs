@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
-using StructureMap.Testing.Pipeline;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
-using System.Linq;
 
 namespace StructureMap.Testing.Graph
 {
@@ -77,11 +76,7 @@ namespace StructureMap.Testing.Graph
         {
             var container = new Container();
 
-            container.Configure(registry =>
-            {
-                registry.Scan(x => x.TheCallingAssembly());
-            });
-
+            container.Configure(registry => { registry.Scan(x => x.TheCallingAssembly()); });
 
 
             container.GetInstance<IThingy>().ShouldBeOfType<TheThingy>();
@@ -174,10 +169,7 @@ namespace StructureMap.Testing.Graph
         {
             ObjectFactory.Initialize(x => { x.BuildInstancesOf<ISomething>().TheDefaultIsConcreteType<SomethingTwo>(); });
 
-            ObjectFactory.Configure(x =>
-            {
-                x.ForRequestedType<ISomething>().TheDefaultIsConcreteType<SomethingOne>();
-            });
+            ObjectFactory.Configure(x => { x.ForRequestedType<ISomething>().TheDefaultIsConcreteType<SomethingOne>(); });
 
             ObjectFactory.GetInstance<ISomething>().ShouldBeOfType<SomethingOne>();
         }
@@ -188,10 +180,7 @@ namespace StructureMap.Testing.Graph
         {
             ObjectFactory.Initialize(x => { x.BuildInstancesOf<ISomething>(); });
 
-            ObjectFactory.Configure(x =>
-            {
-                x.ForRequestedType<ISomething>().TheDefaultIsConcreteType<SomethingOne>();
-            });
+            ObjectFactory.Configure(x => { x.ForRequestedType<ISomething>().TheDefaultIsConcreteType<SomethingOne>(); });
 
             Assert.IsInstanceOfType(typeof (SomethingOne), ObjectFactory.GetInstance<ISomething>());
         }
@@ -276,10 +265,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void AddTypeThroughObjectFactory()
         {
-            ObjectFactory.Initialize(x =>
-            {
-                x.ForRequestedType<ISomething>().TheDefaultIsConcreteType<SomethingOne>();
-            });
+            ObjectFactory.Initialize(x => { x.ForRequestedType<ISomething>().TheDefaultIsConcreteType<SomethingOne>(); });
 
             Assert.IsInstanceOfType(typeof (SomethingOne), ObjectFactory.GetInstance<ISomething>());
         }
@@ -293,8 +279,6 @@ namespace StructureMap.Testing.Graph
             factory.AddInstance(new ObjectInstance(_blue).WithName("Blue"));
 
             factory.FindInstance("Red").ShouldNotBeNull();
-
-
         }
 
         [Test]
@@ -311,10 +295,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void JustAddATypeWithNoNameAndDefault()
         {
-            ObjectFactory.Initialize(x =>
-            {
-                x.ForRequestedType<ISomething>().TheDefaultIsConcreteType<SomethingOne>();
-            });
+            ObjectFactory.Initialize(x => { x.ForRequestedType<ISomething>().TheDefaultIsConcreteType<SomethingOne>(); });
 
             Assert.IsInstanceOfType(typeof (SomethingOne), ObjectFactory.GetInstance<ISomething>());
         }
@@ -325,11 +306,11 @@ namespace StructureMap.Testing.Graph
             IInstanceFactory factory = getISomethingFactory();
 
             factory.AddInstance(new ObjectInstance(_red).WithName("Red"));
-            var oldBlue = new ObjectInstance(_blue).WithName("Blue");
+            ObjectInstance oldBlue = new ObjectInstance(_blue).WithName("Blue");
             factory.AddInstance(oldBlue);
 
             // Replace Blue
-            var newBlue = new ObjectInstance(_orange).WithName("Blue");
+            ObjectInstance newBlue = new ObjectInstance(_orange).WithName("Blue");
             factory.AddInstance(newBlue);
 
             factory.FindInstance("Blue").ShouldBeTheSameAs(newBlue);

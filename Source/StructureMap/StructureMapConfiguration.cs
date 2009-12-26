@@ -49,24 +49,12 @@ namespace StructureMap
         /// Flag to enable or disable the usage of the default StructureMap.config
         /// If set to false, StructureMap will not look for a StructureMap.config file
         /// </summary>
-        public static bool UseDefaultStructureMapConfigFile
-        {
-            get { return parserBuilder.UseAndEnforceExistenceOfDefaultFile; }
-            set { parserBuilder.UseAndEnforceExistenceOfDefaultFile = value; }
-        }
+        public static bool UseDefaultStructureMapConfigFile { get { return parserBuilder.UseAndEnforceExistenceOfDefaultFile; } set { parserBuilder.UseAndEnforceExistenceOfDefaultFile = value; } }
 
 
-        public static bool IgnoreStructureMapConfig
-        {
-            get { return parserBuilder.IgnoreDefaultFile; }
-            set { parserBuilder.IgnoreDefaultFile = value; }
-        }
+        public static bool IgnoreStructureMapConfig { get { return parserBuilder.IgnoreDefaultFile; } set { parserBuilder.IgnoreDefaultFile = value; } }
 
-        public static bool PullConfigurationFromAppConfig
-        {
-            get { return parserBuilder.PullConfigurationFromAppConfig; }
-            set { parserBuilder.PullConfigurationFromAppConfig = value; }
-        }
+        public static bool PullConfigurationFromAppConfig { get { return parserBuilder.PullConfigurationFromAppConfig; } set { parserBuilder.PullConfigurationFromAppConfig = value; } }
 
         private static void assertIsNotSealed()
         {

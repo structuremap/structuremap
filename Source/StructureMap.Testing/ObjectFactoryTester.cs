@@ -24,14 +24,10 @@ namespace StructureMap.Testing
 
         #endregion
 
-
         [Test]
         public void Pass_in_arguments_as_dictionary()
         {
-            ObjectFactory.Initialize(x =>
-            {
-                x.ForRequestedType<IView>().TheDefaultIsConcreteType<View>();
-            });
+            ObjectFactory.Initialize(x => { x.ForRequestedType<IView>().TheDefaultIsConcreteType<View>(); });
 
             var theNode = new Node();
             var theTrade = new Trade();
@@ -42,7 +38,7 @@ namespace StructureMap.Testing
 
             var command = ObjectFactory.GetInstance<Command>(args);
 
-            Assert.IsInstanceOfType(typeof(View), command.View);
+            Assert.IsInstanceOfType(typeof (View), command.View);
             Assert.AreSame(theNode, command.Node);
             Assert.AreSame(theTrade, command.Trade);
         }
