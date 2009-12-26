@@ -67,6 +67,23 @@ namespace StructureMap.Configuration.DSL.Expressions
             return TheDefaultIsConcreteType(concreteType);
         }
 
+
+        public LambdaInstance<object> Use(Func<IContext, object> func)
+        {
+            var instance = new LambdaInstance<object>(func);
+            Use(instance);
+
+            return instance;
+        }
+
+        public LambdaInstance<object> Add(Func<IContext, object> func)
+        {
+            var instance = new LambdaInstance<object>(func);
+            Add(instance);
+
+            return instance;
+        }
+
         /// <summary>
         /// Shortcut to add a value by type
         /// </summary>
@@ -198,6 +215,45 @@ namespace StructureMap.Configuration.DSL.Expressions
         {
             return alterAndContinue(family => family.SetScopeTo(lifecycle));
         }
+
+        /// <summary>
+        /// Convenience method to mark a PluginFamily as a Singleton
+        /// </summary>
+        /// <returns></returns>
+        public GenericFamilyExpression Singleton()
+        {
+            return LifecycleIs(InstanceScope.Singleton);
+        }
+
+
+        /// <summary>
+        /// Convenience method to mark a PluginFamily as a Hybrid lifecycle
+        /// </summary>
+        /// <returns></returns>
+        public GenericFamilyExpression HybridHttpOrThreadLocalScoped()
+        {
+            return LifecycleIs(InstanceScope.Hybrid);
+        }
+
+        /// <summary>
+        /// Convenience method to mark a PluginFamily as HttpContext scoped
+        /// </summary>
+        /// <returns></returns>
+        public GenericFamilyExpression HttpContextScoped()
+        {
+            return LifecycleIs(InstanceScope.HttpContext);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="lifecycle"></param>
+        /// <returns></returns>
+        public GenericFamilyExpression LifecycleIs(InstanceScope lifecycle)
+        {
+            return alterAndContinue(family => family.SetScopeTo(lifecycle));
+        }
+
 
         /// <summary>
         /// Shortcut method to add an additional Instance to this Plugin Type
