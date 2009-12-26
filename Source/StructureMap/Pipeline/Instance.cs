@@ -27,6 +27,8 @@ namespace StructureMap.Pipeline
         Instance FindInstanceForProfile(PluginFamily family, string profileName, GraphLog log);
         InstanceToken CreateToken();
         void Preprocess(PluginFamily family);
+
+        [Obsolete("can go away")]
         void AddTemplatedInstanceTo(PluginFamily family, Type[] templateTypes);
     }
 
@@ -52,6 +54,9 @@ namespace StructureMap.Pipeline
             get { return _interceptor; }
             set { _interceptor = value; }
         }
+
+        internal bool IsReference { get; set; }
+        internal bool CopyAsIsWhenClosingInstance { get; set; }
 
         #region IDiagnosticInstance Members
 
@@ -81,6 +86,7 @@ namespace StructureMap.Pipeline
             preprocess(family);
         }
 
+        [Obsolete("Can go")]
         void IDiagnosticInstance.AddTemplatedInstanceTo(PluginFamily family, Type[] templateTypes)
         {
             addTemplatedInstanceTo(family, templateTypes);
@@ -150,6 +156,7 @@ namespace StructureMap.Pipeline
             return pluginType;
         }
 
+        [Obsolete("Can go")]
         protected virtual void addTemplatedInstanceTo(PluginFamily family, Type[] templateTypes)
         {
             if (canBePartOfPluginFamily(family))
@@ -203,6 +210,11 @@ namespace StructureMap.Pipeline
         internal virtual bool Matches(Plugin plugin)
         {
             return false;
+        }
+
+        public virtual Instance CloseType(Type[] types)
+        {
+            return null;
         }
     }
 

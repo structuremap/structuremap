@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,5 +10,7 @@ namespace StructureMap.Pipeline
         {
             return enumerable.Select(x => x as T).ToList();
         }
+
+        public Type ElementType { get { return typeof (T); } }
     }
 }

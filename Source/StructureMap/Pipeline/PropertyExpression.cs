@@ -1,3 +1,4 @@
+using System;
 using System.Configuration;
 using StructureMap.TypeRules;
 
@@ -6,12 +7,12 @@ namespace StructureMap.Pipeline
     /// <summary>
     /// Defines the value of a primitive argument to a constructur argument
     /// </summary>
-    public class PropertyExpression<T> where T : IConfiguredInstance
+    public class PropertyExpression<T> where T : ConstructorInstance
     {
-        private readonly IConfiguredInstance _instance;
+        private readonly ConstructorInstance _instance;
         private readonly string _propertyName;
 
-        public PropertyExpression(IConfiguredInstance instance, string propertyName)
+        public PropertyExpression(ConstructorInstance instance, string propertyName)
         {
             _instance = instance;
             _propertyName = propertyName;
@@ -24,12 +25,8 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public T EqualTo(object propertyValue)
         {
-            if(propertyValue.GetType().IsSimple())
-                _instance.SetProperty(_propertyName, propertyValue.ToString());
-            else
-            {
-                _instance.Set(_propertyName,new ObjectInstance(propertyValue));
-            }
+            _instance.SetValue(_propertyName, propertyValue);
+
             return (T) _instance;
         }
 
@@ -51,11 +48,12 @@ namespace StructureMap.Pipeline
         /// <param name="appSettingKey">The key in appSettings for the value to use.</param>
         /// <param name="defaultValue">The value to use if an entry for <paramref name="appSettingKey"/> does not exist in the appSettings section.</param>
         /// <returns></returns>
+        [Obsolete("Change to using a func to get this")]
         public T EqualToAppSetting(string appSettingKey, string defaultValue)
         {
             string propertyValue = ConfigurationManager.AppSettings[appSettingKey];
             if (propertyValue == null) propertyValue = defaultValue;
-            _instance.SetProperty(_propertyName, propertyValue);
+            _instance.SetValue(_propertyName, propertyValue);
             return (T)_instance;
         }
     }

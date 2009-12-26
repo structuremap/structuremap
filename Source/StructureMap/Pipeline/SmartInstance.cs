@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.Graph;
@@ -11,11 +12,11 @@ namespace StructureMap.Pipeline
     /// Instance that builds objects with by calling constructor functions and using setter properties
     /// </summary>
     /// <typeparam name="T">The concrete type constructed by SmartInstance</typeparam>
-    public class SmartInstance<T> : ConfiguredInstanceBase<SmartInstance<T>>
+    public class SmartInstance<T> : ConstructorInstance
     {
         private readonly List<Action<T>> _actions = new List<Action<T>>();
 
-        public SmartInstance() : base(typeof (T))
+        public SmartInstance() : base(typeof(T))
         {
         }
 
@@ -123,11 +124,6 @@ namespace StructureMap.Pipeline
         {
             Interceptor = interceptor;
             return this;
-        }
-
-        protected override string getDescription()
-        {
-            return "Smart Instance for " + getConcreteType(null).FullName;
         }
 
         /// <summary>
@@ -253,7 +249,7 @@ namespace StructureMap.Pipeline
 
             Plugin plugin = PluginCache.GetPlugin(typeof (T));
             string propertyName = plugin.FindArgumentNameForType(typeof (CHILD).MakeArrayType());
-
+            Debug.WriteLine("Property Name:  " + propertyName);
             return TheArrayOf<CHILD>(propertyName);
         }
 
@@ -298,7 +294,7 @@ namespace StructureMap.Pipeline
                 var child = new InstanceExpression<ARRAY>(list.Add);
                 action(child);
 
-                _instance.setChildArray(_propertyName, list.ToArray());
+                _instance.SetCollection(_propertyName, list);
 
                 return _instance;
             }
@@ -306,11 +302,11 @@ namespace StructureMap.Pipeline
             /// <summary>
             /// Specify an array of Instance objects directly for an Array dependency
             /// </summary>
-            /// <param name="arrayInstances"></param>
+            /// <param name="children"></param>
             /// <returns></returns>
-            public SmartInstance<T> Contains(params Instance[] arrayInstances)
+            public SmartInstance<T> Contains(params Instance[] children)
             {
-                _instance.setChildArray(_propertyName, arrayInstances);
+                _instance.SetCollection(_propertyName, children);
 
                 return _instance;
             }
@@ -342,7 +338,7 @@ namespace StructureMap.Pipeline
             /// <returns></returns>
             public SmartInstance<T> Is(Action<IInstanceExpression<CHILD>> action)
             {
-                var expression = new InstanceExpression<CHILD>(i => _instance.setChild(_propertyName, i));
+                var expression = new InstanceExpression<CHILD>(i => _instance.SetChild(_propertyName, i));
                 action(expression);
 
                 return _instance;
@@ -355,7 +351,7 @@ namespace StructureMap.Pipeline
             /// <returns></returns>
             public SmartInstance<T> Is(Instance instance)
             {
-                _instance.setChild(_propertyName, instance);
+                _instance.SetChild(_propertyName, instance);
                 return _instance;
             }
 

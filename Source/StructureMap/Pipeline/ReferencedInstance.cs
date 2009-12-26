@@ -11,6 +11,9 @@ namespace StructureMap.Pipeline
 
         public ReferencedInstance(string referenceKey)
         {
+            IsReference = true;
+            CopyAsIsWhenClosingInstance = true;
+
             if (string.IsNullOrEmpty(referenceKey))
             {
                 throw new ArgumentNullException("referenceKey");

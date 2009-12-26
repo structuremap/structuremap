@@ -94,15 +94,23 @@ namespace StructureMap.Pipeline
 
         public void CopyDefault(Type sourceType, Type destinationType, PluginFamily family)
         {
-            if (_instances.ContainsKey(sourceType))
+            if (!_instances.ContainsKey(sourceType)) return;
+            
+            var sourceInstance = _instances[sourceType];
+            if (sourceInstance.IsReference)
             {
-                Instance sourceInstance = _instances[sourceType];
-                Instance destinationInstance = family.GetInstance(sourceInstance.Name);
-                if (destinationInstance != null)
-                {
-                    _instances.Add(destinationType, destinationInstance);
-                }
+                _instances.Add(destinationType, sourceInstance);
             }
+            else
+            {
+                family.ForInstance(sourceInstance.Name, x =>
+                {
+                    _instances.Add(destinationType, x);
+                });
+            }
+
+
+
         }
 
 

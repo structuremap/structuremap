@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace StructureMap.Pipeline
 {
@@ -7,28 +8,17 @@ namespace StructureMap.Pipeline
         string Name { get; }
         Type PluggedType { get; }
 
-
-
-        [Obsolete]
-        Instance[] GetChildrenArray(string propertyName);
-
-        [Obsolete]
-        string GetProperty(string propertyName);
-        
-        
         object Get(string propertyName, Type pluginType, BuildSession buildSession);
 
-        object Build(Type pluginType, BuildSession session, InstanceBuilder builder);
+        T Get<T>(string propertyName, BuildSession session);
 
-        bool HasProperty(string propertyName);
+        bool HasProperty(string propertyName, BuildSession session);
 
-        [Obsolete]
-        void SetProperty(string name, string value);
-        
-        
-        void Set(string name, Instance instance);
+        void SetChild(string name, Instance instance);
+        void SetValue(Type type, object value);
+        void SetValue(string name, object value);
+        void SetCollection(string name, IEnumerable<Instance> children);
 
-        [Obsolete]
-        void SetChildArray(string name, Type type, Instance[] children);
+        string GetProperty(string propertyName);
     }
 }

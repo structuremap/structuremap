@@ -49,13 +49,15 @@ namespace StructureMap.Pipeline
 
         public void Configure(IConfiguredInstance instance)
         {
-            foreach (var arg in _args)
+            _args.Each(pair =>
             {
-                if (arg.Value == null) continue;
+                instance.SetValue(pair.Key, pair.Value);
+            });
 
-                instance.SetProperty(arg.Key, arg.Value.ToString());
-                instance.Set(arg.Key, new ObjectInstance(arg.Value));
-            }
+            _children.Each(pair =>
+            {
+                instance.SetValue(pair.Key, pair.Value);
+            });
         }
 
         public bool Has(Type type)
@@ -77,31 +79,4 @@ namespace StructureMap.Pipeline
         }
     }
 
-    public class ExplicitInstance : ConfiguredInstance
-    {
-        private readonly ExplicitArguments _args;
-
-        public ExplicitInstance(Type pluginType, ExplicitArguments args, BasicInstance defaultInstance) : base(null)
-        {
-            args.Configure(this);
-            _args = args;
-            mergeIntoThis(defaultInstance);
-        }
-
-
-        protected override object getChild(string propertyName, Type pluginType, BuildSession buildSession)
-        {
-            if (_args.Has(pluginType))
-            {
-                return _args.Get(pluginType);
-            }
-
-            if (_args.Has(propertyName))
-            {
-                return _args.GetArg(propertyName);
-            }
-
-            return base.getChild(propertyName, pluginType, buildSession);
-        }
-    }
 }

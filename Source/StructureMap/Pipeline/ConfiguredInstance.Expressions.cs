@@ -78,8 +78,6 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public ChildArrayExpression ChildArray<PLUGINTYPE>(string propertyName)
         {
-            validateTypeIsArray<PLUGINTYPE>();
-
             var expression =
                 new ChildArrayExpression(this, propertyName);
 
@@ -98,8 +96,6 @@ namespace StructureMap.Pipeline
 
         public ChildArrayExpression ChildArray(Type pluginType)
         {
-            //TODO: add validation check
-            validateTypeIsArray(pluginType);
             var propertyName = findPropertyName(pluginType);
             return ChildArray(propertyName);
         }
@@ -231,7 +227,7 @@ namespace StructureMap.Pipeline
             /// <returns></returns>
             public ConfiguredInstance Contains(params Instance[] instances)
             {
-                _instance.setChildArray(_propertyName, instances);
+                _instance.SetCollection(_propertyName, instances);
 
                 return _instance;
             }
@@ -278,7 +274,7 @@ namespace StructureMap.Pipeline
             public ConfiguredInstance IsNamedInstance(string instanceKey)
             {
                 var instance = new ReferencedInstance(instanceKey);
-                _instance.setChild(_propertyName, instance);
+                _instance.SetChild(_propertyName, instance);
 
                 return _instance;
             }
@@ -303,7 +299,7 @@ namespace StructureMap.Pipeline
                 ExpressionValidator.ValidatePluggabilityOf(pluggedType).IntoPluginType(_childType);
 
                 var childInstance = new ConfiguredInstance(pluggedType);
-                _instance.setChild(_propertyName, childInstance);
+                _instance.SetChild(_propertyName, childInstance);
 
                 return _instance;
             }
@@ -316,7 +312,7 @@ namespace StructureMap.Pipeline
             /// <returns></returns>
             public ConfiguredInstance Is(Instance child)
             {
-                _instance.setChild(_propertyName, child);
+                _instance.SetChild(_propertyName, child);
                 return _instance;
             }
 

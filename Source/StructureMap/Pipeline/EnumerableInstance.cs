@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -44,6 +45,8 @@ namespace StructureMap.Pipeline
             throw new ArgumentException("Only IEnumerable<T> types can be passed to this constructor.  {0} is invalid".ToFormat(propertyType.AssemblyQualifiedName));
         }
 
+        public IEnumerable<Instance> Children { get { return _children; } }
+
         protected override string getDescription()
         {
             return _description;
@@ -51,8 +54,27 @@ namespace StructureMap.Pipeline
 
         protected override object build(Type pluginType, BuildSession session)
         {
-            var objects = _children.Select(x => x.Build(pluginType, session));
+            var elementType = _coercion.ElementType;
+
+            var objects = buildObjects(elementType, session);
             return _coercion.Convert(objects);
+        }
+
+        private IEnumerable<object> buildObjects(Type elementType, BuildSession session)
+        {
+            if (_children == null)
+            {
+                return session.GetAllInstances(elementType);
+            }
+
+            return _children.Select(x => x.Build(elementType, session));
+        }
+
+        public static bool IsEnumerable(Type type)
+        {
+            if (type.IsArray) return true;
+
+            return type.IsGenericType && type.GetGenericTypeDefinition().IsIn(_enumerableTypes);
         }
     }
 }
