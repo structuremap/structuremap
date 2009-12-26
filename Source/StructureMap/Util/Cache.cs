@@ -1,90 +1,100 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using StructureMap.Graph;
 
 namespace StructureMap.Util
 {
-    public class Cache<KEY, VALUE> : IEnumerable<VALUE> where VALUE : class
+    [Serializable]
+    public class Cache<TKey, TValue> where TValue : class
     {
-        private readonly object _locker = new object();
-        private readonly IDictionary<KEY, VALUE> _values;
+        readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
+        readonly IDictionary<TKey, TValue> _values;
+        Func<TValue, TKey> _getKey = delegate { throw new NotImplementedException(); };
 
-        private Func<KEY, VALUE> _onMissing = delegate(KEY key)
+        Action<TValue> _onAddition = x => { };
+
+        Func<TKey, TValue> _onMissing = delegate(TKey key)
         {
             string message = string.Format("Key '{0}' could not be found", key);
             throw new KeyNotFoundException(message);
         };
 
         public Cache()
-            : this(new Dictionary<KEY, VALUE>())
+            : this(new Dictionary<TKey, TValue>())
         {
         }
 
-        public Cache(Func<KEY, VALUE> onMissing)
-            : this(new Dictionary<KEY, VALUE>(), onMissing)
+        public Cache(Func<TKey, TValue> onMissing)
+            : this(new Dictionary<TKey, TValue>(), onMissing)
         {
         }
 
-        public Cache(IDictionary<KEY, VALUE> dictionary, Func<KEY, VALUE> onMissing)
+        public Cache(IDictionary<TKey, TValue> dictionary, Func<TKey, TValue> onMissing)
             : this(dictionary)
         {
             _onMissing = onMissing;
         }
 
-        public Cache(IDictionary<KEY, VALUE> dictionary)
+        public Cache(IDictionary<TKey, TValue> dictionary)
         {
             _values = dictionary;
         }
 
-        public Func<KEY, VALUE> OnMissing
-        {
-            set { _onMissing = value; }
-        }
+        public Func<TKey, TValue> OnMissing { set { _onMissing = value; } }
+
+        public Action<TValue> OnAddition { set { _onAddition = value; } }
+
+        public Func<TValue, TKey> GetKey { get { return _getKey; } set { _getKey = value; } }
 
         public int Count
         {
-            get { return _values.Count; }
+            get
+            {
+                using (ReadLock())
+                    return _values.Count;
+            }
         }
 
-        public VALUE First
+        public TValue First
         {
             get
             {
-                foreach (var pair in _values)
-                {
-                    return pair.Value;
-                }
+                using (ReadLock())
+                    foreach (var pair in _values)
+                    {
+                        return pair.Value;
+                    }
 
                 return null;
             }
         }
 
-
-        public VALUE this[KEY key]
+        public TValue this[TKey key]
         {
             get
             {
-                if (!_values.ContainsKey(key))
+                using (var @lock = ReadLock())
                 {
-                    lock (_locker)
+                    if (!_values.ContainsKey(key))
                     {
+                        @lock.Upgrade();
                         if (!_values.ContainsKey(key))
                         {
-                            VALUE value = _onMissing(key);
-                            //Check to make sure that the onMissing didn't cache this already
-                            if(!_values.ContainsKey(key))
-                            {
-                                _values.Add(key, value);
-                            }
+                            TValue value = _onMissing(key);
+                            _values.Add(key, value);
                         }
                     }
-                }
 
-                return _values[key];
+                    return _values[key];
+                }
             }
             set
             {
-                lock (_locker)
+                _onAddition(value);
+
+                using (var @lock = WriteLock())
                 {
                     if (_values.ContainsKey(key))
                     {
@@ -98,33 +108,22 @@ namespace StructureMap.Util
             }
         }
 
-        #region IEnumerable<VALUE> Members
-
-        IEnumerator IEnumerable.GetEnumerator()
+        public void Fill(TKey key, TValue value)
         {
-            return ((IEnumerable<VALUE>)this).GetEnumerator();
-        }
-
-        public IEnumerator<VALUE> GetEnumerator()
-        {
-            return _values.Values.GetEnumerator();
-        }
-
-        #endregion
-
-        public void Fill(KEY key, VALUE value)
-        {
-            if (_values.ContainsKey(key))
+            using (WriteLock())
             {
-                return;
-            }
+                if (_values.ContainsKey(key))
+                {
+                    return;
+                }
 
-            _values.Add(key, value);
+                _values.Add(key, value);
+            }
         }
 
-        public void Each(Action<VALUE> action)
+        public void Each(Action<TValue> action)
         {
-            lock (_locker)
+            using (ReadLock())
             {
                 foreach (var pair in _values)
                 {
@@ -133,73 +132,150 @@ namespace StructureMap.Util
             }
         }
 
-        public void Each(Action<KEY, VALUE> action)
+        public void Each(Action<TKey, TValue> action)
         {
-            foreach (var pair in _values)
+            using (ReadLock())
             {
-                action(pair.Key, pair.Value);
+                foreach (var pair in _values)
+                {
+                    action(pair.Key, pair.Value);
+                }
             }
         }
 
-        public bool Has(KEY key)
+        public bool Has(TKey key)
         {
-            return _values.ContainsKey(key);
+            using (ReadLock())
+                return _values.ContainsKey(key);
         }
 
-        public bool Exists(Predicate<VALUE> predicate)
+        public bool Exists(Predicate<TValue> predicate)
         {
             bool returnValue = false;
 
-            Each(delegate(VALUE value) { returnValue |= predicate(value); });
+            Each(delegate(TValue value) { returnValue |= predicate(value); });
 
             return returnValue;
         }
 
-        public VALUE Find(Predicate<VALUE> predicate)
+        public TValue Find(Predicate<TValue> predicate)
         {
-            foreach (var pair in _values)
-            {
-                if (predicate(pair.Value))
+            using (ReadLock())
+                foreach (var pair in _values)
                 {
-                    return pair.Value;
+                    if (predicate(pair.Value))
+                    {
+                        return pair.Value;
+                    }
                 }
-            }
 
             return null;
         }
 
-        public VALUE[] GetAll()
+        public TKey Find(TValue value)
         {
-            var returnValue = new VALUE[Count];
-            _values.Values.CopyTo(returnValue, 0);
+            using (ReadLock())
+                foreach (KeyValuePair<TKey, TValue> pair in _values)
+                {
+                    if (pair.Value == value)
+                    {
+                        return pair.Key;
+                    }
+                }
+
+            return default(TKey);
+        }
+
+        public TValue[] GetAll()
+        {
+            var returnValue = new TValue[Count];
+            using (ReadLock())
+                _values.Values.CopyTo(returnValue, 0);
 
             return returnValue;
         }
 
-        public IDictionary<KEY, VALUE> Contents()
+        public void Remove(TKey key)
         {
-            return _values;
-        }
-
-        public void Remove(KEY key)
-        {
-            if (_values.ContainsKey(key))
-            {
-                _values.Remove(key);
-            }
+            using (ReadLock())
+                if (_values.ContainsKey(key))
+                {
+                    _values.Remove(key);
+                }
         }
 
         public void Clear()
         {
-            _values.Clear();
+            using (WriteLock())
+                _values.Clear();
         }
 
-        public Cache<KEY, VALUE> Clone()
+        public void WithValue(TKey key, Action<TValue> callback)
         {
-            var clone = new Cache<KEY, VALUE>(_onMissing);
-            Each((k, v) => clone[k] = v);
+            using (ReadLock())
+                _values.TryGet(key, callback);
+        }
 
-            return clone;
+        ReadLockToken ReadLock()
+        {
+            return new ReadLockToken(_lock);
+        }
+
+        WriteLockToken WriteLock()
+        {
+            return new WriteLockToken(_lock);
+        }
+
+        class ReadLockToken : IDisposable
+        {
+            readonly ReaderWriterLockSlim _lock;
+            bool upgraded;
+
+            public ReadLockToken(ReaderWriterLockSlim @lock)
+            {
+                _lock = @lock;
+                _lock.EnterReadLock();
+            }
+
+            public void Upgrade()
+            {
+                _lock.ExitReadLock();
+                _lock.EnterWriteLock();
+                upgraded = true;
+            }
+
+            public void Dispose()
+            {
+                if (upgraded)
+                    _lock.ExitWriteLock();
+                else
+                    _lock.ExitReadLock();
+            }
+        }
+
+        class WriteLockToken : IDisposable
+        {
+            readonly ReaderWriterLockSlim _lock;
+            public WriteLockToken(ReaderWriterLockSlim @lock)
+            {
+                _lock = @lock;
+                _lock.EnterWriteLock();
+            }
+
+            public void Dispose()
+            {
+                _lock.EnterWriteLock();
+            }
+        }
+
+        public Cache<TKey, TValue> Clone()
+        {
+            var cache = new Cache<TKey, TValue>();
+            cache._onMissing = _onMissing;
+            
+            Each((key, value) => cache[key] = value);
+
+            return cache;
         }
     }
 }
