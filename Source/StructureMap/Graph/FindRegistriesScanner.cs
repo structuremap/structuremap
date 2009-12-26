@@ -3,26 +3,14 @@ using StructureMap.Configuration.DSL;
 
 namespace StructureMap.Graph
 {
-    public class FindRegistriesScanner : ITypeScanner
+    public class FindRegistriesScanner : IRegistrationConvention
     {
-        #region ITypeScanner Members
-
-        public void Process(Type type, PluginGraph graph)
+        public void Process(Type type, Registry registry)
         {
-            if (!Registry.IsPublicRegistry(type)) return;
-
-            foreach (Registry previous in graph.Registries)
+            if (Registry.IsPublicRegistry(type))
             {
-                if (previous.GetType().Equals(type))
-                {
-                    return;
-                }
+                registry.Configure(x => x.ImportRegistry(type));
             }
-
-            var registry = (Registry) Activator.CreateInstance(type);
-            registry.ConfigurePluginGraph(graph);
         }
-
-        #endregion
     }
 }

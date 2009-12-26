@@ -194,10 +194,19 @@ namespace StructureMap.Testing.Graph
             var scanner = new FamilyAttributeScanner();
             var graph = new PluginGraph();
 
-            scanner.Process(typeof (ITypeThatHasAttributeButIsNotInRegistry), graph);
+            var registry = new Registry();
+
+            scanner.Process(typeof (ITypeThatHasAttributeButIsNotInRegistry), registry);
+            registry.ConfigurePluginGraph(graph);
+
             graph.PluginFamilies.Contains(typeof (ITypeThatHasAttributeButIsNotInRegistry)).ShouldBeTrue();
 
-            scanner.Process(GetType(), graph);
+            graph = new PluginGraph();
+            registry = new Registry();
+
+            scanner.Process(GetType(), registry);
+            registry.ConfigurePluginGraph(graph);
+
             graph.PluginFamilies.Contains(GetType()).ShouldBeFalse();
         }
 

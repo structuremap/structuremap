@@ -1,9 +1,10 @@
 using System;
+using StructureMap.Configuration.DSL;
 using StructureMap.TypeRules;
 
 namespace StructureMap.Graph
 {
-    public class FindAllTypesFilter : ITypeScanner
+    public class FindAllTypesFilter : IRegistrationConvention
     {
         private readonly Type _pluginType;
         private Func<Type, string> _getName = type => PluginCache.GetPlugin(type).ConcreteKey;
@@ -13,22 +14,18 @@ namespace StructureMap.Graph
             _pluginType = pluginType;
         }
 
-        #region ITypeScanner Members
-
-        public void Process(Type type, PluginGraph graph)
-        {
-            if (type.CanBeCastTo(_pluginType) && Constructor.HasConstructors(type))
-            {
-                string name = _getName(type);
-                graph.AddType(_pluginType, type, name);
-            }
-        }
-
         public void NameBy(Func<Type, string> getName)
         {
             _getName = getName;
         }
 
-        #endregion
+        public void Process(Type type, Registry registry)
+        {
+            if (type.CanBeCastTo(_pluginType) && Constructor.HasConstructors(type))
+            {
+                string name = _getName(type);
+                registry.AddType(_pluginType, type, name);
+            }
+        }
     }
 }

@@ -1,19 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using StructureMap.Configuration.DSL;
 using StructureMap.TypeRules;
 using StructureMap.Util;
 
 namespace StructureMap.Graph
 {
-    public class ImplementationMap : ITypeScanner
+    public class ImplementationMap : IRegistrationConvention
     {
         private readonly Cache<Type, List<Type>> _types = new Cache<Type, List<Type>>(t => new List<Type>());
-
-        public void Process(Type type, PluginGraph graph)
-        {
-            RegisterType(type);
-        }
 
         public void Register(Type interfaceType, Type concreteType)
         {
@@ -36,6 +32,11 @@ namespace StructureMap.Graph
                     graph.AddType(pluginType, types[0]);
                 }
             });
+        }
+
+        public void Process(Type type, Registry registry)
+        {
+            RegisterType(type);
         }
     }
 }

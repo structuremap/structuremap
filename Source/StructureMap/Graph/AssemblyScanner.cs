@@ -49,8 +49,8 @@ namespace StructureMap.Graph
 
         public AssemblyScanner()
         {
-            With<FamilyAttributeScanner>();
-            With<PluggableAttributeScanner>();
+            Convention<FamilyAttributeScanner>();
+            Convention<PluggableAttributeScanner>();
         }
 
         public int Count { get { return _assemblies.Count; } }
@@ -103,7 +103,7 @@ namespace StructureMap.Graph
 
         public void LookForRegistries()
         {
-            With<FindRegistriesScanner>();
+            Convention<FindRegistriesScanner>();
         }
 
         public void TheCallingAssembly()
@@ -141,8 +141,8 @@ namespace StructureMap.Graph
 
         public void IgnoreStructureMapAttributes()
         {
-            _scanners.RemoveAll(scanner => scanner is FamilyAttributeScanner);
-            _scanners.RemoveAll(scanner => scanner is PluggableAttributeScanner);
+            _conventions.RemoveAll(scanner => scanner is FamilyAttributeScanner);
+            _conventions.RemoveAll(scanner => scanner is PluggableAttributeScanner);
         }
 
 
@@ -189,7 +189,7 @@ namespace StructureMap.Graph
 
         public void SingleImplementationsOfInterface()
         {
-            _scanners.Fill(_implementationMap);
+            _conventions.Fill(_implementationMap);
             _postScanningActions.Add(graph => _implementationMap.RegisterSingleImplementations(graph));
         }
 

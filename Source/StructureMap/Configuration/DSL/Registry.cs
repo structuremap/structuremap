@@ -225,6 +225,13 @@ namespace StructureMap.Configuration.DSL
         /// <typeparam name="U"></typeparam>
         /// <returns></returns>
         LambdaInstance<T> Redirect<T, U>() where T : class where U : class;
+
+        /// <summary>
+        /// Advanced Usage Only!  Skips the Registry and goes right to the inner
+        /// Semantic Model of StructureMap.  Use with care
+        /// </summary>
+        /// <param name="configure"></param>
+        void Configure(Action<PluginGraph> configure);
     }
 
     /// <summary>
@@ -639,6 +646,16 @@ namespace StructureMap.Configuration.DSL
 
                 return t;
             });
+        }
+
+        /// <summary>
+        /// Advanced Usage Only!  Skips the Registry and goes right to the inner
+        /// Semantic Model of StructureMap.  Use with care
+        /// </summary>
+        /// <param name="configure"></param>
+        public void Configure(Action<PluginGraph> configure)
+        {
+            _actions.Add(configure);
         }
 
         #region Nested type: BuildWithExpression

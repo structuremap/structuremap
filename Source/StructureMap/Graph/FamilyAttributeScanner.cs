@@ -1,19 +1,16 @@
 using System;
+using StructureMap.Configuration.DSL;
 
 namespace StructureMap.Graph
 {
-    public class FamilyAttributeScanner : ITypeScanner
+    public class FamilyAttributeScanner : IRegistrationConvention
     {
-        #region ITypeScanner Members
-
-        public void Process(Type type, PluginGraph graph)
+        public void Process(Type type, Registry registry)
         {
             if (PluginFamilyAttribute.MarkedAsPluginFamily(type))
             {
-                graph.CreateFamily(type);
+                registry.Configure(x => x.FindFamily(type));
             }
         }
-
-        #endregion
     }
 }

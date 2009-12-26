@@ -1,19 +1,16 @@
 using System;
+using StructureMap.Configuration.DSL;
 
 namespace StructureMap.Graph
 {
-    public class PluggableAttributeScanner : ITypeScanner
+    public class PluggableAttributeScanner : IRegistrationConvention
     {
-        #region ITypeScanner Members
-
-        public void Process(Type type, PluginGraph graph)
+        public void Process(Type type, Registry registry)
         {
             if (PluggableAttribute.MarkedAsPluggable(type))
             {
-                graph.AddType(type);
+                registry.AddType(type);
             }
         }
-
-        #endregion
     }
 }

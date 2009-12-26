@@ -5,6 +5,7 @@ using StructureMap.Configuration.DSL;
 using StructureMap.Diagnostics;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
+using System.Linq;
 
 namespace StructureMap.Graph
 {
@@ -216,6 +217,14 @@ namespace StructureMap.Graph
             var registry = new Registry();
             action(registry);
 
+            registry.ConfigurePluginGraph(this);
+        }
+
+        public void ImportRegistry(Type type)
+        {
+            if (Registries.Any(x => x.GetType() == type)) return;
+
+            var registry = (Registry)Activator.CreateInstance(type);
             registry.ConfigurePluginGraph(this);
         }
     }

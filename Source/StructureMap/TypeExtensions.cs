@@ -246,6 +246,8 @@ namespace StructureMap
             {
                 return IsChild(type) || IsChildArray(type);
             }
+
+            
         }
     }
 }

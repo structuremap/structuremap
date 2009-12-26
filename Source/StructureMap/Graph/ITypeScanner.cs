@@ -36,7 +36,7 @@ namespace StructureMap.Graph
         }
     }
 
-    public class GenericConnectionScanner : ITypeScanner
+    public class GenericConnectionScanner : IRegistrationConvention
     {
         private readonly Type _openType;
 
@@ -50,12 +50,12 @@ namespace StructureMap.Graph
             }
         }
 
-        public void Process(Type type, PluginGraph graph)
+        public void Process(Type type, Registry registry)
         {
             Type interfaceType = type.FindInterfaceThatCloses(_openType);
             if (interfaceType != null)
             {
-                graph.AddType(interfaceType, type);
+                registry.For(interfaceType).Add(type);
             }
         }
     }
