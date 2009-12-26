@@ -7,6 +7,7 @@ using StructureMap.Util;
 
 namespace StructureMap.Graph
 {
+    [Obsolete]
     public interface IHeavyweightTypeScanner
     {
         void Process(PluginGraph graph, IEnumerable<TypeMap> typeMaps);

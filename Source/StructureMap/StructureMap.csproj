@@ -356,9 +356,12 @@
     <Compile Include="ErrorMessages.cs" />
     <Compile Include="Example.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="Graph\CompositeFilter.cs" />
+    <Compile Include="Graph\CompositePredicate.cs" />
     <Compile Include="Graph\FamilyAttributeScanner.cs" />
     <Compile Include="Graph\FindAllTypesFilter.cs" />
     <Compile Include="Graph\FindRegistriesScanner.cs" />
+    <Compile Include="Graph\IAssemblyScanner.cs" />
     <Compile Include="Graph\IHeavyweightTypeScanner.cs" />
     <Compile Include="Graph\ITypeScanner.cs" />
     <Compile Include="Graph\PluggableAttributeScanner.cs" />

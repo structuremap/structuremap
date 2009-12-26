@@ -5,194 +5,44 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using StructureMap.TypeRules;
+using StructureMap.Util;
 
 namespace StructureMap.Graph
 {
-    public interface IAssemblyScanner
+    public class TypePool
     {
-        #region Designating Assemblies
+        private readonly Cache<Assembly, Type[]> _types = new Cache<Assembly, Type[]>();
 
-        /// <summary>
-        /// Add an Assembly to the scanning operation
-        /// </summary>
-        /// <param name="assembly"></param>
-        void Assembly(Assembly assembly);
+        public TypePool(PluginGraph graph)
+        {
+            _types.OnMissing = assembly =>
+            {
+                try
+                {
+                    return assembly.GetExportedTypes();
+                }
+                catch (Exception ex)
+                {
+                    graph.Log.RegisterError(170, ex, assembly.FullName);
+                    return new Type[0];
+                }
+            };
+        }
 
-        /// <summary>
-        /// Add an Assembly by name to the scanning operation
-        /// </summary>
-        /// <param name="assemblyName"></param>
-        void Assembly(string assemblyName);
-
-        /// <summary>
-        /// Add the currently executing Assembly to the scanning operation
-        /// </summary>
-        void TheCallingAssembly();
-
-        /// <summary>
-        /// Add the Assembly that contains type T to the scanning operation
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        void AssemblyContainingType<T>();
-
-        /// <summary>
-        /// Add the Assembly that contains type to the scanning operation
-        /// </summary>
-        /// <param name="type"></param>
-        void AssemblyContainingType(Type type);
-
-        /// <summary>
-        /// Sweep the designated path and add any Assembly's found in this folder to the
-        /// scanning operation
-        /// </summary>
-        /// <param name="path"></param>
-        void AssembliesFromPath(string path);
-
-        /// <summary>
-        /// Sweep the designated path and add any Assembly's found in this folder to the
-        /// scanning operation.  The assemblyFilter can be used to filter or limit the 
-        /// Assembly's that are picked up.
-        /// </summary>
-        /// <param name="path"></param>
-        /// <param name="assemblyFilter"></param>
-        void AssembliesFromPath(string path, Predicate<Assembly> assemblyFilter);
-
-        /// <summary>
-        /// Sweep the application base directory of current app domain and add any Assembly's 
-        /// found to the scanning operation.
-        /// </summary>
-        void AssembliesFromApplicationBaseDirectory();
-
-        /// <summary>
-        /// Sweep the application base directory of current app domain and add any Assembly's 
-        /// found to the scanning operation. The assemblyFilter can be used to filter or limit the 
-        /// Assembly's that are picked up.
-        /// </summary>
-        void AssembliesFromApplicationBaseDirectory(Predicate<Assembly> assemblyFilter);
-
-        #endregion
-
-        #region Adding TypeScanners
-
-        /// <summary>
-        /// Adds an ITypeScanner object to the scanning operation
-        /// </summary>
-        /// <param name="scanner"></param>
-        void With(ITypeScanner scanner);
-
-        void With(IHeavyweightTypeScanner heavyweightScanner);
-
-        /// <summary>
-        /// Adds the DefaultConventionScanner to the scanning operations.  I.e., a concrete
-        /// class named "Something" that implements "ISomething" will be automatically 
-        /// added to PluginType "ISomething"
-        /// </summary>
-        void WithDefaultConventions();
-
-        /// <summary>
-        /// Creates and adds a new ITypeScanner of type T to this scanning operation
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        void With<T>() where T : ITypeScanner, new();
-
-        #endregion
-
-        #region Other options
-
-        /// <summary>
-        /// Directs the scanning operation to automatically detect and include any Registry
-        /// classes found in the Assembly's being scanned
-        /// </summary>
-        void LookForRegistries();
-
-        /// <summary>
-        /// Add all concrete types of the Plugin Type as Instances of Plugin Type
-        /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
-        FindAllTypesFilter AddAllTypesOf<PLUGINTYPE>();
-
-        /// <summary>
-        /// Add all concrete types of the Plugin Type as Instances of Plugin Type
-        /// </summary>
-        /// <param name="pluginType"></param>
-        FindAllTypesFilter AddAllTypesOf(Type pluginType);
-
-        /// <summary>
-        /// Makes this scanning operation ignore all [PluginFamily] and [Pluggable] attributes
-        /// </summary>
-        void IgnoreStructureMapAttributes();
-
-        #endregion
-
-        #region Filtering types
-
-        /// <summary>
-        /// Exclude types that match the Predicate from being scanned
-        /// </summary>
-        /// <param name="exclude"></param>
-        void Exclude(Predicate<Type> exclude);
-
-        /// <summary>
-        /// Exclude all types in this nameSpace or its children from the scanning operation
-        /// </summary>
-        /// <param name="nameSpace"></param>
-        void ExcludeNamespace(string nameSpace);
-
-        /// <summary>
-        /// Exclude all types in this nameSpace or its children from the scanning operation
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        void ExcludeNamespaceContainingType<T>();
-
-        /// <summary>
-        /// Only include types matching the Predicate in the scanning operation. You can 
-        /// use multiple Include() calls in a single scanning operation
-        /// </summary>
-        /// <param name="predicate"></param>
-        void Include(Predicate<Type> predicate);
-
-        /// <summary>
-        /// Only include types from this nameSpace or its children in the scanning operation.  You can 
-        /// use multiple Include() calls in a single scanning operation
-        /// </summary>
-        /// <param name="nameSpace"></param>
-        void IncludeNamespace(string nameSpace);
-
-        /// <summary>
-        /// Only include types from this nameSpace or its children in the scanning operation.  You can 
-        /// use multiple Include() calls in a single scanning operation
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        void IncludeNamespaceContainingType<T>();
-
-        /// <summary>
-        /// Exclude this specific type from the scanning operation
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        void ExcludeType<T>();
-
-        // ... Other methods
-
-        #endregion
-
-        // ... Other methods
-
-        /// <summary>
-        /// Scans for PluginType's and Concrete Types that close the given open generic type
-        /// </summary>
-        /// <example>
-        /// 
-        /// </example>
-        /// <param name="openGenericType"></param>
-        void ConnectImplementationsToTypesClosing(Type openGenericType);
+        public IEnumerable<Type> For(IEnumerable<Assembly> assemblies, CompositeFilter<Type> filter)
+        {
+            return assemblies.SelectMany(x => _types[x].Where(filter.Matches));
+        }
     }
+
 
     public class AssemblyScanner : IAssemblyScanner
     {
         private readonly List<Assembly> _assemblies = new List<Assembly>();
-        private readonly List<Predicate<Type>> _excludes = new List<Predicate<Type>>();
+        private readonly CompositeFilter<Type> _filter = new CompositeFilter<Type>();
+
         private readonly List<IHeavyweightTypeScanner> _heavyweightScanners = new List<IHeavyweightTypeScanner>();
-        private readonly List<Predicate<Type>> _includes = new List<Predicate<Type>>();
+
         private readonly List<ITypeScanner> _scanners = new List<ITypeScanner>();
 
         public AssemblyScanner()
@@ -292,9 +142,9 @@ namespace StructureMap.Graph
         }
 
 
-        public void Exclude(Predicate<Type> exclude)
+        public void Exclude(Func<Type, bool> exclude)
         {
-            _excludes.Add(exclude);
+            _filter.Excludes += exclude;
         }
 
         public void ExcludeNamespace(string nameSpace)
@@ -307,9 +157,9 @@ namespace StructureMap.Graph
             ExcludeNamespace(typeof (T).Namespace);
         }
 
-        public void Include(Predicate<Type> predicate)
+        public void Include(Func<Type, bool> predicate)
         {
-            _includes.Add(predicate);
+            _filter.Includes += predicate;
         }
 
         public void IncludeNamespace(string nameSpace)
@@ -381,30 +231,16 @@ namespace StructureMap.Graph
 
         internal void ScanForAll(PluginGraph pluginGraph)
         {
-            TypeMapBuilder heavyweightScan = configureHeavyweightScan();
+            //TypeMapBuilder heavyweightScan = configureHeavyweightScan();
 
-            _assemblies.ForEach(assem => scanTypesInAssembly(assem, pluginGraph));
+            pluginGraph.Types.For(_assemblies, _filter).Each(type =>
+            {
+                _scanners.Each(x => x.Process(type, pluginGraph));
+            });
 
-            performHeavyweightScan(pluginGraph, heavyweightScan);
+            //performHeavyweightScan(pluginGraph, heavyweightScan);
         }
 
-        private void scanTypesInAssembly(Assembly assembly, PluginGraph graph)
-        {
-            try
-            {
-                foreach (Type type in assembly.GetExportedTypes())
-                {
-                    if (!isInTheIncludes(type)) continue;
-                    if (isInTheExcludes(type)) continue;
-
-                    _scanners.ForEach(scanner => scanner.Process(type, graph));
-                }
-            }
-            catch (Exception ex)
-            {
-                graph.Log.RegisterError(170, ex, assembly.FullName);
-            }
-        }
 
         private TypeMapBuilder configureHeavyweightScan()
         {
@@ -416,36 +252,12 @@ namespace StructureMap.Graph
             return typeMapBuilder;
         }
 
+        [Obsolete]
         private void performHeavyweightScan(PluginGraph pluginGraph, TypeMapBuilder typeMapBuilder)
         {
             IEnumerable<TypeMap> typeMaps = typeMapBuilder.GetTypeMaps();
             _heavyweightScanners.ForEach(scanner => scanner.Process(pluginGraph, typeMaps));
             typeMapBuilder.Dispose();
-        }
-
-        private bool isInTheExcludes(Type type)
-        {
-            if (_excludes.Count == 0) return false;
-
-            foreach (var exclude in _excludes)
-            {
-                if (exclude(type)) return true;
-            }
-
-            return false;
-        }
-
-        private bool isInTheIncludes(Type type)
-        {
-            if (_includes.Count == 0) return true;
-
-
-            foreach (var include in _includes)
-            {
-                if (include(type)) return true;
-            }
-
-            return false;
         }
 
         public bool Contains(string assemblyName)

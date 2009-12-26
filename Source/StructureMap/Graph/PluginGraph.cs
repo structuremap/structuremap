@@ -33,6 +33,33 @@ namespace StructureMap.Graph
         void AddType(Type pluggedType);
     }
 
+
+    public class WeakReference<T>
+    {
+        private readonly Func<T> _builder;
+        private readonly WeakReference _reference;
+
+        public WeakReference(Func<T> builder)
+        {
+            _builder = builder;
+            _reference = new WeakReference(_builder());
+        }
+
+        public T Value
+        {
+            get
+            {
+                if (!_reference.IsAlive)
+                {
+                    _reference.Target = _builder();
+                }
+
+                return (T)_reference.Target;
+            }
+        }
+    }
+
+
     /// <summary>
     /// Models the runtime configuration of a StructureMap Container
     /// </summary>
@@ -47,17 +74,21 @@ namespace StructureMap.Graph
         private readonly List<AssemblyScanner> _scanners = new List<AssemblyScanner>();
         private GraphLog _log = new GraphLog();
         private bool _sealed;
+        private readonly WeakReference<TypePool> _types;
 
 
         public PluginGraph()
         {
             _pluginFamilies = new PluginFamilyCollection(this);
+            _types = new WeakReference<TypePool>(() => new TypePool(this));
         }
 
-        public PluginGraph(AssemblyScanner assemblies)
+        public TypePool Types
         {
-            _pluginFamilies = new PluginFamilyCollection(this);
-            _scanners.Add(assemblies);
+            get
+            {
+                return _types.Value;
+            }
         }
 
         public List<Registry> Registries { get { return _registries; } }
