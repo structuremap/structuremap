@@ -1,9 +1,11 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
 using StructureMap.Util;
+using System.Linq;
 
 namespace StructureMap
 {
@@ -75,7 +77,7 @@ namespace StructureMap
             }
         }
 
-        T IContext.GetInstance<T>()
+        public T GetInstance<T>()
         {
             return (T) CreateInstance(typeof (T));
         }
@@ -119,6 +121,8 @@ namespace StructureMap
 
             return list;
         }
+
+
 
         #endregion
 
@@ -170,6 +174,16 @@ namespace StructureMap
             }
 
             return array;
+        }
+
+        public IEnumerable<T> GetAllInstances<T>()
+        {
+            return forType(typeof (T)).AllInstances.Select(x => GetInstance<T>());
+        }
+
+        public IEnumerable<object> GetAllInstances(Type pluginType)
+        {
+            return forType(pluginType).AllInstances.Select(x => CreateInstance(pluginType, x));
         }
 
         public virtual object CreateInstance(Type pluginType)

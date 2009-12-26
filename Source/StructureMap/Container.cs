@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using StructureMap.Configuration.DSL;
+using StructureMap.Construction;
 using StructureMap.Diagnostics;
 using StructureMap.Exceptions;
 using StructureMap.Graph;
@@ -241,8 +242,9 @@ namespace StructureMap
             IConfiguredInstance instance = _pipelineGraph.GetDefault(pluggedType) as IConfiguredInstance
                                            ?? new ConfiguredInstance(pluggedType);
 
-            InstanceBuilder builder = PluginCache.FindBuilder(pluggedType);
-            builder.BuildUp(instance, withNewSession(Plugin.DEFAULT), target);
+            IInstanceBuilder builder = PluginCache.FindBuilder(pluggedType);
+            var arguments = new Arguments(instance, withNewSession(Plugin.DEFAULT));
+            builder.BuildUp(arguments, target);
         }
 
         /// <summary>
@@ -481,11 +483,11 @@ namespace StructureMap
                 defaultInstance = new ConfiguredInstance(pluginType);
             }
 
-            var basicInstance = defaultInstance as BasicInstance;
+            var basicInstance = defaultInstance as ConstructorInstance;
 
             Instance instance = basicInstance == null
                                     ? defaultInstance
-                                    : new ExplicitInstance(pluginType, args, basicInstance);
+                                    : basicInstance.Override(args);
 
             BuildSession session = withNewSession(requestedName);
 
@@ -516,11 +518,10 @@ namespace StructureMap
 
             _pipelineGraph = new PipelineGraph(pluginGraph);
 
-            PluginCache.Compile();
-
             _pipelineGraph.Inject<IContainer>(this);
         }
 
+        [Obsolete("delegate to something cleaner in BuildSession")]
         private IList<T> getListOfTypeWithSession<T>(BuildSession session)
         {
             var list = new List<T>();

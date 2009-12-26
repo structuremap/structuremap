@@ -193,7 +193,6 @@ namespace StructureMap
             return getPropertyValue(XmlConstants.PLUGGED_TYPE);
         }
 
-        // TODO -- this is where we can read other types
         public Instance ReadInstance(PluginGraph pluginGraph, Type pluginType)
         {
             try

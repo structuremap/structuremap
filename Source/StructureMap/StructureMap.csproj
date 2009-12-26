@@ -144,16 +144,13 @@
     <Compile Include="Diagnostics\TextLine.cs" />
     <Compile Include="Diagnostics\TextReportWriter.cs" />
     <Compile Include="Diagnostics\WhatDoIHaveWriter.cs" />
-    <Compile Include="Emitting\ArgumentEmitter.cs" />
     <Compile Include="Exceptions\StructureMapConfigurationException.cs" />
     <Compile Include="ExplicitArgsExpression.cs" />
     <Compile Include="Graph\Constructor.cs" />
     <Compile Include="Graph\IArgumentVisitor.cs" />
     <Compile Include="Graph\IPluginFamily.cs" />
     <Compile Include="Graph\AssemblyScanner.cs" />
-    <Compile Include="InstanceBuilderList.cs" />
     <Compile Include="InstanceCache.cs" />
-    <Compile Include="InstanceFamily.cs" />
     <Compile Include="Interceptors\MatchedTypeInterceptor.cs" />
     <Compile Include="PipelineGraph.cs" />
     <Compile Include="Pipeline\ConfiguredInstance.cs" />
@@ -217,39 +214,6 @@
     <Compile Include="Configuration\XmlConstants.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Emitting\BuildInstanceMethod.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Emitting\ClassBuilder.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Emitting\DynamicAssembly.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Emitting\InstanceBuilderAssembly.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Emitting\Method.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Emitting\Parameters\ChildArrayParameterEmitter.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Emitting\Parameters\ChildParameterEmitter.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Emitting\Parameters\EnumParameterEmitter.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Emitting\Parameters\ParameterEmitter.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Emitting\Parameters\PrimitiveParameterEmitter.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Emitting\Parameters\StringParameterEmitter.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Exceptions\InstancePropertyValueException.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -285,9 +249,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="IContainer.cs" />
-    <Compile Include="InstanceBuilder.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="InstanceFactory.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -382,13 +343,16 @@
     <Compile Include="Configuration\PrimitiveArrayReader.cs" />
     <Compile Include="Configuration\TypeReaderFactory.cs" />
     <Compile Include="Configuration\XmlExtensions.cs" />
+    <Compile Include="Construction\BuilderCompiler.cs" />
+    <Compile Include="Construction\ConstructorFunctionBuilder.cs" />
+    <Compile Include="Construction\IArguments.cs" />
+    <Compile Include="Construction\InstanceBuilder.cs" />
+    <Compile Include="Construction\SetterBuilder.cs" />
     <Compile Include="Diagnostics\Doctor.cs" />
     <Compile Include="Diagnostics\DoctorReport.cs" />
     <Compile Include="Diagnostics\DoctorResult.cs" />
     <Compile Include="Diagnostics\DoctorRunner.cs" />
     <Compile Include="Diagnostics\ValidationError.cs" />
-    <Compile Include="Emitting\BuildUpMethod.cs" />
-    <Compile Include="Emitting\Parameters\Methods.cs" />
     <Compile Include="ErrorMessages.cs" />
     <Compile Include="Example.cs" />
     <Compile Include="Extensions.cs" />
@@ -401,6 +365,7 @@
     <Compile Include="Graph\PluginCache.cs" />
     <Compile Include="Graph\SingleImplementationScanner.cs" />
     <Compile Include="IContext.cs" />
+    <Compile Include="Pipeline\Arguments.cs" />
     <Compile Include="Pipeline\ArrayCoercion.cs" />
     <Compile Include="Pipeline\ConditionalInstance.cs" />
     <Compile Include="Pipeline\ConstructorInstance.cs" />

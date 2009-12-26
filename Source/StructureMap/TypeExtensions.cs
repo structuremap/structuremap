@@ -1,13 +1,41 @@
 using System;
+using System.Collections.Generic;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 
 namespace StructureMap
 {
+    public static class BasicExtensions
+    {
+        public static void TryGet<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key,
+                                                Action<TValue> action)
+        {
+            TValue value;
+            if (dictionary.TryGetValue(key, out value))
+            {
+                action(value);
+            }
+        }
+
+        public static T As<T>(this object target) where T : class
+        {
+            return target as T;
+        }
+
+        public static bool IsIn<T>(this T target, IList<T> list)
+        {
+            return list.Contains(target);
+        }
+    }
+
     namespace TypeRules
     {
         public static class TypeExtensions
         {
+
+
+
+
             public static bool Closes(this Type type, Type openType)
             {
                 var baseType = type.BaseType;

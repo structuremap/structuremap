@@ -132,6 +132,7 @@ namespace StructureMap
             return _factories[pluginType];
         }
 
+        [Obsolete("Replace this with a Cache")]
         private void createFactoryIfMissing(Type pluginType)
         {
             if (!_factories.ContainsKey(pluginType))

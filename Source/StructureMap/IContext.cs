@@ -67,10 +67,18 @@ namespace StructureMap
 
         /// <summary>
         /// Gets all objects in the current object graph that can be cast
-        /// to T
+        /// to T that have already been created
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         IEnumerable<T> All<T>() where T : class;
+
+
+        /// <summary>
+        /// Creates/Resolves every configured instance of PlutinType T
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        IEnumerable<T> GetAllInstances<T>();
     }
 }
