@@ -119,11 +119,6 @@ namespace StructureMap.Pipeline
             return instance;
         }
 
-        protected override void addTemplatedInstanceTo(PluginFamily family, Type[] templateTypes)
-        {
-            throw new NotImplementedException();
-        }
-
         protected override sealed string getDescription()
         {
             return "Configured Instance of " + _plugin.PluggedType.AssemblyQualifiedName;

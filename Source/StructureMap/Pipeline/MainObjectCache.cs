@@ -1,21 +1,38 @@
 using System;
 using System.Collections.Generic;
+using StructureMap.Util;
 
 namespace StructureMap.Pipeline
 {
     public class MainObjectCache : IObjectCache
     {
         private readonly object _locker = new object();
-        private readonly IDictionary<InstanceKey, object> _objects = new Dictionary<InstanceKey, object>();
+        private readonly Cache<InstanceKey, object> _objects = new Cache<InstanceKey, object>();
 
         public object Locker { get { return _locker; } }
 
         public int Count { get { return _objects.Count; } }
 
+        public bool Has(Type pluginType, Instance instance)
+        {
+            var key = new InstanceKey(instance, pluginType);
+            return _objects.Has(key);
+        }
+
+        public void Eject(Type pluginType, Instance instance)
+        {
+            var key = new InstanceKey(instance, pluginType);
+            if (!_objects.Has(key)) return;
+
+            var disposable = _objects[key] as IDisposable;
+            _objects.Remove(key);
+            disposeObject(disposable);
+        }
+
         public object Get(Type pluginType, Instance instance)
         {
             var key = new InstanceKey(instance, pluginType);
-            return _objects.ContainsKey(key) ? _objects[key] : null;
+            return _objects.Has(key) ? _objects[key] : null;
         }
 
         public void Set(Type pluginType, Instance instance, object value)
@@ -25,7 +42,7 @@ namespace StructureMap.Pipeline
             try
             {
                 var key = new InstanceKey(instance, pluginType);
-                _objects.Add(key, value);
+                _objects[key] = value;
             }
             catch (ArgumentException e)
             {
@@ -39,24 +56,28 @@ namespace StructureMap.Pipeline
         {
             lock (Locker)
             {
-                foreach (object @object in _objects.Values)
+                _objects.Each(@object =>
                 {
-                    if (@object is Container) continue;
+                    if (@object is Container) return;
 
-                    var disposable = @object as IDisposable;
-                    if (disposable != null)
-                    {
-                        try
-                        {
-                            disposable.Dispose();
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
+                    disposeObject(@object as IDisposable);
+                });
 
                 _objects.Clear();
+            }
+        }
+
+        private void disposeObject(IDisposable disposable)
+        {
+            if (disposable != null)
+            {
+                try
+                {
+                    disposable.Dispose();
+                }
+                catch (Exception)
+                {
+                }
             }
         }
     }

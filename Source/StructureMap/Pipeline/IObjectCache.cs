@@ -8,6 +8,11 @@ namespace StructureMap.Pipeline
 
         int Count { get; }
 
+        bool Has(Type pluginType, Instance instance);
+
+        void Eject(Type pluginType, Instance instance);
+
+
         object Get(Type pluginType, Instance instance);
         void Set(Type pluginType, Instance instance, object value);
         void DisposeAndClear();

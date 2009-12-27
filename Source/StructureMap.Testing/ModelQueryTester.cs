@@ -5,6 +5,7 @@ using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Testing.GenericWidgets;
 using StructureMap.Testing.Graph;
+using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing
 {
@@ -30,7 +31,7 @@ namespace StructureMap.Testing
             PluginGraph graph = registry.Build();
             var pipeline = new PipelineGraph(graph);
 
-            _model = new Model(pipeline);
+            _model = new Container(graph).Model;
 
             _container = new Container(graph);
         }
@@ -54,7 +55,7 @@ namespace StructureMap.Testing
         }
 
 
-        private Model _model;
+        private IModel _model;
         private Container _container;
 
 
@@ -67,12 +68,24 @@ namespace StructureMap.Testing
         }
 
         [Test]
+        public void the_default_type_for()
+        {
+            _model.DefaultTypeFor<ISomething>().ShouldEqual(typeof (SomethingOne));
+            _model.DefaultTypeFor<IWidget>().ShouldBeNull();
+
+            _model.DefaultTypeFor(typeof (IService<>)).ShouldBeNull();
+            _model.DefaultTypeFor(typeof(ISomething)).ShouldEqual(typeof(SomethingOne));
+        }
+
+        [Test]
         public void HasImplementationFor_w_container()
         {
             _container.Model.HasDefaultImplementationFor(typeof (ISomething)).ShouldBeTrue();
             _container.Model.HasDefaultImplementationFor(GetType()).ShouldBeFalse();
             _container.Model.HasDefaultImplementationFor(typeof (IServiceProvider)).ShouldBeFalse();
         }
+
+
 
         [Test]
         public void HasImplementationsFor()
@@ -109,7 +122,8 @@ namespace StructureMap.Testing
         [Test]
         public void Iterate_over_pluginTypes()
         {
-            _model.PluginTypes.Count().ShouldEqual(3);
+            // 3 registered plus the 4th is the IContainer itself
+            _model.PluginTypes.Count().ShouldEqual(4);
         }
 
         [Test]

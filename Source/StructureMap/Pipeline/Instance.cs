@@ -25,9 +25,6 @@ namespace StructureMap.Pipeline
         Instance FindInstanceForProfile(PluginFamily family, string profileName, GraphLog log);
         InstanceToken CreateToken();
         void Preprocess(PluginFamily family);
-
-        [Obsolete("can go away")]
-        void AddTemplatedInstanceTo(PluginFamily family, Type[] templateTypes);
     }
 
     public abstract class Instance : IDiagnosticInstance
@@ -71,12 +68,6 @@ namespace StructureMap.Pipeline
         void IDiagnosticInstance.Preprocess(PluginFamily family)
         {
             preprocess(family);
-        }
-
-        [Obsolete("Can go")]
-        void IDiagnosticInstance.AddTemplatedInstanceTo(PluginFamily family, Type[] templateTypes)
-        {
-            addTemplatedInstanceTo(family, templateTypes);
         }
 
         Type IInstance.ConcreteType { get { return getConcreteType(null); } }
