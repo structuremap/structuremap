@@ -367,7 +367,7 @@
     <Compile Include="Graph\PluggableAttributeScanner.cs" />
     <Compile Include="Graph\PluginCache.cs" />
     <Compile Include="IContext.cs" />
-    <Compile Include="IModel.cs" />
+    <Compile Include="Query\IModel.cs" />
     <Compile Include="Pipeline\Arguments.cs" />
     <Compile Include="Pipeline\ArrayCoercion.cs" />
     <Compile Include="Pipeline\ConditionalInstance.cs" />
@@ -392,7 +392,7 @@
     <Compile Include="TypeExtensions.cs" />
     <Compile Include="IBootstrapper.cs" />
     <Compile Include="InitializationExpression.cs" />
-    <Compile Include="Model.cs" />
+    <Compile Include="Query\Model.cs" />
     <Compile Include="Pipeline\BuildFrame.cs" />
     <Compile Include="Pipeline\BuildStack.cs" />
     <Compile Include="Pipeline\ConfiguredInstanceBase.cs" />

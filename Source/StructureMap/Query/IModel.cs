@@ -2,8 +2,23 @@ using System;
 using System.Collections.Generic;
 using StructureMap.Pipeline;
 
-namespace StructureMap
+namespace StructureMap.Query
 {
+
+    public interface IInstance
+    {
+        string Name { get; }
+
+        /// <summary>
+        /// The actual concrete type of this Instance.  Not every type of IInstance
+        /// can determine the ConcreteType
+        /// </summary>
+        Type ConcreteType { get; }
+
+
+        string Description { get; }
+    }
+
     /// <summary>
     /// Models the state of a Container or ObjectFactory.  Can be used to query for the 
     /// existence of types registered with StructureMap

@@ -2,22 +2,11 @@ using System;
 using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
+using StructureMap.Query;
 
 namespace StructureMap.Pipeline
 {
-    public interface IInstance
-    {
-        string Name { get; }
 
-        /// <summary>
-        /// The actual concrete type of this Instance.  Not every type of IInstance
-        /// can determine the ConcreteType
-        /// </summary>
-        Type ConcreteType { get; }
-
-
-        string Description { get; }
-    }
 
     public interface IDiagnosticInstance : IInstance
     {

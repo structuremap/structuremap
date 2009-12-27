@@ -4,6 +4,7 @@ using System.Linq;
 using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
+using StructureMap.Query;
 
 namespace StructureMap
 {
@@ -212,6 +213,7 @@ namespace StructureMap
             _profileManager.EjectAllInstancesOf<T>();
         }
 
+        [Obsolete("Move this to PluginTypeConfiguration")]
         public IEnumerable<IInstance> InstancesOf(Type pluginType)
         {
             if (_genericsGraph.HasFamily(pluginType))
@@ -227,16 +229,9 @@ namespace StructureMap
             return new IInstance[0];
         }
 
-        public List<IInstance> GetAllInstances()
+        public List<Instance> GetAllInstances()
         {
-            var list = new List<IInstance>();
-
-            foreach (var pair in _factories)
-            {
-                list.AddRange(pair.Value.AllInstances);
-            }
-
-            return list;
+            return _factories.Values.SelectMany(x => x.AllInstances).ToList();
         }
 
         public bool HasDefaultForPluginType(Type pluginType)

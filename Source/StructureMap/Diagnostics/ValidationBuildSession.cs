@@ -6,6 +6,7 @@ using System.Text;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
+using StructureMap.Query;
 
 namespace StructureMap.Diagnostics
 {
@@ -14,7 +15,7 @@ namespace StructureMap.Diagnostics
         private readonly Stack<BuildDependency> _dependencyStack = new Stack<BuildDependency>();
         private readonly List<ValidationError> _validationErrors = new List<ValidationError>();
         private ErrorCollection _errors;
-        private List<IInstance> _explicitInstances;
+        private List<Instance> _explicitInstances;
 
         public ValidationBuildSession(PipelineGraph pipelineGraph, InterceptorLibrary interceptorLibrary)
             : base(pipelineGraph, interceptorLibrary, new NulloObjectCache())

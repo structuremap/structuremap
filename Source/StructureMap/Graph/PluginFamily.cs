@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using StructureMap.Attributes;
 using StructureMap.Pipeline;
+using StructureMap.Query;
 using StructureMap.TypeRules;
 using StructureMap.Util;
 
@@ -324,6 +325,7 @@ namespace StructureMap.Graph
             };
         }
 
+        [Obsolete("replace with Instances")]
         public void ForInstance(string name, Action<Instance> action)
         {
             _instances.WithValue(name, action);
@@ -338,7 +340,9 @@ namespace StructureMap.Graph
 
         public int InstanceCount { get { return _instances.Count; } }
 
+        [Obsolete]
         public IEnumerable<IInstance> Instances { get { return _instances.GetAll(); } }
+        
         public Instance MissingInstance { get; set; }
 
         /// <summary>

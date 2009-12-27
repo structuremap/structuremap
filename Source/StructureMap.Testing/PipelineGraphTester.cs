@@ -4,6 +4,7 @@ using NUnit.Framework;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
+using StructureMap.Query;
 using StructureMap.Testing.GenericWidgets;
 using StructureMap.Testing.Graph;
 

@@ -3,6 +3,7 @@ using System.Linq;
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
+using StructureMap.Query;
 using StructureMap.Testing.GenericWidgets;
 using StructureMap.Testing.Graph;
 using StructureMap.Testing.Widget;

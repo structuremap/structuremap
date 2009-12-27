@@ -8,6 +8,7 @@ using StructureMap.Exceptions;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
+using StructureMap.Query;
 using StructureMap.TypeRules;
 
 namespace StructureMap

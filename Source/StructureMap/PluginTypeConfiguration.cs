@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using StructureMap.Pipeline;
+using StructureMap.Query;
 
 namespace StructureMap
 {
@@ -13,7 +14,7 @@ namespace StructureMap
 
         /// <summary>
         /// The "instance" that will be used when Container.GetInstance(PluginType) is called.
-        /// See <see cref="StructureMap.Pipeline.IInstance">IInstance</see> for more information
+        /// See <see cref="IInstance">IInstance</see> for more information
         /// </summary>
         public IInstance Default { get; set; }
 
@@ -23,7 +24,7 @@ namespace StructureMap
         public ILifecycle Lifecycle { get; set; }
 
         /// <summary>
-        /// All of the <see cref="StructureMap.Pipeline.IInstance">IInstance</see>'s registered
+        /// All of the <see cref="IInstance">IInstance</see>'s registered
         /// for this PluginType
         /// </summary>
         public IEnumerable<IInstance> Instances { get; set; }
