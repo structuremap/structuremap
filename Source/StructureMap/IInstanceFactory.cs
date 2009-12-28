@@ -27,5 +27,6 @@ namespace StructureMap
         void EjectAllInstances();
 
         IInstanceFactory Clone();
+        void RemoveInstance(Instance instance);
     }
 }

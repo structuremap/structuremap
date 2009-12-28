@@ -7,8 +7,6 @@ namespace StructureMap.Configuration
     {
         void AddProfile(string profileName);
         void OverrideProfile(TypePath typePath, string instanceKey);
-        void AddMachine(string machineName, string profileName);
-        void OverrideMachine(TypePath typePath, string instanceKey);
         void SetDefaultProfileName(string profileName);
     }
 

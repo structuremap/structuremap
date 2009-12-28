@@ -39,5 +39,10 @@ namespace StructureMap.Query
         {
             return false;
         }
+
+        public void EjectAndRemove(InstanceRef instance)
+        {
+        }
+
     }
 }

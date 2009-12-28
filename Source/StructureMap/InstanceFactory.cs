@@ -133,6 +133,11 @@ namespace StructureMap
             return factory;
         }
 
+        public void RemoveInstance(Instance instance)
+        {
+            _instances.Remove(instance.Name);
+        }
+
         #endregion
 
         public void Dispose()

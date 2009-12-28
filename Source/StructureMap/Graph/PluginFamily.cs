@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using StructureMap.Pipeline;
+using StructureMap.Query;
 using StructureMap.TypeRules;
 using StructureMap.Util;
 
@@ -350,5 +351,15 @@ namespace StructureMap.Graph
         public string DefaultInstanceKey { get { return _defaultKey; } set { _defaultKey = value ?? string.Empty; } }
 
         #endregion
+
+        public void RemoveInstance(Instance instance)
+        {
+            _instances.Remove(instance.Name);
+            if (_defaultKey == instance.Name)
+            {
+                _defaultKey = null;
+            }
+
+        }
     }
 }

@@ -14,42 +14,13 @@ namespace StructureMap.Testing.Configuration
         public void SetUp()
         {
             _graph = new PluginGraph();
-            _builder = new ProfileBuilder(_graph, THE_MACHINE_NAME);
+            _builder = new ProfileBuilder(_graph);
         }
 
         #endregion
 
         private PluginGraph _graph;
         private ProfileBuilder _builder;
-        private const string THE_MACHINE_NAME = "TheMachineName";
-
-        [Test]
-        public void Do_not_register_a_machine_override_if_it_is_NOT_the_matching_machine()
-        {
-            _builder.AddMachine("Some other machine", "TheProfile");
-            _builder.OverrideMachine(new TypePath(GetType()), "Purple");
-
-            Assert.IsNull(_graph.ProfileManager.GetMachineDefault(GetType()));
-        }
-
-        [Test]
-        public void Ignore_any_information_from_a_different_machine()
-        {
-            _builder.AddMachine("DifferentMachine", "TheProfile");
-            Assert.IsTrue(string.IsNullOrEmpty(_graph.ProfileManager.DefaultMachineProfileName));
-        }
-
-        [Test]
-        public void Log_131_if_trying_to_register_override_for_a_machine_when_the_PluginType_cannot_be_found()
-        {
-            _builder.AddMachine(THE_MACHINE_NAME, "TheProfile");
-
-            _graph.Log.AssertHasNoError(131);
-
-            _builder.OverrideMachine(new TypePath("not a real type"), "Purple");
-
-            _graph.Log.AssertHasError(131);
-        }
 
         [Test]
         public void Log_131_if_trying_to_register_override_for_a_profile_when_the_PluginType_cannot_be_found()
@@ -80,28 +51,12 @@ namespace StructureMap.Testing.Configuration
         }
 
         [Test]
-        public void Register_a_machine_override_if_it_is_the_matching_machine()
-        {
-            _builder.AddMachine(THE_MACHINE_NAME, "TheProfile");
-            _builder.OverrideMachine(new TypePath(GetType()), "Purple");
-
-            var instance = new ReferencedInstance("Purple");
-            Assert.AreEqual(instance, _graph.ProfileManager.GetMachineDefault(GetType()));
-        }
-
-        [Test]
         public void SetDefaultProfileName()
         {
             string theProfileName = "some profile name";
             _builder.SetDefaultProfileName(theProfileName);
 
             Assert.AreEqual(theProfileName, _graph.ProfileManager.DefaultProfileName);
-        }
-
-        [Test]
-        public void smoke_test_get_machine_name()
-        {
-            ProfileBuilder.GetMachineName().ShouldNotBeEmpty();
         }
 
         [Test]
@@ -120,11 +75,5 @@ namespace StructureMap.Testing.Configuration
             }
         }
 
-        [Test]
-        public void Use_the_machine_profile_name_if_the_machine_name_matches()
-        {
-            _builder.AddMachine(THE_MACHINE_NAME, "TheProfile");
-            Assert.AreEqual("TheProfile", _graph.ProfileManager.DefaultMachineProfileName);
-        }
     }
 }

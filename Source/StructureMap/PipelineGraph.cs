@@ -30,18 +30,13 @@ namespace StructureMap
             _profileManager = graph.ProfileManager;
             _log = graph.Log;
 
-            foreach (PluginFamily family in graph.PluginFamilies)
+
+            graph.PluginFamilies.Where(x => x.IsGenericTemplate).Each(_genericsGraph.AddFamily);
+            graph.PluginFamilies.Where(x => !x.IsGenericTemplate).Each(family =>
             {
-                if (family.IsGenericTemplate)
-                {
-                    _genericsGraph.AddFamily(family);
-                }
-                else
-                {
-                    var factory = new InstanceFactory(family);
-                    _factories.Add(family.PluginType, factory);
-                }
-            }
+                var factory = new InstanceFactory(family);
+                _factories.Add(family.PluginType, factory);
+            });
         }
 
         private PipelineGraph(ProfileManager profileManager, GenericsPluginGraph genericsGraph, GraphLog log)
@@ -230,6 +225,12 @@ namespace StructureMap
             return lifecycle == null
                        ? _transientCache
                        : lifecycle.FindCache();
+        }
+
+        public void Remove(Type pluginType, Instance instance)
+        {
+            ForType(pluginType).RemoveInstance(instance);
+            _profileManager.RemoveInstance(pluginType, instance);
         }
     }
 }

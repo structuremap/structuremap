@@ -25,6 +25,11 @@ namespace StructureMap.Configuration
             _structureMapNode.ForAttributeValue(DEFAULT_PROFILE,
                                                 profileName => _profileBuilder.SetDefaultProfileName(profileName));
 
+            readProfileNodes();
+        }
+
+        private void readProfileNodes()
+        {
             forEachNode(PROFILE_NODE).Do(element =>
             {
                 string profileName = element.GetAttribute(NAME);
@@ -33,19 +38,6 @@ namespace StructureMap.Configuration
                 writeOverrides(element,
                                (fullName, defaultKey) =>
                                _profileBuilder.OverrideProfile(new TypePath(fullName), defaultKey), profileName);
-            });
-
-
-            forEachNode(MACHINE_NODE).Do(element =>
-            {
-                string machineName = element.GetAttribute(NAME);
-                string profileName = element.GetAttribute(PROFILE_NODE);
-
-                _profileBuilder.AddMachine(machineName, profileName);
-
-                writeOverrides(element,
-                               (fullName, defaultKey) =>
-                               _profileBuilder.OverrideMachine(new TypePath(fullName), defaultKey), machineName);
             });
         }
 

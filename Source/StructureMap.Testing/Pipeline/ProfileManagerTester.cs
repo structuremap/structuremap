@@ -38,14 +38,7 @@ namespace StructureMap.Testing.Pipeline
             family.AddInstance(new ObjectInstance(0).WithName(name));
         }
 
-        private void addDefaultToMachine<T>(string name)
-        {
-            ObjectInstance instance = new ObjectInstance(0).WithName(name);
-            PluginFamily family = _pluginGraph.FindFamily(typeof (T));
-            family.AddInstance(instance);
 
-            _manager.SetMachineDefault(typeof (T), new ReferencedInstance(name));
-        }
 
         private void assertNoDefaultForType<T>()
         {
@@ -85,59 +78,6 @@ namespace StructureMap.Testing.Pipeline
 
 
         [Test]
-        public void DefaultMachineProfileNotSet_and_pickUp_default_from_family_machine()
-        {
-            addDefaultToProfile<ISomething>("Machine", "Red");
-            addDefaultToPluginFamily<ISomething>("Blue");
-            _manager.DefaultMachineProfileName = null;
-
-            seal();
-
-            assertDefaultInstanceNameIs<ISomething>("Blue");
-        }
-
-        [Test]
-        public void Got_machine_default_machine_profile_and_family_default_the_machine_wins()
-        {
-            addDefaultToProfile<ISomething>("MachineProfile", "MachineProfile");
-            addDefaultToPluginFamily<ISomething>("Family");
-            addDefaultToMachine<ISomething>("Machine");
-            _manager.DefaultMachineProfileName = "MachineProfile";
-
-            seal();
-
-            assertDefaultInstanceNameIs<ISomething>("Machine");
-        }
-
-
-        [Test]
-        public void Got_profile_and_family_and_machine_and_machine_profile_so_profile_wins()
-        {
-            addDefaultToProfile<ISomething>("TheProfile", "Profile");
-            addDefaultToProfile<ISomething>("TheMachineProfile", "MachineProfile");
-            addDefaultToPluginFamily<ISomething>("Family");
-            addDefaultToMachine<ISomething>("Machine");
-            _manager.DefaultProfileName = "TheProfile";
-            _manager.DefaultMachineProfileName = "TheMachineProfile";
-
-            seal();
-
-            assertDefaultInstanceNameIs<ISomething>("Profile");
-        }
-
-        [Test]
-        public void Got_profile_and_family_and_machine_so_profile_wins()
-        {
-            addDefaultToProfile<ISomething>("TheProfile", "Profile");
-            addDefaultToPluginFamily<ISomething>("Family");
-            addDefaultToMachine<ISomething>("Machine");
-            _manager.DefaultProfileName = "TheProfile";
-            seal();
-
-            assertDefaultInstanceNameIs<ISomething>("Profile");
-        }
-
-        [Test]
         public void Got_profile_and_family_so_profile_wins()
         {
             addDefaultToProfile<ISomething>("TheProfile", "Profile");
@@ -158,37 +98,6 @@ namespace StructureMap.Testing.Pipeline
             assertDefaultInstanceNameIs<ISomething>("Profile");
         }
 
-        [Test]
-        public void Have_a_machine_default_and_a_base_default_the_machine_wins()
-        {
-            addDefaultToPluginFamily<ISomething>("Red");
-            addDefaultToMachine<ISomething>("Blue");
-
-            seal();
-
-            assertDefaultInstanceNameIs<ISomething>("Blue");
-        }
-
-        [Test]
-        public void Have_a_machine_default_but_not_any_other_default_for_a_type()
-        {
-            addDefaultToMachine<ISomething>("Blue");
-            seal();
-
-            assertDefaultInstanceNameIs<ISomething>("Blue");
-        }
-
-        [Test]
-        public void Have_machine_profile_and_default_from_family_machine_profile_wins()
-        {
-            addDefaultToProfile<ISomething>("Machine", "MachineProfile");
-            addDefaultToPluginFamily<ISomething>("Family");
-            _manager.DefaultMachineProfileName = "Machine";
-
-            seal();
-
-            assertDefaultInstanceNameIs<ISomething>("MachineProfile");
-        }
 
         [Test]
         public void If_the_profile_is_set_and_there_is_a_default_in_that_profile_use_the_profile_default()
@@ -207,18 +116,6 @@ namespace StructureMap.Testing.Pipeline
         {
             var manager = new ProfileManager();
             manager.DefaultProfileName = "something that doesn't exist";
-
-            var graph = new PluginGraph();
-            manager.Seal(graph);
-
-            graph.Log.AssertHasError(280);
-        }
-
-        [Test]
-        public void Log_280_if_the_machine_default_profile_cannot_be_found()
-        {
-            var manager = new ProfileManager();
-            manager.DefaultMachineProfileName = "something that doesn't exist";
 
             var graph = new PluginGraph();
             manager.Seal(graph);

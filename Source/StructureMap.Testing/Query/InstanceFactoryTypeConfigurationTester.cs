@@ -1,5 +1,6 @@
 using System.Linq;
 using NUnit.Framework;
+using StructureMap.Query;
 using StructureMap.Testing.Configuration.DSL;
 using StructureMap.Testing.Graph;
 using StructureMap.Testing.Widget;
@@ -34,6 +35,46 @@ namespace StructureMap.Testing.Query
         #endregion
 
         private Container container;
+
+        [Test]
+        public void eject_and_remove_an_instance_should_remove_it_from_the_model()
+        {
+            var iRef = container.Model.For<Rule>().Instances.First();
+            container.Model.For<Rule>().EjectAndRemove(iRef);
+
+            container.Model.For<Rule>().Instances.Select(x => x.ConcreteType)
+                .ShouldHaveTheSameElementsAs(typeof(ARule), typeof(ColorRule));
+
+            container.GetAllInstances<Rule>().Select(x => x.GetType())
+                .ShouldHaveTheSameElementsAs(typeof(ARule), typeof(ColorRule));
+        }
+
+
+        [Test]
+        public void eject_and_remove_an_instance_should_remove_it_from_the_model_by_name()
+        {
+            var iRef = container.Model.For<Rule>().Instances.First();
+            container.Model.For<Rule>().EjectAndRemove(iRef.Name);
+
+            container.Model.For<Rule>().Instances.Select(x => x.ConcreteType)
+                .ShouldHaveTheSameElementsAs(typeof(ARule), typeof(ColorRule));
+
+            container.GetAllInstances<Rule>().Select(x => x.GetType())
+                .ShouldHaveTheSameElementsAs(typeof(ARule), typeof(ColorRule));
+        }
+
+        [Test]
+        public void eject_and_remove_an_instance_by_filter_should_remove_it_from_the_model()
+        {
+            var iRef = container.Model.For<Rule>().Instances.First();
+            container.Model.For<Rule>().EjectAndRemove(x => x.Name == iRef.Name);
+
+            container.Model.For<Rule>().Instances.Select(x => x.ConcreteType)
+                .ShouldHaveTheSameElementsAs(typeof(ARule), typeof(ColorRule));
+
+            container.GetAllInstances<Rule>().Select(x => x.GetType())
+                .ShouldHaveTheSameElementsAs(typeof(ARule), typeof(ColorRule));
+        }
 
         [Test]
         public void build_when_the_cast_does_not_work()

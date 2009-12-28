@@ -14,6 +14,7 @@ namespace StructureMap.Query
             _family = family;
         }
 
+        internal Instance Instance { get { return _instance; } }
 
         public string Name { get { return _instance.Name; } }
 

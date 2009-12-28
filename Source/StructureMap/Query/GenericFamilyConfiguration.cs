@@ -53,7 +53,7 @@ namespace StructureMap.Query
         /// All of the <see cref="InstanceRef">InstanceRef</see>'s registered
         /// for this PluginType
         /// </summary>
-        public IEnumerable<InstanceRef> Instances { get { return _family.Instances.Select(x => new InstanceRef(x, this)); } }
+        public IEnumerable<InstanceRef> Instances { get { return _family.Instances.Select(x => new InstanceRef(x, this)).ToArray(); } }
 
         /// <summary>
         /// Simply query to see if there are any implementations registered
@@ -63,5 +63,13 @@ namespace StructureMap.Query
         {
             return _family.InstanceCount > 0;
         }
+
+        public void EjectAndRemove(InstanceRef instance)
+        {
+            if (instance == null) return;
+            _family.RemoveInstance(instance.Instance);
+        }
+
+
     }
 }

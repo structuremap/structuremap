@@ -114,5 +114,15 @@ namespace StructureMap.Pipeline
         {
             _instances.Clear();
         }
+
+        public void Remove(Type pluginType, Instance instance)
+        {
+            if (!_instances.ContainsKey(pluginType)) return;
+
+            if (_instances[pluginType] == instance)
+            {
+                _instances.Remove(pluginType);
+            }
+        }
     }
 }

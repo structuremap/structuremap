@@ -53,7 +53,6 @@ namespace StructureMap.Testing.Configuration
 
         public void TearDown()
         {
-            ProfileBuilder.ResetMachineName();
         }
 
         [Test]
@@ -72,26 +71,6 @@ namespace StructureMap.Testing.Configuration
             memento.InstanceKey = "Elvis";
 
             Assert.AreEqual("Elvis", memento.InstanceKey);
-        }
-
-        [Test]
-        public void GettingTheRightInstanceKeyWhenUsingAMAchineOverrideInCombinationWithProfile()
-        {
-            ProfileBuilder.OverrideMachineName("GREEN-BOX");
-            var manager = new Container(graph);
-
-            var widget = (ColorWidget) manager.GetInstance<IWidget>();
-            Assert.AreEqual("Green", widget.Color);
-        }
-
-        [Test]
-        public void GotTheInstanceForTheMachineOverride()
-        {
-            ProfileBuilder.OverrideMachineName("ORANGE-BOX");
-            var manager = new Container(graph);
-
-            var widget = (ColorWidget) manager.GetInstance<IWidget>();
-            Assert.AreEqual("Orange", widget.Color);
         }
 
         [Test]
@@ -116,27 +95,6 @@ namespace StructureMap.Testing.Configuration
 
             var widget = (ColorWidget) manager.GetInstance<IWidget>();
             Assert.AreEqual("Blue", widget.Color);
-        }
-
-
-        [Test]
-        public void InlineMachine1()
-        {
-            ProfileBuilder.OverrideMachineName("ORANGE-BOX");
-            var manager = new Container(graph);
-
-            var widget = (ColorWidget) manager.GetInstance(typeof (IWidget));
-            Assert.AreEqual("Orange", widget.Color);
-        }
-
-        [Test]
-        public void InlineMachine2()
-        {
-            ProfileBuilder.OverrideMachineName("GREEN-BOX");
-            var manager = new Container(graph);
-
-            var widget = (ColorWidget) manager.GetInstance(typeof (IWidget));
-            Assert.AreEqual("Green", widget.Color);
         }
 
         [Test]
