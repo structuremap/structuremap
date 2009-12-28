@@ -62,13 +62,15 @@ namespace StructureMap.Testing.Graph
     [TestFixture]
     public class DefaultConventionScanningTester
     {
+        #region Setup/Teardown
+
         [SetUp]
         public void SetUp()
         {
             PluginCache.ResetAll();
         }
 
-
+        #endregion
 
         [Test]
         public void FindPluginType()

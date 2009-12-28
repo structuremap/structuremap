@@ -14,11 +14,6 @@ namespace StructureMap.Graph
             _pluginType = pluginType;
         }
 
-        public void NameBy(Func<Type, string> getName)
-        {
-            _getName = getName;
-        }
-
         public void Process(Type type, Registry registry)
         {
             if (type.CanBeCastTo(_pluginType) && Constructor.HasConstructors(type))
@@ -26,6 +21,11 @@ namespace StructureMap.Graph
                 string name = _getName(type);
                 registry.AddType(_pluginType, type, name);
             }
+        }
+
+        public void NameBy(Func<Type, string> getName)
+        {
+            _getName = getName;
         }
     }
 }

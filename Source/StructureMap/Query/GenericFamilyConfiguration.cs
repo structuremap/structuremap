@@ -47,25 +47,13 @@ namespace StructureMap.Query
         /// <summary>
         /// The build "policy" for this PluginType.  Used by the WhatDoIHave() diagnostics methods
         /// </summary>
-        public string Lifecycle
-        {
-            get
-            {
-                return _family.Lifecycle.ToName();
-            }
-        }
+        public string Lifecycle { get { return _family.Lifecycle.ToName(); } }
 
         /// <summary>
         /// All of the <see cref="InstanceRef">InstanceRef</see>'s registered
         /// for this PluginType
         /// </summary>
-        public IEnumerable<InstanceRef> Instances
-        {
-            get
-            {
-                return _family.Instances.Select(x => new InstanceRef(x, this));
-            }
-        }
+        public IEnumerable<InstanceRef> Instances { get { return _family.Instances.Select(x => new InstanceRef(x, this)); } }
 
         /// <summary>
         /// Simply query to see if there are any implementations registered

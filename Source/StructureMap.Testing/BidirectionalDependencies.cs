@@ -1,14 +1,15 @@
-using System;
 using System.Diagnostics;
 using NUnit.Framework;
 
 namespace StructureMap.Testing
 {
-    [TestFixture] public class BidirectionalDependencies
+    [TestFixture]
+    public class BidirectionalDependencies
     {
-        private Container container;
+        #region Setup/Teardown
 
-        [SetUp] public void SetUp()
+        [SetUp]
+        public void SetUp()
         {
             container = new Container(x =>
             {
@@ -17,7 +18,12 @@ namespace StructureMap.Testing
             });
         }
 
-        [Test] public void do_not_blow_up_with_a_stack_overflow_problem()
+        #endregion
+
+        private Container container;
+
+        [Test]
+        public void do_not_blow_up_with_a_stack_overflow_problem()
         {
             try
             {
@@ -33,8 +39,13 @@ namespace StructureMap.Testing
     }
 
 
-    public interface IBiView{}
-    public interface IBiPresenter{}
+    public interface IBiView
+    {
+    }
+
+    public interface IBiPresenter
+    {
+    }
 
     public class BiView : IBiView
     {
@@ -45,10 +56,7 @@ namespace StructureMap.Testing
             _presenter = presenter;
         }
 
-        public IBiPresenter Presenter
-        {
-            get { return _presenter; }
-        }
+        public IBiPresenter Presenter { get { return _presenter; } }
     }
 
     public class BiPresenter : IBiPresenter
@@ -60,9 +68,6 @@ namespace StructureMap.Testing
             _view = view;
         }
 
-        public IBiView View
-        {
-            get { return _view; }
-        }
+        public IBiView View { get { return _view; } }
     }
 }

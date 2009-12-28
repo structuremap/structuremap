@@ -1,17 +1,16 @@
+using System.Linq;
 using NUnit.Framework;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Query;
 using StructureMap.Testing.GenericWidgets;
-using System.Linq;
 
 namespace StructureMap.Testing.Query
 {
     [TestFixture]
     public class GenericFamilyConfigurationTester
     {
-        private PluginFamily family;
-        private GenericFamilyConfiguration configuration;
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -21,17 +20,10 @@ namespace StructureMap.Testing.Query
             configuration = new GenericFamilyConfiguration(family);
         }
 
-        [Test]
-        public void eject_does_nothing_and_does_not_blow_up()
-        {
-            configuration.As<IFamily>().Eject(null);
-        }
+        #endregion
 
-        [Test]
-        public void has_been_created_is_false()
-        {
-            configuration.As<IFamily>().HasBeenCreated(null).ShouldBeFalse();
-        }
+        private PluginFamily family;
+        private GenericFamilyConfiguration configuration;
 
         [Test]
         public void build_should_return_null()
@@ -40,9 +32,19 @@ namespace StructureMap.Testing.Query
         }
 
         [Test]
-        public void PluginType_pulls_from_the_inner_family()
+        public void eject_does_nothing_and_does_not_blow_up()
         {
-            configuration.PluginType.ShouldEqual(family.PluginType);
+            configuration.As<IFamily>().Eject(null);
+        }
+
+        [Test]
+        public void get_instances()
+        {
+            family.AddInstance(new ConfiguredInstance(typeof (Service<>)));
+            family.AddInstance(new ConfiguredInstance(typeof (Service2<>)));
+
+            configuration.Instances.Select(x => x.ConcreteType)
+                .ShouldHaveTheSameElementsAs(typeof (Service<>), typeof (Service2<>));
         }
 
         [Test]
@@ -61,6 +63,12 @@ namespace StructureMap.Testing.Query
         }
 
         [Test]
+        public void has_been_created_is_false()
+        {
+            configuration.As<IFamily>().HasBeenCreated(null).ShouldBeFalse();
+        }
+
+        [Test]
         public void has_implementations_is_false_if_there_are_no_instances_for_the_underlying_family()
         {
             configuration.HasImplementations().ShouldBeFalse();
@@ -69,7 +77,7 @@ namespace StructureMap.Testing.Query
         [Test]
         public void has_implementations_is_true_if_there_are_instances_for_the_underlying_family()
         {
-            var instance = new ConfiguredInstance(typeof(Service<>));
+            var instance = new ConfiguredInstance(typeof (Service<>));
             family.SetDefault(instance);
 
             configuration.HasImplementations().ShouldBeTrue();
@@ -88,15 +96,10 @@ namespace StructureMap.Testing.Query
             configuration.Lifecycle.ShouldEqual(InstanceScope.Singleton.ToString());
         }
 
-
         [Test]
-        public void get_instances()
+        public void PluginType_pulls_from_the_inner_family()
         {
-            family.AddInstance(new ConfiguredInstance(typeof(Service<>)));
-            family.AddInstance(new ConfiguredInstance(typeof(Service2<>)));
-
-            configuration.Instances.Select(x => x.ConcreteType)
-                .ShouldHaveTheSameElementsAs(typeof(Service<>), typeof(Service2<>));
+            configuration.PluginType.ShouldEqual(family.PluginType);
         }
     }
 }

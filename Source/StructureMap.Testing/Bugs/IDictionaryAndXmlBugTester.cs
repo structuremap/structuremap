@@ -101,7 +101,6 @@ namespace StructureMap.Testing.Bugs
                 e.ErrorCode.ShouldEqual(202);
             }
         }
-
     }
 
     public class ClassWithDictionaryInCtor
@@ -113,10 +112,7 @@ namespace StructureMap.Testing.Bugs
             _values = values;
         }
 
-        public IDictionary<string, string> Values
-        {
-            get { return _values; }
-        }
+        public IDictionary<string, string> Values { get { return _values; } }
     }
 
     public class ClassWithDictionaryProperty

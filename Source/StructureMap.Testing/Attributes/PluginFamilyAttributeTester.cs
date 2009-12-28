@@ -33,10 +33,7 @@ namespace StructureMap.Testing.Attributes
 
         public class CustomMementoSource : MementoSource
         {
-            public override string Description
-            {
-                get { throw new NotImplementedException(); }
-            }
+            public override string Description { get { throw new NotImplementedException(); } }
 
             protected override InstanceMemento[] fetchInternalMementos()
             {

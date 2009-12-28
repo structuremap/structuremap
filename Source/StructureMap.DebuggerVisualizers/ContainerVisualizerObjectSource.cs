@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.DebuggerVisualizers;
-using StructureMap.Pipeline;
 using StructureMap.Query;
 
 namespace StructureMap.DebuggerVisualizers

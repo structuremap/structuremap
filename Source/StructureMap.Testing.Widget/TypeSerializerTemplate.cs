@@ -7,20 +7,9 @@ namespace StructureMap.Testing.Widget
     /// </summary>
     public class TypeSerializerTemplate
     {
-        public TypeSerializerTemplate()
-        {
-        }
+        public Type PluginType { get { return typeof (Rule); } }
 
-
-        public Type PluginType
-        {
-            get { return typeof (Rule); }
-        }
-
-        public string ConcreteTypeKey
-        {
-            get { return "ComplexRule"; }
-        }
+        public string ConcreteTypeKey { get { return "ComplexRule"; } }
 
         public object BuildInstance(InstanceMemento Memento)
         {

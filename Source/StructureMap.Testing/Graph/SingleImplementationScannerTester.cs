@@ -1,6 +1,5 @@
 using System;
 using NUnit.Framework;
-using StructureMap.Graph;
 
 namespace StructureMap.Testing.Graph
 {

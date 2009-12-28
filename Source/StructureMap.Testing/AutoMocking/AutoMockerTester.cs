@@ -9,7 +9,9 @@ namespace StructureMap.Testing.AutoMocking
     public abstract class AutoMockerTester
     {
         protected abstract AutoMocker<T> createAutoMocker<T>() where T : class;
-        protected abstract void setExpectation<T, TResult>(T mock, Expression<Func<T, TResult>> functionCall, TResult expectedResult) where T : class;
+
+        protected abstract void setExpectation<T, TResult>(T mock, Expression<Func<T, TResult>> functionCall,
+                                                           TResult expectedResult) where T : class;
 
         public class ConcreteThing
         {
@@ -24,15 +26,9 @@ namespace StructureMap.Testing.AutoMocking
             }
 
 
-            public IMockedService Service
-            {
-                get { return _service; }
-            }
+            public IMockedService Service { get { return _service; } }
 
-            public IMockedService2 Service2
-            {
-                get { return _service2; }
-            }
+            public IMockedService2 Service2 { get { return _service2; } }
         }
 
         public class ConcreteClass
@@ -48,25 +44,13 @@ namespace StructureMap.Testing.AutoMocking
                 _service3 = service3;
             }
 
-            public virtual string Name
-            {
-                get { return _service.Name; }
-            }
+            public virtual string Name { get { return _service.Name; } }
 
-            public IMockedService Service
-            {
-                get { return _service; }
-            }
+            public IMockedService Service { get { return _service; } }
 
-            public IMockedService2 Service2
-            {
-                get { return _service2; }
-            }
+            public IMockedService2 Service2 { get { return _service2; } }
 
-            public IMockedService3 Service3
-            {
-                get { return _service3; }
-            }
+            public IMockedService3 Service3 { get { return _service3; } }
 
             public void CallService()
             {
@@ -106,10 +90,7 @@ namespace StructureMap.Testing.AutoMocking
 
             #region IMockedService Members
 
-            public string Name
-            {
-                get { return _name; }
-            }
+            public string Name { get { return _name; } }
 
             public void Go()
             {
@@ -128,16 +109,17 @@ namespace StructureMap.Testing.AutoMocking
                 _services = services;
             }
 
-            public IMockedService[] Services
-            {
-                get { return _services; }
-            }
+            public IMockedService[] Services { get { return _services; } }
+        }
+
+        public interface IAnotherService
+        {
         }
 
         [Test]
         public void CanInjectAnArrayOfMockServices1()
         {
-            var mocker = createAutoMocker<ClassWithArray>();
+            AutoMocker<ClassWithArray> mocker = createAutoMocker<ClassWithArray>();
 
             IMockedService[] services = mocker.CreateMockArrayFor<IMockedService>(3);
             ClassWithArray theClass = mocker.ClassUnderTest;
@@ -148,7 +130,7 @@ namespace StructureMap.Testing.AutoMocking
         [Test]
         public void CanInjectAnArrayOfMockServices2()
         {
-            var mocker = createAutoMocker<ClassWithArray>();
+            AutoMocker<ClassWithArray> mocker = createAutoMocker<ClassWithArray>();
 
             ClassWithArray theClass = mocker.ClassUnderTest;
 
@@ -159,7 +141,7 @@ namespace StructureMap.Testing.AutoMocking
         [Test]
         public void CanInjectAnArrayOfMockServices3()
         {
-            var mocker = createAutoMocker<ClassWithArray>();
+            AutoMocker<ClassWithArray> mocker = createAutoMocker<ClassWithArray>();
 
             IMockedService[] services = mocker.CreateMockArrayFor<IMockedService>(3);
 
@@ -172,7 +154,7 @@ namespace StructureMap.Testing.AutoMocking
         [Test]
         public void CanInjectAnArrayOfMockServices4()
         {
-            var mocker = createAutoMocker<ClassWithArray>();
+            AutoMocker<ClassWithArray> mocker = createAutoMocker<ClassWithArray>();
 
             mocker.PartialMockTheClassUnderTest();
             ClassWithArray theClass = mocker.ClassUnderTest;
@@ -184,7 +166,7 @@ namespace StructureMap.Testing.AutoMocking
         [Test]
         public void GetTheSameConcreteClassTwiceFromCreate()
         {
-            var autoMocker = createAutoMocker<ConcreteClass>();
+            AutoMocker<ConcreteClass> autoMocker = createAutoMocker<ConcreteClass>();
             ConcreteClass concreteClass = autoMocker.ClassUnderTest;
 
             Assert.AreSame(concreteClass, autoMocker.ClassUnderTest);
@@ -195,7 +177,7 @@ namespace StructureMap.Testing.AutoMocking
         [Test]
         public void TheAutoMockerPushesInMocksAndAPreBuiltStubForAllOfTheConstructorArguments()
         {
-            var autoMocker = createAutoMocker<ConcreteClass>();
+            AutoMocker<ConcreteClass> autoMocker = createAutoMocker<ConcreteClass>();
             var stub = new StubService();
             autoMocker.Inject<IMockedService>(stub);
 
@@ -212,7 +194,7 @@ namespace StructureMap.Testing.AutoMocking
         [Test]
         public void TheAutoMockerPushesInMocksForAllOfTheConstructorArgumentsForAPartialMock()
         {
-            var autoMocker = createAutoMocker<ConcreteClass>();
+            AutoMocker<ConcreteClass> autoMocker = createAutoMocker<ConcreteClass>();
 
             var service = autoMocker.Get<IMockedService>();
             var service2 = autoMocker.Get<IMockedService2>();
@@ -229,7 +211,7 @@ namespace StructureMap.Testing.AutoMocking
         [Test]
         public void UseConcreteClassFor()
         {
-            var mocker = createAutoMocker<ConcreteClass>();
+            AutoMocker<ConcreteClass> mocker = createAutoMocker<ConcreteClass>();
             mocker.UseConcreteClassFor<ConcreteThing>();
 
             var thing = mocker.Get<ConcreteThing>();
@@ -242,26 +224,20 @@ namespace StructureMap.Testing.AutoMocking
         [Test]
         public void UseTheAutoMockerToStartUpTheConcreteClass()
         {
-            var autoMocker = createAutoMocker<ConcreteClass>();
-            setExpectation(autoMocker.Get<IMockedService>(), x=> x.Name, "Jeremy");
+            AutoMocker<ConcreteClass> autoMocker = createAutoMocker<ConcreteClass>();
+            setExpectation(autoMocker.Get<IMockedService>(), x => x.Name, "Jeremy");
             autoMocker.ClassUnderTest.Name.ShouldEqual("Jeremy");
         }
 
         [Test]
         public void UseTheAutoMockerToStartUpTheConcreteClassAsAPartialMockAndSetTheNameMethodUp()
         {
-            var autoMocker = createAutoMocker<ConcreteClass>();
+            AutoMocker<ConcreteClass> autoMocker = createAutoMocker<ConcreteClass>();
 
             autoMocker.PartialMockTheClassUnderTest();
             ConcreteClass concreteClass = autoMocker.ClassUnderTest;
-            setExpectation(concreteClass, x=> x.Name, "Max");
+            setExpectation(concreteClass, x => x.Name, "Max");
             concreteClass.Name.ShouldEqual("Max");
         }
-
-        public interface IAnotherService
-        {
-            
-        }
-
     }
 }

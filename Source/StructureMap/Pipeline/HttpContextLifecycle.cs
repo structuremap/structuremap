@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Web;
 
@@ -35,10 +34,7 @@ namespace StructureMap.Pipeline
             return (IObjectCache) items[ITEM_NAME];
         }
 
-        public string Scope
-        {
-            get { return InstanceScope.HttpContext.ToString(); }
-        }
+        public string Scope { get { return InstanceScope.HttpContext.ToString(); } }
 
         public static bool HasContext()
         {

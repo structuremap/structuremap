@@ -1,11 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using StructureMap.Pipeline;
-
 namespace StructureMap.Testing.Widget
 {
-    
     public enum Color
     {
         Red,
@@ -20,7 +14,6 @@ namespace StructureMap.Testing.Widget
         public bool Active { get; set; }
         public Color Color { get; set; }
     }
-
 
 
     //public class BuilderWithOneSetter : InstanceBuilder

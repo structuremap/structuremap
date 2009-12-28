@@ -69,23 +69,12 @@ namespace StructureMap.Testing
         }
 
         [Test]
-        public void the_default_type_for()
-        {
-            _model.DefaultTypeFor<ISomething>().ShouldEqual(typeof (SomethingOne));
-            _model.DefaultTypeFor<IWidget>().ShouldBeNull();
-
-            _model.DefaultTypeFor(typeof (IService<>)).ShouldBeNull();
-            _model.DefaultTypeFor(typeof(ISomething)).ShouldEqual(typeof(SomethingOne));
-        }
-
-        [Test]
         public void HasImplementationFor_w_container()
         {
             _container.Model.HasDefaultImplementationFor(typeof (ISomething)).ShouldBeTrue();
             _container.Model.HasDefaultImplementationFor(GetType()).ShouldBeFalse();
             _container.Model.HasDefaultImplementationFor(typeof (IServiceProvider)).ShouldBeFalse();
         }
-
 
 
         [Test]
@@ -132,6 +121,16 @@ namespace StructureMap.Testing
         {
             // IContainer is always added to the Container
             _container.Model.PluginTypes.Count().ShouldEqual(4);
+        }
+
+        [Test]
+        public void the_default_type_for()
+        {
+            _model.DefaultTypeFor<ISomething>().ShouldEqual(typeof (SomethingOne));
+            _model.DefaultTypeFor<IWidget>().ShouldBeNull();
+
+            _model.DefaultTypeFor(typeof (IService<>)).ShouldBeNull();
+            _model.DefaultTypeFor(typeof (ISomething)).ShouldEqual(typeof (SomethingOne));
         }
     }
 }

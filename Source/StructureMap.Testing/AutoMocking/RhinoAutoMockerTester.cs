@@ -32,7 +32,8 @@ namespace StructureMap.Testing.AutoMocking
             return new RhinoAutoMocker<T>();
         }
 
-        protected override void setExpectation<T,TResult>(T mock, Expression<Func<T,TResult>> functionCall, TResult expectedResult)
+        protected override void setExpectation<T, TResult>(T mock, Expression<Func<T, TResult>> functionCall,
+                                                           TResult expectedResult)
         {
             mock.Expect(x => functionCall.Compile()(mock)).Return(expectedResult);
         }
@@ -94,6 +95,5 @@ namespace StructureMap.Testing.AutoMocking
             // This retrieves the mock object for IMockedService
             autoMocker.Get<IMockedService>().AssertWasCalled(s => s.Go());
         }
-
     }
 }

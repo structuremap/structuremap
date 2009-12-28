@@ -3,13 +3,17 @@ using NUnit.Framework;
 
 namespace StructureMap.Testing.Bugs
 {
-
-    [TestFixture] public class LambdaCreatesNullBugTester
+    [TestFixture]
+    public class LambdaCreatesNullBugTester
     {
-        [SetUp] public void SetUp()
-        {
+        #region Setup/Teardown
 
+        [SetUp]
+        public void SetUp()
+        {
         }
+
+        #endregion
 
         [Test]
         public void Returning_null_values_in_contructed_by_generates_a_duplicate_cache_entry()
@@ -30,14 +34,13 @@ namespace StructureMap.Testing.Bugs
     }
 
 
-        public class TestClass
+    public class TestClass
+    {
+        private IPrincipal principal;
+
+        public TestClass(IPrincipal principal)
         {
-            private IPrincipal principal;
-
-            public TestClass(IPrincipal principal)
-            {
-                this.principal = principal;
-            }
-
-        } 
+            this.principal = principal;
+        }
+    }
 }

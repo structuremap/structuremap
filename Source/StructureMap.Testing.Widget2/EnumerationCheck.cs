@@ -1,6 +1,3 @@
-using System;
-using StructureMap.Pipeline;
-
 namespace StructureMap.Testing.Widget2
 {
     public enum BreedEnum

@@ -31,12 +31,6 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
-        public void checking_can_be_cast()
-        {
-            assertCanBeCast(typeof(IOpenType<>), typeof(OpenType<>));
-        }
-
-        [Test]
         public void BuildAnInstanceManagerFromTemplatedPluginFamily()
         {
             var pluginGraph = new PluginGraph();
@@ -97,6 +91,12 @@ namespace StructureMap.Testing.Graph
                     });
 
             container.GetInstance<IGenericService<string>>().ShouldBeOfType(typeof (GenericService<string>));
+        }
+
+        [Test]
+        public void checking_can_be_cast()
+        {
+            assertCanBeCast(typeof (IOpenType<>), typeof (OpenType<>));
         }
 
 

@@ -470,6 +470,29 @@ namespace StructureMap
 
         #endregion
 
+        /// <summary>
+        /// Injects the given object into a Container as the default for the designated
+        /// PLUGINTYPE.  Mostly used for temporarily setting up return values of the Container
+        /// to introduce mocks or stubs during automated testing scenarios
+        /// </summary>
+        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <param name="instance"></param>
+        public void Inject<PLUGINTYPE>(PLUGINTYPE instance)
+        {
+            Configure(x => x.For<PLUGINTYPE>().Use(instance));
+        }
+
+        /// <summary>
+        /// Injects the given object into a Container as the default for the designated
+        /// pluginType.  Mostly used for temporarily setting up return values of the Container
+        /// to introduce mocks or stubs during automated testing scenarios
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="object"></param>
+        public void Inject(Type pluginType, object @object)
+        {
+            Configure(x => x.For(pluginType).Use(@object));
+        }
 
         private object buildInstanceWithArgs(Type pluginType, Instance defaultInstance, ExplicitArguments args,
                                              string requestedName)
@@ -510,16 +533,14 @@ namespace StructureMap
             }
 
             _pluginGraph = pluginGraph;
-            
+
             var thisInstance = new ObjectInstance(this);
-            _pluginGraph.FindFamily(typeof(IContainer)).AddInstance(thisInstance);
-            _pluginGraph.ProfileManager.SetDefault(typeof(IContainer), thisInstance);
+            _pluginGraph.FindFamily(typeof (IContainer)).AddInstance(thisInstance);
+            _pluginGraph.ProfileManager.SetDefault(typeof (IContainer), thisInstance);
 
             pluginGraph.Log.AssertFailures();
 
             _pipelineGraph = new PipelineGraph(pluginGraph);
-
-            
         }
 
         [Obsolete("delegate to something cleaner in BuildSession")]
@@ -598,31 +619,5 @@ namespace StructureMap
         }
 
         #endregion
-
-        /// <summary>
-        /// Injects the given object into a Container as the default for the designated
-        /// PLUGINTYPE.  Mostly used for temporarily setting up return values of the Container
-        /// to introduce mocks or stubs during automated testing scenarios
-        /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
-        /// <param name="instance"></param>
-        public void Inject<PLUGINTYPE>(PLUGINTYPE instance)
-        {
-            Configure(x => x.For<PLUGINTYPE>().Use(instance));
-        }
-
-        /// <summary>
-        /// Injects the given object into a Container as the default for the designated
-        /// pluginType.  Mostly used for temporarily setting up return values of the Container
-        /// to introduce mocks or stubs during automated testing scenarios
-        /// </summary>
-        /// <param name="pluginType"></param>
-        /// <param name="object"></param>
-        public void Inject(Type pluginType, object @object)
-        {
-            Configure(x => x.For(pluginType).Use(@object));
-        }
-
-
     }
 }

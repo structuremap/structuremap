@@ -1,11 +1,11 @@
 using System;
+using System.Linq;
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
-using System.Linq;
 
 namespace StructureMap.Testing
 {
@@ -44,10 +44,27 @@ namespace StructureMap.Testing
                 _widgets = widgets;
             }
 
-            public IWidget[] Widgets
+            public IWidget[] Widgets { get { return _widgets; } }
+        }
+
+        [Test]
+        public void can_get_all_of_a_type_during_object_creation()
+        {
+            var container = new Container(x =>
             {
-                get { return _widgets; }
-            }
+                x.For<IWidget>().AddInstances(o =>
+                {
+                    o.OfConcreteType<AWidget>();
+                    o.ConstructedBy(() => new ColorWidget("red"));
+                    o.ConstructedBy(() => new ColorWidget("blue"));
+                    o.ConstructedBy(() => new ColorWidget("green"));
+                });
+
+                x.ForConcreteType<TopClass>().Configure.OnCreation(
+                    (c, top) => { top.Widgets = c.All<IWidget>().ToArray(); });
+            });
+
+            container.GetInstance<TopClass>().Widgets.Count().ShouldEqual(4);
         }
 
         [Test]
@@ -190,10 +207,18 @@ namespace StructureMap.Testing
         }
 
         [Test]
-        public void when_retrieving_with_try_get_instance_for_instance_that_does_not_exists()
+        public void when_retrieving_an_object_by_name()
         {
-            var session = new BuildSession(new PluginGraph());
-            session.TryGetInstance<IService>().ShouldBeNull();
+            var red = new ColorService("red");
+            var green = new ColorService("green");
+
+            var graph = new PluginGraph();
+            PluginFamily family = graph.FindFamily(typeof (IService));
+            family.AddInstance(new ObjectInstance(red).WithName("red"));
+            family.AddInstance(new ObjectInstance(green).WithName("green"));
+
+            var session = new BuildSession(graph);
+            session.GetInstance<IService>("red").ShouldBeTheSameAs(red);
         }
 
         [Test]
@@ -201,9 +226,25 @@ namespace StructureMap.Testing
         {
             var session = new BuildSession();
             var theService = new ColorService("red");
-            session.RegisterDefault(typeof(IService), theService);
+            session.RegisterDefault(typeof (IService), theService);
 
             session.TryGetInstance<IService>().ShouldBeTheSameAs(theService);
+        }
+
+        [Test]
+        public void when_retrieving_by_try_get_named_instance_that_does_exist()
+        {
+            var red = new ColorService("red");
+            var green = new ColorService("green");
+
+            var graph = new PluginGraph();
+            PluginFamily family = graph.FindFamily(typeof (IService));
+            family.AddInstance(new ObjectInstance(red).WithName("red"));
+            family.AddInstance(new ObjectInstance(green).WithName("green"));
+
+            var session = new BuildSession(graph);
+            session.TryGetInstance<IService>("red").ShouldBeTheSameAs(red);
+            session.TryGetInstance<IService>("green").ShouldBeTheSameAs(green);
         }
 
         [Test]
@@ -214,56 +255,10 @@ namespace StructureMap.Testing
         }
 
         [Test]
-        public void when_retrieving_by_try_get_named_instance_that_does_exist()
+        public void when_retrieving_with_try_get_instance_for_instance_that_does_not_exists()
         {
-            var red = new ColorService("red");
-            var green = new ColorService("green");
-
-            PluginGraph graph = new PluginGraph();
-            PluginFamily family = graph.FindFamily(typeof(IService));
-            family.AddInstance(new ObjectInstance(red).WithName("red"));
-            family.AddInstance(new ObjectInstance(green).WithName("green"));
-
-            var session = new BuildSession(graph);
-            session.TryGetInstance<IService>("red").ShouldBeTheSameAs(red);
-            session.TryGetInstance<IService>("green").ShouldBeTheSameAs(green);
-        }
-
-        [Test]
-        public void when_retrieving_an_object_by_name()
-        {
-            var red = new ColorService("red");
-            var green = new ColorService("green");
-
-            PluginGraph graph = new PluginGraph();
-            PluginFamily family = graph.FindFamily(typeof(IService));
-            family.AddInstance(new ObjectInstance(red).WithName("red"));
-            family.AddInstance(new ObjectInstance(green).WithName("green"));
-
-            var session = new BuildSession(graph);
-            session.GetInstance<IService>("red").ShouldBeTheSameAs(red);
-        }
-
-        [Test]
-        public void can_get_all_of_a_type_during_object_creation()
-        {
-            var container = new Container(x =>
-            {
-                x.For<IWidget>().AddInstances(o =>
-                {
-                    o.OfConcreteType<AWidget>();
-                    o.ConstructedBy(() => new ColorWidget("red"));
-                    o.ConstructedBy(() => new ColorWidget("blue"));
-                    o.ConstructedBy(() => new ColorWidget("green"));
-                });
-
-                x.ForConcreteType<TopClass>().Configure.OnCreation((c, top) =>
-                {
-                    top.Widgets = c.All<IWidget>().ToArray();
-                });
-            });
-
-            container.GetInstance<TopClass>().Widgets.Count().ShouldEqual(4);
+            var session = new BuildSession(new PluginGraph());
+            session.TryGetInstance<IService>().ShouldBeNull();
         }
     }
 

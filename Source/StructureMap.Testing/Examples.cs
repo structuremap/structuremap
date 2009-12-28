@@ -3,8 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Windows.Forms;
-using NUnit.Framework;
-using Rhino.Mocks;
 using StructureMap.Attributes;
 using StructureMap.Configuration.DSL;
 using StructureMap.Testing.Widget3;
@@ -435,6 +433,4 @@ namespace StructureMap.Testing.DocumentationExamples
             CreateProfile("Connected", x => { x.Type<IService>().Is.OfConcreteType<RemoteService>(); });
         }
     }
-
-
 }

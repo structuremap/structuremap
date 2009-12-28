@@ -27,16 +27,10 @@ namespace StructureMap.Testing.Configuration.DSL
             }
 
 
-            public IHandler[] Handlers
-            {
-                get { return _handlers; }
-            }
+            public IHandler[] Handlers { get { return _handlers; } }
 
 
-            public string Name
-            {
-                get { return _name; }
-            }
+            public string Name { get { return _name; } }
         }
 
         public class Processor2
@@ -52,15 +46,9 @@ namespace StructureMap.Testing.Configuration.DSL
             }
 
 
-            public IHandler[] First
-            {
-                get { return _first; }
-            }
+            public IHandler[] First { get { return _first; } }
 
-            public IHandler[] Second
-            {
-                get { return _second; }
-            }
+            public IHandler[] Second { get { return _second; } }
         }
 
         public interface IHandler

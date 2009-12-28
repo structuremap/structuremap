@@ -9,9 +9,7 @@ namespace StructureMap.Testing.Query
     [TestFixture]
     public class InstanceRefTester
     {
-        private NullInstance instance;
-        private IFamily family;
-        private InstanceRef instanceRef;
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -22,18 +20,28 @@ namespace StructureMap.Testing.Query
             instanceRef = new InstanceRef(instance, family);
         }
 
+        #endregion
+
+        private NullInstance instance;
+        private IFamily family;
+        private InstanceRef instanceRef;
+
         [Test]
-        public void name_just_relays()
+        public void eject_object_calls_to_the_family()
         {
-            instanceRef.Name.ShouldEqual(instance.Name);
+            instanceRef.EjectObject();
+
+            family.AssertWasCalled(x => x.Eject(instance));
         }
 
         [Test]
-        public void plugin_type_comes_from_family()
+        public void get_uses_the_family_to_return()
         {
-            family.Stub(x => x.PluginType).Return(typeof (IWidget));
+            var widget = new AWidget();
 
-            instanceRef.PluginType.ShouldEqual(typeof (IWidget));
+            family.Stub(x => x.Build(instance)).Return(widget);
+
+            instanceRef.Get<IWidget>().ShouldBeTheSameAs(widget);
         }
 
         [Test]
@@ -54,21 +62,17 @@ namespace StructureMap.Testing.Query
         }
 
         [Test]
-        public void eject_object_calls_to_the_family()
+        public void name_just_relays()
         {
-            instanceRef.EjectObject();
-
-            family.AssertWasCalled(x => x.Eject(instance));
+            instanceRef.Name.ShouldEqual(instance.Name);
         }
 
         [Test]
-        public void get_uses_the_family_to_return()
+        public void plugin_type_comes_from_family()
         {
-            var widget = new AWidget();
+            family.Stub(x => x.PluginType).Return(typeof (IWidget));
 
-            family.Stub(x => x.Build(instance)).Return(widget);
-
-            instanceRef.Get<IWidget>().ShouldBeTheSameAs(widget);
+            instanceRef.PluginType.ShouldEqual(typeof (IWidget));
         }
     }
 }

@@ -1,6 +1,3 @@
-using System;
-using StructureMap.Pipeline;
-
 namespace StructureMap.Testing.Widget
 {
     [Pluggable("Default")]
@@ -13,5 +10,4 @@ namespace StructureMap.Testing.Widget
             this.Rules = Rules;
         }
     }
-
 }

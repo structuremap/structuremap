@@ -35,13 +35,7 @@ namespace StructureMap.Query
             return findForFamily(pluginType, f => f.Default == null ? null : f.Default.ConcreteType);
         }
 
-        public IEnumerable<IPluginTypeConfiguration> PluginTypes
-        {
-            get
-            {
-                return _pluginTypes;
-            }
-        }
+        public IEnumerable<IPluginTypeConfiguration> PluginTypes { get { return _pluginTypes; } }
 
         /// <summary>
         /// Retrieves the configuration for the given type

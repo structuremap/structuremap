@@ -68,16 +68,16 @@ namespace StructureMap.Testing.Configuration.DSL
         private ContextRecorder recorder;
 
         [Test]
-        public void call_the_build_context_with_startup()
+        public void call_the_build_context_with_enrich()
         {
-            _container.GetInstance<IService>("InterceptedWithContext");
+            _container.GetInstance<IService>("DecoratedWithContext");
             recorder.WasTouched.ShouldBeTrue();
         }
 
         [Test]
-        public void call_the_build_context_with_enrich()
+        public void call_the_build_context_with_startup()
         {
-            _container.GetInstance<IService>("DecoratedWithContext");
+            _container.GetInstance<IService>("InterceptedWithContext");
             recorder.WasTouched.ShouldBeTrue();
         }
 
@@ -149,10 +149,7 @@ namespace StructureMap.Testing.Configuration.DSL
         }
 
 
-        public IService Inner
-        {
-            get { return _inner; }
-        }
+        public IService Inner { get { return _inner; } }
     }
 
     public class ContextRecorder

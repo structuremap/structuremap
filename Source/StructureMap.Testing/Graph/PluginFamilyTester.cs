@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Reflection;
 using NUnit.Framework;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
-using StructureMap.Query;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
 using StructureMap.TypeRules;
@@ -29,18 +27,6 @@ namespace StructureMap.Testing.Graph
             }
 
             #endregion
-        }
-
-        [Test]
-        public void set_default()
-        {
-            var family = new PluginFamily(typeof(IServiceProvider));
-            var instance = new SmartInstance<DataSet>();
-
-            family.SetDefault(instance);
-
-            family.GetDefaultInstance().ShouldBeTheSameAs(instance);
-            family.DefaultInstanceKey.ShouldEqual(instance.Name);
         }
 
         [Test]
@@ -207,6 +193,18 @@ namespace StructureMap.Testing.Graph
             Assert.AreSame(repository1, repository3);
             Assert.AreSame(repository1, repository4);
             Assert.AreSame(repository1, repository5);
+        }
+
+        [Test]
+        public void set_default()
+        {
+            var family = new PluginFamily(typeof (IServiceProvider));
+            var instance = new SmartInstance<DataSet>();
+
+            family.SetDefault(instance);
+
+            family.GetDefaultInstance().ShouldBeTheSameAs(instance);
+            family.DefaultInstanceKey.ShouldEqual(instance.Name);
         }
 
         [Test]

@@ -7,27 +7,26 @@ namespace StructureMap.Testing.Bugs
     [TestFixture]
     public class TryGetInstanceWithOpenGenericsBugTester
     {
+        #region Setup/Teardown
+
         [SetUp]
         public void SetUp()
         {
         }
+
+        #endregion
 
         [Test]
         public void can_get_closing_type_if_starting_from_a_base_type()
         {
             typeof (ClosedClass<string>).FindInterfaceThatCloses(typeof (IOpenClass<>)).ShouldEqual(
                 typeof (IOpenClass<string>));
-
-            
         }
 
         [Test]
         public void try_get_instance_fills_from_open_generic()
         {
-            var container = new Container(x =>
-            {
-                x.For(typeof(IOpenClass<>)).AddType(typeof(ClosedClass<>));
-            });
+            var container = new Container(x => { x.For(typeof (IOpenClass<>)).AddType(typeof (ClosedClass<>)); });
 
             container.TryGetInstance<IOpenClass<string>>().ShouldBeOfType<ClosedClass<string>>();
         }
@@ -40,7 +39,7 @@ namespace StructureMap.Testing.Bugs
                 x.Scan(o =>
                 {
                     o.TheCallingAssembly();
-                    o.ConnectImplementationsToTypesClosing(typeof(IOpenClass<>));
+                    o.ConnectImplementationsToTypesClosing(typeof (IOpenClass<>));
                 });
             });
 
@@ -51,7 +50,15 @@ namespace StructureMap.Testing.Bugs
         }
     }
 
-    public class IOpenClass<T>{}
-    public class ClosedClass<T> : IOpenClass<T>{}
-    public class ClosedStringClass : IOpenClass<string>{}
+    public class IOpenClass<T>
+    {
+    }
+
+    public class ClosedClass<T> : IOpenClass<T>
+    {
+    }
+
+    public class ClosedStringClass : IOpenClass<string>
+    {
+    }
 }

@@ -1,12 +1,8 @@
 using System;
 using System.Collections.Generic;
-using StructureMap.Pipeline;
 
 namespace StructureMap.Query
 {
-
-
-
     /// <summary>
     /// Models the state of a Container or ObjectFactory.  Can be used to query for the 
     /// existence of types registered with StructureMap

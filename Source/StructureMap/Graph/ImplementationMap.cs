@@ -11,6 +11,11 @@ namespace StructureMap.Graph
     {
         private readonly Cache<Type, List<Type>> _types = new Cache<Type, List<Type>>(t => new List<Type>());
 
+        public void Process(Type type, Registry registry)
+        {
+            RegisterType(type);
+        }
+
         public void Register(Type interfaceType, Type concreteType)
         {
             _types[interfaceType].Add(concreteType);
@@ -32,11 +37,6 @@ namespace StructureMap.Graph
                     graph.AddType(pluginType, types[0]);
                 }
             });
-        }
-
-        public void Process(Type type, Registry registry)
-        {
-            RegisterType(type);
         }
     }
 }

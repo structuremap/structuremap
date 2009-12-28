@@ -87,7 +87,6 @@ namespace StructureMap.Testing.Pipeline
 
             disposable.WasDisposed.ShouldBeTrue();
         }
-
     }
 
     public class Disposable : IDisposable

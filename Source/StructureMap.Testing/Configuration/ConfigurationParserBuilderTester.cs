@@ -59,6 +59,20 @@ namespace StructureMap.Testing.Configuration
         }
 
         [Test]
+        public void Always_resolve_files_to_an_absolute_path_before_giving_to_configuration_parser()
+        {
+            builder.UseAndEnforceExistenceOfDefaultFile = false;
+            builder.IgnoreDefaultFile = true;
+
+            DataMother.WriteDocument("GenericsTesting.xml");
+
+            builder.IncludeFile("GenericsTesting.xml");
+
+            ConfigurationParser[] parsers = builder.GetParsers();
+            Assert.IsTrue(Path.IsPathRooted(parsers[0].Description));
+        }
+
+        [Test]
         public void Do_NOT_Log_exception_100_if_StructureMap_config_is_missing_but_not_required()
         {
             assertNoErrorIsLogged(100, delegate
@@ -170,20 +184,6 @@ namespace StructureMap.Testing.Configuration
 
             ConfigurationParser[] parsers = builder.GetParsers();
             Assert.AreEqual("GenericsTesting.xml", Path.GetFileName(parsers[0].Description));
-        }
-
-        [Test]
-        public void Always_resolve_files_to_an_absolute_path_before_giving_to_configuration_parser()
-        {
-            builder.UseAndEnforceExistenceOfDefaultFile = false;
-            builder.IgnoreDefaultFile = true;
-
-            DataMother.WriteDocument("GenericsTesting.xml");
-
-            builder.IncludeFile("GenericsTesting.xml");
-
-            ConfigurationParser[] parsers = builder.GetParsers();
-            Assert.IsTrue(Path.IsPathRooted(parsers[0].Description));
         }
 
 

@@ -51,10 +51,9 @@ namespace StructureMap.Testing.Configuration.DSL
 
             container.SetDefaultsToProfile(theProfileName);
 
-            Assert.IsInstanceOfType(typeof(AWidget), container.GetInstance<IWidget>());
-            Assert.IsInstanceOfType(typeof(DefaultRule), container.GetInstance<Rule>());
+            Assert.IsInstanceOfType(typeof (AWidget), container.GetInstance<IWidget>());
+            Assert.IsInstanceOfType(typeof (DefaultRule), container.GetInstance<Rule>());
         }
-
 
 
         [Test]

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using StructureMap.Pipeline;
 using StructureMap.Query;
 using StructureMap.TypeRules;
 

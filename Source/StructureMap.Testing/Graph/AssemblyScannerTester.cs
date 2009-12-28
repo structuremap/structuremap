@@ -1,12 +1,9 @@
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
-using StructureMap.Pipeline;
-using StructureMap.Query;
 using StructureMap.Testing.DocumentationExamples;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
@@ -411,7 +408,6 @@ namespace StructureMap.Testing.Graph
                     o.AddAllTypesOf<IController>().NameBy(type => type.Name.Replace("Controller", ""));
                 });
             });
-
         }
 
         #endregion

@@ -93,8 +93,8 @@ namespace StructureMap.Graph
         }
 
         public void Convention<T>() where T : IRegistrationConvention, new()
-        {            
-            var previous = _conventions.FirstOrDefault(scanner => scanner is T);
+        {
+            IRegistrationConvention previous = _conventions.FirstOrDefault(scanner => scanner is T);
             if (previous == null)
             {
                 With(new T());

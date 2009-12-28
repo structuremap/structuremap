@@ -13,7 +13,7 @@ namespace StructureMap.Testing.Query
     [TestFixture]
     public class ModelIntegrationTester
     {
-        private Container container;
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -35,33 +35,9 @@ namespace StructureMap.Testing.Query
             });
         }
 
-        [Test]
-        public void get_all_instances_from_the_top()
-        {
-            container.Model.AllInstances.Count().ShouldEqual(8);
-        }
+        #endregion
 
-        [Test]
-        public void default_type_for_from_the_top()
-        {
-            container.Model.DefaultTypeFor<IWidget>().ShouldEqual(typeof (AWidget));
-            container.Model.DefaultTypeFor<Rule>().ShouldBeNull();
-        }
-
-        [Test]
-        public void has_implementation_from_the_top()
-        {
-            container.Model.HasDefaultImplementationFor<IServiceProvider>().ShouldBeFalse();
-            container.Model.HasDefaultImplementationFor<IWidget>().ShouldBeTrue();
-        }
-
-        [Test]
-        public void has_default_implementation_from_the_top()
-        {
-            container.Model.HasDefaultImplementationFor<IWidget>().ShouldBeTrue();
-            container.Model.HasDefaultImplementationFor<Rule>().ShouldBeFalse();
-            container.Model.HasDefaultImplementationFor<IServiceProvider>().ShouldBeFalse();
-        }
+        private Container container;
 
         [Test]
         public void can_iterate_through_families_including_both_generics_and_normal()
@@ -70,18 +46,6 @@ namespace StructureMap.Testing.Query
             container.Model.PluginTypes.Count().ShouldEqual(5);
 
             container.Model.PluginTypes.Each(x => Debug.WriteLine(x.PluginType.FullName));
-        }
-
-        [Test]
-        public void can_iterate_through_instances_of_pipeline_graph_for_generics()
-        {
-            container.Model.For(typeof (IService<>)).Instances.Count().ShouldEqual(2);
-        }
-
-        [Test]
-        public void can_iterate_through_instances_of_pipeline_graph_for_generics_from_model()
-        {
-            container.Model.InstancesOf(typeof(IService<>)).Count().ShouldEqual(2);
         }
 
         [Test]
@@ -94,6 +58,46 @@ namespace StructureMap.Testing.Query
         public void can_iterate_through_instances_of_pipeline_graph_for_closed_type_that_is_not_registered()
         {
             container.Model.InstancesOf<IServiceProvider>().Count().ShouldEqual(0);
+        }
+
+        [Test]
+        public void can_iterate_through_instances_of_pipeline_graph_for_generics()
+        {
+            container.Model.For(typeof (IService<>)).Instances.Count().ShouldEqual(2);
+        }
+
+        [Test]
+        public void can_iterate_through_instances_of_pipeline_graph_for_generics_from_model()
+        {
+            container.Model.InstancesOf(typeof (IService<>)).Count().ShouldEqual(2);
+        }
+
+        [Test]
+        public void default_type_for_from_the_top()
+        {
+            container.Model.DefaultTypeFor<IWidget>().ShouldEqual(typeof (AWidget));
+            container.Model.DefaultTypeFor<Rule>().ShouldBeNull();
+        }
+
+        [Test]
+        public void get_all_instances_from_the_top()
+        {
+            container.Model.AllInstances.Count().ShouldEqual(8);
+        }
+
+        [Test]
+        public void has_default_implementation_from_the_top()
+        {
+            container.Model.HasDefaultImplementationFor<IWidget>().ShouldBeTrue();
+            container.Model.HasDefaultImplementationFor<Rule>().ShouldBeFalse();
+            container.Model.HasDefaultImplementationFor<IServiceProvider>().ShouldBeFalse();
+        }
+
+        [Test]
+        public void has_implementation_from_the_top()
+        {
+            container.Model.HasDefaultImplementationFor<IServiceProvider>().ShouldBeFalse();
+            container.Model.HasDefaultImplementationFor<IWidget>().ShouldBeTrue();
         }
 
         [Test]

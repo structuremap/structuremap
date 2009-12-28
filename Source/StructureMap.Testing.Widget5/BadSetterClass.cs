@@ -14,9 +14,6 @@ namespace StructureMap.Testing.Widget5
         }
 
         [SetterProperty]
-        public string ColumnName
-        {
-            get { return _columnName; }
-        }
+        public string ColumnName { get { return _columnName; } }
     }
 }

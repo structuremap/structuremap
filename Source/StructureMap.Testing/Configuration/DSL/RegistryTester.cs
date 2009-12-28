@@ -86,19 +86,14 @@ namespace StructureMap.Testing.Configuration.DSL
 
     public class TestRegistry2 : Registry
     {
-        private int _count;
+        private readonly int _count;
 
         public TestRegistry2()
         {
             _count++;
         }
 
-        public int ExecutedCount
-        {
-            get { return _count; }
-        }
-
-        
+        public int ExecutedCount { get { return _count; } }
     }
 
     public class FakeGateway : IGateway
@@ -110,10 +105,7 @@ namespace StructureMap.Testing.Configuration.DSL
             throw new NotImplementedException();
         }
 
-        public string WhoAmI
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public string WhoAmI { get { throw new NotImplementedException(); } }
 
         #endregion
     }
@@ -127,10 +119,7 @@ namespace StructureMap.Testing.Configuration.DSL
             throw new NotImplementedException();
         }
 
-        public string WhoAmI
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public string WhoAmI { get { throw new NotImplementedException(); } }
 
         #endregion
     }
@@ -144,10 +133,7 @@ namespace StructureMap.Testing.Configuration.DSL
             throw new NotImplementedException();
         }
 
-        public string WhoAmI
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public string WhoAmI { get { throw new NotImplementedException(); } }
 
         #endregion
     }

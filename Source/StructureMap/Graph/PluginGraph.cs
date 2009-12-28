@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using StructureMap.Configuration.DSL;
 using StructureMap.Diagnostics;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
-using System.Linq;
 
 namespace StructureMap.Graph
 {
@@ -224,7 +224,7 @@ namespace StructureMap.Graph
         {
             if (Registries.Any(x => x.GetType() == type)) return;
 
-            var registry = (Registry)Activator.CreateInstance(type);
+            var registry = (Registry) Activator.CreateInstance(type);
             registry.ConfigurePluginGraph(this);
         }
     }

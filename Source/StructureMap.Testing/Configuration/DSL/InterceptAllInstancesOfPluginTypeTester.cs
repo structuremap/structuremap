@@ -66,17 +66,15 @@ namespace StructureMap.Testing.Configuration.DSL
             return _manager.GetInstance<IService>(name);
         }
 
-        [Test]
-        public void EnrichForAll()
+        public class MockInterceptor : InstanceInterceptor
         {
-            IService green = getService("Green", r =>
-            {
-                r.ForRequestedType<IService>().EnrichWith(s => new DecoratorService(s))
-                    .AddInstances(x => { x.ConstructedBy(() => new ColorService("Green")).WithName("Green"); });
-            });
+            public object Target { get; set; }
 
-            green.ShouldBeOfType<DecoratorService>()
-                .Inner.ShouldBeOfType<ColorService>().Color.ShouldEqual("Green");
+            public object Process(object target, IContext context)
+            {
+                Target = target;
+                return target;
+            }
         }
 
         [Test]
@@ -92,15 +90,17 @@ namespace StructureMap.Testing.Configuration.DSL
             interceptor.Target.ShouldBeTheSameAs(service);
         }
 
-        public class MockInterceptor : InstanceInterceptor
+        [Test]
+        public void EnrichForAll()
         {
-            public object Process(object target, IContext context)
+            IService green = getService("Green", r =>
             {
-                Target = target;
-                return target;
-            }
+                r.ForRequestedType<IService>().EnrichWith(s => new DecoratorService(s))
+                    .AddInstances(x => { x.ConstructedBy(() => new ColorService("Green")).WithName("Green"); });
+            });
 
-            public object Target { get; set; }
+            green.ShouldBeOfType<DecoratorService>()
+                .Inner.ShouldBeOfType<ColorService>().Color.ShouldEqual("Green");
         }
 
         [Test]
@@ -109,10 +109,7 @@ namespace StructureMap.Testing.Configuration.DSL
             Action<Registry> action = registry =>
             {
                 registry.ForRequestedType<IService>().OnCreation(s => _lastService = s)
-                    .AddInstances(x =>
-                    {
-                        x.ConstructedBy(() => new ColorService("Green")).WithName("Green");
-                    });
+                    .AddInstances(x => { x.ConstructedBy(() => new ColorService("Green")).WithName("Green"); });
             };
 
 

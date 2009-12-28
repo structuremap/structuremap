@@ -36,6 +36,14 @@ namespace StructureMap.Testing
         }
 
         [Test]
+        public void get_all_interfaces()
+        {
+            typeof (C3).AllInterfaces().ShouldHaveTheSameElementsAs(typeof (I1), typeof (I2), typeof (I3));
+            typeof (C2).AllInterfaces().ShouldHaveTheSameElementsAs(typeof (I1), typeof (I2));
+            typeof (C1).AllInterfaces().ShouldHaveTheSameElementsAs(typeof (I1));
+        }
+
+        [Test]
         public void implements_interface_template()
         {
             typeof (Service1).ImplementsInterfaceTemplate(typeof (IService<>))
@@ -102,22 +110,30 @@ namespace StructureMap.Testing
             Assert.IsTrue(typeof (string).IsString());
             Assert.IsFalse(typeof (int).IsString());
         }
-
-        [Test]
-        public void get_all_interfaces()
-        {
-            typeof(C3).AllInterfaces().ShouldHaveTheSameElementsAs(typeof(I1), typeof(I2), typeof(I3));
-            typeof(C2).AllInterfaces().ShouldHaveTheSameElementsAs(typeof(I1), typeof(I2));
-            typeof(C1).AllInterfaces().ShouldHaveTheSameElementsAs(typeof(I1));
-        }
     }
 
 
-    public interface I1{}
-    public interface I2{}
-    public interface I3{}
+    public interface I1
+    {
+    }
 
-    public class C1 : I1{}
-    public class C2 : C1, I2{}
-    public class C3 : C2, I3{}
+    public interface I2
+    {
+    }
+
+    public interface I3
+    {
+    }
+
+    public class C1 : I1
+    {
+    }
+
+    public class C2 : C1, I2
+    {
+    }
+
+    public class C3 : C2, I3
+    {
+    }
 }

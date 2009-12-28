@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
-using IEnumerator=System.Collections.IEnumerator;
 
 namespace TableOfContentsBuilder
 {
@@ -38,7 +37,7 @@ namespace TableOfContentsBuilder
 
         public static XmlElement WithFormattedText(this XmlElement element, string text)
         {
-            var section = element.OwnerDocument.CreateCDataSection(text);
+            XmlCDataSection section = element.OwnerDocument.CreateCDataSection(text);
             element.AppendChild(section);
 
             return element;
@@ -54,7 +53,7 @@ namespace TableOfContentsBuilder
 
         public static void AddComment(this XmlNode element, string text)
         {
-            var comment = element.OwnerDocument.CreateComment(text);
+            XmlComment comment = element.OwnerDocument.CreateComment(text);
             element.AppendChild(comment);
         }
 
@@ -169,21 +168,11 @@ namespace TableOfContentsBuilder
             _values = dictionary;
         }
 
-        public Func<KEY, VALUE> OnMissing
-        {
-            set { _onMissing = value; }
-        }
+        public Func<KEY, VALUE> OnMissing { set { _onMissing = value; } }
 
-        public Func<VALUE, KEY> GetKey
-        {
-            get { return _getKey; }
-            set { _getKey = value; }
-        }
+        public Func<VALUE, KEY> GetKey { get { return _getKey; } set { _getKey = value; } }
 
-        public int Count
-        {
-            get { return _values.Count; }
-        }
+        public int Count { get { return _values.Count; } }
 
         public VALUE First
         {
@@ -234,7 +223,7 @@ namespace TableOfContentsBuilder
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return ((IEnumerable<VALUE>)this).GetEnumerator();
+            return ((IEnumerable<VALUE>) this).GetEnumerator();
         }
 
         public IEnumerator<VALUE> GetEnumerator()
@@ -330,7 +319,5 @@ namespace TableOfContentsBuilder
         {
             _values.Clear();
         }
-
-
     }
 }

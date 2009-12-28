@@ -10,7 +10,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var container = new Container(x =>
             {
-                x.SelectConstructor<ClassWithTwoConstructors>(()=>new ClassWithTwoConstructors(0));
+                x.SelectConstructor(() => new ClassWithTwoConstructors(0));
                 x.ForConcreteType<ClassWithTwoConstructors>().Configure
                     .WithCtorArg("age").EqualTo(34);
             });
@@ -24,6 +24,8 @@ namespace StructureMap.Testing.Configuration.DSL
         private int _age;
         private string _name;
 
+        public bool WasConstructedWithNarrowCtor;
+
         public ClassWithTwoConstructors(int age, string name)
         {
             Assert.Fail("Should not be called");
@@ -32,7 +34,6 @@ namespace StructureMap.Testing.Configuration.DSL
             _name = name;
         }
 
-        public bool WasConstructedWithNarrowCtor = false;
         public ClassWithTwoConstructors(int age)
         {
             _age = age;

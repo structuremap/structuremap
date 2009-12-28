@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using StructureMap.Pipeline;
-using StructureMap.Query;
 using StructureMap.TypeRules;
 using StructureMap.Util;
 
@@ -46,6 +45,7 @@ namespace StructureMap.Graph
         }
 
         public PluginGraph Parent { get { return _parent; } set { _parent = value; } }
+        public IEnumerable<Instance> Instances { get { return _instances.GetAll(); } }
 
         #region IPluginFamily Members
 
@@ -167,14 +167,6 @@ namespace StructureMap.Graph
             return _instances.Exists(instance => instance.Matches(plugin));
         }
 
-
-        public IEnumerable<Instance> Instances
-        {
-            get
-            {
-                return _instances.GetAll();
-            }
-        }
 
         public Instance GetInstance(string name)
         {

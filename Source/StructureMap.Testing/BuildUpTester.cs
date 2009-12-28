@@ -10,11 +10,7 @@ namespace StructureMap.Testing
     [TestFixture]
     public class BuildUpTester
     {
-        private IInstanceBuilder builder;
-        private SmartInstance<ClassWithMixOfSetters> instance;
-        private ClassWithMixOfSetters _target;
-        private BuildSession _session;
-        private DefaultGateway TheDefaultGateway;
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -25,10 +21,18 @@ namespace StructureMap.Testing
             _session = new BuildSession();
 
             TheDefaultGateway = new DefaultGateway();
-            _session.RegisterDefault(typeof(IGateway), TheDefaultGateway);
+            _session.RegisterDefault(typeof (IGateway), TheDefaultGateway);
 
             _target = null;
         }
+
+        #endregion
+
+        private IInstanceBuilder builder;
+        private SmartInstance<ClassWithMixOfSetters> instance;
+        private ClassWithMixOfSetters _target;
+        private BuildSession _session;
+        private DefaultGateway TheDefaultGateway;
 
         private ClassWithMixOfSetters TheTarget
         {
@@ -48,22 +52,16 @@ namespace StructureMap.Testing
         }
 
         [Test]
-        public void set_a_mandatory_primitive_property()
-        {
-            TheTarget.Age.ShouldEqual(34);
-        }
-
-        [Test]
-        public void sets_a_mandatory_child_property()
-        {
-            TheTarget.Gateway.ShouldBeTheSameAs(TheDefaultGateway);
-        }
-
-        [Test]
         public void do_not_set_optional_properties_and_the_value_of_those_properties_is_the_default()
         {
             TheTarget.FirstName.ShouldBeNull();
             TheTarget.LastName.ShouldBeNull();
+        }
+
+        [Test]
+        public void set_a_mandatory_primitive_property()
+        {
+            TheTarget.Age.ShouldEqual(34);
         }
 
         [Test]
@@ -78,18 +76,24 @@ namespace StructureMap.Testing
         }
 
         [Test]
-        public void the_optional_child_properties_are_not_set_if_the_instance_is_not_explicitly_specified()
-        {
-            TheTarget.Service.ShouldBeNull();
-        }
-
-        [Test]
         public void set_optional_property_for_a_child_object()
         {
             var theService = new ColorService("red");
             instance.SetterDependency(x => x.Service).Is(theService);
 
             TheTarget.Service.ShouldBeTheSameAs(theService);
+        }
+
+        [Test]
+        public void sets_a_mandatory_child_property()
+        {
+            TheTarget.Gateway.ShouldBeTheSameAs(TheDefaultGateway);
+        }
+
+        [Test]
+        public void the_optional_child_properties_are_not_set_if_the_instance_is_not_explicitly_specified()
+        {
+            TheTarget.Service.ShouldBeNull();
         }
     }
 
@@ -100,10 +104,10 @@ namespace StructureMap.Testing
 
         [SetterProperty]
         public int Age { get; set; }
-        
+
         [SetterProperty]
         public IGateway Gateway { get; set; }
-        
+
         public IService Service { get; set; }
     }
 }

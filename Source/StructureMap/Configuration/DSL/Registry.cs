@@ -301,28 +301,6 @@ namespace StructureMap.Configuration.DSL
             _actions.Add(registry.ConfigurePluginGraph);
         }
 
-        protected void registerAction(Action action)
-        {
-            _basicActions.Add(action);
-        }
-
-        internal void addExpression(Action<PluginGraph> alteration)
-        {
-            _actions.Add(alteration);
-        }
-
-        internal void ConfigurePluginGraph(PluginGraph graph)
-        {
-            if (graph.Registries.Contains(this)) return;
-
-            graph.Log.StartSource("Registry:  " + GetType().AssemblyQualifiedName);
-
-            _basicActions.ForEach(action => action());
-            _actions.ForEach(action => action(graph));
-
-            graph.Registries.Add(this);
-        }
-
 
         /// <summary>
         /// Expression Builder used to define policies for a PluginType including
@@ -456,26 +434,6 @@ namespace StructureMap.Configuration.DSL
             action(expression);
         }
 
-        internal static bool IsPublicRegistry(Type type)
-        {
-            if (type.Assembly == typeof (Registry).Assembly)
-            {
-                return false;
-            }
-
-            if (!typeof (Registry).IsAssignableFrom(type))
-            {
-                return false;
-            }
-
-            if (type.IsInterface || type.IsAbstract || type.IsGenericType)
-            {
-                return false;
-            }
-
-            return (type.GetConstructor(new Type[0]) != null);
-        }
-
         /// <summary>
         /// Registers a new TypeInterceptor object with the Container
         /// </summary>
@@ -513,29 +471,6 @@ namespace StructureMap.Configuration.DSL
             action(scanner);
 
             _actions.Add(graph => graph.AddScanner(scanner));
-        }
-
-        public bool Equals(Registry obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            return GetType().Equals(obj.GetType());
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-
-            if (obj is Registry) return false;
-
-
-            if (obj.GetType() != typeof (Registry)) return false;
-            return Equals((Registry) obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return 0;
         }
 
         /// <summary>
@@ -656,6 +591,71 @@ namespace StructureMap.Configuration.DSL
         public void Configure(Action<PluginGraph> configure)
         {
             _actions.Add(configure);
+        }
+
+        protected void registerAction(Action action)
+        {
+            _basicActions.Add(action);
+        }
+
+        internal void addExpression(Action<PluginGraph> alteration)
+        {
+            _actions.Add(alteration);
+        }
+
+        internal void ConfigurePluginGraph(PluginGraph graph)
+        {
+            if (graph.Registries.Contains(this)) return;
+
+            graph.Log.StartSource("Registry:  " + GetType().AssemblyQualifiedName);
+
+            _basicActions.ForEach(action => action());
+            _actions.ForEach(action => action(graph));
+
+            graph.Registries.Add(this);
+        }
+
+        internal static bool IsPublicRegistry(Type type)
+        {
+            if (type.Assembly == typeof (Registry).Assembly)
+            {
+                return false;
+            }
+
+            if (!typeof (Registry).IsAssignableFrom(type))
+            {
+                return false;
+            }
+
+            if (type.IsInterface || type.IsAbstract || type.IsGenericType)
+            {
+                return false;
+            }
+
+            return (type.GetConstructor(new Type[0]) != null);
+        }
+
+        public bool Equals(Registry obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            return GetType().Equals(obj.GetType());
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+
+            if (obj is Registry) return false;
+
+
+            if (obj.GetType() != typeof (Registry)) return false;
+            return Equals((Registry) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return 0;
         }
 
         #region Nested type: BuildWithExpression

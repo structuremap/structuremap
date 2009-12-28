@@ -44,7 +44,7 @@ namespace StructureMap.Testing
     [TestFixture]
     public class ValidatorExamples
     {
-        private Container container;
+        #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
@@ -75,37 +75,14 @@ namespace StructureMap.Testing
             });
         }
 
-        [Test]
-        public void what_are_the_validators()
-        {
-            Debug.WriteLine("With Auto Wiring");
-            container.GetInstance<ClassThatUsesValidators>("WithAutoWiring").Write();
-            Debug.WriteLine("=================================");
-            Debug.WriteLine("With Explicit Configuration");
-            container.GetInstance<ClassThatUsesValidators>("ExplicitArray").Write();
-        }
+        #endregion
 
-        [Test]
-        public void demonstrate_session_identity()
-        {
-            var class3 = container.GetInstance<Class3>();
-            Debug.WriteLine(class3);
-        }
-
-        [Test]
-        public void demonstrate_session_identity_with_explicit_argument()
-        {
-            DataContext context = new DataContext();
-            Debug.WriteLine("The context being passed in is " + context);
-
-            var class3 = container.With(context).GetInstance<Class3>();
-            Debug.WriteLine(class3);
-        }
+        private Container container;
 
 
         public class DataContext
         {
-            private Guid _id = Guid.NewGuid();
+            private readonly Guid _id = Guid.NewGuid();
 
             public override string ToString()
             {
@@ -160,6 +137,33 @@ namespace StructureMap.Testing
             {
                 return string.Format("Class3 has Context: {0}\n{1}", _context, _class2);
             }
+        }
+
+        [Test]
+        public void demonstrate_session_identity()
+        {
+            var class3 = container.GetInstance<Class3>();
+            Debug.WriteLine(class3);
+        }
+
+        [Test]
+        public void demonstrate_session_identity_with_explicit_argument()
+        {
+            var context = new DataContext();
+            Debug.WriteLine("The context being passed in is " + context);
+
+            var class3 = container.With(context).GetInstance<Class3>();
+            Debug.WriteLine(class3);
+        }
+
+        [Test]
+        public void what_are_the_validators()
+        {
+            Debug.WriteLine("With Auto Wiring");
+            container.GetInstance<ClassThatUsesValidators>("WithAutoWiring").Write();
+            Debug.WriteLine("=================================");
+            Debug.WriteLine("With Explicit Configuration");
+            container.GetInstance<ClassThatUsesValidators>("ExplicitArray").Write();
         }
     }
 }

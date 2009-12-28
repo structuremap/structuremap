@@ -8,15 +8,42 @@ namespace StructureMap.Testing.Construction
     [TestFixture]
     public class BuilderCompilerTester
     {
+        #region Setup/Teardown
+
         [SetUp]
         public void SetUp()
         {
         }
 
+        #endregion
+
+        public class ConstructorTarget
+        {
+            private readonly int _age;
+            private readonly DateTime _birthDay;
+            private readonly string _name;
+
+            public ConstructorTarget(string name, int age, DateTime birthDay)
+            {
+                _name = name;
+                _age = age;
+                _birthDay = birthDay;
+            }
+
+            public string Name { get { return _name; } }
+            public int Age { get { return _age; } }
+            public DateTime BirthDay { get { return _birthDay; } }
+
+
+            public string Color { get; set; }
+            public string Direction { get; set; }
+            public int Number { get; set; }
+        }
+
         [Test]
         public void compile_and_exercise_a_builder()
         {
-            var func = BuilderCompiler.CompileCreator(new Plugin(typeof (ConstructorTarget)));
+            Func<IArguments, object> func = BuilderCompiler.CompileCreator(new Plugin(typeof (ConstructorTarget)));
             var args = new StubArguments();
             args.Set("name", "Jeremy");
             args.Set("age", 35);
@@ -42,33 +69,10 @@ namespace StructureMap.Testing.Construction
 
             var target = new ConstructorTarget(null, 5, DateTime.Today);
 
-            var action = BuilderCompiler.CompileBuildUp(new Plugin(typeof (ConstructorTarget)));
+            Action<IArguments, object> action = BuilderCompiler.CompileBuildUp(new Plugin(typeof (ConstructorTarget)));
             action(args, target);
 
             target.Color.ShouldEqual("blue");
-        }
-
-        public class ConstructorTarget
-        {
-            private readonly string _name;
-            private readonly int _age;
-            private readonly DateTime _birthDay;
-
-            public ConstructorTarget(string name, int age, DateTime birthDay)
-            {
-                _name = name;
-                _age = age;
-                _birthDay = birthDay;
-            }
-
-            public string Name { get { return _name; } }
-            public int Age { get { return _age; } }
-            public DateTime BirthDay { get { return _birthDay; } }
-
-
-            public string Color { get; set; }
-            public string Direction { get; set; }
-            public int Number { get; set; }
         }
     }
 }

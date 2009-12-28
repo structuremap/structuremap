@@ -1,5 +1,3 @@
-using System;
-
 namespace StructureMap.Pipeline
 {
     /// <summary>
@@ -16,10 +14,6 @@ namespace StructureMap.Pipeline
             return new NulloObjectCache();
         }
 
-        public string Scope
-        {
-            get { return InstanceScope.Unique.ToString(); } }
-
-
+        public string Scope { get { return InstanceScope.Unique.ToString(); } }
     }
 }

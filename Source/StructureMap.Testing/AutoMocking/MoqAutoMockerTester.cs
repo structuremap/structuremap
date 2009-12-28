@@ -1,8 +1,8 @@
 using System;
+using System.Linq.Expressions;
 using Moq;
 using NUnit.Framework;
 using StructureMap.AutoMocking;
-using System.Linq.Expressions;
 
 namespace StructureMap.Testing.AutoMocking
 {
@@ -12,8 +12,8 @@ namespace StructureMap.Testing.AutoMocking
         [Test]
         public void verify_an_expected_calls()
         {
-            MoqAutoMocker<AutoMockerTester.ConcreteClass> autoMocker = new MoqAutoMocker<AutoMockerTester.ConcreteClass>();
-            AutoMockerTester.IMockedService mockedService = autoMocker.Get<AutoMockerTester.IMockedService>();
+            var autoMocker = new MoqAutoMocker<AutoMockerTester.ConcreteClass>();
+            var mockedService = autoMocker.Get<AutoMockerTester.IMockedService>();
             autoMocker.ClassUnderTest.CallService();
 
             IMock<AutoMockerTester.IMockedService> mockedServiceWrapper = Mock.Get(mockedService);
@@ -29,7 +29,8 @@ namespace StructureMap.Testing.AutoMocking
             return new MoqAutoMocker<T>();
         }
 
-        protected override void setExpectation<T, TResult>(T mock, Expression<Func<T, TResult>> functionCall, TResult expectedResult)
+        protected override void setExpectation<T, TResult>(T mock, Expression<Func<T, TResult>> functionCall,
+                                                           TResult expectedResult)
         {
             Mock.Get(mock).Expect(functionCall).Returns(expectedResult);
         }

@@ -10,50 +10,24 @@ namespace StructureMap.Testing.Widget4
 
     public class Strategy : IStrategy
     {
-        private int _count;
-        private bool _isCalculated;
-        private string _name;
-        private long _quantity;
-        private double _rating;
-
         public Strategy(string name, int count, double rating, long quantity, bool isCalculated)
         {
-            _name = name;
-            _count = count;
-            _rating = rating;
-            _quantity = quantity;
-            _isCalculated = isCalculated;
+            Name = name;
+            Count = count;
+            Rating = rating;
+            Quantity = quantity;
+            IsCalculated = isCalculated;
         }
 
-        public string Name
-        {
-            get { return _name; }
-            set { _name = value; }
-        }
+        public string Name { get; set; }
 
-        public int Count
-        {
-            get { return _count; }
-            set { _count = value; }
-        }
+        public int Count { get; set; }
 
-        public double Rating
-        {
-            get { return _rating; }
-            set { _rating = value; }
-        }
+        public double Rating { get; set; }
 
-        public long Quantity
-        {
-            get { return _quantity; }
-            set { _quantity = value; }
-        }
+        public long Quantity { get; set; }
 
-        public bool IsCalculated
-        {
-            get { return _isCalculated; }
-            set { _isCalculated = value; }
-        }
+        public bool IsCalculated { get; set; }
 
         #region IStrategy Members
 
@@ -67,7 +41,7 @@ namespace StructureMap.Testing.Widget4
         {
             if (obj is Strategy)
             {
-                Strategy peer = (Strategy) obj;
+                var peer = (Strategy) obj;
 
                 bool returnValue = Name.Equals(peer.Name);
                 returnValue = returnValue && Count.Equals(peer.Count);
@@ -132,7 +106,7 @@ namespace StructureMap.Testing.Widget4
         {
             if (obj is ComplexStrategy)
             {
-                ComplexStrategy peer = (ComplexStrategy) obj;
+                var peer = (ComplexStrategy) obj;
                 if (_innerStrategies.Length != peer._innerStrategies.Length)
                 {
                     return false;
@@ -160,18 +134,12 @@ namespace StructureMap.Testing.Widget4
 
     public class RandomStrategy : IStrategy
     {
-        private double _seed;
-
         public RandomStrategy(double seed)
         {
-            _seed = seed;
+            Seed = seed;
         }
 
-        public double Seed
-        {
-            get { return _seed; }
-            set { _seed = value; }
-        }
+        public double Seed { get; set; }
 
         #region IStrategy Members
 
@@ -190,7 +158,7 @@ namespace StructureMap.Testing.Widget4
         {
             if (obj is RandomStrategy)
             {
-                RandomStrategy peer = (RandomStrategy) obj;
+                var peer = (RandomStrategy) obj;
                 return (Seed == peer.Seed);
             }
             else
@@ -203,17 +171,14 @@ namespace StructureMap.Testing.Widget4
 
     public class ColorStrategy : IStrategy
     {
-        private string _color;
+        private readonly string _color;
 
         public ColorStrategy(string color)
         {
             _color = color;
         }
 
-        public string Color
-        {
-            get { return _color; }
-        }
+        public string Color { get { return _color; } }
 
         #region IStrategy Members
 
@@ -227,7 +192,7 @@ namespace StructureMap.Testing.Widget4
         {
             if (obj is ColorStrategy)
             {
-                ColorStrategy peer = (ColorStrategy) obj;
+                var peer = (ColorStrategy) obj;
                 return (Color == peer.Color);
             }
             else
@@ -245,18 +210,12 @@ namespace StructureMap.Testing.Widget4
 
     public class StrategyDecorator : IStrategy
     {
-        private IStrategy _innerStrategy;
-
         public StrategyDecorator(IStrategy innerStrategy)
         {
-            _innerStrategy = innerStrategy;
+            InnerStrategy = innerStrategy;
         }
 
-        public IStrategy InnerStrategy
-        {
-            get { return _innerStrategy; }
-            set { _innerStrategy = value; }
-        }
+        public IStrategy InnerStrategy { get; set; }
 
         #region IStrategy Members
 
@@ -270,7 +229,7 @@ namespace StructureMap.Testing.Widget4
         {
             if (obj is StrategyDecorator)
             {
-                StrategyDecorator peer = (StrategyDecorator) obj;
+                var peer = (StrategyDecorator) obj;
                 return InnerStrategy.Equals(peer.InnerStrategy);
             }
             else
@@ -288,17 +247,14 @@ namespace StructureMap.Testing.Widget4
 
     public class CompoundStrategy : IStrategy
     {
-        private IStrategy[] _innerStrategies;
+        private readonly IStrategy[] _innerStrategies;
 
         public CompoundStrategy(IStrategy[] innerStrategies)
         {
             _innerStrategies = innerStrategies;
         }
 
-        public IStrategy[] InnerStrategies
-        {
-            get { return _innerStrategies; }
-        }
+        public IStrategy[] InnerStrategies { get { return _innerStrategies; } }
 
         #region IStrategy Members
 
@@ -319,7 +275,7 @@ namespace StructureMap.Testing.Widget4
         {
             if (obj is CompoundStrategy)
             {
-                CompoundStrategy peer = (CompoundStrategy) obj;
+                var peer = (CompoundStrategy) obj;
 
                 bool returnValue = (InnerStrategies.Length == peer.InnerStrategies.Length);
 

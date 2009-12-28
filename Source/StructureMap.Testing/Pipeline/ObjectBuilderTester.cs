@@ -1,6 +1,5 @@
 using System;
 using NUnit.Framework;
-using Rhino.Mocks;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;

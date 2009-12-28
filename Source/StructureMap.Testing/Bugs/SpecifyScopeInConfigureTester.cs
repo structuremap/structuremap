@@ -3,9 +3,11 @@ using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Bugs
 {
-    [TestFixture] public class SpecifyScopeInConfigureTester
+    [TestFixture]
+    public class SpecifyScopeInConfigureTester
     {
-        [Test] public void specify_the_scope_in_a_Configure_if_it_is_not_already_set()
+        [Test]
+        public void specify_the_scope_in_a_Configure_if_it_is_not_already_set()
         {
             var container = new Container(x => { });
             container.Configure(x =>

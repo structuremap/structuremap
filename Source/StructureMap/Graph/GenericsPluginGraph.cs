@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using StructureMap.Pipeline;
-using StructureMap.Query;
 using StructureMap.Util;
 
 namespace StructureMap.Graph
@@ -17,13 +16,7 @@ namespace StructureMap.Graph
 
         public int FamilyCount { get { return _families.Count; } }
 
-        public IEnumerable<PluginFamily> Families
-        {
-            get
-            {
-                return _families.GetAll();
-            }
-        }
+        public IEnumerable<PluginFamily> Families { get { return _families.GetAll(); } }
 
         public GenericsPluginGraph Clone()
         {

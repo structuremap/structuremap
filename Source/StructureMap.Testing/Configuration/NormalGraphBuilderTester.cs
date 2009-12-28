@@ -2,7 +2,6 @@ using NUnit.Framework;
 using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
-using StructureMap.Pipeline;
 using StructureMap.Source;
 using StructureMap.Testing.Widget3;
 
@@ -69,7 +68,7 @@ namespace StructureMap.Testing.Configuration
             var builder = new GraphBuilder(new Registry[0]);
             builder.WithSystemObject<MementoSource>(memento, "some xml", policy =>
             {
-                Assert.IsInstanceOfType(typeof(XmlFileMementoSource), policy);
+                Assert.IsInstanceOfType(typeof (XmlFileMementoSource), policy);
                 iWasCalled = true;
             });
 

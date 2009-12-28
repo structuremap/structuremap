@@ -18,7 +18,5 @@ namespace StructureMap.Testing.Bugs
 
             container.GetInstance<IGateway>().ShouldNotBeNull();
         }
-
-        
     }
 }

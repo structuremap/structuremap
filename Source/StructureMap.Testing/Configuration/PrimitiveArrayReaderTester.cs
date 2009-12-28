@@ -40,10 +40,10 @@ namespace StructureMap.Testing.Configuration
         {
             parseNode("<node Values='a,b,c,d' Delimiter=';'></node>", typeof (string[])).ShouldEqual(new[] {"a,b,c,d"});
             parseNode("<node Values='a;b;c;d' Delimiter=';'></node>", typeof (string[])).ShouldEqual(new[]
-                                                                                                         {
-                                                                                                             "a", "b", "c",
-                                                                                                             "d"
-                                                                                                         });
+            {
+                "a", "b", "c",
+                "d"
+            });
         }
 
         [Test]

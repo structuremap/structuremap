@@ -1,11 +1,9 @@
-using StructureMap.Attributes;
-
 namespace StructureMap.Pipeline
 {
     public interface ILifecycle
     {
+        string Scope { get; }
         void EjectAll();
         IObjectCache FindCache();
-        string Scope { get; }
     }
 }

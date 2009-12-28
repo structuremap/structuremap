@@ -16,19 +16,8 @@ namespace StructureMap.Testing.Bugs
 
     public class ClassWithStaticProperty
     {
-
         private static volatile bool disabled;
 
-        public static bool Disabled
-        {
-            get
-            {
-                return disabled;
-            }
-            set
-            {
-                    disabled = value;
-            }
-        }
+        public static bool Disabled { get { return disabled; } set { disabled = value; } }
     }
 }

@@ -58,19 +58,6 @@ namespace StructureMap
 
         public string CurrentProfile { get { return _profileManager.CurrentProfile; } set { _profileManager.CurrentProfile = value; } }
 
-        public IEnumerable<IPluginTypeConfiguration> GetPluginTypes(IContainer container)
-        {
-            foreach (PluginFamily family in _genericsGraph.Families)
-            {
-                yield return new GenericFamilyConfiguration(family);
-            }
-
-            foreach (IInstanceFactory factory in _factories.Values.ToArray())
-            {
-                yield return new InstanceFactoryTypeConfiguration(factory.PluginType, container, this);
-            }
-        }
-
         public void Dispose()
         {
             if (_factories.ContainsKey(typeof (IContainer)))
@@ -94,6 +81,19 @@ namespace StructureMap
             _genericsGraph.ClearAll();
 
             _transientCache.DisposeAndClear();
+        }
+
+        public IEnumerable<IPluginTypeConfiguration> GetPluginTypes(IContainer container)
+        {
+            foreach (PluginFamily family in _genericsGraph.Families)
+            {
+                yield return new GenericFamilyConfiguration(family);
+            }
+
+            foreach (IInstanceFactory factory in _factories.Values.ToArray())
+            {
+                yield return new InstanceFactoryTypeConfiguration(factory.PluginType, container, this);
+            }
         }
 
         public PipelineGraph ToNestedGraph()
@@ -221,10 +221,7 @@ namespace StructureMap
 
         public void EachInstance(Action<Type, Instance> action)
         {
-            _factories.Values.Each(f =>
-            {
-                f.AllInstances.Each(i => action(f.PluginType, i));
-            });
+            _factories.Values.Each(f => { f.AllInstances.Each(i => action(f.PluginType, i)); });
         }
 
         public IObjectCache FindCache(Type pluginType)

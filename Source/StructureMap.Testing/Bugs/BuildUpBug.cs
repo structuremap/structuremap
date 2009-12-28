@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using NUnit.Framework;
 
 namespace StructureMap.Testing.Bugs
@@ -17,7 +13,7 @@ namespace StructureMap.Testing.Bugs
                 x.UseDefaultStructureMapConfigFile = false;
 
                 x.ForConcreteType<SomeDbRepository>().Configure.
-                  WithCtorArg("connectionString").EqualTo("some connection string");
+                    WithCtorArg("connectionString").EqualTo("some connection string");
 
                 //x.ForConcreteType<SomeWebPage>().Configure.
                 //  SetterDependency<SomeDbRepository>().Is<SomeDbRepository>();
@@ -25,10 +21,10 @@ namespace StructureMap.Testing.Bugs
                 x.SetAllProperties(o => o.OfType<SomeDbRepository>());
             });
 
-            SomeDbRepository dbRepository =
-              ObjectFactory.GetInstance<SomeDbRepository>();
+            var dbRepository =
+                ObjectFactory.GetInstance<SomeDbRepository>();
 
-            SomeWebPage webPage = new SomeWebPage();
+            var webPage = new SomeWebPage();
 
             ObjectFactory.BuildUp(webPage);
 
@@ -40,7 +36,7 @@ namespace StructureMap.Testing.Bugs
     {
         public SomeDbRepository(string connectionString)
         {
-            this.ConnectionString = connectionString;
+            ConnectionString = connectionString;
         }
 
         public string ConnectionString { get; set; }
