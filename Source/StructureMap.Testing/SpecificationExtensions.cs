@@ -44,7 +44,7 @@ namespace StructureMap.Testing
             catch (Exception)
             {
                 Debug.WriteLine("ACTUAL:");
-                foreach (var o in actual)
+                foreach (object o in actual)
                 {
                     Debug.WriteLine(o);
                 }

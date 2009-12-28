@@ -188,7 +188,7 @@ namespace StructureMap
 
         public void EjectAllInstancesOf<T>()
         {
-            EjectAllInstancesOf(typeof(T));
+            EjectAllInstancesOf(typeof (T));
         }
 
         public void EjectAllInstancesOf(Type pluginType)
@@ -250,8 +250,5 @@ namespace StructureMap
             ForType(pluginType).RemoveInstance(instance);
             _profileManager.RemoveInstance(pluginType, instance);
         }
-
-
-
     }
 }

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using StructureMap.Pipeline;
-using StructureMap.Query;
 using StructureMap.TypeRules;
 using StructureMap.Util;
 
@@ -328,6 +327,22 @@ namespace StructureMap.Graph
             _instances.WithValue(name, action);
         }
 
+        public void RemoveInstance(Instance instance)
+        {
+            _instances.Remove(instance.Name);
+            if (_defaultKey == instance.Name)
+            {
+                _defaultKey = null;
+            }
+        }
+
+        public void RemoveAll()
+        {
+            _instances.Clear();
+            _mementoList.Clear();
+            _defaultKey = null;
+        }
+
         #region properties
 
         public bool IsGenericTemplate { get { return _pluginType.IsGenericTypeDefinition || _pluginType.ContainsGenericParameters; } }
@@ -348,29 +363,8 @@ namespace StructureMap.Graph
         /// The InstanceKey of the default instance of the PluginFamily
         /// </summary>
         [Obsolete]
-        public string DefaultInstanceKey
-        {
-            get { return _defaultKey; } 
-            set { _defaultKey = value ?? string.Empty; }
-        }
+        public string DefaultInstanceKey { get { return _defaultKey; } set { _defaultKey = value ?? string.Empty; } }
 
         #endregion
-
-        public void RemoveInstance(Instance instance)
-        {
-            _instances.Remove(instance.Name);
-            if (_defaultKey == instance.Name)
-            {
-                _defaultKey = null;
-            }
-
-        }
-
-        public void RemoveAll()
-        {
-            _instances.Clear();
-            _mementoList.Clear();
-            _defaultKey = null;
-        }
     }
 }

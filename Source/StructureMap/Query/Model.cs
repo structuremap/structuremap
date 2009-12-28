@@ -7,8 +7,8 @@ namespace StructureMap.Query
 {
     public class Model : IModel
     {
-        private PipelineGraph _graph;
-        private IContainer _container;
+        private readonly IContainer _container;
+        private readonly PipelineGraph _graph;
 
         internal Model(PipelineGraph graph, IContainer container)
         {
@@ -17,6 +17,8 @@ namespace StructureMap.Query
         }
 
         #region IModel Members
+
+        private IEnumerable<IPluginTypeConfiguration> pluginTypes { get { return _graph.GetPluginTypes(_container); } }
 
         public bool HasDefaultImplementationFor(Type pluginType)
         {
@@ -36,14 +38,6 @@ namespace StructureMap.Query
         public Type DefaultTypeFor(Type pluginType)
         {
             return findForFamily(pluginType, f => f.Default == null ? null : f.Default.ConcreteType);
-        }
-
-        private IEnumerable<IPluginTypeConfiguration> pluginTypes
-        {
-            get
-            {
-                return _graph.GetPluginTypes(_container);
-            }
         }
 
         public IEnumerable<IPluginTypeConfiguration> PluginTypes { get { return pluginTypes; } }
@@ -78,10 +72,7 @@ namespace StructureMap.Query
             EjectAndRemovePluginTypes(filter);
 
             // second pass to hit instances
-            pluginTypes.Each(x =>
-            {
-                x.EjectAndRemove(i => filter(i.ConcreteType));
-            });
+            pluginTypes.Each(x => { x.EjectAndRemove(i => filter(i.ConcreteType)); });
         }
 
         /// <summary>

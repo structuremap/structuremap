@@ -74,6 +74,5 @@ namespace StructureMap.Testing.Configuration
                 Assert.AreEqual(280, ex.ErrorCode);
             }
         }
-
     }
 }

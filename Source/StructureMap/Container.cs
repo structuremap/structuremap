@@ -64,13 +64,7 @@ namespace StructureMap
         /// <summary>
         /// Provides queryable access to the configured PluginType's and Instances of this Container
         /// </summary>
-        public IModel Model
-        {
-            get
-            {
-                return new Model(_pipelineGraph, this);
-            }
-        }
+        public IModel Model { get { return new Model(_pipelineGraph, this); } }
 
         /// <summary>
         /// Creates or finds the named instance of T

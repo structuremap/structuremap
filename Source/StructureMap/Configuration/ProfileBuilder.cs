@@ -1,4 +1,3 @@
-using System;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 
@@ -39,6 +38,5 @@ namespace StructureMap.Configuration
         }
 
         #endregion
-
     }
 }

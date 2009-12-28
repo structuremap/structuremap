@@ -23,7 +23,8 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             public RedGreenRegistry()
             {
-                InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithCtorArg("color").EqualTo("Red").WithName("Red");
+                InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithCtorArg("color").EqualTo("Red").WithName(
+                    "Red");
                 InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithCtorArg("color").EqualTo("Green").WithName(
                     "Green");
             }
@@ -35,7 +36,8 @@ namespace StructureMap.Testing.Configuration.DSL
             {
                 InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithCtorArg("color").EqualTo("Yellow").WithName(
                     "Yellow");
-                InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithProperty("color").EqualTo("Blue").WithName("Blue");
+                InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithProperty("color").EqualTo("Blue").WithName(
+                    "Blue");
             }
         }
 
@@ -45,21 +47,6 @@ namespace StructureMap.Testing.Configuration.DSL
             {
                 For<IWidget>().Use<AWidget>();
             }
-        }
-
-        [Test]
-        public void include_a_registry()
-        {
-            var registry = new Registry();
-            registry.IncludeRegistry<YellowBlueRegistry>();
-            registry.IncludeRegistry<RedGreenRegistry>();
-            registry.IncludeRegistry<PurpleRegistry>();
-
-            var container = new Container(registry);
-
-            container.GetInstance<IWidget>().ShouldBeOfType<AWidget>();
-
-            container.GetAllInstances<IWidget>().Count.ShouldEqual(5);
         }
 
 
@@ -88,6 +75,21 @@ namespace StructureMap.Testing.Configuration.DSL
 
             registry1.Equals(registry3).ShouldBeFalse();
             registry3.Equals(registry1).ShouldBeFalse();
+        }
+
+        [Test]
+        public void include_a_registry()
+        {
+            var registry = new Registry();
+            registry.IncludeRegistry<YellowBlueRegistry>();
+            registry.IncludeRegistry<RedGreenRegistry>();
+            registry.IncludeRegistry<PurpleRegistry>();
+
+            var container = new Container(registry);
+
+            container.GetInstance<IWidget>().ShouldBeOfType<AWidget>();
+
+            container.GetAllInstances<IWidget>().Count.ShouldEqual(5);
         }
 
         [Test]
