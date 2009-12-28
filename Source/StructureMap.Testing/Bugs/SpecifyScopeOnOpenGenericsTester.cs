@@ -1,5 +1,4 @@
 using NUnit.Framework;
-using StructureMap.Attributes;
 
 namespace StructureMap.Testing.Bugs
 {

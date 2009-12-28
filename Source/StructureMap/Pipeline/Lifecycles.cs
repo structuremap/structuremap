@@ -1,5 +1,4 @@
 using System;
-using StructureMap.Attributes;
 
 namespace StructureMap.Pipeline
 {
@@ -29,6 +28,9 @@ namespace StructureMap.Pipeline
 
                 case InstanceScope.HybridHttpSession:
                     return new HybridSessionLifecycle();
+
+                case InstanceScope.Unique:
+                    return new UniquePerRequestLifecycle();
             }
 
             throw new ArgumentOutOfRangeException("scope");

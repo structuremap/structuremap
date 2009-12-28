@@ -23,17 +23,17 @@ namespace StructureMap.DebuggerVisualizers
         public static ContainerDetail BuildContainerDetails(Container container)
         {
             IList<PluginTypeDetail> pluginTypeDetails = new List<PluginTypeDetail>();
-            foreach (PluginTypeConfiguration pluginType in container.Model.PluginTypes)
+            foreach (IPluginTypeConfiguration pluginType in container.Model.PluginTypes)
             {
                 IList<InstanceDetail> instances = new List<InstanceDetail>();
-                IList<IInstance> usedInstances = new List<IInstance>();
+                IList<InstanceRef> usedInstances = new List<InstanceRef>();
 
                 if (pluginType.Default != null)
                 {
                     instances.Add(buildInstanceDetail(pluginType.Default));
                     usedInstances.Add(pluginType.Default);
                 }
-                foreach (IInstance instance in pluginType.Instances)
+                foreach (InstanceRef instance in pluginType.Instances)
                 {
                     if (usedInstances.Contains(instance)) continue;
                     instances.Add(buildInstanceDetail(instance));
@@ -47,7 +47,7 @@ namespace StructureMap.DebuggerVisualizers
             return new ContainerDetail(container.PluginGraph.Log.Sources, pluginTypeDetails.ToArray());
         }
 
-        private static InstanceDetail buildInstanceDetail(IInstance instance)
+        private static InstanceDetail buildInstanceDetail(InstanceRef instance)
         {
             return new InstanceDetail(instance.Name, instance.Description, instance.ConcreteType);
         }

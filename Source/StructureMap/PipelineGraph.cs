@@ -19,12 +19,14 @@ namespace StructureMap
         private readonly GenericsPluginGraph _genericsGraph = new GenericsPluginGraph();
         private readonly GraphLog _log;
         private readonly ProfileManager _profileManager;
+        private readonly IObjectCache _transientCache;
 
         private MissingFactoryFunction _missingFactory =
             (pluginType, profileManager) => null;
 
         public PipelineGraph(PluginGraph graph)
         {
+            _transientCache = new NulloObjectCache();
             _profileManager = graph.ProfileManager;
             _log = graph.Log;
 
@@ -47,6 +49,7 @@ namespace StructureMap
             _profileManager = profileManager;
             _genericsGraph = genericsGraph;
             _log = log;
+            _transientCache = new MainObjectCache();
         }
 
         public GraphLog Log { get { return _log; } }
@@ -55,28 +58,16 @@ namespace StructureMap
 
         public string CurrentProfile { get { return _profileManager.CurrentProfile; } set { _profileManager.CurrentProfile = value; } }
 
-        public IEnumerable<PluginTypeConfiguration> PluginTypes
+        public IEnumerable<IPluginTypeConfiguration> GetPluginTypes(IContainer container)
         {
-            get
+            foreach (PluginFamily family in _genericsGraph.Families)
             {
-                foreach (PluginTypeConfiguration configuration in _genericsGraph.Families)
-                {
-                    yield return configuration;
-                }
+                yield return new GenericFamilyConfiguration(family);
+            }
 
-                var factories = new IInstanceFactory[_factories.Count];
-                _factories.Values.CopyTo(factories, 0);
-
-                foreach (IInstanceFactory factory in factories)
-                {
-                    yield return new PluginTypeConfiguration
-                    {
-                        Default = _profileManager.GetDefault(factory.PluginType),
-                        PluginType = factory.PluginType,
-                        Lifecycle = factory.Lifecycle,
-                        Instances = factory.AllInstances
-                    };
-                }
+            foreach (IInstanceFactory factory in _factories.Values.ToArray())
+            {
+                yield return new InstanceFactoryTypeConfiguration(factory.PluginType, container, this);
             }
         }
 
@@ -101,9 +92,11 @@ namespace StructureMap
             _factories.Clear();
             _profileManager.Dispose();
             _genericsGraph.ClearAll();
+
+            _transientCache.DisposeAndClear();
         }
 
-        public PipelineGraph Clone()
+        public PipelineGraph ToNestedGraph()
         {
             var clone = new PipelineGraph(_profileManager.Clone(), _genericsGraph.Clone(), _log)
             {
@@ -198,36 +191,12 @@ namespace StructureMap
             ForType(typeof (T)).AddInstance(instance);
         }
 
-        public Instance Inject<PLUGINTYPE>(PLUGINTYPE instance)
-        {
-            var literalInstance = new ObjectInstance(instance);
-            ForType(typeof (PLUGINTYPE)).AddInstance(literalInstance);
-            SetDefault(typeof (PLUGINTYPE), literalInstance);
-
-            return literalInstance;
-        }
-
         public void EjectAllInstancesOf<T>()
         {
             ForType(typeof (T)).EjectAllInstances();
             _profileManager.EjectAllInstancesOf<T>();
         }
 
-        [Obsolete("Move this to PluginTypeConfiguration")]
-        public IEnumerable<IInstance> InstancesOf(Type pluginType)
-        {
-            if (_genericsGraph.HasFamily(pluginType))
-            {
-                return _genericsGraph.FindFamily(pluginType).Instances;
-            }
-
-            if (_factories.ContainsKey(pluginType))
-            {
-                return _factories[pluginType].AllInstances;
-            }
-
-            return new IInstance[0];
-        }
 
         public List<Instance> GetAllInstances()
         {
@@ -248,6 +217,22 @@ namespace StructureMap
         public bool HasInstance(Type pluginType, string instanceKey)
         {
             return ForType(pluginType).FindInstance(instanceKey) != null;
+        }
+
+        public void EachInstance(Action<Type, Instance> action)
+        {
+            _factories.Values.Each(f =>
+            {
+                f.AllInstances.Each(i => action(f.PluginType, i));
+            });
+        }
+
+        public IObjectCache FindCache(Type pluginType)
+        {
+            ILifecycle lifecycle = ForType(pluginType).Lifecycle;
+            return lifecycle == null
+                       ? _transientCache
+                       : lifecycle.FindCache();
         }
     }
 }

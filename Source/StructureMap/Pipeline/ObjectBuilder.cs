@@ -5,17 +5,15 @@ namespace StructureMap.Pipeline
 {
     public class ObjectBuilder
     {
-        private readonly IObjectCache _defaultCache;
         private readonly InterceptorLibrary _library;
         private readonly PipelineGraph _pipeline;
 
-        public ObjectBuilder(PipelineGraph pipeline, InterceptorLibrary library, IObjectCache defaultCache)
+        public ObjectBuilder(PipelineGraph pipeline, InterceptorLibrary library)
         {
             if (pipeline == null) throw new ArgumentNullException("pipeline");
 
             _pipeline = pipeline;
             _library = library;
-            _defaultCache = defaultCache;
         }
 
         public object Resolve(Type pluginType, Instance instance, BuildSession session)
@@ -59,10 +57,7 @@ namespace StructureMap.Pipeline
 
         public IObjectCache FindCache(Type pluginType, Instance instance, BuildSession session)
         {
-            ILifecycle lifecycle = _pipeline.ForType(pluginType).Lifecycle;
-            return lifecycle == null
-                       ? _defaultCache
-                       : lifecycle.FindCache();
+            return _pipeline.FindCache(pluginType);
         }
     }
 }

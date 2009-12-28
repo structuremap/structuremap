@@ -56,7 +56,8 @@ namespace StructureMap.Testing.Configuration.DSL
 
             var colors = new List<string>();
             PluginFamily family = graph.FindFamily(typeof (IWidget));
-            family.EachInstance(instance => colors.Add(instance.Name));
+
+            family.Instances.Each(instance => colors.Add(instance.Name));
 
             Assert.Contains("Red", colors);
             Assert.Contains("Green", colors);

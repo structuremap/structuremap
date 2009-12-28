@@ -1,3 +1,5 @@
+using System;
+
 namespace StructureMap.Pipeline
 {
     public abstract class HttpLifecycleBase<HTTP, NONHTTP> : ILifecycle
@@ -25,9 +27,7 @@ namespace StructureMap.Pipeline
                        ? _http.FindCache()
                        : _nonHttp.FindCache();
         }
-    }
 
-    public class HybridLifecycle : HttpLifecycleBase<HttpContextLifecycle, ThreadLocalStorageLifecycle>
-    {
+        public abstract string Scope { get;}
     }
 }

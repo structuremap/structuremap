@@ -16,9 +16,9 @@ namespace StructureMap
         private readonly PipelineGraph _pipelineGraph;
         protected BuildStack _buildStack = new BuildStack();
 
-        public BuildSession(PipelineGraph pipelineGraph, InterceptorLibrary interceptorLibrary, IObjectCache cache)
+        public BuildSession(PipelineGraph pipelineGraph, InterceptorLibrary interceptorLibrary)
         {
-            _builder = new ObjectBuilder(pipelineGraph, interceptorLibrary, cache);
+            _builder = new ObjectBuilder(pipelineGraph, interceptorLibrary);
             _pipelineGraph = pipelineGraph;
 
             _defaults = new Cache<Type, Func<object>>(t =>
@@ -35,7 +35,7 @@ namespace StructureMap
         }
 
         public BuildSession(PluginGraph graph)
-            : this(new PipelineGraph(graph), graph.InterceptorLibrary, new NulloObjectCache())
+            : this(new PipelineGraph(graph), graph.InterceptorLibrary)
         {
         }
 

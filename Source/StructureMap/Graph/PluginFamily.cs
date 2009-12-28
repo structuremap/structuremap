@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using StructureMap.Attributes;
 using StructureMap.Pipeline;
 using StructureMap.Query;
 using StructureMap.TypeRules;
@@ -57,6 +56,12 @@ namespace StructureMap.Graph
 
         public void SetScopeTo(InstanceScope scope)
         {
+            if (scope == InstanceScope.Transient)
+            {
+                _lifecycle = null;
+                return;
+            }
+
             _lifecycle = Lifecycles.GetLifecycle(scope);
         }
 
@@ -77,6 +82,12 @@ namespace StructureMap.Graph
         public void AddInstance(Instance instance)
         {
             _instances[instance.Name] = instance;
+        }
+
+        public void SetDefault(Instance instance)
+        {
+            AddInstance(instance);
+            DefaultInstanceKey = instance.Name;
         }
 
 
@@ -156,9 +167,13 @@ namespace StructureMap.Graph
             return _instances.Exists(instance => instance.Matches(plugin));
         }
 
-        public void EachInstance(Action<Instance> action)
+
+        public IEnumerable<Instance> Instances
         {
-            _instances.Each(action);
+            get
+            {
+                return _instances.GetAll();
+            }
         }
 
         public Instance GetInstance(string name)
@@ -243,7 +258,8 @@ namespace StructureMap.Graph
 
         public void ImportFrom(PluginFamily source)
         {
-            source.EachInstance(instance => _instances.Fill(instance.Name, instance));
+            source.Instances.Each(instance => _instances.Fill(instance.Name, instance));
+
             source._pluggedTypes.Each((key, plugin) => _pluggedTypes.Fill(key, plugin));
 
             if (source.MissingInstance != null)
@@ -314,18 +330,6 @@ namespace StructureMap.Graph
             }
         }
 
-        public PluginTypeConfiguration GetConfiguration()
-        {
-            return new PluginTypeConfiguration
-            {
-                Default = GetDefaultInstance(),
-                PluginType = PluginType,
-                Lifecycle = _lifecycle,
-                Instances = Instances
-            };
-        }
-
-        [Obsolete("replace with Instances")]
         public void ForInstance(string name, Action<Instance> action)
         {
             _instances.WithValue(name, action);
@@ -340,9 +344,6 @@ namespace StructureMap.Graph
 
         public int InstanceCount { get { return _instances.Count; } }
 
-        [Obsolete]
-        public IEnumerable<IInstance> Instances { get { return _instances.GetAll(); } }
-        
         public Instance MissingInstance { get; set; }
 
         /// <summary>
@@ -353,6 +354,7 @@ namespace StructureMap.Graph
         /// <summary>
         /// The InstanceKey of the default instance of the PluginFamily
         /// </summary>
+        [Obsolete]
         public string DefaultInstanceKey { get { return _defaultKey; } set { _defaultKey = value ?? string.Empty; } }
 
         #endregion

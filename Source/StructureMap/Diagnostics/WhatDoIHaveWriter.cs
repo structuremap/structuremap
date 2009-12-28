@@ -10,7 +10,7 @@ namespace StructureMap.Diagnostics
     public class WhatDoIHaveWriter
     {
         private readonly PipelineGraph _graph;
-        private List<IInstance> _instances;
+        private List<InstanceRef> _instances;
         private TextReportWriter _writer;
 
         public WhatDoIHaveWriter(PipelineGraph graph)
@@ -32,12 +32,12 @@ namespace StructureMap.Diagnostics
         private void writeContentsOfPluginTypes(StringWriter stringWriter)
         {
             _writer = new TextReportWriter(3);
-            _instances = new List<IInstance>();
+            _instances = new List<InstanceRef>();
 
             _writer.AddDivider('=');
             _writer.AddText("PluginType", "Name", "Description");
 
-            foreach (PluginTypeConfiguration pluginType in _graph.PluginTypes)
+            foreach (IPluginTypeConfiguration pluginType in _graph.GetPluginTypes(null))
             {
                 writePluginType(pluginType);
             }
@@ -64,7 +64,7 @@ namespace StructureMap.Diagnostics
             writer.WriteLine();
         }
 
-        private void writePluginType(PluginTypeConfiguration pluginType)
+        private void writePluginType(IPluginTypeConfiguration pluginType)
         {
             _writer.AddDivider('-');
             var contents = new[]
@@ -90,13 +90,13 @@ namespace StructureMap.Diagnostics
                 _writer.AddContent("Scoped as:  PerRequest");
             }
 
-            foreach (IInstance instance in pluginType.Instances)
+            foreach (InstanceRef instance in pluginType.Instances)
             {
                 writeInstance(instance);
             }
         }
 
-        private void writeInstance(IInstance instance)
+        private void writeInstance(InstanceRef instance)
         {
             if (_instances.Contains(instance))
             {
@@ -110,7 +110,7 @@ namespace StructureMap.Diagnostics
         }
 
 
-        private void setContents(string[] contents, IInstance instance)
+        private void setContents(string[] contents, InstanceRef instance)
         {
             contents[1] = instance.Name;
             contents[2] = instance.Description;

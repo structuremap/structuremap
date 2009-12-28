@@ -77,7 +77,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void FillDependenc1ies2()
         {
-            var target = ObjectFactory.FillDependencies<FilledTarget>();
+            var target = ObjectFactory.GetInstance<FilledTarget>();
             Assert.IsNotNull(target.Gateway);
             Assert.IsNotNull(target.Rule);
         }
@@ -85,7 +85,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void FillDependencies()
         {
-            var target = (FilledTarget) ObjectFactory.FillDependencies(typeof (FilledTarget));
+            var target = (FilledTarget) ObjectFactory.GetInstance(typeof (FilledTarget));
             Assert.IsNotNull(target.Gateway);
             Assert.IsNotNull(target.Rule);
         }

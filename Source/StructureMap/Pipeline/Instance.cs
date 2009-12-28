@@ -2,13 +2,10 @@ using System;
 using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
-using StructureMap.Query;
 
 namespace StructureMap.Pipeline
 {
-
-
-    public interface IDiagnosticInstance : IInstance
+    public interface IDiagnosticInstance
     {
         bool CanBePartOfPluginFamily(PluginFamily family);
         Instance FindInstanceForProfile(PluginFamily family, string profileName, GraphLog log);
@@ -38,6 +35,9 @@ namespace StructureMap.Pipeline
         #region IDiagnosticInstance Members
 
         public string Name { get { return _name; } set { _name = value; } }
+        internal Type ConcreteType { get { return getConcreteType(null); } }
+
+        internal string Description { get { return getDescription(); } }
 
         bool IDiagnosticInstance.CanBePartOfPluginFamily(PluginFamily family)
         {
@@ -58,10 +58,6 @@ namespace StructureMap.Pipeline
         {
             preprocess(family);
         }
-
-        Type IInstance.ConcreteType { get { return getConcreteType(null); } }
-
-        string IInstance.Description { get { return getDescription(); } }
 
         #endregion
 

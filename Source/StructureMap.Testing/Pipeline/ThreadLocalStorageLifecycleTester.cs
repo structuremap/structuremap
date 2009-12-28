@@ -1,6 +1,5 @@
 using System.Threading;
 using NUnit.Framework;
-using StructureMap.Attributes;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 

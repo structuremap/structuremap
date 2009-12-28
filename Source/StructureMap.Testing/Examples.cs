@@ -260,7 +260,7 @@ namespace StructureMap.Testing.DocumentationExamples
     {
         public void ActivateScreenFor<T>() where T : IPresenter
         {
-            IPresenter presenter = ObjectFactory.FillDependencies<T>();
+            IPresenter presenter = ObjectFactory.GetInstance<T>();
             presenter.Activate();
         }
 
@@ -436,52 +436,5 @@ namespace StructureMap.Testing.DocumentationExamples
         }
     }
 
-    [TestFixture]
-    public class MockingExample
-    {
-        #region Setup/Teardown
 
-        [SetUp]
-        public void SetUp()
-        {
-            // Make sure that the container is bootstrapped
-            Bootstrapper.Restart();
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            // The problem with injecting mocks is in keeping the 
-            // mocks from one test getting into another test.
-            // If you build the Container individually for each test run,
-            // this isn't a problem.  However, if you do inject mocks into
-            // the ObjectFactory static container, use the ResetDefaults()
-            // method in the [TearDown] (or Dispose() for xUnit.net) to clear
-            // out runtime injected services between tests
-            ObjectFactory.ResetDefaults();
-        }
-
-        #endregion
-
-        [Test]
-        public void unit_test_that_uses_a_mock()
-        {
-            // Create a mock object with Rhino Mocks
-            var serviceMock = MockRepository.GenerateMock<IService>();
-
-            ObjectFactory.Inject(serviceMock);
-
-            // or
-
-            ObjectFactory.Inject("theService", serviceMock);
-
-            // WARNING!  Inject is a generic method
-
-            // This method registers serviceMock as an "IService"
-            ObjectFactory.Inject(serviceMock);
-
-            // and is NOT equivalent to:
-            ObjectFactory.Inject<IBasicService>(serviceMock);
-        }
-    }
 }

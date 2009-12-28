@@ -350,7 +350,6 @@
     <Compile Include="ObjectFactoryTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="PipelineGraphTester.cs" />
     <Compile Include="Pipeline\BuildStackTester.cs" />
     <Compile Include="Pipeline\BuildStrategiesTester.cs" />
     <Compile Include="Pipeline\ConditionalInstanceTester.cs" />
@@ -387,6 +386,10 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Query\GenericFamilyConfigurationTester.cs" />
+    <Compile Include="Query\InstanceFactoryTypeConfigurationTester.cs" />
+    <Compile Include="Query\InstanceRefTester.cs" />
+    <Compile Include="Query\ModelIntegrationTester.cs" />
     <Compile Include="ReadingRegistriesFromXmlTester.cs" />
     <Compile Include="SpecificationExtensions.cs" />
     <Compile Include="StructureMapConfigCreator.cs" />

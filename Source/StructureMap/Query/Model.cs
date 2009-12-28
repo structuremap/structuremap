@@ -1,19 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using StructureMap.Pipeline;
 
 namespace StructureMap.Query
 {
     public class Model : IModel
     {
-        private readonly PipelineGraph _graph;
-        private readonly IContainer _container;
+        private readonly IEnumerable<IPluginTypeConfiguration> _pluginTypes;
 
-        internal Model(PipelineGraph graph, IContainer container)
+        internal Model(IEnumerable<IPluginTypeConfiguration> pluginTypes)
         {
-            _graph = graph;
-            _container = container;
+            _pluginTypes = pluginTypes;
         }
 
         #region IModel Members
@@ -21,12 +18,6 @@ namespace StructureMap.Query
         public bool HasDefaultImplementationFor(Type pluginType)
         {
             return findForFamily(pluginType, f => f.Default != null);
-        }
-
-        private T findForFamily<T>(Type pluginType, Func<PluginTypeConfiguration, T> func)
-        {
-            PluginTypeConfiguration family = PluginTypes.FirstOrDefault(x => x.PluginType == pluginType);
-            return family == null ? default(T) : func(family);
         }
 
         public bool HasDefaultImplementationFor<T>()
@@ -44,21 +35,47 @@ namespace StructureMap.Query
             return findForFamily(pluginType, f => f.Default == null ? null : f.Default.ConcreteType);
         }
 
-        public IEnumerable<PluginTypeConfiguration> PluginTypes { get { return _graph.PluginTypes; } }
-
-        public IEnumerable<IInstance> InstancesOf(Type pluginType)
+        public IEnumerable<IPluginTypeConfiguration> PluginTypes
         {
-            return _graph.InstancesOf(pluginType);
+            get
+            {
+                return _pluginTypes;
+            }
         }
 
-        public IEnumerable<IInstance> InstancesOf<T>()
+        /// <summary>
+        /// Retrieves the configuration for the given type
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public IPluginTypeConfiguration For<T>()
         {
-            return _graph.InstancesOf(typeof (T));
+            return For(typeof (T));
+        }
+
+        /// <summary>
+        /// Retrieves the configuration for the given type
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public IPluginTypeConfiguration For(Type type)
+        {
+            return _pluginTypes.FirstOrDefault(x => x.PluginType == type) ?? new EmptyConfiguration(type);
+        }
+
+        public IEnumerable<InstanceRef> InstancesOf(Type pluginType)
+        {
+            return findForFamily(pluginType, x => x.Instances, new InstanceRef[0]);
+        }
+
+        public IEnumerable<InstanceRef> InstancesOf<T>()
+        {
+            return InstancesOf(typeof (T));
         }
 
         public bool HasImplementationsFor(Type pluginType)
         {
-            return _graph.InstancesOf(pluginType).Count() > 0;
+            return findForFamily(pluginType, x => x.HasImplementations());
         }
 
         public bool HasImplementationsFor<T>()
@@ -66,18 +83,17 @@ namespace StructureMap.Query
             return HasImplementationsFor(typeof (T));
         }
 
-        public IEnumerable<IInstance> AllInstances
+        public IEnumerable<InstanceRef> AllInstances { get { return PluginTypes.SelectMany(x => x.Instances); } }
+
+        private T findForFamily<T>(Type pluginType, Func<IPluginTypeConfiguration, T> func, T defaultValue)
         {
-            get
-            {
-                foreach (PluginTypeConfiguration pluginType in PluginTypes)
-                {
-                    foreach (IInstance instance in pluginType.Instances)
-                    {
-                        yield return instance;
-                    }
-                }
-            }
+            IPluginTypeConfiguration family = PluginTypes.FirstOrDefault(x => x.PluginType == pluginType);
+            return family == null ? defaultValue : func(family);
+        }
+
+        private T findForFamily<T>(Type pluginType, Func<IPluginTypeConfiguration, T> func)
+        {
+            return findForFamily(pluginType, func, default(T));
         }
 
         #endregion

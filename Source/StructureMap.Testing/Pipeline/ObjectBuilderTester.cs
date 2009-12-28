@@ -20,9 +20,7 @@ namespace StructureMap.Testing.Pipeline
             pipeline = new PipelineGraph(graph);
             library = new InterceptorLibrary();
 
-            theDefaultCache = MockRepository.GenerateMock<IObjectCache>();
-
-            builder = new ObjectBuilder(pipeline, library, theDefaultCache);
+            builder = new ObjectBuilder(pipeline, library);
         }
 
         #endregion
@@ -30,7 +28,6 @@ namespace StructureMap.Testing.Pipeline
         private PluginGraph graph;
         private PipelineGraph pipeline;
         private InterceptorLibrary library;
-        private IObjectCache theDefaultCache;
         private ObjectBuilder builder;
 
 

@@ -18,7 +18,6 @@ namespace StructureMap
         private InterceptorLibrary _interceptorLibrary;
         private PipelineGraph _pipelineGraph;
         private PluginGraph _pluginGraph;
-        private IObjectCache _transientCache = new NulloObjectCache();
 
         public Container(Action<ConfigurationExpression> action)
         {
@@ -65,7 +64,7 @@ namespace StructureMap
         /// <summary>
         /// Provides queryable access to the configured PluginType's and Instances of this Container
         /// </summary>
-        public IModel Model { get { return new Model(_pipelineGraph, this); } }
+        public IModel Model { get { return new Model(_pipelineGraph.GetPluginTypes(this)); } }
 
         /// <summary>
         /// Creates or finds the named instance of T
@@ -442,8 +441,7 @@ namespace StructureMap
             var container = new Container
             {
                 _interceptorLibrary = _interceptorLibrary,
-                _pipelineGraph = _pipelineGraph.Clone(),
-                _transientCache = new MainObjectCache()
+                _pipelineGraph = _pipelineGraph.ToNestedGraph(),
             };
 
             // Fixes a mild bug.  The child container should inject itself
@@ -467,60 +465,11 @@ namespace StructureMap
 
         public void Dispose()
         {
-            _transientCache.DisposeAndClear();
             _pipelineGraph.Dispose();
         }
 
         #endregion
 
-        /// <summary>
-        /// Injects the given object into a Container by name for the designated
-        /// pluginType.  Mostly used for temporarily setting up return values of the Container
-        /// to introduce mocks or stubs during automated testing scenarios
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="name"></param>
-        /// <param name="object"></param>
-        public void Inject<T>(string name, T @object)
-        {
-            ObjectInstance instance = new ObjectInstance(@object).WithName(name);
-            _transientCache.Set(typeof (T), instance, @object);
-            _pipelineGraph.AddInstance<T>(instance);
-        }
-
-        /// <summary>
-        /// Injects the given object into a Container as the default for the designated
-        /// pluginType.  Mostly used for temporarily setting up return values of the Container
-        /// to introduce mocks or stubs during automated testing scenarios
-        /// </summary>
-        /// <param name="pluginType"></param>
-        /// <param name="object"></param>
-        public void Inject(Type pluginType, object @object)
-        {
-            if (!@object.GetType().CanBeCastTo(pluginType))
-            {
-                throw new StructureMapException(220, pluginType.FullName,
-                                                @object.GetType().FullName);
-            }
-
-
-            var instance = new ObjectInstance(@object);
-            _transientCache.Set(pluginType, instance, @object);
-            _pipelineGraph.SetDefault(pluginType, instance);
-        }
-
-        /// <summary>
-        /// Injects the given object into a Container as the default for the designated
-        /// PLUGINTYPE.  Mostly used for temporarily setting up return values of the Container
-        /// to introduce mocks or stubs during automated testing scenarios
-        /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
-        /// <param name="object"></param>
-        public void Inject<PLUGINTYPE>(PLUGINTYPE @object)
-        {
-            Instance instance = _pipelineGraph.Inject(@object);
-            _transientCache.Set(typeof (PLUGINTYPE), instance, @object);
-        }
 
         private object buildInstanceWithArgs(Type pluginType, Instance defaultInstance, ExplicitArguments args,
                                              string requestedName)
@@ -561,11 +510,16 @@ namespace StructureMap
             }
 
             _pluginGraph = pluginGraph;
+            
+            var thisInstance = new ObjectInstance(this);
+            _pluginGraph.FindFamily(typeof(IContainer)).AddInstance(thisInstance);
+            _pluginGraph.ProfileManager.SetDefault(typeof(IContainer), thisInstance);
+
             pluginGraph.Log.AssertFailures();
 
             _pipelineGraph = new PipelineGraph(pluginGraph);
 
-            _pipelineGraph.Inject<IContainer>(this);
+            
         }
 
         [Obsolete("delegate to something cleaner in BuildSession")]
@@ -583,7 +537,7 @@ namespace StructureMap
 
         private BuildSession withNewSession(string name)
         {
-            return new BuildSession(_pipelineGraph, _interceptorLibrary, _transientCache)
+            return new BuildSession(_pipelineGraph, _interceptorLibrary)
             {
                 RequestedName = name
             };
@@ -644,5 +598,31 @@ namespace StructureMap
         }
 
         #endregion
+
+        /// <summary>
+        /// Injects the given object into a Container as the default for the designated
+        /// PLUGINTYPE.  Mostly used for temporarily setting up return values of the Container
+        /// to introduce mocks or stubs during automated testing scenarios
+        /// </summary>
+        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <param name="instance"></param>
+        public void Inject<PLUGINTYPE>(PLUGINTYPE instance)
+        {
+            Configure(x => x.For<PLUGINTYPE>().Use(instance));
+        }
+
+        /// <summary>
+        /// Injects the given object into a Container as the default for the designated
+        /// pluginType.  Mostly used for temporarily setting up return values of the Container
+        /// to introduce mocks or stubs during automated testing scenarios
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="object"></param>
+        public void Inject(Type pluginType, object @object)
+        {
+            Configure(x => x.For(pluginType).Use(@object));
+        }
+
+
     }
 }

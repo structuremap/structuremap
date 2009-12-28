@@ -42,7 +42,7 @@ namespace StructureMap
                 _pluginType = family.PluginType;
                 MissingInstance = family.MissingInstance;
 
-                family.EachInstance(AddInstance);
+                family.Instances.Each(AddInstance);
             }
             catch (StructureMapException)
             {
@@ -105,7 +105,8 @@ namespace StructureMap
                 _lifecycle = family.Lifecycle;
             }
 
-            family.EachInstance(instance => _instances.Fill(instance.Name, instance));
+
+            family.Instances.Each(instance => _instances.Fill(instance.Name, instance));
 
             if (family.MissingInstance != null)
             {

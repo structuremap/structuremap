@@ -103,7 +103,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <typeparam name="PLUGGEDTYPE"></typeparam>
         /// <returns></returns>
-        [Obsolete("Favor For<ISomething>().Use<Something>()")]
+        [Obsolete("Favor For<ISomething>().Use<Something>() or For<ISomething>().Add<Something>()")]
         SmartInstance<PLUGGEDTYPE> OfConcreteType<PLUGGEDTYPE>() where PLUGGEDTYPE : T;
 
         /// <summary>

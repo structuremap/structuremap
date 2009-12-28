@@ -18,6 +18,11 @@ namespace StructureMap.Pipeline
             return _cache;
         }
 
+        public string Scope
+        {
+            get { return InstanceScope.ThreadLocal.ToString(); }
+        }
+
         private void guaranteeHashExists()
         {
             if (_cache == null)

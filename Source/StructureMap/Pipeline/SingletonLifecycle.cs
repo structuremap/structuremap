@@ -1,3 +1,5 @@
+using System;
+
 namespace StructureMap.Pipeline
 {
     public class SingletonLifecycle : ILifecycle
@@ -12,6 +14,11 @@ namespace StructureMap.Pipeline
         public IObjectCache FindCache()
         {
             return _cache;
+        }
+
+        public string Scope
+        {
+            get { return InstanceScope.Singleton.ToString(); }
         }
     }
 }

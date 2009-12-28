@@ -18,7 +18,7 @@ namespace StructureMap.Diagnostics
         private List<Instance> _explicitInstances;
 
         public ValidationBuildSession(PipelineGraph pipelineGraph, InterceptorLibrary interceptorLibrary)
-            : base(pipelineGraph, interceptorLibrary, new NulloObjectCache())
+            : base(pipelineGraph, interceptorLibrary)
         {
         }
 
@@ -104,14 +104,11 @@ namespace StructureMap.Diagnostics
             _explicitInstances = pipelineGraph.GetAllInstances();
             _errors = new ErrorCollection();
 
-            foreach (PluginTypeConfiguration pluginType in pipelineGraph.PluginTypes)
+            pipelineGraph.EachInstance((t, i) =>
             {
-                foreach (Instance instance in pluginType.Instances)
-                {
-                    _buildStack = new BuildStack();
-                    validateInstance(pluginType.PluginType, instance);
-                }
-            }
+                _buildStack = new BuildStack();
+                validateInstance(t, i);
+            });
         }
 
         public string BuildErrorMessages()

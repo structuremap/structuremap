@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using StructureMap.Attributes;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
@@ -357,6 +356,19 @@ namespace StructureMap.Configuration.DSL.Expressions
         public CreatePluginFamilyExpression<PLUGINTYPE> AlwaysUnique()
         {
             return LifecycleIs(new UniquePerRequestLifecycle());
+        }
+
+        /// <summary>
+        /// Adds the object to to the PLUGINTYPE
+        /// </summary>
+        /// <param name="object"></param>
+        /// <returns></returns>
+        public ObjectInstance Add(PLUGINTYPE @object)
+        {
+            var instance = new ObjectInstance(@object);
+            _alterations.Add(f => f.AddInstance(instance));
+
+            return instance;
         }
     }
 }

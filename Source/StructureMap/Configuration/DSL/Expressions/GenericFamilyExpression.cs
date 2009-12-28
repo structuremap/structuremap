@@ -1,5 +1,4 @@
 using System;
-using StructureMap.Attributes;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;

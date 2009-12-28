@@ -1,5 +1,4 @@
 using System;
-using StructureMap.Attributes;
 
 namespace StructureMap.Testing.GenericWidgets
 {

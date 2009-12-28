@@ -1,7 +1,6 @@
 using System;
 using System.Xml;
 using NUnit.Framework;
-using StructureMap.Attributes;
 using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;

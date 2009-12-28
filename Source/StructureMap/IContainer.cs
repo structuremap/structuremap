@@ -135,15 +135,6 @@ namespace StructureMap
         /// <param name="object"></param>
         void Inject(Type pluginType, object @object);
 
-        /// <summary>
-        /// Injects the given object into a Container by name for the designated
-        /// pluginType.  Mostly used for temporarily setting up return values of the Container
-        /// to introduce mocks or stubs during automated testing scenarios
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="name"></param>
-        /// <param name="instance"></param>
-        void Inject<T>(string name, T instance);
 
         /// <summary>
         /// Sets the default instance for all PluginType's to the designated Profile.

@@ -412,10 +412,6 @@ namespace StructureMap.Testing.Graph
                 });
             });
 
-            foreach (IInstance instance in container.Model.InstancesOf<IController>())
-            {
-                Debug.WriteLine(instance.Name + " is " + instance.ConcreteType.Name);
-            }
         }
 
         #endregion

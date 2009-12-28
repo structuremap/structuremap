@@ -33,7 +33,7 @@ namespace StructureMap.Testing.Pipeline
             PluginGraph graph = registry.Build();
 
             var pipelineGraph = new PipelineGraph(graph);
-            _session = new BuildSession(pipelineGraph, graph.InterceptorLibrary, new NulloObjectCache());
+            _session = new BuildSession(pipelineGraph, graph.InterceptorLibrary);
         }
 
         #endregion
@@ -130,13 +130,6 @@ namespace StructureMap.Testing.Pipeline
             var container = new Container();
 
             container.GetInstance<IService<string>>(instance).ShouldBeOfType(typeof (Service2<string>));
-        }
-
-        [Test]
-        public void get_the_concrete_type_from_diagnostic_instance()
-        {
-            var instance = new ConfiguredInstance(typeof (ColorRule)) as IDiagnosticInstance;
-            instance.ConcreteType.ShouldEqual(typeof (ColorRule));
         }
 
 

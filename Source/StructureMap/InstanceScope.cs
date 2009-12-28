@@ -1,4 +1,4 @@
-namespace StructureMap.Attributes
+namespace StructureMap
 {
     public enum InstanceScope
     {
@@ -8,6 +8,8 @@ namespace StructureMap.Attributes
         HttpContext,
         Hybrid,
         HttpSession,
-        HybridHttpSession
+        HybridHttpSession,
+        Unique,
+        Transient
     }
 }

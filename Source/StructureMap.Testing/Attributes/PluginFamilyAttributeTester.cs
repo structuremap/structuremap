@@ -2,7 +2,6 @@ using System;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Rhino.Mocks.Constraints;
-using StructureMap.Attributes;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 

@@ -1,4 +1,3 @@
-using StructureMap.Attributes;
 using StructureMap.Configuration.DSL;
 using StructureMap.Pipeline;
 using StructureMap.Source;

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework;
-using StructureMap.Attributes;
 using StructureMap.Configuration.DSL;
 using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.Graph;
@@ -282,5 +281,9 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             throw new NotImplementedException();
         }
+
+        public string Scope
+        {
+            get { return "Stubbed"; } }
     }
 }

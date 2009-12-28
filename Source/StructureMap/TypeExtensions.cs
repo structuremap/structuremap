@@ -7,6 +7,12 @@ namespace StructureMap
 {
     public static class BasicExtensions
     {
+        public static string ToName(this ILifecycle lifecycle)
+        {
+            return lifecycle == null ? InstanceScope.Transient.ToString() : lifecycle.Scope;
+        }
+
+
         public static void Fill<T>(this IList<T> list, T value)
         {
             if (list.Contains(value)) return;

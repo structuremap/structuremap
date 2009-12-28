@@ -1,7 +1,6 @@
 using System.Linq;
 using NUnit.Framework;
 using Rhino.Mocks;
-using StructureMap.Attributes;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Pipeline;

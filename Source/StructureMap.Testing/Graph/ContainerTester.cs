@@ -202,8 +202,11 @@ namespace StructureMap.Testing.Graph
             var red = new ColorRule("Red");
             var blue = new ColorRule("Blue");
 
-            container.Inject<Rule>("Red", red);
-            container.Inject<Rule>("Blue", blue);
+            container.Configure(x =>
+            {
+                x.For<Rule>().Add(red).WithName("Red");
+                x.For<Rule>().Add(blue).WithName("Blue");
+            });
 
             Assert.AreSame(red, container.GetInstance<Rule>("Red"));
             Assert.AreSame(blue, container.GetInstance<Rule>("Blue"));

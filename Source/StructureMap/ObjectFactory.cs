@@ -63,24 +63,6 @@ namespace StructureMap
         }
 
 
-        [Obsolete("Please use GetInstance(Type) instead")]
-        public static object FillDependencies(Type type)
-        {
-            return container.FillDependencies(type);
-        }
-
-        [Obsolete("Please use GetInstance<T>() instead")]
-        public static T FillDependencies<T>()
-        {
-            return (T) container.FillDependencies(typeof (T));
-        }
-
-        [Obsolete("Please use Inject(Type, object) instead.")]
-        public static void InjectStub(Type pluginType, object stub)
-        {
-            Inject(pluginType, stub);
-        }
-
         /// <summary>
         /// Injects the given object into a Container as the default for the designated
         /// pluginType.  Mostly used for temporarily setting up return values of the Container
@@ -91,12 +73,6 @@ namespace StructureMap
         public static void Inject(Type pluginType, object instance)
         {
             container.Inject(pluginType, instance);
-        }
-
-        [Obsolete("Please use Inject() instead.")]
-        public static void InjectStub<PLUGINTYPE>(PLUGINTYPE stub)
-        {
-            Inject(stub);
         }
 
         /// <summary>
@@ -111,24 +87,6 @@ namespace StructureMap
             container.Inject(instance);
         }
 
-        /// <summary>
-        /// Injects the given object into a Container by name for the designated
-        /// pluginType.  Mostly used for temporarily setting up return values of the Container
-        /// to introduce mocks or stubs during automated testing scenarios
-        /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
-        /// <param name="name"></param>
-        /// <param name="instance"></param>
-        public static void Inject<PLUGINTYPE>(string name, PLUGINTYPE instance)
-        {
-            container.Inject(name, instance);
-        }
-
-        [Obsolete("Please use Inject<PLUGINTYPE>(name) instead.")]
-        public static void InjectStub<PLUGINTYPE>(string name, PLUGINTYPE stub)
-        {
-            Inject(name, stub);
-        }
 
         /// <summary>
         /// Returns a report detailing the complete configuration of all PluginTypes and Instances

@@ -4,9 +4,9 @@ using System.Data;
 using System.Linq;
 using System.Reflection;
 using NUnit.Framework;
-using StructureMap.Attributes;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
+using StructureMap.Query;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
 using StructureMap.TypeRules;
@@ -31,6 +31,17 @@ namespace StructureMap.Testing.Graph
             #endregion
         }
 
+        [Test]
+        public void set_default()
+        {
+            var family = new PluginFamily(typeof(IServiceProvider));
+            var instance = new SmartInstance<DataSet>();
+
+            family.SetDefault(instance);
+
+            family.GetDefaultInstance().ShouldBeTheSameAs(instance);
+            family.DefaultInstanceKey.ShouldEqual(instance.Name);
+        }
 
         [Test]
         public void add_plugins_at_seal_from_the_list_of_types()
@@ -105,28 +116,6 @@ namespace StructureMap.Testing.Graph
             var family = new PluginFamily(typeof (IWidget));
             family.DefaultInstanceKey = "DefaultKey";
             family.AddPlugin(typeof (Rule), "Rule");
-        }
-
-        [Test]
-        public void can_get_configuration_object_from_PluginFamily()
-        {
-            var family = new PluginFamily(typeof (IWidget));
-
-            SmartInstance<ColorWidget> instance1 = new SmartInstance<ColorWidget>().WithCtorArg("color").EqualTo("Red");
-            SmartInstance<ColorWidget> instance2 = new SmartInstance<ColorWidget>().WithCtorArg("color").EqualTo("Blue");
-
-            family.AddInstance(instance1);
-            family.AddInstance(instance2);
-
-            family.DefaultInstanceKey = instance1.Name;
-
-            PluginTypeConfiguration configuration = family.GetConfiguration();
-
-            configuration.Default.ShouldBeTheSameAs(instance1);
-            configuration.PluginType.ShouldEqual(typeof (IWidget));
-            configuration.Lifecycle.ShouldBeTheSameAs(family.Lifecycle);
-
-            configuration.Instances.Count().ShouldEqual(2);
         }
 
         [Test]

@@ -79,42 +79,15 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void should_dispose_objects_injected_into_the_container_2()
         {
-            IContainer container = new Container().GetNestedContainer();
+            IContainer container = new Container(x => x.For<I1>().Use<C1Yes>()).GetNestedContainer();
 
-            var disposable = new C1Yes();
-            container.Inject<I1>(disposable);
-
-            container.Dispose();
-
-            disposable.WasDisposed.ShouldBeTrue();
-        }
-
-        [Test]
-        public void should_dispose_objects_injected_into_the_container_3()
-        {
-            IContainer container = new Container().GetNestedContainer();
-
-            var disposable = new C1Yes();
-            container.Inject<I1>("blue", disposable);
+            var disposable = container.GetInstance<I1>().ShouldBeOfType<C1Yes>();
 
             container.Dispose();
 
             disposable.WasDisposed.ShouldBeTrue();
         }
 
-
-        [Test]
-        public void should_dispose_objects_injected_into_the_container_4()
-        {
-            IContainer container = new Container().GetNestedContainer();
-
-            var disposable = new C1Yes();
-            container.Inject(typeof (I1), disposable);
-
-            container.Dispose();
-
-            disposable.WasDisposed.ShouldBeTrue();
-        }
     }
 
     public class Disposable : IDisposable
