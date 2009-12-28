@@ -2,6 +2,7 @@ using System;
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
+using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Configuration.DSL
@@ -17,6 +18,50 @@ namespace StructureMap.Testing.Configuration.DSL
         }
 
         #endregion
+
+        public class RedGreenRegistry : Registry
+        {
+            public RedGreenRegistry()
+            {
+                InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithCtorArg("color").EqualTo("Red").WithName("Red");
+                InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithCtorArg("color").EqualTo("Green").WithName(
+                    "Green");
+            }
+        }
+
+        public class YellowBlueRegistry : Registry
+        {
+            public YellowBlueRegistry()
+            {
+                InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithCtorArg("color").EqualTo("Yellow").WithName(
+                    "Yellow");
+                InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithProperty("color").EqualTo("Blue").WithName("Blue");
+            }
+        }
+
+        public class PurpleRegistry : Registry
+        {
+            public PurpleRegistry()
+            {
+                For<IWidget>().Use<AWidget>();
+            }
+        }
+
+        [Test]
+        public void include_a_registry()
+        {
+            var registry = new Registry();
+            registry.IncludeRegistry<YellowBlueRegistry>();
+            registry.IncludeRegistry<RedGreenRegistry>();
+            registry.IncludeRegistry<PurpleRegistry>();
+
+            var container = new Container(registry);
+
+            container.GetInstance<IWidget>().ShouldBeOfType<AWidget>();
+
+            container.GetAllInstances<IWidget>().Count.ShouldEqual(5);
+        }
+
 
         [Test]
         public void Can_add_an_instance_for_concrete_class_with_no_constructors()
