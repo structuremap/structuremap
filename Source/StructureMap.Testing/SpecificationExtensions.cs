@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using NUnit.Framework;
 
@@ -31,11 +32,23 @@ namespace StructureMap.Testing
             actual.ShouldNotBeNull();
             expected.ShouldNotBeNull();
 
-            actual.Count.ShouldEqual(expected.Count);
-
-            for (int i = 0; i < actual.Count; i++)
+            try
             {
-                actual[i].ShouldEqual(expected[i]);
+                actual.Count.ShouldEqual(expected.Count);
+
+                for (int i = 0; i < actual.Count; i++)
+                {
+                    actual[i].ShouldEqual(expected[i]);
+                }
+            }
+            catch (Exception)
+            {
+                Debug.WriteLine("ACTUAL:");
+                foreach (var o in actual)
+                {
+                    Debug.WriteLine(o);
+                }
+                throw;
             }
         }
 

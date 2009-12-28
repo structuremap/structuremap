@@ -348,7 +348,11 @@ namespace StructureMap.Graph
         /// The InstanceKey of the default instance of the PluginFamily
         /// </summary>
         [Obsolete]
-        public string DefaultInstanceKey { get { return _defaultKey; } set { _defaultKey = value ?? string.Empty; } }
+        public string DefaultInstanceKey
+        {
+            get { return _defaultKey; } 
+            set { _defaultKey = value ?? string.Empty; }
+        }
 
         #endregion
 

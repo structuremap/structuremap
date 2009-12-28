@@ -80,6 +80,11 @@ namespace StructureMap.Graph
             Convention<DefaultConventionScanner>();
         }
 
+        public void RegisterConcreteTypesAgainstTheFirstInterface()
+        {
+            Convention<FirstInterfaceConvention>();
+        }
+
         [Obsolete("Replace ITypeScanner with IRegistrationConvention")]
         public void With<T>() where T : ITypeScanner, new()
         {

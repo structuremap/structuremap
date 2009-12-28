@@ -361,6 +361,7 @@
     <Compile Include="Graph\FamilyAttributeScanner.cs" />
     <Compile Include="Graph\FindAllTypesFilter.cs" />
     <Compile Include="Graph\FindRegistriesScanner.cs" />
+    <Compile Include="Graph\FirstInterfaceConvention.cs" />
     <Compile Include="Graph\IAssemblyScanner.cs" />
     <Compile Include="Graph\ImplementationMap.cs" />
     <Compile Include="Graph\ITypeScanner.cs" />

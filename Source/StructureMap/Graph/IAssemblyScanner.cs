@@ -83,6 +83,13 @@ namespace StructureMap.Graph
         void WithDefaultConventions();
 
         /// <summary>
+        /// Automatically registers all concrete types without primitive arguments
+        /// against its first interface, if any
+        /// </summary>
+        void RegisterConcreteTypesAgainstTheFirstInterface();
+
+
+        /// <summary>
         /// Creates and adds a new ITypeScanner of type T to this scanning operation
         /// </summary>
         /// <typeparam name="T"></typeparam>

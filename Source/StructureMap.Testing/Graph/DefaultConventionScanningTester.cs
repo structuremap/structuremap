@@ -58,7 +58,6 @@ namespace StructureMap.Testing.Graph
     {
     }
 
-
     [TestFixture]
     public class DefaultConventionScanningTester
     {
