@@ -361,5 +361,12 @@ namespace StructureMap.Graph
             }
 
         }
+
+        public void RemoveAll()
+        {
+            _instances.Clear();
+            _mementoList.Clear();
+            _defaultKey = null;
+        }
     }
 }

@@ -173,6 +173,8 @@ namespace StructureMap
             /// <returns></returns>
             public static bool CanBeCastTo(this Type pluggedType, Type pluginType)
             {
+                if (pluggedType == null) return false;
+
                 if (pluggedType.IsInterface || pluggedType.IsAbstract)
                 {
                     return false;

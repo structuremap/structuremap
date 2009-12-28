@@ -188,8 +188,26 @@ namespace StructureMap
 
         public void EjectAllInstancesOf<T>()
         {
-            ForType(typeof (T)).EjectAllInstances();
-            _profileManager.EjectAllInstancesOf<T>();
+            EjectAllInstancesOf(typeof(T));
+        }
+
+        public void EjectAllInstancesOf(Type pluginType)
+        {
+            ForType(pluginType).EjectAllInstances();
+            _profileManager.EjectAllInstancesOf(pluginType);
+        }
+
+        public void Remove(Func<Type, bool> filter)
+        {
+            _genericsGraph.Families.Where(x => filter(x.PluginType)).ToArray().Each(x => Remove(x.PluginType));
+            _factories.Values.Where(x => filter(x.PluginType)).ToArray().Each(x => Remove(x.PluginType));
+        }
+
+        public void Remove(Type pluginType)
+        {
+            EjectAllInstancesOf(pluginType);
+            _factories.Remove(pluginType);
+            _genericsGraph.Remove(pluginType);
         }
 
 
@@ -232,5 +250,8 @@ namespace StructureMap
             ForType(pluginType).RemoveInstance(instance);
             _profileManager.RemoveInstance(pluginType, instance);
         }
+
+
+
     }
 }

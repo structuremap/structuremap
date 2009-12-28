@@ -80,7 +80,12 @@ namespace StructureMap.Query
             _graph.Remove(_pluginType, instance.Instance);
         }
 
-        
+        public void EjectAndRemoveAll()
+        {
+            _graph.EjectAllInstancesOf(_pluginType);
+        }
+
+
         private InstanceRef toRef(Instance instance)
         {
             if (instance == null) return null;

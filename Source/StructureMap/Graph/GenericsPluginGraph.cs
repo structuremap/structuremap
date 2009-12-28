@@ -160,5 +160,10 @@ namespace StructureMap.Graph
         {
             _families.Clear();
         }
+
+        public void Remove(Type pluginType)
+        {
+            _families.Remove(pluginType);
+        }
     }
 }

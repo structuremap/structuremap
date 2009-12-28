@@ -105,9 +105,9 @@ namespace StructureMap.Pipeline
         }
 
 
-        public void Remove<T>()
+        public void Remove(Type pluginType)
         {
-            _instances.Remove(typeof (T));
+            _instances.Remove(pluginType);
         }
 
         public void Clear()

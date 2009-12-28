@@ -70,6 +70,9 @@ namespace StructureMap.Query
             _family.RemoveInstance(instance.Instance);
         }
 
-
+        public void EjectAndRemoveAll()
+        {
+            _family.RemoveAll();
+        }
     }
 }

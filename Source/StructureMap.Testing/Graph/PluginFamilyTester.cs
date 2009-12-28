@@ -208,6 +208,24 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
+        public void remove_all_clears_the_defaul_and_removes_all_plugins_instances()
+        {
+            var family = new PluginFamily(typeof(IServiceProvider));
+            var instance = new SmartInstance<DataSet>();
+
+            family.SetDefault(instance);
+
+            family.AddInstance(new NullInstance());
+            family.AddType(typeof(DataSet));
+
+            family.RemoveAll();
+
+            family.DefaultInstanceKey.ShouldBeNull();
+
+            family.InstanceCount.ShouldEqual(0);
+        }
+
+        [Test]
         public void set_the_scope_to_session()
         {
             var family = new PluginFamily(typeof (IServiceProvider));

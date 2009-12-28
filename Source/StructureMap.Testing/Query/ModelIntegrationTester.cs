@@ -32,6 +32,10 @@ namespace StructureMap.Testing.Query
                 });
 
                 x.For<IEngine>().Use<PushrodEngine>();
+
+                x.For<Startable1>().Singleton().Use<Startable1>();
+                x.For<Startable2>().Use<Startable2>();
+                x.For<Startable3>().Use<Startable3>();
             });
         }
 
@@ -40,10 +44,63 @@ namespace StructureMap.Testing.Query
         private Container container;
 
         [Test]
+        public void remove_types_based_on_a_filter()
+        {
+            container.GetAllInstances<Rule>().Any(x => x is ARule).ShouldBeTrue();
+            container.Model.HasImplementationsFor<IWidget>().ShouldBeTrue();
+
+            container.Model.EjectAndRemoveTypes(t => t == typeof(IWidget) || t == typeof(ARule));
+
+            container.GetAllInstances<Rule>().Any(x => x is ARule).ShouldBeFalse();
+            container.Model.HasImplementationsFor<IWidget>().ShouldBeFalse();
+        }
+
+        [Test]
+        public void remove_an_entire_closed_type()
+        {
+            container.Model.EjectAndRemove(typeof(Rule));
+            container.Model.HasImplementationsFor<Rule>().ShouldBeFalse();
+
+            container.TryGetInstance<Rule>().ShouldBeNull();
+            container.GetAllInstances<Rule>().Count.ShouldEqual(0);
+
+        }
+
+        [Test]
+        public void remove_an_entire_closed_type_with_the_filter()
+        {
+            container.Model.EjectAndRemovePluginTypes(t => t == typeof(Rule) || t == typeof(IWidget));
+
+            container.Model.HasImplementationsFor<IWidget>().ShouldBeFalse();
+            container.Model.HasImplementationsFor<Rule>().ShouldBeFalse();
+            container.Model.HasImplementationsFor<IEngine>().ShouldBeTrue();
+        }
+
+        [Test]
+        public void remove_an_open_type()
+        {
+            container.Model.EjectAndRemove(typeof(IService<>));
+
+            container.Model.HasImplementationsFor(typeof (IService<>));
+
+            container.TryGetInstance<IService<string>>().ShouldBeNull();
+        }
+
+        [Test]
+        public void remove_an_open_type_with_a_filter()
+        {
+            container.Model.EjectAndRemovePluginTypes(t => t == typeof(IService<>));
+
+            container.Model.HasImplementationsFor(typeof(IService<>));
+
+            container.TryGetInstance<IService<string>>().ShouldBeNull();
+        }
+
+        [Test]
         public void can_iterate_through_families_including_both_generics_and_normal()
         {
             // +1 for "IContainer" itself
-            container.Model.PluginTypes.Count().ShouldEqual(5);
+            container.Model.PluginTypes.Count().ShouldEqual(8);
 
             container.Model.PluginTypes.Each(x => Debug.WriteLine(x.PluginType.FullName));
         }
@@ -82,7 +139,7 @@ namespace StructureMap.Testing.Query
         [Test]
         public void get_all_instances_from_the_top()
         {
-            container.Model.AllInstances.Count().ShouldEqual(8);
+            container.Model.AllInstances.Count().ShouldEqual(11);
         }
 
         [Test]
@@ -105,5 +162,42 @@ namespace StructureMap.Testing.Query
         {
             container.Model.For<ISomething>().HasImplementations().ShouldBeFalse();
         }
+
+        [Test]
+        public void get_all_possibles()
+        {
+            // Startable1 is a singleton
+
+            var startable1 = container.GetInstance<Startable1>();
+            startable1.WasStarted.ShouldBeFalse();
+
+            container.Model.GetAllPossible<IStartable>()
+                .ToArray()
+                .Each(x => x.Start())
+                .Each(x => x.WasStarted.ShouldBeTrue());
+
+            startable1.WasStarted.ShouldBeTrue();
+        }
     }
+
+
+    public interface IStartable
+    {
+        void Start();
+        bool WasStarted { get; }
+    }
+
+    public class Startable : IStartable
+    {
+        public void Start()
+        {
+            WasStarted = true;
+        }
+
+        public bool WasStarted { get; private set; }
+    }
+
+    public class Startable1 : Startable{}
+    public class Startable2 : Startable{}
+    public class Startable3 : Startable{}
 }

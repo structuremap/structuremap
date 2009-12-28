@@ -216,13 +216,9 @@ namespace StructureMap.Pipeline
             return clone;
         }
 
-        public void EjectAllInstancesOf<T>()
+        public void EjectAllInstancesOf(Type pluginType)
         {
-            _currentProfile.Remove<T>();
-            foreach (var pair in _profiles)
-            {
-                pair.Value.Remove<T>();
-            }
+            profiles.Each(x => x.Remove(pluginType));
         }
 
         public void RemoveInstance(Type pluginType, Instance instance)

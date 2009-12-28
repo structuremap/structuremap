@@ -90,5 +90,32 @@ namespace StructureMap.Query
         /// <param name="type"></param>
         /// <returns></returns>
         IPluginTypeConfiguration For(Type type);
+
+        /// <summary>
+        /// Eject all objects, configuration, and Plugin Types matching this filter
+        /// </summary>
+        /// <param name="filter"></param>
+        void EjectAndRemoveTypes(Func<Type, bool> filter);
+
+        /// <summary>
+        /// Eject all objects and configuration for any Plugin Type that matches this filter
+        /// </summary>
+        /// <param name="filter"></param>
+        void EjectAndRemovePluginTypes(Func<Type, bool> filter);
+
+        /// <summary>
+        /// Eject all objects and Instance configuration for this PluginType
+        /// </summary>
+        /// <param name="pluginType"></param>
+        void EjectAndRemove(Type pluginType);
+
+
+        /// <summary>
+        /// Get each and every configured instance that could possibly
+        /// be cast to T
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        IEnumerable<T> GetAllPossible<T>() where T : class;
     }
 }

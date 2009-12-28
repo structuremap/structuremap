@@ -44,5 +44,8 @@ namespace StructureMap.Query
         {
         }
 
+        public void EjectAndRemoveAll()
+        {
+        }
     }
 }

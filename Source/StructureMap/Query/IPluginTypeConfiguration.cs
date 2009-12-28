@@ -38,6 +38,11 @@ namespace StructureMap.Query
         /// <param name="instance"></param>
         void EjectAndRemove(InstanceRef instance);
 
+        /// <summary>
+        /// Eject all instances of this PluginType from the current container,
+        /// but leaves the lifecycle behavior
+        /// </summary>
+        void EjectAndRemoveAll();
     }
 
     public static class PluginTypeConfigurationExtensions
