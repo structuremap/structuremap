@@ -20,13 +20,6 @@ namespace StructureMap.Testing
         public void SetUp()
         {
             DataMother.RestoreStructureMapConfig();
-            StructureMapConfiguration.ResetAll();
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            StructureMapConfiguration.ResetAll();
         }
 
         #endregion
@@ -39,39 +32,12 @@ namespace StructureMap.Testing
         }
 
 
-        public static void Bootstrap()
-        {
-            StructureMapConfiguration.UseDefaultStructureMapConfigFile = false;
-            StructureMapConfiguration.PullConfigurationFromAppConfig = true;
-
-            StructureMapConfiguration.AddRegistry(new CoreRegistry());
-            StructureMapConfiguration.AddRegistry(new WebRegistry());
-
-            StructureMapConfiguration.ForRequestedType<IGateway>().TheDefaultIsConcreteType<DefaultGateway>();
-
-            var gateway = ObjectFactory.GetInstance<IGateway>();
-        }
-
         public class WebRegistry : Registry
         {
         }
 
         public class CoreRegistry : Registry
         {
-        }
-
-        [Test]
-        public void BuildPluginGraph()
-        {
-            PluginGraph graph = StructureMapConfiguration.GetPluginGraph();
-            Assert.IsNotNull(graph);
-        }
-
-        [Test]
-        public void Ignore_the_StructureMap_config_file_even_if_it_exists()
-        {
-            StructureMapConfiguration.IgnoreStructureMapConfig = true;
-            StructureMapConfiguration.GetPluginGraph().FamilyCount.ShouldEqual(0);
         }
 
         [Test]
@@ -115,7 +81,7 @@ namespace StructureMap.Testing
         {
             DataMother.RemoveStructureMapConfig();
 
-            StructureMapConfiguration.GetPluginGraph().ShouldNotBeNull();
+            ObjectFactory.Initialize(x => { });
         }
 
         [Test(
@@ -124,10 +90,15 @@ namespace StructureMap.Testing
             )]
         public void TheDefaultInstance_has_a_dependency_upon_a_Guid_NewGuid_lambda_generated_instance()
         {
-            StructureMapConfiguration.IgnoreStructureMapConfig = true;
+            ObjectFactory.Initialize(x =>
+            {
+                x.IgnoreStructureMapConfig = true;
 
-            StructureMapConfiguration.ForRequestedType<Guid>().TheDefault.Is.ConstructedBy(() => Guid.NewGuid());
-            StructureMapConfiguration.ForRequestedType<IFoo>().TheDefaultIsConcreteType<Foo>();
+                x.ForRequestedType<Guid>().TheDefault.Is.ConstructedBy(() => Guid.NewGuid());
+                x.ForRequestedType<IFoo>().TheDefaultIsConcreteType<Foo>();
+            });
+
+
 
             Assert.That(ObjectFactory.GetInstance<IFoo>().SomeGuid != Guid.Empty);
         }
@@ -138,31 +109,18 @@ namespace StructureMap.Testing
             )]
         public void TheDefaultInstanceIsALambdaForGuidNewGuid()
         {
-            StructureMapConfiguration.IgnoreStructureMapConfig = true;
 
-            StructureMapConfiguration.ForRequestedType<Guid>().TheDefault.Is.ConstructedBy(() => Guid.NewGuid());
+            ObjectFactory.Initialize(x =>
+            {
+                x.IgnoreStructureMapConfig = true;
+
+                x.ForRequestedType<Guid>().TheDefault.Is.ConstructedBy(() => Guid.NewGuid());
+            });
+
 
             Assert.That(ObjectFactory.GetInstance<Guid>() != Guid.Empty);
         }
 
-        [Test]
-        public void TheDefaultNameIs_should_set_the_default_profile_name()
-        {
-            StructureMapConfiguration.IgnoreStructureMapConfig = true;
-
-            string theDefaultProfileName = "the default profile";
-            StructureMapConfiguration.TheDefaultProfileIs(theDefaultProfileName);
-
-            PluginGraph graph = StructureMapConfiguration.GetPluginGraph();
-            graph.ProfileManager.DefaultProfileName.ShouldEqual(theDefaultProfileName);
-        }
-
-        [Test]
-        public void Use_the_StructureMap_config_file_if_it_exists()
-        {
-            DataMother.RestoreStructureMapConfig();
-            StructureMapConfiguration.GetPluginGraph().FamilyCount.ShouldBeGreaterThan(0);
-        }
     }
 
     public interface IFoo

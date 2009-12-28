@@ -35,8 +35,6 @@ namespace StructureMap
         {
             lock (_lockObject)
             {
-                StructureMapConfiguration.Unseal();
-
                 _container = null;
                 _profile = string.Empty;
 
@@ -55,7 +53,6 @@ namespace StructureMap
                 action(expression);
 
                 PluginGraph graph = expression.BuildGraph();
-                StructureMapConfiguration.Seal();
 
                 _container = new Container(graph);
                 Profile = expression.DefaultProfileName;
@@ -336,7 +333,7 @@ namespace StructureMap
                     {
                         if (_container == null)
                         {
-                            _container = buildManager();
+                            _container = new Container();
                         }
                     }
                 }
@@ -404,16 +401,6 @@ namespace StructureMap
         }
 
 
-        private static Container buildManager()
-        {
-            PluginGraph graph = StructureMapConfiguration.GetPluginGraph();
-            StructureMapConfiguration.Seal();
-
-            var container = new Container(graph);
-            container.SetDefaultsToProfile(_profile);
-
-            return container;
-        }
 
         #endregion
     }
