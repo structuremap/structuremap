@@ -63,5 +63,10 @@ namespace StructureMap.Pipeline
         {
             return string.Format("LiteralInstance: {0}", _object);
         }
+
+        protected override Type getConcreteType(Type pluginType)
+        {
+            return _object.GetType();
+        }
     }
 }

@@ -140,7 +140,6 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <summary>
         /// Configure this type as the supplied value
         /// </summary>
-        /// <param name="instance"></param>
         /// <returns></returns>
         public ObjectInstance Add(object @object)
         {

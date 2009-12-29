@@ -10,7 +10,7 @@ namespace StructureMap.Query
     public interface IModel
     {
         /// <summary>
-        /// Access to all the <seealso cref="PluginTypeConfiguration">Plugin Type</seealso> registrations 
+        /// Access to all the <seealso cref="IPluginTypeConfiguration">Plugin Type</seealso> registrations 
         /// </summary>
         IEnumerable<IPluginTypeConfiguration> PluginTypes { get; }
 
@@ -35,14 +35,14 @@ namespace StructureMap.Query
         bool HasDefaultImplementationFor<T>();
 
         /// <summary>
-        /// Queryable access to all of the <see cref="IInstance">IInstance</see> for a given PluginType
+        /// Queryable access to all of the <see cref="InstanceRef">InstanceRef</see> for a given PluginType
         /// </summary>
         /// <param name="pluginType"></param>
         /// <returns></returns>
         IEnumerable<InstanceRef> InstancesOf(Type pluginType);
 
         /// <summary>
-        /// Queryable access to all of the <see cref="IInstance">IInstance</see> for a given PluginType
+        /// Queryable access to all of the <see cref="InstanceRef">InstanceRef</see> for a given PluginType
         /// </summary>
         /// <returns></returns>
         IEnumerable<InstanceRef> InstancesOf<T>();

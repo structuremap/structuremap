@@ -294,11 +294,16 @@ namespace StructureMap.Graph
             return templatedFamily;
         }
 
+        private bool hasType(Type concreteType)
+        {
+            return FindPlugin(concreteType) != null || _instances.Any(x => x.ConcreteType == concreteType);
+        }
+
         public void AddType(Type concreteType)
         {
             if (!concreteType.CanBeCastTo(_pluginType)) return;
 
-            if (FindPlugin(concreteType) == null)
+            if (!hasType(concreteType))
             {
                 AddPlugin(concreteType);
             }
@@ -308,7 +313,7 @@ namespace StructureMap.Graph
         {
             if (!concreteType.CanBeCastTo(_pluginType)) return;
 
-            if (FindPlugin(name) == null)
+            if (!hasType(concreteType))
             {
                 AddPlugin(concreteType, name);
             }
