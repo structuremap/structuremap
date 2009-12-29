@@ -52,7 +52,11 @@ namespace StructureMap.Pipeline
         {
             _args.Each(pair => { instance.SetValue(pair.Key, pair.Value); });
 
-            _children.Each(pair => { instance.SetValue(pair.Key, pair.Value); });
+            _children.Each(pair => 
+            {
+                instance.SetValue(pair.Key, pair.Value, CannotFindProperty.Ignore); 
+            
+            });
         }
 
         public bool Has(Type type)

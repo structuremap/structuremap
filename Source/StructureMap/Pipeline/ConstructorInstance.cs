@@ -47,10 +47,10 @@ namespace StructureMap.Pipeline
             SetChild(name, instance);
         }
 
-        public void SetValue(Type type, object value)
+        public void SetValue(Type type, object value, CannotFindProperty cannotFind)
         {
-            string name = _plugin.FindArgumentNameForType(type);
-            SetValue(name, value);
+            string name = _plugin.FindArgumentNameForType(type, cannotFind);
+            if (name != null) SetValue(name, value);
         }
 
         void IConfiguredInstance.SetValue(string name, object value)
@@ -175,7 +175,7 @@ namespace StructureMap.Pipeline
 
         protected string findPropertyName(Type dependencyType)
         {
-            string propertyName = _plugin.FindArgumentNameForType(dependencyType);
+            string propertyName = _plugin.FindArgumentNameForType(dependencyType, CannotFindProperty.ThrowException);
 
             if (string.IsNullOrEmpty(propertyName))
             {

@@ -16,7 +16,6 @@ namespace StructureMap.Testing.Examples
     {
         public void StartConnection()
         {
-            throw new NotImplementedException();
         }
 
         public void Start()
@@ -93,19 +92,6 @@ namespace StructureMap.Testing.Examples
                 .EnrichWith(x => new LoggingDecorator(x)) // Enrich
                 .InterceptWith(new CustomInterceptor()) // Custom Interceptor
                 .TheDefaultIsConcreteType<ClassThatNeedsSomeBootstrapping>();
-        }
-    }
-
-    [TestFixture, Explicit]
-    public class InterceptionRegistryInAction
-    {
-        [Test]
-        public void see_the_enrichment_with_a_decorator_in_action()
-        {
-            var container = new Container(new InterceptionRegistry());
-            container.GetInstance<IConnectionListener>()
-                .ShouldBeOfType<LoggingDecorator>()
-                .Inner.ShouldBeOfType<ClassThatNeedsSomeBootstrapping>();
         }
     }
 

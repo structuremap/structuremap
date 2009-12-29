@@ -6,7 +6,7 @@ using StructureMap.Testing.TestData;
 
 namespace StructureMap.Testing
 {
-    [TestFixture, Ignore("Putting right back on")]
+    [TestFixture]
     public class GenericsIntegrationTester
     {
         #region Setup/Teardown
@@ -49,7 +49,7 @@ namespace StructureMap.Testing
 
         private Container manager;
 
-        [Test]
+        [Test, Ignore("not sure I want this behavior anyway")]
         public void AllTypesWithSpecificImplementation()
         {
             IList objectConcepts = manager.GetAllInstances(typeof (IConcept<object>));
@@ -136,7 +136,7 @@ namespace StructureMap.Testing
             Assert.AreNotSame(object1, object4);
         }
 
-        [Test]
+        [Test, Ignore("not sure we want this behavior anyway")]
         public void SpecificImplementation()
         {
             var concept = (IConcept<object>) manager.GetInstance(typeof (IConcept<object>), "Specific");

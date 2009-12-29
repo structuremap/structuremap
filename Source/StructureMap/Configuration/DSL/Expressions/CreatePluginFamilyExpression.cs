@@ -120,6 +120,11 @@ namespace StructureMap.Configuration.DSL.Expressions
             return TheDefault.Is.ConstructedBy(func);
         }
 
+        public void Use(Instance instance)
+        {
+            TheDefault.IsThis(instance);
+        }
+
         /// <summary>
         /// Shorthand to say TheDefault.IsThis(@object)
         /// </summary>

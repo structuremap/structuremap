@@ -117,20 +117,6 @@ namespace StructureMap.Testing.Configuration.DSL
             container.GetInstance<ITarget>().ShouldBeOfType<Target2>();
         }
 
-        [Test, Explicit]
-        public void Add_default_instance2()
-        {
-            var container =
-                new Container(
-                    r => { r.ForRequestedType(typeof (IRepository<>)).TheDefaultIsConcreteType(typeof (OnlineRepository<>)); });
-
-            Assert.IsInstanceOfType(typeof (Target2), container.GetInstance<ITarget>());
-
-
-            var repository =
-                ObjectFactory.GetInstance<IRepository<Invoice>>();
-        }
-
 
         [Test]
         public void Add_instance_directly()

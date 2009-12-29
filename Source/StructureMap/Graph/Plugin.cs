@@ -74,7 +74,7 @@ namespace StructureMap.Graph
 
         public string FindArgumentNameForType<T>()
         {
-            return FindArgumentNameForType(typeof (T));
+            return FindArgumentNameForType(typeof (T), CannotFindProperty.ThrowException);
         }
 
         public string FindArgumentNameForEnumerableOf(Type type)
@@ -87,13 +87,13 @@ namespace StructureMap.Graph
             }).FirstOrDefault(x => x != null);
         }
 
-        public string FindArgumentNameForType(Type type)
+        public string FindArgumentNameForType(Type type, CannotFindProperty cannotFind)
         {
             string returnValue =
                 _constructor.FindFirstConstructorArgumentOfType(type) ??
                 _setters.FindFirstWriteablePropertyOfType(type);
 
-            if (returnValue == null)
+            if (returnValue == null && cannotFind == CannotFindProperty.ThrowException)
             {
                 throw new StructureMapException(302, type.FullName, _pluggedType.FullName);
             }
