@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.Linq.Expressions;
 using StructureMap.Configuration.DSL.Expressions;
@@ -26,7 +27,19 @@ namespace StructureMap.Pipeline
         /// </summary>
         /// <param name="instanceKey"></param>
         /// <returns></returns>
+        [Obsolete("Please change to Named(instanceKey)")]
         public SmartInstance<T> WithName(string instanceKey)
+        {
+            Name = instanceKey;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the name of this Instance
+        /// </summary>
+        /// <param name="instanceKey"></param>
+        /// <returns></returns>
+        public SmartInstance<T> Named(string instanceKey)
         {
             Name = instanceKey;
             return this;
@@ -132,6 +145,7 @@ namespace StructureMap.Pipeline
         /// </summary>
         /// <param name="argumentName"></param>
         /// <returns></returns>
+        [Obsolete("Use CtorDependency() instead")]
         public PropertyExpression<SmartInstance<T>> WithCtorArg(string argumentName)
         {
             return new PropertyExpression<SmartInstance<T>>(this, argumentName);
@@ -187,7 +201,20 @@ namespace StructureMap.Pipeline
         /// </summary>
         /// <typeparam name="CTORTYPE"></typeparam>
         /// <returns></returns>
+        [Obsolete("Change to Ctor<>()")]
         public DependencyExpression<CTORTYPE> CtorDependency<CTORTYPE>()
+        {
+            string constructorArg = getArgumentNameForType<CTORTYPE>();
+            return CtorDependency<CTORTYPE>(constructorArg);
+        }
+
+        /// <summary>
+        /// Inline definition of a constructor dependency.  Select the constructor argument by type.  Do not
+        /// use this method if there is more than one constructor arguments of the same type
+        /// </summary>
+        /// <typeparam name="CTORTYPE"></typeparam>
+        /// <returns></returns>
+        public DependencyExpression<CTORTYPE> Ctor<CTORTYPE>()
         {
             string constructorArg = getArgumentNameForType<CTORTYPE>();
             return CtorDependency<CTORTYPE>(constructorArg);
@@ -206,7 +233,20 @@ namespace StructureMap.Pipeline
         /// <typeparam name="CTORTYPE"></typeparam>
         /// <param name="constructorArg"></param>
         /// <returns></returns>
+        [Obsolete("Use Ctor<CTORTYPE>(constructorArg)")]
         public DependencyExpression<CTORTYPE> CtorDependency<CTORTYPE>(string constructorArg)
+        {
+            return new DependencyExpression<CTORTYPE>(this, constructorArg);
+        }
+
+        /// <summary>
+        /// Inline definition of a constructor dependency.  Select the constructor argument by type and constructor name.  
+        /// Use this method if there is more than one constructor arguments of the same type
+        /// </summary>
+        /// <typeparam name="CTORTYPE"></typeparam>
+        /// <param name="constructorArg"></param>
+        /// <returns></returns>
+        public DependencyExpression<CTORTYPE> Ctor<CTORTYPE>(string constructorArg)
         {
             return new DependencyExpression<CTORTYPE>(this, constructorArg);
         }
@@ -217,7 +257,22 @@ namespace StructureMap.Pipeline
         /// <typeparam name="SETTERTYPE"></typeparam>
         /// <param name="expression"></param>
         /// <returns></returns>
+        [Obsolete("Use Setter()")]
         public DependencyExpression<SETTERTYPE> SetterDependency<SETTERTYPE>(
+            Expression<Func<T, SETTERTYPE>> expression)
+        {
+            string propertyName = ReflectionHelper.GetProperty(expression).Name;
+            return new DependencyExpression<SETTERTYPE>(this, propertyName);
+        }
+
+
+        /// <summary>
+        /// Inline definition of a setter dependency.  The property name is specified with an Expression
+        /// </summary>
+        /// <typeparam name="SETTERTYPE"></typeparam>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public DependencyExpression<SETTERTYPE> Setter<SETTERTYPE>(
             Expression<Func<T, SETTERTYPE>> expression)
         {
             string propertyName = ReflectionHelper.GetProperty(expression).Name;
@@ -230,7 +285,20 @@ namespace StructureMap.Pipeline
         /// </summary>
         /// <typeparam name="SETTERTYPE"></typeparam>
         /// <returns></returns>
+        [Obsolete("Use Setter<>()")]
         public DependencyExpression<SETTERTYPE> SetterDependency<SETTERTYPE>()
+        {
+            return CtorDependency<SETTERTYPE>();
+        }
+
+
+        /// <summary>
+        /// Inline definition of a setter dependency.  Only use this method if there
+        /// is only a single property of the SETTERTYPE
+        /// </summary>
+        /// <typeparam name="SETTERTYPE"></typeparam>
+        /// <returns></returns>
+        public DependencyExpression<SETTERTYPE> Setter<SETTERTYPE>()
         {
             return CtorDependency<SETTERTYPE>();
         }
@@ -241,6 +309,7 @@ namespace StructureMap.Pipeline
         /// </summary>
         /// <typeparam name="CHILD"></typeparam>
         /// <returns></returns>
+        [Obsolete("Use EnumerableOf<>")]
         public ArrayDefinitionExpression<CHILD> TheArrayOf<CHILD>()
         {
             if (typeof (CHILD).IsArray)
@@ -249,8 +318,8 @@ namespace StructureMap.Pipeline
             }
 
             Plugin plugin = PluginCache.GetPlugin(typeof (T));
-            string propertyName = plugin.FindArgumentNameForType(typeof (CHILD).MakeArrayType());
-            Debug.WriteLine("Property Name:  " + propertyName);
+            string propertyName = plugin.FindArgumentNameForEnumerableOf(typeof (CHILD));
+            
             return TheArrayOf<CHILD>(propertyName);
         }
 
@@ -261,10 +330,52 @@ namespace StructureMap.Pipeline
         /// <typeparam name="CHILD"></typeparam>
         /// <param name="ctorOrPropertyName"></param>
         /// <returns></returns>
+        [Obsolete("Use EnumerableOf<>")]
         public ArrayDefinitionExpression<CHILD> TheArrayOf<CHILD>(string ctorOrPropertyName)
         {
+            if (ctorOrPropertyName.IsEmpty())
+            {
+                throw new StructureMapException(302, typeof(CHILD).FullName, typeof(T).FullName);
+            }
             return new ArrayDefinitionExpression<CHILD>(this, ctorOrPropertyName);
         }
+
+
+        /// <summary>
+        /// Inline definition of a dependency on an Array of the CHILD type.  I.e. CHILD[].
+        /// This method can be used for either constructor arguments or setter properties
+        /// </summary>
+        /// <typeparam name="CHILD"></typeparam>
+        /// <returns></returns>
+        public ArrayDefinitionExpression<CHILD> EnumerableOf<CHILD>()
+        {
+            if (typeof(CHILD).IsArray)
+            {
+                throw new ApplicationException("Please specify the element type in the call to TheArrayOf");
+            }
+
+            Plugin plugin = PluginCache.GetPlugin(typeof(T));
+            string propertyName = plugin.FindArgumentNameForEnumerableOf(typeof(CHILD));
+
+            return TheArrayOf<CHILD>(propertyName);
+        }
+
+        /// <summary>
+        /// Inline definition of a dependency on an Array of the CHILD type and the specified setter property or constructor argument name.  I.e. CHILD[].
+        /// This method can be used for either constructor arguments or setter properties
+        /// </summary>
+        /// <typeparam name="CHILD"></typeparam>
+        /// <param name="ctorOrPropertyName"></param>
+        /// <returns></returns>
+        public ArrayDefinitionExpression<CHILD> EnumerableOf<CHILD>(string ctorOrPropertyName)
+        {
+            if (ctorOrPropertyName.IsEmpty())
+            {
+                throw new StructureMapException(302, typeof(CHILD).FullName, typeof(T).FullName);
+            }
+            return new ArrayDefinitionExpression<CHILD>(this, ctorOrPropertyName);
+        }
+
 
         #region Nested type: ArrayDefinitionExpression
 
@@ -333,6 +444,32 @@ namespace StructureMap.Pipeline
             }
 
             /// <summary>
+            /// Sets the value of the constructor argument to the key/value in the 
+            /// AppSettings
+            /// </summary>
+            /// <param name="appSettingKey">The key in appSettings for the value to use.</param>
+            /// <returns></returns>
+            public SmartInstance<T> EqualToAppSetting(string appSettingKey)
+            {
+                return EqualToAppSetting(appSettingKey, null);
+            }
+
+            /// <summary>
+            /// Sets the value of the constructor argument to the key/value in the 
+            /// AppSettings when it exists. Otherwise uses the provided default value.
+            /// </summary>
+            /// <param name="appSettingKey">The key in appSettings for the value to use.</param>
+            /// <param name="defaultValue">The value to use if an entry for <paramref name="appSettingKey"/> does not exist in the appSettings section.</param>
+            /// <returns></returns>
+            public SmartInstance<T> EqualToAppSetting(string appSettingKey, string defaultValue)
+            {
+                string propertyValue = ConfigurationManager.AppSettings[appSettingKey];
+                if (propertyValue == null) propertyValue = defaultValue;
+                _instance.SetValue(_propertyName, propertyValue);
+                return _instance;
+            }
+
+            /// <summary>
             /// Nested Closure to define a child dependency inline
             /// </summary>
             /// <param name="action"></param>
@@ -343,6 +480,12 @@ namespace StructureMap.Pipeline
                 action(expression);
 
                 return _instance;
+            }
+
+            public SmartInstance<T> Is(Func<IContext, CHILD> func)
+            {
+                var child = new LambdaInstance<CHILD>(func);
+                return Is(child);
             }
 
             /// <summary>
@@ -363,7 +506,21 @@ namespace StructureMap.Pipeline
             /// <returns></returns>
             public SmartInstance<T> Is(CHILD value)
             {
-                return Is(new ObjectInstance(value));
+                _instance.SetValue(_propertyName, value);
+                return _instance;
+            }
+
+
+            /// <summary>
+            /// Shortcut to set an inline dependency to a designated object
+            /// </summary>
+            /// <param name="value"></param>
+            /// <returns></returns>
+            [Obsolete("Change to Is()")]
+            public SmartInstance<T> EqualTo(CHILD value)
+            {
+                _instance.SetValue(_propertyName, value);
+                return _instance;
             }
 
             /// <summary>
@@ -385,6 +542,20 @@ namespace StructureMap.Pipeline
             public SmartInstance<T> Is<CONCRETETYPE>() where CONCRETETYPE : CHILD
             {
                 return Is(new SmartInstance<CONCRETETYPE>());
+            }
+
+
+            /// <summary>
+            /// Shortcut method to define a child dependency inline and configure
+            /// the child dependency
+            /// </summary>
+            /// <typeparam name="CONCRETETYPE"></typeparam>
+            /// <returns></returns>
+            public SmartInstance<T> Is<CONCRETETYPE>(Action<SmartInstance<CONCRETETYPE>> configure) where CONCRETETYPE : CHILD
+            {
+                var instance = new SmartInstance<CONCRETETYPE>();
+                configure(instance);
+                return Is(instance);
             }
         }
 

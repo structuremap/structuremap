@@ -374,6 +374,14 @@ namespace StructureMap.Configuration.DSL.Expressions
             return instance;
         }
 
+        public SmartInstance<PLUGGEDTYPE> Add<PLUGGEDTYPE>()
+        {
+            var instance = new SmartInstance<PLUGGEDTYPE>();
+            Add(instance);
+
+            return instance;
+        }
+
         /// <summary>
         /// Add an Instance to this type created by a Lambda
         /// </summary>

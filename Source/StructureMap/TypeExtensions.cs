@@ -45,6 +45,7 @@ namespace StructureMap
     {
         public static class TypeExtensions
         {
+
             public static bool Closes(this Type type, Type openType)
             {
                 Type baseType = type.BaseType;

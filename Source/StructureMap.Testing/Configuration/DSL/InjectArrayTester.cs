@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using NUnit.Framework;
 using StructureMap.Pipeline;
+using System.Linq;
 
 namespace StructureMap.Testing.Configuration.DSL
 {
@@ -28,6 +30,24 @@ namespace StructureMap.Testing.Configuration.DSL
 
 
             public IHandler[] Handlers { get { return _handlers; } }
+
+
+            public string Name { get { return _name; } }
+        }
+
+        public class ProcessorWithList
+        {
+            private readonly IList<IHandler> _handlers;
+            private readonly string _name;
+
+            public ProcessorWithList(IList<IHandler> handlers, string name)
+            {
+                _handlers = handlers;
+                _name = name;
+            }
+
+
+            public IList<IHandler> Handlers { get { return _handlers; } }
 
 
             public string Name { get { return _name; } }
@@ -83,6 +103,24 @@ namespace StructureMap.Testing.Configuration.DSL
             });
 
             container.GetInstance<Processor>().Name.ShouldEqual("Jeremy");
+        }
+
+        [Test]
+        public void get_a_configured_list()
+        {
+            var container = new Container(x =>
+            {
+                x.ForRequestedType<Processor>().TheDefault.Is
+                    .OfConcreteType<Processor>()
+                    .TheArrayOf<IHandler>().Contains(
+                    new SmartInstance<Handler1>(),
+                    new SmartInstance<Handler2>(),
+                    new SmartInstance<Handler3>()
+                    )
+                    .WithCtorArg("name").EqualTo("Jeremy");
+            });
+
+            container.GetInstance<Processor>().Handlers.Select(x => x.GetType()).ShouldHaveTheSameElementsAs(typeof(Handler1), typeof(Handler2), typeof(Handler3));
         }
 
         [Test]

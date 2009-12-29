@@ -13,6 +13,14 @@ namespace StructureMap.Pipeline
             typeof (List<>)
         };
 
+        public static IEnumerable<Type> OpenEnumerableTypes
+        {
+            get
+            {
+                return _enumerableTypes;
+            }
+        }
+
         private readonly IEnumerable<Instance> _children;
         private readonly IEnumerableCoercion _coercion;
         private readonly string _description;
@@ -83,5 +91,7 @@ namespace StructureMap.Pipeline
 
             return type.IsGenericType && type.GetGenericTypeDefinition().IsIn(_enumerableTypes);
         }
+
+
     }
 }

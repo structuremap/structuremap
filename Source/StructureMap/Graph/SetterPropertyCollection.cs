@@ -107,7 +107,7 @@ namespace StructureMap.Graph
             return returnValue;
         }
 
-        public string FindFirstConstructorArgumentOfType(Type type)
+        public string FindFirstWriteablePropertyOfType(Type type)
         {
             foreach (SetterProperty setterProperty in this)
             {

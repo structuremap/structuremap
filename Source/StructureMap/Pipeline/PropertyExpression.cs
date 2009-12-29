@@ -6,6 +6,7 @@ namespace StructureMap.Pipeline
     /// <summary>
     /// Defines the value of a primitive argument to a constructur argument
     /// </summary>
+    [Obsolete("Change to DependencyExpression<CTORTYPE> instead")]
     public class PropertyExpression<T> where T : ConstructorInstance
     {
         private readonly ConstructorInstance _instance;

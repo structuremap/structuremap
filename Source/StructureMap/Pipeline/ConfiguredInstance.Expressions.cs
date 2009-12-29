@@ -6,7 +6,14 @@ namespace StructureMap.Pipeline
 {
     public partial class ConfiguredInstance
     {
+        [Obsolete("Change to Named()")]
         public ConfiguredInstance WithName(string instanceKey)
+        {
+            Name = instanceKey;
+            return this;
+        }
+
+        public ConfiguredInstance Named(string instanceKey)
         {
             Name = instanceKey;
             return this;
@@ -202,6 +209,7 @@ namespace StructureMap.Pipeline
         /// </summary>
         /// <param name="propertyName"></param>
         /// <returns></returns>
+        [Obsolete("Change to DependencyExpression<CTORTYPE> instead")]
         public PropertyExpression<ConfiguredInstance> WithCtorArg(string propertyName)
         {
             return new PropertyExpression<ConfiguredInstance>(this, propertyName);

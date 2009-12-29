@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using NUnit.Framework;
@@ -405,6 +406,64 @@ namespace StructureMap.Testing.Graph
         }
     }
 
+
+    [TestFixture]
+    public class when_finding_property_name_of_enumerable_type
+    {
+        private Plugin plugin;
+
+
+
+        [SetUp]
+        public void SetUp()
+        {
+            plugin = new Plugin(typeof (ClassWithEnumerables));
+        }
+
+        [Test]
+        public void smoke_test()
+        {
+            new Plugin(typeof (ClassThatUsesValidators)).FindArgumentNameForEnumerableOf(typeof (IValidator)).
+                ShouldEqual("validators");
+        }
+
+        [Test]
+        public void array_in_ctor()
+        {
+            plugin.FindArgumentNameForEnumerableOf(typeof (IEngine)).ShouldEqual("engines");
+        }
+
+        [Test]
+        public void enumerable_in_ctor()
+        {
+            plugin.FindArgumentNameForEnumerableOf(typeof (IAutomobile)).ShouldEqual("autos");
+        }
+
+        [Test]
+        public void ilist_as_setter()
+        {
+            plugin.FindArgumentNameForEnumerableOf(typeof (IWidget)).ShouldEqual("Widgets");
+        }
+
+        [Test]
+        public void list_as_setter()
+        {
+            plugin.FindArgumentNameForEnumerableOf(typeof (Rule)).ShouldEqual("Rules");
+        }
+    }
+
+
+    public class ClassWithEnumerables
+    {
+        public ClassWithEnumerables(IEngine[] engines, IEnumerable<IAutomobile> autos)
+        {
+
+        }
+
+        public IList<IWidget> Widgets { get; set; }
+        public List<Rule> Rules { get; set; }
+    }
+
     public class LotsOfStuff
     {
         public LotsOfStuff(IEngine engine, IEngine[] engines, string name, int age, BreedEnum breed)
@@ -431,6 +490,8 @@ namespace StructureMap.Testing.Graph
     public interface IEngine
     {
     }
+
+
 
     [Pluggable("Pushrod")]
     public class PushrodEngine : IEngine

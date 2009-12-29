@@ -15,6 +15,16 @@ namespace StructureMap
             return enumerable;
         }
 
+        public static bool IsEmpty(this string value)
+        {
+            return string.IsNullOrEmpty(value);
+        }
+
+        public static bool IsNotEmpty(this string value)
+        {
+            return !value.IsEmpty();
+        }
+
         public static string ToFormat(this string template, params object[] parameters)
         {
             return string.Format(template, parameters);

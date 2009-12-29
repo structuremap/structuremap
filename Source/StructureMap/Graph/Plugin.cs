@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using StructureMap.Pipeline;
 using StructureMap.TypeRules;
+using System.Linq;
 
 namespace StructureMap.Graph
 {
@@ -75,11 +77,21 @@ namespace StructureMap.Graph
             return FindArgumentNameForType(typeof (T));
         }
 
+        public string FindArgumentNameForEnumerableOf(Type type)
+        {
+            var enumerableTypes = EnumerableInstance.OpenEnumerableTypes.Select(x => x.MakeGenericType(type)).Union(new []{type.MakeArrayType()});
+            return enumerableTypes.Select(t =>
+            {
+                return _constructor.FindFirstConstructorArgumentOfType(t) ??
+                       _setters.FindFirstWriteablePropertyOfType(t);
+            }).FirstOrDefault(x => x != null);
+        }
+
         public string FindArgumentNameForType(Type type)
         {
             string returnValue =
                 _constructor.FindFirstConstructorArgumentOfType(type) ??
-                _setters.FindFirstConstructorArgumentOfType(type);
+                _setters.FindFirstWriteablePropertyOfType(type);
 
             if (returnValue == null)
             {

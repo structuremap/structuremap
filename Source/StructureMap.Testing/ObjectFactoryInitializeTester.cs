@@ -11,8 +11,9 @@ namespace StructureMap.Testing
     {
         public InitializeRegistry()
         {
-            InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithCtorArg("color").EqualTo("Green").WithName(
-                "Green");
+            For<IWidget>().Add<ColorWidget>()
+                .Ctor<string>("color").Is("Green")
+                .Named("Green");
         }
     }
 
