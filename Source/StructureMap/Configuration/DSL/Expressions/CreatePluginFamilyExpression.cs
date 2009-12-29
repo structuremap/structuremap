@@ -32,6 +32,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <summary>
         /// Define the Default Instance for this PluginType
         /// </summary>
+        [Obsolete("Prefer the Use() methods")]
         public IsExpression<PLUGINTYPE> TheDefault { get { return new InstanceExpression<PLUGINTYPE>(i => registerDefault(i)); } }
 
         public InstanceExpression<PLUGINTYPE> MissingNamedInstanceIs { get { return new InstanceExpression<PLUGINTYPE>(i => _alterations.Add(family => family.MissingInstance = i)); } }
@@ -135,6 +136,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="scope"></param>
         /// <returns></returns>
+        [Obsolete("Change to LifecycleIs(scope)")]
         public CreatePluginFamilyExpression<PLUGINTYPE> CacheBy(InstanceScope scope)
         {
             return alterAndContinue(family => family.SetScopeTo(scope));
@@ -296,6 +298,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <typeparam name="PLUGGEDTYPE"></typeparam>
         /// <returns></returns>
+        [Obsolete("Change to Add<T>()")]
         public CreatePluginFamilyExpression<PLUGINTYPE> AddConcreteType<PLUGGEDTYPE>()
         {
             if (!PluginCache.GetPlugin(typeof (PLUGGEDTYPE)).CanBeAutoFilled)
@@ -366,9 +369,28 @@ namespace StructureMap.Configuration.DSL.Expressions
         public ObjectInstance Add(PLUGINTYPE @object)
         {
             var instance = new ObjectInstance(@object);
-            _alterations.Add(f => f.AddInstance(instance));
+            Add(instance);
 
             return instance;
+        }
+
+        /// <summary>
+        /// Add an Instance to this type created by a Lambda
+        /// </summary>
+        /// <param name="func"></param>
+        /// <returns></returns>
+        public LambdaInstance<PLUGINTYPE> Add(Func<IContext, PLUGINTYPE> func)
+        {
+            var instance = new LambdaInstance<PLUGINTYPE>(func);
+            Add(instance);
+
+            return instance;
+        }
+
+
+        public void Add(Instance instance)
+        {
+            _alterations.Add(f => f.AddInstance(instance));
         }
     }
 }

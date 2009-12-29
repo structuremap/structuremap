@@ -35,6 +35,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
+        [Obsolete("Prefer the For<T>().**** methods")]
         public IsExpression<T> Type<T>()
         {
             return
@@ -76,10 +77,27 @@ namespace StructureMap.Configuration.DSL.Expressions
             /// </summary>
             /// <param name="concreteType"></param>
             /// <returns></returns>
-            public ProfileExpression UseConcreteType(Type concreteType)
+            [Obsolete("Change to Use(type)")]
+            public ConfiguredInstance UseConcreteType(Type concreteType)
             {
                 var instance = new ConfiguredInstance(concreteType);
-                return Use(instance);
+                Use(instance);
+
+                return instance;
+            }
+
+            /// <summary>
+            /// Use this concreteType for the Instance of this Profile for the PluginType
+            /// </summary>
+            /// <param name="concreteType"></param>
+            /// <returns></returns>
+            [Obsolete("Change to Use(type)")]
+            public ConfiguredInstance Use(Type concreteType)
+            {
+                var instance = new ConfiguredInstance(concreteType);
+                Use(instance);
+
+                return instance;
             }
 
             /// <summary>
@@ -87,11 +105,9 @@ namespace StructureMap.Configuration.DSL.Expressions
             /// </summary>
             /// <param name="instance"></param>
             /// <returns></returns>
-            public ProfileExpression Use(Instance instance)
+            public void Use(Instance instance)
             {
                 _registry.addExpression(graph => graph.SetDefault(_parent._profileName, _pluginType, instance));
-
-                return _parent;
             }
 
 
@@ -100,10 +116,37 @@ namespace StructureMap.Configuration.DSL.Expressions
             /// </summary>
             /// <param name="name"></param>
             /// <returns></returns>
-            public ProfileExpression UseNamedInstance(string name)
+            [Obsolete("Change to Use([name])")]
+            public void UseNamedInstance(string name)
             {
                 var instance = new ReferencedInstance(name);
-                return Use(instance);
+                Use(instance);
+            }
+
+            /// <summary>
+            /// Use the named Instance as the Profile Instance for this PluginType
+            /// </summary>
+            /// <param name="name"></param>
+            /// <returns></returns>
+            public ReferencedInstance Use(string name)
+            {
+                var instance = new ReferencedInstance(name);
+                Use(instance);
+
+                return instance;
+            }
+
+            /// <summary>
+            /// For this type and profile, build the object with this Lambda
+            /// </summary>
+            /// <param name="func"></param>
+            /// <returns></returns>
+            public LambdaInstance<object> Use(Func<IContext, object> func)
+            {
+                var instance = new LambdaInstance<object>(func);
+                Use(instance);
+
+                return instance;
             }
         }
 
@@ -133,6 +176,7 @@ namespace StructureMap.Configuration.DSL.Expressions
             /// </summary>
             /// <param name="instanceKey"></param>
             /// <returns></returns>
+            [Obsolete("Change to For<T>().Use([name])")]
             public ProfileExpression UseNamedInstance(string instanceKey)
             {
                 _registry.addExpression(
@@ -142,17 +186,26 @@ namespace StructureMap.Configuration.DSL.Expressions
             }
 
             /// <summary>
+            /// Use a named, preconfigured instance as the default instance for this profile 
+            /// </summary>
+            /// <param name="instanceKey"></param>
+            /// <returns></returns>
+            public void Use(string instanceKey)
+            {
+                _registry.addExpression(
+                    graph => graph.SetDefault(_profileName, typeof(T), new ReferencedInstance(instanceKey)));
+            }
+
+            /// <summary>
             /// Define the default instance of the PluginType for the containing Profile
             /// </summary>
             /// <param name="instance"></param>
             /// <returns></returns>
-            public ProfileExpression Use(Instance instance)
+            public void Use(Instance instance)
             {
                 instance.Name = "Default Instance for Profile " + _profileName;
 
                 _registry.addExpression(graph => graph.SetDefault(_profileName, typeof (T), instance));
-
-                return _parent;
             }
 
             /// <summary>
@@ -160,10 +213,25 @@ namespace StructureMap.Configuration.DSL.Expressions
             /// </summary>
             /// <param name="func"></param>
             /// <returns></returns>
-            public ProfileExpression Use(Func<T> func)
+            public LambdaInstance<T> Use(Func<T> func)
             {
                 var instance = new LambdaInstance<T>(func);
-                return Use(instance);
+                Use(instance);
+
+                return instance;
+            }
+
+            /// <summary>
+            /// For this Profile, use an Instance with this Func
+            /// </summary>
+            /// <param name="func"></param>
+            /// <returns></returns>
+            public LambdaInstance<T> Use(Func<IContext, T> func)
+            {
+                var instance = new LambdaInstance<T>(func);
+                Use(instance);
+
+                return instance;
             }
 
             /// <summary>
@@ -171,10 +239,12 @@ namespace StructureMap.Configuration.DSL.Expressions
             /// </summary>
             /// <param name="t"></param>
             /// <returns></returns>
-            public ProfileExpression Use(T t)
+            public ObjectInstance Use(T t)
             {
                 var instance = new ObjectInstance(t);
-                return Use(instance);
+                Use(instance);
+
+                return instance;
             }
 
             /// <summary>
@@ -182,10 +252,24 @@ namespace StructureMap.Configuration.DSL.Expressions
             /// </summary>
             /// <typeparam name="CONCRETETYPE"></typeparam>
             /// <returns></returns>
-            public ProfileExpression UseConcreteType<CONCRETETYPE>()
+            [Obsolete("Change to For<T>().Use<CONCRETETYPE>()")]
+            public void UseConcreteType<CONCRETETYPE>()
             {
                 var instance = new ConfiguredInstance(typeof (CONCRETETYPE));
-                return Use(instance);
+                Use(instance);
+            }
+
+            /// <summary>
+            /// For this profile, use this concrete type
+            /// </summary>
+            /// <typeparam name="CONCRETETYPE"></typeparam>
+            /// <returns></returns>
+            public SmartInstance<CONCRETETYPE> Use<CONCRETETYPE>()
+            {
+                var instance = new SmartInstance<CONCRETETYPE>();
+                Use(instance);
+
+                return instance;
             }
         }
 

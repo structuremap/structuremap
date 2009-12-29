@@ -89,8 +89,8 @@ namespace StructureMap.Testing.Graph
                     x.OfConcreteType<ColorService>().WithName("Green").WithProperty("color").EqualTo("Green");
                 });
 
-                r.CreateProfile("Red").For<IService>().UseNamedInstance("Red");
-                r.CreateProfile("Blue").For<IService>().UseNamedInstance("Blue");
+                r.Profile("Red").For<IService>().UseNamedInstance("Red");
+                r.Profile("Blue").For<IService>().UseNamedInstance("Blue");
             });
 
             assertColorIs(container, "Orange");

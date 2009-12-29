@@ -24,14 +24,23 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             string theProfileName = "something";
 
-            IContainer manager = new Container(registry => registry.CreateProfile(theProfileName)
-                                                               .For<IWidget>().Use(delegate { return new AWidget(); })
-                                                               .For<Rule>().Use(delegate { return new DefaultRule(); }));
+            IContainer container = new Container(r =>
+            {
+                r.Profile(theProfileName, x =>
+                {
+                    x.For<IWidget>().Use(() => new AWidget());
+                    x.For<Rule>().Use(() => new DefaultRule());
+                });
 
-            manager.SetDefaultsToProfile(theProfileName);
 
-            Assert.IsInstanceOfType(typeof (AWidget), manager.GetInstance<IWidget>());
-            Assert.IsInstanceOfType(typeof (DefaultRule), manager.GetInstance<Rule>());
+
+
+            });
+
+            container.SetDefaultsToProfile(theProfileName);
+
+            Assert.IsInstanceOfType(typeof (AWidget), container.GetInstance<IWidget>());
+            Assert.IsInstanceOfType(typeof (DefaultRule), container.GetInstance<Rule>());
         }
 
 
@@ -42,7 +51,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
             IContainer container = new Container(registry =>
             {
-                registry.CreateProfile(theProfileName, x =>
+                registry.Profile(theProfileName, x =>
                 {
                     x.Type<IWidget>().Is.ConstructedBy(() => new AWidget());
                     x.Type<Rule>().Is.ConstructedBy(() => new DefaultRule());
@@ -61,9 +70,15 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             string theProfileName = "something";
 
-            IContainer manager = new Container(registry => registry.CreateProfile(theProfileName)
-                                                               .For<IWidget>().UseConcreteType<AWidget>()
-                                                               .For<Rule>().UseConcreteType<DefaultRule>());
+            IContainer manager = new Container(registry =>
+            {
+                registry.Profile(theProfileName, p =>
+                {
+                    p.For<IWidget>().UseConcreteType<AWidget>();
+                    p.For<Rule>().UseConcreteType<DefaultRule>();
+                });
+
+            });
             manager.SetDefaultsToProfile(theProfileName);
 
             Assert.IsInstanceOfType(typeof (AWidget), manager.GetInstance<IWidget>());
@@ -77,7 +92,7 @@ namespace StructureMap.Testing.Configuration.DSL
             var theWidget = new AWidget();
 
             string theProfileName = "something";
-            registry.CreateProfile(theProfileName)
+            registry.Profile(theProfileName)
                 .For<IWidget>().Use(theWidget);
 
             PluginGraph graph = registry.Build();
@@ -93,7 +108,7 @@ namespace StructureMap.Testing.Configuration.DSL
             string theDefaultName = "TheDefaultName";
 
             var registry = new Registry();
-            registry.CreateProfile(theProfileName)
+            registry.Profile(theProfileName)
                 .For<IWidget>().UseNamedInstance(theDefaultName)
                 .For<Rule>().UseNamedInstance("DefaultRule");
 
@@ -110,7 +125,7 @@ namespace StructureMap.Testing.Configuration.DSL
             string theProfileName = "TheProfile";
 
             var registry = new Registry();
-            registry.CreateProfile(theProfileName)
+            registry.Profile(theProfileName)
                 .For<IWidget>().UseConcreteType<AWidget>();
 
             PluginGraph graph = registry.Build();
@@ -118,7 +133,7 @@ namespace StructureMap.Testing.Configuration.DSL
             ProfileManager profileManager = graph.ProfileManager;
             Instance defaultInstance = profileManager.GetDefault(typeof (IWidget), theProfileName);
 
-            Assert.AreEqual(Profile.InstanceKeyForProfile(theProfileName), defaultInstance.Name);
+            Assert.AreEqual(StructureMap.Pipeline.Profile.InstanceKeyForProfile(theProfileName), defaultInstance.Name);
 
             var manager = new Container(graph);
             manager.SetDefaultsToProfile(theProfileName);

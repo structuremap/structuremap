@@ -190,7 +190,14 @@ namespace StructureMap.Pipeline
         /// </summary>
         /// <param name="instanceKey"></param>
         /// <returns></returns>
+        [Obsolete("Change to Named")]
         public T WithName(string instanceKey)
+        {
+            Name = instanceKey;
+            return thisInstance;
+        }
+
+        public T Named(string instanceKey)
         {
             Name = instanceKey;
             return thisInstance;

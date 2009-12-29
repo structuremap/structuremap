@@ -106,6 +106,15 @@ namespace StructureMap.Configuration.DSL.Expressions
         [Obsolete("Favor For<ISomething>().Use<Something>() or For<ISomething>().Add<Something>()")]
         SmartInstance<PLUGGEDTYPE> OfConcreteType<PLUGGEDTYPE>() where PLUGGEDTYPE : T;
 
+
+        /// <summary>
+        /// Build the Instance with the constructor function and setter arguments.  Starts
+        /// the definition of a <see cref="SmartInstance{T}">SmartInstance</see>
+        /// </summary>
+        /// <typeparam name="PLUGGEDTYPE"></typeparam>
+        /// <returns></returns>
+        SmartInstance<PLUGGEDTYPE> Type<PLUGGEDTYPE>();
+
         /// <summary>
         /// Build the Instance with the constructor function and setter arguments.  Use this
         /// method for open generic types, and favor the generic version of OfConcreteType
@@ -117,12 +126,20 @@ namespace StructureMap.Configuration.DSL.Expressions
         ConfiguredInstance OfConcreteType(Type type);
 
         /// <summary>
+        /// Build the Instance with the constructor function and setter arguments.  Use this
+        /// method for open generic types, and favor the generic version of OfConcreteType
+        /// for all other types
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        ConfiguredInstance Type(Type type);
+
+        /// <summary>
         /// Create an Instance that builds an object by calling a Lambda or
         /// an anonymous delegate with no arguments
         /// </summary>
         /// <param name="func"></param>
         /// <returns></returns>
-        [Obsolete("Prefer For<T>().Use(Func<T> func) or For<T>().Add(Func<T> func)")]
         LambdaInstance<T> ConstructedBy(Func<T> func);
 
         /// <summary>
@@ -218,7 +235,17 @@ namespace StructureMap.Configuration.DSL.Expressions
             return returnInstance(new SmartInstance<PLUGGEDTYPE>());
         }
 
+        public SmartInstance<PLUGGEDTYPE> Type<PLUGGEDTYPE>()
+        {
+            return returnInstance(new SmartInstance<PLUGGEDTYPE>());
+        }
+
         public ConfiguredInstance OfConcreteType(Type type)
+        {
+            return returnInstance(new ConfiguredInstance(type));
+        }
+
+        public ConfiguredInstance Type(Type type)
         {
             return returnInstance(new ConfiguredInstance(type));
         }

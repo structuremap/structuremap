@@ -26,13 +26,19 @@ namespace StructureMap.Testing.Query
         private GenericFamilyConfiguration configuration;
 
         [Test]
+        public void build_should_return_null()
+        {
+            configuration.As<IFamily>().Build(null).ShouldBeNull();
+        }
+
+        [Test]
         public void eject_and_remove_an_instance()
         {
-            var instance = new ConfiguredInstance(typeof(Service<>));
+            var instance = new ConfiguredInstance(typeof (Service<>));
             family.AddInstance(instance);
-            family.AddInstance(new ConfiguredInstance(typeof(Service2<>)));
+            family.AddInstance(new ConfiguredInstance(typeof (Service2<>)));
 
-            var iRef = configuration.Instances.FirstOrDefault(x => x.Name == instance.Name);
+            InstanceRef iRef = configuration.Instances.FirstOrDefault(x => x.Name == instance.Name);
 
             configuration.EjectAndRemove(iRef);
 
@@ -45,21 +51,15 @@ namespace StructureMap.Testing.Query
         [Test]
         public void eject_and_remove_the_default_value()
         {
-            var instance = new ConfiguredInstance(typeof(Service<>));
+            var instance = new ConfiguredInstance(typeof (Service<>));
             family.SetDefault(instance);
-            family.AddInstance(new ConfiguredInstance(typeof(Service2<>)));
+            family.AddInstance(new ConfiguredInstance(typeof (Service2<>)));
 
-            var iRef = configuration.Instances.FirstOrDefault(x => x.Name == instance.Name);
-        
+            InstanceRef iRef = configuration.Instances.FirstOrDefault(x => x.Name == instance.Name);
+
             configuration.EjectAndRemove(iRef);
 
             family.GetDefaultInstance().ShouldBeNull();
-        }
-
-        [Test]
-        public void build_should_return_null()
-        {
-            configuration.As<IFamily>().Build(null).ShouldBeNull();
         }
 
         [Test]

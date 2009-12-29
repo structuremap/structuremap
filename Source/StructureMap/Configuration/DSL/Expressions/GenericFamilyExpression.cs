@@ -39,6 +39,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="concreteType"></param>
         /// <returns></returns>
+        [Obsolete("Change to Use(concreteType)")]
         public ConfiguredInstance TheDefaultIsConcreteType(Type concreteType)
         {
             var instance = new ConfiguredInstance(concreteType);
@@ -47,6 +48,10 @@ namespace StructureMap.Configuration.DSL.Expressions
             return instance;
         }
 
+        /// <summary>
+        /// Use this configured Instance as is
+        /// </summary>
+        /// <param name="instance"></param>
         public void Use(Instance instance)
         {
             alterAndContinue(family =>
@@ -131,10 +136,18 @@ namespace StructureMap.Configuration.DSL.Expressions
         {
             return alterAndContinue(family => family.AddInstance(instance));
         }
-
-        public GenericFamilyExpression Add(object instance)
+        
+        /// <summary>
+        /// Configure this type as the supplied value
+        /// </summary>
+        /// <param name="instance"></param>
+        /// <returns></returns>
+        public ObjectInstance Add(object @object)
         {
-            return Add(new ObjectInstance(instance));
+            var instance = new ObjectInstance(@object);
+            Add(instance);
+
+            return instance;
         }
 
 
@@ -144,6 +157,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="scope"></param>
         /// <returns></returns>
+        [Obsolete("Change to LifecycleIs()")]
         public GenericFamilyExpression CacheBy(InstanceScope scope)
         {
             return alterAndContinue(family => family.SetScopeTo(scope));
@@ -261,6 +275,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="concreteType"></param>
         /// <returns></returns>
+        [Obsolete("Change to Add(Type)")]
         public GenericFamilyExpression AddConcreteType(Type concreteType)
         {
             var instance = new ConfiguredInstance(concreteType);
@@ -276,6 +291,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <param name="concreteType"></param>
         /// <param name="instanceName"></param>
         /// <returns></returns>
+        [Obsolete("Change to Add(Type, [name)]")]
         public GenericFamilyExpression AddConcreteType(Type concreteType, string instanceName)
         {
             return Add(new ConfiguredInstance(concreteType).WithName(instanceName));

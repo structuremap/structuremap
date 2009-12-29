@@ -87,7 +87,7 @@ namespace StructureMap.Testing.Pipeline
                 x.For<IWidget>().TheDefault.Is.OfConcreteType<ColorWidget>()
                     .WithCtorArg("color").EqualTo("red");
 
-                x.CreateProfile("green", o =>
+                x.Profile("green", o =>
                 {
                     o.Type<IWidget>().Is.OfConcreteType<ColorWidget>()
                         .WithCtorArg("color").EqualTo("green");

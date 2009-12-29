@@ -119,7 +119,7 @@ namespace StructureMap
         /// </summary>
         /// <param name="profileName"></param>
         /// <returns></returns>
-        ProfileExpression CreateProfile(string profileName);
+        ProfileExpression Profile(string profileName);
 
         /// <summary>
         /// An alternative way to use CreateProfile that uses ProfileExpression
@@ -128,7 +128,7 @@ namespace StructureMap
         /// </summary>
         /// <param name="profileName"></param>
         /// <param name="action"></param>
-        void CreateProfile(string profileName, Action<ProfileExpression> action);
+        void Profile(string profileName, Action<ProfileExpression> action);
 
         /// <summary>
         /// Registers a new TypeInterceptor object with the Container

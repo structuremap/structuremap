@@ -39,7 +39,6 @@ namespace StructureMap.Testing.Pipeline
         }
 
 
-
         private void assertNoDefaultForType<T>()
         {
             Assert.IsNull(_manager.GetDefault(typeof (T)));

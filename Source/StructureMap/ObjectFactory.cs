@@ -400,8 +400,6 @@ namespace StructureMap
             }
         }
 
-
-
         #endregion
     }
 }

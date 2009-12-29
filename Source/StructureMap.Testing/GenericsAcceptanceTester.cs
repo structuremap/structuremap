@@ -161,8 +161,8 @@ namespace StructureMap.Testing
         {
             var container = new Container(registry =>
             {
-                registry.CreateProfile("1").For(typeof (IService<>)).UseConcreteType(typeof (Service<>));
-                registry.CreateProfile("2").For(typeof (IService<>)).UseConcreteType(typeof (Service2<>));
+                registry.Profile("1").For(typeof (IService<>)).UseConcreteType(typeof (Service<>));
+                registry.Profile("2").For(typeof (IService<>)).UseConcreteType(typeof (Service2<>));
             });
 
             container.SetDefaultsToProfile("1");
@@ -182,8 +182,8 @@ namespace StructureMap.Testing
                 r.InstanceOf(typeof (IService<>)).Is(typeof (Service<>)).WithName("Service1");
                 r.InstanceOf(typeof (IService<>)).Is(typeof (Service2<>)).WithName("Service2");
 
-                r.CreateProfile("1").For(typeof (IService<>)).UseNamedInstance("Service1");
-                r.CreateProfile("2").For(typeof (IService<>)).UseNamedInstance("Service2");
+                r.Profile("1").For(typeof (IService<>)).UseNamedInstance("Service1");
+                r.Profile("2").For(typeof (IService<>)).UseNamedInstance("Service2");
             });
 
             manager.SetDefaultsToProfile("1");

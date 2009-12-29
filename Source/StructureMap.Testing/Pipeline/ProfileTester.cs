@@ -78,40 +78,6 @@ namespace StructureMap.Testing.Pipeline
         }
 
         [Test]
-        public void remove_if_the_instance_does_not_match()
-        {
-            var profile = new Profile("something");
-            var instance = new ConfiguredInstance(typeof(SomethingOne)).WithName("Red");
-            profile.SetDefault(typeof(ISomething), instance);
-
-            profile.Remove(typeof(ISomething), new NullInstance());
-
-            profile.GetDefault(typeof (ISomething)).ShouldBeTheSameAs(instance);
-        }
-
-        [Test]
-        public void remove_if_the_instance_does_match()
-        {
-            var profile = new Profile("something");
-            var instance = new ConfiguredInstance(typeof(SomethingOne)).WithName("Red");
-            profile.SetDefault(typeof(ISomething), instance);
-
-            profile.Remove(typeof(ISomething), instance);
-
-            profile.GetDefault(typeof(ISomething)).ShouldBeNull();
-        }
-
-        [Test]
-        public void do_not_blow_up_if_the_profile_does_not_have_the_plugin_type_being_removed()
-        {
-            var profile = new Profile("something");
-
-            var instance = new ConfiguredInstance(typeof(SomethingOne)).WithName("Red");
-
-            profile.Remove(typeof(ISomething), instance);
-        }
-
-        [Test]
         public void A_call_to_fill_sets_the_default_for_a_plugin_type_if_no_previous_default_is_known()
         {
             var profile = new Profile("something");
@@ -130,6 +96,16 @@ namespace StructureMap.Testing.Pipeline
             _profile.CopyDefault(typeof (ISomething), typeof (ILifecycle),
                                  _pluginGraph.FindFamily(typeof (ILifecycle)));
             _profile.GetDefault(typeof (ILifecycle)).Name.ShouldEqual("Red");
+        }
+
+        [Test]
+        public void do_not_blow_up_if_the_profile_does_not_have_the_plugin_type_being_removed()
+        {
+            var profile = new Profile("something");
+
+            ConfiguredInstance instance = new ConfiguredInstance(typeof (SomethingOne)).WithName("Red");
+
+            profile.Remove(typeof (ISomething), instance);
         }
 
         [Test]
@@ -185,6 +161,30 @@ namespace StructureMap.Testing.Pipeline
 
                 profile.FindMasterInstances(graph);
             });
+        }
+
+        [Test]
+        public void remove_if_the_instance_does_match()
+        {
+            var profile = new Profile("something");
+            ConfiguredInstance instance = new ConfiguredInstance(typeof (SomethingOne)).WithName("Red");
+            profile.SetDefault(typeof (ISomething), instance);
+
+            profile.Remove(typeof (ISomething), instance);
+
+            profile.GetDefault(typeof (ISomething)).ShouldBeNull();
+        }
+
+        [Test]
+        public void remove_if_the_instance_does_not_match()
+        {
+            var profile = new Profile("something");
+            ConfiguredInstance instance = new ConfiguredInstance(typeof (SomethingOne)).WithName("Red");
+            profile.SetDefault(typeof (ISomething), instance);
+
+            profile.Remove(typeof (ISomething), new NullInstance());
+
+            profile.GetDefault(typeof (ISomething)).ShouldBeTheSameAs(instance);
         }
     }
 }

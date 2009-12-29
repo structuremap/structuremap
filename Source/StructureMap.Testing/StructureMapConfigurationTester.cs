@@ -4,10 +4,8 @@ using System.Xml;
 using NUnit.Framework;
 using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
-using StructureMap.Graph;
 using StructureMap.Testing.GenericWidgets;
 using StructureMap.Testing.TestData;
-using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing
 {
@@ -99,7 +97,6 @@ namespace StructureMap.Testing
             });
 
 
-
             Assert.That(ObjectFactory.GetInstance<IFoo>().SomeGuid != Guid.Empty);
         }
 
@@ -109,7 +106,6 @@ namespace StructureMap.Testing
             )]
         public void TheDefaultInstanceIsALambdaForGuidNewGuid()
         {
-
             ObjectFactory.Initialize(x =>
             {
                 x.IgnoreStructureMapConfig = true;
@@ -120,7 +116,6 @@ namespace StructureMap.Testing
 
             Assert.That(ObjectFactory.GetInstance<Guid>() != Guid.Empty);
         }
-
     }
 
     public interface IFoo
