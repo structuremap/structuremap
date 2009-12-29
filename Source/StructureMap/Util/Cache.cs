@@ -1,127 +1,147 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
+using StructureMap.Graph;
+using StructureMap.Pipeline;
 
 namespace StructureMap.Util
 {
-    [Serializable]
-    public class Cache<TKey, TValue> where TValue : class
+    public class Cache<KEY, VALUE> : IEnumerable<VALUE> where VALUE : class
     {
-        private readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
-        private readonly IDictionary<TKey, TValue> _values;
-        private Func<TValue, TKey> _getKey = delegate { throw new NotImplementedException(); };
+        private readonly object _locker = new object();
+        private readonly IDictionary<KEY, VALUE> _values;
 
-        private Action<TValue> _onAddition = x => { };
+        private Func<VALUE, KEY> _getKey = delegate { throw new NotImplementedException(); };
 
-        private Func<TKey, TValue> _onMissing = delegate(TKey key)
+        private Func<KEY, VALUE> _onMissing = delegate(KEY key)
         {
             string message = string.Format("Key '{0}' could not be found", key);
             throw new KeyNotFoundException(message);
         };
 
         public Cache()
-            : this(new Dictionary<TKey, TValue>())
+            : this(new Dictionary<KEY, VALUE>())
         {
         }
 
-        public Cache(Func<TKey, TValue> onMissing)
-            : this(new Dictionary<TKey, TValue>(), onMissing)
+        public Cache(Func<KEY, VALUE> onMissing)
+            : this(new Dictionary<KEY, VALUE>(), onMissing)
         {
         }
 
-        public Cache(IDictionary<TKey, TValue> dictionary, Func<TKey, TValue> onMissing)
+        public Cache(IDictionary<KEY, VALUE> dictionary, Func<KEY, VALUE> onMissing)
             : this(dictionary)
         {
             _onMissing = onMissing;
         }
 
-        public Cache(IDictionary<TKey, TValue> dictionary)
+        public Cache(IDictionary<KEY, VALUE> dictionary)
         {
             _values = dictionary;
         }
 
-        public Func<TKey, TValue> OnMissing { set { _onMissing = value; } }
+        public Func<KEY, VALUE> OnMissing
+        {
+            set { _onMissing = value; }
+        }
 
-        public Action<TValue> OnAddition { set { _onAddition = value; } }
-
-        public Func<TValue, TKey> GetKey { get { return _getKey; } set { _getKey = value; } }
+        public Func<VALUE, KEY> GetKey
+        {
+            get { return _getKey; }
+            set { _getKey = value; }
+        }
 
         public int Count
         {
-            get
-            {
-                using (ReadLock())
-                    return _values.Count;
-            }
+            get { return _values.Count; }
         }
 
-        public TValue First
+        public VALUE First
         {
             get
             {
-                using (ReadLock())
-                    foreach (var pair in _values)
-                    {
-                        return pair.Value;
-                    }
+                foreach (var pair in _values)
+                {
+                    return pair.Value;
+                }
 
                 return null;
             }
         }
 
-        public TValue this[TKey key]
+        public VALUE this[KEY key]
         {
             get
             {
-                using (ReadLockToken @lock = ReadLock())
+                if (!_values.ContainsKey(key))
                 {
-                    if (!_values.ContainsKey(key))
+                    lock (_locker)
                     {
-                        @lock.Upgrade();
                         if (!_values.ContainsKey(key))
                         {
-                            TValue value = _onMissing(key);
-                            _values.Add(key, value);
+                            VALUE value = _onMissing(key);
+                            //Check to make sure that the onMissing didn't cache this already
+                            if(!_values.ContainsKey(key))
+                                _values.Add(key, value);
                         }
                     }
-
-                    return _values[key];
                 }
+
+                return _values[key];
             }
             set
             {
-                _onAddition(value);
-
-                using (WriteLockToken @lock = WriteLock())
-                {
-                    if (_values.ContainsKey(key))
-                    {
-                        _values[key] = value;
-                    }
-                    else
-                    {
-                        _values.Add(key, value);
-                    }
-                }
-            }
-        }
-
-        public void Fill(TKey key, TValue value)
-        {
-            using (WriteLock())
-            {
                 if (_values.ContainsKey(key))
                 {
-                    return;
+                    _values[key] = value;
                 }
-
-                _values.Add(key, value);
+                else
+                {
+                    _values.Add(key, value);
+                }
             }
         }
 
-        public void Each(Action<TValue> action)
+        #region IEnumerable<VALUE> Members
+
+        IEnumerator IEnumerable.GetEnumerator()
         {
-            using (ReadLock())
+            return ((IEnumerable<VALUE>)this).GetEnumerator();
+        }
+
+        public IEnumerator<VALUE> GetEnumerator()
+        {
+            return _values.Values.GetEnumerator();
+        }
+
+        #endregion
+
+        public void Fill(KEY key, VALUE value)
+        {
+            if (_values.ContainsKey(key))
+            {
+                return;
+            }
+
+            _values.Add(key, value);
+        }
+
+        public bool TryRetrieve(KEY key, out VALUE value)
+        {
+            value = default(VALUE);
+
+            if (_values.ContainsKey(key))
+            {
+                value = _values[key];
+                return true;
+            }
+
+            return false;
+        }
+
+        public void Each(Action<VALUE> action)
+        {
+            lock (_locker)
             {
                 foreach (var pair in _values)
                 {
@@ -130,159 +150,76 @@ namespace StructureMap.Util
             }
         }
 
-        public void Each(Action<TKey, TValue> action)
+        public void Each(Action<KEY, VALUE> action)
         {
-            using (ReadLock())
+            foreach (var pair in _values)
             {
-                foreach (var pair in _values)
-                {
-                    action(pair.Key, pair.Value);
-                }
+                action(pair.Key, pair.Value);
             }
         }
 
-        public bool Has(TKey key)
+        public bool Has(KEY key)
         {
-            using (ReadLock())
-                return _values.ContainsKey(key);
+            return _values.ContainsKey(key);
         }
 
-        public bool Exists(Predicate<TValue> predicate)
+        public bool Exists(Predicate<VALUE> predicate)
         {
             bool returnValue = false;
 
-            Each(delegate(TValue value) { returnValue |= predicate(value); });
+            Each(delegate(VALUE value) { returnValue |= predicate(value); });
 
             return returnValue;
         }
 
-        public TValue Find(Predicate<TValue> predicate)
+        public VALUE Find(Predicate<VALUE> predicate)
         {
-            using (ReadLock())
-                foreach (var pair in _values)
+            foreach (var pair in _values)
+            {
+                if (predicate(pair.Value))
                 {
-                    if (predicate(pair.Value))
-                    {
-                        return pair.Value;
-                    }
+                    return pair.Value;
                 }
+            }
 
             return null;
         }
 
-        public TKey Find(TValue value)
+        public VALUE[] GetAll()
         {
-            using (ReadLock())
-                foreach (var pair in _values)
-                {
-                    if (pair.Value == value)
-                    {
-                        return pair.Key;
-                    }
-                }
-
-            return default(TKey);
-        }
-
-        public TValue[] GetAll()
-        {
-            var returnValue = new TValue[Count];
-            using (ReadLock())
-                _values.Values.CopyTo(returnValue, 0);
+            var returnValue = new VALUE[Count];
+            _values.Values.CopyTo(returnValue, 0);
 
             return returnValue;
         }
 
-        public void Remove(TKey key)
+        public void Remove(KEY key)
         {
-            using (ReadLock())
-                if (_values.ContainsKey(key))
-                {
-                    _values.Remove(key);
-                }
+            if (_values.ContainsKey(key))
+            {
+                _values.Remove(key);
+            }
         }
 
         public void Clear()
         {
-            using (WriteLock())
-                _values.Clear();
+            _values.Clear();
         }
 
-        public void WithValue(TKey key, Action<TValue> callback)
+        public Cache<KEY, VALUE> Clone()
         {
-            using (ReadLock())
-                _values.TryGet(key, callback);
+            var clone = new Cache<KEY, VALUE>(_onMissing);
+            _values.Each(pair => clone[pair.Key] = pair.Value);
+
+            return clone;
         }
 
-        private ReadLockToken ReadLock()
+        public void WithValue(KEY key, Action<VALUE> action)
         {
-            return new ReadLockToken(_lock);
-        }
-
-        private WriteLockToken WriteLock()
-        {
-            return new WriteLockToken(_lock);
-        }
-
-        public Cache<TKey, TValue> Clone()
-        {
-            var cache = new Cache<TKey, TValue>();
-            cache._onMissing = _onMissing;
-
-            Each((key, value) => cache[key] = value);
-
-            return cache;
-        }
-
-        #region Nested type: ReadLockToken
-
-        private class ReadLockToken : IDisposable
-        {
-            private readonly ReaderWriterLockSlim _lock;
-            private bool upgraded;
-
-            public ReadLockToken(ReaderWriterLockSlim @lock)
+            if (_values.ContainsKey(key))
             {
-                _lock = @lock;
-                _lock.EnterReadLock();
-            }
-
-            public void Dispose()
-            {
-                if (upgraded)
-                    _lock.ExitWriteLock();
-                else
-                    _lock.ExitReadLock();
-            }
-
-            public void Upgrade()
-            {
-                _lock.ExitReadLock();
-                _lock.EnterWriteLock();
-                upgraded = true;
+                action(this[key]);
             }
         }
-
-        #endregion
-
-        #region Nested type: WriteLockToken
-
-        private class WriteLockToken : IDisposable
-        {
-            private readonly ReaderWriterLockSlim _lock;
-
-            public WriteLockToken(ReaderWriterLockSlim @lock)
-            {
-                _lock = @lock;
-                _lock.EnterWriteLock();
-            }
-
-            public void Dispose()
-            {
-                _lock.EnterWriteLock();
-            }
-        }
-
-        #endregion
     }
 }

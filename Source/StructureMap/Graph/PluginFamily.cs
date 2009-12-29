@@ -34,14 +34,6 @@ namespace StructureMap.Graph
 
             PluginFamilyAttribute.ConfigureFamily(this);
 
-            //if (IsConcrete(pluginType))
-            //{
-            //    Plugin plugin = PluginCache.GetPlugin(pluginType);
-            //    if (plugin.CanBeCreated())
-            //    {
-            //        AddPlugin(pluginType, Plugin.DEFAULT);
-            //    }
-            //}
         }
 
         public PluginGraph Parent { get { return _parent; } set { _parent = value; } }
@@ -362,7 +354,6 @@ namespace StructureMap.Graph
         /// <summary>
         /// The InstanceKey of the default instance of the PluginFamily
         /// </summary>
-        [Obsolete]
         public string DefaultInstanceKey { get { return _defaultKey; } set { _defaultKey = value ?? string.Empty; } }
 
         #endregion

@@ -24,7 +24,7 @@ namespace StructureMap.Graph
             Type pluginType = FindPluginType(type);
             if (pluginType != null && Constructor.HasConstructors(type))
             {
-                registry.For(pluginType).Add(type);
+                registry.AddType(pluginType, type);
             }
         }
 

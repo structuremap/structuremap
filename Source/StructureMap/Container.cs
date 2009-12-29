@@ -482,6 +482,11 @@ namespace StructureMap
             Configure(x => x.For<PLUGINTYPE>().Use(instance));
         }
 
+        public void Inject<PLUGINTYPE>(string name, PLUGINTYPE value)
+        {
+            Configure(x => x.For<PLUGINTYPE>().Use(value).Named(name));
+        }
+
         /// <summary>
         /// Injects the given object into a Container as the default for the designated
         /// pluginType.  Mostly used for temporarily setting up return values of the Container

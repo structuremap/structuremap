@@ -234,7 +234,10 @@ namespace StructureMap
 
         public void EachInstance(Action<Type, Instance> action)
         {
-            _factories.Values.Each(f => { f.AllInstances.Each(i => action(f.PluginType, i)); });
+            _factories.Values.ToArray().Each(f =>
+            {
+                f.AllInstances.ToArray().Each(i => action(f.PluginType, i));
+            });
         }
 
         public IObjectCache FindCache(Type pluginType)

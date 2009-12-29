@@ -126,6 +126,9 @@ namespace StructureMap
         /// <param name="instance"></param>
         void Inject<PLUGINTYPE>(PLUGINTYPE instance);
 
+        void Inject<PLUGINTYPE>(string name, PLUGINTYPE value);
+
+
         /// <summary>
         /// Injects the given object into a Container as the default for the designated
         /// pluginType.  Mostly used for temporarily setting up return values of the Container

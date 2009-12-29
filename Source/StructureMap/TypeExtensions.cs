@@ -5,7 +5,7 @@ using StructureMap.Pipeline;
 
 namespace StructureMap
 {
-    public static class BasicExtensions
+    internal static class BasicExtensions
     {
         public static string ToName(this ILifecycle lifecycle)
         {
@@ -30,7 +30,7 @@ namespace StructureMap
             }
         }
 
-        public static T As<T>(this object target) where T : class
+        internal static T As<T>(this object target) where T : class
         {
             return target as T;
         }

@@ -7,7 +7,7 @@ using StructureMap.Interceptors;
 
 namespace StructureMap
 {
-    public interface IInitializationExpression
+    public interface IInitializationExpression : IRegistry
     {
         /// <summary>
         /// If true, makes the existence of the StructureMap.config mandatory.
@@ -61,118 +61,6 @@ namespace StructureMap
         /// <param name="registry"></param>
         void AddRegistry(Registry registry);
 
-
-        /// <summary>
-        /// Expression Builder used to define policies for a PluginType including
-        /// Scoping, the Default Instance, and interception.  BuildInstancesOf()
-        /// and ForRequestedType() are synonyms
-        /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
-        /// <returns></returns>
-        CreatePluginFamilyExpression<PLUGINTYPE> BuildInstancesOf<PLUGINTYPE>();
-
-        /// <summary>
-        /// Expression Builder used to define policies for a PluginType including
-        /// Scoping, the Default Instance, and interception.  BuildInstancesOf()
-        /// and ForRequestedType() are synonyms
-        /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
-        /// <returns></returns>
-        CreatePluginFamilyExpression<PLUGINTYPE> ForRequestedType<PLUGINTYPE>();
-
-        /// <summary>
-        /// Expression Builder used to define policies for a PluginType including
-        /// Scoping, the Default Instance, and interception.  This method is specifically
-        /// meant for registering open generic types
-        /// </summary>
-        /// <returns></returns>
-        GenericFamilyExpression ForRequestedType(Type pluginType);
-
-        /// <summary>
-        /// This method is a shortcut for specifying the default constructor and 
-        /// setter arguments for a ConcreteType.  ForConcreteType is shorthand for:
-        /// ForRequestedType[T]().TheDefault.Is.OfConcreteType[T].**************
-        /// when the PluginType and ConcreteType are the same Type
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        Registry.BuildWithExpression<T> ForConcreteType<T>();
-
-        /// <summary>
-        /// Adds an additional, non-Default Instance to the PluginType T.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        IsExpression<T> InstanceOf<T>();
-
-        /// <summary>
-        /// Adds an additional, non-Default Instance to the designated pluginType
-        /// This method is mostly meant for open generic types
-        /// </summary>
-        /// <param name="pluginType"></param>
-        /// <returns></returns>
-        GenericIsExpression InstanceOf(Type pluginType);
-
-        /// <summary>
-        /// Expression Builder to define the defaults for a named Profile.  Each call
-        /// to CreateProfile is additive.
-        /// </summary>
-        /// <param name="profileName"></param>
-        /// <returns></returns>
-        ProfileExpression Profile(string profileName);
-
-        /// <summary>
-        /// An alternative way to use CreateProfile that uses ProfileExpression
-        /// as a Nested Closure.  This usage will result in cleaner code for 
-        /// multiple declarations
-        /// </summary>
-        /// <param name="profileName"></param>
-        /// <param name="action"></param>
-        void Profile(string profileName, Action<ProfileExpression> action);
-
-        /// <summary>
-        /// Registers a new TypeInterceptor object with the Container
-        /// </summary>
-        /// <param name="interceptor"></param>
-        void RegisterInterceptor(TypeInterceptor interceptor);
-
-        /// <summary>
-        /// Allows you to define a TypeInterceptor inline with Lambdas or anonymous delegates
-        /// </summary>
-        /// <param name="match"></param>
-        /// <returns></returns>
-        /// <example>
-        /// IfTypeMatches( ... ).InterceptWith( o => new ObjectWrapper(o) );
-        /// </example>
-        MatchedTypeInterceptor IfTypeMatches(Predicate<Type> match);
-
-        /// <summary>
-        /// Expresses a single "Scanning" action
-        /// </summary>
-        /// <param name="action"></param>
-        /// <example>
-        /// Scan(x => {
-        ///     x.Assembly("Foo.Services");
-        ///     x.WithDefaultConventions();
-        /// });
-        /// </example>
-        void Scan(Action<IAssemblyScanner> action);
-
-        /// <summary>
-        /// Directs StructureMap to always inject dependencies into any and all public Setter properties
-        /// of the type PLUGINTYPE.
-        /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
-        /// <returns></returns>
-        CreatePluginFamilyExpression<PLUGINTYPE> FillAllPropertiesOfType<PLUGINTYPE>();
-
-        /// <summary>
-        /// Creates automatic "policies" for which public setters are considered mandatory
-        /// properties by StructureMap that will be "setter injected" as part of the 
-        /// construction process.
-        /// </summary>
-        /// <param name="action"></param>
-        void SetAllProperties(Action<SetterConvention> action);
     }
 
     public class InitializationExpression : ConfigurationExpression, IInitializationExpression
