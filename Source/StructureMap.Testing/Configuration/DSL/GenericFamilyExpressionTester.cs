@@ -76,7 +76,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var manager =
                 new Container(
-                    r => r.ForRequestedType(typeof (ITarget)).AddConcreteType(typeof (Target1)));
+                    r => r.For(typeof (ITarget)).AddConcreteType(typeof (Target1)));
 
 
             Assert.IsInstanceOfType(typeof (Target1), manager.GetAllInstances<ITarget>()[0]);
@@ -87,9 +87,9 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var manager = new Container(r =>
             {
-                r.ForRequestedType(typeof (ITarget)).AddConcreteType(typeof (Target1), "1");
-                r.ForRequestedType(typeof (ITarget)).AddConcreteType(typeof (Target2), "2");
-                r.ForRequestedType(typeof (ITarget)).AddConcreteType(typeof (Target3), "3");
+                r.For(typeof (ITarget)).AddConcreteType(typeof (Target1), "1");
+                r.For(typeof (ITarget)).AddConcreteType(typeof (Target2), "2");
+                r.For(typeof (ITarget)).AddConcreteType(typeof (Target3), "3");
             });
 
 
@@ -103,7 +103,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var manager =
                 new Container(
-                    r => r.ForRequestedType(typeof (ITarget)).TheDefaultIsConcreteType(typeof (Target3)));
+                    r => r.For(typeof (ITarget)).TheDefaultIsConcreteType(typeof (Target3)));
 
             Assert.IsInstanceOfType(typeof (Target3), manager.GetInstance<ITarget>());
         }
@@ -112,7 +112,7 @@ namespace StructureMap.Testing.Configuration.DSL
         public void Add_default_instance()
         {
             var container =
-                new Container(r => { r.ForRequestedType(typeof (ITarget)).TheDefaultIsConcreteType(typeof (Target2)); });
+                new Container(r => { r.For(typeof (ITarget)).TheDefaultIsConcreteType(typeof (Target2)); });
 
             container.GetInstance<ITarget>().ShouldBeOfType<Target2>();
         }
@@ -131,7 +131,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var container = new Container(r =>
             {
-                r.ForRequestedType(typeof (ITarget)).EnrichWith(raw => new WrappedTarget((ITarget) raw))
+                r.For(typeof (ITarget)).EnrichWith(raw => new WrappedTarget((ITarget) raw))
                     .TheDefaultIsConcreteType(typeof (Target1));
             });
 
@@ -146,7 +146,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
             var container = new Container(r =>
             {
-                r.ForRequestedType(typeof (ITarget)).OnCreation(raw => created = (ITarget) raw)
+                r.For(typeof (ITarget)).OnCreation(raw => created = (ITarget) raw)
                     .TheDefaultIsConcreteType(typeof (Target3));
             });
 
@@ -157,7 +157,7 @@ namespace StructureMap.Testing.Configuration.DSL
         public void Set_caching()
         {
             var registry = new Registry();
-            registry.ForRequestedType(typeof (ITarget)).CacheBy(InstanceScope.ThreadLocal);
+            registry.For(typeof (ITarget)).CacheBy(InstanceScope.ThreadLocal);
             PluginGraph graph = registry.Build();
 
             graph.FindFamily(typeof (ITarget)).Lifecycle.ShouldBeOfType<ThreadLocalStorageLifecycle>();

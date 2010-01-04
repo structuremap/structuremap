@@ -92,7 +92,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var container = new Container(x =>
             {
-                x.ForRequestedType<Processor>().TheDefault.Is
+                x.For<Processor>().TheDefault.Is
                     .OfConcreteType<Processor>()
                     .TheArrayOf<IHandler>().Contains(
                     new SmartInstance<Handler1>(),
@@ -110,7 +110,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var container = new Container(x =>
             {
-                x.ForRequestedType<Processor>().TheDefault.Is
+                x.For<Processor>().TheDefault.Is
                     .OfConcreteType<Processor>()
                     .TheArrayOf<IHandler>().Contains(
                     new SmartInstance<Handler1>(),
@@ -128,7 +128,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var container = new Container(r =>
             {
-                r.ForRequestedType<Processor2>().TheDefault.Is.OfConcreteType<Processor2>()
+                r.For<Processor2>().TheDefault.Is.OfConcreteType<Processor2>()
                     .TheArrayOf<IHandler>("first").Contains(x =>
                     {
                         x.OfConcreteType<Handler1>();
@@ -159,7 +159,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 r.InstanceOf<IHandler>().Is.OfConcreteType<Handler1>().WithName("One");
                 r.InstanceOf<IHandler>().Is.OfConcreteType<Handler2>().WithName("Two");
 
-                r.ForRequestedType<Processor>().TheDefault.Is.OfConcreteType<Processor>()
+                r.For<Processor>().TheDefault.Is.OfConcreteType<Processor>()
                     .WithCtorArg("name").EqualTo("Jeremy")
                     .TheArrayOf<IHandler>().Contains(x =>
                     {
@@ -183,7 +183,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 registry.InstanceOf<IHandler>().Is.OfConcreteType<Handler1>().WithName("One");
                 registry.InstanceOf<IHandler>().Is.OfConcreteType<Handler2>().WithName("Two");
 
-                registry.ForRequestedType<Processor>().TheDefault.Is.OfConcreteType<Processor>()
+                registry.For<Processor>().TheDefault.Is.OfConcreteType<Processor>()
                     .WithCtorArg("name").EqualTo("Jeremy")
                     .TheArrayOf<IHandler>().Contains(x =>
                     {
@@ -203,7 +203,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var container = new Container(x =>
             {
-                x.ForRequestedType<Processor>().TheDefault.Is.OfConcreteType<Processor>()
+                x.For<Processor>().TheDefault.Is.OfConcreteType<Processor>()
                     .WithCtorArg("name").EqualTo("Jeremy")
                     .TheArrayOf<IHandler>().Contains(y =>
                     {

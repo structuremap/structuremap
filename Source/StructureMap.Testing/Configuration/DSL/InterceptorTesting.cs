@@ -18,9 +18,9 @@ namespace StructureMap.Testing.Configuration.DSL
 
             _container = new Container(r =>
             {
-                r.ForRequestedType<ContextRecorder>().TheDefault.IsThis(recorder);
+                r.For<ContextRecorder>().TheDefault.IsThis(recorder);
 
-                r.ForRequestedType<IService>().AddInstances(x =>
+                r.For<IService>().AddInstances(x =>
                 {
                     x.OfConcreteType<ColorService>()
                         .OnCreation(s => _lastService = s)

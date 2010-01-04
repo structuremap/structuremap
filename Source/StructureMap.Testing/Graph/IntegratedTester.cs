@@ -72,7 +72,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void GetParentWithDefaultChildWhenChildIsNotReferenced()
         {
-            container.Configure(x => x.ForRequestedType<Child>().TheDefault.Is.TheInstanceNamed("Marsha"));
+            container.Configure(x => x.For<Child>().TheDefault.Is.TheInstanceNamed("Marsha"));
 
             var parentOfMarsha = (Parent) container.GetInstance(typeof (Parent), "ImplicitChild");
 
@@ -121,7 +121,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void GetParentWithReferenceToDefaultGrandChild()
         {
-            container.Configure(x => x.ForRequestedType<GrandChild>().TheDefault.Is.TheInstanceNamed("Trevor"));
+            container.Configure(x => x.For<GrandChild>().TheDefault.Is.TheInstanceNamed("Trevor"));
             var child = container.GetInstance(typeof (Child), "Jessica") as Child;
             Assert.IsNotNull(child);
             Assert.AreEqual("Jessica", child.Name);

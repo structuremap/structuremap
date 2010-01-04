@@ -19,7 +19,7 @@ namespace StructureMap.Testing.Graph
         {
             _container = new Container(registry =>
             {
-                registry.BuildInstancesOf<Rule>();
+                registry.For<Rule>();
                 registry.Scan(x =>
                 {
                     x.Assembly("StructureMap.Testing.Widget");
@@ -39,7 +39,7 @@ namespace StructureMap.Testing.Graph
             var registry = new Registry();
             registry.Scan(x => x.Assembly("StructureMap.Testing.Widget3"));
 
-            registry.BuildInstancesOf<IGateway>();
+            registry.For<IGateway>();
 
             PluginGraph graph = registry.Build();
             var pipelineGraph = new PipelineGraph(graph);

@@ -146,7 +146,6 @@ namespace StructureMap
             return result;
         }
 
-        [Obsolete("Move all of this into the new EnumerableInstance")]
         public virtual Array CreateInstanceArray(Type pluginType, Instance[] instances)
         {
             if (instances == null)

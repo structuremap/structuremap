@@ -54,7 +54,7 @@ namespace StructureMap.Testing.Configuration.DSL
         public void Can_add_an_instance_for_concrete_class_with_no_constructors()
         {
             var registry = new Registry();
-            registry.ForRequestedType<ConcreteWithNoConstructor>().TheDefault.Is.ConstructedBy(
+            registry.For<ConcreteWithNoConstructor>().TheDefault.Is.ConstructedBy(
                 () => ConcreteWithNoConstructor.Build());
 
             var container = new Container(registry);
@@ -189,7 +189,7 @@ namespace StructureMap.Testing.Configuration.DSL
     {
         public BasicActionRegistry()
         {
-            registerAction(() => ForRequestedType<IGateway>().TheDefaultIsConcreteType<Fake3Gateway>());
+            registerAction(() => For<IGateway>().TheDefaultIsConcreteType<Fake3Gateway>());
         }
     }
 }

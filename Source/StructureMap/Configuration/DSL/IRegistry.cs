@@ -44,25 +44,6 @@ namespace StructureMap.Configuration.DSL
         void IncludeRegistry(Registry registry);
 
         /// <summary>
-        /// Expression Builder used to define policies for a PluginType including
-        /// Scoping, the Default Instance, and interception.  BuildInstancesOf()
-        /// and ForRequestedType() are synonyms
-        /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
-        /// <returns></returns>
-        [Obsolete("Change to For<T>()")]
-        CreatePluginFamilyExpression<PLUGINTYPE> BuildInstancesOf<PLUGINTYPE>();
-
-        /// <summary>
-        /// Expression Builder used to define policies for a PluginType including
-        /// Scoping, the Default Instance, and interception.  This method is specifically
-        /// meant for registering open generic types
-        /// </summary>
-        /// <returns></returns>
-        [Obsolete("Change to For(pluginType)")]
-        GenericFamilyExpression ForRequestedType(Type pluginType);
-
-        /// <summary>
         /// This method is a shortcut for specifying the default constructor and 
         /// setter arguments for a ConcreteType.  ForConcreteType is shorthand for:
         /// ForRequestedType[T]().TheDefault.Is.OfConcreteType[T].**************
@@ -73,17 +54,7 @@ namespace StructureMap.Configuration.DSL
         Registry.BuildWithExpression<T> ForConcreteType<T>();
 
         /// <summary>
-        /// Expression Builder used to define policies for a PluginType including
-        /// Scoping, the Default Instance, and interception.  BuildInstancesOf()
-        /// and ForRequestedType() are synonyms
-        /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
-        /// <returns></returns>
-        [Obsolete("Change to For<T>()")]
-        CreatePluginFamilyExpression<PLUGINTYPE> ForRequestedType<PLUGINTYPE>();
-
-        /// <summary>
-        /// Convenience method.  Equivalent of ForRequestedType[PluginType]().AsSingletons()
+        /// Convenience method.  Equivalent of For[PluginType]().AsSingletons()
         /// </summary>
         /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <returns></returns>
@@ -188,28 +159,28 @@ namespace StructureMap.Configuration.DSL
         void Forward<FROM, TO>() where FROM : class where TO : class;
 
         /// <summary>
-        /// Syntactic Sugar for saying ForRequestedType().TheDefault.IsThis( @object )
+        /// Syntactic Sugar for saying For().TheDefault.IsThis( @object )
         /// </summary>
         /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <param name="object"></param>
         void Register<PLUGINTYPE>(PLUGINTYPE @object);
 
         /// <summary>
-        /// Syntactic Sugar for saying ForRequestedType().TheDefault.IsThis( instance )
+        /// Syntactic Sugar for saying For().TheDefault.IsThis( instance )
         /// </summary>
         /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <param name="instance"></param>
         void Register<PLUGINTYPE>(Instance instance);
 
         /// <summary>
-        /// Shorthand for ForRequestedType<PLUGINTYPE>()
+        /// Shorthand for For<PLUGINTYPE>()
         /// </summary>
         /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <returns></returns>
         CreatePluginFamilyExpression<PLUGINTYPE> For<PLUGINTYPE>();
 
         /// <summary>
-        /// Shorthand for ForRequestedType(pluginType)
+        /// Shorthand for For(pluginType)
         /// </summary>
         /// <param name="pluginType"></param>
         /// <returns></returns>

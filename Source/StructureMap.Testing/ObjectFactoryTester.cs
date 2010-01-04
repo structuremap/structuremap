@@ -27,7 +27,7 @@ namespace StructureMap.Testing
         [Test]
         public void Pass_in_arguments_as_dictionary()
         {
-            ObjectFactory.Initialize(x => { x.ForRequestedType<IView>().TheDefaultIsConcreteType<View>(); });
+            ObjectFactory.Initialize(x => { x.For<IView>().TheDefaultIsConcreteType<View>(); });
 
             var theNode = new Node();
             var theTrade = new Trade();

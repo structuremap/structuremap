@@ -14,15 +14,15 @@ namespace StructureMap.DebuggerVisualizers.Testing
                     s.TheCallingAssembly();
                     s.WithDefaultConventions();
                 });
-                x.ForRequestedType<IDoMore<string>>().TheDefaultIsConcreteType<DoForStrings>();
-                x.ForRequestedType<IDoThat>().AddInstances(i =>
+                x.For<IDoMore<string>>().TheDefaultIsConcreteType<DoForStrings>();
+                x.For<IDoThat>().AddInstances(i =>
                 {
                     i.OfConcreteType<DoThat>().WithName("Red");
                     i.OfConcreteType<DoThat>().WithName("Blue");
                 });
             });
 
-            ObjectFactory.Initialize(i => i.ForRequestedType<IDoThat>().TheDefaultIsConcreteType<DoThat>());
+            ObjectFactory.Initialize(i => i.For<IDoThat>().TheDefaultIsConcreteType<DoThat>());
             Debug.WriteLine(container.WhatDoIHave());
 
             ContainerDetail details = ContainerVisualizerObjectSource.BuildContainerDetails(container);

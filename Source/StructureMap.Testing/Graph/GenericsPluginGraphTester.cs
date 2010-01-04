@@ -86,7 +86,7 @@ namespace StructureMap.Testing.Graph
                 new Container(
                     r =>
                     {
-                        r.ForRequestedType(typeof (IGenericService<>)).TheDefaultIsConcreteType(
+                        r.For(typeof (IGenericService<>)).TheDefaultIsConcreteType(
                             typeof (GenericService<>));
                     });
 

@@ -526,8 +526,7 @@ namespace StructureMap
             _pipelineGraph = new PipelineGraph(pluginGraph);
         }
 
-        [Obsolete("delegate to something cleaner in BuildSession")]
-        private IList<T> getListOfTypeWithSession<T>(BuildSession session)
+        private static IList<T> getListOfTypeWithSession<T>(BuildSession session)
         {
             var list = new List<T>();
             foreach (T instance in session.CreateInstanceArray(typeof (T), null))

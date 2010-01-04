@@ -188,7 +188,7 @@ namespace StructureMap.Testing.Diagnostics
             {
                 x.IgnoreStructureMapConfig = true;
 
-                x.BuildInstancesOf<DoctorTester.ClassThatFails>().TheDefaultIsConcreteType<DoctorTester.ClassThatFails>();
+                x.For<DoctorTester.ClassThatFails>().TheDefaultIsConcreteType<DoctorTester.ClassThatFails>();
             });
         }
 
@@ -231,7 +231,7 @@ namespace StructureMap.Testing.Diagnostics
             ObjectFactory.Initialize(x =>
             {
                 x.IgnoreStructureMapConfig = true;
-                x.BuildInstancesOf<IWidget>().TheDefault.Is.Object(new ColorWidget("Red"));
+                x.For<IWidget>().TheDefault.Is.Object(new ColorWidget("Red"));
             });
         }
 
@@ -248,7 +248,7 @@ namespace StructureMap.Testing.Diagnostics
             {
                 x.IgnoreStructureMapConfig = true;
 
-                x.ForRequestedType<IWidget>().TheDefault.Is
+                x.For<IWidget>().TheDefault.Is
                     .OfConcreteType<DoctorTester.NumberWidget>()
                     .WithCtorArg("age").EqualToAppSetting("age");
             });

@@ -166,12 +166,12 @@
         <p>The Registry class exposes these methods for configuration.&nbsp; Most of these 
             methods are the root of a Fluent Interface expression.</p>
 <!--
-{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green128\blue0;\red43\green145\blue175;\red0\green0\blue255;}??\fs20         \cf3 // Registering Types -- BuildInstancesOf() and ForRequestedType() are Synonyms\par ??\cf0         \cf4 CreatePluginFamilyExpression\cf0 &lt;PLUGINTYPE&gt; BuildInstancesOf&lt;PLUGINTYPE&gt;();\par ??        \cf4 CreatePluginFamilyExpression\cf0 &lt;PLUGINTYPE&gt; ForRequestedType&lt;PLUGINTYPE&gt;();\par ??        \par ??        \cf4 GenericFamilyExpression\cf0  ForRequestedType(\cf4 Type\cf0  pluginType);\par ??\par ??        \cf3 // Shortcut for configuring the default configuration of a concrete type\par ??\cf0         \cf4 Registry\cf0 .\cf4 BuildWithExpression\cf0 &lt;T&gt; ForConcreteType&lt;T&gt;();\par ??\par ??        \cf3 // Adding additional Instances of a PluginType\par ??\cf0         \cf4 IsExpression\cf0 &lt;T&gt; InstanceOf&lt;T&gt;();\par ??        \cf4 GenericIsExpression\cf0  InstanceOf(\cf4 Type\cf0  pluginType);\par ??\par ??        \cf3 // Creating or Adding to a Profile\par ??\cf0         \cf4 ProfileExpression\cf0  CreateProfile(\cf5 string\cf0  profileName);\par ??        \cf5 void\cf0  CreateProfile(\cf5 string\cf0  profileName, \cf4 Action\cf0 &lt;\cf4 ProfileExpression\cf0 &gt; action);\par ??\par ??        \cf3 // Interception\par ??\cf0         \cf5 void\cf0  RegisterInterceptor(\cf4 TypeInterceptor\cf0  interceptor);\par ??        \cf4 MatchedTypeInterceptor\cf0  IfTypeMatches(\cf4 Predicate\cf0 &lt;\cf4 Type\cf0 &gt; match);\par ??\par ??        \cf3 // Type Scanning and Auto Registration\par ??\cf0         \cf5 void\cf0  Scan(\cf4 Action\cf0 &lt;\cf4 IAssemblyScanner\cf0 &gt; action);\par ??\par ??        \cf3 // Controlling Setter Injection Behavior\par ??\cf0         \cf4 CreatePluginFamilyExpression\cf0 &lt;PLUGINTYPE&gt; FillAllPropertiesOfType&lt;PLUGINTYPE&gt;();\par ??        \cf5 void\cf0  SetAllProperties(\cf4 Action\cf0 &lt;\cf4 SetterConvention\cf0 &gt; action);}
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green128\blue0;\red43\green145\blue175;\red0\green0\blue255;}??\fs20         \cf3 // Registering Types -- BuildInstancesOf() and For() are Synonyms\par ??\cf0         \cf4 CreatePluginFamilyExpression\cf0 &lt;PLUGINTYPE&gt; BuildInstancesOf&lt;PLUGINTYPE&gt;();\par ??        \cf4 CreatePluginFamilyExpression\cf0 &lt;PLUGINTYPE&gt; ForRequestedType&lt;PLUGINTYPE&gt;();\par ??        \par ??        \cf4 GenericFamilyExpression\cf0  For(\cf4 Type\cf0  pluginType);\par ??\par ??        \cf3 // Shortcut for configuring the default configuration of a concrete type\par ??\cf0         \cf4 Registry\cf0 .\cf4 BuildWithExpression\cf0 &lt;T&gt; ForConcreteType&lt;T&gt;();\par ??\par ??        \cf3 // Adding additional Instances of a PluginType\par ??\cf0         \cf4 IsExpression\cf0 &lt;T&gt; InstanceOf&lt;T&gt;();\par ??        \cf4 GenericIsExpression\cf0  InstanceOf(\cf4 Type\cf0  pluginType);\par ??\par ??        \cf3 // Creating or Adding to a Profile\par ??\cf0         \cf4 ProfileExpression\cf0  CreateProfile(\cf5 string\cf0  profileName);\par ??        \cf5 void\cf0  CreateProfile(\cf5 string\cf0  profileName, \cf4 Action\cf0 &lt;\cf4 ProfileExpression\cf0 &gt; action);\par ??\par ??        \cf3 // Interception\par ??\cf0         \cf5 void\cf0  RegisterInterceptor(\cf4 TypeInterceptor\cf0  interceptor);\par ??        \cf4 MatchedTypeInterceptor\cf0  IfTypeMatches(\cf4 Predicate\cf0 &lt;\cf4 Type\cf0 &gt; match);\par ??\par ??        \cf3 // Type Scanning and Auto Registration\par ??\cf0         \cf5 void\cf0  Scan(\cf4 Action\cf0 &lt;\cf4 IAssemblyScanner\cf0 &gt; action);\par ??\par ??        \cf3 // Controlling Setter Injection Behavior\par ??\cf0         \cf4 CreatePluginFamilyExpression\cf0 &lt;PLUGINTYPE&gt; FillAllPropertiesOfType&lt;PLUGINTYPE&gt;();\par ??        \cf5 void\cf0  SetAllProperties(\cf4 Action\cf0 &lt;\cf4 SetterConvention\cf0 &gt; action);}
 -->
         <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
             <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">// Registering Types -- 
-                BuildInstancesOf() and ForRequestedType() are Synonyms</span></p>
+                BuildInstancesOf() and For() are Synonyms</span></p>
             <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #2b91af;">
                 CreatePluginFamilyExpression</span>&lt;PLUGINTYPE&gt; BuildInstancesOf&lt;PLUGINTYPE&gt;();</p>
@@ -182,7 +182,7 @@
                 &nbsp;</p>
             <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #2b91af;">GenericFamilyExpression</span> 
-                ForRequestedType(<span style="color: #2b91af;">Type</span> pluginType);</p>
+                For(<span style="color: #2b91af;">Type</span> pluginType);</p>
             <p style="margin: 0px;">
                 &nbsp;</p>
             <p style="margin: 0px;">
@@ -319,7 +319,7 @@
             cannot use the generic ForRequestedType&lt;T&gt;() method.&nbsp; For example, with 
             open generic types, you have to use this syntax:</p>
 <!--
-{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20             \cf3 var\cf0  container = \cf3 new\cf0  \cf4 Container\cf0 (r =&gt;\par ??            \{\par ??                r.ForRequestedType(\cf3 typeof\cf0  (\cf4 IRepository\cf0 &lt;&gt;)).TheDefaultIsConcreteType(\cf3 typeof\cf0  (\cf4 OnlineRepository\cf0 &lt;&gt;));\par ??            \});}
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20             \cf3 var\cf0  container = \cf3 new\cf0  \cf4 Container\cf0 (r =&gt;\par ??            \{\par ??                r.For(\cf3 typeof\cf0  (\cf4 IRepository\cf0 &lt;&gt;)).TheDefaultIsConcreteType(\cf3 typeof\cf0  (\cf4 OnlineRepository\cf0 &lt;&gt;));\par ??            \});}
 -->
         <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
             <p style="margin: 0px;">
@@ -330,7 +330,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
             <p style="margin: 0px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-                r.ForRequestedType(<span style="color: blue;">typeof</span> (<span 
+                r.For(<span style="color: blue;">typeof</span> (<span 
                     style="color: #2b91af;">IRepository</span>&lt;&gt;)).TheDefaultIsConcreteType(<span 
                     style="color: blue;">typeof</span> (<span style="color: #2b91af;">OnlineRepository</span>&lt;&gt;));</p>
             <p style="margin: 0px;">

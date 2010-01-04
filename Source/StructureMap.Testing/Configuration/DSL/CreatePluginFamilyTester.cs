@@ -87,7 +87,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var registry = new Registry();
             CreatePluginFamilyExpression<IGateway> expression =
-                registry.BuildInstancesOf<IGateway>().CacheBy(InstanceScope.ThreadLocal);
+                registry.For<IGateway>().CacheBy(InstanceScope.ThreadLocal);
             Assert.IsNotNull(expression);
 
             PluginGraph pluginGraph = registry.Build();
@@ -102,7 +102,7 @@ namespace StructureMap.Testing.Configuration.DSL
         public void BuildInstancesOfType()
         {
             var registry = new Registry();
-            registry.BuildInstancesOf<IGateway>();
+            registry.For<IGateway>();
             PluginGraph pluginGraph = registry.Build();
 
             Assert.IsTrue(pluginGraph.ContainsFamily(typeof (IGateway)));
@@ -114,7 +114,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var registry = new Registry();
             CreatePluginFamilyExpression<IGateway> expression =
-                registry.BuildInstancesOf<IGateway>();
+                registry.For<IGateway>();
             Assert.IsNotNull(expression);
 
             PluginGraph pluginGraph = registry.Build();
@@ -128,7 +128,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var registry = new Registry();
             CreatePluginFamilyExpression<IGateway> expression =
-                registry.BuildInstancesOf<IGateway>().Singleton();
+                registry.For<IGateway>().Singleton();
             Assert.IsNotNull(expression);
 
             PluginGraph pluginGraph = registry.Build();
@@ -143,7 +143,7 @@ namespace StructureMap.Testing.Configuration.DSL
             {
                 var container = new Container(x =>
                 {
-                    x.ForRequestedType<ClassWithStringInConstructor>().TheDefaultIsConcreteType
+                    x.For<ClassWithStringInConstructor>().TheDefaultIsConcreteType
                         <ClassWithStringInConstructor>();
                 });
                 Assert.Fail("Should have thrown exception 231");
@@ -159,7 +159,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var registry = new Registry();
             // Specify the default implementation for an interface
-            registry.BuildInstancesOf<IGateway>().TheDefaultIsConcreteType<StubbedGateway>();
+            registry.For<IGateway>().TheDefaultIsConcreteType<StubbedGateway>();
 
             PluginGraph pluginGraph = registry.Build();
             Assert.IsTrue(pluginGraph.ContainsFamily(typeof (IGateway)));
@@ -174,7 +174,7 @@ namespace StructureMap.Testing.Configuration.DSL
         public void CanOverrideTheDefaultInstanceAndCreateAnAllNewPluginOnTheFly()
         {
             var registry = new Registry();
-            registry.BuildInstancesOf<IGateway>().TheDefaultIsConcreteType<FakeGateway>();
+            registry.For<IGateway>().TheDefaultIsConcreteType<FakeGateway>();
             PluginGraph pluginGraph = registry.Build();
 
             Assert.IsTrue(pluginGraph.ContainsFamily(typeof (IGateway)));
@@ -190,7 +190,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var container = new Container(r =>
             {
-                r.ForRequestedType<IWidget>().TheDefault.Is.OfConcreteType<ColorWidget>()
+                r.For<IWidget>().TheDefault.Is.OfConcreteType<ColorWidget>()
                     .WithCtorArg("color").EqualTo("Red");
             });
 
@@ -203,7 +203,7 @@ namespace StructureMap.Testing.Configuration.DSL
             var lifecycle = new StubbedLifecycle();
 
             var registry = new Registry();
-            registry.BuildInstancesOf<IGateway>().LifecycleIs(lifecycle);
+            registry.For<IGateway>().LifecycleIs(lifecycle);
 
             PluginGraph pluginGraph = registry.Build();
 
@@ -215,7 +215,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var manager =
                 new Container(
-                    registry => registry.ForRequestedType<IWidget>().TheDefault.Is.ConstructedBy(() => new AWidget()));
+                    registry => registry.For<IWidget>().TheDefault.Is.ConstructedBy(() => new AWidget()));
 
             Assert.IsInstanceOfType(typeof (AWidget), manager.GetInstance<IWidget>());
         }
@@ -227,7 +227,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
             var manager =
                 new Container(
-                    registry => registry.ForRequestedType<IWidget>().TheDefault.Is.Object(aWidget));
+                    registry => registry.For<IWidget>().TheDefault.Is.Object(aWidget));
 
             Assert.AreSame(aWidget, manager.GetInstance<IWidget>());
         }
@@ -240,7 +240,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var manager =
                 new Container(
-                    registry => registry.ForRequestedType<Guid>().TheDefault.Is.ConstructedBy(() => Guid.NewGuid()));
+                    registry => registry.For<Guid>().TheDefault.Is.ConstructedBy(() => Guid.NewGuid()));
 
             Assert.IsInstanceOfType(typeof (Guid), manager.GetInstance<Guid>());
         }
@@ -249,7 +249,7 @@ namespace StructureMap.Testing.Configuration.DSL
         public void TheDefaultInstanceIsConcreteType()
         {
             IContainer manager = new Container(
-                registry => registry.BuildInstancesOf<Rule>().TheDefaultIsConcreteType<ARule>());
+                registry => registry.For<Rule>().TheDefaultIsConcreteType<ARule>());
 
             Assert.IsInstanceOfType(typeof (ARule), manager.GetInstance<Rule>());
         }
@@ -258,7 +258,7 @@ namespace StructureMap.Testing.Configuration.DSL
         public void TheDefaultInstanceIsPickedUpFromTheAttribute()
         {
             var registry = new Registry();
-            registry.BuildInstancesOf<IGateway>();
+            registry.For<IGateway>();
             registry.Scan(x => x.AssemblyContainingType<IGateway>());
 
             PluginGraph pluginGraph = registry.Build();

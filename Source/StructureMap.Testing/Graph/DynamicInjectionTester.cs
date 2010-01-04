@@ -156,7 +156,7 @@ namespace StructureMap.Testing.Graph
             var container = new Container();
             container.Configure(registry =>
             {
-                registry.ForRequestedType(typeof (IService<>))
+                registry.For(typeof (IService<>))
                     .AddConcreteType(typeof (Service1<>))
                     .AddConcreteType(typeof (Service2<>));
             });
@@ -167,9 +167,9 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void AddANewDefaultTypeForAPluginTypeThatAlreadyExists()
         {
-            ObjectFactory.Initialize(x => { x.BuildInstancesOf<ISomething>().TheDefaultIsConcreteType<SomethingTwo>(); });
+            ObjectFactory.Initialize(x => { x.For<ISomething>().TheDefaultIsConcreteType<SomethingTwo>(); });
 
-            ObjectFactory.Configure(x => { x.ForRequestedType<ISomething>().TheDefaultIsConcreteType<SomethingOne>(); });
+            ObjectFactory.Configure(x => { x.For<ISomething>().TheDefaultIsConcreteType<SomethingOne>(); });
 
             ObjectFactory.GetInstance<ISomething>().ShouldBeOfType<SomethingOne>();
         }
@@ -178,9 +178,9 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void AddANewDefaultTypeForAPluginTypeThatAlreadyExists2()
         {
-            ObjectFactory.Initialize(x => { x.BuildInstancesOf<ISomething>(); });
+            ObjectFactory.Initialize(x => { x.For<ISomething>(); });
 
-            ObjectFactory.Configure(x => { x.ForRequestedType<ISomething>().TheDefaultIsConcreteType<SomethingOne>(); });
+            ObjectFactory.Configure(x => { x.For<ISomething>().TheDefaultIsConcreteType<SomethingOne>(); });
 
             Assert.IsInstanceOfType(typeof (SomethingOne), ObjectFactory.GetInstance<ISomething>());
         }
@@ -200,7 +200,7 @@ namespace StructureMap.Testing.Graph
             IContainer container = new Container(new PluginGraph());
             container.Configure(r =>
             {
-                r.ForRequestedType<IService>().AddInstances(x =>
+                r.For<IService>().AddInstances(x =>
                 {
                     x.Object(_red).WithName("Red");
                     x.Object(_blue).WithName("Blue");
@@ -217,7 +217,7 @@ namespace StructureMap.Testing.Graph
         {
             ObjectFactory.Configure(r =>
             {
-                r.ForRequestedType<ISomething>().AddInstances(x =>
+                r.For<ISomething>().AddInstances(x =>
                 {
                     x.OfConcreteType<SomethingOne>().WithName("One");
                     x.OfConcreteType<SomethingTwo>().WithName("Two");
@@ -236,7 +236,7 @@ namespace StructureMap.Testing.Graph
 
             ObjectFactory.Configure(r =>
             {
-                r.ForRequestedType<ISomething>().AddInstances(x =>
+                r.For<ISomething>().AddInstances(x =>
                 {
                     x.Object(one).WithName("One");
                     x.Object(two).WithName("Two");
@@ -265,7 +265,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void AddTypeThroughObjectFactory()
         {
-            ObjectFactory.Initialize(x => { x.ForRequestedType<ISomething>().TheDefaultIsConcreteType<SomethingOne>(); });
+            ObjectFactory.Initialize(x => { x.For<ISomething>().TheDefaultIsConcreteType<SomethingOne>(); });
 
             Assert.IsInstanceOfType(typeof (SomethingOne), ObjectFactory.GetInstance<ISomething>());
         }
@@ -295,7 +295,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void JustAddATypeWithNoNameAndDefault()
         {
-            ObjectFactory.Initialize(x => { x.ForRequestedType<ISomething>().TheDefaultIsConcreteType<SomethingOne>(); });
+            ObjectFactory.Initialize(x => { x.For<ISomething>().TheDefaultIsConcreteType<SomethingOne>(); });
 
             Assert.IsInstanceOfType(typeof (SomethingOne), ObjectFactory.GetInstance<ISomething>());
         }

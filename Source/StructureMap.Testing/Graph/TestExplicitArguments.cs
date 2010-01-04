@@ -112,7 +112,7 @@ namespace StructureMap.Testing.Graph
         {
             var container = new Container(x =>
             {
-                x.ForRequestedType<ColorWithLump>().AddInstances(o =>
+                x.For<ColorWithLump>().AddInstances(o =>
                 {
                     o.OfConcreteType<ColorWithLump>().WithCtorArg("color").EqualTo("red").WithName("red");
                     o.OfConcreteType<ColorWithLump>().WithCtorArg("color").EqualTo("green").WithName("green");
@@ -146,8 +146,8 @@ namespace StructureMap.Testing.Graph
 
             IContainer container = new Container(r =>
             {
-                r.ForRequestedType<IView>().TheDefaultIsConcreteType<TradeView>();
-                r.ForRequestedType<Node>().TheDefaultIsConcreteType<TradeNode>();
+                r.For<IView>().TheDefaultIsConcreteType<TradeView>();
+                r.For<Node>().TheDefaultIsConcreteType<TradeNode>();
             });
 
             var command = container.With(theTrade).GetInstance<Command>();
@@ -168,7 +168,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void Fill_in_argument_by_name()
         {
-            var container = new Container(x => { x.ForRequestedType<IView>().TheDefaultIsConcreteType<View>(); });
+            var container = new Container(x => { x.For<IView>().TheDefaultIsConcreteType<View>(); });
 
             var theNode = new Node();
             var theTrade = new Trade();
@@ -186,7 +186,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void Fill_in_argument_by_type()
         {
-            var container = new Container(x => { x.ForRequestedType<IView>().TheDefaultIsConcreteType<View>(); });
+            var container = new Container(x => { x.For<IView>().TheDefaultIsConcreteType<View>(); });
 
             var theNode = new SpecialNode();
             var theTrade = new Trade();
@@ -204,7 +204,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void Fill_in_argument_by_type_with_ObjectFactory()
         {
-            ObjectFactory.Initialize(x => { x.ForRequestedType<IView>().TheDefaultIsConcreteType<View>(); });
+            ObjectFactory.Initialize(x => { x.For<IView>().TheDefaultIsConcreteType<View>(); });
 
             var theNode = new SpecialNode();
             var theTrade = new Trade();
@@ -244,7 +244,7 @@ namespace StructureMap.Testing.Graph
         {
             ObjectFactory.Initialize(x =>
             {
-                x.ForRequestedType<ExplicitTarget>().TheDefault.Is.OfConcreteType<ExplicitTarget>()
+                x.For<ExplicitTarget>().TheDefault.Is.OfConcreteType<ExplicitTarget>()
                     .CtorDependency<IProvider>().Is(child => child.OfConcreteType<RedProvider>())
                     .WithCtorArg("name").EqualTo("Jeremy");
             });
@@ -284,7 +284,7 @@ namespace StructureMap.Testing.Graph
             // of TradeView
             var container = new Container(r =>
             {
-                r.ForRequestedType<TradeView>()
+                r.For<TradeView>()
                     .TheDefaultIsConcreteType<TradeView>()
                     .AddConcreteType<SecuredTradeView>();
             });
@@ -303,7 +303,7 @@ namespace StructureMap.Testing.Graph
             // of TradeView
             var container = new Container(r =>
             {
-                r.ForRequestedType<TradeView>()
+                r.For<TradeView>()
                     .TheDefaultIsConcreteType<TradeView>()
                     .AddConcreteType<SecuredTradeView>();
             });
@@ -320,7 +320,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void Pass_in_arguments_as_dictionary()
         {
-            var container = new Container(x => { x.ForRequestedType<IView>().TheDefaultIsConcreteType<View>(); });
+            var container = new Container(x => { x.For<IView>().TheDefaultIsConcreteType<View>(); });
 
             var theNode = new Node();
             var theTrade = new Trade();
@@ -342,7 +342,7 @@ namespace StructureMap.Testing.Graph
         {
             IContainer manager =
                 new Container(
-                    registry => registry.ForRequestedType<IProvider>().TheDefaultIsConcreteType<LumpProvider>());
+                    registry => registry.For<IProvider>().TheDefaultIsConcreteType<LumpProvider>());
 
             var args = new ExplicitArguments();
             var theLump = new Lump();
@@ -355,7 +355,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void PassAnArgumentIntoExplicitArgumentsForARequestedInterfaceUsingObjectFactory()
         {
-            ObjectFactory.Initialize(x => { x.ForRequestedType<IProvider>().TheDefaultIsConcreteType<LumpProvider>(); });
+            ObjectFactory.Initialize(x => { x.For<IProvider>().TheDefaultIsConcreteType<LumpProvider>(); });
 
 
             var theLump = new Lump();
@@ -434,7 +434,7 @@ namespace StructureMap.Testing.Graph
         public void use_explicit_type_arguments_with_custom_instance()
         {
             var container =
-                new Container(x => { x.ForRequestedType<ClassWithNoArgs>().TheDefault.IsThis(new SpecialInstance()); });
+                new Container(x => { x.For<ClassWithNoArgs>().TheDefault.IsThis(new SpecialInstance()); });
 
             Debug.WriteLine(container.WhatDoIHave());
 

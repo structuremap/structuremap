@@ -60,10 +60,10 @@ namespace StructureMap.Testing.Pipeline
             container = new Container(x =>
             {
                 // Define the basic open type for IFlattener<>
-                x.ForRequestedType(typeof (IFlattener<>)).TheDefaultIsConcreteType(typeof (PassthroughFlattener<>));
+                x.For(typeof (IFlattener<>)).TheDefaultIsConcreteType(typeof (PassthroughFlattener<>));
 
                 // Explicitly Register a specific closed type for Address
-                x.ForRequestedType<IFlattener<Address>>().TheDefaultIsConcreteType<AddressFlattener>();
+                x.For<IFlattener<Address>>().TheDefaultIsConcreteType<AddressFlattener>();
             });
         }
 
@@ -155,7 +155,7 @@ namespace StructureMap.Testing.Pipeline
         {
             var container =
                 new Container(
-                    x => { x.ForRequestedType<IHandler<Shipment>>().TheDefaultIsConcreteType<ShipmentHandler>(); });
+                    x => { x.For<IHandler<Shipment>>().TheDefaultIsConcreteType<ShipmentHandler>(); });
 
             var shipment = new Shipment();
 
@@ -175,7 +175,7 @@ namespace StructureMap.Testing.Pipeline
         public void fetch_the_object()
         {
             ObjectFactory.Initialize(
-                x => { x.ForRequestedType<IHandler<Shipment>>().TheDefaultIsConcreteType<ShipmentHandler>(); });
+                x => { x.For<IHandler<Shipment>>().TheDefaultIsConcreteType<ShipmentHandler>(); });
 
             var shipment = new Shipment();
             var handler = ObjectFactory.ForObject(shipment).GetClosedTypeOf(typeof (IHandler<>)).As<IHandler>();
@@ -192,8 +192,8 @@ namespace StructureMap.Testing.Pipeline
         {
             var container = new Container(x =>
             {
-                x.ForRequestedType<IHandler<Shipment>>().TheDefaultIsConcreteType<ShipmentHandler>();
-                x.ForRequestedType<IHandler<Shipment>>().AddConcreteType<ShipmentHandler2>();
+                x.For<IHandler<Shipment>>().TheDefaultIsConcreteType<ShipmentHandler>();
+                x.For<IHandler<Shipment>>().AddConcreteType<ShipmentHandler2>();
             });
 
             var shipment = new Shipment();

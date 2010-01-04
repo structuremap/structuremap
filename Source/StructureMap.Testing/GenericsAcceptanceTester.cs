@@ -137,7 +137,7 @@ namespace StructureMap.Testing
         {
             var con = new Container(x =>
             {
-                x.ForRequestedType(typeof (IService<>))
+                x.For(typeof (IService<>))
                     .CacheBy(InstanceScope.Singleton)
                     .TheDefaultIsConcreteType(typeof (Service<>));
             });

@@ -33,7 +33,7 @@ namespace StructureMap.Testing.Pipeline
                 r.ForConcreteType<ClassWithDependency>().Configure
                     .SetterDependency<Rule>().IsTheDefault();
 
-                r.ForRequestedType<Rule>().TheDefault.Is.Object(new ColorRule("Green"));
+                r.For<Rule>().TheDefault.Is.Object(new ColorRule("Green"));
             });
 
 
@@ -64,7 +64,7 @@ namespace StructureMap.Testing.Pipeline
         {
             var container = new Container(x =>
             {
-                x.ForRequestedType<ClassWithDependency>().TheDefault.Is.OfConcreteType<ClassWithDependency>()
+                x.For<ClassWithDependency>().TheDefault.Is.OfConcreteType<ClassWithDependency>()
                     .TheArrayOf<Rule>().Contains(arr => { arr.IsThis(new ColorRule("Red")); });
             });
 

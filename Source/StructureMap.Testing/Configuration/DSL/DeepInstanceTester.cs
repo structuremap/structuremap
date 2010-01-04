@@ -21,12 +21,12 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             assertThingMatches(r =>
             {
-                r.ForRequestedType<IWidget>().TheDefault.Is.OfConcreteType<ColorWidget>()
+                r.For<IWidget>().TheDefault.Is.OfConcreteType<ColorWidget>()
                     .WithProperty("color").EqualTo("yellow");
 
-                r.ForRequestedType<Rule>().TheDefaultIsConcreteType<WidgetRule>();
+                r.For<Rule>().TheDefaultIsConcreteType<WidgetRule>();
 
-                r.ForRequestedType<Thing>().TheDefault.Is.OfConcreteType<Thing>()
+                r.For<Thing>().TheDefault.Is.OfConcreteType<Thing>()
                     .WithCtorArg("average").EqualTo(.333)
                     .WithCtorArg("name").EqualTo("Jeremy")
                     .WithCtorArg("count").EqualTo(4);
@@ -38,11 +38,11 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             assertThingMatches(r =>
             {
-                r.ForRequestedType<IWidget>().TheDefault.IsThis(new ColorWidget("yellow"));
+                r.For<IWidget>().TheDefault.IsThis(new ColorWidget("yellow"));
 
-                r.ForRequestedType<Rule>().TheDefaultIsConcreteType<WidgetRule>();
+                r.For<Rule>().TheDefaultIsConcreteType<WidgetRule>();
 
-                r.ForRequestedType<Thing>().TheDefault.Is.OfConcreteType<Thing>()
+                r.For<Thing>().TheDefault.Is.OfConcreteType<Thing>()
                     .WithProperty("average").EqualTo(.333)
                     .WithProperty("name").EqualTo("Jeremy")
                     .WithProperty("count").EqualTo(4);
@@ -55,11 +55,11 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             assertThingMatches(r =>
             {
-                r.ForRequestedType<IWidget>().TheDefault.Is.PrototypeOf(new ColorWidget("yellow"));
+                r.For<IWidget>().TheDefault.Is.PrototypeOf(new ColorWidget("yellow"));
 
-                r.BuildInstancesOf<Rule>().TheDefaultIsConcreteType<WidgetRule>();
+                r.For<Rule>().TheDefaultIsConcreteType<WidgetRule>();
 
-                r.ForRequestedType<Thing>().TheDefault.Is.OfConcreteType<Thing>()
+                r.For<Thing>().TheDefault.Is.OfConcreteType<Thing>()
                     .WithProperty("average").EqualTo(.333)
                     .WithProperty("name").EqualTo("Jeremy")
                     .WithProperty("count").EqualTo(4);
@@ -82,7 +82,7 @@ namespace StructureMap.Testing.Configuration.DSL
                     .WithName("TheWidgetRule")
                     .CtorDependency<IWidget>().Is(i => i.TheInstanceNamed("Yellow"));
 
-                registry.BuildInstancesOf<Thing>().TheDefault.Is.OfConcreteType<Thing>()
+                registry.For<Thing>().TheDefault.Is.OfConcreteType<Thing>()
                     .WithCtorArg("average").EqualTo(.333)
                     .WithCtorArg("name").EqualTo("Jeremy")
                     .WithCtorArg("count").EqualTo(4)
@@ -96,7 +96,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             assertThingMatches(registry =>
             {
-                registry.ForRequestedType<Thing>().TheDefault.Is.OfConcreteType<Thing>()
+                registry.For<Thing>().TheDefault.Is.OfConcreteType<Thing>()
                     .WithCtorArg("name").EqualTo("Jeremy")
                     .WithCtorArg("count").EqualTo(4)
                     .WithCtorArg("average").EqualTo(.333)
@@ -113,7 +113,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             assertThingMatches(r =>
             {
-                r.ForRequestedType<Thing>().TheDefault.Is.OfConcreteType<Thing>()
+                r.For<Thing>().TheDefault.Is.OfConcreteType<Thing>()
                     .WithProperty("name").EqualTo("Jeremy")
                     .WithProperty("count").EqualTo(4)
                     .WithProperty("average").EqualTo(.333)
