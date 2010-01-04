@@ -17,7 +17,7 @@ namespace StructureMap.Testing.Graph
             });
 
             var concreteClass =
-                (FilledConcreteClass) container.FillDependencies(typeof (FilledConcreteClass));
+                (FilledConcreteClass) container.GetInstance(typeof (FilledConcreteClass));
 
             Assert.IsNotNull(concreteClass.Widget);
             Assert.IsNotNull(concreteClass.Strategy);
@@ -27,7 +27,7 @@ namespace StructureMap.Testing.Graph
         public void TryToFillDependenciesOnAbstractClassThrowsException()
         {
             var manager = new Container();
-            manager.FillDependencies(typeof (AbstractClass));
+            manager.GetInstance(typeof (AbstractClass));
         }
 
 
@@ -35,7 +35,7 @@ namespace StructureMap.Testing.Graph
         public void TryToFillDependenciesOnClassWithPrimitiveArgumentsThrowsException()
         {
             var manager = new Container();
-            manager.FillDependencies(typeof (CannotBeFilledConcreteClass));
+            manager.GetInstance(typeof (CannotBeFilledConcreteClass));
         }
     }
 
