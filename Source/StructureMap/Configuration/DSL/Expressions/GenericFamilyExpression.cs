@@ -156,7 +156,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="scope"></param>
         /// <returns></returns>
-        [Obsolete("Change to LifecycleIs()")]
+		[Obsolete("Change to LifecycleIs() or use Singleton(), HttpContextScoped(), HybridHttpOrThreadLocalScoped().")]
         public GenericFamilyExpression CacheBy(InstanceScope scope)
         {
             return alterAndContinue(family => family.SetScopeTo(scope));
