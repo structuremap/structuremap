@@ -8,6 +8,7 @@
   <property name="project.config" value="release" />
   <property name="archive.dir" value="archive"/>
   <target name="all" depends="compile, unit-test, post-clean"/>
+  <target name="release" depends="compile, post-clean"/>
   <target name="ci" depends="compile, unit-test, post-clean, archive" />
 
   <target name="pre-clean">
