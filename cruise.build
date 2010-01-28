@@ -134,6 +134,7 @@
 
     <copy todir="deploy" file="bin\Rhino.Mocks.dll"/>
     <copy todir="deploy" file="StructureMap.chm"/>
+	<copy todir="deploy" file="LICENSE.TXT"/>
 
     <copy todir="deploy" file="Source\StructureMapDoctor\bin\${project.config}\StructureMapDoctor.exe" />
 
