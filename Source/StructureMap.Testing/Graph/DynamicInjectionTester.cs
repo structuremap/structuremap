@@ -12,16 +12,6 @@ namespace StructureMap.Testing.Graph
     [TestFixture]
     public class DynamicInjectionTester
     {
-        #region Setup/Teardown
-
-        [SetUp]
-        public void SetUp()
-        {
-            ObjectFactory.Initialize(x => { });
-        }
-
-        #endregion
-
         private readonly IService _red = new ColorService("Red");
         private readonly IService _blue = new ColorService("Blue");
         private readonly IService _orange = new ColorService("Orange");
@@ -93,14 +83,7 @@ namespace StructureMap.Testing.Graph
                     x.AddAllTypesOf<IWidget>();
                 }));
 
-            IList<IWidget> instances = container.GetAllInstances<IWidget>();
-            bool found = false;
-            foreach (IWidget widget in instances)
-            {
-                found |= widget.GetType().Equals(typeof (TheWidget));
-            }
-
-            Assert.IsTrue(found);
+            container.GetAllInstances<IWidget>().OfType<TheWidget>().Any().ShouldBeTrue();
         }
 
 
@@ -120,7 +103,7 @@ namespace StructureMap.Testing.Graph
                 );
 
             IList<IService<string>> instances = container.GetAllInstances<IService<string>>();
-            instances.Count.ShouldBeGreaterThan(0);
+            instances.Count.ShouldEqual(3);
         }
 
 
@@ -167,31 +150,32 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void AddANewDefaultTypeForAPluginTypeThatAlreadyExists()
         {
-            ObjectFactory.Initialize(x => { x.For<ISomething>().TheDefaultIsConcreteType<SomethingTwo>(); });
+            var container = new Container(x => { x.For<ISomething>().TheDefaultIsConcreteType<SomethingTwo>(); });
 
-            ObjectFactory.Configure(x => { x.For<ISomething>().TheDefaultIsConcreteType<SomethingOne>(); });
+            container.Configure(x => { x.For<ISomething>().TheDefaultIsConcreteType<SomethingOne>(); });
 
-            ObjectFactory.GetInstance<ISomething>().ShouldBeOfType<SomethingOne>();
+            container.GetInstance<ISomething>().ShouldBeOfType<SomethingOne>();
         }
 
 
         [Test]
         public void AddANewDefaultTypeForAPluginTypeThatAlreadyExists2()
         {
-            ObjectFactory.Initialize(x => { x.For<ISomething>(); });
+            var container = new Container(x => { x.For<ISomething>(); });
 
-            ObjectFactory.Configure(x => { x.For<ISomething>().TheDefaultIsConcreteType<SomethingOne>(); });
+            container.Configure(x => { x.For<ISomething>().TheDefaultIsConcreteType<SomethingOne>(); });
 
-            Assert.IsInstanceOfType(typeof (SomethingOne), ObjectFactory.GetInstance<ISomething>());
+            Assert.IsInstanceOfType(typeof(SomethingOne), container.GetInstance<ISomething>());
         }
 
         [Test]
-        public void AddInstanceFromObjectFactory()
+        public void AddInstanceFromContainer()
         {
             var one = new SomethingOne();
-            ObjectFactory.Inject<ISomething>(one);
+            var container = new Container();
+            container.Inject<ISomething>(one);
 
-            Assert.AreSame(one, ObjectFactory.GetInstance<ISomething>());
+            Assert.AreSame(one, container.GetInstance<ISomething>());
         }
 
         [Test]
@@ -215,7 +199,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void AddNamedInstanceByType()
         {
-            ObjectFactory.Configure(r =>
+            var container = new Container(r =>
             {
                 r.For<ISomething>().AddInstances(x =>
                 {
@@ -224,8 +208,8 @@ namespace StructureMap.Testing.Graph
                 });
             });
 
-            Assert.IsInstanceOfType(typeof (SomethingOne), ObjectFactory.GetNamedInstance<ISomething>("One"));
-            Assert.IsInstanceOfType(typeof (SomethingTwo), ObjectFactory.GetNamedInstance<ISomething>("Two"));
+            Assert.IsInstanceOfType(typeof(SomethingOne), container.GetInstance<ISomething>("One"));
+            Assert.IsInstanceOfType(typeof(SomethingTwo), container.GetInstance<ISomething>("Two"));
         }
 
         [Test]
@@ -234,7 +218,7 @@ namespace StructureMap.Testing.Graph
             var one = new SomethingOne();
             var two = new SomethingOne();
 
-            ObjectFactory.Configure(r =>
+            var container = new Container(r =>
             {
                 r.For<ISomething>().AddInstances(x =>
                 {
@@ -243,8 +227,8 @@ namespace StructureMap.Testing.Graph
                 });
             });
 
-            Assert.AreSame(one, ObjectFactory.GetNamedInstance<ISomething>("One"));
-            Assert.AreSame(two, ObjectFactory.GetNamedInstance<ISomething>("Two"));
+            Assert.AreSame(one, container.GetInstance<ISomething>("One"));
+            Assert.AreSame(two, container.GetInstance<ISomething>("Two"));
         }
 
 
@@ -263,11 +247,11 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
-        public void AddTypeThroughObjectFactory()
+        public void AddTypeThroughContainer()
         {
-            ObjectFactory.Initialize(x => { x.For<ISomething>().TheDefaultIsConcreteType<SomethingOne>(); });
+            var container = new Container(x => { x.For<ISomething>().TheDefaultIsConcreteType<SomethingOne>(); });
 
-            Assert.IsInstanceOfType(typeof (SomethingOne), ObjectFactory.GetInstance<ISomething>());
+            Assert.IsInstanceOfType(typeof(SomethingOne), container.GetInstance<ISomething>());
         }
 
         [Test]
@@ -284,10 +268,10 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void InjectType()
         {
-            ObjectFactory.Configure(
+            var container = new Container(
                 r => r.InstanceOf<ISomething>().Is.OfConcreteType<SomethingOne>());
 
-            IList<ISomething> list = ObjectFactory.GetAllInstances<ISomething>();
+            IList<ISomething> list = container.GetAllInstances<ISomething>();
 
             Assert.IsInstanceOfType(typeof (SomethingOne), list[0]);
         }
@@ -295,9 +279,9 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void JustAddATypeWithNoNameAndDefault()
         {
-            ObjectFactory.Initialize(x => { x.For<ISomething>().TheDefaultIsConcreteType<SomethingOne>(); });
+            var container = new Container(x => { x.For<ISomething>().TheDefaultIsConcreteType<SomethingOne>(); });
 
-            Assert.IsInstanceOfType(typeof (SomethingOne), ObjectFactory.GetInstance<ISomething>());
+            Assert.IsInstanceOfType(typeof(SomethingOne), container.GetInstance<ISomething>());
         }
 
         [Test]
@@ -323,10 +307,11 @@ namespace StructureMap.Testing.Graph
         {
             var one = new SomethingOne();
             var two = new SomethingOne();
-            ObjectFactory.Inject<ISomething>(one);
-            ObjectFactory.Inject<ISomething>(two);
+            var container = new Container();
+            container.Inject<ISomething>(one);
+            container.Inject<ISomething>(two);
 
-            Assert.AreSame(two, ObjectFactory.GetInstance<ISomething>());
+            Assert.AreSame(two, container.GetInstance<ISomething>());
         }
     }
 
