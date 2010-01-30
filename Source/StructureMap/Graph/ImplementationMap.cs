@@ -7,11 +7,11 @@ using StructureMap.Util;
 
 namespace StructureMap.Graph
 {
-    public class ImplementationMap : IRegistrationConvention
+    public class ImplementationMap : ConfigurableRegistrationConvention
     {
         private readonly Cache<Type, List<Type>> _types = new Cache<Type, List<Type>>(t => new List<Type>());
 
-        public void Process(Type type, Registry registry)
+        public override void Process(Type type, Registry registry)
         {
             RegisterType(type);
         }
@@ -30,13 +30,22 @@ namespace StructureMap.Graph
 
         public void RegisterSingleImplementations(PluginGraph graph)
         {
+            var singleImplementationRegistry = new SingleImplementationRegistry();
             _types.Each((pluginType, types) =>
             {
                 if (types.Count == 1)
                 {
-                    graph.AddType(pluginType, types[0]);
+                    singleImplementationRegistry.AddType(pluginType, types[0]);
+                    ConfigureFamily(singleImplementationRegistry.For(pluginType));
                 }
             });
+            singleImplementationRegistry.ConfigurePluginGraph(graph);
         }
+    }
+
+    internal class SingleImplementationRegistry : Registry
+    {
+        // This type created just to make the output clearer in WhatDoIHave()
+        // might consider adding a Description property to Registry instead
     }
 }

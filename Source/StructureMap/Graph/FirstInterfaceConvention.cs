@@ -6,9 +6,9 @@ using StructureMap.TypeRules;
 
 namespace StructureMap.Graph
 {
-    public class FirstInterfaceConvention : IRegistrationConvention
+    public class FirstInterfaceConvention : ConfigurableRegistrationConvention
     {
-        public void Process(Type type, Registry registry)
+        public override void Process(Type type, Registry registry)
         {
             if (!type.IsConcrete() || !type.CanBeCreated()) return;
 
@@ -18,6 +18,7 @@ namespace StructureMap.Graph
             {
                 Debug.WriteLine("Plugging {0} into {1}".ToFormat(type.Name, interfaceType.Name));
                 registry.AddType(interfaceType, type);
+                ConfigureFamily(registry.For(interfaceType));
             }
         }
     }

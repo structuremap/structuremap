@@ -336,6 +336,7 @@
     <Compile Include="CloseGenericTypeExpression.cs" />
     <Compile Include="ConfigurationExpression.cs" />
     <Compile Include="Configuration\DictionaryReader.cs" />
+    <Compile Include="AssemblyScannerExtensions.cs" />
     <Compile Include="Configuration\DSL\Expressions\InstanceExpression.cs" />
     <Compile Include="Configuration\DSL\IRegistry.cs" />
     <Compile Include="Configuration\DSL\SetterConvention.cs" />
@@ -358,12 +359,14 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="Graph\CompositeFilter.cs" />
     <Compile Include="Graph\CompositePredicate.cs" />
+    <Compile Include="Configuration\DSL\Expressions\ConfigureConventionExpression.cs" />
     <Compile Include="Graph\FamilyAttributeScanner.cs" />
     <Compile Include="Graph\FindAllTypesFilter.cs" />
     <Compile Include="Graph\FindRegistriesScanner.cs" />
     <Compile Include="Graph\FirstInterfaceConvention.cs" />
     <Compile Include="Graph\IAssemblyScanner.cs" />
     <Compile Include="Graph\ImplementationMap.cs" />
+    <Compile Include="Graph\IRegistrationConvention.cs" />
     <Compile Include="Graph\ITypeScanner.cs" />
     <Compile Include="Graph\PluggableAttributeScanner.cs" />
     <Compile Include="Graph\PluginCache.cs" />

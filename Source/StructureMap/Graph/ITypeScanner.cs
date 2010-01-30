@@ -10,14 +10,9 @@ namespace StructureMap.Graph
         void Process(Type type, PluginGraph graph);
     }
 
-    public interface IRegistrationConvention
+    public class DefaultConventionScanner : ConfigurableRegistrationConvention
     {
-        void Process(Type type, Registry registry);
-    }
-
-    public class DefaultConventionScanner : IRegistrationConvention
-    {
-        public void Process(Type type, Registry registry)
+        public override void Process(Type type, Registry registry)
         {
             if (!type.IsConcrete()) return;
 
@@ -25,6 +20,7 @@ namespace StructureMap.Graph
             if (pluginType != null && Constructor.HasConstructors(type))
             {
                 registry.AddType(pluginType, type);
+                ConfigureFamily(registry.For(pluginType));
             }
         }
 
@@ -36,7 +32,7 @@ namespace StructureMap.Graph
         }
     }
 
-    public class GenericConnectionScanner : IRegistrationConvention
+    public class GenericConnectionScanner : ConfigurableRegistrationConvention
     {
         private readonly Type _openType;
 
@@ -50,12 +46,14 @@ namespace StructureMap.Graph
             }
         }
 
-        public void Process(Type type, Registry registry)
+        public override void Process(Type type, Registry registry)
         {
             Type interfaceType = type.FindInterfaceThatCloses(_openType);
             if (interfaceType != null)
             {
-                registry.For(interfaceType).Add(type);
+                var family = registry.For(interfaceType);
+                ConfigureFamily(family);
+                family.Add(type);
             }
         }
     }

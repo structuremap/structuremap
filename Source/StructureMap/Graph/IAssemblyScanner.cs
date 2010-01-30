@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using StructureMap.Configuration.DSL.Expressions;
 
 namespace StructureMap.Graph
 {
@@ -74,20 +75,6 @@ namespace StructureMap.Graph
         /// </summary>
         /// <param name="scanner"></param>
         void With(ITypeScanner scanner);
-
-        /// <summary>
-        /// Adds the DefaultConventionScanner to the scanning operations.  I.e., a concrete
-        /// class named "Something" that implements "ISomething" will be automatically 
-        /// added to PluginType "ISomething"
-        /// </summary>
-        void WithDefaultConventions();
-
-        /// <summary>
-        /// Automatically registers all concrete types without primitive arguments
-        /// against its first interface, if any
-        /// </summary>
-        void RegisterConcreteTypesAgainstTheFirstInterface();
-
 
         /// <summary>
         /// Creates and adds a new ITypeScanner of type T to this scanning operation
@@ -178,22 +165,6 @@ namespace StructureMap.Graph
         // ... Other methods
 
         /// <summary>
-        /// Scans for PluginType's and Concrete Types that close the given open generic type
-        /// </summary>
-        /// <example>
-        /// 
-        /// </example>
-        /// <param name="openGenericType"></param>
-        void ConnectImplementationsToTypesClosing(Type openGenericType);
-
-        /// <summary>
-        /// Directs the scanning to automatically register any type that is the single
-        /// implementation of an interface against that interface.
-        /// The filters apply
-        /// </summary>
-        void SingleImplementationsOfInterface();
-
-        /// <summary>
         /// Adds a registration convention to be applied to all the types in this
         /// logical "scan" operation
         /// </summary>
@@ -205,5 +176,7 @@ namespace StructureMap.Graph
         /// logical "scan" operation
         /// </summary>
         void With(IRegistrationConvention convention);
+
+        void ModifyGraphAfterScan(Action<PluginGraph> modifyGraph);
     }
 }

@@ -258,6 +258,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Graph\FirstInterfaceConventionTester.cs" />
+    <Compile Include="Graph\GenericConnectionScannerTester.cs" />
     <Compile Include="Graph\SingleImplementationScannerTester.cs" />
     <Compile Include="Graph\TestExplicitArguments.cs" />
     <Compile Include="Graph\FillDependenciesTester.cs">

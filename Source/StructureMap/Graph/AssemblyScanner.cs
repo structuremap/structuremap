@@ -42,7 +42,6 @@ namespace StructureMap.Graph
         private readonly List<Assembly> _assemblies = new List<Assembly>();
         private readonly List<IRegistrationConvention> _conventions = new List<IRegistrationConvention>();
         private readonly CompositeFilter<Type> _filter = new CompositeFilter<Type>();
-        private readonly ImplementationMap _implementationMap = new ImplementationMap();
 
         private readonly List<Action<PluginGraph>> _postScanningActions = new List<Action<PluginGraph>>();
         private readonly List<ITypeScanner> _scanners = new List<ITypeScanner>();
@@ -73,16 +72,6 @@ namespace StructureMap.Graph
         public void With(ITypeScanner scanner)
         {
             _scanners.Fill(scanner);
-        }
-
-        public void WithDefaultConventions()
-        {
-            Convention<DefaultConventionScanner>();
-        }
-
-        public void RegisterConcreteTypesAgainstTheFirstInterface()
-        {
-            Convention<FirstInterfaceConvention>();
         }
 
         [Obsolete("Replace ITypeScanner with IRegistrationConvention")]
@@ -186,16 +175,9 @@ namespace StructureMap.Graph
             Exclude(type => type == typeof (T));
         }
 
-        public void ConnectImplementationsToTypesClosing(Type openGenericType)
+        public void ModifyGraphAfterScan(Action<PluginGraph> modifyGraph)
         {
-            With(new GenericConnectionScanner(openGenericType));
-        }
-
-
-        public void SingleImplementationsOfInterface()
-        {
-            _conventions.Fill(_implementationMap);
-            _postScanningActions.Add(graph => _implementationMap.RegisterSingleImplementations(graph));
+            _postScanningActions.Add(modifyGraph);
         }
 
         public void AssembliesFromApplicationBaseDirectory()
