@@ -47,6 +47,14 @@ namespace StructureMap.Testing.Graph
         public class Service3<T> : IService<T>
         {
         }
+        
+        public interface IOtherService<T>
+        {
+        }
+
+        public class Service4 : IOtherService<string>
+        {
+        }
 
         [PluginFamily("Default")]
         public interface IThingy
@@ -148,6 +156,22 @@ namespace StructureMap.Testing.Graph
             }
 
             Assert.IsTrue(found);
+        }
+
+        [Test]
+        public void Add_an_assembly_on_the_fly_and_pick_up_plugins4()
+        {
+            var container = new Container();
+            container.Configure(
+                registry => registry.Scan(
+                                x =>
+                                    {
+                                        x.AssemblyContainingType(typeof (IOtherService<>));
+                                        x.AddAllTypesOf(typeof (IOtherService<>));
+                                    }));
+
+            var instances = container.GetAllInstances<IOtherService<string>>();
+            instances.Any(s=> s is Service4).ShouldBeTrue();
         }
 
         [Test]
