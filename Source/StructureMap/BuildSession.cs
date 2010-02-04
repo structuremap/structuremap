@@ -5,6 +5,7 @@ using StructureMap.Graph;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
 using StructureMap.Util;
+using StructureMap.Construction;
 
 namespace StructureMap
 {
@@ -59,6 +60,17 @@ namespace StructureMap
                 if (_buildStack.Parent != null) return _buildStack.Parent.ConcreteType;
                 return null;
             }
+        }
+
+        public void BuildUp(object target)
+        {
+            Type pluggedType = target.GetType();
+            IConfiguredInstance instance = _pipelineGraph.GetDefault(pluggedType) as IConfiguredInstance
+                ?? new ConfiguredInstance(pluggedType);
+
+            IInstanceBuilder builder = PluginCache.FindBuilder(pluggedType);
+            var arguments = new Arguments(instance, this);
+            builder.BuildUp(arguments, target);
         }
 
         public T GetInstance<T>()

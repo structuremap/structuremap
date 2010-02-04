@@ -281,6 +281,18 @@ namespace StructureMap.Testing.Graph
             family.SetScopeTo(InstanceScope.ThreadLocal);
             Assert.IsInstanceOfType(typeof (ThreadLocalStorageLifecycle), family.Lifecycle);
         }
+
+        [Test]
+        public void Lifecycle_is_imported_from_the_source_when_merging_PluginFamilies()
+        {
+            var source = new PluginFamily(typeof(GenericType<>));
+            source.SetScopeTo(InstanceScope.Unique);
+            var importInto = new PluginFamily(typeof(GenericType<>));
+
+            importInto.ImportFrom(source);
+
+            importInto.Lifecycle.ShouldBeOfType(source.Lifecycle.GetType());
+        }
     }
 
 
@@ -313,4 +325,6 @@ namespace StructureMap.Testing.Graph
     public interface IDevice
     {
     }
+
+    public class GenericType<T> { }
 }

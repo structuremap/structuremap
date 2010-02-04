@@ -242,6 +242,11 @@ namespace StructureMap.Graph
 
         public void ImportFrom(PluginFamily source)
         {
+            if (source.Lifecycle != null)
+            {
+                SetScopeTo(source.Lifecycle);
+            }
+            
             source.Instances.Each(instance => _instances.Fill(instance.Name, instance));
 
             source._pluggedTypes.Each((key, plugin) => _pluggedTypes.Fill(key, plugin));

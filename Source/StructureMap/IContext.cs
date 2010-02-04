@@ -27,6 +27,14 @@ namespace StructureMap
         string RequestedName { get; }
 
         /// <summary>
+        /// The "BuildUp" method takes in an already constructed object
+        /// and uses Setter Injection to push in configured dependencies
+        /// of that object
+        /// </summary>
+        /// <param name="target"></param>
+        void BuildUp(object target);
+
+        /// <summary>
         /// Get the object of type T that is valid for this build session.
         /// </summary>
         /// <typeparam name="T"></typeparam>
