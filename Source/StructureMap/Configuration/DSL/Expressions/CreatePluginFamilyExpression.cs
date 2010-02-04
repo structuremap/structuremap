@@ -59,6 +59,48 @@ namespace StructureMap.Configuration.DSL.Expressions
         }
 
 
+        /// <summary>
+        /// Conditional binding of instances
+        /// </summary>
+        /// <param name="configuration"></param>
+        /// <returns></returns>
+        public ConditionalInstance<PLUGINTYPE> ConditionallyUse(
+            Action<ConditionalInstance<PLUGINTYPE>.ConditionalInstanceExpression> configuration)
+        {
+            var instance = new ConditionalInstance<PLUGINTYPE>(configuration);
+            Use(instance);
+            
+            return instance;
+        }
+
+        /// <summary>
+        /// Access to all of the uncommon Instance types
+        /// </summary>
+        /// <param name="configure"></param>
+        /// <returns></returns>
+        public CreatePluginFamilyExpression<PLUGINTYPE> Use(Action<IInstanceExpression<PLUGINTYPE>> configure)
+        {
+            var expression = new InstanceExpression<PLUGINTYPE>(i => Use(i));
+            configure(expression);
+
+            return this;
+        }
+
+
+        /// <summary>
+        /// Access to all of the uncommon Instance types
+        /// </summary>
+        /// <param name="configure"></param>
+        /// <returns></returns>
+        public CreatePluginFamilyExpression<PLUGINTYPE> Add(Action<IInstanceExpression<PLUGINTYPE>> configure)
+        {
+            var expression = new InstanceExpression<PLUGINTYPE>(i => Add(i));
+            configure(expression);
+
+            return this;
+        }
+
+
         private CreatePluginFamilyExpression<PLUGINTYPE> alterAndContinue(Action<PluginFamily> action)
         {
             _alterations.Add(action);

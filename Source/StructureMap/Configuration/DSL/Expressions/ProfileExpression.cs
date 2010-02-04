@@ -110,6 +110,7 @@ namespace StructureMap.Configuration.DSL.Expressions
                 _registry.addExpression(graph => graph.SetDefault(_parent._profileName, _pluginType, instance));
             }
 
+            
 
             /// <summary>
             /// Use the named Instance as the Profile Instance for this PluginType
@@ -246,6 +247,17 @@ namespace StructureMap.Configuration.DSL.Expressions
 
                 return instance;
             }
+
+            /// <summary>
+            /// Access to the uncommon types of Instance
+            /// </summary>
+            /// <param name="configure"></param>
+            public void Use(Action<IInstanceExpression<T>> configure)
+            {
+                var expression = new InstanceExpression<T>(i => Use(i));
+                configure(expression);
+            }
+
 
             /// <summary>
             /// For this Profile, use the Concrete Type

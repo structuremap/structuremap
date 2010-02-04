@@ -55,18 +55,6 @@ namespace StructureMap
 
         public void Dispose()
         {
-            //if (_factories.ContainsKey(typeof (IContainer)))
-            //{
-            //    foreach (Instance instance in _factories[typeof (IContainer)].AllInstances)
-            //    {
-            //        var disposable = instance as IDisposable;
-            //        if (disposable != null)
-            //        {
-            //            disposable.Dispose();
-            //        }
-            //    }
-            //}
-
             foreach (var factory in _factories)
             {
                 factory.Value.Dispose();
