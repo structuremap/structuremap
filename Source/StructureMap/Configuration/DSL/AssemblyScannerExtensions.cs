@@ -2,7 +2,7 @@ using System;
 using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.Graph;
 
-namespace StructureMap
+namespace StructureMap.Configuration.DSL
 {
     /// <summary>
     /// Extend the assembly scanning DSL to support the built-in registration conventions

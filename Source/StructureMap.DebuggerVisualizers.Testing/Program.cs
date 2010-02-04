@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Windows.Forms;
+using StructureMap.Configuration.DSL;
 
 namespace StructureMap.DebuggerVisualizers.Testing
 {

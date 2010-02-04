@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using NUnit.Framework;
+using StructureMap.Configuration.DSL;
 using StructureMap.TypeRules;
 
 namespace StructureMap.Testing.Bugs
