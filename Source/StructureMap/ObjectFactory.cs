@@ -45,6 +45,14 @@ namespace StructureMap
             }
         }
 
+        /// <summary>
+        /// Remove and dispose all objects scoped by HttpContext.  Call this method at the *end* of an Http request to clean up resources
+        /// </summary>
+        public static void ReleaseAndDisposeAllHttpScopedObjects()
+        {
+            HttpContextLifecycle.DisposeAndClearAll();
+        }
+
         public static void Initialize(Action<IInitializationExpression> action)
         {
             lock (typeof (ObjectFactory))
