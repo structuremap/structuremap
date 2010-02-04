@@ -82,11 +82,11 @@ namespace StructureMap.Diagnostics
 
             if (pluginType.Lifecycle != null)
             {
-                _writer.AddContent("Scoped as:  " + pluginType.Lifecycle.GetType().Name);
+                _writer.AddContent("Scoped as:  " + pluginType.Lifecycle);
             }
             else
             {
-                _writer.AddContent("Scoped as:  PerRequest");
+                _writer.AddContent("Scoped as:  PerRequest/Transient");
             }
 
             foreach (InstanceRef instance in pluginType.Instances)

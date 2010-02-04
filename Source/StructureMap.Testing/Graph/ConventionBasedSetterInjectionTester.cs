@@ -40,6 +40,9 @@ namespace StructureMap.Testing.Graph
             plugin.Setters.IsMandatory("LastName").ShouldBeTrue();
             plugin.Setters.IsMandatory("Gateway").ShouldBeFalse();
             plugin.Setters.IsMandatory("Service").ShouldBeFalse();
+
+
+            
         }
 
 
