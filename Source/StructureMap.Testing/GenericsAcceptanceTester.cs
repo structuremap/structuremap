@@ -157,6 +157,13 @@ namespace StructureMap.Testing
         }
 
         [Test]
+        public void CanPlugConcreteNonGenericClassIntoGenericInterface()
+        {
+            typeof(NotSoGenericService).CanBeCastTo(typeof(IGenericService<>))
+                .ShouldBeTrue();
+        }
+
+        [Test]
         public void Define_profile_with_generics_and_concrete_type()
         {
             var container = new Container(registry =>
@@ -305,5 +312,10 @@ namespace StructureMap.Testing
         {
             return typeof (T);
         }
+    }
+
+    public class NotSoGenericService : IGenericService<string>
+    {
+        public void DoSomething(string thing) { }
     }
 }

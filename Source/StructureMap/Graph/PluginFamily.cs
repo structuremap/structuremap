@@ -288,8 +288,14 @@ namespace StructureMap.Graph
                 return clone;
             }).Where(x => x != null).Each(templatedFamily.AddInstance);
 
+            //Are there instances that close the templatedtype straight away?
+            _instances.GetAll()
+                .Where(x => x.ConcreteType.CanBeCastTo(templatedType))
+                .Each(templatedFamily.AddInstance);
+
             // Need to attach the new PluginFamily to the old PluginGraph
             Parent.PluginFamilies.Add(templatedFamily);
+
 
             return templatedFamily;
         }

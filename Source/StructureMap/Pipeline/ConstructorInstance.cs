@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using StructureMap.Construction;
 using StructureMap.Graph;
@@ -198,7 +199,7 @@ namespace StructureMap.Pipeline
                     if (value.GetType() == dependencyType) return new ObjectInstance(value);
 
                     TypeConverter converter = TypeDescriptor.GetConverter(dependencyType);
-                    object convertedValue = converter.ConvertFrom(value);
+                    object convertedValue = converter.ConvertFrom(null, CultureInfo.InvariantCulture, value);
                     return new ObjectInstance(convertedValue);
                 }
                 catch (Exception e)
