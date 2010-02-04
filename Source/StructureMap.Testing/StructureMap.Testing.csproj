@@ -364,6 +364,7 @@
     <Compile Include="Pipeline\GenericsHelperExpressionTester.cs" />
     <Compile Include="Pipeline\HybridBuildLifecycleTester.cs" />
     <Compile Include="Pipeline\InstanceTester.cs" />
+    <Compile Include="Pipeline\LazyFuncTester.cs" />
     <Compile Include="Pipeline\MainObjectCacheTester.cs" />
     <Compile Include="Pipeline\ObjectInstanceTester.cs" />
     <Compile Include="Pipeline\MissingInstanceTester.cs" />

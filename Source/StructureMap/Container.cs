@@ -558,9 +558,17 @@ namespace StructureMap
             _pluginGraph.FindFamily(typeof (IContainer)).AddInstance(thisInstance);
             _pluginGraph.ProfileManager.SetDefault(typeof (IContainer), thisInstance);
 
+            var funcInstance = new FactoryTemplate(typeof (LazyInstance<>));
+            _pluginGraph.FindFamily(typeof(Func<>)).AddInstance(funcInstance);
+            _pluginGraph.ProfileManager.SetDefault(typeof(Func<>), funcInstance);
+
+
+
             pluginGraph.Log.AssertFailures();
 
             _pipelineGraph = new PipelineGraph(pluginGraph);
+
+
         }
 
         [Obsolete("delegate to something cleaner in BuildSession")]

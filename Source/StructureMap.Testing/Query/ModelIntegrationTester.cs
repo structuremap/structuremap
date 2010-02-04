@@ -46,8 +46,8 @@ namespace StructureMap.Testing.Query
         [Test]
         public void can_iterate_through_families_including_both_generics_and_normal()
         {
-            // +1 for "IContainer" itself
-            container.Model.PluginTypes.Count().ShouldEqual(8);
+            // +1 for "IContainer" itself + Func
+            container.Model.PluginTypes.Count().ShouldEqual(9);
 
             container.Model.PluginTypes.Each(x => Debug.WriteLine(x.PluginType.FullName));
         }
@@ -86,7 +86,7 @@ namespace StructureMap.Testing.Query
         [Test]
         public void get_all_instances_from_the_top()
         {
-            container.Model.AllInstances.Count().ShouldEqual(11);
+            container.Model.AllInstances.Count().ShouldEqual(12);
         }
 
         [Test]

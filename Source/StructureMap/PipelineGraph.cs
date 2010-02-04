@@ -37,6 +37,8 @@ namespace StructureMap
                 var factory = new InstanceFactory(family);
                 _factories.Add(family.PluginType, factory);
             });
+
+            
         }
 
         private PipelineGraph(ProfileManager profileManager, GenericsPluginGraph genericsGraph, GraphLog log)
