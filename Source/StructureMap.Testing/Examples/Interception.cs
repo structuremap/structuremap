@@ -49,7 +49,7 @@ namespace StructureMap.Testing.Examples
         {
             // Perform an Action<T> upon the object of type T 
             // just created before it is returned to the caller
-            For<ClassThatNeedsSomeBootstrapping>().TheDefault.Is
+            ForRequestedType<ClassThatNeedsSomeBootstrapping>().TheDefault.Is
                 .OfConcreteType<ClassThatNeedsSomeBootstrapping>()
                 .OnCreation(x => x.Start());
 
@@ -57,7 +57,7 @@ namespace StructureMap.Testing.Examples
 
             // You can also register an Action<IContext, T> to get access
             // to all the services and capabilities of the BuildSession
-            For<ClassThatNeedsSomeBootstrapping>().TheDefault.Is
+            ForRequestedType<ClassThatNeedsSomeBootstrapping>().TheDefault.Is
                 .OfConcreteType<ClassThatNeedsSomeBootstrapping>()
                 .OnCreation((context, x) =>
                 {
@@ -66,11 +66,11 @@ namespace StructureMap.Testing.Examples
                 });
 
 
-            For<IConnectionListener>().TheDefault.Is
+            ForRequestedType<IConnectionListener>().TheDefault.Is
                 .OfConcreteType<ClassThatNeedsSomeBootstrapping>()
                 .EnrichWith(x => new LoggingDecorator(x));
 
-            For<IConnectionListener>().TheDefault.Is
+            ForRequestedType<IConnectionListener>().TheDefault.Is
                 .OfConcreteType<ClassThatNeedsSomeBootstrapping>()
                 .EnrichWith((context, x) =>
                 {
@@ -81,13 +81,13 @@ namespace StructureMap.Testing.Examples
                 });
 
 
-            For<IConnectionListener>().TheDefault.Is
+            ForRequestedType<IConnectionListener>().TheDefault.Is
                 .OfConcreteType<ClassThatNeedsSomeBootstrapping>()
                 .InterceptWith(new CustomInterceptor());
 
 
             // Place the Interception at the PluginType level
-            For<IConnectionListener>()
+            ForRequestedType<IConnectionListener>()
                 .OnCreation(x => x.StartConnection()) // OnCreation
                 .EnrichWith(x => new LoggingDecorator(x)) // Enrich
                 .InterceptWith(new CustomInterceptor()) // Custom Interceptor

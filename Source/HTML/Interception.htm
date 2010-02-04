@@ -329,7 +329,7 @@
 
 	<h2>Apply Interception to all Instances of a PluginType</h2>
         <p>The same OnCreation(), EnrichWith(), and InterceptWith() methods can be applied 
-            to all Instances of a given PluginType off of the For() or 
+            to all Instances of a given PluginType off of the ForRequestedType() or 
             BuildInstancesOf() methods of the <a href="RegistryDSL.htm">Registry DSL</a>:</p>
 <!--
 {\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green128\blue0;\red43\green145\blue175;\red0\green0\blue255;}??\fs20             \cf3 // Place the Interception at the PluginType level\par ??\cf0             ForRequestedType&lt;\cf4 IConnectionListener\cf0 &gt;()\par ??                .OnCreation(x =&gt; x.StartConnection())     \cf3 // OnCreation\par ??\cf0                 .EnrichWith(x =&gt; \cf5 new\cf0  \cf4 LoggingDecorator\cf0 (x)) \cf3 // Enrich\par ??\cf0                 .InterceptWith(\cf5 new\cf0  \cf4 CustomInterceptor\cf0 ())   \cf3 // Custom Interceptor\par ??\par ??\par ??\cf0                 .TheDefaultIsConcreteType&lt;\cf4 ClassThatNeedsSomeBootstrapping\cf0 &gt;();}

@@ -95,7 +95,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         }
 
         /// <summary>
-        /// Shorthand way of saying TheDefault.Is.OfConcreteType<>
+        /// Shorthand way of saying Use<>
         /// </summary>
         /// <typeparam name="CONCRETETYPE"></typeparam>
         /// <returns></returns>

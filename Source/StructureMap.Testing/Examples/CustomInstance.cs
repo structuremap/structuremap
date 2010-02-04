@@ -38,7 +38,7 @@ namespace StructureMap.Testing.Examples
     {
         public CustomInstanceRegistry()
         {
-            For<Address>().TheDefault.IsThis(new XmlFileInstance<Address>("address1.xml"));
+            ForRequestedType<Address>().TheDefault.IsThis(new XmlFileInstance<Address>("address1.xml"));
         }
     }
 }

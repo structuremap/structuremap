@@ -44,7 +44,7 @@ namespace StructureMap.Testing.Pipeline
         {
             var container = new Container(x =>
             {
-                x.For<IService>().Singleton().AddInstances(o =>
+                x.ForRequestedType<IService>().Singleton().AddInstances(o =>
                 {
                     o.Is.ConstructedBy(() => new ColorService("Red")).WithName("Red");
                     o.Is.ConstructedBy(() => new ColorService("Green")).WithName("Green");

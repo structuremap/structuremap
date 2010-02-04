@@ -23,9 +23,9 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             public RedGreenRegistry()
             {
-                InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithCtorArg("color").EqualTo("Red").WithName(
+                For<IWidget>().Add<ColorWidget>().WithCtorArg("color").EqualTo("Red").WithName(
                     "Red");
-                InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithCtorArg("color").EqualTo("Green").WithName(
+                For<IWidget>().Add<ColorWidget>().WithCtorArg("color").EqualTo("Green").WithName(
                     "Green");
             }
         }
@@ -34,9 +34,9 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             public YellowBlueRegistry()
             {
-                InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithCtorArg("color").EqualTo("Yellow").WithName(
+                For<IWidget>().Add<ColorWidget>().WithCtorArg("color").EqualTo("Yellow").WithName(
                     "Yellow");
-                InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithProperty("color").EqualTo("Blue").WithName(
+                For<IWidget>().Add<ColorWidget>().WithProperty("color").EqualTo("Blue").WithName(
                     "Blue");
             }
         }
@@ -54,10 +54,12 @@ namespace StructureMap.Testing.Configuration.DSL
         public void Can_add_an_instance_for_concrete_class_with_no_constructors()
         {
             var registry = new Registry();
-            registry.For<ConcreteWithNoConstructor>().TheDefault.Is.ConstructedBy(
-                () => ConcreteWithNoConstructor.Build());
+            registry.For<ConcreteWithNoConstructor>().Use(
+                c => ConcreteWithNoConstructor.Build());
+
 
             var container = new Container(registry);
+            container.GetInstance<ConcreteWithNoConstructor>().ShouldNotBeNull();
         }
 
         [Test]
@@ -189,7 +191,7 @@ namespace StructureMap.Testing.Configuration.DSL
     {
         public BasicActionRegistry()
         {
-            registerAction(() => For<IGateway>().TheDefaultIsConcreteType<Fake3Gateway>());
+            registerAction(() => ForRequestedType<IGateway>().TheDefaultIsConcreteType<Fake3Gateway>());
         }
     }
 }

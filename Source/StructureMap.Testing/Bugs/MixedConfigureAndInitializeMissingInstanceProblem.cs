@@ -15,7 +15,7 @@ namespace StructureMap.Testing.Bugs
                 new Container(
                     x =>
                     {
-                        x.For<IWidget>().MissingNamedInstanceIs.Conditional(
+                        x.ForRequestedType<IWidget>().MissingNamedInstanceIs.Conditional(
                             o => { o.TheDefault.Is.ConstructedBy(c => new ColorWidget(c.RequestedName)); });
                     });
         }
@@ -27,7 +27,7 @@ namespace StructureMap.Testing.Bugs
         [Test]
         public void configure_again_and_try_to_fetch_the_missing_instance()
         {
-            container.Configure(x => { x.For<IWidget>().TheDefaultIsConcreteType<AWidget>(); });
+            container.Configure(x => { x.ForRequestedType<IWidget>().TheDefaultIsConcreteType<AWidget>(); });
 
             container.GetInstance<IWidget>("Red").ShouldBeOfType<ColorWidget>().Color.ShouldEqual("Red");
         }
@@ -35,12 +35,12 @@ namespace StructureMap.Testing.Bugs
         [Test]
         public void configure_the_missing_method_instance_in_the_configure()
         {
-            container = new Container(x => { x.For<IWidget>().TheDefaultIsConcreteType<AWidget>(); });
+            container = new Container(x => { x.ForRequestedType<IWidget>().TheDefaultIsConcreteType<AWidget>(); });
 
             container.Configure(
                 x =>
                 {
-                    x.For<IWidget>().MissingNamedInstanceIs.Conditional(
+                    x.ForRequestedType<IWidget>().MissingNamedInstanceIs.Conditional(
                         o => { o.TheDefault.Is.ConstructedBy(c => new ColorWidget(c.RequestedName)); });
                 });
 

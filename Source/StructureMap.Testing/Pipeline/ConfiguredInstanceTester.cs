@@ -23,7 +23,7 @@ namespace StructureMap.Testing.Pipeline
         public void SetUp()
         {
             var registry = new Registry();
-            registry.For<Rule>();
+            registry.BuildInstancesOf<Rule>();
             registry.Scan(x =>
             {
                 x.Assembly("StructureMap.Testing.Widget");

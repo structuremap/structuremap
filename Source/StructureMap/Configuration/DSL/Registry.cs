@@ -17,7 +17,7 @@ namespace StructureMap.Configuration.DSL
     /// {
     ///     public MyRegistry()
     ///     {
-    ///         For(typeof(IService)).TheDefaultIsConcreteType(typeof(Service));
+    ///         ForRequestedType(typeof(IService)).TheDefaultIsConcreteType(typeof(Service));
     ///     }
     /// }
     /// </example>
@@ -77,6 +77,32 @@ namespace StructureMap.Configuration.DSL
             _actions.Add(registry.ConfigurePluginGraph);
         }
 
+
+        /// <summary>
+        /// Expression Builder used to define policies for a PluginType including
+        /// Scoping, the Default Instance, and interception.  BuildInstancesOf()
+        /// and ForRequestedType() are synonyms
+        /// </summary>
+        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <returns></returns>
+        [Obsolete("Change to For<T>()")]
+        public CreatePluginFamilyExpression<PLUGINTYPE> BuildInstancesOf<PLUGINTYPE>()
+        {
+            return new CreatePluginFamilyExpression<PLUGINTYPE>(this);
+        }
+
+        /// <summary>
+        /// Expression Builder used to define policies for a PluginType including
+        /// Scoping, the Default Instance, and interception.  This method is specifically
+        /// meant for registering open generic types
+        /// </summary>
+        /// <returns></returns>
+        [Obsolete("Change to For(pluginType)")]
+        public GenericFamilyExpression ForRequestedType(Type pluginType)
+        {
+            return new GenericFamilyExpression(pluginType, this);
+        }
+
         /// <summary>
         /// This method is a shortcut for specifying the default constructor and 
         /// setter arguments for a ConcreteType.  ForConcreteType is shorthand for:
@@ -87,11 +113,23 @@ namespace StructureMap.Configuration.DSL
         /// <returns></returns>
         public BuildWithExpression<T> ForConcreteType<T>()
         {
-            SmartInstance<T> instance = For<T>().TheDefault.Is.OfConcreteType<T>();
+            SmartInstance<T> instance = For<T>().Use<T>();
             return new BuildWithExpression<T>(instance);
         }
 
-        
+        /// <summary>
+        /// Expression Builder used to define policies for a PluginType including
+        /// Scoping, the Default Instance, and interception.  BuildInstancesOf()
+        /// and ForRequestedType() are synonyms
+        /// </summary>
+        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <returns></returns>
+        [Obsolete("Change to For<T>()")]
+        public CreatePluginFamilyExpression<PLUGINTYPE> ForRequestedType<PLUGINTYPE>()
+        {
+            return new CreatePluginFamilyExpression<PLUGINTYPE>(this);
+        }
+
         /// <summary>
         /// Convenience method.  Equivalent of ForRequestedType[PluginType]().Singletons()
         /// </summary>
@@ -99,7 +137,7 @@ namespace StructureMap.Configuration.DSL
         /// <returns></returns>
         public CreatePluginFamilyExpression<PLUGINTYPE> ForSingletonOf<PLUGINTYPE>()
         {
-            return For<PLUGINTYPE>().Singleton();
+            return ForRequestedType<PLUGINTYPE>().Singleton();
         }
 
         /// <summary>
@@ -221,7 +259,7 @@ namespace StructureMap.Configuration.DSL
         public CreatePluginFamilyExpression<PLUGINTYPE> FillAllPropertiesOfType<PLUGINTYPE>()
         {
             PluginCache.AddFilledType(typeof (PLUGINTYPE));
-            return For<PLUGINTYPE>();
+            return ForRequestedType<PLUGINTYPE>();
         }
 
         /// <summary>
@@ -260,31 +298,31 @@ namespace StructureMap.Configuration.DSL
 
 
         /// <summary>
-        /// Syntactic Sugar for saying For().TheDefault.IsThis( @object )
+        /// Syntactic Sugar for saying ForRequestedType().TheDefault.IsThis( @object )
         /// </summary>
         /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <param name="object"></param>
         [Obsolete("Prefer For<T>().Use(value)")]
         public void Register<PLUGINTYPE>(PLUGINTYPE @object)
         {
-            For<PLUGINTYPE>().TheDefault.IsThis(@object);
+            ForRequestedType<PLUGINTYPE>().TheDefault.IsThis(@object);
         }
 
         /// <summary>
-        /// Syntactic Sugar for saying For().TheDefault.IsThis( instance )
+        /// Syntactic Sugar for saying ForRequestedType().TheDefault.IsThis( instance )
         /// </summary>
         /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <param name="instance"></param>
         [Obsolete("Prefer For<T>().Use(instance)")]
         public void Register<PLUGINTYPE>(Instance instance)
         {
-            For<PLUGINTYPE>().TheDefault.IsThis(instance);
+            ForRequestedType<PLUGINTYPE>().TheDefault.IsThis(instance);
         }
 
         /// <summary>
         /// Expression Builder used to define policies for a PluginType including
         /// Scoping, the Default Instance, and interception.  BuildInstancesOf()
-        /// and For() are synonyms
+        /// and ForRequestedType() are synonyms
         /// </summary>
         /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <returns></returns>
@@ -301,7 +339,7 @@ namespace StructureMap.Configuration.DSL
         /// <returns></returns>
         public GenericFamilyExpression For(Type pluginType)
         {
-            return new GenericFamilyExpression(pluginType, this);
+            return ForRequestedType(pluginType);
         }
 
 

@@ -57,7 +57,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void ChangeDefault()
         {
-            ObjectFactory.Configure(x => { x.For<IWidget>().TheDefault.Is.TheInstanceNamed("Green"); });
+            ObjectFactory.Configure(x => { x.ForRequestedType<IWidget>().TheDefault.Is.TheInstanceNamed("Green"); });
 
             var green = (ColorWidget) ObjectFactory.GetInstance(typeof (IWidget));
             Assert.IsNotNull(green);
@@ -67,7 +67,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void ChangeDefaultWithGenericMethod()
         {
-            ObjectFactory.Configure(x => { x.For<IWidget>().TheDefault.Is.TheInstanceNamed("Green"); });
+            ObjectFactory.Configure(x => { x.ForRequestedType<IWidget>().TheDefault.Is.TheInstanceNamed("Green"); });
 
             var green = (ColorWidget) ObjectFactory.GetInstance<IWidget>();
             Assert.IsNotNull(green);
@@ -183,7 +183,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void GetParentWithReferenceToDefaultGrandChild()
         {
-            ObjectFactory.Configure(x => { x.For<GrandChild>().TheDefault.Is.TheInstanceNamed("Trevor"); });
+            ObjectFactory.Configure(x => { x.ForRequestedType<GrandChild>().TheDefault.Is.TheInstanceNamed("Trevor"); });
 
             var child = ObjectFactory.GetNamedInstance(typeof (Child), "Jessica") as Child;
 

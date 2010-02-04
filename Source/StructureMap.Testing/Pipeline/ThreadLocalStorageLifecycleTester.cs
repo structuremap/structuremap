@@ -19,7 +19,7 @@ namespace StructureMap.Testing.Pipeline
                 new Container(
                     x =>
                     {
-                        x.For<Rule>().CacheBy(InstanceScope.ThreadLocal).TheDefault.Is.ConstructedBy(
+                        x.ForRequestedType<Rule>().CacheBy(InstanceScope.ThreadLocal).TheDefault.Is.ConstructedBy(
                             () => new ColorRule("Red"));
                     });
         }

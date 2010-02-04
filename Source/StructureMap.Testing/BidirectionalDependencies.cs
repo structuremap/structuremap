@@ -13,8 +13,8 @@ namespace StructureMap.Testing
         {
             container = new Container(x =>
             {
-                x.For<IBiView>().TheDefaultIsConcreteType<BiView>();
-                x.For<IBiPresenter>().TheDefaultIsConcreteType<BiPresenter>();
+                x.ForRequestedType<IBiView>().TheDefaultIsConcreteType<BiView>();
+                x.ForRequestedType<IBiPresenter>().TheDefaultIsConcreteType<BiPresenter>();
             });
         }
 

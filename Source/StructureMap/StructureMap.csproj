@@ -371,7 +371,6 @@
     <Compile Include="Graph\PluggableAttributeScanner.cs" />
     <Compile Include="Graph\PluginCache.cs" />
     <Compile Include="IContext.cs" />
-    <Compile Include="Pipeline\BasicInstance.cs" />
     <Compile Include="Pipeline\HybridLifecycle.cs" />
     <Compile Include="Query\EmptyConfiguration.cs" />
     <Compile Include="Query\GenericFamilyConfiguration.cs" />
@@ -407,6 +406,7 @@
     <Compile Include="Query\Model.cs" />
     <Compile Include="Pipeline\BuildFrame.cs" />
     <Compile Include="Pipeline\BuildStack.cs" />
+    <Compile Include="Pipeline\ConfiguredInstanceBase.cs" />
     <Compile Include="Pipeline\InstanceKey.cs" />
     <Compile Include="Pipeline\IStructuredInstance.cs" />
     <Compile Include="Pipeline\PropertyExpression.cs" />

@@ -13,7 +13,7 @@ namespace StructureMap.Testing.Graph
         {
             container = new Container(registry =>
             {
-                registry.For<INormalType>();
+                registry.BuildInstancesOf<INormalType>();
                 registry.Scan(x =>
                 {
                     x.TheCallingAssembly();

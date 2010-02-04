@@ -26,7 +26,7 @@ namespace StructureMap.Testing.Pipeline
             SmartInstance<T> instance = instanceOf<T>();
             action(instance);
 
-            var container = new Container(r => r.For<T>().TheDefault.IsThis(instance));
+            var container = new Container(r => r.ForRequestedType<T>().TheDefault.IsThis(instance));
             return container.GetInstance<T>();
         }
 
@@ -51,8 +51,8 @@ namespace StructureMap.Testing.Pipeline
         public void specify_a_non_simple_property_with_equal_to()
         {
             var widget = new ColorWidget("Red");
-            var container = new Container(x => x.For<ClassWithWidgetProperty>()
-                                                   .TheDefault.Is.OfConcreteType<ClassWithWidgetProperty>()
+            var container = new Container(x => x.ForRequestedType<ClassWithWidgetProperty>()
+                                                   .Use<ClassWithWidgetProperty>()
                                                    .WithProperty(o => o.Widget).EqualTo(widget));
 
             Assert.AreSame(widget, container.GetInstance<ClassWithWidgetProperty>().Widget);
@@ -145,8 +145,8 @@ namespace StructureMap.Testing.Pipeline
         public void specify_ctorarg_with_non_simple_argument()
         {
             var widget = new ColorWidget("Red");
-            var container = new Container(x => x.For<ClassWithWidget>()
-                                                   .TheDefault.Is.OfConcreteType<ClassWithWidget>()
+            var container = new Container(x => x.ForRequestedType<ClassWithWidget>()
+                                                   .Use<ClassWithWidget>()
                                                    .WithCtorArg("widget").EqualTo(widget));
 
             Assert.AreSame(widget, container.GetInstance<ClassWithWidget>().Widget);

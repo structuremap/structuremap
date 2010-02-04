@@ -107,7 +107,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void Can_get_the_referencedInstance_for_a_type()
         {
-            var container = new Container(r => r.For<IEngine>().AddConcreteType<DOHCEngine>());
+            var container = new Container(r => r.ForRequestedType<IEngine>().AddConcreteType<DOHCEngine>());
 
             Debug.WriteLine(container.WhatDoIHave());
 
@@ -368,7 +368,7 @@ namespace StructureMap.Testing.Graph
         {
             try
             {
-                new Registry().For<ClassWithNoConstructor>().TheDefaultIsConcreteType
+                new Registry().ForRequestedType<ClassWithNoConstructor>().TheDefaultIsConcreteType
                     <ClassWithNoConstructor>();
             }
             catch (StructureMapException ex)

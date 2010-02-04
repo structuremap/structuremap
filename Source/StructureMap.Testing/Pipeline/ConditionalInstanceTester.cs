@@ -89,7 +89,7 @@ namespace StructureMap.Testing.Pipeline
         {
             var container = new Container(x =>
             {
-                x.For<Rule>().TheDefault.IsThis(DEFAULT);
+                x.ForRequestedType<Rule>().TheDefault.IsThis(DEFAULT);
                 x.InstanceOf<Rule>().Is.Conditional(o =>
                 {
                     o.If(c => false).ThenIt.Is.OfConcreteType<ARule>();
@@ -106,7 +106,7 @@ namespace StructureMap.Testing.Pipeline
         {
             var container = new Container(x =>
             {
-                x.For<Rule>().TheDefault.IsThis(DEFAULT);
+                x.ForRequestedType<Rule>().TheDefault.IsThis(DEFAULT);
                 x.InstanceOf<Rule>().Is.Conditional(o =>
                 {
                     o.If(c => false).ThenIt.Is.OfConcreteType<ARule>();
@@ -122,7 +122,7 @@ namespace StructureMap.Testing.Pipeline
         {
             var container = new Container(x =>
             {
-                x.For<Rule>().TheDefault.IsThis(DEFAULT);
+                x.ForRequestedType<Rule>().TheDefault.IsThis(DEFAULT);
                 x.InstanceOf<Rule>().Is.Conditional(o => { o.If(c => false).ThenIt.Is.OfConcreteType<ARule>(); }).
                     WithName("conditional");
             });

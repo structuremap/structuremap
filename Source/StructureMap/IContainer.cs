@@ -104,6 +104,13 @@ namespace StructureMap
         /// <returns></returns>
         T TryGetInstance<T>(string instanceKey);
 
+
+        [Obsolete("Please use GetInstance<T>() instead.")]
+        T FillDependencies<T>();
+
+        [Obsolete("Please use GetInstance(Type) instead")]
+        object FillDependencies(Type type);
+
         /// <summary>
         /// Used to add additional configuration to a Container *after* the initialization.
         /// </summary>

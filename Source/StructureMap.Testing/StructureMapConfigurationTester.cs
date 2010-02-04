@@ -92,8 +92,8 @@ namespace StructureMap.Testing
             {
                 x.IgnoreStructureMapConfig = true;
 
-                x.For<Guid>().TheDefault.Is.ConstructedBy(() => Guid.NewGuid());
-                x.For<IFoo>().TheDefaultIsConcreteType<Foo>();
+                x.ForRequestedType<Guid>().TheDefault.Is.ConstructedBy(() => Guid.NewGuid());
+                x.ForRequestedType<IFoo>().TheDefaultIsConcreteType<Foo>();
             });
 
 
@@ -110,7 +110,7 @@ namespace StructureMap.Testing
             {
                 x.IgnoreStructureMapConfig = true;
 
-                x.For<Guid>().TheDefault.Is.ConstructedBy(() => Guid.NewGuid());
+                x.ForRequestedType<Guid>().TheDefault.Is.ConstructedBy(() => Guid.NewGuid());
             });
 
 

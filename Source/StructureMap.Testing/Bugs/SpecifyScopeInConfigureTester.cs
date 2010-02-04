@@ -12,7 +12,7 @@ namespace StructureMap.Testing.Bugs
             var container = new Container(x => { });
             container.Configure(x =>
             {
-                x.For<IGateway>().CacheBy(InstanceScope.Singleton)
+                x.ForRequestedType<IGateway>().CacheBy(InstanceScope.Singleton)
                     .TheDefaultIsConcreteType<DefaultGateway>();
             });
 

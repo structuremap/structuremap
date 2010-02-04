@@ -32,7 +32,7 @@ namespace StructureMap.Testing.Bugs
         {
             var container = new Container(x =>
             {
-                x.For<IGateway>().CacheBy(InstanceScope.Singleton).TheDefaultIsConcreteType
+                x.ForRequestedType<IGateway>().CacheBy(InstanceScope.Singleton).TheDefaultIsConcreteType
                     <SingletonShouldBeLazy>();
             });
         }
@@ -78,7 +78,7 @@ namespace StructureMap.Testing.Bugs
             ObjectFactory.Initialize(registry =>
                                      registry.UseDefaultStructureMapConfigFile = false);
             ObjectFactory.Configure(registry =>
-                                    registry.For<ICrm>().TheDefaultIsConcreteType<Crm>
+                                    registry.ForRequestedType<ICrm>().TheDefaultIsConcreteType<Crm>
                                         ().CacheBy(InstanceScope.Singleton));
         }
     }

@@ -51,7 +51,7 @@ namespace StructureMap.Testing
         {
             container = new Container(x =>
             {
-                x.For<IValidator>().AddInstances(o =>
+                x.ForRequestedType<IValidator>().AddInstances(o =>
                 {
                     o.OfConcreteType<Validator>().WithCtorArg("name").EqualTo("Red").WithName("Red");
                     o.OfConcreteType<Validator>().WithCtorArg("name").EqualTo("Blue").WithName("Blue");
@@ -59,7 +59,7 @@ namespace StructureMap.Testing
                     o.OfConcreteType<Validator>().WithCtorArg("name").EqualTo("Green").WithName("Green");
                 });
 
-                x.For<ClassThatUsesValidators>().AddInstances(o =>
+                x.ForRequestedType<ClassThatUsesValidators>().AddInstances(o =>
                 {
                     // Define an Instance of ClassThatUsesValidators that depends on AutoWiring
                     o.OfConcreteType<ClassThatUsesValidators>().WithName("WithAutoWiring");

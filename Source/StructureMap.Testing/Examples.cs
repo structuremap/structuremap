@@ -59,7 +59,7 @@ namespace StructureMap.Testing.DocumentationExamples
     {
         public ShippingRegistry()
         {
-            For<IShippingService>().AddInstances(x =>
+            ForRequestedType<IShippingService>().AddInstances(x =>
             {
                 x.OfConcreteType<ShippingWebService>()
                     .WithCtorArg("url").EqualTo("a url")
@@ -410,16 +410,16 @@ namespace StructureMap.Testing.DocumentationExamples
         public InstanceExampleRegistry()
         {
             // Shortcut for just specifying "use this type -- with auto wiring"
-            For<IService>().TheDefaultIsConcreteType<RemoteService>();
+            ForRequestedType<IService>().TheDefaultIsConcreteType<RemoteService>();
 
             // Set the default Instance of a PluginType
-            For<IService>().TheDefault.Is.OfConcreteType<RemoteService>();
+            For<IService>().Use<RemoteService>();
 
             // Add an additional Instance of a PluginType
             InstanceOf<IService>().Is.OfConcreteType<RemoteService>();
 
             // Add multiple additional Instances of a PluginType
-            For<IService>().AddInstances(x =>
+            ForRequestedType<IService>().AddInstances(x =>
             {
                 x.ConstructedBy(() => new ColorService("Red"));
 

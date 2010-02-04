@@ -28,7 +28,7 @@ namespace StructureMap.Testing.Examples
             {
                 // In this case, we need to specify the value of "connectionString" argument to
                 // the constructor function
-                x.For<DatabaseRepository>().TheDefault.Is.OfConcreteType<DatabaseRepository>()
+                x.For<DatabaseRepository>().Use<DatabaseRepository>()
                     .WithCtorArg("connectionString").EqualToAppSetting("connectionString");
             });
 
@@ -63,10 +63,10 @@ namespace StructureMap.Testing.Examples
         public RepositoryRegistry()
         {
             // First I'll specify the "default" Instance of IRepository
-            For<IRepository>().TheDefaultIsConcreteType<InMemoryRepository>();
+            ForRequestedType<IRepository>().TheDefaultIsConcreteType<InMemoryRepository>();
 
             // Now, I'll add three more Instances of IRepository
-            For<IRepository>().AddInstances(x =>
+            ForRequestedType<IRepository>().AddInstances(x =>
             {
                 // "NorthAmerica" is the concrete type DatabaseRepository with 
                 // the connectionString pointed to the NorthAmerica database
@@ -101,9 +101,9 @@ namespace StructureMap.Testing.Examples
 
             ObjectFactory.Initialize(x =>
             {
-                x.For<IRepository>().TheDefaultIsConcreteType<InMemoryRepository>();
+                x.ForRequestedType<IRepository>().TheDefaultIsConcreteType<InMemoryRepository>();
 
-                x.For<IRepository>().AddInstances(y =>
+                x.ForRequestedType<IRepository>().AddInstances(y =>
                 {
                     y.OfConcreteType<DatabaseRepository>().WithName("NorthAmerica")
                         .WithCtorArg("connectionString").EqualTo("database=NorthAmerica");

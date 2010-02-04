@@ -139,7 +139,7 @@ namespace StructureMap.Testing.Graph
             var container = new Container();
             container.Configure(registry =>
             {
-                registry.For(typeof (IService<>))
+                registry.ForRequestedType(typeof (IService<>))
                     .AddConcreteType(typeof (Service1<>))
                     .AddConcreteType(typeof (Service2<>));
             });
@@ -184,7 +184,7 @@ namespace StructureMap.Testing.Graph
             IContainer container = new Container(new PluginGraph());
             container.Configure(r =>
             {
-                r.For<IService>().AddInstances(x =>
+                r.ForRequestedType<IService>().AddInstances(x =>
                 {
                     x.Object(_red).WithName("Red");
                     x.Object(_blue).WithName("Blue");
@@ -201,7 +201,7 @@ namespace StructureMap.Testing.Graph
         {
             var container = new Container(r =>
             {
-                r.For<ISomething>().AddInstances(x =>
+                r.ForRequestedType<ISomething>().AddInstances(x =>
                 {
                     x.OfConcreteType<SomethingOne>().WithName("One");
                     x.OfConcreteType<SomethingTwo>().WithName("Two");
@@ -220,7 +220,7 @@ namespace StructureMap.Testing.Graph
 
             var container = new Container(r =>
             {
-                r.For<ISomething>().AddInstances(x =>
+                r.ForRequestedType<ISomething>().AddInstances(x =>
                 {
                     x.Object(one).WithName("One");
                     x.Object(two).WithName("Two");

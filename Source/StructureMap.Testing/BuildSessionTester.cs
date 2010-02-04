@@ -97,7 +97,7 @@ namespace StructureMap.Testing
         {
             IContainer manager = new Container(r =>
             {
-                r.For<IWidget>().AddInstances(x =>
+                r.ForRequestedType<IWidget>().AddInstances(x =>
                 {
                     x.Object(new ColorWidget("Red"));
                     x.Object(new ColorWidget("Blue"));
@@ -144,7 +144,7 @@ namespace StructureMap.Testing
                 return new ColorRule("Red");
             });
             var registry = new Registry();
-            registry.For<ColorRule>().TheDefault.IsThis(instance);
+            registry.ForRequestedType<ColorRule>().TheDefault.IsThis(instance);
 
             PluginGraph graph = registry.Build();
             var session = new BuildSession(graph);

@@ -21,7 +21,7 @@ namespace StructureMap.Testing.Graph
             var container = new Container(x =>
             {
                 x.AddConfigurationFromXmlFile("ObjectMother.config");
-                x.For<Decision>().AddInstancesFrom(source);
+                x.ForRequestedType<Decision>().AddInstancesFrom(source);
             });
 
             container.GetInstance<Decision>("RedBlue").Rules.Length.ShouldEqual(2);

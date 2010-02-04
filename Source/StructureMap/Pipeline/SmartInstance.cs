@@ -145,7 +145,7 @@ namespace StructureMap.Pipeline
         /// </summary>
         /// <param name="argumentName"></param>
         /// <returns></returns>
-        [Obsolete("Use CtorDependency() instead")]
+        [Obsolete("Use Ctor() instead")]
         public PropertyExpression<SmartInstance<T>> WithCtorArg(string argumentName)
         {
             return new PropertyExpression<SmartInstance<T>>(this, argumentName);

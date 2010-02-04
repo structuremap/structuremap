@@ -1,6 +1,7 @@
 using System;
 using System.Configuration;
 using NUnit.Framework;
+using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing.Configuration.DSL
@@ -18,31 +19,31 @@ namespace StructureMap.Testing.Configuration.DSL
                 registry.Scan(x => x.AssemblyContainingType<ColorWidget>());
 
                 // Add an instance with properties
-                registry.InstanceOf<IWidget>()
-                    .Is.OfConcreteType<ColorWidget>()
+                registry.For<IWidget>()
+                    .Add<ColorWidget>()
                     .WithName("DarkGreen")
                     .WithProperty("color").EqualTo("DarkGreen");
 
                 // Add an instance by specifying the ConcreteKey
-                registry.InstanceOf<IWidget>()
-                    .Is.OfConcreteType<ColorWidget>()
+                registry.For<IWidget>()
+                    .Add<ColorWidget>()
                     .WithName("Purple")
                     .WithProperty("color").EqualTo("Purple");
 
                 // Pull a property from the App config
-                registry.InstanceOf<IWidget>()
-                    .Is.OfConcreteType<ColorWidget>()
+                registry.For<IWidget>()
+                    .Add<ColorWidget>()
                     .WithName("AppSetting")
                     .WithProperty("color").EqualToAppSetting("Color");
 
                 // Pull a property from the App config
-                registry.InstanceOf<IWidget>()
-                    .Is.OfConcreteType<NotPluggableWidget>()
+                registry.For<IWidget>()
+                    .Add<NotPluggableWidget>()
                     .WithName("UsesDefaultValue")
                     .WithProperty("name").EqualToAppSetting("WidgetName", "TheDefaultValue");
 
 
-                registry.InstanceOf<IWidget>().Is.OfConcreteType<AWidget>();
+                registry.For<IWidget>().Add<AWidget>();
             });
         }
 
@@ -67,10 +68,12 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void AddInstanceAndOverrideTheConcreteTypeForADependency()
         {
-            IContainer container = new Container(
-                registry => registry.InstanceOf<Rule>().Is.OfConcreteType<WidgetRule>()
-                                .WithName("AWidgetRule")
-                                .CtorDependency<IWidget>().Is(i => i.OfConcreteType<AWidget>()));
+            IContainer container = new Container(x =>
+            {
+                x.For<Rule>().Add<WidgetRule>()
+                    .WithName("AWidgetRule")
+                    .CtorDependency<IWidget>().Is(i => i.OfConcreteType<AWidget>());
+            });
 
             container.GetInstance<Rule>("AWidgetRule")
                 .IsType<WidgetRule>()
@@ -96,9 +99,10 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void SimpleCaseWithNamedInstance()
         {
-            container =
-                new Container(
-                    registry => { registry.InstanceOf<IWidget>().Is.OfConcreteType<AWidget>().WithName("MyInstance"); });
+            container = new Container(x =>
+            {
+                x.For<IWidget>().Add<AWidget>().WithName("MyInstance");
+            });
 
             var widget = (AWidget) container.GetInstance<IWidget>("MyInstance");
             Assert.IsNotNull(widget);
@@ -110,16 +114,16 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             container = new Container(registry =>
             {
-                registry.InstanceOf<Rule>().Is.OfConcreteType<ARule>().WithName("Alias");
+                registry.For<Rule>().Add<ARule>().WithName("Alias");
 
                 // Add an instance by specifying the ConcreteKey
-                registry.InstanceOf<IWidget>()
-                    .Is.OfConcreteType<ColorWidget>()
+                registry.For<IWidget>()
+                    .Add<ColorWidget>()
                     .WithName("Purple")
                     .WithProperty("color").EqualTo("Purple");
 
                 // Specify a new Instance, override a dependency with a named instance
-                registry.InstanceOf<Rule>().Is.OfConcreteType<WidgetRule>().WithName("RuleThatUsesMyInstance")
+                registry.For<Rule>().Add<WidgetRule>().WithName("RuleThatUsesMyInstance")
                     .CtorDependency<IWidget>("widget").Is(x => x.TheInstanceNamed("Purple"));
             });
 
@@ -138,9 +142,9 @@ namespace StructureMap.Testing.Configuration.DSL
 
             var theContainer = new Container(registry =>
             {
-                registry.InstanceOf<Rule>().Is.OfConcreteType<WidgetRule>().WithName(instanceKey)
+                registry.For<Rule>().Add<WidgetRule>().WithName(instanceKey)
                     .CtorDependency<IWidget>().Is(
-                    i => { i.OfConcreteType<ColorWidget>().WithCtorArg("color").EqualTo("Orange").WithName("Orange"); });
+                    i => { i.Type<ColorWidget>().WithCtorArg("color").EqualTo("Orange").WithName("Orange"); });
             });
 
             var rule = (WidgetRule) theContainer.GetInstance<Rule>(instanceKey);
@@ -155,7 +159,10 @@ namespace StructureMap.Testing.Configuration.DSL
             // "Prototype" (GoF pattern) whenever someone asks for IWidget named "Jeremy"
             var theWidget = new CloneableWidget("Jeremy");
 
-            container = new Container(x => { x.InstanceOf<IWidget>().Is.PrototypeOf(theWidget).WithName("Jeremy"); });
+            container = new Container(x =>
+            {
+                x.For<IWidget>().Add(new PrototypeInstance(theWidget).Named("Jeremy"));
+            });
 
             var widget1 = (CloneableWidget) container.GetInstance<IWidget>("Jeremy");
             var widget2 = (CloneableWidget) container.GetInstance<IWidget>("Jeremy");
@@ -179,7 +186,10 @@ namespace StructureMap.Testing.Configuration.DSL
             var theWidget = new CloneableWidget("Jeremy");
 
             container =
-                new Container(x => { x.InstanceOf<IWidget>().Is.SerializedCopyOf(theWidget).WithName("Jeremy"); });
+                new Container(x =>
+                {
+                    x.For<IWidget>().Add(new SerializedInstance(theWidget).Named("Jeremy"));
+                });
 
             var widget1 = (CloneableWidget) container.GetInstance<IWidget>("Jeremy");
             var widget2 = (CloneableWidget) container.GetInstance<IWidget>("Jeremy");
@@ -202,7 +212,7 @@ namespace StructureMap.Testing.Configuration.DSL
             var julia = new CloneableWidget("Julia");
 
             container =
-                new Container(registry => registry.InstanceOf<IWidget>().Is.Object(julia).WithName("Julia"));
+                new Container(x => x.For<IWidget>().Add(julia).WithName("Julia"));
 
             var widget1 = (CloneableWidget) container.GetInstance<IWidget>("Julia");
             var widget2 = (CloneableWidget) container.GetInstance<IWidget>("Julia");

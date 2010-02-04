@@ -12,12 +12,12 @@ namespace StructureMap.Testing.Graph
         {
             var container = new Container(x =>
             {
-                x.For<IStrategy>().TheDefault.IsThis(new Strategy("name", 3, 3, 3, true));
-                x.For<IWidget>().TheDefault.IsThis(new ColorWidget("Red"));
+                x.ForRequestedType<IStrategy>().TheDefault.IsThis(new Strategy("name", 3, 3, 3, true));
+                x.ForRequestedType<IWidget>().TheDefault.IsThis(new ColorWidget("Red"));
             });
 
             var concreteClass =
-                (FilledConcreteClass) container.GetInstance(typeof (FilledConcreteClass));
+                (FilledConcreteClass) container.FillDependencies(typeof (FilledConcreteClass));
 
             Assert.IsNotNull(concreteClass.Widget);
             Assert.IsNotNull(concreteClass.Strategy);
@@ -27,7 +27,7 @@ namespace StructureMap.Testing.Graph
         public void TryToFillDependenciesOnAbstractClassThrowsException()
         {
             var manager = new Container();
-            manager.GetInstance(typeof (AbstractClass));
+            manager.FillDependencies(typeof (AbstractClass));
         }
 
 
@@ -35,7 +35,7 @@ namespace StructureMap.Testing.Graph
         public void TryToFillDependenciesOnClassWithPrimitiveArgumentsThrowsException()
         {
             var manager = new Container();
-            manager.GetInstance(typeof (CannotBeFilledConcreteClass));
+            manager.FillDependencies(typeof (CannotBeFilledConcreteClass));
         }
     }
 

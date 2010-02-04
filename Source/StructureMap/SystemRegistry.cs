@@ -10,7 +10,7 @@ namespace StructureMap
         {
             addExpression(graph => graph.AddType(typeof (MementoSource), typeof (XmlFileMementoSource), "XmlFile"));
 
-            For<MementoSource>().TheDefaultIsConcreteType<MemoryMementoSource>();
+            ForRequestedType<MementoSource>().TheDefaultIsConcreteType<MemoryMementoSource>();
             AddMementoSourceType<DirectoryXmlMementoSource>("DirectoryXml");
             AddMementoSourceType<EmbeddedFolderXmlMementoSource>("EmbeddedXmlFolder");
             AddMementoSourceType<SingleEmbeddedXmlMementoSource>("EmbeddedXmlFile");
