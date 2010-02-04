@@ -4,7 +4,7 @@
   <property name="deployment.dir" value="source\StructureMap.Testing.DeploymentTasks\"/>
   <property name="results.dir" value="results" />
   <property name="nant.dir" value="bin\nant" />
-  <property name="project.version" value="3.0.0" />
+  <property name="project.version" value="2.6.0" />
   <property name="project.config" value="release" />
   <property name="archive.dir" value="archive"/>
   <target name="all" depends="compile, unit-test, post-clean"/>
