@@ -25,7 +25,7 @@ namespace StructureMap.Pipeline
 
             var disposable = _objects[key] as IDisposable;
             _objects.Remove(key);
-            disposeObject(disposable);
+            disposable.SafeDispose();
         }
 
         public object Get(Type pluginType, Instance instance)
@@ -59,25 +59,12 @@ namespace StructureMap.Pipeline
                 {
                     if (@object is Container) return;
 
-                    disposeObject(@object as IDisposable);
+                    @object.SafeDispose();
                 });
 
                 _objects.Clear();
             }
         }
 
-        private void disposeObject(IDisposable disposable)
-        {
-            if (disposable != null)
-            {
-                try
-                {
-                    disposable.Dispose();
-                }
-                catch (Exception)
-                {
-                }
-            }
-        }
     }
 }

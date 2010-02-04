@@ -40,6 +40,12 @@ namespace StructureMap.Pipeline
 
         public void Dispose()
         {
+            bool isContainer = _object is IContainer;
+            if (!isContainer)
+            {
+                _object.SafeDispose();
+            }
+
             _object = null;
         }
 

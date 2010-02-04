@@ -442,6 +442,7 @@ namespace StructureMap
             {
                 _interceptorLibrary = _interceptorLibrary,
                 _pipelineGraph = _pipelineGraph.ToNestedGraph(),
+                _onDispose = nestedDispose
             };
 
             // Fixes a mild bug.  The child container should inject itself
@@ -463,9 +464,23 @@ namespace StructureMap
             return container;
         }
 
+
+        private Action<Container> _onDispose = fullDispose;
         public void Dispose()
         {
-            _pipelineGraph.Dispose();
+            _onDispose(this);
+        }
+
+        private static void fullDispose(Container c)
+        {
+            c.Model.AllInstances.Each(i => i.EjectObject());
+
+            nestedDispose(c);
+        }
+
+        private static void nestedDispose(Container c)
+        {
+            c._pipelineGraph.Dispose();
         }
 
         #endregion

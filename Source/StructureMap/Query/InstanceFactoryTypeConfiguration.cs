@@ -24,6 +24,7 @@ namespace StructureMap.Query
         void IFamily.Eject(Instance instance)
         {
             cache.Eject(_pluginType, instance);
+            instance.SafeDispose();
         }
 
         object IFamily.Build(Instance instance)

@@ -19,6 +19,20 @@ namespace StructureMap
             list.Add(value);
         }
 
+        public static void SafeDispose(this object target)
+        {
+            var disposable = target as IDisposable;
+            if (disposable == null) return;
+
+            try
+            {
+                disposable.Dispose();
+            }
+            catch (Exception)
+            {
+            }
+        }
+
 
         public static void TryGet<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key,
                                                 Action<TValue> action)

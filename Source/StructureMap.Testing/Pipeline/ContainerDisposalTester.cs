@@ -16,6 +16,35 @@ namespace StructureMap.Testing.Pipeline
         #endregion
 
         [Test]
+        public void disposing_a_main_container_will_dispose_an_object_injected_into_the_container()
+        {
+            var disposable = new C2Yes();
+            var container = new Container(x => x.For<C2Yes>().Use(disposable));
+
+            container.Dispose();
+
+            disposable.WasDisposed.ShouldBeTrue();
+        }
+
+        [Test]
+        public void main_container_should_dispose_singletons()
+        {
+            var container = new Container(x =>
+            {
+                x.ForSingletonOf<C1Yes>().Use<C1Yes>();
+            });
+
+            var single = container.GetInstance<C1Yes>();
+            
+            container.Dispose();
+
+            single.WasDisposed.ShouldBeTrue();
+        }
+
+
+
+
+        [Test]
         public void disposing_a_nested_container_does_not_try_to_dispose_objects_created_by_the_parent()
         {
             var container = new Container(x => { x.ForSingletonOf<I1>().Use<C1No>(); });
