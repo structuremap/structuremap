@@ -120,6 +120,16 @@ namespace StructureMap.Configuration.DSL.Expressions
             return TheDefault.Is.ConstructedBy(func);
         }
 
+        /// <summary>
+        /// Shorthand to say TheDefault.Is.ConstructedBy(func)
+        /// </summary>
+        /// <param name="func"></param>
+        /// <returns></returns>
+        public LambdaInstance<PLUGINTYPE> Use(Func<PLUGINTYPE> func)
+        {
+            return TheDefault.Is.ConstructedBy(func);
+        }
+
         public void Use(Instance instance)
         {
             TheDefault.IsThis(instance);
@@ -187,6 +197,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="handler"></param>
         /// <returns></returns>
+        [Obsolete("Change to OnCreationForAll")]
         public CreatePluginFamilyExpression<PLUGINTYPE> OnCreation(Action<PLUGINTYPE> handler)
         {
             _children.Add(
@@ -201,6 +212,36 @@ namespace StructureMap.Configuration.DSL.Expressions
                     var interceptor = new PluginTypeInterceptor(typeof (PLUGINTYPE), (c, o) =>
                     {
                         handler((PLUGINTYPE) o);
+                        return o;
+                    });
+
+                    graph.InterceptorLibrary.AddInterceptor(interceptor);
+                });
+
+            return this;
+        }
+
+
+        /// <summary>
+        /// Register an Action to run against any object of this PluginType immediately after
+        /// it is created, but before the new object is passed back to the caller
+        /// </summary>
+        /// <param name="handler"></param>
+        /// <returns></returns>
+        public CreatePluginFamilyExpression<PLUGINTYPE> OnCreationForAll(Action<PLUGINTYPE> handler)
+        {
+            _children.Add(
+                graph =>
+                {
+                    Func<object, object> function = target =>
+                    {
+                        handler((PLUGINTYPE)target);
+                        return target;
+                    };
+
+                    var interceptor = new PluginTypeInterceptor(typeof(PLUGINTYPE), (c, o) =>
+                    {
+                        handler((PLUGINTYPE)o);
                         return o;
                     });
 
@@ -234,6 +275,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="handler"></param>
         /// <returns></returns>
+        [Obsolete("Change to OnCreationForAll")]
         public CreatePluginFamilyExpression<PLUGINTYPE> OnCreation(Action<IContext, PLUGINTYPE> handler)
         {
             _children.Add(
@@ -253,6 +295,32 @@ namespace StructureMap.Configuration.DSL.Expressions
             return this;
         }
 
+
+        /// <summary>
+        /// Register an Action to run against any object of this PluginType immediately after
+        /// it is created, but before the new object is passed back to the caller
+        /// </summary>
+        /// <param name="handler"></param>
+        /// <returns></returns>
+        public CreatePluginFamilyExpression<PLUGINTYPE> OnCreationForAll(Action<IContext, PLUGINTYPE> handler)
+        {
+            _children.Add(
+                graph =>
+                {
+                    Func<IContext, object, object> function = (c, o) =>
+                    {
+                        handler(c, (PLUGINTYPE)o);
+                        return o;
+                    };
+
+                    var interceptor = new PluginTypeInterceptor(typeof(PLUGINTYPE), function);
+
+                    graph.InterceptorLibrary.AddInterceptor(interceptor);
+                });
+
+            return this;
+        }
+
         /// <summary>
         /// Register a Func to run against any object of this PluginType immediately after it is created,
         /// but before the new object is passed back to the caller.  Unlike <see cref="OnCreation(Action{PLUGINTYPE})">OnCreation()</see>,
@@ -261,6 +329,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="handler"></param>
         /// <returns></returns>
+        [Obsolete("Change to EnrichAllWith() -- eliminates confusion")]
         public CreatePluginFamilyExpression<PLUGINTYPE> EnrichWith(EnrichmentHandler<PLUGINTYPE> handler)
         {
             _children.Add(
@@ -277,12 +346,35 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         /// <summary>
         /// Register a Func to run against any object of this PluginType immediately after it is created,
+        /// but before the new object is passed back to the caller.  Unlike <see cref="OnCreation(Action{PLUGINTYPE})">OnCreation()</see>,
+        /// EnrichWith() gives the the ability to return a different object.  Use this method for runtime AOP
+        /// scenarios or to return a decorator.
+        /// </summary>
+        /// <param name="handler"></param>
+        /// <returns></returns>
+        public CreatePluginFamilyExpression<PLUGINTYPE> EnrichAllWith(EnrichmentHandler<PLUGINTYPE> handler)
+        {
+            _children.Add(
+                graph =>
+                {
+                    Func<IContext, object, object> function = (context, target) => handler((PLUGINTYPE)target);
+
+                    var interceptor = new PluginTypeInterceptor(typeof(PLUGINTYPE), function);
+                    graph.InterceptorLibrary.AddInterceptor(interceptor);
+                });
+
+            return this;
+        }
+
+        /// <summary>
+        /// Register a Func to run against any object of this PluginType immediately after it is created,
         /// but before the new object is passed back to the caller.  Unlike <see cref="OnCreation(Action{IContext,PLUGINTYPE})">OnCreation()</see>,
         /// EnrichWith() gives the the ability to return a different object.  Use this method for runtime AOP
         /// scenarios or to return a decorator.
         /// </summary>
         /// <param name="handler"></param>
         /// <returns></returns>
+        [Obsolete("Change to EnrichAllWith -- it's to avoid confusion")]
         public CreatePluginFamilyExpression<PLUGINTYPE> EnrichWith(ContextEnrichmentHandler<PLUGINTYPE> handler)
         {
             _children.Add(
@@ -295,6 +387,29 @@ namespace StructureMap.Configuration.DSL.Expressions
 
             return this;
         }
+
+
+        /// <summary>
+        /// Register a Func to run against any object of this PluginType immediately after it is created,
+        /// but before the new object is passed back to the caller.  Unlike <see cref="OnCreation(Action{IContext,PLUGINTYPE})">OnCreation()</see>,
+        /// EnrichWith() gives the the ability to return a different object.  Use this method for runtime AOP
+        /// scenarios or to return a decorator.
+        /// </summary>
+        /// <param name="handler"></param>
+        /// <returns></returns>
+        public CreatePluginFamilyExpression<PLUGINTYPE> EnrichAllWith(ContextEnrichmentHandler<PLUGINTYPE> handler)
+        {
+            _children.Add(
+                graph =>
+                {
+                    var interceptor = new PluginTypeInterceptor(typeof(PLUGINTYPE),
+                                                                (c, o) => handler(c, (PLUGINTYPE)o));
+                    graph.InterceptorLibrary.AddInterceptor(interceptor);
+                });
+
+            return this;
+        }
+
 
         /// <summary>
         /// Shortcut method to add an additional Instance to this Plugin Type
