@@ -78,7 +78,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="configure"></param>
         /// <returns></returns>
-        public CreatePluginFamilyExpression<PLUGINTYPE> Use(Action<IInstanceExpression<PLUGINTYPE>> configure)
+        public CreatePluginFamilyExpression<PLUGINTYPE> UseSpecial(Action<IInstanceExpression<PLUGINTYPE>> configure)
         {
             var expression = new InstanceExpression<PLUGINTYPE>(i => Use(i));
             configure(expression);
@@ -92,7 +92,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="configure"></param>
         /// <returns></returns>
-        public CreatePluginFamilyExpression<PLUGINTYPE> Add(Action<IInstanceExpression<PLUGINTYPE>> configure)
+        public CreatePluginFamilyExpression<PLUGINTYPE> AddSpecial(Action<IInstanceExpression<PLUGINTYPE>> configure)
         {
             var expression = new InstanceExpression<PLUGINTYPE>(i => Add(i));
             configure(expression);

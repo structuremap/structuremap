@@ -252,7 +252,7 @@ namespace StructureMap.Configuration.DSL.Expressions
             /// Access to the uncommon types of Instance
             /// </summary>
             /// <param name="configure"></param>
-            public void Use(Action<IInstanceExpression<T>> configure)
+            public void UseSpecial(Action<IInstanceExpression<T>> configure)
             {
                 var expression = new InstanceExpression<T>(i => Use(i));
                 configure(expression);
