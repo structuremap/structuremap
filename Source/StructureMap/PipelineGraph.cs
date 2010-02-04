@@ -57,10 +57,16 @@ namespace StructureMap
 
         public void Dispose()
         {
+            if (_factories.ContainsKey(typeof(IContainer)))
+            {
+                _factories[typeof (IContainer)].AllInstances.Each(x => x.SafeDispose());
+            }
+
             foreach (var factory in _factories)
             {
                 factory.Value.Dispose();
             }
+
             _factories.Clear();
             _profileManager.Dispose();
             _genericsGraph.ClearAll();

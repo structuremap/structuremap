@@ -142,8 +142,12 @@ namespace StructureMap
 
         public void Dispose()
         {
-            _instances.GetAll().Each(i => i.SafeDispose());
             _instances.Clear();
+        }
+
+        public void DisposeInstances()
+        {
+            _instances.GetAll().Each(i => i.SafeDispose());
         }
     }
 }
