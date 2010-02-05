@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using StructureMap.Configuration.DSL;
+using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.TypeRules;
 using StructureMap.Util;
 
@@ -280,5 +281,58 @@ namespace StructureMap.Graph
             }
             return callingAssembly;
         }
+
+
+
+        /// <summary>
+        /// Adds the DefaultConventionScanner to the scanning operations.  I.e., a concrete
+        /// class named "Something" that implements "ISomething" will be automatically 
+        /// added to PluginType "ISomething"
+        /// </summary>
+        public ConfigureConventionExpression WithDefaultConventions()
+        {
+            var convention = new DefaultConventionScanner();
+            With(convention);
+            return new ConfigureConventionExpression(convention);
+        }
+
+        /// <summary>
+        /// Scans for PluginType's and Concrete Types that close the given open generic type
+        /// </summary>
+        /// <example>
+        /// 
+        /// </example>
+        /// <param name="openGenericType"></param>
+        public ConfigureConventionExpression ConnectImplementationsToTypesClosing(Type openGenericType)
+        {
+            var convention = new GenericConnectionScanner(openGenericType);
+            With(convention);
+            return new ConfigureConventionExpression(convention);
+        }
+
+        /// <summary>
+        /// Automatically registers all concrete types without primitive arguments
+        /// against its first interface, if any
+        /// </summary>
+        public ConfigureConventionExpression RegisterConcreteTypesAgainstTheFirstInterface()
+        {
+            var convention = new FirstInterfaceConvention();
+            With(convention);
+            return new ConfigureConventionExpression(convention);
+        }
+
+        /// <summary>
+        /// Directs the scanning to automatically register any type that is the single
+        /// implementation of an interface against that interface.
+        /// The filters apply
+        /// </summary>
+        public ConfigureConventionExpression SingleImplementationsOfInterface()
+        {
+            var convention = new ImplementationMap();
+            With(convention);
+            ModifyGraphAfterScan(convention.RegisterSingleImplementations);
+            return new ConfigureConventionExpression(convention);
+        }
+
     }
 }

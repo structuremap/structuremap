@@ -336,7 +336,6 @@
     <Compile Include="CloseGenericTypeExpression.cs" />
     <Compile Include="ConfigurationExpression.cs" />
     <Compile Include="Configuration\DictionaryReader.cs" />
-    <Compile Include="Configuration\DSL\AssemblyScannerExtensions.cs" />
     <Compile Include="Configuration\DSL\Expressions\InstanceExpression.cs" />
     <Compile Include="Configuration\DSL\IRegistry.cs" />
     <Compile Include="Configuration\DSL\SetterConvention.cs" />
