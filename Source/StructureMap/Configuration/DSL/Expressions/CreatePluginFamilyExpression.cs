@@ -205,10 +205,10 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <returns></returns>
         public CreatePluginFamilyExpression<PLUGINTYPE> Singleton()
         {
-            return lifecycleIs(InstanceScope.Singleton);
+            return LifecycleIs(InstanceScope.Singleton);
         }
 
-        private CreatePluginFamilyExpression<PLUGINTYPE> lifecycleIs(InstanceScope lifecycle)
+        public CreatePluginFamilyExpression<PLUGINTYPE> LifecycleIs(InstanceScope lifecycle)
         {
             _alterations.Add(family => family.SetScopeTo(lifecycle));
             return this;
@@ -220,7 +220,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <returns></returns>
         public CreatePluginFamilyExpression<PLUGINTYPE> HybridHttpOrThreadLocalScoped()
         {
-            return lifecycleIs(InstanceScope.Hybrid);
+            return LifecycleIs(InstanceScope.Hybrid);
         }
 
         /// <summary>
@@ -229,7 +229,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <returns></returns>
         public CreatePluginFamilyExpression<PLUGINTYPE> HttpContextScoped()
         {
-            return lifecycleIs(InstanceScope.HttpContext);
+            return LifecycleIs(InstanceScope.HttpContext);
         }
 
 
