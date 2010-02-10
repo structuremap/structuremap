@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
@@ -63,20 +64,37 @@ namespace StructureMap.Testing.Configuration.DSL
         }
 
         [Test]
-        public void Equals_check_true()
+        public void an_instance_of_the_base_registry_is_equal_to_itself()
+        {
+            var registry1 = new Registry();
+            
+            registry1.Equals((object)registry1).ShouldBeTrue();
+        }
+
+        [Test]
+        public void two_instances_of_the_base_registry_type_are_not_considered_equal()
+        {
+            var registry1 = new Registry();
+            var registry2 = new Registry();
+
+            registry1.Equals((object)registry2).ShouldBeFalse();
+        }
+
+        [Test]
+        public void two_instances_of_a_derived_registry_type_are_considered_equal()
         {
             var registry1 = new TestRegistry();
             var registry2 = new TestRegistry();
             var registry3 = new TestRegistry2();
             var registry4 = new TestRegistry2();
 
-            registry1.Equals(registry1).ShouldBeTrue();
-            registry1.Equals(registry2).ShouldBeTrue();
-            registry2.Equals(registry1).ShouldBeTrue();
-            registry3.Equals(registry4).ShouldBeTrue();
+            registry1.Equals((object)registry1).ShouldBeTrue();
+            registry1.Equals((object)registry2).ShouldBeTrue();
+            registry2.Equals((object)registry1).ShouldBeTrue();
+            registry3.Equals((object)registry4).ShouldBeTrue();
 
-            registry1.Equals(registry3).ShouldBeFalse();
-            registry3.Equals(registry1).ShouldBeFalse();
+            registry1.Equals((object)registry3).ShouldBeFalse();
+            registry3.Equals((object)registry1).ShouldBeFalse();
         }
 
         [Test]
@@ -93,6 +111,45 @@ namespace StructureMap.Testing.Configuration.DSL
 
             container.GetAllInstances<IWidget>().Count.ShouldEqual(5);
         }
+
+        public class MutatedWidget : IWidget
+        {
+            public void DoSomething() { }
+        }
+
+        public class MutatingRegistry : Registry
+        {
+            private static int count = 0;
+
+            public MutatingRegistry()
+            {
+                For<IWidget>().Use<AWidget>();
+
+                if(count++ >= 1)
+                {
+                    For<IWidget>().Use<MutatedWidget>();
+                }
+            }
+        }
+
+        [Test]
+        public void include_an_existing_registry_should_not_reevaluate_the_registry()
+        {
+            var registry1 = new Registry();
+            registry1.IncludeRegistry<MutatingRegistry>();
+
+            var registry2 = new Registry();
+            registry2.IncludeRegistry<MutatingRegistry>();
+
+            var container = new Container(config =>
+            {
+                config.AddRegistry(registry1);
+                config.AddRegistry(registry2);
+            });
+
+            container.GetInstance<IWidget>().ShouldBeOfType<AWidget>();
+        }
+
 
         [Test]
         public void Latch_on_a_PluginGraph()

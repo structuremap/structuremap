@@ -417,30 +417,26 @@ namespace StructureMap.Configuration.DSL
             return (type.GetConstructor(new Type[0]) != null);
         }
 
-        public bool Equals(Registry obj)
+        public bool Equals(Registry other)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            return GetType().Equals(obj.GetType());
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            if(other.GetType() == typeof(Registry) && GetType() == typeof(Registry)) return false;
+            return Equals(other.GetType(), GetType());
         }
 
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-
-            if (obj is Registry) return false;
-
-
-            if (obj.GetType() != typeof (Registry)) return false;
+            if (!typeof (Registry).IsAssignableFrom(obj.GetType())) return false;
             return Equals((Registry) obj);
         }
 
         public override int GetHashCode()
         {
-            return 0;
+            return GetType().GetHashCode();
         }
-
-        #region Nested type: BuildWithExpression
 
         /// <summary>
         /// Define the constructor and setter arguments for the default T
@@ -457,7 +453,5 @@ namespace StructureMap.Configuration.DSL
 
             public SmartInstance<T> Configure { get { return _instance; } }
         }
-
-        #endregion
     }
 }
