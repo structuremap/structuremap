@@ -4,7 +4,7 @@
   <property name="deployment.dir" value="source\StructureMap.Testing.DeploymentTasks\"/>
   <property name="results.dir" value="results" />
   <property name="nant.dir" value="bin\nant" />
-  <property name="project.version" value="2.6.1" />
+  <property name="project.version" value="2.6.2" />
   <property name="project.config" value="release" />
   <property name="archive.dir" value="archive"/>
   <target name="all" depends="compile, unit-test, post-clean"/>
@@ -36,8 +36,9 @@
 
   <target name="version" description="mark AssemblyInfo builds with the build number">
     <property name="assembly-version" value="${project.version}.0000" />
+    <property name="file-version" value="${project.version}.0000" />
     <if test="${environment::variable-exists('BUILD_VCS_NUMBER_SourceForge_SVN')}">
-      <property name="assembly-version" value="${project.version}.${environment::get-variable('BUILD_VCS_NUMBER_SourceForge_SVN')}" />
+      <property name="file-version" value="${project.version}.${environment::get-variable('BUILD_VCS_NUMBER_SourceForge_SVN')}" />
     </if>
 
     <echo message="Marking this build as version ${assembly-version}" />
@@ -55,8 +56,8 @@
         <attribute type="AssemblyProductAttribute" value="StructureMap" />
         <attribute type="AssemblyCompanyAttribute" value="" />
         <attribute type="AssemblyConfigurationAttribute" value="${project.config}" />
-        <attribute type="AssemblyInformationalVersionAttribute" value="${assembly-version}" />
-        <attribute type="AssemblyFileVersionAttribute" value="${assembly-version}" />
+        <attribute type="AssemblyInformationalVersionAttribute" value="${file-version}" />
+        <attribute type="AssemblyFileVersionAttribute" value="${file-version}" />
       </attributes>
       <references>
         <include name="System.dll" />
