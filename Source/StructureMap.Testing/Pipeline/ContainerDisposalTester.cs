@@ -1,5 +1,6 @@
 using System;
 using NUnit.Framework;
+using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Pipeline
 {

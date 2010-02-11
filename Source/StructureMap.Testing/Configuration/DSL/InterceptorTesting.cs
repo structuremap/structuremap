@@ -150,6 +150,10 @@ namespace StructureMap.Testing.Configuration.DSL
 
 
         public IService Inner { get { return _inner; } }
+        public void DoSomething()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class ContextRecorder

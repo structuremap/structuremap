@@ -403,6 +403,10 @@ namespace StructureMap.Testing.DocumentationExamples
 
     public class RemoteService : IService
     {
+        public void DoSomething()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class InstanceExampleRegistry : Registry

@@ -1,7 +1,10 @@
+using System;
+
 namespace StructureMap.Testing.Widget3
 {
     public interface IService : IBasicService
     {
+        void DoSomething();
     }
 
     public interface IBasicService
@@ -24,6 +27,11 @@ namespace StructureMap.Testing.Widget3
         public override string ToString()
         {
             return "ColorService:  " + _color;
+        }
+
+        public void DoSomething()
+        {
+            throw new NotImplementedException();
         }
     }
 }

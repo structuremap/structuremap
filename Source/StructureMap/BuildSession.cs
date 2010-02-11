@@ -119,7 +119,7 @@ namespace StructureMap
 
         public IEnumerable<T> GetAllInstances<T>()
         {
-            return forType(typeof (T)).AllInstances.Select(x => GetInstance<T>());
+            return (IEnumerable<T>) forType(typeof (T)).AllInstances.Select(x => (T)CreateInstance(typeof(T), x));
         }
 
         protected void clearBuildStack()

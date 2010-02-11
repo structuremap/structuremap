@@ -67,6 +67,48 @@ namespace StructureMap.Testing
             container.GetInstance<TopClass>().Widgets.Count().ShouldEqual(4);
         }
 
+
+        [Test]
+        public void can_get_all_of_a_type_during_object_creation_as_generic_type()
+        {
+            var container = new Container(x =>
+            {
+                x.For<IWidget>().AddInstances(o =>
+                {
+                    o.OfConcreteType<AWidget>();
+                    o.ConstructedBy(() => new ColorWidget("red"));
+                    o.ConstructedBy(() => new ColorWidget("blue"));
+                    o.ConstructedBy(() => new ColorWidget("green"));
+                });
+
+                x.ForConcreteType<TopClass>().Configure.OnCreation(
+                    (c, top) => { top.Widgets = c.All<IWidget>().ToArray(); });
+            });
+
+            container.GetInstance<TopClass>().Widgets.Count().ShouldEqual(4);
+        }
+
+
+        [Test]
+        public void can_get_all_of_a_type_by_GetAllInstances_during_object_creation_as_generic_type()
+        {
+            var container = new Container(x =>
+            {
+                x.For<IWidget>().AddInstances(o =>
+                {
+                    o.OfConcreteType<AWidget>();
+                    o.ConstructedBy(() => new ColorWidget("red"));
+                    o.ConstructedBy(() => new ColorWidget("blue"));
+                    o.ConstructedBy(() => new ColorWidget("green"));
+                });
+
+                x.ForConcreteType<TopClass>().Configure.OnCreation(
+                    (c, top) => { top.Widgets = c.GetAllInstances<IWidget>().ToArray(); });
+            });
+
+            container.GetInstance<TopClass>().Widgets.Count().ShouldEqual(4);
+        }
+
         [Test]
         public void Get_a_unique_value_for_each_individual_buildsession()
         {

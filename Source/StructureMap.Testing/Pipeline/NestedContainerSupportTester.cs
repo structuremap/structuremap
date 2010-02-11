@@ -206,7 +206,11 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void transient_service_in_the_parent_container_is_effectively_a_singleton_for_the_nested_container()
         {
-            var parent = new Container(x => { x.For<IWidget>().Use<AWidget>(); });
+            var parent = new Container(x =>
+            {
+                // IWidget is a "transient"
+                x.For<IWidget>().Use<AWidget>();
+            });
 
             IContainer child = parent.GetNestedContainer();
 
