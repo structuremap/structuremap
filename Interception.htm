@@ -1,0 +1,645 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+	<head>
+		<title>Interception Capabilities</title>
+		<link rel="stylesheet" type="text/css" href="style.css" />
+		<script type="text/javascript" src="jquery-1.2.6.js"></script>
+		<script type="text/javascript" src="structuremap.js"></script>
+	</head>
+	<body>
+	    <p>StructureMap 2.5+ added the ability to postprocess or even intercept and replace 
+            the objects being created.&nbsp; While StructureMap will never include its own 
+            Aspect Oriented Programming model (the world does not need a new one), the 
+            interception techniques shown below could be used to apply runtime AOP from 
+            existing AOP tools like the Policy Injection Application Block from Microsoft.</p>
+        <p>In general, interception is specified in three ways:</p>
+        <ol>
+            <li>OnCreation() -- Registers an Action to run against the new object after creation</li>
+            <li>EnrichWith() -- Registers a Func that runs against the new object after creation 
+                and gives you the option of returning a different object than the original 
+                object</li>
+            <li>A custom class that implements the TypeInterceptor interface (the runtime model 
+                behind all the interception techniques)</li>
+        </ol>
+	    
+
+	    <p>
+            &nbsp;</p>
+	    
+
+	    <h2>Intercept a Single Instance</h2>
+        <p>You can specify interception for a single Instance.&nbsp; This interception could 
+            be combined with other Interception policies, but users should be cautious about 
+            this.&nbsp; </p>
+        <h4>Run an Action Against an Object</h4>
+        <p>Some classes may require some extra bootstrapping work before they are ready to 
+            be used.&nbsp; While I recommend building classes in such a way that the new 
+            objects are ready to function after calling the constructor function, not every 
+            class you will encounter will follow this rule.&nbsp; For that reason, 
+            StructureMap has the ability to register an Action&lt;T&gt; to run against a newly 
+            created object before it is returned to the requesting code.&nbsp; You can 
+            register that Action on an individual Instance:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red0\green128\blue0;}??\fs20     \cf3 public\cf0  \cf3 class\cf0  \cf4 InterceptionRegistry\cf0  : \cf4 Registry\par ??\cf0     \{\par ??        \cf3 public\cf0  InterceptionRegistry()\par ??        \{\par ??            \cf5 // Perform an Action&lt;T&gt; upon the object of type T \par ??\cf0             \cf5 // just created before it is returned to the caller\par ??\cf0             ForRequestedType&lt;\cf4 ClassThatNeedsSomeBootstrapping\cf0 &gt;().TheDefault.Is\par ??                .OfConcreteType&lt;\cf4 ClassThatNeedsSomeBootstrapping\cf0 &gt;()\par ??                .OnCreation(x =&gt; x.Start());\par ??                \par ??            \cf5 // or...\par ??\par ??\cf0             \cf5 // You can also register an Action&lt;IContext, T&gt; to get access\par ??\cf0             \cf5 // to all the services and capabilities of the BuildSession\par ??\cf0             ForRequestedType&lt;\cf4 ClassThatNeedsSomeBootstrapping\cf0 &gt;().TheDefault.Is\par ??                .OfConcreteType&lt;\cf4 ClassThatNeedsSomeBootstrapping\cf0 &gt;()\par ??                .OnCreation((context, x) =&gt;\par ??                \{\par ??                    \cf3 var\cf0  connection = context.GetInstance&lt;\cf4 IConnectionPoint\cf0 &gt;();\par ??                    x.Connect(connection);\par ??                \});\par ??\par ??        \}\par ??    \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">class</span>
+                <span style="color: #2b91af;">InterceptionRegistry</span> :
+                <span style="color: #2b91af;">Registry</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> 
+                InterceptionRegistry()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // Perform an Action&lt;T&gt; upon the object of type T </span>
+            </p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // just created before it is returned to the caller</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ForRequestedType&lt;<span 
+                    style="color: #2b91af;">ClassThatNeedsSomeBootstrapping</span>&gt;().TheDefault.Is</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .OfConcreteType&lt;<span style="color: #2b91af;">ClassThatNeedsSomeBootstrapping</span>&gt;()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .OnCreation(x =&gt; x.Start());</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // or...</span></p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // You can also register an Action&lt;IContext, T&gt; to get access</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // to all the services and capabilities of the BuildSession</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ForRequestedType&lt;<span 
+                    style="color: #2b91af;">ClassThatNeedsSomeBootstrapping</span>&gt;().TheDefault.Is</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .OfConcreteType&lt;<span style="color: #2b91af;">ClassThatNeedsSomeBootstrapping</span>&gt;()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .OnCreation((context, x) =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="color: blue;">var</span> connection = context.GetInstance&lt;<span 
+                    style="color: #2b91af;">IConnectionPoint</span>&gt;();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.Connect(connection);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<hr />
+        <h4>Wrap or Substitute the Returned Object</h4>
+        <p>Sometimes you may want to wrap the constructed object in some sort of Decorator 
+            or apply runtime AOP to the new object.&nbsp; In this case, StructureMap will 
+            allow you to substitute the constructed object for the new wrapped object -- 
+            with the restriction that the object returned must be assignable to the 
+            requested PluginType.&nbsp; Let&#39;s consider the case of using a
+            <a href="http://resharper.codebetter.com/blogs/jeremy.miller/archive/2005/09/02/131613.aspx">
+            Decorator</a> pattern to add logging to an existing service:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20     \cf3 public\cf0  \cf3 class\cf0  \cf4 LoggingDecorator\cf0  : \cf4 IConnectionListener\par ??\cf0     \{\par ??        \cf3 private\cf0  \cf3 readonly\cf0  \cf4 IConnectionListener\cf0  _inner;\par ??\par ??        \cf3 public\cf0  LoggingDecorator(\cf4 IConnectionListener\cf0  inner)\par ??        \{\par ??            _inner = inner;\par ??        \}\par ??    \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">class</span>
+                <span style="color: #2b91af;">LoggingDecorator</span> :
+                <span style="color: #2b91af;">IConnectionListener</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">private</span>
+                <span style="color: blue;">readonly</span> <span style="color: #2b91af;">
+                IConnectionListener</span> _inner;</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> 
+                LoggingDecorator(<span style="color: #2b91af;">IConnectionListener</span> inner)</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _inner = inner;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<p>When you register an instance of IConnectionListener, you can specify that the 
+    constructed object get wrapped with a decorator using the EnrichWith() syntax 
+    like this:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red0\green128\blue0;\red43\green145\blue175;}??\fs20         \cf3 public\cf0  InterceptionRegistry()\par ??        \{\par ??            \cf4 // Perform an Action&lt;T&gt; upon the object of type T \par ??\cf0             \cf4 // just created before it is returned to the caller\par ??\cf0             ForRequestedType&lt;\cf5 ClassThatNeedsSomeBootstrapping\cf0 &gt;().TheDefault.Is\par ??                .OfConcreteType&lt;\cf5 ClassThatNeedsSomeBootstrapping\cf0 &gt;()\par ??                .OnCreation(x =&gt; x.Start());\par ??                \par ??            \cf4 // or...\par ??\par ??\cf0             \cf4 // You can also register an Action&lt;IContext, T&gt; to get access\par ??\cf0             \cf4 // to all the services and capabilities of the BuildSession\par ??\cf0             ForRequestedType&lt;\cf5 ClassThatNeedsSomeBootstrapping\cf0 &gt;().TheDefault.Is\par ??                .OfConcreteType&lt;\cf5 ClassThatNeedsSomeBootstrapping\cf0 &gt;()\par ??                .OnCreation((context, x) =&gt;\par ??                \{\par ??                    \cf3 var\cf0  connection = context.GetInstance&lt;\cf5 IConnectionPoint\cf0 &gt;();\par ??                    x.Connect(connection);\par ??                \});\par ??\par ??\par ??            ForRequestedType&lt;\cf5 IConnectionListener\cf0 &gt;().TheDefault.Is\par ??                .OfConcreteType&lt;\cf5 ClassThatNeedsSomeBootstrapping\cf0 &gt;()\par ??                .EnrichWith(x =&gt; \cf3 new\cf0  \cf5 LoggingDecorator\cf0 (x));\par ??\par ??        \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> 
+                InterceptionRegistry()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ForRequestedType&lt;<span 
+                    style="color: #2b91af;">IConnectionListener</span>&gt;().TheDefault.Is</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .OfConcreteType&lt;<span style="color: #2b91af;">ClassThatNeedsSomeBootstrapping</span>&gt;()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .EnrichWith(x =&gt; <span style="color: blue;">new</span>
+                <span style="color: #2b91af;">LoggingDecorator</span>(x));</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<p>In the sample registration above, a call to 
+    Container.GetInstance&lt;IConnectionListener&gt;() will result in a new 
+    ClassThatNeedsSomeBootstrapping wrapped in a LoggingDecorator object:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red43\green145\blue175;\red0\green0\blue255;}??\fs20         [\cf3 Test\cf0 ]\par ??        \cf4 public\cf0  \cf4 void\cf0  see_the_enrichment_with_a_decorator_in_action()\par ??        \{\par ??            \cf4 var\cf0  container = \cf4 new\cf0  \cf3 Container\cf0 (\cf4 new\cf0  \cf3 InterceptionRegistry\cf0 ());\par ??            container.GetInstance&lt;\cf3 IConnectionListener\cf0 &gt;()\par ??                .ShouldBeOfType&lt;\cf3 LoggingDecorator\cf0 &gt;()\par ??                .Inner.ShouldBeOfType&lt;\cf3 ClassThatNeedsSomeBootstrapping\cf0 &gt;();\par ??        \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<span style="color: #2b91af;">Test</span>]</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: blue;">void</span> 
+                see_the_enrichment_with_a_decorator_in_action()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                var</span> container = <span style="color: blue;">new</span>
+                <span style="color: #2b91af;">Container</span>(<span style="color: blue;">new</span>
+                <span style="color: #2b91af;">InterceptionRegistry</span>());</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; container.GetInstance&lt;<span 
+                    style="color: #2b91af;">IConnectionListener</span>&gt;()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .ShouldBeOfType&lt;<span style="color: #2b91af;">LoggingDecorator</span>&gt;()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .Inner.ShouldBeOfType&lt;<span style="color: #2b91af;">ClassThatNeedsSomeBootstrapping</span>&gt;();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<p>There is also an overload of EnrichWith() that takes in the IContext object:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red43\green145\blue175;\red0\green0\blue255;}??\fs20             ForRequestedType&lt;\cf3 IConnectionListener\cf0 &gt;().TheDefault.Is\par ??                .OfConcreteType&lt;\cf3 ClassThatNeedsSomeBootstrapping\cf0 &gt;()\par ??                .EnrichWith((context, x) =&gt;\par ??                \{\par ??                    \cf4 var\cf0  connection = context.GetInstance&lt;\cf3 IConnectionPoint\cf0 &gt;();\par ??                    x.Connect(connection);\par ??\par ??                    \cf4 return\cf0  \cf4 new\cf0  \cf3 LoggingDecorator\cf0 (x);\par ??                \});}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ForRequestedType&lt;<span 
+                    style="color: #2b91af;">IConnectionListener</span>&gt;().TheDefault.Is</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .OfConcreteType&lt;<span style="color: #2b91af;">ClassThatNeedsSomeBootstrapping</span>&gt;()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .EnrichWith((context, x) =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="color: blue;">var</span> connection = context.GetInstance&lt;<span 
+                    style="color: #2b91af;">IConnectionPoint</span>&gt;();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.Connect(connection);</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="color: blue;">return</span> <span style="color: blue;">new</span>
+                <span style="color: #2b91af;">LoggingDecorator</span>(x);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+        </div>
+<!--EndFragment-->
+<p>See <a href="UsingSessionContext.htm">Using the Session Context</a> for more 
+            information on using the IContext.</p>
+        <hr />
+        <h4>With a Custom Interceptor</h4>
+        <p>To write a custom Interceptor for a single Instance, create a new class that 
+            implements the InstaneInterceptor interface:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20     \cf3 public\cf0  \cf3 interface\cf0  \cf4 InstanceInterceptor\par ??\cf0     \{\par ??        \cf3 object\cf0  Process(\cf3 object\cf0  target, \cf4 IContext\cf0  context);\par ??    \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">interface</span>
+                <span style="color: #2b91af;">InstanceInterceptor</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">object</span> Process(<span 
+                    style="color: blue;">object</span> target, <span style="color: #2b91af;">
+                IContext</span> context);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<p>&nbsp;with a class like this:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red0\green128\blue0;}??\fs20     \cf3 public\cf0  \cf3 class\cf0  \cf4 CustomInterceptor\cf0  : \cf4 InstanceInterceptor\par ??\cf0     \{\par ??        \cf3 public\cf0  \cf3 object\cf0  Process(\cf3 object\cf0  target, \cf4 IContext\cf0  context)\par ??        \{\par ??            \cf5 // manipulate the target object and return a wrapped version\par ??\cf0             \cf3 return\cf0  wrapTarget(target);\par ??        \}\par ??\par ??        \cf3 private\cf0  \cf3 object\cf0  wrapTarget(\cf3 object\cf0  target)\par ??        \{\par ??            \cf3 throw\cf0  \cf3 new\cf0  \cf4 NotImplementedException\cf0 ();\par ??        \}\par ??    \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">class</span>
+                <span style="color: #2b91af;">CustomInterceptor</span> :
+                <span style="color: #2b91af;">InstanceInterceptor</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: blue;">object</span> Process(<span style="color: blue;">object</span> 
+                target, <span style="color: #2b91af;">IContext</span> context)</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // manipulate the target object and return a wrapped version</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                return</span> wrapTarget(target);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">private</span>
+                <span style="color: blue;">object</span> wrapTarget(<span style="color: blue;">object</span> 
+                target)</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                throw</span> <span style="color: blue;">new</span> <span style="color: #2b91af;">
+                NotImplementedException</span>();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<p>Then, register the a new object instance of the CustomerInterceptor:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red43\green145\blue175;\red0\green0\blue255;}??\fs20             ForRequestedType&lt;\cf3 IConnectionListener\cf0 &gt;().TheDefault.Is\par ??                .OfConcreteType&lt;\cf3 ClassThatNeedsSomeBootstrapping\cf0 &gt;()\par ??                .InterceptWith(\cf4 new\cf0  \cf3 CustomInterceptor\cf0 ());}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ForRequestedType&lt;<span 
+                    style="color: #2b91af;">IConnectionListener</span>&gt;().TheDefault.Is</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .OfConcreteType&lt;<span style="color: #2b91af;">ClassThatNeedsSomeBootstrapping</span>&gt;()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .InterceptWith(<span style="color: blue;">new</span>
+                <span style="color: #2b91af;">CustomInterceptor</span>());</p>
+        </div>
+	    <hr />
+
+
+
+	<h2>Apply Interception to all Instances of a PluginType</h2>
+        <p>The same OnCreation(), EnrichWith(), and InterceptWith() methods can be applied 
+            to all Instances of a given PluginType off of the ForRequestedType() or 
+            BuildInstancesOf() methods of the <a href="RegistryDSL.htm">Registry DSL</a>:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green128\blue0;\red43\green145\blue175;\red0\green0\blue255;}??\fs20             \cf3 // Place the Interception at the PluginType level\par ??\cf0             ForRequestedType&lt;\cf4 IConnectionListener\cf0 &gt;()\par ??                .OnCreation(x =&gt; x.StartConnection())     \cf3 // OnCreation\par ??\cf0                 .EnrichWith(x =&gt; \cf5 new\cf0  \cf4 LoggingDecorator\cf0 (x)) \cf3 // Enrich\par ??\cf0                 .InterceptWith(\cf5 new\cf0  \cf4 CustomInterceptor\cf0 ())   \cf3 // Custom Interceptor\par ??\par ??\par ??\cf0                 .TheDefaultIsConcreteType&lt;\cf4 ClassThatNeedsSomeBootstrapping\cf0 &gt;();}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // Place the Interception at the PluginType level</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ForRequestedType&lt;<span 
+                    style="color: #2b91af;">IConnectionListener</span>&gt;()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .OnCreation(x =&gt; x.StartConnection())&nbsp;&nbsp;&nbsp;
+                <span style="color: green;">// OnCreation</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .EnrichWith(x =&gt; <span style="color: blue;">new</span>
+                <span style="color: #2b91af;">LoggingDecorator</span>(x))
+                <span style="color: green;">// Enrich</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .InterceptWith(<span style="color: blue;">new</span>
+                <span style="color: #2b91af;">CustomInterceptor</span>())&nbsp;&nbsp;
+                <span style="color: green;">// Custom Interceptor</span></p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .TheDefaultIsConcreteType&lt;<span style="color: #2b91af;">ClassThatNeedsSomeBootstrapping</span>&gt;();</p>
+        </div>
+<!--EndFragment-->
+<p>Note that these methods can be used in combination with each other and even 
+    multiple times for the same type.&nbsp; All additional calls are additive.&nbsp; 
+    Use with caution!</p>
+	    <hr />
+	    
+	    
+	    <h2>Apply Interception to all Types Matching a Criteria</h2>
+        <p>If an interception policy is simple, you can just register the interception 
+            policy with the IfTypeMatches( Predicate&lt;Type&gt; ).InterceptWith(&nbsp;&nbsp; 
+            Lambda&nbsp; ) syntax:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20             registry.IfTypeMatches(type =&gt; type.Equals(\cf3 typeof\cf0  (\cf4 BlueSomething\cf0 )))\par ??                .InterceptWith(rawInstance =&gt; \cf3 new\cf0  \cf4 WrappedSomething\cf0 ((\cf4 IAnInterfaceOfSomeSort\cf0 ) rawInstance));}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; registry.IfTypeMatches(type 
+                =&gt; type.Equals(<span style="color: blue;">typeof</span> (<span 
+                    style="color: #2b91af;">BlueSomething</span>)))</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .InterceptWith(rawInstance =&gt; <span style="color: blue;">new</span>
+                <span style="color: #2b91af;">WrappedSomething</span>((<span 
+                    style="color: #2b91af;">IAnInterfaceOfSomeSort</span>) rawInstance));</p>
+        </div>
+<!--EndFragment-->
+<p>Please note that when StructureMap encounters a new concrete type for the first 
+    time, it searches for all TypeInterceptors that match that the concrete type, 
+    and caches these TypeInterceptors against the concrete type for future usage.&nbsp; 
+    The long and short of this is that any filter on the type is only going to be 
+    evaluated once.</p>
+	    <hr />
+	    
+	    <h2>Creating a Custom Type Interceptor</h2>
+        <p>Sooner or later the Fluent Interface registration of TypeInterceptors will not be 
+            adequate.&nbsp; In that case, you can create a custom class that implements the 
+            TypeInterceptor interface:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red128\green128\blue128;\red0\green128\blue0;\red0\green0\blue255;\red43\green145\blue175;}??\fs20     \cf3 ///\cf4  \cf3 &lt;summary&gt;\par ??\cf0     \cf3 ///\cf4  A TypeInterceptor that is only applied if the MatchesType()\par ??\cf0     \cf3 ///\cf4  method is true for a given Type\par ??\cf0     \cf3 ///\cf4  \cf3 &lt;/summary&gt;\par ??\cf0     \cf5 public\cf0  \cf5 interface\cf0  \cf6 TypeInterceptor\cf0  : \cf6 InstanceInterceptor\par ??\cf0     \{\par ??        \cf3 ///\cf4  \cf3 &lt;summary&gt;\par ??\cf0         \cf3 ///\cf4  Does this TypeInterceptor apply to the given type?\par ??\cf0         \cf3 ///\cf4  \cf3 &lt;/summary&gt;\par ??\cf0         \cf3 ///\cf4  \cf3 &lt;param name="type"&gt;&lt;/param&gt;\par ??\cf0         \cf3 ///\cf4  \cf3 &lt;returns&gt;&lt;/returns&gt;\par ??\cf0         \cf5 bool\cf0  MatchesType(\cf6 Type\cf0  type);\par ??    \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span style="color: green;"> </span>
+                <span style="color: gray;">&lt;summary&gt;</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span style="color: green;"> A 
+                TypeInterceptor that is only applied if the MatchesType()</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span style="color: green;"> method is 
+                true for a given Type</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span style="color: green;"> </span>
+                <span style="color: gray;">&lt;/summary&gt;</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">interface</span>
+                <span style="color: #2b91af;">TypeInterceptor</span> :
+                <span style="color: #2b91af;">InstanceInterceptor</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> </span><span style="color: gray;">&lt;summary&gt;</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> Does this TypeInterceptor apply to the given type?</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> </span><span style="color: gray;">&lt;/summary&gt;</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> </span><span style="color: gray;">&lt;param 
+                name=&quot;type&quot;&gt;&lt;/param&gt;</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: gray;">///</span><span 
+                    style="color: green;"> </span><span style="color: gray;">&lt;returns&gt;&lt;/returns&gt;</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">bool</span> MatchesType(<span 
+                    style="color: #2b91af;">Type</span> type);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<p>Registered TypeInterceptor objects are applied against any object created by 
+    StructureMap if the type of the new object meets the MatchesType() method of 
+    TypeInterceptor.&nbsp; You can happily use multiple TypeInterceptors.</p>
+        <p>Here&#39;s a fairly advanced example.&nbsp; Let&#39;s say that you&#39;re using an
+            <a href="http://codebetter.com/blogs/jeremy.miller/archive/2008/01/11/build-your-own-cab-extensible-pub-sub-event-aggregator-with-generics.aspx">
+            Event Aggregator</a> pattern.&nbsp; You&#39;ll typically have some sort of Event 
+            Aggregator, and a listener interface to register with the Event Aggregator.</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20     \cf3 public\cf0  \cf3 interface\cf0  \cf4 IEventListener\cf0 &lt;T&gt;\par ??    \{\par ??        \cf3 void\cf0  ProcessEvent(T @event);\par ??    \}\par ??\par ??    \cf3 public\cf0  \cf3 interface\cf0  \cf4 IEventAggregator\par ??\cf0     \{\par ??        \cf3 void\cf0  RegisterListener&lt;T&gt;(\cf4 IEventListener\cf0 &lt;T&gt; listener);\par ??        \cf3 void\cf0  PublishEvent&lt;T&gt;(T @event);\par ??    \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">interface</span>
+                <span style="color: #2b91af;">IEventListener</span>&lt;T&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">void</span> ProcessEvent(T 
+                @event);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">interface</span>
+                <span style="color: #2b91af;">IEventAggregator</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">void</span> 
+                RegisterListener&lt;T&gt;(<span style="color: #2b91af;">IEventListener</span>&lt;T&gt; 
+                listener);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">void</span> 
+                PublishEvent&lt;T&gt;(T @event);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<p>Let&#39;s say that anytime an object of any sort (Presenter, Controller, View, who 
+    knows what) is created by StructureMap, we want to see if that object implements 
+    any sort of IEventListener&lt;T&gt; interface, and if it does, register that object as 
+    a listener with the IEventAggregator.&nbsp; Here&#39;s the custom TypeInterceptor 
+    that does just this (most of the code is actually just massaging the generic 
+    types, but I wanted a nontrivial example):</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red0\green128\blue0;}??\fs20     \cf3 public\cf0  \cf3 class\cf0  \cf4 ListenerInterceptor\cf0  : \cf4 TypeInterceptor\par ??\cf0     \{\par ??        \cf3 public\cf0  \cf3 object\cf0  Process(\cf3 object\cf0  target, \cf4 IContext\cf0  context)\par ??        \{\par ??            \cf5 // Assuming that "target" is an implementation of IEventListener&lt;T&gt;,\par ??\cf0             \cf5 // we'll do a little bit of generics sleight of hand\par ??\cf0             \cf5 // to register "target" with IEventAggregator\par ??\cf0             \cf3 var\cf0  eventType = target.GetType().FindInterfaceThatCloses(\cf3 typeof\cf0  (\cf4 IEventListener\cf0 &lt;&gt;)).GetGenericArguments()[0];\par ??            \cf3 var\cf0  type = \cf3 typeof\cf0  (\cf4 Registration\cf0 &lt;&gt;).MakeGenericType(eventType);\par ??            \cf4 Registration\cf0  registration = (\cf4 Registration\cf0 ) \cf4 Activator\cf0 .CreateInstance(type);\par ??            registration.RegisterListener(context, target);\par ??            \par ??            \cf5 // we didn't change the target object, so just return it\par ??\cf0             \cf3 return\cf0  target;\par ??        \}\par ??\par ??        \cf3 public\cf0  \cf3 bool\cf0  MatchesType(\cf4 Type\cf0  type)\par ??        \{\par ??            \cf5 // ImplementsInterfaceTemplate is an Extension method in the\par ??\cf0             \cf5 // StructureMap namespace that basically says:\par ??\cf0             \cf5 // does this type implement any closed type of the open template type?\par ??\cf0             \cf3 return\cf0  type.ImplementsInterfaceTemplate(\cf3 typeof\cf0  (\cf4 IEventListener\cf0 &lt;&gt;));\par ??        \}\par ??\par ??        \cf5 // The inner type and interface is just a little trick to\par ??\cf0         \cf5 // grease the generic wheels\par ??\cf0         \cf3 public\cf0  \cf3 interface\cf0  \cf4 Registration\par ??\cf0         \{\par ??            \cf3 void\cf0  RegisterListener(\cf4 IContext\cf0  context, \cf3 object\cf0  listener);\par ??        \}\par ??\par ??        \cf3 public\cf0  \cf3 class\cf0  \cf4 Registration\cf0 &lt;T&gt; : \cf4 Registration\par ??\cf0         \{\par ??            \cf3 public\cf0  \cf3 void\cf0  RegisterListener(\cf4 IContext\cf0  context, \cf3 object\cf0  listener)\par ??            \{\par ??                \cf3 var\cf0  aggregator = context.GetInstance&lt;\cf4 IEventAggregator\cf0 &gt;();\par ??                aggregator.RegisterListener&lt;T&gt;((\cf4 IEventListener\cf0 &lt;T&gt;) listener);\par ??            \}\par ??        \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">class</span>
+                <span style="color: #2b91af;">ListenerInterceptor</span> :
+                <span style="color: #2b91af;">TypeInterceptor</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: blue;">object</span> Process(<span style="color: blue;">object</span> 
+                target, <span style="color: #2b91af;">IContext</span> context)</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // Assuming that &quot;target&quot; is an implementation of IEventListener&lt;T&gt;,</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // we&#39;ll do a little bit of generics sleight of hand</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // to register &quot;target&quot; with IEventAggregator</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                var</span> eventType = target.GetType().FindInterfaceThatCloses(<span 
+                    style="color: blue;">typeof</span> (<span style="color: #2b91af;">IEventListener</span>&lt;&gt;)).GetGenericArguments()[0];</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                var</span> type = <span style="color: blue;">typeof</span> (<span 
+                    style="color: #2b91af;">Registration</span>&lt;&gt;).MakeGenericType(eventType);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #2b91af;">
+                Registration</span> registration = (<span style="color: #2b91af;">Registration</span>)
+                <span style="color: #2b91af;">Activator</span>.CreateInstance(type);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                registration.RegisterListener(context, target);</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // we didn&#39;t change the target object, so just return it</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                return</span> target;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: blue;">bool</span> MatchesType(<span 
+                    style="color: #2b91af;">Type</span> type)</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // ImplementsInterfaceTemplate is an Extension method in the</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // StructureMap namespace that basically says:</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // does this type implement any closed type of the open template type?</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                return</span> type.ImplementsInterfaceTemplate(<span style="color: blue;">typeof</span> 
+                (<span style="color: #2b91af;">IEventListener</span>&lt;&gt;));</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">// The inner type and 
+                interface is just a little trick to</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">// grease the generic 
+                wheels</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: blue;">interface</span> <span style="color: #2b91af;">
+                Registration</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                void</span> RegisterListener(<span style="color: #2b91af;">IContext</span> 
+                context, <span style="color: blue;">object</span> listener);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: blue;">class</span> <span style="color: #2b91af;">
+                Registration</span>&lt;T&gt; : <span style="color: #2b91af;">Registration</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                public</span> <span style="color: blue;">void</span> RegisterListener(<span 
+                    style="color: #2b91af;">IContext</span> context, <span style="color: blue;">
+                object</span> listener)</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="color: blue;">var</span> aggregator = context.GetInstance&lt;<span 
+                    style="color: #2b91af;">IEventAggregator</span>&gt;();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                aggregator.RegisterListener&lt;T&gt;((<span style="color: #2b91af;">IEventListener</span>&lt;T&gt;) 
+                listener);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<p>Finally, you can register the new ListenerInterceptor like this:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20     \cf3 public\cf0  \cf3 class\cf0  \cf4 ListeningRegistry\cf0  : \cf4 Registry\par ??\cf0     \{\par ??        \cf3 public\cf0  ListeningRegistry()\par ??        \{\par ??            RegisterInterceptor(\cf3 new\cf0  \cf4 ListenerInterceptor\cf0 ());\par ??        \}\par ??    \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">class</span>
+                <span style="color: #2b91af;">ListeningRegistry</span> :
+                <span style="color: #2b91af;">Registry</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> 
+                ListeningRegistry()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RegisterInterceptor(<span 
+                    style="color: blue;">new</span> <span style="color: #2b91af;">
+                ListenerInterceptor</span>());</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<p>By the way, this is cooked up sample code.&nbsp; Don&#39;t dream for a second that 
+    it&#39;ll work without some testing.</p>
+	    <hr />
+	</body>
+</html>

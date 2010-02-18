@@ -1,0 +1,438 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+	<head>
+		<title>Software Design Concepts</title>
+		<link rel="stylesheet" type="text/css" href="style.css" />
+		<script type="text/javascript" src="jquery-1.2.6.js"></script>
+		<script type="text/javascript" src="structuremap.js"></script>
+	</head>
+	<body>
+	
+	    <p>
+            Before you jump into using StructueMap in anger, there are some design concepts 
+            that can help you get the most out of an IoC tool.&nbsp; This web page is 
+            strictly about conceptual design fundamentals, and not particularly specific to 
+            StructureMap itself.&nbsp; I think this stuff is important to real world 
+            development.&nbsp; You might not memorize the &quot;Liskov Substitution Principle&quot; 
+            text, but you&#39;re code will be better for following its intent -- even if you 
+            don&#39;t particulary know the exact term for LSP.&nbsp; When you read this section, 
+            please focus on the concepts and any class&#39;s role within a system rather than 
+            get caught up in coding details like &quot;why is he using an AddressController 
+            instead of that being part of another class?&quot;</p>
+        <p>
+            &nbsp;</p>
+        <h2>
+            Design Concepts</h2>
+        <p>
+            Over the years a series of concepts and principles have been discovered and 
+            developed to describe well-structured Object Oriented systems.&nbsp; To most 
+            effectively use StructureMap, or any other IoC tool for that matter, your system 
+            needs to be designed with these principles first:
+        </p>
+        <ul>
+            <li><a href="http://en.wikipedia.org/wiki/Separation_of_concerns" 
+                    mce_href="http://en.wikipedia.org/wiki/Separation_of_concerns">Separation of 
+                Concerns</li>
+            <li><a href="http://msdn.microsoft.com/en-us/magazine/cc546578.aspx" 
+                    mce_href="http://msdn.microsoft.com/en-us/magazine/cc546578.aspx">Open 
+                Closed Principle, the Single Responsibility Principle, and the Liskov 
+                Substitution Principle</a></li>
+            <li><a href="http://codebetter.com/blogs/jeremy.miller/pages/129542.aspx" 
+                    mce_href="http://codebetter.com/blogs/jeremy.miller/pages/129542.aspx">
+                Responsibilities, Cohesion, and Coupling</a></li>
+            <li><a href="http://codebetter.com/blogs/jeremy.miller/archive/2007/01/08/Orthogonal-Code.aspx" 
+                    mce_href="http://codebetter.com/blogs/jeremy.miller/archive/2007/01/08/Orthogonal-Code.aspx">
+                Orthogonal Code</a></li>
+            <li><a href="http://codebetter.com/blogs/jeremy.miller/pages/129543.aspx" 
+                    mce_href="http://codebetter.com/blogs/jeremy.miller/pages/129543.aspx">
+                Dependency Inversion Principle</a></li>
+            <li><a href="http://www.artima.com/lejava/articles/designprinciples4.html" 
+                    mce_href="http://www.artima.com/lejava/articles/designprinciples4.html">
+                Favor Composition over Inheritance</a></li>
+        </ul>
+        <p>
+            To sum it all up, well designed Object Oriented systems are <b>composed</b> of 
+            many objects that work with each other to accomplish to goals of the system.&nbsp; 
+            We want our systems to be decomposed into cohesive classes that perform a well 
+            defined responsibility within the system, rather than monolithic “God” classes 
+            that do too much.&nbsp; A cohesive class will have to be dependent upon other 
+            classes to perform services outside of its own tightly defined responsibility.&nbsp; 
+            In IoC speak, we call the collaborating objects <b>dependencies</b>.&nbsp;
+        </p>
+        <hr />
+        <h2 class="style1">
+            Dependencies</h2>
+        <p>
+            For example, in my current system we have a class called
+            <font face="Courier New">AddressEditController</font> that governs the creation 
+            and editing of Address entities in our web based UI.&nbsp; The 
+            AddressEditController needs to validate user input and persist or load data.&nbsp; 
+            Those are two distinct responsibilities, so AddressEditController has 
+            dependencies on other objects for these services.&nbsp;
+        </p>
+        <div style="border: thin solid black; background: white none repeat scroll 0% 50%; font-size: 10pt; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial; color: black; font-family: courier new;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">class</span>
+                <span style="color: rgb(43, 145, 175);">AddressEditController</span> :
+                <span style="color: rgb(43, 145, 175);">Controller</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">// AddressEditController 
+                uses IValidator to validate user input</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">// and IRepository to 
+                load and save Address information</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">private</span>
+                <span style="color: blue;">readonly</span>
+                <span style="color: rgb(43, 145, 175);">IValidator</span> _validator;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">private</span>
+                <span style="color: rgb(43, 145, 175);">IRepository</span> _repository;</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+        <p>
+            So here’s some facts about <font face="Courier New">AddressEditController:</font></p>
+        <ul>
+            <li><font face="Courier New">AddressEditController</font> depends on
+                <font face="Courier New">IValidator</font> and <font face="Courier New">
+                IRepository</font>&nbsp; </li>
+            <li><font face="Courier New">AddressEditController</font> cannot function unless it 
+                has both an <font face="Courier New">IValidator</font> and an
+                <font face="Courier New">IRepository</font></li>
+            <li>From the concepts section above, for best results, the <font face="Courier New">
+                AddressEditController</font> should be loosely coupled to its dependencies by 
+                knowing as little about the inner workings of the real <font face="Courier New">
+                IValidator</font> and <font face="Courier New">IRepository</font></li>
+            <li>The real IRepository is a Gateway into NHibernate. The concrete Repository class 
+                cannot be used without its own dependency trail of external configuration, a 
+                Singleton to keep track of an expensive resource, and some NHibernate 
+                bootstrapping code.&nbsp; </li>
+        </ul>
+        <p>
+            Just calling a new() constructor on its dependencies isn’t the best design for 
+            our <font face="Courier New">AddressEditController</font>.&nbsp; Creating a 
+            concrete Validator class is very possible, but what if we want to selectively 
+            replace the implementation of IValidator later?&nbsp; That’s only somewhat 
+            likely, but the dependency on Repository is a much larger concern.&nbsp; I might 
+            have semantic decoupling between <font face="Courier New">AddressEditController</font> 
+            and Repository, but if <font face="Courier New">AddressEditController</font> 
+            calls new Repository() itself, <font face="Courier New">AddressEditController</font> 
+            will not be able to function without all that NHibernate bootstrapping.&nbsp; I 
+            do not want a piece of my user interface to be tightly coupled to the existence 
+            of the persistence layer.&nbsp;
+        </p>
+        <p>
+            In other scenarios, creating the dependencies may involve more than just calling 
+            new() on the dependencies (don’t believe me?&nbsp; Go try to create an 
+            HttpContext object).</p>
+        <p>
+            <font face="Courier New">AddressEditController</font> is responsible for the 
+            workflow around editing Address entities in the UI.&nbsp; It shouldn’t be 
+            concerned with NHibernate configuration and whatnot.&nbsp; One way to solve this 
+            problem is to move the responsibility for building its dependencies to somewhere 
+            external to <font face="Courier New">AddressEditController</font>.&nbsp;
+        </p>
+        <hr />
+        <h2>
+            Inversion of Control and Dependency Injection</h2>
+        <p>
+            In many cases, I don’t want my classes to have to be aware of how their 
+            dependencies are created or located.&nbsp; I don’t want controller classes to 
+            even care that they’re using an object that is created via Microsoft’s Provider 
+            infrastructure, or a Singleton, or needs configuration data.&nbsp; My class 
+            should only know the public interfaces of its dependencies.&nbsp; I can make 
+            that true by applying “<a 
+                href="http://codebetter.com/blogs/jeremy.miller/archive/2005/09/20/132290.aspx" 
+                mce_href="http://codebetter.com/blogs/jeremy.miller/archive/2005/09/20/132290.aspx">Inversion 
+            of Control</a>.”&nbsp; Instead of doing:</p>
+        <div style="border: thin solid black; background: white none repeat scroll 0% 50%; font-size: 10pt; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial; color: black; font-family: courier new;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> 
+                AddressEditController()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _validator =
+                <span style="color: blue;">new</span> <span style="color: rgb(43, 145, 175);">
+                Validator</span>();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _repository =
+                <span style="color: blue;">new</span> <span style="color: rgb(43, 145, 175);">
+                Repository</span>();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+        <p>
+            where <font face="Courier New">AddressEditController</font> calls linearly 
+            through to the constructors on Validator and Repository, we can invert the 
+            control to make the creator of <font face="Courier New">AddressEditController</font> 
+            responsible for building the dependencies and “pushing” them into
+            <font face="Courier New">AddressEditController</font>.&nbsp;
+        </p>
+        <div style="border: thin solid black; background: white none repeat scroll 0% 50%; font-size: 10pt; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial; color: black; font-family: courier new;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">class</span>
+                <span style="color: rgb(43, 145, 175);">AddressEditController</span> :
+                <span style="color: rgb(43, 145, 175);">Controller</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+            </p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">private</span> <span style="color: blue;">
+            readonly</span> <span style="color: rgb(43, 145, 175);">IValidator</span> 
+            _validator;
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">private</span>
+                <span style="color: rgb(43, 145, 175);">IRepository</span> _repository;</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> 
+                AddressEditController(<span style="color: rgb(43, 145, 175);">IValidator</span> 
+                validator, <span style="color: rgb(43, 145, 175);">IRepository</span> 
+                repository)</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _validator = validator;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _repository = repository;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+        <p>
+            The code sample above uses a form of Inversion of Control called
+            <a href="http://codebetter.com/blogs/jeremy.miller/archive/2005/10/06/132825.aspx" 
+                mce_href="http://codebetter.com/blogs/jeremy.miller/archive/2005/10/06/132825.aspx">
+            Dependency Injection</a> to push in the dependencies via a constructor function.&nbsp; 
+            Of course, at some point, something needs to know how to create the entire chain 
+            of dependencies and do all of that Dependency Injection.&nbsp; StructureMap 
+            supports a pattern known as
+            <a href="http://martinfowler.com/articles/injection.html#UsingAServiceLocator" 
+                mce_href="http://martinfowler.com/articles/injection.html#UsingAServiceLocator">
+            Service Locator</a>:</p>
+        <div style="border: thin solid black; background: white none repeat scroll 0% 50%; font-size: 10pt; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial; color: black; font-family: courier new;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // Creates an AddressEditController with all of its dependencies</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="color: rgb(43, 145, 175);">AddressEditController</span> controller 
+                = <span style="color: rgb(43, 145, 175);">ObjectFactory</span>.GetInstance&lt;<span 
+                    style="color: rgb(43, 145, 175);">AddressEditController</span>&gt;();</p>
+        </div>
+        <p>
+            <font face="Courier New">ObjectFactory</font> is a StructureMap class that 
+            serves as a well known place to go and find any service that you need.&nbsp; 
+            When the <font face="Courier New">AddressEditController</font> is created and 
+            returned by <font face="Courier New">ObjectFactory</font>, it should be 
+            completely ready to go.&nbsp; There’s another important concept to understand 
+            before you use StructureMap.&nbsp;
+        </p>
+        <hr />
+        <h2>
+            Auto Wiring</h2>
+        <p>
+            Every &quot;real&quot; IoC container supports the concept of &quot;Auto Wiring.&quot;&nbsp; Auto 
+            Wiring simply means that StructureMap can figure out dependency chains for you 
+            without a lot of explicit configuration.&nbsp; When you ask for
+            <font face="Courier New">AddressEditController</font>, there is more going on 
+            than just <font face="Courier New">AddressEditController</font> and its two 
+            dependencies.&nbsp; The Repository class itself has its own dependencies.</p>
+        <div style="border: thin solid black; background: white none repeat scroll 0% 50%; font-size: 10pt; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial; color: black; font-family: courier new;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<span style="color: rgb(43, 145, 175);">DefaultConstructor</span>]</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> Repository(<span 
+                    style="color: rgb(43, 145, 175);">ISessionSource</span> source) :
+                <span style="color: blue;">this</span>(source.CreateSession())</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+        <p>
+            In turn, the concrete version of <font face="Courier New">ISessionSource</font> 
+            above has <b>its</b> own dependencies:</p>
+        <div style="border: thin solid black; background: white none repeat scroll 0% 50%; font-size: 10pt; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial; color: black; font-family: courier new;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> 
+                SessionSource(<span style="color: rgb(43, 145, 175);">IDictionary</span>&lt;<span 
+                    style="color: blue;">string</span>, <span style="color: blue;">string</span>&gt; 
+                properties, <span style="color: rgb(43, 145, 175);">PersistenceModel</span> 
+                model)</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _configuration =
+                <span style="color: blue;">new</span> <span style="color: rgb(43, 145, 175);">
+                Configuration</span>();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                _configuration.AddProperties(properties);</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                model.Configure(_configuration);</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _sessionFactory = 
+                _configuration.BuildSessionFactory();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+        <p>
+            which starts to get interesting because <font face="Courier New">SessionSource</font> 
+            needs some information like connection strings that have to come in from Xml 
+            configuration:&nbsp;
+        </p>
+        <div style="border: thin solid black; background: white none repeat scroll 0% 50%; font-size: 10pt; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial; color: black; font-family: courier new;">
+            <p style="margin: 0px;">
+                <span style="color: blue;">&lt;</span><span style="color: rgb(163, 21, 21);">StructureMap</span><span 
+                    style="color: blue;"> </span><span style="color: red;">MementoStyle</span><span 
+                    style="color: blue;">=</span>&quot;<span style="color: blue;">Attribute</span>&quot;<span 
+                    style="color: blue;">&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp; &lt;</span><span 
+                    style="color: rgb(163, 21, 21);">DefaultInstance</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; </span><span style="color: red;">
+                PluginType</span><span style="color: blue;">=</span>&quot;<span style="color: blue;">ShadeTree.DomainModel.ISessionSource,ShadeTree.DomainModel</span>&quot;</p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; </span><span style="color: red;">
+                PluggedType</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">ShadeTree.DomainModel.SessionSource,ShadeTree.DomainModel</span>&quot;<span 
+                    style="color: blue;">&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; &lt;</span><span 
+                    style="color: rgb(163, 21, 21);">properties</span><span 
+                    style="color: blue;">&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</span><span 
+                    style="color: rgb(163, 21, 21);">Pair</span><span style="color: blue;">
+                </span><span style="color: red;">Key</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">connection.provider</span>&quot;<span style="color: blue;">
+                </span><span style="color: red;">Value</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">NHibernate.Connection.DriverConnectionProvider</span>&quot;<span 
+                    style="color: blue;"> /&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</span><span 
+                    style="color: rgb(163, 21, 21);">Pair</span><span style="color: blue;">
+                </span><span style="color: red;">Key</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">connection.driver_class</span>&quot;<span 
+                    style="color: blue;"> </span><span style="color: red;">Value</span><span 
+                    style="color: blue;">=</span>&quot;<span style="color: blue;">NHibernate.Driver.SqlClientDriver</span>&quot;<span 
+                    style="color: blue;"> /&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</span><span 
+                    style="color: rgb(163, 21, 21);">Pair</span><span style="color: blue;">
+                </span><span style="color: red;">Key</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">dialect</span>&quot;<span style="color: blue;"> </span>
+                <span style="color: red;">Value</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">NHibernate.Dialect.MsSql2000Dialect</span>&quot;<span 
+                    style="color: blue;"> /&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</span><span 
+                    style="color: rgb(163, 21, 21);">Pair</span><span style="color: blue;">
+                </span><span style="color: red;">Key</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">hibernate.dialect</span>&quot;<span style="color: blue;">
+                </span><span style="color: red;">Value</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">NHibernate.Dialect.MsSql2000Dialect</span>&quot;<span 
+                    style="color: blue;"> /&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</span><span 
+                    style="color: rgb(163, 21, 21);">Pair</span><span style="color: blue;">
+                </span><span style="color: red;">Key</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">use_outer_join</span>&quot;<span style="color: blue;">
+                </span><span style="color: red;">Value</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">true</span>&quot;<span style="color: blue;"> /&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</span><span 
+                    style="color: rgb(163, 21, 21);">Pair</span><span style="color: blue;">
+                </span><span style="color: red;">Key</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">connection.connection_string</span>&quot;<span 
+                    style="color: blue;"> </span><span style="color: red;">Value</span><span 
+                    style="color: blue;">=</span>&quot;<span style="color: blue;">a connection string 
+                that I’m certainly not giving out to you!</span>&quot;<span style="color: blue;"> /&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</span><span 
+                    style="color: rgb(163, 21, 21);">Pair</span><span style="color: blue;">
+                </span><span style="color: red;">Key</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">show_sql</span>&quot;<span style="color: blue;"> </span>
+                <span style="color: red;">Value</span><span style="color: blue;">=</span>&quot;<span 
+                    style="color: blue;">true</span>&quot;<span style="color: blue;"> /&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp;&nbsp;&nbsp; &lt;/</span><span 
+                    style="color: rgb(163, 21, 21);">properties</span><span 
+                    style="color: blue;">&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&nbsp; &lt;/</span><span 
+                    style="color: rgb(163, 21, 21);">DefaultInstance</span><span 
+                    style="color: blue;">&gt;</span></p>
+            <p style="margin: 0px;">
+                <span style="color: blue;">&lt;/</span><span style="color: rgb(163, 21, 21);">StructureMap</span><span 
+                    style="color: blue;">&gt;</span></p>
+        </div>
+        <p>
+            Here’s some of the configuration for the other services that the entire 
+            EditAddressController needs:</p>
+        <div style="border: thin solid black; background: white none repeat scroll 0% 50%; font-size: 10pt; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial; color: black; font-family: courier new;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ForRequestedType&lt;<span 
+                    style="color: rgb(43, 145, 175);">IValidator</span>&gt;().TheDefaultIsConcreteType&lt;<span 
+                    style="color: rgb(43, 145, 175);">Validator</span>&gt;();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ForRequestedType&lt;<span 
+                    style="color: rgb(43, 145, 175);">IRepository</span>&gt;().TheDefaultIsConcreteType&lt;<span 
+                    style="color: rgb(43, 145, 175);">Repository</span>&gt;().CacheBy(<span 
+                    style="color: rgb(43, 145, 175);">InstanceScope</span>.Hybrid);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ForRequestedType&lt;<span 
+                    style="color: rgb(43, 145, 175);">PersistenceModel</span>&gt;().TheDefaultIsConcreteType&lt;<span 
+                    style="color: rgb(43, 145, 175);">DovetailPersistenceModel</span>&gt;();</p>
+        </div>
+        <p>
+            At no point did I specify that <font face="Courier New">EditAddressController</font> 
+            needs an <font face="Courier New">IRepository</font> that needs an
+            <font face="Courier New">ISessionSource</font> that needs 2-3 other things, but 
+            yet when I call:</p>
+        <div style="border: thin solid black; background: white none repeat scroll 0% 50%; font-size: 10pt; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial; color: black; font-family: courier new;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // Creates an AddressEditController with all of its dependencies</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="color: rgb(43, 145, 175);">AddressEditController</span> controller 
+                = <span style="color: rgb(43, 145, 175);">ObjectFactory</span>.GetInstance&lt;<span 
+                    style="color: rgb(43, 145, 175);">AddressEditController</span>&gt;();</p>
+        </div>
+        <p>
+            StructureMap will construct <font face="Courier New">EditAddressController</font> 
+            that had a new instance of <font face="Courier New">Repository</font> that had a 
+            new instance of <font face="Courier New">SessionSource</font> that had an
+            <font face="Courier New">IDictionary&lt;string, string&gt;</font> object and a new 
+            instance of <font face="Courier New">DovetailPersistenceModel</font>.&nbsp; I 
+            don’t have to explicitly tell StructureMap to do that for me because it uses its 
+            “Auto Wiring” feature to examine the dependencies of each concrete class and act 
+            accordingly.&nbsp; StructureMap does need to know what to do with each type of 
+            object it encounters.&nbsp; When it tries to build the <font face="Courier New">
+            Repository</font> class StructureMap sees the constructor argument for
+            <font face="Courier New">ISessionSource</font> on <font face="Courier New">
+            Repository</font>, and knows to build and inject a new <font face="Courier New">
+            SessionSource</font> object (and so on as deep as you need to go).</p>
+	
+	</body>
+</html>

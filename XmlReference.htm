@@ -1,0 +1,510 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+	<head>
+		<title>Xml Reference</title>
+		<link rel="stylesheet" type="text/css" href="style.css" />
+		<script type="text/javascript" src="jquery-1.2.6.js"></script>
+		<script type="text/javascript" src="structuremap.js"></script>
+	</head>
+	<body>
+					<p>This document is a reference for older elements of the Xml configuration syntax.&nbsp; 
+                        This reference is valid for versions prior to 2.5.&nbsp; See
+                        <a href="XmlConfiguration.htm">Xml Configuration</a> for the preferred usages.</p>
+                    <H2>&lt;StructureMap&gt; Element</H2>
+					<P>The root element of all StructureMap.config files</P>
+					<H5>Sample</H5>
+					<pre class="xml-sample">&lt;StructureMap DefaultProfile=&quot;MyProfile&quot;&gt;
+        &lt;Include /&gt;<BR>	&lt;Assembly/&gt;y/&gt;<BR>	&lt;Instances/&gt;BR>	&lt;Machine/&gt;<BR>	&lt;Profile/&gt;<BR>	&lt;log4net/&gt;<BR>&lt;/StructureMap&gt;</pre>
+                    <hr />
+                    &nbsp;<A name="Assembly0"><H5>Optional Attributes</H5>
+						<DIV class="schema-table">
+							<TABLE width="100%" border="1" cellPadding="1" cellSpacing="1" ID="table17">
+								<TR>
+									<TH width="25%">
+										Attribute</TH><TH width="75%">Description</TH></TR>
+								<TR>
+									<TD>DefaultProfile</TD>
+									<TD>Directs StructureMap to use the named 
+									Profile as the default profile at runtime</TD>
+								</TR>
+								<tr>
+								    <td>MementoStyle</td>
+								    <td>Specifies the type of Instance Memento definition between "Node" normalized and "Attribute" normalized.  For backwards compatibility, the default value is "Node"</td>
+								</tr>
+							</TABLE>
+						</DIV>
+					<HR>
+					<A name="Include"></A>
+					<H2>&lt;Include&gt; Element</H2>
+					<P>Allows a StructureMap.config to include the &lt;PluginFamily&gt; 
+					and instances from additional StructureMap configuration 
+					files.&nbsp; This is useful in cases where a large component 
+					may have its own StructureMap.config file that is copied 
+					into the parent systems source code tree.</P>
+					<H5>Sample</H5>
+					<pre class="xml-sample">&lt;StructureMap DefaultProfile=&quot;MyProfile&quot;&gt;<BR>		&lt;Include File=&quot;Component-StructureMap.config&quot; /&gt;<BR>&lt;/StructureMap&gt;</pre>
+					&nbsp;<A name="Assembly0"><H5>Required Attributes</H5>
+						<DIV class="schema-table">
+							<TABLE width="100%" border="1" cellPadding="1" cellSpacing="1" ID="table21">
+								<TR>
+									<TH width="25%">
+										Attribute</TH><TH width="75%">Description</TH></TR>
+								<TR>
+									<TD>File</TD>
+									<TD>Path to a StructureMap configuration 
+									file to be included in the 
+									StructureMap.config</TD>
+								</TR>
+							</TABLE>
+						</DIV>
+                    </a>
+					<HR>
+
+					<!--Assembly Node-->
+					<A name="Assembly">
+						<H2>&lt;Assembly&gt; Element</H2>
+						<P>Instructs StructureMap to search the specified assembly for possible 
+							PluginFamily interfaces and Plugin classes</P>
+						<H5>Sample</H5>
+						<pre class="xml-sample">&lt;Assembly Name="MyApplication.Common" Deploy="All"/&gt;
+&lt;Assembly Name="MyApplication.Persistence" Deploy="Server,Batch,Build"/&gt;</pre>
+						<H5>Required Attributes</H5>
+						<DIV class="schema-table"><TABLE width="100%" border="1" cellPadding="1" cellSpacing="1" ID="Table1">
+								<TR>
+									<TH width="25%">
+										Attribute</TH><TH width="75%">Description</TH></TR>
+								<TR>
+									<TD>Name</TD>
+									<TD>The assembly name</TD>
+								</TR>
+							</TABLE>
+						</DIV>
+						<H5>Optional Attributes</H5>
+						<DIV class="schema-table"><TABLE width="100%" border="1" cellPadding="1" cellSpacing="1" ID="Table2">
+								<TR>
+									<TH width="25%">
+										Attribute</TH><TH width="75%">Description</TH></TR>
+								<TR>
+									<TD>Deploy</TD>
+									<TD>A comma-delimited list of deployment targets used to control partial copies of 
+										the StructureMap.config file. “All” or a missing value for Deploy means the 
+										assembly configuration will always be copied.</TD>
+								</TR>
+							</TABLE>
+						</DIV>
+                    </a>
+						<BR>
+						<HR>
+						<A name="Instances"></A>
+						<H2>&lt;Instances&gt; Element</H2>
+						<P>A container node for InstanceMemento nodes. Can be used as a catch all 
+							MementoSource. May be deprecated in later versions of StructureMap</P>
+						<H5>Sample</H5>
+						<pre class="xml-sample">&lt;Instances&gt;
+&lt;StructureMap.Testing.Widget.WidgetMaker Type="Color" Key="Red"&gt;
+&lt;Property Name="Color" Value="Red" /&gt;
+&lt;/StructureMap.Testing.Widget.WidgetMaker&gt;
+&lt;/Instances&gt;</pre>
+						<HR>
+						<A name="Machine"></A>
+						<H2>&lt;Machine&gt; Element</H2>
+						<P>Machine level overrides for default instances of one or more PluginFamily’s.  New in version 2.0 is the ability to define the instance for the type specified by the Type attribute inline in an embedded &lt;Instance&gt; node</P>
+						<H5>Sample</H5>
+						<pre class="xml-sample">
+&lt;Machine Name="SERVER" Profile="Local"&gt;
+&lt;Override Type="StructureMap.Testing.Widget.IWidget" DefaultKey="Orange"/&gt;
+&lt;/Machine&gt;
+
+    &lt;Override Type="StructureMap.Testing.Widget.Rule"&gt;
+      &lt;Instance Type="Color" Color="Green"/&gt;
+    &lt;/Override>
+
+
+</pre>
+						<H5>Required Attributes</H5>
+						<DIV class="schema-table"><TABLE width="100%" border="1" cellPadding="1" cellSpacing="1" ID="Table3">
+								<TR>
+									<TH width="25%">
+										Attribute</TH><TH width="75%">Description</TH></TR>
+								<TR>
+									<TD>Name</TD>
+									<TD>The name of the machine in all capitals</TD>
+								</TR>
+							</TABLE>
+						</DIV>
+						<H5>Optional Attributes</H5>
+						<DIV class="schema-table"><TABLE width="100%" border="1" cellPadding="1" cellSpacing="1" ID="Table4">
+								<TR>
+									<TH width="25%">
+										Attribute</TH><TH width="75%">Description</TH></TR>
+								<TR>
+									<TD>Profile</TD>
+									<TD>Optionally sets the defaults for the named machine to the specified profile</TD>
+								</TR>
+							</TABLE>
+						</DIV>
+                    <BR>
+						<BR>
+						<HR>
+						<A name="PluginFamily"></A>
+						<H2>&lt;PluginFamily&gt; Element</H2>
+						<P>Represents an explicit declaration of a PluginFamily. Explicitly directs and 
+							configures StructureMap to create instances of the CLR Type specified by the 
+							"Type" attribute</P>
+						<H5>Sample</H5>
+						<pre class="xml-sample">&lt;PluginFamily Type="StructureMap.Testing.Widget.Rule" Assembly="StructureMap.Testing.Widget" DefaultKey="Blue" Scope=&quot;Singleton"&gt;
+	&lt;Interceptors/&gt;<BR>	&lt;Plugin/&gt;<BR>	&lt;Source/&gt;<BR>	&lt;Instance/&gt;<BR> &lt;/PluginFamily&gt;</pre>
+						<H5>Required Attributes</H5>
+						<DIV class="schema-table"><TABLE width="100%" border="1" cellPadding="1" cellSpacing="1" ID="Table5">
+								<TR>
+									<TH width="25%">
+										Attribute</TH><TH width="75%">Description</TH></TR>
+								<TR>
+									<TD>Type</TD>
+									<TD>The fullname of the CLR Type to be built as a PluginFamily</TD>
+								</TR>
+								<TR>
+									<TD>Assembly</TD>
+									<TD>The assembly where to PluginFamily Type is found</TD>
+								</TR>
+							</TABLE>
+						</DIV>
+						<H5>Optional Attributes</H5>
+						<DIV class="schema-table"><TABLE width="100%" border="1" cellPadding="1" cellSpacing="1" ID="Table6">
+								<TR>
+									<TH width="25%">
+										Attribute</TH><TH width="75%">Description</TH></TR>
+								<TR>
+									<TD>DefaultKey</TD>
+									<TD>The InstanceKey of the default instance</TD>
+								</TR>
+								<TR>
+									<TD>Scope</TD>
+									<TD>Controls the &quot;scope&quot; of the requested 
+									instance.&nbsp; The default value is 
+									PerRequest.&nbsp; Valid values are 
+									PerRequest, Singleton, ThreadLocal, 
+									HttpContext, and Hybrid (uses HttpContext if 
+									available, otherwise ThreadLocal)</TD>
+								</TR>
+							</TABLE>
+						</DIV>
+						<BR>
+						<HR>
+
+
+
+
+						<A name="DefaultInstance"></A>
+						<H2>&lt;DefaultInstance&gt; Element</H2>
+						<P>Shorthand way to explicitly define the default instance of a PluginType in one element. Explicitly directs and 
+							configures StructureMap to create instances of the CLR Type specified by the "PluginType" attribute.  The DefaultInstance node also represents an Instance node, and the arguments to the constructor function and setter properties follow the same rules as an Instance node.</P>
+						<H5>Sample</H5>
+						<pre class="xml-sample">&lt;DefaultInstance PluginType="StructureMap.Testing.Widget.Rule,StructureMap.Testing" PluggedType="StructureMap.Testing.Widget.ColorRule,StructureMap.Testing"  Scope=&quot;Singleton"&gt; Color=&quot;Red&quot;
+	<BR> &lt;/DefaultInstance&gt;</pre>
+						<H5>Required Attributes</H5>
+						<DIV class="schema-table"><TABLE width="100%" border="1" cellPadding="1" cellSpacing="1" ID="Table19">
+								<TR>
+									<TH width="25%">
+										Attribute</TH><TH width="75%">Description</TH></TR>
+								<TR>
+									<TD>PluginType</TD>
+									<TD>Assembly qualified name of the PluginType, as in PluginType instance = ObjectFactory.GetInstance&lt;PluginType&gt;()</TD>
+								</TR>
+								<TR>
+									<TD>PluggedType</TD>
+									<TD>The assembly qualified name of the concrete type</TD>
+								</TR>
+							</TABLE>
+						</DIV>
+						<H5>Optional Attributes</H5>
+						<DIV class="schema-table"><TABLE width="100%" border="1" cellPadding="1" cellSpacing="1" ID="Table20">
+								<TR>
+									<TH width="25%">
+										Attribute</TH><TH width="75%">Description</TH></TR>
+								<TR>
+									<TD>Name</TD>
+									<TD>The InstanceKey of the default instance.  If unspecified, StructureMap will create a default name.  This is mostly for diagnostics.</TD>
+								</TR>
+								<TR>
+									<TD>Scope</TD>
+									<TD>Controls the &quot;scope&quot; of the requested 
+									instance.&nbsp; The default value is 
+									PerRequest.&nbsp; Valid values are 
+									PerRequest, Singleton, ThreadLocal, 
+									HttpContext, and Hybrid (uses HttpContext if 
+									available, otherwise ThreadLocal)</TD>
+								</TR>
+							</TABLE>
+						</DIV>
+						<BR>
+						<HR>
+
+
+
+
+
+
+						<A name="Profile"></A>
+						<H2>&lt;Profile&gt; Element</H2>
+						<P>Models a named set of overrides for default instances of one or more 
+							PluginFamily’s. Profile level overrides supercede machine level overrides.&nbsp; 
+                            See <a href="Profiles.htm">Profiles</a> for more information.</P>
+						<H5>Sample</H5>
+						<pre class="xml-sample">&lt;Profile Name="Blue"&gt;
+&lt;Override Type="StructureMap.Testing.Widget.Rule" DefaultKey="Blue"/&gt;
+&lt;Override Type="StructureMap.Testing.Widget.IWidget" DefaultKey="Blue"/&gt;
+&lt;/Profile&gt;
+
+&lt;Override Type="StructureMap.Testing.Widget.Rule"&gt;
+  &lt;Instance Type="Color" Color="Green"/&gt;
+&lt;/Override&gt;
+
+
+</pre>
+						<H5>Required Attributes</H5>
+						<DIV class="schema-table"><TABLE width="100%" border="1" cellPadding="1" cellSpacing="1" ID="Table7">
+								<TR>
+									<TH width="25%">
+										Attribute</TH><TH width="75%">Description</TH></TR>
+								<TR>
+									<TD>Name</TD>
+									<TD>The name of the profile</TD>
+								</TR>
+							</TABLE>
+						</DIV>
+						<HR>
+						<A name="Instance">
+							<H2>&lt;Instance&gt; Element</H2>
+							<P>Configures an object instance within a PluginFamily</P>
+							<H5>Sample</H5>
+							<pre class="xml-sample">&lt;PluginFamily&gt;<BR>	&lt;Instance Key="Bigger" Type="GreaterThan"&gt;
+		&lt;Property Name="Attribute" Value="MyDad" /&gt;
+		&lt;Property Name="Value" Value="10" /&gt;
+	&lt;/Instance&gt;<BR>
+&lt;/PluginFamily&gt;
+
+* OR *
+
+&lt;PluginFamily&gt;<BR>	&lt;Instance Key="Bigger" PluggedType="Assembly Qualified Name"&gt;
+		&lt;Property Name="Attribute" Value="MyDad" /&gt;
+		&lt;Property Name="Value" Value="10" /&gt;
+	&lt;/Instance&gt;<BR>
+&lt;/PluginFamily&gt;
+</pre>
+							<H5>Required Attributes</H5>
+							<DIV class="schema-table"><TABLE width="100%" border="1" cellPadding="1" cellSpacing="1" ID="Table8">
+									<TR>
+										<TH width="25%">
+											Attribute</TH><TH width="75%">Description</TH></TR>
+									<TR>
+										<TD>Key</TD>
+										<TD>The InstanceKey of the configured object</TD>
+									</TR>
+									<TR>
+										<TD>Type</TD>
+										<TD>The ConcreteKey of the configured object</TD>
+									</TR>
+								</TABLE>
+							</DIV>
+							</a>
+						<H5>Optional Attributes</H5>
+						<DIV class="schema-table">
+							<TABLE width="100%" border="1" cellPadding="1" cellSpacing="1" ID="table18">
+								<TR>
+									<TH width="25%">
+										Attribute</TH><TH width="75%">Description</TH></TR>
+								<tr>
+								    <td>PluggedType</td>
+								    <td>An alternative to the Type attribute.  Allows you to specify the assembly qualified type of the concrete class directly</td>
+								</tr>
+								<TR>
+									<TD>Template</TD>
+									<TD>When using the
+									<a href="../../Docs/MementoSources.htm#Templated">
+									TemplatedMementoSource</a> this attribute 
+									directs StructureMap to apply the values of 
+									the memento against the template named in 
+									the attribute</TD>
+								</TR>
+								<TR>
+									<TD>Substitutions</TD>
+									<TD>A comma delimited list of substitution 
+									tokens to control templating</TD>
+								</TR>
+							</TABLE>
+						</DIV>
+							<HR>
+							<A name="Interceptors"></A>
+							<H2>&lt;Interceptors&gt; Element</H2>
+							<P>Optional within a &lt;PluginFamily&gt; element, holds an ordered array of 
+								&lt;Interceptor&gt; elements.</P>
+							<H5>Sample</H5>
+							<pre class="xml-sample">&lt;PluginFamily&gt;<BR>	&lt;Interceptors&gt;<BR>		&lt;Interceptor Type="Singleton" /&gt; <BR>	&lt;/Interceptors&gt;<BR>
+&lt;/PluginFamily&gt;</pre>
+							<HR>
+							<A name="Interceptor"></A>
+							<H2>&lt;Interceptor&gt; Element</H2>
+							<P>Defines an InstanceFactoryInterceptor to&nbsp;decorate the InstanceFactory for a 
+								PluginFamily.&nbsp; As of version&nbsp;0.90 the only option is a Singleton 
+								interceptor to create the Injected Singleton.&nbsp; In later releases this will 
+								be the mechanism for caching and security.&nbsp; The &lt;Interceptor&gt; 
+								node&nbsp;has the same structure as the &lt;Instance&gt;&nbsp;node.&nbsp;</P>
+							<H5>Sample</H5>
+							<pre class="xml-sample">&lt;Interceptors&gt;<BR>	&lt;Interceptor Type="Singleton" /&gt;
+&lt;/Interceptors&gt;</pre>
+							<H5>Required Attributes</H5>
+							<DIV class="schema-table"><TABLE width="100%" border="1" cellPadding="1" cellSpacing="1" ID="Table16">
+									<TR>
+										<TH width="25%">
+											Attribute</TH><TH width="75%">Description</TH></TR>
+									<TR>
+										<TD>Type</TD>
+										<TD>The ConcreteKey of the configured object</TD>
+									</TR>
+								</TABLE>
+							</DIV>
+							<BR>
+							<HR>
+							<A name="Override"></A>
+							<H2>&lt;Override&gt; Element</H2>
+							<P>Within a Machine or Profile node, overrides the name of the default InstanceKey 
+								for a particular PluginFamily</P>
+							<H5>Sample</H5>
+							<pre class="xml-sample">&lt;Override Type="StructureMap.Testing.Widget.IWidget" DefaultKey="Orange"/&gt;</pre>
+							<H5>Required Attributes</H5>
+							<DIV class="schema-table"><TABLE width="100%" border="1" cellPadding="1" cellSpacing="1" ID="Table9">
+									<TR>
+										<TH width="25%">
+											Attribute</TH><TH width="75%">Description</TH></TR>
+									<TR>
+										<TD>Type</TD>
+										<TD>The fully qualified type name of the PluginFamily</TD>
+									</TR>
+									<TR>
+										<TD>DefaultKey</TD>
+										<TD>The InstanceKey of the desired default</TD>
+									</TR>
+								</TABLE>
+							</DIV>
+                    <BR>
+							<HR>
+							<A name="Plugin"></A>
+							<H2>&lt;Plugin&gt; Element</H2>
+							<P>Explicitly defines a concrete class as a Plugin to a PluginFamily. Useful for 
+								classes that are outside of your codebase.</P>
+							<H5>Sample</H5>
+							<pre class="xml-sample">&lt;PluginFamily Type="StructureMap.Testing.Widget.IWidget" Assembly="StructureMap.Testing.Widget" DefaultKey="Red"&gt;
+	&lt;Plugin Assembly="StructureMap.Testing.Widget" Type="StructureMap.Testing.Widget.NotPluggableWidget" ConcreteKey="NotPluggable"&gt;<BR>		&lt;Setter/&gt;<BR>		&lt;Setter/&gt;<BR> &lt;/Plugin&gt;
+&lt;/PluginFamily&gt;</pre>
+							<H5>Required Attributes</H5>
+							<DIV class="schema-table"><TABLE width="100%" border="1" cellPadding="1" cellSpacing="1" ID="Table10">
+									<TR>
+										<TH width="25%">
+											Attribute</TH><TH width="75%">Description</TH></TR>
+									<TR>
+										<TD>Assembly</TD>
+										<TD>The name of the Assembly that the concrete class is in</TD>
+									</TR>
+									<TR>
+										<TD>Type</TD>
+										<TD>The fully qualified type name of the concrete class</TD>
+									</TR>
+									<TR>
+										<TD>ConcreteKey</TD>
+										<TD>The ConcreteKey that will be used within StructureMap to identify the concrete 
+											class</TD>
+									</TR>
+								</TABLE>
+							</DIV>
+							<BR>
+							<HR>
+							<A name="Setter"></A>
+							<H2>&lt;Setter&gt; Element</H2>
+							<P>Explicitly marks a property on the plugged type for setter injection.&nbsp; 
+								Directs StructureMap to set the value of the property from an InstanceMemento. 
+								Useful for classes that are outside of your codebase.</P>
+							< H5> Sample< /H5>
+							<pre class="xml-sample">&lt;Plugin&gt;<BR>	&lt;Setter Name=		"prop1"/&gt;<BR>	&lt;Setter Name=		"prop2"/&gt;<BR>
+&lt;/Plugin&gt;</pre>
+							<H5>Required Attributes</H5>
+							<DIV class="schema-table"><TABLE width="100%" border="1" cellPadding="1" cellSpacing="1" ID="Table15">
+									<TR>
+										<TH width="25%">
+											Attribute</TH><TH width="75%">Description</TH></TR>
+									<TR>
+										<TD>Name</TD>
+										<TD>The name of the property on the plugged type of the &lt;Plugin&gt; element</TD>
+									</TR>
+								</TABLE>
+							</DIV>
+							<BR>
+							<HR>
+							<A name="Source"></A>
+							<H2>&lt;Source&gt; Element</H2>
+							<P>Overrides the default MementoSource for a PluginFamily with a configured 
+								MementoSource. The specific properties of the configured MementoSource object 
+								are named attributes on the Source node itself</P>
+							<H5>Sample</H5>
+							<pre class="xml-sample">&lt;PluginFamily&gt;<BR>	&lt;Source Type="XmlFile" FilePath="FullTesting.XML" XPath="Columns" NodeName="Columns" /&gt;<BR> &lt;/PluginFamily&gt;</pre>
+							<H5>Required Attributes</H5>
+							<DIV class="schema-table"><TABLE width="100%" border="1" cellPadding="1" cellSpacing="1" ID="Table11">
+									<TR>
+										<TH width="25%">
+											Attribute</TH><TH width="75%">Description</TH></TR>
+									<TR>
+										<TD>Type</TD>
+										<TD>Sets the type of MementoSource object to use by defining the ConcreteKey</TD>
+									</TR>
+								</TABLE>
+							</DIV>
+							<BR>
+							<HR>
+							<A name="Property"></A>
+							<H2>&lt;Property&gt; Element</H2>
+							<P>Models a name/value parameter to the configured object instance constructor 
+								function. Property nodes can be nested in the case of object hierarchies</P>
+							<H5>Sample</H5>
+							<pre class="xml-sample">&lt;Instance&gt;<BR>	&lt;Property Name="Color" Value="Blue" /&gt;
+	&lt;Property Name="MyGrandChild" Type="Leftie"&gt;
+		&lt;Property Name="BirthYear" Value="1992"/&gt;
+	&lt;/Property&gt;
+	&lt;Property Name="MyGrandChild" Key="Tommy"/&gt;<BR> &lt;/Instance&gt;</pre>
+							<H5>Required Attributes</H5>
+							<DIV class="schema-table"><TABLE width="100%" border="1" cellPadding="1" cellSpacing="1" ID="Table12">
+									<TR>
+										<TH width="25%">
+											Attribute</TH><TH width="75%">Description</TH></TR>
+									<TR>
+										<TD>Name</TD>
+										<TD>The case-sensitive name of the constructor argument</TD>
+									</TR>
+								</TABLE>
+							</DIV>
+							<H5>Optional Attributes</H5>
+							<DIV class="schema-table"><TABLE width="100%" border="1" cellPadding="1" cellSpacing="1" ID="Table13">
+									<TR>
+										<TH width="25%">
+											Attribute</TH><TH width="75%">Description</TH></TR>
+									<TR>
+										<TD>Value</TD>
+										<TD>A string value for the constructor argument. Only primitive types work in this 
+											manner. DateTime structures have never been tested.</TD>
+									</TR>
+									<TR>
+										<TD>Key</TD>
+										<TD>For constructor arguments that are non-primitive types, the argument value can 
+											be a reference to a defined instance of the member type. The member type must 
+											also be controlled by StructureMap. Omitting the Key attribute TODO</TD>
+									</TR>
+									<TR>
+										<TD>Type</TD>
+										<TD>For constructor arguments that are non-primitive types, the Type key is the 
+											ConcreteKey to the configured child instance</TD>
+									</TR>
+								</TABLE>
+							</DIV>
+							<hr />
+                    <BR>
+							</body>
+</html>

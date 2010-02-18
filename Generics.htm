@@ -1,0 +1,346 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+	<head>
+		<title>Using Open Generic Types</title>
+		<link rel="stylesheet" type="text/css" href="style.css" />
+		<script type="text/javascript" src="jquery-1.2.6.js"></script>
+		<script type="text/javascript" src="structuremap.js"></script>
+	</head>
+	<body>
+	    <p>StructureMap directly supports 
+            <a href="http://msdn.microsoft.com/en-us/library/ms172334.aspx">open generic types</a>*.&nbsp; This is most 
+            easily explained by a demonstration.&nbsp; I&#39;m currently working on an MVC 
+            application that uses a lot of semi-RESTful services that return Json.&nbsp; 
+            These Json service methods are implemented by methods on a Controller class that 
+            by convention, all return a single object:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20     \cf3 public\cf0  \cf3 class\cf0  \cf4 FindAddressController\par ??\cf0     \{\par ??        \cf3 public\cf0  \cf4 Address\cf0  FindAddress(\cf3 long\cf0  id)\par ??        \{\par ??            \cf3 return\cf0  \cf3 null\cf0 ;\par ??        \}\par ??\par ??        \cf3 public\cf0  \cf4 Continuation\cf0  WhatShouldTheUserDoNext()\par ??        \{\par ??            \cf3 return\cf0  \cf3 null\cf0 ;\par ??        \}\par ??    \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">class</span>
+                <span style="color: #2b91af;">FindAddressController</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: #2b91af;">Address</span> FindAddress(<span 
+                    style="color: blue;">long</span> id){}</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: #2b91af;">Continuation</span> WhatShouldTheUserDoNext() {}</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<p>When these methods are executed in our MVC applications, the output objects 
+    (Address or Continuation) are serialized to Json by other code and sent down to 
+    the client.&nbsp; It&#39;s worked out well, but there&#39;s one little wrinkle from the 
+    code above that we stumbled upon:</p>
+        <ol>
+            <li>Continuation is basically a dumb
+                <a href="http://martinfowler.com/eaaCatalog/dataTransferObject.html">Data 
+                Transfer Object</a> class that&#39;s 
+                perfectly suited for being Json serialized and consumed by JavaScript on the 
+                client</li>
+            <li>Address is an Entity class in our <a href="http://c2.com/cgi/wiki?DomainModel">Domain Model</a>, and very poorly suited to 
+                Json serialization.&nbsp; Besides the fact that we probably wouldn&#39;t want the 
+                shape of our Domain Model classes to be coupled to the client JavaScript, the 
+                Entity classes are jagged, have lots of lazy loaded members, and contain a fair 
+                amount of data we may not want to send down to the client (plus the Json 
+                serialization does poorly with bidirectional dependencies).&nbsp; Direct Json 
+                serialization is out.</li>
+        </ol>
+        <p>What we needed to do was convert the Entity objects (and any other object that 
+            wasn&#39;t suited to Json serialization and client usage) into a UI-friendly Data 
+            Transfer Object.&nbsp; Other objects like Continuation that were already Json 
+            friendly, we could just use as is.&nbsp; The solution we came up with was the 
+            &quot;ObjectFlattener:&quot;</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red0\green128\blue0;}??\fs20     \cf3 public\cf0  \cf3 class\cf0  \cf4 ObjectFlattener\par ??\cf0     \{\par ??        \cf3 private\cf0  \cf3 readonly\cf0  \cf4 IContainer\cf0  _container;\par ??\par ??        \cf5 // You can inject the IContainer itself into an object by the way...\par ??\cf0         \cf3 public\cf0  ObjectFlattener(\cf4 IContainer\cf0  container)\par ??        \{\par ??            _container = container;\par ??        \}\par ??\par ??        \cf5 // This method can "flatten" any object\par ??\cf0         \cf3 public\cf0  \cf3 object\cf0  Flatten(\cf3 object\cf0  input)\par ??        \{\par ??            \cf3 var\cf0  flattener = _container.ForGenericType(\cf3 typeof\cf0  (\cf4 IFlattener\cf0 &lt;&gt;))\par ??                .WithParameters(input.GetType())\par ??                .GetInstanceAs&lt;\cf4 IFlattener\cf0 &gt;();\par ??\par ??            \cf3 return\cf0  flattener.ToDto(input);\par ??        \}\par ??    \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">class</span>
+                <span style="color: #2b91af;">ObjectFlattener</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">private</span>
+                <span style="color: blue;">readonly</span> <span style="color: #2b91af;">
+                IContainer</span> _container;</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">// You can inject the 
+                IContainer itself into an object by the way...</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> 
+                ObjectFlattener(<span style="color: #2b91af;">IContainer</span> container)</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _container = container;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">// This method can 
+                &quot;flatten&quot; any object</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: blue;">object</span> Flatten(<span style="color: blue;">object</span> 
+                input)</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                var</span> flattener = _container.ForGenericType(<span style="color: blue;">typeof</span> 
+                (<span style="color: #2b91af;">IFlattener</span>&lt;&gt;))</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .WithParameters(input.GetType())</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .GetInstanceAs&lt;<span style="color: #2b91af;">IFlattener</span>&gt;();</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                return</span> flattener.ToDto(input);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<p>The ObjectFlattener can take in any object, select a strategy for &quot;flattening&quot; 
+    that object into something Json friendly, and return the Json friendly object.&nbsp; 
+    ObjectFlattener is dirt simple.&nbsp; It simply finds the correct IFlattener for 
+    the object type passed into the Flatten(object) method:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20     \cf3 public\cf0  \cf3 interface\cf0  \cf4 IFlattener\par ??\cf0     \{\par ??        \cf3 object\cf0  ToDto(\cf3 object\cf0  input);\par ??    \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">interface</span>
+                <span style="color: #2b91af;">IFlattener</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">object</span> ToDto(<span 
+                    style="color: blue;">object</span> input);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<p>ObjectFlattener needs to find the corrent IFlattener for the object Type passed 
+    in, so it&#39;s really looking for the type:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20     \cf3 public\cf0  \cf3 interface\cf0  \cf4 IFlattener\cf0 &lt;T&gt; : \cf4 IFlattener\par ??\cf0     \{\par ??        \par ??    \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">interface</span>
+                <span style="color: #2b91af;">IFlattener</span>&lt;T&gt; :
+                <span style="color: #2b91af;">IFlattener</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<p>where &quot;T&quot; is the type of object passed into the ToDto(object) method.&nbsp; When 
+    an Address object is passed into ToDto(), ObjectFlattener finds the default 
+    instance of IFlattener&lt;Address&gt;.&nbsp; The 
+    &quot;ForGenericType().WithParameters().GetInstanceAs&lt;T&gt;()&quot; syntax is a helper 
+    expression to create and request a closed generic type from an open generic 
+    template and the appropriate generic parameter types.</p>
+        <p>Now, we said that many objects like Continuation in our system are DTO&#39;s to begin 
+            with and don&#39;t need to be &quot;flattened.&quot;&nbsp; For those objects, we use a &quot;Nullo&quot; 
+            implementation of IFlattener that just returns the object passed in without any 
+            transformation:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20     \cf3 public\cf0  \cf3 class\cf0  \cf4 PassthroughFlattener\cf0 &lt;T&gt; : \cf4 IFlattener\cf0 &lt;T&gt;\par ??    \{\par ??        \cf3 public\cf0  \cf3 object\cf0  ToDto(\cf3 object\cf0  input)\par ??        \{\par ??            \cf3 return\cf0  input;\par ??        \}\par ??    \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">class</span>
+                <span style="color: #2b91af;">PassthroughFlattener</span>&lt;T&gt; :
+                <span style="color: #2b91af;">IFlattener</span>&lt;T&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: blue;">object</span> ToDto(<span style="color: blue;">object</span> 
+                input)</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                return</span> input;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<p>The Address class needs some transformation, so we&#39;ll create an AddressFlattener 
+    class:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red0\green128\blue0;}??\fs20     \cf3 public\cf0  \cf3 class\cf0  \cf4 AddressFlattener\cf0  : \cf4 IFlattener\cf0 &lt;\cf4 Address\cf0 &gt;\par ??    \{\par ??        \cf3 public\cf0  \cf3 object\cf0  ToDto(\cf3 object\cf0  input)\par ??        \{\par ??            \cf3 var\cf0  dto = createDTO((\cf4 Address\cf0 ) input);\par ??            \cf3 return\cf0  dto;\par ??        \}\par ??\par ??        \cf3 private\cf0  \cf3 object\cf0  createDTO(\cf4 Address\cf0  input)\par ??        \{\par ??            \cf5 // creates the AddressDTO object from the \par ??\cf0             \cf5 // Address object passed in\par ??\cf0             \cf3 throw\cf0  \cf3 new\cf0  System.\cf4 NotImplementedException\cf0 ();\par ??        \}\par ??    \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">class</span>
+                <span style="color: #2b91af;">AddressFlattener</span> :
+                <span style="color: #2b91af;">IFlattener</span>&lt;<span style="color: #2b91af;">Address</span>&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: blue;">object</span> ToDto(<span style="color: blue;">object</span> 
+                input)</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                var</span> dto = createDTO((<span style="color: #2b91af;">Address</span>) 
+                input);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                return</span> dto;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">private</span>
+                <span style="color: blue;">object</span> createDTO(<span 
+                    style="color: #2b91af;">Address</span> input)</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // creates the AddressDTO object from the </span>
+            </p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: green;">
+                // Address object passed in</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<p>Great, but now let&#39;s move on to registering these classes with a Container.&nbsp; 
+    This unit test fixture from the code illustrates this very scenario:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red43\green145\blue175;\red0\green0\blue255;\red0\green128\blue0;}??\fs20         [\cf3 SetUp\cf0 ]\par ??        \cf4 public\cf0  \cf4 void\cf0  SetUp()\par ??        \{\par ??            container = \cf4 new\cf0  \cf3 Container\cf0 (x =&gt;\par ??            \{\par ??                \cf5 // Define the basic open type for IFlattener&lt;&gt;\par ??\cf0                 x.ForRequestedType(\cf4 typeof\cf0  (\cf3 IFlattener\cf0 &lt;&gt;)).TheDefaultIsConcreteType(\cf4 typeof\cf0  (\cf3 PassthroughFlattener\cf0 &lt;&gt;));\par ??                \par ??                \cf5 // Explicitly Register a specific closed type for Address\par ??\cf0                 x.ForRequestedType&lt;\cf3 IFlattener\cf0 &lt;\cf3 Address\cf0 &gt;&gt;().TheDefaultIsConcreteType&lt;\cf3 AddressFlattener\cf0 &gt;();\par ??            \});\par ??        \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<span style="color: #2b91af;">SetUp</span>]</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: blue;">void</span> SetUp()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; container =
+                <span style="color: blue;">new</span> <span style="color: #2b91af;">Container</span>(x 
+                =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="color: green;">// Define the basic open type for IFlattener&lt;&gt;</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.ForRequestedType(<span style="color: blue;">typeof</span> (<span 
+                    style="color: #2b91af;">IFlattener</span>&lt;&gt;)).TheDefaultIsConcreteType(<span 
+                    style="color: blue;">typeof</span> (<span style="color: #2b91af;">PassthroughFlattener</span>&lt;&gt;));</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="color: green;">// Explicitly Register a specific closed type for 
+                Address</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.ForRequestedType&lt;<span style="color: #2b91af;">IFlattener</span>&lt;<span 
+                    style="color: #2b91af;">Address</span>&gt;&gt;().TheDefaultIsConcreteType&lt;<span 
+                    style="color: #2b91af;">AddressFlattener</span>&gt;();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<p>In the code above we registered a specific concrete type for IFlattener&lt;Address&gt;, 
+    and the open generic type PassthroughFlattener&lt;T&gt; for requests to IFlattener&lt;T&gt;.&nbsp; 
+    When we request an instance of IFlattener&lt;Address&gt;, StructureMap behaves as 
+    expected and returns a AddressFlattener object:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red43\green145\blue175;\red0\green0\blue255;}??\fs20         [\cf3 Test\cf0 ]\par ??        \cf4 public\cf0  \cf4 void\cf0  asking_for_a_closed_type_that_is_explicitly_registered_returns_the_explicitly_defined_type()\par ??        \{\par ??            container.GetInstance&lt;\cf3 IFlattener\cf0 &lt;\cf3 Address\cf0 &gt;&gt;()\par ??                .ShouldBeOfType&lt;\cf3 AddressFlattener\cf0 &gt;();\par ??        \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<span style="color: #2b91af;">Test</span>]</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: blue;">void</span> 
+                asking_for_a_closed_type_that_is_explicitly_registered_returns_the_explicitly_defined_type()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; container.GetInstance&lt;<span 
+                    style="color: #2b91af;">IFlattener</span>&lt;<span style="color: #2b91af;">Address</span>&gt;&gt;()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .ShouldBeOfType&lt;<span style="color: #2b91af;">AddressFlattener</span>&gt;();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<p>Now, we&#39;ll ask for an instance of IFlattener&lt;Continuation&gt;.&nbsp; You&#39;ll notice 
+    that we didn&#39;t explicitly register that specific type.&nbsp; When the Container 
+    gets the request for IFlattener&lt;Continuation&gt;, it first looks to see if it 
+    already knows how to build that specific type.&nbsp; In this case the Container 
+    doesn&#39;t already know about IFlattener&lt;Continuation&gt;, but it does know about the 
+    open type IFlattener&lt;T&gt; template, so it can use that configuration to create the 
+    closed type IFlattener&lt;Continuation&gt;:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red43\green145\blue175;\red0\green0\blue255;}??\fs20         [\cf3 Test\cf0 ]\par ??        \cf4 public\cf0  \cf4 void\cf0  asking_for_a_closed_type_that_is_not_explicitly_registered_will_close_the_open_type_template()\par ??        \{\par ??            container.GetInstance&lt;\cf3 IFlattener\cf0 &lt;\cf3 Continuation\cf0 &gt;&gt;()\par ??                .ShouldBeOfType&lt;\cf3 PassthroughFlattener\cf0 &lt;\cf3 Continuation\cf0 &gt;&gt;();\par ??        \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<span style="color: #2b91af;">Test</span>]</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: blue;">void</span> 
+                asking_for_a_closed_type_that_is_not_explicitly_registered_will_close_the_open_type_template()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; container.GetInstance&lt;<span 
+                    style="color: #2b91af;">IFlattener</span>&lt;<span style="color: #2b91af;">Continuation</span>&gt;&gt;()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .ShouldBeOfType&lt;<span style="color: #2b91af;">PassthroughFlattener</span>&lt;<span 
+                    style="color: #2b91af;">Continuation</span>&gt;&gt;();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<hr />
+        <p>
+            &nbsp;</p>
+        <p>
+            * Anytime I read one of those &quot;look I&#39;m so clever I can write my own IoC 
+            container in 50 lines of code&quot; blog posts, my immediate response is &quot;oh yeah, 
+            can you handle open generic types smart guy?&quot;</p>
+	    
+	</body>
+</html>

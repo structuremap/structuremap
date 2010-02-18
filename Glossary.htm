@@ -1,0 +1,629 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+	<head>
+		<title>Glossary of Terms</title>
+		<link rel="stylesheet" type="text/css" href="style.css" />
+		<script type="text/javascript" src="jquery-1.2.6.js"></script>
+		<script type="text/javascript" src="structuremap.js"></script>
+	</head>
+	<body>
+	<p>There are some terms that reoccur throughout the documentation and show up in the StructureMap configuration.  Understanding these terms and how they relate to StructureMap isn't a prerequisite to using StructureMap, but it helps.</p>
+	<h2>Container</h2>
+	<p>Tools like StructureMap are generally referred to as IoC containers, or in the 
+        Java world sometimes as &quot;lightweight&quot; containers to differentiate them from the 
+        older EJB containers.&nbsp; As far as I know, the term &quot;Inversion of Control 
+        Container&quot; was coined by members of the PicoContainer team at ThoughtWorks and 
+        popularized by the publication of Martin Fowler&#39;s paper
+        <a href="http://martinfowler.com/articles/injection.html">Inversion of Control 
+        Containers and the Dependency Injection</a> pattern in January 2004.&nbsp; 
+        StructureMap development was already underway when the paper was published.&nbsp; 
+        I was definitely influenced by the paper and PicoContainer itself to a degree, 
+        but I resisted the term &quot;Container&quot; for a long time.&nbsp; StructureMap has a 
+        container class, but it&#39;s always been largely hidden behind the static 
+        ObjectFactory class.&nbsp; New in StructureMap 2.5 is an easy way to use the 
+        Container without StructureMapConfiguration or ObjectFactory like this:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red43\green145\blue175;\red0\green0\blue255;\red163\green21\blue21;\red0\green128\blue0;}??\fs20             \cf3 IContainer\cf0  container = \cf4 new\cf0  \cf3 Container\cf0 (registry =&gt;\par ??            \{\par ??                registry.AddInstanceOf&lt;\cf3 Rule\cf0 &gt;().UsingConcreteType&lt;\cf3 ARule\cf0 &gt;().WithName(\cf5 "Alias"\cf0 );\par ??\par ??                \cf6 // Add an instance by specifying the ConcreteKey\par ??\cf0                 registry.AddInstanceOf&lt;\cf3 IWidget\cf0 &gt;()\par ??                    .UsingConcreteType&lt;\cf3 ColorWidget\cf0 &gt;()\par ??                    .WithName(\cf5 "Purple"\cf0 )\par ??                    .WithProperty(\cf5 "Color"\cf0 ).EqualTo(\cf5 "Purple"\cf0 );\par ??\par ??                \cf6 // Specify a new Instance, override a dependency with a named instance\par ??\cf0                 registry.AddInstanceOf&lt;\cf3 Rule\cf0 &gt;().UsingConcreteType&lt;\cf3 WidgetRule\cf0 &gt;().WithName(\cf5 "RuleThatUsesMyInstance"\cf0 )\par ??                    .Child&lt;\cf3 IWidget\cf0 &gt;(\cf5 "widget"\cf0 ).IsNamedInstance(\cf5 "Purple"\cf0 );\par ??            \});}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #2b91af;">
+                IContainer</span> container = <span style="color: blue;">new</span>
+                <span style="color: #2b91af;">Container</span>(registry =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                registry.AddInstanceOf&lt;<span style="color: #2b91af;">Rule</span>&gt;().UsingConcreteType&lt;<span 
+                    style="color: #2b91af;">ARule</span>&gt;().WithName(<span 
+                    style="color: #a31515;">&quot;Alias&quot;</span>);</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="color: green;">// Add an instance by specifying the ConcreteKey</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                registry.AddInstanceOf&lt;<span style="color: #2b91af;">IWidget</span>&gt;()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .UsingConcreteType&lt;<span style="color: #2b91af;">ColorWidget</span>&gt;()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .WithName(<span style="color: #a31515;">&quot;Purple&quot;</span>)</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .WithProperty(<span style="color: #a31515;">&quot;Color&quot;</span>).EqualTo(<span 
+                    style="color: #a31515;">&quot;Purple&quot;</span>);</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="color: green;">// Specify a new Instance, override a dependency 
+                with a named instance</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                registry.AddInstanceOf&lt;<span style="color: #2b91af;">Rule</span>&gt;().UsingConcreteType&lt;<span 
+                    style="color: #2b91af;">WidgetRule</span>&gt;().WithName(<span 
+                    style="color: #a31515;">&quot;RuleThatUsesMyInstance&quot;</span>)</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                .Child&lt;<span style="color: #2b91af;">IWidget</span>&gt;(<span 
+                    style="color: #a31515;">&quot;widget&quot;</span>).IsNamedInstance(<span 
+                    style="color: #a31515;">&quot;Purple&quot;</span>);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+        </div>
+<!--EndFragment-->
+<hr />
+	<h2>PluginType &amp; PluggedType</h2>
+	<p>I use the term &quot;PluginType&quot; throughout the code and documentation to mean &quot;the 
+        type that you want.&quot;&nbsp; In my current project I have this line of 
+        configuration:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red43\green145\blue175;}??\fs20             ForRequestedType&lt;\cf3 IRepository\cf0 &gt;().TheDefaultIsConcreteType&lt;\cf3 Repository\cf0 &gt;().CacheBy(\cf3 InstanceScope\cf0 .Hybrid);}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ForRequestedType&lt;<span 
+                    style="color: #2b91af;">IRepository</span>&gt;().TheDefaultIsConcreteType&lt;<span 
+                    style="color: #2b91af;">Repository</span>&gt;().CacheBy(<span 
+                    style="color: #2b91af;">InstanceScope</span>.Hybrid);</p>
+    </div>
+<!--EndFragment-->
+<p>If you request an object of <span class="style1">IRepository,</span> you&#39;ll get 
+    an instance of the<span class="style1"> Repository</span> class.&nbsp; In this 
+    case, <span class="style1">IRepository</span> is the PluginType (what you&#39;re 
+    asking for) and <span class="style1">Repository</span> is the &quot;PluggedType&quot; (the 
+    concrete class you&#39;ll get that fulfills implements the PluginType contract).</p>
+<p>Another example of the PluginType / PluggedType nomenclature is in the Xml 
+    configuration on the &lt;DefaultInstance&gt; node.&nbsp; The example below configures 
+    the default ISessionSource:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue255;\red255\green255\blue255;\red163\green21\blue21;\red255\green0\blue0;\red0\green0\blue0;}??\fs20 \cf1   &lt;\cf3 DefaultInstance\par ??\cf1     \cf4 PluginType\cf1 =\cf0 "\cf1 ShadeTree.DomainModel.ISessionSource,ShadeTree.DomainModel\cf0 "\par ??\cf1     \cf4 PluggedType\cf1 =\cf0 "\cf1 ShadeTree.DomainModel.SessionSource,ShadeTree.DomainModel\cf0 "\cf1 &gt;\par ??    &lt;\cf3 properties\cf1 &gt;\par ??      &lt;\cf3 Pair\cf1  \cf4 Key\cf1 =\cf0 "\cf1 connection.provider\cf0 "\cf1  \cf4 Value\cf1 =\cf0 "\cf1 NHibernate.Connection.DriverConnectionProvider\cf0 "\cf1  /&gt;\par ??      &lt;\cf3 Pair\cf1  \cf4 Key\cf1 =\cf0 "\cf1 connection.driver_class\cf0 "\cf1  \cf4 Value\cf1 =\cf0 "\cf1 NHibernate.Driver.SqlClientDriver\cf0 "\cf1  /&gt;\par ??      &lt;\cf3 Pair\cf1  \cf4 Key\cf1 =\cf0 "\cf1 dialect\cf0 "\cf1  \cf4 Value\cf1 =\cf0 "\cf1 NHibernate.Dialect.MsSql2000Dialect\cf0 "\cf1  /&gt;\par ??      &lt;\cf3 Pair\cf1  \cf4 Key\cf1 =\cf0 "\cf1 hibernate.dialect\cf0 "\cf1  \cf4 Value\cf1 =\cf0 "\cf1 NHibernate.Dialect.MsSql2000Dialect\cf0 "\cf1  /&gt;\par ??      &lt;\cf3 Pair\cf1  \cf4 Key\cf1 =\cf0 "\cf1 use_outer_join\cf0 "\cf1  \cf4 Value\cf1 =\cf0 "\cf1 true\cf0 "\cf1  /&gt;\par ??      &lt;\cf3 Pair\cf1  \cf4 Key\cf1 =\cf0 "\cf1 connection.connection_string\cf0 "\cf1  \cf4 Value\cf1 =\cf0 "\cf1 Data Source=localhost;Initial Catalog=Blue;Trusted_Connection=yes;\cf0 "\cf1  /&gt;\par ??      &lt;\cf3 Pair\cf1  \cf4 Key\cf1 =\cf0 "\cf1 show_sql\cf0 "\cf1  \cf4 Value\cf1 =\cf0 "\cf1 true\cf0 "\cf1  /&gt;\par ??    &lt;/\cf3 properties\cf1 &gt;\par ??  &lt;/\cf3 DefaultInstance\cf1 &gt;}
+-->
+<div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+    <p style="margin: 0px;">
+        <span style="color: blue;">&nbsp; &lt;</span><span style="color: #a31515;">DefaultInstance</span></p>
+    <p style="margin: 0px;">
+        <span style="color: blue;">&nbsp;&nbsp;&nbsp; </span><span style="color: red;">
+        PluginType</span><span style="color: blue;">=</span>&quot;<span style="color: blue;">ShadeTree.DomainModel.ISessionSource,ShadeTree.DomainModel</span>&quot;</p>
+    <p style="margin: 0px;">
+        <span style="color: blue;">&nbsp;&nbsp;&nbsp; </span><span style="color: red;">
+        PluggedType</span><span style="color: blue;">=</span>&quot;<span 
+            style="color: blue;">ShadeTree.DomainModel.SessionSource,ShadeTree.DomainModel</span>&quot;<span 
+            style="color: blue;">&gt;</span></p>
+    <p style="margin: 0px;">
+        <span style="color: blue;">&nbsp;&nbsp;&nbsp; &lt;</span><span 
+            style="color: #a31515;">properties</span><span style="color: blue;">&gt;</span></p>
+    <p style="margin: 0px;">
+        <span style="color: blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</span><span 
+            style="color: #a31515;">Pair</span><span style="color: blue;"> </span>
+        <span style="color: red;">Key</span><span style="color: blue;">=</span>&quot;<span 
+            style="color: blue;">connection.provider</span>&quot;<span style="color: blue;">
+        </span><span style="color: red;">Value</span><span style="color: blue;">=</span>&quot;<span 
+            style="color: blue;">NHibernate.Connection.DriverConnectionProvider</span>&quot;<span 
+            style="color: blue;"> /&gt;</span></p>
+    <p style="margin: 0px;">
+        <span style="color: blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</span><span 
+            style="color: #a31515;">Pair</span><span style="color: blue;"> </span>
+        <span style="color: red;">Key</span><span style="color: blue;">=</span>&quot;<span 
+            style="color: blue;">connection.driver_class</span>&quot;<span 
+            style="color: blue;"> </span><span style="color: red;">Value</span><span 
+            style="color: blue;">=</span>&quot;<span style="color: blue;">NHibernate.Driver.SqlClientDriver</span>&quot;<span 
+            style="color: blue;"> /&gt;</span></p>
+    <p style="margin: 0px;">
+        <span style="color: blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</span><span 
+            style="color: #a31515;">Pair</span><span style="color: blue;"> </span>
+        <span style="color: red;">Key</span><span style="color: blue;">=</span>&quot;<span 
+            style="color: blue;">dialect</span>&quot;<span style="color: blue;"> </span>
+        <span style="color: red;">Value</span><span style="color: blue;">=</span>&quot;<span 
+            style="color: blue;">NHibernate.Dialect.MsSql2000Dialect</span>&quot;<span 
+            style="color: blue;"> /&gt;</span></p>
+    <p style="margin: 0px;">
+        <span style="color: blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</span><span 
+            style="color: #a31515;">Pair</span><span style="color: blue;"> </span>
+        <span style="color: red;">Key</span><span style="color: blue;">=</span>&quot;<span 
+            style="color: blue;">hibernate.dialect</span>&quot;<span style="color: blue;">
+        </span><span style="color: red;">Value</span><span style="color: blue;">=</span>&quot;<span 
+            style="color: blue;">NHibernate.Dialect.MsSql2000Dialect</span>&quot;<span 
+            style="color: blue;"> /&gt;</span></p>
+    <p style="margin: 0px;">
+        <span style="color: blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</span><span 
+            style="color: #a31515;">Pair</span><span style="color: blue;"> </span>
+        <span style="color: red;">Key</span><span style="color: blue;">=</span>&quot;<span 
+            style="color: blue;">use_outer_join</span>&quot;<span style="color: blue;">
+        </span><span style="color: red;">Value</span><span style="color: blue;">=</span>&quot;<span 
+            style="color: blue;">true</span>&quot;<span style="color: blue;"> /&gt;</span></p>
+    <p style="margin: 0px;">
+        <span style="color: blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</span><span 
+            style="color: #a31515;">Pair</span><span style="color: blue;"> </span>
+        <span style="color: red;">Key</span><span style="color: blue;">=</span>&quot;<span 
+            style="color: blue;">connection.connection_string</span>&quot;<span 
+            style="color: blue;"> </span><span style="color: red;">Value</span><span 
+            style="color: blue;">=</span>&quot;a connection string&quot;<span 
+            style="color: blue;"> /&gt;</span></p>
+    <p style="margin: 0px;">
+        <span style="color: blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</span><span 
+            style="color: #a31515;">Pair</span><span style="color: blue;"> </span>
+        <span style="color: red;">Key</span><span style="color: blue;">=</span>&quot;<span 
+            style="color: blue;">show_sql</span>&quot;<span style="color: blue;"> </span>
+        <span style="color: red;">Value</span><span style="color: blue;">=</span>&quot;<span 
+            style="color: blue;">true</span>&quot;<span style="color: blue;"> /&gt;</span></p>
+    <p style="margin: 0px;">
+        <span style="color: blue;">&nbsp;&nbsp;&nbsp; &lt;/</span><span 
+            style="color: #a31515;">properties</span><span style="color: blue;">&gt;</span></p>
+    <p style="margin: 0px;">
+        <span style="color: blue;">&nbsp; &lt;/</span><span style="color: #a31515;">DefaultInstance</span><span 
+            style="color: blue;">&gt;</span></p>
+</div>
+<!--EndFragment-->
+<hr />
+	<a name="Instance"></a><h2>Instance</h2>
+	<p>In StructureMap terms, an &quot;Instance&quot; is a named way to build or locate a 
+        named object 
+        instance for a requested PluginType.&nbsp; An &quot;Instance&quot; does not automatically 
+        equate to a concrete type.&nbsp; For example, let&#39;s say that we&#39;re building a 
+        system to automate a warehouse.&nbsp; Our system might consume an interface 
+        called IShippingService that acts as a 
+        <a href="http://martinfowler.com/eaaCatalog/gateway.html">Gateway</a> to various ways of shipping 
+        boxes out of our warehouse.</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20     \cf3 public\cf0  \cf3 interface\cf0  \cf4 IShippingService\par ??\cf0     \{\par ??        \cf3 void\cf0  ShipIt();\par ??    \}}
+-->
+    <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">
+            interface</span> <span style="color: #2b91af;">IShippingService</span></p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">void</span> ShipIt();</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+    </div>
+<!--EndFragment-->
+<p>Our warehouse system might have to interact with three types of shipping:&nbsp; 
+    domestic, international, and intra-company or internal shipments.&nbsp; The 
+    internal shipping service runs in process with the warehouse application, but 
+    domestic and international shipping is done by invoking external web services.&nbsp; 
+    The registration of the IShippingService Instances might look like this:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red163\green21\blue21;}??\fs20     \cf3 public\cf0  \cf3 class\cf0  \cf4 ShippingRegistry\cf0  : \cf4 Registry\par ??\cf0     \{\par ??        \cf3 public\cf0  ShippingRegistry()\par ??        \{\par ??            ForRequestedType&lt;\cf4 IShippingService\cf0 &gt;().AddInstances(x =&gt;\par ??            \{\par ??                x.OfConcreteType&lt;\cf4 ShippingWebService\cf0 &gt;()\par ??                    .WithCtorArg(\cf5 "url"\cf0 ).EqualTo(\cf5 "a url"\cf0 )\par ??                    .WithName(\cf5 "Domestic"\cf0 );\par ??\par ??                x.OfConcreteType&lt;\cf4 ShippingWebService\cf0 &gt;()\par ??                    .WithCtorArg(\cf5 "url"\cf0 ).EqualTo(\cf5 "a different url"\cf0 )\par ??                    .WithName(\cf5 "International"\cf0 );\par ??\par ??                x.OfConcreteType&lt;\cf4 InternalShippingService\cf0 &gt;().WithName(\cf5 "Internal"\cf0 );\par ??            \});\par ??        \}\par ??    \}}
+-->
+<div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">
+        class</span> <span style="color: #2b91af;">ShippingRegistry</span> :
+        <span style="color: #2b91af;">Registry</span></p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> 
+        ShippingRegistry()</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ForRequestedType&lt;<span 
+            style="color: #2b91af;">IShippingService</span>&gt;().AddInstances(x =&gt;</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        x.OfConcreteType&lt;<span style="color: #2b91af;">ShippingWebService</span>&gt;()</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        .WithCtorArg(<span style="color: #a31515;">&quot;url&quot;</span>).EqualTo(<span 
+            style="color: #a31515;">&quot;a url&quot;</span>)</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        .WithName(<span style="color: #a31515;">&quot;Domestic&quot;</span>);</p>
+    <p style="margin: 0px;">
+        &nbsp;</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        x.OfConcreteType&lt;<span style="color: #2b91af;">ShippingWebService</span>&gt;()</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        .WithCtorArg(<span style="color: #a31515;">&quot;url&quot;</span>).EqualTo(<span 
+            style="color: #a31515;">&quot;a different url&quot;</span>)</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        .WithName(<span style="color: #a31515;">&quot;International&quot;</span>);</p>
+    <p style="margin: 0px;">
+        &nbsp;</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        x.OfConcreteType&lt;<span style="color: #2b91af;">InternalShippingService</span>&gt;().WithName(<span 
+            style="color: #a31515;">&quot;Internal&quot;</span>);</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+</div>
+<!--EndFragment-->
+<p>In the registration code above, there are three &quot;Instance&#39;s.&quot;&nbsp; You can 
+    access the various IShippingService Instance&#39;s by name:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green128\blue0;\red0\green0\blue255;\red43\green145\blue175;\red163\green21\blue21;}??\fs20             \cf3 // Accessing the IShippingService Instance's by name\par ??\cf0             \cf4 var\cf0  internationalService = \cf5 ObjectFactory\cf0 .GetNamedInstance&lt;\cf5 IShippingService\cf0 &gt;(\cf6 "International"\cf0 );\par ??            \cf4 var\cf0  domesticService = \cf5 ObjectFactory\cf0 .GetNamedInstance&lt;\cf5 IShippingService\cf0 &gt;(\cf6 "Domestic"\cf0 );\par ??            \cf4 var\cf0  internalService = \cf5 ObjectFactory\cf0 .GetNamedInstance&lt;\cf5 IShippingService\cf0 &gt;(\cf6 "Internal"\cf0 );\par ??}
+-->
+<div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span style="color: green;">// Accessing the IShippingService Instance&#39;s by name</span></p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span style="color: blue;">var</span> internationalService =
+        <span style="color: #2b91af;">ObjectFactory</span>.GetNamedInstance&lt;<span 
+            style="color: #2b91af;">IShippingService</span>&gt;(<span 
+            style="color: #a31515;">&quot;International&quot;</span>);</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span style="color: blue;">var</span> domesticService =
+        <span style="color: #2b91af;">ObjectFactory</span>.GetNamedInstance&lt;<span 
+            style="color: #2b91af;">IShippingService</span>&gt;(<span 
+            style="color: #a31515;">&quot;Domestic&quot;</span>);</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span style="color: blue;">var</span> internalService =
+        <span style="color: #2b91af;">ObjectFactory</span>.GetNamedInstance&lt;<span 
+            style="color: #2b91af;">IShippingService</span>&gt;(<span 
+            style="color: #a31515;">&quot;Internal&quot;</span>);</p>
+</div>
+<!--EndFragment-->
+<p>Asking for the &quot;International&quot; or the &quot;Domestic&quot; instance of IShippingService 
+    will both return an object of type ShippingWebService, but the two objects will 
+    be differently configured with unique Url&#39;s.</p>
+<p>There is an actual class in 
+        StructureMap 2.5 that represents an &quot;Instance.&quot;&nbsp; An abreviated version of 
+        the abstract Instance class is shown below:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red0\green128\blue0;}??\fs20     \cf3 public\cf0  \cf3 abstract\cf0  \cf3 class\cf0  \cf4 Instance\cf0  : \cf4 IDiagnosticInstance\par ??\cf0     \{\par ??        \cf3 private\cf0  \cf3 readonly\cf0  \cf3 string\cf0  _originalName;\par ??        \cf3 private\cf0  \cf4 InstanceInterceptor\cf0  _interceptor = \cf3 new\cf0  \cf4 NulloInterceptor\cf0 ();\par ??        \cf3 private\cf0  \cf3 string\cf0  _name = \cf4 Guid\cf0 .NewGuid().ToString();\par ??\par ??\par ??        \cf3 protected\cf0  Instance()\par ??        \{\par ??            _originalName = _name;\par ??        \}\par ??\par ??        \cf3 public\cf0  \cf3 string\cf0  Name\par ??        \{\par ??            \cf3 get\cf0  \{ \cf3 return\cf0  _name; \}\par ??            \cf3 set\cf0  \{ _name = \cf3 value\cf0 ; \}\par ??        \}\par ??\par ??        \cf3 public\cf0  \cf3 virtual\cf0  \cf3 object\cf0  Build(\cf4 Type\cf0  pluginType, \cf4 IBuildSession\cf0  session)\par ??        \{\par ??            \cf3 object\cf0  rawValue = createRawObject(pluginType, session);\par ??            \cf3 return\cf0  applyInterception(rawValue, pluginType);\par ??        \}\par ??\par ??        \cf3 private\cf0  \cf3 object\cf0  createRawObject(\cf4 Type\cf0  pluginType, \cf4 IBuildSession\cf0  session)\par ??        \{\par ??            \cf3 try\par ??\cf0             \{\par ??                \cf3 return\cf0  build(pluginType, session);\par ??            \}\par ??            \cf3 catch\cf0  (\cf4 StructureMapException\cf0  ex)\par ??            \{\par ??                \cf3 throw\cf0 ;\par ??            \}\par ??            \cf3 catch\cf0  (\cf4 Exception\cf0  ex)\par ??            \{\par ??                \cf3 throw\cf0  \cf3 new\cf0  \cf4 StructureMapException\cf0 (400, ex);\par ??            \}\par ??        \}\par ??\par ??        \cf3 protected\cf0  \cf3 abstract\cf0  \cf3 object\cf0  build(\cf4 Type\cf0  pluginType, \cf4 IBuildSession\cf0  session);\par ??\par ??        \cf3 public\cf0  \cf4 InstanceInterceptor\cf0  Interceptor\par ??        \{\par ??            \cf3 get\cf0  \{ \cf3 return\cf0  _interceptor; \}\par ??            \cf3 set\cf0  \{ _interceptor = \cf3 value\cf0 ; \}\par ??        \}\par ??\par ??\par ??\par ??\cf3         #region\cf0  IDiagnosticInstance Members\par ??\par ??        \cf3 bool\cf0  \cf4 IDiagnosticInstance\cf0 .CanBePartOfPluginFamily(\cf4 PluginFamily\cf0  family)\par ??        \{\par ??            \cf3 return\cf0  canBePartOfPluginFamily(family);\par ??        \}\par ??\par ??        \cf4 Instance\cf0  \cf4 IDiagnosticInstance\cf0 .FindInstanceForProfile(\cf4 PluginFamily\cf0  family, \cf3 string\cf0  profileName, \cf4 GraphLog\cf0  log)\par ??        \{\par ??            \cf3 return\cf0  findMasterInstance(family, profileName, log);\par ??        \}\par ??\par ??        \cf4 InstanceToken\cf0  \cf4 IDiagnosticInstance\cf0 .CreateToken()\par ??        \{\par ??            \cf3 return\cf0  \cf3 new\cf0  \cf4 InstanceToken\cf0 (Name, getDescription());\par ??        \}\par ??\par ??        \cf3 void\cf0  \cf4 IDiagnosticInstance\cf0 .Preprocess(\cf4 PluginFamily\cf0  family)\par ??        \{\par ??            preprocess(family);\par ??        \}\par ??\par ??        \cf3 protected\cf0  \cf3 virtual\cf0  \cf3 void\cf0  preprocess(\cf4 PluginFamily\cf0  family)\par ??        \{\par ??            \cf5 // no-op;\par ??\cf0         \}\par ??\par ??        \cf3 protected\cf0  \cf3 abstract\cf0  \cf3 string\cf0  getDescription();\par ??\par ??\cf3         #endregion\par ??\par ??\cf0         \cf3 protected\cf0  \cf3 void\cf0  replaceNameIfNotAlreadySet(\cf3 string\cf0  name)\par ??        \{\par ??            \cf3 if\cf0  (_name == _originalName)\par ??            \{\par ??                _name = name;\par ??            \}\par ??        \}\par ??\par ??\par ??\par ??        \cf3 private\cf0  \cf3 object\cf0  applyInterception(\cf3 object\cf0  rawValue, \cf4 Type\cf0  pluginType)\par ??        \{\par ??            \cf3 try\par ??\cf0             \{\par ??                \cf5 // Intercept with the Instance-specific InstanceInterceptor\par ??\cf0                 \cf3 return\cf0  _interceptor.Process(rawValue);\par ??            \}\par ??            \cf3 catch\cf0  (\cf4 Exception\cf0  e)\par ??            \{\par ??                \cf3 throw\cf0  \cf3 new\cf0  \cf4 StructureMapException\cf0 (270, e, Name, pluginType);\par ??            \}\par ??        \}\par ??\par ??        \cf3 protected\cf0  \cf3 abstract\cf0  \cf3 object\cf0  build(\cf4 Type\cf0  pluginType, \cf4 IBuildSession\cf0  session);\par ??\par ??        \cf3 protected\cf0  \cf3 virtual\cf0  \cf4 Plugin\cf0  findPlugin(\cf4 PluginCollection\cf0  plugins)\par ??        \{\par ??            \cf3 return\cf0  \cf3 null\cf0 ;\par ??        \}\par ??\par ??        \cf3 protected\cf0  \cf3 virtual\cf0  \cf4 Instance\cf0  findMasterInstance(\cf4 PluginFamily\cf0  family, \cf3 string\cf0  profileName, \cf4 GraphLog\cf0  log)\par ??        \{\par ??            \cf3 return\cf0  \cf3 this\cf0 ;\par ??        \}\par ??\par ??        \cf3 protected\cf0  \cf3 virtual\cf0  \cf3 bool\cf0  canBePartOfPluginFamily(\cf4 PluginFamily\cf0  family)\par ??        \{\par ??            \cf3 return\cf0  \cf3 true\cf0 ;\par ??        \}\par ??\par ??\par ??\par ??        \cf3 internal\cf0  \cf3 virtual\cf0  \cf3 bool\cf0  Matches(\cf4 Plugin\cf0  plugin)\par ??        \{\par ??            \cf3 return\cf0  \cf3 false\cf0 ;\par ??        \}\par ??    \}}
+-->
+    <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">
+            abstract</span> <span style="color: blue;">class</span>
+            <span style="color: #2b91af;">Instance</span> : <span style="color: #2b91af;">
+            IDiagnosticInstance</span></p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+            <span style="color: blue;">string</span> Name</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: blue;">get</span> { <span style="color: blue;">return</span> 
+            _name; }</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: blue;">set</span> { _name = <span style="color: blue;">value</span>; 
+            }</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        <p style="margin: 0px;">
+            &nbsp;</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+            <span style="color: blue;">virtual</span> <span style="color: blue;">object</span> 
+            Build(<span style="color: #2b91af;">Type</span> pluginType,
+            <span style="color: #2b91af;">IBuildSession</span> session)</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: blue;">object</span> rawValue = createRawObject(pluginType, 
+            session);</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: blue;">return</span> applyInterception(rawValue, 
+            pluginType);</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        <p style="margin: 0px;">
+            &nbsp;</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">private</span>
+            <span style="color: blue;">object</span> createRawObject(<span 
+                style="color: #2b91af;">Type</span> pluginType,
+            <span style="color: #2b91af;">IBuildSession</span> session)</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: blue;">try</span></p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: blue;">return</span> build(pluginType, session);</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: blue;">catch</span> (<span style="color: #2b91af;">StructureMapException</span> 
+            ex)</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: blue;">throw</span>;</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: blue;">catch</span> (<span style="color: #2b91af;">Exception</span> 
+            ex)</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: blue;">throw</span> <span style="color: blue;">new</span>
+            <span style="color: #2b91af;">StructureMapException</span>(400, ex);</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        <p style="margin: 0px;">
+            &nbsp;</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">protected</span>
+            <span style="color: blue;">abstract</span> <span style="color: blue;">object</span> 
+            build(<span style="color: #2b91af;">Type</span> pluginType,
+            <span style="color: #2b91af;">IBuildSession</span> session);</p>
+        <p style="margin: 0px;">
+            &nbsp;</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+    </div>
+<!--EndFragment-->
+<p>A single Instance can be assigned to a PluginType as the default.&nbsp; When you 
+    call ObjectFactory.GetInstance&lt;T&gt;(), StructureMap looks for the default Instance 
+    object for PluginType T, then executes the Instance.Build(Type, IBuildSession) 
+    method to create a new object or get an existing object.&nbsp; Note the abstract 
+    build(Type, IBuildSession) method.&nbsp; This is a Template Method that can be 
+    overriden to write your own customized Instance type.</p>
+<p>When you call ObjectFactory.GetNamedInstance&lt;T&gt;(&quot;the instance that I want&quot;) or 
+    ObjectFactory.GetInstance&lt;T&gt;(), the internal Container object is locating the 
+    correct Instance object and calling its Build() method.</p>
+	    <hr />
+	<h2>Scoping (or Lifecycle)</h2>
+	<p>When you register a PluginType in the system you can &quot;scope&quot; the Instance&#39;s of 
+        that PluginType like this:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green128\blue0;\red43\green145\blue175;}??\fs20             \cf3 // This is used as a sort of lightweight ScriptManager in\par ??\cf0             \cf3 // our website application\par ??\cf0             ForRequestedType&lt;\cf4 ICachedSet\cf0 &gt;().TheDefaultIsConcreteType&lt;\cf4 CachedSet\cf0 &gt;()\par ??                .CacheBy(\cf4 InstanceScope\cf0 .Hybrid);\par ??}
+-->
+    <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: green;">// This is used as a sort of lightweight 
+            ScriptManager in</span></p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: green;">// our website application</span></p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ForRequestedType&lt;<span 
+                style="color: #2b91af;">ICachedSet</span>&gt;().TheDefaultIsConcreteType&lt;<span 
+                style="color: #2b91af;">CachedSet</span>&gt;()</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+            .CacheBy(<span style="color: #2b91af;">InstanceScope</span>.HttpContext);</p>
+    </div>
+<!--EndFragment-->
+<p>Note the CacheBy() method hanging off the end of the expression.&nbsp; This is 
+    directing the StructureMap container to use the same object instance for 
+    ICachedSet for all requests in the same HttpContext.&nbsp; In this case, if a 
+    request is made for any Instance of ICachedSet, StructureMap will first check 
+    the HttpContext.Items collection to see if that exact Instance has already been 
+    created within the same HttpContext. </p>
+					<ol>
+						<li>PerRequest - The default option unless otherwise overridden.&nbsp; A new object 
+                            will be created for each time you request an Instance from the container.&nbsp; 
+                            Some other IoC containers call this &quot;Transient.&quot;&nbsp; Please note that this is 
+                            the default behavior in StructureMap.&nbsp; Many other IoC container tools will 
+                            use &quot;Singleton&quot; instead. </li>
+						<li>Singleton - A single object will be shared across 
+						all requests for a specific Instance.&nbsp; StructureMap will only create the 
+                            singleton object upon demand</li>
+						<li>ThreadLocal - A single object will be created for 
+						each requesting thread.&nbsp; Caches the instances with 
+						ThreadLocalStorage.</li>
+						<li>HttpContext - A single object will be created for 
+						each HttpContext.&nbsp; Caches the instances in the 
+						HttpContext.Items collection.</li>
+                        <li>HttpSession - A single object will be created for each Http Session.&nbsp; 
+                            Caches the intances in the HttpContext.Session collection.</li>
+						<li>Hybrid - Uses HttpContext storage if it exists, 
+						otherwise uses ThreadLocal storage.</li>
+					</ol>
+					<p>
+                        It is possible to create your own type of scoping.&nbsp; See &quot;<a 
+                            href="ExtendingStructureMap.htm">Extending 
+                        StructureMap</a>&quot; for more information.&nbsp; Also note 
+                        that StructureMap provides no functionality for cleaning up resources of the 
+                        objects held by the container (Container.EjectAllInstances&lt;T&gt;() will clear out 
+                        singleton objects).&nbsp; To date, I have not found a need for this 
+                        behavior or functionality.&nbsp; I generally assume that a combination of basic 
+                        garbage collection and proper class design is sufficient.&nbsp; Please also note 
+                        that StructureMap does not retain a reference to objects that are created as 
+                        &quot;PerRequest/Transient&quot; and there is not need for any kind of Container.Release() 
+                        method like some other IoC tools.</p>
+	    <hr />
+    <h2>Profile</h2>
+	<p>From the very beginning, StructureMap has supported the ability to define a named 
+        set of default instances called a &quot;Profile.&quot;&nbsp; The Profile feature was 
+        originally meant to be a quick way of switching the connection mode of a smart 
+        client application from connected to disconnected modes.&nbsp; In practice, it&#39;s 
+        more commonly used as a way to migrate configuration between environments or for 
+        creating alternative deployment configurations.&nbsp; My team uses the Profile 
+        feature in our system as a quick way to collapse our entire distributed 
+        application into a single AppDomain for easier testing and debugging.&nbsp; Our 
+        &quot;InMemory&quot; profile is defined like this:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green128\blue0;\red0\green0\blue255;\red43\green145\blue175;}??\fs20             \cf3 // Using this Profile configures our application to \par ??\cf0             \cf3 // run completely inside a single AppDomain\par ??\cf0             \cf3 // In production the application will consist\par ??\cf0             \cf3 // of the website and 2-3 external windows\par ??\cf0             \cf3 // services\par ??\cf0             \cf4 var\cf0  repository = \cf4 new\cf0  \cf5 InMemoryRepository\cf0 ();\par ??            CreateProfile(IN_MEMORY_PROFILE, x =&gt;\par ??            \{\par ??                x.For&lt;\cf5 IRepository\cf0 &gt;().Use(repository);\par ??                x.For&lt;\cf5 IEventPublishingService\cf0 &gt;().Use(\cf4 new\cf0  \cf5 InMemoryEventPublishingService\cf0 (repository));\par ??                x.For&lt;\cf5 IUserMessagePublisher\cf0 &gt;().UseConcreteType&lt;\cf5 InMemoryUserMessageQueue\cf0 &gt;();\par ??                x.For&lt;\cf5 IUnitOfWork\cf0 &gt;().UseConcreteType&lt;\cf5 InMemoryUnitOfWork\cf0 &gt;();\par ??            \});}
+-->
+    <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: green;">// Using this Profile configures our application to
+            </span>
+        </p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: green;">// run completely inside a single AppDomain</span></p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: green;">// In production the application will consist</span></p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: green;">// of the website and 2-3 external windows</span></p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: green;">// services</span></p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: blue;">var</span> repository = <span style="color: blue;">
+            new</span> <span style="color: #2b91af;">InMemoryRepository</span>();</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+            CreateProfile(IN_MEMORY_PROFILE, x =&gt;</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+            x.For&lt;<span style="color: #2b91af;">IRepository</span>&gt;().Use(repository);</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+            x.For&lt;<span style="color: #2b91af;">IEventPublishingService</span>&gt;().Use(<span 
+                style="color: blue;">new</span> <span style="color: #2b91af;">
+            InMemoryEventPublishingService</span>(repository));</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+            x.For&lt;<span style="color: #2b91af;">IUserMessagePublisher</span>&gt;().UseConcreteType&lt;<span 
+                style="color: #2b91af;">InMemoryUserMessageQueue</span>&gt;();</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+            x.For&lt;<span style="color: #2b91af;">IUnitOfWork</span>&gt;().UseConcreteType&lt;<span 
+                style="color: #2b91af;">InMemoryUnitOfWork</span>&gt;();</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+    </div>
+<!--EndFragment-->
+<p>In the code, we can switch the application to the in memory mode by calling the 
+    SetDefaultsToProfile() method on the Container (or ObjectFactory.Profile = 
+    CoreRegistry.IN_MEMORY_PROFILE):</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green128\blue0;\red43\green145\blue175;\red0\green0\blue255;}??\fs20             \cf3 // This is actual code from a test harness class we use\par ??\cf0             \cf3 // for integration testing\par ??\cf0             \cf4 IContainer\cf0  container = createContainer(\cf5 new\cf0  \cf4 RuleSet\cf0 []\{ruleSet\});\par ??            container.SetDefaultsToProfile(\cf4 CoreRegistry\cf0 .IN_MEMORY_PROFILE);\par ??}
+-->
+<div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span style="color: green;">// This is actual code from a test harness class we 
+        use</span></p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span style="color: green;">// for integration testing</span></p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span style="color: #2b91af;">IContainer</span> container = createContainer(<span 
+            style="color: blue;">new</span> <span style="color: #2b91af;">RuleSet</span>[]{ruleSet});</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        container.SetDefaultsToProfile(<span style="color: #2b91af;">CoreRegistry</span>.IN_MEMORY_PROFILE);</p>
+</div>
+<!--EndFragment-->
+<hr />
+	<h2>Interceptor</h2>
+	<p>A new feature for StructureMap 2.5 is the ability to &quot;intercept&quot; an object 
+        getting created in StructureMap before the new object is handed back to the 
+        requesting code.&nbsp; The intention behind this feature is to support runtime 
+        Aspect Oriented Programming techniques or any type of object initialization 
+        beyond the constructor function.&nbsp; </p>
+    <p>
+        To explain the sequence of events, here&#39;s an ellided version of the Build() 
+        method of the Instance abstract class:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red0\green128\blue0;}??\fs20         \cf3 public\cf0  \cf3 virtual\cf0  \cf3 object\cf0  Build(\cf4 Type\cf0  pluginType, \cf4 BuildSession\cf0  session)\par ??        \{\par ??            markBuildStackStart(session, pluginType);\par ??\par ??            \cf5 // "Build" the desired object\par ??\cf0             \cf3 object\cf0  rawValue = createRawObject(pluginType, session);\par ??            \par ??            \cf5 // Allow the Interceptor a chance to enhance, configure,  \par ??\cf0             \cf5 // wrap with a decorator, or even replace the rawValue\par ??\cf0             \cf3 object\cf0  finalValue = applyInterception(rawValue, pluginType);\par ??\par ??            markBuildStackFinish(session);\par ??\par ??            \cf3 return\cf0  finalValue;\par ??        \}}
+-->
+    <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+            <span style="color: blue;">virtual</span> <span style="color: blue;">object</span> 
+            Build(<span style="color: #2b91af;">Type</span> pluginType,
+            <span style="color: #2b91af;">BuildSession</span> session)</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+            markBuildStackStart(session, pluginType);</p>
+        <p style="margin: 0px;">
+            &nbsp;</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: green;">// &quot;Build&quot; the desired object</span></p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: blue;">object</span> rawValue = createRawObject(pluginType, 
+            session);</p>
+        <p style="margin: 0px;">
+            &nbsp;</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: green;">// Allow the Interceptor a chance to enhance, 
+            configure,&nbsp; </span>
+        </p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: green;">// wrap with a decorator, or even replace the 
+            rawValue</span></p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: blue;">object</span> finalValue = 
+            applyInterception(rawValue, pluginType);</p>
+        <p style="margin: 0px;">
+            &nbsp;</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+            markBuildStackFinish(session);</p>
+        <p style="margin: 0px;">
+            &nbsp;</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="color: blue;">return</span> finalValue;</p>
+        <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+    </div>
+<!--EndFragment-->
+<p>
+    The Instance class first builds the raw object, then applies any registered 
+    interception on the raw object to get the final value.&nbsp;
+</p>
+        <p>
+            See <a href="Interception.htm">Interception</a> for more information.</p>
+	    <hr />
+	</body>
+</html>

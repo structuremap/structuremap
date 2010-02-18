@@ -1,0 +1,698 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+	<head>
+		<title>Configuring StructureMap</title>
+		<link rel="stylesheet" type="text/css" href="style.css" />
+		<script type="text/javascript" src="jquery-1.2.6.js"></script>
+		<script type="text/javascript" src="structuremap.js"></script>
+	</head>
+	<body>
+
+    <h2>Forms of Configuration</h2>
+    <p>
+        The first step in using StructureMap is configuring a Container object or 
+        ObjectFactory.&nbsp; The configuration options have changed more than anything 
+        else from the initial releases to StructureMap 2.5+.&nbsp; You have three forms 
+        of configuration to choose from:</p>
+    <ol>
+        <li><a href="RegistryDSL.htm">Registry DSL</a> -- The programmatic 
+            <a href="http://www.martinfowler.com/bliki/FluentInterface.html">Fluent Interface</a> API for configuring the Container in code.</li>
+        <li><a href="XmlConfiguration.htm">Xml configuration</a> (StructureMap.config, the App.config file, or named files)</li>
+        <li><a href="UsingAttributes.htm">StructureMap Attributes </a>-- Not fully deprecated, but not really recommended either.&nbsp; </li>
+    </ol>
+    <p>
+        The configuration is highly modular and you can mix and match all of the configuration 
+        choices within the same Container instance.&nbsp; The strong recommendation is 
+        to use the Registry DSL as much as possible, then use the Xml configuration 
+        strictly for configuration that absolutely must be external to the code 
+        (connection strings, file paths, Url&#39;s, etc.).&nbsp; The attributes are 
+        deprecated and largely unnecessary now, but still supported for backwards 
+        compatibility.</p>
+        <hr />
+    <h2>Initializing the Container</h2>
+    <p>
+        The recommended mechanism for initializing the Container or ObjectFactory is the Initialize() 
+        method.&nbsp; The Initialize() method is new for StructureMap 2.5, and largely 
+        driven by (my current love affair with Lambda&#39;s) the confusion and misuse of 
+        StructureMapConfiguration.&nbsp; StructureMapConfiguration is still supported, 
+        but it is deprecated in the code and will be eliminated in a future release.&nbsp; Initialize() is a Nested Closure that 
+        gives you a chance to express directives telling the Container how to construct 
+        itself and add one or more sources of configuration.&nbsp; </p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20         \cf3 public\cf0  Container(\cf4 Action\cf0 &lt;\cf4 ConfigurationExpression\cf0 &gt; action)\par ??        \{\par ??            \cf3 var\cf0  expression = \cf3 new\cf0  \cf4 ConfigurationExpression\cf0 ();\par ??            action(expression);\par ??\par ??            construct(expression.BuildGraph());\par ??        \}}
+-->
+<div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+    <p style="margin: 0px;">
+        <span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </span><span style="color: blue; overflow: scroll;">public Container(</span><span 
+            style="color: #2b91af; overflow: scroll;">Action</span><span 
+            style="overflow: scroll;">&lt;</span><span 
+            style="color: #2b91af; overflow: scroll;">ConfigurationExpression</span><span 
+            style="overflow: scroll;">&gt; action)</span></p>
+    <p style="margin: 0px;">
+        <span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</span></p>
+    <p style="margin: 0px;">
+        <span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </span><span style="color: blue; overflow: scroll;">var</span><span 
+            style="overflow: scroll;"> expression = </span>
+        <span style="color: blue; overflow: scroll;">new</span><span 
+            style="overflow: scroll;"> </span>
+        <span style="color: #2b91af; overflow: scroll;">ConfigurationExpression</span><span 
+            style="overflow: scroll;">();</span></p>
+    <p style="margin: 0px;">
+        <span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        action(expression);</span></p>
+    <p style="margin: 0px;">
+        &nbsp;</p>
+    <p style="margin: 0px;">
+        <span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        construct(expression.BuildGraph());</span></p>
+    <p style="margin: 0px;">
+        <span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</span></p>
+</div>
+<!--EndFragment-->
+</div>
+<!--EndFragment-->
+<p>
+        Typically, you would make a single call to the Initialize() method at 
+        application start up (Global.asax for web application, or the main routine for a 
+        desktop application).&nbsp; The Container (ObjectFactory is simply a static 
+        wrapper around a single Container object) is completely initialized and configured by 
+        the Initialize() method in one atomic action.&nbsp; <b>Any successive calls to 
+        Initialize() will effectively wipe out any existing configuration and 
+        effectively restart the Container.</b>&nbsp; Here&#39;s a sample usage of 
+        Initialize():</p>
+
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red43\green145\blue175;\red0\green0\blue255;}??\fs20             \cf3 ObjectFactory\cf0 .Initialize(x =&gt;\par ??            \{\par ??                x.UseDefaultStructureMapConfigFile = \cf4 true\cf0 ;\par ??\par ??                x.AddRegistry(\cf4 new\cf0  \cf3 CoreRegistry\cf0 ());\par ??                x.AddRegistry(\cf4 new\cf0  \cf3 SearchRegistry\cf0 ());\par ??                x.AddRegistry(\cf4 new\cf0  \cf3 WebCoreRegistry\cf0 ());\par ??                x.AddRegistry(\cf4 new\cf0  \cf3 WebRegistry\cf0 ());\par ??                x.AddRegistry(\cf4 new\cf0  \cf3 RuleRegistry\cf0 ());\par ??            \});}
+-->
+<div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+    <p style="margin: 0px;">
+        <span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </span><span style="color: #2b91af; overflow: scroll;">ObjectFactory</span><span 
+            style="overflow: scroll;">.Initialize(x =&gt;</span></p>
+    <p style="margin: 0px;">
+        <span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        {</span></p>
+    <p style="margin: 0px;">
+        <span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        x.UseDefaultStructureMapConfigFile = </span>
+        <span style="color: blue; overflow: scroll;">true</span><span 
+            style="overflow: scroll;">;</span></p>
+    <p style="margin: 0px;">
+        &nbsp;</p>
+    <p style="margin: 0px;">
+        <span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        x.AddRegistry(</span><span style="color: blue; overflow: scroll;">new</span><span 
+            style="overflow: scroll;"> </span>
+        <span style="color: #2b91af; overflow: scroll;">CoreRegistry</span><span 
+            style="overflow: scroll;">());</span></p>
+    <p style="margin: 0px;">
+        <span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        x.AddRegistry(</span><span style="color: blue; overflow: scroll;">new</span><span 
+            style="overflow: scroll;"> </span>
+        <span style="color: #2b91af; overflow: scroll;">SearchRegistry</span><span 
+            style="overflow: scroll;">());</span></p>
+    <p style="margin: 0px;">
+        <span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        x.AddRegistry(</span><span style="color: blue; overflow: scroll;">new</span><span 
+            style="overflow: scroll;"> </span>
+        <span style="color: #2b91af; overflow: scroll;">WebCoreRegistry</span><span 
+            style="overflow: scroll;">());</span></p>
+    <p style="margin: 0px;">
+        <span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        x.AddRegistry(</span><span style="color: blue; overflow: scroll;">new</span><span 
+            style="overflow: scroll;"> </span>
+        <span style="color: #2b91af; overflow: scroll;">WebRegistry</span><span 
+            style="overflow: scroll;">());</span></p>
+    <p style="margin: 0px;">
+        <span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        x.AddRegistry(</span><span style="color: blue; overflow: scroll;">new</span><span 
+            style="overflow: scroll;"> </span>
+        <span style="color: #2b91af; overflow: scroll;">RuleRegistry</span><span 
+            style="overflow: scroll;">());</span></p>
+    <p style="margin: 0px;">
+        <span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        });</span></p>
+</div>
+<!--EndFragment-->
+<p>
+        Inside the Initialization() method you can declare directives against an 
+        InitializationExpression object.&nbsp; The InitializationExpression object has 
+        these methods 
+        for all all the possible configuration directives.</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red0\green128\blue0;}??\fs20     \cf3 public\cf0  \cf3 interface\cf0  \cf4 IInitializationExpression\par ??\cf0     \{\par ??        \cf5 // Directives on how to treat the StructureMap.config file\par ??\cf0         \cf3 bool\cf0  UseDefaultStructureMapConfigFile \{ \cf3 set\cf0 ; \}\par ??        \cf3 bool\cf0  IgnoreStructureMapConfig \{ \cf3 set\cf0 ; \}\par ??\par ??        \cf5 // Xml configuration from the App.Config file\par ??\cf0         \cf3 bool\cf0  PullConfigurationFromAppConfig \{ \cf3 set\cf0 ; \}\par ??\par ??        \cf5 // Ancillary sources of Xml configuration\par ??\cf0         \cf3 void\cf0  AddConfigurationFromXmlFile(\cf3 string\cf0  fileName);\par ??        \cf3 void\cf0  AddConfigurationFromNode(\cf4 XmlNode\cf0  node);\par ??\par ??        \cf5 // Specifying Registry's\par ??\cf0         \cf3 void\cf0  AddRegistry&lt;T&gt;() \cf3 where\cf0  T : \cf4 Registry\cf0 , \cf3 new\cf0 ();\par ??        \cf3 void\cf0  AddRegistry(\cf4 Registry\cf0  registry);\par ??\par ??        \cf5 // Designate the Default Profile.  This will be applied as soon as the \par ??\cf0         \cf5 // Container is initialized.\par ??\cf0         \cf3 string\cf0  DefaultProfileName \{ \cf3 get\cf0 ; \cf3 set\cf0 ; \}\par ??\par ??        \cf5 // ... and the Registry DSL as well\par ??\par ??\cf0         \cf5 // The Registry DSL\par ??\cf0         \cf4 CreatePluginFamilyExpression\cf0 &lt;PLUGINTYPE&gt; BuildInstancesOf&lt;PLUGINTYPE&gt;();\par ??        \cf4 CreatePluginFamilyExpression\cf0 &lt;PLUGINTYPE&gt; ForRequestedType&lt;PLUGINTYPE&gt;();\par ??        \cf4 GenericFamilyExpression\cf0  ForRequestedType(\cf4 Type\cf0  pluginType);\par ??        \cf4 Registry\cf0 .\cf4 BuildWithExpression\cf0 &lt;T&gt; ForConcreteType&lt;T&gt;();\par ??\par ??        \cf4 IsExpression\cf0 &lt;T&gt; InstanceOf&lt;T&gt;();\par ??        \cf4 GenericIsExpression\cf0  InstanceOf(\cf4 Type\cf0  pluginType);\par ??\par ??        \cf4 ProfileExpression\cf0  CreateProfile(\cf3 string\cf0  profileName);\par ??        \cf3 void\cf0  CreateProfile(\cf3 string\cf0  profileName, \cf4 Action\cf0 &lt;\cf4 ProfileExpression\cf0 &gt; action);\par ??\par ??        \cf3 void\cf0  RegisterInterceptor(\cf4 TypeInterceptor\cf0  interceptor);\par ??        \cf4 MatchedTypeInterceptor\cf0  IfTypeMatches(\cf4 Predicate\cf0 &lt;\cf4 Type\cf0 &gt; match);\par ??\par ??        \cf3 void\cf0  Scan(\cf4 Action\cf0 &lt;\cf4 IAssemblyScanner\cf0 &gt; action);\par ??\par ??        \cf4 CreatePluginFamilyExpression\cf0 &lt;PLUGINTYPE&gt; FillAllPropertiesOfType&lt;PLUGINTYPE&gt;();\par ??    \}}
+-->
+<div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+    <p style="margin: 0px;">
+        &nbsp;</p>
+    <p style="margin: 0px;">
+        <span style="overflow: scroll;">&nbsp;&nbsp;&nbsp; </span>
+        <span style="color: blue; overflow: scroll;">public</span><span 
+            style="overflow: scroll;"> </span>
+        <span style="color: blue; overflow: scroll;">interface</span><span 
+            style="overflow: scroll;"> </span>
+        <span style="color: #2b91af; overflow: scroll;">IInitializationExpression</span></p>
+    <p style="margin: 0px;">
+        <span style="overflow: scroll;">&nbsp;&nbsp;&nbsp; {</span></p>
+    <p style="margin: 0px;">
+        <span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </span><span style="color: green; overflow: scroll;">// Directives on how to 
+        treat the StructureMap.config file</span></p>
+    <p style="margin: 0px;">
+        <span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </span><span style="color: blue; overflow: scroll;">bool</span><span 
+            style="overflow: scroll;"> UseDefaultStructureMapConfigFile { </span>
+        <span style="color: blue; overflow: scroll;">set</span><span 
+            style="overflow: scroll;">; }</span></p>
+    <p style="margin: 0px;">
+        <span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </span><span style="color: blue; overflow: scroll;">bool</span><span 
+            style="overflow: scroll;"> IgnoreStructureMapConfig { </span>
+        <span style="color: blue; overflow: scroll;">set</span><span 
+            style="overflow: scroll;">; }</span></p>
+    <p style="margin: 0px;">
+        &nbsp;</p>
+    <p style="margin: 0px;">
+        <span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </span><span style="color: green; overflow: scroll;">// Xml configuration from 
+        the App.Config file</span></p>
+    <p style="margin: 0px;">
+        <span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </span><span style="color: blue; overflow: scroll;">bool</span><span 
+            style="overflow: scroll;"> PullConfigurationFromAppConfig { </span>
+        <span style="color: blue; overflow: scroll;">set</span><span 
+            style="overflow: scroll;">; }</span></p>
+    <p style="margin: 0px;">
+        &nbsp;</p>
+    <p style="margin: 0px;">
+        <span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </span><span style="color: green; overflow: scroll;">// Ancillary sources of Xml 
+        configuration</span></p>
+    <p style="margin: 0px;">
+        <span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </span><span style="color: blue; overflow: scroll;">void</span><span 
+            style="overflow: scroll;"> AddConfigurationFromXmlFile(</span><span 
+            style="color: blue; overflow: scroll;">string</span><span 
+            style="overflow: scroll;"> fileName);</span></p>
+    <p style="margin: 0px;">
+        <span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </span><span style="color: blue; overflow: scroll;">void</span><span 
+            style="overflow: scroll;"> AddConfigurationFromNode(</span><span 
+            style="color: #2b91af; overflow: scroll;">XmlNode</span><span 
+            style="overflow: scroll;"> node);</span></p>
+    <p style="margin: 0px;">
+        &nbsp;</p>
+    <p style="margin: 0px;">
+        <span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </span><span style="color: green; overflow: scroll;">// Specifying Registry&#39;s</span></p>
+    <p style="margin: 0px;">
+        <span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </span><span style="color: blue; overflow: scroll;">void</span><span 
+            style="overflow: scroll;"> AddRegistry&lt;T&gt;() </span>
+        <span style="color: blue; overflow: scroll;">where</span><span 
+            style="overflow: scroll;"> T : </span>
+        <span style="color: #2b91af; overflow: scroll;">Registry</span><span 
+            style="overflow: scroll;">, </span>
+        <span style="color: blue; overflow: scroll;">new</span><span 
+            style="overflow: scroll;">();</span></p>
+    <p style="margin: 0px;">
+        <span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </span><span style="color: blue; overflow: scroll;">void</span><span 
+            style="overflow: scroll;"> AddRegistry(</span><span 
+            style="color: #2b91af; overflow: scroll;">Registry</span><span 
+            style="overflow: scroll;"> registry);</span></p>
+    <p style="margin: 0px;">
+        &nbsp;</p>
+    <p style="margin: 0px;">
+        <span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </span><span style="color: green; overflow: scroll;">// Designate the Default 
+        Profile.&nbsp; This will be applied as soon as the </span>
+    </p>
+    <p style="margin: 0px;">
+        <span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </span><span style="color: green; overflow: scroll;">// Container is 
+        initialized.</span></p>
+    <p style="margin: 0px;">
+        <span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </span><span style="color: blue; overflow: scroll;">string</span><span 
+            style="overflow: scroll;"> DefaultProfileName { </span>
+        <span style="color: blue; overflow: scroll;">get</span><span 
+            style="overflow: scroll;">; </span>
+        <span style="color: blue; overflow: scroll;">set</span><span 
+            style="overflow: scroll;">; }</span></p>
+    <p style="margin: 0px;">
+        &nbsp;</p>
+    <p style="margin: 0px;">
+        <span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </span><span style="color: green; overflow: scroll;">// ... and the Registry DSL 
+        as well</span></p>
+    <p style="margin: 0px;">
+        <span style="overflow: scroll;">&nbsp;&nbsp;&nbsp; }</span></p>
+    <p style="margin: 0px;">
+        &nbsp;</p>
+</div>
+<!--EndFragment-->
+<hr />
+<h4>
+        Using the App.Config File</h4>
+<p>
+        The <a href="http://msdn.microsoft.com/en-us/library/system.configuration.aspx">
+        System.Configuration</a> namespace in the .Net framework provides a lot of 
+        functionality for caching and encrypting configuration.&nbsp; To take advantage 
+        of this functionality StructureMap offers an option to embed configuration 
+        directly into the App.config file (web.config for web development).&nbsp; Just 
+        add a section for StructureMap like this:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue255;\red255\green255\blue255;\red163\green21\blue21;\red255\green0\blue0;\red0\green0\blue0;\red0\green128\blue0;}??\fs20 \cf1 &lt;?\cf3 xml\cf1  \cf4 version\cf1 =\cf0 "\cf1 1.0\cf0 "\cf1  \cf4 encoding\cf1 =\cf0 "\cf1 utf-8\cf0 "\cf1  ?&gt;\par ??&lt;\cf3 configuration\cf1 &gt;\par ??  &lt;\cf3 configSections\cf1 &gt;\par ??    &lt;\cf3 section\cf1  \cf4 name\cf1 =\cf0 "\cf1 StructureMap\cf0 "\cf1  \cf4 type\cf1 =\cf0 "\cf1 StructureMap.Configuration.StructureMapConfigurationSection,StructureMap\cf0 "\cf1 /&gt;\par ??  &lt;/\cf3 configSections\cf1 &gt;\par ??\par ??  &lt;\cf3 StructureMap\cf1 &gt;\par ??    &lt;!--\cf6  Put StructureMap configuration here \cf1 --&gt;\par ??    \par ??    &lt;\cf3 Assembly\cf1  \cf4 Name\cf1 =\cf0 "\cf1 StructureMap.Testing.GenericWidgets\cf0 "\cf1 /&gt;\par ??\par ??    &lt;\cf3 PluginFamily\cf1  \cf4 Assembly\cf1 =\cf0 "\cf1 StructureMap.Testing.GenericWidgets\cf0 "\cf1  \cf4 Type\cf1 =\cf0 "\cf1 StructureMap.Testing.GenericWidgets.IThing`2\cf0 "\cf1  \cf4 DefaultKey\cf1 =\cf0 "\cf1 Cornflower\cf0 "\cf1 &gt;\par ??      &lt;\cf3 Plugin\cf1  \cf4 Assembly\cf1 =\cf0 "\cf1 StructureMap.Testing.GenericWidgets\cf0 "\cf1  \cf4 Type\cf1 =\cf0 "\cf1 StructureMap.Testing.GenericWidgets.ColorThing`2\cf0 "\cf1  \cf4 ConcreteKey\cf1 =\cf0 "\cf1 Color\cf0 "\cf1  /&gt;\par ??      &lt;\cf3 Plugin\cf1  \cf4 Assembly\cf1 =\cf0 "\cf1 StructureMap.Testing.GenericWidgets\cf0 "\cf1  \cf4 Type\cf1 =\cf0 "\cf1 StructureMap.Testing.GenericWidgets.ComplexThing`2\cf0 "\cf1  \cf4 ConcreteKey\cf1 =\cf0 "\cf1 Complex\cf0 "\cf1  /&gt;\par ??\par ??      &lt;\cf3 Instance\cf1  \cf4 Key\cf1 =\cf0 "\cf1 Cornflower\cf0 "\cf1  \cf4 Type\cf1 =\cf0 "\cf1 Color\cf0 "\cf1 &gt;\par ??        &lt;\cf3 Property\cf1  \cf4 Name\cf1 =\cf0 "\cf1 color\cf0 "\cf1  \cf4 Value\cf1 =\cf0 "\cf1 Cornflower\cf0 "\cf1 /&gt;\par ??      &lt;/\cf3 Instance\cf1 &gt;\par ??\par ??      &lt;\cf3 Instance\cf1  \cf4 Key\cf1 =\cf0 "\cf1 Complicated\cf0 "\cf1  \cf4 Type\cf1 =\cf0 "\cf1 Complex\cf0 "\cf1 &gt;\par ??        &lt;\cf3 Property\cf1  \cf4 Name\cf1 =\cf0 "\cf1 name\cf0 "\cf1  \cf4 Value\cf1 =\cf0 "\cf1 Jeremy\cf0 "\cf1  /&gt;\par ??        &lt;\cf3 Property\cf1  \cf4 Name\cf1 =\cf0 "\cf1 age\cf0 "\cf1  \cf4 Value\cf1 =\cf0 "\cf1 32\cf0 "\cf1  /&gt;\par ??        &lt;\cf3 Property\cf1  \cf4 Name\cf1 =\cf0 "\cf1 ready\cf0 "\cf1  \cf4 Value\cf1 =\cf0 "\cf1 true\cf0 "\cf1  /&gt;\par ??      &lt;/\cf3 Instance\cf1 &gt;\par ??    &lt;/\cf3 PluginFamily\cf1 &gt;\par ??\par ??    &lt;\cf3 PluginFamily\cf1  \cf4 Assembly\cf1 =\cf0 "\cf1 StructureMap.Testing.GenericWidgets\cf0 "\cf1  \cf4 Type\cf1 =\cf0 "\cf1 StructureMap.Testing.GenericWidgets.ISimpleThing`1\cf0 "\cf1  \cf4 DefaultKey\cf1 =\cf0 "\cf1 Simple\cf0 "\cf1 &gt;\par ??      &lt;\cf3 Plugin\cf1  \cf4 Assembly\cf1 =\cf0 "\cf1 StructureMap.Testing.GenericWidgets\cf0 "\cf1  \cf4 Type\cf1 =\cf0 "\cf1 StructureMap.Testing.GenericWidgets.SimpleThing`1\cf0 "\cf1  \cf4 ConcreteKey\cf1 =\cf0 "\cf1 Simple\cf0 "\cf1  /&gt;\par ??    &lt;/\cf3 PluginFamily\cf1 &gt;\par ??  &lt;/\cf3 StructureMap\cf1 &gt;\par ??  \par ??  \par ??  &lt;\cf3 appSettings\cf1 &gt;\par ??    &lt;\cf3 add\cf1  \cf4 key\cf1 =\cf0 "\cf1 Color\cf0 "\cf1  \cf4 value\cf1 =\cf0 "\cf1 Blue\cf0 "\cf1 /&gt;\par ??    &lt;\cf3 add\cf1  \cf4 key\cf1 =\cf0 "\cf1 Day\cf0 "\cf1  \cf4 value\cf1 =\cf0 "\cf1 Monday\cf0 "\cf1 /&gt;\par ??  &lt;/\cf3 appSettings\cf1 &gt;\par ??\par ??\par ??&lt;/\cf3 configuration\cf1 &gt;}
+-->
+<div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid; overflow: scroll;">
+    <p style="margin: 0px;">
+        <span style="color: blue;">&lt;?</span><span style="color: #a31515;">xml</span><span 
+            style="color: blue;"> </span><span style="color: red;">version</span><span 
+            style="color: blue;">=</span>&quot;<span style="color: blue;">1.0</span>&quot;<span 
+            style="color: blue;"> </span><span style="color: red;">encoding</span><span 
+            style="color: blue;">=</span>&quot;<span style="color: blue;">utf-8</span>&quot;<span 
+            style="color: blue;"> ?&gt;</span></p>
+    <p style="margin: 0px;">
+        <span style="color: blue;">&lt;</span><span style="color: #a31515;">configuration</span><span 
+            style="color: blue;">&gt;</span></p>
+    <p style="margin: 0px;">
+        <span style="color: blue;">&nbsp; &lt;</span><span style="color: #a31515;">configSections</span><span 
+            style="color: blue;">&gt;</span></p>
+    <p style="margin: 0px;">
+        <span style="color: blue;">&nbsp;&nbsp;&nbsp; &lt;</span><span 
+            style="color: #a31515;">section</span><span style="color: blue;"> </span>
+        <span style="color: red;">name</span><span style="color: blue;">=</span>&quot;<span 
+            style="color: blue;">StructureMap</span>&quot;<span style="color: blue;"> </span>
+        <span style="color: red;">type</span><span style="color: blue;">=</span>&quot;<span 
+            style="color: blue;">StructureMap.Configuration.StructureMapConfigurationSection,StructureMap</span>&quot;<span 
+            style="color: blue;">/&gt;</span></p>
+    <p style="margin: 0px;">
+        <span style="color: blue;">&nbsp; &lt;/</span><span style="color: #a31515;">configSections</span><span 
+            style="color: blue;">&gt;</span></p>
+    <p style="margin: 0px;">
+        &nbsp;</p>
+    <p style="margin: 0px;">
+        <span style="color: blue;">&nbsp; &lt;</span><span style="color: #a31515;">StructureMap</span><span 
+            style="color: blue;">&gt;</span></p>
+    <p style="margin: 0px;">
+        <span style="color: blue;">&nbsp;&nbsp;&nbsp; &lt;!--</span><span 
+            style="color: green;"> Put StructureMap configuration here </span>
+        <span style="color: blue;">--&gt;</span></p>
+    <p style="margin: 0px;">
+        <span style="color: blue;">&nbsp; &lt;/</span><span style="color: #a31515;">StructureMap</span><span 
+            style="color: blue;">&gt;</span></p>
+    <p style="margin: 0px;">
+        <span style="color: blue;">&lt;/</span><span style="color: #a31515;">configuration</span><span 
+            style="color: blue;">&gt;</span></p>
+</div>
+<!--EndFragment-->
+<p>
+        Then you need to explicitly tell ObjectFactory to use this configuration:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red43\green145\blue175;\red0\green0\blue255;\red0\green128\blue0;}??\fs20             \cf3 ObjectFactory\cf0 .Initialize(x =&gt;\par ??            \{\par ??                x.UseDefaultStructureMapConfigFile = \cf4 false\cf0 ;\par ??\par ??                \cf5 // Tell StructureMap to look for configuration \par ??\cf0                 \cf5 // from the App.config file\par ??\cf0                 \cf5 // The default is false\par ??\cf0                 x.PullConfigurationFromAppConfig = \cf4 true\cf0 ;\par ??            \});}
+-->
+<div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid; overflow: scroll;">
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span style="color: #2b91af;">ObjectFactory</span>.Initialize(x =&gt;</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span style="color: green;">// Tell StructureMap to look for configuration         </span>
+    </p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span style="color: green;">// from the App.config file</span></p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span style="color: green;">// The default is false</span></p>
+    <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        x.PullConfigurationFromAppConfig = <span style="color: blue;">true</span>;</p>
+    <p style="margin: 0px;">
+&&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+</div>
+<!--EndFragment-->
+<hr />
+<h4>
+        The StructureMap.config File</h4>
+<p>In the beginning, StructureMap configuration began and ended with a single file named "StructureMap.config" in the application base folder that contained StructureMap Xml configuration (in short, wherever your App.config file would go).&nbsp; Today, the default behavior is that StructureMap will automatically read in configuration data from the StructureMap.config if it is found when either ObjectFactory.Initialize() is called, or the first time that a service is requested from ObjectFactory.&nbsp; You can technically use only the StructureMap.config file and completely forgo the the usage of any programmatic bootstrapping./p>
+  
+<p>You can override the default behavior for the StructureMap.config file.&nbsp; If you want to make the StructureMap.config file mandatory, you can do this:</p>
+ <!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red43\green145\blue175;\red0\green128\blue0;\red0\green0\blue255;}??\fs20             \cf3 ObjectFactory\cf0 .Initialize(x =&gt;\par ??            \{\par ??                \cf4 // We put the properties for an NHibernate ISession\par ??\cf0                 \cf4 // in the StructureMap.config file, so this file\par ??\cf0                 \cf4 // must be there for our application to \par ??\cf0                 \cf4 // function correctly\par ??\cf0                 x.UseDefaultStructureMapConfigFile = \cf5 true\cf0 ;\par ??\par ??                x.AddRegistry(\cf5 new\cf0  \cf3 CoreRegistry\cf0 ());\par ??                x.AddRegistry(\cf5 new\cf0  \cf3 SearchRegistry\cf0 ());\par ??                x.AddRegistry(\cf5 new\cf0  \cf3 WebCoreRegistry\cf0 ());\par ??                x.AddRegistry(\cf5 new\cf0  \cf3 WebRegistry\cf0 ());\par ??                x.AddRegistry(\cf5 new\cf0  \cf3 RuleRegistry\cf0 ());\par ??            \});}
+-->  <div style="border: thin solid black; background: white none repeat scroll 0% 0%; font-size: 10pt; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial; color: black; font-family: courier new;">   
+<p style="margin: 0px;"><span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="overflow: scroll; color: rgb(43, 145, 175);">ObjectFactory</span><span style="overflow: scroll;">.Initialize(x =&gt;</span></p>
+    
+<p style="margin: 0px;"><span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</span></p>
+    
+<p style="margin: 0px;"><span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="overflow: scroll; color: green;">// We put the properties for an NHibernate ISession</span></p>
+    
+<p style="margin: 0px;"><span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="overflow: scroll; color: green;">// in the StructureMap.config file, so this file</span></p>
+    
+<p style="margin: 0px;"><span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="overflow: scroll; color: green;">// must be there for our application to </span></p>
+    
+<p style="margin: 0px;"><span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="overflow: scroll; color: green;">// function correctly</span></p>
+    
+<p style="margin: 0px;"><span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; x.UseDefaultStructureMapConfigFile = </span><span style="overflow: scroll; color: blue;">true</span><span style="overflow: scroll;">;</span></p>
+    
+<p style="margin: 0px;"><span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</span></p>
+ </div> <!--EndFragment-->  
+<p>At other times you might want to force ObjectFactory to ignore the StructureMap.config file even if it does exist.</p>
+ <!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red43\green145\blue175;\red0\green0\blue255;\red163\green21\blue21;}??\fs20             \cf3 ObjectFactory\cf0 .Initialize(x =&gt;\par ??            \{\par ??                x.IgnoreStructureMapConfig = \cf4 true\cf0 ;\par ??                \par ??                x.ForRequestedType&lt;\cf3 IWidget\cf0 &gt;().TheDefault.Is\par ??                    .OfConcreteType&lt;\cf3 DoctorTester\cf0 .\cf3 NumberWidget\cf0 &gt;()\par ??                    .WithCtorArg(\cf5 "age"\cf0 ).EqualToAppSetting(\cf5 "age"\cf0 );\par ??            \});}
+-->  <div style="border: thin solid black; background: white none repeat scroll 0% 0%; font-size: 10pt; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial; color: black; font-family: courier new;">   
+<p style="margin: 0px;"><span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="overflow: scroll; color: rgb(43, 145, 175);">ObjectFactory</span><span style="overflow: scroll;">.Initialize(x =&gt;</span></p>
+    
+<p style="margin: 0px;"><span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</span></p>
+    
+<p style="margin: 0px;"><span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; x.IgnoreStructureMapConfig = </span><span style="overflow: scroll; color: blue;">true</span><span style="overflow: scroll;">;</span></p>
+    
+<p style="margin: 0px;"><span style="overflow: scroll;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</span></p>
+ </div> <!--EndFragment--><hr />
+<h2>
+    Where and How to Bootstrap StructureMap</h2>
+        <p>
+            Typically, you will bootstrap StructureMap in either the GlobalApplication 
+            (Global.asax) for web applications,</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20     \cf3 public\cf0  \cf3 class\cf0  \cf4 GlobalApplication\cf0  : \cf4 HttpApplication\par ??\cf0     \{\par ??        \cf3 protected\cf0  \cf3 void\cf0  Application_Start()\par ??        \{\par ??            \cf4 Bootstrapper\cf0 .Bootstrap(\cf4 RouteTable\cf0 .Routes);\par ??        \}\par ??    \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">class</span>
+                <span style="color: #2b91af;">GlobalApplication</span> :
+                <span style="color: #2b91af;">HttpApplication</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">protected</span>
+                <span style="color: blue;">void</span> Application_Start()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #2b91af;">
+                Bootstrapper</span>.Bootstrap();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<p>
+            or for service applications or desktop clients (WPF or WinForms or Console 
+            apps), you would simply embed the initialization in the &quot;Main&quot; method before 
+            anything else runs.&nbsp; Here&#39;s an example from the generic Windows Service 
+            project on my current project.&nbsp; The very first line of code initializes the 
+            StructureMap container:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red163\green21\blue21;}??\fs20         \cf3 private\cf0  \cf3 static\cf0  \cf3 void\cf0  Main(\cf3 string\cf0 [] args)\par ??        \{\par ??            \cf4 ObjectFactory\cf0 .Initialize(initialConfiguration);\par ??            \cf3 var\cf0  program = \cf4 ObjectFactory\cf0 .GetInstance&lt;\cf4 Program\cf0 &gt;();\par ??\par ??            \cf3 try\par ??\cf0             \{\par ??                \cf3 var\cf0  shouldRunAsConsole = \cf3 false\cf0 ;\par ??                \cf3 if\cf0  (args.Any(arg =&gt; arg.Equals(\cf5 "/i"\cf0 , \cf4 StringComparison\cf0 .OrdinalIgnoreCase)))\par ??                \{\par ??                    shouldRunAsConsole = \cf3 true\cf0 ;\par ??                    logToTheConsoleWindow();\par ??                \}\par ??\par ??                program.Run(shouldRunAsConsole);\par ??            \}\par ??            \cf3 catch\cf0 (\cf4 Exception\cf0  e)\par ??            \{\par ??                \cf4 LogManager\cf0 .GetLogger(\cf5 "WindowsService"\cf0 ).Error(\cf5 "Service failure."\cf0 , e);\par ??            \}\par ??            \cf3 finally\par ??\cf0             \{\par ??                \cf4 LogManager\cf0 .Shutdown();\par ??            \}\par ??        \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">private</span>
+                <span style="color: blue;">static</span> <span style="color: blue;">void</span> 
+                Main(<span style="color: blue;">string</span>[] args)</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #2b91af;">
+                ObjectFactory</span>.Initialize(initialConfiguration);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                var</span> program = <span style="color: #2b91af;">ObjectFactory</span>.GetInstance&lt;<span 
+                    style="color: #2b91af;">Program</span>&gt;();</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                try</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="color: blue;">var</span> shouldRunAsConsole =
+                <span style="color: blue;">false</span>;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="color: blue;">if</span> (args.Any(arg =&gt; arg.Equals(<span 
+                    style="color: #a31515;">&quot;/i&quot;</span>, <span style="color: #2b91af;">
+                StringComparison</span>.OrdinalIgnoreCase)))</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                shouldRunAsConsole = <span style="color: blue;">true</span>;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                logToTheConsoleWindow();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                program.Run(shouldRunAsConsole);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                catch</span>(<span style="color: #2b91af;">Exception</span> e)</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="color: #2b91af;">LogManager</span>.GetLogger(<span 
+                    style="color: #a31515;">&quot;WindowsService&quot;</span>).Error(<span 
+                    style="color: #a31515;">&quot;Service failure.&quot;</span>, e);</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                finally</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="color: #2b91af;">LogManager</span>.Shutdown();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<p>
+            Important Note:&nbsp; You could easily call ObjectFactory.Initialize() directly 
+            within the Global.asax or Main method and even do all of the necessary 
+            configuration within that call to Initialize(), but that&#39;s not necessarily a 
+            good idea.&nbsp; Instead, I strongly recommend that you centralize all container 
+            configuration into a &quot;Bootstrapper&quot; class that can be exercised independently of 
+            the user interface or application.&nbsp; That strategy is useful for many 
+            reasons:</p>
+        <ol>
+            <li>You can then reuse the Bootstrapper configuration inside integrations tests</li>
+            <li>The Bootstrapper can be used to create configuration diagnostics and environment 
+                tests.&nbsp; See <a href="Diagnostics.htm">Diagnostics</a> for more information.</li>
+            <li>You can potentially reuse the StructureMap configuration in other environments 
+                and configurations than your current application</li>
+        </ol>
+        <hr />
+        <h4>
+            Creating a Bootstrapper</h4>
+        <p>
+            There is not much to building your own Bootstrapper.&nbsp; There is an interface 
+            called IBootstrapper that you can implement to standardize the bootstrapping:</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20     \cf3 public\cf0  \cf3 interface\cf0  \cf4 IBootstrapper\par ??\cf0     \{\par ??        \cf3 void\cf0  BootstrapStructureMap();\par ??    \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">interface</span>
+                <span style="color: #2b91af;">IBootstrapper</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">void</span> 
+                BootstrapStructureMap();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<p>
+            Implementing IBootstrapper is not mandatory, but it does enable the usage of the 
+            StructureMapDoctor tool in automated builds.&nbsp; Below is an eclided version 
+            of the Bootstrapper that my current project is using.&nbsp; We&#39;ve simply added 
+            some static convenience methods to start the ObjectFactory Container if it 
+            hasn&#39;t already been initialized.</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;}??\fs20     \cf3 public\cf0  \cf3 class\cf0  \cf4 Bootstrapper\cf0  : \cf4 IBootstrapper\par ??\cf0     \{\par ??        \cf3 private\cf0  \cf3 static\cf0  \cf3 bool\cf0  _hasStarted;\par ??\par ??\cf3         #region\cf0  IBootstrapper Members\par ??\par ??        \cf3 public\cf0  \cf3 void\cf0  BootstrapStructureMap()\par ??        \{\par ??            \cf4 ValidationMessages\cf0 .Register();\par ??\par ??            \cf4 FilterTypeRegistry\cf0 .ResetAll();\par ??\par ??            \cf4 ObjectFactory\cf0 .Initialize(x =&gt;\par ??            \{\par ??                x.AddRegistry(\cf3 new\cf0  \cf4 CoreRegistry\cf0 ());\par ??                x.AddRegistry(\cf3 new\cf0  \cf4 SearchRegistry\cf0 ());\par ??                x.AddRegistry(\cf3 new\cf0  \cf4 WebCoreRegistry\cf0 ());\par ??                x.AddRegistry(\cf3 new\cf0  \cf4 WebRegistry\cf0 ());\par ??                x.AddRegistry(\cf3 new\cf0  \cf4 RuleRegistry\cf0 ());\par ??            \});\par ??\par ??            \cf4 ConventionRegistry\cf0 .RegisterFor&lt;\cf4 CultureValue\cf0 , \cf4 CultureValueObjectListConvention\cf0 &gt;();\par ??        \}\par ??\par ??\cf3         #endregion\par ??\par ??\cf0         \cf3 public\cf0  \cf3 static\cf0  \cf3 void\cf0  Restart()\par ??        \{\par ??            \cf3 if\cf0  (_hasStarted)\par ??            \{\par ??                \cf4 ObjectFactory\cf0 .ResetDefaults();\par ??            \}\par ??            \cf3 else\par ??\cf0             \{\par ??                Bootstrap();\par ??                _hasStarted = \cf3 true\cf0 ;\par ??            \}\par ??        \}\par ??\par ??        \cf3 public\cf0  \cf3 static\cf0  \cf3 void\cf0  Bootstrap()\par ??        \{\par ??            \cf3 new\cf0  \cf4 Bootstrapper\cf0 ().BootstrapStructureMap();\par ??        \}\par ??    \}}
+-->
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue255;\red43\green145\blue175;\red0\green128\blue0;}??\fs20     \cf3 public\cf0  \cf3 class\cf0  \cf4 Bootstrapper\cf0  : \cf4 IBootstrapper\par ??\cf0     \{\par ??        \cf3 private\cf0  \cf3 static\cf0  \cf3 bool\cf0  _hasStarted;\par ??        \cf3 private\cf0  \cf4 WebRegistry\cf0  _webRegistry;\par ??\par ??        \cf3 public\cf0  Bootstrapper()\par ??            : \cf3 this\cf0 (\cf3 new\cf0  \cf4 List\cf0 &lt;\cf4 RouteBase\cf0 &gt;())\par ??        \{\par ??        \}\par ??\par ??        \cf3 public\cf0  Bootstrapper(\cf4 ICollection\cf0 &lt;\cf4 RouteBase\cf0 &gt; routes)\par ??        \{\par ??            _webRegistry = \cf3 new\cf0  \cf4 WebRegistry\cf0 (routes);\par ??        \}\par ??\par ??\cf3         #region\cf0  IBootstrapper Members\par ??\par ??        \cf3 public\cf0  \cf3 void\cf0  BootstrapStructureMap()\par ??        \{\par ??            \cf4 UrlContext\cf0 .Reset();\par ??            \cf4 ValidationMessages\cf0 .Register();\par ??            \cf4 FilterTypeRegistry\cf0 .ResetAll();\par ??            \cf4 WebRegistry\cf0  registry = \cf3 new\cf0  \cf4 WebRegistry\cf0 (\cf3 new\cf0  \cf4 List\cf0 &lt;\cf4 RouteBase\cf0 &gt;());\par ??\par ??            \cf4 ObjectFactory\cf0 .Initialize(x =&gt;\par ??            \{\par ??                \cf5 // We put the properties for an NHibernate ISession\par ??\cf0                 \cf5 // in the StructureMap.config file, so this file\par ??\cf0                 \cf5 // must be there for our application to \par ??\cf0                 \cf5 // function correctly\par ??\cf0                 x.UseDefaultStructureMapConfigFile = \cf3 true\cf0 ;\par ??\par ??                x.AddRegistry(\cf3 new\cf0  \cf4 CoreRegistry\cf0 ());\par ??                x.AddRegistry(\cf3 new\cf0  \cf4 SearchRegistry\cf0 ());\par ??                x.AddRegistry(\cf3 new\cf0  \cf4 WebCoreRegistry\cf0 ());\par ??                \par ??                x.AddRegistry(registry);\par ??                x.AddRegistry(\cf3 new\cf0  \cf4 RuleRegistry\cf0 ());\par ??            \});\par ??\par ??            \cf4 ConventionRegistry\cf0 .RegisterFor&lt;\cf4 CultureValue\cf0 , \cf4 CultureValueObjectListConvention\cf0 &gt;();\par ??        \}\par ??\par ??\cf3         #endregion\par ??\par ??\cf0         \cf3 public\cf0  \cf3 static\cf0  \cf3 void\cf0  Restart()\par ??        \{\par ??            \cf3 if\cf0  (_hasStarted)\par ??            \{\par ??                \cf4 ObjectFactory\cf0 .ResetDefaults();\par ??            \}\par ??            \cf3 else\par ??\cf0             \{\par ??                Bootstrap();\par ??                _hasStarted = \cf3 true\cf0 ;\par ??            \}\par ??        \}\par ??\par ??        \cf3 public\cf0  \cf3 static\cf0  \cf3 void\cf0  Bootstrap()\par ??        \{\par ??            \cf3 new\cf0  \cf4 Bootstrapper\cf0 ().BootstrapStructureMap();\par ??        \}\par ??\par ??        \cf3 public\cf0  \cf3 static\cf0  \cf3 void\cf0  Bootstrap(\cf4 RouteCollection\cf0  routes)\par ??        \{\par ??            \cf3 new\cf0  \cf4 Bootstrapper\cf0 (routes).BootstrapStructureMap();\par ??        \}\par ??    \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span> <span style="color: blue;">class</span>
+                <span style="color: #2b91af;">Bootstrapper</span> :
+                <span style="color: #2b91af;">IBootstrapper</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">private</span>
+                <span style="color: blue;">static</span> <span style="color: blue;">bool</span> 
+                _hasStarted;</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: blue;">void</span> BootstrapStructureMap()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #2b91af;">
+                ObjectFactory</span>.Initialize(x =&gt;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="color: green;">// We put the properties for an NHibernate ISession</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="color: green;">// in the StructureMap.config file, so this file</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="color: green;">// must be there for our application to </span>
+            </p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="color: green;">// function correctly</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.UseDefaultStructureMapConfigFile = <span style="color: blue;">true</span>;</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.AddRegistry(<span style="color: blue;">new</span>
+                <span style="color: #2b91af;">CoreRegistry</span>());</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.AddRegistry(<span style="color: blue;">new</span>
+                <span style="color: #2b91af;">SearchRegistry</span>());</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.AddRegistry(<span style="color: blue;">new</span>
+                <span style="color: #2b91af;">WebCoreRegistry</span>());</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                x.AddRegistry(<span style="color: blue;">new</span>
+                <span style="color: #2b91af;">RuleRegistry</span>());</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: blue;">static</span> <span style="color: blue;">void</span> 
+                Restart()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">if</span> 
+                (_hasStarted)</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="color: #2b91af;">ObjectFactory</span>.ResetDefaults();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                else</span></p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                Bootstrap();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                _hasStarted = <span style="color: blue;">true</span>;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+                &nbsp;</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: blue;">static</span> <span style="color: blue;">void</span> 
+                Bootstrap()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">
+                new</span> <span style="color: #2b91af;">Bootstrapper</span>().BootstrapStructureMap();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<p style="margin: 0px">
+        &nbsp;</p>
+        <p style="margin: 0px">
+            In test fixtures, we can simply do this:</p>
+        <p style="margin: 0px">
+            &nbsp;</p>
+<!--
+{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue0;\red255\green255\blue255;\red43\green145\blue175;\red0\green0\blue255;}??\fs20         [\cf3 SetUp\cf0 ]\par ??        \cf4 public\cf0  \cf4 void\cf0  SetUp()\par ??        \{\par ??            \cf3 Bootstrapper\cf0 .Restart();\par ??        \}}
+-->
+        <div style="font-family: Courier New; font-size: 10pt; color: black; background: white; border: black thin solid;">
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<span style="color: #2b91af;">SetUp</span>]</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">public</span>
+                <span style="color: blue;">void</span> SetUp()</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #2b91af;">
+                Bootstrapper</span>.Restart();</p>
+            <p style="margin: 0px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+        </div>
+<!--EndFragment-->
+<p style="margin: 0px">
+        &nbsp;</p>
+        <p style="margin: 0px">
+            Starting the container is a relatively expensive activity, so we only want to 
+            call ObjectFactory.Initialize().&nbsp; The call to ObjectFactory.ResetDefaults() 
+            simply clears default services injected into the container after initialization.&nbsp; 
+            This is mostly used to clear out any mock or stub objects introduced in a unit 
+            test after the unit test is over.</p>
+        <p style="margin: 0px">
+            &nbsp;</p>
+
+        <hr />
+
+<h4>StructureMapConfiguration</h4>
+    <p>StructureMapConfiguration is an earlier version of the Registry DSL and is 
+        deprecated.&nbsp; It is strongly recommended that you use Registry classes and 
+        the ObjectFactory.Initialize() method for initialization as the 
+        StructureMapConfiguration class has turned out to be very problematic in real 
+        world usage.</p>
+        <p>&nbsp;</p>
+	    
+	    
+	    <hr />
+	    
+	    
+	</body>
+</html>
