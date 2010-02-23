@@ -7,7 +7,7 @@ $(document).ready(function() {
         $('<p><a href="#TopOfPage">Back to top...</a><br></br><br></br></p>').replaceAll(hr);
     });
 
-    var top = $('<div><a name="TopOfPage" /></div>').prependTo('body').get(0);
+    var top = $('<div><a name="TopOfPage" /></div>').prependTo('.right-column').get(0);
 
     var title = 'StructureMap  -  ' + $('title').html();
     $('<h1></h1>').html(title).appendTo(top);
