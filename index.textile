@@ -1,13 +1,7 @@
-﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html>
-	<head>
-		<title>StructureMap Home Page</title>
-		<link rel="stylesheet" type="text/css" href="style.css" />
-		<script type="text/javascript" src="jquery-1.2.6.js"></script>
-		<script type="text/javascript" src="structuremap.js"></script>
-	</head>
-	<body>
-
+﻿---
+title: Home
+layout: structuremap
+---
 				<p>
 					StructureMap is a <a href="http://www.martinfowler.com/articles/injection.html">Dependency 
 						Injection</a> / <a href="InversionOfControl.htm">Inversion of Control</a> tool for .Net that can be used to improve the&nbsp;architectural 
@@ -92,9 +86,3 @@
             <li><a href="http://www.lostechies.com/blogs/jimmy_bogard/archive/2008/07/29/integrating-structuremap-with-wcf.aspx">
                 Integrating StructureMap with WCF</a> </li>
         </ul>
-	
-				<hr />
-                <p>&nbsp;</p>
-
-	</body>
-</html>

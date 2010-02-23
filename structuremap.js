@@ -33,16 +33,5 @@ $(document).ready(function() {
     });
 
     $('<hr />').appendTo(top);
-
-    var html = $('body').html();
-    $('body').html('<div class="left-column"></div><div class="right-column"></div>');
-    $('.right-column').html(html);
-
-    $.get('Menu.htm', {}, writeMenu, 'HTML');
-    
 });
-
-function writeMenu(data) {
-    $('.left-column').html(data);
-}
 		
