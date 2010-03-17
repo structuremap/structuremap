@@ -13,3 +13,4 @@ _ReSharper*
 *.suo
 *.cache
 TestResult.xml
+Source/CommonAssemblyInfo.cs
