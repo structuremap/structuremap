@@ -120,6 +120,10 @@
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
+    <ProjectReference Include="..\StructureMap.AutoFactory\StructureMap.AutoFactory.csproj">
+      <Project>{3C6A4946-3CD9-4B74-87C5-A06EF49920FA}</Project>
+      <Name>StructureMap.AutoFactory</Name>
+    </ProjectReference>
     <ProjectReference Include="..\StructureMap.AutoMocking\StructureMap.AutoMocking.csproj">
       <Project>{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}</Project>
       <Name>StructureMap.AutoMocking</Name>
@@ -171,6 +175,7 @@
     <Compile Include="Attributes\PluginFamilyAttributeTester.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="AutoFactories\AutoFactoryTester.cs" />
     <Compile Include="AutoMocking\AutoMockerTester.cs" />
     <Compile Include="AutoMocking\MoqAutoMockerTester.cs" />
     <Compile Include="AutoMocking\MoqFactoryTester.cs" />
