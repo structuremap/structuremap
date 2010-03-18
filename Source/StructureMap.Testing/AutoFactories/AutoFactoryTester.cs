@@ -44,6 +44,41 @@ namespace StructureMap.Testing.AutoFactories
             var component = factory.CreateDummyService();
 
             component.ShouldNotBeNull();
+            component.ShouldBeOfType<Dummy1>();
+        }
+
+        [Test]
+        public void Can_resolve_generic_components_via_a_generic_method()
+        {
+            container.Configure(cfg =>
+            {
+                cfg.For<IDummyService>().Use<Dummy1>();
+                cfg.For<IDummyFactory>().CreateFactory();
+            });
+
+            var factory = container.GetInstance<IDummyFactory>();
+
+            var component = factory.CreateService<IDummyService>();
+
+            component.ShouldNotBeNull();
+            component.ShouldBeOfType<Dummy1>();
+        }
+
+        [Test]
+        public void Can_resolve_components_via_a_non_generic_type_based_factory_method()
+        {
+            container.Configure(cfg =>
+            {
+                cfg.For<IDummyService>().Use<Dummy1>();
+                cfg.For<IDummyFactory>().CreateFactory();
+            });
+
+            var factory = container.GetInstance<IDummyFactory>();
+
+            var component = factory.CreateService(typeof (IDummyService));
+
+            component.ShouldNotBeNull();
+            component.ShouldBeOfType<Dummy1>();
         }
     }
 
@@ -60,6 +95,7 @@ namespace StructureMap.Testing.AutoFactories
     public interface IDummyFactory
     {
         IDummyService CreateDummyService();
-        IDummyService GetSecondService();
+        TService CreateService<TService>();
+        object CreateService(Type pluginType);
     }
 }

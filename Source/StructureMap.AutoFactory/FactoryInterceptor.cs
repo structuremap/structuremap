@@ -1,3 +1,4 @@
+using System;
 using Castle.Core.Interceptor;
 
 namespace StructureMap.AutoFactory
@@ -13,8 +14,16 @@ namespace StructureMap.AutoFactory
 
         public void Intercept(IInvocation invocation)
         {
-            var method = invocation.Method;
-            var pluginType = method.ReturnType;
+            Type pluginType;
+
+            if ((invocation.Arguments.Length > 0) && (invocation.Arguments[0] is Type))
+            {
+                pluginType = (Type) invocation.Arguments[0];
+            }
+            else
+            {
+                pluginType = invocation.Method.ReturnType;                
+            }
 
             invocation.ReturnValue = _context.GetInstance(pluginType);
         }
