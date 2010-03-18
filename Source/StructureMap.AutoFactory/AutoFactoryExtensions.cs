@@ -1,5 +1,4 @@
 using System;
-using Castle.Core.Interceptor;
 using Castle.DynamicProxy;
 using StructureMap.Configuration.DSL.Expressions;
 
@@ -26,43 +25,6 @@ namespace StructureMap.AutoFactory
 
                 return proxyFactory.Create();
             };
-        }
-    }
-
-    public class ProxyFactory<PLUGINTYPE> where PLUGINTYPE : class
-    {
-        private readonly ProxyGenerator _proxyGenerator;
-        private readonly IContext _context;
-
-        public ProxyFactory(ProxyGenerator proxyGenerator, IContext context)
-        {
-            _proxyGenerator = proxyGenerator;
-            _context = context;
-        }
-
-        public PLUGINTYPE Create()
-        {
-            var interceptor = new FactoryInterceptor(_context);
-
-            return _proxyGenerator.CreateInterfaceProxyWithoutTarget<PLUGINTYPE>(interceptor);
-        }
-    }
-
-    public class FactoryInterceptor : IInterceptor
-    {
-        private readonly IContext _context;
-
-        public FactoryInterceptor(IContext context)
-        {
-            _context = context;
-        }
-
-        public void Intercept(IInvocation invocation)
-        {
-            var method = invocation.Method;
-            var pluginType = method.ReturnType;
-
-            invocation.ReturnValue = _context.GetInstance(pluginType);
         }
     }
 }
