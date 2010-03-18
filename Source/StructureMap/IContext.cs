@@ -41,6 +41,8 @@ namespace StructureMap
         /// <returns></returns>
         T GetInstance<T>();
 
+        object GetInstance(Type pluginType);
+
         /// <summary>
         /// Get the object of type T that is valid for this build session by name.
         /// </summary>

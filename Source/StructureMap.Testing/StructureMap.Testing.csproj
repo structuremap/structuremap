@@ -89,6 +89,10 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Castle.DynamicProxy2, Version=2.2.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\Castle.DynamicProxy-2.2\bin\net-35\Castle.DynamicProxy2.dll</HintPath>
+    </Reference>
     <Reference Include="Moq, Version=2.6.1014.1, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\Moq.dll</HintPath>
@@ -176,6 +180,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AutoFactories\AutoFactoryTester.cs" />
+    <Compile Include="AutoFactories\ProxyFactoryTests.cs" />
     <Compile Include="AutoMocking\AutoMockerTester.cs" />
     <Compile Include="AutoMocking\MoqAutoMockerTester.cs" />
     <Compile Include="AutoMocking\MoqFactoryTester.cs" />
@@ -498,6 +503,9 @@
       <ProductName>.NET Framework 3.5</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="AutoFactories\Supporting\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

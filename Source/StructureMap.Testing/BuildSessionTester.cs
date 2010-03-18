@@ -302,6 +302,26 @@ namespace StructureMap.Testing
             var session = new BuildSession(new PluginGraph());
             session.TryGetInstance<IService>().ShouldBeNull();
         }
+
+        [Test]
+        public void Can_get_an_instance_using_the_non_generic_method()
+        {
+            var registry = new Registry();
+            registry.For<IService>().Use<Service>();
+
+            var graph = registry.Build();
+
+            var session = new BuildSession(graph);
+
+            var instance = session.GetInstance(typeof (IService));
+
+            instance.ShouldNotBeNull();
+            instance.ShouldBeOfType<Service>();
+        }
+
+        public interface IService { }
+        public class Service : IService { }
+
     }
 
     public class TopClass

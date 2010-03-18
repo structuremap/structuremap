@@ -78,6 +78,11 @@ namespace StructureMap
             return (T) CreateInstance(typeof (T));
         }
 
+        public object GetInstance(Type pluginType)
+        {
+            return CreateInstance(pluginType);
+        }
+
         public T GetInstance<T>(string name)
         {
             return (T) CreateInstance(typeof (T), name);

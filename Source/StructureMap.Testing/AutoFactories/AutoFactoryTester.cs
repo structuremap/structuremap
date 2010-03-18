@@ -15,6 +15,20 @@ namespace StructureMap.Testing.AutoFactories
         {
             container = new Container();
         }
+
+        [Test]
+        public void Can_build_the_factory()
+        {
+            container.Configure(cfg =>
+            {
+                cfg.For<IDummyService>().Use<Dummy1>();
+                cfg.For<IDummyFactory>().CreateFactory();
+            });
+
+            var factory = container.GetInstance<IDummyFactory>();
+
+            factory.ShouldNotBeNull();
+        }
         
         [Test]
         public void Can_resolve_component()
@@ -28,7 +42,8 @@ namespace StructureMap.Testing.AutoFactories
             var factory = container.GetInstance<IDummyFactory>();
 
             var component = factory.CreateDummyService();
-            Assert.IsNotNull(component);
+
+            component.ShouldNotBeNull();
         }
     }
 
