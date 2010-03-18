@@ -80,6 +80,38 @@ namespace StructureMap.Testing.AutoFactories
             component.ShouldNotBeNull();
             component.ShouldBeOfType<Dummy1>();
         }
+
+        [Test]
+        public void Can_resolve_a_closed_generic_return_type()
+        {
+            container.Configure(cfg =>
+            {
+                cfg.For<IHandler<Message>>().Use<MessageHandler>();
+                cfg.For<IDummyFactory>().CreateFactory();
+            });
+
+            var factory = container.GetInstance<IDummyFactory>();
+
+            var component = factory.CreateHandler<Message>();
+
+            component.ShouldNotBeNull();
+            component.ShouldBeOfType<MessageHandler>();
+        }
+    }
+
+    public interface IHandler<T>
+    {
+        void Handle(T thing);
+    }
+
+    public class Message { }
+
+    public class MessageHandler : IHandler<Message>
+    {
+        public void Handle(Message thing)
+        {
+            
+        }
     }
 
     public interface IDummyService
@@ -96,6 +128,7 @@ namespace StructureMap.Testing.AutoFactories
     {
         IDummyService CreateDummyService();
         TService CreateService<TService>();
+        IHandler<TMessage> CreateHandler<TMessage>();
         object CreateService(Type pluginType);
     }
 }
