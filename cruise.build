@@ -130,10 +130,13 @@
         <include name="StructureMap.xml" />
         <include name="StructureMap.AutoMocking.dll" />
         <include name="StructureMap.AutoMocking.xml" />
+        <include name="StructureMap.AutoFactory.dll" />
       </fileset>
     </copy>
 
     <copy todir="deploy" file="bin\Rhino.Mocks.dll"/>
+    <copy todir="deploy" file="bin\Castle.DynamicProxy-2.2\bin\net-35\Castle.Core.dll"/>
+    <copy todir="deploy" file="bin\Castle.DynamicProxy-2.2\bin\net-35\Castle.DynamicProxy2.dll"/>
     <copy todir="deploy" file="StructureMap.chm"/>
 	<copy todir="deploy" file="LICENSE.TXT"/>
 
