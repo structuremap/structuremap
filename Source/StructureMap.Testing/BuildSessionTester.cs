@@ -307,20 +307,20 @@ namespace StructureMap.Testing
         public void Can_get_an_instance_using_the_non_generic_method()
         {
             var registry = new Registry();
-            registry.For<IService>().Use<Service>();
+            registry.For<IFooService>().Use<Service>();
 
             var graph = registry.Build();
 
             var session = new BuildSession(graph);
 
-            var instance = session.GetInstance(typeof (IService));
+            var instance = session.GetInstance(typeof (IFooService));
 
             instance.ShouldNotBeNull();
             instance.ShouldBeOfType<Service>();
         }
 
-        public interface IService { }
-        public class Service : IService { }
+        public interface IFooService { }
+        public class Service : IFooService { }
 
     }
 

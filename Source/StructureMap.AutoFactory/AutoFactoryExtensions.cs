@@ -62,7 +62,7 @@ namespace StructureMap.AutoFactory
             var method = invocation.Method;
             var pluginType = method.ReturnType;
 
-            //invocation.ReturnValue = _context
+            invocation.ReturnValue = _context.GetInstance(pluginType);
         }
     }
 }

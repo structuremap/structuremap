@@ -46,7 +46,7 @@ namespace StructureMap.Testing.AutoFactories
 
             var service = new Service();
 
-            context.Stub(x => x.GetInstance<IService>()).Return(service);
+            context.Stub(x => x.GetInstance(typeof(IService))).Return(service);
 
             var proxyFactory = new ProxyFactory<IFactory>(proxyGenerator, context);
 
