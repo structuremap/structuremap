@@ -4,6 +4,7 @@ using StructureMap.Configuration.DSL;
 using StructureMap.Exceptions;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
+using StructureMap.Testing.Configuration.DSL;
 using StructureMap.Testing.GenericWidgets;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
@@ -270,6 +271,13 @@ namespace StructureMap.Testing.Graph
             addColorInstance("Blue");
 
             object rule = _container.TryGetInstance(typeof (Rule), "Yellow");
+            rule.ShouldBeNull();
+        }
+
+        [Test]
+        public void TryGetInstanceViaName_of_unregistered_concrete_type_ReturnsNull_WhenNotFound()
+        {
+            object rule = _container.TryGetInstance(typeof (ARule), "Yellow");
             rule.ShouldBeNull();
         }
 
