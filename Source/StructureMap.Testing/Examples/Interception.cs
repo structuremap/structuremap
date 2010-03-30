@@ -130,7 +130,7 @@ namespace StructureMap.Testing.Examples
             // we'll do a little bit of generics sleight of hand
             // to register "target" with IEventAggregator
             Type eventType =
-                target.GetType().FindInterfaceThatCloses(typeof (IEventListener<>)).GetGenericArguments()[0];
+                target.GetType().FindFirstInterfaceThatCloses(typeof (IEventListener<>)).GetGenericArguments()[0];
             Type type = typeof (Registration<>).MakeGenericType(eventType);
             var registration = (Registration) Activator.CreateInstance(type);
             registration.RegisterListener(context, target);

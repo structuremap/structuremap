@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 
@@ -108,29 +109,33 @@ namespace StructureMap
                 return false;
             }
 
-            public static Type FindInterfaceThatCloses(this Type pluggedType, Type templateType)
+            public static Type FindFirstInterfaceThatCloses(this Type pluggedType, Type templateType)
             {
-                if (!pluggedType.IsConcrete()) return null;
+                return pluggedType.FindInterfacesThatClose(templateType).FirstOrDefault();
+            }
 
+            public static IEnumerable<Type> FindInterfacesThatClose(this Type pluggedType, Type templateType)
+            {
+                if (!pluggedType.IsConcrete()) yield break;
+                
                 if (templateType.IsInterface)
                 {
-                    foreach (Type interfaceType in pluggedType.GetInterfaces())
+                    foreach (var interfaceType in pluggedType.GetInterfaces().Where(type => type.IsGenericType && (type.GetGenericTypeDefinition() == templateType)))
                     {
-                        if (interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition() == templateType)
-                        {
-                            return interfaceType;
-                        }
+                        yield return interfaceType;
                     }
                 }
-                else if (pluggedType.BaseType.IsGenericType &&
-                         pluggedType.BaseType.GetGenericTypeDefinition() == templateType)
+                else if (pluggedType.BaseType.IsGenericType && (pluggedType.BaseType.GetGenericTypeDefinition() == templateType))
                 {
-                    return pluggedType.BaseType;
+                    yield return pluggedType.BaseType;
                 }
-
-                return pluggedType.BaseType == typeof (object)
-                           ? null
-                           : pluggedType.BaseType.FindInterfaceThatCloses(templateType);
+                
+                if (pluggedType.BaseType == typeof (object)) yield break;
+                
+                foreach (var interfaceType in pluggedType.BaseType.FindInterfacesThatClose(templateType))
+                {
+                    yield return interfaceType;
+                }
             }
 
             public static bool IsNullable(this Type type)

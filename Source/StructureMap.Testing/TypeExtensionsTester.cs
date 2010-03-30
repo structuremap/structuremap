@@ -21,18 +21,27 @@ namespace StructureMap.Testing
         {
         }
 
+        public class SuperService :IService<decimal>, IService<float>{}
+
         public interface ServiceInterface : IService<string>
         {
         }
 
         [Test]
-        public void find_interface_that_closes_open_interface()
+        public void find_first_interface_that_closes_open_interface()
         {
-            typeof (Service1).FindInterfaceThatCloses(typeof (IService<>))
+            typeof (Service1).FindFirstInterfaceThatCloses(typeof (IService<>))
                 .ShouldEqual(typeof (IService<string>));
 
-            typeof (Service2).FindInterfaceThatCloses(typeof (IService<>))
+            typeof (Service2).FindFirstInterfaceThatCloses(typeof (IService<>))
                 .ShouldBeNull();
+        }
+
+        [Test]
+        public void find_all_interfaces_that_close_an_open_interface()
+        {
+            typeof(SuperService).FindInterfacesThatClose(typeof(IService<>))
+                .ShouldHaveTheSameElementsAs(typeof(IService<decimal>), typeof(IService<float>));
         }
 
         [Test]

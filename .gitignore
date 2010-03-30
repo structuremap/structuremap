@@ -2,6 +2,7 @@ build/
 deploy/
 archive/
 results/
+_site/
 *.suo
 *.user
 Source/**/bin

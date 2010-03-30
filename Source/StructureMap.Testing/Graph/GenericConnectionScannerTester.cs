@@ -21,6 +21,33 @@ namespace StructureMap.Testing.Graph
             container.GetInstance<IFinder<double>>().ShouldBeOfType<DoubleFinder>();
         }
 
+        [Test]
+        public void single_class_can_close_multiple_open_interfaces()
+        {
+            var container = new Container(x => x.Scan(o =>
+            {
+                o.TheCallingAssembly();
+                o.ConnectImplementationsToTypesClosing(typeof(IFinder<>));
+                o.ConnectImplementationsToTypesClosing(typeof(IFindHandler<>));
+            }));
+            container.GetInstance<IFinder<decimal>>().ShouldBeOfType<SrpViolation>();
+            container.GetInstance<IFindHandler<DateTime>>().ShouldBeOfType<SrpViolation>();
+        }
+
+        [Test]
+        public void single_class_can_close_the_same_open_interface_multiple_times()
+        {
+            var container = new Container(x => x.Scan(o =>
+            {
+                o.TheCallingAssembly();
+                o.ConnectImplementationsToTypesClosing(typeof(IFinder<>));
+            }));
+            container.GetInstance<IFinder<byte>>().ShouldBeOfType<SuperFinder>();
+            container.GetInstance<IFinder<char>>().ShouldBeOfType<SuperFinder>();
+            container.GetInstance<IFinder<uint>>().ShouldBeOfType<SuperFinder>();
+        }
+
+
         [Test, ExpectedException(typeof (ApplicationException))]
         public void fails_on_closed_type()
         {
@@ -61,4 +88,11 @@ namespace StructureMap.Testing.Graph
     public class DoubleFinder : IFinder<double>
     {
     }
+    public interface IFindHandler<T>{}
+
+    public class SrpViolation : IFinder<decimal>, IFindHandler<DateTime>
+    {
+    }
+
+    public class SuperFinder : IFinder<byte>, IFinder<char>, IFinder<uint>{}
 }

@@ -48,8 +48,8 @@ namespace StructureMap.Graph
 
         public override void Process(Type type, Registry registry)
         {
-            Type interfaceType = type.FindInterfaceThatCloses(_openType);
-            if (interfaceType != null)
+            var interfaceTypes = type.FindInterfacesThatClose(_openType);
+            foreach (var interfaceType in interfaceTypes)
             {
                 var family = registry.For(interfaceType);
                 ConfigureFamily(family);
