@@ -190,6 +190,7 @@
     <Compile Include="BidirectionalDependencies.cs" />
     <Compile Include="Bugs\AddValueDirectlyWithGenericUsage.cs" />
     <Compile Include="Bugs\BuildUpBug.cs" />
+    <Compile Include="Bugs\CloseOpenGenericsWithSomeSpecifics.cs" />
     <Compile Include="Bugs\EnumerableShouldGetAllValuesTester.cs" />
     <Compile Include="Bugs\FillAllPropertiesShouldWorkForAlreadyConfiguredPluginsBug.cs" />
     <Compile Include="Bugs\HttpSessionNullRefBug.cs" />

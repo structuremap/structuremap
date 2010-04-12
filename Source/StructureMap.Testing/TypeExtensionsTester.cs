@@ -3,6 +3,7 @@ using StructureMap.Testing.GenericWidgets;
 using StructureMap.Testing.Widget2;
 using StructureMap.Testing.Widget3;
 using StructureMap.TypeRules;
+using System.Linq;
 
 namespace StructureMap.Testing
 {
@@ -22,6 +23,8 @@ namespace StructureMap.Testing
         }
 
         public class SuperService :IService<decimal>, IService<float>{}
+
+        public class SpecificService : Service2<string>{}
 
         public interface ServiceInterface : IService<string>
         {
@@ -43,6 +46,15 @@ namespace StructureMap.Testing
             typeof(SuperService).FindInterfacesThatClose(typeof(IService<>))
                 .ShouldHaveTheSameElementsAs(typeof(IService<decimal>), typeof(IService<float>));
         }
+
+        [Test]
+        public void find_all_interfaces_that_close_an_open_interface_should_not_return_the_same_type_twice()
+        {
+            var types = typeof(SpecificService).FindInterfacesThatClose(typeof(IService<>));
+            types.Count().ShouldEqual(1);
+            types.ShouldHaveTheSameElementsAs(typeof(IService<string>));
+        }
+
 
         [Test]
         public void get_all_interfaces()

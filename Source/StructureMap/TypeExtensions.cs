@@ -116,8 +116,13 @@ namespace StructureMap
 
             public static IEnumerable<Type> FindInterfacesThatClose(this Type pluggedType, Type templateType)
             {
+                return rawFindInterfacesThatCloses(pluggedType, templateType).Distinct();
+            }
+
+            private static IEnumerable<Type> rawFindInterfacesThatCloses(Type pluggedType, Type templateType)
+            {
                 if (!pluggedType.IsConcrete()) yield break;
-                
+
                 if (templateType.IsInterface)
                 {
                     foreach (var interfaceType in pluggedType.GetInterfaces().Where(type => type.IsGenericType && (type.GetGenericTypeDefinition() == templateType)))
@@ -129,10 +134,10 @@ namespace StructureMap
                 {
                     yield return pluggedType.BaseType;
                 }
-                
+
                 if (pluggedType.BaseType == typeof (object)) yield break;
-                
-                foreach (var interfaceType in pluggedType.BaseType.FindInterfacesThatClose(templateType))
+
+                foreach (var interfaceType in rawFindInterfacesThatCloses(pluggedType.BaseType, templateType))
                 {
                     yield return interfaceType;
                 }
