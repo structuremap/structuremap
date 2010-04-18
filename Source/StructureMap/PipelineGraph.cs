@@ -57,6 +57,7 @@ namespace StructureMap
 
         public void Dispose()
         {
+            //might need some locking in here, since _factories is being modified
             if (_factories.ContainsKey(typeof(IContainer)))
             {
                 _factories[typeof (IContainer)].AllInstances.Each(x => x.SafeDispose());
@@ -94,10 +95,12 @@ namespace StructureMap
                 _missingFactory = _missingFactory
             };
 
-
-            foreach (var pair in _factories)
+            lock (this)
             {
-                clone._factories.Add(pair.Key, pair.Value.Clone());
+                foreach (var pair in _factories)
+                {
+                    clone._factories.Add(pair.Key, pair.Value.Clone());
+                }
             }
 
             clone.EjectAllInstancesOf<IContainer>();
@@ -202,7 +205,10 @@ namespace StructureMap
         public void Remove(Type pluginType)
         {
             EjectAllInstancesOf(pluginType);
-            _factories.Remove(pluginType);
+            lock (this)
+            {
+                _factories.Remove(pluginType);
+            }
             _genericsGraph.Remove(pluginType);
         }
 
