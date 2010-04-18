@@ -39,7 +39,6 @@
     <property name="file-version" value="${project.version}.0000" />
     <if test="${environment::variable-exists('BUILD_NUMBER')}">
       <property name="file-version" value="${project.version}.${environment::get-variable('BUILD_NUMBER')}" />
-      <echo message="Marking this build as version ${file-version}" />
       <tc-buildnumber build-number="${file-version}" />
     </if>
 
@@ -150,7 +149,7 @@
 
   <target name="archive" depends="version">
     <if test="${environment::variable-exists('TEAMCITY_PROJECT_NAME')}">
-      <zip zipfile="${archive.dir}\StructureMap_${assembly-version}.zip">
+      <zip zipfile="${archive.dir}\StructureMap_${file-version}.zip">
         <fileset basedir="deploy">
           <include name="*.*" />
         </fileset>
