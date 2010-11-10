@@ -208,6 +208,15 @@ namespace StructureMap.Configuration.DSL.Expressions
             return lifecycleIs(InstanceScope.Singleton);
         }
 
+        /// <summary>
+        /// Convenience method to mark a PluginFamily as a Transient
+        /// </summary>
+        /// <returns></returns>
+        public CreatePluginFamilyExpression<PLUGINTYPE> Transient()
+        {
+            return lifecycleIs(InstanceScope.Transient);
+        }
+
         private CreatePluginFamilyExpression<PLUGINTYPE> lifecycleIs(InstanceScope lifecycle)
         {
             _alterations.Add(family => family.SetScopeTo(lifecycle));
