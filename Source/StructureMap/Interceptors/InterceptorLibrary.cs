@@ -29,22 +29,20 @@ namespace StructureMap.Interceptors
 
         public CompoundInterceptor FindInterceptor(Type type)
         {
-            if (_analyzedInterceptors.ContainsKey(type))
+            CompoundInterceptor interceptor;
+            if (!_analyzedInterceptors.TryGetValue(type, out interceptor))
             {
-                return _analyzedInterceptors[type];
-            }
-
-            lock (_locker)
-            {
-                if (!_analyzedInterceptors.ContainsKey(type))
+                lock (_locker)
                 {
-                    TypeInterceptor[] interceptorArray =
-                        _interceptors.FindAll(i => i.MatchesType(type)).ToArray();
-                    _analyzedInterceptors.Add(type, new CompoundInterceptor(interceptorArray));
+                    if (!_analyzedInterceptors.TryGetValue(type, out interceptor))
+                    {
+                        var interceptorArray = _interceptors.FindAll(i => i.MatchesType(type)).ToArray();
+                        interceptor = new CompoundInterceptor(interceptorArray);
+                        _analyzedInterceptors.Add(type, interceptor);
+                    }
                 }
             }
-
-            return _analyzedInterceptors[type];
+            return interceptor;
         }
 
         public InstanceInterceptor[] FindInterceptors(Type type)
