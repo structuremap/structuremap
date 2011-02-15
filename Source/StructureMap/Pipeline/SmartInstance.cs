@@ -557,6 +557,11 @@ namespace StructureMap.Pipeline
                 configure(instance);
                 return Is(instance);
             }
+
+            public SmartInstance<T> Named(string name)
+            {
+                return Is(c => c.GetInstance<CHILD>(name));
+            }
         }
 
         #endregion

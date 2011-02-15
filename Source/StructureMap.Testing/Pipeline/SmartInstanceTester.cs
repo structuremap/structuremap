@@ -1,5 +1,6 @@
 using System;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 
@@ -156,6 +157,42 @@ namespace StructureMap.Testing.Pipeline
         public void successfully_specify_the_constructor_argument_of_a_string()
         {
             build<ColorRule>(i => i.WithCtorArg("color").EqualTo("Red")).Color.ShouldEqual("Red");
+        }
+
+        [Test]
+        public void specify_a_constructor_dependency_by_name()
+        {
+            var container = new Container(r =>
+            {
+                //r.For<ClassA>().Use<ClassA>().Ctor<ClassB>().Is(c => c.GetInstance<ClassB>("classB"));
+                r.For<ClassA>().Use<ClassA>().Ctor<ClassB>().Named("classB");
+                r.For<ClassB>().Use<ClassB>().Named("classB").Ctor<string>("b").Is("named");
+                r.For<ClassB>().Use<ClassB>().Ctor<string>("b").Is("default");
+            });
+
+            var classA = container.GetInstance<ClassA>();
+
+            Assert.That(classA.B.B, Is.EqualTo("named"));
+        }
+
+        private class ClassA
+        {
+            public ClassB B { get; private set; }
+
+            public ClassA(ClassB b)
+            {
+                B = b;
+            }
+        }
+
+        private class ClassB
+        {
+            public string B { get; private set; }
+
+            public ClassB(string b)
+            {
+                B = b;
+            }
         }
     }
 
