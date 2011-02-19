@@ -1,0 +1,1 @@
+bin\nuget pack packaging\nuget\structuremap.nuspec -o archive
