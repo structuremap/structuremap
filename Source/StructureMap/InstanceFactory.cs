@@ -56,15 +56,18 @@ namespace StructureMap
 
         public static InstanceFactory CreateFactoryForType(Type concreteType, ProfileManager profileManager)
         {
-            var family = new PluginFamily(concreteType);
+            return CreateFactoryForFamily(new PluginFamily(concreteType), profileManager);
+        }
+
+        public static InstanceFactory CreateFactoryForFamily(PluginFamily family, ProfileManager profileManager)
+        {
             family.Seal();
 
             var factory = new InstanceFactory(family);
 
             Instance instance = family.GetDefaultInstance();
-            if (instance != null)
-            {
-                profileManager.SetDefault(concreteType, instance);
+            if(instance != null) {
+                profileManager.SetDefault(family.PluginType, instance);
             }
 
             return factory;
