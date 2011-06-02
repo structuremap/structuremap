@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>structuremap.automocking</id>
+    <version>2.6.2.1</version>
+    <authors>Jeremy D. Miller</authors>
+    <owners>Jeremy D. Miller</owners>
+    <licenseUrl>https://github.com/structuremap/structuremap/raw/master/LICENSE.TXT</licenseUrl>
+    <projectUrl>http://structuremap.net/structuremap/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Test utility to instantiate a class by creating mocks for each of its dependencies</description>
+    <language>en-US</language>
+    <dependencies>
+      <dependency id="StructureMap" version="2.6.2" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="..\..\build\StructureMap.AutoMocking.dll" target="lib" />
+    <file src="..\..\build\StructureMap.AutoMocking.XML" target="lib" />
+  </files>
+</package>
