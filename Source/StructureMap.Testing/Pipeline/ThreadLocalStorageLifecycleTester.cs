@@ -89,4 +89,63 @@ namespace StructureMap.Testing.Pipeline
             Assert.IsTrue(_rule2.ID != _rule3.ID);
         }
     }
+
+	[TestFixture]
+	public class ThreadLocalStorageLifecycleTester_with_nested_containers
+	{
+		#region Setup/Teardown
+
+		[SetUp]
+		public void SetUp()
+		{
+			lifecycle = new ThreadLocalStorageLifecycle();
+
+			container =
+				new Container(
+					x =>
+					{
+						x.For<Rule>().HybridHttpOrThreadLocalScoped().Use(() => new ColorRule("Red"));
+					});
+
+			nestedContainer = container.GetNestedContainer();
+
+			int count = 0;
+			nestedContainer.Configure(x =>
+			{
+				x.For<Rule>().Transient().Use(() =>
+				{
+					count++;
+					return new ColorRule("Red" + count);
+				});
+			});
+		}
+
+		#endregion
+
+		private Container container;
+		private IContainer nestedContainer;
+		private ThreadLocalStorageLifecycle lifecycle;
+
+		[Test]
+		public void Overrides_Lifecycle()
+		{
+			var rule1 = container.GetInstance<Rule>();
+			var rule2 = nestedContainer.GetInstance<Rule>();
+
+			rule1.ShouldNotBeTheSameAs(rule2);
+		}
+
+		[Test]
+		public void Does_not_cache_item()
+		{
+			int initial = lifecycle.FindCache().Count;
+
+			nestedContainer.GetInstance<Rule>();
+
+			int after = lifecycle.FindCache().Count;
+
+			after.ShouldEqual(initial);
+		}
+	}
+
 }

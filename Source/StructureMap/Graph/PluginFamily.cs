@@ -22,7 +22,7 @@ namespace StructureMap.Graph
         private ILifecycle _lifecycle;
         private PluginGraph _parent;
 
-        public PluginFamily(Type pluginType)
+    	public PluginFamily(Type pluginType)
             : this(pluginType, new PluginGraph())
         {
         }
@@ -36,7 +36,9 @@ namespace StructureMap.Graph
 
         }
 
-        public PluginGraph Parent { get { return _parent; } set { _parent = value; } }
+    	public InstanceScope? Scope { get; private set; }
+
+    	public PluginGraph Parent { get { return _parent; } set { _parent = value; } }
         public IEnumerable<Instance> Instances { get { return _instances.GetAll(); } }
 
         #region IPluginFamily Members
@@ -48,7 +50,8 @@ namespace StructureMap.Graph
 
         public void SetScopeTo(InstanceScope scope)
         {
-            if (scope == InstanceScope.Transient)
+        	Scope = scope;
+        	if (scope == InstanceScope.Transient)
             {
                 _lifecycle = null;
                 return;
