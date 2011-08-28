@@ -11,7 +11,7 @@
     <description>Test utility to instantiate a class by creating mocks for each of its dependencies</description>
     <language>en-US</language>
     <dependencies>
-      <dependency id="StructureMap" version="2.6.2" />
+      <dependency id="StructureMap" version="2.6.3" />
     </dependencies>
   </metadata>
   <files>

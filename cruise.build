@@ -4,7 +4,7 @@
   <property name="deployment.dir" value="source\StructureMap.Testing.DeploymentTasks\"/>
   <property name="results.dir" value="results" />
   <property name="nant.dir" value="bin\nant" />
-  <property name="project.version" value="2.6.2" />
+  <property name="project.version" value="2.6.3" />
   <property name="project.config" value="release" />
   <property name="archive.dir" value="archive"/>
   <target name="all" depends="compile, unit-test, post-clean"/>
@@ -51,7 +51,7 @@
       <attributes>
         <attribute type="ComVisibleAttribute" value="false" />
         <attribute type="AssemblyVersionAttribute" value="${assembly-version}" />
-        <attribute type="AssemblyCopyrightAttribute" value="Copyright (c) 2003-20010, Jeremy D. Miller" />
+        <attribute type="AssemblyCopyrightAttribute" value="Copyright (c) 2003-20011, Jeremy D. Miller" />
         <attribute type="AssemblyProductAttribute" value="StructureMap" />
         <attribute type="AssemblyCompanyAttribute" value="" />
         <attribute type="AssemblyConfigurationAttribute" value="${project.config}" />
