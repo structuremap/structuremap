@@ -7,7 +7,7 @@ namespace StructureMap.Testing.Widget
         void DoSomething();
     }
 
-    [Pluggable("Color")]
+    [Pluggable("Color"), Serializable]
     public class ColorWidget : IWidget, ICloneable
     {
         private readonly string _Color;

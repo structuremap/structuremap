@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using NUnit.Framework;
 using Rhino.Mocks;
 using StructureMap.Pipeline;
@@ -68,6 +70,27 @@ namespace StructureMap.Testing.Pipeline
             cache.Set(typeof (IWidget), instance, widget);
 
             cache.Has(typeof (IWidget), instance).ShouldBeTrue();
+        }
+
+        [Test]
+        public void can_serialize()
+        {
+            var widget = new ColorWidget("blue");
+            var instance = new ObjectInstance(widget);
+            cache.Set(typeof(Rule), instance, widget);
+
+            var formatter = new BinaryFormatter();
+            var stream = new MemoryStream();
+            formatter.Serialize(stream, cache);
+
+            stream.Position = 0;
+
+            var deserializedCache = (MainObjectCache)formatter.Deserialize(stream);
+            Assert.AreNotSame(cache, deserializedCache);
+
+            var cachedWidget = deserializedCache.Get(typeof(Rule), instance) as ColorWidget;
+            cachedWidget.ShouldNotBeNull();
+            cachedWidget.Color.ShouldEqual("blue");
         }
     }
 }
