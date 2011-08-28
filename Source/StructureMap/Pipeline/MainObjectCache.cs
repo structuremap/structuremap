@@ -3,6 +3,7 @@ using StructureMap.Util;
 
 namespace StructureMap.Pipeline
 {
+    [Serializable]
     public class MainObjectCache : IObjectCache
     {
         private readonly object _locker = new object();
