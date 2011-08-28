@@ -159,7 +159,7 @@ namespace StructureMap
             if (pluggedType.IsGenericType)
             {
                 PluginFamily family = _genericsGraph.CreateTemplatedFamily(pluggedType, _profileManager);
-                if (family != null) return new InstanceFactory(family);
+                if (family != null) return InstanceFactory.CreateFactoryForFamily(family, _profileManager);
             }
 
             return InstanceFactory.CreateFactoryForType(pluggedType, _profileManager);

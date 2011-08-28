@@ -253,23 +253,26 @@ namespace StructureMap.Pipeline
 
         public override Instance CloseType(Type[] types)
         {
-            if (_plugin.PluggedType.IsOpenGeneric())
-            {
-                Type closedType = _plugin.PluggedType.MakeGenericType(types);
-                var closedInstance = new ConstructorInstance(closedType);
+            if(!_plugin.PluggedType.IsOpenGeneric())
+                return null;
 
-                _dependencies.Each((key, i) =>
-                {
-                    if (i.CopyAsIsWhenClosingInstance)
-                    {
-                        closedInstance.SetChild(key, i);
-                    }
-                });
-
-                return closedInstance;
+            Type closedType;
+            try {
+                closedType = _plugin.PluggedType.MakeGenericType(types);
+            }
+            catch {
+                return null;
             }
 
-            return null;
+            var closedInstance = new ConstructorInstance(closedType);
+
+            _dependencies.Each((key, i) => {
+                                   if(i.CopyAsIsWhenClosingInstance) {
+                                       closedInstance.SetChild(key, i);
+                                   }
+                               });
+
+            return closedInstance;
         }
 
         public override string ToString()
