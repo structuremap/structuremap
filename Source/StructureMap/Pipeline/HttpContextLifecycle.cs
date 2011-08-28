@@ -49,6 +49,9 @@ namespace StructureMap.Pipeline
 
         protected virtual IDictionary findHttpDictionary()
         {
+            if (!HasContext())
+                throw new StructureMapException(309);
+
             return HttpContext.Current.Items;
         }
     }

@@ -280,4 +280,7 @@
   <data name="25" xml:space="preserve">
     <value>Only a concrete type may be used here</value>
   </data>
+  <data name="309" xml:space="preserve">
+    <value>You cannot use the HttpContextLifecycle outside of a web request. Try the HybridLifecycle instead.</value>
+  </data>
 </root>
