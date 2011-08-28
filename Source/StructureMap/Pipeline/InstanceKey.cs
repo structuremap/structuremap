@@ -2,6 +2,7 @@ using System;
 
 namespace StructureMap.Pipeline
 {
+    [Serializable]
     public class InstanceKey
     {
         [Obsolete("Kill!")] private WeakReference _instance;

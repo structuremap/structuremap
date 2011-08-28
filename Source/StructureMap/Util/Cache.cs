@@ -6,6 +6,7 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.Util
 {
+    [Serializable]
     public class Cache<KEY, VALUE> : IEnumerable<VALUE> where VALUE : class
     {
         private readonly object _locker = new object();
