@@ -87,7 +87,7 @@ namespace StructureMap.Pipeline
         public bool HasProperty(string propertyName, BuildSession session)
         {
             // TODO -- richer behavior
-            return _dependencies.Has(propertyName);
+            return _dependencies.Has(propertyName) && !(_dependencies[propertyName] is NullInstance);
         }
 
         Instance IStructuredInstance.GetChild(string name)
