@@ -15,7 +15,10 @@ namespace StructureMap.Pipeline
 
         public void EjectAll()
         {
-            _http.EjectAll();
+            if (HttpContextLifecycle.HasContext())
+            {
+                _http.EjectAll();
+            }
             _nonHttp.EjectAll();
         }
 
