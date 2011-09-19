@@ -1,11 +1,12 @@
 using System.Collections;
+using System.Reflection;
 using System.Web;
 
 namespace StructureMap.Pipeline
 {
     public class HttpContextLifecycle : ILifecycle
     {
-        public static readonly string ITEM_NAME = "STRUCTUREMAP-INSTANCES";
+        public static readonly string ITEM_NAME = string.Format("STRUCTUREMAP-INSTANCES-{0}", Assembly.GetExecutingAssembly().GetName().Version);
 
 
         public void EjectAll()
