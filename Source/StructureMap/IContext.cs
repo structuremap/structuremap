@@ -41,14 +41,22 @@ namespace StructureMap
         /// <returns></returns>
         T GetInstance<T>();
 
-        object GetInstance(Type pluginType);
-
         /// <summary>
         /// Get the object of type T that is valid for this build session by name.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         T GetInstance<T>(string name);
+
+        object GetInstance(Type pluginType);
+
+        /// <summary>
+        /// Creates or finds the named instance of the pluginType
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="instanceKey"></param>
+        /// <returns></returns>
+        object GetInstance(Type pluginType, string instanceKey);
 
         /// <summary>
         /// Register a default object for the given PluginType that will
@@ -76,6 +84,21 @@ namespace StructureMap
         T TryGetInstance<T>(string name) where T : class;
 
         /// <summary>
+        /// Creates or finds the default instance of the pluginType. Returns null if the pluginType is not known to the container.
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <returns></returns>
+        object TryGetInstance(Type pluginType);
+
+        /// <summary>
+        /// Creates or finds the named instance of the pluginType. Returns null if the named instance is not known to the container.
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="instanceKey"></param>
+        /// <returns></returns>
+        object TryGetInstance(Type pluginType, string instanceKey);
+
+        /// <summary>
         /// Gets all objects in the current object graph that can be cast
         /// to T that have already been created
         /// </summary>
@@ -90,5 +113,12 @@ namespace StructureMap
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         IEnumerable<T> GetAllInstances<T>();
+
+        /// <summary>
+        /// Creates or resolves all registered instances of the pluginType
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <returns></returns>
+        IEnumerable<object> GetAllInstances(Type pluginType);
     }
 }

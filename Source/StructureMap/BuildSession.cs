@@ -88,6 +88,11 @@ namespace StructureMap
             return (T) CreateInstance(typeof (T), name);
         }
 
+        public object GetInstance(Type pluginType, string name)
+        {
+            return CreateInstance(pluginType, name);
+        }
+
         BuildFrame IContext.Root { get { return _buildStack.Root; } }
 
         public virtual void RegisterDefault(Type pluginType, object defaultObject)
@@ -110,6 +115,22 @@ namespace StructureMap
         public T TryGetInstance<T>(string name) where T : class
         {
             return _pipelineGraph.HasInstance(typeof (T), name) ? ((IContext) this).GetInstance<T>(name) : null;
+        }
+
+        public object TryGetInstance(Type pluginType)
+        {
+            if (_defaults.Has(pluginType)) {
+                return _defaults[pluginType]();
+            }
+
+            return _pipelineGraph.HasDefaultForPluginType(pluginType)
+                       ? ((IContext)this).GetInstance(pluginType)
+                       : null;
+        }
+
+        public object TryGetInstance(Type pluginType, string name)
+        {
+            return _pipelineGraph.HasInstance(pluginType, name) ? ((IContext)this).GetInstance(pluginType, name) : null;
         }
 
         public IEnumerable<T> All<T>() where T : class
