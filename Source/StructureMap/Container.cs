@@ -445,6 +445,8 @@ namespace StructureMap
                 _onDispose = nestedDispose
             };
 
+            nameContainer(container);
+
             // Fixes a mild bug.  The child container should inject itself
             container.Configure(x => x.For<IContainer>().Use(container));
 
@@ -466,6 +468,7 @@ namespace StructureMap
 
 
         private Action<Container> _onDispose = fullDispose;
+
         public void Dispose()
         {
             _onDispose(this);
@@ -482,6 +485,14 @@ namespace StructureMap
         {
             c._pipelineGraph.Dispose();
         }
+
+        /// <summary>
+        /// The name of the container. By default this is set to 
+        /// a random Guid. This is a convience property to 
+        /// assist with debugging. Feel free to set to anything,
+        /// as this is not used in any logic.
+        /// </summary>
+        public string Name { get; set; }
 
         #endregion
 
@@ -545,6 +556,8 @@ namespace StructureMap
 
         private void construct(PluginGraph pluginGraph)
         {
+            Name = Guid.NewGuid().ToString();
+
             _interceptorLibrary = pluginGraph.InterceptorLibrary;
 
             if (!pluginGraph.IsSealed)
@@ -600,6 +613,11 @@ namespace StructureMap
         public void Inject(Type pluginType, Instance instance)
         {
             _pipelineGraph.SetDefault(pluginType, instance);
+        }
+
+        private void nameContainer(IContainer container)
+        {
+            container.Name = "Nested-" + container.Name;
         }
 
         #region Nested type: GetInstanceAsExpression

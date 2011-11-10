@@ -63,6 +63,7 @@ namespace StructureMap
                 PluginGraph graph = expression.BuildGraph();
 
                 _container = new Container(graph);
+                nameContainer(_container);
                 Profile = expression.DefaultProfileName;
             }
         }
@@ -342,6 +343,7 @@ namespace StructureMap
                         if (_container == null)
                         {
                             _container = new Container();
+                            nameContainer(_container);
                         }
                     }
                 }
@@ -409,5 +411,10 @@ namespace StructureMap
         }
 
         #endregion
+
+        private static void nameContainer(IContainer container)
+        {
+            container.Name = "ObjectFactory-" + container.Name; 
+        }
     }
 }
