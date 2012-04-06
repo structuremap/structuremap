@@ -15,3 +15,5 @@ _ReSharper*
 *.cache
 TestResult.xml
 Source/CommonAssemblyInfo.cs
+UpgradeLog.XML
+_UpgradeReport*/
