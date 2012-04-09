@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using StructureMap.Graph;
+using StructureMap.Util;
 
 namespace StructureMap.Pipeline
 {
     public class Profile
     {
         private readonly string _name;
-        private Dictionary<Type, Instance> _instances = new Dictionary<Type, Instance>();
+        private TypeDictionary<Instance> _instances = new TypeDictionary<Instance>();
 
         public Profile(string name)
         {
@@ -70,7 +71,7 @@ namespace StructureMap.Pipeline
 
         public void FindMasterInstances(PluginGraph graph)
         {
-            var master = new Dictionary<Type, Instance>();
+            var master = new TypeDictionary<Instance>();
 
             foreach (var pair in _instances)
             {

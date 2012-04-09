@@ -5,6 +5,7 @@ using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Query;
+using StructureMap.Util;
 
 namespace StructureMap
 {
@@ -13,8 +14,8 @@ namespace StructureMap
 
     public class PipelineGraph : IDisposable
     {
-        private readonly Dictionary<Type, IInstanceFactory> _factories
-            = new Dictionary<Type, IInstanceFactory>();
+        private readonly TypeDictionary<IInstanceFactory> _factories
+            = new TypeDictionary<IInstanceFactory>();
 
         private readonly GenericsPluginGraph _genericsGraph = new GenericsPluginGraph();
         private readonly GraphLog _log;
