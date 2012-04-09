@@ -328,6 +328,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Diagnostics\ValidationBuildSession.cs" />
+    <Compile Include="Util\TypeDictionary.cs" />
     <EmbeddedResource Include="StructureMapException.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>

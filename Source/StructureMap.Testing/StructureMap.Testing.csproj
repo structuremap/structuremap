@@ -420,6 +420,7 @@
     <Compile Include="Diagnostics\ValidationBuildSessionTester.cs" />
     <Compile Include="TypeExtensionsTester.cs" />
     <Compile Include="Util\CacheTester.cs" />
+    <Compile Include="Util\TypeDictionaryTester.cs" />
     <Compile Include="XmlWriting\ElementChecker.cs">
       <SubType>Code</SubType>
     </Compile>
