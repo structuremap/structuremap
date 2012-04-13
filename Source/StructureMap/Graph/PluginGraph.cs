@@ -116,11 +116,11 @@ namespace StructureMap.Graph
                 return;
             }
 
-            // This was changed to support .Net 4.5 which is stricture on collection modification
-            int index = 0;
-            while (index < _scanners.Count())
-            {
-                _scanners[index++].ScanForAll(this);
+            // This was changed to support .Net 4.5 which is stricture on collection modification	
+            int index = 0;	
+            while (index < _scanners.Count())	
+            {	
+                _scanners[index++].ScanForAll(this);	
             }
 
             _pluginFamilies.Each(family => family.AddTypes(_pluggedTypes));
