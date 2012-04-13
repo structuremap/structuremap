@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace StructureMap
 {
@@ -7,7 +8,7 @@ namespace StructureMap
     {
         public static IEnumerable<T> Each<T>(this IEnumerable<T> enumerable, Action<T> action)
         {
-            foreach (T target in enumerable)
+            foreach (T target in enumerable.ToList())
             {
                 action(target);
             }
