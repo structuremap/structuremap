@@ -319,6 +319,7 @@ namespace StructureMap.Testing.Graph
 
     public interface IOpenGeneric<T>
     {
+        void Nop();
     }
 
     public interface IAnotherOpenGeneric<T>
@@ -326,6 +327,13 @@ namespace StructureMap.Testing.Graph
     }
 
     public class ConcreteOpenGeneric<T> : IOpenGeneric<T>
+    {
+        public void Nop()
+        {
+        }
+    }
+
+    public class StringOpenGeneric : ConcreteOpenGeneric<string>
     {
     }
 }
