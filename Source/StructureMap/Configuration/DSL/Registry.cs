@@ -44,7 +44,7 @@ namespace StructureMap.Configuration.DSL
         /// <param name="pluginType"></param>
         /// <param name="concreteType"></param>
         /// <param name="name"></param>
-        public void AddType(Type pluginType, Type concreteType, string name)
+        public virtual void AddType(Type pluginType, Type concreteType, string name)
         {
             _actions.Add(g => g.AddType(pluginType, concreteType, name));
         }
