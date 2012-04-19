@@ -272,6 +272,7 @@
     <Compile Include="Graph\ExceptionHandling\StructureMapExceptionTester.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Graph\FindAllTypesFilterTester.cs" />
     <Compile Include="Graph\FirstInterfaceConventionTester.cs" />
     <Compile Include="Graph\GenericConnectionScannerTester.cs" />
     <Compile Include="Graph\SingleImplementationScannerTester.cs" />

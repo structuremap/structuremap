@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 
 namespace StructureMap.Testing.Graph
 {
@@ -47,6 +48,40 @@ namespace StructureMap.Testing.Graph
             Assert.AreEqual(1, instances.Count);
 
             Assert.IsInstanceOfType(typeof (NormalTypeWithPluggableAttribute), instances[0]);
+        }
+
+        [TestFixture]
+        public class when_finding_all_types_implementing_and_open_generic_interface
+        {
+            [Test]
+            public void it_can_find_all_implementations()
+            {
+                using (var container = new Container(c => c.Scan(s =>
+                     {
+                         s.AddAllTypesOf(typeof (IOpenGeneric<>));
+                         s.TheCallingAssembly();
+                     })))
+                {
+                    var redTypes = container.GetAllInstances<IOpenGeneric<RedType>>();
+                    Assert.That(redTypes.Count, Is.EqualTo(1));
+                }
+            }
+
+            [Test]
+            public void it_can_override_generic_implementation_with_specific()
+            {
+                var container = new Container(c => c.Scan(s =>
+                      {
+                          s.AddAllTypesOf(typeof (IOpenGeneric<>));
+                          s.TheCallingAssembly();
+                      }));
+
+                using (container)
+                {
+                    var redType = container.GetInstance<IOpenGeneric<string>>();
+                    Assert.That(redType, Is.InstanceOfType(typeof (StringOpenGeneric)));
+                }
+            }
         }
     }
 
