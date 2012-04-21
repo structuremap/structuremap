@@ -96,6 +96,7 @@ namespace StructureMap.Testing.Graph
 
 
         [Test]
+		[Ignore("Debating if this actually reflects current behavior")]
         public void Add_an_assembly_on_the_fly_and_pick_up_plugins2()
         {
             var container = new Container();
