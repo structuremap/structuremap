@@ -62,7 +62,7 @@ namespace StructureMap.Testing.Graph
                          s.TheCallingAssembly();
                      })))
                 {
-                    var redTypes = container.GetAllInstances<IOpenGeneric<RedType>>();
+                    var redTypes = container.GetAllInstances<IOpenGeneric<string>>();
                     Assert.That(redTypes.Count, Is.EqualTo(1));
                 }
             }

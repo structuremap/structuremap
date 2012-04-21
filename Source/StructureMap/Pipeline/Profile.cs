@@ -8,7 +8,7 @@ namespace StructureMap.Pipeline
     public class Profile
     {
         private readonly string _name;
-        private TypeDictionary<Instance> _instances = new TypeDictionary<Instance>();
+        private Dictionary<Type, Instance> _instances = new Dictionary<Type, Instance>();
 
         public Profile(string name)
         {
@@ -71,7 +71,7 @@ namespace StructureMap.Pipeline
 
         public void FindMasterInstances(PluginGraph graph)
         {
-            var master = new TypeDictionary<Instance>();
+            var master = new Dictionary<Type, Instance>();
 
             foreach (var pair in _instances)
             {

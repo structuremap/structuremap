@@ -14,14 +14,17 @@ namespace StructureMap
 
     public class PipelineGraph : IDisposable
     {
-        private readonly TypeDictionary<IInstanceFactory> _factories
-            = new TypeDictionary<IInstanceFactory>();
+        private readonly Dictionary<Type, IInstanceFactory> _factories
+            = new Dictionary<Type, IInstanceFactory>();
 
         private readonly GenericsPluginGraph _genericsGraph = new GenericsPluginGraph();
         private readonly GraphLog _log;
         private readonly ProfileManager _profileManager;
         private readonly IObjectCache _transientCache;
 
+        /// <summary>
+        /// Used for auto-mocking container. When the factory is missing, we can generate a mock for it
+        /// </summary>
         private MissingFactoryFunction _missingFactory =
             (pluginType, profileManager) => null;
 
@@ -170,7 +173,13 @@ namespace StructureMap
         {
             // Need to ensure that the factory exists first
             createFactoryIfMissing(pluginType);
-            return _profileManager.GetDefault(pluginType) ?? _factories[pluginType].MissingInstance;
+            var instance = _profileManager.GetDefault(pluginType);
+            if (instance == null && pluginType.IsGenericType)
+                instance = _profileManager.GetDefault(pluginType.GetGenericTypeDefinition());
+
+            // if we haven't found the instance yet, return it. If we're using an auto-mocking
+            // container, that will handle the missing instance at this point.
+            return instance ?? _factories[pluginType].MissingInstance;
         }
 
         public void SetDefault(Type pluginType, Instance instance)
