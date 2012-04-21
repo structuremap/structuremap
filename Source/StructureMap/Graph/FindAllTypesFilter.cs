@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using StructureMap.Configuration.DSL;
 using StructureMap.TypeRules;
 
@@ -19,8 +20,16 @@ namespace StructureMap.Graph
             if (type.CanBeCastTo(_pluginType) && Constructor.HasConstructors(type))
             {
                 string name = _getName(type);
-                registry.AddType(_pluginType, type, name);
+                registry.AddType(GetLeastSpecificButValidType(_pluginType, type), type, name);
             }
+        }
+
+        private Type GetLeastSpecificButValidType(Type pluginType, Type type)
+        {
+            if (pluginType.IsGenericTypeDefinition)
+                return type.FindFirstInterfaceThatCloses(pluginType);
+
+            return pluginType;
         }
 
         public void NameBy(Func<Type, string> getName)
