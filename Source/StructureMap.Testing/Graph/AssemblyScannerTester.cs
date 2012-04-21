@@ -114,6 +114,13 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
+        public void class_outside_namespace_doesnt_match_any_namespace_check()
+        {
+            typeof(class_outside_namespace).IsInNamespace("blah").ShouldBeFalse();
+            typeof(class_outside_namespace).IsInNamespace("StructureMap").ShouldBeFalse();
+        }
+
+        [Test]
         public void Only_scan_for_registries_ignores_attributes()
         {
             Scan(x =>
@@ -424,4 +431,9 @@ namespace StructureMap.Testing.Graph
                 .ShouldBeOfType<SiteController>();
         }
     }
+}
+
+public class class_outside_namespace
+{
+    
 }
