@@ -73,5 +73,18 @@ namespace StructureMap.Testing
 
             ObjectFactory.Profile.ShouldEqual(theDefaultProfileName);
         }
+        
+        [Test]
+        public void TheDefaultContainerName_should_be_ObjectFactory_Guid()
+        {
+            
+            ObjectFactory.Initialize(x =>
+            {
+                x.IgnoreStructureMapConfig = true;
+            });
+
+            ObjectFactory.Container.Name.ShouldStartWith("ObjectFactory-");
+        }
+
     }
 }

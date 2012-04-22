@@ -273,5 +273,13 @@ namespace StructureMap
         /// <param name="profileName"></param>
         /// <returns></returns>
         IContainer GetNestedContainer(string profileName);
+
+        /// <summary>
+        /// The name of the container. By default this is set to 
+        /// a random Guid. This is a convience property to 
+        /// assist with debugging. Feel free to set to anything,
+        /// as this is not used in any logic.
+        /// </summary>
+        string Name { get; set; }
     }
 }

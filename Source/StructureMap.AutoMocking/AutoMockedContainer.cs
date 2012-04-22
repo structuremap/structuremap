@@ -15,6 +15,8 @@ namespace StructureMap.AutoMocking
 
         public AutoMockedContainer(ServiceLocator locator)
         {
+            nameContainer(this);
+
             _locator = locator;
 
             onMissingFactory = delegate(Type pluginType, ProfileManager profileManager)
@@ -41,6 +43,11 @@ namespace StructureMap.AutoMocking
 
                 return factory;
             };
+        }
+
+        private void nameContainer(IContainer container)
+        {
+            container.Name = "AutoMocking-" + container.Name;
         }
     }
 }
