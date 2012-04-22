@@ -94,28 +94,6 @@ namespace StructureMap.Testing.Graph
             container.GetAllInstances<IWidget>().OfType<TheWidget>().Any().ShouldBeTrue();
         }
 
-
-        [Test]
-		[Ignore("Debating if this actually reflects current behavior")]
-        public void Add_an_assembly_on_the_fly_and_pick_up_plugins2()
-        {
-            var container = new Container();
-            container.Configure(
-                registry =>
-                {
-                    registry.Scan(x =>
-                    {
-                        x.AssemblyContainingType(typeof (IService<>));
-                        x.AddAllTypesOf(typeof (IService<>));
-                    });
-                }
-                );
-
-            IList<IService<string>> instances = container.GetAllInstances<IService<string>>();
-            instances.Count.ShouldEqual(3);
-        }
-
-
         [Test]
         public void Add_an_assembly_on_the_fly_and_pick_up_plugins3()
         {
