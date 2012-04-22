@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Moq;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 
@@ -21,7 +23,9 @@ namespace StructureMap.Testing.Graph
         public void it_registers_types_that_can_be_cast()
         {
             var registry = new Mock<Registry>(MockBehavior.Strict);
-            registry.Expect(x => x.AddType(typeof (IGeneric<>), typeof (Generic<>), It.IsAny<string>()));
+            registry.Expect(x => x.AddType(It.IsAny<Type>(), typeof (Generic<>), It.IsAny<string>()))
+				.Callback<Type, Type, string>((x, y, z) => 
+					Assert.That(x.GetGenericTypeDefinition(), Is.EqualTo(typeof(IGeneric<>))));
             var filter = new FindAllTypesFilter(typeof (IGeneric<>));
 
             filter.Process(typeof(Generic<>), registry.Object);
