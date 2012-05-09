@@ -422,7 +422,11 @@ namespace StructureMap.Configuration.DSL
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
             if(other.GetType() == typeof(Registry) && GetType() == typeof(Registry)) return false;
-            return Equals(other.GetType(), GetType());
+            if (Equals(other.GetType(), GetType()))
+            {
+                return !GetType().IsNotPublic;
+            }
+            return false;
         }
 
         public override bool Equals(object obj)

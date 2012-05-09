@@ -81,7 +81,7 @@ namespace StructureMap.Testing.Configuration.DSL
         }
 
         [Test]
-        public void two_instances_of_a_derived_registry_type_are_considered_equal()
+        public void two_instances_of_a_public_derived_registry_type_are_considered_equal()
         {
             var registry1 = new TestRegistry();
             var registry2 = new TestRegistry();
@@ -95,6 +95,16 @@ namespace StructureMap.Testing.Configuration.DSL
 
             registry1.Equals((object)registry3).ShouldBeFalse();
             registry3.Equals((object)registry1).ShouldBeFalse();
+        }
+
+        [Test]
+        public void two_instances_of_a_non_public_derived_registry_type_are_not_considered_equal()
+        {
+            var registry1 = new InternalTestRegistry();
+            var registry2 = new InternalTestRegistry();
+
+            registry1.Equals((object) registry1).ShouldBeTrue();
+            registry1.Equals((object)registry2).ShouldBeFalse();
         }
 
         [Test]
@@ -201,6 +211,11 @@ namespace StructureMap.Testing.Configuration.DSL
 
         public int ExecutedCount { get { return _count; } }
     }
+
+    internal class InternalTestRegistry : Registry
+    {
+    }
+
 
     public class FakeGateway : IGateway
     {

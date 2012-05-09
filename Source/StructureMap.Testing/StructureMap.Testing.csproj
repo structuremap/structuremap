@@ -208,6 +208,7 @@
     <Compile Include="Bugs\SpecifyScopeOnOpenGenericsTester.cs" />
     <Compile Include="Bugs\StaticPropertyCausesJITExceptionTester.cs" />
     <Compile Include="Bugs\TryGetInstanceWithOpenGenericsBugTester.cs" />
+    <Compile Include="Bugs\UseSingleImplementationConventionInMultipleScans.cs" />
     <Compile Include="BuildSessionTester.cs" />
     <Compile Include="BuildUpIntegratedTester.cs" />
     <Compile Include="BuildUpTester.cs" />
