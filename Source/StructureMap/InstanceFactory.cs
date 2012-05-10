@@ -12,8 +12,7 @@ namespace StructureMap
     {
         private readonly Type _pluginType;
 
-        private Cache<string, Instance> _instances =
-            new Cache<string, Instance>(delegate { return null; });
+        private Cache<string, Instance> _instances;
 
         private ILifecycle _lifecycle;
 
@@ -41,6 +40,8 @@ namespace StructureMap
 
                 _pluginType = family.PluginType;
                 MissingInstance = family.MissingInstance;
+
+                _instances = new Cache<string, Instance>(delegate { return MissingInstance; });
 
                 family.Instances.Each(AddInstance);
             }
