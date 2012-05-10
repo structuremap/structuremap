@@ -60,7 +60,7 @@ namespace StructureMap.Pipeline
                 {
                     if (@object is Container) return;
 
-                    @object.SafeDispose();
+                    if (@object != null) @object.SafeDispose();
                 });
 
                 _objects.Clear();
