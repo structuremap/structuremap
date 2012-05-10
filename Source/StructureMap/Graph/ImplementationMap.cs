@@ -43,9 +43,14 @@ namespace StructureMap.Graph
         }
     }
 
-    internal class SingleImplementationRegistry : Registry
+    // This type created just to make the output clearer in WhatDoIHave()
+    // might consider adding a Description property to Registry instead
+    internal class SingleImplementationRegistry : Registry, IEquatable<SingleImplementationRegistry>
     {
-        // This type created just to make the output clearer in WhatDoIHave()
-        // might consider adding a Description property to Registry instead
+        public bool Equals(SingleImplementationRegistry other)
+        {
+            if (ReferenceEquals(this, other)) return true;
+            return false;
+        }
     }
 }
