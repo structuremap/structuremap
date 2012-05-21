@@ -476,7 +476,7 @@ namespace StructureMap
 
         private static void fullDispose(Container c)
         {
-            c.Model.AllInstances.Each(i => i.EjectObject());
+            c.Model.AllInstances.Each(i => { if (i != null) i.EjectObject(); });
 
             nestedDispose(c);
         }

@@ -14,6 +14,7 @@ namespace StructureMap.Pipeline
         // are met.  If this is not explicitly defined, the ConditionalInstance
         // will simply look for the default Instance of the desired
         // PluginType
+        [CLSCompliant(false)]
         public Instance _default = new DefaultInstance();
 
 
