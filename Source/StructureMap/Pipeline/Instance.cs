@@ -122,6 +122,7 @@ namespace StructureMap.Pipeline
             }
         }
 
+        [CLSCompliant(false)]
         protected virtual void preprocess(PluginFamily family)
         {
             // no-op;
@@ -151,13 +152,18 @@ namespace StructureMap.Pipeline
             }
         }
 
-        protected abstract object build(Type pluginType, BuildSession session);
+        [CLSCompliant(false)]
+        protected virtual object build(Type pluginType, BuildSession session)
+        {
+            throw new NotImplementedException();
+        }
 
         protected virtual Instance findMasterInstance(PluginFamily family, string profileName, GraphLog log)
         {
             return this;
         }
 
+        [CLSCompliant(false)]
         protected virtual bool canBePartOfPluginFamily(PluginFamily family)
         {
             return true;

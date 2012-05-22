@@ -206,6 +206,7 @@ namespace StructureMap
             }
         }
 
+        [CLSCompliant(false)]
         protected virtual Instance readInstance(PluginGraph pluginGraph, Type pluginType)
         {
             if (IsDefault)

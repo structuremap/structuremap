@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Xml;
 using StructureMap.Configuration;
@@ -14,8 +15,12 @@ namespace StructureMap
     /// </summary>
     public class ConfigurationExpression : Registry
     {
+        [CLSCompliant(false)]
         protected readonly GraphLog _log = new GraphLog();
+
+        [CLSCompliant(false)]
         protected readonly ConfigurationParserBuilder _parserBuilder;
+
         private readonly List<Registry> _registries = new List<Registry>();
 
         internal ConfigurationExpression()

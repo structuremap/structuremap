@@ -15,6 +15,8 @@ namespace StructureMap
         private readonly InstanceCache _cache = new InstanceCache();
         private readonly Cache<Type, Func<object>> _defaults;
         private readonly PipelineGraph _pipelineGraph;
+
+        [CLSCompliant(false)]
         protected BuildStack _buildStack = new BuildStack();
 
         public BuildSession(PipelineGraph pipelineGraph, InterceptorLibrary interceptorLibrary)
