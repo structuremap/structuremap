@@ -1,4 +1,7 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Castle.Core.Interceptor;
 
 namespace StructureMap.AutoFactory
@@ -46,7 +49,8 @@ namespace StructureMap.AutoFactory
                 returnValue = GetReturnValueForMultipleArguments(invocation, pluginType, i, Container);
             }
             else
-                returnValue = _context.GetInstance(pluginType);
+                returnValue = DoServiceLocator(pluginType, _context.GetInstance, t => Container.GetAllInstances(t));
+            
             return returnValue;
         }
 
@@ -65,7 +69,40 @@ namespace StructureMap.AutoFactory
                 expr = expr.With(name).EqualTo(value);
             }
 
-            return expr.GetInstance(pluginType);
+            return DoServiceLocator(pluginType, expr.GetInstance, expr.GetAllInstances);
+        }
+
+        private static object DoServiceLocator(Type pluginType, Func<Type, object> singleLocator, Func<Type, object> multipleLocator)
+        {
+            if (IsRequestForAllComponents(pluginType))
+            {
+                pluginType = GetEnumerableType(pluginType);
+                var list = (IList)multipleLocator(pluginType);
+                return ConvertToTypedList(pluginType, list);
+            }
+
+            return singleLocator(pluginType);
+        }
+
+        private static Array ConvertToTypedList(Type pluginType, IList list)
+        {
+            var array = Array.CreateInstance(pluginType, list.Count);
+            for (int i = 0; i < array.Length; i++)
+                array.SetValue(list[i], i);
+            return array;
+        }
+
+        private static Type GetEnumerableType(Type pluginType)
+        {
+            var argments = pluginType.GetGenericArguments();
+            pluginType = argments[0];
+            return pluginType;
+        }
+
+        private static bool IsRequestForAllComponents(Type pluginType)
+        {
+            return pluginType.IsGenericType 
+                && typeof(IEnumerable).IsAssignableFrom(pluginType);
         }
     }
 }

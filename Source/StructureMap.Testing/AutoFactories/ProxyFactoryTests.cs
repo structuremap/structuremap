@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using Castle.DynamicProxy;
 using Moq;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using Rhino.Mocks;
 using StructureMap.AutoFactory;
 
@@ -12,6 +14,8 @@ namespace StructureMap.Testing.AutoFactories
         public interface IFactory
         {
             IService CreateService();
+            IEnumerable<IService> GetAllServices();
+            IList<IService> GetListOfServices();
         }
 
         public interface IService
@@ -59,6 +63,38 @@ namespace StructureMap.Testing.AutoFactories
             built.ShouldBeTheSameAs(service);
         }
 
+        [Test]
+        public void It_gets_all_instances_when_looking_for_IEnumerable()
+        {
+            var container = new Container(cfg =>
+                                              {
+                                                  cfg.For<IFactory>().CreateFactory();
+                                                  cfg.For<IService>().Use<Service>();
+                                              });
+            using (container)
+            {
+                var factory = container.GetInstance<IFactory>();
+                var values = factory.GetAllServices();
+                Assert.That(values, Has.Some.InstanceOfType(typeof(Service)));
+            }
+        }
+
+        [Test]
+        public void It_gets_all_instances_when_looking_for_IList()
+        {
+            var container = new Container(cfg =>
+                                              {
+                                                  cfg.For<IFactory>().CreateFactory();
+                                                  cfg.For<IService>().Use<Service>();
+                                              });
+            using (container)
+            {
+                var factory = container.GetInstance<IFactory>();
+                var values = factory.GetListOfServices();
+                Assert.That(values, Has.Some.InstanceOfType(typeof(Service)));
+            }
+        }
+
         [TestFixture]
         public class WhenUsingExtraParameters
         {
@@ -103,6 +139,7 @@ namespace StructureMap.Testing.AutoFactories
                 SingleParameter GetSingleParameter(string name);
                 SeveralPrimitives GetSeveralPrimitives(int theAnswer, bool isTrue);
                 SeveralPrimitivesAndService GetSeveralPrimitivesAndService(int theAnswer, bool isTrue);
+                IList<SeveralPrimitives> GetAll(int theAnswer, bool isTrue);
             }
             #endregion
 
