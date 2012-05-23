@@ -1,4 +1,5 @@
 using Castle.DynamicProxy;
+using Moq;
 using NUnit.Framework;
 using Rhino.Mocks;
 using StructureMap.AutoFactory;
@@ -57,5 +58,36 @@ namespace StructureMap.Testing.AutoFactories
             built.ShouldNotBeNull();
             built.ShouldBeTheSameAs(service);
         }
+
+		[TestFixture]
+		public class WhenUsingExtraParameters
+		{
+			#region Types used for testing
+			public class SingleParameter
+			{
+				public string Name;
+				public SingleParameter(string name)
+				{
+					Name = name;
+				}
+			}
+
+			public interface IFactory
+			{
+				SingleParameter Get(string name);
+			}
+			#endregion
+
+			[Test]
+			public void It_uses_the_name_of_the_parameter_as_a_key()
+			{
+				using (var container = new Container(cfg => cfg.For<IFactory>().CreateFactory()))
+				{
+					var factory = container.GetInstance<IFactory>();
+					var value = factory.Get("foo");
+					Assert.AreEqual("foo", value.Name);
+				}
+			}
+		}
     }
 }
