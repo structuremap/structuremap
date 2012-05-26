@@ -12,6 +12,7 @@ _ReSharper*
 *.csproj.user
 *.resharper.user
 *.suo
+*.swp
 *.cache
 TestResult.xml
 UpgradeLog.XML
