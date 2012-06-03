@@ -12,6 +12,8 @@ _ReSharper*
 *.csproj.user
 *.resharper.user
 *.suo
+*.swp
 *.cache
 TestResult.xml
-Source/CommonAssemblyInfo.cs
+UpgradeLog.XML
+_UpgradeReport*/

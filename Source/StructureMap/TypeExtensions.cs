@@ -74,7 +74,7 @@ namespace StructureMap
 
             public static bool IsInNamespace(this Type type, string nameSpace)
             {
-                return type.Namespace.StartsWith(nameSpace);
+                return type.Namespace != null && type.Namespace.StartsWith(nameSpace);
             }
 
             public static ReferencedInstance GetReferenceTo(this Type type)

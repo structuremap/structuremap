@@ -44,7 +44,7 @@ namespace StructureMap.Configuration.DSL
         /// <param name="pluginType"></param>
         /// <param name="concreteType"></param>
         /// <param name="name"></param>
-        public void AddType(Type pluginType, Type concreteType, string name)
+        public virtual void AddType(Type pluginType, Type concreteType, string name)
         {
             _actions.Add(g => g.AddType(pluginType, concreteType, name));
         }
@@ -422,7 +422,11 @@ namespace StructureMap.Configuration.DSL
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
             if(other.GetType() == typeof(Registry) && GetType() == typeof(Registry)) return false;
-            return Equals(other.GetType(), GetType());
+            if (Equals(other.GetType(), GetType()))
+            {
+                return !GetType().IsNotPublic;
+            }
+            return false;
         }
 
         public override bool Equals(object obj)

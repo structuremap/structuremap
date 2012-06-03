@@ -5,6 +5,7 @@ using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Query;
+using StructureMap.Util;
 
 namespace StructureMap
 {
@@ -21,6 +22,9 @@ namespace StructureMap
         private readonly ProfileManager _profileManager;
         private readonly IObjectCache _transientCache;
 
+        /// <summary>
+        /// Used for auto-mocking container. When the factory is missing, we can generate a mock for it
+        /// </summary>
         private MissingFactoryFunction _missingFactory =
             (pluginType, profileManager) => null;
 
@@ -169,7 +173,13 @@ namespace StructureMap
         {
             // Need to ensure that the factory exists first
             createFactoryIfMissing(pluginType);
-            return _profileManager.GetDefault(pluginType) ?? _factories[pluginType].MissingInstance;
+            var instance = _profileManager.GetDefault(pluginType);
+            if (instance == null && pluginType.IsGenericType)
+                instance = _profileManager.GetDefault(pluginType.GetGenericTypeDefinition());
+
+            // if we haven't found the instance yet, return it. If we're using an auto-mocking
+            // container, that will handle the missing instance at this point.
+            return instance ?? _factories[pluginType].MissingInstance;
         }
 
         public void SetDefault(Type pluginType, Instance instance)

@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 using StructureMap.Graph;
 using StructureMap.Testing.GenericWidgets;
 using StructureMap.Testing.TestData;
@@ -143,6 +145,27 @@ namespace StructureMap.Testing
 
             Assert.IsNotNull(concept);
             Assert.IsInstanceOfType(typeof (SpecificConcept), concept);
+        }
+
+        interface IGenericType<T>{}
+        class GenericType<T> : IGenericType<T> {}
+        interface INonGenereic{}
+        class NonGeneric : INonGenereic{}
+
+        [Test]
+        public void Can_use_factory_method_with_open_generics()
+        {
+            var container = new Container();
+            container.Configure(x => x.For(typeof (IGenericType<>)).Use(f =>
+            {
+                var generic = f.BuildStack.Current.RequestedType.GetGenericArguments()[0];
+                var type = typeof (GenericType<>).MakeGenericType(generic);
+                return Activator.CreateInstance(type);
+            }));
+
+            var instance = container.GetInstance<IGenericType<string>>();
+            Assert.That(instance, Is.Not.Null);
+            Assert.That(instance, Is.InstanceOfType(typeof(GenericType<string>)));
         }
     }
 }

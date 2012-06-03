@@ -58,6 +58,15 @@ namespace StructureMap.Testing.Pipeline
         }
 
         [Test]
+        public void NestedContainer_names_should_start_with_nested_container()
+        {
+            var container = new Container(x => x.For<IAutomobile>().Use<Mustang>());
+
+            IContainer nestedContainer = container.GetNestedContainer();
+            nestedContainer.Name.ShouldStartWith("Nested-");
+        }
+
+        [Test]
         public void disposing_the_child_container_does_not_affect_the_parent_container()
         {
             var container = new Container(x =>
