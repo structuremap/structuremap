@@ -263,6 +263,21 @@ namespace StructureMap.Testing
             session.GetInstance<IService>("red").ShouldBeTheSameAs(red);
         }
 
+		[Test]
+		public void when_retrieving_an_object_by_nongeneric_type_and_name()
+		{
+			var red = new ColorService("red");
+			var green = new ColorService("green");
+
+			var registry = new Registry();
+			registry.For<IService>().Add(red).Named("red");
+			registry.For<IService>().Add(green).Named("green");
+			var graph = registry.Build();
+
+			var session = new BuildSession(graph);
+			session.GetInstance(typeof(IService), "red").ShouldBeTheSameAs(red);
+		}
+
         [Test]
         public void when_retrieving_by_try_get_instance_for_instance_that_does_exist()
         {
@@ -301,7 +316,47 @@ namespace StructureMap.Testing
         {
             var session = new BuildSession(new PluginGraph());
             session.TryGetInstance<IService>().ShouldBeNull();
-        }
+		}
+
+		[Test]
+		public void when_retrieving_with_try_get_instance_with_nongeneric_type_that_does_exist()
+		{
+			var theService = new ColorService("red");
+			var registry = new Registry();
+			registry.For<IService>().Use(theService);
+			var session = new BuildSession(registry.Build());
+
+			session.TryGetInstance(typeof(IService)).ShouldBeTheSameAs(theService);
+		}
+
+		[Test]
+		public void when_retrieving_with_try_get_instance_with_nongeneric_type_that_does_not_exist()
+		{
+			var session = new BuildSession(new PluginGraph());
+			session.TryGetInstance(typeof(IService)).ShouldBeNull();
+		}
+
+		[Test]
+		public void when_retrieving_by_try_get_named_instance_with_nongeneric_type_that_does_exist()
+		{
+			var red = new ColorService("red");
+			var green = new ColorService("green");
+
+			var registry = new Registry();
+			registry.For<IService>().Add(red).Named("red");
+			registry.For<IService>().Add(green).Named("green");
+			var graph = registry.Build();
+
+			var session = new BuildSession(graph);
+			session.TryGetInstance(typeof(IService), "red").ShouldBeTheSameAs(red);
+		}
+
+		[Test]
+		public void when_retrieving_by_try_get_named_instance_with_type_that_does_not_exist()
+		{
+			var session = new BuildSession(new PluginGraph());
+			session.TryGetInstance(typeof(IService), "yo").ShouldBeNull();
+		}
 
         [Test]
         public void Can_get_an_instance_using_the_non_generic_method()
