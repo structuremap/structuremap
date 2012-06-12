@@ -1,0 +1,213 @@
+/*****************************************************************************/
+/*
+/* Common
+/*
+/*****************************************************************************/
+
+/* Global Reset */
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  background-color: #292929;
+  font: 13.34px helvetica, arial, clean, sans-serif;
+  *font-size: small;
+  text-align: center;
+	color: #CCC;
+}
+
+p {
+  margin: 1em 0;
+}
+
+a, a:hover {
+  color: #C60;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+table {
+  font-size: inherit;
+  font: 100%;
+}
+
+h1,h2,h3,h4,h5,h6 {
+	margin-bottom: 20px;
+	line-height: normal;
+}
+
+blockquote {
+	margin-left: 10px;
+	font-style: italic;
+}
+
+.notice {
+	font-style: italic;
+	background-color: #393939;
+	padding: 3px;
+  border-radius: 6px;
+	text-align: center;
+}
+
+/*****************************************************************************/
+/*
+/* Home
+/*
+/*****************************************************************************/
+
+ul.posts {
+  list-style-type: none;
+  margin-bottom: 2em;
+}
+
+  ul.posts li {
+    line-height: 1.75em;
+  }
+
+  ul.posts span {
+    color: #aaa;
+    font-family: Monaco, "Courier New", monospace;
+    font-size: 80%;
+  }
+
+/*****************************************************************************/
+/*
+/* Site
+/*
+/*****************************************************************************/
+
+.site {
+  font-size: 110%;
+  text-align: left;
+  width: 40em;
+  margin: 3em auto 2em auto;
+  line-height: 1.5em;
+}
+
+.title {
+  color: #a00;
+  font-weight: bold;
+  margin-bottom: 2em;
+}
+
+  .site .title a {
+    color: #C60;
+    text-decoration: none;
+		font-size: 2.5em;
+  }
+
+  .site .title a.extra {
+    color: #aaa;
+    text-decoration: none;
+    margin-left: 1em;
+		font-size: 1.5em;
+  }
+
+  .site .title a.extra:hover {
+    text-decoration: underline;
+  }
+
+  .site .meta {
+    color: #aaa;
+  }
+
+  .site .footer {
+    font-size: 80%;
+    color: #666;
+    border-top: 4px solid #666;
+    margin-top: 1em;
+    overflow: hidden;
+  }
+
+    .site .footer .contact {
+      float: left;
+      margin-right: 3em;
+    }
+
+      .site .footer .contact a {
+        color: #8085C1;
+      }
+
+    .site .footer .rss {
+      margin-top: 1.1em;
+      margin-right: -.2em;
+      float: right;
+    }
+
+      .site .footer .rss img {
+        border: 0;
+      }
+
+/*****************************************************************************/
+/*
+/* Posts
+/*
+/*****************************************************************************/
+
+#post {
+
+}
+
+  /* standard */
+
+  #post ul,
+  #post ol {
+    margin-left: 1.35em;
+  }
+
+#related {
+  margin-top: 2em;
+}
+
+  #related h2 {
+    margin-bottom: 1em;
+  }
+
+.tag-cloud {
+	line-height: normal;
+	word-wrap: break-word;
+}
+
+	.tag-cloud a.tag {
+		color: #aaa;
+		padding: 1px 1px 1px 1px;
+		margin: 1px 1px 1px 1px;
+	}
+
+.date {
+	font-weight: bold;
+}
+
+/*****************************************************************************/
+/*
+/* Syntax customization (trying not to mess with the pygments dump)
+/*
+/*****************************************************************************/
+.highlight {
+  border-radius: 3px;
+	padding: 6px 10px;
+	margin: 4px 0px;
+	overflow: auto;
+	border: 1px solid black;
+	background-color: #222222;
+}
+
+.atom {
+	background-image: url('/images/atom.png');
+	/*background-position: -10px 0px;*/
+	background-repeat: no-repeat;
+	padding-left: 22px;
+}

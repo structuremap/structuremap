@@ -1,0 +1,41 @@
+---
+layout: default
+---
+<h1>{{ page.title }}</h1>
+<div id="post">
+<div class="date">
+	{{ page.date | date: "%a %B %d, %Y" }}
+</div>
+{{ content }}
+</div>
+
+<div id="related">
+	<p>
+		<b>tags</b>: 
+		{% for tag in page.categories %}
+			<a href="/blog/#tag/{{ tag }}">{{ tag}}</a> 
+		{% endfor %}
+	</p>
+	<p> <a href="/blog/atom.xml" class="atom">Subscribe via Atom</a> </p>
+	<p>
+		<div id="fb-root"></div>
+		<script>(function(d, s, id) {
+			var js, fjs = d.getElementsByTagName(s)[0];
+			if (d.getElementById(id)) return;
+			js = d.createElement(s); js.id = id;
+			js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=33100738421";
+			fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));</script>
+
+		<a href="https://twitter.com/share" class="twitter-share-button" data-via="kellogh">Tweet</a>
+		<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+		<div class="fb-like" data-send="false" data-layout="button_count" data-width="450" data-show-faces="true" data-colorscheme="dark"></div>
+	</p>
+  <h2>Related Posts</h2>
+  <ul class="posts">
+    {% for post in site.related_posts limit:6 %}
+      <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ post.url }}">{{ post.title }}</a></li>
+    {% endfor %}
+  </ul>
+</div>
