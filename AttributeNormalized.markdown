@@ -49,7 +49,7 @@ public class ColorRule : Rule
 an Instance node might look like:
 
 
-{% highlight csharp %}
+{% highlight xml %}
 <Instance Key="Red" Type="Color" Color="Red" />
 {% endhighlight %}
 
@@ -61,7 +61,7 @@ by setting the PluggedType attribute to the assembly qualified name of the
 concrete type.
 
 
-{% highlight csharp %}
+{% highlight xml %}
 <Instance Key="Red" PluggedType="StructureMap.Testing.Widget.Color, StructureMap.Testing.Widget" Color="Red" />
 {% endhighlight %}
 
@@ -97,7 +97,7 @@ public class ColorWidget : IWidget
 would be configured like this in the Xml:
 
 
-{% highlight csharp %}
+{% highlight xml %}
 <Widget Type="Color" Key="Red" Color="Red" />
 {% endhighlight %}
 
@@ -110,7 +110,7 @@ There is an optional mode to define a property value inside a CDATA tag for very
 long strings like sql statements or Javascript templates. 
 
 
-{% highlight csharp %}
+{% highlight xml %}
 <Instance Type="Sql" Key="SomeQuery">
   <bigProp>
      <![CDATA[
@@ -202,7 +202,7 @@ public class Child
 
 **Inline Definition**
 
-{% highlight csharp %}
+{% highlight xml %}
 <StructureMap.Testing.Widget.Child Type="Default" Key="Marsha" Name="Marsha">
     <MyGrandChild Key="Tommy"/>
 </StructureMap.Testing.Widget.Child>    
@@ -281,7 +281,7 @@ The delimiter of the list can be optionally overriden by using the Delimiter
 attribute.
 
 
-{% highlight csharp %}
+{% highlight xml %}
 <DefaultInstance
 	PluginType="StructureMap.Testing.Configuration.ClassWithStringAndIntArray, StructureMap.Testing"
 	PluggedType="StructureMap.Testing.Configuration.ClassWithStringAndIntArray, StructureMap.Testing">
