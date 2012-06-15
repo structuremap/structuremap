@@ -20,11 +20,23 @@ class Processor
 				write_p tag
 			elsif tag.name == 'h2' then
 				write_h2 tag
+			elsif tag.name == 'h4' then
+				write_bold tag
 			elsif tag.name == 'div' then
-				if tag.has_attribute? 'class' and tag.attributes['class'].value == 'code-sample' then
+				if is_code tag then
 					write_code tag
 				end
 			end
+		end
+	end
+
+	def is_code tag
+		if tag.has_attribute? 'class' and tag.attributes['class'].value == 'code-sample' then
+			true
+		elsif tag.has_attribute? 'style' and /.*font-family: Courier New;.*/ =~ tag.attributes['style'].value then
+			true
+		else
+			false
 		end
 	end
 
@@ -46,10 +58,18 @@ class Processor
 		end
 	end
 
+	def write_bold tag
+		@file.puts "**#{tag.inner_text}**"
+	end
+
 	def write_code(tag)
 		@file.puts ''
 		@file.puts '{% highlight csharp %}'
-		@file.puts create_newlines(tag)
+
+		tag.css('p,pre').each { |thing|
+			@file.puts thing.inner_text
+		}
+
 		@file.puts '{% endhighlight %}'
 		@file.puts ''
 	end

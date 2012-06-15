@@ -27,11 +27,31 @@ For a class called ColorRule,
 
 
 {% highlight csharp %}
-0
+[Pluggable("Color")]
+public class ColorRule : Rule
+{
+    private string _Color;
+    public string ID = Guid.NewGuid().ToString()
+	 
+    public ColorRule(string Color)
+    {
+        _Color = Color;
+    }
+					 
+    public string Color
+    {
+				get { return _Color; }
+    }
+}
 {% endhighlight %}
 
 
 an Instance node might look like:
+
+
+{% highlight csharp %}
+<Instance Key="Red" Type="Color" Color="Red" />
+{% endhighlight %}
 
 
 The "name" of an Instance is definied by the Key attribute.  The concrete    
@@ -39,6 +59,11 @@ type can be specified in one of two ways.  You can either use the "Type"
 attribute above to specify the aliased concrete type, or do it more explicitly  
 by setting the PluggedType attribute to the assembly qualified name of the    
 concrete type.
+
+
+{% highlight csharp %}
+<Instance Key="Red" PluggedType="StructureMap.Testing.Widget.Color, StructureMap.Testing.Widget" Color="Red" />
+{% endhighlight %}
 
 
 Primitive Properties (Strings and basic value types)
@@ -51,7 +76,29 @@ a string argument to the constructor,
 
 
 {% highlight csharp %}
-0
+[Pluggable("Color", "Only for testing")]    public class ColorWidget : IWidget
+{
+    public ColorWidget(string Color)
+    {
+        _Color = Color;
+    }
+}
+    
+public class ColorWidget : IWidget
+{
+    public ColorWidget(string Color)
+    {
+        _Color = Color;
+    }
+}
+{% endhighlight %}
+
+
+would be configured like this in the Xml:
+
+
+{% highlight csharp %}
+<Widget Type="Color" Key="Red" Color="Red" />
 {% endhighlight %}
 
 
@@ -63,12 +110,56 @@ There is an optional mode to define a property value inside a CDATA tag for very
 long strings like sql statements or Javascript templates. 
 
 
+{% highlight csharp %}
+<Instance Type="Sql" Key="SomeQuery">
+  <bigProp>
+     <![CDATA[
+       select * from table
+       where
+         somecolumn = 'something' or
+         some_other_column = 'something else'
+     ]]>
+   </bigProp>
+</Property>
+{% endhighlight %}
+
+
 Enumeration Properties
 =================================
 
 
 Enumeration arguments are defined the same way as primitive properties.  Use the
 string names of the enumeration for the values.
+
+
+{% highlight csharp %}
+public enum BreedEnum
+{
+    Hereford,
+    Angus,
+    Longhorn
+}
+ 
+[Pluggable("Cow")]
+public class Cow
+{
+    public BreedEnum Breed;
+    public long Weight;
+    public string Name;
+
+    public Cow(long Weight, BreedEnum Breed, string Name)
+    {
+        this.Breed = Breed;
+        this.Weight = Weight;
+        this.Name = Name;
+    }
+}
+{% endhighlight %}
+
+
+{% highlight xml %}
+<Instance Type="Cow" Key="Maggie" Breed="Angus" />
+{% endhighlight %}
 
 
 Dependency Properties
@@ -83,6 +174,41 @@ Simply add a child node to the main instance                         node with
 the name of the constructor argument or setter property name.
 
 
+{% highlight csharp %}
+[PluginFamily, Pluggable("Default", "")]
+public class GrandChild
+{
+    public GrandChild(bool RightHanded, int BirthYear)
+    {
+    }
+}
+ 
+[Pluggable("Leftie", "")]
+public class LeftieGrandChild : GrandChild
+{
+    public LeftieGrandChild(int BirthYear) : base(false, BirthYear)
+    {
+    }
+}
+ 
+[PluginFamily, Pluggable("Default", "")]
+public class Child
+{
+    public Child(string Name, GrandChild MyGrandChild)
+    {
+    }
+}
+{% endhighlight %}
+
+**Inline Definition**
+
+{% highlight csharp %}
+<StructureMap.Testing.Widget.Child Type="Default" Key="Marsha" Name="Marsha">
+    <MyGrandChild Key="Tommy"/>
+</StructureMap.Testing.Widget.Child>    
+{% endhighlight %}
+
+
 Non Primitive Array Property
 =================================
 
@@ -95,6 +221,32 @@ nodes are Attribute     Normalized InstanceMemento's and follow the same rules
 expressed in this     document.
 
 
+{% highlight csharp %}
+[Pluggable("Compound")]
+public class CompoundStrategy : IStrategy
+{
+    public CompoundStrategy(IStrategy[] innerStrategies)
+    {
+    }
+}
+{% endhighlight %}
+
+
+{% highlight xml %}
+<Instance Key="ArrayTest" Type="Compound">
+    <innerStrategies>
+        <!-- Referenced Instance -->
+        <Child Key="Red" />
+ 
+        <Child><!-- Default Instance --></Child>
+ 
+        <!-- Inline Definition -->
+        <Child Type="Random" seed="0.034"/>
+    </innerStrategies>
+</Instance>
+{% endhighlight %}
+
+
 Primitive Arrays
 =================================
 
@@ -103,11 +255,24 @@ Primitive arrays like string[] or int[] can be defined in Xml.  For a class
 with arguments like:
 
 
+{% highlight csharp %}
+public ClassWithStringAndIntArray(int[] numbers, string[] strings)
+{
+    _numbers = numbers;
+    _strings = strings;
+}
+{% endhighlight %}
+
+
 The Xml configuration is:
 
 
-{% highlight csharp %}
-0
+{% highlight xml %}
+<DefaultInstance PluginType="StructureMap.Testing.Configuration.ClassWithStringAndIntArray, StructureMap.Testing"
+  PluggedType="StructureMap.Testing.Configuration.ClassWithStringAndIntArray, StructureMap.Testing">
+    <numbers Values="1,2,3"/>
+    <strings Values="1,2,3"/>
+</DefaultInstance>
 {% endhighlight %}
 
 
@@ -117,7 +282,13 @@ attribute.
 
 
 {% highlight csharp %}
-0
+<DefaultInstance
+	PluginType="StructureMap.Testing.Configuration.ClassWithStringAndIntArray, StructureMap.Testing"
+	PluggedType="StructureMap.Testing.Configuration.ClassWithStringAndIntArray, StructureMap.Testing">
+ 
+    <numbers Values="1;2;3" Delimiter=";" />
+    <strings Values="1,2,3" />
+</DefaultInstance>
 {% endhighlight %}
 
 
@@ -125,17 +296,42 @@ Dictionaries and NameValueCollection
 =================================
 
 
-Any form of IDictionary<Key, Value> or a NameValueCollection can be configured
+Any form of `IDictionary<Key, Value>` or a NameValueCollection can be configured
 in     Xml by the following syntax.  Say you have a class that needs a
 Dictionary     of properties:
 
 
 {% highlight csharp %}
-0
+    public class ClassWithDictionary
+    {
+        private readonly IDictionary<string, string> _dictionary;
+         
+        public ClassWithDictionary(IDictionary<string, string> dictionary)
+        {
+            _dictionary = dictionary;
+        }
+         
+        public IDictionary<string, string> Dictionary
+        {
+             get { return _dictionary; }
+        }
+    }
 {% endhighlight %}
 
 
 The "dictionary" argument to the constructor function could be defined as:
+
+
+{% highlight xml %}
+<DefaultInstance
+		PluginType="StructureMap.Testing.Configuration.ClassWithDictionary, StructureMap.Testing"
+		PluggedType="StructureMap.Testing.Configuration.ClassWithDictionary, StructureMap.Testing">
+  <dictionary Key="color" Value="red"/>
+    <Pair Key="state" Value="texas"/>
+    <Pair Key="direction" Value="north"/>
+  </dictionary>
+</DefaultInstance>
+{% endhighlight %}
 
 
 Just create a new node for the IDictionary property called <[propertyName]>
