@@ -92,10 +92,20 @@ ul.posts {
 .site {
   font-size: 110%;
   text-align: left;
-  width: 40em;
+  width: 960px;
   margin: 3em auto 2em auto;
   line-height: 1.5em;
 }
+
+	.site .toc {
+		width: 208px;
+		float: left;
+	}
+
+	.site .content {
+		width: 752px;
+		float: right;
+	}
 
 .title {
   color: #a00;

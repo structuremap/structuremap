@@ -18,13 +18,20 @@
 				edit this page
 			</a>
 		</p>
-		{{ page.methods.sort.to_s }}
+		<div>
+			<div class="toc">
+				{% include toc.html %}
+			</div>
+			<div class="content">
+				{{ content }}
+			</div>
+		</div>
 
-		{{ content }}
+		<div style="clear: both;"></div>
 
 		<div class="footer">
 			<p>
-				&copy; Jeremy Miller, Tim Kellogg 2012
+				&copy; Jeremy Miller, Joshua Flanagan, Tim Kellogg {{ site.time | date: "%Y" }}
 			</p>
 		</div>
 	</div>
