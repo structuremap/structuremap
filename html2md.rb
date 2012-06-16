@@ -67,12 +67,16 @@ class Processor
 		@file.puts '{% highlight csharp %}'
 
 		tag.css('p,pre').each { |thing|
-			@file.puts thing.inner_text
+			@file.puts strip_trailing_space(thing.inner_text)
 		}
 
 		@file.puts '{% endhighlight %}'
 		@file.puts ''
 	end
+
+  def strip_trailing_space(line)
+    line.gsub /\w+$/, ''
+  end
 
 	def create_newlines(tag)
 		tag.children.each do |child|

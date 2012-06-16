@@ -76,7 +76,8 @@ a string argument to the constructor,
 
 
 {% highlight csharp %}
-[Pluggable("Color", "Only for testing")]    public class ColorWidget : IWidget
+[Pluggable("Color", "Only for testing")]    
+public class ColorWidget : IWidget
 {
     public ColorWidget(string Color)
     {
@@ -251,7 +252,7 @@ Primitive Arrays
 =================================
 
 
-Primitive arrays like string[] or int[] can be defined in Xml.  For a class     
+Primitive arrays like `string[]` or `int[]` can be defined in Xml.  For a class     
 with arguments like:
 
 
@@ -334,7 +335,7 @@ The "dictionary" argument to the constructor function could be defined as:
 {% endhighlight %}
 
 
-Just create a new node for the IDictionary property called <[propertyName]>
-under     the main instance node.  Then add a <Pair Key="key" Value="value"/>
+Just create a new node for the IDictionary property called `<[propertyName]>`
+under     the main instance node.  Then add a `<Pair Key="key" Value="value"/>`
 node     for each name/value pair in the IDictionary.
 
