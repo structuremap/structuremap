@@ -2,28 +2,29 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-	<title>{{ page.title }} - Tim Kellogg</title>
-	<meta name="author" content="Tim Kellogg" />
+	<title>{{ page.title }} - StructureMap</title>
 	<link rel="stylesheet" href="/css/screen.css" type="text/css"/>
 	<link rel="stylesheet" href="/css/syntax.css" type="text/css"/>
 </head>
 <body>
 	<div class="site">
 		<div class="title">
-			<a href="/">Tim Kellogg</a>
-			<a class="extra" href="/blog/">blog</a>
-			<a class="extra" href="/projects/">projects</a>
-			<a class="extra" href="/contact/">find me...</a>
+			<a href="/">StructureMap</a>
 		</div>
 		<p class="notice">
-			Help me understand open source contributions by <a href="http://kwiksurveys.com?s=MKKONI_7b0e5f37">answering these 4 questions</a>
+			Help us by 
+			<a href="/write-documentation.hml">writing documentation</a>,
+			<a href="https://github.com/structuremap/structuremap/blob/gh-pages/_posts/{{page.date | date: "%Y-%m-%d"}}-{{ page.id | remove_first: "/" }}.markdown">
+				edit this page
+			</a>
 		</p>
+		{{ page.methods.sort.to_s }}
 
 		{{ content }}
 
 		<div class="footer">
 			<p>
-				&copy; Tim Kellogg 2012
+				&copy; Jeremy Miller, Tim Kellogg 2012
 			</p>
 		</div>
 	</div>

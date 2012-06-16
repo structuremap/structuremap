@@ -1,2 +1,2 @@
 source: .
-permalink: /blog/:year/:month/:day/:title
+permalink: /:title

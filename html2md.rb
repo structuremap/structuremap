@@ -148,7 +148,7 @@ end
 @document = Nokogiri::HTML(File.open(ARGV[0]))
 
 outfile = File.basename(ARGV[0], '.*')
-File.open "#{outfile}.markdown", 'w' do |file|
+File.open "_posts/#{Time.new.strftime('%Y-%m-%d')}-#{outfile}.markdown", 'w' do |file|
 	file.puts '---'
 	file.puts "title: #{@document.css('title').first.content}"
 	file.puts 'layout: default'
