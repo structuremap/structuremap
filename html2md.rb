@@ -34,7 +34,7 @@ class Processor
 				if is_code tag then
 					write_code tag
 				end
-			elsif tag.name == 'ol' then
+			elsif tag.name == 'ul' or tag.name == 'ol' then
 				write_list tag
 			end
 		end
@@ -52,13 +52,52 @@ class Processor
 
 	def write_p(tag)
 		tag = expand_links tag
+		tag = recover_formatting tag
 		tag = tag.content if tag.respond_to? 'content'
 		return unless tag
+
+		tag = codify_things_that_look_like_code tag
 
 		@file.puts ''
 		@file.puts clean(tag)
 		yield if block_given?
 		@file.puts ''
+	end
+
+	def recover_formatting(tag)
+		return tag unless tag.respond_to? 'xpath'
+
+		tag.xpath('//b').each do |b| 
+			b.replace @document.create_text_node("**#{b.inner_text}**")
+		end
+
+		tag.xpath('//i').each do |i| 
+			b.replace @document.create_text_node("*#{i.inner_text}*")
+		end
+
+		tag
+	end
+
+	def codify_things_that_look_like_code(text)
+		# If it has an uppercase letter in the middle of the word, unless it's not code
+		text.gsub /\w+[A-Z]\w*(<.*?>)?|\w+\(.*?\)/ do |match|
+			if code_in_paragraph? match.to_s then
+				"`#{match}`" 
+			else
+				match
+			end
+		end
+	end
+
+	def code_in_paragraph?(text)
+		not_code = ['StructureMap', 'IoC', 'StructueMap', 'NHibernate']
+
+		# checking that it's not special, and isn't all caps
+		unless not_code.include? text or text.to_s =~ /^[A-Z]+$/ then
+			true
+		else
+			false
+		end
 	end
 
 	def expand_links(tag)
@@ -115,8 +154,14 @@ class Processor
   end
 
 	def write_list(tag)
+		if tag.name == 'ul' then
+			bullet = '*'
+		else
+			bullet = '1.'
+		end
+
 		tag.xpath('li').each do |li|
-			@file.puts "* #{wrap li.inner_text}"
+			@file.puts "#{bullet} #{wrap li.inner_text}"
 		end
 	end
 

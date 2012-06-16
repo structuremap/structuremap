@@ -1,0 +1,257 @@
+---
+title: Software Design Concepts
+layout: default
+---
+
+Before you jump into using StructueMap in anger, there are some design concepts
+that can help you get the most out of an IoC tool.  This web page is strictly
+about conceptual design fundamentals, and not particularly specific to
+StructureMap itself.  I think this stuff is important to real world
+development.  You might not memorize the "Liskov Substitution Principle" text,
+but you're code will be better for following its intent -- even if you don't
+particulary know the exact term for LSP.  When you read this section, please
+focus on the concepts and any class's role within a system rather than get
+caught up in coding details like "why is he using an `AddressController` instead
+of that being part of another class?"
+
+
+  
+
+
+ Design Concepts
+---------------------------------
+
+
+Over the years a series of concepts and principles have been discovered and
+developed to describe well-structured Object Oriented systems.  To most
+effectively use StructureMap, or any other IoC tool for that matter, your system
+needs to be designed with these principles first:
+
+* [Separation of Concerns](http://en.wikipedia.org/wiki/Separation_of_concerns)
+* [Open Closed Principle, the Single Responsibility Principle, and the Liskov
+Substitution Principle](http://msdn.microsoft.com/en-us/magazine/cc546578.aspx)
+* [ Responsibilities, Cohesion, and
+Coupling](http://codebetter.com/blogs/jeremy.miller/pages/129542.aspx)
+* [ Orthogonal
+Code](http://codebetter.com/blogs/jeremy.miller/archive/2007/01/08/Orthogonal-Code.aspx)
+* [ Dependency Inversion
+Principle](http://codebetter.com/blogs/jeremy.miller/pages/129543.aspx)
+* [ Favor Composition over
+Inheritance](http://www.artima.com/lejava/articles/designprinciples4.html)
+
+To sum it all up, well designed Object Oriented systems are **composed** of
+many objects that work with each other to accomplish to goals of the system.  We
+want our systems to be decomposed into cohesive classes that perform a well
+defined responsibility within the system, rather than monolithic “God” classes
+that do too much.  A cohesive class will have to be dependent upon other classes
+to perform services outside of its own tightly defined responsibility.  In IoC
+speak, we call the collaborating objects **dependencies**. 
+
+
+ Dependencies
+---------------------------------
+
+
+For example, in my current system we have a class called
+`AddressEditController` that governs the creation and editing of Address
+entities in our web based UI.  The `AddressEditController` needs to validate
+user input and persist or load data.  Those are two distinct responsibilities,
+so `AddressEditController` has dependencies on other objects for these
+services. 
+
+{% highlight csharp %}
+public class AddressEditController : Controller
+{
+    // AddressEditController uses IValidator to validate user input
+    // and IRepository to load and save Address information
+    private readonly IValidator _validator;
+    private IRepository _repository;
+}
+{% endhighlight %}
+
+So here’s some facts about `AddressEditController`:
+
+* AddressEditController depends on IValidator and IRepository  
+* AddressEditController cannot function unless it has both an IValidator and an
+IRepository
+* From the concepts section above, for best results, the AddressEditController
+should be loosely coupled to its dependencies by knowing as little about the
+inner workings of the real IValidator and IRepository
+* The real IRepository is a Gateway into NHibernate. The concrete Repository class
+cannot be used without its own dependency trail of external configuration, a
+Singleton to keep track of an expensive resource, and some NHibernate
+bootstrapping code. 
+
+Just calling a `new()` constructor on its dependencies isn’t the best design
+for our `AddressEditController`.  Creating a concrete Validator class is very
+possible, but what if we want to selectively replace the implementation of
+`IValidator` later?  That’s only somewhat likely, but the dependency on
+Repository is a much larger concern.  I might have semantic decoupling between
+`AddressEditController` and Repository, but if `AddressEditController` calls new
+`Repository()` itself, `AddressEditController` will not be able to function
+without all that NHibernate bootstrapping.  I do not want a piece of my user
+interface to be tightly coupled to the existence of the persistence layer. 
+
+
+In other scenarios, creating the dependencies may involve more than just
+calling `new()` on the dependencies (don’t believe me?  Go try to create an
+`HttpContext` object).
+
+
+`AddressEditController` is responsible for the workflow around editing Address
+entities in the UI.  It shouldn’t be concerned with NHibernate configuration and
+whatnot.  One way to solve this problem is to move the responsibility for
+building its dependencies to somewhere external to `AddressEditController`. 
+
+
+ Inversion of Control and Dependency Injection
+---------------------------------
+
+
+In many cases, I don’t want my classes to have to be aware of how their
+dependencies are created or located.  I don’t want controller classes to even
+care that they’re using an object that is created via Microsoft’s Provider
+infrastructure, or a Singleton, or needs configuration data.  My class should
+only know the public interfaces of its dependencies.  I can make that true by
+applying “[Inversion of
+Control](http://codebetter.com/blogs/jeremy.miller/archive/2005/09/20/132290.aspx).” 
+Instead of doing:
+
+{% highlight csharp %}
+public AddressEditController()
+{
+    _validator = new Validator();
+    _repository = new Repository();
+}
+{% endhighlight %}
+
+
+where `AddressEditController` calls linearly through to the constructors on
+Validator and Repository, we can invert the control to make the creator of
+`AddressEditController` responsible for building the dependencies and “pushing”
+them into `AddressEditController`. 
+
+{% highlight csharp %}
+public class AddressEditController : Controller
+{
+    private readonly IValidator _validator;
+    private IRepository _repository;
+
+    public AddressEditController(IValidator validator, IRepository repository)
+    {
+        _validator = validator;
+        _repository = repository;
+    }
+}
+{% endhighlight %}
+
+The code sample above uses a form of Inversion of Control called [ Dependency
+Injection](http://codebetter.com/blogs/jeremy.miller/archive/2005/10/06/132825.aspx)
+to push in the dependencies via a constructor function.  Of course, at some
+point, something needs to know how to create the entire chain of dependencies
+and do all of that Dependency Injection.  StructureMap supports a pattern known
+as [ Service
+Locator](http://martinfowler.com/articles/injection.html#`UsingAServiceLocator`):
+
+{% highlight csharp %}
+public class AddressEditController : Controller
+{
+    private readonly IValidator _validator;
+    private IRepository _repository;
+
+    public AddressEditController(IValidator validator, IRepository repository)
+    {
+        _validator = validator;
+        _repository = repository;
+    }
+}
+{% endhighlight %}
+
+`ObjectFactory` is a StructureMap class that serves as a well known place to go
+and find any service that you need.  When the `AddressEditController` is created
+and returned by `ObjectFactory`, it should be completely ready to go.  There’s
+another important concept to understand before you use StructureMap. 
+
+
+ Auto Wiring
+---------------------------------
+
+
+Every "real" IoC container supports the concept of "Auto Wiring."  Auto Wiring
+simply means that StructureMap can figure out dependency chains for you without
+a lot of explicit configuration.  When you ask for `AddressEditController`,
+there is more going on than just `AddressEditController` and its two
+dependencies.  The Repository class itself has its own dependencies.
+
+{% highlight csharp %}
+[DefaultConstructor]
+public Repository(ISessionSource source) : this(source.CreateSession())
+{
+
+}
+{% endhighlight %}
+
+In turn, the concrete version of `ISessionSource` above has **its** own
+dependencies:
+
+{% highlight csharp %}
+public SessionSource(IDictionary<string, string> properties, PersistenceModel model)
+{
+    _configuration = new Configuration();
+    _configuration.AddProperties(properties);
+
+    model.Configure(_configuration);
+
+    _sessionFactory = _configuration.BuildSessionFactory();
+}
+{% endhighlight %}
+
+which starts to get interesting because `SessionSource` needs some information
+like connection strings that have to come in from Xml configuration: 
+
+{% highlight xml %}
+<StructureMap MementoStyle="Attribute">
+  <DefaultInstance
+    PluginType="ShadeTree.DomainModel.ISessionSource,ShadeTree.DomainModel"
+    PluggedType="ShadeTree.DomainModel.SessionSource,ShadeTree.DomainModel">
+    <properties>
+      <Pair Key="connection.provider" Value="NHibernate.Connection.DriverConnectionProvider" />
+      <Pair Key="connection.driver_class" Value="NHibernate.Driver.SqlClientDriver" />
+      <Pair Key="dialect" Value="NHibernate.Dialect.MsSql2000Dialect" />
+      <Pair Key="hibernate.dialect" Value="NHibernate.Dialect.MsSql2000Dialect" />
+      <Pair Key="use_outer_join" Value="true" />
+      <Pair Key="connection.connection_string" Value="a connection string that I’m certainly not giving out to you!" />
+      <Pair Key="show_sql" Value="true" />
+    </properties>
+  </DefaultInstance>
+</StructureMap>
+{% endhighlight %}
+
+Here’s some of the configuration for the other services that the entire
+`EditAddressController` needs:
+
+{% highlight csharp %}
+ForRequestedType<IValidator>().TheDefaultIsConcreteType<Validator>();
+ForRequestedType<IRepository>().TheDefaultIsConcreteType<Repository>().CacheBy(InstanceScope.Hybrid);
+ForRequestedType<PersistenceModel>().TheDefaultIsConcreteType<DovetailPersistenceModel>();
+{% endhighlight %}
+
+At no point did I specify that `EditAddressController` needs an `IRepository`
+that needs an `ISessionSource` that needs 2-3 other things, but yet when I call:
+
+{% highlight csharp %}
+// Creates an AddressEditController with all of its dependencies
+AddressEditController controller = ObjectFactory.GetInstance<AddressEditController>();
+{% endhighlight %}
+
+StructureMap will construct `EditAddressController` that had a new instance of
+Repository that had a new instance of `SessionSource` that had an
+`IDictionary<string, string>` object and a new instance of
+`DovetailPersistenceModel`.  I don’t have to explicitly tell StructureMap to do
+that for me because it uses its “Auto Wiring” feature to examine the
+dependencies of each concrete class and act accordingly.  StructureMap does need
+to know what to do with each type of object it encounters.  When it tries to
+build the Repository class StructureMap sees the constructor argument for
+`ISessionSource` on Repository, and knows to build and inject a new
+`SessionSource` object (and so on as deep as you need to go).
+
