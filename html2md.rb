@@ -18,14 +18,24 @@ class Processor
 		body.children.each do |tag|
 			if tag.name == 'p' then
 				write_p tag
+			elsif tag.name == 'h1' then
+				write_h1 tag
 			elsif tag.name == 'h2' then
 				write_h2 tag
+			elsif tag.name == 'h3' then
+				write_header tag, 3
 			elsif tag.name == 'h4' then
-				write_bold tag
-			elsif tag.name == 'div' then
+				write_header tag, 4
+			elsif tag.name == 'h5' then
+				write_header tag, 5
+			elsif tag.name == 'h6' then
+				write_header tag, 6
+			elsif tag.name == 'div' or tag.name == 'code' then
 				if is_code tag then
 					write_code tag
 				end
+			elsif tag.name == 'ol' then
+				write_list tag
 			end
 		end
 	end
@@ -41,13 +51,30 @@ class Processor
 	end
 
 	def write_p(tag)
+		tag = expand_links tag
+		tag = tag.content if tag.respond_to? 'content'
+		return unless tag
+
 		@file.puts ''
-		@file.puts clean(tag.content)
+		@file.puts clean(tag)
 		yield if block_given?
 		@file.puts ''
 	end
 
+	def expand_links(tag)
+		if tag.respond_to? 'xpath' then
+			tag.xpath('//a').each do |a|
+				inner_text = unwrap a.inner_text
+				text = "[#{inner_text}](#{a['href']})"
+				a.replace @document.create_text_node(text)
+			end
+		end
+		tag
+	end
+
 	def clean(text)
+		# I was seeing some places where <T> was being falsely interpreted as HTML
+		# this is a bit naive but it works. Fix it by hand if it's really GetInstance<T>
 		text.gsub! /<\w*>/, '`\&`'
 		wrap text
 	end
@@ -58,25 +85,40 @@ class Processor
 		end
 	end
 
-	def write_bold tag
-		@file.puts "**#{tag.inner_text}**"
+	def write_h2(tag)
+		write_p tag do
+			@file.puts '---------------------------------'
+		end
+	end
+
+	def write_header tag, size
+		write_p "#{'#' * size} #{tag.inner_text}"
 	end
 
 	def write_code(tag)
 		@file.puts ''
 		@file.puts '{% highlight csharp %}'
 
-		tag.css('p,pre').each { |thing|
-			@file.puts strip_trailing_space(thing.inner_text)
-		}
+		tag.css('p,pre').each do |thing|
+			text = thing.inner_text
+			text = unwrap text if thing.name == 'p'
+			text = strip_insignificant_space(text)
+			@file.puts text
+		end
 
 		@file.puts '{% endhighlight %}'
 		@file.puts ''
 	end
 
-  def strip_trailing_space(line)
-    line.gsub /\w+$/, ''
+  def strip_insignificant_space(line)
+    line.gsub /(^\s*\w.*?)\s\s+$/, '\1'
   end
+
+	def write_list(tag)
+		tag.xpath('li').each do |li|
+			@file.puts "* #{wrap li.inner_text}"
+		end
+	end
 
 	def create_newlines(tag)
 		tag.children.each do |child|
@@ -91,10 +133,15 @@ class Processor
 
 	def unwrap(text)
 		unwrapped = text.gsub /(\r?\n|\t|(?=< ) *)/, ''
+		unwrapped.gsub(/ +/, ' ')
 	end
 
 	def wrap(text)
 		word_wrap unwrap(text)
+	end
+
+	def document=(doc)
+		@document = doc
 	end
 end
 
@@ -107,5 +154,6 @@ File.open "#{outfile}.markdown", 'w' do |file|
 	file.puts 'layout: default'
 	file.puts '---'
 	p = Processor.new file
+	p.document = @document
 	p.process_body @document.css('body').first
 end
