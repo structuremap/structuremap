@@ -53,5 +53,26 @@ converting the old HTML to markdown.
 7. `git push` - this pushes to your fork of structuremap
 8. Use github's website to send a pull request. I'll accept it soon
 
+Prerequisites
+-------------
+
+You'll probably want to see what everything looks like locally before committing, so here are the steps to
+setup your environment.
+
+1. Install Ruby (I use version 1.9.3)
+2. Run `gem install jekyll nokogiri rails` to install dependencies
+3. Install Python
+4. run `easy_install Pygments`
+
+Pygments is the syntax highlighting engine that Jekyll uses to highlight our code samples. Since we have a
+lot of code samples, this is an important part of your environment.
+
+Rails isn't an important part of the environment. I use a single method out of ActionViews to wrap text in
+my conversion script. If you're not using the conversion script, this isn't important.
+
+Nokogiri is for the convertion script also. It's the most amazing HTML parser ever! It lets you navigate
+the DOM using CSS or XPATH and pull `inner_text` or `inner_html` from nodes. It's indispensible to the 
+conversion script. I really wish .NET had something like this.
+
 
  [1]: http://daringfireball.net/projects/markdown/syntax
