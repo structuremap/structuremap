@@ -1,0 +1,196 @@
+---
+title: Using Open Generic Types
+layout: default
+---
+
+StructureMap directly supports [open generic types](http://msdn.microsoft.com/en-us/library/ms172334.aspx)\*. 
+This is most easily explained by a demonstration.  I'm currently working on an MVC
+application that uses a lot of semi-RESTful services that return Json.  These
+Json service methods are implemented by methods on a Controller class that by
+convention, all return a single object:
+
+{% highlight csharp %}
+public class FindAddressController
+{
+    public Address FindAddress(long id){}
+    public Continuation WhatShouldTheUserDoNext() {}
+}
+{% endhighlight %}
+
+When these methods are executed in our MVC applications, the output objects
+(Address or Continuation) are serialized to Json by other code and sent down to
+the client.  It's worked out well, but there's one little wrinkle from the code
+above that we stumbled upon:
+
+
+1. Continuation is basically a dumb [Data Transfer
+  Object](http://martinfowler.com/eaaCatalog/dataTransferObject.html) class that's
+  perfectly suited for being Json serialized and consumed by JavaScript on the
+  client
+2. Address is an Entity class in our [Domain
+  Model](http://c2.com/cgi/wiki?DomainModel), and very poorly suited to Json
+  serialization.  Besides the fact that we probably wouldn't want the shape of our
+  Domain Model classes to be coupled to the client JavaScript, the Entity classes
+  are jagged, have lots of lazy loaded members, and contain a fair amount of data
+  we may not want to send down to the client (plus the Json serialization does
+  poorly with bidirectional dependencies).  Direct Json serialization is out.
+
+What we needed to do was convert the Entity objects (and any other object that
+wasn't suited to Json serialization and client usage) into a UI-friendly Data
+Transfer Object.  Other objects like Continuation that were already Json
+friendly, we could just use as is.  The solution we came up with was the
+`ObjectFlattener`:
+
+
+{% highlight csharp %}
+public class ObjectFlattener
+{
+    private readonly IContainer _container;
+
+    // You can inject the IContainer itself into an object by the way...
+    public ObjectFlattener(IContainer container)
+    {
+        _container = container;
+    }
+
+    // This method can "flatten" any object
+    public object Flatten(object input)
+    {
+        var flattener = _container.ForGenericType(typeof (IFlattener<>))
+            .WithParameters(input.GetType())
+            .GetInstanceAs<IFlattener>();
+  
+        return flattener.ToDto(input);
+    }
+}
+{% endhighlight %}
+
+
+The `ObjectFlattener` can take in any object, select a strategy for "flattening"
+that object into something Json friendly, and return the Json friendly object. 
+`ObjectFlattener` is dirt simple.  It simply finds the correct `IFlattener` for
+the object type passed into the `Flatten(object)` method:
+
+
+{% highlight csharp %}
+public interface IFlattener
+{
+    object ToDto(object input);
+}
+{% endhighlight %}
+
+`ObjectFlattener` needs to find the corrent `IFlattener` for the object Type
+passed in, so it's really looking for the type:
+
+{% highlight csharp %}
+public interface IFlattener<T> : IFlattener
+{
+}
+{% endhighlight %}
+
+Where `T` is the type of object passed into the `ToDto(object)` method.  When an
+Address object is passed into `ToDto()`, `ObjectFlattener` finds the default
+instance of `IFlattener<Address>`.  The
+`ForGenericType().WithParameters().GetInstanceAs<T>()` syntax is a
+helper expression to create and request a closed generic type from an open
+generic template and the appropriate generic parameter types.
+
+
+Now, we said that many objects like Continuation in our system are DTO's to
+begin with and don't need to be "flattened."  For those objects, we use a
+"Nullo" implementation of `IFlattener` that just returns the object passed in
+without any transformation:
+
+
+{% highlight csharp %}
+public class PassthroughFlattener<T> : IFlattener<T>
+{
+    public object ToDto(object input)
+    {
+        return input;
+    }
+}
+{% endhighlight %}
+
+
+The Address class needs some transformation, so we'll create an
+`AddressFlattener` class:
+
+
+{% highlight csharp %}
+public class AddressFlattener : IFlattener<Address>
+{
+    public object ToDto(object input)
+    {
+        var dto = createDTO((Address) input);
+        return dto;
+    }
+
+    private object createDTO(Address input)
+    {
+        // creates the AddressDTO object from the 
+        // Address object passed in
+    }
+}
+{% endhighlight %}
+
+
+Great, but now let's move on to registering these classes with a Container. 
+This unit test fixture from the code illustrates this very scenario:
+
+
+{% highlight csharp %}
+[SetUp]
+public void SetUp()
+{
+    container = new Container(x =>
+    {
+        // Define the basic open type for IFlattener<>
+        x.ForRequestedType(typeof (IFlattener<>)).TheDefaultIsConcreteType(typeof (PassthroughFlattener<>));
+
+        // Explicitly Register a specific closed type for Address
+        x.ForRequestedType<IFlattener<Address>>().TheDefaultIsConcreteType<AddressFlattener>();
+    });
+}
+{% endhighlight %}
+
+
+In the code above we registered a specific concrete type for
+`IFlattener<Address>`, and the open generic type `PassthroughFlattener<T>`
+for requests to `IFlattener<T>`.  When we request an instance of
+`IFlattener<Address>`, StructureMap behaves as expected and returns a
+`AddressFlattener` object:
+
+
+{% highlight csharp %}
+[Test]
+public void asking_for_a_closed_type_that_is_explicitly_registered_returns_the_explicitly_defined_type()
+{
+    container.GetInstance<IFlattener<Address>>()
+        .ShouldBeOfType<AddressFlattener>();
+}
+{% endhighlight %}
+
+
+Now, we'll ask for an instance of `IFlattener<Continuation>`.  You'll notice
+that we didn't explicitly register that specific type.  When the Container gets
+the request for `IFlattener<Continuation>`, it first looks to see if it
+already knows how to build that specific type.  In this case the Container
+doesn't already know about `IFlattener<Continuation>`, but it does know about
+the open type `IFlattener<T>` template, so it can use that configuration to
+create the closed type `IFlattener<Continuation>`:
+
+
+{% highlight csharp %}
+[Test]
+public void asking_for_a_closed_type_that_is_not_explicitly_registered_will_close_the_open_type_template()
+{
+    container.GetInstance<IFlattener<Continuation>>()
+        .ShouldBeOfType<PassthroughFlattener<Continuation>>();
+}
+{% endhighlight %}
+
+\* Anytime I read one of those "look I'm so clever I can write my own IoC
+container in 50 lines of code" blog posts, my immediate response is "oh yeah,
+can you handle open generic types smart guy?"
+
