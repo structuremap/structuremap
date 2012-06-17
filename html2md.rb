@@ -90,7 +90,7 @@ class Processor
 	end
 
 	def code_in_paragraph?(text)
-		not_code = ['StructureMap', 'IoC', 'StructueMap', 'NHibernate']
+		not_code = ['StructureMap', 'IoC', 'StructueMap', 'NHibernate', 'WinForms']
 
 		# checking that it's not special, and isn't all caps
 		unless not_code.include? text or text.to_s =~ /^[A-Z]+$/ then
