@@ -154,14 +154,25 @@ class Processor
   end
 
 	def write_list(tag)
+		write_deep_list(tag, 0)
+	end
+
+	def write_deep_list(tag, depth)
+		indent = '  ' * depth
+
 		if tag.name == 'ul' then
-			bullet = '*'
+			bullet = "#{indent}*"
 		else
-			bullet = '1.'
+			bullet = "#{indent}1."
 		end
 
 		tag.xpath('li').each do |li|
+			@file.puts
 			@file.puts "#{bullet} #{wrap li.inner_text}"
+
+			li.css('ul,ol').each do |ul| 
+				write_deep_list(ul, depth + 1) 
+			end
 		end
 	end
 
