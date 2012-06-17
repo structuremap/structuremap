@@ -80,7 +80,7 @@ class Processor
 
 	def codify_things_that_look_like_code(text)
 		# If it has an uppercase letter in the middle of the word, unless it's not code
-		text.gsub /\w+[A-Z]\w*(<.*?>)?|\w+\(.*?\)/ do |match|
+		text.gsub /[\w.]+\(.*?\)|\w+[A-Z]\w*(<.*?>)?(\(.*?\))?/ do |match|
 			if code_in_paragraph? match.to_s then
 				"`#{match}`" 
 			else
