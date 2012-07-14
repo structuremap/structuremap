@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 using StructureMap.AutoFactory;
 
@@ -97,6 +99,53 @@ namespace StructureMap.Testing.AutoFactories
             component.ShouldNotBeNull();
             component.ShouldBeOfType<MessageHandler>();
         }
+
+        [Test]
+        public void It_can_name_instances_deep_in_the_object_graph()
+        {
+            container.Configure(cfg => cfg.For<IDummyFactory>().CreateFactory());
+
+            var factory = container.GetInstance<IDummyFactory>();
+
+            var message = new Message();
+            var zombie = factory.CreateZombieService(message);
+
+            zombie.MessageHandler.Message.ShouldBeTheSameAs(message);
+        }
+
+        [Test]
+        public void It_can_name_instances()
+        {
+            container.Configure(cfg => cfg.For<IDummyFactory>().CreateFactory());
+
+            var factory = container.GetInstance<IDummyFactory>();
+
+            var message = new Message();
+            var zombie = factory.CreateZombieMessageHandler(message);
+
+            zombie.Message.ShouldBeTheSameAs(message);
+        }
+
+        [Test]
+        public void It_can_name_instances_when_we_get_an_IEnumerable()
+        {
+            container.Configure(cfg =>
+                {
+                    cfg.For<IDummyFactory>().CreateFactory();
+                    cfg.For<ZombieMessageHandler>().Use<ZombieMessageHandler>();
+                });
+
+            var factory = container.GetInstance<IDummyFactory>();
+
+            var message = new Message();
+            var zombies = factory.CreateZombieMessageHandlers(message);
+
+            zombies.Count().ShouldEqual(1);
+            foreach (var zomby in zombies)
+            {
+                zomby.Message.ShouldBeTheSameAs(message);
+            }
+        }
     }
 
     public interface IHandler<T>
@@ -111,6 +160,26 @@ namespace StructureMap.Testing.AutoFactories
         public void Handle(Message thing)
         {
             
+        }
+    }
+
+    public class ZombieMessageHandler
+    {
+        public readonly Message Message;
+
+        public ZombieMessageHandler(Message thing)
+        {
+            Message = thing;
+        }
+    }
+
+    public class ZombieService
+    {
+        public readonly ZombieMessageHandler MessageHandler;
+
+        public ZombieService(ZombieMessageHandler messageHandler)
+        {
+            MessageHandler = messageHandler;
         }
     }
 
@@ -130,5 +199,8 @@ namespace StructureMap.Testing.AutoFactories
         TService CreateService<TService>();
         IHandler<TMessage> CreateHandler<TMessage>();
         object CreateService(Type pluginType);
+        ZombieMessageHandler CreateZombieMessageHandler(Message thing);
+        IEnumerable<ZombieMessageHandler> CreateZombieMessageHandlers(Message thing);
+        ZombieService CreateZombieService(Message thing);
     }
 }

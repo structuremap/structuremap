@@ -23,53 +23,51 @@ namespace StructureMap.AutoFactory
 
         public void Intercept(IInvocation invocation)
         {
-            Type pluginType;
-
-            int remainingArguments = invocation.Arguments.Length;
-            if ((invocation.Arguments.Length > 0) && (invocation.Arguments[0] is Type))
-            {
-                pluginType = (Type) invocation.Arguments[0];
-                remainingArguments--;
-            }
-            else
-            {
-                pluginType = invocation.Method.ReturnType;                
-            }
+            int remainingArguments;
+            var pluginType = DetermineReturnType(invocation, out remainingArguments);
 
             var returnValue = GetReturnValue(invocation, pluginType, remainingArguments);
             invocation.ReturnValue = returnValue;
         }
 
+        private static Type DetermineReturnType(IInvocation invocation, out int remainingArguments)
+        {
+            remainingArguments = invocation.Arguments.Length;
+            if ((invocation.Arguments.Length > 0) && (invocation.Arguments[0] is Type))
+            {
+                remainingArguments--;
+                return (Type) invocation.Arguments[0];
+            }
+
+            return invocation.Method.ReturnType;
+        }
+
         private object GetReturnValue(IInvocation invocation, Type pluginType, int remainingArguments)
         {
-            object returnValue;
             if (remainingArguments > 0)
             {
                 var i = invocation.Arguments.Length - remainingArguments;
-                returnValue = GetReturnValueForMultipleArguments(invocation, pluginType, i, Container);
+                return GetReturnValueForMultipleArguments(invocation, pluginType, i, Container);
             }
-            else
-                returnValue = DoServiceLocator(pluginType, _context.GetInstance, t => Container.GetAllInstances(t));
-            
-            return returnValue;
+
+            return DoServiceLocator(pluginType, _context.GetInstance, t => Container.GetAllInstances(t));
         }
 
         private static object GetReturnValueForMultipleArguments(IInvocation invocation, Type pluginType, int i,
                                                                  IContainer container)
         {
             var parameters = invocation.Method.GetParameters();
-            var name = parameters[i].Name;
-            var value = invocation.Arguments[i];
-            var expr = container.With(name).EqualTo(value);
+            var childContainer = container.GetNestedContainer();
+            childContainer.Configure(conf =>
+                {
+                    for (int k = i; k < invocation.Arguments.Length; k++)
+                    {
+                        conf.For(parameters[k].ParameterType).Use(invocation.Arguments[k])
+                            .Named(parameters[k].Name);
+                    }
+                });
 
-            for (int k = i + 1; k < invocation.Arguments.Length; k++)
-            {
-                name = parameters[k].Name;
-                value = invocation.Arguments[k];
-                expr = expr.With(name).EqualTo(value);
-            }
-
-            return DoServiceLocator(pluginType, expr.GetInstance, expr.GetAllInstances);
+            return DoServiceLocator(pluginType, childContainer.GetInstance, childContainer.GetAllInstances);
         }
 
         private static object DoServiceLocator(Type pluginType, Func<Type, object> singleLocator, Func<Type, object> multipleLocator)
