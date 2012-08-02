@@ -74,6 +74,9 @@
     <Compile Include="AutoMocker.cs" />
     <Compile Include="MoqAutoMocker.cs" />
     <Compile Include="MoqFactory.cs" />
+    <Compile Include="NSubstituteAutoMocker.cs" />
+    <Compile Include="NSubstituteFactory.cs" />
+    <Compile Include="NSubstituteServiceLocator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RhinoAutoMocker.cs" />
     <Compile Include="RhinoMockRepositoryProxy.cs" />
