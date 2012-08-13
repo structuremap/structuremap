@@ -1,0 +1,544 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{63C2742D-B6E2-484F-AFDB-346873075C5E}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>
+    </ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>StructureMap.Testing</AssemblyName>
+    <AssemblyOriginatorKeyFile>..\structuremap.snk</AssemblyOriginatorKeyFile>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>Library</OutputType>
+    <RootNamespace>StructureMap.Testing</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <SignAssembly>true</SignAssembly>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>618</NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>618</NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Castle.Core">
+      <HintPath>..\packages\Castle.Core.3.1.0\lib\net35\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Moq, Version=4.0.10827.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Moq.4.0.10827\lib\NET35\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.5.10.11092, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NUnit.2.5.10.11092\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.mocks">
+      <HintPath>..\packages\NUnit.2.5.10.11092\lib\nunit.mocks.dll</HintPath>
+    </Reference>
+    <Reference Include="pnunit.framework">
+      <HintPath>..\packages\NUnit.2.5.10.11092\lib\pnunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Rhino.Mocks, Version=3.6.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Windows.Forms">
+      <Name>System.Windows.Forms</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+    <ProjectReference Include="..\StructureMap.AutoFactory\StructureMap.AutoFactory.csproj">
+      <Project>{3C6A4946-3CD9-4B74-87C5-A06EF49920FA}</Project>
+      <Name>StructureMap.AutoFactory</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StructureMap.AutoMocking\StructureMap.AutoMocking.csproj">
+      <Project>{0ED1B206-A1C9-4A52-BA87-3BA416C8725C}</Project>
+      <Name>StructureMap.AutoMocking</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StructureMap.Testing.GenericWidgets\StructureMap.Testing.GenericWidgets.csproj">
+      <Project>{C205EA4C-4CD0-4221-A3CB-AFD835F0B263}</Project>
+      <Name>StructureMap.Testing.GenericWidgets</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StructureMap.Testing.Widget2\StructureMap.Testing.Widget2.csproj">
+      <Name>StructureMap.Testing.Widget2</Name>
+      <Project>{027E996C-75E8-40F8-9073-0E3B77A6BE1F}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\StructureMap.Testing.Widget3\StructureMap.Testing.Widget3.csproj">
+      <Name>StructureMap.Testing.Widget3</Name>
+      <Project>{C8878328-281F-4F4F-8D6E-88C60F304B89}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\StructureMap.Testing.Widget4\StructureMap.Testing.Widget4.csproj">
+      <Name>StructureMap.Testing.Widget4</Name>
+      <Project>{901D15CB-EF37-4F84-864B-E70F4B5F1DFF}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\StructureMap.Testing.Widget5\StructureMap.Testing.Widget5.csproj">
+      <Name>StructureMap.Testing.Widget5</Name>
+      <Project>{CAB97F7F-FB75-410C-898A-88DCAAC036BE}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\StructureMap.Testing.Widget\StructureMap.Testing.Widget.csproj">
+      <Name>StructureMap.Testing.Widget</Name>
+      <Project>{E21E1651-3E32-47B7-A290-F461E63FEAD2}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\StructureMap\StructureMap.csproj">
+      <Name>StructureMap</Name>
+      <Project>{3F36EA80-2F9A-4DAD-BA27-5AC6163A2EE3}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\CommonAssemblyInfo.cs">
+      <Link>CommonAssemblyInfo.cs</Link>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AlternativeConfigurationTester.cs" />
+    <Compile Include="AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Attributes\PluginFamilyAttributeTester.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AutoFactories\AutoFactoryTester.cs" />
+    <Compile Include="AutoFactories\ProxyFactoryTests.cs" />
+    <Compile Include="AutoMocking\AutoMockerTester.cs" />
+    <Compile Include="AutoMocking\MoqAutoMockerTester.cs" />
+    <Compile Include="AutoMocking\MoqFactoryTester.cs" />
+    <Compile Include="AutoMocking\RhinoAutoMockerTester.cs" />
+    <Compile Include="AutoMocking\RhinoMockRepositoryProxyTester.cs" />
+    <Compile Include="AutoWiringExamples.cs" />
+    <Compile Include="BidirectionalDependencies.cs" />
+    <Compile Include="Bugs\AddValueDirectlyWithGenericUsage.cs" />
+    <Compile Include="Bugs\BuildUpBug.cs" />
+    <Compile Include="Bugs\CloseOpenGenericsWithSomeSpecifics.cs" />
+    <Compile Include="Bugs\EnumerableShouldGetAllValuesTester.cs" />
+    <Compile Include="Bugs\FillAllPropertiesShouldWorkForAlreadyConfiguredPluginsBug.cs" />
+    <Compile Include="Bugs\GetAllInstancesShouldObserveKeys.cs" />
+    <Compile Include="Bugs\HttpSessionNullRefBug.cs" />
+    <Compile Include="Bugs\IDictionaryAndXmlBugTester.cs" />
+    <Compile Include="Bugs\InjectByFuncWithNoPublicConstructors.cs" />
+    <Compile Include="Bugs\LambdaCreatesNullBugTester.cs" />
+    <Compile Include="Bugs\MixedConfigureAndInitializeMissingInstanceProblem.cs" />
+    <Compile Include="Bugs\OpenGenericWithConstraints.cs" />
+    <Compile Include="Bugs\OverwritingOfPrimitiveProperties.cs" />
+    <Compile Include="Bugs\ScanIndexerBugTester.cs" />
+    <Compile Include="Bugs\SingletonShouldBeLazy.cs" />
+    <Compile Include="Bugs\SpecifyScopeInConfigureTester.cs" />
+    <Compile Include="Bugs\SpecifyScopeOnOpenGenericsTester.cs" />
+    <Compile Include="Bugs\StaticPropertyCausesJITExceptionTester.cs" />
+    <Compile Include="Bugs\TryGetInstanceWithOpenGenericsBugTester.cs" />
+    <Compile Include="Bugs\UseSingleImplementationConventionInMultipleScans.cs" />
+    <Compile Include="BuildSessionTester.cs" />
+    <Compile Include="BuildUpIntegratedTester.cs" />
+    <Compile Include="BuildUpTester.cs" />
+    <Compile Include="ConcreteClassCreationTester.cs" />
+    <Compile Include="Configuration\ConfigurationParserBuilderTester.cs" />
+    <Compile Include="Configuration\ConfigurationParserTester.cs" />
+    <Compile Include="Configuration\DefaultInstanceNodeTester.cs" />
+    <Compile Include="Configuration\DictionaryAndArrayArgumentTester.cs" />
+    <Compile Include="Configuration\DictionaryReaderTester.cs" />
+    <Compile Include="Configuration\DSL\AddInstanceTester.cs" />
+    <Compile Include="Configuration\DSL\AddTypesTester.cs" />
+    <Compile Include="Configuration\DSL\ConstructorExpressionTester.cs" />
+    <Compile Include="Configuration\DSL\CreatePluginFamilyTester.cs" />
+    <Compile Include="Configuration\DSL\CreateProfileTester.cs" />
+    <Compile Include="Configuration\DSL\GenericFamilyExpressionTester.cs" />
+    <Compile Include="Configuration\DSL\InjectArrayTester.cs" />
+    <Compile Include="Configuration\DSL\InstanceExpressionTester.cs" />
+    <Compile Include="Configuration\DSL\InterceptAllInstancesOfPluginTypeTester.cs" />
+    <Compile Include="Configuration\DSL\InterceptorTesting.cs" />
+    <Compile Include="Configuration\DSL\ProfileExpressionTester.cs" />
+    <Compile Include="Configuration\DSL\ProgrammaticConstructorSelectionTester.cs" />
+    <Compile Include="Configuration\DSL\RegistryIntegratedTester.cs" />
+    <Compile Include="Configuration\DSL\RegistryTester.cs" />
+    <Compile Include="Configuration\FamilyParserTester.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\IncludeTesting.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\InlineInstanceDefinitionInProfileAndMachineNodesTester.cs" />
+    <Compile Include="Configuration\NormalGraphBuilderTester.cs" />
+    <Compile Include="Configuration\PrimitiveArrayReaderTester.cs" />
+    <Compile Include="Configuration\ProfileBuilderTester.cs" />
+    <Compile Include="Configuration\ShortcuttedInstanceNodeTester.cs" />
+    <Compile Include="Construction\BuilderCompilerTester.cs" />
+    <Compile Include="Construction\ConstructorFunctionBuilderTester.cs" />
+    <Compile Include="Construction\SetterBuilderTester.cs" />
+    <Compile Include="Construction\StubArguments.cs" />
+    <Compile Include="Debugging.cs" />
+    <Compile Include="Diagnostics\DoctorTester.cs" />
+    <Compile Include="Diagnostics\WriterExtensions.cs" />
+    <Compile Include="Examples.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Examples\BuildUp.cs" />
+    <Compile Include="Examples\CustomInstance.cs" />
+    <Compile Include="Examples\IndividualContainers.cs" />
+    <Compile Include="Examples\Interception.cs" />
+    <Compile Include="Examples\RegisteringWithTheAPI.cs" />
+    <Compile Include="Graph\ArrayConstructorTester.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\AssemblyScannerTester.cs" />
+    <Compile Include="Graph\ContainerConstructorAttributeTester.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\ConventionBasedSetterInjectionTester.cs" />
+    <Compile Include="Graph\DefaultConventionScanningTester.cs" />
+    <Compile Include="Graph\DynamicInjectionTester.cs" />
+    <Compile Include="Graph\EnumerationTester.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\ExceptionHandling\StructureMapExceptionTester.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\FindAllTypesFilterTester.cs" />
+    <Compile Include="Graph\FirstInterfaceConventionTester.cs" />
+    <Compile Include="Graph\GenericConnectionScannerTester.cs" />
+    <Compile Include="Graph\SingleImplementationScannerTester.cs" />
+    <Compile Include="Graph\TestExplicitArguments.cs" />
+    <Compile Include="Graph\FillDependenciesTester.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\FullStackFacadeTester.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\ImplicitDefaultTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\InstanceFactoryTester.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\ContainerTester.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\IntegratedTester.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\Interceptors\CompoundInterceptorTester.cs" />
+    <Compile Include="Graph\Interceptors\InterceptorLibraryTester.cs" />
+    <Compile Include="Graph\Interceptors\MockTypeInterceptor.cs" />
+    <Compile Include="Graph\Interceptors\TypeInterceptionTester.cs" />
+    <Compile Include="Graph\PluggableAttributeTester.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\PluginGraphBuilderTester.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\SetterInjectionEmittingTester.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\Source\DirectoryXmlMementoSourceTester.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\Source\EmbeddedFolderXmlMementoSourceTester.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\Source\SingleEmbeddedXmlMementoSourceTester.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\Source\TemplatingTester.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\Source\XmlAttributeInstanceMementoTester.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\Source\XmlInstanceMementoTester.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\Source\XmlMementoSourceTester.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\Source\XmlTemplaterTester.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\TypeFindingTester.cs" />
+    <Compile Include="Diagnostics\IntegrationTester.cs" />
+    <Compile Include="Diagnostics\TextReportWriterSmokeTester.cs" />
+    <Compile Include="GenericsAcceptanceTester.cs" />
+    <Compile Include="GenericsIntegrationTester.cs" />
+    <Compile Include="Graph\GenericsPluginGraphTester.cs" />
+    <Compile Include="Graph\InstanceTarget.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\ParameterInfoCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\PluginFamilyMergeTester.cs" />
+    <Compile Include="Graph\PluginFamilyTester.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\PluginGraphTester.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\PluginTester.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\SetterInjectionTester.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\TypePathTester.cs" />
+    <Compile Include="ImplicitPluginFromPluggedTypeAttributeTester.cs" />
+    <Compile Include="InstanceCacheTester.cs" />
+    <Compile Include="InstanceMementoInstanceCreationTester.cs" />
+    <Compile Include="MementoTester.cs" />
+    <Compile Include="MergingTester.cs" />
+    <Compile Include="ModelQueryTester.cs" />
+    <Compile Include="ObjectFactoryInitializeTester.cs" />
+    <Compile Include="ObjectFactoryTester.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Pipeline\BuildStackTester.cs" />
+    <Compile Include="Pipeline\BuildStrategiesTester.cs" />
+    <Compile Include="Pipeline\ConditionalInstanceTester.cs" />
+    <Compile Include="Pipeline\ConfiguredInstanceTester.cs" />
+    <Compile Include="Pipeline\ConstructorInstanceTester.cs" />
+    <Compile Include="Pipeline\EnumerableInstanceTester.cs" />
+    <Compile Include="Pipeline\LambdaInstanceTester.cs" />
+    <Compile Include="Pipeline\ContainerDisposalTester.cs" />
+    <Compile Include="Pipeline\ContainerIsInTheContainerTester.cs" />
+    <Compile Include="Pipeline\DefaultInstanceTester.cs" />
+    <Compile Include="Pipeline\GenericsHelperExpressionTester.cs" />
+    <Compile Include="Pipeline\HybridBuildLifecycleTester.cs" />
+    <Compile Include="Pipeline\InstanceTester.cs" />
+    <Compile Include="Pipeline\LazyFuncTester.cs" />
+    <Compile Include="Pipeline\MainObjectCacheTester.cs" />
+    <Compile Include="Pipeline\ObjectInstanceTester.cs" />
+    <Compile Include="Pipeline\MissingInstanceTester.cs" />
+    <Compile Include="Pipeline\NestedContainerSupportTester.cs" />
+    <Compile Include="Pipeline\ObjectBuilderTester.cs" />
+    <Compile Include="Pipeline\OptionalSetterInjectionTester.cs" />
+    <Compile Include="Pipeline\ProfileManagerMergeTester.cs" />
+    <Compile Include="Pipeline\ProfileManagerTester.cs" />
+    <Compile Include="Pipeline\ProfileTester.cs" />
+    <Compile Include="Pipeline\PrototypeInstanceTester.cs" />
+    <Compile Include="Pipeline\RedirectingTester.cs" />
+    <Compile Include="Pipeline\RedirectTester.cs" />
+    <Compile Include="Pipeline\ReferencedInstanceTester.cs" />
+    <Compile Include="Pipeline\SerializedInstanceTester.cs" />
+    <Compile Include="Pipeline\SmartInstanceTester.cs" />
+    <Compile Include="Pipeline\StubBuildSession.cs" />
+    <Compile Include="Pipeline\ThreadLocalStorageLifecycleTester.cs" />
+    <Compile Include="PrimitiveArrayTester.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Query\GenericFamilyConfigurationTester.cs" />
+    <Compile Include="Query\InstanceFactoryTypeConfigurationTester.cs" />
+    <Compile Include="Query\InstanceRefTester.cs" />
+    <Compile Include="Query\ModelIntegrationTester.cs" />
+    <Compile Include="ReadingRegistriesFromXmlTester.cs" />
+    <Compile Include="SpecificationExtensions.cs" />
+    <Compile Include="StructureMapConfigCreator.cs" />
+    <Compile Include="StructureMapConfigurationTester.cs" />
+    <Compile Include="TestData\DataMother.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PerRequestInterceptorTester.cs" />
+    <Compile Include="TestUtility.cs" />
+    <Compile Include="Diagnostics\ValidationBuildSessionTester.cs" />
+    <Compile Include="TypeExtensionsTester.cs" />
+    <Compile Include="Util\CacheTester.cs" />
+    <Compile Include="XmlWriting\ElementChecker.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <None Include="..\structuremap.snk">
+      <Link>structuremap.snk</Link>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="StructureMap.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="StructureMap.Testing.dll.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <EmbeddedResource Include="Graph\Source\EmbeddedMementoFile.xml" />
+    <EmbeddedResource Include="Graph\Source\Mementos\Instance1.xml" />
+    <EmbeddedResource Include="Graph\Source\Mementos\Instance2.xml" />
+    <EmbeddedResource Include="TestData\Array.xml" />
+    <EmbeddedResource Include="TestData\CDataTest.xml" />
+    <EmbeddedResource Include="TestData\ChildArrayPropertyConfig.xml" />
+    <EmbeddedResource Include="TestData\DeepInstanceMemento.xml" />
+    <EmbeddedResource Include="TestData\DefaultProfileConfig.xml" />
+    <EmbeddedResource Include="TestData\ExceptionTrapping.xml" />
+    <EmbeddedResource Include="TestData\ExplicitPluginFamilyOverridesImplicitPluginFamily.xml" />
+    <EmbeddedResource Include="TestData\FullStackGraphConfig.xml" />
+    <EmbeddedResource Include="TestData\FullTesting.XML" />
+    <EmbeddedResource Include="TestData\GridColumnInstances.xml" />
+    <EmbeddedResource Include="TestData\Include1.xml" />
+    <EmbeddedResource Include="TestData\Include2.xml" />
+    <EmbeddedResource Include="TestData\InstanceMementoTemplating.xml" />
+    <EmbeddedResource Include="TestData\IntegratedTest.XML" />
+    <EmbeddedResource Include="TestData\Invalid.config" />
+    <EmbeddedResource Include="TestData\Machine.XML" />
+    <EmbeddedResource Include="TestData\Master.xml" />
+    <EmbeddedResource Include="TestData\NavigationTest.xml" />
+    <EmbeddedResource Include="TestData\NotTriggered.xml" />
+    <EmbeddedResource Include="TestData\ObjectMother.config" />
+    <EmbeddedResource Include="TestData\ProfileAndMachine.xml" />
+    <EmbeddedResource Include="TestData\RuleSource.xml" />
+    <EmbeddedResource Include="TestData\SampleConfig.xml" />
+    <EmbeddedResource Include="TestData\ScopeInFamily.xml" />
+    <EmbeddedResource Include="TestData\SetterInjectionTesting.xml" />
+    <EmbeddedResource Include="TestData\SingletonIntercepterTest.xml" />
+    <EmbeddedResource Include="TestData\StructureMap.config" />
+    <EmbeddedResource Include="TestData\Substitution.xml" />
+    <EmbeddedResource Include="TestData\Templater.xml" />
+    <EmbeddedResource Include="TestData\Trigger.xml" />
+    <EmbeddedResource Include="TestData\Valid.config" />
+    <EmbeddedResource Include="TestData\XmlInstanceMemento.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestData\GenericsTesting.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestData\Config1.xml" />
+    <EmbeddedResource Include="TestData\Config2.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestData\AttributeNormalized.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestData\PluggedTypeTest.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Examples\AddRegistryInXml.xml" />
+    <Content Include="Sample.xml" />
+    <Content Include="TestData\ProfileSample.xml" />
+    <EmbeddedResource Include="TestData\BUG_OverwritingOfPrimitiveProperties.xml" />
+    <EmbeddedResource Include="TestData\ShortInstance.xml" />
+    <EmbeddedResource Include="TestData\DefaultInstance.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="AutoFactories\Supporting\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>

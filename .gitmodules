@@ -1,0 +1,3 @@
+[submodule "buildsupport"]
+	path = buildsupport
+	url = git://github.com/DarthFubuMVC/buildsupport.git

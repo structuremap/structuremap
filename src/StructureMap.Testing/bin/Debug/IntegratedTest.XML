@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Hierarchy>
+  <GrandChildren>
+    <GrandChild Type="Default" Key="Tommy">
+      <Property Name="RightHanded" Value="true" />
+      <Property Name="BirthYear" Value="1972" />
+    </GrandChild>
+    <GrandChild Type="Default" Key="Todd">
+      <Property Name="RightHanded" Value="true" />
+      <Property Name="BirthYear" Value="1975" />
+    </GrandChild>
+    <GrandChild Type="Leftie" Key="Trevor">
+      <Property Name="BirthYear" Value="1979" />
+    </GrandChild>
+  </GrandChildren>
+  <Children>
+    <Child Type="Default" Key="Tom">
+      <Property Name="Name" Value="Tom" />
+      <Property Name="MyGrandChild" Type="Leftie">
+        <Property Name="BirthYear" Value="1984" />
+      </Property>
+    </Child>
+    <Child Type="Default" Key="Marsha">
+      <Property Name="Name" Value="Marsha" />
+      <Property Name="MyGrandChild" Key="Tommy" />
+    </Child>
+    <Child Type="Default" Key="Jessica">
+      <Property Name="Name" Value="Jessica" />
+      <Property Name="MyGrandChild" />
+    </Child>
+    <Child Type="Default" Key="Monte">
+      <Property Name="Name" Value="Monte" />
+      <Property Name="MyGrandChild" Key="NotARealGrandchild" />
+    </Child>
+  </Children>
+  <Parents>
+    <Parent Type="Default" Key="Jerry">
+      <Property Name="Age" Value="72" />
+      <Property Name="EyeColor" Value="Blue" />
+      <Property Name="MyChild" Key="Marsha" />
+    </Parent>
+    <Parent Type="Default" Key="Jackie">
+      <Property Name="Age" Value="70" />
+      <Property Name="EyeColor" Value="Green" />
+      <Property Name="MyChild" Type="Default">
+        <Property Name="Name" Value="Elizabeth" />
+        <Property Name="MyGrandChild" Type="Leftie">
+          <Property Name="BirthYear" Value="1992" />
+        </Property>
+      </Property>
+    </Parent>
+    <Parent Type="Default" Key="ImplicitChild">
+      <Property Name="Age" Value="72" />
+      <Property Name="EyeColor" Value="Blue" />
+    </Parent>
+  </Parents>
+</Hierarchy>

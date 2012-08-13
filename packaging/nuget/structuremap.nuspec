@@ -4,7 +4,7 @@
     <id>structuremap</id>
     <version>2.6.4</version>
     <authors>Jeremy Miller</authors>
-    <owners>Joshua Flanagan, Jeremy Miller</owners>
+    <owners>Jeremy Miller, Tim Kellogg, Joshua Flanagan</owners>
     <licenseUrl>https://github.com/structuremap/structuremap/raw/master/LICENSE.TXT</licenseUrl>
     <projectUrl>http://structuremap.net/structuremap/</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -13,8 +13,6 @@
     <language>en-US</language>
   </metadata>
   <files>
-	<file src="..\..\build\StructureMap.dll" target="lib" />
-	<file src="..\..\build\StructureMap.pdb" target="lib" />
-	<file src="..\..\build\StructureMap.XML" target="lib" />
+	<file src="..\..\src\StructureMap\bin\release\StructureMap.*" target="lib\net40" />
   </files>
 </package>
