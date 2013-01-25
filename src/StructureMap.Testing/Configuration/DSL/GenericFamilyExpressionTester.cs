@@ -76,7 +76,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var container =
                 new Container(
-                    r => r.For(typeof (ITarget)).AddConcreteType(typeof (Target1)));
+                    r => r.For(typeof (ITarget)).Add(typeof (Target1)));
 
 
             container.GetAllInstances<ITarget>()[0].ShouldBeOfType<Target1>();
@@ -87,9 +87,9 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var container = new Container(r =>
             {
-                r.For(typeof (ITarget)).AddConcreteType(typeof (Target1), "1");
-                r.For(typeof (ITarget)).AddConcreteType(typeof (Target2), "2");
-                r.For(typeof (ITarget)).AddConcreteType(typeof (Target3), "3");
+                r.For(typeof(ITarget)).Add(typeof(Target1)).Named("1");
+                r.For(typeof(ITarget)).Add(typeof(Target2)).Named("2");
+                r.For(typeof(ITarget)).Add(typeof(Target3)).Named("3");
             });
 
             container.GetInstance<ITarget>("1").ShouldBeOfType<Target1>();

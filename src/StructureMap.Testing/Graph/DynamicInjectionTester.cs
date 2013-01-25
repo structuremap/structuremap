@@ -142,9 +142,8 @@ namespace StructureMap.Testing.Graph
             var container = new Container();
             container.Configure(registry =>
             {
-                registry.For(typeof (IService<>))
-                    .AddConcreteType(typeof (Service1<>))
-                    .AddConcreteType(typeof (Service2<>));
+                registry.For(typeof (IService<>)).Add(typeof (Service1<>));
+                registry.For(typeof(IService<>)).Add(typeof (Service2<>));
             });
 
             Assert.AreEqual(2, container.GetAllInstances<IService<string>>().Count);
@@ -153,9 +152,9 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void AddANewDefaultTypeForAPluginTypeThatAlreadyExists()
         {
-            var container = new Container(x => { x.For<ISomething>().Use<SomethingTwo>(); });
+            var container = new Container(x => x.For<ISomething>().Use<SomethingTwo>());
 
-            container.Configure(x => { x.For<ISomething>().Use<SomethingOne>(); });
+            container.Configure(x => x.For<ISomething>().Use<SomethingOne>());
 
             container.GetInstance<ISomething>().ShouldBeOfType<SomethingOne>();
         }

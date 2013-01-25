@@ -105,26 +105,13 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="concreteType"></param>
         /// <returns></returns>
-        [Obsolete("Switch to Add()")]
-        public ConfiguredInstance AddType(Type concreteType)
+        public ConfiguredInstance Add(Type concreteType)
         {
             var instance = new ConfiguredInstance(concreteType);
 
-            alterAndContinue(family => { family.AddInstance(instance); });
+            alterAndContinue(family => family.AddInstance(instance));
 
             return instance;
-        }
-
-        /// <summary>
-        /// Shortcut method to add an additional Instance to this Plugin Type
-        /// as just a Concrete Type.  This will only work if the Concrete Type
-        /// has no primitive constructor or mandatory Setter arguments.
-        /// </summary>
-        /// <param name="concreteType"></param>
-        /// <returns></returns>
-        public ConfiguredInstance Add(Type concreteType)
-        {
-            return AddType(concreteType);
         }
 
 
@@ -250,34 +237,5 @@ namespace StructureMap.Configuration.DSL.Expressions
             return alterAndContinue(family => family.SetScopeTo(lifecycle));
         }
 
-
-        /// <summary>
-        /// Shortcut method to add an additional Instance to this Plugin Type
-        /// as just a Concrete Type.  You can also chain other declarations after
-        /// this method to add constructor and setter arguments
-        /// </summary>
-        /// <param name="concreteType"></param>
-        /// <returns></returns>
-        [Obsolete("Change to Add(Type)")]
-        public GenericFamilyExpression AddConcreteType(Type concreteType)
-        {
-            var instance = new ConfiguredInstance(concreteType);
-            return Add(instance);
-        }
-
-
-        /// <summary>
-        /// Shortcut method to add an additional Instance to this Plugin Type
-        /// as just a Concrete Type by a specified name.  You can also chain other declarations after
-        /// this method to add constructor and setter arguments
-        /// </summary>
-        /// <param name="concreteType"></param>
-        /// <param name="instanceName"></param>
-        /// <returns></returns>
-        [Obsolete("Change to Add(Type, [name)]")]
-        public GenericFamilyExpression AddConcreteType(Type concreteType, string instanceName)
-        {
-            return Add(new ConfiguredInstance(concreteType).WithName(instanceName));
-        }
     }
 }

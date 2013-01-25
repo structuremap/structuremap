@@ -19,9 +19,9 @@ namespace StructureMap.Testing
         public void SetUp()
         {
             var registry = new Registry();
-            registry.For(typeof (IService<>))
-                .AddConcreteType(typeof (Service<>))
-                .AddConcreteType(typeof (Service2<>));
+            registry.For(typeof (IService<>)).Add(typeof (Service<>));
+            registry.For(typeof (IService<>)).Add(typeof (Service2<>));
+
 
             registry.For<ISomething>().Use<SomethingOne>();
             registry.For<ISomething>().Add<SomethingTwo>();
