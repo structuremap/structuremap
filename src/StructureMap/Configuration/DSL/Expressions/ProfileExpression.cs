@@ -161,29 +161,13 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <typeparam name="T"></typeparam>
         public class InstanceDefaultExpression<T>
         {
-            private readonly ProfileExpression _parent;
             private readonly string _profileName;
             private readonly Registry _registry;
 
             public InstanceDefaultExpression(ProfileExpression parent)
             {
-                _parent = parent;
                 _registry = parent._registry;
                 _profileName = parent._profileName;
-            }
-
-            /// <summary>
-            /// Use a named, preconfigured instance as the default instance for this profile 
-            /// </summary>
-            /// <param name="instanceKey"></param>
-            /// <returns></returns>
-            [Obsolete("Change to For<T>().Use([name])")]
-            public ProfileExpression UseNamedInstance(string instanceKey)
-            {
-                _registry.addExpression(
-                    graph => graph.SetDefault(_profileName, typeof (T), new ReferencedInstance(instanceKey)));
-
-                return _parent;
             }
 
             /// <summary>
@@ -258,27 +242,14 @@ namespace StructureMap.Configuration.DSL.Expressions
                 configure(expression);
             }
 
-
-            /// <summary>
-            /// For this Profile, use the Concrete Type
-            /// </summary>
-            /// <typeparam name="CONCRETETYPE"></typeparam>
-            /// <returns></returns>
-            [Obsolete("Change to For<T>().Use<CONCRETETYPE>()")]
-            public void UseConcreteType<CONCRETETYPE>()
-            {
-                var instance = new ConfiguredInstance(typeof (CONCRETETYPE));
-                Use(instance);
-            }
-
             /// <summary>
             /// For this profile, use this concrete type
             /// </summary>
-            /// <typeparam name="CONCRETETYPE"></typeparam>
+            /// <typeparam name="TConcreteType"></typeparam>
             /// <returns></returns>
-            public SmartInstance<CONCRETETYPE> Use<CONCRETETYPE>()
+            public SmartInstance<TConcreteType> Use<TConcreteType>()
             {
-                var instance = new SmartInstance<CONCRETETYPE>();
+                var instance = new SmartInstance<TConcreteType>();
                 Use(instance);
 
                 return instance;

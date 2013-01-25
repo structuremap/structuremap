@@ -75,8 +75,8 @@ namespace StructureMap.Testing.Configuration.DSL
             {
                 registry.Profile(theProfileName, p =>
                 {
-                    p.For<IWidget>().UseConcreteType<AWidget>();
-                    p.For<Rule>().UseConcreteType<DefaultRule>();
+                    p.For<IWidget>().Use<AWidget>();
+                    p.For<Rule>().Use<DefaultRule>();
                 });
 
             });
@@ -112,8 +112,8 @@ namespace StructureMap.Testing.Configuration.DSL
 
             var registry = new Registry();
             registry.Profile(theProfileName, p => {
-                p.For<IWidget>().UseNamedInstance(theDefaultName);
-                p.For<Rule>().UseNamedInstance("DefaultRule");
+                p.For<IWidget>().Use(theDefaultName);
+                p.For<Rule>().Use("DefaultRule");
             });
 
 
@@ -131,7 +131,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
             var registry = new Registry();
             registry.Profile(theProfileName, x => {
-                x.For<IWidget>().UseConcreteType<AWidget>();
+                x.For<IWidget>().Use<AWidget>();
             });
                 
 

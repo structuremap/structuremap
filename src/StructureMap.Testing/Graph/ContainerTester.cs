@@ -90,11 +90,11 @@ namespace StructureMap.Testing.Graph
                 });
 
                 r.Profile("Red", x => {
-                    x.For<IService>().UseNamedInstance("Red");
+                    x.For<IService>().Use("Red");
                 });
 
                 r.Profile("Blue", x => {
-                    x.For<IService>().UseNamedInstance("Blue");
+                    x.For<IService>().Use("Blue");
                 });
             });
 
