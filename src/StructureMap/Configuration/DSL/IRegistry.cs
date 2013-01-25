@@ -54,15 +54,6 @@ namespace StructureMap.Configuration.DSL
         CreatePluginFamilyExpression<PLUGINTYPE> BuildInstancesOf<PLUGINTYPE>();
 
         /// <summary>
-        /// Expression Builder used to define policies for a PluginType including
-        /// Scoping, the Default Instance, and interception.  This method is specifically
-        /// meant for registering open generic types
-        /// </summary>
-        /// <returns></returns>
-        [Obsolete("Change to For(pluginType)")]
-        GenericFamilyExpression ForRequestedType(Type pluginType);
-
-        /// <summary>
         /// This method is a shortcut for specifying the default constructor and 
         /// setter arguments for a ConcreteType.  ForConcreteType is shorthand for:
         /// ForRequestedType[T]().Use[T].**************
@@ -71,16 +62,6 @@ namespace StructureMap.Configuration.DSL
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         Registry.BuildWithExpression<T> ForConcreteType<T>();
-
-        /// <summary>
-        /// Expression Builder used to define policies for a PluginType including
-        /// Scoping, the Default Instance, and interception.  BuildInstancesOf()
-        /// and ForRequestedType() are synonyms
-        /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
-        /// <returns></returns>
-        [Obsolete("Change to For<T>()")]
-        CreatePluginFamilyExpression<PLUGINTYPE> ForRequestedType<PLUGINTYPE>();
 
         /// <summary>
         /// Convenience method.  Equivalent of ForRequestedType[PluginType]().AsSingletons()

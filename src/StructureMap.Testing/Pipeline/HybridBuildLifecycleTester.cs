@@ -14,7 +14,7 @@ namespace StructureMap.Testing.Pipeline
                 new Container(
                     x =>
                     {
-                        x.ForRequestedType<IService>().CacheBy(InstanceScope.Hybrid).TheDefaultIsConcreteType
+                        x.For<IService>().CacheBy(InstanceScope.Hybrid).TheDefaultIsConcreteType
                             <RemoteService>();
                     });
 

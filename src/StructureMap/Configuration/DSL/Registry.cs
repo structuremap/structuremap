@@ -92,18 +92,6 @@ namespace StructureMap.Configuration.DSL
         }
 
         /// <summary>
-        /// Expression Builder used to define policies for a PluginType including
-        /// Scoping, the Default Instance, and interception.  This method is specifically
-        /// meant for registering open generic types
-        /// </summary>
-        /// <returns></returns>
-        [Obsolete("Change to For(pluginType)")]
-        public GenericFamilyExpression ForRequestedType(Type pluginType)
-        {
-            return new GenericFamilyExpression(pluginType, this);
-        }
-
-        /// <summary>
         /// This method is a shortcut for specifying the default constructor and 
         /// setter arguments for a ConcreteType.  ForConcreteType is shorthand for:
         /// For[T]().Use[T].**************
@@ -118,26 +106,13 @@ namespace StructureMap.Configuration.DSL
         }
 
         /// <summary>
-        /// Expression Builder used to define policies for a PluginType including
-        /// Scoping, the Default Instance, and interception.  BuildInstancesOf()
-        /// and ForRequestedType() are synonyms
-        /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
-        /// <returns></returns>
-        [Obsolete("Change to For<T>()")]
-        public CreatePluginFamilyExpression<PLUGINTYPE> ForRequestedType<PLUGINTYPE>()
-        {
-            return new CreatePluginFamilyExpression<PLUGINTYPE>(this);
-        }
-
-        /// <summary>
         /// Convenience method.  Equivalent of ForRequestedType[PluginType]().Singletons()
         /// </summary>
         /// <typeparam name="PLUGINTYPE"></typeparam>
         /// <returns></returns>
         public CreatePluginFamilyExpression<PLUGINTYPE> ForSingletonOf<PLUGINTYPE>()
         {
-            return ForRequestedType<PLUGINTYPE>().Singleton();
+            return For<PLUGINTYPE>().Singleton();
         }
 
         /// <summary>
@@ -259,7 +234,7 @@ namespace StructureMap.Configuration.DSL
         public CreatePluginFamilyExpression<PLUGINTYPE> FillAllPropertiesOfType<PLUGINTYPE>()
         {
             PluginCache.AddFilledType(typeof (PLUGINTYPE));
-            return ForRequestedType<PLUGINTYPE>();
+            return For<PLUGINTYPE>();
         }
 
         /// <summary>
@@ -305,7 +280,7 @@ namespace StructureMap.Configuration.DSL
         [Obsolete("Prefer For<T>().Use(value)")]
         public void Register<PLUGINTYPE>(PLUGINTYPE @object)
         {
-            ForRequestedType<PLUGINTYPE>().TheDefault.IsThis(@object);
+            For<PLUGINTYPE>().TheDefault.IsThis(@object);
         }
 
         /// <summary>
@@ -316,7 +291,7 @@ namespace StructureMap.Configuration.DSL
         [Obsolete("Prefer For<T>().Use(instance)")]
         public void Register<PLUGINTYPE>(Instance instance)
         {
-            ForRequestedType<PLUGINTYPE>().TheDefault.IsThis(instance);
+            For<PLUGINTYPE>().TheDefault.IsThis(instance);
         }
 
         /// <summary>
@@ -339,7 +314,7 @@ namespace StructureMap.Configuration.DSL
         /// <returns></returns>
         public GenericFamilyExpression For(Type pluginType)
         {
-            return ForRequestedType(pluginType);
+            return new GenericFamilyExpression(pluginType, this);
         }
 
 

@@ -21,7 +21,7 @@ namespace StructureMap.Testing.Configuration.DSL
             var concretion2 = new Concretion();
 
             IContainer container = new Container(r =>
-                                                 r.ForRequestedType<Abstraction>().AddInstances(x =>
+                                                 r.For<Abstraction>().AddInstances(x =>
                                                  {
                                                      x.ConstructedBy(() => concretion1).WithName("One");
                                                      x.ConstructedBy(() => concretion2).WithName("Two");
@@ -38,7 +38,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
             IContainer container =
                 new Container(
-                    registry => registry.ForRequestedType<Abstraction>().TheDefault.Is.ConstructedBy(() => concretion));
+                    registry => registry.For<Abstraction>().TheDefault.Is.ConstructedBy(() => concretion));
             container.GetInstance<Abstraction>().ShouldBeTheSameAs(concretion);
         }
 
@@ -50,7 +50,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
             IContainer manager = new Container(registry =>
             {
-                registry.ForRequestedType<Abstraction>().AddInstances(x =>
+                registry.For<Abstraction>().AddInstances(x =>
                 {
                     x.ConstructedBy(() => concretion1).WithName("One");
                     x.ConstructedBy(() => concretion2).WithName("Two");

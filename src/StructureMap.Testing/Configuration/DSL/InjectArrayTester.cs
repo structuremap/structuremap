@@ -92,7 +92,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var container = new Container(x =>
             {
-                x.ForRequestedType<Processor>().TheDefault.Is
+                x.For<Processor>().TheDefault.Is
                     .OfConcreteType<Processor>()
                     .TheArrayOf<IHandler>().Contains(
                     new SmartInstance<Handler1>(),
@@ -110,7 +110,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var container = new Container(x =>
             {
-                x.ForRequestedType<Processor>().TheDefault.Is
+                x.For<Processor>().TheDefault.Is
                     .OfConcreteType<Processor>()
                     .TheArrayOf<IHandler>().Contains(
                     new SmartInstance<Handler1>(),

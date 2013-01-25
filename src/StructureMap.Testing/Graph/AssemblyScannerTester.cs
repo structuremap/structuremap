@@ -21,7 +21,7 @@ namespace StructureMap.Testing.Graph
         {
             WasUsed = true;
 
-            ForRequestedType<Rule>().TheDefault.IsThis(new ColorRule("Green"));
+            For<Rule>().TheDefault.IsThis(new ColorRule("Green"));
         }
 
         public static void Reset()

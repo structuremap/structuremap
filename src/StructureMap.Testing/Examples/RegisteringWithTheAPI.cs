@@ -63,10 +63,10 @@ namespace StructureMap.Testing.Examples
         public RepositoryRegistry()
         {
             // First I'll specify the "default" Instance of IRepository
-            ForRequestedType<IRepository>().TheDefaultIsConcreteType<InMemoryRepository>();
+            For<IRepository>().TheDefaultIsConcreteType<InMemoryRepository>();
 
             // Now, I'll add three more Instances of IRepository
-            ForRequestedType<IRepository>().AddInstances(x =>
+            For<IRepository>().AddInstances(x =>
             {
                 // "NorthAmerica" is the concrete type DatabaseRepository with 
                 // the connectionString pointed to the NorthAmerica database
@@ -101,9 +101,9 @@ namespace StructureMap.Testing.Examples
 
             ObjectFactory.Initialize(x =>
             {
-                x.ForRequestedType<IRepository>().TheDefaultIsConcreteType<InMemoryRepository>();
+                x.For<IRepository>().TheDefaultIsConcreteType<InMemoryRepository>();
 
-                x.ForRequestedType<IRepository>().AddInstances(y =>
+                x.For<IRepository>().AddInstances(y =>
                 {
                     y.OfConcreteType<DatabaseRepository>().WithName("NorthAmerica")
                         .WithCtorArg("connectionString").EqualTo("database=NorthAmerica");

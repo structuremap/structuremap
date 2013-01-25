@@ -248,7 +248,7 @@ namespace StructureMap.Testing.Diagnostics
             {
                 x.IgnoreStructureMapConfig = true;
 
-                x.ForRequestedType<IWidget>().TheDefault.Is
+                x.For<IWidget>().TheDefault.Is
                     .OfConcreteType<DoctorTester.NumberWidget>()
                     .WithCtorArg("age").EqualToAppSetting("age");
             });

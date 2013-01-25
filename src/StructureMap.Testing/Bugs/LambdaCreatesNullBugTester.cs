@@ -20,9 +20,9 @@ namespace StructureMap.Testing.Bugs
         {
             var container = new Container(x =>
             {
-                x.ForRequestedType<IPrincipal>().TheDefault.Is.ConstructedBy(() => null);
+                x.For<IPrincipal>().TheDefault.Is.ConstructedBy(() => null);
 
-                x.ForRequestedType<TestClass>().TheDefaultIsConcreteType<TestClass>();
+                x.For<TestClass>().TheDefaultIsConcreteType<TestClass>();
             });
 
             container.GetInstance<TestClass>().ShouldNotBeNull();

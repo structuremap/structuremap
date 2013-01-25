@@ -33,7 +33,7 @@ namespace StructureMap.Testing.Pipeline
                 r.ForConcreteType<ClassWithDependency>().Configure
                     .SetterDependency<Rule>().IsTheDefault();
 
-                r.ForRequestedType<Rule>().TheDefault.Is.Object(new ColorRule("Green"));
+                r.For<Rule>().TheDefault.Is.Object(new ColorRule("Green"));
             });
 
 

@@ -148,7 +148,7 @@ namespace StructureMap.Testing.Configuration.DSL
             {
                 var container = new Container(x =>
                 {
-                    x.ForRequestedType<ClassWithStringInConstructor>().TheDefaultIsConcreteType
+                    x.For<ClassWithStringInConstructor>().TheDefaultIsConcreteType
                         <ClassWithStringInConstructor>();
                 });
                 Assert.Fail("Should have thrown exception 231");
@@ -220,7 +220,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var manager =
                 new Container(
-                    registry => registry.ForRequestedType<IWidget>().TheDefault.Is.ConstructedBy(() => new AWidget()));
+                    registry => registry.For<IWidget>().TheDefault.Is.ConstructedBy(() => new AWidget()));
 
             manager.GetInstance<IWidget>().ShouldBeOfType<AWidget>();
         }
@@ -232,7 +232,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
             var manager =
                 new Container(
-                    registry => registry.ForRequestedType<IWidget>().TheDefault.Is.Object(aWidget));
+                    registry => registry.For<IWidget>().TheDefault.Is.Object(aWidget));
 
             Assert.AreSame(aWidget, manager.GetInstance<IWidget>());
         }
@@ -245,7 +245,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var manager =
                 new Container(
-                    registry => registry.ForRequestedType<Guid>().TheDefault.Is.ConstructedBy(() => Guid.NewGuid()));
+                    registry => registry.For<Guid>().TheDefault.Is.ConstructedBy(() => Guid.NewGuid()));
 
             manager.GetInstance<Guid>().ShouldBeOfType<Guid>();
         }
