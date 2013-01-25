@@ -37,21 +37,7 @@ namespace StructureMap.Configuration.DSL.Expressions
             return this;
         }
 
-        /// <summary>
-        /// Convenience method that sets the default concrete type of the PluginType.  The "concreteType"
-        /// can only accept types that do not have any primitive constructor arguments.
-        /// StructureMap has to know how to construct all of the constructor argument types.
-        /// </summary>
-        /// <param name="concreteType"></param>
-        /// <returns></returns>
-        [Obsolete("Change to Use(concreteType)")]
-        public ConfiguredInstance TheDefaultIsConcreteType(Type concreteType)
-        {
-            var instance = new ConfiguredInstance(concreteType);
-            Use(instance);
 
-            return instance;
-        }
 
         /// <summary>
         /// Use this configured Instance as is
@@ -67,13 +53,18 @@ namespace StructureMap.Configuration.DSL.Expressions
         }
 
         /// <summary>
-        /// Shorter way to call TheDefaultIsConcreteType
+        /// Convenience method that sets the default concrete type of the PluginType.  The "concreteType"
+        /// can only accept types that do not have any primitive constructor arguments.
+        /// StructureMap has to know how to construct all of the constructor argument types.
         /// </summary>
         /// <param name="concreteType"></param>
         /// <returns></returns>
         public ConfiguredInstance Use(Type concreteType)
         {
-            return TheDefaultIsConcreteType(concreteType);
+            var instance = new ConfiguredInstance(concreteType);
+            Use(instance);
+
+            return instance;
         }
 
 

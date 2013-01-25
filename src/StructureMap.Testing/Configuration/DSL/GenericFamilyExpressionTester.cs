@@ -102,7 +102,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var container =
                 new Container(
-                    r => r.For(typeof (ITarget)).TheDefaultIsConcreteType(typeof (Target3)));
+                    r => r.For(typeof (ITarget)).Use(typeof (Target3)));
 
             container.GetInstance<ITarget>().ShouldBeOfType<Target3>();
         }
@@ -111,7 +111,7 @@ namespace StructureMap.Testing.Configuration.DSL
         public void Add_default_instance()
         {
             var container =
-                new Container(r => { r.For(typeof (ITarget)).TheDefaultIsConcreteType(typeof (Target2)); });
+                new Container(r => { r.For(typeof (ITarget)).Use(typeof (Target2)); });
 
             container.GetInstance<ITarget>().ShouldBeOfType<Target2>();
         }
@@ -134,7 +134,7 @@ namespace StructureMap.Testing.Configuration.DSL
             var container = new Container(r =>
             {
                 r.For(typeof (ITarget)).EnrichAllWith(raw => new WrappedTarget((ITarget) raw))
-                    .TheDefaultIsConcreteType(typeof (Target1));
+                    .Use(typeof (Target1));
             });
 
             var target = (WrappedTarget) container.GetInstance<ITarget>();
@@ -150,7 +150,7 @@ namespace StructureMap.Testing.Configuration.DSL
             var container = new Container(r =>
             {
                 r.For(typeof (ITarget)).OnCreationForAll(raw => created = (ITarget) raw)
-                    .TheDefaultIsConcreteType(typeof (Target3));
+                    .Use(typeof (Target3));
             });
 
             container.GetInstance<ITarget>().ShouldBeOfType<Target3>();

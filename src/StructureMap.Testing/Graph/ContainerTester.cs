@@ -224,7 +224,7 @@ namespace StructureMap.Testing.Graph
             var container =
                 new Container(
                     x =>
-                    x.For(typeof (IOpenGeneric<>)).TheDefaultIsConcreteType(typeof (ConcreteOpenGeneric<>)));
+                    x.For(typeof (IOpenGeneric<>)).Use(typeof (ConcreteOpenGeneric<>)));
             container.TryGetInstance<IOpenGeneric<object>>().ShouldNotBeNull();
         }
 
@@ -234,7 +234,7 @@ namespace StructureMap.Testing.Graph
             var container =
                 new Container(
                     x =>
-                    x.For(typeof (IOpenGeneric<>)).TheDefaultIsConcreteType(typeof (ConcreteOpenGeneric<>)));
+                    x.For(typeof (IOpenGeneric<>)).Use(typeof (ConcreteOpenGeneric<>)));
             container.TryGetInstance<IAnotherOpenGeneric<object>>().ShouldBeNull();
         }
 

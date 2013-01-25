@@ -60,7 +60,7 @@ namespace StructureMap.Testing.Pipeline
             container = new Container(x =>
             {
                 // Define the basic open type for IFlattener<>
-                x.For(typeof (IFlattener<>)).TheDefaultIsConcreteType(typeof (PassthroughFlattener<>));
+                x.For(typeof (IFlattener<>)).Use(typeof (PassthroughFlattener<>));
 
                 // Explicitly Register a specific closed type for Address
                 x.For<IFlattener<Address>>().Use<AddressFlattener>();
