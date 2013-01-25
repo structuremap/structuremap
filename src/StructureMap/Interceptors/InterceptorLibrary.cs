@@ -30,18 +30,16 @@ namespace StructureMap.Interceptors
         public CompoundInterceptor FindInterceptor(Type type)
         {
             CompoundInterceptor interceptor;
-            if (!_analyzedInterceptors.TryGetValue(type, out interceptor))
+            lock (_locker)
             {
-                lock (_locker)
+                if (!_analyzedInterceptors.TryGetValue(type, out interceptor))
                 {
-                    if (!_analyzedInterceptors.TryGetValue(type, out interceptor))
-                    {
-                        var interceptorArray = _interceptors.FindAll(i => i.MatchesType(type)).ToArray();
-                        interceptor = new CompoundInterceptor(interceptorArray);
-                        _analyzedInterceptors.Add(type, interceptor);
-                    }
+                    var interceptorArray = _interceptors.FindAll(i => i.MatchesType(type)).ToArray();
+                    interceptor = new CompoundInterceptor(interceptorArray);
+                    _analyzedInterceptors.Add(type, interceptor);
                 }
             }
+
             return interceptor;
         }
 
