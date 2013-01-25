@@ -24,7 +24,7 @@ namespace StructureMap.Testing.Pipeline
 
             var widget = new AWidget();
 
-            instance.SetValue("widget", widget);
+            instance.As<IConfiguredInstance>().SetValue("widget", widget);
 
             instance.Get("widget", typeof (IWidget), new StubBuildSession()).ShouldEqual(widget);
         }
@@ -33,7 +33,7 @@ namespace StructureMap.Testing.Pipeline
         public void get_and_set_for_a_date_time()
         {
             ConstructorInstance instance = ConstructorInstance.For<ClassWithDate>();
-            instance.SetValue("date", "12/23/2009");
+            instance.As<IConfiguredInstance>().SetValue("date", "12/23/2009");
 
             instance.Get("date", typeof (DateTime), new StubBuildSession()).ShouldEqual(new DateTime(2009, 12, 23));
         }
@@ -44,7 +44,7 @@ namespace StructureMap.Testing.Pipeline
             ConstructorInstance instance = ConstructorInstance.For<ClassWithGuid>();
             Guid guid = Guid.NewGuid();
 
-            instance.SetValue("guid", guid.ToString());
+            instance.As<IConfiguredInstance>().SetValue("guid", guid.ToString());
 
             instance.Get("guid", typeof (Guid), new StubBuildSession()).ShouldEqual(guid);
         }
@@ -53,11 +53,11 @@ namespace StructureMap.Testing.Pipeline
         public void get_and_set_for_a_nullable_date_time()
         {
             ConstructorInstance instance = ConstructorInstance.For<ClassWithNullableDate>();
-            instance.SetValue("date", "12/23/2009");
+            instance.As<IConfiguredInstance>().SetValue("date", "12/23/2009");
 
             instance.Get("date", typeof (DateTime?), new StubBuildSession()).ShouldEqual(new DateTime(2009, 12, 23));
 
-            instance.SetValue("date", null);
+            instance.As<IConfiguredInstance>().SetValue("date", null);
 
             instance.Get("date", typeof (DateTime?), new StubBuildSession()).ShouldBeNull();
         }
@@ -73,7 +73,7 @@ namespace StructureMap.Testing.Pipeline
             };
 
             ConstructorInstance instance = ConstructorInstance.For<ClassWithArrayOfWidgets>();
-            instance.SetCollection("widgets", children);
+            instance.As<IConfiguredInstance>().SetCollection("widgets", children);
 
 
             var widgets = instance.Get("widgets", typeof (IWidget), new StubBuildSession()).ShouldBeOfType<IWidget[]>();
@@ -89,11 +89,11 @@ namespace StructureMap.Testing.Pipeline
         public void set_and_get_a_nullable_integer()
         {
             ConstructorInstance instance = ConstructorInstance.For<ClassWithNullableInt>();
-            instance.SetValue("age", "45");
+            instance.As<IConfiguredInstance>().SetValue("age", "45");
 
             instance.Get("age", typeof (int?), new StubBuildSession()).ShouldEqual(45);
 
-            instance.SetValue("age", null);
+            instance.As<IConfiguredInstance>().SetValue("age", null);
             instance.Get("age", typeof (int?), new StubBuildSession()).ShouldBeNull();
         }
 
@@ -101,7 +101,7 @@ namespace StructureMap.Testing.Pipeline
         public void set_and_get_a_string()
         {
             ConstructorInstance instance = ConstructorInstance.For<ColorWidget>();
-            instance.SetValue("color", "Red");
+            instance.As<IConfiguredInstance>().SetValue("color", "Red");
 
 
             instance.Get("color", typeof (string), new StubBuildSession()).ShouldEqual("Red");
@@ -111,7 +111,7 @@ namespace StructureMap.Testing.Pipeline
         public void set_and_get_an_integer()
         {
             ConstructorInstance instance = ConstructorInstance.For<ClassWithInt>();
-            instance.SetValue("age", "45");
+            instance.As<IConfiguredInstance>().SetValue("age", "45");
 
             instance.Get("age", typeof (int), new StubBuildSession()).ShouldEqual(45);
         }

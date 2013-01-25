@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using NUnit.Framework;
+using StructureMap.Configuration;
 using StructureMap.Graph;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget5;
@@ -54,7 +55,7 @@ namespace StructureMap.Testing.Configuration.DSL
             var scanner = new AssemblyScanner();
             scanner.AssemblyContainingType(typeof (RedGreenRegistry));
             scanner.LookForRegistries();
-            scanner.ScanForAll(graph);
+            scanner.ShouldBeOfType<IPluginGraphConfiguration>().Configure(graph);
 
             graph.Seal();
 

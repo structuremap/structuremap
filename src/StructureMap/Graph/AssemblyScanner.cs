@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
 using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.TypeRules;
@@ -37,8 +38,7 @@ namespace StructureMap.Graph
         }
     }
 
-
-    public class AssemblyScanner : IAssemblyScanner
+    public class AssemblyScanner : IAssemblyScanner, IPluginGraphConfiguration
     {
         private readonly List<Assembly> _assemblies = new List<Assembly>();
         private readonly List<IRegistrationConvention> _conventions = new List<IRegistrationConvention>();
@@ -234,7 +234,7 @@ namespace StructureMap.Graph
             _conventions.Fill(convention);
         }
 
-        internal void ScanForAll(PluginGraph pluginGraph)
+        void IPluginGraphConfiguration.Configure(PluginGraph pluginGraph)
         {
             var registry = new Registry();
 
@@ -245,7 +245,7 @@ namespace StructureMap.Graph
                     _conventions.Each(c => c.Process(type, registry));
                 });
 
-            registry.ConfigurePluginGraph(pluginGraph);
+            registry.As<IPluginGraphConfiguration>().Configure(pluginGraph);
             _postScanningActions.Each(x => x(pluginGraph));
         }
 

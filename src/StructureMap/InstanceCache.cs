@@ -4,7 +4,7 @@ using StructureMap.Pipeline;
 
 namespace StructureMap
 {
-    internal class InstanceCache
+    public class InstanceCache
     {
         private readonly Dictionary<Type, Dictionary<Instance, object>> _objects =
             new Dictionary<Type, Dictionary<Instance, object>>();

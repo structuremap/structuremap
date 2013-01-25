@@ -57,7 +57,7 @@ namespace StructureMap.Graph
             _builders[pluggedType] = builder;
         }
 
-        internal static void ResetAll()
+        public static void ResetAll()
         {
             lock (typeof (PluginCache))
             {

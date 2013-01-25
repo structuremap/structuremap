@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>StructureMap.Testing.GenericWidgets</RootNamespace>
     <AssemblyName>StructureMap.Testing.GenericWidgets</AssemblyName>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>structuremap.snk</AssemblyOriginatorKeyFile>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -64,12 +64,6 @@
     <Compile Include="Widgets.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\StructureMap\StructureMap.csproj">
-      <Project>{3F36EA80-2F9A-4DAD-BA27-5AC6163A2EE3}</Project>
-      <Name>StructureMap</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="structuremap.snk" />
   </ItemGroup>
   <ItemGroup>
@@ -88,6 +82,12 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\StructureMap\StructureMap.csproj">
+      <Project>{3F36EA80-2F9A-4DAD-BA27-5AC6163A2EE3}</Project>
+      <Name>StructureMap</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

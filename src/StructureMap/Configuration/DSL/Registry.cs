@@ -21,7 +21,7 @@ namespace StructureMap.Configuration.DSL
     ///     }
     /// }
     /// </example>
-    public class Registry : IRegistry
+    public class Registry : IRegistry, IPluginGraphConfiguration
     {
         private readonly List<Action<PluginGraph>> _actions = new List<Action<PluginGraph>>();
         private readonly List<Action> _basicActions = new List<Action>();
@@ -65,7 +65,7 @@ namespace StructureMap.Configuration.DSL
         /// <typeparam name="T"></typeparam>
         public void IncludeRegistry<T>() where T : Registry, new()
         {
-            _actions.Add(g => new T().ConfigurePluginGraph(g));
+            _actions.Add(g => new T().As<IPluginGraphConfiguration>().Configure(g));
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace StructureMap.Configuration.DSL
         /// <param name="registry"></param>
         public void IncludeRegistry(Registry registry)
         {
-            _actions.Add(registry.ConfigurePluginGraph);
+            _actions.Add(graph => registry.As<IPluginGraphConfiguration>().Configure(graph));
         }
 
 
@@ -149,7 +149,7 @@ namespace StructureMap.Configuration.DSL
         public PluginGraph Build()
         {
             var graph = new PluginGraph();
-            ConfigurePluginGraph(graph);
+            this.As<IPluginGraphConfiguration>().Configure(graph);
             graph.Seal();
 
             return graph;
@@ -385,7 +385,7 @@ namespace StructureMap.Configuration.DSL
             _actions.Add(alteration);
         }
 
-        internal void ConfigurePluginGraph(PluginGraph graph)
+        void IPluginGraphConfiguration.Configure(PluginGraph graph)
         {
             if (graph.Registries.Contains(this)) return;
 

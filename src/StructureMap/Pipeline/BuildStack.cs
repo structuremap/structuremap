@@ -9,7 +9,7 @@ namespace StructureMap.Pipeline
         private BuildFrame _current;
         private BuildFrame _root;
 
-        internal BuildStack()
+        public BuildStack()
         {
         }
 
@@ -28,7 +28,7 @@ namespace StructureMap.Pipeline
         /// </summary>
         public BuildFrame Parent { get { return _current.Parent; } }
 
-        internal void Push(BuildFrame frame)
+        public void Push(BuildFrame frame)
         {
             if (_root == null)
             {
@@ -46,7 +46,7 @@ namespace StructureMap.Pipeline
             }
         }
 
-        internal void Pop()
+        public void Pop()
         {
             _current = _current.Detach();
             if (_current == null) _root = null;

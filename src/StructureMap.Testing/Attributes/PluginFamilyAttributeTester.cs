@@ -41,7 +41,7 @@ namespace StructureMap.Testing.Attributes
                 return new InstanceMemento[0];
             }
 
-            protected internal override bool containsKey(string instanceKey)
+            protected override bool containsKey(string instanceKey)
             {
                 throw new NotImplementedException();
             }

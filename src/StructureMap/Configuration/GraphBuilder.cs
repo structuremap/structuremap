@@ -27,7 +27,7 @@ namespace StructureMap.Configuration
 
             foreach (Registry registry in registries)
             {
-                registry.ConfigurePluginGraph(_pluginGraph);
+                registry.As<IPluginGraphConfiguration>().Configure(_pluginGraph);
             }
 
             _systemGraph = new SystemRegistry().Build();
@@ -62,7 +62,7 @@ namespace StructureMap.Configuration
             {
                 Type type = new TypePath(registryTypeName).FindType();
                 var registry = (Registry) Activator.CreateInstance(type);
-                registry.ConfigurePluginGraph(_pluginGraph);
+                registry.As<IPluginGraphConfiguration>().Configure(_pluginGraph);
             }).AndReportErrorAs(290, registryTypeName);
         }
 

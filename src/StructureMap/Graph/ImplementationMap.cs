@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
 using StructureMap.TypeRules;
 using StructureMap.Util;
@@ -39,7 +40,7 @@ namespace StructureMap.Graph
                     ConfigureFamily(singleImplementationRegistry.For(pluginType));
                 }
             });
-            singleImplementationRegistry.ConfigurePluginGraph(graph);
+            singleImplementationRegistry.As<IPluginGraphConfiguration>().Configure(graph);
         }
     }
 

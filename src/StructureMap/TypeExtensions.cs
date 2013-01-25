@@ -6,6 +6,8 @@ using StructureMap.Pipeline;
 
 namespace StructureMap
 {
+
+
     internal static class BasicExtensions
     {
         public static string ToName(this ILifecycle lifecycle)

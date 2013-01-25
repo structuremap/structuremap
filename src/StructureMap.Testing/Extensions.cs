@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace StructureMap
+namespace StructureMap.Testing
 {
     // TODO -- eliminate in SM3
     internal static class StringExtensions

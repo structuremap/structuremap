@@ -59,7 +59,7 @@ namespace StructureMap.Pipeline
         /// </summary>
         public Type ConcreteType { get { return _concreteType; } }
 
-        internal void Attach(BuildFrame next)
+        public void Attach(BuildFrame next)
         {
             _next = next;
             _next._parent = this;
