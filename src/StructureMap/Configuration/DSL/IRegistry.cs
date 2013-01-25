@@ -142,20 +142,6 @@ namespace StructureMap.Configuration.DSL
         void Forward<FROM, TO>() where FROM : class where TO : class;
 
         /// <summary>
-        /// Syntactic Sugar for saying ForRequestedType().TheDefault.IsThis( @object )
-        /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
-        /// <param name="object"></param>
-        void Register<PLUGINTYPE>(PLUGINTYPE @object);
-
-        /// <summary>
-        /// Syntactic Sugar for saying ForRequestedType().TheDefault.IsThis( instance )
-        /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
-        /// <param name="instance"></param>
-        void Register<PLUGINTYPE>(Instance instance);
-
-        /// <summary>
         /// Shorthand for ForRequestedType<PLUGINTYPE>()
         /// </summary>
         /// <typeparam name="PLUGINTYPE"></typeparam>

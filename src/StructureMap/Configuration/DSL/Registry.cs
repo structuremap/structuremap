@@ -228,29 +228,6 @@ namespace StructureMap.Configuration.DSL
             For<TO>().AddInstances(x => x.ConstructedBy(c => c.GetInstance<FROM>() as TO));
         }
 
-
-        /// <summary>
-        /// Syntactic Sugar for saying ForRequestedType().TheDefault.IsThis( @object )
-        /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
-        /// <param name="object"></param>
-        [Obsolete("Prefer For<T>().Use(value)")]
-        public void Register<PLUGINTYPE>(PLUGINTYPE @object)
-        {
-            For<PLUGINTYPE>().TheDefault.IsThis(@object);
-        }
-
-        /// <summary>
-        /// Syntactic Sugar for saying ForRequestedType().TheDefault.IsThis( instance )
-        /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
-        /// <param name="instance"></param>
-        [Obsolete("Prefer For<T>().Use(instance)")]
-        public void Register<PLUGINTYPE>(Instance instance)
-        {
-            For<PLUGINTYPE>().TheDefault.IsThis(instance);
-        }
-
         /// <summary>
         /// Expression Builder used to define policies for a PluginType including
         /// Scoping, the Default Instance, and interception.  BuildInstancesOf()
