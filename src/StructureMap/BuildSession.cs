@@ -70,11 +70,11 @@ namespace StructureMap
 
         public void BuildUp(object target)
         {
-            Type pluggedType = target.GetType();
-            IConfiguredInstance instance = _pipelineGraph.GetDefault(pluggedType) as IConfiguredInstance
-                ?? new ConfiguredInstance(pluggedType);
+            Type TPluggedType = target.GetType();
+            IConfiguredInstance instance = _pipelineGraph.GetDefault(TPluggedType) as IConfiguredInstance
+                ?? new ConfiguredInstance(TPluggedType);
 
-            IInstanceBuilder builder = PluginCache.FindBuilder(pluggedType);
+            IInstanceBuilder builder = PluginCache.FindBuilder(TPluggedType);
             var arguments = new Arguments(instance, this);
             builder.BuildUp(arguments, target);
         }

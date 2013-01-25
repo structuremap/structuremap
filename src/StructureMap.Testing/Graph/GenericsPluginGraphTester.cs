@@ -20,14 +20,14 @@ namespace StructureMap.Testing.Graph
 
         #endregion
 
-        private void assertCanBeCast(Type pluginType, Type pluggedType)
+        private void assertCanBeCast(Type pluginType, Type TPluggedType)
         {
-            Assert.IsTrue(GenericsPluginGraph.CanBeCast(pluginType, pluggedType));
+            Assert.IsTrue(GenericsPluginGraph.CanBeCast(pluginType, TPluggedType));
         }
 
-        private void assertCanNotBeCast(Type pluginType, Type pluggedType)
+        private void assertCanNotBeCast(Type pluginType, Type TPluggedType)
         {
-            Assert.IsFalse(GenericsPluginGraph.CanBeCast(pluginType, pluggedType));
+            Assert.IsFalse(GenericsPluginGraph.CanBeCast(pluginType, TPluggedType));
         }
 
         [Test]

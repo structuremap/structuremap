@@ -54,7 +54,7 @@ namespace StructureMap.Testing
             {
                 x.For<IWidget>().AddInstances(o =>
                 {
-                    o.OfConcreteType<AWidget>();
+                    o.Type<AWidget>();
                     o.ConstructedBy(() => new ColorWidget("red"));
                     o.ConstructedBy(() => new ColorWidget("blue"));
                     o.ConstructedBy(() => new ColorWidget("green"));
@@ -75,7 +75,7 @@ namespace StructureMap.Testing
             {
                 x.For<IWidget>().AddInstances(o =>
                 {
-                    o.OfConcreteType<AWidget>();
+                    o.Type<AWidget>();
                     o.ConstructedBy(() => new ColorWidget("red"));
                     o.ConstructedBy(() => new ColorWidget("blue"));
                     o.ConstructedBy(() => new ColorWidget("green"));
@@ -96,7 +96,7 @@ namespace StructureMap.Testing
             {
                 x.For<IWidget>().AddInstances(o =>
                 {
-                    o.OfConcreteType<AWidget>();
+                    o.Type<AWidget>();
                     o.ConstructedBy(() => new ColorWidget("red"));
                     o.ConstructedBy(() => new ColorWidget("blue"));
                     o.ConstructedBy(() => new ColorWidget("green"));

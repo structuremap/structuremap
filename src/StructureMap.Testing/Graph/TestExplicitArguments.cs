@@ -114,9 +114,9 @@ namespace StructureMap.Testing.Graph
             {
                 x.For<ColorWithLump>().AddInstances(o =>
                 {
-                    o.OfConcreteType<ColorWithLump>().WithCtorArg("color").EqualTo("red").WithName("red");
-                    o.OfConcreteType<ColorWithLump>().WithCtorArg("color").EqualTo("green").WithName("green");
-                    o.OfConcreteType<ColorWithLump>().WithCtorArg("color").EqualTo("blue").WithName("blue");
+                    o.Type<ColorWithLump>().WithCtorArg("color").EqualTo("red").WithName("red");
+                    o.Type<ColorWithLump>().WithCtorArg("color").EqualTo("green").WithName("green");
+                    o.Type<ColorWithLump>().WithCtorArg("color").EqualTo("blue").WithName("blue");
                 });
             });
 
@@ -245,7 +245,7 @@ namespace StructureMap.Testing.Graph
             ObjectFactory.Initialize(x =>
             {
                 x.For<ExplicitTarget>().Use<ExplicitTarget>()
-                    .CtorDependency<IProvider>().Is(child => child.OfConcreteType<RedProvider>())
+                    .CtorDependency<IProvider>().Is(child => child.Type<RedProvider>())
                     .WithCtorArg("name").EqualTo("Jeremy");
             });
 

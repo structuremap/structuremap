@@ -188,9 +188,9 @@ namespace StructureMap.Testing.Pipeline
 <StructureMap MementoStyle='Attribute'>
     <DefaultInstance 
         PluginType='StructureMap.Testing.Pipeline.ClassWithDependency, StructureMap.Testing' 
-        PluggedType='StructureMap.Testing.Pipeline.ClassWithDependency, StructureMap.Testing'>
+        TPluggedType='StructureMap.Testing.Pipeline.ClassWithDependency, StructureMap.Testing'>
         
-        <Rule PluggedType='StructureMap.Testing.Widget.ColorRule, StructureMap.Testing.Widget' color='Red' />
+        <Rule TPluggedType='StructureMap.Testing.Widget.ColorRule, StructureMap.Testing.Widget' color='Red' />
     </DefaultInstance>
 </StructureMap>
 
@@ -213,7 +213,7 @@ namespace StructureMap.Testing.Pipeline
 <StructureMap MementoStyle='Attribute'>
     <DefaultInstance 
         PluginType='StructureMap.Testing.Pipeline.ClassWithDependency, StructureMap.Testing' 
-        PluggedType='StructureMap.Testing.Pipeline.ClassWithDependency, StructureMap.Testing'>
+        TPluggedType='StructureMap.Testing.Pipeline.ClassWithDependency, StructureMap.Testing'>
 
     </DefaultInstance>
 </StructureMap>

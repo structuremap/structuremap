@@ -61,15 +61,15 @@ namespace StructureMap.Testing.DocumentationExamples
         {
             For<IShippingService>().AddInstances(x =>
             {
-                x.OfConcreteType<ShippingWebService>()
+                x.Type<ShippingWebService>()
                     .WithCtorArg("url").EqualTo("a url")
                     .WithName("Domestic");
 
-                x.OfConcreteType<ShippingWebService>()
+                x.Type<ShippingWebService>()
                     .WithCtorArg("url").EqualTo("a different url")
                     .WithName("International");
 
-                x.OfConcreteType<InternalShippingService>().WithName("Internal");
+                x.Type<InternalShippingService>().WithName("Internal");
             });
         }
     }
@@ -427,14 +427,14 @@ namespace StructureMap.Testing.DocumentationExamples
             {
                 x.ConstructedBy(() => new ColorService("Red"));
 
-                x.OfConcreteType<RemoteService>();
+                x.Type<RemoteService>();
 
                 x.Object(new ColorService("Red"));
             });
 
             // Use the InstanceExpression to define the default Instance
             // of a PluginType within a Profile
-            Profile("Connected", x => { x.Type<IService>().Is.OfConcreteType<RemoteService>(); });
+            Profile("Connected", x => { x.Type<IService>().Is.Type<RemoteService>(); });
         }
     }
 }

@@ -207,7 +207,7 @@ namespace StructureMap.Testing.Graph
             IConfiguredInstance instance = (ConfiguredInstance) plugin.CreateImplicitInstance();
 
             Assert.AreEqual("Default", instance.Name);
-            Assert.AreEqual(typeof (DefaultGateway), instance.PluggedType);
+            Assert.AreEqual(typeof (DefaultGateway), instance.TPluggedType);
         }
 
         [Test]
@@ -219,7 +219,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void CreateImplicitPluginSetsCorrectType()
         {
-            Assert.IsTrue(typeof (ConfigurationWidget).Equals(_plugin.PluggedType));
+            Assert.IsTrue(typeof (ConfigurationWidget).Equals(_plugin.TPluggedType));
         }
 
         [Test]
@@ -230,7 +230,7 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
-        public void DoesNotCreateAnImplicitMementoForAPluggedTypeThatCanBeAutoFilled()
+        public void DoesNotCreateAnImplicitMementoForATPluggedTypeThatCanBeAutoFilled()
         {
             var plugin = new Plugin(typeof (GrandPrix));
             Assert.IsFalse(plugin.CanBeAutoFilled);

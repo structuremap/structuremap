@@ -20,7 +20,7 @@ namespace StructureMap.Graph
             _plugin = plugin;
 
 
-            plugin.PluggedType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+            plugin.TPluggedType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
                 .Where(x => x.CanWrite && x.GetSetMethod(false) != null && x.GetSetMethod().GetParameters().Length == 1)
                 .Each(x =>
                 {
@@ -52,7 +52,7 @@ namespace StructureMap.Graph
             SetterProperty setter = _properties.Find(p => p.Property.Name == propertyName);
             if (setter == null)
             {
-                throw new StructureMapException(240, propertyName, _plugin.PluggedType);
+                throw new StructureMapException(240, propertyName, _plugin.TPluggedType);
             }
 
 

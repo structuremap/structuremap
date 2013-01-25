@@ -2,6 +2,6 @@
 <StructureMap MementoStyle="Attribute">
   <DefaultInstance
       PluginType="StructureMap.Testing.Pipeline.OptionalSetterTarget, StructureMap.Testing"
-      PluggedType="StructureMap.Testing.Pipeline.OptionalSetterTarget, StructureMap.Testing"
+      TPluggedType="StructureMap.Testing.Pipeline.OptionalSetterTarget, StructureMap.Testing"
       Name="Jeremy" />
 </StructureMap>

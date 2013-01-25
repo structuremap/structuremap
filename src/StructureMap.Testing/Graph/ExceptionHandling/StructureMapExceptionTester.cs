@@ -89,7 +89,7 @@ namespace StructureMap.Testing.Graph.ExceptionHandling
         }
 
         [Test]
-        public void CouldNotUpcastDesignatedPluggedTypeIntoPluginType()
+        public void CouldNotUpcastDesignatedTPluggedTypeIntoPluginType()
         {
             assertErrorIsLogged(104,
                                 @"

@@ -28,11 +28,11 @@ namespace StructureMap.Graph
         void AddType(Type pluginType, Type concreteType, string name);
 
         /// <summary>
-        /// Add the pluggedType as an instance to any configured pluginType where pluggedType
+        /// Add the TPluggedType as an instance to any configured pluginType where TPluggedType
         /// could be assigned to the pluginType
         /// </summary>
-        /// <param name="pluggedType"></param>
-        void AddType(Type pluggedType);
+        /// <param name="TPluggedType"></param>
+        void AddType(Type TPluggedType);
     }
 
 
@@ -69,7 +69,7 @@ namespace StructureMap.Graph
     public class PluginGraph : IPluginGraph
     {
         private readonly InterceptorLibrary _interceptorLibrary = new InterceptorLibrary();
-        private readonly List<Type> _pluggedTypes = new List<Type>();
+        private readonly List<Type> _TPluggedTypes = new List<Type>();
         private readonly PluginFamilyCollection _pluginFamilies;
         private readonly ProfileManager _profileManager = new ProfileManager();
         private readonly List<Registry> _registries = new List<Registry>();
@@ -124,7 +124,7 @@ namespace StructureMap.Graph
                 _scanners[index++].As<IPluginGraphConfiguration>().Configure(this);
             }
 
-            _pluginFamilies.Each(family => family.AddTypes(_pluggedTypes));
+            _pluginFamilies.Each(family => family.AddTypes(_TPluggedTypes));
             _pluginFamilies.Each(family => family.Seal());
 
             _profileManager.Seal(this);
@@ -156,13 +156,13 @@ namespace StructureMap.Graph
         }
 
         /// <summary>
-        /// Add the pluggedType as an instance to any configured pluginType where pluggedType
+        /// Add the TPluggedType as an instance to any configured pluginType where TPluggedType
         /// could be assigned to the pluginType
         /// </summary>
-        /// <param name="pluggedType"></param>
-        public virtual void AddType(Type pluggedType)
+        /// <param name="TPluggedType"></param>
+        public virtual void AddType(Type TPluggedType)
         {
-            _pluggedTypes.Add(pluggedType);
+            _TPluggedTypes.Add(TPluggedType);
         }
 
         /// <summary>

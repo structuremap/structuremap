@@ -50,13 +50,13 @@ namespace StructureMap.Configuration.DSL
         }
 
         /// <summary>
-        /// Add the pluggedType as an instance to any configured pluginType where pluggedType. 
+        /// Add the TPluggedType as an instance to any configured pluginType where TPluggedType. 
         /// Mostly useful for conventions
         /// </summary>
-        /// <param name="pluggedType"></param>
-        public void AddType(Type pluggedType)
+        /// <param name="TPluggedType"></param>
+        public void AddType(Type TPluggedType)
         {
-            _actions.Add(g => g.AddType(pluggedType));
+            _actions.Add(g => g.AddType(TPluggedType));
         }
 
         /// <summary>

@@ -98,7 +98,7 @@ namespace StructureMap.Testing.Pipeline
 
                 x.Profile("green", o =>
                 {
-                    o.Type<IWidget>().Is.OfConcreteType<ColorWidget>()
+                    o.Type<IWidget>().Is.Type<ColorWidget>()
                         .WithCtorArg("color").EqualTo("green");
                 });
             });

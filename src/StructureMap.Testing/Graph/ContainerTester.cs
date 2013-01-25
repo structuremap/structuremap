@@ -84,9 +84,9 @@ namespace StructureMap.Testing.Graph
 
                 r.For<IService>().AddInstances(x =>
                 {
-                    x.OfConcreteType<ColorService>().WithName("Red").WithProperty("color").EqualTo("Red");
-                    x.OfConcreteType<ColorService>().WithName("Blue").WithProperty("color").EqualTo("Blue");
-                    x.OfConcreteType<ColorService>().WithName("Green").WithProperty("color").EqualTo("Green");
+                    x.Type<ColorService>().WithName("Red").WithProperty("color").EqualTo("Red");
+                    x.Type<ColorService>().WithName("Blue").WithProperty("color").EqualTo("Blue");
+                    x.Type<ColorService>().WithName("Green").WithProperty("color").EqualTo("Green");
                 });
 
                 r.Profile("Red").For<IService>().UseNamedInstance("Red");

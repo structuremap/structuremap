@@ -15,8 +15,8 @@ namespace StructureMap.Pipeline
         private readonly Cache<string, Instance> _dependencies = new Cache<string, Instance>();
         private readonly Plugin _plugin;
 
-        public ConstructorInstance(Type pluggedType)
-            : this(PluginCache.GetPlugin(pluggedType))
+        public ConstructorInstance(Type TPluggedType)
+            : this(PluginCache.GetPlugin(TPluggedType))
         {
         }
 
@@ -35,8 +35,8 @@ namespace StructureMap.Pipeline
             };
         }
 
-        public ConstructorInstance(Type pluggedType, string name)
-            : this(pluggedType)
+        public ConstructorInstance(Type TPluggedType, string name)
+            : this(TPluggedType)
         {
             Name = name;
         }
@@ -82,7 +82,7 @@ namespace StructureMap.Pipeline
             return (T) o;
         }
 
-        public Type PluggedType { get { return _plugin.PluggedType; } }
+        public Type TPluggedType { get { return _plugin.TPluggedType; } }
 
         public bool HasProperty(string propertyName, BuildSession session)
         {
@@ -107,7 +107,7 @@ namespace StructureMap.Pipeline
 
         protected override bool canBePartOfPluginFamily(PluginFamily family)
         {
-            return _plugin.PluggedType.CanBeCastTo(family.PluginType);
+            return _plugin.TPluggedType.CanBeCastTo(family.PluginType);
         }
 
         public ConstructorInstance Override(ExplicitArguments arguments)
@@ -122,12 +122,12 @@ namespace StructureMap.Pipeline
 
         protected override sealed string getDescription()
         {
-            return "Configured Instance of " + _plugin.PluggedType.AssemblyQualifiedName;
+            return "Configured Instance of " + _plugin.TPluggedType.AssemblyQualifiedName;
         }
 
         protected override sealed Type getConcreteType(Type pluginType)
         {
-            return _plugin.PluggedType;
+            return _plugin.TPluggedType;
         }
 
         internal void SetChild(string name, Instance instance)
@@ -155,7 +155,7 @@ namespace StructureMap.Pipeline
             {
                 throw new ArgumentOutOfRangeException("name",
                                                       "Could not find a constructor parameter or property for {0} named {1}"
-                                                          .ToFormat(_plugin.PluggedType.AssemblyQualifiedName, name));
+                                                          .ToFormat(_plugin.TPluggedType.AssemblyQualifiedName, name));
             }
             return dependencyType;
         }
@@ -214,7 +214,7 @@ namespace StructureMap.Pipeline
 
         protected override object build(Type pluginType, BuildSession session)
         {
-            IInstanceBuilder builder = PluginCache.FindBuilder(_plugin.PluggedType);
+            IInstanceBuilder builder = PluginCache.FindBuilder(_plugin.TPluggedType);
             return Build(pluginType, session, builder);
         }
 
@@ -223,7 +223,7 @@ namespace StructureMap.Pipeline
             if (builder == null)
             {
                 throw new StructureMapException(
-                    201, _plugin.PluggedType.FullName, Name, pluginType);
+                    201, _plugin.TPluggedType.FullName, Name, pluginType);
             }
 
 
@@ -253,12 +253,12 @@ namespace StructureMap.Pipeline
 
         public override Instance CloseType(Type[] types)
         {
-            if(!_plugin.PluggedType.IsOpenGeneric())
+            if(!_plugin.TPluggedType.IsOpenGeneric())
                 return null;
 
             Type closedType;
             try {
-                closedType = _plugin.PluggedType.MakeGenericType(types);
+                closedType = _plugin.TPluggedType.MakeGenericType(types);
             }
             catch {
                 return null;
@@ -277,7 +277,7 @@ namespace StructureMap.Pipeline
 
         public override string ToString()
         {
-            return "'{0}' -> {1}".ToFormat(Name, _plugin.PluggedType.FullName);
+            return "'{0}' -> {1}".ToFormat(Name, _plugin.TPluggedType.FullName);
         }
     }
 }

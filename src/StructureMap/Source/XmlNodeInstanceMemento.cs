@@ -37,7 +37,7 @@ namespace StructureMap.Source
         {
             get
             {
-                if (!string.IsNullOrEmpty(getPluggedType()))
+                if (!string.IsNullOrEmpty(getTPluggedType()))
                 {
                     return false;
                 }
@@ -59,7 +59,7 @@ namespace StructureMap.Source
         public override string ReferenceKey { get { return getAttribute("Key"); } }
 
 
-        protected override string getPluggedType()
+        protected override string getTPluggedType()
         {
             return getAttribute(XmlConstants.PLUGGED_TYPE);
         }

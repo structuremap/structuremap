@@ -228,7 +228,6 @@
     <Compile Include="Configuration\DSL\AddTypesTester.cs" />
     <Compile Include="Configuration\DSL\ConstructorExpressionTester.cs" />
     <Compile Include="Configuration\DSL\CreatePluginFamilyTester.cs" />
-    <Compile Include="Configuration\DSL\CreateProfileTester.cs" />
     <Compile Include="Configuration\DSL\GenericFamilyExpressionTester.cs" />
     <Compile Include="Configuration\DSL\InjectArrayTester.cs" />
     <Compile Include="Configuration\DSL\InstanceExpressionTester.cs" />

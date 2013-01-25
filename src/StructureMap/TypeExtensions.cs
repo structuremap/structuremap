@@ -91,16 +91,16 @@ namespace StructureMap
             }
 
 
-            public static bool IsConcreteAndAssignableTo(this Type pluggedType, Type pluginType)
+            public static bool IsConcreteAndAssignableTo(this Type TPluggedType, Type pluginType)
             {
-                return pluggedType.IsConcrete() && pluginType.IsAssignableFrom(pluggedType);
+                return TPluggedType.IsConcrete() && pluginType.IsAssignableFrom(TPluggedType);
             }
 
-            public static bool ImplementsInterfaceTemplate(this Type pluggedType, Type templateType)
+            public static bool ImplementsInterfaceTemplate(this Type TPluggedType, Type templateType)
             {
-                if (!pluggedType.IsConcrete()) return false;
+                if (!TPluggedType.IsConcrete()) return false;
 
-                foreach (Type interfaceType in pluggedType.GetInterfaces())
+                foreach (Type interfaceType in TPluggedType.GetInterfaces())
                 {
                     if (interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition() == templateType)
                     {
@@ -111,35 +111,35 @@ namespace StructureMap
                 return false;
             }
 
-            public static Type FindFirstInterfaceThatCloses(this Type pluggedType, Type templateType)
+            public static Type FindFirstInterfaceThatCloses(this Type TPluggedType, Type templateType)
             {
-                return pluggedType.FindInterfacesThatClose(templateType).FirstOrDefault();
+                return TPluggedType.FindInterfacesThatClose(templateType).FirstOrDefault();
             }
 
-            public static IEnumerable<Type> FindInterfacesThatClose(this Type pluggedType, Type templateType)
+            public static IEnumerable<Type> FindInterfacesThatClose(this Type TPluggedType, Type templateType)
             {
-                return rawFindInterfacesThatCloses(pluggedType, templateType).Distinct();
+                return rawFindInterfacesThatCloses(TPluggedType, templateType).Distinct();
             }
 
-            private static IEnumerable<Type> rawFindInterfacesThatCloses(Type pluggedType, Type templateType)
+            private static IEnumerable<Type> rawFindInterfacesThatCloses(Type TPluggedType, Type templateType)
             {
-                if (!pluggedType.IsConcrete()) yield break;
+                if (!TPluggedType.IsConcrete()) yield break;
 
                 if (templateType.IsInterface)
                 {
-                    foreach (var interfaceType in pluggedType.GetInterfaces().Where(type => type.IsGenericType && (type.GetGenericTypeDefinition() == templateType)))
+                    foreach (var interfaceType in TPluggedType.GetInterfaces().Where(type => type.IsGenericType && (type.GetGenericTypeDefinition() == templateType)))
                     {
                         yield return interfaceType;
                     }
                 }
-                else if (pluggedType.BaseType.IsGenericType && (pluggedType.BaseType.GetGenericTypeDefinition() == templateType))
+                else if (TPluggedType.BaseType.IsGenericType && (TPluggedType.BaseType.GetGenericTypeDefinition() == templateType))
                 {
-                    yield return pluggedType.BaseType;
+                    yield return TPluggedType.BaseType;
                 }
 
-                if (pluggedType.BaseType == typeof (object)) yield break;
+                if (TPluggedType.BaseType == typeof (object)) yield break;
 
-                foreach (var interfaceType in rawFindInterfacesThatCloses(pluggedType.BaseType, templateType))
+                foreach (var interfaceType in rawFindInterfacesThatCloses(TPluggedType.BaseType, templateType))
                 {
                     yield return interfaceType;
                 }
@@ -193,50 +193,50 @@ namespace StructureMap
             }
 
             /// <summary>
-            /// Determines if the pluggedType can be upcast to the pluginType
+            /// Determines if the TPluggedType can be upcast to the pluginType
             /// </summary>
             /// <param name="pluginType"></param>
-            /// <param name="pluggedType"></param>
+            /// <param name="TPluggedType"></param>
             /// <returns></returns>
-            public static bool CanBeCastTo(this Type pluggedType, Type pluginType)
+            public static bool CanBeCastTo(this Type TPluggedType, Type pluginType)
             {
-                if (pluggedType == null) return false;
+                if (TPluggedType == null) return false;
 
-                if (pluggedType.IsInterface || pluggedType.IsAbstract)
+                if (TPluggedType.IsInterface || TPluggedType.IsAbstract)
                 {
                     return false;
                 }
 
                 if (pluginType.IsOpenGeneric())
                 {
-                    return GenericsPluginGraph.CanBeCast(pluginType, pluggedType);
+                    return GenericsPluginGraph.CanBeCast(pluginType, TPluggedType);
                 }
 
-                if (IsOpenGeneric(pluggedType))
+                if (IsOpenGeneric(TPluggedType))
                 {
                     return false;
                 }
 
 
-                return pluginType.IsAssignableFrom(pluggedType);
+                return pluginType.IsAssignableFrom(TPluggedType);
             }
 
 
             /// <summary>
-            /// Determines if the PluggedType is a valid Plugin into the
+            /// Determines if the TPluggedType is a valid Plugin into the
             /// PluginType
             /// </summary>
             /// <param name="pluginType"></param>
-            /// <param name="pluggedType"></param>
+            /// <param name="TPluggedType"></param>
             /// <returns></returns>
-            public static bool IsExplicitlyMarkedAsPlugin(this Type pluggedType, Type pluginType)
+            public static bool IsExplicitlyMarkedAsPlugin(this Type TPluggedType, Type pluginType)
             {
                 bool returnValue = false;
 
-                bool markedAsPlugin = PluggableAttribute.MarkedAsPluggable(pluggedType);
+                bool markedAsPlugin = PluggableAttribute.MarkedAsPluggable(TPluggedType);
                 if (markedAsPlugin)
                 {
-                    returnValue = CanBeCastTo(pluggedType, pluginType);
+                    returnValue = CanBeCastTo(TPluggedType, pluginType);
                 }
 
                 return returnValue;

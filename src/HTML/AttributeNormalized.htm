@@ -96,10 +96,10 @@
 <p>The &quot;name&quot; of an Instance is definied by the Key attribute.&nbsp; The concrete 
     type can be specified in one of two ways.&nbsp; You can either use the &quot;Type&quot; 
     attribute above to specify the aliased concrete type, or do it more explicitly 
-    by setting the PluggedType attribute to the assembly qualified name of the 
+    by setting the TPluggedType attribute to the assembly qualified name of the 
     concrete type.</p>
 <!--
-{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue255;\red255\green255\blue255;\red163\green21\blue21;\red255\green0\blue0;\red0\green0\blue0;}??\fs20 \cf1     &lt;\cf3 Instance\cf1  \cf4 Key\cf1 =\cf0 "\cf1 Red\cf0 "\cf1  \cf4 PluggedType\cf1 =\cf0 "\cf1 StructureMap.Testing.Widget.Color, StructureMap.Testing.Widget\cf0 "\cf1  \cf4 Color\cf1 =\cf0 "\cf1 Red\cf0 "\cf1  /&gt;}
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue255;\red255\green255\blue255;\red163\green21\blue21;\red255\green0\blue0;\red0\green0\blue0;}??\fs20 \cf1     &lt;\cf3 Instance\cf1  \cf4 Key\cf1 =\cf0 "\cf1 Red\cf0 "\cf1  \cf4 TPluggedType\cf1 =\cf0 "\cf1 StructureMap.Testing.Widget.Color, StructureMap.Testing.Widget\cf0 "\cf1  \cf4 Color\cf1 =\cf0 "\cf1 Red\cf0 "\cf1  /&gt;}
 -->
     <div style="font-family: Courier New; font-size: 10pt; color: black; background: white;">
         <p style="margin: 0px;" class="code-sample">
@@ -107,7 +107,7 @@
                 style="color: #a31515;">Instance</span><span style="color: blue;"> </span>
         <span style="color: red;">Key</span><span style="color: blue;">=</span>&quot;<span 
             style="color: blue;">Red</span>&quot;<span style="color: blue;"> </span>
-        <span style="color: red;">PluggedType</span><span style="color: blue;">=</span>&quot;<span 
+        <span style="color: red;">TPluggedType</span><span style="color: blue;">=</span>&quot;<span 
             style="color: blue;">StructureMap.Testing.Widget.Color, 
         StructureMap.Testing.Widget</span>&quot;<span style="color: blue;"> </span>
         <span style="color: red;">Color</span><span style="color: blue;">=</span>&quot;<span 
@@ -291,7 +291,7 @@
 <!--EndFragment-->
 <p>The Xml configuration is:</p>
 <!--
-{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue255;\red255\green255\blue255;\red163\green21\blue21;\red255\green0\blue0;\red0\green0\blue0;}??\fs20 \cf1   &lt;\cf3 DefaultInstance\par ??\cf1     \cf4 PluginType\cf1 =\cf0 "\cf1 StructureMap.Testing.Configuration.ClassWithStringAndIntArray, StructureMap.Testing\cf0 "\par ??\cf1     \cf4 PluggedType\cf1 =\cf0 "\cf1 StructureMap.Testing.Configuration.ClassWithStringAndIntArray, StructureMap.Testing\cf0 "\cf1 &gt;\par ??\par ??    &lt;\cf3 numbers\cf1  \cf4 Values\cf1 =\cf0 "\cf1 1,2,3\cf0 "\cf1 /&gt;\par ??    &lt;\cf3 strings\cf1  \cf4 Values\cf1 =\cf0 "\cf1 1,2,3\cf0 "\cf1 /&gt;\par ??  &lt;/\cf3 DefaultInstance\cf1 &gt;}
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue255;\red255\green255\blue255;\red163\green21\blue21;\red255\green0\blue0;\red0\green0\blue0;}??\fs20 \cf1   &lt;\cf3 DefaultInstance\par ??\cf1     \cf4 PluginType\cf1 =\cf0 "\cf1 StructureMap.Testing.Configuration.ClassWithStringAndIntArray, StructureMap.Testing\cf0 "\par ??\cf1     \cf4 TPluggedType\cf1 =\cf0 "\cf1 StructureMap.Testing.Configuration.ClassWithStringAndIntArray, StructureMap.Testing\cf0 "\cf1 &gt;\par ??\par ??    &lt;\cf3 numbers\cf1  \cf4 Values\cf1 =\cf0 "\cf1 1,2,3\cf0 "\cf1 /&gt;\par ??    &lt;\cf3 strings\cf1  \cf4 Values\cf1 =\cf0 "\cf1 1,2,3\cf0 "\cf1 /&gt;\par ??  &lt;/\cf3 DefaultInstance\cf1 &gt;}
 -->
                     <div style="font-family: Courier New; font-size: 10pt; color: black; background: white;" 
                         class="code-sample">
@@ -303,7 +303,7 @@
                             StructureMap.Testing</span>&quot;</p>
                         <p style="margin: 0px;">
                             <span style="color: blue;">&nbsp;&nbsp;&nbsp; </span><span style="color: red;">
-                            PluggedType</span><span style="color: blue;">=</span>&quot;<span 
+                            TPluggedType</span><span style="color: blue;">=</span>&quot;<span 
                                 style="color: blue;">StructureMap.Testing.Configuration.ClassWithStringAndIntArray, 
                             StructureMap.Testing</span>&quot;<span style="color: blue;">&gt;</span></p>
                         <p style="margin: 0px;">
@@ -329,7 +329,7 @@
     The delimiter of the list can be optionally overriden by using the Delimiter 
     attribute.</p>
 <!--
-{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue255;\red255\green255\blue255;\red163\green21\blue21;\red255\green0\blue0;\red0\green0\blue0;}??\fs20 \cf1   &lt;\cf3 DefaultInstance\par ??\cf1     \cf4 PluginType\cf1 =\cf0 "\cf1 StructureMap.Testing.Configuration.ClassWithStringAndIntArray, StructureMap.Testing\cf0 "\par ??\cf1     \cf4 PluggedType\cf1 =\cf0 "\cf1 StructureMap.Testing.Configuration.ClassWithStringAndIntArray, StructureMap.Testing\cf0 "\cf1 &gt;\par ??\par ??    &lt;\cf3 numbers\cf1  \cf4 Values\cf1 =\cf0 "\cf1 1;2;3\cf0 "\cf1  \cf4 Delimiter\cf1 =\cf0 "\cf1 ;\cf0 "\cf1 /&gt;\par ??    &lt;\cf3 strings\cf1  \cf4 Values\cf1 =\cf0 "\cf1 1,2,3\cf0 "\cf1 /&gt;\par ??  &lt;/\cf3 DefaultInstance\cf1 &gt;}
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue255;\red255\green255\blue255;\red163\green21\blue21;\red255\green0\blue0;\red0\green0\blue0;}??\fs20 \cf1   &lt;\cf3 DefaultInstance\par ??\cf1     \cf4 PluginType\cf1 =\cf0 "\cf1 StructureMap.Testing.Configuration.ClassWithStringAndIntArray, StructureMap.Testing\cf0 "\par ??\cf1     \cf4 TPluggedType\cf1 =\cf0 "\cf1 StructureMap.Testing.Configuration.ClassWithStringAndIntArray, StructureMap.Testing\cf0 "\cf1 &gt;\par ??\par ??    &lt;\cf3 numbers\cf1  \cf4 Values\cf1 =\cf0 "\cf1 1;2;3\cf0 "\cf1  \cf4 Delimiter\cf1 =\cf0 "\cf1 ;\cf0 "\cf1 /&gt;\par ??    &lt;\cf3 strings\cf1  \cf4 Values\cf1 =\cf0 "\cf1 1,2,3\cf0 "\cf1 /&gt;\par ??  &lt;/\cf3 DefaultInstance\cf1 &gt;}
 -->
 <div style="font-family: Courier New; font-size: 10pt; color: black; background: white;" 
                         class="code-sample">
@@ -341,7 +341,7 @@
         StructureMap.Testing</span>&quot;</p>
     <p style="margin: 0px;">
         <span style="color: blue;">&nbsp;&nbsp;&nbsp; </span><span style="color: red;">
-        PluggedType</span><span style="color: blue;">=</span>&quot;<span 
+        TPluggedType</span><span style="color: blue;">=</span>&quot;<span 
             style="color: blue;">StructureMap.Testing.Configuration.ClassWithStringAndIntArray, 
         StructureMap.Testing</span>&quot;<span style="color: blue;">&gt;</span></p>
     <p style="margin: 0px;">
@@ -417,11 +417,11 @@
 <!--EndFragment-->
 <p>The &quot;dictionary&quot; argument to the constructor function could be defined as:</p>
 <!--
-{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue255;\red255\green255\blue255;\red163\green21\blue21;\red255\green0\blue0;\red0\green0\blue0;}??\fs20 \cf1   &lt;\cf3 DefaultInstance\par ??\cf1     \cf4 PluginType\cf1 =\cf0 "\cf1 StructureMap.Testing.Configuration.ClassWithDictionary, StructureMap.Testing\cf0 "\par ??\cf1     \cf4 PluggedType\cf1 =\cf0 "\cf1 StructureMap.Testing.Configuration.ClassWithDictionary, StructureMap.Testing\cf0 "\cf1 &gt;\par ??    &lt;\cf3 Property\cf1  \cf4 Name\cf1 =\cf0 '\cf1 dictionary\cf0 '\cf1 &gt;\par ??      &lt;\cf3 Pair\cf1  \cf4 Key\cf1 =\cf0 '\cf1 color\cf0 '\cf1  \cf4 Value\cf1 =\cf0 '\cf1 red\cf0 '\cf1 /&gt;\par ??      &lt;\cf3 Pair\cf1  \cf4 Key\cf1 =\cf0 '\cf1 state\cf0 '\cf1  \cf4 Value\cf1 =\cf0 '\cf1 texas\cf0 '\cf1 /&gt;\par ??      &lt;\cf3 Pair\cf1  \cf4 Key\cf1 =\cf0 '\cf1 direction\cf0 '\cf1  \cf4 Value\cf1 =\cf0 '\cf1 north\cf0 '\cf1 /&gt;\par ??    &lt;/\cf3 Property\cf1 &gt;\par ??  &lt;/\cf3 DefaultInstance\cf1 &gt;}
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue255;\red255\green255\blue255;\red163\green21\blue21;\red255\green0\blue0;\red0\green0\blue0;}??\fs20 \cf1   &lt;\cf3 DefaultInstance\par ??\cf1     \cf4 PluginType\cf1 =\cf0 "\cf1 StructureMap.Testing.Configuration.ClassWithDictionary, StructureMap.Testing\cf0 "\par ??\cf1     \cf4 TPluggedType\cf1 =\cf0 "\cf1 StructureMap.Testing.Configuration.ClassWithDictionary, StructureMap.Testing\cf0 "\cf1 &gt;\par ??    &lt;\cf3 Property\cf1  \cf4 Name\cf1 =\cf0 '\cf1 dictionary\cf0 '\cf1 &gt;\par ??      &lt;\cf3 Pair\cf1  \cf4 Key\cf1 =\cf0 '\cf1 color\cf0 '\cf1  \cf4 Value\cf1 =\cf0 '\cf1 red\cf0 '\cf1 /&gt;\par ??      &lt;\cf3 Pair\cf1  \cf4 Key\cf1 =\cf0 '\cf1 state\cf0 '\cf1  \cf4 Value\cf1 =\cf0 '\cf1 texas\cf0 '\cf1 /&gt;\par ??      &lt;\cf3 Pair\cf1  \cf4 Key\cf1 =\cf0 '\cf1 direction\cf0 '\cf1  \cf4 Value\cf1 =\cf0 '\cf1 north\cf0 '\cf1 /&gt;\par ??    &lt;/\cf3 Property\cf1 &gt;\par ??  &lt;/\cf3 DefaultInstance\cf1 &gt;}
 -->
 <div style="font-family: Courier New; font-size: 10pt; color: black; background: white;">
 <!--
-{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue255;\red255\green255\blue255;\red163\green21\blue21;\red255\green0\blue0;\red0\green0\blue0;}??\fs20 \cf1   &lt;\cf3 DefaultInstance\par ??\cf1     \cf4 PluginType\cf1 =\cf0 "\cf1 StructureMap.Testing.Configuration.ClassWithDictionary, StructureMap.Testing\cf0 "\par ??\cf1     \cf4 PluggedType\cf1 =\cf0 "\cf1 StructureMap.Testing.Configuration.ClassWithDictionary, StructureMap.Testing\cf0 "\cf1 &gt;\par ??    &lt;\cf3 dictionary\cf1 &gt;\par ??      &lt;\cf3 Pair\cf1  \cf4 Key\cf1 =\cf0 '\cf1 color\cf0 '\cf1  \cf4 Value\cf1 =\cf0 '\cf1 red\cf0 '\cf1 /&gt;\par ??      &lt;\cf3 Pair\cf1  \cf4 Key\cf1 =\cf0 '\cf1 state\cf0 '\cf1  \cf4 Value\cf1 =\cf0 '\cf1 texas\cf0 '\cf1 /&gt;\par ??      &lt;\cf3 Pair\cf1  \cf4 Key\cf1 =\cf0 '\cf1 direction\cf0 '\cf1  \cf4 Value\cf1 =\cf0 '\cf1 north\cf0 '\cf1 /&gt;\par ??    &lt;/\cf3 dictionary\cf1 &gt;\par ??  &lt;/\cf3 DefaultInstance\cf1 &gt;}
+{\rtf1\ansi\ansicpg\lang1024\noproof65001\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Courier New;}}{\colortbl;??\red0\green0\blue255;\red255\green255\blue255;\red163\green21\blue21;\red255\green0\blue0;\red0\green0\blue0;}??\fs20 \cf1   &lt;\cf3 DefaultInstance\par ??\cf1     \cf4 PluginType\cf1 =\cf0 "\cf1 StructureMap.Testing.Configuration.ClassWithDictionary, StructureMap.Testing\cf0 "\par ??\cf1     \cf4 TPluggedType\cf1 =\cf0 "\cf1 StructureMap.Testing.Configuration.ClassWithDictionary, StructureMap.Testing\cf0 "\cf1 &gt;\par ??    &lt;\cf3 dictionary\cf1 &gt;\par ??      &lt;\cf3 Pair\cf1  \cf4 Key\cf1 =\cf0 '\cf1 color\cf0 '\cf1  \cf4 Value\cf1 =\cf0 '\cf1 red\cf0 '\cf1 /&gt;\par ??      &lt;\cf3 Pair\cf1  \cf4 Key\cf1 =\cf0 '\cf1 state\cf0 '\cf1  \cf4 Value\cf1 =\cf0 '\cf1 texas\cf0 '\cf1 /&gt;\par ??      &lt;\cf3 Pair\cf1  \cf4 Key\cf1 =\cf0 '\cf1 direction\cf0 '\cf1  \cf4 Value\cf1 =\cf0 '\cf1 north\cf0 '\cf1 /&gt;\par ??    &lt;/\cf3 dictionary\cf1 &gt;\par ??  &lt;/\cf3 DefaultInstance\cf1 &gt;}
 -->
     <div style="font-family: Courier New; font-size: 10pt; color: black; background: white;" 
         class="code-sample">
@@ -433,7 +433,7 @@
             StructureMap.Testing</span>&quot;</p>
         <p style="margin: 0px;">
             <span style="color: blue;">&nbsp;&nbsp;&nbsp; </span><span style="color: red;">
-            PluggedType</span><span style="color: blue;">=</span>&quot;<span 
+            TPluggedType</span><span style="color: blue;">=</span>&quot;<span 
                 style="color: blue;">StructureMap.Testing.Configuration.ClassWithDictionary, 
             StructureMap.Testing</span>&quot;<span style="color: blue;">&gt;</span></p>
         <p style="margin: 0px;">

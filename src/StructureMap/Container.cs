@@ -229,11 +229,11 @@ namespace StructureMap
         /// <param name="target"></param>
         public void BuildUp(object target)
         {
-            Type pluggedType = target.GetType();
-            IConfiguredInstance instance = _pipelineGraph.GetDefault(pluggedType) as IConfiguredInstance
-                                           ?? new ConfiguredInstance(pluggedType);
+            Type TPluggedType = target.GetType();
+            IConfiguredInstance instance = _pipelineGraph.GetDefault(TPluggedType) as IConfiguredInstance
+                                           ?? new ConfiguredInstance(TPluggedType);
 
-            IInstanceBuilder builder = PluginCache.FindBuilder(pluggedType);
+            IInstanceBuilder builder = PluginCache.FindBuilder(TPluggedType);
             var arguments = new Arguments(instance, withNewSession(Plugin.DEFAULT));
             builder.BuildUp(arguments, target);
         }

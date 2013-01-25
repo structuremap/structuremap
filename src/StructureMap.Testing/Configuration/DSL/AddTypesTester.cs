@@ -29,12 +29,11 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void A_concrete_type_is_available_by_name_when_it_is_added_by_the_shorthand_mechanism()
         {
-            IContainer container = new Container(r => r.For<IAddTypes>().AddInstances(x =>
-            {
-                x.OfConcreteType<RedAddTypes>().WithName("Red");
-                x.OfConcreteType<GreenAddTypes>().WithName("Green");
-                x.OfConcreteType<BlueAddTypes>().WithName("Blue");
-                x.OfConcreteType<PurpleAddTypes>();
+            IContainer container = new Container(r => r.For<IAddTypes>().AddInstances(x => {
+                x.Type<RedAddTypes>().WithName("Red");
+                x.Type<GreenAddTypes>().WithName("Green");
+                x.Type<BlueAddTypes>().WithName("Blue");
+                x.Type<PurpleAddTypes>();
             }));
 
             container.GetInstance<IAddTypes>("Red").IsType<RedAddTypes>();
@@ -46,10 +45,10 @@ namespace StructureMap.Testing.Configuration.DSL
         public void A_concrete_type_is_available_when_it_is_added_by_the_shorthand_mechanism()
         {
             IContainer manager = new Container(registry => registry.For<IAddTypes>()
-                                                               .AddConcreteType<RedAddTypes>()
-                                                               .AddConcreteType<GreenAddTypes>()
-                                                               .AddConcreteType<BlueAddTypes>()
-                                                               .AddConcreteType<PurpleAddTypes>());
+                                                                   .AddConcreteType<RedAddTypes>()
+                                                                   .AddConcreteType<GreenAddTypes>()
+                                                                   .AddConcreteType<BlueAddTypes>()
+                                                                   .AddConcreteType<PurpleAddTypes>());
 
 
             IList<IAddTypes> instances = manager.GetAllInstances<IAddTypes>();
@@ -59,17 +58,16 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void Make_sure_that_we_dont_double_dip_instances_when_we_register_a_type_with_a_name()
         {
-            IContainer manager = new Container(r =>
-                                               r.For<IAddTypes>().AddInstances(x =>
-                                               {
-                                                   x.OfConcreteType<GreenAddTypes>();
-                                                   x.OfConcreteType<BlueAddTypes>();
-                                                   x.OfConcreteType<PurpleAddTypes>();
-                                                   x.OfConcreteType<PurpleAddTypes>().WithName("Purple");
+            IContainer container = new Container(r =>
+                                               r.For<IAddTypes>().AddInstances(x => {
+                                                   x.Type<GreenAddTypes>();
+                                                   x.Type<BlueAddTypes>();
+                                                   x.Type<PurpleAddTypes>();
+                                                   x.Type<PurpleAddTypes>().WithName("Purple");
                                                })
                 );
 
-            IList<IAddTypes> instances = manager.GetAllInstances<IAddTypes>();
+            IList<IAddTypes> instances = container.GetAllInstances<IAddTypes>();
             Assert.AreEqual(4, instances.Count);
         }
     }

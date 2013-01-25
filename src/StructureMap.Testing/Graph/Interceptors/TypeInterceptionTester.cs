@@ -16,9 +16,9 @@ namespace StructureMap.Testing.Graph.Interceptors
             registry = new Registry();
             registry.For<IAnInterfaceOfSomeSort>().AddInstances(x =>
             {
-                x.OfConcreteType<RedSomething>().WithName("Red");
-                x.OfConcreteType<GreenSomething>().WithName("Green");
-                x.OfConcreteType<BlueSomething>().WithName("Blue");
+                x.Type<RedSomething>().WithName("Red");
+                x.Type<GreenSomething>().WithName("Green");
+                x.Type<BlueSomething>().WithName("Blue");
             });
         }
 

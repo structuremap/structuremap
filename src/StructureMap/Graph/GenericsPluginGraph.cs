@@ -26,29 +26,29 @@ namespace StructureMap.Graph
             };
         }
 
-        public static bool CanBeCast(Type pluginType, Type pluggedType)
+        public static bool CanBeCast(Type pluginType, Type TPluggedType)
         {
             try
             {
-                return checkGenericType(pluggedType, pluginType);
+                return checkGenericType(TPluggedType, pluginType);
             }
             catch (Exception e)
             {
                 string message =
                     string.Format("Could not Determine Whether Type '{0}' plugs into Type '{1}'",
                                   pluginType.Name,
-                                  pluggedType.Name);
+                                  TPluggedType.Name);
                 throw new ApplicationException(message, e);
             }
         }
 
-        private static bool checkGenericType(Type pluggedType, Type pluginType)
+        private static bool checkGenericType(Type TPluggedType, Type pluginType)
         {
-            if (pluginType.IsAssignableFrom(pluggedType)) return true;
+            if (pluginType.IsAssignableFrom(TPluggedType)) return true;
 
 
 // check interfaces
-            foreach (Type type in pluggedType.GetInterfaces())
+            foreach (Type type in TPluggedType.GetInterfaces())
             {
                 if (!type.IsGenericType)
                 {
@@ -61,9 +61,9 @@ namespace StructureMap.Graph
                 }
             }
 
-            if (pluggedType.BaseType.IsGenericType)
+            if (TPluggedType.BaseType.IsGenericType)
             {
-                Type baseType = pluggedType.BaseType.GetGenericTypeDefinition();
+                Type baseType = TPluggedType.BaseType.GetGenericTypeDefinition();
 
                 if (baseType.Equals(pluginType))
                 {
@@ -107,14 +107,14 @@ namespace StructureMap.Graph
         }
 
 
-        public static bool CanBePluggedIntoGenericType(Type pluginType, Type pluggedType, params Type[] templateTypes)
+        public static bool CanBePluggedIntoGenericType(Type pluginType, Type TPluggedType, params Type[] templateTypes)
         {
             bool isValid = true;
 
-            Type interfaceType = pluggedType.GetInterface(pluginType.Name);
+            Type interfaceType = TPluggedType.GetInterface(pluginType.Name);
             if (interfaceType == null)
             {
-                interfaceType = pluggedType.BaseType;
+                interfaceType = TPluggedType.BaseType;
             }
 
             Type[] pluginArgs = pluginType.GetGenericArguments();

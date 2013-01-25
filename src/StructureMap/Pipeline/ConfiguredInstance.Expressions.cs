@@ -297,13 +297,13 @@ namespace StructureMap.Pipeline
             /// <summary>
             /// Start the definition of a child instance by defining the concrete type
             /// </summary>
-            /// <param name="pluggedType"></param>
+            /// <param name="TPluggedType"></param>
             /// <returns></returns>
-            public ConfiguredInstance IsConcreteType(Type pluggedType)
+            public ConfiguredInstance IsConcreteType(Type TPluggedType)
             {
-                ExpressionValidator.ValidatePluggabilityOf(pluggedType).IntoPluginType(_childType);
+                ExpressionValidator.ValidatePluggabilityOf(TPluggedType).IntoPluginType(_childType);
 
-                var childInstance = new ConfiguredInstance(pluggedType);
+                var childInstance = new ConfiguredInstance(TPluggedType);
                 _instance.SetChild(_propertyName, childInstance);
 
                 return _instance;

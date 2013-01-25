@@ -6,34 +6,34 @@ namespace StructureMap.Configuration.DSL
 {
     public static class ExpressionValidator
     {
-        public static ValidateExpression ValidatePluggabilityOf(Type pluggedType)
+        public static ValidateExpression ValidatePluggabilityOf(Type TPluggedType)
         {
-            return new ValidateExpression(pluggedType);
+            return new ValidateExpression(TPluggedType);
         }
 
         #region Nested type: ValidateExpression
 
         public class ValidateExpression
         {
-            private readonly Type _pluggedType;
+            private readonly Type _TPluggedType;
 
-            public ValidateExpression(Type pluggedType)
+            public ValidateExpression(Type TPluggedType)
             {
-                _pluggedType = pluggedType;
+                _TPluggedType = TPluggedType;
             }
 
             public void IntoPluginType(Type pluginType)
             {
-                if (!Constructor.HasConstructors(_pluggedType))
+                if (!Constructor.HasConstructors(_TPluggedType))
                 {
-                    throw new StructureMapException(180, _pluggedType.AssemblyQualifiedName);
+                    throw new StructureMapException(180, _TPluggedType.AssemblyQualifiedName);
                 }
 
-                if (!_pluggedType.CanBeCastTo(pluginType))
+                if (!_TPluggedType.CanBeCastTo(pluginType))
                 {
                     throw new StructureMapException(
                         303,
-                        _pluggedType.AssemblyQualifiedName,
+                        _TPluggedType.AssemblyQualifiedName,
                         pluginType.AssemblyQualifiedName);
                 }
             }

@@ -158,15 +158,15 @@ namespace StructureMap
             _factories.Add(pluginType, factory);
         }
 
-        protected virtual InstanceFactory createFactory(Type pluggedType)
+        protected virtual InstanceFactory createFactory(Type TPluggedType)
         {
-            if (pluggedType.IsGenericType)
+            if (TPluggedType.IsGenericType)
             {
-                PluginFamily family = _genericsGraph.CreateTemplatedFamily(pluggedType, _profileManager);
+                PluginFamily family = _genericsGraph.CreateTemplatedFamily(TPluggedType, _profileManager);
                 if (family != null) return InstanceFactory.CreateFactoryForFamily(family, _profileManager);
             }
 
-            return InstanceFactory.CreateFactoryForType(pluggedType, _profileManager);
+            return InstanceFactory.CreateFactoryForType(TPluggedType, _profileManager);
         }
 
         public virtual Instance GetDefault(Type pluginType)

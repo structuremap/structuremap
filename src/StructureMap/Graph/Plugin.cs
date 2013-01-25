@@ -18,27 +18,27 @@ namespace StructureMap.Graph
         public static readonly string DEFAULT = "DEFAULT";
         private readonly Constructor _constructor;
 
-        private readonly Type _pluggedType;
+        private readonly Type _TPluggedType;
         private readonly SetterPropertyCollection _setters;
         private string _concreteKey;
 
         #region constructors
 
-        public Plugin(Type pluggedType, string concreteKey)
-            : this(pluggedType)
+        public Plugin(Type TPluggedType, string concreteKey)
+            : this(TPluggedType)
         {
             _concreteKey = concreteKey;
         }
 
-        public Plugin(Type pluggedType)
+        public Plugin(Type TPluggedType)
         {
             var att =
-                Attribute.GetCustomAttribute(pluggedType, typeof (PluggableAttribute), false) as PluggableAttribute;
-            _concreteKey = att == null ? pluggedType.AssemblyQualifiedName : att.ConcreteKey;
+                Attribute.GetCustomAttribute(TPluggedType, typeof (PluggableAttribute), false) as PluggableAttribute;
+            _concreteKey = att == null ? TPluggedType.AssemblyQualifiedName : att.ConcreteKey;
 
-            _pluggedType = pluggedType;
+            _TPluggedType = TPluggedType;
             _setters = new SetterPropertyCollection(this);
-            _constructor = new Constructor(pluggedType);
+            _constructor = new Constructor(TPluggedType);
         }
 
         #endregion
@@ -52,7 +52,7 @@ namespace StructureMap.Graph
         /// <summary>
         /// The concrete CLR Type represented by the Plugin
         /// </summary>
-        public Type PluggedType { get { return _pluggedType; } }
+        public Type TPluggedType { get { return _TPluggedType; } }
 
         /// <summary>
         /// Property's that will be filled by setter injection
@@ -63,13 +63,13 @@ namespace StructureMap.Graph
 
         public override string ToString()
         {
-            return ("Plugin:  " + _concreteKey).PadRight(40) + PluggedType.AssemblyQualifiedName;
+            return ("Plugin:  " + _concreteKey).PadRight(40) + TPluggedType.AssemblyQualifiedName;
         }
 
 
         public Instance CreateImplicitInstance()
         {
-            return new ConfiguredInstance(PluggedType).WithName(ConcreteKey);
+            return new ConfiguredInstance(TPluggedType).WithName(ConcreteKey);
         }
 
         public string FindArgumentNameForType<T>()
@@ -95,7 +95,7 @@ namespace StructureMap.Graph
 
             if (returnValue == null && cannotFind == CannotFindProperty.ThrowException)
             {
-                throw new StructureMapException(302, type.FullName, _pluggedType.FullName);
+                throw new StructureMapException(302, type.FullName, _TPluggedType.FullName);
             }
 
             return returnValue;
@@ -134,7 +134,7 @@ namespace StructureMap.Graph
 
         public bool CanBeCreated()
         {
-            return Constructor.HasConstructors(_pluggedType);
+            return Constructor.HasConstructors(_TPluggedType);
         }
 
         public bool HasOptionalSetters()
@@ -144,7 +144,7 @@ namespace StructureMap.Graph
 
         public Plugin CreateTemplatedClone(Type[] types)
         {
-            Type templatedType = _pluggedType.IsGenericType ? _pluggedType.MakeGenericType(types) : _pluggedType;
+            Type templatedType = _TPluggedType.IsGenericType ? _TPluggedType.MakeGenericType(types) : _TPluggedType;
 
             var templatedPlugin = new Plugin(templatedType, ConcreteKey);
 
@@ -168,7 +168,7 @@ namespace StructureMap.Graph
 
         public bool IsNotOpenGeneric()
         {
-            return !_pluggedType.IsOpenGeneric();
+            return !_TPluggedType.IsOpenGeneric();
         }
 
         public Type FindArgumentType(string argumentName)

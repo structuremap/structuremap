@@ -167,7 +167,7 @@ namespace StructureMap.Testing.Graph
         public void GotPluginThatIsAddedInConfigXml()
         {
             PluginFamily family = graph.FindFamily(typeof (IWidget));
-            family.FindPlugin("NotPluggable").PluggedType.ShouldEqual(typeof (NotPluggableWidget));
+            family.FindPlugin("NotPluggable").TPluggedType.ShouldEqual(typeof (NotPluggableWidget));
         }
 
 

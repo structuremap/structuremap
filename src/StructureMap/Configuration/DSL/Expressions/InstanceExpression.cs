@@ -97,37 +97,18 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <returns></returns>
         ObjectInstance Object(T theObject);
 
-        /// <summary>
-        /// Build the Instance with the constructor function and setter arguments.  Starts
-        /// the definition of a <see cref="SmartInstance{T}">SmartInstance</see>
-        /// </summary>
-        /// <typeparam name="PLUGGEDTYPE"></typeparam>
-        /// <returns></returns>
-        [Obsolete("Favor For<ISomething>().Use<Something>() or For<ISomething>().Add<Something>()")]
-        SmartInstance<PLUGGEDTYPE> OfConcreteType<PLUGGEDTYPE>() where PLUGGEDTYPE : T;
-
 
         /// <summary>
         /// Build the Instance with the constructor function and setter arguments.  Starts
         /// the definition of a <see cref="SmartInstance{T}">SmartInstance</see>
         /// </summary>
-        /// <typeparam name="PLUGGEDTYPE"></typeparam>
+        /// <typeparam name="TPluggedType"></typeparam>
         /// <returns></returns>
-        SmartInstance<PLUGGEDTYPE> Type<PLUGGEDTYPE>();
+        SmartInstance<TPluggedType> Type<TPluggedType>();
 
         /// <summary>
         /// Build the Instance with the constructor function and setter arguments.  Use this
-        /// method for open generic types, and favor the generic version of OfConcreteType
-        /// for all other types
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        [Obsolete("Favor For<ISomething>().Use(typeof(Something))")]
-        ConfiguredInstance OfConcreteType(Type type);
-
-        /// <summary>
-        /// Build the Instance with the constructor function and setter arguments.  Use this
-        /// method for open generic types, and favor the generic version of OfConcreteType
+        /// method for open generic types, and favor the generic version of Type()
         /// for all other types
         /// </summary>
         /// <param name="type"></param>
@@ -224,19 +205,9 @@ namespace StructureMap.Configuration.DSL.Expressions
             _action(instance);
         }
 
-        public SmartInstance<PLUGGEDTYPE> OfConcreteType<PLUGGEDTYPE>() where PLUGGEDTYPE : T
+        public SmartInstance<TTPluggedType> Type<TTPluggedType>()
         {
-            return returnInstance(new SmartInstance<PLUGGEDTYPE>());
-        }
-
-        public SmartInstance<PLUGGEDTYPE> Type<PLUGGEDTYPE>()
-        {
-            return returnInstance(new SmartInstance<PLUGGEDTYPE>());
-        }
-
-        public ConfiguredInstance OfConcreteType(Type type)
-        {
-            return returnInstance(new ConfiguredInstance(type));
+            return returnInstance(new SmartInstance<TTPluggedType>());
         }
 
         public ConfiguredInstance Type(Type type)

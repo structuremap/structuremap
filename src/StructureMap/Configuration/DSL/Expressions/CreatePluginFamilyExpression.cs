@@ -452,20 +452,20 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// as just a Concrete Type.  This will only work if the Concrete Type
         /// has no primitive constructor or mandatory Setter arguments.
         /// </summary>
-        /// <typeparam name="PLUGGEDTYPE"></typeparam>
+        /// <typeparam name="TPluggedType"></typeparam>
         /// <returns></returns>
         [Obsolete("Change to Add<T>()")]
-        public CreatePluginFamilyExpression<PLUGINTYPE> AddConcreteType<PLUGGEDTYPE>()
+        public CreatePluginFamilyExpression<PLUGINTYPE> AddConcreteType<TPluggedType>()
         {
-            if (!PluginCache.GetPlugin(typeof (PLUGGEDTYPE)).CanBeAutoFilled)
+            if (!PluginCache.GetPlugin(typeof (TPluggedType)).CanBeAutoFilled)
             {
                 throw new StructureMapException(231);
             }
 
             _alterations.Add(family =>
             {
-                string name = PluginCache.GetPlugin(typeof (PLUGGEDTYPE)).ConcreteKey;
-                SmartInstance<PLUGGEDTYPE> instance = new SmartInstance<PLUGGEDTYPE>().WithName(name);
+                string name = PluginCache.GetPlugin(typeof (TPluggedType)).ConcreteKey;
+                SmartInstance<TPluggedType> instance = new SmartInstance<TPluggedType>().WithName(name);
                 family.AddInstance(instance);
             });
 
@@ -530,9 +530,9 @@ namespace StructureMap.Configuration.DSL.Expressions
             return instance;
         }
 
-        public SmartInstance<PLUGGEDTYPE> Add<PLUGGEDTYPE>()
+        public SmartInstance<TPluggedType> Add<TPluggedType>()
         {
-            var instance = new SmartInstance<PLUGGEDTYPE>();
+            var instance = new SmartInstance<TPluggedType>();
             Add(instance);
 
             return instance;

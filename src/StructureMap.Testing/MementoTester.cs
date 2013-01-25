@@ -32,7 +32,7 @@ namespace StructureMap.Testing
         }
 
         [Test]
-        public void If_a_Memento_does_not_know_its_PluggedType_or_concreteKey_select_the_DEFAULT_Plugin()
+        public void If_a_Memento_does_not_know_its_TPluggedType_or_concreteKey_select_the_DEFAULT_Plugin()
         {
             var family = new PluginFamily(typeof (IGateway));
             Plugin plugin = family.AddPlugin(typeof (TheGateway), Plugin.DEFAULT);

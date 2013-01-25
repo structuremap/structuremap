@@ -72,7 +72,7 @@ namespace StructureMap.Testing.Configuration.DSL
             {
                 x.For<Rule>().Add<WidgetRule>()
                     .WithName("AWidgetRule")
-                    .CtorDependency<IWidget>().Is(i => i.OfConcreteType<AWidget>());
+                    .CtorDependency<IWidget>().Is(i => i.Type<AWidget>());
             });
 
             container.GetInstance<Rule>("AWidgetRule")

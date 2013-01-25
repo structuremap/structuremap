@@ -16,14 +16,14 @@ namespace StructureMap.Pipeline
             read(memento, graph, pluginType);
         }
 
-        public ConfiguredInstance(Type pluggedType, string name)
-            : base(pluggedType, name)
+        public ConfiguredInstance(Type TPluggedType, string name)
+            : base(TPluggedType, name)
         {
         }
 
 
-        public ConfiguredInstance(Type pluggedType)
-            : base(pluggedType)
+        public ConfiguredInstance(Type TPluggedType)
+            : base(TPluggedType)
         {
         }
 

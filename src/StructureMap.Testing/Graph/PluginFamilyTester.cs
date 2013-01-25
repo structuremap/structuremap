@@ -37,7 +37,7 @@ namespace StructureMap.Testing.Graph
 
             // DataView, DataSet, and DataTable are all IServiceProvider implementations, and should get added
             // to the PluginFamily
-            var pluggedTypes = new List<Type>
+            var TPluggedTypes = new List<Type>
             {
                 typeof (DataView),
                 typeof (DataSet),
@@ -45,7 +45,7 @@ namespace StructureMap.Testing.Graph
                 GetType()
             };
 
-            family.AddTypes(pluggedTypes);
+            family.AddTypes(TPluggedTypes);
 
             family.PluginCount.ShouldEqual(3);
 
@@ -87,7 +87,7 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
-        public void AddAPluggedType()
+        public void AddATPluggedType()
         {
             var family = new PluginFamily(typeof (IWidget));
             family.DefaultInstanceKey = "DefaultKey";

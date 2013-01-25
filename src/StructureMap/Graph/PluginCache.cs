@@ -42,19 +42,19 @@ namespace StructureMap.Graph
             });
         }
 
-        public static Plugin GetPlugin(Type pluggedType)
+        public static Plugin GetPlugin(Type TPluggedType)
         {
-            return _plugins[pluggedType];
+            return _plugins[TPluggedType];
         }
 
-        public static IInstanceBuilder FindBuilder(Type pluggedType)
+        public static IInstanceBuilder FindBuilder(Type TPluggedType)
         {
-            return _builders[pluggedType];
+            return _builders[TPluggedType];
         }
 
-        public static void Store(Type pluggedType, InstanceBuilder builder)
+        public static void Store(Type TPluggedType, InstanceBuilder builder)
         {
-            _builders[pluggedType] = builder;
+            _builders[TPluggedType] = builder;
         }
 
         public static void ResetAll()
@@ -81,9 +81,9 @@ namespace StructureMap.Graph
                 plugin.UseSetterRule(predicate);
 
                 //does any of the registered plugins have a setter matching the predicate?
-                if (plugin.PluggedType.GetProperties().Any(s => predicate(s)))
+                if (plugin.TPluggedType.GetProperties().Any(s => predicate(s)))
                 {
-                    _builders.Remove(plugin.PluggedType);
+                    _builders.Remove(plugin.TPluggedType);
                 }
             });
         }

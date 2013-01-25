@@ -50,7 +50,7 @@ namespace StructureMap.Testing.Pipeline
             throw new NotImplementedException();
         }
 
-        public InstanceBuilder FindInstanceBuilder(Type pluginType, Type pluggedType)
+        public InstanceBuilder FindInstanceBuilder(Type pluginType, Type TPluggedType)
         {
             throw new NotImplementedException();
         }

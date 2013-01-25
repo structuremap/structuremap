@@ -206,8 +206,8 @@ namespace StructureMap.Testing.Graph
             {
                 r.For<ISomething>().AddInstances(x =>
                 {
-                    x.OfConcreteType<SomethingOne>().WithName("One");
-                    x.OfConcreteType<SomethingTwo>().WithName("Two");
+                    x.Type<SomethingOne>().WithName("One");
+                    x.Type<SomethingTwo>().WithName("Two");
                 });
             });
 

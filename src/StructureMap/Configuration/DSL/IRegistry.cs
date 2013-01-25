@@ -25,11 +25,11 @@ namespace StructureMap.Configuration.DSL
         void AddType(Type pluginType, Type concreteType, string name);
 
         /// <summary>
-        /// Add the pluggedType as an instance to any configured pluginType where pluggedType
+        /// Add the TPluggedType as an instance to any configured pluginType where TPluggedType
         /// could be assigned to the pluginType
         /// </summary>
-        /// <param name="pluggedType"></param>
-        void AddType(Type pluggedType);
+        /// <param name="TPluggedType"></param>
+        void AddType(Type TPluggedType);
 
         /// <summary>
         /// Imports the configuration from another registry into this registry.

@@ -6,7 +6,7 @@ using StructureMap.TypeRules;
 namespace StructureMap.Graph
 {
     /// <summary>
-    /// Represents a PropertyInfo of a Plugin.PluggedType that is filled by Setter Injection
+    /// Represents a PropertyInfo of a Plugin.TPluggedType that is filled by Setter Injection
     /// </summary>
     public class SetterProperty
     {

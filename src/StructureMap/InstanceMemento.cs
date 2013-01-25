@@ -92,14 +92,14 @@ namespace StructureMap
 
         private Plugin getPluginByType(PluginFamily family)
         {
-            string pluggedTypeName = getPluggedType();
-            if (string.IsNullOrEmpty(pluggedTypeName))
+            string TPluggedTypeName = getTPluggedType();
+            if (string.IsNullOrEmpty(TPluggedTypeName))
             {
                 return null;
             }
 
-            Type pluggedType = new TypePath(pluggedTypeName).FindType();
-            return PluginCache.GetPlugin(pluggedType);
+            Type TPluggedType = new TypePath(TPluggedTypeName).FindType();
+            return PluginCache.GetPlugin(TPluggedType);
         }
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace StructureMap
         }
 
 
-        protected virtual string getPluggedType()
+        protected virtual string getTPluggedType()
         {
             return getPropertyValue(XmlConstants.PLUGGED_TYPE);
         }

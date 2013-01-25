@@ -129,13 +129,13 @@ namespace StructureMap.Testing.Configuration.DSL
                 r.For<Processor2>().Use<Processor2>()
                     .TheArrayOf<IHandler>("first").Contains(x =>
                     {
-                        x.OfConcreteType<Handler1>();
-                        x.OfConcreteType<Handler2>();
+                        x.Type<Handler1>();
+                        x.Type<Handler2>();
                     })
                     .TheArrayOf<IHandler>("second").Contains(x =>
                     {
-                        x.OfConcreteType<Handler2>();
-                        x.OfConcreteType<Handler3>();
+                        x.Type<Handler2>();
+                        x.Type<Handler3>();
                     });
             });
 
@@ -205,9 +205,9 @@ namespace StructureMap.Testing.Configuration.DSL
                     .WithCtorArg("name").EqualTo("Jeremy")
                     .TheArrayOf<IHandler>().Contains(y =>
                     {
-                        y.OfConcreteType<Handler1>();
-                        y.OfConcreteType<Handler2>();
-                        y.OfConcreteType<Handler3>();
+                        y.Type<Handler1>();
+                        y.Type<Handler2>();
+                        y.Type<Handler3>();
                     });
             });
 
@@ -228,9 +228,9 @@ namespace StructureMap.Testing.Configuration.DSL
                     .WithCtorArg("name").EqualTo("Jeremy")
                     .TheArrayOf<IHandler>().Contains(x =>
                     {
-                        x.OfConcreteType<Handler1>();
-                        x.OfConcreteType<Handler2>();
-                        x.OfConcreteType<Handler3>();
+                        x.Type<Handler1>();
+                        x.Type<Handler2>();
+                        x.Type<Handler3>();
                     });
             });
 

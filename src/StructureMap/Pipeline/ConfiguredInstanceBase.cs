@@ -5,7 +5,7 @@ namespace StructureMap.Pipeline
 {
     public interface BasicInstance
     {
-        Type PluggedType { get; }
+        Type TPluggedType { get; }
 
 
         Dictionary<string, string> Properties { get; }
@@ -18,7 +18,7 @@ namespace StructureMap.Pipeline
     //{
     //    protected Dictionary<string, Instance[]> _arrays = new Dictionary<string, Instance[]>();
     //    protected Dictionary<string, Instance> _children = new Dictionary<string, Instance>();
-    //    protected Type _pluggedType;
+    //    protected Type _TPluggedType;
     //    protected Dictionary<string, string> _properties = new Dictionary<string, string>();
 
     //    protected ConfiguredInstanceBase(InstanceMemento memento, PluginGraph graph, Type pluginType)
@@ -26,16 +26,16 @@ namespace StructureMap.Pipeline
     //        read(memento, graph, pluginType);
     //    }
 
-    //    protected ConfiguredInstanceBase(Type pluggedType, string name)
+    //    protected ConfiguredInstanceBase(Type TPluggedType, string name)
     //    {
-    //        _pluggedType = pluggedType;
+    //        _TPluggedType = TPluggedType;
     //        Name = name;
     //    }
 
-    //    protected ConfiguredInstanceBase(Type pluggedType) : this(pluggedType, Guid.NewGuid().ToString())
+    //    protected ConfiguredInstanceBase(Type TPluggedType) : this(TPluggedType, Guid.NewGuid().ToString())
     //    {
-    //        if (pluggedType != null)
-    //            if (pluggedType.IsAbstract || pluggedType.IsInterface)
+    //        if (TPluggedType != null)
+    //            if (TPluggedType.IsAbstract || TPluggedType.IsInterface)
     //            {
     //                throw new StructureMapException(25);
     //            }
@@ -43,9 +43,9 @@ namespace StructureMap.Pipeline
 
     //    #region Copyable Members
 
-    //    Type BasicInstance.PluggedType
+    //    Type BasicInstance.TPluggedType
     //    {
-    //        get { return _pluggedType; }
+    //        get { return _TPluggedType; }
     //    }
 
     //    Dictionary<string, string> BasicInstance.Properties
@@ -67,9 +67,9 @@ namespace StructureMap.Pipeline
 
     //    //#region IConfiguredInstance Members
 
-    //    //Type IConfiguredInstance.PluggedType
+    //    //Type IConfiguredInstance.TPluggedType
     //    //{
-    //    //    get { return _pluggedType; }
+    //    //    get { return _TPluggedType; }
     //    //}
 
     //    //Instance[] IConfiguredInstance.GetChildrenArray(string propertyName)
@@ -97,7 +97,7 @@ namespace StructureMap.Pipeline
     //    //    if (builder == null)
     //    //    {
     //    //        throw new StructureMapException(
-    //    //            201, _pluggedType.FullName, Name, pluginType);
+    //    //            201, _TPluggedType.FullName, Name, pluginType);
     //    //    }
 
 
@@ -163,7 +163,7 @@ namespace StructureMap.Pipeline
 
     //    protected override object build(Type pluginType, BuildSession session)
     //    {
-    //        InstanceBuilder builder = PluginCache.FindBuilder(_pluggedType);
+    //        InstanceBuilder builder = PluginCache.FindBuilder(_TPluggedType);
     //        return ((IConfiguredInstance) this).Build(pluginType, session, builder);
     //    }
 
@@ -179,12 +179,12 @@ namespace StructureMap.Pipeline
 
     //    protected override bool canBePartOfPluginFamily(PluginFamily family)
     //    {
-    //        return _pluggedType.CanBeCastTo(family.PluginType) && Constructor.HasConstructors(_pluggedType);
+    //        return _TPluggedType.CanBeCastTo(family.PluginType) && Constructor.HasConstructors(_TPluggedType);
     //    }
 
     //    internal override bool Matches(Plugin plugin)
     //    {
-    //        return plugin.PluggedType == _pluggedType;
+    //        return plugin.TPluggedType == _TPluggedType;
     //    }
 
     //    private void read(InstanceMemento memento, PluginGraph graph, Type pluginType)
@@ -192,7 +192,7 @@ namespace StructureMap.Pipeline
     //        PluginFamily family = graph.FindFamily(pluginType);
     //        Plugin plugin = memento.FindPlugin(family);
 
-    //        _pluggedType = plugin.PluggedType;
+    //        _TPluggedType = plugin.TPluggedType;
 
     //        var reader = new InstanceMementoPropertyReader(this, memento, graph, pluginType);
     //        plugin.VisitArguments(reader);
@@ -230,7 +230,7 @@ namespace StructureMap.Pipeline
 
     //    protected override Type getConcreteType(Type pluginType)
     //    {
-    //        return _pluggedType;
+    //        return _TPluggedType;
     //    }
 
     //    protected string findPropertyName<PLUGINTYPE>()
@@ -242,7 +242,7 @@ namespace StructureMap.Pipeline
 
     //    protected string findPropertyName(Type dependencyType)
     //    {
-    //        var plugin = new Plugin(_pluggedType);
+    //        var plugin = new Plugin(_TPluggedType);
     //        string propertyName = plugin.FindArgumentNameForType(dependencyType);
 
     //        if (string.IsNullOrEmpty(propertyName))
@@ -274,7 +274,7 @@ namespace StructureMap.Pipeline
 
     //    protected void mergeIntoThis(BasicInstance instance)
     //    {
-    //        _pluggedType = instance.PluggedType;
+    //        _TPluggedType = instance.TPluggedType;
 
     //        foreach (var pair in instance.Properties)
     //        {

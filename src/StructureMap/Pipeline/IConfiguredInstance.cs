@@ -12,7 +12,7 @@ namespace StructureMap.Pipeline
     public interface IConfiguredInstance
     {
         string Name { get; }
-        Type PluggedType { get; }
+        Type TPluggedType { get; }
 
         object Get(string propertyName, Type pluginType, BuildSession buildSession);
 

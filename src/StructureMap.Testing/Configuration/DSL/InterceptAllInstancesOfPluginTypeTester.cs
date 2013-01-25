@@ -35,13 +35,13 @@ namespace StructureMap.Testing.Configuration.DSL
 
                 registry.For<IService>().AddInstances(x =>
                 {
-                    x.OfConcreteType<ColorService>().WithName("Red").WithProperty("color").EqualTo("Red");
+                    x.Type<ColorService>().WithName("Red").WithProperty("color").EqualTo("Red");
 
                     x.Object(new ColorService("Yellow")).WithName("Yellow");
 
                     x.ConstructedBy(() => new ColorService("Purple")).WithName("Purple");
 
-                    x.OfConcreteType<ColorService>().WithName("Decorated").WithProperty("color").EqualTo("Orange");
+                    x.Type<ColorService>().WithName("Decorated").WithProperty("color").EqualTo("Orange");
                 });
             });
         }
@@ -141,14 +141,14 @@ namespace StructureMap.Testing.Configuration.DSL
             _defaultRegistry = (registry =>
                                 registry.For<IService>().AddInstances(x =>
                                 {
-                                    x.OfConcreteType<ColorService>().WithName("Red")
+                                    x.Type<ColorService>().WithName("Red")
                                         .WithCtorArg("color").EqualTo("Red");
 
                                     x.Object(new ColorService("Yellow")).WithName("Yellow");
 
                                     x.ConstructedBy(() => new ColorService("Purple")).WithName("Purple");
 
-                                    x.OfConcreteType<ColorService>().WithName("Decorated").WithCtorArg("color").EqualTo(
+                                    x.Type<ColorService>().WithName("Decorated").WithCtorArg("color").EqualTo(
                                         "Orange");
                                 }));
         }

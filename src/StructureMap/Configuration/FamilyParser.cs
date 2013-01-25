@@ -105,14 +105,14 @@ namespace StructureMap.Configuration
             string concreteKey = pluginElement.GetAttribute(CONCRETE_KEY_ATTRIBUTE);
 
             string context = "creating a Plugin for " + family.PluginType.AssemblyQualifiedName;
-            _builder.WithType(pluginPath, context, pluggedType =>
+            _builder.WithType(pluginPath, context, TPluggedType =>
             {
                 if (concreteKey == string.Empty)
                 {
-                    throw new StructureMapException(112, pluggedType.FullName);
+                    throw new StructureMapException(112, TPluggedType.FullName);
                 }
 
-                Plugin plugin = family.AddPlugin(pluggedType, concreteKey);
+                Plugin plugin = family.AddPlugin(TPluggedType, concreteKey);
 
                 pluginElement.ForTextInChild("Setter/@Name").Do(prop => plugin.Setters.MarkSetterAsMandatory(prop));
             });

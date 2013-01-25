@@ -22,10 +22,10 @@ namespace StructureMap.Pipeline
         {
             Control control = new Page().LoadControl(_url);
 
-            Type pluggedType = control.GetType();
-            if (!pluggedType.CanBeCastTo(pluginType))
+            Type TPluggedType = control.GetType();
+            if (!TPluggedType.CanBeCastTo(pluginType))
             {
-                throw new StructureMapException(303, pluginType, pluggedType);
+                throw new StructureMapException(303, pluginType, TPluggedType);
             }
 
             return control;

@@ -26,7 +26,7 @@ namespace StructureMap.Source
 
         public XmlElement InnerElement { get { return _element; } }
 
-        public override bool IsReference { get { return (ConcreteKey == string.Empty && string.IsNullOrEmpty(getPluggedType())); } }
+        public override bool IsReference { get { return (ConcreteKey == string.Empty && string.IsNullOrEmpty(getTPluggedType())); } }
 
         public override string ReferenceKey { get { return InstanceKey; } }
 

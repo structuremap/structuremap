@@ -21,7 +21,7 @@ namespace StructureMap.Construction
 
         private static FuncCompiler getCompiler(Plugin plugin)
         {
-            Type compilerType = typeof (FuncCompiler<>).MakeGenericType(plugin.PluggedType);
+            Type compilerType = typeof (FuncCompiler<>).MakeGenericType(plugin.TPluggedType);
             return (FuncCompiler) Activator.CreateInstance(compilerType);
         }
 
@@ -60,7 +60,7 @@ namespace StructureMap.Construction
 
                 Action<IArguments, object> builder = (args, o) => setters(args, (T) o);
 
-                return new InstanceBuilder(plugin.PluggedType, creator, builder);
+                return new InstanceBuilder(plugin.TPluggedType, creator, builder);
             }
 
             public Func<IArguments, object> Compile(Plugin plugin)
