@@ -142,29 +142,11 @@ namespace StructureMap.Testing.Configuration.DSL
         }
 
         [Test]
-        public void cannot_use_a_class_with_a_primitive_constructor_in_the_TheDefaultIsConcreteType_shortcut()
-        {
-            try
-            {
-                var container = new Container(x =>
-                {
-                    x.For<ClassWithStringInConstructor>().TheDefaultIsConcreteType
-                        <ClassWithStringInConstructor>();
-                });
-                Assert.Fail("Should have thrown exception 231");
-            }
-            catch (StructureMapException e)
-            {
-                e.ErrorCode.ShouldEqual(231);
-            }
-        }
-
-        [Test]
         public void CanOverrideTheDefaultInstance1()
         {
             var registry = new Registry();
             // Specify the default implementation for an interface
-            registry.For<IGateway>().TheDefaultIsConcreteType<StubbedGateway>();
+            registry.For<IGateway>().Use<StubbedGateway>();
 
             PluginGraph pluginGraph = registry.Build();
             Assert.IsTrue(pluginGraph.ContainsFamily(typeof (IGateway)));
@@ -179,7 +161,7 @@ namespace StructureMap.Testing.Configuration.DSL
         public void CanOverrideTheDefaultInstanceAndCreateAnAllNewPluginOnTheFly()
         {
             var registry = new Registry();
-            registry.For<IGateway>().TheDefaultIsConcreteType<FakeGateway>();
+            registry.For<IGateway>().Use<FakeGateway>();
             PluginGraph pluginGraph = registry.Build();
 
             Assert.IsTrue(pluginGraph.ContainsFamily(typeof (IGateway)));
@@ -254,7 +236,7 @@ namespace StructureMap.Testing.Configuration.DSL
         public void TheDefaultInstanceIsConcreteType()
         {
             IContainer manager = new Container(
-                registry => registry.For<Rule>().TheDefaultIsConcreteType<ARule>());
+                registry => registry.For<Rule>().Use<ARule>());
 
             manager.GetInstance<Rule>().ShouldBeOfType<ARule>();
         }

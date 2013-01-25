@@ -167,9 +167,9 @@ namespace StructureMap.Pipeline
             SetChild(name, instance);
         }
 
-        protected string findPropertyName<PLUGINTYPE>()
+        protected string findPropertyName<TPluginType>()
         {
-            Type dependencyType = typeof (PLUGINTYPE);
+            Type dependencyType = typeof (TPluginType);
 
             return findPropertyName(dependencyType);
         }

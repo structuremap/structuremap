@@ -92,9 +92,9 @@ namespace StructureMap
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        public PLUGINTYPE GetInstance<PLUGINTYPE>(ExplicitArguments args)
+        public TPluginType GetInstance<TPluginType>(ExplicitArguments args)
         {
-            return (PLUGINTYPE) GetInstance(typeof (PLUGINTYPE), args);
+            return (TPluginType) GetInstance(typeof (TPluginType), args);
         }
 
         public T GetInstance<T>(ExplicitArguments args, string name)
@@ -473,19 +473,19 @@ namespace StructureMap
 
         /// <summary>
         /// Injects the given object into a Container as the default for the designated
-        /// PLUGINTYPE.  Mostly used for temporarily setting up return values of the Container
+        /// TPluginType.  Mostly used for temporarily setting up return values of the Container
         /// to introduce mocks or stubs during automated testing scenarios
         /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <typeparam name="TPluginType"></typeparam>
         /// <param name="instance"></param>
-        public void Inject<PLUGINTYPE>(PLUGINTYPE instance)
+        public void Inject<TPluginType>(TPluginType instance)
         {
-            Configure(x => x.For<PLUGINTYPE>().Use(instance));
+            Configure(x => x.For<TPluginType>().Use(instance));
         }
 
-        public void Inject<PLUGINTYPE>(string name, PLUGINTYPE value)
+        public void Inject<TPluginType>(string name, TPluginType value)
         {
-            Configure(x => x.For<PLUGINTYPE>().Use(value).Named(name));
+            Configure(x => x.For<TPluginType>().Use(value).Named(name));
         }
 
         /// <summary>

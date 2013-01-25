@@ -121,9 +121,9 @@ namespace StructureMap.Graph
             _assemblies.Add(type.Assembly);
         }
 
-        public FindAllTypesFilter AddAllTypesOf<PLUGINTYPE>()
+        public FindAllTypesFilter AddAllTypesOf<TPluginType>()
         {
-            return AddAllTypesOf(typeof (PLUGINTYPE));
+            return AddAllTypesOf(typeof (TPluginType));
         }
 
         public FindAllTypesFilter AddAllTypesOf(Type pluginType)

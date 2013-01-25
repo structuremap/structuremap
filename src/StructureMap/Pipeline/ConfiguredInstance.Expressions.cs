@@ -80,10 +80,10 @@ namespace StructureMap.Pipeline
         /// <summary>
         /// Inline definition of a dependency array like IService[] or IHandler[]
         /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <typeparam name="TPluginType"></typeparam>
         /// <param name="propertyName"></param>
         /// <returns></returns>
-        public ChildArrayExpression ChildArray<PLUGINTYPE>(string propertyName)
+        public ChildArrayExpression ChildArray<TPluginType>(string propertyName)
         {
             var expression =
                 new ChildArrayExpression(this, propertyName);
@@ -110,11 +110,11 @@ namespace StructureMap.Pipeline
         /// <summary>
         /// Inline definition of a dependency array like IService[] or IHandler[]
         /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <typeparam name="TPluginType"></typeparam>
         /// <returns></returns>
-        public ChildArrayExpression ChildArray<PLUGINTYPE>()
+        public ChildArrayExpression ChildArray<TPluginType>()
         {
-            return ChildArray(typeof (PLUGINTYPE));
+            return ChildArray(typeof (TPluginType));
         }
 
         /// <summary>

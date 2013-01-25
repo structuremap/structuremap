@@ -153,9 +153,9 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void AddANewDefaultTypeForAPluginTypeThatAlreadyExists()
         {
-            var container = new Container(x => { x.For<ISomething>().TheDefaultIsConcreteType<SomethingTwo>(); });
+            var container = new Container(x => { x.For<ISomething>().Use<SomethingTwo>(); });
 
-            container.Configure(x => { x.For<ISomething>().TheDefaultIsConcreteType<SomethingOne>(); });
+            container.Configure(x => { x.For<ISomething>().Use<SomethingOne>(); });
 
             container.GetInstance<ISomething>().ShouldBeOfType<SomethingOne>();
         }
@@ -166,7 +166,7 @@ namespace StructureMap.Testing.Graph
         {
             var container = new Container(x => { x.For<ISomething>(); });
 
-            container.Configure(x => { x.For<ISomething>().TheDefaultIsConcreteType<SomethingOne>(); });
+            container.Configure(x => { x.For<ISomething>().Use<SomethingOne>(); });
 
             container.GetInstance<ISomething>().ShouldBeOfType<SomethingOne>();
         }
@@ -252,7 +252,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void AddTypeThroughContainer()
         {
-            var container = new Container(x => { x.For<ISomething>().TheDefaultIsConcreteType<SomethingOne>(); });
+            var container = new Container(x => { x.For<ISomething>().Use<SomethingOne>(); });
 
             container.GetInstance<ISomething>().ShouldBeOfType<SomethingOne>();
         }
@@ -282,7 +282,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void JustAddATypeWithNoNameAndDefault()
         {
-            var container = new Container(x => { x.For<ISomething>().TheDefaultIsConcreteType<SomethingOne>(); });
+            var container = new Container(x => { x.For<ISomething>().Use<SomethingOne>(); });
 
             container.GetInstance<ISomething>().ShouldBeOfType<SomethingOne>();
         }

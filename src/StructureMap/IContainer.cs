@@ -112,14 +112,14 @@ namespace StructureMap
 
         /// <summary>
         /// Injects the given object into a Container as the default for the designated
-        /// PLUGINTYPE.  Mostly used for temporarily setting up return values of the Container
+        /// TPluginType.  Mostly used for temporarily setting up return values of the Container
         /// to introduce mocks or stubs during automated testing scenarios
         /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <typeparam name="TPluginType"></typeparam>
         /// <param name="instance"></param>
-        void Inject<PLUGINTYPE>(PLUGINTYPE instance);
+        void Inject<TPluginType>(TPluginType instance);
 
-        void Inject<PLUGINTYPE>(string name, PLUGINTYPE value);
+        void Inject<TPluginType>(string name, TPluginType value);
 
 
         /// <summary>

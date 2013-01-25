@@ -17,7 +17,7 @@ namespace StructureMap.Testing.Bugs
             container.Configure(x =>
             {
                 x.For<ISomeDependency>()
-                    .TheDefaultIsConcreteType<ClassThatImplementsDependency>();
+                    .Use<ClassThatImplementsDependency>();
 
                 x.FillAllPropertiesOfType<ISomeDependency>();
             });

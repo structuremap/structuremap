@@ -264,7 +264,7 @@ namespace StructureMap.Testing.Configuration.DSL
     {
         public BasicActionRegistry()
         {
-            registerAction(() => For<IGateway>().TheDefaultIsConcreteType<Fake3Gateway>());
+            registerAction(() => For<IGateway>().Use<Fake3Gateway>());
         }
     }
 }

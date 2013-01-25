@@ -13,7 +13,7 @@ namespace StructureMap.Testing.Bugs
             {
                 x.For<IGateway>()
                     .CacheBy(InstanceScope.HybridHttpSession)
-                    .TheDefaultIsConcreteType<DefaultGateway>();
+                    .Use<DefaultGateway>();
             });
 
             container.GetInstance<IGateway>().ShouldNotBeNull();

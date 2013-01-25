@@ -233,9 +233,9 @@ namespace StructureMap.Pipeline
     //        return _TPluggedType;
     //    }
 
-    //    protected string findPropertyName<PLUGINTYPE>()
+    //    protected string findPropertyName<TPluginType>()
     //    {
-    //        Type dependencyType = typeof(PLUGINTYPE);
+    //        Type dependencyType = typeof(TPluginType);
 
     //        return findPropertyName(dependencyType);
     //    }
@@ -253,9 +253,9 @@ namespace StructureMap.Pipeline
     //        return propertyName;
     //    }
 
-    //    protected static void validateTypeIsArray<PLUGINTYPE>()
+    //    protected static void validateTypeIsArray<TPluginType>()
     //    {
-    //        validateTypeIsArray(typeof(PLUGINTYPE));
+    //        validateTypeIsArray(typeof(TPluginType));
     //    }
 
     //    protected static void validateTypeIsArray(Type pluginType)

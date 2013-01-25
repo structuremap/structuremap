@@ -414,7 +414,7 @@ namespace StructureMap.Testing.DocumentationExamples
         public InstanceExampleRegistry()
         {
             // Shortcut for just specifying "use this type -- with auto wiring"
-            For<IService>().TheDefaultIsConcreteType<RemoteService>();
+            For<IService>().Use<RemoteService>();
 
             // Set the default Instance of a PluginType
             For<IService>().Use<RemoteService>();

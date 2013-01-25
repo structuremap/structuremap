@@ -24,26 +24,6 @@ namespace StructureMap.Testing.Bugs
         #endregion
     }
 
-    [TestFixture]
-    public class Singleton_should_be_lazy
-    {
-        [Test]
-        public void test_it()
-        {
-            var container = new Container(x =>
-            {
-                x.For<IGateway>().CacheBy(InstanceScope.Singleton).TheDefaultIsConcreteType
-                    <SingletonShouldBeLazy>();
-            });
-        }
-
-        [Test]
-        public void TESTNAME()
-        {
-            CrmService.Main(new string[0]);
-        }
-    }
-
 
     public class CrmService
     {
@@ -78,8 +58,7 @@ namespace StructureMap.Testing.Bugs
             ObjectFactory.Initialize(registry =>
                                      registry.UseDefaultStructureMapConfigFile = false);
             ObjectFactory.Configure(registry =>
-                                    registry.For<ICrm>().TheDefaultIsConcreteType<Crm>
-                                        ().CacheBy(InstanceScope.Singleton));
+                                    registry.ForSingletonOf<ICrm>().Use<Crm>());
         }
     }
 

@@ -94,11 +94,11 @@ namespace StructureMap.Configuration.DSL
         /// <summary>
         /// Convenience method.  Equivalent of ForRequestedType[PluginType]().Singletons()
         /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <typeparam name="TPluginType"></typeparam>
         /// <returns></returns>
-        public CreatePluginFamilyExpression<PLUGINTYPE> ForSingletonOf<PLUGINTYPE>()
+        public CreatePluginFamilyExpression<TPluginType> ForSingletonOf<TPluginType>()
         {
-            return For<PLUGINTYPE>().Singleton();
+            return For<TPluginType>().Singleton();
         }
 
         /// <summary>
@@ -170,14 +170,14 @@ namespace StructureMap.Configuration.DSL
 
         /// <summary>
         /// Directs StructureMap to always inject dependencies into any and all public Setter properties
-        /// of the type PLUGINTYPE.
+        /// of the type TPluginType.
         /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <typeparam name="TPluginType"></typeparam>
         /// <returns></returns>
-        public CreatePluginFamilyExpression<PLUGINTYPE> FillAllPropertiesOfType<PLUGINTYPE>()
+        public CreatePluginFamilyExpression<TPluginType> FillAllPropertiesOfType<TPluginType>()
         {
-            PluginCache.AddFilledType(typeof (PLUGINTYPE));
-            return For<PLUGINTYPE>();
+            PluginCache.AddFilledType(typeof (TPluginType));
+            return For<TPluginType>();
         }
 
         /// <summary>
@@ -219,11 +219,11 @@ namespace StructureMap.Configuration.DSL
         /// Scoping, the Default Instance, and interception.  BuildInstancesOf()
         /// and ForRequestedType() are synonyms
         /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <typeparam name="TPluginType"></typeparam>
         /// <returns></returns>
-        public CreatePluginFamilyExpression<PLUGINTYPE> For<PLUGINTYPE>()
+        public CreatePluginFamilyExpression<TPluginType> For<TPluginType>()
         {
-            return new CreatePluginFamilyExpression<PLUGINTYPE>(this);
+            return new CreatePluginFamilyExpression<TPluginType>(this);
         }
 
         /// <summary>

@@ -95,8 +95,8 @@ namespace StructureMap.Graph
         /// <summary>
         /// Add all concrete types of the Plugin Type as Instances of Plugin Type
         /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
-        FindAllTypesFilter AddAllTypesOf<PLUGINTYPE>();
+        /// <typeparam name="TPluginType"></typeparam>
+        FindAllTypesFilter AddAllTypesOf<TPluginType>();
 
         /// <summary>
         /// Add all concrete types of the Plugin Type as Instances of Plugin Type

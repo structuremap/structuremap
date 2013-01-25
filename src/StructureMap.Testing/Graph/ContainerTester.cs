@@ -114,7 +114,7 @@ namespace StructureMap.Testing.Graph
         public void CanBuildConcreteTypesThatAreNotPreviouslyRegistered()
         {
             IContainer manager = new Container(
-                registry => registry.For<IProvider>().TheDefaultIsConcreteType<Provider>());
+                registry => registry.For<IProvider>().Use<Provider>());
 
             // Now, have that same Container create a ClassThatUsesProvider.  StructureMap will
             // see that ClassThatUsesProvider is concrete, determine its constructor args, and build one 
@@ -129,7 +129,7 @@ namespace StructureMap.Testing.Graph
         {
             IContainer manager =
                 new Container(
-                    registry => registry.For<IProvider>().TheDefaultIsConcreteType<Provider>());
+                    registry => registry.For<IProvider>().Use<Provider>());
 
             var differentProvider = new DifferentProvider();
             var args = new ExplicitArguments();
@@ -241,7 +241,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void TryGetInstance_ReturnsInstance_WhenTypeFound()
         {
-            _container.Configure(c => c.For<IProvider>().TheDefaultIsConcreteType<Provider>());
+            _container.Configure(c => c.For<IProvider>().Use<Provider>());
             object instance = _container.TryGetInstance(typeof (IProvider));
             instance.ShouldBeOfType(typeof (Provider));
         }
@@ -256,7 +256,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void TryGetInstanceViaGeneric_ReturnsInstance_WhenTypeFound()
         {
-            _container.Configure(c => c.For<IProvider>().TheDefaultIsConcreteType<Provider>());
+            _container.Configure(c => c.For<IProvider>().Use<Provider>());
             var instance = _container.TryGetInstance<IProvider>();
             instance.ShouldBeOfType(typeof (Provider));
         }

@@ -93,7 +93,7 @@ namespace StructureMap.Testing
                 x.IgnoreStructureMapConfig = true;
 
                 x.For<Guid>().Use(() => Guid.NewGuid());
-                x.For<IFoo>().TheDefaultIsConcreteType<Foo>();
+                x.For<IFoo>().Use<Foo>();
             });
 
 

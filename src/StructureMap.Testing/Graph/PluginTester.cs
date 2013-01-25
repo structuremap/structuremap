@@ -368,8 +368,7 @@ namespace StructureMap.Testing.Graph
         {
             try
             {
-                new Registry().For<ClassWithNoConstructor>().TheDefaultIsConcreteType
-                    <ClassWithNoConstructor>();
+                new Registry().For<ClassWithNoConstructor>().Use<ClassWithNoConstructor>();
             }
             catch (StructureMapException ex)
             {

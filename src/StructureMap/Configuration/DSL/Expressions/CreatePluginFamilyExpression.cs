@@ -10,7 +10,7 @@ namespace StructureMap.Configuration.DSL.Expressions
     /// Expression Builder that has grammars for defining policies at the 
     /// PluginType level
     /// </summary>
-    public class CreatePluginFamilyExpression<PLUGINTYPE>
+    public class CreatePluginFamilyExpression<TPluginType>
     {
         private readonly List<Action<PluginFamily>> _alterations = new List<Action<PluginFamily>>();
         private readonly List<Action<PluginGraph>> _children = new List<Action<PluginGraph>>();
@@ -18,7 +18,7 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         public CreatePluginFamilyExpression(Registry registry)
         {
-            _pluginType = typeof (PLUGINTYPE);
+            _pluginType = typeof (TPluginType);
 
             registry.addExpression(graph =>
             {
@@ -33,20 +33,20 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// Define the Default Instance for this PluginType
         /// </summary>
         [Obsolete("Prefer the Use() methods")]
-        public IsExpression<PLUGINTYPE> TheDefault { get { return new InstanceExpression<PLUGINTYPE>(i => registerDefault(i)); } }
+        public IsExpression<TPluginType> TheDefault { get { return new InstanceExpression<TPluginType>(i => registerDefault(i)); } }
 
-        public InstanceExpression<PLUGINTYPE> MissingNamedInstanceIs { get { return new InstanceExpression<PLUGINTYPE>(i => _alterations.Add(family => family.MissingInstance = i)); } }
+        public InstanceExpression<TPluginType> MissingNamedInstanceIs { get { return new InstanceExpression<TPluginType>(i => _alterations.Add(family => family.MissingInstance = i)); } }
 
         /// <summary>
         /// Add multiple Instance's to this PluginType
         /// </summary>
         /// <param name="action"></param>
         /// <returns></returns>
-        public CreatePluginFamilyExpression<PLUGINTYPE> AddInstances(Action<IInstanceExpression<PLUGINTYPE>> action)
+        public CreatePluginFamilyExpression<TPluginType> AddInstances(Action<IInstanceExpression<TPluginType>> action)
         {
             var list = new List<Instance>();
 
-            var child = new InstanceExpression<PLUGINTYPE>(i => list.Add(i));
+            var child = new InstanceExpression<TPluginType>(i => list.Add(i));
             action(child);
 
             return alterAndContinue(family =>
@@ -63,9 +63,9 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="configure"></param>
         /// <returns></returns>
-        public CreatePluginFamilyExpression<PLUGINTYPE> UseSpecial(Action<IInstanceExpression<PLUGINTYPE>> configure)
+        public CreatePluginFamilyExpression<TPluginType> UseSpecial(Action<IInstanceExpression<TPluginType>> configure)
         {
-            var expression = new InstanceExpression<PLUGINTYPE>(i => Use(i));
+            var expression = new InstanceExpression<TPluginType>(i => Use(i));
             configure(expression);
 
             return this;
@@ -77,60 +77,31 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="configure"></param>
         /// <returns></returns>
-        public CreatePluginFamilyExpression<PLUGINTYPE> AddSpecial(Action<IInstanceExpression<PLUGINTYPE>> configure)
+        public CreatePluginFamilyExpression<TPluginType> AddSpecial(Action<IInstanceExpression<TPluginType>> configure)
         {
-            var expression = new InstanceExpression<PLUGINTYPE>(i => Add(i));
+            var expression = new InstanceExpression<TPluginType>(i => Add(i));
             configure(expression);
 
             return this;
         }
 
 
-        private CreatePluginFamilyExpression<PLUGINTYPE> alterAndContinue(Action<PluginFamily> action)
+        private CreatePluginFamilyExpression<TPluginType> alterAndContinue(Action<PluginFamily> action)
         {
             _alterations.Add(action);
             return this;
         }
 
         /// <summary>
-        /// Convenience method that sets the default concrete type of the PluginType.  Type T
-        /// can only accept types that do not have any primitive constructor arguments.
-        /// StructureMap has to know how to construct all of the constructor argument types.
-        /// </summary>
-        /// <typeparam name="CONCRETETYPE"></typeparam>
-        /// <returns></returns>
-        [Obsolete("Prefer the usage For<ISomething>().Use<Something>()")]
-        public CreatePluginFamilyExpression<PLUGINTYPE> TheDefaultIsConcreteType<CONCRETETYPE>()
-            where CONCRETETYPE : PLUGINTYPE
-        {
-            Type concreteType = typeof (CONCRETETYPE);
-
-            ExpressionValidator.ValidatePluggabilityOf(concreteType).IntoPluginType(_pluginType);
-
-            if (!PluginCache.GetPlugin(concreteType).CanBeAutoFilled)
-            {
-                throw new StructureMapException(231);
-            }
-
-            return alterAndContinue(family =>
-            {
-                ConfiguredInstance instance =
-                    new ConfiguredInstance(concreteType).WithName(concreteType.AssemblyQualifiedName);
-                family.AddInstance(instance);
-                family.DefaultInstanceKey = instance.Name;
-            });
-        }
-
-        /// <summary>
         /// Shorthand way of saying Use<>
         /// </summary>
-        /// <typeparam name="CONCRETETYPE"></typeparam>
+        /// <typeparam name="TConcreteType"></typeparam>
         /// <returns></returns>
-        public SmartInstance<CONCRETETYPE> Use<CONCRETETYPE>() where CONCRETETYPE : PLUGINTYPE
+        public SmartInstance<TConcreteType> Use<TConcreteType>() where TConcreteType : TPluginType
         {
             // This is *my* team's naming convention for generic parameters
             // I know you may not like it, but it's my article so there
-            var instance = new SmartInstance<CONCRETETYPE>();
+            var instance = new SmartInstance<TConcreteType>();
 
             registerDefault(instance);
 
@@ -142,7 +113,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="func"></param>
         /// <returns></returns>
-        public LambdaInstance<PLUGINTYPE> Use(Func<IContext, PLUGINTYPE> func)
+        public LambdaInstance<TPluginType> Use(Func<IContext, TPluginType> func)
         {
             return TheDefault.Is.ConstructedBy(func);
         }
@@ -152,7 +123,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="func"></param>
         /// <returns></returns>
-        public LambdaInstance<PLUGINTYPE> Use(Func<PLUGINTYPE> func)
+        public LambdaInstance<TPluginType> Use(Func<TPluginType> func)
         {
             return TheDefault.Is.ConstructedBy(func);
         }
@@ -167,7 +138,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="object"></param>
         /// <returns></returns>
-        public ObjectInstance Use(PLUGINTYPE @object)
+        public ObjectInstance Use(TPluginType @object)
         {
             return TheDefault.IsThis(@object);
         }
@@ -179,7 +150,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <param name="scope"></param>
         /// <returns></returns>
 		[Obsolete("Change to LifecycleIs(scope) or use Singleton(), HttpContextScoped(), HybridHttpOrThreadLocalScoped()")]
-        public CreatePluginFamilyExpression<PLUGINTYPE> CacheBy(InstanceScope scope)
+        public CreatePluginFamilyExpression<TPluginType> CacheBy(InstanceScope scope)
         {
             return alterAndContinue(family => family.SetScopeTo(scope));
         }
@@ -188,7 +159,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// Convenience method to mark a PluginFamily as a Singleton
         /// </summary>
         /// <returns></returns>
-        public CreatePluginFamilyExpression<PLUGINTYPE> Singleton()
+        public CreatePluginFamilyExpression<TPluginType> Singleton()
         {
             return lifecycleIs(InstanceScope.Singleton);
         }
@@ -197,12 +168,12 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// Convenience method to mark a PluginFamily as a Transient
         /// </summary>
         /// <returns></returns>
-        public CreatePluginFamilyExpression<PLUGINTYPE> Transient()
+        public CreatePluginFamilyExpression<TPluginType> Transient()
         {
             return lifecycleIs(InstanceScope.Transient);
         }
 
-        private CreatePluginFamilyExpression<PLUGINTYPE> lifecycleIs(InstanceScope lifecycle)
+        private CreatePluginFamilyExpression<TPluginType> lifecycleIs(InstanceScope lifecycle)
         {
             _alterations.Add(family => family.SetScopeTo(lifecycle));
             return this;
@@ -212,7 +183,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// Convenience method to mark a PluginFamily as a Hybrid lifecycle
         /// </summary>
         /// <returns></returns>
-        public CreatePluginFamilyExpression<PLUGINTYPE> HybridHttpOrThreadLocalScoped()
+        public CreatePluginFamilyExpression<TPluginType> HybridHttpOrThreadLocalScoped()
         {
             return lifecycleIs(InstanceScope.Hybrid);
         }
@@ -221,7 +192,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// Convenience method to mark a PluginFamily as HttpContext scoped
         /// </summary>
         /// <returns></returns>
-        public CreatePluginFamilyExpression<PLUGINTYPE> HttpContextScoped()
+        public CreatePluginFamilyExpression<TPluginType> HttpContextScoped()
         {
             return lifecycleIs(InstanceScope.HttpContext);
         }
@@ -234,20 +205,20 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <param name="handler"></param>
         /// <returns></returns>
         [Obsolete("Change to OnCreationForAll")]
-        public CreatePluginFamilyExpression<PLUGINTYPE> OnCreation(Action<PLUGINTYPE> handler)
+        public CreatePluginFamilyExpression<TPluginType> OnCreation(Action<TPluginType> handler)
         {
             _children.Add(
                 graph =>
                 {
                     Func<object, object> function = target =>
                     {
-                        handler((PLUGINTYPE) target);
+                        handler((TPluginType) target);
                         return target;
                     };
 
-                    var interceptor = new PluginTypeInterceptor(typeof (PLUGINTYPE), (c, o) =>
+                    var interceptor = new PluginTypeInterceptor(typeof (TPluginType), (c, o) =>
                     {
-                        handler((PLUGINTYPE) o);
+                        handler((TPluginType) o);
                         return o;
                     });
 
@@ -264,20 +235,20 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public CreatePluginFamilyExpression<PLUGINTYPE> OnCreationForAll(Action<PLUGINTYPE> handler)
+        public CreatePluginFamilyExpression<TPluginType> OnCreationForAll(Action<TPluginType> handler)
         {
             _children.Add(
                 graph =>
                 {
                     Func<object, object> function = target =>
                     {
-                        handler((PLUGINTYPE)target);
+                        handler((TPluginType)target);
                         return target;
                     };
 
-                    var interceptor = new PluginTypeInterceptor(typeof(PLUGINTYPE), (c, o) =>
+                    var interceptor = new PluginTypeInterceptor(typeof(TPluginType), (c, o) =>
                     {
-                        handler((PLUGINTYPE)o);
+                        handler((TPluginType)o);
                         return o;
                     });
 
@@ -292,12 +263,12 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="interceptor"></param>
         /// <returns></returns>
-        public CreatePluginFamilyExpression<PLUGINTYPE> InterceptWith(InstanceInterceptor interceptor)
+        public CreatePluginFamilyExpression<TPluginType> InterceptWith(InstanceInterceptor interceptor)
         {
             _children.Add(
                 graph =>
                 {
-                    var typeInterceptor = new PluginTypeInterceptor(typeof (PLUGINTYPE),
+                    var typeInterceptor = new PluginTypeInterceptor(typeof (TPluginType),
                                                                     (c, o) => interceptor.Process(o, c));
                     graph.InterceptorLibrary.AddInterceptor(typeInterceptor);
                 });
@@ -312,18 +283,18 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <param name="handler"></param>
         /// <returns></returns>
         [Obsolete("Change to OnCreationForAll")]
-        public CreatePluginFamilyExpression<PLUGINTYPE> OnCreation(Action<IContext, PLUGINTYPE> handler)
+        public CreatePluginFamilyExpression<TPluginType> OnCreation(Action<IContext, TPluginType> handler)
         {
             _children.Add(
                 graph =>
                 {
                     Func<IContext, object, object> function = (c, o) =>
                     {
-                        handler(c, (PLUGINTYPE) o);
+                        handler(c, (TPluginType) o);
                         return o;
                     };
 
-                    var interceptor = new PluginTypeInterceptor(typeof (PLUGINTYPE), function);
+                    var interceptor = new PluginTypeInterceptor(typeof (TPluginType), function);
 
                     graph.InterceptorLibrary.AddInterceptor(interceptor);
                 });
@@ -338,18 +309,18 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public CreatePluginFamilyExpression<PLUGINTYPE> OnCreationForAll(Action<IContext, PLUGINTYPE> handler)
+        public CreatePluginFamilyExpression<TPluginType> OnCreationForAll(Action<IContext, TPluginType> handler)
         {
             _children.Add(
                 graph =>
                 {
                     Func<IContext, object, object> function = (c, o) =>
                     {
-                        handler(c, (PLUGINTYPE)o);
+                        handler(c, (TPluginType)o);
                         return o;
                     };
 
-                    var interceptor = new PluginTypeInterceptor(typeof(PLUGINTYPE), function);
+                    var interceptor = new PluginTypeInterceptor(typeof(TPluginType), function);
 
                     graph.InterceptorLibrary.AddInterceptor(interceptor);
                 });
@@ -359,21 +330,21 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         /// <summary>
         /// Register a Func to run against any object of this PluginType immediately after it is created,
-        /// but before the new object is passed back to the caller.  Unlike <see cref="OnCreation(Action{PLUGINTYPE})">OnCreation()</see>,
+        /// but before the new object is passed back to the caller.  Unlike <see cref="OnCreation(Action{TPluginType})">OnCreation()</see>,
         /// EnrichWith() gives the the ability to return a different object.  Use this method for runtime AOP
         /// scenarios or to return a decorator.
         /// </summary>
         /// <param name="handler"></param>
         /// <returns></returns>
         [Obsolete("Change to EnrichAllWith() -- eliminates confusion")]
-        public CreatePluginFamilyExpression<PLUGINTYPE> EnrichWith(EnrichmentHandler<PLUGINTYPE> handler)
+        public CreatePluginFamilyExpression<TPluginType> EnrichWith(EnrichmentHandler<TPluginType> handler)
         {
             _children.Add(
                 graph =>
                 {
-                    Func<IContext, object, object> function = (context, target) => handler((PLUGINTYPE) target);
+                    Func<IContext, object, object> function = (context, target) => handler((TPluginType) target);
 
-                    var interceptor = new PluginTypeInterceptor(typeof (PLUGINTYPE), function);
+                    var interceptor = new PluginTypeInterceptor(typeof (TPluginType), function);
                     graph.InterceptorLibrary.AddInterceptor(interceptor);
                 });
 
@@ -382,20 +353,20 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         /// <summary>
         /// Register a Func to run against any object of this PluginType immediately after it is created,
-        /// but before the new object is passed back to the caller.  Unlike <see cref="OnCreation(Action{PLUGINTYPE})">OnCreation()</see>,
+        /// but before the new object is passed back to the caller.  Unlike <see cref="OnCreation(Action{TPluginType})">OnCreation()</see>,
         /// EnrichWith() gives the the ability to return a different object.  Use this method for runtime AOP
         /// scenarios or to return a decorator.
         /// </summary>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public CreatePluginFamilyExpression<PLUGINTYPE> EnrichAllWith(EnrichmentHandler<PLUGINTYPE> handler)
+        public CreatePluginFamilyExpression<TPluginType> EnrichAllWith(EnrichmentHandler<TPluginType> handler)
         {
             _children.Add(
                 graph =>
                 {
-                    Func<IContext, object, object> function = (context, target) => handler((PLUGINTYPE)target);
+                    Func<IContext, object, object> function = (context, target) => handler((TPluginType)target);
 
-                    var interceptor = new PluginTypeInterceptor(typeof(PLUGINTYPE), function);
+                    var interceptor = new PluginTypeInterceptor(typeof(TPluginType), function);
                     graph.InterceptorLibrary.AddInterceptor(interceptor);
                 });
 
@@ -404,20 +375,20 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         /// <summary>
         /// Register a Func to run against any object of this PluginType immediately after it is created,
-        /// but before the new object is passed back to the caller.  Unlike <see cref="OnCreation(Action{IContext,PLUGINTYPE})">OnCreation()</see>,
+        /// but before the new object is passed back to the caller.  Unlike <see cref="OnCreation(Action{IContext,TPluginType})">OnCreation()</see>,
         /// EnrichWith() gives the the ability to return a different object.  Use this method for runtime AOP
         /// scenarios or to return a decorator.
         /// </summary>
         /// <param name="handler"></param>
         /// <returns></returns>
         [Obsolete("Change to EnrichAllWith -- it's to avoid confusion")]
-        public CreatePluginFamilyExpression<PLUGINTYPE> EnrichWith(ContextEnrichmentHandler<PLUGINTYPE> handler)
+        public CreatePluginFamilyExpression<TPluginType> EnrichWith(ContextEnrichmentHandler<TPluginType> handler)
         {
             _children.Add(
                 graph =>
                 {
-                    var interceptor = new PluginTypeInterceptor(typeof (PLUGINTYPE),
-                                                                (c, o) => handler(c, (PLUGINTYPE) o));
+                    var interceptor = new PluginTypeInterceptor(typeof (TPluginType),
+                                                                (c, o) => handler(c, (TPluginType) o));
                     graph.InterceptorLibrary.AddInterceptor(interceptor);
                 });
 
@@ -427,19 +398,19 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         /// <summary>
         /// Register a Func to run against any object of this PluginType immediately after it is created,
-        /// but before the new object is passed back to the caller.  Unlike <see cref="OnCreation(Action{IContext,PLUGINTYPE})">OnCreation()</see>,
+        /// but before the new object is passed back to the caller.  Unlike <see cref="OnCreation(Action{IContext,TPluginType})">OnCreation()</see>,
         /// EnrichWith() gives the the ability to return a different object.  Use this method for runtime AOP
         /// scenarios or to return a decorator.
         /// </summary>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public CreatePluginFamilyExpression<PLUGINTYPE> EnrichAllWith(ContextEnrichmentHandler<PLUGINTYPE> handler)
+        public CreatePluginFamilyExpression<TPluginType> EnrichAllWith(ContextEnrichmentHandler<TPluginType> handler)
         {
             _children.Add(
                 graph =>
                 {
-                    var interceptor = new PluginTypeInterceptor(typeof(PLUGINTYPE),
-                                                                (c, o) => handler(c, (PLUGINTYPE)o));
+                    var interceptor = new PluginTypeInterceptor(typeof(TPluginType),
+                                                                (c, o) => handler(c, (TPluginType)o));
                     graph.InterceptorLibrary.AddInterceptor(interceptor);
                 });
 
@@ -455,7 +426,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <typeparam name="TPluggedType"></typeparam>
         /// <returns></returns>
         [Obsolete("Change to Add<T>()")]
-        public CreatePluginFamilyExpression<PLUGINTYPE> AddConcreteType<TPluggedType>()
+        public CreatePluginFamilyExpression<TPluginType> AddConcreteType<TPluggedType>()
         {
             if (!PluginCache.GetPlugin(typeof (TPluggedType)).CanBeAutoFilled)
             {
@@ -479,7 +450,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="lifecycle"></param>
         /// <returns></returns>
-        public CreatePluginFamilyExpression<PLUGINTYPE> LifecycleIs(ILifecycle lifecycle)
+        public CreatePluginFamilyExpression<TPluginType> LifecycleIs(ILifecycle lifecycle)
         {
             _alterations.Add(family => family.SetScopeTo(lifecycle));
             return this;
@@ -491,7 +462,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        public CreatePluginFamilyExpression<PLUGINTYPE> AddInstancesFrom(MementoSource source)
+        public CreatePluginFamilyExpression<TPluginType> AddInstancesFrom(MementoSource source)
         {
             _alterations.Add(family => family.AddMementoSource(source));
 
@@ -512,17 +483,17 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// stop the "BuildSession" caching
         /// </summary>
         /// <returns></returns>
-        public CreatePluginFamilyExpression<PLUGINTYPE> AlwaysUnique()
+        public CreatePluginFamilyExpression<TPluginType> AlwaysUnique()
         {
             return LifecycleIs(new UniquePerRequestLifecycle());
         }
 
         /// <summary>
-        /// Adds the object to to the PLUGINTYPE
+        /// Adds the object to to the TPluginType
         /// </summary>
         /// <param name="object"></param>
         /// <returns></returns>
-        public ObjectInstance Add(PLUGINTYPE @object)
+        public ObjectInstance Add(TPluginType @object)
         {
             var instance = new ObjectInstance(@object);
             Add(instance);
@@ -543,9 +514,9 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="func"></param>
         /// <returns></returns>
-        public LambdaInstance<PLUGINTYPE> Add(Func<IContext, PLUGINTYPE> func)
+        public LambdaInstance<TPluginType> Add(Func<IContext, TPluginType> func)
         {
-            var instance = new LambdaInstance<PLUGINTYPE>(func);
+            var instance = new LambdaInstance<TPluginType>(func);
             Add(instance);
 
             return instance;

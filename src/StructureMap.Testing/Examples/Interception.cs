@@ -86,7 +86,7 @@ namespace StructureMap.Testing.Examples
                 .OnCreation(x => x.StartConnection()) // OnCreation
                 .EnrichWith(x => new LoggingDecorator(x)) // Enrich
                 .InterceptWith(new CustomInterceptor()) // Custom Interceptor
-                .TheDefaultIsConcreteType<ClassThatNeedsSomeBootstrapping>();
+                .Use<ClassThatNeedsSomeBootstrapping>();
         }
     }
 

@@ -58,16 +58,16 @@ namespace StructureMap.Testing
                 {
                     x.For<Session>()
                         .AlwaysUnique()
-                        .TheDefaultIsConcreteType<Session>();
+                        .Use<Session>();
 
                     x.For<Model1>()
-                        .TheDefaultIsConcreteType<Model1>();
+                        .Use<Model1>();
 
                     x.For<Model2>()
-                        .TheDefaultIsConcreteType<Model2>();
+                        .Use<Model2>();
 
                     x.For<Shell>()
-                        .TheDefaultIsConcreteType<Shell>();
+                        .Use<Shell>();
                 });
 
             var shell = ObjectFactory.GetInstance<Shell>();

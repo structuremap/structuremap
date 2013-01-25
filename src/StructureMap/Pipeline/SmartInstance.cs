@@ -93,9 +93,9 @@ namespace StructureMap.Pipeline
         /// </summary>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public SmartInstance<T> EnrichWith<PLUGINTYPE>(EnrichmentHandler<PLUGINTYPE> handler)
+        public SmartInstance<T> EnrichWith<TPluginType>(EnrichmentHandler<TPluginType> handler)
         {
-            var interceptor = new EnrichmentInterceptor<PLUGINTYPE>((c, o) => handler(o));
+            var interceptor = new EnrichmentInterceptor<TPluginType>((c, o) => handler(o));
             Interceptor = interceptor;
 
             return this;
@@ -121,9 +121,9 @@ namespace StructureMap.Pipeline
         /// </summary>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public SmartInstance<T> EnrichWith<PLUGINTYPE>(ContextEnrichmentHandler<PLUGINTYPE> handler)
+        public SmartInstance<T> EnrichWith<TPluginType>(ContextEnrichmentHandler<TPluginType> handler)
         {
-            var interceptor = new EnrichmentInterceptor<PLUGINTYPE>(handler);
+            var interceptor = new EnrichmentInterceptor<TPluginType>(handler);
             Interceptor = interceptor;
 
             return this;
@@ -537,11 +537,11 @@ namespace StructureMap.Pipeline
             /// <summary>
             /// Shortcut method to define a child dependency inline
             /// </summary>
-            /// <typeparam name="CONCRETETYPE"></typeparam>
+            /// <typeparam name="TConcreteType"></typeparam>
             /// <returns></returns>
-            public SmartInstance<T> Is<CONCRETETYPE>() where CONCRETETYPE : CHILD
+            public SmartInstance<T> Is<TConcreteType>() where TConcreteType : CHILD
             {
-                return Is(new SmartInstance<CONCRETETYPE>());
+                return Is(new SmartInstance<TConcreteType>());
             }
 
 
@@ -549,11 +549,11 @@ namespace StructureMap.Pipeline
             /// Shortcut method to define a child dependency inline and configure
             /// the child dependency
             /// </summary>
-            /// <typeparam name="CONCRETETYPE"></typeparam>
+            /// <typeparam name="TConcreteType"></typeparam>
             /// <returns></returns>
-            public SmartInstance<T> Is<CONCRETETYPE>(Action<SmartInstance<CONCRETETYPE>> configure) where CONCRETETYPE : CHILD
+            public SmartInstance<T> Is<TConcreteType>(Action<SmartInstance<TConcreteType>> configure) where TConcreteType : CHILD
             {
-                var instance = new SmartInstance<CONCRETETYPE>();
+                var instance = new SmartInstance<TConcreteType>();
                 configure(instance);
                 return Is(instance);
             }

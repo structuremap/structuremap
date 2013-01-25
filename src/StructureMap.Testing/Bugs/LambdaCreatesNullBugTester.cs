@@ -22,7 +22,7 @@ namespace StructureMap.Testing.Bugs
             {
                 x.For<IPrincipal>().Use(() => null);
 
-                x.For<TestClass>().TheDefaultIsConcreteType<TestClass>();
+                x.For<TestClass>().Use<TestClass>();
             });
 
             container.GetInstance<TestClass>().ShouldNotBeNull();

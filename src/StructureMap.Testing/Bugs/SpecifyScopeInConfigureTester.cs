@@ -13,7 +13,7 @@ namespace StructureMap.Testing.Bugs
             container.Configure(x =>
             {
                 x.For<IGateway>().CacheBy(InstanceScope.Singleton)
-                    .TheDefaultIsConcreteType<DefaultGateway>();
+                    .Use<DefaultGateway>();
             });
 
             var gateway1 = container.GetInstance<IGateway>();

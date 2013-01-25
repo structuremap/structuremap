@@ -188,7 +188,7 @@ namespace StructureMap.Testing.Diagnostics
             {
                 x.IgnoreStructureMapConfig = true;
 
-                x.For<DoctorTester.ClassThatFails>().TheDefaultIsConcreteType<DoctorTester.ClassThatFails>();
+                x.For<DoctorTester.ClassThatFails>().Use<DoctorTester.ClassThatFails>();
             });
         }
 

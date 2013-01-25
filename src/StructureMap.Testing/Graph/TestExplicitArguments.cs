@@ -146,8 +146,8 @@ namespace StructureMap.Testing.Graph
 
             IContainer container = new Container(r =>
             {
-                r.For<IView>().TheDefaultIsConcreteType<TradeView>();
-                r.For<Node>().TheDefaultIsConcreteType<TradeNode>();
+                r.For<IView>().Use<TradeView>();
+                r.For<Node>().Use<TradeNode>();
             });
 
             var command = container.With(theTrade).GetInstance<Command>();
@@ -168,7 +168,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void Fill_in_argument_by_name()
         {
-            var container = new Container(x => { x.For<IView>().TheDefaultIsConcreteType<View>(); });
+            var container = new Container(x => { x.For<IView>().Use<View>(); });
 
             var theNode = new Node();
             var theTrade = new Trade();
@@ -186,7 +186,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void Fill_in_argument_by_type()
         {
-            var container = new Container(x => { x.For<IView>().TheDefaultIsConcreteType<View>(); });
+            var container = new Container(x => { x.For<IView>().Use<View>(); });
 
             var theNode = new SpecialNode();
             var theTrade = new Trade();
@@ -204,7 +204,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void Fill_in_argument_by_type_with_ObjectFactory()
         {
-            ObjectFactory.Initialize(x => { x.For<IView>().TheDefaultIsConcreteType<View>(); });
+            ObjectFactory.Initialize(x => { x.For<IView>().Use<View>(); });
 
             var theNode = new SpecialNode();
             var theTrade = new Trade();
@@ -284,9 +284,8 @@ namespace StructureMap.Testing.Graph
             // of TradeView
             var container = new Container(r =>
             {
-                r.For<TradeView>()
-                    .TheDefaultIsConcreteType<TradeView>()
-                    .AddConcreteType<SecuredTradeView>();
+                r.For<TradeView>().Use<TradeView>();
+                r.For<TradeView>().Add<SecuredTradeView>();
             });
 
             var theTrade = new Trade();
@@ -303,9 +302,8 @@ namespace StructureMap.Testing.Graph
             // of TradeView
             var container = new Container(r =>
             {
-                r.For<TradeView>()
-                    .TheDefaultIsConcreteType<TradeView>()
-                    .AddConcreteType<SecuredTradeView>();
+                r.For<TradeView>().Use<TradeView>();
+                r.For<TradeView>().AddConcreteType<SecuredTradeView>();
             });
 
             var theTrade = new Trade();
@@ -320,7 +318,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void Pass_in_arguments_as_dictionary()
         {
-            var container = new Container(x => { x.For<IView>().TheDefaultIsConcreteType<View>(); });
+            var container = new Container(x => { x.For<IView>().Use<View>(); });
 
             var theNode = new Node();
             var theTrade = new Trade();
@@ -342,7 +340,7 @@ namespace StructureMap.Testing.Graph
         {
             IContainer manager =
                 new Container(
-                    registry => registry.For<IProvider>().TheDefaultIsConcreteType<LumpProvider>());
+                    registry => registry.For<IProvider>().Use<LumpProvider>());
 
             var args = new ExplicitArguments();
             var theLump = new Lump();
@@ -355,7 +353,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void PassAnArgumentIntoExplicitArgumentsForARequestedInterfaceUsingObjectFactory()
         {
-            ObjectFactory.Initialize(x => { x.For<IProvider>().TheDefaultIsConcreteType<LumpProvider>(); });
+            ObjectFactory.Initialize(x => { x.For<IProvider>().Use<LumpProvider>(); });
 
 
             var theLump = new Lump();

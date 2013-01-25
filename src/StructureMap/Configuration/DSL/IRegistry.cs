@@ -56,9 +56,9 @@ namespace StructureMap.Configuration.DSL
         /// <summary>
         /// Convenience method.  Equivalent of ForRequestedType[PluginType]().AsSingletons()
         /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <typeparam name="TPluginType"></typeparam>
         /// <returns></returns>
-        CreatePluginFamilyExpression<PLUGINTYPE> ForSingletonOf<PLUGINTYPE>();
+        CreatePluginFamilyExpression<TPluginType> ForSingletonOf<TPluginType>();
 
         /// <summary>
         /// Uses the configuration expressions of this Registry to create a PluginGraph
@@ -102,11 +102,11 @@ namespace StructureMap.Configuration.DSL
 
         /// <summary>
         /// Directs StructureMap to always inject dependencies into any and all public Setter properties
-        /// of the type PLUGINTYPE.
+        /// of the type TPluginType.
         /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <typeparam name="TPluginType"></typeparam>
         /// <returns></returns>
-        CreatePluginFamilyExpression<PLUGINTYPE> FillAllPropertiesOfType<PLUGINTYPE>();
+        CreatePluginFamilyExpression<TPluginType> FillAllPropertiesOfType<TPluginType>();
 
         /// <summary>
         /// Creates automatic "policies" for which public setters are considered mandatory
@@ -134,11 +134,11 @@ namespace StructureMap.Configuration.DSL
         void Forward<FROM, TO>() where FROM : class where TO : class;
 
         /// <summary>
-        /// Shorthand for ForRequestedType<PLUGINTYPE>()
+        /// Shorthand for ForRequestedType<TPluginType>()
         /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <typeparam name="TPluginType"></typeparam>
         /// <returns></returns>
-        CreatePluginFamilyExpression<PLUGINTYPE> For<PLUGINTYPE>();
+        CreatePluginFamilyExpression<TPluginType> For<TPluginType>();
 
         /// <summary>
         /// Shorthand for ForRequestedType(pluginType)

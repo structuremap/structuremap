@@ -23,14 +23,12 @@ namespace StructureMap.Testing
                 .AddConcreteType(typeof (Service<>))
                 .AddConcreteType(typeof (Service2<>));
 
-            registry.For<ISomething>()
-                .TheDefaultIsConcreteType<SomethingOne>()
-                .AddConcreteType<SomethingTwo>();
+            registry.For<ISomething>().Use<SomethingOne>();
+            registry.For<ISomething>().Add<SomethingTwo>();
 
             registry.For<IServiceProvider>().AddConcreteType<MyDataSet>().AddConcreteType<MyDataView>();
 
             PluginGraph graph = registry.Build();
-            var pipeline = new PipelineGraph(graph);
 
             _model = new Container(graph).Model;
 
