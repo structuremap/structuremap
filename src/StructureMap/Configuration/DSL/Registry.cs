@@ -77,20 +77,6 @@ namespace StructureMap.Configuration.DSL
             _actions.Add(graph => registry.As<IPluginGraphConfiguration>().Configure(graph));
         }
 
-
-        /// <summary>
-        /// Expression Builder used to define policies for a PluginType including
-        /// Scoping, the Default Instance, and interception.  BuildInstancesOf()
-        /// and ForRequestedType() are synonyms
-        /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
-        /// <returns></returns>
-        [Obsolete("Change to For<T>()")]
-        public CreatePluginFamilyExpression<PLUGINTYPE> BuildInstancesOf<PLUGINTYPE>()
-        {
-            return new CreatePluginFamilyExpression<PLUGINTYPE>(this);
-        }
-
         /// <summary>
         /// This method is a shortcut for specifying the default constructor and 
         /// setter arguments for a ConcreteType.  ForConcreteType is shorthand for:

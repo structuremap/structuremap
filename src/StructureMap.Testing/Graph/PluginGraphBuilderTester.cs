@@ -153,7 +153,7 @@ namespace StructureMap.Testing.Graph
             var registry = new Registry();
             registry.Scan(x => x.AssemblyContainingType<IWidget>());
 
-            registry.BuildInstancesOf<IWidget>();
+            registry.For<IWidget>();
             PluginGraph pluginGraph = registry.Build();
 
 

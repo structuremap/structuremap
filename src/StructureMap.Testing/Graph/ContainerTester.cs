@@ -21,9 +21,9 @@ namespace StructureMap.Testing.Graph
             _container = new Container(registry =>
             {
                 registry.Scan(x => x.Assembly("StructureMap.Testing.Widget"));
-                registry.BuildInstancesOf<Rule>();
-                registry.BuildInstancesOf<IWidget>();
-                registry.BuildInstancesOf<WidgetMaker>();
+                registry.For<Rule>();
+                registry.For<IWidget>();
+                registry.For<WidgetMaker>();
             });
         }
 
