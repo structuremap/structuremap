@@ -26,7 +26,8 @@ namespace StructureMap.Testing
             registry.For<ISomething>().Use<SomethingOne>();
             registry.For<ISomething>().Add<SomethingTwo>();
 
-            registry.For<IServiceProvider>().AddConcreteType<MyDataSet>().AddConcreteType<MyDataView>();
+            registry.For<IServiceProvider>().Add<MyDataSet>();
+            registry.For<IServiceProvider>().Add<MyDataView>();
 
             PluginGraph graph = registry.Build();
 

@@ -305,31 +305,6 @@ namespace StructureMap.Configuration.DSL.Expressions
 
 
         /// <summary>
-        /// Shortcut method to add an additional Instance to this Plugin Type
-        /// as just a Concrete Type.  This will only work if the Concrete Type
-        /// has no primitive constructor or mandatory Setter arguments.
-        /// </summary>
-        /// <typeparam name="TPluggedType"></typeparam>
-        /// <returns></returns>
-        [Obsolete("Change to Add<T>()")]
-        public CreatePluginFamilyExpression<TPluginType> AddConcreteType<TPluggedType>()
-        {
-            if (!PluginCache.GetPlugin(typeof (TPluggedType)).CanBeAutoFilled)
-            {
-                throw new StructureMapException(231);
-            }
-
-            _alterations.Add(family =>
-            {
-                string name = PluginCache.GetPlugin(typeof (TPluggedType)).ConcreteKey;
-                SmartInstance<TPluggedType> instance = new SmartInstance<TPluggedType>().WithName(name);
-                family.AddInstance(instance);
-            });
-
-            return this;
-        }
-
-        /// <summary>
         /// Registers an ILifecycle for this Plugin Type that executes before
         /// any object of this PluginType is created.  ILifecycle's can be
         /// used to create a custom scope

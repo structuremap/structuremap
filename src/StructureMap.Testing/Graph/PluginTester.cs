@@ -105,18 +105,6 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
-        public void Can_get_the_referencedInstance_for_a_type()
-        {
-            var container = new Container(r => r.For<IEngine>().AddConcreteType<DOHCEngine>());
-
-            Debug.WriteLine(container.WhatDoIHave());
-
-            Instance instance = typeof (DOHCEngine).GetReferenceTo();
-
-            container.GetInstance<IEngine>(instance).ShouldBeOfType(typeof (DOHCEngine));
-        }
-
-        [Test]
         public void CanBeAutoFilled_with_child_array_in_ctor()
         {
             var ctor = new Constructor(typeof (CanBeAutoFilledWithArray));

@@ -79,12 +79,6 @@ namespace StructureMap
                 return type.Namespace != null && type.Namespace.StartsWith(nameSpace);
             }
 
-            public static ReferencedInstance GetReferenceTo(this Type type)
-            {
-                string key = PluginCache.GetPlugin(type).ConcreteKey;
-                return new ReferencedInstance(key);
-            }
-
             public static bool IsOpenGeneric(this Type type)
             {
                 return type.IsGenericTypeDefinition || type.ContainsGenericParameters;

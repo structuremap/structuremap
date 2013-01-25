@@ -44,11 +44,15 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void A_concrete_type_is_available_when_it_is_added_by_the_shorthand_mechanism()
         {
-            IContainer manager = new Container(registry => registry.For<IAddTypes>()
-                                                                   .AddConcreteType<RedAddTypes>()
-                                                                   .AddConcreteType<GreenAddTypes>()
-                                                                   .AddConcreteType<BlueAddTypes>()
-                                                                   .AddConcreteType<PurpleAddTypes>());
+            IContainer manager = new Container(registry => {
+                registry.For<IAddTypes>().AddInstances(x => {
+                    x.Type<RedAddTypes>();
+                    x.Type<GreenAddTypes>();
+                    x.Type<BlueAddTypes>();
+                    x.Type<PurpleAddTypes>();
+                });
+
+            });
 
 
             IList<IAddTypes> instances = manager.GetAllInstances<IAddTypes>();

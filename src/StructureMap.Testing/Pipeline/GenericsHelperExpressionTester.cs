@@ -193,7 +193,7 @@ namespace StructureMap.Testing.Pipeline
             var container = new Container(x =>
             {
                 x.For<IHandler<Shipment>>().Use<ShipmentHandler>();
-                x.For<IHandler<Shipment>>().AddConcreteType<ShipmentHandler2>();
+                x.For<IHandler<Shipment>>().Add<ShipmentHandler2>();
             });
 
             var shipment = new Shipment();

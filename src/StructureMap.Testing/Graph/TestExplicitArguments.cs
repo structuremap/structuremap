@@ -303,7 +303,7 @@ namespace StructureMap.Testing.Graph
             var container = new Container(r =>
             {
                 r.For<TradeView>().Use<TradeView>();
-                r.For<TradeView>().AddConcreteType<SecuredTradeView>();
+                r.For<TradeView>().Add<SecuredTradeView>();
             });
 
             var theTrade = new Trade();
