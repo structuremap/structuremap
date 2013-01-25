@@ -166,10 +166,14 @@ namespace StructureMap.Testing
         [Test]
         public void Define_profile_with_generics_and_concrete_type()
         {
-            var container = new Container(registry =>
-            {
-                registry.Profile("1").For(typeof (IService<>)).UseConcreteType(typeof (Service<>));
-                registry.Profile("2").For(typeof (IService<>)).UseConcreteType(typeof (Service2<>));
+            var container = new Container(registry => {
+                registry.Profile("1", x => {
+                    x.For(typeof(IService<>)).UseConcreteType(typeof(Service<>));
+                });
+
+                registry.Profile("2", x => {
+                    x.For(typeof(IService<>)).UseConcreteType(typeof(Service2<>));
+                });
             });
 
             container.SetDefaultsToProfile("1");
@@ -189,8 +193,13 @@ namespace StructureMap.Testing
                 r.For(typeof (IService<>)).Add(typeof (Service<>)).WithName("Service1");
                 r.For(typeof (IService<>)).Add(typeof (Service2<>)).WithName("Service2");
 
-                r.Profile("1").For(typeof (IService<>)).UseNamedInstance("Service1");
-                r.Profile("2").For(typeof (IService<>)).UseNamedInstance("Service2");
+                r.Profile("1", x => {
+                    x.For(typeof (IService<>)).UseNamedInstance("Service1");
+                });
+
+                r.Profile("2", x => {
+                    x.For(typeof (IService<>)).UseNamedInstance("Service2");
+                });
             });
 
             container.SetDefaultsToProfile("1");

@@ -117,20 +117,6 @@ namespace StructureMap.Configuration.DSL
         }
 
         /// <summary>
-        /// Expression Builder to define the defaults for a named Profile.  Each call
-        /// to CreateProfile is additive.
-        /// </summary>
-        /// <param name="profileName"></param>
-        /// <returns></returns>
-        [Obsolete("Change to Profile( [name], Action<ProfileExpression> )")]
-        public ProfileExpression Profile(string profileName)
-        {
-            var expression = new ProfileExpression(profileName, this);
-
-            return expression;
-        }
-
-        /// <summary>
         /// An alternative way to use CreateProfile that uses ProfileExpression
         /// as a Nested Closure.  This usage will result in cleaner code for 
         /// multiple declarations

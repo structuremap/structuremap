@@ -93,8 +93,10 @@ namespace StructureMap.Testing.Configuration.DSL
             var theWidget = new AWidget();
 
             string theProfileName = "something";
-            registry.Profile(theProfileName)
-                .For<IWidget>().Use(theWidget);
+            registry.Profile(theProfileName, p => {
+                p.For<IWidget>().Use(theWidget);
+            });
+                
 
             PluginGraph graph = registry.Build();
             var instance = (ObjectInstance) graph.ProfileManager.GetDefault(typeof (IWidget), "something");
@@ -109,9 +111,11 @@ namespace StructureMap.Testing.Configuration.DSL
             string theDefaultName = "TheDefaultName";
 
             var registry = new Registry();
-            registry.Profile(theProfileName)
-                .For<IWidget>().UseNamedInstance(theDefaultName)
-                .For<Rule>().UseNamedInstance("DefaultRule");
+            registry.Profile(theProfileName, p => {
+                p.For<IWidget>().UseNamedInstance(theDefaultName);
+                p.For<Rule>().UseNamedInstance("DefaultRule");
+            });
+
 
             ObjectInstance masterInstance =
                 registry.For<IWidget>().Add(new AWidget()).WithName(theDefaultName);
@@ -126,8 +130,10 @@ namespace StructureMap.Testing.Configuration.DSL
             string theProfileName = "TheProfile";
 
             var registry = new Registry();
-            registry.Profile(theProfileName)
-                .For<IWidget>().UseConcreteType<AWidget>();
+            registry.Profile(theProfileName, x => {
+                x.For<IWidget>().UseConcreteType<AWidget>();
+            });
+                
 
             PluginGraph graph = registry.Build();
 

@@ -65,7 +65,9 @@ namespace StructureMap.Testing
 
             ObjectFactory.Initialize(x =>
             {
-                x.Profile(theDefaultProfileName).For<IGateway>().Use(() => null);
+                x.Profile(theDefaultProfileName, p => {
+                    p.For<IGateway>().Use(() => null);
+                });
 
                 x.IgnoreStructureMapConfig = true;
                 x.DefaultProfileName = theDefaultProfileName;

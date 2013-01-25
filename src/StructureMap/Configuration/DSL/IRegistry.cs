@@ -69,14 +69,6 @@ namespace StructureMap.Configuration.DSL
         PluginGraph Build();
 
         /// <summary>
-        /// Expression Builder to define the defaults for a named Profile.  Each call
-        /// to CreateProfile is additive.
-        /// </summary>
-        /// <param name="profileName"></param>
-        /// <returns></returns>
-        ProfileExpression Profile(string profileName);
-
-        /// <summary>
         /// An alternative way to use CreateProfile that uses ProfileExpression
         /// as a Nested Closure.  This usage will result in cleaner code for 
         /// multiple declarations
