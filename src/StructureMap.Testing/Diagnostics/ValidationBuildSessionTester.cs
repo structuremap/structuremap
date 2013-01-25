@@ -187,10 +187,11 @@ namespace StructureMap.Testing.Diagnostics
 
             ValidationError error = session.ValidationErrors[0];
 
-            Assert.AreEqual(typeof (IWidget), error.PluginType);
+            Assert.AreEqual(typeof(IWidget), error.PluginType);
             Assert.AreEqual(instance, error.Instance);
             Assert.AreEqual("ValidateFailure", error.MethodName);
-            Assert.IsInstanceOfType(typeof (NotImplementedException), error.Exception);
+
+            error.Exception.ShouldBeOfType<NotImplementedException>();
         }
     }
 

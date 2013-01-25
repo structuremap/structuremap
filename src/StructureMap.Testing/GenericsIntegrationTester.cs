@@ -142,8 +142,8 @@ namespace StructureMap.Testing
         {
             var concept = (IConcept<object>) manager.GetInstance(typeof (IConcept<object>), "Specific");
 
-            Assert.IsNotNull(concept);
-            Assert.IsInstanceOfType(typeof (SpecificConcept), concept);
+            concept.ShouldNotBeNull();
+            concept.ShouldBeOfType<SpecificConcept>();
         }
 
         interface IGenericType<T>{}

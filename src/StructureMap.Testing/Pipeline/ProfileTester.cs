@@ -37,7 +37,7 @@ namespace StructureMap.Testing.Pipeline
         private void assertThatMasterInstanceWasFound<T>(string name)
         {
             Instance instance = _profile.GetDefault(typeof (T));
-            Assert.IsNotInstanceOfType(typeof (ReferencedInstance), instance);
+            instance.ShouldNotBeOfType(typeof (ReferencedInstance));
             Assert.AreEqual(name, instance.Name);
         }
 

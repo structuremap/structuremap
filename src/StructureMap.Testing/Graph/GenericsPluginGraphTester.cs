@@ -43,14 +43,13 @@ namespace StructureMap.Testing.Graph
             var manager = new Container(pluginGraph);
 
             var intService = (GenericService<int>) manager.GetInstance<IGenericService<int>>();
-            Assert.AreEqual(typeof (int), intService.GetT());
+            intService.GetT().ShouldEqual(typeof (int));
 
-            Assert.IsInstanceOfType(typeof (SecondGenericService<int>),
-                                    manager.GetInstance<IGenericService<int>>("Second"));
+            manager.GetInstance<IGenericService<int>>("Second").ShouldBeOfType<SecondGenericService<int>>();
 
             var stringService =
                 (GenericService<string>) manager.GetInstance<IGenericService<string>>();
-            Assert.AreEqual(typeof (string), stringService.GetT());
+            stringService.GetT().ShouldEqual(typeof (string));
         }
 
         [Test]

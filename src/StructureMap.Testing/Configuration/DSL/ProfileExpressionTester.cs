@@ -39,8 +39,9 @@ namespace StructureMap.Testing.Configuration.DSL
 
             container.SetDefaultsToProfile(theProfileName);
 
-            Assert.IsInstanceOfType(typeof (AWidget), container.GetInstance<IWidget>());
-            Assert.IsInstanceOfType(typeof (DefaultRule), container.GetInstance<Rule>());
+
+            container.GetInstance<IWidget>().ShouldBeOfType<AWidget>();
+            container.GetInstance<Rule>().ShouldBeOfType<DefaultRule>();
         }
 
 
@@ -60,8 +61,8 @@ namespace StructureMap.Testing.Configuration.DSL
 
             container.SetDefaultsToProfile(theProfileName);
 
-            Assert.IsInstanceOfType(typeof (AWidget), container.GetInstance<IWidget>());
-            Assert.IsInstanceOfType(typeof (DefaultRule), container.GetInstance<Rule>());
+            container.GetInstance<IWidget>().ShouldBeOfType<AWidget>();
+            container.GetInstance<Rule>().ShouldBeOfType<Rule>();
         }
 
 
@@ -70,7 +71,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             string theProfileName = "something";
 
-            IContainer manager = new Container(registry =>
+            IContainer container = new Container(registry =>
             {
                 registry.Profile(theProfileName, p =>
                 {
@@ -79,10 +80,10 @@ namespace StructureMap.Testing.Configuration.DSL
                 });
 
             });
-            manager.SetDefaultsToProfile(theProfileName);
+            container.SetDefaultsToProfile(theProfileName);
 
-            Assert.IsInstanceOfType(typeof (AWidget), manager.GetInstance<IWidget>());
-            Assert.IsInstanceOfType(typeof (DefaultRule), manager.GetInstance<Rule>());
+            container.GetInstance<IWidget>().ShouldBeOfType<AWidget>();
+            container.GetInstance<Rule>().ShouldBeOfType<DefaultRule>();
         }
 
         [Test]

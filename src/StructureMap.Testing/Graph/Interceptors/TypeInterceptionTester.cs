@@ -34,19 +34,20 @@ namespace StructureMap.Testing.Graph.Interceptors
                 manager = new Container(registry);
             }
 
-            Assert.IsInstanceOfType(typeof (T), manager.GetInstance<IAnInterfaceOfSomeSort>(name));
+            manager.GetInstance<IAnInterfaceOfSomeSort>(name).ShouldBeOfType<T>();
         }
 
-        private void assertThatThisIsWrappedSomething<OUTERTYPE, INNERTYPE>(string name)
-            where OUTERTYPE : WrappedSomething
+        private void assertThatThisIsWrappedSomething<TOutertype, TInnertype>(string name)
+            where TOutertype : WrappedSomething
         {
             if (manager == null)
             {
                 manager = new Container(registry);
             }
 
-            var something = (OUTERTYPE) manager.GetInstance<IAnInterfaceOfSomeSort>(name);
-            Assert.IsInstanceOfType(typeof (INNERTYPE), something.Inner);
+            var something = (TOutertype) manager.GetInstance<IAnInterfaceOfSomeSort>(name);
+
+            something.Inner.ShouldBeOfType<TInnertype>();
         }
 
         public interface IAnInterfaceOfSomeSort

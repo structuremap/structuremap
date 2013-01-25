@@ -51,7 +51,7 @@ namespace StructureMap.Testing.Graph
                 });
             });
 
-            Assert.IsInstanceOfType(typeof (Convention), container.GetInstance<IConvention>());
+            container.GetInstance<IConvention>().ShouldBeOfType<Convention>();
         }
 
         [Test]

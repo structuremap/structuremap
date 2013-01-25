@@ -115,7 +115,8 @@ namespace StructureMap.Testing.Graph
             // see that ClassThatUsesProvider is concrete, determine its constructor args, and build one 
             // for you with the default IProvider.  No other configuration necessary.
             var classThatUsesProvider = manager.GetInstance<ClassThatUsesProvider>();
-            Assert.IsInstanceOfType(typeof (Provider), classThatUsesProvider.Provider);
+
+            classThatUsesProvider.Provider.ShouldBeOfType<Provider>();
         }
 
         [Test]

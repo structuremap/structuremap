@@ -178,9 +178,9 @@ namespace StructureMap.Testing.Graph
                 .With(theTrade)
                 .GetInstance<Command>();
 
-            Assert.IsInstanceOfType(typeof (View), command.View);
-            Assert.AreSame(theNode, command.Node);
-            Assert.AreSame(theTrade, command.Trade);
+            command.View.ShouldBeOfType<View>();
+            theNode.ShouldBeTheSameAs(command.Node);
+            theTrade.ShouldBeTheSameAs(command.Trade);
         }
 
         [Test]
@@ -196,9 +196,9 @@ namespace StructureMap.Testing.Graph
                 .With(theTrade)
                 .GetInstance<Command>();
 
-            Assert.IsInstanceOfType(typeof (View), command.View);
-            Assert.AreSame(theNode, command.Node);
-            Assert.AreSame(theTrade, command.Trade);
+            command.View.ShouldBeOfType<View>();
+            theNode.ShouldBeTheSameAs(command.Node);
+            theTrade.ShouldBeTheSameAs(command.Trade);
         }
 
         [Test]
@@ -214,9 +214,9 @@ namespace StructureMap.Testing.Graph
                 .With(theTrade)
                 .GetInstance<Command>();
 
-            Assert.IsInstanceOfType(typeof (View), command.View);
-            Assert.AreSame(theNode, command.Node);
-            Assert.AreSame(theTrade, command.Trade);
+            command.View.ShouldBeOfType<View>();
+            theNode.ShouldBeTheSameAs(command.Node);
+            theTrade.ShouldBeTheSameAs(command.Trade);
         }
 
         [Test]
@@ -231,7 +231,7 @@ namespace StructureMap.Testing.Graph
 
             // Get the ExplicitTarget without setting an explicit arg for IProvider
             var firstTarget = ObjectFactory.GetInstance<ExplicitTarget>();
-            Assert.IsInstanceOfType(typeof (RedProvider), firstTarget.Provider);
+            firstTarget.Provider.ShouldBeOfType<RedProvider>();
 
             // Now, set the explicit arg for IProvider
             var theBlueProvider = new BlueProvider();
@@ -331,9 +331,9 @@ namespace StructureMap.Testing.Graph
 
             var command = container.GetInstance<Command>(args);
 
-            Assert.IsInstanceOfType(typeof (View), command.View);
-            Assert.AreSame(theNode, command.Node);
-            Assert.AreSame(theTrade, command.Trade);
+            command.View.ShouldBeOfType<View>();
+            theNode.ShouldBeTheSameAs(command.Node);
+            theTrade.ShouldBeTheSameAs(command.Trade);
         }
 
 
@@ -386,12 +386,12 @@ namespace StructureMap.Testing.Graph
 
             // Get the ExplicitTarget without setting an explicit arg for IProvider
             var firstTarget = container.GetInstance<ExplicitTarget>(args);
-            Assert.IsInstanceOfType(typeof (RedProvider), firstTarget.Provider);
+            firstTarget.Provider.ShouldBeOfType<RedProvider>();
 
             // Now, set the explicit arg for IProvider
             args.Set<IProvider>(new BlueProvider());
             var secondTarget = container.GetInstance<ExplicitTarget>(args);
-            Assert.IsInstanceOfType(typeof (BlueProvider), secondTarget.Provider);
+            secondTarget.Provider.ShouldBeOfType<BlueProvider>();
         }
 
         [Test]
@@ -406,7 +406,7 @@ namespace StructureMap.Testing.Graph
             Assert.AreSame(red, args.Get<IProvider>());
 
             args.Set<IExplicitTarget>(new RedTarget());
-            Assert.IsInstanceOfType(typeof (RedTarget), args.Get<IExplicitTarget>());
+            args.Get<IExplicitTarget>().ShouldBeOfType<RedTarget>();
         }
 
         [Test]

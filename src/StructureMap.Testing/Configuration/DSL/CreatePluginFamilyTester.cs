@@ -50,7 +50,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 r.For<IWidget>().Add(c => new AWidget());
             });
 
-            Assert.IsInstanceOfType(typeof (AWidget), container.GetAllInstances<IWidget>()[0]);
+            container.GetAllInstances<IWidget>()[0].ShouldBeOfType<AWidget>();
         }
 
         [Test]
@@ -172,7 +172,7 @@ namespace StructureMap.Testing.Configuration.DSL
             var manager = new Container(pluginGraph);
             var gateway = (IGateway) manager.GetInstance(typeof (IGateway));
 
-            Assert.IsInstanceOfType(typeof (StubbedGateway), gateway);
+            gateway.ShouldBeOfType<StubbedGateway>();
         }
 
         [Test]
@@ -184,10 +184,10 @@ namespace StructureMap.Testing.Configuration.DSL
 
             Assert.IsTrue(pluginGraph.ContainsFamily(typeof (IGateway)));
 
-            var manager = new Container(pluginGraph);
-            var gateway = (IGateway) manager.GetInstance(typeof (IGateway));
+            var container = new Container(pluginGraph);
+            var gateway = (IGateway) container.GetInstance(typeof (IGateway));
 
-            Assert.IsInstanceOfType(typeof (FakeGateway), gateway);
+            gateway.ShouldBeOfType<FakeGateway>();
         }
 
         [Test]
@@ -222,7 +222,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 new Container(
                     registry => registry.ForRequestedType<IWidget>().TheDefault.Is.ConstructedBy(() => new AWidget()));
 
-            Assert.IsInstanceOfType(typeof (AWidget), manager.GetInstance<IWidget>());
+            manager.GetInstance<IWidget>().ShouldBeOfType<AWidget>();
         }
 
         [Test]
@@ -247,7 +247,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 new Container(
                     registry => registry.ForRequestedType<Guid>().TheDefault.Is.ConstructedBy(() => Guid.NewGuid()));
 
-            Assert.IsInstanceOfType(typeof (Guid), manager.GetInstance<Guid>());
+            manager.GetInstance<Guid>().ShouldBeOfType<Guid>();
         }
 
         [Test]
@@ -256,7 +256,7 @@ namespace StructureMap.Testing.Configuration.DSL
             IContainer manager = new Container(
                 registry => registry.BuildInstancesOf<Rule>().TheDefaultIsConcreteType<ARule>());
 
-            Assert.IsInstanceOfType(typeof (ARule), manager.GetInstance<Rule>());
+            manager.GetInstance<Rule>().ShouldBeOfType<ARule>();
         }
 
         [Test]
@@ -273,7 +273,7 @@ namespace StructureMap.Testing.Configuration.DSL
             var manager = new Container(pluginGraph);
             var gateway = (IGateway) manager.GetInstance(typeof (IGateway));
 
-            Assert.IsInstanceOfType(typeof (DefaultGateway), gateway);
+            gateway.ShouldBeOfType<DefaultGateway>();
         }
     }
 

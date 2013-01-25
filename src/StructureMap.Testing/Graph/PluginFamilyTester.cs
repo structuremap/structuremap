@@ -146,7 +146,7 @@ namespace StructureMap.Testing.Graph
         public void ImplicitPluginFamilyCreatesASingletonInterceptorWhenIsSingletonIsTrue()
         {
             var family = new PluginFamily(typeof (ISingletonRepository));
-            Assert.IsInstanceOfType(typeof (SingletonLifecycle), family.Lifecycle);
+            family.Lifecycle.ShouldBeOfType<SingletonLifecycle>();
 
             var family2 = new PluginFamily(typeof (IDevice));
             family2.Lifecycle.ShouldBeNull();
@@ -250,7 +250,7 @@ namespace StructureMap.Testing.Graph
             family.Lifecycle.ShouldBeNull();
 
             family.SetScopeTo(InstanceScope.HttpContext);
-            Assert.IsInstanceOfType(typeof (HttpContextLifecycle), family.Lifecycle);
+            family.Lifecycle.ShouldBeOfType<HttpContextLifecycle>();
         }
 
 
@@ -261,7 +261,7 @@ namespace StructureMap.Testing.Graph
 
 
             family.SetScopeTo(InstanceScope.Hybrid);
-            Assert.IsInstanceOfType(typeof (HybridLifecycle), family.Lifecycle);
+            family.Lifecycle.ShouldBeOfType<HybridLifecycle>();
         }
 
         [Test]
@@ -270,7 +270,7 @@ namespace StructureMap.Testing.Graph
             var family = new PluginFamily(typeof (IServiceProvider));
 
             family.SetScopeTo(InstanceScope.Singleton);
-            Assert.IsInstanceOfType(typeof (SingletonLifecycle), family.Lifecycle);
+            family.Lifecycle.ShouldBeOfType<SingletonLifecycle>();
         }
 
         [Test]
@@ -279,7 +279,7 @@ namespace StructureMap.Testing.Graph
             var family = new PluginFamily(typeof (IServiceProvider));
 
             family.SetScopeTo(InstanceScope.ThreadLocal);
-            Assert.IsInstanceOfType(typeof (ThreadLocalStorageLifecycle), family.Lifecycle);
+            family.Lifecycle.ShouldBeOfType<ThreadLocalStorageLifecycle>();
         }
 
         [Test]

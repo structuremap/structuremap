@@ -168,7 +168,7 @@ namespace StructureMap.Testing.Graph
 
             container.Configure(x => { x.For<ISomething>().TheDefaultIsConcreteType<SomethingOne>(); });
 
-            Assert.IsInstanceOfType(typeof(SomethingOne), container.GetInstance<ISomething>());
+            container.GetInstance<ISomething>().ShouldBeOfType<SomethingOne>();
         }
 
         [Test]
@@ -211,8 +211,8 @@ namespace StructureMap.Testing.Graph
                 });
             });
 
-            Assert.IsInstanceOfType(typeof(SomethingOne), container.GetInstance<ISomething>("One"));
-            Assert.IsInstanceOfType(typeof(SomethingTwo), container.GetInstance<ISomething>("Two"));
+            container.GetInstance<ISomething>("One").ShouldBeOfType<SomethingOne>();
+            container.GetInstance<ISomething>("Two").ShouldBeOfType<SomethingTwo>();
         }
 
         [Test]
@@ -246,7 +246,7 @@ namespace StructureMap.Testing.Graph
             IList<ISomething> list = container.GetAllInstances<ISomething>();
 
             Assert.AreEqual(1, list.Count);
-            Assert.IsInstanceOfType(typeof (SomethingOne), list[0]);
+            list[0].ShouldBeOfType<SomethingOne>();
         }
 
         [Test]
@@ -254,7 +254,7 @@ namespace StructureMap.Testing.Graph
         {
             var container = new Container(x => { x.For<ISomething>().TheDefaultIsConcreteType<SomethingOne>(); });
 
-            Assert.IsInstanceOfType(typeof(SomethingOne), container.GetInstance<ISomething>());
+            container.GetInstance<ISomething>().ShouldBeOfType<SomethingOne>();
         }
 
         [Test]
@@ -276,7 +276,7 @@ namespace StructureMap.Testing.Graph
 
             IList<ISomething> list = container.GetAllInstances<ISomething>();
 
-            Assert.IsInstanceOfType(typeof (SomethingOne), list[0]);
+            list[0].ShouldBeOfType<SomethingOne>();
         }
 
         [Test]
@@ -284,7 +284,7 @@ namespace StructureMap.Testing.Graph
         {
             var container = new Container(x => { x.For<ISomething>().TheDefaultIsConcreteType<SomethingOne>(); });
 
-            Assert.IsInstanceOfType(typeof(SomethingOne), container.GetInstance<ISomething>());
+            container.GetInstance<ISomething>().ShouldBeOfType<SomethingOne>();
         }
 
         [Test]

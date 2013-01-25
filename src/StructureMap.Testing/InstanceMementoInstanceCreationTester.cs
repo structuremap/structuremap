@@ -131,7 +131,7 @@ namespace StructureMap.Testing
             MemoryInstanceMemento memento = MemoryInstanceMemento.CreateDefaultInstanceMemento();
             Instance instance = memento.ReadInstance(null, null);
 
-            Assert.IsInstanceOfType(typeof (DefaultInstance), instance);
+            instance.ShouldBeOfType<DefaultInstance>();
         }
 
         [Test]

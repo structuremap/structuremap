@@ -48,7 +48,8 @@ namespace StructureMap.Testing.Configuration
             _parser.ParseFamily(_familyElement);
 
             PluginFamily family = _graph.FindFamily(thePluginType);
-            Assert.IsInstanceOfType(typeof (T), family.Lifecycle);
+
+            family.Lifecycle.ShouldBeOfType<T>();
         }
 
 

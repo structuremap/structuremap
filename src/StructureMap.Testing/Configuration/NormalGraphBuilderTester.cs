@@ -66,9 +66,8 @@ namespace StructureMap.Testing.Configuration
             bool iWasCalled = false;
 
             var builder = new GraphBuilder(new Registry[0]);
-            builder.WithSystemObject<MementoSource>(memento, "some xml", policy =>
-            {
-                Assert.IsInstanceOfType(typeof (XmlFileMementoSource), policy);
+            builder.WithSystemObject<MementoSource>(memento, "some xml", policy => {
+                policy.ShouldBeOfType<XmlFileMementoSource>();
                 iWasCalled = true;
             });
 

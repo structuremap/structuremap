@@ -184,7 +184,7 @@ namespace StructureMap.Testing
         [Test]
         public void Define_profile_with_generics_with_named_instance()
         {
-            IContainer manager = new Container(r =>
+            IContainer container = new Container(r =>
             {
                 r.InstanceOf(typeof (IService<>)).Is(typeof (Service<>)).WithName("Service1");
                 r.InstanceOf(typeof (IService<>)).Is(typeof (Service2<>)).WithName("Service2");
@@ -193,12 +193,13 @@ namespace StructureMap.Testing
                 r.Profile("2").For(typeof (IService<>)).UseNamedInstance("Service2");
             });
 
-            manager.SetDefaultsToProfile("1");
+            container.SetDefaultsToProfile("1");
 
-            Assert.IsInstanceOfType(typeof (Service<string>), manager.GetInstance<IService<string>>());
+            container.GetInstance<IService<string>>().ShouldBeOfType<Service<string>>();
 
-            manager.SetDefaultsToProfile("2");
-            Assert.IsInstanceOfType(typeof (Service2<int>), manager.GetInstance<IService<int>>());
+
+            container.SetDefaultsToProfile("2");
+            container.GetInstance<IService<int>>().ShouldBeOfType<Service2<int>>();
         }
 
         [Test]
@@ -209,18 +210,18 @@ namespace StructureMap.Testing
             pluginGraph.SetDefault("2", typeof (IService<>), new ReferencedInstance("Plugged"));
 
 
-            var manager = new Container(pluginGraph);
+            var container = new Container(pluginGraph);
 
-            var plug = manager.GetInstance<IPlug<string>>();
 
-            manager.SetDefaultsToProfile("1");
-            Assert.IsInstanceOfType(typeof (Service<string>), manager.GetInstance(typeof (IService<string>)));
+            container.SetDefaultsToProfile("1");
+            container.GetInstance(typeof (IService<string>)).ShouldBeOfType<Service<string>>();
 
-            manager.SetDefaultsToProfile("2");
-            Assert.IsInstanceOfType(typeof (ServiceWithPlug<string>), manager.GetInstance(typeof (IService<string>)));
+            container.SetDefaultsToProfile("2");
+            container.GetInstance(typeof (IService<string>))
+                                           .ShouldBeOfType<ServiceWithPlug<string>>();
 
-            manager.SetDefaultsToProfile("1");
-            Assert.IsInstanceOfType(typeof (Service<string>), manager.GetInstance(typeof (IService<string>)));
+            container.SetDefaultsToProfile("1");
+            container.GetInstance(typeof (IService<string>)).ShouldBeOfType < Service<string>>();
         }
 
 

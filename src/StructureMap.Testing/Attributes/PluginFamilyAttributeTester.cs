@@ -19,7 +19,7 @@ namespace StructureMap.Testing.Attributes
             var family = new PluginFamily(typeof (TypeThatDoesNotHaveCustomMementoSource));
             att.Configure(family);
 
-            Assert.IsInstanceOfType(interceptorType, family.Lifecycle);
+            family.Lifecycle.ShouldBeOfType(interceptorType);
         }
 
         [PluginFamily]

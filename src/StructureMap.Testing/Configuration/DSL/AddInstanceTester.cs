@@ -127,7 +127,7 @@ namespace StructureMap.Testing.Configuration.DSL
                     .CtorDependency<IWidget>("widget").Is(x => x.TheInstanceNamed("Purple"));
             });
 
-            Assert.IsInstanceOfType(typeof (ARule), container.GetInstance<Rule>("Alias"));
+            container.GetInstance<Rule>("Alias").ShouldBeOfType<ARule>();
 
             var rule = (WidgetRule) container.GetInstance<Rule>("RuleThatUsesMyInstance");
             var widget = (ColorWidget) rule.Widget;

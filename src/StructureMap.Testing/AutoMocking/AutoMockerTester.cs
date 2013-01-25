@@ -215,7 +215,7 @@ namespace StructureMap.Testing.AutoMocking
             mocker.UseConcreteClassFor<ConcreteThing>();
 
             var thing = mocker.Get<ConcreteThing>();
-            Assert.IsInstanceOfType(typeof (ConcreteThing), thing);
+            thing.ShouldBeOfType<ConcreteThing>();
 
             Assert.AreSame(mocker.Get<IMockedService>(), thing.Service);
             Assert.AreSame(mocker.Get<IMockedService2>(), thing.Service2);

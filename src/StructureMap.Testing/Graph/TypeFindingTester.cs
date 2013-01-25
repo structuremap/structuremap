@@ -44,9 +44,9 @@ namespace StructureMap.Testing.Graph
         public void ScanAssembliesForAPluginAndOnlyGetExplicitlyAttributedClassesWithPluginAttributes()
         {
             IList<INormalType> instances = container.GetAllInstances<INormalType>();
-            Assert.AreEqual(1, instances.Count);
+            instances.Count.ShouldEqual(1);
 
-            Assert.IsInstanceOfType(typeof (NormalTypeWithPluggableAttribute), instances[0]);
+            instances[0].ShouldBeOfType<NormalTypeWithPluggableAttribute>();
         }
 
         [TestFixture]

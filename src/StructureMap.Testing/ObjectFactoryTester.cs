@@ -38,16 +38,16 @@ namespace StructureMap.Testing
 
             var command = ObjectFactory.GetInstance<Command>(args);
 
-            Assert.IsInstanceOfType(typeof (View), command.View);
-            Assert.AreSame(theNode, command.Node);
-            Assert.AreSame(theTrade, command.Trade);
+            command.View.ShouldBeOfType<View>();
+            theNode.ShouldBeTheSameAs(command.Node);
+            theTrade.ShouldBeTheSameAs(command.Trade);
         }
 
         [Test]
         public void SmokeTestGetAllInstances()
         {
             IList list = ObjectFactory.GetAllInstances(typeof (GrandChild));
-            Assert.IsTrue(list.Count > 0);
+            list.Count.ShouldBeGreaterThan(0);
         }
 
         [Test]
