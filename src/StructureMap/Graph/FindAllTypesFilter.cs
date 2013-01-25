@@ -26,7 +26,7 @@ namespace StructureMap.Graph
 
         private Type GetLeastSpecificButValidType(Type pluginType, Type type)
         {
-            if (pluginType.IsGenericTypeDefinition)
+            if (pluginType.IsGenericTypeDefinition && !type.IsOpenGeneric())
                 return type.FindFirstInterfaceThatCloses(pluginType);
 
             return pluginType;
