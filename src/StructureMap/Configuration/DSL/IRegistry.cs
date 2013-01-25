@@ -46,7 +46,7 @@ namespace StructureMap.Configuration.DSL
         /// <summary>
         /// This method is a shortcut for specifying the default constructor and 
         /// setter arguments for a ConcreteType.  ForConcreteType is shorthand for:
-        /// ForRequestedType[T]().Use[T].**************
+        /// For[T]().Use[T].**************
         /// when the PluginType and ConcreteType are the same Type
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -54,7 +54,7 @@ namespace StructureMap.Configuration.DSL
         Registry.BuildWithExpression<T> ForConcreteType<T>();
 
         /// <summary>
-        /// Convenience method.  Equivalent of ForRequestedType[PluginType]().AsSingletons()
+        /// Convenience method.  Equivalent of For[PluginType]().AsSingletons()
         /// </summary>
         /// <typeparam name="TPluginType"></typeparam>
         /// <returns></returns>
@@ -138,14 +138,14 @@ namespace StructureMap.Configuration.DSL
         /// </summary>
         /// <typeparam name="TPluginType"></typeparam>
         /// <returns></returns>
-        CreatePluginFamilyExpression<TPluginType> For<TPluginType>();
+        CreatePluginFamilyExpression<TPluginType> For<TPluginType>(InstanceScope? scope = null);
 
         /// <summary>
         /// Shorthand for ForRequestedType(pluginType)
         /// </summary>
         /// <param name="pluginType"></param>
         /// <returns></returns>
-        GenericFamilyExpression For(Type pluginType);
+        GenericFamilyExpression For(Type pluginType, InstanceScope? scope = null);
 
         /// <summary>
         /// Shortcut to make StructureMap return the default object of U casted to T

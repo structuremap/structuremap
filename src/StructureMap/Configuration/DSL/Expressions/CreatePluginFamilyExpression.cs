@@ -16,7 +16,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         private readonly List<Action<PluginGraph>> _children = new List<Action<PluginGraph>>();
         private readonly Type _pluginType;
 
-        public CreatePluginFamilyExpression(Registry registry)
+        public CreatePluginFamilyExpression(Registry registry, InstanceScope? scope)
         {
             _pluginType = typeof (TPluginType);
 
@@ -27,6 +27,11 @@ namespace StructureMap.Configuration.DSL.Expressions
                 _children.ForEach(action => action(graph));
                 _alterations.ForEach(action => action(family));
             });
+
+            if (scope != null)
+            {
+                _alterations.Add(family => family.SetScopeTo(scope.Value));
+            }
         }
 
         /// <summary>
@@ -141,18 +146,6 @@ namespace StructureMap.Configuration.DSL.Expressions
         public ObjectInstance Use(TPluginType @object)
         {
             return TheDefault.IsThis(@object);
-        }
-
-        /// <summary>
-        /// Sets the object creation of the instances of the PluginType.  For example:  PerRequest,
-        /// Singleton, ThreadLocal, HttpContext, or Hybrid
-        /// </summary>
-        /// <param name="scope"></param>
-        /// <returns></returns>
-		[Obsolete("Change to LifecycleIs(scope) or use Singleton(), HttpContextScoped(), HybridHttpOrThreadLocalScoped()")]
-        public CreatePluginFamilyExpression<TPluginType> CacheBy(InstanceScope scope)
-        {
-            return alterAndContinue(family => family.SetScopeTo(scope));
         }
 
         /// <summary>

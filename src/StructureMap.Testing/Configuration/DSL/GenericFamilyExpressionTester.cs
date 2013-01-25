@@ -160,7 +160,7 @@ namespace StructureMap.Testing.Configuration.DSL
         public void Set_caching()
         {
             var registry = new Registry();
-            registry.For(typeof (ITarget)).CacheBy(InstanceScope.ThreadLocal);
+            registry.For(typeof(ITarget), InstanceScope.ThreadLocal);
             PluginGraph graph = registry.Build();
 
             graph.FindFamily(typeof (ITarget)).Lifecycle.ShouldBeOfType<ThreadLocalStorageLifecycle>();

@@ -15,10 +15,15 @@ namespace StructureMap.Configuration.DSL.Expressions
         private readonly Type _pluginType;
         private readonly Registry _registry;
 
-        public GenericFamilyExpression(Type pluginType, Registry registry)
+        public GenericFamilyExpression(Type pluginType, InstanceScope? scope, Registry registry)
         {
             _pluginType = pluginType;
             _registry = registry;
+
+            if (scope != null)
+            {
+                alterAndContinue(family => family.SetScopeTo(scope.Value));
+            }
         }
 
         private GenericFamilyExpression alterAndContinue(Action<PluginFamily> action)
@@ -149,18 +154,6 @@ namespace StructureMap.Configuration.DSL.Expressions
             return instance;
         }
 
-
-        /// <summary>
-        /// Sets the object creation of the instances of the PluginType.  For example:  PerRequest,
-        /// Singleton, ThreadLocal, HttpContext, or Hybrid
-        /// </summary>
-        /// <param name="scope"></param>
-        /// <returns></returns>
-		[Obsolete("Change to LifecycleIs() or use Singleton(), HttpContextScoped(), HybridHttpOrThreadLocalScoped().")]
-        public GenericFamilyExpression CacheBy(InstanceScope scope)
-        {
-            return alterAndContinue(family => family.SetScopeTo(scope));
-        }
 
         /// <summary>
         /// Register an Action to run against any object of this PluginType immediately after

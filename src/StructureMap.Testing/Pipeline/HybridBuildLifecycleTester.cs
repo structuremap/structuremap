@@ -14,7 +14,7 @@ namespace StructureMap.Testing.Pipeline
                 new Container(
                     x =>
                     {
-                        x.For<IService>().CacheBy(InstanceScope.Hybrid).Use<RemoteService>();
+                        x.For<IService>(InstanceScope.Hybrid).Use<RemoteService>();
                     });
 
 

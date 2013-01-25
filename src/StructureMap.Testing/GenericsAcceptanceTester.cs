@@ -137,9 +137,7 @@ namespace StructureMap.Testing
         {
             var con = new Container(x =>
             {
-                x.For(typeof (IService<>))
-                    .CacheBy(InstanceScope.Singleton)
-                    .TheDefaultIsConcreteType(typeof (Service<>));
+                x.ForSingletonOf(typeof (IService<>)).Use(typeof (Service<>));
             });
 
             var first = con.GetInstance<IService<string>>();

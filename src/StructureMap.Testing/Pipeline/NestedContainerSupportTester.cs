@@ -141,9 +141,9 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void singleton_service_from_open_type_in_the_parent_is_found_by_the_child()
         {
-            var parent =
-                new Container(
-                    x => { x.For(typeof (IService<>)).CacheBy(InstanceScope.Singleton).Use(typeof (Service<>)); });
+            var parent = new Container(x => {
+                x.ForSingletonOf(typeof (IService<>)).Use(typeof (Service<>));
+            });
 
             IContainer child = parent.GetNestedContainer();
 

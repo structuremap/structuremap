@@ -92,7 +92,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var registry = new Registry();
             CreatePluginFamilyExpression<IGateway> expression =
-                registry.For<IGateway>().CacheBy(InstanceScope.ThreadLocal);
+                registry.For<IGateway>(InstanceScope.ThreadLocal);
             Assert.IsNotNull(expression);
 
             PluginGraph pluginGraph = registry.Build();

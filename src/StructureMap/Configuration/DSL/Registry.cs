@@ -102,6 +102,16 @@ namespace StructureMap.Configuration.DSL
         }
 
         /// <summary>
+        /// Shorthand way of saying For(pluginType).Singleton()
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <returns></returns>
+        public GenericFamilyExpression ForSingletonOf(Type pluginType)
+        {
+            return For(pluginType).Singleton();
+        }
+
+        /// <summary>
         /// Uses the configuration expressions of this Registry to create a PluginGraph
         /// object that could be used to initialize a Container.  This method is 
         /// mostly for internal usage, but might be helpful for diagnostics
@@ -220,10 +230,11 @@ namespace StructureMap.Configuration.DSL
         /// and ForRequestedType() are synonyms
         /// </summary>
         /// <typeparam name="TPluginType"></typeparam>
+        /// <param name="scope">Optionally specify the instance scoping for this PluginType</param>
         /// <returns></returns>
-        public CreatePluginFamilyExpression<TPluginType> For<TPluginType>()
+        public CreatePluginFamilyExpression<TPluginType> For<TPluginType>(InstanceScope? scope = null)
         {
-            return new CreatePluginFamilyExpression<TPluginType>(this);
+            return new CreatePluginFamilyExpression<TPluginType>(this, scope);
         }
 
         /// <summary>
@@ -231,10 +242,11 @@ namespace StructureMap.Configuration.DSL
         /// Scoping, the Default Instance, and interception.  This method is specifically
         /// meant for registering open generic types
         /// </summary>
+        /// <param name="scope">Optionally specify the instance scoping for this PluginType</param>
         /// <returns></returns>
-        public GenericFamilyExpression For(Type pluginType)
+        public GenericFamilyExpression For(Type pluginType, InstanceScope? scope = null)
         {
-            return new GenericFamilyExpression(pluginType, this);
+            return new GenericFamilyExpression(pluginType, scope, this);
         }
 
 
