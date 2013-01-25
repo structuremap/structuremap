@@ -218,7 +218,7 @@ namespace StructureMap.Testing.Graph
         {
             var target = new AClass("Me");
 
-            var container = new Container(registry => registry.InstanceOf<AClass>().Is.Object(target));
+            var container = new Container(registry => registry.For<AClass>().Use(target));
 
             Assert.AreSame(target, container.GetInstance<AClass>());
         }

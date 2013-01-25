@@ -172,7 +172,7 @@ namespace StructureMap.Testing.Diagnostics
         public void BootstrapStructureMap()
         {
             ObjectFactory.Initialize(
-                x => { x.InstanceOf<IWidget>().IsThis(new ConfiguredInstance(typeof (ColorRule))); });
+                x => { x.For<IWidget>().Use(new ConfiguredInstance(typeof (ColorRule))); });
         }
 
         #endregion
@@ -216,7 +216,7 @@ namespace StructureMap.Testing.Diagnostics
         public void BootstrapStructureMap()
         {
             ObjectFactory.Initialize(
-                x => { x.InstanceOf<IWidget>().Is.ConstructedBy(() => { throw new NotImplementedException(); }); });
+                x => { x.For<IWidget>().Use(() => { throw new NotImplementedException(); }); });
         }
 
         #endregion

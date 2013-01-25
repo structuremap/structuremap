@@ -58,21 +58,6 @@ namespace StructureMap.Configuration.DSL.Expressions
             });
         }
 
-
-        /// <summary>
-        /// Conditional binding of instances
-        /// </summary>
-        /// <param name="configuration"></param>
-        /// <returns></returns>
-        public ConditionalInstance<PLUGINTYPE> ConditionallyUse(
-            Action<ConditionalInstance<PLUGINTYPE>.ConditionalInstanceExpression> configuration)
-        {
-            var instance = new ConditionalInstance<PLUGINTYPE>(configuration);
-            Use(instance);
-            
-            return instance;
-        }
-
         /// <summary>
         /// Access to all of the uncommon Instance types
         /// </summary>

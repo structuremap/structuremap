@@ -420,7 +420,7 @@ namespace StructureMap.Testing.DocumentationExamples
             For<IService>().Use<RemoteService>();
 
             // Add an additional Instance of a PluginType
-            InstanceOf<IService>().Is.OfConcreteType<RemoteService>();
+            For<IService>().Use<RemoteService>();
 
             // Add multiple additional Instances of a PluginType
             ForRequestedType<IService>().AddInstances(x =>

@@ -18,7 +18,7 @@ namespace StructureMap.Testing.Graph
 
             var manager = new Container(graph);
 
-            manager.Configure(r => r.InstanceOf<Cow>().Is.OfConcreteType<Cow>()
+            manager.Configure(r => r.For<Cow>().Use<Cow>()
                                        .WithName("Angus")
                                        .WithProperty("Name").EqualTo("Bessie")
                                        .WithProperty("Breed").EqualTo("Angus")

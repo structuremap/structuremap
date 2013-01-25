@@ -149,7 +149,7 @@ namespace StructureMap.Testing.Pipeline
             var container = new Container(r =>
             {
                 // The "Name" property is not configured for this instance
-                r.InstanceOf<OptionalSetterTarget>().Is.OfConcreteType<OptionalSetterTarget>().WithName("NoName");
+                r.For<OptionalSetterTarget>().Use<OptionalSetterTarget>().WithName("NoName");
 
                 // The "Name" property is configured for this instance
                 r.ForConcreteType<OptionalSetterTarget>().Configure
@@ -166,7 +166,7 @@ namespace StructureMap.Testing.Pipeline
             var container = new Container(r =>
             {
                 // The "Name" property is not configured for this instance
-                r.InstanceOf<OptionalSetterTarget>().Is.OfConcreteType<OptionalSetterTarget>().WithName("NoName");
+                r.For<OptionalSetterTarget>().Use<OptionalSetterTarget>().WithName("NoName");
 
                 // The "Name" property is configured for this instance
                 r.ForConcreteType<OptionalSetterTarget>().Configure

@@ -189,15 +189,8 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
+        [Obsolete]
         UserControlInstance LoadControlFrom(string url);
-
-        /// <summary>
-        /// Creates an Instance according to conditional rules
-        /// </summary>
-        /// <param name="configuration"></param>
-        /// <returns></returns>
-        // Conditional object construction
-        ConditionalInstance<T> Conditional(Action<ConditionalInstance<T>.ConditionalInstanceExpression> configuration);
     }
 
     public class InstanceExpression<T> : IInstanceExpression<T>, ThenItExpression<T>
@@ -289,13 +282,6 @@ namespace StructureMap.Configuration.DSL.Expressions
         {
             return returnInstance(new UserControlInstance(url));
         }
-
-        public ConditionalInstance<T> Conditional(
-            Action<ConditionalInstance<T>.ConditionalInstanceExpression> configuration)
-        {
-            return returnInstance(new ConditionalInstance<T>(configuration));
-        }
-
 
         IsExpression<T> ThenItExpression<T>.ThenIt { get { return this; } }
 

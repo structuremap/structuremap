@@ -7,8 +7,8 @@ namespace StructureMap.Testing.Widget5
     {
         public RedGreenRegistry()
         {
-            InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithCtorArg("color").EqualTo("Red").WithName("Red");
-            InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithCtorArg("color").EqualTo("Green").WithName(
+            For<IWidget>().Add<ColorWidget>().WithCtorArg("color").EqualTo("Red").WithName("Red");
+            For<IWidget>().Add<ColorWidget>().WithCtorArg("color").EqualTo("Green").WithName(
                 "Green");
         }
 
@@ -31,9 +31,9 @@ namespace StructureMap.Testing.Widget5
     {
         public YellowBlueRegistry()
         {
-            InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithCtorArg("color").EqualTo("Yellow").WithName(
+            For<IWidget>().Add<ColorWidget>().WithCtorArg("color").EqualTo("Yellow").WithName(
                 "Yellow");
-            InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithProperty("color").EqualTo("Blue").WithName("Blue");
+            For<IWidget>().Add<ColorWidget>().WithProperty("color").EqualTo("Blue").WithName("Blue");
         }
 
         public override bool Equals(object obj)
@@ -69,9 +69,9 @@ namespace StructureMap.Testing.Widget5
     {
         public BrownBlackRegistry()
         {
-            InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithProperty("color").EqualTo("Brown").WithName(
+            For<IWidget>().Add<ColorWidget>().WithProperty("color").EqualTo("Brown").WithName(
                 "Brown");
-            InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithProperty("color").EqualTo("Black").WithName(
+            For<IWidget>().Add<ColorWidget>().WithProperty("color").EqualTo("Black").WithName(
                 "Black");
         }
 

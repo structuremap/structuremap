@@ -241,7 +241,7 @@ namespace StructureMap.Testing.Graph
             var pluginGraph = new PluginGraph();
             IContainer container = new Container(pluginGraph);
             container.Configure(
-                r => { r.InstanceOf<ISomething>().Is.OfConcreteType<SomethingOne>(); });
+                r => { r.For<ISomething>().Use<SomethingOne>(); });
 
             IList<ISomething> list = container.GetAllInstances<ISomething>();
 
@@ -272,7 +272,7 @@ namespace StructureMap.Testing.Graph
         public void InjectType()
         {
             var container = new Container(
-                r => r.InstanceOf<ISomething>().Is.OfConcreteType<SomethingOne>());
+                r => r.For<ISomething>().Use<SomethingOne>());
 
             IList<ISomething> list = container.GetAllInstances<ISomething>();
 

@@ -13,10 +13,9 @@ namespace StructureMap.Testing.Bugs
         {
             container =
                 new Container(
-                    x =>
-                    {
-                        x.ForRequestedType<IWidget>().MissingNamedInstanceIs.Conditional(
-                            o => { o.TheDefault.Is.ConstructedBy(c => new ColorWidget(c.RequestedName)); });
+                    x => {
+                        x.ForRequestedType<IWidget>()
+                         .MissingNamedInstanceIs.ConstructedBy(c => new ColorWidget(c.RequestedName));
                     });
         }
 
@@ -40,8 +39,7 @@ namespace StructureMap.Testing.Bugs
             container.Configure(
                 x =>
                 {
-                    x.ForRequestedType<IWidget>().MissingNamedInstanceIs.Conditional(
-                        o => { o.TheDefault.Is.ConstructedBy(c => new ColorWidget(c.RequestedName)); });
+                    x.ForRequestedType<IWidget>().MissingNamedInstanceIs.ConstructedBy(c => new ColorWidget(c.RequestedName));
                 });
 
             container.GetInstance<IWidget>("Red").ShouldBeOfType<ColorWidget>().Color.ShouldEqual("Red");

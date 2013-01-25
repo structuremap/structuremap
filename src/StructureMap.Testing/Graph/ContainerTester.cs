@@ -35,10 +35,10 @@ namespace StructureMap.Testing.Graph
         {
             _container.Configure(r =>
             {
-                r.InstanceOf<Rule>().Is.OfConcreteType<ColorRule>().WithCtorArg("color").EqualTo(Color).WithName(Color);
-                r.InstanceOf<IWidget>().Is.OfConcreteType<ColorWidget>().WithCtorArg("color").EqualTo(Color).WithName(
+                r.For<Rule>().Use<ColorRule>().WithCtorArg("color").EqualTo(Color).WithName(Color);
+                r.For<IWidget>().Use<ColorWidget>().WithCtorArg("color").EqualTo(Color).WithName(
                     Color);
-                r.InstanceOf<WidgetMaker>().Is.OfConcreteType<ColorWidgetMaker>().WithCtorArg("color").EqualTo(Color).
+                r.For<WidgetMaker>().Use<ColorWidgetMaker>().WithCtorArg("color").EqualTo(Color).
                     WithName(Color);
             });
         }

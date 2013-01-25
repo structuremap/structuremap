@@ -379,7 +379,6 @@
     </Compile>
     <Compile Include="Pipeline\BuildStackTester.cs" />
     <Compile Include="Pipeline\BuildStrategiesTester.cs" />
-    <Compile Include="Pipeline\ConditionalInstanceTester.cs" />
     <Compile Include="Pipeline\ConfiguredInstanceTester.cs" />
     <Compile Include="Pipeline\ConstructorInstanceTester.cs" />
     <Compile Include="Pipeline\EnumerableInstanceTester.cs" />

@@ -14,7 +14,7 @@ namespace StructureMap.Testing.Configuration.DSL
             pluginGraph = new PluginGraph();
             Registry registry = new Registry(pluginGraph);
             registry.ScanAssemblies().IncludeAssemblyContainingType<IWidget>();
-            registry.AddInstanceOf<IWidget>
+            registry.AddFor<IWidget>
                 .Called("DarkGreen").OfConcreteType<ColorWidget>.WithProperty("Color").EqualTo("DarkGreen");
 
 

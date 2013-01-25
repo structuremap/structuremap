@@ -11,7 +11,7 @@ namespace StructureMap.Testing.Pipeline
         private IStructuredInstance structuredInstance;
         private IConfiguredInstance configuredInstance;
 
-        private SmartInstance<T> instanceOf<T>()
+        private SmartInstance<T> For<T>()
         {
             var instance = new SmartInstance<T>();
 
@@ -23,7 +23,7 @@ namespace StructureMap.Testing.Pipeline
 
         public T build<T>(Action<SmartInstance<T>> action)
         {
-            SmartInstance<T> instance = instanceOf<T>();
+            SmartInstance<T> instance = For<T>();
             action(instance);
 
             var container = new Container(r => r.ForRequestedType<T>().TheDefault.IsThis(instance));

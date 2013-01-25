@@ -42,9 +42,9 @@ namespace StructureMap.Testing.Diagnostics
         {
             ValidationBuildSession session = validatedSession(r =>
             {
-                r.InstanceOf<IWidget>().IsThis(errorInstance().WithName("BadInstance"));
+                r.For<IWidget>().Use(errorInstance().WithName("BadInstance"));
 
-                r.InstanceOf<SomethingThatNeedsAWidget>().Is.OfConcreteType<SomethingThatNeedsAWidget>()
+                r.For<SomethingThatNeedsAWidget>().Use<SomethingThatNeedsAWidget>()
                     .WithName("DependentInstance")
                     .CtorDependency<IWidget>().Is(x => x.TheInstanceNamed("BadInstance"));
             });
@@ -63,7 +63,7 @@ namespace StructureMap.Testing.Diagnostics
         {
             ValidationBuildSession session =
                 validatedSession(
-                    r => r.InstanceOf<IWidget>().Is.Object(new ColorWidget("Red")));
+                    r => r.For<IWidget>().Use(new ColorWidget("Red")));
 
             Assert.AreEqual(0, session.BuildErrors.Length);
         }
@@ -73,10 +73,10 @@ namespace StructureMap.Testing.Diagnostics
         {
             ValidationBuildSession session = validatedSession(r =>
             {
-                r.InstanceOf<IWidget>().IsThis(errorInstance().WithName("BadInstance"));
+                r.For<IWidget>().Use(errorInstance().WithName("BadInstance"));
 
 
-                r.InstanceOf<SomethingThatNeedsAWidget>().Is.OfConcreteType<SomethingThatNeedsAWidget>()
+                r.For<SomethingThatNeedsAWidget>().Use<SomethingThatNeedsAWidget>()
                     .WithName("DependentInstance")
                     .CtorDependency<IWidget>().Is(x => x.TheInstanceNamed("BadInstance"));
             });
@@ -96,7 +96,7 @@ namespace StructureMap.Testing.Diagnostics
             ValidationBuildSession session = validatedSession(
                 r =>
                 {
-                    r.InstanceOf<SomethingThatNeedsAWidget>().Is.OfConcreteType<SomethingThatNeedsAWidget>()
+                    r.For<SomethingThatNeedsAWidget>().Use<SomethingThatNeedsAWidget>()
                         .WithName("BadInstance")
                         .CtorDependency<IWidget>().Is(errorInstance());
                 });
@@ -112,7 +112,7 @@ namespace StructureMap.Testing.Diagnostics
         {
             Instance instance = errorInstance().WithName("Bad");
             ValidationBuildSession session =
-                validatedSession(registry => registry.InstanceOf<IWidget>().IsThis(instance));
+                validatedSession(registry => registry.For<IWidget>().Use(instance));
 
             BuildError error = getFirstAndOnlyError(session);
 
@@ -131,10 +131,10 @@ namespace StructureMap.Testing.Diagnostics
 
                 r.ForConcreteType<ClassThatNeedsWidgetAndRule1>();
                 r.ForConcreteType<ClassThatNeedsWidgetAndRule2>();
-                r.InstanceOf<ClassThatNeedsWidgetAndRule2>().Is.OfConcreteType<ClassThatNeedsWidgetAndRule2>();
-                r.InstanceOf<ClassThatNeedsWidgetAndRule2>().Is.OfConcreteType<ClassThatNeedsWidgetAndRule2>();
-                r.InstanceOf<ClassThatNeedsWidgetAndRule2>().Is.OfConcreteType<ClassThatNeedsWidgetAndRule2>();
-                r.InstanceOf<ClassThatNeedsWidgetAndRule2>().Is.OfConcreteType<ClassThatNeedsWidgetAndRule2>().
+                r.For<ClassThatNeedsWidgetAndRule2>().Use<ClassThatNeedsWidgetAndRule2>();
+                r.For<ClassThatNeedsWidgetAndRule2>().Use<ClassThatNeedsWidgetAndRule2>();
+                r.For<ClassThatNeedsWidgetAndRule2>().Use<ClassThatNeedsWidgetAndRule2>();
+                r.For<ClassThatNeedsWidgetAndRule2>().Use<ClassThatNeedsWidgetAndRule2>().
                     CtorDependency<Rule>().Is<ARule>();
             });
 
@@ -146,7 +146,7 @@ namespace StructureMap.Testing.Diagnostics
         {
             ValidationBuildSession session =
                 validatedSession(
-                    registry => registry.InstanceOf<IWidget>().Is.Object(new ColorWidget("Red")));
+                    registry => registry.For<IWidget>().Use(new ColorWidget("Red")));
 
             Assert.AreEqual(0, session.ValidationErrors.Length);
         }
@@ -180,7 +180,7 @@ namespace StructureMap.Testing.Diagnostics
         {
             var instance = new ObjectInstance(new WidgetWithOneValidationFailure());
             ValidationBuildSession session =
-                validatedSession(registry => registry.InstanceOf<IWidget>().IsThis(instance));
+                validatedSession(registry => registry.For<IWidget>().Use(instance));
 
 
             Assert.AreEqual(1, session.ValidationErrors.Length);
