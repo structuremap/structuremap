@@ -1,4 +1,5 @@
 using System;
+using System.Security;
 using StructureMap.Exceptions;
 using StructureMap.Graph;
 
@@ -6,6 +7,7 @@ namespace StructureMap.Diagnostics
 {
     public class DoctorRunner : MarshalByRefObject
     {
+        [SecurityCritical]
         public override object InitializeLifetimeService()
         {
             return null;
