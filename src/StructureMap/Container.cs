@@ -155,13 +155,6 @@ namespace StructureMap
             return (T) GetInstance(typeof (T));
         }
 
-        [Obsolete("Please use GetInstance<T>() instead.")]
-        public T FillDependencies<T>()
-        {
-            return (T) FillDependencies(typeof (T));
-        }
-
-
         /// <summary>
         /// Creates or resolves all registered instances of type T
         /// </summary>
@@ -281,24 +274,6 @@ namespace StructureMap
         {
             _pipelineGraph.SetDefault(pluginType, instance);
         }
-
-        [Obsolete("Please use GetInstance(Type) instead")]
-        public object FillDependencies(Type type)
-        {
-            if (!type.IsConcrete())
-            {
-                throw new StructureMapException(230, type.FullName);
-            }
-
-            var plugin = new Plugin(type);
-            if (!plugin.CanBeAutoFilled)
-            {
-                throw new StructureMapException(230, type.FullName);
-            }
-
-            return GetInstance(type);
-        }
-
 
         /// <summary>
         /// Creates or resolves all registered instances of the pluginType
