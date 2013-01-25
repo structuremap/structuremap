@@ -161,7 +161,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="action"></param>
         /// <returns></returns>
-        public GenericFamilyExpression OnCreation(Action<object> action)
+        public GenericFamilyExpression OnCreationForAll(Action<object> action)
         {
             Func<object, object> func = raw =>
             {
@@ -173,7 +173,7 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         /// <summary>
         /// Register a Func to run against any object of this PluginType immediately after it is created,
-        /// but before the new object is passed back to the caller.  Unlike <see cref="OnCreation">OnCreation()</see>,
+        /// but before the new object is passed back to the caller.  Unlike <see cref="OnCreationForAll">OnCreationForAll()</see>,
         /// EnrichWith() gives the the ability to return a different object.  Use this method for runtime AOP
         /// scenarios or to return a decorator.
         /// </summary>
@@ -192,7 +192,7 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         /// <summary>
         /// Register a Func to run against any object of this PluginType immediately after it is created,
-        /// but before the new object is passed back to the caller.  Unlike <see cref="OnCreation">OnCreation()</see>,
+        /// but before the new object is passed back to the caller.  Unlike <see cref="OnCreationForAll">OnCreationForAll()</see>,
         /// EnrichWith() gives the the ability to return a different object.  Use this method for runtime AOP
         /// scenarios or to return a decorator.
         /// </summary>

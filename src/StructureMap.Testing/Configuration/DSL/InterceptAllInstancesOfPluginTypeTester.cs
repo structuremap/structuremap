@@ -108,7 +108,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             Action<Registry> action = registry =>
             {
-                registry.For<IService>().OnCreation(s => _lastService = s)
+                registry.For<IService>().OnCreationForAll(s => _lastService = s)
                     .AddInstances(x => { x.ConstructedBy(() => new ColorService("Green")).WithName("Green"); });
             };
 
@@ -196,7 +196,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             Action<Registry> action = r =>
             {
-                r.For<IService>().OnCreation(s => _lastService = s)
+                r.For<IService>().OnCreationForAll(s => _lastService = s)
                     .AddInstances(x => { x.ConstructedBy(() => new ColorService("Green")).WithName("Green"); });
             };
 

@@ -37,7 +37,7 @@ namespace StructureMap.Testing.Pipeline
             {
                 var container = new Container(x =>
                 {
-                    x.For<Rule>().OnCreation((c, r) => { throw new NotImplementedException(); })
+                    x.For<Rule>().OnCreationForAll((c, r) => { throw new NotImplementedException(); })
                         .Use(() => new ColorRule("red"));
                 });
 
@@ -58,7 +58,7 @@ namespace StructureMap.Testing.Pipeline
 
             var container = new Container(x =>
             {
-                x.For<Rule>().OnCreation((c, r) => comingAcross = r)
+                x.For<Rule>().OnCreationForAll((c, r) => comingAcross = r)
                     .Use(() => new ColorRule("red"));
             });
 

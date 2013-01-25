@@ -149,7 +149,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
             var container = new Container(r =>
             {
-                r.For(typeof (ITarget)).OnCreation(raw => created = (ITarget) raw)
+                r.For(typeof (ITarget)).OnCreationForAll(raw => created = (ITarget) raw)
                     .TheDefaultIsConcreteType(typeof (Target3));
             });
 

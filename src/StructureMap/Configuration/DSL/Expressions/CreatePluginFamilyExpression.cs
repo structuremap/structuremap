@@ -191,36 +191,6 @@ namespace StructureMap.Configuration.DSL.Expressions
         }
 
 
-        /// <summary>
-        /// Register an Action to run against any object of this PluginType immediately after
-        /// it is created, but before the new object is passed back to the caller
-        /// </summary>
-        /// <param name="handler"></param>
-        /// <returns></returns>
-        [Obsolete("Change to OnCreationForAll")]
-        public CreatePluginFamilyExpression<TPluginType> OnCreation(Action<TPluginType> handler)
-        {
-            _children.Add(
-                graph =>
-                {
-                    Func<object, object> function = target =>
-                    {
-                        handler((TPluginType) target);
-                        return target;
-                    };
-
-                    var interceptor = new PluginTypeInterceptor(typeof (TPluginType), (c, o) =>
-                    {
-                        handler((TPluginType) o);
-                        return o;
-                    });
-
-                    graph.InterceptorLibrary.AddInterceptor(interceptor);
-                });
-
-            return this;
-        }
-
 
         /// <summary>
         /// Register an Action to run against any object of this PluginType immediately after
@@ -233,12 +203,6 @@ namespace StructureMap.Configuration.DSL.Expressions
             _children.Add(
                 graph =>
                 {
-                    Func<object, object> function = target =>
-                    {
-                        handler((TPluginType)target);
-                        return target;
-                    };
-
                     var interceptor = new PluginTypeInterceptor(typeof(TPluginType), (c, o) =>
                     {
                         handler((TPluginType)o);
@@ -264,32 +228,6 @@ namespace StructureMap.Configuration.DSL.Expressions
                     var typeInterceptor = new PluginTypeInterceptor(typeof (TPluginType),
                                                                     (c, o) => interceptor.Process(o, c));
                     graph.InterceptorLibrary.AddInterceptor(typeInterceptor);
-                });
-
-            return this;
-        }
-
-        /// <summary>
-        /// Register an Action to run against any object of this PluginType immediately after
-        /// it is created, but before the new object is passed back to the caller
-        /// </summary>
-        /// <param name="handler"></param>
-        /// <returns></returns>
-        [Obsolete("Change to OnCreationForAll")]
-        public CreatePluginFamilyExpression<TPluginType> OnCreation(Action<IContext, TPluginType> handler)
-        {
-            _children.Add(
-                graph =>
-                {
-                    Func<IContext, object, object> function = (c, o) =>
-                    {
-                        handler(c, (TPluginType) o);
-                        return o;
-                    };
-
-                    var interceptor = new PluginTypeInterceptor(typeof (TPluginType), function);
-
-                    graph.InterceptorLibrary.AddInterceptor(interceptor);
                 });
 
             return this;
@@ -323,7 +261,7 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         /// <summary>
         /// Register a Func to run against any object of this PluginType immediately after it is created,
-        /// but before the new object is passed back to the caller.  Unlike <see cref="OnCreation(Action{TPluginType})">OnCreation()</see>,
+        /// but before the new object is passed back to the caller.  Unlike <see cref="OnCreation(Action{TPluginType})">OnCreationForAll()</see>,
         /// EnrichWith() gives the the ability to return a different object.  Use this method for runtime AOP
         /// scenarios or to return a decorator.
         /// </summary>
@@ -346,7 +284,7 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         /// <summary>
         /// Register a Func to run against any object of this PluginType immediately after it is created,
-        /// but before the new object is passed back to the caller.  Unlike <see cref="OnCreation(Action{TPluginType})">OnCreation()</see>,
+        /// but before the new object is passed back to the caller.  Unlike <see cref="OnCreation(Action{TPluginType})">OnCreationForAll()</see>,
         /// EnrichWith() gives the the ability to return a different object.  Use this method for runtime AOP
         /// scenarios or to return a decorator.
         /// </summary>
@@ -368,7 +306,7 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         /// <summary>
         /// Register a Func to run against any object of this PluginType immediately after it is created,
-        /// but before the new object is passed back to the caller.  Unlike <see cref="OnCreation(Action{IContext,TPluginType})">OnCreation()</see>,
+        /// but before the new object is passed back to the caller.  Unlike <see cref="OnCreation(Action{IContext,TPluginType})">OnCreationForAll()</see>,
         /// EnrichWith() gives the the ability to return a different object.  Use this method for runtime AOP
         /// scenarios or to return a decorator.
         /// </summary>
@@ -391,7 +329,7 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         /// <summary>
         /// Register a Func to run against any object of this PluginType immediately after it is created,
-        /// but before the new object is passed back to the caller.  Unlike <see cref="OnCreation(Action{IContext,TPluginType})">OnCreation()</see>,
+        /// but before the new object is passed back to the caller.  Unlike <see cref="OnCreation(Action{IContext,TPluginType})">OnCreationForAll()</see>,
         /// EnrichWith() gives the the ability to return a different object.  Use this method for runtime AOP
         /// scenarios or to return a decorator.
         /// </summary>
