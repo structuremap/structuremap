@@ -15,6 +15,7 @@ namespace StructureMap
         private readonly InstanceCache _cache = new InstanceCache();
         private readonly Cache<Type, Func<object>> _defaults;
         private readonly PipelineGraph _pipelineGraph;
+        private readonly object _locker = new object();
 
         [CLSCompliant(false)]
         protected BuildStack _buildStack = new BuildStack();
@@ -24,17 +25,20 @@ namespace StructureMap
             _builder = new ObjectBuilder(pipelineGraph, interceptorLibrary);
             _pipelineGraph = pipelineGraph;
 
-            _defaults = new Cache<Type, Func<object>>(t =>
+            lock (this._locker)
             {
-                Instance instance = _pipelineGraph.GetDefault(t);
-
-                if (instance == null)
+                _defaults = new Cache<Type, Func<object>>(t =>
                 {
-                    throw new StructureMapException(202, t);
-                }
+                    Instance instance = _pipelineGraph.GetDefault(t);
 
-                return () => CreateInstance(t, instance);
-            });
+                    if (instance == null)
+                    {
+                        throw new StructureMapException(202, t);
+                    }
+
+                    return () => CreateInstance(t, instance);
+                });
+            }
         }
 
         public BuildSession(PluginGraph graph)
@@ -77,7 +81,7 @@ namespace StructureMap
 
         public T GetInstance<T>()
         {
-            return (T) CreateInstance(typeof (T));
+            return (T)CreateInstance(typeof(T));
         }
 
         public object GetInstance(Type pluginType)
@@ -87,7 +91,7 @@ namespace StructureMap
 
         public T GetInstance<T>(string name)
         {
-            return (T) CreateInstance(typeof (T), name);
+            return (T)CreateInstance(typeof(T), name);
         }
 
         public object GetInstance(Type pluginType, string name)
@@ -104,25 +108,32 @@ namespace StructureMap
 
         public T TryGetInstance<T>() where T : class
         {
-            if (_defaults.Has(typeof (T)))
+            lock (this._locker)
             {
-                return (T) _defaults[typeof (T)]();
+                if (_defaults.Has(typeof(T)))
+                {
+                    return (T)_defaults[typeof(T)]();
+                }
             }
 
-            return _pipelineGraph.HasDefaultForPluginType(typeof (T))
-                       ? ((IContext) this).GetInstance<T>()
+            return _pipelineGraph.HasDefaultForPluginType(typeof(T))
+                       ? ((IContext)this).GetInstance<T>()
                        : null;
         }
 
         public T TryGetInstance<T>(string name) where T : class
         {
-            return _pipelineGraph.HasInstance(typeof (T), name) ? ((IContext) this).GetInstance<T>(name) : null;
+            return _pipelineGraph.HasInstance(typeof(T), name) ? ((IContext)this).GetInstance<T>(name) : null;
         }
 
         public object TryGetInstance(Type pluginType)
         {
-            if (_defaults.Has(pluginType)) {
-                return _defaults[pluginType]();
+            lock (this._locker)
+            {
+                if (_defaults.Has(pluginType))
+                {
+                    return _defaults[pluginType]();
+                }
             }
 
             return _pipelineGraph.HasDefaultForPluginType(pluginType)
@@ -147,7 +158,7 @@ namespace StructureMap
 
         public IEnumerable<T> GetAllInstances<T>()
         {
-            return (IEnumerable<T>) forType(typeof (T)).AllInstances.Select(x => (T)CreateInstance(typeof(T), x));
+            return (IEnumerable<T>)forType(typeof(T)).AllInstances.Select(x => (T)CreateInstance(typeof(T), x));
         }
 
         protected void clearBuildStack()
@@ -212,12 +223,18 @@ namespace StructureMap
 
         public virtual object CreateInstance(Type pluginType)
         {
-            return _defaults[pluginType]();
+            lock (this._locker)
+            {
+                return _defaults[pluginType]();
+            }
         }
 
         public virtual void RegisterDefault(Type pluginType, Func<object> creator)
         {
-            _defaults[pluginType] = creator;
+            lock (this._locker)
+            {
+                _defaults[pluginType] = creator;
+            }
         }
 
 
