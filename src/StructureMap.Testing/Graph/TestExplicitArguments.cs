@@ -434,7 +434,7 @@ namespace StructureMap.Testing.Graph
         public void use_explicit_type_arguments_with_custom_instance()
         {
             var container =
-                new Container(x => { x.For<ClassWithNoArgs>().TheDefault.IsThis(new SpecialInstance()); });
+                new Container(x => { x.For<ClassWithNoArgs>().Use(new SpecialInstance()); });
 
             Debug.WriteLine(container.WhatDoIHave());
 

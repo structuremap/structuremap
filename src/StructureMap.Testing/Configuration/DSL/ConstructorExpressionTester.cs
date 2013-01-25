@@ -38,7 +38,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
             IContainer container =
                 new Container(
-                    registry => registry.For<Abstraction>().TheDefault.Is.ConstructedBy(() => concretion));
+                    registry => registry.For<Abstraction>().Use(() => concretion));
             container.GetInstance<Abstraction>().ShouldBeTheSameAs(concretion);
         }
 

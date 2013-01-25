@@ -26,7 +26,7 @@ namespace StructureMap.Testing.Pipeline
             SmartInstance<T> instance = For<T>();
             action(instance);
 
-            var container = new Container(r => r.For<T>().TheDefault.IsThis(instance));
+            var container = new Container(r => r.For<T>().Use(instance));
             return container.GetInstance<T>();
         }
 

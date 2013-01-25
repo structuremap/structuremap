@@ -49,16 +49,14 @@ namespace StructureMap.Testing.Examples
         {
             // Perform an Action<T> upon the object of type T 
             // just created before it is returned to the caller
-            For<ClassThatNeedsSomeBootstrapping>().TheDefault.Is
-                .OfConcreteType<ClassThatNeedsSomeBootstrapping>()
+            For<ClassThatNeedsSomeBootstrapping>().Use<ClassThatNeedsSomeBootstrapping>()
                 .OnCreation(x => x.Start());
 
             // or...
 
             // You can also register an Action<IContext, T> to get access
             // to all the services and capabilities of the BuildSession
-            For<ClassThatNeedsSomeBootstrapping>().TheDefault.Is
-                .OfConcreteType<ClassThatNeedsSomeBootstrapping>()
+            For<ClassThatNeedsSomeBootstrapping>().Use<ClassThatNeedsSomeBootstrapping>()
                 .OnCreation((context, x) =>
                 {
                     var connection = context.GetInstance<IConnectionPoint>();
@@ -66,12 +64,10 @@ namespace StructureMap.Testing.Examples
                 });
 
 
-            For<IConnectionListener>().TheDefault.Is
-                .OfConcreteType<ClassThatNeedsSomeBootstrapping>()
+            For<IConnectionListener>().Use<ClassThatNeedsSomeBootstrapping>()
                 .EnrichWith(x => new LoggingDecorator(x));
 
-            For<IConnectionListener>().TheDefault.Is
-                .OfConcreteType<ClassThatNeedsSomeBootstrapping>()
+            For<IConnectionListener>().Use<ClassThatNeedsSomeBootstrapping>()
                 .EnrichWith((context, x) =>
                 {
                     var connection = context.GetInstance<IConnectionPoint>();
@@ -81,8 +77,7 @@ namespace StructureMap.Testing.Examples
                 });
 
 
-            For<IConnectionListener>().TheDefault.Is
-                .OfConcreteType<ClassThatNeedsSomeBootstrapping>()
+            For<IConnectionListener>().Use<ClassThatNeedsSomeBootstrapping>()
                 .InterceptWith(new CustomInterceptor());
 
 

@@ -262,7 +262,7 @@ namespace StructureMap.Configuration.DSL
         /// <returns></returns>
         public LambdaInstance<T> Redirect<T, U>() where T : class where U : class
         {
-            return For<T>().TheDefault.Is.ConstructedBy(c =>
+            return For<T>().Use(c =>
             {
                 var raw = c.GetInstance<U>();
                 var t = raw as T;

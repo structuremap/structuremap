@@ -18,7 +18,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
             _container = new Container(r =>
             {
-                r.For<ContextRecorder>().TheDefault.IsThis(recorder);
+                r.For<ContextRecorder>().Use(recorder);
 
                 r.For<IService>().AddInstances(x =>
                 {

@@ -121,7 +121,7 @@ namespace StructureMap.Testing.Graph
 
             var container = new Container(x =>
             {
-                x.For<IService>().TheDefault.Is.Object(theService);
+                x.For<IService>().Use(theService);
                 x.For<IGateway>().TheDefaultIsConcreteType<DefaultGateway>();
 
                 x.SetAllProperties(policy => { policy.WithAnyTypeFromNamespace("StructureMap.Testing.Widget3"); });
@@ -139,7 +139,7 @@ namespace StructureMap.Testing.Graph
 
             var container = new Container(x =>
             {
-                x.For<IService>().TheDefault.Is.Object(theService);
+                x.For<IService>().Use(theService);
                 x.For<IGateway>().TheDefaultIsConcreteType<DefaultGateway>();
 
                 x.SetAllProperties(policy => { policy.TypeMatches(type => type == typeof (IService)); });

@@ -12,8 +12,8 @@ namespace StructureMap.Testing.Graph
         {
             var container = new Container(x =>
             {
-                x.For<IStrategy>().TheDefault.IsThis(new Strategy("name", 3, 3, 3, true));
-                x.For<IWidget>().TheDefault.IsThis(new ColorWidget("Red"));
+                x.For<IStrategy>().Use(new Strategy("name", 3, 3, 3, true));
+                x.For<IWidget>().Use(new ColorWidget("Red"));
             });
 
             var concreteClass =

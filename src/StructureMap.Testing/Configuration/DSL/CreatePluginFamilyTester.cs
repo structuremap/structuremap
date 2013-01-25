@@ -220,7 +220,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var manager =
                 new Container(
-                    registry => registry.For<IWidget>().TheDefault.Is.ConstructedBy(() => new AWidget()));
+                    registry => registry.For<IWidget>().Use(() => new AWidget()));
 
             manager.GetInstance<IWidget>().ShouldBeOfType<AWidget>();
         }
@@ -232,7 +232,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
             var manager =
                 new Container(
-                    registry => registry.For<IWidget>().TheDefault.Is.Object(aWidget));
+                    registry => registry.For<IWidget>().Use(aWidget));
 
             Assert.AreSame(aWidget, manager.GetInstance<IWidget>());
         }
@@ -245,7 +245,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var manager =
                 new Container(
-                    registry => registry.For<Guid>().TheDefault.Is.ConstructedBy(() => Guid.NewGuid()));
+                    registry => registry.For<Guid>().Use(() => Guid.NewGuid()));
 
             manager.GetInstance<Guid>().ShouldBeOfType<Guid>();
         }

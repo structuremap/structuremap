@@ -23,7 +23,7 @@ namespace StructureMap.Testing
             var theGateway = new DefaultGateway();
             var container = new Container(x =>
             {
-                x.For<IGateway>().TheDefault.IsThis(theGateway);
+                x.For<IGateway>().Use(theGateway);
                 x.SetAllProperties(y => { y.OfType<IGateway>(); });
             });
 
@@ -41,7 +41,7 @@ namespace StructureMap.Testing
             ObjectFactory.Initialize(x =>
             {
                 x.IgnoreStructureMapConfig = true;
-                x.For<IGateway>().TheDefault.IsThis(theGateway);
+                x.For<IGateway>().Use(theGateway);
 
                 // First we create a new Setter Injection Policy that
                 // forces StructureMap to inject all public properties
