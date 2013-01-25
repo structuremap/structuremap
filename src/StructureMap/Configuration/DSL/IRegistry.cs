@@ -69,23 +69,6 @@ namespace StructureMap.Configuration.DSL
         PluginGraph Build();
 
         /// <summary>
-        /// Adds an additional, non-Default Instance to the PluginType T.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        [Obsolete("Prefer For<T>().Add() instead")]
-        IsExpression<T> InstanceOf<T>();
-
-        /// <summary>
-        /// Adds an additional, non-Default Instance to the designated pluginType
-        /// This method is mostly meant for open generic types
-        /// </summary>
-        /// <param name="pluginType"></param>
-        /// <returns></returns>
-        [Obsolete("Prefer For(type).Add() instead")]
-        GenericIsExpression InstanceOf(Type pluginType);
-
-        /// <summary>
         /// Expression Builder to define the defaults for a named Profile.  Each call
         /// to CreateProfile is additive.
         /// </summary>

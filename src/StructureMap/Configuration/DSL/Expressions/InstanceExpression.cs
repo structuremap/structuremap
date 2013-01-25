@@ -193,6 +193,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         UserControlInstance LoadControlFrom(string url);
     }
 
+    [Obsolete("Maybe?")]
     public class InstanceExpression<T> : IInstanceExpression<T>, ThenItExpression<T>
     {
         private readonly Action<Instance> _action;
