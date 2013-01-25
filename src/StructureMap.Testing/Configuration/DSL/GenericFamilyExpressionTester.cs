@@ -133,7 +133,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var container = new Container(r =>
             {
-                r.For(typeof (ITarget)).EnrichWith(raw => new WrappedTarget((ITarget) raw))
+                r.For(typeof (ITarget)).EnrichAllWith(raw => new WrappedTarget((ITarget) raw))
                     .TheDefaultIsConcreteType(typeof (Target1));
             });
 

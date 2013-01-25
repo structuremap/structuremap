@@ -84,7 +84,7 @@ namespace StructureMap.Testing.Examples
             // Place the Interception at the PluginType level
             For<IConnectionListener>()
                 .OnCreationForAll(x => x.StartConnection()) // OnCreation
-                .EnrichWith(x => new LoggingDecorator(x)) // Enrich
+                .EnrichAllWith(x => new LoggingDecorator(x)) // Enrich
                 .InterceptWith(new CustomInterceptor()) // Custom Interceptor
                 .Use<ClassThatNeedsSomeBootstrapping>();
         }
