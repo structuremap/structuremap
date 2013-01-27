@@ -188,8 +188,8 @@ namespace StructureMap.Testing.Graph
             {
                 r.For<IService>().AddInstances(x =>
                 {
-                    x.Object(_red).WithName("Red");
-                    x.Object(_blue).WithName("Blue");
+                    x.Object(_red).Named("Red");
+                    x.Object(_blue).Named("Blue");
                 });
             });
 
@@ -205,8 +205,8 @@ namespace StructureMap.Testing.Graph
             {
                 r.For<ISomething>().AddInstances(x =>
                 {
-                    x.Type<SomethingOne>().WithName("One");
-                    x.Type<SomethingTwo>().WithName("Two");
+                    x.Type<SomethingOne>().Named("One");
+                    x.Type<SomethingTwo>().Named("Two");
                 });
             });
 
@@ -224,8 +224,8 @@ namespace StructureMap.Testing.Graph
             {
                 r.For<ISomething>().AddInstances(x =>
                 {
-                    x.Object(one).WithName("One");
-                    x.Object(two).WithName("Two");
+                    x.Object(one).Named("One");
+                    x.Object(two).Named("Two");
                 });
             });
 
@@ -261,8 +261,8 @@ namespace StructureMap.Testing.Graph
         {
             IInstanceFactory factory = getISomethingFactory();
 
-            factory.AddInstance(new ObjectInstance(_red).WithName("Red"));
-            factory.AddInstance(new ObjectInstance(_blue).WithName("Blue"));
+            factory.AddInstance(new ObjectInstance(_red).Named("Red"));
+            factory.AddInstance(new ObjectInstance(_blue).Named("Blue"));
 
             factory.FindInstance("Red").ShouldNotBeNull();
         }
@@ -291,12 +291,12 @@ namespace StructureMap.Testing.Graph
         {
             IInstanceFactory factory = getISomethingFactory();
 
-            factory.AddInstance(new ObjectInstance(_red).WithName("Red"));
-            ObjectInstance oldBlue = new ObjectInstance(_blue).WithName("Blue");
+            factory.AddInstance(new ObjectInstance(_red).Named("Red"));
+            ObjectInstance oldBlue = new ObjectInstance(_blue).Named("Blue");
             factory.AddInstance(oldBlue);
 
             // Replace Blue
-            ObjectInstance newBlue = new ObjectInstance(_orange).WithName("Blue");
+            ObjectInstance newBlue = new ObjectInstance(_orange).Named("Blue");
             factory.AddInstance(newBlue);
 
             factory.FindInstance("Blue").ShouldBeTheSameAs(newBlue);

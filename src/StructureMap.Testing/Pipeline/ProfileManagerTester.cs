@@ -25,7 +25,7 @@ namespace StructureMap.Testing.Pipeline
 
         private void addDefaultToPluginFamily<T>(string name)
         {
-            ObjectInstance instance = new ObjectInstance(0).WithName(name);
+            ObjectInstance instance = new ObjectInstance(0).Named(name);
             PluginFamily family = _pluginGraph.FindFamily(typeof (T));
             family.AddInstance(instance);
             family.DefaultInstanceKey = instance.Name;
@@ -35,7 +35,7 @@ namespace StructureMap.Testing.Pipeline
         {
             _manager.SetDefault(profile, typeof (T), new ReferencedInstance(name));
             PluginFamily family = _pluginGraph.FindFamily(typeof (T));
-            family.AddInstance(new ObjectInstance(0).WithName(name));
+            family.AddInstance(new ObjectInstance(0).Named(name));
         }
 
 

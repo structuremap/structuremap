@@ -118,7 +118,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
 
             ObjectInstance masterInstance =
-                registry.For<IWidget>().Add(new AWidget()).WithName(theDefaultName);
+                registry.For<IWidget>().Add(new AWidget()).Named(theDefaultName);
 
             ProfileManager manager = registry.Build().ProfileManager;
             Assert.AreSame(masterInstance, manager.GetDefault(typeof (IWidget), theProfileName));

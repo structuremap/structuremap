@@ -42,10 +42,10 @@ namespace StructureMap.Testing.Diagnostics
         {
             ValidationBuildSession session = validatedSession(r =>
             {
-                r.For<IWidget>().Use(errorInstance().WithName("BadInstance"));
+                r.For<IWidget>().Use(errorInstance().Named("BadInstance"));
 
                 r.For<SomethingThatNeedsAWidget>().Use<SomethingThatNeedsAWidget>()
-                    .WithName("DependentInstance")
+                    .Named("DependentInstance")
                     .CtorDependency<IWidget>().Is(x => x.TheInstanceNamed("BadInstance"));
             });
 
@@ -73,11 +73,11 @@ namespace StructureMap.Testing.Diagnostics
         {
             ValidationBuildSession session = validatedSession(r =>
             {
-                r.For<IWidget>().Use(errorInstance().WithName("BadInstance"));
+                r.For<IWidget>().Use(errorInstance().Named("BadInstance"));
 
 
                 r.For<SomethingThatNeedsAWidget>().Use<SomethingThatNeedsAWidget>()
-                    .WithName("DependentInstance")
+                    .Named("DependentInstance")
                     .CtorDependency<IWidget>().Is(x => x.TheInstanceNamed("BadInstance"));
             });
 
@@ -97,7 +97,7 @@ namespace StructureMap.Testing.Diagnostics
                 r =>
                 {
                     r.For<SomethingThatNeedsAWidget>().Use<SomethingThatNeedsAWidget>()
-                        .WithName("BadInstance")
+                        .Named("BadInstance")
                         .CtorDependency<IWidget>().Is(errorInstance());
                 });
 
@@ -110,7 +110,7 @@ namespace StructureMap.Testing.Diagnostics
         [Test]
         public void Create_an_instance_that_has_a_build_failure()
         {
-            Instance instance = errorInstance().WithName("Bad");
+            Instance instance = errorInstance().Named("Bad");
             ValidationBuildSession session =
                 validatedSession(registry => registry.For<IWidget>().Use(instance));
 

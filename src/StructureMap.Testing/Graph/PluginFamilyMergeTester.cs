@@ -25,11 +25,11 @@ namespace StructureMap.Testing.Graph
         public void Do_not_override_named_instance()
         {
             var source = new PluginFamily(typeof (IWidget));
-            ObjectInstance sourceInstance = new ObjectInstance(new AWidget()).WithName("New");
+            ObjectInstance sourceInstance = new ObjectInstance(new AWidget()).Named("New");
             source.AddInstance(sourceInstance);
 
             var destination = new PluginFamily(typeof (IWidget));
-            ObjectInstance destinationInstance = new ObjectInstance(new AWidget()).WithName("New");
+            ObjectInstance destinationInstance = new ObjectInstance(new AWidget()).Named("New");
             destination.AddInstance(destinationInstance);
 
             destination.ImportFrom(source);

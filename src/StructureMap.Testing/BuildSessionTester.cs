@@ -256,8 +256,8 @@ namespace StructureMap.Testing
 
             var graph = new PluginGraph();
             PluginFamily family = graph.FindFamily(typeof (IService));
-            family.AddInstance(new ObjectInstance(red).WithName("red"));
-            family.AddInstance(new ObjectInstance(green).WithName("green"));
+            family.AddInstance(new ObjectInstance(red).Named("red"));
+            family.AddInstance(new ObjectInstance(green).Named("green"));
 
             var session = new BuildSession(graph);
             session.GetInstance<IService>("red").ShouldBeTheSameAs(red);
@@ -296,8 +296,8 @@ namespace StructureMap.Testing
 
             var graph = new PluginGraph();
             PluginFamily family = graph.FindFamily(typeof (IService));
-            family.AddInstance(new ObjectInstance(red).WithName("red"));
-            family.AddInstance(new ObjectInstance(green).WithName("green"));
+            family.AddInstance(new ObjectInstance(red).Named("red"));
+            family.AddInstance(new ObjectInstance(green).Named("green"));
 
             var session = new BuildSession(graph);
             session.TryGetInstance<IService>("red").ShouldBeTheSameAs(red);

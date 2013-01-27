@@ -71,7 +71,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var container = new Container(r =>
             {
-                r.For<Something>().Add<RedSomething>().WithName("Red");
+                r.For<Something>().Add<RedSomething>().Named("Red");
             });
 
             container.GetAllInstances<Something>().Count.ShouldEqual(1);
@@ -82,7 +82,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             IContainer container =
                 new Container(
-                    registry => registry.For<Something>().Add<RedSomething>().WithName("Red"));
+                    registry => registry.For<Something>().Add<RedSomething>().Named("Red"));
             IList<Something> instances = container.GetAllInstances<Something>();
             Assert.AreEqual(1, instances.Count);
         }

@@ -51,9 +51,9 @@ namespace StructureMap.Testing.Pipeline
         public void FindMaster_Instance_happy_path()
         {
             var family = new PluginFamily(typeof (ISomething));
-            ObjectInstance redInstance = new ObjectInstance(new SomethingOne()).WithName("Red");
+            ObjectInstance redInstance = new ObjectInstance(new SomethingOne()).Named("Red");
             family.AddInstance(redInstance);
-            family.AddInstance(new ObjectInstance(new SomethingOne()).WithName("Blue"));
+            family.AddInstance(new ObjectInstance(new SomethingOne()).Named("Blue"));
 
             var instance = new ReferencedInstance("Red");
             Assert.AreSame(redInstance, ((IDiagnosticInstance) instance).FindInstanceForProfile(family, null, null));

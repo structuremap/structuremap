@@ -19,7 +19,7 @@ namespace StructureMap.Testing.Graph
             var manager = new Container(graph);
 
             manager.Configure(r => r.For<Cow>().Use<Cow>()
-                                       .WithName("Angus")
+                                       .Named("Angus")
                                        .WithProperty("Name").EqualTo("Bessie")
                                        .WithProperty("Breed").EqualTo("Angus")
                                        .WithProperty("Weight").EqualTo("1200"));

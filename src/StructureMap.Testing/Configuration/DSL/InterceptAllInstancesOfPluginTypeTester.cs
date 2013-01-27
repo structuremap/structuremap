@@ -35,13 +35,13 @@ namespace StructureMap.Testing.Configuration.DSL
 
                 registry.For<IService>().AddInstances(x =>
                 {
-                    x.Type<ColorService>().WithName("Red").WithProperty("color").EqualTo("Red");
+                    x.Type<ColorService>().Named("Red").WithProperty("color").EqualTo("Red");
 
-                    x.Object(new ColorService("Yellow")).WithName("Yellow");
+                    x.Object(new ColorService("Yellow")).Named("Yellow");
 
-                    x.ConstructedBy(() => new ColorService("Purple")).WithName("Purple");
+                    x.ConstructedBy(() => new ColorService("Purple")).Named("Purple");
 
-                    x.Type<ColorService>().WithName("Decorated").WithProperty("color").EqualTo("Orange");
+                    x.Type<ColorService>().Named("Decorated").WithProperty("color").EqualTo("Orange");
                 });
             });
         }
@@ -84,7 +84,7 @@ namespace StructureMap.Testing.Configuration.DSL
             IService service = getService("Green", r =>
             {
                 r.For<IService>().InterceptWith(interceptor)
-                    .AddInstances(x => { x.ConstructedBy(() => new ColorService("Green")).WithName("Green"); });
+                    .AddInstances(x => { x.ConstructedBy(() => new ColorService("Green")).Named("Green"); });
             });
 
             interceptor.Target.ShouldBeTheSameAs(service);
@@ -96,7 +96,7 @@ namespace StructureMap.Testing.Configuration.DSL
             IService green = getService("Green", r =>
             {
                 r.For<IService>().EnrichAllWith(s => new DecoratorService(s))
-                    .AddInstances(x => { x.ConstructedBy(() => new ColorService("Green")).WithName("Green"); });
+                    .AddInstances(x => { x.ConstructedBy(() => new ColorService("Green")).Named("Green"); });
             });
 
             green.ShouldBeOfType<DecoratorService>()
@@ -109,7 +109,7 @@ namespace StructureMap.Testing.Configuration.DSL
             Action<Registry> action = registry =>
             {
                 registry.For<IService>().OnCreationForAll(s => _lastService = s)
-                    .AddInstances(x => { x.ConstructedBy(() => new ColorService("Green")).WithName("Green"); });
+                    .AddInstances(x => { x.ConstructedBy(() => new ColorService("Green")).Named("Green"); });
             };
 
 
@@ -141,14 +141,14 @@ namespace StructureMap.Testing.Configuration.DSL
             _defaultRegistry = (registry =>
                                 registry.For<IService>().AddInstances(x =>
                                 {
-                                    x.Type<ColorService>().WithName("Red")
+                                    x.Type<ColorService>().Named("Red")
                                         .WithCtorArg("color").EqualTo("Red");
 
-                                    x.Object(new ColorService("Yellow")).WithName("Yellow");
+                                    x.Object(new ColorService("Yellow")).Named("Yellow");
 
-                                    x.ConstructedBy(() => new ColorService("Purple")).WithName("Purple");
+                                    x.ConstructedBy(() => new ColorService("Purple")).Named("Purple");
 
-                                    x.Type<ColorService>().WithName("Decorated").WithCtorArg("color").EqualTo(
+                                    x.Type<ColorService>().Named("Decorated").WithCtorArg("color").EqualTo(
                                         "Orange");
                                 }));
         }
@@ -179,7 +179,7 @@ namespace StructureMap.Testing.Configuration.DSL
             Action<Registry> action = r =>
             {
                 r.For<IService>().EnrichAllWith(s => new DecoratorService(s))
-                    .AddInstances(x => { x.ConstructedBy(() => new ColorService("Green")).WithName("Green"); });
+                    .AddInstances(x => { x.ConstructedBy(() => new ColorService("Green")).Named("Green"); });
             };
 
 
@@ -197,7 +197,7 @@ namespace StructureMap.Testing.Configuration.DSL
             Action<Registry> action = r =>
             {
                 r.For<IService>().OnCreationForAll(s => _lastService = s)
-                    .AddInstances(x => { x.ConstructedBy(() => new ColorService("Green")).WithName("Green"); });
+                    .AddInstances(x => { x.ConstructedBy(() => new ColorService("Green")).Named("Green"); });
             };
 
             IService red = getService(action, "Red");

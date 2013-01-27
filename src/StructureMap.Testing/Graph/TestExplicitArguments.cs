@@ -114,9 +114,9 @@ namespace StructureMap.Testing.Graph
             {
                 x.For<ColorWithLump>().AddInstances(o =>
                 {
-                    o.Type<ColorWithLump>().WithCtorArg("color").EqualTo("red").WithName("red");
-                    o.Type<ColorWithLump>().WithCtorArg("color").EqualTo("green").WithName("green");
-                    o.Type<ColorWithLump>().WithCtorArg("color").EqualTo("blue").WithName("blue");
+                    o.Type<ColorWithLump>().WithCtorArg("color").EqualTo("red").Named("red");
+                    o.Type<ColorWithLump>().WithCtorArg("color").EqualTo("green").Named("green");
+                    o.Type<ColorWithLump>().WithCtorArg("color").EqualTo("blue").Named("blue");
                 });
             });
 

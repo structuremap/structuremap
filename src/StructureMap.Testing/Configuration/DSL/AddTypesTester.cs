@@ -30,9 +30,9 @@ namespace StructureMap.Testing.Configuration.DSL
         public void A_concrete_type_is_available_by_name_when_it_is_added_by_the_shorthand_mechanism()
         {
             IContainer container = new Container(r => r.For<IAddTypes>().AddInstances(x => {
-                x.Type<RedAddTypes>().WithName("Red");
-                x.Type<GreenAddTypes>().WithName("Green");
-                x.Type<BlueAddTypes>().WithName("Blue");
+                x.Type<RedAddTypes>().Named("Red");
+                x.Type<GreenAddTypes>().Named("Green");
+                x.Type<BlueAddTypes>().Named("Blue");
                 x.Type<PurpleAddTypes>();
             }));
 
@@ -67,7 +67,7 @@ namespace StructureMap.Testing.Configuration.DSL
                                                    x.Type<GreenAddTypes>();
                                                    x.Type<BlueAddTypes>();
                                                    x.Type<PurpleAddTypes>();
-                                                   x.Type<PurpleAddTypes>().WithName("Purple");
+                                                   x.Type<PurpleAddTypes>().Named("Purple");
                                                })
                 );
 

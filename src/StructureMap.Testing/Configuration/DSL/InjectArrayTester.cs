@@ -178,7 +178,7 @@ namespace StructureMap.Testing.Configuration.DSL
             IContainer manager = new Container(registry =>
             {
                 registry.For<IHandler>().Add<Handler1>().Named("One");
-                registry.For<IHandler>().Add<Handler2>().WithName("Two");
+                registry.For<IHandler>().Add<Handler2>().Named("Two");
 
 
                 registry.For<Processor>().Use<Processor>()

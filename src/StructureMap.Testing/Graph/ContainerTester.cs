@@ -35,11 +35,11 @@ namespace StructureMap.Testing.Graph
         {
             _container.Configure(r =>
             {
-                r.For<Rule>().Use<ColorRule>().WithCtorArg("color").EqualTo(Color).WithName(Color);
-                r.For<IWidget>().Use<ColorWidget>().WithCtorArg("color").EqualTo(Color).WithName(
+                r.For<Rule>().Use<ColorRule>().WithCtorArg("color").EqualTo(Color).Named(Color);
+                r.For<IWidget>().Use<ColorWidget>().WithCtorArg("color").EqualTo(Color).Named(
                     Color);
                 r.For<WidgetMaker>().Use<ColorWidgetMaker>().WithCtorArg("color").EqualTo(Color).
-                    WithName(Color);
+                    Named(Color);
             });
         }
 
@@ -79,14 +79,14 @@ namespace StructureMap.Testing.Graph
             var container = new Container(r =>
             {
                 r.For<IService>()
-                    .Use<ColorService>().WithName("Orange").WithProperty("color").EqualTo(
+                    .Use<ColorService>().Named("Orange").WithProperty("color").EqualTo(
                     "Orange");
 
                 r.For<IService>().AddInstances(x =>
                 {
-                    x.Type<ColorService>().WithName("Red").WithProperty("color").EqualTo("Red");
-                    x.Type<ColorService>().WithName("Blue").WithProperty("color").EqualTo("Blue");
-                    x.Type<ColorService>().WithName("Green").WithProperty("color").EqualTo("Green");
+                    x.Type<ColorService>().Named("Red").WithProperty("color").EqualTo("Red");
+                    x.Type<ColorService>().Named("Blue").WithProperty("color").EqualTo("Blue");
+                    x.Type<ColorService>().Named("Green").WithProperty("color").EqualTo("Green");
                 });
 
                 r.Profile("Red", x => {
@@ -210,8 +210,8 @@ namespace StructureMap.Testing.Graph
 
             container.Configure(x =>
             {
-                x.For<Rule>().Add(red).WithName("Red");
-                x.For<Rule>().Add(blue).WithName("Blue");
+                x.For<Rule>().Add(red).Named("Red");
+                x.For<Rule>().Add(blue).Named("Blue");
             });
 
             Assert.AreSame(red, container.GetInstance<Rule>("Red"));

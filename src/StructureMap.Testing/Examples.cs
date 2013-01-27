@@ -63,13 +63,13 @@ namespace StructureMap.Testing.DocumentationExamples
             {
                 x.Type<ShippingWebService>()
                     .WithCtorArg("url").EqualTo("a url")
-                    .WithName("Domestic");
+                    .Named("Domestic");
 
                 x.Type<ShippingWebService>()
                     .WithCtorArg("url").EqualTo("a different url")
-                    .WithName("International");
+                    .Named("International");
 
-                x.Type<InternalShippingService>().WithName("Internal");
+                x.Type<InternalShippingService>().Named("Internal");
             });
         }
     }

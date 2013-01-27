@@ -24,37 +24,37 @@ namespace StructureMap.Testing.Configuration.DSL
                 {
                     x.Type<ColorService>()
                         .OnCreation(s => _lastService = s)
-                        .WithName("Intercepted")
+                        .Named("Intercepted")
                         .WithCtorArg("color").EqualTo("Red");
 
                     x.Type<ColorService>()
                         .OnCreation((c, s) => c.GetInstance<ContextRecorder>().WasTouched = true)
-                        .WithName("InterceptedWithContext")
+                        .Named("InterceptedWithContext")
                         .WithCtorArg("color").EqualTo("Red");
 
                     x.Type<ColorService>()
-                        .WithName("NotIntercepted")
+                        .Named("NotIntercepted")
                         .WithCtorArg("color").EqualTo("Blue");
 
                     x.Object(new ColorService("Yellow"))
-                        .WithName("Yellow")
+                        .Named("Yellow")
                         .OnCreation<ColorService>(s => _lastService = s);
 
-                    x.ConstructedBy(() => new ColorService("Purple")).WithName("Purple")
+                    x.ConstructedBy(() => new ColorService("Purple")).Named("Purple")
                         .EnrichWith<IService>(s => new DecoratorService(s));
 
-                    x.ConstructedBy(() => new ColorService("Purple")).WithName("DecoratedWithContext")
+                    x.ConstructedBy(() => new ColorService("Purple")).Named("DecoratedWithContext")
                         .EnrichWith<IService>((c, s) =>
                         {
                             c.GetInstance<ContextRecorder>().WasTouched = true;
                             return new DecoratorService(s);
                         });
 
-                    x.Type<ColorService>().WithName("Decorated").EnrichWith<IService>(
+                    x.Type<ColorService>().Named("Decorated").EnrichWith<IService>(
                         s => new DecoratorService(s))
                         .WithCtorArg("color").EqualTo("Orange");
 
-                    x.Object(new ColorService("Yellow")).WithName("Bad")
+                    x.Object(new ColorService("Yellow")).Named("Bad")
                         .OnCreation<ColorService>(obj => { throw new ApplicationException("Bad!"); });
                 });
             });
