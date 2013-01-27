@@ -68,22 +68,6 @@ namespace StructureMap.Graph
 
         #endregion
 
-        #region Adding TypeScanners
-
-        /// <summary>
-        /// Adds an ITypeScanner object to the scanning operation
-        /// </summary>
-        /// <param name="scanner"></param>
-        void With(ITypeScanner scanner);
-
-        /// <summary>
-        /// Creates and adds a new ITypeScanner of type T to this scanning operation
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        void With<T>() where T : ITypeScanner, new();
-
-        #endregion
-
         #region Other options
 
         /// <summary>

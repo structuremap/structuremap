@@ -45,7 +45,6 @@ namespace StructureMap.Graph
         private readonly CompositeFilter<Type> _filter = new CompositeFilter<Type>();
 
         private readonly List<Action<PluginGraph>> _postScanningActions = new List<Action<PluginGraph>>();
-        private readonly List<ITypeScanner> _scanners = new List<ITypeScanner>();
 
         public AssemblyScanner()
         {
@@ -67,24 +66,6 @@ namespace StructureMap.Graph
         public void Assembly(string assemblyName)
         {
             Assembly(AppDomain.CurrentDomain.Load(assemblyName));
-        }
-
-        [Obsolete("Replace ITypeScanner with IRegistrationConvention")]
-        public void With(ITypeScanner scanner)
-        {
-            _scanners.Fill(scanner);
-        }
-
-        [Obsolete("Replace ITypeScanner with IRegistrationConvention")]
-        public void With<T>() where T : ITypeScanner, new()
-        {
-            _scanners.RemoveAll(scanner => scanner is T);
-
-            ITypeScanner previous = _scanners.FirstOrDefault(scanner => scanner is T);
-            if (previous == null)
-            {
-                With(new T());
-            }
         }
 
         public void Convention<T>() where T : IRegistrationConvention, new()
@@ -239,11 +220,7 @@ namespace StructureMap.Graph
             var registry = new Registry();
 
             pluginGraph.Types.For(_assemblies, _filter).Each(
-                type =>
-                {
-                    _scanners.Each(x => x.Process(type, pluginGraph));
-                    _conventions.Each(c => c.Process(type, registry));
-                });
+                type => _conventions.Each(c => c.Process(type, registry)));
 
             registry.As<IPluginGraphConfiguration>().Configure(pluginGraph);
             _postScanningActions.Each(x => x(pluginGraph));
