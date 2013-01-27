@@ -54,8 +54,8 @@ namespace StructureMap.Testing.Configuration.DSL
             {
                 registry.Profile(theProfileName, x =>
                 {
-                    x.Type<IWidget>().Is.ConstructedBy(() => new AWidget());
-                    x.Type<Rule>().Is.ConstructedBy(() => new DefaultRule());
+                    x.For<IWidget>().Use(() => new AWidget());
+                    x.For<Rule>().Use(() => new DefaultRule());
                 });
             });
 

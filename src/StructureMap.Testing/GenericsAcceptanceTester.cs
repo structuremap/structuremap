@@ -166,11 +166,11 @@ namespace StructureMap.Testing
         {
             var container = new Container(registry => {
                 registry.Profile("1", x => {
-                    x.For(typeof(IService<>)).UseConcreteType(typeof(Service<>));
+                    x.For(typeof(IService<>)).Use(typeof(Service<>));
                 });
 
                 registry.Profile("2", x => {
-                    x.For(typeof(IService<>)).UseConcreteType(typeof(Service2<>));
+                    x.For(typeof(IService<>)).Use(typeof(Service2<>));
                 });
             });
 
@@ -192,11 +192,11 @@ namespace StructureMap.Testing
                 r.For(typeof (IService<>)).Add(typeof (Service2<>)).WithName("Service2");
 
                 r.Profile("1", x => {
-                    x.For(typeof (IService<>)).UseNamedInstance("Service1");
+                    x.For(typeof (IService<>)).Use("Service1");
                 });
 
                 r.Profile("2", x => {
-                    x.For(typeof (IService<>)).UseNamedInstance("Service2");
+                    x.For(typeof (IService<>)).Use("Service2");
                 });
             });
 

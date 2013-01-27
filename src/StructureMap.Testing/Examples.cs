@@ -434,7 +434,7 @@ namespace StructureMap.Testing.DocumentationExamples
 
             // Use the InstanceExpression to define the default Instance
             // of a PluginType within a Profile
-            Profile("Connected", x => { x.Type<IService>().Is.Type<RemoteService>(); });
+            Profile("Connected", x => { x.For<IService>().Use<RemoteService>(); });
         }
     }
 }
