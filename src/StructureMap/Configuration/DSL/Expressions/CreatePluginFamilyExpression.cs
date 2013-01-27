@@ -114,28 +114,42 @@ namespace StructureMap.Configuration.DSL.Expressions
         }
 
         /// <summary>
-        /// Shorthand to say TheDefault.Is.ConstructedBy(func)
+        /// Use a lambda using the IContext to construct the default instance of the plugin type
+        /// 
         /// </summary>
         /// <param name="func"></param>
         /// <returns></returns>
         public LambdaInstance<TPluginType> Use(Func<IContext, TPluginType> func)
         {
-            return TheDefault.Is.ConstructedBy(func);
+            var instance = new LambdaInstance<TPluginType>(func);
+
+            registerDefault(instance);
+
+            return instance;
         }
 
         /// <summary>
-        /// Shorthand to say TheDefault.Is.ConstructedBy(func)
+        /// Use a lambda to construct the default instance of the plugin type
         /// </summary>
         /// <param name="func"></param>
         /// <returns></returns>
         public LambdaInstance<TPluginType> Use(Func<TPluginType> func)
         {
-            return TheDefault.Is.ConstructedBy(func);
+            var instance = new LambdaInstance<TPluginType>(func);
+
+            registerDefault(instance);
+
+            return instance;
         }
 
+        /// <summary>
+        /// Makes the supplied instance the default Instance for 
+        /// TPluginType
+        /// </summary>
+        /// <param name="instance"></param>
         public void Use(Instance instance)
         {
-            TheDefault.IsThis(instance);
+            registerDefault(instance);
         }
 
         /// <summary>
@@ -145,7 +159,24 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <returns></returns>
         public ObjectInstance Use(TPluginType @object)
         {
-            return TheDefault.IsThis(@object);
+            var instance = new ObjectInstance(@object);
+            registerDefault(instance);
+
+            return instance;
+        }
+
+        /// <summary>
+        /// Makes the default instance of TPluginType the named
+        /// instance
+        /// </summary>
+        /// <param name="instanceName"></param>
+        /// <returns></returns>
+        public ReferencedInstance Use(string instanceName)
+        {
+            var instance = new ReferencedInstance(instanceName);
+            Use(instance);
+
+            return instance;
         }
 
         /// <summary>

@@ -45,8 +45,7 @@ namespace StructureMap.Testing.Pipeline
         {
             var container = new Container(r =>
             {
-                r.FillAllPropertiesOfType<ILogger>().TheDefault.Is
-                    .ConstructedBy(context => new Logger(context.ParentType));
+                r.FillAllPropertiesOfType<ILogger>().Use(context => new Logger(context.ParentType));
             });
 
             container.GetInstance<ClassWithLogger>().Logger.ShouldBeOfType<Logger>().Type.ShouldEqual(

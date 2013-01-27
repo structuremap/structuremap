@@ -139,6 +139,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
+        [Obsolete]
         ReferencedInstance TheInstanceNamed(string name);
 
         /// <summary>

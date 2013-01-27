@@ -169,7 +169,7 @@ namespace StructureMap.Testing.Graph
             addColorInstance("Orange");
             addColorInstance("Blue");
 
-            _container.Configure(x => { x.For<Rule>().TheDefault.Is.TheInstanceNamed("Blue"); });
+            _container.Configure(x => { x.For<Rule>().Use("Blue"); });
 
             _container.GetInstance<Rule>().ShouldBeOfType<ColorRule>().Color.ShouldEqual("Blue");
         }
