@@ -34,12 +34,6 @@ namespace StructureMap.Configuration.DSL.Expressions
             }
         }
 
-        /// <summary>
-        /// Define the Default Instance for this PluginType
-        /// </summary>
-        [Obsolete("Prefer the Use() methods")]
-        public IsExpression<TPluginType> TheDefault { get { return new InstanceExpression<TPluginType>(i => registerDefault(i)); } }
-
         public InstanceExpression<TPluginType> MissingNamedInstanceIs { get { return new InstanceExpression<TPluginType>(i => _alterations.Add(family => family.MissingInstance = i)); } }
 
         /// <summary>
@@ -51,7 +45,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         {
             var list = new List<Instance>();
 
-            var child = new InstanceExpression<TPluginType>(i => list.Add(i));
+            var child = new InstanceExpression<TPluginType>(list.Add);
             action(child);
 
             return alterAndContinue(family =>
@@ -70,7 +64,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <returns></returns>
         public CreatePluginFamilyExpression<TPluginType> UseSpecial(Action<IInstanceExpression<TPluginType>> configure)
         {
-            var expression = new InstanceExpression<TPluginType>(i => Use(i));
+            var expression = new InstanceExpression<TPluginType>(Use);
             configure(expression);
 
             return this;
@@ -84,7 +78,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <returns></returns>
         public CreatePluginFamilyExpression<TPluginType> AddSpecial(Action<IInstanceExpression<TPluginType>> configure)
         {
-            var expression = new InstanceExpression<TPluginType>(i => Add(i));
+            var expression = new InstanceExpression<TPluginType>(Add);
             configure(expression);
 
             return this;
