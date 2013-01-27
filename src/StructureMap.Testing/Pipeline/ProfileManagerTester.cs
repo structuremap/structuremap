@@ -125,7 +125,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void Only_programmatic_override_so_use_the_programmatic_override()
         {
-            _manager.SetDefault(typeof (ISomething), new ConfiguredInstance(typeof (SomethingOne)).WithName("Red"));
+            _manager.SetDefault(typeof (ISomething), new ConfiguredInstance(typeof (SomethingOne)).Named("Red"));
             assertDefaultInstanceNameIs<ISomething>("Red");
         }
 

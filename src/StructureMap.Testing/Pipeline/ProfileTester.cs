@@ -28,7 +28,7 @@ namespace StructureMap.Testing.Pipeline
         private void setDefault<T, U>(string key) where U : T, new()
         {
             PluginFamily family = _pluginGraph.FindFamily(typeof (T));
-            ConfiguredInstance instance = new ConfiguredInstance(typeof (U)).WithName(key);
+            ConfiguredInstance instance = new ConfiguredInstance(typeof (U)).Named(key);
             family.AddInstance(instance);
 
             _profile.SetDefault(typeof (T), instance);
@@ -77,8 +77,8 @@ namespace StructureMap.Testing.Pipeline
         public void A_call_to_fill_is_ignored_if_there_is_already_a_default_for_that_type()
         {
             var profile = new Profile("something");
-            profile.SetDefault(typeof (ISomething), new ConfiguredInstance(typeof (SomethingOne)).WithName("Red"));
-            profile.FillTypeInto(typeof (ISomething), new ConfiguredInstance(typeof (SomethingOne)).WithName("Blue"));
+            profile.SetDefault(typeof (ISomething), new ConfiguredInstance(typeof (SomethingOne)).Named("Red"));
+            profile.FillTypeInto(typeof (ISomething), new ConfiguredInstance(typeof (SomethingOne)).Named("Blue"));
 
             Assert.AreEqual("Red", profile.GetDefault(typeof (ISomething)).Name);
         }
@@ -87,7 +87,7 @@ namespace StructureMap.Testing.Pipeline
         public void A_call_to_fill_sets_the_default_for_a_plugin_type_if_no_previous_default_is_known()
         {
             var profile = new Profile("something");
-            profile.FillTypeInto(typeof (ISomething), new ConfiguredInstance(typeof (SomethingOne)).WithName("Blue"));
+            profile.FillTypeInto(typeof (ISomething), new ConfiguredInstance(typeof (SomethingOne)).Named("Blue"));
 
             Assert.AreEqual("Blue", profile.GetDefault(typeof (ISomething)).Name);
         }
@@ -97,7 +97,7 @@ namespace StructureMap.Testing.Pipeline
         {
             setDefault<ISomething, SomethingOne>("Red");
             _pluginGraph.FindFamily(typeof (ILifecycle)).AddInstance(
-                new ConfiguredInstance(typeof (SingletonLifecycle)).WithName("Red"));
+                new ConfiguredInstance(typeof (SingletonLifecycle)).Named("Red"));
 
             _profile.CopyDefault(typeof (ISomething), typeof (ILifecycle),
                                  _pluginGraph.FindFamily(typeof (ILifecycle)));
@@ -109,7 +109,7 @@ namespace StructureMap.Testing.Pipeline
         {
             var profile = new Profile("something");
 
-            ConfiguredInstance instance = new ConfiguredInstance(typeof (SomethingOne)).WithName("Red");
+            ConfiguredInstance instance = new ConfiguredInstance(typeof (SomethingOne)).Named("Red");
 
             profile.Remove(typeof (ISomething), instance);
         }
@@ -173,7 +173,7 @@ namespace StructureMap.Testing.Pipeline
         public void remove_if_the_instance_does_match()
         {
             var profile = new Profile("something");
-            ConfiguredInstance instance = new ConfiguredInstance(typeof (SomethingOne)).WithName("Red");
+            ConfiguredInstance instance = new ConfiguredInstance(typeof (SomethingOne)).Named("Red");
             profile.SetDefault(typeof (ISomething), instance);
 
             profile.Remove(typeof (ISomething), instance);
@@ -185,7 +185,7 @@ namespace StructureMap.Testing.Pipeline
         public void remove_if_the_instance_does_not_match()
         {
             var profile = new Profile("something");
-            ConfiguredInstance instance = new ConfiguredInstance(typeof (SomethingOne)).WithName("Red");
+            ConfiguredInstance instance = new ConfiguredInstance(typeof (SomethingOne)).Named("Red");
             profile.SetDefault(typeof (ISomething), instance);
 
             profile.Remove(typeof (ISomething), new NullInstance());

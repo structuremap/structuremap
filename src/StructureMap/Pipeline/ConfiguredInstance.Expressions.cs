@@ -6,13 +6,6 @@ namespace StructureMap.Pipeline
 {
     public partial class ConfiguredInstance
     {
-        [Obsolete("Change to Named()")]
-        public ConfiguredInstance WithName(string instanceKey)
-        {
-            Name = instanceKey;
-            return this;
-        }
-
         public ConfiguredInstance Named(string instanceKey)
         {
             Name = instanceKey;
@@ -23,12 +16,12 @@ namespace StructureMap.Pipeline
         /// Register an Action to perform on the object created by this Instance
         /// before it is returned to the caller
         /// </summary>
-        /// <typeparam name="TYPE"></typeparam>
+        /// <typeparam name="T"></typeparam>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public ConfiguredInstance OnCreation<TYPE>(Action<TYPE> handler)
+        public ConfiguredInstance OnCreation<T>(Action<T> handler)
         {
-            var interceptor = new StartupInterceptor<TYPE>((c, o) => handler(o));
+            var interceptor = new StartupInterceptor<T>((c, o) => handler(o));
             Interceptor = interceptor;
 
             return this;
@@ -38,12 +31,12 @@ namespace StructureMap.Pipeline
         /// Register an Action to perform on the object created by this Instance
         /// before it is returned to the caller
         /// </summary>
-        /// <typeparam name="TYPE"></typeparam>
+        /// <typeparam name="T"></typeparam>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public ConfiguredInstance OnCreation<TYPE>(Action<IContext, TYPE> handler)
+        public ConfiguredInstance OnCreation<T>(Action<IContext, T> handler)
         {
-            var interceptor = new StartupInterceptor<TYPE>(handler);
+            var interceptor = new StartupInterceptor<T>(handler);
             Interceptor = interceptor;
 
             return this;
@@ -55,9 +48,9 @@ namespace StructureMap.Pipeline
         /// </summary>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public ConfiguredInstance EnrichWith<TYPE>(EnrichmentHandler<TYPE> handler)
+        public ConfiguredInstance EnrichWith<T>(EnrichmentHandler<T> handler)
         {
-            var interceptor = new EnrichmentInterceptor<TYPE>((c, o) => handler(o));
+            var interceptor = new EnrichmentInterceptor<T>((c, o) => handler(o));
             Interceptor = interceptor;
 
             return this;
@@ -69,9 +62,9 @@ namespace StructureMap.Pipeline
         /// </summary>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public ConfiguredInstance EnrichWith<TYPE>(ContextEnrichmentHandler<TYPE> handler)
+        public ConfiguredInstance EnrichWith<T>(ContextEnrichmentHandler<T> handler)
         {
-            var interceptor = new EnrichmentInterceptor<TYPE>(handler);
+            var interceptor = new EnrichmentInterceptor<T>(handler);
             Interceptor = interceptor;
 
             return this;
@@ -120,19 +113,19 @@ namespace StructureMap.Pipeline
         /// <summary>
         /// Start the definition of a child instance for type CONSTRUCTORARGUMENTTYPE
         /// </summary>
-        /// <typeparam name="CONSTRUCTORARGUMENTTYPE"></typeparam>
+        /// <typeparam name="TConstructorArgumentType"></typeparam>
         /// <returns></returns>
-        public ChildInstanceExpression Child<CONSTRUCTORARGUMENTTYPE>()
+        public ChildInstanceExpression Child<TConstructorArgumentType>()
         {
-            Type dependencyType = typeof (CONSTRUCTORARGUMENTTYPE);
+            Type dependencyType = typeof (TConstructorArgumentType);
 
             return Child(dependencyType);
         }
 
         /// <summary>
-        /// Start the definition of a child instance for type CONSTRUCTORARGUMENTTYPE
+        /// Start the definition of a child instance for type TConstructorArgumentType
         /// </summary>
-        /// <typeparam name="CONSTRUCTORARGUMENTTYPE"></typeparam>
+        /// <typeparam name="TConstructorArgumentType"></typeparam>
         /// <returns></returns>
         public ChildInstanceExpression Child(Type dependencyType)
         {
@@ -161,13 +154,13 @@ namespace StructureMap.Pipeline
         /// in the case of a constructor function that consumes more than one argument
         /// of type T
         /// </summary>
-        /// <typeparam name="CONSTRUCTORARGUMENTTYPE"></typeparam>
+        /// <typeparam name="TConstructorArgumentType"></typeparam>
         /// <param name="propertyName"></param>
         /// <returns></returns>
-        public ChildInstanceExpression Child<CONSTRUCTORARGUMENTTYPE>(string propertyName)
+        public ChildInstanceExpression Child<TConstructorArgumentType>(string propertyName)
         {
             var child = new ChildInstanceExpression(this, propertyName);
-            child.ChildType = typeof (CONSTRUCTORARGUMENTTYPE);
+            child.ChildType = typeof (TConstructorArgumentType);
 
             return child;
         }
@@ -175,23 +168,23 @@ namespace StructureMap.Pipeline
         /// <summary>
         /// Inline definition of a constructor dependency
         /// </summary>
-        /// <typeparam name="CONSTRUCTORARGUMENTTYPE"></typeparam>
+        /// <typeparam name="TConstructorArgumentType"></typeparam>
         /// <param name="propertyName"></param>
         /// <returns></returns>
-        public ChildInstanceExpression CtorDependency<CONSTRUCTORARGUMENTTYPE>(string propertyName)
+        public ChildInstanceExpression CtorDependency<TConstructorArgumentType>(string propertyName)
         {
-            return Child<CONSTRUCTORARGUMENTTYPE>(propertyName);
+            return Child<TConstructorArgumentType>(propertyName);
         }
 
         /// <summary>
         /// Inline definition of a setter dependency
         /// </summary>
-        /// <typeparam name="CONSTRUCTORARGUMENTTYPE"></typeparam>
+        /// <typeparam name="TConstructorArgumentType"></typeparam>
         /// <param name="propertyName"></param>
         /// <returns></returns>
-        public ChildInstanceExpression SetterDependency<CONSTRUCTORARGUMENTTYPE>(string propertyName)
+        public ChildInstanceExpression SetterDependency<TConstructorArgumentType>(string propertyName)
         {
-            return Child<CONSTRUCTORARGUMENTTYPE>(propertyName);
+            return Child<TConstructorArgumentType>(propertyName);
         }
 
         /// <summary>

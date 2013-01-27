@@ -69,7 +69,7 @@ namespace StructureMap.Graph
 
         public Instance CreateImplicitInstance()
         {
-            return new ConfiguredInstance(TPluggedType).WithName(ConcreteKey);
+            return new ConfiguredInstance(TPluggedType).Named(ConcreteKey);
         }
 
         public string FindArgumentNameForType<T>()

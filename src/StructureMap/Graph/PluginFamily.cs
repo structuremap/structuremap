@@ -147,7 +147,7 @@ namespace StructureMap.Graph
 
                 if (hasInstanceWithTPluggedType(plugin)) return;
 
-                ConfiguredInstance instance = new ConfiguredInstance(plugin.TPluggedType).WithName(key);
+                ConfiguredInstance instance = new ConfiguredInstance(plugin.TPluggedType).Named(key);
                 FillInstance(instance);
             });
         }

@@ -21,14 +21,14 @@ namespace StructureMap.Testing.Configuration.DSL
             {
                 //registry.For<IService>()
                 //    .AddInstances(
-                //    Instance<ColorService>().WithName("Red").WithProperty("color").
+                //    Instance<ColorService>().Named("Red").WithProperty("color").
                 //        EqualTo(
                 //        "Red"),
-                //    Object<IService>(new ColorService("Yellow")).WithName("Yellow"),
+                //    Object<IService>(new ColorService("Yellow")).Named("Yellow"),
                 //    ConstructedBy<IService>(
                 //        delegate { return new ColorService("Purple"); })
-                //        .WithName("Purple"),
-                //    Instance<ColorService>().WithName("Decorated").WithProperty("color")
+                //        .Named("Purple"),
+                //    Instance<ColorService>().Named("Decorated").WithProperty("color")
                 //        .
                 //        EqualTo("Orange")
                 //    );

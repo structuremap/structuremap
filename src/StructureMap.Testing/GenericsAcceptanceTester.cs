@@ -188,8 +188,8 @@ namespace StructureMap.Testing
         {
             IContainer container = new Container(r =>
             {
-                r.For(typeof (IService<>)).Add(typeof (Service<>)).WithName("Service1");
-                r.For(typeof (IService<>)).Add(typeof (Service2<>)).WithName("Service2");
+                r.For(typeof (IService<>)).Add(typeof (Service<>)).Named("Service1");
+                r.For(typeof (IService<>)).Add(typeof (Service2<>)).Named("Service2");
 
                 r.Profile("1", x => {
                     x.For(typeof (IService<>)).Use("Service1");
