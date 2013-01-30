@@ -166,7 +166,6 @@ namespace StructureMap.Configuration.DSL.Expressions
         SerializedInstance SerializedCopyOf(T template);
     }
 
-    [Obsolete("Maybe?")]
     public class InstanceExpression<T> : IInstanceExpression<T>, ThenItExpression<T>
     {
         private readonly Action<Instance> _action;
