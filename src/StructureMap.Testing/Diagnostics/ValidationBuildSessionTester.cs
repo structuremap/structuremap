@@ -46,7 +46,7 @@ namespace StructureMap.Testing.Diagnostics
 
                 r.For<SomethingThatNeedsAWidget>().Use<SomethingThatNeedsAWidget>()
                     .Named("DependentInstance")
-                    .CtorDependency<IWidget>().Is(x => x.TheInstanceNamed("BadInstance"));
+                    .Ctor<IWidget>().Is(x => x.TheInstanceNamed("BadInstance"));
             });
 
             BuildError error = getFirstAndOnlyError(session);
@@ -78,7 +78,7 @@ namespace StructureMap.Testing.Diagnostics
 
                 r.For<SomethingThatNeedsAWidget>().Use<SomethingThatNeedsAWidget>()
                     .Named("DependentInstance")
-                    .CtorDependency<IWidget>().Is(x => x.TheInstanceNamed("BadInstance"));
+                    .Ctor<IWidget>().Is(x => x.TheInstanceNamed("BadInstance"));
             });
 
             Assert.AreEqual(1, session.BuildErrors.Length);
@@ -98,7 +98,7 @@ namespace StructureMap.Testing.Diagnostics
                 {
                     r.For<SomethingThatNeedsAWidget>().Use<SomethingThatNeedsAWidget>()
                         .Named("BadInstance")
-                        .CtorDependency<IWidget>().Is(errorInstance());
+                        .Ctor<IWidget>().Is(errorInstance());
                 });
 
             BuildError error = getFirstAndOnlyError(session);
@@ -135,7 +135,7 @@ namespace StructureMap.Testing.Diagnostics
                 r.For<ClassThatNeedsWidgetAndRule2>().Use<ClassThatNeedsWidgetAndRule2>();
                 r.For<ClassThatNeedsWidgetAndRule2>().Use<ClassThatNeedsWidgetAndRule2>();
                 r.For<ClassThatNeedsWidgetAndRule2>().Use<ClassThatNeedsWidgetAndRule2>().
-                    CtorDependency<Rule>().Is<ARule>();
+                    Ctor<Rule>().Is<ARule>();
             });
 
             container.AssertConfigurationIsValid();

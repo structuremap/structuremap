@@ -225,7 +225,7 @@ namespace StructureMap.Testing.Graph
             ObjectFactory.Initialize(x =>
             {
                 x.ForConcreteType<ExplicitTarget>().Configure
-                    .CtorDependency<IProvider>().Is<RedProvider>()
+                    .Ctor<IProvider>().Is<RedProvider>()
                     .Ctor<string>("name").EqualTo("Jeremy");
             });
 
@@ -245,7 +245,7 @@ namespace StructureMap.Testing.Graph
             ObjectFactory.Initialize(x =>
             {
                 x.For<ExplicitTarget>().Use<ExplicitTarget>()
-                    .CtorDependency<IProvider>().Is(child => child.Type<RedProvider>())
+                    .Ctor<IProvider>().Is(child => child.Type<RedProvider>())
                     .Ctor<string>("name").EqualTo("Jeremy");
             });
 
@@ -264,7 +264,7 @@ namespace StructureMap.Testing.Graph
             ObjectFactory.Initialize(x =>
             {
                 x.ForConcreteType<ExplicitTarget>().Configure
-                    .CtorDependency<IProvider>().Is<RedProvider>()
+                    .Ctor<IProvider>().Is<RedProvider>()
                     .Ctor<string>("name").EqualTo("Jeremy");
             });
 
@@ -376,7 +376,7 @@ namespace StructureMap.Testing.Graph
             var container = new Container(r =>
             {
                 r.ForConcreteType<ExplicitTarget>().Configure
-                    .CtorDependency<IProvider>().Is<RedProvider>()
+                    .Ctor<IProvider>().Is<RedProvider>()
                     .Ctor<string>("name").EqualTo("Jeremy");
             });
 

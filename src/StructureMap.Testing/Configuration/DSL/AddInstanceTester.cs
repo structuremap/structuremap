@@ -72,7 +72,7 @@ namespace StructureMap.Testing.Configuration.DSL
             {
                 x.For<Rule>().Add<WidgetRule>()
                     .Named("AWidgetRule")
-                    .CtorDependency<IWidget>().Is(i => i.Type<AWidget>());
+                    .Ctor<IWidget>().Is(i => i.Type<AWidget>());
             });
 
             container.GetInstance<Rule>("AWidgetRule")
@@ -124,7 +124,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
                 // Specify a new Instance, override a dependency with a named instance
                 registry.For<Rule>().Add<WidgetRule>().Named("RuleThatUsesMyInstance")
-                    .CtorDependency<IWidget>("widget").Is(x => x.TheInstanceNamed("Purple"));
+                    .Ctor<IWidget>("widget").Is(x => x.TheInstanceNamed("Purple"));
             });
 
             container.GetInstance<Rule>("Alias").ShouldBeOfType<ARule>();
@@ -143,7 +143,7 @@ namespace StructureMap.Testing.Configuration.DSL
             var theContainer = new Container(registry =>
             {
                 registry.For<Rule>().Add<WidgetRule>().Named(instanceKey)
-                    .CtorDependency<IWidget>().Is(
+                    .Ctor<IWidget>().Is(
                     i => { i.Type<ColorWidget>().Ctor<string>("color").Is("Orange").Named("Orange"); });
             });
 

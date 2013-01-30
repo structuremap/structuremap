@@ -79,7 +79,7 @@ namespace StructureMap.Testing
         public void set_optional_property_for_a_child_object()
         {
             var theService = new ColorService("red");
-            instance.SetterDependency(x => x.Service).Is(theService);
+            instance.Setter(x => x.Service).Is(theService);
 
             TheTarget.Service.ShouldBeTheSameAs(theService);
         }

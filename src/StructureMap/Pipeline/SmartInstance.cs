@@ -156,6 +156,7 @@ namespace StructureMap.Pipeline
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
+        [Obsolete]
         public PropertyExpression<SmartInstance<T>> WithProperty(Expression<Func<T, object>> expression)
         {
             string propertyName = ReflectionHelper.GetProperty(expression).Name;
@@ -177,108 +178,54 @@ namespace StructureMap.Pipeline
         /// Inline definition of a constructor dependency.  Select the constructor argument by type.  Do not
         /// use this method if there is more than one constructor arguments of the same type
         /// </summary>
-        /// <typeparam name="CTORTYPE"></typeparam>
+        /// <typeparam name="TCtorType"></typeparam>
         /// <returns></returns>
-        [Obsolete("Change to Ctor<>()")]
-        public DependencyExpression<CTORTYPE> CtorDependency<CTORTYPE>()
+        public DependencyExpression<TCtorType> Ctor<TCtorType>()
         {
-            string constructorArg = getArgumentNameForType<CTORTYPE>();
-            return CtorDependency<CTORTYPE>(constructorArg);
+            string constructorArg = getArgumentNameForType<TCtorType>();
+            return Ctor<TCtorType>(constructorArg);
         }
 
-        /// <summary>
-        /// Inline definition of a constructor dependency.  Select the constructor argument by type.  Do not
-        /// use this method if there is more than one constructor arguments of the same type
-        /// </summary>
-        /// <typeparam name="CTORTYPE"></typeparam>
-        /// <returns></returns>
-        public DependencyExpression<CTORTYPE> Ctor<CTORTYPE>()
-        {
-            string constructorArg = getArgumentNameForType<CTORTYPE>();
-            return CtorDependency<CTORTYPE>(constructorArg);
-        }
-
-        private string getArgumentNameForType<CTORTYPE>()
+        private string getArgumentNameForType<TCtorType>()
         {
             Plugin plugin = PluginCache.GetPlugin(getConcreteType(null));
-            return plugin.FindArgumentNameForType<CTORTYPE>();
+            return plugin.FindArgumentNameForType<TCtorType>();
         }
 
         /// <summary>
         /// Inline definition of a constructor dependency.  Select the constructor argument by type and constructor name.  
         /// Use this method if there is more than one constructor arguments of the same type
         /// </summary>
-        /// <typeparam name="CTORTYPE"></typeparam>
+        /// <typeparam name="TCtorType"></typeparam>
         /// <param name="constructorArg"></param>
         /// <returns></returns>
-        [Obsolete("Use Ctor<CTORTYPE>(constructorArg)")]
-        public DependencyExpression<CTORTYPE> CtorDependency<CTORTYPE>(string constructorArg)
+        public DependencyExpression<TCtorType> Ctor<TCtorType>(string constructorArg)
         {
-            return new DependencyExpression<CTORTYPE>(this, constructorArg);
-        }
-
-        /// <summary>
-        /// Inline definition of a constructor dependency.  Select the constructor argument by type and constructor name.  
-        /// Use this method if there is more than one constructor arguments of the same type
-        /// </summary>
-        /// <typeparam name="CTORTYPE"></typeparam>
-        /// <param name="constructorArg"></param>
-        /// <returns></returns>
-        public DependencyExpression<CTORTYPE> Ctor<CTORTYPE>(string constructorArg)
-        {
-            return new DependencyExpression<CTORTYPE>(this, constructorArg);
+            return new DependencyExpression<TCtorType>(this, constructorArg);
         }
 
         /// <summary>
         /// Inline definition of a setter dependency.  The property name is specified with an Expression
         /// </summary>
-        /// <typeparam name="SETTERTYPE"></typeparam>
+        /// <typeparam name="TSettertype"></typeparam>
         /// <param name="expression"></param>
         /// <returns></returns>
-        [Obsolete("Use Setter()")]
-        public DependencyExpression<SETTERTYPE> SetterDependency<SETTERTYPE>(
-            Expression<Func<T, SETTERTYPE>> expression)
+        public DependencyExpression<TSettertype> Setter<TSettertype>(
+            Expression<Func<T, TSettertype>> expression)
         {
             string propertyName = ReflectionHelper.GetProperty(expression).Name;
-            return new DependencyExpression<SETTERTYPE>(this, propertyName);
-        }
-
-
-        /// <summary>
-        /// Inline definition of a setter dependency.  The property name is specified with an Expression
-        /// </summary>
-        /// <typeparam name="SETTERTYPE"></typeparam>
-        /// <param name="expression"></param>
-        /// <returns></returns>
-        public DependencyExpression<SETTERTYPE> Setter<SETTERTYPE>(
-            Expression<Func<T, SETTERTYPE>> expression)
-        {
-            string propertyName = ReflectionHelper.GetProperty(expression).Name;
-            return new DependencyExpression<SETTERTYPE>(this, propertyName);
+            return new DependencyExpression<TSettertype>(this, propertyName);
         }
 
         /// <summary>
         /// Inline definition of a setter dependency.  Only use this method if there
         /// is only a single property of the SETTERTYPE
         /// </summary>
-        /// <typeparam name="SETTERTYPE"></typeparam>
+        /// <typeparam name="TSetterType"></typeparam>
         /// <returns></returns>
-        [Obsolete("Use Setter<>()")]
-        public DependencyExpression<SETTERTYPE> SetterDependency<SETTERTYPE>()
+        public DependencyExpression<TSetterType> Setter<TSetterType>()
         {
-            return CtorDependency<SETTERTYPE>();
-        }
-
-
-        /// <summary>
-        /// Inline definition of a setter dependency.  Only use this method if there
-        /// is only a single property of the SETTERTYPE
-        /// </summary>
-        /// <typeparam name="SETTERTYPE"></typeparam>
-        /// <returns></returns>
-        public DependencyExpression<SETTERTYPE> Setter<SETTERTYPE>()
-        {
-            return CtorDependency<SETTERTYPE>();
+            return Ctor<TSetterType>();
         }
 
         /// <summary>

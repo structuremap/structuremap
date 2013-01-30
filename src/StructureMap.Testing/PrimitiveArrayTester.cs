@@ -12,8 +12,8 @@ namespace StructureMap.Testing
             var container = new Container(x =>
             {
                 x.ForConcreteType<ClassWithStringAndIntArray>().Configure
-                    .CtorDependency<string[]>().Is(new[] {"a", "b", "c"})
-                    .CtorDependency<int[]>().Is(new[] {1, 2, 3});
+                    .Ctor<string[]>().Is(new[] {"a", "b", "c"})
+                    .Ctor<int[]>().Is(new[] {1, 2, 3});
             });
 
             var objectWithArrays = container.GetInstance<ClassWithStringAndIntArray>();

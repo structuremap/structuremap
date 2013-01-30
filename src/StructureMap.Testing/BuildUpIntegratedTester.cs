@@ -66,7 +66,7 @@ namespace StructureMap.Testing
             var container = new Container(x =>
             {
                 x.ForConcreteType<BuildUpTarget1>().Configure
-                    .SetterDependency(y => y.Gateway).Is(theGateway);
+                    .Setter(y => y.Gateway).Is(theGateway);
             });
 
             var target = new BuildUpTarget1();
