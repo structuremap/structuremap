@@ -126,7 +126,7 @@ namespace StructureMap.Testing.Diagnostics
         {
             var container = new Container(r =>
             {
-                r.For<IWidget>().Use<ColorWidget>().WithCtorArg("color").EqualTo("red");
+                r.For<IWidget>().Use<ColorWidget>().Ctor<string>("color").EqualTo("red");
                 r.For<Rule>().Use<WidgetRule>();
 
                 r.ForConcreteType<ClassThatNeedsWidgetAndRule1>();

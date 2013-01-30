@@ -27,18 +27,6 @@ namespace StructureMap.Pipeline
         /// </summary>
         /// <param name="instanceKey"></param>
         /// <returns></returns>
-        [Obsolete("Please change to Named(instanceKey)")]
-        public SmartInstance<T> WithName(string instanceKey)
-        {
-            Name = instanceKey;
-            return this;
-        }
-
-        /// <summary>
-        /// Sets the name of this Instance
-        /// </summary>
-        /// <param name="instanceKey"></param>
-        /// <returns></returns>
         public SmartInstance<T> Named(string instanceKey)
         {
             Name = instanceKey;
@@ -140,17 +128,6 @@ namespace StructureMap.Pipeline
             return this;
         }
 
-        /// <summary>
-        /// Define a primitive constructor argument
-        /// </summary>
-        /// <param name="argumentName"></param>
-        /// <returns></returns>
-        [Obsolete("Use Ctor() instead")]
-        public PropertyExpression<SmartInstance<T>> WithCtorArg(string argumentName)
-        {
-            return new PropertyExpression<SmartInstance<T>>(this, argumentName);
-        }
-
         protected override object build(Type pluginType, BuildSession session)
         {
             var builtTarget = (T) base.build(pluginType, session);
@@ -190,6 +167,7 @@ namespace StructureMap.Pipeline
         /// </summary>
         /// <param name="propertyName"></param>
         /// <returns></returns>
+        [Obsolete]
         public PropertyExpression<SmartInstance<T>> WithProperty(string propertyName)
         {
             return new PropertyExpression<SmartInstance<T>>(this, propertyName);

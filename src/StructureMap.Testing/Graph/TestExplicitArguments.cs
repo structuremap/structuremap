@@ -114,9 +114,9 @@ namespace StructureMap.Testing.Graph
             {
                 x.For<ColorWithLump>().AddInstances(o =>
                 {
-                    o.Type<ColorWithLump>().WithCtorArg("color").EqualTo("red").Named("red");
-                    o.Type<ColorWithLump>().WithCtorArg("color").EqualTo("green").Named("green");
-                    o.Type<ColorWithLump>().WithCtorArg("color").EqualTo("blue").Named("blue");
+                    o.Type<ColorWithLump>().Ctor<string>("color").EqualTo("red").Named("red");
+                    o.Type<ColorWithLump>().Ctor<string>("color").EqualTo("green").Named("green");
+                    o.Type<ColorWithLump>().Ctor<string>("color").EqualTo("blue").Named("blue");
                 });
             });
 
@@ -226,7 +226,7 @@ namespace StructureMap.Testing.Graph
             {
                 x.ForConcreteType<ExplicitTarget>().Configure
                     .CtorDependency<IProvider>().Is<RedProvider>()
-                    .WithCtorArg("name").EqualTo("Jeremy");
+                    .Ctor<string>("name").EqualTo("Jeremy");
             });
 
             // Get the ExplicitTarget without setting an explicit arg for IProvider
@@ -246,7 +246,7 @@ namespace StructureMap.Testing.Graph
             {
                 x.For<ExplicitTarget>().Use<ExplicitTarget>()
                     .CtorDependency<IProvider>().Is(child => child.Type<RedProvider>())
-                    .WithCtorArg("name").EqualTo("Jeremy");
+                    .Ctor<string>("name").EqualTo("Jeremy");
             });
 
             // Get the ExplicitTarget without setting an explicit arg for IProvider
@@ -265,7 +265,7 @@ namespace StructureMap.Testing.Graph
             {
                 x.ForConcreteType<ExplicitTarget>().Configure
                     .CtorDependency<IProvider>().Is<RedProvider>()
-                    .WithCtorArg("name").EqualTo("Jeremy");
+                    .Ctor<string>("name").EqualTo("Jeremy");
             });
 
             // Get the ExplicitTarget without setting an explicit arg for IProvider
@@ -377,7 +377,7 @@ namespace StructureMap.Testing.Graph
             {
                 r.ForConcreteType<ExplicitTarget>().Configure
                     .CtorDependency<IProvider>().Is<RedProvider>()
-                    .WithCtorArg("name").EqualTo("Jeremy");
+                    .Ctor<string>("name").EqualTo("Jeremy");
             });
 
             var args = new ExplicitArguments();

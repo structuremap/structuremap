@@ -178,7 +178,7 @@ namespace StructureMap.Testing.Configuration.DSL
             var container = new Container(r =>
             {
                 r.For<IWidget>().Use<ColorWidget>()
-                    .WithCtorArg("color").EqualTo("Red");
+                    .Ctor<string>("color").EqualTo("Red");
             });
 
             container.GetInstance<IWidget>().ShouldBeOfType<ColorWidget>().Color.ShouldEqual("Red");

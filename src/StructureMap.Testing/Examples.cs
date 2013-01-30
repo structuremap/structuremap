@@ -62,11 +62,11 @@ namespace StructureMap.Testing.DocumentationExamples
             For<IShippingService>().AddInstances(x =>
             {
                 x.Type<ShippingWebService>()
-                    .WithCtorArg("url").EqualTo("a url")
+                    .Ctor<string>("url").EqualTo("a url")
                     .Named("Domestic");
 
                 x.Type<ShippingWebService>()
-                    .WithCtorArg("url").EqualTo("a different url")
+                    .Ctor<string>("url").EqualTo("a different url")
                     .Named("International");
 
                 x.Type<InternalShippingService>().Named("Internal");

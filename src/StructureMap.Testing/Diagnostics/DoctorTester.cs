@@ -249,7 +249,7 @@ namespace StructureMap.Testing.Diagnostics
                 x.IgnoreStructureMapConfig = true;
 
                 x.For<IWidget>().Use<DoctorTester.NumberWidget>()
-                    .WithCtorArg("age").EqualToAppSetting("age");
+                    .Ctor<int>("age").EqualToAppSetting("age");
             });
         }
 

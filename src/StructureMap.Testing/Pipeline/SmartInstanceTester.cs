@@ -147,7 +147,7 @@ namespace StructureMap.Testing.Pipeline
             var widget = new ColorWidget("Red");
             var container = new Container(x => x.For<ClassWithWidget>()
                                                    .Use<ClassWithWidget>()
-                                                   .WithCtorArg("widget").EqualTo(widget));
+                                                   .Ctor<IWidget>().EqualTo(widget));
 
             Assert.AreSame(widget, container.GetInstance<ClassWithWidget>().Widget);
         }
@@ -155,7 +155,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void successfully_specify_the_constructor_argument_of_a_string()
         {
-            build<ColorRule>(i => i.WithCtorArg("color").EqualTo("Red")).Color.ShouldEqual("Red");
+            build<ColorRule>(i => i.Ctor<string>("color").EqualTo("Red")).Color.ShouldEqual("Red");
         }
 
         [Test]

@@ -29,13 +29,13 @@ namespace StructureMap.Testing.Examples
                 // In this case, we need to specify the value of "connectionString" argument to
                 // the constructor function
                 x.For<DatabaseRepository>().Use<DatabaseRepository>()
-                    .WithCtorArg("connectionString").EqualToAppSetting("connectionString");
+                    .Ctor<string>("connectionString").EqualToAppSetting("connectionString");
             });
 
             ObjectFactory.Initialize(x =>
             {
                 x.ForConcreteType<DatabaseRepository>().Configure
-                    .WithCtorArg("connectionString").EqualToAppSetting("connectionString");
+                    .Ctor<string>("connectionString").EqualToAppSetting("connectionString");
             });
 
             // Now, we can request an instance of DatabaseRepository, and

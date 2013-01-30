@@ -142,13 +142,13 @@ namespace StructureMap.Testing.Configuration.DSL
                                 registry.For<IService>().AddInstances(x =>
                                 {
                                     x.Type<ColorService>().Named("Red")
-                                        .WithCtorArg("color").EqualTo("Red");
+                                        .Ctor<string>("color").EqualTo("Red");
 
                                     x.Object(new ColorService("Yellow")).Named("Yellow");
 
                                     x.ConstructedBy(() => new ColorService("Purple")).Named("Purple");
 
-                                    x.Type<ColorService>().Named("Decorated").WithCtorArg("color").EqualTo(
+                                    x.Type<ColorService>().Named("Decorated").Ctor<string>("color").EqualTo(
                                         "Orange");
                                 }));
         }

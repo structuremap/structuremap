@@ -25,9 +25,9 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             public RedGreenRegistry()
             {
-                For<IWidget>().Add<ColorWidget>().WithCtorArg("color").EqualTo("Red").Named(
+                For<IWidget>().Add<ColorWidget>().Ctor<string>("color").EqualTo("Red").Named(
                     "Red");
-                For<IWidget>().Add<ColorWidget>().WithCtorArg("color").EqualTo("Green").Named(
+                For<IWidget>().Add<ColorWidget>().Ctor<string>("color").EqualTo("Green").Named(
                     "Green");
             }
         }
@@ -36,7 +36,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             public YellowBlueRegistry()
             {
-                For<IWidget>().Add<ColorWidget>().WithCtorArg("color").EqualTo("Yellow").Named(
+                For<IWidget>().Add<ColorWidget>().Ctor<string>("color").EqualTo("Yellow").Named(
                     "Yellow");
                 For<IWidget>().Add<ColorWidget>().WithProperty("color").EqualTo("Blue").Named(
                     "Blue");

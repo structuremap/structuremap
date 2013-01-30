@@ -17,7 +17,7 @@ namespace StructureMap.Testing
         {
             PluginCache.ResetAll();
             builder = PluginCache.FindBuilder(typeof (ClassWithMixOfSetters));
-            instance = new SmartInstance<ClassWithMixOfSetters>().WithCtorArg("Age").EqualTo(34);
+            instance = new SmartInstance<ClassWithMixOfSetters>().Ctor<int>("Age").EqualTo(34);
             _session = new BuildSession();
 
             TheDefaultGateway = new DefaultGateway();

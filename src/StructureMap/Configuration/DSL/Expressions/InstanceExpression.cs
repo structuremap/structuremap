@@ -244,7 +244,7 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         IsExpression<T> ThenItExpression<T>.ThenIt { get { return this; } }
 
-        private INSTANCE returnInstance<INSTANCE>(INSTANCE instance) where INSTANCE : Instance
+        private TInstance returnInstance<TInstance>(TInstance instance) where TInstance : Instance
         {
             Instance(instance);
             return instance;

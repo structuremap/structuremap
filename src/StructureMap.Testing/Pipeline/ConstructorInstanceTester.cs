@@ -67,8 +67,8 @@ namespace StructureMap.Testing.Pipeline
         {
             var children = new Instance[]
             {
-                new SmartInstance<ColorWidget>().WithCtorArg("color").EqualTo("red"),
-                new SmartInstance<ColorWidget>().WithCtorArg("color").EqualTo("green"),
+                new SmartInstance<ColorWidget>().Ctor<string>("color").EqualTo("red"),
+                new SmartInstance<ColorWidget>().Ctor<string>("color").EqualTo("green"),
                 new ObjectInstance(new AWidget())
             };
 

@@ -192,18 +192,8 @@ namespace StructureMap.Pipeline
         /// </summary>
         /// <param name="propertyName"></param>
         /// <returns></returns>
+        [Obsolete]
         public PropertyExpression<ConfiguredInstance> WithProperty(string propertyName)
-        {
-            return new PropertyExpression<ConfiguredInstance>(this, propertyName);
-        }
-
-        /// <summary>
-        /// Configure a primitive constructor argument
-        /// </summary>
-        /// <param name="propertyName"></param>
-        /// <returns></returns>
-        [Obsolete("Change to DependencyExpression<CTORTYPE> instead")]
-        public PropertyExpression<ConfiguredInstance> WithCtorArg(string propertyName)
         {
             return new PropertyExpression<ConfiguredInstance>(this, propertyName);
         }

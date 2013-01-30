@@ -144,7 +144,7 @@ namespace StructureMap.Testing.Configuration.DSL
             {
                 registry.For<Rule>().Add<WidgetRule>().Named(instanceKey)
                     .CtorDependency<IWidget>().Is(
-                    i => { i.Type<ColorWidget>().WithCtorArg("color").EqualTo("Orange").Named("Orange"); });
+                    i => { i.Type<ColorWidget>().Ctor<string>("color").Is("Orange").Named("Orange"); });
             });
 
             var rule = (WidgetRule) theContainer.GetInstance<Rule>(instanceKey);

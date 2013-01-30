@@ -13,16 +13,13 @@ namespace StructureMap.Testing.Bugs
                 x.UseDefaultStructureMapConfigFile = false;
 
                 x.ForConcreteType<SomeDbRepository>().Configure.
-                    WithCtorArg("connectionString").EqualTo("some connection string");
+                    Ctor<string>("connectionString").EqualTo("some connection string");
 
                 //x.ForConcreteType<SomeWebPage>().Configure.
                 //  SetterDependency<SomeDbRepository>().Is<SomeDbRepository>();
 
                 x.SetAllProperties(o => o.OfType<SomeDbRepository>());
             });
-
-            var dbRepository =
-                ObjectFactory.GetInstance<SomeDbRepository>();
 
             var webPage = new SomeWebPage();
 
