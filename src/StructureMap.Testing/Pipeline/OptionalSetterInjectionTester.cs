@@ -122,7 +122,7 @@ namespace StructureMap.Testing.Pipeline
             {
                 r.ForConcreteType<ClassWithOneLongAndOneBool>().Configure
                     .Setter(x => x.Age).Is(34)
-                    .Setter(x => x.Active).EqualTo(true);
+                    .Setter(x => x.Active).Is(true);
             });
 
             var instance = container.GetInstance<ClassWithOneLongAndOneBool>();
@@ -136,7 +136,7 @@ namespace StructureMap.Testing.Pipeline
             var container = new Container(r =>
             {
                 r.ForConcreteType<ClassWithOneSetter>().Configure
-                    .Setter(x => x.Name).EqualTo("Jeremy");
+                    .Setter(x => x.Name).Is("Jeremy");
             });
 
             container.GetInstance<ClassWithOneSetter>().Name.ShouldEqual("Jeremy");
@@ -152,7 +152,7 @@ namespace StructureMap.Testing.Pipeline
 
                 // The "Name" property is configured for this instance
                 r.ForConcreteType<OptionalSetterTarget>().Configure
-                    .Setter(x => x.Name).EqualTo("Jeremy");
+                    .Setter(x => x.Name).Is("Jeremy");
             });
 
             container.GetInstance<OptionalSetterTarget>().Name.ShouldEqual("Jeremy");
@@ -169,7 +169,7 @@ namespace StructureMap.Testing.Pipeline
 
                 // The "Name" property is configured for this instance
                 r.ForConcreteType<OptionalSetterTarget>().Configure
-                    .Setter(x => x.Name).EqualTo("Jeremy");
+                    .Setter(x => x.Name).Is("Jeremy");
             });
 
             container.GetInstance<OptionalSetterTarget>().Name.ShouldEqual("Jeremy");

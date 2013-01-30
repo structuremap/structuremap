@@ -94,12 +94,12 @@ namespace StructureMap.Testing.Pipeline
             var parent = new Container(x =>
             {
                 x.For<IWidget>().Use<ColorWidget>()
-                    .Ctor<string>("color").EqualTo("red");
+                    .Ctor<string>("color").Is("red");
 
                 x.Profile("green", o =>
                 {
                     o.For<IWidget>().Use<ColorWidget>()
-                        .Ctor<string>("color").EqualTo("green");
+                        .Ctor<string>("color").Is("green");
                 });
             });
 

@@ -53,7 +53,7 @@ namespace StructureMap.Testing.Pipeline
             var widget = new ColorWidget("Red");
             var container = new Container(x => x.For<ClassWithWidgetProperty>()
                                                    .Use<ClassWithWidgetProperty>()
-                                                   .Setter(o => o.Widget).EqualTo(widget));
+                                                   .Setter(o => o.Widget).Is(widget));
 
             Assert.AreSame(widget, container.GetInstance<ClassWithWidgetProperty>().Widget);
         }
@@ -99,7 +99,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void specify_a_simple_property_with_equal_to()
         {
-            build<SimplePropertyTarget>(i => i.Setter(x => x.Name).EqualTo("Bret")).Name.ShouldEqual("Bret");
+            build<SimplePropertyTarget>(i => i.Setter(x => x.Name).Is("Bret")).Name.ShouldEqual("Bret");
 
             var container = new Container(x =>
             {
@@ -147,7 +147,7 @@ namespace StructureMap.Testing.Pipeline
             var widget = new ColorWidget("Red");
             var container = new Container(x => x.For<ClassWithWidget>()
                                                    .Use<ClassWithWidget>()
-                                                   .Ctor<IWidget>().EqualTo(widget));
+                                                   .Ctor<IWidget>().Is(widget));
 
             Assert.AreSame(widget, container.GetInstance<ClassWithWidget>().Widget);
         }
@@ -155,7 +155,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void successfully_specify_the_constructor_argument_of_a_string()
         {
-            build<ColorRule>(i => i.Ctor<string>("color").EqualTo("Red")).Color.ShouldEqual("Red");
+            build<ColorRule>(i => i.Ctor<string>("color").Is("Red")).Color.ShouldEqual("Red");
         }
 
         [Test]

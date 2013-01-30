@@ -25,16 +25,16 @@ namespace StructureMap.Testing.Configuration.DSL
                     x.Type<ColorService>()
                         .OnCreation(s => _lastService = s)
                         .Named("Intercepted")
-                        .Ctor<string>("color").EqualTo("Red");
+                        .Ctor<string>("color").Is("Red");
 
                     x.Type<ColorService>()
                         .OnCreation((c, s) => c.GetInstance<ContextRecorder>().WasTouched = true)
                         .Named("InterceptedWithContext")
-                        .Ctor<string>("color").EqualTo("Red");
+                        .Ctor<string>("color").Is("Red");
 
                     x.Type<ColorService>()
                         .Named("NotIntercepted")
-                        .Ctor<string>("color").EqualTo("Blue");
+                        .Ctor<string>("color").Is("Blue");
 
                     x.Object(new ColorService("Yellow"))
                         .Named("Yellow")
@@ -52,7 +52,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
                     x.Type<ColorService>().Named("Decorated").EnrichWith<IService>(
                         s => new DecoratorService(s))
-                        .Ctor<string>("color").EqualTo("Orange");
+                        .Ctor<string>("color").Is("Orange");
 
                     x.Object(new ColorService("Yellow")).Named("Bad")
                         .OnCreation<ColorService>(obj => { throw new ApplicationException("Bad!"); });

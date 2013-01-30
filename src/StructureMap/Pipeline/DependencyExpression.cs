@@ -86,19 +86,6 @@ namespace StructureMap.Pipeline
             return _instance;
         }
 
-
-        /// <summary>
-        /// Shortcut to set an inline dependency to a designated object
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        [Obsolete("Change to Is()")]
-        public TInstance EqualTo(TChild value)
-        {
-            _instance.SetValue(_propertyName, value);
-            return _instance;
-        }
-
         /// <summary>
         /// Set an Inline dependency to the Default Instance of the Property type
         /// Used mostly to force an optional Setter property to be filled by

@@ -17,7 +17,7 @@ namespace StructureMap.Testing
         {
             PluginCache.ResetAll();
             builder = PluginCache.FindBuilder(typeof (ClassWithMixOfSetters));
-            instance = new SmartInstance<ClassWithMixOfSetters>().Ctor<int>("Age").EqualTo(34);
+            instance = new SmartInstance<ClassWithMixOfSetters>().Ctor<int>("Age").Is(34);
             _session = new BuildSession();
 
             TheDefaultGateway = new DefaultGateway();
@@ -68,8 +68,8 @@ namespace StructureMap.Testing
         public void set_optional_properties_and_the_values_should_be_set()
         {
             instance
-                .Setter(x => x.FirstName).EqualTo("Jeremy")
-                .Setter(x => x.LastName).EqualTo("Miller");
+                .Setter(x => x.FirstName).Is("Jeremy")
+                .Setter(x => x.LastName).Is("Miller");
 
             TheTarget.FirstName.ShouldEqual("Jeremy");
             TheTarget.LastName.ShouldEqual("Miller");

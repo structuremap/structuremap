@@ -98,7 +98,7 @@ namespace StructureMap.Testing.Configuration.DSL
                     new SmartInstance<Handler2>(),
                     new SmartInstance<Handler3>()
                     )
-                    .Ctor<string>("name").EqualTo("Jeremy");
+                    .Ctor<string>("name").Is("Jeremy");
             });
 
             container.GetInstance<Processor>().Name.ShouldEqual("Jeremy");
@@ -182,7 +182,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
 
                 registry.For<Processor>().Use<Processor>()
-                    .Ctor<string>("name").EqualTo("Jeremy")
+                    .Ctor<string>("name").Is("Jeremy")
                     .EnumerableOf<IHandler>().Contains(x =>
                     {
                         x.TheInstanceNamed("Two");
@@ -202,7 +202,7 @@ namespace StructureMap.Testing.Configuration.DSL
             var container = new Container(x =>
             {
                 x.For<Processor>().Use<Processor>()
-                    .Ctor<string>("name").EqualTo("Jeremy")
+                    .Ctor<string>("name").Is("Jeremy")
                     .EnumerableOf<IHandler>().Contains(y =>
                     {
                         y.Type<Handler1>();
@@ -225,7 +225,7 @@ namespace StructureMap.Testing.Configuration.DSL
             IContainer container = new Container(r =>
             {
                 r.For<Processor>().Use<Processor>()
-                    .Ctor<string>("name").EqualTo("Jeremy")
+                    .Ctor<string>("name").Is("Jeremy")
                     .EnumerableOf<IHandler>().Contains(x =>
                     {
                         x.Type<Handler1>();

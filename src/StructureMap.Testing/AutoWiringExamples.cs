@@ -53,10 +53,10 @@ namespace StructureMap.Testing
             {
                 x.For<IValidator>().AddInstances(o =>
                 {
-                    o.Type<Validator>().Ctor<string>("name").EqualTo("Red").Named("Red");
-                    o.Type<Validator>().Ctor<string>("name").EqualTo("Blue").Named("Blue");
-                    o.Type<Validator>().Ctor<string>("name").EqualTo("Purple").Named("Purple");
-                    o.Type<Validator>().Ctor<string>("name").EqualTo("Green").Named("Green");
+                    o.Type<Validator>().Ctor<string>("name").Is("Red").Named("Red");
+                    o.Type<Validator>().Ctor<string>("name").Is("Blue").Named("Blue");
+                    o.Type<Validator>().Ctor<string>("name").Is("Purple").Named("Purple");
+                    o.Type<Validator>().Ctor<string>("name").Is("Green").Named("Green");
                 });
 
                 x.For<ClassThatUsesValidators>().AddInstances(o =>

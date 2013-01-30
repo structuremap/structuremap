@@ -13,7 +13,7 @@ namespace StructureMap.Testing.Bugs
                 x.UseDefaultStructureMapConfigFile = false;
 
                 x.ForConcreteType<SomeDbRepository>().Configure.
-                    Ctor<string>("connectionString").EqualTo("some connection string");
+                    Ctor<string>("connectionString").Is("some connection string");
 
                 //x.ForConcreteType<SomeWebPage>().Configure.
                 //  SetterDependency<SomeDbRepository>().Is<SomeDbRepository>();

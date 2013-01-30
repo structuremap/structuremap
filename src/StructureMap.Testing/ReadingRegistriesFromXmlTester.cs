@@ -69,7 +69,7 @@ namespace StructureMap.Testing
     {
         public XmlFileRegistry()
         {
-            ForConcreteType<ColorRule>().Configure.Ctor<string>("color").EqualTo("Cornflower");
+            ForConcreteType<ColorRule>().Configure.Ctor<string>("color").Is("Cornflower");
         }
     }
 }

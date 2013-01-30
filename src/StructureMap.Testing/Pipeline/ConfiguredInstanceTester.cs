@@ -129,7 +129,7 @@ namespace StructureMap.Testing.Pipeline
         public void setter_with_primitive_happy_path()
         {
             ConfiguredInstance instance = new ConfiguredInstance(typeof (ColorRule))
-                .Ctor<string>("color").EqualTo("Red").Setter<int>("Age").EqualTo(34);
+                .Ctor<string>("color").Is("Red").Setter<int>("Age").Is(34);
 
             IConfiguredInstance configuredInstance = instance;
 
@@ -137,7 +137,7 @@ namespace StructureMap.Testing.Pipeline
             Assert.AreEqual("Red", configuredInstance.GetProperty("color"));
             Assert.AreEqual("34", configuredInstance.GetProperty("Age"));
 
-            instance.Ctor<string>("color").EqualTo("Blue");
+            instance.Ctor<string>("color").Is("Blue");
             Assert.AreEqual("Blue", configuredInstance.GetProperty("color"));
         }
 

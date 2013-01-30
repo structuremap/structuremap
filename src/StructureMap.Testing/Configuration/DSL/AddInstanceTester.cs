@@ -22,13 +22,13 @@ namespace StructureMap.Testing.Configuration.DSL
                 registry.For<IWidget>()
                     .Add<ColorWidget>()
                     .Named("DarkGreen")
-                    .Ctor<string>("color").EqualTo("DarkGreen");
+                    .Ctor<string>("color").Is("DarkGreen");
 
                 // Add an instance by specifying the ConcreteKey
                 registry.For<IWidget>()
                     .Add<ColorWidget>()
                     .Named("Purple")
-                    .Ctor<string>("color").EqualTo("Purple");
+                    .Ctor<string>("color").Is("Purple");
 
                 // Pull a property from the App config
                 registry.For<IWidget>()
@@ -120,7 +120,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 registry.For<IWidget>()
                     .Add<ColorWidget>()
                     .Named("Purple")
-                    .Ctor<string>("color").EqualTo("Purple");
+                    .Ctor<string>("color").Is("Purple");
 
                 // Specify a new Instance, override a dependency with a named instance
                 registry.For<Rule>().Add<WidgetRule>().Named("RuleThatUsesMyInstance")

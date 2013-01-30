@@ -23,7 +23,7 @@ namespace StructureMap.Testing.Query
                 {
                     o.Type<DefaultRule>();
                     o.Type<ARule>();
-                    o.Type<ColorRule>().Ctor<string>("color").EqualTo("red");
+                    o.Type<ColorRule>().Ctor<string>("color").Is("red");
                 });
 
                 x.For<IEngine>().Use<PushrodEngine>();

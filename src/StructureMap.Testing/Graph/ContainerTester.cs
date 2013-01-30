@@ -35,10 +35,10 @@ namespace StructureMap.Testing.Graph
         {
             _container.Configure(r =>
             {
-                r.For<Rule>().Use<ColorRule>().Ctor<string>("color").EqualTo(Color).Named(Color);
-                r.For<IWidget>().Use<ColorWidget>().Ctor<string>("color").EqualTo(Color).Named(
+                r.For<Rule>().Use<ColorRule>().Ctor<string>("color").Is(Color).Named(Color);
+                r.For<IWidget>().Use<ColorWidget>().Ctor<string>("color").Is(Color).Named(
                     Color);
-                r.For<WidgetMaker>().Use<ColorWidgetMaker>().Ctor<string>("color").EqualTo(Color).
+                r.For<WidgetMaker>().Use<ColorWidgetMaker>().Ctor<string>("color").Is(Color).
                     Named(Color);
             });
         }
@@ -79,14 +79,14 @@ namespace StructureMap.Testing.Graph
             var container = new Container(r =>
             {
                 r.For<IService>()
-                    .Use<ColorService>().Named("Orange").Ctor<string>("color").EqualTo(
+                    .Use<ColorService>().Named("Orange").Ctor<string>("color").Is(
                     "Orange");
 
                 r.For<IService>().AddInstances(x =>
                 {
-                    x.Type<ColorService>().Named("Red").Ctor<string>("color").EqualTo("Red");
-                    x.Type<ColorService>().Named("Blue").Ctor<string>("color").EqualTo("Blue");
-                    x.Type<ColorService>().Named("Green").Ctor<string>("color").EqualTo("Green");
+                    x.Type<ColorService>().Named("Red").Ctor<string>("color").Is("Red");
+                    x.Type<ColorService>().Named("Blue").Ctor<string>("color").Is("Blue");
+                    x.Type<ColorService>().Named("Green").Ctor<string>("color").Is("Green");
                 });
 
                 r.Profile("Red", x => {
