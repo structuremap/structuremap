@@ -68,10 +68,8 @@ namespace StructureMap.Testing.Widget5
     {
         public BrownBlackRegistry()
         {
-            For<IWidget>().Add<ColorWidget>().WithProperty("color").EqualTo("Brown").Named(
-                "Brown");
-            For<IWidget>().Add<ColorWidget>().WithProperty("color").EqualTo("Black").Named(
-                "Black");
+            For<IWidget>().Add<ColorWidget>().Ctor<string>("color").Is("Brown").Named("Brown");
+            For<IWidget>().Add<ColorWidget>().Ctor<string>("color").Is("Black").Named("Black");
         }
 
 

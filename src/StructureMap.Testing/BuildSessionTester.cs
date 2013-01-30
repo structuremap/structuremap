@@ -222,7 +222,7 @@ namespace StructureMap.Testing
         {
             var recordingInstance = new BuildSessionInstance1();
             ConfiguredInstance instance =
-                new ConfiguredInstance(typeof (ClassWithRule)).Child("rule").Is(recordingInstance);
+                new ConfiguredInstance(typeof (ClassWithRule)).Ctor<Rule>("rule").Is(recordingInstance);
             var session = new BuildSession(new PluginGraph());
 
             session.CreateInstance(typeof (IClassWithRule), instance);

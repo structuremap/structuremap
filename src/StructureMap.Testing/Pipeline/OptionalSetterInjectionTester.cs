@@ -109,7 +109,7 @@ namespace StructureMap.Testing.Pipeline
             var container = new Container(r =>
             {
                 r.ForConcreteType<ClassWithOneEnum>().Configure
-                    .WithProperty("Color").EqualTo("Red");
+                    .Setter(x => x.Color).Is(ColorEnum.Red);
             });
 
             container.GetInstance<ClassWithOneEnum>().Color.ShouldEqual(ColorEnum.Red);
@@ -121,8 +121,8 @@ namespace StructureMap.Testing.Pipeline
             var container = new Container(r =>
             {
                 r.ForConcreteType<ClassWithOneLongAndOneBool>().Configure
-                    .WithProperty("Age").EqualTo(34)
-                    .WithProperty("Active").EqualTo(true);
+                    .Setter(x => x.Age).Is(34)
+                    .Setter(x => x.Active).EqualTo(true);
             });
 
             var instance = container.GetInstance<ClassWithOneLongAndOneBool>();
@@ -136,7 +136,7 @@ namespace StructureMap.Testing.Pipeline
             var container = new Container(r =>
             {
                 r.ForConcreteType<ClassWithOneSetter>().Configure
-                    .WithProperty("Name").EqualTo("Jeremy");
+                    .Setter(x => x.Name).EqualTo("Jeremy");
             });
 
             container.GetInstance<ClassWithOneSetter>().Name.ShouldEqual("Jeremy");
@@ -152,7 +152,7 @@ namespace StructureMap.Testing.Pipeline
 
                 // The "Name" property is configured for this instance
                 r.ForConcreteType<OptionalSetterTarget>().Configure
-                    .WithProperty("Name").EqualTo("Jeremy");
+                    .Setter(x => x.Name).EqualTo("Jeremy");
             });
 
             container.GetInstance<OptionalSetterTarget>().Name.ShouldEqual("Jeremy");
@@ -169,7 +169,7 @@ namespace StructureMap.Testing.Pipeline
 
                 // The "Name" property is configured for this instance
                 r.ForConcreteType<OptionalSetterTarget>().Configure
-                    .WithProperty("Name").EqualTo("Jeremy");
+                    .Setter(x => x.Name).EqualTo("Jeremy");
             });
 
             container.GetInstance<OptionalSetterTarget>().Name.ShouldEqual("Jeremy");

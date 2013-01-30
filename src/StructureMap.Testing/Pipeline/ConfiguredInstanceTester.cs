@@ -137,7 +137,7 @@ namespace StructureMap.Testing.Pipeline
         public void GetProperty_happy_path()
         {
             ConfiguredInstance instance = new ConfiguredInstance(typeof (ColorRule))
-                .WithProperty("color").EqualTo("Red").WithProperty("Age").EqualTo("34");
+                .Ctor<string>("color").EqualTo("Red").WithProperty("Age").EqualTo("34");
 
             IConfiguredInstance configuredInstance = instance;
 
@@ -145,7 +145,7 @@ namespace StructureMap.Testing.Pipeline
             Assert.AreEqual("Red", configuredInstance.GetProperty("color"));
             Assert.AreEqual("34", configuredInstance.GetProperty("Age"));
 
-            instance.WithProperty("color").EqualTo("Blue");
+            instance.Ctor<string>("color").EqualTo("Blue");
             Assert.AreEqual("Blue", configuredInstance.GetProperty("color"));
         }
 
@@ -157,7 +157,7 @@ namespace StructureMap.Testing.Pipeline
             IConfiguredInstance configuredInstance = instance;
             configuredInstance.HasProperty("prop1", null).ShouldBeFalse();
 
-            instance.Child("prop1").IsNamedInstance("something");
+            instance.Setter<List<string>>("prop1").IsNamedInstance("something");
             configuredInstance.HasProperty("prop1", null).ShouldBeTrue();
         }
 
@@ -256,7 +256,7 @@ namespace StructureMap.Testing.Pipeline
         }
 
         [Test]
-        public void use_the_child_function()
+        public void use_the_setter_function()
         {
             var theRule = new ARule();
 
@@ -264,7 +264,7 @@ namespace StructureMap.Testing.Pipeline
                 new Container(
                     x =>
                     {
-                        x.For(typeof (ClassWithDependency)).Use(typeof (ClassWithDependency)).Child(typeof (Rule)).Is(
+                        x.For(typeof (ClassWithDependency)).Use(typeof (ClassWithDependency)).Setter<Rule>().Is(
                             theRule);
                     });
 

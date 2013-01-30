@@ -22,25 +22,25 @@ namespace StructureMap.Testing.Configuration.DSL
                 registry.For<IWidget>()
                     .Add<ColorWidget>()
                     .Named("DarkGreen")
-                    .WithProperty("color").EqualTo("DarkGreen");
+                    .Ctor<string>("color").EqualTo("DarkGreen");
 
                 // Add an instance by specifying the ConcreteKey
                 registry.For<IWidget>()
                     .Add<ColorWidget>()
                     .Named("Purple")
-                    .WithProperty("color").EqualTo("Purple");
+                    .Ctor<string>("color").EqualTo("Purple");
 
                 // Pull a property from the App config
                 registry.For<IWidget>()
                     .Add<ColorWidget>()
                     .Named("AppSetting")
-                    .WithProperty("color").EqualToAppSetting("Color");
+                    .Ctor<string>("color").EqualToAppSetting("Color");
 
                 // Pull a property from the App config
                 registry.For<IWidget>()
                     .Add<NotPluggableWidget>()
                     .Named("UsesDefaultValue")
-                    .WithProperty("name").EqualToAppSetting("WidgetName", "TheDefaultValue");
+                    .Ctor<string>("name").EqualToAppSetting("WidgetName", "TheDefaultValue");
 
 
                 registry.For<IWidget>().Add<AWidget>();
@@ -120,7 +120,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 registry.For<IWidget>()
                     .Add<ColorWidget>()
                     .Named("Purple")
-                    .WithProperty("color").EqualTo("Purple");
+                    .Ctor<string>("color").EqualTo("Purple");
 
                 // Specify a new Instance, override a dependency with a named instance
                 registry.For<Rule>().Add<WidgetRule>().Named("RuleThatUsesMyInstance")

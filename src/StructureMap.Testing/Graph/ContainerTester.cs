@@ -79,14 +79,14 @@ namespace StructureMap.Testing.Graph
             var container = new Container(r =>
             {
                 r.For<IService>()
-                    .Use<ColorService>().Named("Orange").WithProperty("color").EqualTo(
+                    .Use<ColorService>().Named("Orange").Ctor<string>("color").EqualTo(
                     "Orange");
 
                 r.For<IService>().AddInstances(x =>
                 {
-                    x.Type<ColorService>().Named("Red").WithProperty("color").EqualTo("Red");
-                    x.Type<ColorService>().Named("Blue").WithProperty("color").EqualTo("Blue");
-                    x.Type<ColorService>().Named("Green").WithProperty("color").EqualTo("Green");
+                    x.Type<ColorService>().Named("Red").Ctor<string>("color").EqualTo("Red");
+                    x.Type<ColorService>().Named("Blue").Ctor<string>("color").EqualTo("Blue");
+                    x.Type<ColorService>().Named("Green").Ctor<string>("color").EqualTo("Green");
                 });
 
                 r.Profile("Red", x => {

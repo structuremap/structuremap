@@ -21,27 +21,27 @@ namespace StructureMap.Testing.Configuration.DSL
             {
                 //registry.For<IService>()
                 //    .AddInstances(
-                //    Instance<ColorService>().Named("Red").WithProperty("color").
+                //    Instance<ColorService>().Named("Red").Ctor<string>("color").
                 //        EqualTo(
                 //        "Red"),
                 //    Object<IService>(new ColorService("Yellow")).Named("Yellow"),
                 //    ConstructedBy<IService>(
                 //        delegate { return new ColorService("Purple"); })
                 //        .Named("Purple"),
-                //    Instance<ColorService>().Named("Decorated").WithProperty("color")
+                //    Instance<ColorService>().Named("Decorated").Ctor<string>("color")
                 //        .
                 //        EqualTo("Orange")
                 //    );
 
                 registry.For<IService>().AddInstances(x =>
                 {
-                    x.Type<ColorService>().Named("Red").WithProperty("color").EqualTo("Red");
+                    x.Type<ColorService>().Named("Red").Ctor<string>("color").EqualTo("Red");
 
                     x.Object(new ColorService("Yellow")).Named("Yellow");
 
                     x.ConstructedBy(() => new ColorService("Purple")).Named("Purple");
 
-                    x.Type<ColorService>().Named("Decorated").WithProperty("color").EqualTo("Orange");
+                    x.Type<ColorService>().Named("Decorated").Ctor<string>("color").EqualTo("Orange");
                 });
             });
         }

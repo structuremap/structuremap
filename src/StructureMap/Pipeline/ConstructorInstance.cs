@@ -280,4 +280,77 @@ namespace StructureMap.Pipeline
             return "'{0}' -> {1}".ToFormat(Name, _plugin.TPluggedType.FullName);
         }
     }
+
+
+
+    public abstract class ConstructorInstance<TThis> : ConstructorInstance where TThis : ConstructorInstance
+    {
+        public ConstructorInstance(Type TPluggedType) : base(TPluggedType)
+        {
+        }
+
+        public ConstructorInstance(Plugin plugin) : base(plugin)
+        {
+        }
+
+        public ConstructorInstance(Type TPluggedType, string name) : base(TPluggedType, name)
+        {
+        }
+
+        /// <summary>
+        /// Inline definition of a constructor dependency.  Select the constructor argument by type.  Do not
+        /// use this method if there is more than one constructor arguments of the same type
+        /// </summary>
+        /// <typeparam name="TCtorType"></typeparam>
+        /// <returns></returns>
+        public DependencyExpression<TThis, TCtorType> Ctor<TCtorType>()
+        {
+            string constructorArg = getArgumentNameForType<TCtorType>();
+            return Ctor<TCtorType>(constructorArg);
+        }
+
+        private string getArgumentNameForType<TCtorType>()
+        {
+            Plugin plugin = PluginCache.GetPlugin(getConcreteType(null));
+            return plugin.FindArgumentNameForType<TCtorType>();
+        }
+
+        /// <summary>
+        /// Inline definition of a constructor dependency.  Select the constructor argument by type and constructor name.  
+        /// Use this method if there is more than one constructor arguments of the same type
+        /// </summary>
+        /// <typeparam name="TCtorType"></typeparam>
+        /// <param name="constructorArg"></param>
+        /// <returns></returns>
+        public DependencyExpression<TThis, TCtorType> Ctor<TCtorType>(string constructorArg)
+        {
+            return new DependencyExpression<TThis, TCtorType>(thisObject(), constructorArg);
+        }
+
+        protected abstract TThis thisObject();
+
+        /// <summary>
+        /// Inline definition of a setter dependency.  Only use this method if there
+        /// is only a single property of the TSetterType
+        /// </summary>
+        /// <typeparam name="TSetterType"></typeparam>
+        /// <returns></returns>
+        public DependencyExpression<TThis, TSetterType> Setter<TSetterType>()
+        {
+            return Ctor<TSetterType>();
+        }
+
+        /// <summary>
+        /// Inline definition of a setter dependency.  Only use this method if there
+        /// is only a single property of the TSetterType
+        /// </summary>
+        /// <typeparam name="TSetterType"></typeparam>
+        /// <param name="setterName">The name of the property</param>
+        /// <returns></returns>
+        public DependencyExpression<TThis, TSetterType> Setter<TSetterType>(string setterName)
+        {
+            return Ctor<TSetterType>(setterName);
+        }
+    }
+
 }

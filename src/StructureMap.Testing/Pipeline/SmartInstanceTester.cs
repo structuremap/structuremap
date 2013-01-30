@@ -53,7 +53,7 @@ namespace StructureMap.Testing.Pipeline
             var widget = new ColorWidget("Red");
             var container = new Container(x => x.For<ClassWithWidgetProperty>()
                                                    .Use<ClassWithWidgetProperty>()
-                                                   .WithProperty(o => o.Widget).EqualTo(widget));
+                                                   .Setter(o => o.Widget).EqualTo(widget));
 
             Assert.AreSame(widget, container.GetInstance<ClassWithWidgetProperty>().Widget);
         }
@@ -93,19 +93,19 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void specify_a_simple_property_name_with_equal_to()
         {
-            build<SimplePropertyTarget>(i => i.WithProperty("Name").EqualTo("Scott")).Name.ShouldEqual("Scott");
+            build<SimplePropertyTarget>(i => i.Setter(x => x.Name).Is("Scott")).Name.ShouldEqual("Scott");
         }
 
         [Test]
         public void specify_a_simple_property_with_equal_to()
         {
-            build<SimplePropertyTarget>(i => i.WithProperty(x => x.Name).EqualTo("Bret")).Name.ShouldEqual("Bret");
+            build<SimplePropertyTarget>(i => i.Setter(x => x.Name).EqualTo("Bret")).Name.ShouldEqual("Bret");
 
             var container = new Container(x =>
             {
                 x.ForConcreteType<SimplePropertyTarget>().Configure
-                    .WithProperty(o => o.Name).EqualToAppSetting("name")
-                    .WithProperty(o => o.Age).EqualToAppSetting("age");
+                    .Setter(o => o.Name).EqualToAppSetting("name")
+                    .Setter(o => o.Age).EqualToAppSetting("age");
             });
         }
 

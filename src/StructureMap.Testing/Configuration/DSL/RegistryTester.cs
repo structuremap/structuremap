@@ -38,7 +38,7 @@ namespace StructureMap.Testing.Configuration.DSL
             {
                 For<IWidget>().Add<ColorWidget>().Ctor<string>("color").EqualTo("Yellow").Named(
                     "Yellow");
-                For<IWidget>().Add<ColorWidget>().WithProperty("color").EqualTo("Blue").Named(
+                For<IWidget>().Add<ColorWidget>().Ctor<string>("color").EqualTo("Blue").Named(
                     "Blue");
             }
         }

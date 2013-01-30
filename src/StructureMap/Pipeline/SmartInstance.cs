@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 using System.Linq.Expressions;
 using StructureMap.Configuration.DSL.Expressions;
@@ -13,7 +12,7 @@ namespace StructureMap.Pipeline
     /// Instance that builds objects with by calling constructor functions and using setter properties
     /// </summary>
     /// <typeparam name="T">The concrete type constructed by SmartInstance</typeparam>
-    public class SmartInstance<T> : ConstructorInstance
+    public class SmartInstance<T> : ConstructorInstance<SmartInstance<T>> 
     {
         private readonly List<Action<T>> _actions = new List<Action<T>>();
 
@@ -44,6 +43,11 @@ namespace StructureMap.Pipeline
             var interceptor = new StartupInterceptor<T>((c, o) => handler(o));
             Interceptor = interceptor;
 
+            return this;
+        }
+
+        protected override SmartInstance<T> thisObject()
+        {
             return this;
         }
 
@@ -150,59 +154,6 @@ namespace StructureMap.Pipeline
             return this;
         }
 
-        /// <summary>
-        /// Define a primitive setter property by specifying the property name with
-        /// an expression
-        /// </summary>
-        /// <param name="expression"></param>
-        /// <returns></returns>
-        [Obsolete]
-        public PropertyExpression<SmartInstance<T>> WithProperty(Expression<Func<T, object>> expression)
-        {
-            string propertyName = ReflectionHelper.GetProperty(expression).Name;
-            return WithProperty(propertyName);
-        }
-
-        /// <summary>
-        /// Define a primitive setter property by specifying the property name
-        /// </summary>
-        /// <param name="propertyName"></param>
-        /// <returns></returns>
-        [Obsolete]
-        public PropertyExpression<SmartInstance<T>> WithProperty(string propertyName)
-        {
-            return new PropertyExpression<SmartInstance<T>>(this, propertyName);
-        }
-
-        /// <summary>
-        /// Inline definition of a constructor dependency.  Select the constructor argument by type.  Do not
-        /// use this method if there is more than one constructor arguments of the same type
-        /// </summary>
-        /// <typeparam name="TCtorType"></typeparam>
-        /// <returns></returns>
-        public DependencyExpression<TCtorType> Ctor<TCtorType>()
-        {
-            string constructorArg = getArgumentNameForType<TCtorType>();
-            return Ctor<TCtorType>(constructorArg);
-        }
-
-        private string getArgumentNameForType<TCtorType>()
-        {
-            Plugin plugin = PluginCache.GetPlugin(getConcreteType(null));
-            return plugin.FindArgumentNameForType<TCtorType>();
-        }
-
-        /// <summary>
-        /// Inline definition of a constructor dependency.  Select the constructor argument by type and constructor name.  
-        /// Use this method if there is more than one constructor arguments of the same type
-        /// </summary>
-        /// <typeparam name="TCtorType"></typeparam>
-        /// <param name="constructorArg"></param>
-        /// <returns></returns>
-        public DependencyExpression<TCtorType> Ctor<TCtorType>(string constructorArg)
-        {
-            return new DependencyExpression<TCtorType>(this, constructorArg);
-        }
 
         /// <summary>
         /// Inline definition of a setter dependency.  The property name is specified with an Expression
@@ -210,23 +161,14 @@ namespace StructureMap.Pipeline
         /// <typeparam name="TSettertype"></typeparam>
         /// <param name="expression"></param>
         /// <returns></returns>
-        public DependencyExpression<TSettertype> Setter<TSettertype>(
+        public DependencyExpression<SmartInstance<T>, TSettertype> Setter<TSettertype>(
             Expression<Func<T, TSettertype>> expression)
         {
             string propertyName = ReflectionHelper.GetProperty(expression).Name;
-            return new DependencyExpression<TSettertype>(this, propertyName);
+            return new DependencyExpression<SmartInstance<T>, TSettertype>(this, propertyName);
         }
 
-        /// <summary>
-        /// Inline definition of a setter dependency.  Only use this method if there
-        /// is only a single property of the SETTERTYPE
-        /// </summary>
-        /// <typeparam name="TSetterType"></typeparam>
-        /// <returns></returns>
-        public DependencyExpression<TSetterType> Setter<TSetterType>()
-        {
-            return Ctor<TSetterType>();
-        }
+
 
         /// <summary>
         /// Inline definition of a dependency on an Array of the CHILD type.  I.e. CHILD[].
@@ -352,142 +294,6 @@ namespace StructureMap.Pipeline
         #endregion
 
         #region Nested type: DependencyExpression
-
-        /// <summary>
-        /// Expression Builder that helps to define child dependencies inline 
-        /// </summary>
-        /// <typeparam name="CHILD"></typeparam>
-        public class DependencyExpression<CHILD>
-        {
-            private readonly SmartInstance<T> _instance;
-            private readonly string _propertyName;
-
-            internal DependencyExpression(SmartInstance<T> instance, string propertyName)
-            {
-                _instance = instance;
-                _propertyName = propertyName;
-            }
-
-            /// <summary>
-            /// Sets the value of the constructor argument to the key/value in the 
-            /// AppSettings
-            /// </summary>
-            /// <param name="appSettingKey">The key in appSettings for the value to use.</param>
-            /// <returns></returns>
-            public SmartInstance<T> EqualToAppSetting(string appSettingKey)
-            {
-                return EqualToAppSetting(appSettingKey, null);
-            }
-
-            /// <summary>
-            /// Sets the value of the constructor argument to the key/value in the 
-            /// AppSettings when it exists. Otherwise uses the provided default value.
-            /// </summary>
-            /// <param name="appSettingKey">The key in appSettings for the value to use.</param>
-            /// <param name="defaultValue">The value to use if an entry for <paramref name="appSettingKey"/> does not exist in the appSettings section.</param>
-            /// <returns></returns>
-            public SmartInstance<T> EqualToAppSetting(string appSettingKey, string defaultValue)
-            {
-                string propertyValue = ConfigurationManager.AppSettings[appSettingKey];
-                if (propertyValue == null) propertyValue = defaultValue;
-                _instance.SetValue(_propertyName, propertyValue);
-                return _instance;
-            }
-
-            /// <summary>
-            /// Nested Closure to define a child dependency inline
-            /// </summary>
-            /// <param name="action"></param>
-            /// <returns></returns>
-            public SmartInstance<T> Is(Action<IInstanceExpression<CHILD>> action)
-            {
-                var expression = new InstanceExpression<CHILD>(i => _instance.SetChild(_propertyName, i));
-                action(expression);
-
-                return _instance;
-            }
-
-            public SmartInstance<T> Is(Func<IContext, CHILD> func)
-            {
-                var child = new LambdaInstance<CHILD>(func);
-                return Is(child);
-            }
-
-            /// <summary>
-            /// Shortcut to set an inline dependency to an Instance
-            /// </summary>
-            /// <param name="instance"></param>
-            /// <returns></returns>
-            public SmartInstance<T> Is(Instance instance)
-            {
-                _instance.SetChild(_propertyName, instance);
-                return _instance;
-            }
-
-            /// <summary>
-            /// Shortcut to set an inline dependency to a designated object
-            /// </summary>
-            /// <param name="value"></param>
-            /// <returns></returns>
-            public SmartInstance<T> Is(CHILD value)
-            {
-                _instance.SetValue(_propertyName, value);
-                return _instance;
-            }
-
-
-            /// <summary>
-            /// Shortcut to set an inline dependency to a designated object
-            /// </summary>
-            /// <param name="value"></param>
-            /// <returns></returns>
-            [Obsolete("Change to Is()")]
-            public SmartInstance<T> EqualTo(CHILD value)
-            {
-                _instance.SetValue(_propertyName, value);
-                return _instance;
-            }
-
-            /// <summary>
-            /// Set an Inline dependency to the Default Instance of the Property type
-            /// Used mostly to force an optional Setter property to be filled by
-            /// StructureMap
-            /// </summary>
-            /// <returns></returns>
-            public SmartInstance<T> IsTheDefault()
-            {
-                return Is(new DefaultInstance());
-            }
-
-            /// <summary>
-            /// Shortcut method to define a child dependency inline
-            /// </summary>
-            /// <typeparam name="TConcreteType"></typeparam>
-            /// <returns></returns>
-            public SmartInstance<T> Is<TConcreteType>() where TConcreteType : CHILD
-            {
-                return Is(new SmartInstance<TConcreteType>());
-            }
-
-
-            /// <summary>
-            /// Shortcut method to define a child dependency inline and configure
-            /// the child dependency
-            /// </summary>
-            /// <typeparam name="TConcreteType"></typeparam>
-            /// <returns></returns>
-            public SmartInstance<T> Is<TConcreteType>(Action<SmartInstance<TConcreteType>> configure) where TConcreteType : CHILD
-            {
-                var instance = new SmartInstance<TConcreteType>();
-                configure(instance);
-                return Is(instance);
-            }
-
-            public SmartInstance<T> Named(string name)
-            {
-                return Is(c => c.GetInstance<CHILD>(name));
-            }
-        }
 
         #endregion
     }

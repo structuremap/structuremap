@@ -68,8 +68,8 @@ namespace StructureMap.Testing
         public void set_optional_properties_and_the_values_should_be_set()
         {
             instance
-                .WithProperty("FirstName").EqualTo("Jeremy")
-                .WithProperty("LastName").EqualTo("Miller");
+                .Setter(x => x.FirstName).EqualTo("Jeremy")
+                .Setter(x => x.LastName).EqualTo("Miller");
 
             TheTarget.FirstName.ShouldEqual("Jeremy");
             TheTarget.LastName.ShouldEqual("Miller");

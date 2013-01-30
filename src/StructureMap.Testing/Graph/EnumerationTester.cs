@@ -20,9 +20,9 @@ namespace StructureMap.Testing.Graph
 
             manager.Configure(r => r.For<Cow>().Use<Cow>()
                                        .Named("Angus")
-                                       .WithProperty("Name").EqualTo("Bessie")
-                                       .WithProperty("Breed").EqualTo("Angus")
-                                       .WithProperty("Weight").EqualTo("1200"));
+                                       .Ctor<string>("Name").Is("Bessie")
+                                       .Ctor<BreedEnum>("Breed").Is(BreedEnum.Angus)
+                                       .Ctor<long>("Weight").Is(1200));
 
             var angus = manager.GetInstance<Cow>("Angus");
 

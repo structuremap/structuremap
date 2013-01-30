@@ -8,7 +8,7 @@ namespace StructureMap.Pipeline
     /// and filling setter properties.  ConfiguredInstance should only be used for open generic types.
     /// Favor <see cref="SmartInstance{T}">SmartInstance{T}</see> for all other usages.
     /// </summary>
-    public partial class ConfiguredInstance : ConstructorInstance
+    public partial class ConfiguredInstance : ConstructorInstance<ConfiguredInstance>
     {
         public ConfiguredInstance(InstanceMemento memento, PluginGraph graph, Type pluginType)
             : base(memento.FindPlugin(graph.FindFamily(pluginType)))
@@ -36,6 +36,11 @@ namespace StructureMap.Pipeline
         {
             var reader = new InstanceMementoPropertyReader(this, memento, graph, pluginType);
             plugin.VisitArguments(reader);
+        }
+
+        protected override ConfiguredInstance thisObject()
+        {
+            return this;
         }
     }
 }

@@ -162,6 +162,7 @@
     <Compile Include="PipelineGraph.cs" />
     <Compile Include="Pipeline\ConfiguredInstance.cs" />
     <Compile Include="Pipeline\ConfiguredInstance.Expressions.cs" />
+    <Compile Include="Pipeline\DependencyExpression.cs" />
     <Compile Include="Pipeline\LambdaInstance.cs" />
     <Compile Include="Pipeline\DefaultInstance.cs" />
     <Compile Include="Pipeline\IConfiguredInstance.cs" />

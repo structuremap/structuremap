@@ -20,7 +20,7 @@ namespace StructureMap.Testing.Examples
             var container = new Container(x =>
             {
                 x.ForConcreteType<ClassThatHasConnection>().Configure
-                    .WithProperty(o => o.ConnectionString).EqualTo("connect1");
+                    .Setter(o => o.ConnectionString).EqualTo("connect1");
             });
 
             var @class = new ClassThatHasConnection();
