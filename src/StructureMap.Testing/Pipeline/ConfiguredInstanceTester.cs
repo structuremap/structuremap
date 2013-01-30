@@ -162,7 +162,7 @@ namespace StructureMap.Testing.Pipeline
             IConfiguredInstance configuredInstance = instance;
             configuredInstance.HasProperty("prop1", null).ShouldBeFalse();
 
-            instance.ChildArray<IGateway[]>("prop1").Contains(new DefaultInstance());
+            instance.EnumerableOf<IGateway>("prop1").Contains(new DefaultInstance());
             configuredInstance.HasProperty("prop1", null).ShouldBeTrue();
         }
 
@@ -174,7 +174,7 @@ namespace StructureMap.Testing.Pipeline
             IConfiguredInstance configuredInstance = instance;
             configuredInstance.HasProperty("gateways", null).ShouldBeFalse();
 
-            instance.ChildArray(typeof (IGateway[])).Contains(new DefaultInstance());
+            instance.EnumerableOf<IGateway>().Contains(new DefaultInstance());
             configuredInstance.HasProperty("gateways", null).ShouldBeTrue();
         }
 
@@ -186,7 +186,7 @@ namespace StructureMap.Testing.Pipeline
             IConfiguredInstance configuredInstance = instance;
             configuredInstance.HasProperty("gateways", null).ShouldBeFalse();
 
-            instance.ChildArray<IGateway[]>().Contains(new DefaultInstance());
+            instance.EnumerableOf<IGateway>().Contains(new DefaultInstance());
             configuredInstance.HasProperty("gateways", null).ShouldBeTrue();
         }
 
