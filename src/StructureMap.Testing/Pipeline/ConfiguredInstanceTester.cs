@@ -86,14 +86,6 @@ namespace StructureMap.Testing.Pipeline
         }
 
 
-        [Test, ExpectedException(typeof (StructureMapException))]
-        public void BuildRuleWithABadValue()
-        {
-            var instance = (ConfiguredInstance) ComplexRule.GetInstance();
-
-            instance.WithProperty("Int").EqualTo("abc");
-            var rule = (ComplexRule) instance.Build(typeof (Rule), _session);
-        }
 
         [Test, ExpectedException(typeof (StructureMapException))]
         public void BuildRuleWithAMissingValue()
@@ -134,10 +126,10 @@ namespace StructureMap.Testing.Pipeline
 
 
         [Test]
-        public void GetProperty_happy_path()
+        public void setter_with_primitive_happy_path()
         {
             ConfiguredInstance instance = new ConfiguredInstance(typeof (ColorRule))
-                .Ctor<string>("color").EqualTo("Red").WithProperty("Age").EqualTo("34");
+                .Ctor<string>("color").EqualTo("Red").Setter<int>("Age").EqualTo(34);
 
             IConfiguredInstance configuredInstance = instance;
 

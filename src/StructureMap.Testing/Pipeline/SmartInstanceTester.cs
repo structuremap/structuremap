@@ -117,7 +117,7 @@ namespace StructureMap.Testing.Pipeline
             IWidget widget2 = new AWidget();
             IWidget widget3 = new AWidget();
 
-            build<ClassWithWidgetArrayCtor>(i => i.TheArrayOf<IWidget>().Contains(x =>
+            build<ClassWithWidgetArrayCtor>(i => i.EnumerableOf<IWidget>().Contains(x =>
             {
                 x.Object(widget1);
                 x.Object(widget2);
@@ -133,7 +133,7 @@ namespace StructureMap.Testing.Pipeline
             IWidget widget2 = new AWidget();
             IWidget widget3 = new AWidget();
 
-            build<ClassWithWidgetArraySetter>(i => i.TheArrayOf<IWidget>().Contains(x =>
+            build<ClassWithWidgetArraySetter>(i => i.EnumerableOf<IWidget>().Contains(x =>
             {
                 x.Object(widget1);
                 x.Object(widget2);

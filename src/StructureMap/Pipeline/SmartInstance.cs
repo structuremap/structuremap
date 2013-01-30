@@ -168,79 +168,43 @@ namespace StructureMap.Pipeline
             return new DependencyExpression<SmartInstance<T>, TSettertype>(this, propertyName);
         }
 
-
-
         /// <summary>
         /// Inline definition of a dependency on an Array of the CHILD type.  I.e. CHILD[].
         /// This method can be used for either constructor arguments or setter properties
         /// </summary>
-        /// <typeparam name="CHILD"></typeparam>
+        /// <typeparam name="TChild"></typeparam>
         /// <returns></returns>
-        [Obsolete("Use EnumerableOf<>")]
-        public ArrayDefinitionExpression<CHILD> TheArrayOf<CHILD>()
+        public ArrayDefinitionExpression<TChild> EnumerableOf<TChild>()
         {
-            if (typeof (CHILD).IsArray)
-            {
-                throw new ApplicationException("Please specify the element type in the call to TheArrayOf");
-            }
-
-            Plugin plugin = PluginCache.GetPlugin(typeof (T));
-            string propertyName = plugin.FindArgumentNameForEnumerableOf(typeof (CHILD));
-            
-            return TheArrayOf<CHILD>(propertyName);
-        }
-
-        /// <summary>
-        /// Inline definition of a dependency on an Array of the CHILD type and the specified setter property or constructor argument name.  I.e. CHILD[].
-        /// This method can be used for either constructor arguments or setter properties
-        /// </summary>
-        /// <typeparam name="CHILD"></typeparam>
-        /// <param name="ctorOrPropertyName"></param>
-        /// <returns></returns>
-        [Obsolete("Use EnumerableOf<>")]
-        public ArrayDefinitionExpression<CHILD> TheArrayOf<CHILD>(string ctorOrPropertyName)
-        {
-            if (ctorOrPropertyName.IsEmpty())
-            {
-                throw new StructureMapException(302, typeof(CHILD).FullName, typeof(T).FullName);
-            }
-            return new ArrayDefinitionExpression<CHILD>(this, ctorOrPropertyName);
-        }
-
-
-        /// <summary>
-        /// Inline definition of a dependency on an Array of the CHILD type.  I.e. CHILD[].
-        /// This method can be used for either constructor arguments or setter properties
-        /// </summary>
-        /// <typeparam name="CHILD"></typeparam>
-        /// <returns></returns>
-        public ArrayDefinitionExpression<CHILD> EnumerableOf<CHILD>()
-        {
-            if (typeof(CHILD).IsArray)
+            if (typeof(TChild).IsArray)
             {
                 throw new ApplicationException("Please specify the element type in the call to TheArrayOf");
             }
 
             Plugin plugin = PluginCache.GetPlugin(typeof(T));
-            string propertyName = plugin.FindArgumentNameForEnumerableOf(typeof(CHILD));
+            string propertyName = plugin.FindArgumentNameForEnumerableOf(typeof(TChild));
 
-            return TheArrayOf<CHILD>(propertyName);
+            if (propertyName.IsEmpty())
+            {
+                throw new StructureMapException(302, typeof(TChild).FullName, typeof(T).FullName);
+            }
+            return new ArrayDefinitionExpression<TChild>(this, propertyName);
         }
 
         /// <summary>
         /// Inline definition of a dependency on an Array of the CHILD type and the specified setter property or constructor argument name.  I.e. CHILD[].
         /// This method can be used for either constructor arguments or setter properties
         /// </summary>
-        /// <typeparam name="CHILD"></typeparam>
+        /// <typeparam name="TChild"></typeparam>
         /// <param name="ctorOrPropertyName"></param>
         /// <returns></returns>
-        public ArrayDefinitionExpression<CHILD> EnumerableOf<CHILD>(string ctorOrPropertyName)
+        public ArrayDefinitionExpression<TChild> EnumerableOf<TChild>(string ctorOrPropertyName)
         {
             if (ctorOrPropertyName.IsEmpty())
             {
-                throw new StructureMapException(302, typeof(CHILD).FullName, typeof(T).FullName);
+                throw new StructureMapException(302, typeof(TChild).FullName, typeof(T).FullName);
             }
-            return new ArrayDefinitionExpression<CHILD>(this, ctorOrPropertyName);
+            return new ArrayDefinitionExpression<TChild>(this, ctorOrPropertyName);
         }
 
 

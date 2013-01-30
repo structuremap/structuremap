@@ -93,7 +93,7 @@ namespace StructureMap.Testing.Configuration.DSL
             var container = new Container(x =>
             {
                 x.For<Processor>().Use<Processor>()
-                    .TheArrayOf<IHandler>().Contains(
+                    .EnumerableOf<IHandler>().Contains(
                     new SmartInstance<Handler1>(),
                     new SmartInstance<Handler2>(),
                     new SmartInstance<Handler3>()
@@ -110,7 +110,7 @@ namespace StructureMap.Testing.Configuration.DSL
             var container = new Container(x =>
             {
                 x.For<Processor>().Use<Processor>()
-                    .TheArrayOf<IHandler>().Contains(
+                    .EnumerableOf<IHandler>().Contains(
                     new SmartInstance<Handler1>(),
                     new SmartInstance<Handler2>(),
                     new SmartInstance<Handler3>()
@@ -127,12 +127,12 @@ namespace StructureMap.Testing.Configuration.DSL
             var container = new Container(r =>
             {
                 r.For<Processor2>().Use<Processor2>()
-                    .TheArrayOf<IHandler>("first").Contains(x =>
+                    .EnumerableOf<IHandler>("first").Contains(x =>
                     {
                         x.Type<Handler1>();
                         x.Type<Handler2>();
                     })
-                    .TheArrayOf<IHandler>("second").Contains(x =>
+                    .EnumerableOf<IHandler>("second").Contains(x =>
                     {
                         x.Type<Handler2>();
                         x.Type<Handler3>();
@@ -183,7 +183,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
                 registry.For<Processor>().Use<Processor>()
                     .Ctor<string>("name").EqualTo("Jeremy")
-                    .TheArrayOf<IHandler>().Contains(x =>
+                    .EnumerableOf<IHandler>().Contains(x =>
                     {
                         x.TheInstanceNamed("Two");
                         x.TheInstanceNamed("One");
@@ -203,7 +203,7 @@ namespace StructureMap.Testing.Configuration.DSL
             {
                 x.For<Processor>().Use<Processor>()
                     .Ctor<string>("name").EqualTo("Jeremy")
-                    .TheArrayOf<IHandler>().Contains(y =>
+                    .EnumerableOf<IHandler>().Contains(y =>
                     {
                         y.Type<Handler1>();
                         y.Type<Handler2>();
@@ -226,7 +226,7 @@ namespace StructureMap.Testing.Configuration.DSL
             {
                 r.For<Processor>().Use<Processor>()
                     .Ctor<string>("name").EqualTo("Jeremy")
-                    .TheArrayOf<IHandler>().Contains(x =>
+                    .EnumerableOf<IHandler>().Contains(x =>
                     {
                         x.Type<Handler1>();
                         x.Type<Handler2>();

@@ -66,7 +66,7 @@ namespace StructureMap.Testing
 
                     // Define an Instance of ClassThatUsesValidators that overrides AutoWiring
                     o.Type<ClassThatUsesValidators>().Named("ExplicitArray")
-                        .TheArrayOf<IValidator>().Contains(y =>
+                        .EnumerableOf<IValidator>().Contains(y =>
                         {
                             y.TheInstanceNamed("Red");
                             y.TheInstanceNamed("Green");

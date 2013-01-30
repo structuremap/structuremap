@@ -96,8 +96,8 @@ namespace StructureMap.Testing
             var manager = new Container(graph);
 
             ConfiguredInstance instance = new ConfiguredInstance(typeof (ComplexType<int>))
-                .WithProperty("name").EqualTo("Jeremy")
-                .WithProperty("age").EqualTo(32);
+                .Ctor<string>("name").EqualTo("Jeremy")
+                .Ctor<int>("age").EqualTo(32);
 
             var com = manager.GetInstance<ComplexType<int>>(instance);
             Assert.AreEqual("Jeremy", com.Name);

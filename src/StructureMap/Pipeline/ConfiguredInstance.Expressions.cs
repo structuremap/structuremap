@@ -110,18 +110,6 @@ namespace StructureMap.Pipeline
             return ChildArray(typeof (TPluginType));
         }
 
- 
-        /// <summary>
-        /// Start the definition of a primitive argument to a constructor argument
-        /// </summary>
-        /// <param name="propertyName"></param>
-        /// <returns></returns>
-        [Obsolete]
-        public PropertyExpression<ConfiguredInstance> WithProperty(string propertyName)
-        {
-            return new PropertyExpression<ConfiguredInstance>(this, propertyName);
-        }
-
         #region Nested type: ChildArrayExpression
 
         public class ChildArrayExpression

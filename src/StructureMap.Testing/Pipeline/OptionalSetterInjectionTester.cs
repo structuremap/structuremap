@@ -64,7 +64,7 @@ namespace StructureMap.Testing.Pipeline
             var container = new Container(x =>
             {
                 x.For<ClassWithDependency>().Use<ClassWithDependency>()
-                    .TheArrayOf<Rule>().Contains(arr => { arr.IsThis(new ColorRule("Red")); });
+                    .EnumerableOf<Rule>().Contains(arr => { arr.IsThis(new ColorRule("Red")); });
             });
 
             container.GetInstance<ClassWithDependency>().Rules.Length.ShouldEqual(1);
