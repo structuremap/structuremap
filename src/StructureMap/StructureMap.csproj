@@ -416,7 +416,6 @@
     <Compile Include="Pipeline\ConfiguredInstanceBase.cs" />
     <Compile Include="Pipeline\InstanceKey.cs" />
     <Compile Include="Pipeline\IStructuredInstance.cs" />
-    <Compile Include="Pipeline\PropertyExpression.cs" />
     <Compile Include="Pipeline\SerializedInstance.cs" />
     <Compile Include="Pipeline\SmartInstance.cs" />
     <Compile Include="ReflectionHelper.cs" />
