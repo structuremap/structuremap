@@ -164,14 +164,6 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <param name="template"></param>
         /// <returns></returns>
         SerializedInstance SerializedCopyOf(T template);
-
-        /// <summary>
-        /// Creates an Instance that will load an ASCX user control from the url
-        /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
-        [Obsolete]
-        UserControlInstance LoadControlFrom(string url);
     }
 
     [Obsolete("Maybe?")]
@@ -248,11 +240,6 @@ namespace StructureMap.Configuration.DSL.Expressions
         public SerializedInstance SerializedCopyOf(T template)
         {
             return returnInstance(new SerializedInstance(template));
-        }
-
-        public UserControlInstance LoadControlFrom(string url)
-        {
-            return returnInstance(new UserControlInstance(url));
         }
 
         IsExpression<T> ThenItExpression<T>.ThenIt { get { return this; } }
