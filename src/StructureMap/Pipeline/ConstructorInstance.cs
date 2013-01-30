@@ -351,6 +351,45 @@ namespace StructureMap.Pipeline
         {
             return Ctor<TSetterType>(setterName);
         }
+
+        /// <summary>
+        ///     Inline definition of a dependency on an Array of the CHILD type.  I.e. CHILD[].
+        ///     This method can be used for either constructor arguments or setter properties
+        /// </summary>
+        /// <typeparam name="TChild"></typeparam>
+        /// <returns></returns>
+        public ArrayDefinitionExpression<TThis, TChild> EnumerableOf<TChild>()
+        {
+            if (typeof(TChild).IsArray)
+            {
+                throw new ApplicationException("Please specify the element type in the call to TheArrayOf");
+            }
+
+            Plugin plugin = PluginCache.GetPlugin(ConcreteType);
+            string propertyName = plugin.FindArgumentNameForEnumerableOf(typeof(TChild));
+
+            if (propertyName.IsEmpty())
+            {
+                throw new StructureMapException(302, typeof(TChild).FullName, ConcreteType.FullName);
+            }
+            return new ArrayDefinitionExpression<TThis, TChild>(thisObject(), propertyName);
+        }
+
+        /// <summary>
+        ///     Inline definition of a dependency on an Array of the CHILD type and the specified setter property or constructor argument name.  I.e. CHILD[].
+        ///     This method can be used for either constructor arguments or setter properties
+        /// </summary>
+        /// <typeparam name="TChild"></typeparam>
+        /// <param name="ctorOrPropertyName"></param>
+        /// <returns></returns>
+        public ArrayDefinitionExpression<TThis, TChild> EnumerableOf<TChild>(string ctorOrPropertyName)
+        {
+            if (ctorOrPropertyName.IsEmpty())
+            {
+                throw new StructureMapException(302, typeof(TChild).FullName, ConcreteType.FullName);
+            }
+            return new ArrayDefinitionExpression<TThis, TChild>(thisObject(), ctorOrPropertyName);
+        }
     }
 
 }

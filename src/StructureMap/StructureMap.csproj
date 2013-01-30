@@ -160,6 +160,7 @@
     <Compile Include="InstanceCache.cs" />
     <Compile Include="Interceptors\MatchedTypeInterceptor.cs" />
     <Compile Include="PipelineGraph.cs" />
+    <Compile Include="Pipeline\ArrayDefinitionExpression.cs" />
     <Compile Include="Pipeline\ConfiguredInstance.cs" />
     <Compile Include="Pipeline\ConfiguredInstance.Expressions.cs" />
     <Compile Include="Pipeline\DependencyExpression.cs" />
