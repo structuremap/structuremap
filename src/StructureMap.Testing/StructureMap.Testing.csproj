@@ -319,9 +319,6 @@
     <Compile Include="Graph\SetterInjectionEmittingTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Graph\Source\DirectoryXmlMementoSourceTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Graph\Source\EmbeddedFolderXmlMementoSourceTester.cs">
       <SubType>Code</SubType>
     </Compile>
