@@ -342,19 +342,6 @@ namespace StructureMap.Configuration.DSL.Expressions
             return this;
         }
 
-
-        /// <summary>
-        /// Largely deprecated and unnecessary with the ability to add Xml configuration files
-        /// </summary>
-        /// <param name="source"></param>
-        /// <returns></returns>
-        public CreatePluginFamilyExpression<TPluginType> AddInstancesFrom(MementoSource source)
-        {
-            _alterations.Add(family => family.AddMementoSource(source));
-
-            return this;
-        }
-
         private void registerDefault(Instance instance)
         {
             _alterations.Add(family =>

@@ -2,6 +2,7 @@ using NUnit.Framework;
 using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
+using StructureMap.Pipeline;
 using StructureMap.Source;
 using StructureMap.Testing.Widget3;
 
@@ -67,7 +68,7 @@ namespace StructureMap.Testing.Configuration
             var memento = new MemoryInstanceMemento();
             var builder = new GraphBuilder(new Registry[0]);
 
-            builder.WithSystemObject<MementoSource>(memento, "I am going to break here",
+            builder.WithSystemObject<ILifecycle>(memento, "I am going to break here",
                                                     delegate { Assert.Fail("Wasn't supposed to be called"); });
         }
 
@@ -77,7 +78,7 @@ namespace StructureMap.Testing.Configuration
             var memento = new MemoryInstanceMemento();
             var builder = new GraphBuilder(new Registry[0]);
 
-            builder.WithSystemObject<MementoSource>(memento, "I am going to break here", delegate { });
+            builder.WithSystemObject<ILifecycle>(memento, "I am going to break here", delegate { });
 
             builder.PluginGraph.Log.AssertHasError(130);
         }

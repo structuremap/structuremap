@@ -172,22 +172,6 @@ namespace StructureMap.Testing.Graph.ExceptionHandling
         }
 
         [Test]
-        public void Log_130_if_there_is_an_error_while_creating_TheDesignatedMementoSourceForAPluginFamily()
-        {
-            assertErrorIsLogged(130,
-                                @"
-		<StructureMap>
-			<Assembly Name='StructureMap.Testing.Widget'/>
-					
-			<PluginFamily Type='StructureMap.Testing.Widget.IWidget' Assembly='StructureMap.Testing.Widget' DefaultKey=''>
-				<Plugin Assembly='StructureMap.Testing.Widget' Type='StructureMap.Testing.Widget.NotPluggableWidget' ConcreteKey='Dup'/>
-				<Source Type='Nonexistent'/>
-			</PluginFamily>							
-		</StructureMap>
-");
-        }
-
-        [Test]
         public void Log_131_if_Plugin_type_could_not_be_loaded_from_Xml_configuration()
         {
             assertErrorIsLogged(131,

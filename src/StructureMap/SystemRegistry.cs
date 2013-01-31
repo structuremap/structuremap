@@ -8,8 +8,6 @@ namespace StructureMap
     {
         public SystemRegistry()
         {
-            For<MementoSource>().Use<MemoryMementoSource>();
-
             AddLifecycleType<SingletonLifecycle>(InstanceScope.Singleton);
             AddLifecycleType<HttpContextLifecycle>(InstanceScope.HttpContext);
             AddLifecycleType<HttpSessionLifecycle>(InstanceScope.HttpSession);

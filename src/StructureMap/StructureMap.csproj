@@ -274,9 +274,6 @@
     <Compile Include="Interceptors\NulloInterceptor.cs" />
     <Compile Include="Interceptors\StartupInterceptor.cs" />
     <Compile Include="Interceptors\FilteredInstanceInterceptor.cs" />
-    <Compile Include="MementoSource.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="MemoryInstanceMemento.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -286,19 +283,10 @@
     <Compile Include="PluginGraphBuilder.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Source\MementoSourceType.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Source\MemoryMementoSource.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Source\XmlAttributeInstanceMemento.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Source\XmlMementoCreator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Source\XmlMementoSource.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Source\XmlMementoStyle.cs">

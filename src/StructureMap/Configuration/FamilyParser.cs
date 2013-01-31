@@ -28,7 +28,6 @@ namespace StructureMap.Configuration
                 InstanceScope scope = findScope(familyElement);
                 family.SetScopeTo(scope);
 
-                attachMementoSource(family, familyElement);
                 attachPlugins(family, familyElement);
                 attachInterceptors(family, familyElement);
                 attachInstances(family, familyElement, _builder);
@@ -84,19 +83,6 @@ namespace StructureMap.Configuration
                                             scope => { returnValue = (InstanceScope) Enum.Parse(typeof (InstanceScope), scope); });
 
             return returnValue;
-        }
-
-        private void attachMementoSource(PluginFamily family, XmlElement familyElement)
-        {
-            familyElement.IfHasNode(MEMENTO_SOURCE_NODE).Do(node =>
-            {
-                InstanceMemento sourceMemento = new XmlAttributeInstanceMemento(node);
-
-                string context = string.Format("MementoSource for {0}\n{1}",
-                                               family.PluginType.AssemblyQualifiedName, node.OuterXml);
-                _builder.WithSystemObject<MementoSource>(sourceMemento, context,
-                                                         source => family.AddMementoSource(source));
-            });
         }
 
         private void attachPlugin(XmlElement pluginElement, PluginFamily family)

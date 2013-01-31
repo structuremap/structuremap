@@ -27,8 +27,6 @@ namespace StructureMap
         /// </summary>
         public InstanceScope Scope { get { return _scope; } set { _scope = value; } }
 
-        public Type SourceType { get; set; }
-
         /// <summary>
         /// InstanceKey of the default instance.  Used to implicitly define the default without
         /// declaring the instance in StructureMap.config
@@ -68,21 +66,6 @@ namespace StructureMap
 
         public void Configure(IPluginFamily family)
         {
-            if (SourceType != null)
-            {
-                try
-                {
-                    var source = (MementoSource) Activator.CreateInstance(SourceType);
-                    family.AddMementoSource(source);
-                }
-                catch (Exception ex)
-                {
-                    throw new StructureMapException(122, ex, SourceType.FullName,
-                                                    family.PluginType.AssemblyQualifiedName);
-                }
-            }
-
-
             if (!string.IsNullOrEmpty(DefaultKey)) family.DefaultInstanceKey = DefaultKey;
             if (Scope != InstanceScope.PerRequest) family.SetScopeTo(Scope);
         }

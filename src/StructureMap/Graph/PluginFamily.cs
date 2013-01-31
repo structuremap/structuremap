@@ -43,11 +43,6 @@ namespace StructureMap.Graph
 
         #region IPluginFamily Members
 
-        public void AddMementoSource(MementoSource source)
-        {
-            _mementoList.AddRange(source.GetAllMementos());
-        }
-
         public void SetScopeTo(InstanceScope scope)
         {
         	Scope = scope;
