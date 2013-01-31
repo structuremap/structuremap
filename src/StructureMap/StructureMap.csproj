@@ -298,9 +298,6 @@
     <Compile Include="Source\SingleEmbeddedXmlMementoSource.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Source\TemplatedMementoSource.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Source\XmlAttributeFileMementoSource.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -320,9 +317,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Source\XmlNodeInstanceMemento.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Source\XmlTemplater.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Diagnostics\ValidationBuildSession.cs" />

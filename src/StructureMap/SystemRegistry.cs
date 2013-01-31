@@ -13,7 +13,6 @@ namespace StructureMap
             For<MementoSource>().Use<MemoryMementoSource>();
             AddMementoSourceType<EmbeddedFolderXmlMementoSource>("EmbeddedXmlFolder");
             AddMementoSourceType<SingleEmbeddedXmlMementoSource>("EmbeddedXmlFile");
-            AddMementoSourceType<TemplatedMementoSource>("Templated");
             AddMementoSourceType<XmlAttributeFileMementoSource>("XmlAttributeFile");
             AddMementoSourceType<XmlFileMementoSource>("XmlFile");
 

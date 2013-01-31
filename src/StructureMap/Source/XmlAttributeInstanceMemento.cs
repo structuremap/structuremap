@@ -85,14 +85,6 @@ namespace StructureMap.Source
             return (InstanceMemento[]) list.ToArray(typeof (InstanceMemento));
         }
 
-        public override InstanceMemento Substitute(InstanceMemento memento)
-        {
-            var templater = new XmlTemplater(_element);
-            XmlNode substitutedNode = templater.SubstituteTemplates(_element, memento);
-
-            return new XmlAttributeInstanceMemento(substitutedNode);
-        }
-
 
         public override string ToString()
         {

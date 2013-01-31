@@ -11,8 +11,6 @@ namespace StructureMap
     public abstract class InstanceMemento
     {
         public const string EMPTY_STRING = "STRING.EMPTY";
-        public const string SUBSTITUTIONS_ATTRIBUTE = "Substitutions";
-        public const string TEMPLATE_ATTRIBUTE = "Template";
         private string _instanceKey;
         private string _lastKey = string.Empty;
 
@@ -45,19 +43,6 @@ namespace StructureMap
         }
 
         protected abstract string innerInstanceKey { get; }
-
-        /// <summary>
-        /// Gets the referred template name
-        /// </summary>
-        /// <returns></returns>
-        public string TemplateName
-        {
-            get
-            {
-                string rawValue = getPropertyValue(TEMPLATE_ATTRIBUTE);
-                return rawValue == null ? string.Empty : rawValue.Trim();
-            }
-        }
 
         /// <summary>
         /// Template pattern property specifying whether the InstanceMemento is simply a reference
@@ -169,17 +154,6 @@ namespace StructureMap
         /// </summary>
         /// <returns></returns>
         public abstract InstanceMemento[] GetChildrenArray(string Key);
-
-
-        /// <summary>
-        /// Used to create a templated InstanceMemento
-        /// </summary>
-        /// <param name="memento"></param>
-        /// <returns></returns>
-        public virtual InstanceMemento Substitute(InstanceMemento memento)
-        {
-            throw new NotSupportedException("This type of InstanceMemento does not support the Substitute() Method");
-        }
 
 
         protected virtual string getTPluggedType()

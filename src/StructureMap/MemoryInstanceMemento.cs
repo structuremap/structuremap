@@ -114,11 +114,6 @@ namespace StructureMap
             _properties[name] = stringValue;
         }
 
-        public void SetTemplateKey(string templateName)
-        {
-            SetProperty(TEMPLATE_ATTRIBUTE, templateName);
-        }
-
         /// <summary>
         /// Deletes a named property from the DefaultInstanceMemento
         /// </summary>

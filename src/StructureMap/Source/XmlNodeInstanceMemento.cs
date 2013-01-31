@@ -151,13 +151,6 @@ namespace StructureMap.Source
             return list.ToArray();
         }
 
-        public override InstanceMemento Substitute(InstanceMemento memento)
-        {
-            var templater = new XmlTemplater(_innerNode);
-            XmlNode substitutedNode = templater.SubstituteTemplates(_innerNode, memento);
-            return new XmlNodeInstanceMemento(substitutedNode, _typeAttribute, _keyAttribute);
-        }
-
         public override string ToString()
         {
             return _innerNode.OuterXml;
