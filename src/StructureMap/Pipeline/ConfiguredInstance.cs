@@ -34,7 +34,7 @@ namespace StructureMap.Pipeline
 
         private void read(InstanceMemento memento, PluginGraph graph, Type pluginType)
         {
-            var reader = new InstanceMementoPropertyReader(this, memento, graph, pluginType);
+            var reader = new InstanceMementoPropertyReader(this, memento, graph);
             plugin.VisitArguments(reader);
         }
 

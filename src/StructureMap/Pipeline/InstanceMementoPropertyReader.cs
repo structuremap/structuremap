@@ -9,15 +9,12 @@ namespace StructureMap.Pipeline
         private readonly ConfiguredInstance _instance;
         private readonly InstanceMemento _memento;
         private readonly PluginGraph _pluginGraph;
-        private readonly Type _pluginType;
 
-        public InstanceMementoPropertyReader(ConfiguredInstance instance, InstanceMemento memento,
-                                             PluginGraph pluginGraph, Type pluginType)
+        public InstanceMementoPropertyReader(ConfiguredInstance instance, InstanceMemento memento, PluginGraph pluginGraph)
         {
             _instance = instance;
             _memento = memento;
             _pluginGraph = pluginGraph;
-            _pluginType = pluginType;
         }
 
         #region IArgumentVisitor Members
