@@ -310,9 +310,6 @@
     <Compile Include="Graph\Source\XmlAttributeInstanceMementoTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Graph\Source\XmlInstanceMementoTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Graph\TypeFindingTester.cs" />
     <Compile Include="Diagnostics\IntegrationTester.cs" />
     <Compile Include="Diagnostics\TextReportWriterSmokeTester.cs" />

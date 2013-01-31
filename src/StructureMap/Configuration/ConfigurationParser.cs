@@ -38,18 +38,7 @@ namespace StructureMap.Configuration
         {
             _structureMapNode = structureMapNode;
 
-            XmlMementoStyle mementoStyle = XmlMementoStyle.NodeNormalized;
-            _structureMapNode.ForAttributeValue(MEMENTO_STYLE,
-                                                style =>
-                                                {
-                                                    if (style == ATTRIBUTE_STYLE)
-                                                        mementoStyle = XmlMementoStyle.AttributeNormalized;
-                                                });
-
-            _mementoCreator = new XmlMementoCreator(
-                mementoStyle,
-                TYPE_ATTRIBUTE,
-                KEY_ATTRIBUTE);
+            _mementoCreator = new XmlMementoCreator();
         }
 
         public string Id

@@ -39,37 +39,6 @@ namespace StructureMap.Testing.Configuration
         }
 
         [Test]
-        public void Read_in_a_dictionary_type_from_a_node_normalized_memento()
-        {
-            string xml =
-                @"
-<root>
-    <Property Name='dictionary'>
-        <Pair Key='color' Value='red'/>
-        <Pair Key='state' Value='texas'/>
-        <Pair Key='direction' Value='north'/>
-    </Property>
-</root>
-";
-
-            XmlElement element = DataMother.BuildDocument(xml).DocumentElement;
-            element.SetAttribute("TPluggedType", typeof (ClassWithDictionary).AssemblyQualifiedName);
-
-            var memento = new XmlNodeInstanceMemento(element, "Type", "Key");
-
-            Instance instance = memento.ReadInstance(new PluginGraph(), typeof (ClassWithDictionary));
-
-
-            var theObject =
-                (ClassWithDictionary) instance.Build(typeof (ClassWithDictionary), new BuildSession(new PluginGraph()));
-
-
-            theObject.Dictionary["color"].ShouldEqual("red");
-            theObject.Dictionary["state"].ShouldEqual("texas");
-            theObject.Dictionary["direction"].ShouldEqual("north");
-        }
-
-        [Test]
         public void Read_in_a_dictionary_type_from_an_attribute_normalized_memento()
         {
             string xml =

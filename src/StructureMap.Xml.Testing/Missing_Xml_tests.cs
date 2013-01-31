@@ -47,8 +47,22 @@ namespace StructureMap.Xml.Testing
             Assert.Fail("NWO");
         }
 
+        [Test]
+        public void load_configuration_from_xml_after_container_is_initialized()
+        {
+            Assert.Fail("NWO");
+        }
 
+        [Test]
+        public void Add()
+        {
+            Assert.Fail();
+        }
 
+        [Test]
+        public void Use()
+        {
 
+        }
     }
 }

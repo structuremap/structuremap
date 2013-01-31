@@ -53,21 +53,5 @@ namespace StructureMap.Testing
             container.GetInstance<IPlug<string>>().ShouldNotBeNull();
         }
 
-        [Test]
-        public void Load_configuration_file_after_the_container_has_already_been_initialized()
-        {
-            var container = new Container(x => x.AddConfigurationFromXmlFile("Config1.xml"));
-
-            container.GetInstance<IWidget>().ShouldBeOfType<ColorWidget>().Color.ShouldEqual("Orange");
-            container.Configure(x => x.AddConfigurationFromXmlFile("Config2.xml"));
-            container.GetInstance<IWidget>().ShouldBeOfType<ColorWidget>().Color.ShouldEqual("Green");
-        }
-
-        [Test]
-        public void NotTheDefault()
-        {
-            assertTheDefault("Orange", x => { x.AddConfigurationFromXmlFile("Config1.xml"); });
-        }
-
     }
 }

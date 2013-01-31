@@ -24,15 +24,9 @@ namespace StructureMap.Testing
     <Plugin Assembly='StructureMap.Testing.GenericWidgets' Type='StructureMap.Testing.GenericWidgets.ColorThing`2' ConcreteKey='Color' />
     <Plugin Assembly='StructureMap.Testing.GenericWidgets' Type='StructureMap.Testing.GenericWidgets.ComplexThing`2' ConcreteKey='Complex' />
 
-    <Instance Key='Red' Type='Color'>
-      <Property Name='color' Value='Red'/>
-    </Instance>
+    <Instance Key='Red' Type='Color' color='Red'/>
 
-    <Instance Key='Complicated' Type='Complex'>
-      <Property Name='name' Value='Jeremy' />
-      <Property Name='age' Value='32' />
-      <Property Name='ready' Value='true' />
-    </Instance>
+    <Instance Key='Complicated' Type='Complex' name='Jeremy' age='32' ready='true'/>
   </PluginFamily>
 
   <PluginFamily Assembly='StructureMap.Testing.GenericWidgets' Type='StructureMap.Testing.GenericWidgets.ISimpleThing`1' DefaultKey='Simple'>

@@ -289,12 +289,6 @@
     <Compile Include="Source\XmlMementoCreator.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Source\XmlMementoStyle.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Source\XmlNodeInstanceMemento.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Diagnostics\ValidationBuildSession.cs" />
     <EmbeddedResource Include="StructureMapException.resx">
       <SubType>Designer</SubType>

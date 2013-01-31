@@ -23,8 +23,7 @@ namespace StructureMap.Testing.Configuration
 
             _parser =
                 new FamilyParser(builder,
-                                 new XmlMementoCreator(XmlMementoStyle.NodeNormalized, XmlConstants.TYPE_ATTRIBUTE,
-                                                       XmlConstants.ATTRIBUTE_STYLE));
+                                 new XmlMementoCreator());
 
             _document = new XmlDocument();
             _document.LoadXml("<PluginFamily />");
