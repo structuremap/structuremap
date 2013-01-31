@@ -286,16 +286,10 @@
     <Compile Include="PluginGraphBuilder.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Source\EmbeddedFolderXmlMementoSource.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Source\MementoSourceType.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Source\MemoryMementoSource.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Source\SingleEmbeddedXmlMementoSource.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Source\XmlAttributeFileMementoSource.cs">
