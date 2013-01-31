@@ -25,7 +25,6 @@ namespace StructureMap.Testing
         {
             ObjectFactory.Initialize(x =>
             {
-                x.IgnoreStructureMapConfig = true;
                 x.AddRegistry<InitializeRegistry>();
             });
 
@@ -37,8 +36,6 @@ namespace StructureMap.Testing
         {
             ObjectFactory.Initialize(x =>
             {
-                x.UseDefaultStructureMapConfigFile = false;
-
                 // Tell StructureMap to look for configuration 
                 // from the App.config file
                 // The default is false
@@ -69,7 +66,6 @@ namespace StructureMap.Testing
                     p.For<IGateway>().Use(() => null);
                 });
 
-                x.IgnoreStructureMapConfig = true;
                 x.DefaultProfileName = theDefaultProfileName;
             });
 
@@ -82,7 +78,6 @@ namespace StructureMap.Testing
             
             ObjectFactory.Initialize(x =>
             {
-                x.IgnoreStructureMapConfig = true;
             });
 
             ObjectFactory.Container.Name.ShouldStartWith("ObjectFactory-");

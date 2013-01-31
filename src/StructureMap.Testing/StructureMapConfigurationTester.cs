@@ -43,7 +43,6 @@ namespace StructureMap.Testing
         {
             ObjectFactory.Initialize(x =>
             {
-                x.UseDefaultStructureMapConfigFile = false;
                 x.PullConfigurationFromAppConfig = true;
             });
 
@@ -90,8 +89,6 @@ namespace StructureMap.Testing
         {
             ObjectFactory.Initialize(x =>
             {
-                x.IgnoreStructureMapConfig = true;
-
                 x.For<Guid>().Use(() => Guid.NewGuid());
                 x.For<IFoo>().Use<Foo>();
             });
@@ -108,8 +105,6 @@ namespace StructureMap.Testing
         {
             ObjectFactory.Initialize(x =>
             {
-                x.IgnoreStructureMapConfig = true;
-
                 x.For<Guid>().Use(() => Guid.NewGuid());
             });
 

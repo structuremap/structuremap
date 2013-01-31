@@ -58,15 +58,6 @@ namespace StructureMap.Testing.Graph
             pluginGraph.FindFamily(typeof (IWidget)).Lifecycle.ShouldBeNull();
         }
 
-        [Test]
-        public void CanDefinedSourceBuildMemento()
-        {
-            PluginFamily family = graph.FindFamily(typeof (IWidget));
-
-            InstanceMemento memento = family.GetMemento("Red");
-
-            Assert.IsNotNull(memento);
-        }
 
         [Test]
         public void CanImpliedInlineSourceBuildMemento()

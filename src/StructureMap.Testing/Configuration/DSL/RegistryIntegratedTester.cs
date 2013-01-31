@@ -15,12 +15,8 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             ObjectFactory.Initialize(x =>
             {
-                x.IgnoreStructureMapConfig = true;
-
                 x.Scan(s =>
                 {
-                    
-
                     s.AssemblyContainingType<RedGreenRegistry>();
                     s.LookForRegistries();
                 });

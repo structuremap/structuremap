@@ -292,13 +292,7 @@
     <Compile Include="Source\MemoryMementoSource.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Source\XmlAttributeFileMementoSource.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Source\XmlAttributeInstanceMemento.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Source\XmlFileMementoSource.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Source\XmlMementoCreator.cs">

@@ -10,8 +10,6 @@ namespace StructureMap.Testing.Bugs
         {
             ObjectFactory.Initialize(x =>
             {
-                x.UseDefaultStructureMapConfigFile = false;
-
                 x.ForConcreteType<SomeDbRepository>().Configure.
                     Ctor<string>("connectionString").Is("some connection string");
 

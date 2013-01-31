@@ -40,7 +40,6 @@ namespace StructureMap.Testing
             var theGateway = new DefaultGateway();
             ObjectFactory.Initialize(x =>
             {
-                x.IgnoreStructureMapConfig = true;
                 x.For<IGateway>().Use(theGateway);
 
                 // First we create a new Setter Injection Policy that

@@ -61,9 +61,6 @@ namespace StructureMap.Testing.Configuration
         [Test]
         public void Always_resolve_files_to_an_absolute_path_before_giving_to_configuration_parser()
         {
-            builder.UseAndEnforceExistenceOfDefaultFile = false;
-            builder.IgnoreDefaultFile = true;
-
             DataMother.WriteDocument("GenericsTesting.xml");
 
             builder.IncludeFile("GenericsTesting.xml");
@@ -73,22 +70,9 @@ namespace StructureMap.Testing.Configuration
         }
 
         [Test]
-        public void Do_NOT_Log_exception_100_if_StructureMap_config_is_missing_but_not_required()
-        {
-            assertNoErrorIsLogged(100, delegate
-            {
-                DataMother.RemoveStructureMapConfig();
-                builder.UseAndEnforceExistenceOfDefaultFile = false;
-            });
-        }
-
-        [Test]
         public void DoNotUseDefaultAndUseADifferentFile()
         {
             DataMother.RemoveStructureMapConfig();
-
-            builder.UseAndEnforceExistenceOfDefaultFile = false;
-            builder.IgnoreDefaultFile = true;
 
             DataMother.WriteDocument("GenericsTesting.xml");
 
@@ -105,8 +89,6 @@ namespace StructureMap.Testing.Configuration
             DataMother.WriteDocument("Include2.xml");
             DataMother.WriteDocument("Master.xml");
 
-            builder.UseAndEnforceExistenceOfDefaultFile = false;
-            builder.IgnoreDefaultFile = true;
             builder.IncludeFile("Master.xml");
 
             assertParserIdList("Include1", "Include2", "Master");
@@ -122,10 +104,9 @@ namespace StructureMap.Testing.Configuration
             DataMother.WriteDocument("GenericsTesting.xml");
 
             builder.IncludeFile("GenericsTesting.xml");
-            builder.UseAndEnforceExistenceOfDefaultFile = true;
             builder.IncludeFile("Master.xml");
 
-            assertParserIdList("Generics", "Include1", "Include2", "Main", "Master");
+            assertParserIdList("Generics", "Include1", "Include2", "Master");
         }
 
 
@@ -140,17 +121,6 @@ namespace StructureMap.Testing.Configuration
                 File.Delete("Include2.xml");
                 DataMother.WriteDocument("Master.xml");
 
-                builder.IgnoreDefaultFile = true;
-            });
-        }
-
-        [Test, Explicit]
-        public void Log_exception_100_if_StructureMap_config_is_required_and_missing()
-        {
-            assertErrorIsLogged(100, delegate
-            {
-                DataMother.RemoveStructureMapConfig();
-                builder.UseAndEnforceExistenceOfDefaultFile = true;
             });
         }
 
@@ -175,8 +145,6 @@ namespace StructureMap.Testing.Configuration
         [Test]
         public void Put_the_file_name_onto_ConfigurationParser()
         {
-            builder.UseAndEnforceExistenceOfDefaultFile = false;
-            builder.IgnoreDefaultFile = true;
 
             DataMother.WriteDocument("GenericsTesting.xml");
 
@@ -186,18 +154,5 @@ namespace StructureMap.Testing.Configuration
             Assert.AreEqual("GenericsTesting.xml", Path.GetFileName(parsers[0].Description));
         }
 
-
-        [Test]
-        public void SimpleDefaultConfigurationParser()
-        {
-            builder.UseAndEnforceExistenceOfDefaultFile = true;
-            assertParserIdList("Main");
-        }
-
-        [Test]
-        public void UseDefaultIsTrueUponConstruction()
-        {
-            Assert.IsFalse(builder.UseAndEnforceExistenceOfDefaultFile);
-        }
     }
 }

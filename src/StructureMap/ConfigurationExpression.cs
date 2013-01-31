@@ -26,7 +26,6 @@ namespace StructureMap
         internal ConfigurationExpression()
         {
             _parserBuilder = new ConfigurationParserBuilder(_log);
-            _parserBuilder.IgnoreDefaultFile = true;
             _parserBuilder.PullConfigurationFromAppConfig = false;
 
             _registries.Add(this);
@@ -36,7 +35,7 @@ namespace StructureMap
         /// If true, directs StructureMap to look for configuration in the App.config.
         /// The default value is false.
         /// </summary>
-        public bool IncludeConfigurationFromConfigFile { set { _parserBuilder.UseAndEnforceExistenceOfDefaultFile = value; } }
+        public bool IncludeConfigurationFromConfigFile { set { _parserBuilder.PullConfigurationFromAppConfig = value; } }
 
         /// <summary>
         /// Creates and adds a Registry object of type T.  

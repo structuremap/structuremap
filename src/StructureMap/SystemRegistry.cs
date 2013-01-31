@@ -8,11 +8,7 @@ namespace StructureMap
     {
         public SystemRegistry()
         {
-            addExpression(graph => graph.AddType(typeof (MementoSource), typeof (XmlFileMementoSource), "XmlFile"));
-
             For<MementoSource>().Use<MemoryMementoSource>();
-            AddMementoSourceType<XmlAttributeFileMementoSource>("XmlAttributeFile");
-            AddMementoSourceType<XmlFileMementoSource>("XmlFile");
 
             AddLifecycleType<SingletonLifecycle>(InstanceScope.Singleton);
             AddLifecycleType<HttpContextLifecycle>(InstanceScope.HttpContext);
@@ -26,11 +22,6 @@ namespace StructureMap
         private void AddLifecycleType<T>(InstanceScope scope) where T : ILifecycle
         {
             addExpression(graph => graph.AddType(typeof (ILifecycle), typeof (T), scope.ToString()));
-        }
-
-        private void AddMementoSourceType<T>(string name)
-        {
-            addExpression(graph => graph.AddType(typeof (MementoSource), typeof (T), name));
         }
     }
 }

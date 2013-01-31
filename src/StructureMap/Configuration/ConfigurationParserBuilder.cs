@@ -8,8 +8,6 @@ namespace StructureMap.Configuration
 {
     public interface IConfigurationParserBuilder
     {
-        bool UseAndEnforceExistenceOfDefaultFile { get; set; }
-        bool IgnoreDefaultFile { get; set; }
         bool PullConfigurationFromAppConfig { get; set; }
         void IncludeFile(string filename);
         void IncludeNode(XmlNode node, string description);
@@ -17,17 +15,10 @@ namespace StructureMap.Configuration
 
     public class ConfigurationParserBuilder : IConfigurationParserBuilder
     {
-        /// <summary>
-        /// The name of the default configuration file. The value is always <c>StructurMap.config</c>
-        /// </summary>
-        public static readonly string DefaultConfigurationFilename = "StructureMap.config";
-
         private readonly GraphLog _log;
         private readonly List<string> _otherFiles = new List<string>();
         private readonly List<ConfigurationParser> _parsers = new List<ConfigurationParser>();
-        private bool _ignoreDefaultFile;
         private bool _pullConfigurationFromAppConfig;
-        private bool _useAndEnforceExistenceOfDefaultFile;
 
 
         public ConfigurationParserBuilder(GraphLog log)
@@ -36,12 +27,6 @@ namespace StructureMap.Configuration
         }
 
         #region IConfigurationParserBuilder Members
-
-        public bool UseAndEnforceExistenceOfDefaultFile { get { return _useAndEnforceExistenceOfDefaultFile; } set { _useAndEnforceExistenceOfDefaultFile = value; } }
-
-
-        public bool IgnoreDefaultFile { get { return _ignoreDefaultFile; } set { _ignoreDefaultFile = value; } }
-
         public bool PullConfigurationFromAppConfig { get { return _pullConfigurationFromAppConfig; } set { _pullConfigurationFromAppConfig = value; } }
 
         public void IncludeFile(string filename)
@@ -64,7 +49,6 @@ namespace StructureMap.Configuration
         {
             var list = new List<ConfigurationParser>();
 
-            addConfigurationFromStructureMapConfig(list);
             addConfigurationFromExplicitlyAddedFiles(list);
             addConfigurationFromApplicationConfigFile();
 
@@ -117,38 +101,13 @@ namespace StructureMap.Configuration
             }
         }
 
-        private void addConfigurationFromStructureMapConfig(ICollection<ConfigurationParser> list)
-        {
-            if (_ignoreDefaultFile) return;
-            // Pick up the configuration in the default StructureMap.config
-            string pathToStructureMapConfig = GetStructureMapConfigurationPath();
-            if ((_useAndEnforceExistenceOfDefaultFile || File.Exists(pathToStructureMapConfig)))
-            {
-                _log.Try(() =>
-                {
-                    ConfigurationParser parser = ConfigurationParser.FromFile(pathToStructureMapConfig);
-                    list.Add(parser);
-                }).AndReportErrorAs(100, pathToStructureMapConfig);
-            }
-        }
-
 
         public static ConfigurationParser[] GetParsers(XmlNode node, GraphLog log)
         {
             var builder = new ConfigurationParserBuilder(log);
             builder.IncludeNode(node, String.Empty);
-            builder.IgnoreDefaultFile = true;
 
             return builder.GetParsers();
-        }
-
-        /// <summary>
-        /// Returns the absolute path to the StructureMap.config file
-        /// </summary>
-        /// <returns></returns>
-        public static string GetStructureMapConfigurationPath()
-        {
-            return locateFileAsAbsolutePath(DefaultConfigurationFilename);
         }
 
         private static string locateFileAsAbsolutePath(string filename)

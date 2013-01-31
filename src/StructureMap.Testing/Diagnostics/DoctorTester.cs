@@ -186,8 +186,6 @@ namespace StructureMap.Testing.Diagnostics
         {
             ObjectFactory.Initialize(x =>
             {
-                x.IgnoreStructureMapConfig = true;
-
                 x.For<DoctorTester.ClassThatFails>().Use<DoctorTester.ClassThatFails>();
             });
         }
@@ -230,7 +228,6 @@ namespace StructureMap.Testing.Diagnostics
         {
             ObjectFactory.Initialize(x =>
             {
-                x.IgnoreStructureMapConfig = true;
                 x.For<IWidget>().Use(new ColorWidget("Red"));
             });
         }
@@ -246,8 +243,6 @@ namespace StructureMap.Testing.Diagnostics
         {
             ObjectFactory.Initialize(x =>
             {
-                x.IgnoreStructureMapConfig = true;
-
                 x.For<IWidget>().Use<DoctorTester.NumberWidget>()
                     .Ctor<int>("age").EqualToAppSetting("age");
             });

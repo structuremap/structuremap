@@ -47,7 +47,6 @@ namespace StructureMap.Testing
 
             var container = new Container(x =>
             {
-                x.AddConfigurationFromXmlFile("StructureMap.config");
                 x.AddConfigurationFromNode(doc.DocumentElement);
             });
 
@@ -70,15 +69,5 @@ namespace StructureMap.Testing
             assertTheDefault("Orange", x => { x.AddConfigurationFromXmlFile("Config1.xml"); });
         }
 
-        [Test]
-        public void WithTheDefault()
-        {
-            // This code enforces the existence of the StructureMap.config file
-            // Initialize() will throw an exception if the StructureMap.config file
-            // cannot be found
-            ObjectFactory.Initialize(x => { x.UseDefaultStructureMapConfigFile = true; });
-
-            ObjectFactory.GetInstance<IWidget>().ShouldBeOfType<ColorWidget>().Color.ShouldEqual("Red");
-        }
     }
 }

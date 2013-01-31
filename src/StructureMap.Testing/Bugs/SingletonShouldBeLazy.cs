@@ -55,8 +55,7 @@ namespace StructureMap.Testing.Bugs
 
         private static void Initialise()
         {
-            ObjectFactory.Initialize(registry =>
-                                     registry.UseDefaultStructureMapConfigFile = false);
+            ObjectFactory.Initialize(registry => { });
             ObjectFactory.Configure(registry =>
                                     registry.ForSingletonOf<ICrm>().Use<Crm>());
         }

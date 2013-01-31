@@ -267,9 +267,6 @@
     <Compile Include="Examples\Interception.cs" />
     <Compile Include="Examples\RegisteringWithTheAPI.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="Graph\ArrayConstructorTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Graph\AssemblyScannerTester.cs" />
     <Compile Include="Graph\ContainerConstructorAttributeTester.cs">
       <SubType>Code</SubType>
@@ -294,16 +291,10 @@
     <Compile Include="Graph\FullStackFacadeTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Graph\ImplicitDefaultTest.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Graph\InstanceFactoryTester.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Graph\ContainerTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Graph\IntegratedTester.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Graph\Interceptors\CompoundInterceptorTester.cs" />
@@ -316,16 +307,10 @@
     <Compile Include="Graph\PluginGraphBuilderTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Graph\SetterInjectionEmittingTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Graph\Source\XmlAttributeInstanceMementoTester.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Graph\Source\XmlInstanceMementoTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Graph\Source\XmlMementoSourceTester.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Graph\TypeFindingTester.cs" />
@@ -361,9 +346,6 @@
     <Compile Include="MergingTester.cs" />
     <Compile Include="ModelQueryTester.cs" />
     <Compile Include="ObjectFactoryInitializeTester.cs" />
-    <Compile Include="ObjectFactoryTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Pipeline\BuildStackTester.cs" />
     <Compile Include="Pipeline\BuildStrategiesTester.cs" />
     <Compile Include="Pipeline\ConfiguredInstanceTester.cs" />

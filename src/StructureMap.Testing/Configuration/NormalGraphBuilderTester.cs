@@ -55,26 +55,6 @@ namespace StructureMap.Testing.Configuration
         }
 
         [Test]
-        public void Create_system_object_successfully_and_call_the_requested_action()
-        {
-            var memento = new MemoryInstanceMemento("XmlFile", "anything");
-            memento.SetProperty("FilePath", "something");
-            memento.SetProperty("XPath", "nodeName");
-            memento.SetProperty("NodeName", "something");
-
-
-            bool iWasCalled = false;
-
-            var builder = new GraphBuilder(new Registry[0]);
-            builder.WithSystemObject<MementoSource>(memento, "some xml", policy => {
-                policy.ShouldBeOfType<XmlFileMementoSource>();
-                iWasCalled = true;
-            });
-
-            Assert.IsTrue(iWasCalled);
-        }
-
-        [Test]
         public void Do_not_call_the_action_on_ConfigureFamily_if_the_type_path_blows_up()
         {
             var builder = new GraphBuilder(new Registry[0]);
