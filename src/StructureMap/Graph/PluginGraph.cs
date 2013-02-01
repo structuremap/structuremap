@@ -28,7 +28,7 @@ namespace StructureMap.Graph
         void AddType(Type pluginType, Type concreteType, string name);
 
         /// <summary>
-        /// Add the TPluggedType as an instance to any configured pluginType where TPluggedType
+        /// Add the PluggedType as an instance to any configured pluginType where PluggedType
         /// could be assigned to the pluginType
         /// </summary>
         /// <param name="TPluggedType"></param>
@@ -66,7 +66,7 @@ namespace StructureMap.Graph
     /// Models the runtime configuration of a StructureMap Container
     /// </summary>
     [Serializable]
-    public class PluginGraph : IPluginGraph, IPluginFactory
+    public class PluginGraph : IPluginGraph
     {
         private readonly InterceptorLibrary _interceptorLibrary = new InterceptorLibrary();
         private readonly List<Type> _TPluggedTypes = new List<Type>();
@@ -156,7 +156,7 @@ namespace StructureMap.Graph
         }
 
         /// <summary>
-        /// Add the TPluggedType as an instance to any configured pluginType where TPluggedType
+        /// Add the PluggedType as an instance to any configured pluginType where PluggedType
         /// could be assigned to the pluginType
         /// </summary>
         /// <param name="TPluggedType"></param>
@@ -232,25 +232,6 @@ namespace StructureMap.Graph
 
             var registry = (Registry) Activator.CreateInstance(type);
             registry.As<IPluginGraphConfiguration>().Configure(this);
-        }
-
-        // TODO -- if name is blank and pluginType is concrete, just use that.
-        [Obsolete("This is meant to be an intermediate step")]
-        Plugin IPluginFactory.PluginFor(Type pluginType, string name)
-        {
-            if (name == null) throw new ArgumentNullException("name");
-
-            if (name.Contains(","))
-            {
-                var pluggedType = new TypePath(name).FindType();
-                return PluginCache.GetPlugin(pluggedType);
-            }
-
-
-            var family = FindFamily(pluginType);
-            var plugin = family.FindPlugin(name) ?? family.FindPlugin(Plugin.DEFAULT);
-
-            return plugin;
         }
     }
 }

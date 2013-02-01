@@ -207,7 +207,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void CreateImplicitPluginSetsCorrectType()
         {
-            Assert.IsTrue(typeof (ConfigurationWidget).Equals(_plugin.TPluggedType));
+            Assert.IsTrue(typeof (ConfigurationWidget).Equals(_plugin.PluggedType));
         }
 
         [Test]

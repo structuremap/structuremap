@@ -18,7 +18,7 @@ namespace StructureMap.Testing.Widget
 
     //public class BuilderWithOneSetter : InstanceBuilder
     //{
-    //    public override Type TPluggedType
+    //    public override Type PluggedType
     //    {
     //        get { throw new System.NotImplementedException(); }
     //    }
@@ -33,7 +33,7 @@ namespace StructureMap.Testing.Widget
 
     //public class BuilderWithTwoSetters : InstanceBuilder
     //{
-    //    public override Type TPluggedType
+    //    public override Type PluggedType
     //    {
     //        get { throw new System.NotImplementedException(); }
     //    }

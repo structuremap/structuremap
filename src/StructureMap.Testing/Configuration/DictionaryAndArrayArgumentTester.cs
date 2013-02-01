@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Xml;
 using NUnit.Framework;
+using StructureMap.Configuration;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Source;
@@ -27,7 +28,7 @@ namespace StructureMap.Testing.Configuration
 
             var memento = new XmlAttributeInstanceMemento(element);
             var graph = new PluginGraph();
-            Instance instance = memento.ReadInstance(graph, typeof (ClassWithStringAndIntArray));
+            Instance instance = memento.ReadInstance(new SimplePluginFactory(), typeof (ClassWithStringAndIntArray));
 
             var theObject = (ClassWithStringAndIntArray) instance.Build(typeof (ClassWithStringAndIntArray),
                                                                         new BuildSession(graph));
@@ -57,7 +58,7 @@ namespace StructureMap.Testing.Configuration
 
             var memento = new XmlAttributeInstanceMemento(element);
 
-            Instance instance = memento.ReadInstance(new PluginGraph(), typeof (ClassWithDictionary));
+            Instance instance = memento.ReadInstance(new SimplePluginFactory(), typeof(ClassWithDictionary));
 
 
             var theObject =

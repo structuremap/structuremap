@@ -20,7 +20,7 @@ namespace StructureMap.Graph
         public ConstructorInfo Ctor { get { return _ctor; } }
 
         /// <summary>
-        /// Returns the System.Reflection.ConstructorInfo for the TPluggedType.  Uses either
+        /// Returns the System.Reflection.ConstructorInfo for the PluggedType.  Uses either
         /// the "greediest" constructor with the most arguments or the constructor function
         /// marked with the [DefaultConstructor]
         /// </summary>

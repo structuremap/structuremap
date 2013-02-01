@@ -4,6 +4,6 @@ namespace StructureMap.Graph
 {
     public interface IPluginFactory
     {
-        Plugin PluginFor(Type pluginType, string name);
+        Plugin PluginFor(string name);
     }
 }

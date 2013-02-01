@@ -2,6 +2,7 @@ using NUnit.Framework;
 using StructureMap.Configuration;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
+using StructureMap.Testing.Configuration;
 using StructureMap.Testing.Widget2;
 using StructureMap.Testing.Widget3;
 
@@ -152,7 +153,7 @@ namespace StructureMap.Testing
             memento.SetProperty("Color", "Red");
             memento.InstanceKey = "Red";
 
-            Assert.AreEqual("Red", memento.ReadInstance(_graph, typeof (IService)).Name);
+            Assert.AreEqual("Red", memento.ReadInstance(new SimplePluginFactory(), typeof(IService)).Name);
         }
 
         [Test]
@@ -171,7 +172,7 @@ namespace StructureMap.Testing
                 MemoryInstanceMemento.CreateReferencedInstanceMemento("Dodge"),
             });
 
-            var instance = (IStructuredInstance) memento.ReadInstance(graph, typeof (Rule));
+            var instance = (IStructuredInstance)memento.ReadInstance(new SimplePluginFactory(), typeof(Rule));
             Instance[] instances = instance.GetChildArray("cars");
             Assert.AreEqual(3, instances.Length);
 
@@ -192,7 +193,7 @@ namespace StructureMap.Testing
             MemoryInstanceMemento carMemento = MemoryInstanceMemento.CreateReferencedInstanceMemento("GrandPrix");
             memento.AddChild("car", carMemento);
 
-            var instance = (IStructuredInstance) memento.ReadInstance(graph, typeof (Rule));
+            var instance = (IStructuredInstance)memento.ReadInstance(new SimplePluginFactory(), typeof(Rule));
             var child = (ReferencedInstance) instance.GetChild("car");
 
             Assert.AreEqual("GrandPrix", child.ReferenceKey);
@@ -208,7 +209,7 @@ namespace StructureMap.Testing
             MemoryInstanceMemento memento = ComplexRule.GetMemento();
             memento.SetProperty(XmlConstants.PLUGGED_TYPE, typeof (ComplexRule).AssemblyQualifiedName);
 
-            var instance = (IConfiguredInstance) memento.ReadInstance(graph, typeof (Rule));
+            var instance = (IConfiguredInstance)memento.ReadInstance(new SimplePluginFactory(), typeof(Rule));
 
 
             Assert.AreEqual(memento.GetProperty("String"), instance.GetProperty("String"));

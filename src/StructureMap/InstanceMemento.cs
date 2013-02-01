@@ -16,7 +16,7 @@ namespace StructureMap
 
         public ConstructorInstance ToInstance(IPluginFactory factory, Type pluginType)
         {
-            var plugin = factory.PluginFor(pluginType, PluggedType());
+            var plugin = factory.PluginFor(PluggedType());
 
             if (plugin == null)
             {
@@ -25,6 +25,10 @@ namespace StructureMap
             }
 
             var instance = new ConstructorInstance(plugin);
+            if (InstanceKey.IsNotEmpty())
+            {
+                instance.Name = InstanceKey;
+            }
 
             var reader = new InstanceMementoPropertyReader(instance, this, factory);
             plugin.VisitArguments(reader);

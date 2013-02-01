@@ -187,7 +187,7 @@ namespace StructureMap
             }
 
             /// <summary>
-            /// Determines if the TPluggedType can be upcast to the pluginType
+            /// Determines if the PluggedType can be upcast to the pluginType
             /// </summary>
             /// <param name="pluginType"></param>
             /// <param name="TPluggedType"></param>
@@ -217,7 +217,7 @@ namespace StructureMap
 
 
             /// <summary>
-            /// Determines if the TPluggedType is a valid Plugin into the
+            /// Determines if the PluggedType is a valid Plugin into the
             /// PluginType
             /// </summary>
             /// <param name="pluginType"></param>

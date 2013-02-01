@@ -82,9 +82,9 @@ namespace StructureMap.Graph
                 plugin.UseSetterRule(predicate);
 
                 //does any of the registered plugins have a setter matching the predicate?
-                if (plugin.TPluggedType.GetProperties().Any(s => predicate(s)))
+                if (plugin.PluggedType.GetProperties().Any(s => predicate(s)))
                 {
-                    _builders.Remove(plugin.TPluggedType);
+                    _builders.Remove(plugin.PluggedType);
                 }
             });
         }

@@ -15,7 +15,7 @@ namespace StructureMap.Configuration
             _builder = builder;
         }
 
-        public Plugin PluginFor(Type pluginType, string name)
+        public Plugin PluginFor(string name)
         {
             if (name == null) throw new ArgumentNullException("name");
 
@@ -51,7 +51,8 @@ namespace StructureMap.Configuration
                 family.SetScopeTo(scope);
 
                 InstanceMemento memento = ConfigurationParser.CreateMemento(element);
-                family.AddDefaultMemento(memento);
+                var instance = memento.ToInstance(this, family.PluginType);
+                family.SetDefault(instance);
             });
         }
 
@@ -60,9 +61,10 @@ namespace StructureMap.Configuration
             var pluginTypePath = new TypePath(element.GetAttribute(PLUGIN_TYPE));
 
             _builder.ConfigureFamily(pluginTypePath, family => {
-                InstanceMemento memento =
-                    ConfigurationParser.CreateMemento(element);
-                family.AddInstance(memento);
+                InstanceMemento memento = ConfigurationParser.CreateMemento(element);
+                var instance = memento.ToInstance(this, family.PluginType);
+
+                family.AddInstance(instance);
             });
         }
 

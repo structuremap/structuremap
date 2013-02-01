@@ -15,7 +15,7 @@ namespace StructureMap.Testing.Configuration
         {
             string xml =
                 @"
-<StructureMap MementoStyle='Attribute'>
+<StructureMap>
   <DefaultInstance PluginType='StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget' PluggedType='StructureMap.Testing.Widget.ColorWidget,StructureMap.Testing.Widget' color='Red' />  
   <DefaultInstance PluginType='StructureMap.Testing.Widget.Rule,StructureMap.Testing.Widget' PluggedType='StructureMap.Testing.Widget.ColorRule,StructureMap.Testing.Widget' color='Blue' Scope='Singleton' Key='TheBlueOne'/>  
 </StructureMap>

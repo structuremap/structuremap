@@ -6,6 +6,18 @@ namespace StructureMap.Xml.Testing
     public class Missing_Xml_tests
     {
         [Test]
+        public void InstanceParser_malformed_alias()
+        {
+            Assert.Fail("Do.");
+        }
+
+        [Test]
+        public void InstanceParser_parse_alias()
+        {
+            Assert.Fail("Do.");
+        }
+
+        [Test]
         public void IPluginFactory_cannot_find_plugin()
         {
             Assert.Fail("Do.");

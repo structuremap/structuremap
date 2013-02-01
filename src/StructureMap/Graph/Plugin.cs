@@ -52,7 +52,7 @@ namespace StructureMap.Graph
         /// <summary>
         /// The concrete CLR Type represented by the Plugin
         /// </summary>
-        public Type TPluggedType { get { return _TPluggedType; } }
+        public Type PluggedType { get { return _TPluggedType; } }
 
         /// <summary>
         /// Property's that will be filled by setter injection
@@ -63,13 +63,13 @@ namespace StructureMap.Graph
 
         public override string ToString()
         {
-            return ("Plugin:  " + _concreteKey).PadRight(40) + TPluggedType.AssemblyQualifiedName;
+            return ("Plugin:  " + _concreteKey).PadRight(40) + PluggedType.AssemblyQualifiedName;
         }
 
 
         public Instance CreateImplicitInstance()
         {
-            return new ConfiguredInstance(TPluggedType).Named(ConcreteKey);
+            return new ConfiguredInstance(PluggedType).Named(ConcreteKey);
         }
 
         public string FindArgumentNameForType<T>()

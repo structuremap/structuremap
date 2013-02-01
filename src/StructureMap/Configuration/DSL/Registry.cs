@@ -50,7 +50,7 @@ namespace StructureMap.Configuration.DSL
         }
 
         /// <summary>
-        /// Add the TPluggedType as an instance to any configured pluginType where TPluggedType. 
+        /// Add the PluggedType as an instance to any configured pluginType where PluggedType. 
         /// Mostly useful for conventions
         /// </summary>
         /// <param name="TPluggedType"></param>

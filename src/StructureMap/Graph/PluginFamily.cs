@@ -15,7 +15,6 @@ namespace StructureMap.Graph
     public class PluginFamily : IPluginFamily
     {
         private readonly Cache<string, Instance> _instances = new Cache<string, Instance>(delegate { return null; });
-        private readonly List<InstanceMemento> _mementoList = new List<InstanceMemento>();
         private readonly Cache<string, Plugin> _pluggedTypes = new Cache<string, Plugin>();
         private readonly Type _pluginType;
         private string _defaultKey = string.Empty;
@@ -64,11 +63,6 @@ namespace StructureMap.Graph
 
         public ILifecycle Lifecycle { get { return _lifecycle; } }
 
-        public void AddInstance(InstanceMemento memento)
-        {
-            _mementoList.Add(memento);
-        }
-
         public void AddInstance(Instance instance)
         {
             _instances[instance.Name] = instance;
@@ -80,27 +74,13 @@ namespace StructureMap.Graph
             DefaultInstanceKey = instance.Name;
         }
 
-
-        // For testing
-        public InstanceMemento GetMemento(string instanceKey)
+        public void AddTypes(List<Type> pluggedTypes)
         {
-            return _mementoList.Find(m => m.InstanceKey == instanceKey);
-        }
-
-
-        public void AddTypes(List<Type> TPluggedTypes)
-        {
-            TPluggedTypes.ForEach(type => AddType(type));
+            pluggedTypes.ForEach(AddType);
         }
 
         public void Seal()
         {
-            _mementoList.ForEach(memento => _parent.Log.Try(() =>
-            {
-                Instance instance = memento.ReadInstance(Parent, _pluginType);
-                AddInstance(instance);
-            }).AndLogAnyErrors());
-
             discoverImplicitInstances();
 
             validatePluggabilityOfInstances();
@@ -140,9 +120,9 @@ namespace StructureMap.Graph
             {
                 if (!plugin.CanBeAutoFilled) return;
 
-                if (hasInstanceWithTPluggedType(plugin)) return;
+                if (hasInstanceWithPluggedType(plugin)) return;
 
-                ConfiguredInstance instance = new ConfiguredInstance(plugin.TPluggedType).Named(key);
+                ConfiguredInstance instance = new ConfiguredInstance(plugin.PluggedType).Named(key);
                 FillInstance(instance);
             });
         }
@@ -152,7 +132,7 @@ namespace StructureMap.Graph
             _instances.Fill(instance.Name, instance);
         }
 
-        private bool hasInstanceWithTPluggedType(Plugin plugin)
+        private bool hasInstanceWithPluggedType(Plugin plugin)
         {
             return _instances.Exists(instance => instance.Matches(plugin));
         }
@@ -163,39 +143,39 @@ namespace StructureMap.Graph
             return _instances[name];
         }
 
-        public bool HasPlugin(Type TPluggedType)
+        public bool HasPlugin(Type pluggedType)
         {
-            return _pluggedTypes.Exists(plugin => plugin.TPluggedType == TPluggedType);
+            return _pluggedTypes.Exists(plugin => plugin.PluggedType == pluggedType);
         }
 
-        private void assertPluggability(Type TPluggedType)
+        private void assertPluggability(Type pluggedType)
         {
-            if (!TPluggedType.CanBeCastTo(_pluginType))
+            if (!pluggedType.CanBeCastTo(_pluginType))
             {
-                throw new StructureMapException(104, TPluggedType, _pluginType);
+                throw new StructureMapException(104, pluggedType, _pluginType);
             }
 
-            if (!Constructor.HasConstructors(TPluggedType))
+            if (!Constructor.HasConstructors(pluggedType))
             {
-                throw new StructureMapException(180, TPluggedType.AssemblyQualifiedName);
+                throw new StructureMapException(180, pluggedType.AssemblyQualifiedName);
             }
         }
 
-        public Plugin AddPlugin(Type TPluggedType)
+        public Plugin AddPlugin(Type pluggedType)
         {
-            assertPluggability(TPluggedType);
+            assertPluggability(pluggedType);
 
-            Plugin plugin = PluginCache.GetPlugin(TPluggedType);
+            Plugin plugin = PluginCache.GetPlugin(pluggedType);
             _pluggedTypes[plugin.ConcreteKey] = plugin;
 
             return plugin;
         }
 
-        public Plugin AddPlugin(Type TPluggedType, string key)
+        public Plugin AddPlugin(Type pluggedType, string key)
         {
-            assertPluggability(TPluggedType);
+            assertPluggability(pluggedType);
 
-            Plugin plugin = PluginCache.GetPlugin(TPluggedType);
+            Plugin plugin = PluginCache.GetPlugin(pluggedType);
             _pluggedTypes[key] = plugin;
 
             return plugin;
@@ -208,18 +188,7 @@ namespace StructureMap.Graph
 
         public Plugin FindPlugin(Type TPluggedType)
         {
-            return _pluggedTypes.Find(p => p.TPluggedType == TPluggedType);
-        }
-
-        public void AddDefaultMemento(InstanceMemento memento)
-        {
-            if (string.IsNullOrEmpty(memento.InstanceKey))
-            {
-                memento.InstanceKey = "DefaultInstanceOf" + PluginType.AssemblyQualifiedName;
-            }
-
-            AddInstance(memento);
-            DefaultInstanceKey = memento.InstanceKey;
+            return _pluggedTypes.Find(p => p.PluggedType == TPluggedType);
         }
 
         public void FillDefault(Profile profile)
@@ -237,6 +206,7 @@ namespace StructureMap.Graph
 
             profile.FillTypeInto(PluginType, defaultInstance);
         }
+
 
         public void ImportFrom(PluginFamily source)
         {
@@ -345,7 +315,6 @@ namespace StructureMap.Graph
         public void RemoveAll()
         {
             _instances.Clear();
-            _mementoList.Clear();
             _defaultKey = null;
         }
 

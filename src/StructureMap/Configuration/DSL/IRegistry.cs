@@ -25,7 +25,7 @@ namespace StructureMap.Configuration.DSL
         void AddType(Type pluginType, Type concreteType, string name);
 
         /// <summary>
-        /// Add the TPluggedType as an instance to any configured pluginType where TPluggedType
+        /// Add the PluggedType as an instance to any configured pluginType where PluggedType
         /// could be assigned to the pluginType
         /// </summary>
         /// <param name="TPluggedType"></param>

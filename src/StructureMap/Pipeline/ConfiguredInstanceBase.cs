@@ -26,16 +26,16 @@ namespace StructureMap.Pipeline
     //        read(memento, graph, pluginType);
     //    }
 
-    //    protected ConfiguredInstanceBase(Type TPluggedType, string name)
+    //    protected ConfiguredInstanceBase(Type PluggedType, string name)
     //    {
-    //        _TPluggedType = TPluggedType;
+    //        _TPluggedType = PluggedType;
     //        Name = name;
     //    }
 
-    //    protected ConfiguredInstanceBase(Type TPluggedType) : this(TPluggedType, Guid.NewGuid().ToString())
+    //    protected ConfiguredInstanceBase(Type PluggedType) : this(PluggedType, Guid.NewGuid().ToString())
     //    {
-    //        if (TPluggedType != null)
-    //            if (TPluggedType.IsAbstract || TPluggedType.IsInterface)
+    //        if (PluggedType != null)
+    //            if (PluggedType.IsAbstract || PluggedType.IsInterface)
     //            {
     //                throw new StructureMapException(25);
     //            }
@@ -43,7 +43,7 @@ namespace StructureMap.Pipeline
 
     //    #region Copyable Members
 
-    //    Type BasicInstance.TPluggedType
+    //    Type BasicInstance.PluggedType
     //    {
     //        get { return _TPluggedType; }
     //    }
@@ -67,7 +67,7 @@ namespace StructureMap.Pipeline
 
     //    //#region IConfiguredInstance Members
 
-    //    //Type IConfiguredInstance.TPluggedType
+    //    //Type IConfiguredInstance.PluggedType
     //    //{
     //    //    get { return _TPluggedType; }
     //    //}
@@ -184,7 +184,7 @@ namespace StructureMap.Pipeline
 
     //    internal override bool Matches(Plugin plugin)
     //    {
-    //        return plugin.TPluggedType == _TPluggedType;
+    //        return plugin.PluggedType == _TPluggedType;
     //    }
 
     //    private void read(InstanceMemento memento, PluginGraph graph, Type pluginType)
@@ -192,7 +192,7 @@ namespace StructureMap.Pipeline
     //        PluginFamily family = graph.FindFamily(pluginType);
     //        Plugin plugin = memento.FindPlugin(family);
 
-    //        _TPluggedType = plugin.TPluggedType;
+    //        _TPluggedType = plugin.PluggedType;
 
     //        var reader = new InstanceMementoPropertyReader(this, memento, graph, pluginType);
     //        plugin.VisitArguments(reader);
@@ -274,7 +274,7 @@ namespace StructureMap.Pipeline
 
     //    protected void mergeIntoThis(BasicInstance instance)
     //    {
-    //        _TPluggedType = instance.TPluggedType;
+    //        _TPluggedType = instance.PluggedType;
 
     //        foreach (var pair in instance.Properties)
     //        {

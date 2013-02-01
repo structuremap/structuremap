@@ -2,17 +2,36 @@ using System;
 using System.IO;
 using System.Xml;
 using StructureMap.Diagnostics;
-using StructureMap.Graph;
 using StructureMap.Source;
-using StructureMap.Util;
 
 namespace StructureMap.Configuration
 {
     public class ConfigurationParser : XmlConstants
     {
-        
+        private readonly XmlNode _structureMapNode;
+        public string Description = string.Empty;
+        private string _filePath = string.Empty;
 
-        #region statics
+        public ConfigurationParser(XmlNode structureMapNode)
+        {
+            _structureMapNode = structureMapNode;
+        }
+
+        public string Id
+        {
+            get
+            {
+                XmlAttribute att = _structureMapNode.Attributes["Id"];
+                return att == null ? string.Empty : att.Value;
+            }
+        }
+
+
+        public string FilePath
+        {
+            get { return _filePath; }
+            set { _filePath = value; }
+        }
 
         public static ConfigurationParser FromFile(string filename)
         {
@@ -31,34 +50,11 @@ namespace StructureMap.Configuration
             return parser;
         }
 
-        #endregion
-
-        private readonly XmlNode _structureMapNode;
-        private string _filePath = string.Empty;
-        public string Description = string.Empty;
-
-        public ConfigurationParser(XmlNode structureMapNode)
-        {
-            _structureMapNode = structureMapNode;
-        }
-
         public static InstanceMemento CreateMemento(XmlNode node)
         {
             XmlNode clonedNode = node.CloneNode(true);
             return new XmlAttributeInstanceMemento(clonedNode);
         }
-
-        public string Id
-        {
-            get
-            {
-                XmlAttribute att = _structureMapNode.Attributes["Id"];
-                return att == null ? string.Empty : att.Value;
-            }
-        }
-
-
-        public string FilePath { get { return _filePath; } set { _filePath = value; } }
 
         public void ForEachFile(GraphLog log, Action<string> action)
         {
@@ -66,8 +62,7 @@ namespace StructureMap.Configuration
 
             // Find the text in every child node of _structureMapNode and
             // perform an action with that text
-            _structureMapNode.ForTextInChild("Include/@File").Do(fileName =>
-            {
+            _structureMapNode.ForTextInChild("Include/@File").Do(fileName => {
                 string includedFile = Path.Combine(includePath, fileName);
                 action(includedFile);
             });
@@ -102,6 +97,5 @@ namespace StructureMap.Configuration
             forEachNode(DEFAULT_INSTANCE).Do(instanceParser.ParseDefaultElement);
             forEachNode(ADD_INSTANCE_NODE).Do(instanceParser.ParseInstanceElement);
         }
-
     }
 }
