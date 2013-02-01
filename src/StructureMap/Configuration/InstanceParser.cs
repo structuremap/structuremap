@@ -1,19 +1,16 @@
 using System;
 using System.Xml;
 using StructureMap.Graph;
-using StructureMap.Source;
 
 namespace StructureMap.Configuration
 {
     public class InstanceParser : XmlConstants
     {
         private readonly IGraphBuilder _builder;
-        private readonly XmlMementoCreator _mementoCreator;
 
-        public InstanceParser(IGraphBuilder builder, XmlMementoCreator mementoCreator)
+        public InstanceParser(IGraphBuilder builder)
         {
             _builder = builder;
-            _mementoCreator = mementoCreator;
         }
 
         public void ParseDefaultElement(XmlElement element)
@@ -25,7 +22,7 @@ namespace StructureMap.Configuration
                 InstanceScope scope = findScope(element);
                 family.SetScopeTo(scope);
 
-                InstanceMemento memento = _mementoCreator.CreateMemento(element);
+                InstanceMemento memento = ConfigurationParser.CreateMemento(element);
                 family.AddDefaultMemento(memento);
             });
         }
@@ -36,7 +33,7 @@ namespace StructureMap.Configuration
 
             _builder.ConfigureFamily(pluginTypePath, family => {
                 InstanceMemento memento =
-                    _mementoCreator.CreateMemento(element);
+                    ConfigurationParser.CreateMemento(element);
                 family.AddInstance(memento);
             });
         }

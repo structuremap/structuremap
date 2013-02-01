@@ -29,7 +29,6 @@ namespace StructureMap.Configuration
 
         #endregion
 
-        private readonly XmlMementoCreator _mementoCreator;
         private readonly XmlNode _structureMapNode;
         private string _filePath = string.Empty;
         public string Description = string.Empty;
@@ -37,8 +36,12 @@ namespace StructureMap.Configuration
         public ConfigurationParser(XmlNode structureMapNode)
         {
             _structureMapNode = structureMapNode;
+        }
 
-            _mementoCreator = new XmlMementoCreator();
+        public static InstanceMemento CreateMemento(XmlNode node)
+        {
+            XmlNode clonedNode = node.CloneNode(true);
+            return new XmlAttributeInstanceMemento(clonedNode);
         }
 
         public string Id
@@ -89,7 +92,7 @@ namespace StructureMap.Configuration
 
         public void Parse(IGraphBuilder builder)
         {
-            var instanceParser = new InstanceParser(builder, _mementoCreator);
+            var instanceParser = new InstanceParser(builder);
 
             forEachNode(DEFAULT_INSTANCE).Do(instanceParser.ParseDefaultElement);
             forEachNode(ADD_INSTANCE_NODE).Do(instanceParser.ParseInstanceElement);
