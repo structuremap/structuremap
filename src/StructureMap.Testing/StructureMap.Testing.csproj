@@ -182,7 +182,6 @@
       <Link>CommonAssemblyInfo.cs</Link>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="AlternativeConfigurationTester.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -223,7 +222,6 @@
     <Compile Include="BuildUpTester.cs" />
     <Compile Include="ConcreteClassCreationTester.cs" />
     <Compile Include="Configuration\ConfigurationParserBuilderTester.cs" />
-    <Compile Include="Configuration\ConfigurationParserTester.cs" />
     <Compile Include="Configuration\DefaultInstanceNodeTester.cs" />
     <Compile Include="Configuration\DictionaryAndArrayArgumentTester.cs" />
     <Compile Include="Configuration\DictionaryReaderTester.cs" />
@@ -246,7 +244,6 @@
     <Compile Include="Configuration\IncludeTesting.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Configuration\InlineInstanceDefinitionInProfileAndMachineNodesTester.cs" />
     <Compile Include="Configuration\NormalGraphBuilderTester.cs" />
     <Compile Include="Configuration\PrimitiveArrayReaderTester.cs" />
     <Compile Include="Configuration\ProfileBuilderTester.cs" />

@@ -76,11 +76,6 @@ namespace StructureMap.Configuration
             return Path.GetDirectoryName(_filePath);
         }
 
-        public void ParseAssemblies(IGraphBuilder builder)
-        {
-            _structureMapNode.ForTextInChild("Assembly/@Name").Do(name => builder.AddAssembly(name));
-        }
-
         public void ParseRegistries(IGraphBuilder builder)
         {
             _structureMapNode.ForTextInChild("Registry/@Type").Do(name => builder.AddRegistry(name));
@@ -92,12 +87,6 @@ namespace StructureMap.Configuration
             return _structureMapNode.ForEachChild(xpath);
         }
 
-        public void ParseProfilesAndMachines(IGraphBuilder builder)
-        {
-            var parser = new ProfileAndMachineParser(builder, _structureMapNode, _mementoCreator);
-            parser.Parse();
-        }
-
         public void Parse(IGraphBuilder builder)
         {
             var familyParser = new FamilyParser(builder, _mementoCreator);
@@ -105,8 +94,6 @@ namespace StructureMap.Configuration
             forEachNode(PLUGIN_FAMILY_NODE).Do(familyParser.ParseFamily);
             forEachNode(DEFAULT_INSTANCE).Do(familyParser.ParseDefaultElement);
             forEachNode(ADD_INSTANCE_NODE).Do(familyParser.ParseInstanceElement);
-
-            ParseProfilesAndMachines(builder);
         }
     }
 }

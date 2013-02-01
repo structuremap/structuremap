@@ -115,16 +115,6 @@ namespace StructureMap.Testing.Graph.ExceptionHandling
             Assert.AreEqual(expected, actual);
         }
 
-        [Test]
-        public void Log_101_if_CannotLoadAssemblyInAssemblyNode()
-        {
-            assertErrorIsLogged(101,
-                                @"
-		        <StructureMap>
-			        <Assembly Name='StructureMap.NonExistent'/>
-		        </StructureMap>
-            ");
-        }
 
 
         [Test]

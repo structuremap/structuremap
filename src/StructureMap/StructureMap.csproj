@@ -218,7 +218,6 @@
     <Compile Include="Configuration\GraphBuilder.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Configuration\ProfileAndMachineParser.cs" />
     <Compile Include="Configuration\StructureMapConfigurationSection.cs" />
     <Compile Include="Configuration\XmlConstants.cs">
       <SubType>Code</SubType>

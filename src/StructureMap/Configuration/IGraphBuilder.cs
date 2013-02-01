@@ -14,7 +14,6 @@ namespace StructureMap.Configuration
     public interface IGraphBuilder
     {
         PluginGraph PluginGraph { get; }
-        void AddAssembly(string assemblyName);
         void AddRegistry(string registryTypeName);
 
         void FinishFamilies();

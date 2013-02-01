@@ -21,15 +21,6 @@ namespace StructureMap.Testing.Configuration
         #endregion
 
         [Test]
-        public void AddAssembly_SadPath()
-        {
-            var builder = new GraphBuilder(new Registry[0]);
-            builder.AddAssembly("something");
-
-            builder.PluginGraph.Log.AssertHasError(101);
-        }
-
-        [Test]
         public void Call_the_action_on_configure_family_if_the_pluginType_is_found()
         {
             var typePath = new TypePath(typeof (IGateway));

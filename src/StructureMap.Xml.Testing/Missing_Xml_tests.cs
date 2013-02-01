@@ -6,6 +6,18 @@ namespace StructureMap.Xml.Testing
     public class Missing_Xml_tests
     {
         [Test]
+        public void set_the_default_profile_name_on_the_structureMap_element()
+        {
+            Assert.Fail("do.");
+        }
+
+        [Test]
+        public void add_node_in_initialization()
+        {
+            Assert.Fail("Do.");
+        }
+
+        [Test]
         public void deep_instance_with_children_and_grandchildren()
         {
             Assert.Fail("Do.");

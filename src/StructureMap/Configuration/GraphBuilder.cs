@@ -8,7 +8,6 @@ namespace StructureMap.Configuration
 {
     public class GraphBuilder : IGraphBuilder
     {
-        private readonly AssemblyScanner _assemblyScanner;
         private readonly PluginGraph _pluginGraph;
         private readonly Container _systemContainer;
         private readonly PluginGraph _systemGraph;
@@ -22,8 +21,6 @@ namespace StructureMap.Configuration
         public GraphBuilder(Registry[] registries, PluginGraph pluginGraph)
         {
             _pluginGraph = pluginGraph;
-            _assemblyScanner = new AssemblyScanner();
-            _pluginGraph.AddScanner(_assemblyScanner);
 
             foreach (Registry registry in registries)
             {
@@ -42,19 +39,6 @@ namespace StructureMap.Configuration
         }
 
         public PluginGraph PluginGraph { get { return _pluginGraph; } }
-
-        public void AddAssembly(string assemblyName)
-        {
-            try
-            {
-                Assembly assembly = AppDomain.CurrentDomain.Load(assemblyName);
-                _assemblyScanner.Assembly(assembly);
-            }
-            catch (Exception ex)
-            {
-                _pluginGraph.Log.RegisterError(101, ex, assemblyName);
-            }
-        }
 
         public void AddRegistry(string registryTypeName)
         {

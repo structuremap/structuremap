@@ -163,29 +163,6 @@ namespace StructureMap.Testing.Graph
 
 
         [Test]
-        public void GotRightNumberOfPluginsForIWidget()
-        {
-            PluginFamily pluginFamily = graph.FindFamily(typeof (IWidget));
-            Assert.AreEqual(5, pluginFamily.PluginCount, "Should be 5 total");
-        }
-
-
-        [Test]
-        public void GotRightNumberOfPluginsForMultipleAssemblies()
-        {
-            PluginFamily pluginFamily = graph.FindFamily(typeof (Rule));
-            Assert.AreEqual(5, pluginFamily.PluginCount, "Should be 5 total");
-        }
-
-        [Test]
-        public void PicksUpTheDefaultProfileAttributeOnTheStructureMapNodeAndSetsTheProfile()
-        {
-            PluginGraph graph = DataMother.GetDiagnosticPluginGraph("DefaultProfileConfig.xml");
-            Assert.AreEqual("Green", graph.ProfileManager.DefaultProfileName);
-        }
-
-
-        [Test]
         public void SetsTheDefaultInstanceKey()
         {
             PluginFamily family = graph.FindFamily(typeof (IWidget));
