@@ -6,6 +6,24 @@ namespace StructureMap.Xml.Testing
     public class Missing_Xml_tests
     {
         [Test]
+        public void IPluginFactory_cannot_find_plugin()
+        {
+            Assert.Fail("Do.");
+        }
+
+        [Test]
+        public void include_node_tester()
+        {
+            Assert.Fail("Do.");
+        }
+
+        [Test]
+        public void set_scope_in_xml_for_individual_instance()
+        {
+            Assert.Fail("Do.");
+        }
+
+        [Test]
         public void set_the_default_profile_name_on_the_structureMap_element()
         {
             Assert.Fail("do.");

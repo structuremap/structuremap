@@ -59,21 +59,6 @@ namespace StructureMap.Testing.Graph.ExceptionHandling
         }
 
         [Test]
-        public void CouldNotFindConcreteKey()
-        {
-            assertErrorIsLogged(201,
-                                @"
-		        <StructureMap>
-			        <Assembly Name='StructureMap.Testing.Widget'/>
-        					
-			        <PluginFamily Type='StructureMap.Testing.Widget.IWidget' Assembly='StructureMap.Testing.Widget' DefaultKey=''>			
-				        <Instance Key='BadConcreteKey' Type='NotARealConcreteKey'></Instance>
-			        </PluginFamily>						
-		        </StructureMap>
-            ");
-        }
-
-        [Test]
         public void CouldNotFindInstanceKey()
         {
             assertErrorIsThrown(200,
@@ -88,20 +73,6 @@ namespace StructureMap.Testing.Graph.ExceptionHandling
                 );
         }
 
-        [Test]
-        public void CouldNotUpcastDesignatedTPluggedTypeIntoPluginType()
-        {
-            assertErrorIsLogged(104,
-                                @"
-		        <StructureMap>
-			        <Assembly Name='StructureMap.Testing.Widget'/>
-        					
-			        <PluginFamily Type='StructureMap.Testing.Widget.IWidget' Assembly='StructureMap.Testing.Widget' DefaultKey=''>
-				        <Plugin Assembly='StructureMap.Testing.Widget' Type='StructureMap.Testing.Widget.ComplexRule' ConcreteKey='Rule'/>
-			        </PluginFamily>			
-		        </StructureMap>
-            ");
-        }
 
         [Test]
         public void ExceptionMessage()
@@ -113,67 +84,6 @@ namespace StructureMap.Testing.Graph.ExceptionHandling
             string actual = exception.Message;
 
             Assert.AreEqual(expected, actual);
-        }
-
-
-
-        [Test]
-        public void Log_103_CannotLoadTypeFromPluginFamilyNode()
-        {
-            assertErrorIsLogged(103,
-                                @"
-		        <StructureMap>
-			        <PluginFamily Assembly='StructureMap.Testing.Widget' Type='StructureMap.Testing.Widget.NotARealType'/>
-		        </StructureMap>
-            ");
-        }
-
-        [Test]
-        public void Log_112_if_MissingConcreteKeyOnPluginNode()
-        {
-            assertErrorIsLogged(112,
-                                @"
-		        <StructureMap>
-			        <Assembly Name='StructureMap.Testing.Widget'/>
-        					
-			        <PluginFamily Type='StructureMap.Testing.Widget.IWidget' Assembly='StructureMap.Testing.Widget' DefaultKey=''>
-				        <Plugin Assembly='StructureMap.Testing.Widget' Type='StructureMap.Testing.Widget.NotPluggableWidget' ConcreteKey=''/>
-			        </PluginFamily>				
-		        </StructureMap>
-");
-        }
-
-
-        [Test]
-        public void Log_130_if_an_error_occurs_when_trying_to_create_an_interceptor_configured_in_xml()
-        {
-            assertErrorIsLogged(130,
-                                @"
-		        <StructureMap>
-			        <Assembly Name='StructureMap.Testing.Widget'/>
-        					
-			        <PluginFamily Type='StructureMap.Testing.Widget.IWidget' Assembly='StructureMap.Testing.Widget' DefaultKey=''>
-				        <Interceptors>
-					        <Interceptor Type='NotARealType'></Interceptor>
-				        </Interceptors>
-			        </PluginFamily>						
-		        </StructureMap>
-");
-        }
-
-        [Test]
-        public void Log_131_if_Plugin_type_could_not_be_loaded_from_Xml_configuration()
-        {
-            assertErrorIsLogged(131,
-                                @"
-		        <StructureMap>
-			        <Assembly Name='StructureMap.Testing.Widget'/>
-        					
-			        <PluginFamily Type='StructureMap.Testing.Widget.IWidget' Assembly='StructureMap.Testing.Widget' DefaultKey=''>
-				        <Plugin Assembly='StructureMap.Testing' Type='StructureMap.Testing.Widget.NotARealClass' ConcreteKey='NotReal'/>
-			        </PluginFamily>	
-		        </StructureMap>	
-            ");
         }
 
         [Test]

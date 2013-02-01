@@ -89,11 +89,10 @@ namespace StructureMap.Configuration
 
         public void Parse(IGraphBuilder builder)
         {
-            var familyParser = new FamilyParser(builder, _mementoCreator);
+            var instanceParser = new InstanceParser(builder, _mementoCreator);
 
-            forEachNode(PLUGIN_FAMILY_NODE).Do(familyParser.ParseFamily);
-            forEachNode(DEFAULT_INSTANCE).Do(familyParser.ParseDefaultElement);
-            forEachNode(ADD_INSTANCE_NODE).Do(familyParser.ParseInstanceElement);
+            forEachNode(DEFAULT_INSTANCE).Do(instanceParser.ParseDefaultElement);
+            forEachNode(ADD_INSTANCE_NODE).Do(instanceParser.ParseInstanceElement);
         }
     }
 }

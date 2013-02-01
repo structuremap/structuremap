@@ -50,16 +50,5 @@ namespace StructureMap.Testing
             Assert.IsNotNull(gateway);
         }
 
-
-        [Test]
-        public void RunThroughXml()
-        {
-            PluginGraph graph = DataMother.GetPluginGraph("PluggedTypeTest.xml");
-            var manager = new Container(graph);
-
-
-            var widget = (NotPluggableWidget) manager.GetInstance(typeof (IWidget), "Me");
-            Assert.AreEqual("Jeremy", widget.Name);
-        }
     }
 }

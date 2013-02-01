@@ -238,12 +238,6 @@
     <Compile Include="Configuration\DSL\ProgrammaticConstructorSelectionTester.cs" />
     <Compile Include="Configuration\DSL\RegistryIntegratedTester.cs" />
     <Compile Include="Configuration\DSL\RegistryTester.cs" />
-    <Compile Include="Configuration\FamilyParserTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Configuration\IncludeTesting.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Configuration\NormalGraphBuilderTester.cs" />
     <Compile Include="Configuration\PrimitiveArrayReaderTester.cs" />
     <Compile Include="Configuration\ProfileBuilderTester.cs" />
@@ -299,9 +293,6 @@
     <Compile Include="Graph\Interceptors\MockTypeInterceptor.cs" />
     <Compile Include="Graph\Interceptors\TypeInterceptionTester.cs" />
     <Compile Include="Graph\PluggableAttributeTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Graph\PluginGraphBuilderTester.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Graph\Source\XmlAttributeInstanceMementoTester.cs">
@@ -432,7 +423,6 @@
     <EmbeddedResource Include="TestData\NavigationTest.xml" />
     <EmbeddedResource Include="TestData\NotTriggered.xml" />
     <EmbeddedResource Include="TestData\ObjectMother.config" />
-    <EmbeddedResource Include="TestData\ProfileAndMachine.xml" />
     <EmbeddedResource Include="TestData\RuleSource.xml" />
     <EmbeddedResource Include="TestData\SampleConfig.xml" />
     <EmbeddedResource Include="TestData\ScopeInFamily.xml" />
@@ -456,12 +446,8 @@
     <EmbeddedResource Include="TestData\AttributeNormalized.xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="TestData\PluggedTypeTest.xml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Examples\AddRegistryInXml.xml" />
     <Content Include="Sample.xml" />
-    <Content Include="TestData\ProfileSample.xml" />
     <EmbeddedResource Include="TestData\BUG_OverwritingOfPrimitiveProperties.xml" />
     <EmbeddedResource Include="TestData\ShortInstance.xml" />
     <EmbeddedResource Include="TestData\DefaultInstance.xml" />

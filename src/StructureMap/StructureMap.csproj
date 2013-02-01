@@ -209,7 +209,7 @@
     <Compile Include="Pipeline\ExplicitArguments.cs" />
     <Compile Include="Configuration\DSL\Expressions\ProfileExpression.cs" />
     <Compile Include="Configuration\DSL\Registry.cs" />
-    <Compile Include="Configuration\FamilyParser.cs">
+    <Compile Include="Configuration\InstanceParser.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Configuration\IGraphBuilder.cs">
