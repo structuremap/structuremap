@@ -18,27 +18,27 @@ namespace StructureMap.Graph
         public static readonly string DEFAULT = "DEFAULT";
         private readonly Constructor _constructor;
 
-        private readonly Type _TPluggedType;
+        private readonly Type _pluggedType;
         private readonly SetterPropertyCollection _setters;
         private string _concreteKey;
 
         #region constructors
 
-        public Plugin(Type TPluggedType, string concreteKey)
-            : this(TPluggedType)
+        public Plugin(Type pluggedType, string concreteKey)
+            : this(pluggedType)
         {
             _concreteKey = concreteKey;
         }
 
-        public Plugin(Type TPluggedType)
+        public Plugin(Type pluggedType)
         {
             var att =
-                Attribute.GetCustomAttribute(TPluggedType, typeof (PluggableAttribute), false) as PluggableAttribute;
-            _concreteKey = att == null ? TPluggedType.AssemblyQualifiedName : att.ConcreteKey;
+                Attribute.GetCustomAttribute(pluggedType, typeof (PluggableAttribute), false) as PluggableAttribute;
+            _concreteKey = att == null ? pluggedType.AssemblyQualifiedName : att.ConcreteKey;
 
-            _TPluggedType = TPluggedType;
+            _pluggedType = pluggedType;
             _setters = new SetterPropertyCollection(this);
-            _constructor = new Constructor(TPluggedType);
+            _constructor = new Constructor(pluggedType);
         }
 
         #endregion
@@ -52,7 +52,7 @@ namespace StructureMap.Graph
         /// <summary>
         /// The concrete CLR Type represented by the Plugin
         /// </summary>
-        public Type PluggedType { get { return _TPluggedType; } }
+        public Type PluggedType { get { return _pluggedType; } }
 
         /// <summary>
         /// Property's that will be filled by setter injection
@@ -95,7 +95,7 @@ namespace StructureMap.Graph
 
             if (returnValue == null && cannotFind == CannotFindProperty.ThrowException)
             {
-                throw new StructureMapException(302, type.FullName, _TPluggedType.FullName);
+                throw new StructureMapException(302, type.FullName, _pluggedType.FullName);
             }
 
             return returnValue;
@@ -134,7 +134,7 @@ namespace StructureMap.Graph
 
         public bool CanBeCreated()
         {
-            return Constructor.HasConstructors(_TPluggedType);
+            return Constructor.HasConstructors(_pluggedType);
         }
 
         public bool HasOptionalSetters()
@@ -144,7 +144,7 @@ namespace StructureMap.Graph
 
         public Plugin CreateTemplatedClone(Type[] types)
         {
-            Type templatedType = _TPluggedType.IsGenericType ? _TPluggedType.MakeGenericType(types) : _TPluggedType;
+            Type templatedType = _pluggedType.IsGenericType ? _pluggedType.MakeGenericType(types) : _pluggedType;
 
             var templatedPlugin = new Plugin(templatedType, ConcreteKey);
 
@@ -168,7 +168,7 @@ namespace StructureMap.Graph
 
         public bool IsNotOpenGeneric()
         {
-            return !_TPluggedType.IsOpenGeneric();
+            return !_pluggedType.IsOpenGeneric();
         }
 
         public Type FindArgumentType(string argumentName)

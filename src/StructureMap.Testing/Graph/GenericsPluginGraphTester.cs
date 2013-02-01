@@ -36,9 +36,9 @@ namespace StructureMap.Testing.Graph
             var pluginGraph = new PluginGraph();
             PluginFamily family = pluginGraph.FindFamily(typeof (IGenericService<>));
             family.DefaultInstanceKey = "Default";
-            family.AddPlugin(typeof (GenericService<>), "Default");
-            family.AddPlugin(typeof (SecondGenericService<>), "Second");
-            family.AddPlugin(typeof (ThirdGenericService<>), "Third");
+            family.AddType(typeof (GenericService<>), "Default");
+            family.AddType(typeof (SecondGenericService<>), "Second");
+            family.AddType(typeof (ThirdGenericService<>), "Third");
 
             var manager = new Container(pluginGraph);
 
@@ -57,9 +57,9 @@ namespace StructureMap.Testing.Graph
         {
             var pluginGraph = new PluginGraph();
             PluginFamily family = pluginGraph.FindFamily(typeof (IGenericService<>));
-            family.AddPlugin(typeof (GenericService<>), "Default");
-            family.AddPlugin(typeof (SecondGenericService<>), "Second");
-            family.AddPlugin(typeof (ThirdGenericService<>), "Third");
+            family.AddType(typeof (GenericService<>), "Default");
+            family.AddType(typeof (SecondGenericService<>), "Second");
+            family.AddType(typeof (ThirdGenericService<>), "Third");
 
             PluginFamily templatedFamily1 = family.CreateTemplatedClone(new[] {typeof (int)});
             PluginFamily templatedFamily = templatedFamily1;
@@ -117,9 +117,9 @@ namespace StructureMap.Testing.Graph
         {
             var pluginGraph = new PluginGraph();
             PluginFamily family = pluginGraph.FindFamily(typeof (IGenericService<>));
-            family.AddPlugin(typeof (GenericService<>), "Default");
-            family.AddPlugin(typeof (SecondGenericService<>), "Second");
-            family.AddPlugin(typeof (ThirdGenericService<>), "Third");
+            family.AddType(typeof (GenericService<>), "Default");
+            family.AddType(typeof (SecondGenericService<>), "Second");
+            family.AddType(typeof (ThirdGenericService<>), "Third");
 
             var genericsGraph = new GenericsPluginGraph();
             genericsGraph.AddFamily(family);

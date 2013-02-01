@@ -10,13 +10,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void BuildClassWithEnumeration()
         {
-            var graph = new PluginGraph();
-
-
-            PluginFamily family = graph.FindFamily(typeof (Cow));
-            family.AddPlugin(typeof (Cow), "Default");
-
-            var manager = new Container(graph);
+            var manager = new Container();
 
             manager.Configure(r => r.For<Cow>().Use<Cow>()
                                        .Named("Angus")

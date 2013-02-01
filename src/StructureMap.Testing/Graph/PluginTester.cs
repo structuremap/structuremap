@@ -195,7 +195,7 @@ namespace StructureMap.Testing.Graph
             IConfiguredInstance instance = (ConfiguredInstance) plugin.CreateImplicitInstance();
 
             Assert.AreEqual("Default", instance.Name);
-            Assert.AreEqual(typeof (DefaultGateway), instance.TPluggedType);
+            Assert.AreEqual(typeof (DefaultGateway), instance.PluggedType);
         }
 
         [Test]

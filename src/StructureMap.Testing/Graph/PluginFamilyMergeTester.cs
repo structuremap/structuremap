@@ -37,31 +37,6 @@ namespace StructureMap.Testing.Graph
             Assert.AreSame(destinationInstance, destination.GetInstance(sourceInstance.Name));
         }
 
-        [Test]
-        public void Do_not_overwrite_existing_plugin()
-        {
-            var source = new PluginFamily(typeof (IWidget));
-            source.AddPlugin(typeof (AWidget));
 
-            var destination = new PluginFamily(typeof (IWidget));
-            Plugin destinationPlugin = destination.AddPlugin(typeof (AWidget));
-            destination.ImportFrom(source);
-
-            Assert.AreSame(destinationPlugin, destination.FindPlugin(typeof (AWidget)));
-        }
-
-        [Test]
-        public void Merge_missing_Plugin()
-        {
-            var source = new PluginFamily(typeof (IWidget));
-            source.AddPlugin(typeof (AWidget));
-
-            var destination = new PluginFamily(typeof (IWidget));
-            destination.ImportFrom(source);
-
-            destination.ImportFrom(source);
-
-            Assert.IsTrue(destination.HasPlugin(typeof (AWidget)));
-        }
     }
 }

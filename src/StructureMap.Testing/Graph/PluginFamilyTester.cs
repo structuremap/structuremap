@@ -9,6 +9,7 @@ using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
 using StructureMap.TypeRules;
 using Rule=StructureMap.Testing.Widget.Rule;
+using System.Linq;
 
 namespace StructureMap.Testing.Graph
 {
@@ -29,40 +30,21 @@ namespace StructureMap.Testing.Graph
             #endregion
         }
 
-        [Test]
-        public void add_plugins_at_seal_from_the_list_of_types()
+        public class DataTableProvider : IServiceProvider
         {
-            var family = new PluginFamily(typeof (IServiceProvider));
-            family.AddType(typeof (DataTable));
-
-            // DataView, DataSet, and DataTable are all IServiceProvider implementations, and should get added
-            // to the PluginFamily
-            var TPluggedTypes = new List<Type>
+            public object GetService(Type serviceType)
             {
-                typeof (DataView),
-                typeof (DataSet),
-                typeof (DataTable),
-                GetType()
-            };
-
-            family.AddTypes(TPluggedTypes);
-
-            family.PluginCount.ShouldEqual(3);
-
-            family.FindPlugin(typeof (DataView)).ShouldNotBeNull();
-            family.FindPlugin(typeof (DataTable)).ShouldNotBeNull();
-            family.FindPlugin(typeof (DataSet)).ShouldNotBeNull();
+                throw new NotImplementedException();
+            }
         }
 
         [Test]
         public void add_type_by_name()
         {
             var family = new PluginFamily(typeof (IServiceProvider));
-            family.AddType(typeof (DataTable), "table");
+            family.AddType(typeof (DataTableProvider), "table");
 
-            family.PluginCount.ShouldEqual(1);
-
-            family.FindPlugin("table").ShouldNotBeNull();
+            family.Instances.Single().ShouldBeOfType<ConstructorInstance>().PluggedType.ShouldEqual(typeof (DataTableProvider));
         }
 
         [Test]
@@ -71,7 +53,7 @@ namespace StructureMap.Testing.Graph
             var family = new PluginFamily(typeof (IServiceProvider));
             family.AddType(GetType());
 
-            family.PluginCount.ShouldEqual(0);
+            family.Instances.Any().ShouldBeFalse();
         }
 
         [Test]
@@ -79,30 +61,16 @@ namespace StructureMap.Testing.Graph
         {
             var family = new PluginFamily(typeof (IServiceProvider));
 
-            family.AddType(typeof (DataTable));
-            family.PluginCount.ShouldEqual(1);
+            family.AddType(typeof (DataTableProvider));
+            family.Instances.Single()
+                  .ShouldBeOfType<ConstructorInstance>()
+                  .PluggedType.ShouldEqual(typeof (DataTableProvider));
+            
 
             family.AddType(typeof (DataTable));
-            family.PluginCount.ShouldEqual(1);
+            family.Instances.Count().ShouldEqual(1);
         }
 
-        [Test]
-        public void AddATPluggedType()
-        {
-            var family = new PluginFamily(typeof (IWidget));
-            family.DefaultInstanceKey = "DefaultKey";
-            family.AddPlugin(typeof (NotPluggableWidget), "NotPlugged");
-
-            Assert.AreEqual(1, family.PluginCount, "Plugin Count");
-        }
-
-        [Test, ExpectedException(typeof (StructureMapException))]
-        public void AddAWrongType()
-        {
-            var family = new PluginFamily(typeof (IWidget));
-            family.DefaultInstanceKey = "DefaultKey";
-            family.AddPlugin(typeof (Rule), "Rule");
-        }
 
         [Test]
         public void FillDefault_happy_path()

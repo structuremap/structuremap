@@ -15,8 +15,8 @@ namespace StructureMap.Pipeline
         private readonly Cache<string, Instance> _dependencies = new Cache<string, Instance>();
         private readonly Plugin _plugin;
 
-        public ConstructorInstance(Type TPluggedType)
-            : this(PluginCache.GetPlugin(TPluggedType))
+        public ConstructorInstance(Type pluggedType)
+            : this(PluginCache.GetPlugin(pluggedType))
         {
         }
 
@@ -35,8 +35,8 @@ namespace StructureMap.Pipeline
             };
         }
 
-        public ConstructorInstance(Type TPluggedType, string name)
-            : this(TPluggedType)
+        public ConstructorInstance(Type pluggedType, string name)
+            : this(pluggedType)
         {
             Name = name;
         }
@@ -82,7 +82,7 @@ namespace StructureMap.Pipeline
             return (T) o;
         }
 
-        public Type TPluggedType { get { return _plugin.PluggedType; } }
+        public Type PluggedType { get { return _plugin.PluggedType; } }
 
         public bool HasProperty(string propertyName, BuildSession session)
         {

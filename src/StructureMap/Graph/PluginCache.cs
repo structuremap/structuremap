@@ -43,19 +43,19 @@ namespace StructureMap.Graph
             });
         }
 
-        public static Plugin GetPlugin(Type TPluggedType)
+        public static Plugin GetPlugin(Type pluggedType)
         {
-            return _plugins[TPluggedType];
+            return _plugins[pluggedType];
         }
 
-        public static IInstanceBuilder FindBuilder(Type TPluggedType)
+        public static IInstanceBuilder FindBuilder(Type pluggedType)
         {
-            return _builders[TPluggedType];
+            return _builders[pluggedType];
         }
 
-        public static void Store(Type TPluggedType, InstanceBuilder builder)
+        public static void Store(Type pluggedType, InstanceBuilder builder)
         {
-            _builders[TPluggedType] = builder;
+            _builders[pluggedType] = builder;
         }
 
         public static void ResetAll()

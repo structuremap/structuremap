@@ -17,8 +17,6 @@ namespace StructureMap.Testing
         public void SetUp()
         {
             _graph = new PluginGraph();
-            PluginFamily family = _graph.FindFamily(typeof (IService));
-            family.AddPlugin(typeof (ColorService), "Color");
 
             _graph.FindFamily(typeof (Rule));
         }
@@ -159,10 +157,6 @@ namespace StructureMap.Testing
         [Test]
         public void ReadChildArrayProperty()
         {
-            var graph = new PluginGraph();
-
-            graph.FindFamily(typeof (Rule)).AddPlugin(typeof (ComplexRule));
-
             MemoryInstanceMemento memento = ComplexRule.GetMemento();
             memento.SetProperty(XmlConstants.PLUGGED_TYPE, typeof (ComplexRule).AssemblyQualifiedName);
             memento.AddChildArray("cars", new InstanceMemento[]
@@ -184,10 +178,6 @@ namespace StructureMap.Testing
         [Test]
         public void ReadChildProperty_child_property_is_defined_build_child()
         {
-            var graph = new PluginGraph();
-
-            graph.FindFamily(typeof (Rule)).AddPlugin(typeof (ComplexRule));
-
             MemoryInstanceMemento memento = ComplexRule.GetMemento();
             memento.SetProperty(XmlConstants.PLUGGED_TYPE, typeof (ComplexRule).AssemblyQualifiedName);
             MemoryInstanceMemento carMemento = MemoryInstanceMemento.CreateReferencedInstanceMemento("GrandPrix");
@@ -202,10 +192,6 @@ namespace StructureMap.Testing
         [Test]
         public void ReadPrimitivePropertiesHappyPath()
         {
-            var graph = new PluginGraph();
-
-            graph.FindFamily(typeof (Rule)).AddPlugin(typeof (ComplexRule));
-
             MemoryInstanceMemento memento = ComplexRule.GetMemento();
             memento.SetProperty(XmlConstants.PLUGGED_TYPE, typeof (ComplexRule).AssemblyQualifiedName);
 
