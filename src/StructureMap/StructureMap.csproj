@@ -138,6 +138,7 @@
     <Compile Include="BuildSession.cs" />
     <Compile Include="Configuration\DSL\Expressions\GenericFamilyExpression.cs" />
     <Compile Include="Configuration\IPluginGraphConfiguration.cs" />
+    <Compile Include="Configuration\MalformedAliasException.cs" />
     <Compile Include="Diagnostics\BuildError.cs" />
     <Compile Include="Diagnostics\CharacterWidth.cs" />
     <Compile Include="Diagnostics\DividerLine.cs" />

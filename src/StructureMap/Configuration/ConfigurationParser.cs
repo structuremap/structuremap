@@ -2,12 +2,16 @@ using System;
 using System.IO;
 using System.Xml;
 using StructureMap.Diagnostics;
+using StructureMap.Graph;
 using StructureMap.Source;
+using StructureMap.Util;
 
 namespace StructureMap.Configuration
 {
     public class ConfigurationParser : XmlConstants
     {
+        
+
         #region statics
 
         public static ConfigurationParser FromFile(string filename)
@@ -94,8 +98,10 @@ namespace StructureMap.Configuration
         {
             var instanceParser = new InstanceParser(builder);
 
+            forEachNode("Alias").Do(instanceParser.ParseAlias);
             forEachNode(DEFAULT_INSTANCE).Do(instanceParser.ParseDefaultElement);
             forEachNode(ADD_INSTANCE_NODE).Do(instanceParser.ParseInstanceElement);
         }
+
     }
 }
