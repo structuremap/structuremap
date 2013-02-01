@@ -15,7 +15,7 @@ namespace StructureMap.Testing.Bugs
             string xml =
                 @"
 <StructureMap>
-    <DefaultInstance PluginType='{0}' TPluggedType='{0}'>
+    <DefaultInstance PluginType='{0}' PluggedType='{0}'>
         <values>
             <Pair Key='color' Value='red'/>
             <Pair Key='state' Value='texas'/>
@@ -42,7 +42,7 @@ namespace StructureMap.Testing.Bugs
             string xml =
                 @"
 <StructureMap MementoStyle='Attribute'>
-    <DefaultInstance PluginType='{0}' TPluggedType='{0}'></DefaultInstance>
+    <DefaultInstance PluginType='{0}' PluggedType='{0}'></DefaultInstance>
 </StructureMap>
 "
                     .ToFormat(className);
@@ -68,7 +68,7 @@ namespace StructureMap.Testing.Bugs
             string xml =
                 @"
 <StructureMap MementoStyle='Attribute'>
-    <DefaultInstance PluginType='{0}' TPluggedType='{0}'></DefaultInstance>
+    <DefaultInstance PluginType='{0}' PluggedType='{0}'></DefaultInstance>
 </StructureMap>
 "
                     .ToFormat(className);
@@ -85,7 +85,7 @@ namespace StructureMap.Testing.Bugs
             string xml =
                 @"
 <StructureMap>
-    <DefaultInstance PluginType='{0}' TPluggedType='{0}'></DefaultInstance>
+    <DefaultInstance PluginType='{0}' PluggedType='{0}'></DefaultInstance>
 </StructureMap>
 "
                     .ToFormat(className);

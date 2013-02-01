@@ -46,7 +46,7 @@ namespace StructureMap.Testing.Graph
 	
 	<PluginFamily Type='StructureMap.Testing.Widget.Rule' Assembly='StructureMap.Testing.Widget' DefaultKey='Blue'>
 		<Interceptors>
-			<Interceptor Type='Singleton'></Interceptor>
+			<Interceptor PluggedType='Singleton'></Interceptor>
 		</Interceptors>
 	</PluginFamily>
 </StructureMap>

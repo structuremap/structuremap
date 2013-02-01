@@ -129,7 +129,7 @@ namespace StructureMap.Testing
         public void Create_a_default_instance()
         {
             MemoryInstanceMemento memento = MemoryInstanceMemento.CreateDefaultInstanceMemento();
-            Instance instance = memento.ReadInstance(null, null);
+            Instance instance = memento.ReadInstance(null, GetType());
 
             instance.ShouldBeOfType<DefaultInstance>();
         }
@@ -138,7 +138,7 @@ namespace StructureMap.Testing
         public void Create_a_referenced_instance()
         {
             MemoryInstanceMemento memento = MemoryInstanceMemento.CreateReferencedInstanceMemento("blue");
-            var instance = (ReferencedInstance) memento.ReadInstance(null, null);
+            var instance = (ReferencedInstance) memento.ReadInstance(null, GetType());
 
             Assert.AreEqual("blue", instance.ReferenceKey);
         }
@@ -148,6 +148,7 @@ namespace StructureMap.Testing
         public void Get_the_instance_name()
         {
             var memento = new MemoryInstanceMemento("Color", "Red");
+            memento.SetPluggedType<ColorService>();
             memento.SetProperty("Color", "Red");
             memento.InstanceKey = "Red";
 

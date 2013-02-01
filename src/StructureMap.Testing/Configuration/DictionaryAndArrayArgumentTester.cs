@@ -23,7 +23,7 @@ namespace StructureMap.Testing.Configuration
 ";
 
             XmlElement element = DataMother.BuildDocument(xml).DocumentElement;
-            element.SetAttribute("TPluggedType", typeof (ClassWithStringAndIntArray).AssemblyQualifiedName);
+            element.SetAttribute("PluggedType", typeof (ClassWithStringAndIntArray).AssemblyQualifiedName);
 
             var memento = new XmlAttributeInstanceMemento(element);
             var graph = new PluginGraph();
@@ -53,7 +53,7 @@ namespace StructureMap.Testing.Configuration
 ";
 
             XmlElement element = DataMother.BuildDocument(xml).DocumentElement;
-            element.SetAttribute("TPluggedType", typeof (ClassWithDictionary).AssemblyQualifiedName);
+            element.SetAttribute("PluggedType", typeof (ClassWithDictionary).AssemblyQualifiedName);
 
             var memento = new XmlAttributeInstanceMemento(element);
 

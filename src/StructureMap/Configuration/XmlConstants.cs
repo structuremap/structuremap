@@ -22,7 +22,7 @@ namespace StructureMap.Configuration
         public const string NAME = "Name";
         public const string NODE_STYLE = "Node";
         public const string OVERRIDE = "Override";
-        public const string PLUGGED_TYPE = "TPluggedType";
+        public const string PLUGGED_TYPE = "PluggedType";
         public const string PLUGIN_FAMILY_NODE = "PluginFamily";
         public const string PLUGIN_NODE = "Plugin";
         public const string PLUGIN_TYPE = "PluginType";

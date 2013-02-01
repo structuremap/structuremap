@@ -15,44 +15,35 @@ namespace StructureMap.Testing
         [SetUp]
         public void SetUp()
         {
-            string xml =
-                @"
-<StructureMap Id='Generics'>
-  <Assembly Name='StructureMap.Testing.GenericWidgets'/>
+            container = new Container(x => {
+                x.For(typeof (IThing<,>)).Use(typeof (ColorThing<,>)).Ctor<string>("color").Is("Red").Named("Red");
+                x.For(typeof (IThing<,>)).Add(typeof (ComplexThing<,>))
+                    .Ctor<string>("name").Is("Jeremy")
+                    .Ctor<int>("age").Is(32)
+                    .Ctor<bool>("ready").Is(true)
+                    .Named("Complicated");
 
-  <PluginFamily Assembly='StructureMap.Testing.GenericWidgets' Type='StructureMap.Testing.GenericWidgets.IThing`2' DefaultKey='Red'>
-    <Plugin Assembly='StructureMap.Testing.GenericWidgets' Type='StructureMap.Testing.GenericWidgets.ColorThing`2' ConcreteKey='Color' />
-    <Plugin Assembly='StructureMap.Testing.GenericWidgets' Type='StructureMap.Testing.GenericWidgets.ComplexThing`2' ConcreteKey='Complex' />
+                x.For(typeof (ISimpleThing<>)).Use(typeof (SimpleThing<>));
 
-    <Instance Key='Red' Type='Color' color='Red'/>
+                x.For(typeof (IService<>)).Use(typeof (Service<>)).Named("Default");
 
-    <Instance Key='Complicated' Type='Complex' name='Jeremy' age='32' ready='true'/>
-  </PluginFamily>
-
-  <PluginFamily Assembly='StructureMap.Testing.GenericWidgets' Type='StructureMap.Testing.GenericWidgets.ISimpleThing`1' DefaultKey='Simple'>
-    <Plugin Assembly='StructureMap.Testing.GenericWidgets' Type='StructureMap.Testing.GenericWidgets.SimpleThing`1' ConcreteKey='Simple' />
-  </PluginFamily>
-  
-</StructureMap>
-";
-
-            PluginGraph graph = DataMother.BuildPluginGraphFromXml(xml);
-            manager = new Container(graph);
+                x.For(typeof (AbstractClass<>)).Use(typeof(ConcreteClass<>));
+            });
         }
 
         #endregion
 
-        private Container manager;
+        private Container container;
 
         [Test, Ignore("not sure I want this behavior anyway")]
         public void AllTypesWithSpecificImplementation()
         {
-            IList objectConcepts = manager.GetAllInstances(typeof (IConcept<object>));
+            IList objectConcepts = container.GetAllInstances(typeof (IConcept<object>));
 
             Assert.IsNotNull(objectConcepts);
             Assert.AreEqual(2, objectConcepts.Count);
 
-            IList stringConcepts = manager.GetAllInstances(typeof (IConcept<string>));
+            IList stringConcepts = container.GetAllInstances(typeof (IConcept<string>));
 
             Assert.IsNotNull(stringConcepts);
             Assert.AreEqual(1, stringConcepts.Count);
@@ -62,11 +53,11 @@ namespace StructureMap.Testing
         [Test]
         public void MultipleGenericTypes()
         {
-            var intService = (IService<int>) manager.GetInstance(typeof (IService<int>), "Default");
+            var intService = (IService<int>) container.GetInstance(typeof (IService<int>), "Default");
             var stringService =
-                (IService<string>) manager.GetInstance(typeof (IService<string>), "Default");
+                (IService<string>) container.GetInstance(typeof (IService<string>), "Default");
             var doubleService =
-                (IService<double>) manager.GetInstance(typeof (IService<double>), "Default");
+                (IService<double>) container.GetInstance(typeof (IService<double>), "Default");
         }
 
 
@@ -74,7 +65,7 @@ namespace StructureMap.Testing
         public void PicksUpAnExplicitlyDefinedGenericPluginFamilyFromConfiguration()
         {
             var thing =
-                (IThing<int, string>) manager.GetInstance(typeof (IThing<int, string>));
+                (IThing<int, string>) container.GetInstance(typeof (IThing<int, string>));
             var redThing = (ColorThing<int, string>) thing;
 
             Assert.AreEqual("Red", redThing.Color);
@@ -83,7 +74,7 @@ namespace StructureMap.Testing
         [Test]
         public void PicksUpASimpleGenericPluginFamilyFromConfiguration()
         {
-            var thing = (ISimpleThing<int>) manager.GetInstance(typeof (ISimpleThing<int>));
+            var thing = (ISimpleThing<int>) container.GetInstance(typeof (ISimpleThing<int>));
             Assert.IsNotNull(thing);
         }
 
@@ -101,27 +92,27 @@ namespace StructureMap.Testing
         [Test]
         public void SimpleInstanceManagerTestWithGenerics()
         {
-            var intService = (Service<int>) manager.GetInstance(typeof (IService<int>), "Default");
+            var intService = (Service<int>) container.GetInstance(typeof (IService<int>), "Default");
             Assert.AreEqual(typeof (int), intService.GetT());
 
             var stringService =
-                (Service<string>) manager.GetInstance(typeof (IService<string>), "Default");
+                (Service<string>) container.GetInstance(typeof (IService<string>), "Default");
             Assert.AreEqual(typeof (string), stringService.GetT());
         }
 
         [Test]
         public void SingletonInterceptors()
         {
-            var object1 = (AbstractClass<int>) manager.GetInstance(typeof (AbstractClass<int>));
-            var object2 = (AbstractClass<int>) manager.GetInstance(typeof (AbstractClass<int>));
-            var object3 = (AbstractClass<int>) manager.GetInstance(typeof (AbstractClass<int>));
+            var object1 = (AbstractClass<int>) container.GetInstance(typeof (AbstractClass<int>));
+            var object2 = (AbstractClass<int>) container.GetInstance(typeof (AbstractClass<int>));
+            var object3 = (AbstractClass<int>) container.GetInstance(typeof (AbstractClass<int>));
 
             var object4 =
-                (AbstractClass<string>) manager.GetInstance(typeof (AbstractClass<string>));
+                (AbstractClass<string>) container.GetInstance(typeof (AbstractClass<string>));
             var object5 =
-                (AbstractClass<string>) manager.GetInstance(typeof (AbstractClass<string>));
+                (AbstractClass<string>) container.GetInstance(typeof (AbstractClass<string>));
             var object6 =
-                (AbstractClass<string>) manager.GetInstance(typeof (AbstractClass<string>));
+                (AbstractClass<string>) container.GetInstance(typeof (AbstractClass<string>));
 
             Assert.AreSame(object1, object2);
             Assert.AreSame(object1, object3);
@@ -134,7 +125,7 @@ namespace StructureMap.Testing
         [Test, Ignore("not sure we want this behavior anyway")]
         public void SpecificImplementation()
         {
-            var concept = (IConcept<object>) manager.GetInstance(typeof (IConcept<object>), "Specific");
+            var concept = (IConcept<object>) container.GetInstance(typeof (IConcept<object>), "Specific");
 
             concept.ShouldNotBeNull();
             concept.ShouldBeOfType<SpecificConcept>();

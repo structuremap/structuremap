@@ -155,6 +155,7 @@
     <Compile Include="Graph\Constructor.cs" />
     <Compile Include="Graph\GenericConnectionScanner.cs" />
     <Compile Include="Graph\IArgumentVisitor.cs" />
+    <Compile Include="Graph\IPluginFactory.cs" />
     <Compile Include="Graph\IPluginFamily.cs" />
     <Compile Include="Graph\AssemblyScanner.cs" />
     <Compile Include="InstanceCache.cs" />

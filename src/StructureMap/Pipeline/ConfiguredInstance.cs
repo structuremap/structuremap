@@ -10,32 +10,22 @@ namespace StructureMap.Pipeline
     /// </summary>
     public partial class ConfiguredInstance : ConstructorInstance<ConfiguredInstance>
     {
-        public ConfiguredInstance(InstanceMemento memento, PluginGraph graph, Type pluginType)
-            : base(memento.FindPlugin(graph.FindFamily(pluginType)))
-        {
-            read(memento, graph, pluginType);
-        }
 
-        public ConfiguredInstance(Type TPluggedType, string name)
-            : base(TPluggedType, name)
+
+        public ConfiguredInstance(Type pluggedType, string name)
+            : base(pluggedType, name)
         {
         }
 
 
-        public ConfiguredInstance(Type TPluggedType)
-            : base(TPluggedType)
+        public ConfiguredInstance(Type pluggedType)
+            : base(pluggedType)
         {
         }
 
         public ConfiguredInstance(Type templateType, params Type[] types)
             : base(templateType.MakeGenericType(types))
         {
-        }
-
-        private void read(InstanceMemento memento, PluginGraph graph, Type pluginType)
-        {
-            var reader = new InstanceMementoPropertyReader(this, memento, graph);
-            plugin.VisitArguments(reader);
         }
 
         protected override ConfiguredInstance thisObject()

@@ -12,12 +12,31 @@ namespace StructureMap
     {
         public const string EMPTY_STRING = "STRING.EMPTY";
         private string _instanceKey;
-        private string _lastKey = string.Empty;
+
+
+        public ConstructorInstance ToInstance(IPluginFactory factory, Type pluginType)
+        {
+            var plugin = factory.PluginFor(pluginType, PluggedType());
+
+            if (plugin == null)
+            {
+                throw new StructureMapException(201, innerConcreteKey, InstanceKey,
+                                                pluginType.AssemblyQualifiedName);
+            }
+
+            var instance = new ConstructorInstance(plugin);
+
+            var reader = new InstanceMementoPropertyReader(instance, this, factory);
+            plugin.VisitArguments(reader);
+
+            return instance;
+        }
 
         /// <summary>
         /// The named type of the object instance represented by the InstanceMemento.  Translates to a concrete
         /// type
         /// </summary>
+        [Obsolete]
         public string ConcreteKey { get { return innerConcreteKey; } }
 
 
@@ -30,7 +49,7 @@ namespace StructureMap
         {
             get
             {
-                if (string.IsNullOrEmpty(_instanceKey))
+                if (String.IsNullOrEmpty(_instanceKey))
                 {
                     return innerInstanceKey;
                 }
@@ -59,33 +78,8 @@ namespace StructureMap
         /// <summary>
         /// Is the InstanceMemento a reference to the default instance of the plugin type?
         /// </summary>
-        public bool IsDefault { get { return (IsReference && ReferenceKey == string.Empty); } }
+        public bool IsDefault { get { return (IsReference && ReferenceKey == String.Empty); } }
 
-        public virtual Plugin FindPlugin(PluginFamily family)
-        {
-            Plugin plugin = getPluginByType(family) ?? family.FindPlugin(innerConcreteKey ?? string.Empty) ??
-                                                       family.FindPlugin(Plugin.DEFAULT);
-
-            if (plugin == null)
-            {
-                throw new StructureMapException(201, innerConcreteKey, InstanceKey,
-                                                family.PluginType.AssemblyQualifiedName);
-            }
-
-            return plugin;
-        }
-
-        private Plugin getPluginByType(PluginFamily family)
-        {
-            string TPluggedTypeName = getTPluggedType();
-            if (string.IsNullOrEmpty(TPluggedTypeName))
-            {
-                return null;
-            }
-
-            Type TPluggedType = new TypePath(TPluggedTypeName).FindType();
-            return PluginCache.GetPlugin(TPluggedType);
-        }
 
         /// <summary>
         /// Retrieves the named property value as a string
@@ -105,10 +99,10 @@ namespace StructureMap
                 throw new StructureMapException(205, ex, Key, InstanceKey);
             }
 
-            if (string.IsNullOrEmpty(returnValue)) return null;
+            if (String.IsNullOrEmpty(returnValue)) return null;
             if (returnValue.ToUpper() == EMPTY_STRING)
             {
-                returnValue = string.Empty;
+                returnValue = String.Empty;
             }
 
             return returnValue;
@@ -117,25 +111,23 @@ namespace StructureMap
         /// <summary>
         /// Template method for implementation specific retrieval of the named property
         /// </summary>
-        /// <param name="Key"></param>
+        /// <param name="key"></param>
         /// <returns></returns>
-        protected abstract string getPropertyValue(string Key);
+        protected abstract string getPropertyValue(string key);
 
 
         /// <summary>
         /// Returns the named child InstanceMemento
         /// </summary>
-        /// <param name="Key"></param>
+        /// <param name="key"></param>
         /// <returns></returns>
-        public InstanceMemento GetChildMemento(string Key)
+        public InstanceMemento GetChildMemento(string key)
         {
-            _lastKey = Key;
-
-            InstanceMemento returnValue = getChild(Key);
+            InstanceMemento returnValue = getChild(key);
             return returnValue;
         }
 
-        public virtual Instance ReadChildInstance(string name, PluginGraph graph, Type childType)
+        public virtual Instance ReadChildInstance(string name, IPluginFactory graph, Type childType)
         {
             InstanceMemento child = GetChildMemento(name);
             return child == null ? null : child.ReadInstance(graph, childType);
@@ -144,28 +136,33 @@ namespace StructureMap
         /// <summary>
         /// Template method for implementation specific retrieval of the named property
         /// </summary>
-        /// <param name="Key"></param>
+        /// <param name="key"></param>
         /// <returns></returns>
-        protected abstract InstanceMemento getChild(string Key);
+        protected abstract InstanceMemento getChild(string key);
 
 
         /// <summary>
         /// This method is made public for testing.  It is not necessary for normal usage.
         /// </summary>
         /// <returns></returns>
-        public abstract InstanceMemento[] GetChildrenArray(string Key);
+        public abstract InstanceMemento[] GetChildrenArray(string key);
 
 
-        protected virtual string getTPluggedType()
+        public virtual string PluggedType()
         {
             return getPropertyValue(XmlConstants.PLUGGED_TYPE);
         }
 
-        public Instance ReadInstance(PluginGraph pluginGraph, Type pluginType)
+        public Instance ReadInstance(IPluginFactory pluginFactory, Type pluginType)
         {
+            if (pluginType == null)
+            {
+                throw new ArgumentNullException("pluginType");
+            }
+
             try
             {
-                Instance instance = readInstance(pluginGraph, pluginType);
+                Instance instance = readInstance(pluginFactory, pluginType);
                 instance.Name = InstanceKey;
 
                 return instance;
@@ -181,7 +178,7 @@ namespace StructureMap
         }
 
         [CLSCompliant(false)]
-        protected virtual Instance readInstance(PluginGraph pluginGraph, Type pluginType)
+        protected virtual Instance readInstance(IPluginFactory pluginFactory, Type pluginType)
         {
             if (IsDefault)
             {
@@ -193,7 +190,7 @@ namespace StructureMap
                 return new ReferencedInstance(ReferenceKey);
             }
 
-            return new ConfiguredInstance(this, pluginGraph, pluginType);
+            return ToInstance(pluginFactory, pluginType);
         }
     }
 }

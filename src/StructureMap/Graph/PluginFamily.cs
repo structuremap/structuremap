@@ -16,7 +16,7 @@ namespace StructureMap.Graph
     {
         private readonly Cache<string, Instance> _instances = new Cache<string, Instance>(delegate { return null; });
         private readonly List<InstanceMemento> _mementoList = new List<InstanceMemento>();
-        private readonly Cache<string, Plugin> _TPluggedTypes = new Cache<string, Plugin>();
+        private readonly Cache<string, Plugin> _pluggedTypes = new Cache<string, Plugin>();
         private readonly Type _pluginType;
         private string _defaultKey = string.Empty;
         private ILifecycle _lifecycle;
@@ -136,7 +136,7 @@ namespace StructureMap.Graph
 
         private void discoverImplicitInstances()
         {
-            _TPluggedTypes.Each((key, plugin) =>
+            _pluggedTypes.Each((key, plugin) =>
             {
                 if (!plugin.CanBeAutoFilled) return;
 
@@ -165,7 +165,7 @@ namespace StructureMap.Graph
 
         public bool HasPlugin(Type TPluggedType)
         {
-            return _TPluggedTypes.Exists(plugin => plugin.TPluggedType == TPluggedType);
+            return _pluggedTypes.Exists(plugin => plugin.TPluggedType == TPluggedType);
         }
 
         private void assertPluggability(Type TPluggedType)
@@ -186,7 +186,7 @@ namespace StructureMap.Graph
             assertPluggability(TPluggedType);
 
             Plugin plugin = PluginCache.GetPlugin(TPluggedType);
-            _TPluggedTypes[plugin.ConcreteKey] = plugin;
+            _pluggedTypes[plugin.ConcreteKey] = plugin;
 
             return plugin;
         }
@@ -196,7 +196,7 @@ namespace StructureMap.Graph
             assertPluggability(TPluggedType);
 
             Plugin plugin = PluginCache.GetPlugin(TPluggedType);
-            _TPluggedTypes[key] = plugin;
+            _pluggedTypes[key] = plugin;
 
             return plugin;
         }
@@ -208,7 +208,7 @@ namespace StructureMap.Graph
 
         public Plugin FindPlugin(Type TPluggedType)
         {
-            return _TPluggedTypes.Find(p => p.TPluggedType == TPluggedType);
+            return _pluggedTypes.Find(p => p.TPluggedType == TPluggedType);
         }
 
         public void AddDefaultMemento(InstanceMemento memento)
@@ -247,7 +247,7 @@ namespace StructureMap.Graph
             
             source.Instances.Each(instance => _instances.Fill(instance.Name, instance));
 
-            source._TPluggedTypes.Each((key, plugin) => _TPluggedTypes.Fill(key, plugin));
+            source._pluggedTypes.Each((key, plugin) => _pluggedTypes.Fill(key, plugin));
 
             if (source.MissingInstance != null)
             {
@@ -262,9 +262,9 @@ namespace StructureMap.Graph
 
         public Plugin FindPlugin(string concreteKey)
         {
-            if (_TPluggedTypes.Has(concreteKey))
+            if (_pluggedTypes.Has(concreteKey))
             {
-                return _TPluggedTypes[concreteKey];
+                return _pluggedTypes[concreteKey];
             }
 
             return null;
@@ -272,7 +272,7 @@ namespace StructureMap.Graph
 
         public bool HasPlugin(string concreteKey)
         {
-            return _TPluggedTypes.Has(concreteKey);
+            return _pluggedTypes.Has(concreteKey);
         }
 
         public PluginFamily CreateTemplatedClone(Type[] templateTypes)
@@ -354,7 +354,7 @@ namespace StructureMap.Graph
         public bool IsGenericTemplate { get { return _pluginType.IsGenericTypeDefinition || _pluginType.ContainsGenericParameters; } }
 
 
-        public int PluginCount { get { return _TPluggedTypes.Count; } }
+        public int PluginCount { get { return _pluggedTypes.Count; } }
 
         public int InstanceCount { get { return _instances.Count; } }
 

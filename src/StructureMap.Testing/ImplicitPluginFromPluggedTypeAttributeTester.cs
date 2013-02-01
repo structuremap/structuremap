@@ -11,20 +11,20 @@ using StructureMap.Testing.Widget3;
 namespace StructureMap.Testing
 {
     [TestFixture]
-    public class ImplicitPluginFromTPluggedTypeAttributeTester
+    public class ImplicitPluginFromPluggedTypeAttributeTester
     {
         #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
         {
-            Type TPluggedType = typeof (StubbedGateway);
+            Type pluggedType = typeof (StubbedGateway);
 
             var values = new NameValueCollection();
-            values.Add(XmlConstants.PLUGGED_TYPE, TPluggedType.AssemblyQualifiedName);
+            values.Add(XmlConstants.PLUGGED_TYPE, pluggedType.AssemblyQualifiedName);
             _memento = new MemoryInstanceMemento(string.Empty, "Frank", values);
 
-            _expectedPlugin = new Plugin(TPluggedType);
+            _expectedPlugin = new Plugin(pluggedType);
         }
 
         #endregion

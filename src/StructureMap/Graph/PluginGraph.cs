@@ -66,7 +66,7 @@ namespace StructureMap.Graph
     /// Models the runtime configuration of a StructureMap Container
     /// </summary>
     [Serializable]
-    public class PluginGraph : IPluginGraph
+    public class PluginGraph : IPluginGraph, IPluginFactory
     {
         private readonly InterceptorLibrary _interceptorLibrary = new InterceptorLibrary();
         private readonly List<Type> _TPluggedTypes = new List<Type>();
@@ -232,6 +232,25 @@ namespace StructureMap.Graph
 
             var registry = (Registry) Activator.CreateInstance(type);
             registry.As<IPluginGraphConfiguration>().Configure(this);
+        }
+
+        // TODO -- if name is blank and pluginType is concrete, just use that.
+        [Obsolete("This is meant to be an intermediate step")]
+        Plugin IPluginFactory.PluginFor(Type pluginType, string name)
+        {
+            if (name == null) throw new ArgumentNullException("name");
+
+            if (name.Contains(","))
+            {
+                var pluggedType = new TypePath(name).FindType();
+                return PluginCache.GetPlugin(pluggedType);
+            }
+
+
+            var family = FindFamily(pluginType);
+            var plugin = family.FindPlugin(name) ?? family.FindPlugin(Plugin.DEFAULT);
+
+            return plugin;
         }
     }
 }

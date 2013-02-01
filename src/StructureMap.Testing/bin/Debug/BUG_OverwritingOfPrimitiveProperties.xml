@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <StructureMap>
   <PluginFamily Type="StructureMap.Testing.Bugs.IFooWithPrimitives" Assembly="StructureMap.Testing" DefaultKey="TEST">
-    <Instance Key="TEST" Scope="Singleton" TPluggedType="StructureMap.Testing.Bugs.FooWithPrimitives, StructureMap.Testing" name="Test123" />
+    <Instance Key="TEST" Scope="Singleton" PluggedType="StructureMap.Testing.Bugs.FooWithPrimitives, StructureMap.Testing" name="Test123" />
   </PluginFamily>
 </StructureMap>

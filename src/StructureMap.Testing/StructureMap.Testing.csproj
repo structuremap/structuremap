@@ -339,8 +339,6 @@
     <Compile Include="ImplicitPluginFromPluggedTypeAttributeTester.cs" />
     <Compile Include="InstanceCacheTester.cs" />
     <Compile Include="InstanceMementoInstanceCreationTester.cs" />
-    <Compile Include="MementoTester.cs" />
-    <Compile Include="MergingTester.cs" />
     <Compile Include="ModelQueryTester.cs" />
     <Compile Include="ObjectFactoryInitializeTester.cs" />
     <Compile Include="Pipeline\BuildStackTester.cs" />

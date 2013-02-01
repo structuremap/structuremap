@@ -1,29 +1,29 @@
 ﻿<StructureMap MementoStyle="Attribute">
   <DefaultInstance 
     PluginType="StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget" 
-    TPluggedType="StructureMap.Testing.Widget.ColorWidget,StructureMap.Testing.Widget" 
+    PluggedType="StructureMap.Testing.Widget.ColorWidget,StructureMap.Testing.Widget" 
     color="Red" />
 
   <AddInstance 
     Key="Red" 
     PluginType="StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget" 
-    TPluggedType="StructureMap.Testing.Widget.ColorWidget,StructureMap.Testing.Widget" 
+    PluggedType="StructureMap.Testing.Widget.ColorWidget,StructureMap.Testing.Widget" 
     color="Red" />
 
   <AddInstance 
     Key="Green" 
     PluginType="StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget" 
-    TPluggedType="StructureMap.Testing.Widget.ColorWidget,StructureMap.Testing.Widget" 
+    PluggedType="StructureMap.Testing.Widget.ColorWidget,StructureMap.Testing.Widget" 
     color="Green" />
 
   <AddInstance  
     PluginType="StructureMap.Testing.Widget.IWidget,StructureMap.Testing.Widget" 
-    TPluggedType="StructureMap.Testing.Widget.ColorWidget,StructureMap.Testing.Widget" 
+    PluggedType="StructureMap.Testing.Widget.ColorWidget,StructureMap.Testing.Widget" 
     color="Purple" />
 
 
   <AddInstance 
     Key="Blue" 
     PluginType="StructureMap.Testing.Widget.Rule,StructureMap.Testing.Widget" 
-    TPluggedType="StructureMap.Testing.Widget.ColorRule,StructureMap.Testing.Widget" color="Blue" Scope="Singleton" Name="TheBlueOne"/>
+    PluggedType="StructureMap.Testing.Widget.ColorRule,StructureMap.Testing.Widget" color="Blue" Scope="Singleton" Name="TheBlueOne"/>
 </StructureMap>

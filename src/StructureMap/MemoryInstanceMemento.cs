@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Specialized;
+using StructureMap.Configuration;
 
 namespace StructureMap
 {
@@ -156,14 +157,14 @@ namespace StructureMap
             _instanceKey = instanceKey;
         }
 
-        protected override string getPropertyValue(string Key)
+        protected override string getPropertyValue(string key)
         {
-            return _properties[Key];
+            return _properties[key];
         }
 
-        protected override InstanceMemento getChild(string Key)
+        protected override InstanceMemento getChild(string key)
         {
-            return (InstanceMemento) _children[Key];
+            return (InstanceMemento) _children[key];
         }
 
 
@@ -179,6 +180,11 @@ namespace StructureMap
         public override InstanceMemento[] GetChildrenArray(string key)
         {
             return (InstanceMemento[]) _children[key];
+        }
+
+        public void SetPluggedType<T>()
+        {
+            _properties[XmlConstants.PLUGGED_TYPE] = typeof (T).AssemblyQualifiedName;
         }
     }
 }
