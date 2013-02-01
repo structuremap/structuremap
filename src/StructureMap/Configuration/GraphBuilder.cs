@@ -50,11 +50,6 @@ namespace StructureMap.Configuration
             }).AndReportErrorAs(290, registryTypeName);
         }
 
-        public IProfileBuilder GetProfileBuilder()
-        {
-            return new ProfileBuilder(_pluginGraph);
-        }
-
         public void ConfigureFamily(TypePath pluginTypePath, Action<PluginFamily> action)
         {
             try
@@ -69,17 +64,7 @@ namespace StructureMap.Configuration
             }
         }
 
-        public void WithType(TypePath path, string context, Action<Type> action)
-        {
-            _pluginGraph.Log.WithType(path, context, action);
-        }
-
         #endregion
 
-        private object buildSystemObject(Type type, InstanceMemento memento)
-        {
-            Instance instance = memento.ReadInstance(_systemGraph, type);
-            return _systemContainer.GetInstance(type, instance);
-        }
     }
 }

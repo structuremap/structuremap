@@ -240,7 +240,6 @@
     <Compile Include="Configuration\DSL\RegistryTester.cs" />
     <Compile Include="Configuration\NormalGraphBuilderTester.cs" />
     <Compile Include="Configuration\PrimitiveArrayReaderTester.cs" />
-    <Compile Include="Configuration\ProfileBuilderTester.cs" />
     <Compile Include="Configuration\ShortcuttedInstanceNodeTester.cs" />
     <Compile Include="Construction\BuilderCompilerTester.cs" />
     <Compile Include="Construction\ConstructorFunctionBuilderTester.cs" />
