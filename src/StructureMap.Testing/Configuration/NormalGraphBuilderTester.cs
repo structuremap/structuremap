@@ -54,27 +54,6 @@ namespace StructureMap.Testing.Configuration
         }
 
         [Test]
-        public void Do_not_try_to_execute_the_action_when_requested_system_object_if_it_cannot_be_created()
-        {
-            var memento = new MemoryInstanceMemento();
-            var builder = new GraphBuilder(new Registry[0]);
-
-            builder.WithSystemObject<ILifecycle>(memento, "I am going to break here",
-                                                    delegate { Assert.Fail("Wasn't supposed to be called"); });
-        }
-
-        [Test]
-        public void Log_an_error_for_a_requested_system_object_if_it_cannot_be_created()
-        {
-            var memento = new MemoryInstanceMemento();
-            var builder = new GraphBuilder(new Registry[0]);
-
-            builder.WithSystemObject<ILifecycle>(memento, "I am going to break here", delegate { });
-
-            builder.PluginGraph.Log.AssertHasError(130);
-        }
-
-        [Test]
         public void WithType_calls_through_to_the_Action_if_the_type_can_be_found()
         {
             var builder = new GraphBuilder(new Registry[0]);

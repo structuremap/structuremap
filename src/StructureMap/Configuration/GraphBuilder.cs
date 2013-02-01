@@ -69,20 +69,6 @@ namespace StructureMap.Configuration
             }
         }
 
-
-        public void WithSystemObject<T>(InstanceMemento memento, string context, Action<T> action)
-        {
-            try
-            {
-                var systemObject = (T) buildSystemObject(typeof (T), memento);
-                action(systemObject);
-            }
-            catch (Exception ex)
-            {
-                _pluginGraph.Log.RegisterError(130, ex, context);
-            }
-        }
-
         public void WithType(TypePath path, string context, Action<Type> action)
         {
             _pluginGraph.Log.WithType(path, context, action);

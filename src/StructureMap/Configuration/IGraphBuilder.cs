@@ -22,8 +22,6 @@ namespace StructureMap.Configuration
 
         void ConfigureFamily(TypePath pluginTypePath, Action<PluginFamily> action);
 
-        [Obsolete("Just not gonna be necessary anymore")]
-        void WithSystemObject<T>(InstanceMemento memento, string context, Action<T> action);
         void WithType(TypePath path, string context, Action<Type> action);
     }
 }
