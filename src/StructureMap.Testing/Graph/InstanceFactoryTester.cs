@@ -44,7 +44,7 @@ namespace StructureMap.Testing.Graph
             PluginGraph graph = registry.Build();
             var pipelineGraph = new PipelineGraph(graph);
 
-            var session = new BuildSession(graph);
+            var session = BuildSession.ForPluginGraph(graph);
 
             var gateway =
                 (DefaultGateway) session.CreateInstance(typeof (IGateway), "Default");

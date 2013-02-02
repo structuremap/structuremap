@@ -31,7 +31,7 @@ namespace StructureMap.Testing.Configuration
             Instance instance = memento.ReadInstance(new SimplePluginFactory(), typeof (ClassWithStringAndIntArray));
 
             var theObject = (ClassWithStringAndIntArray) instance.Build(typeof (ClassWithStringAndIntArray),
-                                                                        new BuildSession(graph));
+                                                                        BuildSession.ForPluginGraph(graph));
 
             theObject.Numbers.ShouldEqual(new[] {1, 2, 3});
             theObject.Strings.ShouldEqual(new[] {"1", "2", "3"});
@@ -62,7 +62,7 @@ namespace StructureMap.Testing.Configuration
 
 
             var theObject =
-                (ClassWithDictionary) instance.Build(typeof (ClassWithDictionary), new BuildSession(new PluginGraph()));
+                (ClassWithDictionary) instance.Build(typeof (ClassWithDictionary), BuildSession.Empty());
 
 
             theObject.Dictionary["color"].ShouldEqual("red");

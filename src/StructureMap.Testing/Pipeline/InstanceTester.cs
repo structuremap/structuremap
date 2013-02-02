@@ -32,30 +32,6 @@ namespace StructureMap.Testing.Pipeline
             Assert.AreEqual("InstanceUnderTest", token.Description);
         }
 
-        [Test]
-        public void Instance_Build_Calls_into_its_Interceptor()
-        {
-            var mocks = new MockRepository();
-            var interceptor = mocks.StrictMock<InstanceInterceptor>();
-            var buildSession = mocks.StrictMock<BuildSession>();
-
-
-            var instanceUnderTest = new InstanceUnderTest();
-            instanceUnderTest.Interceptor = interceptor;
-
-            var objectReturnedByInterceptor = new object();
-
-            using (mocks.Record())
-            {
-                Expect.Call(interceptor.Process(instanceUnderTest.TheInstanceThatWasBuilt, buildSession)).Return(
-                    objectReturnedByInterceptor);
-            }
-
-            using (mocks.Playback())
-            {
-                Assert.AreEqual(objectReturnedByInterceptor, instanceUnderTest.Build(typeof (object), buildSession));
-            }
-        }
     }
 
     public class InstanceUnderTest : Instance

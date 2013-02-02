@@ -8,8 +8,17 @@ namespace StructureMap.Testing.Pipeline
 {
     public class StubBuildSession : BuildSession
     {
+        private readonly static PluginGraph _pluginGraph = new PluginGraph();
+        private static readonly PipelineGraph _pipeline;
+
+        static StubBuildSession()
+        {
+            _pipeline = new PipelineGraph(_pluginGraph);
+            
+        }
+
         public StubBuildSession()
-            : base(new PluginGraph())
+            : base(_pipeline, new ObjectBuilder(_pipeline, _pluginGraph.InterceptorLibrary))
         {
         }
 

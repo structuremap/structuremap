@@ -32,8 +32,7 @@ namespace StructureMap.Testing.Pipeline
 
             PluginGraph graph = registry.Build();
 
-            var pipelineGraph = new PipelineGraph(graph);
-            _session = new BuildSession(pipelineGraph, graph.InterceptorLibrary);
+            _session = BuildSession.ForPluginGraph(graph);
         }
 
         #endregion

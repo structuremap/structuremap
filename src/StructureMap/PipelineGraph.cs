@@ -12,6 +12,7 @@ namespace StructureMap
     public delegate InstanceFactory MissingFactoryFunction(Type pluginType, ProfileManager profileManager);
 
 
+
     public class PipelineGraph : IDisposable
     {
         private readonly Dictionary<Type, IInstanceFactory> _factories

@@ -11,7 +11,7 @@ namespace StructureMap
 {
     public class BuildSession : IContext
     {
-        private readonly ObjectBuilder _builder;
+        private readonly IObjectBuilder _builder;
         private readonly InstanceCache _cache = new InstanceCache();
         private readonly Cache<Type, Func<object>> _defaults;
         private readonly PipelineGraph _pipelineGraph;
@@ -20,9 +20,9 @@ namespace StructureMap
         [CLSCompliant(false)]
         protected BuildStack _buildStack = new BuildStack();
 
-        public BuildSession(PipelineGraph pipelineGraph, InterceptorLibrary interceptorLibrary)
+        public BuildSession(PipelineGraph pipelineGraph, IObjectBuilder builder)
         {
-            _builder = new ObjectBuilder(pipelineGraph, interceptorLibrary);
+            _builder = builder;
             _pipelineGraph = pipelineGraph;
 
             lock (this._locker)
@@ -41,14 +41,17 @@ namespace StructureMap
             }
         }
 
-        public BuildSession(PluginGraph graph)
-            : this(new PipelineGraph(graph), graph.InterceptorLibrary)
+        public static BuildSession ForPluginGraph(PluginGraph graph)
         {
+            var pipeline = new PipelineGraph(graph);
+            var builder = new ObjectBuilder(pipeline, graph.InterceptorLibrary);
+
+            return new BuildSession(pipeline, builder);
         }
 
-        public BuildSession()
-            : this(new PluginGraph())
+        public static BuildSession Empty()
         {
+            return ForPluginGraph(new PluginGraph());
         }
 
         protected PipelineGraph pipelineGraph { get { return _pipelineGraph; } }
@@ -70,11 +73,11 @@ namespace StructureMap
 
         public void BuildUp(object target)
         {
-            Type TPluggedType = target.GetType();
-            IConfiguredInstance instance = _pipelineGraph.GetDefault(TPluggedType) as IConfiguredInstance
-                ?? new ConfiguredInstance(TPluggedType);
+            Type pluggedType = target.GetType();
+            IConfiguredInstance instance = _pipelineGraph.GetDefault(pluggedType) as IConfiguredInstance
+                ?? new ConfiguredInstance(pluggedType);
 
-            IInstanceBuilder builder = PluginCache.FindBuilder(TPluggedType);
+            IInstanceBuilder builder = PluginCache.FindBuilder(pluggedType);
             var arguments = new Arguments(instance, this);
             builder.BuildUp(arguments, target);
         }

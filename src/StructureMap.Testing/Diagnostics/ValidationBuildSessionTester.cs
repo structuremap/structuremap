@@ -18,7 +18,7 @@ namespace StructureMap.Testing.Diagnostics
             action(registry);
 
             PluginGraph graph = registry.Build();
-            var session = new ValidationBuildSession(graph);
+            var session = ValidationBuildSession.ValidateForPluginGraph(graph);
             session.PerformValidations();
 
             return session;
@@ -154,7 +154,7 @@ namespace StructureMap.Testing.Diagnostics
         [Test]
         public void Request_an_instance_for_the_second_time_successfully_and_get_the_same_object()
         {
-            var session = new ValidationBuildSession(new PluginGraph());
+            var session = ValidationBuildSession.ValidateForPluginGraph(new PluginGraph());
 
             var instance = new ObjectInstance(new ColorWidget("Red"));
             object widget1 = session.CreateInstance(typeof (IWidget), instance);

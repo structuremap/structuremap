@@ -87,7 +87,6 @@ namespace StructureMap.Graph
                 MissingInstance = new ConfiguredInstance(_pluginType);
             }
 
-
             if (_instances.Count == 1)
             {
                 _defaultKey = _instances.First.Name;
