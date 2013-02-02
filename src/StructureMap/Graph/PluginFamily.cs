@@ -86,11 +86,6 @@ namespace StructureMap.Graph
             {
                 MissingInstance = new ConfiguredInstance(_pluginType);
             }
-
-            if (_instances.Count == 1)
-            {
-                _default = _instances.Single();
-            }
         }
 
         private void validatePluggabilityOfInstances()
@@ -115,9 +110,17 @@ namespace StructureMap.Graph
             return _instances[name];
         }
 
+        // TODO -- make this a bit smarter
         public Instance GetDefaultInstance()
         {
-            return _default;
+            if (_default != null) return _default;
+
+            if (_instances.Count == 1)
+            {
+                return _instances.Single();
+            }
+
+            return null;
         }
 
         [Obsolete("Gonna make this go away")]

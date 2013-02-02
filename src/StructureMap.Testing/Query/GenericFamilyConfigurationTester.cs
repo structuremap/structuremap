@@ -53,13 +53,14 @@ namespace StructureMap.Testing.Query
         {
             var instance = new ConfiguredInstance(typeof (Service<>));
             family.SetDefault(instance);
-            family.AddInstance(new ConfiguredInstance(typeof (Service2<>)));
+            var secondInstance = new ConfiguredInstance(typeof (Service2<>));
+            family.AddInstance(secondInstance);
 
             InstanceRef iRef = configuration.Instances.FirstOrDefault(x => x.Name == instance.Name);
 
             configuration.EjectAndRemove(iRef);
 
-            family.GetDefaultInstance().ShouldBeNull();
+            family.GetDefaultInstance().ShouldBeTheSameAs(secondInstance);
         }
 
         [Test]
