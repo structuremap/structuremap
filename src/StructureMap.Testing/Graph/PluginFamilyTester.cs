@@ -77,8 +77,7 @@ namespace StructureMap.Testing.Graph
         {
             var family = new PluginFamily(typeof (IWidget));
             family.Parent = new PluginGraph();
-            family.AddInstance(new ConfiguredInstance(typeof (ColorWidget)).Named("Default"));
-            family.DefaultInstanceKey = "Default";
+            family.SetDefault(new ConfiguredInstance(typeof (ColorWidget)).Named("Default"));
 
 
             family.FillDefault(new Profile("theProfile"));
@@ -87,27 +86,16 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
-        public void FillDefault_sad_path_when_the_default_instance_key_does_not_exist_throws_210()
-        {
-            var family = new PluginFamily(typeof (IWidget));
-            family.Parent = new PluginGraph();
-
-            family.DefaultInstanceKey = "something that cannot be found";
-            family.FillDefault(new Profile("theProfile"));
-
-            family.Parent.Log.AssertHasError(210);
-        }
-
-        [Test]
         public void If_PluginFamily_only_has_one_instance_make_that_the_default()
         {
             var family = new PluginFamily(typeof (IGateway));
             string theInstanceKey = "the default";
-            family.AddInstance(new ConfiguredInstance(typeof (TheGateway)).Named(theInstanceKey));
+            var instance = new ConfiguredInstance(typeof (TheGateway)).Named(theInstanceKey);
+            family.AddInstance(instance);
 
             family.Seal();
 
-            Assert.AreEqual(theInstanceKey, family.DefaultInstanceKey);
+            family.GetDefaultInstance().ShouldBeTheSameAs(instance);
         }
 
         [Test]
@@ -176,7 +164,7 @@ namespace StructureMap.Testing.Graph
 
             family.RemoveAll();
 
-            family.DefaultInstanceKey.ShouldBeNull();
+            family.GetDefaultInstance().ShouldBeNull();
 
             family.InstanceCount.ShouldEqual(0);
         }
@@ -190,7 +178,6 @@ namespace StructureMap.Testing.Graph
             family.SetDefault(instance);
 
             family.GetDefaultInstance().ShouldBeTheSameAs(instance);
-            family.DefaultInstanceKey.ShouldEqual(instance.Name);
         }
 
         [Test]
@@ -260,6 +247,51 @@ namespace StructureMap.Testing.Graph
             importInto.ImportFrom(source);
 
             importInto.Lifecycle.ShouldBeOfType(source.Lifecycle.GetType());
+        }
+
+        [Test]
+        public void removing_the_default_will_change_the_default()
+        {
+            var instance = new ConstructorInstance(GetType());
+            var family = new PluginFamily(GetType());
+
+            family.SetDefault(instance);
+
+            family.RemoveInstance(instance);
+
+            family.Instances.Any().ShouldBeFalse();
+            family.GetDefaultInstance().ShouldBeNull();
+        }
+
+        [Test]
+        public void remove_all_clears_the_default()
+        {
+            var instance = new ConstructorInstance(GetType());
+            var family = new PluginFamily(GetType());
+
+            family.SetDefault(instance);
+            family.SetDefault(new ConstructorInstance(GetType()));
+            family.SetDefault(new ConstructorInstance(GetType()));
+
+            family.RemoveAll();
+
+            family.Instances.Any().ShouldBeFalse();
+            family.GetDefaultInstance().ShouldBeNull();
+            
+        }
+
+        [Test]
+        public void add_instance_fills_and_is_idempotent()
+        {
+            var instance = new ConstructorInstance(GetType());
+            var family = new PluginFamily(GetType());
+
+            family.AddInstance(instance);
+            family.SetDefault(instance);
+            family.AddInstance(instance);
+            family.SetDefault(instance);
+
+            family.Instances.Single().ShouldBeTheSameAs(instance);
         }
     }
 

@@ -156,12 +156,18 @@ namespace StructureMap.Testing.Graph
             pluginGraph.Scan(x => x.Assembly(Assembly.GetExecutingAssembly()));
             pluginGraph.Seal();
 
-            var manager = new Container(pluginGraph);
 
-            var mustang = (Mustang) manager.GetInstance(typeof (IAutomobile), "Mustang");
 
-            Assert.IsNotNull(mustang);
-            Assert.IsTrue(mustang.Engine is PushrodEngine);
+            var container = new Container(x => {
+                x.Scan(o => {
+                    o.TheCallingAssembly();
+                });
+                x.For<IEngine>().Use<PushrodEngine>();
+            });
+
+
+            var mustang = container.GetInstance<IAutomobile>("Mustang");
+            mustang.ShouldBeOfType<Mustang>().Engine.ShouldBeOfType<PushrodEngine>();
         }
 
         [Test]

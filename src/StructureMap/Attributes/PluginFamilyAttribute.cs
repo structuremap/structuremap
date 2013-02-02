@@ -1,5 +1,6 @@
 using System;
 using StructureMap.Graph;
+using System.Linq;
 
 namespace StructureMap
 {
@@ -26,12 +27,6 @@ namespace StructureMap
         /// HttpContext, etc.
         /// </summary>
         public InstanceScope Scope { get { return _scope; } set { _scope = value; } }
-
-        /// <summary>
-        /// InstanceKey of the default instance.  Used to implicitly define the default without
-        /// declaring the instance in StructureMap.config
-        /// </summary>
-        public string DefaultKey { get { return _default; } }
 
         /// <summary>
         /// Declares the target to be built by StructureMap as a Singleton.  One object instance will
@@ -66,7 +61,6 @@ namespace StructureMap
 
         public void Configure(IPluginFamily family)
         {
-            if (!string.IsNullOrEmpty(DefaultKey)) family.DefaultInstanceKey = DefaultKey;
             if (Scope != InstanceScope.PerRequest) family.SetScopeTo(Scope);
         }
     }

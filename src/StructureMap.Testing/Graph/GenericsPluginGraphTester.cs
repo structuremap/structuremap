@@ -35,10 +35,12 @@ namespace StructureMap.Testing.Graph
         {
             var pluginGraph = new PluginGraph();
             PluginFamily family = pluginGraph.FindFamily(typeof (IGenericService<>));
-            family.DefaultInstanceKey = "Default";
+
+            
             family.AddType(typeof (GenericService<>), "Default");
             family.AddType(typeof (SecondGenericService<>), "Second");
             family.AddType(typeof (ThirdGenericService<>), "Third");
+            family.SetDefaultKey("Default");
 
             var manager = new Container(pluginGraph);
 

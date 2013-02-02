@@ -45,11 +45,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <param name="instance"></param>
         public void Use(Instance instance)
         {
-            alterAndContinue(family =>
-            {
-                family.AddInstance(instance);
-                family.DefaultInstanceKey = instance.Name;
-            });
+            alterAndContinue(family => family.SetDefault(instance));
         }
 
         /// <summary>

@@ -44,9 +44,6 @@ namespace StructureMap.Testing.Graph
             var graph = new PluginGraph();
             graph.Scan(x => { x.Assembly("StructureMap.Testing.Widget"); });
 
-            graph.FindFamily(typeof (IWidget)).DefaultInstanceKey = "Blue";
-            graph.CreateFamily(typeof (WidgetMaker));
-
             graph.Seal();
 
 
@@ -55,7 +52,7 @@ namespace StructureMap.Testing.Graph
                 Console.WriteLine(family.PluginType.AssemblyQualifiedName);
             }
 
-            Assert.AreEqual(5, graph.FamilyCount);
+            Assert.AreEqual(4, graph.FamilyCount);
         }
 
         [Test]
@@ -81,23 +78,6 @@ namespace StructureMap.Testing.Graph
             family.Instances.Count().ShouldEqual(2);
         }
 
-
-        [Test]
-        public void PutsRightNumberOfPluginsIntoAFamily()
-        {
-            var graph = new PluginGraph();
-
-            graph.Scan(x => { x.Assembly("StructureMap.Testing.Widget"); });
-
-            graph.FindFamily(typeof (IWidget)).DefaultInstanceKey = "Blue";
-            graph.Seal();
-
-            var family = graph.FindFamily(typeof (IWidget));
-            family.DefaultInstanceKey.ShouldEqual("Blue");
-
-            // 3 different IWidget classes are marked as Pluggable
-            family.Instances.Count().ShouldEqual(3);
-        }
 
         [Test]
         public void Seal_does_not_throw_an_exception_if_there_are_no_errors()

@@ -16,11 +16,11 @@ namespace StructureMap.Graph
     {
         private readonly Cache<string, Instance> _instances = new Cache<string, Instance>(delegate { return null; });
         private readonly Type _pluginType;
-        private string _defaultKey = string.Empty;
         private ILifecycle _lifecycle;
         private PluginGraph _parent;
+        private Instance _default;
 
-    	public PluginFamily(Type pluginType)
+        public PluginFamily(Type pluginType)
             : this(pluginType, new PluginGraph())
         {
         }
@@ -70,7 +70,7 @@ namespace StructureMap.Graph
         public void SetDefault(Instance instance)
         {
             AddInstance(instance);
-            DefaultInstanceKey = instance.Name;
+            _default = instance;
         }
 
         public void AddTypes(List<Type> pluggedTypes)
@@ -89,7 +89,7 @@ namespace StructureMap.Graph
 
             if (_instances.Count == 1)
             {
-                _defaultKey = _instances.First.Name;
+                _default = _instances.Single();
             }
         }
 
@@ -117,23 +117,17 @@ namespace StructureMap.Graph
 
         public Instance GetDefaultInstance()
         {
-            return string.IsNullOrEmpty(_defaultKey) ? null : GetInstance(_defaultKey);
+            return _default;
         }
 
+        [Obsolete("Gonna make this go away")]
         public void FillDefault(Profile profile)
         {
-            if (string.IsNullOrEmpty(DefaultInstanceKey))
+            var defaultInstance = GetDefaultInstance();
+            if (defaultInstance != null)
             {
-                return;
+                profile.FillTypeInto(PluginType, defaultInstance);
             }
-
-            Instance defaultInstance = GetInstance(DefaultInstanceKey);
-            if (defaultInstance == null)
-            {
-                Parent.Log.RegisterError(210, DefaultInstanceKey, PluginType);
-            }
-
-            profile.FillTypeInto(PluginType, defaultInstance);
         }
 
 
@@ -161,7 +155,6 @@ namespace StructureMap.Graph
         {
             Type templatedType = _pluginType.MakeGenericType(templateTypes);
             var templatedFamily = new PluginFamily(templatedType, Parent);
-            templatedFamily.DefaultInstanceKey = DefaultInstanceKey;
             templatedFamily._lifecycle = _lifecycle;
 
             _instances.GetAll().Select(x =>
@@ -172,6 +165,16 @@ namespace StructureMap.Graph
                 clone.Name = x.Name;
                 return clone;
             }).Where(x => x != null).Each(templatedFamily.AddInstance);
+
+            if (GetDefaultInstance() != null)
+            {
+                var defaultKey = GetDefaultInstance().Name;
+                var @default = templatedFamily.Instances.FirstOrDefault(x => x.Name == defaultKey);
+                if (@default != null)
+                {
+                    templatedFamily.SetDefault(@default);
+                }
+            }
 
             //Are there instances that close the templatedtype straight away?
             _instances.GetAll()
@@ -219,16 +222,16 @@ namespace StructureMap.Graph
         public void RemoveInstance(Instance instance)
         {
             _instances.Remove(instance.Name);
-            if (_defaultKey == instance.Name)
+            if (_default == instance)
             {
-                _defaultKey = null;
+                _default = null;
             }
         }
 
         public void RemoveAll()
         {
             _instances.Clear();
-            _defaultKey = null;
+            _default = null;
         }
 
         public bool IsGenericTemplate { get { return _pluginType.IsGenericTypeDefinition || _pluginType.ContainsGenericParameters; } }
@@ -243,8 +246,18 @@ namespace StructureMap.Graph
         public Type PluginType { get { return _pluginType; } }
 
         /// <summary>
-        /// The InstanceKey of the default instance of the PluginFamily
+        /// Primarily for TESTING
         /// </summary>
-        public string DefaultInstanceKey { get { return _defaultKey; } set { _defaultKey = value ?? string.Empty; } }
+        /// <param name="defaultKey"></param>
+        public void SetDefaultKey(string defaultKey)
+        {
+            var instance = _instances.FirstOrDefault(x => x.Name == defaultKey);
+            if (instance == null)
+            {
+                throw new ArgumentOutOfRangeException("Could not find an instance with name " + defaultKey);
+            }
+
+            SetDefault(instance);
+        }
     }
 }

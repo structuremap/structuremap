@@ -241,22 +241,6 @@ namespace StructureMap.Testing.Configuration.DSL
             manager.GetInstance<Rule>().ShouldBeOfType<ARule>();
         }
 
-        [Test]
-        public void TheDefaultInstanceIsPickedUpFromTheAttribute()
-        {
-            var registry = new Registry();
-            registry.For<IGateway>();
-            registry.Scan(x => x.AssemblyContainingType<IGateway>());
-
-            PluginGraph pluginGraph = registry.Build();
-
-            Assert.IsTrue(pluginGraph.ContainsFamily(typeof (IGateway)));
-
-            var manager = new Container(pluginGraph);
-            var gateway = (IGateway) manager.GetInstance(typeof (IGateway));
-
-            gateway.ShouldBeOfType<DefaultGateway>();
-        }
     }
 
     public class StubbedLifecycle : ILifecycle
