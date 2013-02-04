@@ -299,7 +299,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Graph\TypeFindingTester.cs" />
-    <Compile Include="Diagnostics\IntegrationTester.cs" />
     <Compile Include="Diagnostics\TextReportWriterSmokeTester.cs" />
     <Compile Include="GenericsAcceptanceTester.cs" />
     <Compile Include="GenericsIntegrationTester.cs" />

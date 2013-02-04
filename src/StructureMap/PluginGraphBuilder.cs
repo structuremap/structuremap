@@ -13,21 +13,6 @@ namespace StructureMap
     /// </summary>
     public class PluginGraphBuilder
     {
-        #region statics
-
-        // Only used in testing
-        public static PluginGraph BuildFromXml(XmlDocument document)
-        {
-            var log = new GraphLog();
-
-            ConfigurationParser[] parsers = ConfigurationParserBuilder.GetParsers(document.DocumentElement, log);
-            var builder = new PluginGraphBuilder(parsers, new Registry[0], log);
-
-            return builder.Build();
-        }
-
-        #endregion
-
         private readonly PluginGraph _graph;
         private readonly ConfigurationParser[] _parsers;
         private readonly Registry[] _registries = new Registry[0];

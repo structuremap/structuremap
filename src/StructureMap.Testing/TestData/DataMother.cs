@@ -71,12 +71,6 @@ namespace StructureMap.Testing.TestData
             return document;
         }
 
-        public static PluginGraph GetDiagnosticPluginGraph(string fileName)
-        {
-            XmlDocument document = GetXmlDocument(fileName);
-            return PluginGraphBuilder.BuildFromXml(document);
-        }
-
         public static PluginGraph GetPluginGraph(string fileName)
         {
             XmlDocument document = GetXmlDocument(fileName);
