@@ -16,7 +16,6 @@ namespace StructureMap.Graph
     {
         private readonly Cache<string, Instance> _instances = new Cache<string, Instance>(delegate { return null; });
         private readonly Type _pluginType;
-        private ILifecycle _lifecycle;
         private PluginGraph _parent;
         private Instance _default;
 
@@ -39,28 +38,24 @@ namespace StructureMap.Graph
     	public PluginGraph Parent { get { return _parent; } set { _parent = value; } }
         public IEnumerable<Instance> Instances { get { return _instances.GetAll(); } }
 
-        #region IPluginFamily Members
-
         public void SetScopeTo(InstanceScope scope)
         {
         	Scope = scope;
         	if (scope == InstanceScope.Transient)
             {
-                _lifecycle = null;
+                Lifecycle = null;
                 return;
             }
 
-            _lifecycle = Lifecycles.GetLifecycle(scope);
+            Lifecycle = Lifecycles.GetLifecycle(scope);
         }
-
-        #endregion
 
         public void SetScopeTo(ILifecycle lifecycle)
         {
-            _lifecycle = lifecycle;
+            Lifecycle = lifecycle;
         }
 
-        public ILifecycle Lifecycle { get { return _lifecycle; } }
+        public ILifecycle Lifecycle { get; private set; }
 
         public void AddInstance(Instance instance)
         {
@@ -78,16 +73,19 @@ namespace StructureMap.Graph
             pluggedTypes.ForEach(AddType);
         }
 
+        // TODO -- move all of this code into a new PluginGraphBuilder
         public void Seal()
         {
             validatePluggabilityOfInstances();
 
+            // TODO -- make this be a bit more at runtime
             if (_pluginType.IsConcrete() && PluginCache.GetPlugin(_pluginType).CanBeAutoFilled)
             {
                 MissingInstance = new ConfiguredInstance(_pluginType);
             }
         }
 
+        // TODO -- move all of this code into a new PluginGraphBuilder
         private void validatePluggabilityOfInstances()
         {
             _instances.Each(instance =>
@@ -119,6 +117,9 @@ namespace StructureMap.Graph
             {
                 return _instances.Single();
             }
+
+            // TODO -- move this behind a Lazy
+            // TODO -- add in the magic rule about it being a concrete type
 
             return null;
         }
@@ -158,7 +159,7 @@ namespace StructureMap.Graph
         {
             Type templatedType = _pluginType.MakeGenericType(templateTypes);
             var templatedFamily = new PluginFamily(templatedType, Parent);
-            templatedFamily._lifecycle = _lifecycle;
+            templatedFamily.Lifecycle = Lifecycle;
 
             _instances.GetAll().Select(x =>
             {

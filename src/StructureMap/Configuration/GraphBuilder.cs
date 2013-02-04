@@ -9,8 +9,6 @@ namespace StructureMap.Configuration
     public class GraphBuilder : IGraphBuilder
     {
         private readonly PluginGraph _pluginGraph;
-        private readonly Container _systemContainer;
-        private readonly PluginGraph _systemGraph;
 
 
         public GraphBuilder(Registry[] registries)
@@ -26,12 +24,7 @@ namespace StructureMap.Configuration
             {
                 registry.As<IPluginGraphConfiguration>().Configure(_pluginGraph);
             }
-
-            _systemGraph = new SystemRegistry().Build();
-            _systemContainer = new Container(_systemGraph);
         }
-
-        #region IGraphBuilder Members
 
         public void FinishFamilies()
         {
@@ -63,8 +56,5 @@ namespace StructureMap.Configuration
                 _pluginGraph.Log.RegisterError(103, ex, pluginTypePath.AssemblyQualifiedName);
             }
         }
-
-        #endregion
-
     }
 }
