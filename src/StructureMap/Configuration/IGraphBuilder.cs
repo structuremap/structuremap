@@ -7,9 +7,6 @@ namespace StructureMap.Configuration
     {
         PluginGraph PluginGraph { get; }
         void AddRegistry(string registryTypeName);
-
-        void FinishFamilies();
-
         void ConfigureFamily(TypePath pluginTypePath, Action<PluginFamily> action);
     }
 }

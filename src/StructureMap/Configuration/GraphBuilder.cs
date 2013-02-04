@@ -26,11 +26,6 @@ namespace StructureMap.Configuration
             }
         }
 
-        public void FinishFamilies()
-        {
-            _pluginGraph.Seal();
-        }
-
         public PluginGraph PluginGraph { get { return _pluginGraph; } }
 
         public void AddRegistry(string registryTypeName)
