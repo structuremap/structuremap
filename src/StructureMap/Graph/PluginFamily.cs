@@ -113,9 +113,6 @@ namespace StructureMap.Graph
             return _instances[name];
         }
 
-        
-
-        // TODO -- make this a bit smarter
         public Instance GetDefaultInstance()
         {
             return _defaultInstance.Value;
