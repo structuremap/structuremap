@@ -20,21 +20,6 @@ namespace StructureMap.Testing
 
         #endregion
 
-        [Test]
-        public void BuildFamilyAndPluginThenSealAndCreateInstanceManagerWithGenericTypeWithOpenGenericParameters()
-        {
-            var graph = new PluginGraph();
-            graph.Scan(x => x.TheCallingAssembly());
-
-
-            PluginFamily family = graph.FindFamily(typeof (IGenericService<>));
-            family.DefaultInstanceKey = "Default";
-            family.AddPlugin(typeof (GenericService<>), "Default");
-
-            graph.Seal();
-
-            var manager = new Container(graph);
-        }
 
         [Test]
         public void CanBuildAGenericObjectThatHasAnotherGenericObjectAsAChild()
@@ -76,35 +61,6 @@ namespace StructureMap.Testing
 
 
         [Test]
-        public void CanEmitForATemplateWithTwoTemplates()
-        {
-            var family = new PluginFamily(typeof (ITarget<int, string>));
-
-
-            family.AddPlugin(typeof (SpecificTarget<int, string>), "specific");
-
-            var factory = new InstanceFactory(family);
-        }
-
-        [Test]
-        public void CanEmitInstanceBuilderForATypeWithConstructorArguments()
-        {
-            var graph = new PluginGraph();
-            PluginFamily family = graph.FindFamily(typeof (ComplexType<int>));
-            family.AddPlugin(typeof (ComplexType<int>), "complex");
-
-            var manager = new Container(graph);
-
-            ConfiguredInstance instance = new ConfiguredInstance(typeof (ComplexType<int>))
-                .WithProperty("name").EqualTo("Jeremy")
-                .WithProperty("age").EqualTo(32);
-
-            var com = manager.GetInstance<ComplexType<int>>(instance);
-            Assert.AreEqual("Jeremy", com.Name);
-            Assert.AreEqual(32, com.Age);
-        }
-
-        [Test]
         public void CanGetPluginFamilyFromPluginGraphWithNoParameters()
         {
             var graph = new PluginGraph();
@@ -137,9 +93,7 @@ namespace StructureMap.Testing
         {
             var con = new Container(x =>
             {
-                x.ForRequestedType(typeof (IService<>))
-                    .CacheBy(InstanceScope.Singleton)
-                    .TheDefaultIsConcreteType(typeof (Service<>));
+                x.ForSingletonOf(typeof (IService<>)).Use(typeof (Service<>));
             });
 
             var first = con.GetInstance<IService<string>>();
@@ -166,10 +120,14 @@ namespace StructureMap.Testing
         [Test]
         public void Define_profile_with_generics_and_concrete_type()
         {
-            var container = new Container(registry =>
-            {
-                registry.Profile("1").For(typeof (IService<>)).UseConcreteType(typeof (Service<>));
-                registry.Profile("2").For(typeof (IService<>)).UseConcreteType(typeof (Service2<>));
+            var container = new Container(registry => {
+                registry.Profile("1", x => {
+                    x.For(typeof(IService<>)).Use(typeof(Service<>));
+                });
+
+                registry.Profile("2", x => {
+                    x.For(typeof(IService<>)).Use(typeof(Service2<>));
+                });
             });
 
             container.SetDefaultsToProfile("1");
@@ -184,21 +142,27 @@ namespace StructureMap.Testing
         [Test]
         public void Define_profile_with_generics_with_named_instance()
         {
-            IContainer manager = new Container(r =>
+            IContainer container = new Container(r =>
             {
-                r.InstanceOf(typeof (IService<>)).Is(typeof (Service<>)).WithName("Service1");
-                r.InstanceOf(typeof (IService<>)).Is(typeof (Service2<>)).WithName("Service2");
+                r.For(typeof (IService<>)).Add(typeof (Service<>)).Named("Service1");
+                r.For(typeof (IService<>)).Add(typeof (Service2<>)).Named("Service2");
 
-                r.Profile("1").For(typeof (IService<>)).UseNamedInstance("Service1");
-                r.Profile("2").For(typeof (IService<>)).UseNamedInstance("Service2");
+                r.Profile("1", x => {
+                    x.For(typeof (IService<>)).Use("Service1");
+                });
+
+                r.Profile("2", x => {
+                    x.For(typeof (IService<>)).Use("Service2");
+                });
             });
 
-            manager.SetDefaultsToProfile("1");
+            container.SetDefaultsToProfile("1");
 
-            Assert.IsInstanceOfType(typeof (Service<string>), manager.GetInstance<IService<string>>());
+            container.GetInstance<IService<string>>().ShouldBeOfType<Service<string>>();
 
-            manager.SetDefaultsToProfile("2");
-            Assert.IsInstanceOfType(typeof (Service2<int>), manager.GetInstance<IService<int>>());
+
+            container.SetDefaultsToProfile("2");
+            container.GetInstance<IService<int>>().ShouldBeOfType<Service2<int>>();
         }
 
         [Test]
@@ -209,18 +173,18 @@ namespace StructureMap.Testing
             pluginGraph.SetDefault("2", typeof (IService<>), new ReferencedInstance("Plugged"));
 
 
-            var manager = new Container(pluginGraph);
+            var container = new Container(pluginGraph);
 
-            var plug = manager.GetInstance<IPlug<string>>();
 
-            manager.SetDefaultsToProfile("1");
-            Assert.IsInstanceOfType(typeof (Service<string>), manager.GetInstance(typeof (IService<string>)));
+            container.SetDefaultsToProfile("1");
+            container.GetInstance(typeof (IService<string>)).ShouldBeOfType<Service<string>>();
 
-            manager.SetDefaultsToProfile("2");
-            Assert.IsInstanceOfType(typeof (ServiceWithPlug<string>), manager.GetInstance(typeof (IService<string>)));
+            container.SetDefaultsToProfile("2");
+            container.GetInstance(typeof (IService<string>))
+                                           .ShouldBeOfType<ServiceWithPlug<string>>();
 
-            manager.SetDefaultsToProfile("1");
-            Assert.IsInstanceOfType(typeof (Service<string>), manager.GetInstance(typeof (IService<string>)));
+            container.SetDefaultsToProfile("1");
+            container.GetInstance(typeof (IService<string>)).ShouldBeOfType < Service<string>>();
         }
 
 

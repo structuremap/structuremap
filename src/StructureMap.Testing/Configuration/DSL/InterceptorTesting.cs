@@ -18,43 +18,43 @@ namespace StructureMap.Testing.Configuration.DSL
 
             _container = new Container(r =>
             {
-                r.ForRequestedType<ContextRecorder>().TheDefault.IsThis(recorder);
+                r.For<ContextRecorder>().Use(recorder);
 
-                r.ForRequestedType<IService>().AddInstances(x =>
+                r.For<IService>().AddInstances(x =>
                 {
-                    x.OfConcreteType<ColorService>()
+                    x.Type<ColorService>()
                         .OnCreation(s => _lastService = s)
-                        .WithName("Intercepted")
-                        .WithCtorArg("color").EqualTo("Red");
+                        .Named("Intercepted")
+                        .Ctor<string>("color").Is("Red");
 
-                    x.OfConcreteType<ColorService>()
+                    x.Type<ColorService>()
                         .OnCreation((c, s) => c.GetInstance<ContextRecorder>().WasTouched = true)
-                        .WithName("InterceptedWithContext")
-                        .WithCtorArg("color").EqualTo("Red");
+                        .Named("InterceptedWithContext")
+                        .Ctor<string>("color").Is("Red");
 
-                    x.OfConcreteType<ColorService>()
-                        .WithName("NotIntercepted")
-                        .WithCtorArg("color").EqualTo("Blue");
+                    x.Type<ColorService>()
+                        .Named("NotIntercepted")
+                        .Ctor<string>("color").Is("Blue");
 
                     x.Object(new ColorService("Yellow"))
-                        .WithName("Yellow")
+                        .Named("Yellow")
                         .OnCreation<ColorService>(s => _lastService = s);
 
-                    x.ConstructedBy(() => new ColorService("Purple")).WithName("Purple")
+                    x.ConstructedBy(() => new ColorService("Purple")).Named("Purple")
                         .EnrichWith<IService>(s => new DecoratorService(s));
 
-                    x.ConstructedBy(() => new ColorService("Purple")).WithName("DecoratedWithContext")
+                    x.ConstructedBy(() => new ColorService("Purple")).Named("DecoratedWithContext")
                         .EnrichWith<IService>((c, s) =>
                         {
                             c.GetInstance<ContextRecorder>().WasTouched = true;
                             return new DecoratorService(s);
                         });
 
-                    x.OfConcreteType<ColorService>().WithName("Decorated").EnrichWith<IService>(
+                    x.Type<ColorService>().Named("Decorated").EnrichWith<IService>(
                         s => new DecoratorService(s))
-                        .WithCtorArg("color").EqualTo("Orange");
+                        .Ctor<string>("color").Is("Orange");
 
-                    x.Object(new ColorService("Yellow")).WithName("Bad")
+                    x.Object(new ColorService("Yellow")).Named("Bad")
                         .OnCreation<ColorService>(obj => { throw new ApplicationException("Bad!"); });
                 });
             });

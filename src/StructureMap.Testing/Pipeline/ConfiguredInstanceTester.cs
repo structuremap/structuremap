@@ -23,7 +23,7 @@ namespace StructureMap.Testing.Pipeline
         public void SetUp()
         {
             var registry = new Registry();
-            registry.BuildInstancesOf<Rule>();
+            registry.For<Rule>();
             registry.Scan(x =>
             {
                 x.Assembly("StructureMap.Testing.Widget");
@@ -32,8 +32,7 @@ namespace StructureMap.Testing.Pipeline
 
             PluginGraph graph = registry.Build();
 
-            var pipelineGraph = new PipelineGraph(graph);
-            _session = new BuildSession(pipelineGraph, graph.InterceptorLibrary);
+            _session = BuildSession.ForPluginGraph(graph);
         }
 
         #endregion
@@ -86,14 +85,6 @@ namespace StructureMap.Testing.Pipeline
         }
 
 
-        [Test, ExpectedException(typeof (StructureMapException))]
-        public void BuildRuleWithABadValue()
-        {
-            var instance = (ConfiguredInstance) ComplexRule.GetInstance();
-
-            instance.WithProperty("Int").EqualTo("abc");
-            var rule = (ComplexRule) instance.Build(typeof (Rule), _session);
-        }
 
         [Test, ExpectedException(typeof (StructureMapException))]
         public void BuildRuleWithAMissingValue()
@@ -134,10 +125,10 @@ namespace StructureMap.Testing.Pipeline
 
 
         [Test]
-        public void GetProperty_happy_path()
+        public void setter_with_primitive_happy_path()
         {
             ConfiguredInstance instance = new ConfiguredInstance(typeof (ColorRule))
-                .WithProperty("color").EqualTo("Red").WithProperty("Age").EqualTo("34");
+                .Ctor<string>("color").Is("Red").Setter<int>("Age").Is(34);
 
             IConfiguredInstance configuredInstance = instance;
 
@@ -145,7 +136,7 @@ namespace StructureMap.Testing.Pipeline
             Assert.AreEqual("Red", configuredInstance.GetProperty("color"));
             Assert.AreEqual("34", configuredInstance.GetProperty("Age"));
 
-            instance.WithProperty("color").EqualTo("Blue");
+            instance.Ctor<string>("color").Is("Blue");
             Assert.AreEqual("Blue", configuredInstance.GetProperty("color"));
         }
 
@@ -157,7 +148,7 @@ namespace StructureMap.Testing.Pipeline
             IConfiguredInstance configuredInstance = instance;
             configuredInstance.HasProperty("prop1", null).ShouldBeFalse();
 
-            instance.Child("prop1").IsNamedInstance("something");
+            instance.Setter<List<string>>("prop1").IsNamedInstance("something");
             configuredInstance.HasProperty("prop1", null).ShouldBeTrue();
         }
 
@@ -170,7 +161,7 @@ namespace StructureMap.Testing.Pipeline
             IConfiguredInstance configuredInstance = instance;
             configuredInstance.HasProperty("prop1", null).ShouldBeFalse();
 
-            instance.ChildArray<IGateway[]>("prop1").Contains(new DefaultInstance());
+            instance.EnumerableOf<IGateway>("prop1").Contains(new DefaultInstance());
             configuredInstance.HasProperty("prop1", null).ShouldBeTrue();
         }
 
@@ -182,7 +173,7 @@ namespace StructureMap.Testing.Pipeline
             IConfiguredInstance configuredInstance = instance;
             configuredInstance.HasProperty("gateways", null).ShouldBeFalse();
 
-            instance.ChildArray(typeof (IGateway[])).Contains(new DefaultInstance());
+            instance.EnumerableOf<IGateway>().Contains(new DefaultInstance());
             configuredInstance.HasProperty("gateways", null).ShouldBeTrue();
         }
 
@@ -194,7 +185,7 @@ namespace StructureMap.Testing.Pipeline
             IConfiguredInstance configuredInstance = instance;
             configuredInstance.HasProperty("gateways", null).ShouldBeFalse();
 
-            instance.ChildArray<IGateway[]>().Contains(new DefaultInstance());
+            instance.EnumerableOf<IGateway>().Contains(new DefaultInstance());
             configuredInstance.HasProperty("gateways", null).ShouldBeTrue();
         }
 
@@ -256,7 +247,7 @@ namespace StructureMap.Testing.Pipeline
         }
 
         [Test]
-        public void use_the_child_function()
+        public void use_the_setter_function()
         {
             var theRule = new ARule();
 
@@ -264,7 +255,7 @@ namespace StructureMap.Testing.Pipeline
                 new Container(
                     x =>
                     {
-                        x.For(typeof (ClassWithDependency)).Use(typeof (ClassWithDependency)).Child(typeof (Rule)).Is(
+                        x.For(typeof (ClassWithDependency)).Use(typeof (ClassWithDependency)).Setter<Rule>().Is(
                             theRule);
                     });
 

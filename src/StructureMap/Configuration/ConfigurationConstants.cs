@@ -30,7 +30,6 @@ namespace StructureMap.Configuration
 
         public const string MISSING_CHILD = "Child memento is not defined";
         public const string MISSING_INSTANCE_KEY = "InstanceKey is required";
-        public const string MISSING_TEMPLATE_VALUE = "A required value for a Templated InstanceMemento is missing";
 
         public const string NO_DEFAULT_INSTANCE_CONFIGURED = "No default instance is configured for this PluginFamily";
         public const string NO_MATCHING_INSTANCE_CONFIGURED = "No matching instance is configured for this PluginFamily";

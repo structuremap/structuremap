@@ -113,15 +113,6 @@ namespace StructureMap.Pipeline
             return pluginType;
         }
 
-        [Obsolete("Can go")]
-        protected virtual void addTemplatedInstanceTo(PluginFamily family, Type[] templateTypes)
-        {
-            if (canBePartOfPluginFamily(family))
-            {
-                family.AddInstance(this);
-            }
-        }
-
         [CLSCompliant(false)]
         protected virtual void preprocess(PluginFamily family)
         {
@@ -196,13 +187,6 @@ namespace StructureMap.Pipeline
         /// </summary>
         /// <param name="instanceKey"></param>
         /// <returns></returns>
-        [Obsolete("Change to Named")]
-        public T WithName(string instanceKey)
-        {
-            Name = instanceKey;
-            return thisInstance;
-        }
-
         public T Named(string instanceKey)
         {
             Name = instanceKey;
@@ -213,12 +197,12 @@ namespace StructureMap.Pipeline
         /// Register an Action to perform on the object created by this Instance
         /// before it is returned to the caller
         /// </summary>
-        /// <typeparam name="TYPE"></typeparam>
+        /// <typeparam name="THandler"></typeparam>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public T OnCreation<TYPE>(Action<TYPE> handler)
+        public T OnCreation<THandler>(Action<THandler> handler)
         {
-            var interceptor = new StartupInterceptor<TYPE>((c, o) => handler(o));
+            var interceptor = new StartupInterceptor<THandler>((c, o) => handler(o));
             Interceptor = interceptor;
 
             return thisInstance;
@@ -228,12 +212,12 @@ namespace StructureMap.Pipeline
         /// Register a Func to potentially enrich or substitute for the object
         /// created by this Instance before it is returned to the caller
         /// </summary>
-        /// <typeparam name="TYPE"></typeparam>
+        /// <typeparam name="THandler"></typeparam>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public T EnrichWith<TYPE>(EnrichmentHandler<TYPE> handler)
+        public T EnrichWith<THandler>(EnrichmentHandler<THandler> handler)
         {
-            var interceptor = new EnrichmentInterceptor<TYPE>((c, o) => handler(o));
+            var interceptor = new EnrichmentInterceptor<THandler>((c, o) => handler(o));
             Interceptor = interceptor;
 
             return thisInstance;
@@ -243,12 +227,12 @@ namespace StructureMap.Pipeline
         /// Register a Func to potentially enrich or substitute for the object
         /// created by this Instance before it is returned to the caller
         /// </summary>
-        /// <typeparam name="TYPE"></typeparam>
+        /// <typeparam name="THandler"></typeparam>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public T EnrichWith<TYPE>(ContextEnrichmentHandler<TYPE> handler)
+        public T EnrichWith<THandler>(ContextEnrichmentHandler<THandler> handler)
         {
-            var interceptor = new EnrichmentInterceptor<TYPE>(handler);
+            var interceptor = new EnrichmentInterceptor<THandler>(handler);
             Interceptor = interceptor;
 
             return thisInstance;

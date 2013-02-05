@@ -200,7 +200,7 @@
 						<P>Shorthand way to explicitly define the default instance of a PluginType in one element. Explicitly directs and 
 							configures StructureMap to create instances of the CLR Type specified by the "PluginType" attribute.  The DefaultInstance node also represents an Instance node, and the arguments to the constructor function and setter properties follow the same rules as an Instance node.</P>
 						<H5>Sample</H5>
-						<pre class="xml-sample">&lt;DefaultInstance PluginType="StructureMap.Testing.Widget.Rule,StructureMap.Testing" PluggedType="StructureMap.Testing.Widget.ColorRule,StructureMap.Testing"  Scope=&quot;Singleton"&gt; Color=&quot;Red&quot;
+						<pre class="xml-sample">&lt;DefaultInstance PluginType="StructureMap.Testing.Widget.Rule,StructureMap.Testing" TPluggedType="StructureMap.Testing.Widget.ColorRule,StructureMap.Testing"  Scope=&quot;Singleton"&gt; Color=&quot;Red&quot;
 	<BR> &lt;/DefaultInstance&gt;</pre>
 						<H5>Required Attributes</H5>
 						<DIV class="schema-table"><TABLE width="100%" border="1" cellPadding="1" cellSpacing="1" ID="Table19">
@@ -212,7 +212,7 @@
 									<TD>Assembly qualified name of the PluginType, as in PluginType instance = ObjectFactory.GetInstance&lt;PluginType&gt;()</TD>
 								</TR>
 								<TR>
-									<TD>PluggedType</TD>
+									<TD>TPluggedType</TD>
 									<TD>The assembly qualified name of the concrete type</TD>
 								</TR>
 							</TABLE>
@@ -286,7 +286,7 @@
 
 * OR *
 
-&lt;PluginFamily&gt;<BR>	&lt;Instance Key="Bigger" PluggedType="Assembly Qualified Name"&gt;
+&lt;PluginFamily&gt;<BR>	&lt;Instance Key="Bigger" TPluggedType="Assembly Qualified Name"&gt;
 		&lt;Property Name="Attribute" Value="MyDad" /&gt;
 		&lt;Property Name="Value" Value="10" /&gt;
 	&lt;/Instance&gt;<BR>
@@ -315,7 +315,7 @@
 									<TH width="25%">
 										Attribute</TH><TH width="75%">Description</TH></TR>
 								<tr>
-								    <td>PluggedType</td>
+								    <td>TPluggedType</td>
 								    <td>An alternative to the Type attribute.  Allows you to specify the assembly qualified type of the concrete class directly</td>
 								</tr>
 								<TR>

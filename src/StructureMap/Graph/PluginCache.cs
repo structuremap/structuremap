@@ -7,6 +7,7 @@ using StructureMap.Util;
 
 namespace StructureMap.Graph
 {
+    [Obsolete("Like this to go away")]
     public static class PluginCache
     {
         private static readonly Cache<Type, IInstanceBuilder> _builders;
@@ -57,7 +58,7 @@ namespace StructureMap.Graph
             _builders[pluggedType] = builder;
         }
 
-        internal static void ResetAll()
+        public static void ResetAll()
         {
             lock (typeof (PluginCache))
             {

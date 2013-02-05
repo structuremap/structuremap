@@ -21,3 +21,4 @@ UpgradeLog.XML
 _UpgradeReport*/
 src/packages
 artifacts
+src/CommonAssemblyInfo.cs

@@ -94,12 +94,12 @@ namespace StructureMap.Testing.Pipeline
             var parent = new Container(x =>
             {
                 x.For<IWidget>().Use<ColorWidget>()
-                    .WithCtorArg("color").EqualTo("red");
+                    .Ctor<string>("color").Is("red");
 
                 x.Profile("green", o =>
                 {
-                    o.Type<IWidget>().Is.OfConcreteType<ColorWidget>()
-                        .WithCtorArg("color").EqualTo("green");
+                    o.For<IWidget>().Use<ColorWidget>()
+                        .Ctor<string>("color").Is("green");
                 });
             });
 
@@ -141,9 +141,9 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void singleton_service_from_open_type_in_the_parent_is_found_by_the_child()
         {
-            var parent =
-                new Container(
-                    x => { x.For(typeof (IService<>)).CacheBy(InstanceScope.Singleton).Use(typeof (Service<>)); });
+            var parent = new Container(x => {
+                x.ForSingletonOf(typeof (IService<>)).Use(typeof (Service<>));
+            });
 
             IContainer child = parent.GetNestedContainer();
 

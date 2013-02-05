@@ -1,5 +1,6 @@
 using System;
 using NUnit.Framework;
+using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 
@@ -50,7 +51,7 @@ namespace StructureMap.Testing.Graph
                 });
             });
 
-            Assert.IsInstanceOfType(typeof (Convention), container.GetInstance<IConvention>());
+            container.GetInstance<IConvention>().ShouldBeOfType<Convention>();
         }
 
         [Test]
@@ -63,7 +64,7 @@ namespace StructureMap.Testing.Graph
 
             scanner.Process(typeof (Convention), registry);
 
-            registry.ConfigurePluginGraph(graph);
+            registry.ShouldBeOfType<IPluginGraphConfiguration>().Configure(graph);
 
             Assert.IsFalse(graph.PluginFamilies.Contains(typeof (IServer)));
             Assert.IsTrue(graph.PluginFamilies.Contains(typeof (IConvention)));

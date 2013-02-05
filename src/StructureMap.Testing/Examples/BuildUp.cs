@@ -14,13 +14,13 @@ namespace StructureMap.Testing.Examples
         public void push_in_a_string_property()
         {
             // There is a limitation to this.  As of StructureMap 2.5.2,
-            // you can only use the .WithProperty().EqualTo() syntax
+            // you can only use the .WithProperty().Is() syntax
             // for BuildUp()
             // SetProperty() will not work at this time.
             var container = new Container(x =>
             {
                 x.ForConcreteType<ClassThatHasConnection>().Configure
-                    .WithProperty(o => o.ConnectionString).EqualTo("connect1");
+                    .Setter(o => o.ConnectionString).Is("connect1");
             });
 
             var @class = new ClassThatHasConnection();

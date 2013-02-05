@@ -5,19 +5,19 @@
   <Assembly Name="StructureMap.Testing.Widget3"/>
 
   <PluginFamily Type="StructureMap.Testing.Widget.IWidget" Assembly="StructureMap.Testing.Widget" DefaultKey="Red">
-    <Instance Key="Red" Type="Color" color="Red" />
-    <Instance Key="Blue" Type="Color" color="Blue" />
+    <Instance Key="Red" PluggedType="Color" color="Red" />
+    <Instance Key="Blue" PluggedType="Color" color="Blue" />
     <Plugin Assembly="StructureMap.Testing.Widget" Type="StructureMap.Testing.Widget.NotPluggableWidget" ConcreteKey="NotPluggable"/>
   </PluginFamily>
 
 
   <PluginFamily Type="StructureMap.Testing.Widget.Rule" Assembly="StructureMap.Testing.Widget" DefaultKey="Blue">
-    <Instance Key="Red" Type="Color" color="Red" />
-    <Instance Key="Blue" Type="Color" color="Blue" />
-    <Instance Key="Bigger" Type="GreaterThan" Attribute="MyDad" Value="10" />
+    <Instance Key="Red" PluggedType="Color" color="Red" />
+    <Instance Key="Blue" PluggedType="Color" color="Blue" />
+    <Instance Key="Bigger" PluggedType="GreaterThan" Attribute="MyDad" Value="10" />
   </PluginFamily>
 
-  <AddInstance PluginType="StructureMap.Testing.Widget.GrandChild, StructureMap.Testing.Widget"  Type="Default" Key="Tommy" RightHanded="false" BirthYear="1972"/>
+  <AddInstance PluginType="StructureMap.Testing.Widget.GrandChild, StructureMap.Testing.Widget"  PluggedType="Default" Key="Tommy" RightHanded="false" BirthYear="1972"/>
   
   
   
@@ -27,15 +27,15 @@
   
   <AddInstance 
     PluginType="StructureMap.Testing.Widget.GrandChild, StructureMap.Testing.Widget"  
-    Type="Default" 
+    PluggedType="Default" 
     Key="Todd" 
     RightHanded="true" 
     BirthYear="1975" />
   
   
-  <AddInstance PluginType="StructureMap.Testing.Widget.GrandChild, StructureMap.Testing.Widget"   Type="Leftie" Key="Trevor" BirthYear="1979" />
-  <AddInstance PluginType="StructureMap.Testing.Widget.Child, StructureMap.Testing.Widget" Type="Default" Key="Tom" Name="Tom">
-    <MyGrandChild Type="Leftie" BirthYear="1984" />
+  <AddInstance PluginType="StructureMap.Testing.Widget.GrandChild, StructureMap.Testing.Widget"   PluggedType="StructureMap.Testing.Widget.LeftieGrandChild, StructureMap.Testing.Widget" Key="Trevor" BirthYear="1979" />
+  <AddInstance PluginType="StructureMap.Testing.Widget.Child, StructureMap.Testing.Widget" PluggedType="Default" Key="Tom" Name="Tom">
+    <MyGrandChild PluggedType="StructureMap.Testing.Widget.LeftieGrandChild, StructureMap.Testing.Widget" BirthYear="1984" />
   </AddInstance>
 
 </StructureMap>

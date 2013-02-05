@@ -38,27 +38,6 @@ namespace StructureMap.Testing.Pipeline
             public List<IWidget> Widgets { get { return _widgets; } }
         }
 
-        [Test]
-        public void Build_happy_path()
-        {
-            var mocks = new MockRepository();
-            var buildSession =
-                mocks.StrictMock<BuildSession>();
-
-            var theDefault = new DefaultClass();
-
-
-            using (mocks.Record())
-            {
-                Expect.Call(buildSession.CreateInstance(typeof (IDefault))).Return(theDefault);
-            }
-
-            using (mocks.Playback())
-            {
-                var instance = new DefaultInstance();
-                Assert.AreSame(theDefault, instance.Build(typeof (IDefault), buildSession));
-            }
-        }
 
         [Test]
         public void Get_description()

@@ -1,27 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?> 
-<Decisions>
-	<Decision Type="Default" Key="RedBlue">
-		<Property Name="Rules">
-			<Rule Type="Color">
-				<Property Name="color" Value="Red"/>
-			</Rule>
-			<Rule Type="Color">
-				<Property Name="color" Value="Blue"/>
-			</Rule>
-		</Property>
-	</Decision>
-	
-	<Decision Type="Default" Key="GreenBluePurple">
-		<Property Name="Rules">
-			<Rule Type="Color">
-				<Property Name="color" Value="Green"/>
-			</Rule>
-			<Rule Type="Color">
-				<Property Name="color" Value="Blue"/>
-			</Rule>
-			<Rule Type="Color">
-				<Property Name="color" Value="Purple"/>
-			</Rule>
-		</Property>
-	</Decision>
-</Decisions>
+<StructureMap>
+	<AddInstance PluginType="StructureMap.Testing.Widget.Decision, StructureMap.Testing.Widget" Key="RedBlue">
+    <Rules>
+      <Instance Type="Color" color="Red"/>
+      <Instance Type="Color" color="Blue"/>
+    </Rules>
+	</AddInstance>
+
+  <AddInstance PluginType="StructureMap.Testing.Widget.Decision, StructureMap.Testing.Widget" Key="GreenBluePurple">
+    <Rules>
+      <Instance Type="Color" color="Green"/>
+      <Instance Type="Color" color="Blue"/>
+      <Instance Type="Color" color="Purple"/>
+    </Rules>
+  </AddInstance>
+</StructureMap>

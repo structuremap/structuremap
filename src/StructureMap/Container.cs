@@ -92,9 +92,9 @@ namespace StructureMap
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        public PLUGINTYPE GetInstance<PLUGINTYPE>(ExplicitArguments args)
+        public TPluginType GetInstance<TPluginType>(ExplicitArguments args)
         {
-            return (PLUGINTYPE) GetInstance(typeof (PLUGINTYPE), args);
+            return (TPluginType) GetInstance(typeof (TPluginType), args);
         }
 
         public T GetInstance<T>(ExplicitArguments args, string name)
@@ -154,13 +154,6 @@ namespace StructureMap
         {
             return (T) GetInstance(typeof (T));
         }
-
-        [Obsolete("Please use GetInstance<T>() instead.")]
-        public T FillDependencies<T>()
-        {
-            return (T) FillDependencies(typeof (T));
-        }
-
 
         /// <summary>
         /// Creates or resolves all registered instances of type T
@@ -236,11 +229,11 @@ namespace StructureMap
         /// <param name="target"></param>
         public void BuildUp(object target)
         {
-            Type pluggedType = target.GetType();
-            IConfiguredInstance instance = _pipelineGraph.GetDefault(pluggedType) as IConfiguredInstance
-                                           ?? new ConfiguredInstance(pluggedType);
+            Type TPluggedType = target.GetType();
+            IConfiguredInstance instance = _pipelineGraph.GetDefault(TPluggedType) as IConfiguredInstance
+                                           ?? new ConfiguredInstance(TPluggedType);
 
-            IInstanceBuilder builder = PluginCache.FindBuilder(pluggedType);
+            IInstanceBuilder builder = PluginCache.FindBuilder(TPluggedType);
             var arguments = new Arguments(instance, withNewSession(Plugin.DEFAULT));
             builder.BuildUp(arguments, target);
         }
@@ -281,24 +274,6 @@ namespace StructureMap
         {
             _pipelineGraph.SetDefault(pluginType, instance);
         }
-
-        [Obsolete("Please use GetInstance(Type) instead")]
-        public object FillDependencies(Type type)
-        {
-            if (!type.IsConcrete())
-            {
-                throw new StructureMapException(230, type.FullName);
-            }
-
-            var plugin = new Plugin(type);
-            if (!plugin.CanBeAutoFilled)
-            {
-                throw new StructureMapException(230, type.FullName);
-            }
-
-            return GetInstance(type);
-        }
-
 
         /// <summary>
         /// Creates or resolves all registered instances of the pluginType
@@ -383,7 +358,7 @@ namespace StructureMap
         /// </summary>
         public void AssertConfigurationIsValid()
         {
-            var session = new ValidationBuildSession(_pipelineGraph, _interceptorLibrary);
+            var session = new ValidationBuildSession(_pipelineGraph, new ObjectBuilder(_pipelineGraph, _interceptorLibrary));
             session.PerformValidations();
 
             if (!session.Success)
@@ -498,19 +473,19 @@ namespace StructureMap
 
         /// <summary>
         /// Injects the given object into a Container as the default for the designated
-        /// PLUGINTYPE.  Mostly used for temporarily setting up return values of the Container
+        /// TPluginType.  Mostly used for temporarily setting up return values of the Container
         /// to introduce mocks or stubs during automated testing scenarios
         /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <typeparam name="TPluginType"></typeparam>
         /// <param name="instance"></param>
-        public void Inject<PLUGINTYPE>(PLUGINTYPE instance)
+        public void Inject<TPluginType>(TPluginType instance)
         {
-            Configure(x => x.For<PLUGINTYPE>().Use(instance));
+            Configure(x => x.For<TPluginType>().Use(instance));
         }
 
-        public void Inject<PLUGINTYPE>(string name, PLUGINTYPE value)
+        public void Inject<TPluginType>(string name, TPluginType value)
         {
-            Configure(x => x.For<PLUGINTYPE>().Use(value).Named(name));
+            Configure(x => x.For<TPluginType>().Use(value).Named(name));
         }
 
         /// <summary>
@@ -599,7 +574,7 @@ namespace StructureMap
 
         private BuildSession withNewSession(string name)
         {
-            return new BuildSession(_pipelineGraph, _interceptorLibrary)
+            return new BuildSession(_pipelineGraph, new ObjectBuilder(_pipelineGraph, _interceptorLibrary))
             {
                 RequestedName = name
             };

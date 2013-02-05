@@ -31,9 +31,9 @@ namespace StructureMap.Testing.Pipeline
             var container = new Container(r =>
             {
                 r.ForConcreteType<ClassWithDependency>().Configure
-                    .SetterDependency<Rule>().IsTheDefault();
+                    .Setter<Rule>().IsTheDefault();
 
-                r.ForRequestedType<Rule>().TheDefault.Is.Object(new ColorRule("Green"));
+                r.For<Rule>().Use(new ColorRule("Green"));
             });
 
 
@@ -45,8 +45,7 @@ namespace StructureMap.Testing.Pipeline
         {
             var container = new Container(r =>
             {
-                r.FillAllPropertiesOfType<ILogger>().TheDefault.Is
-                    .ConstructedBy(context => new Logger(context.ParentType));
+                r.FillAllPropertiesOfType<ILogger>().Use(context => new Logger(context.ParentType));
             });
 
             container.GetInstance<ClassWithLogger>().Logger.ShouldBeOfType<Logger>().Type.ShouldEqual(
@@ -65,7 +64,7 @@ namespace StructureMap.Testing.Pipeline
             var container = new Container(x =>
             {
                 x.For<ClassWithDependency>().Use<ClassWithDependency>()
-                    .TheArrayOf<Rule>().Contains(arr => { arr.IsThis(new ColorRule("Red")); });
+                    .EnumerableOf<Rule>().Contains(arr => { arr.IsThis(new ColorRule("Red")); });
             });
 
             container.GetInstance<ClassWithDependency>().Rules.Length.ShouldEqual(1);
@@ -77,7 +76,7 @@ namespace StructureMap.Testing.Pipeline
             var container = new Container(r =>
             {
                 r.ForConcreteType<ClassWithDependency>().Configure
-                    .SetterDependency<Rule>().Is(new ColorRule("Red"));
+                    .Setter<Rule>().Is(new ColorRule("Red"));
             });
 
             container.GetInstance<ClassWithDependency>().Rule.ShouldBeOfType(typeof (ColorRule));
@@ -98,7 +97,7 @@ namespace StructureMap.Testing.Pipeline
             var container = new Container(r =>
             {
                 r.ForConcreteType<ClassWithDependency>().Configure
-                    .SetterDependency<Rule>().Is(new ColorRule("Red"));
+                    .Setter<Rule>().Is(new ColorRule("Red"));
             });
 
             container.GetInstance<ClassWithDependency>().Rule.ShouldBeOfType(typeof (ColorRule));
@@ -110,7 +109,7 @@ namespace StructureMap.Testing.Pipeline
             var container = new Container(r =>
             {
                 r.ForConcreteType<ClassWithOneEnum>().Configure
-                    .WithProperty("Color").EqualTo("Red");
+                    .Setter(x => x.Color).Is(ColorEnum.Red);
             });
 
             container.GetInstance<ClassWithOneEnum>().Color.ShouldEqual(ColorEnum.Red);
@@ -122,8 +121,8 @@ namespace StructureMap.Testing.Pipeline
             var container = new Container(r =>
             {
                 r.ForConcreteType<ClassWithOneLongAndOneBool>().Configure
-                    .WithProperty("Age").EqualTo(34)
-                    .WithProperty("Active").EqualTo(true);
+                    .Setter(x => x.Age).Is(34)
+                    .Setter(x => x.Active).Is(true);
             });
 
             var instance = container.GetInstance<ClassWithOneLongAndOneBool>();
@@ -137,7 +136,7 @@ namespace StructureMap.Testing.Pipeline
             var container = new Container(r =>
             {
                 r.ForConcreteType<ClassWithOneSetter>().Configure
-                    .WithProperty("Name").EqualTo("Jeremy");
+                    .Setter(x => x.Name).Is("Jeremy");
             });
 
             container.GetInstance<ClassWithOneSetter>().Name.ShouldEqual("Jeremy");
@@ -149,11 +148,11 @@ namespace StructureMap.Testing.Pipeline
             var container = new Container(r =>
             {
                 // The "Name" property is not configured for this instance
-                r.InstanceOf<OptionalSetterTarget>().Is.OfConcreteType<OptionalSetterTarget>().WithName("NoName");
+                r.For<OptionalSetterTarget>().Use<OptionalSetterTarget>().Named("NoName");
 
                 // The "Name" property is configured for this instance
                 r.ForConcreteType<OptionalSetterTarget>().Configure
-                    .WithProperty("Name").EqualTo("Jeremy");
+                    .Setter(x => x.Name).Is("Jeremy");
             });
 
             container.GetInstance<OptionalSetterTarget>().Name.ShouldEqual("Jeremy");
@@ -166,11 +165,11 @@ namespace StructureMap.Testing.Pipeline
             var container = new Container(r =>
             {
                 // The "Name" property is not configured for this instance
-                r.InstanceOf<OptionalSetterTarget>().Is.OfConcreteType<OptionalSetterTarget>().WithName("NoName");
+                r.For<OptionalSetterTarget>().Use<OptionalSetterTarget>().Named("NoName");
 
                 // The "Name" property is configured for this instance
                 r.ForConcreteType<OptionalSetterTarget>().Configure
-                    .WithProperty("Name").EqualTo("Jeremy");
+                    .Setter(x => x.Name).Is("Jeremy");
             });
 
             container.GetInstance<OptionalSetterTarget>().Name.ShouldEqual("Jeremy");
@@ -232,7 +231,7 @@ namespace StructureMap.Testing.Pipeline
             var container =
                 new Container(
                     r =>
-                    r.FillAllPropertiesOfType<Rule>().TheDefault.Is.Object(new ColorRule("Red")));
+                    r.FillAllPropertiesOfType<Rule>().Use(new ColorRule("Red")));
 
             container.GetInstance<ClassWithDependency>().Rule.ShouldBeOfType(typeof (ColorRule));
         }

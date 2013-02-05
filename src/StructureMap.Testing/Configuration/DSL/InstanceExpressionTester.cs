@@ -19,7 +19,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test, ExpectedException(typeof (StructureMapException))]
         public void BlowUpIfNoPropertyIsFoundForType()
         {
-            new SmartInstance<AWidget>().CtorDependency<Rule>();
+            new SmartInstance<AWidget>().Ctor<Rule>();
         }
     }
 }

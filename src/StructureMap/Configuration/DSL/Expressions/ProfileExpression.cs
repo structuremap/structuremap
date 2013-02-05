@@ -30,20 +30,6 @@ namespace StructureMap.Configuration.DSL.Expressions
         }
 
         /// <summary>
-        /// Designate or define the Instance for a type within
-        /// this Profile
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        [Obsolete("Prefer the For<T>().**** methods")]
-        public IsExpression<T> Type<T>()
-        {
-            return
-                new InstanceExpression<T>(
-                    instance => { _registry.addExpression(graph => { graph.SetDefault(_profileName, typeof (T), instance); }); });
-        }
-
-        /// <summary>
         /// Use statement to define the Profile defaults for a Generic type
         /// </summary>
         /// <param name="pluginType"></param>
@@ -77,21 +63,6 @@ namespace StructureMap.Configuration.DSL.Expressions
             /// </summary>
             /// <param name="concreteType"></param>
             /// <returns></returns>
-            [Obsolete("Change to Use(type)")]
-            public ConfiguredInstance UseConcreteType(Type concreteType)
-            {
-                var instance = new ConfiguredInstance(concreteType);
-                Use(instance);
-
-                return instance;
-            }
-
-            /// <summary>
-            /// Use this concreteType for the Instance of this Profile for the PluginType
-            /// </summary>
-            /// <param name="concreteType"></param>
-            /// <returns></returns>
-            [Obsolete("Change to Use(type)")]
             public ConfiguredInstance Use(Type concreteType)
             {
                 var instance = new ConfiguredInstance(concreteType);
@@ -108,20 +79,6 @@ namespace StructureMap.Configuration.DSL.Expressions
             public void Use(Instance instance)
             {
                 _registry.addExpression(graph => graph.SetDefault(_parent._profileName, _pluginType, instance));
-            }
-
-            
-
-            /// <summary>
-            /// Use the named Instance as the Profile Instance for this PluginType
-            /// </summary>
-            /// <param name="name"></param>
-            /// <returns></returns>
-            [Obsolete("Change to Use([name])")]
-            public void UseNamedInstance(string name)
-            {
-                var instance = new ReferencedInstance(name);
-                Use(instance);
             }
 
             /// <summary>
@@ -161,29 +118,13 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <typeparam name="T"></typeparam>
         public class InstanceDefaultExpression<T>
         {
-            private readonly ProfileExpression _parent;
             private readonly string _profileName;
             private readonly Registry _registry;
 
             public InstanceDefaultExpression(ProfileExpression parent)
             {
-                _parent = parent;
                 _registry = parent._registry;
                 _profileName = parent._profileName;
-            }
-
-            /// <summary>
-            /// Use a named, preconfigured instance as the default instance for this profile 
-            /// </summary>
-            /// <param name="instanceKey"></param>
-            /// <returns></returns>
-            [Obsolete("Change to For<T>().Use([name])")]
-            public ProfileExpression UseNamedInstance(string instanceKey)
-            {
-                _registry.addExpression(
-                    graph => graph.SetDefault(_profileName, typeof (T), new ReferencedInstance(instanceKey)));
-
-                return _parent;
             }
 
             /// <summary>
@@ -258,27 +199,14 @@ namespace StructureMap.Configuration.DSL.Expressions
                 configure(expression);
             }
 
-
-            /// <summary>
-            /// For this Profile, use the Concrete Type
-            /// </summary>
-            /// <typeparam name="CONCRETETYPE"></typeparam>
-            /// <returns></returns>
-            [Obsolete("Change to For<T>().Use<CONCRETETYPE>()")]
-            public void UseConcreteType<CONCRETETYPE>()
-            {
-                var instance = new ConfiguredInstance(typeof (CONCRETETYPE));
-                Use(instance);
-            }
-
             /// <summary>
             /// For this profile, use this concrete type
             /// </summary>
-            /// <typeparam name="CONCRETETYPE"></typeparam>
+            /// <typeparam name="TConcreteType"></typeparam>
             /// <returns></returns>
-            public SmartInstance<CONCRETETYPE> Use<CONCRETETYPE>()
+            public SmartInstance<TConcreteType> Use<TConcreteType>()
             {
-                var instance = new SmartInstance<CONCRETETYPE>();
+                var instance = new SmartInstance<TConcreteType>();
                 Use(instance);
 
                 return instance;

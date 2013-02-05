@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Xml;
 using NUnit.Framework;
+using StructureMap.Configuration;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Source;
@@ -27,46 +28,15 @@ namespace StructureMap.Testing.Configuration
 
             var memento = new XmlAttributeInstanceMemento(element);
             var graph = new PluginGraph();
-            Instance instance = memento.ReadInstance(graph, typeof (ClassWithStringAndIntArray));
+            Instance instance = memento.ReadInstance(new SimplePluginFactory(), typeof (ClassWithStringAndIntArray));
 
             var theObject = (ClassWithStringAndIntArray) instance.Build(typeof (ClassWithStringAndIntArray),
-                                                                        new BuildSession(graph));
+                                                                        BuildSession.ForPluginGraph(graph));
 
             theObject.Numbers.ShouldEqual(new[] {1, 2, 3});
             theObject.Strings.ShouldEqual(new[] {"1", "2", "3"});
 
             Debug.WriteLine(theObject.GetType().AssemblyQualifiedName);
-        }
-
-        [Test]
-        public void Read_in_a_dictionary_type_from_a_node_normalized_memento()
-        {
-            string xml =
-                @"
-<root>
-    <Property Name='dictionary'>
-        <Pair Key='color' Value='red'/>
-        <Pair Key='state' Value='texas'/>
-        <Pair Key='direction' Value='north'/>
-    </Property>
-</root>
-";
-
-            XmlElement element = DataMother.BuildDocument(xml).DocumentElement;
-            element.SetAttribute("PluggedType", typeof (ClassWithDictionary).AssemblyQualifiedName);
-
-            var memento = new XmlNodeInstanceMemento(element, "Type", "Key");
-
-            Instance instance = memento.ReadInstance(new PluginGraph(), typeof (ClassWithDictionary));
-
-
-            var theObject =
-                (ClassWithDictionary) instance.Build(typeof (ClassWithDictionary), new BuildSession(new PluginGraph()));
-
-
-            theObject.Dictionary["color"].ShouldEqual("red");
-            theObject.Dictionary["state"].ShouldEqual("texas");
-            theObject.Dictionary["direction"].ShouldEqual("north");
         }
 
         [Test]
@@ -88,11 +58,11 @@ namespace StructureMap.Testing.Configuration
 
             var memento = new XmlAttributeInstanceMemento(element);
 
-            Instance instance = memento.ReadInstance(new PluginGraph(), typeof (ClassWithDictionary));
+            Instance instance = memento.ReadInstance(new SimplePluginFactory(), typeof(ClassWithDictionary));
 
 
             var theObject =
-                (ClassWithDictionary) instance.Build(typeof (ClassWithDictionary), new BuildSession(new PluginGraph()));
+                (ClassWithDictionary) instance.Build(typeof (ClassWithDictionary), BuildSession.Empty());
 
 
             theObject.Dictionary["color"].ShouldEqual("red");

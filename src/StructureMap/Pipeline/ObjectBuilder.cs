@@ -3,7 +3,18 @@ using StructureMap.Interceptors;
 
 namespace StructureMap.Pipeline
 {
-    public class ObjectBuilder
+    public interface IObjectBuilder
+    {
+        object Resolve(Type pluginType, Instance instance, BuildSession session);
+        object ConstructNew(Type pluginType, Instance instance, BuildSession session);
+
+        object ApplyInterception(Type pluginType, object actualValue, BuildSession session,
+                                                 Instance instance);
+
+        IObjectCache FindCache(Type pluginType, Instance instance, BuildSession session);
+    }
+
+    public class ObjectBuilder : IObjectBuilder
     {
         private readonly InterceptorLibrary _library;
         private readonly PipelineGraph _pipeline;

@@ -10,19 +10,13 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void BuildClassWithEnumeration()
         {
-            var graph = new PluginGraph();
+            var manager = new Container();
 
-
-            PluginFamily family = graph.FindFamily(typeof (Cow));
-            family.AddPlugin(typeof (Cow), "Default");
-
-            var manager = new Container(graph);
-
-            manager.Configure(r => r.InstanceOf<Cow>().Is.OfConcreteType<Cow>()
-                                       .WithName("Angus")
-                                       .WithProperty("Name").EqualTo("Bessie")
-                                       .WithProperty("Breed").EqualTo("Angus")
-                                       .WithProperty("Weight").EqualTo("1200"));
+            manager.Configure(r => r.For<Cow>().Use<Cow>()
+                                       .Named("Angus")
+                                       .Ctor<string>("Name").Is("Bessie")
+                                       .Ctor<BreedEnum>("Breed").Is(BreedEnum.Angus)
+                                       .Ctor<long>("Weight").Is(1200));
 
             var angus = manager.GetInstance<Cow>("Angus");
 

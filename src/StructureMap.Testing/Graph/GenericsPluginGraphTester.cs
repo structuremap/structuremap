@@ -20,14 +20,14 @@ namespace StructureMap.Testing.Graph
 
         #endregion
 
-        private void assertCanBeCast(Type pluginType, Type pluggedType)
+        private void assertCanBeCast(Type pluginType, Type TPluggedType)
         {
-            Assert.IsTrue(GenericsPluginGraph.CanBeCast(pluginType, pluggedType));
+            Assert.IsTrue(GenericsPluginGraph.CanBeCast(pluginType, TPluggedType));
         }
 
-        private void assertCanNotBeCast(Type pluginType, Type pluggedType)
+        private void assertCanNotBeCast(Type pluginType, Type TPluggedType)
         {
-            Assert.IsFalse(GenericsPluginGraph.CanBeCast(pluginType, pluggedType));
+            Assert.IsFalse(GenericsPluginGraph.CanBeCast(pluginType, TPluggedType));
         }
 
         [Test]
@@ -35,22 +35,23 @@ namespace StructureMap.Testing.Graph
         {
             var pluginGraph = new PluginGraph();
             PluginFamily family = pluginGraph.FindFamily(typeof (IGenericService<>));
-            family.DefaultInstanceKey = "Default";
-            family.AddPlugin(typeof (GenericService<>), "Default");
-            family.AddPlugin(typeof (SecondGenericService<>), "Second");
-            family.AddPlugin(typeof (ThirdGenericService<>), "Third");
+
+            
+            family.AddType(typeof (GenericService<>), "Default");
+            family.AddType(typeof (SecondGenericService<>), "Second");
+            family.AddType(typeof (ThirdGenericService<>), "Third");
+            family.SetDefaultKey("Default");
 
             var manager = new Container(pluginGraph);
 
             var intService = (GenericService<int>) manager.GetInstance<IGenericService<int>>();
-            Assert.AreEqual(typeof (int), intService.GetT());
+            intService.GetT().ShouldEqual(typeof (int));
 
-            Assert.IsInstanceOfType(typeof (SecondGenericService<int>),
-                                    manager.GetInstance<IGenericService<int>>("Second"));
+            manager.GetInstance<IGenericService<int>>("Second").ShouldBeOfType<SecondGenericService<int>>();
 
             var stringService =
                 (GenericService<string>) manager.GetInstance<IGenericService<string>>();
-            Assert.AreEqual(typeof (string), stringService.GetT());
+            stringService.GetT().ShouldEqual(typeof (string));
         }
 
         [Test]
@@ -58,9 +59,9 @@ namespace StructureMap.Testing.Graph
         {
             var pluginGraph = new PluginGraph();
             PluginFamily family = pluginGraph.FindFamily(typeof (IGenericService<>));
-            family.AddPlugin(typeof (GenericService<>), "Default");
-            family.AddPlugin(typeof (SecondGenericService<>), "Second");
-            family.AddPlugin(typeof (ThirdGenericService<>), "Third");
+            family.AddType(typeof (GenericService<>), "Default");
+            family.AddType(typeof (SecondGenericService<>), "Second");
+            family.AddType(typeof (ThirdGenericService<>), "Third");
 
             PluginFamily templatedFamily1 = family.CreateTemplatedClone(new[] {typeof (int)});
             PluginFamily templatedFamily = templatedFamily1;
@@ -86,7 +87,7 @@ namespace StructureMap.Testing.Graph
                 new Container(
                     r =>
                     {
-                        r.ForRequestedType(typeof (IGenericService<>)).TheDefaultIsConcreteType(
+                        r.For(typeof (IGenericService<>)).Use(
                             typeof (GenericService<>));
                     });
 
@@ -118,9 +119,9 @@ namespace StructureMap.Testing.Graph
         {
             var pluginGraph = new PluginGraph();
             PluginFamily family = pluginGraph.FindFamily(typeof (IGenericService<>));
-            family.AddPlugin(typeof (GenericService<>), "Default");
-            family.AddPlugin(typeof (SecondGenericService<>), "Second");
-            family.AddPlugin(typeof (ThirdGenericService<>), "Third");
+            family.AddType(typeof (GenericService<>), "Default");
+            family.AddType(typeof (SecondGenericService<>), "Second");
+            family.AddType(typeof (ThirdGenericService<>), "Third");
 
             var genericsGraph = new GenericsPluginGraph();
             genericsGraph.AddFamily(family);

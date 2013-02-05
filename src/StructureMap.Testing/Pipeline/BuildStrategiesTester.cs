@@ -44,10 +44,10 @@ namespace StructureMap.Testing.Pipeline
         {
             var container = new Container(x =>
             {
-                x.ForRequestedType<IService>().Singleton().AddInstances(o =>
+                x.For<IService>().Singleton().AddInstances(o =>
                 {
-                    o.Is.ConstructedBy(() => new ColorService("Red")).WithName("Red");
-                    o.Is.ConstructedBy(() => new ColorService("Green")).WithName("Green");
+                    o.Is.ConstructedBy(() => new ColorService("Red")).Named("Red");
+                    o.Is.ConstructedBy(() => new ColorService("Green")).Named("Green");
                 });
             });
 

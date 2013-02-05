@@ -15,7 +15,7 @@ namespace StructureMap.Testing.Graph
         [SetUp]
         public void SetUp()
         {
-            ObjectFactory.Initialize(x => { x.UseDefaultStructureMapConfigFile = false; });
+            ObjectFactory.Initialize(x => {  });
         }
 
         #endregion
@@ -112,11 +112,11 @@ namespace StructureMap.Testing.Graph
         {
             var container = new Container(x =>
             {
-                x.ForRequestedType<ColorWithLump>().AddInstances(o =>
+                x.For<ColorWithLump>().AddInstances(o =>
                 {
-                    o.OfConcreteType<ColorWithLump>().WithCtorArg("color").EqualTo("red").WithName("red");
-                    o.OfConcreteType<ColorWithLump>().WithCtorArg("color").EqualTo("green").WithName("green");
-                    o.OfConcreteType<ColorWithLump>().WithCtorArg("color").EqualTo("blue").WithName("blue");
+                    o.Type<ColorWithLump>().Ctor<string>("color").Is("red").Named("red");
+                    o.Type<ColorWithLump>().Ctor<string>("color").Is("green").Named("green");
+                    o.Type<ColorWithLump>().Ctor<string>("color").Is("blue").Named("blue");
                 });
             });
 
@@ -146,8 +146,8 @@ namespace StructureMap.Testing.Graph
 
             IContainer container = new Container(r =>
             {
-                r.ForRequestedType<IView>().TheDefaultIsConcreteType<TradeView>();
-                r.ForRequestedType<Node>().TheDefaultIsConcreteType<TradeNode>();
+                r.For<IView>().Use<TradeView>();
+                r.For<Node>().Use<TradeNode>();
             });
 
             var command = container.With(theTrade).GetInstance<Command>();
@@ -168,7 +168,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void Fill_in_argument_by_name()
         {
-            var container = new Container(x => { x.ForRequestedType<IView>().TheDefaultIsConcreteType<View>(); });
+            var container = new Container(x => { x.For<IView>().Use<View>(); });
 
             var theNode = new Node();
             var theTrade = new Trade();
@@ -178,15 +178,15 @@ namespace StructureMap.Testing.Graph
                 .With(theTrade)
                 .GetInstance<Command>();
 
-            Assert.IsInstanceOfType(typeof (View), command.View);
-            Assert.AreSame(theNode, command.Node);
-            Assert.AreSame(theTrade, command.Trade);
+            command.View.ShouldBeOfType<View>();
+            theNode.ShouldBeTheSameAs(command.Node);
+            theTrade.ShouldBeTheSameAs(command.Trade);
         }
 
         [Test]
         public void Fill_in_argument_by_type()
         {
-            var container = new Container(x => { x.ForRequestedType<IView>().TheDefaultIsConcreteType<View>(); });
+            var container = new Container(x => { x.For<IView>().Use<View>(); });
 
             var theNode = new SpecialNode();
             var theTrade = new Trade();
@@ -196,15 +196,15 @@ namespace StructureMap.Testing.Graph
                 .With(theTrade)
                 .GetInstance<Command>();
 
-            Assert.IsInstanceOfType(typeof (View), command.View);
-            Assert.AreSame(theNode, command.Node);
-            Assert.AreSame(theTrade, command.Trade);
+            command.View.ShouldBeOfType<View>();
+            theNode.ShouldBeTheSameAs(command.Node);
+            theTrade.ShouldBeTheSameAs(command.Trade);
         }
 
         [Test]
         public void Fill_in_argument_by_type_with_ObjectFactory()
         {
-            ObjectFactory.Initialize(x => { x.ForRequestedType<IView>().TheDefaultIsConcreteType<View>(); });
+            ObjectFactory.Initialize(x => { x.For<IView>().Use<View>(); });
 
             var theNode = new SpecialNode();
             var theTrade = new Trade();
@@ -214,9 +214,9 @@ namespace StructureMap.Testing.Graph
                 .With(theTrade)
                 .GetInstance<Command>();
 
-            Assert.IsInstanceOfType(typeof (View), command.View);
-            Assert.AreSame(theNode, command.Node);
-            Assert.AreSame(theTrade, command.Trade);
+            command.View.ShouldBeOfType<View>();
+            theNode.ShouldBeTheSameAs(command.Node);
+            theTrade.ShouldBeTheSameAs(command.Trade);
         }
 
         [Test]
@@ -225,13 +225,13 @@ namespace StructureMap.Testing.Graph
             ObjectFactory.Initialize(x =>
             {
                 x.ForConcreteType<ExplicitTarget>().Configure
-                    .CtorDependency<IProvider>().Is<RedProvider>()
-                    .WithCtorArg("name").EqualTo("Jeremy");
+                    .Ctor<IProvider>().Is<RedProvider>()
+                    .Ctor<string>("name").Is("Jeremy");
             });
 
             // Get the ExplicitTarget without setting an explicit arg for IProvider
             var firstTarget = ObjectFactory.GetInstance<ExplicitTarget>();
-            Assert.IsInstanceOfType(typeof (RedProvider), firstTarget.Provider);
+            firstTarget.Provider.ShouldBeOfType<RedProvider>();
 
             // Now, set the explicit arg for IProvider
             var theBlueProvider = new BlueProvider();
@@ -245,8 +245,8 @@ namespace StructureMap.Testing.Graph
             ObjectFactory.Initialize(x =>
             {
                 x.For<ExplicitTarget>().Use<ExplicitTarget>()
-                    .CtorDependency<IProvider>().Is(child => child.OfConcreteType<RedProvider>())
-                    .WithCtorArg("name").EqualTo("Jeremy");
+                    .Ctor<IProvider>().Is(child => child.Type<RedProvider>())
+                    .Ctor<string>("name").Is("Jeremy");
             });
 
             // Get the ExplicitTarget without setting an explicit arg for IProvider
@@ -264,8 +264,8 @@ namespace StructureMap.Testing.Graph
             ObjectFactory.Initialize(x =>
             {
                 x.ForConcreteType<ExplicitTarget>().Configure
-                    .CtorDependency<IProvider>().Is<RedProvider>()
-                    .WithCtorArg("name").EqualTo("Jeremy");
+                    .Ctor<IProvider>().Is<RedProvider>()
+                    .Ctor<string>("name").Is("Jeremy");
             });
 
             // Get the ExplicitTarget without setting an explicit arg for IProvider
@@ -284,9 +284,8 @@ namespace StructureMap.Testing.Graph
             // of TradeView
             var container = new Container(r =>
             {
-                r.ForRequestedType<TradeView>()
-                    .TheDefaultIsConcreteType<TradeView>()
-                    .AddConcreteType<SecuredTradeView>();
+                r.For<TradeView>().Use<TradeView>();
+                r.For<TradeView>().Add<SecuredTradeView>();
             });
 
             var theTrade = new Trade();
@@ -303,9 +302,8 @@ namespace StructureMap.Testing.Graph
             // of TradeView
             var container = new Container(r =>
             {
-                r.ForRequestedType<TradeView>()
-                    .TheDefaultIsConcreteType<TradeView>()
-                    .AddConcreteType<SecuredTradeView>();
+                r.For<TradeView>().Use<TradeView>();
+                r.For<TradeView>().Add<SecuredTradeView>();
             });
 
             var theTrade = new Trade();
@@ -320,7 +318,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void Pass_in_arguments_as_dictionary()
         {
-            var container = new Container(x => { x.ForRequestedType<IView>().TheDefaultIsConcreteType<View>(); });
+            var container = new Container(x => { x.For<IView>().Use<View>(); });
 
             var theNode = new Node();
             var theTrade = new Trade();
@@ -331,9 +329,9 @@ namespace StructureMap.Testing.Graph
 
             var command = container.GetInstance<Command>(args);
 
-            Assert.IsInstanceOfType(typeof (View), command.View);
-            Assert.AreSame(theNode, command.Node);
-            Assert.AreSame(theTrade, command.Trade);
+            command.View.ShouldBeOfType<View>();
+            theNode.ShouldBeTheSameAs(command.Node);
+            theTrade.ShouldBeTheSameAs(command.Trade);
         }
 
 
@@ -342,7 +340,7 @@ namespace StructureMap.Testing.Graph
         {
             IContainer manager =
                 new Container(
-                    registry => registry.ForRequestedType<IProvider>().TheDefaultIsConcreteType<LumpProvider>());
+                    registry => registry.For<IProvider>().Use<LumpProvider>());
 
             var args = new ExplicitArguments();
             var theLump = new Lump();
@@ -355,7 +353,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void PassAnArgumentIntoExplicitArgumentsForARequestedInterfaceUsingObjectFactory()
         {
-            ObjectFactory.Initialize(x => { x.ForRequestedType<IProvider>().TheDefaultIsConcreteType<LumpProvider>(); });
+            ObjectFactory.Initialize(x => { x.For<IProvider>().Use<LumpProvider>(); });
 
 
             var theLump = new Lump();
@@ -378,20 +376,20 @@ namespace StructureMap.Testing.Graph
             var container = new Container(r =>
             {
                 r.ForConcreteType<ExplicitTarget>().Configure
-                    .CtorDependency<IProvider>().Is<RedProvider>()
-                    .WithCtorArg("name").EqualTo("Jeremy");
+                    .Ctor<IProvider>().Is<RedProvider>()
+                    .Ctor<string>("name").Is("Jeremy");
             });
 
             var args = new ExplicitArguments();
 
             // Get the ExplicitTarget without setting an explicit arg for IProvider
             var firstTarget = container.GetInstance<ExplicitTarget>(args);
-            Assert.IsInstanceOfType(typeof (RedProvider), firstTarget.Provider);
+            firstTarget.Provider.ShouldBeOfType<RedProvider>();
 
             // Now, set the explicit arg for IProvider
             args.Set<IProvider>(new BlueProvider());
             var secondTarget = container.GetInstance<ExplicitTarget>(args);
-            Assert.IsInstanceOfType(typeof (BlueProvider), secondTarget.Provider);
+            secondTarget.Provider.ShouldBeOfType<BlueProvider>();
         }
 
         [Test]
@@ -406,7 +404,7 @@ namespace StructureMap.Testing.Graph
             Assert.AreSame(red, args.Get<IProvider>());
 
             args.Set<IExplicitTarget>(new RedTarget());
-            Assert.IsInstanceOfType(typeof (RedTarget), args.Get<IExplicitTarget>());
+            args.Get<IExplicitTarget>().ShouldBeOfType<RedTarget>();
         }
 
         [Test]
@@ -434,7 +432,7 @@ namespace StructureMap.Testing.Graph
         public void use_explicit_type_arguments_with_custom_instance()
         {
             var container =
-                new Container(x => { x.ForRequestedType<ClassWithNoArgs>().TheDefault.IsThis(new SpecialInstance()); });
+                new Container(x => { x.For<ClassWithNoArgs>().Use(new SpecialInstance()); });
 
             Debug.WriteLine(container.WhatDoIHave());
 

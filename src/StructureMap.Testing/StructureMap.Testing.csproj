@@ -26,9 +26,9 @@
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
     <OldToolsVersion>3.5</OldToolsVersion>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -44,6 +44,7 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -92,6 +93,10 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\StructureMap\StructureMap.csproj">
+      <Project>{3F36EA80-2F9A-4DAD-BA27-5AC6163A2EE3}</Project>
+      <Name>StructureMap</Name>
+    </ProjectReference>
     <Reference Include="Castle.Core">
       <HintPath>..\packages\Castle.Core.3.1.0\lib\net35\Castle.Core.dll</HintPath>
     </Reference>
@@ -103,10 +108,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NUnit.2.5.10.11092\lib\nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.mocks">
+    <Reference Include="nunit.mocks, Version=2.5.10.11092, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NUnit.2.5.10.11092\lib\nunit.mocks.dll</HintPath>
     </Reference>
-    <Reference Include="pnunit.framework">
+    <Reference Include="pnunit.framework, Version=1.0.4109.34242, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NUnit.2.5.10.11092\lib\pnunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="Rhino.Mocks, Version=3.6.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
@@ -169,18 +176,12 @@
       <Project>{E21E1651-3E32-47B7-A290-F461E63FEAD2}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
-    <ProjectReference Include="..\StructureMap\StructureMap.csproj">
-      <Name>StructureMap</Name>
-      <Project>{3F36EA80-2F9A-4DAD-BA27-5AC6163A2EE3}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="AlternativeConfigurationTester.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -220,8 +221,6 @@
     <Compile Include="BuildUpIntegratedTester.cs" />
     <Compile Include="BuildUpTester.cs" />
     <Compile Include="ConcreteClassCreationTester.cs" />
-    <Compile Include="Configuration\ConfigurationParserBuilderTester.cs" />
-    <Compile Include="Configuration\ConfigurationParserTester.cs" />
     <Compile Include="Configuration\DefaultInstanceNodeTester.cs" />
     <Compile Include="Configuration\DictionaryAndArrayArgumentTester.cs" />
     <Compile Include="Configuration\DictionaryReaderTester.cs" />
@@ -229,7 +228,6 @@
     <Compile Include="Configuration\DSL\AddTypesTester.cs" />
     <Compile Include="Configuration\DSL\ConstructorExpressionTester.cs" />
     <Compile Include="Configuration\DSL\CreatePluginFamilyTester.cs" />
-    <Compile Include="Configuration\DSL\CreateProfileTester.cs" />
     <Compile Include="Configuration\DSL\GenericFamilyExpressionTester.cs" />
     <Compile Include="Configuration\DSL\InjectArrayTester.cs" />
     <Compile Include="Configuration\DSL\InstanceExpressionTester.cs" />
@@ -239,17 +237,10 @@
     <Compile Include="Configuration\DSL\ProgrammaticConstructorSelectionTester.cs" />
     <Compile Include="Configuration\DSL\RegistryIntegratedTester.cs" />
     <Compile Include="Configuration\DSL\RegistryTester.cs" />
-    <Compile Include="Configuration\FamilyParserTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Configuration\IncludeTesting.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Configuration\InlineInstanceDefinitionInProfileAndMachineNodesTester.cs" />
-    <Compile Include="Configuration\NormalGraphBuilderTester.cs" />
+    <Compile Include="Configuration\GraphBuilderTester.cs" />
     <Compile Include="Configuration\PrimitiveArrayReaderTester.cs" />
-    <Compile Include="Configuration\ProfileBuilderTester.cs" />
     <Compile Include="Configuration\ShortcuttedInstanceNodeTester.cs" />
+    <Compile Include="Configuration\SimplePluginFactory.cs" />
     <Compile Include="Construction\BuilderCompilerTester.cs" />
     <Compile Include="Construction\ConstructorFunctionBuilderTester.cs" />
     <Compile Include="Construction\SetterBuilderTester.cs" />
@@ -265,9 +256,7 @@
     <Compile Include="Examples\IndividualContainers.cs" />
     <Compile Include="Examples\Interception.cs" />
     <Compile Include="Examples\RegisteringWithTheAPI.cs" />
-    <Compile Include="Graph\ArrayConstructorTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Extensions.cs" />
     <Compile Include="Graph\AssemblyScannerTester.cs" />
     <Compile Include="Graph\ContainerConstructorAttributeTester.cs">
       <SubType>Code</SubType>
@@ -292,16 +281,10 @@
     <Compile Include="Graph\FullStackFacadeTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Graph\ImplicitDefaultTest.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Graph\InstanceFactoryTester.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Graph\ContainerTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Graph\IntegratedTester.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Graph\Interceptors\CompoundInterceptorTester.cs" />
@@ -311,38 +294,10 @@
     <Compile Include="Graph\PluggableAttributeTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Graph\PluginGraphBuilderTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Graph\SetterInjectionEmittingTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Graph\Source\DirectoryXmlMementoSourceTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Graph\Source\EmbeddedFolderXmlMementoSourceTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Graph\Source\SingleEmbeddedXmlMementoSourceTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Graph\Source\TemplatingTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Graph\Source\XmlAttributeInstanceMementoTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Graph\Source\XmlInstanceMementoTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Graph\Source\XmlMementoSourceTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Graph\Source\XmlTemplaterTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Graph\TypeFindingTester.cs" />
-    <Compile Include="Diagnostics\IntegrationTester.cs" />
     <Compile Include="Diagnostics\TextReportWriterSmokeTester.cs" />
     <Compile Include="GenericsAcceptanceTester.cs" />
     <Compile Include="GenericsIntegrationTester.cs" />
@@ -367,19 +322,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Graph\TypePathTester.cs" />
-    <Compile Include="ImplicitPluginFromPluggedTypeAttributeTester.cs" />
     <Compile Include="InstanceCacheTester.cs" />
     <Compile Include="InstanceMementoInstanceCreationTester.cs" />
-    <Compile Include="MementoTester.cs" />
-    <Compile Include="MergingTester.cs" />
     <Compile Include="ModelQueryTester.cs" />
     <Compile Include="ObjectFactoryInitializeTester.cs" />
-    <Compile Include="ObjectFactoryTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Pipeline\BuildStackTester.cs" />
     <Compile Include="Pipeline\BuildStrategiesTester.cs" />
-    <Compile Include="Pipeline\ConditionalInstanceTester.cs" />
     <Compile Include="Pipeline\ConfiguredInstanceTester.cs" />
     <Compile Include="Pipeline\ConstructorInstanceTester.cs" />
     <Compile Include="Pipeline\EnumerableInstanceTester.cs" />
@@ -419,6 +367,7 @@
     <Compile Include="Query\InstanceRefTester.cs" />
     <Compile Include="Query\ModelIntegrationTester.cs" />
     <Compile Include="ReadingRegistriesFromXmlTester.cs" />
+    <Compile Include="ReflectionHelper.cs" />
     <Compile Include="SpecificationExtensions.cs" />
     <Compile Include="StructureMapConfigCreator.cs" />
     <Compile Include="StructureMapConfigurationTester.cs" />
@@ -428,6 +377,7 @@
     <Compile Include="PerRequestInterceptorTester.cs" />
     <Compile Include="TestUtility.cs" />
     <Compile Include="Diagnostics\ValidationBuildSessionTester.cs" />
+    <Compile Include="TypeExtensions.cs" />
     <Compile Include="TypeExtensionsTester.cs" />
     <Compile Include="Util\CacheTester.cs" />
     <Compile Include="XmlWriting\ElementChecker.cs">
@@ -470,7 +420,6 @@
     <EmbeddedResource Include="TestData\NavigationTest.xml" />
     <EmbeddedResource Include="TestData\NotTriggered.xml" />
     <EmbeddedResource Include="TestData\ObjectMother.config" />
-    <EmbeddedResource Include="TestData\ProfileAndMachine.xml" />
     <EmbeddedResource Include="TestData\RuleSource.xml" />
     <EmbeddedResource Include="TestData\SampleConfig.xml" />
     <EmbeddedResource Include="TestData\ScopeInFamily.xml" />
@@ -494,12 +443,8 @@
     <EmbeddedResource Include="TestData\AttributeNormalized.xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="TestData\PluggedTypeTest.xml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Examples\AddRegistryInXml.xml" />
     <Content Include="Sample.xml" />
-    <Content Include="TestData\ProfileSample.xml" />
     <EmbeddedResource Include="TestData\BUG_OverwritingOfPrimitiveProperties.xml" />
     <EmbeddedResource Include="TestData\ShortInstance.xml" />
     <EmbeddedResource Include="TestData\DefaultInstance.xml" />

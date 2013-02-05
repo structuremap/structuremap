@@ -39,8 +39,9 @@ namespace StructureMap.Testing.Configuration.DSL
 
             container.SetDefaultsToProfile(theProfileName);
 
-            Assert.IsInstanceOfType(typeof (AWidget), container.GetInstance<IWidget>());
-            Assert.IsInstanceOfType(typeof (DefaultRule), container.GetInstance<Rule>());
+
+            container.GetInstance<IWidget>().ShouldBeOfType<AWidget>();
+            container.GetInstance<Rule>().ShouldBeOfType<DefaultRule>();
         }
 
 
@@ -53,15 +54,15 @@ namespace StructureMap.Testing.Configuration.DSL
             {
                 registry.Profile(theProfileName, x =>
                 {
-                    x.Type<IWidget>().Is.ConstructedBy(() => new AWidget());
-                    x.Type<Rule>().Is.ConstructedBy(() => new DefaultRule());
+                    x.For<IWidget>().Use(() => new AWidget());
+                    x.For<Rule>().Use(() => new DefaultRule());
                 });
             });
 
             container.SetDefaultsToProfile(theProfileName);
 
-            Assert.IsInstanceOfType(typeof (AWidget), container.GetInstance<IWidget>());
-            Assert.IsInstanceOfType(typeof (DefaultRule), container.GetInstance<Rule>());
+            container.GetInstance<IWidget>().ShouldBeOfType<AWidget>();
+            container.GetInstance<Rule>().ShouldBeOfType<Rule>();
         }
 
 
@@ -70,19 +71,19 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             string theProfileName = "something";
 
-            IContainer manager = new Container(registry =>
+            IContainer container = new Container(registry =>
             {
                 registry.Profile(theProfileName, p =>
                 {
-                    p.For<IWidget>().UseConcreteType<AWidget>();
-                    p.For<Rule>().UseConcreteType<DefaultRule>();
+                    p.For<IWidget>().Use<AWidget>();
+                    p.For<Rule>().Use<DefaultRule>();
                 });
 
             });
-            manager.SetDefaultsToProfile(theProfileName);
+            container.SetDefaultsToProfile(theProfileName);
 
-            Assert.IsInstanceOfType(typeof (AWidget), manager.GetInstance<IWidget>());
-            Assert.IsInstanceOfType(typeof (DefaultRule), manager.GetInstance<Rule>());
+            container.GetInstance<IWidget>().ShouldBeOfType<AWidget>();
+            container.GetInstance<Rule>().ShouldBeOfType<DefaultRule>();
         }
 
         [Test]
@@ -92,8 +93,10 @@ namespace StructureMap.Testing.Configuration.DSL
             var theWidget = new AWidget();
 
             string theProfileName = "something";
-            registry.Profile(theProfileName)
-                .For<IWidget>().Use(theWidget);
+            registry.Profile(theProfileName, p => {
+                p.For<IWidget>().Use(theWidget);
+            });
+                
 
             PluginGraph graph = registry.Build();
             var instance = (ObjectInstance) graph.ProfileManager.GetDefault(typeof (IWidget), "something");
@@ -108,12 +111,14 @@ namespace StructureMap.Testing.Configuration.DSL
             string theDefaultName = "TheDefaultName";
 
             var registry = new Registry();
-            registry.Profile(theProfileName)
-                .For<IWidget>().UseNamedInstance(theDefaultName)
-                .For<Rule>().UseNamedInstance("DefaultRule");
+            registry.Profile(theProfileName, p => {
+                p.For<IWidget>().Use(theDefaultName);
+                p.For<Rule>().Use("DefaultRule");
+            });
+
 
             ObjectInstance masterInstance =
-                registry.For<IWidget>().Add(new AWidget()).WithName(theDefaultName);
+                registry.For<IWidget>().Add(new AWidget()).Named(theDefaultName);
 
             ProfileManager manager = registry.Build().ProfileManager;
             Assert.AreSame(masterInstance, manager.GetDefault(typeof (IWidget), theProfileName));
@@ -125,8 +130,10 @@ namespace StructureMap.Testing.Configuration.DSL
             string theProfileName = "TheProfile";
 
             var registry = new Registry();
-            registry.Profile(theProfileName)
-                .For<IWidget>().UseConcreteType<AWidget>();
+            registry.Profile(theProfileName, x => {
+                x.For<IWidget>().Use<AWidget>();
+            });
+                
 
             PluginGraph graph = registry.Build();
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
 using StructureMap.Diagnostics;
 using StructureMap.Interceptors;
@@ -27,7 +28,7 @@ namespace StructureMap.Graph
         void AddType(Type pluginType, Type concreteType, string name);
 
         /// <summary>
-        /// Add the pluggedType as an instance to any configured pluginType where pluggedType
+        /// Add the PluggedType as an instance to any configured pluginType where PluggedType
         /// could be assigned to the pluginType
         /// </summary>
         /// <param name="pluggedType"></param>
@@ -120,7 +121,7 @@ namespace StructureMap.Graph
             int index = 0;
             while (index < _scanners.Count())
             {
-                _scanners[index++].ScanForAll(this);
+                _scanners[index++].As<IPluginGraphConfiguration>().Configure(this);
             }
 
             _pluginFamilies.Each(family => family.AddTypes(_pluggedTypes));
@@ -155,12 +156,14 @@ namespace StructureMap.Graph
         }
 
         /// <summary>
-        /// Add the pluggedType as an instance to any configured pluginType where pluggedType
+        /// Add the PluggedType as an instance to any configured pluginType where PluggedType
         /// could be assigned to the pluginType
         /// </summary>
         /// <param name="pluggedType"></param>
         public virtual void AddType(Type pluggedType)
         {
+            // TODO -- let's get this moved out of PluginGraph and into
+            // a separate IPluginGraphConfiguration object
             _pluggedTypes.Add(pluggedType);
         }
 
@@ -222,7 +225,7 @@ namespace StructureMap.Graph
             var registry = new Registry();
             action(registry);
 
-            registry.ConfigurePluginGraph(this);
+            registry.As<IPluginGraphConfiguration>().Configure(this);
         }
 
         public void ImportRegistry(Type type)
@@ -230,7 +233,7 @@ namespace StructureMap.Graph
             if (Registries.Any(x => x.GetType() == type)) return;
 
             var registry = (Registry) Activator.CreateInstance(type);
-            registry.ConfigurePluginGraph(this);
+            registry.As<IPluginGraphConfiguration>().Configure(this);
         }
     }
 }

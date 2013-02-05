@@ -11,9 +11,8 @@ namespace StructureMap.Testing.Bugs
         {
             var container = new Container(x =>
             {
-                x.ForRequestedType<IGateway>()
-                    .CacheBy(InstanceScope.HybridHttpSession)
-                    .TheDefaultIsConcreteType<DefaultGateway>();
+                x.For<IGateway>(InstanceScope.HybridHttpSession)
+                    .Use<DefaultGateway>();
             });
 
             container.GetInstance<IGateway>().ShouldNotBeNull();

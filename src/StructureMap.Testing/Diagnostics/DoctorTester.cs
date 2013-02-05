@@ -172,7 +172,7 @@ namespace StructureMap.Testing.Diagnostics
         public void BootstrapStructureMap()
         {
             ObjectFactory.Initialize(
-                x => { x.InstanceOf<IWidget>().IsThis(new ConfiguredInstance(typeof (ColorRule))); });
+                x => { x.For<IWidget>().Use(new ConfiguredInstance(typeof (ColorRule))); });
         }
 
         #endregion
@@ -186,9 +186,7 @@ namespace StructureMap.Testing.Diagnostics
         {
             ObjectFactory.Initialize(x =>
             {
-                x.IgnoreStructureMapConfig = true;
-
-                x.BuildInstancesOf<DoctorTester.ClassThatFails>().TheDefaultIsConcreteType<DoctorTester.ClassThatFails>();
+                x.For<DoctorTester.ClassThatFails>().Use<DoctorTester.ClassThatFails>();
             });
         }
 
@@ -216,7 +214,7 @@ namespace StructureMap.Testing.Diagnostics
         public void BootstrapStructureMap()
         {
             ObjectFactory.Initialize(
-                x => { x.InstanceOf<IWidget>().Is.ConstructedBy(() => { throw new NotImplementedException(); }); });
+                x => { x.For<IWidget>().Use(() => { throw new NotImplementedException(); }); });
         }
 
         #endregion
@@ -230,8 +228,7 @@ namespace StructureMap.Testing.Diagnostics
         {
             ObjectFactory.Initialize(x =>
             {
-                x.IgnoreStructureMapConfig = true;
-                x.BuildInstancesOf<IWidget>().TheDefault.Is.Object(new ColorWidget("Red"));
+                x.For<IWidget>().Use(new ColorWidget("Red"));
             });
         }
 
@@ -246,11 +243,8 @@ namespace StructureMap.Testing.Diagnostics
         {
             ObjectFactory.Initialize(x =>
             {
-                x.IgnoreStructureMapConfig = true;
-
-                x.ForRequestedType<IWidget>().TheDefault.Is
-                    .OfConcreteType<DoctorTester.NumberWidget>()
-                    .WithCtorArg("age").EqualToAppSetting("age");
+                x.For<IWidget>().Use<DoctorTester.NumberWidget>()
+                    .Ctor<int>("age").EqualToAppSetting("age");
             });
         }
 

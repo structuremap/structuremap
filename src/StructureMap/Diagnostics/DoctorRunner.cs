@@ -1,4 +1,5 @@
 using System;
+using System.Security;
 using StructureMap.Exceptions;
 using StructureMap.Graph;
 
@@ -6,6 +7,7 @@ namespace StructureMap.Diagnostics
 {
     public class DoctorRunner : MarshalByRefObject
     {
+        [SecurityCritical]
         public override object InitializeLifetimeService()
         {
             return null;
@@ -75,7 +77,7 @@ namespace StructureMap.Diagnostics
             var writer = new WhatDoIHaveWriter(pipelineGraph);
             report.WhatDoIHave = writer.GetText();
 
-            var session = new ValidationBuildSession(pipelineGraph, graph.InterceptorLibrary);
+            var session = ValidationBuildSession.ValidateForPluginGraph(graph);
             session.PerformValidations();
 
             if (session.HasBuildErrors())

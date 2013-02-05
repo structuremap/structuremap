@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using NUnit.Framework;
+using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Testing.Widget;
@@ -24,9 +25,9 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             public RedGreenRegistry()
             {
-                For<IWidget>().Add<ColorWidget>().WithCtorArg("color").EqualTo("Red").WithName(
+                For<IWidget>().Add<ColorWidget>().Ctor<string>("color").Is("Red").Named(
                     "Red");
-                For<IWidget>().Add<ColorWidget>().WithCtorArg("color").EqualTo("Green").WithName(
+                For<IWidget>().Add<ColorWidget>().Ctor<string>("color").Is("Green").Named(
                     "Green");
             }
         }
@@ -35,9 +36,9 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             public YellowBlueRegistry()
             {
-                For<IWidget>().Add<ColorWidget>().WithCtorArg("color").EqualTo("Yellow").WithName(
+                For<IWidget>().Add<ColorWidget>().Ctor<string>("color").Is("Yellow").Named(
                     "Yellow");
-                For<IWidget>().Add<ColorWidget>().WithProperty("color").EqualTo("Blue").WithName(
+                For<IWidget>().Add<ColorWidget>().Ctor<string>("color").Is("Blue").Named(
                     "Blue");
             }
         }
@@ -168,11 +169,11 @@ namespace StructureMap.Testing.Configuration.DSL
             var graph = new PluginGraph();
 
             graph.Registries.Count.ShouldEqual(0);
-            registry2.ConfigurePluginGraph(graph);
+            registry2.ShouldBeOfType<IPluginGraphConfiguration>().Configure(graph);
 
             graph.Registries.Contains(registry2).ShouldBeTrue();
 
-            registry2.ConfigurePluginGraph(graph);
+            registry2.ShouldBeOfType<IPluginGraphConfiguration>().Configure(graph);
             registry2.ExecutedCount.ShouldEqual(1);
         }
 
@@ -263,7 +264,7 @@ namespace StructureMap.Testing.Configuration.DSL
     {
         public BasicActionRegistry()
         {
-            registerAction(() => ForRequestedType<IGateway>().TheDefaultIsConcreteType<Fake3Gateway>());
+            registerAction(() => For<IGateway>().Use<Fake3Gateway>());
         }
     }
 }

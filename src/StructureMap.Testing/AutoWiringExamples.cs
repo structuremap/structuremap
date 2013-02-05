@@ -51,22 +51,22 @@ namespace StructureMap.Testing
         {
             container = new Container(x =>
             {
-                x.ForRequestedType<IValidator>().AddInstances(o =>
+                x.For<IValidator>().AddInstances(o =>
                 {
-                    o.OfConcreteType<Validator>().WithCtorArg("name").EqualTo("Red").WithName("Red");
-                    o.OfConcreteType<Validator>().WithCtorArg("name").EqualTo("Blue").WithName("Blue");
-                    o.OfConcreteType<Validator>().WithCtorArg("name").EqualTo("Purple").WithName("Purple");
-                    o.OfConcreteType<Validator>().WithCtorArg("name").EqualTo("Green").WithName("Green");
+                    o.Type<Validator>().Ctor<string>("name").Is("Red").Named("Red");
+                    o.Type<Validator>().Ctor<string>("name").Is("Blue").Named("Blue");
+                    o.Type<Validator>().Ctor<string>("name").Is("Purple").Named("Purple");
+                    o.Type<Validator>().Ctor<string>("name").Is("Green").Named("Green");
                 });
 
-                x.ForRequestedType<ClassThatUsesValidators>().AddInstances(o =>
+                x.For<ClassThatUsesValidators>().AddInstances(o =>
                 {
                     // Define an Instance of ClassThatUsesValidators that depends on AutoWiring
-                    o.OfConcreteType<ClassThatUsesValidators>().WithName("WithAutoWiring");
+                    o.Type<ClassThatUsesValidators>().Named("WithAutoWiring");
 
                     // Define an Instance of ClassThatUsesValidators that overrides AutoWiring
-                    o.OfConcreteType<ClassThatUsesValidators>().WithName("ExplicitArray")
-                        .TheArrayOf<IValidator>().Contains(y =>
+                    o.Type<ClassThatUsesValidators>().Named("ExplicitArray")
+                        .EnumerableOf<IValidator>().Contains(y =>
                         {
                             y.TheInstanceNamed("Red");
                             y.TheInstanceNamed("Green");

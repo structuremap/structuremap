@@ -104,13 +104,6 @@ namespace StructureMap
         /// <returns></returns>
         T TryGetInstance<T>(string instanceKey);
 
-
-        [Obsolete("Please use GetInstance<T>() instead.")]
-        T FillDependencies<T>();
-
-        [Obsolete("Please use GetInstance(Type) instead")]
-        object FillDependencies(Type type);
-
         /// <summary>
         /// Used to add additional configuration to a Container *after* the initialization.
         /// </summary>
@@ -119,14 +112,14 @@ namespace StructureMap
 
         /// <summary>
         /// Injects the given object into a Container as the default for the designated
-        /// PLUGINTYPE.  Mostly used for temporarily setting up return values of the Container
+        /// TPluginType.  Mostly used for temporarily setting up return values of the Container
         /// to introduce mocks or stubs during automated testing scenarios
         /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <typeparam name="TPluginType"></typeparam>
         /// <param name="instance"></param>
-        void Inject<PLUGINTYPE>(PLUGINTYPE instance);
+        void Inject<TPluginType>(TPluginType instance);
 
-        void Inject<PLUGINTYPE>(string name, PLUGINTYPE value);
+        void Inject<TPluginType>(string name, TPluginType value);
 
 
         /// <summary>

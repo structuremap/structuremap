@@ -25,7 +25,7 @@ namespace StructureMap.Configuration.DSL
         void AddType(Type pluginType, Type concreteType, string name);
 
         /// <summary>
-        /// Add the pluggedType as an instance to any configured pluginType where pluggedType
+        /// Add the PluggedType as an instance to any configured pluginType where PluggedType
         /// could be assigned to the pluginType
         /// </summary>
         /// <param name="pluggedType"></param>
@@ -44,28 +44,9 @@ namespace StructureMap.Configuration.DSL
         void IncludeRegistry(Registry registry);
 
         /// <summary>
-        /// Expression Builder used to define policies for a PluginType including
-        /// Scoping, the Default Instance, and interception.  BuildInstancesOf()
-        /// and ForRequestedType() are synonyms
-        /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
-        /// <returns></returns>
-        [Obsolete("Change to For<T>()")]
-        CreatePluginFamilyExpression<PLUGINTYPE> BuildInstancesOf<PLUGINTYPE>();
-
-        /// <summary>
-        /// Expression Builder used to define policies for a PluginType including
-        /// Scoping, the Default Instance, and interception.  This method is specifically
-        /// meant for registering open generic types
-        /// </summary>
-        /// <returns></returns>
-        [Obsolete("Change to For(pluginType)")]
-        GenericFamilyExpression ForRequestedType(Type pluginType);
-
-        /// <summary>
         /// This method is a shortcut for specifying the default constructor and 
         /// setter arguments for a ConcreteType.  ForConcreteType is shorthand for:
-        /// ForRequestedType[T]().Use[T].**************
+        /// For[T]().Use[T].**************
         /// when the PluginType and ConcreteType are the same Type
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -73,21 +54,11 @@ namespace StructureMap.Configuration.DSL
         Registry.BuildWithExpression<T> ForConcreteType<T>();
 
         /// <summary>
-        /// Expression Builder used to define policies for a PluginType including
-        /// Scoping, the Default Instance, and interception.  BuildInstancesOf()
-        /// and ForRequestedType() are synonyms
+        /// Convenience method.  Equivalent of For[PluginType]().AsSingletons()
         /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <typeparam name="TPluginType"></typeparam>
         /// <returns></returns>
-        [Obsolete("Change to For<T>()")]
-        CreatePluginFamilyExpression<PLUGINTYPE> ForRequestedType<PLUGINTYPE>();
-
-        /// <summary>
-        /// Convenience method.  Equivalent of ForRequestedType[PluginType]().AsSingletons()
-        /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
-        /// <returns></returns>
-        CreatePluginFamilyExpression<PLUGINTYPE> ForSingletonOf<PLUGINTYPE>();
+        CreatePluginFamilyExpression<TPluginType> ForSingletonOf<TPluginType>();
 
         /// <summary>
         /// Uses the configuration expressions of this Registry to create a PluginGraph
@@ -96,31 +67,6 @@ namespace StructureMap.Configuration.DSL
         /// </summary>
         /// <returns></returns>
         PluginGraph Build();
-
-        /// <summary>
-        /// Adds an additional, non-Default Instance to the PluginType T.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        [Obsolete("Prefer For<T>().Add() instead")]
-        IsExpression<T> InstanceOf<T>();
-
-        /// <summary>
-        /// Adds an additional, non-Default Instance to the designated pluginType
-        /// This method is mostly meant for open generic types
-        /// </summary>
-        /// <param name="pluginType"></param>
-        /// <returns></returns>
-        [Obsolete("Prefer For(type).Add() instead")]
-        GenericIsExpression InstanceOf(Type pluginType);
-
-        /// <summary>
-        /// Expression Builder to define the defaults for a named Profile.  Each call
-        /// to CreateProfile is additive.
-        /// </summary>
-        /// <param name="profileName"></param>
-        /// <returns></returns>
-        ProfileExpression Profile(string profileName);
 
         /// <summary>
         /// An alternative way to use CreateProfile that uses ProfileExpression
@@ -156,11 +102,11 @@ namespace StructureMap.Configuration.DSL
 
         /// <summary>
         /// Directs StructureMap to always inject dependencies into any and all public Setter properties
-        /// of the type PLUGINTYPE.
+        /// of the type TPluginType.
         /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <typeparam name="TPluginType"></typeparam>
         /// <returns></returns>
-        CreatePluginFamilyExpression<PLUGINTYPE> FillAllPropertiesOfType<PLUGINTYPE>();
+        CreatePluginFamilyExpression<TPluginType> FillAllPropertiesOfType<TPluginType>();
 
         /// <summary>
         /// Creates automatic "policies" for which public setters are considered mandatory
@@ -188,32 +134,18 @@ namespace StructureMap.Configuration.DSL
         void Forward<FROM, TO>() where FROM : class where TO : class;
 
         /// <summary>
-        /// Syntactic Sugar for saying ForRequestedType().TheDefault.IsThis( @object )
+        /// Shorthand for ForRequestedType<TPluginType>()
         /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
-        /// <param name="object"></param>
-        void Register<PLUGINTYPE>(PLUGINTYPE @object);
-
-        /// <summary>
-        /// Syntactic Sugar for saying ForRequestedType().TheDefault.IsThis( instance )
-        /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
-        /// <param name="instance"></param>
-        void Register<PLUGINTYPE>(Instance instance);
-
-        /// <summary>
-        /// Shorthand for ForRequestedType<PLUGINTYPE>()
-        /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <typeparam name="TPluginType"></typeparam>
         /// <returns></returns>
-        CreatePluginFamilyExpression<PLUGINTYPE> For<PLUGINTYPE>();
+        CreatePluginFamilyExpression<TPluginType> For<TPluginType>(InstanceScope? scope = null);
 
         /// <summary>
         /// Shorthand for ForRequestedType(pluginType)
         /// </summary>
         /// <param name="pluginType"></param>
         /// <returns></returns>
-        GenericFamilyExpression For(Type pluginType);
+        GenericFamilyExpression For(Type pluginType, InstanceScope? scope = null);
 
         /// <summary>
         /// Shortcut to make StructureMap return the default object of U casted to T

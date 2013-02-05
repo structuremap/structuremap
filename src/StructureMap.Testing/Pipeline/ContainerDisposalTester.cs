@@ -68,8 +68,8 @@ namespace StructureMap.Testing.Pipeline
                 x.For<I2>().Use<C2Yes>();
                 x.For<I3>().AddInstances(o =>
                 {
-                    o.OfConcreteType<C3Yes>().WithName("1");
-                    o.OfConcreteType<C3Yes>().WithName("2");
+                    o.Type<C3Yes>().Named("1");
+                    o.Type<C3Yes>().Named("2");
                 });
             });
 

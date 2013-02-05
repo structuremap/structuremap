@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
 using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.TypeRules;
@@ -37,15 +38,13 @@ namespace StructureMap.Graph
         }
     }
 
-
-    public class AssemblyScanner : IAssemblyScanner
+    public class AssemblyScanner : IAssemblyScanner, IPluginGraphConfiguration
     {
         private readonly List<Assembly> _assemblies = new List<Assembly>();
         private readonly List<IRegistrationConvention> _conventions = new List<IRegistrationConvention>();
         private readonly CompositeFilter<Type> _filter = new CompositeFilter<Type>();
 
         private readonly List<Action<PluginGraph>> _postScanningActions = new List<Action<PluginGraph>>();
-        private readonly List<ITypeScanner> _scanners = new List<ITypeScanner>();
 
         public AssemblyScanner()
         {
@@ -67,24 +66,6 @@ namespace StructureMap.Graph
         public void Assembly(string assemblyName)
         {
             Assembly(AppDomain.CurrentDomain.Load(assemblyName));
-        }
-
-        [Obsolete("Replace ITypeScanner with IRegistrationConvention")]
-        public void With(ITypeScanner scanner)
-        {
-            _scanners.Fill(scanner);
-        }
-
-        [Obsolete("Replace ITypeScanner with IRegistrationConvention")]
-        public void With<T>() where T : ITypeScanner, new()
-        {
-            _scanners.RemoveAll(scanner => scanner is T);
-
-            ITypeScanner previous = _scanners.FirstOrDefault(scanner => scanner is T);
-            if (previous == null)
-            {
-                With(new T());
-            }
         }
 
         public void Convention<T>() where T : IRegistrationConvention, new()
@@ -121,9 +102,9 @@ namespace StructureMap.Graph
             _assemblies.Add(type.Assembly);
         }
 
-        public FindAllTypesFilter AddAllTypesOf<PLUGINTYPE>()
+        public FindAllTypesFilter AddAllTypesOf<TPluginType>()
         {
-            return AddAllTypesOf(typeof (PLUGINTYPE));
+            return AddAllTypesOf(typeof (TPluginType));
         }
 
         public FindAllTypesFilter AddAllTypesOf(Type pluginType)
@@ -234,18 +215,14 @@ namespace StructureMap.Graph
             _conventions.Fill(convention);
         }
 
-        internal void ScanForAll(PluginGraph pluginGraph)
+        void IPluginGraphConfiguration.Configure(PluginGraph pluginGraph)
         {
             var registry = new Registry();
 
             pluginGraph.Types.For(_assemblies, _filter).Each(
-                type =>
-                {
-                    _scanners.Each(x => x.Process(type, pluginGraph));
-                    _conventions.Each(c => c.Process(type, registry));
-                });
+                type => _conventions.Each(c => c.Process(type, registry)));
 
-            registry.ConfigurePluginGraph(pluginGraph);
+            registry.As<IPluginGraphConfiguration>().Configure(pluginGraph);
             _postScanningActions.Each(x => x(pluginGraph));
         }
 

@@ -16,14 +16,17 @@ namespace StructureMap.Diagnostics
         private ErrorCollection _errors;
         private List<Instance> _explicitInstances;
 
-        public ValidationBuildSession(PipelineGraph pipelineGraph, InterceptorLibrary interceptorLibrary)
-            : base(pipelineGraph, interceptorLibrary)
+        public ValidationBuildSession(PipelineGraph pipelineGraph, IObjectBuilder builder)
+            : base(pipelineGraph, builder)
         {
         }
-
-        public ValidationBuildSession(PluginGraph graph)
-            : base(graph)
+        
+        public static ValidationBuildSession ValidateForPluginGraph(PluginGraph graph)
         {
+            var pipeline = new PipelineGraph(graph);
+            var builder = new ObjectBuilder(pipeline, graph.InterceptorLibrary);
+
+            return new ValidationBuildSession(pipeline, builder);
         }
 
 

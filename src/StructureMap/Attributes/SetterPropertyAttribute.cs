@@ -12,16 +12,16 @@ namespace StructureMap.Attributes
     {
         #region statics
 
-        public static PropertyInfo[] FindMarkedProperties(Type pluggedType)
+        public static PropertyInfo[] FindMarkedProperties(Type TPluggedType)
         {
-            if (pluggedType == null)
+            if (TPluggedType == null)
             {
                 return new PropertyInfo[0];
             }
 
             var list = new ArrayList();
 
-            PropertyInfo[] properties = pluggedType.GetProperties();
+            PropertyInfo[] properties = TPluggedType.GetProperties();
             foreach (PropertyInfo property in properties)
             {
                 var att =

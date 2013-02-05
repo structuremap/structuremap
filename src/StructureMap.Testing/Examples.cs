@@ -59,17 +59,17 @@ namespace StructureMap.Testing.DocumentationExamples
     {
         public ShippingRegistry()
         {
-            ForRequestedType<IShippingService>().AddInstances(x =>
+            For<IShippingService>().AddInstances(x =>
             {
-                x.OfConcreteType<ShippingWebService>()
-                    .WithCtorArg("url").EqualTo("a url")
-                    .WithName("Domestic");
+                x.Type<ShippingWebService>()
+                    .Ctor<string>("url").Is("a url")
+                    .Named("Domestic");
 
-                x.OfConcreteType<ShippingWebService>()
-                    .WithCtorArg("url").EqualTo("a different url")
-                    .WithName("International");
+                x.Type<ShippingWebService>()
+                    .Ctor<string>("url").Is("a different url")
+                    .Named("International");
 
-                x.OfConcreteType<InternalShippingService>().WithName("Internal");
+                x.Type<InternalShippingService>().Named("Internal");
             });
         }
     }
@@ -414,27 +414,27 @@ namespace StructureMap.Testing.DocumentationExamples
         public InstanceExampleRegistry()
         {
             // Shortcut for just specifying "use this type -- with auto wiring"
-            ForRequestedType<IService>().TheDefaultIsConcreteType<RemoteService>();
+            For<IService>().Use<RemoteService>();
 
             // Set the default Instance of a PluginType
             For<IService>().Use<RemoteService>();
 
             // Add an additional Instance of a PluginType
-            InstanceOf<IService>().Is.OfConcreteType<RemoteService>();
+            For<IService>().Use<RemoteService>();
 
             // Add multiple additional Instances of a PluginType
-            ForRequestedType<IService>().AddInstances(x =>
+            For<IService>().AddInstances(x =>
             {
                 x.ConstructedBy(() => new ColorService("Red"));
 
-                x.OfConcreteType<RemoteService>();
+                x.Type<RemoteService>();
 
                 x.Object(new ColorService("Red"));
             });
 
             // Use the InstanceExpression to define the default Instance
             // of a PluginType within a Profile
-            Profile("Connected", x => { x.Type<IService>().Is.OfConcreteType<RemoteService>(); });
+            Profile("Connected", x => { x.For<IService>().Use<RemoteService>(); });
         }
     }
 }

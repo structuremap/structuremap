@@ -21,9 +21,9 @@ namespace StructureMap.Testing.Query
                 x.For<IWidget>().Singleton().Use<AWidget>();
                 x.For<Rule>().AddInstances(o =>
                 {
-                    o.OfConcreteType<DefaultRule>();
-                    o.OfConcreteType<ARule>();
-                    o.OfConcreteType<ColorRule>().WithCtorArg("color").EqualTo("red");
+                    o.Type<DefaultRule>();
+                    o.Type<ARule>();
+                    o.Type<ColorRule>().Ctor<string>("color").Is("red");
                 });
 
                 x.For<IEngine>().Use<PushrodEngine>();

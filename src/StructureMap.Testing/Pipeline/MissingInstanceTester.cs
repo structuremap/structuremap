@@ -17,7 +17,7 @@ namespace StructureMap.Testing.Pipeline
             // IContext.RequestedName property
             var container = new Container(x =>
             {
-                x.ForRequestedType<Rule>().MissingNamedInstanceIs
+                x.For<Rule>().MissingNamedInstanceIs
                     .ConstructedBy(context => new ColorRule(context.RequestedName));
             });
 

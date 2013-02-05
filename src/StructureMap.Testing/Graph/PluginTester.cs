@@ -105,18 +105,6 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
-        public void Can_get_the_referencedInstance_for_a_type()
-        {
-            var container = new Container(r => r.ForRequestedType<IEngine>().AddConcreteType<DOHCEngine>());
-
-            Debug.WriteLine(container.WhatDoIHave());
-
-            Instance instance = typeof (DOHCEngine).GetReferenceTo();
-
-            container.GetInstance<IEngine>(instance).ShouldBeOfType(typeof (DOHCEngine));
-        }
-
-        [Test]
         public void CanBeAutoFilled_with_child_array_in_ctor()
         {
             var ctor = new Constructor(typeof (CanBeAutoFilledWithArray));
@@ -168,12 +156,18 @@ namespace StructureMap.Testing.Graph
             pluginGraph.Scan(x => x.Assembly(Assembly.GetExecutingAssembly()));
             pluginGraph.Seal();
 
-            var manager = new Container(pluginGraph);
 
-            var mustang = (Mustang) manager.GetInstance(typeof (IAutomobile), "Mustang");
 
-            Assert.IsNotNull(mustang);
-            Assert.IsTrue(mustang.Engine is PushrodEngine);
+            var container = new Container(x => {
+                x.Scan(o => {
+                    o.TheCallingAssembly();
+                });
+                x.For<IEngine>().Use<PushrodEngine>();
+            });
+
+
+            var mustang = container.GetInstance<IAutomobile>("Mustang");
+            mustang.ShouldBeOfType<Mustang>().Engine.ShouldBeOfType<PushrodEngine>();
         }
 
         [Test]
@@ -230,7 +224,7 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
-        public void DoesNotCreateAnImplicitMementoForAPluggedTypeThatCanBeAutoFilled()
+        public void DoesNotCreateAnImplicitMementoForATPluggedTypeThatCanBeAutoFilled()
         {
             var plugin = new Plugin(typeof (GrandPrix));
             Assert.IsFalse(plugin.CanBeAutoFilled);
@@ -368,8 +362,7 @@ namespace StructureMap.Testing.Graph
         {
             try
             {
-                new Registry().ForRequestedType<ClassWithNoConstructor>().TheDefaultIsConcreteType
-                    <ClassWithNoConstructor>();
+                new Registry().For<ClassWithNoConstructor>().Use<ClassWithNoConstructor>();
             }
             catch (StructureMapException ex)
             {

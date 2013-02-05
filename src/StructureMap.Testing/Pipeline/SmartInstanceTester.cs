@@ -11,7 +11,7 @@ namespace StructureMap.Testing.Pipeline
         private IStructuredInstance structuredInstance;
         private IConfiguredInstance configuredInstance;
 
-        private SmartInstance<T> instanceOf<T>()
+        private SmartInstance<T> For<T>()
         {
             var instance = new SmartInstance<T>();
 
@@ -23,10 +23,10 @@ namespace StructureMap.Testing.Pipeline
 
         public T build<T>(Action<SmartInstance<T>> action)
         {
-            SmartInstance<T> instance = instanceOf<T>();
+            SmartInstance<T> instance = For<T>();
             action(instance);
 
-            var container = new Container(r => r.ForRequestedType<T>().TheDefault.IsThis(instance));
+            var container = new Container(r => r.For<T>().Use(instance));
             return container.GetInstance<T>();
         }
 
@@ -34,7 +34,7 @@ namespace StructureMap.Testing.Pipeline
         public void specify_a_constructor_dependency()
         {
             var widget = new ColorWidget("Red");
-            build<ClassWithWidget>(instance => instance.CtorDependency<IWidget>("widget").Is(x => x.Object(widget))).
+            build<ClassWithWidget>(instance => instance.Ctor<IWidget>("widget").Is(x => x.Object(widget))).
                 Widget.
                 ShouldBeTheSameAs(widget);
         }
@@ -43,7 +43,7 @@ namespace StructureMap.Testing.Pipeline
         public void specify_a_constructor_dependency_by_type()
         {
             var widget = new ColorWidget("Red");
-            build<ClassWithWidget>(i => i.CtorDependency<IWidget>().Is(x => x.Object(widget))).Widget.ShouldBeTheSameAs(
+            build<ClassWithWidget>(i => i.Ctor<IWidget>().Is(x => x.Object(widget))).Widget.ShouldBeTheSameAs(
                 widget);
         }
 
@@ -51,9 +51,9 @@ namespace StructureMap.Testing.Pipeline
         public void specify_a_non_simple_property_with_equal_to()
         {
             var widget = new ColorWidget("Red");
-            var container = new Container(x => x.ForRequestedType<ClassWithWidgetProperty>()
+            var container = new Container(x => x.For<ClassWithWidgetProperty>()
                                                    .Use<ClassWithWidgetProperty>()
-                                                   .WithProperty(o => o.Widget).EqualTo(widget));
+                                                   .Setter(o => o.Widget).Is(widget));
 
             Assert.AreSame(widget, container.GetInstance<ClassWithWidgetProperty>().Widget);
         }
@@ -62,13 +62,13 @@ namespace StructureMap.Testing.Pipeline
         public void specify_a_property_dependency()
         {
             var widget = new ColorWidget("Red");
-            build<ClassWithWidgetProperty>(i => i.SetterDependency(x => x.Widget).Is(x => x.Object(widget))).Widget.
+            build<ClassWithWidgetProperty>(i => i.Setter(x => x.Widget).Is(x => x.Object(widget))).Widget.
                 ShouldBeTheSameAs(widget);
 
             var container = new Container(x =>
             {
                 x.ForConcreteType<ClassWithWidgetProperty>().Configure
-                    .SetterDependency(o => o.Widget).Is(o => o.Object(new ColorWidget("Red")));
+                    .Setter(o => o.Widget).Is(o => o.Object(new ColorWidget("Red")));
             });
         }
 
@@ -93,19 +93,19 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void specify_a_simple_property_name_with_equal_to()
         {
-            build<SimplePropertyTarget>(i => i.WithProperty("Name").EqualTo("Scott")).Name.ShouldEqual("Scott");
+            build<SimplePropertyTarget>(i => i.Setter(x => x.Name).Is("Scott")).Name.ShouldEqual("Scott");
         }
 
         [Test]
         public void specify_a_simple_property_with_equal_to()
         {
-            build<SimplePropertyTarget>(i => i.WithProperty(x => x.Name).EqualTo("Bret")).Name.ShouldEqual("Bret");
+            build<SimplePropertyTarget>(i => i.Setter(x => x.Name).Is("Bret")).Name.ShouldEqual("Bret");
 
             var container = new Container(x =>
             {
                 x.ForConcreteType<SimplePropertyTarget>().Configure
-                    .WithProperty(o => o.Name).EqualToAppSetting("name")
-                    .WithProperty(o => o.Age).EqualToAppSetting("age");
+                    .Setter(o => o.Name).EqualToAppSetting("name")
+                    .Setter(o => o.Age).EqualToAppSetting("age");
             });
         }
 
@@ -117,7 +117,7 @@ namespace StructureMap.Testing.Pipeline
             IWidget widget2 = new AWidget();
             IWidget widget3 = new AWidget();
 
-            build<ClassWithWidgetArrayCtor>(i => i.TheArrayOf<IWidget>().Contains(x =>
+            build<ClassWithWidgetArrayCtor>(i => i.EnumerableOf<IWidget>().Contains(x =>
             {
                 x.Object(widget1);
                 x.Object(widget2);
@@ -133,7 +133,7 @@ namespace StructureMap.Testing.Pipeline
             IWidget widget2 = new AWidget();
             IWidget widget3 = new AWidget();
 
-            build<ClassWithWidgetArraySetter>(i => i.TheArrayOf<IWidget>().Contains(x =>
+            build<ClassWithWidgetArraySetter>(i => i.EnumerableOf<IWidget>().Contains(x =>
             {
                 x.Object(widget1);
                 x.Object(widget2);
@@ -145,9 +145,9 @@ namespace StructureMap.Testing.Pipeline
         public void specify_ctorarg_with_non_simple_argument()
         {
             var widget = new ColorWidget("Red");
-            var container = new Container(x => x.ForRequestedType<ClassWithWidget>()
+            var container = new Container(x => x.For<ClassWithWidget>()
                                                    .Use<ClassWithWidget>()
-                                                   .WithCtorArg("widget").EqualTo(widget));
+                                                   .Ctor<IWidget>().Is(widget));
 
             Assert.AreSame(widget, container.GetInstance<ClassWithWidget>().Widget);
         }
@@ -155,7 +155,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void successfully_specify_the_constructor_argument_of_a_string()
         {
-            build<ColorRule>(i => i.WithCtorArg("color").EqualTo("Red")).Color.ShouldEqual("Red");
+            build<ColorRule>(i => i.Ctor<string>("color").Is("Red")).Color.ShouldEqual("Red");
         }
 
         [Test]

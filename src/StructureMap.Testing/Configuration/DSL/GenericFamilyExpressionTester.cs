@@ -74,45 +74,44 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void Add_concrete_type()
         {
-            var manager =
+            var container =
                 new Container(
-                    r => r.ForRequestedType(typeof (ITarget)).AddConcreteType(typeof (Target1)));
+                    r => r.For(typeof (ITarget)).Add(typeof (Target1)));
 
 
-            Assert.IsInstanceOfType(typeof (Target1), manager.GetAllInstances<ITarget>()[0]);
+            container.GetAllInstances<ITarget>()[0].ShouldBeOfType<Target1>();
         }
 
         [Test]
         public void Add_concrete_type_with_name()
         {
-            var manager = new Container(r =>
+            var container = new Container(r =>
             {
-                r.ForRequestedType(typeof (ITarget)).AddConcreteType(typeof (Target1), "1");
-                r.ForRequestedType(typeof (ITarget)).AddConcreteType(typeof (Target2), "2");
-                r.ForRequestedType(typeof (ITarget)).AddConcreteType(typeof (Target3), "3");
+                r.For(typeof(ITarget)).Add(typeof(Target1)).Named("1");
+                r.For(typeof(ITarget)).Add(typeof(Target2)).Named("2");
+                r.For(typeof(ITarget)).Add(typeof(Target3)).Named("3");
             });
 
-
-            Assert.IsInstanceOfType(typeof (Target1), manager.GetInstance<ITarget>("1"));
-            Assert.IsInstanceOfType(typeof (Target2), manager.GetInstance<ITarget>("2"));
-            Assert.IsInstanceOfType(typeof (Target3), manager.GetInstance<ITarget>("3"));
+            container.GetInstance<ITarget>("1").ShouldBeOfType<Target1>();
+            container.GetInstance<ITarget>("2").ShouldBeOfType<Target2>();
+            container.GetInstance<ITarget>("3").ShouldBeOfType<Target3>();
         }
 
         [Test]
         public void Add_default_by_concrete_type()
         {
-            var manager =
+            var container =
                 new Container(
-                    r => r.ForRequestedType(typeof (ITarget)).TheDefaultIsConcreteType(typeof (Target3)));
+                    r => r.For(typeof (ITarget)).Use(typeof (Target3)));
 
-            Assert.IsInstanceOfType(typeof (Target3), manager.GetInstance<ITarget>());
+            container.GetInstance<ITarget>().ShouldBeOfType<Target3>();
         }
 
         [Test]
         public void Add_default_instance()
         {
             var container =
-                new Container(r => { r.ForRequestedType(typeof (ITarget)).TheDefaultIsConcreteType(typeof (Target2)); });
+                new Container(r => { r.For(typeof (ITarget)).Use(typeof (Target2)); });
 
             container.GetInstance<ITarget>().ShouldBeOfType<Target2>();
         }
@@ -126,7 +125,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 r.For<ITarget>().Add<Target2>();
             });
 
-            Assert.IsInstanceOfType(typeof (Target2), container.GetAllInstances<ITarget>()[0]);
+            container.GetAllInstances<ITarget>()[0].ShouldBeOfType<Target2>();
         }
 
         [Test]
@@ -134,12 +133,13 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var container = new Container(r =>
             {
-                r.ForRequestedType(typeof (ITarget)).EnrichWith(raw => new WrappedTarget((ITarget) raw))
-                    .TheDefaultIsConcreteType(typeof (Target1));
+                r.For(typeof (ITarget)).EnrichAllWith(raw => new WrappedTarget((ITarget) raw))
+                    .Use(typeof (Target1));
             });
 
             var target = (WrappedTarget) container.GetInstance<ITarget>();
-            Assert.IsInstanceOfType(typeof (Target1), target.Inner);
+
+            target.Inner.ShouldBeOfType<Target1>();
         }
 
         [Test]
@@ -149,8 +149,8 @@ namespace StructureMap.Testing.Configuration.DSL
 
             var container = new Container(r =>
             {
-                r.ForRequestedType(typeof (ITarget)).OnCreation(raw => created = (ITarget) raw)
-                    .TheDefaultIsConcreteType(typeof (Target3));
+                r.For(typeof (ITarget)).OnCreationForAll(raw => created = (ITarget) raw)
+                    .Use(typeof (Target3));
             });
 
             container.GetInstance<ITarget>().ShouldBeOfType<Target3>();
@@ -160,7 +160,7 @@ namespace StructureMap.Testing.Configuration.DSL
         public void Set_caching()
         {
             var registry = new Registry();
-            registry.ForRequestedType(typeof (ITarget)).CacheBy(InstanceScope.ThreadLocal);
+            registry.For(typeof(ITarget), InstanceScope.ThreadLocal);
             PluginGraph graph = registry.Build();
 
             graph.FindFamily(typeof (ITarget)).Lifecycle.ShouldBeOfType<ThreadLocalStorageLifecycle>();

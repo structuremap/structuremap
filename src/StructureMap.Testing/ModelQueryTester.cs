@@ -19,18 +19,17 @@ namespace StructureMap.Testing
         public void SetUp()
         {
             var registry = new Registry();
-            registry.ForRequestedType(typeof (IService<>))
-                .AddConcreteType(typeof (Service<>))
-                .AddConcreteType(typeof (Service2<>));
+            registry.For(typeof (IService<>)).Add(typeof (Service<>));
+            registry.For(typeof (IService<>)).Add(typeof (Service2<>));
 
-            registry.BuildInstancesOf<ISomething>()
-                .TheDefaultIsConcreteType<SomethingOne>()
-                .AddConcreteType<SomethingTwo>();
 
-            registry.BuildInstancesOf<IServiceProvider>().AddConcreteType<MyDataSet>().AddConcreteType<MyDataView>();
+            registry.For<ISomething>().Use<SomethingOne>();
+            registry.For<ISomething>().Add<SomethingTwo>();
+
+            registry.For<IServiceProvider>().Add<MyDataSet>();
+            registry.For<IServiceProvider>().Add<MyDataView>();
 
             PluginGraph graph = registry.Build();
-            var pipeline = new PipelineGraph(graph);
 
             _model = new Container(graph).Model;
 

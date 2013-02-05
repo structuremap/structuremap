@@ -29,7 +29,7 @@ namespace StructureMap.Testing
         public void graphbuilder_can_add_a_registry_directly()
         {
             var graph = new PluginGraph();
-            var builder = new GraphBuilder(new Registry[0], graph);
+            var builder = new GraphBuilder(graph);
             builder.AddRegistry(typeof (XmlFileRegistry).AssemblyQualifiedName);
 
             var container = new Container(graph);
@@ -41,7 +41,7 @@ namespace StructureMap.Testing
         {
             //290
             var graph = new PluginGraph();
-            var builder = new GraphBuilder(new Registry[0], graph);
+            var builder = new GraphBuilder(graph);
             builder.AddRegistry("an invalid type name");
 
             graph.Log.ErrorCount.ShouldEqual(1);
@@ -69,7 +69,7 @@ namespace StructureMap.Testing
     {
         public XmlFileRegistry()
         {
-            ForConcreteType<ColorRule>().Configure.WithCtorArg("color").EqualTo("Cornflower");
+            ForConcreteType<ColorRule>().Configure.Ctor<string>("color").Is("Cornflower");
         }
     }
 }

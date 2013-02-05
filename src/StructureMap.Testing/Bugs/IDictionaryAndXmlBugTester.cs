@@ -16,11 +16,11 @@ namespace StructureMap.Testing.Bugs
                 @"
 <StructureMap>
     <DefaultInstance PluginType='{0}' PluggedType='{0}'>
-        <Property Name='values'>
+        <values>
             <Pair Key='color' Value='red'/>
             <Pair Key='state' Value='texas'/>
             <Pair Key='direction' Value='north'/>
-        </Property>
+        </values>
     </DefaultInstance>
 </StructureMap>
 "

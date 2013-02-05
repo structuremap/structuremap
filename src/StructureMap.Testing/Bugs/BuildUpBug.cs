@@ -10,19 +10,14 @@ namespace StructureMap.Testing.Bugs
         {
             ObjectFactory.Initialize(x =>
             {
-                x.UseDefaultStructureMapConfigFile = false;
-
                 x.ForConcreteType<SomeDbRepository>().Configure.
-                    WithCtorArg("connectionString").EqualTo("some connection string");
+                    Ctor<string>("connectionString").Is("some connection string");
 
                 //x.ForConcreteType<SomeWebPage>().Configure.
                 //  SetterDependency<SomeDbRepository>().Is<SomeDbRepository>();
 
                 x.SetAllProperties(o => o.OfType<SomeDbRepository>());
             });
-
-            var dbRepository =
-                ObjectFactory.GetInstance<SomeDbRepository>();
 
             var webPage = new SomeWebPage();
 

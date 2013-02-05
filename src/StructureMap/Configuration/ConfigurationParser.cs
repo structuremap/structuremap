@@ -1,55 +1,22 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using StructureMap.Diagnostics;
+using StructureMap.Graph;
 using StructureMap.Source;
 
 namespace StructureMap.Configuration
 {
-    public class ConfigurationParser : XmlConstants
+    public class ConfigurationParser : XmlConstants, IPluginGraphConfiguration
     {
-        #region statics
-
-        public static ConfigurationParser FromFile(string filename)
-        {
-            var document = new XmlDocument();
-            document.Load(filename);
-
-            XmlNode structureMapNode = document.SelectSingleNode("//" + STRUCTUREMAP);
-            if (structureMapNode == null)
-            {
-                throw new StructureMapException(155, filename);
-            }
-
-            var parser = new ConfigurationParser(structureMapNode);
-            parser.FilePath = filename;
-
-            return parser;
-        }
-
-        #endregion
-
-        private readonly XmlMementoCreator _mementoCreator;
         private readonly XmlNode _structureMapNode;
-        private string _filePath = string.Empty;
         public string Description = string.Empty;
+        private string _filePath = string.Empty;
 
         public ConfigurationParser(XmlNode structureMapNode)
         {
             _structureMapNode = structureMapNode;
-
-            XmlMementoStyle mementoStyle = XmlMementoStyle.NodeNormalized;
-            _structureMapNode.ForAttributeValue(MEMENTO_STYLE,
-                                                style =>
-                                                {
-                                                    if (style == ATTRIBUTE_STYLE)
-                                                        mementoStyle = XmlMementoStyle.AttributeNormalized;
-                                                });
-
-            _mementoCreator = new XmlMementoCreator(
-                mementoStyle,
-                TYPE_ATTRIBUTE,
-                KEY_ATTRIBUTE);
         }
 
         public string Id
@@ -62,7 +29,32 @@ namespace StructureMap.Configuration
         }
 
 
-        public string FilePath { get { return _filePath; } set { _filePath = value; } }
+        public string FilePath
+        {
+            get { return _filePath; }
+            set { _filePath = value; }
+        }
+
+        // TODO -- set the description
+        public static ConfigurationParser FromFile(string filename)
+        {
+            var document = new XmlDocument();
+            document.Load(filename);
+
+            XmlNode structureMapNode = document.SelectSingleNode("//" + STRUCTUREMAP);
+            if (structureMapNode == null)
+            {
+                throw new StructureMapException(155, filename);
+            }
+
+            return new ConfigurationParser(structureMapNode) {FilePath = filename};
+        }
+
+        public static InstanceMemento CreateMemento(XmlNode node)
+        {
+            XmlNode clonedNode = node.CloneNode(true);
+            return new XmlAttributeInstanceMemento(clonedNode);
+        }
 
         public void ForEachFile(GraphLog log, Action<string> action)
         {
@@ -70,8 +62,7 @@ namespace StructureMap.Configuration
 
             // Find the text in every child node of _structureMapNode and
             // perform an action with that text
-            _structureMapNode.ForTextInChild("Include/@File").Do(fileName =>
-            {
+            _structureMapNode.ForTextInChild("Include/@File").Do(fileName => {
                 string includedFile = Path.Combine(includePath, fileName);
                 action(includedFile);
             });
@@ -87,14 +78,9 @@ namespace StructureMap.Configuration
             return Path.GetDirectoryName(_filePath);
         }
 
-        public void ParseAssemblies(IGraphBuilder builder)
-        {
-            _structureMapNode.ForTextInChild("Assembly/@Name").Do(name => builder.AddAssembly(name));
-        }
-
         public void ParseRegistries(IGraphBuilder builder)
         {
-            _structureMapNode.ForTextInChild("Registry/@Type").Do(name => builder.AddRegistry(name));
+            _structureMapNode.ForTextInChild("Registry/@Type").Do(builder.AddRegistry);
         }
 
 
@@ -103,21 +89,32 @@ namespace StructureMap.Configuration
             return _structureMapNode.ForEachChild(xpath);
         }
 
-        public void ParseProfilesAndMachines(IGraphBuilder builder)
-        {
-            var parser = new ProfileAndMachineParser(builder, _structureMapNode, _mementoCreator);
-            parser.Parse();
-        }
-
         public void Parse(IGraphBuilder builder)
         {
-            var familyParser = new FamilyParser(builder, _mementoCreator);
+            var instanceParser = new InstanceParser(builder);
 
-            forEachNode(PLUGIN_FAMILY_NODE).Do(familyParser.ParseFamily);
-            forEachNode(DEFAULT_INSTANCE).Do(familyParser.ParseDefaultElement);
-            forEachNode(ADD_INSTANCE_NODE).Do(familyParser.ParseInstanceElement);
+            forEachNode("Alias").Do(instanceParser.ParseAlias);
+            forEachNode(DEFAULT_INSTANCE).Do(instanceParser.ParseDefaultElement);
+            forEachNode(ADD_INSTANCE_NODE).Do(instanceParser.ParseInstanceElement);
+        }
 
-            ParseProfilesAndMachines(builder);
+        void IPluginGraphConfiguration.Configure(PluginGraph graph)
+        {
+            var builder = new GraphBuilder(graph);
+
+            ParseRegistries(builder);
+            Parse(builder);
+        }
+
+        // TODO -- set the description
+        public static IEnumerable<ConfigurationParser> FromApplicationConfig()
+        {
+            IList<XmlNode> appConfigNodes = StructureMapConfigurationSection.GetStructureMapConfiguration();
+            foreach (XmlNode appConfigNode in appConfigNodes)
+            {
+                yield return new ConfigurationParser(appConfigNode);
+
+            }
         }
     }
 }

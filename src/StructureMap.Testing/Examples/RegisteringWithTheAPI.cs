@@ -29,13 +29,13 @@ namespace StructureMap.Testing.Examples
                 // In this case, we need to specify the value of "connectionString" argument to
                 // the constructor function
                 x.For<DatabaseRepository>().Use<DatabaseRepository>()
-                    .WithCtorArg("connectionString").EqualToAppSetting("connectionString");
+                    .Ctor<string>("connectionString").EqualToAppSetting("connectionString");
             });
 
             ObjectFactory.Initialize(x =>
             {
                 x.ForConcreteType<DatabaseRepository>().Configure
-                    .WithCtorArg("connectionString").EqualToAppSetting("connectionString");
+                    .Ctor<string>("connectionString").EqualToAppSetting("connectionString");
             });
 
             // Now, we can request an instance of DatabaseRepository, and
@@ -57,64 +57,4 @@ namespace StructureMap.Testing.Examples
         public static WeirdLegacyRepository Current { get; set; }
     }
 
-
-    public class RepositoryRegistry : Registry
-    {
-        public RepositoryRegistry()
-        {
-            // First I'll specify the "default" Instance of IRepository
-            ForRequestedType<IRepository>().TheDefaultIsConcreteType<InMemoryRepository>();
-
-            // Now, I'll add three more Instances of IRepository
-            ForRequestedType<IRepository>().AddInstances(x =>
-            {
-                // "NorthAmerica" is the concrete type DatabaseRepository with 
-                // the connectionString pointed to the NorthAmerica database
-                x.OfConcreteType<DatabaseRepository>().WithName("NorthAmerica")
-                    .WithCtorArg("connectionString").EqualTo("database=NorthAmerica");
-
-                // "Asia/Pacific" is the concrete type DatabaseRepository with 
-                // the connectionString pointed to the AsiaPacific database
-                x.OfConcreteType<DatabaseRepository>().WithName("Asia/Pacific")
-                    .WithCtorArg("connectionString").EqualTo("database=AsiaPacific");
-
-                // Lastly, the "Weird" instance is built by calling a specified 
-                // Lambda (an anonymous delegate will work as well).
-                x.ConstructedBy(() => WeirdLegacyRepository.Current).WithName("Weird");
-            });
-            /*
-            // Example #1
-            var container1 = new Container(new RepositoryRegistry());
-
-            // Example #2
-            var container2 = new Container(x =>
-            {
-                x.AddRegistry<RepositoryRegistry>();
-            });
-
-            // Example #3
-            ObjectFactory.Initialize(x =>
-            {
-                x.AddRegistry<RepositoryRegistry>();
-            });
-
-
-            ObjectFactory.Initialize(x =>
-            {
-                x.ForRequestedType<IRepository>().TheDefaultIsConcreteType<InMemoryRepository>();
-
-                x.ForRequestedType<IRepository>().AddInstances(y =>
-                {
-                    y.OfConcreteType<DatabaseRepository>().WithName("NorthAmerica")
-                        .WithCtorArg("connectionString").EqualTo("database=NorthAmerica");
-
-                    y.OfConcreteType<DatabaseRepository>().WithName("Asia/Pacific")
-                        .WithCtorArg("connectionString").EqualTo("database=AsiaPacific");
-
-                    y.ConstructedBy(() => WeirdLegacyRepository.Current).WithName("Weird");
-                });
-            });
-             */
-        }
-    }
 }

@@ -26,7 +26,7 @@ namespace StructureMap.Source
 
         public XmlElement InnerElement { get { return _element; } }
 
-        public override bool IsReference { get { return (ConcreteKey == string.Empty && string.IsNullOrEmpty(getPluggedType())); } }
+        public override bool IsReference { get { return (ConcreteKey == string.Empty && string.IsNullOrEmpty(PluggedType())); } }
 
         public override string ReferenceKey { get { return InstanceKey; } }
 
@@ -61,9 +61,9 @@ namespace StructureMap.Source
             }
         }
 
-        public override InstanceMemento[] GetChildrenArray(string Key)
+        public override InstanceMemento[] GetChildrenArray(string key)
         {
-            XmlNode childrenNode = _element[Key];
+            XmlNode childrenNode = _element[key];
             if (childrenNode == null)
             {
                 return null;
@@ -85,21 +85,13 @@ namespace StructureMap.Source
             return (InstanceMemento[]) list.ToArray(typeof (InstanceMemento));
         }
 
-        public override InstanceMemento Substitute(InstanceMemento memento)
-        {
-            var templater = new XmlTemplater(_element);
-            XmlNode substitutedNode = templater.SubstituteTemplates(_element, memento);
-
-            return new XmlAttributeInstanceMemento(substitutedNode);
-        }
-
 
         public override string ToString()
         {
             return _element.OuterXml;
         }
 
-        public override Instance ReadChildInstance(string name, PluginGraph graph, Type childType)
+        public override Instance ReadChildInstance(string name, IPluginFactory graph, Type childType)
         {
             ITypeReader reader = TypeReaderFactory.GetReader(childType);
             if (reader == null)

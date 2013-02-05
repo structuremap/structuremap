@@ -92,14 +92,13 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var container = new Container(x =>
             {
-                x.ForRequestedType<Processor>().TheDefault.Is
-                    .OfConcreteType<Processor>()
-                    .TheArrayOf<IHandler>().Contains(
+                x.For<Processor>().Use<Processor>()
+                    .EnumerableOf<IHandler>().Contains(
                     new SmartInstance<Handler1>(),
                     new SmartInstance<Handler2>(),
                     new SmartInstance<Handler3>()
                     )
-                    .WithCtorArg("name").EqualTo("Jeremy");
+                    .Ctor<string>("name").Is("Jeremy");
             });
 
             container.GetInstance<Processor>().Name.ShouldEqual("Jeremy");
@@ -110,14 +109,13 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var container = new Container(x =>
             {
-                x.ForRequestedType<Processor>().TheDefault.Is
-                    .OfConcreteType<Processor>()
-                    .TheArrayOf<IHandler>().Contains(
+                x.For<Processor>().Use<Processor>()
+                    .EnumerableOf<IHandler>().Contains(
                     new SmartInstance<Handler1>(),
                     new SmartInstance<Handler2>(),
                     new SmartInstance<Handler3>()
                     )
-                    .WithCtorArg("name").EqualTo("Jeremy");
+                    .Ctor<string>("name").Is("Jeremy");
             });
 
             container.GetInstance<Processor>().Handlers.Select(x => x.GetType()).ShouldHaveTheSameElementsAs(typeof(Handler1), typeof(Handler2), typeof(Handler3));
@@ -129,25 +127,25 @@ namespace StructureMap.Testing.Configuration.DSL
             var container = new Container(r =>
             {
                 r.For<Processor2>().Use<Processor2>()
-                    .TheArrayOf<IHandler>("first").Contains(x =>
+                    .EnumerableOf<IHandler>("first").Contains(x =>
                     {
-                        x.OfConcreteType<Handler1>();
-                        x.OfConcreteType<Handler2>();
+                        x.Type<Handler1>();
+                        x.Type<Handler2>();
                     })
-                    .TheArrayOf<IHandler>("second").Contains(x =>
+                    .EnumerableOf<IHandler>("second").Contains(x =>
                     {
-                        x.OfConcreteType<Handler2>();
-                        x.OfConcreteType<Handler3>();
+                        x.Type<Handler2>();
+                        x.Type<Handler3>();
                     });
             });
 
 
             var processor = container.GetInstance<Processor2>();
 
-            Assert.IsInstanceOfType(typeof (Handler1), processor.First[0]);
-            Assert.IsInstanceOfType(typeof (Handler2), processor.First[1]);
-            Assert.IsInstanceOfType(typeof (Handler2), processor.Second[0]);
-            Assert.IsInstanceOfType(typeof (Handler3), processor.Second[1]);
+            processor.First[0].ShouldBeOfType<Handler1>();
+            processor.First[1].ShouldBeOfType<Handler2>();
+            processor.Second[0].ShouldBeOfType<Handler2>();
+            processor.Second[1].ShouldBeOfType<Handler3>();
         }
 
 
@@ -180,12 +178,12 @@ namespace StructureMap.Testing.Configuration.DSL
             IContainer manager = new Container(registry =>
             {
                 registry.For<IHandler>().Add<Handler1>().Named("One");
-                registry.For<IHandler>().Add<Handler2>().WithName("Two");
+                registry.For<IHandler>().Add<Handler2>().Named("Two");
 
 
                 registry.For<Processor>().Use<Processor>()
-                    .WithCtorArg("name").EqualTo("Jeremy")
-                    .TheArrayOf<IHandler>().Contains(x =>
+                    .Ctor<string>("name").Is("Jeremy")
+                    .EnumerableOf<IHandler>().Contains(x =>
                     {
                         x.TheInstanceNamed("Two");
                         x.TheInstanceNamed("One");
@@ -194,8 +192,8 @@ namespace StructureMap.Testing.Configuration.DSL
 
             var processor = manager.GetInstance<Processor>();
 
-            Assert.IsInstanceOfType(typeof (Handler2), processor.Handlers[0]);
-            Assert.IsInstanceOfType(typeof (Handler1), processor.Handlers[1]);
+            processor.Handlers[0].ShouldBeOfType<Handler2>();
+            processor.Handlers[1].ShouldBeOfType<Handler1>();
         }
 
         [Test]
@@ -204,21 +202,21 @@ namespace StructureMap.Testing.Configuration.DSL
             var container = new Container(x =>
             {
                 x.For<Processor>().Use<Processor>()
-                    .WithCtorArg("name").EqualTo("Jeremy")
-                    .TheArrayOf<IHandler>().Contains(y =>
+                    .Ctor<string>("name").Is("Jeremy")
+                    .EnumerableOf<IHandler>().Contains(y =>
                     {
-                        y.OfConcreteType<Handler1>();
-                        y.OfConcreteType<Handler2>();
-                        y.OfConcreteType<Handler3>();
+                        y.Type<Handler1>();
+                        y.Type<Handler2>();
+                        y.Type<Handler3>();
                     });
             });
 
 
             var processor = container.GetInstance<Processor>();
 
-            Assert.IsInstanceOfType(typeof (Handler1), processor.Handlers[0]);
-            Assert.IsInstanceOfType(typeof (Handler2), processor.Handlers[1]);
-            Assert.IsInstanceOfType(typeof (Handler3), processor.Handlers[2]);
+            processor.Handlers[0].ShouldBeOfType<Handler1>();
+            processor.Handlers[1].ShouldBeOfType<Handler2>();
+            processor.Handlers[2].ShouldBeOfType<Handler3>();
         }
 
         [Test]
@@ -227,20 +225,20 @@ namespace StructureMap.Testing.Configuration.DSL
             IContainer container = new Container(r =>
             {
                 r.For<Processor>().Use<Processor>()
-                    .WithCtorArg("name").EqualTo("Jeremy")
-                    .TheArrayOf<IHandler>().Contains(x =>
+                    .Ctor<string>("name").Is("Jeremy")
+                    .EnumerableOf<IHandler>().Contains(x =>
                     {
-                        x.OfConcreteType<Handler1>();
-                        x.OfConcreteType<Handler2>();
-                        x.OfConcreteType<Handler3>();
+                        x.Type<Handler1>();
+                        x.Type<Handler2>();
+                        x.Type<Handler3>();
                     });
             });
 
             var processor = container.GetInstance<Processor>();
 
-            Assert.IsInstanceOfType(typeof (Handler1), processor.Handlers[0]);
-            Assert.IsInstanceOfType(typeof (Handler2), processor.Handlers[1]);
-            Assert.IsInstanceOfType(typeof (Handler3), processor.Handlers[2]);
+            processor.Handlers[0].ShouldBeOfType<Handler1>();
+            processor.Handlers[1].ShouldBeOfType<Handler2>();
+            processor.Handlers[2].ShouldBeOfType<Handler3>();
         }
     }
 }

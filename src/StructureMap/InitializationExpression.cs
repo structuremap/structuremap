@@ -10,24 +10,6 @@ namespace StructureMap
     public interface IInitializationExpression : IRegistry
     {
         /// <summary>
-        /// If true, makes the existence of the StructureMap.config mandatory.
-        /// The default is false.
-        /// </summary>
-        bool UseDefaultStructureMapConfigFile { set; }
-
-        /// <summary>
-        /// If true, the StructureMap.config file will be ignored even if it exists.
-        /// The default is false.
-        /// </summary>
-        bool IgnoreStructureMapConfig { set; }
-
-        /// <summary>
-        /// If true, directs StructureMap to look for configuration in the App.config.
-        /// The default value is false.
-        /// </summary>
-        bool PullConfigurationFromAppConfig { set; }
-
-        /// <summary>
         /// Designate the Default Profile.  This will be applied as soon as the 
         /// Container is initialized.
         /// </summary>
@@ -50,6 +32,11 @@ namespace StructureMap
         void AddConfigurationFromNode(XmlNode node);
 
         /// <summary>
+        /// If called, directs StructureMap to look for configuration in the App.config in any <StructureMap> node.
+        /// </summary>
+        void IncludeConfigurationFromConfigFile();
+
+        /// <summary>
         /// Creates and adds a Registry object of type T.  
         /// </summary>
         /// <typeparam name="T">The Registry Type</typeparam>
@@ -67,25 +54,8 @@ namespace StructureMap
     {
         internal InitializationExpression()
         {
-            _parserBuilder.IgnoreDefaultFile = false;
             DefaultProfileName = string.Empty;
         }
-
-        public bool UseDefaultStructureMapConfigFile
-        {
-            set
-            {
-                _parserBuilder.UseAndEnforceExistenceOfDefaultFile = value;
-                if (!value)
-                {
-                    _parserBuilder.IgnoreDefaultFile = true;
-                }
-            }
-        }
-
-        public bool IgnoreStructureMapConfig { set { _parserBuilder.IgnoreDefaultFile = value; } }
-
-        public bool PullConfigurationFromAppConfig { set { _parserBuilder.PullConfigurationFromAppConfig = value; } }
 
         public string DefaultProfileName { get; set; }
     }

@@ -17,8 +17,8 @@ namespace StructureMap.Testing
         {
             PluginCache.ResetAll();
             builder = PluginCache.FindBuilder(typeof (ClassWithMixOfSetters));
-            instance = new SmartInstance<ClassWithMixOfSetters>().WithCtorArg("Age").EqualTo(34);
-            _session = new BuildSession();
+            instance = new SmartInstance<ClassWithMixOfSetters>().Ctor<int>("Age").Is(34);
+            _session = BuildSession.Empty();
 
             TheDefaultGateway = new DefaultGateway();
             _session.RegisterDefault(typeof (IGateway), TheDefaultGateway);
@@ -68,8 +68,8 @@ namespace StructureMap.Testing
         public void set_optional_properties_and_the_values_should_be_set()
         {
             instance
-                .WithProperty("FirstName").EqualTo("Jeremy")
-                .WithProperty("LastName").EqualTo("Miller");
+                .Setter(x => x.FirstName).Is("Jeremy")
+                .Setter(x => x.LastName).Is("Miller");
 
             TheTarget.FirstName.ShouldEqual("Jeremy");
             TheTarget.LastName.ShouldEqual("Miller");
@@ -79,7 +79,7 @@ namespace StructureMap.Testing
         public void set_optional_property_for_a_child_object()
         {
             var theService = new ColorService("red");
-            instance.SetterDependency(x => x.Service).Is(theService);
+            instance.Setter(x => x.Service).Is(theService);
 
             TheTarget.Service.ShouldBeTheSameAs(theService);
         }

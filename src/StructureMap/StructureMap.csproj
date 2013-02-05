@@ -26,9 +26,9 @@
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
     <OldToolsVersion>3.5</OldToolsVersion>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -44,6 +44,7 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -136,7 +137,8 @@
     </Compile>
     <Compile Include="BuildSession.cs" />
     <Compile Include="Configuration\DSL\Expressions\GenericFamilyExpression.cs" />
-    <Compile Include="Configuration\ProfileBuilder.cs" />
+    <Compile Include="Configuration\IPluginGraphConfiguration.cs" />
+    <Compile Include="Configuration\MalformedAliasException.cs" />
     <Compile Include="Diagnostics\BuildError.cs" />
     <Compile Include="Diagnostics\CharacterWidth.cs" />
     <Compile Include="Diagnostics\DividerLine.cs" />
@@ -151,14 +153,18 @@
     <Compile Include="Exceptions\StructureMapConfigurationException.cs" />
     <Compile Include="ExplicitArgsExpression.cs" />
     <Compile Include="Graph\Constructor.cs" />
+    <Compile Include="Graph\GenericConnectionScanner.cs" />
     <Compile Include="Graph\IArgumentVisitor.cs" />
+    <Compile Include="Graph\IPluginFactory.cs" />
     <Compile Include="Graph\IPluginFamily.cs" />
     <Compile Include="Graph\AssemblyScanner.cs" />
     <Compile Include="InstanceCache.cs" />
     <Compile Include="Interceptors\MatchedTypeInterceptor.cs" />
     <Compile Include="PipelineGraph.cs" />
+    <Compile Include="Pipeline\ArrayDefinitionExpression.cs" />
     <Compile Include="Pipeline\ConfiguredInstance.cs" />
     <Compile Include="Pipeline\ConfiguredInstance.Expressions.cs" />
+    <Compile Include="Pipeline\DependencyExpression.cs" />
     <Compile Include="Pipeline\LambdaInstance.cs" />
     <Compile Include="Pipeline\DefaultInstance.cs" />
     <Compile Include="Pipeline\IConfiguredInstance.cs" />
@@ -170,7 +176,6 @@
     <Compile Include="Pipeline\ProfileManager.cs" />
     <Compile Include="Pipeline\PrototypeInstance.cs" />
     <Compile Include="Pipeline\ReferencedInstance.cs" />
-    <Compile Include="Pipeline\UserControlInstance.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -198,13 +203,12 @@
     <Compile Include="Configuration\ConfigurationParser.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Configuration\ConfigurationParserBuilder.cs" />
     <Compile Include="Configuration\DSL\Expressions\CreatePluginFamilyExpression.cs" />
     <Compile Include="Configuration\DSL\ExpressionValidator.cs" />
     <Compile Include="Pipeline\ExplicitArguments.cs" />
     <Compile Include="Configuration\DSL\Expressions\ProfileExpression.cs" />
     <Compile Include="Configuration\DSL\Registry.cs" />
-    <Compile Include="Configuration\FamilyParser.cs">
+    <Compile Include="Configuration\InstanceParser.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Configuration\IGraphBuilder.cs">
@@ -213,7 +217,6 @@
     <Compile Include="Configuration\GraphBuilder.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Configuration\ProfileAndMachineParser.cs" />
     <Compile Include="Configuration\StructureMapConfigurationSection.cs" />
     <Compile Include="Configuration\XmlConstants.cs">
       <SubType>Code</SubType>
@@ -270,9 +273,6 @@
     <Compile Include="Interceptors\NulloInterceptor.cs" />
     <Compile Include="Interceptors\StartupInterceptor.cs" />
     <Compile Include="Interceptors\FilteredInstanceInterceptor.cs" />
-    <Compile Include="MementoSource.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="MemoryInstanceMemento.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -282,49 +282,7 @@
     <Compile Include="PluginGraphBuilder.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Source\BasicXmlMementoSource.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Source\DirectoryXmlMementoSource.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Source\EmbeddedFolderXmlMementoSource.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Source\MementoSourceType.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Source\MemoryMementoSource.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Source\SingleEmbeddedXmlMementoSource.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Source\TemplatedMementoSource.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Source\XmlAttributeFileMementoSource.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Source\XmlAttributeInstanceMemento.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Source\XmlFileMementoSource.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Source\XmlMementoCreator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Source\XmlMementoSource.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Source\XmlMementoStyle.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Source\XmlNodeInstanceMemento.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Source\XmlTemplater.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Diagnostics\ValidationBuildSession.cs" />
@@ -370,7 +328,7 @@
     <Compile Include="Graph\IAssemblyScanner.cs" />
     <Compile Include="Graph\ImplementationMap.cs" />
     <Compile Include="Graph\IRegistrationConvention.cs" />
-    <Compile Include="Graph\ITypeScanner.cs" />
+    <Compile Include="Graph\DefaultConventionScanner.cs" />
     <Compile Include="Graph\PluggableAttributeScanner.cs" />
     <Compile Include="Graph\PluginCache.cs" />
     <Compile Include="IContext.cs" />
@@ -382,7 +340,6 @@
     <Compile Include="Query\IModel.cs" />
     <Compile Include="Pipeline\Arguments.cs" />
     <Compile Include="Pipeline\ArrayCoercion.cs" />
-    <Compile Include="Pipeline\ConditionalInstance.cs" />
     <Compile Include="Pipeline\ConstructorInstance.cs" />
     <Compile Include="Pipeline\EnumerableInstance.cs" />
     <Compile Include="Pipeline\HttpContextLifecycle.cs" />
@@ -413,11 +370,9 @@
     <Compile Include="Pipeline\ConfiguredInstanceBase.cs" />
     <Compile Include="Pipeline\InstanceKey.cs" />
     <Compile Include="Pipeline\IStructuredInstance.cs" />
-    <Compile Include="Pipeline\PropertyExpression.cs" />
     <Compile Include="Pipeline\SerializedInstance.cs" />
     <Compile Include="Pipeline\SmartInstance.cs" />
     <Compile Include="ReflectionHelper.cs" />
-    <Compile Include="SystemRegistry.cs" />
     <Compile Include="Util\Cache.cs" />
   </ItemGroup>
   <ItemGroup>

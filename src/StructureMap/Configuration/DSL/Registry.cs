@@ -21,7 +21,7 @@ namespace StructureMap.Configuration.DSL
     ///     }
     /// }
     /// </example>
-    public class Registry : IRegistry
+    public class Registry : IRegistry, IPluginGraphConfiguration
     {
         private readonly List<Action<PluginGraph>> _actions = new List<Action<PluginGraph>>();
         private readonly List<Action> _basicActions = new List<Action>();
@@ -50,7 +50,7 @@ namespace StructureMap.Configuration.DSL
         }
 
         /// <summary>
-        /// Add the pluggedType as an instance to any configured pluginType where pluggedType. 
+        /// Add the PluggedType as an instance to any configured pluginType where PluggedType. 
         /// Mostly useful for conventions
         /// </summary>
         /// <param name="pluggedType"></param>
@@ -65,7 +65,7 @@ namespace StructureMap.Configuration.DSL
         /// <typeparam name="T"></typeparam>
         public void IncludeRegistry<T>() where T : Registry, new()
         {
-            _actions.Add(g => new T().ConfigurePluginGraph(g));
+            _actions.Add(g => new T().As<IPluginGraphConfiguration>().Configure(g));
         }
 
         /// <summary>
@@ -74,33 +74,7 @@ namespace StructureMap.Configuration.DSL
         /// <param name="registry"></param>
         public void IncludeRegistry(Registry registry)
         {
-            _actions.Add(registry.ConfigurePluginGraph);
-        }
-
-
-        /// <summary>
-        /// Expression Builder used to define policies for a PluginType including
-        /// Scoping, the Default Instance, and interception.  BuildInstancesOf()
-        /// and ForRequestedType() are synonyms
-        /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
-        /// <returns></returns>
-        [Obsolete("Change to For<T>()")]
-        public CreatePluginFamilyExpression<PLUGINTYPE> BuildInstancesOf<PLUGINTYPE>()
-        {
-            return new CreatePluginFamilyExpression<PLUGINTYPE>(this);
-        }
-
-        /// <summary>
-        /// Expression Builder used to define policies for a PluginType including
-        /// Scoping, the Default Instance, and interception.  This method is specifically
-        /// meant for registering open generic types
-        /// </summary>
-        /// <returns></returns>
-        [Obsolete("Change to For(pluginType)")]
-        public GenericFamilyExpression ForRequestedType(Type pluginType)
-        {
-            return new GenericFamilyExpression(pluginType, this);
+            _actions.Add(graph => registry.As<IPluginGraphConfiguration>().Configure(graph));
         }
 
         /// <summary>
@@ -118,26 +92,23 @@ namespace StructureMap.Configuration.DSL
         }
 
         /// <summary>
-        /// Expression Builder used to define policies for a PluginType including
-        /// Scoping, the Default Instance, and interception.  BuildInstancesOf()
-        /// and ForRequestedType() are synonyms
+        /// Convenience method.  Equivalent of ForRequestedType[PluginType]().Singletons()
         /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <typeparam name="TPluginType"></typeparam>
         /// <returns></returns>
-        [Obsolete("Change to For<T>()")]
-        public CreatePluginFamilyExpression<PLUGINTYPE> ForRequestedType<PLUGINTYPE>()
+        public CreatePluginFamilyExpression<TPluginType> ForSingletonOf<TPluginType>()
         {
-            return new CreatePluginFamilyExpression<PLUGINTYPE>(this);
+            return For<TPluginType>().Singleton();
         }
 
         /// <summary>
-        /// Convenience method.  Equivalent of ForRequestedType[PluginType]().Singletons()
+        /// Shorthand way of saying For(pluginType).Singleton()
         /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <param name="pluginType"></param>
         /// <returns></returns>
-        public CreatePluginFamilyExpression<PLUGINTYPE> ForSingletonOf<PLUGINTYPE>()
+        public GenericFamilyExpression ForSingletonOf(Type pluginType)
         {
-            return ForRequestedType<PLUGINTYPE>().Singleton();
+            return For(pluginType).Singleton();
         }
 
         /// <summary>
@@ -149,53 +120,10 @@ namespace StructureMap.Configuration.DSL
         public PluginGraph Build()
         {
             var graph = new PluginGraph();
-            ConfigurePluginGraph(graph);
+            this.As<IPluginGraphConfiguration>().Configure(graph);
             graph.Seal();
 
             return graph;
-        }
-
-        /// <summary>
-        /// Adds an additional, non-Default Instance to the PluginType T.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        [Obsolete("Prefer For<T>().Add() instead")]
-        public IsExpression<T> InstanceOf<T>()
-        {
-            return new InstanceExpression<T>(instance =>
-            {
-                Action<PluginGraph> alteration = g => g.FindFamily(typeof (T)).AddInstance(instance);
-                _actions.Add(alteration);
-            });
-        }
-
-        /// <summary>
-        /// Adds an additional, non-Default Instance to the designated pluginType
-        /// This method is mostly meant for open generic types
-        /// </summary>
-        /// <param name="pluginType"></param>
-        /// <returns></returns>
-        [Obsolete("Prefer For(type).Add() instead")]
-        public GenericIsExpression InstanceOf(Type pluginType)
-        {
-            return
-                new GenericIsExpression(
-                    instance => { _actions.Add(graph => { graph.FindFamily(pluginType).AddInstance(instance); }); });
-        }
-
-        /// <summary>
-        /// Expression Builder to define the defaults for a named Profile.  Each call
-        /// to CreateProfile is additive.
-        /// </summary>
-        /// <param name="profileName"></param>
-        /// <returns></returns>
-        [Obsolete("Change to Profile( [name], Action<ProfileExpression> )")]
-        public ProfileExpression Profile(string profileName)
-        {
-            var expression = new ProfileExpression(profileName, this);
-
-            return expression;
         }
 
         /// <summary>
@@ -252,14 +180,14 @@ namespace StructureMap.Configuration.DSL
 
         /// <summary>
         /// Directs StructureMap to always inject dependencies into any and all public Setter properties
-        /// of the type PLUGINTYPE.
+        /// of the type TPluginType.
         /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <typeparam name="TPluginType"></typeparam>
         /// <returns></returns>
-        public CreatePluginFamilyExpression<PLUGINTYPE> FillAllPropertiesOfType<PLUGINTYPE>()
+        public CreatePluginFamilyExpression<TPluginType> FillAllPropertiesOfType<TPluginType>()
         {
-            PluginCache.AddFilledType(typeof (PLUGINTYPE));
-            return ForRequestedType<PLUGINTYPE>();
+            PluginCache.AddFilledType(typeof (TPluginType));
+            return For<TPluginType>();
         }
 
         /// <summary>
@@ -296,39 +224,17 @@ namespace StructureMap.Configuration.DSL
             For<TO>().AddInstances(x => x.ConstructedBy(c => c.GetInstance<FROM>() as TO));
         }
 
-
-        /// <summary>
-        /// Syntactic Sugar for saying ForRequestedType().TheDefault.IsThis( @object )
-        /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
-        /// <param name="object"></param>
-        [Obsolete("Prefer For<T>().Use(value)")]
-        public void Register<PLUGINTYPE>(PLUGINTYPE @object)
-        {
-            ForRequestedType<PLUGINTYPE>().TheDefault.IsThis(@object);
-        }
-
-        /// <summary>
-        /// Syntactic Sugar for saying ForRequestedType().TheDefault.IsThis( instance )
-        /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
-        /// <param name="instance"></param>
-        [Obsolete("Prefer For<T>().Use(instance)")]
-        public void Register<PLUGINTYPE>(Instance instance)
-        {
-            ForRequestedType<PLUGINTYPE>().TheDefault.IsThis(instance);
-        }
-
         /// <summary>
         /// Expression Builder used to define policies for a PluginType including
         /// Scoping, the Default Instance, and interception.  BuildInstancesOf()
         /// and ForRequestedType() are synonyms
         /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <typeparam name="TPluginType"></typeparam>
+        /// <param name="scope">Optionally specify the instance scoping for this PluginType</param>
         /// <returns></returns>
-        public CreatePluginFamilyExpression<PLUGINTYPE> For<PLUGINTYPE>()
+        public CreatePluginFamilyExpression<TPluginType> For<TPluginType>(InstanceScope? scope = null)
         {
-            return new CreatePluginFamilyExpression<PLUGINTYPE>(this);
+            return new CreatePluginFamilyExpression<TPluginType>(this, scope);
         }
 
         /// <summary>
@@ -336,10 +242,11 @@ namespace StructureMap.Configuration.DSL
         /// Scoping, the Default Instance, and interception.  This method is specifically
         /// meant for registering open generic types
         /// </summary>
+        /// <param name="scope">Optionally specify the instance scoping for this PluginType</param>
         /// <returns></returns>
-        public GenericFamilyExpression For(Type pluginType)
+        public GenericFamilyExpression For(Type pluginType, InstanceScope? scope = null)
         {
-            return ForRequestedType(pluginType);
+            return new GenericFamilyExpression(pluginType, scope, this);
         }
 
 
@@ -353,7 +260,7 @@ namespace StructureMap.Configuration.DSL
         /// <returns></returns>
         public LambdaInstance<T> Redirect<T, U>() where T : class where U : class
         {
-            return For<T>().TheDefault.Is.ConstructedBy(c =>
+            return For<T>().Use(c =>
             {
                 var raw = c.GetInstance<U>();
                 var t = raw as T;
@@ -385,7 +292,7 @@ namespace StructureMap.Configuration.DSL
             _actions.Add(alteration);
         }
 
-        internal void ConfigurePluginGraph(PluginGraph graph)
+        void IPluginGraphConfiguration.Configure(PluginGraph graph)
         {
             if (graph.Registries.Contains(this)) return;
 

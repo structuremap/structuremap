@@ -6,18 +6,15 @@ namespace StructureMap.Pipeline
 {
     public class InstanceMementoPropertyReader : IArgumentVisitor
     {
-        private readonly ConfiguredInstance _instance;
+        private readonly IConfiguredInstance _instance;
         private readonly InstanceMemento _memento;
-        private readonly PluginGraph _pluginGraph;
-        private readonly Type _pluginType;
+        private readonly IPluginFactory _pluginFactory;
 
-        public InstanceMementoPropertyReader(ConfiguredInstance instance, InstanceMemento memento,
-                                             PluginGraph pluginGraph, Type pluginType)
+        public InstanceMementoPropertyReader(IConfiguredInstance instance, InstanceMemento memento, IPluginFactory pluginFactory)
         {
             _instance = instance;
             _memento = memento;
-            _pluginGraph = pluginGraph;
-            _pluginType = pluginType;
+            _pluginFactory = pluginFactory;
         }
 
         #region IArgumentVisitor Members
@@ -88,7 +85,7 @@ namespace StructureMap.Pipeline
 
         private void copyChild(string name, Type childType)
         {
-            Instance childInstance = _memento.ReadChildInstance(name, _pluginGraph, childType);
+            Instance childInstance = _memento.ReadChildInstance(name, _pluginFactory, childType);
             if (childInstance == null) return;
 
             _instance.SetChild(name, childInstance);
@@ -102,7 +99,7 @@ namespace StructureMap.Pipeline
             for (int i = 0; i < mementoes.Length; i++)
             {
                 InstanceMemento memento = mementoes[i];
-                children[i] = memento.ReadInstance(_pluginGraph, childType);
+                children[i] = memento.ReadInstance(_pluginFactory, childType);
             }
 
             _instance.SetCollection(name, children);

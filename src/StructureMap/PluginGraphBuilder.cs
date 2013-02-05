@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Xml;
 using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
@@ -13,41 +14,19 @@ namespace StructureMap
     /// </summary>
     public class PluginGraphBuilder
     {
-        #region statics
-
-        // Only used in testing
-        public static PluginGraph BuildFromXml(XmlDocument document)
-        {
-            var log = new GraphLog();
-
-            ConfigurationParser[] parsers = ConfigurationParserBuilder.GetParsers(document.DocumentElement, log);
-            var builder = new PluginGraphBuilder(parsers, new Registry[0], log);
-
-            return builder.Build();
-        }
-
-        #endregion
-
         private readonly PluginGraph _graph;
-        private readonly ConfigurationParser[] _parsers;
-        private readonly Registry[] _registries = new Registry[0];
+        private readonly IList<IPluginGraphConfiguration> _configurations = new List<IPluginGraphConfiguration>();
 
-        #region constructors
-
-        public PluginGraphBuilder(ConfigurationParser parser)
-            : this(new[] {parser}, new Registry[0], new GraphLog())
+        public PluginGraphBuilder()
         {
-        }
-
-        public PluginGraphBuilder(ConfigurationParser[] parsers, Registry[] registries, GraphLog log)
-        {
-            _parsers = parsers;
-            _registries = registries;
             _graph = new PluginGraph();
-            _graph.Log = log;
         }
 
-        #endregion
+        public void Add(IPluginGraphConfiguration configuration)
+        {
+            _configurations.Add(configuration);
+        }
+
 
         /// <summary>
         /// Reads the configuration information and returns the PluginGraph definition of
@@ -56,28 +35,16 @@ namespace StructureMap
         /// <returns></returns>
         public PluginGraph Build()
         {
-            var graphBuilder = new GraphBuilder(_registries, _graph);
-
-            forAllParsers(p =>
-            {
-                _graph.Log.StartSource(p.Description);
-                p.ParseAssemblies(graphBuilder);
-                p.ParseRegistries(graphBuilder);
+            _configurations.Each(x => {
+                // Change this to using the FubuCore.Description later
+                _graph.Log.StartSource(x.ToString());
+                x.Configure(_graph);
             });
-
-            forAllParsers(p => p.Parse(graphBuilder));
 
             _graph.Seal();
 
             return _graph;
         }
 
-        private void forAllParsers(Action<ConfigurationParser> action)
-        {
-            foreach (ConfigurationParser parser in _parsers)
-            {
-                action(parser);
-            }
-        }
     }
 }

@@ -167,9 +167,9 @@ namespace StructureMap.Pipeline
             SetChild(name, instance);
         }
 
-        protected string findPropertyName<PLUGINTYPE>()
+        protected string findPropertyName<TPluginType>()
         {
-            Type dependencyType = typeof (PLUGINTYPE);
+            Type dependencyType = typeof (TPluginType);
 
             return findPropertyName(dependencyType);
         }
@@ -280,4 +280,116 @@ namespace StructureMap.Pipeline
             return "'{0}' -> {1}".ToFormat(Name, _plugin.PluggedType.FullName);
         }
     }
+
+
+
+    public abstract class ConstructorInstance<TThis> : ConstructorInstance where TThis : ConstructorInstance
+    {
+        public ConstructorInstance(Type TPluggedType) : base(TPluggedType)
+        {
+        }
+
+        public ConstructorInstance(Plugin plugin) : base(plugin)
+        {
+        }
+
+        public ConstructorInstance(Type TPluggedType, string name) : base(TPluggedType, name)
+        {
+        }
+
+        /// <summary>
+        /// Inline definition of a constructor dependency.  Select the constructor argument by type.  Do not
+        /// use this method if there is more than one constructor arguments of the same type
+        /// </summary>
+        /// <typeparam name="TCtorType"></typeparam>
+        /// <returns></returns>
+        public DependencyExpression<TThis, TCtorType> Ctor<TCtorType>()
+        {
+            string constructorArg = getArgumentNameForType<TCtorType>();
+            return Ctor<TCtorType>(constructorArg);
+        }
+
+        private string getArgumentNameForType<TCtorType>()
+        {
+            Plugin plugin = PluginCache.GetPlugin(getConcreteType(null));
+            return plugin.FindArgumentNameForType<TCtorType>();
+        }
+
+        /// <summary>
+        /// Inline definition of a constructor dependency.  Select the constructor argument by type and constructor name.  
+        /// Use this method if there is more than one constructor arguments of the same type
+        /// </summary>
+        /// <typeparam name="TCtorType"></typeparam>
+        /// <param name="constructorArg"></param>
+        /// <returns></returns>
+        public DependencyExpression<TThis, TCtorType> Ctor<TCtorType>(string constructorArg)
+        {
+            return new DependencyExpression<TThis, TCtorType>(thisObject(), constructorArg);
+        }
+
+        protected abstract TThis thisObject();
+
+        /// <summary>
+        /// Inline definition of a setter dependency.  Only use this method if there
+        /// is only a single property of the TSetterType
+        /// </summary>
+        /// <typeparam name="TSetterType"></typeparam>
+        /// <returns></returns>
+        public DependencyExpression<TThis, TSetterType> Setter<TSetterType>()
+        {
+            return Ctor<TSetterType>();
+        }
+
+        /// <summary>
+        /// Inline definition of a setter dependency.  Only use this method if there
+        /// is only a single property of the TSetterType
+        /// </summary>
+        /// <typeparam name="TSetterType"></typeparam>
+        /// <param name="setterName">The name of the property</param>
+        /// <returns></returns>
+        public DependencyExpression<TThis, TSetterType> Setter<TSetterType>(string setterName)
+        {
+            return Ctor<TSetterType>(setterName);
+        }
+
+        /// <summary>
+        ///     Inline definition of a dependency on an Array of the CHILD type.  I.e. CHILD[].
+        ///     This method can be used for either constructor arguments or setter properties
+        /// </summary>
+        /// <typeparam name="TChild"></typeparam>
+        /// <returns></returns>
+        public ArrayDefinitionExpression<TThis, TChild> EnumerableOf<TChild>()
+        {
+            if (typeof(TChild).IsArray)
+            {
+                throw new ApplicationException("Please specify the element type in the call to TheArrayOf");
+            }
+
+            Plugin plugin = PluginCache.GetPlugin(ConcreteType);
+            string propertyName = plugin.FindArgumentNameForEnumerableOf(typeof(TChild));
+
+            if (propertyName.IsEmpty())
+            {
+                throw new StructureMapException(302, typeof(TChild).FullName, ConcreteType.FullName);
+            }
+            return new ArrayDefinitionExpression<TThis, TChild>(thisObject(), propertyName);
+        }
+
+        /// <summary>
+        ///     Inline definition of a dependency on an Array of the CHILD type and the specified setter property or constructor argument name.  I.e. CHILD[].
+        ///     This method can be used for either constructor arguments or setter properties
+        /// </summary>
+        /// <typeparam name="TChild"></typeparam>
+        /// <param name="ctorOrPropertyName"></param>
+        /// <returns></returns>
+        public ArrayDefinitionExpression<TThis, TChild> EnumerableOf<TChild>(string ctorOrPropertyName)
+        {
+            if (ctorOrPropertyName.IsEmpty())
+            {
+                throw new StructureMapException(302, typeof(TChild).FullName, ConcreteType.FullName);
+            }
+            return new ArrayDefinitionExpression<TThis, TChild>(thisObject(), ctorOrPropertyName);
+        }
+    }
+
 }

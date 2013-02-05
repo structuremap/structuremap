@@ -3,7 +3,7 @@
 
   <DefaultInstance
     PluginType="StructureMap.Testing.Configuration.ClassWithStringAndIntArray, StructureMap.Testing"
-    PluggedType="StructureMap.Testing.Configuration.ClassWithStringAndIntArray, StructureMap.Testing">
+    TPluggedType="StructureMap.Testing.Configuration.ClassWithStringAndIntArray, StructureMap.Testing">
 
     <Property Name="numbers" Values="1;2;3" Delimiter=";"/>
     <Property Name="strings" Values="1,2,3"/>
@@ -12,7 +12,7 @@
 
   <DefaultInstance
     PluginType="StructureMap.Testing.Configuration.ClassWithDictionary, StructureMap.Testing"
-    PluggedType="StructureMap.Testing.Configuration.ClassWithDictionary, StructureMap.Testing">
+    TPluggedType="StructureMap.Testing.Configuration.ClassWithDictionary, StructureMap.Testing">
     <Property Name="dictionary">
       <Pair Key='color' Value='red'/>
       <Pair Key='state' Value='texas'/>

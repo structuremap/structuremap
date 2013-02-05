@@ -27,33 +27,12 @@ namespace StructureMap.Testing.Pipeline
         }
 
         [Test]
-        public void Create_referenced_instance_happy_path()
-        {
-            var mocks = new MockRepository();
-            var buildSession = mocks.StrictMock<BuildSession>();
-
-            var returnedValue = new ConcreteReferenced();
-            string theReferenceKey = "theReferenceKey";
-            var instance = new ReferencedInstance(theReferenceKey);
-
-            using (mocks.Record())
-            {
-                Expect.Call(buildSession.CreateInstance(typeof (IReferenced), theReferenceKey)).Return(returnedValue);
-            }
-
-            using (mocks.Playback())
-            {
-                Assert.AreSame(returnedValue, instance.Build(typeof (IReferenced), buildSession));
-            }
-        }
-
-        [Test]
         public void FindMaster_Instance_happy_path()
         {
             var family = new PluginFamily(typeof (ISomething));
-            ObjectInstance redInstance = new ObjectInstance(new SomethingOne()).WithName("Red");
+            ObjectInstance redInstance = new ObjectInstance(new SomethingOne()).Named("Red");
             family.AddInstance(redInstance);
-            family.AddInstance(new ObjectInstance(new SomethingOne()).WithName("Blue"));
+            family.AddInstance(new ObjectInstance(new SomethingOne()).Named("Blue"));
 
             var instance = new ReferencedInstance("Red");
             Assert.AreSame(redInstance, ((IDiagnosticInstance) instance).FindInstanceForProfile(family, null, null));

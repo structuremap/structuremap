@@ -27,8 +27,8 @@ namespace StructureMap.Testing.TestData
         {
             XmlDocument document = BuildDocument(xml);
 
-            var parser = new ConfigurationParser(document.DocumentElement);
-            var builder = new PluginGraphBuilder(parser);
+            var builder = new PluginGraphBuilder();
+            builder.Add(new ConfigurationParser(document.DocumentElement));
             return builder.Build();
         }
 
@@ -71,17 +71,12 @@ namespace StructureMap.Testing.TestData
             return document;
         }
 
-        public static PluginGraph GetDiagnosticPluginGraph(string fileName)
-        {
-            XmlDocument document = GetXmlDocument(fileName);
-            return PluginGraphBuilder.BuildFromXml(document);
-        }
-
         public static PluginGraph GetPluginGraph(string fileName)
         {
             XmlDocument document = GetXmlDocument(fileName);
             var parser = new ConfigurationParser(document.DocumentElement);
-            var builder = new PluginGraphBuilder(parser);
+            var builder = new PluginGraphBuilder();
+            builder.Add(parser);
 
             return builder.Build();
         }

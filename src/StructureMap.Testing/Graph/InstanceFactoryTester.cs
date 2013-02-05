@@ -19,7 +19,7 @@ namespace StructureMap.Testing.Graph
         {
             _container = new Container(registry =>
             {
-                registry.BuildInstancesOf<Rule>();
+                registry.For<Rule>();
                 registry.Scan(x =>
                 {
                     x.Assembly("StructureMap.Testing.Widget");
@@ -39,12 +39,12 @@ namespace StructureMap.Testing.Graph
             var registry = new Registry();
             registry.Scan(x => x.Assembly("StructureMap.Testing.Widget3"));
 
-            registry.BuildInstancesOf<IGateway>();
+            registry.For<IGateway>();
 
             PluginGraph graph = registry.Build();
             var pipelineGraph = new PipelineGraph(graph);
 
-            var session = new BuildSession(graph);
+            var session = BuildSession.ForPluginGraph(graph);
 
             var gateway =
                 (DefaultGateway) session.CreateInstance(typeof (IGateway), "Default");
@@ -112,9 +112,9 @@ namespace StructureMap.Testing.Graph
             var factory = new InstanceFactory(typeof (IWidget));
 
             var family = new PluginFamily(typeof (IWidget));
-            family.AddInstance(new ObjectInstance(new AWidget()).WithName("New"));
-            family.AddInstance(new ObjectInstance(new AWidget()).WithName("New2"));
-            family.AddInstance(new ObjectInstance(new AWidget()).WithName("New3"));
+            family.AddInstance(new ObjectInstance(new AWidget()).Named("New"));
+            family.AddInstance(new ObjectInstance(new AWidget()).Named("New2"));
+            family.AddInstance(new ObjectInstance(new AWidget()).Named("New3"));
 
             factory.ImportFrom(family);
 
@@ -128,11 +128,11 @@ namespace StructureMap.Testing.Graph
         public void Merge_from_PluginFamily_will_not_replace_an_existing_instance()
         {
             var factory = new InstanceFactory(typeof (IWidget));
-            ObjectInstance instance1 = new ObjectInstance(new AWidget()).WithName("New");
+            ObjectInstance instance1 = new ObjectInstance(new AWidget()).Named("New");
             factory.AddInstance(instance1);
 
             var family = new PluginFamily(typeof (IWidget));
-            family.AddInstance(new ObjectInstance(new AWidget()).WithName("New"));
+            family.AddInstance(new ObjectInstance(new AWidget()).Named("New"));
 
             factory.ImportFrom(family);
 

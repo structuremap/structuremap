@@ -18,7 +18,6 @@ namespace StructureMap.Configuration
         public const string INSTANCE_NODE = "Instance";
         public const string INTERCEPTORS_NODE = "Interceptors";
         public const string KEY_ATTRIBUTE = "Key";
-        public const string MEMENTO_SOURCE_NODE = "Source";
         public const string MEMENTO_STYLE = "MementoStyle";
         public const string NAME = "Name";
         public const string NODE_STYLE = "Node";

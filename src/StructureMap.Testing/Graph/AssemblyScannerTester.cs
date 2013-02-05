@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
+using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Testing.DocumentationExamples;
@@ -20,7 +21,7 @@ namespace StructureMap.Testing.Graph
         {
             WasUsed = true;
 
-            ForRequestedType<Rule>().TheDefault.IsThis(new ColorRule("Green"));
+            For<Rule>().Use(new ColorRule("Green"));
         }
 
         public static void Reset()
@@ -67,7 +68,7 @@ namespace StructureMap.Testing.Graph
             action(scanner);
             theGraph = new PluginGraph();
             scanner.ExcludeNamespaceContainingType<ScanningRegistry>();
-            scanner.ScanForAll(theGraph);
+            scanner.ShouldBeOfType<IPluginGraphConfiguration>().Configure(theGraph);
             theGraph.Log.AssertFailures();
         }
 
@@ -202,7 +203,7 @@ namespace StructureMap.Testing.Graph
             var registry = new Registry();
 
             scanner.Process(typeof (ITypeThatHasAttributeButIsNotInRegistry), registry);
-            registry.ConfigurePluginGraph(graph);
+            registry.ShouldBeOfType<IPluginGraphConfiguration>().Configure(graph);
 
             graph.PluginFamilies.Contains(typeof (ITypeThatHasAttributeButIsNotInRegistry)).ShouldBeTrue();
 
@@ -210,7 +211,7 @@ namespace StructureMap.Testing.Graph
             registry = new Registry();
 
             scanner.Process(GetType(), registry);
-            registry.ConfigurePluginGraph(graph);
+            registry.ShouldBeOfType<IPluginGraphConfiguration>().Configure(graph);
 
             graph.PluginFamilies.Contains(GetType()).ShouldBeFalse();
         }

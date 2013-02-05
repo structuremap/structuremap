@@ -12,7 +12,7 @@ namespace StructureMap.Testing.Configuration.DSL
             {
                 x.SelectConstructor(() => new ClassWithTwoConstructors(0));
                 x.ForConcreteType<ClassWithTwoConstructors>().Configure
-                    .WithCtorArg("age").EqualTo(34);
+                    .Ctor<int>("age").Is(34);
             });
 
             container.GetInstance<ClassWithTwoConstructors>().WasConstructedWithNarrowCtor.ShouldBeTrue();

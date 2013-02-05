@@ -83,12 +83,12 @@ namespace StructureMap
 
         /// <summary>
         /// Injects the given object into a Container as the default for the designated
-        /// PLUGINTYPE.  Mostly used for temporarily setting up return values of the Container
+        /// TPluginType.  Mostly used for temporarily setting up return values of the Container
         /// to introduce mocks or stubs during automated testing scenarios
         /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <typeparam name="TPluginType"></typeparam>
         /// <param name="instance"></param>
-        public static void Inject<PLUGINTYPE>(PLUGINTYPE instance)
+        public static void Inject<TPluginType>(TPluginType instance)
         {
             container.Inject(instance);
         }
@@ -125,11 +125,11 @@ namespace StructureMap
         /// <summary>
         /// Creates or finds the default instance of type T
         /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <typeparam name="TPluginType"></typeparam>
         /// <returns></returns>
-        public static PLUGINTYPE GetInstance<PLUGINTYPE>()
+        public static TPluginType GetInstance<TPluginType>()
         {
-            return container.GetInstance<PLUGINTYPE>();
+            return container.GetInstance<TPluginType>();
         }
 
         /// <summary>
@@ -167,12 +167,12 @@ namespace StructureMap
         /// <summary>
         /// Creates or finds the named instance of T
         /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <typeparam name="TPluginType"></typeparam>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static PLUGINTYPE GetNamedInstance<PLUGINTYPE>(string name)
+        public static TPluginType GetNamedInstance<TPluginType>(string name)
         {
-            return container.GetInstance<PLUGINTYPE>(name);
+            return container.GetInstance<TPluginType>(name);
         }
 
 
@@ -189,11 +189,11 @@ namespace StructureMap
         /// <summary>
         /// Creates or resolves all registered instances of type T
         /// </summary>
-        /// <typeparam name="PLUGINTYPE"></typeparam>
+        /// <typeparam name="TPluginType"></typeparam>
         /// <returns></returns>
-        public static IList<PLUGINTYPE> GetAllInstances<PLUGINTYPE>()
+        public static IList<TPluginType> GetAllInstances<TPluginType>()
         {
-            return container.GetAllInstances<PLUGINTYPE>();
+            return container.GetAllInstances<TPluginType>();
         }
 
         /// <summary>

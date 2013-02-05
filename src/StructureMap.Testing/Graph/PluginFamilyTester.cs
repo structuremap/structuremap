@@ -9,6 +9,7 @@ using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
 using StructureMap.TypeRules;
 using Rule=StructureMap.Testing.Widget.Rule;
+using System.Linq;
 
 namespace StructureMap.Testing.Graph
 {
@@ -29,40 +30,21 @@ namespace StructureMap.Testing.Graph
             #endregion
         }
 
-        [Test]
-        public void add_plugins_at_seal_from_the_list_of_types()
+        public class DataTableProvider : IServiceProvider
         {
-            var family = new PluginFamily(typeof (IServiceProvider));
-            family.AddType(typeof (DataTable));
-
-            // DataView, DataSet, and DataTable are all IServiceProvider implementations, and should get added
-            // to the PluginFamily
-            var pluggedTypes = new List<Type>
+            public object GetService(Type serviceType)
             {
-                typeof (DataView),
-                typeof (DataSet),
-                typeof (DataTable),
-                GetType()
-            };
-
-            family.AddTypes(pluggedTypes);
-
-            family.PluginCount.ShouldEqual(3);
-
-            family.FindPlugin(typeof (DataView)).ShouldNotBeNull();
-            family.FindPlugin(typeof (DataTable)).ShouldNotBeNull();
-            family.FindPlugin(typeof (DataSet)).ShouldNotBeNull();
+                throw new NotImplementedException();
+            }
         }
 
         [Test]
         public void add_type_by_name()
         {
             var family = new PluginFamily(typeof (IServiceProvider));
-            family.AddType(typeof (DataTable), "table");
+            family.AddType(typeof (DataTableProvider), "table");
 
-            family.PluginCount.ShouldEqual(1);
-
-            family.FindPlugin("table").ShouldNotBeNull();
+            family.Instances.Single().ShouldBeOfType<ConstructorInstance>().PluggedType.ShouldEqual(typeof (DataTableProvider));
         }
 
         [Test]
@@ -71,7 +53,7 @@ namespace StructureMap.Testing.Graph
             var family = new PluginFamily(typeof (IServiceProvider));
             family.AddType(GetType());
 
-            family.PluginCount.ShouldEqual(0);
+            family.Instances.Any().ShouldBeFalse();
         }
 
         [Test]
@@ -79,38 +61,23 @@ namespace StructureMap.Testing.Graph
         {
             var family = new PluginFamily(typeof (IServiceProvider));
 
-            family.AddType(typeof (DataTable));
-            family.PluginCount.ShouldEqual(1);
+            family.AddType(typeof (DataTableProvider));
+            family.Instances.Single()
+                  .ShouldBeOfType<ConstructorInstance>()
+                  .PluggedType.ShouldEqual(typeof (DataTableProvider));
+            
 
             family.AddType(typeof (DataTable));
-            family.PluginCount.ShouldEqual(1);
+            family.Instances.Count().ShouldEqual(1);
         }
 
-        [Test]
-        public void AddAPluggedType()
-        {
-            var family = new PluginFamily(typeof (IWidget));
-            family.DefaultInstanceKey = "DefaultKey";
-            family.AddPlugin(typeof (NotPluggableWidget), "NotPlugged");
-
-            Assert.AreEqual(1, family.PluginCount, "Plugin Count");
-        }
-
-        [Test, ExpectedException(typeof (StructureMapException))]
-        public void AddAWrongType()
-        {
-            var family = new PluginFamily(typeof (IWidget));
-            family.DefaultInstanceKey = "DefaultKey";
-            family.AddPlugin(typeof (Rule), "Rule");
-        }
 
         [Test]
         public void FillDefault_happy_path()
         {
             var family = new PluginFamily(typeof (IWidget));
             family.Parent = new PluginGraph();
-            family.AddInstance(new ConfiguredInstance(typeof (ColorWidget)).WithName("Default"));
-            family.DefaultInstanceKey = "Default";
+            family.SetDefault(new ConfiguredInstance(typeof (ColorWidget)).Named("Default"));
 
 
             family.FillDefault(new Profile("theProfile"));
@@ -119,34 +86,23 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
-        public void FillDefault_sad_path_when_the_default_instance_key_does_not_exist_throws_210()
-        {
-            var family = new PluginFamily(typeof (IWidget));
-            family.Parent = new PluginGraph();
-
-            family.DefaultInstanceKey = "something that cannot be found";
-            family.FillDefault(new Profile("theProfile"));
-
-            family.Parent.Log.AssertHasError(210);
-        }
-
-        [Test]
         public void If_PluginFamily_only_has_one_instance_make_that_the_default()
         {
             var family = new PluginFamily(typeof (IGateway));
             string theInstanceKey = "the default";
-            family.AddInstance(new ConfiguredInstance(typeof (TheGateway)).WithName(theInstanceKey));
+            var instance = new ConfiguredInstance(typeof (TheGateway)).Named(theInstanceKey);
+            family.AddInstance(instance);
 
             family.Seal();
 
-            Assert.AreEqual(theInstanceKey, family.DefaultInstanceKey);
+            family.GetDefaultInstance().ShouldBeTheSameAs(instance);
         }
 
         [Test]
         public void ImplicitPluginFamilyCreatesASingletonInterceptorWhenIsSingletonIsTrue()
         {
             var family = new PluginFamily(typeof (ISingletonRepository));
-            Assert.IsInstanceOfType(typeof (SingletonLifecycle), family.Lifecycle);
+            family.Lifecycle.ShouldBeOfType<SingletonLifecycle>();
 
             var family2 = new PluginFamily(typeof (IDevice));
             family2.Lifecycle.ShouldBeNull();
@@ -208,7 +164,7 @@ namespace StructureMap.Testing.Graph
 
             family.RemoveAll();
 
-            family.DefaultInstanceKey.ShouldBeNull();
+            family.GetDefaultInstance().ShouldBeNull();
 
             family.InstanceCount.ShouldEqual(0);
         }
@@ -222,7 +178,6 @@ namespace StructureMap.Testing.Graph
             family.SetDefault(instance);
 
             family.GetDefaultInstance().ShouldBeTheSameAs(instance);
-            family.DefaultInstanceKey.ShouldEqual(instance.Name);
         }
 
         [Test]
@@ -250,7 +205,7 @@ namespace StructureMap.Testing.Graph
             family.Lifecycle.ShouldBeNull();
 
             family.SetScopeTo(InstanceScope.HttpContext);
-            Assert.IsInstanceOfType(typeof (HttpContextLifecycle), family.Lifecycle);
+            family.Lifecycle.ShouldBeOfType<HttpContextLifecycle>();
         }
 
 
@@ -261,7 +216,7 @@ namespace StructureMap.Testing.Graph
 
 
             family.SetScopeTo(InstanceScope.Hybrid);
-            Assert.IsInstanceOfType(typeof (HybridLifecycle), family.Lifecycle);
+            family.Lifecycle.ShouldBeOfType<HybridLifecycle>();
         }
 
         [Test]
@@ -270,7 +225,7 @@ namespace StructureMap.Testing.Graph
             var family = new PluginFamily(typeof (IServiceProvider));
 
             family.SetScopeTo(InstanceScope.Singleton);
-            Assert.IsInstanceOfType(typeof (SingletonLifecycle), family.Lifecycle);
+            family.Lifecycle.ShouldBeOfType<SingletonLifecycle>();
         }
 
         [Test]
@@ -279,7 +234,7 @@ namespace StructureMap.Testing.Graph
             var family = new PluginFamily(typeof (IServiceProvider));
 
             family.SetScopeTo(InstanceScope.ThreadLocal);
-            Assert.IsInstanceOfType(typeof (ThreadLocalStorageLifecycle), family.Lifecycle);
+            family.Lifecycle.ShouldBeOfType<ThreadLocalStorageLifecycle>();
         }
 
         [Test]
@@ -292,6 +247,51 @@ namespace StructureMap.Testing.Graph
             importInto.ImportFrom(source);
 
             importInto.Lifecycle.ShouldBeOfType(source.Lifecycle.GetType());
+        }
+
+        [Test]
+        public void removing_the_default_will_change_the_default()
+        {
+            var instance = new ConstructorInstance(GetType());
+            var family = new PluginFamily(GetType());
+
+            family.SetDefault(instance);
+
+            family.RemoveInstance(instance);
+
+            family.Instances.Any().ShouldBeFalse();
+            family.GetDefaultInstance().ShouldNotBeTheSameAs(instance);
+        }
+
+        [Test]
+        public void remove_all_clears_the_default()
+        {
+            var instance = new ConstructorInstance(GetType());
+            var family = new PluginFamily(GetType());
+
+            family.SetDefault(instance);
+            family.SetDefault(new ConstructorInstance(GetType()));
+            family.SetDefault(new ConstructorInstance(GetType()));
+
+            family.RemoveAll();
+
+            family.Instances.Any().ShouldBeFalse();
+            family.GetDefaultInstance().ShouldNotBeTheSameAs(instance);
+
+        }
+
+        [Test]
+        public void add_instance_fills_and_is_idempotent()
+        {
+            var instance = new ConstructorInstance(GetType());
+            var family = new PluginFamily(GetType());
+
+            family.AddInstance(instance);
+            family.SetDefault(instance);
+            family.AddInstance(instance);
+            family.SetDefault(instance);
+
+            family.Instances.Single().ShouldBeTheSameAs(instance);
         }
     }
 

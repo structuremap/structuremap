@@ -2,7 +2,9 @@ using System;
 using NUnit.Framework;
 using StructureMap.Exceptions;
 using StructureMap.Graph;
+using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
+using System.Linq;
 
 namespace StructureMap.Testing.Graph
 {
@@ -10,19 +12,21 @@ namespace StructureMap.Testing.Graph
     public class PluginGraphTester
     {
         [Test]
-        public void add_type_adds_a_plugin_for_type_once_and_only_once()
+        public void add_type_adds_an_instance_for_type_once_and_only_once()
         {
             var graph = new PluginGraph();
 
             graph.AddType(typeof (IThingy), typeof (BigThingy));
 
             PluginFamily family = graph.FindFamily(typeof (IThingy));
-            family.PluginCount.ShouldEqual(1);
-            family.FindPlugin(typeof (BigThingy)).ShouldNotBeNull();
+            family.Instances
+                  .Single()
+                  .ShouldBeOfType<ConstructorInstance>()
+                  .PluggedType.ShouldEqual(typeof (BigThingy));
 
             graph.AddType(typeof (IThingy), typeof (BigThingy));
 
-            family.PluginCount.ShouldEqual(1);
+            family.Instances.Count().ShouldEqual(1);
         }
 
         [Test, ExpectedException(typeof (StructureMapConfigurationException))]
@@ -40,9 +44,6 @@ namespace StructureMap.Testing.Graph
             var graph = new PluginGraph();
             graph.Scan(x => { x.Assembly("StructureMap.Testing.Widget"); });
 
-            graph.FindFamily(typeof (IWidget)).DefaultInstanceKey = "Blue";
-            graph.CreateFamily(typeof (WidgetMaker));
-
             graph.Seal();
 
 
@@ -51,7 +52,7 @@ namespace StructureMap.Testing.Graph
                 Console.WriteLine(family.PluginType.AssemblyQualifiedName);
             }
 
-            Assert.AreEqual(5, graph.FamilyCount);
+            Assert.AreEqual(4, graph.FamilyCount);
         }
 
         [Test]
@@ -68,53 +69,15 @@ namespace StructureMap.Testing.Graph
 
             graph.Seal();
 
-            PluginFamily family = graph.FindFamily(typeof (Rule));
-            Assert.IsNotNull(family);
-            Assert.AreEqual(5, family.PluginCount, "There are 5 Rule classes in the two assemblies");
+            
+
+            var family = graph.FindFamily(typeof (Rule));
+
+            // there are 2 Rule classes in these assemblies that do not have
+            // primitive arguments
+            family.Instances.Count().ShouldEqual(2);
         }
 
-
-        [Test]
-        public void PicksUpManuallyAddedPlugin()
-        {
-            var graph = new PluginGraph();
-
-            graph.Scan(x => { x.Assembly("StructureMap.Testing.Widget"); });
-
-            graph.FindFamily(typeof (IWidget)).DefaultInstanceKey = "Blue";
-
-
-            PluginFamily family = graph.FindFamily(typeof (IWidget));
-            family.AddPlugin(typeof (NotPluggableWidget), "NotPluggable");
-
-            graph.Seal();
-
-
-            Assert.IsNotNull(family);
-
-            Assert.AreEqual(
-                5,
-                family.PluginCount,
-                "5 different IWidget classes are marked as Pluggable, + the manual add");
-        }
-
-        [Test]
-        public void PutsRightNumberOfPluginsIntoAFamily()
-        {
-            var graph = new PluginGraph();
-
-            graph.Scan(x => { x.Assembly("StructureMap.Testing.Widget"); });
-
-            graph.FindFamily(typeof (IWidget)).DefaultInstanceKey = "Blue";
-            graph.Seal();
-
-            PluginFamily family = graph.FindFamily(typeof (IWidget));
-            Assert.IsNotNull(family);
-
-            Assert.AreEqual("Blue", family.DefaultInstanceKey);
-
-            Assert.AreEqual(4, family.PluginCount, "3 different IWidget classes are marked as Pluggable");
-        }
 
         [Test]
         public void Seal_does_not_throw_an_exception_if_there_are_no_errors()

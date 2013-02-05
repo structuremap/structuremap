@@ -38,7 +38,7 @@
 		</PluginFamily>							
 	</StructureMap>
 	
-	<StructureMap Description="SpecifiedPluggedTypeDoesNotPluginIntoPluginType">
+	<StructureMap Description="SpecifiedTPluggedTypeDoesNotPluginIntoPluginType">
 		<Assembly Name="StructureMap.Testing.Widget"/>
 				
 		<PluginFamily Type="StructureMap.Testing.Widget.IWidget" Assembly="StructureMap.Testing.Widget" DefaultKey="">

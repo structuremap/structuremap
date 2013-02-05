@@ -49,16 +49,14 @@ namespace StructureMap.Testing.Examples
         {
             // Perform an Action<T> upon the object of type T 
             // just created before it is returned to the caller
-            ForRequestedType<ClassThatNeedsSomeBootstrapping>().TheDefault.Is
-                .OfConcreteType<ClassThatNeedsSomeBootstrapping>()
+            For<ClassThatNeedsSomeBootstrapping>().Use<ClassThatNeedsSomeBootstrapping>()
                 .OnCreation(x => x.Start());
 
             // or...
 
             // You can also register an Action<IContext, T> to get access
             // to all the services and capabilities of the BuildSession
-            ForRequestedType<ClassThatNeedsSomeBootstrapping>().TheDefault.Is
-                .OfConcreteType<ClassThatNeedsSomeBootstrapping>()
+            For<ClassThatNeedsSomeBootstrapping>().Use<ClassThatNeedsSomeBootstrapping>()
                 .OnCreation((context, x) =>
                 {
                     var connection = context.GetInstance<IConnectionPoint>();
@@ -66,12 +64,10 @@ namespace StructureMap.Testing.Examples
                 });
 
 
-            ForRequestedType<IConnectionListener>().TheDefault.Is
-                .OfConcreteType<ClassThatNeedsSomeBootstrapping>()
+            For<IConnectionListener>().Use<ClassThatNeedsSomeBootstrapping>()
                 .EnrichWith(x => new LoggingDecorator(x));
 
-            ForRequestedType<IConnectionListener>().TheDefault.Is
-                .OfConcreteType<ClassThatNeedsSomeBootstrapping>()
+            For<IConnectionListener>().Use<ClassThatNeedsSomeBootstrapping>()
                 .EnrichWith((context, x) =>
                 {
                     var connection = context.GetInstance<IConnectionPoint>();
@@ -81,17 +77,16 @@ namespace StructureMap.Testing.Examples
                 });
 
 
-            ForRequestedType<IConnectionListener>().TheDefault.Is
-                .OfConcreteType<ClassThatNeedsSomeBootstrapping>()
+            For<IConnectionListener>().Use<ClassThatNeedsSomeBootstrapping>()
                 .InterceptWith(new CustomInterceptor());
 
 
             // Place the Interception at the PluginType level
-            ForRequestedType<IConnectionListener>()
-                .OnCreation(x => x.StartConnection()) // OnCreation
-                .EnrichWith(x => new LoggingDecorator(x)) // Enrich
+            For<IConnectionListener>()
+                .OnCreationForAll(x => x.StartConnection()) // OnCreation
+                .EnrichAllWith(x => new LoggingDecorator(x)) // Enrich
                 .InterceptWith(new CustomInterceptor()) // Custom Interceptor
-                .TheDefaultIsConcreteType<ClassThatNeedsSomeBootstrapping>();
+                .Use<ClassThatNeedsSomeBootstrapping>();
         }
     }
 

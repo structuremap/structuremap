@@ -19,12 +19,6 @@ namespace StructureMap.AutoMocking
         AutoMockedContainer Container { get; }
 
         /// <summary>
-        /// Use this with EXTREME caution.  This will replace the active "Container" in accessed
-        /// by ObjectFactory with the AutoMockedContainer from this instance
-        /// </summary>
-        void MockObjectFactory();
-
-        /// <summary>
         /// Calling this method will immediately create a "Partial" mock
         /// for the ClassUnderTest using the "Greediest" constructor.
         /// </summary>
@@ -118,15 +112,6 @@ namespace StructureMap.AutoMocking
         /// Accesses the underlying AutoMockedContainer
         /// </summary>
         public AutoMockedContainer Container { get { return _container; } }
-
-        /// <summary>
-        /// Use this with EXTREME caution.  This will replace the active "Container" in accessed
-        /// by ObjectFactory with the AutoMockedContainer from this instance
-        /// </summary>
-        public void MockObjectFactory()
-        {
-            ObjectFactory.ReplaceManager(_container);
-        }
 
         /// <summary>
         /// Calling this method will immediately create a "Partial" mock

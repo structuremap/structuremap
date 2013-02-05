@@ -97,37 +97,18 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <returns></returns>
         ObjectInstance Object(T theObject);
 
-        /// <summary>
-        /// Build the Instance with the constructor function and setter arguments.  Starts
-        /// the definition of a <see cref="SmartInstance{T}">SmartInstance</see>
-        /// </summary>
-        /// <typeparam name="PLUGGEDTYPE"></typeparam>
-        /// <returns></returns>
-        [Obsolete("Favor For<ISomething>().Use<Something>() or For<ISomething>().Add<Something>()")]
-        SmartInstance<PLUGGEDTYPE> OfConcreteType<PLUGGEDTYPE>() where PLUGGEDTYPE : T;
-
 
         /// <summary>
         /// Build the Instance with the constructor function and setter arguments.  Starts
         /// the definition of a <see cref="SmartInstance{T}">SmartInstance</see>
         /// </summary>
-        /// <typeparam name="PLUGGEDTYPE"></typeparam>
+        /// <typeparam name="TPluggedType"></typeparam>
         /// <returns></returns>
-        SmartInstance<PLUGGEDTYPE> Type<PLUGGEDTYPE>();
+        SmartInstance<TPluggedType> Type<TPluggedType>();
 
         /// <summary>
         /// Build the Instance with the constructor function and setter arguments.  Use this
-        /// method for open generic types, and favor the generic version of OfConcreteType
-        /// for all other types
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        [Obsolete("Favor For<ISomething>().Use(typeof(Something))")]
-        ConfiguredInstance OfConcreteType(Type type);
-
-        /// <summary>
-        /// Build the Instance with the constructor function and setter arguments.  Use this
-        /// method for open generic types, and favor the generic version of OfConcreteType
+        /// method for open generic types, and favor the generic version of Type()
         /// for all other types
         /// </summary>
         /// <param name="type"></param>
@@ -183,21 +164,6 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <param name="template"></param>
         /// <returns></returns>
         SerializedInstance SerializedCopyOf(T template);
-
-        /// <summary>
-        /// Creates an Instance that will load an ASCX user control from the url
-        /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
-        UserControlInstance LoadControlFrom(string url);
-
-        /// <summary>
-        /// Creates an Instance according to conditional rules
-        /// </summary>
-        /// <param name="configuration"></param>
-        /// <returns></returns>
-        // Conditional object construction
-        ConditionalInstance<T> Conditional(Action<ConditionalInstance<T>.ConditionalInstanceExpression> configuration);
     }
 
     public class InstanceExpression<T> : IInstanceExpression<T>, ThenItExpression<T>
@@ -230,19 +196,9 @@ namespace StructureMap.Configuration.DSL.Expressions
             _action(instance);
         }
 
-        public SmartInstance<PLUGGEDTYPE> OfConcreteType<PLUGGEDTYPE>() where PLUGGEDTYPE : T
+        public SmartInstance<TTPluggedType> Type<TTPluggedType>()
         {
-            return returnInstance(new SmartInstance<PLUGGEDTYPE>());
-        }
-
-        public SmartInstance<PLUGGEDTYPE> Type<PLUGGEDTYPE>()
-        {
-            return returnInstance(new SmartInstance<PLUGGEDTYPE>());
-        }
-
-        public ConfiguredInstance OfConcreteType(Type type)
-        {
-            return returnInstance(new ConfiguredInstance(type));
+            return returnInstance(new SmartInstance<TTPluggedType>());
         }
 
         public ConfiguredInstance Type(Type type)
@@ -285,21 +241,9 @@ namespace StructureMap.Configuration.DSL.Expressions
             return returnInstance(new SerializedInstance(template));
         }
 
-        public UserControlInstance LoadControlFrom(string url)
-        {
-            return returnInstance(new UserControlInstance(url));
-        }
-
-        public ConditionalInstance<T> Conditional(
-            Action<ConditionalInstance<T>.ConditionalInstanceExpression> configuration)
-        {
-            return returnInstance(new ConditionalInstance<T>(configuration));
-        }
-
-
         IsExpression<T> ThenItExpression<T>.ThenIt { get { return this; } }
 
-        private INSTANCE returnInstance<INSTANCE>(INSTANCE instance) where INSTANCE : Instance
+        private TInstance returnInstance<TInstance>(TInstance instance) where TInstance : Instance
         {
             Instance(instance);
             return instance;

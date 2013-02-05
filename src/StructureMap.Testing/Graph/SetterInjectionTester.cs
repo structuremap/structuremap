@@ -91,44 +91,6 @@ namespace StructureMap.Testing.Graph
 
 
         [Test]
-        public void CreateSetterPropertyCollectionFromExplicitPlugin()
-        {
-            PluginGraph pluginGraph = getPluginGraph();
-            PluginFamily family = pluginGraph.FindFamily(typeof (IGridColumn));
-            Plugin plugin = family.FindPlugin("Other");
-
-            Assert.AreEqual(2, plugin.Setters.OptionalCount);
-            Assert.AreEqual(5, plugin.Setters.MandatoryCount);
-
-
-            Assert.IsTrue(plugin.Setters.IsMandatory("Widget"));
-            Assert.IsTrue(plugin.Setters.IsMandatory("FontStyle"));
-            Assert.IsTrue(plugin.Setters.IsMandatory("ColumnName"));
-            Assert.IsTrue(plugin.Setters.IsMandatory("Rules"));
-            Assert.IsTrue(plugin.Setters.IsMandatory("WrapLines"));
-        }
-
-        [Test]
-        public void CreateSetterPropertyCollectionFromImplicitPlugin()
-        {
-            /*    The BasicGridColumn class has 5 [SetterProperty] marked properties
-			 *    Widget
-			 *    FontStyle
-			 *    ColumnName
-			 *    Rules
-			 *    WrapLines
-			 */
-
-            var plugin = new Plugin(typeof (BasicGridColumn));
-            Assert.AreEqual(5, plugin.Setters.MandatoryCount);
-            Assert.IsTrue(plugin.Setters.IsMandatory("Widget"));
-            Assert.IsTrue(plugin.Setters.IsMandatory("FontStyle"));
-            Assert.IsTrue(plugin.Setters.IsMandatory("ColumnName"));
-            Assert.IsTrue(plugin.Setters.IsMandatory("Rules"));
-            Assert.IsTrue(plugin.Setters.IsMandatory("WrapLines"));
-        }
-
-        [Test]
         public void got_the_right_number_of_mandatory_and_optional_properties()
         {
             var plugin = new Plugin(typeof (SetterTarget));
@@ -136,45 +98,6 @@ namespace StructureMap.Testing.Graph
             plugin.Setters.IsMandatory("Name2").ShouldBeTrue();
             plugin.Setters.IsMandatory("Name3").ShouldBeFalse();
             plugin.Setters.IsMandatory("Name4").ShouldBeTrue();
-        }
-
-        [Test]
-        public void Log_240_when_a_designated_setter_does_not_exist()
-        {
-            string errorXml =
-                @"
-                <StructureMap>
-	                <PluginFamily Type='StructureMap.Testing.Widget5.IGridColumn' Assembly='StructureMap.Testing.Widget5' DefaultKey=''>
-		                <Plugin Assembly='StructureMap.Testing.Widget5' Type='StructureMap.Testing.Widget5.OtherGridColumn' ConcreteKey='Other'>
-			                <Setter Name='Does not exist' />
-		                </Plugin>
-	                </PluginFamily>
-                </StructureMap>
-                ";
-
-
-            PluginGraph graph = DataMother.BuildPluginGraphFromXml(errorXml);
-            graph.Log.AssertHasError(240);
-        }
-
-
-        [Test]
-        public void Log_241_when_a_designated_setter_does_not_exist()
-        {
-            string errorXml =
-                @"
-                <StructureMap>
-	                <PluginFamily Type='StructureMap.Testing.Widget5.IGridColumn' Assembly='StructureMap.Testing.Widget5' DefaultKey=''>
-		                <Plugin Assembly='StructureMap.Testing.Widget5' Type='StructureMap.Testing.Widget5.OtherGridColumn' ConcreteKey='Other'>
-			                <Setter Name='ReadOnly' />
-		                </Plugin>
-	                </PluginFamily>
-                </StructureMap>
-                ";
-
-
-            PluginGraph graph = DataMother.BuildPluginGraphFromXml(errorXml);
-            graph.Log.AssertHasError(240);
         }
 
         [Test]

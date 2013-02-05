@@ -2,7 +2,7 @@ using Castle.DynamicProxy;
 
 namespace StructureMap.AutoFactory
 {
-    public class ProxyFactory<PLUGINTYPE> where PLUGINTYPE : class
+    public class ProxyFactory<TPluginType> where TPluginType : class
     {
         private readonly ProxyGenerator _proxyGenerator;
         private readonly IContext _context;
@@ -13,11 +13,11 @@ namespace StructureMap.AutoFactory
             _context = context;
         }
 
-        public PLUGINTYPE Create()
+        public TPluginType Create()
         {
             var interceptor = new FactoryInterceptor(_context);
 
-            return _proxyGenerator.CreateInterfaceProxyWithoutTarget<PLUGINTYPE>(interceptor);
+            return _proxyGenerator.CreateInterfaceProxyWithoutTarget<TPluginType>(interceptor);
         }
     }
 }

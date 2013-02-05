@@ -43,8 +43,7 @@ namespace StructureMap.Testing
         {
             ObjectFactory.Initialize(x =>
             {
-                x.UseDefaultStructureMapConfigFile = false;
-                x.PullConfigurationFromAppConfig = true;
+                x.IncludeConfigurationFromConfigFile();
             });
 
             ObjectFactory.GetInstance<IThing<string, bool>>()
@@ -90,10 +89,8 @@ namespace StructureMap.Testing
         {
             ObjectFactory.Initialize(x =>
             {
-                x.IgnoreStructureMapConfig = true;
-
-                x.ForRequestedType<Guid>().TheDefault.Is.ConstructedBy(() => Guid.NewGuid());
-                x.ForRequestedType<IFoo>().TheDefaultIsConcreteType<Foo>();
+                x.For<Guid>().Use(() => Guid.NewGuid());
+                x.For<IFoo>().Use<Foo>();
             });
 
 
@@ -108,9 +105,7 @@ namespace StructureMap.Testing
         {
             ObjectFactory.Initialize(x =>
             {
-                x.IgnoreStructureMapConfig = true;
-
-                x.ForRequestedType<Guid>().TheDefault.Is.ConstructedBy(() => Guid.NewGuid());
+                x.For<Guid>().Use(() => Guid.NewGuid());
             });
 
 

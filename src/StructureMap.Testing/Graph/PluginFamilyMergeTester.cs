@@ -25,11 +25,11 @@ namespace StructureMap.Testing.Graph
         public void Do_not_override_named_instance()
         {
             var source = new PluginFamily(typeof (IWidget));
-            ObjectInstance sourceInstance = new ObjectInstance(new AWidget()).WithName("New");
+            ObjectInstance sourceInstance = new ObjectInstance(new AWidget()).Named("New");
             source.AddInstance(sourceInstance);
 
             var destination = new PluginFamily(typeof (IWidget));
-            ObjectInstance destinationInstance = new ObjectInstance(new AWidget()).WithName("New");
+            ObjectInstance destinationInstance = new ObjectInstance(new AWidget()).Named("New");
             destination.AddInstance(destinationInstance);
 
             destination.ImportFrom(source);
@@ -37,31 +37,6 @@ namespace StructureMap.Testing.Graph
             Assert.AreSame(destinationInstance, destination.GetInstance(sourceInstance.Name));
         }
 
-        [Test]
-        public void Do_not_overwrite_existing_plugin()
-        {
-            var source = new PluginFamily(typeof (IWidget));
-            source.AddPlugin(typeof (AWidget));
 
-            var destination = new PluginFamily(typeof (IWidget));
-            Plugin destinationPlugin = destination.AddPlugin(typeof (AWidget));
-            destination.ImportFrom(source);
-
-            Assert.AreSame(destinationPlugin, destination.FindPlugin(typeof (AWidget)));
-        }
-
-        [Test]
-        public void Merge_missing_Plugin()
-        {
-            var source = new PluginFamily(typeof (IWidget));
-            source.AddPlugin(typeof (AWidget));
-
-            var destination = new PluginFamily(typeof (IWidget));
-            destination.ImportFrom(source);
-
-            destination.ImportFrom(source);
-
-            Assert.IsTrue(destination.HasPlugin(typeof (AWidget)));
-        }
     }
 }
