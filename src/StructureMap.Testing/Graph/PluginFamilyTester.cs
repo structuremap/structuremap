@@ -260,7 +260,7 @@ namespace StructureMap.Testing.Graph
             family.RemoveInstance(instance);
 
             family.Instances.Any().ShouldBeFalse();
-            family.GetDefaultInstance().ShouldBeNull();
+            family.GetDefaultInstance().ShouldNotBeTheSameAs(instance);
         }
 
         [Test]
@@ -276,8 +276,8 @@ namespace StructureMap.Testing.Graph
             family.RemoveAll();
 
             family.Instances.Any().ShouldBeFalse();
-            family.GetDefaultInstance().ShouldBeNull();
-            
+            family.GetDefaultInstance().ShouldNotBeTheSameAs(instance);
+
         }
 
         [Test]

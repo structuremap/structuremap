@@ -17,7 +17,7 @@ namespace StructureMap.Graph
         private readonly Cache<string, Instance> _instances = new Cache<string, Instance>(delegate { return null; });
         private readonly Type _pluginType;
         private PluginGraph _parent;
-        private Instance _default;
+        private Lazy<Instance> _defaultInstance; 
 
         public PluginFamily(Type pluginType)
             : this(pluginType, new PluginGraph())
@@ -31,6 +31,17 @@ namespace StructureMap.Graph
 
             PluginFamilyAttribute.ConfigureFamily(this);
 
+            if (_pluginType.IsConcrete() && PluginCache.GetPlugin(_pluginType).CanBeAutoFilled)
+            {
+                MissingInstance = new ConfiguredInstance(_pluginType);
+            }
+
+            resetDefault();
+        }
+
+        private void resetDefault()
+        {
+            _defaultInstance = new Lazy<Instance>(determineDefault);
         }
 
     	public InstanceScope? Scope { get; private set; }
@@ -65,7 +76,7 @@ namespace StructureMap.Graph
         public void SetDefault(Instance instance)
         {
             AddInstance(instance);
-            _default = instance;
+            _defaultInstance = new Lazy<Instance>(() => instance);
         }
 
         public void AddTypes(List<Type> pluggedTypes)
@@ -77,12 +88,6 @@ namespace StructureMap.Graph
         public void Seal()
         {
             validatePluggabilityOfInstances();
-
-            // TODO -- make this be a bit more at runtime
-            if (_pluginType.IsConcrete() && PluginCache.GetPlugin(_pluginType).CanBeAutoFilled)
-            {
-                MissingInstance = new ConfiguredInstance(_pluginType);
-            }
         }
 
         // TODO -- move all of this code into a new PluginGraphBuilder
@@ -108,18 +113,25 @@ namespace StructureMap.Graph
             return _instances[name];
         }
 
+        
+
         // TODO -- make this a bit smarter
         public Instance GetDefaultInstance()
         {
-            if (_default != null) return _default;
+            return _defaultInstance.Value;
+        }
 
+        private Instance determineDefault()
+        {
             if (_instances.Count == 1)
             {
                 return _instances.Single();
             }
 
-            // TODO -- move this behind a Lazy
-            // TODO -- add in the magic rule about it being a concrete type
+            if (_pluginType.IsConcrete() && PluginCache.GetPlugin(_pluginType).CanBeAutoFilled)
+            {
+                return new ConfiguredInstance(_pluginType);
+            }
 
             return null;
         }
@@ -226,16 +238,13 @@ namespace StructureMap.Graph
         public void RemoveInstance(Instance instance)
         {
             _instances.Remove(instance.Name);
-            if (_default == instance)
-            {
-                _default = null;
-            }
+            resetDefault();
         }
 
         public void RemoveAll()
         {
             _instances.Clear();
-            _default = null;
+            resetDefault();
         }
 
         public bool IsGenericTemplate { get { return _pluginType.IsGenericTypeDefinition || _pluginType.ContainsGenericParameters; } }

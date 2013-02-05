@@ -1,15 +1,12 @@
 using NUnit.Framework;
 using StructureMap.Configuration;
-using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
-using StructureMap.Pipeline;
-using StructureMap.Source;
 using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Configuration
 {
     [TestFixture]
-    public class NormalGraphBuilderTester
+    public class GraphBuilderTester
     {
         [Test]
         public void Call_the_action_on_configure_family_if_the_pluginType_is_found()
@@ -18,8 +15,7 @@ namespace StructureMap.Testing.Configuration
 
             bool iWasCalled = false;
             var builder = new GraphBuilder(new PluginGraph());
-            builder.ConfigureFamily(typePath, f =>
-            {
+            builder.ConfigureFamily(typePath, f => {
                 Assert.AreEqual(typeof (IGateway), f.PluginType);
                 iWasCalled = true;
             });
@@ -43,6 +39,5 @@ namespace StructureMap.Testing.Configuration
             var builder = new GraphBuilder(new PluginGraph());
             builder.ConfigureFamily(new TypePath("a,a"), obj => Assert.Fail("Should not be called"));
         }
-
     }
 }

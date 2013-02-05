@@ -237,7 +237,7 @@
     <Compile Include="Configuration\DSL\ProgrammaticConstructorSelectionTester.cs" />
     <Compile Include="Configuration\DSL\RegistryIntegratedTester.cs" />
     <Compile Include="Configuration\DSL\RegistryTester.cs" />
-    <Compile Include="Configuration\NormalGraphBuilderTester.cs" />
+    <Compile Include="Configuration\GraphBuilderTester.cs" />
     <Compile Include="Configuration\PrimitiveArrayReaderTester.cs" />
     <Compile Include="Configuration\ShortcuttedInstanceNodeTester.cs" />
     <Compile Include="Configuration\SimplePluginFactory.cs" />
