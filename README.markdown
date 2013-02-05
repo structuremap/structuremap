@@ -21,7 +21,7 @@ Building the Source
     To obtain the contents run `git submodule update --init`.
     The __--init__ flag is only necessary the first time you run it. 
  1. In the root, run `rake`.
- 1. Open `StructureMap.sln` in Visual Studio 2008 or `StructureMap_2010.sln` in VS2010.
+ 1. Open `StructureMap.sln` in VS2010.
  1. Build
 
 Debugger Visualizers
