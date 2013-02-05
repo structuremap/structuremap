@@ -81,7 +81,7 @@ end
 
 desc "Compiles the app"
 task :compile => [:restore_if_missing, :clean, :version] do
-  MSBuildRunner.compile :compilemode => COMPILE_TARGET, :solutionfile => 'src/StructureMap_2010.sln', :clrversion => CLR_TOOLS_VERSION
+  MSBuildRunner.compile :compilemode => COMPILE_TARGET, :solutionfile => 'src/StructureMap.sln', :clrversion => CLR_TOOLS_VERSION
 
   target = COMPILE_TARGET.downcase
 end
