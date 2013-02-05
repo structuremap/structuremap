@@ -10,12 +10,6 @@ namespace StructureMap
     public interface IInitializationExpression : IRegistry
     {
         /// <summary>
-        /// If true, directs StructureMap to look for configuration in the App.config.
-        /// The default value is false.
-        /// </summary>
-        bool PullConfigurationFromAppConfig { set; }
-
-        /// <summary>
         /// Designate the Default Profile.  This will be applied as soon as the 
         /// Container is initialized.
         /// </summary>
@@ -38,6 +32,11 @@ namespace StructureMap
         void AddConfigurationFromNode(XmlNode node);
 
         /// <summary>
+        /// If called, directs StructureMap to look for configuration in the App.config in any <StructureMap> node.
+        /// </summary>
+        void IncludeConfigurationFromConfigFile();
+
+        /// <summary>
         /// Creates and adds a Registry object of type T.  
         /// </summary>
         /// <typeparam name="T">The Registry Type</typeparam>
@@ -57,8 +56,6 @@ namespace StructureMap
         {
             DefaultProfileName = string.Empty;
         }
-
-        public bool PullConfigurationFromAppConfig { set { _parserBuilder.PullConfigurationFromAppConfig = value; } }
 
         public string DefaultProfileName { get; set; }
     }

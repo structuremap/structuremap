@@ -39,7 +39,7 @@ namespace StructureMap.Testing
                 // Tell StructureMap to look for configuration 
                 // from the App.config file
                 // The default is false
-                x.PullConfigurationFromAppConfig = true;
+                x.IncludeConfigurationFromConfigFile();
             });
 
             ObjectFactory.GetInstance<IThing<string, bool>>()

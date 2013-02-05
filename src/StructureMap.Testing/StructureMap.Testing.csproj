@@ -221,7 +221,6 @@
     <Compile Include="BuildUpIntegratedTester.cs" />
     <Compile Include="BuildUpTester.cs" />
     <Compile Include="ConcreteClassCreationTester.cs" />
-    <Compile Include="Configuration\ConfigurationParserBuilderTester.cs" />
     <Compile Include="Configuration\DefaultInstanceNodeTester.cs" />
     <Compile Include="Configuration\DictionaryAndArrayArgumentTester.cs" />
     <Compile Include="Configuration\DictionaryReaderTester.cs" />

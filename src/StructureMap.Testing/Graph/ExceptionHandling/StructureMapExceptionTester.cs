@@ -25,8 +25,8 @@ namespace StructureMap.Testing.Graph.ExceptionHandling
             var document = new XmlDocument();
             document.LoadXml(xml.Replace("\"", "'"));
 
-            var parser = new ConfigurationParser(document.DocumentElement);
-            var builder = new PluginGraphBuilder(parser);
+            var builder = new PluginGraphBuilder();
+            builder.Add(new ConfigurationParser(document.DocumentElement));
             var manager = new Container(builder.Build());
 
             try

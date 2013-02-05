@@ -1,12 +1,14 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using StructureMap.Diagnostics;
+using StructureMap.Graph;
 using StructureMap.Source;
 
 namespace StructureMap.Configuration
 {
-    public class ConfigurationParser : XmlConstants
+    public class ConfigurationParser : XmlConstants, IPluginGraphConfiguration
     {
         private readonly XmlNode _structureMapNode;
         public string Description = string.Empty;
@@ -33,6 +35,7 @@ namespace StructureMap.Configuration
             set { _filePath = value; }
         }
 
+        // TODO -- set the description
         public static ConfigurationParser FromFile(string filename)
         {
             var document = new XmlDocument();
@@ -44,10 +47,7 @@ namespace StructureMap.Configuration
                 throw new StructureMapException(155, filename);
             }
 
-            var parser = new ConfigurationParser(structureMapNode);
-            parser.FilePath = filename;
-
-            return parser;
+            return new ConfigurationParser(structureMapNode) {FilePath = filename};
         }
 
         public static InstanceMemento CreateMemento(XmlNode node)
@@ -80,7 +80,7 @@ namespace StructureMap.Configuration
 
         public void ParseRegistries(IGraphBuilder builder)
         {
-            _structureMapNode.ForTextInChild("Registry/@Type").Do(name => builder.AddRegistry(name));
+            _structureMapNode.ForTextInChild("Registry/@Type").Do(builder.AddRegistry);
         }
 
 
@@ -96,6 +96,25 @@ namespace StructureMap.Configuration
             forEachNode("Alias").Do(instanceParser.ParseAlias);
             forEachNode(DEFAULT_INSTANCE).Do(instanceParser.ParseDefaultElement);
             forEachNode(ADD_INSTANCE_NODE).Do(instanceParser.ParseInstanceElement);
+        }
+
+        void IPluginGraphConfiguration.Configure(PluginGraph graph)
+        {
+            var builder = new GraphBuilder(graph);
+
+            ParseRegistries(builder);
+            Parse(builder);
+        }
+
+        // TODO -- set the description
+        public static IEnumerable<ConfigurationParser> FromApplicationConfig()
+        {
+            IList<XmlNode> appConfigNodes = StructureMapConfigurationSection.GetStructureMapConfiguration();
+            foreach (XmlNode appConfigNode in appConfigNodes)
+            {
+                yield return new ConfigurationParser(appConfigNode);
+
+            }
         }
     }
 }

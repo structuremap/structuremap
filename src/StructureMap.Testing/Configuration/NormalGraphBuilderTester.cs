@@ -17,7 +17,7 @@ namespace StructureMap.Testing.Configuration
             var typePath = new TypePath(typeof (IGateway));
 
             bool iWasCalled = false;
-            var builder = new GraphBuilder(new Registry[0]);
+            var builder = new GraphBuilder(new PluginGraph());
             builder.ConfigureFamily(typePath, f =>
             {
                 Assert.AreEqual(typeof (IGateway), f.PluginType);
@@ -31,7 +31,7 @@ namespace StructureMap.Testing.Configuration
         [Test]
         public void Configure_a_family_that_does_not_exist_and_log_an_error_with_PluginGraph()
         {
-            var builder = new GraphBuilder(new Registry[0]);
+            var builder = new GraphBuilder(new PluginGraph());
             builder.ConfigureFamily(new TypePath("a,a"), delegate { });
 
             builder.PluginGraph.Log.AssertHasError(103);
@@ -40,7 +40,7 @@ namespace StructureMap.Testing.Configuration
         [Test]
         public void Do_not_call_the_action_on_ConfigureFamily_if_the_type_path_blows_up()
         {
-            var builder = new GraphBuilder(new Registry[0]);
+            var builder = new GraphBuilder(new PluginGraph());
             builder.ConfigureFamily(new TypePath("a,a"), obj => Assert.Fail("Should not be called"));
         }
 

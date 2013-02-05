@@ -203,7 +203,6 @@
     <Compile Include="Configuration\ConfigurationParser.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Configuration\ConfigurationParserBuilder.cs" />
     <Compile Include="Configuration\DSL\Expressions\CreatePluginFamilyExpression.cs" />
     <Compile Include="Configuration\DSL\ExpressionValidator.cs" />
     <Compile Include="Pipeline\ExplicitArguments.cs" />

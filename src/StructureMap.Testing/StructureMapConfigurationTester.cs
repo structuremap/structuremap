@@ -43,7 +43,7 @@ namespace StructureMap.Testing
         {
             ObjectFactory.Initialize(x =>
             {
-                x.PullConfigurationFromAppConfig = true;
+                x.IncludeConfigurationFromConfigFile();
             });
 
             ObjectFactory.GetInstance<IThing<string, bool>>()
