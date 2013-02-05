@@ -5,9 +5,8 @@ Getting StructureMap
 
 StructureMap is available via NuGet:
 
-```powershell
-> Install-Package StructureMap
-```
+    > Install-Package StructureMap
+
 
 Also, you can get it from the downloads area. If you want to fix a bug or just want to tinker with an idea,
 we love receiving pull requests!
@@ -15,16 +14,15 @@ we love receiving pull requests!
 Building the Source
 -------------------
 
-To start using StructureMap, either use the DLL's in the "deploy" folder or click on the RunBuild.BAT
-file to run the full NAnt build.  There is a known issue with the build "sticking" on the custom NAnt
-tasks.  If this happens, delete the copies of StructureMap.Dll and StructureMap.DeploymentTasks.Dll
-in the bin\NAnt folder.  Look in the "build" directory for the build products.
-
  1. Clone the repository: `git clone git://github.com/structuremap/structuremap.git`
- 2. Run `nant` from the command line (if you have nant installed globally, you literally run `nant`).
- This generates the appropriate `CommonAssemblyInfo.cs` file that is linked into every project.
- 3. Open `StructureMap.sln` in Visual Studio 2008 or `StructureMap_2010.sln` in VS2010.
- 4. Build
+ 1. make sure that you have got [ruby installed][2].
+ 1. run `gem install albacore`
+ 1. Necessary files for the build are located in the __buildsupport__ git module. 
+    To obtain the contents run `git submodule update --init`.
+    The __--init__ flag is only necessary the first time you run it. 
+ 1. In the root, run `rake`.
+ 1. Open `StructureMap.sln` in VS2010.
+ 1. Build
 
 Debugger Visualizers
 --------------------
@@ -48,3 +46,4 @@ http://structuremap.net/
 Thanks for trying StructureMap.
 
  [1]: http://docs.structuremap.net/InversionOfControl.htm
+ [2]: http://www.ruby-lang.org/en/downloads/
