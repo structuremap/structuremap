@@ -42,6 +42,9 @@ namespace StructureMap.Pipeline
             return HttpContext.Current != null;
         }
 
+        /// <summary>
+        /// Remove and dispose all objects scoped by HttpContext.  Call this method at the *end* of an Http request to clean up resources
+        /// </summary>
         public static void DisposeAndClearAll()
         {
             new HttpContextLifecycle().FindCache().DisposeAndClear();

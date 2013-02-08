@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using StructureMap.Graph;
 
 namespace StructureMap.Query
 {
@@ -13,6 +14,11 @@ namespace StructureMap.Query
         /// Access to all the <seealso cref="IPluginTypeConfiguration">Plugin Type</seealso> registrations 
         /// </summary>
         IEnumerable<IPluginTypeConfiguration> PluginTypes { get; }
+
+        /// <summary>
+        /// Access to the plugin graph
+        /// </summary>
+        IPluginGraph PluginGraph { get; }
 
         IEnumerable<InstanceRef> AllInstances { get; }
 

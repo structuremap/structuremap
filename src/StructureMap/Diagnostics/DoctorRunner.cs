@@ -40,7 +40,7 @@ namespace StructureMap.Diagnostics
             {
                 bootstrapper.BootstrapStructureMap();
 
-                PluginGraph graph = ObjectFactory.PluginGraph;
+                var graph = (PluginGraph)ObjectFactory.Container.Model.PluginGraph;
 
                 if (graph.Log.ErrorCount > 0)
                 {

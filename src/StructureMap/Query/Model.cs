@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using StructureMap.Graph;
 using StructureMap.TypeRules;
 
 namespace StructureMap.Query
@@ -10,10 +11,11 @@ namespace StructureMap.Query
         private readonly IContainer _container;
         private readonly PipelineGraph _graph;
 
-        internal Model(PipelineGraph graph, IContainer container)
+        internal Model(PipelineGraph graph, PluginGraph pluginGraph, IContainer container)
         {
             _graph = graph;
             _container = container;
+            PluginGraph = pluginGraph;
         }
 
         #region IModel Members
@@ -41,6 +43,8 @@ namespace StructureMap.Query
         }
 
         public IEnumerable<IPluginTypeConfiguration> PluginTypes { get { return pluginTypes; } }
+        
+        public IPluginGraph PluginGraph { get; private set; }
 
         /// <summary>
         /// Retrieves the configuration for the given type
