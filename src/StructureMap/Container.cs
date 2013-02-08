@@ -36,7 +36,7 @@ namespace StructureMap
         }
 
         public Container(Registry registry)
-            : this(registry.Build())
+            : this(new PluginGraphBuilder().Add(registry).Build())
         {
         }
 

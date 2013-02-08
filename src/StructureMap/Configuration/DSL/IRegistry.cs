@@ -61,14 +61,6 @@ namespace StructureMap.Configuration.DSL
         CreatePluginFamilyExpression<TPluginType> ForSingletonOf<TPluginType>();
 
         /// <summary>
-        /// Uses the configuration expressions of this Registry to create a PluginGraph
-        /// object that could be used to initialize a Container.  This method is 
-        /// mostly for internal usage, but might be helpful for diagnostics
-        /// </summary>
-        /// <returns></returns>
-        PluginGraph Build();
-
-        /// <summary>
         /// An alternative way to use CreateProfile that uses ProfileExpression
         /// as a Nested Closure.  This usage will result in cleaner code for 
         /// multiple declarations

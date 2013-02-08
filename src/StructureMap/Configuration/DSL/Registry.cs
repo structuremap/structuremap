@@ -112,21 +112,6 @@ namespace StructureMap.Configuration.DSL
         }
 
         /// <summary>
-        /// Uses the configuration expressions of this Registry to create a PluginGraph
-        /// object that could be used to initialize a Container.  This method is 
-        /// mostly for internal usage, but might be helpful for diagnostics
-        /// </summary>
-        /// <returns></returns>
-        public PluginGraph Build()
-        {
-            var graph = new PluginGraph();
-            this.As<IPluginGraphConfiguration>().Configure(graph);
-            graph.Seal();
-
-            return graph;
-        }
-
-        /// <summary>
         /// An alternative way to use CreateProfile that uses ProfileExpression
         /// as a Nested Closure.  This usage will result in cleaner code for 
         /// multiple declarations
@@ -217,11 +202,11 @@ namespace StructureMap.Configuration.DSL
         /// type and casting it to "TO"
         /// GetInstance(typeof(TO)) basically becomes (TO)GetInstance(typeof(FROM))
         /// </summary>
-        /// <typeparam name="FROM"></typeparam>
-        /// <typeparam name="TO"></typeparam>
-        public void Forward<FROM, TO>() where FROM : class where TO : class
+        /// <typeparam name="TFrom"></typeparam>
+        /// <typeparam name="TTo"></typeparam>
+        public void Forward<TFrom, TTo>() where TFrom : class where TTo : class
         {
-            For<TO>().AddInstances(x => x.ConstructedBy(c => c.GetInstance<FROM>() as TO));
+            For<TTo>().AddInstances(x => x.ConstructedBy(c => c.GetInstance<TFrom>() as TTo));
         }
 
         /// <summary>

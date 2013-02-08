@@ -6,4 +6,5 @@ namespace StructureMap.Configuration
     {
         void Configure(PluginGraph graph);
     }
+
 }

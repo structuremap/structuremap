@@ -117,7 +117,7 @@ namespace StructureMap.Graph
                 return;
             }
 
-            // This was changed to support .Net 4.5 which is stricture on collection modification	
+            // This was changed to support .Net 4.5 which is stricter on collection modification	
             int index = 0;
             while (index < _scanners.Count())
             {
