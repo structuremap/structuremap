@@ -122,6 +122,12 @@ namespace StructureMap.Testing.Graph
             GetType().IsInNamespace("StructureMap.Testing").ShouldBeTrue();
             GetType().IsInNamespace("StructureMap.Testing.Graph").ShouldBeTrue();
             GetType().IsInNamespace("StructureMap.Testing.Graph.Something").ShouldBeFalse();
+
+            var _person = new { ID = 1,
+FirstName = "Michael",
+LastName = "Sync" };
+
+            _person.GetType().IsInNamespace("foo").ShouldBeFalse();
         }
 
         [Test]
