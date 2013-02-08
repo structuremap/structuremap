@@ -46,14 +46,11 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void FindRegistriesWithinPluginGraphSeal()
         {
-            var graph = new PluginGraph();
-
             var scanner = new AssemblyScanner();
             scanner.AssemblyContainingType(typeof (RedGreenRegistry));
             scanner.LookForRegistries();
-            scanner.ShouldBeOfType<IPluginGraphConfiguration>().Configure(graph);
 
-            graph.Seal();
+            var graph = scanner.ToPluginGraph();
 
             var colors = new List<string>();
             PluginFamily family = graph.FindFamily(typeof (IWidget));

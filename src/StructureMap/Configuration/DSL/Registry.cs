@@ -25,6 +25,23 @@ namespace StructureMap.Configuration.DSL
     {
         private readonly List<Action<PluginGraph>> _actions = new List<Action<PluginGraph>>();
         private readonly List<Action> _basicActions = new List<Action>();
+        private readonly List<Action<PluginGraphBuilder>> _builders = new List<Action<PluginGraphBuilder>>();
+
+        internal Action<PluginGraph> alter
+        {
+            set
+            {
+                _actions.Add(value);
+            }
+        }
+
+        private Action<PluginGraphBuilder> register
+        {
+            set
+            {
+                _builders.Add(value);
+            }
+        }
 
         /// <summary>
         /// Adds the concreteType as an Instance of the pluginType.  Mostly useful
@@ -34,7 +51,7 @@ namespace StructureMap.Configuration.DSL
         /// <param name="concreteType"></param>
         public void AddType(Type pluginType, Type concreteType)
         {
-            _actions.Add(g => g.AddType(pluginType, concreteType));
+            alter = g => g.AddType(pluginType, concreteType);
         }
 
         /// <summary>
@@ -46,7 +63,7 @@ namespace StructureMap.Configuration.DSL
         /// <param name="name"></param>
         public virtual void AddType(Type pluginType, Type concreteType, string name)
         {
-            _actions.Add(g => g.AddType(pluginType, concreteType, name));
+            alter = g => g.AddType(pluginType, concreteType, name);
         }
 
         /// <summary>
@@ -56,7 +73,7 @@ namespace StructureMap.Configuration.DSL
         /// <param name="pluggedType"></param>
         public void AddType(Type pluggedType)
         {
-            _actions.Add(g => g.AddType(pluggedType));
+            alter = g => g.AddType(pluggedType);
         }
 
         /// <summary>
@@ -65,7 +82,7 @@ namespace StructureMap.Configuration.DSL
         /// <typeparam name="T"></typeparam>
         public void IncludeRegistry<T>() where T : Registry, new()
         {
-            _actions.Add(g => new T().As<IPluginGraphConfiguration>().Configure(g));
+            alter = g => new T().As<IPluginGraphConfiguration>().Configure(g);
         }
 
         /// <summary>
@@ -74,7 +91,7 @@ namespace StructureMap.Configuration.DSL
         /// <param name="registry"></param>
         public void IncludeRegistry(Registry registry)
         {
-            _actions.Add(graph => registry.As<IPluginGraphConfiguration>().Configure(graph));
+            alter = graph => registry.As<IPluginGraphConfiguration>().Configure(graph);
         }
 
         /// <summary>
@@ -130,7 +147,7 @@ namespace StructureMap.Configuration.DSL
         /// <param name="interceptor"></param>
         public void RegisterInterceptor(TypeInterceptor interceptor)
         {
-            addExpression(pluginGraph => pluginGraph.InterceptorLibrary.AddInterceptor(interceptor));
+            alter = x => x.InterceptorLibrary.AddInterceptor(interceptor);
         }
 
         /// <summary>
@@ -144,7 +161,7 @@ namespace StructureMap.Configuration.DSL
         public MatchedTypeInterceptor IfTypeMatches(Predicate<Type> match)
         {
             var interceptor = new MatchedTypeInterceptor(match);
-            _actions.Add(graph => graph.InterceptorLibrary.AddInterceptor(interceptor));
+            alter = graph => graph.InterceptorLibrary.AddInterceptor(interceptor);
 
             return interceptor;
         }
@@ -160,7 +177,7 @@ namespace StructureMap.Configuration.DSL
             var scanner = new AssemblyScanner();
             action(scanner);
 
-            _actions.Add(graph => graph.AddScanner(scanner));
+            register = x => x.AddScanner(scanner);
         }
 
         /// <summary>
@@ -264,17 +281,12 @@ namespace StructureMap.Configuration.DSL
         /// <param name="configure"></param>
         public void Configure(Action<PluginGraph> configure)
         {
-            _actions.Add(configure);
+            alter = configure;
         }
 
         protected void registerAction(Action action)
         {
             _basicActions.Add(action);
-        }
-
-        internal void addExpression(Action<PluginGraph> alteration)
-        {
-            _actions.Add(alteration);
         }
 
         void IPluginGraphConfiguration.Configure(PluginGraph graph)
@@ -287,6 +299,11 @@ namespace StructureMap.Configuration.DSL
             _actions.ForEach(action => action(graph));
 
             graph.Registries.Add(this);
+        }
+
+        void IPluginGraphConfiguration.Register(PluginGraphBuilder builder)
+        {
+            _builders.Each(x => x(builder));
         }
 
         internal static bool IsPublicRegistry(Type type)

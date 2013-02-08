@@ -106,6 +106,11 @@ namespace StructureMap.Configuration
             Parse(builder);
         }
 
+        public void Register(PluginGraphBuilder builder)
+        {
+            // no-op for now
+        }
+
         // TODO -- set the description
         public static IEnumerable<ConfigurationParser> FromApplicationConfig()
         {

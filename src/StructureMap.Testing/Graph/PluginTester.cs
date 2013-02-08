@@ -150,14 +150,6 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void CanCreateTheAutoFilledInstance()
         {
-            // Builds a PluginGraph that includes all of the PluginFamily's and Plugin's 
-            // defined in this file
-            var pluginGraph = new PluginGraph();
-            pluginGraph.Scan(x => x.Assembly(Assembly.GetExecutingAssembly()));
-            pluginGraph.Seal();
-
-
-
             var container = new Container(x => {
                 x.Scan(o => {
                     o.TheCallingAssembly();

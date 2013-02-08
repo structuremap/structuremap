@@ -78,7 +78,7 @@ namespace StructureMap.Configuration.DSL.Expressions
             /// <returns></returns>
             public void Use(Instance instance)
             {
-                _registry.addExpression(graph => graph.SetDefault(_parent._profileName, _pluginType, instance));
+                _registry.alter = graph => graph.SetDefault(_parent._profileName, _pluginType, instance);
             }
 
             /// <summary>
@@ -134,8 +134,8 @@ namespace StructureMap.Configuration.DSL.Expressions
             /// <returns></returns>
             public void Use(string instanceKey)
             {
-                _registry.addExpression(
-                    graph => graph.SetDefault(_profileName, typeof(T), new ReferencedInstance(instanceKey)));
+                _registry.alter = 
+                    graph => graph.SetDefault(_profileName, typeof(T), new ReferencedInstance(instanceKey));
             }
 
             /// <summary>
@@ -147,7 +147,7 @@ namespace StructureMap.Configuration.DSL.Expressions
             {
                 instance.Name = "Default Instance for Profile " + _profileName;
 
-                _registry.addExpression(graph => graph.SetDefault(_profileName, typeof (T), instance));
+                _registry.alter = graph => graph.SetDefault(_profileName, typeof (T), instance);
             }
 
             /// <summary>

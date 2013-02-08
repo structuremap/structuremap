@@ -63,8 +63,7 @@ namespace StructureMap.Testing
         [Test]
         public void CanGetPluginFamilyFromPluginGraphWithNoParameters()
         {
-            var graph = new PluginGraph();
-            graph.Scan(x => x.TheCallingAssembly());
+            var graph = PluginGraph.BuildGraphFromAssembly(GetType().Assembly);
 
             PluginFamily family1 = graph.FindFamily(typeof (IGenericService<int>));
             PluginFamily family2 = graph.FindFamily(typeof (IGenericService<string>));
@@ -78,8 +77,7 @@ namespace StructureMap.Testing
         [Test]
         public void CanGetPluginFamilyFromPluginGraphWithParameters()
         {
-            var graph = new PluginGraph();
-            graph.Scan(x => x.TheCallingAssembly());
+            var graph = PluginGraph.BuildGraphFromAssembly(GetType().Assembly);
 
             PluginFamily family1 = graph.FindFamily(typeof (IGenericService<int>));
             PluginFamily family2 = graph.FindFamily(typeof (IGenericService<string>));

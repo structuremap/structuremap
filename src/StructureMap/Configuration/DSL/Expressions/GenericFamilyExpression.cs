@@ -28,11 +28,11 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         private GenericFamilyExpression alterAndContinue(Action<PluginFamily> action)
         {
-            _registry.addExpression(graph =>
+            _registry.alter = graph =>
             {
-                PluginFamily family = graph.FindFamily(_pluginType);
+                var family = graph.FindFamily(_pluginType);
                 action(family);
-            });
+            };
 
             return this;
         }
@@ -155,11 +155,11 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <returns></returns>
         public GenericFamilyExpression EnrichAllWith(Func<object, object> func)
         {
-            _registry.addExpression(graph =>
+            _registry.alter = graph =>
             {
                 var interceptor = new PluginTypeInterceptor(_pluginType, (c, o) => func(o));
                 graph.InterceptorLibrary.AddInterceptor(interceptor);
-            });
+            };
 
             return this;
         }
@@ -174,11 +174,11 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <returns></returns>
         public GenericFamilyExpression EnrichAllWith(Func<IContext, object, object> func)
         {
-            _registry.addExpression(graph =>
+            _registry.alter = graph =>
             {
                 var interceptor = new PluginTypeInterceptor(_pluginType, func);
                 graph.InterceptorLibrary.AddInterceptor(interceptor);
-            });
+            };
 
             return this;
         }

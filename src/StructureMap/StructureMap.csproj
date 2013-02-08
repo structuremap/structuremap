@@ -158,6 +158,7 @@
     <Compile Include="Graph\IPluginFactory.cs" />
     <Compile Include="Graph\IPluginFamily.cs" />
     <Compile Include="Graph\AssemblyScanner.cs" />
+    <Compile Include="Graph\TypePool.cs" />
     <Compile Include="InstanceCache.cs" />
     <Compile Include="Interceptors\MatchedTypeInterceptor.cs" />
     <Compile Include="PipelineGraph.cs" />

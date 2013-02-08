@@ -24,13 +24,13 @@ namespace StructureMap.Configuration.DSL.Expressions
         {
             _pluginType = typeof (TPluginType);
 
-            registry.addExpression(graph =>
+            registry.alter = graph =>
             {
                 PluginFamily family = graph.FindFamily(_pluginType);
 
-                _children.ForEach(action => action(graph));
-                _alterations.ForEach(action => action(family));
-            });
+                _children.Each(action => action(graph));
+                _alterations.Each(action => action(family));
+            };
 
             if (scope != null)
             {

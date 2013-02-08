@@ -17,6 +17,7 @@ namespace StructureMap.Graph
         /// </summary>
         /// <param name="pluginType"></param>
         /// <param name="concreteType"></param>
+        
         void AddType(Type pluginType, Type concreteType);
 
         /// <summary>
@@ -32,34 +33,10 @@ namespace StructureMap.Graph
         /// could be assigned to the pluginType
         /// </summary>
         /// <param name="pluggedType"></param>
+        [Obsolete("This is just fubar.  Do the Pluggable another way")]
         void AddType(Type pluggedType);
     }
 
-
-    public class WeakReference<T>
-    {
-        private readonly Func<T> _builder;
-        private readonly WeakReference _reference;
-
-        public WeakReference(Func<T> builder)
-        {
-            _builder = builder;
-            _reference = new WeakReference(_builder());
-        }
-
-        public T Value
-        {
-            get
-            {
-                if (!_reference.IsAlive)
-                {
-                    _reference.Target = _builder();
-                }
-
-                return (T) _reference.Target;
-            }
-        }
-    }
 
 
     /// <summary>
@@ -73,8 +50,6 @@ namespace StructureMap.Graph
         private readonly PluginFamilyCollection _pluginFamilies;
         private readonly ProfileManager _profileManager = new ProfileManager();
         private readonly List<Registry> _registries = new List<Registry>();
-        private readonly List<AssemblyScanner> _scanners = new List<AssemblyScanner>();
-        private readonly WeakReference<TypePool> _types;
         private GraphLog _log = new GraphLog();
         private bool _sealed;
 
@@ -82,10 +57,7 @@ namespace StructureMap.Graph
         public PluginGraph()
         {
             _pluginFamilies = new PluginFamilyCollection(this);
-            _types = new WeakReference<TypePool>(() => new TypePool(this));
         }
-
-        public TypePool Types { get { return _types.Value; } }
 
         public List<Registry> Registries { get { return _registries; } }
 
@@ -115,13 +87,6 @@ namespace StructureMap.Graph
             if (_sealed)
             {
                 return;
-            }
-
-            // This was changed to support .Net 4.5 which is stricter on collection modification	
-            int index = 0;
-            while (index < _scanners.Count())
-            {
-                _scanners[index++].As<IPluginGraphConfiguration>().Configure(this);
             }
 
             _pluginFamilies.Each(family => family.AddTypes(_pluggedTypes));
@@ -167,32 +132,7 @@ namespace StructureMap.Graph
             _pluggedTypes.Add(pluggedType);
         }
 
-        /// <summary>
-        /// Adds an AssemblyScanner to the PluginGraph.  Used for Testing.
-        /// </summary>
-        /// <param name="action"></param>
-        public void Scan(Action<AssemblyScanner> action)
-        {
-            var scanner = new AssemblyScanner();
-            action(scanner);
 
-            AddScanner(scanner);
-        }
-
-        public void AddScanner(AssemblyScanner scanner)
-        {
-            _scanners.Add(scanner);
-        }
-
-        public static PluginGraph BuildGraphFromAssembly(Assembly assembly)
-        {
-            var graph = new PluginGraph();
-            graph.Scan(x => x.Assembly(assembly));
-
-            graph.Seal();
-
-            return graph;
-        }
 
         public PluginFamily FindFamily(Type pluginType)
         {
@@ -234,6 +174,17 @@ namespace StructureMap.Graph
 
             var registry = (Registry) Activator.CreateInstance(type);
             registry.As<IPluginGraphConfiguration>().Configure(this);
+        }
+
+        public static PluginGraph BuildGraphFromAssembly(Assembly assembly)
+        {
+            var builder = new PluginGraphBuilder();
+            var scanner = new AssemblyScanner();
+            scanner.Assembly(assembly);
+
+            builder.AddScanner(scanner);
+
+            return builder.Build();
         }
     }
 }

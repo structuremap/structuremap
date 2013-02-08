@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using NUnit.Framework;
 using StructureMap.Exceptions;
 using StructureMap.Graph;
@@ -41,11 +42,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void FindPluginFamilies()
         {
-            var graph = new PluginGraph();
-            graph.Scan(x => { x.Assembly("StructureMap.Testing.Widget"); });
-
-            graph.Seal();
-
+            var graph = PluginGraph.BuildGraphFromAssembly(Assembly.Load("StructureMap.Testing.Widget"));
 
             foreach (PluginFamily family in graph.PluginFamilies)
             {
@@ -53,29 +50,6 @@ namespace StructureMap.Testing.Graph
             }
 
             Assert.AreEqual(4, graph.FamilyCount);
-        }
-
-        [Test]
-        public void FindPlugins()
-        {
-            var graph = new PluginGraph();
-            graph.Scan(x =>
-            {
-                x.Assembly("StructureMap.Testing.Widget");
-                x.Assembly("StructureMap.Testing.Widget2");
-            });
-
-            graph.FindFamily(typeof (Rule));
-
-            graph.Seal();
-
-            
-
-            var family = graph.FindFamily(typeof (Rule));
-
-            // there are 2 Rule classes in these assemblies that do not have
-            // primitive arguments
-            family.Instances.Count().ShouldEqual(2);
         }
 
 

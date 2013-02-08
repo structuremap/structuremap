@@ -15,6 +15,7 @@ namespace StructureMap.Testing.Bugs
                     y.TheCallingAssembly();
                     y.ConnectImplementationsToTypesClosing(typeof (IAmOpenGeneric<>));
                 });
+
                 x.For(typeof (IAmOpenGeneric<>)).Use(typeof (TheClosedGeneric<>));
             });
 

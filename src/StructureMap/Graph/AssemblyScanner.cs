@@ -8,37 +8,10 @@ using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
 using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.TypeRules;
-using StructureMap.Util;
 
 namespace StructureMap.Graph
 {
-    public class TypePool
-    {
-        private readonly Cache<Assembly, Type[]> _types = new Cache<Assembly, Type[]>();
-
-        public TypePool(PluginGraph graph)
-        {
-            _types.OnMissing = assembly =>
-            {
-                try
-                {
-                    return assembly.GetExportedTypes();
-                }
-                catch (Exception ex)
-                {
-                    graph.Log.RegisterError(170, ex, assembly.FullName);
-                    return new Type[0];
-                }
-            };
-        }
-
-        public IEnumerable<Type> For(IEnumerable<Assembly> assemblies, CompositeFilter<Type> filter)
-        {
-            return assemblies.SelectMany(x => _types[x].Where(filter.Matches));
-        }
-    }
-
-    public class AssemblyScanner : IAssemblyScanner, IPluginGraphConfiguration
+    public class AssemblyScanner : IAssemblyScanner
     {
         private readonly List<Assembly> _assemblies = new List<Assembly>();
         private readonly List<IRegistrationConvention> _conventions = new List<IRegistrationConvention>();
@@ -215,16 +188,17 @@ namespace StructureMap.Graph
             _conventions.Fill(convention);
         }
 
-        void IPluginGraphConfiguration.Configure(PluginGraph pluginGraph)
+        public void ScanForTypes(TypePool types, PluginGraph pluginGraph)
         {
             var registry = new Registry();
 
-            pluginGraph.Types.For(_assemblies, _filter).Each(
+            types.For(_assemblies, _filter).Each(
                 type => _conventions.Each(c => c.Process(type, registry)));
 
             registry.As<IPluginGraphConfiguration>().Configure(pluginGraph);
             _postScanningActions.Each(x => x(pluginGraph));
         }
+
 
 
         public bool Contains(string assemblyName)
@@ -311,5 +285,11 @@ namespace StructureMap.Graph
             return new ConfigureConventionExpression(convention);
         }
 
+        public PluginGraph ToPluginGraph()
+        {
+            var builder = new PluginGraphBuilder();
+            builder.AddScanner(this);
+            return builder.Build();
+        }
     }
 }

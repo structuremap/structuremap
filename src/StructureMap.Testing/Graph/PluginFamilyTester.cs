@@ -127,23 +127,20 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void PluginFamilyImplicitlyConfiguredAsASingletonBehavesAsASingleton()
         {
-            var pluginGraph = new PluginGraph();
-            pluginGraph.Scan(x => { x.Assembly(Assembly.GetExecutingAssembly()); });
+            var graph = PluginGraph.BuildGraphFromAssembly(GetType().Assembly);
 
-            pluginGraph.Seal();
-
-            var manager = new Container(pluginGraph);
+            var container = new Container(graph);
 
             var repository1 =
-                (ISingletonRepository) manager.GetInstance(typeof (ISingletonRepository));
+                (ISingletonRepository) container.GetInstance(typeof (ISingletonRepository));
             var repository2 =
-                (ISingletonRepository) manager.GetInstance(typeof (ISingletonRepository));
+                (ISingletonRepository) container.GetInstance(typeof (ISingletonRepository));
             var repository3 =
-                (ISingletonRepository) manager.GetInstance(typeof (ISingletonRepository));
+                (ISingletonRepository) container.GetInstance(typeof (ISingletonRepository));
             var repository4 =
-                (ISingletonRepository) manager.GetInstance(typeof (ISingletonRepository));
+                (ISingletonRepository) container.GetInstance(typeof (ISingletonRepository));
             var repository5 =
-                (ISingletonRepository) manager.GetInstance(typeof (ISingletonRepository));
+                (ISingletonRepository) container.GetInstance(typeof (ISingletonRepository));
 
             Assert.AreSame(repository1, repository2);
             Assert.AreSame(repository1, repository3);

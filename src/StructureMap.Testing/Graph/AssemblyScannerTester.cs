@@ -66,9 +66,13 @@ namespace StructureMap.Testing.Graph
         {
             var scanner = new AssemblyScanner();
             action(scanner);
-            theGraph = new PluginGraph();
+
             scanner.ExcludeNamespaceContainingType<ScanningRegistry>();
-            scanner.ShouldBeOfType<IPluginGraphConfiguration>().Configure(theGraph);
+
+            var builder = new PluginGraphBuilder();
+            builder.AddScanner(scanner);
+            theGraph = builder.Build();
+
             theGraph.Log.AssertFailures();
         }
 
