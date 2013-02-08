@@ -38,7 +38,6 @@ namespace StructureMap.Graph
     public class PluginGraph : IPluginGraph
     {
         private readonly InterceptorLibrary _interceptorLibrary = new InterceptorLibrary();
-        private readonly List<Type> _pluggedTypes = new List<Type>();
         private readonly PluginFamilyCollection _pluginFamilies;
         private readonly ProfileManager _profileManager = new ProfileManager();
         private readonly List<Registry> _registries = new List<Registry>();
@@ -81,7 +80,6 @@ namespace StructureMap.Graph
                 return;
             }
 
-            _pluginFamilies.Each(family => family.AddTypes(_pluggedTypes));
             _pluginFamilies.Each(family => family.Seal());
 
             _profileManager.Seal(this);
