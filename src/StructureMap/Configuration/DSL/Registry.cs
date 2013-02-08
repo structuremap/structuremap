@@ -67,16 +67,6 @@ namespace StructureMap.Configuration.DSL
         }
 
         /// <summary>
-        /// Add the PluggedType as an instance to any configured pluginType where PluggedType. 
-        /// Mostly useful for conventions
-        /// </summary>
-        /// <param name="pluggedType"></param>
-        public void AddType(Type pluggedType)
-        {
-            alter = g => g.AddType(pluggedType);
-        }
-
-        /// <summary>
         /// Imports the configuration from another registry into this registry.
         /// </summary>
         /// <typeparam name="T"></typeparam>

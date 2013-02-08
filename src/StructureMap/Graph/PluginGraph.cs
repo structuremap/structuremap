@@ -27,14 +27,6 @@ namespace StructureMap.Graph
         /// <param name="concreteType"></param>
         /// <param name="name"></param>
         void AddType(Type pluginType, Type concreteType, string name);
-
-        /// <summary>
-        /// Add the PluggedType as an instance to any configured pluginType where PluggedType
-        /// could be assigned to the pluginType
-        /// </summary>
-        /// <param name="pluggedType"></param>
-        [Obsolete("This is just fubar.  Do the Pluggable another way")]
-        void AddType(Type pluggedType);
     }
 
 
@@ -119,19 +111,6 @@ namespace StructureMap.Graph
         {
             FindFamily(pluginType).AddType(concreteType, name);
         }
-
-        /// <summary>
-        /// Add the PluggedType as an instance to any configured pluginType where PluggedType
-        /// could be assigned to the pluginType
-        /// </summary>
-        /// <param name="pluggedType"></param>
-        public virtual void AddType(Type pluggedType)
-        {
-            // TODO -- let's get this moved out of PluginGraph and into
-            // a separate IPluginGraphConfiguration object
-            _pluggedTypes.Add(pluggedType);
-        }
-
 
 
         public PluginFamily FindFamily(Type pluginType)
