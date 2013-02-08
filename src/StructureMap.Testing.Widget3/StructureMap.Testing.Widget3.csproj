@@ -144,6 +144,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\StructureMap.LegacyAttributeSupport\StructureMap.LegacyAttributeSupport.csproj">
+      <Project>{840415D3-247D-449A-BC79-605D0A1C6F81}</Project>
+      <Name>StructureMap.LegacyAttributeSupport</Name>
+    </ProjectReference>
     <ProjectReference Include="..\StructureMap\StructureMap.csproj">
       <Project>{3F36EA80-2F9A-4DAD-BA27-5AC6163A2EE3}</Project>
       <Name>StructureMap</Name>

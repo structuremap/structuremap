@@ -43,6 +43,10 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="FamilyAttributeScanner.cs" />
+    <Compile Include="PluggableAttribute.cs" />
+    <Compile Include="PluggableAttributeScanner.cs" />
+    <Compile Include="PluginFamilyAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

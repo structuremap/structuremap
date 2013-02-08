@@ -2,7 +2,7 @@ using System;
 
 namespace StructureMap.Testing.Graph
 {
-    [Pluggable("Default")]
+    //[Pluggable("Default")]
     public class InstanceTarget
     {
         private readonly bool _isValid;

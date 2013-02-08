@@ -21,7 +21,6 @@
     PluggedType="StructureMap.Testing.Widget.ColorWidget,StructureMap.Testing.Widget" 
     color="Purple" />
 
-
   <AddInstance 
     Key="Blue" 
     PluginType="StructureMap.Testing.Widget.Rule,StructureMap.Testing.Widget" 

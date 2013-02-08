@@ -186,12 +186,6 @@
     <Compile Include="InstanceScope.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Attributes\PluggableAttribute.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Attributes\PluginFamilyAttribute.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Attributes\SetterPropertyAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -322,7 +316,6 @@
     <Compile Include="Graph\CompositeFilter.cs" />
     <Compile Include="Graph\CompositePredicate.cs" />
     <Compile Include="Configuration\DSL\Expressions\ConfigureConventionExpression.cs" />
-    <Compile Include="Graph\FamilyAttributeScanner.cs" />
     <Compile Include="Graph\FindAllTypesFilter.cs" />
     <Compile Include="Graph\FindRegistriesScanner.cs" />
     <Compile Include="Graph\FirstInterfaceConvention.cs" />
@@ -330,7 +323,6 @@
     <Compile Include="Graph\ImplementationMap.cs" />
     <Compile Include="Graph\IRegistrationConvention.cs" />
     <Compile Include="Graph\DefaultConventionScanner.cs" />
-    <Compile Include="Graph\PluggableAttributeScanner.cs" />
     <Compile Include="Graph\PluginCache.cs" />
     <Compile Include="IContext.cs" />
     <Compile Include="Pipeline\AdapterClasses.cs" />

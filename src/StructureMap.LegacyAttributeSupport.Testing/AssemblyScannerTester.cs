@@ -1,18 +1,18 @@
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
 using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
+using StructureMap.Testing;
 using StructureMap.Testing.DocumentationExamples;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
 using StructureMap.Testing.Widget5;
 using StructureMap.TypeRules;
 
-namespace StructureMap.Testing.Graph
+namespace StructureMap.LegacyAttributeSupport.Testing
 {
     public class TestingRegistry : Registry
     {
@@ -66,28 +66,18 @@ namespace StructureMap.Testing.Graph
         private void Scan(Action<AssemblyScanner> action)
         {
             var scanner = new AssemblyScanner();
+            scanner.Convention<FamilyAttributeScanner>();
+            scanner.Convention<PluggableAttributeScanner>();
+
             action(scanner);
 
             scanner.ExcludeNamespaceContainingType<ScanningRegistry>();
-            scanner.Convention<FakeConvention>();
 
             var builder = new PluginGraphBuilder();
             builder.AddScanner(scanner);
             theGraph = builder.Build();
 
             theGraph.Log.AssertFailures();
-        }
-
-        public class FakeConvention : IRegistrationConvention
-        {
-            public void Process(Type type, Registry registry)
-            {
-                if (type.IsInterface)
-                {
-                    Debug.WriteLine(type.FullName);
-                    registry.For(type);
-                }
-            }
         }
 
 
@@ -112,16 +102,6 @@ namespace StructureMap.Testing.Graph
         private void shouldNotHaveFamilyWithSameName<T>()
         {
             theGraph.PluginFamilies.Any(family => family.PluginType.FullName == typeof (T).FullName).ShouldBeFalse();
-        }
-
-        [Test]
-        public void is_in_namespace()
-        {
-            GetType().IsInNamespace("blah").ShouldBeFalse();
-            GetType().IsInNamespace("StructureMap").ShouldBeTrue();
-            GetType().IsInNamespace("StructureMap.Testing").ShouldBeTrue();
-            GetType().IsInNamespace("StructureMap.Testing.Graph").ShouldBeTrue();
-            GetType().IsInNamespace("StructureMap.Testing.Graph.Something").ShouldBeFalse();
         }
 
         [Test]

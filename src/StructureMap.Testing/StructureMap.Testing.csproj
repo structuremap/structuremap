@@ -185,9 +185,6 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Attributes\PluginFamilyAttributeTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="AutoFactories\AutoFactoryTester.cs" />
     <Compile Include="AutoFactories\ProxyFactoryTests.cs" />
     <Compile Include="AutoMocking\AutoMockerTester.cs" />
@@ -291,9 +288,6 @@
     <Compile Include="Graph\Interceptors\InterceptorLibraryTester.cs" />
     <Compile Include="Graph\Interceptors\MockTypeInterceptor.cs" />
     <Compile Include="Graph\Interceptors\TypeInterceptionTester.cs" />
-    <Compile Include="Graph\PluggableAttributeTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Graph\Source\XmlAttributeInstanceMementoTester.cs">
       <SubType>Code</SubType>
     </Compile>

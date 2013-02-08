@@ -99,16 +99,6 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
-        public void ImplicitPluginFamilyCreatesASingletonInterceptorWhenIsSingletonIsTrue()
-        {
-            var family = new PluginFamily(typeof (ISingletonRepository));
-            family.Lifecycle.ShouldBeOfType<SingletonLifecycle>();
-
-            var family2 = new PluginFamily(typeof (IDevice));
-            family2.Lifecycle.ShouldBeNull();
-        }
-
-        [Test]
         public void Log_104_if_instance_cannot_be_added_into_PluginFamily()
         {
             TestUtility.AssertErrorIsLogged(104, graph =>
@@ -122,30 +112,6 @@ namespace StructureMap.Testing.Graph
 
                 family.Seal();
             });
-        }
-
-        [Test]
-        public void PluginFamilyImplicitlyConfiguredAsASingletonBehavesAsASingleton()
-        {
-            var graph = PluginGraph.BuildGraphFromAssembly(GetType().Assembly);
-
-            var container = new Container(graph);
-
-            var repository1 =
-                (ISingletonRepository) container.GetInstance(typeof (ISingletonRepository));
-            var repository2 =
-                (ISingletonRepository) container.GetInstance(typeof (ISingletonRepository));
-            var repository3 =
-                (ISingletonRepository) container.GetInstance(typeof (ISingletonRepository));
-            var repository4 =
-                (ISingletonRepository) container.GetInstance(typeof (ISingletonRepository));
-            var repository5 =
-                (ISingletonRepository) container.GetInstance(typeof (ISingletonRepository));
-
-            Assert.AreSame(repository1, repository2);
-            Assert.AreSame(repository1, repository3);
-            Assert.AreSame(repository1, repository4);
-            Assert.AreSame(repository1, repository5);
         }
 
         [Test]
@@ -297,12 +263,12 @@ namespace StructureMap.Testing.Graph
     /// Specifying the default instance is "Default" and marking the PluginFamily
     /// as an injected Singleton
     /// </summary>
-    [PluginFamily("Default", IsSingleton = true)]
+    //[PluginFamily("Default", IsSingleton = true)]
     public interface ISingletonRepository
     {
     }
 
-    [Pluggable("Default")]
+    //[Pluggable("Default")]
     public class SingletonRepositoryWithAttribute : ISingletonRepository
     {
         private readonly Guid _id = Guid.NewGuid();
@@ -318,7 +284,7 @@ namespace StructureMap.Testing.Graph
     {
     }
 
-    [PluginFamily(IsSingleton = false)]
+    //[PluginFamily(IsSingleton = false)]
     public interface IDevice
     {
     }

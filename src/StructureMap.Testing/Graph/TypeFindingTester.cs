@@ -40,15 +40,6 @@ namespace StructureMap.Testing.Graph
             container.GetAllInstances<OtherType>().Count.ShouldEqual(2);
         }
 
-        [Test]
-        public void ScanAssembliesForAPluginAndOnlyGetExplicitlyAttributedClassesWithPluginAttributes()
-        {
-            IList<INormalType> instances = container.GetAllInstances<INormalType>();
-            instances.Count.ShouldEqual(1);
-
-            instances[0].ShouldBeOfType<NormalTypeWithPluggableAttribute>();
-        }
-
         [TestFixture]
         public class when_finding_all_types_implementing_and_open_generic_interface
         {
@@ -128,7 +119,7 @@ namespace StructureMap.Testing.Graph
     {
     }
 
-    [Pluggable("First")]
+    //[Pluggable("First")]
     public class NormalTypeWithPluggableAttribute : INormalType
     {
     }

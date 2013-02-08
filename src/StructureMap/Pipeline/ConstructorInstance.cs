@@ -33,6 +33,9 @@ namespace StructureMap.Pipeline
 
                 return new DefaultInstance();
             };
+
+            _plugin.PluggedType.GetCustomAttributes(typeof (InstanceAttribute), false).OfType<InstanceAttribute>()
+                .Each(x => x.Alter(this));
         }
 
         public ConstructorInstance(Type pluggedType, string name)

@@ -7,6 +7,19 @@ using StructureMap.Util;
 
 namespace StructureMap.Graph
 {
+
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
+    public abstract class FamilyAttribute : Attribute
+    {
+        public abstract void Alter(PluginFamily family);
+    }
+
+    [AttributeUsage(AttributeTargets.Class)]
+    public abstract class InstanceAttribute : Attribute
+    {
+        public abstract void Alter(ConstructorInstance instance);
+    }
+
     /// <summary>
     /// Conceptually speaking, a PluginFamily object represents a point of abstraction or variability in 
     /// the system.  A PluginFamily defines a CLR Type that StructureMap can build, and all of the possible
@@ -29,14 +42,16 @@ namespace StructureMap.Graph
             _parent = parent;
             _pluginType = pluginType;
 
-            PluginFamilyAttribute.ConfigureFamily(this);
-
+            // TODO -- like to clean this up so it happens more at runtime
             if (_pluginType.IsConcrete() && PluginCache.GetPlugin(_pluginType).CanBeAutoFilled)
             {
                 MissingInstance = new ConfiguredInstance(_pluginType);
             }
 
             resetDefault();
+
+            Attribute.GetCustomAttributes(typeof (FamilyAttribute), true).OfType<FamilyAttribute>()
+                .Each(x => x.Alter(this));
         }
 
         private void resetDefault()

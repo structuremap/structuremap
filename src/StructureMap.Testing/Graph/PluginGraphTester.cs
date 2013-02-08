@@ -39,19 +39,6 @@ namespace StructureMap.Testing.Graph
             graph.Log.AssertFailures();
         }
 
-        [Test]
-        public void FindPluginFamilies()
-        {
-            var graph = PluginGraph.BuildGraphFromAssembly(Assembly.Load("StructureMap.Testing.Widget"));
-
-            foreach (PluginFamily family in graph.PluginFamilies)
-            {
-                Console.WriteLine(family.PluginType.AssemblyQualifiedName);
-            }
-
-            Assert.AreEqual(4, graph.FamilyCount);
-        }
-
 
         [Test]
         public void Seal_does_not_throw_an_exception_if_there_are_no_errors()
@@ -63,13 +50,13 @@ namespace StructureMap.Testing.Graph
         }
     }
 
-    [PluginFamily]
+    //[PluginFamily]
     public interface IThingy
     {
         void Go();
     }
 
-    [Pluggable("Big")]
+    //[Pluggable("Big")]
     public class BigThingy : IThingy
     {
         #region IThingy Members

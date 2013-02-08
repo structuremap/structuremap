@@ -7,7 +7,7 @@ namespace StructureMap
     /// <summary>
     /// Declares a class, abstract class, or interface to be the target of a PluginFamily in the container
     /// </summary>
-    public class PluginFamilyAttribute : Attribute
+    public class PluginFamilyAttribute : FamilyAttribute
     {
         private readonly string _default = string.Empty;
         private InstanceScope _scope = InstanceScope.PerRequest;
@@ -57,6 +57,11 @@ namespace StructureMap
             {
                 att.Configure(family);
             }
+        }
+
+        public override void Alter(PluginFamily family)
+        {
+            Configure(family);
         }
 
         public void Configure(IPluginFamily family)

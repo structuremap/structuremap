@@ -20,6 +20,8 @@ namespace StructureMap.Configuration.DSL.Expressions
             _pluginType = pluginType;
             _registry = registry;
 
+            alterAndContinue(f => { });
+
             if (scope != null)
             {
                 alterAndContinue(family => family.SetScopeTo(scope.Value));

@@ -32,13 +32,11 @@ namespace StructureMap.Graph
 
         public Plugin(Type pluggedType)
         {
-            var att =
-                Attribute.GetCustomAttribute(pluggedType, typeof (PluggableAttribute), false) as PluggableAttribute;
-            _concreteKey = att == null ? pluggedType.AssemblyQualifiedName : att.ConcreteKey;
-
             _pluggedType = pluggedType;
             _setters = new SetterPropertyCollection(this);
             _constructor = new Constructor(pluggedType);
+
+            _concreteKey = pluggedType.FullName;
         }
 
         #endregion
@@ -46,6 +44,7 @@ namespace StructureMap.Graph
         /// <summary>
         /// The ConcreteKey that identifies the Plugin within a PluginFamily
         /// </summary>
+        [Obsolete("Eliminating this anyway")]
         public string ConcreteKey { get { return _concreteKey; } set { _concreteKey = value; } }
 
 

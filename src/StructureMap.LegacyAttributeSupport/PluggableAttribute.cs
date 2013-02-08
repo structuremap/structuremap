@@ -1,4 +1,6 @@
 using System;
+using StructureMap.Graph;
+using StructureMap.Pipeline;
 
 namespace StructureMap
 {
@@ -6,7 +8,7 @@ namespace StructureMap
     /// Used to implicitly mark a class as a Plugin candidate for StructureMap
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    public class PluggableAttribute : Attribute
+    public class PluggableAttribute : InstanceAttribute
     {
         public PluggableAttribute(string concreteKey)
         {
@@ -28,6 +30,11 @@ namespace StructureMap
         {
             var att = GetCustomAttribute(objectType, typeof (PluggableAttribute), false) as PluggableAttribute;
             return (att != null);
+        }
+
+        public override void Alter(ConstructorInstance instance)
+        {
+  
         }
     }
 }

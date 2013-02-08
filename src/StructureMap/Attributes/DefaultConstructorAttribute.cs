@@ -1,8 +1,13 @@
 using System;
 using System.Reflection;
+using StructureMap.Graph;
+using StructureMap.Pipeline;
 
 namespace StructureMap
 {
+
+
+
     /// <summary>
     /// Used to override the constructor of a class to be used by StructureMap to create
     /// a Pluggable object

@@ -46,12 +46,12 @@ namespace StructureMap.Testing.Graph
         {
         }
 
-        [PluginFamily("Default")]
+        //[PluginFamily("Default")]
         public interface IThingy
         {
         }
 
-        [Pluggable("Default")]
+        //[Pluggable("Default")]
         public class TheThingy : IThingy
         {
         }
@@ -74,7 +74,14 @@ namespace StructureMap.Testing.Graph
         {
             var container = new Container();
 
-            container.Configure(registry => { registry.Scan(x => x.TheCallingAssembly()); });
+            container.Configure(registry =>
+            {
+                registry.Scan(x =>
+                {
+                    x.TheCallingAssembly();
+                    x.AddAllTypesOf<IThingy>();
+                });
+            });
 
 
             container.GetInstance<IThingy>().ShouldBeOfType<TheThingy>();

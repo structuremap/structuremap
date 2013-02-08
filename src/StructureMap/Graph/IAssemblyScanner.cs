@@ -88,11 +88,6 @@ namespace StructureMap.Graph
         /// <param name="pluginType"></param>
         FindAllTypesFilter AddAllTypesOf(Type pluginType);
 
-        /// <summary>
-        /// Makes this scanning operation ignore all [PluginFamily] and [Pluggable] attributes
-        /// </summary>
-        void IgnoreStructureMapAttributes();
-
         #endregion
 
         #region Filtering types

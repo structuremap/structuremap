@@ -32,26 +32,6 @@ namespace StructureMap.Testing.Graph
 
         private Container _container;
 
-
-        [Test]
-        public void CanMakeAClassWithNoConstructorParametersWithoutADefinedMemento()
-        {
-            var registry = new Registry();
-            registry.Scan(x => x.Assembly("StructureMap.Testing.Widget3"));
-
-            registry.For<IGateway>();
-
-            PluginGraph graph = registry.Build();
-            var pipelineGraph = new PipelineGraph(graph);
-
-            var session = BuildSession.ForPluginGraph(graph);
-
-            var gateway =
-                (DefaultGateway) session.CreateInstance(typeof (IGateway), "Default");
-
-            Assert.IsNotNull(gateway);
-        }
-
         [Test]
         public void do_not_replace_the_build_Lifecycle_if_it_is_the_same_type_as_the_imported_family()
         {

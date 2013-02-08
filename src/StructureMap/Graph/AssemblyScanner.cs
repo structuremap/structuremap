@@ -19,12 +19,6 @@ namespace StructureMap.Graph
 
         private readonly List<Action<PluginGraph>> _postScanningActions = new List<Action<PluginGraph>>();
 
-        public AssemblyScanner()
-        {
-            Convention<FamilyAttributeScanner>();
-            Convention<PluggableAttributeScanner>();
-        }
-
         public int Count { get { return _assemblies.Count; } }
 
 
@@ -86,12 +80,6 @@ namespace StructureMap.Graph
             With(filter);
 
             return filter;
-        }
-
-        public void IgnoreStructureMapAttributes()
-        {
-            _conventions.RemoveAll(scanner => scanner is FamilyAttributeScanner);
-            _conventions.RemoveAll(scanner => scanner is PluggableAttributeScanner);
         }
 
 

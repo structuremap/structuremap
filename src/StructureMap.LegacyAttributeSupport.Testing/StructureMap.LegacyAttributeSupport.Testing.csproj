@@ -31,6 +31,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.2.5.10.11092\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.mocks">
+      <HintPath>..\packages\NUnit.2.5.10.11092\lib\nunit.mocks.dll</HintPath>
+    </Reference>
+    <Reference Include="pnunit.framework">
+      <HintPath>..\packages\NUnit.2.5.10.11092\lib\pnunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Rhino.Mocks">
+      <HintPath>..\packages\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -40,6 +52,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyScannerTester.cs" />
+    <Compile Include="Attributes\PluginFamilyAttributeTester.cs" />
+    <Compile Include="FamilyAttributeScannerTester.cs" />
+    <Compile Include="PluggableAttributeTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -47,10 +63,29 @@
       <Project>{840415D3-247D-449A-BC79-605D0A1C6F81}</Project>
       <Name>StructureMap.LegacyAttributeSupport</Name>
     </ProjectReference>
+    <ProjectReference Include="..\StructureMap.Testing.Widget3\StructureMap.Testing.Widget3.csproj">
+      <Project>{C8878328-281F-4F4F-8D6E-88C60F304B89}</Project>
+      <Name>StructureMap.Testing.Widget3</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StructureMap.Testing.Widget5\StructureMap.Testing.Widget5.csproj">
+      <Project>{CAB97F7F-FB75-410C-898A-88DCAAC036BE}</Project>
+      <Name>StructureMap.Testing.Widget5</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StructureMap.Testing.Widget\StructureMap.Testing.Widget.csproj">
+      <Project>{E21E1651-3E32-47B7-A290-F461E63FEAD2}</Project>
+      <Name>StructureMap.Testing.Widget</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StructureMap.Testing\StructureMap.Testing.csproj">
+      <Project>{63C2742D-B6E2-484F-AFDB-346873075C5E}</Project>
+      <Name>StructureMap.Testing</Name>
+    </ProjectReference>
     <ProjectReference Include="..\StructureMap\StructureMap.csproj">
       <Project>{3F36EA80-2F9A-4DAD-BA27-5AC6163A2EE3}</Project>
       <Name>StructureMap</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

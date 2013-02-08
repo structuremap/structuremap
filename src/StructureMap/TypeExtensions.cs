@@ -216,26 +216,6 @@ namespace StructureMap
             }
 
 
-            /// <summary>
-            /// Determines if the PluggedType is a valid Plugin into the
-            /// PluginType
-            /// </summary>
-            /// <param name="pluginType"></param>
-            /// <param name="TPluggedType"></param>
-            /// <returns></returns>
-            public static bool IsExplicitlyMarkedAsPlugin(this Type TPluggedType, Type pluginType)
-            {
-                bool returnValue = false;
-
-                bool markedAsPlugin = PluggableAttribute.MarkedAsPluggable(TPluggedType);
-                if (markedAsPlugin)
-                {
-                    returnValue = CanBeCastTo(TPluggedType, pluginType);
-                }
-
-                return returnValue;
-            }
-
             public static bool IsString(this Type type)
             {
                 return type.Equals(typeof (string));

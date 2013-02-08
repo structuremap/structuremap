@@ -147,40 +147,12 @@ namespace StructureMap.Testing.Graph
             new Plugin(typeof (LotsOfStuff)).CanBeCreated().ShouldBeTrue();
         }
 
-        [Test]
-        public void CanCreateTheAutoFilledInstance()
-        {
-            var container = new Container(x => {
-                x.Scan(o => {
-                    o.TheCallingAssembly();
-                });
-                x.For<IEngine>().Use<PushrodEngine>();
-            });
-
-
-            var mustang = container.GetInstance<IAutomobile>("Mustang");
-            mustang.ShouldBeOfType<Mustang>().Engine.ShouldBeOfType<PushrodEngine>();
-        }
 
         [Test]
         public void cannot_be_auto_filled_with_no_contructors()
         {
             var plugin = new Plugin(typeof (ClassWithNoConstructor));
             plugin.CanBeAutoFilled.ShouldBeFalse();
-        }
-
-
-        [Test]
-        public void CanNotPluginWithoutAttribute()
-        {
-            Assert.IsFalse(typeof (NotPluggable).IsExplicitlyMarkedAsPlugin(_iwidget),
-                           "NotPluggableWidget cannot plug into IWidget automatically");
-        }
-
-        [Test]
-        public void CanPluginWithAttribute()
-        {
-            Assert.IsTrue(_colorWidget.IsExplicitlyMarkedAsPlugin(_iwidget), "ColorWidget plugs into IWidget");
         }
 
 
@@ -196,23 +168,11 @@ namespace StructureMap.Testing.Graph
             Assert.AreEqual(typeof (DefaultGateway), instance.PluggedType);
         }
 
-        [Test]
-        public void CreateImplicitPluginSetsCorrectName()
-        {
-            Assert.AreEqual("Configuration", _plugin.ConcreteKey);
-        }
 
         [Test]
         public void CreateImplicitPluginSetsCorrectType()
         {
             Assert.IsTrue(typeof (ConfigurationWidget).Equals(_plugin.PluggedType));
-        }
-
-        [Test]
-        public void CreatePluginFromTypeThatDoesNotHaveAnAttributeDetermineTheConcreteKey()
-        {
-            var plugin = new Plugin(GetType());
-            Assert.AreEqual(GetType().AssemblyQualifiedName, plugin.ConcreteKey);
         }
 
         [Test]
@@ -263,13 +223,6 @@ namespace StructureMap.Testing.Graph
         {
             var plugin = new Plugin(typeof (GrandPrix));
             plugin.FindArgumentNameForType<IWidget>();
-        }
-
-        [Test]
-        public void Get_concrete_key_from_attribute_if_it_exists()
-        {
-            var plugin = new Plugin(typeof (ColorWidget));
-            Assert.AreEqual("Color", plugin.ConcreteKey);
         }
 
         [Test]
@@ -471,29 +424,28 @@ namespace StructureMap.Testing.Graph
         public BreedEnum OtherBreed { get; set; }
     }
 
-    [PluginFamily("Pushrod")]
+    //[PluginFamily("Pushrod")]
     public interface IEngine
     {
     }
 
 
 
-    [Pluggable("Pushrod")]
+    [Named("Pushrod")]
     public class PushrodEngine : IEngine
     {
     }
 
-    [Pluggable("DOHC")]
+    [Named("DOHC")]
     public class DOHCEngine : IEngine
     {
     }
 
-    [PluginFamily]
     public interface IAutomobile
     {
     }
 
-    [Pluggable("GrandPrix")]
+    [Named("GrandPrix")]
     public class GrandPrix : IAutomobile
     {
         private readonly string _breed;
@@ -509,7 +461,7 @@ namespace StructureMap.Testing.Graph
     }
 
 
-    [Pluggable("Mustang")]
+    [Named("Mustang")]
     public class Mustang : IAutomobile
     {
         private readonly IEngine _engine;
@@ -522,11 +474,26 @@ namespace StructureMap.Testing.Graph
         public IEngine Engine { get { return _engine; } }
     }
 
-    [Pluggable("NoConstructor")]
+    [Named("NoConstructor")]
     public class ClassWithNoConstructor
     {
         private ClassWithNoConstructor()
         {
+        }
+    }
+
+    public class NamedAttribute : InstanceAttribute
+    {
+        private readonly string _name;
+
+        public NamedAttribute(string name)
+        {
+            _name = name;
+        }
+
+        public override void Alter(ConstructorInstance instance)
+        {
+            instance.Name = _name;
         }
     }
 }

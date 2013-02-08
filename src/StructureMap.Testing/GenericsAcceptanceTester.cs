@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using NUnit.Framework;
+using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.GenericWidgets;
@@ -11,28 +12,63 @@ namespace StructureMap.Testing
     [TestFixture]
     public class GenericsAcceptanceTester
     {
-        #region Setup/Teardown
 
-        [SetUp]
-        public void SetUp()
+
+        public interface IService<T>{}
+        public interface IHelper<T>{}
+        public class Service<T> : IService<T>
         {
+            private readonly IHelper<T> _helper;
+
+            public Service(IHelper<T> helper)
+            {
+                _helper = helper;
+            }
+
+            public IHelper<T> Helper
+            {
+                get { return _helper; }
+            }
         }
 
-        #endregion
+        public class Service2<T> : IService<T>
+        {
+            public Type GetT()
+            {
+                return typeof(T);
+            }
+        }
 
+        public class ServiceWithPlug<T> : IService<T>
+        {
+            private readonly IPlug<T> _plug;
+
+            public ServiceWithPlug(IPlug<T> plug)
+            {
+                _plug = plug;
+            }
+
+
+            public IPlug<T> Plug { get { return _plug; } }
+        }
+
+        public class Helper<T> : IHelper<T>
+        {
+            
+        }
 
         [Test]
         public void CanBuildAGenericObjectThatHasAnotherGenericObjectAsAChild()
         {
-            Type serviceType = typeof (IService<double>);
-            PluginGraph pluginGraph = PluginGraph.BuildGraphFromAssembly(serviceType.Assembly);
-            var manager = new Container(pluginGraph);
+            var container = new Container(x =>
+            {
+                x.For(typeof (IService<>)).Use(typeof (Service<>));
+                x.For(typeof (IHelper<>)).Use(typeof (Helper<>));
+            });
 
-            Type doubleServiceType = typeof (IService<double>);
-
-            var service =
-                (ServiceWithPlug<double>) manager.GetInstance(doubleServiceType, "Plugged");
-            Assert.AreEqual(typeof (double), service.Plug.PlugType);
+            container.GetInstance<IService<string>>()
+                .ShouldBeOfType<Service<string>>()
+                .Helper.ShouldBeOfType<Helper<string>>();
         }
 
         [Test]
@@ -92,6 +128,7 @@ namespace StructureMap.Testing
             var con = new Container(x =>
             {
                 x.ForSingletonOf(typeof (IService<>)).Use(typeof (Service<>));
+                x.For(typeof (IHelper<>)).Use(typeof (Helper<>));
             });
 
             var first = con.GetInstance<IService<string>>();
@@ -119,6 +156,8 @@ namespace StructureMap.Testing
         public void Define_profile_with_generics_and_concrete_type()
         {
             var container = new Container(registry => {
+                registry.For(typeof (IHelper<>)).Use(typeof (Helper<>));
+
                 registry.Profile("1", x => {
                     x.For(typeof(IService<>)).Use(typeof(Service<>));
                 });
@@ -145,6 +184,8 @@ namespace StructureMap.Testing
                 r.For(typeof (IService<>)).Add(typeof (Service<>)).Named("Service1");
                 r.For(typeof (IService<>)).Add(typeof (Service2<>)).Named("Service2");
 
+                r.For(typeof(IHelper<>)).Use(typeof(Helper<>));
+
                 r.Profile("1", x => {
                     x.For(typeof (IService<>)).Use("Service1");
                 });
@@ -166,7 +207,14 @@ namespace StructureMap.Testing
         [Test]
         public void GenericsTypeAndProfileOrMachine()
         {
-            PluginGraph pluginGraph = PluginGraph.BuildGraphFromAssembly(typeof (IService<>).Assembly);
+            var registry = new Registry();
+            registry.For(typeof(IHelper<>)).Use(typeof(Helper<>));
+            registry.For(typeof (IService<>)).Use(typeof (Service<>)).Named("Default");
+            registry.For(typeof (IService<>)).Add(typeof (ServiceWithPlug<>)).Named("Plugged");
+            registry.For(typeof(IPlug<>)).Use(typeof(ConcretePlug<>));
+
+            var pluginGraph = registry.Build();
+
             pluginGraph.SetDefault("1", typeof (IService<>), new ReferencedInstance("Default"));
             pluginGraph.SetDefault("2", typeof (IService<>), new ReferencedInstance("Plugged"));
 

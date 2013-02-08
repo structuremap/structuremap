@@ -28,6 +28,7 @@ namespace StructureMap.Testing
                 x.For(typeof (IService<>)).Use(typeof (Service<>)).Named("Default");
 
                 x.For(typeof (AbstractClass<>)).Use(typeof(ConcreteClass<>));
+                                               x.For(typeof (AbstractClass<>)).Singleton();
             });
         }
 
