@@ -34,7 +34,7 @@ namespace StructureMap.Configuration
             try
             {
                 Type pluginType = pluginTypePath.FindType();
-                PluginFamily family = _pluginGraph.FindFamily(pluginType);
+                PluginFamily family = _pluginGraph.Families[pluginType];
                 action(family);
             }
             catch (Exception ex)

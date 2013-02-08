@@ -154,7 +154,7 @@ namespace StructureMap.Pipeline
 
         private void findFamilyDefaults(PluginGraph graph)
         {
-            foreach (PluginFamily family in graph.PluginFamilies)
+            foreach (PluginFamily family in graph.Families)
             {
                 family.FillDefault(_default);
             }

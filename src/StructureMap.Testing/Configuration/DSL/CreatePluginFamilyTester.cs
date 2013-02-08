@@ -110,7 +110,7 @@ namespace StructureMap.Testing.Configuration.DSL
             registry.For<IGateway>();
             PluginGraph pluginGraph = registry.Build();
 
-            Assert.IsTrue(pluginGraph.ContainsFamily(typeof (IGateway)));
+            Assert.IsTrue(pluginGraph.Families.Has(typeof (IGateway)));
         }
 
 
@@ -149,7 +149,7 @@ namespace StructureMap.Testing.Configuration.DSL
             registry.For<IGateway>().Use<StubbedGateway>();
 
             PluginGraph pluginGraph = registry.Build();
-            Assert.IsTrue(pluginGraph.ContainsFamily(typeof (IGateway)));
+            Assert.IsTrue(pluginGraph.Families.Has(typeof (IGateway)));
 
             var manager = new Container(pluginGraph);
             var gateway = (IGateway) manager.GetInstance(typeof (IGateway));
@@ -164,7 +164,7 @@ namespace StructureMap.Testing.Configuration.DSL
             registry.For<IGateway>().Use<FakeGateway>();
             PluginGraph pluginGraph = registry.Build();
 
-            Assert.IsTrue(pluginGraph.ContainsFamily(typeof (IGateway)));
+            Assert.IsTrue(pluginGraph.Families.Has(typeof (IGateway)));
 
             var container = new Container(pluginGraph);
             var gateway = (IGateway) container.GetInstance(typeof (IGateway));

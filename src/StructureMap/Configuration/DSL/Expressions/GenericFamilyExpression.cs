@@ -32,7 +32,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         {
             _registry.alter = graph =>
             {
-                var family = graph.FindFamily(_pluginType);
+                var family = graph.Families[_pluginType];
                 action(family);
             };
 

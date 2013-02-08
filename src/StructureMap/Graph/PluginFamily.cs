@@ -210,7 +210,7 @@ namespace StructureMap.Graph
                 .Each(templatedFamily.AddInstance);
 
             // Need to attach the new PluginFamily to the old PluginGraph
-            Parent.PluginFamilies.Add(templatedFamily);
+            Parent.AddFamily(templatedFamily);
 
 
             return templatedFamily;

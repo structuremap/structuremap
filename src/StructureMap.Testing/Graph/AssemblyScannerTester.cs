@@ -93,12 +93,12 @@ namespace StructureMap.Testing.Graph
 
         private void shouldHaveFamily<T>()
         {
-            theGraph.PluginFamilies.Contains(typeof (T)).ShouldBeTrue();
+            theGraph.Families.Has(typeof (T)).ShouldBeTrue();
         }
 
         private void shouldNotHaveFamily<T>()
         {
-            theGraph.PluginFamilies.Contains(typeof (T)).ShouldBeFalse();
+            theGraph.Families.Has(typeof(T)).ShouldBeFalse();
         }
 
 
@@ -106,12 +106,12 @@ namespace StructureMap.Testing.Graph
         {
             // The Types may not be "Equal" if their assemblies were loaded in different load contexts (.LoadFrom)
             // so we will consider them equal if their names match.
-            theGraph.PluginFamilies.Any(family => family.PluginType.FullName == typeof (T).FullName).ShouldBeTrue();
+            theGraph.Families.Any(family => family.PluginType.FullName == typeof (T).FullName).ShouldBeTrue();
         }
 
         private void shouldNotHaveFamilyWithSameName<T>()
         {
-            theGraph.PluginFamilies.Any(family => family.PluginType.FullName == typeof (T).FullName).ShouldBeFalse();
+            theGraph.Families.Any(family => family.PluginType.FullName == typeof (T).FullName).ShouldBeFalse();
         }
 
         [Test]

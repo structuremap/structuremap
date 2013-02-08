@@ -75,7 +75,7 @@ namespace StructureMap.Pipeline
 
             foreach (var pair in _instances)
             {
-                PluginFamily family = graph.FindFamily(pair.Key);
+                PluginFamily family = graph.Families[pair.Key];
                 Instance masterInstance = ((IDiagnosticInstance) pair.Value)
                     .FindInstanceForProfile(family, _name, graph.Log);
 

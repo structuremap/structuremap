@@ -26,7 +26,7 @@ namespace StructureMap.Configuration.DSL.Expressions
 
             registry.alter = graph =>
             {
-                PluginFamily family = graph.FindFamily(_pluginType);
+                PluginFamily family = graph.Families[_pluginType];
 
                 _children.Each(action => action(graph));
                 _alterations.Each(action => action(family));

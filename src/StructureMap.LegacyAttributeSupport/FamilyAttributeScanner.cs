@@ -7,10 +7,7 @@ namespace StructureMap.Graph
     {
         public void Process(Type type, Registry registry)
         {
-            if (PluginFamilyAttribute.MarkedAsPluginFamily(type))
-            {
-                registry.Configure(x => x.FindFamily(type));
-            }
+            throw new NotImplementedException("do something else");
         }
     }
 }

@@ -22,7 +22,7 @@ namespace StructureMap.LegacyAttributeSupport.Testing
             scanner.Process(typeof(ITypeThatHasAttributeButIsNotInRegistry), registry);
             registry.ShouldBeOfType<IPluginGraphConfiguration>().Configure(graph);
 
-            graph.PluginFamilies.Contains(typeof(ITypeThatHasAttributeButIsNotInRegistry)).ShouldBeTrue();
+            graph.Families.Has(typeof(ITypeThatHasAttributeButIsNotInRegistry)).ShouldBeTrue();
 
             graph = new PluginGraph();
             registry = new Registry();
@@ -30,7 +30,7 @@ namespace StructureMap.LegacyAttributeSupport.Testing
             scanner.Process(GetType(), registry);
             registry.ShouldBeOfType<IPluginGraphConfiguration>().Configure(graph);
 
-            graph.PluginFamilies.Contains(GetType()).ShouldBeFalse();
+            graph.Families.Has(GetType()).ShouldBeFalse();
         }
     }
 }

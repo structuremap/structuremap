@@ -232,9 +232,6 @@
     <Compile Include="Graph\PluginFamily.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Graph\PluginFamilyCollection.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Graph\PluginGraph.cs">
       <SubType>Code</SubType>
     </Compile>

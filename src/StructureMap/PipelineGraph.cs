@@ -36,8 +36,8 @@ namespace StructureMap
             _log = graph.Log;
 
 
-            graph.PluginFamilies.Where(x => x.IsGenericTemplate).Each(_genericsGraph.AddFamily);
-            graph.PluginFamilies.Where(x => !x.IsGenericTemplate).Each(family =>
+            graph.Families.Where(x => x.IsGenericTemplate).Each(_genericsGraph.AddFamily);
+            graph.Families.Where(x => !x.IsGenericTemplate).Each(family =>
             {
                 var factory = new InstanceFactory(family);
                 _factories.Add(family.PluginType, factory);
@@ -115,7 +115,7 @@ namespace StructureMap
 
         public void ImportFrom(PluginGraph graph)
         {
-            foreach (PluginFamily family in graph.PluginFamilies)
+            foreach (PluginFamily family in graph.Families)
             {
                 if (family.IsGenericTemplate)
                 {

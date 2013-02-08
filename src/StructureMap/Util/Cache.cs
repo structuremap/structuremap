@@ -1,52 +1,63 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using StructureMap.Graph;
-using StructureMap.Pipeline;
 
 namespace StructureMap.Util
 {
+    [Obsolete("Replace this with the one from FubuCore")]
     [Serializable]
-    public class Cache<KEY, VALUE> : IEnumerable<VALUE> where VALUE : class
+    public class Cache<TKey, TValue> : IEnumerable<TValue> where TValue : class
     {
         private readonly object _locker = new object();
-        private readonly IDictionary<KEY, VALUE> _values;
+        private readonly IDictionary<TKey, TValue> _values;
 
-        private Func<VALUE, KEY> _getKey = delegate { throw new NotImplementedException(); };
+        private Func<TValue, TKey> _getKey = delegate { throw new NotImplementedException(); };
 
-        private Func<KEY, VALUE> _onMissing = delegate(KEY key)
+        private Func<TKey, TValue> _onMissing = delegate(TKey key)
         {
-            string message = string.Format("Key '{0}' could not be found", key);
+            var message = string.Format("Key '{0}' could not be found", key);
             throw new KeyNotFoundException(message);
         };
 
         public Cache()
-            : this(new Dictionary<KEY, VALUE>())
+            : this(new Dictionary<TKey, TValue>())
         {
         }
 
-        public Cache(Func<KEY, VALUE> onMissing)
-            : this(new Dictionary<KEY, VALUE>(), onMissing)
+        public Cache(Func<TKey, TValue> onMissing)
+            : this(new Dictionary<TKey, TValue>(), onMissing)
         {
         }
 
-        public Cache(IDictionary<KEY, VALUE> dictionary, Func<KEY, VALUE> onMissing)
+        public Cache(IDictionary<TKey, TValue> dictionary, Func<TKey, TValue> onMissing)
             : this(dictionary)
         {
             _onMissing = onMissing;
         }
 
-        public Cache(IDictionary<KEY, VALUE> dictionary)
+        public Cache(IDictionary<TKey, TValue> dictionary)
         {
             _values = dictionary;
         }
 
-        public Func<KEY, VALUE> OnMissing
+
+        /// <summary>
+        ///   Guarantees that the Cache has the default value for a given key.
+        ///   If it does not already exist, it's created.
+        /// </summary>
+        /// <param name = "key"></param>
+        public void FillDefault(TKey key)
+        {
+            Fill(key, _onMissing(key));
+        }
+
+
+        public Func<TKey, TValue> OnMissing
         {
             set { _onMissing = value; }
         }
 
-        public Func<VALUE, KEY> GetKey
+        public Func<TValue, TKey> GetKey
         {
             get { return _getKey; }
             set { _getKey = value; }
@@ -57,7 +68,7 @@ namespace StructureMap.Util
             get { return _values.Count; }
         }
 
-        public VALUE First
+        public TValue First
         {
             get
             {
@@ -70,7 +81,7 @@ namespace StructureMap.Util
             }
         }
 
-        public VALUE this[KEY key]
+        public TValue this[TKey key]
         {
             get
             {
@@ -80,9 +91,9 @@ namespace StructureMap.Util
                     {
                         if (!_values.ContainsKey(key))
                         {
-                            VALUE value = _onMissing(key);
+                            var value = _onMissing(key);
                             //Check to make sure that the onMissing didn't cache this already
-                            if(!_values.ContainsKey(key))
+                            if (!_values.ContainsKey(key))
                                 _values.Add(key, value);
                         }
                     }
@@ -103,21 +114,17 @@ namespace StructureMap.Util
             }
         }
 
-        #region IEnumerable<VALUE> Members
-
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return ((IEnumerable<VALUE>)this).GetEnumerator();
+            return ((IEnumerable<TValue>) this).GetEnumerator();
         }
 
-        public IEnumerator<VALUE> GetEnumerator()
+        public IEnumerator<TValue> GetEnumerator()
         {
             return _values.Values.GetEnumerator();
         }
 
-        #endregion
-
-        public void Fill(KEY key, VALUE value)
+        public void Fill(TKey key, TValue value)
         {
             if (_values.ContainsKey(key))
             {
@@ -127,9 +134,9 @@ namespace StructureMap.Util
             _values.Add(key, value);
         }
 
-        public bool TryRetrieve(KEY key, out VALUE value)
+        public bool TryRetrieve(TKey key, out TValue value)
         {
-            value = default(VALUE);
+            value = default(TValue);
 
             if (_values.ContainsKey(key))
             {
@@ -140,7 +147,7 @@ namespace StructureMap.Util
             return false;
         }
 
-        public void Each(Action<VALUE> action)
+        public void Each(Action<TValue> action)
         {
             lock (_locker)
             {
@@ -151,7 +158,7 @@ namespace StructureMap.Util
             }
         }
 
-        public void Each(Action<KEY, VALUE> action)
+        public void Each(Action<TKey, TValue> action)
         {
             foreach (var pair in _values)
             {
@@ -159,21 +166,21 @@ namespace StructureMap.Util
             }
         }
 
-        public bool Has(KEY key)
+        public bool Has(TKey key)
         {
             return _values.ContainsKey(key);
         }
 
-        public bool Exists(Predicate<VALUE> predicate)
+        public bool Exists(Predicate<TValue> predicate)
         {
-            bool returnValue = false;
+            var returnValue = false;
 
-            Each(delegate(VALUE value) { returnValue |= predicate(value); });
+            Each(delegate(TValue value) { returnValue |= predicate(value); });
 
             return returnValue;
         }
 
-        public VALUE Find(Predicate<VALUE> predicate)
+        public TValue Find(Predicate<TValue> predicate)
         {
             foreach (var pair in _values)
             {
@@ -186,15 +193,15 @@ namespace StructureMap.Util
             return null;
         }
 
-        public VALUE[] GetAll()
+        public TValue[] GetAll()
         {
-            var returnValue = new VALUE[Count];
+            var returnValue = new TValue[Count];
             _values.Values.CopyTo(returnValue, 0);
 
             return returnValue;
         }
 
-        public void Remove(KEY key)
+        public void Remove(TKey key)
         {
             if (_values.ContainsKey(key))
             {
@@ -207,15 +214,15 @@ namespace StructureMap.Util
             _values.Clear();
         }
 
-        public Cache<KEY, VALUE> Clone()
+        public Cache<TKey, TValue> Clone()
         {
-            var clone = new Cache<KEY, VALUE>(_onMissing);
+            var clone = new Cache<TKey, TValue>(_onMissing);
             _values.Each(pair => clone[pair.Key] = pair.Value);
 
             return clone;
         }
 
-        public void WithValue(KEY key, Action<VALUE> action)
+        public void WithValue(TKey key, Action<TValue> action)
         {
             if (_values.ContainsKey(key))
             {

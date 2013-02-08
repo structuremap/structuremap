@@ -1,3 +1,4 @@
+using System;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 
@@ -11,6 +12,11 @@ namespace StructureMap.Testing
             builder.Add(registry);
 
             return builder.Build();
+        }
+
+        public static PluginFamily FindFamily(this PluginGraph graph, Type pluginType)
+        {
+            return graph.Families[pluginType];
         }
     }
 }

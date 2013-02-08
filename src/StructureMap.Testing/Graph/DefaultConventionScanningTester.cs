@@ -66,8 +66,8 @@ namespace StructureMap.Testing.Graph
 
             registry.ShouldBeOfType<IPluginGraphConfiguration>().Configure(graph);
 
-            Assert.IsFalse(graph.PluginFamilies.Contains(typeof (IServer)));
-            Assert.IsTrue(graph.PluginFamilies.Contains(typeof (IConvention)));
+            Assert.IsFalse(graph.Families.Has(typeof (IServer)));
+            Assert.IsTrue(graph.Families.Has(typeof (IConvention)));
 
             PluginFamily family = graph.FindFamily(typeof (IConvention));
             family.Seal();
