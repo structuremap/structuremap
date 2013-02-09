@@ -48,6 +48,8 @@ namespace StructureMap.Graph
                 MissingInstance = new ConfiguredInstance(_pluginType);
             }
 
+
+
             resetDefault();
 
             Attribute.GetCustomAttributes(typeof (FamilyAttribute), true).OfType<FamilyAttribute>()

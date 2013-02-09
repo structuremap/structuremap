@@ -201,6 +201,7 @@
     <Compile Include="Bugs\EnumerableShouldGetAllValuesTester.cs" />
     <Compile Include="Bugs\FillAllPropertiesShouldWorkForAlreadyConfiguredPluginsBug.cs" />
     <Compile Include="Bugs\GetAllInstancesShouldObserveKeys.cs" />
+    <Compile Include="Bugs\GetNamedInstance_then_GetAllInstances_bug.cs" />
     <Compile Include="Bugs\HttpSessionNullRefBug.cs" />
     <Compile Include="Bugs\IDictionaryAndXmlBugTester.cs" />
     <Compile Include="Bugs\InjectByFuncWithNoPublicConstructors.cs" />
