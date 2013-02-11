@@ -54,23 +54,6 @@ namespace StructureMap.Testing
             ObjectFactory.Initialize(x => { });
         }
 
-
-        [Test]
-        public void TheDefaultNameIs_should_set_the_default_profile_name()
-        {
-            string theDefaultProfileName = "the default profile";
-
-            ObjectFactory.Initialize(x =>
-            {
-                x.Profile(theDefaultProfileName, p => {
-                    p.For<IGateway>().Use(() => null);
-                });
-
-                x.DefaultProfileName = theDefaultProfileName;
-            });
-
-            ObjectFactory.Profile.ShouldEqual(theDefaultProfileName);
-        }
         
         [Test]
         public void TheDefaultContainerName_should_be_ObjectFactory_Guid()

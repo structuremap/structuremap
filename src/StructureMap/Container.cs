@@ -64,7 +64,7 @@ namespace StructureMap
         /// <summary>
         /// Provides queryable access to the configured PluginType's and Instances of this Container
         /// </summary>
-        public IModel Model { get { return new Model(_pipelineGraph, this); } }
+        public IModel Model { get { return new Model(_pipelineGraph, _pluginGraph, this); } }
 
         /// <summary>
         /// Creates or finds the named instance of T
@@ -309,7 +309,7 @@ namespace StructureMap
         /// <summary>
         /// Returns a report detailing the complete configuration of all PluginTypes and Instances
         /// </summary>
-        /// <returns></returns>
+
         public string WhatDoIHave()
         {
             var writer = new WhatDoIHaveWriter(_pipelineGraph);
@@ -493,8 +493,6 @@ namespace StructureMap
         /// pluginType.  Mostly used for temporarily setting up return values of the Container
         /// to introduce mocks or stubs during automated testing scenarios
         /// </summary>
-        /// <param name="pluginType"></param>
-        /// <param name="object"></param>
         public void Inject(Type pluginType, object @object)
         {
             Configure(x => x.For(pluginType).Use(@object));

@@ -9,12 +9,7 @@ namespace StructureMap
 {
     public interface IInitializationExpression : IRegistry
     {
-        /// <summary>
-        /// Designate the Default Profile.  This will be applied as soon as the 
-        /// Container is initialized.
-        /// </summary>
-        string DefaultProfileName { get; set; }
-
+        
         /// <summary>
         /// Imports configuration from an Xml file.  The fileName
         /// must point to an Xml file with valid StructureMap

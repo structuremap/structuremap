@@ -209,7 +209,7 @@ namespace StructureMap.Testing.Graph
             var theNode = new SpecialNode();
             var theTrade = new Trade();
 
-            var command = ObjectFactory
+            var command = ObjectFactory.Container
                 .With(typeof (Node), theNode)
                 .With(theTrade)
                 .GetInstance<Command>();
@@ -235,7 +235,7 @@ namespace StructureMap.Testing.Graph
 
             // Now, set the explicit arg for IProvider
             var theBlueProvider = new BlueProvider();
-            var secondTarget = ObjectFactory.With<IProvider>(theBlueProvider).GetInstance<ExplicitTarget>();
+            var secondTarget = ObjectFactory.Container.With<IProvider>(theBlueProvider).GetInstance<ExplicitTarget>();
             Assert.AreSame(theBlueProvider, secondTarget.Provider);
         }
 
@@ -254,7 +254,7 @@ namespace StructureMap.Testing.Graph
 
             // Now, set the explicit arg for IProvider
             var theBlueProvider = new BlueProvider();
-            ObjectFactory.With<IProvider>(theBlueProvider).GetInstance<ExplicitTarget>()
+            ObjectFactory.Container.With<IProvider>(theBlueProvider).GetInstance<ExplicitTarget>()
                 .Provider.ShouldBeTheSameAs(theBlueProvider);
         }
 
@@ -273,7 +273,7 @@ namespace StructureMap.Testing.Graph
             Assert.AreEqual("Jeremy", firstTarget.Name);
 
             // Now, set the explicit arg for IProvider
-            var secondTarget = ObjectFactory.With("name").EqualTo("Julia").GetInstance<ExplicitTarget>();
+            var secondTarget = ObjectFactory.Container.With("name").EqualTo("Julia").GetInstance<ExplicitTarget>();
             Assert.AreEqual("Julia", secondTarget.Name);
         }
 
@@ -358,7 +358,7 @@ namespace StructureMap.Testing.Graph
 
             var theLump = new Lump();
 
-            var provider = (LumpProvider) ObjectFactory.With(theLump).GetInstance<IProvider>();
+            var provider = (LumpProvider)ObjectFactory.Container.With(theLump).GetInstance<IProvider>();
             Assert.AreSame(theLump, provider.Lump);
         }
 
@@ -366,7 +366,7 @@ namespace StructureMap.Testing.Graph
         public void PassAnArgumentIntoExplicitArgumentsThatMightNotAlreadyBeRegistered()
         {
             var theLump = new Lump();
-            var provider = ObjectFactory.With(theLump).GetInstance<LumpProvider>();
+            var provider = ObjectFactory.Container.With(theLump).GetInstance<LumpProvider>();
             Assert.AreSame(theLump, provider.Lump);
         }
 

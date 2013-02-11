@@ -305,7 +305,7 @@ namespace StructureMap.Testing.DocumentationExamples
 
         private void editInvoice(Invoice invoice, ApplicationController controller)
         {
-            var presenter = ObjectFactory.With(invoice).GetInstance<EditInvoicePresenter>();
+            var presenter = ObjectFactory.Container.With(invoice).GetInstance<EditInvoicePresenter>();
             controller.ActivateScreen(presenter);
         }
     }
@@ -353,9 +353,9 @@ namespace StructureMap.Testing.DocumentationExamples
             // Put the main form, and some of its children into StructureMap
             // where other Controllers and Commands can get to them
             // without being coupled to the main form
-            ObjectFactory.Inject<IApplicationShell>(shell);
-            ObjectFactory.Inject(shell.QueryToolBar);
-            ObjectFactory.Inject(shell.ExplorerPane);
+            ObjectFactory.Container.Inject<IApplicationShell>(shell);
+            ObjectFactory.Container.Inject(shell.QueryToolBar);
+            ObjectFactory.Container.Inject(shell.ExplorerPane);
 
 
             Application.Run(shell);
@@ -378,7 +378,7 @@ namespace StructureMap.Testing.DocumentationExamples
         {
             if (_hasStarted)
             {
-                ObjectFactory.ResetDefaults();
+                ObjectFactory.Initialize(_=>{});
             }
             else
             {

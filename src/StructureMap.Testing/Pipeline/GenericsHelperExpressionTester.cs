@@ -178,7 +178,7 @@ namespace StructureMap.Testing.Pipeline
                 x => { x.For<IHandler<Shipment>>().Use<ShipmentHandler>(); });
 
             var shipment = new Shipment();
-            var handler = ObjectFactory.ForObject(shipment).GetClosedTypeOf(typeof (IHandler<>)).As<IHandler>();
+            var handler = ObjectFactory.Container.ForObject(shipment).GetClosedTypeOf(typeof (IHandler<>)).As<IHandler>();
 
             handler.ShouldBeOfType<ShipmentHandler>().Shipment.ShouldBeTheSameAs(shipment);
         }

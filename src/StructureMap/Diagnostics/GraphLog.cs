@@ -70,6 +70,8 @@ namespace StructureMap.Diagnostics
 
         public string BuildFailureMessage()
         {
+            if (_errors.Count == 0)
+                return "No Errors";
             var sb = new StringBuilder();
             var writer = new StringWriter(sb);
 
