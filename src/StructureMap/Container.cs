@@ -533,11 +533,6 @@ namespace StructureMap
 
             _interceptorLibrary = pluginGraph.InterceptorLibrary;
 
-            if (!pluginGraph.IsSealed)
-            {
-                pluginGraph.Seal();
-            }
-
             _pluginGraph = pluginGraph;
 
             var thisInstance = new ObjectInstance(this);

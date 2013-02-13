@@ -96,25 +96,7 @@ namespace StructureMap.Testing.Graph
             var instance = new ConfiguredInstance(typeof (TheGateway)).Named(theInstanceKey);
             family.AddInstance(instance);
 
-            family.ValidatePluggabilityOfInstances(new GraphLog());
-
             family.GetDefaultInstance().ShouldBeTheSameAs(instance);
-        }
-
-        [Test]
-        public void Log_104_if_instance_cannot_be_added_into_PluginFamily()
-        {
-            TestUtility.AssertErrorIsLogged(104, graph =>
-            {
-                var family = new PluginFamily(typeof (IGateway));
-                var instance = new ConfiguredInstance(typeof (ColorRule));
-
-                Assert.IsFalse(typeof (Rule).CanBeCastTo(typeof (IGateway)));
-
-                family.AddInstance(instance);
-
-                family.ValidatePluggabilityOfInstances(graph.Log);
-            });
         }
 
         [Test]

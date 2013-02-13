@@ -40,14 +40,6 @@ namespace StructureMap.Testing.Graph
         }
 
 
-        [Test]
-        public void Seal_does_not_throw_an_exception_if_there_are_no_errors()
-        {
-            var graph = new PluginGraph();
-            Assert.AreEqual(0, graph.Log.ErrorCount);
-
-            graph.Seal();
-        }
     }
 
     //[PluginFamily]

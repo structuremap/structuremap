@@ -79,13 +79,6 @@ namespace StructureMap.Testing.Diagnostics
             doctor.RunReport().Result.ShouldEqual(DoctorResult.BootstrapperCouldNotBeFound);
         }
 
-        [Test]
-        public void Configuration_errors_returns_failure_and_failure_report()
-        {
-            DoctorReport report = fetchReport<BootstrapperThatWouldCreateErrors>("");
-            report.Result.ShouldEqual(DoctorResult.ConfigurationErrors);
-            report.ErrorMessages.ShouldContain("cannot be plugged into type");
-        }
 
         [Test]
         public void Happy_path_returns_successful()

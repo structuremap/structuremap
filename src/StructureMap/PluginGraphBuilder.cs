@@ -47,7 +47,8 @@ namespace StructureMap
             var types = new TypePool(_graph);
             _scanners.Each(x => x.ScanForTypes(types, _graph));
 
-            _graph.Seal();
+            // TODO -- going to kill this later when Profile's are rewritten because they're stupid
+            _graph.ProfileManager.Seal(_graph);
 
             return _graph;
         }

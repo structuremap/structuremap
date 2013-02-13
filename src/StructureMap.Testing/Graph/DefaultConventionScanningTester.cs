@@ -70,7 +70,6 @@ namespace StructureMap.Testing.Graph
             Assert.IsTrue(graph.Families.Has(typeof (IConvention)));
 
             PluginFamily family = graph.FindFamily(typeof (IConvention));
-            family.ValidatePluggabilityOfInstances(graph.Log);
             Assert.AreEqual(1, family.InstanceCount);
         }
 

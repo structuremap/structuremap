@@ -94,26 +94,6 @@ namespace StructureMap.Graph
             pluggedTypes.ForEach(AddType);
         }
 
-        // TODO -- move all of this code into a new PluginGraphBuilder
-        public void ValidatePluggabilityOfInstances(GraphLog graphLog)
-        {
-            _instances.Each(instance =>
-            {
-                IDiagnosticInstance diagnosticInstance = instance;
-
-                graphLog.Try(() => diagnosticInstance.Preprocess(this))
-                    .AndReportErrorAs(104, diagnosticInstance.CreateToken(), _pluginType);
-
-
-                if (!diagnosticInstance.CanBePartOfPluginFamily(this))
-                {
-                    graphLog.RegisterError(104, diagnosticInstance.CreateToken(), _pluginType);
-                }
-            });
-        }
-
-        // TODO -- move all of this code into a new PluginGraphBuilder
-
         public Instance GetInstance(string name)
         {
             return _instances[name];

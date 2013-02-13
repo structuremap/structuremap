@@ -10,7 +10,6 @@ namespace StructureMap.Pipeline
         bool CanBePartOfPluginFamily(PluginFamily family);
         Instance FindInstanceForProfile(PluginFamily family, string profileName, GraphLog log);
         InstanceToken CreateToken();
-        void Preprocess(PluginFamily family);
     }
 
     public abstract class Instance : IDiagnosticInstance
@@ -52,11 +51,6 @@ namespace StructureMap.Pipeline
         InstanceToken IDiagnosticInstance.CreateToken()
         {
             return new InstanceToken(Name, getDescription());
-        }
-
-        void IDiagnosticInstance.Preprocess(PluginFamily family)
-        {
-            preprocess(family);
         }
 
         #endregion
@@ -111,12 +105,6 @@ namespace StructureMap.Pipeline
         protected virtual Type getConcreteType(Type pluginType)
         {
             return pluginType;
-        }
-
-        [CLSCompliant(false)]
-        protected virtual void preprocess(PluginFamily family)
-        {
-            // no-op;
         }
 
         protected abstract string getDescription();

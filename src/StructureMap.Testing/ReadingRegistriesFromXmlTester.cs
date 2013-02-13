@@ -25,16 +25,6 @@ namespace StructureMap.Testing
             container.GetInstance<ColorRule>().Color.ShouldEqual("Cornflower");
         }
 
-        [Test]
-        public void graphbuilder_can_add_a_registry_directly()
-        {
-            var graph = new PluginGraph();
-            var builder = new GraphBuilder(graph);
-            builder.AddRegistry(typeof (XmlFileRegistry).AssemblyQualifiedName);
-
-            var container = new Container(graph);
-            TheXmlFileRegistryWasLoadedInto(container);
-        }
 
         [Test]
         public void handles_failures_gracefully_if_the_registry_cannot_be_loaded()

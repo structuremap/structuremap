@@ -42,7 +42,6 @@ namespace StructureMap.Graph
         private readonly ProfileManager _profileManager = new ProfileManager();
         private readonly List<Registry> _registries = new List<Registry>();
         private GraphLog _log = new GraphLog();
-        private bool _sealed;
 
         public PluginGraph()
         {
@@ -63,14 +62,6 @@ namespace StructureMap.Graph
         {
             get { return _log; }
             set { _log = value; }
-        }
-
-        /// <summary>
-        ///   Designates whether a PluginGraph has been "Sealed."
-        /// </summary>
-        public bool IsSealed
-        {
-            get { return _sealed; }
         }
 
         // TODO -- do something tighter here later
@@ -103,24 +94,6 @@ namespace StructureMap.Graph
         public virtual void AddType(Type pluginType, Type concreteType, string name)
         {
             _families[pluginType].AddType(concreteType, name);
-        }
-
-        /// <summary>
-        ///   Closes the PluginGraph for adding or removing members.  Runs all the <see cref = "AssemblyScanner"> AssemblyScanner's</see>
-        ///   and attempts to attach concrete types to the proper plugin types.  Calculates the Profile defaults.
-        /// </summary>
-        public void Seal()
-        {
-            if (_sealed)
-            {
-                return;
-            }
-
-            _families.Each(family => family.ValidatePluggabilityOfInstances(Log));
-
-            _profileManager.Seal(this);
-
-            _sealed = true;
         }
 
         public void SetDefault(string profileName, Type pluginType, Instance instance)

@@ -23,16 +23,6 @@ namespace StructureMap.Testing.Configuration
         private Container _manager;
         private PluginGraph _graph;
 
-        [Test]
-        public void CreateTheInferredPluginCorrectly()
-        {
-            // Who needs the Law of Demeter?
-            _graph.Seal();
-
-            PluginFamily family = _graph.FindFamily(typeof (IWidget));
-
-            Assert.AreEqual(4, family.InstanceCount);
-        }
 
         [Test]
         public void GetAllRules()
