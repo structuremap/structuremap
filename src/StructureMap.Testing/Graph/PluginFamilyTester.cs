@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
 using NUnit.Framework;
+using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
@@ -76,13 +77,15 @@ namespace StructureMap.Testing.Graph
         public void FillDefault_happy_path()
         {
             var family = new PluginFamily(typeof (IWidget));
-            family.Parent = new PluginGraph();
-            family.SetDefault(new ConfiguredInstance(typeof (ColorWidget)).Named("Default"));
+            var configuredInstance = new ConfiguredInstance(typeof (ColorWidget)).Named("Default");
+            family.SetDefault(configuredInstance);
 
 
-            family.FillDefault(new Profile("theProfile"));
+            var profile = new Profile("theProfile");
+            family.FillDefault(profile);
 
-            family.Parent.Log.AssertHasNoError(210);
+            profile.GetDefault(typeof (IWidget))
+                .ShouldBeTheSameAs(configuredInstance);
         }
 
         [Test]
@@ -93,7 +96,7 @@ namespace StructureMap.Testing.Graph
             var instance = new ConfiguredInstance(typeof (TheGateway)).Named(theInstanceKey);
             family.AddInstance(instance);
 
-            family.Seal();
+            family.ValidatePluggabilityOfInstances(new GraphLog());
 
             family.GetDefaultInstance().ShouldBeTheSameAs(instance);
         }
@@ -103,14 +106,14 @@ namespace StructureMap.Testing.Graph
         {
             TestUtility.AssertErrorIsLogged(104, graph =>
             {
-                var family = new PluginFamily(typeof (IGateway), graph);
+                var family = new PluginFamily(typeof (IGateway));
                 var instance = new ConfiguredInstance(typeof (ColorRule));
 
                 Assert.IsFalse(typeof (Rule).CanBeCastTo(typeof (IGateway)));
 
                 family.AddInstance(instance);
 
-                family.Seal();
+                family.ValidatePluggabilityOfInstances(graph.Log);
             });
         }
 

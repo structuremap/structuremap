@@ -46,7 +46,7 @@ namespace StructureMap.Graph
 
         public PluginGraph()
         {
-            _families = new Cache<Type, PluginFamily>(type => new PluginFamily(type, this));
+            _families = new Cache<Type, PluginFamily>(type => new PluginFamily(type));
         }
 
         public List<Registry> Registries
@@ -116,7 +116,7 @@ namespace StructureMap.Graph
                 return;
             }
 
-            _families.Each(family => family.Seal());
+            _families.Each(family => family.ValidatePluggabilityOfInstances(Log));
 
             _profileManager.Seal(this);
 

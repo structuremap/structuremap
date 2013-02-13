@@ -62,8 +62,6 @@ namespace StructureMap
 
         public static InstanceFactory CreateFactoryForFamily(PluginFamily family, ProfileManager profileManager)
         {
-            family.Seal();
-
             var factory = new InstanceFactory(family);
 
             Instance instance = family.GetDefaultInstance();

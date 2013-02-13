@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using StructureMap.Diagnostics;
 using StructureMap.Pipeline;
 using StructureMap.TypeRules;
 using StructureMap.Util;
@@ -29,17 +30,10 @@ namespace StructureMap.Graph
     {
         private readonly Cache<string, Instance> _instances = new Cache<string, Instance>(delegate { return null; });
         private readonly Type _pluginType;
-        private PluginGraph _parent;
         private Lazy<Instance> _defaultInstance; 
 
         public PluginFamily(Type pluginType)
-            : this(pluginType, new PluginGraph())
         {
-        }
-
-        public PluginFamily(Type pluginType, PluginGraph parent)
-        {
-            _parent = parent;
             _pluginType = pluginType;
 
             // TODO -- like to clean this up so it happens more at runtime
@@ -63,7 +57,6 @@ namespace StructureMap.Graph
 
     	public InstanceScope? Scope { get; private set; }
 
-    	public PluginGraph Parent { get { return _parent; } set { _parent = value; } }
         public IEnumerable<Instance> Instances { get { return _instances.GetAll(); } }
 
         public void SetScopeTo(InstanceScope scope)
@@ -102,28 +95,24 @@ namespace StructureMap.Graph
         }
 
         // TODO -- move all of this code into a new PluginGraphBuilder
-        public void Seal()
-        {
-            validatePluggabilityOfInstances();
-        }
-
-        // TODO -- move all of this code into a new PluginGraphBuilder
-        private void validatePluggabilityOfInstances()
+        public void ValidatePluggabilityOfInstances(GraphLog graphLog)
         {
             _instances.Each(instance =>
             {
                 IDiagnosticInstance diagnosticInstance = instance;
 
-                _parent.Log.Try(() => diagnosticInstance.Preprocess(this))
+                graphLog.Try(() => diagnosticInstance.Preprocess(this))
                     .AndReportErrorAs(104, diagnosticInstance.CreateToken(), _pluginType);
 
 
                 if (!diagnosticInstance.CanBePartOfPluginFamily(this))
                 {
-                    _parent.Log.RegisterError(104, diagnosticInstance.CreateToken(), _pluginType);
+                    graphLog.RegisterError(104, diagnosticInstance.CreateToken(), _pluginType);
                 }
             });
         }
+
+        // TODO -- move all of this code into a new PluginGraphBuilder
 
         public Instance GetInstance(string name)
         {
@@ -184,7 +173,7 @@ namespace StructureMap.Graph
         public PluginFamily CreateTemplatedClone(Type[] templateTypes)
         {
             Type templatedType = _pluginType.MakeGenericType(templateTypes);
-            var templatedFamily = new PluginFamily(templatedType, Parent);
+            var templatedFamily = new PluginFamily(templatedType);
             templatedFamily.Lifecycle = Lifecycle;
 
             _instances.GetAll().Select(x =>
@@ -210,10 +199,6 @@ namespace StructureMap.Graph
             _instances.GetAll()
                 .Where(x => x.ConcreteType.CanBeCastTo(templatedType))
                 .Each(templatedFamily.AddInstance);
-
-            // Need to attach the new PluginFamily to the old PluginGraph
-            Parent.AddFamily(templatedFamily);
-
 
             return templatedFamily;
         }
