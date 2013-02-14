@@ -12,8 +12,19 @@ namespace StructureMap
     public delegate InstanceFactory MissingFactoryFunction(Type pluginType, ProfileManager profileManager);
 
 
+    public interface IPipelineGraph
+    {
+        Instance GetDefault(Type pluginType);
+        bool HasDefaultForPluginType(Type pluginType);
+        bool HasInstance(Type pluginType, string instanceKey);
+        void EachInstance(Action<Type, Instance> action);
+        List<Instance> GetAllInstances();
+        IEnumerable<Instance> GetAllInstances(Type pluginType);
+        Instance FindInstance(Type pluginType, string name);
+        bool IsUnique(Type pluginType);
+    }
 
-    public class PipelineGraph : IDisposable
+    public class PipelineGraph : IDisposable, IPipelineGraph
     {
         private readonly Dictionary<Type, IInstanceFactory> _factories
             = new Dictionary<Type, IInstanceFactory>();
@@ -228,6 +239,21 @@ namespace StructureMap
         public List<Instance> GetAllInstances()
         {
             return _factories.Values.SelectMany(x => x.AllInstances).ToList();
+        }
+
+        public IEnumerable<Instance> GetAllInstances(Type pluginType)
+        {
+            return ForType(pluginType).AllInstances;
+        }
+
+        public Instance FindInstance(Type pluginType, string name)
+        {
+            return ForType(pluginType).FindInstance(name);
+        }
+
+        public bool IsUnique(Type pluginType)
+        {
+            return ForType(pluginType).Lifecycle is UniquePerRequestLifecycle;
         }
 
         public bool HasDefaultForPluginType(Type pluginType)

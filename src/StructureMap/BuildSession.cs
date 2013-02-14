@@ -14,13 +14,13 @@ namespace StructureMap
         private readonly IObjectBuilder _builder;
         private readonly InstanceCache _cache = new InstanceCache();
         private readonly Cache<Type, Func<object>> _defaults;
-        private readonly PipelineGraph _pipelineGraph;
+        private readonly IPipelineGraph _pipelineGraph;
         private readonly object _locker = new object();
 
         [CLSCompliant(false)]
         protected BuildStack _buildStack = new BuildStack();
 
-        public BuildSession(PipelineGraph pipelineGraph, IObjectBuilder builder)
+        public BuildSession(IPipelineGraph pipelineGraph, IObjectBuilder builder)
         {
             _builder = builder;
             _pipelineGraph = pipelineGraph;
@@ -54,7 +54,7 @@ namespace StructureMap
             return ForPluginGraph(new PluginGraph());
         }
 
-        protected PipelineGraph pipelineGraph { get { return _pipelineGraph; } }
+        protected IPipelineGraph pipelineGraph { get { return _pipelineGraph; } }
 
         #region IContext Members
 
@@ -161,7 +161,7 @@ namespace StructureMap
 
         public IEnumerable<T> GetAllInstances<T>()
         {
-            return (IEnumerable<T>)forType(typeof(T)).AllInstances.Select(x => (T)CreateInstance(typeof(T), x));
+            return _pipelineGraph.GetAllInstances(typeof(T)).Select(x => (T)CreateInstance(typeof(T), x));
         }
 
         protected void clearBuildStack()
@@ -171,7 +171,7 @@ namespace StructureMap
 
         public virtual object CreateInstance(Type pluginType, string name)
         {
-            Instance instance = forType(pluginType).FindInstance(name);
+            var instance = _pipelineGraph.FindInstance(pluginType, name);
             if (instance == null)
             {
                 throw new StructureMapException(200, name, pluginType.FullName);
@@ -190,7 +190,7 @@ namespace StructureMap
                 result = _builder.Resolve(pluginType, instance, this);
 
                 // TODO: HACK ATTACK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                bool isUnique = forType(pluginType).Lifecycle is UniquePerRequestLifecycle;
+                bool isUnique = _pipelineGraph.IsUnique(pluginType);
                 if (!isUnique)
                 {
                     _cache.Set(pluginType, instance, result);
@@ -205,7 +205,7 @@ namespace StructureMap
         {
             if (instances == null)
             {
-                instances = forType(pluginType).AllInstances;
+                instances = _pipelineGraph.GetAllInstances(pluginType).ToArray();
             }
 
             Array array = Array.CreateInstance(pluginType, instances.Length);
@@ -221,7 +221,8 @@ namespace StructureMap
 
         public IEnumerable<object> GetAllInstances(Type pluginType)
         {
-            return forType(pluginType).AllInstances.Select(x => CreateInstance(pluginType, x));
+            var allInstances = _pipelineGraph.GetAllInstances(pluginType);
+            return allInstances.Select(x => CreateInstance(pluginType, x));
         }
 
         public virtual object CreateInstance(Type pluginType)
@@ -238,12 +239,6 @@ namespace StructureMap
             {
                 _defaults[pluginType] = creator;
             }
-        }
-
-
-        private IInstanceFactory forType(Type pluginType)
-        {
-            return _pipelineGraph.ForType(pluginType);
         }
     }
 }
