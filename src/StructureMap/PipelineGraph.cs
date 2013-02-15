@@ -55,6 +55,12 @@ namespace StructureMap
 
         public GraphLog Log { get { return _log; } }
 
+        public IPipelineGraph ForProfile(string profile)
+        {
+            CurrentProfile = profile;
+            return this;
+        }
+
         public MissingFactoryFunction OnMissingFactory { set { _missingFactory = value; } }
 
         public string CurrentProfile { get { return _profileManager.CurrentProfile; } set { _profileManager.CurrentProfile = value; } }

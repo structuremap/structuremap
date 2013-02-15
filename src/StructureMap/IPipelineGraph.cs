@@ -20,7 +20,9 @@ namespace StructureMap
         // TODO -- going to add the Instance here.
         IObjectCache FindCache(Type pluginType);
         void SetDefault(Type pluginType, Instance instance);
-        string CurrentProfile { get; set; }
+
+        IPipelineGraph ForProfile(string profile);
+
         MissingFactoryFunction OnMissingFactory { set; }
 
         [Obsolete("This needs to go away.  We'll just have Container.Configure write directly to the PluginGraph")]

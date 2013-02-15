@@ -65,6 +65,11 @@ namespace StructureMap
             throw new NotImplementedException();
         }
 
+        public IPipelineGraph ForProfile(string profile)
+        {
+            throw new NotImplementedException();
+        }
+
         public string CurrentProfile
         {
             get { throw new NotImplementedException(); }

@@ -172,7 +172,7 @@ namespace StructureMap
         /// <param name="profile"></param>
         public void SetDefaultsToProfile(string profile)
         {
-            _pipelineGraph.CurrentProfile = profile;
+            _pipelineGraph = _pipelineGraph.ForProfile(profile);
         }
 
         /// <summary>
