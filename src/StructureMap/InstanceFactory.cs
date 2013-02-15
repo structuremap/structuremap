@@ -97,17 +97,7 @@ namespace StructureMap
 
         public void ImportFrom(PluginFamily family)
         {
-            if (_lifecycle == null)
-            {
-                _lifecycle = family.Lifecycle;
-            }
-            else if ((family.Lifecycle != null &&
-                     !_lifecycle.GetType().Equals(family.Lifecycle.GetType())) || 
-				((family.Scope != null) && (family.Scope.Value.ToString() != _lifecycle.ToName())))
-            {
-                // TODO:  Might need to clear out the existing policy when it's ejected
-                _lifecycle = family.Lifecycle;
-            }
+            _lifecycle = family.Lifecycle;
 
 
             family.Instances.Each(instance => _instances.Fill(instance.Name, instance));

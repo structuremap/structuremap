@@ -31,6 +31,9 @@ namespace StructureMap.Pipeline
 
                 case InstanceScope.Unique:
                     return new UniquePerRequestLifecycle();
+
+                case InstanceScope.Transient:
+                    return null;
             }
 
             throw new ArgumentOutOfRangeException("scope");

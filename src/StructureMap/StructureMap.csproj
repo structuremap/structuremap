@@ -153,8 +153,10 @@
     <Compile Include="Exceptions\StructureMapConfigurationException.cs" />
     <Compile Include="ExplicitArgsExpression.cs" />
     <Compile Include="Graph\Constructor.cs" />
+    <Compile Include="Graph\FamilyAttribute.cs" />
     <Compile Include="Graph\GenericConnectionScanner.cs" />
     <Compile Include="Graph\IArgumentVisitor.cs" />
+    <Compile Include="Graph\InstanceAttribute.cs" />
     <Compile Include="Graph\IPluginFactory.cs" />
     <Compile Include="Graph\IPluginFamily.cs" />
     <Compile Include="Graph\AssemblyScanner.cs" />

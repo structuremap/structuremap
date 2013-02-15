@@ -8,19 +8,6 @@ using StructureMap.Util;
 
 namespace StructureMap.Graph
 {
-
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
-    public abstract class FamilyAttribute : Attribute
-    {
-        public abstract void Alter(PluginFamily family);
-    }
-
-    [AttributeUsage(AttributeTargets.Class)]
-    public abstract class InstanceAttribute : Attribute
-    {
-        public abstract void Alter(ConstructorInstance instance);
-    }
-
     /// <summary>
     /// Conceptually speaking, a PluginFamily object represents a point of abstraction or variability in 
     /// the system.  A PluginFamily defines a CLR Type that StructureMap can build, and all of the possible
@@ -55,28 +42,27 @@ namespace StructureMap.Graph
             _defaultInstance = new Lazy<Instance>(determineDefault);
         }
 
-    	public InstanceScope? Scope { get; private set; }
-
         public IEnumerable<Instance> Instances { get { return _instances.GetAll(); } }
+
+        private Lazy<ILifecycle> _lifecycle = new Lazy<ILifecycle>(() => null);
 
         public void SetScopeTo(InstanceScope scope)
         {
-        	Scope = scope;
-        	if (scope == InstanceScope.Transient)
-            {
-                Lifecycle = null;
-                return;
-            }
-
-            Lifecycle = Lifecycles.GetLifecycle(scope);
+            _lifecycle = new Lazy<ILifecycle>(() => Lifecycles.GetLifecycle(scope));
         }
 
         public void SetScopeTo(ILifecycle lifecycle)
         {
-            Lifecycle = lifecycle;
+            _lifecycle = new Lazy<ILifecycle>(() => lifecycle);
         }
 
-        public ILifecycle Lifecycle { get; private set; }
+        public ILifecycle Lifecycle
+        {
+            get
+            {
+                return _lifecycle.Value;
+            }
+        }
 
         public void AddInstance(Instance instance)
         {
@@ -154,7 +140,7 @@ namespace StructureMap.Graph
         {
             Type templatedType = _pluginType.MakeGenericType(templateTypes);
             var templatedFamily = new PluginFamily(templatedType);
-            templatedFamily.Lifecycle = Lifecycle;
+            templatedFamily._lifecycle = _lifecycle;
 
             _instances.GetAll().Select(x =>
             {

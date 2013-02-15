@@ -33,24 +33,6 @@ namespace StructureMap.Testing.Graph
         private Container _container;
 
         [Test]
-        public void do_not_replace_the_build_Lifecycle_if_it_is_the_same_type_as_the_imported_family()
-        {
-            var originalFamily = new PluginFamily(typeof (IWidget));
-            originalFamily.SetScopeTo(InstanceScope.Singleton);
-            var factory = new InstanceFactory(originalFamily);
-
-            ILifecycle originalLifecycle = factory.Lifecycle;
-
-
-            var family = new PluginFamily(typeof (IWidget));
-            family.SetScopeTo(InstanceScope.Singleton);
-
-            factory.ImportFrom(family);
-
-            factory.Lifecycle.ShouldBeTheSameAs(originalLifecycle);
-        }
-
-        [Test]
         public void eject_all_instances_removes_all_instances_and_ejects_from_the_build_policy()
         {
             var factory = new InstanceFactory(typeof (IGateway));
