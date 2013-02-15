@@ -9,9 +9,9 @@ namespace StructureMap.Query
     public class Model : IModel
     {
         private readonly IContainer _container;
-        private readonly PipelineGraph _graph;
+        private readonly IPipelineGraph _graph;
 
-        internal Model(PipelineGraph graph, PluginGraph pluginGraph, IContainer container)
+        internal Model(IPipelineGraph graph, PluginGraph pluginGraph, IContainer container)
         {
             _graph = graph;
             _container = container;

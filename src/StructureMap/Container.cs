@@ -16,7 +16,7 @@ namespace StructureMap
     public class Container : IContainer
     {
         private InterceptorLibrary _interceptorLibrary;
-        private PipelineGraph _pipelineGraph;
+        private IPipelineGraph _pipelineGraph;
         private PluginGraph _pluginGraph;
 
         public Container(Action<ConfigurationExpression> action)
@@ -99,7 +99,7 @@ namespace StructureMap
 
         public T GetInstance<T>(ExplicitArguments args, string name)
         {
-            Instance namedInstance = _pipelineGraph.ForType(typeof (T)).FindInstance(name);
+            var namedInstance = _pipelineGraph.FindInstance(typeof (T), name);
             return (T) buildInstanceWithArgs(typeof (T), namedInstance, args, name);
         }
 

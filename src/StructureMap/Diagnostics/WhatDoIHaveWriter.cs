@@ -8,11 +8,11 @@ namespace StructureMap.Diagnostics
 {
     public class WhatDoIHaveWriter
     {
-        private readonly PipelineGraph _graph;
+        private readonly IPipelineGraph _graph;
         private List<InstanceRef> _instances;
         private TextReportWriter _writer;
 
-        public WhatDoIHaveWriter(PipelineGraph graph)
+        public WhatDoIHaveWriter(IPipelineGraph graph)
         {
             _graph = graph;
         }
@@ -22,7 +22,6 @@ namespace StructureMap.Diagnostics
             var sb = new StringBuilder();
             var writer = new StringWriter(sb);
 
-            writeSources(writer);
             writeContentsOfPluginTypes(writer);
 
             return sb.ToString();
@@ -44,23 +43,6 @@ namespace StructureMap.Diagnostics
             _writer.AddDivider('=');
 
             _writer.Write(stringWriter);
-        }
-
-        private void writeSources(StringWriter writer)
-        {
-            writer.WriteLine(
-                "===========================================================================================================");
-            writer.WriteLine("Configuration Sources:");
-            writer.WriteLine();
-
-            for (int i = 0; i < _graph.Log.Sources.Length; i++)
-            {
-                string source = _graph.Log.Sources[i];
-                string message = (i + ")").PadRight(5) + source;
-                writer.WriteLine(message);
-            }
-
-            writer.WriteLine();
         }
 
         private void writePluginType(IPluginTypeConfiguration pluginType)

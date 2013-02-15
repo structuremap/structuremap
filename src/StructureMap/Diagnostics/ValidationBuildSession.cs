@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using StructureMap.Graph;
@@ -14,9 +15,9 @@ namespace StructureMap.Diagnostics
         private readonly Stack<BuildDependency> _dependencyStack = new Stack<BuildDependency>();
         private readonly List<ValidationError> _validationErrors = new List<ValidationError>();
         private ErrorCollection _errors;
-        private List<Instance> _explicitInstances;
+        private IEnumerable<Instance> _explicitInstances;
 
-        public ValidationBuildSession(PipelineGraph pipelineGraph, IObjectBuilder builder)
+        public ValidationBuildSession(IPipelineGraph pipelineGraph, IObjectBuilder builder)
             : base(pipelineGraph, builder)
         {
         }

@@ -17,9 +17,9 @@ namespace StructureMap.Pipeline
     public class ObjectBuilder : IObjectBuilder
     {
         private readonly InterceptorLibrary _library;
-        private readonly PipelineGraph _pipeline;
+        private readonly IPipelineGraph _pipeline;
 
-        public ObjectBuilder(PipelineGraph pipeline, InterceptorLibrary library)
+        public ObjectBuilder(IPipelineGraph pipeline, InterceptorLibrary library)
         {
             if (pipeline == null) throw new ArgumentNullException("pipeline");
 

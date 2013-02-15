@@ -18,10 +18,26 @@ namespace StructureMap
         bool HasDefaultForPluginType(Type pluginType);
         bool HasInstance(Type pluginType, string instanceKey);
         void EachInstance(Action<Type, Instance> action);
-        List<Instance> GetAllInstances();
+        IEnumerable<Instance> GetAllInstances();
         IEnumerable<Instance> GetAllInstances(Type pluginType);
         Instance FindInstance(Type pluginType, string name);
         bool IsUnique(Type pluginType);
+
+        // TODO -- going to add the Instance here.
+        IObjectCache FindCache(Type pluginType);
+        void SetDefault(Type pluginType, Instance instance);
+        string CurrentProfile { get; set; }
+        MissingFactoryFunction OnMissingFactory { set; }
+
+        [Obsolete("This needs to go away.  We'll just have Container.Configure write directly to the PluginGraph")]
+        void ImportFrom(PluginGraph graph);
+
+        IEnumerable<IPluginTypeConfiguration> GetPluginTypes(IContainer container);
+        void EjectAllInstancesOf<T>();
+        void Dispose();
+        void Remove(Func<Type, bool> filter);
+        void Remove(Type pluginType);
+        IPipelineGraph ToNestedGraph();
     }
 
     public class PipelineGraph : IDisposable, IPipelineGraph
@@ -104,7 +120,7 @@ namespace StructureMap
             }
         }
 
-        public PipelineGraph ToNestedGraph()
+        public IPipelineGraph ToNestedGraph()
         {
             var clone = new PipelineGraph(_profileManager.Clone(), _genericsGraph.Clone(), _log)
             {
@@ -236,7 +252,7 @@ namespace StructureMap
         }
 
 
-        public List<Instance> GetAllInstances()
+        public IEnumerable<Instance> GetAllInstances()
         {
             return _factories.Values.SelectMany(x => x.AllInstances).ToList();
         }
