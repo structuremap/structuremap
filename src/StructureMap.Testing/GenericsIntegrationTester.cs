@@ -79,16 +79,6 @@ namespace StructureMap.Testing
             Assert.IsNotNull(thing);
         }
 
-        [Test]
-        public void Plugin_can_service_a_generic_type()
-        {
-            Assert.IsTrue(GenericsPluginGraph.CanBePluggedIntoGenericType(typeof (IConcept<>), typeof (SpecificConcept),
-                                                                          typeof (object)));
-            Assert.IsFalse(GenericsPluginGraph.CanBePluggedIntoGenericType(typeof (IConcept<>), typeof (SpecificConcept),
-                                                                           typeof (string)));
-            Assert.IsFalse(GenericsPluginGraph.CanBePluggedIntoGenericType(typeof (IConcept<>), typeof (SpecificConcept),
-                                                                           typeof (int)));
-        }
 
         [Test]
         public void SimpleInstanceManagerTestWithGenerics()

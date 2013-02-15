@@ -39,7 +39,14 @@ namespace StructureMap.Testing.Graph
             graph.Log.AssertFailures();
         }
 
-
+        [Test]
+        public void find_family_for_concrete_type_with_default()
+        {
+            var graph = PluginGraph.Empty();
+            graph.Families[typeof (BigThingy)].GetDefaultInstance()
+                .ShouldBeOfType<ConstructorInstance>()
+                .PluggedType.ShouldEqual(typeof (BigThingy));
+        }
     }
 
     //[PluginFamily]

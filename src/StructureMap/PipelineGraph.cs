@@ -11,11 +11,7 @@ namespace StructureMap
 {
     public delegate InstanceFactory MissingFactoryFunction(Type pluginType, ProfileManager profileManager);
 
-    public interface IFamilyPolicy
-    {
-        bool Matches(Type type);
-        PluginFamily Build(Type type);
-    }
+
 
     public interface IPipelineGraph
     {

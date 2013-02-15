@@ -44,6 +44,8 @@ namespace StructureMap
                 x.Configure(_graph);
             });
 
+            //_graph.AddFamilyPolicy(new CloseGenericFamilyPolicy(_graph));
+
             var types = new TypePool(_graph);
             _scanners.Each(x => x.ScanForTypes(types, _graph));
 

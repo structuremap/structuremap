@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using StructureMap.Pipeline;
 using StructureMap.Util;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Graph
 {
@@ -26,29 +27,29 @@ namespace StructureMap.Graph
             };
         }
 
-        public static bool CanBeCast(Type pluginType, Type TPluggedType)
+        public static bool CanBeCast(Type pluginType, Type pluggedType)
         {
             try
             {
-                return checkGenericType(TPluggedType, pluginType);
+                return checkGenericType(pluggedType, pluginType);
             }
             catch (Exception e)
             {
                 string message =
                     string.Format("Could not Determine Whether Type '{0}' plugs into Type '{1}'",
                                   pluginType.Name,
-                                  TPluggedType.Name);
+                                  pluggedType.Name);
                 throw new ApplicationException(message, e);
             }
         }
 
-        private static bool checkGenericType(Type TPluggedType, Type pluginType)
+        private static bool checkGenericType(Type pluggedType, Type pluginType)
         {
-            if (pluginType.IsAssignableFrom(TPluggedType)) return true;
+            if (pluginType.IsAssignableFrom(pluggedType)) return true;
 
 
 // check interfaces
-            foreach (Type type in TPluggedType.GetInterfaces())
+            foreach (Type type in pluggedType.GetInterfaces())
             {
                 if (!type.IsGenericType)
                 {
@@ -61,9 +62,9 @@ namespace StructureMap.Graph
                 }
             }
 
-            if (TPluggedType.BaseType.IsGenericType)
+            if (pluggedType.BaseType.IsGenericType)
             {
-                Type baseType = TPluggedType.BaseType.GetGenericTypeDefinition();
+                Type baseType = pluggedType.BaseType.GetGenericTypeDefinition();
 
                 if (baseType.Equals(pluginType))
                 {
@@ -104,35 +105,6 @@ namespace StructureMap.Graph
             {
                 return null;
             }
-        }
-
-
-        public static bool CanBePluggedIntoGenericType(Type pluginType, Type TPluggedType, params Type[] templateTypes)
-        {
-            bool isValid = true;
-
-            Type interfaceType = TPluggedType.GetInterface(pluginType.Name);
-            if (interfaceType == null)
-            {
-                interfaceType = TPluggedType.BaseType;
-            }
-
-            Type[] pluginArgs = pluginType.GetGenericArguments();
-            Type[] pluggableArgs = interfaceType.GetGenericArguments();
-
-            if (templateTypes.Length != pluginArgs.Length &&
-                pluginArgs.Length != pluggableArgs.Length)
-            {
-                return false;
-            }
-
-            for (int i = 0; i < templateTypes.Length; i++)
-            {
-                isValid &= templateTypes[i] == pluggableArgs[i] ||
-                           pluginArgs[i].IsGenericParameter &&
-                           pluggableArgs[i].IsGenericParameter;
-            }
-            return isValid;
         }
 
         public void ImportFrom(GenericsPluginGraph source)

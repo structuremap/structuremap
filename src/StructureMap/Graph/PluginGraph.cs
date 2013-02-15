@@ -8,6 +8,7 @@ using StructureMap.Diagnostics;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
 using StructureMap.Util;
+using StructureMap;
 
 namespace StructureMap.Graph
 {
@@ -29,6 +30,10 @@ namespace StructureMap.Graph
         void AddType(Type pluginType, Type concreteType, string name);
     }
 
+    public interface IFamilyPolicy
+    {
+        PluginFamily Build(Type type);
+    }
 
     /// <summary>
     ///   Models the runtime configuration of a StructureMap Container
@@ -37,6 +42,7 @@ namespace StructureMap.Graph
     public class PluginGraph : IPluginGraph
     {
         private readonly Cache<Type, PluginFamily> _families;
+        private readonly IList<IFamilyPolicy> _policies = new List<IFamilyPolicy>();
 
         private readonly InterceptorLibrary _interceptorLibrary = new InterceptorLibrary();
         private readonly ProfileManager _profileManager = new ProfileManager();
@@ -45,7 +51,21 @@ namespace StructureMap.Graph
 
         public PluginGraph()
         {
-            _families = new Cache<Type, PluginFamily>(type => new PluginFamily(type));
+            _families = new Cache<Type, PluginFamily>(type =>
+            {
+                return _policies.FirstValue(x => x.Build(type)) ?? new PluginFamily(type);
+            });
+        }
+
+        public static PluginGraph Empty()
+        {
+            return new PluginGraphBuilder().Build();
+        }
+
+        // TODO -- might simplify this later
+        public void AddFamilyPolicy(IFamilyPolicy policy)
+        {
+            _policies.Add(policy);
         }
 
         public List<Registry> Registries

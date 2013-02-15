@@ -10,6 +10,18 @@ namespace StructureMap
 
     internal static class BasicExtensions
     {
+        public static TReturn FirstValue<TItem, TReturn>(this IEnumerable<TItem> enumerable, Func<TItem, TReturn> func)
+            where TReturn : class
+        {
+            foreach (TItem item in enumerable)
+            {
+                TReturn @object = func(item);
+                if (@object != null) return @object;
+            }
+
+            return null;
+        }
+
         public static string ToName(this ILifecycle lifecycle)
         {
             return lifecycle == null ? InstanceScope.Transient.ToString() : lifecycle.Scope;
@@ -190,29 +202,29 @@ namespace StructureMap
             /// Determines if the PluggedType can be upcast to the pluginType
             /// </summary>
             /// <param name="pluginType"></param>
-            /// <param name="TPluggedType"></param>
+            /// <param name="pluggedType"></param>
             /// <returns></returns>
-            public static bool CanBeCastTo(this Type TPluggedType, Type pluginType)
+            public static bool CanBeCastTo(this Type pluggedType, Type pluginType)
             {
-                if (TPluggedType == null) return false;
+                if (pluggedType == null) return false;
 
-                if (TPluggedType.IsInterface || TPluggedType.IsAbstract)
+                if (pluggedType.IsInterface || pluggedType.IsAbstract)
                 {
                     return false;
                 }
 
                 if (pluginType.IsOpenGeneric())
                 {
-                    return GenericsPluginGraph.CanBeCast(pluginType, TPluggedType);
+                    return GenericsPluginGraph.CanBeCast(pluginType, pluggedType);
                 }
 
-                if (IsOpenGeneric(TPluggedType))
+                if (IsOpenGeneric(pluggedType))
                 {
                     return false;
                 }
 
 
-                return pluginType.IsAssignableFrom(TPluggedType);
+                return pluginType.IsAssignableFrom(pluggedType);
             }
 
 
