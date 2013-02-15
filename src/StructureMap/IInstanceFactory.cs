@@ -7,6 +7,7 @@ namespace StructureMap
     /// <summary>
     /// Interface for a "Factory" pattern class that creates object instances of the PluginType
     /// </summary>
+    [Obsolete]
     public interface IInstanceFactory : IDisposable
     {
         Type PluginType { get; }

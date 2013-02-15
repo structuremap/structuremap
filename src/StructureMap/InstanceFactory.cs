@@ -8,6 +8,7 @@ namespace StructureMap
     /// <summary>
     /// Default implementation of IInstanceFactory
     /// </summary>
+    [Obsolete]
     public class InstanceFactory : IInstanceFactory
     {
         private readonly Type _pluginType;

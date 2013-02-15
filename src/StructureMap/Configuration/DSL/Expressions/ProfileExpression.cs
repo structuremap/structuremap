@@ -6,6 +6,7 @@ namespace StructureMap.Configuration.DSL.Expressions
     /// <summary>
     /// Expression class to help define a runtime Profile
     /// </summary>
+    [Obsolete]
     public class ProfileExpression
     {
         private readonly string _profileName;
