@@ -10,26 +10,6 @@ namespace StructureMap.Testing.Pipeline
     [TestFixture]
     public class ObjectBuilderTester
     {
-        #region Setup/Teardown
-
-        [SetUp]
-        public void SetUp()
-        {
-            graph = new PluginGraph();
-            pipeline = new PipelineGraph(graph);
-            library = new InterceptorLibrary();
-
-            builder = new ObjectBuilder(pipeline, library);
-        }
-
-        #endregion
-
-        private PluginGraph graph;
-        private PipelineGraph pipeline;
-        private InterceptorLibrary library;
-        private ObjectBuilder builder;
-
-
         [Test]
         public void ObjectBuilder_should_throw_308_if_interception_fails()
         {

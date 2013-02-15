@@ -44,7 +44,7 @@ namespace StructureMap
         public static BuildSession ForPluginGraph(PluginGraph graph)
         {
             var pipeline = new PipelineGraph(graph);
-            var builder = new ObjectBuilder(pipeline, graph.InterceptorLibrary);
+            var builder = new ObjectBuilder(graph.InterceptorLibrary);
 
             return new BuildSession(pipeline, builder);
         }
@@ -187,7 +187,7 @@ namespace StructureMap
 
             if (result == null)
             {
-                result = _builder.Resolve(pluginType, instance, this);
+                result = _builder.Resolve(pluginType, instance, this, _pipelineGraph);
 
                 // TODO: HACK ATTACK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 bool isUnique = _pipelineGraph.IsUnique(pluginType);

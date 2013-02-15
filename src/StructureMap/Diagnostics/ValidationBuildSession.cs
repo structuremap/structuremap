@@ -25,7 +25,7 @@ namespace StructureMap.Diagnostics
         public static ValidationBuildSession ValidateForPluginGraph(PluginGraph graph)
         {
             var pipeline = new PipelineGraph(graph);
-            var builder = new ObjectBuilder(pipeline, graph.InterceptorLibrary);
+            var builder = new ObjectBuilder(graph.InterceptorLibrary);
 
             return new ValidationBuildSession(pipeline, builder);
         }

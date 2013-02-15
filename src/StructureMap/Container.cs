@@ -358,7 +358,7 @@ namespace StructureMap
         /// </summary>
         public void AssertConfigurationIsValid()
         {
-            var session = new ValidationBuildSession(_pipelineGraph, new ObjectBuilder(_pipelineGraph, _interceptorLibrary));
+            var session = new ValidationBuildSession(_pipelineGraph, new ObjectBuilder(_interceptorLibrary));
             session.PerformValidations();
 
             if (!session.Success)
@@ -567,7 +567,7 @@ namespace StructureMap
 
         private BuildSession withNewSession(string name)
         {
-            return new BuildSession(_pipelineGraph, new ObjectBuilder(_pipelineGraph, _interceptorLibrary))
+            return new BuildSession(_pipelineGraph, new ObjectBuilder(_interceptorLibrary))
             {
                 RequestedName = name
             };

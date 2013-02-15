@@ -6,19 +6,15 @@ namespace StructureMap.Pipeline
     public class ObjectBuilder : IObjectBuilder
     {
         private readonly InterceptorLibrary _library;
-        private readonly IPipelineGraph _pipeline;
 
-        public ObjectBuilder(IPipelineGraph pipeline, InterceptorLibrary library)
+        public ObjectBuilder(InterceptorLibrary library)
         {
-            if (pipeline == null) throw new ArgumentNullException("pipeline");
-
-            _pipeline = pipeline;
             _library = library;
         }
 
-        public object Resolve(Type pluginType, Instance instance, BuildSession session)
+        public object Resolve(Type pluginType, Instance instance, BuildSession session, IPipelineGraph pipeline)
         {
-            IObjectCache cache = FindCache(pluginType, instance, session);
+            IObjectCache cache = pipeline.FindCache(pluginType);
             lock (cache.Locker)
             {
                 object returnValue = cache.Get(pluginType, instance);
@@ -53,11 +49,6 @@ namespace StructureMap.Pipeline
             {
                 throw new StructureMapException(308, e, instance.Name, actualValue.GetType());
             }
-        }
-
-        public IObjectCache FindCache(Type pluginType, Instance instance, BuildSession session)
-        {
-            return _pipeline.FindCache(pluginType);
         }
     }
 }
