@@ -19,7 +19,7 @@ namespace StructureMap.Pipeline
                 return enumerable.Build(pluginType, session);
             }
 
-            return session.CreateInstance(pluginType);
+            return session.GetInstance(pluginType);
         }
 
         protected override string getDescription()

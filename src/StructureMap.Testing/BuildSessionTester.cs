@@ -192,10 +192,10 @@ namespace StructureMap.Testing
             var session = BuildSession.ForPluginGraph(graph);
 
 
-            object result1 = session.CreateInstance(typeof (ColorRule));
-            object result2 = session.CreateInstance(typeof (ColorRule));
-            object result3 = session.CreateInstance(typeof (ColorRule));
-            object result4 = session.CreateInstance(typeof (ColorRule));
+            object result1 = session.GetInstance(typeof (ColorRule));
+            object result2 = session.GetInstance(typeof (ColorRule));
+            object result3 = session.GetInstance(typeof (ColorRule));
+            object result4 = session.GetInstance(typeof (ColorRule));
 
             Assert.AreEqual(1, count);
 
@@ -237,14 +237,14 @@ namespace StructureMap.Testing
         }
 
         [Test]
-        public void When_calling_CreateInstance_if_no_default_can_be_found_throw_202()
+        public void When_calling_GetInstance_if_no_default_can_be_found_throw_202()
         {
             var graph = new PipelineGraph(new PluginGraph());
 
             assertActionThrowsErrorCode(202, delegate
             {
                 var session = new BuildSession(graph);
-                session.CreateInstance(typeof (IGateway));
+                session.GetInstance(typeof (IGateway));
             });
         }
 

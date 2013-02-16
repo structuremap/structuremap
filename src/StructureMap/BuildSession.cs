@@ -72,12 +72,15 @@ namespace StructureMap
 
         public T GetInstance<T>()
         {
-            return (T) CreateInstance(typeof (T));
+            return (T) GetInstance(typeof (T));
         }
 
         public object GetInstance(Type pluginType)
         {
-            return CreateInstance(pluginType);
+            lock (_locker)
+            {
+                return _defaults[pluginType]();
+            }
         }
 
         public T GetInstance<T>(string name)
@@ -195,7 +198,21 @@ namespace StructureMap
 
             if (result == null)
             {
-                result = Resolve(pluginType, instance);
+                IObjectCache cache = _pipelineGraph.FindCache(pluginType);
+                lock (cache.Locker)
+                {
+                    object returnValue = cache.Get(pluginType, instance);
+                    if (returnValue == null)
+                    {
+                        returnValue = instance.Build(pluginType, this);
+                        returnValue = ApplyInterception(pluginType, returnValue, instance);
+
+
+                        cache.Set(pluginType, instance, returnValue);
+                    }
+
+                    result = returnValue;
+                }
 
                 // TODO: HACK ATTACK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 bool isUnique = _pipelineGraph.IsUnique(pluginType);
@@ -227,38 +244,13 @@ namespace StructureMap
             return array;
         }
 
-        public virtual object CreateInstance(Type pluginType)
-        {
-            lock (_locker)
-            {
-                return _defaults[pluginType]();
-            }
-        }
+
 
         public virtual void RegisterDefault(Type pluginType, Func<object> creator)
         {
             lock (_locker)
             {
                 _defaults[pluginType] = creator;
-            }
-        }
-
-        public object Resolve(Type pluginType, Instance instance)
-        {
-            IObjectCache cache = _pipelineGraph.FindCache(pluginType);
-            lock (cache.Locker)
-            {
-                object returnValue = cache.Get(pluginType, instance);
-                if (returnValue == null)
-                {
-                    returnValue = instance.Build(pluginType, this);
-                    returnValue = ApplyInterception(pluginType, returnValue, instance);
-
-
-                    cache.Set(pluginType, instance, returnValue);
-                }
-
-                return returnValue;
             }
         }
 

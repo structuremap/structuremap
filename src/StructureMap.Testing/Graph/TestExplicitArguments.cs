@@ -81,7 +81,7 @@ namespace StructureMap.Testing.Graph
             {
                 return new ClassWithNoArgs
                 {
-                    TheAddress = (Address) session.CreateInstance(typeof (Address))
+                    TheAddress = (Address) session.GetInstance(typeof (Address))
                 };
             }
         }

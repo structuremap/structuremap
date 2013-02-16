@@ -255,7 +255,7 @@ namespace StructureMap
         /// <returns></returns>
         public object GetInstance(Type pluginType)
         {
-            return withNewSession(Plugin.DEFAULT).CreateInstance(pluginType);
+            return withNewSession(Plugin.DEFAULT).GetInstance(pluginType);
         }
 
 
