@@ -279,10 +279,12 @@
     <Compile Include="PluginGraphBuilder.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="SessionCache.cs" />
     <Compile Include="Source\XmlAttributeInstanceMemento.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Diagnostics\ValidationBuildSession.cs" />
+    <Compile Include="Util\LightweightCache.cs" />
     <EmbeddedResource Include="StructureMapException.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>

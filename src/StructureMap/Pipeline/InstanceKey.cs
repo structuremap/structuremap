@@ -2,6 +2,7 @@ using System;
 
 namespace StructureMap.Pipeline
 {
+    [Obsolete("Kill this whole silly thing")]
     [Serializable]
     public class InstanceKey
     {

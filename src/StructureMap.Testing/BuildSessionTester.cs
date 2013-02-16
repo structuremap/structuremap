@@ -122,10 +122,10 @@ namespace StructureMap.Testing
                 return new ColorRule("Red");
             });
 
-            object result1 = session.CreateInstance(typeof (ColorRule), instance);
-            object result2 = session.CreateInstance(typeof (ColorRule), instance);
-            object result3 = session2.CreateInstance(typeof (ColorRule), instance);
-            object result4 = session2.CreateInstance(typeof (ColorRule), instance);
+            object result1 = session.Resolve(typeof (ColorRule), instance);
+            object result2 = session.Resolve(typeof (ColorRule), instance);
+            object result3 = session2.Resolve(typeof (ColorRule), instance);
+            object result4 = session2.Resolve(typeof (ColorRule), instance);
 
             Assert.AreEqual(2, count);
 
@@ -163,10 +163,10 @@ namespace StructureMap.Testing
                 return new ColorRule("Red");
             });
 
-            object result1 = session.CreateInstance(typeof (ColorRule), instance);
-            object result2 = session.CreateInstance(typeof (ColorRule), instance);
-            object result3 = session.CreateInstance(typeof (ColorRule), instance);
-            object result4 = session.CreateInstance(typeof (ColorRule), instance);
+            object result1 = session.Resolve(typeof (ColorRule), instance);
+            object result2 = session.Resolve(typeof (ColorRule), instance);
+            object result3 = session.Resolve(typeof (ColorRule), instance);
+            object result4 = session.Resolve(typeof (ColorRule), instance);
 
             Assert.AreEqual(1, count);
 
@@ -225,7 +225,7 @@ namespace StructureMap.Testing
                 new ConfiguredInstance(typeof (ClassWithRule)).Ctor<Rule>("rule").Is(recordingInstance);
             var session = BuildSession.Empty();
 
-            session.CreateInstance(typeof (IClassWithRule), instance);
+            session.Resolve(typeof (IClassWithRule), instance);
 
             recordingInstance.Root.ConcreteType.ShouldEqual(typeof (ClassWithRule));
             recordingInstance.Root.RequestedType.ShouldEqual(typeof (IClassWithRule));

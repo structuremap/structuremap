@@ -5,6 +5,7 @@ using StructureMap.Interceptors;
 
 namespace StructureMap.Pipeline
 {
+
     public interface IDiagnosticInstance
     {
         bool CanBePartOfPluginFamily(PluginFamily family);
@@ -157,6 +158,14 @@ namespace StructureMap.Pipeline
         public virtual Instance CloseType(Type[] types)
         {
             return null;
+        }
+
+        public int InstanceKey(Type pluginType)
+        {
+            unchecked
+            {
+                return ((Name != null ? Name.GetHashCode() : 0)*397) ^ (pluginType != null ? pluginType.AssemblyQualifiedName.GetHashCode() : 0);
+            }
         }
     }
 

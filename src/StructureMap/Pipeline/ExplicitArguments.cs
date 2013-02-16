@@ -6,7 +6,7 @@ namespace StructureMap.Pipeline
     public class ExplicitArguments
     {
         private readonly IDictionary<string, object> _args;
-        private readonly IDictionary<Type, object> _children = new Dictionary<Type, object>();
+        private readonly IDictionary<Type, object> _defaults = new Dictionary<Type, object>();
 
         public ExplicitArguments(IDictionary<string, object> args)
         {
@@ -18,6 +18,11 @@ namespace StructureMap.Pipeline
         {
         }
 
+        public IDictionary<Type, object> Defaults
+        {
+            get { return _defaults; }
+        }
+
         public T Get<T>() where T : class
         {
             return (T) Get(typeof (T));
@@ -25,7 +30,7 @@ namespace StructureMap.Pipeline
 
         public object Get(Type type)
         {
-            return _children.ContainsKey(type) ? _children[type] : null;
+            return _defaults.ContainsKey(type) ? _defaults[type] : null;
         }
 
         public void Set<T>(T arg)
@@ -35,7 +40,7 @@ namespace StructureMap.Pipeline
 
         public void Set(Type pluginType, object arg)
         {
-            _children.Add(pluginType, arg);
+            _defaults.Add(pluginType, arg);
         }
 
         public void SetArg(string key, object argValue)
@@ -52,7 +57,7 @@ namespace StructureMap.Pipeline
         {
             _args.Each(pair => { instance.SetValue(pair.Key, pair.Value); });
 
-            _children.Each(pair => 
+            _defaults.Each(pair => 
             {
                 instance.SetValue(pair.Key, pair.Value, CannotFindProperty.Ignore); 
             
@@ -61,7 +66,7 @@ namespace StructureMap.Pipeline
 
         public bool Has(Type type)
         {
-            return _children.ContainsKey(type);
+            return _defaults.ContainsKey(type);
         }
 
         public bool Has(string propertyName)
@@ -71,10 +76,12 @@ namespace StructureMap.Pipeline
 
         public void RegisterDefaults(BuildSession session)
         {
-            foreach (var pair in _children)
+            foreach (var pair in _defaults)
             {
                 session.RegisterDefault(pair.Key, pair.Value);
             }
         }
+
+
     }
 }

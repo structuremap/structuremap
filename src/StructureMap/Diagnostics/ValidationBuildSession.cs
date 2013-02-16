@@ -36,14 +36,14 @@ namespace StructureMap.Diagnostics
 
         public ValidationError[] ValidationErrors { get { return _validationErrors.ToArray(); } }
 
-        public override object CreateInstance(Type pluginType, Instance instance)
+        public override object Resolve(Type pluginType, Instance instance)
         {
             _dependencyStack.Push(new BuildDependency(pluginType, instance));
 
             try
             {
                 //clearBuildStack();
-                return base.CreateInstance(pluginType, instance);
+                return base.Resolve(pluginType, instance);
             }
             catch (StructureMapException ex)
             {
@@ -73,7 +73,7 @@ namespace StructureMap.Diagnostics
             try
             {
                 _dependencyStack.Clear();
-                object builtInstance = CreateInstance(pluginType, instance);
+                object builtInstance = Resolve(pluginType, instance);
                 validate(pluginType, instance, builtInstance);
             }
             catch (Exception)

@@ -267,7 +267,7 @@ namespace StructureMap
         /// <returns></returns>
         public object GetInstance(Type pluginType, Instance instance)
         {
-            return withNewSession(instance.Name).CreateInstance(pluginType, instance);
+            return withNewSession(instance.Name).Resolve(pluginType, instance);
         }
 
         public void SetDefault(Type pluginType, Instance instance)
@@ -516,7 +516,7 @@ namespace StructureMap
 
             args.RegisterDefaults(session);
 
-            return session.CreateInstance(pluginType, instance);
+            return session.Resolve(pluginType, instance);
         }
 
         public ExplicitArgsExpression With(Action<ExplicitArgsExpression> action)

@@ -8,7 +8,14 @@ using StructureMap.Util;
 
 namespace StructureMap
 {
-    public class BuildSession : IContext
+
+
+    public interface IInstanceResolver
+    {
+        object Resolve(Type pluginType, Instance instance);
+    }
+
+    public class BuildSession : IContext, IInstanceResolver
     {
         private readonly InstanceCache _cache = new InstanceCache();
         private readonly Cache<Type, Func<object>> _defaults;
@@ -31,7 +38,7 @@ namespace StructureMap
                         throw new StructureMapException(202, t);
                     }
 
-                    return () => CreateInstance(t, instance);
+                    return () => Resolve(t, instance);
                 });
             }
         }
@@ -98,6 +105,7 @@ namespace StructureMap
             get { return _buildStack.Root; }
         }
 
+        [Obsolete("going to make this unnecessary")]
         public virtual void RegisterDefault(Type pluginType, object defaultObject)
         {
             RegisterDefault(pluginType, () => defaultObject);
@@ -155,13 +163,13 @@ namespace StructureMap
 
         public IEnumerable<T> GetAllInstances<T>()
         {
-            return _pipelineGraph.GetAllInstances(typeof (T)).Select(x => (T) CreateInstance(typeof (T), x));
+            return _pipelineGraph.GetAllInstances(typeof (T)).Select(x => (T) Resolve(typeof (T), x));
         }
 
         public IEnumerable<object> GetAllInstances(Type pluginType)
         {
             IEnumerable<Instance> allInstances = _pipelineGraph.GetAllInstances(pluginType);
-            return allInstances.Select(x => CreateInstance(pluginType, x));
+            return allInstances.Select(x => Resolve(pluginType, x));
         }
 
         public static BuildSession ForPluginGraph(PluginGraph graph)
@@ -188,11 +196,11 @@ namespace StructureMap
                 throw new StructureMapException(200, name, pluginType.FullName);
             }
 
-            return CreateInstance(pluginType, instance);
+            return Resolve(pluginType, instance);
         }
 
         // This is where all Creation happens
-        public virtual object CreateInstance(Type pluginType, Instance instance)
+        public virtual object Resolve(Type pluginType, Instance instance)
         {
             object result = _cache.Get(pluginType, instance);
 
@@ -237,7 +245,7 @@ namespace StructureMap
             for (int i = 0; i < instances.Length; i++)
             {
                 Instance instance = instances[i];
-                object arrayValue = CreateInstance(pluginType, instance);
+                object arrayValue = Resolve(pluginType, instance);
                 array.SetValue(arrayValue, i);
             }
 

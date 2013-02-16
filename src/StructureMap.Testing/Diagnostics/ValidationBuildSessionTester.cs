@@ -157,8 +157,8 @@ namespace StructureMap.Testing.Diagnostics
             var session = ValidationBuildSession.ValidateForPluginGraph(new PluginGraph());
 
             var instance = new ObjectInstance(new ColorWidget("Red"));
-            object widget1 = session.CreateInstance(typeof (IWidget), instance);
-            object widget2 = session.CreateInstance(typeof (IWidget), instance);
+            object widget1 = session.Resolve(typeof (IWidget), instance);
+            object widget2 = session.Resolve(typeof (IWidget), instance);
 
             Assert.AreSame(widget1, widget2);
         }

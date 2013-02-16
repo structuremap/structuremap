@@ -32,6 +32,19 @@ namespace StructureMap.Testing.Pipeline
             Assert.AreEqual("InstanceUnderTest", token.Description);
         }
 
+
+        [Test]
+        public void instance_key_is_predictable()
+        {
+            var i1 = new ConfiguredInstance(GetType()).Named("foo");
+            var i2 = new ConfiguredInstance(GetType()).Named("bar");
+
+            i1.InstanceKey(GetType()).ShouldEqual(i1.InstanceKey(GetType()));
+            i2.InstanceKey(GetType()).ShouldEqual(i2.InstanceKey(GetType()));
+            i1.InstanceKey(GetType()).ShouldNotEqual(i2.InstanceKey(GetType()));
+            i1.InstanceKey(typeof(InstanceUnderTest)).ShouldNotEqual(i1.InstanceKey(GetType()));
+        }
+
     }
 
     public class InstanceUnderTest : Instance
