@@ -18,7 +18,7 @@ namespace StructureMap.Testing.Pipeline
         }
 
         public StubBuildSession()
-            : base(_pipeline, new ObjectBuilder(_pluginGraph.InterceptorLibrary))
+            : base(_pipeline)
         {
         }
 

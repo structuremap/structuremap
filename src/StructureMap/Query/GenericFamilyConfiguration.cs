@@ -6,6 +6,7 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.Query
 {
+    // TODO --rename this, because it's going to be the only thing.  
     public class GenericFamilyConfiguration : IPluginTypeConfiguration, IFamily
     {
         private readonly PluginFamily _family;

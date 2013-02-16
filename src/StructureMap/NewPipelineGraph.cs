@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using StructureMap.Graph;
+using StructureMap.Interceptors;
 using StructureMap.Pipeline;
 using StructureMap.Query;
 
@@ -13,6 +14,11 @@ namespace StructureMap
         public NewPipelineGraph(PluginGraph pluginGraph)
         {
             _pluginGraph = pluginGraph;
+        }
+
+        public InstanceInterceptor FindInterceptor(Type concreteType)
+        {
+            throw new NotImplementedException();
         }
 
         public Instance GetDefault(Type pluginType)

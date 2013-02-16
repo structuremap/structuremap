@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using StructureMap.Diagnostics;
 using StructureMap.Graph;
+using StructureMap.Interceptors;
 using StructureMap.Pipeline;
 using StructureMap.Query;
 using StructureMap.Util;
@@ -28,6 +29,8 @@ namespace StructureMap
         private MissingFactoryFunction _missingFactory =
             (pluginType, profileManager) => null;
 
+        private InterceptorLibrary _interceptors;
+
         public PipelineGraph(PluginGraph graph)
         {
             _transientCache = new NulloObjectCache();
@@ -42,7 +45,7 @@ namespace StructureMap
                 _factories.Add(family.PluginType, factory);
             });
 
-            
+            _interceptors = graph.InterceptorLibrary;
         }
 
         private PipelineGraph(ProfileManager profileManager, GenericsPluginGraph genericsGraph, GraphLog log)
@@ -102,7 +105,8 @@ namespace StructureMap
         {
             var clone = new PipelineGraph(_profileManager.Clone(), _genericsGraph.Clone(), _log)
             {
-                _missingFactory = _missingFactory
+                _missingFactory = _missingFactory,
+                _interceptors = _interceptors
             };
 
             lock (this)
@@ -174,6 +178,11 @@ namespace StructureMap
             }
 
             return InstanceFactory.CreateFactoryForType(pluggedType, _profileManager);
+        }
+
+        public InstanceInterceptor FindInterceptor(Type concreteType)
+        {
+            return _interceptors.FindInterceptor(concreteType);
         }
 
         public virtual Instance GetDefault(Type pluginType)

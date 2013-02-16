@@ -1,34 +1,29 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using StructureMap.Construction;
 using StructureMap.Graph;
-using StructureMap.Interceptors;
 using StructureMap.Pipeline;
 using StructureMap.Util;
-using StructureMap.Construction;
 
 namespace StructureMap
 {
     public class BuildSession : IContext
     {
-        private readonly IObjectBuilder _builder;
         private readonly InstanceCache _cache = new InstanceCache();
         private readonly Cache<Type, Func<object>> _defaults;
-        private readonly IPipelineGraph _pipelineGraph;
         private readonly object _locker = new object();
+        private readonly IPipelineGraph _pipelineGraph;
 
-        [CLSCompliant(false)]
-        protected BuildStack _buildStack = new BuildStack();
+        [CLSCompliant(false)] protected BuildStack _buildStack = new BuildStack();
 
-        public BuildSession(IPipelineGraph pipelineGraph, IObjectBuilder builder)
+        public BuildSession(IPipelineGraph pipelineGraph)
         {
-            _builder = builder;
             _pipelineGraph = pipelineGraph;
 
-            lock (this._locker)
+            lock (_locker)
             {
-                _defaults = new Cache<Type, Func<object>>(t =>
-                {
+                _defaults = new Cache<Type, Func<object>>(t => {
                     Instance instance = _pipelineGraph.GetDefault(t);
 
                     if (instance == null)
@@ -41,26 +36,19 @@ namespace StructureMap
             }
         }
 
-        public static BuildSession ForPluginGraph(PluginGraph graph)
+        protected IPipelineGraph pipelineGraph
         {
-            var pipeline = new PipelineGraph(graph);
-            var builder = new ObjectBuilder(graph.InterceptorLibrary);
-
-            return new BuildSession(pipeline, builder);
+            get { return _pipelineGraph; }
         }
-
-        public static BuildSession Empty()
-        {
-            return ForPluginGraph(new PluginGraph());
-        }
-
-        protected IPipelineGraph pipelineGraph { get { return _pipelineGraph; } }
 
         #region IContext Members
 
         public string RequestedName { get; set; }
 
-        public BuildStack BuildStack { get { return _buildStack; } }
+        public BuildStack BuildStack
+        {
+            get { return _buildStack; }
+        }
 
         public Type ParentType
         {
@@ -75,7 +63,7 @@ namespace StructureMap
         {
             Type pluggedType = target.GetType();
             IConfiguredInstance instance = _pipelineGraph.GetDefault(pluggedType) as IConfiguredInstance
-                ?? new ConfiguredInstance(pluggedType);
+                                           ?? new ConfiguredInstance(pluggedType);
 
             IInstanceBuilder builder = PluginCache.FindBuilder(pluggedType);
             var arguments = new Arguments(instance, this);
@@ -84,7 +72,7 @@ namespace StructureMap
 
         public T GetInstance<T>()
         {
-            return (T)CreateInstance(typeof(T));
+            return (T) CreateInstance(typeof (T));
         }
 
         public object GetInstance(Type pluginType)
@@ -94,7 +82,7 @@ namespace StructureMap
 
         public T GetInstance<T>(string name)
         {
-            return (T)CreateInstance(typeof(T), name);
+            return (T) CreateInstance(typeof (T), name);
         }
 
         public object GetInstance(Type pluginType, string name)
@@ -102,7 +90,10 @@ namespace StructureMap
             return CreateInstance(pluginType, name);
         }
 
-        BuildFrame IContext.Root { get { return _buildStack.Root; } }
+        BuildFrame IContext.Root
+        {
+            get { return _buildStack.Root; }
+        }
 
         public virtual void RegisterDefault(Type pluginType, object defaultObject)
         {
@@ -111,27 +102,27 @@ namespace StructureMap
 
         public T TryGetInstance<T>() where T : class
         {
-            lock (this._locker)
+            lock (_locker)
             {
-                if (_defaults.Has(typeof(T)))
+                if (_defaults.Has(typeof (T)))
                 {
-                    return (T)_defaults[typeof(T)]();
+                    return (T) _defaults[typeof (T)]();
                 }
             }
 
-            return _pipelineGraph.HasDefaultForPluginType(typeof(T))
-                       ? ((IContext)this).GetInstance<T>()
+            return _pipelineGraph.HasDefaultForPluginType(typeof (T))
+                       ? ((IContext) this).GetInstance<T>()
                        : null;
         }
 
         public T TryGetInstance<T>(string name) where T : class
         {
-            return _pipelineGraph.HasInstance(typeof(T), name) ? ((IContext)this).GetInstance<T>(name) : null;
+            return _pipelineGraph.HasInstance(typeof (T), name) ? ((IContext) this).GetInstance<T>(name) : null;
         }
 
         public object TryGetInstance(Type pluginType)
         {
-            lock (this._locker)
+            lock (_locker)
             {
                 if (_defaults.Has(pluginType))
                 {
@@ -140,13 +131,13 @@ namespace StructureMap
             }
 
             return _pipelineGraph.HasDefaultForPluginType(pluginType)
-                       ? ((IContext)this).GetInstance(pluginType)
+                       ? ((IContext) this).GetInstance(pluginType)
                        : null;
         }
 
         public object TryGetInstance(Type pluginType, string name)
         {
-            return _pipelineGraph.HasInstance(pluginType, name) ? ((IContext)this).GetInstance(pluginType, name) : null;
+            return _pipelineGraph.HasInstance(pluginType, name) ? ((IContext) this).GetInstance(pluginType, name) : null;
         }
 
         public IEnumerable<T> All<T>() where T : class
@@ -161,7 +152,24 @@ namespace StructureMap
 
         public IEnumerable<T> GetAllInstances<T>()
         {
-            return _pipelineGraph.GetAllInstances(typeof(T)).Select(x => (T)CreateInstance(typeof(T), x));
+            return _pipelineGraph.GetAllInstances(typeof (T)).Select(x => (T) CreateInstance(typeof (T), x));
+        }
+
+        public IEnumerable<object> GetAllInstances(Type pluginType)
+        {
+            IEnumerable<Instance> allInstances = _pipelineGraph.GetAllInstances(pluginType);
+            return allInstances.Select(x => CreateInstance(pluginType, x));
+        }
+
+        public static BuildSession ForPluginGraph(PluginGraph graph)
+        {
+            var pipeline = new PipelineGraph(graph);
+            return new BuildSession(pipeline);
+        }
+
+        public static BuildSession Empty()
+        {
+            return ForPluginGraph(new PluginGraph());
         }
 
         protected void clearBuildStack()
@@ -171,7 +179,7 @@ namespace StructureMap
 
         public virtual object CreateInstance(Type pluginType, string name)
         {
-            var instance = _pipelineGraph.FindInstance(pluginType, name);
+            Instance instance = _pipelineGraph.FindInstance(pluginType, name);
             if (instance == null)
             {
                 throw new StructureMapException(200, name, pluginType.FullName);
@@ -187,7 +195,7 @@ namespace StructureMap
 
             if (result == null)
             {
-                result = _builder.Resolve(pluginType, instance, this, _pipelineGraph);
+                result = Resolve(pluginType, instance);
 
                 // TODO: HACK ATTACK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 bool isUnique = _pipelineGraph.IsUnique(pluginType);
@@ -219,15 +227,9 @@ namespace StructureMap
             return array;
         }
 
-        public IEnumerable<object> GetAllInstances(Type pluginType)
-        {
-            var allInstances = _pipelineGraph.GetAllInstances(pluginType);
-            return allInstances.Select(x => CreateInstance(pluginType, x));
-        }
-
         public virtual object CreateInstance(Type pluginType)
         {
-            lock (this._locker)
+            lock (_locker)
             {
                 return _defaults[pluginType]();
             }
@@ -235,9 +237,42 @@ namespace StructureMap
 
         public virtual void RegisterDefault(Type pluginType, Func<object> creator)
         {
-            lock (this._locker)
+            lock (_locker)
             {
                 _defaults[pluginType] = creator;
+            }
+        }
+
+        public object Resolve(Type pluginType, Instance instance)
+        {
+            IObjectCache cache = _pipelineGraph.FindCache(pluginType);
+            lock (cache.Locker)
+            {
+                object returnValue = cache.Get(pluginType, instance);
+                if (returnValue == null)
+                {
+                    returnValue = instance.Build(pluginType, this);
+                    returnValue = ApplyInterception(pluginType, returnValue, instance);
+
+
+                    cache.Set(pluginType, instance, returnValue);
+                }
+
+                return returnValue;
+            }
+        }
+
+        public object ApplyInterception(Type pluginType, object actualValue, Instance instance)
+        {
+            if (actualValue == null) return null;
+
+            try
+            {
+                return _pipelineGraph.FindInterceptor(actualValue.GetType()).Process(actualValue, this);
+            }
+            catch (Exception e)
+            {
+                throw new StructureMapException(308, e, instance.Name, actualValue.GetType());
             }
         }
     }

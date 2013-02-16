@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using StructureMap.Graph;
+using StructureMap.Interceptors;
 using StructureMap.Pipeline;
 using StructureMap.Query;
 
@@ -8,6 +9,8 @@ namespace StructureMap
 {
     public interface IPipelineGraph
     {
+        InstanceInterceptor FindInterceptor(Type concreteType);
+
         Instance GetDefault(Type pluginType);
         bool HasDefaultForPluginType(Type pluginType);
         bool HasInstance(Type pluginType, string instanceKey);
@@ -28,7 +31,10 @@ namespace StructureMap
         [Obsolete("This needs to go away.  We'll just have Container.Configure write directly to the PluginGraph")]
         void ImportFrom(PluginGraph graph);
 
+        // This is borderline awful. 
         IEnumerable<IPluginTypeConfiguration> GetPluginTypes(IContainer container);
+
+
         void EjectAllInstancesOf<T>();
         void Dispose();
         void Remove(Func<Type, bool> filter);

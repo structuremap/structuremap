@@ -171,7 +171,6 @@
     <Compile Include="Pipeline\ConfiguredInstance.cs" />
     <Compile Include="Pipeline\ConfiguredInstance.Expressions.cs" />
     <Compile Include="Pipeline\DependencyExpression.cs" />
-    <Compile Include="Pipeline\IObjectBuilder.cs" />
     <Compile Include="Pipeline\LambdaInstance.cs" />
     <Compile Include="Pipeline\DefaultInstance.cs" />
     <Compile Include="Pipeline\IConfiguredInstance.cs" />
@@ -349,7 +348,6 @@
     <Compile Include="Pipeline\ListCoercion.cs" />
     <Compile Include="Pipeline\MainObjectCache.cs" />
     <Compile Include="Pipeline\NulloObjectCache.cs" />
-    <Compile Include="Pipeline\ObjectBuilder.cs" />
     <Compile Include="Pipeline\SessionWrapper.cs" />
     <Compile Include="Pipeline\SingletonLifecycle.cs" />
     <Compile Include="Pipeline\ThreadLocalStorageLifecycle.cs" />
