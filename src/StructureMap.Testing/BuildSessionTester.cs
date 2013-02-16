@@ -281,9 +281,9 @@ namespace StructureMap.Testing
         [Test]
         public void when_retrieving_by_try_get_instance_for_instance_that_does_exist()
         {
-            var session = BuildSession.Empty();
+            
             var theService = new ColorService("red");
-            session.RegisterDefault(typeof (IService), theService);
+            var session = BuildSession.Empty(new ExplicitArguments().Set<IService>(theService));
 
             session.TryGetInstance<IService>().ShouldBeTheSameAs(theService);
         }

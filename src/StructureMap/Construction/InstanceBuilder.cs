@@ -4,7 +4,7 @@ namespace StructureMap.Construction
 {
     public interface IInstanceBuilder
     {
-        Type TPluggedType { get; }
+        Type PluggedType { get; }
         object BuildInstance(IArguments args);
         void BuildUp(IArguments args, object target);
     }
@@ -17,17 +17,17 @@ namespace StructureMap.Construction
     {
         private readonly Action<IArguments, object> _buildUp;
         private readonly Func<IArguments, object> _constructor;
-        private readonly Type _TPluggedType;
+        private readonly Type _pluggedType;
 
-        public InstanceBuilder(Type TPluggedType, Func<IArguments, object> constructor,
+        public InstanceBuilder(Type pluggedType, Func<IArguments, object> constructor,
                                Action<IArguments, object> buildUp)
         {
-            _TPluggedType = TPluggedType;
+            _pluggedType = pluggedType;
             _constructor = constructor;
             _buildUp = buildUp;
         }
 
-        public Type TPluggedType { get { return _TPluggedType; } }
+        public Type PluggedType { get { return _pluggedType; } }
 
         public virtual object BuildInstance(IArguments args)
         {

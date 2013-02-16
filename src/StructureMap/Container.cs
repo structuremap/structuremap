@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using StructureMap.Configuration.DSL;
 using StructureMap.Construction;
 using StructureMap.Diagnostics;
@@ -46,28 +47,41 @@ namespace StructureMap
         }
 
         /// <summary>
-        /// Constructor to create an Container
+        ///     Constructor to create an Container
         /// </summary>
-        /// <param name="pluginGraph">PluginGraph containing the instance and type definitions 
-        /// for the Container</param>
+        /// <param name="pluginGraph">
+        ///     PluginGraph containing the instance and type definitions
+        ///     for the Container
+        /// </param>
         public Container(PluginGraph pluginGraph)
         {
             construct(pluginGraph);
         }
 
-        protected MissingFactoryFunction onMissingFactory { set { _pipelineGraph.OnMissingFactory = value; } }
+        protected MissingFactoryFunction onMissingFactory
+        {
+            set { _pipelineGraph.OnMissingFactory = value; }
+        }
 
-        public PluginGraph PluginGraph { get { return _pluginGraph; } }
+        public PluginGraph PluginGraph
+        {
+            get { return _pluginGraph; }
+        }
 
         #region IContainer Members
 
-        /// <summary>
-        /// Provides queryable access to the configured PluginType's and Instances of this Container
-        /// </summary>
-        public IModel Model { get { return new Model(_pipelineGraph, _pluginGraph, this); } }
+        private Action<Container> _onDispose = fullDispose;
 
         /// <summary>
-        /// Creates or finds the named instance of T
+        ///     Provides queryable access to the configured PluginType's and Instances of this Container
+        /// </summary>
+        public IModel Model
+        {
+            get { return new Model(_pipelineGraph, _pluginGraph, this); }
+        }
+
+        /// <summary>
+        ///     Creates or finds the named instance of T
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="instanceKey"></param>
@@ -78,7 +92,7 @@ namespace StructureMap
         }
 
         /// <summary>
-        /// Creates a new instance of the requested type T using the supplied Instance.  Mostly used internally
+        ///     Creates a new instance of the requested type T using the supplied Instance.  Mostly used internally
         /// </summary>
         /// <param name="instance"></param>
         /// <returns></returns>
@@ -88,7 +102,7 @@ namespace StructureMap
         }
 
         /// <summary>
-        /// Gets the default instance of the pluginType using the explicitly configured arguments from the "args"
+        ///     Gets the default instance of the pluginType using the explicitly configured arguments from the "args"
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
@@ -99,12 +113,12 @@ namespace StructureMap
 
         public T GetInstance<T>(ExplicitArguments args, string name)
         {
-            var namedInstance = _pipelineGraph.FindInstance(typeof (T), name);
+            Instance namedInstance = _pipelineGraph.FindInstance(typeof (T), name);
             return (T) buildInstanceWithArgs(typeof (T), namedInstance, args, name);
         }
 
         /// <summary>
-        /// Gets the default instance of the pluginType using the explicitly configured arguments from the "args"
+        ///     Gets the default instance of the pluginType using the explicitly configured arguments from the "args"
         /// </summary>
         /// <param name="pluginType"></param>
         /// <param name="args"></param>
@@ -119,16 +133,14 @@ namespace StructureMap
 
 
         /// <summary>
-        /// Gets all configured instances of type T using explicitly configured arguments from the "args"
+        ///     Gets all configured instances of type T using explicitly configured arguments from the "args"
         /// </summary>
         /// <param name="type"></param>
         /// <param name="args"></param>
         /// <returns></returns>
         public IList GetAllInstances(Type type, ExplicitArguments args)
         {
-            BuildSession session = withNewSession(Plugin.DEFAULT);
-
-            args.RegisterDefaults(session);
+            var session = new BuildSession(_pipelineGraph, Plugin.DEFAULT, args);
 
             Array instances = session.CreateInstanceArray(type, null);
             return new ArrayList(instances);
@@ -137,16 +149,14 @@ namespace StructureMap
 
         public IList<T> GetAllInstances<T>(ExplicitArguments args)
         {
-            BuildSession session = withNewSession(Plugin.DEFAULT);
-
-            args.RegisterDefaults(session);
+            var session = new BuildSession(_pipelineGraph, Plugin.DEFAULT, args);
 
             return getListOfTypeWithSession<T>(session);
         }
 
 
         /// <summary>
-        /// Creates or finds the default instance of type T
+        ///     Creates or finds the default instance of type T
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
@@ -156,18 +166,18 @@ namespace StructureMap
         }
 
         /// <summary>
-        /// Creates or resolves all registered instances of type T
+        ///     Creates or resolves all registered instances of type T
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         public IList<T> GetAllInstances<T>()
         {
-            BuildSession session = withNewSession(Plugin.DEFAULT);
+            var session = new BuildSession(_pipelineGraph);
             return getListOfTypeWithSession<T>(session);
         }
 
         /// <summary>
-        /// Sets the default instance for all PluginType's to the designated Profile.
+        ///     Sets the default instance for all PluginType's to the designated Profile.
         /// </summary>
         /// <param name="profile"></param>
         public void SetDefaultsToProfile(string profile)
@@ -176,18 +186,18 @@ namespace StructureMap
         }
 
         /// <summary>
-        /// Creates or finds the named instance of the pluginType
+        ///     Creates or finds the named instance of the pluginType
         /// </summary>
         /// <param name="pluginType"></param>
         /// <param name="instanceKey"></param>
         /// <returns></returns>
         public object GetInstance(Type pluginType, string instanceKey)
         {
-            return withNewSession(instanceKey).CreateInstance(pluginType, instanceKey);
+            return new BuildSession(_pipelineGraph, instanceKey).CreateInstance(pluginType, instanceKey);
         }
 
         /// <summary>
-        /// Creates or finds the named instance of the pluginType. Returns null if the named instance is not known to the container.
+        ///     Creates or finds the named instance of the pluginType. Returns null if the named instance is not known to the container.
         /// </summary>
         /// <param name="pluginType"></param>
         /// <param name="instanceKey"></param>
@@ -200,7 +210,7 @@ namespace StructureMap
         }
 
         /// <summary>
-        /// Creates or finds the default instance of the pluginType. Returns null if the pluginType is not known to the container.
+        ///     Creates or finds the default instance of the pluginType. Returns null if the pluginType is not known to the container.
         /// </summary>
         /// <param name="pluginType"></param>
         /// <returns></returns>
@@ -212,7 +222,7 @@ namespace StructureMap
         }
 
         /// <summary>
-        /// Creates or finds the default instance of type T. Returns the default value of T if it is not known to the container.
+        ///     Creates or finds the default instance of type T. Returns the default value of T if it is not known to the container.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
@@ -222,24 +232,24 @@ namespace StructureMap
         }
 
         /// <summary>
-        /// The "BuildUp" method takes in an already constructed object
-        /// and uses Setter Injection to push in configured dependencies
-        /// of that object
+        ///     The "BuildUp" method takes in an already constructed object
+        ///     and uses Setter Injection to push in configured dependencies
+        ///     of that object
         /// </summary>
         /// <param name="target"></param>
         public void BuildUp(object target)
         {
-            Type TPluggedType = target.GetType();
-            IConfiguredInstance instance = _pipelineGraph.GetDefault(TPluggedType) as IConfiguredInstance
-                                           ?? new ConfiguredInstance(TPluggedType);
+            Type pluggedType = target.GetType();
+            IConfiguredInstance instance = _pipelineGraph.GetDefault(pluggedType) as IConfiguredInstance
+                                           ?? new ConfiguredInstance(pluggedType);
 
-            IInstanceBuilder builder = PluginCache.FindBuilder(TPluggedType);
-            var arguments = new Arguments(instance, withNewSession(Plugin.DEFAULT));
+            IInstanceBuilder builder = PluginCache.FindBuilder(pluggedType);
+            var arguments = new Arguments(instance, new BuildSession(_pipelineGraph));
             builder.BuildUp(arguments, target);
         }
 
         /// <summary>
-        /// Creates or finds the named instance of type T. Returns the default value of T if the named instance is not known to the container.
+        ///     Creates or finds the named instance of type T. Returns the default value of T if the named instance is not known to the container.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
@@ -249,25 +259,26 @@ namespace StructureMap
         }
 
         /// <summary>
-        /// Creates or finds the default instance of the pluginType
+        ///     Creates or finds the default instance of the pluginType
         /// </summary>
         /// <param name="pluginType"></param>
         /// <returns></returns>
         public object GetInstance(Type pluginType)
         {
-            return withNewSession(Plugin.DEFAULT).GetInstance(pluginType);
+            return new BuildSession(_pipelineGraph).GetInstance(pluginType);
         }
 
 
         /// <summary>
-        /// Creates a new instance of the requested type using the supplied Instance.  Mostly used internally
+        ///     Creates a new instance of the requested type using the supplied Instance.  Mostly used internally
         /// </summary>
         /// <param name="pluginType"></param>
         /// <param name="instance"></param>
         /// <returns></returns>
         public object GetInstance(Type pluginType, Instance instance)
         {
-            return withNewSession(instance.Name).Resolve(pluginType, instance);
+            var session = new BuildSession(_pipelineGraph, instance.Name);
+            return session.Resolve(pluginType, instance);
         }
 
         public void SetDefault(Type pluginType, Instance instance)
@@ -276,18 +287,18 @@ namespace StructureMap
         }
 
         /// <summary>
-        /// Creates or resolves all registered instances of the pluginType
+        ///     Creates or resolves all registered instances of the pluginType
         /// </summary>
         /// <param name="pluginType"></param>
         /// <returns></returns>
         public IList GetAllInstances(Type pluginType)
         {
-            Array instances = withNewSession(Plugin.DEFAULT).CreateInstanceArray(pluginType, null);
+            Array instances = new BuildSession(_pipelineGraph).CreateInstanceArray(pluginType, null);
             return new ArrayList(instances);
         }
 
         /// <summary>
-        /// Used to add additional configuration to a Container *after* the initialization.
+        ///     Used to add additional configuration to a Container *after* the initialization.
         /// </summary>
         /// <param name="configure"></param>
         public void Configure(Action<ConfigurationExpression> configure)
@@ -307,9 +318,8 @@ namespace StructureMap
         }
 
         /// <summary>
-        /// Returns a report detailing the complete configuration of all PluginTypes and Instances
+        ///     Returns a report detailing the complete configuration of all PluginTypes and Instances
         /// </summary>
-
         public string WhatDoIHave()
         {
             var writer = new WhatDoIHaveWriter(_pipelineGraph);
@@ -317,8 +327,8 @@ namespace StructureMap
         }
 
         /// <summary>
-        /// Starts a request for an instance or instances with explicitly configured arguments.  Specifies that any dependency
-        /// of type T should be "arg"
+        ///     Starts a request for an instance or instances with explicitly configured arguments.  Specifies that any dependency
+        ///     of type T should be "arg"
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="arg"></param>
@@ -329,8 +339,8 @@ namespace StructureMap
         }
 
         /// <summary>
-        /// Starts a request for an instance or instances with explicitly configured arguments.  Specifies that any dependency
-        /// of type T should be "arg"
+        ///     Starts a request for an instance or instances with explicitly configured arguments.  Specifies that any dependency
+        ///     of type T should be "arg"
         /// </summary>
         /// <param name="pluginType"></param>
         /// <param name="arg"></param>
@@ -341,8 +351,8 @@ namespace StructureMap
         }
 
         /// <summary>
-        /// Starts a request for an instance or instances with explicitly configured arguments.  Specifies that any dependency or primitive argument
-        /// with the designated name should be the next value.
+        ///     Starts a request for an instance or instances with explicitly configured arguments.  Specifies that any dependency or primitive argument
+        ///     with the designated name should be the next value.
         /// </summary>
         /// <param name="argName"></param>
         /// <returns></returns>
@@ -353,8 +363,8 @@ namespace StructureMap
 
 
         /// <summary>
-        /// Use with caution!  Does a full environment test of the configuration of this container.  Will try to create every configured
-        /// instance and afterward calls any methods marked with the [ValidationMethod] attribute
+        ///     Use with caution!  Does a full environment test of the configuration of this container.  Will try to create every configured
+        ///     instance and afterward calls any methods marked with the [ValidationMethod] attribute
         /// </summary>
         public void AssertConfigurationIsValid()
         {
@@ -368,7 +378,7 @@ namespace StructureMap
         }
 
         /// <summary>
-        /// Removes all configured instances of type T from the Container.  Use with caution!
+        ///     Removes all configured instances of type T from the Container.  Use with caution!
         /// </summary>
         /// <typeparam name="T"></typeparam>
         public void EjectAllInstancesOf<T>()
@@ -377,13 +387,13 @@ namespace StructureMap
         }
 
         /// <summary>
-        /// Convenience method to request an object using an Open Generic
-        /// Type and its parameter Types
+        ///     Convenience method to request an object using an Open Generic
+        ///     Type and its parameter Types
         /// </summary>
         /// <param name="templateType"></param>
         /// <returns></returns>
         /// <example>
-        /// IFlattener flattener1 = container.ForGenericType(typeof (IFlattener&lt;&gt;))
+        ///     IFlattener flattener1 = container.ForGenericType(typeof (IFlattener&lt;&gt;))
         ///     .WithParameters(typeof (Address)).GetInstanceAs&lt;IFlattener&gt;();
         /// </example>
         public OpenGenericTypeExpression ForGenericType(Type templateType)
@@ -392,13 +402,13 @@ namespace StructureMap
         }
 
         /// <summary>
-        /// Shortcut syntax for using an object to find a service that handles
-        /// that type of object by using an open generic type
+        ///     Shortcut syntax for using an object to find a service that handles
+        ///     that type of object by using an open generic type
         /// </summary>
         /// <example>
-        /// IHandler handler = container.ForObject(shipment)
-        ///                        .GetClosedTypeOf(typeof (IHandler<>))
-        ///                        .As<IHandler>();
+        ///     IHandler handler = container.ForObject(shipment)
+        ///     .GetClosedTypeOf(typeof (IHandler<>))
+        ///     .As<IHandler>();
         /// </example>
         /// <param name="subject"></param>
         /// <returns></returns>
@@ -408,7 +418,7 @@ namespace StructureMap
         }
 
         /// <summary>
-        /// Starts a "Nested" Container for atomic, isolated access
+        ///     Starts a "Nested" Container for atomic, isolated access
         /// </summary>
         /// <returns></returns>
         public IContainer GetNestedContainer()
@@ -429,7 +439,7 @@ namespace StructureMap
         }
 
         /// <summary>
-        /// Starts a new "Nested" Container for atomic, isolated service location.  Opens 
+        ///     Starts a new "Nested" Container for atomic, isolated service location.  Opens
         /// </summary>
         /// <param name="profileName"></param>
         /// <returns></returns>
@@ -442,12 +452,18 @@ namespace StructureMap
         }
 
 
-        private Action<Container> _onDispose = fullDispose;
-
         public void Dispose()
         {
             _onDispose(this);
         }
+
+        /// <summary>
+        ///     The name of the container. By default this is set to
+        ///     a random Guid. This is a convience property to
+        ///     assist with debugging. Feel free to set to anything,
+        ///     as this is not used in any logic.
+        /// </summary>
+        public string Name { get; set; }
 
         private static void fullDispose(Container c)
         {
@@ -461,20 +477,12 @@ namespace StructureMap
             c._pipelineGraph.Dispose();
         }
 
-        /// <summary>
-        /// The name of the container. By default this is set to 
-        /// a random Guid. This is a convience property to 
-        /// assist with debugging. Feel free to set to anything,
-        /// as this is not used in any logic.
-        /// </summary>
-        public string Name { get; set; }
-
         #endregion
 
         /// <summary>
-        /// Injects the given object into a Container as the default for the designated
-        /// TPluginType.  Mostly used for temporarily setting up return values of the Container
-        /// to introduce mocks or stubs during automated testing scenarios
+        ///     Injects the given object into a Container as the default for the designated
+        ///     TPluginType.  Mostly used for temporarily setting up return values of the Container
+        ///     to introduce mocks or stubs during automated testing scenarios
         /// </summary>
         /// <typeparam name="TPluginType"></typeparam>
         /// <param name="instance"></param>
@@ -489,9 +497,9 @@ namespace StructureMap
         }
 
         /// <summary>
-        /// Injects the given object into a Container as the default for the designated
-        /// pluginType.  Mostly used for temporarily setting up return values of the Container
-        /// to introduce mocks or stubs during automated testing scenarios
+        ///     Injects the given object into a Container as the default for the designated
+        ///     pluginType.  Mostly used for temporarily setting up return values of the Container
+        ///     to introduce mocks or stubs during automated testing scenarios
         /// </summary>
         public void Inject(Type pluginType, object @object)
         {
@@ -508,13 +516,11 @@ namespace StructureMap
 
             var basicInstance = defaultInstance as ConstructorInstance;
 
-            Instance instance = basicInstance == null
+            var instance = basicInstance == null
                                     ? defaultInstance
                                     : basicInstance.Override(args);
 
-            BuildSession session = withNewSession(requestedName);
-
-            args.RegisterDefaults(session);
+            var session = new BuildSession(_pipelineGraph, requestedName, args);
 
             return session.Resolve(pluginType, instance);
         }
@@ -540,41 +546,23 @@ namespace StructureMap
             _pluginGraph.ProfileManager.SetDefault(typeof (IContainer), thisInstance);
 
             var funcInstance = new FactoryTemplate(typeof (LazyInstance<>));
-            _pluginGraph.Families[typeof(Func<>)].AddInstance(funcInstance);
-            _pluginGraph.ProfileManager.SetDefault(typeof(Func<>), funcInstance);
-
+            _pluginGraph.Families[typeof (Func<>)].AddInstance(funcInstance);
+            _pluginGraph.ProfileManager.SetDefault(typeof (Func<>), funcInstance);
 
 
             pluginGraph.Log.AssertFailures();
 
             _pipelineGraph = new PipelineGraph(pluginGraph);
-
-
         }
 
         [Obsolete("delegate to something cleaner in BuildSession")]
         private IList<T> getListOfTypeWithSession<T>(BuildSession session)
         {
-            var list = new List<T>();
-            foreach (T instance in session.CreateInstanceArray(typeof (T), null))
-            {
-                list.Add(instance);
-            }
-
-            return list;
-        }
-
-
-        private BuildSession withNewSession(string name)
-        {
-            return new BuildSession(_pipelineGraph)
-            {
-                RequestedName = name
-            };
+            return session.CreateInstanceArray(typeof (T), null).Cast<T>().ToList();
         }
 
         /// <summary>
-        /// Sets the default instance for the PluginType
+        ///     Sets the default instance for the PluginType
         /// </summary>
         /// <param name="pluginType"></param>
         /// <param name="instance"></param>

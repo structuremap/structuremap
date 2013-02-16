@@ -24,7 +24,7 @@ namespace StructureMap
 
         [CLSCompliant(false)] protected BuildStack _buildStack = new BuildStack();
 
-        public BuildSession(IPipelineGraph pipelineGraph)
+        public BuildSession(IPipelineGraph pipelineGraph, string requestedName = null, ExplicitArguments args = null)
         {
             _pipelineGraph = pipelineGraph;
 
@@ -41,6 +41,13 @@ namespace StructureMap
                     return () => Resolve(t, instance);
                 });
             }
+
+            RequestedName = requestedName ?? Plugin.DEFAULT;
+
+            // TODO -- make a second constructor
+            if (args != null) args.Defaults.Each(pair => {
+                _defaults[pair.Key] = () => pair.Value;
+            });
         }
 
         protected IPipelineGraph pipelineGraph
@@ -105,12 +112,6 @@ namespace StructureMap
             get { return _buildStack.Root; }
         }
 
-        [Obsolete("going to make this unnecessary")]
-        public virtual void RegisterDefault(Type pluginType, object defaultObject)
-        {
-            RegisterDefault(pluginType, () => defaultObject);
-        }
-
         public T TryGetInstance<T>() where T : class
         {
             lock (_locker)
@@ -172,15 +173,15 @@ namespace StructureMap
             return allInstances.Select(x => Resolve(pluginType, x));
         }
 
-        public static BuildSession ForPluginGraph(PluginGraph graph)
+        public static BuildSession ForPluginGraph(PluginGraph graph, ExplicitArguments args = null)
         {
             var pipeline = new PipelineGraph(graph);
-            return new BuildSession(pipeline);
+            return new BuildSession(pipeline, args:args);
         }
 
-        public static BuildSession Empty()
+        public static BuildSession Empty(ExplicitArguments args = null)
         {
-            return ForPluginGraph(new PluginGraph());
+            return ForPluginGraph(new PluginGraph(), args);
         }
 
         protected void clearBuildStack()
@@ -250,16 +251,6 @@ namespace StructureMap
             }
 
             return array;
-        }
-
-
-
-        public virtual void RegisterDefault(Type pluginType, Func<object> creator)
-        {
-            lock (_locker)
-            {
-                _defaults[pluginType] = creator;
-            }
         }
 
         public object ApplyInterception(Type pluginType, object actualValue, Instance instance)

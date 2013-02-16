@@ -33,14 +33,16 @@ namespace StructureMap.Pipeline
             return _defaults.ContainsKey(type) ? _defaults[type] : null;
         }
 
-        public void Set<T>(T arg)
+        public ExplicitArguments Set<T>(T arg)
         {
-            Set(typeof (T), arg);
+            return Set(typeof (T), arg);
         }
 
-        public void Set(Type pluginType, object arg)
+        public ExplicitArguments Set(Type pluginType, object arg)
         {
             _defaults.Add(pluginType, arg);
+
+            return this;
         }
 
         public void SetArg(string key, object argValue)
@@ -73,15 +75,5 @@ namespace StructureMap.Pipeline
         {
             return _args.ContainsKey(propertyName);
         }
-
-        public void RegisterDefaults(BuildSession session)
-        {
-            foreach (var pair in _defaults)
-            {
-                session.RegisterDefault(pair.Key, pair.Value);
-            }
-        }
-
-
     }
 }

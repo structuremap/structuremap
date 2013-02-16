@@ -59,14 +59,6 @@ namespace StructureMap
         object GetInstance(Type pluginType, string instanceKey);
 
         /// <summary>
-        /// Register a default object for the given PluginType that will
-        /// be used throughout the rest of the current object request
-        /// </summary>
-        /// <param name="pluginType"></param>
-        /// <param name="defaultObject"></param>
-        void RegisterDefault(Type pluginType, object defaultObject);
-
-        /// <summary>
         /// Same as GetInstance, but can gracefully return null if 
         /// the Type does not already exist
         /// </summary>

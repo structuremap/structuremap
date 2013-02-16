@@ -15,13 +15,15 @@ namespace StructureMap.Testing
         [SetUp]
         public void SetUp()
         {
+            TheDefaultGateway = new DefaultGateway();
+
+            var args = new ExplicitArguments();
+            args.Set<IGateway>(TheDefaultGateway);
+
             PluginCache.ResetAll();
             builder = PluginCache.FindBuilder(typeof (ClassWithMixOfSetters));
             instance = new SmartInstance<ClassWithMixOfSetters>().Ctor<int>("Age").Is(34);
-            _session = BuildSession.Empty();
-
-            TheDefaultGateway = new DefaultGateway();
-            _session.RegisterDefault(typeof (IGateway), TheDefaultGateway);
+            _session = BuildSession.Empty(args);
 
             _target = null;
         }
