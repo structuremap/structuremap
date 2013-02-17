@@ -13,7 +13,7 @@ namespace StructureMap.Graph
     /// the system.  A PluginFamily defines a CLR Type that StructureMap can build, and all of the possible
     /// Plugin’s implementing the CLR Type.
     /// </summary>
-    public class PluginFamily : IPluginFamily
+    public class PluginFamily : HasScope, IPluginFamily
     {
         private readonly Cache<string, Instance> _instances = new Cache<string, Instance>(delegate { return null; });
         private readonly Type _pluginType;
@@ -29,8 +29,6 @@ namespace StructureMap.Graph
                 MissingInstance = new ConfiguredInstance(_pluginType);
             }
 
-
-
             resetDefault();
 
             Attribute.GetCustomAttributes(typeof (FamilyAttribute), true).OfType<FamilyAttribute>()
@@ -43,26 +41,6 @@ namespace StructureMap.Graph
         }
 
         public IEnumerable<Instance> Instances { get { return _instances.GetAll(); } }
-
-        private Lazy<ILifecycle> _lifecycle = new Lazy<ILifecycle>(() => null);
-
-        public void SetScopeTo(InstanceScope scope)
-        {
-            _lifecycle = new Lazy<ILifecycle>(() => Lifecycles.GetLifecycle(scope));
-        }
-
-        public void SetScopeTo(ILifecycle lifecycle)
-        {
-            _lifecycle = new Lazy<ILifecycle>(() => lifecycle);
-        }
-
-        public ILifecycle Lifecycle
-        {
-            get
-            {
-                return _lifecycle.Value;
-            }
-        }
 
         public void AddInstance(Instance instance)
         {
