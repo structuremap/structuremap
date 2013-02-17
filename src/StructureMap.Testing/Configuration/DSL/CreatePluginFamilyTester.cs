@@ -125,7 +125,7 @@ namespace StructureMap.Testing.Configuration.DSL
             PluginGraph pluginGraph = registry.Build();
 
             PluginFamily family = pluginGraph.FindFamily(typeof (IGateway));
-            family.Lifecycle.ShouldBeNull();
+            family.Lifecycle.ShouldBeOfType<TransientLifecycle>();
         }
 
         [Test]

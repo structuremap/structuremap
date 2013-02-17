@@ -206,7 +206,7 @@ namespace StructureMap
 
             if (result == null)
             {
-                IObjectCache cache = _pipelineGraph.FindCache(pluginType);
+                IObjectCache cache = instance.Lifecycle.FindCache(_pipelineGraph);
                 lock (cache.Locker)
                 {
                     object returnValue = cache.Get(pluginType, instance);
@@ -223,7 +223,7 @@ namespace StructureMap
                 }
 
                 // TODO: HACK ATTACK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                bool isUnique = _pipelineGraph.IsUnique(pluginType);
+                bool isUnique = instance.IsUnique();
                 if (!isUnique)
                 {
                     _cache.Set(pluginType, instance, result);

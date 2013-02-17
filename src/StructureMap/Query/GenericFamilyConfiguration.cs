@@ -18,6 +18,7 @@ namespace StructureMap.Query
 
         void IFamily.Eject(Instance instance)
         {
+
         }
 
         object IFamily.Build(Instance instance)

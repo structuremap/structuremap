@@ -197,6 +197,11 @@ namespace StructureMap.Pipeline
                        (pluginType != null ? pluginType.AssemblyQualifiedName.GetHashCode() : 0);
             }
         }
+
+        public bool IsUnique()
+        {
+            return Lifecycle is UniquePerRequestLifecycle;
+        }
     }
 
     /// <summary>

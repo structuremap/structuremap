@@ -80,7 +80,7 @@ namespace StructureMap.Testing.Graph
         public void SetScopeToHttpContext()
         {
             var family = new PluginFamily(typeof (IServiceProvider));
-            family.Lifecycle.ShouldBeNull();
+            family.Lifecycle.ShouldBeOfType<TransientLifecycle>();
 
             family.SetScopeTo(InstanceScope.HttpContext);
             family.Lifecycle.ShouldBeOfType<HttpContextLifecycle>();

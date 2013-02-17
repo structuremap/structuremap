@@ -5,15 +5,19 @@ namespace StructureMap.Pipeline
     // TODO -- make all of these flyweights
     public static class Lifecycles
     {
+        public static readonly ILifecycle Transient = new TransientLifecycle();
+        public static readonly ILifecycle Singleton = new SingletonLifecycle();
+        public static readonly ILifecycle Unique = new UniquePerRequestLifecycle();
+
         public static ILifecycle GetLifecycle(InstanceScope scope)
         {
             switch (scope)
             {
                 case InstanceScope.PerRequest:
-                    return null;
+                    return Transient;
 
                 case InstanceScope.Singleton:
-                    return new SingletonLifecycle();
+                    return Singleton;
 
                 case InstanceScope.HttpContext:
                     return new HttpContextLifecycle();
@@ -31,10 +35,10 @@ namespace StructureMap.Pipeline
                     return new HybridSessionLifecycle();
 
                 case InstanceScope.Unique:
-                    return new UniquePerRequestLifecycle();
+                    return Unique;
 
                 case InstanceScope.Transient:
-                    return null;
+                    return Transient;
             }
 
             throw new ArgumentOutOfRangeException("scope");

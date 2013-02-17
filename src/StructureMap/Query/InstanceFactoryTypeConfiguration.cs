@@ -18,13 +18,17 @@ namespace StructureMap.Query
             _graph = graph;
         }
 
-        private IObjectCache cache { get { return _graph.FindCache(_pluginType); } }
         private IInstanceFactory factory { get { return _graph.ForType(_pluginType); } }
 
         void IFamily.Eject(Instance instance)
         {
-            cache.Eject(_pluginType, instance);
+            cacheForInstance(instance).Eject(_pluginType, instance);
             instance.SafeDispose();
+        }
+
+        private IObjectCache cacheForInstance(Instance instance)
+        {
+            return instance.Lifecycle.FindCache(_graph);
         }
 
         object IFamily.Build(Instance instance)
@@ -37,7 +41,7 @@ namespace StructureMap.Query
 
         bool IFamily.HasBeenCreated(Instance instance)
         {
-            return cache.Has(_pluginType, instance);
+            return cacheForInstance(instance).Has(_pluginType, instance);
         }
 
         public Type PluginType { get { return _pluginType; } }

@@ -18,10 +18,7 @@ namespace StructureMap
         IEnumerable<Instance> GetAllInstances();
         IEnumerable<Instance> GetAllInstances(Type pluginType);
         Instance FindInstance(Type pluginType, string name);
-        bool IsUnique(Type pluginType);
 
-        // TODO -- going to add the Instance here.
-        IObjectCache FindCache(Type pluginType);
         void SetDefault(Type pluginType, Instance instance);
 
         IPipelineGraph ForProfile(string profile);
