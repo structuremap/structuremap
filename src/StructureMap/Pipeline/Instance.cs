@@ -5,7 +5,6 @@ using StructureMap.Interceptors;
 
 namespace StructureMap.Pipeline
 {
-
     public interface IDiagnosticInstance
     {
         bool CanBePartOfPluginFamily(PluginFamily family);
@@ -13,31 +12,61 @@ namespace StructureMap.Pipeline
         InstanceToken CreateToken();
     }
 
-    public abstract class Instance : IDiagnosticInstance
+    public abstract class Instance : HasScope, IDiagnosticInstance
     {
         private readonly string _originalName;
         private InstanceInterceptor _interceptor = new NulloInterceptor();
         private string _name = Guid.NewGuid().ToString();
 
 
+        private PluginFamily _parent;
+
         protected Instance()
         {
             _originalName = _name;
         }
 
-        protected virtual bool doesRecordOnTheStack { get { return true; } }
+        public PluginFamily Parent
+        {
+            get { return _parent; }
+            internal set
+            {
+                _parent = value;
+                scopedParent = _parent;
+            }
+        }
 
-        public InstanceInterceptor Interceptor { get { return _interceptor; } set { _interceptor = value; } }
+        protected virtual bool doesRecordOnTheStack
+        {
+            get { return true; }
+        }
+
+        public InstanceInterceptor Interceptor
+        {
+            get { return _interceptor; }
+            set { _interceptor = value; }
+        }
 
         internal bool IsReference { get; set; }
         internal bool CopyAsIsWhenClosingInstance { get; set; }
 
         #region IDiagnosticInstance Members
 
-        public string Name { get { return _name; } set { _name = value; } }
-        internal Type ConcreteType { get { return getConcreteType(null); } }
+        public string Name
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
 
-        internal string Description { get { return getDescription(); } }
+        internal Type ConcreteType
+        {
+            get { return getConcreteType(null); }
+        }
+
+        internal string Description
+        {
+            get { return getDescription(); }
+        }
 
         bool IDiagnosticInstance.CanBePartOfPluginFamily(PluginFamily family)
         {
@@ -164,14 +193,15 @@ namespace StructureMap.Pipeline
         {
             unchecked
             {
-                return ((Name != null ? Name.GetHashCode() : 0)*397) ^ (pluginType != null ? pluginType.AssemblyQualifiedName.GetHashCode() : 0);
+                return ((Name != null ? Name.GetHashCode() : 0)*397) ^
+                       (pluginType != null ? pluginType.AssemblyQualifiedName.GetHashCode() : 0);
             }
         }
     }
 
     /// <summary>
-    /// Base class for many of the Instance subclasses to support 
-    /// method chaining in the Registry DSL for common options
+    ///     Base class for many of the Instance subclasses to support
+    ///     method chaining in the Registry DSL for common options
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public abstract class ExpressedInstance<T> : Instance
@@ -180,7 +210,7 @@ namespace StructureMap.Pipeline
 
 
         /// <summary>
-        /// Set the name of this Instance
+        ///     Set the name of this Instance
         /// </summary>
         /// <param name="instanceKey"></param>
         /// <returns></returns>
@@ -191,8 +221,8 @@ namespace StructureMap.Pipeline
         }
 
         /// <summary>
-        /// Register an Action to perform on the object created by this Instance
-        /// before it is returned to the caller
+        ///     Register an Action to perform on the object created by this Instance
+        ///     before it is returned to the caller
         /// </summary>
         /// <typeparam name="THandler"></typeparam>
         /// <param name="handler"></param>
@@ -206,8 +236,8 @@ namespace StructureMap.Pipeline
         }
 
         /// <summary>
-        /// Register a Func to potentially enrich or substitute for the object
-        /// created by this Instance before it is returned to the caller
+        ///     Register a Func to potentially enrich or substitute for the object
+        ///     created by this Instance before it is returned to the caller
         /// </summary>
         /// <typeparam name="THandler"></typeparam>
         /// <param name="handler"></param>
@@ -221,8 +251,8 @@ namespace StructureMap.Pipeline
         }
 
         /// <summary>
-        /// Register a Func to potentially enrich or substitute for the object
-        /// created by this Instance before it is returned to the caller
+        ///     Register a Func to potentially enrich or substitute for the object
+        ///     created by this Instance before it is returned to the caller
         /// </summary>
         /// <typeparam name="THandler"></typeparam>
         /// <param name="handler"></param>
@@ -236,7 +266,7 @@ namespace StructureMap.Pipeline
         }
 
         /// <summary>
-        /// Register an <see cref="InstanceInterceptor">InstanceInterceptor</see> with this Instance
+        ///     Register an <see cref="InstanceInterceptor">InstanceInterceptor</see> with this Instance
         /// </summary>
         /// <param name="interceptor"></param>
         /// <returns></returns>

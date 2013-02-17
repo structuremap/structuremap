@@ -27,29 +27,6 @@ namespace StructureMap.Testing.Attributes
         {
         }
 
-
-
-        [Test]
-        public void PerRequest_DoesNot_call_SetScopeTo_on_family()
-        {
-            var att = new PluginFamilyAttribute("something");
-            att.Scope = InstanceScope.PerRequest;
-
-            var mocks = new MockRepository();
-            var family = mocks.DynamicMock<IPluginFamily>();
-
-            using (mocks.Record())
-            {
-                family.SetScopeTo(InstanceScope.PerRequest);
-                LastCall.Repeat.Never();
-            }
-
-            using (mocks.Playback())
-            {
-                att.Configure(family);
-            }
-        }
-
         [Test]
         public void ScopeToInterceptorTypes()
         {

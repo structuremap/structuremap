@@ -160,7 +160,6 @@
     <Compile Include="Graph\IArgumentVisitor.cs" />
     <Compile Include="Graph\InstanceAttribute.cs" />
     <Compile Include="Graph\IPluginFactory.cs" />
-    <Compile Include="Graph\IPluginFamily.cs" />
     <Compile Include="Graph\AssemblyScanner.cs" />
     <Compile Include="Graph\TypePool.cs" />
     <Compile Include="InstanceCache.cs" />

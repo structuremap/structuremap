@@ -47,7 +47,7 @@ namespace StructureMap
             return (att != null);
         }
 
-        public static void ConfigureFamily(IPluginFamily family)
+        public static void ConfigureFamily(PluginFamily family)
         {
             var att =
                 GetCustomAttribute(family.PluginType, typeof (PluginFamilyAttribute), false)
@@ -64,7 +64,7 @@ namespace StructureMap
             Configure(family);
         }
 
-        public void Configure(IPluginFamily family)
+        public void Configure(PluginFamily family)
         {
             if (Scope != InstanceScope.PerRequest) family.SetScopeTo(Scope);
         }
