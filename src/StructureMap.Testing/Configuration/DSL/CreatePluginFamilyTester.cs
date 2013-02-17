@@ -245,12 +245,12 @@ namespace StructureMap.Testing.Configuration.DSL
 
     public class StubbedLifecycle : ILifecycle
     {
-        public void EjectAll()
+        public void EjectAll(ILifecycleContext context)
         {
             throw new NotImplementedException();
         }
 
-        public IObjectCache FindCache()
+        public IObjectCache FindCache(ILifecycleContext context)
         {
             throw new NotImplementedException();
         }

@@ -80,12 +80,12 @@ namespace StructureMap.Testing.Pipeline
             disposable2 = new StubDisposable();
 
 
-            lifecycle.FindCache().Set(typeof (IGateway), new StubInstance("a"), disposable1);
-            lifecycle.FindCache().Set(typeof (IGateway), new StubInstance("b"), disposable2);
-            lifecycle.FindCache().Set(typeof (IGateway), new StubInstance("c"), new object());
+            lifecycle.FindCache(null).Set(typeof (IGateway), new StubInstance("a"), disposable1);
+            lifecycle.FindCache(null).Set(typeof (IGateway), new StubInstance("b"), disposable2);
+            lifecycle.FindCache(null).Set(typeof (IGateway), new StubInstance("c"), new object());
 
 
-            lifecycle.EjectAll();
+            lifecycle.EjectAll(null);
         }
 
         #endregion
@@ -122,7 +122,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void the_count_should_be_zero()
         {
-            lifecycle.FindCache().Count.ShouldEqual(0);
+            lifecycle.FindCache(null).Count.ShouldEqual(0);
         }
     }
 

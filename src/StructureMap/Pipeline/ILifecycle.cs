@@ -3,7 +3,7 @@ namespace StructureMap.Pipeline
     public interface ILifecycle
     {
         string Scope { get; }
-        void EjectAll();
-        IObjectCache FindCache();
+        void EjectAll(ILifecycleContext context);
+        IObjectCache FindCache(ILifecycleContext context);
     }
 }

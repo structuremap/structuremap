@@ -13,20 +13,20 @@ namespace StructureMap.Pipeline
             _nonHttp = new NONHTTP();
         }
 
-        public void EjectAll()
+        public void EjectAll(ILifecycleContext context)
         {
             if (HttpContextLifecycle.HasContext())
             {
-                _http.EjectAll();
+                _http.EjectAll(context);
             }
-            _nonHttp.EjectAll();
+            _nonHttp.EjectAll(context);
         }
 
-        public IObjectCache FindCache()
+        public IObjectCache FindCache(ILifecycleContext context)
         {
             return HttpContextLifecycle.HasContext()
-                       ? _http.FindCache()
-                       : _nonHttp.FindCache();
+                       ? _http.FindCache(context)
+                       : _nonHttp.FindCache(context);
         }
 
         public abstract string Scope { get; }

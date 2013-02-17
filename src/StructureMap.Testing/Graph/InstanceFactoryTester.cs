@@ -46,7 +46,7 @@ namespace StructureMap.Testing.Graph
 
             factory.AllInstances.Count().ShouldEqual(0);
 
-            lifecycle.AssertWasCalled(x => x.EjectAll());
+            lifecycle.AssertWasCalled(x => x.EjectAll(null));
         }
 
         [Test, ExpectedException(typeof (StructureMapException))]

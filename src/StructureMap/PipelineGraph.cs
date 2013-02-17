@@ -292,7 +292,7 @@ namespace StructureMap
             ILifecycle lifecycle = ForType(pluginType).Lifecycle;
             return lifecycle == null
                        ? _transientCache
-                       : lifecycle.FindCache();
+                       : lifecycle.FindCache(this);
         }
 
         public void Remove(Type pluginType, Instance instance)

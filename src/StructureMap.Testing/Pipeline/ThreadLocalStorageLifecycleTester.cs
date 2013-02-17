@@ -138,11 +138,11 @@ namespace StructureMap.Testing.Pipeline
 		[Test]
 		public void Does_not_cache_item()
 		{
-			int initial = lifecycle.FindCache().Count;
+			int initial = lifecycle.FindCache(null).Count;
 
 			nestedContainer.GetInstance<Rule>();
 
-			int after = lifecycle.FindCache().Count;
+			int after = lifecycle.FindCache(null).Count;
 
 			after.ShouldEqual(initial);
 		}

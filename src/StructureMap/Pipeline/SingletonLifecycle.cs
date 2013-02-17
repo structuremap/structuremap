@@ -4,12 +4,12 @@ namespace StructureMap.Pipeline
     {
         private readonly MainObjectCache _cache = new MainObjectCache();
 
-        public void EjectAll()
+        public void EjectAll(ILifecycleContext context)
         {
             _cache.DisposeAndClear();
         }
 
-        public IObjectCache FindCache()
+        public IObjectCache FindCache(ILifecycleContext context)
         {
             return _cache;
         }

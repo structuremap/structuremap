@@ -9,12 +9,12 @@ namespace StructureMap.Pipeline
         public static readonly string ITEM_NAME = string.Format("STRUCTUREMAP-INSTANCES-{0}", Assembly.GetExecutingAssembly().GetName().Version);
 
 
-        public void EjectAll()
+        public void EjectAll(ILifecycleContext context)
         {
-            FindCache().DisposeAndClear();
+            FindCache(context).DisposeAndClear();
         }
 
-        public IObjectCache FindCache()
+        public IObjectCache FindCache(ILifecycleContext context)
         {
             IDictionary items = findHttpDictionary();
 
@@ -47,7 +47,7 @@ namespace StructureMap.Pipeline
         /// </summary>
         public static void DisposeAndClearAll()
         {
-            new HttpContextLifecycle().FindCache().DisposeAndClear();
+            new HttpContextLifecycle().FindCache(null).DisposeAndClear();
         }
 
 

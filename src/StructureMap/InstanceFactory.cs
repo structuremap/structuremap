@@ -108,9 +108,10 @@ namespace StructureMap
             }
         }
 
+        [Obsolete]
         public void EjectAllInstances()
         {
-            if (_lifecycle != null) _lifecycle.EjectAll();
+            if (_lifecycle != null) _lifecycle.EjectAll(null);
             _instances.Clear();
         }
 

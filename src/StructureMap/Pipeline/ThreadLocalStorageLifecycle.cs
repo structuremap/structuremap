@@ -7,12 +7,12 @@ namespace StructureMap.Pipeline
         [ThreadStatic] private static MainObjectCache _cache;
         private readonly object _locker = new object();
 
-        public void EjectAll()
+        public void EjectAll(ILifecycleContext context)
         {
-            FindCache().DisposeAndClear();
+            FindCache(context).DisposeAndClear();
         }
 
-        public IObjectCache FindCache()
+        public IObjectCache FindCache(ILifecycleContext context)
         {
             guaranteeHashExists();
             return _cache;

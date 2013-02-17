@@ -5,11 +5,11 @@ namespace StructureMap.Pipeline
     /// </summary>
     public class UniquePerRequestLifecycle : ILifecycle
     {
-        public void EjectAll()
+        public void EjectAll(ILifecycleContext context)
         {
         }
 
-        public IObjectCache FindCache()
+        public IObjectCache FindCache(ILifecycleContext context)
         {
             return new NulloObjectCache();
         }
