@@ -7,7 +7,7 @@ using StructureMap.Query;
 
 namespace StructureMap
 {
-    public interface IPipelineGraph
+    public interface IPipelineGraph : ILifecycleContext
     {
         InstanceInterceptor FindInterceptor(Type concreteType);
 

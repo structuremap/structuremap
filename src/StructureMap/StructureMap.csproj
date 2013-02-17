@@ -162,10 +162,10 @@
     <Compile Include="Graph\IPluginFactory.cs" />
     <Compile Include="Graph\AssemblyScanner.cs" />
     <Compile Include="Graph\TypePool.cs" />
+    <Compile Include="IInstanceResolver.cs" />
     <Compile Include="InstanceCache.cs" />
     <Compile Include="Interceptors\MatchedTypeInterceptor.cs" />
     <Compile Include="IPipelineGraph.cs" />
-    <Compile Include="NewPipelineGraph.cs" />
     <Compile Include="PipelineGraph.cs" />
     <Compile Include="Pipeline\ArrayDefinitionExpression.cs" />
     <Compile Include="Pipeline\ConfiguredInstance.cs" />

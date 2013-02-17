@@ -30,6 +30,7 @@ namespace StructureMap
             (pluginType, profileManager) => null;
 
         private InterceptorLibrary _interceptors;
+        private PluginGraph _graph;
 
         public PipelineGraph(PluginGraph graph)
         {
@@ -46,6 +47,8 @@ namespace StructureMap
             });
 
             _interceptors = graph.InterceptorLibrary;
+
+            _graph = graph;
         }
 
         private PipelineGraph(ProfileManager profileManager, GenericsPluginGraph genericsGraph, GraphLog log)
@@ -106,7 +109,8 @@ namespace StructureMap
             var clone = new PipelineGraph(_profileManager.Clone(), _genericsGraph.Clone(), _log)
             {
                 _missingFactory = _missingFactory,
-                _interceptors = _interceptors
+                _interceptors = _interceptors,
+                _graph = _graph
             };
 
             lock (this)
@@ -295,6 +299,16 @@ namespace StructureMap
         {
             ForType(pluginType).RemoveInstance(instance);
             _profileManager.RemoveInstance(pluginType, instance);
+        }
+
+        public IObjectCache Singletons
+        {
+            get { return _graph.SingletonCache; }
+        }
+
+        public IObjectCache Transients
+        {
+            get { return _transientCache; }
         }
     }
 }

@@ -8,11 +8,10 @@ using StructureMap.Util;
 
 namespace StructureMap
 {
-
-
-    public interface IInstanceResolver
+    public interface ILifecycleContext
     {
-        object Resolve(Type pluginType, Instance instance);
+        IObjectCache Singletons { get; }
+        IObjectCache Transients { get; }
     }
 
     public class BuildSession : IContext, IInstanceResolver

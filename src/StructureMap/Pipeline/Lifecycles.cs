@@ -2,6 +2,7 @@ using System;
 
 namespace StructureMap.Pipeline
 {
+    // TODO -- make all of these flyweights
     public static class Lifecycles
     {
         public static ILifecycle GetLifecycle(InstanceScope scope)

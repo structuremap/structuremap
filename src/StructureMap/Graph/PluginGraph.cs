@@ -48,6 +48,7 @@ namespace StructureMap.Graph
         private readonly ProfileManager _profileManager = new ProfileManager();
         private readonly List<Registry> _registries = new List<Registry>();
         private GraphLog _log = new GraphLog();
+        private readonly MainObjectCache _singletonCache = new MainObjectCache();
 
         public PluginGraph()
         {
@@ -55,6 +56,11 @@ namespace StructureMap.Graph
             {
                 return _policies.FirstValue(x => x.Build(type)) ?? new PluginFamily(type);
             });
+        }
+
+        public MainObjectCache SingletonCache
+        {
+            get { return _singletonCache; }
         }
 
         public static PluginGraph Empty()
