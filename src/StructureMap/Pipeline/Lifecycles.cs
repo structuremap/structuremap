@@ -2,12 +2,17 @@ using System;
 
 namespace StructureMap.Pipeline
 {
-    // TODO -- make all of these flyweights
+    // TODO -- make this a string, and make it possible to register Lifecycles
     public static class Lifecycles
     {
         public static readonly ILifecycle Transient = new TransientLifecycle();
         public static readonly ILifecycle Singleton = new SingletonLifecycle();
         public static readonly ILifecycle Unique = new UniquePerRequestLifecycle();
+        public static readonly ILifecycle HttpContext = new HttpContextLifecycle();
+        public static readonly ILifecycle ThreadLocal = new ThreadLocalStorageLifecycle();
+        public static readonly HybridLifecycle Hybrid = new HybridLifecycle();
+        public static readonly HttpSessionLifecycle HttpSession = new HttpSessionLifecycle();
+        public static readonly HybridSessionLifecycle HybridSession = new HybridSessionLifecycle();
 
         public static ILifecycle GetLifecycle(InstanceScope scope)
         {
@@ -20,19 +25,19 @@ namespace StructureMap.Pipeline
                     return Singleton;
 
                 case InstanceScope.HttpContext:
-                    return new HttpContextLifecycle();
+                    return HttpContext;
 
                 case InstanceScope.ThreadLocal:
-                    return new ThreadLocalStorageLifecycle();
+                    return ThreadLocal;
 
                 case InstanceScope.Hybrid:
-                    return new HybridLifecycle();
+                    return Hybrid;
 
                 case InstanceScope.HttpSession:
-                    return new HttpSessionLifecycle();
+                    return HttpSession;
 
                 case InstanceScope.HybridHttpSession:
-                    return new HybridSessionLifecycle();
+                    return HybridSession;
 
                 case InstanceScope.Unique:
                     return Unique;
