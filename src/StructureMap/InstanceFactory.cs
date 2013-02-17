@@ -109,9 +109,9 @@ namespace StructureMap
         }
 
         [Obsolete]
-        public void EjectAllInstances()
+        public void EjectAllInstances(PipelineGraph pipelineGraph)
         {
-            if (_lifecycle != null) _lifecycle.EjectAll(null);
+            if (_lifecycle != null) _lifecycle.EjectAll(pipelineGraph);
             _instances.Clear();
         }
 

@@ -31,6 +31,7 @@ namespace StructureMap.Testing.Graph
         #endregion
 
         private Container _container;
+        private PipelineGraph pipelineGraph;
 
         [Test]
         public void eject_all_instances_removes_all_instances_and_ejects_from_the_build_policy()
@@ -42,11 +43,12 @@ namespace StructureMap.Testing.Graph
             var lifecycle = MockRepository.GenerateMock<ILifecycle>();
             factory.Lifecycle = lifecycle;
 
-            factory.EjectAllInstances();
+            pipelineGraph = new PipelineGraph(new PluginGraph());
+            factory.EjectAllInstances(pipelineGraph);
 
             factory.AllInstances.Count().ShouldEqual(0);
 
-            lifecycle.AssertWasCalled(x => x.EjectAll(null));
+            lifecycle.AssertWasCalled(x => x.EjectAll(pipelineGraph));
         }
 
         [Test, ExpectedException(typeof (StructureMapException))]

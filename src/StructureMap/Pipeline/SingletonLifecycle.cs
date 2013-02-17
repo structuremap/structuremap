@@ -2,16 +2,14 @@ namespace StructureMap.Pipeline
 {
     public class SingletonLifecycle : ILifecycle
     {
-        private readonly MainObjectCache _cache = new MainObjectCache();
-
         public void EjectAll(ILifecycleContext context)
         {
-            _cache.DisposeAndClear();
+            FindCache(context).DisposeAndClear();
         }
 
         public IObjectCache FindCache(ILifecycleContext context)
         {
-            return _cache;
+            return context.Singletons;
         }
 
         public string Scope { get { return InstanceScope.Singleton.ToString(); } }

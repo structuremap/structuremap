@@ -222,7 +222,7 @@ namespace StructureMap
 
         public void EjectAllInstancesOf(Type pluginType)
         {
-            ForType(pluginType).EjectAllInstances();
+            ForType(pluginType).EjectAllInstances(this);
             _profileManager.EjectAllInstancesOf(pluginType);
         }
 

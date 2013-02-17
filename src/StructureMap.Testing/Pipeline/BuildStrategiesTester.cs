@@ -1,5 +1,6 @@
 using System;
 using NUnit.Framework;
+using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget3;
 
@@ -79,13 +80,14 @@ namespace StructureMap.Testing.Pipeline
             disposable1 = new StubDisposable();
             disposable2 = new StubDisposable();
 
+            pipeline = new PipelineGraph(new PluginGraph());
 
-            lifecycle.FindCache(null).Set(typeof (IGateway), new StubInstance("a"), disposable1);
-            lifecycle.FindCache(null).Set(typeof (IGateway), new StubInstance("b"), disposable2);
-            lifecycle.FindCache(null).Set(typeof (IGateway), new StubInstance("c"), new object());
+            lifecycle.FindCache(pipeline).Set(typeof (IGateway), new StubInstance("a"), disposable1);
+            lifecycle.FindCache(pipeline).Set(typeof (IGateway), new StubInstance("b"), disposable2);
+            lifecycle.FindCache(pipeline).Set(typeof (IGateway), new StubInstance("c"), new object());
 
 
-            lifecycle.EjectAll(null);
+            lifecycle.EjectAll(pipeline);
         }
 
         #endregion
@@ -93,6 +95,7 @@ namespace StructureMap.Testing.Pipeline
         private SingletonLifecycle lifecycle;
         private StubDisposable disposable1;
         private StubDisposable disposable2;
+        private PipelineGraph pipeline;
 
         public class StubInstance : Instance
         {
@@ -122,7 +125,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void the_count_should_be_zero()
         {
-            lifecycle.FindCache(null).Count.ShouldEqual(0);
+            lifecycle.FindCache(pipeline).Count.ShouldEqual(0);
         }
     }
 

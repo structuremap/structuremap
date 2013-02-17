@@ -25,7 +25,7 @@ namespace StructureMap
         void ImportFrom(PluginFamily family);
 
 
-        void EjectAllInstances();
+        void EjectAllInstances(PipelineGraph pipelineGraph);
 
         IInstanceFactory Clone();
         void RemoveInstance(Instance instance);
