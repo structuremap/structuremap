@@ -1,21 +1,18 @@
-using System;
 using System.Collections.Generic;
-using System.Reflection;
 using StructureMap.Configuration;
 using StructureMap.Graph;
-using System.Linq;
 
 namespace StructureMap
 {
     /// <summary>
-    ///   Reads configuration XML documents and builds the structures necessary to initialize
-    ///   the Container/IInstanceFactory/InstanceBuilder/ObjectInstanceActivator objects
+    ///     Reads configuration XML documents and builds the structures necessary to initialize
+    ///     the Container/IInstanceFactory/InstanceBuilder/ObjectInstanceActivator objects
     /// </summary>
     public class PluginGraphBuilder
     {
         private readonly IList<IPluginGraphConfiguration> _configurations = new List<IPluginGraphConfiguration>();
-        private readonly IList<AssemblyScanner> _scanners = new List<AssemblyScanner>();
         private readonly PluginGraph _graph;
+        private readonly IList<AssemblyScanner> _scanners = new List<AssemblyScanner>();
 
         public PluginGraphBuilder()
         {
@@ -30,14 +27,13 @@ namespace StructureMap
 
 
         /// <summary>
-        ///   Reads the configuration information and returns the PluginGraph definition of
-        ///   plugin families and plugin's
+        ///     Reads the configuration information and returns the PluginGraph definition of
+        ///     plugin families and plugin's
         /// </summary>
         /// <returns></returns>
         public PluginGraph Build()
         {
-            _configurations.Each(x =>
-            {
+            _configurations.Each(x => {
                 // Change this to using the FubuCore.Description later
                 _graph.Log.StartSource(x.ToString());
                 x.Register(this);
@@ -49,6 +45,7 @@ namespace StructureMap
 
             _graph.AddFamilyPolicy(new CloseGenericFamilyPolicy(_graph));
 
+
             // TODO -- going to kill this later when Profile's are rewritten because they're stupid
             _graph.ProfileManager.Seal(_graph);
 
@@ -59,7 +56,5 @@ namespace StructureMap
         {
             _scanners.Add(scanner);
         }
-
-
     }
 }

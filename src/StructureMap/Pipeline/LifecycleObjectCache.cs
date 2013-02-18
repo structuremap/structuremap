@@ -4,7 +4,6 @@ using System.Threading;
 
 namespace StructureMap.Pipeline
 {
-    [Serializable]
     public class LifecycleObjectCache : IObjectCache
     {
         private readonly ReaderWriterLockSlim _lock;
@@ -58,7 +57,7 @@ namespace StructureMap.Pipeline
                 _lock.EnterWriteLock();
                 try
                 {
-                    result = session.BuildNewInSession(pluginType, instance);
+                    result = buildWithSession(pluginType, instance, session);
                     _objects.Add(key, result);
                 }
                 finally
@@ -68,6 +67,11 @@ namespace StructureMap.Pipeline
             }
 
             return result;
+        }
+
+        protected virtual object buildWithSession(Type pluginType, Instance instance, IBuildSession session)
+        {
+            return session.BuildNewInOriginalContext(pluginType, instance);
         }
 
         public void DisposeAndClear()
@@ -99,75 +103,6 @@ namespace StructureMap.Pipeline
                     _objects.Add(key, value);
                 }
             });
-        }
-    }
-
-    public static class ReaderWriterLockExtensions
-    {
-        public static void Write(this ReaderWriterLockSlim rwLock, Action action)
-        {
-            rwLock.EnterWriteLock();
-            try
-            {
-                action();
-            }
-            finally
-            {
-                rwLock.ExitWriteLock();
-            }
-        }
-
-        public static T Read<T>(this ReaderWriterLockSlim rwLock, Func<T> func)
-        {
-            rwLock.EnterReadLock();
-            try
-            {
-                return func();
-            }
-            finally
-            {
-                rwLock.ExitReadLock();
-            }
-        }
-
-        public static void MaybeWrite(this ReaderWriterLockSlim theLock, Action action)
-        {
-            try
-            {
-                theLock.EnterUpgradeableReadLock();
-                action();
-            }
-            finally
-            {
-                theLock.ExitUpgradeableReadLock();
-            }
-        }
-
-        public static T MaybeWrite<T>(this ReaderWriterLockSlim theLock, Func<T> answer, Func<bool> missingTest,
-                                      Action write)
-        {
-            try
-            {
-                theLock.EnterUpgradeableReadLock();
-                if (missingTest())
-                {
-                    theLock.Write(() => {
-                        if (missingTest())
-                        {
-                            write();
-                        }
-                    });
-                }
-
-                return answer();
-            }
-            finally
-            {
-                if (theLock.IsReadLockHeld)
-                {
-                    theLock.ExitUpgradeableReadLock();
-                }
-            }
         }
     }
 }

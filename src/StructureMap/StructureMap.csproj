@@ -180,7 +180,9 @@
     <Compile Include="Pipeline\Profile.cs" />
     <Compile Include="Pipeline\ProfileManager.cs" />
     <Compile Include="Pipeline\PrototypeInstance.cs" />
+    <Compile Include="Pipeline\ReaderWriterLockExtensions.cs" />
     <Compile Include="Pipeline\ReferencedInstance.cs" />
+    <Compile Include="Pipeline\TransientObjectCache.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

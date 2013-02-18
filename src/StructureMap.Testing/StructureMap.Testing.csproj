@@ -182,6 +182,7 @@
       <Link>CommonAssemblyInfo.cs</Link>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Acceptance\lifecycle_creation.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -337,6 +338,7 @@
     <Compile Include="Pipeline\LazyFuncTester.cs" />
     <Compile Include="Pipeline\LifecyclesTester.cs" />
     <Compile Include="Pipeline\LifecycleObjectCacheTester.cs" />
+    <Compile Include="Pipeline\NulloTransientCacheTester.cs" />
     <Compile Include="Pipeline\ObjectInstanceTester.cs" />
     <Compile Include="Pipeline\MissingInstanceTester.cs" />
     <Compile Include="Pipeline\NestedContainerSupportTester.cs" />

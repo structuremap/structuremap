@@ -6,7 +6,6 @@ using StructureMap.Graph;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
 using StructureMap.Query;
-using StructureMap.Util;
 
 namespace StructureMap
 {
@@ -23,14 +22,14 @@ namespace StructureMap
         private readonly ProfileManager _profileManager;
         private readonly IObjectCache _transientCache;
 
+        private PluginGraph _graph;
+        private InterceptorLibrary _interceptors;
+
         /// <summary>
-        /// Used for auto-mocking container. When the factory is missing, we can generate a mock for it
+        ///     Used for auto-mocking container. When the factory is missing, we can generate a mock for it
         /// </summary>
         private MissingFactoryFunction _missingFactory =
             (pluginType, profileManager) => null;
-
-        private InterceptorLibrary _interceptors;
-        private PluginGraph _graph;
 
         public PipelineGraph(PluginGraph graph)
         {
@@ -40,8 +39,7 @@ namespace StructureMap
 
 
             graph.Families.Where(x => x.IsGenericTemplate).Each(_genericsGraph.AddFamily);
-            graph.Families.Where(x => !x.IsGenericTemplate).Each(family =>
-            {
+            graph.Families.Where(x => !x.IsGenericTemplate).Each(family => {
                 var factory = new InstanceFactory(family);
                 _factories.Add(family.PluginType, factory);
             });
@@ -56,25 +54,24 @@ namespace StructureMap
             _profileManager = profileManager;
             _genericsGraph = genericsGraph;
             _log = log;
-            _transientCache = new LifecycleObjectCache();
+            _transientCache = new TransientObjectCache();
         }
 
-        public GraphLog Log { get { return _log; } }
-
-        public IPipelineGraph ForProfile(string profile)
+        public GraphLog Log
         {
-            CurrentProfile = profile;
-            return this;
+            get { return _log; }
         }
 
-        public MissingFactoryFunction OnMissingFactory { set { _missingFactory = value; } }
-
-        public string CurrentProfile { get { return _profileManager.CurrentProfile; } set { _profileManager.CurrentProfile = value; } }
+        public string CurrentProfile
+        {
+            get { return _profileManager.CurrentProfile; }
+            set { _profileManager.CurrentProfile = value; }
+        }
 
         public void Dispose()
         {
             //might need some locking in here, since _factories is being modified
-            if (_factories.ContainsKey(typeof(IContainer)))
+            if (_factories.ContainsKey(typeof (IContainer)))
             {
                 _factories[typeof (IContainer)].AllInstances.Each(x => x.SafeDispose());
             }
@@ -89,6 +86,17 @@ namespace StructureMap
             _genericsGraph.ClearAll();
 
             _transientCache.DisposeAndClear();
+        }
+
+        public IPipelineGraph ForProfile(string profile)
+        {
+            CurrentProfile = profile;
+            return this;
+        }
+
+        public MissingFactoryFunction OnMissingFactory
+        {
+            set { _missingFactory = value; }
         }
 
         public IEnumerable<IPluginTypeConfiguration> GetPluginTypes(IContainer container)
@@ -143,6 +151,105 @@ namespace StructureMap
             _profileManager.ImportFrom(graph.ProfileManager);
         }
 
+        public IPipelineGraph Root()
+        {
+            return new PipelineGraph(_graph);
+        }
+
+        public InstanceInterceptor FindInterceptor(Type concreteType)
+        {
+            return _interceptors.FindInterceptor(concreteType);
+        }
+
+        public virtual Instance GetDefault(Type pluginType)
+        {
+            // Need to ensure that the factory exists first
+            createFactoryIfMissing(pluginType);
+            Instance instance = _profileManager.GetDefault(pluginType);
+            if (instance == null && pluginType.IsGenericType)
+                instance = _profileManager.GetDefault(pluginType.GetGenericTypeDefinition());
+
+            // if we haven't found the instance yet, return it. If we're using an auto-mocking
+            // container, that will handle the missing instance at this point.
+            return instance ?? _factories[pluginType].MissingInstance;
+        }
+
+        public void SetDefault(Type pluginType, Instance instance)
+        {
+            createFactoryIfMissing(pluginType);
+            ForType(pluginType).AddInstance(instance);
+            _profileManager.SetDefault(pluginType, instance);
+        }
+
+
+        public void EjectAllInstancesOf<T>()
+        {
+            EjectAllInstancesOf(typeof (T));
+        }
+
+        public void Remove(Func<Type, bool> filter)
+        {
+            _genericsGraph.Families.Where(x => filter(x.PluginType)).ToArray().Each(x => Remove(x.PluginType));
+            _factories.Values.Where(x => filter(x.PluginType)).ToArray().Each(x => Remove(x.PluginType));
+        }
+
+        public void Remove(Type pluginType)
+        {
+            EjectAllInstancesOf(pluginType);
+            lock (this)
+            {
+                _factories.Remove(pluginType);
+            }
+            _genericsGraph.Remove(pluginType);
+        }
+
+
+        public IEnumerable<Instance> GetAllInstances()
+        {
+            return _factories.Values.SelectMany(x => x.AllInstances).ToList();
+        }
+
+        public IEnumerable<Instance> GetAllInstances(Type pluginType)
+        {
+            return ForType(pluginType).AllInstances;
+        }
+
+        public Instance FindInstance(Type pluginType, string name)
+        {
+            return ForType(pluginType).FindInstance(name);
+        }
+
+        public bool HasDefaultForPluginType(Type pluginType)
+        {
+            IInstanceFactory factory = ForType(pluginType);
+            if (_profileManager.GetDefault(pluginType) != null)
+            {
+                return true;
+            }
+
+            return (factory.AllInstances.Count() == 1);
+        }
+
+        public bool HasInstance(Type pluginType, string instanceKey)
+        {
+            return ForType(pluginType).FindInstance(instanceKey) != null;
+        }
+
+        public void EachInstance(Action<Type, Instance> action)
+        {
+            _factories.Values.ToArray().Each(f => { f.AllInstances.ToArray().Each(i => action(f.PluginType, i)); });
+        }
+
+        public IObjectCache Singletons
+        {
+            get { return _graph.SingletonCache; }
+        }
+
+        public IObjectCache Transients
+        {
+            get { return _transientCache; }
+        }
+
         public IInstanceFactory ForType(Type pluginType)
         {
             createFactoryIfMissing(pluginType);
@@ -184,40 +291,9 @@ namespace StructureMap
             return InstanceFactory.CreateFactoryForType(pluggedType, _profileManager);
         }
 
-        public InstanceInterceptor FindInterceptor(Type concreteType)
-        {
-            return _interceptors.FindInterceptor(concreteType);
-        }
-
-        public virtual Instance GetDefault(Type pluginType)
-        {
-            // Need to ensure that the factory exists first
-            createFactoryIfMissing(pluginType);
-            var instance = _profileManager.GetDefault(pluginType);
-            if (instance == null && pluginType.IsGenericType)
-                instance = _profileManager.GetDefault(pluginType.GetGenericTypeDefinition());
-
-            // if we haven't found the instance yet, return it. If we're using an auto-mocking
-            // container, that will handle the missing instance at this point.
-            return instance ?? _factories[pluginType].MissingInstance;
-        }
-
-        public void SetDefault(Type pluginType, Instance instance)
-        {
-            createFactoryIfMissing(pluginType);
-            ForType(pluginType).AddInstance(instance);
-            _profileManager.SetDefault(pluginType, instance);
-        }
-
-
         public void AddInstance<T>(Instance instance)
         {
             ForType(typeof (T)).AddInstance(instance);
-        }
-
-        public void EjectAllInstancesOf<T>()
-        {
-            EjectAllInstancesOf(typeof (T));
         }
 
         public void EjectAllInstancesOf(Type pluginType)
@@ -226,81 +302,15 @@ namespace StructureMap
             _profileManager.EjectAllInstancesOf(pluginType);
         }
 
-        public void Remove(Func<Type, bool> filter)
-        {
-            _genericsGraph.Families.Where(x => filter(x.PluginType)).ToArray().Each(x => Remove(x.PluginType));
-            _factories.Values.Where(x => filter(x.PluginType)).ToArray().Each(x => Remove(x.PluginType));
-        }
-
-        public void Remove(Type pluginType)
-        {
-            EjectAllInstancesOf(pluginType);
-            lock (this)
-            {
-                _factories.Remove(pluginType);
-            }
-            _genericsGraph.Remove(pluginType);
-        }
-
-
-        public IEnumerable<Instance> GetAllInstances()
-        {
-            return _factories.Values.SelectMany(x => x.AllInstances).ToList();
-        }
-
-        public IEnumerable<Instance> GetAllInstances(Type pluginType)
-        {
-            return ForType(pluginType).AllInstances;
-        }
-
-        public Instance FindInstance(Type pluginType, string name)
-        {
-            return ForType(pluginType).FindInstance(name);
-        }
-
         public bool IsUnique(Type pluginType)
         {
             return ForType(pluginType).Lifecycle is UniquePerRequestLifecycle;
-        }
-
-        public bool HasDefaultForPluginType(Type pluginType)
-        {
-            IInstanceFactory factory = ForType(pluginType);
-            if (_profileManager.GetDefault(pluginType) != null)
-            {
-                return true;
-            }
-
-            return (factory.AllInstances.Count() == 1);
-        }
-
-        public bool HasInstance(Type pluginType, string instanceKey)
-        {
-            return ForType(pluginType).FindInstance(instanceKey) != null;
-        }
-
-        public void EachInstance(Action<Type, Instance> action)
-        {
-            _factories.Values.ToArray().Each(f =>
-            {
-                f.AllInstances.ToArray().Each(i => action(f.PluginType, i));
-            });
         }
 
         public void Remove(Type pluginType, Instance instance)
         {
             ForType(pluginType).RemoveInstance(instance);
             _profileManager.RemoveInstance(pluginType, instance);
-        }
-
-        public IObjectCache Singletons
-        {
-            get { return _graph.SingletonCache; }
-        }
-
-        public IObjectCache Transients
-        {
-            get { return _transientCache; }
         }
     }
 }

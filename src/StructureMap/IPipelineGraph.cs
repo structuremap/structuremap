@@ -9,6 +9,12 @@ namespace StructureMap
 {
     public interface IPipelineGraph : ILifecycleContext
     {
+        /// <summary>
+        /// Unwraps a nested container and/or profiles?
+        /// </summary>
+        /// <returns></returns>
+        IPipelineGraph Root();
+
         InstanceInterceptor FindInterceptor(Type concreteType);
 
         Instance GetDefault(Type pluginType);

@@ -135,7 +135,8 @@ namespace StructureMap
 
         public object BuildNewInOriginalContext(Type pluginType, Instance instance)
         {
-            throw new NotImplementedException();
+            var session = new BuildSession(pipelineGraph.Root(), requestedName: instance.Name);
+            return session.BuildNewInSession(pluginType, instance);
         }
 
         public IEnumerable<T> GetAllInstances<T>()
