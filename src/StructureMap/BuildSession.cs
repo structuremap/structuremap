@@ -37,7 +37,7 @@ namespace StructureMap
                         throw new StructureMapException(202, t);
                     }
 
-                    return () => Resolve(t, instance);
+                    return () => FindObject(t, instance);
                 });
             }
 
@@ -163,13 +163,13 @@ namespace StructureMap
 
         public IEnumerable<T> GetAllInstances<T>()
         {
-            return _pipelineGraph.GetAllInstances(typeof (T)).Select(x => (T) Resolve(typeof (T), x));
+            return _pipelineGraph.GetAllInstances(typeof (T)).Select(x => (T) FindObject(typeof (T), x));
         }
 
         public IEnumerable<object> GetAllInstances(Type pluginType)
         {
             IEnumerable<Instance> allInstances = _pipelineGraph.GetAllInstances(pluginType);
-            return allInstances.Select(x => Resolve(pluginType, x));
+            return allInstances.Select(x => FindObject(pluginType, x));
         }
 
         public static BuildSession ForPluginGraph(PluginGraph graph, ExplicitArguments args = null)
@@ -196,42 +196,45 @@ namespace StructureMap
                 throw new StructureMapException(200, name, pluginType.FullName);
             }
 
-            return Resolve(pluginType, instance);
+            return FindObject(pluginType, instance);
         }
 
         // This is where all Creation happens
-        public virtual object Resolve(Type pluginType, Instance instance)
+        public virtual object FindObject(Type pluginType, Instance instance)
         {
-            object result = _cache.Get(pluginType, instance);
+            object result = _cache.Get(pluginType, instance) ?? ResolveFromLifecycle(pluginType, instance);
 
-            if (result == null)
+            return result;
+        }
+
+        public object ResolveFromLifecycle(Type pluginType, Instance instance)
+        {
+            object result = null;
+            IObjectCache cache = instance.Lifecycle.FindCache(_pipelineGraph);
+            lock (cache.Locker)
             {
-                IObjectCache cache = instance.Lifecycle.FindCache(_pipelineGraph);
-                lock (cache.Locker)
+                object returnValue = cache.Get(pluginType, instance);
+                if (returnValue == null)
                 {
-                    object returnValue = cache.Get(pluginType, instance);
-                    if (returnValue == null)
-                    {
-                        returnValue = Build(pluginType, instance);
+                    returnValue = BuildNewInSession(pluginType, instance);
 
-                        cache.Set(pluginType, instance, returnValue);
-                    }
-
-                    result = returnValue;
+                    cache.Set(pluginType, instance, returnValue);
                 }
 
-                // TODO: HACK ATTACK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                bool isUnique = instance.IsUnique();
-                if (!isUnique)
-                {
-                    _cache.Set(pluginType, instance, result);
-                }
+                result = returnValue;
+            }
+
+            // TODO: HACK ATTACK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            bool isUnique = instance.IsUnique();
+            if (!isUnique)
+            {
+                _cache.Set(pluginType, instance, result);
             }
 
             return result;
         }
 
-        public object Build(Type pluginType, Instance instance)
+        public object BuildNewInSession(Type pluginType, Instance instance)
         {
             var returnValue = instance.Build(pluginType, this);
             if (returnValue == null) return null;
@@ -246,7 +249,7 @@ namespace StructureMap
             }
         }
 
-        public object BuildInOriginalContext(Type pluginType, Instance instance)
+        public object BuildNewInOriginalContext(Type pluginType, Instance instance)
         {
             throw new NotImplementedException();
         }
@@ -263,7 +266,7 @@ namespace StructureMap
             for (int i = 0; i < instances.Length; i++)
             {
                 Instance instance = instances[i];
-                object arrayValue = Resolve(pluginType, instance);
+                object arrayValue = FindObject(pluginType, instance);
                 array.SetValue(arrayValue, i);
             }
 

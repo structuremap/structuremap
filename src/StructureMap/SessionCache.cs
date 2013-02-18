@@ -34,20 +34,28 @@ namespace StructureMap
                 return _defaults[pluginType];
             }
 
-            Instance instance = pipelineGraph.GetDefault(pluginType);
-            object o = GetObject(pluginType, instance);
+            var instance = pipelineGraph.GetDefault(pluginType);
+            var o = GetObject(pluginType, instance);
 
-            _defaults.Add(pluginType, o);
-
+            if (!instance.IsUnique())
+            {
+                _defaults.Add(pluginType, o);
+            }
+            
             return o;
         }
 
         public object GetObject(Type pluginType, Instance instance)
         {
+            if (instance.IsUnique())
+            {
+                return _resolver.BuildNewInSession(pluginType, instance);
+            }
+
             int key = instance.InstanceKey(pluginType);
             if (!_cachedObjects.ContainsKey(key))
             {
-                object o = _resolver.Resolve(pluginType, instance);
+                object o = _resolver.ResolveFromLifecycle(pluginType, instance);
                 _cachedObjects[key] = o;
 
                 return o;

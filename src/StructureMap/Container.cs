@@ -278,7 +278,7 @@ namespace StructureMap
         public object GetInstance(Type pluginType, Instance instance)
         {
             var session = new BuildSession(_pipelineGraph, instance.Name);
-            return session.Resolve(pluginType, instance);
+            return session.FindObject(pluginType, instance);
         }
 
         public void SetDefault(Type pluginType, Instance instance)
@@ -522,7 +522,7 @@ namespace StructureMap
 
             var session = new BuildSession(_pipelineGraph, requestedName, args);
 
-            return session.Resolve(pluginType, instance);
+            return session.FindObject(pluginType, instance);
         }
 
         public ExplicitArgsExpression With(Action<ExplicitArgsExpression> action)

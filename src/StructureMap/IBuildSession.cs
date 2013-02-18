@@ -5,8 +5,8 @@ namespace StructureMap
 {
     public interface IBuildSession
     {
-        object Build(Type pluginType, Instance instance);
-        object BuildInOriginalContext(Type pluginType, Instance instance);
-        object Resolve(Type pluginType, Instance instance);
+        object BuildNewInSession(Type pluginType, Instance instance);
+        object BuildNewInOriginalContext(Type pluginType, Instance instance);
+        object ResolveFromLifecycle(Type pluginType, Instance instance);
     }
 }
