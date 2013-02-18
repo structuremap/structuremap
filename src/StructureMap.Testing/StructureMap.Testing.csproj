@@ -363,6 +363,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Query\ClosedPluginTypeConfigurationTester.cs" />
     <Compile Include="Query\GenericFamilyConfigurationTester.cs" />
     <Compile Include="Query\InstanceFactoryTypeConfigurationTester.cs" />
     <Compile Include="Query\InstanceRefTester.cs" />

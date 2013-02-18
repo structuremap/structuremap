@@ -5,6 +5,7 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.Query
 {
+    [Obsolete("Gonna kill InstanceFactory anyway")]
     public class InstanceFactoryTypeConfiguration : IPluginTypeConfiguration, IFamily
     {
         private readonly IContainer _container;

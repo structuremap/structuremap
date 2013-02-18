@@ -57,6 +57,48 @@ namespace StructureMap.Testing.Graph
             graph.Families[typeof (IOpen<string>)].GetDefaultInstance().ShouldBeOfType<ConstructorInstance>()
                                                   .PluggedType.ShouldEqual(typeof (Open<string>));
         }
+
+        [Test]
+        public void has_instance_negative_when_the_family_has_not_been_created()
+        {
+            Assert.Fail("Do.");
+        }
+
+        [Test]
+        public void has_instance_negative_with_the_family_already_existing()
+        {
+            Assert.Fail("Do.");
+        }
+
+        [Test]
+        public void has_instance_positive()
+        {
+            Assert.Fail("Do.");
+        }
+
+        [Test]
+        public void has_default_when_the_family_has_not_been_created()
+        {
+            Assert.Fail("Do.");
+        }
+
+        [Test]
+        public void has_default_positive()
+        {
+            Assert.Fail("Do.");
+        }
+
+        [Test]
+        public void has_default_with_family_but_no_default()
+        {
+            Assert.Fail("Do.");
+        }
+
+        [Test]
+        public void eject_family_removes_the_family_and_disposes_all_of_its_instances()
+        {
+            Assert.Fail("Do.");
+        }
     }
 
     public interface IOpen<T>

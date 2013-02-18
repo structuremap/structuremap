@@ -157,14 +157,6 @@ namespace StructureMap
             return instance ?? _factories[pluginType].MissingInstance;
         }
 
-        public void SetDefault(Type pluginType, Instance instance)
-        {
-            createFactoryIfMissing(pluginType);
-            ForType(pluginType).AddInstance(instance);
-            _profileManager.SetDefault(pluginType, instance);
-        }
-
-
         public void EjectAllInstancesOf<T>()
         {
             EjectAllInstancesOf(typeof (T));

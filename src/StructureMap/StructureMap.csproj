@@ -280,6 +280,7 @@
     <Compile Include="PluginGraphBuilder.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Query\ClosedPluginTypeConfiguration.cs" />
     <Compile Include="SessionCache.cs" />
     <Compile Include="Source\XmlAttributeInstanceMemento.cs">
       <SubType>Code</SubType>

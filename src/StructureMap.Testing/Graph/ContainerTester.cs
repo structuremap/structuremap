@@ -74,6 +74,16 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
+        public void can_inject_into_a_running_container()
+        {
+            var container = new Container();
+            container.Inject(typeof(ISport), new ConstructorInstance(typeof(Football)));
+
+            container.GetInstance<ISport>()
+                     .ShouldBeOfType<Football>();
+        }
+
+        [Test]
         public void Can_set_profile_name_and_reset_defaults()
         {
             var container = new Container(r =>
@@ -321,6 +331,12 @@ namespace StructureMap.Testing.Graph
             var manager = new Container(new PluginGraph());
             manager.GetInstance<IService>();
         }
+    }
+
+    public interface ISport{}
+
+    public class Football : ISport
+    {
     }
 
     public interface IOpenGeneric<T>

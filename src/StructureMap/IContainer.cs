@@ -208,8 +208,6 @@ namespace StructureMap
         /// <param name="target"></param>
         void BuildUp(object target);
 
-        void SetDefault(Type pluginType, Instance instance);
-
         /// <summary>
         /// Convenience method to request an object using an Open Generic
         /// Type and its parameter Types

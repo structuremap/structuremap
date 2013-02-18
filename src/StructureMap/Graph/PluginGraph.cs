@@ -168,5 +168,30 @@ namespace StructureMap.Graph
         {
             _families.Remove(pluginType);
         }
+
+        public bool HasInstance(Type pluginType, string name)
+        {
+            if (!_families.Has(pluginType))
+            {
+                return false;
+            }
+
+            return _families[pluginType].GetInstance(name) != null;
+        }
+
+        public bool HasDefaultForPluginType(Type pluginType)
+        {
+            if (!Families.Has(pluginType))
+            {
+                return false;
+            }
+
+            return Families[pluginType].GetDefaultInstance() != null;
+        }
+
+        public void EjectFamily(Type pluginType)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

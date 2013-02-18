@@ -276,11 +276,6 @@ namespace StructureMap
             return session.FindObject(pluginType, instance);
         }
 
-        public void SetDefault(Type pluginType, Instance instance)
-        {
-            _pipelineGraph.SetDefault(pluginType, instance);
-        }
-
         /// <summary>
         ///     Creates or resolves all registered instances of the pluginType
         /// </summary>
@@ -564,7 +559,7 @@ namespace StructureMap
         /// <param name="instance"></param>
         public void Inject(Type pluginType, Instance instance)
         {
-            _pipelineGraph.SetDefault(pluginType, instance);
+            Configure(x => x.For(pluginType).Use(instance));
         }
 
         private void nameContainer(IContainer container)
