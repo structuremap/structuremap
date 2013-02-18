@@ -58,11 +58,6 @@ namespace StructureMap
             construct(pluginGraph);
         }
 
-        protected MissingFactoryFunction onMissingFactory
-        {
-            set { _pipelineGraph.OnMissingFactory = value; }
-        }
-
         public PluginGraph PluginGraph
         {
             get { return _pluginGraph; }

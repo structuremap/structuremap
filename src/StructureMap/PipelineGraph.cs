@@ -10,9 +10,6 @@ using StructureMap.TypeRules;
 
 namespace StructureMap
 {
-    public delegate InstanceFactory MissingFactoryFunction(Type pluginType, ProfileManager profileManager);
-
-
     public class PipelineGraph : IDisposable, IPipelineGraph
     {
         private readonly Dictionary<Type, IInstanceFactory> _factories
@@ -24,12 +21,6 @@ namespace StructureMap
 
         private PluginGraph _graph;
         private InterceptorLibrary _interceptors;
-
-        /// <summary>
-        ///     Used for auto-mocking container. When the factory is missing, we can generate a mock for it
-        /// </summary>
-        private MissingFactoryFunction _missingFactory =
-            (pluginType, profileManager) => null;
 
         public PipelineGraph(PluginGraph graph)
         {
@@ -91,11 +82,6 @@ namespace StructureMap
             return this;
         }
 
-        public MissingFactoryFunction OnMissingFactory
-        {
-            set { _missingFactory = value; }
-        }
-
         public IEnumerable<IPluginTypeConfiguration> GetPluginTypes(IContainer container)
         {
             foreach (PluginFamily family in _graph.Families.Where(x => x.PluginType.IsOpenGeneric()))
@@ -113,7 +99,6 @@ namespace StructureMap
         {
             var clone = new PipelineGraph(_profileManager.Clone(), _log)
             {
-                _missingFactory = _missingFactory,
                 _interceptors = _interceptors,
                 _graph = _graph
             };

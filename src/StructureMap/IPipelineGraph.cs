@@ -29,8 +29,6 @@ namespace StructureMap
 
         IPipelineGraph ForProfile(string profile);
 
-        MissingFactoryFunction OnMissingFactory { set; }
-
         [Obsolete("This needs to go away.  We'll just have Container.Configure write directly to the PluginGraph")]
         void ImportFrom(PluginGraph graph);
 
