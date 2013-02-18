@@ -14,7 +14,7 @@ namespace StructureMap
         IObjectCache Transients { get; }
     }
 
-    public class BuildSession : IContext, IInstanceResolver
+    public class BuildSession : IContext, IBuildSession
     {
         private readonly InstanceCache _cache = new InstanceCache();
         private readonly Cache<Type, Func<object>> _defaults;
@@ -212,9 +212,7 @@ namespace StructureMap
                     object returnValue = cache.Get(pluginType, instance);
                     if (returnValue == null)
                     {
-                        returnValue = instance.Build(pluginType, this);
-                        returnValue = ApplyInterception(pluginType, returnValue, instance);
-
+                        returnValue = Build(pluginType, instance);
 
                         cache.Set(pluginType, instance, returnValue);
                     }
@@ -231,6 +229,26 @@ namespace StructureMap
             }
 
             return result;
+        }
+
+        public object Build(Type pluginType, Instance instance)
+        {
+            var returnValue = instance.Build(pluginType, this);
+            if (returnValue == null) return null;
+
+            try
+            {
+                return _pipelineGraph.FindInterceptor(returnValue.GetType()).Process(returnValue, this);
+            }
+            catch (Exception e)
+            {
+                throw new StructureMapException(308, e, instance.Name, returnValue.GetType());
+            }
+        }
+
+        public object BuildInOriginalContext(Type pluginType, Instance instance)
+        {
+            throw new NotImplementedException();
         }
 
         [Obsolete("Move all of this into the new EnumerableInstance")]
@@ -250,20 +268,6 @@ namespace StructureMap
             }
 
             return array;
-        }
-
-        public object ApplyInterception(Type pluginType, object actualValue, Instance instance)
-        {
-            if (actualValue == null) return null;
-
-            try
-            {
-                return _pipelineGraph.FindInterceptor(actualValue.GetType()).Process(actualValue, this);
-            }
-            catch (Exception e)
-            {
-                throw new StructureMapException(308, e, instance.Name, actualValue.GetType());
-            }
         }
     }
 }

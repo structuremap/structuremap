@@ -14,14 +14,14 @@ namespace StructureMap
     {
         private readonly IDictionary<int, object> _cachedObjects = new Dictionary<int, object>();
         private readonly IDictionary<Type, object> _defaults = new Dictionary<Type, object>();
-        private readonly IInstanceResolver _resolver;
+        private readonly IBuildSession _resolver;
 
-        public SessionCache(IInstanceResolver resolver)
+        public SessionCache(IBuildSession resolver)
         {
             _resolver = resolver;
         }
 
-        public SessionCache(IInstanceResolver resolver, ExplicitArguments arguments)
+        public SessionCache(IBuildSession resolver, ExplicitArguments arguments)
             : this(resolver)
         {
             _defaults = arguments.Defaults;

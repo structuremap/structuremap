@@ -8,14 +8,14 @@ namespace StructureMap.Testing
     [TestFixture]
     public class SessionCacheTester
     {
-        private IInstanceResolver theResolver;
+        private IBuildSession theResolver;
         private SessionCache theCache;
         private IPipelineGraph thePipeline;
 
         [SetUp]
         public void SetUp()
         {
-            theResolver = MockRepository.GenerateMock<IInstanceResolver>();
+            theResolver = MockRepository.GenerateMock<IBuildSession>();
             theCache = new SessionCache(theResolver);
 
             thePipeline = MockRepository.GenerateMock<IPipelineGraph>();
