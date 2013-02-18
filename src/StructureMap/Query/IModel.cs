@@ -18,7 +18,7 @@ namespace StructureMap.Query
         /// <summary>
         /// Access to the plugin graph
         /// </summary>
-        IPluginGraph PluginGraph { get; }
+        PluginGraph PluginGraph { get; }
 
         IEnumerable<InstanceRef> AllInstances { get; }
 

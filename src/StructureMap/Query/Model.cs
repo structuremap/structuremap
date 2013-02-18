@@ -44,7 +44,7 @@ namespace StructureMap.Query
 
         public IEnumerable<IPluginTypeConfiguration> PluginTypes { get { return pluginTypes; } }
         
-        public IPluginGraph PluginGraph { get; private set; }
+        public PluginGraph PluginGraph { get; private set; }
 
         /// <summary>
         /// Retrieves the configuration for the given type

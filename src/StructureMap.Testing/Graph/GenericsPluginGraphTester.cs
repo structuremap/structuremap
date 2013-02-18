@@ -33,24 +33,20 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void BuildAnInstanceManagerFromTemplatedPluginFamily()
         {
-            var pluginGraph = new PluginGraph();
-            PluginFamily family = pluginGraph.FindFamily(typeof (IGenericService<>));
+            var container = new Container(x => {
+                x.For(typeof (IGenericService<>)).Use(typeof (GenericService<>)).Named("Default");
+                x.For(typeof (IGenericService<>)).Add(typeof (SecondGenericService<>)).Named("Second");
+                x.For(typeof (IGenericService<>)).Add(typeof (ThirdGenericService<>)).Named("Third");
+            });
 
-            
-            family.AddType(typeof (GenericService<>), "Default");
-            family.AddType(typeof (SecondGenericService<>), "Second");
-            family.AddType(typeof (ThirdGenericService<>), "Third");
-            family.SetDefaultKey("Default");
 
-            var manager = new Container(pluginGraph);
-
-            var intService = (GenericService<int>) manager.GetInstance<IGenericService<int>>();
+            var intService = container.GetInstance<IGenericService<int>>().ShouldBeOfType<GenericService<int>>();
             intService.GetT().ShouldEqual(typeof (int));
 
-            manager.GetInstance<IGenericService<int>>("Second").ShouldBeOfType<SecondGenericService<int>>();
+            container.GetInstance<IGenericService<int>>("Second").ShouldBeOfType<SecondGenericService<int>>();
 
             var stringService =
-                (GenericService<string>) manager.GetInstance<IGenericService<string>>();
+                (GenericService<string>) container.GetInstance<IGenericService<string>>();
             stringService.GetT().ShouldEqual(typeof (string));
         }
 
@@ -68,16 +64,6 @@ namespace StructureMap.Testing.Graph
 
             Assert.IsNotNull(templatedFamily);
             Assert.AreEqual(typeof (IGenericService<int>), templatedFamily.PluginType);
-        }
-
-        [Test]
-        public void can_iterate_through_families()
-        {
-            var graph = new GenericsPluginGraph();
-            graph.FindFamily(typeof (IGenericService<>)).AddType(typeof (GenericService<>));
-            graph.FindFamily(typeof (IService<>)).AddType(typeof (Service<>));
-
-            graph.Families.Count().ShouldEqual(2);
         }
 
         [Test]
@@ -115,47 +101,9 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
-        public void GetTemplatedFamily()
-        {
-            var pluginGraph = new PluginGraph();
-            PluginFamily family = pluginGraph.FindFamily(typeof (IGenericService<>));
-            family.AddType(typeof (GenericService<>), "Default");
-            family.AddType(typeof (SecondGenericService<>), "Second");
-            family.AddType(typeof (ThirdGenericService<>), "Third");
-
-            var genericsGraph = new GenericsPluginGraph();
-            genericsGraph.AddFamily(family);
-
-            PluginFamily templatedFamily = genericsGraph.CreateTemplatedFamily(typeof (IGenericService<int>),
-                                                                               new ProfileManager());
-
-            Assert.IsNotNull(templatedFamily);
-            Assert.AreEqual(typeof (IGenericService<int>), templatedFamily.PluginType);
-        }
-
-        [Test]
         public void ImplementationOfInterfaceFromBaseType()
         {
             assertCanBeCast(typeof (ISomething<>), typeof (SpecificService<>));
-        }
-
-        [Test]
-        public void Import_from_adds_all_new_PluginFamily_from_source()
-        {
-            var sourceFamily = new PluginFamily(typeof (ISomething<>));
-            var sourceFamily2 = new PluginFamily(typeof (ISomething2<>));
-            var sourceFamily3 = new PluginFamily(typeof (ISomething3<>));
-            var source = new GenericsPluginGraph();
-            source.AddFamily(sourceFamily);
-            source.AddFamily(sourceFamily2);
-            source.AddFamily(sourceFamily3);
-
-            var destination = new GenericsPluginGraph();
-            destination.ImportFrom(source);
-
-            Assert.AreEqual(3, destination.FamilyCount);
-
-            Assert.AreNotSame(sourceFamily, destination.FindFamily(typeof (ISomething<>)));
         }
 
         [Test]

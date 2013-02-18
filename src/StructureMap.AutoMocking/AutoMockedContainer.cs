@@ -4,7 +4,7 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.AutoMocking
 {
-    public class AutoMockedContainer : Container
+    public class AutoMockedContainer : Container, IFamilyPolicy
     {
         private readonly ServiceLocator _locator;
 
@@ -18,36 +18,28 @@ namespace StructureMap.AutoMocking
             nameContainer(this);
 
             _locator = locator;
-
-            onMissingFactory = delegate(Type pluginType, ProfileManager profileManager)
-            {
-                if (!pluginType.IsAbstract && pluginType.IsClass)
-                {
-                    return null;
-                }
-
-                var factory = new InstanceFactory(new PluginFamily(pluginType));
-
-                try
-                {
-                    object service = _locator.Service(pluginType);
-
-                    var instance = new ObjectInstance(service);
-
-                    profileManager.SetDefault(pluginType, instance);
-                }
-                catch (Exception)
-                {
-                    // ignore errors
-                }
-
-                return factory;
-            };
+            Model.PluginGraph.AddFamilyPolicy(this);
         }
 
         private void nameContainer(IContainer container)
         {
             container.Name = "AutoMocking-" + container.Name;
+        }
+
+        public PluginFamily Build(Type pluginType)
+        {
+            if (!pluginType.IsAbstract && pluginType.IsClass)
+            {
+                return null;
+            }
+
+            var family = new PluginFamily(pluginType);
+            object service = _locator.Service(pluginType);
+
+            var instance = new ObjectInstance(service);
+            family.SetDefault(instance);
+
+            return family;
         }
     }
 }

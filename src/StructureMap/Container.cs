@@ -42,7 +42,7 @@ namespace StructureMap
         }
 
         public Container()
-            : this(new PluginGraph())
+            : this(new PluginGraphBuilder().Build())
         {
         }
 
@@ -545,6 +545,7 @@ namespace StructureMap
             _pluginGraph.Families[typeof (IContainer)].AddInstance(thisInstance);
             _pluginGraph.ProfileManager.SetDefault(typeof (IContainer), thisInstance);
 
+            // TODO -- want this as a FamilyPolicy in PluginGraphBuilder
             var funcInstance = new FactoryTemplate(typeof (LazyInstance<>));
             _pluginGraph.Families[typeof (Func<>)].AddInstance(funcInstance);
             _pluginGraph.ProfileManager.SetDefault(typeof (Func<>), funcInstance);

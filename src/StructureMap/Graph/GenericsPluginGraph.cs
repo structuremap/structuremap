@@ -1,32 +1,9 @@
 using System;
-using System.Collections.Generic;
-using StructureMap.Pipeline;
-using StructureMap.Util;
-using StructureMap.TypeRules;
 
 namespace StructureMap.Graph
 {
-    public class GenericsPluginGraph
+    public static class GenericsPluginGraph
     {
-        private Cache<Type, PluginFamily> _families;
-
-        public GenericsPluginGraph()
-        {
-            _families = new Cache<Type, PluginFamily>(pluginType => new PluginFamily(pluginType));
-        }
-
-        public int FamilyCount { get { return _families.Count; } }
-
-        public IEnumerable<PluginFamily> Families { get { return _families.GetAll(); } }
-
-        public GenericsPluginGraph Clone()
-        {
-            return new GenericsPluginGraph
-            {
-                _families = _families.Clone()
-            };
-        }
-
         public static bool CanBeCast(Type pluginType, Type pluggedType)
         {
             try
@@ -77,65 +54,6 @@ namespace StructureMap.Graph
             }
 
             return false;
-        }
-
-        public void AddFamily(PluginFamily family)
-        {
-            _families[family.PluginType] = family;
-        }
-
-
-        public PluginFamily CreateTemplatedFamily(Type templatedType, ProfileManager profileManager)
-        {
-            Type basicType = templatedType.GetGenericTypeDefinition();
-
-            if (_families.Has(basicType))
-            {
-                PluginFamily basicFamily = _families[basicType];
-                Type[] templatedParameterTypes = templatedType.GetGenericArguments();
-
-
-                PluginFamily templatedFamily = basicFamily.CreateTemplatedClone(templatedParameterTypes);
-                PluginFamily family = templatedFamily;
-                profileManager.CopyDefaults(basicType, templatedType, family);
-
-                return family;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        public void ImportFrom(GenericsPluginGraph source)
-        {
-            source._families.Each(ImportFrom);
-        }
-
-        public void ImportFrom(PluginFamily sourceFamily)
-        {
-            PluginFamily destinationFamily = FindFamily(sourceFamily.PluginType);
-            destinationFamily.ImportFrom(sourceFamily);
-        }
-
-        public PluginFamily FindFamily(Type pluginType)
-        {
-            return _families[pluginType];
-        }
-
-        public bool HasFamily(Type pluginType)
-        {
-            return _families.Has(pluginType);
-        }
-
-        public void ClearAll()
-        {
-            _families.Clear();
-        }
-
-        public void Remove(Type pluginType)
-        {
-            _families.Remove(pluginType);
         }
     }
 }

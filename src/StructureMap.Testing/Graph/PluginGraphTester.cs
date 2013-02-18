@@ -47,7 +47,24 @@ namespace StructureMap.Testing.Graph
                 .ShouldBeOfType<ConstructorInstance>()
                 .PluggedType.ShouldEqual(typeof (BigThingy));
         }
+
+        [Test]
+        public void find_family_by_closing_an_open_interface_that_matches()
+        {
+            var graph = PluginGraph.Empty();
+            graph.Families[typeof(IOpen<>)].SetDefault(new ConfiguredInstance(typeof(Open<>)));
+
+            graph.Families[typeof (IOpen<string>)].GetDefaultInstance().ShouldBeOfType<ConstructorInstance>()
+                                                  .PluggedType.ShouldEqual(typeof (Open<string>));
+        }
     }
+
+    public interface IOpen<T>
+    {
+        
+    }
+
+    public class Open<T> : IOpen<T>{}
 
     //[PluginFamily]
     public interface IThingy

@@ -128,17 +128,6 @@ namespace StructureMap.Testing.AutoMocking
         }
 
         [Test]
-        public void CanInjectAnArrayOfMockServices2()
-        {
-            AutoMocker<ClassWithArray> mocker = createAutoMocker<ClassWithArray>();
-
-            ClassWithArray theClass = mocker.ClassUnderTest;
-
-            theClass.Services.Length.ShouldEqual(0);
-        }
-
-
-        [Test]
         public void CanInjectAnArrayOfMockServices3()
         {
             AutoMocker<ClassWithArray> mocker = createAutoMocker<ClassWithArray>();
@@ -151,16 +140,6 @@ namespace StructureMap.Testing.AutoMocking
             theClass.Services.Length.ShouldEqual(3);
         }
 
-        [Test]
-        public void CanInjectAnArrayOfMockServices4()
-        {
-            AutoMocker<ClassWithArray> mocker = createAutoMocker<ClassWithArray>();
-
-            mocker.PartialMockTheClassUnderTest();
-            ClassWithArray theClass = mocker.ClassUnderTest;
-
-            theClass.Services.Length.ShouldEqual(0);
-        }
 
 
         [Test]

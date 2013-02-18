@@ -14,6 +14,7 @@ namespace StructureMap.Testing
             return builder.Build();
         }
 
+        [Obsolete("Get rid of this, just use PluginGraph.Families[]")]
         public static PluginFamily FindFamily(this PluginGraph graph, Type pluginType)
         {
             return graph.Families[pluginType];

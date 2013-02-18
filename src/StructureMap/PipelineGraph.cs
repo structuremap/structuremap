@@ -6,6 +6,7 @@ using StructureMap.Graph;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
 using StructureMap.Query;
+using StructureMap.TypeRules;
 
 namespace StructureMap
 {
@@ -17,7 +18,6 @@ namespace StructureMap
         private readonly Dictionary<Type, IInstanceFactory> _factories
             = new Dictionary<Type, IInstanceFactory>();
 
-        private readonly GenericsPluginGraph _genericsGraph = new GenericsPluginGraph();
         private readonly GraphLog _log;
         private readonly ProfileManager _profileManager;
         private readonly IObjectCache _transientCache;
@@ -38,7 +38,6 @@ namespace StructureMap
             _log = graph.Log;
 
 
-            graph.Families.Where(x => x.IsGenericTemplate).Each(_genericsGraph.AddFamily);
             graph.Families.Where(x => !x.IsGenericTemplate).Each(family => {
                 var factory = new InstanceFactory(family);
                 _factories.Add(family.PluginType, factory);
@@ -49,10 +48,9 @@ namespace StructureMap
             _graph = graph;
         }
 
-        private PipelineGraph(ProfileManager profileManager, GenericsPluginGraph genericsGraph, GraphLog log)
+        private PipelineGraph(ProfileManager profileManager, GraphLog log)
         {
             _profileManager = profileManager;
-            _genericsGraph = genericsGraph;
             _log = log;
             _transientCache = new TransientObjectCache();
         }
@@ -83,7 +81,6 @@ namespace StructureMap
 
             _factories.Clear();
             _profileManager.Dispose();
-            _genericsGraph.ClearAll();
 
             _transientCache.DisposeAndClear();
         }
@@ -101,7 +98,7 @@ namespace StructureMap
 
         public IEnumerable<IPluginTypeConfiguration> GetPluginTypes(IContainer container)
         {
-            foreach (PluginFamily family in _genericsGraph.Families)
+            foreach (PluginFamily family in _graph.Families.Where(x => x.PluginType.IsOpenGeneric()))
             {
                 yield return new GenericFamilyConfiguration(family);
             }
@@ -114,7 +111,7 @@ namespace StructureMap
 
         public IPipelineGraph ToNestedGraph()
         {
-            var clone = new PipelineGraph(_profileManager.Clone(), _genericsGraph.Clone(), _log)
+            var clone = new PipelineGraph(_profileManager.Clone(), _log)
             {
                 _missingFactory = _missingFactory,
                 _interceptors = _interceptors,
@@ -134,13 +131,14 @@ namespace StructureMap
             return clone;
         }
 
+        [Obsolete("HATE this")]
         public void ImportFrom(PluginGraph graph)
         {
             foreach (PluginFamily family in graph.Families)
             {
                 if (family.IsGenericTemplate)
                 {
-                    _genericsGraph.ImportFrom(family);
+                    graph.AddFamily(family); // TODO -- this is awful
                 }
                 else
                 {
@@ -189,7 +187,8 @@ namespace StructureMap
 
         public void Remove(Func<Type, bool> filter)
         {
-            _genericsGraph.Families.Where(x => filter(x.PluginType)).ToArray().Each(x => Remove(x.PluginType));
+            _graph.Families.Where(x => filter(x.PluginType)).ToArray().Each(x => _graph.RemoveFamily(x.PluginType));
+
             _factories.Values.Where(x => filter(x.PluginType)).ToArray().Each(x => Remove(x.PluginType));
         }
 
@@ -200,7 +199,8 @@ namespace StructureMap
             {
                 _factories.Remove(pluginType);
             }
-            _genericsGraph.Remove(pluginType);
+
+            _graph.RemoveFamily(pluginType);
         }
 
 
@@ -256,7 +256,7 @@ namespace StructureMap
             return _factories[pluginType];
         }
 
-        [Obsolete("Replace this with a Cache")]
+        [Obsolete("Replace this with a Cache?")]
         private void createFactoryIfMissing(Type pluginType)
         {
             if (!_factories.ContainsKey(pluginType))
@@ -265,9 +265,12 @@ namespace StructureMap
                 {
                     if (!_factories.ContainsKey(pluginType))
                     {
-                        InstanceFactory factory = _missingFactory(pluginType, _profileManager);
+                        var family = _graph.Families[pluginType];
+                        var @default = family.GetDefaultInstance();
 
-                        if (factory == null) factory = createFactory(pluginType);
+                        var factory = new InstanceFactory(family);
+                        if (@default != null) _profileManager.SetDefault(pluginType, @default);
+
                         registerFactory(pluginType, factory);
                     }
                 }
@@ -279,18 +282,6 @@ namespace StructureMap
             _factories.Add(pluginType, factory);
         }
 
-        protected virtual InstanceFactory createFactory(Type pluggedType)
-        {
-            if (pluggedType.IsGenericType)
-            {
-                PluginFamily family = _genericsGraph.CreateTemplatedFamily(pluggedType, _profileManager);
-
-                if (family != null) return InstanceFactory.CreateFactoryForFamily(family, _profileManager);
-            }
-
-            return InstanceFactory.CreateFactoryForType(pluggedType, _profileManager);
-        }
-
         public void AddInstance<T>(Instance instance)
         {
             ForType(typeof (T)).AddInstance(instance);
@@ -299,6 +290,12 @@ namespace StructureMap
         public void EjectAllInstancesOf(Type pluginType)
         {
             ForType(pluginType).EjectAllInstances(this);
+
+            if (_graph.Families.Has(pluginType))
+            {
+                _graph.Families[pluginType].RemoveAll();
+            }
+
             _profileManager.EjectAllInstancesOf(pluginType);
         }
 
