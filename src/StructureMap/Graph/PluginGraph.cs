@@ -48,7 +48,7 @@ namespace StructureMap.Graph
         private readonly ProfileManager _profileManager = new ProfileManager();
         private readonly List<Registry> _registries = new List<Registry>();
         private GraphLog _log = new GraphLog();
-        private readonly MainObjectCache _singletonCache = new MainObjectCache();
+        private readonly LifecycleObjectCache _singletonCache = new LifecycleObjectCache();
 
         public PluginGraph()
         {
@@ -58,7 +58,7 @@ namespace StructureMap.Graph
             });
         }
 
-        public MainObjectCache SingletonCache
+        public LifecycleObjectCache SingletonCache
         {
             get { return _singletonCache; }
         }

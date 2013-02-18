@@ -34,7 +34,7 @@ namespace StructureMap
 
         public PipelineGraph(PluginGraph graph)
         {
-            _transientCache = new NulloObjectCache();
+            _transientCache = new NulloTransientCache();
             _profileManager = graph.ProfileManager;
             _log = graph.Log;
 
@@ -56,7 +56,7 @@ namespace StructureMap
             _profileManager = profileManager;
             _genericsGraph = genericsGraph;
             _log = log;
-            _transientCache = new MainObjectCache();
+            _transientCache = new LifecycleObjectCache();
         }
 
         public GraphLog Log { get { return _log; } }

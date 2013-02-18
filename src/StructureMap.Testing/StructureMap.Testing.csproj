@@ -336,7 +336,7 @@
     <Compile Include="Pipeline\InstanceTester.cs" />
     <Compile Include="Pipeline\LazyFuncTester.cs" />
     <Compile Include="Pipeline\LifecyclesTester.cs" />
-    <Compile Include="Pipeline\MainObjectCacheTester.cs" />
+    <Compile Include="Pipeline\LifecycleObjectCacheTester.cs" />
     <Compile Include="Pipeline\ObjectInstanceTester.cs" />
     <Compile Include="Pipeline\MissingInstanceTester.cs" />
     <Compile Include="Pipeline\NestedContainerSupportTester.cs" />

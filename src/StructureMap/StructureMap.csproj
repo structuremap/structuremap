@@ -347,8 +347,8 @@
     <Compile Include="Pipeline\IObjectCache.cs" />
     <Compile Include="Pipeline\Lifecycles.cs" />
     <Compile Include="Pipeline\ListCoercion.cs" />
-    <Compile Include="Pipeline\MainObjectCache.cs" />
-    <Compile Include="Pipeline\NulloObjectCache.cs" />
+    <Compile Include="Pipeline\LifecycleObjectCache.cs" />
+    <Compile Include="Pipeline\NulloTransientCache.cs" />
     <Compile Include="Pipeline\SessionWrapper.cs" />
     <Compile Include="Pipeline\SingletonLifecycle.cs" />
     <Compile Include="Pipeline\ThreadLocalStorageLifecycle.cs" />
@@ -363,7 +363,6 @@
     <Compile Include="Pipeline\BuildFrame.cs" />
     <Compile Include="Pipeline\BuildStack.cs" />
     <Compile Include="Pipeline\ConfiguredInstanceBase.cs" />
-    <Compile Include="Pipeline\InstanceKey.cs" />
     <Compile Include="Pipeline\IStructuredInstance.cs" />
     <Compile Include="Pipeline\SerializedInstance.cs" />
     <Compile Include="Pipeline\SmartInstance.cs" />

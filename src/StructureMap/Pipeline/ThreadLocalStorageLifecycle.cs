@@ -4,7 +4,7 @@ namespace StructureMap.Pipeline
 {
     public class ThreadLocalStorageLifecycle : ILifecycle
     {
-        [ThreadStatic] private static MainObjectCache _cache;
+        [ThreadStatic] private static LifecycleObjectCache _cache;
         private readonly object _locker = new object();
 
         public void EjectAll(ILifecycleContext context)
@@ -28,7 +28,7 @@ namespace StructureMap.Pipeline
                 {
                     if (_cache == null)
                     {
-                        _cache = new MainObjectCache();
+                        _cache = new LifecycleObjectCache();
                     }
                 }
             }

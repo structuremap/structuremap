@@ -24,7 +24,7 @@ namespace StructureMap.Pipeline
                 {
                     if (!items.Contains(ITEM_NAME))
                     {
-                        var cache = new MainObjectCache();
+                        var cache = new LifecycleObjectCache();
                         items.Add(ITEM_NAME, cache);
 
                         return cache;

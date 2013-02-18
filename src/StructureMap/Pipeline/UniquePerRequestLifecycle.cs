@@ -1,3 +1,5 @@
+using System;
+
 namespace StructureMap.Pipeline
 {
     /// <summary>
@@ -11,7 +13,7 @@ namespace StructureMap.Pipeline
 
         public IObjectCache FindCache(ILifecycleContext context)
         {
-            return new NulloObjectCache();
+            throw new NotSupportedException("Should never be called");
         }
 
         public string Scope { get { return InstanceScope.Unique.ToString(); } }

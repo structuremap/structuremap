@@ -82,9 +82,9 @@ namespace StructureMap.Testing.Pipeline
 
             pipeline = new PipelineGraph(new PluginGraph());
 
-            lifecycle.FindCache(pipeline).Set(typeof (IGateway), new StubInstance("a"), disposable1);
-            lifecycle.FindCache(pipeline).Set(typeof (IGateway), new StubInstance("b"), disposable2);
-            lifecycle.FindCache(pipeline).Set(typeof (IGateway), new StubInstance("c"), new object());
+            lifecycle.FindCache(pipeline).As<LifecycleObjectCache>().Set(typeof (IGateway), new StubInstance("a"), disposable1);
+            lifecycle.FindCache(pipeline).As<LifecycleObjectCache>().Set(typeof(IGateway), new StubInstance("b"), disposable2);
+            lifecycle.FindCache(pipeline).As<LifecycleObjectCache>().Set(typeof(IGateway), new StubInstance("c"), new object());
 
 
             lifecycle.EjectAll(pipeline);

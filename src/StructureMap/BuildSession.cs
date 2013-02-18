@@ -114,22 +114,8 @@ namespace StructureMap
 
         public object ResolveFromLifecycle(Type pluginType, Instance instance)
         {
-            object result = null;
-            IObjectCache cache = instance.Lifecycle.FindCache(_pipelineGraph);
-            lock (cache.Locker)
-            {
-                object returnValue = cache.Get(pluginType, instance);
-                if (returnValue == null)
-                {
-                    returnValue = BuildNewInSession(pluginType, instance);
-
-                    cache.Set(pluginType, instance, returnValue);
-                }
-
-                result = returnValue;
-            }
-
-            return result;
+            var cache = instance.Lifecycle.FindCache(_pipelineGraph);
+            return cache.Get(pluginType, instance, this);
         }
 
         public object BuildNewInSession(Type pluginType, Instance instance)

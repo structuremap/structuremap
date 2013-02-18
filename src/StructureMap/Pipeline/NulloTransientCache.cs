@@ -2,7 +2,7 @@ using System;
 
 namespace StructureMap.Pipeline
 {
-    public class NulloObjectCache : IObjectCache
+    public class NulloTransientCache : IObjectCache
     {
         public object Locker { get { return new object(); } }
 
@@ -17,14 +17,9 @@ namespace StructureMap.Pipeline
         {
         }
 
-        public object Get(Type pluginType, Instance instance)
+        public object Get(Type pluginType, Instance instance, IBuildSession session)
         {
-            return null;
-        }
-
-        public void Set(Type pluginType, Instance instance, object value)
-        {
-            // no-op
+            return session.BuildNewInSession(pluginType, instance);
         }
 
         public void DisposeAndClear()

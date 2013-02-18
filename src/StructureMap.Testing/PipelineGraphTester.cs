@@ -23,7 +23,7 @@ namespace StructureMap.Testing
             var plugins = new PluginGraph();
 
             var pipeline = new PipelineGraph(plugins);
-            pipeline.Transients.ShouldBeOfType<NulloObjectCache>();
+            pipeline.Transients.ShouldBeOfType<NulloTransientCache>();
         }
 
         [Test]
@@ -33,7 +33,7 @@ namespace StructureMap.Testing
 
             var pipeline = new PipelineGraph(plugins);
 
-            pipeline.ToNestedGraph().Transients.ShouldBeOfType<MainObjectCache>();
+            pipeline.ToNestedGraph().Transients.ShouldBeOfType<LifecycleObjectCache>();
         }
     }
 }
