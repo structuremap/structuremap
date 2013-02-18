@@ -7,6 +7,28 @@ using NUnit.Framework;
 
 namespace StructureMap.Testing
 {
+    public static class Exception<T> where T : Exception
+    {
+        public static T ShouldBeThrownBy(Action action)
+        {
+            T exception = null;
+
+            try
+            {
+                action();
+            }
+            catch (Exception e)
+            {
+                exception = e.ShouldBeOfType<T>();
+            }
+
+            if (exception == null) Assert.Fail("An exception was expected, but not thrown by the given action.");
+
+            return exception;
+        }
+    }
+
+
     public delegate void MethodThatThrows();
 
     public static class SpecificationExtensions

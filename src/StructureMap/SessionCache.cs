@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using StructureMap.Pipeline;
+using System.Linq;
 
 namespace StructureMap
 {
@@ -8,6 +9,9 @@ namespace StructureMap
     {
         object GetDefault(Type pluginType, IPipelineGraph pipelineGraph);
         object GetObject(Type pluginType, Instance instance);
+        object TryGetDefault(Type pluginType, IPipelineGraph pipelineGraph);
+
+        IEnumerable<T> All<T>();
     }
 
     public class SessionCache : ISessionCache
@@ -24,7 +28,7 @@ namespace StructureMap
         public SessionCache(IBuildSession resolver, ExplicitArguments arguments)
             : this(resolver)
         {
-            _defaults = arguments.Defaults;
+            if (arguments != null) _defaults = arguments.Defaults;
         }
 
         public object GetDefault(Type pluginType, IPipelineGraph pipelineGraph)
@@ -35,6 +39,12 @@ namespace StructureMap
             }
 
             var instance = pipelineGraph.GetDefault(pluginType);
+            if (instance == null)
+            {
+                throw new StructureMapException(202, pluginType);
+            }
+
+
             var o = GetObject(pluginType, instance);
 
             if (!instance.IsUnique())
@@ -62,6 +72,25 @@ namespace StructureMap
             }
 
             return _cachedObjects[key];
+        }
+
+        public object TryGetDefault(Type pluginType, IPipelineGraph pipelineGraph)
+        {
+            if (_defaults.ContainsKey(pluginType)) return _defaults[pluginType];
+
+            var instance = pipelineGraph.GetDefault(pluginType);
+            if (instance == null) return null;
+
+            var o = GetObject(pluginType, instance);
+            _defaults.Add(pluginType, o);
+
+            return o;
+        }
+
+        // Tested through BuildSession
+        public IEnumerable<T> All<T>()
+        {
+            return _cachedObjects.Values.OfType<T>();
         }
     }
 }

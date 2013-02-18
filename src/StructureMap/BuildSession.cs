@@ -4,7 +4,6 @@ using System.Linq;
 using StructureMap.Construction;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
-using StructureMap.Util;
 
 namespace StructureMap
 {
@@ -16,10 +15,8 @@ namespace StructureMap
 
     public class BuildSession : IContext, IBuildSession
     {
-        private readonly InstanceCache _cache = new InstanceCache();
-        private readonly Cache<Type, Func<object>> _defaults;
-        private readonly object _locker = new object();
         private readonly IPipelineGraph _pipelineGraph;
+        private readonly ISessionCache _sessionCache;
 
         [CLSCompliant(false)] protected BuildStack _buildStack = new BuildStack();
 
@@ -27,34 +24,16 @@ namespace StructureMap
         {
             _pipelineGraph = pipelineGraph;
 
-            lock (_locker)
-            {
-                _defaults = new Cache<Type, Func<object>>(t => {
-                    Instance instance = _pipelineGraph.GetDefault(t);
+            _sessionCache = new SessionCache(this, args);
 
-                    if (instance == null)
-                    {
-                        throw new StructureMapException(202, t);
-                    }
-
-                    return () => FindObject(t, instance);
-                });
-            }
 
             RequestedName = requestedName ?? Plugin.DEFAULT;
-
-            // TODO -- make a second constructor
-            if (args != null) args.Defaults.Each(pair => {
-                _defaults[pair.Key] = () => pair.Value;
-            });
         }
 
         protected IPipelineGraph pipelineGraph
         {
             get { return _pipelineGraph; }
         }
-
-        #region IContext Members
 
         public string RequestedName { get; set; }
 
@@ -90,10 +69,7 @@ namespace StructureMap
 
         public object GetInstance(Type pluginType)
         {
-            lock (_locker)
-            {
-                return _defaults[pluginType]();
-            }
+            return _sessionCache.GetDefault(pluginType, _pipelineGraph);
         }
 
         public T GetInstance<T>(string name)
@@ -113,37 +89,17 @@ namespace StructureMap
 
         public T TryGetInstance<T>() where T : class
         {
-            lock (_locker)
-            {
-                if (_defaults.Has(typeof (T)))
-                {
-                    return (T) _defaults[typeof (T)]();
-                }
-            }
-
-            return _pipelineGraph.HasDefaultForPluginType(typeof (T))
-                       ? ((IContext) this).GetInstance<T>()
-                       : null;
+            return (T) TryGetInstance(typeof (T));
         }
 
         public T TryGetInstance<T>(string name) where T : class
         {
-            return _pipelineGraph.HasInstance(typeof (T), name) ? ((IContext) this).GetInstance<T>(name) : null;
+            return (T) TryGetInstance(typeof (T), name);
         }
 
         public object TryGetInstance(Type pluginType)
         {
-            lock (_locker)
-            {
-                if (_defaults.Has(pluginType))
-                {
-                    return _defaults[pluginType]();
-                }
-            }
-
-            return _pipelineGraph.HasDefaultForPluginType(pluginType)
-                       ? ((IContext) this).GetInstance(pluginType)
-                       : null;
+            return _sessionCache.TryGetDefault(pluginType, _pipelineGraph);
         }
 
         public object TryGetInstance(Type pluginType, string name)
@@ -153,13 +109,48 @@ namespace StructureMap
 
         public IEnumerable<T> All<T>() where T : class
         {
-            var list = new List<T>();
-            _cache.Each<T>(list.Add);
-
-            return list;
+            return _sessionCache.All<T>();
         }
 
-        #endregion
+        public object ResolveFromLifecycle(Type pluginType, Instance instance)
+        {
+            object result = null;
+            IObjectCache cache = instance.Lifecycle.FindCache(_pipelineGraph);
+            lock (cache.Locker)
+            {
+                object returnValue = cache.Get(pluginType, instance);
+                if (returnValue == null)
+                {
+                    returnValue = BuildNewInSession(pluginType, instance);
+
+                    cache.Set(pluginType, instance, returnValue);
+                }
+
+                result = returnValue;
+            }
+
+            return result;
+        }
+
+        public object BuildNewInSession(Type pluginType, Instance instance)
+        {
+            object returnValue = instance.Build(pluginType, this);
+            if (returnValue == null) return null;
+
+            try
+            {
+                return _pipelineGraph.FindInterceptor(returnValue.GetType()).Process(returnValue, this);
+            }
+            catch (Exception e)
+            {
+                throw new StructureMapException(308, e, instance.Name, returnValue.GetType());
+            }
+        }
+
+        public object BuildNewInOriginalContext(Type pluginType, Instance instance)
+        {
+            throw new NotImplementedException();
+        }
 
         public IEnumerable<T> GetAllInstances<T>()
         {
@@ -175,7 +166,7 @@ namespace StructureMap
         public static BuildSession ForPluginGraph(PluginGraph graph, ExplicitArguments args = null)
         {
             var pipeline = new PipelineGraph(graph);
-            return new BuildSession(pipeline, args:args);
+            return new BuildSession(pipeline, args: args);
         }
 
         public static BuildSession Empty(ExplicitArguments args = null)
@@ -202,56 +193,7 @@ namespace StructureMap
         // This is where all Creation happens
         public virtual object FindObject(Type pluginType, Instance instance)
         {
-            object result = _cache.Get(pluginType, instance) ?? ResolveFromLifecycle(pluginType, instance);
-
-            return result;
-        }
-
-        public object ResolveFromLifecycle(Type pluginType, Instance instance)
-        {
-            object result = null;
-            IObjectCache cache = instance.Lifecycle.FindCache(_pipelineGraph);
-            lock (cache.Locker)
-            {
-                object returnValue = cache.Get(pluginType, instance);
-                if (returnValue == null)
-                {
-                    returnValue = BuildNewInSession(pluginType, instance);
-
-                    cache.Set(pluginType, instance, returnValue);
-                }
-
-                result = returnValue;
-            }
-
-            // TODO: HACK ATTACK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            bool isUnique = instance.IsUnique();
-            if (!isUnique)
-            {
-                _cache.Set(pluginType, instance, result);
-            }
-
-            return result;
-        }
-
-        public object BuildNewInSession(Type pluginType, Instance instance)
-        {
-            var returnValue = instance.Build(pluginType, this);
-            if (returnValue == null) return null;
-
-            try
-            {
-                return _pipelineGraph.FindInterceptor(returnValue.GetType()).Process(returnValue, this);
-            }
-            catch (Exception e)
-            {
-                throw new StructureMapException(308, e, instance.Name, returnValue.GetType());
-            }
-        }
-
-        public object BuildNewInOriginalContext(Type pluginType, Instance instance)
-        {
-            throw new NotImplementedException();
+            return _sessionCache.GetObject(pluginType, instance);
         }
 
         [Obsolete("Move all of this into the new EnumerableInstance")]

@@ -318,7 +318,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Graph\TypePathTester.cs" />
-    <Compile Include="InstanceCacheTester.cs" />
     <Compile Include="InstanceMementoInstanceCreationTester.cs" />
     <Compile Include="ModelQueryTester.cs" />
     <Compile Include="ObjectFactoryInitializeTester.cs" />

@@ -163,7 +163,6 @@
     <Compile Include="Graph\AssemblyScanner.cs" />
     <Compile Include="Graph\TypePool.cs" />
     <Compile Include="IBuildSession.cs" />
-    <Compile Include="InstanceCache.cs" />
     <Compile Include="Interceptors\MatchedTypeInterceptor.cs" />
     <Compile Include="IPipelineGraph.cs" />
     <Compile Include="PipelineGraph.cs" />

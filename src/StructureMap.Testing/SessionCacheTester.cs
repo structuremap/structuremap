@@ -119,6 +119,72 @@ namespace StructureMap.Testing
                     .ShouldBeTheSameAs(foo1);
         }
 
+        [Test]
+        public void try_get_default_completely_negative_case()
+        {
+            theCache.TryGetDefault(typeof(IFoo), thePipeline).ShouldBeNull();
+        }
+
+        [Test]
+        public void try_get_default_with_explicit_arg()
+        {
+            var foo1 = new Foo();
+
+            var args = new ExplicitArguments();
+            args.Set<IFoo>(foo1);
+
+            theCache = new SessionCache(theResolver, args);
+
+            theCache.GetDefault(typeof (IFoo), thePipeline)
+                    .ShouldBeTheSameAs(foo1);
+        }
+
+        [Test]
+        public void try_get_default_with_a_default()
+        {
+            var instance = new ConfiguredInstance(typeof(Foo));
+            thePipeline.Stub(x => x.GetDefault(typeof(IFoo))).Return(instance);
+
+            var foo = new Foo();
+
+            theResolver.Expect(x => x.ResolveFromLifecycle(typeof(IFoo), instance)).Return(foo)
+                .Repeat.Once();
+
+            theCache.TryGetDefault(typeof (IFoo), thePipeline)
+                    .ShouldBeTheSameAs(foo);
+        }
+
+        [Test]
+        public void explicit_wins_over_instance_in_try_get_default()
+        {
+            var foo1 = new Foo();
+
+            var args = new ExplicitArguments();
+            args.Set<IFoo>(foo1);
+
+            theCache = new SessionCache(theResolver, args);
+
+            var instance = new ConfiguredInstance(typeof(Foo));
+            thePipeline.Stub(x => x.GetDefault(typeof(IFoo))).Return(instance);
+
+            var foo2 = new Foo();
+
+            theResolver.Expect(x => x.ResolveFromLifecycle(typeof(IFoo), instance)).Return(foo2)
+                .Repeat.Once();
+
+            theCache.GetDefault(typeof(IFoo), thePipeline)
+                    .ShouldBeTheSameAs(foo1);
+        }
+
+        [Test]
+        public void should_throw_202_if_you_try_to_build_the_default_of_something_that_does_not_exist()
+        {
+            Exception<StructureMapException>.ShouldBeThrownBy(() => {
+                theCache.GetDefault(typeof (IFoo), thePipeline);
+            }).ErrorCode.ShouldEqual(202);
+        }
+
+
         public interface IFoo{}
         public class Foo : IFoo{}
     }
