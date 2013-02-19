@@ -12,29 +12,6 @@ using StructureMap;
 
 namespace StructureMap.Graph
 {
-    public interface IPluginGraph
-    {
-        /// <summary>
-        ///   Adds the concreteType as an Instance of the pluginType
-        /// </summary>
-        /// <param name = "pluginType"></param>
-        /// <param name = "concreteType"></param>
-        void AddType(Type pluginType, Type concreteType);
-
-        /// <summary>
-        ///   Adds the concreteType as an Instance of the pluginType with a name
-        /// </summary>
-        /// <param name = "pluginType"></param>
-        /// <param name = "concreteType"></param>
-        /// <param name = "name"></param>
-        void AddType(Type pluginType, Type concreteType, string name);
-    }
-
-    public interface IFamilyPolicy
-    {
-        PluginFamily Build(Type type);
-    }
-
     /// <summary>
     ///   Models the runtime configuration of a StructureMap Container
     /// </summary>
@@ -45,10 +22,14 @@ namespace StructureMap.Graph
         private readonly IList<IFamilyPolicy> _policies = new List<IFamilyPolicy>();
 
         private readonly InterceptorLibrary _interceptorLibrary = new InterceptorLibrary();
+        
+        [Obsolete("Gonna kill this turkey")]
         private readonly ProfileManager _profileManager = new ProfileManager();
         private readonly List<Registry> _registries = new List<Registry>();
         private GraphLog _log = new GraphLog();
         private readonly LifecycleObjectCache _singletonCache = new LifecycleObjectCache();
+
+        private readonly LightweightCache<string, PluginGraph> _profiles = new LightweightCache<string, PluginGraph>(name => new PluginGraph());  
 
         public PluginGraph()
         {
@@ -66,6 +47,11 @@ namespace StructureMap.Graph
         public static PluginGraph Empty()
         {
             return new PluginGraphBuilder().Build();
+        }
+
+        public PluginGraph Profile(string name)
+        {
+            return _profiles[name];
         }
 
         // TODO -- might simplify this later

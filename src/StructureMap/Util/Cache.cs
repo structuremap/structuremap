@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace StructureMap.Util
 {
     [Obsolete("Replace this with the one from FubuCore")]
-    [Serializable]
+    [Serializable] // TODO -- at a minimum, use ReaderWriterLockSlim
     public class Cache<TKey, TValue> : IEnumerable<TValue> where TValue : class
     {
         private readonly object _locker = new object();

@@ -158,9 +158,11 @@
     <Compile Include="Graph\GenericConnectionScanner.cs" />
     <Compile Include="Graph\HasScope.cs" />
     <Compile Include="Graph\IArgumentVisitor.cs" />
+    <Compile Include="Graph\IFamilyPolicy.cs" />
     <Compile Include="Graph\InstanceAttribute.cs" />
     <Compile Include="Graph\IPluginFactory.cs" />
     <Compile Include="Graph\AssemblyScanner.cs" />
+    <Compile Include="Graph\IPluginGraph.cs" />
     <Compile Include="Graph\TypePool.cs" />
     <Compile Include="IBuildSession.cs" />
     <Compile Include="Interceptors\MatchedTypeInterceptor.cs" />
@@ -281,6 +283,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Query\ClosedPluginTypeConfiguration.cs" />
+    <Compile Include="RootPipelineGraph.cs" />
     <Compile Include="SessionCache.cs" />
     <Compile Include="Source\XmlAttributeInstanceMemento.cs">
       <SubType>Code</SubType>
