@@ -212,7 +212,6 @@
     <Compile Include="Configuration\DSL\Expressions\CreatePluginFamilyExpression.cs" />
     <Compile Include="Configuration\DSL\ExpressionValidator.cs" />
     <Compile Include="Pipeline\ExplicitArguments.cs" />
-    <Compile Include="Configuration\DSL\Expressions\ProfileExpression.cs" />
     <Compile Include="Configuration\DSL\Registry.cs" />
     <Compile Include="Configuration\InstanceParser.cs">
       <SubType>Code</SubType>

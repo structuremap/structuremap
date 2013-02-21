@@ -60,7 +60,7 @@ namespace StructureMap.Configuration.DSL
         /// </summary>
         /// <param name="profileName"></param>
         /// <param name="action"></param>
-        void Profile(string profileName, Action<ProfileExpression> action);
+        void Profile(string profileName, Action<Registry> action);
 
         /// <summary>
         /// Registers a new TypeInterceptor object with the Container

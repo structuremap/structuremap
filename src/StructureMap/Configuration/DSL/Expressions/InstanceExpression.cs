@@ -29,6 +29,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         ObjectInstance IsThis(T obj);
     }
 
+    [Obsolete("Can we get rid of this?")]
     public interface ThenItExpression<T>
     {
         IsExpression<T> ThenIt { get; }

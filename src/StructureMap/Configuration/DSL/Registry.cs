@@ -125,10 +125,13 @@ namespace StructureMap.Configuration.DSL
         /// </summary>
         /// <param name="profileName"></param>
         /// <param name="action"></param>
-        public void Profile(string profileName, Action<ProfileExpression> action)
+        // TODO -- going to add some extra semantics for Profile
+        public void Profile(string profileName, Action<Registry> action)
         {
-            var expression = new ProfileExpression(profileName, this);
-            action(expression);
+            var registry = new Registry();
+            action(registry);
+
+            alter = x => registry.As<IPluginGraphConfiguration>().Configure(x.Profile(profileName));
         }
 
         /// <summary>
