@@ -1,5 +1,6 @@
 using System;
 using NUnit.Framework;
+using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 
@@ -29,14 +30,13 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void returns_missing_instance_if_it_exists_and_the_requested_instance_is_not_found()
         {
-            var factory = new InstanceFactory(typeof (IWidget));
+            var graph = new PluginGraph();
+            var family = graph.Families[typeof(IWidget)];
             var missing = new ObjectInstance(new AWidget());
+            family.MissingInstance = missing;
 
-
-            factory.MissingInstance = missing;
-
-            factory.FindInstance("anything").ShouldBeTheSameAs(missing);
-            factory.FindInstance(Guid.NewGuid().ToString()).ShouldBeTheSameAs(missing);
+            graph.FindInstance(typeof(IWidget),"anything").ShouldBeTheSameAs(missing);
+            graph.FindInstance(typeof(IWidget), Guid.NewGuid().ToString()).ShouldBeTheSameAs(missing);
         }
     }
 }

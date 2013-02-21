@@ -160,19 +160,6 @@ namespace StructureMap.Testing.Graph
 
 
         [Test]
-        public void FindAPluginFamilyForAGenericTypeFromPluginTypeName()
-        {
-            Type serviceType = typeof (IService<string>);
-            PluginGraph pluginGraph = PluginGraph.BuildGraphFromAssembly(serviceType.Assembly);
-            var pipelineGraph = new PipelineGraph(pluginGraph);
-
-            Type stringService = typeof (IService<string>);
-
-            IInstanceFactory factory = pipelineGraph.ForType(stringService);
-            Assert.AreEqual(stringService, factory.PluginType);
-        }
-
-        [Test]
         public void GetDefaultInstance()
         {
             addColorInstance("Red");

@@ -37,22 +37,6 @@ namespace StructureMap.Testing.Graph
             }
         }
 
-
-        [Test]
-        public void FillDefault_happy_path()
-        {
-            var family = new PluginFamily(typeof (IWidget));
-            ConfiguredInstance configuredInstance = new ConfiguredInstance(typeof (ColorWidget)).Named("Default");
-            family.SetDefault(configuredInstance);
-
-
-            var profile = new Profile("theProfile");
-            family.FillDefault(profile);
-
-            profile.GetDefault(typeof (IWidget))
-                   .ShouldBeTheSameAs(configuredInstance);
-        }
-
         [Test]
         public void If_PluginFamily_only_has_one_instance_make_that_the_default()
         {

@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using StructureMap.Configuration;
 using StructureMap.Graph;
+using StructureMap.Pipeline;
 
 namespace StructureMap
 {
@@ -45,9 +47,10 @@ namespace StructureMap
 
             _graph.AddFamilyPolicy(new CloseGenericFamilyPolicy(_graph));
 
-
-            // TODO -- going to kill this later when Profile's are rewritten because they're stupid
-            _graph.ProfileManager.Seal(_graph);
+            var funcInstance = new FactoryTemplate(typeof(LazyInstance<>));
+            _graph.Families[typeof(Func<>)].SetDefault(funcInstance);
+ 
+            _graph.Log.AssertFailures();
 
             return _graph;
         }

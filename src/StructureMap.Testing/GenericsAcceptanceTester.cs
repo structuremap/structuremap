@@ -215,8 +215,8 @@ namespace StructureMap.Testing
 
             var pluginGraph = registry.Build();
 
-            pluginGraph.SetDefault("1", typeof (IService<>), new ReferencedInstance("Default"));
-            pluginGraph.SetDefault("2", typeof (IService<>), new ReferencedInstance("Plugged"));
+            pluginGraph.Profile("1").Families[typeof(IService<>)].SetDefault(new ReferencedInstance("Default"));
+            pluginGraph.Profile("2").Families[typeof (IService<>)].SetDefault(new ReferencedInstance("Plugged"));
 
 
             var container = new Container(pluginGraph);

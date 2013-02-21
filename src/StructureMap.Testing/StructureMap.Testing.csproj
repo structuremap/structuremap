@@ -233,7 +233,7 @@
     <Compile Include="Configuration\DSL\InstanceExpressionTester.cs" />
     <Compile Include="Configuration\DSL\InterceptAllInstancesOfPluginTypeTester.cs" />
     <Compile Include="Configuration\DSL\InterceptorTesting.cs" />
-    <Compile Include="Configuration\DSL\ProfileExpressionTester.cs" />
+    <Compile Include="Configuration\DSL\profiles_acceptance_tester.cs" />
     <Compile Include="Configuration\DSL\ProgrammaticConstructorSelectionTester.cs" />
     <Compile Include="Configuration\DSL\RegistryIntegratedTester.cs" />
     <Compile Include="Configuration\DSL\RegistryTester.cs" />
@@ -283,9 +283,6 @@
     <Compile Include="Graph\FullStackFacadeTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Graph\InstanceFactoryTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Graph\ContainerTester.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -324,7 +321,6 @@
     <Compile Include="InstanceMementoInstanceCreationTester.cs" />
     <Compile Include="ModelQueryTester.cs" />
     <Compile Include="ObjectFactoryInitializeTester.cs" />
-    <Compile Include="PipelineGraphTester.cs" />
     <Compile Include="Pipeline\BuildStackTester.cs" />
     <Compile Include="Pipeline\BuildStrategiesTester.cs" />
     <Compile Include="Pipeline\ConfiguredInstanceTester.cs" />
@@ -346,9 +342,6 @@
     <Compile Include="Pipeline\NestedContainerSupportTester.cs" />
     <Compile Include="Pipeline\ObjectBuilderTester.cs" />
     <Compile Include="Pipeline\OptionalSetterInjectionTester.cs" />
-    <Compile Include="Pipeline\ProfileManagerMergeTester.cs" />
-    <Compile Include="Pipeline\ProfileManagerTester.cs" />
-    <Compile Include="Pipeline\ProfileTester.cs" />
     <Compile Include="Pipeline\PrototypeInstanceTester.cs" />
     <Compile Include="Pipeline\RedirectingTester.cs" />
     <Compile Include="Pipeline\RedirectTester.cs" />

@@ -207,7 +207,7 @@ namespace StructureMap.Testing
         [Test]
         public void Throw_200_When_trying_to_build_an_instance_that_cannot_be_found()
         {
-            var graph = new PipelineGraph(new PluginGraph());
+            var graph = new RootPipelineGraph(new PluginGraph());
 
             assertActionThrowsErrorCode(200, delegate
             {
@@ -239,7 +239,7 @@ namespace StructureMap.Testing
         [Test]
         public void When_calling_GetInstance_if_no_default_can_be_found_throw_202()
         {
-            var graph = new PipelineGraph(new PluginGraph());
+            var graph = new RootPipelineGraph(new PluginGraph());
 
             assertActionThrowsErrorCode(202, delegate
             {

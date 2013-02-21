@@ -74,7 +74,7 @@ namespace StructureMap.Diagnostics
 
         private void writeConfigurationAndValidate(DoctorReport report, PluginGraph graph)
         {
-            var pipelineGraph = new PipelineGraph(graph);
+            var pipelineGraph = new RootPipelineGraph(graph);
             var writer = new WhatDoIHaveWriter(pipelineGraph);
             report.WhatDoIHave = writer.GetText();
 

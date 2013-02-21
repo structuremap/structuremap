@@ -16,11 +16,6 @@ namespace StructureMap.Testing.Graph
         private readonly IService _blue = new ColorService("Blue");
         private readonly IService _orange = new ColorService("Orange");
 
-        private IInstanceFactory getISomethingFactory()
-        {
-            var family = new PluginFamily(typeof (ISomething));
-            return new InstanceFactory(family);
-        }
 
         public interface IService<T>
         {
@@ -263,16 +258,6 @@ namespace StructureMap.Testing.Graph
             container.GetInstance<ISomething>().ShouldBeOfType<SomethingOne>();
         }
 
-        [Test]
-        public void CanAddInstancesDirectlyToAnInstanceFactory()
-        {
-            IInstanceFactory factory = getISomethingFactory();
-
-            factory.AddInstance(new ObjectInstance(_red).Named("Red"));
-            factory.AddInstance(new ObjectInstance(_blue).Named("Blue"));
-
-            factory.FindInstance("Red").ShouldNotBeNull();
-        }
 
         [Test]
         public void InjectType()
@@ -291,24 +276,6 @@ namespace StructureMap.Testing.Graph
             var container = new Container(x => { x.For<ISomething>().Use<SomethingOne>(); });
 
             container.GetInstance<ISomething>().ShouldBeOfType<SomethingOne>();
-        }
-
-        [Test]
-        public void NowOverwriteAPreviouslyAttachedInstance()
-        {
-            IInstanceFactory factory = getISomethingFactory();
-
-            factory.AddInstance(new ObjectInstance(_red).Named("Red"));
-            ObjectInstance oldBlue = new ObjectInstance(_blue).Named("Blue");
-            factory.AddInstance(oldBlue);
-
-            // Replace Blue
-            ObjectInstance newBlue = new ObjectInstance(_orange).Named("Blue");
-            factory.AddInstance(newBlue);
-
-            factory.FindInstance("Blue").ShouldBeTheSameAs(newBlue);
-
-            factory.AllInstances.Contains(oldBlue).ShouldBeFalse();
         }
 
         [Test]

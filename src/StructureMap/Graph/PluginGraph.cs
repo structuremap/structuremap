@@ -23,8 +23,6 @@ namespace StructureMap.Graph
 
         private readonly InterceptorLibrary _interceptorLibrary = new InterceptorLibrary();
         
-        [Obsolete("Gonna kill this turkey")]
-        private readonly ProfileManager _profileManager = new ProfileManager();
         private readonly List<Registry> _registries = new List<Registry>();
         private GraphLog _log = new GraphLog();
         private readonly LifecycleObjectCache _singletonCache = new LifecycleObjectCache();
@@ -64,11 +62,6 @@ namespace StructureMap.Graph
             get { return _registries; }
         }
 
-        public ProfileManager ProfileManager
-        {
-            get { return _profileManager; }
-        }
-
         public GraphLog Log
         {
             get { return _log; }
@@ -105,12 +98,6 @@ namespace StructureMap.Graph
         public virtual void AddType(Type pluginType, Type concreteType, string name)
         {
             _families[pluginType].AddType(concreteType, name);
-        }
-
-        public void SetDefault(string profileName, Type pluginType, Instance instance)
-        {
-            _families[pluginType].AddInstance(instance);
-            _profileManager.SetDefault(profileName, pluginType, instance);
         }
 
         /// <summary>

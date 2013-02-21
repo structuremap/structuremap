@@ -170,7 +170,6 @@
     <Compile Include="IGraphEjector.cs" />
     <Compile Include="Interceptors\MatchedTypeInterceptor.cs" />
     <Compile Include="IPipelineGraph.cs" />
-    <Compile Include="PipelineGraph.cs" />
     <Compile Include="Pipeline\ArrayDefinitionExpression.cs" />
     <Compile Include="Pipeline\ConfiguredInstance.cs" />
     <Compile Include="Pipeline\ConfiguredInstance.Expressions.cs" />
@@ -182,8 +181,6 @@
     <Compile Include="Pipeline\Instance.cs" />
     <Compile Include="Pipeline\InstanceMementoPropertyReader.cs" />
     <Compile Include="Pipeline\ObjectInstance.cs" />
-    <Compile Include="Pipeline\Profile.cs" />
-    <Compile Include="Pipeline\ProfileManager.cs" />
     <Compile Include="Pipeline\PrototypeInstance.cs" />
     <Compile Include="Pipeline\ReaderWriterLockExtensions.cs" />
     <Compile Include="Pipeline\ReferencedInstance.cs" />
@@ -254,13 +251,7 @@
     <Compile Include="Graph\TypePath.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IInstanceFactory.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="IContainer.cs" />
-    <Compile Include="InstanceFactory.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Container.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -361,7 +352,6 @@
     <Compile Include="Pipeline\SingletonLifecycle.cs" />
     <Compile Include="Pipeline\ThreadLocalStorageLifecycle.cs" />
     <Compile Include="Pipeline\UniquePerRequestLifecycle.cs" />
-    <Compile Include="Query\InstanceFactoryTypeConfiguration.cs" />
     <Compile Include="Query\InstanceRef.cs" />
     <Compile Include="Query\IPluginTypeConfiguration.cs" />
     <Compile Include="TypeExtensions.cs" />

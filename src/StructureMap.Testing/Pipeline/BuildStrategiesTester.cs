@@ -80,7 +80,7 @@ namespace StructureMap.Testing.Pipeline
             disposable1 = new StubDisposable();
             disposable2 = new StubDisposable();
 
-            pipeline = new PipelineGraph(new PluginGraph());
+            pipeline = new RootPipelineGraph(new PluginGraph());
 
             lifecycle.FindCache(pipeline).As<LifecycleObjectCache>().Set(typeof (IGateway), new StubInstance("a"), disposable1);
             lifecycle.FindCache(pipeline).As<LifecycleObjectCache>().Set(typeof(IGateway), new StubInstance("b"), disposable2);
@@ -95,7 +95,7 @@ namespace StructureMap.Testing.Pipeline
         private SingletonLifecycle lifecycle;
         private StubDisposable disposable1;
         private StubDisposable disposable2;
-        private PipelineGraph pipeline;
+        private RootPipelineGraph pipeline;
 
         public class StubInstance : Instance
         {

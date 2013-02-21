@@ -12,11 +12,11 @@ namespace StructureMap.Query
         private readonly IPipelineGraph _graph;
 
         // TODO -- have this just take in IPipelineGraph, and IPipelineGraph will now expose all PluginGraph's
-        internal Model(IPipelineGraph graph, PluginGraph pluginGraph, IContainer container)
+        internal Model(IPipelineGraph graph, IContainer container)
         {
             _graph = graph;
             _container = container;
-            PluginGraph = pluginGraph;
+            PluginGraph = _graph.Outer;
         }
 
         #region IModel Members

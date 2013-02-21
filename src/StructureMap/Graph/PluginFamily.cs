@@ -84,17 +84,6 @@ namespace StructureMap.Graph
             return null;
         }
 
-        [Obsolete("Gonna make this go away")]
-        public void FillDefault(Profile profile)
-        {
-            var defaultInstance = GetDefaultInstance();
-            if (defaultInstance != null)
-            {
-                profile.FillTypeInto(PluginType, defaultInstance);
-            }
-        }
-
-
         public void ImportFrom(PluginFamily source)
         {
             if (source.Lifecycle != null)

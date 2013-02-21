@@ -9,11 +9,11 @@ namespace StructureMap.Testing.Pipeline
     public class StubBuildSession : BuildSession
     {
         private readonly static PluginGraph _pluginGraph = new PluginGraph();
-        private static readonly PipelineGraph _pipeline;
+        private static readonly IPipelineGraph _pipeline;
 
         static StubBuildSession()
         {
-            _pipeline = new PipelineGraph(_pluginGraph);
+            _pipeline = new RootPipelineGraph(_pluginGraph);
             
         }
 

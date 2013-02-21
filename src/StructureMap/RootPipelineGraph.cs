@@ -24,6 +24,18 @@ namespace StructureMap
                     name => new ComplexPipelineGraph(this, _pluginGraph.Profile(name), new NulloTransientCache()));
         }
 
+        public static RootPipelineGraph For(Action<ConfigurationExpression> action)
+        {
+            var expression = new ConfigurationExpression();
+            action(expression);
+
+            var builder = new PluginGraphBuilder();
+            builder.Add(expression);
+
+            var graph = builder.Build();
+            return new RootPipelineGraph(graph);
+        }
+
         public IObjectCache Singletons
         {
             get { return _pluginGraph.SingletonCache; }

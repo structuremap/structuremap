@@ -2,12 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
 using StructureMap.Construction;
 using StructureMap.Diagnostics;
 using StructureMap.Exceptions;
 using StructureMap.Graph;
-using StructureMap.Interceptors;
 using StructureMap.Pipeline;
 using StructureMap.Query;
 using StructureMap.TypeRules;
@@ -16,24 +16,10 @@ namespace StructureMap
 {
     public class Container : IContainer
     {
-        private InterceptorLibrary _interceptorLibrary;
         private IPipelineGraph _pipelineGraph;
-        private PluginGraph _pluginGraph;
 
-        public Container(Action<ConfigurationExpression> action)
+        public Container(Action<ConfigurationExpression> action) : this(RootPipelineGraph.For(action))
         {
-            var expression = new ConfigurationExpression();
-            action(expression);
-
-            // As explained later in the article,
-            // PluginGraph is part of the Semantic Model
-            // of StructureMap
-            PluginGraph graph = expression.BuildGraph();
-
-            // Take the PluginGraph object graph and
-            // dynamically emit classes to build the
-            // configured objects
-            construct(graph);
         }
 
         public Container(Registry registry)
@@ -53,14 +39,16 @@ namespace StructureMap
         ///     PluginGraph containing the instance and type definitions
         ///     for the Container
         /// </param>
-        public Container(PluginGraph pluginGraph)
+        public Container(PluginGraph pluginGraph) : this(new RootPipelineGraph(pluginGraph))
         {
-            construct(pluginGraph);
         }
 
-        public PluginGraph PluginGraph
+        private Container(IPipelineGraph pipelineGraph)
         {
-            get { return _pluginGraph; }
+            Name = Guid.NewGuid().ToString();
+
+            _pipelineGraph = pipelineGraph;
+            _pipelineGraph.Outer.Families[typeof(IContainer)].SetDefault(new ObjectInstance(this));
         }
 
         #region IContainer Members
@@ -72,7 +60,7 @@ namespace StructureMap
         /// </summary>
         public IModel Model
         {
-            get { return new Model(_pipelineGraph, _pluginGraph, this); }
+            get { return new Model(_pipelineGraph, this); }
         }
 
         /// <summary>
@@ -175,6 +163,7 @@ namespace StructureMap
         ///     Sets the default instance for all PluginType's to the designated Profile.
         /// </summary>
         /// <param name="profile"></param>
+        [Obsolete("Get a different container here")]
         public void SetDefaultsToProfile(string profile)
         {
             _pipelineGraph = _pipelineGraph.ForProfile(profile);
@@ -298,12 +287,7 @@ namespace StructureMap
                 var registry = new ConfigurationExpression();
                 configure(registry);
 
-                PluginGraph graph = registry.BuildGraph();
-
-                graph.Log.AssertFailures();
-
-                _interceptorLibrary.ImportFrom(graph.InterceptorLibrary);
-                _pipelineGraph.ImportFrom(graph);
+                registry.As<IPluginGraphConfiguration>().Configure(_pipelineGraph.Outer);
             }
         }
 
@@ -415,7 +399,6 @@ namespace StructureMap
         {
             var container = new Container
             {
-                _interceptorLibrary = _interceptorLibrary,
                 _pipelineGraph = _pipelineGraph.ToNestedGraph(),
                 _onDispose = nestedDispose
             };
@@ -523,28 +506,7 @@ namespace StructureMap
             return expression;
         }
 
-        private void construct(PluginGraph pluginGraph)
-        {
-            Name = Guid.NewGuid().ToString();
 
-            _interceptorLibrary = pluginGraph.InterceptorLibrary;
-
-            _pluginGraph = pluginGraph;
-
-            var thisInstance = new ObjectInstance(this);
-            _pluginGraph.Families[typeof (IContainer)].AddInstance(thisInstance);
-            _pluginGraph.ProfileManager.SetDefault(typeof (IContainer), thisInstance);
-
-            // TODO -- want this as a FamilyPolicy in PluginGraphBuilder
-            var funcInstance = new FactoryTemplate(typeof (LazyInstance<>));
-            _pluginGraph.Families[typeof (Func<>)].AddInstance(funcInstance);
-            _pluginGraph.ProfileManager.SetDefault(typeof (Func<>), funcInstance);
-
-
-            pluginGraph.Log.AssertFailures();
-
-            _pipelineGraph = new PipelineGraph(pluginGraph);
-        }
 
         [Obsolete("delegate to something cleaner in BuildSession")]
         private IList<T> getListOfTypeWithSession<T>(BuildSession session)

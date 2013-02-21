@@ -8,7 +8,7 @@ using StructureMap.Testing.Widget2;
 namespace StructureMap.Testing.Configuration.DSL
 {
     [TestFixture]
-    public class ProfileExpressionTester : Registry
+    public class profiles_acceptance_tester : Registry
     {
         #region Setup/Teardown
 
@@ -99,9 +99,29 @@ namespace StructureMap.Testing.Configuration.DSL
                 
 
             PluginGraph graph = registry.Build();
-            var instance = (ObjectInstance) graph.ProfileManager.GetDefault(typeof (IWidget), "something");
+            graph.Profile("something").Families[typeof (IWidget)].GetDefaultInstance()
+                                                                 .ShouldBeOfType<ObjectInstance>()
+                                                                 .Object.ShouldBeTheSameAs(theWidget);
+        }
 
-            Assert.AreSame(theWidget, instance.Object);
+        public class NamedWidget : IWidget
+        {
+            private readonly string _name;
+
+            public void DoSomething()
+            {
+                throw new System.NotImplementedException();
+            }
+
+            public NamedWidget(string name)
+            {
+                _name = name;
+            }
+
+            public string Name
+            {
+                get { return _name; }
+            }
         }
 
         [Test]
@@ -111,17 +131,19 @@ namespace StructureMap.Testing.Configuration.DSL
             string theDefaultName = "TheDefaultName";
 
             var registry = new Registry();
+
+            registry.For<IWidget>().Add(new NamedWidget(theDefaultName)).Named(theDefaultName);
+            registry.For<IWidget>().Use<AWidget>();
+
             registry.Profile(theProfileName, p => {
                 p.For<IWidget>().Use(theDefaultName);
                 p.For<Rule>().Use("DefaultRule");
             });
 
-
-            ObjectInstance masterInstance =
-                registry.For<IWidget>().Add(new AWidget()).Named(theDefaultName);
-
-            ProfileManager manager = registry.Build().ProfileManager;
-            Assert.AreSame(masterInstance, manager.GetDefault(typeof (IWidget), theProfileName));
+            var container = new Container(registry);
+            container.SetDefaultsToProfile(theProfileName);
+            container.GetInstance<IWidget>().ShouldBeOfType<NamedWidget>()
+                     .Name.ShouldEqual(theDefaultName);
         }
 
         [Test]
@@ -129,23 +151,17 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             string theProfileName = "TheProfile";
 
-            var registry = new Registry();
-            registry.Profile(theProfileName, x => {
-                x.For<IWidget>().Use<AWidget>();
+            var container = new Container(registry => {
+                registry.For<IWidget>().Use(new NamedWidget("default"));
+
+                registry.Profile(theProfileName, x =>
+                {
+                    x.For<IWidget>().Use<AWidget>();
+                });
             });
-                
 
-            PluginGraph graph = registry.Build();
-
-            ProfileManager profileManager = graph.ProfileManager;
-            Instance defaultInstance = profileManager.GetDefault(typeof (IWidget), theProfileName);
-
-            Assert.AreEqual(StructureMap.Pipeline.Profile.InstanceKeyForProfile(theProfileName), defaultInstance.Name);
-
-            var manager = new Container(graph);
-            manager.SetDefaultsToProfile(theProfileName);
-            var widget = (AWidget) manager.GetInstance<IWidget>();
-            Assert.IsNotNull(widget);
+            container.SetDefaultsToProfile(theProfileName);
+            container.GetInstance<IWidget>().ShouldBeOfType<AWidget>();
         }
     }
 }

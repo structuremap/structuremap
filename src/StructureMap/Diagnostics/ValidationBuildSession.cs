@@ -24,7 +24,7 @@ namespace StructureMap.Diagnostics
         
         public static ValidationBuildSession ValidateForPluginGraph(PluginGraph graph)
         {
-            var pipeline = new PipelineGraph(graph);
+            var pipeline = new RootPipelineGraph(graph);
 
             return new ValidationBuildSession(pipeline);
         }
