@@ -8,32 +8,31 @@ namespace StructureMap.Query
 {
     public class Model : IModel
     {
-        private readonly IContainer _container;
         private readonly IPipelineGraph _graph;
 
         // TODO -- have this just take in IPipelineGraph, and IPipelineGraph will now expose all PluginGraph's
-        internal Model(IPipelineGraph graph, IContainer container)
+        internal Model(IPipelineGraph graph)
         {
             _graph = graph;
-            _container = container;
             PluginGraph = _graph.Outer;
         }
 
-        #region IModel Members
+        public IPipelineGraph Pipeline
+        {
+            get { return _graph; }
+        }
 
         private IEnumerable<IPluginTypeConfiguration> pluginTypes
         {
             get
             {
-                // TODO -- do this by using the AllPluginTypes
-                
-                return _graph.GetPluginTypes(_container);
+                return _graph.GetPluginTypes();
             }
         }
 
         public bool HasDefaultImplementationFor(Type pluginType)
         {
-            return findForFamily(pluginType, f => f.Default != null);
+            return _graph.HasDefaultForPluginType(pluginType);
         }
 
         public bool HasDefaultImplementationFor<T>()
@@ -145,7 +144,7 @@ namespace StructureMap.Query
 
         private T findForFamily<T>(Type pluginType, Func<IPluginTypeConfiguration, T> func, T defaultValue)
         {
-            IPluginTypeConfiguration family = PluginTypes.FirstOrDefault(x => x.PluginType == pluginType);
+            var family = PluginTypes.FirstOrDefault(x => x.PluginType == pluginType);
             return family == null ? defaultValue : func(family);
         }
 
@@ -153,7 +152,5 @@ namespace StructureMap.Query
         {
             return findForFamily(pluginType, func, default(T));
         }
-
-        #endregion
     }
 }

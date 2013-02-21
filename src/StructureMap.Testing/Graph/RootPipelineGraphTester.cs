@@ -4,15 +4,9 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.Testing.Graph
 {
-    [TestFixture, Ignore("Come back to this")]
+    [TestFixture]
     public class RootPipelineGraphTester
     {
-        [Test]
-        public void everything()
-        {
-            Assert.Fail("Do.");
-        }
-
         [Test]
         public void singleton_is_just_the_plugin_graph_singletons()
         {

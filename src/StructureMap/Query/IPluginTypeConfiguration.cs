@@ -1,11 +1,40 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using StructureMap.Pipeline;
 
 namespace StructureMap.Query
 {
+    public interface IFamily
+    {
+        /// <summary>
+        /// The resulting object from this Instance will be evicted from its
+        /// lifecycle if it has already been created and cached
+        /// </summary>
+        /// <param name="instance"></param>
+        void Eject(Instance instance);
+
+        /// <summary>
+        /// Builds the object
+        /// </summary>
+        /// <param name="instance"></param>
+        /// <returns></returns>
+        object Build(Instance instance);
+
+        /// <summary>
+        /// Queries the lifecycle if it has been created
+        /// </summary>
+        /// <param name="instance"></param>
+        /// <returns></returns>
+        bool HasBeenCreated(Instance instance);
+
+        Type PluginType { get; }
+    }
+
     public interface IPluginTypeConfiguration
     {
+        string ProfileName { get; }
+
         Type PluginType { get; }
 
         /// <summary>
@@ -17,7 +46,7 @@ namespace StructureMap.Query
         /// <summary>
         /// The build "policy" for this PluginType.  Used by the WhatDoIHave() diagnostics methods
         /// </summary>
-        string Lifecycle { get; }
+        ILifecycle Lifecycle { get; }
 
         /// <summary>
         /// All of the <see cref="InstanceRef">InstanceRef</see>'s registered
@@ -32,7 +61,7 @@ namespace StructureMap.Query
         bool HasImplementations();
 
         /// <summary>
-        /// Ejects any instances of this instance from the current container
+        /// Ejects any instances of this instance from its lifecycle
         /// and permanently removes the instance from the container configuration
         /// </summary>
         /// <param name="instance"></param>

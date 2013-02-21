@@ -17,13 +17,19 @@ namespace StructureMap.Testing.Query
         {
             family = new PluginFamily(typeof (IService<>));
 
-            configuration = new GenericFamilyConfiguration(family);
+            configuration = new GenericFamilyConfiguration(family, new PluginGraph("something"));
         }
 
         #endregion
 
         private PluginFamily family;
         private GenericFamilyConfiguration configuration;
+
+        [Test]
+        public void profile_name_is_taken_from_PluginGraph()
+        {
+            configuration.ProfileName.ShouldEqual("something");
+        }
 
         [Test]
         public void build_should_return_null()
@@ -42,7 +48,7 @@ namespace StructureMap.Testing.Query
 
             configuration.EjectAndRemove(iRef);
 
-            family.InstanceCount.ShouldEqual(1);
+            family.Instances.Count().ShouldEqual(1);
             configuration.Instances.Count().ShouldEqual(1);
 
             configuration.Instances.Any(x => x.Name == instance.Name).ShouldBeFalse();

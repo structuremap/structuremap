@@ -6,14 +6,20 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.Query
 {
-    // TODO --rename this, because it's going to be the only thing.  
     public class GenericFamilyConfiguration : IPluginTypeConfiguration, IFamily
     {
         private readonly PluginFamily _family;
+        private readonly PluginGraph _graph;
 
-        public GenericFamilyConfiguration(PluginFamily family)
+        public GenericFamilyConfiguration(PluginFamily family, PluginGraph graph)
         {
             _family = family;
+            _graph = graph;
+        }
+
+        public string ProfileName
+        {
+            get { return _graph.ProfileName; }
         }
 
         void IFamily.Eject(Instance instance)
@@ -49,7 +55,7 @@ namespace StructureMap.Query
         /// <summary>
         /// The build "policy" for this PluginType.  Used by the WhatDoIHave() diagnostics methods
         /// </summary>
-        public string Lifecycle { get { return _family.Lifecycle.ToName(); } }
+        public ILifecycle Lifecycle { get { return _family.Lifecycle; } }
 
         /// <summary>
         /// All of the <see cref="InstanceRef">InstanceRef</see>'s registered
@@ -63,7 +69,7 @@ namespace StructureMap.Query
         /// <returns></returns>
         public bool HasImplementations()
         {
-            return _family.InstanceCount > 0;
+            return _family.Instances.Any();
         }
 
         public void EjectAndRemove(InstanceRef instance)

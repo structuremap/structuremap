@@ -10,7 +10,7 @@ using StructureMap.Testing.Widget2;
 
 namespace StructureMap.Testing.Query
 {
-    [TestFixture, Ignore("Ignoring all Model tests until the big PipelineGraph switcheroo is done")]
+    [TestFixture]
     public class ModelIntegrationTester
     {
         #region Setup/Teardown

@@ -44,6 +44,11 @@ namespace StructureMap.Graph
             });
         }
 
+        public PluginGraph(string profileName) : this()
+        {
+            ProfileName = profileName;
+        }
+
         public string ProfileName { get; private set; }
 
         public LifecycleObjectCache SingletonCache

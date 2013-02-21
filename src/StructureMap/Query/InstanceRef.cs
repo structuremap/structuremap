@@ -16,6 +16,11 @@ namespace StructureMap.Query
 
         internal Instance Instance { get { return _instance; } }
 
+        public ILifecycle Lifecycle
+        {
+            get { return _instance.Lifecycle; }
+        }
+
         public string Name { get { return _instance.Name; } }
 
         /// <summary>

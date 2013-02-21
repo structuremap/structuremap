@@ -155,7 +155,10 @@ namespace StructureMap.Graph
         public void RemoveInstance(Instance instance)
         {
             _instances.Remove(instance.Name);
-            resetDefault();
+            if (instance == GetDefaultInstance())
+            {
+                resetDefault();
+            }
         }
 
         public void RemoveAll()
@@ -165,8 +168,6 @@ namespace StructureMap.Graph
         }
 
         public bool IsGenericTemplate { get { return _pluginType.IsGenericTypeDefinition || _pluginType.ContainsGenericParameters; } }
-
-        public int InstanceCount { get { return _instances.Count; } }
 
         public Instance MissingInstance { get; set; }
 

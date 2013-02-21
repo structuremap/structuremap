@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 
@@ -8,14 +9,39 @@ namespace StructureMap.Query
     public class ClosedPluginTypeConfiguration : IPluginTypeConfiguration, IFamily
     {
         private readonly PluginFamily _family;
-        private readonly IContainer _container;
         private readonly IPipelineGraph _pipelineGraph;
 
-        public ClosedPluginTypeConfiguration(PluginFamily family, IContainer container, IPipelineGraph pipelineGraph)
+        public ClosedPluginTypeConfiguration(PluginFamily family, IPipelineGraph pipelineGraph)
         {
             _family = family;
-            _container = container;
             _pipelineGraph = pipelineGraph;
+        }
+
+        public void Eject(Instance instance)
+        {
+            instance.Lifecycle.FindCache(_pipelineGraph).Eject(_family.PluginType, instance);
+            instance.SafeDispose();
+            _family.RemoveInstance(instance);
+        }
+
+        public object Build(Instance instance)
+        {
+            return new Container(_pipelineGraph).GetInstance(_family.PluginType, instance);
+        }
+
+        public bool HasBeenCreated(Instance instance)
+        {
+            return instance.Lifecycle.FindCache(_pipelineGraph).Has(_family.PluginType, instance);
+        }
+
+        public string ProfileName
+        {
+            get { return _pipelineGraph.Outer.ProfileName; }
+        }
+
+        Type IFamily.PluginType
+        {
+            get { return _family.PluginType; }
         }
 
         Type IPluginTypeConfiguration.PluginType
@@ -23,48 +49,43 @@ namespace StructureMap.Query
             get { return _family.PluginType; }
         }
 
-        public void Eject(Instance instance)
+        public InstanceRef Default
         {
-            throw new NotImplementedException();
+            get { 
+                var instance = _family.GetDefaultInstance();
+                return instance == null ? null : new InstanceRef(instance, this);
+            }
         }
 
-        public object Build(Instance instance)
+        public ILifecycle Lifecycle
         {
-            throw new NotImplementedException();
+            get { return _family.Lifecycle; }
         }
 
-        public bool HasBeenCreated(Instance instance)
-        {
-            throw new NotImplementedException();
-        }
-
-        public InstanceRef Default { get; private set; }
-        public string Lifecycle { get; private set; }
         public IEnumerable<InstanceRef> Instances
         {
             get
             {
-                throw new NotImplementedException();
+                foreach (Instance instance in _family.Instances)
+                {
+                    yield return new InstanceRef(instance, this);
+                }
             }
         }
+
         public bool HasImplementations()
         {
-            throw new NotImplementedException();
+            return _family.Instances.Any();
         }
 
         public void EjectAndRemove(InstanceRef instance)
         {
-            throw new NotImplementedException();
+            ;
         }
 
         public void EjectAndRemoveAll()
         {
             throw new NotImplementedException();
-        }
-
-        Type IFamily.PluginType
-        {
-            get { return _family.PluginType; }
         }
     }
 }

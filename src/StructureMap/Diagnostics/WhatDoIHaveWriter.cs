@@ -35,7 +35,7 @@ namespace StructureMap.Diagnostics
             _writer.AddDivider('=');
             _writer.AddText("PluginType", "Name", "Description");
 
-            foreach (IPluginTypeConfiguration pluginType in _graph.GetPluginTypes(null))
+            foreach (IPluginTypeConfiguration pluginType in _graph.GetPluginTypes())
             {
                 writePluginType(pluginType);
             }

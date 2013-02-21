@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using NUnit.Framework;
 using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
@@ -70,7 +71,7 @@ namespace StructureMap.Testing.Graph
             Assert.IsTrue(graph.Families.Has(typeof (IConvention)));
 
             PluginFamily family = graph.FindFamily(typeof (IConvention));
-            Assert.AreEqual(1, family.InstanceCount);
+            Assert.AreEqual(1, family.Instances.Count());
         }
 
         [Test]

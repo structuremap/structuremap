@@ -138,7 +138,7 @@ namespace StructureMap.Testing.Graph
             instances.Any(s=> s is Service4).ShouldBeTrue();
         }
 
-        [Test, Ignore("Until we fix Container.Configure() to just write to the PluginGraph")]
+        [Test]
         public void Add_generic_stuff_in_configure()
         {
             var container = new Container();

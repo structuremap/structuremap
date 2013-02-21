@@ -95,17 +95,17 @@ namespace StructureMap
             return _profiles[profile];
         }
 
-        public IEnumerable<IPluginTypeConfiguration> GetPluginTypes(IContainer container)
+        public IEnumerable<IPluginTypeConfiguration> GetPluginTypes()
         {
             foreach (var family in _pluginGraph.Families)
             {
                 if (family.IsGenericTemplate)
                 {
-                    yield return new GenericFamilyConfiguration(family);
+                    yield return new GenericFamilyConfiguration(family, _pluginGraph);
                 }
                 else
                 {
-                    yield return new ClosedPluginTypeConfiguration(family, container, this);
+                    yield return new ClosedPluginTypeConfiguration(family, this);
                 }
             }
         }
@@ -118,7 +118,7 @@ namespace StructureMap
 
         public IPipelineGraph ToNestedGraph()
         {
-            return new ComplexPipelineGraph(this, new PluginGraph(), new NestedContainerTransientObjectCache());
+            return new ComplexPipelineGraph(this, new PluginGraph("Nested"), new NestedContainerTransientObjectCache());
         }
 
         public IEnumerable<PluginGraph> AllGraphs()

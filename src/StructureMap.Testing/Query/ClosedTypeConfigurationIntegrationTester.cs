@@ -1,5 +1,6 @@
 using System.Linq;
 using NUnit.Framework;
+using StructureMap.Pipeline;
 using StructureMap.Query;
 using StructureMap.Testing.Configuration.DSL;
 using StructureMap.Testing.Graph;
@@ -8,8 +9,8 @@ using StructureMap.Testing.Widget2;
 
 namespace StructureMap.Testing.Query
 {
-    [TestFixture, Ignore("Temporarily ignoring anything to do w/ Model")]
-    public class InstanceFactoryTypeConfigurationTester
+    [TestFixture]
+    public class ClosedTypeConfigurationIntegrationTester
     {
         #region Setup/Teardown
 
@@ -39,7 +40,8 @@ namespace StructureMap.Testing.Query
         [Test]
         public void build_when_the_cast_does_not_work()
         {
-            container.Model.For<IWidget>().Default.Get<Rule>().ShouldBeNull();
+            var configuration = container.Model.For<IWidget>();
+            configuration.Default.Get<Rule>().ShouldBeNull();
         }
 
         [Test]
@@ -160,8 +162,8 @@ namespace StructureMap.Testing.Query
         [Test]
         public void get_lifecycle()
         {
-            container.Model.For<IWidget>().Lifecycle.ShouldEqual(InstanceScope.Singleton.ToString());
-            container.Model.For<Rule>().Lifecycle.ShouldEqual(InstanceScope.Transient.ToString());
+            container.Model.For<IWidget>().Lifecycle.ShouldBeOfType<SingletonLifecycle>();
+            container.Model.For<Rule>().Lifecycle.ShouldBeOfType<TransientLifecycle>();
         }
 
         [Test]

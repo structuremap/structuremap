@@ -10,7 +10,7 @@ using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing
 {
-    [TestFixture, Ignore("Temporarily ignoring anything to do with Model")]
+    [TestFixture]
     public class ModelQueryTester
     {
         #region Setup/Teardown

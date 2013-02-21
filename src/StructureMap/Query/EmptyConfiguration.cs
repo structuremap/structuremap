@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using StructureMap.Pipeline;
 
 namespace StructureMap.Query
 {
@@ -10,6 +11,11 @@ namespace StructureMap.Query
         public EmptyConfiguration(Type pluginType)
         {
             _pluginType = pluginType;
+        }
+
+        public string ProfileName
+        {
+            get { return "DEFAULT"; }
         }
 
         public Type PluginType { get { return _pluginType; } }
@@ -23,7 +29,7 @@ namespace StructureMap.Query
         /// <summary>
         /// The build "policy" for this PluginType.  Used by the WhatDoIHave() diagnostics methods
         /// </summary>
-        public string Lifecycle { get { return null; } }
+        public ILifecycle Lifecycle { get { return Lifecycles.Transient; } }
 
         /// <summary>
         /// All of the <see cref="InstanceRef">InstanceRef</see>'s registered

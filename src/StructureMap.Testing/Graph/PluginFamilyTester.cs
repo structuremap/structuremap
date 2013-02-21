@@ -161,7 +161,7 @@ namespace StructureMap.Testing.Graph
 
             family.GetDefaultInstance().ShouldBeNull();
 
-            family.InstanceCount.ShouldEqual(0);
+            family.Instances.Count().ShouldEqual(0);
         }
 
         [Test]

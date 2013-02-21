@@ -10,7 +10,7 @@ using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing.Diagnostics
 {
-    [TestFixture, Ignore("Not worrying about anything with Model")]
+    [TestFixture]
     public class DoctorTester
     {
         private DoctorReport fetchReport<T>(string config) where T : IBootstrapper

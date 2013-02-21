@@ -45,7 +45,7 @@ namespace StructureMap.Testing.Pipeline
         {
         }
 
-        [Test, Ignore("Not worrying about Model right now")]
+        [Test]
         public void allow_nested_container_to_report_what_it_has()
         {
             var container = new Container(x => x.For<IAutomobile>().Use<Mustang>());

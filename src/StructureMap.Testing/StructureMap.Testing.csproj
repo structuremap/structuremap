@@ -255,7 +255,6 @@
     <Compile Include="Examples\Interception.cs" />
     <Compile Include="Examples\RegisteringWithTheAPI.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="GraphEjectorTester.cs" />
     <Compile Include="Graph\AssemblyScannerTester.cs" />
     <Compile Include="Graph\ContainerConstructorAttributeTester.cs">
       <SubType>Code</SubType>
@@ -355,9 +354,8 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Query\ClosedPluginTypeConfigurationTester.cs" />
     <Compile Include="Query\GenericFamilyConfigurationTester.cs" />
-    <Compile Include="Query\InstanceFactoryTypeConfigurationTester.cs" />
+    <Compile Include="Query\ClosedTypeConfigurationIntegrationTester.cs" />
     <Compile Include="Query\InstanceRefTester.cs" />
     <Compile Include="Query\ModelIntegrationTester.cs" />
     <Compile Include="ReadingRegistriesFromXmlTester.cs" />

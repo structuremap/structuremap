@@ -43,7 +43,7 @@ namespace StructureMap
         {
         }
 
-        private Container(IPipelineGraph pipelineGraph)
+        internal Container(IPipelineGraph pipelineGraph)
         {
             Name = Guid.NewGuid().ToString();
 
@@ -56,7 +56,7 @@ namespace StructureMap
         /// </summary>
         public IModel Model
         {
-            get { return new Model(_pipelineGraph, this); }
+            get { return new Model(_pipelineGraph); }
         }
 
         /// <summary>

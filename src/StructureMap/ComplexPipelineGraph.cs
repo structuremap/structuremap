@@ -85,9 +85,22 @@ namespace StructureMap
             return _parent.ForProfile(profile);
         }
 
-        public IEnumerable<IPluginTypeConfiguration> GetPluginTypes(IContainer container)
+        public IEnumerable<IPluginTypeConfiguration> GetPluginTypes()
         {
-            throw new NotImplementedException();
+            var specific = new RootPipelineGraph(_outer).GetPluginTypes().ToArray();
+
+            foreach (var config in specific)
+            {
+                yield return config;
+            }
+
+            foreach (var parentType in _parent.GetPluginTypes())
+            {
+                if (!specific.Any(x => x.PluginType == parentType.PluginType))
+                {
+                    yield return parentType;
+                }
+            }
         }
 
         public void Dispose()
@@ -99,7 +112,7 @@ namespace StructureMap
         // Identical to RootPipelineGraph
         public IPipelineGraph ToNestedGraph()
         {
-            return new ComplexPipelineGraph(this, new PluginGraph(), new NestedContainerTransientObjectCache());
+            return new ComplexPipelineGraph(this, new PluginGraph("Nested"), new NestedContainerTransientObjectCache());
         }
 
         public IEnumerable<PluginGraph> AllGraphs()

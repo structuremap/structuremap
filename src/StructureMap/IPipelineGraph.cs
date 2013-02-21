@@ -27,12 +27,7 @@ namespace StructureMap
 
         IPipelineGraph ForProfile(string profile);
 
-        // This is borderline awful. 
-        [Obsolete("replace with new Model class")]
-        IEnumerable<IPluginTypeConfiguration> GetPluginTypes(IContainer container);
-
-        
-
+        IEnumerable<IPluginTypeConfiguration> GetPluginTypes();
 
         IPipelineGraph ToNestedGraph();
 

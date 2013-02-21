@@ -4,6 +4,7 @@ using StructureMap.Graph;
 
 namespace StructureMap
 {
+    // Tested w/ integration tests through Container.Model
     public class GraphEjector : IGraphEjector
     {
         private readonly PluginGraph _pluginGraph;

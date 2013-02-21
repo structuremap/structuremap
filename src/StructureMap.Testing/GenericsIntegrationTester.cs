@@ -127,7 +127,7 @@ namespace StructureMap.Testing
         interface INonGenereic{}
         class NonGeneric : INonGenereic{}
 
-        [Test, Ignore("need to fix by having Container.Configure write directly to the PluginGraph")]
+        [Test]
         public void Can_use_factory_method_with_open_generics()
         {
             var container = new Container();

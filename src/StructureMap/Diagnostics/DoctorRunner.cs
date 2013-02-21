@@ -40,8 +40,8 @@ namespace StructureMap.Diagnostics
             {
                 bootstrapper.BootstrapStructureMap();
 
-                // TODO -- OMG this sucks
-                var graph = (PluginGraph)ObjectFactory.Container.Model.PluginGraph;
+                // TODO -- OMG this sucks.  Maybe have the GraphLog exposed from IPipelineGraph instead
+                var graph = ObjectFactory.Container.Model.Pipeline.Outer;
 
                 if (graph.Log.ErrorCount > 0)
                 {
