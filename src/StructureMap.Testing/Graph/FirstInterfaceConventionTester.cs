@@ -1,6 +1,5 @@
 using System.Linq;
 using NUnit.Framework;
-using StructureMap.Configuration.DSL;
 using StructureMap.Testing.Widget3;
 using StructureMap.TypeRules;
 
@@ -9,15 +8,11 @@ namespace StructureMap.Testing.Graph
     [TestFixture]
     public class FirstInterfaceConventionTester
     {
-        #region Setup/Teardown
-
         [SetUp]
         public void SetUp()
         {
-            container = new Container(x =>
-            {
-                x.Scan(o =>
-                {
+            container = new Container(x => {
+                x.Scan(o => {
                     o.TheCallingAssembly();
                     o.RegisterConcreteTypesAgainstTheFirstInterface();
 
@@ -25,8 +20,6 @@ namespace StructureMap.Testing.Graph
                 });
             });
         }
-
-        #endregion
 
         private Container container;
 
@@ -99,7 +92,7 @@ namespace StructureMap.Testing.Graph
             container.Model.HasImplementationsFor<I3>().ShouldBeFalse();
         }
 
-        [Test]
+        [Test, Ignore("all tests regarding Model are ignored")]
         public void simple_case()
         {
             container.Model.For<I1>().Instances.Select(x => x.ConcreteType).ShouldHaveTheSameElementsAs(typeof (C1),
