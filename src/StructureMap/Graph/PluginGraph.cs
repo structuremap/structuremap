@@ -16,7 +16,7 @@ namespace StructureMap.Graph
     ///   Models the runtime configuration of a StructureMap Container
     /// </summary>
     [Serializable]
-    public class PluginGraph : IPluginGraph
+    public class PluginGraph : IPluginGraph, IDisposable
     {
         private readonly Cache<Type, PluginFamily> _families;
         private readonly IList<IFamilyPolicy> _policies = new List<IFamilyPolicy>();
@@ -197,6 +197,21 @@ namespace StructureMap.Graph
             {
                 return Enumerable.Empty<Instance>();
             }
+        }
+
+        void IDisposable.Dispose()
+        {
+            _singletonCache.DisposeAndClear();
+
+            _profiles.Each(x => x.SafeDispose());
+            _profiles.Clear();
+
+            var containerFamily = _families[typeof (IContainer)];
+            _families.Remove(typeof(IContainer));
+            containerFamily.RemoveAll();
+
+            _families.Each(x => x.SafeDispose());
+            _families.Clear();
         }
     }
 }

@@ -206,7 +206,7 @@ namespace StructureMap.Graph
             SetDefault(instance);
         }
 
-        public void Dispose()
+        void IDisposable.Dispose()
         {
             _instances.Each(x => x.SafeDispose());
         }

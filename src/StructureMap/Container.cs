@@ -51,10 +51,6 @@ namespace StructureMap
             _pipelineGraph.Outer.Families[typeof(IContainer)].SetDefault(new ObjectInstance(this));
         }
 
-        #region IContainer Members
-
-        private Action<Container> _onDispose = fullDispose;
-
         /// <summary>
         ///     Provides queryable access to the configured PluginType's and Instances of this Container
         /// </summary>
@@ -397,18 +393,7 @@ namespace StructureMap
         /// <returns></returns>
         public IContainer GetNestedContainer()
         {
-            var container = new Container
-            {
-                _pipelineGraph = _pipelineGraph.ToNestedGraph(),
-                _onDispose = nestedDispose
-            };
-
-            nameContainer(container);
-
-            // Fixes a mild bug.  The child container should inject itself
-            container.Configure(x => x.For<IContainer>().Use(container));
-
-            return container;
+            return new Container(_pipelineGraph.ToNestedGraph());
         }
 
         /// <summary>
@@ -427,7 +412,8 @@ namespace StructureMap
 
         public void Dispose()
         {
-            _onDispose(this);
+            _pipelineGraph.SafeDispose();
+            _pipelineGraph = null;
         }
 
         /// <summary>
@@ -437,20 +423,6 @@ namespace StructureMap
         ///     as this is not used in any logic.
         /// </summary>
         public string Name { get; set; }
-
-        private static void fullDispose(Container c)
-        {
-            c.Model.AllInstances.Each(i => { if (i != null) i.EjectObject(); });
-
-            nestedDispose(c);
-        }
-
-        private static void nestedDispose(Container c)
-        {
-            c._pipelineGraph.Dispose();
-        }
-
-        #endregion
 
         /// <summary>
         ///     Injects the given object into a Container as the default for the designated

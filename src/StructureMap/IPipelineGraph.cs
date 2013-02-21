@@ -7,7 +7,7 @@ using StructureMap.Query;
 
 namespace StructureMap
 {
-    public interface IPipelineGraph : ILifecycleContext
+    public interface IPipelineGraph : ILifecycleContext, IDisposable
     {
         /// <summary>
         /// Unwraps a nested container and/or profiles?

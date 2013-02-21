@@ -119,7 +119,7 @@ namespace StructureMap
 
         public void Dispose()
         {
-            _pluginGraph.EjectFamily(typeof(IContainer));
+            _pluginGraph.SafeDispose();
             _transientCache.DisposeAndClear();
         }
 
