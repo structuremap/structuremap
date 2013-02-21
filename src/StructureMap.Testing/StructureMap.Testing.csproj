@@ -257,6 +257,7 @@
     <Compile Include="Examples\Interception.cs" />
     <Compile Include="Examples\RegisteringWithTheAPI.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="GraphEjectorTester.cs" />
     <Compile Include="Graph\AssemblyScannerTester.cs" />
     <Compile Include="Graph\ContainerConstructorAttributeTester.cs">
       <SubType>Code</SubType>
@@ -273,6 +274,7 @@
     <Compile Include="Graph\FindAllTypesFilterTester.cs" />
     <Compile Include="Graph\FirstInterfaceConventionTester.cs" />
     <Compile Include="Graph\GenericConnectionScannerTester.cs" />
+    <Compile Include="Graph\RootPipelineGraphTester.cs" />
     <Compile Include="Graph\SingleImplementationScannerTester.cs" />
     <Compile Include="Graph\TestExplicitArguments.cs" />
     <Compile Include="Graph\FillDependenciesTester.cs">

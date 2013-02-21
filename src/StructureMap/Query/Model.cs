@@ -11,6 +11,7 @@ namespace StructureMap.Query
         private readonly IContainer _container;
         private readonly IPipelineGraph _graph;
 
+        // TODO -- have this just take in IPipelineGraph, and IPipelineGraph will now expose all PluginGraph's
         internal Model(IPipelineGraph graph, PluginGraph pluginGraph, IContainer container)
         {
             _graph = graph;
@@ -20,7 +21,15 @@ namespace StructureMap.Query
 
         #region IModel Members
 
-        private IEnumerable<IPluginTypeConfiguration> pluginTypes { get { return _graph.GetPluginTypes(_container); } }
+        private IEnumerable<IPluginTypeConfiguration> pluginTypes
+        {
+            get
+            {
+                // TODO -- do this by using the AllPluginTypes
+                
+                return _graph.GetPluginTypes(_container);
+            }
+        }
 
         public bool HasDefaultImplementationFor(Type pluginType)
         {
@@ -85,7 +94,7 @@ namespace StructureMap.Query
         /// <param name="filter"></param>
         public void EjectAndRemovePluginTypes(Func<Type, bool> filter)
         {
-            _graph.Remove(filter);
+            _graph.Ejector.Remove(filter);
         }
 
         /// <summary>
@@ -94,7 +103,7 @@ namespace StructureMap.Query
         /// <param name="pluginType"></param>
         public void EjectAndRemove(Type pluginType)
         {
-            _graph.Remove(pluginType);
+            _graph.Ejector.Remove(pluginType);
         }
 
         /// <summary>

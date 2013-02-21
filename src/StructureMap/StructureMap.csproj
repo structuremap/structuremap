@@ -136,6 +136,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="BuildSession.cs" />
+    <Compile Include="ComplexPipelineGraph.cs" />
     <Compile Include="Configuration\DSL\Expressions\GenericFamilyExpression.cs" />
     <Compile Include="Configuration\IPluginGraphConfiguration.cs" />
     <Compile Include="Configuration\MalformedAliasException.cs" />
@@ -152,6 +153,7 @@
     <Compile Include="Diagnostics\WhatDoIHaveWriter.cs" />
     <Compile Include="Exceptions\StructureMapConfigurationException.cs" />
     <Compile Include="ExplicitArgsExpression.cs" />
+    <Compile Include="GraphEjector.cs" />
     <Compile Include="Graph\CloseGenericFamilyPolicy.cs" />
     <Compile Include="Graph\Constructor.cs" />
     <Compile Include="Graph\FamilyAttribute.cs" />
@@ -165,6 +167,7 @@
     <Compile Include="Graph\IPluginGraph.cs" />
     <Compile Include="Graph\TypePool.cs" />
     <Compile Include="IBuildSession.cs" />
+    <Compile Include="IGraphEjector.cs" />
     <Compile Include="Interceptors\MatchedTypeInterceptor.cs" />
     <Compile Include="IPipelineGraph.cs" />
     <Compile Include="PipelineGraph.cs" />
@@ -184,7 +187,7 @@
     <Compile Include="Pipeline\PrototypeInstance.cs" />
     <Compile Include="Pipeline\ReaderWriterLockExtensions.cs" />
     <Compile Include="Pipeline\ReferencedInstance.cs" />
-    <Compile Include="Pipeline\TransientObjectCache.cs" />
+    <Compile Include="Pipeline\NestedContainerTransientObjectCache.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

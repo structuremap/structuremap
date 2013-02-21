@@ -5,6 +5,7 @@ using StructureMap.Graph;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
 using StructureMap.Query;
+using StructureMap.Util;
 
 namespace StructureMap
 {
@@ -12,11 +13,15 @@ namespace StructureMap
     {
         private readonly PluginGraph _pluginGraph;
         private readonly IObjectCache _transientCache;
+        private readonly Cache<string, IPipelineGraph> _profiles; 
 
         public RootPipelineGraph(PluginGraph pluginGraph)
         {
             _pluginGraph = pluginGraph;
             _transientCache = new NulloTransientCache();
+            _profiles =
+                new Cache<string, IPipelineGraph>(
+                    name => new ComplexPipelineGraph(this, _pluginGraph.Profile(name), new NulloTransientCache()));
         }
 
         public IObjectCache Singletons
@@ -34,6 +39,7 @@ namespace StructureMap
             return this;
         }
 
+        // TODO -- what if we cache these on the Instance itself?
         public InstanceInterceptor FindInterceptor(Type concreteType)
         {
             return _pluginGraph.InterceptorLibrary.FindInterceptor(concreteType);
@@ -56,9 +62,7 @@ namespace StructureMap
 
         public void EachInstance(Action<Type, Instance> action)
         {
-            _pluginGraph.Families.Each(family => {
-                family.Instances.Each(i => action(family.PluginType, i));
-            });
+            _pluginGraph.EachInstance(action);
         }
 
         public IEnumerable<Instance> GetAllInstances()
@@ -68,17 +72,17 @@ namespace StructureMap
 
         public IEnumerable<Instance> GetAllInstances(Type pluginType)
         {
-            return _pluginGraph.Families[pluginType].Instances;
+            return _pluginGraph.AllInstances(pluginType);
         }
 
         public Instance FindInstance(Type pluginType, string name)
         {
-            return _pluginGraph.Families[pluginType].GetInstance(name);
+            return _pluginGraph.FindInstance(pluginType, name);
         }
 
         public IPipelineGraph ForProfile(string profile)
         {
-            throw new NotImplementedException();
+            return _profiles[profile];
         }
 
         public void ImportFrom(PluginGraph graph)
@@ -101,31 +105,28 @@ namespace StructureMap
             }
         }
 
-        public void EjectAllInstancesOf<T>()
-        {
-            _pluginGraph.EjectFamily(typeof(T));
-        }
-
         public void Dispose()
         {
-            _pluginGraph.EjectFamily(typeof (IContainer));
+            _pluginGraph.EjectFamily(typeof(IContainer));
             _transientCache.DisposeAndClear();
-        }
-
-        public void Remove(Func<Type, bool> filter)
-        {
-            _pluginGraph.Families.Where(x => filter(x.PluginType)).Select(x => x.PluginType)
-                        .ToArray().Each(x => _pluginGraph.EjectFamily(x));
-        }
-
-        public void Remove(Type pluginType)
-        {
-            _pluginGraph.EjectFamily(pluginType);
         }
 
         public IPipelineGraph ToNestedGraph()
         {
-            throw new NotImplementedException();
+            return new ComplexPipelineGraph(this, new PluginGraph(), new NestedContainerTransientObjectCache());
+        }
+
+        public IEnumerable<Type> AllPluginTypes()
+        {
+            return _pluginGraph.Families.Select(x => x.PluginType);
+        }
+
+        public IGraphEjector Ejector
+        {
+            get
+            {
+                return new GraphEjector(_pluginGraph);
+            }
         }
     }
 }

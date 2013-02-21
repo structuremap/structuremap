@@ -56,6 +56,9 @@ namespace StructureMap.Query
             throw new NotImplementedException();
         }
 
-        Type IFamily.PluginType { get; private set; }
+        Type IFamily.PluginType
+        {
+            get { return _family.PluginType; }
+        }
     }
 }

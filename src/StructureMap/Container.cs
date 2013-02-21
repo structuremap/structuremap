@@ -373,7 +373,7 @@ namespace StructureMap
         /// <typeparam name="T"></typeparam>
         public void EjectAllInstancesOf<T>()
         {
-            _pipelineGraph.EjectAllInstancesOf<T>();
+            _pipelineGraph.Ejector.EjectAllInstancesOf<T>();
         }
 
         /// <summary>

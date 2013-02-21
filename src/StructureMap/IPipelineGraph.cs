@@ -30,15 +30,17 @@ namespace StructureMap
         [Obsolete("This needs to go away.  We'll just have Container.Configure write directly to the PluginGraph")]
         void ImportFrom(PluginGraph graph);
 
+        void Dispose();
+
         // This is borderline awful. 
+        [Obsolete("replace with new Model class")]
         IEnumerable<IPluginTypeConfiguration> GetPluginTypes(IContainer container);
 
+        IGraphEjector Ejector { get; }
 
-        void EjectAllInstancesOf<T>();
-        void Dispose();
-        void Remove(Func<Type, bool> filter);
-        void Remove(Type pluginType);
 
         IPipelineGraph ToNestedGraph();
+
+        IEnumerable<Type> AllPluginTypes();
     }
 }

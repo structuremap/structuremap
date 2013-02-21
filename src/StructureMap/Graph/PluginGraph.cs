@@ -177,7 +177,40 @@ namespace StructureMap.Graph
 
         public void EjectFamily(Type pluginType)
         {
-            throw new NotImplementedException();
+            if (_families.Has(pluginType))
+            {
+                var family = _families[pluginType];
+                family.SafeDispose();
+
+                _families.Remove(pluginType);
+            }
+        }
+
+        public void EachInstance(Action<Type, Instance> action)
+        {
+            _families.Each(family =>
+            {
+                family.Instances.Each(i => action(family.PluginType, i));
+            });
+        }
+
+        public Instance FindInstance(Type pluginType, string name)
+        {
+            if (!_families.Has(pluginType)) return null;
+
+            return _families[pluginType].GetInstance(name);
+        }
+
+        public IEnumerable<Instance> AllInstances(Type pluginType)
+        {
+            if (_families.Has(pluginType))
+            {
+                return _families[pluginType].Instances;
+            }
+            else
+            {
+                return Enumerable.Empty<Instance>();
+            }
         }
     }
 }

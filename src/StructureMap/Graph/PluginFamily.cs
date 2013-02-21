@@ -13,7 +13,7 @@ namespace StructureMap.Graph
     /// the system.  A PluginFamily defines a CLR Type that StructureMap can build, and all of the possible
     /// Plugin’s implementing the CLR Type.
     /// </summary>
-    public class PluginFamily : HasScope
+    public class PluginFamily : HasScope, IDisposable
     {
         private readonly Cache<string, Instance> _instances = new Cache<string, Instance>(delegate { return null; });
         private readonly Type _pluginType;
@@ -215,6 +215,11 @@ namespace StructureMap.Graph
             }
 
             SetDefault(instance);
+        }
+
+        public void Dispose()
+        {
+            _instances.Each(x => x.SafeDispose());
         }
     }
 }

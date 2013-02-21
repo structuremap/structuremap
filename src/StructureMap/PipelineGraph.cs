@@ -10,7 +10,7 @@ using StructureMap.TypeRules;
 
 namespace StructureMap
 {
-    public class PipelineGraph : IDisposable, IPipelineGraph
+    public class PipelineGraph : IDisposable, IPipelineGraph, IGraphEjector
     {
         private readonly Dictionary<Type, IInstanceFactory> _factories
             = new Dictionary<Type, IInstanceFactory>();
@@ -43,7 +43,7 @@ namespace StructureMap
         {
             _profileManager = profileManager;
             _log = log;
-            _transientCache = new TransientObjectCache();
+            _transientCache = new NestedContainerTransientObjectCache();
         }
 
         public GraphLog Log
@@ -114,6 +114,11 @@ namespace StructureMap
             clone.EjectAllInstancesOf<IContainer>();
 
             return clone;
+        }
+
+        public IEnumerable<Type> AllPluginTypes()
+        {
+            throw new NotImplementedException();
         }
 
         [Obsolete("HATE this")]
@@ -285,6 +290,11 @@ namespace StructureMap
         {
             ForType(pluginType).RemoveInstance(instance);
             _profileManager.RemoveInstance(pluginType, instance);
+        }
+
+        public IGraphEjector Ejector
+        {
+            get { return this; }
         }
     }
 }
