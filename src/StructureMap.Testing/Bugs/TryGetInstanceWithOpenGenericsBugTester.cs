@@ -27,7 +27,9 @@ namespace StructureMap.Testing.Bugs
         [Test]
         public void try_get_instance_fills_from_open_generic()
         {
-            var container = new Container(x => { x.For(typeof (IOpenClass<>)).Add(typeof (ClosedClass<>)); });
+            var container = new Container(x => {
+                x.For(typeof (IOpenClass<>)).Add(typeof (ClosedClass<>));
+            });
 
             container.TryGetInstance<IOpenClass<string>>().ShouldBeOfType<ClosedClass<string>>();
         }
@@ -43,8 +45,6 @@ namespace StructureMap.Testing.Bugs
                     o.ConnectImplementationsToTypesClosing(typeof (IOpenClass<>));
                 });
             });
-
-            Debug.WriteLine(container.WhatDoIHave());
 
             container.GetInstance<IOpenClass<string>>().ShouldBeOfType<ClosedStringClass>();
             container.TryGetInstance<IOpenClass<string>>().ShouldBeOfType<ClosedStringClass>();
