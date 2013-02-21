@@ -199,19 +199,22 @@ namespace StructureMap.Testing
         [Test]
         public void GenericsTypeAndProfileOrMachine()
         {
-            var registry = new Registry();
-            registry.For(typeof(IHelper<>)).Use(typeof(Helper<>));
-            registry.For(typeof (IService<>)).Use(typeof (Service<>)).Named("Default");
-            registry.For(typeof (IService<>)).Add(typeof (ServiceWithPlug<>)).Named("Plugged");
-            registry.For(typeof(IPlug<>)).Use(typeof(ConcretePlug<>));
+            var container = new Container(registry => {
+                registry.For(typeof(IHelper<>)).Use(typeof(Helper<>));
+                registry.For(typeof(IService<>)).Use(typeof(Service<>)).Named("Default");
+                registry.For(typeof(IService<>)).Add(typeof(ServiceWithPlug<>)).Named("Plugged");
+                registry.For(typeof(IPlug<>)).Use(typeof(ConcretePlug<>));
 
-            var pluginGraph = registry.Build();
+                registry.Profile("1", x =>
+                {
+                    x.For(typeof(IService<>)).Use("Default");
+                });
 
-            pluginGraph.Profile("1").Families[typeof(IService<>)].SetDefault(new ReferencedInstance("Default"));
-            pluginGraph.Profile("2").Families[typeof (IService<>)].SetDefault(new ReferencedInstance("Plugged"));
-
-
-            var container = new Container(pluginGraph);
+                registry.Profile("2", x =>
+                {
+                    x.For(typeof(IService<>)).Use("Plugged");
+                });
+            });
 
             container.GetProfile("1").GetInstance(typeof (IService<string>)).ShouldBeOfType<Service<string>>();
 

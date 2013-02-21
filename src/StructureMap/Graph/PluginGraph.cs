@@ -36,6 +36,8 @@ namespace StructureMap.Graph
         {
             ProfileName = "DEFAULT";
 
+            _profiles = new LightweightCache<string, PluginGraph>(name => new PluginGraph{ProfileName = name});
+
             _families = new Cache<Type, PluginFamily>(type =>
             {
                 return _policies.FirstValue(x => x.Build(type)) ?? new PluginFamily(type);
