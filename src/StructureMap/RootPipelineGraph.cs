@@ -116,17 +116,14 @@ namespace StructureMap
             return new ComplexPipelineGraph(this, new PluginGraph(), new NestedContainerTransientObjectCache());
         }
 
-        public IEnumerable<Type> AllPluginTypes()
+        public IEnumerable<PluginGraph> AllGraphs()
         {
-            return _pluginGraph.Families.Select(x => x.PluginType);
+            yield return _pluginGraph;
         }
 
-        public IGraphEjector Ejector
+        public PluginGraph Outer
         {
-            get
-            {
-                return new GraphEjector(_pluginGraph);
-            }
+            get { return _pluginGraph; }
         }
     }
 }

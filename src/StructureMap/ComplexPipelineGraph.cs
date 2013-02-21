@@ -101,23 +101,25 @@ namespace StructureMap
             // TODO -- run through and dispose of all instances?
         }
 
-        public IGraphEjector Ejector
-        {
-            get
-            {
-                return new GraphEjector(_outer);
-            }
-        }
-
         // Identical to RootPipelineGraph
         public IPipelineGraph ToNestedGraph()
         {
             return new ComplexPipelineGraph(this, new PluginGraph(), new NestedContainerTransientObjectCache());
         }
 
-        public IEnumerable<Type> AllPluginTypes()
+        public IEnumerable<PluginGraph> AllGraphs()
         {
-            return _outer.Families.Select(x => x.PluginType).Union(_parent.AllPluginTypes());
+            foreach (var pluginGraph in _parent.AllGraphs())
+            {
+                yield return pluginGraph;
+            }
+
+            yield return _outer;
+        }
+
+        public PluginGraph Outer
+        {
+            get { return _outer; }
         }
     }
 }

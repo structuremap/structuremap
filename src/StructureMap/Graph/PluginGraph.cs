@@ -54,7 +54,6 @@ namespace StructureMap.Graph
             return _profiles[name];
         }
 
-        // TODO -- might simplify this later
         public void AddFamilyPolicy(IFamilyPolicy policy)
         {
             _policies.Add(policy);
@@ -76,7 +75,7 @@ namespace StructureMap.Graph
             set { _log = value; }
         }
 
-        // TODO -- do something tighter here later
+        // TODO -- do something tighter here later?
         public Cache<Type, PluginFamily> Families
         {
             get { return _families; }

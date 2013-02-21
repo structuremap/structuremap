@@ -36,11 +36,12 @@ namespace StructureMap
         [Obsolete("replace with new Model class")]
         IEnumerable<IPluginTypeConfiguration> GetPluginTypes(IContainer container);
 
-        IGraphEjector Ejector { get; }
+        
 
 
         IPipelineGraph ToNestedGraph();
 
-        IEnumerable<Type> AllPluginTypes();
+        IEnumerable<PluginGraph> AllGraphs();
+        PluginGraph Outer { get; }
     }
 }

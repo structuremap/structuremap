@@ -116,9 +116,14 @@ namespace StructureMap
             return clone;
         }
 
-        public IEnumerable<Type> AllPluginTypes()
+        public IEnumerable<PluginGraph> AllGraphs()
         {
-            throw new NotImplementedException();
+            yield return _graph;
+        }
+
+        public PluginGraph Outer
+        {
+            get { return _graph; }
         }
 
         [Obsolete("HATE this")]
@@ -290,11 +295,6 @@ namespace StructureMap
         {
             ForType(pluginType).RemoveInstance(instance);
             _profileManager.RemoveInstance(pluginType, instance);
-        }
-
-        public IGraphEjector Ejector
-        {
-            get { return this; }
         }
     }
 }
