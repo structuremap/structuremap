@@ -97,8 +97,8 @@ namespace StructureMap
 
         public void Dispose()
         {
-            // no-op;
-            // TODO -- run through and dispose of all instances?
+            _transientCache.DisposeAndClear();
+            _outer.SafeDispose();
         }
 
         // Identical to RootPipelineGraph
