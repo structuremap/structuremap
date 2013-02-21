@@ -283,7 +283,10 @@ namespace StructureMap
                 var registry = new ConfigurationExpression();
                 configure(registry);
 
-                registry.As<IPluginGraphConfiguration>().Configure(_pipelineGraph.Outer);
+                var builder = new PluginGraphBuilder(_pipelineGraph.Outer);
+                builder.Add(registry);
+
+                builder.RunConfigurations();
             }
         }
 

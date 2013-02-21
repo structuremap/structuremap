@@ -21,6 +21,11 @@ namespace StructureMap
             _graph = new PluginGraph();
         }
 
+        public PluginGraphBuilder(PluginGraph graph)
+        {
+            _graph = graph;
+        }
+
         public PluginGraphBuilder Add(IPluginGraphConfiguration configuration)
         {
             _configurations.Add(configuration);
@@ -35,15 +40,7 @@ namespace StructureMap
         /// <returns></returns>
         public PluginGraph Build()
         {
-            _configurations.Each(x => {
-                // Change this to using the FubuCore.Description later
-                _graph.Log.StartSource(x.ToString());
-                x.Register(this);
-                x.Configure(_graph);
-            });
-
-            var types = new TypePool(_graph);
-            _scanners.Each(x => x.ScanForTypes(types, _graph));
+            RunConfigurations();
 
             _graph.AddFamilyPolicy(new CloseGenericFamilyPolicy(_graph));
 
@@ -53,6 +50,19 @@ namespace StructureMap
             _graph.Log.AssertFailures();
 
             return _graph;
+        }
+
+        public void RunConfigurations()
+        {
+            _configurations.Each(x => {
+                // Change this to using the FubuCore.Description later
+                _graph.Log.StartSource(x.ToString());
+                x.Register(this);
+                x.Configure(_graph);
+            });
+
+            var types = new TypePool(_graph);
+            _scanners.Each(x => x.ScanForTypes(types, _graph));
         }
 
         public void AddScanner(AssemblyScanner scanner)
