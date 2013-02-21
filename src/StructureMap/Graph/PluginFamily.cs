@@ -48,6 +48,11 @@ namespace StructureMap.Graph
             instance.Parent = this;
         }
 
+        public void SetDefault(Func<Instance> defaultInstance)
+        {
+            _defaultInstance = new Lazy<Instance>(defaultInstance);
+        }
+
         public void SetDefault(Instance instance)
         {
             AddInstance(instance);
