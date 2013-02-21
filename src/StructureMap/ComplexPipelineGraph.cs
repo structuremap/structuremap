@@ -85,11 +85,6 @@ namespace StructureMap
             return _parent.ForProfile(profile);
         }
 
-        public void ImportFrom(PluginGraph graph)
-        {
-            throw new NotImplementedException();
-        }
-
         public IEnumerable<IPluginTypeConfiguration> GetPluginTypes(IContainer container)
         {
             throw new NotImplementedException();

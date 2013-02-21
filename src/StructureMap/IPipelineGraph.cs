@@ -27,11 +27,6 @@ namespace StructureMap
 
         IPipelineGraph ForProfile(string profile);
 
-        [Obsolete("This needs to go away.  We'll just have Container.Configure write directly to the PluginGraph")]
-        void ImportFrom(PluginGraph graph);
-
-        void Dispose();
-
         // This is borderline awful. 
         [Obsolete("replace with new Model class")]
         IEnumerable<IPluginTypeConfiguration> GetPluginTypes(IContainer container);

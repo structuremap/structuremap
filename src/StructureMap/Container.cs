@@ -290,6 +290,12 @@ namespace StructureMap
             }
         }
 
+        public IContainer GetProfile(string profileName)
+        {
+            var pipeline = _pipelineGraph.ForProfile(profileName);
+            return new Container(pipeline);
+        }
+
         /// <summary>
         ///     Returns a report detailing the complete configuration of all PluginTypes and Instances
         /// </summary>
@@ -396,7 +402,10 @@ namespace StructureMap
         /// <returns></returns>
         public IContainer GetNestedContainer()
         {
-            return new Container(_pipelineGraph.ToNestedGraph());
+            var container =  new Container(_pipelineGraph.ToNestedGraph());
+            container.Name = "Nested-" + container.Name;
+
+            return container;
         }
 
         /// <summary>
@@ -406,12 +415,9 @@ namespace StructureMap
         /// <returns></returns>
         public IContainer GetNestedContainer(string profileName)
         {
-            IContainer container = GetNestedContainer();
-            container.SetDefaultsToProfile(profileName);
-
-            return container;
+            var pipeine = _pipelineGraph.ForProfile(profileName).ToNestedGraph();
+            return new Container(pipeine);
         }
-
 
         public void Dispose()
         {

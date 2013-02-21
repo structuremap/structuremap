@@ -131,12 +131,14 @@ namespace StructureMap
         /// <param name="object"></param>
         void Inject(Type pluginType, object @object);
 
-
         /// <summary>
-        /// Sets the default instance for all PluginType's to the designated Profile.
+        /// Gets a new child container for the named profile using that profile's defaults with
+        /// fallback to the original parent
         /// </summary>
-        /// <param name="profile"></param>
-        void SetDefaultsToProfile(string profile);
+        /// <param name="profileName"></param>
+        /// <returns></returns>
+        IContainer GetProfile(string profileName);
+        
 
         /// <summary>
         /// Returns a report detailing the complete configuration of all PluginTypes and Instances

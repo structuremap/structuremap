@@ -37,11 +37,10 @@ namespace StructureMap.Testing.Configuration.DSL
 
             });
 
-            container.SetDefaultsToProfile(theProfileName);
+            var profile = container.GetProfile(theProfileName);
 
-
-            container.GetInstance<IWidget>().ShouldBeOfType<AWidget>();
-            container.GetInstance<Rule>().ShouldBeOfType<DefaultRule>();
+            profile.GetInstance<IWidget>().ShouldBeOfType<AWidget>();
+            profile.GetInstance<Rule>().ShouldBeOfType<DefaultRule>();
         }
 
 
@@ -59,10 +58,10 @@ namespace StructureMap.Testing.Configuration.DSL
                 });
             });
 
-            container.SetDefaultsToProfile(theProfileName);
+            var profile = container.GetProfile(theProfileName);
 
-            container.GetInstance<IWidget>().ShouldBeOfType<AWidget>();
-            container.GetInstance<Rule>().ShouldBeOfType<Rule>();
+            profile.GetInstance<IWidget>().ShouldBeOfType<AWidget>();
+            profile.GetInstance<Rule>().ShouldBeOfType<Rule>();
         }
 
 
@@ -80,10 +79,11 @@ namespace StructureMap.Testing.Configuration.DSL
                 });
 
             });
-            container.SetDefaultsToProfile(theProfileName);
 
-            container.GetInstance<IWidget>().ShouldBeOfType<AWidget>();
-            container.GetInstance<Rule>().ShouldBeOfType<DefaultRule>();
+            var profile = container.GetProfile(theProfileName);
+
+            profile.GetInstance<IWidget>().ShouldBeOfType<AWidget>();
+            profile.GetInstance<Rule>().ShouldBeOfType<DefaultRule>();
         }
 
         [Test]

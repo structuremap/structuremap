@@ -48,6 +48,11 @@ namespace StructureMap.Testing.Widget
         {
             return _Color != null ? _Color.GetHashCode() : 0;
         }
+
+        public override string ToString()
+        {
+            return string.Format("Color: {0}", Color);
+        }
     }
 
     [Pluggable("AWidget")]

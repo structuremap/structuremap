@@ -97,11 +97,6 @@ namespace StructureMap
             return _profiles[profile];
         }
 
-        public void ImportFrom(PluginGraph graph)
-        {
-            throw new NotImplementedException();
-        }
-
         public IEnumerable<IPluginTypeConfiguration> GetPluginTypes(IContainer container)
         {
             foreach (var family in _pluginGraph.Families)

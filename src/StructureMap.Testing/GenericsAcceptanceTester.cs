@@ -195,13 +195,10 @@ namespace StructureMap.Testing
                 });
             });
 
-            container.SetDefaultsToProfile("1");
-
-            container.GetInstance<IService<string>>().ShouldBeOfType<Service<string>>();
+            container.GetProfile("1").GetInstance<IService<string>>().ShouldBeOfType<Service<string>>();
 
 
-            container.SetDefaultsToProfile("2");
-            container.GetInstance<IService<int>>().ShouldBeOfType<Service2<int>>();
+            container.GetProfile("2").GetInstance<IService<int>>().ShouldBeOfType<Service2<int>>();
         }
 
         [Test]
