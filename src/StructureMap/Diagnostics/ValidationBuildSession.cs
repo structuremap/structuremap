@@ -7,6 +7,7 @@ using System.Text;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Diagnostics
 {
@@ -106,8 +107,9 @@ namespace StructureMap.Diagnostics
             _explicitInstances = pipelineGraph.GetAllInstances();
             _errors = new ErrorCollection();
 
-            pipelineGraph.EachInstance((t, i) =>
-            {
+            pipelineGraph.EachInstance((t, i) => {
+                if (t.IsOpenGeneric()) return;
+
                 _buildStack = new BuildStack();
                 validateInstance(t, i);
             });
