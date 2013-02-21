@@ -70,5 +70,10 @@ namespace StructureMap.Pipeline
         {
             return string.Format("\"{0}\"", _referenceKey);
         }
+
+        public override Instance CloseType(Type[] types)
+        {
+            return this;
+        }
     }
 }

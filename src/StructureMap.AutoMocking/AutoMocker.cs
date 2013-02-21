@@ -6,12 +6,12 @@ using StructureMap.Graph;
 
 namespace StructureMap.AutoMocking
 {
-    public interface IAutoMocker<TARGETCLASS> where TARGETCLASS : class
+    public interface IAutoMocker<TTargetClass> where TTargetClass : class
     {
         /// <summary>
         ///Gets an instance of the ClassUnderTest with mock objects (or stubs) pushed in for all of its dependencies
         /// </summary>
-        TARGETCLASS ClassUnderTest { get; }
+        TTargetClass ClassUnderTest { get; }
 
         /// <summary>
         /// Accesses the underlying AutoMockedContainer
@@ -85,23 +85,23 @@ namespace StructureMap.AutoMocking
     /// <summary>
     /// The Auto Mocking Container for StructureMap
     /// </summary>
-    /// <typeparam name="TARGETCLASS"></typeparam>
-    public class AutoMocker<TARGETCLASS> : IAutoMocker<TARGETCLASS> where TARGETCLASS : class
+    /// <typeparam name="TTargetClass"></typeparam>
+    public class AutoMocker<TTargetClass> : IAutoMocker<TTargetClass> where TTargetClass : class
     {
-        private TARGETCLASS _classUnderTest;
+        private TTargetClass _classUnderTest;
         protected AutoMockedContainer _container;
         protected ServiceLocator _serviceLocator;
 
         /// <summary>
         ///Gets an instance of the ClassUnderTest with mock objects (or stubs) pushed in for all of its dependencies
         /// </summary>
-        public TARGETCLASS ClassUnderTest
+        public TTargetClass ClassUnderTest
         {
             get
             {
                 if (_classUnderTest == null)
                 {
-                    _classUnderTest = _container.GetInstance<TARGETCLASS>();
+                    _classUnderTest = _container.GetInstance<TTargetClass>();
                 }
 
                 return _classUnderTest;
@@ -119,7 +119,7 @@ namespace StructureMap.AutoMocking
         /// </summary>
         public void PartialMockTheClassUnderTest()
         {
-            _classUnderTest = _serviceLocator.PartialMock<TARGETCLASS>(getConstructorArgs());
+            _classUnderTest = _serviceLocator.PartialMock<TTargetClass>(getConstructorArgs());
         }
 
         /// <summary>
@@ -130,11 +130,6 @@ namespace StructureMap.AutoMocking
         /// <returns></returns>
         public T Get<T>() where T : class
         {
-            if (!_container.Model.HasDefaultImplementationFor(typeof (T)))
-            {
-                _container.Inject(_serviceLocator.Service<T>());
-            }
-
             return _container.GetInstance<T>();
         }
 
@@ -227,7 +222,7 @@ namespace StructureMap.AutoMocking
 
         private object[] getConstructorArgs()
         {
-            ConstructorInfo ctor = Constructor.GetGreediestConstructor(typeof (TARGETCLASS));
+            ConstructorInfo ctor = Constructor.GetGreediestConstructor(typeof (TTargetClass));
             var list = new List<object>();
             foreach (ParameterInfo parameterInfo in ctor.GetParameters())
             {

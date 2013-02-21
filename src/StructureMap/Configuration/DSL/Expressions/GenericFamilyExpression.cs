@@ -95,6 +95,14 @@ namespace StructureMap.Configuration.DSL.Expressions
             return instance;
         }
 
+        public ReferencedInstance Use(string instanceKey)
+        {
+            var instance = new ReferencedInstance(instanceKey);
+            Use(instance);
+
+            return instance;
+        }
+
 
         /// <summary>
         /// Shortcut method to add an additional Instance to this Plugin Type

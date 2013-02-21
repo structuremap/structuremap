@@ -42,7 +42,7 @@ namespace StructureMap
         {
             RunConfigurations();
 
-            _graph.AddFamilyPolicy(new CloseGenericFamilyPolicy(_graph));
+            addCloseGenericPolicyTo(_graph);
 
             var funcInstance = new FactoryTemplate(typeof(LazyInstance<>));
             _graph.Families[typeof(Func<>)].SetDefault(funcInstance);
@@ -50,6 +50,14 @@ namespace StructureMap
             _graph.Log.AssertFailures();
 
             return _graph;
+        }
+
+        private void addCloseGenericPolicyTo(PluginGraph graph)
+        {
+            var policy = new CloseGenericFamilyPolicy(graph);
+            graph.AddFamilyPolicy(policy);
+
+            graph.Profiles.Each(addCloseGenericPolicyTo);
         }
 
         public void RunConfigurations()
