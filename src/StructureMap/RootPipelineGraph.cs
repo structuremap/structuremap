@@ -29,10 +29,8 @@ namespace StructureMap
             var expression = new ConfigurationExpression();
             action(expression);
 
-            var builder = new PluginGraphBuilder();
-            builder.Add(expression);
+            var graph = expression.BuildGraph();
 
-            var graph = builder.Build();
             return new RootPipelineGraph(graph);
         }
 

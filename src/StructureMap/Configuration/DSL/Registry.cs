@@ -72,7 +72,7 @@ namespace StructureMap.Configuration.DSL
         /// <typeparam name="T"></typeparam>
         public void IncludeRegistry<T>() where T : Registry, new()
         {
-            alter = g => new T().As<IPluginGraphConfiguration>().Configure(g);
+            IncludeRegistry(new T());
         }
 
         /// <summary>
@@ -81,7 +81,9 @@ namespace StructureMap.Configuration.DSL
         /// <param name="registry"></param>
         public void IncludeRegistry(Registry registry)
         {
-            alter = graph => registry.As<IPluginGraphConfiguration>().Configure(graph);
+            alter = graph => {
+                registry.As<IPluginGraphConfiguration>().Configure(graph);
+            };
         }
 
         /// <summary>

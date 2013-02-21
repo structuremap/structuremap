@@ -434,8 +434,6 @@ namespace StructureMap.Testing.Graph
             var container =
                 new Container(x => { x.For<ClassWithNoArgs>().Use(new SpecialInstance()); });
 
-            Debug.WriteLine(container.WhatDoIHave());
-
             var address = new Address();
 
 
