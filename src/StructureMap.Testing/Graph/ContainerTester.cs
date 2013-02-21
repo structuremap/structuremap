@@ -110,13 +110,10 @@ namespace StructureMap.Testing.Graph
 
             assertColorIs(container, "Orange");
 
-            container.SetDefaultsToProfile("Red");
-            assertColorIs(container, "Red");
+            assertColorIs(container.GetProfile("Red"), "Red");
 
-            container.SetDefaultsToProfile("Blue");
-            assertColorIs(container, "Blue");
+            assertColorIs(container.GetProfile("Blue"), "Blue");
 
-            container.SetDefaultsToProfile(string.Empty);
             assertColorIs(container, "Orange");
         }
 

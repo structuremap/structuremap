@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace StructureMap.Util
 {
+    // TODO -- at least use reader/writer locks
     [Obsolete("Replace this with the one from FubuCore")]
     [Serializable] // TODO -- at a minimum, use ReaderWriterLockSlim
     public class Cache<TKey, TValue> : IEnumerable<TValue> where TValue : class

@@ -12,6 +12,9 @@ using StructureMap;
 
 namespace StructureMap.Graph
 {
+    // TODO -- might eliminate the cache and use a dictionary directly
+    // TODO -- go to reader writer locks
+
     /// <summary>
     ///   Models the runtime configuration of a StructureMap Container
     /// </summary>
@@ -143,7 +146,7 @@ namespace StructureMap.Graph
 
         public bool HasInstance(Type pluginType, string name)
         {
-            if (!_families.Has(pluginType))
+            if (!HasFamily(pluginType))
             {
                 return false;
             }
@@ -151,9 +154,24 @@ namespace StructureMap.Graph
             return _families[pluginType].GetInstance(name) != null;
         }
 
+        public bool HasFamily(Type pluginType)
+        {
+            if (_families.Has(pluginType)) return true;
+
+            // TODO -- this needs better locking mechanics
+            var newFamily = _policies.Where(x => x.AppliesToHasFamilyChecks).FirstValue(x => x.Build(pluginType));
+            if (newFamily != null)
+            {
+                _families[pluginType] = newFamily;
+                return true;
+            }
+
+            return false;
+        }
+
         public bool HasDefaultForPluginType(Type pluginType)
         {
-            if (!Families.Has(pluginType))
+            if (!HasFamily(pluginType))
             {
                 return false;
             }
@@ -182,14 +200,14 @@ namespace StructureMap.Graph
 
         public Instance FindInstance(Type pluginType, string name)
         {
-            if (!_families.Has(pluginType)) return null;
+            if (!HasFamily(pluginType)) return null;
 
             return _families[pluginType].GetInstance(name) ?? _families[pluginType].MissingInstance;
         }
 
         public IEnumerable<Instance> AllInstances(Type pluginType)
         {
-            if (_families.Has(pluginType))
+            if (HasFamily(pluginType))
             {
                 return _families[pluginType].Instances;
             }

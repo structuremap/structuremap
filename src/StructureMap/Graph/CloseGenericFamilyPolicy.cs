@@ -2,6 +2,7 @@ using System;
 
 namespace StructureMap.Graph
 {
+    // Covered by testing integrated w/ the container
     public class CloseGenericFamilyPolicy : IFamilyPolicy
     {
         private readonly PluginGraph _graph;
@@ -25,6 +26,11 @@ namespace StructureMap.Graph
             var templatedParameterTypes = type.GetGenericArguments();
 
             return basicFamily.CreateTemplatedClone(templatedParameterTypes);
+        }
+
+        public bool AppliesToHasFamilyChecks
+        {
+            get { return true; }
         }
 
         public bool Matches(Type type)

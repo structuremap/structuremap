@@ -167,13 +167,8 @@ namespace StructureMap.Testing
                 });
             });
 
-            container.SetDefaultsToProfile("1");
-
-            container.GetInstance<IService<string>>().ShouldBeOfType<Service<string>>();
-
-            container.SetDefaultsToProfile("2");
-
-            container.GetInstance<IService<string>>().ShouldBeOfType<Service2<string>>();
+            container.GetProfile("1").GetInstance<IService<string>>().ShouldBeOfType<Service<string>>();
+            container.GetProfile("2").GetInstance<IService<string>>().ShouldBeOfType<Service2<string>>();
         }
 
         [Test]
@@ -218,16 +213,12 @@ namespace StructureMap.Testing
 
             var container = new Container(pluginGraph);
 
+            container.GetProfile("1").GetInstance(typeof (IService<string>)).ShouldBeOfType<Service<string>>();
 
-            container.SetDefaultsToProfile("1");
-            container.GetInstance(typeof (IService<string>)).ShouldBeOfType<Service<string>>();
-
-            container.SetDefaultsToProfile("2");
-            container.GetInstance(typeof (IService<string>))
+            container.GetProfile("2").GetInstance(typeof (IService<string>))
                                            .ShouldBeOfType<ServiceWithPlug<string>>();
 
-            container.SetDefaultsToProfile("1");
-            container.GetInstance(typeof (IService<string>)).ShouldBeOfType < Service<string>>();
+            container.GetProfile("1").GetInstance(typeof (IService<string>)).ShouldBeOfType < Service<string>>();
         }
 
 

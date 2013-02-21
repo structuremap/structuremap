@@ -42,5 +42,10 @@ namespace StructureMap.AutoMocking
 
             return family;
         }
+
+        public bool AppliesToHasFamilyChecks
+        {
+            get { return false; }
+        }
     }
 }

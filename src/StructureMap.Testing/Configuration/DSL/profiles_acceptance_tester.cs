@@ -141,8 +141,7 @@ namespace StructureMap.Testing.Configuration.DSL
             });
 
             var container = new Container(registry);
-            container.SetDefaultsToProfile(theProfileName);
-            container.GetInstance<IWidget>().ShouldBeOfType<NamedWidget>()
+            container.GetProfile(theProfileName).GetInstance<IWidget>().ShouldBeOfType<NamedWidget>()
                      .Name.ShouldEqual(theDefaultName);
         }
 
@@ -160,8 +159,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 });
             });
 
-            container.SetDefaultsToProfile(theProfileName);
-            container.GetInstance<IWidget>().ShouldBeOfType<AWidget>();
+            container.GetProfile(theProfileName).GetInstance<IWidget>().ShouldBeOfType<AWidget>();
         }
     }
 }

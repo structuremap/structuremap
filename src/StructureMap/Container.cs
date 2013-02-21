@@ -156,16 +156,6 @@ namespace StructureMap
         }
 
         /// <summary>
-        ///     Sets the default instance for all PluginType's to the designated Profile.
-        /// </summary>
-        /// <param name="profile"></param>
-        [Obsolete("Get a different container here")]
-        public void SetDefaultsToProfile(string profile)
-        {
-            _pipelineGraph = _pipelineGraph.ForProfile(profile);
-        }
-
-        /// <summary>
         ///     Creates or finds the named instance of the pluginType
         /// </summary>
         /// <param name="pluginType"></param>

@@ -192,6 +192,32 @@ namespace StructureMap.Testing.Graph
             graph.HasInstance(typeof(IThingy), "blue")
                 .ShouldBeTrue();
         }
+
+        [Test]
+        public void has_family_false_with_simple()
+        {
+            var graph = PluginGraph.Empty();
+            graph.HasFamily(typeof(IThingy)).ShouldBeFalse();
+        }
+
+        [Test]
+        public void has_family_true_with_simple()
+        {
+            var graph = PluginGraph.Empty();
+            graph.AddFamily(new PluginFamily(typeof(IThingy)));
+
+            graph.HasFamily(typeof(IThingy)).ShouldBeTrue();
+        }
+
+        [Test]
+        public void has_family_true_with_open_generics()
+        {
+            var graph = PluginGraph.Empty();
+            graph.Families[typeof(IOpen<>)].SetDefault(new ConstructorInstance(typeof(Open<>)));
+
+            graph.HasFamily(typeof(IOpen<string>))
+                .ShouldBeTrue();
+        }
     }
 
     public class FakeInstance : Instance, IDisposable
