@@ -149,15 +149,6 @@ namespace StructureMap.Testing.Graph
             Assert.AreSame(differentProvider, classThatUsesProvider.Provider);
         }
 
-        [Test, ExpectedException(typeof (StructureMapConfigurationException))]
-        public void CTOR_throws_StructureMapConfigurationException_if_there_is_an_error()
-        {
-            var graph = new PluginGraph();
-            graph.Log.RegisterError(400, new ApplicationException("Bad!"));
-
-            new Container(graph);
-        }
-
 
         [Test]
         public void GetDefaultInstance()

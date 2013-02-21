@@ -23,12 +23,6 @@ namespace StructureMap.Graph
         {
             _pluginType = pluginType;
 
-            // TODO -- like to clean this up so it happens more at runtime
-            if (_pluginType.IsConcrete() && PluginCache.GetPlugin(_pluginType).CanBeAutoFilled)
-            {
-                MissingInstance = new ConfiguredInstance(_pluginType);
-            }
-
             resetDefault();
 
             Attribute.GetCustomAttributes(typeof (FamilyAttribute), true).OfType<FamilyAttribute>()
@@ -87,21 +81,6 @@ namespace StructureMap.Graph
             }
 
             return null;
-        }
-
-        public void ImportFrom(PluginFamily source)
-        {
-            if (source.Lifecycle != null)
-            {
-                SetScopeTo(source.Lifecycle);
-            }
-            
-            source.Instances.Each(instance => _instances.Fill(instance.Name, instance));
-
-            if (source.MissingInstance != null)
-            {
-                MissingInstance = source.MissingInstance;
-            }
         }
 
         public Instance FirstInstance()

@@ -253,7 +253,6 @@
     </Compile>
     <Compile Include="Examples\BuildUp.cs" />
     <Compile Include="Examples\CustomInstance.cs" />
-    <Compile Include="Examples\IndividualContainers.cs" />
     <Compile Include="Examples\Interception.cs" />
     <Compile Include="Examples\RegisteringWithTheAPI.cs" />
     <Compile Include="Extensions.cs" />
@@ -304,7 +303,6 @@
     <Compile Include="Graph\ParameterInfoCollection.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Graph\PluginFamilyMergeTester.cs" />
     <Compile Include="Graph\PluginFamilyTester.cs">
       <SubType>Code</SubType>
     </Compile>

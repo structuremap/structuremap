@@ -49,18 +49,6 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
-        public void Lifecycle_is_imported_from_the_source_when_merging_PluginFamilies()
-        {
-            var source = new PluginFamily(typeof (GenericType<>));
-            source.SetScopeTo(InstanceScope.Unique);
-            var importInto = new PluginFamily(typeof (GenericType<>));
-
-            importInto.ImportFrom(source);
-
-            importInto.Lifecycle.ShouldBeOfType(source.Lifecycle.GetType());
-        }
-
-        [Test]
         public void SetScopeToHttpContext()
         {
             var family = new PluginFamily(typeof (IServiceProvider));

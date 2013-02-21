@@ -40,7 +40,13 @@ namespace StructureMap.Query
 
         public InstanceRef Default { get; private set; }
         public string Lifecycle { get; private set; }
-        public IEnumerable<InstanceRef> Instances { get; private set; }
+        public IEnumerable<InstanceRef> Instances
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
         public bool HasImplementations()
         {
             throw new NotImplementedException();
