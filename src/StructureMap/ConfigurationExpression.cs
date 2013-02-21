@@ -71,5 +71,23 @@ namespace StructureMap
         {
             return _builder.Build();
         }
+
+        protected bool Equals(ConfigurationExpression other)
+        {
+            return false;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((ConfigurationExpression) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
