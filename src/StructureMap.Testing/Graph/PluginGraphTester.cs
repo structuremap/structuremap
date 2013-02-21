@@ -124,6 +124,18 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
+        public void find_instance_can_use_missing_instance()
+        {
+            var graph = new PluginGraph();
+            var instance = new SmartInstance<BigThingy>().Named("red");
+            graph.Families[typeof (BigThingy)].MissingInstance = instance;
+
+            graph.FindInstance(typeof (BigThingy), "green")
+                 .ShouldBeTheSameAs(instance);
+        }
+
+
+        [Test]
         public void has_default_positive()
         {
             var graph = new PluginGraph();

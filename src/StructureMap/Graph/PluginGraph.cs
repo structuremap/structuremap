@@ -184,7 +184,7 @@ namespace StructureMap.Graph
         {
             if (!_families.Has(pluginType)) return null;
 
-            return _families[pluginType].GetInstance(name);
+            return _families[pluginType].GetInstance(name) ?? _families[pluginType].MissingInstance;
         }
 
         public IEnumerable<Instance> AllInstances(Type pluginType)
