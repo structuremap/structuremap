@@ -161,5 +161,28 @@ namespace StructureMap.Testing.Configuration.DSL
 
             container.GetProfile(theProfileName).GetInstance<IWidget>().ShouldBeOfType<AWidget>();
         }
+
+
+        public interface IFoo<T> { }
+        public class DefaultFoo<T> : IFoo<T> { }
+        public class AzureFoo<T> : IFoo<T> { }
+
+        [Test]
+        public void respects_open_generics_in_the_profile()
+        {
+            var container = new Container(x => {
+                x.For(typeof(IFoo<>)).Use(typeof(DefaultFoo<>));
+
+                x.Profile("Azure", cfg =>
+                {
+                    cfg.For(typeof(IFoo<>)).Use(typeof(AzureFoo<>));
+                });
+            });
+
+            container.GetInstance<IFoo<string>>().ShouldBeOfType<DefaultFoo<string>>();
+            container.GetProfile("Azure").GetInstance<IFoo<string>>()
+                     .ShouldBeOfType<AzureFoo<string>>();
+        }
+
     }
 }
