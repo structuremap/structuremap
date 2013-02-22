@@ -255,7 +255,7 @@ namespace StructureMap.Testing
             var green = new ColorService("green");
 
             var graph = new PluginGraph();
-            PluginFamily family = graph.FindFamily(typeof (IService));
+            var family = graph.Families[typeof (IService)];
             family.AddInstance(new ObjectInstance(red).Named("red"));
             family.AddInstance(new ObjectInstance(green).Named("green"));
 
@@ -295,7 +295,7 @@ namespace StructureMap.Testing
             var green = new ColorService("green");
 
             var graph = new PluginGraph();
-            PluginFamily family = graph.FindFamily(typeof (IService));
+            PluginFamily family = graph.Families[typeof (IService)];
             family.AddInstance(new ObjectInstance(red).Named("red"));
             family.AddInstance(new ObjectInstance(green).Named("green"));
 

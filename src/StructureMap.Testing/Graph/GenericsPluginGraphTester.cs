@@ -54,7 +54,7 @@ namespace StructureMap.Testing.Graph
         public void BuildTemplatedFamilyWithOnlyOneTemplateParameter()
         {
             var pluginGraph = new PluginGraph();
-            PluginFamily family = pluginGraph.FindFamily(typeof (IGenericService<>));
+            PluginFamily family = pluginGraph.Families[typeof (IGenericService<>)];
             family.AddType(typeof (GenericService<>), "Default");
             family.AddType(typeof (SecondGenericService<>), "Second");
             family.AddType(typeof (ThirdGenericService<>), "Third");

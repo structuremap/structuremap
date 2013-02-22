@@ -33,7 +33,7 @@ namespace StructureMap.Testing.Configuration
         [Test]
         public void DefaultNameOfRule()
         {
-            PluginFamily family = _graph.FindFamily(typeof (Rule));
+            var family = _graph.Families[typeof(Rule)];
             Assert.AreEqual("TheBlueOne", family.GetDefaultInstance().Name);
         }
 

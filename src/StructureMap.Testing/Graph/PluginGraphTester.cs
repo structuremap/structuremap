@@ -27,7 +27,7 @@ namespace StructureMap.Testing.Graph
 
             graph.AddType(typeof (IThingy), typeof (BigThingy));
 
-            PluginFamily family = graph.FindFamily(typeof (IThingy));
+            var family = graph.Families[typeof (IThingy)];
             family.Instances
                   .Single()
                   .ShouldBeOfType<ConstructorInstance>()

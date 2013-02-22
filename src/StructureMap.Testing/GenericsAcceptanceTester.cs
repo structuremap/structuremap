@@ -101,25 +101,14 @@ namespace StructureMap.Testing
         {
             var graph = PluginGraph.BuildGraphFromAssembly(GetType().Assembly);
 
-            PluginFamily family1 = graph.FindFamily(typeof (IGenericService<int>));
-            PluginFamily family2 = graph.FindFamily(typeof (IGenericService<string>));
-            PluginFamily family3 = graph.FindFamily(typeof (IGenericService<>));
+            graph.Families[typeof (IGenericService<int>)].ShouldBeTheSameAs(
+                graph.Families[typeof (IGenericService<int>)]);
 
-            Assert.AreSame(graph.FindFamily(typeof (IGenericService<int>)), family1);
-            Assert.AreSame(graph.FindFamily(typeof (IGenericService<string>)), family2);
-            Assert.AreSame(graph.FindFamily(typeof (IGenericService<>)), family3);
-        }
+            graph.Families[typeof(IGenericService<string>)].ShouldBeTheSameAs(
+                graph.Families[typeof(IGenericService<string>)]);
 
-        [Test]
-        public void CanGetPluginFamilyFromPluginGraphWithParameters()
-        {
-            var graph = PluginGraph.BuildGraphFromAssembly(GetType().Assembly);
-
-            PluginFamily family1 = graph.FindFamily(typeof (IGenericService<int>));
-            PluginFamily family2 = graph.FindFamily(typeof (IGenericService<string>));
-
-            Assert.AreSame(graph.FindFamily(typeof (IGenericService<int>)), family1);
-            Assert.AreSame(graph.FindFamily(typeof (IGenericService<string>)), family2);
+            graph.Families[typeof(IGenericService<>)].ShouldBeTheSameAs(
+                graph.Families[typeof(IGenericService<>)]);
         }
 
         [Test]

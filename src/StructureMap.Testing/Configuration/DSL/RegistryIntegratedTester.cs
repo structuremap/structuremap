@@ -53,7 +53,7 @@ namespace StructureMap.Testing.Configuration.DSL
             var graph = scanner.ToPluginGraph();
 
             var colors = new List<string>();
-            PluginFamily family = graph.FindFamily(typeof (IWidget));
+            var family = graph.Families[typeof (IWidget)];
 
             family.Instances.Each(instance => colors.Add(instance.Name));
 

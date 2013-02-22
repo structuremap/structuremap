@@ -167,7 +167,8 @@ namespace StructureMap.Testing.Configuration.DSL
             registry.For(typeof(ITarget), InstanceScope.ThreadLocal);
             PluginGraph graph = registry.Build();
 
-            graph.FindFamily(typeof (ITarget)).Lifecycle.ShouldBeOfType<ThreadLocalStorageLifecycle>();
+            graph.Families[typeof (ITarget)]
+                .Lifecycle.ShouldBeOfType<ThreadLocalStorageLifecycle>();
         }
     }
 }

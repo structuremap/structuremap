@@ -17,8 +17,6 @@ namespace StructureMap.Testing
         public void SetUp()
         {
             _graph = new PluginGraph();
-
-            _graph.FindFamily(typeof (Rule));
         }
 
         #endregion

@@ -100,7 +100,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
             PluginGraph pluginGraph = registry.Build();
 
-            PluginFamily family = pluginGraph.FindFamily(typeof (IGateway));
+            PluginFamily family = pluginGraph.Families[typeof(IGateway)];
 
             family.Lifecycle.ShouldBeOfType<ThreadLocalStorageLifecycle>();
         }
@@ -127,7 +127,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
             PluginGraph pluginGraph = registry.Build();
 
-            PluginFamily family = pluginGraph.FindFamily(typeof (IGateway));
+            PluginFamily family = pluginGraph.Families[typeof (IGateway)];
             family.Lifecycle.ShouldBeOfType<TransientLifecycle>();
         }
 
@@ -140,7 +140,7 @@ namespace StructureMap.Testing.Configuration.DSL
             Assert.IsNotNull(expression);
 
             PluginGraph pluginGraph = registry.Build();
-            PluginFamily family = pluginGraph.FindFamily(typeof (IGateway));
+            PluginFamily family = pluginGraph.Families[typeof (IGateway)];
             family.Lifecycle.ShouldBeOfType<SingletonLifecycle>();
         }
 
@@ -197,7 +197,8 @@ namespace StructureMap.Testing.Configuration.DSL
 
             PluginGraph pluginGraph = registry.Build();
 
-            pluginGraph.FindFamily(typeof (IGateway)).Lifecycle.ShouldBeTheSameAs(lifecycle);
+            pluginGraph.Families[typeof (IGateway)]
+                .Lifecycle.ShouldBeTheSameAs(lifecycle);
         }
 
         [Test]
