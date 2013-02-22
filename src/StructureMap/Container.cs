@@ -255,8 +255,7 @@ namespace StructureMap
         /// <returns></returns>
         public IEnumerable GetAllInstances(Type pluginType)
         {
-            Array instances = new BuildSession(_pipelineGraph).CreateInstanceArray(pluginType, null);
-            return instances;
+            return new BuildSession(_pipelineGraph).GetAllInstances(pluginType);
         }
 
         /// <summary>

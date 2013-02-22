@@ -182,24 +182,5 @@ namespace StructureMap
         {
             return _sessionCache.GetObject(pluginType, instance);
         }
-
-        [Obsolete("Move all of this into the new EnumerableInstance")]
-        public virtual Array CreateInstanceArray(Type pluginType, Instance[] instances)
-        {
-            if (instances == null)
-            {
-                instances = _pipelineGraph.GetAllInstances(pluginType).ToArray();
-            }
-
-            Array array = Array.CreateInstance(pluginType, instances.Length);
-            for (int i = 0; i < instances.Length; i++)
-            {
-                Instance instance = instances[i];
-                object arrayValue = FindObject(pluginType, instance);
-                array.SetValue(arrayValue, i);
-            }
-
-            return array;
-        }
     }
 }
