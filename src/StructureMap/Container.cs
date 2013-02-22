@@ -474,14 +474,6 @@ namespace StructureMap
             return expression;
         }
 
-
-
-        [Obsolete("delegate to something cleaner in BuildSession")]
-        private IList<T> getListOfTypeWithSession<T>(BuildSession session)
-        {
-            return session.CreateInstanceArray(typeof (T), null).Cast<T>().ToList();
-        }
-
         /// <summary>
         ///     Sets the default instance for the PluginType
         /// </summary>
