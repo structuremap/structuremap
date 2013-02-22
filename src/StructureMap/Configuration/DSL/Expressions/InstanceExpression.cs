@@ -199,6 +199,8 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         public SmartInstance<TTPluggedType> Type<TTPluggedType>()
         {
+            // TODO -- this needs to blow up if it's not a concrete type
+
             return returnInstance(new SmartInstance<TTPluggedType>());
         }
 
