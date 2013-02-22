@@ -93,7 +93,7 @@ namespace StructureMap
         /// <summary>
         /// Creates or resolves all registered instances of the pluginType
         /// </summary>
-        public static IList GetAllInstances(Type pluginType)
+        public static IEnumerable GetAllInstances(Type pluginType)
         {
             return Container.GetAllInstances(pluginType);
         }
@@ -101,7 +101,7 @@ namespace StructureMap
         /// <summary>
         /// Creates or resolves all registered instances of type T
         /// </summary>
-        public static IList<TPluginType> GetAllInstances<TPluginType>()
+        public static IEnumerable<TPluginType> GetAllInstances<TPluginType>()
         {
             return Container.GetAllInstances<TPluginType>();
         }

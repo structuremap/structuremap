@@ -110,8 +110,8 @@ namespace StructureMap.Testing.DocumentationExamples
         {
             var result = new ValidationResult();
 
-            IList<InvoiceValidator> validators = ObjectFactory.GetAllInstances<InvoiceValidator>();
-            foreach (InvoiceValidator validator in validators)
+            var validators = ObjectFactory.GetAllInstances<InvoiceValidator>();
+            foreach (var validator in validators)
             {
                 validator.Validate(invoice, result);
             }
@@ -124,7 +124,7 @@ namespace StructureMap.Testing.DocumentationExamples
         {
             var result = new ValidationResult();
 
-            IList validators = ObjectFactory.GetAllInstances(typeof (InvoiceValidator));
+            var validators = ObjectFactory.GetAllInstances(typeof (InvoiceValidator));
             foreach (InvoiceValidator validator in validators)
             {
                 validator.Validate(invoice, result);

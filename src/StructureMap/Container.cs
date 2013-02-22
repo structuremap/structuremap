@@ -117,20 +117,17 @@ namespace StructureMap
         /// <param name="type"></param>
         /// <param name="args"></param>
         /// <returns></returns>
-        public IList GetAllInstances(Type type, ExplicitArguments args)
+        public IEnumerable GetAllInstances(Type type, ExplicitArguments args)
         {
             var session = new BuildSession(_pipelineGraph, Plugin.DEFAULT, args);
-
-            Array instances = session.CreateInstanceArray(type, null);
-            return new ArrayList(instances);
+            return session.GetAllInstances(type);
         }
 
 
-        public IList<T> GetAllInstances<T>(ExplicitArguments args)
+        public IEnumerable<T> GetAllInstances<T>(ExplicitArguments args)
         {
             var session = new BuildSession(_pipelineGraph, Plugin.DEFAULT, args);
-
-            return getListOfTypeWithSession<T>(session);
+            return session.GetAllInstances<T>();
         }
 
 
@@ -149,10 +146,10 @@ namespace StructureMap
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public IList<T> GetAllInstances<T>()
+        public IEnumerable<T> GetAllInstances<T>()
         {
             var session = new BuildSession(_pipelineGraph);
-            return getListOfTypeWithSession<T>(session);
+            return session.GetAllInstances<T>();
         }
 
         /// <summary>
@@ -256,10 +253,10 @@ namespace StructureMap
         /// </summary>
         /// <param name="pluginType"></param>
         /// <returns></returns>
-        public IList GetAllInstances(Type pluginType)
+        public IEnumerable GetAllInstances(Type pluginType)
         {
             Array instances = new BuildSession(_pipelineGraph).CreateInstanceArray(pluginType, null);
-            return new ArrayList(instances);
+            return instances;
         }
 
         /// <summary>

@@ -3,6 +3,7 @@ using NUnit.Framework;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
+using System.Linq;
 
 namespace StructureMap.Testing.Configuration.DSL
 {
@@ -79,7 +80,9 @@ namespace StructureMap.Testing.Configuration.DSL
                     r => r.For(typeof (ITarget)).Add(typeof (Target1)));
 
 
-            container.GetAllInstances<ITarget>()[0].ShouldBeOfType<Target1>();
+            container.GetAllInstances<ITarget>()
+                .First()
+                .ShouldBeOfType<Target1>();
         }
 
         [Test]
@@ -125,7 +128,8 @@ namespace StructureMap.Testing.Configuration.DSL
                 r.For<ITarget>().Add<Target2>();
             });
 
-            container.GetAllInstances<ITarget>()[0].ShouldBeOfType<Target2>();
+            container.GetAllInstances<ITarget>()
+                .First().ShouldBeOfType<Target2>();
         }
 
         [Test]

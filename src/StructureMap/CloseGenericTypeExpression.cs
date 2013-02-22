@@ -30,7 +30,7 @@ namespace StructureMap
 
         IList<T> OpenGenericTypeListSpecificationExpression.As<T>()
         {
-            IList list = _container.With(_subject.GetType(), _subject).GetAllInstances(_pluginType);
+            var list = _container.With(_subject.GetType(), _subject).GetAllInstances(_pluginType);
             var returnValue = new List<T>();
             foreach (object o in list)
             {

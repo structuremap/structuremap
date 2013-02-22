@@ -66,14 +66,14 @@ namespace StructureMap
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        IList<T> GetAllInstances<T>();
+        IEnumerable<T> GetAllInstances<T>();
 
         /// <summary>
         /// Creates or resolves all registered instances of the pluginType
         /// </summary>
         /// <param name="pluginType"></param>
         /// <returns></returns>
-        IList GetAllInstances(Type pluginType);
+        IEnumerable GetAllInstances(Type pluginType);
 
         /// <summary>
         /// Creates or finds the named instance of the pluginType. Returns null if the named instance is not known to the container.
@@ -159,7 +159,7 @@ namespace StructureMap
         /// <typeparam name="T"></typeparam>
         /// <param name="args"></param>
         /// <returns></returns>
-        IList<T> GetAllInstances<T>(ExplicitArguments args);
+        IEnumerable<T> GetAllInstances<T>(ExplicitArguments args);
 
         /// <summary>
         /// Gets the default instance of type T using the explicitly configured arguments from the "args"
@@ -167,7 +167,7 @@ namespace StructureMap
         /// <param name="type"></param>
         /// <param name="args"></param>
         /// <returns></returns>
-        IList GetAllInstances(Type type, ExplicitArguments args);
+        IEnumerable GetAllInstances(Type type, ExplicitArguments args);
 
         T GetInstance<T>(ExplicitArguments args);
 

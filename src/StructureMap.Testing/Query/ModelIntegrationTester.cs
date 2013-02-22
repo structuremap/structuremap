@@ -129,12 +129,12 @@ namespace StructureMap.Testing.Query
         [Test]
         public void remove_an_entire_closed_type()
         {
-            container.GetAllInstances<Rule>().Count.ShouldEqual(3);
+            container.GetAllInstances<Rule>().Count().ShouldEqual(3);
             container.Model.EjectAndRemove(typeof (Rule));
             container.Model.HasImplementationsFor<Rule>().ShouldBeFalse();
 
             container.TryGetInstance<Rule>().ShouldBeNull();
-            container.GetAllInstances<Rule>().Count.ShouldEqual(0);
+            container.GetAllInstances<Rule>().Count().ShouldEqual(0);
         }
 
         [Test]

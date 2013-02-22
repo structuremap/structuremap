@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using NUnit.Framework;
+using System.Linq;
 
 namespace StructureMap.Testing.Graph
 {
@@ -31,13 +32,14 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void FoundTheRightNumberOfInstancesForATypeWithNoPlugins()
         {
-            Assert.AreEqual(3, container.GetAllInstances<TypeIWantToFind>().Count);
+            container.GetAllInstances<TypeIWantToFind>().Count()
+                     .ShouldEqual(3);
         }
 
         [Test]
         public void FoundTheRightNumberOfInstancesForATypeWithNoPlugins2()
         {
-            container.GetAllInstances<OtherType>().Count.ShouldEqual(2);
+            container.GetAllInstances<OtherType>().Count().ShouldEqual(2);
         }
 
         [TestFixture]
@@ -53,7 +55,8 @@ namespace StructureMap.Testing.Graph
                      })))
                 {
                     var redTypes = container.GetAllInstances<IOpenGeneric<string>>();
-                    Assert.That(redTypes.Count, Is.EqualTo(1));
+
+                    redTypes.Count().ShouldEqual(1);
                 }
             }
 

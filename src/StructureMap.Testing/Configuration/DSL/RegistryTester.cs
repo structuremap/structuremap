@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Linq;
 using NUnit.Framework;
 using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
@@ -120,7 +121,7 @@ namespace StructureMap.Testing.Configuration.DSL
 
             container.GetInstance<IWidget>().ShouldBeOfType<AWidget>();
 
-            container.GetAllInstances<IWidget>().Count.ShouldEqual(5);
+            container.GetAllInstances<IWidget>().Count().ShouldEqual(5);
         }
 
         public class MutatedWidget : IWidget

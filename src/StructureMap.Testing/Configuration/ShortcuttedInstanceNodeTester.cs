@@ -3,6 +3,7 @@ using NUnit.Framework;
 using StructureMap.Graph;
 using StructureMap.Testing.TestData;
 using StructureMap.Testing.Widget;
+using System.Linq;
 
 namespace StructureMap.Testing.Configuration
 {
@@ -15,44 +16,45 @@ namespace StructureMap.Testing.Configuration
         public void SetUp()
         {
             _graph = DataMother.GetPluginGraph("ShortInstance.xml");
-            _manager = new Container(_graph);
+            theContainer = new Container(_graph);
         }
 
         #endregion
 
-        private Container _manager;
+        private Container theContainer;
         private PluginGraph _graph;
 
 
         [Test]
         public void GetAllRules()
         {
-            IList<Rule> list = _manager.GetAllInstances<Rule>();
-            Assert.AreEqual(1, list.Count);
+            theContainer.GetAllInstances<Rule>()
+                .Count().ShouldEqual(1);
         }
 
         [Test]
         public void GetTheRule()
         {
-            var rule = (ColorRule) _manager.GetInstance<Rule>("Blue");
-            Assert.AreEqual("Blue", rule.Color);
+            theContainer.GetInstance<Rule>("Blue")
+                        .ShouldBeOfType<ColorRule>()
+                        .Color.ShouldEqual("Blue");
         }
 
         [Test]
         public void GetTheWidget()
         {
-            var widget = (ColorWidget) _manager.GetInstance<IWidget>("Red");
+            var widget = (ColorWidget) theContainer.GetInstance<IWidget>("Red");
             Assert.AreEqual("Red", widget.Color);
 
-            var widget2 = (ColorWidget) _manager.GetInstance<IWidget>("Red");
+            var widget2 = (ColorWidget) theContainer.GetInstance<IWidget>("Red");
             Assert.AreNotSame(widget, widget2);
         }
 
         [Test]
         public void GetUnKeyedInstancesToo()
         {
-            IList<IWidget> list = _manager.GetAllInstances<IWidget>();
-            Assert.AreEqual(4, list.Count);
+            theContainer.GetAllInstances<IWidget>()
+                    .Count().ShouldEqual(4);
         }
     }
 }

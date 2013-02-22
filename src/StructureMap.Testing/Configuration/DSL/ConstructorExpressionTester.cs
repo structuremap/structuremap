@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
+using System.Linq;
 
 namespace StructureMap.Testing.Configuration.DSL
 {
@@ -71,8 +72,7 @@ namespace StructureMap.Testing.Configuration.DSL
                 r.For<Abstraction>().Add(c => concretion);
             });
 
-            Abstraction actual = container.GetAllInstances<Abstraction>()[0];
-            Assert.AreSame(concretion, actual);
+            container.GetAllInstances<Abstraction>().First().ShouldBeTheSameAs(concretion);
         }
     }
 }

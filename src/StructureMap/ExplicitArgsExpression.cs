@@ -107,12 +107,12 @@ namespace StructureMap
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public IList<T> GetAllInstances<T>()
+        public IEnumerable<T> GetAllInstances<T>()
         {
             return _container.GetAllInstances<T>(_args);
         }
 
-        public IList GetAllInstances(Type type)
+        public IEnumerable GetAllInstances(Type type)
         {
             return _container.GetAllInstances(type, _args);
         }

@@ -1,8 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
+using Rhino.Mocks.Interfaces;
 using StructureMap.Graph;
+using System.Linq;
+using StructureMap.TypeRules;
 
 namespace StructureMap.AutoMocking
 {
@@ -230,11 +234,16 @@ namespace StructureMap.AutoMocking
 
                 if (dependencyType.IsArray)
                 {
-                    IList values = _container.GetAllInstances(dependencyType.GetElementType());
-                    Array array = Array.CreateInstance(dependencyType.GetElementType(), values.Count);
-                    values.CopyTo(array, 0);
+                    var builder = typeof (ArrayBuilder<>).CloseAndBuildAs<IEnumerableBuilder>(_container, dependencyType.GetElementType());
+                    list.Add(builder.ToEnumerable());
+                }
+                else if (dependencyType.Closes(typeof (IEnumerable<>)))
+                {
+                    var @interface = dependencyType.FindFirstInterfaceThatCloses(typeof (IEnumerable<>));
+                    var elementType = @interface.GetGenericArguments().First();
 
-                    list.Add(array);
+                    var builder = typeof (EnumerableBuilder<>).CloseAndBuildAs<IEnumerableBuilder>(_container, elementType);
+                    list.Add(builder.ToEnumerable());
                 }
                 else
                 {
@@ -245,5 +254,46 @@ namespace StructureMap.AutoMocking
 
             return list.ToArray();
         }
+
+
+
+
     }
+
+    public interface IEnumerableBuilder
+    {
+        object ToEnumerable();
+    }
+
+    public class ArrayBuilder<T> : IEnumerableBuilder
+    {
+        private readonly IContainer _container;
+
+        public ArrayBuilder(IContainer container)
+        {
+            _container = container;
+        }
+
+        public object ToEnumerable()
+        {
+            return _container.GetAllInstances<T>().ToArray();
+        }
+    }
+
+    public class EnumerableBuilder<T> : IEnumerableBuilder
+    {
+        private readonly IContainer _container;
+
+        public EnumerableBuilder(IContainer container)
+        {
+            _container = container;
+        }
+
+        public object ToEnumerable()
+        {
+            return _container.GetAllInstances<T>();
+        }
+    }
+
+
 }

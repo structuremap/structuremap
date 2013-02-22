@@ -141,13 +141,13 @@ namespace StructureMap
 
         public IEnumerable<T> GetAllInstances<T>()
         {
-            return _pipelineGraph.GetAllInstances(typeof (T)).Select(x => (T) FindObject(typeof (T), x));
+            return _pipelineGraph.GetAllInstances(typeof (T)).Select(x => (T) FindObject(typeof (T), x)).ToArray();
         }
 
         public IEnumerable<object> GetAllInstances(Type pluginType)
         {
             IEnumerable<Instance> allInstances = _pipelineGraph.GetAllInstances(pluginType);
-            return allInstances.Select(x => FindObject(pluginType, x));
+            return allInstances.Select(x => FindObject(pluginType, x)).ToArray();
         }
 
         public static BuildSession ForPluginGraph(PluginGraph graph, ExplicitArguments args = null)

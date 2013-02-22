@@ -1,3 +1,4 @@
+using System.Linq;
 using NUnit.Framework;
 using StructureMap.Testing.GenericWidgets;
 using StructureMap.Testing.Graph;
@@ -78,14 +79,17 @@ namespace StructureMap.Testing.Pipeline
                 });
             });
 
-            container.GetAllInstances<IBar>().Count.ShouldBeGreaterThan(0);
+            container.GetAllInstances<IBar>().Count()
+                .ShouldBeGreaterThan(0);
 
             using (IContainer nested = container.GetNestedContainer())
             {
-                nested.GetAllInstances<IBar>().Count.ShouldBeGreaterThan(0);
+                nested.GetAllInstances<IBar>().Count()
+                    .ShouldBeGreaterThan(0);
             }
 
-            container.GetAllInstances<IBar>().Count.ShouldBeGreaterThan(0);
+            container.GetAllInstances<IBar>().Count()
+                .ShouldBeGreaterThan(0);
         }
 
         [Test]

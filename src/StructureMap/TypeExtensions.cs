@@ -74,6 +74,18 @@ namespace StructureMap
     {
         public static class TypeExtensions
         {
+            public static T CloseAndBuildAs<T>(this Type openType, params Type[] parameterTypes)
+            {
+                var closedType = openType.MakeGenericType(parameterTypes);
+                return (T)Activator.CreateInstance(closedType);
+            }
+
+            public static T CloseAndBuildAs<T>(this Type openType, object ctorArgument, params Type[] parameterTypes)
+            {
+                var closedType = openType.MakeGenericType(parameterTypes);
+                return (T)Activator.CreateInstance(closedType, ctorArgument);
+            }
+
 
             public static bool Closes(this Type type, Type openType)
             {

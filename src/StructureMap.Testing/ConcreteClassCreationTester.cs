@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using StructureMap.Testing.Widget;
+using System.Linq;
 
 namespace StructureMap.Testing
 {
@@ -39,7 +40,7 @@ namespace StructureMap.Testing
         [Test]
         public void the_instance_count_is_zero()
         {
-            container.GetAllInstances<ConcreteClass>().Count.ShouldEqual(0);
+            container.GetAllInstances<ConcreteClass>().Any().ShouldBeFalse();
         }
     }
 }

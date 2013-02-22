@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using NUnit.Framework;
 using StructureMap.Pipeline;
+using System.Linq;
 
 namespace StructureMap.Testing.Graph
 {
@@ -289,10 +290,10 @@ namespace StructureMap.Testing.Graph
             });
 
             var theTrade = new Trade();
-            IList<TradeView> views = container.With(theTrade).GetAllInstances<TradeView>();
+            var views = container.With(theTrade).GetAllInstances<TradeView>();
 
-            views[0].Trade.ShouldBeTheSameAs(theTrade);
-            views[1].Trade.ShouldBeTheSameAs(theTrade);
+            views.ElementAt(0).Trade.ShouldBeTheSameAs(theTrade);
+            views.ElementAt(1).Trade.ShouldBeTheSameAs(theTrade);
         }
 
         [Test]
@@ -308,10 +309,11 @@ namespace StructureMap.Testing.Graph
 
             var theTrade = new Trade();
 
-            IList views = container.With(theTrade).GetAllInstances(typeof (TradeView));
+            var views = container.With(theTrade).GetAllInstances(typeof (TradeView))
+                .OfType<TradeView>();
 
-            ((TradeView) views[0]).Trade.ShouldBeTheSameAs(theTrade);
-            ((TradeView) views[1]).Trade.ShouldBeTheSameAs(theTrade);
+            views.ElementAt(0).Trade.ShouldBeTheSameAs(theTrade);
+            views.ElementAt(1).Trade.ShouldBeTheSameAs(theTrade);
         }
 
 

@@ -50,7 +50,9 @@ namespace StructureMap.Testing.Configuration.DSL
                 r.For<IWidget>().Add(c => new AWidget());
             });
 
-            container.GetAllInstances<IWidget>()[0].ShouldBeOfType<AWidget>();
+            container.GetAllInstances<IWidget>()
+                .First()
+                .ShouldBeOfType<AWidget>();
         }
 
         [Test]
@@ -74,17 +76,18 @@ namespace StructureMap.Testing.Configuration.DSL
                 r.For<Something>().Add<RedSomething>().Named("Red");
             });
 
-            container.GetAllInstances<Something>().Count.ShouldEqual(1);
+            container.GetAllInstances<Something>().Count().ShouldEqual(1);
         }
 
         [Test]
         public void AddInstanceWithNameOnlyAddsOneInstanceToStructureMap()
         {
-            IContainer container =
-                new Container(
-                    registry => registry.For<Something>().Add<RedSomething>().Named("Red"));
-            IList<Something> instances = container.GetAllInstances<Something>();
-            Assert.AreEqual(1, instances.Count);
+            var container = new Container(x => {
+                x.For<Something>().Add<RedSomething>().Named("Red");
+            });
+
+            container.GetAllInstances<Something>()
+                .Count().ShouldEqual(1);
         }
 
         [Test]
