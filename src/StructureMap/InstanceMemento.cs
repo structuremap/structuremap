@@ -18,12 +18,6 @@ namespace StructureMap
         {
             var plugin = factory.PluginFor(PluggedType());
 
-            if (plugin == null)
-            {
-                throw new StructureMapException(201, innerConcreteKey, InstanceKey,
-                                                pluginType.AssemblyQualifiedName);
-            }
-
             var instance = new ConstructorInstance(plugin);
             if (InstanceKey.IsNotEmpty())
             {
@@ -35,13 +29,6 @@ namespace StructureMap
 
             return instance;
         }
-
-        /// <summary>
-        /// The named type of the object instance represented by the InstanceMemento.  Translates to a concrete
-        /// type
-        /// </summary>
-        [Obsolete]
-        public string ConcreteKey { get { return innerConcreteKey; } }
 
 
         protected abstract string innerConcreteKey { get; }

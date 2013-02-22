@@ -12,7 +12,7 @@ namespace StructureMap.Testing.Graph.Source
         [SetUp]
         public void SetUp()
         {
-            string xml = "<Instance Type=\"Color\" Key=\"Red\" color=\"red\"/>";
+            string xml = "<Instance PluggedType=\"Color\" Key=\"Red\" color=\"red\"/>";
             _memento = buildMemento(xml);
         }
 
@@ -30,25 +30,18 @@ namespace StructureMap.Testing.Graph.Source
         }
 
         [Test]
-        public void ConcreteKey()
-        {
-            Assert.AreEqual("Color", _memento.ConcreteKey);
-        }
-
-        [Test]
         public void GetChildIsNotNull()
         {
             XmlElement element = _memento.InnerElement;
             XmlElement childElement = element.OwnerDocument.CreateElement("rule");
             element.AppendChild(childElement);
-            childElement.SetAttribute("Type", "theConcreteKey");
+            childElement.SetAttribute("PluggedType", "theConcreteKey");
             childElement.SetAttribute("Key", "theInstanceKey");
             childElement.SetAttribute("prop1", "thePropertyValue");
 
             InstanceMemento memento = _memento.GetChildMemento("rule");
             Assert.IsNotNull(memento);
             Assert.AreEqual("theInstanceKey", memento.InstanceKey);
-            Assert.AreEqual("theConcreteKey", memento.ConcreteKey);
             Assert.AreEqual("thePropertyValue", memento.GetProperty("prop1"));
             Assert.IsFalse(memento.IsDefault);
             Assert.IsFalse(memento.IsReference);
@@ -64,7 +57,7 @@ namespace StructureMap.Testing.Graph.Source
 
             XmlElement childElement1 = element.OwnerDocument.CreateElement("rule");
             rulesElement.AppendChild(childElement1);
-            childElement1.SetAttribute("Type", "theConcreteKey");
+            childElement1.SetAttribute("PluggedType", "theConcreteKey");
             childElement1.SetAttribute("Key", "theInstanceKey");
             childElement1.SetAttribute("prop1", "thePropertyValue");
 
@@ -119,7 +112,7 @@ namespace StructureMap.Testing.Graph.Source
         [Test]
         public void ReferencedMemento()
         {
-            _memento.InnerElement.SetAttribute("Type", string.Empty);
+            _memento.InnerElement.SetAttribute("PluggedType", string.Empty);
 
             Assert.IsTrue(_memento.IsReference);
             Assert.IsFalse(_memento.IsDefault);
