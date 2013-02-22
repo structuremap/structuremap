@@ -129,14 +129,14 @@ namespace StructureMap.Testing.Graph
         [Test, ExpectedException(typeof (StructureMapException))]
         public void TryToAddANonExistentSetterProperty()
         {
-            var plugin = new Plugin(typeof (BasicGridColumn), "Basic");
+            var plugin = new Plugin(typeof (BasicGridColumn));
             plugin.Setters.MarkSetterAsMandatory("NonExistentPropertyName");
         }
 
         [Test, ExpectedException(typeof (StructureMapException))]
         public void TryToAddASetterPropertyThatDoesNotHaveASetter()
         {
-            var plugin = new Plugin(typeof (BasicGridColumn), "Basic");
+            var plugin = new Plugin(typeof (BasicGridColumn));
             plugin.Setters.MarkSetterAsMandatory("HeaderText");
         }
     }

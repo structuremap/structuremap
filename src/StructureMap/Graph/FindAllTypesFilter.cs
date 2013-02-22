@@ -8,7 +8,7 @@ namespace StructureMap.Graph
     public class FindAllTypesFilter : IRegistrationConvention
     {
         private readonly Type _pluginType;
-        private Func<Type, string> _getName = type => PluginCache.GetPlugin(type).ConcreteKey;
+        private Func<Type, string> _getName = type => Guid.NewGuid().ToString();
 
         public FindAllTypesFilter(Type pluginType)
         {

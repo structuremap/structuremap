@@ -136,7 +136,7 @@ namespace StructureMap.Graph
             if (!hasType(concreteType))
             {
                 var plugin = PluginCache.GetPlugin(concreteType);
-                AddType(concreteType, plugin.ConcreteKey ?? concreteType.AssemblyQualifiedName);
+                AddType(concreteType, concreteType.AssemblyQualifiedName);
             }
         }
 

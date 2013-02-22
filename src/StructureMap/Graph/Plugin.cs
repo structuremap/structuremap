@@ -20,32 +20,17 @@ namespace StructureMap.Graph
 
         private readonly Type _pluggedType;
         private readonly SetterPropertyCollection _setters;
-        private string _concreteKey;
 
         #region constructors
-
-        public Plugin(Type pluggedType, string concreteKey)
-            : this(pluggedType)
-        {
-            _concreteKey = concreteKey;
-        }
 
         public Plugin(Type pluggedType)
         {
             _pluggedType = pluggedType;
             _setters = new SetterPropertyCollection(this);
             _constructor = new Constructor(pluggedType);
-
-            _concreteKey = pluggedType.FullName;
         }
 
         #endregion
-
-        /// <summary>
-        /// The ConcreteKey that identifies the Plugin within a PluginFamily
-        /// </summary>
-        [Obsolete("Eliminating this anyway")]
-        public string ConcreteKey { get { return _concreteKey; } set { _concreteKey = value; } }
 
 
         /// <summary>
@@ -62,13 +47,7 @@ namespace StructureMap.Graph
 
         public override string ToString()
         {
-            return ("Plugin:  " + _concreteKey).PadRight(40) + PluggedType.AssemblyQualifiedName;
-        }
-
-
-        public Instance CreateImplicitInstance()
-        {
-            return new ConfiguredInstance(PluggedType).Named(ConcreteKey);
+            return "Plugin:  " +  PluggedType.AssemblyQualifiedName;
         }
 
         public string FindArgumentNameForType<T>()
@@ -145,7 +124,7 @@ namespace StructureMap.Graph
         {
             Type templatedType = _pluggedType.IsGenericType ? _pluggedType.MakeGenericType(types) : _pluggedType;
 
-            var templatedPlugin = new Plugin(templatedType, ConcreteKey);
+            var templatedPlugin = new Plugin(templatedType);
 
             foreach (SetterProperty setter in Setters)
             {
