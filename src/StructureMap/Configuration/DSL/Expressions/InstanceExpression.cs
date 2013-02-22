@@ -29,11 +29,6 @@ namespace StructureMap.Configuration.DSL.Expressions
         ObjectInstance IsThis(T obj);
     }
 
-    [Obsolete("Can we get rid of this?")]
-    public interface ThenItExpression<T>
-    {
-        IsExpression<T> ThenIt { get; }
-    }
 
     /// <summary>
     /// An Expression Builder to define Instances of a PluginType.
@@ -167,7 +162,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         SerializedInstance SerializedCopyOf(T template);
     }
 
-    public class InstanceExpression<T> : IInstanceExpression<T>, ThenItExpression<T>
+    public class InstanceExpression<T> : IInstanceExpression<T>
     {
         private readonly Action<Instance> _action;
 
@@ -243,8 +238,6 @@ namespace StructureMap.Configuration.DSL.Expressions
         {
             return returnInstance(new SerializedInstance(template));
         }
-
-        IsExpression<T> ThenItExpression<T>.ThenIt { get { return this; } }
 
         private TInstance returnInstance<TInstance>(TInstance instance) where TInstance : Instance
         {
