@@ -5,12 +5,12 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using StructureMap.Graph;
-using StructureMap.Interceptors;
 using StructureMap.Pipeline;
 using StructureMap.TypeRules;
 
 namespace StructureMap.Diagnostics
 {
+    // TODO -- think this just gets a redo. Just try to build everything you know about.
     public class ValidationBuildSession : BuildSession
     {
         private readonly Stack<BuildDependency> _dependencyStack = new Stack<BuildDependency>();
@@ -22,20 +22,29 @@ namespace StructureMap.Diagnostics
             : base(pipelineGraph)
         {
         }
-        
+
+
+        public bool Success
+        {
+            get { return _errors.BuildErrors.Length == 0 && _validationErrors.Count == 0; }
+        }
+
+        public BuildError[] BuildErrors
+        {
+            get { return _errors.BuildErrors; }
+        }
+
+        public ValidationError[] ValidationErrors
+        {
+            get { return _validationErrors.ToArray(); }
+        }
+
         public static ValidationBuildSession ValidateForPluginGraph(PluginGraph graph)
         {
             var pipeline = new RootPipelineGraph(graph);
 
             return new ValidationBuildSession(pipeline);
         }
-
-
-        public bool Success { get { return _errors.BuildErrors.Length == 0 && _validationErrors.Count == 0; } }
-
-        public BuildError[] BuildErrors { get { return _errors.BuildErrors; } }
-
-        public ValidationError[] ValidationErrors { get { return _validationErrors.ToArray(); } }
 
         public override object FindObject(Type pluginType, Instance instance)
         {

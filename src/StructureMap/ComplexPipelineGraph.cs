@@ -66,7 +66,6 @@ namespace StructureMap
 
         public IEnumerable<Instance> GetAllInstances()
         {
-            // TODO -- this will have to be smarter about the family/profile thing
             return _outer.Families.SelectMany(x => x.Instances).Union(_parent.GetAllInstances());
         }
 

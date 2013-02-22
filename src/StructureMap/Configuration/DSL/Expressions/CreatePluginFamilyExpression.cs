@@ -6,16 +6,12 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.Configuration.DSL.Expressions
 {
-    
-
-
     /// <summary>
     /// Expression Builder that has grammars for defining policies at the 
     /// PluginType level
     /// </summary>
     public class CreatePluginFamilyExpression<TPluginType>
     {
-        // TODO -- do the set trick that pisses off Dru here to make it cleaner
         private readonly List<Action<PluginFamily>> _alterations = new List<Action<PluginFamily>>();
         private readonly List<Action<PluginGraph>> _children = new List<Action<PluginGraph>>();
         private readonly Type _pluginType;

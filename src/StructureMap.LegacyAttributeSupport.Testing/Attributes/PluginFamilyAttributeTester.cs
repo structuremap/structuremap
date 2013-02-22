@@ -1,10 +1,7 @@
 using System;
 using NUnit.Framework;
-using Rhino.Mocks;
-using Rhino.Mocks.Constraints;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
-using Is = Rhino.Mocks.Constraints.Is;
 
 namespace StructureMap.Testing.Attributes
 {

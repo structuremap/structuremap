@@ -35,7 +35,6 @@ namespace StructureMap.Configuration
             set { _filePath = value; }
         }
 
-        // TODO -- set the description
         public static ConfigurationParser FromFile(string filename)
         {
             var document = new XmlDocument();
@@ -111,7 +110,6 @@ namespace StructureMap.Configuration
             // no-op for now
         }
 
-        // TODO -- set the description
         public static IEnumerable<ConfigurationParser> FromApplicationConfig()
         {
             IList<XmlNode> appConfigNodes = StructureMapConfigurationSection.GetStructureMapConfiguration();

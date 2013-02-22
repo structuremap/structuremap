@@ -37,7 +37,7 @@ namespace StructureMap.Testing.Pipeline
         public void default_scope_is_PerRequest()
         {
             var i1 = new ConfiguredInstance(GetType()).Named("foo");
-            i1.Lifecycle.ShouldBeOfType<TransientLifecycle>();  // TODO -- this is going to change
+            i1.Lifecycle.ShouldBeOfType<TransientLifecycle>();  
         }
 
         [Test]

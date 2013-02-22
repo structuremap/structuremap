@@ -127,7 +127,6 @@ namespace StructureMap.Configuration.DSL
         /// </summary>
         /// <param name="profileName"></param>
         /// <param name="action"></param>
-        // TODO -- going to add some extra semantics for Profile
         public void Profile(string profileName, Action<Registry> action)
         {
             var registry = new Registry();

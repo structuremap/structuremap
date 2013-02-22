@@ -10,6 +10,8 @@ using StructureMap.Util;
 
 namespace StructureMap.Pipeline
 {
+    // TODO -- make the storage of raw values a bit more efficient.  Store by Instance
+    // TODO -- optimize the heck out of the Expression construction
     public class ConstructorInstance : Instance, IConfiguredInstance, IStructuredInstance
     {
         private readonly Cache<string, Instance> _dependencies = new Cache<string, Instance>();
@@ -89,7 +91,6 @@ namespace StructureMap.Pipeline
 
         public bool HasProperty(string propertyName, BuildSession session)
         {
-            // TODO -- richer behavior
             return _dependencies.Has(propertyName) && !(_dependencies[propertyName] is NullInstance);
         }
 

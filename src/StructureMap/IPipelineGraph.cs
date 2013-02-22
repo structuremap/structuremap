@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
-using StructureMap.Query;
 
 namespace StructureMap
 {
     public interface IPipelineGraph : ILifecycleContext, IDisposable
     {
+        PluginGraph Outer { get; }
+
         /// <summary>
-        /// Unwraps a nested container and/or profiles?
+        ///     Unwraps a nested container and/or profiles?
         /// </summary>
         /// <returns></returns>
-        IPipelineGraph Root(); // TODO -- I think this will need to be surfaced somehow so that it builds in the right Profile (?)
+        IPipelineGraph Root();
 
         InstanceInterceptor FindInterceptor(Type concreteType);
 
@@ -30,12 +31,9 @@ namespace StructureMap
         IPipelineGraph ToNestedGraph();
 
 
-
         IEnumerable<PluginGraph> AllGraphs();
-        PluginGraph Outer { get; }
 
 
         IEnumerable<PluginFamily> UniqueFamilies();
     }
-
 }

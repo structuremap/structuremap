@@ -91,7 +91,6 @@ namespace StructureMap.Graph
             set { _log = value; }
         }
 
-        // TODO -- do something tighter here later?
         public Cache<Type, PluginFamily> Families
         {
             get { return _families; }

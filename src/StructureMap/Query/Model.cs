@@ -10,7 +10,6 @@ namespace StructureMap.Query
     {
         private readonly IPipelineGraph _graph;
 
-        // TODO -- have this just take in IPipelineGraph, and IPipelineGraph will now expose all PluginGraph's
         internal Model(IPipelineGraph graph)
         {
             _graph = graph;
