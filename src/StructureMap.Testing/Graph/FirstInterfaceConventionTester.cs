@@ -92,7 +92,7 @@ namespace StructureMap.Testing.Graph
             container.Model.HasImplementationsFor<I3>().ShouldBeFalse();
         }
 
-        [Test, Ignore("all tests regarding Model are ignored")]
+        [Test]
         public void simple_case()
         {
             container.Model.For<I1>().Instances.Select(x => x.ConcreteType).ShouldHaveTheSameElementsAs(typeof (C1),

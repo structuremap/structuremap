@@ -146,7 +146,7 @@ LastName = "Sync" };
             shouldHaveFamilyWithSameName<IWorker>();
         }
 
-        [Test, Explicit]
+        [Test]
         public void scan_all_assemblies_in_application_base_directory()
         {
             Scan(x => x.AssembliesFromApplicationBaseDirectory());

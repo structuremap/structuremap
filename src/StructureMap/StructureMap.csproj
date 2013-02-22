@@ -226,9 +226,6 @@
     <Compile Include="Exceptions\InstancePropertyValueException.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Exceptions\MissingPluginFamilyException.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Exceptions\StructureMapException.cs">
       <SubType>Code</SubType>
     </Compile>

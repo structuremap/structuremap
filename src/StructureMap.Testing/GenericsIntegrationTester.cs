@@ -1,55 +1,63 @@
 using System;
-using System.Collections;
 using NUnit.Framework;
-using StructureMap.Graph;
 using StructureMap.Testing.GenericWidgets;
-using StructureMap.Testing.TestData;
 
 namespace StructureMap.Testing
 {
     [TestFixture]
     public class GenericsIntegrationTester
     {
-        #region Setup/Teardown
-
         [SetUp]
         public void SetUp()
         {
             container = new Container(x => {
                 x.For(typeof (IThing<,>)).Use(typeof (ColorThing<,>)).Ctor<string>("color").Is("Red").Named("Red");
                 x.For(typeof (IThing<,>)).Add(typeof (ComplexThing<,>))
-                    .Ctor<string>("name").Is("Jeremy")
-                    .Ctor<int>("age").Is(32)
-                    .Ctor<bool>("ready").Is(true)
-                    .Named("Complicated");
+                 .Ctor<string>("name").Is("Jeremy")
+                 .Ctor<int>("age").Is(32)
+                 .Ctor<bool>("ready").Is(true)
+                 .Named("Complicated");
 
                 x.For(typeof (ISimpleThing<>)).Use(typeof (SimpleThing<>));
 
                 x.For(typeof (IService<>)).Use(typeof (Service<>)).Named("Default");
 
-                x.For(typeof (AbstractClass<>)).Use(typeof(ConcreteClass<>));
-                                               x.For(typeof (AbstractClass<>)).Singleton();
+                x.For(typeof (AbstractClass<>)).Use(typeof (ConcreteClass<>));
+                x.For(typeof (AbstractClass<>)).Singleton();
             });
         }
 
-        #endregion
-
         private Container container;
 
-        [Test, Ignore("not sure I want this behavior anyway")]
-        public void AllTypesWithSpecificImplementation()
+        private interface IGenericType<T>
         {
-            IList objectConcepts = container.GetAllInstances(typeof (IConcept<object>));
-
-            Assert.IsNotNull(objectConcepts);
-            Assert.AreEqual(2, objectConcepts.Count);
-
-            IList stringConcepts = container.GetAllInstances(typeof (IConcept<string>));
-
-            Assert.IsNotNull(stringConcepts);
-            Assert.AreEqual(1, stringConcepts.Count);
         }
 
+        private class GenericType<T> : IGenericType<T>
+        {
+        }
+
+        private interface INonGenereic
+        {
+        }
+
+        private class NonGeneric : INonGenereic
+        {
+        }
+
+        [Test]
+        public void Can_use_factory_method_with_open_generics()
+        {
+            var container = new Container();
+            container.Configure(x => x.For(typeof (IGenericType<>)).Use(f => {
+                Type generic = f.BuildStack.Current.RequestedType.GetGenericArguments()[0];
+                Type type = typeof (GenericType<>).MakeGenericType(generic);
+                return Activator.CreateInstance(type);
+            }));
+
+            var instance = container.GetInstance<IGenericType<string>>();
+            instance.ShouldBeOfType<GenericType<string>>();
+        }
 
         [Test]
         public void MultipleGenericTypes()
@@ -61,6 +69,12 @@ namespace StructureMap.Testing
                 (IService<double>) container.GetInstance(typeof (IService<double>), "Default");
         }
 
+        [Test]
+        public void PicksUpASimpleGenericPluginFamilyFromConfiguration()
+        {
+            var thing = (ISimpleThing<int>) container.GetInstance(typeof (ISimpleThing<int>));
+            Assert.IsNotNull(thing);
+        }
 
         [Test]
         public void PicksUpAnExplicitlyDefinedGenericPluginFamilyFromConfiguration()
@@ -71,14 +85,6 @@ namespace StructureMap.Testing
 
             Assert.AreEqual("Red", redThing.Color);
         }
-
-        [Test]
-        public void PicksUpASimpleGenericPluginFamilyFromConfiguration()
-        {
-            var thing = (ISimpleThing<int>) container.GetInstance(typeof (ISimpleThing<int>));
-            Assert.IsNotNull(thing);
-        }
-
 
         [Test]
         public void SimpleInstanceManagerTestWithGenerics()
@@ -113,33 +119,5 @@ namespace StructureMap.Testing
             Assert.AreNotSame(object1, object4);
         }
 
-        [Test, Ignore("not sure we want this behavior anyway")]
-        public void SpecificImplementation()
-        {
-            var concept = (IConcept<object>) container.GetInstance(typeof (IConcept<object>), "Specific");
-
-            concept.ShouldNotBeNull();
-            concept.ShouldBeOfType<SpecificConcept>();
-        }
-
-        interface IGenericType<T>{}
-        class GenericType<T> : IGenericType<T> {}
-        interface INonGenereic{}
-        class NonGeneric : INonGenereic{}
-
-        [Test]
-        public void Can_use_factory_method_with_open_generics()
-        {
-            var container = new Container();
-            container.Configure(x => x.For(typeof (IGenericType<>)).Use(f =>
-            {
-                var generic = f.BuildStack.Current.RequestedType.GetGenericArguments()[0];
-                var type = typeof (GenericType<>).MakeGenericType(generic);
-                return Activator.CreateInstance(type);
-            }));
-
-            var instance = container.GetInstance<IGenericType<string>>();
-            instance.ShouldBeOfType<GenericType<string>>();
-        }
     }
 }
