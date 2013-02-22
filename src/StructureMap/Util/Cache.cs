@@ -1,18 +1,20 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace StructureMap.Util
 {
     // TODO -- at least use reader/writer locks
-    [Obsolete("Replace this with the one from FubuCore")]
-    [Serializable] // TODO -- at a minimum, use ReaderWriterLockSlim
-    public class Cache<TKey, TValue> : IEnumerable<TValue> where TValue : class
+    [Serializable]
+    public class Cache<TKey, TValue> : IEnumerable<TValue>
     {
         private readonly object _locker = new object();
         private readonly IDictionary<TKey, TValue> _values;
 
         private Func<TValue, TKey> _getKey = delegate { throw new NotImplementedException(); };
+
+        private Action<TValue> _onAddition = x => { };
 
         private Func<TKey, TValue> _onMissing = delegate(TKey key)
         {
@@ -41,17 +43,10 @@ namespace StructureMap.Util
             _values = dictionary;
         }
 
-
-        /// <summary>
-        ///   Guarantees that the Cache has the default value for a given key.
-        ///   If it does not already exist, it's created.
-        /// </summary>
-        /// <param name = "key"></param>
-        public void FillDefault(TKey key)
+        public Action<TValue> OnAddition
         {
-            Fill(key, _onMissing(key));
+            set { _onAddition = value; }
         }
-
 
         public Func<TKey, TValue> OnMissing
         {
@@ -78,7 +73,7 @@ namespace StructureMap.Util
                     return pair.Value;
                 }
 
-                return null;
+                return default(TValue);
             }
         }
 
@@ -86,24 +81,13 @@ namespace StructureMap.Util
         {
             get
             {
-                if (!_values.ContainsKey(key))
-                {
-                    lock (_locker)
-                    {
-                        if (!_values.ContainsKey(key))
-                        {
-                            var value = _onMissing(key);
-                            //Check to make sure that the onMissing didn't cache this already
-                            if (!_values.ContainsKey(key))
-                                _values.Add(key, value);
-                        }
-                    }
-                }
+                FillDefault(key);
 
                 return _values[key];
             }
             set
             {
+                _onAddition(value);
                 if (_values.ContainsKey(key))
                 {
                     _values[key] = value;
@@ -117,12 +101,39 @@ namespace StructureMap.Util
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return ((IEnumerable<TValue>) this).GetEnumerator();
+            return ((IEnumerable<TValue>)this).GetEnumerator();
         }
 
         public IEnumerator<TValue> GetEnumerator()
         {
             return _values.Values.GetEnumerator();
+        }
+
+        /// <summary>
+        ///   Guarantees that the Cache has the default value for a given key.
+        ///   If it does not already exist, it's created.
+        /// </summary>
+        /// <param name = "key"></param>
+        public void FillDefault(TKey key)
+        {
+            Fill(key, _onMissing);
+        }
+
+        public void Fill(TKey key, Func<TKey, TValue> onMissing)
+        {
+            if (!_values.ContainsKey(key))
+            {
+                lock (_locker)
+                {
+                    if (!_values.ContainsKey(key))
+                    {
+
+                        var value = onMissing(key);
+                        _onAddition(value);
+                        _values.Add(key, value);
+                    }
+                }
+            }
         }
 
         public void Fill(TKey key, TValue value)
@@ -135,27 +146,11 @@ namespace StructureMap.Util
             _values.Add(key, value);
         }
 
-        public bool TryRetrieve(TKey key, out TValue value)
-        {
-            value = default(TValue);
-
-            if (_values.ContainsKey(key))
-            {
-                value = _values[key];
-                return true;
-            }
-
-            return false;
-        }
-
         public void Each(Action<TValue> action)
         {
-            lock (_locker)
+            foreach (var pair in _values)
             {
-                foreach (var pair in _values)
-                {
-                    action(pair.Value);
-                }
+                action(pair.Value);
             }
         }
 
@@ -191,15 +186,17 @@ namespace StructureMap.Util
                 }
             }
 
-            return null;
+            return default(TValue);
+        }
+
+        public TKey[] GetAllKeys()
+        {
+            return _values.Keys.ToArray();
         }
 
         public TValue[] GetAll()
         {
-            var returnValue = new TValue[Count];
-            _values.Values.CopyTo(returnValue, 0);
-
-            return returnValue;
+            return _values.Values.ToArray();
         }
 
         public void Remove(TKey key)
@@ -210,25 +207,25 @@ namespace StructureMap.Util
             }
         }
 
-        public void Clear()
+        public void ClearAll()
         {
             _values.Clear();
         }
 
-        public Cache<TKey, TValue> Clone()
+        public bool WithValue(TKey key, Action<TValue> callback)
         {
-            var clone = new Cache<TKey, TValue>(_onMissing);
-            _values.Each(pair => clone[pair.Key] = pair.Value);
+            if (Has(key))
+            {
+                callback(this[key]);
+                return true;
+            }
 
-            return clone;
+            return false;
         }
 
-        public void WithValue(TKey key, Action<TValue> action)
+        public IDictionary<TKey, TValue> ToDictionary()
         {
-            if (_values.ContainsKey(key))
-            {
-                action(this[key]);
-            }
+            return new Dictionary<TKey, TValue>(_values);
         }
     }
 }

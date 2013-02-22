@@ -14,24 +14,43 @@ namespace StructureMap.Query
             _family = family;
         }
 
-        internal Instance Instance { get { return _instance; } }
+        internal Instance Instance
+        {
+            get { return _instance; }
+        }
 
         public ILifecycle Lifecycle
         {
             get { return _instance.Lifecycle; }
         }
 
-        public string Name { get { return _instance.Name; } }
+        public string Name
+        {
+            get { return _instance.Name; }
+        }
 
         /// <summary>
-        /// The actual concrete type of this Instance.  Not every type of IInstance
-        /// can determine the ConcreteType
+        ///     The actual concrete type of this Instance.  Not every type of IInstance
+        ///     can determine the ConcreteType
         /// </summary>
-        public Type ConcreteType { get { return _instance.ConcreteType; } }
+        public Type ConcreteType
+        {
+            get
+            {
+                return _instance.ConcreteType;
+            }
+        }
 
 
-        public string Description { get { return _instance.Description; } }
-        public Type PluginType { get { return _family.PluginType; } }
+        public string Description
+        {
+            get { return _instance.Description; }
+        }
+
+        public Type PluginType
+        {
+            get { return _family.PluginType; }
+        }
 
         public void EjectObject()
         {

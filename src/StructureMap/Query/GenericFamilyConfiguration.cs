@@ -11,10 +11,10 @@ namespace StructureMap.Query
         private readonly PluginFamily _family;
         private readonly PluginGraph _graph;
 
-        public GenericFamilyConfiguration(PluginFamily family, PluginGraph graph)
+        public GenericFamilyConfiguration(PluginFamily family)
         {
             _family = family;
-            _graph = graph;
+            _graph = family.Owner;
         }
 
         public string ProfileName

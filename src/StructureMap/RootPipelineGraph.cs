@@ -4,7 +4,6 @@ using System.Linq;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
-using StructureMap.Query;
 using StructureMap.Util;
 
 namespace StructureMap
@@ -12,8 +11,8 @@ namespace StructureMap
     public class RootPipelineGraph : IPipelineGraph
     {
         private readonly PluginGraph _pluginGraph;
+        private readonly Cache<string, IPipelineGraph> _profiles;
         private readonly IObjectCache _transientCache;
-        private readonly Cache<string, IPipelineGraph> _profiles; 
 
         public RootPipelineGraph(PluginGraph pluginGraph)
         {
@@ -22,16 +21,6 @@ namespace StructureMap
             _profiles =
                 new Cache<string, IPipelineGraph>(
                     name => new ComplexPipelineGraph(this, _pluginGraph.Profile(name), new NulloTransientCache()));
-        }
-
-        public static RootPipelineGraph For(Action<ConfigurationExpression> action)
-        {
-            var expression = new ConfigurationExpression();
-            action(expression);
-
-            var graph = expression.BuildGraph();
-
-            return new RootPipelineGraph(graph);
         }
 
         public IObjectCache Singletons
@@ -95,21 +84,6 @@ namespace StructureMap
             return _profiles[profile];
         }
 
-        public IEnumerable<IPluginTypeConfiguration> GetPluginTypes()
-        {
-            foreach (var family in _pluginGraph.Families)
-            {
-                if (family.IsGenericTemplate)
-                {
-                    yield return new GenericFamilyConfiguration(family, _pluginGraph);
-                }
-                else
-                {
-                    yield return new ClosedPluginTypeConfiguration(family, this);
-                }
-            }
-        }
-
         public void Dispose()
         {
             _pluginGraph.SafeDispose();
@@ -129,6 +103,21 @@ namespace StructureMap
         public PluginGraph Outer
         {
             get { return _pluginGraph; }
+        }
+
+        public IEnumerable<PluginFamily> UniqueFamilies()
+        {
+            return _pluginGraph.Families;
+        }
+
+        public static RootPipelineGraph For(Action<ConfigurationExpression> action)
+        {
+            var expression = new ConfigurationExpression();
+            action(expression);
+
+            PluginGraph graph = expression.BuildGraph();
+
+            return new RootPipelineGraph(graph);
         }
     }
 }

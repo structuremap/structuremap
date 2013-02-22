@@ -34,5 +34,15 @@ namespace StructureMap.Pipeline
         {
             return "Instance is created by Func<object> function:  " + _builder;
         }
+
+        public override Instance CloseType(Type[] types)
+        {
+            if (typeof (T) == typeof (object))
+            {
+                return this;
+            }
+
+            return null;
+        }
     }
 }

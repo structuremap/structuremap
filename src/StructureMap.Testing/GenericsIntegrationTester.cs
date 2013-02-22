@@ -139,8 +139,7 @@ namespace StructureMap.Testing
             }));
 
             var instance = container.GetInstance<IGenericType<string>>();
-            Assert.That(instance, Is.Not.Null);
-            Assert.That(instance, Is.InstanceOfType(typeof(GenericType<string>)));
+            instance.ShouldBeOfType<GenericType<string>>();
         }
     }
 }

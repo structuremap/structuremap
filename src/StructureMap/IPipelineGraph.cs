@@ -27,11 +27,15 @@ namespace StructureMap
 
         IPipelineGraph ForProfile(string profile);
 
-        IEnumerable<IPluginTypeConfiguration> GetPluginTypes();
-
         IPipelineGraph ToNestedGraph();
+
+
 
         IEnumerable<PluginGraph> AllGraphs();
         PluginGraph Outer { get; }
+
+
+        IEnumerable<PluginFamily> UniqueFamilies();
     }
+
 }

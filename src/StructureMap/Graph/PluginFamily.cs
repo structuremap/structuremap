@@ -18,6 +18,7 @@ namespace StructureMap.Graph
         private readonly Cache<string, Instance> _instances = new Cache<string, Instance>(delegate { return null; });
         private readonly Type _pluginType;
         private Lazy<Instance> _defaultInstance; 
+        
 
         public PluginFamily(Type pluginType)
         {
@@ -28,6 +29,8 @@ namespace StructureMap.Graph
             Attribute.GetCustomAttributes(typeof (FamilyAttribute), true).OfType<FamilyAttribute>()
                 .Each(x => x.Alter(this));
         }
+
+        public PluginGraph Owner { get; set; }
 
         private void resetDefault()
         {
@@ -163,7 +166,7 @@ namespace StructureMap.Graph
 
         public void RemoveAll()
         {
-            _instances.Clear();
+            _instances.ClearAll();
             resetDefault();
         }
 

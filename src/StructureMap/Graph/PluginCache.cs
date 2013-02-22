@@ -63,8 +63,8 @@ namespace StructureMap.Graph
             lock (typeof (PluginCache))
             {
                 _setterRules.Clear();
-                _builders.Clear();
-                _plugins.Clear();
+                _builders.ClearAll();
+                _plugins.ClearAll();
             }
         }
 

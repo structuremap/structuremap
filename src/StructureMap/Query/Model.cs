@@ -26,7 +26,17 @@ namespace StructureMap.Query
         {
             get
             {
-                return _graph.GetPluginTypes();
+                foreach (var family in _graph.UniqueFamilies())
+                {
+                    if (family.IsGenericTemplate)
+                    {
+                        yield return new GenericFamilyConfiguration(family);
+                    }
+                    else
+                    {
+                        yield return new ClosedPluginTypeConfiguration(family, _graph);
+                    }
+                }
             }
         }
 
@@ -84,7 +94,9 @@ namespace StructureMap.Query
             EjectAndRemovePluginTypes(filter);
 
             // second pass to hit instances
-            pluginTypes.Each(x => { x.EjectAndRemove(i => filter(i.ConcreteType)); });
+            pluginTypes.Each(x => {
+                x.EjectAndRemove(i => filter(i.ConcreteType));
+            });
         }
 
         /// <summary>

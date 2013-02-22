@@ -42,6 +42,10 @@ namespace StructureMap.Graph
             {
                 return _policies.FirstValue(x => x.Build(type)) ?? new PluginFamily(type);
             });
+
+            _families.OnAddition = family => family.Owner = this;
+
+
         }
 
         public PluginGraph(string profileName) : this()
@@ -245,7 +249,7 @@ namespace StructureMap.Graph
             containerFamily.RemoveAll();
 
             _families.Each(x => x.SafeDispose());
-            _families.Clear();
+            _families.ClearAll();
         }
     }
 }

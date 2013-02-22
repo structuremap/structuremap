@@ -16,8 +16,9 @@ namespace StructureMap.Testing.Query
         public void SetUp()
         {
             family = new PluginFamily(typeof (IService<>));
+            family.Owner = new PluginGraph("something");
 
-            configuration = new GenericFamilyConfiguration(family, new PluginGraph("something"));
+            configuration = new GenericFamilyConfiguration(family);
         }
 
         #endregion
@@ -124,14 +125,14 @@ namespace StructureMap.Testing.Query
         [Test]
         public void lifecycle_is_transient()
         {
-            configuration.Lifecycle.ShouldEqual(InstanceScope.Transient.ToString());
+            configuration.Lifecycle.ShouldBeOfType<TransientLifecycle>();
         }
 
         [Test]
         public void lifecyle_is_singleton()
         {
             family.SetScopeTo(InstanceScope.Singleton);
-            configuration.Lifecycle.ShouldEqual(InstanceScope.Singleton.ToString());
+            configuration.Lifecycle.ShouldBeOfType<SingletonLifecycle>();
         }
 
         [Test]

@@ -85,23 +85,6 @@ namespace StructureMap
             return _parent.ForProfile(profile);
         }
 
-        public IEnumerable<IPluginTypeConfiguration> GetPluginTypes()
-        {
-            var specific = new RootPipelineGraph(_outer).GetPluginTypes().ToArray();
-
-            foreach (var config in specific)
-            {
-                yield return config;
-            }
-
-            foreach (var parentType in _parent.GetPluginTypes())
-            {
-                if (!specific.Any(x => x.PluginType == parentType.PluginType))
-                {
-                    yield return parentType;
-                }
-            }
-        }
 
         public void Dispose()
         {
@@ -128,6 +111,19 @@ namespace StructureMap
         public PluginGraph Outer
         {
             get { return _outer; }
+        }
+
+        public IEnumerable<PluginFamily> UniqueFamilies()
+        {
+            foreach (var family in _outer.Families)
+            {
+                yield return family;
+            }
+
+            foreach (var family in _parent.UniqueFamilies().Where(x => !_outer.Families.Has(x.PluginType)))
+            {
+                yield return family;
+            }
         }
     }
 }
