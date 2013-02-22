@@ -85,7 +85,7 @@ namespace StructureMap.Testing.Pipeline
 
             family.AddInstance(i1);
 
-            i1.Lifecycle.ShouldBeOfType<TransientLifecycle>(); // TODO -- will change later
+            i1.Lifecycle.ShouldBeOfType<TransientLifecycle>();
         }
 
 

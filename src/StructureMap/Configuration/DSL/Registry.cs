@@ -229,7 +229,7 @@ namespace StructureMap.Configuration.DSL
         /// <typeparam name="TPluginType"></typeparam>
         /// <param name="scope">Optionally specify the instance scoping for this PluginType</param>
         /// <returns></returns>
-        public CreatePluginFamilyExpression<TPluginType> For<TPluginType>(InstanceScope? scope = null)
+        public CreatePluginFamilyExpression<TPluginType> For<TPluginType>(string scope = null)
         {
             return new CreatePluginFamilyExpression<TPluginType>(this, scope);
         }
@@ -241,7 +241,7 @@ namespace StructureMap.Configuration.DSL
         /// </summary>
         /// <param name="scope">Optionally specify the instance scoping for this PluginType</param>
         /// <returns></returns>
-        public GenericFamilyExpression For(Type pluginType, InstanceScope? scope = null)
+        public GenericFamilyExpression For(Type pluginType, string scope = null)
         {
             return new GenericFamilyExpression(pluginType, scope, this);
         }

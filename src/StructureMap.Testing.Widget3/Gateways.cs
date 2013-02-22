@@ -2,7 +2,7 @@ using System;
 
 namespace StructureMap.Testing.Widget3
 {
-    [PluginFamily("Default")]
+    [PluginFamily]
     public interface IGateway
     {
         string WhoAmI { get; }

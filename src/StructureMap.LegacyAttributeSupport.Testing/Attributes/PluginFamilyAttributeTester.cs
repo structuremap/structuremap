@@ -11,9 +11,9 @@ namespace StructureMap.Testing.Attributes
     [TestFixture]
     public class PluginFamilyAttributeTester
     {
-        private void assertScopeLeadsToInterceptor(InstanceScope scope, Type interceptorType)
+        private void assertScopeLeadsToInterceptor(string scope, Type interceptorType)
         {
-            var att = new PluginFamilyAttribute("something");
+            var att = new PluginFamilyAttribute();
             att.Scope = scope;
 
             var family = new PluginFamily(typeof (TypeThatDoesNotHaveCustomMementoSource));

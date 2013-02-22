@@ -46,7 +46,7 @@ namespace StructureMap.Testing.GenericWidgets
         public IPlug<T> Plug { get { return _plug; } }
     }
 
-    [PluginFamily("Default")]
+    [PluginFamily]
     public interface IPlug<T>
     {
         Type PlugType { get; }
@@ -62,7 +62,7 @@ namespace StructureMap.Testing.GenericWidgets
         #endregion
     }
 
-    [PluginFamily("Default")]
+    [PluginFamily]
     public interface IConcept<T>
     {
     }
@@ -113,7 +113,7 @@ namespace StructureMap.Testing.GenericWidgets
         public bool Ready { get { return _ready; } }
     }
 
-    [PluginFamily("Default", Scope = InstanceScope.Singleton)]
+    [PluginFamily(Scope = InstanceScope.Singleton)]
     public abstract class AbstractClass<T>
     {
         private readonly Guid _id = Guid.NewGuid();
@@ -131,7 +131,7 @@ namespace StructureMap.Testing.GenericWidgets
     {
     }
 
-    [PluginFamily("Default")]
+    [PluginFamily]
     public interface ILotsOfTemplatedTypes<T, U, V>
     {
     }

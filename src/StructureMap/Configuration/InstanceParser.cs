@@ -47,7 +47,7 @@ namespace StructureMap.Configuration
 
 
             _builder.ConfigureFamily(pluginTypePath, family => {
-                InstanceScope scope = findScope(element);
+                var scope = findScope(element);
                 family.SetScopeTo(scope);
 
                 InstanceMemento memento = ConfigurationParser.CreateMemento(element);
@@ -68,12 +68,12 @@ namespace StructureMap.Configuration
             });
         }
 
-        private static InstanceScope findScope(XmlElement familyElement)
+        private static string findScope(XmlElement familyElement)
         {
-            var returnValue = InstanceScope.PerRequest;
+            var returnValue = InstanceScope.Transient;
 
             familyElement.ForAttributeValue(SCOPE,
-                                            scope => { returnValue = (InstanceScope) Enum.Parse(typeof (InstanceScope), scope); });
+                                            scope => { returnValue = scope; });
 
             return returnValue;
         }

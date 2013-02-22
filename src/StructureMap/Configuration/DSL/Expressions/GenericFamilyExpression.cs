@@ -15,7 +15,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         private readonly Type _pluginType;
         private readonly Registry _registry;
 
-        public GenericFamilyExpression(Type pluginType, InstanceScope? scope, Registry registry)
+        public GenericFamilyExpression(Type pluginType, string scope, Registry registry)
         {
             _pluginType = pluginType;
             _registry = registry;
@@ -24,7 +24,7 @@ namespace StructureMap.Configuration.DSL.Expressions
 
             if (scope != null)
             {
-                alterAndContinue(family => family.SetScopeTo(scope.Value));
+                alterAndContinue(family => family.SetScopeTo(scope));
             }
         }
 
@@ -238,7 +238,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <param name="lifecycle"></param>
         /// <returns></returns>
-        public GenericFamilyExpression LifecycleIs(InstanceScope lifecycle)
+        public GenericFamilyExpression LifecycleIs(string lifecycle)
         {
             return alterAndContinue(family => family.SetScopeTo(lifecycle));
         }

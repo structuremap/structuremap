@@ -2,7 +2,7 @@ using System;
 
 namespace StructureMap.Pipeline
 {
-    // TODO -- make this a string, and make it possible to register Lifecycles
+    // TODO -- make it possible to register Lifecycles
     public static class Lifecycles
     {
         public static readonly ILifecycle Transient = new TransientLifecycle();
@@ -14,13 +14,10 @@ namespace StructureMap.Pipeline
         public static readonly HttpSessionLifecycle HttpSession = new HttpSessionLifecycle();
         public static readonly HybridSessionLifecycle HybridSession = new HybridSessionLifecycle();
 
-        public static ILifecycle GetLifecycle(InstanceScope scope)
+        public static ILifecycle GetLifecycle(string scope)
         {
             switch (scope)
             {
-                case InstanceScope.PerRequest:
-                    return Transient;
-
                 case InstanceScope.Singleton:
                     return Singleton;
 

@@ -20,7 +20,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         private readonly List<Action<PluginGraph>> _children = new List<Action<PluginGraph>>();
         private readonly Type _pluginType;
 
-        public CreatePluginFamilyExpression(Registry registry, InstanceScope? scope)
+        public CreatePluginFamilyExpression(Registry registry, string scope)
         {
             _pluginType = typeof (TPluginType);
 
@@ -34,7 +34,7 @@ namespace StructureMap.Configuration.DSL.Expressions
 
             if (scope != null)
             {
-                _alterations.Add(family => family.SetScopeTo(scope.Value));
+                _alterations.Add(family => family.SetScopeTo(scope));
             }
         }
 
@@ -195,7 +195,7 @@ namespace StructureMap.Configuration.DSL.Expressions
             return lifecycleIs(InstanceScope.Transient);
         }
 
-        private CreatePluginFamilyExpression<TPluginType> lifecycleIs(InstanceScope lifecycle)
+        private CreatePluginFamilyExpression<TPluginType> lifecycleIs(string lifecycle)
         {
             _alterations.Add(family => family.SetScopeTo(lifecycle));
             return this;

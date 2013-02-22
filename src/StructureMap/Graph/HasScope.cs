@@ -3,6 +3,8 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.Graph
 {
+
+    // TODO -- make sure there's helpers for all the common things
     public abstract class HasScope
     {
         protected Lazy<ILifecycle> _lifecycle;
@@ -16,7 +18,11 @@ namespace StructureMap.Graph
 
         protected HasScope scopedParent { get; set; }
 
-        public void SetScopeTo(InstanceScope scope)
+        /// <summary>
+        /// Use InstanceScope for the constants
+        /// </summary>
+        /// <param name="scope"></param>
+        public void SetScopeTo(string scope)
         {
             _lifecycle = new Lazy<ILifecycle>(() => Lifecycles.GetLifecycle(scope));
         }

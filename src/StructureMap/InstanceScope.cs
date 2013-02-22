@@ -1,15 +1,14 @@
 namespace StructureMap
 {
-    public enum InstanceScope
+    public static class InstanceScope
     {
-        PerRequest,
-        Singleton,
-        ThreadLocal,
-        HttpContext,
-        Hybrid,
-        HttpSession,
-        HybridHttpSession,
-        Unique,
-        Transient
+        public const string Singleton = "Singleton";
+        public const string ThreadLocal = "ThreadLocal";
+        public const string HttpContext = "HttpContext";
+        public const string Hybrid = "Hybrid";
+        public const string HttpSession = "HttpSession";
+        public const string HybridHttpSession = "HybridHttpSession";
+        public const string Unique = "Unique";
+        public const string Transient = "Transient";
     }
 }
