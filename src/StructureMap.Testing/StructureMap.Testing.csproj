@@ -246,7 +246,6 @@
     <Compile Include="Construction\SetterBuilderTester.cs" />
     <Compile Include="Construction\StubArguments.cs" />
     <Compile Include="Debugging.cs" />
-    <Compile Include="Diagnostics\DoctorTester.cs" />
     <Compile Include="Diagnostics\WriterExtensions.cs" />
     <Compile Include="Examples.cs">
       <SubType>Form</SubType>

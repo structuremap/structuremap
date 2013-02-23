@@ -303,10 +303,7 @@
     <Compile Include="Construction\IArguments.cs" />
     <Compile Include="Construction\InstanceBuilder.cs" />
     <Compile Include="Construction\SetterBuilder.cs" />
-    <Compile Include="Diagnostics\Doctor.cs" />
-    <Compile Include="Diagnostics\DoctorReport.cs" />
     <Compile Include="Diagnostics\DoctorResult.cs" />
-    <Compile Include="Diagnostics\DoctorRunner.cs" />
     <Compile Include="Diagnostics\ValidationError.cs" />
     <Compile Include="ErrorMessages.cs" />
     <Compile Include="Example.cs" />
