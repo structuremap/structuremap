@@ -1,7 +1,7 @@
 using System;
 using System.Xml;
 
-namespace StructureMap.Configuration
+namespace StructureMap.Configuration.Xml
 {
     public static class XmlExtensions
     {
@@ -43,7 +43,7 @@ namespace StructureMap.Configuration
 
             internal HasXmlElementExpression(XmlNode parent, string xpath)
             {
-                _element = (XmlElement) parent.SelectSingleNode(xpath);
+                _element = (XmlElement)parent.SelectSingleNode(xpath);
             }
 
             public HasXmlElementExpression Do(Action<XmlElement> action)
@@ -84,7 +84,7 @@ namespace StructureMap.Configuration
 
                 foreach (XmlNode node in _list)
                 {
-                    action((XmlElement) node);
+                    action((XmlElement)node);
                 }
             }
         }

@@ -20,5 +20,23 @@ namespace StructureMap.Testing
             objectWithArrays.Numbers.ShouldEqual(new[] {1, 2, 3});
             objectWithArrays.Strings.ShouldEqual(new[] {"a", "b", "c"});
         }
+
+        public class ClassWithStringAndIntArray
+        {
+            private readonly int[] _numbers;
+            private readonly string[] _strings;
+
+            public ClassWithStringAndIntArray(int[] numbers, string[] strings)
+            {
+                _numbers = numbers;
+                _strings = strings;
+            }
+
+            public int[] Numbers { get { return _numbers; } }
+
+            public string[] Strings { get { return _strings; } }
+        }
     }
+
+
 }

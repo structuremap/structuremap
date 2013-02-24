@@ -4,9 +4,8 @@ using System.IO;
 using System.Xml;
 using StructureMap.Diagnostics;
 using StructureMap.Graph;
-using StructureMap.Source;
 
-namespace StructureMap.Configuration
+namespace StructureMap.Configuration.Xml
 {
     public class ConfigurationParser : XmlConstants, IPluginGraphConfiguration
     {
@@ -49,9 +48,9 @@ namespace StructureMap.Configuration
             return new ConfigurationParser(structureMapNode) {FilePath = filename};
         }
 
-        public static InstanceMemento CreateMemento(XmlNode node)
+        public static XmlAttributeInstanceMemento CreateMemento(XmlNode node)
         {
-            XmlNode clonedNode = node.CloneNode(true);
+            var clonedNode = node.CloneNode(true);
             return new XmlAttributeInstanceMemento(clonedNode);
         }
 

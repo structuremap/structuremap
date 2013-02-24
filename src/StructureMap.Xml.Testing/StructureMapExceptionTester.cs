@@ -3,23 +3,15 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Xml;
 using NUnit.Framework;
-using StructureMap.Configuration;
-using StructureMap.Graph;
-using StructureMap.Testing.TestData;
+using StructureMap.Configuration.Xml;
 using StructureMap.Testing.Widget;
 
-namespace StructureMap.Testing.Graph.ExceptionHandling
+namespace StructureMap.Xml.Testing
 {
     [TestFixture]
     public class StructureMapExceptionTester
     {
-        private void assertErrorIsLogged(int errorCode, string xml)
-        {
-            PluginGraph graph = DataMother.BuildPluginGraphFromXml(xml);
-            graph.Log.AssertHasError(errorCode);
-        }
-
-
+        
         private void assertErrorIsThrown(int errorCode, string xml, Action<Container> action)
         {
             var document = new XmlDocument();

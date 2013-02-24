@@ -58,6 +58,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.LegacyAttribut
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.LegacyAttributeSupport.Testing", "StructureMap.LegacyAttributeSupport.Testing\StructureMap.LegacyAttributeSupport.Testing.csproj", "{05C3CC51-F8F1-4218-B2F6-F8F6BA73D33C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureMap.Configuration.Xml", "StructureMap.Configuration.Xml\StructureMap.Configuration.Xml.csproj", "{6AC066CC-4550-44B4-96B3-89F0406E6763}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Build|.NET = Build|.NET
@@ -293,6 +295,21 @@ Global
 		{05C3CC51-F8F1-4218-B2F6-F8F6BA73D33C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{05C3CC51-F8F1-4218-B2F6-F8F6BA73D33C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{05C3CC51-F8F1-4218-B2F6-F8F6BA73D33C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{6AC066CC-4550-44B4-96B3-89F0406E6763}.Build|.NET.ActiveCfg = Release|Any CPU
+		{6AC066CC-4550-44B4-96B3-89F0406E6763}.Build|Any CPU.ActiveCfg = Release|Any CPU
+		{6AC066CC-4550-44B4-96B3-89F0406E6763}.Build|Any CPU.Build.0 = Release|Any CPU
+		{6AC066CC-4550-44B4-96B3-89F0406E6763}.Build|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{6AC066CC-4550-44B4-96B3-89F0406E6763}.Build|Mixed Platforms.Build.0 = Release|Any CPU
+		{6AC066CC-4550-44B4-96B3-89F0406E6763}.Debug|.NET.ActiveCfg = Debug|Any CPU
+		{6AC066CC-4550-44B4-96B3-89F0406E6763}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AC066CC-4550-44B4-96B3-89F0406E6763}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AC066CC-4550-44B4-96B3-89F0406E6763}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{6AC066CC-4550-44B4-96B3-89F0406E6763}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{6AC066CC-4550-44B4-96B3-89F0406E6763}.Release|.NET.ActiveCfg = Release|Any CPU
+		{6AC066CC-4550-44B4-96B3-89F0406E6763}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AC066CC-4550-44B4-96B3-89F0406E6763}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6AC066CC-4550-44B4-96B3-89F0406E6763}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{6AC066CC-4550-44B4-96B3-89F0406E6763}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

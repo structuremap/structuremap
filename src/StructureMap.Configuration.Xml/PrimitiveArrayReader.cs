@@ -3,9 +3,9 @@ using System.Xml;
 using StructureMap.Pipeline;
 using StructureMap.TypeRules;
 
-namespace StructureMap.Configuration
+namespace StructureMap.Configuration.Xml
 {
-    public class PrimitiveArrayReader : ITypeReader
+    public class PrimitiveArrayReader : ITypeReader<XmlNode>
     {
         #region ITypeReader Members
 

@@ -126,9 +126,6 @@
     <Reference Include="System.Web">
       <Name>System.Web</Name>
     </Reference>
-    <Reference Include="System.Xml">
-      <Name>System.XML</Name>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs">
@@ -203,24 +200,14 @@
     <Compile Include="Configuration\ConfigurationConstants.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Configuration\ConfigurationParser.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Configuration\DSL\Expressions\CreatePluginFamilyExpression.cs" />
     <Compile Include="Configuration\DSL\ExpressionValidator.cs" />
     <Compile Include="Pipeline\ExplicitArguments.cs" />
     <Compile Include="Configuration\DSL\Registry.cs" />
-    <Compile Include="Configuration\InstanceParser.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Configuration\IGraphBuilder.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Configuration\GraphBuilder.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Configuration\StructureMapConfigurationSection.cs" />
-    <Compile Include="Configuration\XmlConstants.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Exceptions\InstancePropertyValueException.cs">
@@ -275,9 +262,6 @@
     <Compile Include="Query\ClosedPluginTypeConfiguration.cs" />
     <Compile Include="RootPipelineGraph.cs" />
     <Compile Include="SessionCache.cs" />
-    <Compile Include="Source\XmlAttributeInstanceMemento.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Diagnostics\ValidationBuildSession.cs" />
     <Compile Include="Util\LightweightCache.cs" />
     <EmbeddedResource Include="StructureMapException.resx">
@@ -290,14 +274,10 @@
     </None>
     <Compile Include="CloseGenericTypeExpression.cs" />
     <Compile Include="ConfigurationExpression.cs" />
-    <Compile Include="Configuration\DictionaryReader.cs" />
     <Compile Include="Configuration\DSL\Expressions\InstanceExpression.cs" />
     <Compile Include="Configuration\DSL\IRegistry.cs" />
     <Compile Include="Configuration\DSL\SetterConvention.cs" />
     <Compile Include="Configuration\ITypeReader.cs" />
-    <Compile Include="Configuration\PrimitiveArrayReader.cs" />
-    <Compile Include="Configuration\TypeReaderFactory.cs" />
-    <Compile Include="Configuration\XmlExtensions.cs" />
     <Compile Include="Construction\BuilderCompiler.cs" />
     <Compile Include="Construction\ConstructorFunctionBuilder.cs" />
     <Compile Include="Construction\IArguments.cs" />
@@ -388,6 +368,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Source\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

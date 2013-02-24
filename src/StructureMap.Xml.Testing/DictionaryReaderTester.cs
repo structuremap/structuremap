@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Specialized;
 using NUnit.Framework;
-using StructureMap.Configuration;
+using StructureMap.Configuration.Xml;
 using StructureMap.Pipeline;
+using StructureMap.Testing;
 using StructureMap.Testing.Pipeline;
-using StructureMap.Testing.TestData;
+using StructureMap.Xml.Testing.TestData;
 
-namespace StructureMap.Testing.Configuration
+namespace StructureMap.Xml.Testing
 {
     [TestFixture]
     public class DictionaryReaderTester

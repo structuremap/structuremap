@@ -1,8 +1,8 @@
 using System;
 using System.Xml;
-using StructureMap.Configuration;
+using StructureMap.Configuration.Xml;
 
-namespace StructureMap.Testing
+namespace StructureMap.Xml.Testing
 {
     public class StructureMapConfigCreator
     {
