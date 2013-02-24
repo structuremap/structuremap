@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Xml;
 using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
@@ -13,6 +14,7 @@ namespace StructureMap
     public class ConfigurationExpression : Registry
     {
         private readonly PluginGraphBuilder _builder = new PluginGraphBuilder();
+        private readonly List<IPluginGraphConfiguration> _pluginGraphConfigs = new List<IPluginGraphConfiguration>();
 
         internal ConfigurationExpression()
         {
@@ -20,7 +22,7 @@ namespace StructureMap
         }
 
         /// <summary>
-        ///     If called, directs StructureMap to look for configuration in the App.config in any <StructureMap> node.
+        ///     If called, directs StructureMap to look for configuration in the App.config in any &lt;StructureMap&gt; node.
         /// </summary>
         public void IncludeConfigurationFromConfigFile()
         {
@@ -50,7 +52,6 @@ namespace StructureMap
         ///     must point to an Xml file with valid StructureMap
         ///     configuration
         /// </summary>
-        /// <param name="fileName"></param>
         public void AddConfigurationFromXmlFile(string fileName)
         {
             _builder.Add(ConfigurationParser.FromFile(fileName));
@@ -69,7 +70,8 @@ namespace StructureMap
 
         internal PluginGraph BuildGraph()
         {
-            return _builder.Build();
+            var pluginGraph = _builder.Build();
+            return pluginGraph;
         }
 
         protected bool Equals(ConfigurationExpression other)

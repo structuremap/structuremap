@@ -226,6 +226,7 @@
     <Compile Include="Configuration\DictionaryReaderTester.cs" />
     <Compile Include="Configuration\DSL\AddInstanceTester.cs" />
     <Compile Include="Configuration\DSL\AddTypesTester.cs" />
+    <Compile Include="Configuration\DSL\Add_PluginGraphConfigurationTester.cs" />
     <Compile Include="Configuration\DSL\ConstructorExpressionTester.cs" />
     <Compile Include="Configuration\DSL\CreatePluginFamilyTester.cs" />
     <Compile Include="Configuration\DSL\GenericFamilyExpressionTester.cs" />

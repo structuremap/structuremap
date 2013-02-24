@@ -360,5 +360,41 @@ namespace StructureMap.Configuration.DSL
 
             public SmartInstance<T> Configure { get { return _instance; } }
         }
+
+        /// <summary>
+        /// Gives a <see cref="IPluginGraphConfiguration"/> the possibility to interact with the current <see cref="PluginGraphBuilder"/>
+        /// via <see cref="IPluginGraphConfiguration.Register"/>.
+        /// </summary>
+        public void RegisterPluginGraphConfiguration<T>() where T : IPluginGraphConfiguration, new()
+        {
+            RegisterPluginGraphConfiguration(new T());
+        }
+
+        /// <summary>
+        /// See <see cref="RegisterPluginGraphConfiguration{T}"/>
+        /// </summary>
+        public void RegisterPluginGraphConfiguration(IPluginGraphConfiguration pluginGraphConfig)
+        {
+            register = pluginGraphConfig.Register;
+        }
+
+        /// <summary>
+        /// Gives a <see cref="IPluginGraphConfiguration"/> the possibility to interact with the resulting <see cref="PluginGraph"/>,
+        /// i.e. as opposed to <see cref="RegisterPluginGraphConfiguration"/>, the PluginGraph is built, and the provided
+        /// PluginGraph config obtains access to saig graph.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        public void ConfigurePluginGraph<T>() where T : IPluginGraphConfiguration, new()
+        {
+            ConfigurePluginGraph(new T());
+        }
+
+        /// <summary>
+        /// <see cref="ConfigurePluginGraph{T}"/>
+        /// </summary>
+        public void ConfigurePluginGraph(IPluginGraphConfiguration pluginGraphConfig)
+        {
+            alter = pluginGraphConfig.Configure;
+        }
     }
 }
