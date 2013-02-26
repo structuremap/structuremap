@@ -196,24 +196,6 @@ namespace StructureMap.Configuration.DSL.Expressions
             _alterations.Add(family => family.SetScopeTo(lifecycle));
             return this;
         }
-
-        /// <summary>
-        /// Convenience method to mark a PluginFamily as a Hybrid lifecycle
-        /// </summary>
-        /// <returns></returns>
-        public CreatePluginFamilyExpression<TPluginType> HybridHttpOrThreadLocalScoped()
-        {
-            return lifecycleIs(Lifecycles.Hybrid);
-        }
-
-        /// <summary>
-        /// Convenience method to mark a PluginFamily as HttpContext scoped
-        /// </summary>
-        /// <returns></returns>
-        public CreatePluginFamilyExpression<TPluginType> HttpContextScoped()
-        {
-            return lifecycleIs(Lifecycles.HttpContext);
-        }
         
         /// <summary>
         /// Register an Action to run against any object of this PluginType immediately after

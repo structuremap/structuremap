@@ -44,7 +44,7 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -321,7 +321,6 @@
     <Compile Include="Graph\PluginCache.cs" />
     <Compile Include="IContext.cs" />
     <Compile Include="Pipeline\AdapterClasses.cs" />
-    <Compile Include="Pipeline\HybridLifecycle.cs" />
     <Compile Include="Query\EmptyConfiguration.cs" />
     <Compile Include="Query\GenericFamilyConfiguration.cs" />
     <Compile Include="Query\IModel.cs" />
@@ -329,10 +328,6 @@
     <Compile Include="Pipeline\ArrayCoercion.cs" />
     <Compile Include="Pipeline\ConstructorInstance.cs" />
     <Compile Include="Pipeline\EnumerableInstance.cs" />
-    <Compile Include="Pipeline\HttpContextLifecycle.cs" />
-    <Compile Include="Pipeline\HttpLifecycleBase.cs" />
-    <Compile Include="Pipeline\HttpSessionLifecycle.cs" />
-    <Compile Include="Pipeline\HybridSessionLifecycle.cs" />
     <Compile Include="Pipeline\IEnumerableCoercion.cs" />
     <Compile Include="Pipeline\ILifecycle.cs" />
     <Compile Include="Pipeline\IObjectCache.cs" />
@@ -340,7 +335,6 @@
     <Compile Include="Pipeline\ListCoercion.cs" />
     <Compile Include="Pipeline\LifecycleObjectCache.cs" />
     <Compile Include="Pipeline\NulloTransientCache.cs" />
-    <Compile Include="Pipeline\SessionWrapper.cs" />
     <Compile Include="Pipeline\SingletonLifecycle.cs" />
     <Compile Include="Pipeline\ThreadLocalStorageLifecycle.cs" />
     <Compile Include="Pipeline\UniquePerRequestLifecycle.cs" />

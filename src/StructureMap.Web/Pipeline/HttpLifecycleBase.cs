@@ -1,4 +1,6 @@
-namespace StructureMap.Pipeline
+using StructureMap.Pipeline;
+
+namespace StructureMap.Web.Pipeline
 {
     public abstract class HttpLifecycleBase<HTTP, NONHTTP> : LifecycleBase
         where HTTP : ILifecycle, new()
