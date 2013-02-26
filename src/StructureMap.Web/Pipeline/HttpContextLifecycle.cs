@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Reflection;
 using System.Web;
+using StructureMap.Pipeline;
 
-namespace StructureMap.Pipeline
+namespace StructureMap.Web.Pipeline
 {
     public class HttpContextLifecycle : LifecycleBase
     {

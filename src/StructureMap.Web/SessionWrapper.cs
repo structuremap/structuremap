@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Web.SessionState;
 
-namespace StructureMap.Pipeline
+namespace StructureMap.Web
 {
     public class SessionWrapper : IDictionary
     {
