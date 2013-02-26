@@ -15,13 +15,7 @@ namespace StructureMap.Testing.Pipeline
         {
             _lifecycle = new ThreadLocalStorageLifecycle();
 
-            container =
-                new Container(
-                    x =>
-                    {
-                        x.For<Rule>(InstanceScope.ThreadLocal).Use(
-                            () => new ColorRule("Red"));
-                    });
+            container = new Container(x => x.For<Rule>(Lifecycles.ThreadLocal).Use(() => new ColorRule("Red")));
         }
 
         #endregion

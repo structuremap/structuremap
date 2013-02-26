@@ -54,7 +54,7 @@ namespace StructureMap.Testing.Graph
             var family = new PluginFamily(typeof (IServiceProvider));
             family.Lifecycle.ShouldBeOfType<TransientLifecycle>();
 
-            family.SetScopeTo(InstanceScope.HttpContext);
+            family.SetScopeTo(Lifecycles.HttpContext);
             family.Lifecycle.ShouldBeOfType<HttpContextLifecycle>();
         }
 
@@ -64,8 +64,7 @@ namespace StructureMap.Testing.Graph
         {
             var family = new PluginFamily(typeof (IServiceProvider));
 
-
-            family.SetScopeTo(InstanceScope.Hybrid);
+            family.SetScopeTo(Lifecycles.Hybrid);
             family.Lifecycle.ShouldBeOfType<HybridLifecycle>();
         }
 
@@ -74,7 +73,7 @@ namespace StructureMap.Testing.Graph
         {
             var family = new PluginFamily(typeof (IServiceProvider));
 
-            family.SetScopeTo(InstanceScope.Singleton);
+            family.SetScopeTo(Lifecycles.Singleton);
             family.Lifecycle.ShouldBeOfType<SingletonLifecycle>();
         }
 
@@ -83,7 +82,7 @@ namespace StructureMap.Testing.Graph
         {
             var family = new PluginFamily(typeof (IServiceProvider));
 
-            family.SetScopeTo(InstanceScope.ThreadLocal);
+            family.SetScopeTo(Lifecycles.ThreadLocal);
             family.Lifecycle.ShouldBeOfType<ThreadLocalStorageLifecycle>();
         }
 
@@ -209,7 +208,7 @@ namespace StructureMap.Testing.Graph
         public void set_the_scope_to_session()
         {
             var family = new PluginFamily(typeof (IServiceProvider));
-            family.SetScopeTo(InstanceScope.HttpSession);
+            family.SetScopeTo(Lifecycles.HttpSession);
 
             family.Lifecycle.ShouldBeOfType<HttpSessionLifecycle>();
         }
@@ -218,7 +217,7 @@ namespace StructureMap.Testing.Graph
         public void set_the_scope_to_session_hybrid()
         {
             var family = new PluginFamily(typeof (IServiceProvider));
-            family.SetScopeTo(InstanceScope.HybridHttpSession);
+            family.SetScopeTo(Lifecycles.HybridSession);
 
             family.Lifecycle.ShouldBeOfType<HybridSessionLifecycle>();
         }

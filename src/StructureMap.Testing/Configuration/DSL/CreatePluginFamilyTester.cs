@@ -95,7 +95,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var registry = new Registry();
             CreatePluginFamilyExpression<IGateway> expression =
-                registry.For<IGateway>(InstanceScope.ThreadLocal);
+                registry.For<IGateway>(Lifecycles.ThreadLocal);
             Assert.IsNotNull(expression);
 
             PluginGraph pluginGraph = registry.Build();
@@ -104,7 +104,6 @@ namespace StructureMap.Testing.Configuration.DSL
 
             family.Lifecycle.ShouldBeOfType<ThreadLocalStorageLifecycle>();
         }
-
 
         [Test]
         public void BuildInstancesOfType()

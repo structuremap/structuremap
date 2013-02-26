@@ -191,9 +191,6 @@
     <Compile Include="Attributes\DefaultConstructorAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="InstanceScope.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Attributes\SetterPropertyAttribute.cs">
       <SubType>Code</SubType>
     </Compile>

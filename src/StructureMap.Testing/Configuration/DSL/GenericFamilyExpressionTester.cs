@@ -164,7 +164,7 @@ namespace StructureMap.Testing.Configuration.DSL
         public void Set_caching()
         {
             var registry = new Registry();
-            registry.For(typeof(ITarget), InstanceScope.ThreadLocal);
+            registry.For(typeof(ITarget), Lifecycles.ThreadLocal);
             PluginGraph graph = registry.Build();
 
             graph.Families[typeof (ITarget)]
