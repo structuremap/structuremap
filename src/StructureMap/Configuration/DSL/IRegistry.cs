@@ -123,14 +123,14 @@ namespace StructureMap.Configuration.DSL
         /// </summary>
         /// <typeparam name="TPluginType"></typeparam>
         /// <returns></returns>
-        CreatePluginFamilyExpression<TPluginType> For<TPluginType>(string scope = null);
+        CreatePluginFamilyExpression<TPluginType> For<TPluginType>(ILifecycle lifecycle = null);
 
         /// <summary>
         /// Shorthand for ForRequestedType(pluginType)
         /// </summary>
         /// <param name="pluginType"></param>
         /// <returns></returns>
-        GenericFamilyExpression For(Type pluginType, string scope = null);
+        GenericFamilyExpression For(Type pluginType, ILifecycle lifecycle = null);
 
         /// <summary>
         /// Shortcut to make StructureMap return the default object of U casted to T

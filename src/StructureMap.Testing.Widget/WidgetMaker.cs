@@ -1,6 +1,5 @@
 namespace StructureMap.Testing.Widget
 {
-    [PluginFamily]
     public abstract class WidgetMaker
     {
         public abstract IWidget MakeWidget();

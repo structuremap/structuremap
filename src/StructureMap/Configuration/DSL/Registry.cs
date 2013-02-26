@@ -226,11 +226,15 @@ namespace StructureMap.Configuration.DSL
         /// and ForRequestedType() are synonyms
         /// </summary>
         /// <typeparam name="TPluginType"></typeparam>
-        /// <param name="scope">Optionally specify the instance scoping for this PluginType</param>
+        /// <param name="lifecycle">Optionally specify the instance scoping for this PluginType</param>
         /// <returns></returns>
-        public CreatePluginFamilyExpression<TPluginType> For<TPluginType>(string scope = null)
+        public CreatePluginFamilyExpression<TPluginType> For<TPluginType>(ILifecycle lifecycle = null)
         {
-            return new CreatePluginFamilyExpression<TPluginType>(this, scope);
+            if (lifecycle == null)
+            {
+                lifecycle = Lifecycles.Transient;
+            }
+            return new CreatePluginFamilyExpression<TPluginType>(this, lifecycle);
         }
 
         /// <summary>
@@ -238,11 +242,15 @@ namespace StructureMap.Configuration.DSL
         /// Scoping, the Default Instance, and interception.  This method is specifically
         /// meant for registering open generic types
         /// </summary>
-        /// <param name="scope">Optionally specify the instance scoping for this PluginType</param>
+        /// <param name="lifecycle">Optionally specify the instance scoping for this PluginType</param>
         /// <returns></returns>
-        public GenericFamilyExpression For(Type pluginType, string scope = null)
+        public GenericFamilyExpression For(Type pluginType, ILifecycle lifecycle = null)
         {
-            return new GenericFamilyExpression(pluginType, scope, this);
+            if (lifecycle == null)
+            {
+                lifecycle = Lifecycles.Transient;
+            }
+            return new GenericFamilyExpression(pluginType, lifecycle, this);
         }
 
 

@@ -1,6 +1,7 @@
 using System;
 using System.Xml;
 using StructureMap.Graph;
+using StructureMap.Pipeline;
 using StructureMap.Util;
 
 namespace StructureMap.Configuration.Xml
@@ -68,12 +69,12 @@ namespace StructureMap.Configuration.Xml
             });
         }
 
-        private static string findScope(XmlElement familyElement)
+        private static ILifecycle findScope(XmlElement familyElement)
         {
-            var returnValue = InstanceScope.Transient;
+            var returnValue = Lifecycles.Transient;
 
-            familyElement.ForAttributeValue(SCOPE,
-                                            scope => { returnValue = scope; });
+            //familyElement.ForAttributeValue(SCOPE,
+            //                                scope => { returnValue = scope; });
 
             return returnValue;
         }

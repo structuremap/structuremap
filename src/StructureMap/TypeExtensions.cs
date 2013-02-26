@@ -24,9 +24,8 @@ namespace StructureMap
 
         public static string ToName(this ILifecycle lifecycle)
         {
-            return lifecycle == null ? InstanceScope.Transient.ToString() : lifecycle.Scope;
+            return lifecycle == null ? Lifecycles.Transient.Scope : lifecycle.Scope;
         }
-
 
         public static void Fill<T>(this IList<T> list, T value)
         {
