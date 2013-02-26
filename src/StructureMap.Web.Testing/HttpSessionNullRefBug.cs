@@ -1,8 +1,8 @@
 using NUnit.Framework;
-using StructureMap.Pipeline;
+using StructureMap.Testing;
 using StructureMap.Testing.Widget3;
 
-namespace StructureMap.Testing.Bugs
+namespace StructureMap.Web.Testing
 {
     [TestFixture]
     public class HttpSessionNullRefBug
@@ -10,7 +10,7 @@ namespace StructureMap.Testing.Bugs
         [Test]
         public void SetUp()
         {
-            var container = new Container(x => x.For<IGateway>(Lifecycles.HybridSession).Use<DefaultGateway>());
+            var container = new Container(x => x.For<IGateway>(WebLifecycles.HybridSession).Use<DefaultGateway>());
 
             container.GetInstance<IGateway>().ShouldNotBeNull();
         }

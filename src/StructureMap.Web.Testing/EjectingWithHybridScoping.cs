@@ -1,6 +1,7 @@
 using NUnit.Framework;
+using StructureMap.Testing;
 
-namespace StructureMap.Testing.Bugs
+namespace StructureMap.Web.Testing
 {
     [TestFixture]
     public class EjectingWithHybridScoping
@@ -15,7 +16,7 @@ namespace StructureMap.Testing.Bugs
 
             container.GetInstance<IFoo>().ShouldNotBeNull();
 
-            container.EjectAllInstancesOf<Testing.IFoo>();
+            container.EjectAllInstancesOf<StructureMap.Testing.IFoo>();
         }
 
         public interface IFoo

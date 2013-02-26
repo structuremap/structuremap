@@ -48,25 +48,7 @@ namespace StructureMap.Testing.Graph
             family.GetDefaultInstance().ShouldBeTheSameAs(instance);
         }
 
-        [Test]
-        public void SetScopeToHttpContext()
-        {
-            var family = new PluginFamily(typeof (IServiceProvider));
-            family.Lifecycle.ShouldBeOfType<TransientLifecycle>();
 
-            family.SetScopeTo(Lifecycles.HttpContext);
-            family.Lifecycle.ShouldBeOfType<HttpContextLifecycle>();
-        }
-
-
-        [Test]
-        public void SetScopeToHybrid()
-        {
-            var family = new PluginFamily(typeof (IServiceProvider));
-
-            family.SetScopeTo(Lifecycles.Hybrid);
-            family.Lifecycle.ShouldBeOfType<HybridLifecycle>();
-        }
 
         [Test]
         public void SetScopeToSingleton()
@@ -203,26 +185,7 @@ namespace StructureMap.Testing.Graph
 
             family.GetDefaultInstance().ShouldBeTheSameAs(instance);
         }
-
-        [Test]
-        public void set_the_scope_to_session()
-        {
-            var family = new PluginFamily(typeof (IServiceProvider));
-            family.SetScopeTo(Lifecycles.HttpSession);
-
-            family.Lifecycle.ShouldBeOfType<HttpSessionLifecycle>();
-        }
-
-        [Test]
-        public void set_the_scope_to_session_hybrid()
-        {
-            var family = new PluginFamily(typeof (IServiceProvider));
-            family.SetScopeTo(Lifecycles.HybridSession);
-
-            family.Lifecycle.ShouldBeOfType<HybridSessionLifecycle>();
-        }
     }
-
 
     /// <summary>
     ///     Specifying the default instance is "Default" and marking the PluginFamily

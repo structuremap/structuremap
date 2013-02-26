@@ -199,15 +199,15 @@
     <Compile Include="Bugs\AddValueDirectlyWithGenericUsage.cs" />
     <Compile Include="Bugs\BuildUpBug.cs" />
     <Compile Include="Bugs\CloseOpenGenericsWithSomeSpecifics.cs" />
-    <Compile Include="Bugs\EjectingWithHybridScoping.cs" />
     <Compile Include="Bugs\EnumerableShouldGetAllValuesTester.cs" />
     <Compile Include="Bugs\FillAllPropertiesShouldWorkForAlreadyConfiguredPluginsBug.cs" />
     <Compile Include="Bugs\GetAllInstancesShouldObserveKeys.cs" />
-    <Compile Include="Bugs\HttpSessionNullRefBug.cs" />
+    <Compile Include="Bugs\IDictionaryAndXmlBugTester.cs" />
     <Compile Include="Bugs\InjectByFuncWithNoPublicConstructors.cs" />
     <Compile Include="Bugs\LambdaCreatesNullBugTester.cs" />
     <Compile Include="Bugs\MixedConfigureAndInitializeMissingInstanceProblem.cs" />
     <Compile Include="Bugs\OpenGenericWithConstraints.cs" />
+    <Compile Include="Bugs\OverwritingOfPrimitiveProperties.cs" />
     <Compile Include="Bugs\ScanIndexerBugTester.cs" />
     <Compile Include="Bugs\SingletonShouldBeLazy.cs" />
     <Compile Include="Bugs\SpecifyScopeInConfigureTester.cs" />
@@ -219,9 +219,11 @@
     <Compile Include="BuildUpIntegratedTester.cs" />
     <Compile Include="BuildUpTester.cs" />
     <Compile Include="ConcreteClassCreationTester.cs" />
+    <Compile Include="Configuration\DefaultInstanceNodeTester.cs" />
+    <Compile Include="Configuration\DictionaryAndArrayArgumentTester.cs" />
+    <Compile Include="Configuration\DictionaryReaderTester.cs" />
     <Compile Include="Configuration\DSL\AddInstanceTester.cs" />
     <Compile Include="Configuration\DSL\AddTypesTester.cs" />
-    <Compile Include="Configuration\DSL\Add_PluginGraphConfigurationTester.cs" />
     <Compile Include="Configuration\DSL\ConstructorExpressionTester.cs" />
     <Compile Include="Configuration\DSL\CreatePluginFamilyTester.cs" />
     <Compile Include="Configuration\DSL\GenericFamilyExpressionTester.cs" />
@@ -234,12 +236,15 @@
     <Compile Include="Configuration\DSL\RegistryIntegratedTester.cs" />
     <Compile Include="Configuration\DSL\RegistryTester.cs" />
     <Compile Include="Configuration\GraphBuilderTester.cs" />
+    <Compile Include="Configuration\PrimitiveArrayReaderTester.cs" />
+    <Compile Include="Configuration\ShortcuttedInstanceNodeTester.cs" />
     <Compile Include="Configuration\SimplePluginFactory.cs" />
     <Compile Include="Construction\BuilderCompilerTester.cs" />
     <Compile Include="Construction\ConstructorFunctionBuilderTester.cs" />
     <Compile Include="Construction\SetterBuilderTester.cs" />
     <Compile Include="Construction\StubArguments.cs" />
     <Compile Include="Debugging.cs" />
+    <Compile Include="Diagnostics\DoctorTester.cs" />
     <Compile Include="Diagnostics\WriterExtensions.cs" />
     <Compile Include="Examples.cs">
       <SubType>Form</SubType>
@@ -259,6 +264,9 @@
     <Compile Include="Graph\EnumerationTester.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Graph\ExceptionHandling\StructureMapExceptionTester.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Graph\FindAllTypesFilterTester.cs" />
     <Compile Include="Graph\FirstInterfaceConventionTester.cs" />
     <Compile Include="Graph\GenericConnectionScannerTester.cs" />
@@ -275,6 +283,9 @@
     <Compile Include="Graph\Interceptors\InterceptorLibraryTester.cs" />
     <Compile Include="Graph\Interceptors\MockTypeInterceptor.cs" />
     <Compile Include="Graph\Interceptors\TypeInterceptionTester.cs" />
+    <Compile Include="Graph\Source\XmlAttributeInstanceMementoTester.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Graph\TypeFindingTester.cs" />
     <Compile Include="Diagnostics\TextReportWriterSmokeTester.cs" />
     <Compile Include="GenericsAcceptanceTester.cs" />
@@ -312,7 +323,6 @@
     <Compile Include="Pipeline\ContainerIsInTheContainerTester.cs" />
     <Compile Include="Pipeline\DefaultInstanceTester.cs" />
     <Compile Include="Pipeline\GenericsHelperExpressionTester.cs" />
-    <Compile Include="Pipeline\HybridBuildLifecycleTester.cs" />
     <Compile Include="Pipeline\InstanceTester.cs" />
     <Compile Include="Pipeline\LazyFuncTester.cs" />
     <Compile Include="Pipeline\LifecyclesTester.cs" />
@@ -348,6 +358,7 @@
     <Compile Include="RegistryExtensions.cs" />
     <Compile Include="SessionCacheTester.cs" />
     <Compile Include="SpecificationExtensions.cs" />
+    <Compile Include="StructureMapConfigCreator.cs" />
     <Compile Include="StructureMapConfigurationTester.cs" />
     <Compile Include="TestData\DataMother.cs">
       <SubType>Code</SubType>
@@ -357,6 +368,9 @@
     <Compile Include="Diagnostics\ValidationBuildSessionTester.cs" />
     <Compile Include="TypeExtensions.cs" />
     <Compile Include="TypeExtensionsTester.cs" />
+    <Compile Include="XmlWriting\ElementChecker.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <None Include="..\structuremap.snk">
       <Link>structuremap.snk</Link>
     </None>
@@ -366,6 +380,9 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <None Include="StructureMap.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="StructureMap.Testing.dll.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <EmbeddedResource Include="Graph\Source\EmbeddedMementoFile.xml" />
@@ -402,9 +419,6 @@
     <EmbeddedResource Include="TestData\Trigger.xml" />
     <EmbeddedResource Include="TestData\Valid.config" />
     <EmbeddedResource Include="TestData\XmlInstanceMemento.xml" />
-    <None Include="StructureMap.Testing.dll.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="TestData\GenericsTesting.xml" />
@@ -419,6 +433,8 @@
   <ItemGroup>
     <Content Include="Examples\AddRegistryInXml.xml" />
     <Content Include="Sample.xml" />
+    <EmbeddedResource Include="TestData\BUG_OverwritingOfPrimitiveProperties.xml" />
+    <EmbeddedResource Include="TestData\ShortInstance.xml" />
     <EmbeddedResource Include="TestData\DefaultInstance.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -450,7 +466,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AutoFactories\Supporting\" />
-    <Folder Include="Graph\ExceptionHandling\" />
     <Folder Include="Util\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
