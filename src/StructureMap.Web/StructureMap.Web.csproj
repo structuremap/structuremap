@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{840415D3-247D-449A-BC79-605D0A1C6F81}</ProjectGuid>
+    <ProjectGuid>{FA8FDBC9-46ED-4976-A554-A5A1079BD765}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>StructureMap.LegacyAttributeSupport</RootNamespace>
-    <AssemblyName>StructureMap.LegacyAttributeSupport</AssemblyName>
+    <RootNamespace>StructureMap.Web</RootNamespace>
+    <AssemblyName>StructureMap.Web</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -33,6 +33,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -40,13 +41,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\CommonAssemblyInfo.cs">
-      <Link>CommonAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="FamilyAttributeScanner.cs" />
-    <Compile Include="PluggableAttribute.cs" />
-    <Compile Include="PluggableAttributeScanner.cs" />
+    <Compile Include="CreatePluginFamilyExpressionExtensions.cs" />
+    <Compile Include="GenericFamilyExpressionExtensions.cs" />
+    <Compile Include="Pipeline\HttpContextLifecycle.cs" />
+    <Compile Include="Pipeline\HttpLifecycleBase.cs" />
+    <Compile Include="Pipeline\HttpSessionLifecycle.cs" />
+    <Compile Include="Pipeline\HybridLifecycle.cs" />
+    <Compile Include="Pipeline\HybridSessionLifecycle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SessionWrapper.cs" />
+    <Compile Include="WebLifecycles.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\StructureMap\StructureMap.csproj">

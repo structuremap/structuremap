@@ -131,8 +131,6 @@
       <Name>System.Data</Name>
     </Reference>
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Services" />
     <Reference Include="System.Windows.Forms">
       <Name>System.Windows.Forms</Name>
     </Reference>
@@ -199,11 +197,9 @@
     <Compile Include="Bugs\AddValueDirectlyWithGenericUsage.cs" />
     <Compile Include="Bugs\BuildUpBug.cs" />
     <Compile Include="Bugs\CloseOpenGenericsWithSomeSpecifics.cs" />
-    <Compile Include="Bugs\EjectingWithHybridScoping.cs" />
     <Compile Include="Bugs\EnumerableShouldGetAllValuesTester.cs" />
     <Compile Include="Bugs\FillAllPropertiesShouldWorkForAlreadyConfiguredPluginsBug.cs" />
     <Compile Include="Bugs\GetAllInstancesShouldObserveKeys.cs" />
-    <Compile Include="Bugs\HttpSessionNullRefBug.cs" />
     <Compile Include="Bugs\IDictionaryAndXmlBugTester.cs" />
     <Compile Include="Bugs\InjectByFuncWithNoPublicConstructors.cs" />
     <Compile Include="Bugs\LambdaCreatesNullBugTester.cs" />
@@ -325,7 +321,6 @@
     <Compile Include="Pipeline\ContainerIsInTheContainerTester.cs" />
     <Compile Include="Pipeline\DefaultInstanceTester.cs" />
     <Compile Include="Pipeline\GenericsHelperExpressionTester.cs" />
-    <Compile Include="Pipeline\HybridBuildLifecycleTester.cs" />
     <Compile Include="Pipeline\InstanceTester.cs" />
     <Compile Include="Pipeline\LazyFuncTester.cs" />
     <Compile Include="Pipeline\LifecyclesTester.cs" />

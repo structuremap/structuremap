@@ -44,7 +44,7 @@ namespace StructureMap.Testing.Pipeline
         public void can_set_scope_directly_on_the_instance()
         {
             var i1 = new ConfiguredInstance(GetType()).Named("foo");
-            i1.SetScopeTo(InstanceScope.ThreadLocal);
+            i1.SetScopeTo(Lifecycles.ThreadLocal);
 
             i1.Lifecycle.ShouldBeOfType<ThreadLocalStorageLifecycle>();
         }
@@ -53,10 +53,10 @@ namespace StructureMap.Testing.Pipeline
         public void does_override_the_scope_of_the_parent()
         {
             var family = new PluginFamily(GetType());
-            family.SetScopeTo(InstanceScope.Singleton);
+            family.SetScopeTo(Lifecycles.Singleton);
 
             var i1 = new ConfiguredInstance(GetType()).Named("foo");
-            i1.SetScopeTo(InstanceScope.ThreadLocal);
+            i1.SetScopeTo(Lifecycles.ThreadLocal);
 
             family.AddInstance(i1);
 
@@ -67,7 +67,7 @@ namespace StructureMap.Testing.Pipeline
         public void uses_parent_lifecycle_if_none_is_set_on_instance()
         {
             var family = new PluginFamily(GetType());
-            family.SetScopeTo(InstanceScope.Singleton);
+            family.SetScopeTo(Lifecycles.Singleton);
 
             var i1 = new ConfiguredInstance(GetType()).Named("foo");
 

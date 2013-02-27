@@ -1,7 +1,9 @@
-namespace StructureMap.Pipeline
+using StructureMap.Pipeline;
+
+namespace StructureMap.Web.Pipeline
 {
     public class HybridLifecycle : HttpLifecycleBase<HttpContextLifecycle, ThreadLocalStorageLifecycle>
     {
-        public override string Scope { get { return InstanceScope.Hybrid.ToString(); } }
+
     }
 }

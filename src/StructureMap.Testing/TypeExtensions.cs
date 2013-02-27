@@ -6,16 +6,12 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.Testing
 {
-
-
     internal static class BasicExtensions
     {
-
         public static string ToName(this ILifecycle lifecycle)
         {
-            return lifecycle == null ? InstanceScope.Transient.ToString() : lifecycle.Scope;
+            return lifecycle == null ? Lifecycles.Transient.Scope : lifecycle.Scope;
         }
-
 
         public static void Fill<T>(this IList<T> list, T value)
         {
@@ -37,9 +33,7 @@ namespace StructureMap.Testing
             }
         }
 
-
-        public static void TryGet<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key,
-                                                Action<TValue> action)
+        public static void TryGet<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, Action<TValue> action)
         {
             TValue value;
             if (dictionary.TryGetValue(key, out value))

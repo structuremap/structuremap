@@ -12,7 +12,6 @@ namespace StructureMap.Testing.Widget5
                 "Green");
         }
 
-
         public override bool Equals(object obj)
         {
             if (this == obj) return true;
@@ -49,12 +48,10 @@ namespace StructureMap.Testing.Widget5
         }
     }
 
-    [PluginFamily]
     public interface ITypeThatHasAttributeButIsNotInRegistry
     {
     }
 
-    [PluginFamily]
     public interface IInterfaceInWidget5
     {
     }

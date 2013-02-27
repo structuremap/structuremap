@@ -1,6 +1,8 @@
-namespace StructureMap.Pipeline
+using StructureMap.Pipeline;
+
+namespace StructureMap.Web.Pipeline
 {
-    public abstract class HttpLifecycleBase<HTTP, NONHTTP> : ILifecycle
+    public abstract class HttpLifecycleBase<HTTP, NONHTTP> : LifecycleBase
         where HTTP : ILifecycle, new()
         where NONHTTP : ILifecycle, new()
     {
@@ -13,7 +15,7 @@ namespace StructureMap.Pipeline
             _nonHttp = new NONHTTP();
         }
 
-        public void EjectAll(ILifecycleContext context)
+        public override void EjectAll(ILifecycleContext context)
         {
             if (HttpContextLifecycle.HasContext())
             {
@@ -22,13 +24,11 @@ namespace StructureMap.Pipeline
             _nonHttp.EjectAll(context);
         }
 
-        public IObjectCache FindCache(ILifecycleContext context)
+        public override IObjectCache FindCache(ILifecycleContext context)
         {
             return HttpContextLifecycle.HasContext()
                        ? _http.FindCache(context)
                        : _nonHttp.FindCache(context);
         }
-
-        public abstract string Scope { get; }
     }
 }

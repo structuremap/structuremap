@@ -15,7 +15,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         private readonly Type _pluginType;
         private readonly Registry _registry;
 
-        public GenericFamilyExpression(Type pluginType, string scope, Registry registry)
+        public GenericFamilyExpression(Type pluginType, ILifecycle scope, Registry registry)
         {
             _pluginType = pluginType;
             _registry = registry;
@@ -211,37 +211,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <returns></returns>
         public GenericFamilyExpression Singleton()
         {
-            return LifecycleIs(InstanceScope.Singleton);
+            return LifecycleIs(Lifecycles.Singleton);
         }
-
-
-        /// <summary>
-        /// Convenience method to mark a PluginFamily as a Hybrid lifecycle
-        /// </summary>
-        /// <returns></returns>
-        public GenericFamilyExpression HybridHttpOrThreadLocalScoped()
-        {
-            return LifecycleIs(InstanceScope.Hybrid);
-        }
-
-        /// <summary>
-        /// Convenience method to mark a PluginFamily as HttpContext scoped
-        /// </summary>
-        /// <returns></returns>
-        public GenericFamilyExpression HttpContextScoped()
-        {
-            return LifecycleIs(InstanceScope.HttpContext);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="lifecycle"></param>
-        /// <returns></returns>
-        public GenericFamilyExpression LifecycleIs(string lifecycle)
-        {
-            return alterAndContinue(family => family.SetScopeTo(lifecycle));
-        }
-
     }
 }

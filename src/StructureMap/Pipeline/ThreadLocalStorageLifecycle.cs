@@ -2,23 +2,21 @@ using System;
 
 namespace StructureMap.Pipeline
 {
-    public class ThreadLocalStorageLifecycle : ILifecycle
+    public class ThreadLocalStorageLifecycle : LifecycleBase
     {
         [ThreadStatic] private static LifecycleObjectCache _cache;
         private readonly object _locker = new object();
 
-        public void EjectAll(ILifecycleContext context)
+        public override void EjectAll(ILifecycleContext context)
         {
             FindCache(context).DisposeAndClear();
         }
 
-        public IObjectCache FindCache(ILifecycleContext context)
+        public override IObjectCache FindCache(ILifecycleContext context)
         {
             guaranteeHashExists();
             return _cache;
         }
-
-        public string Scope { get { return InstanceScope.ThreadLocal.ToString(); } }
 
         private void guaranteeHashExists()
         {

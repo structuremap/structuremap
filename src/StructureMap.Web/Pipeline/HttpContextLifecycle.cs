@@ -1,20 +1,21 @@
 using System.Collections;
 using System.Reflection;
 using System.Web;
+using StructureMap.Pipeline;
 
-namespace StructureMap.Pipeline
+namespace StructureMap.Web.Pipeline
 {
-    public class HttpContextLifecycle : ILifecycle
+    public class HttpContextLifecycle : LifecycleBase
     {
         public static readonly string ITEM_NAME = string.Format("STRUCTUREMAP-INSTANCES-{0}", Assembly.GetExecutingAssembly().GetName().Version);
 
 
-        public void EjectAll(ILifecycleContext context)
+        public override void EjectAll(ILifecycleContext context)
         {
             FindCache(context).DisposeAndClear();
         }
 
-        public IObjectCache FindCache(ILifecycleContext context)
+        public override IObjectCache FindCache(ILifecycleContext context)
         {
             IDictionary items = findHttpDictionary();
 
@@ -34,8 +35,6 @@ namespace StructureMap.Pipeline
 
             return (IObjectCache) items[ITEM_NAME];
         }
-
-        public string Scope { get { return InstanceScope.HttpContext.ToString(); } }
 
         public static bool HasContext()
         {

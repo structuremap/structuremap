@@ -16,7 +16,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         private readonly List<Action<PluginGraph>> _children = new List<Action<PluginGraph>>();
         private readonly Type _pluginType;
 
-        public CreatePluginFamilyExpression(Registry registry, string scope)
+        public CreatePluginFamilyExpression(Registry registry, ILifecycle scope)
         {
             _pluginType = typeof (TPluginType);
 
@@ -179,7 +179,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <returns></returns>
         public CreatePluginFamilyExpression<TPluginType> Singleton()
         {
-            return lifecycleIs(InstanceScope.Singleton);
+            return lifecycleIs(Lifecycles.Singleton);
         }
 
         /// <summary>
@@ -188,35 +188,15 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <returns></returns>
         public CreatePluginFamilyExpression<TPluginType> Transient()
         {
-            return lifecycleIs(InstanceScope.Transient);
+            return lifecycleIs(Lifecycles.Transient);
         }
 
-        private CreatePluginFamilyExpression<TPluginType> lifecycleIs(string lifecycle)
+        private CreatePluginFamilyExpression<TPluginType> lifecycleIs(ILifecycle lifecycle)
         {
             _alterations.Add(family => family.SetScopeTo(lifecycle));
             return this;
         }
-
-        /// <summary>
-        /// Convenience method to mark a PluginFamily as a Hybrid lifecycle
-        /// </summary>
-        /// <returns></returns>
-        public CreatePluginFamilyExpression<TPluginType> HybridHttpOrThreadLocalScoped()
-        {
-            return lifecycleIs(InstanceScope.Hybrid);
-        }
-
-        /// <summary>
-        /// Convenience method to mark a PluginFamily as HttpContext scoped
-        /// </summary>
-        /// <returns></returns>
-        public CreatePluginFamilyExpression<TPluginType> HttpContextScoped()
-        {
-            return lifecycleIs(InstanceScope.HttpContext);
-        }
-
-
-
+        
         /// <summary>
         /// Register an Action to run against any object of this PluginType immediately after
         /// it is created, but before the new object is passed back to the caller

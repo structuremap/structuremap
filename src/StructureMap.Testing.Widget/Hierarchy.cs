@@ -1,6 +1,6 @@
 namespace StructureMap.Testing.Widget
 {
-    [PluginFamily, Pluggable("Default")]
+    [Pluggable("Default")]
     public class GrandChild
     {
         private readonly int _BirthYear;
@@ -28,7 +28,7 @@ namespace StructureMap.Testing.Widget
     }
 
 
-    [PluginFamily, Pluggable("Default")]
+    [Pluggable("Default")]
     public class Child
     {
         private readonly GrandChild _MyGrandChild;
@@ -45,7 +45,7 @@ namespace StructureMap.Testing.Widget
         public GrandChild MyGrandChild { get { return _MyGrandChild; } }
     }
 
-    [PluginFamily, Pluggable("Default")]
+    [Pluggable("Default")]
     public class Parent
     {
         private readonly int _Age;

@@ -7,19 +7,25 @@ namespace StructureMap.Pipeline
         IObjectCache FindCache(ILifecycleContext context);
     }
 
-    public class TransientLifecycle : ILifecycle
+    public abstract class LifecycleBase: ILifecycle
     {
         public string Scope
         {
-            get { return InstanceScope.Transient.ToString(); }
+            get { return GetType().Name.Replace("Lifecycle", string.Empty); }
         }
 
-        public void EjectAll(ILifecycleContext context)
+        public abstract void EjectAll(ILifecycleContext context);
+        public abstract IObjectCache FindCache(ILifecycleContext context);
+    }
+
+    public class TransientLifecycle : LifecycleBase
+    {
+        public override void EjectAll(ILifecycleContext context)
         {
             FindCache(context).DisposeAndClear();
         }
 
-        public IObjectCache FindCache(ILifecycleContext context)
+        public override IObjectCache FindCache(ILifecycleContext context)
         {
             return context.Transients;
         }

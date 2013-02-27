@@ -1,8 +1,9 @@
 using NUnit.Framework;
+using StructureMap.Testing;
 using StructureMap.Testing.DocumentationExamples;
 using StructureMap.Testing.Widget3;
 
-namespace StructureMap.Testing.Pipeline
+namespace StructureMap.Web.Testing
 {
     [TestFixture]
     public class HybridBuildLifecycleTester
@@ -10,13 +11,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void run_without_an_httpcontext()
         {
-            var container =
-                new Container(
-                    x =>
-                    {
-                        x.For<IService>(InstanceScope.Hybrid).Use<RemoteService>();
-                    });
-
+            var container = new Container(x => x.For<IService>(WebLifecycles.Hybrid).Use<RemoteService>());
 
             var object1 = container.GetInstance<IService>();
             var object2 = container.GetInstance<IService>();
