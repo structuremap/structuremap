@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Security;
@@ -9,6 +9,6 @@ using System.Security;
 // associated with an assembly.
 //
 
-[assembly: AssemblyTitle("StructureMap")]
+[assembly: AssemblyTitle("StructureMap.Configuration.Xml")]
 [assembly: AllowPartiallyTrustedCallers]
 [assembly: CLSCompliant(true)]

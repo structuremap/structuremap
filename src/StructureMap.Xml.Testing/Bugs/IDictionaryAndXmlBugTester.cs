@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using StructureMap.Attributes;
-using StructureMap.Testing.TestData;
+using StructureMap.Testing;
+using StructureMap.Xml.Testing.TestData;
 
-namespace StructureMap.Testing.Bugs
+namespace StructureMap.Xml.Testing.Bugs
 {
     [TestFixture]
     public class IDictionaryAndXmlBugTester
@@ -12,7 +13,7 @@ namespace StructureMap.Testing.Bugs
         public void read_a_dictionary_from_configuration()
         {
             string className = typeof (ClassWithDictionaryInCtor).AssemblyQualifiedName;
-            string xml =
+            string xml = string.Format(
                 @"
 <StructureMap>
     <DefaultInstance PluginType='{0}' PluggedType='{0}'>
@@ -23,8 +24,7 @@ namespace StructureMap.Testing.Bugs
         </values>
     </DefaultInstance>
 </StructureMap>
-"
-                    .ToFormat(className);
+", className);
 
             Container container = DataMother.BuildContainerForXml(xml);
 
@@ -39,13 +39,12 @@ namespace StructureMap.Testing.Bugs
             ()
         {
             string className = typeof (ClassWithDictionaryInCtor).AssemblyQualifiedName;
-            string xml =
+            string xml = string.Format(
                 @"
 <StructureMap MementoStyle='Attribute'>
     <DefaultInstance PluginType='{0}' PluggedType='{0}'></DefaultInstance>
 </StructureMap>
-"
-                    .ToFormat(className);
+", className);
 
 
             try
@@ -65,13 +64,12 @@ namespace StructureMap.Testing.Bugs
             read_a_dictionary_from_configuration_in_attribute_style_that_is_missing_a_dictionary_for_an_optional_setter()
         {
             string className = typeof (ClassWithDictionaryProperty).AssemblyQualifiedName;
-            string xml =
+            string xml = string.Format(
                 @"
 <StructureMap MementoStyle='Attribute'>
     <DefaultInstance PluginType='{0}' PluggedType='{0}'></DefaultInstance>
 </StructureMap>
-"
-                    .ToFormat(className);
+",className);
 
 
             Container container = DataMother.BuildContainerForXml(xml);
@@ -82,13 +80,12 @@ namespace StructureMap.Testing.Bugs
         public void read_a_dictionary_from_configuration_when_the_property_is_missing_on_mandatory_setter()
         {
             string className = typeof (ClassWithDictionaryProperty2).AssemblyQualifiedName;
-            string xml =
+            string xml = string.Format(
                 @"
 <StructureMap>
     <DefaultInstance PluginType='{0}' PluggedType='{0}'></DefaultInstance>
 </StructureMap>
-"
-                    .ToFormat(className);
+",className);
 
 
             try

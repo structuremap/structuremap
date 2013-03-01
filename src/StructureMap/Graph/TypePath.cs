@@ -27,19 +27,6 @@ namespace StructureMap.Graph
 
         public string AssemblyQualifiedName { get; private set; }
 
-        public static TypePath CreateFromXmlNode(XmlNode node)
-        {
-            string typeName = node.Attributes[XmlConstants.TYPE_ATTRIBUTE].Value;
-            string assemblyName = node.Attributes[XmlConstants.ASSEMBLY].Value;
-
-            return new TypePath(assemblyName, typeName);
-        }
-
-        public static void WriteTypePathToXmlElement(Type type, XmlElement element)
-        {
-            element.SetAttribute(XmlConstants.TYPE_ATTRIBUTE, type.FullName);
-            element.SetAttribute(XmlConstants.ASSEMBLY, type.Assembly.GetName().Name);
-        }
 
         public Type FindType()
         {

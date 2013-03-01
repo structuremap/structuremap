@@ -1,14 +1,15 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Xml;
 using NUnit.Framework;
-using StructureMap.Configuration;
+using StructureMap.Configuration.Xml;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
-using StructureMap.Source;
-using StructureMap.Testing.TestData;
+using StructureMap.Testing;
+using StructureMap.Xml.Testing.TestData;
 
-namespace StructureMap.Testing.Configuration
+namespace StructureMap.Xml.Testing
 {
     [TestFixture]
     public class DictionaryAndArrayArgumentTester
@@ -97,5 +98,13 @@ namespace StructureMap.Testing.Configuration
         }
 
         public IDictionary<string, string> Dictionary { get { return _dictionary; } }
+    }
+
+    public class SimplePluginFactory : IPluginFactory
+    {
+        public Plugin PluginFor(string name)
+        {
+            return PluginCache.GetPlugin(Type.GetType(name));
+        }
     }
 }

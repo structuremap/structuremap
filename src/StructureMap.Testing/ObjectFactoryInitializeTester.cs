@@ -32,21 +32,6 @@ namespace StructureMap.Testing
         }
 
         [Test]
-        public void PullConfigurationFromTheAppConfig()
-        {
-            ObjectFactory.Initialize(x =>
-            {
-                // Tell StructureMap to look for configuration 
-                // from the App.config file
-                // The default is false
-                x.IncludeConfigurationFromConfigFile();
-            });
-
-            ObjectFactory.GetInstance<IThing<string, bool>>()
-                .IsType<ColorThing<string, bool>>().Color.ShouldEqual("Cornflower");
-        }
-
-        [Test]
         public void StructureMap_functions_without_StructureMapconfig_file_in_the_default_mode()
         {
             DataMother.RemoveStructureMapConfig();

@@ -1,11 +1,10 @@
 using System;
 using System.Collections;
 using System.Xml;
-using StructureMap.Configuration;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 
-namespace StructureMap.Source
+namespace StructureMap.Configuration.Xml
 {
     /// <summary>
     /// An implementation of InstanceMemento that stores properties as Xml attributes
@@ -26,7 +25,7 @@ namespace StructureMap.Source
 
         public XmlElement InnerElement { get { return _element; } }
 
-        public override bool IsReference { get { return PluggedType().IsEmpty(); } }
+        public override bool IsReference { get { return String.IsNullOrEmpty(PluggedType()); } }
 
         public override string ReferenceKey { get { return InstanceKey; } }
 
@@ -61,6 +60,11 @@ namespace StructureMap.Source
             }
         }
 
+        protected override string PluggedType()
+        {
+            return getPropertyValue(XmlConstants.PLUGGED_TYPE);
+        }
+
         public override InstanceMemento[] GetChildrenArray(string key)
         {
             XmlNode childrenNode = _element[key];
@@ -93,7 +97,7 @@ namespace StructureMap.Source
 
         public override Instance ReadChildInstance(string name, IPluginFactory graph, Type childType)
         {
-            ITypeReader reader = TypeReaderFactory.GetReader(childType);
+            ITypeReader<XmlNode> reader = TypeReaderFactory.GetReader(childType);
             if (reader == null)
             {
                 return base.ReadChildInstance(name, graph, childType);

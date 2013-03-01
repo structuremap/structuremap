@@ -1,10 +1,6 @@
-using System.Diagnostics;
-using System.Xml;
 using NUnit.Framework;
 using StructureMap.Configuration;
-using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
-using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing
 {
@@ -20,12 +16,7 @@ namespace StructureMap.Testing
 
         #endregion
 
-        public void TheXmlFileRegistryWasLoadedInto(IContainer container)
-        {
-            container.GetInstance<ColorRule>().Color.ShouldEqual("Cornflower");
-        }
-
-
+        
         [Test]
         public void handles_failures_gracefully_if_the_registry_cannot_be_loaded()
         {
@@ -38,28 +29,6 @@ namespace StructureMap.Testing
             graph.Log.AssertHasError(290);
         }
 
-        [Test]
-        public void read_registry_from_xml()
-        {
-            var document = new XmlDocument();
-            document.LoadXml("<StructureMap><Registry></Registry></StructureMap>");
-            document.DocumentElement.FirstChild.ShouldBeOfType<XmlElement>().SetAttribute("Type",
-                                                                                          typeof (XmlFileRegistry).
-                                                                                              AssemblyQualifiedName);
-
-            Debug.WriteLine(document.OuterXml);
-
-            var container = new Container(x => { x.AddConfigurationFromNode(document.DocumentElement); });
-
-            TheXmlFileRegistryWasLoadedInto(container);
-        }
-    }
-
-    public class XmlFileRegistry : Registry
-    {
-        public XmlFileRegistry()
-        {
-            ForConcreteType<ColorRule>().Configure.Ctor<string>("color").Is("Cornflower");
-        }
+        
     }
 }

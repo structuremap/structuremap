@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Xml;
 
-namespace StructureMap.Configuration
+namespace StructureMap.Configuration.Xml
 {
     public static class TypeReaderFactory
     {
-        private static readonly List<ITypeReader> _readers = new List<ITypeReader>();
+        private static readonly List<ITypeReader<XmlNode>> _readers = new List<ITypeReader<XmlNode>>();
 
         static TypeReaderFactory()
         {
@@ -13,9 +14,9 @@ namespace StructureMap.Configuration
             _readers.Add(new PrimitiveArrayReader());
         }
 
-        public static ITypeReader GetReader(Type pluginType)
+        public static ITypeReader<XmlNode> GetReader(Type pluginType)
         {
-            foreach (ITypeReader reader in _readers)
+            foreach (var reader in _readers)
             {
                 if (reader.CanProcess(pluginType))
                 {

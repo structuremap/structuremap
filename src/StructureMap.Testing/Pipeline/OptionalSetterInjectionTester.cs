@@ -177,55 +177,6 @@ namespace StructureMap.Testing.Pipeline
         }
 
         [Test]
-        public void read_instance_from_xml_with_optional_setter_defined()
-        {
-            Debug.WriteLine(typeof (ClassWithDependency).AssemblyQualifiedName);
-
-            PluginGraph graph =
-                DataMother.BuildPluginGraphFromXml(
-                    @"
-<StructureMap MementoStyle='Attribute'>
-    <DefaultInstance 
-        PluginType='StructureMap.Testing.Pipeline.ClassWithDependency, StructureMap.Testing' 
-        PluggedType='StructureMap.Testing.Pipeline.ClassWithDependency, StructureMap.Testing'>
-        
-        <Rule PluggedType='StructureMap.Testing.Widget.ColorRule, StructureMap.Testing.Widget' color='Red' />
-    </DefaultInstance>
-</StructureMap>
-
-");
-
-            var container = new Container(graph);
-
-            container.GetInstance<ClassWithDependency>().Rule.IsType<ColorRule>().Color.ShouldEqual("Red");
-        }
-
-
-        [Test]
-        public void read_instance_from_xml_with_optional_setter_not_defined()
-        {
-            Debug.WriteLine(typeof (ClassWithDependency).AssemblyQualifiedName);
-
-            PluginGraph graph =
-                DataMother.BuildPluginGraphFromXml(
-                    @"
-<StructureMap MementoStyle='Attribute'>
-    <DefaultInstance 
-        PluginType='StructureMap.Testing.Pipeline.ClassWithDependency, StructureMap.Testing' 
-        PluggedType='StructureMap.Testing.Pipeline.ClassWithDependency, StructureMap.Testing'>
-
-    </DefaultInstance>
-</StructureMap>
-
-");
-
-            var container = new Container(graph);
-
-            container.GetInstance<ClassWithDependency>().Rule.ShouldBeNull();
-        }
-
-
-        [Test]
         public void using_the_FillAllPropertiesOf()
         {
             var container =

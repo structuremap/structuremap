@@ -1,13 +1,14 @@
 using System;
 using System.Xml;
 using NUnit.Framework;
-using StructureMap.Configuration;
+using StructureMap.Configuration.Xml;
 using StructureMap.Pipeline;
+using StructureMap.Testing;
 using StructureMap.Testing.Pipeline;
-using StructureMap.Testing.TestData;
 using StructureMap.Testing.Widget;
+using StructureMap.Xml.Testing.TestData;
 
-namespace StructureMap.Testing.Configuration
+namespace StructureMap.Xml.Testing
 {
     [TestFixture]
     public class PrimitiveeArrayReaderTester

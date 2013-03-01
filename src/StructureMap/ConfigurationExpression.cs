@@ -1,4 +1,4 @@
-using System.Xml;
+using System.Collections.Generic;
 using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
@@ -13,18 +13,11 @@ namespace StructureMap
     public class ConfigurationExpression : Registry
     {
         private readonly PluginGraphBuilder _builder = new PluginGraphBuilder();
+        private readonly List<IPluginGraphConfiguration> _pluginGraphConfigs = new List<IPluginGraphConfiguration>();
 
         internal ConfigurationExpression()
         {
             _builder.Add(this);
-        }
-
-        /// <summary>
-        ///     If called, directs StructureMap to look for configuration in the App.config in any <StructureMap> node.
-        /// </summary>
-        public void IncludeConfigurationFromConfigFile()
-        {
-            ConfigurationParser.FromApplicationConfig().Each(x => _builder.Add(x));
         }
 
         /// <summary>
@@ -45,31 +38,10 @@ namespace StructureMap
             _builder.Add(registry);
         }
 
-        /// <summary>
-        ///     Imports configuration from an Xml file.  The fileName
-        ///     must point to an Xml file with valid StructureMap
-        ///     configuration
-        /// </summary>
-        /// <param name="fileName"></param>
-        public void AddConfigurationFromXmlFile(string fileName)
-        {
-            _builder.Add(ConfigurationParser.FromFile(fileName));
-        }
-
-        /// <summary>
-        ///     Imports configuration directly from an XmlNode.  This
-        ///     method was intended for scenarios like Xml being embedded
-        ///     into an assembly.  The node must be a 'StructureMap' node
-        /// </summary>
-        /// <param name="node"></param>
-        public void AddConfigurationFromNode(XmlNode node)
-        {
-            _builder.Add(new ConfigurationParser(node));
-        }
-
         internal PluginGraph BuildGraph()
         {
-            return _builder.Build();
+            var pluginGraph = _builder.Build();
+            return pluginGraph;
         }
 
         protected bool Equals(ConfigurationExpression other)

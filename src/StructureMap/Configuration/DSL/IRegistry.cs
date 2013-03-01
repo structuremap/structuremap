@@ -148,5 +148,29 @@ namespace StructureMap.Configuration.DSL
         /// </summary>
         /// <param name="configure"></param>
         void Configure(Action<PluginGraph> configure);
+
+        /// <summary>
+        /// Gives a <see cref="IPluginGraphConfiguration"/> the possibility to interact with the current <see cref="PluginGraphBuilder"/>
+        /// via <see cref="IPluginGraphConfiguration.Register"/>.
+        /// </summary>
+        void RegisterPluginGraphConfiguration<T>() where T : IPluginGraphConfiguration, new();
+
+        /// <summary>
+        /// See <see cref="Registry.RegisterPluginGraphConfiguration{T}"/>
+        /// </summary>
+        void RegisterPluginGraphConfiguration(IPluginGraphConfiguration pluginGraphConfig);
+
+        /// <summary>
+        /// Gives a <see cref="IPluginGraphConfiguration"/> the possibility to interact with the resulting <see cref="PluginGraph"/>,
+        /// i.e. as opposed to <see cref="Registry.RegisterPluginGraphConfiguration"/>, the PluginGraph is built, and the provided
+        /// PluginGraph config obtains access to saig graph.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        void ConfigurePluginGraph<T>() where T : IPluginGraphConfiguration, new();
+
+        /// <summary>
+        /// <see cref="Registry.ConfigurePluginGraph{T}"/>
+        /// </summary>
+        void ConfigurePluginGraph(IPluginGraphConfiguration pluginGraphConfig);
     }
 }

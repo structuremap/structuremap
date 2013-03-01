@@ -4,9 +4,9 @@ using System.Collections.Specialized;
 using System.Xml;
 using StructureMap.Pipeline;
 
-namespace StructureMap.Configuration
+namespace StructureMap.Configuration.Xml
 {
-    public class DictionaryReader : ITypeReader
+    public class DictionaryReader : ITypeReader<XmlNode>
     {
         #region ITypeReader Members
 
@@ -49,7 +49,7 @@ namespace StructureMap.Configuration
 
         #region Nested type: DictionaryBuilder
 
-        internal class DictionaryBuilder<KEY, VALUE> : IBuilder
+        private class DictionaryBuilder<KEY, VALUE> : IBuilder
         {
             private readonly Dictionary<KEY, VALUE> _dictionary = new Dictionary<KEY, VALUE>();
 
@@ -72,7 +72,7 @@ namespace StructureMap.Configuration
 
         #region Nested type: IBuilder
 
-        internal interface IBuilder
+        private interface IBuilder
         {
             object Object { get; }
             void Read(string name, string value);
@@ -82,7 +82,7 @@ namespace StructureMap.Configuration
 
         #region Nested type: NameValueCollectionBuilder
 
-        internal class NameValueCollectionBuilder : IBuilder
+        private class NameValueCollectionBuilder : IBuilder
         {
             private readonly NameValueCollection _collection = new NameValueCollection();
 

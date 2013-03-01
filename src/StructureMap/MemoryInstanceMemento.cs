@@ -9,6 +9,8 @@ namespace StructureMap
     /// </summary>
     public class MemoryInstanceMemento : InstanceMemento
     {
+        private const string PluggedTypeKey = "PluggedType";
+
         #region statics
 
         /// <summary>
@@ -77,6 +79,11 @@ namespace StructureMap
 
         public MemoryInstanceMemento()
         {
+        }
+
+        protected override string PluggedType()
+        {
+            return getPropertyValue(PluggedTypeKey);
         }
 
         /// <summary>
@@ -184,7 +191,7 @@ namespace StructureMap
 
         public void SetPluggedType<T>()
         {
-            _properties[XmlConstants.PLUGGED_TYPE] = typeof (T).AssemblyQualifiedName;
+            _properties[PluggedTypeKey] = typeof(T).AssemblyQualifiedName;
         }
     }
 }

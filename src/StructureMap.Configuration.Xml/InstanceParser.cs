@@ -3,7 +3,7 @@ using System.Xml;
 using StructureMap.Graph;
 using StructureMap.Util;
 
-namespace StructureMap.Configuration
+namespace StructureMap.Configuration.Xml
 {
     public class InstanceParser : XmlConstants, IPluginFactory
     {
@@ -33,7 +33,7 @@ namespace StructureMap.Configuration
             var attribute = element.GetAttribute("Key");
             var typeName = element.GetAttribute("Type");
 
-            if (attribute.IsEmpty() || typeName.IsEmpty())
+            if (String.IsNullOrEmpty(attribute) || String.IsNullOrEmpty(typeName))
             {
                 throw new MalformedAliasException(element.OuterXml);
             }
@@ -50,7 +50,7 @@ namespace StructureMap.Configuration
                 var scope = findScope(element);
                 family.SetScopeTo(scope);
 
-                InstanceMemento memento = ConfigurationParser.CreateMemento(element);
+                var memento = ConfigurationParser.CreateMemento(element);
                 var instance = memento.ToInstance(this, family.PluginType);
                 family.SetDefault(instance);
             });
