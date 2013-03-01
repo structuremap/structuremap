@@ -1,9 +1,9 @@
 using NUnit.Framework;
 using StructureMap.Graph;
-using StructureMap.Testing.TestData;
 using StructureMap.Testing.Widget;
+using StructureMap.Xml.Testing.TestData;
 
-namespace StructureMap.Testing.Configuration
+namespace StructureMap.Xml.Testing
 {
     [TestFixture]
     public class DefaultInstanceNodeTester

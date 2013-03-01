@@ -1,25 +1,21 @@
-using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 using StructureMap.Graph;
-using StructureMap.Testing.TestData;
+using StructureMap.Testing;
 using StructureMap.Testing.Widget;
-using System.Linq;
+using StructureMap.Xml.Testing.TestData;
 
-namespace StructureMap.Testing.Configuration
+namespace StructureMap.Xml.Testing
 {
     [TestFixture]
     public class ShortcuttedInstanceNodeTester
     {
-        #region Setup/Teardown
-
         [SetUp]
         public void SetUp()
         {
             _graph = DataMother.GetPluginGraph("ShortInstance.xml");
             theContainer = new Container(_graph);
         }
-
-        #endregion
 
         private Container theContainer;
         private PluginGraph _graph;

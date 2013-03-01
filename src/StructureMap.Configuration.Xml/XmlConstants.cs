@@ -1,4 +1,4 @@
-namespace StructureMap.Configuration
+namespace StructureMap.Configuration.Xml
 {
     /// <summary>
     /// Constants for the names of Xml nodes and attributes in the StructureMap.config

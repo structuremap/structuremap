@@ -1,8 +1,8 @@
 using System.Xml;
 using NUnit.Framework;
-using StructureMap.Source;
+using StructureMap.Configuration.Xml;
 
-namespace StructureMap.Testing.Graph.Source
+namespace StructureMap.Xml.Testing
 {
     [TestFixture]
     public class XmlAttributeInstanceMementoTester

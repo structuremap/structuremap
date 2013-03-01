@@ -156,7 +156,7 @@ namespace StructureMap.Testing
         public void ReadChildArrayProperty()
         {
             MemoryInstanceMemento memento = ComplexRule.GetMemento();
-            memento.SetProperty(XmlConstants.PLUGGED_TYPE, typeof (ComplexRule).AssemblyQualifiedName);
+            memento.SetPluggedType<ComplexRule>();
             memento.AddChildArray("cars", new InstanceMemento[]
             {
                 MemoryInstanceMemento.CreateReferencedInstanceMemento("Ford"),
@@ -176,8 +176,8 @@ namespace StructureMap.Testing
         [Test]
         public void ReadChildProperty_child_property_is_defined_build_child()
         {
-            MemoryInstanceMemento memento = ComplexRule.GetMemento();
-            memento.SetProperty(XmlConstants.PLUGGED_TYPE, typeof (ComplexRule).AssemblyQualifiedName);
+            var memento = ComplexRule.GetMemento();
+            memento.SetPluggedType<ComplexRule>();
             MemoryInstanceMemento carMemento = MemoryInstanceMemento.CreateReferencedInstanceMemento("GrandPrix");
             memento.AddChild("car", carMemento);
 
@@ -190,9 +190,8 @@ namespace StructureMap.Testing
         [Test]
         public void ReadPrimitivePropertiesHappyPath()
         {
-            MemoryInstanceMemento memento = ComplexRule.GetMemento();
-            memento.SetProperty(XmlConstants.PLUGGED_TYPE, typeof (ComplexRule).AssemblyQualifiedName);
-
+            var memento = ComplexRule.GetMemento();
+            memento.SetPluggedType<ComplexRule>();
             var instance = (IConfiguredInstance)memento.ReadInstance(new SimplePluginFactory(), typeof(Rule));
 
 

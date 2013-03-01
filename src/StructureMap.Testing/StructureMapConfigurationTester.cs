@@ -22,55 +22,13 @@ namespace StructureMap.Testing
 
         #endregion
 
-        private static XmlNode createNodeFromText(string outerXml)
-        {
-            var document = new XmlDocument();
-            document.LoadXml(outerXml);
-            return document.DocumentElement;
-        }
-
-
+        
         public class WebRegistry : Registry
         {
         }
 
         public class CoreRegistry : Registry
         {
-        }
-
-        [Test]
-        public void PullConfigurationFromTheAppConfig()
-        {
-            ObjectFactory.Initialize(x =>
-            {
-                x.IncludeConfigurationFromConfigFile();
-            });
-
-            ObjectFactory.GetInstance<IThing<string, bool>>()
-                .IsType<ColorThing<string, bool>>().Color.ShouldEqual("Cornflower");
-        }
-
-
-        [Test]
-        public void SettingsFromAllParentConfigFilesShouldBeIncluded()
-        {
-            var configurationSection = new StructureMapConfigurationSection();
-
-            XmlNode fromMachineConfig =
-                createNodeFromText(@"<StructureMap><Assembly Name=""SomeAssembly""/></StructureMap>");
-            XmlNode fromWebConfig =
-                createNodeFromText(@"<StructureMap><Assembly Name=""AnotherAssembly""/></StructureMap>");
-
-            IList<XmlNode> parentNodes = new List<XmlNode>();
-            parentNodes.Add(fromMachineConfig);
-
-            var effectiveConfig =
-                configurationSection.Create(parentNodes, null, fromWebConfig) as IList<XmlNode>;
-
-            Assert.IsNotNull(effectiveConfig, "A list of configuration nodes should have been returned.");
-            Assert.AreEqual(2, effectiveConfig.Count, "Both configurations should have been returned.");
-            Assert.AreEqual(fromMachineConfig, effectiveConfig[0]);
-            Assert.AreEqual(fromWebConfig, effectiveConfig[1]);
         }
 
         [Test]
