@@ -22,7 +22,7 @@ namespace StructureMap.Graph
         /// Use InstanceScope for the constants
         /// </summary>
         /// <param name="scope"></param>
-        public void SetScopeTo<T>() where T: ILifecycle
+        public void SetScopeTo<T>() where T: ILifecycle, new()
         {
             _lifecycle = new Lazy<ILifecycle>(() => Lifecycles.Get<T>());
         }

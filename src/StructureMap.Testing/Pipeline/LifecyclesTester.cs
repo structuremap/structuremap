@@ -3,7 +3,7 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.Testing.Pipeline
 {
-    [TestFixture, Ignore("not sure what to do after InstanceScope is gone")]
+    [TestFixture]
     public class LifecyclesTester
     {
         [Test]
