@@ -25,5 +25,7 @@ namespace StructureMap.Graph
         {
             _setterRules.Add(predicate);
         }
+
+
     }
 }

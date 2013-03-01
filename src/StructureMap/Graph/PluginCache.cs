@@ -69,6 +69,7 @@ namespace StructureMap.Graph
             UseSetterRule(predicate);
         }
 
+        [Obsolete("This is going to be eliminated")]
         public static void UseSetterRule(Func<PropertyInfo, bool> predicate)
         {
             _setterRules.Add(predicate);

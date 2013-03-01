@@ -315,7 +315,6 @@ namespace StructureMap.Pipeline
 
         private string getArgumentNameForType<TCtorType>()
         {
-            Plugin plugin = PluginCache.GetPlugin(getConcreteType(null));
             return plugin.FindArgumentNameForType<TCtorType>();
         }
 
@@ -369,7 +368,6 @@ namespace StructureMap.Pipeline
                 throw new ApplicationException("Please specify the element type in the call to TheArrayOf");
             }
 
-            Plugin plugin = PluginCache.GetPlugin(ConcreteType);
             string propertyName = plugin.FindArgumentNameForEnumerableOf(typeof(TChild));
 
             if (propertyName.IsEmpty())

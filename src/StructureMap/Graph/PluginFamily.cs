@@ -78,7 +78,7 @@ namespace StructureMap.Graph
                 return _instances.Single();
             }
 
-            if (_pluginType.IsConcrete() && PluginCache.GetPlugin(_pluginType).CanBeAutoFilled)
+            if (_pluginType.IsConcrete() && new Plugin(_pluginType).CanBeAutoFilled)
             {
                 return new ConfiguredInstance(_pluginType);
             }
@@ -135,7 +135,6 @@ namespace StructureMap.Graph
 
             if (!hasType(concreteType))
             {
-                var plugin = PluginCache.GetPlugin(concreteType);
                 AddType(concreteType, concreteType.AssemblyQualifiedName);
             }
         }
@@ -144,7 +143,7 @@ namespace StructureMap.Graph
         {
             if (!concreteType.CanBeCastTo(_pluginType)) return;
 
-            if (!hasType(concreteType) && PluginCache.GetPlugin(concreteType).CanBeAutoFilled)
+            if (!hasType(concreteType) && new Plugin(concreteType).CanBeAutoFilled)
             {
                 AddInstance(new ConstructorInstance(concreteType, name));
             }

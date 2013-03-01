@@ -53,11 +53,12 @@ namespace StructureMap
 
         public void BuildUp(object target)
         {
-            Type pluggedType = target.GetType();
-            IConfiguredInstance instance = _pipelineGraph.GetDefault(pluggedType) as IConfiguredInstance
+            var pluggedType = target.GetType();
+            var instance = _pipelineGraph.GetDefault(pluggedType) as IConfiguredInstance
                                            ?? new ConfiguredInstance(pluggedType);
 
-            IInstanceBuilder builder = PluginCache.FindBuilder(pluggedType);
+            // TODO -- do this by pulling SetterRules out of PluginGraph
+            var builder = PluginCache.FindBuilder(pluggedType);
             var arguments = new Arguments(instance, this);
             builder.BuildUp(arguments, target);
         }
