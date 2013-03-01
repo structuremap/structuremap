@@ -1,1 +1,2 @@
 StructureMap.Testing
+StructureMap.Xml.Testing
