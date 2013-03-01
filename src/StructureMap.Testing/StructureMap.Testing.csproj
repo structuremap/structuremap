@@ -289,6 +289,7 @@
     <Compile Include="Pipeline\ConfiguredInstanceTester.cs" />
     <Compile Include="Pipeline\ConstructorInstanceTester.cs" />
     <Compile Include="Pipeline\EnumerableInstanceTester.cs" />
+    <Compile Include="Pipeline\Instance_finding_its_owner.cs" />
     <Compile Include="Pipeline\LambdaInstanceTester.cs" />
     <Compile Include="Pipeline\ContainerDisposalTester.cs" />
     <Compile Include="Pipeline\ContainerIsInTheContainerTester.cs" />

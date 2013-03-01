@@ -30,14 +30,14 @@ namespace StructureMap.Graph
         private GraphLog _log = new GraphLog();
         private readonly LifecycleObjectCache _singletonCache = new LifecycleObjectCache();
 
-        private readonly LightweightCache<string, PluginGraph> _profiles = new LightweightCache<string, PluginGraph>(name => new PluginGraph{ProfileName = name});  
+        private readonly LightweightCache<string, PluginGraph> _profiles;  
 
         public PluginGraph()
         {
+            _profiles =
+                new LightweightCache<string, PluginGraph>(name => new PluginGraph {ProfileName = name, Parent = this});
+
             ProfileName = "DEFAULT";
-
-            _profiles = new LightweightCache<string, PluginGraph>(name => new PluginGraph{ProfileName = name});
-
             _families = new Cache<Type, PluginFamily>(type =>
             {
                 return _policies.FirstValue(x => x.Build(type)) ?? new PluginFamily(type);
@@ -47,6 +47,8 @@ namespace StructureMap.Graph
 
 
         }
+
+        public PluginGraph Parent { get; set; }
 
         public PluginGraph(string profileName) : this()
         {
