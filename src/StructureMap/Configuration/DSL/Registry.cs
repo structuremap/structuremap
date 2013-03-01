@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Reflection;
 using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
@@ -182,7 +183,8 @@ namespace StructureMap.Configuration.DSL
         /// <returns></returns>
         public CreatePluginFamilyExpression<TPluginType> FillAllPropertiesOfType<TPluginType>()
         {
-            PluginCache.AddFilledType(typeof (TPluginType));
+            Func<PropertyInfo, bool> predicate = prop => prop.PropertyType == typeof (TPluginType);
+            PluginCache.UseSetterRule(predicate);
             return For<TPluginType>();
         }
 

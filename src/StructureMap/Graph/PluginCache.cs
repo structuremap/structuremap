@@ -63,12 +63,6 @@ namespace StructureMap.Graph
             }
         }
 
-        public static void AddFilledType(Type type)
-        {
-            Func<PropertyInfo, bool> predicate = prop => prop.PropertyType == type;
-            UseSetterRule(predicate);
-        }
-
         [Obsolete("This is going to be eliminated")]
         public static void UseSetterRule(Func<PropertyInfo, bool> predicate)
         {

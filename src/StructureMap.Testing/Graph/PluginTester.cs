@@ -251,8 +251,10 @@ namespace StructureMap.Testing.Graph
         public void SetFilledTypes_1()
         {
             PluginCache.ResetAll();
-            PluginCache.AddFilledType(typeof (IEngine));
-            PluginCache.AddFilledType(typeof (IAutomobile));
+            Func<PropertyInfo, bool> predicate = prop1 => prop1.PropertyType == typeof (IEngine);
+            PluginCache.UseSetterRule(predicate);
+            Func<PropertyInfo, bool> predicate1 = prop1 => prop1.PropertyType == typeof (IAutomobile);
+            PluginCache.UseSetterRule(predicate1);
 
             Plugin plugin = PluginCache.GetPlugin(typeof (ClassWithProperties));
 
@@ -266,8 +268,10 @@ namespace StructureMap.Testing.Graph
         public void SetFilledTypes_2()
         {
             PluginCache.ResetAll();
-            PluginCache.AddFilledType(typeof (IGateway));
-            PluginCache.AddFilledType(typeof (IAutomobile));
+            Func<PropertyInfo, bool> predicate = prop1 => prop1.PropertyType == typeof (IGateway);
+            PluginCache.UseSetterRule(predicate);
+            Func<PropertyInfo, bool> predicate1 = prop1 => prop1.PropertyType == typeof (IAutomobile);
+            PluginCache.UseSetterRule(predicate1);
 
             Plugin plugin = PluginCache.GetPlugin(typeof (ClassWithProperties));
 
@@ -281,7 +285,8 @@ namespace StructureMap.Testing.Graph
         public void SetFilledTypes_3()
         {
             PluginCache.ResetAll();
-            PluginCache.AddFilledType(typeof (IGateway));
+            Func<PropertyInfo, bool> predicate = prop1 => prop1.PropertyType == typeof (IGateway);
+            PluginCache.UseSetterRule(predicate);
 
             Plugin plugin = PluginCache.GetPlugin(typeof (ClassWithProperties));
 
