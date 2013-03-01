@@ -1,9 +1,9 @@
 using System;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using StructureMap.AutoMocking;
+using StructureMap.Testing;
 
-namespace StructureMap.Testing.AutoMocking
+namespace StructureMap.AutoMocking.Moq.Testing
 {
     [TestFixture]
     public abstract class AutoMockerTester

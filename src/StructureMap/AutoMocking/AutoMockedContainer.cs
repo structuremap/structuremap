@@ -8,10 +8,6 @@ namespace StructureMap.AutoMocking
     {
         private readonly ServiceLocator _locator;
 
-        public AutoMockedContainer()
-            : this(new RhinoMocksAAAServiceLocator())
-        {
-        }
 
         public AutoMockedContainer(ServiceLocator locator)
         {

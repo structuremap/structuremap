@@ -3,10 +3,10 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Rhino.Mocks.Interfaces;
-using StructureMap.AutoMocking;
 using StructureMap.Graph;
+using StructureMap.Testing;
 
-namespace StructureMap.Testing.AutoMocking
+namespace StructureMap.AutoMocking.Testing
 {
     [TestFixture]
     public class RhinoAutoMockerTester : AutoMockerTester

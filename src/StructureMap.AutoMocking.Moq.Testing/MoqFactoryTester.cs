@@ -1,8 +1,8 @@
 using Moq;
 using NUnit.Framework;
-using StructureMap.AutoMocking;
+using StructureMap.Testing;
 
-namespace StructureMap.Testing.AutoMocking
+namespace StructureMap.AutoMocking.Moq.Testing
 {
     [TestFixture]
     public class MoqFactoryTester
@@ -37,6 +37,25 @@ namespace StructureMap.Testing.AutoMocking
             var mock = new Mock<ITestMocks>();
             mock.Expect(t => t.Answer()).Returns("Moq");
             mock.Object.Answer().ShouldEqual("Moq");
+        }
+    }
+
+
+    public interface ITestMocks
+    {
+        string Answer();
+    }
+
+    public class TestPartials
+    {
+        public string Concrete()
+        {
+            return "Concrete";
+        }
+
+        public virtual string Virtual()
+        {
+            return "Virtual";
         }
     }
 }

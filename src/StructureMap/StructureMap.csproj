@@ -132,6 +132,9 @@
       <Link>CommonAssemblyInfo.cs</Link>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="AutoMocking\AutoMockedContainer.cs" />
+    <Compile Include="AutoMocking\AutoMocker.cs" />
+    <Compile Include="AutoMocking\ServiceLocator.cs" />
     <Compile Include="BuildSession.cs" />
     <Compile Include="ComplexPipelineGraph.cs" />
     <Compile Include="Configuration\DSL\Expressions\GenericFamilyExpression.cs" />

@@ -2,9 +2,8 @@ using System;
 using System.Linq.Expressions;
 using Moq;
 using NUnit.Framework;
-using StructureMap.AutoMocking;
 
-namespace StructureMap.Testing.AutoMocking
+namespace StructureMap.AutoMocking.Moq.Testing
 {
     [TestFixture]
     public class example_MoqAutoMocker_usage

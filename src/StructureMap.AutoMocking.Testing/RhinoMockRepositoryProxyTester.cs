@@ -1,8 +1,8 @@
 using NUnit.Framework;
 using Rhino.Mocks;
-using StructureMap.AutoMocking;
+using StructureMap.Testing;
 
-namespace StructureMap.Testing.AutoMocking
+namespace StructureMap.AutoMocking.Testing
 {
     [TestFixture]
     public class RhinoMockRepositoryProxyTester

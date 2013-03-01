@@ -11,8 +11,11 @@
     <description>This is a package that provides support for Web-related lifecycles in StructureMap.</description>
     <summary>StructureMap is a Dependency Injection / Inversion of Control tool for .Net</summary>
     <language>en-US</language>
+    <dependencies>
+      <dependency id="StructureMap" version="3.0.0" />
+    </dependencies>
   </metadata>
   <files>
-	<file src="..\..\src\StructureMap.Web\bin\release\StructureMap.*" target="lib\net40" />
+	<file src="..\..\src\StructureMap.Web\bin\release\StructureMap.Web.*" target="lib\net40" />
   </files>
 </package>

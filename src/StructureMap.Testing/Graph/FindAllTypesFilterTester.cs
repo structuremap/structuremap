@@ -1,51 +1,58 @@
-﻿using System;
-using Moq;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
+using System.Linq;
+using StructureMap.Pipeline;
 
 namespace StructureMap.Testing.Graph
 {
+    [TestFixture]
     public class FindAllTypesFilterTester
     {
+
         [Test]
         public void it_registers_types_that_can_be_cast()
         {
-            var registry = new Mock<Registry>(MockBehavior.Strict);
-            registry
-				.Expect(x => x.AddType(It.IsAny<Type>(), typeof (Generic<>), It.IsAny<string>()))
-                .Callback<Type, Type, string>((x, y, z) =>
-                                              Assert.That(x.GetGenericTypeDefinition(), Is.EqualTo(typeof (IGeneric<>))));
-            var filter = new FindAllTypesFilter(typeof (IGeneric<>));
+            var filter = new FindAllTypesFilter(typeof(IGeneric<>));
+            var registry = new Registry();
 
-            filter.Process(typeof (Generic<>), registry.Object);
-            registry.VerifyAll();
+            filter.Process(typeof(Generic<>), registry);
+
+            var graph = registry.Build();
+
+            graph.Families[typeof (IGeneric<>)].Instances.Single().ShouldBeOfType<ConstructorInstance>()
+                                              .PluggedType.ShouldEqual(typeof (Generic<>));
         }
+
 
         [Test]
         public void it_registers_types_implementing_the_closed_generic_version()
         {
-            var registry = new Mock<Registry>(MockBehavior.Strict);
-            registry.Expect(x =>
-                            x.AddType(typeof (IGeneric<string>), typeof (StringGeneric), It.IsAny<string>()));
-            var filter = new FindAllTypesFilter(typeof (IGeneric<>));
+            var filter = new FindAllTypesFilter(typeof(IGeneric<>));
+            var registry = new Registry();
 
-            filter.Process(typeof (StringGeneric), registry.Object);
-            registry.VerifyAll();
+            filter.Process(typeof(StringGeneric), registry);
+
+            var graph = registry.Build();
+
+            graph.Families[typeof(IGeneric<string>)].Instances.Single().ShouldBeOfType<ConstructorInstance>()
+                                              .PluggedType.ShouldEqual(typeof(StringGeneric));
         }
-		
-		[Test]
-		public void it_registers_open_types_which_can_be_cast()
-		{
-			var registry = new Mock<Registry>(MockBehavior.Strict);
-			registry.Expect(x => x.AddType(It.IsAny<Type>(), typeof(ConcreteGeneric<>), It.IsAny<string>()))
-				.Callback<Type, Type, string>((x, y, z) => Assert.That(x.GetGenericTypeDefinition(), Is.EqualTo(typeof (IGeneric<>))));
 
-			var filter = new FindAllTypesFilter(typeof(IGeneric<>));
+        [Test]
+        public void it_registers_open_types_which_can_be_cast()
+        {
+            var filter = new FindAllTypesFilter(typeof(IGeneric<>));
+            var registry = new Registry();
 
-			filter.Process(typeof(ConcreteGeneric<>), registry.Object);
-			registry.VerifyAll();
-		}
+            filter.Process(typeof(ConcreteGeneric<>), registry);
+
+            var graph = registry.Build();
+
+            graph.Families[typeof(IGeneric<>)].Instances.Single().ShouldBeOfType<ConstructorInstance>()
+                                              .PluggedType.ShouldEqual(typeof(ConcreteGeneric<>));
+        }
+
 
         public class Generic<T> : IGeneric<T>
         {
@@ -53,13 +60,19 @@ namespace StructureMap.Testing.Graph
             {
             }
         }
-		
-		public interface IGeneric<T>
+
+        public interface IGeneric<T>
         {
             void Nop();
         }
 
-        public class StringGeneric : Generic<string> { }
-		public class ConcreteGeneric<T> : Generic<T> { }
+        public class StringGeneric : Generic<string>
+        {
+        }
+
+        public class ConcreteGeneric<T> : Generic<T>
+        {
+        }
+
     }
 }

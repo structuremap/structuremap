@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 
-namespace StructureMap.AutoMocking
+namespace StructureMap.AutoMocking.Moq
 {
     public class MoqFactory
     {

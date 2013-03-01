@@ -1,11 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Reflection;
-using Rhino.Mocks.Interfaces;
-using StructureMap.Graph;
 using System.Linq;
+using System.Reflection;
+using StructureMap.Graph;
 using StructureMap.TypeRules;
 
 namespace StructureMap.AutoMocking
@@ -13,64 +10,64 @@ namespace StructureMap.AutoMocking
     public interface IAutoMocker<TTargetClass> where TTargetClass : class
     {
         /// <summary>
-        ///Gets an instance of the ClassUnderTest with mock objects (or stubs) pushed in for all of its dependencies
+        ///     Gets an instance of the ClassUnderTest with mock objects (or stubs) pushed in for all of its dependencies
         /// </summary>
         TTargetClass ClassUnderTest { get; }
 
         /// <summary>
-        /// Accesses the underlying AutoMockedContainer
+        ///     Accesses the underlying AutoMockedContainer
         /// </summary>
         AutoMockedContainer Container { get; }
 
         /// <summary>
-        /// Calling this method will immediately create a "Partial" mock
-        /// for the ClassUnderTest using the "Greediest" constructor.
+        ///     Calling this method will immediately create a "Partial" mock
+        ///     for the ClassUnderTest using the "Greediest" constructor.
         /// </summary>
         void PartialMockTheClassUnderTest();
 
         /// <summary>
-        /// Gets the mock object for type T that would be injected into the constructor function
-        /// of the ClassUnderTest
+        ///     Gets the mock object for type T that would be injected into the constructor function
+        ///     of the ClassUnderTest
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         T Get<T>() where T : class;
 
         /// <summary>
-        /// Method to specify the exact object that will be used for 
-        /// "pluginType."  Useful for stub objects and/or static mocks
+        ///     Method to specify the exact object that will be used for
+        ///     "pluginType."  Useful for stub objects and/or static mocks
         /// </summary>
         /// <param name="pluginType"></param>
         /// <param name="stub"></param>
         void Inject(Type pluginType, object stub);
 
         /// <summary>
-        /// Method to specify the exact object that will be used for 
-        /// "pluginType."  Useful for stub objects and/or static mocks
+        ///     Method to specify the exact object that will be used for
+        ///     "pluginType."  Useful for stub objects and/or static mocks
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="target"></param>
         void Inject<T>(T target);
 
         /// <summary>
-        /// Adds an additional mock object for a given T
-        /// Useful for array arguments to the ClassUnderTest
-        /// object
+        ///     Adds an additional mock object for a given T
+        ///     Useful for array arguments to the ClassUnderTest
+        ///     object
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         T AddAdditionalMockFor<T>() where T : class;
 
         /// <summary>
-        /// So that Aaron Jensen can use his concrete HubService object
-        /// Construct whatever T is with all mocks, and make sure that the
-        /// ClassUnderTest gets built with a concrete T
+        ///     So that Aaron Jensen can use his concrete HubService object
+        ///     Construct whatever T is with all mocks, and make sure that the
+        ///     ClassUnderTest gets built with a concrete T
         /// </summary>
         /// <typeparam name="T"></typeparam>
         void UseConcreteClassFor<T>();
 
         /// <summary>
-        /// Creates, returns, and registers an array of mock objects for type T.  
+        ///     Creates, returns, and registers an array of mock objects for type T.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="count"></param>
@@ -78,8 +75,8 @@ namespace StructureMap.AutoMocking
         T[] CreateMockArrayFor<T>(int count) where T : class;
 
         /// <summary>
-        /// Allows you to "inject" an array of known objects for an 
-        /// argument of type T[] in the ClassUnderTest
+        ///     Allows you to "inject" an array of known objects for an
+        ///     argument of type T[] in the ClassUnderTest
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="stubs"></param>
@@ -87,7 +84,7 @@ namespace StructureMap.AutoMocking
     }
 
     /// <summary>
-    /// The Auto Mocking Container for StructureMap
+    ///     The Auto Mocking Container for StructureMap
     /// </summary>
     /// <typeparam name="TTargetClass"></typeparam>
     public class AutoMocker<TTargetClass> : IAutoMocker<TTargetClass> where TTargetClass : class
@@ -97,7 +94,7 @@ namespace StructureMap.AutoMocking
         protected ServiceLocator _serviceLocator;
 
         /// <summary>
-        ///Gets an instance of the ClassUnderTest with mock objects (or stubs) pushed in for all of its dependencies
+        ///     Gets an instance of the ClassUnderTest with mock objects (or stubs) pushed in for all of its dependencies
         /// </summary>
         public TTargetClass ClassUnderTest
         {
@@ -113,13 +110,16 @@ namespace StructureMap.AutoMocking
         }
 
         /// <summary>
-        /// Accesses the underlying AutoMockedContainer
+        ///     Accesses the underlying AutoMockedContainer
         /// </summary>
-        public AutoMockedContainer Container { get { return _container; } }
+        public AutoMockedContainer Container
+        {
+            get { return _container; }
+        }
 
         /// <summary>
-        /// Calling this method will immediately create a "Partial" mock
-        /// for the ClassUnderTest using the "Greediest" constructor.
+        ///     Calling this method will immediately create a "Partial" mock
+        ///     for the ClassUnderTest using the "Greediest" constructor.
         /// </summary>
         public void PartialMockTheClassUnderTest()
         {
@@ -127,8 +127,8 @@ namespace StructureMap.AutoMocking
         }
 
         /// <summary>
-        /// Gets the mock object for type T that would be injected into the constructor function
-        /// of the ClassUnderTest
+        ///     Gets the mock object for type T that would be injected into the constructor function
+        ///     of the ClassUnderTest
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
@@ -138,8 +138,8 @@ namespace StructureMap.AutoMocking
         }
 
         /// <summary>
-        /// Method to specify the exact object that will be used for 
-        /// "pluginType."  Useful for stub objects and/or static mocks
+        ///     Method to specify the exact object that will be used for
+        ///     "pluginType."  Useful for stub objects and/or static mocks
         /// </summary>
         /// <param name="pluginType"></param>
         /// <param name="stub"></param>
@@ -149,8 +149,8 @@ namespace StructureMap.AutoMocking
         }
 
         /// <summary>
-        /// Method to specify the exact object that will be used for 
-        /// "pluginType."  Useful for stub objects and/or static mocks
+        ///     Method to specify the exact object that will be used for
+        ///     "pluginType."  Useful for stub objects and/or static mocks
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="target"></param>
@@ -160,9 +160,9 @@ namespace StructureMap.AutoMocking
         }
 
         /// <summary>
-        /// Adds an additional mock object for a given T
-        /// Useful for array arguments to the ClassUnderTest
-        /// object
+        ///     Adds an additional mock object for a given T
+        ///     Useful for array arguments to the ClassUnderTest
+        ///     object
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
@@ -175,9 +175,9 @@ namespace StructureMap.AutoMocking
         }
 
         /// <summary>
-        /// So that Aaron Jensen can use his concrete HubService object
-        /// Construct whatever T is with all mocks, and make sure that the
-        /// ClassUnderTest gets built with a concrete T
+        ///     So that Aaron Jensen can use his concrete HubService object
+        ///     Construct whatever T is with all mocks, and make sure that the
+        ///     ClassUnderTest gets built with a concrete T
         /// </summary>
         /// <typeparam name="T"></typeparam>
         public void UseConcreteClassFor<T>()
@@ -187,7 +187,7 @@ namespace StructureMap.AutoMocking
         }
 
         /// <summary>
-        /// Creates, returns, and registers an array of mock objects for type T.  
+        ///     Creates, returns, and registers an array of mock objects for type T.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="count"></param>
@@ -207,16 +207,15 @@ namespace StructureMap.AutoMocking
         }
 
         /// <summary>
-        /// Allows you to "inject" an array of known objects for an 
-        /// argument of type T[] in the ClassUnderTest
+        ///     Allows you to "inject" an array of known objects for an
+        ///     argument of type T[] in the ClassUnderTest
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="stubs"></param>
         public void InjectArray<T>(T[] stubs)
         {
             _container.EjectAllInstancesOf<T>();
-            _container.Configure(x =>
-            {
+            _container.Configure(x => {
                 foreach (T t in stubs)
                 {
                     x.For(typeof (T)).Add(t);
@@ -234,15 +233,18 @@ namespace StructureMap.AutoMocking
 
                 if (dependencyType.IsArray)
                 {
-                    var builder = typeof (ArrayBuilder<>).CloseAndBuildAs<IEnumerableBuilder>(_container, dependencyType.GetElementType());
+                    var builder = typeof (ArrayBuilder<>).CloseAndBuildAs<IEnumerableBuilder>(_container,
+                                                                                              dependencyType
+                                                                                                  .GetElementType());
                     list.Add(builder.ToEnumerable());
                 }
                 else if (dependencyType.Closes(typeof (IEnumerable<>)))
                 {
-                    var @interface = dependencyType.FindFirstInterfaceThatCloses(typeof (IEnumerable<>));
-                    var elementType = @interface.GetGenericArguments().First();
+                    Type @interface = dependencyType.FindFirstInterfaceThatCloses(typeof (IEnumerable<>));
+                    Type elementType = @interface.GetGenericArguments().First();
 
-                    var builder = typeof (EnumerableBuilder<>).CloseAndBuildAs<IEnumerableBuilder>(_container, elementType);
+                    var builder = typeof (EnumerableBuilder<>).CloseAndBuildAs<IEnumerableBuilder>(_container,
+                                                                                                   elementType);
                     list.Add(builder.ToEnumerable());
                 }
                 else
@@ -254,10 +256,6 @@ namespace StructureMap.AutoMocking
 
             return list.ToArray();
         }
-
-
-
-
     }
 
     public interface IEnumerableBuilder
@@ -294,6 +292,4 @@ namespace StructureMap.AutoMocking
             return _container.GetAllInstances<T>();
         }
     }
-
-
 }

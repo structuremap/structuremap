@@ -1,10 +1,10 @@
-namespace StructureMap.AutoMocking
+namespace StructureMap.AutoMocking.Moq
 {
     /// <summary>
     /// Provides an "Auto Mocking Container" for the concrete class TARGETCLASS using Moq
     /// </summary>
-    /// <typeparam name="TARGETCLASS">The concrete class being tested</typeparam>
-    public class MoqAutoMocker<TARGETCLASS> : AutoMocker<TARGETCLASS> where TARGETCLASS : class
+    /// <typeparam name="T">The concrete class being tested</typeparam>
+    public class MoqAutoMocker<T> : AutoMocker<T> where T : class
     {
         public MoqAutoMocker()
         {
