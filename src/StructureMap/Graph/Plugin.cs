@@ -139,7 +139,7 @@ namespace StructureMap.Graph
             _constructor.UseConstructor(expression);
         }
 
-        public void UseSetterRule(Predicate<PropertyInfo> rule)
+        public void UseSetterRule(Func<PropertyInfo, bool> rule)
         {
             _setters.UseSetterRule(rule);
         }

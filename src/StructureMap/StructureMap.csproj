@@ -165,6 +165,7 @@
     <Compile Include="Graph\IPluginFactory.cs" />
     <Compile Include="Graph\AssemblyScanner.cs" />
     <Compile Include="Graph\IPluginGraph.cs" />
+    <Compile Include="Graph\SetterRules.cs" />
     <Compile Include="Graph\TypePool.cs" />
     <Compile Include="IBuildSession.cs" />
     <Compile Include="IGraphEjector.cs" />

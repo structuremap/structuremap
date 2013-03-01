@@ -36,7 +36,7 @@ namespace StructureMap.Configuration.DSL
         /// rule as mandatory properties
         /// </summary>
         /// <param name="rule"></param>
-        public void Matching(Predicate<PropertyInfo> rule)
+        public void Matching(Func<PropertyInfo, bool> rule)
         {
             PluginCache.UseSetterRule(rule);
         }

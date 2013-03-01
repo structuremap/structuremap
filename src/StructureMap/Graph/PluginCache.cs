@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using StructureMap.Construction;
@@ -12,18 +11,14 @@ namespace StructureMap.Graph
     {
         private static readonly Cache<Type, IInstanceBuilder> _builders;
         private static readonly Cache<Type, Plugin> _plugins;
-        private static readonly List<Predicate<PropertyInfo>> _setterRules;
+        private static readonly SetterRules _setterRules = new SetterRules();
 
         static PluginCache()
         {
-            _setterRules = new List<Predicate<PropertyInfo>>();
             _plugins = new Cache<Type, Plugin>(t =>
             {
                 var plugin = new Plugin(t);
-                foreach (var rule in _setterRules)
-                {
-                    plugin.UseSetterRule(rule);
-                }
+                _setterRules.Configure(plugin);
 
                 return plugin;
             });
@@ -70,11 +65,11 @@ namespace StructureMap.Graph
 
         public static void AddFilledType(Type type)
         {
-            Predicate<PropertyInfo> predicate = prop => prop.PropertyType == type;
+            Func<PropertyInfo, bool> predicate = prop => prop.PropertyType == type;
             UseSetterRule(predicate);
         }
 
-        public static void UseSetterRule(Predicate<PropertyInfo> predicate)
+        public static void UseSetterRule(Func<PropertyInfo, bool> predicate)
         {
             _setterRules.Add(predicate);
             _plugins.Each(plugin =>
