@@ -16,8 +16,6 @@ namespace StructureMap.AutoMocking.Testing
         [SetUp]
         public void SetUp()
         {
-            PluginCache.ResetAll();
-
             _locator = new RhinoMocksAAAServiceLocator();
             _container = new AutoMockedContainer(_locator);
         }

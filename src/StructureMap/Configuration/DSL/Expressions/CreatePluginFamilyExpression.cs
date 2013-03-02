@@ -108,7 +108,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         }
 
         /// <summary>
-        /// Use a lambda using the IContext to construct the default instance of the plugin type
+        /// Use a lambda using the IContext to construct the default instance of the Plugin type
         /// 
         /// </summary>
         /// <param name="func"></param>
@@ -123,7 +123,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         }
 
         /// <summary>
-        /// Use a lambda to construct the default instance of the plugin type
+        /// Use a lambda to construct the default instance of the Plugin type
         /// </summary>
         /// <param name="func"></param>
         /// <returns></returns>

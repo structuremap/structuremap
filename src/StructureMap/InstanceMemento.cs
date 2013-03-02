@@ -69,7 +69,7 @@ namespace StructureMap
 
 
         /// <summary>
-        /// Is the InstanceMemento a reference to the default instance of the plugin type?
+        /// Is the InstanceMemento a reference to the default instance of the Plugin type?
         /// </summary>
         public bool IsDefault { get { return (IsReference && ReferenceKey == String.Empty); } }
 

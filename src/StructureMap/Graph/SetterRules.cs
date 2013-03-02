@@ -27,5 +27,9 @@ namespace StructureMap.Graph
         }
 
 
+        public void Add(IEnumerable<Func<PropertyInfo, bool>> rules)
+        {
+            _setterRules.AddRange(rules);
+        }
     }
 }

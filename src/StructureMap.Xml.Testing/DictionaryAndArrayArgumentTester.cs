@@ -104,7 +104,7 @@ namespace StructureMap.Xml.Testing
     {
         public Plugin PluginFor(string name)
         {
-            return PluginCache.GetPlugin(Type.GetType(name));
+            return new Plugin(Type.GetType(name));
         }
     }
 }

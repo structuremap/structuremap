@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using StructureMap.Diagnostics;
 using StructureMap.Pipeline;
 using StructureMap.TypeRules;
 using StructureMap.Util;
@@ -9,16 +8,16 @@ using StructureMap.Util;
 namespace StructureMap.Graph
 {
     /// <summary>
-    /// Conceptually speaking, a PluginFamily object represents a point of abstraction or variability in 
-    /// the system.  A PluginFamily defines a CLR Type that StructureMap can build, and all of the possible
-    /// Plugin’s implementing the CLR Type.
+    ///     Conceptually speaking, a PluginFamily object represents a point of abstraction or variability in
+    ///     the system.  A PluginFamily defines a CLR Type that StructureMap can build, and all of the possible
+    ///     Plugin’s implementing the CLR Type.
     /// </summary>
     public class PluginFamily : HasScope, IDisposable
     {
         private readonly Cache<string, Instance> _instances = new Cache<string, Instance>(delegate { return null; });
         private readonly Type _pluginType;
-        private Lazy<Instance> _defaultInstance; 
-        
+        private Lazy<Instance> _defaultInstance;
+
 
         public PluginFamily(Type pluginType)
         {
@@ -27,17 +26,40 @@ namespace StructureMap.Graph
             resetDefault();
 
             Attribute.GetCustomAttributes(typeof (FamilyAttribute), true).OfType<FamilyAttribute>()
-                .Each(x => x.Alter(this));
+                     .Each(x => x.Alter(this));
         }
 
         public PluginGraph Owner { get; set; }
+
+        public IEnumerable<Instance> Instances
+        {
+            get { return _instances.GetAll(); }
+        }
+
+        public bool IsGenericTemplate
+        {
+            get { return _pluginType.IsGenericTypeDefinition || _pluginType.ContainsGenericParameters; }
+        }
+
+        public Instance MissingInstance { get; set; }
+
+        /// <summary>
+        ///     The CLR Type that defines the "Plugin" interface for the PluginFamily
+        /// </summary>
+        public Type PluginType
+        {
+            get { return _pluginType; }
+        }
+
+        void IDisposable.Dispose()
+        {
+            _instances.Each(x => x.SafeDispose());
+        }
 
         private void resetDefault()
         {
             _defaultInstance = new Lazy<Instance>(determineDefault);
         }
-
-        public IEnumerable<Instance> Instances { get { return _instances.GetAll(); } }
 
         public void AddInstance(Instance instance)
         {
@@ -97,8 +119,7 @@ namespace StructureMap.Graph
             var templatedFamily = new PluginFamily(templatedType);
             templatedFamily._lifecycle = _lifecycle;
 
-            _instances.GetAll().Select(x =>
-            {
+            _instances.GetAll().Select(x => {
                 Instance clone = x.CloseType(templateTypes);
                 if (clone == null) return null;
 
@@ -108,8 +129,8 @@ namespace StructureMap.Graph
 
             if (GetDefaultInstance() != null)
             {
-                var defaultKey = GetDefaultInstance().Name;
-                var @default = templatedFamily.Instances.FirstOrDefault(x => x.Name == defaultKey);
+                string defaultKey = GetDefaultInstance().Name;
+                Instance @default = templatedFamily.Instances.FirstOrDefault(x => x.Name == defaultKey);
                 if (@default != null)
                 {
                     templatedFamily.SetDefault(@default);
@@ -118,8 +139,8 @@ namespace StructureMap.Graph
 
             //Are there instances that close the templatedtype straight away?
             _instances.GetAll()
-                .Where(x => x.ConcreteType.CanBeCastTo(templatedType))
-                .Each(templatedFamily.AddInstance);
+                      .Where(x => x.ConcreteType.CanBeCastTo(templatedType))
+                      .Each(templatedFamily.AddInstance);
 
             return templatedFamily;
         }
@@ -169,33 +190,19 @@ namespace StructureMap.Graph
             resetDefault();
         }
 
-        public bool IsGenericTemplate { get { return _pluginType.IsGenericTypeDefinition || _pluginType.ContainsGenericParameters; } }
-
-        public Instance MissingInstance { get; set; }
-
         /// <summary>
-        /// The CLR Type that defines the "Plugin" interface for the PluginFamily
-        /// </summary>
-        public Type PluginType { get { return _pluginType; } }
-
-        /// <summary>
-        /// Primarily for TESTING
+        ///     Primarily for TESTING
         /// </summary>
         /// <param name="defaultKey"></param>
         public void SetDefaultKey(string defaultKey)
         {
-            var instance = _instances.FirstOrDefault(x => x.Name == defaultKey);
+            Instance instance = _instances.FirstOrDefault(x => x.Name == defaultKey);
             if (instance == null)
             {
                 throw new ArgumentOutOfRangeException("Could not find an instance with name " + defaultKey);
             }
 
             SetDefault(instance);
-        }
-
-        void IDisposable.Dispose()
-        {
-            _instances.Each(x => x.SafeDispose());
         }
     }
 }

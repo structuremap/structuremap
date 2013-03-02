@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using StructureMap.Testing.Widget;
 
-namespace StructureMap.Testing.Graph
+namespace StructureMap.LegacyAttributeSupport.Testing
 {
     [TestFixture]
     public class PluggableAttributeTester

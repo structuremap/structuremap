@@ -10,12 +10,6 @@ namespace StructureMap.Testing.Graph
     [TestFixture]
     public class DefaultConventionScanningTester
     {
-        [SetUp]
-        public void SetUp()
-        {
-            PluginCache.ResetAll();
-        }
-
         [Test]
         public void FindPluginType()
         {

@@ -102,14 +102,6 @@ namespace StructureMap.Configuration.DSL
         void SetAllProperties(Action<SetterConvention> action);
 
         /// <summary>
-        /// Use to programmatically select the constructor function of a concrete
-        /// class.  Applies globally to all Containers in a single AppDomain.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="expression"></param>
-        void SelectConstructor<T>(Expression<Func<T>> expression);
-
-        /// <summary>
         /// All requests For the "TO" types will be filled by fetching the "FROM"
         /// type and casting it to "TO"
         /// GetInstance(typeof(TO)) basically becomes (TO)GetInstance(typeof(FROM))

@@ -30,7 +30,7 @@ namespace StructureMap
 
         /// <summary>
         /// Creates a MemoryInstanceMemento that represents a reference to the default instance
-        /// of a plugin type.
+        /// of a Plugin type.
         /// </summary>
         /// <returns></returns>
         public static MemoryInstanceMemento CreateDefaultInstanceMemento()
@@ -55,7 +55,7 @@ namespace StructureMap
         /// <summary>
         /// Constructs a MemoryInstanceMemento without properties
         /// </summary>
-        /// <param name="concreteKey">The concrete key of the plugin type</param>
+        /// <param name="concreteKey">The concrete key of the Plugin type</param>
         /// <param name="instanceKey">The identifying instance key</param>
         public MemoryInstanceMemento(string concreteKey, string instanceKey)
             : this(concreteKey, instanceKey, new NameValueCollection())
@@ -66,7 +66,7 @@ namespace StructureMap
         /// <summary>
         /// Constructs a MemoryInstanceMemento with properties
         /// </summary>
-        /// <param name="concreteKey">The concrete key of the plugin type</param>
+        /// <param name="concreteKey">The concrete key of the Plugin type</param>
         /// <param name="instanceKey">The identifying instance key</param>
         /// <param name="properties">NameValueCollection of instance properties</param>
         public MemoryInstanceMemento(string concreteKey, string instanceKey, NameValueCollection properties)

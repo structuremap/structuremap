@@ -16,6 +16,7 @@ namespace StructureMap.Configuration.Xml
             _builder = builder;
         }
 
+        [Obsolete("Think this should just return PluggedType")]
         public Plugin PluginFor(string name)
         {
             if (name == null) throw new ArgumentNullException("name");
@@ -23,10 +24,10 @@ namespace StructureMap.Configuration.Xml
             if (name.Contains(","))
             {
                 var pluggedType = new TypePath(name).FindType();
-                return PluginCache.GetPlugin(pluggedType);
+                return new Plugin(pluggedType);
             }
 
-            return _aliases.Has(name) ? PluginCache.GetPlugin(_aliases[name]) : null;
+            return _aliases.Has(name) ?  new Plugin(_aliases[name]) : null;
         }
 
         public void ParseAlias(XmlElement element)

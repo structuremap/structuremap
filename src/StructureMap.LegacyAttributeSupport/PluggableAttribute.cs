@@ -2,7 +2,7 @@ using System;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 
-namespace StructureMap
+namespace StructureMap.LegacyAttributeSupport
 {
     /// <summary>
     /// Used to implicitly mark a class as a Plugin candidate for StructureMap

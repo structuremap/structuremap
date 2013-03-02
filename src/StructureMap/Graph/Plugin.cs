@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
+using StructureMap.Construction;
 using StructureMap.Pipeline;
 using StructureMap.TypeRules;
 using System.Linq;
@@ -32,6 +33,18 @@ namespace StructureMap.Graph
 
         #endregion
 
+        [Obsolete("Temporary only")]
+        public IInstanceBuilder CreateBuilder()
+        {
+            try
+            {
+                return BuilderCompiler.CreateBuilder(this);
+            }
+            catch (Exception e)
+            {
+                throw new StructureMapException(245, e, _pluggedType.AssemblyQualifiedName);
+            }
+        }
 
         /// <summary>
         /// The concrete CLR Type represented by the Plugin

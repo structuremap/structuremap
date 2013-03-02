@@ -1,4 +1,5 @@
 using System;
+using StructureMap.LegacyAttributeSupport;
 using StructureMap.Pipeline;
 
 namespace StructureMap.Testing.Widget

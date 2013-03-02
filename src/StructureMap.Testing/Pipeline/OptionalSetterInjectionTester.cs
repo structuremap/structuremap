@@ -8,12 +8,6 @@ namespace StructureMap.Testing.Pipeline
     [TestFixture]
     public class OptionalSetterInjectionTester
     {
-        [SetUp]
-        public void SetUp()
-        {
-            PluginCache.ResetAll();
-        }
-
         private static Logger createLogger(IContext session)
         {
             return new Logger(session.ParentType);

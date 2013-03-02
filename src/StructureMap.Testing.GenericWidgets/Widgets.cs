@@ -1,4 +1,5 @@
 using System;
+using StructureMap.LegacyAttributeSupport;
 
 namespace StructureMap.Testing.GenericWidgets
 {

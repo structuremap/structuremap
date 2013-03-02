@@ -89,7 +89,7 @@ namespace StructureMap.Query
         /// <param name="filter"></param>
         public void EjectAndRemoveTypes(Func<Type, bool> filter)
         {
-            // first pass hits plugin types
+            // first pass hits Plugin types
             EjectAndRemovePluginTypes(filter);
 
             // second pass to hit instances

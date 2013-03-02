@@ -384,15 +384,15 @@ namespace StructureMap.LegacyAttributeSupport.Testing
         public void can_find_objects_later_by_name()
         {
             container.GetInstance<IController>("Address")
-                .ShouldBeOfType<AddressController>();
+                     .ShouldBeOfType<AddressController>();
 
             container.GetInstance<IController>("Site")
-                .ShouldBeOfType<SiteController>();
+                     .ShouldBeOfType<SiteController>();
         }
     }
-}
 
-public class class_outside_namespace
-{
+    public class class_outside_namespace
+    {
     
+    }
 }

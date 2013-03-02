@@ -15,19 +15,22 @@ namespace StructureMap.Pipeline
     public class ConstructorInstance : Instance, IConfiguredInstance, IStructuredInstance
     {
         private readonly Cache<string, Instance> _dependencies = new Cache<string, Instance>();
+        private readonly object _locker = new object();
+        private readonly Type _pluggedType;
         private readonly Plugin _plugin;
+        private volatile IInstanceBuilder _builder;
 
         public ConstructorInstance(Type pluggedType)
-            : this(PluginCache.GetPlugin(pluggedType))
+            : this(new Plugin(pluggedType))
         {
         }
 
         public ConstructorInstance(Plugin plugin)
         {
             _plugin = plugin;
+            _pluggedType = plugin.PluggedType;
 
-            _dependencies.OnMissing = key =>
-            {
+            _dependencies.OnMissing = key => {
                 if (_plugin.FindArgumentType(key).IsSimple())
                 {
                     throw new StructureMapException(205, key, Name);
@@ -36,8 +39,8 @@ namespace StructureMap.Pipeline
                 return new DefaultInstance();
             };
 
-            _plugin.PluggedType.GetCustomAttributes(typeof (InstanceAttribute), false).OfType<InstanceAttribute>()
-                .Each(x => x.Alter(this));
+            _pluggedType.GetCustomAttributes(typeof (InstanceAttribute), false).OfType<InstanceAttribute>()
+                        .Each(x => x.Alter(this));
         }
 
         public ConstructorInstance(Type pluggedType, string name)
@@ -46,7 +49,10 @@ namespace StructureMap.Pipeline
             Name = name;
         }
 
-        protected Plugin plugin { get { return _plugin; } }
+        public Plugin Plugin
+        {
+            get { return _plugin; }
+        }
 
         void IConfiguredInstance.SetChild(string name, Instance instance)
         {
@@ -87,7 +93,10 @@ namespace StructureMap.Pipeline
             return (T) o;
         }
 
-        public Type PluggedType { get { return _plugin.PluggedType; } }
+        public Type PluggedType
+        {
+            get { return _pluggedType; }
+        }
 
         public bool HasProperty(string propertyName, BuildSession session)
         {
@@ -111,12 +120,12 @@ namespace StructureMap.Pipeline
 
         protected override bool canBePartOfPluginFamily(PluginFamily family)
         {
-            return _plugin.PluggedType.CanBeCastTo(family.PluginType);
+            return _pluggedType.CanBeCastTo(family.PluginType);
         }
 
         public ConstructorInstance Override(ExplicitArguments arguments)
         {
-            var instance = new ConstructorInstance(_plugin);
+            var instance = new ConstructorInstance(_pluggedType);
             _dependencies.Each((key, i) => instance.SetChild(key, i));
 
             arguments.Configure(instance);
@@ -126,12 +135,12 @@ namespace StructureMap.Pipeline
 
         protected override sealed string getDescription()
         {
-            return "Configured Instance of " + _plugin.PluggedType.AssemblyQualifiedName;
+            return "Configured Instance of " + _pluggedType.AssemblyQualifiedName;
         }
 
         protected override sealed Type getConcreteType(Type pluginType)
         {
-            return _plugin.PluggedType;
+            return _pluggedType;
         }
 
         internal void SetChild(string name, Instance instance)
@@ -159,7 +168,7 @@ namespace StructureMap.Pipeline
             {
                 throw new ArgumentOutOfRangeException("name",
                                                       "Could not find a constructor parameter or property for {0} named {1}"
-                                                          .ToFormat(_plugin.PluggedType.AssemblyQualifiedName, name));
+                                                          .ToFormat(_pluggedType.AssemblyQualifiedName, name));
             }
             return dependencyType;
         }
@@ -218,8 +227,18 @@ namespace StructureMap.Pipeline
 
         protected override object build(Type pluginType, BuildSession session)
         {
-            IInstanceBuilder builder = PluginCache.FindBuilder(_plugin.PluggedType);
-            return Build(pluginType, session, builder);
+            if (_builder == null)
+            {
+                lock (_locker)
+                {
+                    if (_builder == null)
+                    {
+                        _builder = session.CreateBuilder(Plugin);
+                    }
+                }
+            }
+
+            return Build(pluginType, session, _builder);
         }
 
         public object Build(Type pluginType, BuildSession session, IInstanceBuilder builder)
@@ -227,7 +246,7 @@ namespace StructureMap.Pipeline
             if (builder == null)
             {
                 throw new StructureMapException(
-                    201, _plugin.PluggedType.FullName, Name, pluginType);
+                    201, _pluggedType.FullName, Name, pluginType);
             }
 
 
@@ -257,39 +276,41 @@ namespace StructureMap.Pipeline
 
         public override Instance CloseType(Type[] types)
         {
-            if(!_plugin.PluggedType.IsOpenGeneric())
+            if (!_pluggedType.IsOpenGeneric())
                 return null;
 
             Type closedType;
-            try {
-                closedType = _plugin.PluggedType.MakeGenericType(types);
+            try
+            {
+                closedType = _pluggedType.MakeGenericType(types);
             }
-            catch {
+            catch
+            {
                 return null;
             }
 
             var closedInstance = new ConstructorInstance(closedType);
 
             _dependencies.Each((key, i) => {
-                                   if(i.CopyAsIsWhenClosingInstance) {
-                                       closedInstance.SetChild(key, i);
-                                   }
-                               });
+                if (i.CopyAsIsWhenClosingInstance)
+                {
+                    closedInstance.SetChild(key, i);
+                }
+            });
 
             return closedInstance;
         }
 
         public override string ToString()
         {
-            return "'{0}' -> {1}".ToFormat(Name, _plugin.PluggedType.FullName);
+            return "'{0}' -> {1}".ToFormat(Name, _pluggedType.FullName);
         }
     }
 
 
-
     public abstract class ConstructorInstance<TThis> : ConstructorInstance where TThis : ConstructorInstance
     {
-        public ConstructorInstance(Type TPluggedType) : base(TPluggedType)
+        public ConstructorInstance(Type pluggedType) : base(pluggedType)
         {
         }
 
@@ -297,13 +318,13 @@ namespace StructureMap.Pipeline
         {
         }
 
-        public ConstructorInstance(Type TPluggedType, string name) : base(TPluggedType, name)
+        public ConstructorInstance(Type pluggedType, string name) : base(pluggedType, name)
         {
         }
 
         /// <summary>
-        /// Inline definition of a constructor dependency.  Select the constructor argument by type.  Do not
-        /// use this method if there is more than one constructor arguments of the same type
+        ///     Inline definition of a constructor dependency.  Select the constructor argument by type.  Do not
+        ///     use this method if there is more than one constructor arguments of the same type
         /// </summary>
         /// <typeparam name="TCtorType"></typeparam>
         /// <returns></returns>
@@ -315,12 +336,12 @@ namespace StructureMap.Pipeline
 
         private string getArgumentNameForType<TCtorType>()
         {
-            return plugin.FindArgumentNameForType<TCtorType>();
+            return Plugin.FindArgumentNameForType<TCtorType>();
         }
 
         /// <summary>
-        /// Inline definition of a constructor dependency.  Select the constructor argument by type and constructor name.  
-        /// Use this method if there is more than one constructor arguments of the same type
+        ///     Inline definition of a constructor dependency.  Select the constructor argument by type and constructor name.
+        ///     Use this method if there is more than one constructor arguments of the same type
         /// </summary>
         /// <typeparam name="TCtorType"></typeparam>
         /// <param name="constructorArg"></param>
@@ -333,8 +354,8 @@ namespace StructureMap.Pipeline
         protected abstract TThis thisObject();
 
         /// <summary>
-        /// Inline definition of a setter dependency.  Only use this method if there
-        /// is only a single property of the TSetterType
+        ///     Inline definition of a setter dependency.  Only use this method if there
+        ///     is only a single property of the TSetterType
         /// </summary>
         /// <typeparam name="TSetterType"></typeparam>
         /// <returns></returns>
@@ -344,8 +365,8 @@ namespace StructureMap.Pipeline
         }
 
         /// <summary>
-        /// Inline definition of a setter dependency.  Only use this method if there
-        /// is only a single property of the TSetterType
+        ///     Inline definition of a setter dependency.  Only use this method if there
+        ///     is only a single property of the TSetterType
         /// </summary>
         /// <typeparam name="TSetterType"></typeparam>
         /// <param name="setterName">The name of the property</param>
@@ -363,16 +384,16 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public ArrayDefinitionExpression<TThis, TChild> EnumerableOf<TChild>()
         {
-            if (typeof(TChild).IsArray)
+            if (typeof (TChild).IsArray)
             {
                 throw new ApplicationException("Please specify the element type in the call to TheArrayOf");
             }
 
-            string propertyName = plugin.FindArgumentNameForEnumerableOf(typeof(TChild));
+            string propertyName = Plugin.FindArgumentNameForEnumerableOf(typeof (TChild));
 
             if (propertyName.IsEmpty())
             {
-                throw new StructureMapException(302, typeof(TChild).FullName, ConcreteType.FullName);
+                throw new StructureMapException(302, typeof (TChild).FullName, ConcreteType.FullName);
             }
             return new ArrayDefinitionExpression<TThis, TChild>(thisObject(), propertyName);
         }
@@ -388,10 +409,9 @@ namespace StructureMap.Pipeline
         {
             if (ctorOrPropertyName.IsEmpty())
             {
-                throw new StructureMapException(302, typeof(TChild).FullName, ConcreteType.FullName);
+                throw new StructureMapException(302, typeof (TChild).FullName, ConcreteType.FullName);
             }
             return new ArrayDefinitionExpression<TThis, TChild>(thisObject(), ctorOrPropertyName);
         }
     }
-
 }
