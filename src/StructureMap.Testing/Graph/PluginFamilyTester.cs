@@ -37,6 +37,7 @@ namespace StructureMap.Testing.Graph
             }
         }
 
+
         [Test]
         public void If_PluginFamily_only_has_one_instance_make_that_the_default()
         {
@@ -48,6 +49,52 @@ namespace StructureMap.Testing.Graph
             family.GetDefaultInstance().ShouldBeTheSameAs(instance);
         }
 
+
+        public class LoggingFamilyAttribute : FamilyAttribute
+        {
+            public static bool Called { get; set; }
+            public override void Alter(PluginFamily family)
+            {
+                Called = true;
+            }
+        }
+
+        [LoggingFamily]
+        public class FamilyGateway
+        {
+            
+        }
+
+        [LoggingFamily]
+        public interface IFamilyInterface
+        {
+            
+        }
+
+        [Test]
+        public void PluginFamily_uses_family_attribute_when_present_on_class()
+        {
+            LoggingFamilyAttribute.Called = false;
+
+            var testFamily = typeof(FamilyGateway);
+
+            var family = new PluginFamily(testFamily);
+
+            LoggingFamilyAttribute.Called.ShouldBeTrue();
+
+        }
+
+        [Test]
+        public void PluginFamily_uses_family_attribute_when_present_on_interface()
+        {
+
+            LoggingFamilyAttribute.Called = false;
+
+            var testFamily = typeof(IFamilyInterface);
+
+            var family = new PluginFamily(testFamily);
+            LoggingFamilyAttribute.Called.ShouldBeTrue();
+        }
 
 
         [Test]

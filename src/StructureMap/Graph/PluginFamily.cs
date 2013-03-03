@@ -25,7 +25,7 @@ namespace StructureMap.Graph
 
             resetDefault();
 
-            Attribute.GetCustomAttributes(typeof (FamilyAttribute), true).OfType<FamilyAttribute>()
+            Attribute.GetCustomAttributes(_pluginType, typeof (FamilyAttribute), true).OfType<FamilyAttribute>()
                      .Each(x => x.Alter(this));
         }
 
