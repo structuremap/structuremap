@@ -3,7 +3,6 @@ using StructureMap.Util;
 
 namespace StructureMap.Pipeline
 {
-    // TODO -- make it possible to register Lifecycles
     public static class Lifecycles
     {
         private static readonly Cache<Type, ILifecycle> _lifecycles = new Cache<Type, ILifecycle>(type => (ILifecycle)Activator.CreateInstance(type));

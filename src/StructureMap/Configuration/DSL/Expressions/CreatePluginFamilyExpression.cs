@@ -145,7 +145,29 @@ namespace StructureMap.Configuration.DSL.Expressions
             return instance;
         }
 
-        
+        /// <summary>
+        /// Defines a fallback instance in case no default was defined for <see cref="TPluginType"/>
+        /// </summary>
+        public SmartInstance<TConcreteType> UseIfNone<TConcreteType>() where TConcreteType : TPluginType
+        {
+            var instance = new SmartInstance<TConcreteType>();
+            registerFallBack(instance);
+            return instance;
+        }
+
+        public LambdaInstance<TPluginType> UseIfNone(Func<IContext, TPluginType> func)
+        {
+            var instance = new LambdaInstance<TPluginType>(func);
+            registerFallBack(instance);
+            return instance;
+        }
+
+        public LambdaInstance<TPluginType> UseIfNone(Func<TPluginType> func)
+        {
+            var instance = new LambdaInstance<TPluginType>(func);
+            registerFallBack(instance);
+            return instance;
+        }
 
         /// <summary>
         /// Convenience method to mark a PluginFamily as a Singleton
@@ -330,6 +352,11 @@ namespace StructureMap.Configuration.DSL.Expressions
         private void registerDefault(Instance instance)
         {
             alter = family => family.SetDefault(instance);
+        }
+
+        private void registerFallBack(Instance instance)
+        {
+            alter = family => family.SetFallback(instance);
         }
 
         private Action<PluginFamily> alter

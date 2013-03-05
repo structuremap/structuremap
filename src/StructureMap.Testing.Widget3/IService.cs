@@ -34,4 +34,12 @@ namespace StructureMap.Testing.Widget3
             throw new NotImplementedException();
         }
     }
+
+    public class WhateverService : IService
+    {
+        public void DoSomething()
+        {
+            throw new NotImplementedException();
+        }
+    }
 }
