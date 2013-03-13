@@ -200,6 +200,7 @@
     <Compile Include="Bugs\UseSingleImplementationConventionInMultipleScans.cs" />
     <Compile Include="Building\constructor_expression_building.cs" />
     <Compile Include="Building\FakeContext.cs" />
+    <Compile Include="Building\setter_expression_building.cs" />
     <Compile Include="BuildSessionTester.cs" />
     <Compile Include="BuildUpIntegratedTester.cs" />
     <Compile Include="BuildUpTester.cs" />

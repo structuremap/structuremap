@@ -10,7 +10,7 @@ namespace StructureMap.Testing.Building
         [Test]
         public void try_a_simple_constructor_with_all_constants()
         {
-            var step = ConstructorAndSetterStep<CtorTarget>.For(() => new CtorTarget("", 0));
+            var step = ConcreteBuild<CtorTarget>.For(() => new CtorTarget("", 0));
             step.Constructor.Add(Constant.For("Jeremy"));
             step.Constructor.Add(Constant.For<int>(39));
 

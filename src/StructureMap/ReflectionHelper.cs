@@ -9,19 +9,31 @@ namespace StructureMap
 {
     internal static class ReflectionHelper
     {
-        public static PropertyInfo GetProperty<MODEL>(Expression<Func<MODEL, object>> expression)
+        public static PropertyInfo GetProperty<T>(Expression<Func<T, object>> expression)
         {
             MemberExpression memberExpression = getMemberExpression(expression);
             return (PropertyInfo) memberExpression.Member;
         }
 
-        public static PropertyInfo GetProperty<MODEL, T>(Expression<Func<MODEL, T>> expression)
+        public static PropertyInfo GetProperty<TModel, T>(Expression<Func<TModel, T>> expression)
         {
             MemberExpression memberExpression = getMemberExpression(expression);
             return (PropertyInfo) memberExpression.Member;
         }
 
-        private static MemberExpression getMemberExpression<MODEL, T>(Expression<Func<MODEL, T>> expression)
+        public static MemberInfo GetMember<T>(Expression<Func<T, object>> expression)
+        {
+            MemberExpression memberExpression = getMemberExpression(expression);
+            return memberExpression.Member;
+        }
+
+        public static MemberInfo GetMember<TModel, T>(Expression<Func<TModel, T>> expression)
+        {
+            MemberExpression memberExpression = getMemberExpression(expression);
+            return memberExpression.Member;
+        }
+
+        private static MemberExpression getMemberExpression<TModel, T>(Expression<Func<TModel, T>> expression)
         {
             MemberExpression memberExpression = null;
             if (expression.Body.NodeType == ExpressionType.Convert)

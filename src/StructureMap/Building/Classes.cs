@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
+using StructureMap.Graph;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
 using System.Linq;
@@ -219,19 +220,24 @@ namespace StructureMap.Building
 
     }
 
-    public class ConstructorAndSetterStep : IBuildStep
+    public class ConcreteBuild : IBuildStep
     {
         private readonly Type _concreteType;
         private readonly ConstructorStep _constructor;
         private readonly IList<Setter> _setters = new List<Setter>();
 
-        public ConstructorAndSetterStep(Type concreteType, ConstructorStep constructor)
+        public ConcreteBuild(Type concreteType) : this(concreteType, new Plugin(concreteType).GetConstructor())
+        {
+            
+        }
+
+        public ConcreteBuild(Type concreteType, ConstructorStep constructor)
         {
             _concreteType = concreteType;
             _constructor = constructor;
         }
 
-        protected ConstructorAndSetterStep(Type concreteType, ConstructorInfo constructor) : this(concreteType, new ConstructorStep(constructor))
+        protected ConcreteBuild(Type concreteType, ConstructorInfo constructor) : this(concreteType, new ConstructorStep(constructor))
         {
         }
 
@@ -286,23 +292,32 @@ namespace StructureMap.Building
         
     }
 
-    public class ConstructorAndSetterStep<T> : ConstructorAndSetterStep
+    public class ConcreteBuild<T> : ConcreteBuild
     {
-        public static ConstructorAndSetterStep<T> For(Expression<Func<T>> expression)
+        public static ConcreteBuild<T> For(Expression<Func<T>> expression)
         {
             var finder = new ConstructorFinderVisitor();
             finder.Visit(expression);
 
             ConstructorInfo ctor = finder.Constructor;
 
-            return new ConstructorAndSetterStep<T>(ctor);
+            return new ConcreteBuild<T>(ctor);
         } 
 
-        public ConstructorAndSetterStep(ConstructorInfo constructor) : base(typeof(T), constructor)
+        public ConcreteBuild(ConstructorInfo constructor) : base(typeof(T), constructor)
         {
         }
 
+        public ConcreteBuild() : base(typeof (T))
+        {
+        }
 
+        public void Set<TValue>(Expression<Func<T, TValue>> expression, TValue value)
+        {
+            var member = ReflectionHelper.GetMember(expression);
+
+            Add(new Setter(member, Constant.For(value)));
+        }
     }
 
 
@@ -322,9 +337,7 @@ namespace StructureMap.Building
 
         public MemberBinding ToBinding()
         {
-            var assignment = Expression.Bind(_member, AssignedValue.ToExpression());
-
-            return Expression.MemberBind(_member, assignment);
+            return Expression.Bind(_member, AssignedValue.ToExpression());
         }
     }
 

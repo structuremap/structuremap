@@ -45,12 +45,12 @@ namespace StructureMap.Testing
         [Test]
         public void simple_expression()
         {
-//            Expression<Func<IContext, ColorRule>> expression = c => new ColorRule("red")
-//            {
-//                Name = "Jeremy"
-//            };
+            Expression<Func<IContext, ColorRule>> expression = c => new ColorRule("red")
+            {
+                Name = "Jeremy"
+            };
 
-            Expression<Func<IContext, ColorRule>> expression = c => new ColorRule("red");
+            //Expression<Func<IContext, ColorRule>> expression = c => new ColorRule("red");
 
             Debug.WriteLine(expression);
         }
