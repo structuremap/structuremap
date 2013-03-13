@@ -135,6 +135,8 @@
     <Compile Include="AutoMocking\AutoMockedContainer.cs" />
     <Compile Include="AutoMocking\AutoMocker.cs" />
     <Compile Include="AutoMocking\ServiceLocator.cs" />
+    <Compile Include="Building\Classes.cs" />
+    <Compile Include="Building\StructureMapBuildException.cs" />
     <Compile Include="BuildSession.cs" />
     <Compile Include="ComplexPipelineGraph.cs" />
     <Compile Include="Configuration\DSL\Expressions\GenericFamilyExpression.cs" />
