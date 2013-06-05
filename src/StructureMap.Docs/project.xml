@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<ProjectRoot xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <TagLine>The original IoC/DI Container for .Net</TagLine>
+  <Name>StructureMap</Name>
+  <GitHubPage>http://github.com/DarthFubuMVC/StructureMap</GitHubPage>
+  <UserGroupUrl>https://groups.google.com/forum/?fromgroups#!forum/fubumvc-devel</UserGroupUrl>
+  <BuildServerUrl>http://build.fubu-project.org/project.html?projectId=project27&amp;tab=projectOverview</BuildServerUrl>
+  <BottleName>StructureMap.Docs</BottleName>
+  <TeamCityBuildType>bt46</TeamCityBuildType>
+  <Nugets>
+    <PublishedNuget>
+      <Name>structuremap.automocking.moq</Name>
+      <Description>AutoMocker with StructureMap for Moq</Description>
+    </PublishedNuget>
+    <PublishedNuget>
+      <Name>structuremap.automocking</Name>
+      <Description>StructureMap AutoMocker for RhinoMocks</Description>
+    </PublishedNuget>
+    <PublishedNuget>
+      <Name>structuremap</Name>
+      <Description>StructureMap is a Dependency Injection / Inversion of Control tool for .Net that can be used to improve the architectural qualities of an object oriented system by reducing the mechanical costs of good design techniques. StructureMap can enable looser coupling between classes and their dependencies, improve the testability of a class structure, and provide generic flexibility mechanisms. Used judiciously, StructureMap can greatly enhance the opportunities for code reuse by minimizing direct coupling between classes and configuration mechanisms.</Description>
+    </PublishedNuget>
+    <PublishedNuget>
+      <Name>structuremap.web</Name>
+      <Description>This is a package that provides support for Web-related lifecycles in StructureMap.</Description>
+    </PublishedNuget>
+  </Nugets>
+  <Url>structuremap</Url>
+</ProjectRoot>
