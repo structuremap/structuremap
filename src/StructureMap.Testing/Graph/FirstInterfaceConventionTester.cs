@@ -95,7 +95,9 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void simple_case()
         {
-            container.Model.For<I1>().Instances.Select(x => x.ConcreteType).ShouldHaveTheSameElementsAs(typeof (C1),
+            container.Model.For<I1>().Instances.Any(x => x.ConcreteType == typeof(C1)).ShouldBeTrue();
+            container.Model.For<I1>().Instances.Any(x => x.ConcreteType == typeof(C2)).ShouldBeTrue();
+
                                                                                                         typeof (C2));
             container.Model.For<I2>().Instances.Select(x => x.ConcreteType).Any().ShouldBeFalse();
         }
