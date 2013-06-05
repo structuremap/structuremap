@@ -98,7 +98,6 @@ namespace StructureMap.Testing.Graph
             container.Model.For<I1>().Instances.Any(x => x.ConcreteType == typeof(C1)).ShouldBeTrue();
             container.Model.For<I1>().Instances.Any(x => x.ConcreteType == typeof(C2)).ShouldBeTrue();
 
-                                                                                                        typeof (C2));
             container.Model.For<I2>().Instances.Select(x => x.ConcreteType).Any().ShouldBeFalse();
         }
     }
