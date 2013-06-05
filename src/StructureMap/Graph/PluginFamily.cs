@@ -17,6 +17,7 @@ namespace StructureMap.Graph
         private readonly Cache<string, Instance> _instances = new Cache<string, Instance>(delegate { return null; });
         private readonly Type _pluginType;
         private Lazy<Instance> _defaultInstance;
+        private Lazy<Instance> _fallBack = new Lazy<Instance>(()=>null);
 
 
         public PluginFamily(Type pluginType)
@@ -25,7 +26,7 @@ namespace StructureMap.Graph
 
             resetDefault();
 
-            Attribute.GetCustomAttributes(typeof (FamilyAttribute), true).OfType<FamilyAttribute>()
+            Attribute.GetCustomAttributes(_pluginType, typeof (FamilyAttribute), true).OfType<FamilyAttribute>()
                      .Each(x => x.Alter(this));
         }
 
@@ -59,6 +60,7 @@ namespace StructureMap.Graph
         private void resetDefault()
         {
             _defaultInstance = new Lazy<Instance>(determineDefault);
+            _fallBack = new Lazy<Instance>(()=>null);
         }
 
         public void AddInstance(Instance instance)
@@ -78,6 +80,12 @@ namespace StructureMap.Graph
             _defaultInstance = new Lazy<Instance>(() => instance);
         }
 
+        public void SetFallback(Instance instance)
+        {
+            _fallBack = new Lazy<Instance>(() => instance);
+
+        }
+
         public void AddTypes(List<Type> pluggedTypes)
         {
             pluggedTypes.ForEach(AddType);
@@ -90,7 +98,7 @@ namespace StructureMap.Graph
 
         public Instance GetDefaultInstance()
         {
-            return _defaultInstance.Value;
+            return _defaultInstance.Value ?? _fallBack.Value;
         }
 
         private Instance determineDefault()
