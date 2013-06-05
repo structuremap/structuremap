@@ -22,3 +22,4 @@ _UpgradeReport*/
 src/packages
 artifacts
 src/CommonAssemblyInfo.cs
+logs
