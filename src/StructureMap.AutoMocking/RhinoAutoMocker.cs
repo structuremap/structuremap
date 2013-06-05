@@ -25,8 +25,8 @@ namespace StructureMap.AutoMocking
 
         public RhinoAutoMocker(MockMode mockMode)
         {
-            _serviceLocator = createLocator(mockMode);
-            _container = new AutoMockedContainer(_serviceLocator);
+            ServiceLocator = createLocator(mockMode);
+            Container = new AutoMockedContainer(ServiceLocator);
         }
 
         private ServiceLocator createLocator(MockMode mode)

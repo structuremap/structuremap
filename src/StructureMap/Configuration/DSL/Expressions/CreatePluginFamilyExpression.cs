@@ -146,7 +146,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         }
 
         /// <summary>
-        /// Defines a fallback instance in case no default was defined for <see cref="TPluginType"/>
+        /// Defines a fallback instance in case no default was defined for TPluginType
         /// </summary>
         public SmartInstance<TConcreteType> UseIfNone<TConcreteType>() where TConcreteType : TPluginType
         {
@@ -248,7 +248,7 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         /// <summary>
         /// Register a Func to run against any object of this PluginType immediately after it is created,
-        /// but before the new object is passed back to the caller.  Unlike <see cref="OnCreation(Action{TPluginType})">OnCreationForAll()</see>,
+        /// but before the new object is passed back to the caller.  Unlike OnCreationForAll(),
         /// EnrichAllWith() gives the the ability to return a different object.  Use this method for runtime AOP
         /// scenarios or to return a decorator.
         /// </summary>
@@ -269,7 +269,7 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         /// <summary>
         /// Register a Func to run against any object of this PluginType immediately after it is created,
-        /// but before the new object is passed back to the caller.  Unlike <see cref="OnCreation(Action{IContext,TPluginType})">OnCreationForAll()</see>,
+        /// but before the new object is passed back to the caller.  Unlike OnCreationForAll(),
         /// EnrichAllWith() gives the the ability to return a different object.  Use this method for runtime AOP
         /// scenarios or to return a decorator.
         /// </summary>

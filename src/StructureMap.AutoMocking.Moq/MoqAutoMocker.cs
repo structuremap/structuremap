@@ -8,8 +8,8 @@ namespace StructureMap.AutoMocking.Moq
     {
         public MoqAutoMocker()
         {
-            _serviceLocator = new MoqServiceLocator();
-            _container = new AutoMockedContainer(_serviceLocator);
+            ServiceLocator = new MoqServiceLocator();
+            Container = new AutoMockedContainer(ServiceLocator);
         }
     }
 }

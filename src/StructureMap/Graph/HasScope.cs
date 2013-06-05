@@ -7,7 +7,12 @@ namespace StructureMap.Graph
     // TODO -- make sure there's helpers for all the common things
     public abstract class HasScope
     {
-        protected Lazy<ILifecycle> _lifecycle;
+        private Lazy<ILifecycle> _lifecycle;
+
+        protected void copyLifecycle(HasScope other)
+        {
+            _lifecycle = other._lifecycle;
+        }
 
         protected HasScope()
         {
@@ -19,9 +24,9 @@ namespace StructureMap.Graph
         protected HasScope scopedParent { get; set; }
 
         /// <summary>
-        /// Use InstanceScope for the constants
+        /// Use InstanceScope for the constants now
         /// </summary>
-        /// <param name="scope"></param>
+        /// <typeparam name="T"></typeparam>
         public void SetScopeTo<T>() where T: ILifecycle, new()
         {
             _lifecycle = new Lazy<ILifecycle>(() => Lifecycles.Get<T>());

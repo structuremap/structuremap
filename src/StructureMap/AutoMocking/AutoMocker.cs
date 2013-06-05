@@ -90,8 +90,7 @@ namespace StructureMap.AutoMocking
     public class AutoMocker<TTargetClass> : IAutoMocker<TTargetClass> where TTargetClass : class
     {
         private TTargetClass _classUnderTest;
-        protected AutoMockedContainer _container;
-        protected ServiceLocator _serviceLocator;
+        protected ServiceLocator ServiceLocator { get; set; }
 
         /// <summary>
         ///     Gets an instance of the ClassUnderTest with mock objects (or stubs) pushed in for all of its dependencies
@@ -102,7 +101,7 @@ namespace StructureMap.AutoMocking
             {
                 if (_classUnderTest == null)
                 {
-                    _classUnderTest = _container.GetInstance<TTargetClass>();
+                    _classUnderTest = Container.GetInstance<TTargetClass>();
                 }
 
                 return _classUnderTest;
@@ -112,10 +111,7 @@ namespace StructureMap.AutoMocking
         /// <summary>
         ///     Accesses the underlying AutoMockedContainer
         /// </summary>
-        public AutoMockedContainer Container
-        {
-            get { return _container; }
-        }
+        public AutoMockedContainer Container { get; protected set; }
 
         /// <summary>
         ///     Calling this method will immediately create a "Partial" mock
@@ -123,7 +119,7 @@ namespace StructureMap.AutoMocking
         /// </summary>
         public void PartialMockTheClassUnderTest()
         {
-            _classUnderTest = _serviceLocator.PartialMock<TTargetClass>(getConstructorArgs());
+            _classUnderTest = ServiceLocator.PartialMock<TTargetClass>(getConstructorArgs());
         }
 
         /// <summary>
@@ -134,7 +130,7 @@ namespace StructureMap.AutoMocking
         /// <returns></returns>
         public T Get<T>() where T : class
         {
-            return _container.GetInstance<T>();
+            return Container.GetInstance<T>();
         }
 
         /// <summary>
@@ -145,7 +141,7 @@ namespace StructureMap.AutoMocking
         /// <param name="stub"></param>
         public void Inject(Type pluginType, object stub)
         {
-            _container.Inject(pluginType, stub);
+            Container.Inject(pluginType, stub);
         }
 
         /// <summary>
@@ -156,7 +152,7 @@ namespace StructureMap.AutoMocking
         /// <param name="target"></param>
         public void Inject<T>(T target)
         {
-            _container.Inject(target);
+            Container.Inject(target);
         }
 
         /// <summary>
@@ -168,8 +164,8 @@ namespace StructureMap.AutoMocking
         /// <returns></returns>
         public T AddAdditionalMockFor<T>() where T : class
         {
-            var mock = _serviceLocator.Service<T>();
-            _container.Configure(r => r.For(typeof (T)).Add(mock));
+            var mock = ServiceLocator.Service<T>();
+            Container.Configure(r => r.For(typeof (T)).Add(mock));
 
             return mock;
         }
@@ -182,8 +178,8 @@ namespace StructureMap.AutoMocking
         /// <typeparam name="T"></typeparam>
         public void UseConcreteClassFor<T>()
         {
-            var concreteClass = _container.GetInstance<T>();
-            _container.Inject(concreteClass);
+            var concreteClass = Container.GetInstance<T>();
+            Container.Inject(concreteClass);
         }
 
         /// <summary>
@@ -198,7 +194,7 @@ namespace StructureMap.AutoMocking
 
             for (int i = 0; i < returnValue.Length; i++)
             {
-                returnValue[i] = _serviceLocator.Service<T>();
+                returnValue[i] = ServiceLocator.Service<T>();
             }
 
             InjectArray(returnValue);
@@ -214,8 +210,8 @@ namespace StructureMap.AutoMocking
         /// <param name="stubs"></param>
         public void InjectArray<T>(T[] stubs)
         {
-            _container.EjectAllInstancesOf<T>();
-            _container.Configure(x => {
+            Container.EjectAllInstancesOf<T>();
+            Container.Configure(x => {
                 foreach (T t in stubs)
                 {
                     x.For(typeof (T)).Add(t);
@@ -233,7 +229,7 @@ namespace StructureMap.AutoMocking
 
                 if (dependencyType.IsArray)
                 {
-                    var builder = typeof (ArrayBuilder<>).CloseAndBuildAs<IEnumerableBuilder>(_container,
+                    var builder = typeof (ArrayBuilder<>).CloseAndBuildAs<IEnumerableBuilder>(Container,
                                                                                               dependencyType
                                                                                                   .GetElementType());
                     list.Add(builder.ToEnumerable());
@@ -243,13 +239,13 @@ namespace StructureMap.AutoMocking
                     Type @interface = dependencyType.FindFirstInterfaceThatCloses(typeof (IEnumerable<>));
                     Type elementType = @interface.GetGenericArguments().First();
 
-                    var builder = typeof (EnumerableBuilder<>).CloseAndBuildAs<IEnumerableBuilder>(_container,
+                    var builder = typeof (EnumerableBuilder<>).CloseAndBuildAs<IEnumerableBuilder>(Container,
                                                                                                    elementType);
                     list.Add(builder.ToEnumerable());
                 }
                 else
                 {
-                    object dependency = _container.GetInstance(dependencyType);
+                    object dependency = Container.GetInstance(dependencyType);
                     list.Add(dependency);
                 }
             }

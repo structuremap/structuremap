@@ -27,7 +27,7 @@ namespace StructureMap.AutoMocking.Moq.Testing
             testPartials.Virtual().ShouldEqual("Virtual");
 
             var mock = Mock.Get(testPartials);
-            mock.Expect(t => t.Virtual()).Returns("MOQed!");
+            mock.Setup(t => t.Virtual()).Returns("MOQed!");
             testPartials.Virtual().ShouldEqual("MOQed!");
         }
 
@@ -35,7 +35,7 @@ namespace StructureMap.AutoMocking.Moq.Testing
         public void sample_moq_usage()
         {
             var mock = new Mock<ITestMocks>();
-            mock.Expect(t => t.Answer()).Returns("Moq");
+            mock.Setup(t => t.Answer()).Returns("Moq");
             mock.Object.Answer().ShouldEqual("Moq");
         }
     }

@@ -32,7 +32,7 @@ namespace StructureMap.AutoMocking.Moq.Testing
         protected override void setExpectation<T, TResult>(T mock, Expression<Func<T, TResult>> functionCall,
                                                            TResult expectedResult)
         {
-            Mock.Get(mock).Expect(functionCall).Returns(expectedResult);
+            Mock.Get(mock).Setup(functionCall).Returns(expectedResult);
         }
     }
 }

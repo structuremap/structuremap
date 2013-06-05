@@ -125,7 +125,7 @@ namespace StructureMap.Graph
         {
             Type templatedType = _pluginType.MakeGenericType(templateTypes);
             var templatedFamily = new PluginFamily(templatedType);
-            templatedFamily._lifecycle = _lifecycle;
+            templatedFamily.copyLifecycle(this);
 
             _instances.GetAll().Select(x => {
                 Instance clone = x.CloseType(templateTypes);
