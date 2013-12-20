@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
 using StructureMap.Construction;
 using StructureMap.Diagnostics;
@@ -210,7 +208,7 @@ namespace StructureMap
             IConfiguredInstance instance = _pipelineGraph.GetDefault(pluggedType) as IConfiguredInstance
                                            ?? new ConfiguredInstance(pluggedType);
 
-            IInstanceBuilder builder = PluginCache.FindBuilder(pluggedType);
+            IInstanceBuilder builder = _pipelineGraph.Outer.BuilderFor(pluggedType);
             var arguments = new Arguments(instance, new BuildSession(_pipelineGraph));
             builder.BuildUp(arguments, target);
         }

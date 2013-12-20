@@ -20,8 +20,7 @@ namespace StructureMap.Testing
             var args = new ExplicitArguments();
             args.Set<IGateway>(TheDefaultGateway);
 
-            PluginCache.ResetAll();
-            builder = PluginCache.FindBuilder(typeof (ClassWithMixOfSetters));
+            builder = new Plugin(typeof (ClassWithMixOfSetters)).CreateBuilder();
             instance = new SmartInstance<ClassWithMixOfSetters>().Ctor<int>("Age").Is(34);
             _session = BuildSession.Empty(args);
 

@@ -59,9 +59,9 @@ namespace StructureMap.Testing
         [Test]
         public void get_all_interfaces()
         {
-            typeof (C3).AllInterfaces().ShouldHaveTheSameElementsAs(typeof (I1), typeof (I2), typeof (I3));
-            typeof (C2).AllInterfaces().ShouldHaveTheSameElementsAs(typeof (I1), typeof (I2));
-            typeof (C1).AllInterfaces().ShouldHaveTheSameElementsAs(typeof (I1));
+            typeof (C3).AllInterfaces().OrderBy(x => x.Name).ShouldHaveTheSameElementsAs(typeof (I1), typeof (I2), typeof (I3));
+            typeof(C2).AllInterfaces().OrderBy(x => x.Name).ShouldHaveTheSameElementsAs(typeof(I1), typeof(I2));
+            typeof(C1).AllInterfaces().OrderBy(x => x.Name).ShouldHaveTheSameElementsAs(typeof(I1));
         }
 
         [Test]

@@ -120,7 +120,7 @@ namespace StructureMap.Graph
             return null;
         }
 
-        public void UseSetterRule(Predicate<PropertyInfo> rule)
+        public void UseSetterRule(Func<PropertyInfo, bool> rule)
         {
             _properties.FindAll(setter => rule(setter.Property)).ForEach(setter => setter.IsMandatory = true);
         }

@@ -30,6 +30,8 @@ namespace StructureMap
             return instance;
         }
 
+        protected abstract string PluggedType();
+
 
         protected abstract string innerConcreteKey { get; }
 
@@ -67,7 +69,7 @@ namespace StructureMap
 
 
         /// <summary>
-        /// Is the InstanceMemento a reference to the default instance of the plugin type?
+        /// Is the InstanceMemento a reference to the default instance of the Plugin type?
         /// </summary>
         public bool IsDefault { get { return (IsReference && ReferenceKey == String.Empty); } }
 
@@ -139,10 +141,7 @@ namespace StructureMap
         public abstract InstanceMemento[] GetChildrenArray(string key);
 
 
-        public virtual string PluggedType()
-        {
-            return getPropertyValue(XmlConstants.PLUGGED_TYPE);
-        }
+
 
         public Instance ReadInstance(IPluginFactory pluginFactory, Type pluginType)
         {

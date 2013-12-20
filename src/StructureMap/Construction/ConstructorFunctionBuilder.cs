@@ -9,12 +9,6 @@ namespace StructureMap.Construction
 {
     public class ConstructorFunctionBuilder<T>
     {
-        public Func<IArguments, T> CreateBuilder()
-        {
-            Plugin plugin = PluginCache.GetPlugin(typeof (T));
-            return CreateBuilder(plugin);
-        }
-
         public Func<IArguments, T> CreateBuilder(Plugin plugin)
         {
             ConstructorInfo constructor = plugin.GetConstructor();

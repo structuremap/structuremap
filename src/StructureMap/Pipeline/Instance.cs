@@ -202,6 +202,19 @@ namespace StructureMap.Pipeline
         {
             return Lifecycle is UniquePerRequestLifecycle;
         }
+
+        public PluginGraph Owner()
+        {
+            if (Parent == null || Parent.Owner == null) return null;
+
+            var owner = Parent.Owner;
+            while (owner.Parent != null)
+            {
+                owner = owner.Parent;
+            }
+
+            return owner;
+        }
     }
 
     /// <summary>

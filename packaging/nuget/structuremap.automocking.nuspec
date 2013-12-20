@@ -8,13 +8,14 @@
     <licenseUrl>https://github.com/structuremap/structuremap/raw/master/LICENSE.TXT</licenseUrl>
     <projectUrl>http://structuremap.net/structuremap/</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Test utility to instantiate a class by creating mocks for each of its dependencies</description>
+    <description>StructureMap AutoMocker for RhinoMocks</description>
     <language>en-US</language>
     <dependencies>
-      <dependency id="StructureMap" version="2.6.4" />
+      <dependency id="StructureMap" version="3.0.0" />
+      <dependency id="RhinoMocks" version="3.6.1" />
     </dependencies>
   </metadata>
   <files>
-	<file src="..\..\src\StructureMap.AutoMocking\bin\release\StructureMap.AutoMocking.*" target="lib\net40" />
+    <file src="..\..\src\StructureMap.AutoMocking\bin\release\StructureMap.AutoMocking.*" target="lib\net40" />
   </files>
 </package>

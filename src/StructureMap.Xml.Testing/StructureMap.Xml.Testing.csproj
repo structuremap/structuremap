@@ -31,35 +31,77 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit.2.5.10.11092\lib\nunit.framework.dll</HintPath>
+      <HintPath>..\packages\NUnit\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="nunit.mocks">
-      <HintPath>..\packages\NUnit.2.5.10.11092\lib\nunit.mocks.dll</HintPath>
+      <HintPath>..\packages\NUnit\lib\nunit.mocks.dll</HintPath>
     </Reference>
     <Reference Include="pnunit.framework">
-      <HintPath>..\packages\NUnit.2.5.10.11092\lib\pnunit.framework.dll</HintPath>
+      <HintPath>..\packages\NUnit\lib\pnunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\StructureMap.Testing\Pipeline\StubBuildSession.cs">
+      <Link>StubBuildSession.cs</Link>
+    </Compile>
+    <Compile Include="..\StructureMap.Testing\SpecificationExtensions.cs">
+      <Link>SpecificationExtensions.cs</Link>
+    </Compile>
+    <Compile Include="AppConfigTest.cs" />
+    <Compile Include="Bugs\FooWithPrimitives.cs" />
+    <Compile Include="Bugs\IDictionaryAndXmlBugTester.cs" />
+    <Compile Include="Bugs\IFooWithPrimitives.cs" />
+    <Compile Include="Bugs\OverwritingOfPrimitiveProperties.cs" />
+    <Compile Include="DefaultInstanceNodeTester.cs" />
+    <Compile Include="DictionaryAndArrayArgumentTester.cs" />
+    <Compile Include="DictionaryReaderTester.cs" />
     <Compile Include="Missing_Xml_tests.cs" />
+    <Compile Include="OptionalSetterInjectionTests.cs" />
+    <Compile Include="PrimitiveeArrayReaderTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ShortcuttedInstanceNodeTester.cs" />
+    <Compile Include="StructureMapConfigCreator.cs" />
+    <Compile Include="StructureMapExceptionTester.cs" />
+    <Compile Include="TestData\DataMother.cs" />
+    <Compile Include="XmlAttributeInstanceMementoTester.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="StructureMap.Xml.Testing.dll.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\StructureMap.Configuration.Xml\StructureMap.Configuration.Xml.csproj">
+      <Project>{6AC066CC-4550-44B4-96B3-89F0406E6763}</Project>
+      <Name>StructureMap.Configuration.Xml</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StructureMap.Testing.GenericWidgets\StructureMap.Testing.GenericWidgets.csproj">
+      <Project>{C205EA4C-4CD0-4221-A3CB-AFD835F0B263}</Project>
+      <Name>StructureMap.Testing.GenericWidgets</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StructureMap.Testing.Widget\StructureMap.Testing.Widget.csproj">
+      <Project>{E21E1651-3E32-47B7-A290-F461E63FEAD2}</Project>
+      <Name>StructureMap.Testing.Widget</Name>
+    </ProjectReference>
     <ProjectReference Include="..\StructureMap\StructureMap.csproj">
       <Project>{3F36EA80-2F9A-4DAD-BA27-5AC6163A2EE3}</Project>
       <Name>StructureMap</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestData\BUG_OverwritingOfPrimitiveProperties.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestData\ShortInstance.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

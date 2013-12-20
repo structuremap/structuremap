@@ -25,3 +25,6 @@ src/CommonAssemblyInfo.cs
 *.ncrunchproject
 *.ncrunchsolution
 *.sln.DotSettings
+logs
+Gemfile.lock
+*.orig

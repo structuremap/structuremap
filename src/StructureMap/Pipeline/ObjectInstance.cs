@@ -74,11 +74,5 @@ namespace StructureMap.Pipeline
         {
             return _object.GetType();
         }
-
-        public ObjectInstance Named(string name)
-        {
-            Name = name;
-            return this;
-        }
     }
 }

@@ -113,28 +113,21 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System">
-      <Name>System</Name>
-    </Reference>
+    <Reference Include="System" />
     <Reference Include="System.configuration" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data">
-      <Name>System.Data</Name>
-    </Reference>
-    <Reference Include="System.Web">
-      <Name>System.Web</Name>
-    </Reference>
-    <Reference Include="System.Xml">
-      <Name>System.XML</Name>
-    </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="AutoMocking\AutoMockedContainer.cs" />
+    <Compile Include="AutoMocking\AutoMocker.cs" />
+    <Compile Include="AutoMocking\ServiceLocator.cs" />
+    <Compile Include="Building\Classes.cs" />
+    <Compile Include="Building\StructureMapBuildException.cs" />
     <Compile Include="BuildSession.cs" />
     <Compile Include="ComplexPipelineGraph.cs" />
     <Compile Include="Configuration\DSL\Expressions\GenericFamilyExpression.cs" />
@@ -165,6 +158,7 @@
     <Compile Include="Graph\IPluginFactory.cs" />
     <Compile Include="Graph\AssemblyScanner.cs" />
     <Compile Include="Graph\IPluginGraph.cs" />
+    <Compile Include="Graph\SetterRules.cs" />
     <Compile Include="Graph\TypePool.cs" />
     <Compile Include="IBuildSession.cs" />
     <Compile Include="IGraphEjector.cs" />
@@ -200,24 +194,14 @@
     <Compile Include="Configuration\ConfigurationConstants.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Configuration\ConfigurationParser.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Configuration\DSL\Expressions\CreatePluginFamilyExpression.cs" />
     <Compile Include="Configuration\DSL\ExpressionValidator.cs" />
     <Compile Include="Pipeline\ExplicitArguments.cs" />
     <Compile Include="Configuration\DSL\Registry.cs" />
-    <Compile Include="Configuration\InstanceParser.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Configuration\IGraphBuilder.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Configuration\GraphBuilder.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Configuration\StructureMapConfigurationSection.cs" />
-    <Compile Include="Configuration\XmlConstants.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Exceptions\InstancePropertyValueException.cs">
@@ -272,9 +256,6 @@
     <Compile Include="Query\ClosedPluginTypeConfiguration.cs" />
     <Compile Include="RootPipelineGraph.cs" />
     <Compile Include="SessionCache.cs" />
-    <Compile Include="Source\XmlAttributeInstanceMemento.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Diagnostics\ValidationBuildSession.cs" />
     <Compile Include="Util\Lazy.cs" />
     <Compile Include="Util\LightweightCache.cs" />
@@ -288,23 +269,16 @@
     </None>
     <Compile Include="CloseGenericTypeExpression.cs" />
     <Compile Include="ConfigurationExpression.cs" />
-    <Compile Include="Configuration\DictionaryReader.cs" />
     <Compile Include="Configuration\DSL\Expressions\InstanceExpression.cs" />
     <Compile Include="Configuration\DSL\IRegistry.cs" />
     <Compile Include="Configuration\DSL\SetterConvention.cs" />
     <Compile Include="Configuration\ITypeReader.cs" />
-    <Compile Include="Configuration\PrimitiveArrayReader.cs" />
-    <Compile Include="Configuration\TypeReaderFactory.cs" />
-    <Compile Include="Configuration\XmlExtensions.cs" />
     <Compile Include="Construction\BuilderCompiler.cs" />
     <Compile Include="Construction\ConstructorFunctionBuilder.cs" />
     <Compile Include="Construction\IArguments.cs" />
     <Compile Include="Construction\InstanceBuilder.cs" />
     <Compile Include="Construction\SetterBuilder.cs" />
-    <Compile Include="Diagnostics\Doctor.cs" />
-    <Compile Include="Diagnostics\DoctorReport.cs" />
     <Compile Include="Diagnostics\DoctorResult.cs" />
-    <Compile Include="Diagnostics\DoctorRunner.cs" />
     <Compile Include="Diagnostics\ValidationError.cs" />
     <Compile Include="ErrorMessages.cs" />
     <Compile Include="Example.cs" />
@@ -319,7 +293,6 @@
     <Compile Include="Graph\ImplementationMap.cs" />
     <Compile Include="Graph\IRegistrationConvention.cs" />
     <Compile Include="Graph\DefaultConventionScanner.cs" />
-    <Compile Include="Graph\PluginCache.cs" />
     <Compile Include="IContext.cs" />
     <Compile Include="Pipeline\AdapterClasses.cs" />
     <Compile Include="Query\EmptyConfiguration.cs" />
@@ -380,6 +353,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Source\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

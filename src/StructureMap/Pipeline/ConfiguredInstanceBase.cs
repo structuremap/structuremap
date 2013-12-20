@@ -182,20 +182,20 @@ namespace StructureMap.Pipeline
     //        return _TPluggedType.CanBeCastTo(family.PluginType) && Constructor.HasConstructors(_TPluggedType);
     //    }
 
-    //    internal override bool Matches(Plugin plugin)
+    //    internal override bool Matches(Plugin Plugin)
     //    {
-    //        return plugin.PluggedType == _TPluggedType;
+    //        return Plugin.PluggedType == _TPluggedType;
     //    }
 
     //    private void read(InstanceMemento memento, PluginGraph graph, Type pluginType)
     //    {
     //        PluginFamily family = graph.FindFamily(pluginType);
-    //        Plugin plugin = memento.FindPlugin(family);
+    //        Plugin Plugin = memento.FindPlugin(family);
 
-    //        _TPluggedType = plugin.PluggedType;
+    //        _TPluggedType = Plugin.PluggedType;
 
     //        var reader = new InstanceMementoPropertyReader(this, memento, graph, pluginType);
-    //        plugin.VisitArguments(reader);
+    //        Plugin.VisitArguments(reader);
     //    }
 
     //    protected void setChild(string name, Instance instance)
@@ -242,8 +242,8 @@ namespace StructureMap.Pipeline
 
     //    protected string findPropertyName(Type dependencyType)
     //    {
-    //        var plugin = new Plugin(_TPluggedType);
-    //        string propertyName = plugin.FindArgumentNameForType(dependencyType);
+    //        var Plugin = new Plugin(_TPluggedType);
+    //        string propertyName = Plugin.FindArgumentNameForType(dependencyType);
 
     //        if (string.IsNullOrEmpty(propertyName))
     //        {

@@ -8,6 +8,7 @@ namespace StructureMap.Pipeline
     ///     Expression Builder to help define multiple Instances for an Array dependency
     /// </summary>
     /// <typeparam name="TElementType"></typeparam>
+    /// <typeparam name="TInstance"></typeparam>
     public class ArrayDefinitionExpression<TInstance, TElementType> where TInstance : ConstructorInstance
     {
         private readonly TInstance _instance;

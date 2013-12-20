@@ -9,6 +9,8 @@ namespace StructureMap
     /// </summary>
     public class MemoryInstanceMemento : InstanceMemento
     {
+        private const string PluggedTypeKey = "PluggedType";
+
         #region statics
 
         /// <summary>
@@ -28,7 +30,7 @@ namespace StructureMap
 
         /// <summary>
         /// Creates a MemoryInstanceMemento that represents a reference to the default instance
-        /// of a plugin type.
+        /// of a Plugin type.
         /// </summary>
         /// <returns></returns>
         public static MemoryInstanceMemento CreateDefaultInstanceMemento()
@@ -53,7 +55,7 @@ namespace StructureMap
         /// <summary>
         /// Constructs a MemoryInstanceMemento without properties
         /// </summary>
-        /// <param name="concreteKey">The concrete key of the plugin type</param>
+        /// <param name="concreteKey">The concrete key of the Plugin type</param>
         /// <param name="instanceKey">The identifying instance key</param>
         public MemoryInstanceMemento(string concreteKey, string instanceKey)
             : this(concreteKey, instanceKey, new NameValueCollection())
@@ -64,7 +66,7 @@ namespace StructureMap
         /// <summary>
         /// Constructs a MemoryInstanceMemento with properties
         /// </summary>
-        /// <param name="concreteKey">The concrete key of the plugin type</param>
+        /// <param name="concreteKey">The concrete key of the Plugin type</param>
         /// <param name="instanceKey">The identifying instance key</param>
         /// <param name="properties">NameValueCollection of instance properties</param>
         public MemoryInstanceMemento(string concreteKey, string instanceKey, NameValueCollection properties)
@@ -77,6 +79,11 @@ namespace StructureMap
 
         public MemoryInstanceMemento()
         {
+        }
+
+        protected override string PluggedType()
+        {
+            return getPropertyValue(PluggedTypeKey);
         }
 
         /// <summary>
@@ -184,7 +191,7 @@ namespace StructureMap
 
         public void SetPluggedType<T>()
         {
-            _properties[XmlConstants.PLUGGED_TYPE] = typeof (T).AssemblyQualifiedName;
+            _properties[PluggedTypeKey] = typeof(T).AssemblyQualifiedName;
         }
     }
 }

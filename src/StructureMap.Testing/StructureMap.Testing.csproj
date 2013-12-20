@@ -7,10 +7,8 @@
     <ProjectGuid>{63C2742D-B6E2-484F-AFDB-346873075C5E}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ApplicationIcon>
-    </ApplicationIcon>
-    <AssemblyKeyContainerName>
-    </AssemblyKeyContainerName>
+    <ApplicationIcon></ApplicationIcon>
+    <AssemblyKeyContainerName></AssemblyKeyContainerName>
     <AssemblyName>StructureMap.Testing</AssemblyName>
     <AssemblyOriginatorKeyFile>..\structuremap.snk</AssemblyOriginatorKeyFile>
     <DefaultClientScript>JScript</DefaultClientScript>
@@ -20,12 +18,9 @@
     <OutputType>Library</OutputType>
     <RootNamespace>StructureMap.Testing</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <StartupObject>
-    </StartupObject>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
+    <StartupObject></StartupObject>
+    <FileUpgradeFlags></FileUpgradeFlags>
+    <UpgradeBackupLocation></UpgradeBackupLocation>
     <SignAssembly>false</SignAssembly>
     <OldToolsVersion>3.5</OldToolsVersion>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
@@ -51,11 +46,9 @@
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <BaseAddress>285212672</BaseAddress>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
-    <ConfigurationOverrideFile>
-    </ConfigurationOverrideFile>
+    <ConfigurationOverrideFile></ConfigurationOverrideFile>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DocumentationFile>
-    </DocumentationFile>
+    <DocumentationFile></DocumentationFile>
     <DebugSymbols>true</DebugSymbols>
     <FileAlignment>4096</FileAlignment>
     <NoStdLib>false</NoStdLib>
@@ -74,11 +67,9 @@
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <BaseAddress>285212672</BaseAddress>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
-    <ConfigurationOverrideFile>
-    </ConfigurationOverrideFile>
+    <ConfigurationOverrideFile></ConfigurationOverrideFile>
     <DefineConstants>TRACE</DefineConstants>
-    <DocumentationFile>
-    </DocumentationFile>
+    <DocumentationFile></DocumentationFile>
     <DebugSymbols>false</DebugSymbols>
     <FileAlignment>4096</FileAlignment>
     <NoStdLib>false</NoStdLib>
@@ -174,6 +165,28 @@
       <Project>{E21E1651-3E32-47B7-A290-F461E63FEAD2}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
+    <Reference Include="Castle.Core">
+      <HintPath>..\packages\Castle.Core\lib\net40-client\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.mocks">
+      <HintPath>..\packages\NUnit\lib\nunit.mocks.dll</HintPath>
+    </Reference>
+    <Reference Include="pnunit.framework">
+      <HintPath>..\packages\NUnit\lib\pnunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Rhino.Mocks">
+      <HintPath>..\packages\RhinoMocks\lib\net\Rhino.Mocks.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs">
@@ -200,7 +213,10 @@
     <Compile Include="Bugs\EnumerableShouldGetAllValuesTester.cs" />
     <Compile Include="Bugs\FillAllPropertiesShouldWorkForAlreadyConfiguredPluginsBug.cs" />
     <Compile Include="Bugs\GetAllInstancesShouldObserveKeys.cs" />
+<<<<<<< HEAD
     <Compile Include="Bugs\IDictionaryAndXmlBugTester.cs" />
+=======
+>>>>>>> c62898a85f9c25bd1dd358f888fd59ffe1aef3ac
     <Compile Include="Bugs\InjectByFuncWithNoPublicConstructors.cs" />
     <Compile Include="Bugs\LambdaCreatesNullBugTester.cs" />
     <Compile Include="Bugs\MixedConfigureAndInitializeMissingInstanceProblem.cs" />
@@ -213,6 +229,10 @@
     <Compile Include="Bugs\StaticPropertyCausesJITExceptionTester.cs" />
     <Compile Include="Bugs\TryGetInstanceWithOpenGenericsBugTester.cs" />
     <Compile Include="Bugs\UseSingleImplementationConventionInMultipleScans.cs" />
+    <Compile Include="Building\constructor_expression_building.cs" />
+    <Compile Include="Building\FakeContext.cs" />
+    <Compile Include="Building\mixed_constructor_setter_and_fields.cs" />
+    <Compile Include="Building\setter_expression_building.cs" />
     <Compile Include="BuildSessionTester.cs" />
     <Compile Include="BuildUpIntegratedTester.cs" />
     <Compile Include="BuildUpTester.cs" />
@@ -233,6 +253,7 @@
     <Compile Include="Configuration\DSL\ProgrammaticConstructorSelectionTester.cs" />
     <Compile Include="Configuration\DSL\RegistryIntegratedTester.cs" />
     <Compile Include="Configuration\DSL\RegistryTester.cs" />
+    <Compile Include="Configuration\DSL\UseIfNoneTests.cs" />
     <Compile Include="Configuration\GraphBuilderTester.cs" />
     <Compile Include="Configuration\PrimitiveArrayReaderTester.cs" />
     <Compile Include="Configuration\ShortcuttedInstanceNodeTester.cs" />
@@ -316,6 +337,7 @@
     <Compile Include="Pipeline\ConfiguredInstanceTester.cs" />
     <Compile Include="Pipeline\ConstructorInstanceTester.cs" />
     <Compile Include="Pipeline\EnumerableInstanceTester.cs" />
+    <Compile Include="Pipeline\Instance_finding_its_owner.cs" />
     <Compile Include="Pipeline\LambdaInstanceTester.cs" />
     <Compile Include="Pipeline\ContainerDisposalTester.cs" />
     <Compile Include="Pipeline\ContainerIsInTheContainerTester.cs" />
@@ -366,13 +388,11 @@
     <Compile Include="Diagnostics\ValidationBuildSessionTester.cs" />
     <Compile Include="TypeExtensions.cs" />
     <Compile Include="TypeExtensionsTester.cs" />
-    <Compile Include="XmlWriting\ElementChecker.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Util\LightweightCacheTester.cs" />
     <None Include="..\structuremap.snk">
       <Link>structuremap.snk</Link>
     </None>
-    <None Include="packages.config" />
+    <None Include="ripple.dependencies.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -468,9 +488,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PreBuildEvent></PreBuildEvent>
+    <PostBuildEvent></PostBuildEvent>
   </PropertyGroup>
 </Project>

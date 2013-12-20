@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Reflection;
 using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
@@ -182,7 +183,10 @@ namespace StructureMap.Configuration.DSL
         /// <returns></returns>
         public CreatePluginFamilyExpression<TPluginType> FillAllPropertiesOfType<TPluginType>()
         {
-            PluginCache.AddFilledType(typeof (TPluginType));
+            Func<PropertyInfo, bool> predicate = prop => prop.PropertyType == typeof (TPluginType);
+
+            alter = graph => graph.SetterRules.Add(predicate);
+
             return For<TPluginType>();
         }
 
@@ -194,18 +198,10 @@ namespace StructureMap.Configuration.DSL
         /// <param name="action"></param>
         public void SetAllProperties(Action<SetterConvention> action)
         {
-            action(new SetterConvention());
-        }
+            var convention = new SetterConvention();
+            action(convention);
 
-        /// <summary>
-        /// Use to programmatically select the constructor function of a concrete
-        /// class.  Applies globally to all Containers in a single AppDomain.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="expression"></param>
-        public void SelectConstructor<T>(Expression<Func<T>> expression)
-        {
-            PluginCache.GetPlugin(typeof (T)).UseConstructor(expression);
+            alter = graph => convention.As<SetterConventionRule>().Configure(graph.SetterRules);
         }
 
         /// <summary>
@@ -367,6 +363,42 @@ namespace StructureMap.Configuration.DSL
             }
 
             public SmartInstance<T> Configure { get { return _instance; } }
+        }
+
+        /// <summary>
+        /// Gives a <see cref="IPluginGraphConfiguration"/> the possibility to interact with the current <see cref="PluginGraphBuilder"/>
+        /// via <see cref="IPluginGraphConfiguration.Register"/>.
+        /// </summary>
+        public void RegisterPluginGraphConfiguration<T>() where T : IPluginGraphConfiguration, new()
+        {
+            RegisterPluginGraphConfiguration(new T());
+        }
+
+        /// <summary>
+        /// See <see cref="RegisterPluginGraphConfiguration{T}"/>
+        /// </summary>
+        public void RegisterPluginGraphConfiguration(IPluginGraphConfiguration pluginGraphConfig)
+        {
+            register = pluginGraphConfig.Register;
+        }
+
+        /// <summary>
+        /// Gives a <see cref="IPluginGraphConfiguration"/> the possibility to interact with the resulting <see cref="PluginGraph"/>,
+        /// i.e. as opposed to <see cref="RegisterPluginGraphConfiguration"/>, the PluginGraph is built, and the provided
+        /// PluginGraph config obtains access to saig graph.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        public void ConfigurePluginGraph<T>() where T : IPluginGraphConfiguration, new()
+        {
+            ConfigurePluginGraph(new T());
+        }
+
+        /// <summary>
+        /// <see cref="ConfigurePluginGraph{T}"/>
+        /// </summary>
+        public void ConfigurePluginGraph(IPluginGraphConfiguration pluginGraphConfig)
+        {
+            alter = pluginGraphConfig.Configure;
         }
     }
 }

@@ -8,6 +8,7 @@ namespace StructureMap.Pipeline
     /// Expression Builder that helps to define child dependencies inline 
     /// </summary>
     /// <typeparam name="TChild"></typeparam>
+    /// <typeparam name="TInstance"></typeparam>
     public class DependencyExpression<TInstance, TChild> where TInstance : ConstructorInstance
     {
         private readonly TInstance _instance;

@@ -8,13 +8,19 @@ namespace StructureMap.Graph
 {
     public class Constructor
     {
-        private readonly Type _TPluggedType;
+        private readonly Type _pluggedType;
         private ConstructorInfo _ctor;
 
-        public Constructor(Type TPluggedType)
+        public Constructor(Type pluggedType)
         {
-            _TPluggedType = TPluggedType;
-            _ctor = GetConstructor(TPluggedType);
+            _pluggedType = pluggedType;
+            _ctor = GetConstructor(pluggedType);
+        }
+
+        public Constructor(Type pluggedType, ConstructorInfo ctor)
+        {
+            _pluggedType = pluggedType;
+            _ctor = ctor;
         }
 
         public ConstructorInfo Ctor { get { return _ctor; } }
@@ -25,22 +31,22 @@ namespace StructureMap.Graph
         /// marked with the [DefaultConstructor]
         /// </summary>
         /// <returns></returns>
-        public static ConstructorInfo GetConstructor(Type TPluggedType)
+        public static ConstructorInfo GetConstructor(Type pluggedType)
         {
-            ConstructorInfo returnValue = DefaultConstructorAttribute.GetConstructor(TPluggedType);
+            ConstructorInfo returnValue = DefaultConstructorAttribute.GetConstructor(pluggedType);
 
             // if no constructor is marked as the "ContainerConstructor", find the greediest constructor
             if (returnValue == null)
             {
-                returnValue = GetGreediestConstructor(TPluggedType);
+                returnValue = GetGreediestConstructor(pluggedType);
             }
 
             return returnValue;
         }
 
-        public static bool HasConstructors(Type TPluggedType)
+        public static bool HasConstructors(Type pluggedType)
         {
-            return GetGreediestConstructor(TPluggedType) != null;
+            return GetGreediestConstructor(pluggedType) != null;
         }
 
         public static ConstructorInfo GetGreediestConstructor(Type TPluggedType)
@@ -100,7 +106,7 @@ namespace StructureMap.Graph
                     {
                         string message =
                             "Trying to visit parameter {0} of type {1} in the constructor for {2}"
-                                .ToFormat(info.Name, info.ParameterType, _TPluggedType.AssemblyQualifiedName);
+                                .ToFormat(info.Name, info.ParameterType, _pluggedType.AssemblyQualifiedName);
                         throw new ApplicationException(message, e);
                     }
                 }
@@ -108,7 +114,7 @@ namespace StructureMap.Graph
             catch (Exception e)
             {
                 string message = "Failed while trying to visit the constructor for " +
-                                 _TPluggedType.AssemblyQualifiedName;
+                                 _pluggedType.AssemblyQualifiedName;
                 throw new ApplicationException(message, e);
             }
         }

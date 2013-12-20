@@ -2,7 +2,7 @@
 <package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <id>structuremap</id>
-    <version>2.6.4</version>
+    <version>3.0.0</version>
     <authors>Jeremy Miller</authors>
     <owners>Jeremy Miller, Tim Kellogg, Joshua Flanagan</owners>
     <licenseUrl>https://github.com/structuremap/structuremap/raw/master/LICENSE.TXT</licenseUrl>

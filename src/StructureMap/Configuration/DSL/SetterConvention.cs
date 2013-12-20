@@ -1,15 +1,23 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using StructureMap.Graph;
 using StructureMap.TypeRules;
 
 namespace StructureMap.Configuration.DSL
 {
+    public interface SetterConventionRule
+    {
+        void Configure(SetterRules rules);
+    }
+
     /// <summary>
     /// Used as an expression builder to specify setter injection policies
     /// </summary>
-    public class SetterConvention
+    public class SetterConvention : SetterConventionRule
     {
+        private readonly IList<Func<PropertyInfo, bool>> _rules = new List<Func<PropertyInfo, bool>>(); 
+
         /// <summary>
         /// Directs StructureMap to treat all public setters of type T as
         /// mandatory properties
@@ -36,9 +44,9 @@ namespace StructureMap.Configuration.DSL
         /// rule as mandatory properties
         /// </summary>
         /// <param name="rule"></param>
-        public void Matching(Predicate<PropertyInfo> rule)
+        public void Matching(Func<PropertyInfo, bool> rule)
         {
-            PluginCache.UseSetterRule(rule);
+            _rules.Add(rule);
         }
 
         /// <summary>
@@ -69,6 +77,11 @@ namespace StructureMap.Configuration.DSL
         public void NameMatches(Predicate<string> rule)
         {
             Matching(prop => rule(prop.Name));
+        }
+
+        void SetterConventionRule.Configure(SetterRules rules)
+        {
+            rules.Add(_rules);
         }
     }
 }

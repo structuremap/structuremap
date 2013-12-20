@@ -244,17 +244,18 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void GoodPluginToInterface()
         {
-            Assert.AreEqual(true, _colorWidget.CanBeCastTo(_iwidget), "ColorWidget is an IWidget");
+            _colorWidget.CanBeCastTo(_iwidget).ShouldBeTrue();
         }
 
         [Test]
         public void SetFilledTypes_1()
         {
-            PluginCache.ResetAll();
-            PluginCache.AddFilledType(typeof (IEngine));
-            PluginCache.AddFilledType(typeof (IAutomobile));
+            Func<PropertyInfo, bool> predicate = prop1 => prop1.PropertyType == typeof (IEngine);
+            Func<PropertyInfo, bool> predicate1 = prop1 => prop1.PropertyType == typeof (IAutomobile);
 
-            Plugin plugin = PluginCache.GetPlugin(typeof (ClassWithProperties));
+            var plugin = new Plugin(typeof (ClassWithProperties));
+            plugin.UseSetterRule(predicate);
+            plugin.UseSetterRule(predicate1);
 
             plugin.Setters.IsMandatory("Engine").ShouldBeTrue();
             plugin.Setters.IsMandatory("Car").ShouldBeTrue();
@@ -265,11 +266,12 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void SetFilledTypes_2()
         {
-            PluginCache.ResetAll();
-            PluginCache.AddFilledType(typeof (IGateway));
-            PluginCache.AddFilledType(typeof (IAutomobile));
+            Func<PropertyInfo, bool> predicate = prop1 => prop1.PropertyType == typeof (IGateway);
+            Func<PropertyInfo, bool> predicate1 = prop1 => prop1.PropertyType == typeof (IAutomobile);
 
-            Plugin plugin = PluginCache.GetPlugin(typeof (ClassWithProperties));
+            var plugin = new Plugin(typeof (ClassWithProperties));
+            plugin.UseSetterRule(predicate);
+            plugin.UseSetterRule(predicate1);
 
             plugin.Setters.IsMandatory("Engine").ShouldBeFalse();
             plugin.Setters.IsMandatory("Car").ShouldBeTrue();
@@ -280,10 +282,10 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void SetFilledTypes_3()
         {
-            PluginCache.ResetAll();
-            PluginCache.AddFilledType(typeof (IGateway));
+            Func<PropertyInfo, bool> predicate = prop1 => prop1.PropertyType == typeof (IGateway);
 
-            Plugin plugin = PluginCache.GetPlugin(typeof (ClassWithProperties));
+            var plugin = new Plugin(typeof (ClassWithProperties));
+            plugin.UseSetterRule(predicate);
 
             plugin.Setters.IsMandatory("Engine").ShouldBeFalse();
             plugin.Setters.IsMandatory("Car").ShouldBeFalse();

@@ -1,19 +1,30 @@
 using System;
+using StructureMap.Util;
 
 namespace StructureMap.Pipeline
 {
-    // TODO -- make it possible to register Lifecycles
     public static class Lifecycles
     {
-        public static readonly ILifecycle Transient = new TransientLifecycle();
-        public static readonly ILifecycle Singleton = new SingletonLifecycle();
-        public static readonly ILifecycle Unique = new UniquePerRequestLifecycle();
-        
-        public static readonly ILifecycle ThreadLocal = new ThreadLocalStorageLifecycle();
+        private static readonly Cache<Type, ILifecycle> _lifecycles = new Cache<Type, ILifecycle>(type => (ILifecycle)Activator.CreateInstance(type));
 
-        public static ILifecycle Get<T>() where T: ILifecycle
+
+        public static readonly ILifecycle Transient = Register<TransientLifecycle>();
+        public static readonly ILifecycle Singleton = Register<SingletonLifecycle>();
+        public static readonly ILifecycle Unique = Register<UniquePerRequestLifecycle>();
+        
+        public static readonly ILifecycle ThreadLocal = Register<ThreadLocalStorageLifecycle>();
+
+
+        public static ILifecycle Register<T>() where T : ILifecycle, new()
         {
-            return Activator.CreateInstance<T>();
+            var lifecycle = new T();
+            _lifecycles[typeof(T)] = lifecycle;
+            return lifecycle;
+        }
+
+        public static ILifecycle Get<T>() where T: ILifecycle, new()
+        {
+            return _lifecycles[typeof (T)];
         }
     }
 }

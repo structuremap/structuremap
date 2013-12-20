@@ -1,4 +1,5 @@
 using StructureMap.Attributes;
+using StructureMap.LegacyAttributeSupport;
 
 namespace StructureMap.Testing.Widget5
 {

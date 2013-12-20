@@ -35,7 +35,7 @@ namespace StructureMap
 
         /// <summary>
         ///     Reads the configuration information and returns the PluginGraph definition of
-        ///     plugin families and plugin's
+        ///     Plugin families and Plugin's
         /// </summary>
         /// <returns></returns>
         public PluginGraph Build()

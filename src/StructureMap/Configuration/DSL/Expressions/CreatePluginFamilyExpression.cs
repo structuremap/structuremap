@@ -30,14 +30,14 @@ namespace StructureMap.Configuration.DSL.Expressions
 
             if (scope != null)
             {
-                _alterations.Add(family => family.SetScopeTo(scope));
+                lifecycleIs(scope);
             }
         }
 
         public InstanceExpression<TPluginType> MissingNamedInstanceIs { get { return new InstanceExpression<TPluginType>(i => _alterations.Add(family => family.MissingInstance = i)); } }
 
         /// <summary>
-        /// Add multiple Instance's to this PluginType
+        /// Add multiple Instances to this PluginType
         /// </summary>
         /// <param name="action"></param>
         /// <returns></returns>
@@ -163,8 +163,6 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// Makes the default instance of TPluginType the named
         /// instance
         /// </summary>
-        /// <param name="instanceName"></param>
-        /// <returns></returns>
         public ReferencedInstance Use(string instanceName)
         {
             var instance = new ReferencedInstance(instanceName);
@@ -174,9 +172,32 @@ namespace StructureMap.Configuration.DSL.Expressions
         }
 
         /// <summary>
+        /// Defines a fallback instance in case no default was defined for TPluginType
+        /// </summary>
+        public SmartInstance<TConcreteType> UseIfNone<TConcreteType>() where TConcreteType : TPluginType
+        {
+            var instance = new SmartInstance<TConcreteType>();
+            registerFallBack(instance);
+            return instance;
+        }
+
+        public LambdaInstance<TPluginType> UseIfNone(Func<IContext, TPluginType> func)
+        {
+            var instance = new LambdaInstance<TPluginType>(func);
+            registerFallBack(instance);
+            return instance;
+        }
+
+        public LambdaInstance<TPluginType> UseIfNone(Func<TPluginType> func)
+        {
+            var instance = new LambdaInstance<TPluginType>(func);
+            registerFallBack(instance);
+            return instance;
+        }
+
+        /// <summary>
         /// Convenience method to mark a PluginFamily as a Singleton
         /// </summary>
-        /// <returns></returns>
         public CreatePluginFamilyExpression<TPluginType> Singleton()
         {
             return lifecycleIs(Lifecycles.Singleton);
@@ -185,7 +206,6 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <summary>
         /// Convenience method to mark a PluginFamily as a Transient
         /// </summary>
-        /// <returns></returns>
         public CreatePluginFamilyExpression<TPluginType> Transient()
         {
             return lifecycleIs(Lifecycles.Transient);
@@ -265,8 +285,24 @@ namespace StructureMap.Configuration.DSL.Expressions
         }
 
         /// <summary>
+        /// Adds an Interceptor to only this PluginType
+        /// </summary>
+        public CreatePluginFamilyExpression<TPluginType> InterceptWith(InstanceInterceptor interceptor)
+        {
+            _children.Add(
+                graph =>
+                {
+                    var typeInterceptor = new PluginTypeInterceptor(typeof (TPluginType),
+                                                                    (c, o) => interceptor.Process(o, c));
+                    graph.InterceptorLibrary.AddInterceptor(typeInterceptor);
+                });
+
+            return this;
+        }
+
+        /// <summary>
         /// Register a Func to run against any object of this PluginType immediately after it is created,
-        /// but before the new object is passed back to the caller.  Unlike <see cref="OnCreation(Action{TPluginType})">OnCreationForAll()</see>,
+        /// but before the new object is passed back to the caller.  Unlike OnCreationForAll(),
         /// EnrichAllWith() gives the the ability to return a different object.  Use this method for runtime AOP
         /// scenarios or to return a decorator.
         /// </summary>
@@ -370,7 +406,6 @@ namespace StructureMap.Configuration.DSL.Expressions
 
             return instance;
         }
-
 
         public void Add(Instance instance)
         {

@@ -53,11 +53,12 @@ namespace StructureMap
 
         public void BuildUp(object target)
         {
-            Type pluggedType = target.GetType();
-            IConfiguredInstance instance = _pipelineGraph.GetDefault(pluggedType) as IConfiguredInstance
+            var pluggedType = target.GetType();
+            var instance = _pipelineGraph.GetDefault(pluggedType) as IConfiguredInstance
                                            ?? new ConfiguredInstance(pluggedType);
 
-            IInstanceBuilder builder = PluginCache.FindBuilder(pluggedType);
+            // TODO -- do this by pulling SetterRules out of PluginGraph
+            var builder = _pipelineGraph.Outer.BuilderFor(pluggedType);
             var arguments = new Arguments(instance, this);
             builder.BuildUp(arguments, target);
         }
@@ -181,6 +182,13 @@ namespace StructureMap
         public virtual object FindObject(Type pluginType, Instance instance)
         {
             return _sessionCache.GetObject(pluginType, instance);
+        }
+
+        // TODO -- really don't like this.  Could be better.
+        public IInstanceBuilder CreateBuilder(Plugin plugin)
+        {
+            _pipelineGraph.Outer.SetterRules.Configure(plugin);
+            return plugin.CreateBuilder();
         }
     }
 }

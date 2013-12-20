@@ -2,7 +2,7 @@ using System;
 
 namespace StructureMap.AutoMocking
 {
-    public delegate void GenericVoidMethod<TARGETCLASS>(TARGETCLASS target);
+    public delegate void GenericVoidMethod<T>(T target);
 
     public delegate void VoidMethod();
 
@@ -15,8 +15,8 @@ namespace StructureMap.AutoMocking
     /// <summary>
     /// Provides an "Auto Mocking Container" for the concrete class TARGETCLASS using Rhino.Mocks
     /// </summary>
-    /// <typeparam name="TARGETCLASS">The concrete class being tested</typeparam>
-    public class RhinoAutoMocker<TARGETCLASS> : AutoMocker<TARGETCLASS> where TARGETCLASS : class
+    /// <typeparam name="T">The concrete class being tested</typeparam>
+    public class RhinoAutoMocker<T> : AutoMocker<T> where T : class
     {
         public RhinoAutoMocker()
             : this(MockMode.AAA)
@@ -25,8 +25,8 @@ namespace StructureMap.AutoMocking
 
         public RhinoAutoMocker(MockMode mockMode)
         {
-            _serviceLocator = createLocator(mockMode);
-            _container = new AutoMockedContainer(_serviceLocator);
+            ServiceLocator = createLocator(mockMode);
+            Container = new AutoMockedContainer(ServiceLocator);
         }
 
         private ServiceLocator createLocator(MockMode mode)

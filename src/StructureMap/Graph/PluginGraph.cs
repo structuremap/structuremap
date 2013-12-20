@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
+using StructureMap.Construction;
 using StructureMap.Diagnostics;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
@@ -30,14 +31,17 @@ namespace StructureMap.Graph
         private GraphLog _log = new GraphLog();
         private readonly LifecycleObjectCache _singletonCache = new LifecycleObjectCache();
 
-        private readonly LightweightCache<string, PluginGraph> _profiles = new LightweightCache<string, PluginGraph>(name => new PluginGraph{ProfileName = name});  
+        private readonly LightweightCache<string, PluginGraph> _profiles;
+        private readonly SetterRules _setterRules;
+
+        private readonly Cache<Type, IInstanceBuilder> _builders; 
 
         public PluginGraph()
         {
+            _profiles =
+                new LightweightCache<string, PluginGraph>(name => new PluginGraph {ProfileName = name, Parent = this});
+
             ProfileName = "DEFAULT";
-
-            _profiles = new LightweightCache<string, PluginGraph>(name => new PluginGraph{ProfileName = name});
-
             _families = new Cache<Type, PluginFamily>(type =>
             {
                 return _policies.FirstValue(x => x.Build(type)) ?? new PluginFamily(type);
@@ -45,8 +49,27 @@ namespace StructureMap.Graph
 
             _families.OnAddition = family => family.Owner = this;
 
+            _setterRules = new SetterRules();
 
+            _builders = new Cache<Type, IInstanceBuilder>(type => {
+                var plugin = new Plugin(type);
+                _setterRules.Configure(plugin);
+
+                return plugin.CreateBuilder();
+            });
         }
+
+        public IInstanceBuilder BuilderFor(Type pluggedType)
+        {
+            return _builders[pluggedType];
+        }
+
+        public SetterRules SetterRules
+        {
+            get { return _setterRules; }
+        }
+
+        public PluginGraph Parent { get; set; }
 
         public PluginGraph(string profileName) : this()
         {

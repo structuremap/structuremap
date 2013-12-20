@@ -1,5 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8" ?> 
-<StructureMap>
-	<Assembly Name="StructureMap.Testing.Widget" />
-	<PluginFamily Assembly="StructureMap.Testing.Widget" Type="StructureMap.Testing.Widget.GrandChild" DefaultKey="Fred"/>
-</StructureMap>

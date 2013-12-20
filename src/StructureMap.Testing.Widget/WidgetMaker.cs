@@ -1,3 +1,5 @@
+using StructureMap.LegacyAttributeSupport;
+
 namespace StructureMap.Testing.Widget
 {
     public abstract class WidgetMaker

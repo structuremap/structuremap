@@ -7,16 +7,6 @@ namespace StructureMap.Testing
     [TestFixture]
     public class BuildUpIntegratedTester
     {
-        #region Setup/Teardown
-
-        [SetUp]
-        public void SetUp()
-        {
-            PluginCache.ResetAll();
-        }
-
-        #endregion
-
         [Test]
         public void create_a_setter_rule_and_see_it_applied_in_BuildUp()
         {

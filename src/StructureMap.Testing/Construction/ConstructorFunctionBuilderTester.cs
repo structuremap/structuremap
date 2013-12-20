@@ -1,6 +1,7 @@
 using System;
 using NUnit.Framework;
 using StructureMap.Construction;
+using StructureMap.Graph;
 
 namespace StructureMap.Testing.Construction
 {
@@ -13,7 +14,7 @@ namespace StructureMap.Testing.Construction
         public void SetUp()
         {
             var builder = new ConstructorFunctionBuilder<ConstructorTarget>();
-            func = builder.CreateBuilder();
+            func = builder.CreateBuilder(new Plugin(typeof(ConstructorTarget)));
         }
 
         #endregion
