@@ -1,5 +1,6 @@
 using System;
 using StructureMap.Pipeline;
+using StructureMap.Util;
 
 namespace StructureMap.Graph
 {
@@ -7,7 +8,7 @@ namespace StructureMap.Graph
     // TODO -- make sure there's helpers for all the common things
     public abstract class HasScope
     {
-        private Lazy<ILifecycle> _lifecycle;
+        protected Lazy<ILifecycle> _lifecycle;
 
         protected void copyLifecycle(HasScope other)
         {

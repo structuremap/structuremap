@@ -74,7 +74,7 @@
     <Compile Include="XmlAttributeInstanceMementoTester.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="ripple.dependencies.config" />
     <None Include="StructureMap.Xml.Testing.dll.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

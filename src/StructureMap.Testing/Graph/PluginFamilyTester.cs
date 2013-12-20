@@ -49,7 +49,6 @@ namespace StructureMap.Testing.Graph
             family.GetDefaultInstance().ShouldBeTheSameAs(instance);
         }
 
-
         public class LoggingFamilyAttribute : FamilyAttribute
         {
             public static bool Called { get; set; }

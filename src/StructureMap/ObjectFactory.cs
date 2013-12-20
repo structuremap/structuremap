@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using StructureMap.Pipeline;
+using StructureMap.Util;
 
 namespace StructureMap
 {
@@ -13,7 +14,7 @@ namespace StructureMap
     public static class ObjectFactory
     {
         private static readonly object _lockObject = new object();
-        private static Lazy<Container> _containerBuilder = new Lazy<Container>(defaultContainer,LazyThreadSafetyMode.ExecutionAndPublication);
+        private static Lazy<Container> _containerBuilder = new Lazy<Container>(defaultContainer);
 
         /// <summary>
         /// The Container that is kept alive by the ObjectFactory

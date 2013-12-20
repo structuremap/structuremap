@@ -60,6 +60,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ripple.dependencies.config" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\StructureMap.Testing.Widget3\StructureMap.Testing.Widget3.csproj">
       <Project>{C8878328-281F-4F4F-8D6E-88C60F304B89}</Project>
       <Name>StructureMap.Testing.Widget3</Name>
