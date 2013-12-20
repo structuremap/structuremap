@@ -7,8 +7,10 @@
     <ProjectGuid>{63C2742D-B6E2-484F-AFDB-346873075C5E}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ApplicationIcon></ApplicationIcon>
-    <AssemblyKeyContainerName></AssemblyKeyContainerName>
+    <ApplicationIcon>
+    </ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
     <AssemblyName>StructureMap.Testing</AssemblyName>
     <AssemblyOriginatorKeyFile>..\structuremap.snk</AssemblyOriginatorKeyFile>
     <DefaultClientScript>JScript</DefaultClientScript>
@@ -18,9 +20,12 @@
     <OutputType>Library</OutputType>
     <RootNamespace>StructureMap.Testing</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <StartupObject></StartupObject>
-    <FileUpgradeFlags></FileUpgradeFlags>
-    <UpgradeBackupLocation></UpgradeBackupLocation>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
     <SignAssembly>false</SignAssembly>
     <OldToolsVersion>3.5</OldToolsVersion>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
@@ -46,9 +51,11 @@
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <BaseAddress>285212672</BaseAddress>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
-    <ConfigurationOverrideFile></ConfigurationOverrideFile>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DocumentationFile></DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
     <DebugSymbols>true</DebugSymbols>
     <FileAlignment>4096</FileAlignment>
     <NoStdLib>false</NoStdLib>
@@ -67,9 +74,11 @@
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <BaseAddress>285212672</BaseAddress>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
-    <ConfigurationOverrideFile></ConfigurationOverrideFile>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
     <DefineConstants>TRACE</DefineConstants>
-    <DocumentationFile></DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
     <DebugSymbols>false</DebugSymbols>
     <FileAlignment>4096</FileAlignment>
     <NoStdLib>false</NoStdLib>
@@ -200,11 +209,6 @@
     </Compile>
     <Compile Include="AutoFactories\AutoFactoryTester.cs" />
     <Compile Include="AutoFactories\ProxyFactoryTests.cs" />
-    <Compile Include="AutoMocking\AutoMockerTester.cs" />
-    <Compile Include="AutoMocking\MoqAutoMockerTester.cs" />
-    <Compile Include="AutoMocking\MoqFactoryTester.cs" />
-    <Compile Include="AutoMocking\RhinoAutoMockerTester.cs" />
-    <Compile Include="AutoMocking\RhinoMockRepositoryProxyTester.cs" />
     <Compile Include="AutoWiringExamples.cs" />
     <Compile Include="BidirectionalDependencies.cs" />
     <Compile Include="Bugs\AddValueDirectlyWithGenericUsage.cs" />
@@ -213,15 +217,10 @@
     <Compile Include="Bugs\EnumerableShouldGetAllValuesTester.cs" />
     <Compile Include="Bugs\FillAllPropertiesShouldWorkForAlreadyConfiguredPluginsBug.cs" />
     <Compile Include="Bugs\GetAllInstancesShouldObserveKeys.cs" />
-<<<<<<< HEAD
-    <Compile Include="Bugs\IDictionaryAndXmlBugTester.cs" />
-=======
->>>>>>> c62898a85f9c25bd1dd358f888fd59ffe1aef3ac
     <Compile Include="Bugs\InjectByFuncWithNoPublicConstructors.cs" />
     <Compile Include="Bugs\LambdaCreatesNullBugTester.cs" />
     <Compile Include="Bugs\MixedConfigureAndInitializeMissingInstanceProblem.cs" />
     <Compile Include="Bugs\OpenGenericWithConstraints.cs" />
-    <Compile Include="Bugs\OverwritingOfPrimitiveProperties.cs" />
     <Compile Include="Bugs\ScanIndexerBugTester.cs" />
     <Compile Include="Bugs\SingletonShouldBeLazy.cs" />
     <Compile Include="Bugs\SpecifyScopeInConfigureTester.cs" />
@@ -237,9 +236,6 @@
     <Compile Include="BuildUpIntegratedTester.cs" />
     <Compile Include="BuildUpTester.cs" />
     <Compile Include="ConcreteClassCreationTester.cs" />
-    <Compile Include="Configuration\DefaultInstanceNodeTester.cs" />
-    <Compile Include="Configuration\DictionaryAndArrayArgumentTester.cs" />
-    <Compile Include="Configuration\DictionaryReaderTester.cs" />
     <Compile Include="Configuration\DSL\AddInstanceTester.cs" />
     <Compile Include="Configuration\DSL\AddTypesTester.cs" />
     <Compile Include="Configuration\DSL\ConstructorExpressionTester.cs" />
@@ -255,15 +251,12 @@
     <Compile Include="Configuration\DSL\RegistryTester.cs" />
     <Compile Include="Configuration\DSL\UseIfNoneTests.cs" />
     <Compile Include="Configuration\GraphBuilderTester.cs" />
-    <Compile Include="Configuration\PrimitiveArrayReaderTester.cs" />
-    <Compile Include="Configuration\ShortcuttedInstanceNodeTester.cs" />
     <Compile Include="Configuration\SimplePluginFactory.cs" />
     <Compile Include="Construction\BuilderCompilerTester.cs" />
     <Compile Include="Construction\ConstructorFunctionBuilderTester.cs" />
     <Compile Include="Construction\SetterBuilderTester.cs" />
     <Compile Include="Construction\StubArguments.cs" />
     <Compile Include="Debugging.cs" />
-    <Compile Include="Diagnostics\DoctorTester.cs" />
     <Compile Include="Diagnostics\WriterExtensions.cs" />
     <Compile Include="Examples.cs">
       <SubType>Form</SubType>
@@ -283,9 +276,6 @@
     <Compile Include="Graph\EnumerationTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Graph\ExceptionHandling\StructureMapExceptionTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Graph\FindAllTypesFilterTester.cs" />
     <Compile Include="Graph\FirstInterfaceConventionTester.cs" />
     <Compile Include="Graph\GenericConnectionScannerTester.cs" />
@@ -302,9 +292,6 @@
     <Compile Include="Graph\Interceptors\InterceptorLibraryTester.cs" />
     <Compile Include="Graph\Interceptors\MockTypeInterceptor.cs" />
     <Compile Include="Graph\Interceptors\TypeInterceptionTester.cs" />
-    <Compile Include="Graph\Source\XmlAttributeInstanceMementoTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Graph\TypeFindingTester.cs" />
     <Compile Include="Diagnostics\TextReportWriterSmokeTester.cs" />
     <Compile Include="GenericsAcceptanceTester.cs" />
@@ -378,11 +365,7 @@
     <Compile Include="RegistryExtensions.cs" />
     <Compile Include="SessionCacheTester.cs" />
     <Compile Include="SpecificationExtensions.cs" />
-    <Compile Include="StructureMapConfigCreator.cs" />
     <Compile Include="StructureMapConfigurationTester.cs" />
-    <Compile Include="TestData\DataMother.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="PerRequestInterceptorTester.cs" />
     <Compile Include="TestUtility.cs" />
     <Compile Include="Diagnostics\ValidationBuildSessionTester.cs" />
@@ -403,57 +386,10 @@
     <None Include="StructureMap.Testing.dll.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <EmbeddedResource Include="Graph\Source\EmbeddedMementoFile.xml" />
-    <EmbeddedResource Include="Graph\Source\Mementos\Instance1.xml" />
-    <EmbeddedResource Include="Graph\Source\Mementos\Instance2.xml" />
-    <EmbeddedResource Include="TestData\Array.xml" />
-    <EmbeddedResource Include="TestData\CDataTest.xml" />
-    <EmbeddedResource Include="TestData\ChildArrayPropertyConfig.xml" />
-    <EmbeddedResource Include="TestData\DeepInstanceMemento.xml" />
-    <EmbeddedResource Include="TestData\DefaultProfileConfig.xml" />
-    <EmbeddedResource Include="TestData\ExceptionTrapping.xml" />
-    <EmbeddedResource Include="TestData\ExplicitPluginFamilyOverridesImplicitPluginFamily.xml" />
-    <EmbeddedResource Include="TestData\FullStackGraphConfig.xml" />
-    <EmbeddedResource Include="TestData\FullTesting.XML" />
-    <EmbeddedResource Include="TestData\GridColumnInstances.xml" />
-    <EmbeddedResource Include="TestData\Include1.xml" />
-    <EmbeddedResource Include="TestData\Include2.xml" />
-    <EmbeddedResource Include="TestData\InstanceMementoTemplating.xml" />
-    <EmbeddedResource Include="TestData\IntegratedTest.XML" />
-    <EmbeddedResource Include="TestData\Invalid.config" />
-    <EmbeddedResource Include="TestData\Machine.XML" />
-    <EmbeddedResource Include="TestData\Master.xml" />
-    <EmbeddedResource Include="TestData\NavigationTest.xml" />
-    <EmbeddedResource Include="TestData\NotTriggered.xml" />
-    <EmbeddedResource Include="TestData\ObjectMother.config" />
-    <EmbeddedResource Include="TestData\RuleSource.xml" />
-    <EmbeddedResource Include="TestData\SampleConfig.xml" />
-    <EmbeddedResource Include="TestData\ScopeInFamily.xml" />
-    <EmbeddedResource Include="TestData\SetterInjectionTesting.xml" />
-    <EmbeddedResource Include="TestData\SingletonIntercepterTest.xml" />
-    <EmbeddedResource Include="TestData\StructureMap.config" />
-    <EmbeddedResource Include="TestData\Substitution.xml" />
-    <EmbeddedResource Include="TestData\Templater.xml" />
-    <EmbeddedResource Include="TestData\Trigger.xml" />
-    <EmbeddedResource Include="TestData\Valid.config" />
-    <EmbeddedResource Include="TestData\XmlInstanceMemento.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="TestData\GenericsTesting.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="TestData\Config1.xml" />
-    <EmbeddedResource Include="TestData\Config2.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="TestData\AttributeNormalized.xml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Examples\AddRegistryInXml.xml" />
     <Content Include="Sample.xml" />
-    <EmbeddedResource Include="TestData\BUG_OverwritingOfPrimitiveProperties.xml" />
-    <EmbeddedResource Include="TestData\ShortInstance.xml" />
-    <EmbeddedResource Include="TestData\DefaultInstance.xml" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -484,11 +420,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AutoFactories\Supporting\" />
-    <Folder Include="Util\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent></PreBuildEvent>
-    <PostBuildEvent></PostBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>

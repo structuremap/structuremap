@@ -172,30 +172,6 @@ namespace StructureMap.Configuration.DSL.Expressions
         }
 
         /// <summary>
-        /// Defines a fallback instance in case no default was defined for TPluginType
-        /// </summary>
-        public SmartInstance<TConcreteType> UseIfNone<TConcreteType>() where TConcreteType : TPluginType
-        {
-            var instance = new SmartInstance<TConcreteType>();
-            registerFallBack(instance);
-            return instance;
-        }
-
-        public LambdaInstance<TPluginType> UseIfNone(Func<IContext, TPluginType> func)
-        {
-            var instance = new LambdaInstance<TPluginType>(func);
-            registerFallBack(instance);
-            return instance;
-        }
-
-        public LambdaInstance<TPluginType> UseIfNone(Func<TPluginType> func)
-        {
-            var instance = new LambdaInstance<TPluginType>(func);
-            registerFallBack(instance);
-            return instance;
-        }
-
-        /// <summary>
         /// Convenience method to mark a PluginFamily as a Singleton
         /// </summary>
         public CreatePluginFamilyExpression<TPluginType> Singleton()
@@ -241,6 +217,30 @@ namespace StructureMap.Configuration.DSL.Expressions
         }
 
         /// <summary>
+        /// Defines a fallback instance in case no default was defined for TPluginType
+        /// </summary>
+        public SmartInstance<TConcreteType> UseIfNone<TConcreteType>() where TConcreteType : TPluginType
+        {
+            var instance = new SmartInstance<TConcreteType>();
+            registerFallBack(instance);
+            return instance;
+        }
+
+        public LambdaInstance<TPluginType> UseIfNone(Func<IContext, TPluginType> func)
+        {
+            var instance = new LambdaInstance<TPluginType>(func);
+            registerFallBack(instance);
+            return instance;
+        }
+
+        public LambdaInstance<TPluginType> UseIfNone(Func<TPluginType> func)
+        {
+            var instance = new LambdaInstance<TPluginType>(func);
+            registerFallBack(instance);
+            return instance;
+        }
+
+        /// <summary>
         /// Adds an Interceptor to only this PluginType
         /// </summary>
         /// <param name="interceptor"></param>
@@ -279,22 +279,6 @@ namespace StructureMap.Configuration.DSL.Expressions
                     var interceptor = new PluginTypeInterceptor(typeof(TPluginType), function);
 
                     graph.InterceptorLibrary.AddInterceptor(interceptor);
-                });
-
-            return this;
-        }
-
-        /// <summary>
-        /// Adds an Interceptor to only this PluginType
-        /// </summary>
-        public CreatePluginFamilyExpression<TPluginType> InterceptWith(InstanceInterceptor interceptor)
-        {
-            _children.Add(
-                graph =>
-                {
-                    var typeInterceptor = new PluginTypeInterceptor(typeof (TPluginType),
-                                                                    (c, o) => interceptor.Process(o, c));
-                    graph.InterceptorLibrary.AddInterceptor(typeInterceptor);
                 });
 
             return this;
@@ -410,6 +394,16 @@ namespace StructureMap.Configuration.DSL.Expressions
         public void Add(Instance instance)
         {
             _alterations.Add(f => f.AddInstance(instance));
+        }
+
+        private void registerFallBack(Instance instance)
+        {
+            alter = family => family.SetFallback(instance);
+        }
+
+        private Action<PluginFamily> alter
+        {
+            set { _alterations.Add(value); }
         }
     }
 }
