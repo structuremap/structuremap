@@ -16,6 +16,6 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="..\..\src\StructureMap.AutoMocking\bin\release\StructureMap.AutoMocking.*" target="lib\net40" />
+    <file src="..\..\src\StructureMap.AutoMocking\bin\release\StructureMap.AutoMocking.*" target="lib\net35-client" />
   </files>
 </package>
