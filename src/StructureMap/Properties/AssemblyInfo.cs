@@ -12,4 +12,3 @@ using System.Security;
 [assembly: AssemblyTitle("StructureMap")]
 [assembly: AllowPartiallyTrustedCallers]
 [assembly: CLSCompliant(true)]
-[assembly: SecurityRules(SecurityRuleSet.Level1, SkipVerificationInFullTrust = true)]

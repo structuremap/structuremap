@@ -6,8 +6,6 @@ _site/
 *.suo
 *.user
 Source/**/bin
-Source/**/Bin
-src/**/bin
 src/**/Bin
 obj
 _ReSharper*
@@ -24,3 +22,5 @@ artifacts
 src/CommonAssemblyInfo.cs
 logs
 Gemfile.lock
+*.DotSettings
+buildSupport
