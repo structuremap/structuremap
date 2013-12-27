@@ -21,13 +21,13 @@ namespace StructureMap.Testing
         [Test]
         public void expression_playing()
         {
-            var instance = new FakeInstance();
-            Expression<Func<IBuildSession, LifecycleTarget>> expression =
-                session => new LifecycleTarget((IGateway)session.ResolveFromLifecycle(typeof(IGateway), instance));
-
+            Expression<Func<IBuildSession, UsesGateways>> expression =
+                session => new UsesGateways(new IGateway[]{new StubbedGateway(), new DefaultGateway()}.ToList());
 
             Debug.WriteLine(expression);
         }
+
+
 
         [Test]
         public void look_at_expression()
@@ -74,7 +74,15 @@ namespace StructureMap.Testing
             func(new BuildSession(new RootPipelineGraph(new PluginGraph())));
         }
     }
-    
+
+    public class UsesGateways
+    {
+        public UsesGateways(List<IGateway> gateways)
+        {
+
+        }
+    }
+
 
     public class DeepException : Exception
     {

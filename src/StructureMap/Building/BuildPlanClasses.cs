@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
@@ -54,6 +57,36 @@ namespace StructureMap.Building
      *   a.) Stateless, no need to hit IContext |____ Not sure we need to differentiate
      *   b.) Stateful, needs to hit IContext    |
      */
+
+
+
+    public class ArrayDependencySource : IDependencySource
+    {
+        private readonly Type _pluginType;
+        private readonly List<IDependencySource> _items = new List<IDependencySource>();
+
+        public ArrayDependencySource(Type pluginType, params IDependencySource[] items)
+        {
+            _pluginType = pluginType;
+            _items.AddRange(items);
+        }
+
+        public void Add(IDependencySource item)
+        {
+            _items.Add(item);
+        }
+
+        public IEnumerable<IDependencySource> Items
+        {
+            get { return _items; }
+        }
+
+        public string Description { get; private set; }
+        public Expression ToExpression(ParameterExpression session)
+        {
+            return Expression.NewArrayInit(_pluginType, _items.Select(x => x.ToExpression(session)));
+        }
+    }
 
 
     public class InterceptionStep<T> : IDependencySource

@@ -184,6 +184,7 @@
     <Compile Include="Bugs\StaticPropertyCausesJITExceptionTester.cs" />
     <Compile Include="Bugs\TryGetInstanceWithOpenGenericsBugTester.cs" />
     <Compile Include="Bugs\UseSingleImplementationConventionInMultipleScans.cs" />
+    <Compile Include="Building\array_expression_building.cs" />
     <Compile Include="Building\constructor_expression_building.cs" />
     <Compile Include="Building\complex_concrete_build_with_child_dependencies.cs" />
     <Compile Include="Building\FakebuildSession.cs" />
