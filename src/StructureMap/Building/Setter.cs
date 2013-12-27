@@ -7,13 +7,13 @@ namespace StructureMap.Building
     {
         private readonly MemberInfo _member;
 
-        public Setter(MemberInfo member, IBuildStep value)
+        public Setter(MemberInfo member, IDependencySource value)
         {
             _member = member;
             AssignedValue = value;
         }
 
-        public IBuildStep AssignedValue { get; private set; }
+        public IDependencySource AssignedValue { get; private set; }
 
         public string Description { get; private set; }
 

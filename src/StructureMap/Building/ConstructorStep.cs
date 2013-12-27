@@ -8,19 +8,19 @@ namespace StructureMap.Building
     public class ConstructorStep
     {
         private readonly ConstructorInfo _constructor;
-        private readonly IList<IBuildStep> _arguments = new List<IBuildStep>(); 
+        private readonly IList<IDependencySource> _arguments = new List<IDependencySource>(); 
 
         public ConstructorStep(ConstructorInfo constructor)
         {
             _constructor = constructor;
         }
 
-        public void Add(IBuildStep argument)
+        public void Add(IDependencySource argument)
         {
             _arguments.Add(argument);
         }
 
-        public IEnumerable<IBuildStep> Arguments
+        public IEnumerable<IDependencySource> Arguments
         {
             get { return _arguments; }
         }

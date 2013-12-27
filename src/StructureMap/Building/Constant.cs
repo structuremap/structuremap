@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace StructureMap.Building
 {
-    public class Constant : IBuildStep
+    public class Constant : IDependencySource
     {
         private readonly Type _argumentType;
         private readonly object _value;

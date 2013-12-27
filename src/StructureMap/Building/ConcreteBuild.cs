@@ -38,7 +38,7 @@ namespace StructureMap.Building
             _setters.Add(setter);
         }
 
-        public void Add(MemberInfo member, IBuildStep value)
+        public void Add(MemberInfo member, IDependencySource value)
         {
             _setters.Add(new Setter(member, value));
         }
@@ -80,7 +80,7 @@ namespace StructureMap.Building
         
     }
 
-    public class ConcreteBuild<T> : ConcreteBuild, IBuildStep
+    public class ConcreteBuild<T> : ConcreteBuild, IDependencySource
     {
         public static ConcreteBuild<T> For(Expression<Func<T>> expression)
         {
@@ -109,7 +109,7 @@ namespace StructureMap.Building
             Add(new Setter(member, Constant.For(value)));
         }
 
-        public void Set(Expression<Func<T, object>> expression, IBuildStep step)
+        public void Set(Expression<Func<T, object>> expression, IDependencySource step)
         {
             var member = ReflectionHelper.GetMember(expression);
             Add(new Setter(member, step));
@@ -118,7 +118,7 @@ namespace StructureMap.Building
         public ConcreteBuild<T> ConstructorArgs(params object[] args)
         {
             args.Each(a => {
-                var arg = a as IBuildStep ?? Constant.ForObject(a);
+                var arg = a as IDependencySource ?? Constant.ForObject(a);
                 Constructor.Add(arg);
             });
             return this;

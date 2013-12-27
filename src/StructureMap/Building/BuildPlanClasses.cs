@@ -34,7 +34,7 @@ namespace StructureMap.Building
 
 
     /*
-     * IBuildStep Types
+     * IDependencySource Types
      * 1.) Instance node
      *   a.) ConstructorStep
      *   b.) ObjectNode
@@ -58,7 +58,7 @@ namespace StructureMap.Building
 
 
     // TODO -- maybe make this much lighter.
-    public interface IBuildStep
+    public interface IDependencySource
     {
         string Description { get; }
         Expression ToExpression();
@@ -69,7 +69,7 @@ namespace StructureMap.Building
         Delegate ToDelegate();
     }
 
-    public class InterceptionStep<T> : IBuildStep
+    public class InterceptionStep<T> : IDependencySource
     {
         private readonly InstanceInterceptor _interceptor;
 
@@ -78,7 +78,7 @@ namespace StructureMap.Building
             _interceptor = interceptor;
         }
 
-        public IBuildStep Inner { get; set; }
+        public IDependencySource Inner { get; set; }
 
         public InstanceInterceptor Interceptor
         {
@@ -97,7 +97,7 @@ namespace StructureMap.Building
     }
 
 
-    public class LifecycleStep : IBuildStep
+    public class LifecycleStep : IDependencySource
     {
         private readonly ILifecycle _lifecycle;
 
@@ -116,7 +116,7 @@ namespace StructureMap.Building
     /// <summary>
     /// Wraps with direct access to the IContext.Transient stuff
     /// </summary>
-    public class TransientStep : IBuildStep
+    public class TransientStep : IDependencySource
     {
 
 
@@ -127,7 +127,7 @@ namespace StructureMap.Building
         }
     }
 
-    public class InstanceStep : IBuildStep
+    public class InstanceStep : IDependencySource
     {
         private readonly Type _pluginType;
         private readonly Instance _instance;
@@ -161,8 +161,8 @@ namespace StructureMap.Building
 
     /*
      * Needs to consist of a couple different things -->
-     * 1.) 0..* IBuildStep's for constructor arguments
-     * 2.) 0..* IBuildStep's for setters
+     * 1.) 0..* IDependencySource's for constructor arguments
+     * 2.) 0..* IDependencySource's for setters
      * 
      * - Will need to be knowledgeable about interceptors
      *   - no interceptors, then not much to do here

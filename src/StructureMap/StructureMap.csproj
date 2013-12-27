@@ -126,7 +126,7 @@
     <Compile Include="AutoMocking\AutoMockedContainer.cs" />
     <Compile Include="AutoMocking\AutoMocker.cs" />
     <Compile Include="AutoMocking\ServiceLocator.cs" />
-    <Compile Include="Building\Classes.cs" />
+    <Compile Include="Building\BuildPlanClasses.cs" />
     <Compile Include="Building\ConcreteBuild.cs" />
     <Compile Include="Building\Constant.cs" />
     <Compile Include="Building\ConstructorStep.cs" />
