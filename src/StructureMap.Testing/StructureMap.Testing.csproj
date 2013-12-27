@@ -185,6 +185,7 @@
     <Compile Include="Bugs\TryGetInstanceWithOpenGenericsBugTester.cs" />
     <Compile Include="Bugs\UseSingleImplementationConventionInMultipleScans.cs" />
     <Compile Include="Building\constructor_expression_building.cs" />
+    <Compile Include="Building\complex_concrete_build_with_child_dependencies.cs" />
     <Compile Include="Building\FakeContext.cs" />
     <Compile Include="Building\LiteralPlanTester.cs" />
     <Compile Include="Building\mixed_constructor_setter_and_fields.cs" />

@@ -48,6 +48,7 @@ namespace StructureMap.Building
             get { return _constructor; }
         }
 
+        
 
         public string Description { get; private set; }
 
@@ -79,7 +80,7 @@ namespace StructureMap.Building
         
     }
 
-    public class ConcreteBuild<T> : ConcreteBuild
+    public class ConcreteBuild<T> : ConcreteBuild, IBuildStep
     {
         public static ConcreteBuild<T> For(Expression<Func<T>> expression)
         {
@@ -107,5 +108,21 @@ namespace StructureMap.Building
 
             Add(new Setter(member, Constant.For(value)));
         }
+
+        public void Set(Expression<Func<T, object>> expression, IBuildStep step)
+        {
+            var member = ReflectionHelper.GetMember(expression);
+            Add(new Setter(member, step));
+        }
+
+        public ConcreteBuild<T> ConstructorArgs(params object[] args)
+        {
+            args.Each(a => {
+                var arg = a as IBuildStep ?? Constant.ForObject(a);
+                Constructor.Add(arg);
+            });
+            return this;
+        }
     }
+
 }

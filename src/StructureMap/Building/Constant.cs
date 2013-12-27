@@ -8,6 +8,12 @@ namespace StructureMap.Building
         private readonly Type _argumentType;
         private readonly object _value;
 
+
+        public static Constant ForObject(object o)
+        {
+            return new Constant(o.GetType(), o);    
+        }
+
         public static Constant For<T>(T value)
         {
             return new Constant(typeof(T), value);
