@@ -1,6 +1,4 @@
 using System;
-using StructureMap.Diagnostics;
-using StructureMap.Graph;
 
 namespace StructureMap.Pipeline
 {
@@ -11,9 +9,6 @@ namespace StructureMap.Pipeline
 
         public ReferencedInstance(string referenceKey)
         {
-            IsReference = true;
-            CopyAsIsWhenClosingInstance = true;
-
             if (string.IsNullOrEmpty(referenceKey))
             {
                 throw new ArgumentNullException("referenceKey");
@@ -23,7 +18,10 @@ namespace StructureMap.Pipeline
         }
 
 
-        public string ReferenceKey { get { return _referenceKey; } }
+        public string ReferenceKey
+        {
+            get { return _referenceKey; }
+        }
 
         #region IEquatable<ReferencedInstance> Members
 

@@ -35,9 +35,6 @@ namespace StructureMap.Pipeline
             set { _interceptor = value; }
         }
 
-        internal bool IsReference { get; set; }
-        internal bool CopyAsIsWhenClosingInstance { get; set; }
-
         #region IDiagnosticInstance Members
 
         public string Name
@@ -143,9 +140,15 @@ namespace StructureMap.Pipeline
             return false;
         }
 
+        /// <summary>
+        /// Return the closed type value for this Instance
+        /// when starting from an open generic type
+        /// </summary>
+        /// <param name="types"></param>
+        /// <returns></returns>
         public virtual Instance CloseType(Type[] types)
         {
-            return null;
+            return this;
         }
 
         public int InstanceKey(Type pluginType)

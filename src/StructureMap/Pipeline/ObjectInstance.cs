@@ -23,8 +23,6 @@ namespace StructureMap.Pipeline
 
         public ObjectInstance(object anObject)
         {
-            CopyAsIsWhenClosingInstance = true;
-
             if (anObject == null)
             {
                 throw new ArgumentNullException("anObject");

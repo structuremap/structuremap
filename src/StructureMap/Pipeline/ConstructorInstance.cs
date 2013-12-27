@@ -292,10 +292,7 @@ namespace StructureMap.Pipeline
             var closedInstance = new ConstructorInstance(closedType);
 
             _dependencies.Each((key, i) => {
-                if (i.CopyAsIsWhenClosingInstance)
-                {
-                    closedInstance.SetChild(key, i);
-                }
+                closedInstance.SetChild(key, i.CloseType(types));
             });
 
             return closedInstance;
