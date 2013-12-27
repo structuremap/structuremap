@@ -10,5 +10,6 @@ namespace StructureMap
         object ResolveFromLifecycle(Type pluginType, Instance instance);
         string RequestedName { get; set; }
         T GetInstance<T>();
+        T GetInstance<T>(string name);
     }
 }

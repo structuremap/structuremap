@@ -6,10 +6,9 @@ namespace StructureMap.Pipeline
     {
         private readonly string _referenceKey;
 
-
         public ReferencedInstance(string referenceKey)
         {
-            if (string.IsNullOrEmpty(referenceKey))
+            if (referenceKey.IsEmpty())
             {
                 throw new ArgumentNullException("referenceKey");
             }
@@ -23,15 +22,11 @@ namespace StructureMap.Pipeline
             get { return _referenceKey; }
         }
 
-        #region IEquatable<ReferencedInstance> Members
-
         public bool Equals(ReferencedInstance referencedInstance)
         {
             if (referencedInstance == null) return false;
             return Equals(_referenceKey, referencedInstance._referenceKey);
         }
-
-        #endregion
 
         protected override object build(Type pluginType, BuildSession session)
         {

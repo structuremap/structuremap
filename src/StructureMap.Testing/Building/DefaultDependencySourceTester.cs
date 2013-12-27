@@ -23,6 +23,27 @@ namespace StructureMap.Testing.Building
         }
     }
 
+    [TestFixture]
+    public class ReferencedDependencySourceTester
+    {
+        [Test]
+        public void can_resolve_through_build_session()
+        {
+            var session = new FakeBuildSession();
+            var gateway = new StubbedGateway();
+            var gateway2 = new StubbedGateway();
+
+            session.NamedObjects[typeof (IGateway)]["Red"] = gateway;
+            session.NamedObjects[typeof (IGateway)]["Blue"] = gateway2;
+
+            var build = new ConcreteBuild<GuyWhoUsesGateway>();
+            build.ConstructorArgs(new ReferencedDependencySource(typeof(IGateway), "Blue"));
+
+            build.ToDelegate<GuyWhoUsesGateway>()(session)
+                .Gateway.ShouldBeTheSameAs(gateway2);
+        }
+    }
+
     public class GuyWhoUsesGateway
     {
         private readonly IGateway _gateway;

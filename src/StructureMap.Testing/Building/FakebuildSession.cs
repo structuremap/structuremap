@@ -11,6 +11,7 @@ namespace StructureMap.Testing.Building
             new Cache<Type, Cache<Instance, object>>(type => new Cache<Instance, object>());
 
         public readonly Cache<Type, object> Defaults = new Cache<Type, object>();
+        public readonly Cache<Type, Cache<string, object>> NamedObjects = new Cache<Type, Cache<string, object>>(type => new Cache<string, object>());
 
         public void SetDefault<T>(T @object)
         {
@@ -37,6 +38,11 @@ namespace StructureMap.Testing.Building
         public T GetInstance<T>()
         {
             return (T) Defaults[typeof (T)];
+        }
+
+        public T GetInstance<T>(string name)
+        {
+            return (T) NamedObjects[typeof (T)][name];
         }
     }
 }
