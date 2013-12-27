@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using StructureMap.Pipeline;
+using StructureMap.Util;
 
 namespace StructureMap.Testing.Building
 {
-    public class FakeSession : IBuildSession
+    public class FakeBuildSession : IBuildSession
     {
+        public readonly Cache<Type, Cache<Instance, object>> LifecycledObjects =
+            new Cache<Type, Cache<Instance, object>>(type => new Cache<Instance, object>());
+
         public object BuildNewInSession(Type pluginType, Instance instance)
         {
             throw new NotImplementedException();
@@ -18,7 +22,7 @@ namespace StructureMap.Testing.Building
 
         public object ResolveFromLifecycle(Type pluginType, Instance instance)
         {
-            throw new NotImplementedException();
+            return LifecycledObjects[pluginType][instance];
         }
 
         public string RequestedName { get; set; }

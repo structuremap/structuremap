@@ -15,7 +15,7 @@ namespace StructureMap.Testing.Building
             step.Set(x => x.Direction, "North");
 
             var builder = step.ToDelegate<SetterTarget>();
-            SetterTarget target = builder(new FakeSession());
+            SetterTarget target = builder(new FakeBuildSession());
 
             target.Color.ShouldEqual("Red");
             target.Direction.ShouldEqual("North");
@@ -29,7 +29,7 @@ namespace StructureMap.Testing.Building
             step.Set(x => x.Direction, "North");
 
             var builder = step.ToDelegate<FieldTarget>();
-            FieldTarget target = builder(new FakeSession());
+            FieldTarget target = builder(new FakeBuildSession());
 
             target.Color.ShouldEqual("Red");
             target.Direction.ShouldEqual("North");

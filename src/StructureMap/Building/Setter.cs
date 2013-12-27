@@ -17,9 +17,9 @@ namespace StructureMap.Building
 
         public string Description { get; private set; }
 
-        public MemberBinding ToBinding()
+        public MemberBinding ToBinding(ParameterExpression session)
         {
-            return Expression.Bind(_member, AssignedValue.ToExpression());
+            return Expression.Bind(_member, AssignedValue.ToExpression(session));
         }
     }
 }

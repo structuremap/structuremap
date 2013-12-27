@@ -19,7 +19,7 @@ namespace StructureMap.Testing.Building
 
             var builder = build.ToDelegate<MixedTarget>();
 
-            var target = builder(new FakeSession());
+            var target = builder(new FakeBuildSession());
 
             target.Name.ShouldEqual("Jeremy");
             target.Color.ShouldEqual("Red");

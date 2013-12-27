@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
+using System.Reflection;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
 
@@ -61,7 +62,7 @@ namespace StructureMap.Building
     public interface IDependencySource
     {
         string Description { get; }
-        Expression ToExpression();
+        Expression ToExpression(ParameterExpression session);
     }
 
     public interface IBuildPlan
@@ -90,26 +91,38 @@ namespace StructureMap.Building
             get { return _interceptor.ToString(); }
         }
 
-        public Expression ToExpression()
+        public Expression ToExpression(ParameterExpression session)
         {
             throw new NotImplementedException();
         }
     }
 
 
-    public class LifecycleStep : IDependencySource
+    public class LifecycleDependencySource : IDependencySource
     {
-        private readonly ILifecycle _lifecycle;
+        public static MethodInfo SessionMethod =
+            ReflectionHelper.GetMethod<IBuildSession>(x => x.ResolveFromLifecycle(null, null));
 
-        public LifecycleStep(ILifecycle lifecycle)
+        private readonly Type _pluginType;
+        private readonly Instance _instance;
+
+        public LifecycleDependencySource(Type pluginType, Instance instance)
         {
-            _lifecycle = lifecycle;
+            _pluginType = pluginType;
+            _instance = instance;
         }
 
         public string Description { get; private set; }
-        public Expression ToExpression()
+
+        public Expression ToExpression(ParameterExpression session)
         {
-            throw new NotImplementedException();
+            var typeArg = Expression.Constant(_pluginType);
+            var instanceArg = Expression.Constant(_instance);
+
+            var method = Expression.Call(session, SessionMethod, typeArg, instanceArg);
+            
+
+            return Expression.Convert(method, _pluginType);
         }
     }
 
@@ -121,7 +134,7 @@ namespace StructureMap.Building
 
 
         public string Description { get; private set; }
-        public Expression ToExpression()
+        public Expression ToExpression(ParameterExpression session)
         {
             throw new NotImplementedException();
         }
@@ -153,7 +166,7 @@ namespace StructureMap.Building
             get { return _pluginType; }
         }
 
-        public Expression ToExpression()
+        public Expression ToExpression(ParameterExpression session)
         {
             throw new NotImplementedException();
         }

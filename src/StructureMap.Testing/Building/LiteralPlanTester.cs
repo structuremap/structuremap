@@ -13,7 +13,7 @@ namespace StructureMap.Testing.Building
             var foo = new Foo(Guid.NewGuid());
             var plan = new LiteralPlan<Foo>(foo, "some foo");
 
-            plan.ToDelegate<Foo>()(new FakeSession())
+            plan.ToDelegate<Foo>()(new FakeBuildSession())
                 .ShouldBeTheSameAs(foo);
         }
     }

@@ -14,7 +14,7 @@ namespace StructureMap.Testing.Building
             step.Constructor.Add(Constant.For("Jeremy"));
             step.Constructor.Add(Constant.For<int>(39));
 
-            var context = new FakeSession();
+            var context = new FakeBuildSession();
 
             var builder = step.ToDelegate<CtorTarget>();
             var target = builder(context);

@@ -7,6 +7,8 @@ using NUnit.Framework;
 using StructureMap.Building;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
+using StructureMap.Testing.Building;
+using StructureMap.Testing.Graph;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
 using System.Linq;
@@ -19,17 +21,12 @@ namespace StructureMap.Testing
         [Test]
         public void expression_playing()
         {
-            Func<IContext, IGateway> gatewayBuilder = c => new FakeGateway();
-            Func<IContext, IGateway> gatewayBuilder2 = DeepException.Wrap(gatewayBuilder, "new FakeGateway()");
-            
-            Func<IContext, Leaf> leafBuilder = c => new Leaf(gatewayBuilder2(c), new ColorService("red"));
-            var leafBuilder2 = DeepException.Wrap(leafBuilder, "new Leaf(IGateway, IService)");
+            var instance = new FakeInstance();
+            Expression<Func<IBuildSession, LifecycleTarget>> expression =
+                session => new LifecycleTarget((IGateway)session.ResolveFromLifecycle(typeof(IGateway), instance));
 
-            Func<IContext, TopLevel> topLevelBuilder = context => new TopLevel(leafBuilder2(context));
-            var func = DeepException.Wrap(topLevelBuilder, "new TopLevel(Leaf)");
-            
 
-            func(new BuildSession(new RootPipelineGraph(new PluginGraph()))).ShouldNotBeNull();
+            Debug.WriteLine(expression);
         }
 
         [Test]

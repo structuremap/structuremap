@@ -55,26 +55,27 @@ namespace StructureMap.Building
 
         public Delegate ToDelegate()
         {
-            var inner = ToExpression();
+            var session = Expression.Parameter(typeof(IBuildSession), "session");
+            var inner = ToExpression(session);
 
             var lambdaType = typeof (Func<,>).MakeGenericType(typeof (IBuildSession), _concreteType);
-            var argument = Expression.Parameter(typeof (IBuildSession), "s");
             
-            var lambda = Expression.Lambda(lambdaType, inner, argument);
+            
+            var lambda = Expression.Lambda(lambdaType, inner, session);
 
             return lambda.Compile();
         }
 
-        public Expression ToExpression()
+        public Expression ToExpression(ParameterExpression session)
         {
-            var newExpr = _constructor.ToExpression();
+            var newExpr = _constructor.ToExpression(session);
             
             if (!_setters.Any())
             {
                 return newExpr;
             }
             
-            return Expression.MemberInit(newExpr, _setters.Select(x => x.ToBinding()));
+            return Expression.MemberInit(newExpr, _setters.Select(x => x.ToBinding(session)));
         }
 
         

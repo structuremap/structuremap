@@ -26,7 +26,7 @@ namespace StructureMap.Building
         }
 
         public string Description { get; private set; }
-        public Expression ToExpression()
+        public Expression ToExpression(ParameterExpression session)
         {
             return Expression.Constant(_value, _argumentType);
         }
