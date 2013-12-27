@@ -51,19 +51,6 @@ namespace StructureMap.Pipeline
             return _referenceKey != null ? _referenceKey.GetHashCode() : 0;
         }
 
-
-        protected override Instance findMasterInstance(PluginFamily family, string profileName, GraphLog log)
-        {
-            Instance instance = family.GetInstance(_referenceKey);
-
-            if (instance == null)
-            {
-                log.RegisterError(196, ReferenceKey, family.PluginType, profileName);
-            }
-
-            return instance;
-        }
-
         protected override string getDescription()
         {
             return string.Format("\"{0}\"", _referenceKey);

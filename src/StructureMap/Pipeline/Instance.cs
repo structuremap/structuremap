@@ -5,13 +5,6 @@ using StructureMap.Interceptors;
 
 namespace StructureMap.Pipeline
 {
-    public interface IDiagnosticInstance
-    {
-        bool CanBePartOfPluginFamily(PluginFamily family);
-        Instance FindInstanceForProfile(PluginFamily family, string profileName, GraphLog log);
-        InstanceToken CreateToken();
-    }
-
     public abstract class Instance : HasScope, IDiagnosticInstance
     {
         private readonly string _originalName;
@@ -66,11 +59,6 @@ namespace StructureMap.Pipeline
         bool IDiagnosticInstance.CanBePartOfPluginFamily(PluginFamily family)
         {
             return canBePartOfPluginFamily(family);
-        }
-
-        Instance IDiagnosticInstance.FindInstanceForProfile(PluginFamily family, string profileName, GraphLog log)
-        {
-            return findMasterInstance(family, profileName, log);
         }
 
         InstanceToken IDiagnosticInstance.CreateToken()
@@ -141,11 +129,6 @@ namespace StructureMap.Pipeline
         protected virtual object build(Type pluginType, BuildSession session)
         {
             throw new NotImplementedException();
-        }
-
-        protected virtual Instance findMasterInstance(PluginFamily family, string profileName, GraphLog log)
-        {
-            return this;
         }
 
         [CLSCompliant(false)]

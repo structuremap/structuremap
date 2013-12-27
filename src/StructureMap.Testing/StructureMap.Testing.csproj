@@ -188,7 +188,7 @@
     <Compile Include="Building\constructor_expression_building.cs" />
     <Compile Include="Building\complex_concrete_build_with_child_dependencies.cs" />
     <Compile Include="Building\DefaultDependencySourceTester.cs" />
-    <Compile Include="Building\FakebuildSession.cs" />
+    <Compile Include="Building\FakeBuildSession.cs" />
     <Compile Include="Building\LifecycleDependencySourceTester.cs" />
     <Compile Include="Building\list_expression_building.cs" />
     <Compile Include="Building\LiteralPlanTester.cs" />
