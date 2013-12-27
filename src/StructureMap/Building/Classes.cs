@@ -56,12 +56,17 @@ namespace StructureMap.Building
      */
 
 
+
     // TODO -- maybe make this much lighter.
     public interface IBuildStep
     {
         string Description { get; }
-
         Expression ToExpression();
+    }
+
+    public interface IBuildPlan
+    {
+        Delegate ToDelegate();
     }
 
     public class InterceptionStep<T> : IBuildStep
@@ -91,27 +96,6 @@ namespace StructureMap.Building
         }
     }
 
-    public class LiteralStep<T> : IBuildStep
-    {
-        private readonly T _object;
-        private readonly string _description;
-
-        public LiteralStep(T @object, string description)
-        {
-            _object = @object;
-            _description = description;
-        }
-
-        public string Description
-        {
-            get { return _description; }
-        }
-
-        public Expression ToExpression()
-        {
-            throw new NotImplementedException();
-        }
-    }
 
     public class LifecycleStep : IBuildStep
     {
@@ -191,6 +175,11 @@ namespace StructureMap.Building
         public static Func<IContext, T> BuilderOf<T>(this Delegate @delegate)
         {
             return @delegate.As<Func<IContext, T>>();
-        } 
+        }
+
+        public static Func<IContext, T> ToDelegate<T>(this IBuildPlan plan)
+        {
+            return plan.ToDelegate().As<Func<IContext, T>>();
+        }
     }
 }

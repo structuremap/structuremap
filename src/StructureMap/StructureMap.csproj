@@ -130,6 +130,7 @@
     <Compile Include="Building\ConcreteBuild.cs" />
     <Compile Include="Building\Constant.cs" />
     <Compile Include="Building\ConstructorStep.cs" />
+    <Compile Include="Building\LiteralPlan.cs" />
     <Compile Include="Building\Setter.cs" />
     <Compile Include="Building\StructureMapBuildException.cs" />
     <Compile Include="BuildSession.cs" />

@@ -7,7 +7,7 @@ using StructureMap.Graph;
 
 namespace StructureMap.Building
 {
-    public class ConcreteBuild : IBuildStep
+    public class ConcreteBuild : IBuildPlan
     {
         private readonly Type _concreteType;
         private readonly ConstructorStep _constructor;
@@ -63,11 +63,6 @@ namespace StructureMap.Building
 
             return lambda.Compile();
         }
-
-        public Func<IContext, T> ToDelegate<T>()
-        {
-            return ToDelegate() as Func<IContext, T>;
-        } 
 
         public Expression ToExpression()
         {
