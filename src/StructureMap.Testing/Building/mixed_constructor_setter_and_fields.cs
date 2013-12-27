@@ -17,7 +17,7 @@ namespace StructureMap.Testing.Building
             build.Set(x => x.Direction, "South");
             build.Set(x => x.Description, "Something");
 
-            var builder = build.ToDelegate().As<Func<IContext, MixedTarget>>();
+            var builder = build.ToDelegate<MixedTarget>();
 
             var target = builder(new FakeContext());
 

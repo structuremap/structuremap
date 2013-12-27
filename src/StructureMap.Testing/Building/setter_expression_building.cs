@@ -14,7 +14,7 @@ namespace StructureMap.Testing.Building
             step.Set(x => x.Color, "Red");
             step.Set(x => x.Direction, "North");
 
-            var builder = (Func<IContext, SetterTarget>) step.ToDelegate();
+            var builder = step.ToDelegate<SetterTarget>();
             SetterTarget target = builder(new FakeContext());
 
             target.Color.ShouldEqual("Red");
@@ -28,7 +28,7 @@ namespace StructureMap.Testing.Building
             step.Set(x => x.Color, "Red");
             step.Set(x => x.Direction, "North");
 
-            var builder = (Func<IContext, FieldTarget>)step.ToDelegate();
+            var builder = step.ToDelegate<FieldTarget>();
             FieldTarget target = builder(new FakeContext());
 
             target.Color.ShouldEqual("Red");

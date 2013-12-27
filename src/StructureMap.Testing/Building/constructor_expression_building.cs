@@ -16,7 +16,7 @@ namespace StructureMap.Testing.Building
 
             var context = new FakeContext();
 
-            var builder = (Func<IContext, CtorTarget>)step.ToDelegate();
+            var builder = step.ToDelegate<CtorTarget>();
             var target = builder(context);
 
             target.Name.ShouldEqual("Jeremy");
