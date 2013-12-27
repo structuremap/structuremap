@@ -9,5 +9,6 @@ namespace StructureMap
         object BuildNewInOriginalContext(Type pluginType, Instance instance);
         object ResolveFromLifecycle(Type pluginType, Instance instance);
         string RequestedName { get; set; }
+        T GetInstance<T>();
     }
 }

@@ -131,6 +131,7 @@
     <Compile Include="Building\ConcreteBuild.cs" />
     <Compile Include="Building\Constant.cs" />
     <Compile Include="Building\ConstructorStep.cs" />
+    <Compile Include="Building\DefaultDependencySource.cs" />
     <Compile Include="Building\DelegateExtensions.cs" />
     <Compile Include="Building\IBuildPlan.cs" />
     <Compile Include="Building\IDependencySource.cs" />

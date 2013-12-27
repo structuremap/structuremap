@@ -20,15 +20,6 @@ namespace StructureMap.Building
      */
 
 
-    public class BuildPlan
-    {
-        private readonly Instance _instance;
-
-        public BuildPlan(Instance instance)
-        {
-            _instance = instance;
-        }
-    }
 
 
     /*

@@ -10,6 +10,13 @@ namespace StructureMap.Testing.Building
         public readonly Cache<Type, Cache<Instance, object>> LifecycledObjects =
             new Cache<Type, Cache<Instance, object>>(type => new Cache<Instance, object>());
 
+        public readonly Cache<Type, object> Defaults = new Cache<Type, object>();
+
+        public void SetDefault<T>(T @object)
+        {
+            Defaults[typeof (T)] = @object;
+        }
+
         public object BuildNewInSession(Type pluginType, Instance instance)
         {
             throw new NotImplementedException();
@@ -26,5 +33,10 @@ namespace StructureMap.Testing.Building
         }
 
         public string RequestedName { get; set; }
+
+        public T GetInstance<T>()
+        {
+            return (T) Defaults[typeof (T)];
+        }
     }
 }
