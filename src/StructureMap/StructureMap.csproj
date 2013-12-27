@@ -322,8 +322,6 @@
     <Compile Include="IBootstrapper.cs" />
     <Compile Include="InitializationExpression.cs" />
     <Compile Include="Query\Model.cs" />
-    <Compile Include="Pipeline\BuildFrame.cs" />
-    <Compile Include="Pipeline\BuildStack.cs" />
     <Compile Include="Pipeline\ConfiguredInstanceBase.cs" />
     <Compile Include="Pipeline\IStructuredInstance.cs" />
     <Compile Include="Pipeline\SerializedInstance.cs" />

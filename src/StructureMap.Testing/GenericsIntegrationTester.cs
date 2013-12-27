@@ -45,19 +45,6 @@ namespace StructureMap.Testing
         {
         }
 
-        [Test]
-        public void Can_use_factory_method_with_open_generics()
-        {
-            var container = new Container();
-            container.Configure(x => x.For(typeof (IGenericType<>)).Use(f => {
-                Type generic = f.BuildStack.Current.RequestedType.GetGenericArguments()[0];
-                Type type = typeof (GenericType<>).MakeGenericType(generic);
-                return Activator.CreateInstance(type);
-            }));
-
-            var instance = container.GetInstance<IGenericType<string>>();
-            instance.ShouldBeOfType<GenericType<string>>();
-        }
 
         [Test]
         public void MultipleGenericTypes()

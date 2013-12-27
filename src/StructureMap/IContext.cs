@@ -1,26 +1,10 @@
 using System;
 using System.Collections.Generic;
-using StructureMap.Pipeline;
 
 namespace StructureMap
 {
     public interface IContext
     {
-        /// <summary>
-        /// Gets a reference to the <see cref="BuildStack">BuildStack</see> for this build session
-        /// </summary>
-        BuildStack BuildStack { get; }
-
-        /// <summary>
-        /// The concrete type of the immediate parent object in the object graph
-        /// </summary>
-        Type ParentType { get; }
-
-        /// <summary>
-        /// Gets the root "frame" of the object request
-        /// </summary>
-        BuildFrame Root { get; }
-
         /// <summary>
         /// The requested instance name of the object graph
         /// </summary>

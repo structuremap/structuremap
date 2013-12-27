@@ -119,7 +119,6 @@ namespace StructureMap.Diagnostics
             pipelineGraph.EachInstance((t, i) => {
                 if (t.IsOpenGeneric()) return;
 
-                _buildStack = new BuildStack();
                 validateInstance(t, i);
             });
         }

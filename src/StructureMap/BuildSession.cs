@@ -18,8 +18,6 @@ namespace StructureMap
         private readonly IPipelineGraph _pipelineGraph;
         private readonly ISessionCache _sessionCache;
 
-        [CLSCompliant(false)] protected BuildStack _buildStack = new BuildStack();
-
         public BuildSession(IPipelineGraph pipelineGraph, string requestedName = null, ExplicitArguments args = null)
         {
             _pipelineGraph = pipelineGraph;
@@ -36,20 +34,6 @@ namespace StructureMap
         }
 
         public string RequestedName { get; set; }
-
-        public BuildStack BuildStack
-        {
-            get { return _buildStack; }
-        }
-
-        public Type ParentType
-        {
-            get
-            {
-                if (_buildStack.Parent != null) return _buildStack.Parent.ConcreteType;
-                return null;
-            }
-        }
 
         public void BuildUp(object target)
         {
@@ -81,11 +65,6 @@ namespace StructureMap
         public object GetInstance(Type pluginType, string name)
         {
             return CreateInstance(pluginType, name);
-        }
-
-        BuildFrame IContext.Root
-        {
-            get { return _buildStack.Root; }
         }
 
         public T TryGetInstance<T>() where T : class
@@ -160,11 +139,6 @@ namespace StructureMap
         public static BuildSession Empty(ExplicitArguments args = null)
         {
             return ForPluginGraph(new PluginGraph(), args);
-        }
-
-        protected void clearBuildStack()
-        {
-            _buildStack = new BuildStack();
         }
 
         public virtual object CreateInstance(Type pluginType, string name)

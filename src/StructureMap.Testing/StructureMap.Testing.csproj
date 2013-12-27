@@ -277,7 +277,6 @@
     <Compile Include="InstanceMementoInstanceCreationTester.cs" />
     <Compile Include="ModelQueryTester.cs" />
     <Compile Include="ObjectFactoryInitializeTester.cs" />
-    <Compile Include="Pipeline\BuildStackTester.cs" />
     <Compile Include="Pipeline\BuildStrategiesTester.cs" />
     <Compile Include="Pipeline\ConfiguredInstanceTester.cs" />
     <Compile Include="Pipeline\ConstructorInstanceTester.cs" />

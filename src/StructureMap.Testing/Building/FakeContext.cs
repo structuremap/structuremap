@@ -6,9 +6,7 @@ namespace StructureMap.Testing.Building
 {
     public class FakeContext : IContext
     {
-        public BuildStack BuildStack { get; private set; }
         public Type ParentType { get; private set; }
-        public BuildFrame Root { get; private set; }
         public string RequestedName { get; private set; }
         public void BuildUp(object target)
         {

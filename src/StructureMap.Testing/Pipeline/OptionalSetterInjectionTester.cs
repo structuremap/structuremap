@@ -8,10 +8,6 @@ namespace StructureMap.Testing.Pipeline
     [TestFixture]
     public class OptionalSetterInjectionTester
     {
-        private static Logger createLogger(IContext session)
-        {
-            return new Logger(session.ParentType);
-        }
 
         [Test]
         public void AutoFill_a_property()
@@ -25,23 +21,6 @@ namespace StructureMap.Testing.Pipeline
 
 
             container.GetInstance<ClassWithDependency>().Rule.ShouldBeOfType(typeof (ColorRule));
-        }
-
-        [Test]
-        public void AutoFill_a_property_with_contextual_construction()
-        {
-            var container =
-                new Container(
-                    r => { r.FillAllPropertiesOfType<ILogger>().Use(context => new Logger(context.ParentType)); });
-
-            container.GetInstance<ClassWithLogger>().Logger.ShouldBeOfType<Logger>().Type.ShouldEqual(
-                typeof (ClassWithLogger));
-            container.GetInstance<ClassWithLogger2>().Logger.ShouldBeOfType<Logger>().Type.ShouldEqual(
-                typeof (ClassWithLogger2));
-
-            container.GetInstance<ClassWithClassWithLogger>().ClassWithLogger.Logger.ShouldBeOfType<Logger>().Type.
-                      ShouldEqual(
-                          typeof (ClassWithLogger));
         }
 
         [Test]

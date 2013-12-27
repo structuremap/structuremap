@@ -87,8 +87,6 @@ namespace StructureMap.Pipeline
 
         public virtual object Build(Type pluginType, BuildSession session)
         {
-            markBuildStackStart(session, pluginType);
-
             // "Build" the desired object
             object rawValue = createRawObject(pluginType, session);
 
@@ -96,24 +94,7 @@ namespace StructureMap.Pipeline
             // wrap with a decorator, or even replace the rawValue
             object finalValue = applyInterception(rawValue, pluginType, session);
 
-            markBuildStackFinish(session);
-
             return finalValue;
-        }
-
-        protected virtual void markBuildStackFinish(BuildSession session)
-        {
-            if (!doesRecordOnTheStack) return;
-
-            session.BuildStack.Pop();
-        }
-
-        protected virtual void markBuildStackStart(BuildSession session, Type pluginType)
-        {
-            if (!doesRecordOnTheStack) return;
-
-            var frame = new BuildFrame(pluginType, Name, getConcreteType(pluginType));
-            session.BuildStack.Push(frame);
         }
 
         private object createRawObject(Type pluginType, BuildSession session)

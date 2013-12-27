@@ -217,24 +217,7 @@ namespace StructureMap.Testing
         }
 
 
-        [Test]
-        public void when_building_an_instance_use_the_register_the_stack_frame()
-        {
-            var recordingInstance = new BuildSessionInstance1();
-            ConfiguredInstance instance =
-                new ConfiguredInstance(typeof (ClassWithRule)).Ctor<Rule>("rule").Is(recordingInstance);
-            var session = BuildSession.Empty();
 
-            session.FindObject(typeof (IClassWithRule), instance);
-
-            recordingInstance.Root.ConcreteType.ShouldEqual(typeof (ClassWithRule));
-            recordingInstance.Root.RequestedType.ShouldEqual(typeof (IClassWithRule));
-            recordingInstance.Root.Name.ShouldEqual(instance.Name);
-
-            recordingInstance.Current.ConcreteType.ShouldEqual(typeof (ColorRule));
-            recordingInstance.Current.RequestedType.ShouldEqual(typeof (Rule));
-            recordingInstance.Current.Name.ShouldEqual(recordingInstance.Name);
-        }
 
         [Test]
         public void When_calling_GetInstance_if_no_default_can_be_found_throw_202()
@@ -408,8 +391,6 @@ namespace StructureMap.Testing
 
     public class BuildSessionInstance1 : Instance
     {
-        public BuildFrame Current { get; set; }
-        public BuildFrame Root { get; set; }
 
         protected override string getDescription()
         {
@@ -423,9 +404,6 @@ namespace StructureMap.Testing
 
         protected override object build(Type pluginType, BuildSession session)
         {
-            Current = session.BuildStack.Current;
-            Root = session.BuildStack.Root;
-
             return new ColorRule("Red");
         }
     }

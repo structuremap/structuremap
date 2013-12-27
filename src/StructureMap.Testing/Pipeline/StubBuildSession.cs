@@ -22,17 +22,6 @@ namespace StructureMap.Testing.Pipeline
         {
         }
 
-        public new BuildStack BuildStack
-        {
-            get
-            {
-                var stack = new BuildStack();
-                stack.Push(new BuildFrame(typeof (Rule), "Blue", typeof (ColorRule)));
-                return stack;
-            }
-        }
-
-
         public InstanceBuilder FindBuilderByConcreteKey(Type pluginType, string concreteKey)
         {
             throw new NotImplementedException();
