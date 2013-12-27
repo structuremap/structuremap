@@ -95,14 +95,4 @@ namespace StructureMap.Building
         }
     }
 
-
-    /*
-     * Needs to consist of a couple different things -->
-     * 1.) 0..* IDependencySource's for constructor arguments
-     * 2.) 0..* IDependencySource's for setters
-     * 
-     * - Will need to be knowledgeable about interceptors
-     *   - no interceptors, then not much to do here
-     *   - wrap interceptors if need be
-     */
 }
