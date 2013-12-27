@@ -153,6 +153,7 @@ namespace StructureMap
         }
 
         // TODO -- really don't like this.  Could be better.
+        [Obsolete("Holy cow, that's awful!")]
         public IInstanceBuilder CreateBuilder(Plugin plugin)
         {
             _pipelineGraph.Outer.SetterRules.Configure(plugin);

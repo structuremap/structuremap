@@ -10,10 +10,9 @@ using StructureMap.Util;
 
 namespace StructureMap.Pipeline
 {
-    // TODO -- make the storage of raw values a bit more efficient.  Store by Instance
-    // TODO -- optimize the heck out of the Expression construction
     public class ConstructorInstance : Instance, IConfiguredInstance, IStructuredInstance
     {
+        [Obsolete("Can surely get rid of this")]
         private readonly Cache<string, Instance> _dependencies = new Cache<string, Instance>();
         private readonly object _locker = new object();
         private readonly Type _pluggedType;

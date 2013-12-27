@@ -1,5 +1,8 @@
+using System;
+
 namespace StructureMap.Pipeline
 {
+    [Obsolete("Try to get rid of this")]
     public interface IStructuredInstance
     {
         Instance GetChild(string name);

@@ -9,6 +9,7 @@ namespace StructureMap.Pipeline
         Ignore
     }
 
+    // TODO -- let's see if we can thin this down
     public interface IConfiguredInstance
     {
         string Name { get; }
