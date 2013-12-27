@@ -126,6 +126,7 @@
     <Compile Include="AutoMocking\AutoMockedContainer.cs" />
     <Compile Include="AutoMocking\AutoMocker.cs" />
     <Compile Include="AutoMocking\ServiceLocator.cs" />
+    <Compile Include="Building\ArrayDependencySource.cs" />
     <Compile Include="Building\BuildPlanClasses.cs" />
     <Compile Include="Building\ConcreteBuild.cs" />
     <Compile Include="Building\Constant.cs" />
@@ -134,6 +135,7 @@
     <Compile Include="Building\IBuildPlan.cs" />
     <Compile Include="Building\IDependencySource.cs" />
     <Compile Include="Building\LifecycleDependencySource.cs" />
+    <Compile Include="Building\ListDependencySource.cs" />
     <Compile Include="Building\LiteralPlan.cs" />
     <Compile Include="Building\Setter.cs" />
     <Compile Include="Building\StructureMapBuildException.cs" />

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
@@ -21,8 +18,6 @@ namespace StructureMap.Building
      * Setter w/ other build steps
      * 
      */
-
-
 
 
     public class BuildPlan
@@ -59,36 +54,6 @@ namespace StructureMap.Building
      */
 
 
-
-    public class ArrayDependencySource : IDependencySource
-    {
-        private readonly Type _pluginType;
-        private readonly List<IDependencySource> _items = new List<IDependencySource>();
-
-        public ArrayDependencySource(Type pluginType, params IDependencySource[] items)
-        {
-            _pluginType = pluginType;
-            _items.AddRange(items);
-        }
-
-        public void Add(IDependencySource item)
-        {
-            _items.Add(item);
-        }
-
-        public IEnumerable<IDependencySource> Items
-        {
-            get { return _items; }
-        }
-
-        public string Description { get; private set; }
-        public Expression ToExpression(ParameterExpression session)
-        {
-            return Expression.NewArrayInit(_pluginType, _items.Select(x => x.ToExpression(session)));
-        }
-    }
-
-
     public class InterceptionStep<T> : IDependencySource
     {
         private readonly InstanceInterceptor _interceptor;
@@ -122,15 +87,13 @@ namespace StructureMap.Building
     /// </summary>
     public class TransientStep : IDependencySource
     {
-
-
         public string Description { get; private set; }
+
         public Expression ToExpression(ParameterExpression session)
         {
             throw new NotImplementedException();
         }
     }
-
 
 
     /*
