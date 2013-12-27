@@ -16,8 +16,7 @@ namespace StructureMap.Testing.Building
 
             var context = new FakeBuildSession();
 
-            var builder = step.ToDelegate<CtorTarget>();
-            var target = builder(context);
+            var target = step.Build<CtorTarget>(context);
 
             target.Name.ShouldEqual("Jeremy");
             target.Age.ShouldEqual(39);

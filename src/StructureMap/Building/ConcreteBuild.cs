@@ -12,6 +12,8 @@ namespace StructureMap.Building
         private readonly Type _concreteType;
         private readonly ConstructorStep _constructor;
         private readonly IList<Setter> _setters = new List<Setter>();
+        private Lazy<Func<IBuildSession, object>> _func;
+
 
         public ConcreteBuild(Type concreteType) : this(concreteType, new Plugin(concreteType).GetConstructor())
         {
@@ -26,6 +28,9 @@ namespace StructureMap.Building
 
         protected ConcreteBuild(Type concreteType, ConstructorInfo constructor) : this(concreteType, new ConstructorStep(constructor))
         {
+            _func = new Lazy<Func<IBuildSession, object>>(() => {
+                return ToDelegate() as Func<IBuildSession, object>;
+            });
         }
 
         public Type ConcreteType
@@ -48,7 +53,10 @@ namespace StructureMap.Building
             get { return _constructor; }
         }
 
-        
+        public object Build(IBuildSession session)
+        {
+            return _func.Value(session);
+        }
 
         public string Description { get; private set; }
 

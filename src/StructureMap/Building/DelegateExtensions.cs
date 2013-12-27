@@ -9,9 +9,9 @@ namespace StructureMap.Building
             return @delegate.As<Func<IBuildSession, T>>();
         }
 
-        public static Func<IBuildSession, T> ToDelegate<T>(this IBuildPlan plan)
+        public static T Build<T>(this IBuildPlan plan, IBuildSession session) where T : class
         {
-            return plan.ToDelegate().As<Func<IBuildSession, T>>();
+            return plan.Build(session).As<T>();
         }
     }
 }

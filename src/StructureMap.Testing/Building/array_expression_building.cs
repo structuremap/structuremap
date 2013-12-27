@@ -24,7 +24,7 @@ namespace StructureMap.Testing.Building
 
             build.ConstructorArgs(array);
 
-            var arrayUser = build.ToDelegate<GatewayArrayUser>()(new FakeBuildSession());
+            var arrayUser = build.Build<GatewayArrayUser>(new FakeBuildSession());
         
             arrayUser.Gateways.ShouldHaveTheSameElementsAs(gateway1, gateway2, gateway3);
         }
@@ -44,7 +44,7 @@ namespace StructureMap.Testing.Building
 
             build.ConstructorArgs(array);
 
-            var enumerableUser = build.ToDelegate<GatewayEnumerableUser>()(new FakeBuildSession());
+            var enumerableUser = build.Build<GatewayEnumerableUser>(new FakeBuildSession());
 
             enumerableUser.Gateways.ShouldHaveTheSameElementsAs(gateway1, gateway2, gateway3);
         }
@@ -64,7 +64,7 @@ namespace StructureMap.Testing.Building
 
             build.ConstructorArgs(array);
 
-            var arrayUser = build.ToDelegate<GatewayIListUser>()(new FakeBuildSession());
+            var arrayUser = build.Build<GatewayIListUser>(new FakeBuildSession());
 
             arrayUser.Gateways.ShouldHaveTheSameElementsAs(gateway1, gateway2, gateway3);
         }

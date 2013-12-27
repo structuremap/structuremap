@@ -18,7 +18,7 @@ namespace StructureMap.Testing.Building
             var build = new ConcreteBuild<GuyWhoUsesGateway>();
             build.ConstructorArgs(new DefaultDependencySource(typeof (IGateway)));
 
-            build.ToDelegate<GuyWhoUsesGateway>()(session)
+            build.Build<GuyWhoUsesGateway>(session)
                 .Gateway.ShouldBeTheSameAs(gateway);
         }
     }
@@ -39,7 +39,7 @@ namespace StructureMap.Testing.Building
             var build = new ConcreteBuild<GuyWhoUsesGateway>();
             build.ConstructorArgs(new ReferencedDependencySource(typeof(IGateway), "Blue"));
 
-            build.ToDelegate<GuyWhoUsesGateway>()(session)
+            build.Build<GuyWhoUsesGateway>(session)
                 .Gateway.ShouldBeTheSameAs(gateway2);
         }
     }

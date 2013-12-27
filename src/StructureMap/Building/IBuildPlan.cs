@@ -4,6 +4,6 @@ namespace StructureMap.Building
 {
     public interface IBuildPlan
     {
-        Delegate ToDelegate();
+        object Build(IBuildSession session);
     }
 }

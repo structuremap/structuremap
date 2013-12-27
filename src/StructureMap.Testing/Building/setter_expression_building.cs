@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.Eventing.Reader;
 using NUnit.Framework;
 using StructureMap.Building;
 
@@ -14,8 +15,7 @@ namespace StructureMap.Testing.Building
             step.Set(x => x.Color, "Red");
             step.Set(x => x.Direction, "North");
 
-            var builder = step.ToDelegate<SetterTarget>();
-            SetterTarget target = builder(new FakeBuildSession());
+            SetterTarget target = step.Build<SetterTarget>(new FakeBuildSession());
 
             target.Color.ShouldEqual("Red");
             target.Direction.ShouldEqual("North");
@@ -28,8 +28,7 @@ namespace StructureMap.Testing.Building
             step.Set(x => x.Color, "Red");
             step.Set(x => x.Direction, "North");
 
-            var builder = step.ToDelegate<FieldTarget>();
-            FieldTarget target = builder(new FakeBuildSession());
+            FieldTarget target = step.Build<FieldTarget>(new FakeBuildSession());
 
             target.Color.ShouldEqual("Red");
             target.Direction.ShouldEqual("North");

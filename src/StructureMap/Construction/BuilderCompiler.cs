@@ -5,6 +5,7 @@ using StructureMap.Graph;
 
 namespace StructureMap.Construction
 {
+    [Obsolete("Probably going away soon")]
     public class BuilderCompiler
     {
         public static InstanceBuilder CreateBuilder(Plugin plugin)

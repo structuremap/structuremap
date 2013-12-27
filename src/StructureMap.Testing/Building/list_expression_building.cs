@@ -23,7 +23,7 @@ namespace StructureMap.Testing.Building
 
             build.ConstructorArgs(array);
 
-            var arrayUser = build.ToDelegate<GatewayListUser>()(new FakeBuildSession());
+            var arrayUser = build.Build<GatewayListUser>(new FakeBuildSession());
 
             arrayUser.Gateways.ShouldHaveTheSameElementsAs(gateway1, gateway2, gateway3);
         }

@@ -23,7 +23,7 @@ namespace StructureMap.Testing.Building
             var arg = new LifecycleDependencySource(typeof (IGateway), instance);
             build.ConstructorArgs(arg);
 
-            var target = build.ToDelegate<LifecycleTarget>()(session);
+            var target = build.Build<LifecycleTarget>(session);
             target.Gateway.ShouldBeTheSameAs(gateway);
 
         }

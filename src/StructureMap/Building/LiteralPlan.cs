@@ -18,10 +18,9 @@ namespace StructureMap.Building
             get { return _description; }
         }
 
-        public Delegate ToDelegate()
+        public object Build(IBuildSession session)
         {
-            Func<IBuildSession, T> func = c => _object;
-            return func;
+            return _object;
         }
     }
 }
