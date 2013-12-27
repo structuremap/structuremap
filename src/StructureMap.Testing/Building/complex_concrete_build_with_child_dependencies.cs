@@ -22,7 +22,7 @@ namespace StructureMap.Testing.Building
 
             build.Set(x => x.Referee, new ConcreteBuild<Referee>().ConstructorArgs("John", "Smith"));
 
-            game = build.ToDelegate<Game>()(new FakeContext());
+            game = build.ToDelegate<Game>()(new FakeSession());
         }
 
         [Test]

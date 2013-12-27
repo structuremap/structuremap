@@ -57,8 +57,8 @@ namespace StructureMap.Building
         {
             var inner = ToExpression();
 
-            var lambdaType = typeof (Func<,>).MakeGenericType(typeof (IContext), _concreteType);
-            var argument = Expression.Parameter(typeof (IContext), "c");
+            var lambdaType = typeof (Func<,>).MakeGenericType(typeof (IBuildSession), _concreteType);
+            var argument = Expression.Parameter(typeof (IBuildSession), "s");
             
             var lambda = Expression.Lambda(lambdaType, inner, argument);
 

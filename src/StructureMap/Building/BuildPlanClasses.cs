@@ -172,14 +172,14 @@ namespace StructureMap.Building
 
     public static class DelegateExtensions
     {
-        public static Func<IContext, T> BuilderOf<T>(this Delegate @delegate)
+        public static Func<IBuildSession, T> BuilderOf<T>(this Delegate @delegate)
         {
-            return @delegate.As<Func<IContext, T>>();
+            return @delegate.As<Func<IBuildSession, T>>();
         }
 
-        public static Func<IContext, T> ToDelegate<T>(this IBuildPlan plan)
+        public static Func<IBuildSession, T> ToDelegate<T>(this IBuildPlan plan)
         {
-            return plan.ToDelegate().As<Func<IContext, T>>();
+            return plan.ToDelegate().As<Func<IBuildSession, T>>();
         }
     }
 }

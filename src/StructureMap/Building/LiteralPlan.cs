@@ -20,7 +20,7 @@ namespace StructureMap.Building
 
         public Delegate ToDelegate()
         {
-            Func<IContext, T> func = c => _object;
+            Func<IBuildSession, T> func = c => _object;
             return func;
         }
     }
