@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq.Expressions;
-using System.Reflection;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
 
@@ -57,19 +56,6 @@ namespace StructureMap.Building
      */
 
 
-
-    // TODO -- maybe make this much lighter.
-    public interface IDependencySource
-    {
-        string Description { get; }
-        Expression ToExpression(ParameterExpression session);
-    }
-
-    public interface IBuildPlan
-    {
-        Delegate ToDelegate();
-    }
-
     public class InterceptionStep<T> : IDependencySource
     {
         private readonly InstanceInterceptor _interceptor;
@@ -98,34 +84,6 @@ namespace StructureMap.Building
     }
 
 
-    public class LifecycleDependencySource : IDependencySource
-    {
-        public static MethodInfo SessionMethod =
-            ReflectionHelper.GetMethod<IBuildSession>(x => x.ResolveFromLifecycle(null, null));
-
-        private readonly Type _pluginType;
-        private readonly Instance _instance;
-
-        public LifecycleDependencySource(Type pluginType, Instance instance)
-        {
-            _pluginType = pluginType;
-            _instance = instance;
-        }
-
-        public string Description { get; private set; }
-
-        public Expression ToExpression(ParameterExpression session)
-        {
-            var typeArg = Expression.Constant(_pluginType);
-            var instanceArg = Expression.Constant(_instance);
-
-            var method = Expression.Call(session, SessionMethod, typeArg, instanceArg);
-            
-
-            return Expression.Convert(method, _pluginType);
-        }
-    }
-
     /// <summary>
     /// Wraps with direct access to the IContext.Transient stuff
     /// </summary>
@@ -140,37 +98,7 @@ namespace StructureMap.Building
         }
     }
 
-    public class InstanceStep : IDependencySource
-    {
-        private readonly Type _pluginType;
-        private readonly Instance _instance;
 
-        public InstanceStep(Type pluginType, Instance instance)
-        {
-            _pluginType = pluginType;
-            _instance = instance;
-        }
-
-        public string Description
-        {
-            get { return _instance.Description; }
-        }
-
-        public Instance Instance
-        {
-            get { return _instance; }
-        }
-
-        public Type PluginType
-        {
-            get { return _pluginType; }
-        }
-
-        public Expression ToExpression(ParameterExpression session)
-        {
-            throw new NotImplementedException();
-        }
-    }
 
     /*
      * Needs to consist of a couple different things -->
@@ -181,18 +109,4 @@ namespace StructureMap.Building
      *   - no interceptors, then not much to do here
      *   - wrap interceptors if need be
      */
-
-
-    public static class DelegateExtensions
-    {
-        public static Func<IBuildSession, T> BuilderOf<T>(this Delegate @delegate)
-        {
-            return @delegate.As<Func<IBuildSession, T>>();
-        }
-
-        public static Func<IBuildSession, T> ToDelegate<T>(this IBuildPlan plan)
-        {
-            return plan.ToDelegate().As<Func<IBuildSession, T>>();
-        }
-    }
 }
