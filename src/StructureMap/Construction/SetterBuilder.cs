@@ -4,6 +4,7 @@ using System.Reflection;
 
 namespace StructureMap.Construction
 {
+    [Obsolete("Will be unnecessary after BuildPlan is in place")]
     public class SetterBuilder<T>
     {
         public Action<IArguments, T> BuildMandatorySetter(string propertyName)

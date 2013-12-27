@@ -1,7 +1,9 @@
+using System;
 using StructureMap.Construction;
 
 namespace StructureMap.Pipeline
 {
+    [Obsolete("Going to remove in favor of the new 'BuildPlan'")]
     public class Arguments : IArguments
     {
         private readonly IConfiguredInstance _instance;

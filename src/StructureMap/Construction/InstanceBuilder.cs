@@ -13,6 +13,7 @@ namespace StructureMap.Construction
     /// Base class for creating an object instance from an InstanceMemento.  SubClasses are
     /// emitted for each concrete Plugin with constructor parameters.
     /// </summary>
+    [Obsolete("Will be unnecessary when we're able to switch to the build plan")]
     public class InstanceBuilder : IInstanceBuilder
     {
         private readonly Action<IArguments, object> _buildUp;

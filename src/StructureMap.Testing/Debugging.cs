@@ -12,22 +12,13 @@ using StructureMap.Testing.Graph;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
 using System.Linq;
+using SetterTarget = StructureMap.Testing.Building.SetterTarget;
 
 namespace StructureMap.Testing
 {
     [TestFixture, Explicit]
     public class Debugging
     {
-        [Test]
-        public void expression_playing()
-        {
-            Expression<Func<IBuildSession, UsesGateways>> expression =
-                session => new UsesGateways(new IGateway[]{new StubbedGateway(), new DefaultGateway()}.ToList());
-
-            Debug.WriteLine(expression);
-        }
-
-
 
         [Test]
         public void look_at_expression()

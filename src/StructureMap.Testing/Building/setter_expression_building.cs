@@ -2,6 +2,7 @@
 using System.Diagnostics.Eventing.Reader;
 using NUnit.Framework;
 using StructureMap.Building;
+using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Building
 {
@@ -39,6 +40,8 @@ namespace StructureMap.Testing.Building
     {
         public string Color { get; set; }
         public string Direction { get; set; }
+
+        public IGateway Gateway { get; set; }
     }
 
     public class FieldTarget

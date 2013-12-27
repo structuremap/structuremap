@@ -12,7 +12,7 @@ namespace StructureMap.Building
         private readonly Type _concreteType;
         private readonly ConstructorStep _constructor;
         private readonly IList<Setter> _setters = new List<Setter>();
-        private Lazy<Func<IBuildSession, object>> _func;
+        private readonly Lazy<Func<IBuildSession, object>> _func;
 
 
         public ConcreteBuild(Type concreteType) : this(concreteType, new Plugin(concreteType).GetConstructor())

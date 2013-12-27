@@ -128,6 +128,7 @@
     <Compile Include="AutoMocking\ServiceLocator.cs" />
     <Compile Include="Building\ArrayDependencySource.cs" />
     <Compile Include="Building\BuildPlanClasses.cs" />
+    <Compile Include="Building\BuildUpPlan.cs" />
     <Compile Include="Building\ConcreteBuild.cs" />
     <Compile Include="Building\Constant.cs" />
     <Compile Include="Building\ConstructorStep.cs" />
