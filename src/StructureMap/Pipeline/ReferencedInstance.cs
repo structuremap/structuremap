@@ -25,8 +25,6 @@ namespace StructureMap.Pipeline
 
         public string ReferenceKey { get { return _referenceKey; } }
 
-        protected override bool doesRecordOnTheStack { get { return false; } }
-
         #region IEquatable<ReferencedInstance> Members
 
         public bool Equals(ReferencedInstance referencedInstance)

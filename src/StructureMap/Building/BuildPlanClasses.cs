@@ -73,17 +73,4 @@ namespace StructureMap.Building
     }
 
 
-    /// <summary>
-    /// Wraps with direct access to the IContext.Transient stuff
-    /// </summary>
-    public class TransientStep : IDependencySource
-    {
-        public string Description { get; private set; }
-
-        public Expression ToExpression(ParameterExpression session)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
 }

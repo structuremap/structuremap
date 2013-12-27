@@ -36,11 +36,6 @@ namespace StructureMap.Pipeline
             }
         }
 
-        protected virtual bool doesRecordOnTheStack
-        {
-            get { return true; }
-        }
-
         public InstanceInterceptor Interceptor
         {
             get { return _interceptor; }
