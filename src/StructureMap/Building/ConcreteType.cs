@@ -68,16 +68,16 @@ namespace StructureMap.Building
             {
                 if (dependencyType.IsSimple())
                 {
+                    // TODO -- needs to throw an exception
                     throw new NotImplementedException();
                 }
-                else if (EnumerableInstance.IsEnumerable(dependencyType))
+                
+                if (EnumerableInstance.IsEnumerable(dependencyType))
                 {
-                    throw new NotImplementedException();
+                    return new AllPossibleValuesDependencySource(dependencyType, EnumerableInstance.DetermineElementType(dependencyType));
                 }
-                else
-                {
-                    return new DefaultDependencySource(dependencyType);
-                }
+                
+                return new DefaultDependencySource(dependencyType);
             }
 
             if (value is Instance)
@@ -102,7 +102,7 @@ namespace StructureMap.Building
                 throw new NotImplementedException();
             }
 
-            throw new NotImplementedException();
+            throw new NotSupportedException("Unable to determine how to source dependency {0} and value '{1}'".ToFormat(dependencyType, value));
         }
     }
 }

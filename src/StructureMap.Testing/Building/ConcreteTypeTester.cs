@@ -76,7 +76,7 @@ namespace StructureMap.Testing.Building
                 .ShouldEqual(Constant.For(BreedEnum.Angus));
         }
 
-        [Test, Ignore("next step")]
+        [Test, Ignore("For now, just coercion though")]
         public void array_can_be_coerced_to_concrete_list()
         {
             var list = new IGateway[] { new StubbedGateway(), new StubbedGateway() };
@@ -90,6 +90,36 @@ namespace StructureMap.Testing.Building
 
         }
 
+        [Test]
+        public void use_all_possible_for_array()
+        {
+            var enumerableType = typeof (IGateway[]);
+            ConcreteType.SourceFor(enumerableType, null)
+                .ShouldEqual(new AllPossibleValuesDependencySource(enumerableType, typeof (IGateway)));
+        }
 
+        [Test]
+        public void use_all_possible_for_ienumerable()
+        {
+            var enumerableType = typeof(IEnumerable<IGateway>);
+            ConcreteType.SourceFor(enumerableType, null)
+                .ShouldEqual(new AllPossibleValuesDependencySource(enumerableType, typeof(IGateway)));
+        }
+
+        [Test]
+        public void use_all_possible_for_ilist()
+        {
+            var enumerableType = typeof(IList<IGateway>);
+            ConcreteType.SourceFor(enumerableType, null)
+                .ShouldEqual(new AllPossibleValuesDependencySource(enumerableType, typeof(IGateway)));
+        }
+
+        [Test]
+        public void use_all_possible_for_list()
+        {
+            var enumerableType = typeof(List<IGateway>);
+            ConcreteType.SourceFor(enumerableType, null)
+                .ShouldEqual(new AllPossibleValuesDependencySource(enumerableType, typeof(IGateway)));
+        }
     }
 }
