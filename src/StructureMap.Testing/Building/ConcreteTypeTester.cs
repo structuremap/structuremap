@@ -76,18 +76,52 @@ namespace StructureMap.Testing.Building
                 .ShouldEqual(Constant.For(BreedEnum.Angus));
         }
 
-        [Test, Ignore("For now, just coercion though")]
+        [Test]
         public void array_can_be_coerced_to_concrete_list()
         {
-            var list = new IGateway[] { new StubbedGateway(), new StubbedGateway() };
-            var constant = ConcreteType.SourceFor(typeof (List<IGateway>), list)
+            var array = new IGateway[] { new StubbedGateway(), new StubbedGateway() };
+            var constant = ConcreteType.SourceFor(typeof (List<IGateway>), array)
                 .ShouldBeOfType<Constant>();
 
             constant.ArgumentType.ShouldEqual(typeof (List<IGateway>));
             constant.Value.As<List<IGateway>>()
+                .ShouldHaveTheSameElementsAs(array);
+        }
+
+        [Test]
+        public void array_can_be_coerced_to_concrete_ilist()
+        {
+            var array = new IGateway[] { new StubbedGateway(), new StubbedGateway() };
+            var constant = ConcreteType.SourceFor(typeof(IList<IGateway>), array)
+                .ShouldBeOfType<Constant>();
+
+            constant.ArgumentType.ShouldEqual(typeof(IList<IGateway>));
+            constant.Value.As<IList<IGateway>>()
+                .ShouldHaveTheSameElementsAs(array);
+        }
+
+        [Test]
+        public void array_can_be_coerced_to_enumerable()
+        {
+            var list = new IGateway[] { new StubbedGateway(), new StubbedGateway() };
+            var constant = ConcreteType.SourceFor(typeof(List<IGateway>), list)
+                .ShouldBeOfType<Constant>();
+
+            constant.ArgumentType.ShouldEqual(typeof(List<IGateway>));
+            constant.Value.As<List<IGateway>>()
                 .ShouldHaveTheSameElementsAs(list);
+        }
 
+        [Test]
+        public void list_can_be_coerced_to_array()
+        {
+            var list = new List<IGateway> { new StubbedGateway(), new StubbedGateway() };
+            var constant = ConcreteType.SourceFor(typeof(IGateway[]), list)
+                .ShouldBeOfType<Constant>();
 
+            constant.ArgumentType.ShouldEqual(typeof(IGateway[]));
+            constant.Value.As<IGateway[]>()
+                .ShouldHaveTheSameElementsAs(list.ToArray());
         }
 
         [Test]

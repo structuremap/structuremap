@@ -42,7 +42,6 @@ namespace StructureMap.Testing.Building
         [Test]
         public void can_build_with_ienumerable_dependency()
         {
-
             var build = new ConcreteBuild<GatewayEnumerableUser>();
 
             build.ConstructorArgs(new AllPossibleValuesDependencySource(typeof(IEnumerable<IGateway>)));

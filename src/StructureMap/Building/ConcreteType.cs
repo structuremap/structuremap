@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
@@ -61,9 +63,6 @@ namespace StructureMap.Building
 
         public static IDependencySource SourceFor(Type dependencyType, object value)
         {
-            // TODO: Could be Instance, could be a value, could be null so use default
-            // if a value type and missing, throw
-
             if (value == null)
             {
                 if (dependencyType.IsSimple())
@@ -98,8 +97,10 @@ namespace StructureMap.Building
             
             if (EnumerableInstance.IsEnumerable(dependencyType))
             {
-                // TODO -- do some coercion here
-                throw new NotImplementedException();
+                var coercion = EnumerableInstance.DetermineCoercion(dependencyType);
+                var coercedValue = coercion.Convert(value.As<IEnumerable<object>>());
+
+                return new Constant(dependencyType, coercedValue);
             }
 
             throw new NotSupportedException("Unable to determine how to source dependency {0} and value '{1}'".ToFormat(dependencyType, value));
