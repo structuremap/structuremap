@@ -156,8 +156,16 @@ namespace StructureMap
         [Obsolete("Holy cow, that's awful!")]
         public IInstanceBuilder CreateBuilder(Plugin plugin)
         {
-            _pipelineGraph.Outer.SetterRules.Configure(plugin);
+            Policies.SetterRules.Configure(plugin);
             return plugin.CreateBuilder();
+        }
+
+        public Policies Policies
+        {
+            get
+            {
+                return _pipelineGraph.Outer.Policies;
+            }
         }
     }
 }

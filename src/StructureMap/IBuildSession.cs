@@ -3,13 +3,11 @@ using StructureMap.Pipeline;
 
 namespace StructureMap
 {
-    public interface IBuildSession
+    public interface IBuildSession : IContext
     {
         object BuildNewInSession(Type pluginType, Instance instance);
         object BuildNewInOriginalContext(Type pluginType, Instance instance);
         object ResolveFromLifecycle(Type pluginType, Instance instance);
-        string RequestedName { get; set; }
-        T GetInstance<T>();
-        T GetInstance<T>(string name);
+        Policies Policies { get; }
     }
 }

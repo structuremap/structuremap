@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -9,7 +10,7 @@ namespace StructureMap.Building
         private readonly Type _dependencyType;
 
         public static MethodInfo SessionMethod =
-            typeof(IBuildSession).GetMethod("GetInstance", new Type[0]);
+            typeof(IContext).GetMethods().FirstOrDefault(x => x.Name == "GetInstance" && x.IsGenericMethod && x.GetParameters().Count() == 0);
 
 
         public DefaultDependencySource(Type dependencyType)

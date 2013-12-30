@@ -32,10 +32,11 @@ namespace StructureMap.Graph
         private readonly LifecycleObjectCache _singletonCache = new LifecycleObjectCache();
 
         private readonly LightweightCache<string, PluginGraph> _profiles;
-        private readonly SetterRules _setterRules;
 
         [Obsolete("Wanna kill this after the BuildPlan business is in place")]
         private readonly Cache<Type, IInstanceBuilder> _builders; 
+
+        public readonly Policies Policies = new Policies();
 
         public PluginGraph()
         {
@@ -50,11 +51,9 @@ namespace StructureMap.Graph
 
             _families.OnAddition = family => family.Owner = this;
 
-            _setterRules = new SetterRules();
-
             _builders = new Cache<Type, IInstanceBuilder>(type => {
                 var plugin = new Plugin(type);
-                _setterRules.Configure(plugin);
+                Policies.SetterRules.Configure(plugin);
 
                 return plugin.CreateBuilder();
             });
@@ -63,11 +62,6 @@ namespace StructureMap.Graph
         public IInstanceBuilder BuilderFor(Type pluggedType)
         {
             return _builders[pluggedType];
-        }
-
-        public SetterRules SetterRules
-        {
-            get { return _setterRules; }
         }
 
         public PluginGraph Parent { get; set; }

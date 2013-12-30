@@ -185,7 +185,7 @@ namespace StructureMap.Configuration.DSL
         {
             Func<PropertyInfo, bool> predicate = prop => prop.PropertyType == typeof (TPluginType);
 
-            alter = graph => graph.SetterRules.Add(predicate);
+            alter = graph => graph.Policies.SetterRules.Add(predicate);
 
             return For<TPluginType>();
         }
@@ -201,7 +201,7 @@ namespace StructureMap.Configuration.DSL
             var convention = new SetterConvention();
             action(convention);
 
-            alter = graph => convention.As<SetterConventionRule>().Configure(graph.SetterRules);
+            alter = graph => convention.As<SetterConventionRule>().Configure(graph.Policies.SetterRules);
         }
 
         /// <summary>
