@@ -87,7 +87,15 @@ namespace StructureMap.Pipeline
         {
             var value = _dependencies.FindByTypeOrName(pluginType, propertyName);
 
-            if (value == null) return new DefaultInstance().Build(pluginType, session);
+            if (value == null)
+            {
+                if (pluginType.IsSimple() || pluginType == typeof(string))
+                {
+                    throw new StructureMapException(205, propertyName, Name);
+                }
+
+                return new DefaultInstance().Build(pluginType, session);
+            }
 
             return value is Instance ? value.As<Instance>().Build(pluginType, session) : value;
         }
