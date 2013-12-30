@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -11,7 +10,8 @@ namespace StructureMap.Building
 {
     public static class ConcreteType
     {
-        public static IBuildPlan BuildPlan(Type pluggedType, ConstructorInfo constructor, DependencyCollection dependencies, Policies policies)
+        public static IBuildPlan BuildPlan(Type pluggedType, ConstructorInfo constructor,
+            DependencyCollection dependencies, Policies policies)
         {
             var ctorStep = BuildConstructorStep(pluggedType, constructor, dependencies, policies);
 
@@ -22,7 +22,8 @@ namespace StructureMap.Building
             return plan;
         }
 
-        private static void determineSetterSources(Type pluggedType, DependencyCollection dependencies, Policies policies,
+        private static void determineSetterSources(Type pluggedType, DependencyCollection dependencies,
+            Policies policies,
             ConcreteBuild plan)
         {
             var setters = pluggedType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
@@ -32,7 +33,8 @@ namespace StructureMap.Building
             setters.Each(setter => determineSetterSource(dependencies, policies, setter, plan));
         }
 
-        private static void determineSetterSource(DependencyCollection dependencies, Policies policies, PropertyInfo setter,
+        private static void determineSetterSource(DependencyCollection dependencies, Policies policies,
+            PropertyInfo setter,
             ConcreteBuild plan)
         {
             var dependency = dependencies.FindByTypeOrName(setter.PropertyType, setter.Name);
@@ -67,15 +69,15 @@ namespace StructureMap.Building
             {
                 if (dependencyType.IsSimple())
                 {
-                    // TODO -- needs to throw an exception
+                    // TODO -- needs to throw an exception message
                     throw new NotImplementedException();
                 }
-                
+
                 if (EnumerableInstance.IsEnumerable(dependencyType))
                 {
                     return new AllPossibleValuesDependencySource(dependencyType);
                 }
-                
+
                 return new DefaultDependencySource(dependencyType);
             }
 
@@ -94,7 +96,7 @@ namespace StructureMap.Building
                 var converter = TypeDescriptor.GetConverter(dependencyType);
                 return new Constant(dependencyType, converter.ConvertFrom(value));
             }
-            
+
             if (EnumerableInstance.IsEnumerable(dependencyType))
             {
                 var coercion = EnumerableInstance.DetermineCoercion(dependencyType);
@@ -103,7 +105,8 @@ namespace StructureMap.Building
                 return new Constant(dependencyType, coercedValue);
             }
 
-            throw new NotSupportedException("Unable to determine how to source dependency {0} and value '{1}'".ToFormat(dependencyType, value));
+            throw new NotSupportedException(
+                "Unable to determine how to source dependency {0} and value '{1}'".ToFormat(dependencyType, value));
         }
     }
 }
