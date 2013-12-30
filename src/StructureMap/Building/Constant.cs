@@ -25,10 +25,46 @@ namespace StructureMap.Building
             _value = value;
         }
 
+        public Type ArgumentType
+        {
+            get { return _argumentType; }
+        }
+
+        public object Value
+        {
+            get { return _value; }
+        }
+
         public string Description { get; private set; }
         public Expression ToExpression(ParameterExpression session)
         {
             return Expression.Constant(_value, _argumentType);
+        }
+
+        protected bool Equals(Constant other)
+        {
+            return Equals(_argumentType, other._argumentType) && Equals(_value, other._value);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Constant) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return ((_argumentType != null ? _argumentType.GetHashCode() : 0)*397) ^ (_value != null ? _value.GetHashCode() : 0);
+            }
+        }
+
+        public override string ToString()
+        {
+            return string.Format("ArgumentType: {0}, Value: {1}", _argumentType, _value);
         }
     }
 }

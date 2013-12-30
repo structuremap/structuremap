@@ -17,6 +17,11 @@ namespace StructureMap.Building
             _dependencyType = dependencyType;
         }
 
+        public Type DependencyType
+        {
+            get { return _dependencyType; }
+        }
+
         public string Description { get; private set; }
         public Expression ToExpression(ParameterExpression session)
         {

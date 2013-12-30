@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using StructureMap.Building;
 
 namespace StructureMap.Pipeline
 {
@@ -48,5 +49,6 @@ namespace StructureMap.Pipeline
             public Type Type;
             public object Dependency;
         }
+
     }
 }

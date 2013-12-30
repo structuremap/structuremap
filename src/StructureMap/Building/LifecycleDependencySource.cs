@@ -19,6 +19,16 @@ namespace StructureMap.Building
             _instance = instance;
         }
 
+        public Type PluginType
+        {
+            get { return _pluginType; }
+        }
+
+        public Instance Instance
+        {
+            get { return _instance; }
+        }
+
         public string Description { get; private set; }
 
         public Expression ToExpression(ParameterExpression session)

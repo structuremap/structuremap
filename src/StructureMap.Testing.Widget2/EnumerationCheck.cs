@@ -6,7 +6,8 @@ namespace StructureMap.Testing.Widget2
     {
         Hereford,
         Angus,
-        Longhorn
+        Longhorn, 
+        Beefmaster
     }
 
     [Pluggable("Cow")]

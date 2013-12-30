@@ -130,6 +130,7 @@
     <Compile Include="Building\BuildPlanClasses.cs" />
     <Compile Include="Building\BuildUpPlan.cs" />
     <Compile Include="Building\ConcreteBuild.cs" />
+    <Compile Include="Building\ConcreteType.cs" />
     <Compile Include="Building\Constant.cs" />
     <Compile Include="Building\ConstructorStep.cs" />
     <Compile Include="Building\DefaultDependencySource.cs" />
@@ -143,6 +144,7 @@
     <Compile Include="Building\Setter.cs" />
     <Compile Include="Building\StructureMapBuildException.cs" />
     <Compile Include="BuildSession.cs" />
+    <Compile Include="Policies.cs" />
     <Compile Include="ComplexPipelineGraph.cs" />
     <Compile Include="Configuration\DSL\Expressions\GenericFamilyExpression.cs" />
     <Compile Include="Configuration\IPluginGraphConfiguration.cs" />

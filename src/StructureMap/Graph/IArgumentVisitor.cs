@@ -1,7 +1,9 @@
+using System;
 using System.Reflection;
 
 namespace StructureMap.Graph
 {
+    [Obsolete("Going to make this go away")]
     public interface IArgumentVisitor
     {
         void PrimitiveSetter(PropertyInfo property, bool isMandatory);

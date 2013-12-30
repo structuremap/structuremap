@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using StructureMap.Attributes;
 using StructureMap.TypeRules;
@@ -37,6 +38,11 @@ namespace StructureMap.Graph
         public void Add(IEnumerable<Func<PropertyInfo, bool>> rules)
         {
             _setterRules.AddRange(rules);
+        }
+
+        public bool IsMandatory(PropertyInfo propertyInfo)
+        {
+            return _setterRules.Any(x => x(propertyInfo));
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -8,10 +9,12 @@ namespace StructureMap.Building
     public class ConstructorStep
     {
         private readonly ConstructorInfo _constructor;
-        private readonly IList<IDependencySource> _arguments = new List<IDependencySource>(); 
+        private readonly List<IDependencySource> _arguments = new List<IDependencySource>(); 
 
         public ConstructorStep(ConstructorInfo constructor)
         {
+            if (constructor == null) throw new ArgumentNullException("constructor");
+
             _constructor = constructor;
         }
 
@@ -40,6 +43,9 @@ namespace StructureMap.Building
             return Expression.New(_constructor, _arguments.Select(x => x.ToExpression(session)));
         }
 
-
+        public void Add(IEnumerable<IDependencySource> arguments)
+        {
+            _arguments.AddRange(arguments);
+        }
     }
 }
