@@ -285,6 +285,7 @@
     <Compile Include="Pipeline\BuildStrategiesTester.cs" />
     <Compile Include="Pipeline\ConfiguredInstanceTester.cs" />
     <Compile Include="Pipeline\ConstructorInstanceTester.cs" />
+    <Compile Include="Pipeline\DependencyCollectionTester.cs" />
     <Compile Include="Pipeline\EnumerableInstanceTester.cs" />
     <Compile Include="Pipeline\Instance_finding_its_owner.cs" />
     <Compile Include="Pipeline\LambdaInstanceTester.cs" />

@@ -182,6 +182,7 @@
     <Compile Include="Pipeline\ArrayDefinitionExpression.cs" />
     <Compile Include="Pipeline\ConfiguredInstance.cs" />
     <Compile Include="Pipeline\ConfiguredInstance.Expressions.cs" />
+    <Compile Include="Pipeline\DependencyCollection.cs" />
     <Compile Include="Pipeline\DependencyExpression.cs" />
     <Compile Include="Pipeline\ExpressedInstance.cs" />
     <Compile Include="Pipeline\IDiagnosticInstance.cs" />
