@@ -2,10 +2,12 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using StructureMap.Pipeline;
 using StructureMap.TypeRules;
 
 namespace StructureMap.Graph
 {
+    [Obsolete("Making this go away w/ the new IConstructorSelector")]
     public class Constructor
     {
         private readonly Type _pluggedType;
@@ -33,39 +35,12 @@ namespace StructureMap.Graph
         /// <returns></returns>
         public static ConstructorInfo GetConstructor(Type pluggedType)
         {
-            ConstructorInfo returnValue = DefaultConstructorAttribute.GetConstructor(pluggedType);
-
-            // if no constructor is marked as the "ContainerConstructor", find the greediest constructor
-            if (returnValue == null)
-            {
-                returnValue = GetGreediestConstructor(pluggedType);
-            }
-
-            return returnValue;
+            return new ConstructorSelector().Select(pluggedType);
         }
 
         public static bool HasConstructors(Type pluggedType)
         {
-            return GetGreediestConstructor(pluggedType) != null;
-        }
-
-        public static ConstructorInfo GetGreediestConstructor(Type TPluggedType)
-        {
-            ConstructorInfo returnValue = null;
-
-            foreach (ConstructorInfo constructor in TPluggedType.GetConstructors())
-            {
-                if (returnValue == null)
-                {
-                    returnValue = constructor;
-                }
-                else if (constructor.GetParameters().Length > returnValue.GetParameters().Length)
-                {
-                    returnValue = constructor;
-                }
-            }
-
-            return returnValue;
+            return pluggedType.GetConstructors().Any();
         }
 
         public bool CanBeAutoFilled()

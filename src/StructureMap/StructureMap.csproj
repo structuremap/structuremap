@@ -182,9 +182,13 @@
     <Compile Include="Pipeline\ArrayDefinitionExpression.cs" />
     <Compile Include="Pipeline\ConfiguredInstance.cs" />
     <Compile Include="Pipeline\ConfiguredInstance.Expressions.cs" />
+    <Compile Include="Pipeline\ConstructorSelector.cs" />
+    <Compile Include="Pipeline\AttributeConstructorSelector.cs" />
     <Compile Include="Pipeline\DependencyCollection.cs" />
     <Compile Include="Pipeline\DependencyExpression.cs" />
     <Compile Include="Pipeline\ExpressedInstance.cs" />
+    <Compile Include="Pipeline\GreediestConstructorSelector.cs" />
+    <Compile Include="Pipeline\IConstructorSelector.cs" />
     <Compile Include="Pipeline\IDiagnosticInstance.cs" />
     <Compile Include="Pipeline\LambdaInstance.cs" />
     <Compile Include="Pipeline\DefaultInstance.cs" />

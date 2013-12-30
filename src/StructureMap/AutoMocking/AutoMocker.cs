@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using StructureMap.Graph;
+using StructureMap.Pipeline;
 using StructureMap.TypeRules;
 
 namespace StructureMap.AutoMocking
@@ -221,7 +222,7 @@ namespace StructureMap.AutoMocking
 
         private object[] getConstructorArgs()
         {
-            ConstructorInfo ctor = Constructor.GetGreediestConstructor(typeof (TTargetClass));
+            ConstructorInfo ctor = new GreediestConstructorSelector().Find(typeof (TTargetClass));
             var list = new List<object>();
             foreach (ParameterInfo parameterInfo in ctor.GetParameters())
             {

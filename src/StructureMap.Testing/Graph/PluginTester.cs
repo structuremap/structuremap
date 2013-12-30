@@ -213,25 +213,7 @@ namespace StructureMap.Testing.Graph
             plugin.FindArgumentNameForType<IWidget>();
         }
 
-        [Test]
-        public void GetFirstMarkedConstructor()
-        {
-            var ctor = new Constructor(typeof (ComplexRule));
-            ConstructorInfo constructor = ctor.Ctor;
 
-            Assert.IsNotNull(constructor);
-            Assert.AreEqual(7, constructor.GetParameters().Length, "Should have 7 inputs, not 8");
-        }
-
-        [Test]
-        public void GetGreediestConstructor()
-        {
-            var ctor = new Constructor(typeof (GreaterThanRule));
-            ConstructorInfo constructor = ctor.Ctor;
-
-            Assert.IsNotNull(constructor);
-            Assert.AreEqual(2, constructor.GetParameters().Length, "Should have 2 inputs");
-        }
 
 
         [Test]
