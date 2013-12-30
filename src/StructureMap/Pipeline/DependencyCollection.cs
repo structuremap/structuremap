@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using StructureMap.Building;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Pipeline
 {
@@ -83,7 +84,26 @@ namespace StructureMap.Pipeline
 
         public Argument CloseType(params Type[] types)
         {
-            throw new NotImplementedException();
+            var clone = new Argument
+            {
+                Name = Name
+            };
+
+            if (Type != null)
+            {
+                clone.Type = Type.IsOpenGeneric() ? Type.MakeGenericType(types) : Type;
+            }
+
+            if (Dependency is Instance)
+            {
+                clone.Dependency = Dependency.As<Instance>().CloseType(types) ?? Dependency;
+            }
+            else
+            {
+                clone.Dependency = Dependency;
+            }
+
+            return clone;
         }
     }
 }
