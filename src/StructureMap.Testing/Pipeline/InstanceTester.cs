@@ -1,6 +1,7 @@
 using System;
 using NUnit.Framework;
 using Rhino.Mocks;
+using StructureMap.Building;
 using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
@@ -111,6 +112,11 @@ namespace StructureMap.Testing.Pipeline
         protected override object build(Type pluginType, BuildSession session)
         {
             return TheInstanceThatWasBuilt;
+        }
+
+        public override IDependencySource ToDependencySource(Type pluginType)
+        {
+            throw new NotImplementedException();
         }
 
         protected override string getDescription()

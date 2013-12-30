@@ -1,4 +1,5 @@
 using System;
+using StructureMap.Building;
 
 namespace StructureMap.Pipeline
 {
@@ -42,6 +43,11 @@ namespace StructureMap.Pipeline
         public override int GetHashCode()
         {
             return _referenceKey != null ? _referenceKey.GetHashCode() : 0;
+        }
+
+        public override IDependencySource ToDependencySource(Type pluginType)
+        {
+            return new ReferencedDependencySource(pluginType, _referenceKey);
         }
 
         protected override string getDescription()

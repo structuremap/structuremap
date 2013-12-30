@@ -1,4 +1,6 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
+using StructureMap.Building;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 
@@ -65,6 +67,11 @@ namespace StructureMap.Testing.Pipeline
 
     public class SimpleInstance : Instance
     {
+        public override IDependencySource ToDependencySource(Type pluginType)
+        {
+            throw new System.NotImplementedException();
+        }
+
         protected override string getDescription()
         {
             return "simple";

@@ -1,7 +1,9 @@
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 using NUnit.Framework;
 using Rhino.Mocks;
+using StructureMap.Building;
 using StructureMap.Exceptions;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
@@ -220,9 +222,25 @@ namespace StructureMap.Testing.Graph
         }
     }
 
+    public class FakeDependencySource : IDependencySource
+    {
+        public string Description { get; private set; }
+        public Expression ToExpression(ParameterExpression session)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class FakeInstance : Instance, IDisposable
     {
         public bool WasDisposed;
+
+        public readonly FakeDependencySource DependencySource = new FakeDependencySource();
+
+        public override IDependencySource ToDependencySource(Type pluginType)
+        {
+            return DependencySource;
+        }
 
         protected override string getDescription()
         {

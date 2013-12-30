@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using StructureMap.Building;
 
 namespace StructureMap.Pipeline
 {
@@ -21,6 +22,17 @@ namespace StructureMap.Pipeline
             }
         }
 
+        public static Type DetermineElementType(Type pluginType)
+        {
+            if (pluginType.IsArray)
+            {
+                return pluginType.GetElementType();
+            }
+
+            return pluginType.GetGenericArguments().First();
+        }
+
+        private readonly Type _propertyType;
         private readonly IEnumerable<Instance> _children;
         private readonly IEnumerableCoercion _coercion;
         private readonly string _description;
@@ -29,6 +41,7 @@ namespace StructureMap.Pipeline
         {
             _description = propertyType.FullName;
 
+            _propertyType = propertyType;
             _children = children;
             _coercion = DetermineCoercion(propertyType);
         }
@@ -60,6 +73,28 @@ namespace StructureMap.Pipeline
             throw new ArgumentException(
                 "Only IEnumerable<T> types can be passed to this constructor.  {0} is invalid".ToFormat(
                     propertyType.AssemblyQualifiedName));
+        }
+
+        public override IDependencySource ToDependencySource(Type pluginType)
+        {
+            var elementType = _coercion.ElementType;
+
+            if (!_children.Any())
+            {
+                return new AllPossibleValuesDependencySource(_propertyType, elementType);
+            }
+
+            var items = _children.Select(x => x.ToDependencySource(elementType)).ToArray();
+
+            if (_propertyType.IsArray)
+            {
+                return new ArrayDependencySource(elementType, items);
+            }
+
+            var parentType = _propertyType.GetGenericTypeDefinition();
+            return parentType == typeof (List<>) 
+                ? new ListDependencySource(elementType, items) 
+                : new ArrayDependencySource(elementType, items);
         }
 
         protected override string getDescription()

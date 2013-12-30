@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using StructureMap.Building;
 
 namespace StructureMap.Pipeline
 {
@@ -14,6 +15,11 @@ namespace StructureMap.Pipeline
             _stream = new MemoryStream();
             var formatter = new BinaryFormatter();
             formatter.Serialize(_stream, template);
+        }
+
+        public override IDependencySource ToDependencySource(Type pluginType)
+        {
+            throw new NotImplementedException();
         }
 
         protected override SerializedInstance thisInstance { get { return this; } }

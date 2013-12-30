@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Xml.Serialization;
+using StructureMap.Building;
 using StructureMap.Configuration.DSL;
 using StructureMap.Pipeline;
 
@@ -13,6 +14,11 @@ namespace StructureMap.Testing.Examples
         public XmlFileInstance(string fileName)
         {
             _fileName = fileName;
+        }
+
+        public override IDependencySource ToDependencySource(Type pluginType)
+        {
+            throw new NotImplementedException();
         }
 
         protected override string getDescription()

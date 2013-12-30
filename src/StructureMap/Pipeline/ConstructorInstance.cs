@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using StructureMap.Building;
 using StructureMap.Construction;
 using StructureMap.Graph;
 using StructureMap.TypeRules;
@@ -140,6 +141,11 @@ namespace StructureMap.Pipeline
         protected override sealed string getDescription()
         {
             return "Configured Instance of " + _pluggedType.AssemblyQualifiedName;
+        }
+
+        public override IDependencySource ToDependencySource(Type pluginType)
+        {
+            return new LifecycleDependencySource(pluginType, this);
         }
 
         protected override sealed Type getConcreteType(Type pluginType)

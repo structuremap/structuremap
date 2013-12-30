@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using NUnit.Framework;
+using StructureMap.Building;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
@@ -395,6 +396,11 @@ namespace StructureMap.Testing
         protected override string getDescription()
         {
             return string.Empty;
+        }
+
+        public override IDependencySource ToDependencySource(Type pluginType)
+        {
+            throw new NotImplementedException();
         }
 
         protected override Type getConcreteType(Type pluginType)

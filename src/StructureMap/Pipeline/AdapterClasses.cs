@@ -1,4 +1,5 @@
 using System;
+using StructureMap.Building;
 
 namespace StructureMap.Pipeline
 {
@@ -9,6 +10,11 @@ namespace StructureMap.Pipeline
         public FactoryTemplate(Type openInstanceType)
         {
             _openInstanceType = openInstanceType;
+        }
+
+        public override IDependencySource ToDependencySource(Type pluginType)
+        {
+            throw new NotImplementedException();
         }
 
         protected override string getDescription()
@@ -31,6 +37,11 @@ namespace StructureMap.Pipeline
 
     public class LazyInstance<T> : Instance
     {
+        public override IDependencySource ToDependencySource(Type pluginType)
+        {
+            throw new NotImplementedException();
+        }
+
         protected override string getDescription()
         {
             return "Lazy construction of " + typeof (T).FullName;
@@ -39,7 +50,7 @@ namespace StructureMap.Pipeline
         protected override object build(Type pluginType, BuildSession session)
         {
             var container = session.GetInstance<IContainer>();
-            Func<T> func = () => container.GetInstance<T>();
+            Func<T> func = container.GetInstance<T>;
 
             return func;
         }
@@ -47,6 +58,11 @@ namespace StructureMap.Pipeline
 
     public class FactoryInstance<T> : Instance
     {
+        public override IDependencySource ToDependencySource(Type pluginType)
+        {
+            throw new NotImplementedException();
+        }
+
         protected override string getDescription()
         {
             return "Lazy factory of " + typeof (T).FullName;
@@ -55,7 +71,7 @@ namespace StructureMap.Pipeline
         protected override object build(Type pluginType, BuildSession session)
         {
             var container = session.GetInstance<IContainer>();
-            Func<string, T> func = name => container.GetInstance<T>(name);
+            Func<string, T> func = container.GetInstance<T>;
 
             return func;
         }
@@ -63,6 +79,11 @@ namespace StructureMap.Pipeline
 
     public class FactoryInstance<T, T1> : Instance
     {
+        public override IDependencySource ToDependencySource(Type pluginType)
+        {
+            throw new NotImplementedException();
+        }
+
         protected override string getDescription()
         {
             return "Lazy construction of {0} using {1}".ToFormat(typeof(T1).FullName, typeof(T).FullName);

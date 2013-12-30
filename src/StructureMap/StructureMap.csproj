@@ -126,6 +126,7 @@
     <Compile Include="AutoMocking\AutoMockedContainer.cs" />
     <Compile Include="AutoMocking\AutoMocker.cs" />
     <Compile Include="AutoMocking\ServiceLocator.cs" />
+    <Compile Include="Building\AllPossibleValuesDependencySource.cs" />
     <Compile Include="Building\ArrayDependencySource.cs" />
     <Compile Include="Building\BuildPlanClasses.cs" />
     <Compile Include="Building\BuildUpPlan.cs" />

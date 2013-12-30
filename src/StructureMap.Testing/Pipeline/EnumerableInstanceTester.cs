@@ -1,7 +1,10 @@
 using System.Collections.Generic;
 using NUnit.Framework;
+using StructureMap.Building;
 using StructureMap.Pipeline;
+using StructureMap.Testing.Graph;
 using StructureMap.Testing.Widget;
+using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Pipeline
 {
@@ -16,6 +19,74 @@ namespace StructureMap.Testing.Pipeline
         }
 
         #endregion
+
+        [Test]
+        public void to_dependency_source_with_all_possible_values()
+        {
+            new EnumerableInstance(typeof (IList<IGateway>), new Instance[0])
+                .ToDependencySource(typeof (IList<IGateway>))
+                .ShouldEqual(new AllPossibleValuesDependencySource(typeof (IList<IGateway>), typeof (IGateway)));
+        }
+
+        [Test]
+        public void to_dependency_source_as_array_with_explicit_values()
+        {
+            var i1 = new FakeInstance();
+            var i2 = new FakeInstance();
+            var i3 = new FakeInstance();
+            var enumerableType = typeof (IGateway[]);
+            var source = new EnumerableInstance(enumerableType, new Instance[] {i1, i2, i3})
+                .ToDependencySource(enumerableType)
+                .ShouldBeOfType<ArrayDependencySource>();
+
+            source.ItemType.ShouldEqual(typeof (IGateway));
+            source.Items.ShouldHaveTheSameElementsAs(i1.DependencySource, i2.DependencySource, i3.DependencySource);
+        }
+
+        [Test]
+        public void to_dependency_source_as_ilist_with_explicit_values()
+        {
+            var i1 = new FakeInstance();
+            var i2 = new FakeInstance();
+            var i3 = new FakeInstance();
+            var enumerableType = typeof(IList<IGateway>);
+            var source = new EnumerableInstance(enumerableType, new Instance[] { i1, i2, i3 })
+                .ToDependencySource(enumerableType)
+                .ShouldBeOfType<ArrayDependencySource>();
+
+            source.ItemType.ShouldEqual(typeof(IGateway));
+            source.Items.ShouldHaveTheSameElementsAs(i1.DependencySource, i2.DependencySource, i3.DependencySource);
+        }
+
+        [Test]
+        public void to_dependency_source_as_ienumerable_with_explicit_values()
+        {
+            var i1 = new FakeInstance();
+            var i2 = new FakeInstance();
+            var i3 = new FakeInstance();
+            var enumerableType = typeof(IEnumerable<IGateway>);
+            var source = new EnumerableInstance(enumerableType, new Instance[] { i1, i2, i3 })
+                .ToDependencySource(enumerableType)
+                .ShouldBeOfType<ArrayDependencySource>();
+
+            source.ItemType.ShouldEqual(typeof(IGateway));
+            source.Items.ShouldHaveTheSameElementsAs(i1.DependencySource, i2.DependencySource, i3.DependencySource);
+        }
+
+        [Test]
+        public void to_dependency_source_as_list_with_explicit_values()
+        {
+            var i1 = new FakeInstance();
+            var i2 = new FakeInstance();
+            var i3 = new FakeInstance();
+            var enumerableType = typeof(List<IGateway>);
+            var source = new EnumerableInstance(enumerableType, new Instance[] { i1, i2, i3 })
+                .ToDependencySource(enumerableType)
+                .ShouldBeOfType<ListDependencySource>();
+
+            source.ItemType.ShouldEqual(typeof(IGateway));
+            source.Items.ShouldHaveTheSameElementsAs(i1.DependencySource, i2.DependencySource, i3.DependencySource);
+        }
 
         [Test]
         public void build_children_to_a_list()

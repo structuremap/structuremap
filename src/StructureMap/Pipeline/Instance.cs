@@ -1,4 +1,5 @@
 using System;
+using StructureMap.Building;
 using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
@@ -18,6 +19,15 @@ namespace StructureMap.Pipeline
         {
             _originalName = _name;
         }
+
+        /// <summary>
+        /// Strategy for how this Instance would be built as
+        /// an inline dependency in the parent Instance's
+        /// "Build Plan"
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <returns></returns>
+        public abstract IDependencySource ToDependencySource(Type pluginType);
 
         public PluginFamily Parent
         {

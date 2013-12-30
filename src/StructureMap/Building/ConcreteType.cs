@@ -97,14 +97,10 @@ namespace StructureMap.Building
                 return new Constant(dependencyType, converter.ConvertFrom(value));
             }
             
-
-            else if (EnumerableInstance.IsEnumerable(dependencyType))
+            if (EnumerableInstance.IsEnumerable(dependencyType))
             {
+                // TODO -- do some coercion here
                 throw new NotImplementedException();
-            }
-            else
-            {
-
             }
 
             throw new NotImplementedException();

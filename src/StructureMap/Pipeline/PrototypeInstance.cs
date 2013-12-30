@@ -1,4 +1,5 @@
 using System;
+using StructureMap.Building;
 using StructureMap.Graph;
 using StructureMap.TypeRules;
 
@@ -12,6 +13,11 @@ namespace StructureMap.Pipeline
         public PrototypeInstance(ICloneable prototype)
         {
             _prototype = prototype;
+        }
+
+        public override IDependencySource ToDependencySource(Type pluginType)
+        {
+            throw new NotImplementedException();
         }
 
         protected override PrototypeInstance thisInstance { get { return this; } }

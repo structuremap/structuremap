@@ -1,4 +1,5 @@
 using System;
+using StructureMap.Building;
 
 namespace StructureMap.Pipeline
 {
@@ -18,6 +19,13 @@ namespace StructureMap.Pipeline
         protected override string getDescription()
         {
             return "Default";
+        }
+
+        public override IDependencySource ToDependencySource(Type pluginType)
+        {
+            return EnumerableInstance.IsEnumerable(pluginType)
+                ? (IDependencySource) new AllPossibleValuesDependencySource(pluginType, EnumerableInstance.DetermineElementType(pluginType))
+                : new DefaultDependencySource(pluginType);
         }
     }
 }

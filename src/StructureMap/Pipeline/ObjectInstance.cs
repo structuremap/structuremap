@@ -1,4 +1,5 @@
 using System;
+using StructureMap.Building;
 using StructureMap.Graph;
 using StructureMap.TypeRules;
 
@@ -14,6 +15,11 @@ namespace StructureMap.Pipeline
         protected override object build(Type pluginType, BuildSession session)
         {
             return null;
+        }
+
+        public override IDependencySource ToDependencySource(Type pluginType)
+        {
+            throw new NotSupportedException();
         }
     }
 
@@ -66,6 +72,11 @@ namespace StructureMap.Pipeline
         public override string ToString()
         {
             return string.Format("LiteralInstance: {0}", _object);
+        }
+
+        public override IDependencySource ToDependencySource(Type pluginType)
+        {
+            return new Constant(pluginType, _object);
         }
 
         protected override Type getConcreteType(Type pluginType)

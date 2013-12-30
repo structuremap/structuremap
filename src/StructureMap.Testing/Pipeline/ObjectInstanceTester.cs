@@ -1,7 +1,9 @@
 using System;
 using NUnit.Framework;
+using StructureMap.Building;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
+using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Pipeline
 {
@@ -27,6 +29,14 @@ namespace StructureMap.Testing.Pipeline
             {
                 return "the description of ATarget";
             }
+        }
+
+        [Test]
+        public void to_dependency_source()
+        {
+            var gateway = new StubbedGateway();
+            new ObjectInstance(gateway).ToDependencySource(typeof (IGateway))
+                .ShouldEqual(Constant.For<IGateway>(gateway));
         }
 
         [Test]

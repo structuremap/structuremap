@@ -1,5 +1,6 @@
 using System;
 using NUnit.Framework;
+using StructureMap.Building;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget3;
@@ -31,6 +32,11 @@ namespace StructureMap.Testing.Pipeline
             protected override object build(Type pluginType, BuildSession session)
             {
                 return _constructedObject;
+            }
+
+            public override IDependencySource ToDependencySource(Type pluginType)
+            {
+                throw new NotImplementedException();
             }
 
             protected override string getDescription()
@@ -102,6 +108,11 @@ namespace StructureMap.Testing.Pipeline
             public StubInstance(string name)
             {
                 Name = name;
+            }
+
+            public override IDependencySource ToDependencySource(Type pluginType)
+            {
+                throw new NotImplementedException();
             }
 
             protected override string getDescription()

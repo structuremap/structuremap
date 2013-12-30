@@ -1,7 +1,9 @@
 using System;
 using NUnit.Framework;
+using StructureMap.Building;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
+using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Pipeline
 {
@@ -16,6 +18,18 @@ namespace StructureMap.Testing.Pipeline
         }
 
         #endregion
+
+        [Test]
+        public void to_dependency_source()
+        {
+            var instance = ConstructorInstance.For<StubbedGateway>();
+            var source = instance.ToDependencySource(typeof (IGateway))
+                .ShouldBeOfType<LifecycleDependencySource>();
+
+            source.Instance.ShouldEqual(instance);
+            source.PluginType.ShouldEqual(typeof (IGateway));
+
+        }
 
         [Test]
         public void get_and_set_a_non_primitive_type_that_is_not_enumerable()

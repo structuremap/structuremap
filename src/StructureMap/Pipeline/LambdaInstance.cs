@@ -1,4 +1,5 @@
 using System;
+using StructureMap.Building;
 
 namespace StructureMap.Pipeline
 {
@@ -28,6 +29,11 @@ namespace StructureMap.Pipeline
             {
                 throw new StructureMapException(207, ex, Name, pluginType);
             }
+        }
+
+        public override IDependencySource ToDependencySource(Type pluginType)
+        {
+            throw new NotImplementedException();
         }
 
         protected override string getDescription()

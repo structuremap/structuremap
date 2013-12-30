@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using Rhino.Mocks;
+using StructureMap.Building;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
+using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Pipeline
 {
@@ -63,6 +65,47 @@ namespace StructureMap.Testing.Pipeline
             });
 
             container.GetInstance<ClassWithWidgets>().Widgets.ShouldHaveTheSameElementsAs(widget1, widget2, widget3);
+        }
+
+        [Test]
+        public void to_dependency_source_when_not_an_enum()
+        {
+            new DefaultInstance().ToDependencySource(typeof (IGateway))
+                .ShouldBeOfType<DefaultDependencySource>()
+                .DependencyType.ShouldEqual(typeof (IGateway));
+        }
+
+        [Test]
+        public void to_dependency_source_when_an_array()
+        {
+            var enumerationType = typeof (IGateway[]);
+            new DefaultInstance().ToDependencySource(enumerationType)
+                .ShouldEqual(new AllPossibleValuesDependencySource(enumerationType, typeof (IGateway)));
+        }
+
+        [Test]
+        public void to_dependency_source_when_an_IEnumerable()
+        {
+            var enumerationType = typeof(IEnumerable<IGateway>);
+            new DefaultInstance().ToDependencySource(enumerationType)
+                .ShouldEqual(new AllPossibleValuesDependencySource(enumerationType, typeof(IGateway)));
+        }
+
+
+        [Test]
+        public void to_dependency_source_when_an_IList()
+        {
+            var enumerationType = typeof(IList<IGateway>);
+            new DefaultInstance().ToDependencySource(enumerationType)
+                .ShouldEqual(new AllPossibleValuesDependencySource(enumerationType, typeof(IGateway)));
+        }
+
+        [Test]
+        public void to_dependency_source_when_a_concrete_List()
+        {
+            var enumerationType = typeof(IList<IGateway>);
+            new DefaultInstance().ToDependencySource(enumerationType)
+                .ShouldEqual(new AllPossibleValuesDependencySource(enumerationType, typeof(IGateway)));
         }
     }
 }

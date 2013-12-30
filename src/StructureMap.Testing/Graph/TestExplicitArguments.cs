@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using NUnit.Framework;
+using StructureMap.Building;
 using StructureMap.Pipeline;
 using System.Linq;
 
@@ -73,6 +74,11 @@ namespace StructureMap.Testing.Graph
 
         public class SpecialInstance : Instance
         {
+            public override IDependencySource ToDependencySource(Type pluginType)
+            {
+                throw new NotImplementedException();
+            }
+
             protected override string getDescription()
             {
                 return string.Empty;
