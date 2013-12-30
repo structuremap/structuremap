@@ -95,7 +95,7 @@ namespace StructureMap.Testing.Building
         {
             var enumerableType = typeof (IGateway[]);
             ConcreteType.SourceFor(enumerableType, null)
-                .ShouldEqual(new AllPossibleValuesDependencySource(enumerableType, typeof (IGateway)));
+                .ShouldEqual(new AllPossibleValuesDependencySource(enumerableType));
         }
 
         [Test]
@@ -103,7 +103,7 @@ namespace StructureMap.Testing.Building
         {
             var enumerableType = typeof(IEnumerable<IGateway>);
             ConcreteType.SourceFor(enumerableType, null)
-                .ShouldEqual(new AllPossibleValuesDependencySource(enumerableType, typeof(IGateway)));
+                .ShouldEqual(new AllPossibleValuesDependencySource(enumerableType));
         }
 
         [Test]
@@ -111,7 +111,7 @@ namespace StructureMap.Testing.Building
         {
             var enumerableType = typeof(IList<IGateway>);
             ConcreteType.SourceFor(enumerableType, null)
-                .ShouldEqual(new AllPossibleValuesDependencySource(enumerableType, typeof(IGateway)));
+                .ShouldEqual(new AllPossibleValuesDependencySource(enumerableType));
         }
 
         [Test]
@@ -119,7 +119,7 @@ namespace StructureMap.Testing.Building
         {
             var enumerableType = typeof(List<IGateway>);
             ConcreteType.SourceFor(enumerableType, null)
-                .ShouldEqual(new AllPossibleValuesDependencySource(enumerableType, typeof(IGateway)));
+                .ShouldEqual(new AllPossibleValuesDependencySource(enumerableType));
         }
     }
 }

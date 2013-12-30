@@ -1,23 +1,44 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
+using StructureMap.Pipeline;
 
 namespace StructureMap.Building
 {
     public class AllPossibleValuesDependencySource : IDependencySource
     {
+        public static readonly MethodInfo SessionMethod = typeof (IContext).GetMethod("GetAllInstances", new Type[0]);
+        public static readonly MethodInfo ToArrayMethod = typeof(Enumerable).GetMethod("ToArray");
+
+
         private readonly Type _enumerationType;
         private readonly Type _elementType;
 
-        public AllPossibleValuesDependencySource(Type enumerationType, Type elementType)
+        public AllPossibleValuesDependencySource(Type enumerationType)
         {
             _enumerationType = enumerationType;
-            _elementType = elementType;
+            _elementType = EnumerableInstance.DetermineElementType(enumerationType);
         }
 
         public string Description { get; private set; }
+
         public Expression ToExpression(ParameterExpression session)
         {
-            throw new NotImplementedException();
+            var getData = Expression.Call(session, SessionMethod.MakeGenericMethod(_elementType));
+
+            if (_enumerationType.IsArray || _enumerationType.GetGenericTypeDefinition() == typeof(IList<>))
+            {
+                return Expression.Call(null, ToArrayMethod.MakeGenericMethod(_elementType), getData);
+            }
+            
+            if (_enumerationType.GetGenericTypeDefinition() != typeof (List<>))
+            {
+                return getData;
+            }
+
+            return ListDependencySource.ToExpression(_elementType, getData);
         }
 
         public Type EnumerationType

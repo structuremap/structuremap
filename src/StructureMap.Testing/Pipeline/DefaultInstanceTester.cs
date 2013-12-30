@@ -80,7 +80,7 @@ namespace StructureMap.Testing.Pipeline
         {
             var enumerationType = typeof (IGateway[]);
             new DefaultInstance().ToDependencySource(enumerationType)
-                .ShouldEqual(new AllPossibleValuesDependencySource(enumerationType, typeof (IGateway)));
+                .ShouldEqual(new AllPossibleValuesDependencySource(enumerationType));
         }
 
         [Test]
@@ -88,7 +88,7 @@ namespace StructureMap.Testing.Pipeline
         {
             var enumerationType = typeof(IEnumerable<IGateway>);
             new DefaultInstance().ToDependencySource(enumerationType)
-                .ShouldEqual(new AllPossibleValuesDependencySource(enumerationType, typeof(IGateway)));
+                .ShouldEqual(new AllPossibleValuesDependencySource(enumerationType));
         }
 
 
@@ -97,7 +97,7 @@ namespace StructureMap.Testing.Pipeline
         {
             var enumerationType = typeof(IList<IGateway>);
             new DefaultInstance().ToDependencySource(enumerationType)
-                .ShouldEqual(new AllPossibleValuesDependencySource(enumerationType, typeof(IGateway)));
+                .ShouldEqual(new AllPossibleValuesDependencySource(enumerationType));
         }
 
         [Test]
@@ -105,7 +105,7 @@ namespace StructureMap.Testing.Pipeline
         {
             var enumerationType = typeof(IList<IGateway>);
             new DefaultInstance().ToDependencySource(enumerationType)
-                .ShouldEqual(new AllPossibleValuesDependencySource(enumerationType, typeof(IGateway)));
+                .ShouldEqual(new AllPossibleValuesDependencySource(enumerationType));
         }
     }
 }

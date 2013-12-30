@@ -81,7 +81,7 @@ namespace StructureMap.Pipeline
 
             if (!_children.Any())
             {
-                return new AllPossibleValuesDependencySource(_propertyType, elementType);
+                return new AllPossibleValuesDependencySource(_propertyType);
             }
 
             var items = _children.Select(x => x.ToDependencySource(elementType)).ToArray();

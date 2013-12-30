@@ -24,7 +24,7 @@ namespace StructureMap.Pipeline
         public override IDependencySource ToDependencySource(Type pluginType)
         {
             return EnumerableInstance.IsEnumerable(pluginType)
-                ? (IDependencySource) new AllPossibleValuesDependencySource(pluginType, EnumerableInstance.DetermineElementType(pluginType))
+                ? (IDependencySource) new AllPossibleValuesDependencySource(pluginType)
                 : new DefaultDependencySource(pluginType);
         }
     }

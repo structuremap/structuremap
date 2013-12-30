@@ -16,7 +16,14 @@ namespace StructureMap.Building
         public override Expression ToExpression(ParameterExpression session)
         {
             var arrayExpression = base.ToExpression(session);
-            return Expression.Call(null, ToListMethod.MakeGenericMethod(ItemType), arrayExpression);
+            var itemType = ItemType;
+
+            return ToExpression(itemType, arrayExpression);
+        }
+
+        public static Expression ToExpression(Type itemType, Expression arrayExpression)
+        {
+            return Expression.Call(null, ToListMethod.MakeGenericMethod(itemType), arrayExpression);
         }
     }
 }

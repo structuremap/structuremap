@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using StructureMap.Pipeline;
 using StructureMap.Util;
 
@@ -94,7 +95,7 @@ namespace StructureMap.Testing.Building
 
         public IEnumerable<T> GetAllInstances<T>()
         {
-            throw new NotImplementedException();
+            return LifecycledObjects[typeof (T)].GetAll().Select(x => (T) x);
         }
 
         public IEnumerable<object> GetAllInstances(Type pluginType)

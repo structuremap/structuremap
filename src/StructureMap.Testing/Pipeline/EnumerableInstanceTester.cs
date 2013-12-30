@@ -25,7 +25,7 @@ namespace StructureMap.Testing.Pipeline
         {
             new EnumerableInstance(typeof (IList<IGateway>), new Instance[0])
                 .ToDependencySource(typeof (IList<IGateway>))
-                .ShouldEqual(new AllPossibleValuesDependencySource(typeof (IList<IGateway>), typeof (IGateway)));
+                .ShouldEqual(new AllPossibleValuesDependencySource(typeof (IList<IGateway>)));
         }
 
         [Test]
