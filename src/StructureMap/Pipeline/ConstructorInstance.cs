@@ -7,17 +7,14 @@ using StructureMap.Building;
 using StructureMap.Construction;
 using StructureMap.Graph;
 using StructureMap.TypeRules;
-using StructureMap.Util;
 
 namespace StructureMap.Pipeline
 {
     public class ConstructorInstance : Instance, IConfiguredInstance, IStructuredInstance
     {
-        [Obsolete("Can surely get rid of this.  There's a GH issue for it")]
-        private readonly Cache<string, Instance> _dependencies = new Cache<string, Instance>();
-
         private readonly object _locker = new object();
         private readonly Type _pluggedType;
+        private readonly DependencyCollection _dependencies = new DependencyCollection();
 
         [Obsolete("Going to eliminate the need for this")]
         private readonly Plugin _plugin;
@@ -34,15 +31,6 @@ namespace StructureMap.Pipeline
         {
             _plugin = plugin;
             _pluggedType = plugin.PluggedType;
-
-            _dependencies.OnMissing = key => {
-                if (_plugin.FindArgumentType(key).IsSimple())
-                {
-                    throw new StructureMapException(205, key, Name);
-                }
-
-                return new DefaultInstance();
-            };
 
             _pluggedType.GetCustomAttributes(typeof (InstanceAttribute), false).OfType<InstanceAttribute>()
                         .Each(x => x.Alter(this));
@@ -80,16 +68,24 @@ namespace StructureMap.Pipeline
             SetCollection(name, children);
         }
 
+        // Seems to exist only for testing the Xml configuration
         public string GetProperty(string propertyName)
         {
-            return _dependencies[propertyName].As<ObjectInstance>().Object.ToString();
+            var value = _dependencies.FindByTypeOrName(null, propertyName);
+            return value == null ? null : value.ToString();
         }
 
+        [Obsolete("Expose the dependencies instead")]
         public object Get(string propertyName, Type pluginType, BuildSession session)
         {
-            return _dependencies[propertyName].Build(pluginType, session);
+            var value = _dependencies.FindByTypeOrName(pluginType, propertyName);
+
+            if (value == null) return new DefaultInstance().Build(pluginType, session);
+
+            return value is Instance ? value.As<Instance>().Build(pluginType, session) : value;
         }
 
+        [Obsolete("Seems to only be used in testing and for the Obsolete Argument")]
         public T Get<T>(string propertyName, BuildSession session)
         {
             object o = Get(propertyName, typeof (T), session);
@@ -105,22 +101,25 @@ namespace StructureMap.Pipeline
 
         public bool HasProperty(string propertyName, BuildSession session)
         {
-            return _dependencies.Has(propertyName) && !(_dependencies[propertyName] is NullInstance);
+            return _dependencies.Has(propertyName);
         }
 
+        [Obsolete("Just expose DependencyCollection")]
         Instance IStructuredInstance.GetChild(string name)
         {
-            return _dependencies[name];
+            return _dependencies.FindByTypeOrName(null, name) as Instance;
         }
 
+        [Obsolete("Just expose DependencyCollection")]
         Instance[] IStructuredInstance.GetChildArray(string name)
         {
-            return _dependencies[name].As<EnumerableInstance>().Children.ToArray();
+            return _dependencies.FindByTypeOrName(null, name)
+                .As<EnumerableInstance>().Children.ToArray();
         }
 
         void IStructuredInstance.RemoveKey(string name)
         {
-            _dependencies.Remove(name);
+            _dependencies.RemoveByName(name);
         }
 
         protected override bool canBePartOfPluginFamily(PluginFamily family)
@@ -131,7 +130,7 @@ namespace StructureMap.Pipeline
         public ConstructorInstance Override(ExplicitArguments arguments)
         {
             var instance = new ConstructorInstance(_pluggedType);
-            _dependencies.Each((key, i) => instance.SetChild(key, i));
+            _dependencies.CopyTo(instance._dependencies);
 
             arguments.Configure(instance);
 
@@ -160,7 +159,7 @@ namespace StructureMap.Pipeline
                 throw new ArgumentNullException("instance", "Instance for {0} was null".ToFormat(name));
             }
 
-            _dependencies[name] = instance;
+            _dependencies.Add(name, instance);
         }
 
         internal void SetValue(string name, object value)
@@ -282,8 +281,8 @@ namespace StructureMap.Pipeline
 
             var closedInstance = new ConstructorInstance(closedType);
 
-            _dependencies.Each((key, i) => {
-                closedInstance.SetChild(key, i.CloseType(types));
+            _dependencies.Each(arg => {
+                closedInstance._dependencies.Add(arg.CloseType(types));
             });
 
             return closedInstance;

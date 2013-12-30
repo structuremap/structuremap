@@ -12,11 +12,6 @@ namespace StructureMap.Pipeline
             return "NULL";
         }
 
-        protected override object build(Type pluginType, BuildSession session)
-        {
-            return null;
-        }
-
         public override IDependencySource ToDependencySource(Type pluginType)
         {
             throw new NotSupportedException();
