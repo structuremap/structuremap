@@ -82,8 +82,7 @@ namespace StructureMap.Building
 
             if (value is Instance)
             {
-                // TODO -- this is wrong.  Need Instance.ToDependencySource() here.
-                return new LifecycleDependencySource(dependencyType, value as Instance);
+                return value.As<Instance>().ToDependencySource(dependencyType);
             }
 
             if (value.GetType().CanBeCastTo(dependencyType))

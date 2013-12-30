@@ -25,11 +25,8 @@ namespace StructureMap.Testing.Building
             var instance = new FakeInstance();
             instance.SetScopeTo(new SingletonLifecycle());
 
-            var source = ConcreteType.SourceFor(typeof (IGateway), instance)
-                .ShouldBeOfType<LifecycleDependencySource>();
-
-            source.Instance.ShouldBeTheSameAs(instance);
-            source.PluginType.ShouldEqual(typeof (IGateway));
+            ConcreteType.SourceFor(typeof (IGateway), instance)
+                .ShouldBeTheSameAs(instance.DependencySource);
         }
 
         [Test]
