@@ -12,11 +12,16 @@ namespace StructureMap.Pipeline
 {
     public class ConstructorInstance : Instance, IConfiguredInstance, IStructuredInstance
     {
-        [Obsolete("Can surely get rid of this")]
+        [Obsolete("Can surely get rid of this.  There's a GH issue for it")]
         private readonly Cache<string, Instance> _dependencies = new Cache<string, Instance>();
+
         private readonly object _locker = new object();
         private readonly Type _pluggedType;
+
+        [Obsolete("Going to eliminate the need for this")]
         private readonly Plugin _plugin;
+
+        [Obsolete("Definitely eliminating this soon")]
         private volatile IInstanceBuilder _builder;
 
         public ConstructorInstance(Type pluggedType)
@@ -177,25 +182,6 @@ namespace StructureMap.Pipeline
             Type dependencyType = getDependencyType(name);
             var instance = new EnumerableInstance(dependencyType, children);
             SetChild(name, instance);
-        }
-
-        protected string findPropertyName<TPluginType>()
-        {
-            Type dependencyType = typeof (TPluginType);
-
-            return findPropertyName(dependencyType);
-        }
-
-        protected string findPropertyName(Type dependencyType)
-        {
-            string propertyName = _plugin.FindArgumentNameForType(dependencyType, CannotFindProperty.ThrowException);
-
-            if (string.IsNullOrEmpty(propertyName))
-            {
-                throw new StructureMapException(305, dependencyType);
-            }
-
-            return propertyName;
         }
 
         private Instance buildInstanceForType(Type dependencyType, object value)

@@ -34,6 +34,7 @@ namespace StructureMap.Graph
         private readonly LightweightCache<string, PluginGraph> _profiles;
         private readonly SetterRules _setterRules;
 
+        [Obsolete("Wanna kill this after the BuildPlan business is in place")]
         private readonly Cache<Type, IInstanceBuilder> _builders; 
 
         public PluginGraph()
