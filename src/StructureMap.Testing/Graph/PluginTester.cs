@@ -24,6 +24,8 @@ namespace StructureMap.Testing.Graph
         public void SetUp()
         {
             _plugin = new Plugin(typeof (ConfigurationWidget));
+            new SetterRules().Configure(_plugin);
+
             _iwidget = typeof (IWidget);
             _widgetmaker = typeof (WidgetMaker);
             _colorWidget = typeof (ColorWidget);
@@ -311,6 +313,8 @@ namespace StructureMap.Testing.Graph
             using (mocks.Playback())
             {
                 var plugin = new Plugin(typeof (LotsOfStuff));
+                new SetterRules().Configure(plugin);
+
                 plugin.VisitArguments(visitor);
             }
         }

@@ -8,6 +8,7 @@ namespace StructureMap.Graph
     /// <summary>
     /// Represents a PropertyInfo of a Plugin.PluggedType that is filled by Setter Injection
     /// </summary>
+    [Obsolete("Should not be necessary going forward")]
     public class SetterProperty
     {
         private readonly PropertyInfo _property;
@@ -16,9 +17,6 @@ namespace StructureMap.Graph
         public SetterProperty(PropertyInfo property)
         {
             _property = property;
-            Attribute att = Attribute.GetCustomAttribute(property, typeof (SetterPropertyAttribute));
-
-            IsMandatory = att != null;
         }
 
         public PropertyInfo Property { get { return _property; } }

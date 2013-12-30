@@ -25,6 +25,8 @@ namespace StructureMap.Testing.Graph
         public void AutoFillDeterminationWithSetterPropertiesIsFalse()
         {
             var plugin = new Plugin(typeof (CannotBeAutoFilledGridColumn));
+            new SetterRules().Configure(plugin);
+
             Assert.IsFalse(plugin.CanBeAutoFilled);
         }
 
@@ -32,6 +34,8 @@ namespace StructureMap.Testing.Graph
         public void AutoFillDeterminationWithSetterPropertiesIsTrue()
         {
             var plugin = new Plugin(typeof (AutoFilledGridColumn));
+            new SetterRules().Configure(plugin);
+
             Assert.IsTrue(plugin.CanBeAutoFilled);
         }
 
@@ -55,11 +59,11 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void SetterProperty_picks_up_IsMandatory_from_setter_attribute()
         {
-            var setter1 = new SetterProperty(ReflectionHelper.GetProperty<SetterTarget>(x => x.Name1));
-            setter1.IsMandatory.ShouldBeFalse();
+            var plugin = new Plugin(typeof (SetterTarget));
+            new SetterRules().Configure(plugin);
 
-            var setter2 = new SetterProperty(ReflectionHelper.GetProperty<SetterTarget>(x => x.Name2));
-            setter2.IsMandatory.ShouldBeTrue();
+            plugin.Setters.IsMandatory("Name1").ShouldBeFalse();
+            plugin.Setters.IsMandatory("Name2").ShouldBeTrue();
         }
 
         [Test, ExpectedException(typeof (StructureMapException))]
@@ -80,6 +84,8 @@ namespace StructureMap.Testing.Graph
         public void got_the_right_number_of_mandatory_and_optional_properties()
         {
             var plugin = new Plugin(typeof (SetterTarget));
+            new SetterRules().Configure(plugin);
+
             plugin.Setters.IsMandatory("Name1").ShouldBeFalse();
             plugin.Setters.IsMandatory("Name2").ShouldBeTrue();
             plugin.Setters.IsMandatory("Name3").ShouldBeFalse();

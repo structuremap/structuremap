@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 
@@ -73,6 +74,20 @@ namespace StructureMap
     {
         public static class TypeExtensions
         {
+            internal static bool HasAttribute<T>(this ICustomAttributeProvider provider) where T : Attribute
+            {
+                var atts = provider.GetCustomAttributes(typeof(T), true);
+                return atts.Length > 0;
+            }
+
+            internal static void ForAttribute<T>(this ICustomAttributeProvider provider, Action<T> action) where T : Attribute
+            {
+                foreach (T attribute in provider.GetCustomAttributes(typeof(T), true))
+                {
+                    action(attribute);
+                }
+            }
+
             public static T CloseAndBuildAs<T>(this Type openType, params Type[] parameterTypes)
             {
                 var closedType = openType.MakeGenericType(parameterTypes);
