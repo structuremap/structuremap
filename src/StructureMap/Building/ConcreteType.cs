@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using StructureMap.Pipeline;
@@ -92,7 +93,8 @@ namespace StructureMap.Building
 
             if (dependencyType.IsSimple())
             {
-                throw new NotImplementedException();
+                var converter = TypeDescriptor.GetConverter(dependencyType);
+                return new Constant(dependencyType, converter.ConvertFrom(value));
             }
             
 

@@ -65,6 +65,20 @@ namespace StructureMap.Testing.Building
                 .ShouldEqual(Constant.For<IList<IGateway>>(list));
         }
 
+        [Test]
+        public void coerce_simple_numbers()
+        {
+            ConcreteType.SourceFor(typeof (int), "42")
+                .ShouldEqual(Constant.For(42));
+        }
+
+        [Test]
+        public void coerce_enum()
+        {
+            ConcreteType.SourceFor(typeof (BreedEnum), "Angus")
+                .ShouldEqual(Constant.For(BreedEnum.Angus));
+        }
+
         [Test, Ignore("next step")]
         public void array_can_be_coerced_to_concrete_list()
         {
