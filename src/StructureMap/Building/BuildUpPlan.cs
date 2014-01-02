@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace StructureMap.Building
 {
-    public class BuildUpPlan
+    public class BuildUpPlan : IHasSetters
     {
         private readonly Type _concreteType;
         private readonly IList<Setter> _setters = new List<Setter>();
@@ -17,6 +17,14 @@ namespace StructureMap.Building
             _concreteType = concreteType;
 
             resetBuildups();
+        }
+
+        public Type ConcreteType
+        {
+            get
+            {
+                return _concreteType;
+            }
         }
 
         private void resetBuildups()

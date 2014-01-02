@@ -7,7 +7,7 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.Building
 {
-    public class ConcreteBuild : IBuildPlan
+    public class ConcreteBuild : IBuildPlan, IHasSetters
     {
         private readonly Type _concreteType;
         private readonly ConstructorStep _constructor;

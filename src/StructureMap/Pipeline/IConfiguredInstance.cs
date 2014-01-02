@@ -27,5 +27,7 @@ namespace StructureMap.Pipeline
         void SetCollection(string name, IEnumerable<Instance> children);
 
         string GetProperty(string propertyName);
+
+        DependencyCollection Dependencies { get; }
     }
 }

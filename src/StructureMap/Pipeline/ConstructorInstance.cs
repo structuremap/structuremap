@@ -290,6 +290,11 @@ namespace StructureMap.Pipeline
             return closedInstance;
         }
 
+        public DependencyCollection Dependencies
+        {
+            get { return _dependencies; }
+        }
+
         public override string ToString()
         {
             return "'{0}' -> {1}".ToFormat(Name, _pluggedType.FullName);

@@ -22,9 +22,17 @@ namespace StructureMap.Building
             return plan;
         }
 
+        public static BuildUpPlan BuildUpPlan(Type pluggedType, DependencyCollection dependencies, Policies policies)
+        {
+            var plan = new BuildUpPlan(pluggedType);
+            determineSetterSources(pluggedType, dependencies, policies, plan);
+
+            return plan;
+        }
+
         private static void determineSetterSources(Type pluggedType, DependencyCollection dependencies,
             Policies policies,
-            ConcreteBuild plan)
+            IHasSetters plan)
         {
             var setters = pluggedType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
                 .Where(x => x.CanWrite && x.GetSetMethod(false) != null && x.GetSetMethod().GetParameters().Length == 1)
@@ -35,7 +43,7 @@ namespace StructureMap.Building
 
         private static void determineSetterSource(DependencyCollection dependencies, Policies policies,
             PropertyInfo setter,
-            ConcreteBuild plan)
+            IHasSetters plan)
         {
             var dependency = dependencies.FindByTypeOrName(setter.PropertyType, setter.Name);
 
