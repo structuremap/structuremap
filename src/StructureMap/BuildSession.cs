@@ -37,7 +37,7 @@ namespace StructureMap
 
             var pluggedType = target.GetType();
             var instance = _pipelineGraph.GetDefault(pluggedType) as IConfiguredInstance
-                                           ?? new ConfiguredInstance(pluggedType);
+                           ?? new ConfiguredInstance(pluggedType);
 
             var plan = ConcreteType.BuildUpPlan(pluggedType, instance.Dependencies, _pipelineGraph.Outer.Policies);
 
@@ -98,7 +98,7 @@ namespace StructureMap
 
         public object BuildNewInSession(Type pluginType, Instance instance)
         {
-            object returnValue = instance.Build(pluginType, this);
+            var returnValue = instance.Build(pluginType, this);
             if (returnValue == null) return null;
 
             try
@@ -124,7 +124,7 @@ namespace StructureMap
 
         public IEnumerable<object> GetAllInstances(Type pluginType)
         {
-            IEnumerable<Instance> allInstances = _pipelineGraph.GetAllInstances(pluginType);
+            var allInstances = _pipelineGraph.GetAllInstances(pluginType);
             return allInstances.Select(x => FindObject(pluginType, x)).ToArray();
         }
 
@@ -141,7 +141,7 @@ namespace StructureMap
 
         public virtual object CreateInstance(Type pluginType, string name)
         {
-            Instance instance = _pipelineGraph.FindInstance(pluginType, name);
+            var instance = _pipelineGraph.FindInstance(pluginType, name);
             if (instance == null)
             {
                 throw new StructureMapException(200, name, pluginType.FullName);
@@ -158,10 +158,7 @@ namespace StructureMap
 
         public Policies Policies
         {
-            get
-            {
-                return _pipelineGraph.Outer.Policies;
-            }
+            get { return _pipelineGraph.Outer.Policies; }
         }
     }
 }

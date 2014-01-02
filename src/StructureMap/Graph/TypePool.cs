@@ -12,8 +12,7 @@ namespace StructureMap.Graph
 
         public TypePool(PluginGraph graph)
         {
-            _types.OnMissing = assembly =>
-            {
+            _types.OnMissing = assembly => {
                 try
                 {
                     return assembly.GetExportedTypes();

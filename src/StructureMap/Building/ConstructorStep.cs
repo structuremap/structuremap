@@ -9,7 +9,7 @@ namespace StructureMap.Building
     public class ConstructorStep
     {
         private readonly ConstructorInfo _constructor;
-        private readonly List<IDependencySource> _arguments = new List<IDependencySource>(); 
+        private readonly List<IDependencySource> _arguments = new List<IDependencySource>();
 
         public ConstructorStep(ConstructorInfo constructor)
         {

@@ -4,9 +4,15 @@ namespace StructureMap.Pipeline
 {
     public class NulloTransientCache : IObjectCache
     {
-        public object Locker { get { return new object(); } }
+        public object Locker
+        {
+            get { return new object(); }
+        }
 
-        public int Count { get { return 0; } }
+        public int Count
+        {
+            get { return 0; }
+        }
 
         public bool Has(Type pluginType, Instance instance)
         {

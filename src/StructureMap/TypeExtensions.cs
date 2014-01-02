@@ -7,16 +7,14 @@ using StructureMap.Pipeline;
 
 namespace StructureMap
 {
-
-
     internal static class BasicExtensions
     {
         public static TReturn FirstValue<TItem, TReturn>(this IEnumerable<TItem> enumerable, Func<TItem, TReturn> func)
             where TReturn : class
         {
-            foreach (TItem item in enumerable)
+            foreach (var item in enumerable)
             {
-                TReturn @object = func(item);
+                var @object = func(item);
                 if (@object != null) return @object;
             }
 
@@ -50,7 +48,7 @@ namespace StructureMap
 
 
         public static void TryGet<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key,
-                                                Action<TValue> action)
+            Action<TValue> action)
         {
             TValue value;
             if (dictionary.TryGetValue(key, out value))
@@ -76,13 +74,14 @@ namespace StructureMap
         {
             internal static bool HasAttribute<T>(this ICustomAttributeProvider provider) where T : Attribute
             {
-                var atts = provider.GetCustomAttributes(typeof(T), true);
+                var atts = provider.GetCustomAttributes(typeof (T), true);
                 return atts.Length > 0;
             }
 
-            internal static void ForAttribute<T>(this ICustomAttributeProvider provider, Action<T> action) where T : Attribute
+            internal static void ForAttribute<T>(this ICustomAttributeProvider provider, Action<T> action)
+                where T : Attribute
             {
-                foreach (T attribute in provider.GetCustomAttributes(typeof(T), true))
+                foreach (T attribute in provider.GetCustomAttributes(typeof (T), true))
                 {
                     action(attribute);
                 }
@@ -91,22 +90,22 @@ namespace StructureMap
             public static T CloseAndBuildAs<T>(this Type openType, params Type[] parameterTypes)
             {
                 var closedType = openType.MakeGenericType(parameterTypes);
-                return (T)Activator.CreateInstance(closedType);
+                return (T) Activator.CreateInstance(closedType);
             }
 
             public static T CloseAndBuildAs<T>(this Type openType, object ctorArgument, params Type[] parameterTypes)
             {
                 var closedType = openType.MakeGenericType(parameterTypes);
-                return (T)Activator.CreateInstance(closedType, ctorArgument);
+                return (T) Activator.CreateInstance(closedType, ctorArgument);
             }
 
 
             public static bool Closes(this Type type, Type openType)
             {
-                Type baseType = type.BaseType;
+                var baseType = type.BaseType;
                 if (baseType == null) return false;
 
-                bool closes = baseType.IsGenericType && baseType.GetGenericTypeDefinition() == openType;
+                var closes = baseType.IsGenericType && baseType.GetGenericTypeDefinition() == openType;
                 if (closes) return true;
 
                 return type.BaseType == null ? false : type.BaseType.Closes(openType);
@@ -132,7 +131,7 @@ namespace StructureMap
             {
                 if (!TPluggedType.IsConcrete()) return false;
 
-                foreach (Type interfaceType in TPluggedType.GetInterfaces())
+                foreach (var interfaceType in TPluggedType.GetInterfaces())
                 {
                     if (interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition() == templateType)
                     {
@@ -159,12 +158,16 @@ namespace StructureMap
 
                 if (templateType.IsInterface)
                 {
-                    foreach (var interfaceType in TPluggedType.GetInterfaces().Where(type => type.IsGenericType && (type.GetGenericTypeDefinition() == templateType)))
+                    foreach (
+                        var interfaceType in
+                            TPluggedType.GetInterfaces()
+                                .Where(type => type.IsGenericType && (type.GetGenericTypeDefinition() == templateType)))
                     {
                         yield return interfaceType;
                     }
                 }
-                else if (TPluggedType.BaseType.IsGenericType && (TPluggedType.BaseType.GetGenericTypeDefinition() == templateType))
+                else if (TPluggedType.BaseType.IsGenericType &&
+                         (TPluggedType.BaseType.GetGenericTypeDefinition() == templateType))
                 {
                     yield return TPluggedType.BaseType;
                 }
@@ -191,7 +194,7 @@ namespace StructureMap
             {
                 if (type.IsGenericType)
                 {
-                    string[] parameters = Array.ConvertAll(type.GetGenericArguments(), t => t.GetName());
+                    var parameters = Array.ConvertAll(type.GetGenericArguments(), t => t.GetName());
                     string parameterList = String.Join(", ", parameters);
                     return "{0}<{1}>".ToFormat(type.Name, parameterList);
                 }
@@ -203,7 +206,7 @@ namespace StructureMap
             {
                 if (type.IsGenericType)
                 {
-                    string[] parameters = Array.ConvertAll(type.GetGenericArguments(), t => t.GetName());
+                    var parameters = Array.ConvertAll(type.GetGenericArguments(), t => t.GetName());
                     string parameterList = String.Join(", ", parameters);
                     return "{0}<{1}>".ToFormat(type.Name, parameterList);
                 }
@@ -218,7 +221,7 @@ namespace StructureMap
 
             public static IEnumerable<Type> AllInterfaces(this Type type)
             {
-                foreach (Type @interface in type.GetInterfaces())
+                foreach (var @interface in type.GetInterfaces())
                 {
                     yield return @interface;
                 }

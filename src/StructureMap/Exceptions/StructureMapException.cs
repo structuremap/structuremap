@@ -16,10 +16,9 @@ namespace StructureMap
 
         protected StructureMapException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
-                        _errorCode = info.GetInt32("errorCode");
-                        _msg = info.GetString("msg");
+            _errorCode = info.GetInt32("errorCode");
+            _msg = info.GetString("msg");
         }
-
 
 
         public StructureMapException(int ErrorCode, params object[] args)
@@ -37,9 +36,15 @@ namespace StructureMap
             _msg += ErrorMessages.GetMessage(ErrorCode, args);
         }
 
-        public override string Message { get { return _msg; } }
+        public override string Message
+        {
+            get { return _msg; }
+        }
 
-        public int ErrorCode { get { return _errorCode; } }
+        public int ErrorCode
+        {
+            get { return _errorCode; }
+        }
 
         [SecurityCritical]
         public override void GetObjectData(SerializationInfo info, StreamingContext context)

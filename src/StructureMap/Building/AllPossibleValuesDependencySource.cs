@@ -10,7 +10,7 @@ namespace StructureMap.Building
     public class AllPossibleValuesDependencySource : IDependencySource
     {
         public static readonly MethodInfo SessionMethod = typeof (IContext).GetMethod("GetAllInstances", new Type[0]);
-        public static readonly MethodInfo ToArrayMethod = typeof(Enumerable).GetMethod("ToArray");
+        public static readonly MethodInfo ToArrayMethod = typeof (Enumerable).GetMethod("ToArray");
 
 
         private readonly Type _enumerationType;
@@ -28,11 +28,11 @@ namespace StructureMap.Building
         {
             var getData = Expression.Call(session, SessionMethod.MakeGenericMethod(_elementType));
 
-            if (_enumerationType.IsArray || _enumerationType.GetGenericTypeDefinition() == typeof(IList<>))
+            if (_enumerationType.IsArray || _enumerationType.GetGenericTypeDefinition() == typeof (IList<>))
             {
                 return Expression.Call(null, ToArrayMethod.MakeGenericMethod(_elementType), getData);
             }
-            
+
             if (_enumerationType.GetGenericTypeDefinition() != typeof (List<>))
             {
                 return getData;
@@ -68,7 +68,8 @@ namespace StructureMap.Building
         {
             unchecked
             {
-                return ((_enumerationType != null ? _enumerationType.GetHashCode() : 0)*397) ^ (_elementType != null ? _elementType.GetHashCode() : 0);
+                return ((_enumerationType != null ? _enumerationType.GetHashCode() : 0)*397) ^
+                       (_elementType != null ? _elementType.GetHashCode() : 0);
             }
         }
     }

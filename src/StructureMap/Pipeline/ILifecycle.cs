@@ -7,7 +7,7 @@ namespace StructureMap.Pipeline
         IObjectCache FindCache(ILifecycleContext context);
     }
 
-    public abstract class LifecycleBase: ILifecycle
+    public abstract class LifecycleBase : ILifecycle
     {
         public string Scope
         {

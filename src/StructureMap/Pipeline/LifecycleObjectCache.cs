@@ -22,14 +22,14 @@ namespace StructureMap.Pipeline
         public bool Has(Type pluginType, Instance instance)
         {
             return _lock.Read(() => {
-                int key = instance.InstanceKey(pluginType);
+                var key = instance.InstanceKey(pluginType);
                 return _objects.ContainsKey(key);
             });
         }
 
         public void Eject(Type pluginType, Instance instance)
         {
-            int key = instance.InstanceKey(pluginType);
+            var key = instance.InstanceKey(pluginType);
             _lock.MaybeWrite(() => {
                 if (!_objects.ContainsKey(key)) return;
 
@@ -44,11 +44,10 @@ namespace StructureMap.Pipeline
         public object Get(Type pluginType, Instance instance, IBuildSession session)
         {
             object result = null;
-            int key = instance.InstanceKey(pluginType);
+            var key = instance.InstanceKey(pluginType);
             _lock.EnterUpgradeableReadLock();
             if (_objects.ContainsKey(key))
             {
-
                 result = _objects[key];
                 _lock.ExitUpgradeableReadLock();
             }
@@ -93,7 +92,7 @@ namespace StructureMap.Pipeline
             if (value == null) return;
 
             _lock.Write(() => {
-                int key = instance.InstanceKey(pluginType);
+                var key = instance.InstanceKey(pluginType);
                 if (_objects.ContainsKey(key))
                 {
                     _objects[key] = value;

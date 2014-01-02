@@ -4,12 +4,15 @@ namespace StructureMap.Diagnostics
     {
         private int _width;
 
-        internal int Width { get { return _width; } }
+        internal int Width
+        {
+            get { return _width; }
+        }
 
         internal static CharacterWidth[] For(int count)
         {
             var widths = new CharacterWidth[count];
-            for (int i = 0; i < widths.Length; i++)
+            for (var i = 0; i < widths.Length; i++)
             {
                 widths[i] = new CharacterWidth();
             }

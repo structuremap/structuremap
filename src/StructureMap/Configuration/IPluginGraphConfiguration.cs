@@ -18,5 +18,4 @@ namespace StructureMap.Configuration
         /// <param name="builder"></param>
         void Register(PluginGraphBuilder builder);
     }
-
 }

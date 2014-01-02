@@ -19,7 +19,10 @@ namespace StructureMap.Graph
 
         private readonly List<Action<PluginGraph>> _postScanningActions = new List<Action<PluginGraph>>();
 
-        public int Count { get { return _assemblies.Count; } }
+        public int Count
+        {
+            get { return _assemblies.Count; }
+        }
 
 
         public void Assembly(Assembly assembly)
@@ -37,7 +40,7 @@ namespace StructureMap.Graph
 
         public void Convention<T>() where T : IRegistrationConvention, new()
         {
-            IRegistrationConvention previous = _conventions.FirstOrDefault(scanner => scanner is T);
+            var previous = _conventions.FirstOrDefault(scanner => scanner is T);
             if (previous == null)
             {
                 With(new T());
@@ -51,7 +54,7 @@ namespace StructureMap.Graph
 
         public void TheCallingAssembly()
         {
-            Assembly callingAssembly = findTheCallingAssembly();
+            var callingAssembly = findTheCallingAssembly();
 
             if (callingAssembly != null)
             {
@@ -130,10 +133,10 @@ namespace StructureMap.Graph
 
         public void AssembliesFromApplicationBaseDirectory(Predicate<Assembly> assemblyFilter)
         {
-            string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
 
             AssembliesFromPath(baseDirectory, assemblyFilter);
-            string binPath = AppDomain.CurrentDomain.SetupInformation.PrivateBinPath;
+            var binPath = AppDomain.CurrentDomain.SetupInformation.PrivateBinPath;
             if (Directory.Exists(binPath))
             {
                 AssembliesFromPath(binPath, assemblyFilter);
@@ -147,17 +150,17 @@ namespace StructureMap.Graph
 
         public void AssembliesFromPath(string path, Predicate<Assembly> assemblyFilter)
         {
-            IEnumerable<string> assemblyPaths = Directory.GetFiles(path)
+            var assemblyPaths = Directory.GetFiles(path)
                 .Where(file =>
-                       Path.GetExtension(file).Equals(
-                           ".exe",
-                           StringComparison.OrdinalIgnoreCase)
-                       ||
-                       Path.GetExtension(file).Equals(
-                           ".dll",
-                           StringComparison.OrdinalIgnoreCase));
+                    Path.GetExtension(file).Equals(
+                        ".exe",
+                        StringComparison.OrdinalIgnoreCase)
+                    ||
+                    Path.GetExtension(file).Equals(
+                        ".dll",
+                        StringComparison.OrdinalIgnoreCase));
 
-            foreach (string assemblyPath in assemblyPaths)
+            foreach (var assemblyPath in assemblyPaths)
             {
                 Assembly assembly = null;
                 try
@@ -188,10 +191,9 @@ namespace StructureMap.Graph
         }
 
 
-
         public bool Contains(string assemblyName)
         {
-            foreach (Assembly assembly in _assemblies)
+            foreach (var assembly in _assemblies)
             {
                 if (assembly.GetName().Name == assemblyName)
                 {
@@ -206,12 +208,12 @@ namespace StructureMap.Graph
         {
             var trace = new StackTrace(false);
 
-            Assembly thisAssembly = System.Reflection.Assembly.GetExecutingAssembly();
+            var thisAssembly = System.Reflection.Assembly.GetExecutingAssembly();
             Assembly callingAssembly = null;
-            for (int i = 0; i < trace.FrameCount; i++)
+            for (var i = 0; i < trace.FrameCount; i++)
             {
-                StackFrame frame = trace.GetFrame(i);
-                Assembly assembly = frame.GetMethod().DeclaringType.Assembly;
+                var frame = trace.GetFrame(i);
+                var assembly = frame.GetMethod().DeclaringType.Assembly;
                 if (assembly != thisAssembly)
                 {
                     callingAssembly = assembly;
@@ -220,7 +222,6 @@ namespace StructureMap.Graph
             }
             return callingAssembly;
         }
-
 
 
         /// <summary>

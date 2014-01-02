@@ -33,20 +33,20 @@ namespace StructureMap.Diagnostics
 
         public void Write(StringWriter writer)
         {
-            CharacterWidth[] widths = CharacterWidth.For(_columnCount);
+            var widths = CharacterWidth.For(_columnCount);
 
-            foreach (Line line in _lines)
+            foreach (var line in _lines)
             {
                 line.OverwriteCounts(widths);
             }
 
-            for (int i = 0; i < widths.Length - 1; i++)
+            for (var i = 0; i < widths.Length - 1; i++)
             {
-                CharacterWidth width = widths[i];
+                var width = widths[i];
                 width.Add(5);
             }
 
-            foreach (Line line in _lines)
+            foreach (var line in _lines)
             {
                 writer.WriteLine();
                 line.Write(writer, widths);

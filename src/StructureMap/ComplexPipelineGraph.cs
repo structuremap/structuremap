@@ -4,7 +4,6 @@ using System.Linq;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
-using StructureMap.Query;
 
 namespace StructureMap
 {
@@ -44,8 +43,8 @@ namespace StructureMap
         public Instance GetDefault(Type pluginType)
         {
             return _outer.HasDefaultForPluginType(pluginType)
-                       ? _outer.Families[pluginType].GetDefaultInstance()
-                       : _parent.GetDefault(pluginType);
+                ? _outer.Families[pluginType].GetDefaultInstance()
+                : _parent.GetDefault(pluginType);
         }
 
         public bool HasDefaultForPluginType(Type pluginType)

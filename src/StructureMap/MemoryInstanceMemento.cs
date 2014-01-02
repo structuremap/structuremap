@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Specialized;
-using StructureMap.Configuration;
 
 namespace StructureMap
 {
@@ -89,22 +88,34 @@ namespace StructureMap
         /// <summary>
         /// See <cref>InstanceMemento</cref>
         /// </summary>
-        protected override string innerConcreteKey { get { return _concreteKey; } }
+        protected override string innerConcreteKey
+        {
+            get { return _concreteKey; }
+        }
 
         /// <summary>
         /// See <cref>InstanceMemento</cref>
         /// </summary>
-        protected override string innerInstanceKey { get { return _instanceKey; } }
+        protected override string innerInstanceKey
+        {
+            get { return _instanceKey; }
+        }
 
         /// <summary>
         /// See <cref>InstanceMemento</cref>
         /// </summary>
-        public override bool IsReference { get { return _isReference; } }
+        public override bool IsReference
+        {
+            get { return _isReference; }
+        }
 
         /// <summary>
         /// See <cref>InstanceMemento</cref>
         /// </summary>
-        public override string ReferenceKey { get { return _referenceKey; } }
+        public override string ReferenceKey
+        {
+            get { return _referenceKey; }
+        }
 
         public void SetConcreteKey(string concreteKey)
         {
@@ -118,7 +129,7 @@ namespace StructureMap
         /// <param name="value"></param>
         public void SetProperty(string name, string value)
         {
-            string stringValue = value == string.Empty ? EMPTY_STRING : value;
+            var stringValue = value == string.Empty ? EMPTY_STRING : value;
             _properties[name] = stringValue;
         }
 
@@ -191,7 +202,7 @@ namespace StructureMap
 
         public void SetPluggedType<T>()
         {
-            _properties[PluggedTypeKey] = typeof(T).AssemblyQualifiedName;
+            _properties[PluggedTypeKey] = typeof (T).AssemblyQualifiedName;
         }
     }
 }

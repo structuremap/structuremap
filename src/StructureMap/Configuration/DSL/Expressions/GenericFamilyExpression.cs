@@ -30,15 +30,13 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         private GenericFamilyExpression alterAndContinue(Action<PluginFamily> action)
         {
-            _registry.alter = graph =>
-            {
+            _registry.alter = graph => {
                 var family = graph.Families[_pluginType];
                 action(family);
             };
 
             return this;
         }
-
 
 
         /// <summary>
@@ -125,7 +123,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         {
             return alterAndContinue(family => family.AddInstance(instance));
         }
-        
+
         /// <summary>
         /// Configure this type as the supplied value
         /// </summary>
@@ -147,8 +145,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <returns></returns>
         public GenericFamilyExpression OnCreationForAll(Action<object> action)
         {
-            Func<object, object> func = raw =>
-            {
+            Func<object, object> func = raw => {
                 action(raw);
                 return raw;
             };
@@ -165,8 +162,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <returns></returns>
         public GenericFamilyExpression EnrichAllWith(Func<object, object> func)
         {
-            _registry.alter = graph =>
-            {
+            _registry.alter = graph => {
                 var interceptor = new PluginTypeInterceptor(_pluginType, (c, o) => func(o));
                 graph.InterceptorLibrary.AddInterceptor(interceptor);
             };
@@ -184,8 +180,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <returns></returns>
         public GenericFamilyExpression EnrichAllWith(Func<IContext, object, object> func)
         {
-            _registry.alter = graph =>
-            {
+            _registry.alter = graph => {
                 var interceptor = new PluginTypeInterceptor(_pluginType, func);
                 graph.InterceptorLibrary.AddInterceptor(interceptor);
             };

@@ -32,8 +32,7 @@ namespace StructureMap.Graph
         public void RegisterSingleImplementations(PluginGraph graph)
         {
             var singleImplementationRegistry = new SingleImplementationRegistry();
-            _types.Each((pluginType, types) =>
-            {
+            _types.Each((pluginType, types) => {
                 if (types.Count == 1)
                 {
                     singleImplementationRegistry.AddType(pluginType, types[0]);

@@ -20,9 +20,8 @@ namespace StructureMap.Configuration.DSL.Expressions
         {
             _pluginType = typeof (TPluginType);
 
-            registry.alter = graph =>
-            {
-                PluginFamily family = graph.Families[_pluginType];
+            registry.alter = graph => {
+                var family = graph.Families[_pluginType];
 
                 _children.Each(action => action(graph));
                 _alterations.Each(action => action(family));
@@ -34,7 +33,13 @@ namespace StructureMap.Configuration.DSL.Expressions
             }
         }
 
-        public InstanceExpression<TPluginType> MissingNamedInstanceIs { get { return new InstanceExpression<TPluginType>(i => _alterations.Add(family => family.MissingInstance = i)); } }
+        public InstanceExpression<TPluginType> MissingNamedInstanceIs
+        {
+            get
+            {
+                return new InstanceExpression<TPluginType>(i => _alterations.Add(family => family.MissingInstance = i));
+            }
+        }
 
         /// <summary>
         /// Add multiple Instances to this PluginType
@@ -192,11 +197,9 @@ namespace StructureMap.Configuration.DSL.Expressions
         public CreatePluginFamilyExpression<TPluginType> OnCreationForAll(Action<TPluginType> handler)
         {
             _children.Add(
-                graph =>
-                {
-                    var interceptor = new PluginTypeInterceptor(typeof(TPluginType), (c, o) =>
-                    {
-                        handler((TPluginType)o);
+                graph => {
+                    var interceptor = new PluginTypeInterceptor(typeof (TPluginType), (c, o) => {
+                        handler((TPluginType) o);
                         return o;
                     });
 
@@ -214,15 +217,13 @@ namespace StructureMap.Configuration.DSL.Expressions
         public CreatePluginFamilyExpression<TPluginType> OnCreationForAll(Action<IContext, TPluginType> handler)
         {
             _children.Add(
-                graph =>
-                {
-                    Func<IContext, object, object> function = (c, o) =>
-                    {
-                        handler(c, (TPluginType)o);
+                graph => {
+                    Func<IContext, object, object> function = (c, o) => {
+                        handler(c, (TPluginType) o);
                         return o;
                     };
 
-                    var interceptor = new PluginTypeInterceptor(typeof(TPluginType), function);
+                    var interceptor = new PluginTypeInterceptor(typeof (TPluginType), function);
 
                     graph.InterceptorLibrary.AddInterceptor(interceptor);
                 });
@@ -236,10 +237,9 @@ namespace StructureMap.Configuration.DSL.Expressions
         public CreatePluginFamilyExpression<TPluginType> InterceptWith(InstanceInterceptor interceptor)
         {
             _children.Add(
-                graph =>
-                {
+                graph => {
                     var typeInterceptor = new PluginTypeInterceptor(typeof (TPluginType),
-                                                                    (c, o) => interceptor.Process(o, c));
+                        (c, o) => interceptor.Process(o, c));
                     graph.InterceptorLibrary.AddInterceptor(typeInterceptor);
                 });
 
@@ -255,11 +255,10 @@ namespace StructureMap.Configuration.DSL.Expressions
         public CreatePluginFamilyExpression<TPluginType> EnrichAllWith(EnrichmentHandler<TPluginType> handler)
         {
             _children.Add(
-                graph =>
-                {
-                    Func<IContext, object, object> function = (context, target) => handler((TPluginType)target);
+                graph => {
+                    Func<IContext, object, object> function = (context, target) => handler((TPluginType) target);
 
-                    var interceptor = new PluginTypeInterceptor(typeof(TPluginType), function);
+                    var interceptor = new PluginTypeInterceptor(typeof (TPluginType), function);
                     graph.InterceptorLibrary.AddInterceptor(interceptor);
                 });
 
@@ -276,10 +275,9 @@ namespace StructureMap.Configuration.DSL.Expressions
         public CreatePluginFamilyExpression<TPluginType> EnrichAllWith(ContextEnrichmentHandler<TPluginType> handler)
         {
             _children.Add(
-                graph =>
-                {
-                    var interceptor = new PluginTypeInterceptor(typeof(TPluginType),
-                                                                (c, o) => handler(c, (TPluginType)o));
+                graph => {
+                    var interceptor = new PluginTypeInterceptor(typeof (TPluginType),
+                        (c, o) => handler(c, (TPluginType) o));
                     graph.InterceptorLibrary.AddInterceptor(interceptor);
                 });
 

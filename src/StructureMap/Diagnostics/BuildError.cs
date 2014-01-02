@@ -52,11 +52,20 @@ namespace StructureMap.Diagnostics
             _pluginType = pluginType;
         }
 
-        public List<BuildDependency> Dependencies { get { return _dependencies; } }
+        public List<BuildDependency> Dependencies
+        {
+            get { return _dependencies; }
+        }
 
-        public Instance Instance { get { return _instance; } }
+        public Instance Instance
+        {
+            get { return _instance; }
+        }
 
-        public Type PluginType { get { return _pluginType; } }
+        public Type PluginType
+        {
+            get { return _pluginType; }
+        }
 
         public StructureMapException Exception { get; set; }
 
@@ -70,13 +79,13 @@ namespace StructureMap.Diagnostics
 
         public void Write(StringWriter writer)
         {
-            string description = ((IDiagnosticInstance) Instance).CreateToken().Description;
+            var description = ((IDiagnosticInstance) Instance).CreateToken().Description;
 
             writer.WriteLine();
             writer.WriteLine(
                 "-----------------------------------------------------------------------------------------------------");
             writer.WriteLine("Build Error on Instance '{0}' ({1})\n    for PluginType {2}", Instance.Name, description,
-                             PluginType.AssemblyQualifiedName);
+                PluginType.AssemblyQualifiedName);
             writer.WriteLine();
 
             if (Exception != null) writer.WriteLine(Exception.ToString());

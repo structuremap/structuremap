@@ -37,7 +37,7 @@ namespace StructureMap.Building
             var instanceArg = Expression.Constant(_instance);
 
             var method = Expression.Call(session, SessionMethod, typeArg, instanceArg);
-            
+
 
             return Expression.Convert(method, _pluginType);
         }

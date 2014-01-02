@@ -23,7 +23,7 @@ namespace StructureMap.Configuration
         public void AddRegistry(string registryTypeName)
         {
             _pluginGraph.Log.Try(() => {
-                Type type = new TypePath(registryTypeName).FindType();
+                var type = new TypePath(registryTypeName).FindType();
                 var registry = (Registry) Activator.CreateInstance(type);
                 registry.As<IPluginGraphConfiguration>().Configure(_pluginGraph);
             }).AndReportErrorAs(290, registryTypeName);
@@ -33,8 +33,8 @@ namespace StructureMap.Configuration
         {
             try
             {
-                Type pluginType = pluginTypePath.FindType();
-                PluginFamily family = _pluginGraph.Families[pluginType];
+                var pluginType = pluginTypePath.FindType();
+                var family = _pluginGraph.Families[pluginType];
                 action(family);
             }
             catch (Exception ex)

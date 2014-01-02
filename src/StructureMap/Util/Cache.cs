@@ -16,8 +16,7 @@ namespace StructureMap.Util
 
         private Action<TValue> _onAddition = x => { };
 
-        private Func<TKey, TValue> _onMissing = delegate(TKey key)
-        {
+        private Func<TKey, TValue> _onMissing = delegate(TKey key) {
             var message = string.Format("Key '{0}' could not be found", key);
             throw new KeyNotFoundException(message);
         };
@@ -101,7 +100,7 @@ namespace StructureMap.Util
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return ((IEnumerable<TValue>)this).GetEnumerator();
+            return ((IEnumerable<TValue>) this).GetEnumerator();
         }
 
         public IEnumerator<TValue> GetEnumerator()
@@ -127,7 +126,6 @@ namespace StructureMap.Util
                 {
                     if (!_values.ContainsKey(key))
                     {
-
                         var value = onMissing(key);
                         _onAddition(value);
                         _values.Add(key, value);

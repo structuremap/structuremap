@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace StructureMap.Building
+﻿namespace StructureMap.Building
 {
     public class LiteralPlan<T> : IBuildPlan
     {

@@ -1,5 +1,4 @@
 using System;
-using StructureMap.Graph;
 
 namespace StructureMap.Pipeline
 {
@@ -10,8 +9,6 @@ namespace StructureMap.Pipeline
     /// </summary>
     public partial class ConfiguredInstance : ConstructorInstance<ConfiguredInstance>
     {
-
-
         public ConfiguredInstance(Type pluggedType, string name)
             : base(pluggedType, name)
         {

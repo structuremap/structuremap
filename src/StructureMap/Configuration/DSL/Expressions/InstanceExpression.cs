@@ -173,7 +173,10 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         #region IsExpression<T> Members
 
-        IInstanceExpression<T> IsExpression<T>.Is { get { return this; } }
+        IInstanceExpression<T> IsExpression<T>.Is
+        {
+            get { return this; }
+        }
 
         public void IsThis(Instance instance)
         {

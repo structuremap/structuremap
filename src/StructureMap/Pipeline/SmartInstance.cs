@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using StructureMap.Graph;
 using StructureMap.Interceptors;
 
 namespace StructureMap.Pipeline
@@ -162,11 +161,8 @@ namespace StructureMap.Pipeline
         public DependencyExpression<SmartInstance<T>, TSettertype> Setter<TSettertype>(
             Expression<Func<T, TSettertype>> expression)
         {
-            string propertyName = ReflectionHelper.GetProperty(expression).Name;
+            var propertyName = ReflectionHelper.GetProperty(expression).Name;
             return new DependencyExpression<SmartInstance<T>, TSettertype>(this, propertyName);
         }
-
-
-
     }
 }

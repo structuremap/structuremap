@@ -12,10 +12,10 @@ namespace StructureMap.Graph
             }
             catch (Exception e)
             {
-                string message =
+                var message =
                     string.Format("Could not Determine Whether Type '{0}' plugs into Type '{1}'",
-                                  pluginType.Name,
-                                  pluggedType.Name);
+                        pluginType.Name,
+                        pluggedType.Name);
                 throw new ApplicationException(message, e);
             }
         }
@@ -26,7 +26,7 @@ namespace StructureMap.Graph
 
 
 // check interfaces
-            foreach (Type type in pluggedType.GetInterfaces())
+            foreach (var type in pluggedType.GetInterfaces())
             {
                 if (!type.IsGenericType)
                 {
@@ -41,7 +41,7 @@ namespace StructureMap.Graph
 
             if (pluggedType.BaseType.IsGenericType)
             {
-                Type baseType = pluggedType.BaseType.GetGenericTypeDefinition();
+                var baseType = pluggedType.BaseType.GetGenericTypeDefinition();
 
                 if (baseType.Equals(pluginType))
                 {

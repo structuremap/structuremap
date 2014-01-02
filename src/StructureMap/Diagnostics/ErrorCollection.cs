@@ -29,7 +29,7 @@ namespace StructureMap.Diagnostics
         {
             if (_buildErrors.ContainsKey(instance))
             {
-                BuildError existingError = _buildErrors[instance];
+                var existingError = _buildErrors[instance];
                 addDependenciesToError(instance, dependencies, existingError);
             }
 
@@ -38,7 +38,7 @@ namespace StructureMap.Diagnostics
                 return;
             }
 
-            InstanceToken token = ((IDiagnosticInstance) instance).CreateToken();
+            var token = ((IDiagnosticInstance) instance).CreateToken();
             var error = new BuildError(pluginType, instance);
             error.Exception = ex;
 
@@ -48,9 +48,9 @@ namespace StructureMap.Diagnostics
         }
 
         private void addDependenciesToError(Instance instance, IEnumerable<BuildDependency> dependencies,
-                                            BuildError error)
+            BuildError error)
         {
-            foreach (BuildDependency dependency in dependencies)
+            foreach (var dependency in dependencies)
             {
                 if (_brokenInstances.Contains(instance))
                 {
@@ -66,7 +66,7 @@ namespace StructureMap.Diagnostics
         {
             foreach (var pair in _buildErrors)
             {
-                BuildError error = pair.Value;
+                var error = pair.Value;
                 if (error.PluginType == pluginType && error.Instance.Name == name)
                 {
                     return error;

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using System.Reflection;
 using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.Graph;
@@ -30,18 +29,12 @@ namespace StructureMap.Configuration.DSL
 
         internal Action<PluginGraph> alter
         {
-            set
-            {
-                _actions.Add(value);
-            }
+            set { _actions.Add(value); }
         }
 
         private Action<PluginGraphBuilder> register
         {
-            set
-            {
-                _builders.Add(value);
-            }
+            set { _builders.Add(value); }
         }
 
         /// <summary>
@@ -82,9 +75,7 @@ namespace StructureMap.Configuration.DSL
         /// <param name="registry"></param>
         public void IncludeRegistry(Registry registry)
         {
-            alter = graph => {
-                registry.As<IPluginGraphConfiguration>().Configure(graph);
-            };
+            alter = graph => { registry.As<IPluginGraphConfiguration>().Configure(graph); };
         }
 
         /// <summary>
@@ -97,7 +88,7 @@ namespace StructureMap.Configuration.DSL
         /// <returns></returns>
         public BuildWithExpression<T> ForConcreteType<T>()
         {
-            SmartInstance<T> instance = For<T>().Use<T>();
+            var instance = For<T>().Use<T>();
             return new BuildWithExpression<T>(instance);
         }
 
@@ -183,13 +174,9 @@ namespace StructureMap.Configuration.DSL
         /// <returns></returns>
         public CreatePluginFamilyExpression<TPluginType> FillAllPropertiesOfType<TPluginType>()
         {
-            Func<PropertyInfo, bool> predicate = prop => {
-                return prop.PropertyType == typeof (TPluginType);
-            };
+            Func<PropertyInfo, bool> predicate = prop => { return prop.PropertyType == typeof (TPluginType); };
 
-            alter = graph => {
-                graph.Policies.SetterRules.Add(predicate);
-            };
+            alter = graph => { graph.Policies.SetterRules.Add(predicate); };
 
             return For<TPluginType>();
         }
@@ -264,8 +251,7 @@ namespace StructureMap.Configuration.DSL
         /// <returns></returns>
         public LambdaInstance<T> Redirect<T, U>() where T : class where U : class
         {
-            return For<T>().Use(c =>
-            {
+            return For<T>().Use(c => {
                 var raw = c.GetInstance<U>();
                 var t = raw as T;
                 if (t == null)
@@ -332,7 +318,7 @@ namespace StructureMap.Configuration.DSL
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            if(other.GetType() == typeof(Registry) && GetType() == typeof(Registry)) return false;
+            if (other.GetType() == typeof (Registry) && GetType() == typeof (Registry)) return false;
             if (Equals(other.GetType(), GetType()))
             {
                 return !GetType().IsNotPublic;
@@ -366,7 +352,10 @@ namespace StructureMap.Configuration.DSL
                 _instance = instance;
             }
 
-            public SmartInstance<T> Configure { get { return _instance; } }
+            public SmartInstance<T> Configure
+            {
+                get { return _instance; }
+            }
         }
 
         /// <summary>

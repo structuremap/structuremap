@@ -20,13 +20,19 @@ namespace StructureMap.Pipeline
         }
 
 
-        protected override ObjectInstance thisInstance { get { return this; } }
+        protected override ObjectInstance thisInstance
+        {
+            get { return this; }
+        }
 
-        public object Object { get { return _object; } }
+        public object Object
+        {
+            get { return _object; }
+        }
 
         public void Dispose()
         {
-            bool isContainer = _object is IContainer;
+            var isContainer = _object is IContainer;
             if (!isContainer)
             {
                 _object.SafeDispose();

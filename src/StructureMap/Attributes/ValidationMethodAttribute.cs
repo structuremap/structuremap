@@ -21,8 +21,8 @@ namespace StructureMap
         {
             var methodList = new ArrayList();
 
-            MethodInfo[] methods = objectType.GetMethods();
-            foreach (MethodInfo method in methods)
+            var methods = objectType.GetMethods();
+            foreach (var method in methods)
             {
                 var att =
                     (ValidationMethodAttribute) GetCustomAttribute(method, typeof (ValidationMethodAttribute));
@@ -31,7 +31,7 @@ namespace StructureMap
                 {
                     if (method.GetParameters().Length > 0)
                     {
-                        string msg =
+                        var msg =
                             string.Format(
                                 "Method *{0}* in Class *{1}* cannot be a validation method because it has parameters",
                                 method.Name, objectType.AssemblyQualifiedName);

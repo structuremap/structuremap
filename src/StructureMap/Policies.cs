@@ -19,7 +19,7 @@ namespace StructureMap
 
             if (ctor == null) return false;
 
-            foreach (ParameterInfo parameter in ctor.GetParameters())
+            foreach (var parameter in ctor.GetParameters())
             {
                 if (!parameter.ParameterType.IsAutoFillable())
                 {

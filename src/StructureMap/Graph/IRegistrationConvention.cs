@@ -20,7 +20,7 @@ namespace StructureMap.Graph
     public abstract class ConfigurableRegistrationConvention : IRegistrationConvention
     {
         protected Action<GenericFamilyExpression> ConfigureFamily = x => { };
-        
+
         public void SetFamilyConfigurationAction(Action<GenericFamilyExpression> configureFamily)
         {
             ConfigureFamily = configureFamily;

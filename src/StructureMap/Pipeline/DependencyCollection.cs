@@ -68,7 +68,7 @@ namespace StructureMap.Pipeline
             {
                 var elementType = EnumerableInstance.DetermineElementType(argumentType);
                 argument = _dependencies
-                    .LastOrDefault(x => x.Type == typeof(IEnumerable<>).MakeGenericType(elementType) && x.Name == name);
+                    .LastOrDefault(x => x.Type == typeof (IEnumerable<>).MakeGenericType(elementType) && x.Name == name);
             }
 
             return argument;
@@ -109,7 +109,9 @@ namespace StructureMap.Pipeline
             {
                 if (@dependency == null)
                 {
-                    throw new ArgumentNullException("@dependency", "Dependency value cannot be null for a simple argument of type '{1}' with name: '{0}".ToFormat(name, type));
+                    throw new ArgumentNullException("@dependency",
+                        "Dependency value cannot be null for a simple argument of type '{1}' with name: '{0}".ToFormat(
+                            name, type));
                 }
 
                 if (@dependency.GetType() != type)
@@ -125,7 +127,7 @@ namespace StructureMap.Pipeline
                     }
                 }
             }
-            
+
             _dependencies.Add(new Argument
             {
                 Name = name,

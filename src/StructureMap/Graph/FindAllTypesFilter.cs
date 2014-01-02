@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using StructureMap.Configuration.DSL;
 using StructureMap.TypeRules;
 
@@ -19,7 +18,7 @@ namespace StructureMap.Graph
         {
             if (type.CanBeCastTo(_pluginType) && type.HasConstructors())
             {
-                string name = _getName(type);
+                var name = _getName(type);
                 registry.AddType(GetLeastSpecificButValidType(_pluginType, type), type, name);
             }
         }

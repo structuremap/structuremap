@@ -10,8 +10,7 @@ namespace StructureMap.Building
     {
         public static Func<IContext, T> Wrap<T>(Func<IContext, T> inner, string description)
         {
-            return context =>
-            {
+            return context => {
                 try
                 {
                     return inner(context);

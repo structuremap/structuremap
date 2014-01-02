@@ -22,13 +22,13 @@ namespace StructureMap.Diagnostics
 
         public void Write(StringWriter writer)
         {
-            string description = ((IDiagnosticInstance) Instance).CreateToken().Description;
+            var description = ((IDiagnosticInstance) Instance).CreateToken().Description;
 
             writer.WriteLine();
             writer.WriteLine(
                 "-----------------------------------------------------------------------------------------------------");
             writer.WriteLine("Validation Error in Method {0} of Instance '{1}' ({2})\n   in PluginType {3}", MethodName,
-                             Instance.Name, description, PluginType.AssemblyQualifiedName);
+                Instance.Name, description, PluginType.AssemblyQualifiedName);
             writer.WriteLine();
             writer.WriteLine(Exception.ToString());
             writer.WriteLine();

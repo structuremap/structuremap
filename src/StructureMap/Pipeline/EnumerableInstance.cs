@@ -16,10 +16,7 @@ namespace StructureMap.Pipeline
 
         public static IEnumerable<Type> OpenEnumerableTypes
         {
-            get
-            {
-                return _enumerableTypes;
-            }
+            get { return _enumerableTypes; }
         }
 
         public static Type DetermineElementType(Type pluginType)
@@ -39,11 +36,14 @@ namespace StructureMap.Pipeline
             _children = children;
         }
 
-        public IEnumerable<Instance> Children { get { return _children; } }
+        public IEnumerable<Instance> Children
+        {
+            get { return _children; }
+        }
 
         public static IEnumerableCoercion DetermineCoercion(Type propertyType)
         {
-            Type coercionType = determineCoercionType(propertyType);
+            var coercionType = determineCoercionType(propertyType);
             return (IEnumerableCoercion) Activator.CreateInstance(coercionType);
         }
 
@@ -56,7 +56,7 @@ namespace StructureMap.Pipeline
 
             if (propertyType.IsGenericType)
             {
-                Type templateType = propertyType.GetGenericTypeDefinition();
+                var templateType = propertyType.GetGenericTypeDefinition();
                 if (_enumerableTypes.Contains(templateType))
                 {
                     return typeof (ListCoercion<>).MakeGenericType(propertyType.GetGenericArguments().First());
@@ -86,8 +86,8 @@ namespace StructureMap.Pipeline
             }
 
             var parentType = pluginType.GetGenericTypeDefinition();
-            return parentType == typeof (List<>) 
-                ? new ListDependencySource(elementType, items) 
+            return parentType == typeof (List<>)
+                ? new ListDependencySource(elementType, items)
                 : new ArrayDependencySource(elementType, items);
         }
 
@@ -101,7 +101,7 @@ namespace StructureMap.Pipeline
             var coercion = DetermineCoercion(pluginType);
             var elementType = coercion.ElementType;
 
-            IEnumerable<object> objects = buildObjects(elementType, session);
+            var objects = buildObjects(elementType, session);
             return coercion.Convert(objects);
         }
 
@@ -121,7 +121,5 @@ namespace StructureMap.Pipeline
 
             return type.IsGenericType && type.GetGenericTypeDefinition().IsIn(_enumerableTypes);
         }
-
-
     }
 }

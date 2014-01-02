@@ -37,7 +37,7 @@ namespace StructureMap.Diagnostics
 
             var model = new Model(_graph);
 
-            foreach (IPluginTypeConfiguration pluginType in model.PluginTypes)
+            foreach (var pluginType in model.PluginTypes)
             {
                 writePluginType(pluginType);
             }
@@ -73,7 +73,7 @@ namespace StructureMap.Diagnostics
                 _writer.AddContent("Scoped as:  PerRequest/Transient");
             }
 
-            foreach (InstanceRef instance in pluginType.Instances)
+            foreach (var instance in pluginType.Instances)
             {
                 writeInstance(instance);
             }

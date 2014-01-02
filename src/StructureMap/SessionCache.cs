@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using StructureMap.Pipeline;
 using System.Linq;
+using StructureMap.Pipeline;
 
 namespace StructureMap
 {
@@ -51,7 +51,7 @@ namespace StructureMap
             {
                 _defaults.Add(pluginType, o);
             }
-            
+
             return o;
         }
 
@@ -62,10 +62,10 @@ namespace StructureMap
                 return _resolver.BuildNewInSession(pluginType, instance);
             }
 
-            int key = instance.InstanceKey(pluginType);
+            var key = instance.InstanceKey(pluginType);
             if (!_cachedObjects.ContainsKey(key))
             {
-                object o = _resolver.ResolveFromLifecycle(pluginType, instance);
+                var o = _resolver.ResolveFromLifecycle(pluginType, instance);
                 _cachedObjects[key] = o;
 
                 return o;

@@ -1,5 +1,4 @@
 using System;
-using StructureMap.Building;
 using StructureMap.Graph;
 using StructureMap.TypeRules;
 
@@ -15,7 +14,10 @@ namespace StructureMap.Pipeline
             _prototype = prototype;
         }
 
-        protected override PrototypeInstance thisInstance { get { return this; } }
+        protected override PrototypeInstance thisInstance
+        {
+            get { return this; }
+        }
 
 
         protected override object build(Type pluginType, IBuildSession session)

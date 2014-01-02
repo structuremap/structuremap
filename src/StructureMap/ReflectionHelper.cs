@@ -11,25 +11,25 @@ namespace StructureMap
     {
         public static PropertyInfo GetProperty<T>(Expression<Func<T, object>> expression)
         {
-            MemberExpression memberExpression = getMemberExpression(expression);
+            var memberExpression = getMemberExpression(expression);
             return (PropertyInfo) memberExpression.Member;
         }
 
         public static PropertyInfo GetProperty<TModel, T>(Expression<Func<TModel, T>> expression)
         {
-            MemberExpression memberExpression = getMemberExpression(expression);
+            var memberExpression = getMemberExpression(expression);
             return (PropertyInfo) memberExpression.Member;
         }
 
         public static MemberInfo GetMember<T>(Expression<Func<T, object>> expression)
         {
-            MemberExpression memberExpression = getMemberExpression(expression);
+            var memberExpression = getMemberExpression(expression);
             return memberExpression.Member;
         }
 
         public static MemberInfo GetMember<TModel, T>(Expression<Func<TModel, T>> expression)
         {
-            MemberExpression memberExpression = getMemberExpression(expression);
+            var memberExpression = getMemberExpression(expression);
             return memberExpression.Member;
         }
 
@@ -53,7 +53,7 @@ namespace StructureMap
 
         public static MethodInfo GetMethod<T>(Expression<Func<T, object>> expression)
         {
-            MethodCallExpression methodCall =
+            var methodCall =
                 expression.Body is UnaryExpression
                     ? (MethodCallExpression) ((UnaryExpression) expression.Body).Operand
                     : (MethodCallExpression) expression.Body;
@@ -171,7 +171,7 @@ namespace StructureMap
 
         protected virtual ElementInit VisitElementInitializer(ElementInit initializer)
         {
-            ReadOnlyCollection<Expression> arguments = VisitList(initializer.Arguments);
+            var arguments = VisitList(initializer.Arguments);
             if (arguments != initializer.Arguments)
             {
                 return Expression.ElementInit(initializer.AddMethod, arguments);
@@ -181,7 +181,7 @@ namespace StructureMap
 
         protected virtual Expression VisitUnary(UnaryExpression u)
         {
-            Expression operand = Visit(u.Operand);
+            var operand = Visit(u.Operand);
             if (operand != u.Operand)
             {
                 return Expression.MakeUnary(u.NodeType, operand, u.Type, u.Method);
@@ -191,9 +191,9 @@ namespace StructureMap
 
         protected virtual Expression VisitBinary(BinaryExpression b)
         {
-            Expression left = Visit(b.Left);
-            Expression right = Visit(b.Right);
-            Expression conversion = Visit(b.Conversion);
+            var left = Visit(b.Left);
+            var right = Visit(b.Right);
+            var conversion = Visit(b.Conversion);
 
             if (left != b.Left || right != b.Right || conversion != b.Conversion)
             {
@@ -207,7 +207,7 @@ namespace StructureMap
 
         protected virtual Expression VisitTypeIs(TypeBinaryExpression b)
         {
-            Expression expr = Visit(b.Expression);
+            var expr = Visit(b.Expression);
             if (expr != b.Expression)
             {
                 return Expression.TypeIs(expr, b.TypeOperand);
@@ -222,9 +222,9 @@ namespace StructureMap
 
         protected virtual Expression VisitConditional(ConditionalExpression c)
         {
-            Expression test = Visit(c.Test);
-            Expression ifTrue = Visit(c.IfTrue);
-            Expression ifFalse = Visit(c.IfFalse);
+            var test = Visit(c.Test);
+            var ifTrue = Visit(c.IfTrue);
+            var ifFalse = Visit(c.IfFalse);
 
             if (test != c.Test || ifTrue != c.IfTrue || ifFalse != c.IfFalse)
             {
@@ -241,7 +241,7 @@ namespace StructureMap
 
         protected virtual Expression VisitMemberAccess(MemberExpression m)
         {
-            Expression exp = Visit(m.Expression);
+            var exp = Visit(m.Expression);
             if (exp != m.Expression)
             {
                 return Expression.MakeMemberAccess(exp, m.Member);
@@ -251,7 +251,7 @@ namespace StructureMap
 
         protected virtual Expression VisitMethodCall(MethodCallExpression m)
         {
-            Expression obj = Visit(m.Object);
+            var obj = Visit(m.Object);
             IEnumerable<Expression> args = VisitList(m.Arguments);
 
             if (obj != m.Object || args != m.Arguments)
@@ -267,7 +267,7 @@ namespace StructureMap
             List<Expression> list = null;
             for (int i = 0, n = original.Count; i < n; i++)
             {
-                Expression p = Visit(original[i]);
+                var p = Visit(original[i]);
                 if (list != null)
                 {
                     list.Add(p);
@@ -275,7 +275,7 @@ namespace StructureMap
                 else if (p != original[i])
                 {
                     list = new List<Expression>(n);
-                    for (int j = 0; j < i; j++)
+                    for (var j = 0; j < i; j++)
                     {
                         list.Add(original[j]);
                     }
@@ -291,7 +291,7 @@ namespace StructureMap
 
         protected virtual MemberAssignment VisitMemberAssignment(MemberAssignment assignment)
         {
-            Expression e = Visit(assignment.Expression);
+            var e = Visit(assignment.Expression);
 
             if (e != assignment.Expression)
             {
@@ -303,7 +303,7 @@ namespace StructureMap
 
         protected virtual MemberMemberBinding VisitMemberMemberBinding(MemberMemberBinding binding)
         {
-            IEnumerable<MemberBinding> bindings = VisitBindingList(binding.Bindings);
+            var bindings = VisitBindingList(binding.Bindings);
 
             if (bindings != binding.Bindings)
             {
@@ -315,7 +315,7 @@ namespace StructureMap
 
         protected virtual MemberListBinding VisitMemberListBinding(MemberListBinding binding)
         {
-            IEnumerable<ElementInit> initializers = VisitElementInitializerList(binding.Initializers);
+            var initializers = VisitElementInitializerList(binding.Initializers);
 
             if (initializers != binding.Initializers)
             {
@@ -329,7 +329,7 @@ namespace StructureMap
             List<MemberBinding> list = null;
             for (int i = 0, n = original.Count; i < n; i++)
             {
-                MemberBinding b = VisitBinding(original[i]);
+                var b = VisitBinding(original[i]);
                 if (list != null)
                 {
                     list.Add(b);
@@ -337,7 +337,7 @@ namespace StructureMap
                 else if (b != original[i])
                 {
                     list = new List<MemberBinding>(n);
-                    for (int j = 0; j < i; j++)
+                    for (var j = 0; j < i; j++)
                     {
                         list.Add(original[j]);
                     }
@@ -356,7 +356,7 @@ namespace StructureMap
             List<ElementInit> list = null;
             for (int i = 0, n = original.Count; i < n; i++)
             {
-                ElementInit init = VisitElementInitializer(original[i]);
+                var init = VisitElementInitializer(original[i]);
                 if (list != null)
                 {
                     list.Add(init);
@@ -364,7 +364,7 @@ namespace StructureMap
                 else if (init != original[i])
                 {
                     list = new List<ElementInit>(n);
-                    for (int j = 0; j < i; j++)
+                    for (var j = 0; j < i; j++)
                     {
                         list.Add(original[j]);
                     }
@@ -380,7 +380,7 @@ namespace StructureMap
 
         protected virtual Expression VisitLambda(LambdaExpression lambda)
         {
-            Expression body = Visit(lambda.Body);
+            var body = Visit(lambda.Body);
             if (body != lambda.Body)
             {
                 return Expression.Lambda(lambda.Type, body, lambda.Parameters);
@@ -404,8 +404,8 @@ namespace StructureMap
 
         protected virtual Expression VisitMemberInit(MemberInitExpression init)
         {
-            NewExpression n = VisitNew(init.NewExpression);
-            IEnumerable<MemberBinding> bindings = VisitBindingList(init.Bindings);
+            var n = VisitNew(init.NewExpression);
+            var bindings = VisitBindingList(init.Bindings);
 
             if (n != init.NewExpression || bindings != init.Bindings)
             {
@@ -417,8 +417,8 @@ namespace StructureMap
 
         protected virtual Expression VisitListInit(ListInitExpression init)
         {
-            NewExpression n = VisitNew(init.NewExpression);
-            IEnumerable<ElementInit> initializers = VisitElementInitializerList(init.Initializers);
+            var n = VisitNew(init.NewExpression);
+            var initializers = VisitElementInitializerList(init.Initializers);
 
             if (n != init.NewExpression || initializers != init.Initializers)
             {
@@ -449,7 +449,7 @@ namespace StructureMap
         protected virtual Expression VisitInvocation(InvocationExpression iv)
         {
             IEnumerable<Expression> args = VisitList(iv.Arguments);
-            Expression expr = Visit(iv.Expression);
+            var expr = Visit(iv.Expression);
 
             if (args != iv.Arguments || expr != iv.Expression)
             {
@@ -465,7 +465,10 @@ namespace StructureMap
     {
         private ConstructorInfo _constructor;
 
-        public ConstructorInfo Constructor { get { return _constructor; } }
+        public ConstructorInfo Constructor
+        {
+            get { return _constructor; }
+        }
 
         protected override NewExpression VisitNew(NewExpression nex)
         {

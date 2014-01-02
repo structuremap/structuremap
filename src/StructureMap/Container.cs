@@ -45,7 +45,7 @@ namespace StructureMap
             Name = Guid.NewGuid().ToString();
 
             _pipelineGraph = pipelineGraph;
-            _pipelineGraph.Outer.Families[typeof(IContainer)].SetDefault(new ObjectInstance(this));
+            _pipelineGraph.Outer.Families[typeof (IContainer)].SetDefault(new ObjectInstance(this));
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace StructureMap
 
         public T GetInstance<T>(ExplicitArguments args, string name)
         {
-            Instance namedInstance = _pipelineGraph.FindInstance(typeof (T), name);
+            var namedInstance = _pipelineGraph.FindInstance(typeof (T), name);
             return (T) buildInstanceWithArgs(typeof (T), namedInstance, args, name);
         }
 
@@ -101,8 +101,8 @@ namespace StructureMap
         /// <returns></returns>
         public object GetInstance(Type pluginType, ExplicitArguments args)
         {
-            Instance defaultInstance = _pipelineGraph.GetDefault(pluginType);
-            string requestedName = BuildSession.DEFAULT;
+            var defaultInstance = _pipelineGraph.GetDefault(pluginType);
+            var requestedName = BuildSession.DEFAULT;
 
             return buildInstanceWithArgs(pluginType, defaultInstance, args, requestedName);
         }
@@ -169,8 +169,8 @@ namespace StructureMap
         public object TryGetInstance(Type pluginType, string instanceKey)
         {
             return !_pipelineGraph.HasInstance(pluginType, instanceKey)
-                       ? null
-                       : GetInstance(pluginType, instanceKey);
+                ? null
+                : GetInstance(pluginType, instanceKey);
         }
 
         /// <summary>
@@ -181,8 +181,8 @@ namespace StructureMap
         public object TryGetInstance(Type pluginType)
         {
             return !_pipelineGraph.HasDefaultForPluginType(pluginType)
-                       ? null
-                       : GetInstance(pluginType);
+                ? null
+                : GetInstance(pluginType);
         }
 
         /// <summary>
@@ -379,7 +379,7 @@ namespace StructureMap
         /// <returns></returns>
         public IContainer GetNestedContainer()
         {
-            var container =  new Container(_pipelineGraph.ToNestedGraph());
+            var container = new Container(_pipelineGraph.ToNestedGraph());
             container.Name = "Nested-" + container.Name;
 
             return container;
@@ -438,7 +438,7 @@ namespace StructureMap
         }
 
         private object buildInstanceWithArgs(Type pluginType, Instance defaultInstance, ExplicitArguments args,
-                                             string requestedName)
+            string requestedName)
         {
             if (defaultInstance == null && pluginType.IsConcrete())
             {
@@ -448,8 +448,8 @@ namespace StructureMap
             var basicInstance = defaultInstance as ConstructorInstance;
 
             var instance = basicInstance == null
-                                    ? defaultInstance
-                                    : basicInstance.Override(args);
+                ? defaultInstance
+                : basicInstance.Override(args);
 
             var session = new BuildSession(_pipelineGraph, requestedName, args);
 

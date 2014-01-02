@@ -24,7 +24,7 @@ namespace StructureMap.Graph
         private readonly IList<IFamilyPolicy> _policies = new List<IFamilyPolicy>();
 
         private readonly InterceptorLibrary _interceptorLibrary = new InterceptorLibrary();
-        
+
         private readonly List<Registry> _registries = new List<Registry>();
         private GraphLog _log = new GraphLog();
         private readonly LifecycleObjectCache _singletonCache = new LifecycleObjectCache();
@@ -39,13 +39,11 @@ namespace StructureMap.Graph
                 new LightweightCache<string, PluginGraph>(name => new PluginGraph {ProfileName = name, Parent = this});
 
             ProfileName = "DEFAULT";
-            _families = new Cache<Type, PluginFamily>(type =>
-            {
-                return _policies.FirstValue(x => x.Build(type)) ?? new PluginFamily(type);
-            });
+            _families =
+                new Cache<Type, PluginFamily>(
+                    type => { return _policies.FirstValue(x => x.Build(type)) ?? new PluginFamily(type); });
 
             _families.OnAddition = family => family.Owner = this;
-
         }
 
         public PluginGraph Parent { get; set; }
@@ -75,7 +73,7 @@ namespace StructureMap.Graph
         public IEnumerable<PluginGraph> Profiles
         {
             get { return _profiles; }
-        } 
+        }
 
         public void AddFamilyPolicy(IFamilyPolicy policy)
         {
@@ -105,10 +103,7 @@ namespace StructureMap.Graph
 
         public PluginGraph Root
         {
-            get
-            {
-                return Parent == null ? this : Parent.Root;
-            }
+            get { return Parent == null ? this : Parent.Root; }
         }
 
         /// <summary>
@@ -222,10 +217,7 @@ namespace StructureMap.Graph
 
         public void EachInstance(Action<Type, Instance> action)
         {
-            _families.Each(family =>
-            {
-                family.Instances.Each(i => action(family.PluginType, i));
-            });
+            _families.Each(family => { family.Instances.Each(i => action(family.PluginType, i)); });
         }
 
         public Instance FindInstance(Type pluginType, string name)
@@ -255,7 +247,7 @@ namespace StructureMap.Graph
             _profiles.Clear();
 
             var containerFamily = _families[typeof (IContainer)];
-            _families.Remove(typeof(IContainer));
+            _families.Remove(typeof (IContainer));
             containerFamily.RemoveAll();
 
             _families.Each(x => x.SafeDispose());

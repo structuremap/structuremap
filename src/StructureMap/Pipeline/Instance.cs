@@ -91,11 +91,11 @@ namespace StructureMap.Pipeline
         public virtual object Build(Type pluginType, IBuildSession session)
         {
             // "Build" the desired object
-            object rawValue = createRawObject(pluginType, session);
+            var rawValue = createRawObject(pluginType, session);
 
             // Allow the Interceptor a chance to enhance, configure,  
             // wrap with a decorator, or even replace the rawValue
-            object finalValue = applyInterception(rawValue, pluginType, session);
+            var finalValue = applyInterception(rawValue, pluginType, session);
 
             return finalValue;
         }

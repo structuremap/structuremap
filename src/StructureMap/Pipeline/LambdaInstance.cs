@@ -1,5 +1,4 @@
 using System;
-using StructureMap.Building;
 
 namespace StructureMap.Pipeline
 {
@@ -17,7 +16,10 @@ namespace StructureMap.Pipeline
             _builder = s => func();
         }
 
-        protected override LambdaInstance<T> thisInstance { get { return this; } }
+        protected override LambdaInstance<T> thisInstance
+        {
+            get { return this; }
+        }
 
         protected override object build(Type pluginType, IBuildSession session)
         {

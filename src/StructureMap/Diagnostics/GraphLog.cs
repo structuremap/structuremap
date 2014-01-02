@@ -14,9 +14,15 @@ namespace StructureMap.Diagnostics
         private readonly List<string> _sources = new List<string>();
         private string _currentSource;
 
-        public int ErrorCount { get { return _errors.Count; } }
+        public int ErrorCount
+        {
+            get { return _errors.Count; }
+        }
 
-        public string[] Sources { get { return _sources.ToArray(); } }
+        public string[] Sources
+        {
+            get { return _sources.ToArray(); }
+        }
 
         public void StartSource(string description)
         {
@@ -63,7 +69,7 @@ namespace StructureMap.Diagnostics
                 return;
             }
 
-            string message = BuildFailureMessage();
+            var message = BuildFailureMessage();
 
             throw new StructureMapConfigurationException(message);
         }
@@ -77,7 +83,7 @@ namespace StructureMap.Diagnostics
 
             writer.WriteLine("StructureMap configuration failures:");
 
-            foreach (Error error in _errors)
+            foreach (var error in _errors)
             {
                 error.Write(writer);
                 writer.WriteLine(
@@ -91,11 +97,11 @@ namespace StructureMap.Diagnostics
 
         public void AssertHasError(int errorCode, string message)
         {
-            Error error = Error.FromMessage(errorCode, message);
+            var error = Error.FromMessage(errorCode, message);
             if (!_errors.Contains(error))
             {
-                string msg = "Did not have the requested Error.  Had:\n\n";
-                foreach (Error err in _errors)
+                var msg = "Did not have the requested Error.  Had:\n\n";
+                foreach (var err in _errors)
                 {
                     msg += err + "\n";
                 }
@@ -106,8 +112,8 @@ namespace StructureMap.Diagnostics
 
         public void AssertHasError(int errorCode)
         {
-            string message = "No error with code " + errorCode + "\nHad errors: ";
-            foreach (Error error in _errors)
+            var message = "No error with code " + errorCode + "\nHad errors: ";
+            foreach (var error in _errors)
             {
                 message += error.Code + ", ";
                 if (error.Code == errorCode)
@@ -121,7 +127,7 @@ namespace StructureMap.Diagnostics
 
         public void AssertHasNoError(int errorCode)
         {
-            foreach (Error error in _errors)
+            foreach (var error in _errors)
             {
                 if (error.Code == errorCode)
                 {
@@ -134,7 +140,7 @@ namespace StructureMap.Diagnostics
         {
             try
             {
-                Type type = path.FindType();
+                var type = path.FindType();
                 action(type);
             }
             catch (StructureMapException ex)

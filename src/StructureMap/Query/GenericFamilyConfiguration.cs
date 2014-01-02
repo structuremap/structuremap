@@ -24,7 +24,6 @@ namespace StructureMap.Query
 
         void IFamily.Eject(Instance instance)
         {
-
         }
 
         object IFamily.Build(Instance instance)
@@ -37,7 +36,10 @@ namespace StructureMap.Query
             return false;
         }
 
-        public Type PluginType { get { return _family.PluginType; } }
+        public Type PluginType
+        {
+            get { return _family.PluginType; }
+        }
 
         /// <summary>
         /// The "instance" that will be used when Container.GetInstance(PluginType) is called.
@@ -47,7 +49,7 @@ namespace StructureMap.Query
         {
             get
             {
-                Instance defaultInstance = _family.GetDefaultInstance();
+                var defaultInstance = _family.GetDefaultInstance();
                 return defaultInstance == null ? null : new InstanceRef(defaultInstance, this);
             }
         }
@@ -55,13 +57,19 @@ namespace StructureMap.Query
         /// <summary>
         /// The build "policy" for this PluginType.  Used by the WhatDoIHave() diagnostics methods
         /// </summary>
-        public ILifecycle Lifecycle { get { return _family.Lifecycle; } }
+        public ILifecycle Lifecycle
+        {
+            get { return _family.Lifecycle; }
+        }
 
         /// <summary>
         /// All of the <see cref="InstanceRef">InstanceRef</see>'s registered
         /// for this PluginType
         /// </summary>
-        public IEnumerable<InstanceRef> Instances { get { return _family.Instances.Select(x => new InstanceRef(x, this)).ToArray(); } }
+        public IEnumerable<InstanceRef> Instances
+        {
+            get { return _family.Instances.Select(x => new InstanceRef(x, this)).ToArray(); }
+        }
 
         /// <summary>
         /// Simply query to see if there are any implementations registered

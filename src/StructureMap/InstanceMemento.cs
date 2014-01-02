@@ -1,6 +1,4 @@
 using System;
-using StructureMap.Configuration;
-using StructureMap.Graph;
 using StructureMap.Pipeline;
 
 namespace StructureMap
@@ -54,7 +52,10 @@ namespace StructureMap
         /// <summary>
         /// Is the InstanceMemento a reference to the default instance of the Plugin type?
         /// </summary>
-        public bool IsDefault { get { return (IsReference && ReferenceKey == String.Empty); } }
+        public bool IsDefault
+        {
+            get { return (IsReference && ReferenceKey == String.Empty); }
+        }
 
 
         /// <summary>
@@ -64,7 +65,7 @@ namespace StructureMap
         /// <returns></returns>
         public string GetProperty(string Key)
         {
-            string returnValue = "";
+            var returnValue = "";
 
             try
             {
@@ -99,7 +100,7 @@ namespace StructureMap
         /// <returns></returns>
         public InstanceMemento GetChildMemento(string key)
         {
-            InstanceMemento returnValue = getChild(key);
+            var returnValue = getChild(key);
             return returnValue;
         }
 
@@ -125,8 +126,6 @@ namespace StructureMap
         public abstract InstanceMemento[] GetChildrenArray(string key);
 
 
-
-
         public Instance ReadInstance(Type pluginType)
         {
             if (pluginType == null)
@@ -136,7 +135,7 @@ namespace StructureMap
 
             try
             {
-                Instance instance = readInstance(pluginType);
+                var instance = readInstance(pluginType);
                 instance.Name = InstanceKey;
 
                 return instance;

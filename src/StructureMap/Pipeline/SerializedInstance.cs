@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using StructureMap.Building;
 
 namespace StructureMap.Pipeline
 {
@@ -17,7 +16,10 @@ namespace StructureMap.Pipeline
             formatter.Serialize(_stream, template);
         }
 
-        protected override SerializedInstance thisInstance { get { return this; } }
+        protected override SerializedInstance thisInstance
+        {
+            get { return this; }
+        }
 
         protected override string getDescription()
         {

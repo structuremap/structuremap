@@ -32,6 +32,7 @@ namespace StructureMap.Building
         }
 
         public string Description { get; private set; }
+
         public virtual Expression ToExpression(ParameterExpression session)
         {
             return Expression.NewArrayInit(_itemType, _items.Select(x => x.ToExpression(session)));

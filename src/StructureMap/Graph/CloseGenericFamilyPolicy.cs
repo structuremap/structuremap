@@ -37,7 +37,7 @@ namespace StructureMap.Graph
         {
             if (!type.IsGenericType) return false;
 
-            Type basicType = type.GetGenericTypeDefinition();
+            var basicType = type.GetGenericTypeDefinition();
             return _graph.Families.Has(basicType);
         }
     }

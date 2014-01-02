@@ -13,7 +13,7 @@ namespace StructureMap.Graph
             if (!type.IsConcrete() || !type.CanBeCreated()) return;
 
 
-            Type interfaceType = type.AllInterfaces().FirstOrDefault();
+            var interfaceType = type.AllInterfaces().FirstOrDefault();
             if (interfaceType != null)
             {
                 Debug.WriteLine("Plugging {0} into {1}".ToFormat(type.Name, interfaceType.Name));

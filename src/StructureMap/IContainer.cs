@@ -138,7 +138,7 @@ namespace StructureMap
         /// <param name="profileName"></param>
         /// <returns></returns>
         IContainer GetProfile(string profileName);
-        
+
 
         /// <summary>
         /// Returns a report detailing the complete configuration of all PluginTypes and Instances

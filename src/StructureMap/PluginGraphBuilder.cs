@@ -44,9 +44,9 @@ namespace StructureMap
 
             addCloseGenericPolicyTo(_graph);
 
-            var funcInstance = new FactoryTemplate(typeof(LazyInstance<>));
-            _graph.Families[typeof(Func<>)].SetDefault(funcInstance);
- 
+            var funcInstance = new FactoryTemplate(typeof (LazyInstance<>));
+            _graph.Families[typeof (Func<>)].SetDefault(funcInstance);
+
             _graph.Log.AssertFailures();
 
             return _graph;

@@ -1,6 +1,4 @@
 using System;
-using System.Xml;
-using StructureMap.Configuration;
 
 namespace StructureMap.Graph
 {
@@ -36,7 +34,7 @@ namespace StructureMap.Graph
             }
             catch (Exception e)
             {
-                string message = string.Format("Could not create a Type for '{0}'", AssemblyQualifiedName);
+                var message = string.Format("Could not create a Type for '{0}'", AssemblyQualifiedName);
                 throw new ApplicationException(message, e);
             }
         }

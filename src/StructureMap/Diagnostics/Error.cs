@@ -42,7 +42,10 @@ namespace StructureMap.Diagnostics
         }
 
 
-        public int Code { get { return _code; } }
+        public int Code
+        {
+            get { return _code; }
+        }
 
         #region IEquatable<Error> Members
 
@@ -61,7 +64,7 @@ namespace StructureMap.Diagnostics
         private void writeStackTrace(Exception exception)
         {
             _stackTrace = string.Empty;
-            Exception ex = exception;
+            var ex = exception;
             while (ex != null)
             {
                 _stackTrace += exception.ToString();
@@ -78,7 +81,7 @@ namespace StructureMap.Diagnostics
 
         public override int GetHashCode()
         {
-            int result = _code;
+            var result = _code;
             result = 29*result + (_message != null ? _message.GetHashCode() : 0);
             result = 29*result + (_stackTrace != null ? _stackTrace.GetHashCode() : 0);
             result = 29*result + (Instance != null ? Instance.GetHashCode() : 0);

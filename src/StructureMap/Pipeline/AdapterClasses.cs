@@ -1,5 +1,4 @@
 using System;
-using StructureMap.Building;
 
 namespace StructureMap.Pipeline
 {
@@ -66,7 +65,7 @@ namespace StructureMap.Pipeline
     {
         protected override string getDescription()
         {
-            return "Lazy construction of {0} using {1}".ToFormat(typeof(T1).FullName, typeof(T).FullName);
+            return "Lazy construction of {0} using {1}".ToFormat(typeof (T1).FullName, typeof (T).FullName);
         }
 
         protected override object build(Type pluginType, IBuildSession session)

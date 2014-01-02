@@ -20,7 +20,6 @@ namespace StructureMap.Query
         public void Eject(Instance instance)
         {
             instance.Lifecycle.FindCache(_pipelineGraph).Eject(_family.PluginType, instance);
-            
         }
 
         public object Build(Instance instance)
@@ -50,7 +49,8 @@ namespace StructureMap.Query
 
         public InstanceRef Default
         {
-            get { 
+            get
+            {
                 var instance = _family.GetDefaultInstance();
                 return instance == null ? null : new InstanceRef(instance, this);
             }
@@ -65,7 +65,7 @@ namespace StructureMap.Query
         {
             get
             {
-                foreach (Instance instance in _family.Instances)
+                foreach (var instance in _family.Instances)
                 {
                     yield return new InstanceRef(instance, this);
                 }

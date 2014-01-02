@@ -1,5 +1,4 @@
 using System;
-using System.Linq.Expressions;
 using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.Graph;
 using StructureMap.Interceptors;

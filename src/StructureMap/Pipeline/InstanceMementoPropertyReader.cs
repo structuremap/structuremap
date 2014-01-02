@@ -1,6 +1,4 @@
-using System;
 using System.Reflection;
-using StructureMap.Graph;
 
 namespace StructureMap.Pipeline
 {
@@ -71,7 +69,7 @@ namespace StructureMap.Pipeline
 
         private void copyPrimitive(string name, bool isMandatory)
         {
-            string propertyValue = _memento.GetProperty(name);
+            var propertyValue = _memento.GetProperty(name);
 
             if (propertyValue == null)
             {

@@ -10,14 +10,17 @@ namespace StructureMap.Interceptors
         }
 
 
-        public InstanceInterceptor[] Interceptors { get { return _interceptors; } }
+        public InstanceInterceptor[] Interceptors
+        {
+            get { return _interceptors; }
+        }
 
         #region InstanceInterceptor Members
 
         public object Process(object target, IContext context)
         {
-            object returnValue = target;
-            foreach (InstanceInterceptor interceptor in _interceptors)
+            var returnValue = target;
+            foreach (var interceptor in _interceptors)
             {
                 returnValue = interceptor.Process(returnValue, context);
             }

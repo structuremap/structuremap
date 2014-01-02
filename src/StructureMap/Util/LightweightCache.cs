@@ -11,7 +11,7 @@ namespace StructureMap.Util
         private Func<TValue, TKey> _getKey = delegate { throw new NotImplementedException(); };
 
         private Func<TKey, TValue> _onMissing = delegate(TKey key) {
-            string message = string.Format("Key '{0}' could not be found", key);
+            var message = string.Format("Key '{0}' could not be found", key);
             throw new KeyNotFoundException(message);
         };
 
@@ -72,7 +72,7 @@ namespace StructureMap.Util
             {
                 if (!_values.ContainsKey(key))
                 {
-                    TValue value = _onMissing(key);
+                    var value = _onMissing(key);
                     _values.Add(key, value);
                 }
 
@@ -157,7 +157,7 @@ namespace StructureMap.Util
 
         public bool Exists(Predicate<TValue> predicate)
         {
-            bool returnValue = false;
+            var returnValue = false;
 
             Each(delegate(TValue value) { returnValue |= predicate(value); });
 

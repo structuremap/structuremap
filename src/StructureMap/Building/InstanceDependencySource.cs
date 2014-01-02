@@ -20,10 +20,11 @@ namespace StructureMap.Building
         }
 
         public string Description { get; private set; }
+
         public Expression ToExpression(ParameterExpression session)
         {
-            var instanceConstant = Expression.Constant(_instance, typeof(Instance));
-            var typeConstant = Expression.Constant(_pluginType, typeof(Type));
+            var instanceConstant = Expression.Constant(_instance, typeof (Instance));
+            var typeConstant = Expression.Constant(_pluginType, typeof (Type));
             var call = Expression.Call(instanceConstant, BuildMethod, typeConstant, session);
 
 

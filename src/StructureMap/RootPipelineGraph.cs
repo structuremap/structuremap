@@ -115,7 +115,7 @@ namespace StructureMap
             var expression = new ConfigurationExpression();
             action(expression);
 
-            PluginGraph graph = expression.BuildGraph();
+            var graph = expression.BuildGraph();
 
             return new RootPipelineGraph(graph);
         }

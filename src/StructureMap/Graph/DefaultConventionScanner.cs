@@ -10,7 +10,7 @@ namespace StructureMap.Graph
         {
             if (!type.IsConcrete()) return;
 
-            Type pluginType = FindPluginType(type);
+            var pluginType = FindPluginType(type);
             if (pluginType != null && type.HasConstructors())
             {
                 registry.AddType(pluginType, type);
@@ -20,8 +20,8 @@ namespace StructureMap.Graph
 
         public virtual Type FindPluginType(Type concreteType)
         {
-            string interfaceName = "I" + concreteType.Name;
-            Type[] interfaces = concreteType.GetInterfaces();
+            var interfaceName = "I" + concreteType.Name;
+            var interfaces = concreteType.GetInterfaces();
             return Array.Find(interfaces, t => t.Name == interfaceName);
         }
     }

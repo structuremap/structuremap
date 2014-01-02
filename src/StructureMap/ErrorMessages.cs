@@ -7,11 +7,11 @@ namespace StructureMap
     {
         public static string GetMessage(int errorCode, params object[] args)
         {
-            string msg = "StructureMap Exception Code:  " + errorCode + "\n";
+            var msg = "StructureMap Exception Code:  " + errorCode + "\n";
 
-            for (int i = 0; i < args.Length; i++)
+            for (var i = 0; i < args.Length; i++)
             {
-                object arg = args[i];
+                var arg = args[i];
                 var type = arg as Type;
                 if (type != null)
                 {
@@ -19,7 +19,7 @@ namespace StructureMap
                 }
             }
 
-            string errorMsg = getMessage(errorCode);
+            var errorMsg = getMessage(errorCode);
             if (errorMsg == null)
             {
                 errorMsg = string.Empty;

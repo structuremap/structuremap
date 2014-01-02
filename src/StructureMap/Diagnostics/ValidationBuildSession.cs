@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
@@ -83,7 +82,7 @@ namespace StructureMap.Diagnostics
             try
             {
                 _dependencyStack.Clear();
-                object builtInstance = FindObject(pluginType, instance);
+                var builtInstance = FindObject(pluginType, instance);
                 validate(pluginType, instance, builtInstance);
             }
             catch (Exception)
@@ -96,8 +95,8 @@ namespace StructureMap.Diagnostics
         {
             if (builtObject == null) return;
 
-            MethodInfo[] methods = ValidationMethodAttribute.GetValidationMethods(builtObject.GetType());
-            foreach (MethodInfo method in methods)
+            var methods = ValidationMethodAttribute.GetValidationMethods(builtObject.GetType());
+            foreach (var method in methods)
             {
                 try
                 {
@@ -136,7 +135,7 @@ namespace StructureMap.Diagnostics
 
 
             writer.WriteLine("StructureMap Failures:  {0} Build/Configuration Failures and {1} Validation Errors",
-                             _errors.BuildErrors.Length, _validationErrors.Count);
+                _errors.BuildErrors.Length, _validationErrors.Count);
 
             return builder.ToString();
         }

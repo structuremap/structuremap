@@ -1,5 +1,4 @@
 using System;
-using StructureMap.Configuration.DSL;
 using StructureMap.Interceptors;
 
 namespace StructureMap.Pipeline

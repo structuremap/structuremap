@@ -59,8 +59,11 @@ namespace StructureMap.Query
             return findForFamily(pluginType, f => f.Default == null ? null : f.Default.ConcreteType);
         }
 
-        public IEnumerable<IPluginTypeConfiguration> PluginTypes { get { return pluginTypes; } }
-        
+        public IEnumerable<IPluginTypeConfiguration> PluginTypes
+        {
+            get { return pluginTypes; }
+        }
+
         public PluginGraph PluginGraph { get; private set; }
 
         /// <summary>
@@ -93,9 +96,7 @@ namespace StructureMap.Query
             EjectAndRemovePluginTypes(filter);
 
             // second pass to hit instances
-            pluginTypes.Each(x => {
-                x.EjectAndRemove(i => filter(i.ConcreteType));
-            });
+            pluginTypes.Each(x => { x.EjectAndRemove(i => filter(i.ConcreteType)); });
         }
 
         /// <summary>
@@ -124,7 +125,7 @@ namespace StructureMap.Query
         /// <returns></returns>
         public IEnumerable<T> GetAllPossible<T>() where T : class
         {
-            Type targetType = typeof (T);
+            var targetType = typeof (T);
             return AllInstances
                 .Where(x => x.ConcreteType.CanBeCastTo(targetType))
                 .Select(x => x.Get<T>())
@@ -151,7 +152,10 @@ namespace StructureMap.Query
             return HasImplementationsFor(typeof (T));
         }
 
-        public IEnumerable<InstanceRef> AllInstances { get { return PluginTypes.SelectMany(x => x.Instances); } }
+        public IEnumerable<InstanceRef> AllInstances
+        {
+            get { return PluginTypes.SelectMany(x => x.Instances); }
+        }
 
         private T findForFamily<T>(Type pluginType, Func<IPluginTypeConfiguration, T> func, T defaultValue)
         {

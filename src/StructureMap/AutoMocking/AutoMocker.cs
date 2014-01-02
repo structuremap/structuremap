@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.TypeRules;
 
@@ -193,7 +191,7 @@ namespace StructureMap.AutoMocking
         {
             var returnValue = new T[count];
 
-            for (int i = 0; i < returnValue.Length; i++)
+            for (var i = 0; i < returnValue.Length; i++)
             {
                 returnValue[i] = ServiceLocator.Service<T>();
             }
@@ -213,7 +211,7 @@ namespace StructureMap.AutoMocking
         {
             Container.EjectAllInstancesOf<T>();
             Container.Configure(x => {
-                foreach (T t in stubs)
+                foreach (var t in stubs)
                 {
                     x.For(typeof (T)).Add(t);
                 }
@@ -222,31 +220,31 @@ namespace StructureMap.AutoMocking
 
         private object[] getConstructorArgs()
         {
-            ConstructorInfo ctor = new GreediestConstructorSelector().Find(typeof (TTargetClass));
+            var ctor = new GreediestConstructorSelector().Find(typeof (TTargetClass));
             var list = new List<object>();
-            foreach (ParameterInfo parameterInfo in ctor.GetParameters())
+            foreach (var parameterInfo in ctor.GetParameters())
             {
-                Type dependencyType = parameterInfo.ParameterType;
+                var dependencyType = parameterInfo.ParameterType;
 
                 if (dependencyType.IsArray)
                 {
                     var builder = typeof (ArrayBuilder<>).CloseAndBuildAs<IEnumerableBuilder>(Container,
-                                                                                              dependencyType
-                                                                                                  .GetElementType());
+                        dependencyType
+                            .GetElementType());
                     list.Add(builder.ToEnumerable());
                 }
                 else if (dependencyType.Closes(typeof (IEnumerable<>)))
                 {
-                    Type @interface = dependencyType.FindFirstInterfaceThatCloses(typeof (IEnumerable<>));
-                    Type elementType = @interface.GetGenericArguments().First();
+                    var @interface = dependencyType.FindFirstInterfaceThatCloses(typeof (IEnumerable<>));
+                    var elementType = @interface.GetGenericArguments().First();
 
                     var builder = typeof (EnumerableBuilder<>).CloseAndBuildAs<IEnumerableBuilder>(Container,
-                                                                                                   elementType);
+                        elementType);
                     list.Add(builder.ToEnumerable());
                 }
                 else
                 {
-                    object dependency = Container.GetInstance(dependencyType);
+                    var dependency = Container.GetInstance(dependencyType);
                     list.Add(dependency);
                 }
             }

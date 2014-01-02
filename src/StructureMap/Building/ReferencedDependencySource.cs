@@ -11,7 +11,8 @@ namespace StructureMap.Building
         private readonly string _name;
 
         public static MethodInfo SessionMethod =
-            typeof (IContext).GetMethods().FirstOrDefault(x => x.Name == "GetInstance" && x.IsGenericMethod && x.GetParameters().Count() == 1);
+            typeof (IContext).GetMethods()
+                .FirstOrDefault(x => x.Name == "GetInstance" && x.IsGenericMethod && x.GetParameters().Count() == 1);
 
         public ReferencedDependencySource(Type dependencyType, string name)
         {
@@ -30,6 +31,7 @@ namespace StructureMap.Building
         }
 
         public string Description { get; private set; }
+
         public Expression ToExpression(ParameterExpression session)
         {
             return Expression.Call(session, SessionMethod.MakeGenericMethod(_dependencyType), Expression.Constant(_name));
@@ -57,7 +59,8 @@ namespace StructureMap.Building
         {
             unchecked
             {
-                return ((_dependencyType != null ? _dependencyType.GetHashCode() : 0)*397) ^ (_name != null ? _name.GetHashCode() : 0);
+                return ((_dependencyType != null ? _dependencyType.GetHashCode() : 0)*397) ^
+                       (_name != null ? _name.GetHashCode() : 0);
             }
         }
     }

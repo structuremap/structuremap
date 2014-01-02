@@ -11,12 +11,12 @@ namespace StructureMap.Building
 
         public static Constant ForObject(object o)
         {
-            return new Constant(o.GetType(), o);    
+            return new Constant(o.GetType(), o);
         }
 
         public static Constant For<T>(T value)
         {
-            return new Constant(typeof(T), value);
+            return new Constant(typeof (T), value);
         }
 
         public Constant(Type argumentType, object value)
@@ -36,6 +36,7 @@ namespace StructureMap.Building
         }
 
         public string Description { get; private set; }
+
         public Expression ToExpression(ParameterExpression session)
         {
             return Expression.Constant(_value, _argumentType);
@@ -58,7 +59,8 @@ namespace StructureMap.Building
         {
             unchecked
             {
-                return ((_argumentType != null ? _argumentType.GetHashCode() : 0)*397) ^ (_value != null ? _value.GetHashCode() : 0);
+                return ((_argumentType != null ? _argumentType.GetHashCode() : 0)*397) ^
+                       (_value != null ? _value.GetHashCode() : 0);
             }
         }
 

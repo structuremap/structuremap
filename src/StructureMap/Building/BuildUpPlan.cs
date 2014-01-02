@@ -10,7 +10,7 @@ namespace StructureMap.Building
     {
         private readonly Type _concreteType;
         private readonly IList<Setter> _setters = new List<Setter>();
-        private Lazy<ISetterActions> _buildups; 
+        private Lazy<ISetterActions> _buildups;
 
         public BuildUpPlan(Type concreteType)
         {
@@ -21,10 +21,7 @@ namespace StructureMap.Building
 
         public Type ConcreteType
         {
-            get
-            {
-                return _concreteType;
-            }
+            get { return _concreteType; }
         }
 
         private void resetBuildups()
@@ -71,11 +68,11 @@ namespace StructureMap.Building
 
             public SetterActions(IEnumerable<Setter> setters)
             {
-                var target = Expression.Parameter(typeof(T), "target");
+                var target = Expression.Parameter(typeof (T), "target");
                 _actions = setters.Select(x => {
-                    var lambda = x.ToSetterLambda(typeof(T), target);
+                    var lambda = x.ToSetterLambda(typeof (T), target);
                     return lambda.Compile().As<Action<IBuildSession, T>>();
-                }).ToArray();      
+                }).ToArray();
             }
 
             public void BuildUp(IBuildSession session, object @object)
@@ -86,13 +83,11 @@ namespace StructureMap.Building
         }
     }
 
-    
 
     public class BuildUpPlan<T> : BuildUpPlan
     {
-        public BuildUpPlan() : base(typeof(T))
+        public BuildUpPlan() : base(typeof (T))
         {
-
         }
 
         public void Set<TValue>(Expression<Func<T, TValue>> expression, TValue value)

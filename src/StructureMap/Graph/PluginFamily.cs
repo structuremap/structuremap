@@ -17,7 +17,7 @@ namespace StructureMap.Graph
         private readonly Cache<string, Instance> _instances = new Cache<string, Instance>(delegate { return null; });
         private readonly Type _pluginType;
         private Lazy<Instance> _defaultInstance;
-        private Lazy<Instance> _fallBack = new Lazy<Instance>(()=>null);
+        private Lazy<Instance> _fallBack = new Lazy<Instance>(() => null);
 
 
         public PluginFamily(Type pluginType)
@@ -27,7 +27,7 @@ namespace StructureMap.Graph
             resetDefault();
 
             Attribute.GetCustomAttributes(_pluginType, typeof (FamilyAttribute), true).OfType<FamilyAttribute>()
-                     .Each(x => x.Alter(this));
+                .Each(x => x.Alter(this));
         }
 
         public PluginGraph Owner { get; internal set; }
@@ -54,10 +54,7 @@ namespace StructureMap.Graph
 
         public PluginGraph Root
         {
-            get
-            {
-                return Owner.Root;
-            }
+            get { return Owner.Root; }
         }
 
 
@@ -69,7 +66,7 @@ namespace StructureMap.Graph
         private void resetDefault()
         {
             _defaultInstance = new Lazy<Instance>(determineDefault);
-            _fallBack = new Lazy<Instance>(()=>null);
+            _fallBack = new Lazy<Instance>(() => null);
         }
 
         public void AddInstance(Instance instance)
@@ -92,7 +89,6 @@ namespace StructureMap.Graph
         public void SetFallback(Instance instance)
         {
             _fallBack = new Lazy<Instance>(() => instance);
-
         }
 
         public void AddTypes(List<Type> pluggedTypes)
@@ -135,12 +131,12 @@ namespace StructureMap.Graph
 
         public PluginFamily CreateTemplatedClone(Type[] templateTypes)
         {
-            Type templatedType = _pluginType.MakeGenericType(templateTypes);
+            var templatedType = _pluginType.MakeGenericType(templateTypes);
             var templatedFamily = new PluginFamily(templatedType);
             templatedFamily.copyLifecycle(this);
 
             _instances.GetAll().Select(x => {
-                Instance clone = x.CloseType(templateTypes);
+                var clone = x.CloseType(templateTypes);
                 if (clone == null) return null;
 
                 clone.Name = x.Name;
@@ -149,8 +145,8 @@ namespace StructureMap.Graph
 
             if (GetDefaultInstance() != null)
             {
-                string defaultKey = GetDefaultInstance().Name;
-                Instance @default = templatedFamily.Instances.FirstOrDefault(x => x.Name == defaultKey);
+                var defaultKey = GetDefaultInstance().Name;
+                var @default = templatedFamily.Instances.FirstOrDefault(x => x.Name == defaultKey);
                 if (@default != null)
                 {
                     templatedFamily.SetDefault(@default);
@@ -159,8 +155,8 @@ namespace StructureMap.Graph
 
             //Are there instances that close the templatedtype straight away?
             _instances.GetAll()
-                      .Where(x => x.ConcreteType.CanBeCastTo(templatedType))
-                      .Each(templatedFamily.AddInstance);
+                .Where(x => x.ConcreteType.CanBeCastTo(templatedType))
+                .Each(templatedFamily.AddInstance);
 
             return templatedFamily;
         }
@@ -226,7 +222,7 @@ namespace StructureMap.Graph
         /// <param name="defaultKey"></param>
         public void SetDefaultKey(string defaultKey)
         {
-            Instance instance = _instances.FirstOrDefault(x => x.Name == defaultKey);
+            var instance = _instances.FirstOrDefault(x => x.Name == defaultKey);
             if (instance == null)
             {
                 throw new ArgumentOutOfRangeException("Could not find an instance with name " + defaultKey);

@@ -11,6 +11,9 @@ namespace StructureMap.Pipeline
             return enumerable.Select(x => x as T).ToList();
         }
 
-        public Type ElementType { get { return typeof (T); } }
+        public Type ElementType
+        {
+            get { return typeof (T); }
+        }
     }
 }

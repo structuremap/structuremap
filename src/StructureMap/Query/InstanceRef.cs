@@ -35,10 +35,7 @@ namespace StructureMap.Query
         /// </summary>
         public Type ConcreteType
         {
-            get
-            {
-                return _instance.ConcreteType;
-            }
+            get { return _instance.ConcreteType; }
         }
 
 

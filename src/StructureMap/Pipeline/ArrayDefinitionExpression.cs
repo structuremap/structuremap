@@ -32,7 +32,7 @@ namespace StructureMap.Pipeline
             var child = new InstanceExpression<TElementType>(list.Add);
             action(child);
 
-            _instance.Dependencies.Add(_propertyName, typeof(IEnumerable<TElementType>), new EnumerableInstance(list));
+            _instance.Dependencies.Add(_propertyName, typeof (IEnumerable<TElementType>), new EnumerableInstance(list));
 
             return _instance;
         }
@@ -44,7 +44,8 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public TInstance Contains(params Instance[] children)
         {
-            _instance.Dependencies.Add(_propertyName, typeof(IEnumerable<TElementType>), new EnumerableInstance(children));
+            _instance.Dependencies.Add(_propertyName, typeof (IEnumerable<TElementType>),
+                new EnumerableInstance(children));
 
             return _instance;
         }
