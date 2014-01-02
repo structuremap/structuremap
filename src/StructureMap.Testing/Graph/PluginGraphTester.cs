@@ -212,6 +212,42 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
+        public void add_family_sets_the_parent_relationship()
+        {
+            var graph = PluginGraph.Empty();
+            graph.AddFamily(new PluginFamily(typeof(IThingy)));
+
+            graph.Families[typeof (IThingy)].Owner.ShouldBeTheSameAs(graph);
+        }
+
+        [Test]
+        public void find_root()
+        {
+            var top = new PluginGraph();
+            var node = top.Profile("Foo");
+            var leaf = node.Profile("Bar");
+
+            top.Root.ShouldBeTheSameAs(top);
+            node.Root.ShouldBeTheSameAs(top);
+            leaf.Root.ShouldBeTheSameAs(top);
+        }
+
+        [Test]
+        public void added_instance_can_find_the_root_policies()
+        {
+            var top = new PluginGraph();
+            var node = top.Profile("Foo");
+            var leaf = node.Profile("Bar");
+
+            var family = leaf.Families[typeof (IFoo)];
+            var instance = new FakeInstance();
+            family.AddInstance(instance);
+
+            instance.Policies.ShouldBeTheSameAs(top.Policies);
+        }
+
+
+        [Test]
         public void has_family_true_with_open_generics()
         {
             var graph = PluginGraph.Empty();

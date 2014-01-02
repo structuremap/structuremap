@@ -119,6 +119,14 @@ namespace StructureMap.Graph
             get { return _interceptorLibrary; }
         }
 
+        public PluginGraph Root
+        {
+            get
+            {
+                return Parent == null ? this : Parent.Root;
+            }
+        }
+
         /// <summary>
         ///   Adds the concreteType as an Instance of the pluginType
         /// </summary>
@@ -173,6 +181,7 @@ namespace StructureMap.Graph
 
         public void AddFamily(PluginFamily family)
         {
+            family.Owner = this;
             _families[family.PluginType] = family;
         }
 

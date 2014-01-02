@@ -30,7 +30,7 @@ namespace StructureMap.Graph
                      .Each(x => x.Alter(this));
         }
 
-        public PluginGraph Owner { get; set; }
+        public PluginGraph Owner { get; internal set; }
 
         public IEnumerable<Instance> Instances
         {
@@ -52,6 +52,15 @@ namespace StructureMap.Graph
             get { return _pluginType; }
         }
 
+        public PluginGraph Root
+        {
+            get
+            {
+                return Owner.Root;
+            }
+        }
+
+
         void IDisposable.Dispose()
         {
             _instances.Each(x => x.SafeDispose());
@@ -65,8 +74,8 @@ namespace StructureMap.Graph
 
         public void AddInstance(Instance instance)
         {
-            _instances[instance.Name] = instance;
             instance.Parent = this;
+            _instances[instance.Name] = instance;
         }
 
         public void SetDefault(Func<Instance> defaultInstance)

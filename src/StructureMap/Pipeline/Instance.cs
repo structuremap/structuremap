@@ -39,6 +39,14 @@ namespace StructureMap.Pipeline
             }
         }
 
+        public Policies Policies
+        {
+            get
+            {
+                return _parent.Root.Policies;
+            }
+        }
+
         public InstanceInterceptor Interceptor
         {
             get { return _interceptor; }
