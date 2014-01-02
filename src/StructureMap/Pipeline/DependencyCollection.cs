@@ -42,18 +42,36 @@ namespace StructureMap.Pipeline
             return _dependencies.LastOrDefault(x => x.Name == name);
         }
 
+
         private Argument findByTypeOnly(Type argumentType)
         {
             if (argumentType == null) return null;
 
-            return _dependencies.LastOrDefault(x => x.Type == argumentType);
+            var argument = _dependencies.LastOrDefault(x => x.Type == argumentType);
+            if (argument == null && EnumerableInstance.IsEnumerable(argumentType))
+            {
+                var elementType = EnumerableInstance.DetermineElementType(argumentType);
+                argument = _dependencies
+                    .LastOrDefault(x => x.Type == typeof (IEnumerable<>).MakeGenericType(elementType));
+            }
+
+
+            return argument;
         }
 
         private Argument findByAll(Type argumentType, string name)
         {
             if (argumentType == null) return null;
 
-            return _dependencies.LastOrDefault(x => x.Name == name && x.Type == argumentType);
+            var argument = _dependencies.LastOrDefault(x => x.Name == name && x.Type == argumentType);
+            if (argument == null && EnumerableInstance.IsEnumerable(argumentType))
+            {
+                var elementType = EnumerableInstance.DetermineElementType(argumentType);
+                argument = _dependencies
+                    .LastOrDefault(x => x.Type == typeof(IEnumerable<>).MakeGenericType(elementType) && x.Name == name);
+            }
+
+            return argument;
         }
 
         public void Add<T>(T value)
@@ -90,7 +108,7 @@ namespace StructureMap.Pipeline
             {
                 if (@dependency == null)
                 {
-                    throw new ArgumentNullException("@dependency", "Dependency value cannot be null for a simple argument. Name: '{0}, Type: '{1}'".ToFormat(name, type));
+                    throw new ArgumentNullException("@dependency", "Dependency value cannot be null for a simple argument of type '{1}' with name: '{0}".ToFormat(name, type));
                 }
 
                 if (@dependency.GetType() != type)
