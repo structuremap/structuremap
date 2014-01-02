@@ -47,12 +47,6 @@ namespace StructureMap.Pipeline
             SetChild(name, instance);
         }
 
-        public void SetValue(Type type, object value, CannotFindProperty cannotFind)
-        {
-            string name = _plugin.FindArgumentNameForType(type, cannotFind);
-            if (name != null) SetValue(name, value);
-        }
-
         void IConfiguredInstance.SetValue(string name, object value)
         {
             SetValue(name, value);
