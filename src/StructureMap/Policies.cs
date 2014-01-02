@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 
@@ -12,6 +13,11 @@ namespace StructureMap
         public bool IsMandatorySetter(PropertyInfo propertyInfo)
         {
             return SetterRules.IsMandatory(propertyInfo);
+        }
+
+        public ConstructorInfo SelectConstructor(Type pluggedType)
+        {
+            return ConstructorSelector.Select(pluggedType);
         }
     }
 }

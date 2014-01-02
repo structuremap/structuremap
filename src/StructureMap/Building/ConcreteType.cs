@@ -48,7 +48,7 @@ namespace StructureMap.Building
         public static ConstructorStep BuildConstructorStep(Type pluggedType, ConstructorInfo constructor,
             DependencyCollection dependencies, Policies policies)
         {
-            var ctor = constructor ?? policies.ConstructorSelector.Select(pluggedType);
+            var ctor = constructor ?? policies.SelectConstructor(pluggedType);
             // TODO -- throw if doesn't exist
 
             var ctorStep = new ConstructorStep(ctor);
