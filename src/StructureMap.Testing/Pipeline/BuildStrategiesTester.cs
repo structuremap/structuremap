@@ -29,7 +29,7 @@ namespace StructureMap.Testing.Pipeline
                 _constructedObject = constructedObject;
             }
 
-            protected override object build(Type pluginType, BuildSession session)
+            protected override object build(Type pluginType, IBuildSession session)
             {
                 return _constructedObject;
             }
@@ -120,7 +120,7 @@ namespace StructureMap.Testing.Pipeline
                 throw new NotImplementedException();
             }
 
-            protected override object build(Type pluginType, BuildSession session)
+            protected override object build(Type pluginType, IBuildSession session)
             {
                 throw new NotImplementedException();
             }

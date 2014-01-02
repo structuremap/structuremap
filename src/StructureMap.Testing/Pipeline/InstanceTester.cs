@@ -109,7 +109,7 @@ namespace StructureMap.Testing.Pipeline
         public object TheInstanceThatWasBuilt = new object();
 
 
-        protected override object build(Type pluginType, BuildSession session)
+        protected override object build(Type pluginType, IBuildSession session)
         {
             return TheInstanceThatWasBuilt;
         }

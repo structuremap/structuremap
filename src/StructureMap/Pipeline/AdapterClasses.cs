@@ -17,7 +17,7 @@ namespace StructureMap.Pipeline
             return string.Empty;
         }
 
-        protected override object build(Type pluginType, BuildSession session)
+        protected override object build(Type pluginType, IBuildSession session)
         {
             throw new NotImplementedException();
         }
@@ -37,7 +37,7 @@ namespace StructureMap.Pipeline
             return "Lazy construction of " + typeof (T).FullName;
         }
 
-        protected override object build(Type pluginType, BuildSession session)
+        protected override object build(Type pluginType, IBuildSession session)
         {
             var container = session.GetInstance<IContainer>();
             Func<T> func = container.GetInstance<T>;
@@ -53,7 +53,7 @@ namespace StructureMap.Pipeline
             return "Lazy factory of " + typeof (T).FullName;
         }
 
-        protected override object build(Type pluginType, BuildSession session)
+        protected override object build(Type pluginType, IBuildSession session)
         {
             var container = session.GetInstance<IContainer>();
             Func<string, T> func = container.GetInstance<T>;
@@ -69,7 +69,7 @@ namespace StructureMap.Pipeline
             return "Lazy construction of {0} using {1}".ToFormat(typeof(T1).FullName, typeof(T).FullName);
         }
 
-        protected override object build(Type pluginType, BuildSession session)
+        protected override object build(Type pluginType, IBuildSession session)
         {
             var container = session.GetInstance<IContainer>();
             Func<T, T1> func = key => container.With(key).GetInstance<T1>();

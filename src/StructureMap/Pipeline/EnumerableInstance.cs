@@ -102,7 +102,7 @@ namespace StructureMap.Pipeline
             return _description;
         }
 
-        protected override object build(Type pluginType, BuildSession session)
+        protected override object build(Type pluginType, IBuildSession session)
         {
             Type elementType = _coercion.ElementType;
 
@@ -110,7 +110,7 @@ namespace StructureMap.Pipeline
             return _coercion.Convert(objects);
         }
 
-        private IEnumerable<object> buildObjects(Type elementType, BuildSession session)
+        private IEnumerable<object> buildObjects(Type elementType, IBuildSession session)
         {
             if (_children == null)
             {

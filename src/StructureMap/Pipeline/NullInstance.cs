@@ -10,7 +10,7 @@ namespace StructureMap.Pipeline
             return "NULL";
         }
 
-        protected override object build(Type pluginType, BuildSession session)
+        protected override object build(Type pluginType, IBuildSession session)
         {
             return null;
         }

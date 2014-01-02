@@ -40,6 +40,10 @@ namespace StructureMap.Testing.Building
         }
 
         public Policies Policies { get; private set; }
+        public object CreateInstance(Type pluginType, string name)
+        {
+            throw new NotImplementedException();
+        }
 
         public string RequestedName { get; set; }
 

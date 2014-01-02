@@ -35,7 +35,7 @@ namespace StructureMap.Pipeline
             _object = null;
         }
 
-        protected override object build(Type pluginType, BuildSession session)
+        protected override object build(Type pluginType, IBuildSession session)
         {
             return _object;
         }

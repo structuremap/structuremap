@@ -26,7 +26,7 @@ namespace StructureMap.Testing.Examples
             return "Xml Serialized {0} at {1}".ToFormat(typeof (T).FullName, _fileName);
         }
 
-        protected override object build(Type pluginType, BuildSession session)
+        protected override object build(Type pluginType, IBuildSession session)
         {
             var serializer = new XmlSerializer(typeof (T));
             using (var stream = new FileStream(_fileName, FileMode.Open))

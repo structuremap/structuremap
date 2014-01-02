@@ -408,7 +408,7 @@ namespace StructureMap.Testing
             return typeof (ColorRule);
         }
 
-        protected override object build(Type pluginType, BuildSession session)
+        protected override object build(Type pluginType, IBuildSession session)
         {
             return new ColorRule("Red");
         }

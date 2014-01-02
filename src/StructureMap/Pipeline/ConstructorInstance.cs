@@ -226,7 +226,7 @@ namespace StructureMap.Pipeline
             return new ObjectInstance(value);
         }
 
-        protected override object build(Type pluginType, BuildSession session)
+        protected override object build(Type pluginType, IBuildSession session)
         {
             // TODO -- make this Lazy for crying out loud
             var plan = StructureMap.Building.ConcreteType.BuildPlan(_pluggedType, null, _dependencies, Policies);
@@ -234,7 +234,7 @@ namespace StructureMap.Pipeline
             return Build(pluginType, session, plan);
         }
 
-        public object Build(Type pluginType, BuildSession session, IBuildPlan builder)
+        public object Build(Type pluginType, IBuildSession session, IBuildPlan builder)
         {
             if (builder == null)
             {

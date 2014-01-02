@@ -9,5 +9,6 @@ namespace StructureMap
         object BuildNewInOriginalContext(Type pluginType, Instance instance);
         object ResolveFromLifecycle(Type pluginType, Instance instance);
         Policies Policies { get; }
+        object CreateInstance(Type pluginType, string name);
     }
 }

@@ -130,7 +130,7 @@ namespace StructureMap.Pipeline
             return this;
         }
 
-        protected override object build(Type pluginType, BuildSession session)
+        protected override object build(Type pluginType, IBuildSession session)
         {
             var builtTarget = (T) base.build(pluginType, session);
             foreach (var action in _actions)

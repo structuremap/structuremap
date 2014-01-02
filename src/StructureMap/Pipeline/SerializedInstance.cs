@@ -24,7 +24,7 @@ namespace StructureMap.Pipeline
             return "Serialized instance";
         }
 
-        protected override object build(Type pluginType, BuildSession session)
+        protected override object build(Type pluginType, IBuildSession session)
         {
             lock (_locker)
             {

@@ -84,7 +84,7 @@ namespace StructureMap.Testing.Graph
                 return string.Empty;
             }
 
-            protected override object build(Type pluginType, BuildSession session)
+            protected override object build(Type pluginType, IBuildSession session)
             {
                 return new ClassWithNoArgs
                 {

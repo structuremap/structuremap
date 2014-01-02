@@ -18,7 +18,7 @@ namespace StructureMap.Pipeline
         protected override PrototypeInstance thisInstance { get { return this; } }
 
 
-        protected override object build(Type pluginType, BuildSession session)
+        protected override object build(Type pluginType, IBuildSession session)
         {
             return _prototype.Clone();
         }

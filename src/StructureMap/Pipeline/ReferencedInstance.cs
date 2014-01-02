@@ -29,7 +29,7 @@ namespace StructureMap.Pipeline
             return Equals(_referenceKey, referencedInstance._referenceKey);
         }
 
-        protected override object build(Type pluginType, BuildSession session)
+        protected override object build(Type pluginType, IBuildSession session)
         {
             return session.CreateInstance(pluginType, _referenceKey);
         }

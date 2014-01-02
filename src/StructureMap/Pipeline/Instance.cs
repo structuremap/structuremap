@@ -88,7 +88,7 @@ namespace StructureMap.Pipeline
 
         #endregion
 
-        public virtual object Build(Type pluginType, BuildSession session)
+        public virtual object Build(Type pluginType, IBuildSession session)
         {
             // "Build" the desired object
             object rawValue = createRawObject(pluginType, session);
@@ -100,7 +100,7 @@ namespace StructureMap.Pipeline
             return finalValue;
         }
 
-        private object createRawObject(Type pluginType, BuildSession session)
+        private object createRawObject(Type pluginType, IBuildSession session)
         {
             try
             {
@@ -146,7 +146,7 @@ namespace StructureMap.Pipeline
         }
 
         [CLSCompliant(false)]
-        protected virtual object build(Type pluginType, BuildSession session)
+        protected virtual object build(Type pluginType, IBuildSession session)
         {
             throw new NotImplementedException();
         }

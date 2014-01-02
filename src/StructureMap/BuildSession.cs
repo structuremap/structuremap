@@ -7,7 +7,7 @@ using StructureMap.Pipeline;
 
 namespace StructureMap
 {
-    public class BuildSession : IContext, IBuildSession
+    public class BuildSession : IBuildSession
     {
         private readonly IPipelineGraph _pipelineGraph;
         private readonly ISessionCache _sessionCache;
