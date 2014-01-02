@@ -25,6 +25,16 @@ namespace StructureMap.Pipeline
             return argument == null ? null : argument.Dependency;
         }
 
+        public void Add<T>(T value)
+        {
+            Add(null, typeof(T), value);
+        }
+
+        public void Add<T>(Instance instance)
+        {
+            Add(null, typeof(T), instance); 
+        }
+
         public void Add(Type type, object @dependency)
         {
             Add(null, type, dependency);

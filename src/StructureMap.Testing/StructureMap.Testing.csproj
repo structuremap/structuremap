@@ -199,7 +199,6 @@
     <Compile Include="Building\setter_expression_building.cs" />
     <Compile Include="BuildSessionTester.cs" />
     <Compile Include="BuildUpIntegratedTester.cs" />
-    <Compile Include="BuildUpTester.cs" />
     <Compile Include="ConcreteClassCreationTester.cs" />
     <Compile Include="Configuration\DSL\AddInstanceTester.cs" />
     <Compile Include="Configuration\DSL\AddTypesTester.cs" />
