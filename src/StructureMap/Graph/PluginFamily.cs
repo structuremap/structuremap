@@ -119,7 +119,10 @@ namespace StructureMap.Graph
 
             if (_pluginType.IsConcrete() && new Plugin(_pluginType).CanBeAutoFilled)
             {
-                return new ConfiguredInstance(_pluginType);
+                var instance = new ConfiguredInstance(_pluginType);
+                AddInstance(instance);
+
+                return instance;
             }
 
             return null;

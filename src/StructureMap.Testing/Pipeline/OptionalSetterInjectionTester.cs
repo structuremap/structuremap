@@ -136,10 +136,9 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void using_the_FillAllPropertiesOf()
         {
-            var container =
-                new Container(
-                    r =>
-                    r.FillAllPropertiesOfType<Rule>().Use(new ColorRule("Red")));
+            var container = new Container(r => {
+                r.FillAllPropertiesOfType<Rule>().Use(new ColorRule("Red"));
+            });
 
             container.GetInstance<ClassWithDependency>().Rule.ShouldBeOfType(typeof (ColorRule));
         }

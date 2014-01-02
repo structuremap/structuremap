@@ -183,9 +183,13 @@ namespace StructureMap.Configuration.DSL
         /// <returns></returns>
         public CreatePluginFamilyExpression<TPluginType> FillAllPropertiesOfType<TPluginType>()
         {
-            Func<PropertyInfo, bool> predicate = prop => prop.PropertyType == typeof (TPluginType);
+            Func<PropertyInfo, bool> predicate = prop => {
+                return prop.PropertyType == typeof (TPluginType);
+            };
 
-            alter = graph => graph.Policies.SetterRules.Add(predicate);
+            alter = graph => {
+                graph.Policies.SetterRules.Add(predicate);
+            };
 
             return For<TPluginType>();
         }
