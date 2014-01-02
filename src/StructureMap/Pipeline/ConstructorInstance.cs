@@ -47,11 +47,6 @@ namespace StructureMap.Pipeline
             get { return _pluggedType; }
         }
 
-        public bool HasProperty(string propertyName, BuildSession session)
-        {
-            return _dependencies.Has(propertyName);
-        }
-
         [Obsolete("Just expose DependencyCollection")]
         Instance IStructuredInstance.GetChild(string name)
         {

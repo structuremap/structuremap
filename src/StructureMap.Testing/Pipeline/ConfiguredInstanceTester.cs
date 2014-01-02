@@ -148,10 +148,10 @@ namespace StructureMap.Testing.Pipeline
             var instance = new ConfiguredInstance(GetType());
 
             IConfiguredInstance configuredInstance = instance;
-            configuredInstance.HasProperty("prop1", null).ShouldBeFalse();
+            configuredInstance.Dependencies.Has("prop1").ShouldBeFalse();
 
             instance.Setter<List<string>>("prop1").IsNamedInstance("something");
-            configuredInstance.HasProperty("prop1", null).ShouldBeTrue();
+            configuredInstance.Dependencies.Has("prop1").ShouldBeTrue();
         }
 
 
@@ -161,10 +161,10 @@ namespace StructureMap.Testing.Pipeline
             var instance = new ConfiguredInstance(GetType());
 
             IConfiguredInstance configuredInstance = instance;
-            configuredInstance.HasProperty("prop1", null).ShouldBeFalse();
+            configuredInstance.Dependencies.Has("prop1").ShouldBeFalse();
 
             instance.EnumerableOf<IGateway>("prop1").Contains(new DefaultInstance());
-            configuredInstance.HasProperty("prop1", null).ShouldBeTrue();
+            configuredInstance.Dependencies.Has("prop1").ShouldBeTrue();
         }
 
         [Test]
@@ -173,10 +173,10 @@ namespace StructureMap.Testing.Pipeline
             var instance = new ConfiguredInstance(typeof (UsesGateways));
 
             IConfiguredInstance configuredInstance = instance;
-            configuredInstance.HasProperty("gateways", null).ShouldBeFalse();
+            configuredInstance.Dependencies.Has("gateways").ShouldBeFalse();
 
             instance.EnumerableOf<IGateway>().Contains(new DefaultInstance());
-            configuredInstance.HasProperty("gateways", null).ShouldBeTrue();
+            configuredInstance.Dependencies.Has("gateways").ShouldBeTrue();
         }
 
         [Test]
@@ -185,10 +185,10 @@ namespace StructureMap.Testing.Pipeline
             var instance = new ConfiguredInstance(typeof (UsesGateways));
 
             IConfiguredInstance configuredInstance = instance;
-            configuredInstance.HasProperty("gateways", null).ShouldBeFalse();
+            configuredInstance.Dependencies.Has("gateways").ShouldBeFalse();
 
             instance.EnumerableOf<IGateway>().Contains(new DefaultInstance());
-            configuredInstance.HasProperty("gateways", null).ShouldBeTrue();
+            configuredInstance.Dependencies.Has("gateways").ShouldBeTrue();
         }
 
 

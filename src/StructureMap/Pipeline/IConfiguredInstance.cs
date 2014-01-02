@@ -15,8 +15,6 @@ namespace StructureMap.Pipeline
         string Name { get; }
         Type PluggedType { get; }
 
-        bool HasProperty(string propertyName, BuildSession session);
-
         DependencyCollection Dependencies { get; }
     }
 }
