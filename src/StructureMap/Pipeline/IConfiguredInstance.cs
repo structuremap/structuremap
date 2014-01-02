@@ -24,7 +24,6 @@ namespace StructureMap.Pipeline
         void SetChild(string name, Instance instance);
         void SetValue(Type type, object value, CannotFindProperty cannotFind);
         void SetValue(string name, object value);
-        void SetCollection(string name, IEnumerable<Instance> children);
 
         string GetProperty(string propertyName);
 

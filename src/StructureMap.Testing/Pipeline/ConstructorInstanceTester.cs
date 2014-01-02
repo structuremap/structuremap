@@ -87,7 +87,7 @@ namespace StructureMap.Testing.Pipeline
             };
 
             ConstructorInstance instance = ConstructorInstance.For<ClassWithArrayOfWidgets>();
-            instance.As<IConfiguredInstance>().SetCollection("widgets", children);
+            instance.Dependencies.Add("widgets", children) ;
 
             var widgets = instance.Build(typeof (ClassWithArrayOfWidgets), new StubBuildSession())
                 .As<ClassWithArrayOfWidgets>()

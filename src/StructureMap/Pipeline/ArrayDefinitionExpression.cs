@@ -32,7 +32,7 @@ namespace StructureMap.Pipeline
             var child = new InstanceExpression<TElementType>(list.Add);
             action(child);
 
-            _instance.SetCollection(_propertyName, list);
+            _instance.Dependencies.Add(_propertyName, list);
 
             return _instance;
         }
@@ -44,7 +44,7 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public TInstance Contains(params Instance[] children)
         {
-            _instance.SetCollection(_propertyName, children);
+            _instance.Dependencies.Add(_propertyName, children);
 
             return _instance;
         }

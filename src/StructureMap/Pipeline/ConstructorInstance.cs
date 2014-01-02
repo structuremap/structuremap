@@ -58,11 +58,6 @@ namespace StructureMap.Pipeline
             SetValue(name, value);
         }
 
-        void IConfiguredInstance.SetCollection(string name, IEnumerable<Instance> children)
-        {
-            SetCollection(name, children);
-        }
-
         // Seems to exist only for testing the Xml configuration
         [Obsolete("Get rid of this when we can expose the Dependencies")]
         public string GetProperty(string propertyName)
@@ -190,13 +185,6 @@ namespace StructureMap.Pipeline
                                                           .ToFormat(_pluggedType.AssemblyQualifiedName, name));
             }
             return dependencyType;
-        }
-
-        internal void SetCollection(string name, IEnumerable<Instance> children)
-        {
-            Type dependencyType = getDependencyType(name);
-            var instance = new EnumerableInstance(children);
-            SetChild(name, instance);
         }
 
         private Instance buildInstanceForType(Type dependencyType, object value)

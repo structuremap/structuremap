@@ -40,6 +40,11 @@ namespace StructureMap.Pipeline
             Add(null, type, dependency);
         }
 
+        public void Add(string name, IEnumerable<Instance> items)
+        {
+            Add(name, null, new EnumerableInstance(items));
+        }
+
         public void Add(string name, object @dependency)
         {
             Add(name, null, dependency);

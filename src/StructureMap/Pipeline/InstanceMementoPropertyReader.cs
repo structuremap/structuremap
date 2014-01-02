@@ -107,7 +107,7 @@ namespace StructureMap.Pipeline
                 children[i] = memento.ReadInstance(_pluginFactory, childType);
             }
 
-            _instance.SetCollection(name, children);
+            _instance.Dependencies.Add(name, children);
         }
     }
 }
