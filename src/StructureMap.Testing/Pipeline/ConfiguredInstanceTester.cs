@@ -191,20 +191,6 @@ namespace StructureMap.Testing.Pipeline
             configuredInstance.HasProperty("gateways", null).ShouldBeTrue();
         }
 
-        [Test]
-        public void Property_cannot_be_found_so_throw_205()
-        {
-            try
-            {
-                IConfiguredInstance configuredInstance = new ConfiguredInstance(typeof (ClassThatTakesAnything));
-                configuredInstance.Get<string>("anything", new StubBuildSession());
-            }
-            catch (StructureMapException ex)
-            {
-                Assert.AreEqual(205, ex.ErrorCode);
-            }
-        }
-
 
         [Test]
         public void TestComplexRule()

@@ -57,7 +57,7 @@ namespace StructureMap.Pipeline
 
         public void Configure(IConfiguredInstance instance)
         {
-            _args.Each(pair => instance.SetValue(pair.Key, pair.Value));
+            _args.Each(pair => instance.Dependencies.Add(pair.Key, pair.Value));
 
             _defaults.Each(pair => instance.Dependencies.Add(pair.Key, pair.Value));
         }

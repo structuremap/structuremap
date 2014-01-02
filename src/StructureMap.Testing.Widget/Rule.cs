@@ -74,13 +74,13 @@ namespace StructureMap.Testing.Widget
 
             IConfiguredInstance instance = memento;
 
-            instance.SetValue("String", "Red");
-            instance.SetValue("String2", "Green");
-            instance.SetValue("Int", "1");
-            instance.SetValue("Long", "2");
-            instance.SetValue("Byte", "3");
-            instance.SetValue("Double", "4");
-            instance.SetValue("Bool", "true");
+            instance.Dependencies.Add("String", "Red");
+            instance.Dependencies.Add("String2", "Green");
+            instance.Dependencies.Add("Int", "1");
+            instance.Dependencies.Add("Long", "2");
+            instance.Dependencies.Add("Byte", "3");
+            instance.Dependencies.Add("Double", "4");
+            instance.Dependencies.Add("Bool", "true");
 
             return memento;
         }

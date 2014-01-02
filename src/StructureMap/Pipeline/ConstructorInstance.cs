@@ -42,38 +42,6 @@ namespace StructureMap.Pipeline
             get { return _plugin; }
         }
 
-        void IConfiguredInstance.SetValue(string name, object value)
-        {
-            SetValue(name, value);
-        }
-
-        [Obsolete("Expose the dependencies instead")]
-        public object Get(string propertyName, Type pluginType, BuildSession session)
-        {
-            var value = _dependencies.FindByTypeOrName(pluginType, propertyName);
-
-            if (value == null)
-            {
-                if (pluginType.IsSimple() || pluginType == typeof(string))
-                {
-                    throw new StructureMapException(205, propertyName, Name);
-                }
-
-                return new DefaultInstance().Build(pluginType, session);
-            }
-
-            return value is Instance ? value.As<Instance>().Build(pluginType, session) : value;
-        }
-
-        [Obsolete("Seems to only be used in testing and for the Obsolete Argument")]
-        public T Get<T>(string propertyName, BuildSession session)
-        {
-            object o = Get(propertyName, typeof (T), session);
-            if (o == null) return default(T);
-
-            return (T) o;
-        }
-
         public Type PluggedType
         {
             get { return _pluggedType; }
@@ -130,15 +98,6 @@ namespace StructureMap.Pipeline
         protected override sealed Type getConcreteType(Type pluginType)
         {
             return _pluggedType;
-        }
-
-        internal void SetValue(string name, object value)
-        {
-            Type dependencyType = getDependencyType(name);
-
-            Instance instance = buildInstanceForType(dependencyType, value);
-
-            _dependencies.Add(name, dependencyType, instance);
         }
 
         private Type getDependencyType(string name)

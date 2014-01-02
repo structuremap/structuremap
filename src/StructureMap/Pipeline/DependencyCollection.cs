@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
-using StructureMap.Building;
 using StructureMap.TypeRules;
 
 namespace StructureMap.Pipeline
@@ -57,12 +58,12 @@ namespace StructureMap.Pipeline
 
         public void Add<T>(T value)
         {
-            Add(null, typeof(T), value);
+            Add(null, typeof (T), value);
         }
 
         public void Add<T>(Instance instance)
         {
-            Add(null, typeof(T), instance); 
+            Add(null, typeof (T), instance);
         }
 
         public void Add(Type type, object @dependency)
@@ -85,6 +86,19 @@ namespace StructureMap.Pipeline
         // check that Instance is pluggable
         public void Add(string name, Type type, object @dependency)
         {
+            if (type.IsSimple() && @dependency.GetType() != type)
+            {
+                try
+                {
+                    var converter = TypeDescriptor.GetConverter(type);
+                    @dependency = converter.ConvertFrom(null, CultureInfo.InvariantCulture, @dependency);
+                }
+                catch (Exception e)
+                {
+                    throw new StructureMapException(206, e, name);
+                }
+            }
+            
             _dependencies.Add(new Argument
             {
                 Name = name,

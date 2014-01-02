@@ -15,13 +15,7 @@ namespace StructureMap.Pipeline
         string Name { get; }
         Type PluggedType { get; }
 
-        object Get(string propertyName, Type pluginType, BuildSession buildSession);
-
-        T Get<T>(string propertyName, BuildSession session);
-
         bool HasProperty(string propertyName, BuildSession session);
-
-        void SetValue(string name, object value);
 
         DependencyCollection Dependencies { get; }
     }

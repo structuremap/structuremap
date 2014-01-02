@@ -42,7 +42,7 @@ namespace StructureMap.Pipeline
         {
             string propertyValue = ConfigurationManager.AppSettings[appSettingKey];
             if (propertyValue == null) propertyValue = defaultValue;
-            _instance.SetValue(_propertyName, propertyValue);
+            _instance.Dependencies.Add(_propertyName, propertyValue);
             return _instance;
         }
 
@@ -83,7 +83,7 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public TInstance Is(TChild value)
         {
-            _instance.SetValue(_propertyName, value);
+            _instance.Dependencies.Add(_propertyName, value);
             return _instance;
         }
 

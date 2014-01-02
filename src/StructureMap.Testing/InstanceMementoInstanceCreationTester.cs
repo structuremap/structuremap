@@ -196,12 +196,12 @@ namespace StructureMap.Testing
 
             instance.Dependencies.Get("String").ShouldEqual("Red");
 
-            instance.Dependencies.Get("Breed").ShouldEqual(BreedEnum.Longhorn);
-            instance.Dependencies.Get("Int").ShouldEqual(1);
-            instance.Dependencies.Get("Long").ShouldEqual(2L);
-            instance.Dependencies.Get("Byte").ShouldEqual(3);
-            instance.Dependencies.Get("Double").ShouldEqual(4d);
-            instance.Dependencies.Get("Bool").ShouldEqual(true);
+            instance.Dependencies.Get("Breed").ShouldEqual("Longhorn");
+            instance.Dependencies.Get("Int").ShouldEqual("1");
+            instance.Dependencies.Get("Long").ShouldEqual("2");
+            instance.Dependencies.Get("Byte").ShouldEqual("3");
+            instance.Dependencies.Get("Double").ShouldEqual("4");
+            instance.Dependencies.Get("Bool").ShouldEqual("True");
         }
     }
 }

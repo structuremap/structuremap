@@ -84,7 +84,7 @@ namespace StructureMap.Pipeline
             }
             else
             {
-                _instance.SetValue(name, propertyValue);
+                _instance.Dependencies.Add(name, propertyValue);
             }
         }
 
