@@ -12,15 +12,11 @@ namespace StructureMap.Pipeline
 {
     public class ConstructorInstance : Instance, IConfiguredInstance, IStructuredInstance
     {
-        private readonly object _locker = new object();
         private readonly Type _pluggedType;
         private readonly DependencyCollection _dependencies = new DependencyCollection();
 
         [Obsolete("Going to eliminate the need for this")]
         private readonly Plugin _plugin;
-
-        [Obsolete("Definitely eliminating this soon")]
-        private volatile IInstanceBuilder _builder;
 
         public ConstructorInstance(Type pluggedType)
             : this(new Plugin(pluggedType))
@@ -232,21 +228,13 @@ namespace StructureMap.Pipeline
 
         protected override object build(Type pluginType, BuildSession session)
         {
-            if (_builder == null)
-            {
-                lock (_locker)
-                {
-                    if (_builder == null)
-                    {
-                        _builder = session.CreateBuilder(Plugin);
-                    }
-                }
-            }
+            // TODO -- make this Lazy for crying out loud
+            var plan = StructureMap.Building.ConcreteType.BuildPlan(_pluggedType, null, _dependencies, Policies);
 
-            return Build(pluginType, session, _builder);
+            return Build(pluginType, session, plan);
         }
 
-        public object Build(Type pluginType, BuildSession session, IInstanceBuilder builder)
+        public object Build(Type pluginType, BuildSession session, IBuildPlan builder)
         {
             if (builder == null)
             {
@@ -257,8 +245,7 @@ namespace StructureMap.Pipeline
 
             try
             {
-                var args = new Arguments(this, session);
-                return builder.BuildInstance(args);
+                return builder.Build(session);
             }
             catch (StructureMapException)
             {

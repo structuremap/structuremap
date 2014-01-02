@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 using Rhino.Mocks;
+using StructureMap.Building;
 using StructureMap.Configuration.DSL;
 using StructureMap.Construction;
 using StructureMap.Graph;
@@ -218,8 +219,8 @@ namespace StructureMap.Testing.Pipeline
         public void Trying_to_build_with_an_InvalidCastException_will_throw_error_206()
         {
             var mocks = new MockRepository();
-            var builder = mocks.StrictMock<IInstanceBuilder>();
-            Expect.Call(builder.BuildInstance(null)).Throw(new InvalidCastException());
+            var builder = mocks.StrictMock<IBuildPlan>();
+            Expect.Call(builder.Build(null)).Throw(new InvalidCastException());
             LastCall.IgnoreArguments();
             mocks.Replay(builder);
 
@@ -234,8 +235,8 @@ namespace StructureMap.Testing.Pipeline
         public void Trying_to_build_with_an_unknown_exception_will_throw_error_207()
         {
             var mocks = new MockRepository();
-            var builder = mocks.StrictMock<IInstanceBuilder>();
-            Expect.Call(builder.BuildInstance(null)).Throw(new Exception());
+            var builder = mocks.StrictMock<IBuildPlan>();
+            Expect.Call(builder.Build(null)).Throw(new Exception());
             LastCall.IgnoreArguments();
             mocks.Replay(builder);
 

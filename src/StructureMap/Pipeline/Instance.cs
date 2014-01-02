@@ -43,6 +43,8 @@ namespace StructureMap.Pipeline
         {
             get
             {
+                if (_parent == null) return new Policies();
+
                 return _parent.Root.Policies;
             }
         }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using StructureMap.Graph;
+using StructureMap.Pipeline;
 
 namespace StructureMap.Building
 {
@@ -15,22 +15,24 @@ namespace StructureMap.Building
         private readonly Lazy<Func<IBuildSession, object>> _func;
 
 
-        public ConcreteBuild(Type concreteType) : this(concreteType, new Plugin(concreteType).GetConstructor())
+        public ConcreteBuild(Type concreteType) : this(concreteType, new ConstructorSelector().Select(concreteType))
         {
-            
         }
 
         public ConcreteBuild(Type concreteType, ConstructorStep constructor)
         {
             _concreteType = concreteType;
             _constructor = constructor;
+
+            _func = new Lazy<Func<IBuildSession, object>>(() => {
+                var @delegate = ToDelegate();
+                return @delegate as Func<IBuildSession, object>;
+            });
         }
 
-        protected ConcreteBuild(Type concreteType, ConstructorInfo constructor) : this(concreteType, new ConstructorStep(constructor))
+        protected ConcreteBuild(Type concreteType, ConstructorInfo constructor)
+            : this(concreteType, new ConstructorStep(constructor))
         {
-            _func = new Lazy<Func<IBuildSession, object>>(() => {
-                return ToDelegate() as Func<IBuildSession, object>;
-            });
         }
 
         public Type ConcreteType
@@ -63,12 +65,12 @@ namespace StructureMap.Building
 
         public Delegate ToDelegate()
         {
-            var session = Expression.Parameter(typeof(IBuildSession), "session");
+            var session = Expression.Parameter(typeof (IBuildSession), "session");
             var inner = ToExpression(session);
 
             var lambdaType = typeof (Func<,>).MakeGenericType(typeof (IBuildSession), _concreteType);
-            
-            
+
+
             var lambda = Expression.Lambda(lambdaType, inner, session);
 
             return lambda.Compile();
@@ -77,16 +79,14 @@ namespace StructureMap.Building
         public Expression ToExpression(ParameterExpression session)
         {
             var newExpr = _constructor.ToExpression(session);
-            
+
             if (!_setters.Any())
             {
                 return newExpr;
             }
-            
+
             return Expression.MemberInit(newExpr, _setters.Select(x => x.ToBinding(session)));
         }
-
-        
     }
 
     public class ConcreteBuild<T> : ConcreteBuild, IDependencySource
@@ -96,18 +96,18 @@ namespace StructureMap.Building
             var finder = new ConstructorFinderVisitor();
             finder.Visit(expression);
 
-            ConstructorInfo ctor = finder.Constructor;
+            var ctor = finder.Constructor;
 
             return new ConcreteBuild<T>(ctor);
         }
 
         public ConcreteBuild(ConstructorInfo constructor)
-            : base(typeof(T), constructor)
+            : base(typeof (T), constructor)
         {
         }
 
         public ConcreteBuild()
-            : base(typeof(T))
+            : base(typeof (T))
         {
         }
 
@@ -133,5 +133,4 @@ namespace StructureMap.Building
             return this;
         }
     }
-
 }
