@@ -15,11 +15,6 @@ namespace StructureMap.Pipeline
             _prototype = prototype;
         }
 
-        public override IDependencySource ToDependencySource(Type pluginType)
-        {
-            throw new NotImplementedException();
-        }
-
         protected override PrototypeInstance thisInstance { get { return this; } }
 
 

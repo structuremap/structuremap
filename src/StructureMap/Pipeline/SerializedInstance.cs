@@ -17,11 +17,6 @@ namespace StructureMap.Pipeline
             formatter.Serialize(_stream, template);
         }
 
-        public override IDependencySource ToDependencySource(Type pluginType)
-        {
-            throw new NotImplementedException();
-        }
-
         protected override SerializedInstance thisInstance { get { return this; } }
 
         protected override string getDescription()

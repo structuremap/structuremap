@@ -5,24 +5,6 @@ using StructureMap.TypeRules;
 
 namespace StructureMap.Pipeline
 {
-    public class NullInstance : Instance
-    {
-        protected override string getDescription()
-        {
-            return "NULL";
-        }
-
-        protected override object build(Type pluginType, BuildSession session)
-        {
-            return null;
-        }
-
-        public override IDependencySource ToDependencySource(Type pluginType)
-        {
-            throw new NotSupportedException();
-        }
-    }
-
     public class ObjectInstance : ExpressedInstance<ObjectInstance>, IDisposable
     {
         private object _object;

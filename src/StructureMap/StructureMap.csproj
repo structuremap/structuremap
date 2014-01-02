@@ -138,6 +138,7 @@
     <Compile Include="Building\DelegateExtensions.cs" />
     <Compile Include="Building\IBuildPlan.cs" />
     <Compile Include="Building\IDependencySource.cs" />
+    <Compile Include="Building\InstanceDependencySource.cs" />
     <Compile Include="Building\LifecycleDependencySource.cs" />
     <Compile Include="Building\ListDependencySource.cs" />
     <Compile Include="Building\LiteralPlan.cs" />
@@ -145,6 +146,7 @@
     <Compile Include="Building\Setter.cs" />
     <Compile Include="Building\StructureMapBuildException.cs" />
     <Compile Include="BuildSession.cs" />
+    <Compile Include="Pipeline\NullInstance.cs" />
     <Compile Include="Policies.cs" />
     <Compile Include="ComplexPipelineGraph.cs" />
     <Compile Include="Configuration\DSL\Expressions\GenericFamilyExpression.cs" />

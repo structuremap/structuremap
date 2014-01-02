@@ -31,11 +31,6 @@ namespace StructureMap.Pipeline
             }
         }
 
-        public override IDependencySource ToDependencySource(Type pluginType)
-        {
-            throw new NotImplementedException();
-        }
-
         protected override string getDescription()
         {
             return "Instance is created by Func<object> function:  " + _builder;

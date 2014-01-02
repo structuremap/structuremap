@@ -27,7 +27,10 @@ namespace StructureMap.Pipeline
         /// </summary>
         /// <param name="pluginType"></param>
         /// <returns></returns>
-        public abstract IDependencySource ToDependencySource(Type pluginType);
+        public virtual IDependencySource ToDependencySource(Type pluginType)
+        {
+            return new InstanceDependencySource(pluginType, this);
+        }
 
         public PluginFamily Parent
         {

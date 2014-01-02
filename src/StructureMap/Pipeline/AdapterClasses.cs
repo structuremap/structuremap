@@ -12,11 +12,6 @@ namespace StructureMap.Pipeline
             _openInstanceType = openInstanceType;
         }
 
-        public override IDependencySource ToDependencySource(Type pluginType)
-        {
-            throw new NotImplementedException();
-        }
-
         protected override string getDescription()
         {
             return string.Empty;
@@ -37,11 +32,6 @@ namespace StructureMap.Pipeline
 
     public class LazyInstance<T> : Instance
     {
-        public override IDependencySource ToDependencySource(Type pluginType)
-        {
-            throw new NotImplementedException();
-        }
-
         protected override string getDescription()
         {
             return "Lazy construction of " + typeof (T).FullName;
@@ -58,11 +48,6 @@ namespace StructureMap.Pipeline
 
     public class FactoryInstance<T> : Instance
     {
-        public override IDependencySource ToDependencySource(Type pluginType)
-        {
-            throw new NotImplementedException();
-        }
-
         protected override string getDescription()
         {
             return "Lazy factory of " + typeof (T).FullName;
@@ -79,11 +64,6 @@ namespace StructureMap.Pipeline
 
     public class FactoryInstance<T, T1> : Instance
     {
-        public override IDependencySource ToDependencySource(Type pluginType)
-        {
-            throw new NotImplementedException();
-        }
-
         protected override string getDescription()
         {
             return "Lazy construction of {0} using {1}".ToFormat(typeof(T1).FullName, typeof(T).FullName);
