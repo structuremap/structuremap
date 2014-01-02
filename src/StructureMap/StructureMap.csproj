@@ -340,7 +340,6 @@
     <Compile Include="InitializationExpression.cs" />
     <Compile Include="Query\Model.cs" />
     <Compile Include="Pipeline\ConfiguredInstanceBase.cs" />
-    <Compile Include="Pipeline\IStructuredInstance.cs" />
     <Compile Include="Pipeline\SerializedInstance.cs" />
     <Compile Include="Pipeline\SmartInstance.cs" />
     <Compile Include="ReflectionHelper.cs" />

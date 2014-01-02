@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Globalization;
 using System.Linq;
 using StructureMap.Building;
 using StructureMap.Graph;
@@ -9,13 +6,12 @@ using StructureMap.TypeRules;
 
 namespace StructureMap.Pipeline
 {
-    public class ConstructorInstance : Instance, IConfiguredInstance, IStructuredInstance
+    public class ConstructorInstance : Instance, IConfiguredInstance
     {
         private readonly Type _pluggedType;
         private readonly DependencyCollection _dependencies = new DependencyCollection();
 
-        [Obsolete("Going to eliminate the need for this")]
-        private readonly Plugin _plugin;
+        [Obsolete("Going to eliminate the need for this")] private readonly Plugin _plugin;
 
         public ConstructorInstance(Type pluggedType)
             : this(new Plugin(pluggedType))
@@ -28,7 +24,7 @@ namespace StructureMap.Pipeline
             _pluggedType = plugin.PluggedType;
 
             _pluggedType.GetCustomAttributes(typeof (InstanceAttribute), false).OfType<InstanceAttribute>()
-                        .Each(x => x.Alter(this));
+                .Each(x => x.Alter(this));
         }
 
         public ConstructorInstance(Type pluggedType, string name)
@@ -45,24 +41,6 @@ namespace StructureMap.Pipeline
         public Type PluggedType
         {
             get { return _pluggedType; }
-        }
-
-        [Obsolete("Just expose DependencyCollection")]
-        Instance IStructuredInstance.GetChild(string name)
-        {
-            return _dependencies.FindByTypeOrName(null, name) as Instance;
-        }
-
-        [Obsolete("Just expose DependencyCollection")]
-        Instance[] IStructuredInstance.GetChildArray(string name)
-        {
-            return _dependencies.FindByTypeOrName(null, name)
-                .As<EnumerableInstance>().Children.ToArray();
-        }
-
-        void IStructuredInstance.RemoveKey(string name)
-        {
-            _dependencies.RemoveByName(name);
         }
 
         protected override bool canBePartOfPluginFamily(PluginFamily family)
@@ -97,41 +75,16 @@ namespace StructureMap.Pipeline
 
         private Type getDependencyType(string name)
         {
-            Type dependencyType = _plugin.FindArgumentType(name);
+            var dependencyType = _plugin.FindArgumentType(name);
             if (dependencyType == null)
             {
                 throw new ArgumentOutOfRangeException("name",
-                                                      "Could not find a constructor parameter or property for {0} named {1}"
-                                                          .ToFormat(_pluggedType.AssemblyQualifiedName, name));
+                    "Could not find a constructor parameter or property for {0} named {1}"
+                        .ToFormat(_pluggedType.AssemblyQualifiedName, name));
             }
             return dependencyType;
         }
 
-        private Instance buildInstanceForType(Type dependencyType, object value)
-        {
-            if (value == null) return new NullInstance();
-
-
-            if (dependencyType.IsSimple() || dependencyType.IsNullable() || dependencyType == typeof (Guid) ||
-                dependencyType == typeof (DateTime))
-            {
-                try
-                {
-                    if (value.GetType() == dependencyType) return new ObjectInstance(value);
-
-                    TypeConverter converter = TypeDescriptor.GetConverter(dependencyType);
-                    object convertedValue = converter.ConvertFrom(null, CultureInfo.InvariantCulture, value);
-                    return new ObjectInstance(convertedValue);
-                }
-                catch (Exception e)
-                {
-                    throw new StructureMapException(206, e, Name);
-                }
-            }
-
-
-            return new ObjectInstance(value);
-        }
 
         protected override object build(Type pluginType, IBuildSession session)
         {
@@ -190,9 +143,7 @@ namespace StructureMap.Pipeline
 
             var closedInstance = new ConstructorInstance(closedType);
 
-            _dependencies.Each(arg => {
-                closedInstance._dependencies.Add(arg.CloseType(types));
-            });
+            _dependencies.Each(arg => { closedInstance._dependencies.Add(arg.CloseType(types)); });
 
             return closedInstance;
         }
@@ -289,7 +240,7 @@ namespace StructureMap.Pipeline
                 throw new ApplicationException("Please specify the element type in the call to TheArrayOf");
             }
 
-            string propertyName = Plugin.FindArgumentNameForEnumerableOf(typeof (TChild));
+            var propertyName = Plugin.FindArgumentNameForEnumerableOf(typeof (TChild));
 
             if (propertyName.IsEmpty())
             {

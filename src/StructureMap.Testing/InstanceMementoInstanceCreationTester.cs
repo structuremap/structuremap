@@ -1,3 +1,6 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 using StructureMap.Configuration;
 using StructureMap.Graph;
@@ -164,8 +167,10 @@ namespace StructureMap.Testing
                 MemoryInstanceMemento.CreateReferencedInstanceMemento("Dodge"),
             });
 
-            var instance = (IStructuredInstance)memento.ReadInstance(new SimplePluginFactory(), typeof(Rule));
-            Instance[] instances = instance.GetChildArray("cars");
+            var instance = memento.ReadInstance(new SimplePluginFactory(), typeof(Rule))
+                .As<ConstructorInstance>();
+            var raw = instance.Dependencies.FindByTypeOrName(null, "cars").As<EnumerableInstance>();
+            var instances = raw.Children.ToArray();
             Assert.AreEqual(3, instances.Length);
 
             assertIsReference(instances[0], "Ford");
@@ -181,8 +186,11 @@ namespace StructureMap.Testing
             MemoryInstanceMemento carMemento = MemoryInstanceMemento.CreateReferencedInstanceMemento("GrandPrix");
             memento.AddChild("car", carMemento);
 
-            var instance = (IStructuredInstance)memento.ReadInstance(new SimplePluginFactory(), typeof(Rule));
-            var child = (ReferencedInstance) instance.GetChild("car");
+            var instance = memento.ReadInstance(new SimplePluginFactory(), typeof(Rule)).As<ConstructorInstance>();
+            var child = instance
+                .Dependencies
+                .FindByTypeOrName(null, "car")
+                .ShouldBeOfType<ReferencedInstance>();
 
             Assert.AreEqual("GrandPrix", child.ReferenceKey);
         }

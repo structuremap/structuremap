@@ -89,8 +89,8 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void BuildRuleWithAMissingValue()
         {
-            var instance = (IStructuredInstance) ComplexRule.GetInstance();
-            instance.RemoveKey("String");
+            var instance = ComplexRule.GetInstance();
+            instance.Dependencies.RemoveByName("String");
 
             Exception<StructureMapException>.ShouldBeThrownBy(() => {
                 var rule = (ComplexRule)((Instance)instance).Build(typeof(Rule), _session);
