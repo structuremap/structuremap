@@ -89,6 +89,17 @@ namespace StructureMap.Pipeline
         {
             _dependencies.Add(argument);
         }
+
+        public object Get(string name)
+        {
+            if (!Has(name)) return null;
+
+            var value = FindByTypeOrName(null, name);
+
+            return value is ObjectInstance
+                ? value.As<ObjectInstance>().Object
+                : value;
+        }
     }
 
     public class Argument

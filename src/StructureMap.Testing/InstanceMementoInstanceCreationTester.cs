@@ -195,13 +195,14 @@ namespace StructureMap.Testing
             var instance = (IConfiguredInstance)memento.ReadInstance(new SimplePluginFactory(), typeof(Rule));
 
 
-            Assert.AreEqual(memento.GetProperty("String"), instance.GetProperty("String"));
-            Assert.AreEqual(memento.GetProperty("Breed"), instance.GetProperty("Breed"));
-            Assert.AreEqual(memento.GetProperty("Int"), instance.GetProperty("Int"));
-            Assert.AreEqual(memento.GetProperty("Long"), instance.GetProperty("Long"));
-            Assert.AreEqual(memento.GetProperty("Byte"), instance.GetProperty("Byte"));
-            Assert.AreEqual(memento.GetProperty("Double"), instance.GetProperty("Double"));
-            Assert.AreEqual(memento.GetProperty("Bool"), instance.GetProperty("Bool"));
+            Assert.AreEqual(memento.GetProperty("String"), instance.Dependencies.Get("String"));
+
+            instance.Dependencies.Get("Breed").ShouldEqual(BreedEnum.Longhorn);
+            instance.Dependencies.Get("Int").ShouldEqual(1);
+            instance.Dependencies.Get("Long").ShouldEqual(2L);
+            instance.Dependencies.Get("Byte").ShouldEqual(3);
+            instance.Dependencies.Get("Double").ShouldEqual(4d);
+            instance.Dependencies.Get("Bool").ShouldEqual(true);
         }
     }
 }

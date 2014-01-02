@@ -25,8 +25,6 @@ namespace StructureMap.Pipeline
         void SetValue(Type type, object value, CannotFindProperty cannotFind);
         void SetValue(string name, object value);
 
-        string GetProperty(string propertyName);
-
         DependencyCollection Dependencies { get; }
     }
 }

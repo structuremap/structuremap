@@ -58,20 +58,6 @@ namespace StructureMap.Pipeline
             SetValue(name, value);
         }
 
-        // Seems to exist only for testing the Xml configuration
-        [Obsolete("Get rid of this when we can expose the Dependencies")]
-        public string GetProperty(string propertyName)
-        {
-            var value = _dependencies.FindByTypeOrName(null, propertyName);
-
-            if (value is ObjectInstance)
-            {
-                return value.As<ObjectInstance>().Object.ToString();
-            }
-
-            return value == null ? null : value.ToString();
-        }
-
         [Obsolete("Expose the dependencies instead")]
         public object Get(string propertyName, Type pluginType, BuildSession session)
         {
