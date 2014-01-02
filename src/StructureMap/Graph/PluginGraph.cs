@@ -4,12 +4,10 @@ using System.Linq;
 using System.Reflection;
 using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
-using StructureMap.Construction;
 using StructureMap.Diagnostics;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
 using StructureMap.Util;
-using StructureMap;
 
 namespace StructureMap.Graph
 {
@@ -33,9 +31,6 @@ namespace StructureMap.Graph
 
         private readonly LightweightCache<string, PluginGraph> _profiles;
 
-        [Obsolete("Wanna kill this after the BuildPlan business is in place")]
-        private readonly Cache<Type, IInstanceBuilder> _builders; 
-
         public readonly Policies Policies = new Policies();
 
         public PluginGraph()
@@ -51,17 +46,6 @@ namespace StructureMap.Graph
 
             _families.OnAddition = family => family.Owner = this;
 
-            _builders = new Cache<Type, IInstanceBuilder>(type => {
-                var plugin = new Plugin(type);
-                Policies.SetterRules.Configure(plugin);
-
-                return plugin.CreateBuilder();
-            });
-        }
-
-        public IInstanceBuilder BuilderFor(Type pluggedType)
-        {
-            return _builders[pluggedType];
         }
 
         public PluginGraph Parent { get; set; }

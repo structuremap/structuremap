@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using StructureMap.Building;
-using StructureMap.Construction;
 using StructureMap.Graph;
 using StructureMap.TypeRules;
 

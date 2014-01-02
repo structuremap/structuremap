@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
-using StructureMap.Construction;
 using StructureMap.Pipeline;
 using StructureMap.TypeRules;
 using System.Linq;
@@ -14,6 +12,7 @@ namespace StructureMap.Graph
     /// PluginFamily’s PluginType. The properties of a Plugin are the CLR Type of the concrete class, 
     /// and the human-friendly concrete key that StructureMap will use to identify the Type.
     /// </summary>
+    [Obsolete("This is going away after the BuildPlan stuff is completely in")]
     public class Plugin
     {
         public static readonly string DEFAULT = "DEFAULT";
@@ -33,18 +32,6 @@ namespace StructureMap.Graph
 
         #endregion
 
-        [Obsolete("Temporary only")]
-        public IInstanceBuilder CreateBuilder()
-        {
-            try
-            {
-                return BuilderCompiler.CreateBuilder(this);
-            }
-            catch (Exception e)
-            {
-                throw new StructureMapException(245, e, _pluggedType.AssemblyQualifiedName);
-            }
-        }
 
         /// <summary>
         /// The concrete CLR Type represented by the Plugin

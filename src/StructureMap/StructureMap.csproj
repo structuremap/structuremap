@@ -299,11 +299,6 @@
     <Compile Include="Configuration\DSL\IRegistry.cs" />
     <Compile Include="Configuration\DSL\SetterConvention.cs" />
     <Compile Include="Configuration\ITypeReader.cs" />
-    <Compile Include="Construction\BuilderCompiler.cs" />
-    <Compile Include="Construction\ConstructorFunctionBuilder.cs" />
-    <Compile Include="Construction\IArguments.cs" />
-    <Compile Include="Construction\InstanceBuilder.cs" />
-    <Compile Include="Construction\SetterBuilder.cs" />
     <Compile Include="Diagnostics\DoctorResult.cs" />
     <Compile Include="Diagnostics\ValidationError.cs" />
     <Compile Include="ErrorMessages.cs" />
@@ -324,7 +319,6 @@
     <Compile Include="Query\EmptyConfiguration.cs" />
     <Compile Include="Query\GenericFamilyConfiguration.cs" />
     <Compile Include="Query\IModel.cs" />
-    <Compile Include="Pipeline\Arguments.cs" />
     <Compile Include="Pipeline\ArrayCoercion.cs" />
     <Compile Include="Pipeline\ConstructorInstance.cs" />
     <Compile Include="Pipeline\EnumerableInstance.cs" />

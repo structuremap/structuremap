@@ -1,8 +1,6 @@
 ﻿using NUnit.Framework;
 using StructureMap.Attributes;
 using StructureMap.Building;
-using StructureMap.Construction;
-using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget3;
 
@@ -23,7 +21,7 @@ namespace StructureMap.Testing.Building
             var plan = new BuildUpPlan<SetterTarget>();
             plan.Set(x => x.Color, "Red");
             plan.Set(x => x.Direction, "Green");
-            plan.Set(x => x.Gateway, new DefaultDependencySource(typeof(IGateway)));
+            plan.Set(x => x.Gateway, new DefaultDependencySource(typeof (IGateway)));
 
             plan.BuildUp(session, target);
 
@@ -44,13 +42,11 @@ namespace StructureMap.Testing.Building
             TheDefaultGateway = new DefaultGateway();
 
 
-
             var args = new ExplicitArguments();
             args.Set<IGateway>(TheDefaultGateway);
             _session = BuildSession.Empty(args);
 
             theDependencies = new DependencyCollection {{"Age", 34}};
-
 
 
             _target = null;
@@ -139,5 +135,4 @@ namespace StructureMap.Testing.Building
 
         public IService Service { get; set; }
     }
-
 }

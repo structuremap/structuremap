@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using StructureMap.Construction;
+using StructureMap.Building;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 
@@ -31,14 +31,16 @@ namespace StructureMap
 
         public void BuildUp(object target)
         {
+            if (target == null) throw new ArgumentNullException("target");
+
             var pluggedType = target.GetType();
             var instance = _pipelineGraph.GetDefault(pluggedType) as IConfiguredInstance
                                            ?? new ConfiguredInstance(pluggedType);
 
-            // TODO -- do this by pulling SetterRules out of PluginGraph
-            var builder = _pipelineGraph.Outer.BuilderFor(pluggedType);
-            var arguments = new Arguments(instance, this);
-            builder.BuildUp(arguments, target);
+            var plan = ConcreteType.BuildUpPlan(pluggedType, instance.Dependencies, _pipelineGraph.Outer.Policies);
+
+
+            plan.BuildUp(this, target);
         }
 
         public T GetInstance<T>()
@@ -150,14 +152,6 @@ namespace StructureMap
         public virtual object FindObject(Type pluginType, Instance instance)
         {
             return _sessionCache.GetObject(pluginType, instance);
-        }
-
-        // TODO -- really don't like this.  Could be better.
-        [Obsolete("Holy cow, that's awful!")]
-        public IInstanceBuilder CreateBuilder(Plugin plugin)
-        {
-            Policies.SetterRules.Configure(plugin);
-            return plugin.CreateBuilder();
         }
 
         public Policies Policies

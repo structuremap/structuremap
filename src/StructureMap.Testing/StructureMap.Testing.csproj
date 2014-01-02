@@ -216,10 +216,6 @@
     <Compile Include="Configuration\DSL\UseIfNoneTests.cs" />
     <Compile Include="Configuration\GraphBuilderTester.cs" />
     <Compile Include="Configuration\SimplePluginFactory.cs" />
-    <Compile Include="Construction\BuilderCompilerTester.cs" />
-    <Compile Include="Construction\ConstructorFunctionBuilderTester.cs" />
-    <Compile Include="Construction\SetterBuilderTester.cs" />
-    <Compile Include="Construction\StubArguments.cs" />
     <Compile Include="Debugging.cs" />
     <Compile Include="Diagnostics\WriterExtensions.cs" />
     <Compile Include="Examples.cs">

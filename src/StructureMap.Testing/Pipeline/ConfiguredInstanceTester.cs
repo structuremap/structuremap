@@ -4,7 +4,6 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using StructureMap.Building;
 using StructureMap.Configuration.DSL;
-using StructureMap.Construction;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Configuration.DSL;

@@ -1,9 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using StructureMap.Building;
 using StructureMap.Configuration.DSL;
-using StructureMap.Construction;
 using StructureMap.Diagnostics;
 using StructureMap.Exceptions;
 using StructureMap.Graph;
@@ -205,14 +203,7 @@ namespace StructureMap
         /// <param name="target"></param>
         public void BuildUp(object target)
         {
-            if (target == null) throw new ArgumentNullException("target");
-
-            var pluggedType = target.GetType();
-            var instance = _pipelineGraph.GetDefault(pluggedType) as IConfiguredInstance
-                                           ?? new ConfiguredInstance(pluggedType);
-
-            var plan = ConcreteType.BuildUpPlan(pluggedType, instance.Dependencies, _pipelineGraph.Outer.Policies);
-            plan.BuildUp(new BuildSession(_pipelineGraph), target);
+            new BuildSession(_pipelineGraph).BuildUp(target);
         }
 
         /// <summary>
