@@ -73,18 +73,6 @@ namespace StructureMap.Pipeline
             return _pluggedType;
         }
 
-        private Type getDependencyType(string name)
-        {
-            var dependencyType = _plugin.FindArgumentType(name);
-            if (dependencyType == null)
-            {
-                throw new ArgumentOutOfRangeException("name",
-                    "Could not find a constructor parameter or property for {0} named {1}"
-                        .ToFormat(_pluggedType.AssemblyQualifiedName, name));
-            }
-            return dependencyType;
-        }
-
 
         protected override object build(Type pluginType, IBuildSession session)
         {
