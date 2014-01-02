@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
+using StructureMap.Building;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
+using StructureMap.TypeRules;
 
 namespace StructureMap
 {
@@ -9,6 +12,29 @@ namespace StructureMap
     {
         public readonly SetterRules SetterRules = new SetterRules();
         public readonly ConstructorSelector ConstructorSelector = new ConstructorSelector();
+
+        public bool CanBeAutoFilled(Type concreteType)
+        {
+            var ctor = SelectConstructor(concreteType);
+
+            if (ctor == null) return false;
+
+            foreach (ParameterInfo parameter in ctor.GetParameters())
+            {
+                if (!parameter.ParameterType.IsAutoFillable())
+                {
+                    return false;
+                }
+            }
+
+            var mandatories = ConcreteType.GetSetters(concreteType).Where(IsMandatorySetter).ToArray();
+            if (mandatories.Any())
+            {
+                return mandatories.All(x => x.PropertyType.IsAutoFillable());
+            }
+
+            return true;
+        }
 
         public bool IsMandatorySetter(PropertyInfo propertyInfo)
         {

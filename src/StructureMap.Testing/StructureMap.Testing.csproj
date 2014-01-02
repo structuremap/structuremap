@@ -311,6 +311,7 @@
     <Compile Include="Pipeline\StubBuildSession.cs" />
     <Compile Include="Pipeline\ThreadLocalStorageLifecycleTester.cs" />
     <Compile Include="Pipeline\TransientLifecycleTester.cs" />
+    <Compile Include="PoliciesTester.cs" />
     <Compile Include="PrimitiveArrayTester.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>

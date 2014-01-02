@@ -34,11 +34,16 @@ namespace StructureMap.Building
             Policies policies,
             IHasSetters plan)
         {
-            var setters = pluggedType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Where(x => x.CanWrite && x.GetSetMethod(false) != null && x.GetSetMethod().GetParameters().Length == 1)
-                .ToArray();
+            var setters = GetSetters(pluggedType);
 
             setters.Each(setter => determineSetterSource(dependencies, policies, setter, plan));
+        }
+
+        public static PropertyInfo[] GetSetters(Type pluggedType)
+        {
+            return pluggedType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Where(x => x.CanWrite && x.GetSetMethod(false) != null && x.GetSetMethod().GetParameters().Length == 1)
+                .ToArray();
         }
 
         private static void determineSetterSource(DependencyCollection dependencies, Policies policies,

@@ -122,22 +122,6 @@ namespace StructureMap.Testing.Graph
         }
 
         [Test]
-        public void CanBeAutoFilledIsFalse()
-        {
-            var plugin = new Plugin(typeof (GrandPrix));
-
-            Assert.IsFalse(plugin.CanBeAutoFilled);
-        }
-
-        [Test]
-        public void CanBeAutoFilledIsTrue()
-        {
-            var plugin = new Plugin(typeof (Mustang));
-
-            Assert.IsTrue(plugin.CanBeAutoFilled);
-        }
-
-        [Test]
         public void CanBeCreated_is_negative_with_no_public_constructors()
         {
             new Plugin(typeof (ClassWithNoConstructor)).CanBeCreated().ShouldBeFalse();
@@ -150,13 +134,6 @@ namespace StructureMap.Testing.Graph
         }
 
 
-        [Test]
-        public void cannot_be_auto_filled_with_no_contructors()
-        {
-            var plugin = new Plugin(typeof (ClassWithNoConstructor));
-            plugin.CanBeAutoFilled.ShouldBeFalse();
-        }
-
 
 
         [Test]
@@ -165,12 +142,6 @@ namespace StructureMap.Testing.Graph
             Assert.IsTrue(typeof (ConfigurationWidget).Equals(_plugin.PluggedType));
         }
 
-        [Test]
-        public void DoesNotCreateAnImplicitMementoForATPluggedTypeThatCanBeAutoFilled()
-        {
-            var plugin = new Plugin(typeof (GrandPrix));
-            Assert.IsFalse(plugin.CanBeAutoFilled);
-        }
 
         [Test]
         public void find_argument_type_if_it_is_a_setter()

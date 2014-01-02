@@ -43,8 +43,6 @@ namespace StructureMap.Graph
         /// </summary>
         public SetterPropertyCollection Setters { get { return _setters; } }
 
-        public bool CanBeAutoFilled { get { return _constructor.CanBeAutoFilled() && _setters.CanBeAutoFilled(); } }
-
         public override string ToString()
         {
             return "Plugin:  " +  PluggedType.AssemblyQualifiedName;

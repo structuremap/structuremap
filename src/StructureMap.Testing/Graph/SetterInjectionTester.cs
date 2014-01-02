@@ -24,19 +24,15 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void AutoFillDeterminationWithSetterPropertiesIsFalse()
         {
-            var plugin = new Plugin(typeof (CannotBeAutoFilledGridColumn));
-            new SetterRules().Configure(plugin);
-
-            Assert.IsFalse(plugin.CanBeAutoFilled);
+            new Policies().CanBeAutoFilled(typeof(CannotBeAutoFilledGridColumn))
+                .ShouldBeFalse();
         }
 
         [Test]
         public void AutoFillDeterminationWithSetterPropertiesIsTrue()
         {
-            var plugin = new Plugin(typeof (AutoFilledGridColumn));
-            new SetterRules().Configure(plugin);
-
-            Assert.IsTrue(plugin.CanBeAutoFilled);
+            new Policies().CanBeAutoFilled(typeof (AutoFilledGridColumn))
+                .ShouldBeTrue();
         }
 
 
