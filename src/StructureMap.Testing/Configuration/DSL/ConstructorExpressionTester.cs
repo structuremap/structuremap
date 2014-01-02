@@ -1,6 +1,6 @@
+using System.Linq;
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
-using System.Linq;
 
 namespace StructureMap.Testing.Configuration.DSL
 {
@@ -22,11 +22,10 @@ namespace StructureMap.Testing.Configuration.DSL
             var concretion2 = new Concretion();
 
             IContainer container = new Container(r =>
-                                                 r.For<Abstraction>().AddInstances(x =>
-                                                 {
-                                                     x.ConstructedBy(() => concretion1).Named("One");
-                                                     x.ConstructedBy(() => concretion2).Named("Two");
-                                                 }));
+                r.For<Abstraction>().AddInstances(x => {
+                    x.ConstructedBy(() => concretion1).Named("One");
+                    x.ConstructedBy(() => concretion2).Named("Two");
+                }));
 
             Assert.AreSame(concretion1, container.GetInstance<Abstraction>("One"));
             Assert.AreSame(concretion2, container.GetInstance<Abstraction>("Two"));
@@ -49,10 +48,8 @@ namespace StructureMap.Testing.Configuration.DSL
             var concretion1 = new Concretion();
             var concretion2 = new Concretion();
 
-            IContainer manager = new Container(registry =>
-            {
-                registry.For<Abstraction>().AddInstances(x =>
-                {
+            IContainer manager = new Container(registry => {
+                registry.For<Abstraction>().AddInstances(x => {
                     x.ConstructedBy(() => concretion1).Named("One");
                     x.ConstructedBy(() => concretion2).Named("Two");
                 });
@@ -67,10 +64,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var concretion = new Concretion();
 
-            var container = new Container(r =>
-            {
-                r.For<Abstraction>().Add(c => concretion);
-            });
+            var container = new Container(r => { r.For<Abstraction>().Add(c => concretion); });
 
             container.GetAllInstances<Abstraction>().First().ShouldBeTheSameAs(concretion);
         }

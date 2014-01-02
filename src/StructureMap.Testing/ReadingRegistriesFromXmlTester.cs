@@ -16,7 +16,6 @@ namespace StructureMap.Testing
 
         #endregion
 
-        
         [Test]
         public void handles_failures_gracefully_if_the_registry_cannot_be_loaded()
         {
@@ -28,7 +27,5 @@ namespace StructureMap.Testing
             graph.Log.ErrorCount.ShouldEqual(1);
             graph.Log.AssertHasError(290);
         }
-
-        
     }
 }

@@ -28,7 +28,6 @@ namespace StructureMap.Testing.Pipeline
 
             source.Instance.ShouldEqual(instance);
             source.PluginType.ShouldEqual(typeof (IGateway));
-
         }
 
         [Test]
@@ -41,8 +40,8 @@ namespace StructureMap.Testing.Pipeline
                 new ObjectInstance(new AWidget())
             };
 
-            ConstructorInstance instance = ConstructorInstance.For<ClassWithArrayOfWidgets>();
-            instance.Dependencies.Add("widgets", children) ;
+            var instance = ConstructorInstance.For<ClassWithArrayOfWidgets>();
+            instance.Dependencies.Add("widgets", children);
 
             var widgets = instance.Build(typeof (ClassWithArrayOfWidgets), new StubBuildSession())
                 .As<ClassWithArrayOfWidgets>()
@@ -53,7 +52,6 @@ namespace StructureMap.Testing.Pipeline
             widgets[0].ShouldBeOfType<ColorWidget>().Color.ShouldEqual("red");
             widgets[2].ShouldBeOfType<AWidget>();
         }
-
     }
 
     public class ClassWithArrayOfWidgets

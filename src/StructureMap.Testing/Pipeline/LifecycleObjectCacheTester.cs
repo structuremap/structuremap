@@ -77,7 +77,7 @@ namespace StructureMap.Testing.Pipeline
         {
             var widget = new ColorWidget("blue");
             var instance = new ObjectInstance(widget);
-            cache.Set(typeof(Rule), instance, widget);
+            cache.Set(typeof (Rule), instance, widget);
 
             var formatter = new BinaryFormatter();
             var stream = new MemoryStream();
@@ -85,10 +85,10 @@ namespace StructureMap.Testing.Pipeline
 
             stream.Position = 0;
 
-            var deserializedCache = (LifecycleObjectCache)formatter.Deserialize(stream);
+            var deserializedCache = (LifecycleObjectCache) formatter.Deserialize(stream);
             Assert.AreNotSame(cache, deserializedCache);
 
-            var cachedWidget = deserializedCache.Get(typeof(Rule), instance, null) as ColorWidget;
+            var cachedWidget = deserializedCache.Get(typeof (Rule), instance, null) as ColorWidget;
             cachedWidget.ShouldNotBeNull();
             cachedWidget.Color.ShouldEqual("blue");
         }

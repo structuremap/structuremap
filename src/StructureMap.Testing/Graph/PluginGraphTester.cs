@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using Rhino.Mocks;
 using StructureMap.Building;
 using StructureMap.Exceptions;
 using StructureMap.Graph;
@@ -31,9 +30,9 @@ namespace StructureMap.Testing.Graph
 
             var family = graph.Families[typeof (IThingy)];
             family.Instances
-                  .Single()
-                  .ShouldBeOfType<ConstructorInstance>()
-                  .PluggedType.ShouldEqual(typeof (BigThingy));
+                .Single()
+                .ShouldBeOfType<ConstructorInstance>()
+                .PluggedType.ShouldEqual(typeof (BigThingy));
 
             graph.AddType(typeof (IThingy), typeof (BigThingy));
 
@@ -66,11 +65,11 @@ namespace StructureMap.Testing.Graph
             var instance3 = new FakeInstance();
 
             var graph = new PluginGraph();
-            graph.Families[typeof(IThingy)].AddInstance(instance1);
-            graph.Families[typeof(IThingy)].AddInstance(instance2);
-            graph.Families[typeof(IThingy)].AddInstance(instance3);
+            graph.Families[typeof (IThingy)].AddInstance(instance1);
+            graph.Families[typeof (IThingy)].AddInstance(instance2);
+            graph.Families[typeof (IThingy)].AddInstance(instance3);
 
-            graph.EjectFamily(typeof(IThingy));
+            graph.EjectFamily(typeof (IThingy));
 
             instance1.WasDisposed.ShouldBeTrue();
             instance2.WasDisposed.ShouldBeTrue();
@@ -82,20 +81,20 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void find_family_by_closing_an_open_interface_that_matches()
         {
-            PluginGraph graph = PluginGraph.Empty();
+            var graph = PluginGraph.Empty();
             graph.Families[typeof (IOpen<>)].SetDefault(new ConfiguredInstance(typeof (Open<>)));
 
             graph.Families[typeof (IOpen<string>)].GetDefaultInstance().ShouldBeOfType<ConstructorInstance>()
-                                                  .PluggedType.ShouldEqual(typeof (Open<string>));
+                .PluggedType.ShouldEqual(typeof (Open<string>));
         }
 
         [Test]
         public void find_family_for_concrete_type_with_default()
         {
-            PluginGraph graph = PluginGraph.Empty();
+            var graph = PluginGraph.Empty();
             graph.Families[typeof (BigThingy)].GetDefaultInstance()
-                                              .ShouldBeOfType<ConstructorInstance>()
-                                              .PluggedType.ShouldEqual(typeof (BigThingy));
+                .ShouldBeOfType<ConstructorInstance>()
+                .PluggedType.ShouldEqual(typeof (BigThingy));
         }
 
         [Test]
@@ -119,7 +118,7 @@ namespace StructureMap.Testing.Graph
         public void find_instance_positive()
         {
             var graph = new PluginGraph();
-            SmartInstance<BigThingy> instance = new SmartInstance<BigThingy>().Named("red");
+            var instance = new SmartInstance<BigThingy>().Named("red");
             graph.Families[typeof (BigThingy)].AddInstance(instance);
 
             graph.FindInstance(typeof (BigThingy), "red").ShouldBeTheSameAs(instance);
@@ -133,7 +132,7 @@ namespace StructureMap.Testing.Graph
             graph.Families[typeof (BigThingy)].MissingInstance = instance;
 
             graph.FindInstance(typeof (BigThingy), "green")
-                 .ShouldBeTheSameAs(instance);
+                .ShouldBeTheSameAs(instance);
         }
 
 
@@ -141,7 +140,7 @@ namespace StructureMap.Testing.Graph
         public void has_default_positive()
         {
             var graph = new PluginGraph();
-            graph.Families[typeof(IThingy)].SetDefault(new SmartInstance<BigThingy>());
+            graph.Families[typeof (IThingy)].SetDefault(new SmartInstance<BigThingy>());
 
             graph.HasDefaultForPluginType(typeof (IThingy));
         }
@@ -150,17 +149,17 @@ namespace StructureMap.Testing.Graph
         public void has_default_when_the_family_has_not_been_created()
         {
             var graph = new PluginGraph();
-            graph.HasDefaultForPluginType(typeof(IThingy)).ShouldBeFalse();
+            graph.HasDefaultForPluginType(typeof (IThingy)).ShouldBeFalse();
         }
 
         [Test]
         public void has_default_with_family_but_no_default()
         {
             var graph = new PluginGraph();
-            graph.Families[typeof(IThingy)].AddInstance(new SmartInstance<BigThingy>());
-            graph.Families[typeof(IThingy)].AddInstance(new SmartInstance<BigThingy>());
+            graph.Families[typeof (IThingy)].AddInstance(new SmartInstance<BigThingy>());
+            graph.Families[typeof (IThingy)].AddInstance(new SmartInstance<BigThingy>());
 
-            graph.HasDefaultForPluginType(typeof(IThingy))
+            graph.HasDefaultForPluginType(typeof (IThingy))
                 .ShouldBeFalse();
         }
 
@@ -169,7 +168,7 @@ namespace StructureMap.Testing.Graph
         {
             var graph = new PluginGraph();
 
-            graph.HasInstance(typeof(IThingy), "red")
+            graph.HasInstance(typeof (IThingy), "red")
                 .ShouldBeFalse();
         }
 
@@ -177,10 +176,10 @@ namespace StructureMap.Testing.Graph
         public void has_instance_negative_with_the_family_already_existing()
         {
             var graph = new PluginGraph();
-            graph.Families[typeof(IThingy)]
+            graph.Families[typeof (IThingy)]
                 .AddInstance(new SmartInstance<BigThingy>().Named("blue"));
 
-            graph.HasInstance(typeof(IThingy), "red")
+            graph.HasInstance(typeof (IThingy), "red")
                 .ShouldBeFalse();
         }
 
@@ -188,10 +187,10 @@ namespace StructureMap.Testing.Graph
         public void has_instance_positive()
         {
             var graph = new PluginGraph();
-            graph.Families[typeof(IThingy)]
+            graph.Families[typeof (IThingy)]
                 .AddInstance(new SmartInstance<BigThingy>().Named("blue"));
 
-            graph.HasInstance(typeof(IThingy), "blue")
+            graph.HasInstance(typeof (IThingy), "blue")
                 .ShouldBeTrue();
         }
 
@@ -199,23 +198,23 @@ namespace StructureMap.Testing.Graph
         public void has_family_false_with_simple()
         {
             var graph = PluginGraph.Empty();
-            graph.HasFamily(typeof(IThingy)).ShouldBeFalse();
+            graph.HasFamily(typeof (IThingy)).ShouldBeFalse();
         }
 
         [Test]
         public void has_family_true_with_simple()
         {
             var graph = PluginGraph.Empty();
-            graph.AddFamily(new PluginFamily(typeof(IThingy)));
+            graph.AddFamily(new PluginFamily(typeof (IThingy)));
 
-            graph.HasFamily(typeof(IThingy)).ShouldBeTrue();
+            graph.HasFamily(typeof (IThingy)).ShouldBeTrue();
         }
 
         [Test]
         public void add_family_sets_the_parent_relationship()
         {
             var graph = PluginGraph.Empty();
-            graph.AddFamily(new PluginFamily(typeof(IThingy)));
+            graph.AddFamily(new PluginFamily(typeof (IThingy)));
 
             graph.Families[typeof (IThingy)].Owner.ShouldBeTheSameAs(graph);
         }
@@ -251,9 +250,9 @@ namespace StructureMap.Testing.Graph
         public void has_family_true_with_open_generics()
         {
             var graph = PluginGraph.Empty();
-            graph.Families[typeof(IOpen<>)].SetDefault(new ConstructorInstance(typeof(Open<>)));
+            graph.Families[typeof (IOpen<>)].SetDefault(new ConstructorInstance(typeof (Open<>)));
 
-            graph.HasFamily(typeof(IOpen<string>))
+            graph.HasFamily(typeof (IOpen<string>))
                 .ShouldBeTrue();
         }
     }
@@ -261,6 +260,7 @@ namespace StructureMap.Testing.Graph
     public class FakeDependencySource : IDependencySource
     {
         public string Description { get; private set; }
+
         public Expression ToExpression(ParameterExpression session)
         {
             throw new NotImplementedException();

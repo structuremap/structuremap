@@ -1,9 +1,8 @@
 using System;
+using System.Linq;
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
-using StructureMap.Graph;
 using StructureMap.Pipeline;
-using System.Linq;
 
 namespace StructureMap.Testing.Configuration.DSL
 {
@@ -35,7 +34,10 @@ namespace StructureMap.Testing.Configuration.DSL
                 _inner = target;
             }
 
-            public ITarget Inner { get { return _inner; } }
+            public ITarget Inner
+            {
+                get { return _inner; }
+            }
         }
 
 
@@ -88,11 +90,10 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void Add_concrete_type_with_name()
         {
-            var container = new Container(r =>
-            {
-                r.For(typeof(ITarget)).Add(typeof(Target1)).Named("1");
-                r.For(typeof(ITarget)).Add(typeof(Target2)).Named("2");
-                r.For(typeof(ITarget)).Add(typeof(Target3)).Named("3");
+            var container = new Container(r => {
+                r.For(typeof (ITarget)).Add(typeof (Target1)).Named("1");
+                r.For(typeof (ITarget)).Add(typeof (Target2)).Named("2");
+                r.For(typeof (ITarget)).Add(typeof (Target3)).Named("3");
             });
 
             container.GetInstance<ITarget>("1").ShouldBeOfType<Target1>();
@@ -123,10 +124,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void Add_instance_directly()
         {
-            var container = new Container(r =>
-            {
-                r.For<ITarget>().Add<Target2>();
-            });
+            var container = new Container(r => { r.For<ITarget>().Add<Target2>(); });
 
             container.GetAllInstances<ITarget>()
                 .First().ShouldBeOfType<Target2>();
@@ -135,8 +133,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void Enrichment()
         {
-            var container = new Container(r =>
-            {
+            var container = new Container(r => {
                 r.For(typeof (ITarget)).EnrichAllWith(raw => new WrappedTarget((ITarget) raw))
                     .Use(typeof (Target1));
             });
@@ -151,8 +148,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             ITarget created = null;
 
-            var container = new Container(r =>
-            {
+            var container = new Container(r => {
                 r.For(typeof (ITarget)).OnCreationForAll(raw => created = (ITarget) raw)
                     .Use(typeof (Target3));
             });
@@ -164,8 +160,8 @@ namespace StructureMap.Testing.Configuration.DSL
         public void Set_caching()
         {
             var registry = new Registry();
-            registry.For(typeof(ITarget), Lifecycles.ThreadLocal);
-            PluginGraph graph = registry.Build();
+            registry.For(typeof (ITarget), Lifecycles.ThreadLocal);
+            var graph = registry.Build();
 
             graph.Families[typeof (ITarget)]
                 .Lifecycle.ShouldBeOfType<ThreadLocalStorageLifecycle>();

@@ -12,7 +12,9 @@ namespace StructureMap.Testing.Building
             new Cache<Type, Cache<Instance, object>>(type => new Cache<Instance, object>());
 
         public readonly Cache<Type, object> Defaults = new Cache<Type, object>();
-        public readonly Cache<Type, Cache<string, object>> NamedObjects = new Cache<Type, Cache<string, object>>(type => new Cache<string, object>());
+
+        public readonly Cache<Type, Cache<string, object>> NamedObjects =
+            new Cache<Type, Cache<string, object>>(type => new Cache<string, object>());
 
         public FakeBuildSession()
         {
@@ -40,6 +42,7 @@ namespace StructureMap.Testing.Building
         }
 
         public Policies Policies { get; private set; }
+
         public object CreateInstance(Type pluginType, string name)
         {
             throw new NotImplementedException();

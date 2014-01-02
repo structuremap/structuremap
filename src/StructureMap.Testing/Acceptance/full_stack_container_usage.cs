@@ -1,16 +1,27 @@
-﻿using NUnit.Framework;
-using System.Linq;
+﻿using System.Linq;
+using NUnit.Framework;
 
 namespace StructureMap.Testing.Acceptance
 {
     [TestFixture]
     public class full_stack_container_usage
     {
-        public interface IFoo { }
-        public class AFoo : IFoo { }
-        public class BFoo : IFoo { }
-        public class CFoo : IFoo { }
-        
+        public interface IFoo
+        {
+        }
+
+        public class AFoo : IFoo
+        {
+        }
+
+        public class BFoo : IFoo
+        {
+        }
+
+        public class CFoo : IFoo
+        {
+        }
+
         [Test]
         public void builds_all_instances_from_get_all()
         {
@@ -24,15 +35,13 @@ namespace StructureMap.Testing.Acceptance
 
             container.GetAllInstances<IFoo>()
                 .Select(x => x.GetType())
-                .ShouldHaveTheSameElementsAs(typeof(AFoo), typeof(BFoo), typeof(CFoo));
+                .ShouldHaveTheSameElementsAs(typeof (AFoo), typeof (BFoo), typeof (CFoo));
         }
 
         [Test]
         public void change_default_in_an_existing_container()
         {
-            var container = new Container(x => {
-                x.For<IFoo>().Use<AFoo>();
-            });
+            var container = new Container(x => { x.For<IFoo>().Use<AFoo>(); });
 
             container.GetInstance<IFoo>().ShouldBeOfType<AFoo>();
 
@@ -41,23 +50,27 @@ namespace StructureMap.Testing.Acceptance
             container.GetInstance<IFoo>().ShouldBeOfType<BFoo>();
         }
 
-        public interface IOpen<T>{}
-        public class AOpen<T> : IOpen<T>{}
-        public class BOpen<T> : IOpen<T>{}
+        public interface IOpen<T>
+        {
+        }
+
+        public class AOpen<T> : IOpen<T>
+        {
+        }
+
+        public class BOpen<T> : IOpen<T>
+        {
+        }
 
         [Test]
         public void change_default_of_generic_method()
         {
-            var container = new Container(x => {
-                x.For(typeof (IOpen<>)).Use(typeof (AOpen<>));
-            });
+            var container = new Container(x => { x.For(typeof (IOpen<>)).Use(typeof (AOpen<>)); });
 
-            container.Configure(x => {
-                x.For(typeof(IOpen<>)).Use(typeof(BOpen<>));
-            });
+            container.Configure(x => { x.For(typeof (IOpen<>)).Use(typeof (BOpen<>)); });
 
             container.GetInstance<IOpen<string>>()
-                     .ShouldBeOfType<BOpen<string>>();
+                .ShouldBeOfType<BOpen<string>>();
         }
 
 
@@ -78,7 +91,7 @@ namespace StructureMap.Testing.Acceptance
         {
             var container = new Container(x => {
                 x.For<IFoo>().Use<CFoo>();
-                x.For(typeof(IOpen<>)).Use(typeof(BOpen<>));
+                x.For(typeof (IOpen<>)).Use(typeof (BOpen<>));
             });
 
             var guy = container.GetInstance<GuyWithOpenAndFoo>();
@@ -89,13 +102,12 @@ namespace StructureMap.Testing.Acceptance
         [Test]
         public void auto_resolve_a_concrete_type_with_defaults_with_the_type()
         {
-            var container = new Container(x =>
-            {
+            var container = new Container(x => {
                 x.For<IFoo>().Use<CFoo>();
-                x.For(typeof(IOpen<>)).Use(typeof(BOpen<>));
+                x.For(typeof (IOpen<>)).Use(typeof (BOpen<>));
             });
 
-            var guy = container.GetInstance(typeof(GuyWithOpenAndFoo))
+            var guy = container.GetInstance(typeof (GuyWithOpenAndFoo))
                 .ShouldBeOfType<GuyWithOpenAndFoo>();
             guy.Foo.ShouldBeOfType<CFoo>();
             guy.Open.ShouldBeOfType<BOpen<string>>();
@@ -172,17 +184,15 @@ namespace StructureMap.Testing.Acceptance
         {
             var container = new Container(x => {
                 x.For<IParent>().Use<Parent>()
-                 .Ctor<string>("name").Is("Jerry")
-                 .Ctor<Child>().Is<Child>(child => {
-                     child.Ctor<string>("name").Is("Monte")
-                          .Ctor<GrandChild>().Is<GrandChild>(grand => {
-                              grand.Ctor<string>("name").Is("Jeremy");
-                          });
-                 });
+                    .Ctor<string>("name").Is("Jerry")
+                    .Ctor<Child>().Is<Child>(child => {
+                        child.Ctor<string>("name").Is("Monte")
+                            .Ctor<GrandChild>().Is<GrandChild>(grand => { grand.Ctor<string>("name").Is("Jeremy"); });
+                    });
             });
 
             var parent = container.GetInstance<IParent>()
-                                  .ShouldBeOfType<Parent>();
+                .ShouldBeOfType<Parent>();
 
             parent.Name.ShouldEqual("Jerry");
             parent.Child.Name.ShouldEqual("Monte");
@@ -198,7 +208,7 @@ namespace StructureMap.Testing.Acceptance
             var container = new Container(registry => registry.For<IFoo>().Use(target));
 
             container.GetInstance<IFoo>()
-                     .ShouldBeTheSameAs(target);
+                .ShouldBeTheSameAs(target);
         }
 
         [Test]
@@ -214,9 +224,5 @@ namespace StructureMap.Testing.Acceptance
             container.GetInstance<IFoo>("B").ShouldBeOfType<BFoo>();
             container.GetInstance<IFoo>("C").ShouldBeOfType<CFoo>();
         }
-
     }
-
-
-
 }

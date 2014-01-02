@@ -14,8 +14,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [SetUp]
         public void SetUp()
         {
-            container = new Container(registry =>
-            {
+            container = new Container(registry => {
                 registry.Scan(x => x.AssemblyContainingType<ColorWidget>());
 
                 // Add an instance with properties
@@ -68,8 +67,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void AddInstanceAndOverrideTheConcreteTypeForADependency()
         {
-            IContainer container = new Container(x =>
-            {
+            IContainer container = new Container(x => {
                 x.For<Rule>().Add<WidgetRule>()
                     .Named("AWidgetRule")
                     .Ctor<IWidget>().Is(i => i.Type<AWidget>());
@@ -99,10 +97,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void SimpleCaseWithNamedInstance()
         {
-            container = new Container(x =>
-            {
-                x.For<IWidget>().Add<AWidget>().Named("MyInstance");
-            });
+            container = new Container(x => { x.For<IWidget>().Add<AWidget>().Named("MyInstance"); });
 
             var widget = (AWidget) container.GetInstance<IWidget>("MyInstance");
             Assert.IsNotNull(widget);
@@ -112,8 +107,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void SpecifyANewInstanceOverrideADependencyWithANamedInstance()
         {
-            container = new Container(registry =>
-            {
+            container = new Container(registry => {
                 registry.For<Rule>().Add<ARule>().Named("Alias");
 
                 // Add an instance by specifying the ConcreteKey
@@ -138,13 +132,12 @@ namespace StructureMap.Testing.Configuration.DSL
         public void SpecifyANewInstanceWithADependency()
         {
             // Specify a new Instance, create an instance for a dependency on the fly
-            string instanceKey = "OrangeWidgetRule";
+            var instanceKey = "OrangeWidgetRule";
 
-            var theContainer = new Container(registry =>
-            {
+            var theContainer = new Container(registry => {
                 registry.For<Rule>().Add<WidgetRule>().Named(instanceKey)
                     .Ctor<IWidget>().Is(
-                    i => { i.Type<ColorWidget>().Ctor<string>("color").Is("Orange").Named("Orange"); });
+                        i => { i.Type<ColorWidget>().Ctor<string>("color").Is("Orange").Named("Orange"); });
             });
 
             var rule = (WidgetRule) theContainer.GetInstance<Rule>(instanceKey);
@@ -159,10 +152,7 @@ namespace StructureMap.Testing.Configuration.DSL
             // "Prototype" (GoF pattern) whenever someone asks for IWidget named "Jeremy"
             var theWidget = new CloneableWidget("Jeremy");
 
-            container = new Container(x =>
-            {
-                x.For<IWidget>().Add(new PrototypeInstance(theWidget).Named("Jeremy"));
-            });
+            container = new Container(x => { x.For<IWidget>().Add(new PrototypeInstance(theWidget).Named("Jeremy")); });
 
             var widget1 = (CloneableWidget) container.GetInstance<IWidget>("Jeremy");
             var widget2 = (CloneableWidget) container.GetInstance<IWidget>("Jeremy");
@@ -186,10 +176,7 @@ namespace StructureMap.Testing.Configuration.DSL
             var theWidget = new CloneableWidget("Jeremy");
 
             container =
-                new Container(x =>
-                {
-                    x.For<IWidget>().Add(new SerializedInstance(theWidget).Named("Jeremy"));
-                });
+                new Container(x => { x.For<IWidget>().Add(new SerializedInstance(theWidget).Named("Jeremy")); });
 
             var widget1 = (CloneableWidget) container.GetInstance<IWidget>("Jeremy");
             var widget2 = (CloneableWidget) container.GetInstance<IWidget>("Jeremy");
@@ -235,7 +222,10 @@ namespace StructureMap.Testing.Configuration.DSL
         }
 
 
-        public IWidget Widget { get { return _widget; } }
+        public IWidget Widget
+        {
+            get { return _widget; }
+        }
 
 
         public override bool Equals(object obj)
@@ -275,7 +265,10 @@ namespace StructureMap.Testing.Configuration.DSL
             _name = name;
         }
 
-        public string Name { get { return _name; } }
+        public string Name
+        {
+            get { return _name; }
+        }
 
         #region ICloneable Members
 

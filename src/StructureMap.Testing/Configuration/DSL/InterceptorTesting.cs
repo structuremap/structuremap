@@ -16,12 +16,10 @@ namespace StructureMap.Testing.Configuration.DSL
             _lastService = null;
             recorder = new ContextRecorder();
 
-            _container = new Container(r =>
-            {
+            _container = new Container(r => {
                 r.For<ContextRecorder>().Use(recorder);
 
-                r.For<IService>().AddInstances(x =>
-                {
+                r.For<IService>().AddInstances(x => {
                     x.Type<ColorService>()
                         .OnCreation(s => _lastService = s)
                         .Named("Intercepted")
@@ -44,8 +42,7 @@ namespace StructureMap.Testing.Configuration.DSL
                         .EnrichWith<IService>(s => new DecoratorService(s));
 
                     x.ConstructedBy(() => new ColorService("Purple")).Named("DecoratedWithContext")
-                        .EnrichWith<IService>((c, s) =>
-                        {
+                        .EnrichWith<IService>((c, s) => {
                             c.GetInstance<ContextRecorder>().WasTouched = true;
                             return new DecoratorService(s);
                         });
@@ -149,7 +146,11 @@ namespace StructureMap.Testing.Configuration.DSL
         }
 
 
-        public IService Inner { get { return _inner; } }
+        public IService Inner
+        {
+            get { return _inner; }
+        }
+
         public void DoSomething()
         {
             throw new NotImplementedException();

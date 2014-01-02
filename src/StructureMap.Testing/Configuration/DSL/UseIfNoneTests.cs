@@ -13,12 +13,18 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             private class Reg1 : Registry
             {
-                public Reg1() { For<IService>().Use<WhateverService>(); }
+                public Reg1()
+                {
+                    For<IService>().Use<WhateverService>();
+                }
             }
 
             private class Reg2 : Registry
             {
-                public Reg2() { For<IService>().Use<RemoteService>(); }
+                public Reg2()
+                {
+                    For<IService>().Use<RemoteService>();
+                }
             }
 
             [Test]
@@ -31,7 +37,7 @@ namespace StructureMap.Testing.Configuration.DSL
             [Test]
             public void default_plugin_depends_on_registration_sequence_take2()
             {
-                var c = GetContainerWithRegistries<Reg2,Reg1>();
+                var c = GetContainerWithRegistries<Reg2, Reg1>();
                 c.GetInstance<IService>().ShouldBeOfType<WhateverService>();
             }
 
@@ -40,14 +46,14 @@ namespace StructureMap.Testing.Configuration.DSL
             {
                 var c = GetContainerWithRegistries<Reg1, Reg2>();
                 c.EjectAllInstancesOf<IService>();
-                Assert.Throws<StructureMapException>(()=>c.GetInstance<IService>());
+                Assert.Throws<StructureMapException>(() => c.GetInstance<IService>());
             }
 
             [Test]
             public void no_default_throws()
             {
                 var c = new Container();
-                Assert.Throws<StructureMapException>(()=> c.GetInstance<IService>())
+                Assert.Throws<StructureMapException>(() => c.GetInstance<IService>())
                     .ErrorCode.ShouldEqual(202);
             }
         }
@@ -97,14 +103,13 @@ namespace StructureMap.Testing.Configuration.DSL
             Assert.Throws<StructureMapException>(() => c.GetInstance<IService>());
         }
 
-        private static IContainer GetContainerWithRegistries<TReg1, TReg2>() where TReg1 : Registry,new() where TReg2 : Registry,new()
+        private static IContainer GetContainerWithRegistries<TReg1, TReg2>() where TReg1 : Registry, new()
+            where TReg2 : Registry, new()
         {
-            return new Container(ce =>
-            {
+            return new Container(ce => {
                 ce.AddRegistry<TReg1>();
                 ce.AddRegistry<TReg2>();
             });
         }
     }
-
 }

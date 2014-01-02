@@ -37,7 +37,7 @@ namespace StructureMap.Testing.Building
             session.NamedObjects[typeof (IGateway)]["Blue"] = gateway2;
 
             var build = new ConcreteBuild<GuyWhoUsesGateway>();
-            build.ConstructorArgs(new ReferencedDependencySource(typeof(IGateway), "Blue"));
+            build.ConstructorArgs(new ReferencedDependencySource(typeof (IGateway), "Blue"));
 
             build.Build<GuyWhoUsesGateway>(session)
                 .Gateway.ShouldBeTheSameAs(gateway2);

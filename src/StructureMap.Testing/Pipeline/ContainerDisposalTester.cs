@@ -1,6 +1,5 @@
 using System;
 using NUnit.Framework;
-using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Pipeline
 {
@@ -30,19 +29,14 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void main_container_should_dispose_singletons()
         {
-            var container = new Container(x =>
-            {
-                x.ForSingletonOf<C1Yes>().Use<C1Yes>();
-            });
+            var container = new Container(x => { x.ForSingletonOf<C1Yes>().Use<C1Yes>(); });
 
             var single = container.GetInstance<C1Yes>();
-            
+
             container.Dispose();
 
             single.WasDisposed.ShouldBeTrue();
         }
-
-
 
 
         [Test]
@@ -50,7 +44,7 @@ namespace StructureMap.Testing.Pipeline
         {
             var container = new Container(x => { x.ForSingletonOf<I1>().Use<C1No>(); });
 
-            IContainer child = container.GetNestedContainer();
+            var child = container.GetNestedContainer();
 
             // Blows up if the Dispose() is called
             var notDisposable = child.GetInstance<I1>();
@@ -62,18 +56,16 @@ namespace StructureMap.Testing.Pipeline
         public void
             disposing_a_nested_container_should_dispose_all_of_the_transient_objects_created_by_the_nested_container()
         {
-            var container = new Container(x =>
-            {
+            var container = new Container(x => {
                 x.For<I1>().Use<C1Yes>();
                 x.For<I2>().Use<C2Yes>();
-                x.For<I3>().AddInstances(o =>
-                {
+                x.For<I3>().AddInstances(o => {
                     o.Type<C3Yes>().Named("1");
                     o.Type<C3Yes>().Named("2");
                 });
             });
 
-            IContainer child = container.GetNestedContainer();
+            var child = container.GetNestedContainer();
 
             var disposables = new[]
             {
@@ -85,7 +77,7 @@ namespace StructureMap.Testing.Pipeline
 
             child.Dispose();
 
-            foreach (Disposable disposable in disposables)
+            foreach (var disposable in disposables)
             {
                 disposable.WasDisposed.ShouldBeTrue();
             }
@@ -94,7 +86,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void should_dispose_objects_injected_into_the_container_1()
         {
-            IContainer container = new Container().GetNestedContainer();
+            var container = new Container().GetNestedContainer();
 
             var disposable = new C1Yes();
             container.Inject<I1>(disposable);
@@ -109,7 +101,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void should_dispose_objects_injected_into_the_container_2()
         {
-            IContainer container = new Container(x => x.For<I1>().Use<C1Yes>()).GetNestedContainer();
+            var container = new Container(x => x.For<I1>().Use<C1Yes>()).GetNestedContainer();
 
             var disposable = container.GetInstance<I1>().ShouldBeOfType<C1Yes>();
 
@@ -123,7 +115,10 @@ namespace StructureMap.Testing.Pipeline
     {
         private bool _wasDisposed;
 
-        public bool WasDisposed { get { return _wasDisposed; } }
+        public bool WasDisposed
+        {
+            get { return _wasDisposed; }
+        }
 
         public void Dispose()
         {

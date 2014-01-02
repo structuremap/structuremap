@@ -14,8 +14,7 @@ namespace StructureMap.Testing.Graph.Interceptors
             manager = null;
 
             registry = new Registry();
-            registry.For<IAnInterfaceOfSomeSort>().AddInstances(x =>
-            {
+            registry.For<IAnInterfaceOfSomeSort>().AddInstances(x => {
                 x.Type<RedSomething>().Named("Red");
                 x.Type<GreenSomething>().Named("Green");
                 x.Type<BlueSomething>().Named("Blue");
@@ -76,7 +75,10 @@ namespace StructureMap.Testing.Graph.Interceptors
             }
 
 
-            public IAnInterfaceOfSomeSort Inner { get { return _inner; } }
+            public IAnInterfaceOfSomeSort Inner
+            {
+                get { return _inner; }
+            }
         }
 
         public class WrappedSomething2 : WrappedSomething

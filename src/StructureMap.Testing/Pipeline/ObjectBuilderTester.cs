@@ -1,8 +1,5 @@
 using System;
 using NUnit.Framework;
-using StructureMap.Graph;
-using StructureMap.Interceptors;
-using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing.Pipeline
@@ -15,8 +12,7 @@ namespace StructureMap.Testing.Pipeline
         {
             try
             {
-                var container = new Container(x =>
-                {
+                var container = new Container(x => {
                     x.For<Rule>().OnCreationForAll((c, r) => { throw new NotImplementedException(); })
                         .Use(() => new ColorRule("red"));
                 });
@@ -36,8 +32,7 @@ namespace StructureMap.Testing.Pipeline
         {
             object comingAcross = null;
 
-            var container = new Container(x =>
-            {
+            var container = new Container(x => {
                 x.For<Rule>().OnCreationForAll((c, r) => comingAcross = r)
                     .Use(() => new ColorRule("red"));
             });

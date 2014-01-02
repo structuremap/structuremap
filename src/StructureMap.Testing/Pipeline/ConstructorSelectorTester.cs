@@ -1,7 +1,5 @@
 ﻿using System.Linq;
-using System.Reflection;
 using NUnit.Framework;
-using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 
@@ -28,7 +26,7 @@ namespace StructureMap.Testing.Pipeline
             var constructor = selector.Select(typeof (GreaterThanRule));
 
             constructor.GetParameters().Select(x => x.ParameterType)
-                .ShouldHaveTheSameElementsAs(typeof(string), typeof(int));
+                .ShouldHaveTheSameElementsAs(typeof (string), typeof (int));
         }
     }
 }

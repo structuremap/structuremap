@@ -54,8 +54,7 @@ namespace StructureMap.Testing
         public void TestObjectReturnedAreUnique()
         {
             ObjectFactory.Initialize(
-                x =>
-                {
+                x => {
                     x.For<Session>()
                         .AlwaysUnique()
                         .Use<Session>();

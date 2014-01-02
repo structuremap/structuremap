@@ -34,7 +34,7 @@ namespace StructureMap.Testing
 
         public void Write()
         {
-            foreach (IValidator validator in _validators)
+            foreach (var validator in _validators)
             {
                 Debug.WriteLine(validator);
             }
@@ -49,25 +49,21 @@ namespace StructureMap.Testing
         [SetUp]
         public void SetUp()
         {
-            container = new Container(x =>
-            {
-                x.For<IValidator>().AddInstances(o =>
-                {
+            container = new Container(x => {
+                x.For<IValidator>().AddInstances(o => {
                     o.Type<Validator>().Ctor<string>("name").Is("Red").Named("Red");
                     o.Type<Validator>().Ctor<string>("name").Is("Blue").Named("Blue");
                     o.Type<Validator>().Ctor<string>("name").Is("Purple").Named("Purple");
                     o.Type<Validator>().Ctor<string>("name").Is("Green").Named("Green");
                 });
 
-                x.For<ClassThatUsesValidators>().AddInstances(o =>
-                {
+                x.For<ClassThatUsesValidators>().AddInstances(o => {
                     // Define an Instance of ClassThatUsesValidators that depends on AutoWiring
                     o.Type<ClassThatUsesValidators>().Named("WithAutoWiring");
 
                     // Define an Instance of ClassThatUsesValidators that overrides AutoWiring
                     o.Type<ClassThatUsesValidators>().Named("ExplicitArray")
-                        .EnumerableOf<IValidator>().Contains(y =>
-                        {
+                        .EnumerableOf<IValidator>().Contains(y => {
                             y.TheInstanceNamed("Red");
                             y.TheInstanceNamed("Green");
                         });

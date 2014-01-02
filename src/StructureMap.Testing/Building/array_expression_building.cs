@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NUnit.Framework;
 using StructureMap.Building;
 using StructureMap.Testing.Widget3;
@@ -17,15 +16,15 @@ namespace StructureMap.Testing.Building
             var gateway3 = new StubbedGateway();
 
             var build = new ConcreteBuild<GatewayArrayUser>();
-            var array = new ArrayDependencySource(typeof (IGateway), 
-                Constant.For(gateway1), 
+            var array = new ArrayDependencySource(typeof (IGateway),
+                Constant.For(gateway1),
                 Constant.For(gateway2),
                 Constant.For(gateway3));
 
             build.ConstructorArgs(array);
 
             var arrayUser = build.Build<GatewayArrayUser>(new FakeBuildSession());
-        
+
             arrayUser.Gateways.ShouldHaveTheSameElementsAs(gateway1, gateway2, gateway3);
         }
 
@@ -37,7 +36,7 @@ namespace StructureMap.Testing.Building
             var gateway3 = new StubbedGateway();
 
             var build = new ConcreteBuild<GatewayEnumerableUser>();
-            var array = new ArrayDependencySource(typeof(IGateway),
+            var array = new ArrayDependencySource(typeof (IGateway),
                 Constant.For(gateway1),
                 Constant.For(gateway2),
                 Constant.For(gateway3));
@@ -57,7 +56,7 @@ namespace StructureMap.Testing.Building
             var gateway3 = new StubbedGateway();
 
             var build = new ConcreteBuild<GatewayIListUser>();
-            var array = new ArrayDependencySource(typeof(IGateway),
+            var array = new ArrayDependencySource(typeof (IGateway),
                 Constant.For(gateway1),
                 Constant.For(gateway2),
                 Constant.For(gateway3));

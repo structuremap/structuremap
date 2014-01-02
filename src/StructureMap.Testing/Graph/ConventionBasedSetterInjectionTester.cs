@@ -1,8 +1,4 @@
-using System;
 using NUnit.Framework;
-using StructureMap.Configuration.DSL;
-using StructureMap.Graph;
-using StructureMap.Pipeline;
 using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Graph

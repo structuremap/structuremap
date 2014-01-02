@@ -16,10 +16,8 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void FactoryTemplateTester()
         {
-            var container = new Container(x =>
-            {
-                x.For(typeof (Func<>)).Use(new FactoryTemplate(typeof (LazyInstance<>)));
-            });
+            var container =
+                new Container(x => { x.For(typeof (Func<>)).Use(new FactoryTemplate(typeof (LazyInstance<>))); });
 
             //container.GetInstance<Func<ConcreteClass>>()().ShouldNotBeNull();
         }
@@ -36,10 +34,8 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void build_a_func_that_returns_a_transient()
         {
-            var container = new Container(x =>
-            {
-                x.For<IWidget>().Use<ColorWidget>().Ctor<string>("color").Is("green");
-            });
+            var container =
+                new Container(x => { x.For<IWidget>().Use<ColorWidget>().Ctor<string>("color").Is("green"); });
 
             var func = container.GetInstance<Func<IWidget>>();
             var w1 = func();
@@ -56,10 +52,8 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void build_a_func_that_returns_a_singleton()
         {
-            var container = new Container(x =>
-            {
-                x.ForSingletonOf<IWidget>().Use<ColorWidget>().Ctor<string>("color").Is("green");
-            });
+            var container =
+                new Container(x => { x.ForSingletonOf<IWidget>().Use<ColorWidget>().Ctor<string>("color").Is("green"); });
 
             var func = container.GetInstance<Func<IWidget>>();
             var w1 = func();
@@ -73,6 +67,8 @@ namespace StructureMap.Testing.Pipeline
             w2.ShouldBeTheSameAs(w3);
         }
 
-        public class ConcreteClass{}
+        public class ConcreteClass
+        {
+        }
     }
 }

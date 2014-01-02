@@ -15,10 +15,11 @@ namespace StructureMap.Testing.AutoFactories
 
         public interface IService
         {
-            
         }
 
-        public class Service : IService { }
+        public class Service : IService
+        {
+        }
 
         private static TDependency Stub<TDependency>() where TDependency : class
         {
@@ -46,7 +47,7 @@ namespace StructureMap.Testing.AutoFactories
 
             var service = new Service();
 
-            context.Stub(x => x.GetInstance(typeof(IService))).Return(service);
+            context.Stub(x => x.GetInstance(typeof (IService))).Return(service);
 
             var proxyFactory = new ProxyFactory<IFactory>(proxyGenerator, context);
 

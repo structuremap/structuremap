@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.Linq;
 using NUnit.Framework;
 using StructureMap.Configuration;
@@ -69,8 +68,8 @@ namespace StructureMap.Testing.Configuration.DSL
         public void an_instance_of_the_base_registry_is_equal_to_itself()
         {
             var registry1 = new Registry();
-            
-            registry1.Equals((object)registry1).ShouldBeTrue();
+
+            registry1.Equals((object) registry1).ShouldBeTrue();
         }
 
         [Test]
@@ -79,7 +78,7 @@ namespace StructureMap.Testing.Configuration.DSL
             var registry1 = new Registry();
             var registry2 = new Registry();
 
-            registry1.Equals((object)registry2).ShouldBeFalse();
+            registry1.Equals((object) registry2).ShouldBeFalse();
         }
 
         [Test]
@@ -90,13 +89,13 @@ namespace StructureMap.Testing.Configuration.DSL
             var registry3 = new TestRegistry2();
             var registry4 = new TestRegistry2();
 
-            registry1.Equals((object)registry1).ShouldBeTrue();
-            registry1.Equals((object)registry2).ShouldBeTrue();
-            registry2.Equals((object)registry1).ShouldBeTrue();
-            registry3.Equals((object)registry4).ShouldBeTrue();
+            registry1.Equals((object) registry1).ShouldBeTrue();
+            registry1.Equals((object) registry2).ShouldBeTrue();
+            registry2.Equals((object) registry1).ShouldBeTrue();
+            registry3.Equals((object) registry4).ShouldBeTrue();
 
-            registry1.Equals((object)registry3).ShouldBeFalse();
-            registry3.Equals((object)registry1).ShouldBeFalse();
+            registry1.Equals((object) registry3).ShouldBeFalse();
+            registry3.Equals((object) registry1).ShouldBeFalse();
         }
 
         [Test]
@@ -106,7 +105,7 @@ namespace StructureMap.Testing.Configuration.DSL
             var registry2 = new InternalTestRegistry();
 
             registry1.Equals((object) registry1).ShouldBeTrue();
-            registry1.Equals((object)registry2).ShouldBeFalse();
+            registry1.Equals((object) registry2).ShouldBeFalse();
         }
 
         [Test]
@@ -126,7 +125,9 @@ namespace StructureMap.Testing.Configuration.DSL
 
         public class MutatedWidget : IWidget
         {
-            public void DoSomething() { }
+            public void DoSomething()
+            {
+            }
         }
 
         public class MutatingRegistry : Registry
@@ -137,7 +138,7 @@ namespace StructureMap.Testing.Configuration.DSL
             {
                 For<IWidget>().Use<AWidget>();
 
-                if(count++ >= 1)
+                if (count++ >= 1)
                 {
                     For<IWidget>().Use<MutatedWidget>();
                 }
@@ -153,8 +154,7 @@ namespace StructureMap.Testing.Configuration.DSL
             var registry2 = new Registry();
             registry2.IncludeRegistry<MutatingRegistry>();
 
-            var container = new Container(config =>
-            {
+            var container = new Container(config => {
                 config.AddRegistry(registry1);
                 config.AddRegistry(registry2);
             });
@@ -211,7 +211,10 @@ namespace StructureMap.Testing.Configuration.DSL
             _count++;
         }
 
-        public int ExecutedCount { get { return _count; } }
+        public int ExecutedCount
+        {
+            get { return _count; }
+        }
     }
 
     internal class InternalTestRegistry : Registry
@@ -228,7 +231,10 @@ namespace StructureMap.Testing.Configuration.DSL
             throw new NotImplementedException();
         }
 
-        public string WhoAmI { get { throw new NotImplementedException(); } }
+        public string WhoAmI
+        {
+            get { throw new NotImplementedException(); }
+        }
 
         #endregion
     }
@@ -242,7 +248,10 @@ namespace StructureMap.Testing.Configuration.DSL
             throw new NotImplementedException();
         }
 
-        public string WhoAmI { get { throw new NotImplementedException(); } }
+        public string WhoAmI
+        {
+            get { throw new NotImplementedException(); }
+        }
 
         #endregion
     }
@@ -256,7 +265,10 @@ namespace StructureMap.Testing.Configuration.DSL
             throw new NotImplementedException();
         }
 
-        public string WhoAmI { get { throw new NotImplementedException(); } }
+        public string WhoAmI
+        {
+            get { throw new NotImplementedException(); }
+        }
 
         #endregion
     }

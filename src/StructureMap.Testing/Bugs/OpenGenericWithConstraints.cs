@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 
@@ -43,7 +42,7 @@ namespace StructureMap.Testing.Bugs
             container.GetInstance<IAmOpenGeneric<int>>().ShouldBeOfType<ClosedGenericForStruct<int>>();
             container.GetInstance<IAmOpenGeneric<ArrayList>>().ShouldBeOfType<ClosedGenericForEnumerable<ArrayList>>();
 
-            IEnumerable<IAmOpenGeneric<EnumerableStruct>> amOpenGenerics =
+            var amOpenGenerics =
                 container.GetAllInstances<IAmOpenGeneric<EnumerableStruct>>();
             amOpenGenerics.Single(x => x.GetType() == typeof (ClosedGenericForStruct<EnumerableStruct>));
             amOpenGenerics.Single(x => x.GetType() == typeof (ClosedGenericForEnumerable<EnumerableStruct>));

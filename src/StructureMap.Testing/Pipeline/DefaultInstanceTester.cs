@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using NUnit.Framework;
-using Rhino.Mocks;
 using StructureMap.Building;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
@@ -37,7 +36,10 @@ namespace StructureMap.Testing.Pipeline
                 _widgets = widgets;
             }
 
-            public List<IWidget> Widgets { get { return _widgets; } }
+            public List<IWidget> Widgets
+            {
+                get { return _widgets; }
+            }
         }
 
 
@@ -54,10 +56,8 @@ namespace StructureMap.Testing.Pipeline
             var widget2 = new AWidget();
             var widget3 = new AWidget();
 
-            var container = new Container(x =>
-            {
-                x.For<IWidget>().AddInstances(o =>
-                {
+            var container = new Container(x => {
+                x.For<IWidget>().AddInstances(o => {
                     o.Object(widget1);
                     o.Object(widget2);
                     o.Object(widget3);
@@ -86,7 +86,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void to_dependency_source_when_an_IEnumerable()
         {
-            var enumerationType = typeof(IEnumerable<IGateway>);
+            var enumerationType = typeof (IEnumerable<IGateway>);
             new DefaultInstance().ToDependencySource(enumerationType)
                 .ShouldEqual(new AllPossibleValuesDependencySource(enumerationType));
         }
@@ -95,7 +95,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void to_dependency_source_when_an_IList()
         {
-            var enumerationType = typeof(IList<IGateway>);
+            var enumerationType = typeof (IList<IGateway>);
             new DefaultInstance().ToDependencySource(enumerationType)
                 .ShouldEqual(new AllPossibleValuesDependencySource(enumerationType));
         }
@@ -103,7 +103,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void to_dependency_source_when_a_concrete_List()
         {
-            var enumerationType = typeof(IList<IGateway>);
+            var enumerationType = typeof (IList<IGateway>);
             new DefaultInstance().ToDependencySource(enumerationType)
                 .ShouldEqual(new AllPossibleValuesDependencySource(enumerationType));
         }

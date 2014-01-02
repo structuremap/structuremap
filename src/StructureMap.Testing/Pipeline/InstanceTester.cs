@@ -1,10 +1,7 @@
 using System;
 using NUnit.Framework;
-using Rhino.Mocks;
 using StructureMap.Building;
-using StructureMap.Diagnostics;
 using StructureMap.Graph;
-using StructureMap.Interceptors;
 using StructureMap.Pipeline;
 
 namespace StructureMap.Testing.Pipeline
@@ -28,7 +25,7 @@ namespace StructureMap.Testing.Pipeline
             instance.Name = "name of instance";
             IDiagnosticInstance diagnosticInstance = instance;
 
-            InstanceToken token = diagnosticInstance.CreateToken();
+            var token = diagnosticInstance.CreateToken();
 
             Assert.AreEqual(instance.Name, token.Name);
             Assert.AreEqual("InstanceUnderTest", token.Description);
@@ -38,7 +35,7 @@ namespace StructureMap.Testing.Pipeline
         public void default_scope_is_PerRequest()
         {
             var i1 = new ConfiguredInstance(GetType()).Named("foo");
-            i1.Lifecycle.ShouldBeOfType<TransientLifecycle>();  
+            i1.Lifecycle.ShouldBeOfType<TransientLifecycle>();
         }
 
         [Test]
@@ -99,9 +96,8 @@ namespace StructureMap.Testing.Pipeline
             i1.InstanceKey(GetType()).ShouldEqual(i1.InstanceKey(GetType()));
             i2.InstanceKey(GetType()).ShouldEqual(i2.InstanceKey(GetType()));
             i1.InstanceKey(GetType()).ShouldNotEqual(i2.InstanceKey(GetType()));
-            i1.InstanceKey(typeof(InstanceUnderTest)).ShouldNotEqual(i1.InstanceKey(GetType()));
+            i1.InstanceKey(typeof (InstanceUnderTest)).ShouldNotEqual(i1.InstanceKey(GetType()));
         }
-
     }
 
     public class InstanceUnderTest : Instance

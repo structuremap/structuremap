@@ -16,7 +16,7 @@ namespace StructureMap.Testing.Building
             var gateway3 = new StubbedGateway();
 
             var build = new ConcreteBuild<GatewayListUser>();
-            var array = new ListDependencySource(typeof(IGateway),
+            var array = new ListDependencySource(typeof (IGateway),
                 Constant.For(gateway1),
                 Constant.For(gateway2),
                 Constant.For(gateway3));

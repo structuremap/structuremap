@@ -25,16 +25,18 @@ namespace StructureMap.Testing.Acceptance
 
             // Singleton should be created in the master scope and therefore,
             // not disposed by the nested container closing
-            thing.Singleton.ShouldBeOfType<Singleton>().Transient.ShouldBeOfType<Transient>().WasDisposed.ShouldBeFalse();
-        
+            thing.Singleton.ShouldBeOfType<Singleton>()
+                .Transient.ShouldBeOfType<Transient>()
+                .WasDisposed.ShouldBeFalse();
+
             // The singleton should not be sharing any children services with the transient
             thing.Transient.ShouldNotBeTheSameAs(thing.Singleton.ShouldBeOfType<Singleton>().Transient);
         }
- 
-    
     }
 
-    public interface ISingleton{}
+    public interface ISingleton
+    {
+    }
 
     public class Singleton : ISingleton
     {
@@ -65,7 +67,9 @@ namespace StructureMap.Testing.Acceptance
         }
     }
 
-    public interface IThing{}
+    public interface IThing
+    {
+    }
 
     public class Thing : IThing
     {

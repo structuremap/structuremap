@@ -14,7 +14,10 @@ namespace StructureMap.Testing.Bugs
 
         #region IGateway Members
 
-        public string WhoAmI { get { throw new NotImplementedException(); } }
+        public string WhoAmI
+        {
+            get { throw new NotImplementedException(); }
+        }
 
         public void DoSomething()
         {
@@ -57,7 +60,7 @@ namespace StructureMap.Testing.Bugs
         {
             ObjectFactory.Initialize(registry => { });
             ObjectFactory.Configure(registry =>
-                                    registry.ForSingletonOf<ICrm>().Use<Crm>());
+                registry.ForSingletonOf<ICrm>().Use<Crm>());
         }
     }
 

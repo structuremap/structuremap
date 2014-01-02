@@ -1,10 +1,7 @@
-using System;
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
-using StructureMap.Exceptions;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
-using StructureMap.Testing.GenericWidgets;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
 
@@ -18,8 +15,7 @@ namespace StructureMap.Testing.Graph
         [SetUp]
         public void SetUp()
         {
-            _container = new Container(registry =>
-            {
+            _container = new Container(registry => {
                 registry.Scan(x => x.Assembly("StructureMap.Testing.Widget"));
                 registry.For<Rule>();
                 registry.For<IWidget>();
@@ -33,8 +29,7 @@ namespace StructureMap.Testing.Graph
 
         private void addColorInstance(string Color)
         {
-            _container.Configure(r =>
-            {
+            _container.Configure(r => {
                 r.For<Rule>().Use<ColorRule>().Ctor<string>("color").Is(Color).Named(Color);
                 r.For<IWidget>().Use<ColorWidget>().Ctor<string>("color").Is(Color).Named(
                     Color);
@@ -61,7 +56,10 @@ namespace StructureMap.Testing.Graph
             }
 
 
-            public IProvider Provider { get { return _provider; } }
+            public IProvider Provider
+            {
+                get { return _provider; }
+            }
         }
 
         public class DifferentProvider : IProvider
@@ -77,35 +75,29 @@ namespace StructureMap.Testing.Graph
         public void can_inject_into_a_running_container()
         {
             var container = new Container();
-            container.Inject(typeof(ISport), new ConstructorInstance(typeof(Football)));
+            container.Inject(typeof (ISport), new ConstructorInstance(typeof (Football)));
 
             container.GetInstance<ISport>()
-                     .ShouldBeOfType<Football>();
+                .ShouldBeOfType<Football>();
         }
 
         [Test]
         public void Can_set_profile_name_and_reset_defaults()
         {
-            var container = new Container(r =>
-            {
+            var container = new Container(r => {
                 r.For<IService>()
                     .Use<ColorService>().Named("Orange").Ctor<string>("color").Is(
-                    "Orange");
+                        "Orange");
 
-                r.For<IService>().AddInstances(x =>
-                {
+                r.For<IService>().AddInstances(x => {
                     x.Type<ColorService>().Named("Red").Ctor<string>("color").Is("Red");
                     x.Type<ColorService>().Named("Blue").Ctor<string>("color").Is("Blue");
                     x.Type<ColorService>().Named("Green").Ctor<string>("color").Is("Green");
                 });
 
-                r.Profile("Red", x => {
-                    x.For<IService>().Use("Red");
-                });
+                r.Profile("Red", x => { x.For<IService>().Use("Red"); });
 
-                r.Profile("Blue", x => {
-                    x.For<IService>().Use("Blue");
-                });
+                r.Profile("Blue", x => { x.For<IService>().Use("Blue"); });
             });
 
             assertColorIs(container, "Orange");
@@ -182,7 +174,7 @@ namespace StructureMap.Testing.Graph
         [Test, ExpectedException(typeof (StructureMapException))]
         public void GetMissingType()
         {
-            object o = _container.GetInstance(typeof (string));
+            var o = _container.GetInstance(typeof (string));
         }
 
         [Test]
@@ -193,8 +185,7 @@ namespace StructureMap.Testing.Graph
             var red = new ColorRule("Red");
             var blue = new ColorRule("Blue");
 
-            container.Configure(x =>
-            {
+            container.Configure(x => {
                 x.For<Rule>().Add(red).Named("Red");
                 x.For<Rule>().Add(blue).Named("Blue");
             });
@@ -209,7 +200,7 @@ namespace StructureMap.Testing.Graph
             var container =
                 new Container(
                     x =>
-                    x.For(typeof (IOpenGeneric<>)).Use(typeof (ConcreteOpenGeneric<>)));
+                        x.For(typeof (IOpenGeneric<>)).Use(typeof (ConcreteOpenGeneric<>)));
             container.TryGetInstance<IOpenGeneric<object>>().ShouldNotBeNull();
         }
 
@@ -219,7 +210,7 @@ namespace StructureMap.Testing.Graph
             var container =
                 new Container(
                     x =>
-                    x.For(typeof (IOpenGeneric<>)).Use(typeof (ConcreteOpenGeneric<>)));
+                        x.For(typeof (IOpenGeneric<>)).Use(typeof (ConcreteOpenGeneric<>)));
             container.TryGetInstance<IAnotherOpenGeneric<object>>().ShouldBeNull();
         }
 
@@ -227,14 +218,14 @@ namespace StructureMap.Testing.Graph
         public void TryGetInstance_ReturnsInstance_WhenTypeFound()
         {
             _container.Configure(c => c.For<IProvider>().Use<Provider>());
-            object instance = _container.TryGetInstance(typeof (IProvider));
+            var instance = _container.TryGetInstance(typeof (IProvider));
             instance.ShouldBeOfType(typeof (Provider));
         }
 
         [Test]
         public void TryGetInstance_ReturnsNull_WhenTypeNotFound()
         {
-            object instance = _container.TryGetInstance(typeof (IProvider));
+            var instance = _container.TryGetInstance(typeof (IProvider));
             instance.ShouldBeNull();
         }
 
@@ -260,7 +251,7 @@ namespace StructureMap.Testing.Graph
             addColorInstance("Orange");
             addColorInstance("Blue");
 
-            object rule = _container.TryGetInstance(typeof (Rule), "Yellow");
+            var rule = _container.TryGetInstance(typeof (Rule), "Yellow");
             rule.ShouldBeNull();
         }
 
@@ -271,7 +262,7 @@ namespace StructureMap.Testing.Graph
             addColorInstance("Orange");
             addColorInstance("Blue");
 
-            object rule = _container.TryGetInstance(typeof (Rule), "Orange");
+            var rule = _container.TryGetInstance(typeof (Rule), "Orange");
             rule.ShouldBeOfType(typeof (ColorRule));
         }
 
@@ -308,7 +299,9 @@ namespace StructureMap.Testing.Graph
         }
     }
 
-    public interface ISport{}
+    public interface ISport
+    {
+    }
 
     public class Football : ISport
     {

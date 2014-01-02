@@ -1,6 +1,5 @@
 using System;
 using System.Runtime.InteropServices.ComTypes;
-using NUnit.Framework;
 using StructureMap.Configuration.DSL;
 using StructureMap.Interceptors;
 using StructureMap.TypeRules;
@@ -36,7 +35,10 @@ namespace StructureMap.Testing.Examples
             _inner = inner;
         }
 
-        public IConnectionListener Inner { get { return _inner; } }
+        public IConnectionListener Inner
+        {
+            get { return _inner; }
+        }
 
         public void StartConnection()
         {
@@ -57,8 +59,7 @@ namespace StructureMap.Testing.Examples
             // You can also register an Action<IContext, T> to get access
             // to all the services and capabilities of the BuildSession
             For<ClassThatNeedsSomeBootstrapping>().Use<ClassThatNeedsSomeBootstrapping>()
-                .OnCreation((context, x) =>
-                {
+                .OnCreation((context, x) => {
                     var connection = context.GetInstance<IConnectionPoint>();
                     x.Connect(connection);
                 });
@@ -68,8 +69,7 @@ namespace StructureMap.Testing.Examples
                 .EnrichWith(x => new LoggingDecorator(x));
 
             For<IConnectionListener>().Use<ClassThatNeedsSomeBootstrapping>()
-                .EnrichWith((context, x) =>
-                {
+                .EnrichWith((context, x) => {
                     var connection = context.GetInstance<IConnectionPoint>();
                     x.Connect(connection);
 
@@ -124,9 +124,9 @@ namespace StructureMap.Testing.Examples
             // Assuming that "target" is an implementation of IEventListener<T>,
             // we'll do a little bit of generics sleight of hand
             // to register "target" with IEventAggregator
-            Type eventType =
+            var eventType =
                 target.GetType().FindFirstInterfaceThatCloses(typeof (IEventListener<>)).GetGenericArguments()[0];
-            Type type = typeof (Registration<>).MakeGenericType(eventType);
+            var type = typeof (Registration<>).MakeGenericType(eventType);
             var registration = (Registration) Activator.CreateInstance(type);
             registration.RegisterListener(context, target);
 

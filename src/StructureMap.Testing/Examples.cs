@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Reflection;
 using System.Windows.Forms;
 using StructureMap.Attributes;
@@ -21,7 +19,10 @@ namespace StructureMap.Testing.DocumentationExamples
         // StructureMap to use this property when
         // constructing a Repository instance
         [SetterProperty]
-        public IDataProvider Provider { set { _provider = value; } }
+        public IDataProvider Provider
+        {
+            set { _provider = value; }
+        }
 
         [SetterProperty]
         public bool ShouldCache { get; set; }
@@ -59,8 +60,7 @@ namespace StructureMap.Testing.DocumentationExamples
     {
         public ShippingRegistry()
         {
-            For<IShippingService>().AddInstances(x =>
-            {
+            For<IShippingService>().AddInstances(x => {
                 x.Type<ShippingWebService>()
                     .Ctor<string>("url").Is("a url")
                     .Named("Domestic");
@@ -92,7 +92,7 @@ namespace StructureMap.Testing.DocumentationExamples
             domesticService.ShipIt();
             internationalService2.ShipIt();
 
-            string serviceName = determineShippingService();
+            var serviceName = determineShippingService();
             var service = ObjectFactory.GetNamedInstance<IShippingService>(serviceName);
 
 
@@ -155,8 +155,7 @@ namespace StructureMap.Testing.DocumentationExamples
     {
         public ScanningRegistry()
         {
-            Scan(x =>
-            {
+            Scan(x => {
                 // Add assembly by name.
                 x.Assembly("StructureMap.Testing.Widget");
 
@@ -170,8 +169,7 @@ namespace StructureMap.Testing.DocumentationExamples
             });
 
 
-            Scan(x =>
-            {
+            Scan(x => {
                 // I'm telling StructureMap to sweep a folder called "Extensions" directly
                 // underneath the application root folder for any assemblies
                 x.AssembliesFromPath("Extensions");
@@ -182,8 +180,7 @@ namespace StructureMap.Testing.DocumentationExamples
                 x.LookForRegistries();
             });
 
-            Scan(x =>
-            {
+            Scan(x => {
                 // This time I'm going to specify a filter on the assembly such that 
                 // only assemblies that have "Extension" in their name will be scanned
                 x.AssembliesFromPath("Extensions", assembly => assembly.GetName().Name.Contains("Extension"));
@@ -194,10 +191,8 @@ namespace StructureMap.Testing.DocumentationExamples
 
             // Adding configuration from an extension Assembly
             // after ObjectFactory is already configured
-            ObjectFactory.Configure(x =>
-            {
-                x.Scan(scan =>
-                {
+            ObjectFactory.Configure(x => {
+                x.Scan(scan => {
                     scan.Assembly("MyCompany.MyApp.ExtensionAssembly");
                     scan.LookForRegistries();
                 });
@@ -325,9 +320,15 @@ namespace StructureMap.Testing.DocumentationExamples
 
     public class ApplicationShell : Form, IApplicationShell
     {
-        public IQueryToolBar QueryToolBar { get { return null; } }
+        public IQueryToolBar QueryToolBar
+        {
+            get { return null; }
+        }
 
-        public IExplorerPane ExplorerPane { get { return null; } }
+        public IExplorerPane ExplorerPane
+        {
+            get { return null; }
+        }
     }
 
 
@@ -368,8 +369,7 @@ namespace StructureMap.Testing.DocumentationExamples
 
         public void BootstrapStructureMap()
         {
-            ObjectFactory.Initialize(x =>
-            {
+            ObjectFactory.Initialize(x => {
                 // initialization
             });
         }
@@ -378,7 +378,7 @@ namespace StructureMap.Testing.DocumentationExamples
         {
             if (_hasStarted)
             {
-                ObjectFactory.Initialize(_=>{});
+                ObjectFactory.Initialize(_ => { });
             }
             else
             {
@@ -423,8 +423,7 @@ namespace StructureMap.Testing.DocumentationExamples
             For<IService>().Use<RemoteService>();
 
             // Add multiple additional Instances of a PluginType
-            For<IService>().AddInstances(x =>
-            {
+            For<IService>().AddInstances(x => {
                 x.ConstructedBy(() => new ColorService("Red"));
 
                 x.Type<RemoteService>();

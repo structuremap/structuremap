@@ -45,7 +45,7 @@ namespace StructureMap.Testing.Query
             family.AddInstance(instance);
             family.AddInstance(new ConfiguredInstance(typeof (Service2<>)));
 
-            InstanceRef iRef = configuration.Instances.FirstOrDefault(x => x.Name == instance.Name);
+            var iRef = configuration.Instances.FirstOrDefault(x => x.Name == instance.Name);
 
             configuration.EjectAndRemove(iRef);
 
@@ -63,7 +63,7 @@ namespace StructureMap.Testing.Query
             var secondInstance = new ConfiguredInstance(typeof (Service2<>));
             family.AddInstance(secondInstance);
 
-            InstanceRef iRef = configuration.Instances.FirstOrDefault(x => x.Name == instance.Name);
+            var iRef = configuration.Instances.FirstOrDefault(x => x.Name == instance.Name);
 
             configuration.EjectAndRemove(iRef);
 

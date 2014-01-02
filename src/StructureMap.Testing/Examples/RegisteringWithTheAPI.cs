@@ -1,5 +1,3 @@
-using StructureMap.Configuration.DSL;
-
 namespace StructureMap.Testing.Examples
 {
     public interface IRepository
@@ -24,16 +22,14 @@ namespace StructureMap.Testing.Examples
     {
         public static void Bootstrap()
         {
-            ObjectFactory.Initialize(x =>
-            {
+            ObjectFactory.Initialize(x => {
                 // In this case, we need to specify the value of "connectionString" argument to
                 // the constructor function
                 x.For<DatabaseRepository>().Use<DatabaseRepository>()
                     .Ctor<string>("connectionString").EqualToAppSetting("connectionString");
             });
 
-            ObjectFactory.Initialize(x =>
-            {
+            ObjectFactory.Initialize(x => {
                 x.ForConcreteType<DatabaseRepository>().Configure
                     .Ctor<string>("connectionString").EqualToAppSetting("connectionString");
             });
@@ -56,5 +52,4 @@ namespace StructureMap.Testing.Examples
 
         public static WeirdLegacyRepository Current { get; set; }
     }
-
 }

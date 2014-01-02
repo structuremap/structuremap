@@ -1,10 +1,6 @@
 using NUnit.Framework;
-using Rhino.Mocks;
 using StructureMap.Building;
-using StructureMap.Graph;
 using StructureMap.Pipeline;
-using StructureMap.Testing.Building;
-using StructureMap.Testing.Graph;
 using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Pipeline
@@ -33,7 +29,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void GetDescription()
         {
-            string theReferenceKey = "theReferenceKey";
+            var theReferenceKey = "theReferenceKey";
             var instance = new ReferencedInstance(theReferenceKey);
 
             TestUtility.AssertDescriptionIs(instance, "\"theReferenceKey\"");
@@ -42,11 +38,11 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void to_dependency_source()
         {
-            string theReferenceKey = "theReferenceKey";
+            var theReferenceKey = "theReferenceKey";
             var instance = new ReferencedInstance(theReferenceKey);
 
-            instance.ToDependencySource(typeof(IGateway))
-                .ShouldEqual(new ReferencedDependencySource(typeof(IGateway), theReferenceKey));
+            instance.ToDependencySource(typeof (IGateway))
+                .ShouldEqual(new ReferencedDependencySource(typeof (IGateway), theReferenceKey));
         }
     }
 }

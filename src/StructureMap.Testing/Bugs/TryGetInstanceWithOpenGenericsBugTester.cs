@@ -1,6 +1,4 @@
-using System.Diagnostics;
 using NUnit.Framework;
-using StructureMap.Configuration.DSL;
 using StructureMap.TypeRules;
 
 namespace StructureMap.Testing.Bugs
@@ -27,9 +25,7 @@ namespace StructureMap.Testing.Bugs
         [Test]
         public void try_get_instance_fills_from_open_generic()
         {
-            var container = new Container(x => {
-                x.For(typeof (IOpenClass<>)).Add(typeof (ClosedClass<>));
-            });
+            var container = new Container(x => { x.For(typeof (IOpenClass<>)).Add(typeof (ClosedClass<>)); });
 
             container.TryGetInstance<IOpenClass<string>>().ShouldBeOfType<ClosedClass<string>>();
         }
@@ -37,10 +33,8 @@ namespace StructureMap.Testing.Bugs
         [Test]
         public void try_get_instance_fills_from_open_generic_on_conventions()
         {
-            var container = new Container(x =>
-            {
-                x.Scan(o =>
-                {
+            var container = new Container(x => {
+                x.Scan(o => {
                     o.TheCallingAssembly();
                     o.ConnectImplementationsToTypesClosing(typeof (IOpenClass<>));
                 });

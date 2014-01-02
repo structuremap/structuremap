@@ -4,7 +4,6 @@ using System.Linq;
 using NUnit.Framework;
 using StructureMap.Testing.Configuration.DSL;
 using StructureMap.Testing.GenericWidgets;
-using StructureMap.Testing.Graph;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget2;
 
@@ -15,20 +14,23 @@ namespace StructureMap.Testing.Query
     {
         #region Setup/Teardown
 
-        public interface IEngine{}
-        public class PushrodEngine : IEngine{}
+        public interface IEngine
+        {
+        }
+
+        public class PushrodEngine : IEngine
+        {
+        }
 
         [SetUp]
         public void SetUp()
         {
-            container = new Container(x =>
-            {
+            container = new Container(x => {
                 x.For(typeof (IService<>)).Add(typeof (Service<>));
                 x.For(typeof (IService<>)).Add(typeof (Service2<>));
 
                 x.For<IWidget>().Singleton().Use<AWidget>();
-                x.For<Rule>().AddInstances(o =>
-                {
+                x.For<Rule>().AddInstances(o => {
                     o.Type<DefaultRule>();
                     o.Type<ARule>();
                     o.Type<ColorRule>().Ctor<string>("color").Is("red");

@@ -17,7 +17,7 @@ namespace StructureMap.Testing.Diagnostics
             var registry = new Registry();
             action(registry);
 
-            PluginGraph graph = registry.Build();
+            var graph = registry.Build();
             var session = ValidationBuildSession.ValidateForPluginGraph(graph);
             session.PerformValidations();
 
@@ -40,8 +40,7 @@ namespace StructureMap.Testing.Diagnostics
         [Test]
         public void Attach_dependency_to_the_build_error_but_do_not_create_new_error_for_dependency()
         {
-            ValidationBuildSession session = validatedSession(r =>
-            {
+            var session = validatedSession(r => {
                 r.For<IWidget>().Use(errorInstance().Named("BadInstance"));
 
                 r.For<SomethingThatNeedsAWidget>().Use<SomethingThatNeedsAWidget>()
@@ -49,10 +48,10 @@ namespace StructureMap.Testing.Diagnostics
                     .Ctor<IWidget>().Is(x => x.TheInstanceNamed("BadInstance"));
             });
 
-            BuildError error = getFirstAndOnlyError(session);
+            var error = getFirstAndOnlyError(session);
 
             Assert.AreEqual(1, error.Dependencies.Count);
-            BuildDependency dependency = error.Dependencies[0];
+            var dependency = error.Dependencies[0];
             Assert.AreEqual(typeof (SomethingThatNeedsAWidget), dependency.PluginType);
             Assert.AreEqual("DependentInstance", dependency.Instance.Name);
         }
@@ -61,7 +60,7 @@ namespace StructureMap.Testing.Diagnostics
         [Test]
         public void Create_an_instance_for_the_first_time_happy_path()
         {
-            ValidationBuildSession session =
+            var session =
                 validatedSession(
                     r => r.For<IWidget>().Use(new ColorWidget("Red")));
 
@@ -71,8 +70,7 @@ namespace StructureMap.Testing.Diagnostics
         [Test]
         public void Create_an_instance_that_fails_and_an_instance_that_depends_on_that_exception()
         {
-            ValidationBuildSession session = validatedSession(r =>
-            {
+            var session = validatedSession(r => {
                 r.For<IWidget>().Use(errorInstance().Named("BadInstance"));
 
 
@@ -83,25 +81,24 @@ namespace StructureMap.Testing.Diagnostics
 
             Assert.AreEqual(1, session.BuildErrors.Length);
 
-            BuildError error = session.Find(typeof (SomethingThatNeedsAWidget), "DependentInstance");
+            var error = session.Find(typeof (SomethingThatNeedsAWidget), "DependentInstance");
             Assert.IsNull(error);
 
-            BuildError error2 = session.Find(typeof (IWidget), "BadInstance");
+            var error2 = session.Find(typeof (IWidget), "BadInstance");
             Assert.IsNotNull(error2);
         }
 
         [Test]
         public void Create_an_instance_that_fails_because_of_an_inline_child()
         {
-            ValidationBuildSession session = validatedSession(
-                r =>
-                {
+            var session = validatedSession(
+                r => {
                     r.For<SomethingThatNeedsAWidget>().Use<SomethingThatNeedsAWidget>()
                         .Named("BadInstance")
                         .Ctor<IWidget>().Is(errorInstance());
                 });
 
-            BuildError error = getFirstAndOnlyError(session);
+            var error = getFirstAndOnlyError(session);
 
             Assert.AreEqual("BadInstance", error.Instance.Name);
             Assert.AreEqual(typeof (SomethingThatNeedsAWidget), error.PluginType);
@@ -111,10 +108,10 @@ namespace StructureMap.Testing.Diagnostics
         public void Create_an_instance_that_has_a_build_failure()
         {
             Instance instance = errorInstance().Named("Bad");
-            ValidationBuildSession session =
+            var session =
                 validatedSession(registry => registry.For<IWidget>().Use(instance));
 
-            BuildError error = getFirstAndOnlyError(session);
+            var error = getFirstAndOnlyError(session);
 
             Assert.AreEqual(instance, error.Instance);
             Assert.AreEqual(typeof (IWidget), error.PluginType);
@@ -124,8 +121,7 @@ namespace StructureMap.Testing.Diagnostics
         [Test]
         public void do_not_fail_with_the_bidirectional_checks()
         {
-            var container = new Container(r =>
-            {
+            var container = new Container(r => {
                 r.For<IWidget>().Use<ColorWidget>().Ctor<string>("color").Is("red");
                 r.For<Rule>().Use<WidgetRule>();
 
@@ -144,7 +140,7 @@ namespace StructureMap.Testing.Diagnostics
         [Test]
         public void Happy_path_with_no_validation_errors()
         {
-            ValidationBuildSession session =
+            var session =
                 validatedSession(
                     registry => registry.For<IWidget>().Use(new ColorWidget("Red")));
 
@@ -157,8 +153,8 @@ namespace StructureMap.Testing.Diagnostics
             var session = ValidationBuildSession.ValidateForPluginGraph(new PluginGraph());
 
             var instance = new ObjectInstance(new ColorWidget("Red"));
-            object widget1 = session.FindObject(typeof (IWidget), instance);
-            object widget2 = session.FindObject(typeof (IWidget), instance);
+            var widget1 = session.FindObject(typeof (IWidget), instance);
+            var widget2 = session.FindObject(typeof (IWidget), instance);
 
             Assert.AreSame(widget1, widget2);
         }
@@ -166,10 +162,10 @@ namespace StructureMap.Testing.Diagnostics
         [Test]
         public void Successfully_build_an_object_that_has_multiple_validation_errors()
         {
-            ValidationBuildSession session =
+            var session =
                 validatedSession(
                     registry =>
-                    registry.For<SomethingThatHasValidationFailures>().Use<SomethingThatHasValidationFailures>());
+                        registry.For<SomethingThatHasValidationFailures>().Use<SomethingThatHasValidationFailures>());
 
             Assert.AreEqual(2, session.ValidationErrors.Length);
         }
@@ -178,15 +174,15 @@ namespace StructureMap.Testing.Diagnostics
         public void Validate_a_single_object_with_both_a_passing_validation_method_and_a_failing_validation_method()
         {
             var instance = new ObjectInstance(new WidgetWithOneValidationFailure());
-            ValidationBuildSession session =
+            var session =
                 validatedSession(registry => registry.For<IWidget>().Use(instance));
 
 
             Assert.AreEqual(1, session.ValidationErrors.Length);
 
-            ValidationError error = session.ValidationErrors[0];
+            var error = session.ValidationErrors[0];
 
-            Assert.AreEqual(typeof(IWidget), error.PluginType);
+            Assert.AreEqual(typeof (IWidget), error.PluginType);
             Assert.AreEqual(instance, error.Instance);
             Assert.AreEqual("ValidateFailure", error.MethodName);
 

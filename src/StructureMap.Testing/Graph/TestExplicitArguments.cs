@@ -1,11 +1,8 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
+using System.Linq;
 using NUnit.Framework;
 using StructureMap.Building;
 using StructureMap.Pipeline;
-using System.Linq;
 
 namespace StructureMap.Testing.Graph
 {
@@ -17,7 +14,7 @@ namespace StructureMap.Testing.Graph
         [SetUp]
         public void SetUp()
         {
-            ObjectFactory.Initialize(x => {  });
+            ObjectFactory.Initialize(x => { });
         }
 
         #endregion
@@ -46,9 +43,15 @@ namespace StructureMap.Testing.Graph
             }
 
 
-            public string Name { get { return _name; } }
+            public string Name
+            {
+                get { return _name; }
+            }
 
-            public IProvider Provider { get { return _provider; } }
+            public IProvider Provider
+            {
+                get { return _provider; }
+            }
         }
 
         public interface IProvider
@@ -117,10 +120,8 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void can_build_a_concrete_type_from_explicit_args_passed_into_a_named_instance()
         {
-            var container = new Container(x =>
-            {
-                x.For<ColorWithLump>().AddInstances(o =>
-                {
+            var container = new Container(x => {
+                x.For<ColorWithLump>().AddInstances(o => {
                     o.Type<ColorWithLump>().Ctor<string>("color").Is("red").Named("red");
                     o.Type<ColorWithLump>().Ctor<string>("color").Is("green").Named("green");
                     o.Type<ColorWithLump>().Ctor<string>("color").Is("blue").Named("blue");
@@ -151,8 +152,7 @@ namespace StructureMap.Testing.Graph
         {
             var theTrade = new Trade();
 
-            IContainer container = new Container(r =>
-            {
+            IContainer container = new Container(r => {
                 r.For<IView>().Use<TradeView>();
                 r.For<Node>().Use<TradeNode>();
             });
@@ -229,8 +229,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void NowDoItWithObjectFactoryItself()
         {
-            ObjectFactory.Initialize(x =>
-            {
+            ObjectFactory.Initialize(x => {
                 x.ForConcreteType<ExplicitTarget>().Configure
                     .Ctor<IProvider>().Is<RedProvider>()
                     .Ctor<string>("name").Is("Jeremy");
@@ -249,8 +248,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void NowDoItWithObjectFactoryItself_with_new_API()
         {
-            ObjectFactory.Initialize(x =>
-            {
+            ObjectFactory.Initialize(x => {
                 x.For<ExplicitTarget>().Use<ExplicitTarget>()
                     .Ctor<IProvider>().Is(child => child.Type<RedProvider>())
                     .Ctor<string>("name").Is("Jeremy");
@@ -268,8 +266,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void OverrideAPrimitiveWithObjectFactory()
         {
-            ObjectFactory.Initialize(x =>
-            {
+            ObjectFactory.Initialize(x => {
                 x.ForConcreteType<ExplicitTarget>().Configure
                     .Ctor<IProvider>().Is<RedProvider>()
                     .Ctor<string>("name").Is("Jeremy");
@@ -289,8 +286,7 @@ namespace StructureMap.Testing.Graph
         {
             // The Container is constructed with 2 instances
             // of TradeView
-            var container = new Container(r =>
-            {
+            var container = new Container(r => {
                 r.For<TradeView>().Use<TradeView>();
                 r.For<TradeView>().Add<SecuredTradeView>();
             });
@@ -307,8 +303,7 @@ namespace StructureMap.Testing.Graph
         {
             // The Container is constructed with 2 instances
             // of TradeView
-            var container = new Container(r =>
-            {
+            var container = new Container(r => {
                 r.For<TradeView>().Use<TradeView>();
                 r.For<TradeView>().Add<SecuredTradeView>();
             });
@@ -366,7 +361,7 @@ namespace StructureMap.Testing.Graph
 
             var theLump = new Lump();
 
-            var provider = (LumpProvider)ObjectFactory.Container.With(theLump).GetInstance<IProvider>();
+            var provider = (LumpProvider) ObjectFactory.Container.With(theLump).GetInstance<IProvider>();
             Assert.AreSame(theLump, provider.Lump);
         }
 
@@ -381,8 +376,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void PassExplicitArgsIntoInstanceManager()
         {
-            var container = new Container(r =>
-            {
+            var container = new Container(r => {
                 r.ForConcreteType<ExplicitTarget>().Configure
                     .Ctor<IProvider>().Is<RedProvider>()
                     .Ctor<string>("name").Is("Jeremy");
@@ -465,9 +459,15 @@ namespace StructureMap.Testing.Graph
             _lump = lump;
         }
 
-        public string Color { get { return _color; } }
+        public string Color
+        {
+            get { return _color; }
+        }
 
-        public Lump Lump { get { return _lump; } }
+        public Lump Lump
+        {
+            get { return _lump; }
+        }
     }
 
     public class LumpProvider : TestExplicitArguments.IProvider
@@ -480,7 +480,10 @@ namespace StructureMap.Testing.Graph
         }
 
 
-        public Lump Lump { get { return _lump; } }
+        public Lump Lump
+        {
+            get { return _lump; }
+        }
     }
 
 
@@ -497,7 +500,10 @@ namespace StructureMap.Testing.Graph
             _trade = trade;
         }
 
-        public Trade Trade { get { return _trade; } }
+        public Trade Trade
+        {
+            get { return _trade; }
+        }
     }
 
     public class SecuredTradeView : TradeView
@@ -533,11 +539,20 @@ namespace StructureMap.Testing.Graph
             _view = view;
         }
 
-        public Trade Trade { get { return _trade; } }
+        public Trade Trade
+        {
+            get { return _trade; }
+        }
 
-        public Node Node { get { return _node; } }
+        public Node Node
+        {
+            get { return _node; }
+        }
 
-        public IView View { get { return _view; } }
+        public IView View
+        {
+            get { return _view; }
+        }
     }
 
     public class TradeNode : Node
@@ -549,7 +564,10 @@ namespace StructureMap.Testing.Graph
             _trade = trade;
         }
 
-        public Trade Trade { get { return _trade; } }
+        public Trade Trade
+        {
+            get { return _trade; }
+        }
     }
 
     public class ConcreteThatNeedsString
@@ -561,6 +579,9 @@ namespace StructureMap.Testing.Graph
             _name = name;
         }
 
-        public string Name { get { return _name; } }
+        public string Name
+        {
+            get { return _name; }
+        }
     }
 }

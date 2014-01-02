@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
-using StructureMap.Graph;
 using StructureMap.Query;
 using StructureMap.Testing.GenericWidgets;
 using StructureMap.Testing.Graph;
@@ -29,7 +28,7 @@ namespace StructureMap.Testing
             registry.For<IServiceProvider>().Add<MyDataSet>();
             registry.For<IServiceProvider>().Add<MyDataView>();
 
-            PluginGraph graph = registry.Build();
+            var graph = registry.Build();
 
             _model = new Container(graph).Model;
 

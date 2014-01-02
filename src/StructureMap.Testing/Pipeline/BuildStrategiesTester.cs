@@ -49,10 +49,8 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void Singleton_build_policy()
         {
-            var container = new Container(x =>
-            {
-                x.For<IService>().Singleton().AddInstances(o =>
-                {
+            var container = new Container(x => {
+                x.For<IService>().Singleton().AddInstances(o => {
                     o.Is.ConstructedBy(() => new ColorService("Red")).Named("Red");
                     o.Is.ConstructedBy(() => new ColorService("Green")).Named("Green");
                 });
@@ -88,9 +86,15 @@ namespace StructureMap.Testing.Pipeline
 
             pipeline = new RootPipelineGraph(new PluginGraph());
 
-            lifecycle.FindCache(pipeline).As<LifecycleObjectCache>().Set(typeof (IGateway), new StubInstance("a"), disposable1);
-            lifecycle.FindCache(pipeline).As<LifecycleObjectCache>().Set(typeof(IGateway), new StubInstance("b"), disposable2);
-            lifecycle.FindCache(pipeline).As<LifecycleObjectCache>().Set(typeof(IGateway), new StubInstance("c"), new object());
+            lifecycle.FindCache(pipeline)
+                .As<LifecycleObjectCache>()
+                .Set(typeof (IGateway), new StubInstance("a"), disposable1);
+            lifecycle.FindCache(pipeline)
+                .As<LifecycleObjectCache>()
+                .Set(typeof (IGateway), new StubInstance("b"), disposable2);
+            lifecycle.FindCache(pipeline)
+                .As<LifecycleObjectCache>()
+                .Set(typeof (IGateway), new StubInstance("c"), new object());
 
 
             lifecycle.EjectAll(pipeline);

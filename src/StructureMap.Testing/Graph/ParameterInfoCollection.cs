@@ -10,12 +10,15 @@ namespace StructureMap.Testing.Graph
         public ParameterInfoCollection(ConstructorInfo constructor)
         {
             _parameters = new Hashtable();
-            foreach (ParameterInfo param in constructor.GetParameters())
+            foreach (var param in constructor.GetParameters())
             {
                 _parameters.Add(param.Name, param);
             }
         }
 
-        public ParameterInfo this[string name] { get { return _parameters[name] as ParameterInfo; } }
+        public ParameterInfo this[string name]
+        {
+            get { return _parameters[name] as ParameterInfo; }
+        }
     }
 }

@@ -3,7 +3,6 @@ using NUnit.Framework;
 using StructureMap.Pipeline;
 using StructureMap.Query;
 using StructureMap.Testing.Configuration.DSL;
-using StructureMap.Testing.Graph;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget2;
 
@@ -20,19 +19,18 @@ namespace StructureMap.Testing.Query
 
         public interface IEngine
         {
-
         }
 
-        public class PushrodEngine : IEngine{}
+        public class PushrodEngine : IEngine
+        {
+        }
 
         [SetUp]
         public void SetUp()
         {
-            container = new Container(x =>
-            {
+            container = new Container(x => {
                 x.For<IWidget>().Singleton().Use<AWidget>();
-                x.For<Rule>().AddInstances(o =>
-                {
+                x.For<Rule>().AddInstances(o => {
                     o.Type<DefaultRule>();
                     o.Type<ARule>();
                     o.Type<ColorRule>().Ctor<string>("color").Is("red");
@@ -102,7 +100,7 @@ namespace StructureMap.Testing.Query
         [Test]
         public void eject_and_remove_an_instance_by_filter_should_remove_it_from_the_model()
         {
-            InstanceRef iRef = container.Model.For<Rule>().Instances.First();
+            var iRef = container.Model.For<Rule>().Instances.First();
             container.Model.For<Rule>().EjectAndRemove(x => x.Name == iRef.Name);
 
             container.Model.For<Rule>().Instances.Select(x => x.ConcreteType)
@@ -115,7 +113,7 @@ namespace StructureMap.Testing.Query
         [Test]
         public void eject_and_remove_an_instance_should_remove_it_from_the_model()
         {
-            InstanceRef iRef = container.Model.For<Rule>().Instances.First();
+            var iRef = container.Model.For<Rule>().Instances.First();
             container.Model.For<Rule>().EjectAndRemove(iRef);
 
             container.Model.For<Rule>().Instances.Select(x => x.ConcreteType)
@@ -129,7 +127,7 @@ namespace StructureMap.Testing.Query
         [Test]
         public void eject_and_remove_an_instance_should_remove_it_from_the_model_by_name()
         {
-            InstanceRef iRef = container.Model.For<Rule>().Instances.First();
+            var iRef = container.Model.For<Rule>().Instances.First();
             container.Model.For<Rule>().EjectAndRemove(iRef.Name);
 
             container.Model.For<Rule>().Instances.Select(x => x.ConcreteType)
@@ -142,7 +140,7 @@ namespace StructureMap.Testing.Query
         [Test]
         public void eject_for_a_transient_type_in_a_container_should_be_tracked()
         {
-            IContainer nested = container.GetNestedContainer();
+            var nested = container.GetNestedContainer();
 
             var engine1 = nested.GetInstance<IEngine>();
             nested.GetInstance<IEngine>().ShouldBeTheSameAs(engine1);
@@ -198,7 +196,7 @@ namespace StructureMap.Testing.Query
         [Test]
         public void has_been_created_for_a_transient_type_in_a_container_should_be_tracked()
         {
-            IContainer nested = container.GetNestedContainer();
+            var nested = container.GetNestedContainer();
 
             nested.Model.For<IEngine>().Default.ObjectHasBeenCreated().ShouldBeFalse();
 

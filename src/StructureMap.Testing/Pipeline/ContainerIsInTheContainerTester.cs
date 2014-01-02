@@ -29,6 +29,9 @@ namespace StructureMap.Testing.Pipeline
             _container = container;
         }
 
-        public IContainer Container { get { return _container; } }
+        public IContainer Container
+        {
+            get { return _container; }
+        }
     }
 }

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using NUnit.Framework;
 
 namespace StructureMap.Testing.Pipeline
@@ -20,7 +19,7 @@ namespace StructureMap.Testing.Pipeline
     {
         public object ToDto(object input)
         {
-            object dto = createDTO((Address) input);
+            var dto = createDTO((Address) input);
             return dto;
         }
 
@@ -57,8 +56,7 @@ namespace StructureMap.Testing.Pipeline
         [SetUp]
         public void SetUp()
         {
-            container = new Container(x =>
-            {
+            container = new Container(x => {
                 // Define the basic open type for IFlattener<>
                 x.For(typeof (IFlattener<>)).Use(typeof (PassthroughFlattener<>));
 
@@ -178,7 +176,8 @@ namespace StructureMap.Testing.Pipeline
                 x => { x.For<IHandler<Shipment>>().Use<ShipmentHandler>(); });
 
             var shipment = new Shipment();
-            var handler = ObjectFactory.Container.ForObject(shipment).GetClosedTypeOf(typeof (IHandler<>)).As<IHandler>();
+            var handler =
+                ObjectFactory.Container.ForObject(shipment).GetClosedTypeOf(typeof (IHandler<>)).As<IHandler>();
 
             handler.ShouldBeOfType<ShipmentHandler>().Shipment.ShouldBeTheSameAs(shipment);
         }
@@ -190,15 +189,14 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void fetch_the_objects()
         {
-            var container = new Container(x =>
-            {
+            var container = new Container(x => {
                 x.For<IHandler<Shipment>>().Use<ShipmentHandler>();
                 x.For<IHandler<Shipment>>().Add<ShipmentHandler2>();
             });
 
             var shipment = new Shipment();
 
-            IList<IHandler> handlers = container
+            var handlers = container
                 .ForObject(shipment)
                 .GetAllClosedTypesOf(typeof (IHandler<>))
                 .As<IHandler>();
@@ -229,7 +227,10 @@ namespace StructureMap.Testing.Pipeline
             _shipment = shipment;
         }
 
-        public Shipment Shipment { get { return _shipment; } }
+        public Shipment Shipment
+        {
+            get { return _shipment; }
+        }
     }
 
     public class ShipmentHandler2 : IHandler<Shipment>
@@ -241,6 +242,9 @@ namespace StructureMap.Testing.Pipeline
             _shipment = shipment;
         }
 
-        public Shipment Shipment { get { return _shipment; } }
+        public Shipment Shipment
+        {
+            get { return _shipment; }
+        }
     }
 }

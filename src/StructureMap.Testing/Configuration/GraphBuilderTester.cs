@@ -13,7 +13,7 @@ namespace StructureMap.Testing.Configuration
         {
             var typePath = new TypePath(typeof (IGateway));
 
-            bool iWasCalled = false;
+            var iWasCalled = false;
             var builder = new GraphBuilder(new PluginGraph());
             builder.ConfigureFamily(typePath, f => {
                 Assert.AreEqual(typeof (IGateway), f.PluginType);

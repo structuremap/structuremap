@@ -8,8 +8,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void can_successfully_redirect()
         {
-            var container = new Container(x =>
-            {
+            var container = new Container(x => {
                 x.For<IOne>().Use<OneAndTwo>();
                 x.Forward<IOne, ITwo>();
             });

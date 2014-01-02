@@ -1,6 +1,5 @@
 using NUnit.Framework;
 using StructureMap.Attributes;
-using StructureMap.Graph;
 using StructureMap.Testing.Widget5;
 
 namespace StructureMap.Testing.Graph
@@ -24,7 +23,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void AutoFillDeterminationWithSetterPropertiesIsFalse()
         {
-            new Policies().CanBeAutoFilled(typeof(CannotBeAutoFilledGridColumn))
+            new Policies().CanBeAutoFilled(typeof (CannotBeAutoFilledGridColumn))
                 .ShouldBeFalse();
         }
 
@@ -34,7 +33,5 @@ namespace StructureMap.Testing.Graph
             new Policies().CanBeAutoFilled(typeof (AutoFilledGridColumn))
                 .ShouldBeTrue();
         }
-
-
     }
 }

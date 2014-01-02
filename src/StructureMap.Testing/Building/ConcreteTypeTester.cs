@@ -16,7 +16,7 @@ namespace StructureMap.Testing.Building
         {
             ConcreteType.SourceFor(typeof (IGateway), null)
                 .ShouldBeOfType<DefaultDependencySource>()
-                .DependencyType.ShouldEqual(typeof(IGateway));
+                .DependencyType.ShouldEqual(typeof (IGateway));
         }
 
         [Test]
@@ -35,7 +35,7 @@ namespace StructureMap.Testing.Building
             ConcreteType.SourceFor(typeof (string), "foo")
                 .ShouldEqual(Constant.For("foo"));
 
-            ConcreteType.SourceFor(typeof(int), 42)
+            ConcreteType.SourceFor(typeof (int), 42)
                 .ShouldEqual(Constant.For<int>(42));
 
             // My dad raises registered Beefmasters and he'd be disappointed
@@ -46,19 +46,16 @@ namespace StructureMap.Testing.Building
             var gateway = new StubbedGateway();
             ConcreteType.SourceFor(typeof (IGateway), gateway)
                 .ShouldEqual(Constant.For<IGateway>(gateway));
-
-
-            
         }
 
         [Test]
         public void if_list_value_exists_use_that()
         {
-            var list = new List<IGateway> { new StubbedGateway(), new StubbedGateway() };
+            var list = new List<IGateway> {new StubbedGateway(), new StubbedGateway()};
             ConcreteType.SourceFor(typeof (List<IGateway>), list)
                 .ShouldEqual(Constant.For(list));
 
-            ConcreteType.SourceFor(typeof(IList<IGateway>), list)
+            ConcreteType.SourceFor(typeof (IList<IGateway>), list)
                 .ShouldEqual(Constant.For<IList<IGateway>>(list));
         }
 
@@ -79,7 +76,7 @@ namespace StructureMap.Testing.Building
         [Test]
         public void array_can_be_coerced_to_concrete_list()
         {
-            var array = new IGateway[] { new StubbedGateway(), new StubbedGateway() };
+            var array = new IGateway[] {new StubbedGateway(), new StubbedGateway()};
             var constant = ConcreteType.SourceFor(typeof (List<IGateway>), array)
                 .ShouldBeOfType<Constant>();
 
@@ -91,11 +88,11 @@ namespace StructureMap.Testing.Building
         [Test]
         public void array_can_be_coerced_to_concrete_ilist()
         {
-            var array = new IGateway[] { new StubbedGateway(), new StubbedGateway() };
-            var constant = ConcreteType.SourceFor(typeof(IList<IGateway>), array)
+            var array = new IGateway[] {new StubbedGateway(), new StubbedGateway()};
+            var constant = ConcreteType.SourceFor(typeof (IList<IGateway>), array)
                 .ShouldBeOfType<Constant>();
 
-            constant.ArgumentType.ShouldEqual(typeof(IList<IGateway>));
+            constant.ArgumentType.ShouldEqual(typeof (IList<IGateway>));
             constant.Value.As<IList<IGateway>>()
                 .ShouldHaveTheSameElementsAs(array);
         }
@@ -103,11 +100,11 @@ namespace StructureMap.Testing.Building
         [Test]
         public void array_can_be_coerced_to_enumerable()
         {
-            var list = new IGateway[] { new StubbedGateway(), new StubbedGateway() };
-            var constant = ConcreteType.SourceFor(typeof(List<IGateway>), list)
+            var list = new IGateway[] {new StubbedGateway(), new StubbedGateway()};
+            var constant = ConcreteType.SourceFor(typeof (List<IGateway>), list)
                 .ShouldBeOfType<Constant>();
 
-            constant.ArgumentType.ShouldEqual(typeof(List<IGateway>));
+            constant.ArgumentType.ShouldEqual(typeof (List<IGateway>));
             constant.Value.As<List<IGateway>>()
                 .ShouldHaveTheSameElementsAs(list);
         }
@@ -115,11 +112,11 @@ namespace StructureMap.Testing.Building
         [Test]
         public void list_can_be_coerced_to_array()
         {
-            var list = new List<IGateway> { new StubbedGateway(), new StubbedGateway() };
-            var constant = ConcreteType.SourceFor(typeof(IGateway[]), list)
+            var list = new List<IGateway> {new StubbedGateway(), new StubbedGateway()};
+            var constant = ConcreteType.SourceFor(typeof (IGateway[]), list)
                 .ShouldBeOfType<Constant>();
 
-            constant.ArgumentType.ShouldEqual(typeof(IGateway[]));
+            constant.ArgumentType.ShouldEqual(typeof (IGateway[]));
             constant.Value.As<IGateway[]>()
                 .ShouldHaveTheSameElementsAs(list.ToArray());
         }
@@ -135,7 +132,7 @@ namespace StructureMap.Testing.Building
         [Test]
         public void use_all_possible_for_ienumerable()
         {
-            var enumerableType = typeof(IEnumerable<IGateway>);
+            var enumerableType = typeof (IEnumerable<IGateway>);
             ConcreteType.SourceFor(enumerableType, null)
                 .ShouldEqual(new AllPossibleValuesDependencySource(enumerableType));
         }
@@ -143,7 +140,7 @@ namespace StructureMap.Testing.Building
         [Test]
         public void use_all_possible_for_ilist()
         {
-            var enumerableType = typeof(IList<IGateway>);
+            var enumerableType = typeof (IList<IGateway>);
             ConcreteType.SourceFor(enumerableType, null)
                 .ShouldEqual(new AllPossibleValuesDependencySource(enumerableType));
         }
@@ -151,7 +148,7 @@ namespace StructureMap.Testing.Building
         [Test]
         public void use_all_possible_for_list()
         {
-            var enumerableType = typeof(List<IGateway>);
+            var enumerableType = typeof (List<IGateway>);
             ConcreteType.SourceFor(enumerableType, null)
                 .ShouldEqual(new AllPossibleValuesDependencySource(enumerableType));
         }

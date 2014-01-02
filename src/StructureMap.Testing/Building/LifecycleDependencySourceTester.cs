@@ -1,7 +1,6 @@
 ﻿using NUnit.Framework;
 using StructureMap.Building;
 using StructureMap.Pipeline;
-using StructureMap.Testing.Graph;
 using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Building
@@ -25,7 +24,6 @@ namespace StructureMap.Testing.Building
 
             var target = build.Build<LifecycleTarget>(session);
             target.Gateway.ShouldBeTheSameAs(gateway);
-
         }
     }
 

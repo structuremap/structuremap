@@ -11,8 +11,7 @@ namespace StructureMap.Testing
         [SetUp]
         public void SetUp()
         {
-            container = new Container(x =>
-            {
+            container = new Container(x => {
                 x.For<IBiView>().Use<BiView>();
                 x.For<IBiPresenter>().Use<BiPresenter>();
             });
@@ -56,7 +55,10 @@ namespace StructureMap.Testing
             _presenter = presenter;
         }
 
-        public IBiPresenter Presenter { get { return _presenter; } }
+        public IBiPresenter Presenter
+        {
+            get { return _presenter; }
+        }
     }
 
     public class BiPresenter : IBiPresenter
@@ -68,6 +70,9 @@ namespace StructureMap.Testing
             _view = view;
         }
 
-        public IBiView View { get { return _view; } }
+        public IBiView View
+        {
+            get { return _view; }
+        }
     }
 }

@@ -8,7 +8,7 @@ namespace StructureMap.Testing
     {
         public static IEnumerable<T> Each<T>(this IEnumerable<T> enumerable, Action<T> action)
         {
-            foreach (T target in enumerable)
+            foreach (var target in enumerable)
             {
                 action(target);
             }
@@ -33,8 +33,8 @@ namespace StructureMap.Testing
 
         public static string[] ToDelimitedArray(this string content)
         {
-            string[] array = content.Split(',');
-            for (int i = 0; i < array.Length; i++)
+            var array = content.Split(',');
+            for (var i = 0; i < array.Length; i++)
             {
                 array[i] = array[i].Trim();
             }

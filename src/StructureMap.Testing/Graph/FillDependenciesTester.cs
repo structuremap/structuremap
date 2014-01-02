@@ -10,8 +10,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void CanFillDependenciesSuccessfully()
         {
-            var container = new Container(x =>
-            {
+            var container = new Container(x => {
                 x.For<IStrategy>().Use(new Strategy("name", 3, 3, 3, true));
                 x.For<IWidget>().Use(new ColorWidget("Red"));
             });
@@ -27,7 +26,7 @@ namespace StructureMap.Testing.Graph
         public void TryToFillDependenciesOnAbstractClassThrowsException()
         {
             var manager = new Container();
-            manager.GetInstance(typeof(AbstractClass));
+            manager.GetInstance(typeof (AbstractClass));
         }
 
 
@@ -35,7 +34,7 @@ namespace StructureMap.Testing.Graph
         public void TryToFillDependenciesOnClassWithPrimitiveArgumentsThrowsException()
         {
             var manager = new Container();
-            manager.GetInstance(typeof(CannotBeFilledConcreteClass));
+            manager.GetInstance(typeof (CannotBeFilledConcreteClass));
         }
     }
 
@@ -50,9 +49,15 @@ namespace StructureMap.Testing.Graph
             _widget = widget;
         }
 
-        public IStrategy Strategy { get { return _strategy; } }
+        public IStrategy Strategy
+        {
+            get { return _strategy; }
+        }
 
-        public IWidget Widget { get { return _widget; } }
+        public IWidget Widget
+        {
+            get { return _widget; }
+        }
     }
 
     public class CannotBeFilledConcreteClass

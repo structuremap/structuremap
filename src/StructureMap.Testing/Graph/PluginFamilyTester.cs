@@ -4,7 +4,6 @@ using System.Linq;
 using NUnit.Framework;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
-using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Graph
@@ -42,8 +41,8 @@ namespace StructureMap.Testing.Graph
         public void If_PluginFamily_only_has_one_instance_make_that_the_default()
         {
             var family = new PluginFamily(typeof (IGateway));
-            string theInstanceKey = "the default";
-            ConfiguredInstance instance = new ConfiguredInstance(typeof (TheGateway)).Named(theInstanceKey);
+            var theInstanceKey = "the default";
+            var instance = new ConfiguredInstance(typeof (TheGateway)).Named(theInstanceKey);
             family.AddInstance(instance);
 
             family.GetDefaultInstance().ShouldBeTheSameAs(instance);
@@ -53,6 +52,7 @@ namespace StructureMap.Testing.Graph
         public class LoggingFamilyAttribute : FamilyAttribute
         {
             public static bool Called { get; set; }
+
             public override void Alter(PluginFamily family)
             {
                 Called = true;
@@ -62,13 +62,11 @@ namespace StructureMap.Testing.Graph
         [LoggingFamily]
         public class FamilyGateway
         {
-            
         }
 
         [LoggingFamily]
         public interface IFamilyInterface
         {
-            
         }
 
         [Test]
@@ -76,21 +74,19 @@ namespace StructureMap.Testing.Graph
         {
             LoggingFamilyAttribute.Called = false;
 
-            var testFamily = typeof(FamilyGateway);
+            var testFamily = typeof (FamilyGateway);
 
             var family = new PluginFamily(testFamily);
 
             LoggingFamilyAttribute.Called.ShouldBeTrue();
-
         }
 
         [Test]
         public void PluginFamily_uses_family_attribute_when_present_on_interface()
         {
-
             LoggingFamilyAttribute.Called = false;
 
-            var testFamily = typeof(IFamilyInterface);
+            var testFamily = typeof (IFamilyInterface);
 
             var family = new PluginFamily(testFamily);
             LoggingFamilyAttribute.Called.ShouldBeTrue();
@@ -136,8 +132,8 @@ namespace StructureMap.Testing.Graph
             family.AddType(typeof (DataTableProvider), "table");
 
             family.Instances.Single()
-                  .ShouldBeOfType<ConstructorInstance>()
-                  .PluggedType.ShouldEqual(typeof (DataTableProvider));
+                .ShouldBeOfType<ConstructorInstance>()
+                .PluggedType.ShouldEqual(typeof (DataTableProvider));
         }
 
         [Test]
@@ -156,8 +152,8 @@ namespace StructureMap.Testing.Graph
 
             family.AddType(typeof (DataTableProvider));
             family.Instances.Single()
-                  .ShouldBeOfType<ConstructorInstance>()
-                  .PluggedType.ShouldEqual(typeof (DataTableProvider));
+                .ShouldBeOfType<ConstructorInstance>()
+                .PluggedType.ShouldEqual(typeof (DataTableProvider));
 
 
             family.AddType(typeof (DataTable));

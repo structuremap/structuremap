@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using NUnit.Framework;
-using StructureMap.Configuration;
 using StructureMap.Graph;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget5;
@@ -13,17 +12,15 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void AutomaticallyFindRegistryFromAssembly()
         {
-            ObjectFactory.Initialize(x =>
-            {
-                x.Scan(s =>
-                {
+            ObjectFactory.Initialize(x => {
+                x.Scan(s => {
                     s.AssemblyContainingType<RedGreenRegistry>();
                     s.LookForRegistries();
                 });
             });
 
             var colors = new List<string>();
-            foreach (IWidget widget in ObjectFactory.GetAllInstances<IWidget>())
+            foreach (var widget in ObjectFactory.GetAllInstances<IWidget>())
             {
                 if (!(widget is ColorWidget))
                 {

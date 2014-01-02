@@ -1,4 +1,3 @@
-using System;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 

@@ -49,12 +49,12 @@ namespace StructureMap.Testing.Pipeline
             var i1 = new FakeInstance();
             var i2 = new FakeInstance();
             var i3 = new FakeInstance();
-            var enumerableType = typeof(IList<IGateway>);
-            var source = new EnumerableInstance(new Instance[] { i1, i2, i3 })
+            var enumerableType = typeof (IList<IGateway>);
+            var source = new EnumerableInstance(new Instance[] {i1, i2, i3})
                 .ToDependencySource(enumerableType)
                 .ShouldBeOfType<ArrayDependencySource>();
 
-            source.ItemType.ShouldEqual(typeof(IGateway));
+            source.ItemType.ShouldEqual(typeof (IGateway));
             source.Items.ShouldHaveTheSameElementsAs(i1.DependencySource, i2.DependencySource, i3.DependencySource);
         }
 
@@ -64,12 +64,12 @@ namespace StructureMap.Testing.Pipeline
             var i1 = new FakeInstance();
             var i2 = new FakeInstance();
             var i3 = new FakeInstance();
-            var enumerableType = typeof(IEnumerable<IGateway>);
-            var source = new EnumerableInstance(new Instance[] { i1, i2, i3 })
+            var enumerableType = typeof (IEnumerable<IGateway>);
+            var source = new EnumerableInstance(new Instance[] {i1, i2, i3})
                 .ToDependencySource(enumerableType)
                 .ShouldBeOfType<ArrayDependencySource>();
 
-            source.ItemType.ShouldEqual(typeof(IGateway));
+            source.ItemType.ShouldEqual(typeof (IGateway));
             source.Items.ShouldHaveTheSameElementsAs(i1.DependencySource, i2.DependencySource, i3.DependencySource);
         }
 
@@ -79,12 +79,12 @@ namespace StructureMap.Testing.Pipeline
             var i1 = new FakeInstance();
             var i2 = new FakeInstance();
             var i3 = new FakeInstance();
-            var enumerableType = typeof(List<IGateway>);
-            var source = new EnumerableInstance(new Instance[] { i1, i2, i3 })
+            var enumerableType = typeof (List<IGateway>);
+            var source = new EnumerableInstance(new Instance[] {i1, i2, i3})
                 .ToDependencySource(enumerableType)
                 .ShouldBeOfType<ListDependencySource>();
 
-            source.ItemType.ShouldEqual(typeof(IGateway));
+            source.ItemType.ShouldEqual(typeof (IGateway));
             source.Items.ShouldHaveTheSameElementsAs(i1.DependencySource, i2.DependencySource, i3.DependencySource);
         }
 

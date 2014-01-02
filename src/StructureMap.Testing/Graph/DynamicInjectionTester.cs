@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using StructureMap.Graph;
@@ -151,8 +150,8 @@ namespace StructureMap.Testing.Graph
                 r => { r.For<ISomething>().Use<SomethingOne>(); });
 
             container.GetAllInstances<ISomething>()
-                     .Single()
-                     .ShouldBeOfType<SomethingOne>();
+                .Single()
+                .ShouldBeOfType<SomethingOne>();
         }
 
         [Test]
@@ -207,8 +206,8 @@ namespace StructureMap.Testing.Graph
                 );
 
             container.GetAllInstances<IWidget>()
-                     .OfType<TheWidget>()
-                     .Any().ShouldBeTrue();
+                .OfType<TheWidget>()
+                .Any().ShouldBeTrue();
         }
 
         [Test]
@@ -222,7 +221,7 @@ namespace StructureMap.Testing.Graph
                         x.AddAllTypesOf(typeof (IOtherService<>));
                     }));
 
-            IEnumerable<IOtherService<string>> instances = container.GetAllInstances<IOtherService<string>>();
+            var instances = container.GetAllInstances<IOtherService<string>>();
             instances.Any(s => s is Service4).ShouldBeTrue();
         }
 
@@ -246,8 +245,8 @@ namespace StructureMap.Testing.Graph
                 r => r.For<ISomething>().Use<SomethingOne>());
 
             container.GetAllInstances<ISomething>()
-                     .Single()
-                     .ShouldBeOfType<SomethingOne>();
+                .Single()
+                .ShouldBeOfType<SomethingOne>();
         }
 
         [Test]

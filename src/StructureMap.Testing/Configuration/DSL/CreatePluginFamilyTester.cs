@@ -1,13 +1,10 @@
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
-using StructureMap.Configuration.DSL.Expressions;
-using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
-using System.Linq;
 
 namespace StructureMap.Testing.Configuration.DSL
 {
@@ -45,10 +42,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void Add_an_instance_by_lambda()
         {
-            var container = new Container(r =>
-            {
-                r.For<IWidget>().Add(c => new AWidget());
-            });
+            var container = new Container(r => { r.For<IWidget>().Add(c => new AWidget()); });
 
             container.GetAllInstances<IWidget>()
                 .First()
@@ -60,10 +54,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var aWidget = new AWidget();
 
-            var container = new Container(x =>
-            {
-                x.For<IWidget>().Use(aWidget);
-            });
+            var container = new Container(x => { x.For<IWidget>().Use(aWidget); });
 
             container.GetAllInstances<IWidget>().First().ShouldBeTheSameAs(aWidget);
         }
@@ -71,10 +62,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void AddInstanceByNameOnlyAddsOneInstanceToStructureMap()
         {
-            var container = new Container(r =>
-            {
-                r.For<Something>().Add<RedSomething>().Named("Red");
-            });
+            var container = new Container(r => { r.For<Something>().Add<RedSomething>().Named("Red"); });
 
             container.GetAllInstances<Something>().Count().ShouldEqual(1);
         }
@@ -82,9 +70,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void AddInstanceWithNameOnlyAddsOneInstanceToStructureMap()
         {
-            var container = new Container(x => {
-                x.For<Something>().Add<RedSomething>().Named("Red");
-            });
+            var container = new Container(x => { x.For<Something>().Add<RedSomething>().Named("Red"); });
 
             container.GetAllInstances<Something>()
                 .Count().ShouldEqual(1);
@@ -94,13 +80,13 @@ namespace StructureMap.Testing.Configuration.DSL
         public void AsAnotherScope()
         {
             var registry = new Registry();
-            CreatePluginFamilyExpression<IGateway> expression =
+            var expression =
                 registry.For<IGateway>(Lifecycles.ThreadLocal);
             Assert.IsNotNull(expression);
 
-            PluginGraph pluginGraph = registry.Build();
+            var pluginGraph = registry.Build();
 
-            PluginFamily family = pluginGraph.Families[typeof(IGateway)];
+            var family = pluginGraph.Families[typeof (IGateway)];
 
             family.Lifecycle.ShouldBeOfType<ThreadLocalStorageLifecycle>();
         }
@@ -110,7 +96,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var registry = new Registry();
             registry.For<IGateway>();
-            PluginGraph pluginGraph = registry.Build();
+            var pluginGraph = registry.Build();
 
             Assert.IsTrue(pluginGraph.Families.Has(typeof (IGateway)));
         }
@@ -120,13 +106,13 @@ namespace StructureMap.Testing.Configuration.DSL
         public void BuildPluginFamilyAsPerRequest()
         {
             var registry = new Registry();
-            CreatePluginFamilyExpression<IGateway> expression =
+            var expression =
                 registry.For<IGateway>();
             Assert.IsNotNull(expression);
 
-            PluginGraph pluginGraph = registry.Build();
+            var pluginGraph = registry.Build();
 
-            PluginFamily family = pluginGraph.Families[typeof (IGateway)];
+            var family = pluginGraph.Families[typeof (IGateway)];
             family.Lifecycle.ShouldBeOfType<TransientLifecycle>();
         }
 
@@ -134,12 +120,12 @@ namespace StructureMap.Testing.Configuration.DSL
         public void BuildPluginFamilyAsSingleton()
         {
             var registry = new Registry();
-            CreatePluginFamilyExpression<IGateway> expression =
+            var expression =
                 registry.For<IGateway>().Singleton();
             Assert.IsNotNull(expression);
 
-            PluginGraph pluginGraph = registry.Build();
-            PluginFamily family = pluginGraph.Families[typeof (IGateway)];
+            var pluginGraph = registry.Build();
+            var family = pluginGraph.Families[typeof (IGateway)];
             family.Lifecycle.ShouldBeOfType<SingletonLifecycle>();
         }
 
@@ -150,7 +136,7 @@ namespace StructureMap.Testing.Configuration.DSL
             // Specify the default implementation for an interface
             registry.For<IGateway>().Use<StubbedGateway>();
 
-            PluginGraph pluginGraph = registry.Build();
+            var pluginGraph = registry.Build();
             Assert.IsTrue(pluginGraph.Families.Has(typeof (IGateway)));
 
             var manager = new Container(pluginGraph);
@@ -164,7 +150,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             var registry = new Registry();
             registry.For<IGateway>().Use<FakeGateway>();
-            PluginGraph pluginGraph = registry.Build();
+            var pluginGraph = registry.Build();
 
             Assert.IsTrue(pluginGraph.Families.Has(typeof (IGateway)));
 
@@ -177,8 +163,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void CreatePluginFamilyWithADefault()
         {
-            var container = new Container(r =>
-            {
+            var container = new Container(r => {
                 r.For<IWidget>().Use<ColorWidget>()
                     .Ctor<string>("color").Is("Red");
             });
@@ -194,7 +179,7 @@ namespace StructureMap.Testing.Configuration.DSL
             var registry = new Registry();
             registry.For<IGateway>().LifecycleIs(lifecycle);
 
-            PluginGraph pluginGraph = registry.Build();
+            var pluginGraph = registry.Build();
 
             pluginGraph.Families[typeof (IGateway)]
                 .Lifecycle.ShouldBeTheSameAs(lifecycle);
@@ -243,7 +228,6 @@ namespace StructureMap.Testing.Configuration.DSL
 
             manager.GetInstance<Rule>().ShouldBeOfType<ARule>();
         }
-
     }
 
     public class StubbedLifecycle : ILifecycle
@@ -258,6 +242,9 @@ namespace StructureMap.Testing.Configuration.DSL
             throw new NotImplementedException();
         }
 
-        public string Scope { get { return "Stubbed"; } }
+        public string Scope
+        {
+            get { return "Stubbed"; }
+        }
     }
 }

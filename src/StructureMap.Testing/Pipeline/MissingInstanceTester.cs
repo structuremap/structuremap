@@ -16,8 +16,7 @@ namespace StructureMap.Testing.Pipeline
             // that does not exist, StructureMap will use an Instance
             // that builds a "ColorRule" object using the 
             // IContext.RequestedName property
-            var container = new Container(x =>
-            {
+            var container = new Container(x => {
                 x.For<Rule>().MissingNamedInstanceIs
                     .ConstructedBy(context => new ColorRule(context.RequestedName));
             });
@@ -31,12 +30,12 @@ namespace StructureMap.Testing.Pipeline
         public void returns_missing_instance_if_it_exists_and_the_requested_instance_is_not_found()
         {
             var graph = new PluginGraph();
-            var family = graph.Families[typeof(IWidget)];
+            var family = graph.Families[typeof (IWidget)];
             var missing = new ObjectInstance(new AWidget());
             family.MissingInstance = missing;
 
-            graph.FindInstance(typeof(IWidget),"anything").ShouldBeTheSameAs(missing);
-            graph.FindInstance(typeof(IWidget), Guid.NewGuid().ToString()).ShouldBeTheSameAs(missing);
+            graph.FindInstance(typeof (IWidget), "anything").ShouldBeTheSameAs(missing);
+            graph.FindInstance(typeof (IWidget), Guid.NewGuid().ToString()).ShouldBeTheSameAs(missing);
         }
     }
 }

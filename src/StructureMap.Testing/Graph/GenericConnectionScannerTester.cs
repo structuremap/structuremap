@@ -1,6 +1,5 @@
 using System;
 using NUnit.Framework;
-using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 
 namespace StructureMap.Testing.Graph
@@ -11,10 +10,9 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void can_find_the_closed_finders()
         {
-            var container = new Container(x => x.Scan(o =>
-            {
+            var container = new Container(x => x.Scan(o => {
                 o.TheCallingAssembly();
-                o.ConnectImplementationsToTypesClosing(typeof(IFinder<>));
+                o.ConnectImplementationsToTypesClosing(typeof (IFinder<>));
             }));
             container.GetInstance<IFinder<string>>().ShouldBeOfType<StringFinder>();
             container.GetInstance<IFinder<int>>().ShouldBeOfType<IntFinder>();
@@ -24,11 +22,10 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void single_class_can_close_multiple_open_interfaces()
         {
-            var container = new Container(x => x.Scan(o =>
-            {
+            var container = new Container(x => x.Scan(o => {
                 o.TheCallingAssembly();
-                o.ConnectImplementationsToTypesClosing(typeof(IFinder<>));
-                o.ConnectImplementationsToTypesClosing(typeof(IFindHandler<>));
+                o.ConnectImplementationsToTypesClosing(typeof (IFinder<>));
+                o.ConnectImplementationsToTypesClosing(typeof (IFindHandler<>));
             }));
             container.GetInstance<IFinder<decimal>>().ShouldBeOfType<SrpViolation>();
             container.GetInstance<IFindHandler<DateTime>>().ShouldBeOfType<SrpViolation>();
@@ -37,10 +34,9 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void single_class_can_close_the_same_open_interface_multiple_times()
         {
-            var container = new Container(x => x.Scan(o =>
-            {
+            var container = new Container(x => x.Scan(o => {
                 o.TheCallingAssembly();
-                o.ConnectImplementationsToTypesClosing(typeof(IFinder<>));
+                o.ConnectImplementationsToTypesClosing(typeof (IFinder<>));
             }));
             container.GetInstance<IFinder<byte>>().ShouldBeOfType<SuperFinder>();
             container.GetInstance<IFinder<char>>().ShouldBeOfType<SuperFinder>();
@@ -57,10 +53,9 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void can_configure_plugin_families_via_dsl()
         {
-            var container = new Container(registry => registry.Scan(x =>
-            {
+            var container = new Container(registry => registry.Scan(x => {
                 x.TheCallingAssembly();
-                x.ConnectImplementationsToTypesClosing(typeof(IFinder<>)).OnAddedPluginTypes(t => t.Singleton());
+                x.ConnectImplementationsToTypesClosing(typeof (IFinder<>)).OnAddedPluginTypes(t => t.Singleton());
             }));
 
             var firstStringFinder = container.GetInstance<IFinder<string>>().ShouldBeOfType<StringFinder>();
@@ -88,11 +83,16 @@ namespace StructureMap.Testing.Graph
     public class DoubleFinder : IFinder<double>
     {
     }
-    public interface IFindHandler<T>{}
+
+    public interface IFindHandler<T>
+    {
+    }
 
     public class SrpViolation : IFinder<decimal>, IFindHandler<DateTime>
     {
     }
 
-    public class SuperFinder : IFinder<byte>, IFinder<char>, IFinder<uint>{}
+    public class SuperFinder : IFinder<byte>, IFinder<char>, IFinder<uint>
+    {
+    }
 }

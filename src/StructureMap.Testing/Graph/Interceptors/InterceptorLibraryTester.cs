@@ -1,4 +1,3 @@
-using System;
 using NUnit.Framework;
 using Rhino.Mocks;
 using StructureMap.Interceptors;
@@ -37,30 +36,30 @@ namespace StructureMap.Testing.Graph.Interceptors
         public void Find_All_Of_The_Interceptors_For_A_Type_On_Multiple_Passes()
         {
             Assert.AreEqual(new TypeInterceptor[] {_interceptor1, _interceptor3, _interceptor4},
-                            _library.FindInterceptors(typeof (string)));
+                _library.FindInterceptors(typeof (string)));
             Assert.AreEqual(new TypeInterceptor[] {_interceptor2, _interceptor4},
-                            _library.FindInterceptors(typeof (double)));
+                _library.FindInterceptors(typeof (double)));
             Assert.AreEqual(new TypeInterceptor[] {_interceptor2}, _library.FindInterceptors(typeof (int)));
             Assert.AreEqual(new TypeInterceptor[] {_interceptor3}, _library.FindInterceptors(typeof (bool)));
 
             Assert.AreEqual(new TypeInterceptor[] {_interceptor1, _interceptor3, _interceptor4},
-                            _library.FindInterceptors(typeof (string)));
+                _library.FindInterceptors(typeof (string)));
             Assert.AreEqual(new TypeInterceptor[] {_interceptor2, _interceptor4},
-                            _library.FindInterceptors(typeof (double)));
+                _library.FindInterceptors(typeof (double)));
             Assert.AreEqual(new TypeInterceptor[] {_interceptor2}, _library.FindInterceptors(typeof (int)));
             Assert.AreEqual(new TypeInterceptor[] {_interceptor3}, _library.FindInterceptors(typeof (bool)));
 
             Assert.AreEqual(new TypeInterceptor[] {_interceptor1, _interceptor3, _interceptor4},
-                            _library.FindInterceptors(typeof (string)));
+                _library.FindInterceptors(typeof (string)));
             Assert.AreEqual(new TypeInterceptor[] {_interceptor2, _interceptor4},
-                            _library.FindInterceptors(typeof (double)));
+                _library.FindInterceptors(typeof (double)));
             Assert.AreEqual(new TypeInterceptor[] {_interceptor2}, _library.FindInterceptors(typeof (int)));
             Assert.AreEqual(new TypeInterceptor[] {_interceptor3}, _library.FindInterceptors(typeof (bool)));
 
             Assert.AreEqual(new TypeInterceptor[] {_interceptor1, _interceptor3, _interceptor4},
-                            _library.FindInterceptors(typeof (string)));
+                _library.FindInterceptors(typeof (string)));
             Assert.AreEqual(new TypeInterceptor[] {_interceptor2, _interceptor4},
-                            _library.FindInterceptors(typeof (double)));
+                _library.FindInterceptors(typeof (double)));
             Assert.AreEqual(new TypeInterceptor[] {_interceptor2}, _library.FindInterceptors(typeof (int)));
             Assert.AreEqual(new TypeInterceptor[] {_interceptor3}, _library.FindInterceptors(typeof (bool)));
         }
@@ -69,9 +68,9 @@ namespace StructureMap.Testing.Graph.Interceptors
         public void Find_All_Of_The_Interceptors_For_A_Type_On_The_First_Pass()
         {
             Assert.AreEqual(new TypeInterceptor[] {_interceptor1, _interceptor3, _interceptor4},
-                            _library.FindInterceptors(typeof (string)));
+                _library.FindInterceptors(typeof (string)));
             Assert.AreEqual(new TypeInterceptor[] {_interceptor2, _interceptor4},
-                            _library.FindInterceptors(typeof (double)));
+                _library.FindInterceptors(typeof (double)));
             Assert.AreEqual(new TypeInterceptor[] {_interceptor2}, _library.FindInterceptors(typeof (int)));
             Assert.AreEqual(new TypeInterceptor[] {_interceptor3}, _library.FindInterceptors(typeof (bool)));
         }
@@ -80,9 +79,9 @@ namespace StructureMap.Testing.Graph.Interceptors
         public void Find_CompoundInterceptor_For_A_Type_On_The_First_Pass()
         {
             Assert.AreEqual(new TypeInterceptor[] {_interceptor1, _interceptor3, _interceptor4},
-                            _library.FindInterceptor(typeof (string)).Interceptors);
+                _library.FindInterceptor(typeof (string)).Interceptors);
             Assert.AreEqual(new TypeInterceptor[] {_interceptor2, _interceptor4},
-                            _library.FindInterceptor(typeof (double)).Interceptors);
+                _library.FindInterceptor(typeof (double)).Interceptors);
         }
 
         [Test]
@@ -97,7 +96,7 @@ namespace StructureMap.Testing.Graph.Interceptors
 
             destinationLibrary.ImportFrom(sourceLibrary);
 
-            InstanceInterceptor[] interceptors = destinationLibrary.FindInterceptors(typeof (string));
+            var interceptors = destinationLibrary.FindInterceptors(typeof (string));
             Assert.AreEqual(2, interceptors.Length);
         }
 
@@ -116,7 +115,7 @@ namespace StructureMap.Testing.Graph.Interceptors
             _library.AddInterceptor(interceptor2);
             _library.AddInterceptor(interceptor3);
 
-            Type type = typeof (string);
+            var type = typeof (string);
             Expect.Call(interceptor1.MatchesType(type)).Return(true);
             Expect.Call(interceptor2.MatchesType(type)).Return(true);
             Expect.Call(interceptor3.MatchesType(type)).Return(true);
@@ -139,7 +138,7 @@ namespace StructureMap.Testing.Graph.Interceptors
             _library.AddInterceptor(interceptor2);
             _library.AddInterceptor(interceptor3);
 
-            Type type = typeof (string);
+            var type = typeof (string);
             Expect.Call(interceptor1.MatchesType(type)).Return(true);
             Expect.Call(interceptor2.MatchesType(type)).Return(true);
             Expect.Call(interceptor3.MatchesType(type)).Return(true);

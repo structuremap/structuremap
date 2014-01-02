@@ -8,10 +8,8 @@ namespace StructureMap.Testing.Bugs
         [Test]
         public void should_handle_default_closed_and_specific_closed()
         {
-            var container = new Container(x =>
-            {
-                x.Scan(y =>
-                {
+            var container = new Container(x => {
+                x.Scan(y => {
                     y.TheCallingAssembly();
                     y.ConnectImplementationsToTypesClosing(typeof (IAmOpenGeneric<>));
                 });
@@ -24,7 +22,15 @@ namespace StructureMap.Testing.Bugs
         }
     }
 
-    public interface IAmOpenGeneric<T>{}
-    public class TheClosedGeneric<T> : IAmOpenGeneric<T>{}
-    public class SpecificClosedGeneric : TheClosedGeneric<string>{}
+    public interface IAmOpenGeneric<T>
+    {
+    }
+
+    public class TheClosedGeneric<T> : IAmOpenGeneric<T>
+    {
+    }
+
+    public class SpecificClosedGeneric : TheClosedGeneric<string>
+    {
+    }
 }

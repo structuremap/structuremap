@@ -34,6 +34,5 @@ namespace StructureMap.Testing.Pipeline
 
             theCache.AssertWasCalled(x => x.DisposeAndClear());
         }
-
     }
 }

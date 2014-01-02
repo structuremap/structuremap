@@ -1,4 +1,3 @@
-using System.Reflection;
 using NUnit.Framework;
 using StructureMap.Testing.Widget;
 
@@ -10,7 +9,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void GetConstructor()
         {
-            ConstructorInfo constructor = DefaultConstructorAttribute.GetConstructor(
+            var constructor = DefaultConstructorAttribute.GetConstructor(
                 typeof (ComplexRule));
 
             Assert.IsNotNull(constructor);

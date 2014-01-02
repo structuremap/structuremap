@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NUnit.Framework;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget3;
@@ -20,7 +19,7 @@ namespace StructureMap.Testing.Pipeline
             var collection = new DependencyCollection();
             var instance = new EnumerableInstance(new Instance[0]);
 
-            collection.Add(typeof(IEnumerable<IGateway>), instance);
+            collection.Add(typeof (IEnumerable<IGateway>), instance);
 
             collection.FindByTypeOrName(typeof (IList<IGateway>), null).ShouldBeTheSameAs(instance);
             collection.FindByTypeOrName(typeof (List<IGateway>), null).ShouldBeTheSameAs(instance);
@@ -31,7 +30,7 @@ namespace StructureMap.Testing.Pipeline
         public void get_by_name_with_nothing_returns_null()
         {
             var collection = new DependencyCollection();
-            collection.FindByTypeOrName(typeof(IGateway), "foo")
+            collection.FindByTypeOrName(typeof (IGateway), "foo")
                 .ShouldBeNull();
         }
 
@@ -45,7 +44,7 @@ namespace StructureMap.Testing.Pipeline
             collection.FindByTypeOrName(typeof (IGateway), "foo")
                 .ShouldBeTheSameAs(gateway1);
 
-            collection.FindByTypeOrName(typeof(IGateway), "bar")
+            collection.FindByTypeOrName(typeof (IGateway), "bar")
                 .ShouldBeTheSameAs(gateway2);
         }
 
@@ -53,8 +52,8 @@ namespace StructureMap.Testing.Pipeline
         public void add_and_retrieve_by_type_only()
         {
             var collection = new DependencyCollection();
-            collection.Add(typeof(IService), service1);
-            collection.Add(typeof(IGateway), gateway3);
+            collection.Add(typeof (IService), service1);
+            collection.Add(typeof (IGateway), gateway3);
 
             collection.FindByTypeOrName(typeof (IGateway), "foo")
                 .ShouldEqual(gateway3);
@@ -67,14 +66,14 @@ namespace StructureMap.Testing.Pipeline
         public void use_most_specific_criteria_if_possible()
         {
             var collection = new DependencyCollection();
-            collection.Add("foo", typeof(IGateway), gateway1);
-            collection.Add("bar", typeof(IGateway), gateway2);
-            collection.Add("bar", typeof(IService), service1);
+            collection.Add("foo", typeof (IGateway), gateway1);
+            collection.Add("bar", typeof (IGateway), gateway2);
+            collection.Add("bar", typeof (IService), service1);
 
-            collection.FindByTypeOrName(typeof(IGateway), "foo")
+            collection.FindByTypeOrName(typeof (IGateway), "foo")
                 .ShouldBeTheSameAs(gateway1);
 
-            collection.FindByTypeOrName(typeof(IGateway), "bar")
+            collection.FindByTypeOrName(typeof (IGateway), "bar")
                 .ShouldBeTheSameAs(gateway2);
 
             collection.FindByTypeOrName(typeof (IService), "bar")
@@ -85,10 +84,10 @@ namespace StructureMap.Testing.Pipeline
         public void can_override_and_last_one_in_wins()
         {
             var collection = new DependencyCollection();
-            collection.Add("foo", typeof(IGateway), gateway1);
-            collection.Add("foo", typeof(IGateway), gateway2);
+            collection.Add("foo", typeof (IGateway), gateway1);
+            collection.Add("foo", typeof (IGateway), gateway2);
 
-            collection.FindByTypeOrName(typeof(IGateway), "foo")
+            collection.FindByTypeOrName(typeof (IGateway), "foo")
                 .ShouldBeTheSameAs(gateway2);
         }
     }

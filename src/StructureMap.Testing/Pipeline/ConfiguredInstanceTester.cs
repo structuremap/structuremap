@@ -24,13 +24,12 @@ namespace StructureMap.Testing.Pipeline
         {
             var registry = new Registry();
             registry.For<Rule>();
-            registry.Scan(x =>
-            {
+            registry.Scan(x => {
                 x.Assembly("StructureMap.Testing.Widget");
                 x.Assembly("StructureMap.Testing.Widget2");
             });
 
-            PluginGraph graph = registry.Build();
+            var graph = registry.Build();
 
             _session = BuildSession.ForPluginGraph(graph);
         }
@@ -85,16 +84,14 @@ namespace StructureMap.Testing.Pipeline
         }
 
 
-
         [Test]
         public void BuildRuleWithAMissingValue()
         {
             var instance = ComplexRule.GetInstance();
             instance.Dependencies.RemoveByName("String");
 
-            Exception<StructureMapException>.ShouldBeThrownBy(() => {
-                var rule = (ComplexRule)((Instance)instance).Build(typeof(Rule), _session);
-            });
+            Exception<StructureMapException>.ShouldBeThrownBy(
+                () => { var rule = (ComplexRule) ((Instance) instance).Build(typeof (Rule), _session); });
         }
 
         [Test]
@@ -129,7 +126,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void setter_with_primitive_happy_path()
         {
-            ConfiguredInstance instance = new ConfiguredInstance(typeof (ColorRule))
+            var instance = new ConfiguredInstance(typeof (ColorRule))
                 .Ctor<string>("color").Is("Red").Setter<int>("Age").Is(34);
 
             IConfiguredInstance configuredInstance = instance;
@@ -187,8 +184,7 @@ namespace StructureMap.Testing.Pipeline
             LastCall.IgnoreArguments();
             mocks.Replay(builder);
 
-            assertActionThrowsErrorCode(206, delegate
-            {
+            assertActionThrowsErrorCode(206, delegate {
                 var instance = new ConfiguredInstance(GetType());
                 instance.Build(GetType(), new StubBuildSession(), builder);
             });
@@ -203,8 +199,7 @@ namespace StructureMap.Testing.Pipeline
             LastCall.IgnoreArguments();
             mocks.Replay(builder);
 
-            assertActionThrowsErrorCode(207, delegate
-            {
+            assertActionThrowsErrorCode(207, delegate {
                 var instance = new ConfiguredInstance(GetType());
                 instance.Build(GetType(), new StubBuildSession(), builder);
             });
@@ -217,8 +212,7 @@ namespace StructureMap.Testing.Pipeline
 
             var container =
                 new Container(
-                    x =>
-                    {
+                    x => {
                         x.For(typeof (ClassWithDependency)).Use(typeof (ClassWithDependency)).Setter<Rule>().Is(
                             theRule);
                     });

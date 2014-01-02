@@ -27,7 +27,11 @@ namespace StructureMap.Testing.Pipeline
                 _name = name;
             }
 
-            public string Name { get { return _name; } set { _name = value; } }
+            public string Name
+            {
+                get { return _name; }
+                set { _name = value; }
+            }
 
             #region ICloneable Members
 
@@ -66,7 +70,7 @@ namespace StructureMap.Testing.Pipeline
             var target = new PrototypeTarget("Jeremy");
             var instance = new PrototypeInstance(target);
 
-            object returnedValue = instance.Build(typeof (PrototypeTarget), new StubBuildSession());
+            var returnedValue = instance.Build(typeof (PrototypeTarget), new StubBuildSession());
 
             Assert.AreEqual(target, returnedValue);
             Assert.AreNotSame(target, returnedValue);

@@ -32,7 +32,7 @@ namespace StructureMap.Testing.Building
         {
             var build = new ConcreteBuild<GatewayArrayUser>();
 
-            build.ConstructorArgs(new AllPossibleValuesDependencySource(typeof(IGateway[])));
+            build.ConstructorArgs(new AllPossibleValuesDependencySource(typeof (IGateway[])));
 
             var arrayUser = build.Build<GatewayArrayUser>(theSession);
 
@@ -44,7 +44,7 @@ namespace StructureMap.Testing.Building
         {
             var build = new ConcreteBuild<GatewayEnumerableUser>();
 
-            build.ConstructorArgs(new AllPossibleValuesDependencySource(typeof(IEnumerable<IGateway>)));
+            build.ConstructorArgs(new AllPossibleValuesDependencySource(typeof (IEnumerable<IGateway>)));
 
             var enumerableUser = build.Build<GatewayEnumerableUser>(theSession);
 
@@ -56,7 +56,7 @@ namespace StructureMap.Testing.Building
         {
             var build = new ConcreteBuild<GatewayIListUser>();
 
-            build.ConstructorArgs(new AllPossibleValuesDependencySource(typeof(IList<IGateway>)));
+            build.ConstructorArgs(new AllPossibleValuesDependencySource(typeof (IList<IGateway>)));
 
             var arrayUser = build.Build<GatewayIListUser>(theSession);
 
@@ -69,7 +69,7 @@ namespace StructureMap.Testing.Building
         {
             var build = new ConcreteBuild<GatewayListUser>();
 
-            build.ConstructorArgs(new AllPossibleValuesDependencySource(typeof(List<IGateway>)));
+            build.ConstructorArgs(new AllPossibleValuesDependencySource(typeof (List<IGateway>)));
 
             var arrayUser = build.Build<GatewayListUser>(theSession);
 

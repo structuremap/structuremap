@@ -1,24 +1,21 @@
 ﻿using NUnit.Framework;
-using StructureMap.Graph;
-using StructureMap.Testing.Graph;
 
 namespace StructureMap.Testing
 {
     [TestFixture]
     public class PoliciesTester
     {
-
         [Test]
         public void CanBeAutoFilledIsFalse()
         {
-            new Policies().CanBeAutoFilled(typeof(ClassWithPrimitiveConstructorArguments))
+            new Policies().CanBeAutoFilled(typeof (ClassWithPrimitiveConstructorArguments))
                 .ShouldBeFalse();
         }
 
         [Test]
         public void CanBeAutoFilledIsTrue()
         {
-            new Policies().CanBeAutoFilled(typeof(ClassWithAllNonSimpleConstructorArguments))
+            new Policies().CanBeAutoFilled(typeof (ClassWithAllNonSimpleConstructorArguments))
                 .ShouldBeTrue();
         }
 
@@ -26,7 +23,7 @@ namespace StructureMap.Testing
         [Test]
         public void cannot_be_auto_filled_with_no_contructors()
         {
-            new Policies().CanBeAutoFilled(typeof(ClassWithNoConstructor))
+            new Policies().CanBeAutoFilled(typeof (ClassWithNoConstructor))
                 .ShouldBeFalse();
         }
 
@@ -36,7 +33,6 @@ namespace StructureMap.Testing
 
         public interface IEngine
         {
-            
         }
 
         public class ClassWithNoConstructor
@@ -69,7 +65,10 @@ namespace StructureMap.Testing
                 _engine = engine;
             }
 
-            public IEngine Engine { get { return _engine; } }
+            public IEngine Engine
+            {
+                get { return _engine; }
+            }
         }
     }
 }

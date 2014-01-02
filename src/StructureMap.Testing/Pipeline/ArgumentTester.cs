@@ -13,8 +13,8 @@ namespace StructureMap.Testing.Pipeline
         {
             var argument = new Argument
             {
-                Type = typeof(IService<>),
-                Dependency = new ConfiguredInstance(typeof(Service<>)),
+                Type = typeof (IService<>),
+                Dependency = new ConfiguredInstance(typeof (Service<>)),
                 Name = "foo"
             };
 
@@ -49,12 +49,12 @@ namespace StructureMap.Testing.Pipeline
         {
             var argument = new Argument
             {
-                Type = typeof(IGateway),
-                Dependency = new ConstructorInstance(typeof(StubbedGateway)),
+                Type = typeof (IGateway),
+                Dependency = new ConstructorInstance(typeof (StubbedGateway)),
                 Name = "Foo"
             };
 
-            var closed = argument.CloseType(typeof(int));
+            var closed = argument.CloseType(typeof (int));
             closed.ShouldNotBeTheSameAs(argument);
 
             closed.Type.ShouldEqual(argument.Type);

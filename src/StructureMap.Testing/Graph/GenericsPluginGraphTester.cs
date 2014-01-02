@@ -1,10 +1,7 @@
 using System;
-using System.Linq;
 using NUnit.Framework;
 using StructureMap.Graph;
-using StructureMap.Pipeline;
 using StructureMap.Testing.Bugs;
-using StructureMap.Testing.GenericWidgets;
 
 namespace StructureMap.Testing.Graph
 {
@@ -54,13 +51,13 @@ namespace StructureMap.Testing.Graph
         public void BuildTemplatedFamilyWithOnlyOneTemplateParameter()
         {
             var pluginGraph = new PluginGraph();
-            PluginFamily family = pluginGraph.Families[typeof (IGenericService<>)];
+            var family = pluginGraph.Families[typeof (IGenericService<>)];
             family.AddType(typeof (GenericService<>), "Default");
             family.AddType(typeof (SecondGenericService<>), "Second");
             family.AddType(typeof (ThirdGenericService<>), "Third");
 
-            PluginFamily templatedFamily1 = family.CreateTemplatedClone(new[] {typeof (int)});
-            PluginFamily templatedFamily = templatedFamily1;
+            var templatedFamily1 = family.CreateTemplatedClone(new[] {typeof (int)});
+            var templatedFamily = templatedFamily1;
 
             Assert.IsNotNull(templatedFamily);
             Assert.AreEqual(typeof (IGenericService<int>), templatedFamily.PluginType);
@@ -71,8 +68,7 @@ namespace StructureMap.Testing.Graph
         {
             var container =
                 new Container(
-                    r =>
-                    {
+                    r => {
                         r.For(typeof (IGenericService<>)).Use(
                             typeof (GenericService<>));
                     });

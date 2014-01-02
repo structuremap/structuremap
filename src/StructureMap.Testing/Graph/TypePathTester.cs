@@ -1,4 +1,3 @@
-using System;
 using NUnit.Framework;
 using StructureMap.Graph;
 using StructureMap.Testing.GenericWidgets;
@@ -21,8 +20,8 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void can_parse_assembly_qualified_generics()
         {
-            Type sampleGenericType = typeof (IConcept<AWidget>);
-            string genericAssemblyQualifiedName = sampleGenericType.AssemblyQualifiedName;
+            var sampleGenericType = typeof (IConcept<AWidget>);
+            var genericAssemblyQualifiedName = sampleGenericType.AssemblyQualifiedName;
 
             var path = new TypePath(genericAssemblyQualifiedName);
             path.FindType().ShouldEqual(sampleGenericType);

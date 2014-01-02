@@ -8,8 +8,7 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test, Ignore("Pending a fix to GH-74")]
         public void override_constructor_selection_in_code()
         {
-            var container = new Container(x =>
-            {
+            var container = new Container(x => {
                 x.ForConcreteType<ClassWithTwoConstructors>().Configure
                     .Ctor<int>("age").Is(34);
             });

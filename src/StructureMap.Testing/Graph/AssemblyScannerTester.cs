@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
-using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap.Testing.DocumentationExamples;
@@ -49,12 +48,12 @@ namespace StructureMap.Testing.Graph
         [TestFixtureSetUp]
         public void FixtureSetUp()
         {
-            string binFolder = Path.GetDirectoryName(GetType().Assembly.Location);
+            var binFolder = Path.GetDirectoryName(GetType().Assembly.Location);
             assemblyScanningFolder = Path.Combine(binFolder, "DynamicallyLoaded");
             if (!Directory.Exists(assemblyScanningFolder)) Directory.CreateDirectory(assemblyScanningFolder);
 
-            string assembly1 = typeof (RedGreenRegistry).Assembly.Location;
-            string assembly2 = typeof (IWorker).Assembly.Location;
+            var assembly1 = typeof (RedGreenRegistry).Assembly.Location;
+            var assembly2 = typeof (IWorker).Assembly.Location;
 
             File.Copy(assembly1, Path.Combine(assemblyScanningFolder, Path.GetFileName(assembly1)), true);
             File.Copy(assembly2, Path.Combine(assemblyScanningFolder, Path.GetFileName(assembly2)), true);
@@ -98,7 +97,7 @@ namespace StructureMap.Testing.Graph
 
         private void shouldNotHaveFamily<T>()
         {
-            theGraph.Families.Has(typeof(T)).ShouldBeFalse();
+            theGraph.Families.Has(typeof (T)).ShouldBeFalse();
         }
 
 
@@ -123,9 +122,12 @@ namespace StructureMap.Testing.Graph
             GetType().IsInNamespace("StructureMap.Testing.Graph").ShouldBeTrue();
             GetType().IsInNamespace("StructureMap.Testing.Graph.Something").ShouldBeFalse();
 
-            var _person = new { ID = 1,
-FirstName = "Michael",
-LastName = "Sync" };
+            var _person = new
+            {
+                ID = 1,
+                FirstName = "Michael",
+                LastName = "Sync"
+            };
 
             _person.GetType().IsInNamespace("foo").ShouldBeFalse();
         }
@@ -133,8 +135,8 @@ LastName = "Sync" };
         [Test]
         public void class_outside_namespace_doesnt_match_any_namespace_check()
         {
-            typeof(class_outside_namespace).IsInNamespace("blah").ShouldBeFalse();
-            typeof(class_outside_namespace).IsInNamespace("StructureMap").ShouldBeFalse();
+            typeof (class_outside_namespace).IsInNamespace("blah").ShouldBeFalse();
+            typeof (class_outside_namespace).IsInNamespace("StructureMap").ShouldBeFalse();
         }
 
 
@@ -166,10 +168,11 @@ LastName = "Sync" };
         [Test]
         public void scan_specific_assemblies_in_a_folder()
         {
-            string assemblyToSpecificallyExclude = typeof (IWorker).Assembly.GetName().Name;
+            var assemblyToSpecificallyExclude = typeof (IWorker).Assembly.GetName().Name;
             Scan(
                 x =>
-                x.AssembliesFromPath(assemblyScanningFolder, asm => asm.GetName().Name != assemblyToSpecificallyExclude));
+                    x.AssembliesFromPath(assemblyScanningFolder,
+                        asm => asm.GetName().Name != assemblyToSpecificallyExclude));
 
             shouldHaveFamilyWithSameName<IInterfaceInWidget5>();
             shouldNotHaveFamilyWithSameName<IWorker>();
@@ -178,10 +181,11 @@ LastName = "Sync" };
         [Test]
         public void scan_specific_assemblies_in_application_base_directory()
         {
-            string assemblyToSpecificallyExclude = typeof (IWorker).Assembly.GetName().Name;
+            var assemblyToSpecificallyExclude = typeof (IWorker).Assembly.GetName().Name;
             Scan(
                 x =>
-                x.AssembliesFromPath(assemblyScanningFolder, asm => asm.GetName().Name != assemblyToSpecificallyExclude));
+                    x.AssembliesFromPath(assemblyScanningFolder,
+                        asm => asm.GetName().Name != assemblyToSpecificallyExclude));
 
             shouldHaveFamilyWithSameName<IInterfaceInWidget5>();
             shouldNotHaveFamilyWithSameName<IWorker>();
@@ -190,8 +194,7 @@ LastName = "Sync" };
         [Test]
         public void Search_for_registries_when_explicitly_told()
         {
-            Scan(x =>
-            {
+            Scan(x => {
                 x.TheCallingAssembly();
                 x.LookForRegistries();
             });
@@ -203,8 +206,7 @@ LastName = "Sync" };
         [Test]
         public void use_a_dual_exclude()
         {
-            Scan(x =>
-            {
+            Scan(x => {
                 x.AssemblyContainingType<ITypeThatHasAttributeButIsNotInRegistry>();
                 x.Exclude(type => type == typeof (ITypeThatHasAttributeButIsNotInRegistry));
                 x.Exclude(type => type == typeof (IInterfaceInWidget5));
@@ -218,8 +220,7 @@ LastName = "Sync" };
         [Test]
         public void use_a_dual_exclude2()
         {
-            Scan(x =>
-            {
+            Scan(x => {
                 x.AssemblyContainingType<ITypeThatHasAttributeButIsNotInRegistry>();
                 x.Exclude(type => type == typeof (ITypeThatHasAttributeButIsNotInRegistry));
                 x.Exclude(type => type == GetType());
@@ -232,8 +233,7 @@ LastName = "Sync" };
         [Test]
         public void use_a_single_exclude()
         {
-            Scan(x =>
-            {
+            Scan(x => {
                 x.AssemblyContainingType<ITypeThatHasAttributeButIsNotInRegistry>();
                 x.Exclude(type => type == typeof (ITypeThatHasAttributeButIsNotInRegistry));
             });
@@ -245,8 +245,7 @@ LastName = "Sync" };
         [Test]
         public void use_a_single_exclude_of_type()
         {
-            Scan(x =>
-            {
+            Scan(x => {
                 x.AssemblyContainingType<ITypeThatHasAttributeButIsNotInRegistry>();
                 x.ExcludeType<ITypeThatHasAttributeButIsNotInRegistry>();
             });
@@ -259,8 +258,7 @@ LastName = "Sync" };
         [Test]
         public void use_a_single_exclude2()
         {
-            Scan(x =>
-            {
+            Scan(x => {
                 x.AssemblyContainingType<ITypeThatHasAttributeButIsNotInRegistry>();
                 x.ExcludeNamespace("StructureMap.Testing.Widget5");
             });
@@ -273,8 +271,7 @@ LastName = "Sync" };
         [Test]
         public void use_a_single_exclude3()
         {
-            Scan(x =>
-            {
+            Scan(x => {
                 x.AssemblyContainingType<ITypeThatHasAttributeButIsNotInRegistry>();
                 x.ExcludeNamespaceContainingType<ITypeThatHasAttributeButIsNotInRegistry>();
             });
@@ -292,8 +289,7 @@ LastName = "Sync" };
             shouldHaveFamily<IInterfaceInWidget5>();
             shouldHaveFamily<ITypeThatHasAttributeButIsNotInRegistry>();
 
-            Scan(x =>
-            {
+            Scan(x => {
                 x.AssemblyContainingType<ITypeThatHasAttributeButIsNotInRegistry>();
                 x.Include(type => type == typeof (ITypeThatHasAttributeButIsNotInRegistry));
             });
@@ -311,8 +307,7 @@ LastName = "Sync" };
             shouldHaveFamily<IInterfaceInWidget5>();
             shouldHaveFamily<ITypeThatHasAttributeButIsNotInRegistry>();
 
-            Scan(x =>
-            {
+            Scan(x => {
                 x.AssemblyContainingType<ITypeThatHasAttributeButIsNotInRegistry>();
                 x.IncludeNamespace(typeof (ITypeThatHasAttributeButIsNotInRegistry).Namespace);
             });
@@ -330,8 +325,7 @@ LastName = "Sync" };
             shouldHaveFamily<IInterfaceInWidget5>();
             shouldHaveFamily<ITypeThatHasAttributeButIsNotInRegistry>();
 
-            Scan(x =>
-            {
+            Scan(x => {
                 x.AssemblyContainingType<ITypeThatHasAttributeButIsNotInRegistry>();
                 x.IncludeNamespaceContainingType<ITypeThatHasAttributeButIsNotInRegistry>();
             });
@@ -344,8 +338,7 @@ LastName = "Sync" };
         [Test]
         public void use_two_predicates_for_includes()
         {
-            Scan(x =>
-            {
+            Scan(x => {
                 x.AssemblyContainingType<ITypeThatHasAttributeButIsNotInRegistry>();
                 x.Include(type => type == typeof (ITypeThatHasAttributeButIsNotInRegistry));
                 x.Include(type => type == typeof (IInterfaceInWidget5));
@@ -359,8 +352,7 @@ LastName = "Sync" };
         [Test]
         public void use_two_predicates_for_includes2()
         {
-            Scan(x =>
-            {
+            Scan(x => {
                 x.AssemblyContainingType<ITypeThatHasAttributeButIsNotInRegistry>();
                 x.Include(type => type == typeof (ITypeThatHasAttributeButIsNotInRegistry));
                 x.Include(type => type == GetType());
@@ -392,10 +384,8 @@ LastName = "Sync" };
         [SetUp]
         public void SetUp()
         {
-            container = new Container(x =>
-            {
-                x.Scan(o =>
-                {
+            container = new Container(x => {
+                x.Scan(o => {
                     o.TheCallingAssembly();
                     o.AddAllTypesOf<IController>().NameBy(type => type.Name.Replace("Controller", ""));
                 });
@@ -420,5 +410,4 @@ LastName = "Sync" };
 
 public class class_outside_namespace
 {
-    
 }

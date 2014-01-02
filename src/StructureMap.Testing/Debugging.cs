@@ -4,27 +4,21 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq.Expressions;
 using NUnit.Framework;
-using StructureMap.Building;
 using StructureMap.Graph;
-using StructureMap.Pipeline;
-using StructureMap.Testing.Building;
-using StructureMap.Testing.Graph;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget3;
-using System.Linq;
-using SetterTarget = StructureMap.Testing.Building.SetterTarget;
 
 namespace StructureMap.Testing
 {
     [TestFixture, Explicit]
     public class Debugging
     {
-
         [Test]
         public void look_at_expression()
         {
             var gateway = new DefaultGateway();
-            Expression<Func<IContext, TopLevel>> expression = c => new TopLevel(new Leaf(gateway, new ColorService("red"))){Foo = new Foo(Guid.NewGuid())};
+            Expression<Func<IContext, TopLevel>> expression =
+                c => new TopLevel(new Leaf(gateway, new ColorService("red"))) {Foo = new Foo(Guid.NewGuid())};
             //Expression<Func<IContext, TopLevel>> expression = c => new TopLevel(new Leaf(gateway, new ColorService("red")));
 
             Debug.WriteLine(expression);
@@ -42,19 +36,16 @@ namespace StructureMap.Testing
 
             Debug.WriteLine(expression);
         }
-
     }
 
-
-    
 
     public static class goer
     {
         public static void go()
         {
             Func<IContext, IGateway> gatewayBuilder = c => new FakeGateway();
-            Func<IContext, IGateway> gatewayBuilder2 = DeepException.Wrap(gatewayBuilder, "new FakeGateway()");
-            
+            var gatewayBuilder2 = DeepException.Wrap(gatewayBuilder, "new FakeGateway()");
+
             Func<IContext, Leaf> leafBuilder = c => new Leaf(gatewayBuilder2(c), new ColorService("red"));
             var leafBuilder2 = DeepException.Wrap(leafBuilder, "new Leaf(IGateway, IService)");
 
@@ -70,7 +61,6 @@ namespace StructureMap.Testing
     {
         public UsesGateways(List<IGateway> gateways)
         {
-
         }
     }
 
@@ -110,7 +100,8 @@ namespace StructureMap.Testing
 
         public override string Message
         {
-            get { 
+            get
+            {
                 var writer = new StringWriter();
                 writer.WriteLine();
                 writer.WriteLine("StructureMap Context from inner to outer:");
@@ -149,6 +140,7 @@ namespace StructureMap.Testing
         }
 
         public string WhoAmI { get; private set; }
+
         public void DoSomething()
         {
             throw new NotImplementedException();

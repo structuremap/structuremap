@@ -8,8 +8,7 @@ namespace StructureMap.Testing.Bugs
         [Test]
         public void Test()
         {
-            ObjectFactory.Initialize(x =>
-            {
+            ObjectFactory.Initialize(x => {
                 x.ForConcreteType<SomeDbRepository>().Configure.
                     Ctor<string>("connectionString").Is("some connection string");
 

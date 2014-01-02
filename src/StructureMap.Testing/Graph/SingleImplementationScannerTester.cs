@@ -1,6 +1,4 @@
-using System;
 using NUnit.Framework;
-using StructureMap.Configuration.DSL;
 
 namespace StructureMap.Testing.Graph
 {
@@ -12,8 +10,7 @@ namespace StructureMap.Testing.Graph
         [SetUp]
         public void Setup()
         {
-            _container = new Container(registry => registry.Scan(x =>
-            {
+            _container = new Container(registry => registry.Scan(x => {
                 x.TheCallingAssembly();
                 x.IncludeNamespaceContainingType<SingleImplementationScannerTester>();
                 x.SingleImplementationsOfInterface();
@@ -23,7 +20,6 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void registers_plugins_that_only_have_a_single_implementation()
         {
-
             _container.GetInstance<IOnlyHaveASingleConcreteImplementation>()
                 .ShouldBeOfType<MyNameIsNotConventionallyRelatedToMyInterface>();
         }
@@ -37,8 +33,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void can_configure_plugin_families_via_dsl()
         {
-            var differentContainer = new Container(registry => registry.Scan(x =>
-            {
+            var differentContainer = new Container(registry => registry.Scan(x => {
                 x.TheCallingAssembly();
                 x.IncludeNamespaceContainingType<SingleImplementationScannerTester>();
                 x.SingleImplementationsOfInterface().OnAddedPluginTypes(t => t.Singleton());
@@ -48,7 +43,6 @@ namespace StructureMap.Testing.Graph
             var secondInstance = differentContainer.GetInstance<IOnlyHaveASingleConcreteImplementation>();
             secondInstance.ShouldBeTheSameAs(firstInstance);
         }
-
     }
 
 
@@ -60,7 +54,15 @@ namespace StructureMap.Testing.Graph
     {
     }
 
-    public interface IHaveMultipleConcreteImplementations { }
-    public class FirstConcreteImplementation : IHaveMultipleConcreteImplementations { }
-    public class SecondConcreteImplementation : IHaveMultipleConcreteImplementations { }
+    public interface IHaveMultipleConcreteImplementations
+    {
+    }
+
+    public class FirstConcreteImplementation : IHaveMultipleConcreteImplementations
+    {
+    }
+
+    public class SecondConcreteImplementation : IHaveMultipleConcreteImplementations
+    {
+    }
 }
