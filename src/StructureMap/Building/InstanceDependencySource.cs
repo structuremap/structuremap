@@ -5,6 +5,7 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.Building
 {
+    // No unit tests for this, but it's tested heavily within integration tests
     public class InstanceDependencySource : IDependencySource
     {
         public static readonly MethodInfo BuildMethod = ReflectionHelper.GetMethod<Instance>(x => x.Build(null, null));
@@ -21,7 +22,12 @@ namespace StructureMap.Building
         public string Description { get; private set; }
         public Expression ToExpression(ParameterExpression session)
         {
-            return Expression.Call(Expression.Constant(_instance), BuildMethod, Expression.Constant(_pluginType), session);
+            var instanceConstant = Expression.Constant(_instance, typeof(Instance));
+            var typeConstant = Expression.Constant(_pluginType, typeof(Type));
+            var call = Expression.Call(instanceConstant, BuildMethod, typeConstant, session);
+
+
+            return Expression.Convert(call, _pluginType);
         }
     }
 }

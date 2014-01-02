@@ -75,12 +75,17 @@ namespace StructureMap.Pipeline
         {
             string propertyValue = _memento.GetProperty(name);
 
-            if (propertyValue == null && isMandatory)
+            if (propertyValue == null)
             {
-                throw new StructureMapException(205, name, _memento.InstanceKey);
+                if (isMandatory)
+                {
+                    throw new StructureMapException(205, name, _memento.InstanceKey);
+                }
             }
-
-            _instance.SetValue(name, propertyValue);
+            else
+            {
+                _instance.SetValue(name, propertyValue);
+            }
         }
 
         private void copyChild(string name, Type childType)

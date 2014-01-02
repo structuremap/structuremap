@@ -5,6 +5,10 @@ namespace StructureMap.Pipeline
 {
     public class NullInstance : Instance
     {
+        public NullInstance()
+        {
+        }
+
         protected override string getDescription()
         {
             return "NULL";
@@ -13,11 +17,6 @@ namespace StructureMap.Pipeline
         protected override object build(Type pluginType, IBuildSession session)
         {
             return null;
-        }
-
-        public override IDependencySource ToDependencySource(Type pluginType)
-        {
-            throw new NotSupportedException();
         }
     }
 }
