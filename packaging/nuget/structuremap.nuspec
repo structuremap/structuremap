@@ -13,6 +13,6 @@
     <language>en-US</language>
   </metadata>
   <files>
-	<file src="..\..\src\StructureMap\bin\release\StructureMap.*" target="lib\net40-client" />
+	<file src="..\..\src\StructureMap\bin\release\StructureMap.*" target="lib\net35-client" />
   </files>
 </package>

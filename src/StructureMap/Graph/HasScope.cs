@@ -1,9 +1,9 @@
 using System;
 using StructureMap.Pipeline;
+using StructureMap.Util;
 
 namespace StructureMap.Graph
 {
-
     // TODO -- make sure there's helpers for all the common things
     public abstract class HasScope
     {
