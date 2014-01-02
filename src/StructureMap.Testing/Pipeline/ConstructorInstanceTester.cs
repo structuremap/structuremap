@@ -89,9 +89,9 @@ namespace StructureMap.Testing.Pipeline
             ConstructorInstance instance = ConstructorInstance.For<ClassWithArrayOfWidgets>();
             instance.As<IConfiguredInstance>().SetCollection("widgets", children);
 
-
-            var widgets = instance.Get("widgets", typeof (IWidget), new StubBuildSession()).ShouldBeOfType<IWidget[]>();
-
+            var widgets = instance.Build(typeof (ClassWithArrayOfWidgets), new StubBuildSession())
+                .As<ClassWithArrayOfWidgets>()
+                .Widgets;
 
             widgets.Length.ShouldEqual(3);
 
@@ -133,8 +133,16 @@ namespace StructureMap.Testing.Pipeline
 
     public class ClassWithArrayOfWidgets
     {
+        private readonly IWidget[] _widgets;
+
         public ClassWithArrayOfWidgets(IWidget[] widgets)
         {
+            _widgets = widgets;
+        }
+
+        public IWidget[] Widgets
+        {
+            get { return _widgets; }
         }
     }
 

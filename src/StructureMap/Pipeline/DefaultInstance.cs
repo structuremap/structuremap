@@ -9,7 +9,7 @@ namespace StructureMap.Pipeline
         {
             if (EnumerableInstance.IsEnumerable(pluginType))
             {
-                var enumerable = new EnumerableInstance(pluginType, null);
+                var enumerable = new EnumerableInstance(null);
                 return enumerable.Build(pluginType, session);
             }
 

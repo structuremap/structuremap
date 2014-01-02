@@ -195,7 +195,7 @@ namespace StructureMap.Pipeline
         internal void SetCollection(string name, IEnumerable<Instance> children)
         {
             Type dependencyType = getDependencyType(name);
-            var instance = new EnumerableInstance(dependencyType, children);
+            var instance = new EnumerableInstance(children);
             SetChild(name, instance);
         }
 

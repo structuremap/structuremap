@@ -23,7 +23,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void to_dependency_source_with_all_possible_values()
         {
-            new EnumerableInstance(typeof (IList<IGateway>), new Instance[0])
+            new EnumerableInstance(new Instance[0])
                 .ToDependencySource(typeof (IList<IGateway>))
                 .ShouldEqual(new AllPossibleValuesDependencySource(typeof (IList<IGateway>)));
         }
@@ -35,7 +35,7 @@ namespace StructureMap.Testing.Pipeline
             var i2 = new FakeInstance();
             var i3 = new FakeInstance();
             var enumerableType = typeof (IGateway[]);
-            var source = new EnumerableInstance(enumerableType, new Instance[] {i1, i2, i3})
+            var source = new EnumerableInstance(new Instance[] {i1, i2, i3})
                 .ToDependencySource(enumerableType)
                 .ShouldBeOfType<ArrayDependencySource>();
 
@@ -50,7 +50,7 @@ namespace StructureMap.Testing.Pipeline
             var i2 = new FakeInstance();
             var i3 = new FakeInstance();
             var enumerableType = typeof(IList<IGateway>);
-            var source = new EnumerableInstance(enumerableType, new Instance[] { i1, i2, i3 })
+            var source = new EnumerableInstance(new Instance[] { i1, i2, i3 })
                 .ToDependencySource(enumerableType)
                 .ShouldBeOfType<ArrayDependencySource>();
 
@@ -65,7 +65,7 @@ namespace StructureMap.Testing.Pipeline
             var i2 = new FakeInstance();
             var i3 = new FakeInstance();
             var enumerableType = typeof(IEnumerable<IGateway>);
-            var source = new EnumerableInstance(enumerableType, new Instance[] { i1, i2, i3 })
+            var source = new EnumerableInstance(new Instance[] { i1, i2, i3 })
                 .ToDependencySource(enumerableType)
                 .ShouldBeOfType<ArrayDependencySource>();
 
@@ -80,7 +80,7 @@ namespace StructureMap.Testing.Pipeline
             var i2 = new FakeInstance();
             var i3 = new FakeInstance();
             var enumerableType = typeof(List<IGateway>);
-            var source = new EnumerableInstance(enumerableType, new Instance[] { i1, i2, i3 })
+            var source = new EnumerableInstance(new Instance[] { i1, i2, i3 })
                 .ToDependencySource(enumerableType)
                 .ShouldBeOfType<ListDependencySource>();
 
@@ -98,7 +98,7 @@ namespace StructureMap.Testing.Pipeline
                 new ObjectInstance(new AWidget())
             };
 
-            var theInstance = new EnumerableInstance(typeof (IList<IWidget>), children);
+            var theInstance = new EnumerableInstance(children);
 
             var list =
                 theInstance.Build(typeof (IList<IWidget>), new StubBuildSession()).ShouldBeOfType<List<IWidget>>();
@@ -119,7 +119,7 @@ namespace StructureMap.Testing.Pipeline
                 new ObjectInstance(new AWidget())
             };
 
-            var theInstance = new EnumerableInstance(typeof (IWidget[]), children);
+            var theInstance = new EnumerableInstance(children);
 
             var list = theInstance.Build(typeof (IWidget[]), new StubBuildSession()).ShouldBeOfType<IWidget[]>();
 

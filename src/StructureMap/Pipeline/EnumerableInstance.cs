@@ -32,18 +32,11 @@ namespace StructureMap.Pipeline
             return pluginType.GetGenericArguments().First();
         }
 
-        private readonly Type _propertyType;
         private readonly IEnumerable<Instance> _children;
-        private readonly IEnumerableCoercion _coercion;
-        private readonly string _description;
 
-        public EnumerableInstance(Type propertyType, IEnumerable<Instance> children)
+        public EnumerableInstance(IEnumerable<Instance> children)
         {
-            _description = propertyType.FullName;
-
-            _propertyType = propertyType;
             _children = children;
-            _coercion = DetermineCoercion(propertyType);
         }
 
         public IEnumerable<Instance> Children { get { return _children; } }
@@ -77,21 +70,22 @@ namespace StructureMap.Pipeline
 
         public override IDependencySource ToDependencySource(Type pluginType)
         {
-            var elementType = _coercion.ElementType;
+            var coercion = DetermineCoercion(pluginType);
+            var elementType = coercion.ElementType;
 
             if (!_children.Any())
             {
-                return new AllPossibleValuesDependencySource(_propertyType);
+                return new AllPossibleValuesDependencySource(pluginType);
             }
 
             var items = _children.Select(x => x.ToDependencySource(elementType)).ToArray();
 
-            if (_propertyType.IsArray)
+            if (pluginType.IsArray)
             {
                 return new ArrayDependencySource(elementType, items);
             }
 
-            var parentType = _propertyType.GetGenericTypeDefinition();
+            var parentType = pluginType.GetGenericTypeDefinition();
             return parentType == typeof (List<>) 
                 ? new ListDependencySource(elementType, items) 
                 : new ArrayDependencySource(elementType, items);
@@ -99,15 +93,16 @@ namespace StructureMap.Pipeline
 
         protected override string getDescription()
         {
-            return _description;
+            return "Enumerable Instance";
         }
 
         protected override object build(Type pluginType, IBuildSession session)
         {
-            Type elementType = _coercion.ElementType;
+            var coercion = DetermineCoercion(pluginType);
+            var elementType = coercion.ElementType;
 
             IEnumerable<object> objects = buildObjects(elementType, session);
-            return _coercion.Convert(objects);
+            return coercion.Convert(objects);
         }
 
         private IEnumerable<object> buildObjects(Type elementType, IBuildSession session)
