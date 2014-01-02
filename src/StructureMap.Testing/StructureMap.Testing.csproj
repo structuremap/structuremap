@@ -206,7 +206,6 @@
     <Compile Include="Configuration\DSL\CreatePluginFamilyTester.cs" />
     <Compile Include="Configuration\DSL\GenericFamilyExpressionTester.cs" />
     <Compile Include="Configuration\DSL\InjectArrayTester.cs" />
-    <Compile Include="Configuration\DSL\InstanceExpressionTester.cs" />
     <Compile Include="Configuration\DSL\InterceptAllInstancesOfPluginTypeTester.cs" />
     <Compile Include="Configuration\DSL\InterceptorTesting.cs" />
     <Compile Include="Configuration\DSL\profiles_acceptance_tester.cs" />

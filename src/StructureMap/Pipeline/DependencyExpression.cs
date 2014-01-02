@@ -42,7 +42,7 @@ namespace StructureMap.Pipeline
         {
             string propertyValue = ConfigurationManager.AppSettings[appSettingKey];
             if (propertyValue == null) propertyValue = defaultValue;
-            _instance.Dependencies.Add(_propertyName, propertyValue);
+            _instance.Dependencies.Add(_propertyName, typeof(TChild), propertyValue);
             return _instance;
         }
 
@@ -53,7 +53,7 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public TInstance Is(Action<IInstanceExpression<TChild>> action)
         {
-            var expression = new InstanceExpression<TChild>(i => _instance.Dependencies.Add(_propertyName, i));
+            var expression = new InstanceExpression<TChild>(i => _instance.Dependencies.Add(_propertyName, typeof(TChild), i));
             action(expression);
 
             return _instance;
@@ -72,7 +72,7 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public TInstance Is(Instance instance)
         {
-            _instance.Dependencies.Add(_propertyName, instance);
+            _instance.Dependencies.Add(_propertyName, typeof(TChild), instance);
             return _instance;
         }
 
@@ -83,7 +83,7 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public TInstance Is(TChild value)
         {
-            _instance.Dependencies.Add(_propertyName, value);
+            _instance.Dependencies.Add(_propertyName, typeof(TChild), value);
             return _instance;
         }
 

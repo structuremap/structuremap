@@ -231,8 +231,7 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public DependencyExpression<TThis, TCtorType> Ctor<TCtorType>()
         {
-            string constructorArg = getArgumentNameForType<TCtorType>();
-            return Ctor<TCtorType>(constructorArg);
+            return Ctor<TCtorType>(null);
         }
 
         private string getArgumentNameForType<TCtorType>()

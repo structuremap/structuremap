@@ -100,13 +100,6 @@ namespace StructureMap.Testing.Pipeline
         public void specify_a_simple_property_with_equal_to()
         {
             build<SimplePropertyTarget>(i => i.Setter(x => x.Name).Is("Bret")).Name.ShouldEqual("Bret");
-
-            var container = new Container(x =>
-            {
-                x.ForConcreteType<SimplePropertyTarget>().Configure
-                    .Setter(o => o.Name).EqualToAppSetting("name")
-                    .Setter(o => o.Age).EqualToAppSetting("age");
-            });
         }
 
 

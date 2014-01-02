@@ -86,16 +86,24 @@ namespace StructureMap.Pipeline
         // check that Instance is pluggable
         public void Add(string name, Type type, object @dependency)
         {
-            if (type.IsSimple() && @dependency.GetType() != type)
+            if (type.IsSimple())
             {
-                try
+                if (@dependency == null)
                 {
-                    var converter = TypeDescriptor.GetConverter(type);
-                    @dependency = converter.ConvertFrom(null, CultureInfo.InvariantCulture, @dependency);
+                    throw new ArgumentNullException("@dependency", "Dependency value cannot be null for a simple argument. Name: '{0}, Type: '{1}'".ToFormat(name, type));
                 }
-                catch (Exception e)
+
+                if (@dependency.GetType() != type)
                 {
-                    throw new StructureMapException(206, e, name);
+                    try
+                    {
+                        var converter = TypeDescriptor.GetConverter(type);
+                        @dependency = converter.ConvertFrom(null, CultureInfo.InvariantCulture, @dependency);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new StructureMapException(206, e, name);
+                    }
                 }
             }
             
