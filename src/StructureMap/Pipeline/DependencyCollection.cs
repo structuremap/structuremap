@@ -18,11 +18,41 @@ namespace StructureMap.Pipeline
 
         public object FindByTypeOrName(Type argumentType, string name)
         {
-            var argument = _dependencies.LastOrDefault(x => x.Name == name && x.Type == argumentType)
-                           ?? _dependencies.LastOrDefault(x => x.Type == argumentType)
-                           ?? _dependencies.LastOrDefault(x => x.Name == name);
+            Argument argument = null;
+
+            if (argumentType.IsSimple())
+            {
+                argument = findByName(name);
+            }
+            else
+            {
+                argument = findByAll(argumentType, name)
+                           ?? findByTypeOnly(argumentType)
+                           ?? findByName(name);
+            }
 
             return argument == null ? null : argument.Dependency;
+        }
+
+        private Argument findByName(string name)
+        {
+            if (name.IsEmpty()) return null;
+
+            return _dependencies.LastOrDefault(x => x.Name == name);
+        }
+
+        private Argument findByTypeOnly(Type argumentType)
+        {
+            if (argumentType == null) return null;
+
+            return _dependencies.LastOrDefault(x => x.Type == argumentType);
+        }
+
+        private Argument findByAll(Type argumentType, string name)
+        {
+            if (argumentType == null) return null;
+
+            return _dependencies.LastOrDefault(x => x.Name == name && x.Type == argumentType);
         }
 
         public void Add<T>(T value)
@@ -50,6 +80,9 @@ namespace StructureMap.Pipeline
             Add(name, null, dependency);
         }
 
+        // TODO -- add some defensive programming checks here.
+        // @dependency has to be null, castable to type, or Instance
+        // check that Instance is pluggable
         public void Add(string name, Type type, object @dependency)
         {
             _dependencies.Add(new Argument
@@ -99,37 +132,6 @@ namespace StructureMap.Pipeline
             return value is ObjectInstance
                 ? value.As<ObjectInstance>().Object
                 : value;
-        }
-    }
-
-    public class Argument
-    {
-        public string Name;
-        public Type Type;
-        public object Dependency;
-
-        public Argument CloseType(params Type[] types)
-        {
-            var clone = new Argument
-            {
-                Name = Name
-            };
-
-            if (Type != null)
-            {
-                clone.Type = Type.IsOpenGeneric() ? Type.MakeGenericType(types) : Type;
-            }
-
-            if (Dependency is Instance)
-            {
-                clone.Dependency = Dependency.As<Instance>().CloseType(types) ?? Dependency;
-            }
-            else
-            {
-                clone.Dependency = Dependency;
-            }
-
-            return clone;
         }
     }
 }

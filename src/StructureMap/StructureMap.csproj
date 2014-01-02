@@ -146,6 +146,7 @@
     <Compile Include="Building\Setter.cs" />
     <Compile Include="Building\StructureMapBuildException.cs" />
     <Compile Include="BuildSession.cs" />
+    <Compile Include="Pipeline\Argument.cs" />
     <Compile Include="Pipeline\NullInstance.cs" />
     <Compile Include="Policies.cs" />
     <Compile Include="ComplexPipelineGraph.cs" />

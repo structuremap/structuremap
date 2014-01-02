@@ -93,7 +93,7 @@ namespace StructureMap.Pipeline
             Instance childInstance = _memento.ReadChildInstance(name, _pluginFactory, childType);
             if (childInstance == null) return;
 
-            _instance.SetChild(name, childInstance);
+            _instance.Dependencies.Add(name, childInstance);
         }
 
         private void copyChildArray(string name, Type childType)

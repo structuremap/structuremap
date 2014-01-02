@@ -53,7 +53,7 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public TInstance Is(Action<IInstanceExpression<TChild>> action)
         {
-            var expression = new InstanceExpression<TChild>(i => _instance.SetChild(_propertyName, i));
+            var expression = new InstanceExpression<TChild>(i => _instance.Dependencies.Add(_propertyName, i));
             action(expression);
 
             return _instance;
@@ -72,7 +72,7 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public TInstance Is(Instance instance)
         {
-            _instance.SetChild(_propertyName, instance);
+            _instance.Dependencies.Add(_propertyName, instance);
             return _instance;
         }
 

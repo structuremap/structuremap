@@ -86,13 +86,15 @@ namespace StructureMap.Testing.Pipeline
 
 
 
-        [Test, ExpectedException(typeof (StructureMapException))]
+        [Test]
         public void BuildRuleWithAMissingValue()
         {
             var instance = (IStructuredInstance) ComplexRule.GetInstance();
             instance.RemoveKey("String");
 
-            var rule = (ComplexRule) ((Instance) instance).Build(typeof (Rule), _session);
+            Exception<StructureMapException>.ShouldBeThrownBy(() => {
+                var rule = (ComplexRule)((Instance)instance).Build(typeof(Rule), _session);
+            });
         }
 
         [Test]

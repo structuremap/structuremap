@@ -78,8 +78,7 @@ namespace StructureMap.Building
                 if (dependencyType.IsSimple())
                 {
                     // TODO -- needs to be a specific exception here.
-                    throw new NotImplementedException();
-                    //throw new StructureMapException(205, key, Name);
+                    throw new StructureMapException(205, "MISSING", "MISSING");
                 }
 
                 if (EnumerableInstance.IsEnumerable(dependencyType))

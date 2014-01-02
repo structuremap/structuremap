@@ -266,6 +266,8 @@ namespace StructureMap
 
             public static bool IsSimple(this Type type)
             {
+                if (type == null) return false;
+
                 return type.IsPrimitive || IsString(type) || type.IsEnum;
             }
 

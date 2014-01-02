@@ -194,8 +194,7 @@ namespace StructureMap.Testing
             memento.SetPluggedType<ComplexRule>();
             var instance = (IConfiguredInstance)memento.ReadInstance(new SimplePluginFactory(), typeof(Rule));
 
-
-            Assert.AreEqual(memento.GetProperty("String"), instance.Dependencies.Get("String"));
+            instance.Dependencies.Get("String").ShouldEqual("Red");
 
             instance.Dependencies.Get("Breed").ShouldEqual(BreedEnum.Longhorn);
             instance.Dependencies.Get("Int").ShouldEqual(1);

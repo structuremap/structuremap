@@ -42,11 +42,6 @@ namespace StructureMap.Pipeline
             get { return _plugin; }
         }
 
-        void IConfiguredInstance.SetChild(string name, Instance instance)
-        {
-            SetChild(name, instance);
-        }
-
         void IConfiguredInstance.SetValue(string name, object value)
         {
             SetValue(name, value);
@@ -137,22 +132,13 @@ namespace StructureMap.Pipeline
             return _pluggedType;
         }
 
-        internal void SetChild(string name, Instance instance)
-        {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("instance", "Instance for {0} was null".ToFormat(name));
-            }
-
-            _dependencies.Add(name, instance);
-        }
-
         internal void SetValue(string name, object value)
         {
             Type dependencyType = getDependencyType(name);
 
             Instance instance = buildInstanceForType(dependencyType, value);
-            SetChild(name, instance);
+
+            _dependencies.Add(name, dependencyType, instance);
         }
 
         private Type getDependencyType(string name)

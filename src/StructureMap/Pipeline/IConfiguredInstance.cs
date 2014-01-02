@@ -21,7 +21,6 @@ namespace StructureMap.Pipeline
 
         bool HasProperty(string propertyName, BuildSession session);
 
-        void SetChild(string name, Instance instance);
         void SetValue(string name, object value);
 
         DependencyCollection Dependencies { get; }
