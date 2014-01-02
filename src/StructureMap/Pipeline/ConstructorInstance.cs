@@ -11,17 +11,9 @@ namespace StructureMap.Pipeline
         private readonly Type _pluggedType;
         private readonly DependencyCollection _dependencies = new DependencyCollection();
 
-        [Obsolete("Going to eliminate the need for this")] private readonly Plugin _plugin;
-
-        public ConstructorInstance(Type pluggedType)
-            : this(new Plugin(pluggedType))
+        public ConstructorInstance(Type concreteType)
         {
-        }
-
-        public ConstructorInstance(Plugin plugin)
-        {
-            _plugin = plugin;
-            _pluggedType = plugin.PluggedType;
+            _pluggedType = concreteType;
 
             _pluggedType.GetCustomAttributes(typeof (InstanceAttribute), false).OfType<InstanceAttribute>()
                 .Each(x => x.Alter(this));
@@ -31,11 +23,6 @@ namespace StructureMap.Pipeline
             : this(pluggedType)
         {
             Name = name;
-        }
-
-        public Plugin Plugin
-        {
-            get { return _plugin; }
         }
 
         public Type PluggedType
@@ -154,10 +141,6 @@ namespace StructureMap.Pipeline
         {
         }
 
-        public ConstructorInstance(Plugin plugin) : base(plugin)
-        {
-        }
-
         public ConstructorInstance(Type pluggedType, string name) : base(pluggedType, name)
         {
         }
@@ -171,11 +154,6 @@ namespace StructureMap.Pipeline
         public DependencyExpression<TThis, TCtorType> Ctor<TCtorType>()
         {
             return Ctor<TCtorType>(null);
-        }
-
-        private string getArgumentNameForType<TCtorType>()
-        {
-            return Plugin.FindArgumentNameForType<TCtorType>();
         }
 
         /// <summary>

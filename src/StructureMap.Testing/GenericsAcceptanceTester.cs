@@ -84,19 +84,6 @@ namespace StructureMap.Testing
         }
 
         [Test]
-        public void CanCreatePluginForGenericTypeWithGenericParameter()
-        {
-            var plugin = new Plugin(typeof (GenericService<int>));
-        }
-
-        [Test]
-        public void CanCreatePluginForGenericTypeWithoutGenericParameter()
-        {
-            var plugin = new Plugin(typeof (GenericService<>));
-        }
-
-
-        [Test]
         public void CanGetPluginFamilyFromPluginGraphWithNoParameters()
         {
             var graph = PluginGraph.BuildGraphFromAssembly(GetType().Assembly);

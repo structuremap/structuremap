@@ -95,12 +95,12 @@ namespace StructureMap.Configuration.Xml
             return _element.OuterXml;
         }
 
-        public override Instance ReadChildInstance(string name, IPluginFactory graph, Type childType)
+        public override Instance ReadChildInstance(string name, Type childType)
         {
             ITypeReader<XmlNode> reader = TypeReaderFactory.GetReader(childType);
             if (reader == null)
             {
-                return base.ReadChildInstance(name, graph, childType);
+                return base.ReadChildInstance(name, childType);
             }
 
             XmlElement element = _element[name];

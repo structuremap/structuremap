@@ -46,6 +46,19 @@ namespace StructureMap.Testing.Pipeline
         {
         }
 
+        public interface IAutomobile
+        {
+        }
+
+        public class Mustang : IAutomobile{}
+
+        public interface IEngine
+        {
+
+        }
+
+        public class PushrodEngine : IEngine { }
+
         [Test]
         public void allow_nested_container_to_report_what_it_has()
         {

@@ -30,6 +30,22 @@ namespace StructureMap.Testing
                 .ShouldBeFalse();
         }
 
+        public interface IAutomobile
+        {
+        }
+
+        public interface IEngine
+        {
+            
+        }
+
+        public class ClassWithNoConstructor
+        {
+            private ClassWithNoConstructor()
+            {
+            }
+        }
+
         public class ClassWithPrimitiveConstructorArguments : IAutomobile
         {
             private readonly string _breed;

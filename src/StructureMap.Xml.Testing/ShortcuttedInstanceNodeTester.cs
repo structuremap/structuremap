@@ -7,7 +7,7 @@ using StructureMap.Xml.Testing.TestData;
 
 namespace StructureMap.Xml.Testing
 {
-    [TestFixture]
+    [TestFixture, Ignore("Until we rewrite the Xml config")]
     public class ShortcuttedInstanceNodeTester
     {
         [SetUp]

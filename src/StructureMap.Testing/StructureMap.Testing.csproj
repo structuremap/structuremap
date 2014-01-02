@@ -214,7 +214,6 @@
     <Compile Include="Configuration\DSL\RegistryTester.cs" />
     <Compile Include="Configuration\DSL\UseIfNoneTests.cs" />
     <Compile Include="Configuration\GraphBuilderTester.cs" />
-    <Compile Include="Configuration\SimplePluginFactory.cs" />
     <Compile Include="Debugging.cs" />
     <Compile Include="Diagnostics\WriterExtensions.cs" />
     <Compile Include="Examples.cs">
@@ -268,14 +267,10 @@
     <Compile Include="Graph\PluginGraphTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Graph\PluginTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Graph\SetterInjectionTester.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Graph\TypePathTester.cs" />
-    <Compile Include="InstanceMementoInstanceCreationTester.cs" />
     <Compile Include="ModelQueryTester.cs" />
     <Compile Include="ObjectFactoryInitializeTester.cs" />
     <Compile Include="Pipeline\ArgumentTester.cs" />

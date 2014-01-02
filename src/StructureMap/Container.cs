@@ -102,7 +102,7 @@ namespace StructureMap
         public object GetInstance(Type pluginType, ExplicitArguments args)
         {
             Instance defaultInstance = _pipelineGraph.GetDefault(pluginType);
-            string requestedName = Plugin.DEFAULT;
+            string requestedName = BuildSession.DEFAULT;
 
             return buildInstanceWithArgs(pluginType, defaultInstance, args, requestedName);
         }
@@ -116,14 +116,14 @@ namespace StructureMap
         /// <returns></returns>
         public IEnumerable GetAllInstances(Type type, ExplicitArguments args)
         {
-            var session = new BuildSession(_pipelineGraph, Plugin.DEFAULT, args);
+            var session = new BuildSession(_pipelineGraph, BuildSession.DEFAULT, args);
             return session.GetAllInstances(type);
         }
 
 
         public IEnumerable<T> GetAllInstances<T>(ExplicitArguments args)
         {
-            var session = new BuildSession(_pipelineGraph, Plugin.DEFAULT, args);
+            var session = new BuildSession(_pipelineGraph, BuildSession.DEFAULT, args);
             return session.GetAllInstances<T>();
         }
 

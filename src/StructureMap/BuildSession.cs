@@ -9,6 +9,8 @@ namespace StructureMap
 {
     public class BuildSession : IBuildSession
     {
+        public static readonly string DEFAULT = "Default";
+
         private readonly IPipelineGraph _pipelineGraph;
         private readonly ISessionCache _sessionCache;
 
@@ -19,7 +21,7 @@ namespace StructureMap
             _sessionCache = new SessionCache(this, args);
 
 
-            RequestedName = requestedName ?? Plugin.DEFAULT;
+            RequestedName = requestedName ?? DEFAULT;
         }
 
         protected IPipelineGraph pipelineGraph

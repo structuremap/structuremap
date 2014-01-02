@@ -17,7 +17,7 @@ namespace StructureMap.Graph
 
         public void Process(Type type, Registry registry)
         {
-            if (type.CanBeCastTo(_pluginType) && Constructor.HasConstructors(type))
+            if (type.CanBeCastTo(_pluginType) && type.HasConstructors())
             {
                 string name = _getName(type);
                 registry.AddType(GetLeastSpecificButValidType(_pluginType, type), type, name);

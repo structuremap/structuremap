@@ -48,8 +48,8 @@ namespace StructureMap.Web.Testing
         [Test]
         public void Overrides_Lifecycle()
         {
-            var rule1 = container.GetInstance<InstanceMementoInstanceCreationTester.Rule>();
-            var rule2 = nestedContainer.GetInstance<InstanceMementoInstanceCreationTester.Rule>();
+            var rule1 = container.GetInstance<Rule>();
+            var rule2 = nestedContainer.GetInstance<Rule>();
 
             rule1.ShouldNotBeTheSameAs(rule2);
         }

@@ -157,12 +157,6 @@ namespace StructureMap.Pipeline
             return true;
         }
 
-
-        internal virtual bool Matches(Plugin plugin)
-        {
-            return false;
-        }
-
         /// <summary>
         /// Return the closed type value for this Instance
         /// when starting from an open generic type

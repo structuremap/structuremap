@@ -6,7 +6,7 @@ using StructureMap.Xml.Testing.TestData;
 
 namespace StructureMap.Xml.Testing.Bugs
 {
-    [TestFixture]
+    [TestFixture, Ignore("Until we rewrite the Xml config")]
     public class IDictionaryAndXmlBugTester
     {
         [Test]

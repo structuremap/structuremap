@@ -168,14 +168,11 @@
     <Compile Include="ExplicitArgsExpression.cs" />
     <Compile Include="GraphEjector.cs" />
     <Compile Include="Graph\CloseGenericFamilyPolicy.cs" />
-    <Compile Include="Graph\Constructor.cs" />
     <Compile Include="Graph\FamilyAttribute.cs" />
     <Compile Include="Graph\GenericConnectionScanner.cs" />
     <Compile Include="Graph\HasScope.cs" />
-    <Compile Include="Graph\IArgumentVisitor.cs" />
     <Compile Include="Graph\IFamilyPolicy.cs" />
     <Compile Include="Graph\InstanceAttribute.cs" />
-    <Compile Include="Graph\IPluginFactory.cs" />
     <Compile Include="Graph\AssemblyScanner.cs" />
     <Compile Include="Graph\IPluginGraph.cs" />
     <Compile Include="Graph\SetterRules.cs" />
@@ -223,7 +220,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Configuration\DSL\Expressions\CreatePluginFamilyExpression.cs" />
-    <Compile Include="Configuration\DSL\ExpressionValidator.cs" />
     <Compile Include="Pipeline\ExplicitArguments.cs" />
     <Compile Include="Configuration\DSL\Registry.cs" />
     <Compile Include="Configuration\IGraphBuilder.cs">
@@ -239,19 +235,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Graph\GenericsPluginGraph.cs" />
-    <Compile Include="Graph\Plugin.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Graph\PluginFamily.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Graph\PluginGraph.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Graph\SetterProperty.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Graph\SetterPropertyCollection.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Graph\TypePath.cs">

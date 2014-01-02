@@ -11,7 +11,7 @@ namespace StructureMap.Graph
             if (!type.IsConcrete()) return;
 
             Type pluginType = FindPluginType(type);
-            if (pluginType != null && Constructor.HasConstructors(type))
+            if (pluginType != null && type.HasConstructors())
             {
                 registry.AddType(pluginType, type);
                 ConfigureFamily(registry.For(pluginType));

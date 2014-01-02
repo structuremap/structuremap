@@ -13,23 +13,6 @@ namespace StructureMap
         public const string EMPTY_STRING = "STRING.EMPTY";
         private string _instanceKey;
 
-
-        public ConstructorInstance ToInstance(IPluginFactory factory, Type pluginType)
-        {
-            var plugin = factory.PluginFor(PluggedType());
-
-            var instance = new ConstructorInstance(plugin);
-            if (InstanceKey.IsNotEmpty())
-            {
-                instance.Name = InstanceKey;
-            }
-
-            var reader = new InstanceMementoPropertyReader(instance, this, factory);
-            plugin.VisitArguments(reader);
-
-            return instance;
-        }
-
         protected abstract string PluggedType();
 
 
@@ -120,10 +103,11 @@ namespace StructureMap
             return returnValue;
         }
 
-        public virtual Instance ReadChildInstance(string name, IPluginFactory graph, Type childType)
+        public virtual Instance ReadChildInstance(string name, Type childType)
         {
-            InstanceMemento child = GetChildMemento(name);
-            return child == null ? null : child.ReadInstance(graph, childType);
+            throw new NotImplementedException();
+//            InstanceMemento child = GetChildMemento(name);
+//            return child == null ? null : child.ReadInstance(graph, childType);
         }
 
         /// <summary>
@@ -143,7 +127,7 @@ namespace StructureMap
 
 
 
-        public Instance ReadInstance(IPluginFactory pluginFactory, Type pluginType)
+        public Instance ReadInstance(Type pluginType)
         {
             if (pluginType == null)
             {
@@ -152,7 +136,7 @@ namespace StructureMap
 
             try
             {
-                Instance instance = readInstance(pluginFactory, pluginType);
+                Instance instance = readInstance(pluginType);
                 instance.Name = InstanceKey;
 
                 return instance;
@@ -168,7 +152,7 @@ namespace StructureMap
         }
 
         [CLSCompliant(false)]
-        protected virtual Instance readInstance(IPluginFactory pluginFactory, Type pluginType)
+        protected virtual Instance readInstance(Type pluginType)
         {
             if (IsDefault)
             {
@@ -180,7 +164,7 @@ namespace StructureMap
                 return new ReferencedInstance(ReferenceKey);
             }
 
-            return ToInstance(pluginFactory, pluginType);
+            throw new NotImplementedException();
         }
     }
 }

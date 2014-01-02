@@ -213,7 +213,7 @@ namespace StructureMap
 
             public static bool CanBeCreated(this Type type)
             {
-                return type.IsConcrete() && Constructor.HasConstructors(type);
+                return type.IsConcrete() && type.HasConstructors();
             }
 
             public static IEnumerable<Type> AllInterfaces(this Type type)
@@ -294,6 +294,11 @@ namespace StructureMap
             public static bool IsAutoFillable(this Type type)
             {
                 return IsChild(type) || IsChildArray(type);
+            }
+
+            public static bool HasConstructors(this Type type)
+            {
+                return type.GetConstructors().Any();
             }
         }
     }

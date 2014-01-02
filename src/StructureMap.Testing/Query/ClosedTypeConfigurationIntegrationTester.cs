@@ -14,6 +14,17 @@ namespace StructureMap.Testing.Query
     {
         #region Setup/Teardown
 
+        public interface IAutomobile
+        {
+        }
+
+        public interface IEngine
+        {
+
+        }
+
+        public class PushrodEngine : IEngine{}
+
         [SetUp]
         public void SetUp()
         {

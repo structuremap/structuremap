@@ -16,14 +16,6 @@ namespace StructureMap.Graph
             Add(p => p.HasAttribute<SetterPropertyAttribute>());
         }
 
-        public void Configure(Plugin plugin)
-        {
-            foreach (var rule in _setterRules)
-            {
-                plugin.UseSetterRule(rule);
-            }
-        }
-
         public void Clear()
         {
             _setterRules.Clear();
