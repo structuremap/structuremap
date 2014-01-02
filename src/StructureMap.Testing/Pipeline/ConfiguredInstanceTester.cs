@@ -167,30 +167,6 @@ namespace StructureMap.Testing.Pipeline
             configuredInstance.Dependencies.Has("prop1").ShouldBeTrue();
         }
 
-        [Test]
-        public void HasProperty_for_child_array_when_property_name_is_inferred()
-        {
-            var instance = new ConfiguredInstance(typeof (UsesGateways));
-
-            IConfiguredInstance configuredInstance = instance;
-            configuredInstance.Dependencies.Has("gateways").ShouldBeFalse();
-
-            instance.EnumerableOf<IGateway>().Contains(new DefaultInstance());
-            configuredInstance.Dependencies.Has("gateways").ShouldBeTrue();
-        }
-
-        [Test]
-        public void HasProperty_for_generic_child_array_when_property_name_is_inferred()
-        {
-            var instance = new ConfiguredInstance(typeof (UsesGateways));
-
-            IConfiguredInstance configuredInstance = instance;
-            configuredInstance.Dependencies.Has("gateways").ShouldBeFalse();
-
-            instance.EnumerableOf<IGateway>().Contains(new DefaultInstance());
-            configuredInstance.Dependencies.Has("gateways").ShouldBeTrue();
-        }
-
 
         [Test]
         public void TestComplexRule()

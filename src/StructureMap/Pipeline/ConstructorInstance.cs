@@ -219,38 +219,28 @@ namespace StructureMap.Pipeline
         ///     Inline definition of a dependency on an Array of the CHILD type.  I.e. CHILD[].
         ///     This method can be used for either constructor arguments or setter properties
         /// </summary>
-        /// <typeparam name="TChild"></typeparam>
+        /// <typeparam name="TElement"></typeparam>
         /// <returns></returns>
-        public ArrayDefinitionExpression<TThis, TChild> EnumerableOf<TChild>()
+        public ArrayDefinitionExpression<TThis, TElement> EnumerableOf<TElement>()
         {
-            if (typeof (TChild).IsArray)
+            if (typeof (TElement).IsArray)
             {
                 throw new ApplicationException("Please specify the element type in the call to TheArrayOf");
             }
 
-            var propertyName = Plugin.FindArgumentNameForEnumerableOf(typeof (TChild));
-
-            if (propertyName.IsEmpty())
-            {
-                throw new StructureMapException(302, typeof (TChild).FullName, ConcreteType.FullName);
-            }
-            return new ArrayDefinitionExpression<TThis, TChild>(thisObject(), propertyName);
+            return new ArrayDefinitionExpression<TThis, TElement>(thisObject(), null);
         }
 
         /// <summary>
         ///     Inline definition of a dependency on an Array of the CHILD type and the specified setter property or constructor argument name.  I.e. CHILD[].
         ///     This method can be used for either constructor arguments or setter properties
         /// </summary>
-        /// <typeparam name="TChild"></typeparam>
+        /// <typeparam name="TElement"></typeparam>
         /// <param name="ctorOrPropertyName"></param>
         /// <returns></returns>
-        public ArrayDefinitionExpression<TThis, TChild> EnumerableOf<TChild>(string ctorOrPropertyName)
+        public ArrayDefinitionExpression<TThis, TElement> EnumerableOf<TElement>(string ctorOrPropertyName)
         {
-            if (ctorOrPropertyName.IsEmpty())
-            {
-                throw new StructureMapException(302, typeof (TChild).FullName, ConcreteType.FullName);
-            }
-            return new ArrayDefinitionExpression<TThis, TChild>(thisObject(), ctorOrPropertyName);
+            return new ArrayDefinitionExpression<TThis, TElement>(thisObject(), ctorOrPropertyName);
         }
     }
 }

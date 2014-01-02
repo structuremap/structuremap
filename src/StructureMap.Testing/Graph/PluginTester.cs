@@ -321,50 +321,6 @@ namespace StructureMap.Testing.Graph
     }
 
 
-    [TestFixture]
-    public class when_finding_property_name_of_enumerable_type
-    {
-        private Plugin plugin;
-
-
-
-        [SetUp]
-        public void SetUp()
-        {
-            plugin = new Plugin(typeof (ClassWithEnumerables));
-        }
-
-        [Test]
-        public void smoke_test()
-        {
-            new Plugin(typeof (ClassThatUsesValidators)).FindArgumentNameForEnumerableOf(typeof (IValidator)).
-                ShouldEqual("validators");
-        }
-
-        [Test]
-        public void array_in_ctor()
-        {
-            plugin.FindArgumentNameForEnumerableOf(typeof (IEngine)).ShouldEqual("engines");
-        }
-
-        [Test]
-        public void enumerable_in_ctor()
-        {
-            plugin.FindArgumentNameForEnumerableOf(typeof (IAutomobile)).ShouldEqual("autos");
-        }
-
-        [Test]
-        public void ilist_as_setter()
-        {
-            plugin.FindArgumentNameForEnumerableOf(typeof (IWidget)).ShouldEqual("Widgets");
-        }
-
-        [Test]
-        public void list_as_setter()
-        {
-            plugin.FindArgumentNameForEnumerableOf(typeof (Rule)).ShouldEqual("Rules");
-        }
-    }
 
 
     public class ClassWithEnumerables

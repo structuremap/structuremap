@@ -55,16 +55,6 @@ namespace StructureMap.Graph
             return FindArgumentNameForType(typeof (T), CannotFindProperty.ThrowException);
         }
 
-        public string FindArgumentNameForEnumerableOf(Type type)
-        {
-            var enumerableTypes = EnumerableInstance.OpenEnumerableTypes.Select(x => x.MakeGenericType(type)).Union(new []{type.MakeArrayType()});
-            return enumerableTypes.Select(t =>
-            {
-                return _constructor.FindFirstConstructorArgumentOfType(t) ??
-                       _setters.FindFirstWriteablePropertyOfType(t);
-            }).FirstOrDefault(x => x != null);
-        }
-
         public string FindArgumentNameForType(Type type, CannotFindProperty cannotFind)
         {
             string returnValue =
