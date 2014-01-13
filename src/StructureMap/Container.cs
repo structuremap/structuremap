@@ -1,9 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using StructureMap.Building;
 using StructureMap.Configuration.DSL;
 using StructureMap.Diagnostics;
-using StructureMap.Exceptions;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.Query;

@@ -3,7 +3,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 using StructureMap.Building;
-using StructureMap.Exceptions;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 

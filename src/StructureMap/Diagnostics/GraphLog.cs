@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using StructureMap.Exceptions;
+using StructureMap.Building;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 

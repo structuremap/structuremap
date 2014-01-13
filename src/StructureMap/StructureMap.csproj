@@ -145,7 +145,8 @@
     <Compile Include="Building\LiteralPlan.cs" />
     <Compile Include="Building\ReferencedDependencySource.cs" />
     <Compile Include="Building\Setter.cs" />
-    <Compile Include="Building\StructureMapBuildException.cs" />
+    <Compile Include="Exceptions\StructureMapBuildException.cs" />
+    <Compile Include="Exceptions\StructureMapConfigurationException.cs" />
     <Compile Include="Building\TryCatchWrapper.cs" />
     <Compile Include="BuildSession.cs" />
     <Compile Include="Pipeline\Argument.cs" />
@@ -166,7 +167,6 @@
     <Compile Include="Diagnostics\TextLine.cs" />
     <Compile Include="Diagnostics\TextReportWriter.cs" />
     <Compile Include="Diagnostics\WhatDoIHaveWriter.cs" />
-    <Compile Include="Exceptions\StructureMapConfigurationException.cs" />
     <Compile Include="ExplicitArgsExpression.cs" />
     <Compile Include="GraphEjector.cs" />
     <Compile Include="Graph\CloseGenericFamilyPolicy.cs" />
@@ -228,9 +228,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Configuration\GraphBuilder.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Exceptions\InstancePropertyValueException.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Exceptions\StructureMapException.cs">
