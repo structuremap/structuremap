@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using NUnit.Framework;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
@@ -171,10 +172,14 @@ namespace StructureMap.Testing.Graph
             Assert.AreEqual("Orange", maker.Color);
         }
 
-        [Test, ExpectedException(typeof (StructureMapException))]
+        [Test]
         public void GetMissingType()
         {
-            var o = _container.GetInstance(typeof (string));
+            var ex = Exception<StructureMapException>.ShouldBeThrownBy(() => {
+                _container.GetInstance(typeof(string));
+            });
+
+            ex.Title.ShouldContain("No default");
         }
 
         [Test]
@@ -290,13 +295,6 @@ namespace StructureMap.Testing.Graph
             instance.ShouldBeNull();
         }
 
-
-        [Test, ExpectedException(typeof (StructureMapException))]
-        public void TryToGetDefaultInstanceWithNoInstance()
-        {
-            var manager = new Container(new PluginGraph());
-            manager.GetInstance<IService>();
-        }
     }
 
     public interface ISport

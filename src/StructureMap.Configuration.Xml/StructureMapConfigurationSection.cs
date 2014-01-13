@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Xml;
+using StructureMap.Building;
 
 namespace StructureMap.Configuration.Xml
 {
@@ -26,7 +27,8 @@ namespace StructureMap.Configuration.Xml
             var nodes = ConfigurationSettings.GetConfig(XmlConstants.STRUCTUREMAP) as IList<XmlNode>;
             if (nodes == null)
             {
-                throw new StructureMapException(105, XmlConstants.STRUCTUREMAP);
+                // TODO -- make sure there's a UT on this behavior
+                throw new StructureMapConfigurationException("The <{0}> section could not be loaded from the application configuration file.", XmlConstants.STRUCTUREMAP);
             }
             return nodes;
         }

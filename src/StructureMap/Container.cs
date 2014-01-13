@@ -474,10 +474,6 @@ namespace StructureMap
             Configure(x => x.For(pluginType).Use(instance));
         }
 
-        private void nameContainer(IContainer container)
-        {
-            container.Name = "Nested-" + container.Name;
-        }
 
         #region Nested type: GetInstanceAsExpression
 
@@ -500,7 +496,7 @@ namespace StructureMap
             {
                 if (!templateType.IsOpenGeneric())
                 {
-                    throw new StructureMapException(285);
+                    throw new StructureMapConfigurationException("Type '{0}' is not an open generic type".ToFormat(templateType.GetFullName()));
                 }
 
                 _templateType = templateType;

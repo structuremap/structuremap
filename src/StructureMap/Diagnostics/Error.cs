@@ -35,7 +35,6 @@ namespace StructureMap.Diagnostics
 
         public Error(StructureMapException exception)
         {
-            _code = exception.ErrorCode;
             _message = exception.Message;
 
             writeStackTrace(exception);

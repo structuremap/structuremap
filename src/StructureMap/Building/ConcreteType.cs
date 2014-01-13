@@ -82,8 +82,8 @@ namespace StructureMap.Building
             {
                 if (dependencyType.IsSimple())
                 {
-                    // TODO -- needs to be a specific exception here.
-                    throw new StructureMapException(205, "MISSING", "MISSING");
+                    // TODO -- unit test this
+                    throw new StructureMapConfigurationException("Missing a value for primitive dependency of type '{0}'", dependencyType.GetFullName());
                 }
 
                 if (EnumerableInstance.IsEnumerable(dependencyType))

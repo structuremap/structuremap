@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using NUnit.Framework;
 using StructureMap.Testing.Widget;
 using StructureMap.Testing.Widget4;
@@ -22,19 +23,28 @@ namespace StructureMap.Testing.Graph
             Assert.IsNotNull(concreteClass.Strategy);
         }
 
-        [Test, ExpectedException(typeof (StructureMapException))]
+        [Test]
         public void TryToFillDependenciesOnAbstractClassThrowsException()
         {
-            var manager = new Container();
-            manager.GetInstance(typeof (AbstractClass));
+            var ex = Exception<StructureMapException>.ShouldBeThrownBy(() => {
+                var container = new Container();
+                container.GetInstance(typeof(AbstractClass));
+            });
+
+            ex.Title.ShouldEqual("No default Instance is registered and cannot be automatically determined for type 'StructureMap.Testing.Graph.AbstractClass'");
         }
 
 
-        [Test, ExpectedException(typeof (StructureMapException))]
+        [Test]
         public void TryToFillDependenciesOnClassWithPrimitiveArgumentsThrowsException()
         {
-            var manager = new Container();
-            manager.GetInstance(typeof (CannotBeFilledConcreteClass));
+            var ex = Exception<StructureMapException>.ShouldBeThrownBy(() => {
+                var container = new Container();
+                container.GetInstance(typeof(CannotBeFilledConcreteClass));
+            });
+
+            ex.Title.ShouldEqual("No default Instance is registered and cannot be automatically determined for type 'StructureMap.Testing.Graph.CannotBeFilledConcreteClass'");
+
         }
     }
 

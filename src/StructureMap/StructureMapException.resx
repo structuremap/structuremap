@@ -112,10 +112,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="100" xml:space="preserve">
     <value>Expected file "StructureMap.config" cannot be opened at {0}</value>
@@ -264,9 +264,6 @@
   </data>
   <data name="231" xml:space="preserve">
     <value>Cannot use the "TheDefaultIsConcreteType" method with an object that has primitive constructor arguments.  Use the "Use&lt;T&gt;()" method instead and specify the primitive constructor arguments</value>
-  </data>
-  <data name="285" xml:space="preserve">
-    <value>Only open generic types can be used in the call to Container.ForGenericType(type)</value>
   </data>
   <data name="290" xml:space="preserve">
     <value>Could not load the designated Registry class '{0}'</value>

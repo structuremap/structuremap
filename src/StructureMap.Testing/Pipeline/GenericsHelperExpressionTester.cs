@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using NUnit.Framework;
 
 namespace StructureMap.Testing.Pipeline
@@ -86,15 +87,12 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void throws_exception_if_passed_a_type_that_is_not_an_open_generic_type()
         {
-            try
-            {
-                container.ForGenericType(typeof (string)).WithParameters().GetInstanceAs<IFlattener>();
+            var ex = Exception<StructureMapException>.ShouldBeThrownBy(() => {
+                container.ForGenericType(typeof(string)).WithParameters().GetInstanceAs<IFlattener>();
                 Assert.Fail("Should have thrown exception");
-            }
-            catch (StructureMapException ex)
-            {
-                ex.ErrorCode.ShouldEqual(285);
-            }
+            });
+
+            ex.Title.ShouldEqual("Type 'System.String' is not an open generic type");
         }
 
         [Test]

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
+using StructureMap.Building;
 using StructureMap.Diagnostics;
 using StructureMap.Graph;
 
@@ -42,7 +43,8 @@ namespace StructureMap.Configuration.Xml
             XmlNode structureMapNode = document.SelectSingleNode("//" + STRUCTUREMAP);
             if (structureMapNode == null)
             {
-                throw new StructureMapException(155, filename);
+                // TODO -- make sure there's a UT on this
+                throw new StructureMapConfigurationException("Cannot find required <StructureMap> node in file '{0}'", filename);
             }
 
             return new ConfigurationParser(structureMapNode) {FilePath = filename};

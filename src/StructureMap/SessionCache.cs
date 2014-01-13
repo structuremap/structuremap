@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using StructureMap.Building;
 using StructureMap.Pipeline;
+using StructureMap.TypeRules;
 
 namespace StructureMap
 {
@@ -41,7 +43,7 @@ namespace StructureMap
             var instance = pipelineGraph.GetDefault(pluginType);
             if (instance == null)
             {
-                throw new StructureMapException(202, pluginType);
+                throw new StructureMapConfigurationException("No default Instance is registered and cannot be automatically determined for type '{0}'", pluginType.GetFullName());
             }
 
 

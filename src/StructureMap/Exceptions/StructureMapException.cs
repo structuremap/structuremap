@@ -77,17 +77,6 @@ namespace StructureMap
         }
 
         [Obsolete("Want to eliminate the error code ctor")]
-        public StructureMapException(int ErrorCode, params object[] args)
-        {
-            _errorCode = ErrorCode;
-            var msg = string.Format("StructureMap Exception Code:  {0}\n", _errorCode);
-            msg += ErrorMessages.GetMessage(ErrorCode, args);
-
-            _title = msg;
-            Push(msg);
-        }
-
-        [Obsolete("Want to eliminate the error code ctor")]
         public StructureMapException(int ErrorCode, Exception InnerException, params object[] args)
             : base(string.Empty, InnerException)
         {

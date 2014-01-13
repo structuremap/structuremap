@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 using NUnit.Framework;
 using Rhino.Mocks;
+using StructureMap.Building;
 using StructureMap.Pipeline;
 
 namespace StructureMap.Testing
@@ -177,10 +179,11 @@ namespace StructureMap.Testing
         }
 
         [Test]
-        public void should_throw_202_if_you_try_to_build_the_default_of_something_that_does_not_exist()
+        public void should_throw_configuration_exception_if_you_try_to_build_the_default_of_something_that_does_not_exist()
         {
-            Exception<StructureMapException>.ShouldBeThrownBy(() => { theCache.GetDefault(typeof (IFoo), thePipeline); })
-                .ErrorCode.ShouldEqual(202);
+            var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() => theCache.GetDefault(typeof (IFoo), thePipeline));
+
+            ex.Title.ShouldEqual("No default Instance is registered and cannot be automatically determined for type 'StructureMap.Testing.SessionCacheTester+IFoo'");
         }
 
 

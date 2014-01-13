@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Linq;
 using NUnit.Framework;
 using StructureMap.Building;
@@ -198,14 +199,16 @@ namespace StructureMap.Testing
         }
 
         [Test]
-        public void Throw_200_When_trying_to_build_an_instance_that_cannot_be_found()
+        public void Throw_exception_When_trying_to_build_an_instance_that_cannot_be_found()
         {
             var graph = new RootPipelineGraph(new PluginGraph());
 
-            assertActionThrowsErrorCode(200, delegate {
+            var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() => {
                 var session = new BuildSession(graph);
-                session.CreateInstance(typeof (IGateway), "Gateway that is not configured");
+                session.CreateInstance(typeof(IGateway), "Gateway that is not configured");
             });
+
+            ex.Title.ShouldEqual("Could not find an Instance named 'Gateway that is not configured' for PluginType StructureMap.Testing.Widget3.IGateway");
         }
 
 
@@ -214,10 +217,13 @@ namespace StructureMap.Testing
         {
             var graph = new RootPipelineGraph(new PluginGraph());
 
-            assertActionThrowsErrorCode(202, delegate {
+
+            var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() => {
                 var session = new BuildSession(graph);
-                session.GetInstance(typeof (IGateway));
+                session.GetInstance(typeof(IGateway));
             });
+
+            ex.Title.ShouldEqual("No default Instance is registered and cannot be automatically determined for type 'StructureMap.Testing.Widget3.IGateway'");
         }
 
         [Test]

@@ -4,6 +4,7 @@ using System.Linq;
 using StructureMap.Building;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
+using StructureMap.TypeRules;
 
 namespace StructureMap
 {
@@ -144,7 +145,8 @@ namespace StructureMap
             var instance = _pipelineGraph.FindInstance(pluginType, name);
             if (instance == null)
             {
-                throw new StructureMapException(200, name, pluginType.FullName);
+                // TODO -- make sure there is a UT on this behavior
+                throw new StructureMapConfigurationException("Could not find an Instance named '{0}' for PluginType {1}", name, pluginType.GetFullName());
             }
 
             return FindObject(pluginType, instance);

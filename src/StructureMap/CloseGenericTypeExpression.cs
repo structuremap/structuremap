@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using StructureMap.Building;
 using StructureMap.TypeRules;
 
 namespace StructureMap
@@ -64,7 +65,7 @@ namespace StructureMap
         {
             if (!type.IsOpenGeneric())
             {
-                throw new StructureMapException(285);
+                throw new StructureMapConfigurationException("Type '{0}' is not an open generic type".ToFormat(type.GetFullName()));
             }
 
             _pluginType = type.MakeGenericType(_subject.GetType());

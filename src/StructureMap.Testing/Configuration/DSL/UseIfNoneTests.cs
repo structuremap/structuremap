@@ -1,4 +1,6 @@
-﻿using NUnit.Framework;
+﻿using System.Diagnostics;
+using NUnit.Framework;
+using StructureMap.Building;
 using StructureMap.Configuration.DSL;
 using StructureMap.Testing.DocumentationExamples;
 using StructureMap.Testing.Widget3;
@@ -46,15 +48,18 @@ namespace StructureMap.Testing.Configuration.DSL
             {
                 var c = GetContainerWithRegistries<Reg1, Reg2>();
                 c.EjectAllInstancesOf<IService>();
-                Assert.Throws<StructureMapException>(() => c.GetInstance<IService>());
+
+                Exception<StructureMapException>.ShouldBeThrownBy(() => c.GetInstance<IService>())
+                    .Title.ShouldContain("No default");
             }
 
             [Test]
             public void no_default_throws()
             {
-                var c = new Container();
-                Assert.Throws<StructureMapException>(() => c.GetInstance<IService>())
-                    .ErrorCode.ShouldEqual(202);
+                Exception<StructureMapException>.ShouldBeThrownBy(() => {
+                    new Container().GetInstance<IService>();
+                }).Title.ShouldContain("No default");
+
             }
         }
 
@@ -98,9 +103,14 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void eject_also_removed_use_if_none_instance()
         {
-            var c = new Container(ce => ce.AddRegistry<Reg1>());
-            c.EjectAllInstancesOf<IService>();
-            Assert.Throws<StructureMapException>(() => c.GetInstance<IService>());
+            var ex = Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() => {
+                var c = new Container(ce => ce.AddRegistry<Reg1>());
+                c.EjectAllInstancesOf<IService>();
+
+                c.GetInstance<IService>();
+            });
+
+            ex.Title.ShouldEqual("No default Instance is registered and cannot be automatically determined for type 'StructureMap.Testing.Widget3.IService'");
         }
 
         private static IContainer GetContainerWithRegistries<TReg1, TReg2>() where TReg1 : Registry, new()

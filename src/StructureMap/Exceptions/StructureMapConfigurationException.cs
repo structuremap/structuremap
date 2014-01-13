@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace StructureMap.Building
+namespace StructureMap
 {
     [Serializable]
     public class StructureMapConfigurationException : StructureMapException
@@ -10,7 +10,7 @@ namespace StructureMap.Building
         {
         }
 
-        public StructureMapConfigurationException(string message) : base(message)
+        public StructureMapConfigurationException(string message, params object[] parameters) : base(message.ToFormat(parameters))
         {
         }
 

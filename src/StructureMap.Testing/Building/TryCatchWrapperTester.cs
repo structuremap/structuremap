@@ -181,12 +181,5 @@ namespace StructureMap.Testing.Building
         {
         }
 
-        public FakeStructureMapException(int ErrorCode, params object[] args) : base(ErrorCode, args)
-        {
-        }
-
-        public FakeStructureMapException(int ErrorCode, Exception InnerException, params object[] args) : base(ErrorCode, InnerException, args)
-        {
-        }
     }
 }
