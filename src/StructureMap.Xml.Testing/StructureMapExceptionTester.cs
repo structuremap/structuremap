@@ -4,6 +4,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Xml;
 using NUnit.Framework;
 using StructureMap.Configuration.Xml;
+using StructureMap.Testing;
 using StructureMap.Testing.Widget;
 
 namespace StructureMap.Xml.Testing
@@ -73,9 +74,10 @@ namespace StructureMap.Xml.Testing
             string expected =
                 "StructureMap Exception Code:  100\nExpected file \"StructureMap.config\" cannot be opened at StructureMap.config";
 
-            string actual = exception.Message;
 
-            Assert.AreEqual(expected, actual);
+
+            exception.Message.ShouldStartWith(expected);
+
         }
 
         [Test]

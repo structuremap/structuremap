@@ -1,6 +1,10 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using System.Runtime.Serialization;
 using System.Security;
+using System.Security.Cryptography;
 
 namespace StructureMap
 {
@@ -11,34 +15,87 @@ namespace StructureMap
     [Serializable]
     public class StructureMapException : Exception
     {
+        public static readonly ConstructorInfo Constructor =
+            typeof(StructureMapException).GetConstructor(new Type[] { typeof(string), typeof(Exception) });
+
+        public static readonly MethodInfo PushMethod = typeof(StructureMapException).GetMethod("Push", new Type[] { typeof(string) });
+
+        private readonly Queue<string> _descriptions = new Queue<string>();
+        private readonly string _message;
         private readonly int _errorCode;
-        private readonly string _msg;
 
         protected StructureMapException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
             _errorCode = info.GetInt32("errorCode");
-            _msg = info.GetString("msg");
+            var descriptions = info.GetValue("descriptions", typeof (string[])).As<string[]>();
+
+            descriptions.Each(x => _descriptions.Enqueue(x));
+
+            _message = info.GetString("message");
         }
 
-
-        public StructureMapException(int ErrorCode, params object[] args)
+        [SecurityCritical]
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            _errorCode = ErrorCode;
-            _msg = string.Format("StructureMap Exception Code:  {0}\n", _errorCode);
-            _msg += ErrorMessages.GetMessage(ErrorCode, args);
-        }
-
-        public StructureMapException(int ErrorCode, Exception InnerException, params object[] args)
-            : base(string.Empty, InnerException)
-        {
-            _errorCode = ErrorCode;
-            _msg = string.Format("StructureMap Exception Code:  {0}\n", _errorCode);
-            _msg += ErrorMessages.GetMessage(ErrorCode, args);
+            info.AddValue("errorCode", _errorCode, typeof(int));
+            info.AddValue("descriptions", _descriptions.ToArray(), typeof(string[]));
+            info.AddValue("message", _message);
+            base.GetObjectData(info, context);
         }
 
         public override string Message
         {
-            get { return _msg; }
+            get
+            {
+                var writer = new StringWriter();
+                //writer.WriteLine("StructureMap Context from inner to outer:");
+
+                writer.WriteLine(_message);
+
+                var i = 0;
+                _descriptions.Each(x => writer.WriteLine(++i + ".) " + x));
+
+                return writer.ToString();
+            }
+        }
+
+        public void Push(string description)
+        {
+            _descriptions.Enqueue(description);
+        }
+
+        public StructureMapException(string message) : base(message)
+        {
+            _message = message;
+            Push(message);
+        }
+
+        public StructureMapException(string message, Exception innerException) : base(message, innerException)
+        {
+            _message = message;
+            Push(message);
+        }
+
+        [Obsolete("Want to eliminate the error code ctor")]
+        public StructureMapException(int ErrorCode, params object[] args)
+        {
+            _errorCode = ErrorCode;
+            var msg = string.Format("StructureMap Exception Code:  {0}\n", _errorCode);
+            msg += ErrorMessages.GetMessage(ErrorCode, args);
+
+            _message = msg;
+            Push(msg);
+        }
+
+        [Obsolete("Want to eliminate the error code ctor")]
+        public StructureMapException(int ErrorCode, Exception InnerException, params object[] args)
+            : base(string.Empty, InnerException)
+        {
+            _errorCode = ErrorCode;
+            var msg = string.Format("StructureMap Exception Code:  {0}\n", _errorCode);
+            msg += ErrorMessages.GetMessage(ErrorCode, args);
+            _message = msg;
+            Push(msg);
         }
 
         public int ErrorCode
@@ -46,13 +103,6 @@ namespace StructureMap
             get { return _errorCode; }
         }
 
-        [SecurityCritical]
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue("errorCode", _errorCode, typeof (int));
-            info.AddValue("msg", _msg, typeof (string));
 
-            base.GetObjectData(info, context);
-        }
     }
 }

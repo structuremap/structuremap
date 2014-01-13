@@ -5,6 +5,7 @@ namespace StructureMap
 {
     internal static class ErrorMessages
     {
+        [Obsolete("no one has ever liked this approach")]
         public static string GetMessage(int errorCode, params object[] args)
         {
             var msg = "StructureMap Exception Code:  " + errorCode + "\n";

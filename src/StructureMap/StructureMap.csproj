@@ -290,7 +290,6 @@
     <Compile Include="Diagnostics\DoctorResult.cs" />
     <Compile Include="Diagnostics\ValidationError.cs" />
     <Compile Include="ErrorMessages.cs" />
-    <Compile Include="Example.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Graph\CompositeFilter.cs" />
     <Compile Include="Graph\CompositePredicate.cs" />
@@ -359,9 +358,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Source\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
