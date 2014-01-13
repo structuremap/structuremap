@@ -63,6 +63,8 @@ namespace StructureMap.Building
 
         public static void Try()
         {
+            Expression<Func<string>> describedExpression = () => "foo{0}bar".ToFormat("-");
+            Debug.WriteLine(describedExpression);
 
 
             Expression<Func<string>> expr = () => default(string);

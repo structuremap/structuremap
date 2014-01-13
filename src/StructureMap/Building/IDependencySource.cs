@@ -2,9 +2,8 @@
 
 namespace StructureMap.Building
 {
-    public interface IDependencySource
+    public interface IDependencySource : IDescribed
     {
-        string Description { get; }
         Expression ToExpression(ParameterExpression session);
     }
 }

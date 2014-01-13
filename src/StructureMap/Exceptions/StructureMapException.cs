@@ -21,7 +21,7 @@ namespace StructureMap
         public static readonly MethodInfo PushMethod = typeof(StructureMapException).GetMethod("Push", new Type[] { typeof(string) });
 
         private readonly Queue<string> _descriptions = new Queue<string>();
-        private readonly string _message;
+        private readonly string _title;
         private readonly int _errorCode;
 
         protected StructureMapException(SerializationInfo info, StreamingContext context) : base(info, context)
@@ -31,7 +31,7 @@ namespace StructureMap
 
             descriptions.Each(x => _descriptions.Enqueue(x));
 
-            _message = info.GetString("message");
+            _title = info.GetString("message");
         }
 
         [SecurityCritical]
@@ -39,7 +39,7 @@ namespace StructureMap
         {
             info.AddValue("errorCode", _errorCode, typeof(int));
             info.AddValue("descriptions", _descriptions.ToArray(), typeof(string[]));
-            info.AddValue("message", _message);
+            info.AddValue("message", _title);
             base.GetObjectData(info, context);
         }
 
@@ -50,7 +50,7 @@ namespace StructureMap
                 var writer = new StringWriter();
                 //writer.WriteLine("StructureMap Context from inner to outer:");
 
-                writer.WriteLine(_message);
+                writer.WriteLine(_title);
 
                 var i = 0;
                 _descriptions.Each(x => writer.WriteLine(++i + ".) " + x));
@@ -66,13 +66,13 @@ namespace StructureMap
 
         public StructureMapException(string message) : base(message)
         {
-            _message = message;
+            _title = message;
             Push(message);
         }
 
         public StructureMapException(string message, Exception innerException) : base(message, innerException)
         {
-            _message = message;
+            _title = message;
             Push(message);
         }
 
@@ -83,7 +83,7 @@ namespace StructureMap
             var msg = string.Format("StructureMap Exception Code:  {0}\n", _errorCode);
             msg += ErrorMessages.GetMessage(ErrorCode, args);
 
-            _message = msg;
+            _title = msg;
             Push(msg);
         }
 
@@ -94,8 +94,13 @@ namespace StructureMap
             _errorCode = ErrorCode;
             var msg = string.Format("StructureMap Exception Code:  {0}\n", _errorCode);
             msg += ErrorMessages.GetMessage(ErrorCode, args);
-            _message = msg;
+            _title = msg;
             Push(msg);
+        }
+
+        public string Title
+        {
+            get { return _title; }
         }
 
         public int ErrorCode

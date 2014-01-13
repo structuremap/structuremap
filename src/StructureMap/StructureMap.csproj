@@ -137,6 +137,7 @@
     <Compile Include="Building\DelegateExtensions.cs" />
     <Compile Include="Building\IBuildPlan.cs" />
     <Compile Include="Building\IDependencySource.cs" />
+    <Compile Include="Building\IDescribed.cs" />
     <Compile Include="Building\IHasSetters.cs" />
     <Compile Include="Building\InstanceDependencySource.cs" />
     <Compile Include="Building\LifecycleDependencySource.cs" />
@@ -145,6 +146,7 @@
     <Compile Include="Building\ReferencedDependencySource.cs" />
     <Compile Include="Building\Setter.cs" />
     <Compile Include="Building\StructureMapBuildException.cs" />
+    <Compile Include="Building\TryCatchWrapper.cs" />
     <Compile Include="BuildSession.cs" />
     <Compile Include="Pipeline\Argument.cs" />
     <Compile Include="Pipeline\NullInstance.cs" />
