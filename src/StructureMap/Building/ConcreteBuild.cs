@@ -60,7 +60,7 @@ namespace StructureMap.Building
             return _func.Value(session);
         }
 
-        public string Description { get; private set; }
+        public string Description { get; set; }
 
 
         public Delegate ToDelegate()
@@ -84,6 +84,7 @@ namespace StructureMap.Building
             {
                 return newExpr;
             }
+
 
             return Expression.MemberInit(newExpr, _setters.Select(x => x.ToBinding(session)));
         }

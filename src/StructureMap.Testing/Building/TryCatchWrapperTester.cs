@@ -52,7 +52,7 @@ namespace StructureMap.Testing.Building
 
             var ex = Exception<FakeStructureMapException>.ShouldBeThrownBy(() => func());
 
-            ex.Title.ShouldEqual("my description");
+            ex.Title.ShouldEqual("Failure at: \"my description\"");
             ex.InnerException.ShouldBeTheSameAs(genericEx);
         }
 
@@ -95,7 +95,7 @@ namespace StructureMap.Testing.Building
 
             var ex = Exception<FakeStructureMapException>.ShouldBeThrownBy(() => func());
 
-            ex.Title.ShouldEqual("some description");
+            ex.Title.ShouldEqual("Failure at: \"some description\"");
             ex.InnerException.ShouldBeTheSameAs(genericEx);
         }
 
@@ -137,7 +137,7 @@ namespace StructureMap.Testing.Building
 
             var ex = Exception<FakeStructureMapException>.ShouldBeThrownBy(() => func());
 
-            ex.Title.ShouldEqual("some description");
+            ex.Title.ShouldEqual("Failure at: \"some description\"");
             ex.InnerException.ShouldBeTheSameAs(genericEx);
         }
 

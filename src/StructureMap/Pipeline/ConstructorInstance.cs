@@ -65,34 +65,24 @@ namespace StructureMap.Pipeline
         {
             // TODO -- make this Lazy for crying out loud
             var plan = StructureMap.Building.ConcreteType.BuildPlan(_pluggedType, null, _dependencies, Policies);
+            
 
             return Build(pluginType, session, plan);
         }
 
         public object Build(Type pluginType, IBuildSession session, IBuildPlan builder)
         {
-            if (builder == null)
-            {
-                throw new StructureMapException(
-                    201, _pluggedType.FullName, Name, pluginType);
-            }
-
-
             try
             {
                 return builder.Build(session);
             }
-            catch (StructureMapException)
+            catch (StructureMapException ex)
             {
                 throw;
             }
-            catch (InvalidCastException ex)
-            {
-                throw new StructureMapException(206, ex, Name);
-            }
             catch (Exception ex)
             {
-                throw new StructureMapException(207, ex, Name, pluginType.FullName);
+                throw new StructureMapBuildException("Failed while building '{0}'".ToFormat(Description), ex);
             }
         }
 

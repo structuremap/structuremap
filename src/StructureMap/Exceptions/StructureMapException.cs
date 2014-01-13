@@ -15,9 +15,10 @@ namespace StructureMap
     public class StructureMapException : Exception
     {
         public static readonly ConstructorInfo Constructor =
-            typeof(StructureMapException).GetConstructor(new Type[] { typeof(string), typeof(Exception) });
+            typeof (StructureMapException).GetConstructor(new Type[] {typeof (string), typeof (Exception)});
 
-        public static readonly MethodInfo PushMethod = typeof(StructureMapException).GetMethod("Push", new Type[] { typeof(string) });
+        public static readonly MethodInfo PushMethod = typeof (StructureMapException).GetMethod("Push",
+            new Type[] {typeof (string)});
 
         private readonly Queue<string> _descriptions = new Queue<string>();
         private readonly string _title;
@@ -36,8 +37,8 @@ namespace StructureMap
         [SecurityCritical]
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("errorCode", _errorCode, typeof(int));
-            info.AddValue("descriptions", _descriptions.ToArray(), typeof(string[]));
+            info.AddValue("errorCode", _errorCode, typeof (int));
+            info.AddValue("descriptions", _descriptions.ToArray(), typeof (string[]));
             info.AddValue("message", _title);
             base.GetObjectData(info, context);
         }
@@ -71,7 +72,7 @@ namespace StructureMap
 
         public StructureMapException(string message, Exception innerException) : base(message, innerException)
         {
-            _title = message;
+            _title = "Failure at: \"{0}\"".ToFormat(message);
             Push(message);
         }
 
@@ -102,11 +103,11 @@ namespace StructureMap
             get { return _title; }
         }
 
+        [Obsolete]
         public int ErrorCode
         {
             get { return _errorCode; }
         }
-
 
     }
 }

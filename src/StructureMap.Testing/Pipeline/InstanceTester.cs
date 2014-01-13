@@ -32,6 +32,16 @@ namespace StructureMap.Testing.Pipeline
         }
 
         [Test]
+        public void has_explicit_name()
+        {
+            var instance = new InstanceUnderTest();
+            instance.HasExplicitName().ShouldBeFalse();
+
+            instance.Name = "name of instance";
+            instance.HasExplicitName().ShouldBeTrue();
+        }
+
+        [Test]
         public void default_scope_is_PerRequest()
         {
             var i1 = new ConfiguredInstance(GetType()).Named("foo");

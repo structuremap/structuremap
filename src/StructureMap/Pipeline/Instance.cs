@@ -6,7 +6,7 @@ using StructureMap.Interceptors;
 
 namespace StructureMap.Pipeline
 {
-    public abstract class Instance : HasScope, IDiagnosticInstance
+    public abstract class Instance : HasScope, IDiagnosticInstance, IDescribed
     {
         private readonly string _originalName;
         private InstanceInterceptor _interceptor = new NulloInterceptor();
@@ -71,7 +71,7 @@ namespace StructureMap.Pipeline
             get { return getConcreteType(null); }
         }
 
-        internal string Description
+        public string Description
         {
             get { return getDescription(); }
         }
@@ -106,13 +106,14 @@ namespace StructureMap.Pipeline
             {
                 return build(pluginType, session);
             }
-            catch (StructureMapException)
+            catch (StructureMapException ex)
             {
+                ex.Push(Description);
                 throw;
             }
             catch (Exception ex)
             {
-                throw new StructureMapException(400, ex);
+                throw new StructureMapException(Description, ex);
             }
         }
 
@@ -129,6 +130,11 @@ namespace StructureMap.Pipeline
             {
                 _name = name;
             }
+        }
+
+        public bool HasExplicitName()
+        {
+            return _name != _originalName;
         }
 
 

@@ -176,32 +176,54 @@ namespace StructureMap.Testing.Pipeline
         }
 
         [Test]
-        public void Trying_to_build_with_an_InvalidCastException_will_throw_error_206()
+        public void Trying_to_build_with_an_InvalidCastException_will_throw_a_StructureMapException()
         {
-            var mocks = new MockRepository();
-            var builder = mocks.StrictMock<IBuildPlan>();
-            Expect.Call(builder.Build(null)).Throw(new InvalidCastException());
-            LastCall.IgnoreArguments();
-            mocks.Replay(builder);
+            var builder = MockRepository.GenerateMock<IBuildPlan>();
+            var session = new StubBuildSession();
 
-            assertActionThrowsErrorCode(206, delegate {
+            builder.Stub(x => x.Build(session)).Throw(new InvalidCastException());
+
+            Exception<StructureMapBuildException>.ShouldBeThrownBy(() => {
                 var instance = new ConfiguredInstance(GetType());
-                instance.Build(GetType(), new StubBuildSession(), builder);
+                
+                instance.Build(GetType(), session, builder);
             });
         }
 
         [Test]
-        public void Trying_to_build_with_an_unknown_exception_will_throw_error_207()
+        public void build_fails_with_StructureMapException_adds_context()
         {
-            var mocks = new MockRepository();
-            var builder = mocks.StrictMock<IBuildPlan>();
-            Expect.Call(builder.Build(null)).Throw(new Exception());
-            LastCall.IgnoreArguments();
-            mocks.Replay(builder);
 
-            assertActionThrowsErrorCode(207, delegate {
+            var instance = new ConfiguredInstance(typeof(ClassThatBlowsUp));
+
+            var actual = Exception<StructureMapException>.ShouldBeThrownBy(() => {
+                instance.Build(typeof (ClassThatBlowsUp), new StubBuildSession());
+            });
+
+            actual.Message.ShouldContain(instance.Description);
+            actual.ShouldBeOfType<StructureMapBuildException>();
+        }
+
+        public class ClassThatBlowsUp
+        {
+            public ClassThatBlowsUp()
+            {
+                throw new StructureMapBuildException("I blew up all over myself");
+            }
+        }
+
+        [Test]
+        public void Trying_to_build_with_an_unknown_exception_will_throw_StructureMapException()
+        {
+            var builder = MockRepository.GenerateMock<IBuildPlan>();
+            var session = new StubBuildSession();
+            builder.Stub(x => x.Build(session)).Throw(new Exception());
+
+            Exception<StructureMapBuildException>.ShouldBeThrownBy(() =>
+            {
                 var instance = new ConfiguredInstance(GetType());
-                instance.Build(GetType(), new StubBuildSession(), builder);
+
+                instance.Build(GetType(), session, builder);
             });
         }
 
