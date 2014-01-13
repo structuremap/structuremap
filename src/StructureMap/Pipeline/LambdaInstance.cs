@@ -1,4 +1,5 @@
 using System;
+using StructureMap.Building;
 
 namespace StructureMap.Pipeline
 {
@@ -27,9 +28,15 @@ namespace StructureMap.Pipeline
             {
                 return _builder(session);
             }
+                // TODO -- UT this behavior
+            catch (StructureMapException ex)
+            {
+                ex.Push(Description);
+                throw;
+            }
             catch (Exception ex)
             {
-                throw new StructureMapException(207, ex, Name, pluginType);
+                throw new StructureMapBuildException("Exception while trying to build '{0}', check the inner exception".ToFormat(Description), ex);
             }
         }
 

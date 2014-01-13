@@ -1,19 +1,23 @@
 using NUnit.Framework;
+using StructureMap.Building;
 
 namespace StructureMap.Testing.Pipeline
 {
     [TestFixture]
     public class RedirectTester
     {
-        [Test, ExpectedException(typeof (StructureMapException))]
+        [Test]
         public void fail_with_cast_failure_when_the_types_are_not_convertible()
         {
-            var container = new Container(x => {
-                x.For<ITarget>().Use<ClassThatOnlyImplementsITarget>();
-                x.Redirect<IOtherTarget, ITarget>();
-            });
+            Exception<StructureMapBuildException>.ShouldBeThrownBy(() => {
+                var container = new Container(x =>
+                {
+                    x.For<ITarget>().Use<ClassThatOnlyImplementsITarget>();
+                    x.Redirect<IOtherTarget, ITarget>();
+                });
 
-            container.GetInstance<IOtherTarget>().ShouldBeOfType<ClassThatImplementsBoth>();
+                container.GetInstance<IOtherTarget>().ShouldBeOfType<ClassThatImplementsBoth>();
+            });
         }
 
         [Test]

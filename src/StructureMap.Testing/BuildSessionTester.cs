@@ -14,28 +14,6 @@ namespace StructureMap.Testing
     [TestFixture]
     public class BuildSessionTester
     {
-        #region Setup/Teardown
-
-        [SetUp]
-        public void SetUp()
-        {
-        }
-
-        #endregion
-
-        private void assertActionThrowsErrorCode(int errorCode, Action action)
-        {
-            try
-            {
-                action();
-
-                Assert.Fail("Should have thrown StructureMapException");
-            }
-            catch (StructureMapException ex)
-            {
-                Assert.AreEqual(errorCode, ex.ErrorCode);
-            }
-        }
 
         public class WidgetHolder
         {

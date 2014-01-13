@@ -1,5 +1,7 @@
 using System;
+using System.Diagnostics;
 using NUnit.Framework;
+using StructureMap.Building;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 
@@ -13,15 +15,11 @@ namespace StructureMap.Testing.Pipeline
         {
             var instance = new LambdaInstance<object>(() => { throw new NotImplementedException(); });
 
-            try
-            {
-                instance.Build(typeof (IWidget), new StubBuildSession());
-                Assert.Fail("Should have thrown an exception");
-            }
-            catch (StructureMapException ex)
-            {
-                Assert.AreEqual(207, ex.ErrorCode);
-            }
+            var ex = Exception<StructureMapBuildException>.ShouldBeThrownBy(() => {
+                instance.Build(typeof(IWidget), new StubBuildSession());
+            });
+
+            ex.Title.ShouldEqual("Failure at: \"Exception while trying to build 'Instance is created by Func<object> function:  System.Func`2[StructureMap.IContext,System.Object]', check the inner exception\"");
         }
     }
 }

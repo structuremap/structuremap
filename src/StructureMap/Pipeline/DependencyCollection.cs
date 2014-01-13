@@ -103,6 +103,7 @@ namespace StructureMap.Pipeline
         // @dependency has to be null, castable to type, or Instance
         // check that Instance is pluggable
         // TODO -- if enumerable of Instance, correct to EnumerableInstance
+        // TODO -- UT the defensive programming checks
         public void Add(string name, Type type, object @dependency)
         {
             if (type.IsSimple())
@@ -123,7 +124,7 @@ namespace StructureMap.Pipeline
                     }
                     catch (Exception e)
                     {
-                        throw new StructureMapException(206, e, name);
+                        throw new StructureMapConfigurationException("Invalid value '{0}' for parameter {1} of type {2}".ToFormat(@dependency, name, type.GetFullName()), e);
                     }
                 }
             }

@@ -1,5 +1,7 @@
 using System;
+using System.Diagnostics;
 using NUnit.Framework;
+using StructureMap.Building;
 using StructureMap.Configuration.DSL;
 using StructureMap.Testing.Widget3;
 
@@ -124,15 +126,11 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void TrapFailureInInterceptor()
         {
-            try
-            {
+            var ex = Exception<StructureMapBuildException>.ShouldBeThrownBy(() => {
                 _container.GetInstance<IService>("Bad");
-                Assert.Fail("Should have thrown an error");
-            }
-            catch (StructureMapException e)
-            {
-                Assert.AreEqual(270, e.ErrorCode);
-            }
+            });
+
+            ex.Title.ShouldEqual("Failure at: \"Instance specific interception failed for Bad of PluginType StructureMap.Testing.Widget3.IService\"");
         }
     }
 

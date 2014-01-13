@@ -39,20 +39,6 @@ namespace StructureMap.Testing.Pipeline
         private BuildSession _session;
 
 
-        private void assertActionThrowsErrorCode(int errorCode, Action action)
-        {
-            try
-            {
-                action();
-
-                Assert.Fail("Should have thrown StructureMapException");
-            }
-            catch (StructureMapException ex)
-            {
-                Assert.AreEqual(errorCode, ex.ErrorCode);
-            }
-        }
-
         public List<string> prop1 { get; set; }
         public IGateway[] gateways { get; set; }
 

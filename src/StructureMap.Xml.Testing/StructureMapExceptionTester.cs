@@ -14,31 +14,26 @@ namespace StructureMap.Xml.Testing
     public class StructureMapExceptionTester
     {
         
-        private void assertErrorIsThrown(int errorCode, string xml, Action<Container> action)
+        private StructureMapException assertErrorIsThrown(string xml, Action<Container> action)
         {
             var document = new XmlDocument();
             document.LoadXml(xml.Replace("\"", "'"));
 
             var builder = new PluginGraphBuilder();
             builder.Add(new ConfigurationParser(document.DocumentElement));
-            var manager = new Container(builder.Build());
+            var container = new Container(builder.Build());
 
-            try
-            {
-                action(manager);
-                Assert.Fail("Should have thrown exception");
-            }
-            catch (StructureMapException ex)
-            {
-                Assert.AreEqual(errorCode, ex.ErrorCode, "Expected error code");
-            }
+            return Exception<StructureMapException>.ShouldBeThrownBy(() => {
+                action(container);
+            });
+            
         }
 
         [Test]
         public void CanSerialize()
         {
             var ex = new ApplicationException("Oh no!");
-            var smapEx = new StructureMapException(200, ex, "a", "b");
+            var smapEx = new StructureMapException("some error message", ex);
 
             var formatter = new BinaryFormatter();
             var stream = new MemoryStream();
@@ -55,8 +50,7 @@ namespace StructureMap.Xml.Testing
         [Test, Ignore("Will have to be redone")]
         public void CouldNotFindInstanceKey()
         {
-            assertErrorIsThrown(200,
-                                @"
+            assertErrorIsThrown(@"
 		            <StructureMap>
 			            <Assembly Name='StructureMap.Testing.Widget'/>
             					
@@ -71,8 +65,7 @@ namespace StructureMap.Xml.Testing
         [Test, Ignore("will have to be redone")]
         public void Throw_202_when_DefaultKeyDoesNotExist()
         {
-            assertErrorIsThrown(202,
-                                @"
+            assertErrorIsThrown(@"
 		            <StructureMap>
 			            <Assembly Name='StructureMap.Testing.Widget'/>
             					

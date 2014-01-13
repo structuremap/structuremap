@@ -3,6 +3,7 @@ using StructureMap.Building;
 using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Pipeline
 {
@@ -147,7 +148,7 @@ namespace StructureMap.Pipeline
             }
             catch (Exception e)
             {
-                throw new StructureMapException(270, e, Name, pluginType);
+                throw new StructureMapBuildException("Instance specific interception failed for {0} of PluginType {1}".ToFormat(Name, pluginType.GetFullName()), e);
             }
         }
 

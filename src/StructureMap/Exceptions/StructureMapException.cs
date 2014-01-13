@@ -22,11 +22,9 @@ namespace StructureMap
 
         private readonly Queue<string> _descriptions = new Queue<string>();
         private readonly string _title;
-        private readonly int _errorCode;
 
         protected StructureMapException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
-            _errorCode = info.GetInt32("errorCode");
             var descriptions = info.GetValue("descriptions", typeof (string[])).As<string[]>();
 
             descriptions.Each(x => _descriptions.Enqueue(x));
@@ -37,7 +35,6 @@ namespace StructureMap
         [SecurityCritical]
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("errorCode", _errorCode, typeof (int));
             info.AddValue("descriptions", _descriptions.ToArray(), typeof (string[]));
             info.AddValue("message", _title);
             base.GetObjectData(info, context);
@@ -76,26 +73,9 @@ namespace StructureMap
             Push(message);
         }
 
-        [Obsolete("Want to eliminate the error code ctor")]
-        public StructureMapException(int ErrorCode, Exception InnerException, params object[] args)
-            : base(string.Empty, InnerException)
-        {
-            _errorCode = ErrorCode;
-            var msg = string.Format("StructureMap Exception Code:  {0}\n", _errorCode);
-            msg += ErrorMessages.GetMessage(ErrorCode, args);
-            _title = msg;
-            Push(msg);
-        }
-
         public string Title
         {
             get { return _title; }
-        }
-
-        [Obsolete]
-        public int ErrorCode
-        {
-            get { return _errorCode; }
         }
 
     }

@@ -108,7 +108,7 @@ namespace StructureMap
             }
             catch (Exception e)
             {
-                throw new StructureMapException(308, e, instance.Name, returnValue.GetType());
+                throw new StructureMapBuildException("A configured instance interceptor has failed for Instance '{0}' and concrete type '{1}'".ToFormat(instance.Name, returnValue.GetType().GetFullName()), e);
             }
         }
 

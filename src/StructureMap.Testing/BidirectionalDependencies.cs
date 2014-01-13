@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using NUnit.Framework;
+using StructureMap.Building;
 
 namespace StructureMap.Testing
 {
@@ -24,16 +25,13 @@ namespace StructureMap.Testing
         [Test]
         public void do_not_blow_up_with_a_stack_overflow_problem()
         {
-            try
-            {
-                container.GetInstance<BiView>();
-                Assert.Fail("Should have thrown error");
-            }
-            catch (StructureMapException e)
-            {
-                Debug.WriteLine(e.ToString());
-                e.ErrorCode.ShouldEqual(295);
-            }
+            var ex = Exception<StructureMapBuildException>.ShouldBeThrownBy(() => {
+
+            });
+
+            Debug.WriteLine(ex.Title);
+
+            ex.Title.ShouldEqual("Something that is adequately explanatory");
         }
     }
 

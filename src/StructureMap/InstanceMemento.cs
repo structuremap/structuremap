@@ -1,5 +1,6 @@
 using System;
 using StructureMap.Pipeline;
+using StructureMap.TypeRules;
 
 namespace StructureMap
 {
@@ -73,7 +74,7 @@ namespace StructureMap
             }
             catch (Exception ex)
             {
-                throw new StructureMapException(205, ex, Key, InstanceKey);
+                throw new StructureMapConfigurationException("Missing requested Instance property '{0}' for InstanceKey '{1}'".ToFormat(Key, InstanceKey), ex);
             }
 
             if (String.IsNullOrEmpty(returnValue)) return null;
@@ -146,7 +147,7 @@ namespace StructureMap
             }
             catch (Exception e)
             {
-                throw new StructureMapException(260, e, InstanceKey, pluginType.FullName);
+                throw new StructureMapConfigurationException("Malformed InstanceMemento {0} of PluginType {1}".ToFormat(InstanceKey, pluginType.GetFullName()), e);
             }
         }
 

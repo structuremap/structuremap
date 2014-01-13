@@ -78,6 +78,8 @@ namespace StructureMap.Pipeline
             }
             catch (StructureMapException ex)
             {
+                // TODO -- UT this behavior
+                ex.Push(Description);
                 throw;
             }
             catch (Exception ex)
