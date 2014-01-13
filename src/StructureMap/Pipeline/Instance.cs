@@ -109,7 +109,8 @@ namespace StructureMap.Pipeline
             }
             catch (StructureMapException ex)
             {
-                ex.Push(Description);
+                // TODO -- change the signature to use PluginType on description
+                ex.Push(pluginType.GetFullName() + ": " + Description);
                 throw;
             }
             catch (Exception ex)

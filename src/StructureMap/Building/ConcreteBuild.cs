@@ -7,7 +7,7 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.Building
 {
-    public class ConcreteBuild : IBuildPlan, IHasSetters
+    public class ConcreteBuild : IBuildPlan, IHasSetters, IDescribed
     {
         private readonly Type _concreteType;
         private readonly ConstructorStep _constructor;
@@ -60,7 +60,15 @@ namespace StructureMap.Building
             return _func.Value(session);
         }
 
-        public string Description { get; set; }
+        public string Description
+        {
+            get
+            {
+                var args = _constructor.Arguments.Select(x => x.Description).ToArray();
+
+                return "new {0}({1})".ToFormat(_concreteType.Name, string.Join(", ", args));
+            }
+        }
 
 
         public Delegate ToDelegate()
@@ -68,10 +76,11 @@ namespace StructureMap.Building
             var session = Expression.Parameter(typeof (IBuildSession), "session");
             var inner = ToExpression(session);
 
+            var wrapped = TryCatchWrapper.Wrap<StructureMapBuildException>(_concreteType, inner, this);
+
             var lambdaType = typeof (Func<,>).MakeGenericType(typeof (IBuildSession), _concreteType);
 
-
-            var lambda = Expression.Lambda(lambdaType, inner, session);
+            var lambda = Expression.Lambda(lambdaType, wrapped, session);
 
             return lambda.Compile();
         }

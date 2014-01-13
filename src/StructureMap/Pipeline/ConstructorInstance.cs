@@ -47,7 +47,10 @@ namespace StructureMap.Pipeline
 
         protected override sealed string getDescription()
         {
-            return "Configured Instance of " + _pluggedType.AssemblyQualifiedName;
+            return HasExplicitName() 
+                ? "{0} ('{1}')".ToFormat(_pluggedType.GetFullName(), Name) 
+                :  _pluggedType.GetFullName();
+
         }
 
         public override IDependencySource ToDependencySource(Type pluginType)
@@ -66,26 +69,7 @@ namespace StructureMap.Pipeline
             // TODO -- make this Lazy for crying out loud
             var plan = StructureMap.Building.ConcreteType.BuildPlan(_pluggedType, null, _dependencies, Policies);
             
-
-            return Build(pluginType, session, plan);
-        }
-
-        public object Build(Type pluginType, IBuildSession session, IBuildPlan builder)
-        {
-            try
-            {
-                return builder.Build(session);
-            }
-            catch (StructureMapException ex)
-            {
-                // TODO -- UT this behavior
-                ex.Push(Description);
-                throw;
-            }
-            catch (Exception ex)
-            {
-                throw new StructureMapBuildException("Failed while building '{0}'".ToFormat(Description), ex);
-            }
+            return plan.Build(session);
         }
 
         public static ConstructorInstance For<T>()

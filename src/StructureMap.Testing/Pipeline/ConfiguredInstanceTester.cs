@@ -161,20 +161,6 @@ namespace StructureMap.Testing.Pipeline
             Assert.IsTrue(rule is ComplexRule);
         }
 
-        [Test]
-        public void Trying_to_build_with_an_InvalidCastException_will_throw_a_StructureMapException()
-        {
-            var builder = MockRepository.GenerateMock<IBuildPlan>();
-            var session = new StubBuildSession();
-
-            builder.Stub(x => x.Build(session)).Throw(new InvalidCastException());
-
-            Exception<StructureMapBuildException>.ShouldBeThrownBy(() => {
-                var instance = new ConfiguredInstance(GetType());
-                
-                instance.Build(GetType(), session, builder);
-            });
-        }
 
         [Test]
         public void build_fails_with_StructureMapException_adds_context()
@@ -196,21 +182,6 @@ namespace StructureMap.Testing.Pipeline
             {
                 throw new StructureMapBuildException("I blew up all over myself");
             }
-        }
-
-        [Test]
-        public void Trying_to_build_with_an_unknown_exception_will_throw_StructureMapException()
-        {
-            var builder = MockRepository.GenerateMock<IBuildPlan>();
-            var session = new StubBuildSession();
-            builder.Stub(x => x.Build(session)).Throw(new Exception());
-
-            Exception<StructureMapBuildException>.ShouldBeThrownBy(() =>
-            {
-                var instance = new ConfiguredInstance(GetType());
-
-                instance.Build(GetType(), session, builder);
-            });
         }
 
         [Test]
