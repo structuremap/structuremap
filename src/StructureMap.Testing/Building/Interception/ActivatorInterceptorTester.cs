@@ -52,16 +52,6 @@ namespace StructureMap.Testing.Building.Interception
             expression.ToString().ShouldEqual("target.Activate()");
         }
 
-        [Test, Ignore("Not entirely sure this is necessary yet")]
-        public void create_the_expression_when_the_variable_needs_to_be_cast()
-        {
-            var variable = Expression.Variable(typeof(IActivatorTarget), "target");
-
-            var expression = theActivator.ToExpression(Parameters.Session, variable);
-
-            expression.ToString().ShouldEqual("foo");
-        }
-
         [Test]
         public void compile_and_use_by_itself()
         {
@@ -79,7 +69,6 @@ namespace StructureMap.Testing.Building.Interception
 
             target.HasBeenActivated.ShouldBeTrue();
         }
-
 
     }
 

@@ -237,6 +237,8 @@ namespace StructureMap
             {
                 if (pluggedType == null) return false;
 
+                if (pluggedType == pluginType) return true;
+
                 if (pluggedType.IsInterface || pluggedType.IsAbstract)
                 {
                     return false;

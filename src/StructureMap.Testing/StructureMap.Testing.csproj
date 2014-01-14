@@ -194,6 +194,7 @@
     <Compile Include="Building\DefaultDependencySourceTester.cs" />
     <Compile Include="Building\FakeBuildSession.cs" />
     <Compile Include="Building\Interception\ActivatorInterceptorTester.cs" />
+    <Compile Include="Building\Interception\InterceptionPlanTester.cs" />
     <Compile Include="Building\LifecycleDependencySourceTester.cs" />
     <Compile Include="Building\list_expression_building.cs" />
     <Compile Include="Building\LiteralPlanTester.cs" />

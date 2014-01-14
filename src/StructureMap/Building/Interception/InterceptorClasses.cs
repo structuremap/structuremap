@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -37,7 +36,7 @@ namespace StructureMap.Building.Interception
 
             var later = Expression.Parameter(typeof (SomeTarget), "later");
 
-
+            
         }
     }
 
@@ -49,63 +48,6 @@ namespace StructureMap.Building.Interception
         }
     }
 
-
-    public class InterceptionPlan : IBuildPlan
-    {
-        private readonly Type _pluginType;
-        private readonly IBuildPlan _inner;
-        private readonly IEnumerable<IInterceptor> _interceptors;
-
-        public InterceptionPlan(Type pluginType, IBuildPlan inner, IEnumerable<IInterceptor> interceptors)
-        {
-            _pluginType = pluginType;
-            _inner = inner;
-            _interceptors = interceptors;
-        }
-
-        public object Build(IBuildSession session)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Expression ToExpression(ParameterExpression session)
-        {
-            var label = Expression.Label(_pluginType);
-            
-
-            var inner = _inner.ToExpression(session);
-            var list = new List<Expression>();
-            
-            var activators = _interceptors.Where(x => x.Role == InterceptorRole.Activates);
-
-            var variable = Expression.Variable(_inner.ReturnedType, "x");
-            Expression returnTarget = variable;
-
-            var assignment = Expression.Assign(variable, inner);
-            list.Add(assignment);
-
-            var activations = activators.Select(x => x.ToExpression(session, variable));
-            list.AddRange(activations);
-
-
-
-            list.Add(Expression.Return(label, returnTarget, _pluginType));
-            list.Add(Expression.Label(label));
-
-            return Expression.Block(list.ToArray());
-
-        }
-
-        public Type ReturnedType
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public string Description { get; private set; }
-    }
 
     // These will go on Policies somehow
     // want one that can handle open generics
@@ -168,6 +110,39 @@ namespace StructureMap.Building.Interception
     {
         Activates,
         Decorates
+    }
+
+    public class BlockPlan
+    {
+        private readonly List<Expression> _expressions = new List<Expression>();
+        private readonly List<ParameterExpression> _variables = new List<ParameterExpression>(); 
+
+        public static BlockPlan operator +(BlockPlan plan, Expression expression)
+        {
+            plan._expressions.Add(expression);
+
+            return plan;
+        }
+
+        public void Add(params Expression[] expressions)
+        {
+            _expressions.AddRange(expressions);
+        }
+
+        public BlockExpression ToExpression()
+        {
+            return Expression.Block(_variables, _expressions.ToArray());
+        }
+
+        public void AddVariable(ParameterExpression variable)
+        {
+            _variables.Add(variable);
+        }
+
+        public void AddVariables(IEnumerable<ParameterExpression> variables)
+        {
+            _variables.AddRange(variables);
+        }
     }
 
 }
