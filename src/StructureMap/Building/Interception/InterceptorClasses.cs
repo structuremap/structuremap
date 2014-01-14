@@ -22,6 +22,7 @@ namespace StructureMap.Building.Interception
      * 
      */
 
+
     public static class Think
     {
         public static void Do()
@@ -69,6 +70,8 @@ namespace StructureMap.Building.Interception
         Type Returns { get; }
     }
 
+
+
     public class ContextualActivatorInterceptor<T> : IInterceptor
     {
         private readonly Expression<Action<IContext, T>> _expression;
@@ -105,44 +108,4 @@ namespace StructureMap.Building.Interception
         public Type Accepts { get; private set; }
         public Type Returns { get; private set; }
     }
-
-    public enum InterceptorRole
-    {
-        Activates,
-        Decorates
-    }
-
-    public class BlockPlan
-    {
-        private readonly List<Expression> _expressions = new List<Expression>();
-        private readonly List<ParameterExpression> _variables = new List<ParameterExpression>(); 
-
-        public static BlockPlan operator +(BlockPlan plan, Expression expression)
-        {
-            plan._expressions.Add(expression);
-
-            return plan;
-        }
-
-        public void Add(params Expression[] expressions)
-        {
-            _expressions.AddRange(expressions);
-        }
-
-        public BlockExpression ToExpression()
-        {
-            return Expression.Block(_variables, _expressions.ToArray());
-        }
-
-        public void AddVariable(ParameterExpression variable)
-        {
-            _variables.Add(variable);
-        }
-
-        public void AddVariables(IEnumerable<ParameterExpression> variables)
-        {
-            _variables.AddRange(variables);
-        }
-    }
-
 }

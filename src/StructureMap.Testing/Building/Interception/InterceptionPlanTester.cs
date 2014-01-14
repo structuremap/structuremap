@@ -12,12 +12,12 @@ namespace StructureMap.Testing.Building.Interception
         [Test]
         public void intercept_happy_path_with_a_single_activation()
         {
-            var target = new ActivatorTarget();
-            var inner = new LiteralPlan<ActivatorTarget>(target);
+            var target = new Target();
+            var inner = new LiteralPlan<Target>(target);
 
-            var plan = new InterceptionPlan(typeof (IActivatorTarget), inner, new IInterceptor[] {new ActivatorInterceptor<IActivatorTarget>(x => x.Activate())});
+            var plan = new InterceptionPlan(typeof (ITarget), inner, new IInterceptor[] {new ActivatorInterceptor<ITarget>(x => x.Activate())});
 
-            plan.ToBuilder<IActivatorTarget>()(new StubBuildSession())
+            plan.ToBuilder<ITarget>()(new StubBuildSession())
                 .ShouldBeTheSameAs(target);
 
             target.HasBeenActivated.ShouldBeTrue();
@@ -26,17 +26,17 @@ namespace StructureMap.Testing.Building.Interception
         [Test]
         public void multiple_activators_taking_different_accept_types()
         {
-            var target = new ActivatorTarget();
-            var inner = new LiteralPlan<ActivatorTarget>(target);
+            var target = new Target();
+            var inner = new LiteralPlan<Target>(target);
 
-            var plan = new InterceptionPlan(typeof(IActivatorTarget), inner, 
+            var plan = new InterceptionPlan(typeof(ITarget), inner, 
                 new IInterceptor[]
                 {
-                    new ActivatorInterceptor<IActivatorTarget>(x => x.Activate()),
-                    new ActivatorInterceptor<ActivatorTarget>(x => x.TurnGreen())
+                    new ActivatorInterceptor<ITarget>(x => x.Activate()),
+                    new ActivatorInterceptor<Target>(x => x.TurnGreen())
                 });
 
-            plan.ToBuilder<IActivatorTarget>()(new StubBuildSession())
+            plan.ToBuilder<ITarget>()(new StubBuildSession())
                 .ShouldBeTheSameAs(target);
 
             target.HasBeenActivated.ShouldBeTrue();
@@ -46,18 +46,18 @@ namespace StructureMap.Testing.Building.Interception
         [Test]
         public void activator_that_fails_gets_wrapped_in_descriptive_text()
         {
-            var target = new ActivatorTarget();
-            var inner = new LiteralPlan<ActivatorTarget>(target);
+            var target = new Target();
+            var inner = new LiteralPlan<Target>(target);
 
-            var interceptor = new ActivatorInterceptor<ActivatorTarget>(x => x.ThrowUp());
-            var plan = new InterceptionPlan(typeof(IActivatorTarget), inner, 
+            var interceptor = new ActivatorInterceptor<Target>(x => x.ThrowUp());
+            var plan = new InterceptionPlan(typeof(ITarget), inner, 
                 new IInterceptor[]
                 {
                     interceptor
                 });
 
             var ex = Exception<StructureMapInterceptorException>.ShouldBeThrownBy(() => {
-                plan.ToBuilder<IActivatorTarget>()(new StubBuildSession());
+                plan.ToBuilder<ITarget>()(new StubBuildSession());
             });
 
             ex.Title.ShouldContain(interceptor.Description);

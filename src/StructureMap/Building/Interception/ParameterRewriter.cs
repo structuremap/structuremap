@@ -12,9 +12,11 @@ namespace StructureMap.Building.Interception
 
         public static LambdaExpression ReplaceParameter(Type acceptsType, LambdaExpression expression, ParameterExpression newParam)
         {
-            var before = expression.Parameters.Single(x => {
+            var before = expression.Parameters.FirstOrDefault(x => {
                 return x.Type.CanBeCastTo(acceptsType);
             });
+
+            if (before == null) return expression;
 
             var rewriter = new ParameterRewriter(before, newParam);
             return rewriter.VisitAndConvert(expression, "Activator");

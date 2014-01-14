@@ -141,8 +141,11 @@
     <Compile Include="Building\IHasSetters.cs" />
     <Compile Include="Building\InstanceDependencySource.cs" />
     <Compile Include="Building\Interception\ActivatorInterceptor.cs" />
+    <Compile Include="Building\Interception\BlockPlan.cs" />
+    <Compile Include="Building\Interception\FuncInterceptor.cs" />
     <Compile Include="Building\Interception\InterceptionPlan.cs" />
     <Compile Include="Building\Interception\InterceptorClasses.cs" />
+    <Compile Include="Building\Interception\InterceptorRole.cs" />
     <Compile Include="Building\Interception\ParameterRewriter.cs" />
     <Compile Include="Building\LifecycleDependencySource.cs" />
     <Compile Include="Building\ListDependencySource.cs" />

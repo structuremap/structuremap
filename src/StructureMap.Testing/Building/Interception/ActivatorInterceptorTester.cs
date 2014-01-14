@@ -11,18 +11,18 @@ namespace StructureMap.Testing.Building.Interception
     [TestFixture]
     public class ActivatorInterceptorTester
     {
-        private ActivatorInterceptor<IActivatorTarget> theActivator;
+        private ActivatorInterceptor<ITarget> theActivator;
 
         [SetUp]
         public void SetUp()
         {
-            theActivator = new ActivatorInterceptor<IActivatorTarget>(x => x.Activate());
+            theActivator = new ActivatorInterceptor<ITarget>(x => x.Activate());
         }
 
         [Test]
         public void the_description()
         {
-            theActivator.Description.ShouldEqual("IActivatorTarget.Activate()");
+            theActivator.Description.ShouldEqual("ITarget.Activate()");
         }
 
         [Test]
@@ -34,18 +34,18 @@ namespace StructureMap.Testing.Building.Interception
         [Test]
         public void the_accepts_type()
         {
-            theActivator.Accepts.ShouldEqual(typeof (IActivatorTarget));
+            theActivator.Accepts.ShouldEqual(typeof (ITarget));
         }
         [Test]
         public void the_return_type()
         {
-            theActivator.Returns.ShouldEqual(typeof (IActivatorTarget));
+            theActivator.Returns.ShouldEqual(typeof (ITarget));
         }
 
         [Test]
         public void create_the_expression_when_the_variable_is_the_right_type()
         {
-            var variable = Expression.Variable(typeof (IActivatorTarget), "target");
+            var variable = Expression.Variable(typeof (ITarget), "target");
 
             var expression = theActivator.ToExpression(Parameters.Session, variable);
 
@@ -55,16 +55,16 @@ namespace StructureMap.Testing.Building.Interception
         [Test]
         public void compile_and_use_by_itself()
         {
-            var variable = Expression.Variable(typeof(IActivatorTarget), "target");
+            var variable = Expression.Variable(typeof(ITarget), "target");
 
             var expression = theActivator.ToExpression(Parameters.Session, variable);
 
-            var lambdaType = typeof (Action<IActivatorTarget>);
+            var lambdaType = typeof (Action<ITarget>);
             var lambda = Expression.Lambda(lambdaType, expression, variable);
 
-            var action = lambda.Compile().As<Action<IActivatorTarget>>();
+            var action = lambda.Compile().As<Action<ITarget>>();
 
-            var target = new ActivatorTarget();
+            var target = new Target();
             action(target);
 
             target.HasBeenActivated.ShouldBeTrue();
@@ -72,16 +72,16 @@ namespace StructureMap.Testing.Building.Interception
 
     }
 
-    public interface IActivatorTarget
+    public interface ITarget
     {
         void Activate();
     }
 
-    public class ActivatorTarget : IActivatorTarget
+    public class Target : ITarget
     {
         public bool HasBeenActivated;
 
-        void IActivatorTarget.Activate()
+        void ITarget.Activate()
         {
             HasBeenActivated = true;
         }
