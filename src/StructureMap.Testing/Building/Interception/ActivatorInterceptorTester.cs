@@ -92,5 +92,10 @@ namespace StructureMap.Testing.Building.Interception
         }
 
         public string Color = "Red";
+
+        public void ThrowUp()
+        {
+            throw new DivideByZeroException("you stink!");
+        }
     }
 }

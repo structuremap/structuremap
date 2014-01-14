@@ -105,7 +105,9 @@ namespace StructureMap.Building.Interception
                 {
                     var interceptionExpression = interceptor.ToExpression(Parameters.Session, variable);
 
-                    yield return interceptionExpression;
+                    yield return
+                        TryCatchWrapper.WrapAction<StructureMapInterceptorException>(interceptionExpression, interceptor);
+
                 }
             } 
         }

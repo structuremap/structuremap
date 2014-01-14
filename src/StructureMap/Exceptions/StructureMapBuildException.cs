@@ -25,4 +25,20 @@ namespace StructureMap.Building
         {
         }
     }
+
+    [Serializable]
+    public class StructureMapInterceptorException : StructureMapBuildException
+    {
+        public StructureMapInterceptorException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
+
+        public StructureMapInterceptorException(string message) : base(message)
+        {
+        }
+
+        protected StructureMapInterceptorException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
+    }
 }
