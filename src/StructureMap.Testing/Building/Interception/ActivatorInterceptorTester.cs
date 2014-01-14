@@ -85,5 +85,12 @@ namespace StructureMap.Testing.Building.Interception
         {
             HasBeenActivated = true;
         }
+
+        public void TurnGreen()
+        {
+            Color = "Green";
+        }
+
+        public string Color = "Red";
     }
 }

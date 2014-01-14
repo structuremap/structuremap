@@ -21,5 +21,25 @@ namespace StructureMap.Testing.Building.Interception
 
             target.HasBeenActivated.ShouldBeTrue();
         }
+
+        [Test]
+        public void multiple_activators_taking_different_accept_types()
+        {
+            var target = new ActivatorTarget();
+            var inner = new LiteralPlan<ActivatorTarget>(target);
+
+            var plan = new InterceptionPlan(typeof(IActivatorTarget), inner, 
+                new IInterceptor[]
+                {
+                    new ActivatorInterceptor<IActivatorTarget>(x => x.Activate()),
+                    new ActivatorInterceptor<ActivatorTarget>(x => x.TurnGreen())
+                });
+
+            plan.ToBuilder<IActivatorTarget>()(new StubBuildSession())
+                .ShouldBeTheSameAs(target);
+
+            target.HasBeenActivated.ShouldBeTrue();
+            target.Color.ShouldEqual("Green");
+        }
     }
 }
