@@ -6,21 +6,26 @@ namespace StructureMap.Building.Interception
 {
     public class ActivatorInterceptor<T> : IInterceptor
     {
-        private readonly Expression<Action<T>> _action;
+        private readonly LambdaExpression _action;
 
         public ActivatorInterceptor(Expression<Action<T>> action)
         {
             _action = action;
         }
 
+        public ActivatorInterceptor(Expression<Action<IBuildSession, T>> action)
+        {
+            _action = action;
+        } 
+
         public string Description
         {
             get
             {
-                var description = _action.Body.ToString();
-                var parameterName = _action.Parameters.Single().Name;
-
-                return description.Replace(parameterName + ".", typeof (T).Name + ".");
+                return _action
+                    .ReplaceParameter(Accepts, Expression.Parameter(Accepts, Accepts.Name))
+                    .ReplaceParameter(typeof(IBuildSession), Expression.Parameter(typeof(IBuildSession), "IBuildSession"))
+                    .Body.ToString();
             }
         }
 
@@ -34,7 +39,10 @@ namespace StructureMap.Building.Interception
 
         public Expression ToExpression(ParameterExpression session, ParameterExpression variable)
         {
-            return ParameterRewriter.ReplaceParameter(Accepts, _action, variable).Body;
+            return _action
+                .ReplaceParameter(Accepts, variable)
+                .ReplaceParameter(typeof (IBuildSession), session)
+                .Body;
         }
 
         public Type Accepts { get { return typeof (T); } }

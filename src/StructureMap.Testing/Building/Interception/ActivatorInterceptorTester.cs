@@ -26,6 +26,14 @@ namespace StructureMap.Testing.Building.Interception
         }
 
         [Test]
+        public void the_description_using_session()
+        {
+            var activator = new ActivatorInterceptor<Target>((s, t) => t.UseContext(s));
+
+            activator.Description.ShouldEqual("Target.UseContext(IBuildSession)");
+        }
+
+        [Test]
         public void the_role_is_activates()
         {
             theActivator.Role.ShouldEqual(InterceptorRole.Activates);
@@ -70,6 +78,28 @@ namespace StructureMap.Testing.Building.Interception
             target.HasBeenActivated.ShouldBeTrue();
         }
 
+        [Test]
+        public void compile_and_use_by_itself_with_session()
+        {
+            var activator = new ActivatorInterceptor<Target>((s, t) => t.UseContext(s));
+            var variable = Expression.Variable(typeof(Target), "target");
+
+
+
+            var expression = activator.ToExpression(Parameters.Session, variable);
+
+            var lambdaType = typeof(Action<IBuildSession, Target>);
+            var lambda = Expression.Lambda(lambdaType, expression, Parameters.Session, variable);
+
+            var action = lambda.Compile().As<Action<IBuildSession, Target>>();
+
+            var target = new Target();
+            var session = new FakeBuildSession();
+            action(session, target);
+
+            target.Session.ShouldBeTheSameAs(session);
+        }
+
     }
 
     public interface ITarget
@@ -90,6 +120,13 @@ namespace StructureMap.Testing.Building.Interception
         {
             Color = "Green";
         }
+
+        public void UseContext(IBuildSession session)
+        {
+            Session = session;
+        }
+
+        public IBuildSession Session;
 
         public string Color = "Red";
 
