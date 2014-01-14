@@ -8,5 +8,7 @@ namespace StructureMap.Building
         [Obsolete("Think this goes away")]
         object Build(IBuildSession session);
         Expression ToExpression(ParameterExpression session);
+
+        Type ReturnedType { get; }
     }
 }

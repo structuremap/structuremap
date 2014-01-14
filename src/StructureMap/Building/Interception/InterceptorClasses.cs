@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 
 namespace StructureMap.Building.Interception
 {
@@ -27,15 +31,36 @@ namespace StructureMap.Building.Interception
             var variable = Expression.Variable(typeof (string), "x");
             var assignment = Expression.Assign(variable, value);
 
+            Expression<Action<SomeTarget>> expr = x => x.Call();
+            //var action = expr.Compile();
+            //Expression<Action<SomeTarget>> intercepted = s => action(s);
 
+            var later = Expression.Parameter(typeof (SomeTarget), "later");
+
+
+        }
+    }
+
+    public class SomeTarget
+    {
+        public void Call()
+        {
+            
         }
     }
 
 
     public class InterceptionPlan : IBuildPlan
     {
-        public InterceptionPlan(IBuildPlan inner, IEnumerable<IInterceptorPolicy> policies)
+        private readonly Type _pluginType;
+        private readonly IBuildPlan _inner;
+        private readonly IEnumerable<IInterceptor> _interceptors;
+
+        public InterceptionPlan(Type pluginType, IBuildPlan inner, IEnumerable<IInterceptor> interceptors)
         {
+            _pluginType = pluginType;
+            _inner = inner;
+            _interceptors = interceptors;
         }
 
         public object Build(IBuildSession session)
@@ -45,7 +70,38 @@ namespace StructureMap.Building.Interception
 
         public Expression ToExpression(ParameterExpression session)
         {
-            throw new NotImplementedException();
+            var label = Expression.Label(_pluginType);
+            
+
+            var inner = _inner.ToExpression(session);
+            var list = new List<Expression>();
+            
+            var activators = _interceptors.Where(x => x.Role == InterceptorRole.Activates);
+
+            var variable = Expression.Variable(_inner.ReturnedType, "x");
+            Expression returnTarget = variable;
+
+            var assignment = Expression.Assign(variable, inner);
+            list.Add(assignment);
+
+            var activations = activators.Select(x => x.ToExpression(session, variable));
+            list.AddRange(activations);
+
+
+
+            list.Add(Expression.Return(label, returnTarget, _pluginType));
+            list.Add(Expression.Label(label));
+
+            return Expression.Block(list.ToArray());
+
+        }
+
+        public Type ReturnedType
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
         }
 
         public string Description { get; private set; }
@@ -69,40 +125,6 @@ namespace StructureMap.Building.Interception
 
         Type Accepts { get; }
         Type Returns { get; }
-    }
-
-    public class ActivatorInterceptor<T> : IInterceptor
-    {
-        private readonly Expression<Action<T>> _action;
-
-        public ActivatorInterceptor(Expression<Action<T>> action)
-        {
-            _action = action;
-        }
-
-        public string Description
-        {
-            get
-            {
-                return _action.Body.ToString();
-            }
-        }
-
-        public InterceptorRole Role
-        {
-            get
-            {
-                return InterceptorRole.Activates;
-            }
-        }
-
-        public Expression ToExpression(ParameterExpression session, ParameterExpression variable)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Type Accepts { get { return typeof (T); } }
-        public Type Returns { get { return typeof(T); } }
     }
 
     public class ContextualActivatorInterceptor<T> : IInterceptor
@@ -147,4 +169,5 @@ namespace StructureMap.Building.Interception
         Activates,
         Decorates
     }
+
 }

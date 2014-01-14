@@ -6,9 +6,6 @@ namespace StructureMap.Building
 {
     public class Setter
     {
-        public static readonly ParameterExpression SessionParameter
-            = Expression.Parameter(typeof (IBuildSession), "session");
-
         private readonly MemberInfo _member;
 
         public Setter(MemberInfo member, IDependencySource value)
@@ -30,9 +27,9 @@ namespace StructureMap.Building
         {
             var lambdaType = typeof (Action<,>).MakeGenericType(typeof (IBuildSession), concreteType);
             var method = _member.As<PropertyInfo>().GetSetMethod();
-            var callSetMethod = Expression.Call(target, method, AssignedValue.ToExpression(SessionParameter));
+            var callSetMethod = Expression.Call(target, method, AssignedValue.ToExpression(Parameters.Session));
 
-            return Expression.Lambda(lambdaType, callSetMethod, SessionParameter, target);
+            return Expression.Lambda(lambdaType, callSetMethod, Parameters.Session, target);
         }
     }
 }

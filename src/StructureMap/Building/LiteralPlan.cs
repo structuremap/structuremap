@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using System;
+using System.Linq.Expressions;
 
 namespace StructureMap.Building
 {
@@ -32,6 +33,14 @@ namespace StructureMap.Building
         public Expression ToExpression(ParameterExpression session)
         {
             return Expression.Constant(_object);
+        }
+
+        public Type ReturnedType
+        {
+            get
+            {
+                return typeof (T);
+            }
         }
     }
 }

@@ -73,14 +73,13 @@ namespace StructureMap.Building
 
         public Delegate ToDelegate()
         {
-            var session = Expression.Parameter(typeof (IBuildSession), "session");
-            var inner = ToExpression(session);
+            var inner = ToExpression(Parameters.Session);
 
             var wrapped = TryCatchWrapper.Wrap<StructureMapBuildException>(_concreteType, inner, this);
 
             var lambdaType = typeof (Func<,>).MakeGenericType(typeof (IBuildSession), _concreteType);
 
-            var lambda = Expression.Lambda(lambdaType, wrapped, session);
+            var lambda = Expression.Lambda(lambdaType, wrapped, Parameters.Session);
 
             return lambda.Compile();
         }
@@ -96,6 +95,14 @@ namespace StructureMap.Building
 
 
             return Expression.MemberInit(newExpr, _setters.Select(x => x.ToBinding(session)));
+        }
+
+        public Type ReturnedType
+        {
+            get
+            {
+                return _concreteType;
+            }
         }
     }
 
