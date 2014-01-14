@@ -97,7 +97,7 @@ namespace StructureMap.Testing
 
             public override string ToString()
             {
-                return string.Format("Class1 has Context: {0}", _context);
+                return string.Format("Class1 has session: {0}", _context);
             }
         }
 
@@ -114,7 +114,7 @@ namespace StructureMap.Testing
 
             public override string ToString()
             {
-                return string.Format("Class2 has Context: {0}\n{1}", _context, _class1);
+                return string.Format("Class2 has session: {0}\n{1}", _context, _class1);
             }
         }
 
@@ -131,7 +131,7 @@ namespace StructureMap.Testing
 
             public override string ToString()
             {
-                return string.Format("Class3 has Context: {0}\n{1}", _context, _class2);
+                return string.Format("Class3 has session: {0}\n{1}", _context, _class2);
             }
         }
 

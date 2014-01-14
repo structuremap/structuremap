@@ -104,7 +104,7 @@ namespace StructureMap.Testing
             {
                 var writer = new StringWriter();
                 writer.WriteLine();
-                writer.WriteLine("StructureMap Context from inner to outer:");
+                writer.WriteLine("StructureMap session from inner to outer:");
                 var i = 0;
                 _descriptions.Each(x => writer.WriteLine(++i + ".) " + x));
 

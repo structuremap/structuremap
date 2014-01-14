@@ -33,8 +33,10 @@ namespace StructureMap.Building.Interception
 
         public Expression ToExpression(ParameterExpression session, ParameterExpression variable)
         {
-            return _expression.ReplaceParameter(Accepts, variable)
+            var body = _expression.ReplaceParameter(Accepts, variable)
                 .ReplaceParameter(typeof (IBuildSession), session).Body;
+
+            return Expression.Convert(body, typeof (T));
         }
 
         public Type Accepts { get { return typeof (T); } }

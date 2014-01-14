@@ -28,9 +28,9 @@ namespace StructureMap.Testing.Building.Interception
         [Test]
         public void the_description_using_session()
         {
-            var activator = new ActivatorInterceptor<Target>((s, t) => t.UseContext(s));
+            var activator = new ActivatorInterceptor<Target>((s, t) => t.UseSession(s));
 
-            activator.Description.ShouldEqual("Target.UseContext(IBuildSession)");
+            activator.Description.ShouldEqual("Target.UseSession(IBuildSession)");
         }
 
         [Test]
@@ -81,7 +81,7 @@ namespace StructureMap.Testing.Building.Interception
         [Test]
         public void compile_and_use_by_itself_with_session()
         {
-            var activator = new ActivatorInterceptor<Target>((s, t) => t.UseContext(s));
+            var activator = new ActivatorInterceptor<Target>((s, t) => t.UseSession(s));
             var variable = Expression.Variable(typeof(Target), "target");
 
 
@@ -121,7 +121,7 @@ namespace StructureMap.Testing.Building.Interception
             Color = "Green";
         }
 
-        public void UseContext(IBuildSession session)
+        public void UseSession(IBuildSession session)
         {
             Session = session;
         }
@@ -133,6 +133,11 @@ namespace StructureMap.Testing.Building.Interception
         public void ThrowUp()
         {
             throw new DivideByZeroException("you stink!");
+        }
+
+        public void BlowUpOnSession(IBuildSession session)
+        {
+            throw new NotImplementedException();
         }
     }
 }

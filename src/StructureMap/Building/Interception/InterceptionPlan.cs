@@ -32,7 +32,6 @@ namespace StructureMap.Building.Interception
             return (Func<IBuildSession, T>) lambda.Compile();
         } 
 
-        // TODO -- wrap with exception wrappers on all
         public Expression ToExpression(ParameterExpression session)
         {
             // Seed the plan with the inner value
@@ -43,10 +42,39 @@ namespace StructureMap.Building.Interception
             plan.Add(assignment);
 
             addActivations(plan);
-            createTheReturnValue(_variable, plan);
+
+            var pluginTypeVariable = addPluginTypeVariable(plan);
+
+            addDecorators(session, pluginTypeVariable, plan);
+
+            createTheReturnValue(pluginTypeVariable, plan);
 
             return plan.ToExpression();
 
+        }
+
+        private void addDecorators(ParameterExpression session, ParameterExpression pluginTypeVariable, BlockPlan plan)
+        {
+            _interceptors.Where(x => x.Role == InterceptorRole.Decorates).Each(decorator => {
+                var decoratedExpression = decorator.ToExpression(session, pluginTypeVariable);
+                var wrapped = TryCatchWrapper.WrapFunc<StructureMapInterceptorException>(_pluginType,
+                    decoratedExpression, decorator);
+                
+                plan.Add(Expression.Assign(pluginTypeVariable, wrapped));
+            });
+        }
+
+        private ParameterExpression addPluginTypeVariable(BlockPlan plan)
+        {
+            var pluginTypeVariable = plan.FindVariableOfType(_pluginType);
+            if (pluginTypeVariable == null)
+            {
+                pluginTypeVariable = Expression.Variable(_pluginType, "returnValue");
+                plan.AddVariable(pluginTypeVariable);
+
+                plan.Add(Expression.Assign(pluginTypeVariable, Expression.Convert(_variable, _pluginType)));
+            }
+            return pluginTypeVariable;
         }
 
         private void createTheReturnValue(ParameterExpression variable, BlockPlan plan)
@@ -112,6 +140,7 @@ namespace StructureMap.Building.Interception
             } 
         }
 
+        [Obsolete("Think we end up taking this out of IBuildPlan")]
         public Type ReturnedType
         {
             get

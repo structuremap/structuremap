@@ -91,7 +91,7 @@ namespace StructureMap.Testing.Building.Interception
             decorated
                 .Inner.ShouldBeTheSameAs(target);
 
-            decorated.Context.ShouldBeTheSameAs(session);
+            decorated.Session.ShouldBeTheSameAs(session);
 
         }
 
@@ -116,24 +116,48 @@ namespace StructureMap.Testing.Building.Interception
         {
             
         }
+    }
+
+    public class BorderedTarget : DecoratedTarget
+    {
+        public BorderedTarget(ITarget inner) : base(inner)
+        {
+        }
+    }
+
+    public class ThrowsDecoratedTarget : ITarget
+    {
+        private readonly ITarget _inner;
+
+        public ThrowsDecoratedTarget(ITarget inner)
+        {
+            throw new DivideByZeroException("you failed!");
+        }
+
+
+
+        public void Activate()
+        {
+
+        }
 
 
     }
 
     public class ContextKeepingTarget : ITarget
     {
-        private readonly IContext _context;
+        private readonly IBuildSession _session;
         private readonly ITarget _inner;
 
-        public ContextKeepingTarget(IBuildSession context, ITarget inner)
+        public ContextKeepingTarget(IBuildSession session, ITarget inner)
         {
-            _context = context;
+            _session = session;
             _inner = inner;
         }
 
-        public IContext Context
+        public IBuildSession Session
         {
-            get { return _context; }
+            get { return _session; }
         }
 
         public ITarget Inner
@@ -144,6 +168,14 @@ namespace StructureMap.Testing.Building.Interception
         public void Activate()
         {
             throw new NotImplementedException();
+        }
+    }
+
+    public class SadContextKeepingTarget : ContextKeepingTarget
+    {
+        public SadContextKeepingTarget(IBuildSession session, ITarget inner) : base(session, inner)
+        {
+            throw new DivideByZeroException("no soup for you!");
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace StructureMap.Building.Interception
@@ -33,6 +35,16 @@ namespace StructureMap.Building.Interception
         public void AddVariables(IEnumerable<ParameterExpression> variables)
         {
             _variables.AddRange(variables);
+        }
+
+        public IEnumerable<ParameterExpression> Variables
+        {
+            get { return _variables; }
+        }
+
+        public ParameterExpression FindVariableOfType(Type type)
+        {
+            return _variables.LastOrDefault(x => x.Type == type);
         }
     }
 }
