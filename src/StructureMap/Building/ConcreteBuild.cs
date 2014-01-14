@@ -75,7 +75,7 @@ namespace StructureMap.Building
         {
             var inner = ToExpression(Parameters.Session);
 
-            var wrapped = TryCatchWrapper.Wrap<StructureMapBuildException>(_concreteType, inner, this);
+            var wrapped = TryCatchWrapper.WrapFunc<StructureMapBuildException>(_concreteType, inner, this);
 
             var lambdaType = typeof (Func<,>).MakeGenericType(typeof (IBuildSession), _concreteType);
 

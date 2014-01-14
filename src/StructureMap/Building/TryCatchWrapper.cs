@@ -16,29 +16,51 @@ namespace StructureMap.Building
                 type => type.GetConstructor(new Type[] {typeof (string), typeof (Exception)}));
 
 
-        public static Expression Wrap<T>(Type returnType, Expression expression,
+        public static Expression WrapAction<T>(Expression expression,
             Expression<Func<string>> descriptionSource) where T : StructureMapException
         {
             var description = descriptionSource.Body;
 
-            return Wrap<T>(returnType, expression, description);
+            return wrap<T>(null, expression, description);
         }
 
-        public static Expression Wrap<T>(Type returnType, Expression expression, IDescribed described)
+        public static Expression WrapFunc<T>(Type returnType, Expression expression,
+            Expression<Func<string>> descriptionSource) where T : StructureMapException
+        {
+            var description = descriptionSource.Body;
+
+            return wrap<T>(returnType, expression, description);
+        }
+
+        public static Expression WrapAction<T>(Expression expression, IDescribed described)
             where T : StructureMapException
         {
             var description = Expression.Call(Expression.Constant(described), DescriptionMethod);
-            return Wrap<T>(returnType, expression, description);
+            return wrap<T>(null, expression, description);
         }
 
-        public static Expression Wrap<T>(Type returnType, Expression expression, string descriptionString)
+        public static Expression WrapFunc<T>(Type returnType, Expression expression, IDescribed described)
+            where T : StructureMapException
+        {
+            var description = Expression.Call(Expression.Constant(described), DescriptionMethod);
+            return wrap<T>(returnType, expression, description);
+        }
+
+        public static Expression WrapAction<T>(Expression expression, string descriptionString)
             where T : StructureMapException
         {
             var description = Expression.Constant(descriptionString);
-            return Wrap<T>(returnType, expression, description);
+            return wrap<T>(null, expression, description);
         }
 
-        public static Expression Wrap<T>(Type returnType, Expression expression, Expression description)
+        public static Expression WrapFunc<T>(Type returnType, Expression expression, string descriptionString)
+            where T : StructureMapException
+        {
+            var description = Expression.Constant(descriptionString);
+            return wrap<T>(returnType, expression, description);
+        }
+
+        private static Expression wrap<T>(Type returnType, Expression expression, Expression description)
             where T : StructureMapException
         {
             var constructor = _constructors[typeof (T)];
