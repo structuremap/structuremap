@@ -5,25 +5,29 @@ namespace StructureMap.Diagnostics
 {
     public class Error : IEquatable<Error>
     {
+        [Obsolete("Remove the error code")]
         private readonly int _code;
         private readonly string _message;
         private string _stackTrace = string.Empty;
         public InstanceToken Instance;
         public string Source;
 
-
+        [Obsolete("Remove the error code")]
         private Error(int code, string message)
         {
+
             _code = code;
             _message = message;
         }
 
+        [Obsolete("Remove the error code")]
         public Error(int errorCode, params object[] args)
         {
             _code = errorCode;
             _message = ErrorMessages.GetMessage(errorCode, args);
         }
 
+        [Obsolete("Remove the error code")]
         public Error(int errorCode, Exception ex, params object[] args)
             : this(errorCode, args)
         {

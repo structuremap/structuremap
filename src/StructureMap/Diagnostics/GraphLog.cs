@@ -30,6 +30,7 @@ namespace StructureMap.Diagnostics
             _sources.Add(description);
         }
 
+        [Obsolete("Remove the error code")]
         public void RegisterError(IDiagnosticInstance instance, int code, params object[] args)
         {
             var error = new Error(code, args);
@@ -37,12 +38,14 @@ namespace StructureMap.Diagnostics
             addError(error);
         }
 
+        [Obsolete("Remove the error code")]
         public void RegisterError(int code, params object[] args)
         {
             var error = new Error(code, args);
             addError(error);
         }
 
+        [Obsolete("Remove the error code")]
         public void RegisterError(int code, Exception ex, params object[] args)
         {
             var error = new Error(code, ex, args);
