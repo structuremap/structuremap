@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 using System.Reflection;
+using StructureMap.TypeRules;
 using StructureMap.Util;
 
 namespace StructureMap.Building
@@ -46,14 +47,19 @@ namespace StructureMap.Building
 
             var genericThrow = Expression.Throw(newSmEx);
 
-            var genericCatch = Expression.Catch(EX, Expression.Block(genericThrow, Expression.Default(returnType)));
+            var genericCatch = returnType.IsVoidReturn()
+                ? Expression.Catch(EX, genericThrow)
+                : Expression.Catch(EX, Expression.Block(genericThrow, Expression.Default(returnType)));
 
             var smParameter = Expression.Parameter(typeof (StructureMapException), "ex");
 
             var smPush = Expression.Call(smParameter, StructureMapException.PushMethod, description);
             var rethrow = Expression.Throw(smParameter);
 
-            var pushAndReThrowBlock = Expression.Block(returnType, smPush, rethrow, Expression.Default(returnType));
+            var pushAndReThrowBlock = returnType.IsVoidReturn()
+                ? Expression.Block(smPush, rethrow)
+                : Expression.Block(returnType, smPush, rethrow, Expression.Default(returnType));
+
             var smCatch = Expression.Catch(smParameter, pushAndReThrowBlock);
 
 

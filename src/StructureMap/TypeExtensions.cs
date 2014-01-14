@@ -305,6 +305,11 @@ namespace StructureMap
             {
                 return type.GetConstructors().Any();
             }
+
+            public static bool IsVoidReturn(this Type type)
+            {
+                return type == null || type == typeof (void);
+            }
         }
     }
 }

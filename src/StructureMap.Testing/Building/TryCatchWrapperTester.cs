@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using NUnit.Framework;
@@ -14,6 +15,9 @@ namespace StructureMap.Testing.Building
         private BlockExpression throwSM;
         private StructureMapException smEx;
         private NotImplementedException genericEx;
+        private BlockExpression goodVoid;
+        private BlockExpression badVoid;
+        private BlockExpression badSmVoid;
 
         [SetUp]
         public void SetUp()
@@ -27,7 +31,46 @@ namespace StructureMap.Testing.Building
             smEx = new StructureMapException("you stink!");
             throwSM = Expression.Block(Expression.Throw(Expression.Constant(smEx)),
                 Expression.Constant("bar"));
+
+            Expression<Action> goodExpr = () => Debug.WriteLine("It's all good");
+
+            goodVoid = Expression.Block(goodExpr.Body);
+            badVoid = Expression.Block(Expression.Throw(Expression.Constant(genericEx)));
+            badSmVoid = Expression.Block(Expression.Throw(Expression.Constant(smEx)));
         }
+
+        [Test]
+        public void no_return_happy_type()
+        {
+            var wrapped = TryCatchWrapper.Wrap<FakeStructureMapException>(null, goodVoid, "okay");
+            var action = Expression.Lambda<Action>(wrapped).Compile();
+
+            action();
+        }
+
+        [Test]
+        public void no_return_sad_path_with_generic_exception()
+        {
+            var wrapped = TryCatchWrapper.Wrap<FakeStructureMapException>(null, badVoid, "okay");
+            var action = Expression.Lambda<Action>(wrapped).Compile();
+
+            Exception<FakeStructureMapException>.ShouldBeThrownBy(() => {
+                action();
+            }).InnerException.ShouldBeTheSameAs(genericEx);
+        }
+
+        [Test]
+        public void no_return_sad_path_with_structuremapexception()
+        {
+            var wrapped = TryCatchWrapper.Wrap<FakeStructureMapException>(null, badSmVoid, "okay");
+            var action = Expression.Lambda<Action>(wrapped).Compile();
+
+            Exception<StructureMapException>.ShouldBeThrownBy(() =>
+            {
+                action();
+            }).ShouldBeTheSameAs(smEx);
+        }
+
 
         [Test]
         public void wrap_against_a_successful_expression_by_IDescribed()

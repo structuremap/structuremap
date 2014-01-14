@@ -103,7 +103,9 @@ namespace StructureMap.Building.Interception
 
                 foreach (var interceptor in _group)
                 {
-                    yield return interceptor.ToExpression(Parameters.Session, variable);
+                    var interceptionExpression = interceptor.ToExpression(Parameters.Session, variable);
+
+                    yield return interceptionExpression;
                 }
             } 
         }
