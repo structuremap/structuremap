@@ -106,8 +106,7 @@ namespace StructureMap.Building
 
             if (dependencyType.IsSimple())
             {
-                var converter = TypeDescriptor.GetConverter(dependencyType);
-                return new Constant(dependencyType, converter.ConvertFrom(value));
+                return new Constant(dependencyType, ConvertType(value, dependencyType));
             }
 
             if (EnumerableInstance.IsEnumerable(dependencyType))
@@ -121,5 +120,15 @@ namespace StructureMap.Building
             throw new NotSupportedException(
                 "Unable to determine how to source dependency {0} and value '{1}'".ToFormat(dependencyType, value));
         }
+
+        public static object ConvertType(object value, Type dependencyType)
+        {
+            if (value.GetType() == dependencyType) return value;
+
+            if (dependencyType.IsEnum) return Enum.Parse(dependencyType, value.ToString());
+
+            return Convert.ChangeType(value, dependencyType);
+        }
     }
+
 }

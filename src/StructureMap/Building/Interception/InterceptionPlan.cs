@@ -10,7 +10,7 @@ namespace StructureMap.Building.Interception
         private readonly Type _pluginType;
         private readonly IBuildPlan _inner;
         private readonly IEnumerable<IInterceptor> _interceptors;
-        private ParameterExpression _variable;
+        private readonly ParameterExpression _variable;
 
         public InterceptionPlan(Type pluginType, IBuildPlan inner, IEnumerable<IInterceptor> interceptors)
         {
