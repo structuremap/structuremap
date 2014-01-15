@@ -26,11 +26,27 @@ namespace StructureMap.Testing.Building.Interception
         }
 
         [Test]
+        public void description_is_set_explicitly()
+        {
+            theActivator = new ActivatorInterceptor<ITarget>(x => x.Activate(), "gonna start it up");
+
+            theActivator.Description.ShouldEqual("gonna start it up");
+        }
+
+        [Test]
         public void the_description_using_session()
         {
             var activator = new ActivatorInterceptor<Target>((s, t) => t.UseSession(s));
 
             activator.Description.ShouldEqual("Target.UseSession(IBuildSession)");
+        }
+
+        [Test]
+        public void the_description_using_session_and_explicit_description()
+        {
+            var activator = new ActivatorInterceptor<Target>((s, t) => t.UseSession(s), "use the Force Luke!");
+
+            activator.Description.ShouldEqual("use the Force Luke!");
         }
 
         [Test]

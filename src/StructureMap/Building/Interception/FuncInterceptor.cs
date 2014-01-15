@@ -7,22 +7,25 @@ namespace StructureMap.Building.Interception
     public class FuncInterceptor<T> : IInterceptor
     {
         private readonly LambdaExpression _expression;
+        private readonly string _description;
 
-        public FuncInterceptor(Expression<Func<T, T>> expression)
+        public FuncInterceptor(Expression<Func<T, T>> expression, string description = null)
         {
             _expression = expression;
+            _description = description;
         }
 
-        public FuncInterceptor(Expression<Func<IBuildSession, T, T>> expression)
+        public FuncInterceptor(Expression<Func<IBuildSession, T, T>> expression, string description = null)
         {
             _expression = expression;
+            _description = description;
         }
 
         public string Description
         {
             get
             {
-                return _expression
+                return _description ?? _expression
                     .ReplaceParameter(Accepts, Expression.Parameter(Accepts, Accepts.Name))
                     .ReplaceParameter(typeof(IBuildSession), Expression.Parameter(typeof(IBuildSession), "IBuildSession"))
                     .Body.ToString();

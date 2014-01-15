@@ -42,6 +42,14 @@ namespace StructureMap.Testing.Building.Interception
         }
 
         [Test]
+        public void explicit_description()
+        {
+            theInterceptor = new FuncInterceptor<ITarget>(x => new DecoratedTarget(x), "decorating the target");
+
+            theInterceptor.Description.ShouldEqual("decorating the target");
+        }
+
+        [Test]
         public void description_when_uses_IContext_too()
         {
             theInterceptor = new FuncInterceptor<ITarget>((c, t) => new ContextKeepingTarget(c, t));
@@ -49,6 +57,13 @@ namespace StructureMap.Testing.Building.Interception
             theInterceptor.Description.ShouldEqual("new ContextKeepingTarget(IBuildSession, ITarget)");
         }
 
+        [Test]
+        public void explicit_description_with_icontext()
+        {
+            theInterceptor = new FuncInterceptor<ITarget>((c, t) => new ContextKeepingTarget(c, t), "context keeping");
+
+            theInterceptor.Description.ShouldEqual("context keeping");
+        }
         [Test]
         public void compile_and_use_by_itself_not_using_IBuildSession()
         {

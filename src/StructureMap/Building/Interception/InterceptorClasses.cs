@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -18,20 +19,41 @@ namespace StructureMap.Building.Interception
      * 
      */
 
+    public static class InterceptorFactory
+    {
+        public static IInterceptor ForAction<T>(string description, Action<T> action)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IInterceptor ForAction<T>(string description, Action<IContext, T> action)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IInterceptor ForFunc<T>(string description, Func<T, T> action)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IInterceptor ForFunc<T>(string description, Action<IContext, T, T> action)
+        {
+            throw new NotImplementedException();
+        }
+
+    }
+
 
     public static class Think
     {
         public static void Do()
         {
-            Expression value = Expression.Constant("horse");
-            var variable = Expression.Variable(typeof (string), "x");
-            var assignment = Expression.Assign(variable, value);
+            Action<SomeTarget> act = x => x.Call();
 
-            Expression<Action<SomeTarget>> expr = x => x.Call();
-            //var action = expr.Compile();
-            //Expression<Action<SomeTarget>> intercepted = s => action(s);
+            Expression<Action<SomeTarget>> expr = x => act(x);
 
-            var later = Expression.Parameter(typeof (SomeTarget), "later");
+
+            Debug.WriteLine(expr);
         }
     }
 
