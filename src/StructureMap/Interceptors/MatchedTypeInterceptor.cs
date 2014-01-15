@@ -20,9 +20,9 @@ namespace StructureMap.Interceptors
             return _match(type);
         }
 
-        public object Process(object target, IContext context)
+        public object Process(object target, IBuildSession session)
         {
-            return _interception(context, target);
+            return _interception(session, target);
         }
 
         #endregion

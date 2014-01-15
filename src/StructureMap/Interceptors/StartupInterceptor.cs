@@ -2,6 +2,7 @@ using System;
 
 namespace StructureMap.Interceptors
 {
+    [Obsolete]
     public class StartupInterceptor<T> : InstanceInterceptor
     {
         private readonly Action<IContext, T> _handler;
@@ -13,9 +14,9 @@ namespace StructureMap.Interceptors
 
         #region InstanceInterceptor Members
 
-        public object Process(object target, IContext context)
+        public object Process(object target, IBuildSession session)
         {
-            _handler(context, (T) target);
+            _handler(session, (T) target);
             return target;
         }
 

@@ -252,7 +252,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// EnrichAllWith() gives the the ability to return a different object.  Use this method for runtime AOP
         /// scenarios or to return a decorator.
         /// </summary>
-        public CreatePluginFamilyExpression<TPluginType> EnrichAllWith(EnrichmentHandler<TPluginType> handler)
+        public CreatePluginFamilyExpression<TPluginType> EnrichAllWith(Func<TPluginType, TPluginType> handler)
         {
             _children.Add(
                 graph => {
@@ -272,7 +272,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// EnrichAllWith() gives the the ability to return a different object.  Use this method for runtime AOP
         /// scenarios or to return a decorator.
         /// </summary>
-        public CreatePluginFamilyExpression<TPluginType> EnrichAllWith(ContextEnrichmentHandler<TPluginType> handler)
+        public CreatePluginFamilyExpression<TPluginType> EnrichAllWith(Func<IBuildSession, TPluginType, TPluginType> handler)
         {
             _children.Add(
                 graph => {

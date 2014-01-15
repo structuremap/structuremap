@@ -18,6 +18,8 @@ namespace StructureMap.Building.Interception
             _inner = inner;
             _interceptors = interceptors;
             _variable = Expression.Variable(_inner.ReturnedType, "x");
+
+            // TODO -- blow up if any decorates interceptors cannot be cast to pluginType
         }
 
         public Func<IBuildSession, T> ToBuilder<T>()

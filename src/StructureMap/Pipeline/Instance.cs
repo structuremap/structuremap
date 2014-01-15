@@ -1,5 +1,8 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using StructureMap.Building;
+using StructureMap.Building.Interception;
 using StructureMap.Diagnostics;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
@@ -10,11 +13,18 @@ namespace StructureMap.Pipeline
     public abstract class Instance : HasScope, IDiagnosticInstance, IDescribed
     {
         private readonly string _originalName;
-        private InstanceInterceptor _interceptor = new NulloInterceptor();
         private string _name = Guid.NewGuid().ToString();
 
 
         private PluginFamily _parent;
+
+        private readonly IList<IInterceptor> _interceptors = new List<IInterceptor>();
+
+        public void AddInterceptor(IInterceptor interceptor)
+        {
+            // TODO -- defensive check to blow up if the interceptor "Accepts" cannot handle the returned type
+            _interceptors.Add(interceptor);
+        }
 
         protected Instance()
         {
@@ -53,10 +63,9 @@ namespace StructureMap.Pipeline
             }
         }
 
-        public InstanceInterceptor Interceptor
+        public IEnumerable<IInterceptor> Interceptors
         {
-            get { return _interceptor; }
-            set { _interceptor = value; }
+            get { return _interceptors; }
         }
 
         #region IDiagnosticInstance Members
@@ -89,18 +98,16 @@ namespace StructureMap.Pipeline
 
         #endregion
 
+        [Obsolete("Going away when BuildPlan is completely in place")]
         public virtual object Build(Type pluginType, IBuildSession session)
         {
             // "Build" the desired object
             var rawValue = createRawObject(pluginType, session);
 
-            // Allow the Interceptor a chance to enhance, configure,  
-            // wrap with a decorator, or even replace the rawValue
-            var finalValue = applyInterception(rawValue, pluginType, session);
-
-            return finalValue;
+            return rawValue;
         }
 
+        [Obsolete("removing this when BuildPlan gets used")]
         private object createRawObject(Type pluginType, IBuildSession session)
         {
             try
@@ -119,6 +126,7 @@ namespace StructureMap.Pipeline
             }
         }
 
+        [Obsolete("Just fold this into ConcreteType")]
         protected virtual Type getConcreteType(Type pluginType)
         {
             return pluginType;
@@ -140,18 +148,6 @@ namespace StructureMap.Pipeline
         }
 
 
-        private object applyInterception(object rawValue, Type pluginType, IContext context)
-        {
-            try
-            {
-                // Intercept with the Instance-specific InstanceInterceptor
-                return _interceptor.Process(rawValue, context);
-            }
-            catch (Exception e)
-            {
-                throw new StructureMapBuildException("Instance specific interception failed for {0} of PluginType {1}".ToFormat(Name, pluginType.GetFullName()), e);
-            }
-        }
 
         [CLSCompliant(false)]
         protected virtual object build(Type pluginType, IBuildSession session)

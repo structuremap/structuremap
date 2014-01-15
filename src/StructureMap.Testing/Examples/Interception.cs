@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices.ComTypes;
+using NUnit.Framework;
 using StructureMap.Configuration.DSL;
 using StructureMap.Interceptors;
 using StructureMap.TypeRules;
@@ -59,26 +60,26 @@ namespace StructureMap.Testing.Examples
             // You can also register an Action<IContext, T> to get access
             // to all the services and capabilities of the BuildSession
             For<ClassThatNeedsSomeBootstrapping>().Use<ClassThatNeedsSomeBootstrapping>()
-                .OnCreation((context, x) => {
+                .OnCreation("testing", (context, x) => {
                     var connection = context.GetInstance<IConnectionPoint>();
                     x.Connect(connection);
                 });
 
-
-            For<IConnectionListener>().Use<ClassThatNeedsSomeBootstrapping>()
-                .EnrichWith(x => new LoggingDecorator(x));
-
-            For<IConnectionListener>().Use<ClassThatNeedsSomeBootstrapping>()
-                .EnrichWith((context, x) => {
-                    var connection = context.GetInstance<IConnectionPoint>();
-                    x.Connect(connection);
-
-                    return new LoggingDecorator(x);
-                });
-
-
-            For<IConnectionListener>().Use<ClassThatNeedsSomeBootstrapping>()
-                .InterceptWith(new CustomInterceptor());
+            Assert.Fail("Don't like having to give the plugin type here");
+//            For<IConnectionListener>().Use<ClassThatNeedsSomeBootstrapping>()
+//                .EnrichWith(x => new LoggingDecorator(x));
+//
+//            For<IConnectionListener>().Use<ClassThatNeedsSomeBootstrapping>()
+//                .EnrichWith<IConnectionListener>((context, x) => {
+//                    var connection = context.GetInstance<IConnectionPoint>();
+//                    x.Connect(connection);
+//
+//                    return new LoggingDecorator(x);
+//                });
+//
+//            Assert.Fail("Don't like having to give the plugin type here");
+//            For<IConnectionListener>().Use<ClassThatNeedsSomeBootstrapping>()
+//                .InterceptWith(new CustomInterceptor());
 
 
             // Place the Interception at the PluginType level
@@ -92,7 +93,7 @@ namespace StructureMap.Testing.Examples
 
     public class CustomInterceptor : InstanceInterceptor
     {
-        public object Process(object target, IContext context)
+        public object Process(object target, IBuildSession session)
         {
             // manipulate the target object and return a wrapped version
             return wrapTarget(target);
@@ -119,7 +120,7 @@ namespace StructureMap.Testing.Examples
 
     public class ListenerInterceptor : TypeInterceptor
     {
-        public object Process(object target, IContext context)
+        public object Process(object target, IBuildSession session)
         {
             // Assuming that "target" is an implementation of IEventListener<T>,
             // we'll do a little bit of generics sleight of hand
@@ -128,7 +129,7 @@ namespace StructureMap.Testing.Examples
                 target.GetType().FindFirstInterfaceThatCloses(typeof (IEventListener<>)).GetGenericArguments()[0];
             var type = typeof (Registration<>).MakeGenericType(eventType);
             var registration = (Registration) Activator.CreateInstance(type);
-            registration.RegisterListener(context, target);
+            registration.RegisterListener(session, target);
 
             // we didn't change the target object, so just return it
             return target;

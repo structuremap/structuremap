@@ -23,10 +23,10 @@ namespace StructureMap.Interceptors
     [Obsolete]
     public class PluginTypeInterceptor : TypeInterceptor
     {
-        private readonly Func<IContext, object, object> _function;
+        private readonly Func<IBuildSession, object, object> _function;
         private readonly Type _pluginType;
 
-        public PluginTypeInterceptor(Type pluginType, Func<IContext, object, object> function)
+        public PluginTypeInterceptor(Type pluginType, Func<IBuildSession, object, object> function)
         {
             _pluginType = pluginType;
             _function = function;
@@ -39,9 +39,9 @@ namespace StructureMap.Interceptors
             return type.CanBeCastTo(_pluginType);
         }
 
-        public object Process(object target, IContext context)
+        public object Process(object target, IBuildSession session)
         {
-            return _function(context, target);
+            return _function(session, target);
         }
 
         #endregion

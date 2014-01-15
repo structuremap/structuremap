@@ -23,12 +23,12 @@ namespace StructureMap.Testing.Configuration.DSL
 
                 r.For<IService>().AddInstances(x => {
                     x.Type<ColorService>()
-                        .OnCreation(s => _lastService = s)
+                        .OnCreation("last service",s => _lastService = s)
                         .Named("Intercepted")
                         .Ctor<string>("color").Is("Red");
 
                     x.Type<ColorService>()
-                        .OnCreation((c, s) => c.GetInstance<ContextRecorder>().WasTouched = true)
+                        .OnCreation("last touched", (c, s) => c.GetInstance<ContextRecorder>().WasTouched = true)
                         .Named("InterceptedWithContext")
                         .Ctor<string>("color").Is("Red");
 
@@ -38,13 +38,13 @@ namespace StructureMap.Testing.Configuration.DSL
 
                     x.Object(new ColorService("Yellow"))
                         .Named("Yellow")
-                        .OnCreation<ColorService>(s => _lastService = s);
+                        .OnCreation<ColorService>("set the last service", s => _lastService = s);
 
                     x.ConstructedBy(() => new ColorService("Purple")).Named("Purple")
                         .EnrichWith<IService>(s => new DecoratorService(s));
 
                     x.ConstructedBy(() => new ColorService("Purple")).Named("DecoratedWithContext")
-                        .EnrichWith<IService>((c, s) => {
+                        .EnrichWith<IService>("decorated with context", (c, s) => {
                             c.GetInstance<ContextRecorder>().WasTouched = true;
                             return new DecoratorService(s);
                         });
@@ -54,7 +54,7 @@ namespace StructureMap.Testing.Configuration.DSL
                         .Ctor<string>("color").Is("Orange");
 
                     x.Object(new ColorService("Yellow")).Named("Bad")
-                        .OnCreation<ColorService>(obj => { throw new ApplicationException("Bad!"); });
+                        .OnCreation<ColorService>("throw exception", obj => { throw new ApplicationException("Bad!"); });
                 });
             });
         }

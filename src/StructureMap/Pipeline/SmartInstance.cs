@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using StructureMap.Building.Interception;
 using StructureMap.Interceptors;
 
 namespace StructureMap.Pipeline
@@ -35,10 +36,23 @@ namespace StructureMap.Pipeline
         /// </summary>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public SmartInstance<T> OnCreation(Action<T> handler)
+        public SmartInstance<T> OnCreation(Expression<Action<T>> handler)
         {
-            var interceptor = new StartupInterceptor<T>((c, o) => handler(o));
-            Interceptor = interceptor;
+            AddInterceptor(new ActivatorInterceptor<T>(handler));
+
+            return this;
+        }
+
+        /// <summary>
+        ///     Register an Action to perform on the object created by this Instance
+        ///     before it is returned to the caller
+        /// </summary>
+        /// <param name="handler"></param>
+        /// <param name="description">Descriptive text for diagnostic purposes</param>
+        /// <returns></returns>
+        public SmartInstance<T> OnCreation(string description, Action<T> handler)
+        {
+            AddInterceptor(InterceptorFactory.ForAction(description, handler));
 
             return this;
         }
@@ -54,10 +68,23 @@ namespace StructureMap.Pipeline
         /// </summary>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public SmartInstance<T> OnCreation(Action<IContext, T> handler)
+        public SmartInstance<T> OnCreation(Expression<Action<IBuildSession, T>> handler)
         {
-            var interceptor = new StartupInterceptor<T>(handler);
-            Interceptor = interceptor;
+            AddInterceptor(new ActivatorInterceptor<T>(handler));
+
+            return this;
+        }
+
+        /// <summary>
+        ///     Register an Action to perform on the object created by this Instance
+        ///     before it is returned to the caller
+        /// </summary>
+        /// <param name="handler"></param>
+        /// <param name="description">Descriptive text for diagnostic purposes</param>
+        /// <returns></returns>
+        public SmartInstance<T> OnCreation(string description, Action<IBuildSession, T> handler)
+        {
+            AddInterceptor(InterceptorFactory.ForAction(description, handler));
 
             return this;
         }
@@ -68,10 +95,23 @@ namespace StructureMap.Pipeline
         /// </summary>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public SmartInstance<T> EnrichWith(EnrichmentHandler<T> handler)
+        public SmartInstance<T> EnrichWith(Expression<Func<T, T>> handler)
         {
-            var interceptor = new EnrichmentInterceptor<T>((c, o) => handler(o));
-            Interceptor = interceptor;
+            AddInterceptor(new FuncInterceptor<T>(handler));
+
+            return this;
+        }
+
+        /// <summary>
+        ///     Register a Func to potentially enrich or substitute for the object
+        ///     created by this Instance before it is returned to the caller
+        /// </summary>
+        /// <param name="handler"></param>
+        /// <param name="description">Descriptive text for diagnostic purposes</param>
+        /// <returns></returns>
+        public SmartInstance<T> EnrichWith(string description, Func<T, T> handler)
+        {
+            AddInterceptor(InterceptorFactory.ForFunc(description, handler));
 
             return this;
         }
@@ -82,10 +122,23 @@ namespace StructureMap.Pipeline
         /// </summary>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public SmartInstance<T> EnrichWith<TPluginType>(EnrichmentHandler<TPluginType> handler)
+        public SmartInstance<T> EnrichWith<TPluginType>(Expression<Func<TPluginType, TPluginType>> handler)
         {
-            var interceptor = new EnrichmentInterceptor<TPluginType>((c, o) => handler(o));
-            Interceptor = interceptor;
+            AddInterceptor(new FuncInterceptor<TPluginType>(handler));
+
+            return this;
+        }
+
+        /// <summary>
+        ///     Register a Func to potentially enrich or substitute for the object
+        ///     created by this Instance before it is returned to the caller
+        /// </summary>
+        /// <param name="handler"></param>
+        /// <param name="description">Descriptive text for diagnostic purposes</param>
+        /// <returns></returns>
+        public SmartInstance<T> EnrichWith<TPluginType>(string description, Func<TPluginType, TPluginType> handler)
+        {
+            AddInterceptor(InterceptorFactory.ForFunc(description, handler));
 
             return this;
         }
@@ -96,10 +149,23 @@ namespace StructureMap.Pipeline
         /// </summary>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public SmartInstance<T> EnrichWith(ContextEnrichmentHandler<T> handler)
+        public SmartInstance<T> EnrichWith(Expression<Func<IBuildSession, T, T>> handler)
         {
-            var interceptor = new EnrichmentInterceptor<T>(handler);
-            Interceptor = interceptor;
+            AddInterceptor(new FuncInterceptor<T>(handler));
+
+            return this;
+        }
+
+        /// <summary>
+        ///     Register a Func to potentially enrich or substitute for the object
+        ///     created by this Instance before it is returned to the caller
+        /// </summary>
+        /// <param name="handler"></param>
+        /// <param name="description">Descriptive text for diagnostic purposes</param>
+        /// <returns></returns>
+        public SmartInstance<T> EnrichWith(string description, Func<IBuildSession, T, T> handler)
+        {
+            AddInterceptor(InterceptorFactory.ForFunc(description, handler));
 
             return this;
         }
@@ -110,22 +176,36 @@ namespace StructureMap.Pipeline
         /// </summary>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public SmartInstance<T> EnrichWith<TPluginType>(ContextEnrichmentHandler<TPluginType> handler)
+        public SmartInstance<T> EnrichWith<TPluginType>(Expression<Func<IBuildSession, TPluginType, TPluginType>> handler)
         {
-            var interceptor = new EnrichmentInterceptor<TPluginType>(handler);
-            Interceptor = interceptor;
+            AddInterceptor(new FuncInterceptor<TPluginType>(handler));
+
+            return this;
+        }
+
+
+        /// <summary>
+        ///     Register a Func to potentially enrich or substitute for the object
+        ///     created by this Instance before it is returned to the caller
+        /// </summary>
+        /// <param name="handler"></param>
+        /// <param name="description">Descriptive text for diagnostic purposes</param>
+        /// <returns></returns>
+        public SmartInstance<T> EnrichWith<TPluginType>(string description, Func<IBuildSession, TPluginType, TPluginType> handler)
+        {
+            AddInterceptor(InterceptorFactory.ForFunc(description, handler));
 
             return this;
         }
 
         /// <summary>
-        ///     Register an <see cref="InstanceInterceptor">InstanceInterceptor</see> with this Instance
+        ///     Register an <see cref="IInterceptor">IInterceptor</see> with this Instance
         /// </summary>
         /// <param name="interceptor"></param>
         /// <returns></returns>
-        public SmartInstance<T> InterceptWith(InstanceInterceptor interceptor)
+        public SmartInstance<T> InterceptWith(IInterceptor interceptor)
         {
-            Interceptor = interceptor;
+            AddInterceptor(interceptor);
             return this;
         }
 

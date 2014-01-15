@@ -11,6 +11,6 @@ namespace StructureMap.Interceptors
     [Obsolete]
     public interface InstanceInterceptor
     {
-        object Process(object target, IContext context);
+        object Process(object target, IBuildSession session);
     }
 }

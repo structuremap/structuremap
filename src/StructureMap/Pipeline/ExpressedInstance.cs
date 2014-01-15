@@ -1,4 +1,6 @@
 using System;
+using System.Linq.Expressions;
+using StructureMap.Building.Interception;
 using StructureMap.Interceptors;
 
 namespace StructureMap.Pipeline
@@ -31,10 +33,24 @@ namespace StructureMap.Pipeline
         /// <typeparam name="THandler"></typeparam>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public T OnCreation<THandler>(Action<THandler> handler)
+        public T OnCreation<THandler>(Expression<Action<THandler>> handler)
         {
-            var interceptor = new StartupInterceptor<THandler>((c, o) => handler(o));
-            Interceptor = interceptor;
+            AddInterceptor(new ActivatorInterceptor<THandler>(handler));
+
+            return thisInstance;
+        }
+
+        /// <summary>
+        ///     Register an Action to perform on the object created by this Instance
+        ///     before it is returned to the caller
+        /// </summary>
+        /// <typeparam name="THandler"></typeparam>
+        /// <param name="handler"></param>
+        /// <param name="description">A description of the action for diagnostic purposes</param>
+        /// <returns></returns>
+        public T OnCreation<THandler>(string description, Action<THandler> handler)
+        {
+            AddInterceptor(InterceptorFactory.ForAction(description, handler));
 
             return thisInstance;
         }
@@ -46,10 +62,9 @@ namespace StructureMap.Pipeline
         /// <typeparam name="THandler"></typeparam>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public T EnrichWith<THandler>(EnrichmentHandler<THandler> handler)
+        public T EnrichWith<THandler>(Expression<Func<THandler, THandler>> handler)
         {
-            var interceptor = new EnrichmentInterceptor<THandler>((c, o) => handler(o));
-            Interceptor = interceptor;
+            AddInterceptor(new FuncInterceptor<THandler>(handler));
 
             return thisInstance;
         }
@@ -61,22 +76,49 @@ namespace StructureMap.Pipeline
         /// <typeparam name="THandler"></typeparam>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public T EnrichWith<THandler>(ContextEnrichmentHandler<THandler> handler)
+        public T EnrichWith<THandler>(string description, Func<THandler, THandler> handler)
         {
-            var interceptor = new EnrichmentInterceptor<THandler>(handler);
-            Interceptor = interceptor;
+            AddInterceptor(InterceptorFactory.ForFunc(description, handler));
 
             return thisInstance;
         }
 
         /// <summary>
-        ///     Register an <see cref="InstanceInterceptor">InstanceInterceptor</see> with this Instance
+        ///     Register a Func to potentially enrich or substitute for the object
+        ///     created by this Instance before it is returned to the caller
+        /// </summary>
+        /// <typeparam name="THandler"></typeparam>
+        /// <param name="handler"></param>
+        /// <returns></returns>
+        public T EnrichWith<THandler>(Expression<Func<IBuildSession, THandler, THandler>> handler)
+        {
+            AddInterceptor(new FuncInterceptor<THandler>(handler));
+
+            return thisInstance;
+        }
+
+        /// <summary>
+        ///     Register a Func to potentially enrich or substitute for the object
+        ///     created by this Instance before it is returned to the caller
+        /// </summary>
+        /// <typeparam name="THandler"></typeparam>
+        /// <param name="handler"></param>
+        /// <returns></returns>
+        public T EnrichWith<THandler>(string description, Func<IBuildSession, THandler, THandler> handler)
+        {
+            AddInterceptor(InterceptorFactory.ForFunc(description, handler));
+
+            return thisInstance;
+        }
+
+        /// <summary>
+        ///     Register an <see cref="IInterceptor">IInterceptor</see> with this Instance
         /// </summary>
         /// <param name="interceptor"></param>
         /// <returns></returns>
-        public T InterceptWith(InstanceInterceptor interceptor)
+        public T InterceptWith(IInterceptor interceptor)
         {
-            Interceptor = interceptor;
+            AddInterceptor(interceptor);
             return thisInstance;
         }
     }

@@ -1,4 +1,6 @@
 using System;
+using System.Linq.Expressions;
+using StructureMap.Building.Interception;
 using StructureMap.Interceptors;
 
 namespace StructureMap.Pipeline
@@ -12,17 +14,13 @@ namespace StructureMap.Pipeline
         }
 
         /// <summary>
-        /// Register an Action to perform on the object created by this Instance
-        /// before it is returned to the caller
+        /// Add an interceptor to only this Instance
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="handler"></param>
+        /// <param name="interceptor"></param>
         /// <returns></returns>
-        public ConfiguredInstance OnCreation<T>(Action<T> handler)
+        public ConfiguredInstance Interceptor(IInterceptor interceptor)
         {
-            var interceptor = new StartupInterceptor<T>((c, o) => handler(o));
-            Interceptor = interceptor;
-
+            AddInterceptor(interceptor);
             return this;
         }
 
@@ -33,12 +31,47 @@ namespace StructureMap.Pipeline
         /// <typeparam name="T"></typeparam>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public ConfiguredInstance OnCreation<T>(Action<IContext, T> handler)
+        public ConfiguredInstance OnCreation<T>(Expression<Action<T>> handler)
         {
-            var interceptor = new StartupInterceptor<T>(handler);
-            Interceptor = interceptor;
+            return Interceptor(new ActivatorInterceptor<T>(handler));
+        }
 
-            return this;
+        /// <summary>
+        /// Register an Action to perform on the object created by this Instance
+        /// before it is returned to the caller
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="handler"></param>
+        /// <param name="description">A description of the creation action for diagnostics</param>
+        /// <returns></returns>
+        public ConfiguredInstance OnCreation<T>(string description, Action<T> handler)
+        {
+            return Interceptor(InterceptorFactory.ForAction(description, handler));
+        }
+
+        /// <summary>
+        /// Register an Action to perform on the object created by this Instance
+        /// before it is returned to the caller
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="handler"></param>
+        /// <returns></returns>
+        public ConfiguredInstance OnCreation<T>(Expression<Action<IBuildSession, T>> handler)
+        {
+            return Interceptor(new ActivatorInterceptor<T>(handler));
+        }
+
+        /// <summary>
+        /// Register an Action to perform on the object created by this Instance
+        /// before it is returned to the caller
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="handler"></param>
+        /// <param name="description">A description of the creation action for diagnostics</param>
+        /// <returns></returns>
+        public ConfiguredInstance OnCreation<T>(string description, Action<IBuildSession, T> handler)
+        {
+            return Interceptor(InterceptorFactory.ForAction(description, handler));
         }
 
         /// <summary>
@@ -47,12 +80,9 @@ namespace StructureMap.Pipeline
         /// </summary>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public ConfiguredInstance EnrichWith<T>(EnrichmentHandler<T> handler)
+        public ConfiguredInstance EnrichWith<T>(Expression<Func<T, T>> handler)
         {
-            var interceptor = new EnrichmentInterceptor<T>((c, o) => handler(o));
-            Interceptor = interceptor;
-
-            return this;
+            return Interceptor(new FuncInterceptor<T>(handler));
         }
 
         /// <summary>
@@ -60,13 +90,34 @@ namespace StructureMap.Pipeline
         /// created by this Instance before it is returned to the caller
         /// </summary>
         /// <param name="handler"></param>
+        /// <param name="description">A description of the creation action for diagnostics</param>
         /// <returns></returns>
-        public ConfiguredInstance EnrichWith<T>(ContextEnrichmentHandler<T> handler)
+        public ConfiguredInstance EnrichWith<T>(string description, Func<T, T> handler)
         {
-            var interceptor = new EnrichmentInterceptor<T>(handler);
-            Interceptor = interceptor;
+            return Interceptor(InterceptorFactory.ForFunc(description, handler));
+        }
 
-            return this;
+        /// <summary>
+        /// Register a Func to potentially enrich or substitute for the object
+        /// created by this Instance before it is returned to the caller
+        /// </summary>
+        /// <param name="func"></param>
+        /// <returns></returns>
+        public ConfiguredInstance EnrichWith<T>(Expression<Func<IBuildSession, T, T>> func)
+        {
+            return Interceptor(new FuncInterceptor<T>(func));
+        }
+
+        /// <summary>
+        /// Register a Func to potentially enrich or substitute for the object
+        /// created by this Instance before it is returned to the caller
+        /// </summary>
+        /// <param name="description">A description of the creation action for diagnostics</param>
+        /// <param name="func"></param>
+        /// <returns></returns>
+        public ConfiguredInstance EnrichWith<T>(string description, Func<IBuildSession, T, T> func)
+        {
+            return Interceptor(InterceptorFactory.ForFunc(description, func));
         }
     }
 }

@@ -267,7 +267,6 @@
     <Compile Include="Interceptors\EnrichmentInterceptor.cs" />
     <Compile Include="Interceptors\InstanceInterceptor.cs" />
     <Compile Include="Interceptors\InterceptorLibrary.cs" />
-    <Compile Include="Interceptors\Interceptors.cs" />
     <Compile Include="Interceptors\NulloInterceptor.cs" />
     <Compile Include="Interceptors\StartupInterceptor.cs" />
     <Compile Include="Interceptors\FilteredInstanceInterceptor.cs" />

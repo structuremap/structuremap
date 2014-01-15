@@ -41,7 +41,7 @@ namespace StructureMap.Testing
                     o.ConstructedBy(() => new ColorWidget("green"));
                 });
 
-                x.ForConcreteType<TopClass>().Configure.OnCreation(
+                x.ForConcreteType<TopClass>().Configure.OnCreation("test",
                     (c, top) => { top.Widgets = c.All<IWidget>().ToArray(); });
             });
 
@@ -60,7 +60,7 @@ namespace StructureMap.Testing
                     o.ConstructedBy(() => new ColorWidget("green"));
                 });
 
-                x.ForConcreteType<TopClass>().Configure.OnCreation(
+                x.ForConcreteType<TopClass>().Configure.OnCreation("set the widgets",
                     (c, top) => { top.Widgets = c.All<IWidget>().ToArray(); });
             });
 
@@ -79,7 +79,7 @@ namespace StructureMap.Testing
                     o.ConstructedBy(() => new ColorWidget("green"));
                 });
 
-                x.ForConcreteType<TopClass>().Configure.OnCreation(
+                x.ForConcreteType<TopClass>().Configure.OnCreation("test",
                     (c, top) => { top.Widgets = c.GetAllInstances<IWidget>().ToArray(); });
             });
 

@@ -67,7 +67,7 @@ namespace StructureMap.Testing.Configuration.DSL
         {
             public object Target { get; set; }
 
-            public object Process(object target, IContext context)
+            public object Process(object target, IBuildSession session)
             {
                 Target = target;
                 return target;
