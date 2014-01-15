@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using System.Reflection;
 using StructureMap.Building;
+using StructureMap.Building.Interception;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
 using StructureMap.TypeRules;
@@ -13,6 +14,7 @@ namespace StructureMap
     {
         public readonly SetterRules SetterRules = new SetterRules();
         public readonly ConstructorSelector ConstructorSelector = new ConstructorSelector();
+        public readonly InterceptorPolicies Interceptors = new InterceptorPolicies();
 
         public bool CanBeAutoFilled(Type concreteType)
         {
