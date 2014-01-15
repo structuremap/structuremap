@@ -41,5 +41,13 @@ namespace StructureMap.Building
 
             return Expression.Convert(method, _pluginType);
         }
+
+        public Type ReturnedType
+        {
+            get
+            {
+                return PluginType;
+            }
+        }
     }
 }

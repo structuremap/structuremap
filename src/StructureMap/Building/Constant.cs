@@ -25,7 +25,7 @@ namespace StructureMap.Building
             _value = value;
         }
 
-        public Type ArgumentType
+        public Type ReturnedType
         {
             get { return _argumentType; }
         }
@@ -66,7 +66,7 @@ namespace StructureMap.Building
 
         public override string ToString()
         {
-            return string.Format("ArgumentType: {0}, Value: {1}", _argumentType, _value);
+            return string.Format("ReturnedType: {0}, Value: {1}", _argumentType, _value);
         }
     }
 }

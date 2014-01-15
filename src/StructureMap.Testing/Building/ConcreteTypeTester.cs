@@ -80,7 +80,7 @@ namespace StructureMap.Testing.Building
             var constant = ConcreteType.SourceFor(typeof (List<IGateway>), array)
                 .ShouldBeOfType<Constant>();
 
-            constant.ArgumentType.ShouldEqual(typeof (List<IGateway>));
+            constant.ReturnedType.ShouldEqual(typeof (List<IGateway>));
             constant.Value.As<List<IGateway>>()
                 .ShouldHaveTheSameElementsAs(array);
         }
@@ -92,7 +92,7 @@ namespace StructureMap.Testing.Building
             var constant = ConcreteType.SourceFor(typeof (IList<IGateway>), array)
                 .ShouldBeOfType<Constant>();
 
-            constant.ArgumentType.ShouldEqual(typeof (IList<IGateway>));
+            constant.ReturnedType.ShouldEqual(typeof (IList<IGateway>));
             constant.Value.As<IList<IGateway>>()
                 .ShouldHaveTheSameElementsAs(array);
         }
@@ -104,7 +104,7 @@ namespace StructureMap.Testing.Building
             var constant = ConcreteType.SourceFor(typeof (List<IGateway>), list)
                 .ShouldBeOfType<Constant>();
 
-            constant.ArgumentType.ShouldEqual(typeof (List<IGateway>));
+            constant.ReturnedType.ShouldEqual(typeof (List<IGateway>));
             constant.Value.As<List<IGateway>>()
                 .ShouldHaveTheSameElementsAs(list);
         }
@@ -116,7 +116,7 @@ namespace StructureMap.Testing.Building
             var constant = ConcreteType.SourceFor(typeof (IGateway[]), list)
                 .ShouldBeOfType<Constant>();
 
-            constant.ArgumentType.ShouldEqual(typeof (IGateway[]));
+            constant.ReturnedType.ShouldEqual(typeof (IGateway[]));
             constant.Value.As<IGateway[]>()
                 .ShouldHaveTheSameElementsAs(list.ToArray());
         }

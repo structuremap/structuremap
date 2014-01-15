@@ -29,6 +29,20 @@ namespace StructureMap.Testing.Building
         }
 
         [Test]
+        public void return_type_of_ArrayDependencySource()
+        {
+            var gateway1 = new StubbedGateway();
+            var gateway2 = new StubbedGateway();
+            var gateway3 = new StubbedGateway();
+            var array = new ArrayDependencySource(typeof(IGateway),
+                Constant.For(gateway1),
+                Constant.For(gateway2),
+                Constant.For(gateway3));
+
+            array.ReturnedType.ShouldEqual(typeof (IGateway[]));
+        }
+
+        [Test]
         public void can_build_with_ienumerable_dependency()
         {
             var gateway1 = new StubbedGateway();

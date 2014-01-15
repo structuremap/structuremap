@@ -30,5 +30,13 @@ namespace StructureMap.Building
 
             return Expression.Convert(call, _pluginType);
         }
+
+        public Type ReturnedType
+        {
+            get
+            {
+                return _instance.ConcreteType;
+            }
+        }
     }
 }

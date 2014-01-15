@@ -41,7 +41,7 @@ namespace StructureMap.Building
             return ListDependencySource.ToExpression(_elementType, getData);
         }
 
-        public Type EnumerationType
+        public Type ReturnedType
         {
             get { return _enumerationType; }
         }

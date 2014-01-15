@@ -37,6 +37,8 @@ namespace StructureMap.Building
             return Expression.Call(session, SessionMethod.MakeGenericMethod(_dependencyType), Expression.Constant(_name));
         }
 
+        public Type ReturnedType { get { return DependencyType; } }
+
         public override string ToString()
         {
             return string.Format("DependencyType: {0}, Name: {1}", _dependencyType, _name);

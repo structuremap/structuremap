@@ -264,6 +264,8 @@ namespace StructureMap.Testing.Graph
         {
             throw new NotImplementedException();
         }
+
+        public Type ReturnedType { get; private set; }
     }
 
     public class FakeInstance : Instance, IDisposable

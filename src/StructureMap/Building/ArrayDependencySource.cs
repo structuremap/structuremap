@@ -37,5 +37,14 @@ namespace StructureMap.Building
         {
             return Expression.NewArrayInit(_itemType, _items.Select(x => x.ToExpression(session)));
         }
+
+        public Type ReturnedType
+        {
+            get
+            {
+                return _itemType.MakeArrayType();
+            }
+            
+        }
     }
 }
