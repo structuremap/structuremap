@@ -1,6 +1,5 @@
 using System;
 using StructureMap.Graph;
-using StructureMap.Interceptors;
 using StructureMap.Pipeline;
 
 namespace StructureMap.Configuration.DSL.Expressions

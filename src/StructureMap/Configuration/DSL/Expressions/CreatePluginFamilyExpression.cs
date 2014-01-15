@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
+using StructureMap.Building.Interception;
 using StructureMap.Graph;
 using StructureMap.Interceptors;
 using StructureMap.Pipeline;
@@ -194,19 +196,18 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// Register an Action to run against any object of this PluginType immediately after
         /// it is created, but before the new object is passed back to the caller
         /// </summary>
-        public CreatePluginFamilyExpression<TPluginType> OnCreationForAll(Action<TPluginType> handler)
+        public CreatePluginFamilyExpression<TPluginType> OnCreationForAll(Expression<Action<TPluginType>> handler)
         {
-            _children.Add(
-                graph => {
-                    var interceptor = new PluginTypeInterceptor(typeof (TPluginType), (c, o) => {
-                        handler((TPluginType) o);
-                        return o;
-                    });
+            return InterceptWith(new ActivatorInterceptor<TPluginType>(handler));
+        }
 
-                    graph.InterceptorLibrary.AddInterceptor(interceptor);
-                });
-
-            return this;
+        /// Register an Action to run against any object of this PluginType immediately after
+        /// it is created, but before the new object is passed back to the caller
+        /// </summary>
+        /// <param name="description">Descriptive text for diagnostics</param>
+        public CreatePluginFamilyExpression<TPluginType> OnCreationForAll(string description, Action<TPluginType> handler)
+        {
+            return InterceptWith(InterceptorFactory.ForAction(description, handler));
         }
 
 
@@ -214,33 +215,29 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// Register an Action to run against any object of this PluginType immediately after
         /// it is created, but before the new object is passed back to the caller
         /// </summary>
-        public CreatePluginFamilyExpression<TPluginType> OnCreationForAll(Action<IContext, TPluginType> handler)
+        public CreatePluginFamilyExpression<TPluginType> OnCreationForAll(Expression<Action<IBuildSession, TPluginType>> handler)
         {
-            _children.Add(
-                graph => {
-                    Func<IContext, object, object> function = (c, o) => {
-                        handler(c, (TPluginType) o);
-                        return o;
-                    };
+            return InterceptWith(new ActivatorInterceptor<TPluginType>(handler));
+        }
 
-                    var interceptor = new PluginTypeInterceptor(typeof (TPluginType), function);
-
-                    graph.InterceptorLibrary.AddInterceptor(interceptor);
-                });
-
-            return this;
+        /// <summary>
+        /// Register an Action to run against any object of this PluginType immediately after
+        /// it is created, but before the new object is passed back to the caller
+        /// </summary>
+        /// <param name="description">Descriptive text for diagnostics</param>
+        public CreatePluginFamilyExpression<TPluginType> OnCreationForAll(string description, Action<IBuildSession, TPluginType> handler)
+        {
+            return InterceptWith(InterceptorFactory.ForAction(description, handler));
         }
 
         /// <summary>
         /// Adds an Interceptor to only this PluginType
         /// </summary>
-        public CreatePluginFamilyExpression<TPluginType> InterceptWith(InstanceInterceptor interceptor)
+        public CreatePluginFamilyExpression<TPluginType> InterceptWith(IInterceptor interceptor)
         {
             _children.Add(
                 graph => {
-                    var typeInterceptor = new PluginTypeInterceptor(typeof (TPluginType),
-                        (c, o) => interceptor.Process(o, c));
-                    graph.InterceptorLibrary.AddInterceptor(typeInterceptor);
+                    graph.Policies.Interceptors.Add<TPluginType>(interceptor);
                 });
 
             return this;
@@ -252,19 +249,10 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// EnrichAllWith() gives the the ability to return a different object.  Use this method for runtime AOP
         /// scenarios or to return a decorator.
         /// </summary>
-        public CreatePluginFamilyExpression<TPluginType> EnrichAllWith(Func<TPluginType, TPluginType> handler)
+        public CreatePluginFamilyExpression<TPluginType> EnrichAllWith(Expression<Func<TPluginType, TPluginType>> handler)
         {
-            _children.Add(
-                graph => {
-                    Func<IContext, object, object> function = (context, target) => handler((TPluginType) target);
-
-                    var interceptor = new PluginTypeInterceptor(typeof (TPluginType), function);
-                    graph.InterceptorLibrary.AddInterceptor(interceptor);
-                });
-
-            return this;
+            return InterceptWith(new FuncInterceptor<TPluginType>(handler));
         }
-
 
         /// <summary>
         /// Register a Func to run against any object of this PluginType immediately after it is created,
@@ -272,18 +260,34 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// EnrichAllWith() gives the the ability to return a different object.  Use this method for runtime AOP
         /// scenarios or to return a decorator.
         /// </summary>
-        public CreatePluginFamilyExpression<TPluginType> EnrichAllWith(Func<IBuildSession, TPluginType, TPluginType> handler)
+        /// <param name="description">Descriptive text for diagnostics</param>
+        public CreatePluginFamilyExpression<TPluginType> EnrichAllWith(string description, Func<TPluginType, TPluginType> handler)
         {
-            _children.Add(
-                graph => {
-                    var interceptor = new PluginTypeInterceptor(typeof (TPluginType),
-                        (c, o) => handler(c, (TPluginType) o));
-                    graph.InterceptorLibrary.AddInterceptor(interceptor);
-                });
-
-            return this;
+            return InterceptWith(InterceptorFactory.ForFunc(description, handler));
         }
 
+        /// <summary>
+        /// Register a Func to run against any object of this PluginType immediately after it is created,
+        /// but before the new object is passed back to the caller.  Unlike OnCreationForAll(),
+        /// EnrichAllWith() gives the the ability to return a different object.  Use this method for runtime AOP
+        /// scenarios or to return a decorator.
+        /// </summary>
+        public CreatePluginFamilyExpression<TPluginType> EnrichAllWith(Expression<Func<IBuildSession, TPluginType, TPluginType>> handler)
+        {
+            return InterceptWith(new FuncInterceptor<TPluginType>(handler));
+        }
+
+        /// <summary>
+        /// Register a Func to run against any object of this PluginType immediately after it is created,
+        /// but before the new object is passed back to the caller.  Unlike OnCreationForAll(),
+        /// EnrichAllWith() gives the the ability to return a different object.  Use this method for runtime AOP
+        /// scenarios or to return a decorator.
+        /// </summary>
+        /// <param name="description">Descriptive text for diagnostics</param>
+        public CreatePluginFamilyExpression<TPluginType> EnrichAllWith(string description, Func<IBuildSession, TPluginType, TPluginType> handler)
+        {
+            return InterceptWith(InterceptorFactory.ForFunc(description, handler));
+        }
 
         /// <summary>
         /// Registers an ILifecycle for this Plugin Type that executes before

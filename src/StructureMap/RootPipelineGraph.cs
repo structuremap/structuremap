@@ -38,12 +38,6 @@ namespace StructureMap
             return this;
         }
 
-        // TODO -- what if we cache these on the Instance itself?
-        public InstanceInterceptor FindInterceptor(Type concreteType)
-        {
-            return _pluginGraph.InterceptorLibrary.FindInterceptor(concreteType);
-        }
-
         public Instance GetDefault(Type pluginType)
         {
             return _pluginGraph.Families[pluginType].GetDefaultInstance();

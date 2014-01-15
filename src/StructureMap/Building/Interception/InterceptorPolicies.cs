@@ -13,6 +13,11 @@ namespace StructureMap.Building.Interception
             _policies.Fill(policy);
         }
 
+        public void Add<T>(IInterceptor interceptor)
+        {
+            Add(new InterceptionPolicy<T>(interceptor));
+        }
+
         public IList<IInterceptorPolicy> Policies
         {
             get { return _policies; }

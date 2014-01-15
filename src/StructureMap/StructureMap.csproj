@@ -195,7 +195,6 @@
     <Compile Include="IBuildSession.cs" />
     <Compile Include="IGraphEjector.cs" />
     <Compile Include="ILifecycleContext.cs" />
-    <Compile Include="Interceptors\MatchedTypeInterceptor.cs" />
     <Compile Include="IPipelineGraph.cs" />
     <Compile Include="Pipeline\ArrayDefinitionExpression.cs" />
     <Compile Include="Pipeline\ConfiguredInstance.cs" />
@@ -263,13 +262,6 @@
     <Compile Include="InstanceMemento.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Interceptors\CompoundInterceptor.cs" />
-    <Compile Include="Interceptors\EnrichmentInterceptor.cs" />
-    <Compile Include="Interceptors\InstanceInterceptor.cs" />
-    <Compile Include="Interceptors\InterceptorLibrary.cs" />
-    <Compile Include="Interceptors\NulloInterceptor.cs" />
-    <Compile Include="Interceptors\StartupInterceptor.cs" />
-    <Compile Include="Interceptors\FilteredInstanceInterceptor.cs" />
     <Compile Include="MemoryInstanceMemento.cs">
       <SubType>Code</SubType>
     </Compile>

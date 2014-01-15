@@ -35,11 +35,6 @@ namespace StructureMap
             return _parent.Root();
         }
 
-        public InstanceInterceptor FindInterceptor(Type concreteType)
-        {
-            return _parent.FindInterceptor(concreteType);
-        }
-
         public Instance GetDefault(Type pluginType)
         {
             return _outer.HasDefaultForPluginType(pluginType)

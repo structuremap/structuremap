@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using StructureMap.Graph;
-using StructureMap.Interceptors;
 using StructureMap.Pipeline;
 
 namespace StructureMap
@@ -15,8 +14,6 @@ namespace StructureMap
         /// </summary>
         /// <returns></returns>
         IPipelineGraph Root();
-
-        InstanceInterceptor FindInterceptor(Type concreteType);
 
         Instance GetDefault(Type pluginType);
         bool HasDefaultForPluginType(Type pluginType);
