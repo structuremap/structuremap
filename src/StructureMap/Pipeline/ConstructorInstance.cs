@@ -30,6 +30,12 @@ namespace StructureMap.Pipeline
             get { return _pluggedType; }
         }
 
+        public override IDependencySource ToBuilder(Type pluginType, Policies policies)
+        {
+            // TODO -- use an explicit constructor when this exists
+            return StructureMap.Building.ConcreteType.BuildSource(_pluggedType, null, _dependencies, Policies);
+        }
+
         protected override bool canBePartOfPluginFamily(PluginFamily family)
         {
             return _pluggedType.CanBeCastTo(family.PluginType);
@@ -63,14 +69,6 @@ namespace StructureMap.Pipeline
             return _pluggedType;
         }
 
-
-        protected override object build(Type pluginType, IBuildSession session)
-        {
-            // TODO -- make this Lazy for crying out loud
-            var plan = StructureMap.Building.ConcreteType.BuildPlan(_pluggedType, null, _dependencies, Policies);
-            
-            return plan.Build(session);
-        }
 
         public static ConstructorInstance For<T>()
         {

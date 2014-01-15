@@ -36,9 +36,11 @@ namespace StructureMap.Pipeline
         /// </summary>
         /// <param name="pluginType"></param>
         /// <returns></returns>
-        public virtual IDependencySource ToDependencySource(Type pluginType)
+        public abstract IDependencySource ToDependencySource(Type pluginType);
+
+        public virtual IDependencySource ToBuilder(Type pluginType, Policies policies)
         {
-            return new InstanceDependencySource(pluginType, this);
+            return ToDependencySource(pluginType);
         }
 
         public PluginFamily Parent
@@ -96,34 +98,6 @@ namespace StructureMap.Pipeline
 
         #endregion
 
-        [Obsolete("Going away when BuildPlan is completely in place")]
-        public virtual object Build(Type pluginType, IBuildSession session)
-        {
-            // "Build" the desired object
-            var rawValue = createRawObject(pluginType, session);
-
-            return rawValue;
-        }
-
-        [Obsolete("removing this when BuildPlan gets used")]
-        private object createRawObject(Type pluginType, IBuildSession session)
-        {
-            try
-            {
-                return build(pluginType, session);
-            }
-            catch (StructureMapException ex)
-            {
-                // TODO -- change the signature to use PluginType on description
-                ex.Push(pluginType.GetFullName() + ": " + Description);
-                throw;
-            }
-            catch (Exception ex)
-            {
-                throw new StructureMapException(Description, ex);
-            }
-        }
-
         [Obsolete("Just fold this into ConcreteType")]
         protected virtual Type getConcreteType(Type pluginType)
         {
@@ -143,13 +117,6 @@ namespace StructureMap.Pipeline
         public bool HasExplicitName()
         {
             return _name != _originalName;
-        }
-
-
-        [CLSCompliant(false)]
-        protected virtual object build(Type pluginType, IBuildSession session)
-        {
-            throw new NotImplementedException();
         }
 
         [CLSCompliant(false)]

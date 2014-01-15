@@ -41,12 +41,6 @@ namespace StructureMap.Pipeline
             _object = null;
         }
 
-        protected override object build(Type pluginType, IBuildSession session)
-        {
-            return _object;
-        }
-
-
         protected override bool canBePartOfPluginFamily(PluginFamily family)
         {
             return _object.GetType().CanBeCastTo(family.PluginType);

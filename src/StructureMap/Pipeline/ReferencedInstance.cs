@@ -29,11 +29,6 @@ namespace StructureMap.Pipeline
             return Equals(_referenceKey, referencedInstance._referenceKey);
         }
 
-        protected override object build(Type pluginType, IBuildSession session)
-        {
-            return session.CreateInstance(pluginType, _referenceKey);
-        }
-
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(this, obj)) return true;

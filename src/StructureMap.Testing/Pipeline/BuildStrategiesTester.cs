@@ -29,14 +29,9 @@ namespace StructureMap.Testing.Pipeline
                 _constructedObject = constructedObject;
             }
 
-            protected override object build(Type pluginType, IBuildSession session)
-            {
-                return _constructedObject;
-            }
-
             public override IDependencySource ToDependencySource(Type pluginType)
             {
-                throw new NotImplementedException();
+                return new Constant(pluginType, _constructedObject);
             }
 
             protected override string getDescription()
@@ -124,10 +119,6 @@ namespace StructureMap.Testing.Pipeline
                 throw new NotImplementedException();
             }
 
-            protected override object build(Type pluginType, IBuildSession session)
-            {
-                throw new NotImplementedException();
-            }
         }
 
         [Test]

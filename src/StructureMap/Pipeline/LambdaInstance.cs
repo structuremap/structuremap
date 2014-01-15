@@ -22,23 +22,28 @@ namespace StructureMap.Pipeline
             get { return this; }
         }
 
-        protected override object build(Type pluginType, IBuildSession session)
+        public override IDependencySource ToDependencySource(Type pluginType)
         {
-            try
-            {
-                return _builder(session);
-            }
-                // TODO -- UT this behavior
-            catch (StructureMapException ex)
-            {
-                ex.Push(Description);
-                throw;
-            }
-            catch (Exception ex)
-            {
-                throw new StructureMapBuildException("Exception while trying to build '{0}', check the inner exception".ToFormat(Description), ex);
-            }
+            throw new NotImplementedException("Need to redo this");
         }
+
+//        protected override object build(Type pluginType, IBuildSession session)
+//        {
+//            try
+//            {
+//                return _builder(session);
+//            }
+//                // TODO -- UT this behavior
+//            catch (StructureMapException ex)
+//            {
+//                ex.Push(Description);
+//                throw;
+//            }
+//            catch (Exception ex)
+//            {
+//                throw new StructureMapBuildException("Exception while trying to build '{0}', check the inner exception".ToFormat(Description), ex);
+//            }
+//        }
 
         protected override string getDescription()
         {

@@ -5,17 +5,6 @@ namespace StructureMap.Pipeline
 {
     public class DefaultInstance : Instance
     {
-        protected override object build(Type pluginType, IBuildSession session)
-        {
-            if (EnumerableInstance.IsEnumerable(pluginType))
-            {
-                var enumerable = new EnumerableInstance(null);
-                return enumerable.Build(pluginType, session);
-            }
-
-            return session.GetInstance(pluginType);
-        }
-
         protected override string getDescription()
         {
             return "Default";

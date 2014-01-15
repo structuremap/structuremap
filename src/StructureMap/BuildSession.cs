@@ -99,9 +99,11 @@ namespace StructureMap
 
         public object BuildNewInSession(Type pluginType, Instance instance)
         {
+            throw new NotImplementedException("Find the IBuildPlan and use that");
+
             // TODO -- test this after the IBuildPlan is in place
             // Test that the interception takes place
-            return instance.Build(pluginType, this);
+            //return instance.Build(pluginType, this);
         }
 
         public object BuildNewInOriginalContext(Type pluginType, Instance instance)

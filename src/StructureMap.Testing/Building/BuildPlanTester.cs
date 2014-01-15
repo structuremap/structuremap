@@ -118,6 +118,11 @@ namespace StructureMap.Testing.Building
             return "Nothing!";
         }
 
+        public override IDependencySource ToDependencySource(Type pluginType)
+        {
+            throw new NotImplementedException();
+        }
+
         protected override Type getConcreteType(Type pluginType)
         {
             return _returnedType;

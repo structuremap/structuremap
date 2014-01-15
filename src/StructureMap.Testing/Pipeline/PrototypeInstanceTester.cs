@@ -69,11 +69,11 @@ namespace StructureMap.Testing.Pipeline
         {
             var target = new PrototypeTarget("Jeremy");
             var instance = new PrototypeInstance(target);
-
-            var returnedValue = instance.Build(typeof (PrototypeTarget), new StubBuildSession());
-
-            Assert.AreEqual(target, returnedValue);
-            Assert.AreNotSame(target, returnedValue);
+            Assert.Fail("NWO");
+//            var returnedValue = instance.Build(typeof (PrototypeTarget), new StubBuildSession());
+//
+//            Assert.AreEqual(target, returnedValue);
+//            Assert.AreNotSame(target, returnedValue);
         }
 
         [Test]

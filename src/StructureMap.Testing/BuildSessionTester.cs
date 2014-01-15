@@ -374,7 +374,7 @@ namespace StructureMap.Testing
 
         public override IDependencySource ToDependencySource(Type pluginType)
         {
-            throw new NotImplementedException();
+            return new Constant(pluginType, new ColorRule("Red"));
         }
 
         protected override Type getConcreteType(Type pluginType)
@@ -382,9 +382,5 @@ namespace StructureMap.Testing
             return typeof (ColorRule);
         }
 
-        protected override object build(Type pluginType, IBuildSession session)
-        {
-            return new ColorRule("Red");
-        }
     }
 }

@@ -10,7 +10,7 @@ namespace StructureMap.Building
 {
     public static class ConcreteType
     {
-        public static IBuildPlan BuildPlan(Type pluggedType, ConstructorInfo constructor,
+        public static ConcreteBuild BuildSource(Type pluggedType, ConstructorInfo constructor,
             DependencyCollection dependencies, Policies policies)
         {
             var ctorStep = BuildConstructorStep(pluggedType, constructor, dependencies, policies);

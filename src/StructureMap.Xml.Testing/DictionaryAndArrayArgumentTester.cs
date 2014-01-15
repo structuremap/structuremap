@@ -31,13 +31,15 @@ namespace StructureMap.Xml.Testing
             var graph = new PluginGraph();
             Instance instance = memento.ReadInstance(typeof (ClassWithStringAndIntArray));
 
-            var theObject = (ClassWithStringAndIntArray) instance.Build(typeof (ClassWithStringAndIntArray),
-                                                                        BuildSession.ForPluginGraph(graph));
+            Assert.Fail("NWO");
 
-            theObject.Numbers.ShouldEqual(new[] {1, 2, 3});
-            theObject.Strings.ShouldEqual(new[] {"1", "2", "3"});
-
-            Debug.WriteLine(theObject.GetType().AssemblyQualifiedName);
+//            var theObject = (ClassWithStringAndIntArray) instance.Build(typeof (ClassWithStringAndIntArray),
+//                                                                        BuildSession.ForPluginGraph(graph));
+//
+//            theObject.Numbers.ShouldEqual(new[] {1, 2, 3});
+//            theObject.Strings.ShouldEqual(new[] {"1", "2", "3"});
+//
+//            Debug.WriteLine(theObject.GetType().AssemblyQualifiedName);
         }
 
         [Test]
@@ -62,13 +64,15 @@ namespace StructureMap.Xml.Testing
             Instance instance = memento.ReadInstance(typeof(ClassWithDictionary));
 
 
-            var theObject =
-                (ClassWithDictionary) instance.Build(typeof (ClassWithDictionary), BuildSession.Empty());
+//            var theObject =
+//                (ClassWithDictionary) instance.Build(typeof (ClassWithDictionary), BuildSession.Empty());
+//
+//
+//            theObject.Dictionary["color"].ShouldEqual("red");
+//            theObject.Dictionary["state"].ShouldEqual("texas");
+//            theObject.Dictionary["direction"].ShouldEqual("north");
 
-
-            theObject.Dictionary["color"].ShouldEqual("red");
-            theObject.Dictionary["state"].ShouldEqual("texas");
-            theObject.Dictionary["direction"].ShouldEqual("north");
+            Assert.Fail("NWO");
         }
     }
 

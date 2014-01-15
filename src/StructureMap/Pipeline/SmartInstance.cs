@@ -208,17 +208,6 @@ namespace StructureMap.Pipeline
             return this;
         }
 
-        protected override object build(Type pluginType, IBuildSession session)
-        {
-            var builtTarget = (T) base.build(pluginType, session);
-            foreach (var action in _actions)
-            {
-                action(builtTarget);
-            }
-
-            return builtTarget;
-        }
-
         /// <summary>
         ///     Set simple setter properties
         /// </summary>
@@ -226,7 +215,7 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public SmartInstance<T> SetProperty(Action<T> action)
         {
-            _actions.Add(action);
+            AddInterceptor(InterceptorFactory.ForAction("Setting property", action));
             return this;
         }
 

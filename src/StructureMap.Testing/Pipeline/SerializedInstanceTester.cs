@@ -17,11 +17,12 @@ namespace StructureMap.Testing.Pipeline
 
             var instance = new SerializedInstance(colors);
 
-            var colors2 = (Dictionary<string, string>) instance.Build(typeof (IDictionary<string, string>),
-                new StubBuildSession());
-
-            colors.ShouldNotBeTheSameAs(colors2);
-            colors2["main"].ShouldEqual("red");
+            Assert.Fail("NWO");
+//            var colors2 = (Dictionary<string, string>) instance.Build(typeof (IDictionary<string, string>),
+//                new StubBuildSession());
+//
+//            colors.ShouldNotBeTheSameAs(colors2);
+//            colors2["main"].ShouldEqual("red");
         }
     }
 }

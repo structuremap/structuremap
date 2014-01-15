@@ -44,7 +44,8 @@ namespace StructureMap.Testing.Pipeline
         {
             var target = new ATarget();
             var instance = new ObjectInstance(target);
-            Assert.AreSame(target, instance.Build(typeof (ITarget), new StubBuildSession()));
+            Assert.Fail("NWO");
+            //Assert.AreSame(target, instance.Build(typeof (ITarget), new StubBuildSession()));
         }
 
         [Test]

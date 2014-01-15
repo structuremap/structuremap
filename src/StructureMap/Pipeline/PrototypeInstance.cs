@@ -1,4 +1,5 @@
 using System;
+using StructureMap.Building;
 using StructureMap.Graph;
 using StructureMap.TypeRules;
 
@@ -19,13 +20,6 @@ namespace StructureMap.Pipeline
             get { return this; }
         }
 
-
-        protected override object build(Type pluginType, IBuildSession session)
-        {
-            return _prototype.Clone();
-        }
-
-
         protected override bool canBePartOfPluginFamily(PluginFamily family)
         {
             return _prototype.GetType().CanBeCastTo(family.PluginType);
@@ -34,6 +28,11 @@ namespace StructureMap.Pipeline
         protected override string getDescription()
         {
             return "Prototype of " + _prototype;
+        }
+
+        public override IDependencySource ToDependencySource(Type pluginType)
+        {
+            throw new NotImplementedException();
         }
     }
 }

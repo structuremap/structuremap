@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using StructureMap.Building;
 
 namespace StructureMap.Pipeline
 {
@@ -26,14 +27,9 @@ namespace StructureMap.Pipeline
             return "Serialized instance";
         }
 
-        protected override object build(Type pluginType, IBuildSession session)
+        public override IDependencySource ToDependencySource(Type pluginType)
         {
-            lock (_locker)
-            {
-                _stream.Position = 0;
-                var formatter = new BinaryFormatter();
-                return formatter.Deserialize(_stream);
-            }
+            throw new NotImplementedException();
         }
     }
 }

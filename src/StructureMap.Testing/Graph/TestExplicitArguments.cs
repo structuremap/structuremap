@@ -79,7 +79,7 @@ namespace StructureMap.Testing.Graph
         {
             public override IDependencySource ToDependencySource(Type pluginType)
             {
-                throw new NotImplementedException();
+                throw new NotImplementedException("See the stuff below");
             }
 
             protected override string getDescription()
@@ -87,13 +87,13 @@ namespace StructureMap.Testing.Graph
                 return string.Empty;
             }
 
-            protected override object build(Type pluginType, IBuildSession session)
-            {
-                return new ClassWithNoArgs
-                {
-                    TheAddress = (Address) session.GetInstance(typeof (Address))
-                };
-            }
+//            protected override object build(Type pluginType, IBuildSession session)
+//            {
+////                return new ClassWithNoArgs
+////                {
+////                    TheAddress = (Address) session.GetInstance(typeof (Address))
+////                };
+//            }
         }
 
         public class SpecialNode : Node

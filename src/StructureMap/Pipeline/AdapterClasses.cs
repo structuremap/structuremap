@@ -1,4 +1,5 @@
 using System;
+using StructureMap.Building;
 
 namespace StructureMap.Pipeline
 {
@@ -16,9 +17,14 @@ namespace StructureMap.Pipeline
             return string.Empty;
         }
 
-        protected override object build(Type pluginType, IBuildSession session)
+        public override IDependencySource ToDependencySource(Type pluginType)
         {
             throw new NotImplementedException();
+        }
+
+        public override IDependencySource ToBuilder(Type pluginType, Policies policies)
+        {
+            return base.ToBuilder(pluginType, policies);
         }
 
         public override Instance CloseType(Type[] types)
@@ -36,13 +42,19 @@ namespace StructureMap.Pipeline
             return "Lazy construction of " + typeof (T).FullName;
         }
 
-        protected override object build(Type pluginType, IBuildSession session)
+        public override IDependencySource ToDependencySource(Type pluginType)
         {
-            var container = session.GetInstance<IContainer>();
-            Func<T> func = container.GetInstance<T>;
-
-            return func;
+            throw new NotImplementedException();
         }
+
+
+//        protected override object build(Type pluginType, IBuildSession session)
+//        {
+//            var container = session.GetInstance<IContainer>();
+//            Func<T> func = container.GetInstance<T>;
+//
+//            return func;
+//        }
     }
 
     public class FactoryInstance<T> : Instance
@@ -52,12 +64,17 @@ namespace StructureMap.Pipeline
             return "Lazy factory of " + typeof (T).FullName;
         }
 
-        protected override object build(Type pluginType, IBuildSession session)
-        {
-            var container = session.GetInstance<IContainer>();
-            Func<string, T> func = container.GetInstance<T>;
+//        protected override object build(Type pluginType, IBuildSession session)
+//        {
+//            var container = session.GetInstance<IContainer>();
+//            Func<string, T> func = container.GetInstance<T>;
+//
+//            return func;
+//        }
 
-            return func;
+        public override IDependencySource ToDependencySource(Type pluginType)
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -68,12 +85,18 @@ namespace StructureMap.Pipeline
             return "Lazy construction of {0} using {1}".ToFormat(typeof (T1).FullName, typeof (T).FullName);
         }
 
-        protected override object build(Type pluginType, IBuildSession session)
-        {
-            var container = session.GetInstance<IContainer>();
-            Func<T, T1> func = key => container.With(key).GetInstance<T1>();
+//        protected override object build(Type pluginType, IBuildSession session)
+//        {
+//            var container = session.GetInstance<IContainer>();
+//            Func<T, T1> func = key => container.With(key).GetInstance<T1>();
+//
+//            return func;
+//        }
 
-            return func;
+        public override IDependencySource ToDependencySource(Type pluginType)
+        {
+            throw new NotImplementedException();
         }
+
     }
 }

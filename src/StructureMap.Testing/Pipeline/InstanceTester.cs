@@ -114,15 +114,9 @@ namespace StructureMap.Testing.Pipeline
     {
         public object TheInstanceThatWasBuilt = new object();
 
-
-        protected override object build(Type pluginType, IBuildSession session)
-        {
-            return TheInstanceThatWasBuilt;
-        }
-
         public override IDependencySource ToDependencySource(Type pluginType)
         {
-            throw new NotImplementedException();
+            return new Constant(pluginType, TheInstanceThatWasBuilt);
         }
 
         protected override string getDescription()

@@ -19,7 +19,8 @@ namespace StructureMap.Xml.Testing
             var reader = new PrimitiveArrayReader();
             Instance instance = reader.Read(element, pluginType);
 
-            return instance.Build(pluginType, new StubBuildSession());
+            throw new NotImplementedException("Redo for the NWO");
+            //return instance.Build(pluginType, new StubBuildSession());
         }
 
         [Test]

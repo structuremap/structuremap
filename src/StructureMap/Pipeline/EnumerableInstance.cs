@@ -96,24 +96,24 @@ namespace StructureMap.Pipeline
             return "Enumerable Instance";
         }
 
-        protected override object build(Type pluginType, IBuildSession session)
-        {
-            var coercion = DetermineCoercion(pluginType);
-            var elementType = coercion.ElementType;
+//        protected override object build(Type pluginType, IBuildSession session)
+//        {
+//            var coercion = DetermineCoercion(pluginType);
+//            var elementType = coercion.ElementType;
+//
+//            var objects = buildObjects(elementType, session);
+//            return coercion.Convert(objects);
+//        }
 
-            var objects = buildObjects(elementType, session);
-            return coercion.Convert(objects);
-        }
-
-        private IEnumerable<object> buildObjects(Type elementType, IBuildSession session)
-        {
-            if (_children == null)
-            {
-                return session.GetAllInstances(elementType);
-            }
-
-            return _children.Select(x => x.Build(elementType, session));
-        }
+//        private IEnumerable<object> buildObjects(Type elementType, IBuildSession session)
+//        {
+//            if (_children == null)
+//            {
+//                return session.GetAllInstances(elementType);
+//            }
+//
+//            return _children.Select(x => x.Build(elementType, session));
+//        }
 
         public static bool IsEnumerable(Type type)
         {
