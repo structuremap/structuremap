@@ -258,6 +258,11 @@ namespace StructureMap
                 return pluginType.IsAssignableFrom(pluggedType);
             }
 
+            public static bool CanBeCastTo<T>(this Type pluggedType)
+            {
+                return pluggedType.CanBeCastTo(typeof (T));
+            }
+
 
             public static bool IsString(this Type type)
             {
