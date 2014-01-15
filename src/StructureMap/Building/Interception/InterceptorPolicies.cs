@@ -20,7 +20,7 @@ namespace StructureMap.Building.Interception
 
         public IEnumerable<IInterceptor> SelectInterceptors(Type returnedType)
         {
-            return _policies.SelectMany(x => x.DetermineInterceptors(returnedType));
+            return _policies.SelectMany(x => x.DetermineInterceptors(returnedType)).ToArray();
         } 
     }
 }

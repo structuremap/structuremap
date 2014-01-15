@@ -186,6 +186,7 @@
     <Compile Include="Bugs\UseSingleImplementationConventionInMultipleScans.cs" />
     <Compile Include="Building\AllPossibleEnumerableDependency_resolution_Tester.cs" />
     <Compile Include="Building\array_expression_building.cs" />
+    <Compile Include="Building\BuildPlanTester.cs" />
     <Compile Include="Building\BuildUpPlanTester.cs" />
     <Compile Include="Building\ConcreteBuild_exception_throwing_Tester.cs" />
     <Compile Include="Building\ConcreteTypeTester.cs" />

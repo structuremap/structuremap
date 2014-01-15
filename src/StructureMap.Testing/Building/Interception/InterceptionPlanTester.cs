@@ -12,7 +12,7 @@ namespace StructureMap.Testing.Building.Interception
         public void intercept_happy_path_with_a_single_activation()
         {
             var target = new Target();
-            var inner = new LiteralPlan<Target>(target);
+            var inner = Constant.For(target);
 
             var plan = new InterceptionPlan(typeof (ITarget), inner,
                 new IInterceptor[]
@@ -30,7 +30,7 @@ namespace StructureMap.Testing.Building.Interception
         public void intercept_happy_path_with_a_single_activation_that_uses_session()
         {
             var target = new Target();
-            var inner = new LiteralPlan<Target>(target);
+            var inner = Constant.For(target);
 
             var plan = new InterceptionPlan(typeof (ITarget), inner,
                 new IInterceptor[] {new ActivatorInterceptor<Target>((session, x) => x.UseSession(session))});
@@ -46,7 +46,7 @@ namespace StructureMap.Testing.Building.Interception
         public void intercept_sad_path_with_a_single_activation_that_uses_session()
         {
             var target = new Target();
-            var inner = new LiteralPlan<Target>(target);
+            var inner = Constant.For(target);
 
             var plan = new InterceptionPlan(typeof (ITarget), inner,
                 new IInterceptor[] {new ActivatorInterceptor<Target>((session, x) => x.BlowUpOnSession(session))});
@@ -64,7 +64,7 @@ namespace StructureMap.Testing.Building.Interception
         public void multiple_activators_taking_different_accept_types()
         {
             var target = new Target();
-            var inner = new LiteralPlan<Target>(target);
+            var inner = Constant.For(target);
 
             var plan = new InterceptionPlan(typeof (ITarget), inner,
                 new IInterceptor[]
@@ -84,7 +84,7 @@ namespace StructureMap.Testing.Building.Interception
         public void activator_that_fails_gets_wrapped_in_descriptive_text()
         {
             var target = new Target();
-            var inner = new LiteralPlan<Target>(target);
+            var inner = Constant.For(target);
 
             var interceptor = new ActivatorInterceptor<Target>(x => x.ThrowUp());
             var plan = new InterceptionPlan(typeof (ITarget), inner,
@@ -104,7 +104,7 @@ namespace StructureMap.Testing.Building.Interception
         public void single_decorator_happy_path_that_uses_the_plugin_type()
         {
             var target = new Target();
-            var inner = new LiteralPlan<Target>(target);
+            var inner = Constant.For(target);
 
             var decorator = new FuncInterceptor<ITarget>(t => new DecoratedTarget(t));
             var plan = new InterceptionPlan(typeof (ITarget), inner, new IInterceptor[] {decorator});
@@ -118,7 +118,7 @@ namespace StructureMap.Testing.Building.Interception
         public void multiple_decorators_happy_path()
         {
             var target = new Target();
-            var inner = new LiteralPlan<Target>(target);
+            var inner = Constant.For(target);
 
             var decorator1 = new FuncInterceptor<ITarget>(t => new DecoratedTarget(t));
             var decorator2 = new FuncInterceptor<ITarget>(t => new BorderedTarget(t));
@@ -134,7 +134,7 @@ namespace StructureMap.Testing.Building.Interception
         public void mixed_activators_and_decorators_happy_path()
         {
             var target = new Target();
-            var inner = new LiteralPlan<Target>(target);
+            var inner = Constant.For(target);
 
             var decorator1 = new FuncInterceptor<ITarget>(t => new DecoratedTarget(t));
             var decorator2 = new FuncInterceptor<ITarget>(t => new BorderedTarget(t));
@@ -159,7 +159,7 @@ namespace StructureMap.Testing.Building.Interception
         public void single_decorator_sad_path_that_uses_the_plugin_type()
         {
             var target = new Target();
-            var inner = new LiteralPlan<Target>(target);
+            var inner = Constant.For(target);
 
             var decorator = new FuncInterceptor<ITarget>(t => new ThrowsDecoratedTarget(t));
             var plan = new InterceptionPlan(typeof (ITarget), inner, new IInterceptor[] {decorator});
@@ -176,7 +176,7 @@ namespace StructureMap.Testing.Building.Interception
         public void single_decorator_happy_path_that_uses_the_plugin_type_and_session()
         {
             var target = new Target();
-            var inner = new LiteralPlan<Target>(target);
+            var inner = Constant.For(target);
 
             var decorator = new FuncInterceptor<ITarget>((s, t) => new ContextKeepingTarget(s, t));
             var plan = new InterceptionPlan(typeof (ITarget), inner, new IInterceptor[] {decorator});
@@ -193,7 +193,7 @@ namespace StructureMap.Testing.Building.Interception
         public void single_decorator_sad_path_that_uses_the_plugin_type_and_session()
         {
             var target = new Target();
-            var inner = new LiteralPlan<Target>(target);
+            var inner = Constant.For(target);
 
             var decorator = new FuncInterceptor<ITarget>((s, t) => new SadContextKeepingTarget(s, t));
             var plan = new InterceptionPlan(typeof (ITarget), inner, new IInterceptor[] {decorator});

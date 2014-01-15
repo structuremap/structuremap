@@ -5,24 +5,19 @@ using System.Linq.Expressions;
 
 namespace StructureMap.Building.Interception
 {
-    public class InterceptionPlan : IBuildPlan
+    public class InterceptionPlan : IDependencySource
     {
         private readonly Type _pluginType;
-        private readonly IBuildPlan _inner;
+        private readonly IDependencySource _inner;
         private readonly IEnumerable<IInterceptor> _interceptors;
         private readonly ParameterExpression _variable;
 
-        public InterceptionPlan(Type pluginType, IBuildPlan inner, IEnumerable<IInterceptor> interceptors)
+        public InterceptionPlan(Type pluginType, IDependencySource inner, IEnumerable<IInterceptor> interceptors)
         {
             _pluginType = pluginType;
             _inner = inner;
             _interceptors = interceptors;
             _variable = Expression.Variable(_inner.ReturnedType, "x");
-        }
-
-        public object Build(IBuildSession session)
-        {
-            throw new NotImplementedException();
         }
 
         public Func<IBuildSession, T> ToBuilder<T>()
@@ -51,6 +46,14 @@ namespace StructureMap.Building.Interception
 
             return plan.ToExpression();
 
+        }
+
+        public Type ReturnedType
+        {
+            get
+            {
+                return _pluginType;
+            }
         }
 
         private void addDecorators(ParameterExpression session, ParameterExpression pluginTypeVariable, BlockPlan plan)
@@ -140,15 +143,12 @@ namespace StructureMap.Building.Interception
             } 
         }
 
-        [Obsolete("Think we end up taking this out of IBuildPlan")]
-        public Type ReturnedType
+        public string Description
         {
             get
             {
                 throw new NotImplementedException();
             }
         }
-
-        public string Description { get; private set; }
     }
 }

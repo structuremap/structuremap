@@ -7,7 +7,7 @@ using StructureMap.Pipeline;
 
 namespace StructureMap.Building
 {
-    public class ConcreteBuild : IBuildPlan, IHasSetters, IDescribed
+    public class ConcreteBuild : IBuildPlan, IHasSetters, IDependencySource
     {
         private readonly Type _concreteType;
         private readonly ConstructorStep _constructor;
@@ -75,16 +75,22 @@ namespace StructureMap.Building
         {
             var inner = ToExpression(Parameters.Session);
 
-            var wrapped = TryCatchWrapper.WrapFunc<StructureMapBuildException>(_concreteType, inner, this);
+            
 
             var lambdaType = typeof (Func<,>).MakeGenericType(typeof (IBuildSession), _concreteType);
 
-            var lambda = Expression.Lambda(lambdaType, wrapped, Parameters.Session);
+            var lambda = Expression.Lambda(lambdaType, inner, Parameters.Session);
 
             return lambda.Compile();
         }
 
         public Expression ToExpression(ParameterExpression session)
+        {
+            var expression = buildInnerExpression(session);
+            return TryCatchWrapper.WrapFunc<StructureMapBuildException>(_concreteType, expression, this);
+        }
+
+        private Expression buildInnerExpression(ParameterExpression session)
         {
             var newExpr = _constructor.ToExpression(session);
 
