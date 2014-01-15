@@ -2,6 +2,7 @@ using System;
 
 namespace StructureMap.Interceptors
 {
+    [Obsolete]
     public class MatchedTypeInterceptor : TypeInterceptor
     {
         private readonly Predicate<Type> _match;

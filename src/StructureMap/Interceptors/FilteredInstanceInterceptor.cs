@@ -20,6 +20,7 @@ namespace StructureMap.Interceptors
     /// <summary>
     /// A TypeInterceptor that always applies to all Instances of a given Plugin Type
     /// </summary>
+    [Obsolete]
     public class PluginTypeInterceptor : TypeInterceptor
     {
         private readonly Func<IContext, object, object> _function;

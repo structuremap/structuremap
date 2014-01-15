@@ -1,5 +1,8 @@
+using System;
+
 namespace StructureMap.Interceptors
 {
+    [Obsolete]
     public class EnrichmentInterceptor<T> : InstanceInterceptor
     {
         private readonly ContextEnrichmentHandler<T> _handler;

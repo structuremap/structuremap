@@ -1,5 +1,8 @@
+using System;
+
 namespace StructureMap.Interceptors
 {
+    [Obsolete]
     public class CompoundInterceptor : InstanceInterceptor
     {
         private readonly InstanceInterceptor[] _interceptors;

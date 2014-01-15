@@ -1,3 +1,5 @@
+using System;
+
 namespace StructureMap.Interceptors
 {
     /// <summary>
@@ -6,6 +8,7 @@ namespace StructureMap.Interceptors
     /// it is passed back to the caller.  This is primarily a hook
     /// for runtime AOP scenarios.
     /// </summary>
+    [Obsolete]
     public interface InstanceInterceptor
     {
         object Process(object target, IContext context);
