@@ -5,6 +5,7 @@ namespace StructureMap.Building.Interception
 {
     public interface IInterceptor : IDescribed
     {
+        // "activates" or "decorates"
         InterceptorRole Role { get; }
 
         Expression ToExpression(ParameterExpression session, ParameterExpression variable);

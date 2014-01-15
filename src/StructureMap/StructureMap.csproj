@@ -144,9 +144,9 @@
     <Compile Include="Building\Interception\BlockPlan.cs" />
     <Compile Include="Building\Interception\FuncInterceptor.cs" />
     <Compile Include="Building\Interception\IInterceptor.cs" />
+    <Compile Include="Building\Interception\IInterceptorPolicy.cs" />
     <Compile Include="Building\Interception\InterceptionPlan.cs" />
     <Compile Include="Building\Interception\InterceptionPolicy.cs" />
-    <Compile Include="Building\Interception\InterceptorClasses.cs" />
     <Compile Include="Building\Interception\InterceptorFactory.cs" />
     <Compile Include="Building\Interception\InterceptorRole.cs" />
     <Compile Include="Building\Interception\ParameterRewriter.cs" />
