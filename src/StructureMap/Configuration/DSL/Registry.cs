@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.Graph;
-using StructureMap.Interceptors;
 using StructureMap.Pipeline;
 
 namespace StructureMap.Configuration.DSL
@@ -125,31 +124,6 @@ namespace StructureMap.Configuration.DSL
             action(registry);
 
             alter = x => registry.As<IPluginGraphConfiguration>().Configure(x.Profile(profileName));
-        }
-
-        /// <summary>
-        /// Registers a new TypeInterceptor object with the Container
-        /// </summary>
-        /// <param name="interceptor"></param>
-        public void RegisterInterceptor(TypeInterceptor interceptor)
-        {
-            alter = x => x.InterceptorLibrary.AddInterceptor(interceptor);
-        }
-
-        /// <summary>
-        /// Allows you to define a TypeInterceptor inline with Lambdas or anonymous delegates
-        /// </summary>
-        /// <param name="match"></param>
-        /// <returns></returns>
-        /// <example>
-        /// IfTypeMatches( ... ).InterceptWith( o => new ObjectWrapper(o) );
-        /// </example>
-        public MatchedTypeInterceptor IfTypeMatches(Predicate<Type> match)
-        {
-            var interceptor = new MatchedTypeInterceptor(match);
-            alter = graph => graph.InterceptorLibrary.AddInterceptor(interceptor);
-
-            return interceptor;
         }
 
 

@@ -1,11 +1,11 @@
 using System;
 using StructureMap.Configuration.DSL.Expressions;
 using StructureMap.Graph;
-using StructureMap.Interceptors;
 using StructureMap.Pipeline;
 
 namespace StructureMap.Configuration.DSL
 {
+    // TODO -- add a new method for global IInterceptionPolicy
     public interface IRegistry
     {
         /// <summary>
@@ -60,22 +60,6 @@ namespace StructureMap.Configuration.DSL
         /// <param name="profileName"></param>
         /// <param name="action"></param>
         void Profile(string profileName, Action<Registry> action);
-
-        /// <summary>
-        /// Registers a new TypeInterceptor object with the Container
-        /// </summary>
-        /// <param name="interceptor"></param>
-        void RegisterInterceptor(TypeInterceptor interceptor);
-
-        /// <summary>
-        /// Allows you to define a TypeInterceptor inline with Lambdas or anonymous delegates
-        /// </summary>
-        /// <param name="match"></param>
-        /// <returns></returns>
-        /// <example>
-        /// IfTypeMatches( ... ).InterceptWith( o => new ObjectWrapper(o) );
-        /// </example>
-        MatchedTypeInterceptor IfTypeMatches(Predicate<Type> match);
 
         /// <summary>
         /// Designates a policy for scanning assemblies to auto

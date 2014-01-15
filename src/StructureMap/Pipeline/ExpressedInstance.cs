@@ -1,7 +1,6 @@
 using System;
 using System.Linq.Expressions;
 using StructureMap.Building.Interception;
-using StructureMap.Interceptors;
 
 namespace StructureMap.Pipeline
 {

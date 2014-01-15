@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using StructureMap.Building.Interception;
-using StructureMap.Interceptors;
 
 namespace StructureMap.Pipeline
 {

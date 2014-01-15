@@ -99,17 +99,9 @@ namespace StructureMap
 
         public object BuildNewInSession(Type pluginType, Instance instance)
         {
-            var returnValue = instance.Build(pluginType, this);
-            if (returnValue == null) return null;
-
-            try
-            {
-                return _pipelineGraph.FindInterceptor(returnValue.GetType()).Process(returnValue, this);
-            }
-            catch (Exception e)
-            {
-                throw new StructureMapBuildException("A configured instance interceptor has failed for Instance '{0}' and concrete type '{1}'".ToFormat(instance.Name, returnValue.GetType().GetFullName()), e);
-            }
+            // TODO -- test this after the IBuildPlan is in place
+            // Test that the interception takes place
+            return instance.Build(pluginType, this);
         }
 
         public object BuildNewInOriginalContext(Type pluginType, Instance instance)

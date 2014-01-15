@@ -15,7 +15,7 @@ namespace StructureMap.Testing.Pipeline
             var ex = Exception<StructureMapBuildException>.ShouldBeThrownBy(() => {
                 var container = new Container(x =>
                 {
-                    x.For<Rule>().OnCreationForAll((c, r) => { throw new NotImplementedException(); })
+                    x.For<Rule>().OnCreationForAll("throwing up", (c, r) => { throw new NotImplementedException(); })
                         .Use(() => new ColorRule("red"));
                 });
 
@@ -33,7 +33,7 @@ namespace StructureMap.Testing.Pipeline
             object comingAcross = null;
 
             var container = new Container(x => {
-                x.For<Rule>().OnCreationForAll((c, r) => comingAcross = r)
+                x.For<Rule>().OnCreationForAll("coming across", (c, r) => comingAcross = r)
                     .Use(() => new ColorRule("red"));
             });
 

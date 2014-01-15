@@ -229,7 +229,6 @@
     </Compile>
     <Compile Include="Examples\BuildUp.cs" />
     <Compile Include="Examples\CustomInstance.cs" />
-    <Compile Include="Examples\Interception.cs" />
     <Compile Include="Examples\RegisteringWithTheAPI.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Graph\AssemblyScannerTester.cs" />
@@ -254,10 +253,6 @@
     <Compile Include="Graph\ContainerTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Graph\Interceptors\CompoundInterceptorTester.cs" />
-    <Compile Include="Graph\Interceptors\InterceptorLibraryTester.cs" />
-    <Compile Include="Graph\Interceptors\MockTypeInterceptor.cs" />
-    <Compile Include="Graph\Interceptors\TypeInterceptionTester.cs" />
     <Compile Include="Graph\TypeFindingTester.cs" />
     <Compile Include="Diagnostics\TextReportWriterSmokeTester.cs" />
     <Compile Include="GenericsAcceptanceTester.cs" />

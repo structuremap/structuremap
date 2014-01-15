@@ -1,11 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using StructureMap.Building;
 using StructureMap.Building.Interception;
 using StructureMap.Diagnostics;
 using StructureMap.Graph;
-using StructureMap.Interceptors;
 using StructureMap.TypeRules;
 
 namespace StructureMap.Pipeline
@@ -146,7 +144,6 @@ namespace StructureMap.Pipeline
         {
             return _name != _originalName;
         }
-
 
 
         [CLSCompliant(false)]

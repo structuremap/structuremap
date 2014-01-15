@@ -5,7 +5,6 @@ using System.Reflection;
 using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
 using StructureMap.Diagnostics;
-using StructureMap.Interceptors;
 using StructureMap.Pipeline;
 using StructureMap.Util;
 
@@ -22,8 +21,6 @@ namespace StructureMap.Graph
     {
         private readonly Cache<Type, PluginFamily> _families;
         private readonly IList<IFamilyPolicy> _policies = new List<IFamilyPolicy>();
-
-        private readonly InterceptorLibrary _interceptorLibrary = new InterceptorLibrary();
 
         private readonly List<Registry> _registries = new List<Registry>();
         private GraphLog _log = new GraphLog();
@@ -94,11 +91,6 @@ namespace StructureMap.Graph
         public Cache<Type, PluginFamily> Families
         {
             get { return _families; }
-        }
-
-        public InterceptorLibrary InterceptorLibrary
-        {
-            get { return _interceptorLibrary; }
         }
 
         public PluginGraph Root

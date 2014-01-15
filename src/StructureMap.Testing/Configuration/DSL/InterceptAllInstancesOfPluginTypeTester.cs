@@ -1,7 +1,8 @@
 using System;
 using NUnit.Framework;
+using Rhino.Mocks;
+using StructureMap.Building.Interception;
 using StructureMap.Configuration.DSL;
-using StructureMap.Interceptors;
 using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Configuration.DSL
@@ -63,27 +64,19 @@ namespace StructureMap.Testing.Configuration.DSL
             return _manager.GetInstance<IService>(name);
         }
 
-        public class MockInterceptor : InstanceInterceptor
-        {
-            public object Target { get; set; }
 
-            public object Process(object target, IBuildSession session)
-            {
-                Target = target;
-                return target;
-            }
-        }
 
         [Test]
         public void custom_interceptor_for_all()
         {
-            var interceptor = new MockInterceptor();
-            var service = getService("Green", r => {
-                r.For<IService>().InterceptWith(interceptor)
-                    .AddInstances(x => { x.ConstructedBy(() => new ColorService("Green")).Named("Green"); });
-            });
-
-            interceptor.Target.ShouldBeTheSameAs(service);
+            Assert.Fail("NWO");
+//            var interceptor = MockRepository.GenerateMock<IInterceptor>();
+//            var service = getService("Green", r => {
+//                r.For<IService>().InterceptWith(interceptor)
+//                    .AddInstances(x => { x.ConstructedBy(() => new ColorService("Green")).Named("Green"); });
+//            });
+//
+//            interceptor.Target.ShouldBeTheSameAs(service);
         }
 
         [Test]
@@ -102,7 +95,7 @@ namespace StructureMap.Testing.Configuration.DSL
         public void OnStartupForAll()
         {
             Action<Registry> action = registry => {
-                registry.For<IService>().OnCreationForAll(s => _lastService = s)
+                registry.For<IService>().OnCreationForAll("setting the last service", s => _lastService = s)
                     .AddInstances(x => { x.ConstructedBy(() => new ColorService("Green")).Named("Green"); });
             };
 
@@ -186,7 +179,7 @@ namespace StructureMap.Testing.Configuration.DSL
         public void OnStartupForAll()
         {
             Action<Registry> action = r => {
-                r.For<IService>().OnCreationForAll(s => _lastService = s)
+                r.For<IService>().OnCreationForAll("setting the last service", s => _lastService = s)
                     .AddInstances(x => { x.ConstructedBy(() => new ColorService("Green")).Named("Green"); });
             };
 

@@ -161,10 +161,12 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <returns></returns>
         public GenericFamilyExpression EnrichAllWith(Func<object, object> func)
         {
-            _registry.alter = graph => {
-                var interceptor = new PluginTypeInterceptor(_pluginType, (c, o) => func(o));
-                graph.InterceptorLibrary.AddInterceptor(interceptor);
-            };
+            // TODO -- redo
+            throw new NotImplementedException();
+//            _registry.alter = graph => {
+//                var interceptor = new PluginTypeInterceptor(_pluginType, (c, o) => func(o));
+//                graph.InterceptorLibrary.AddInterceptor(interceptor);
+//            };
 
             return this;
         }
@@ -179,10 +181,12 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <returns></returns>
         public GenericFamilyExpression EnrichAllWith(Func<IContext, object, object> func)
         {
-            _registry.alter = graph => {
-                var interceptor = new PluginTypeInterceptor(_pluginType, func);
-                graph.InterceptorLibrary.AddInterceptor(interceptor);
-            };
+            // TODO -- redo
+            throw new NotImplementedException();
+//            _registry.alter = graph => {
+//                var interceptor = new PluginTypeInterceptor(_pluginType, func);
+//                graph.InterceptorLibrary.AddInterceptor(interceptor);
+//            };
 
             return this;
         }
