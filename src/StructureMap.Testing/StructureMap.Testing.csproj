@@ -196,6 +196,7 @@
     <Compile Include="Building\Interception\ActivatorInterceptorTester.cs" />
     <Compile Include="Building\Interception\FuncInterceptorTester.cs" />
     <Compile Include="Building\Interception\InterceptionPlanTester.cs" />
+    <Compile Include="Building\Interception\InterceptionPoliciesTester.cs" />
     <Compile Include="Building\Interception\InterceptionPolicyTester.cs" />
     <Compile Include="Building\LifecycleDependencySourceTester.cs" />
     <Compile Include="Building\list_expression_building.cs" />

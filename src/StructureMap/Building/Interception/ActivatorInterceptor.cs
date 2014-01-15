@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+using StructureMap.TypeRules;
 
 namespace StructureMap.Building.Interception
 {
@@ -19,6 +20,11 @@ namespace StructureMap.Building.Interception
         {
             _action = action;
             _description = description;
+        }
+
+        public IInterceptorPolicy ToPolicy()
+        {
+            return new InterceptionPolicy<T>(this);
         }
 
         public string Description
@@ -50,5 +56,28 @@ namespace StructureMap.Building.Interception
 
         public Type Accepts { get { return typeof (T); } }
         public Type Returns { get { return typeof(T); } }
+
+        protected bool Equals(ActivatorInterceptor<T> other)
+        {
+            return Equals(_action, other._action);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((ActivatorInterceptor<T>) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (_action != null ? _action.GetHashCode() : 0);
+        }
+
+        public override string ToString()
+        {
+            return "Interceptor of {0}: {1}".ToFormat(typeof (T).GetFullName(), Description);
+        }
     }
 }

@@ -148,6 +148,7 @@
     <Compile Include="Building\Interception\InterceptionPlan.cs" />
     <Compile Include="Building\Interception\InterceptionPolicy.cs" />
     <Compile Include="Building\Interception\InterceptorFactory.cs" />
+    <Compile Include="Building\Interception\InterceptorPolicies.cs" />
     <Compile Include="Building\Interception\InterceptorRole.cs" />
     <Compile Include="Building\Interception\ParameterRewriter.cs" />
     <Compile Include="Building\LifecycleDependencySource.cs" />

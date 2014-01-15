@@ -5,6 +5,6 @@ namespace StructureMap.Building.Interception
 {
     public interface IInterceptorPolicy : IDescribed
     {
-        IEnumerable<IInterceptor> DetermineInterceptors(Type concreteType);
+        IEnumerable<IInterceptor> DetermineInterceptors(Type returnedType);
     }
 }

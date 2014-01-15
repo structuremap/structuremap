@@ -28,12 +28,30 @@ namespace StructureMap.Building.Interception
             }
         }
 
-        public IEnumerable<IInterceptor> DetermineInterceptors(Type concreteType)
+        public IEnumerable<IInterceptor> DetermineInterceptors(Type returnedType)
         {
-            if (concreteType.CanBeCastTo<T>())
+            if (returnedType.CanBeCastTo<T>())
             {
                 yield return _interceptor;
             }
+        }
+
+        protected bool Equals(InterceptionPolicy<T> other)
+        {
+            return Equals(_interceptor, other._interceptor);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((InterceptionPolicy<T>) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (_interceptor != null ? _interceptor.GetHashCode() : 0);
         }
     }
 }
