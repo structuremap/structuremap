@@ -141,7 +141,7 @@ namespace StructureMap.Pipeline
         {
             // TODO -- memoize this please!
             var builderSource = ToBuilder(pluginType, policies);
-            var interceptors = policies.Interceptors.SelectInterceptors(ConcreteType).Union(_interceptors);
+            var interceptors = policies.Interceptors.SelectInterceptors(ConcreteType ?? pluginType).Union(_interceptors);
             return new BuildPlan(pluginType, this, builderSource, interceptors);
         }
 

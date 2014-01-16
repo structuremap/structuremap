@@ -141,13 +141,13 @@ namespace StructureMap.Testing.Graph
 
 
         [Test]
-        public void GetDefaultInstance()
+        public void can_get_the_default_instance()
         {
             addColorInstance("Red");
             addColorInstance("Orange");
             addColorInstance("Blue");
 
-            _container.Configure(x => { x.For<Rule>().Use("Blue"); });
+            _container.Configure(x => x.For<Rule>().Use("Blue"));
 
             _container.GetInstance<Rule>().ShouldBeOfType<ColorRule>().Color.ShouldEqual("Blue");
         }

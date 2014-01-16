@@ -25,6 +25,8 @@ namespace StructureMap.Building.Interception
 
         public IEnumerable<IInterceptor> SelectInterceptors(Type returnedType)
         {
+            if (returnedType == null) throw new ArgumentNullException("returnedType");
+
             return _policies.SelectMany(x => x.DetermineInterceptors(returnedType)).ToArray();
         } 
     }

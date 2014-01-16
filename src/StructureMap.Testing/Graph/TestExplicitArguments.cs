@@ -75,25 +75,18 @@ namespace StructureMap.Testing.Graph
         {
         }
 
-        public class SpecialInstance : Instance
+        public class SpecialInstance : LambdaInstance<ClassWithNoArgs>
         {
-            public override IDependencySource ToDependencySource(Type pluginType)
+            public SpecialInstance() : base(session => {
+                return new ClassWithNoArgs
+                {
+                    TheAddress = (Address) session.GetInstance(typeof (Address))
+                };
+            }
+                )
             {
-                throw new NotImplementedException("See the stuff below");
             }
 
-            protected override string getDescription()
-            {
-                return string.Empty;
-            }
-
-//            protected override object build(Type pluginType, IBuildSession session)
-//            {
-////                return new ClassWithNoArgs
-////                {
-////                    TheAddress = (Address) session.GetInstance(typeof (Address))
-////                };
-//            }
         }
 
         public class SpecialNode : Node

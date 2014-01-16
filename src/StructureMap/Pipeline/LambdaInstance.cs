@@ -33,6 +33,11 @@ namespace StructureMap.Pipeline
             return Expression.Invoke(Expression.Constant(_builder), Parameters.Session);
         }
 
+        protected override Type getConcreteType(Type pluginType)
+        {
+            return typeof (T);
+        }
+
         public Type ReturnedType
         {
             get

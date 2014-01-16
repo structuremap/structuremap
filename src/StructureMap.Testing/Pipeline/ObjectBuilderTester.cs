@@ -37,7 +37,8 @@ namespace StructureMap.Testing.Pipeline
                     .Use(() => new ColorRule("red"));
             });
 
-            container.GetInstance<Rule>().ShouldBeTheSameAs(comingAcross);
+            var rule = container.GetInstance<Rule>();
+            rule.ShouldBeTheSameAs(comingAcross);
         }
     }
 }

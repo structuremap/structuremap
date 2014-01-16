@@ -43,15 +43,14 @@ namespace StructureMap.Testing.Pipeline
             var instance = ConstructorInstance.For<ClassWithArrayOfWidgets>();
             instance.Dependencies.Add("widgets", children);
 
-            Assert.Fail("NWO");
-//            var widgets = instance.Build(typeof (ClassWithArrayOfWidgets), new StubBuildSession())
-//                .As<ClassWithArrayOfWidgets>()
-//                .Widgets;
-//
-//            widgets.Length.ShouldEqual(3);
-//
-//            widgets[0].ShouldBeOfType<ColorWidget>().Color.ShouldEqual("red");
-//            widgets[2].ShouldBeOfType<AWidget>();
+            var widgets = instance.Build<ClassWithArrayOfWidgets>()
+                .As<ClassWithArrayOfWidgets>()
+                .Widgets;
+
+            widgets.Length.ShouldEqual(3);
+
+            widgets[0].ShouldBeOfType<ColorWidget>().Color.ShouldEqual("red");
+            widgets[2].ShouldBeOfType<AWidget>();
         }
     }
 

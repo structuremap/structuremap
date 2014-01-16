@@ -60,27 +60,24 @@ namespace StructureMap.Testing.Pipeline
         }
 
         [Test]
-        public void BuildRule1()
+        public void can_build_a_simple_class_type()
         {
-            Assert.Fail("NWO");
-
-//            var instance = new ConfiguredInstance(typeof (Rule1));
-//
-//            var rule = (Rule) instance.Build(typeof (Rule), _session);
-//            Assert.IsNotNull(rule);
-//            Assert.IsTrue(rule is Rule1);
+            var instance = new ConfiguredInstance(typeof (Rule1));
+            var rule = instance.Build<Rule>(_session);
+            rule.ShouldNotBeNull();
+            rule.ShouldBeOfType<Rule1>();
         }
 
 
         [Test]
-        public void BuildRuleWithAMissingValue()
+        public void build_with_a_missing_dependency_throws_configuration_exception()
         {
-            Assert.Fail("NWO");
-//            var instance = ComplexRule.GetInstance();
-//            instance.Dependencies.RemoveByName("String");
-//
-//            Exception<StructureMapException>.ShouldBeThrownBy(
-//                () => { var rule = (ComplexRule) ((Instance) instance).Build(typeof (Rule), _session); });
+            var instance = ComplexRule.GetInstance();
+            instance.Dependencies.RemoveByName("String");
+
+            Exception<StructureMapConfigurationException>.ShouldBeThrownBy(() => {
+                instance.As<Instance>().Build<Rule>(_session);
+            });
         }
 
         [Test]
@@ -157,30 +154,25 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void TestComplexRule()
         {
-            Assert.Fail("NWO");
+            var instance = ComplexRule.GetInstance().As<Instance>();
 
-//            var instance = (ConfiguredInstance) ComplexRule.GetInstance();
-//
-//            var rule = (Rule) instance.Build(typeof (Rule), _session);
-//            Assert.IsNotNull(rule);
-//            Assert.IsTrue(rule is ComplexRule);
+            var rule = instance.Build<Rule>(_session);
+            rule.ShouldNotBeNull();
+            rule.ShouldBeOfType<ComplexRule>();
         }
 
 
         [Test]
         public void build_fails_with_StructureMapException_adds_context()
         {
-            Assert.Fail("NWO");
+            var instance = new ConfiguredInstance(typeof(ClassThatBlowsUp));
 
+            var actual = Exception<StructureMapBuildException>.ShouldBeThrownBy(() => {
+                instance.Build<ClassThatBlowsUp>();
+            });
 
-//            var instance = new ConfiguredInstance(typeof(ClassThatBlowsUp));
-//
-//            var actual = Exception<StructureMapException>.ShouldBeThrownBy(() => {
-//                instance.Build(typeof (ClassThatBlowsUp), new StubBuildSession());
-//            });
-//
-//            actual.Message.ShouldContain(instance.Description);
-//            actual.ShouldBeOfType<StructureMapBuildException>();
+            actual.Message.ShouldContain(instance.Description);
+            actual.ShouldBeOfType<StructureMapBuildException>();
         }
 
         public class ClassThatBlowsUp

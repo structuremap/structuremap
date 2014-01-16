@@ -273,6 +273,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Graph\TypePathTester.cs" />
+    <Compile Include="InstanceExtensions.cs" />
     <Compile Include="ModelQueryTester.cs" />
     <Compile Include="ObjectFactoryInitializeTester.cs" />
     <Compile Include="Pipeline\ArgumentTester.cs" />

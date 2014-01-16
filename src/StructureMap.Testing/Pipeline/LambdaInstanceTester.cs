@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using NUnit.Framework;
 using StructureMap.Building;
 using StructureMap.Pipeline;
@@ -16,9 +15,8 @@ namespace StructureMap.Testing.Pipeline
             var instance = new LambdaInstance<object>(() => { throw new NotImplementedException(); });
 
             var ex = Exception<StructureMapBuildException>.ShouldBeThrownBy(() => {
-                
-                Assert.Fail("NWO");
-                //instance.Build(typeof(IWidget), new StubBuildSession());
+
+                instance.Build<IWidget>(new StubBuildSession());
             });
 
             ex.Title.ShouldEqual("Failure at: \"Exception while trying to build 'Instance is created by Func<object> function:  System.Func`2[StructureMap.IContext,System.Object]', check the inner exception\"");
