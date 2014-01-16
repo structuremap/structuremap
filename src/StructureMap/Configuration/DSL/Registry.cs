@@ -118,7 +118,7 @@ namespace StructureMap.Configuration.DSL
         /// </summary>
         /// <param name="profileName"></param>
         /// <param name="action"></param>
-        public void Profile(string profileName, Action<Registry> action)
+        public void Profile(string profileName, Action<IProfileRegistry> action)
         {
             var registry = new Registry();
             action(registry);
