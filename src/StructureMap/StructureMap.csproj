@@ -213,7 +213,6 @@
     <Compile Include="Pipeline\Instance.cs" />
     <Compile Include="Pipeline\InstanceMementoPropertyReader.cs" />
     <Compile Include="Pipeline\ObjectInstance.cs" />
-    <Compile Include="Pipeline\PrototypeInstance.cs" />
     <Compile Include="Pipeline\ReaderWriterLockExtensions.cs" />
     <Compile Include="Pipeline\ReferencedInstance.cs" />
     <Compile Include="Pipeline\NestedContainerTransientObjectCache.cs" />
@@ -328,7 +327,6 @@
     <Compile Include="InitializationExpression.cs" />
     <Compile Include="Query\Model.cs" />
     <Compile Include="Pipeline\ConfiguredInstanceBase.cs" />
-    <Compile Include="Pipeline\SerializedInstance.cs" />
     <Compile Include="Pipeline\SmartInstance.cs" />
     <Compile Include="ReflectionHelper.cs" />
     <Compile Include="Util\Cache.cs" />

@@ -144,22 +144,6 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         /// <returns></returns>
         DefaultInstance TheDefault();
-
-        /// <summary>
-        /// Creates an Instance that stores this object of type T,
-        /// and returns a cloned copy of the template.  
-        /// </summary>
-        /// <param name="template"></param>
-        /// <returns></returns>
-        PrototypeInstance PrototypeOf(T template);
-
-        /// <summary>
-        /// Caches template as a serialized byte stream.  Uses deserialization
-        /// to create copies when the Instance is built.
-        /// </summary>
-        /// <param name="template"></param>
-        /// <returns></returns>
-        SerializedInstance SerializedCopyOf(T template);
     }
 
     public class InstanceExpression<T> : IInstanceExpression<T>
@@ -230,16 +214,6 @@ namespace StructureMap.Configuration.DSL.Expressions
         public LambdaInstance<T> ConstructedBy(Func<IContext, T> func)
         {
             return returnInstance(new LambdaInstance<T>(func));
-        }
-
-        public PrototypeInstance PrototypeOf(T template)
-        {
-            return returnInstance(new PrototypeInstance((ICloneable) template));
-        }
-
-        public SerializedInstance SerializedCopyOf(T template)
-        {
-            return returnInstance(new SerializedInstance(template));
         }
 
         private TInstance returnInstance<TInstance>(TInstance instance) where TInstance : Instance

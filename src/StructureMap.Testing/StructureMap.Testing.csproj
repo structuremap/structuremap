@@ -298,11 +298,9 @@
     <Compile Include="Pipeline\NestedContainerSupportTester.cs" />
     <Compile Include="Pipeline\ObjectBuilderTester.cs" />
     <Compile Include="Pipeline\OptionalSetterInjectionTester.cs" />
-    <Compile Include="Pipeline\PrototypeInstanceTester.cs" />
     <Compile Include="Pipeline\RedirectingTester.cs" />
     <Compile Include="Pipeline\RedirectTester.cs" />
     <Compile Include="Pipeline\ReferencedInstanceTester.cs" />
-    <Compile Include="Pipeline\SerializedInstanceTester.cs" />
     <Compile Include="Pipeline\SingletonLifecycleTester.cs" />
     <Compile Include="Pipeline\SmartInstanceTester.cs" />
     <Compile Include="Pipeline\StubBuildSession.cs" />

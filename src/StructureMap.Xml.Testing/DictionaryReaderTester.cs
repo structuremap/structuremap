@@ -44,7 +44,7 @@ namespace StructureMap.Xml.Testing
 
             Instance instance = new DictionaryReader().Read(DataMother.BuildDocument(xml).DocumentElement,
                                                             typeof (Dictionary<string, int>));
-            instance.ShouldBeOfType(typeof (SerializedInstance));
+            //instance.ShouldBeOfType(typeof (SerializedInstance));
 
             Assert.Fail("NWO");
 
@@ -70,7 +70,7 @@ namespace StructureMap.Xml.Testing
 
             Instance instance = new DictionaryReader().Read(DataMother.BuildDocument(xml).DocumentElement,
                                                             typeof (IDictionary<string, string>));
-            instance.ShouldBeOfType(typeof (SerializedInstance));
+            //instance.ShouldBeOfType(typeof (SerializedInstance));
 
             Assert.Fail("NWO");
 
@@ -98,7 +98,7 @@ namespace StructureMap.Xml.Testing
 
             Instance instance = new DictionaryReader().Read(DataMother.BuildDocument(xml).DocumentElement,
                                                             typeof (Dictionary<string, string>));
-            instance.ShouldBeOfType(typeof (SerializedInstance));
+            //instance.ShouldBeOfType(typeof (SerializedInstance));
 
             Assert.Fail("NWO");
 
@@ -124,7 +124,7 @@ namespace StructureMap.Xml.Testing
 
             Instance instance = new DictionaryReader().Read(DataMother.BuildDocument(xml).DocumentElement,
                                                             typeof (NameValueCollection));
-            instance.ShouldBeOfType(typeof (SerializedInstance));
+            //instance.ShouldBeOfType(typeof (SerializedInstance));
 
             Assert.Fail("NWO");
 
@@ -150,7 +150,7 @@ namespace StructureMap.Xml.Testing
 
             Instance instance = new DictionaryReader().Read(DataMother.BuildDocument(xml).DocumentElement,
                                                             typeof (IDictionary<int, string>));
-            instance.ShouldBeOfType(typeof (SerializedInstance));
+            //instance.ShouldBeOfType(typeof (SerializedInstance));
 
             Assert.Fail("NWO");
 
