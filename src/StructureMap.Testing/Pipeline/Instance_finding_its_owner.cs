@@ -72,6 +72,11 @@ namespace StructureMap.Testing.Pipeline
             throw new System.NotImplementedException();
         }
 
+        public override Type ReturnedType
+        {
+            get { return null; }
+        }
+
         protected override string getDescription()
         {
             return "simple";

@@ -103,7 +103,7 @@ namespace StructureMap.Testing.Query
             var iRef = container.Model.For<Rule>().Instances.First();
             container.Model.For<Rule>().EjectAndRemove(x => x.Name == iRef.Name);
 
-            container.Model.For<Rule>().Instances.Select(x => x.ConcreteType)
+            container.Model.For<Rule>().Instances.Select(x => x.ReturnedType)
                 .ShouldHaveTheSameElementsAs(typeof (ARule), typeof (ColorRule));
 
             container.GetAllInstances<Rule>().Select(x => x.GetType())
@@ -116,7 +116,7 @@ namespace StructureMap.Testing.Query
             var iRef = container.Model.For<Rule>().Instances.First();
             container.Model.For<Rule>().EjectAndRemove(iRef);
 
-            container.Model.For<Rule>().Instances.Select(x => x.ConcreteType)
+            container.Model.For<Rule>().Instances.Select(x => x.ReturnedType)
                 .ShouldHaveTheSameElementsAs(typeof (ARule), typeof (ColorRule));
 
             container.GetAllInstances<Rule>().Select(x => x.GetType())
@@ -130,7 +130,7 @@ namespace StructureMap.Testing.Query
             var iRef = container.Model.For<Rule>().Instances.First();
             container.Model.For<Rule>().EjectAndRemove(iRef.Name);
 
-            container.Model.For<Rule>().Instances.Select(x => x.ConcreteType)
+            container.Model.For<Rule>().Instances.Select(x => x.ReturnedType)
                 .ShouldHaveTheSameElementsAs(typeof (ARule), typeof (ColorRule));
 
             container.GetAllInstances<Rule>().Select(x => x.GetType())
@@ -165,7 +165,7 @@ namespace StructureMap.Testing.Query
         [Test]
         public void get_default_when_it_exists()
         {
-            container.Model.For<IWidget>().Default.ConcreteType.ShouldEqual(typeof (AWidget));
+            container.Model.For<IWidget>().Default.ReturnedType.ShouldEqual(typeof (AWidget));
         }
 
         [Test]

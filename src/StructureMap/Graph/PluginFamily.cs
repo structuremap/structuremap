@@ -155,7 +155,7 @@ namespace StructureMap.Graph
 
             //Are there instances that close the templatedtype straight away?
             _instances.GetAll()
-                .Where(x => x.ConcreteType.CanBeCastTo(templatedType))
+                .Where(x => x.ReturnedType.CanBeCastTo(templatedType))
                 .Each(templatedFamily.AddInstance);
 
             return templatedFamily;
@@ -163,7 +163,7 @@ namespace StructureMap.Graph
 
         private bool hasType(Type concreteType)
         {
-            return _instances.Any(x => x.ConcreteType == concreteType);
+            return _instances.Any(x => x.ReturnedType == concreteType);
         }
 
         public void AddType(Type concreteType)

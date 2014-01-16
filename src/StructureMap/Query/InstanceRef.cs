@@ -33,9 +33,9 @@ namespace StructureMap.Query
         ///     The actual concrete type of this Instance.  Not every type of IInstance
         ///     can determine the ConcreteType
         /// </summary>
-        public Type ConcreteType
+        public Type ReturnedType
         {
-            get { return _instance.ConcreteType; }
+            get { return _instance.ReturnedType; }
         }
 
 

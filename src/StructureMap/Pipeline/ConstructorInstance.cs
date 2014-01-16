@@ -64,9 +64,9 @@ namespace StructureMap.Pipeline
             return new LifecycleDependencySource(pluginType, this);
         }
 
-        protected override sealed Type getConcreteType(Type pluginType)
+        public override Type ReturnedType
         {
-            return _pluggedType;
+            get { return _pluggedType; }
         }
 
 

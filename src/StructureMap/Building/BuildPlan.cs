@@ -77,9 +77,9 @@ namespace StructureMap.Building
                     return "Instance of {0} ('{1}')".ToFormat(_pluginType.GetFullName(), _instance.Name);
                 }
 
-                return _instance.ConcreteType == null || _instance.ConcreteType == _pluginType
+                return _instance.ReturnedType == null || _instance.ReturnedType == _pluginType
                     ? "Instance of {0}".ToFormat(_pluginType.GetFullName())
-                    : "Instance of {0} ({1})".ToFormat(_pluginType.GetFullName(), _instance.ConcreteType.GetFullName());
+                    : "Instance of {0} ({1})".ToFormat(_pluginType.GetFullName(), _instance.ReturnedType.GetFullName());
 
             }
         }

@@ -45,6 +45,11 @@ namespace StructureMap.Pipeline
             return new ReferencedDependencySource(pluginType, _referenceKey);
         }
 
+        public override Type ReturnedType
+        {
+            get { return null; }
+        }
+
         protected override string getDescription()
         {
             return string.Format("\"{0}\"", _referenceKey);

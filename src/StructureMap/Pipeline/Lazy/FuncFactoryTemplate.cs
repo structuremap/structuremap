@@ -22,6 +22,11 @@ namespace StructureMap.Pipeline.Lazy
             throw new NotSupportedException();
         }
 
+        public override Type ReturnedType
+        {
+            get { return typeof (Func<>); }
+        }
+
         public override Instance CloseType(Type[] types)
         {
             var instanceType = typeof(LazyInstance<>).MakeGenericType(types);

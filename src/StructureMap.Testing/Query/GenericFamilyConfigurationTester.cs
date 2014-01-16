@@ -82,7 +82,7 @@ namespace StructureMap.Testing.Query
             family.AddInstance(new ConfiguredInstance(typeof (Service<>)));
             family.AddInstance(new ConfiguredInstance(typeof (Service2<>)));
 
-            configuration.Instances.Select(x => x.ConcreteType)
+            configuration.Instances.Select(x => x.ReturnedType)
                 .ShouldHaveTheSameElementsAs(typeof (Service<>), typeof (Service2<>));
         }
 
@@ -98,7 +98,7 @@ namespace StructureMap.Testing.Query
             var instance = new ConfiguredInstance(typeof (Service<>));
             family.SetDefault(instance);
 
-            configuration.Default.ConcreteType.ShouldEqual(typeof (Service<>));
+            configuration.Default.ReturnedType.ShouldEqual(typeof (Service<>));
         }
 
         [Test]

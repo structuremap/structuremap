@@ -14,5 +14,10 @@ namespace StructureMap.Pipeline
         {
             return new Constant(pluginType, null);
         }
+
+        public override Type ReturnedType
+        {
+            get { return null; }
+        }
     }
 }

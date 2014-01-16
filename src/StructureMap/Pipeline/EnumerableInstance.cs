@@ -14,6 +14,11 @@ namespace StructureMap.Pipeline
             typeof (List<>)
         };
 
+        public override Type ReturnedType
+        {
+            get { return null; }
+        }
+
         public static IEnumerable<Type> OpenEnumerableTypes
         {
             get { return _enumerableTypes; }
@@ -95,25 +100,6 @@ namespace StructureMap.Pipeline
         {
             return "Enumerable Instance";
         }
-
-//        protected override object build(Type pluginType, IBuildSession session)
-//        {
-//            var coercion = DetermineCoercion(pluginType);
-//            var elementType = coercion.ElementType;
-//
-//            var objects = buildObjects(elementType, session);
-//            return coercion.Convert(objects);
-//        }
-
-//        private IEnumerable<object> buildObjects(Type elementType, IBuildSession session)
-//        {
-//            if (_children == null)
-//            {
-//                return session.GetAllInstances(elementType);
-//            }
-//
-//            return _children.Select(x => x.Build(elementType, session));
-//        }
 
         public static bool IsEnumerable(Type type)
         {

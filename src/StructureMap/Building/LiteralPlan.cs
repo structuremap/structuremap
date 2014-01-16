@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 
 namespace StructureMap.Building
 {
+    [Obsolete("Unnecessary now")]
     public class LiteralPlan<T> : IBuildPlan
     {
         private readonly T _object;

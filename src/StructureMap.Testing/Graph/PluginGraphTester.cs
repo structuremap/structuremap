@@ -279,6 +279,11 @@ namespace StructureMap.Testing.Graph
             return DependencySource;
         }
 
+        public override Type ReturnedType
+        {
+            get { return null; }
+        }
+
         protected override string getDescription()
         {
             return "fake";

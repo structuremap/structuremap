@@ -56,7 +56,7 @@ namespace StructureMap.Query
 
         public Type DefaultTypeFor(Type pluginType)
         {
-            return findForFamily(pluginType, f => f.Default == null ? null : f.Default.ConcreteType);
+            return findForFamily(pluginType, f => f.Default == null ? null : f.Default.ReturnedType);
         }
 
         public IEnumerable<IPluginTypeConfiguration> PluginTypes
@@ -96,7 +96,7 @@ namespace StructureMap.Query
             EjectAndRemovePluginTypes(filter);
 
             // second pass to hit instances
-            pluginTypes.Each(x => { x.EjectAndRemove(i => filter(i.ConcreteType)); });
+            pluginTypes.Each(x => { x.EjectAndRemove(i => filter(i.ReturnedType)); });
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace StructureMap.Query
         {
             var targetType = typeof (T);
             return AllInstances
-                .Where(x => x.ConcreteType.CanBeCastTo(targetType))
+                .Where(x => x.ReturnedType.CanBeCastTo(targetType))
                 .Select(x => x.Get<T>())
                 .Where(x => x != null);
         }

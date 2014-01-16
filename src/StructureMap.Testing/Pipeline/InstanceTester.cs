@@ -119,6 +119,11 @@ namespace StructureMap.Testing.Pipeline
             return new Constant(pluginType, TheInstanceThatWasBuilt);
         }
 
+        public override Type ReturnedType
+        {
+            get { return null; }
+        }
+
         protected override string getDescription()
         {
             return "InstanceUnderTest";

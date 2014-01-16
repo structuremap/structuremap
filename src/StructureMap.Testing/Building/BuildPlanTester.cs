@@ -123,9 +123,9 @@ namespace StructureMap.Testing.Building
             throw new NotImplementedException();
         }
 
-        protected override Type getConcreteType(Type pluginType)
+        public override Type ReturnedType
         {
-            return _returnedType;
+            get { return _returnedType; }
         }
     }
 

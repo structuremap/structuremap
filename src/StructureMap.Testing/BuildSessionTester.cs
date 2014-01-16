@@ -377,10 +377,9 @@ namespace StructureMap.Testing
             return new Constant(pluginType, new ColorRule("Red"));
         }
 
-        protected override Type getConcreteType(Type pluginType)
+        public override Type ReturnedType
         {
-            return typeof (ColorRule);
+            get { return typeof (ColorRule); }
         }
-
     }
 }

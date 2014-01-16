@@ -5,6 +5,11 @@ namespace StructureMap.Pipeline
 {
     public class DefaultInstance : Instance
     {
+        public override Type ReturnedType
+        {
+            get { return null; }
+        }
+
         protected override string getDescription()
         {
             return "Default";

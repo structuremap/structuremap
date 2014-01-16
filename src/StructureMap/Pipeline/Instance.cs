@@ -77,11 +77,6 @@ namespace StructureMap.Pipeline
             set { _name = value; }
         }
 
-        internal Type ConcreteType
-        {
-            get { return getConcreteType(null); }
-        }
-
         public string Description
         {
             get { return getDescription(); }
@@ -99,11 +94,7 @@ namespace StructureMap.Pipeline
 
         #endregion
 
-        [Obsolete("Just fold this into ConcreteType")]
-        protected virtual Type getConcreteType(Type pluginType)
-        {
-            return pluginType;
-        }
+        public abstract Type ReturnedType { get; }
 
         protected abstract string getDescription();
 
@@ -141,7 +132,7 @@ namespace StructureMap.Pipeline
         {
             // TODO -- memoize this please!
             var builderSource = ToBuilder(pluginType, policies);
-            var interceptors = policies.Interceptors.SelectInterceptors(ConcreteType ?? pluginType).Union(_interceptors);
+            var interceptors = policies.Interceptors.SelectInterceptors(ReturnedType ?? pluginType).Union(_interceptors);
             return new BuildPlan(pluginType, this, builderSource, interceptors);
         }
 

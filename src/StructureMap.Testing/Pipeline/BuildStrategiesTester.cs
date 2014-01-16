@@ -34,6 +34,11 @@ namespace StructureMap.Testing.Pipeline
                 return new Constant(pluginType, _constructedObject);
             }
 
+            public override Type ReturnedType
+            {
+                get { return _constructedObject.GetType(); }
+            }
+
             protected override string getDescription()
             {
                 return "Stubbed";
@@ -107,6 +112,11 @@ namespace StructureMap.Testing.Pipeline
             public StubInstance(string name)
             {
                 Name = name;
+            }
+
+            public override Type ReturnedType
+            {
+                get { return null; }
             }
 
             public override IDependencySource ToDependencySource(Type pluginType)

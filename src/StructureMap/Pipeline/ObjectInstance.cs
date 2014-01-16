@@ -61,9 +61,9 @@ namespace StructureMap.Pipeline
             return new Constant(pluginType, _object);
         }
 
-        protected override Type getConcreteType(Type pluginType)
+        public override Type ReturnedType
         {
-            return _object.GetType();
+            get { return _object.GetType(); }
         }
     }
 }
