@@ -368,5 +368,10 @@ namespace StructureMap.Configuration.DSL
         {
             alter = pluginGraphConfig.Configure;
         }
+
+        public void AddConstructorSelector(IConstructorSelector constructorSelector)
+        {
+            alter = x => x.Policies.ConstructorSelector.Add(constructorSelector);
+        }
     }
 }

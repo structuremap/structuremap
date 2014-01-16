@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using StructureMap.Configuration;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
+using StructureMap.Pipeline;
 
 namespace StructureMap
 {
