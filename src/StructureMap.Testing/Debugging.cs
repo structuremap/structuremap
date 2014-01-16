@@ -16,10 +16,9 @@ namespace StructureMap.Testing
         [Test]
         public void look_at_expression()
         {
-            var gateway = new DefaultGateway();
-            Expression<Func<IContext, TopLevel>> expression =
-                c => new TopLevel(new Leaf(gateway, new ColorService("red"))) {Foo = new Foo(Guid.NewGuid())};
-            //Expression<Func<IContext, TopLevel>> expression = c => new TopLevel(new Leaf(gateway, new ColorService("red")));
+            Func<IBuildSession, TopLevel> func = s => new TopLevel(null);
+            Expression<Func<IBuildSession, TopLevel>> expression = s => func(s);
+
 
             Debug.WriteLine(expression);
         }

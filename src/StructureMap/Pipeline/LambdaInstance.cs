@@ -1,13 +1,14 @@
 using System;
+using System.Linq.Expressions;
 using StructureMap.Building;
 
 namespace StructureMap.Pipeline
 {
-    public class LambdaInstance<T> : ExpressedInstance<LambdaInstance<T>>
+    public class LambdaInstance<T> : ExpressedInstance<LambdaInstance<T>>, IDependencySource
     {
-        private readonly Func<IContext, T> _builder;
+        private readonly Func<IBuildSession, T> _builder;
 
-        public LambdaInstance(Func<IContext, T> builder)
+        public LambdaInstance(Func<IBuildSession, T> builder)
         {
             _builder = builder;
         }
@@ -24,7 +25,20 @@ namespace StructureMap.Pipeline
 
         public override IDependencySource ToDependencySource(Type pluginType)
         {
-            throw new NotImplementedException("Need to redo this");
+            return this;
+        }
+
+        public Expression ToExpression(ParameterExpression session)
+        {
+            return Expression.Invoke(Expression.Constant(_builder), Parameters.Session);
+        }
+
+        public Type ReturnedType
+        {
+            get
+            {
+                return typeof (T);
+            }
         }
 
 //        protected override object build(Type pluginType, IBuildSession session)
