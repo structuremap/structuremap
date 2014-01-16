@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using StructureMap.Configuration;
 using StructureMap.Graph;
 using StructureMap.Pipeline;
+using StructureMap.Pipeline.Lazy;
 
 namespace StructureMap
 {
@@ -44,7 +45,7 @@ namespace StructureMap
 
             addCloseGenericPolicyTo(_graph);
 
-            var funcInstance = new FactoryTemplate(typeof (LazyInstance<>));
+            var funcInstance = new FuncFactoryTemplate();
             _graph.Families[typeof (Func<>)].SetDefault(funcInstance);
 
             _graph.Log.AssertFailures();

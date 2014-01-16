@@ -64,21 +64,6 @@ namespace StructureMap.Testing.Configuration.DSL
             return _manager.GetInstance<IService>(name);
         }
 
-
-
-        [Test]
-        public void custom_interceptor_for_all()
-        {
-            Assert.Fail("NWO");
-//            var interceptor = MockRepository.GenerateMock<IInterceptor>();
-//            var service = getService("Green", r => {
-//                r.For<IService>().InterceptWith(interceptor)
-//                    .AddInstances(x => { x.ConstructedBy(() => new ColorService("Green")).Named("Green"); });
-//            });
-//
-//            interceptor.Target.ShouldBeTheSameAs(service);
-        }
-
         [Test]
         public void EnrichForAll()
         {

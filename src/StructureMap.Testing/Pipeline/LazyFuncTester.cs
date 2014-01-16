@@ -1,6 +1,5 @@
 using System;
 using NUnit.Framework;
-using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
 
 namespace StructureMap.Testing.Pipeline
@@ -8,18 +7,13 @@ namespace StructureMap.Testing.Pipeline
     [TestFixture]
     public class LazyFuncTester
     {
-        [SetUp]
-        public void SetUp()
-        {
-        }
-
         [Test]
         public void FactoryTemplateTester()
         {
             var container =
-                new Container(x => { x.For(typeof (Func<>)).Use(new FactoryTemplate(typeof (LazyInstance<>))); });
+                new Container();
 
-            //container.GetInstance<Func<ConcreteClass>>()().ShouldNotBeNull();
+            container.GetInstance<Func<ConcreteClass>>()().ShouldNotBeNull();
         }
 
         [Test]
@@ -35,7 +29,7 @@ namespace StructureMap.Testing.Pipeline
         public void build_a_func_that_returns_a_transient()
         {
             var container =
-                new Container(x => { x.For<IWidget>().Use<ColorWidget>().Ctor<string>("color").Is("green"); });
+                new Container(x => x.For<IWidget>().Use<ColorWidget>().Ctor<string>("color").Is("green"));
 
             var func = container.GetInstance<Func<IWidget>>();
             var w1 = func();

@@ -162,6 +162,7 @@
     <Compile Include="Building\TryCatchWrapper.cs" />
     <Compile Include="BuildSession.cs" />
     <Compile Include="Pipeline\Argument.cs" />
+    <Compile Include="Pipeline\Lazy\LazyInstance.cs" />
     <Compile Include="Pipeline\NullInstance.cs" />
     <Compile Include="Policies.cs" />
     <Compile Include="ComplexPipelineGraph.cs" />
@@ -303,7 +304,7 @@
     <Compile Include="Graph\IRegistrationConvention.cs" />
     <Compile Include="Graph\DefaultConventionScanner.cs" />
     <Compile Include="IContext.cs" />
-    <Compile Include="Pipeline\AdapterClasses.cs" />
+    <Compile Include="Pipeline\Lazy\FuncFactoryTemplate.cs" />
     <Compile Include="Query\EmptyConfiguration.cs" />
     <Compile Include="Query\GenericFamilyConfiguration.cs" />
     <Compile Include="Query\IModel.cs" />
