@@ -41,24 +41,6 @@ namespace StructureMap.Pipeline
             }
         }
 
-//        protected override object build(Type pluginType, IBuildSession session)
-//        {
-//            try
-//            {
-//                return _builder(session);
-//            }
-//                // TODO -- UT this behavior
-//            catch (StructureMapException ex)
-//            {
-//                ex.Push(Description);
-//                throw;
-//            }
-//            catch (Exception ex)
-//            {
-//                throw new StructureMapBuildException("Exception while trying to build '{0}', check the inner exception".ToFormat(Description), ex);
-//            }
-//        }
-
         public override string Description
         {
             get { return "Instance is created by Func<object> function:  " + _builder; }

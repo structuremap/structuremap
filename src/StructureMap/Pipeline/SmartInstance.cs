@@ -11,8 +11,6 @@ namespace StructureMap.Pipeline
     /// <typeparam name="T">The concrete type constructed by SmartInstance</typeparam>
     public class SmartInstance<T> : ConstructorInstance<SmartInstance<T>>
     {
-        private readonly List<Action<T>> _actions = new List<Action<T>>();
-
         public SmartInstance()
             : base(typeof (T))
         {

@@ -32,7 +32,7 @@ namespace StructureMap.Pipeline
 
         public override IDependencySource ToBuilder(Type pluginType, Policies policies)
         {
-            return StructureMap.Building.ConcreteType.BuildSource(_pluggedType, null, _dependencies, policies);
+            return ConcreteType.BuildSource(_pluggedType, null, _dependencies, policies);
         }
 
         public ConstructorInstance Override(ExplicitArguments arguments)
