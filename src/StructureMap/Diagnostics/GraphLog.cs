@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using StructureMap.Building;
 using StructureMap.Graph;
@@ -30,30 +31,13 @@ namespace StructureMap.Diagnostics
             _sources.Add(description);
         }
 
-        [Obsolete("Remove the error code")]
-        public void RegisterError(Instance instance, int code, params object[] args)
+        public void RegisterError(string template, params object[] args)
         {
-            var error = new Error(code, args);
-            error.Instance = instance.CreateToken();
+            var error = new Error(template.ToFormat(args));
             addError(error);
         }
 
-        [Obsolete("Remove the error code")]
-        public void RegisterError(int code, params object[] args)
-        {
-            var error = new Error(code, args);
-            addError(error);
-        }
-
-        [Obsolete("Remove the error code")]
-        public void RegisterError(int code, Exception ex, params object[] args)
-        {
-            var error = new Error(code, ex, args);
-            addError(error);
-        }
-
-
-        public void RegisterError(StructureMapException ex)
+        public void RegisterError(Exception ex)
         {
             var error = new Error(ex);
             addError(error);
@@ -67,7 +51,7 @@ namespace StructureMap.Diagnostics
 
         public void AssertFailures()
         {
-            if (_errors.Count == 0)
+            if (!_errors.Any())
             {
                 return;
             }
@@ -79,8 +63,9 @@ namespace StructureMap.Diagnostics
 
         public string BuildFailureMessage()
         {
-            if (_errors.Count == 0)
+            if (!_errors.Any())
                 return "No Errors";
+
             var sb = new StringBuilder();
             var writer = new StringWriter(sb);
 
@@ -98,62 +83,9 @@ namespace StructureMap.Diagnostics
             return sb.ToString();
         }
 
-        public void AssertHasError(int errorCode, string message)
+        public IEnumerable<Error> Errors
         {
-            var error = Error.FromMessage(errorCode, message);
-            if (!_errors.Contains(error))
-            {
-                var msg = "Did not have the requested Error.  Had:\n\n";
-                foreach (var err in _errors)
-                {
-                    msg += err + "\n";
-                }
-
-                throw new ApplicationException(msg);
-            }
-        }
-
-        public void AssertHasError(int errorCode)
-        {
-            var message = "No error with code " + errorCode + "\nHad errors: ";
-            foreach (var error in _errors)
-            {
-                message += error.Code + ", ";
-                if (error.Code == errorCode)
-                {
-                    return;
-                }
-            }
-
-            throw new ApplicationException(message);
-        }
-
-        public void AssertHasNoError(int errorCode)
-        {
-            foreach (var error in _errors)
-            {
-                if (error.Code == errorCode)
-                {
-                    throw new ApplicationException("Has error " + errorCode);
-                }
-            }
-        }
-
-        public void WithType(TypePath path, string context, Action<Type> action)
-        {
-            try
-            {
-                var type = path.FindType();
-                action(type);
-            }
-            catch (StructureMapException ex)
-            {
-                RegisterError(ex);
-            }
-            catch (Exception ex)
-            {
-                RegisterError(131, ex, path.AssemblyQualifiedName, context);
-            }
+            get { return _errors; }
         }
 
         public TryAction Try(Action action)
@@ -182,7 +114,7 @@ namespace StructureMap.Diagnostics
                 }
                 catch (Exception ex)
                 {
-                    _log.RegisterError(code, ex, args);
+                    _log.RegisterError(ex);
                 }
             }
 
@@ -192,13 +124,9 @@ namespace StructureMap.Diagnostics
                 {
                     _action();
                 }
-                catch (StructureMapException ex)
-                {
-                    _log.RegisterError(ex);
-                }
                 catch (Exception ex)
                 {
-                    _log.RegisterError(400, ex);
+                    _log.RegisterError(ex);
                 }
             }
         }

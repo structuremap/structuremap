@@ -25,7 +25,6 @@ namespace StructureMap.Testing
             builder.AddRegistry("an invalid type name");
 
             graph.Log.ErrorCount.ShouldEqual(1);
-            graph.Log.AssertHasError(290);
         }
     }
 }

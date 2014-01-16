@@ -39,7 +39,7 @@ namespace StructureMap.Configuration
             }
             catch (Exception ex)
             {
-                _pluginGraph.Log.RegisterError(103, ex, pluginTypePath.AssemblyQualifiedName);
+                _pluginGraph.Log.RegisterError(ex);
             }
         }
     }

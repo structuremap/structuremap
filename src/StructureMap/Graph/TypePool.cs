@@ -19,7 +19,7 @@ namespace StructureMap.Graph
                 }
                 catch (Exception ex)
                 {
-                    graph.Log.RegisterError(170, ex, assembly.FullName);
+                    graph.Log.RegisterError(ex);
                     return new Type[0];
                 }
             };

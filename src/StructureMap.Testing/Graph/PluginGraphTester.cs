@@ -15,7 +15,7 @@ namespace StructureMap.Testing.Graph
         public void AssertErrors_throws_StructureMapConfigurationException_if_there_is_an_error()
         {
             var graph = new PluginGraph();
-            graph.Log.RegisterError(400, new ApplicationException("Bad!"));
+            graph.Log.RegisterError(new ApplicationException("Bad!"));
 
             graph.Log.AssertFailures();
         }

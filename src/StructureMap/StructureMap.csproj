@@ -273,9 +273,6 @@
     <Compile Include="SessionCache.cs" />
     <Compile Include="Diagnostics\ValidationBuildSession.cs" />
     <Compile Include="Util\LightweightCache.cs" />
-    <EmbeddedResource Include="StructureMapException.resx">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\structuremap.snk">
@@ -289,7 +286,6 @@
     <Compile Include="Configuration\ITypeReader.cs" />
     <Compile Include="Diagnostics\DoctorResult.cs" />
     <Compile Include="Diagnostics\ValidationError.cs" />
-    <Compile Include="ErrorMessages.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Graph\CompositeFilter.cs" />
     <Compile Include="Graph\CompositePredicate.cs" />

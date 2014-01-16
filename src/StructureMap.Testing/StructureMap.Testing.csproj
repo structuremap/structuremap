@@ -323,7 +323,6 @@
     <Compile Include="SpecificationExtensions.cs" />
     <Compile Include="StructureMapConfigurationTester.cs" />
     <Compile Include="PerRequestInterceptorTester.cs" />
-    <Compile Include="TestUtility.cs" />
     <Compile Include="Diagnostics\ValidationBuildSessionTester.cs" />
     <Compile Include="TypeExtensions.cs" />
     <Compile Include="TypeExtensionsTester.cs" />
