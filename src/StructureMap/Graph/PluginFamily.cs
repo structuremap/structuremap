@@ -18,6 +18,7 @@ namespace StructureMap.Graph
         private readonly Type _pluginType;
         private Lazy<Instance> _defaultInstance;
         private Lazy<Instance> _fallBack = new Lazy<Instance>(() => null);
+        private Instance _missingInstance;
 
 
         public PluginFamily(Type pluginType)
@@ -30,20 +31,43 @@ namespace StructureMap.Graph
                 .Each(x => x.Alter(this));
         }
 
+        /// <summary>
+        /// The PluginGraph that "owns" this PluginFamily
+        /// </summary>
         public PluginGraph Owner { get; internal set; }
 
+        /// <summary>
+        /// All the Instances held by this family
+        /// </summary>
         public IEnumerable<Instance> Instances
         {
             get { return _instances.GetAll(); }
         }
 
+        /// <summary>
+        /// Does this PluginFamily represent an open generic type?
+        /// </summary>
         public bool IsGenericTemplate
         {
             get { return _pluginType.IsGenericTypeDefinition || _pluginType.ContainsGenericParameters; }
         }
 
-        // TODO -- defensive check here to verify that the instance can be used against PluginType
-        public Instance MissingInstance { get; set; }
+        /// <summary>
+        /// Can be used to create an object for a named Instance that does not exist
+        /// </summary>
+        public Instance MissingInstance
+        {
+            get { return _missingInstance; }
+            set
+            {
+                if (value != null)
+                {
+                    assertInstanceIsValidForThisPluginType(value);
+                }
+
+                _missingInstance = value;
+            }
+        }
 
         /// <summary>
         ///     The CLR Type that defines the "Plugin" interface for the PluginFamily
@@ -68,16 +92,21 @@ namespace StructureMap.Graph
         {
             if (instance == null) throw new ArgumentNullException("instance");
 
-            if (instance.ReturnedType != null && 
+            assertInstanceIsValidForThisPluginType(instance);
+
+            instance.Parent = this;
+            _instances[instance.Name] = instance;
+        }
+
+        private void assertInstanceIsValidForThisPluginType(Instance instance)
+        {
+            if (instance.ReturnedType != null &&
                 !instance.ReturnedType.CanBeCastTo(_pluginType))
             {
                 throw new ArgumentOutOfRangeException(
                     "instance '{0}' with ReturnType {1} cannot be cast to {2}".ToFormat(instance.Description,
                         instance.ReturnedType.GetFullName(), _pluginType.GetFullName()));
             }
-
-            instance.Parent = this;
-            _instances[instance.Name] = instance;
         }
 
         // TODO -- re-evaluate this
@@ -95,11 +124,6 @@ namespace StructureMap.Graph
         public void SetFallback(Instance instance)
         {
             _fallBack = new Lazy<Instance>(() => instance);
-        }
-
-        public void AddTypes(List<Type> pluggedTypes)
-        {
-            pluggedTypes.ForEach(AddType);
         }
 
         public Instance GetInstance(string name)
@@ -167,6 +191,11 @@ namespace StructureMap.Graph
             return _instances.Any(x => x.ReturnedType == concreteType);
         }
 
+        /// <summary>
+        /// Add a single concrete type as a new Instance with a derived name.
+        /// Is idempotent.
+        /// </summary>
+        /// <param name="concreteType"></param>
         public void AddType(Type concreteType)
         {
             if (!concreteType.CanBeCastTo(_pluginType)) return;
@@ -177,6 +206,10 @@ namespace StructureMap.Graph
             }
         }
 
+        /// <summary>
+        /// The Policies from the root PluginGraph containing this PluginFamily
+        /// or a default set of Policies if none supplied
+        /// </summary>
         public Policies Policies
         {
             get
@@ -187,6 +220,11 @@ namespace StructureMap.Graph
             }
         }
 
+        /// <summary>
+        /// Adds a new Instance for the concreteType with a name
+        /// </summary>
+        /// <param name="concreteType"></param>
+        /// <param name="name"></param>
         public void AddType(Type concreteType, string name)
         {
             if (!concreteType.CanBeCastTo(_pluginType)) return;
@@ -197,6 +235,10 @@ namespace StructureMap.Graph
             }
         }
 
+        /// <summary>
+        /// completely removes an Instance from a PluginFamily
+        /// </summary>
+        /// <param name="instance"></param>
         public void RemoveInstance(Instance instance)
         {
             _instances.Remove(instance.Name);
@@ -207,6 +249,9 @@ namespace StructureMap.Graph
             }
         }
 
+        /// <summary>
+        /// Removes all Instances and resets the default Instance determination
+        /// </summary>
         public void RemoveAll()
         {
             _instances.ClearAll();

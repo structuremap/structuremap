@@ -20,6 +20,10 @@ namespace StructureMap.Pipeline
 
         private readonly IList<IInterceptor> _interceptors = new List<IInterceptor>();
 
+        /// <summary>
+        /// Add an interceptor to only this Instance
+        /// </summary>
+        /// <param name="interceptor"></param>
         public void AddInterceptor(IInterceptor interceptor)
         {
             if (ReturnedType != null && !ReturnedType.CanBeCastTo(interceptor.Accepts))
@@ -44,6 +48,13 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public abstract IDependencySource ToDependencySource(Type pluginType);
 
+        /// <summary>
+        /// Creates an IDependencySource that can be used to build the object
+        /// represented by this Instance 
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="policies"></param>
+        /// <returns></returns>
         public virtual IDependencySource ToBuilder(Type pluginType, Policies policies)
         {
             return ToDependencySource(pluginType);
@@ -78,8 +89,15 @@ namespace StructureMap.Pipeline
             return new InstanceToken(Name, Description);
         }
 
+        /// <summary>
+        /// The known .Net Type built by this Instance.  May be null when indeterminate.
+        /// </summary>
         public abstract Type ReturnedType { get; }
 
+        /// <summary>
+        /// Does this Instance have a user-defined name?
+        /// </summary>
+        /// <returns></returns>
         public bool HasExplicitName()
         {
             return _name != _originalName;
@@ -99,7 +117,13 @@ namespace StructureMap.Pipeline
         private readonly object _buildLock = new object();
         private IBuildPlan _plan;
 
-
+        /// <summary>
+        /// Resolves the IBuildPlan for this Instance.  The result is remembered
+        /// for subsequent requests
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <param name="policies"></param>
+        /// <returns></returns>
         public IBuildPlan ResolveBuildPlan(Type pluginType, Policies policies)
         {
             if (_plan == null)
@@ -116,6 +140,9 @@ namespace StructureMap.Pipeline
             return _plan;
         }
 
+        /// <summary>
+        /// Clears out any remembered IBuildPlan for this Instance
+        /// </summary>
         public void ClearBuildPlan()
         {
             lock (_buildLock)
@@ -131,6 +158,11 @@ namespace StructureMap.Pipeline
             return new BuildPlan(pluginType, this, builderSource, interceptors);
         }
 
+        /// <summary>
+        /// Creates a hash that is unique for this Instance and PluginType combination
+        /// </summary>
+        /// <param name="pluginType"></param>
+        /// <returns></returns>
         public int InstanceKey(Type pluginType)
         {
             unchecked
@@ -140,6 +172,10 @@ namespace StructureMap.Pipeline
             }
         }
 
+        /// <summary>
+        /// Is this Instance created uniquely upon each request?
+        /// </summary>
+        /// <returns></returns>
         public bool IsUnique()
         {
             return Lifecycle is UniquePerRequestLifecycle;

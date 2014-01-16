@@ -11,6 +11,11 @@ namespace StructureMap.Testing.Graph
     [TestFixture]
     public class PluginGraphTester
     {
+        public static PluginGraph Empty()
+        {
+            return new PluginGraphBuilder().Build();
+        }
+
         [Test, ExpectedException(typeof (StructureMapConfigurationException))]
         public void AssertErrors_throws_StructureMapConfigurationException_if_there_is_an_error()
         {
@@ -80,7 +85,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void find_family_by_closing_an_open_interface_that_matches()
         {
-            var graph = PluginGraph.Empty();
+            var graph = Empty();
             graph.Families[typeof (IOpen<>)].SetDefault(new ConfiguredInstance(typeof (Open<>)));
 
             graph.Families[typeof (IOpen<string>)].GetDefaultInstance().ShouldBeOfType<ConstructorInstance>()
@@ -90,7 +95,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void find_family_for_concrete_type_with_default()
         {
-            var graph = PluginGraph.Empty();
+            var graph = Empty();
             graph.Families[typeof (BigThingy)].GetDefaultInstance()
                 .ShouldBeOfType<ConstructorInstance>()
                 .PluggedType.ShouldEqual(typeof (BigThingy));
@@ -196,14 +201,14 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void has_family_false_with_simple()
         {
-            var graph = PluginGraph.Empty();
+            var graph = Empty();
             graph.HasFamily(typeof (IThingy)).ShouldBeFalse();
         }
 
         [Test]
         public void has_family_true_with_simple()
         {
-            var graph = PluginGraph.Empty();
+            var graph = Empty();
             graph.AddFamily(new PluginFamily(typeof (IThingy)));
 
             graph.HasFamily(typeof (IThingy)).ShouldBeTrue();
@@ -212,7 +217,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void add_family_sets_the_parent_relationship()
         {
-            var graph = PluginGraph.Empty();
+            var graph = Empty();
             graph.AddFamily(new PluginFamily(typeof (IThingy)));
 
             graph.Families[typeof (IThingy)].Owner.ShouldBeTheSameAs(graph);
@@ -234,7 +239,7 @@ namespace StructureMap.Testing.Graph
         [Test]
         public void has_family_true_with_open_generics()
         {
-            var graph = PluginGraph.Empty();
+            var graph = Empty();
             graph.Families[typeof (IOpen<>)].SetDefault(new ConstructorInstance(typeof (Open<>)));
 
             graph.HasFamily(typeof (IOpen<string>))
