@@ -3,6 +3,7 @@ using NUnit.Framework;
 using StructureMap.Building;
 using StructureMap.Pipeline;
 using StructureMap.Testing.Widget;
+using StructureMap.Testing.Widget3;
 
 namespace StructureMap.Testing.Pipeline
 {
@@ -20,6 +21,18 @@ namespace StructureMap.Testing.Pipeline
             });
 
             ex.Title.ShouldEqual("Failure at: \"Instance is created by Func<object> function:  System.Func`2[StructureMap.IBuildSession,System.Object]\"");
+        }
+
+        [Test]
+        public void can_use_lambda_as_inline_dependency()
+        {
+            var container = new Container(x => {
+                x.ForConcreteType<DecoratedGateway>().Configure
+                    .Ctor<IGateway>().Is(c => new StubbedGateway());
+            });
+
+            container.GetInstance<DecoratedGateway>()
+                .InnerGateway.ShouldBeOfType<StubbedGateway>();
         }
     }
 }

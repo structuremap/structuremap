@@ -28,7 +28,7 @@ namespace StructureMap.Testing.Pipeline
         public void specify_a_constructor_dependency()
         {
             var widget = new ColorWidget("Red");
-            build<ClassWithWidget>(instance => instance.Ctor<IWidget>("widget").Is(x => x.Object(widget))).
+            build<ClassWithWidget>(instance => instance.Ctor<IWidget>("widget").IsSpecial(x => x.Object(widget))).
                 Widget.
                 ShouldBeTheSameAs(widget);
         }
@@ -37,7 +37,7 @@ namespace StructureMap.Testing.Pipeline
         public void specify_a_constructor_dependency_by_type()
         {
             var widget = new ColorWidget("Red");
-            build<ClassWithWidget>(i => i.Ctor<IWidget>().Is(x => x.Object(widget))).Widget.ShouldBeTheSameAs(
+            build<ClassWithWidget>(i => i.Ctor<IWidget>().IsSpecial(x => x.Object(widget))).Widget.ShouldBeTheSameAs(
                 widget);
         }
 
@@ -56,12 +56,12 @@ namespace StructureMap.Testing.Pipeline
         public void specify_a_property_dependency()
         {
             var widget = new ColorWidget("Red");
-            build<ClassWithWidgetProperty>(i => i.Setter(x => x.Widget).Is(x => x.Object(widget))).Widget.
+            build<ClassWithWidgetProperty>(i => i.Setter(x => x.Widget).IsSpecial(x => x.Object(widget))).Widget.
                 ShouldBeTheSameAs(widget);
 
             var container = new Container(x => {
                 x.ForConcreteType<ClassWithWidgetProperty>().Configure
-                    .Setter(o => o.Widget).Is(o => o.Object(new ColorWidget("Red")));
+                    .Setter(o => o.Widget).IsSpecial(o => o.Object(new ColorWidget("Red")));
             });
         }
 

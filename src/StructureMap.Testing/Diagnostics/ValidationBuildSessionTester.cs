@@ -45,7 +45,7 @@ namespace StructureMap.Testing.Diagnostics
 
                 r.For<SomethingThatNeedsAWidget>().Use<SomethingThatNeedsAWidget>()
                     .Named("DependentInstance")
-                    .Ctor<IWidget>().Is(x => x.TheInstanceNamed("BadInstance"));
+                    .Ctor<IWidget>().IsSpecial(x => x.TheInstanceNamed("BadInstance"));
             });
 
             var error = getFirstAndOnlyError(session);
@@ -76,7 +76,7 @@ namespace StructureMap.Testing.Diagnostics
 
                 r.For<SomethingThatNeedsAWidget>().Use<SomethingThatNeedsAWidget>()
                     .Named("DependentInstance")
-                    .Ctor<IWidget>().Is(x => x.TheInstanceNamed("BadInstance"));
+                    .Ctor<IWidget>().IsSpecial(x => x.TheInstanceNamed("BadInstance"));
             });
 
             Assert.AreEqual(1, session.BuildErrors.Length);

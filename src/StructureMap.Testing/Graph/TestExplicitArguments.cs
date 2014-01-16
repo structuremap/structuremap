@@ -243,7 +243,7 @@ namespace StructureMap.Testing.Graph
         {
             ObjectFactory.Initialize(x => {
                 x.For<ExplicitTarget>().Use<ExplicitTarget>()
-                    .Ctor<IProvider>().Is(child => child.Type<RedProvider>())
+                    .Ctor<IProvider>().IsSpecial(child => child.Type<RedProvider>())
                     .Ctor<string>("name").Is("Jeremy");
             });
 

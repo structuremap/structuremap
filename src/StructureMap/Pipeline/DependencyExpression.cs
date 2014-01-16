@@ -51,7 +51,7 @@ namespace StructureMap.Pipeline
         /// </summary>
         /// <param name="action"></param>
         /// <returns></returns>
-        public TInstance Is(Action<IInstanceExpression<TChild>> action)
+        public TInstance IsSpecial(Action<IInstanceExpression<TChild>> action)
         {
             var expression =
                 new InstanceExpression<TChild>(i => _instance.Dependencies.Add(_propertyName, typeof (TChild), i));
