@@ -33,18 +33,16 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void set_and_get_a_collection()
         {
-            var children = new Instance[]
-            {
-                new SmartInstance<ColorWidget>().Ctor<string>("color").Is("red"),
-                new SmartInstance<ColorWidget>().Ctor<string>("color").Is("green"),
-                new ObjectInstance(new AWidget())
-            };
+            var container = new Container(x => {
+                x.ForConcreteType<ClassWithArrayOfWidgets>().Configure.EnumerableOf<IWidget>()
+                    .Contains(
+                        new SmartInstance<ColorWidget>().Ctor<string>("color").Is("red"),
+                        new SmartInstance<ColorWidget>().Ctor<string>("color").Is("green"),
+                        new ObjectInstance(new AWidget())
+                    );
+            });
 
-            var instance = ConstructorInstance.For<ClassWithArrayOfWidgets>();
-            instance.Dependencies.Add("widgets", children);
-
-            var widgets = instance.Build<ClassWithArrayOfWidgets>()
-                .As<ClassWithArrayOfWidgets>()
+            var widgets = container.GetInstance<ClassWithArrayOfWidgets>()
                 .Widgets;
 
             widgets.Length.ShouldEqual(3);

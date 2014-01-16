@@ -99,14 +99,13 @@ namespace StructureMap.Testing.Pipeline
             };
 
             var theInstance = new EnumerableInstance(children);
-            Assert.Fail("NWO");
-//            var list =
-//                theInstance.Build(typeof (IList<IWidget>), new StubBuildSession()).ShouldBeOfType<List<IWidget>>();
-//
-//            list.Count.ShouldEqual(3);
-//
-//            list[0].ShouldBeOfType<ColorWidget>().Color.ShouldEqual("red");
-//            list[2].ShouldBeOfType<AWidget>();
+            var list =
+                theInstance.Build<IList<IWidget>>(new StubBuildSession()).As<IList<IWidget>>();
+
+            list.Count.ShouldEqual(3);
+
+            list[0].ShouldBeOfType<ColorWidget>().Color.ShouldEqual("red");
+            list[2].ShouldBeOfType<AWidget>();
         }
 
         [Test]
@@ -120,13 +119,13 @@ namespace StructureMap.Testing.Pipeline
             };
 
             var theInstance = new EnumerableInstance(children);
-            Assert.Fail("NWO");
-//            var list = theInstance.Build(typeof (IWidget[]), new StubBuildSession()).ShouldBeOfType<IWidget[]>();
-//
-//            list.Length.ShouldEqual(3);
-//
-//            list[0].ShouldBeOfType<ColorWidget>().Color.ShouldEqual("red");
-//            list[2].ShouldBeOfType<AWidget>();
+
+            var list = theInstance.Build<IWidget[]>(new StubBuildSession()).ShouldBeOfType<IWidget[]>();
+
+            list.Length.ShouldEqual(3);
+
+            list[0].ShouldBeOfType<ColorWidget>().Color.ShouldEqual("red");
+            list[2].ShouldBeOfType<AWidget>();
         }
 
         [Test]
