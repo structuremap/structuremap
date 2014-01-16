@@ -4,34 +4,34 @@ using StructureMap.Pipeline;
 namespace StructureMap.Graph
 {
     // TODO -- make sure there's helpers for all the common things
-    public abstract class HasScope
+    public abstract class HasLifecycle
     {
         private Lazy<ILifecycle> _lifecycle;
 
-        protected void copyLifecycle(HasScope other)
+        protected void copyLifecycle(HasLifecycle other)
         {
             _lifecycle = other._lifecycle;
         }
 
-        protected HasScope()
+        protected HasLifecycle()
         {
             _lifecycle =
                 new Lazy<ILifecycle>(
                     () => { return scopedParent == null ? Lifecycles.Transient : scopedParent.Lifecycle; });
         }
 
-        protected HasScope scopedParent { get; set; }
+        protected HasLifecycle scopedParent { get; set; }
 
         /// <summary>
         /// Use InstanceScope for the constants now
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        public void SetScopeTo<T>() where T : ILifecycle, new()
+        public void SetLifecycleTo<T>() where T : ILifecycle, new()
         {
-            _lifecycle = new Lazy<ILifecycle>(() => Lifecycles.Get<T>());
+            _lifecycle = new Lazy<ILifecycle>(Lifecycles.Get<T>);
         }
 
-        public void SetScopeTo(ILifecycle lifecycle)
+        public void SetLifecycleTo(ILifecycle lifecycle)
         {
             _lifecycle = new Lazy<ILifecycle>(() => lifecycle);
         }

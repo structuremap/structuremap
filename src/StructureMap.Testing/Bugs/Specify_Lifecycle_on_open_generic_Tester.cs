@@ -3,10 +3,10 @@ using NUnit.Framework;
 namespace StructureMap.Testing.Bugs
 {
     [TestFixture]
-    public class SpecifyScopeOnOpenGenericsTester
+    public class Specify_Lifecycle_on_open_generic_Tester
     {
         [Test]
-        public void should_obey_scope_set_on_open_type()
+        public void should_obey_lifecycle_set_on_open_type()
         {
             var container =
                 new Container(x => { x.ForSingletonOf(typeof (IOpenType<>)).Use(typeof (OpenType<>)); });

@@ -131,7 +131,7 @@ namespace StructureMap.Testing.Query
         [Test]
         public void lifecyle_is_singleton()
         {
-            family.SetScopeTo(Lifecycles.Singleton);
+            family.SetLifecycleTo(Lifecycles.Singleton);
             configuration.Lifecycle.ShouldBeOfType<SingletonLifecycle>();
         }
 

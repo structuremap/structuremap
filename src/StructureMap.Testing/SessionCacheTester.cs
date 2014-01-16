@@ -40,7 +40,7 @@ namespace StructureMap.Testing
         public void get_instance_if_the_object_is_unique_and_does_not_exist()
         {
             var instance = new ConfiguredInstance(typeof (Foo));
-            instance.SetScopeTo(Lifecycles.Unique);
+            instance.SetLifecycleTo(Lifecycles.Unique);
 
             var foo = new Foo();
             var foo2 = new Foo();

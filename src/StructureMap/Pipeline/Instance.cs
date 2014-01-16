@@ -10,7 +10,7 @@ using StructureMap.TypeRules;
 
 namespace StructureMap.Pipeline
 {
-    public abstract class Instance : HasScope, IDescribed
+    public abstract class Instance : HasLifecycle, IDescribed
     {
         private readonly string _originalName;
         private string _name = Guid.NewGuid().ToString();

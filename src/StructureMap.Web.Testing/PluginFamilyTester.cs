@@ -19,7 +19,7 @@ namespace StructureMap.Web.Testing
             var family = new PluginFamily(typeof(IServiceProvider));
             family.Lifecycle.ShouldBeOfType<TransientLifecycle>();
 
-            family.SetScopeTo(WebLifecycles.HttpContext);
+            family.SetLifecycleTo(WebLifecycles.HttpContext);
             family.Lifecycle.ShouldBeOfType<HttpContextLifecycle>();
         }
 
@@ -28,7 +28,7 @@ namespace StructureMap.Web.Testing
         {
             var family = new PluginFamily(typeof(IServiceProvider));
 
-            family.SetScopeTo(WebLifecycles.Hybrid);
+            family.SetLifecycleTo(WebLifecycles.Hybrid);
             family.Lifecycle.ShouldBeOfType<HybridLifecycle>();
         }
 
@@ -36,7 +36,7 @@ namespace StructureMap.Web.Testing
         public void set_the_scope_to_session()
         {
             var family = new PluginFamily(typeof(IServiceProvider));
-            family.SetScopeTo(WebLifecycles.HttpSession);
+            family.SetLifecycleTo(WebLifecycles.HttpSession);
 
             family.Lifecycle.ShouldBeOfType<HttpSessionLifecycle>();
         }
@@ -45,7 +45,7 @@ namespace StructureMap.Web.Testing
         public void set_the_scope_to_session_hybrid()
         {
             var family = new PluginFamily(typeof(IServiceProvider));
-            family.SetScopeTo(WebLifecycles.HybridSession);
+            family.SetLifecycleTo(WebLifecycles.HybridSession);
 
             family.Lifecycle.ShouldBeOfType<HybridSessionLifecycle>();
         }

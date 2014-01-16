@@ -2,14 +2,14 @@ namespace StructureMap.Pipeline
 {
     public interface ILifecycle
     {
-        string Scope { get; }
+        string Description { get; }
         void EjectAll(ILifecycleContext context);
         IObjectCache FindCache(ILifecycleContext context);
     }
 
     public abstract class LifecycleBase : ILifecycle
     {
-        public string Scope
+        public string Description
         {
             get { return GetType().Name.Replace("Lifecycle", string.Empty); }
         }

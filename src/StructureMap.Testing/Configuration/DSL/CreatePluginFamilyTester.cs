@@ -77,7 +77,7 @@ namespace StructureMap.Testing.Configuration.DSL
         }
 
         [Test]
-        public void AsAnotherScope()
+        public void as_another_lifecycle()
         {
             var registry = new Registry();
             var expression =
@@ -242,7 +242,7 @@ namespace StructureMap.Testing.Configuration.DSL
             throw new NotImplementedException();
         }
 
-        public string Scope
+        public string Description
         {
             get { return "Stubbed"; }
         }

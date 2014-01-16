@@ -66,11 +66,11 @@ namespace StructureMap.Diagnostics
 
             if (pluginType.Lifecycle != null)
             {
-                _writer.AddContent("Scoped as:  " + pluginType.Lifecycle);
+                _writer.AddContent("Lifecycle:  " + pluginType.Lifecycle);
             }
             else
             {
-                _writer.AddContent("Scoped as:  PerRequest/Transient");
+                _writer.AddContent("Lifecycle:  PerRequest/Transient");
             }
 
             foreach (var instance in pluginType.Instances)

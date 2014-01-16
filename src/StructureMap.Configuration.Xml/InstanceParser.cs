@@ -50,7 +50,7 @@ namespace StructureMap.Configuration.Xml
 
 //            _builder.ConfigureFamily(pluginTypePath, family => {
 //                var scope = findScope(element);
-//                family.SetScopeTo(scope);
+//                family.SetLifecycleTo(scope);
 //
 //                var memento = ConfigurationParser.CreateMemento(element);
 //                var instance = memento.ToInstance(this, family.PluginType);

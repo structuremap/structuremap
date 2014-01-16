@@ -346,7 +346,7 @@ namespace StructureMap.Configuration.DSL.Expressions
 
         private CreatePluginFamilyExpression<TPluginType> lifecycleIs(ILifecycle lifecycle)
         {
-            alter = family => family.SetScopeTo(lifecycle);
+            alter = family => family.SetLifecycleTo(lifecycle);
             return this;
         }
 

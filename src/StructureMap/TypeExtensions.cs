@@ -23,7 +23,7 @@ namespace StructureMap
 
         public static string ToName(this ILifecycle lifecycle)
         {
-            return lifecycle == null ? Lifecycles.Transient.Scope : lifecycle.Scope;
+            return lifecycle == null ? Lifecycles.Transient.Description : lifecycle.Description;
         }
 
         public static void Fill<T>(this IList<T> list, T value)

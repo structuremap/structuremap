@@ -23,7 +23,7 @@ namespace StructureMap.Testing.Building
         public void value_is_instance_for_non_simple_resolves_to_lifecycle_source()
         {
             var instance = new FakeInstance();
-            instance.SetScopeTo(new SingletonLifecycle());
+            instance.SetLifecycleTo(new SingletonLifecycle());
 
             ConcreteType.SourceFor(typeof (IGateway), instance)
                 .ShouldBeTheSameAs(instance.DependencySource);

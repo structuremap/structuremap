@@ -179,8 +179,8 @@
     <Compile Include="Bugs\OpenGenericWithConstraints.cs" />
     <Compile Include="Bugs\ScanIndexerBugTester.cs" />
     <Compile Include="Bugs\SingletonShouldBeLazy.cs" />
-    <Compile Include="Bugs\SpecifyScopeInConfigureTester.cs" />
-    <Compile Include="Bugs\SpecifyScopeOnOpenGenericsTester.cs" />
+    <Compile Include="Bugs\Specify_Lifecycle_in_Configure_TesterTester.cs" />
+    <Compile Include="Bugs\Specify_Lifecycle_on_open_generic_Tester.cs" />
     <Compile Include="Bugs\StaticPropertyCausesJITExceptionTester.cs" />
     <Compile Include="Bugs\TryGetInstanceWithOpenGenericsBugTester.cs" />
     <Compile Include="Bugs\UseSingleImplementationConventionInMultipleScans.cs" />

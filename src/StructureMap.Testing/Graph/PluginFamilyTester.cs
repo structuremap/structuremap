@@ -94,20 +94,20 @@ namespace StructureMap.Testing.Graph
 
 
         [Test]
-        public void SetScopeToSingleton()
+        public void set_the_lifecycle_to_Singleton()
         {
             var family = new PluginFamily(typeof (IServiceProvider));
 
-            family.SetScopeTo(Lifecycles.Singleton);
+            family.SetLifecycleTo(Lifecycles.Singleton);
             family.Lifecycle.ShouldBeOfType<SingletonLifecycle>();
         }
 
         [Test]
-        public void SetScopeToThreadLocal()
+        public void set_the_lifecycle_to_ThreadLocal()
         {
             var family = new PluginFamily(typeof (IServiceProvider));
 
-            family.SetScopeTo(Lifecycles.ThreadLocal);
+            family.SetLifecycleTo(Lifecycles.ThreadLocal);
             family.Lifecycle.ShouldBeOfType<ThreadLocalStorageLifecycle>();
         }
 

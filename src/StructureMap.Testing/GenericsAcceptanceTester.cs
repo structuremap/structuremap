@@ -107,7 +107,7 @@ namespace StructureMap.Testing
         }
 
         [Test]
-        public void CanGetTheSameInstanceOfGenericInterfaceWithSingletonScope()
+        public void CanGetTheSameInstanceOfGenericInterfaceWithSingletonLifecycle()
         {
             var con = new Container(x => {
                 x.ForSingletonOf(typeof (IService<>)).Use(typeof (Service<>));

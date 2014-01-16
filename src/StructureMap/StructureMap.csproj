@@ -186,7 +186,7 @@
     <Compile Include="Graph\CloseGenericFamilyPolicy.cs" />
     <Compile Include="Graph\FamilyAttribute.cs" />
     <Compile Include="Graph\GenericConnectionScanner.cs" />
-    <Compile Include="Graph\HasScope.cs" />
+    <Compile Include="Graph\HasLifecycle.cs" />
     <Compile Include="Graph\IFamilyPolicy.cs" />
     <Compile Include="Graph\InstanceAttribute.cs" />
     <Compile Include="Graph\AssemblyScanner.cs" />

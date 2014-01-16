@@ -23,7 +23,7 @@ namespace StructureMap.Configuration.DSL.Expressions
 
             if (scope != null)
             {
-                alterAndContinue(family => family.SetScopeTo(scope));
+                alterAndContinue(family => family.SetLifecycleTo(scope));
             }
         }
 
@@ -144,7 +144,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// <returns></returns>
         public GenericFamilyExpression LifecycleIs(ILifecycle lifecycle)
         {
-            return alterAndContinue(family => family.SetScopeTo(lifecycle));
+            return alterAndContinue(family => family.SetLifecycleTo(lifecycle));
         }
 
         /// <summary>
