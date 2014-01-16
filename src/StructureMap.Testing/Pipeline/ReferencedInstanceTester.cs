@@ -32,7 +32,7 @@ namespace StructureMap.Testing.Pipeline
             var theReferenceKey = "theReferenceKey";
             var instance = new ReferencedInstance(theReferenceKey);
 
-            TestUtility.AssertDescriptionIs(instance, "\"theReferenceKey\"");
+            instance.Description.ShouldEqual("\"theReferenceKey\"");
         }
 
         [Test]

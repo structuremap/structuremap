@@ -41,11 +41,6 @@ namespace StructureMap.Pipeline
             _object = null;
         }
 
-        protected override bool canBePartOfPluginFamily(PluginFamily family)
-        {
-            return _object.GetType().CanBeCastTo(family.PluginType);
-        }
-
         public override string Description
         {
             get { return "Object:  " + _object; }

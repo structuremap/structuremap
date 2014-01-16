@@ -36,11 +36,6 @@ namespace StructureMap.Pipeline
             return StructureMap.Building.ConcreteType.BuildSource(_pluggedType, null, _dependencies, Policies);
         }
 
-        protected override bool canBePartOfPluginFamily(PluginFamily family)
-        {
-            return _pluggedType.CanBeCastTo(family.PluginType);
-        }
-
         public ConstructorInstance Override(ExplicitArguments arguments)
         {
             var instance = new ConstructorInstance(_pluggedType);

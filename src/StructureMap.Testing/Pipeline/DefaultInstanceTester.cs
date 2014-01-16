@@ -46,7 +46,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void Get_description()
         {
-            TestUtility.AssertDescriptionIs(new DefaultInstance(), "Default");
+            new DefaultInstance().Description.ShouldEqual("Default");
         }
 
         [Test]

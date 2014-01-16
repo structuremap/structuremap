@@ -38,9 +38,7 @@ namespace StructureMap.Diagnostics
                 return;
             }
 
-            var token = ((IDiagnosticInstance) instance).CreateToken();
-            var error = new BuildError(pluginType, instance);
-            error.Exception = ex;
+            var error = new BuildError(pluginType, instance) {Exception = ex};
 
             _buildErrors.Add(instance, error);
 

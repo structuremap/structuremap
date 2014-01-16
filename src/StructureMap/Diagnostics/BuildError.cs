@@ -79,7 +79,7 @@ namespace StructureMap.Diagnostics
 
         public void Write(StringWriter writer)
         {
-            var description = ((IDiagnosticInstance) Instance).CreateToken().Description;
+            var description = Instance.CreateToken().Description;
 
             writer.WriteLine();
             writer.WriteLine(

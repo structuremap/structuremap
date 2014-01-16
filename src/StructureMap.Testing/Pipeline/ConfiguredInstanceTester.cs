@@ -81,25 +81,6 @@ namespace StructureMap.Testing.Pipeline
         }
 
         [Test]
-        public void Can_be_plugged_in_if_there_is_a_plugged_type_and_the_plugged_type_can_be_cast_to_the_plugintype()
-        {
-            var instance = new ConfiguredInstance(typeof (ColorWidget));
-            var family = new PluginFamily(typeof (IWidget));
-
-            IDiagnosticInstance diagnosticInstance = instance;
-            Assert.IsTrue(diagnosticInstance.CanBePartOfPluginFamily(family));
-        }
-
-        [Test]
-        public void Can_NOT_be_plugged_in_if_plugged_type_cannot_be_cast_to_the_plugin_type()
-        {
-            var instance = new ConfiguredInstance(typeof (ColorRule));
-            var family = new PluginFamily(typeof (IWidget));
-
-            instance.As<IDiagnosticInstance>().CanBePartOfPluginFamily(family).ShouldBeFalse();
-        }
-
-        [Test]
         public void can_use_a_configured_instance_with_generic_template_type_and_arguments()
         {
             var instance = new ConfiguredInstance(typeof (Service2<>), typeof (string));

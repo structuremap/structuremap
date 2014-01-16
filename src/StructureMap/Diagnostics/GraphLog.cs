@@ -31,7 +31,7 @@ namespace StructureMap.Diagnostics
         }
 
         [Obsolete("Remove the error code")]
-        public void RegisterError(IDiagnosticInstance instance, int code, params object[] args)
+        public void RegisterError(Instance instance, int code, params object[] args)
         {
             var error = new Error(code, args);
             error.Instance = instance.CreateToken();

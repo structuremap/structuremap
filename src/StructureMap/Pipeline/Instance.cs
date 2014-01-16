@@ -5,11 +5,10 @@ using StructureMap.Building;
 using StructureMap.Building.Interception;
 using StructureMap.Diagnostics;
 using StructureMap.Graph;
-using StructureMap.TypeRules;
 
 namespace StructureMap.Pipeline
 {
-    public abstract class Instance : HasScope, IDiagnosticInstance, IDescribed
+    public abstract class Instance : HasScope, IDescribed
     {
         private readonly string _originalName;
         private string _name = Guid.NewGuid().ToString();
@@ -69,8 +68,6 @@ namespace StructureMap.Pipeline
             get { return _interceptors; }
         }
 
-        #region IDiagnosticInstance Members
-
         public string Name
         {
             get { return _name; }
@@ -79,18 +76,10 @@ namespace StructureMap.Pipeline
 
         public abstract string Description { get; }
 
-
-        bool IDiagnosticInstance.CanBePartOfPluginFamily(PluginFamily family)
-        {
-            return canBePartOfPluginFamily(family);
-        }
-
-        InstanceToken IDiagnosticInstance.CreateToken()
+        public InstanceToken CreateToken()
         {
             return new InstanceToken(Name, Description);
         }
-
-        #endregion
 
         public abstract Type ReturnedType { get; }
 
@@ -106,12 +95,6 @@ namespace StructureMap.Pipeline
         public bool HasExplicitName()
         {
             return _name != _originalName;
-        }
-
-        [CLSCompliant(false)]
-        protected virtual bool canBePartOfPluginFamily(PluginFamily family)
-        {
-            return true;
         }
 
         /// <summary>
@@ -147,6 +130,7 @@ namespace StructureMap.Pipeline
             return Lifecycle is UniquePerRequestLifecycle;
         }
 
+        [Obsolete("Can we get rid of this?")]
         public PluginGraph Owner()
         {
             if (Parent == null || Parent.Owner == null) return null;

@@ -13,11 +13,5 @@ namespace StructureMap.Testing
             action(graph);
             graph.Log.AssertHasError(errorCode);
         }
-
-        public static void AssertDescriptionIs(Instance instance, string expected)
-        {
-            IDiagnosticInstance diagnosticInstance = instance;
-            Assert.AreEqual(expected, diagnosticInstance.CreateToken().Description);
-        }
     }
 }

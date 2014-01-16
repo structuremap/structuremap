@@ -23,9 +23,8 @@ namespace StructureMap.Testing.Pipeline
         {
             var instance = new InstanceUnderTest();
             instance.Name = "name of instance";
-            IDiagnosticInstance diagnosticInstance = instance;
 
-            var token = diagnosticInstance.CreateToken();
+            var token = instance.CreateToken();
 
             Assert.AreEqual(instance.Name, token.Name);
             Assert.AreEqual("InstanceUnderTest", token.Description);
