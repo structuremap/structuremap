@@ -31,10 +31,12 @@ namespace StructureMap.Building.Interception
         {
             get
             {
-                return _description ?? _action
+                var bodyDescription = _description ?? _action
                     .ReplaceParameter(Accepts, Expression.Parameter(Accepts, Accepts.Name))
                     .ReplaceParameter(typeof(IBuildSession), Expression.Parameter(typeof(IBuildSession), "IBuildSession"))
                     .Body.ToString();
+
+                return "ActivatorInterceptor of {0}: {1}".ToFormat(typeof (T).GetFullName(), bodyDescription);
             }
         }
 

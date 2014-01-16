@@ -94,7 +94,7 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public SmartInstance<T> DecorateWith(Expression<Func<T, T>> handler)
         {
-            AddInterceptor(new FuncInterceptor<T>(handler));
+            AddInterceptor(new DecoratorInterceptor<T>(handler));
 
             return this;
         }
@@ -121,7 +121,7 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public SmartInstance<T> DecorateWith<TPluginType>(Expression<Func<TPluginType, TPluginType>> handler)
         {
-            AddInterceptor(new FuncInterceptor<TPluginType>(handler));
+            AddInterceptor(new DecoratorInterceptor<TPluginType>(handler));
 
             return this;
         }
@@ -148,7 +148,7 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public SmartInstance<T> DecorateWith(Expression<Func<IBuildSession, T, T>> handler)
         {
-            AddInterceptor(new FuncInterceptor<T>(handler));
+            AddInterceptor(new DecoratorInterceptor<T>(handler));
 
             return this;
         }
@@ -175,7 +175,7 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public SmartInstance<T> DecorateWith<TPluginType>(Expression<Func<IBuildSession, TPluginType, TPluginType>> handler)
         {
-            AddInterceptor(new FuncInterceptor<TPluginType>(handler));
+            AddInterceptor(new DecoratorInterceptor<TPluginType>(handler));
 
             return this;
         }

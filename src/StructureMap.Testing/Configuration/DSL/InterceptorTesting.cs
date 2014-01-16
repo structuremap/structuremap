@@ -126,11 +126,11 @@ namespace StructureMap.Testing.Configuration.DSL
         [Test]
         public void TrapFailureInInterceptor()
         {
-            var ex = Exception<StructureMapBuildException>.ShouldBeThrownBy(() => {
+            var ex = Exception<StructureMapInterceptorException>.ShouldBeThrownBy(() => {
                 _container.GetInstance<IService>("Bad");
             });
 
-            ex.Title.ShouldEqual("Failure at: \"throw exception\"");
+            ex.Title.ShouldContain("throw exception");
         }
     }
 

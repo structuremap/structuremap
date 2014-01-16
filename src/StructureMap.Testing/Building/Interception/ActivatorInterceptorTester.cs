@@ -22,15 +22,15 @@ namespace StructureMap.Testing.Building.Interception
         [Test]
         public void the_description()
         {
-            theActivator.Description.ShouldEqual("ITarget.Activate()");
+            theActivator.Description.ShouldContain("ITarget.Activate()");
         }
 
         [Test]
         public void description_is_set_explicitly()
         {
             theActivator = new ActivatorInterceptor<ITarget>(x => x.Activate(), "gonna start it up");
-
-            theActivator.Description.ShouldEqual("gonna start it up");
+            
+            theActivator.Description.ShouldContain("gonna start it up");
         }
 
         [Test]
@@ -38,7 +38,7 @@ namespace StructureMap.Testing.Building.Interception
         {
             var activator = new ActivatorInterceptor<Target>((s, t) => t.UseSession(s));
 
-            activator.Description.ShouldEqual("Target.UseSession(IBuildSession)");
+            activator.Description.ShouldContain("Target.UseSession(IBuildSession)");
         }
 
         [Test]
@@ -46,7 +46,7 @@ namespace StructureMap.Testing.Building.Interception
         {
             var activator = new ActivatorInterceptor<Target>((s, t) => t.UseSession(s), "use the Force Luke!");
 
-            activator.Description.ShouldEqual("use the Force Luke!");
+            activator.Description.ShouldContain("use the Force Luke!");
         }
 
         [Test]

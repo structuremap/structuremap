@@ -12,7 +12,7 @@ namespace StructureMap.Testing.Pipeline
         [Test]
         public void ObjectBuilder_should_throw_308_if_interception_fails()
         {
-            var ex = Exception<StructureMapBuildException>.ShouldBeThrownBy(() => {
+            Exception<StructureMapInterceptorException>.ShouldBeThrownBy(() => {
                 var container = new Container(x =>
                 {
                     x.For<Rule>().OnCreationForAll("throwing up", (c, r) => { throw new NotImplementedException(); })
@@ -22,8 +22,6 @@ namespace StructureMap.Testing.Pipeline
                 container.GetInstance<Rule>();
 
             });
-
-            ex.Title.ShouldContain("Failure at: \"Invoke(value(StructureMap.Building.Interception.InterceptorFactory+<>c__DisplayClass2`1[StructureMap.Testing.Widget.Rule]).action, IBuildSession, Rule)\"");
 
         }
 

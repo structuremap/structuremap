@@ -81,7 +81,7 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public ConfiguredInstance DecorateWith<T>(Expression<Func<T, T>> handler)
         {
-            return Interceptor(new FuncInterceptor<T>(handler));
+            return Interceptor(new DecoratorInterceptor<T>(handler));
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public ConfiguredInstance DecorateWith<T>(Expression<Func<IBuildSession, T, T>> func)
         {
-            return Interceptor(new FuncInterceptor<T>(func));
+            return Interceptor(new DecoratorInterceptor<T>(func));
         }
 
         /// <summary>

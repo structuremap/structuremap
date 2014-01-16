@@ -250,7 +250,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         public CreatePluginFamilyExpression<TPluginType> DecorateAllWith(Expression<Func<TPluginType, TPluginType>> handler)
         {
-            return InterceptWith(new FuncInterceptor<TPluginType>(handler));
+            return InterceptWith(new DecoratorInterceptor<TPluginType>(handler));
         }
 
         /// <summary>
@@ -273,7 +273,7 @@ namespace StructureMap.Configuration.DSL.Expressions
         /// </summary>
         public CreatePluginFamilyExpression<TPluginType> DecorateAllWith(Expression<Func<IBuildSession, TPluginType, TPluginType>> handler)
         {
-            return InterceptWith(new FuncInterceptor<TPluginType>(handler));
+            return InterceptWith(new DecoratorInterceptor<TPluginType>(handler));
         }
 
         /// <summary>

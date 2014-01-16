@@ -63,7 +63,7 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public T DecorateWith<THandler>(Expression<Func<THandler, THandler>> handler)
         {
-            AddInterceptor(new FuncInterceptor<THandler>(handler));
+            AddInterceptor(new DecoratorInterceptor<THandler>(handler));
 
             return thisInstance;
         }
@@ -91,7 +91,7 @@ namespace StructureMap.Pipeline
         /// <returns></returns>
         public T DecorateWith<THandler>(Expression<Func<IBuildSession, THandler, THandler>> handler)
         {
-            AddInterceptor(new FuncInterceptor<THandler>(handler));
+            AddInterceptor(new DecoratorInterceptor<THandler>(handler));
 
             return thisInstance;
         }
