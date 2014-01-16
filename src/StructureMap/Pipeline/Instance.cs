@@ -43,6 +43,7 @@ namespace StructureMap.Pipeline
             return ToDependencySource(pluginType);
         }
 
+        [Obsolete("Try to eliminate the bi-directional dependency here.")]
         public PluginFamily Parent
         {
             get { return _parent; }
@@ -50,16 +51,6 @@ namespace StructureMap.Pipeline
             {
                 _parent = value;
                 scopedParent = _parent;
-            }
-        }
-
-        public Policies Policies
-        {
-            get
-            {
-                if (_parent == null) return new Policies();
-
-                return _parent.Root.Policies;
             }
         }
 
@@ -82,15 +73,6 @@ namespace StructureMap.Pipeline
         }
 
         public abstract Type ReturnedType { get; }
-
-
-        protected void replaceNameIfNotAlreadySet(string name)
-        {
-            if (_name == _originalName)
-            {
-                _name = name;
-            }
-        }
 
         public bool HasExplicitName()
         {
@@ -130,18 +112,5 @@ namespace StructureMap.Pipeline
             return Lifecycle is UniquePerRequestLifecycle;
         }
 
-        [Obsolete("Can we get rid of this?")]
-        public PluginGraph Owner()
-        {
-            if (Parent == null || Parent.Owner == null) return null;
-
-            var owner = Parent.Owner;
-            while (owner.Parent != null)
-            {
-                owner = owner.Parent;
-            }
-
-            return owner;
-        }
     }
 }

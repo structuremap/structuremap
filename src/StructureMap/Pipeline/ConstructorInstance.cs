@@ -32,8 +32,7 @@ namespace StructureMap.Pipeline
 
         public override IDependencySource ToBuilder(Type pluginType, Policies policies)
         {
-            // TODO -- use an explicit constructor when this exists
-            return StructureMap.Building.ConcreteType.BuildSource(_pluggedType, null, _dependencies, Policies);
+            return StructureMap.Building.ConcreteType.BuildSource(_pluggedType, null, _dependencies, policies);
         }
 
         public ConstructorInstance Override(ExplicitArguments arguments)

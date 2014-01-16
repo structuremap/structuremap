@@ -230,20 +230,6 @@ namespace StructureMap.Testing.Graph
             leaf.Root.ShouldBeTheSameAs(top);
         }
 
-        [Test]
-        public void added_instance_can_find_the_root_policies()
-        {
-            var top = new PluginGraph();
-            var node = top.Profile("Foo");
-            var leaf = node.Profile("Bar");
-
-            var family = leaf.Families[typeof (IFoo)];
-            var instance = new FakeInstance();
-            family.AddInstance(instance);
-
-            instance.Policies.ShouldBeTheSameAs(top.Policies);
-        }
-
 
         [Test]
         public void has_family_true_with_open_generics()
